@@ -1,41 +1,86 @@
-// What the site is called, which is the site's own name rather than a word of
-// anybody's language: it is configured, it is in no catalogue, and it is what
-// the site's emails call it too (emailWriter.ts). A catalogue that spelled it
-// out would be a second place the site is called something, and the two would
-// come to disagree the day a site serving from this repository is called
-// something else.
+// Which website a request is for, and so what the site it is served by is
+// called, both read from the host the request was addressed to. One server
+// answers for every website (Website.feature), so neither is set once for the
+// server: a page asks for them where it needs them.
 //
-// Which website the site is served as is read the same way, and for the same
-// reason: a page asks whether it is on a try website where it needs to know.
+// What the site is called is the site's own name rather than a word of
+// anybody's language: it is in no catalogue, and it is what the site's emails
+// call it too (emailWriter.ts). A catalogue that spelled it out would be a
+// second place the site is called something, and the two would come to
+// disagree.
 //
-// Read from the server rather than passed down from each route, the way the
+// Read from the request rather than passed down from each route, the way the
 // reader's language is, so that a page asks for it where it needs it.
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
-import type { Website } from "../../domain/common/Website.js";
+import { Website, type Site } from "../../domain/common/Website.js";
+import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 
 declare module "fastify" {
-  interface FastifyInstance {
-    /** What this site is called. Read it through siteNameOf. */
-    readonly siteName: string;
-    /** Which website this is. Read it through websiteOf. */
-    readonly website: Website;
+  interface FastifyRequest {
+    /** Which website this request is for. Read it through websiteOf. */
+    website: Website | undefined;
   }
 }
 
-export const nameTheSite = (
-  server: FastifyInstance,
-  name: string,
-  website: Website,
-): void => {
-  server.decorate("siteName", name);
-  server.decorate("website", website);
+const names: Readonly<Record<Site, string>> = {
+  croquetScores: "Croquet Scores",
+  gateballScores: "Gateball Scores",
 };
+
+/** What the site `website` serves is called. */
+export const siteNameFor = (website: Website): string => names[website.site];
 
 /** What the site serving `request` is called. */
 export const siteNameOf = (request: FastifyRequest): string =>
-  request.server.siteName;
+  siteNameFor(websiteOf(request));
 
-/** Which website the site serving `request` is. */
-export const websiteOf = (request: FastifyRequest): Website =>
-  request.server.website;
+/**
+ * Which website `request` is for. Every request that reaches a route has one,
+ * because {@link placeRequests} answers the rest before they get there.
+ */
+export const websiteOf = (request: FastifyRequest): Website => {
+  if (request.website === undefined) {
+    throw new Error("The request has not been placed on a website.");
+  }
+  return request.website;
+};
+
+// Not a page of any website, and so not drawn with a website's shell, its name
+// or its words: there is none to speak for it, which is the whole of what is
+// wrong with the request.
+const misdirectedPage = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Misdirected request</title>
+  </head>
+  <body>
+    <h1>Misdirected request</h1>
+    <p>This server does not answer for the address you asked for.</p>
+  </body>
+</html>
+`;
+
+/**
+ * Places every request on the website its host names, and answers 421
+ * Misdirected Request to one that names none, before anything else is done
+ * for it (unknownHost.feature). Registered ahead of every hook that reads the
+ * website, which includes the ones that refuse a request.
+ */
+export const placeRequests = (server: FastifyInstance): void => {
+  server.decorateRequest("website", undefined);
+  server.addHook("onRequest", async (request, reply) => {
+    try {
+      request.website = Website.addressedTo(request.host);
+      return;
+    } catch (refusal) {
+      if (!(refusal instanceof ValidationError)) throw refusal;
+    }
+    reply.header("cache-control", "no-store").code(421);
+    if (request.url.startsWith("/api/")) {
+      return reply.send({ error: "Request.Misdirected" });
+    }
+    return reply.type("text/html; charset=utf-8").send(misdirectedPage);
+  });
+};

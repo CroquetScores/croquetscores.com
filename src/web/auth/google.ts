@@ -17,6 +17,8 @@
 // rather than in the address Google is told to come back to, because that
 // address has to be the one Google was given beforehand, and because what is
 // in the signed cookie is what this site put there.
+import { Website } from "../../domain/common/Website.js";
+import { websiteOf } from "../common/site.js";
 import { createHash, randomBytes } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -78,13 +80,6 @@ export interface GoogleRoutesOptions {
   readonly google: GoogleSignIn;
   readonly sessions: Sessions;
   readonly inTransaction: InTransaction;
-  /**
-   * The site's own address, where it has been given one, which Google is told
-   * to send the reader back to. Where it has none — development, and the
-   * scenarios — the address the reader asked by is used, as it is the truth on
-   * a machine nothing sits in front of.
-   */
-  readonly siteAddress: string | undefined;
 }
 
 const pendingCookie = "google-sign-in";
@@ -181,8 +176,17 @@ export const registerGoogleRoutes = (
   server: FastifyInstance,
   options: GoogleRoutesOptions,
 ): void => {
-  const redirectUriFor = (request: FastifyRequest): string =>
-    `${options.siteAddress ?? `${request.protocol}://${request.host}`}${callbackPath}`;
+  // The website's own address, which Google is told to send the reader back
+  // to. Development is the exception: it is reached on whatever port is free,
+  // so the address the reader asked by is the truth, as it is on a machine
+  // nothing sits in front of.
+  const redirectUriFor = (request: FastifyRequest): string => {
+    const website = websiteOf(request);
+    const address = website.equals(Website.development)
+      ? `${request.protocol}://${request.host}`
+      : website.address;
+    return `${address}${callbackPath}`;
+  };
 
   server.get<{ Querystring: { from?: string; return?: string } }>(
     googlePath,

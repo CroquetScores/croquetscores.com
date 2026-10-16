@@ -1,3 +1,4 @@
+import { Website } from "../../../domain/common/Website.js";
 import { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -176,10 +177,18 @@ export class RegisterAccountHandler extends CommandHandler<
       to: to.toString(),
       account,
       language: command.language,
+      website: command.website,
       fill:
         purpose === undefined
           ? {}
-          : { link: this.links.make(purpose, account, until) },
+          : {
+              link: this.links.make(
+                Website.from(command.website),
+                purpose,
+                account,
+                until,
+              ),
+            },
       ...(purpose === undefined ? {} : { linkWorksUntil: until }),
       queuedAt: command.requestedAt,
     });

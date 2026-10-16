@@ -1,3 +1,4 @@
+import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
@@ -87,7 +88,15 @@ export class AskToSetPasswordHandler extends CommandHandler<
       to: account.emailAddress.toString(),
       account: id,
       language: command.language,
-      fill: { link: this.links.make("set-new-password", id, until) },
+      website: command.website,
+      fill: {
+        link: this.links.make(
+          Website.from(command.website),
+          "set-new-password",
+          id,
+          until,
+        ),
+      },
       linkWorksUntil: until,
       queuedAt: command.requestedAt,
     });

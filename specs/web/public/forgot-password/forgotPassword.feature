@@ -30,13 +30,14 @@ Feature: A reader who has forgotten their password is sent a way back in
   would otherwise stay in; the reader who set it is signed out with the rest,
   and signs in with what they have just chosen.
 
-  Every link this page sends is on the site's own address, whatever host the
-  request that asked for it came with. A request's host is whatever its
-  sender wrote, and a link made from it could be pointed at anybody's site:
-  asking for a way back in to somebody else's account with another host would
-  send its owner a genuine email whose link handed the asker the way in. The
-  site's address comes from how the site is configured, and is specified with
-  the email writer (`emailWriter.feature`).
+  Every link this page sends is on the address of the website the request
+  asking for it was for. A request's host is whatever its sender wrote, and a
+  link made from it could be pointed at anybody's site: asking for a way back
+  in to somebody else's account with another host would send its owner a
+  genuine email whose link handed the asker the way in. So a host that is no
+  website's is turned away before anything is sent (`unknownHost.feature`),
+  and the address of one that is comes from the website and not from the
+  request (`emailWriter.feature`).
 
   Asking is limited, so that the page cannot be used to fill somebody's inbox
   or to try address after address. How often an address is written to is
@@ -158,20 +159,33 @@ Feature: A reader who has forgotten their password is sent a way back in
       When the new password "a different long password" is set
       Then the reader is signed out
 
-  Rule: A link is on the site's own address, whatever host it was asked for with
+  Rule: A link is on the address of the website it was asked for on
 
-    Scenario: A link to set a new password asked for with another host is on the site's address
+    Scenario Outline: A link to set a new password is on the website's address
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed
+      And the forgot password page is open
+      When the reader asks for a way back in for "someone@example.com", on the website "<host>"
+      Then the link sent to "someone@example.com" is on the address of the website "<host>"
+
+      Examples:
+        | host                   |
+        | croquetscores.com      |
+        | try.croquetscores.com  |
+        | gateballscores.com     |
+
+    Scenario: A link to register is on the website's address
+      Given a viewport 1200 pixels wide
+      And the forgot password page is open
+      When the reader asks for a way back in for "nobody@example.com", on the website "gateballscores.com"
+      Then the link sent to "nobody@example.com" is on the address of the website "gateballscores.com"
+
+    Scenario: Nothing is sent when it is asked for with a host that is no website's
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed
       And the forgot password page is open
       When the reader asks for a way back in for "someone@example.com", with the host "elsewhere.example"
-      Then the link sent to "someone@example.com" is on the site's own address
-
-    Scenario: A link to register asked for with another host is on the site's address
-      Given a viewport 1200 pixels wide
-      And the forgot password page is open
-      When the reader asks for a way back in for "nobody@example.com", with the host "elsewhere.example"
-      Then the link sent to "nobody@example.com" is on the site's own address
+      Then nothing is sent to "someone@example.com" for a way back in
 
   Rule: The link sets a new password once, and for an hour
 

@@ -119,11 +119,11 @@ Feature: A reader is spoken to in their own language
     Some of what is in the bars is a name rather than a word, and a name is not
     translated.
 
-    The site's name is the site's own. It is configured rather than written
-    into the shell, and it is the same name the site's emails call it by
-    (`emailWriter.feature`): a site serving from this repository under another
-    name should no more call itself Croquet Scores in its own footer than in
-    its email. So it is not in any catalogue, and where a phrase in the bars
+    The site's name is the site's own. It follows the website a request is
+    for rather than being written into the shell, and it is the same name the
+    site's emails call it by (`emailWriter.feature`): Gateball Scores should no
+    more call itself Croquet Scores in its own footer than in its email. So it
+    is not in any catalogue, and where a phrase in the bars
     names the site — the plea beside the Donate button does — the catalogue
     leaves a place for the name and the site fills it in, exactly as an email's
     subject does. A catalogue that spelled the name out would be a second place
@@ -196,36 +196,36 @@ Feature: A reader is spoken to in their own language
       Then the section bar is named in the test locale
 
     @postgres
-    Scenario: A site configured under another name calls itself that
+    Scenario: Gateball Scores calls itself that
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the home page is opened
       Then the header names the site "Gateball Scores"
       And the plea names the site "Gateball Scores"
 
-    Scenario: A site configured under another name is named in the way back to it
+    Scenario: Gateball Scores is named in the way back to it
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When a page that is not there is opened
       Then the way back to the home page names the site "Gateball Scores"
 
     Scenario: The way back from the page shown after registering names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the page shown after registering is opened
       Then the page says the words for "welcome.title"
       And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The way back from the page asking for scripting names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the page asking for scripting is opened
       Then the page says the words for "javaScriptRequired.title"
       And the way back to the home page names the site "Gateball Scores"
 
     Scenario: The way back from the page saying registering is suspended names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the page saying registering is suspended is opened
       Then the page says the words for "registrationsSuspended.title"
       And the way back to the home page names the site "Gateball Scores"
@@ -233,7 +233,7 @@ Feature: A reader is spoken to in their own language
     @postgres
     Scenario: The way back from the page saying a way back in is on its way names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       And "someone@example.com" has an account, confirmed
       And the forgot password page is open
       When the reader asks for a way back in for "someone@example.com"
@@ -243,7 +243,7 @@ Feature: A reader is spoken to in their own language
     @postgres
     Scenario: The way back from the page saying a new password is set names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       And "someone@example.com" has an account, confirmed
       And a link to set a new password has been sent to "someone@example.com"
       And the link is followed
@@ -254,7 +254,7 @@ Feature: A reader is spoken to in their own language
     @postgres
     Scenario: The way back from the page saying an account is forgotten names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
       And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
       And a link to confirm forgetting has been sent to "someone@example.com"
@@ -266,7 +266,7 @@ Feature: A reader is spoken to in their own language
     @postgres
     Scenario: The way back from the page saying an email address is confirmed names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       And "someone@example.com" has an account, not confirmed
       And a link to confirm the email address has been sent to "someone@example.com"
       And the link is followed
@@ -280,7 +280,7 @@ Feature: A reader is spoken to in their own language
     @postgres
     Scenario: The site's name is not translated for a reader of another language
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       And a browser that asks for "en-XA"
       When the home page is opened
       Then the header names the site "Gateball Scores"

@@ -18,7 +18,7 @@ const momentOf = (world: SpecWorld): ReadOnlyDate => {
 
 const report = (world: SpecWorld, service: string): Promise<void> =>
   registeringOf(world).report(
-    new ReportUnreachableService(service, momentOf(world)),
+    new ReportUnreachableService(service, "croquetscores.com", momentOf(world)),
   );
 
 Given(

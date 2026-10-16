@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { ResetPassword } from "../../../../src/application/operations/accounts/ResetPassword.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
-import { siteAddress } from "../../../../src/web/common/emailWriter.js";
+import { Website } from "../../../../src/domain/common/Website.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { applicationFor } from "../../support/browser.js";
 import { clockFor } from "../../support/clock.js";
@@ -92,23 +92,33 @@ When("the reader goes back and asks again", async function (this: SpecWorld) {
   await this.browserPage.waitForLoadState();
 });
 
-// Asked with a host the site does not answer to, as a request can be sent by
-// anybody who writes one. What the scenario asks is where the emailed link
-// points, which must not be wherever the request said it was sent.
+// Asked for as something in front of the site asks: the host the reader typed
+// is forwarded from the proxy the site trusts, 127.0.0.1. Said to come from the
+// site itself, as a form posted from its own page is, so that what the
+// scenario is about is the website and not the guard that turns away other
+// sites.
+const askedWithHost = (world: SpecWorld, address: string, host: string) =>
+  world.browserPage.request.post(`${world.baseUrl!}${forgotPassword}`, {
+    headers: { "x-forwarded-host": host, "sec-fetch-site": "same-origin" },
+    form: { emailAddress: address },
+    failOnStatusCode: false,
+  });
+
+When(
+  "the reader asks for a way back in for {string}, on the website {string}",
+  async function (this: SpecWorld, address: string, host: string) {
+    const answer = await askedWithHost(this, address, host);
+    assert.ok(answer.ok(), `The asking was answered ${answer.status()}.`);
+  },
+);
+
+// A host the site does not answer for, as a request can be sent by anybody who
+// writes one.
 When(
   "the reader asks for a way back in for {string}, with the host {string}",
   async function (this: SpecWorld, address: string, host: string) {
-    // Said to come from the site itself, as a form posted from its own page
-    // is, so that what the scenario is about is the host and not the guard
-    // that turns away other sites.
-    const answer = await this.browserPage.request.post(
-      `${this.baseUrl!}${forgotPassword}`,
-      {
-        headers: { host, "sec-fetch-site": "same-origin" },
-        form: { emailAddress: address },
-      },
-    );
-    assert.ok(answer.ok(), `The asking was answered ${answer.status()}.`);
+    const answer = await askedWithHost(this, address, host);
+    assert.equal(answer.status(), 421);
   },
 );
 
@@ -134,7 +144,13 @@ Given(
   async function (this: SpecWorld, address: string) {
     const application = applicationFor(this);
     await application.mediator.send(
-      new ResetPassword(randomUUID(), address, "en", nowIn(this)),
+      new ResetPassword(
+        randomUUID(),
+        address,
+        "en",
+        "croquetscores.com",
+        nowIn(this),
+      ),
     );
     const queued = await application.unitOfWork.inTransaction(() =>
       application.emailQueue.emails(),
@@ -275,13 +291,12 @@ Then(
   },
 );
 
-// On the site's own address, as the site is configured, whatever host the
-// request that asked for it was sent with.
+// On the address of the website, whatever host the request that asked for it
+// said it was sent with.
 Then(
-  "the link sent to {string} is on the site's own address",
-  async function (this: SpecWorld, address: string) {
-    const { config } = applicationFor(this);
-    const own = siteAddress(config.canonicalHost, config.port);
+  "the link sent to {string} is on the address of the website {string}",
+  async function (this: SpecWorld, address: string, host: string) {
+    const own = Website.from(host).address;
     // What the asking sent, and not the link registering emailed earlier,
     // which would pass whatever the asking did.
     const sent = (await queuedFor(this, address)).filter(
@@ -289,14 +304,24 @@ Then(
     );
     assert.ok(sent.length > 0, `Nothing was sent to ${address}.`);
     // An email carrying no link of its own — the register-instead one — points
-    // at pages by the writer's address, which is the site's by the same
-    // setting; one that carries a link carries it on the site's address.
+    // at pages by the writer's address, which is the website's by the same
+    // rule; one that carries a link carries it on the website's address.
     for (const email of sent.filter((each) => each.link !== undefined)) {
       assert.ok(
         email.link!.startsWith(own),
         `The link is on ${email.link}, not on ${own}.`,
       );
     }
+  },
+);
+
+Then(
+  "nothing is sent to {string} for a way back in",
+  async function (this: SpecWorld, address: string) {
+    const sent = (await queuedFor(this, address)).filter(
+      (email) => email.kind !== "Email.ConfirmAddress",
+    );
+    assert.equal(sent.length, 0, `${sent.length} emails were sent.`);
   },
 );
 

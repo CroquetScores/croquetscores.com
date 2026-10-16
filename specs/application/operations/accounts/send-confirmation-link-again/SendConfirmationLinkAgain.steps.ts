@@ -45,7 +45,13 @@ const ask = async (world: SpecWorld, { account, requestId }: Asked) => {
   world.failure = undefined;
   try {
     await registeringOf(world).sendAgain(
-      new SendConfirmationLinkAgain(requestId, account, "en", momentOf(world)),
+      new SendConfirmationLinkAgain(
+        requestId,
+        account,
+        "en",
+        "croquetscores.com",
+        momentOf(world),
+      ),
     );
   } catch (failure) {
     world.failure = failure;

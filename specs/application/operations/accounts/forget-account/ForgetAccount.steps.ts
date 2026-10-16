@@ -37,6 +37,7 @@ const askAs = async (world: SpecWorld, address: string): Promise<void> => {
     new AskToForgetAccount(
       await signedInTo(world, address),
       "en",
+      "croquetscores.com",
       momentOf(world),
     ),
   );

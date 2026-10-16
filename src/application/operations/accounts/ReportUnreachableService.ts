@@ -16,6 +16,8 @@ export type ReportUnreachableServiceRefusedCode =
 export class ReportUnreachableService extends Command<void> {
   constructor(
     readonly service: string,
+    // The host of the website whose reader was turned away.
+    readonly website: string,
     requestedAt: ReadOnlyDate,
   ) {
     super(requestedAt);

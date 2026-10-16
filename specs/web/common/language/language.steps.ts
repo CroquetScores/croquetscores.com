@@ -6,7 +6,6 @@ import { javaScriptRequiredPath } from "../../../../src/web/public/javaScriptReq
 import { registrationsSuspendedPath } from "../../../../src/web/public/registrationsSuspended.js";
 import { welcomePath } from "../../../../src/web/public/welcome.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { anApplicationCalled } from "../../support/browser.js";
 import {
   exampleFailedPath,
   exampleRefusedPath,
@@ -182,16 +181,6 @@ Then(
 
     const shown = unmarked(await this.browserPage.locator("main").innerText());
     assert.ok(shown.includes(said), `The page says ${JSON.stringify(shown)}.`);
-  },
-);
-
-// A site of this scenario's own, called something else, so that what it calls
-// itself in its bars can be seen to come from what it is called rather than
-// from anything written into the shell.
-Given(
-  "a site called {string}",
-  async function (this: SpecWorld, siteName: string) {
-    this.baseUrl = await anApplicationCalled(this, siteName);
   },
 );
 

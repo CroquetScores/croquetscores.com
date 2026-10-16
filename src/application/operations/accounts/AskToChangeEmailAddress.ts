@@ -20,6 +20,9 @@ export class AskToChangeEmailAddress extends Command<void> {
     readonly emailAddress: string,
     readonly password: string,
     readonly language: string,
+    // The host of the website the request was for, which an email written
+    // about it is addressed from.
+    readonly website: string,
     requestedAt: ReadOnlyDate,
   ) {
     super(requestedAt);

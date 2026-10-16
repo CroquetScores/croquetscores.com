@@ -138,6 +138,7 @@ Given(
         `a-registration-${minted}`,
         address,
         "en",
+        "croquetscores.com",
         momentOf(this),
       ),
     );

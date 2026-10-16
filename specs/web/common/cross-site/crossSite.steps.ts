@@ -6,7 +6,7 @@ import type { SpecWorld } from "../../../support/world.js";
 
 const judged = (world: SpecWorld): boolean => {
   assert.ok(world.provenance !== undefined, "No request has been described.");
-  return isRefused(world.provenance, world.canonicalHost);
+  return isRefused(world.provenance);
 };
 
 Given(
@@ -32,13 +32,6 @@ Given(
   "the browser does not say where it came from",
   function (this: SpecWorld) {
     this.provenance = { ...this.provenance!, secFetchSite: undefined };
-  },
-);
-
-Given(
-  "the site is configured to answer to {string}",
-  function (this: SpecWorld, host: string) {
-    this.canonicalHost = host;
   },
 );
 

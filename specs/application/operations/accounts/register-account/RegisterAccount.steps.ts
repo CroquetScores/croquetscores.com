@@ -71,6 +71,7 @@ const commandFor = (world: SpecWorld, written: Registration): RegisterAccount =>
     written.requestId,
     written.address,
     "en",
+    "croquetscores.com",
     momentOf(world),
   );
 
@@ -147,7 +148,13 @@ Given("recording the account will fail", function (this: SpecWorld) {
 When("a registration is made with no request id", function (this: SpecWorld) {
   this.failure = undefined;
   try {
-    new RegisterAccount("", "someone@example.com", "en", momentOf(this));
+    new RegisterAccount(
+      "",
+      "someone@example.com",
+      "en",
+      "croquetscores.com",
+      momentOf(this),
+    );
   } catch (failure) {
     this.failure = failure;
   }

@@ -6,16 +6,13 @@ import type {
   EmailWriter,
   WrittenEmail,
 } from "../../../../src/application/services/EmailWriter.js";
-import {
-  emailWriter,
-  siteAddress,
-} from "../../../../src/web/common/emailWriter.js";
+import { emailWriter } from "../../../../src/web/common/emailWriter.js";
 import { english } from "../../../../src/web/languages/english.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { closes, opens, scenarioLanguages } from "../../support/languages.js";
 
-// What a scenario has: the writer, the email it last wrote, and the site's
-// address it last made. Kept here rather than on the world, which may name
+// What a scenario has: the writer, the email it last wrote, and the address
+// of the button it last looked at. Kept here rather than on the world, which may name
 // nothing from the web layer.
 interface Writing {
   writer?: EmailWriter;
@@ -56,6 +53,7 @@ const write = (
   kind: string,
   language: string,
   fill: Readonly<Record<string, string>> = {},
+  website = "croquetscores.com",
   // A scenario about an email given nothing says so, and gets nothing: every
   // other one is given whatever its kind is filled in with.
   only = false,
@@ -66,6 +64,7 @@ const write = (
     writingOf(world).written = writer.write({
       kind,
       language,
+      website,
       fill: only ? fill : { ...everyFill, ...fill },
     });
   } catch (failure) {
@@ -124,35 +123,17 @@ const filledIn = (words: string): string =>
     words,
   );
 
-Given(
-  "an email writer for {string}",
-  function (this: SpecWorld, address: string) {
-    writingOf(this).writer = emailWriter(scenarioLanguages, {
-      address,
-      fromName: sendingAs,
-      siteName: sendingAsTheSite,
-    });
-  },
-);
+Given("an email writer", function (this: SpecWorld) {
+  writingOf(this).writer = emailWriter(scenarioLanguages, {
+    fromName: sendingAs,
+  });
+});
 
 Given(
   "an email writer sending as {string}",
   function (this: SpecWorld, name: string) {
     writingOf(this).writer = emailWriter(scenarioLanguages, {
-      address: "https://croquetscores.com",
       fromName: name,
-      siteName: sendingAsTheSite,
-    });
-  },
-);
-
-Given(
-  "an email writer sending from the site {string}",
-  function (this: SpecWorld, site: string) {
-    writingOf(this).writer = emailWriter(scenarioLanguages, {
-      address: "https://croquetscores.com",
-      fromName: sendingAs,
-      siteName: site,
     });
   },
 );
@@ -173,18 +154,21 @@ Given(
         Object.entries(language.words).filter(([each]) => each !== key),
       ),
     }));
-    writingOf(this).writer = emailWriter(without, {
-      address: "https://croquetscores.com",
-      fromName: sendingAs,
-      siteName: sendingAsTheSite,
-    });
+    writingOf(this).writer = emailWriter(without, { fromName: sendingAs });
   },
 );
 
 When(
   "the email {string} is written in {string} with nothing filling it in",
   function (this: SpecWorld, kind: string, language: string) {
-    write(this, kind, language, {}, true);
+    write(this, kind, language, {}, undefined, true);
+  },
+);
+
+When(
+  "the email {string} is written in {string} for the website {string}",
+  function (this: SpecWorld, kind: string, language: string, website: string) {
+    write(this, kind, language, {}, website);
   },
 );
 
@@ -344,28 +328,5 @@ Then(
       !new RegExp(`<\\s*${name}\\b`, "i").test(body),
       `The body has a ${name} element.`,
     );
-  },
-);
-
-// The site's address ---------------------------------------------------------
-
-When(
-  "the site's address is made for the host {string}",
-  function (this: SpecWorld, host: string) {
-    writingOf(this).address = siteAddress(host, 3000);
-  },
-);
-
-When(
-  "the site's address is made for no host and the port {int}",
-  function (this: SpecWorld, port: number) {
-    writingOf(this).address = siteAddress(undefined, port);
-  },
-);
-
-Then(
-  "the site's address is {string}",
-  function (this: SpecWorld, address: string) {
-    assert.equal(writingOf(this).address, address);
   },
 );

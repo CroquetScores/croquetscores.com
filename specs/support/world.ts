@@ -88,9 +88,6 @@ export class SpecWorld extends World {
       }
     | undefined;
 
-  // The host the site is configured to answer to, when a scenario sets one.
-  public canonicalHost: string | undefined;
-
   // What a scenario has told the site forwards requests to it, written as the
   // setting is written, and the request being judged by it: the address its
   // connection came in on, and what it says about having been forwarded, from

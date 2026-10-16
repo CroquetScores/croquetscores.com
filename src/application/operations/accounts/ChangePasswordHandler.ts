@@ -108,6 +108,7 @@ export class ChangePasswordHandler extends CommandHandler<
       to: account.emailAddress.toString(),
       account: account.id,
       language: command.language,
+      website: command.website,
       fill: {},
       queuedAt: command.requestedAt,
     });

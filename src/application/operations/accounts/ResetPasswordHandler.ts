@@ -1,3 +1,4 @@
+import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -125,10 +126,18 @@ export class ResetPasswordHandler extends CommandHandler<ResetPassword, void> {
       // account's, because there is no account whose key could seal it.
       ...(account === undefined ? {} : { account }),
       language: command.language,
+      website: command.website,
       fill:
         purpose === undefined || account === undefined
           ? {}
-          : { link: this.links.make(purpose, account, until) },
+          : {
+              link: this.links.make(
+                Website.from(command.website),
+                purpose,
+                account,
+                until,
+              ),
+            },
       ...(purpose === undefined || account === undefined
         ? {}
         : { linkWorksUntil: until }),

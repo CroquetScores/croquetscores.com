@@ -125,6 +125,7 @@ export const registerSetPasswordPage = (
             requestId,
             reader.value,
             speaking.language.tag,
+            websiteOf(request).host,
             request.requestedAt,
           ),
         );

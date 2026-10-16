@@ -58,6 +58,79 @@ Feature: The website a site is served as
       When the website "" is made
       Then it is refused for breaking "Website.Missing"
 
+  Rule: A request is for the website it was addressed to
+
+    One server answers for all four domains, so which website a request is for
+    is read from the host it was addressed to, one request at a time, and not
+    set once for the whole server. A request is for the website whose host it
+    names, however that is capitalised.
+
+    Development is the exception that makes working here possible: it is
+    reached as localhost or 127.0.0.1 on whatever port is free, by the
+    development server, the admin's Vite server and the browser scenarios, and
+    none of them can be given a fixed port. So a request addressed to either,
+    on any port, is for development. Nothing else is taken for it: an
+    address that is no website's and no local one is refused, never taken for
+    the nearest, for the reason above.
+
+    Scenario Outline: A request is for the website it names
+      When a request addressed to "<host>" is placed
+      Then it is for the website "<website>"
+
+      Examples:
+        | host                   | website                |
+        | croquetscores.com      | croquetscores.com      |
+        | CroquetScores.com      | croquetscores.com      |
+        | try.croquetscores.com  | try.croquetscores.com  |
+        | gateballscores.com     | gateballscores.com     |
+        | try.gateballscores.com | try.gateballscores.com |
+        | localhost:3000         | localhost:3000         |
+
+    Scenario Outline: A request addressed to a local address is for development
+      When a request addressed to "<host>" is placed
+      Then it is for the website "localhost:3000"
+
+      Examples:
+        | host            |
+        | localhost       |
+        | localhost:5173  |
+        | 127.0.0.1       |
+        | 127.0.0.1:41873 |
+
+    Scenario Outline: A request addressed to anywhere else is refused
+      When a request addressed to "<host>" is placed
+      Then it is refused for breaking "Website.Unknown"
+
+      Examples:
+        | host                  |
+        | example.com           |
+        | www.croquetscores.com |
+        | 203.0.113.5           |
+        | localhost.example.com |
+
+    Scenario: A request addressed to nowhere is refused
+      When a request addressed to "" is placed
+      Then it is refused for breaking "Website.Missing"
+
+  Rule: Each website answers at an address
+
+    A link to one of a website's pages begins with its address, which is made
+    from the website and never from a request, whose host is whatever its
+    sender wrote. It is `https://` and the host, except for development, which
+    is never served over TLS and so is `http://`.
+
+    Scenario Outline: A website's address is its host
+      Given the website "<host>"
+      Then its address is "<address>"
+
+      Examples:
+        | host                   | address                       |
+        | croquetscores.com      | https://croquetscores.com     |
+        | try.croquetscores.com  | https://try.croquetscores.com |
+        | gateballscores.com     | https://gateballscores.com    |
+        | try.gateballscores.com | https://try.gateballscores.com |
+        | localhost:3000         | http://localhost:3000         |
+
   Rule: Each website serves one of the two sites
 
     Scenario Outline: A website serves its site

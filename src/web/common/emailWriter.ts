@@ -7,9 +7,11 @@ import type {
   EmailWriter,
   WrittenEmail,
 } from "../../application/services/EmailWriter.js";
+import { Website } from "../../domain/common/Website.js";
 import { Refused } from "../../domain/common/Refused.js";
 import { directionAttribute, speakingIn, type Language } from "./language.js";
 import { escape } from "./escape.js";
+import { siteNameFor } from "./site.js";
 
 /** Every reason writing an email can be refused. */
 export type EmailWriterErrorCode =
@@ -18,25 +20,6 @@ export type EmailWriterErrorCode =
   | "EmailWriter.MissingFill";
 
 export class EmailWriterRefused extends Refused<EmailWriterErrorCode> {}
-
-/**
- * The address the site's links are made with, from how the site is configured
- * and never from a request, whose host is whatever its sender wrote: an email
- * link made from one could be pointed at anybody's site.
- *
- * `https://` and the host the site answers to; `http://` for `localhost` and
- * `127.0.0.1`, which only ever serve development, over plain HTTP; and with no
- * host at all, `http://localhost` and the port the site serves on.
- */
-export const siteAddress = (
-  canonicalHost: string | undefined,
-  port: number,
-): string => {
-  if (canonicalHost === undefined) return `http://localhost:${port}`;
-  const name = canonicalHost.split(":")[0];
-  const local = name === "localhost" || name === "127.0.0.1";
-  return `${local ? "http" : "https"}://${canonicalHost}`;
-};
 
 /**
  * What a button in an email is painted with: the site's darker green, and the
@@ -93,20 +76,23 @@ const languageFor = (
 
 /** What the site knows about itself, which every email it writes is given. */
 export interface SendingEmails {
-  /** The address links to the site's own pages are made with. */
-  readonly address: string;
   /** The name the site's emails are sent from, which each is signed off with. */
   readonly fromName: string;
-  /** What the site is called, which its emails name it by as its pages do. */
-  readonly siteName: string;
 }
 
-/** Writes the site's emails from `offered`, as `sending` says the site sends. */
+/**
+ * Writes the site's emails from `offered`, as `sending` says the site sends.
+ * What an email calls the site, and where its links go, are the website it is
+ * for: one server sends for every website.
+ */
 export const emailWriter = (
   offered: readonly Language[],
-  { address, fromName, siteName }: SendingEmails,
+  { fromName }: SendingEmails,
 ): EmailWriter => ({
-  write: ({ kind, language, fill }: EmailToWrite): WrittenEmail => {
+  write: ({ kind, language, website, fill }: EmailToWrite): WrittenEmail => {
+    const addressed = Website.from(website);
+    const address = addressed.address;
+    const siteName = siteNameFor(addressed);
     if (!kinds.includes(kind)) {
       throw new EmailWriterRefused(
         "EmailWriter.UnknownKind",
@@ -163,10 +149,9 @@ export const emailWriter = (
     // queued with can paint a button or sign an email as somebody else.
     const body = speaking.say(`${kind}.body`, {
       ...escaped,
-      // The site's address, for a link to one of its own pages: it is the
-      // site's own and is written into the markup as {site} and a path. It is
-      // escaped with the rest, since it lands inside an href and is read from
-      // configuration, which nothing here has checked for markup.
+      // The website's address, for a link to one of its own pages: it is the
+      // website's own and is written into the markup as {site} and a path. It
+      // is escaped with the rest, since it lands inside an href.
       site: escape(address),
       buttonBackgroundColour,
       buttonTextColour,

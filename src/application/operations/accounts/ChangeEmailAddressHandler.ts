@@ -87,6 +87,7 @@ export class ChangeEmailAddressHandler extends CommandHandler<
       to: from.toString(),
       account: account.id,
       language: command.language,
+      website: command.website,
       fill: { emailAddress: emailAddress.toString() },
       queuedAt: command.requestedAt,
     });

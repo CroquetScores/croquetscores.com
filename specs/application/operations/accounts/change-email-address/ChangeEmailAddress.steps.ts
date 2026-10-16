@@ -64,7 +64,14 @@ const askToMove = (
   password: string,
 ): Promise<void> =>
   registeringOf(world).askToMove(
-    new AskToChangeEmailAddress(account, to, password, "en", momentOf(world)),
+    new AskToChangeEmailAddress(
+      account,
+      to,
+      password,
+      "en",
+      "croquetscores.com",
+      momentOf(world),
+    ),
   );
 
 When(
@@ -162,7 +169,13 @@ const confirmAs = async (
 ): Promise<unknown> => {
   assert.ok(world.linkInHand !== undefined, "The scenario has no link.");
   const moved = await registeringOf(world).moveWithLink(
-    new ChangeEmailAddress(world.linkInHand, reader, "en", momentOf(world)),
+    new ChangeEmailAddress(
+      world.linkInHand,
+      reader,
+      "en",
+      "croquetscores.com",
+      momentOf(world),
+    ),
   );
   movedAccounts.set(world, moved.value);
   return moved;
@@ -215,6 +228,7 @@ When("{string} registers", async function (this: SpecWorld, address: string) {
       `moved-from-${registered}`,
       address,
       "en",
+      "croquetscores.com",
       momentOf(this),
     ),
   );

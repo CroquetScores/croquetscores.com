@@ -49,6 +49,7 @@ export class ReportUnreachableServiceHandler extends CommandHandler<
       // The site's own language: the administrator reads what the site is
       // written in, not whatever the reader who was turned away asked for.
       language: "en",
+      website: command.website,
       fill: {
         service: command.service,
         when: command.requestedAt.toDate().toISOString(),

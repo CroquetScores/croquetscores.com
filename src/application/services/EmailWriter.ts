@@ -4,6 +4,8 @@ export interface EmailToWrite {
   readonly kind: string;
   /** The language to write it in, as a tag such as `en`. */
   readonly language: string;
+  /** The host of the website it is written for. */
+  readonly website: string;
   /** Whatever fills it in, by the name its words give it, such as `link`. */
   readonly fill: Readonly<Record<string, string>>;
 }

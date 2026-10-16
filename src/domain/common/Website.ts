@@ -6,8 +6,7 @@ export type WebsiteErrorCode = "Website.Missing" | "Website.Unknown";
 
 /**
  * Which of the two sites built from this code a website serves. Not the site's
- * name, which is configured rather than known here, because a site can be
- * served under another name without becoming another site.
+ * name, which is a word of the web layer's and not the domain's.
  */
 export type Site = "croquetScores" | "gateballScores";
 
@@ -94,9 +93,38 @@ export class Website {
     return website;
   }
 
+  /**
+   * The website a request addressed to `host` is for: the website with that
+   * host, or development where `host` is `localhost` or `127.0.0.1` on any
+   * port. Throws {@link ValidationError} when there is no host, or it is no
+   * website's and no local address.
+   *
+   * Development is reached on whatever port is free by the development server,
+   * the admin's Vite server and the browser scenarios, so it is known by its
+   * name and not by its port. Nothing else is taken for it.
+   */
+  static addressedTo(host: string): Website {
+    const lowered = host.toLowerCase();
+    hosts.ensureValid(lowered);
+    const name = lowered.replace(/:\d+$/, "");
+    if (name === "localhost" || name === "127.0.0.1")
+      return Website.development;
+    return Website.from(lowered);
+  }
+
   /** How it is known: its host, as a browser's address bar writes it. */
   get host(): string {
     return this.#host;
+  }
+
+  /**
+   * Where it answers, as a link to one of its pages begins: `https://` and its
+   * host, or `http://` for development, which is never served over TLS.
+   * Worked out here and never from a request, whose host is whatever its
+   * sender wrote: a link made from one could be pointed at anybody's site.
+   */
+  get address(): string {
+    return `${this.equals(Website.development) ? "http" : "https"}://${this.#host}`;
   }
 
   /** Which of the two sites it serves. */

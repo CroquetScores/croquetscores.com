@@ -1,3 +1,4 @@
+import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
@@ -104,6 +105,7 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
         kind: "Email.AlreadyHasAnAccount",
         to: address.toString(),
         language: command.language,
+        website: command.website,
         fill: {},
         queuedAt: command.requestedAt,
       });
@@ -130,8 +132,10 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
       to: address.toString(),
       account: account.id,
       language: command.language,
+      website: command.website,
       fill: {
         link: this.links.make(
+          Website.from(command.website),
           "change-email-address",
           account.id,
           until,

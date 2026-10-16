@@ -61,7 +61,13 @@ const ask = async (
   world.brokenRulesChecked = 0;
   try {
     await registeringOf(world).resetPassword(
-      new ResetPassword(requestId, address, "en", momentOf(world)),
+      new ResetPassword(
+        requestId,
+        address,
+        "en",
+        "croquetscores.com",
+        momentOf(world),
+      ),
     );
     answersTo(world).push({ refusedWith: undefined });
   } catch (failure) {
