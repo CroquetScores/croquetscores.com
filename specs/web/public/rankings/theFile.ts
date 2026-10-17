@@ -8,6 +8,7 @@
 import { strict as assert } from "node:assert";
 import { inflateRawSync } from "node:zlib";
 
+import { addressingOf } from "../../support/browser.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 /** What the site answered a request for the file with. */
@@ -56,6 +57,7 @@ export const request = async (
   path: string,
 ): Promise<Given> => {
   const response = await fetch(`${world.baseUrl!}${path}`, {
+    headers: addressingOf(world),
     redirect: "follow",
   });
   const given: Given = {

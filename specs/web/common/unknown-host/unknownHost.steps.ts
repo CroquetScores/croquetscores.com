@@ -102,6 +102,17 @@ When(
 );
 
 When(
+  "the health check is asked for with a query as {string}",
+  async function (this: SpecWorld, host: string) {
+    const response = await this.browserPage.request.get(
+      `${this.baseUrl!}/api/v1/health?probe=1`,
+      { headers: forwardedFor(host), failOnStatusCode: false },
+    );
+    answers.set(this, await readFrom(response));
+  },
+);
+
+When(
   "a form is posted as {string}",
   async function (this: SpecWorld, host: string) {
     const response = await this.browserPage.request.post(
@@ -124,6 +135,10 @@ Then("the answer is a page", function (this: SpecWorld) {
   const { contentType, body } = answeredOf(this);
   assert.match(contentType, /^text\/html/);
   assert.match(body, /<h1>/);
+});
+
+Then("the answer carries no beta banner", function (this: SpecWorld) {
+  assert.ok(!answeredOf(this).body.includes("beta-banner"));
 });
 
 Then(

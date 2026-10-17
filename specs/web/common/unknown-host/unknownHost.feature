@@ -56,6 +56,11 @@ Feature: Refusing a request addressed to a website nobody set up
       When the sign in page is asked for as "example.com"
       Then the answer is a page
 
+    Scenario: The refusal carries no beta banner
+      Given a site
+      When the sign in page is asked for as "example.com"
+      Then the answer carries no beta banner
+
     Scenario: The refusal is JSON where the API was asked
       Given a site
       When the API is asked for as "example.com"
@@ -77,6 +82,11 @@ Feature: Refusing a request addressed to a website nobody set up
     Scenario: The health check is answered to a host that is no website's
       Given a site
       When the health check is asked for as "203.0.113.5"
+      Then the site answers "200"
+
+    Scenario: The health check is answered with a query on it
+      Given a site
+      When the health check is asked for with a query as "203.0.113.5"
       Then the site answers "200"
 
   Rule: The same server answers each website as itself

@@ -162,10 +162,20 @@ export const anApplicationServedAs = async (
   if (world.browserContext !== undefined) {
     await addressedAs(world.browserContext, host);
   }
-  if (world.baseUrl === undefined) {
-    throw new Error("The scenario has no application. Tag it @browser.");
-  }
+  // A scenario with no browser has no application yet, and makes the one its
+  // requests are sent to.
+  world.baseUrl ??= await anApplicationWith(world, {});
   return world.baseUrl;
+};
+
+/**
+ * The header that has a plain request say which website it is addressing, as
+ * the scenario's browser does: none for development, which is what the
+ * application is reached as.
+ */
+export const addressingOf = (world: SpecWorld): Record<string, string> => {
+  const host = addressed.get(world);
+  return host === undefined ? {} : { "x-forwarded-host": host };
 };
 
 /**

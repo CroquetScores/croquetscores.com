@@ -82,7 +82,7 @@ export const placeRequests = (server: FastifyInstance): void => {
     }
     // Answered whoever asks and placed on nothing: it reads no website, and a
     // probe that calls the instance by its address is not misdirected.
-    if (request.url === healthCheck) return;
+    if (request.url.split("?")[0] === healthCheck) return;
     reply.header("cache-control", "no-store").code(421);
     if (request.url.startsWith("/api/")) {
       return reply.send({ error: "Request.Misdirected" });
