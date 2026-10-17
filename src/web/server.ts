@@ -895,7 +895,7 @@ export const buildApplication = async (
     accountKeys,
     writer,
     emailSender,
-    config.emailFromAddress,
+    config.administratorEmailAddress,
   );
 
   // What an account's operations are put together from. The links are signed
@@ -1379,7 +1379,7 @@ export const buildApplication = async (
   // queue, which is in it: straight to the sender, and counted in memory.
   const databaseOutage = tellingTheAdministrator({
     administrator: config.administratorEmailAddress,
-    from: config.emailFromAddress,
+    from: config.administratorEmailAddress,
     intervalMinutes: config.databaseUnreachableEmailIntervalMinutes,
     writer,
     sender: emailSender,

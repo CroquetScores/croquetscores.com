@@ -33,16 +33,15 @@ export interface Config {
   // its address.
   readonly accountEncryptionKey: string;
   readonly accountEmailAddressHashKey: string;
-  // The address the site's emails are sent from, and the name they are sent
-  // from and signed off with. What the site is called, and which website a
-  // request is for, are not settings: one server answers for every website, and
-  // each request says which it is for by the host it was addressed to
-  // (Website.ts).
-  readonly emailFromAddress: string;
+  // The administrator: who the site's emails are sent from, by the name they
+  // are signed off with, and who is told when a service the site needs cannot
+  // be reached, or a backup has run. Always there, an address that goes nowhere
+  // on a development machine (Config.feature).
+  // What the site is called, and which website a request is for, are not
+  // settings: one server answers for every website, and each request says
+  // which it is for by the host it was addressed to (Website.ts).
+  readonly administratorEmailAddress: string;
   readonly administratorEmailFromName: string;
-  // Who is told when a service the site needs cannot be reached. Absent on a
-  // development machine, where nobody needs telling.
-  readonly administratorEmailAddress: string | undefined;
   // How many minutes the site waits between emailing the administrator that
   // it cannot reach its database. It is counted in the running site's own
   // memory, there being nowhere else to count it when the database is the
@@ -276,12 +275,12 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const problems: string[] = [];
 
   const required = [
+    "ADMINISTRATOR_EMAIL_ADDRESS",
     "DATABASE_URL",
     "SESSION_COOKIE_SECRET",
     "TOKEN_SIGNING_KEY",
     "ACCOUNT_ENCRYPTION_KEY",
     "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
-    "EMAIL_FROM_ADDRESS",
     "ADMINISTRATOR_EMAIL_FROM_NAME",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
@@ -304,10 +303,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     tokenSigningKey: env["TOKEN_SIGNING_KEY"]!,
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
-    emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
     administratorEmailFromName: env["ADMINISTRATOR_EMAIL_FROM_NAME"]!.trim(),
-    administratorEmailAddress:
-      env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
+    administratorEmailAddress: env["ADMINISTRATOR_EMAIL_ADDRESS"]!.trim(),
     databaseUnreachableEmailIntervalMinutes,
     databaseAccessFile:
       env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",

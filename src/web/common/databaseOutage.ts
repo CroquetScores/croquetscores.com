@@ -28,7 +28,7 @@ const A_MINUTE = 60 * 1000;
 /** What telling the administrator is done with. */
 export interface TellingTheAdministrator {
   /** Who is told, or nothing where there is nobody to tell. */
-  readonly administrator: string | undefined;
+  readonly administrator: string;
   /** The address the email is sent from: the site's own. */
   readonly from: string;
   /** How many minutes to wait between telling them. */
@@ -61,7 +61,6 @@ export const tellingTheAdministrator = ({
   const sending = new Set<Promise<void>>();
 
   const send = async (request: FastifyRequest, now: number): Promise<void> => {
-    if (administrator === undefined) return;
     const at = request.requestedAt;
     try {
       const written = writer.write({
@@ -96,8 +95,6 @@ export const tellingTheAdministrator = ({
 
   return {
     tell: (request) => {
-      if (administrator === undefined) return;
-
       // Inside the try as well: a request whose moment was never stamped,
       // because an earlier hook failed, is still owed its answer.
       let now: number;

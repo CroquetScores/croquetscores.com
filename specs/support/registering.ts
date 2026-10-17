@@ -131,7 +131,7 @@ export interface Registering {
   lastCausedBy(address: string): Promise<AccountId | undefined>;
 
   /** Has reporting tell `address`, or nobody where there is none. */
-  tellsAdministrator(address: string | undefined): void;
+  tellsAdministrator(address: string): void;
 
   /** Reports a service unreachable. Throws what the mediator throws. */
   report(command: ReportUnreachableService): Promise<void>;

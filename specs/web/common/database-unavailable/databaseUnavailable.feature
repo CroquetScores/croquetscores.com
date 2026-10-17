@@ -440,18 +440,10 @@ Feature: The site says so when it cannot reach its database
       When the example page is asked for
       Then no email is sent
 
-  Rule: Where there is no administrator, nobody is emailed
-
-    Scenario: A site with no administrator emails nobody
-      Given the site has no administrator's email address
-      And the database cannot be reached
-      And an example page that reads from the database
-      When the example page is asked for
-      Then no email is sent
+  Rule: The database being unreachable is logged
 
     Scenario: The database being unreachable is logged
-      Given the site has no administrator's email address
-      And the database cannot be reached
+      Given the database cannot be reached
       And an example page that reads from the database
       When the example page is asked for
       Then the log says "Database.Unreachable"

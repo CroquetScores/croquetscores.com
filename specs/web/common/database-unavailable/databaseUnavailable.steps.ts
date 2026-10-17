@@ -444,14 +444,6 @@ Given(
   },
 );
 
-Given(
-  "the site has no administrator's email address",
-  async function (this: SpecWorld) {
-    settingOf(this)["ADMINISTRATOR_EMAIL_ADDRESS"] = "";
-    await restart(this);
-  },
-);
-
 Given("emails cannot be sent", function (this: SpecWorld) {
   senderOf(this).failing = true;
 });

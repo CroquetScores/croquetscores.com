@@ -28,10 +28,6 @@ Given(
   },
 );
 
-Given("the site has no administrator's address", function (this: SpecWorld) {
-  registeringOf(this).tellsAdministrator(undefined);
-});
-
 Given(
   "{string} has been reported unreachable",
   async function (this: SpecWorld, service: string) {

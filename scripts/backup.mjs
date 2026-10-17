@@ -28,7 +28,7 @@ try {
       runPgDump({ address: database, file, tables, program }),
     send: (email) =>
       application.emailSender.send(
-        { ...email, from: config.emailFromAddress },
+        { ...email, from: config.administratorEmailAddress },
         ReadOnlyDate.from(new Date()),
       ),
     now: () => new Date(),

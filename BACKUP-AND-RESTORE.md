@@ -37,13 +37,13 @@ It exits with failure whenever anything failed, so the scheduler can show it, an
 
 On Tim's computer, in `.env`:
 
-| Setting                        | What it is                                                                                                                         |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `WEBSITE_DATABASE_URL`         | The website's database. Only ever read                                                                                             |
-| `DATABASE_BACKUP_FOLDER`       | The folder a file is written to each run. **It must be there already**: it is not made, so a disk that is not plugged in fails     |
-| `PG_DUMP_PATH`                 | Only where `pg_dump` is not found by that name. Name its `pg_dump.exe`; `db:restore` looks for `pg_restore.exe` in the same folder |
-| `ADMINISTRATOR_EMAIL_ADDRESS`  | Who is told how every run went: `croquetscores@gmail.com`                                                                          |
-| `EMAIL_FROM_ADDRESS`, the rest | As the site needs them (`.env.example`): the script is started as the site is                                                      |
+| Setting                       | What it is                                                                                                                         |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `WEBSITE_DATABASE_URL`        | The website's database. Only ever read                                                                                             |
+| `DATABASE_BACKUP_FOLDER`      | The folder a file is written to each run. **It must be there already**: it is not made, so a disk that is not plugged in fails     |
+| `PG_DUMP_PATH`                | Only where `pg_dump` is not found by that name. Name its `pg_dump.exe`; `db:restore` looks for `pg_restore.exe` in the same folder |
+| `ADMINISTRATOR_EMAIL_ADDRESS` | Who is told how every run went, and who the emails are sent from: `croquetscores@gmail.com`                                        |
+| The rest                      | As the site needs them (`.env.example`): the script is started as the site is                                                      |
 
 **pg_dump has to be installed on that computer, and be version 17 or later**, which is the website's Postgres's. pg_dump refuses to dump a server newer than itself and says so. `pg_dump --version` says which one is found.
 

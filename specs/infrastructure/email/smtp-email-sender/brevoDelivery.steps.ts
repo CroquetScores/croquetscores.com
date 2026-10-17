@@ -40,7 +40,7 @@ Given("the SMTP settings in the .env file", function (this: SpecWorld) {
   );
   testEmails.set(this, {
     smtp: config.smtp,
-    from: config.emailFromAddress,
+    from: config.administratorEmailAddress,
     failure: undefined,
     sent: false,
   });
