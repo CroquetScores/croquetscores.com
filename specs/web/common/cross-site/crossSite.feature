@@ -57,22 +57,45 @@ Feature: Refusing changes asked for by another site
         | null                           | refused     |
         | not a url                      | refused     |
 
-  Rule: The host the site answers to is configured, not taken from the request
+  Rule: An origin is this site's only when it is the website the request was addressed to
 
-    Scenario: The configured host decides, whatever the request was addressed to
-      Given a POST request addressed to "internal-proxy.local"
+    The site answers for four domains, so there is no one host to judge an
+    origin against. The website a request was addressed to is the one its
+    origin has to be, and a sister website is somebody else's page like any
+    other: a form on try.croquetscores.com cannot change anything on
+    croquetscores.com, though the two are one server and one database.
+
+    The host is the one the site reads for the request (`Website.feature`),
+    which behind a proxy it was told to trust is the host the reader typed, and
+    not the proxy's own. A request addressed to no website at all is refused
+    before it is judged (`unknownHost.feature`).
+
+    Scenario Outline: An origin of the website addressed is let through
+      Given a POST request addressed to "<host>"
       And the browser does not say where it came from
-      And its origin is "https://croquetscores.com"
-      And the site is configured to answer to "croquetscores.com"
+      And its origin is "<origin>"
       Then it is let through
 
-    Scenario: A change is still judged when the request says nothing of where it was addressed
-      Given a POST request addressed to "croquetscores.com"
-      And it is not addressed to anywhere
+      Examples:
+        | host                   | origin                        |
+        | croquetscores.com      | https://croquetscores.com     |
+        | try.croquetscores.com  | https://try.croquetscores.com |
+        | gateballscores.com     | https://gateballscores.com    |
+        | localhost:5173         | http://localhost:5173         |
+        | croquetscores.com.     | https://croquetscores.com.    |
+        | croquetscores.com:443  | https://croquetscores.com     |
+
+    Scenario Outline: An origin of another website is refused
+      Given a POST request addressed to "<host>"
       And the browser does not say where it came from
-      And its origin is "https://croquetscores.com"
-      And the site is configured to answer to "croquetscores.com"
-      Then it is let through
+      And its origin is "<origin>"
+      Then it is refused
+
+      Examples:
+        | host                  | origin                        |
+        | croquetscores.com     | https://try.croquetscores.com |
+        | croquetscores.com     | https://gateballscores.com    |
+        | try.croquetscores.com | https://croquetscores.com     |
 
     Scenario: With nothing to compare against, a change carrying an origin is refused
       Given a POST request addressed to "croquetscores.com"

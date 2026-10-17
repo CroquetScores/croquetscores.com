@@ -13,9 +13,6 @@ Feature: Telling the administrator a service the site needs cannot be reached
   What is counted is what the site has written to the administrator about that
   service, the same way every other email is counted (`EmailsWritten`).
 
-  Where the site has no administrator's address — a development machine, say —
-  nobody is emailed, and asking does nothing.
-
   It is asked for in a transaction of its own, by whatever found the service
   down, because the work that found it was refused and recorded nothing: the
   telling must be kept although the rest was not.
@@ -59,10 +56,3 @@ Feature: Telling the administrator a service the site needs cannot be reached
       And "Have I Been Pwned" has been reported unreachable
       When "reCAPTCHA" is reported unreachable
       Then 2 emails are queued for "administrator@example.com"
-
-  Rule: Where there is no administrator, nobody is emailed
-
-    Scenario: A site with no administrator emails nobody
-      Given the site has no administrator's address
-      When "Have I Been Pwned" is reported unreachable
-      Then nothing is queued to be sent

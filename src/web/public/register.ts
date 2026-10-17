@@ -258,6 +258,7 @@ export const registerRegisterPage = (
             requestId,
             typed["emailAddress"] ?? "",
             speaking.language.tag,
+            websiteOf(request).host,
             request.requestedAt,
           ),
         );

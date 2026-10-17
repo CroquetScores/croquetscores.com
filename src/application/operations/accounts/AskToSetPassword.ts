@@ -24,6 +24,9 @@ export class AskToSetPassword extends Command<void> {
     readonly requestId: string,
     readonly account: string,
     readonly language: string,
+    // The host of the website the request was for, which an email written
+    // about it is addressed from.
+    readonly website: string,
     requestedAt: ReadOnlyDate,
   ) {
     super(requestedAt);

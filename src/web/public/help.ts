@@ -64,7 +64,7 @@ export const registerHelpPages = (
   server: FastifyInstance,
   assets: Assets,
   library: HelpLibrary,
-  administrator: string | undefined,
+  administrator: string,
 ): void => {
   // A picture shows the site in a language, and the address says which, so
   // that the pictures of a page are those of the language the page was written
@@ -153,7 +153,7 @@ export const registerHelpPages = (
       body: `          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
 ${pictured(page.html, writtenIn.tag)}
           </article>${
-            name === privacyName && administrator !== undefined
+            name === privacyName
               ? `
           <p>${asking(speaking.say("privacy.contact", { emailAddress: administrator }), administrator)}</p>`
               : ""

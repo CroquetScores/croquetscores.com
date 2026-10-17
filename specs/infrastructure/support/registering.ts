@@ -111,11 +111,9 @@ import { unitOfWorkOf } from "./transactions.js";
 import { heldAfter } from "../../support/heldAtOnce.js";
 import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { listsStoodUpBy } from "./worldRankings.js";
+import { Website } from "../../../src/domain/common/Website.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
 import { scenarioLanguages } from "../../web/support/languages.js";
-
-/** Where the scenarios' site answers, which its links are made with. */
-const SITE_ADDRESS = "https://croquetscores.com";
 
 /** A projection that fails the append it is given, when a scenario says to. */
 class RefusingProjection implements Projection {
@@ -141,13 +139,10 @@ interface Pending {
 const CONFIRMED_AS = "Sam Someone";
 const CONFIRMED_WITH = "stand-in$password-hash";
 
-// The writer the site writes with, given the address the scenarios' links are
-// made with. Named here, where naming the web layer is allowed, so that the
+// The writer the site writes with. Named here, where naming the web layer is allowed, so that the
 // application's feature can ask where an email points without naming it.
 const writesEmails = emailWriter(scenarioLanguages, {
-  address: SITE_ADDRESS,
   fromName: "Croquet Scores",
-  siteName: "Croquet Scores",
 });
 
 /**
@@ -213,7 +208,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     return ReadOnlyDate.from(world.moment);
   };
   const written = new PostgresEmailsWritten(unitOfWork);
-  const links = new SignedLinks(SITE_ADDRESS, "a signing key");
+  const links = new SignedLinks("a signing key");
 
   const hasher = new QuickHasher();
   // On the world as well, so that a scenario can ask whether a hash was made
@@ -677,6 +672,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       await settle();
       const id = await idFor(address);
       return links.make(
+        Website.croquetScores,
         "confirm-email-address",
         id,
         ReadOnlyDate.from(new Date(now().toDate().getTime() + 86400000)),
@@ -691,6 +687,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       // A day, like the link registering sends: how long it works is not what
       // the scenario using it is about, only what it is for.
       return links.make(
+        Website.croquetScores,
         "confirm-forgetting",
         id,
         ReadOnlyDate.from(new Date(now().toDate().getTime() + 86400000)),
@@ -804,6 +801,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       const written = writesEmails.write({
         kind: only.kind,
         language: "en",
+        website: "croquetscores.com",
         fill: only.fill ?? {},
       });
       return `${written.subject}\n${written.body}`;

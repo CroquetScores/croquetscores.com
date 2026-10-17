@@ -16,6 +16,9 @@ export class ChangeEmailAddress extends Command<AccountId> {
     readonly link: string,
     readonly reader: string,
     readonly language: string,
+    // The host of the website the request was for, which an email written
+    // about it is addressed from.
+    readonly website: string,
     requestedAt: ReadOnlyDate,
   ) {
     super(requestedAt);

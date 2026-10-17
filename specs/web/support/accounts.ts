@@ -66,7 +66,7 @@ export const accountsThrough = (
     );
     if (id === undefined) throw new Error(`No account for ${address}.`);
     await application.mediator.send(
-      new AskToForgetAccount(id.value, "en", now()),
+      new AskToForgetAccount(id.value, "en", "croquetscores.com", now()),
     );
     await application.mediator.send(
       new ForgetAccount(
@@ -99,7 +99,13 @@ export const accountsThrough = (
     }
 
     await application.mediator.send(
-      new RegisterAccount(randomUUID(), address, "en", now()),
+      new RegisterAccount(
+        randomUUID(),
+        address,
+        "en",
+        "croquetscores.com",
+        now(),
+      ),
     );
     if (!as.confirmed) return;
 

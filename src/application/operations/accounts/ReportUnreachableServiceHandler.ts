@@ -23,20 +23,17 @@ export class ReportUnreachableServiceHandler extends CommandHandler<
     ReportUnreachableService;
 
   /**
-   * @param administrator who is told, or nothing where the site has nobody to
-   *   tell — a development machine, say — and so tells nobody.
+   * @param administrator who is told.
    */
   constructor(
     private readonly queue: EmailQueue,
     private readonly written: EmailsWritten,
-    private readonly administrator: string | undefined,
+    private readonly administrator: string,
   ) {
     super();
   }
 
   async handle(command: ReportUnreachableService): Promise<void> {
-    if (this.administrator === undefined) return;
-
     const whom: WrittenTo = { administratorAbout: command.service };
     const since = ReadOnlyDate.from(
       new Date(command.requestedAt.toDate().getTime() - AN_HOUR),
@@ -49,6 +46,7 @@ export class ReportUnreachableServiceHandler extends CommandHandler<
       // The site's own language: the administrator reads what the site is
       // written in, not whatever the reader who was turned away asked for.
       language: "en",
+      website: command.website,
       fill: {
         service: command.service,
         when: command.requestedAt.toDate().toISOString(),

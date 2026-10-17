@@ -2,7 +2,6 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { Website } from "../../../../src/domain/common/Website.js";
 import { english } from "../../../../src/web/languages/english.js";
 import { anApplicationServedAs, siteNameFor } from "../../support/browser.js";
 import { unmarked } from "../../support/languages.js";
@@ -17,7 +16,7 @@ const banner = ".try-banner";
 Given(
   "a site served as {string}",
   async function (this: SpecWorld, host: string) {
-    this.baseUrl = await anApplicationServedAs(this, Website.from(host));
+    this.baseUrl = await anApplicationServedAs(this, host);
   },
 );
 

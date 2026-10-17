@@ -29,7 +29,7 @@ const WEBSITES_ADDRESS =
 interface Backup {
   folder: string | undefined;
   folderIsNamed: boolean;
-  administrator: string | undefined;
+  administrator: string;
   websiteNamed: boolean;
   program: string | undefined;
   dumpWrites: string;
@@ -57,7 +57,7 @@ const backupOf = (world: SpecWorld): Backup => {
     found = {
       folder: undefined,
       folderIsNamed: true,
-      administrator: undefined,
+      administrator: "",
       websiteNamed: true,
       program: undefined,
       dumpWrites: "a dump",
@@ -124,10 +124,6 @@ Given(
     backupOf(this).administrator = address;
   },
 );
-
-Given("no administrator is named", function (this: SpecWorld) {
-  backupOf(this).administrator = undefined;
-});
 
 Given(
   "the settings name the program {string}",
@@ -453,10 +449,6 @@ Then(
 
 Then("the backup says it failed", function (this: SpecWorld) {
   assert.match(saidOnTheScreen(this), /The backup failed\./);
-});
-
-Then("the backup says an administrator is needed", function (this: SpecWorld) {
-  assert.match(saidOnTheScreen(this), /An administrator is needed/);
 });
 
 Then(

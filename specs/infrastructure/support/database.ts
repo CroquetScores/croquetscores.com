@@ -2,7 +2,7 @@
 // set of tables would pass or fail by the order they ran in, and two runs
 // sharing one — a second terminal, or the editor running a scenario while the
 // suite runs — would do the same.
-import { After, AfterAll, Before } from "@cucumber/cucumber";
+import { After, AfterAll, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { randomBytes, randomInt } from "node:crypto";
 import pg from "pg";
 
@@ -21,6 +21,13 @@ import type { SpecWorld } from "../../support/world.js";
 // them, and says to whoever finds one there what it is for. The run's template
 // is named the same way, so that one left behind is cleaned up with the rest.
 const prefix = "zzz_delete_me_spec_";
+
+// Making a scenario's database from the template and dropping it again take a
+// fraction of a second on a machine with nothing else to do, and more than
+// cucumber's five seconds when six workers are at the disk at once, as they
+// are in a full run. A step that is slow for that reason is not a scenario that
+// is wrong, and failing it says nothing about the code.
+setDefaultTimeout(30_000);
 const named = new RegExp(`^${prefix}(\\d+)_(?:[0-9a-f]+|template)$`);
 
 // A run says it is still going by holding an advisory lock on its number for

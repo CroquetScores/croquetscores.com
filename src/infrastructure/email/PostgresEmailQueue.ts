@@ -21,6 +21,7 @@ import type {
 import type { EmailSender } from "../../application/services/EmailSender.js";
 import type { EmailWriter } from "../../application/services/EmailWriter.js";
 import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
+import { Website } from "../../domain/common/Website.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import {
@@ -65,9 +66,11 @@ export interface QueuedEmail {
   readonly givenUp: boolean;
 }
 
-// What is sealed: where an email goes, and what fills it in.
+// What is sealed: where an email goes, the website it is for, and what fills
+// it in.
 interface Sealed {
   readonly to: string;
+  readonly website: string;
   readonly fill: Readonly<Record<string, string>>;
 }
 
@@ -100,7 +103,11 @@ export class PostgresEmailQueue implements EmailQueue {
    * a forgotten account.
    */
   async queue(email: EmailToQueue): Promise<void> {
-    const sealing: Sealed = { to: email.to, fill: email.fill };
+    const sealing: Sealed = {
+      to: email.to,
+      website: email.website,
+      fill: email.fill,
+    };
     let sealed: string;
     if (email.account !== undefined) {
       // An account's key is made as its registering is kept, in the same
@@ -229,6 +236,7 @@ export class PostgresEmailQueue implements EmailQueue {
       const written = this.writer.write({
         kind: row.kind,
         language: row.language,
+        website: sealed.website,
         fill: sealed.fill,
       });
       await this.sender.send(
@@ -275,6 +283,12 @@ export class PostgresEmailQueue implements EmailQueue {
       row.account_id === null
         ? this.keys.decryptForSite(row.sealed)
         : await this.keys.decrypt(AccountId.from(row.account_id), row.sealed);
-    return opened === undefined ? undefined : (JSON.parse(opened) as Sealed);
+    if (opened === undefined) return undefined;
+    // An email queued before the site answered for more than one website did
+    // not say which it was for, and the one website there was is
+    // croquetscores.com.
+    const sealed = JSON.parse(opened) as Omit<Sealed, "website"> &
+      Partial<Pick<Sealed, "website">>;
+    return { ...sealed, website: sealed.website ?? Website.croquetScores.host };
   }
 }

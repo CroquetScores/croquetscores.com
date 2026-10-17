@@ -124,6 +124,7 @@ export const queueAsARequest = async (
     await world.asARequest(() =>
       queue.queue({
         language: "en",
+        website: "croquetscores.com",
         fill: {},
         queuedAt: nowOf(world),
         ...email,

@@ -18,6 +18,7 @@ import type {
   Links,
 } from "../../application/services/Links.js";
 import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
+import type { Website } from "../../domain/common/Website.js";
 import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 
 /** Where each kind of link is followed. */
@@ -40,17 +41,14 @@ const encode = (text: string): string =>
 
 export class SignedLinks implements Links {
   /**
-   * @param siteAddress where the site answers, as the config says and never a
-   *   request's host: a link made from a host is a link anybody can point at
-   *   their own site.
-   * @param signingKey the site's token signing key.
+   * @param signingKey the site's token signing key. Where a link goes is the
+   *   website's own address and never a request's host: a link made from a host
+   *   is a link anybody can point at their own site.
    */
-  constructor(
-    private readonly siteAddress: string,
-    private readonly signingKey: string,
-  ) {}
+  constructor(private readonly signingKey: string) {}
 
   make(
+    website: Website,
     purpose: LinkPurpose,
     account: AccountId,
     until: ReadOnlyDate,
@@ -68,7 +66,7 @@ export class SignedLinks implements Links {
     const parts = [purpose, account.value, `${until.toDate().getTime()}`];
     if (reference !== undefined) parts.push(reference);
     const carried = encode(parts.join("."));
-    return `${this.siteAddress}${pages[purpose]}?link=${carried}.${this.sign(carried)}`;
+    return `${website.address}${pages[purpose]}?link=${carried}.${this.sign(carried)}`;
   }
 
   read(link: string): LinkCarried | undefined {

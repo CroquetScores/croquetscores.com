@@ -263,22 +263,7 @@ Feature: Backing up the website's events and accounts' keys to a file
       When the backup is run
       Then the folder has the file "2026-10-13-10-00-00.dump"
 
-  Rule: It is told who to tell, the database and the folder, before it does anything
-
-    Scenario: Without an administrator it is refused
-      Given no administrator is named
-      When the backup is run
-      Then the backup exits with failure
-
-    Scenario: Without an administrator it says one is needed
-      Given no administrator is named
-      When the backup is run
-      Then the backup says an administrator is needed
-
-    Scenario: Without an administrator nothing is written
-      Given no administrator is named
-      When the backup is run
-      Then the folder has 0 files
+  Rule: It is told the database and the folder, before it does anything
 
     Scenario: Without the website's database it is refused
       Given the website's database is not named

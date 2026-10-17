@@ -38,6 +38,9 @@ export const registerBetaBanner = (server: FastifyInstance): void => {
     if (
       typeof payload !== "string" ||
       !type.startsWith("text/html") ||
+      // The refusal of a host no website has, which is no website's page and
+      // so not one to say it is a beta (unknownHost.feature).
+      reply.statusCode === 421 ||
       !isABeta(request.host)
     ) {
       done(null, payload);

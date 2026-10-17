@@ -63,6 +63,7 @@ When("the command is sent", async function (this: SpecWorld) {
         kind: command.kind,
         to: command.to,
         language: "en",
+        website: "croquetscores.com",
         fill: {},
         queuedAt: nowOf(this),
       });

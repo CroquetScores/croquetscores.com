@@ -32,9 +32,9 @@ Feature: The IP address a request is counted as coming from
 
   Believing a proxy is believing the rest of what it says a request arrived
   with, the host it was addressed to among it, which is a second reason to name
-  what is believed rather than to trust whatever connects. What the site does
-  with the host it was addressed to is `crossSite.feature`, and on a deployment
-  with a proxy in front the configured host decides that anyway.
+  what is believed rather than to trust whatever connects. The host it was
+  addressed to decides which website a request is for, and so what the site
+  does with it is `unknownHost.feature`'s and `crossSite.feature`'s.
 
   These scenarios say where the address is read from, and nothing about what is
   counted with it, which is each limit's own.

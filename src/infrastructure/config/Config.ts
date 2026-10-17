@@ -6,7 +6,6 @@
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
-import { Website } from "../../domain/common/Website.js";
 import type { SmtpSettings } from "../email/SmtpEmailSender.js";
 
 /** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
@@ -34,23 +33,15 @@ export interface Config {
   // its address.
   readonly accountEncryptionKey: string;
   readonly accountEmailAddressHashKey: string;
-  // The address the site's emails are sent from, the name they are sent from
-  // and signed off with, and what the site is called. The last two are
-  // configured rather than written into the catalogues so that a site serving
-  // from this repository under another name neither signs its emails nor calls
-  // itself Croquet Scores — in an email, in its header or in its footer.
-  readonly emailFromAddress: string;
-  readonly emailFromName: string;
-  readonly siteName: string;
-  // Which of the five websites this is, which says which site it serves and
-  // whether it is a try website. Required rather than falling back to
-  // development, because a Gateball Scores that forgot it would quietly be a
-  // Croquet Scores offering croquet. Not worked out from CANONICAL_HOST, which
-  // development leaves blank on purpose (SETUP.md §6.1).
-  readonly website: Website;
-  // Who is told when a service the site needs cannot be reached. Absent on a
-  // development machine, where nobody needs telling.
-  readonly administratorEmailAddress: string | undefined;
+  // The administrator: who the site's emails are sent from, by the name they
+  // are signed off with, and who is told when a service the site needs cannot
+  // be reached, or a backup has run. Always there, an address that goes nowhere
+  // on a development machine (Config.feature).
+  // What the site is called, and which website a request is for, are not
+  // settings: one server answers for every website, and each request says
+  // which it is for by the host it was addressed to (Website.ts).
+  readonly administratorEmailAddress: string;
+  readonly administratorEmailFromName: string;
   // How many minutes the site waits between emailing the administrator that
   // it cannot reach its database. It is counted in the running site's own
   // memory, there being nowhere else to count it when the database is the
@@ -60,11 +51,6 @@ export interface Config {
   // is kept, which is a file because the database cannot say whether it may be
   // asked (FileDatabaseAccess.feature). Relative to where the site is run.
   readonly databaseAccessFile: string;
-  // The host this site answers to, as a browser would name it: "croquetscores.com",
-  // or "localhost:3000" in development. Absent means fall back to the Host header
-  // of each request, which is right on a machine nothing sits in front of and
-  // wrong behind a proxy that rewrites it.
-  readonly canonicalHost: string | undefined;
   // What forwards requests to the site, if anything: the proxies whose word
   // for where a request came from is believed, each an address or a range.
   // Empty on a machine nothing sits in front of, which is development and
@@ -77,7 +63,7 @@ export interface Config {
   // What the register page guards itself with. Absent in development, where
   // there are no keys to give: the page then asks nobody and takes every
   // reader for a person, which is what it did before there was a check at all.
-  // It belongs on the deployment checklist beside CANONICAL_HOST, because a
+  // It belongs on the deployment checklist beside TRUSTED_PROXY, because a
   // production site without it has an open form that emails whoever it is told
   // to (TODO.md says more).
   readonly recaptcha: RecaptchaKeys | undefined;
@@ -137,20 +123,6 @@ const recaptchaKeys = (env: NodeJS.ProcessEnv): RecaptchaKeys | undefined => {
   return { siteKey, secretKey };
 };
 
-const readCanonicalHost = (env: NodeJS.ProcessEnv): string | undefined => {
-  const raw = env["CANONICAL_HOST"]?.trim() ?? "";
-  if (raw === "") return undefined;
-  // "localhost:3000" parses as a URL with a scheme and no host, so a host is
-  // only taken when there is one.
-  try {
-    const host = new URL(raw).host;
-    if (host !== "") return host.toLowerCase();
-  } catch {
-    // Not an address. It is a host, then.
-  }
-  return raw.replace(/\/+$/, "").toLowerCase();
-};
-
 // An address, or a range written as an address and how many of its leading
 // bits are fixed: 10.0.0.0/8, 2001:db8::/32. The names some libraries take for
 // well-known ranges — loopback, linklocal — are not accepted, because a
@@ -203,24 +175,6 @@ const readTrustedProxies = (
     );
   }
   return named;
-};
-
-// Blank is left to the list of what is missing, so that it is said once.
-const readWebsite = (
-  env: NodeJS.ProcessEnv,
-  problems: string[],
-): Website | undefined => {
-  const raw = env["WEBSITE"]?.trim() ?? "";
-  if (raw === "") return undefined;
-  try {
-    return Website.from(raw);
-  } catch {
-    problems.push(
-      `WEBSITE must be one of ${Website.all.map((one) => one.host).join(", ")}, ` +
-        `not ${JSON.stringify(raw)}.`,
-    );
-    return undefined;
-  }
 };
 
 // Yes or no and nothing else, because a misspelling left to mean one of them
@@ -321,15 +275,13 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const problems: string[] = [];
 
   const required = [
+    "ADMINISTRATOR_EMAIL_ADDRESS",
     "DATABASE_URL",
     "SESSION_COOKIE_SECRET",
     "TOKEN_SIGNING_KEY",
     "ACCOUNT_ENCRYPTION_KEY",
     "ACCOUNT_EMAIL_ADDRESS_HASH_KEY",
-    "EMAIL_FROM_ADDRESS",
-    "EMAIL_FROM_NAME",
-    "SITE_NAME",
-    "WEBSITE",
+    "ADMINISTRATOR_EMAIL_FROM_NAME",
   ];
   const missing = required.filter((key) => (env[key]?.trim() ?? "") === "");
   if (missing.length > 0) problems.push(`Missing: ${missing.join(", ")}.`);
@@ -338,13 +290,11 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   // a worse morning than being told about both.
   const port = readPort(env, problems);
   const trustedProxies = readTrustedProxies(env, problems);
-  const website = readWebsite(env, problems);
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
   const smtp = readSmtp(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
-  if (problems.length > 0 || website === undefined)
-    throw new ConfigError(problems);
+  if (problems.length > 0) throw new ConfigError(problems);
 
   return {
     port,
@@ -353,16 +303,11 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     tokenSigningKey: env["TOKEN_SIGNING_KEY"]!,
     accountEncryptionKey: env["ACCOUNT_ENCRYPTION_KEY"]!,
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
-    emailFromAddress: env["EMAIL_FROM_ADDRESS"]!.trim(),
-    emailFromName: env["EMAIL_FROM_NAME"]!.trim(),
-    siteName: env["SITE_NAME"]!.trim(),
-    website,
-    administratorEmailAddress:
-      env["ADMINISTRATOR_EMAIL_ADDRESS"]?.trim() || undefined,
+    administratorEmailFromName: env["ADMINISTRATOR_EMAIL_FROM_NAME"]!.trim(),
+    administratorEmailAddress: env["ADMINISTRATOR_EMAIL_ADDRESS"]!.trim(),
     databaseUnreachableEmailIntervalMinutes,
     databaseAccessFile:
       env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",
-    canonicalHost: readCanonicalHost(env),
     trustedProxies,
     recaptcha: recaptchaKeys(env),
     smtp,

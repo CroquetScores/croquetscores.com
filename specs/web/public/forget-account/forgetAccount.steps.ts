@@ -85,7 +85,12 @@ Given(
     );
     assert.ok(account !== undefined, `There is no account for ${address}.`);
     await application.mediator.send(
-      new AskToForgetAccount(account.value, "en", nowIn(this)),
+      new AskToForgetAccount(
+        account.value,
+        "en",
+        "croquetscores.com",
+        nowIn(this),
+      ),
     );
     const sent = (await queuedFor(this, address)).filter(
       (email) => email.kind === "Email.ConfirmForgetting",

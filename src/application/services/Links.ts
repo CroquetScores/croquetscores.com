@@ -1,4 +1,5 @@
 import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
+import type { Website } from "../../domain/common/Website.js";
 import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 
 /**
@@ -39,11 +40,11 @@ export interface LinkCarried {
  */
 export interface Links {
   /**
-   * The address to email for `purpose` and `account`, working until `until`.
-   * The whole address, since it is what a reader follows, and the site's own
-   * host is not something the application knows.
+   * The address to email for `purpose` and `account`, working until `until`,
+   * on `website`. The whole address, since it is what a reader follows.
    */
   make(
+    website: Website,
     purpose: LinkPurpose,
     account: AccountId,
     until: ReadOnlyDate,

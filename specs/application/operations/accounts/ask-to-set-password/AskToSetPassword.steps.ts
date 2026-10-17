@@ -41,7 +41,13 @@ const ask = async (
   world.failure = undefined;
   try {
     await registeringOf(world).askToSetPassword(
-      new AskToSetPassword(requestId, account, "en", momentOf(world)),
+      new AskToSetPassword(
+        requestId,
+        account,
+        "en",
+        "croquetscores.com",
+        momentOf(world),
+      ),
     );
   } catch (failure) {
     world.failure = failure;

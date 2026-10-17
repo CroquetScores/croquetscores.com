@@ -14,6 +14,12 @@ export interface EmailToQueue {
   readonly account?: AccountId;
   /** The language to write it in, as a tag such as `en`. */
   readonly language: string;
+  /**
+   * The host of the website it is sent for, which says what its words call the
+   * site and where its links go. Kept with it, since it is written after the
+   * request that asked for it is over.
+   */
+  readonly website: string;
   /** Whatever fills it in, by the name its words give it, such as `link`. */
   readonly fill: Readonly<Record<string, string>>;
   /** When the link it carries stops working, when it carries one. */

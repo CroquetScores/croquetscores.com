@@ -34,6 +34,7 @@ const commandFor = async (
     password,
     confirmation,
     "en",
+    "croquetscores.com",
     momentOf(world),
   );
 };

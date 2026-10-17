@@ -27,7 +27,9 @@ import {
 } from "../../../src/infrastructure/config/Config.js";
 import { CheckRefused } from "../../../src/application/services/BreachedPasswords.js";
 import { ListRefused } from "../../../src/application/services/WorldRankingLists.js";
+import { Website } from "../../../src/domain/common/Website.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
+import { siteNameFor as nameOfSite } from "../../../src/web/common/site.js";
 import type { HelpLibrary } from "../../../src/web/common/helpLibrary.js";
 import type { Language } from "../../../src/web/common/language.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
@@ -74,7 +76,13 @@ const theSharedOne = async (): Promise<string> => {
   if (application === undefined) {
     loadEnvFile();
     application = await buildApplication(
-      loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+      {
+        ...loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+        // This application listens on 127.0.0.1, which is trusted to say which
+        // website the browser addressed, as something in front of the site
+        // would (trustedProxy.ts).
+        trustedProxies: ["127.0.0.1"],
+      },
       {
         logger: false,
         languages: scenarioLanguages,
@@ -104,20 +112,12 @@ const theSharedOne = async (): Promise<string> => {
 };
 
 /**
- * An application of this scenario's own, the same as the shared one but for
- * what it is called, listening on a port of its own and closed with the
- * scenario.
- *
- * Most scenarios that need one need no database: what they look at is what
- * the site calls itself, which is decided as a page is rendered. A scenario
- * with a database of its own gets its own application again instead, called
- * what it asked for and over the same tables, because what it looks at is at
- * the end of something written down there.
+ * An application of this scenario's own that is told no proxy forwards requests
+ * to it, so that a host a request says it was forwarded for is not believed.
  */
-export const anApplicationCalled = (
+export const anApplicationBelievingNoProxy = (
   world: SpecWorld,
-  siteName: string,
-): Promise<string> => anApplicationWith(world, { siteName });
+): Promise<string> => anApplicationWith(world, { trustedProxies: [] });
 
 /**
  * An application of this scenario's own that has not been given Google's
@@ -126,14 +126,57 @@ export const anApplicationCalled = (
 export const anApplicationWithoutGoogle = (world: SpecWorld): Promise<string> =>
   anApplicationWith(world, { google: undefined });
 
+// Which website each scenario's browser says it is addressing, where it says
+// one. Nothing is development, which is what the application is reached as.
+const addressed = new WeakMap<SpecWorld, string>();
+
+// The browser reaches the application on 127.0.0.1 and a port, which is
+// development. Saying it is reaching another website is what something in front
+// of the site would do: it forwards the host the reader typed, and the
+// application believes it from 127.0.0.1, which it is told to trust.
+const addressedAs = async (
+  context: BrowserContext,
+  host: string,
+): Promise<void> => {
+  await context.route("**/*", (route) =>
+    route.continue({
+      headers: {
+        ...route.request().headers(),
+        "x-forwarded-host": host,
+      },
+    }),
+  );
+};
+
 /**
- * An application of this scenario's own, the same as the shared one but for
- * which website it is served as, and otherwise as {@link anApplicationCalled}.
+ * The scenario's browser addressing the host `host`, which need not be any
+ * website's, from now on and in
+ * any browser the scenario makes after this one, rather than the development
+ * website the application is reached as. Answers where the application is.
  */
-export const anApplicationServedAs = (
+export const anApplicationServedAs = async (
   world: SpecWorld,
-  website: Config["website"],
-): Promise<string> => anApplicationWith(world, { website });
+  host: string,
+): Promise<string> => {
+  addressed.set(world, host);
+  if (world.browserContext !== undefined) {
+    await addressedAs(world.browserContext, host);
+  }
+  // A scenario with no browser has no application yet, and makes the one its
+  // requests are sent to.
+  world.baseUrl ??= await anApplicationWith(world, {});
+  return world.baseUrl;
+};
+
+/**
+ * The header that has a plain request say which website it is addressing, as
+ * the scenario's browser does: none for development, which is what the
+ * application is reached as.
+ */
+export const addressingOf = (world: SpecWorld): Record<string, string> => {
+  const host = addressed.get(world);
+  return host === undefined ? {} : { "x-forwarded-host": host };
+};
 
 /**
  * An application of this scenario's own told who administers it, offering the
@@ -226,6 +269,9 @@ const anApplicationWith = async (
   const named = await buildApplication(
     {
       ...loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+      // Trusted to say which website the browser addressed, as in the shared
+      // application, unless a scenario says otherwise.
+      trustedProxies: ["127.0.0.1"],
       ...changed,
     },
     {
@@ -261,18 +307,13 @@ const namedApplicationsFor = (world: SpecWorld): Application[] => {
 };
 
 /**
- * What the site the scenario's browser is talking to is called, asked of the
- * application rather than read off a page, so that a scenario can hold a page
- * to the name without that page having to show it anywhere else first. The
- * scenario's own application, where it has one, and otherwise the shared one,
- * which is called what the settings say.
+ * What the site the scenario's browser is talking to is called, worked out
+ * from the website it addresses rather than read off a page, so that a
+ * scenario can hold a page to the name without that page having to show it
+ * anywhere else first.
  */
-export const siteNameFor = (world: SpecWorld): string => {
-  const named = namedApplications.get(world)?.at(-1) ?? applications.get(world);
-  if (named !== undefined) return named.server.siteName;
-  loadEnvFile();
-  return loadConfig().siteName;
-};
+export const siteNameFor = (world: SpecWorld): string =>
+  nameOfSite(Website.addressedTo(addressed.get(world) ?? "localhost"));
 
 /**
  * The application a scenario with a database of its own talks to, listening on
@@ -548,13 +589,16 @@ export const anotherBrowser = async (
 ): Promise<BrowserContext> => {
   const page = world.browserPage;
   if (browser === undefined) throw new Error("No browser is running.");
-  return browser.newContext({
+  const another = await browser.newContext({
     javaScriptEnabled: false,
     viewport: page.viewportSize(),
     ...(world.acceptLanguage === undefined
       ? {}
       : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
   });
+  const host = addressed.get(world);
+  if (host !== undefined) await addressedAs(another, host);
+  return another;
 };
 
 /**
@@ -588,6 +632,8 @@ export const withScripting = async (world: SpecWorld): Promise<void> => {
   // signed in as. Without this a scenario that signs in and then switches to
   // scripting is silently signed out, and reads as though the page were wrong.
   await scripted.addCookies(await context.cookies());
+  const host = addressed.get(world);
+  if (host !== undefined) await addressedAs(scripted, host);
   // Never Google's script, for the reason the scenarios' application never
   // asks Google: a stand-in the scenario can see into, or nothing at all.
   await scripted.route("https://www.google.com/recaptcha/**", (route) =>

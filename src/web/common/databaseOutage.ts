@@ -17,6 +17,7 @@
 // now. And a try that failed counts as a try, since a mail server that is
 // down as well would otherwise be asked again by every request while the
 // database is down, which is when the site can least afford it.
+import { websiteOf } from "./site.js";
 import type { FastifyRequest } from "fastify";
 
 import type { EmailSender } from "../../application/services/EmailSender.js";
@@ -27,7 +28,7 @@ const A_MINUTE = 60 * 1000;
 /** What telling the administrator is done with. */
 export interface TellingTheAdministrator {
   /** Who is told, or nothing where there is nobody to tell. */
-  readonly administrator: string | undefined;
+  readonly administrator: string;
   /** The address the email is sent from: the site's own. */
   readonly from: string;
   /** How many minutes to wait between telling them. */
@@ -60,7 +61,6 @@ export const tellingTheAdministrator = ({
   const sending = new Set<Promise<void>>();
 
   const send = async (request: FastifyRequest, now: number): Promise<void> => {
-    if (administrator === undefined) return;
     const at = request.requestedAt;
     try {
       const written = writer.write({
@@ -68,6 +68,9 @@ export const tellingTheAdministrator = ({
         // The site's own language: the administrator reads what the site is
         // written in, not whatever the reader who was turned away asked for.
         language: "en",
+        // The website of the request that found it out: the site is the one
+        // server, and the administrator is told as it is called there.
+        website: websiteOf(request).host,
         fill: {
           when: new Date(now).toISOString(),
           minutes: String(intervalMinutes),
@@ -92,8 +95,6 @@ export const tellingTheAdministrator = ({
 
   return {
     tell: (request) => {
-      if (administrator === undefined) return;
-
       // Inside the try as well: a request whose moment was never stamped,
       // because an earlier hook failed, is still owed its answer.
       let now: number;

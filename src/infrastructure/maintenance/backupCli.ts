@@ -14,7 +14,7 @@ export const TABLES_BACKED_UP: readonly string[] = ["events", "account_keys"];
 /** What the script is told, as its settings give it (Config.ts). */
 export interface BackupSettings {
   /** Who is told how it went. */
-  readonly administrator: string | undefined;
+  readonly administrator: string;
   /** The website's database, which is only read. */
   readonly websiteDatabase: string | undefined;
   /** The folder the copies are kept in. */
@@ -139,7 +139,6 @@ export const runBackup = async (
     paragraphs: readonly string[],
   ): Promise<BackupOutcome> => {
     const { administrator } = settings;
-    if (administrator === undefined) return { exitCode: 1 };
     try {
       await world.send({
         to: administrator,
@@ -172,10 +171,6 @@ export const runBackup = async (
     return { exitCode: 1 };
   };
 
-  if (settings.administrator === undefined) {
-    say("An administrator is needed: ADMINISTRATOR_EMAIL_ADDRESS.");
-    return { exitCode: 1 };
-  }
   if (args.length > 0) {
     say("Usage: db:backup");
     return { exitCode: 1 };

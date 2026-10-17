@@ -38,6 +38,24 @@ When("the website {string} is made", function (this: SpecWorld, host: string) {
 });
 
 When(
+  "a request addressed to {string} is placed",
+  function (this: SpecWorld, host: string) {
+    try {
+      this.website = Website.addressedTo(host);
+    } catch (failure) {
+      this.failure = failure;
+    }
+  },
+);
+
+Then(
+  "it is for the website {string}",
+  function (this: SpecWorld, host: string) {
+    assert.equal(websiteOfWorld(this).host, host);
+  },
+);
+
+When(
   "it is compared with the website {string}",
   function (this: SpecWorld, host: string) {
     this.sameWebsite = websiteOfWorld(this).equals(Website.from(host));
@@ -46,6 +64,10 @@ When(
 
 Then("it serves the site {string}", function (this: SpecWorld, site: string) {
   assert.equal(siteNamed[websiteOfWorld(this).site], site);
+});
+
+Then("its address is {string}", function (this: SpecWorld, address: string) {
+  assert.equal(websiteOfWorld(this).address, address);
 });
 
 Then("it is a try website", function (this: SpecWorld) {

@@ -260,7 +260,7 @@ import {
 } from "./common/adminPage.js";
 import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
-import { emailWriter, siteAddress } from "./common/emailWriter.js";
+import { emailWriter } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
 import { registerBetaBanner } from "./common/betaSite.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
@@ -278,7 +278,7 @@ import {
   type Language,
 } from "./common/language.js";
 import { sendersBelieved } from "./common/trustedProxy.js";
-import { nameTheSite } from "./common/site.js";
+import { placeRequests } from "./common/site.js";
 import {
   machineClock,
   stampRequests,
@@ -879,14 +879,11 @@ export const buildApplication = async (
     });
 
   // Emails are written from the site's catalogues, with links made from the
-  // site's configured address and never a request's, and written to files in
-  // temp/ unless a mail server is set (SMTP_HOST).
+  // address of the website each is for and never a request's host, and written
+  // to files in temp/ unless a mail server is set (SMTP_HOST).
   const languages = options.languages ?? offeredLanguages;
-  const where = siteAddress(config.canonicalHost, config.port);
   const writer = emailWriter(languages, {
-    address: where,
-    fromName: config.emailFromName,
-    siteName: config.siteName,
+    fromName: config.administratorEmailFromName,
   });
   const emailSender =
     options.emailSender ??
@@ -898,7 +895,7 @@ export const buildApplication = async (
     accountKeys,
     writer,
     emailSender,
-    config.emailFromAddress,
+    config.administratorEmailAddress,
   );
 
   // What an account's operations are put together from. The links are signed
@@ -908,7 +905,7 @@ export const buildApplication = async (
     eventStore,
     (id: AccountId, events) => Account.rebuiltFrom(id, events),
   );
-  const links = new SignedLinks(where, config.tokenSigningKey);
+  const links = new SignedLinks(config.tokenSigningKey);
   const handledRequests = new PostgresHandledRequests(unitOfWork);
   const emailsWritten = new PostgresEmailsWritten(unitOfWork);
 
@@ -1382,7 +1379,7 @@ export const buildApplication = async (
   // queue, which is in it: straight to the sender, and counted in memory.
   const databaseOutage = tellingTheAdministrator({
     administrator: config.administratorEmailAddress,
-    from: config.emailFromAddress,
+    from: config.administratorEmailAddress,
     intervalMinutes: config.databaseUnreachableEmailIntervalMinutes,
     writer,
     sender: emailSender,
@@ -1392,7 +1389,9 @@ export const buildApplication = async (
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
   speakToRequests(server, languages);
-  nameTheSite(server, config.siteName, config.website);
+  // Before anything that reads the website, which includes the hooks that
+  // refuse a request.
+  placeRequests(server);
   // Whether the database may be used at all, asked before anything that would
   // use it, and kept outside it (maintenance.feature).
   const databaseAccess: DatabaseAccess =
@@ -1427,7 +1426,7 @@ export const buildApplication = async (
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
-  refuseCrossSite(server, config.canonicalHost);
+  refuseCrossSite(server);
   registerSearchEngines(server, config.searchEnginesWelcome);
   registerBetaBanner(server);
 
@@ -1486,10 +1485,6 @@ export const buildApplication = async (
       google,
       sessions,
       inTransaction,
-      siteAddress:
-        config.canonicalHost === undefined
-          ? undefined
-          : siteAddress(config.canonicalHost, config.port),
     });
   }
 

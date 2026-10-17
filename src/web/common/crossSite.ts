@@ -16,13 +16,15 @@
 // caught. Held against a token on every form, on a site whose readers are on
 // browsers of this decade, that is a risk worth carrying; it is written down
 // here so it is carried knowingly.
+import { Website } from "../../domain/common/Website.js";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
 export interface Provenance {
   readonly method: string;
   readonly secFetchSite: string | undefined;
   readonly origin: string | undefined;
-  // What the request was addressed to, when nothing better is configured.
+  // What the request was addressed to: the website it is for, which an origin
+  // has to be one of this site's to be let through.
   readonly host: string | undefined;
 }
 
@@ -35,13 +37,7 @@ const changing = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 // still somebody else's page until something here says otherwise.
 const trusted = new Set(["same-origin", "none"]);
 
-export const isRefused = (
-  request: Provenance,
-  // The host this site answers to, from configuration. Given one, the request's
-  // own idea of what it was addressed to is not consulted: a proxy may have
-  // rewritten it, and a client need not have sent it at all.
-  canonicalHost?: string,
-): boolean => {
+export const isRefused = (request: Provenance): boolean => {
   if (!changing.has(request.method.toUpperCase())) return false;
 
   if (request.secFetchSite !== undefined) {
@@ -53,15 +49,17 @@ export const isRefused = (
     // places that are, by design, not this site.
     if (request.origin === "null") return true;
 
-    const expected = canonicalHost ?? request.host;
-    // Nothing to compare against, and an origin saying the request came from
-    // somewhere. Refusing is the answer that cannot be wrong in the dangerous
-    // direction; CANONICAL_HOST is how it is made right.
+    // The site answers for several websites, so there is no one host to judge
+    // an origin against but the one this request was addressed to. Nothing to
+    // compare against, and an origin saying the request came from somewhere,
+    // is refused: the answer that cannot be wrong in the dangerous direction.
+    const expected = request.host;
     if (expected === undefined || expected === "") return true;
 
     try {
       return (
-        new URL(request.origin).host.toLowerCase() !== expected.toLowerCase()
+        Website.spelled(new URL(request.origin).host) !==
+        Website.spelled(expected)
       );
     } catch {
       return true;
@@ -85,12 +83,9 @@ const provenanceOf = (request: FastifyRequest): Provenance => ({
   host: request.host === "" ? header(request, "host") : request.host,
 });
 
-export const refuseCrossSite = (
-  server: FastifyInstance,
-  canonicalHost?: string,
-): void => {
+export const refuseCrossSite = (server: FastifyInstance): void => {
   server.addHook("onRequest", (request, _reply, done) => {
-    if (!isRefused(provenanceOf(request), canonicalHost)) {
+    if (!isRefused(provenanceOf(request))) {
       done();
       return;
     }

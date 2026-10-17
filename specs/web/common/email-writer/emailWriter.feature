@@ -26,14 +26,13 @@ Feature: The site's emails are written in their reader's language
   writer fills all four in wherever the markup says: `{buttonBackgroundColour}`
   and `{buttonTextColour}`, which a button is painted with, `{emailFromName}`,
   the name the site's emails are sent from, which each email is signed off
-  with, and `{siteName}`, what the site is called, which its pages call it too,
-  in an email's subject and wherever its words name the site. The colours are
+  with, and `{siteName}`, what the site the email is for is called, which its
+  pages call it too, in an email's subject and wherever its words name the
+  site. The colours are
   the site's darker green and the white on it, written out rather than named,
   because mail programs read neither a custom property nor `light-dark()`; the
-  writer holds them, and `STYLE.md` says what they are on a page. The name it
-  is sent from and the name of the site are configured, as the address emails
-  are sent from is, so that a site serving from this repository under another
-  name neither signs its emails nor calls itself Croquet Scores.
+  writer holds them, and `STYLE.md` says what they are on a page. The name
+  emails are sent from is configured, as the address they are sent from is.
 
   Whatever fills an email in — a link, the name of a service, a moment — is
   put where the email's markup says, and written as text rather than as
@@ -43,27 +42,24 @@ Feature: The site's emails are written in their reader's language
   link to follow is offered twice: as a button, and as the address itself, for
   a reader whose mail shows no buttons. A link to one of the site's own pages,
   such as the sign in page, is written in the markup as `{site}` and the path,
-  and `{site}` is filled in with the site's address, which the writer is
-  given.
+  and `{site}` is filled in with the address of the website the email is for.
 
-  The site's address comes from how the site is configured, and never from a
+  The address comes from the website the email is for, and never from a
   request. An email is written when the queue sends it, outside any request,
-  so there is no request to ask; and one captured when the email was queued
-  would be worse, because a request's host is whatever its sender wrote. An
-  email whose links took their address from that could be made, by asking for
-  a way back in with another host, to carry a genuine link to set a new
-  password to a site of the asker's choosing. So the address is made from
-  `CANONICAL_HOST`, the host the site is configured to answer to, which
-  anything deployed sets, and is `https://` and that host. A host of
-  `localhost` or `127.0.0.1`, with or without a port, is only ever
-  development, served over plain HTTP, and is `http://` instead; the
-  configuration itself suggests `localhost:3000` as a value, and an `https://`
-  link to it would reach nothing. In development `CANONICAL_HOST` is usually
-  blank, and the address is `http://localhost` and the port the site is
-  configured to serve on, `PORT`, so that a link in an email written to a file
-  opens the site being worked on, wherever it serves. The browser scenarios,
-  which serve on whatever port is free and follow links in the emails they
-  queue, give the writer their own address instead.
+  so there is no request to ask; and a request's host is whatever its sender
+  wrote, so an email whose links took their address from one could be made, by
+  asking for a way back in with another host, to carry a genuine link to set a
+  new password to a site of the asker's choosing. So an email is queued with
+  the website its request was for, one of the few the site answers for
+  (`Website.feature`), and the address is made from that: `https://` and its
+  host, or `http://` for development (`Website.feature`).
+
+  The same goes for what the email calls the site. One server answers for
+  Croquet Scores and for Gateball Scores, and an email asked for on
+  gateballscores.com is signed, worded and linked as Gateball Scores. The name
+  is the website's site's, not a setting: croquetscores.com, its try website
+  and development are Croquet Scores, and gateballscores.com and its try
+  website are Gateball Scores.
 
   An email of a kind this does not know is refused with
   `EmailWriter.UnknownKind`, rather than written with nothing in it. So is one
@@ -77,11 +73,11 @@ Feature: The site's emails are written in their reader's language
   refused email again, and gives it up in the end, which is time enough to put
   right what was wrong.
 
-  These scenarios write with the site's catalogues and the test locale, and
-  give the writer the site's address "https://croquetscores.com".
+  These scenarios write with the site's catalogues and the test locale, for
+  the website croquetscores.com unless one says otherwise.
 
   Background:
-    Given an email writer for "https://croquetscores.com"
+    Given an email writer
 
   Rule: An email is written in the language it was queued in
 
@@ -163,44 +159,34 @@ Feature: The site's emails are written in their reader's language
       When the email "Email.ConfirmAddress" is written in "en"
       Then its sign off says "Croquet Scores Under Another Name"
 
-    Scenario: An email's subject calls the site what it is sent from
-      Given an email writer sending from the site "Another Site Altogether"
-      When the email "Email.ConfirmAddress" is written in "en"
-      Then its subject contains "Another Site Altogether"
-
-    Scenario: An email's words call the site what it is sent from
-      Given an email writer sending from the site "Another Site Altogether"
-      When the email "Email.ConfirmAddress" is written in "en"
-      Then its words contain "Another Site Altogether"
-
-  Rule: The site's address comes from its configuration
-
-    Scenario: The site's address is the host it is configured to answer to
-      When the site's address is made for the host "croquetscores.com"
-      Then the site's address is "https://croquetscores.com"
-
-    Scenario: The site's address keeps a port it is configured with
-      When the site's address is made for the host "croquetscores.com:8443"
-      Then the site's address is "https://croquetscores.com:8443"
-
-    Scenario Outline: A host that is only ever development is on plain HTTP
-      When the site's address is made for the host "<host>"
-      Then the site's address is "<address>"
+    Scenario Outline: An email's subject calls the site by the website it is for
+      When the email "Email.ConfirmAddress" is written in "en" for the website "<host>"
+      Then its subject contains "<site>"
 
       Examples:
-        | host           | address               |
-        | localhost      | http://localhost      |
-        | localhost:3000 | http://localhost:3000 |
-        | 127.0.0.1:3100 | http://127.0.0.1:3100 |
+        | host                   | site            |
+        | croquetscores.com      | Croquet Scores  |
+        | try.croquetscores.com  | Croquet Scores  |
+        | gateballscores.com     | Gateball Scores |
+        | try.gateballscores.com | Gateball Scores |
+        | localhost:3000         | Croquet Scores  |
 
-    Scenario Outline: With no host configured, the site's address is the port it serves on
-      When the site's address is made for no host and the port <port>
-      Then the site's address is "<address>"
+    Scenario: An email's words call the site by the website it is for
+      When the email "Email.ConfirmAddress" is written in "en" for the website "gateballscores.com"
+      Then its words contain "Gateball Scores"
+
+  Rule: A link is made with the address of the website the email is for
+
+    Scenario Outline: A link to one of the site's own pages begins with the website's address
+      When the email "Email.AlreadyRegistered" is written in "en" for the website "<host>"
+      Then its body has a button to "<address>/account/sign-in"
 
       Examples:
-        | port | address               |
-        | 3000 | http://localhost:3000 |
-        | 3100 | http://localhost:3100 |
+        | host                   | address                    |
+        | croquetscores.com      | https://croquetscores.com  |
+        | try.croquetscores.com  | https://try.croquetscores.com |
+        | gateballscores.com     | https://gateballscores.com |
+        | localhost:3000         | http://localhost:3000      |
 
   Rule: What fills an email in is written as text
 

@@ -4,7 +4,7 @@ Feature: The admin is served as the site it belongs to
   The admin is a single-page application whose page is built once, ahead of
   time, and was sent as it was built. So it could say nothing that is only
   known once a request has come in: it called the site Croquet Scores whatever
-  the site is configured as, it carried no banner on a try website, and it
+  website it was for, it carried no banner on a try website, and it
   took the machine's word on light or dark over the reader's own. Each of
   those is something every page a reader is served says, because the server
   says it into the page as it sends it (`language.feature`, `layout.feature`,
@@ -13,7 +13,7 @@ Feature: The admin is served as the site it belongs to
   than by three.
 
   What the admin says is held to the same words as the pages it sits beside:
-  the site's name as it is configured, and the try website's banner in the
+  the site's name as the website names it, and the try website's banner in the
   reader's language. The admin's own words are held to the reader's language
   as well, and how they reach it is a rule of its own below.
 
@@ -31,17 +31,17 @@ Feature: The admin is served as the site it belongs to
   Background:
     Given a reader signed in as "someone@example.com"
 
-  Rule: The admin calls the site by the name it is given
+  Rule: The admin calls the site by the name its website gives it
 
     Scenario: The admin's tab names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the admin is opened
       Then the tab names the site "Gateball Scores"
 
     Scenario: The admin's bar names the site
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the admin is opened
       Then the header names the site "Gateball Scores"
 
@@ -106,7 +106,7 @@ Feature: The admin is served as the site it belongs to
 
     Scenario: The admin's footer carries the plea
       Given a viewport 1200 pixels wide
-      And a site called "Gateball Scores"
+      And a site served as "gateballscores.com"
       When the admin is opened
       Then the plea names the site "Gateball Scores"
 
