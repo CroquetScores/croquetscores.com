@@ -74,6 +74,12 @@ Feature: The website a site is served as
     address that is no website's and no local one is refused, never taken for
     the nearest, for the reason above.
 
+    The beta site, beta.croquetscores.com, is another name for
+    croquetscores.com and not a website of its own: what is entered there is
+    on croquetscores.com, and a reader of one sees the other's tournaments. It
+    is the only other name, so www.croquetscores.com and the like are still
+    refused.
+
     Scenario Outline: A request is for the website it names
       When a request addressed to "<host>" is placed
       Then it is for the website "<website>"
@@ -88,6 +94,16 @@ Feature: The website a site is served as
         | gateballscores.com     | gateballscores.com     |
         | try.gateballscores.com | try.gateballscores.com |
         | localhost:3000         | localhost:3000         |
+
+    Scenario Outline: A request addressed to another name for a website is for that website
+      When a request addressed to "<host>" is placed
+      Then it is for the website "<website>"
+
+      Examples:
+        | host                     | website           |
+        | beta.croquetscores.com   | croquetscores.com |
+        | BETA.CroquetScores.com   | croquetscores.com |
+        | beta.croquetscores.com.  | croquetscores.com |
 
     Scenario Outline: A request addressed to a local address is for development
       When a request addressed to "<host>" is placed
