@@ -5,8 +5,10 @@
 // pictures by where they sit among the files, because that is how they read
 // where they are written, in an editor or on GitHub. On the site neither means
 // anything, so each is turned into where the page or the picture is found.
-import MarkdownIt from "markdown-it";
-import type Token from "markdown-it/lib/token.mjs";
+import MarkdownIt, {
+  type MarkdownIt as Markdown,
+  type Token,
+} from "markdown-it";
 import { posix } from "node:path";
 
 /** Where the help is read from. */
@@ -66,7 +68,7 @@ const isElsewhere = (href: string): boolean =>
   href.startsWith("#") ||
   /^[a-z][a-z0-9+.-]*:/i.test(href);
 
-const markdown = (): MarkdownIt =>
+const markdown = (): Markdown =>
   // Markup written in a page is shown as the characters it is. Nothing a
   // translator writes should be able to run on the site.
   new MarkdownIt({ html: false, breaks: false, linkify: false });
@@ -104,7 +106,8 @@ export const convertHelpPage = (
 
   for (const token of inlineTokens(tokens)) {
     if (token.type === "link_open") {
-      const href = token.attrGet("href") ?? "";
+      // An attribute may be a number as markdown-it types it, though these are not.
+      const href = String(token.attrGet("href") ?? "");
       if (isElsewhere(href)) continue;
       const [target = "", fragment] = href.split("#");
       const name = helpPageName(posix.normalize(posix.join(from, target)));
@@ -114,7 +117,7 @@ export const convertHelpPage = (
         `${helpPath}${name === "" ? "" : `/${name}`}${fragment === undefined ? "" : `#${fragment}`}`,
       );
     } else if (token.type === "image") {
-      const src = token.attrGet("src") ?? "";
+      const src = String(token.attrGet("src") ?? "");
       if (isElsewhere(src)) continue;
       const name = helpImageName(posix.normalize(posix.join(from, src)));
       imagesShown.push(name);

@@ -2,7 +2,7 @@
 // comments (commentary.ts) and a tournament's subtitle (layout.ts). Each is
 // drawn by a Markdown of its own made here, so that what one adds to it, as a
 // comment's turns that begin no list, is not the other's.
-import MarkdownIt from "markdown-it";
+import MarkdownIt, { type MarkdownIt as Markdown } from "markdown-it";
 
 /**
  * A Markdown that draws from Markdown alone. HTML is turned off, so that HTML
@@ -19,7 +19,7 @@ import MarkdownIt from "markdown-it";
  * nothing, which is what a link put there to sell something is after; and the
  * page it leads to is told nothing of the one it was followed from.
  */
-export const markdownWithoutHtml = (): MarkdownIt => {
+export const markdownWithoutHtml = (): Markdown => {
   const markdown = new MarkdownIt({
     html: false,
     breaks: true,
