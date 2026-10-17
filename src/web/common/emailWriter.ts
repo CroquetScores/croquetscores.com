@@ -90,7 +90,7 @@ export const emailWriter = (
   { fromName }: SendingEmails,
 ): EmailWriter => ({
   write: ({ kind, language, website, fill }: EmailToWrite): WrittenEmail => {
-    const addressed = Website.from(website);
+    const addressed = Website.addressedTo(website);
     const address = addressed.address;
     const siteName = siteNameFor(addressed);
     if (!kinds.includes(kind)) {

@@ -137,6 +137,10 @@ Then("the answer is a page", function (this: SpecWorld) {
   assert.match(body, /<h1>/);
 });
 
+Then("the answer carries a beta notice", function (this: SpecWorld) {
+  assert.ok(answeredOf(this).body.includes("beta-banner"));
+});
+
 Then("the answer carries no beta banner", function (this: SpecWorld) {
   assert.ok(!answeredOf(this).body.includes("beta-banner"));
 });

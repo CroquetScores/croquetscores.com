@@ -31,7 +31,7 @@ import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
-import { siteNameOf, websiteOf } from "../common/site.js";
+import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, readerOf, signedIn } from "../common/reader.js";
 import { endSession } from "../common/session.js";
@@ -198,7 +198,7 @@ export const registerForgetAccountPage = (
         new AskToForgetAccount(
           reader.value,
           speaking.language.tag,
-          websiteOf(request).host,
+          servedAsOf(request).host,
           request.requestedAt,
         ),
       );

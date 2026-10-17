@@ -11,7 +11,10 @@ Feature: A site that is not on one of the two websites says it is a beta
   at another, and moving it cannot leave the notice behind or take it away
   wrongly. The two are croquetscores.com and gateballscores.com and every
   website under them, try among them. A name that merely ends the same, such as
-  notcroquetscores.com, is not under them.
+  notcroquetscores.com, is not under them. The one website under them that is
+  a beta is beta.croquetscores.com, which is where the site is tried: it has
+  croquetscores.com's database (`Website.feature`), and says that anything
+  entered there may be thrown away.
 
   These scenarios run against a server built for the notice and one page,
   and say nothing of what a page holds, which is each page's own.
@@ -26,6 +29,9 @@ Feature: A site that is not on one of the two websites says it is a beta
       Examples:
         | address                      |
         | localhost:3000               |
+        | beta.croquetscores.com       |
+        | beta.croquetscores.com:443   |
+        | BETA.CroquetScores.com       |
         | beta.example.com             |
         | notcroquetscores.com         |
         | croquetscores.com.example.io |

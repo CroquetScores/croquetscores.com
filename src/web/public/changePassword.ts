@@ -36,7 +36,7 @@ import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
 import { startSession } from "../common/session.js";
-import { siteNameOf, websiteOf } from "../common/site.js";
+import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
 import { profilePath, toSignIn } from "./profile.js";
@@ -172,7 +172,7 @@ export const registerChangePasswordPage = (
           typed["password"] ?? "",
           typed["passwordConfirmation"] ?? "",
           speaking.language.tag,
-          websiteOf(request).host,
+          servedAsOf(request).host,
           request.requestedAt,
         ),
       );

@@ -23,7 +23,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
-import { siteNameOf, websiteOf } from "../common/site.js";
+import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
@@ -143,7 +143,7 @@ export const registerForgotPasswordPage = (
             requestId,
             typed["emailAddress"] ?? "",
             speaking.language.tag,
-            websiteOf(request).host,
+            servedAsOf(request).host,
             request.requestedAt,
           ),
         );

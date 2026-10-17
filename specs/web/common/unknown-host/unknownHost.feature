@@ -107,6 +107,18 @@ Feature: Refusing a request addressed to a website nobody set up
       When the home page is asked for as "gateballscores.com"
       Then the header names the site "Gateball Scores"
 
+  Rule: The beta site is served as a beta
+
+    Scenario: The beta site carries the beta notice
+      Given a site
+      When the home page is asked for as "beta.croquetscores.com"
+      Then the answer carries a beta notice
+
+    Scenario: Croquet Scores does not
+      Given a site
+      When the home page is asked for as "croquetscores.com"
+      Then the answer carries no beta banner
+
   Rule: A forwarded host is believed from the proxy the site was told to trust, and nowhere else
 
     Scenario: A host forwarded from a proxy the site was not told to trust is ignored

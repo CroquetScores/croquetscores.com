@@ -184,6 +184,7 @@ Feature: The site's emails are written in their reader's language
       Examples:
         | host                   | address                    |
         | croquetscores.com      | https://croquetscores.com  |
+        | beta.croquetscores.com | https://beta.croquetscores.com |
         | try.croquetscores.com  | https://try.croquetscores.com |
         | gateballscores.com     | https://gateballscores.com |
         | localhost:3000         | http://localhost:3000      |
