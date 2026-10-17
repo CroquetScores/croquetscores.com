@@ -1,7 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { anApplicationWithoutGoogle } from "../../support/browser.js";
+import {
+  addressingOf,
+  anApplicationWithoutGoogle,
+} from "../../support/browser.js";
 import {
   boxOf,
   callback,
@@ -184,5 +187,30 @@ When(
     await this.browserPage.goto(
       `${this.baseUrl!}${callback}?code=${encodeURIComponent(code)}&state=made-up-elsewhere`,
     );
+  },
+);
+
+// Where the site sent the reader to ask Google, kept to be read: the address it
+// told Google to send them back to is in it. Followed no further than the site's
+// own answer, because the address it names is not one the scenarios' browser
+// can reach.
+const sentTo = new WeakMap<SpecWorld, URL>();
+
+When("the way to Google is followed", async function (this: SpecWorld) {
+  const answer = await this.browserPage.request.get(
+    `${this.baseUrl!}/auth/google`,
+    { headers: addressingOf(this), maxRedirects: 0, failOnStatusCode: false },
+  );
+  const location = answer.headers()["location"];
+  assert.ok(location !== undefined, `The site answered ${answer.status()}.`);
+  sentTo.set(this, new URL(location));
+});
+
+Then(
+  "Google is told to send the reader back to {string}",
+  function (this: SpecWorld, address: string) {
+    const url = sentTo.get(this);
+    assert.ok(url !== undefined, "The reader was not sent to Google.");
+    assert.equal(url.searchParams.get("redirect_uri"), address);
   },
 );
