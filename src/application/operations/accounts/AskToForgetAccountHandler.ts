@@ -55,7 +55,7 @@ export class AskToForgetAccountHandler extends CommandHandler<
       website: command.website,
       fill: {
         link: this.links.make(
-          Website.from(command.website),
+          Website.addressedTo(command.website),
           "confirm-forgetting",
           id,
           until,

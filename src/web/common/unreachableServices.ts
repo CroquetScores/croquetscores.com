@@ -8,7 +8,7 @@
 // Whatever goes wrong with the telling is logged and not shown: the reader is
 // owed the answer to what they asked, which is that it cannot be done just
 // now, and not an error page about an email they will never see.
-import { websiteOf } from "./site.js";
+import { servedAsOf } from "./site.js";
 import type { FastifyRequest } from "fastify";
 
 import { ReportUnreachableService } from "../../application/operations/accounts/ReportUnreachableService.js";
@@ -24,7 +24,7 @@ export const reportUnreachable = async (
     await request.server.mediator.send(
       new ReportUnreachableService(
         service,
-        websiteOf(request).host,
+        servedAsOf(request).host,
         request.requestedAt,
       ),
     );

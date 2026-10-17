@@ -296,7 +296,7 @@ Then(
 Then(
   "the link sent to {string} is on the address of the website {string}",
   async function (this: SpecWorld, address: string, host: string) {
-    const own = Website.from(host).address;
+    const own = Website.addressedTo(host).address;
     // What the asking sent, and not the link registering emailed earlier,
     // which would pass whatever the asking did.
     const sent = (await queuedFor(this, address)).filter(

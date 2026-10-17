@@ -32,10 +32,18 @@ export class Website {
   readonly #site: Site;
   readonly #isTry: boolean;
 
-  private constructor(host: string, site: Site, isTry: boolean) {
+  readonly #countsAs: Website | undefined;
+
+  private constructor(
+    host: string,
+    site: Site,
+    isTry: boolean,
+    countsAs?: Website,
+  ) {
     this.#host = host;
     this.#site = site;
     this.#isTry = isTry;
+    this.#countsAs = countsAs;
   }
 
   static readonly croquetScores = new Website(
@@ -64,6 +72,19 @@ export class Website {
     "localhost:3000",
     "croquetScores",
     false,
+  );
+
+  /**
+   * The beta site, where a few readers try the site before anybody else is let
+   * in. It has croquetscores.com's database and is otherwise its own: its own
+   * address, and a beta. It is not one of {@link Website.all}, which are the
+   * websites a tournament can be on, and it can be on none.
+   */
+  static readonly beta = new Website(
+    "beta.croquetscores.com",
+    "croquetScores",
+    false,
+    Website.croquetScores,
   );
 
   /** Every website there is. */
@@ -110,8 +131,7 @@ export class Website {
     const name = lowered.replace(/:\d+$/, "");
     if (name === "localhost" || name === "127.0.0.1" || name === "[::1]")
       return Website.development;
-    // The beta site is croquetscores.com under another name, and the only one.
-    if (lowered === "beta.croquetscores.com") return Website.croquetScores;
+    if (lowered === Website.beta.host) return Website.beta;
     return Website.from(lowered);
   }
 
@@ -145,6 +165,14 @@ export class Website {
   /** Which of the two sites it serves. */
   get site(): Site {
     return this.#site;
+  }
+
+  /**
+   * The website whose tournaments, accounts and the rest it keeps and reads:
+   * itself, except for the beta site, which keeps and reads croquetscores.com's.
+   */
+  get countsAs(): Website {
+    return this.#countsAs ?? this;
   }
 
   /** Whether it is where a reader learns the system rather than uses it. */

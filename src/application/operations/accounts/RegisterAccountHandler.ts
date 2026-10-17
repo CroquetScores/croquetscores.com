@@ -183,7 +183,7 @@ export class RegisterAccountHandler extends CommandHandler<
           ? {}
           : {
               link: this.links.make(
-                Website.from(command.website),
+                Website.addressedTo(command.website),
                 purpose,
                 account,
                 until,

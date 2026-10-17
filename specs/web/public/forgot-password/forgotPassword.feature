@@ -171,6 +171,7 @@ Feature: A reader who has forgotten their password is sent a way back in
       Examples:
         | host                   |
         | croquetscores.com      |
+        | beta.croquetscores.com |
         | try.croquetscores.com  |
         | gateballscores.com     |
 

@@ -18,7 +18,7 @@
 // address has to be the one Google was given beforehand, and because what is
 // in the signed cookie is what this site put there.
 import { Website } from "../../domain/common/Website.js";
-import { websiteOf } from "../common/site.js";
+import { servedAsOf } from "../common/site.js";
 import { createHash, randomBytes } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -181,7 +181,7 @@ export const registerGoogleRoutes = (
   // so the address the reader asked by is the truth, as it is on a machine
   // nothing sits in front of.
   const redirectUriFor = (request: FastifyRequest): string => {
-    const website = websiteOf(request);
+    const website = servedAsOf(request);
     const address = website.equals(Website.development)
       ? `${request.protocol}://${request.host}`
       : website.address;

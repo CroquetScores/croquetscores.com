@@ -13,6 +13,7 @@
 // the public layout, by the admin's built file and by the error and
 // maintenance pages, and a notice every one of them had to remember is one
 // that the next of them forgets.
+import { Website } from "../../domain/common/Website.js";
 import type { FastifyInstance } from "fastify";
 
 import { escape } from "./escape.js";
@@ -24,7 +25,9 @@ const websites = ["croquetscores.com", "gateballscores.com"];
 
 /** Whether `host`, as a request names it, is not one of the two websites. */
 export const isABeta = (host: string): boolean => {
-  const name = host.toLowerCase().replace(/:\d+$/, "");
+  const name = Website.spelled(host).replace(/:\d+$/, "");
+  // The one website under the two that is a beta: it is where the site is tried.
+  if (name === Website.beta.host) return true;
   return !websites.some(
     (website) => name === website || name.endsWith(`.${website}`),
   );

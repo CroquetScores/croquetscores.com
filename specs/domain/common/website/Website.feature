@@ -74,10 +74,15 @@ Feature: The website a site is served as
     address that is no website's and no local one is refused, never taken for
     the nearest, for the reason above.
 
-    The beta site, beta.croquetscores.com, is another name for
-    croquetscores.com and not a website of its own: what is entered there is
-    on croquetscores.com, and a reader of one sees the other's tournaments. It
-    is the only other name, so www.croquetscores.com and the like are still
+    The beta site, beta.croquetscores.com, is where a few readers try the
+    site before anybody else is let in. It has the database of
+    croquetscores.com and not one of its own: what is entered there is on
+    croquetscores.com, and a reader of one sees the other's tournaments. But
+    it is not croquetscores.com in anything else. It is reached at its own
+    address, so a link in an email takes its reader back to it, and it says
+    that it is a beta (`betaSite.feature`). So a request addressed to it is for
+    the beta site, which counts as croquetscores.com for what is kept and read.
+    It is the only other name, so www.croquetscores.com and the like are still
     refused.
 
     Scenario Outline: A request is for the website it names
@@ -95,15 +100,30 @@ Feature: The website a site is served as
         | try.gateballscores.com | try.gateballscores.com |
         | localhost:3000         | localhost:3000         |
 
-    Scenario Outline: A request addressed to another name for a website is for that website
+    Scenario Outline: A request addressed to the beta site is for the beta site
       When a request addressed to "<host>" is placed
-      Then it is for the website "<website>"
+      Then it is for the website "beta.croquetscores.com"
 
       Examples:
-        | host                     | website           |
-        | beta.croquetscores.com   | croquetscores.com |
-        | BETA.CroquetScores.com   | croquetscores.com |
-        | beta.croquetscores.com.  | croquetscores.com |
+        | host                    |
+        | beta.croquetscores.com  |
+        | BETA.CroquetScores.com  |
+        | beta.croquetscores.com. |
+
+    Scenario: The beta site counts as croquetscores.com
+      When a request addressed to "beta.croquetscores.com" is placed
+      Then it counts as the website "croquetscores.com"
+
+    Scenario Outline: Any other website counts as itself
+      When a request addressed to "<host>" is placed
+      Then it counts as the website "<host>"
+
+      Examples:
+        | host                   |
+        | croquetscores.com      |
+        | try.croquetscores.com  |
+        | gateballscores.com     |
+        | localhost:3000         |
 
     Scenario Outline: A request addressed to a local address is for development
       When a request addressed to "<host>" is placed

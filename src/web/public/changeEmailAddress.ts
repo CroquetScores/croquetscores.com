@@ -41,7 +41,7 @@ import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
-import { siteNameOf, websiteOf } from "../common/site.js";
+import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
 import { profilePath, toSignIn } from "./profile.js";
@@ -237,7 +237,7 @@ export const registerChangeEmailAddressPage = (
             typed["emailAddress"] ?? "",
             typed["currentPassword"] ?? "",
             speaking.language.tag,
-            websiteOf(request).host,
+            servedAsOf(request).host,
             request.requestedAt,
           ),
         );
@@ -287,7 +287,7 @@ export const registerChangeEmailAddressPage = (
           request.url,
           reader.value,
           speaking.language.tag,
-          websiteOf(request).host,
+          servedAsOf(request).host,
           request.requestedAt,
         ),
       );

@@ -123,6 +123,11 @@ Feature: A tournament's page lists its games, the most recent first
       When the page at "/2026/ac/spring-open" is opened
       Then the page says the words for "errors.notFound"
 
+    Scenario: A tournament on croquetscores.com is found on the beta site
+      Given a site served as "beta.croquetscores.com"
+      When the page at "/2026/ac/spring-open" is opened
+      Then the header names the tournament "Spring Open"
+
   Rule: An address the tournament has moved on from leads to where it is now
 
     Scenario: An old address leads to the tournament's address now

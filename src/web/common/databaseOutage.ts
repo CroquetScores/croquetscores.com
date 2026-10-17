@@ -17,7 +17,7 @@
 // now. And a try that failed counts as a try, since a mail server that is
 // down as well would otherwise be asked again by every request while the
 // database is down, which is when the site can least afford it.
-import { websiteOf } from "./site.js";
+import { servedAsOf } from "./site.js";
 import type { FastifyRequest } from "fastify";
 
 import type { EmailSender } from "../../application/services/EmailSender.js";
@@ -70,7 +70,7 @@ export const tellingTheAdministrator = ({
         language: "en",
         // The website of the request that found it out: the site is the one
         // server, and the administrator is told as it is called there.
-        website: websiteOf(request).host,
+        website: servedAsOf(request).host,
         fill: {
           when: new Date(now).toISOString(),
           minutes: String(intervalMinutes),

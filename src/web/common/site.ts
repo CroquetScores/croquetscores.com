@@ -20,6 +20,8 @@ declare module "fastify" {
   interface FastifyRequest {
     /** Which website this request is for. Read it through websiteOf. */
     website: Website | undefined;
+    /** Which it was addressed to. Read it through servedAsOf. */
+    servedAs: Website | undefined;
   }
 }
 
@@ -39,7 +41,21 @@ export const siteNameOf = (request: FastifyRequest): string =>
   siteNameFor(websiteOf(request));
 
 /**
- * Which website `request` is for. Every request that reaches a route has one,
+ * Which website `request` was addressed to: the beta site where it was, and
+ * otherwise {@link websiteOf}. Asked for what a reader is shown or sent of the
+ * address they came by, such as the link in an email; what is kept and read is
+ * websiteOf's.
+ */
+export const servedAsOf = (request: FastifyRequest): Website => {
+  if (request.servedAs === undefined) {
+    throw new Error("The request has not been placed on a website.");
+  }
+  return request.servedAs;
+};
+
+/**
+ * Which website `request` is for, as far as what is kept and read: the beta
+ * site is for croquetscores.com. Every request that reaches a route has one,
  * because {@link placeRequests} answers the rest before they get there.
  */
 export const websiteOf = (request: FastifyRequest): Website => {
@@ -73,9 +89,11 @@ const misdirectedPage = `<!doctype html>
  */
 export const placeRequests = (server: FastifyInstance): void => {
   server.decorateRequest("website", undefined);
+  server.decorateRequest("servedAs", undefined);
   server.addHook("onRequest", async (request, reply) => {
     try {
-      request.website = Website.addressedTo(request.host);
+      request.servedAs = Website.addressedTo(request.host);
+      request.website = request.servedAs.countsAs;
       return;
     } catch (refusal) {
       if (!(refusal instanceof ValidationError)) throw refusal;

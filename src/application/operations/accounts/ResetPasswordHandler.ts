@@ -132,7 +132,7 @@ export class ResetPasswordHandler extends CommandHandler<ResetPassword, void> {
           ? {}
           : {
               link: this.links.make(
-                Website.from(command.website),
+                Website.addressedTo(command.website),
                 purpose,
                 account,
                 until,

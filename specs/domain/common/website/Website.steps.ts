@@ -66,6 +66,13 @@ Then("it serves the site {string}", function (this: SpecWorld, site: string) {
   assert.equal(siteNamed[websiteOfWorld(this).site], site);
 });
 
+Then(
+  "it counts as the website {string}",
+  function (this: SpecWorld, host: string) {
+    assert.equal(websiteOfWorld(this).countsAs.host, host);
+  },
+);
+
 Then("its address is {string}", function (this: SpecWorld, address: string) {
   assert.equal(websiteOfWorld(this).address, address);
 });
