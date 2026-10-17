@@ -32,6 +32,7 @@ Feature: Refusing a request addressed to a website nobody set up
       Examples:
         | host                   |
         | croquetscores.com      |
+        | beta.croquetscores.com |
         | try.croquetscores.com  |
         | gateballscores.com     |
         | try.gateballscores.com |
