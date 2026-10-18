@@ -126,6 +126,18 @@ export const anApplicationBelievingNoProxy = (
 export const anApplicationWithoutGoogle = (world: SpecWorld): Promise<string> =>
   anApplicationWith(world, { google: undefined });
 
+/**
+ * An application of this scenario's own running the version `version`, or none
+ * where it is null, and otherwise as {@link anApplicationCalled}. Told the
+ * version and not left to read the build's, so that what the footer says does
+ * not depend on whether whoever runs the scenarios has built the site.
+ */
+export const anApplicationRunning = (
+  world: SpecWorld,
+  version: number | null,
+): Promise<string> =>
+  anApplicationWith(world, {}, undefined, undefined, version);
+
 // Which website each scenario's browser says it is addressing, where it says
 // one. Nothing is development, which is what the application is reached as.
 const addressed = new WeakMap<SpecWorld, string>();
@@ -246,6 +258,7 @@ const askedOf = new WeakMap<
     changed: Partial<Config>;
     languages: Offering | undefined;
     help: HelpLibrary | undefined;
+    version: number | null | undefined;
   }
 >();
 
@@ -254,15 +267,27 @@ const anApplicationWith = async (
   asked: Partial<Config>,
   asking?: Offering,
   askingForHelp?: HelpLibrary,
+  askingForVersion?: number | null,
 ): Promise<string> => {
   const before = askedOf.get(world);
   const changed = { ...before?.changed, ...asked };
   const languages = asking ?? before?.languages;
   const help = askingForHelp ?? before?.help;
-  askedOf.set(world, { changed, languages, help });
+  // Not ??, which would take null, a scenario saying there is none, for not
+  // having said.
+  const version =
+    askingForVersion === undefined ? before?.version : askingForVersion;
+  askedOf.set(world, { changed, languages, help, version });
   const helpGiven = help === undefined ? {} : { help };
+  const versionGiven = version === undefined ? {} : { version };
   if (world.pool !== undefined) {
-    return itsOwn(world, changed, languages ?? scenarioLanguages, help);
+    return itsOwn(
+      world,
+      changed,
+      languages ?? scenarioLanguages,
+      help,
+      version,
+    );
   }
 
   loadEnvFile();
@@ -278,6 +303,7 @@ const anApplicationWith = async (
       logger: false,
       ...offered(languages ?? scenarioLanguages),
       ...helpGiven,
+      ...versionGiven,
       reader: readerTheScenariosSet,
       sendsTheEmailQueue: false,
     },
@@ -329,6 +355,7 @@ const itsOwn = async (
   changed: Partial<Config> = {},
   languages: Offering = scenarioLanguages,
   help?: HelpLibrary,
+  version?: number | null,
 ): Promise<string> => {
   const databaseUrl = world.database.options.connectionString;
   if (databaseUrl === undefined) {
@@ -365,6 +392,7 @@ const itsOwn = async (
       logger: false,
       ...offered(languages),
       ...(help === undefined ? {} : { help }),
+      ...(version === undefined ? {} : { version }),
       clock: () => new Date(clock.now.getTime()),
       // What the admin's build is called, which a scenario changes to deploy
       // the site again (newerBuild.feature).

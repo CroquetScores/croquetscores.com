@@ -400,7 +400,10 @@ ${accountMenu(bar)}
 export type SiteFooter = Pick<
   Shell,
   "speaking" | "siteName" | "theme" | "path"
->;
+> & {
+  /** Which version of the website this is, where it is known. */
+  readonly version?: number | undefined;
+};
 
 // Said by the admin's page too, for the reason the header is.
 export const siteFooter = (footer: SiteFooter): string => `
@@ -423,7 +426,12 @@ export const siteFooter = (footer: SiteFooter): string => `
               years: copyrightYears,
               owner: copyrightOwner,
             }),
-          )}</p>
+          )}</p>${
+            footer.version === undefined
+              ? ""
+              : `
+          <p class="site-version">v${String(footer.version)}</p>`
+          }
           <p><a href="/privacy">${escape(footer.speaking.say("footer.privacy"))}</a></p>
         </div>
         <div class="site-footer-theme">
@@ -458,7 +466,7 @@ ${shell.body}
         </div>`
 }
       </div>
-    </main>${siteFooter(shell)}
+    </main>${siteFooter({ ...shell, version: assets.version })}
   </body>
 </html>
 `;

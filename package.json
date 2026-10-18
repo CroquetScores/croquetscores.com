@@ -2,8 +2,9 @@
   "name": "next-croquetscores",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && npm run build:admin && npm run build:help",
+    "build": "tsc -p tsconfig.build.json && npm run build:admin && npm run build:help && npm run build:version",
     "build:help": "tsx scripts/build-help.mjs",
+    "build:version": "tsx scripts/build-version.mjs",
     "help:screenshots": "tsx scripts/help-screenshots.mjs",
     "build:admin": "vite build",
     "build:admin:alongside": "vite build --emptyOutDir=false",

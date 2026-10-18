@@ -46,7 +46,7 @@ The lines are joined with `&&` so that if one fails the rest do not run, and in 
 
 **The file `deploy-finished` says that the last deploy ran to its end.** It is removed just before `npm ci`, the first step that changes what the running site is running from, and made again when the restart has succeeded, so a deploy that failed from there on leaves no file. The first line of the sequence refuses to go on without it, and says why: otherwise a second run after a failed build would copy the failed folder over `site.previous`, the one good copy. A failure before that point, such as a mistyped tag, has changed nothing, leaves the file, and the sequence can be run again as it is. The file is made once at the end of the server setup (server-setup.md §6, step 8), and again by going back (§5). **Do not make it by hand to get past the first line:** a folder that failed looks the same as a good one, and going back is the one way of making the file honestly.
 
-Then look (operations.md §1): `curl -s https://<the site's name>/api/v1/health`, the home page, and a page of a tournament.
+Then look (operations.md §1): `curl -s https://<the site's name>/api/v1/health`, the home page, and a page of a tournament. The footer of any page says which version is running, as `v233`: the number of times `main` has moved, worked out by `npm run build` from the history on the server. It should be one more than it was before a deploy of one merge, and it is the quickest way to see that the new build is the one being served. A server whose clone is cut short (`git clone --depth`) builds with no version and shows none.
 
 What each step does, and what can go wrong:
 

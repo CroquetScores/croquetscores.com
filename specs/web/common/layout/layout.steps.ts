@@ -3,7 +3,11 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import { english } from "../../../../src/web/languages/english.js";
-import { anApplicationServedAs, siteNameFor } from "../../support/browser.js";
+import {
+  anApplicationRunning,
+  anApplicationServedAs,
+  siteNameFor,
+} from "../../support/browser.js";
 import { unmarked } from "../../support/languages.js";
 import { changeTournament } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../../support/world.js";
@@ -223,3 +227,30 @@ Then(
     );
   },
 );
+
+// The version in the footer ----------------------------------------------------
+
+const versionInFooter = (world: SpecWorld): Locator =>
+  world.browserPage.locator("footer.site-footer .site-version");
+
+Given(
+  "a site running version {int}",
+  async function (this: SpecWorld, version: number) {
+    this.baseUrl = await anApplicationRunning(this, version);
+  },
+);
+
+Given("a site running no version", async function (this: SpecWorld) {
+  this.baseUrl = await anApplicationRunning(this, null);
+});
+
+Then(
+  "the footer carries the version {string}",
+  async function (this: SpecWorld, version: string) {
+    assert.equal((await versionInFooter(this).innerText()).trim(), version);
+  },
+);
+
+Then("the footer carries no version", async function (this: SpecWorld) {
+  assert.equal(await versionInFooter(this).count(), 0);
+});

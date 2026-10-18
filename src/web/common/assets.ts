@@ -45,6 +45,14 @@ export interface ResolvedAsset extends Asset {
 }
 
 export interface Assets {
+  /**
+   * Which version of the website the build these files came from is, or
+   * nothing where it is not known (buildVersion.feature). Carried here because
+   * the files are the build's and every page is already given them to draw
+   * itself with; a version of its own, handed to each page, would be one more
+   * thing for each of dozens of pages to remember to pass on.
+   */
+  readonly version: number | undefined;
   /** "site.css" becomes "/assets/site.1a2b3c4d.css". */
   url(name: string): string;
   resolve(requestedName: string): ResolvedAsset | undefined;
@@ -71,7 +79,7 @@ const filesUnder = (root: string, prefix = ""): string[] =>
       : [posix.join(prefix, entry.name)],
   );
 
-export const readAssets = (root: string): Assets => {
+export const readAssets = (root: string, version?: number): Assets => {
   const byName = new Map<string, Asset>();
 
   for (const name of filesUnder(root)) {
@@ -89,6 +97,7 @@ export const readAssets = (root: string): Assets => {
   }
 
   return {
+    version,
     url(name) {
       const asset = byName.get(name);
       if (asset === undefined)

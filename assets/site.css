@@ -1086,6 +1086,13 @@ main {
   text-align: end;
 }
 
+/* Which build this is: a thing to say back when reporting a problem. Not
+   dimmed to sit quietly: white on the footer's green is already short of the
+   contrast wanted (STYLE.md), and less would be worse. */
+.site-footer .site-version {
+  font-variant-numeric: tabular-nums;
+}
+
 /* A row of its own beneath the footer proper. The theme is a setting rather
    than something to read, so it sits apart from the donation and the copyright
    instead of competing with them for the same line. */
