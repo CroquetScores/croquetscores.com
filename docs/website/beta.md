@@ -6,19 +6,16 @@ The beta runs for two weeks: a week for half a dozen people the operator chose, 
 
 ## 1. Before the first tester starts
 
-These are filled in. They are also in `BETA.md`, which is what a tester is sent, so a change to one is a change to the other.
+What a tester is told is in `BETA.md`, which is what is sent, and **is written there and nowhere else**: the address of the beta site, where to report a problem, and that entries may be lost. They are not repeated here, so that two files cannot say different things. What the operator needs, and a tester is not told:
+
+- **Who looks at the logs, and how often:** Tim Murphy, once every day.
 
 **Before `BETA.md` is sent to anybody, check that what it says is true:**
 
-- The address in it loads, with a padlock, and says on every page that it is a beta (server-setup.md §6, step 8).
+- The address and the report email address in it are the ones meant, and the mailbox is read.
+- The address loads, with a padlock, and says on every page that it is a beta (server-setup.md §6, step 8).
 - A registration on it sends an email that arrives (operations.md §1), and Google sign-in comes back to the beta address (configuration.md §3).
 - The two weeks are not already running: it says "about two weeks" with no date, and the operator tells each tester when it ends.
-- The report address in it is read.
-
-- **The address of the beta site:** https://beta.croquetscores.com
-- **Where a tester reports a problem:** croquetscores@gmail.com
-- **Who looks at the logs, and how often:** Tim Murphy, once every day.
-- **What the testers are told about the data:** Entries may be lost.
 
 **The beta's data is a copy, and is thrown away.** The new site's database was filled from a copy of the old site's production data, taken just before the beta opened. Nothing a tester does on the beta site is written to the old site's production data, so a tester who already has an account on croquetscores.com has a copy of it here: what they do to it here, including changing its password or forgetting it, does not touch their real account. Inside the new site, the beta site counts as `croquetscores.com` for what is kept and read (README.md §2), so what is entered on one is seen on the other, and is all in that copy.
 

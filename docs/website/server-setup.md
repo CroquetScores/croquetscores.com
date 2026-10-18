@@ -367,13 +367,17 @@ If the first prints nothing, the shell has not picked the group up: sign out and
 
 ### Step 5. Install, build and migrate
 
-The scripts need the settings, but only while each one runs, so make a small helper that loads the settings file for one command and then forgets it. The keys and passwords in the file are then not left in your shell for everything you type afterwards, such as the install scripts that `npm ci` runs for the packages it installs. Once:
+The scripts need the settings, but only while each one runs, so make a small helper that loads the settings file for one command and then forgets it. The keys and passwords in the file are then not left in your shell for everything you type afterwards, such as the install scripts that `npm ci` runs for the packages it installs. It is a script on the path and not a function in `~/.bashrc`, so that every shell finds it, including the one `ssh deploy@server 'command'` starts. Once:
 
 ```bash
-cat >> ~/.bashrc <<'EOF'
-withsettings() { ( set -a; . /etc/croquetscores/environment; set +a; "$@" ); }
+sudo tee /usr/local/bin/withsettings >/dev/null <<'EOF'
+#!/bin/bash
+# Runs the command it is given with the site's settings in its environment,
+# and in no other process.
+set -a; . /etc/croquetscores/environment; set +a
+exec "$@"
 EOF
-. ~/.bashrc
+sudo chmod 755 /usr/local/bin/withsettings
 ```
 
 First check that the settings file follows the rule for how a value is written (configuration.md §1), since the shell and systemd read some values differently. This prints the number of any line that breaks it, and nothing when none does:
@@ -487,6 +491,12 @@ curl -s https://<the site's name>/api/v1/health
 Then open `https://try.croquetscores.com/` in a browser. It should load with a padlock, and show the try banner on every page, saying that anything entered may be removed at any time. Open `https://beta.croquetscores.com/` too, which should say on every page that it is a beta, and `https://croquetscores.com/`, which should have no banner at all. That shows that Caddy is sending the host the reader typed and that the site is reading it.
 
 This is the real test, since it goes through Cloudflare's DNS (§4) and Caddy (§5). If it does not, the site is running and the fault is in one of those two; operations.md §4 lists what to look for.
+
+When it does, say that this first deploy ran to its end, so that the deploy sequence in deploying.md §2 will run for the next one. Once:
+
+```bash
+touch /srv/croquetscores/deploy-finished
+```
 
 ## 7. The logs
 

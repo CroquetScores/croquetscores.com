@@ -6,16 +6,22 @@ Putting a new build of the website up, and taking it down again. The server is a
 
 ## 1. Running a script on the server
 
-The site's scripts (`npm run db:migrate` and the others) read their settings from the environment, as the site does, and there is no `.env` on the server. So they are run with the service's settings loaded **for that one command**. Make a helper for it, once, as `deploy` (server-setup.md, "Install, build and migrate", already made it; check `grep -c withsettings ~/.bashrc` is 1 before adding it again):
+The site's scripts (`npm run db:migrate` and the others) read their settings from the environment, as the site does, and there is no `.env` on the server. So they are run with the service's settings loaded **for that one command**. Make a helper for it, once, as `deploy` (server-setup.md, "Install, build and migrate", already made it; making it again does no harm, since the command writes the same file):
 
 ```bash
-cat >> ~/.bashrc <<'EOF'
-withsettings() { ( set -a; . /etc/croquetscores/environment; set +a; "$@" ); }
+sudo tee /usr/local/bin/withsettings >/dev/null <<'EOF'
+#!/bin/bash
+# Runs the command it is given with the site's settings in its environment,
+# and in no other process.
+set -a; . /etc/croquetscores/environment; set +a
+exec "$@"
 EOF
-. ~/.bashrc
+sudo chmod 755 /usr/local/bin/withsettings
 ```
 
-Then put `withsettings` in front of a script, as `withsettings npm run db:migrate`. The settings are loaded in a subshell that ends with the command, so the keys and passwords in them are not left in your shell for everything you type afterwards, such as `git`, or the install scripts that `npm ci` runs for the packages it installs. Commands that do not need the settings, `npm ci` and `npm run build`, are run without them.
+It is a small script and not a function in `~/.bashrc`, so that it is found by every shell, including the one `ssh deploy@server 'command'` starts, which does not read `~/.bashrc`. If you made the first version of this helper, a `withsettings()` line in `~/.bashrc`, delete that line: it does the same, but would be used in place of the script.
+
+Then put `withsettings` in front of a script, as `withsettings npm run db:migrate`. The settings are loaded for the one command it runs and no other process, so the keys and passwords in them are not left in your shell for everything you type afterwards, such as `git`, or the install scripts that `npm ci` runs for the packages it installs. Commands that do not need the settings, `npm ci` and `npm run build`, are run without them.
 
 It needs `deploy` to be in the site's group, which is step 4 of server-setup.md §6, and to have signed in again since. The scripts run from source through `tsx`, a development dependency, so **the server keeps a full `npm ci`, development dependencies and all**, and not `--omit=dev`. That is also why `NODE_ENV` is not put in the settings file (configuration.md §1).
 
@@ -33,18 +39,25 @@ Then, on the server. This keeps a copy of the whole folder as it is running, and
 
 ```bash
 cd /srv/croquetscores &&
+( [ -e deploy-finished ] || { echo "The last deploy did not finish: put site.previous back (deploying.md §5) before deploying again."; false; } ) &&
+rm -rf site.previous.new &&
+cp -a site site.previous.new &&
 rm -rf site.previous &&
-cp -a site site.previous &&
+mv site.previous.new site.previous &&
+rm deploy-finished &&
 cd site &&
 git fetch --tags &&
 git checkout <the tag or commit> &&
 npm ci &&
 npm run build &&
 withsettings npm run db:migrate &&
-sudo systemctl restart croquetscores
+sudo systemctl restart croquetscores &&
+touch ../deploy-finished
 ```
 
-The lines are joined with `&&` so that if one fails the rest do not run, and in particular the site is not restarted after a failed build. Use the tag or commit, not "whatever is on main" (§3). `site.previous` is the code, the packages and the build as they were running, about 350 MB, and only the last one is kept.
+The lines are joined with `&&` so that if one fails the rest do not run, and in particular the site is not restarted after a failed build. Use the tag or commit, not "whatever is on main" (§3). `site.previous` is the code, the packages and the build as they were running, about 350 MB, and only the last one is kept. It is copied under another name and renamed into place only when the copy has finished, so a copy that fails (a full disk) leaves the old `site.previous` as it was.
+
+**The file `deploy-finished` says that the last deploy ran to its end.** It is removed when a deploy begins, and made again when its restart has succeeded, so a deploy that failed leaves no file. The first line of the sequence refuses to go on without it, and says why: otherwise a second run after a failed build would copy the failed folder over `site.previous`, the one good copy. The file is made once at the end of the server setup (server-setup.md §6, step 8), and again by going back (§5).
 
 Then look (operations.md §1): `curl -s https://<the site's name>/api/v1/health`, the home page, and a page of a tournament.
 
@@ -52,7 +65,7 @@ What each step does, and what can go wrong:
 
 - **`cp -a site site.previous`** is what makes going back a rename (§5). If `site.previous` is not there, the way back is to build the old version again, which is slower and can fail.
 - **`npm ci` and `npm run build`** replace `node_modules` and rewrite `dist/` **while the site is running from them.** The site has its code in memory, so most requests go on being answered, but a file it loads late (an admin or help page, say) can be missing for the minutes this takes, and a request for it fails. Building into a separate folder and switching to it at the restart would remove this, and is not done: it is more to set up and more to keep, for a beta of a few people. At the size of a beta that is accepted: do it at a quiet time. If you would rather not take the risk, or the release needs the site off anyway, stop the site first and use the sequence in §4.
-- **A build that fails** leaves `dist/` half written, and **the next time the site starts it starts from that**, whether you restart it, or the server reboots, or the site crashes and systemd starts it again. The `&&` stops the restart, but it does not make the running site safe. If the build fails, put `site.previous` back before anything else (§5), then find out why it failed. **Do not run the sequence again first.** Its second line deletes `site.previous` and its third copies the folder as it is now, so a second run after a failure replaces the good copy with the failed one.
+- **A build that fails** leaves `dist/` half written, and **the next time the site starts it starts from that**, whether you restart it, or the server reboots, or the site crashes and systemd starts it again. The `&&` stops the restart, but it does not make the running site safe. If the build fails, put `site.previous` back before anything else (§5), then find out why it failed. **The sequence will not run again until you have:** `deploy-finished` is missing after a failure, and its first line stops.
 - **`withsettings npm run db:migrate`** applies the numbered SQL files in `src/infrastructure/database/migrations/` that have not been applied, each in a transaction with its record in `schema_migrations`. It is safe to run when there is nothing to do, and says `Applied: …` or `Database is up to date.` It reads the SQL from the source folder, which is why the source is on the server.
 - **`systemctl restart`** stops the site with SIGTERM, which lets the email being sent finish, and starts it again. Readers are told nothing for the few seconds it takes; a request in that time fails and a reader's browser retries on a reload. At the size of a beta, that is accepted.
 
@@ -94,10 +107,14 @@ It turns the site's database access off itself, for the minutes given, so that t
 **When a migration cannot be lived with by the running site,** or the release is better put up with the site off, stop the site first and put the new version up while nothing is using it. Readers get the proxy's "bad gateway" for the minutes this takes, since the site that would show a maintenance page is the one that is stopped. The same steps as §2, with the stop first, the rebuild before the start where the release needs one, and the start last:
 
 ```bash
-sudo systemctl stop croquetscores &&
 cd /srv/croquetscores &&
+( [ -e deploy-finished ] || { echo "The last deploy did not finish: put site.previous back (deploying.md §5) before deploying again."; false; } ) &&
+sudo systemctl stop croquetscores &&
+rm -rf site.previous.new &&
+cp -a site site.previous.new &&
 rm -rf site.previous &&
-cp -a site site.previous &&
+mv site.previous.new site.previous &&
+rm deploy-finished &&
 cd site &&
 git fetch --tags &&
 git checkout <the tag or commit> &&
@@ -105,10 +122,11 @@ npm ci &&
 npm run build &&
 withsettings npm run db:migrate &&
 withsettings npm run db:rebuild-read-models -- --minutes 30 &&
-sudo systemctl start croquetscores
+sudo systemctl start croquetscores &&
+touch ../deploy-finished
 ```
 
-Leave the rebuild line out where the release does not need it. **After a failure, put `site.previous` back (§5) before running this again**, for the reason given in §2. **If a step fails the site is left stopped, on purpose:** it must not be started on a build that did not finish, or on a schema half changed. Find out why it failed. To put the old version back, see §5.
+Leave the rebuild line out where the release does not need it. **After a failure, put `site.previous` back (§5) before running this again:** the first line stops it without `deploy-finished`, for the reason given in §2. **If a step fails the site is left stopped, on purpose:** it must not be started on a build that did not finish, or on a schema half changed. Find out why it failed. To put the old version back, see §5.
 
 ## 5. Going back
 
@@ -121,8 +139,11 @@ cd /srv/croquetscores &&
 sudo systemctl stop croquetscores &&
 mv site site.failed &&
 mv site.previous site &&
-sudo systemctl start croquetscores
+sudo systemctl start croquetscores &&
+touch deploy-finished
 ```
+
+The last line says the folder now in place is a good one, so that the next deploy is let to copy it.
 
 Look at the site (operations.md §1). When you are sure, delete the version that was put aside:
 

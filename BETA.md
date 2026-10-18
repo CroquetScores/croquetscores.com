@@ -8,7 +8,7 @@ If you are willing, please reply to this email and say so. If you would rather n
 
 Here is what taking part involves. The site to try is at https://beta.croquetscores.com and you can start as soon as you have replied. The testing runs for about two weeks, and I will tell you when it ends.
 
-IMPORTANT: this is a try-out. Anything you enter may be lost or removed at any time, so please do not put in anything you need to keep. If you already have an account on croquetscores.com, it is the same account here, and anything you do to it here will be lost at any time, including when the beta closes.
+IMPORTANT: this is a try-out. Anything you enter may be lost or removed at any time, so please do not put in anything you need to keep. If you already have an account on croquetscores.com, it has been copied to this try-out and you can use it here. What you do to the copy, such as changing its password or forgetting it, does not touch your real account, and is lost when the try-out closes.
 
 WHAT I WOULD LIKE YOU TO DO
 
