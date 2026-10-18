@@ -1,0 +1,58 @@
+name: Deploy
+
+# Only on a push to main, and main is only ever reached by squash-merging a pull
+# request whose CI run passed (ci.yml), so a commit arriving here has already
+# passed every scenario. Running them again would say nothing new.
+on:
+  push:
+    branches: [main]
+
+# One deploy at a time, and a newer merge waits for the one running rather than
+# cancelling it: a deploy stopped half way is the state deploying.md §5 is about.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    # The secrets belong to this environment, which is where a rule such as
+    # "only main" or "wait for a person to approve" is set in GitHub.
+    environment: production
+
+    permissions:
+      contents: read
+
+    steps:
+      # The key can run the deploy script on the server and nothing else
+      # (deploying.md §8), so a leaked one deploys a commit of this repository
+      # and does no more. The server's own key is pinned, and not asked for with
+      # ssh-keyscan, which would trust whatever answered.
+      - name: Prepare ssh
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST_KEY: ${{ secrets.DEPLOY_SSH_HOST_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy
+          chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$DEPLOY_HOST_KEY" > ~/.ssh/known_hosts
+
+      - name: Deploy ${{ github.sha }}
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+        run: |
+          ssh -i ~/.ssh/deploy \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -o ServerAliveInterval=30 \
+            "deploy@$DEPLOY_HOST" "${{ github.sha }}"
+
+      # The site seen from outside, through the proxy and the certificate,
+      # which the check on the server (127.0.0.1) cannot see.
+      - name: Look at the site
+        env:
+          SITE_ADDRESS: ${{ vars.SITE_ADDRESS }}
+        run: curl -fsS --retry 5 --retry-delay 5 --retry-all-errors "https://$SITE_ADDRESS/api/v1/health"

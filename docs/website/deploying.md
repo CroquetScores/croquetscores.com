@@ -179,3 +179,60 @@ TODO.md asks that this be written down by doing it. **The operator followed the 
 - Do §5's going back once, by the rename, to see that the older build comes up.
 - Do backup-and-restore.md §7 steps 2–6 into a throwaway database, and time step 5.
 - Say in README.md that they have now been followed start to finish, and on what date.
+
+## 8. Deploying by itself on a merge to main
+
+`.github/workflows/deploy.yml` runs when a pull request is squash-merged to `main`, signs in to the server, and runs `scripts/deploy.sh`, which is §2 as one script. CI is not run again on `main` (§3), so a commit reaching it has already passed. The manual sequences in §2 and §4 still work, and are what to use for a release that needs the site stopped (§4): the script does not stop the site.
+
+**What it does differently from §2:**
+
+- **The copy of the data is taken on the server,** with the same `pg_dump` of the same two tables as `npm run db:backup`, into `/srv/croquetscores/before-deploy/`, and the last five are kept. A deploy does not go on if it fails. It is not the off-site backup (backup-and-restore.md): that is still the daily one from the operator's computer, and a copy on the server is lost with the server. It is there so that a migration that goes wrong can be restored from without anybody having remembered to run the backup first. Restore it as backup-and-restore.md §7 says.
+- **A failure before the migration puts the old build back by itself** (§5, the rename), because the database has not been touched. It leaves the failed folder as `site.failed`. A failure in or after the migration does not: the old code may not live with the new schema, so the site is left for a person, and `deploy-finished` is not made, so the next deploy refuses to run until §5 has been followed.
+- **It looks at the site after the restart:** the health address on the server for up to a minute, and then from the workflow through the proxy.
+- **It refuses to put an older commit over a newer one,** so that a run started again from GitHub's Actions page after a later merge does no harm, and does nothing where the commit is already running.
+
+A failed run shows red in GitHub and emails whoever is set to be told of failed runs in their GitHub notification settings. Its log says which step failed.
+
+### Setting it up, once
+
+**1. On your computer, make a key for this and nothing else,** with no passphrase because nobody is there to type one (see the warning about `-N` in backup-and-restore.md §3 if you are on PowerShell):
+
+```bash
+ssh-keygen -t ed25519 -C croquetscores-github-deploy -f croquetscores_github_deploy
+```
+
+**2. On the server, as `deploy`, install the script and allow the key to run it and nothing else.** The script is installed from the checkout, and again whenever it changes in a pull request (the deploy says so, with a warning, when the commit it has put up has a different one):
+
+```bash
+sudo install -m 755 /srv/croquetscores/site/scripts/deploy.sh /usr/local/bin/croquetscores-deploy
+echo 'restrict,command="/usr/local/bin/croquetscores-deploy" ssh-ed25519 AAAA…the public half… croquetscores-github-deploy' >> ~/.ssh/authorized_keys
+```
+
+`restrict` switches off everything, and `command=` means whatever is asked for, the key runs only that, with what was asked for given to it as the commit to deploy. The script refuses anything that is not 40 hexadecimal digits. This is why the key can be a secret in GitHub: all it can do is deploy a commit of this repository, and not the commit nobody has merged unless somebody has pushed it to the repository.
+
+Run it once by hand before relying on it, from your computer, with the commit that is already running so that it has nothing to change, and see `deploy: … is already what is running. Nothing to do.`:
+
+```bash
+ssh -i croquetscores_github_deploy deploy@<the server's address> $(git rev-parse origin/main)
+```
+
+(Use the commit the server is on. A different one will deploy it.)
+
+**3. In GitHub, Settings, Environments, New environment, `production`.** Add:
+
+- Secret `DEPLOY_SSH_KEY`: the private half, the whole file including its first and last lines.
+- Secret `DEPLOY_SSH_HOST`: the server's address.
+- Secret `DEPLOY_SSH_HOST_KEY`: the server's own key, as a `known_hosts` line. Get it from a computer that has already signed in to the server and been shown its fingerprint: `ssh-keygen -F <the server's address>` prints it. It is pinned so that the workflow cannot be talked into signing in to something that is not the server.
+- Variable `SITE_ADDRESS`: the site's name, as the health check in §2 uses it.
+
+Under "Deployment branches", choose **Selected branches** and name `main`, so that no other branch's workflow can read the key. If you want a person to look before each deploy, add yourself under "Required reviewers"; the deploy then waits for approval in GitHub.
+
+**4. Delete the key file on your computer** once it is in GitHub, or keep it with the other secrets (recovery.md §2). It is not needed again unless the server's `authorized_keys` is lost.
+
+### Turning it off
+
+Disable the workflow in GitHub (Actions, Deploy, the three dots, Disable workflow), or remove the key's line from `~/.ssh/authorized_keys` on the server, which is the one that works even if GitHub has been got into.
+
+### Not yet done
+
+It has not run for real. The first merge is the rehearsal: be at the server for it, and watch the run. The same goes for §7: once it has run, say so there.
