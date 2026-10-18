@@ -1,5 +1,3 @@
-# todo: review
-
 # If the operator's computer is lost
 
 What lives only on the computer the website is run from, where a copy of each belongs so that losing, wiping or reformatting it costs an afternoon and not the website, and what to do on the new computer. Written for whoever has to do it with the old computer gone, which may not be the person who wrote it.

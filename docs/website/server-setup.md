@@ -334,7 +334,7 @@ The key has no passphrase, because nobody is there to type one, so anyone who ca
 
 ### Step 3. Make the folder for the maintenance switch
 
-The switch that turns the site's database access off for maintenance is a small file (operations.md §3). The site reads it, and the scripts you run as `deploy` (`npm run db:access`) write it, so both need to be able to write in its folder. The folder belongs to the site's account and to its group, which `deploy` joins in step 4, and the `2775` makes files made there belong to that group too:
+The switch that turns the site's database access off for maintenance is a small file (operations.md §3). **Only the scripts you run as `deploy` write it** (`npm run db:access`, and `npm run db:rebuild-read-models`, which turns it off while it runs and on again). The running site only reads it, at each request. So `deploy` must be able to write in its folder, and the site must be able to read what it writes. The folder belongs to the site's account and to its group, which `deploy` joins in step 4, and the `2775` makes the folder writable by that group and the files made there belong to it:
 
 ```bash
 sudo mkdir -p /srv/croquetscores/state

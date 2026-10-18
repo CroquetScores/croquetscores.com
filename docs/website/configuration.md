@@ -56,7 +56,7 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 - **`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`** — Sign in with Facebook. Leave blank until the app has been reviewed (TODO.md, Facebook sign-in)
 - **`OLD_SITE_PASSWORD_SALT`** — The salt the old site added before hashing passwords. Needed only so that passwords imported from the old site match. Blank, they match nothing
 - **`DATABASE_UNREACHABLE_EMAIL_INTERVAL_MINUTES`** — How long between emails to the administrator that the database cannot be reached. Whole minutes, blank is 30
-- **`DATABASE_ACCESS_FILE`** — Where the maintenance switch is kept (operations.md §3). Blank is `.database-access` in the site's folder. It is a file, because the database cannot say whether it may be asked
+- **`DATABASE_ACCESS_FILE`** — Where the maintenance switch is kept (operations.md §3). Only the scripts run as `deploy` write it, and the running site only reads it. Blank is `.database-access` in the site's folder. It is a file, because the database cannot say whether it may be asked
 
 ### Never on the website
 
@@ -85,10 +85,10 @@ Changing `ACCOUNT_ENCRYPTION_KEY` is not this. It is `npm run db:change-site-key
 
 ## 6. A checklist before the first visitor
 
-- [x] Every one of the required settings has a value.
-- [x] `TRUSTED_PROXY` is the proxy's address, and the proxy forwards the host the reader typed as `X-Forwarded-Host`.
-- [x] The reCAPTCHA keys are made for all four domains and for `beta.croquetscores.com`.
-- [x] The four `SMTP_` settings are all there, and a registration's email arrived (operations.md §1).
-- [x] The whole file is in the LastPass note for kamatera.com, and the two account keys in it match the server's.
-- [x] `SEARCH_ENGINES_WELCOME` is `false` for a beta, `true` for production.
-- [x] No `.env` is in the site's folder on the server.
+- [ ] Every one of the required settings has a value.
+- [ ] `TRUSTED_PROXY` is the proxy's address, and the proxy forwards the host the reader typed as `X-Forwarded-Host`.
+- [ ] The reCAPTCHA keys are made for all four domains and for `beta.croquetscores.com`.
+- [ ] The four `SMTP_` settings are all there, and a registration's email arrived (operations.md §1).
+- [ ] The whole file is in the LastPass note for kamatera.com, and the two account keys in it match the server's.
+- [ ] `SEARCH_ENGINES_WELCOME` is `false` for a beta, `true` for production.
+- [ ] No `.env` is in the site's folder on the server.

@@ -25,11 +25,11 @@ sudo journalctl -u caddy -n 50                # the proxy's
 
 The site writes a line for each request and for each thing that went wrong, as JSON. The first lines after a start say whether its settings were accepted: a setting that is wrong stops the site, and lists every problem (configuration.md).
 
-The journal is on the server, kept for 90 days or 500 MB (server-setup.md §7), and is lost with the server except for Kamatera's daily backup of it. Only `deploy` can read it. **Tim Murphy reads it once a day,** with the three commands in server-setup.md §7: warnings and errors from the site and the proxy, and whether the site restarted. That is the whole of the watching, so a night's outage is found the next day (§1).
+The journal is on the server, kept for 90 days or 500 MB (server-setup.md §7), and is lost with the server except for Kamatera's daily backup of it. Only `deploy` can read it. **Tim Murphy reads it once a day,** with the three commands under "Reading them every day" in server-setup.md §7: warnings and errors from the site and the proxy, and whether the site restarted. That is the whole of the watching, so a night's outage is found the next day (§1).
 
 ## 3. Turning the database off on purpose
 
-For a migration, a rebuild, or anything else where the site should say it is down for maintenance rather than answer from a database that is being changed. It does not stop the site, and does not touch the database; it writes a file the running site reads at each request (`DATABASE_ACCESS_FILE`).
+For a migration, a rebuild, or anything else where the site should say it is down for maintenance rather than answer from a database that is being changed. It does not stop the site, and does not touch the database; it writes a file the running site reads at each request (`DATABASE_ACCESS_FILE`). The scripts you run as `deploy` write the file, and the site never does.
 
 ```bash
 npm run db:access -- off --minutes 30      # readers see a page saying it is for maintenance and when to come back
@@ -61,7 +61,7 @@ The administrator is emailed once, and then again no sooner than `DATABASE_UNREA
 
 1. Is `SMTP_HOST` set at all? Without it emails are written to `temp/` in the site's folder, and nothing is sent. `sudo ls /srv/croquetscores/site/temp` shows them.
 2. Look in the log for the server's own words. An email the server refused is **kept in the queue and tried again**, so nothing is lost while the setting is wrong. Fix it and restart.
-3. At Brevo: is the sender's domain verified, and are the SPF, DKIM and DMARC records answering? Email that is sent and lands in spam is these (backup-and-restore.md §3).
+3. At Brevo: is the sender's domain verified, and are the SPF, DKIM and DMARC records answering? Email that is sent and lands in spam is these (server-setup.md §4).
 4. The Brevo key is the SMTP key and not the account's password.
 
 ### Readers are told "try again later" when they have done nothing

@@ -1,5 +1,3 @@
-# todo: review
-
 # Deploying
 
 Putting a new build of the website up, and taking it down again. The server is already set up (server-setup.md).
@@ -25,7 +23,7 @@ From the operator's computer first, copy the data (backup-and-restore.md §2):
 npm run db:backup
 ```
 
-and read that it worked. On the server:
+and read the email that says it worked (its subject says `worked`, and a failure's begins `WARNING:`). **Do not go on if it did not arrive or did not say it worked.** The migration below cannot be undone (§5), and a restore from an old copy loses whatever was entered since it was made. On the server:
 
 ```bash
 cd /srv/croquetscores/site
@@ -39,11 +37,13 @@ npm run db:migrate                     # "Applied: …" or "Database is up to da
 sudo systemctl restart croquetscores
 ```
 
+This sequence does not turn the site off, so it is for a release whose migrations only add (see "The old process runs against the new schema", below). A release that removes or renames, or that says in its pull request that the old code cannot live with the new schema, is put up with the site turned off first (§4).
+
 Then look (operations.md §1): `curl -s https://<the site's name>/api/v1/health`, the home page, and a page of a tournament.
 
 What each step does and why it is in this order:
 
-- **`npm run build`** writes `dist/`. The site runs from `dist/web/server.js`, and finds the admin application and the help under `dist/admin` and `dist/help`. A build that fails leaves the running site as it was, because the site is not restarted until `systemctl restart`. The old `dist/` is, however, already overwritten by then if the failure is a late one: if the build fails, do not restart, fix it or check out the previous build and run `npm run build` again.
+- **`npm run build`** writes `dist/`. The site runs from `dist/web/server.js`, and finds the admin application and the help under `dist/admin` and `dist/help`. The running site has its code in memory, so a build in progress or a build that fails does not stop it. But a build that fails part way leaves `dist/` half written, and **the next time the site starts it starts from that**, whether you restart it or the server reboots or the site crashes and systemd starts it again. So if the build fails, the site is running on borrowed time: fix the failure and build again, or check out the previous build and run `npm run build`, **before anything restarts it**. Do not run `systemctl restart` after a failed build.
 - **`npm run db:migrate`** applies the numbered SQL files in `src/infrastructure/database/migrations/` that have not been applied, each in a transaction with its record in `schema_migrations`. It is safe to run when there is nothing to do. It reads the SQL from the source folder, which is why the source is on the server.
 - **`systemctl restart`** stops the site with SIGTERM, which lets the email being sent finish, and starts it again. Readers are told nothing for the few seconds it takes; a request in that time fails and a reader's browser retries on a reload. At the size of a beta, that is accepted.
 
