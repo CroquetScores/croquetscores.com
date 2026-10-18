@@ -7,8 +7,11 @@ on:
   push:
     branches: [main]
 
-# One deploy at a time, and a newer merge waits for the one running rather than
-# cancelling it: a deploy stopped half way is the state deploying.md §5 is about.
+# One deploy at a time, and the one running is never cancelled for a newer
+# merge: a deploy stopped half way is the state deploying.md §5 is about. GitHub
+# keeps one run waiting, and cancels an older one that is waiting when another
+# merge arrives. That is harmless, since the newest commit has what they had,
+# but those runs show as cancelled in the history.
 concurrency:
   group: deploy
   cancel-in-progress: false
@@ -38,7 +41,11 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           DEPLOY_HOST_KEY: ${{ secrets.DEPLOY_SSH_HOST_KEY }}
+          SITE_ADDRESS: ${{ vars.SITE_ADDRESS }}
         run: |
+          # Before anything is deployed, so that a missing variable does not
+          # show as a red run for a deploy that went well.
+          test -n "$SITE_ADDRESS" || { echo "The variable SITE_ADDRESS is not set in the production environment."; exit 1; }
           install -d -m 700 ~/.ssh
           printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy
           chmod 600 ~/.ssh/deploy
@@ -47,13 +54,24 @@ jobs:
       - name: Deploy ${{ github.sha }}
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          COMMIT: ${{ github.sha }}
         run: |
           ssh -i ~/.ssh/deploy \
             -o IdentitiesOnly=yes \
             -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
             -o ServerAliveInterval=30 \
-            "deploy@$DEPLOY_HOST" "${{ github.sha }}"
+            "deploy@$DEPLOY_HOST" "$COMMIT" 2>&1 | tee "$RUNNER_TEMP/deploy.log"
+
+      # The script on the server is the one installed by hand, so a commit that
+      # changes it deploys with the old one. The script says so in a line of its
+      # log, which nobody reads in a green run, so it is made a warning on the
+      # run's page.
+      - name: Say if the installed script is out of date
+        run: |
+          if grep -q '^deploy: WARNING' "$RUNNER_TEMP/deploy.log"; then
+            echo "::warning title=Deploy script out of date::The deploy script installed on the server differs from scripts/deploy.sh in this commit. Install it again (deploying.md section 8)."
+          fi
 
       # The site seen from outside, through the proxy and the certificate,
       # which the check on the server (127.0.0.1) cannot see.

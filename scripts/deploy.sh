@@ -76,6 +76,51 @@ if git merge-base --is-ancestor "$commit" "$running"; then
   exit 1
 fi
 
+stage="copying the data"
+
+# From the first command that changes what the running site runs from, until
+# the database is migrated, a failure is put right by putting the old folder
+# back, which is safe because the database has not been touched. After the
+# migration it is not, because the old code may not live with the new schema,
+# so the site is left as it is for a person to look at (deploying.md §5).
+go_back() {
+  trap 'say "Going back failed, and the site may be stopped. Follow deploying.md §5 by hand." >&2' ERR
+  say "Failed $stage. Putting the previous build back."
+  cd "$root"
+  # Checked before anything is stopped, so that the site is left running where
+  # there is nothing to put back.
+  if [ ! -d site.previous ]; then
+    say "There is no site.previous to put back. The site is left as it is: see deploying.md §5." >&2
+    return 1
+  fi
+  sudo systemctl stop croquetscores
+  rm -rf site.failed
+  mv site site.failed
+  mv site.previous site
+  sudo systemctl start croquetscores
+  touch deploy-finished
+  say "The previous build is running again. What failed is in site.failed."
+}
+# Run when the script ends by any way but success, and not only when a command
+# fails: the workflow's timeout, a cancelled run and a dropped connection end it
+# with a signal, which an ERR trap never sees, and that is when the folder is
+# most likely to be half built.
+on_exit() {
+  local status=$?
+  trap - EXIT ERR
+  [ "$status" -eq 0 ] && return 0
+  case $stage in
+    "copying the data" | "making site.previous")
+      say "Failed $stage. Nothing was changed, and the sequence can be run again as it is." >&2 ;;
+    "before the migration") go_back || true ;;
+    *) say "Failed $stage. The site is left as it is, and deploy-finished is not made: see deploying.md §5." >&2 ;;
+  esac
+}
+trap on_exit EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
 # Copy the data first. A migration cannot be undone, and the restore from an old
 # copy loses what was entered since it was made. This is the same copy that
 # npm run db:backup makes, taken on the server so that nobody has to be at a
@@ -93,34 +138,8 @@ mv "$copy.partial" "$copy"
 # Only the last few are kept: each is the size of the whole of the events.
 ls -1t "$copies"/*.dump | tail -n +6 | xargs -r rm --
 
-stage="before anything changed"
 
-# From the first command that changes what the running site runs from, until
-# the database is migrated, a failure is put right by putting the old folder
-# back, which is safe because the database has not been touched. After the
-# migration it is not, because the old code may not live with the new schema,
-# so the site is left as it is for a person to look at (deploying.md §5).
-go_back() {
-  trap 'say "Going back failed, and the site may be stopped. Follow deploying.md §5 by hand." >&2' ERR
-  say "Failed $stage. Putting the previous build back."
-  cd "$root"
-  sudo systemctl stop croquetscores
-  rm -rf site.failed
-  mv site site.failed
-  mv site.previous site
-  sudo systemctl start croquetscores
-  touch deploy-finished
-  say "The previous build is running again. What failed is in site.failed."
-}
-on_failure() {
-  case $stage in
-    "before the migration") go_back ;;
-    "before anything changed") ;;
-    *) say "Failed $stage. The site is left as it is, and deploy-finished is not made: see deploying.md §5." >&2 ;;
-  esac
-}
-trap on_failure ERR
-
+stage="making site.previous"
 cd "$root"
 rm -rf site.previous.new
 cp -a site site.previous.new
