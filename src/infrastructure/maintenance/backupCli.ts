@@ -142,7 +142,11 @@ export const runBackup = async (
     try {
       await world.send({
         to: administrator,
-        subject: `Backup of the website: ${worked ? "worked" : "failed"}`,
+        // A failure says WARNING first, so that it stands out in an inbox
+        // among the successes, which arrive every day and are not read.
+        subject: worked
+          ? "Croquet Scores database backup worked"
+          : "WARNING: Croquet Scores database backup FAILED",
         body: paragraphs.map((each) => `<p>${escaped(each)}</p>`).join("\n"),
       });
     } catch (failure) {

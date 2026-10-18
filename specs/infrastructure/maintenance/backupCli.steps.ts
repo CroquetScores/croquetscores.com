@@ -351,6 +351,20 @@ Then("the email says the backup failed", function (this: SpecWorld) {
 });
 
 Then(
+  "the email subject begins {string}",
+  function (this: SpecWorld, start: string) {
+    assert.ok(lastEmail(this).subject.startsWith(start));
+  },
+);
+
+Then(
+  "the email subject does not begin {string}",
+  function (this: SpecWorld, start: string) {
+    assert.ok(!lastEmail(this).subject.startsWith(start));
+  },
+);
+
+Then(
   "the email says the file is called {string}",
   function (this: SpecWorld, name: string) {
     assert.ok(emailText(this).includes(`The file is called ${name}.`));
