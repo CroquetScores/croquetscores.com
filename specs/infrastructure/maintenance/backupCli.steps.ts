@@ -351,6 +351,13 @@ Then("the email says the backup failed", function (this: SpecWorld) {
 });
 
 Then(
+  "the email subject is {string}",
+  function (this: SpecWorld, subject: string) {
+    assert.equal(lastEmail(this).subject, subject);
+  },
+);
+
+Then(
   "the email subject begins {string}",
   function (this: SpecWorld, start: string) {
     assert.ok(lastEmail(this).subject.startsWith(start));

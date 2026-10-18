@@ -133,8 +133,8 @@ and set to run when the computer is on and whether or not Tim is signed in, and 
 
 Each run emails `ADMINISTRATOR_EMAIL_ADDRESS` through Brevo, in the same way as the website's own emails. That works from this computer when its `.env` has the four `SMTP_` settings above, with the same values as the website's. The subject says how it went:
 
-- **A success:** `Croquet Scores database backup: worked`
-- **A failure:** `WARNING: Croquet Scores database backup: FAILED`. Any failure, whichever step it was, so a subject that begins `WARNING:` is the one to read.
+- **A success:** `Croquet Scores database backup worked`
+- **A failure:** `WARNING: Croquet Scores database backup FAILED`. Any failure, whichever step it was, so a subject that begins `WARNING:` is the one to read.
 
 **With none of the four `SMTP_` settings in `.env`, nothing is sent.** The email is written as a file in `temp/` of this repository, as the website's are in development, and nothing arrives in `croquetscores@gmail.com`. The screen and the scheduler's last result still say how it went. A part-set mail server (some of the four, not all) stops the script starting, and says which are missing.
 
