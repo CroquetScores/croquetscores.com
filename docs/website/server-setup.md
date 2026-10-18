@@ -358,15 +358,25 @@ In `nano`, paste in the whole of your `.env.production` from your own computer (
 
 ### Step 5. Install, build and migrate
 
+The scripts need the settings, but only while each one runs, so make a small helper that loads the settings file for one command and then forgets it. The keys and passwords in the file are then not left in your shell for everything you type afterwards, such as the install scripts that `npm ci` runs for the packages it installs. Once:
+
 ```bash
-cd /srv/croquetscores/site
-set -a; . /etc/croquetscores/environment; set +a
-npm ci
-npm run build
-npm run db:migrate
+cat >> ~/.bashrc <<'EOF'
+withsettings() { ( set -a; . /etc/croquetscores/environment; set +a; "$@" ); }
+EOF
+. ~/.bashrc
 ```
 
-The `set -a` line loads the settings file into this session so that `db:migrate` can find the database. `npm ci` and `npm run build` take a few minutes. `db:migrate` should print `Applied: …` the first time, and `Database is up to date.` afterwards. If it prints an error about a missing setting or a password, fix the settings file (step 4) and run it again. More on what each command does is in deploying.md §2.
+Then:
+
+```bash
+cd /srv/croquetscores/site &&
+npm ci &&
+npm run build &&
+withsettings npm run db:migrate
+```
+
+`withsettings` loads the settings file for the `db:migrate` that follows it, so that it can find the database. `npm ci` and `npm run build` take a few minutes and do not need the settings. `db:migrate` should print `Applied: …` the first time, and `Database is up to date.` afterwards. If it prints an error about a missing setting or a password, fix the settings file (step 4) and run it again. More on what each command does is in deploying.md §2.
 
 ### Step 6. Write the service file
 

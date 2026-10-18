@@ -32,12 +32,13 @@ The journal is on the server, kept for 90 days or 500 MB (server-setup.md §7), 
 For a migration, a rebuild, or anything else where the site should say it is down for maintenance rather than answer from a database that is being changed. It does not stop the site, and does not touch the database; it writes a file the running site reads at each request (`DATABASE_ACCESS_FILE`). The scripts you run as `deploy` write the file, and the site never does.
 
 ```bash
-npm run db:access -- off --minutes 30      # readers see a page saying it is for maintenance and when to come back
-npm run db:access -- change --from-now 45  # the time to come back was wrong
-npm run db:access -- on                    # open again
+cd /srv/croquetscores/site
+withsettings npm run db:access -- off --minutes 30      # readers see a page saying it is for maintenance and when to come back
+withsettings npm run db:access -- change --from-now 45  # the time to come back was wrong
+withsettings npm run db:access -- on                    # open again
 ```
 
-Run from `/srv/croquetscores/site` with the service's settings loaded (deploying.md §1), so that the script writes the file the site is reading.
+Run from `/srv/croquetscores/site`, with `withsettings` in front (deploying.md §1), so that the script has the service's settings and writes the file the site is reading.
 
 While it is off, the pages, the API and the admin all answer that the site is for maintenance, with the time to come back; programs are told to ask again after the estimate. Files (styles, scripts, images) are still served, so the page looks like the site's. `/api/v1/health` still answers `ok`. Nobody is emailed that the database is unreachable, since the operator turned it off.
 

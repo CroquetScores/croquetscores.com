@@ -235,12 +235,11 @@ The steps above are for any new website. This is the same restore done on the se
    sudo -u postgres psql -c "alter user croquetscores createdb;"
    ```
 
-4. **Restore into a new database,** with the site's settings loaded:
+4. **Restore into a new database,** with the site's settings, through `withsettings` (deploying.md §1):
 
    ```bash
    cd /srv/croquetscores/site
-   set -a; . /etc/croquetscores/environment; set +a
-   npm run db:restore -- croquetscores_restored ~/2026-10-15-21-40-20.dump
+   withsettings npm run db:restore -- croquetscores_restored ~/2026-10-15-21-40-20.dump
    ```
 
    It says each step as it goes. If it fails it drops the database it made, so the same name can be tried again.
@@ -255,7 +254,7 @@ The steps above are for any new website. This is the same restore done on the se
 6. **Make the read models,** which a restore never carries. The number is the minutes visitors are told the site is down, so give more than you expect:
 
    ```bash
-   npm run db:rebuild-read-models -- --minutes 30
+   withsettings npm run db:rebuild-read-models -- --minutes 30
    ```
 
 7. **Start the site and look at it:**

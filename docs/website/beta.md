@@ -8,6 +8,13 @@ The beta runs for two weeks: a week for half a dozen people the operator chose, 
 
 These are filled in. They are also in `BETA.md`, which is what a tester is sent, so a change to one is a change to the other.
 
+**Before `BETA.md` is sent to anybody, check that what it says is true:**
+
+- The address in it loads, with a padlock, and says on every page that it is a beta (server-setup.md §6, step 8).
+- A registration on it sends an email that arrives (operations.md §1), and Google sign-in comes back to the beta address (configuration.md §3).
+- The two weeks are not already running: it says "about two weeks" with no date, and the operator tells each tester when it ends.
+- The report address in it is read.
+
 - **The address of the beta site:** https://beta.croquetscores.com
 - **Where a tester reports a problem:** croquetscores@gmail.com
 - **Who looks at the logs, and how often:** Tim Murphy, once every day.
