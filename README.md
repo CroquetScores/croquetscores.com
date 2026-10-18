@@ -10,6 +10,7 @@ follow along with the action as events unfold.
 npm ci
 npx playwright install chromium # the browser some scenarios drive
 npm run db:up                   # Postgres in Docker, and a .env if there is not one
+                                # (or use a Postgres you have: SETUP.md §6)
 npm run dev                     # the server on http://localhost:3000
 npm run dev:admin               # the admin SPA, proxying to it
 ```
