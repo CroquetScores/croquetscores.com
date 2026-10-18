@@ -17,6 +17,11 @@ jobs:
   deploy:
     runs-on: ubuntu-24.04
 
+    # A deploy that hangs would otherwise hold the concurrency group above for
+    # GitHub's default six hours, and every merge after it would wait. The
+    # build on the server takes minutes.
+    timeout-minutes: 20
+
     # The secrets belong to this environment, which is where a rule such as
     # "only main" or "wait for a person to approve" is set in GitHub.
     environment: production

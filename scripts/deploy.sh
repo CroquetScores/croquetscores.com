@@ -34,6 +34,17 @@ say() { echo "deploy: $*"; }
 
 cd "$root"
 
+# Two deploys at once would each be moving site.previous and checking out a
+# commit under the other. The workflow runs one at a time; this is for a person
+# who is deploying by hand while it runs. It is taken before the marker is
+# looked at, because a deploy that is running has removed the marker, and a
+# second one would otherwise say the last deploy failed.
+exec 9>"$root/deploy.lock"
+if ! flock -n 9; then
+  say "Another deploy is running." >&2
+  exit 1
+fi
+
 # Refuse, as the manual sequence does, to go on after a deploy that did not
 # finish: a second run would copy the failed folder over site.previous, the one
 # good copy.
@@ -42,17 +53,11 @@ if [ ! -e deploy-finished ]; then
   exit 1
 fi
 
-# Two deploys at once would each be moving site.previous and checking out a
-# commit under the other. The workflow runs one at a time; this is for a person
-# who is deploying by hand while it runs.
-exec 9>"$root/deploy.lock"
-if ! flock -n 9; then
-  say "Another deploy is running." >&2
-  exit 1
-fi
-
 cd "$site"
-git fetch --tags origin
+# Not --tags: a tag moved on GitHub makes that fail with "would clobber", which
+# would stop every deploy until the server's clone was mended, and only the
+# commit is wanted. Tags that point into what is fetched still come with it.
+git fetch origin
 if ! git cat-file -e "$commit^{commit}" 2>/dev/null; then
   say "The commit $commit is not in the repository." >&2
   exit 1
@@ -78,6 +83,9 @@ fi
 # daily backup, which is the one that lives somewhere else.
 mkdir -p "$copies"
 chmod 700 "$copies"
+# From a copy that was stopped half way: it is not a .dump, so the pruning below
+# would never remove it.
+rm -f "$copies"/*.partial
 copy=$copies/$(date -u +%Y-%m-%d-%H-%M-%S).dump
 say "Copying the data to $copy."
 withsettings bash -c 'pg_dump --format=custom --no-password --table=events --table=account_keys --file "$1.partial" "$DATABASE_URL"' _ "$copy"
@@ -93,6 +101,7 @@ stage="before anything changed"
 # migration it is not, because the old code may not live with the new schema,
 # so the site is left as it is for a person to look at (deploying.md §5).
 go_back() {
+  trap 'say "Going back failed, and the site may be stopped. Follow deploying.md §5 by hand." >&2' ERR
   say "Failed $stage. Putting the previous build back."
   cd "$root"
   sudo systemctl stop croquetscores
@@ -119,13 +128,15 @@ rm -rf site.previous
 mv site.previous.new site.previous
 
 cd "$site"
+# The marker is taken off, and the stage set, before the checkout and not after:
+# the checkout is the first thing that changes the folder the site runs from.
+rm "$root/deploy-finished"
+stage="before the migration"
 git checkout --quiet "$commit"
 if ! cmp -s /usr/local/bin/croquetscores-deploy scripts/deploy.sh; then
   say "WARNING: the installed deploy script differs from scripts/deploy.sh in this commit. Install it again (deploying.md §8) so the next deploy uses it."
 fi
 
-rm "$root/deploy-finished"
-stage="before the migration"
 npm ci
 npm run build
 
