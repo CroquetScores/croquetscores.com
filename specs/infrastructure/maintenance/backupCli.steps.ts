@@ -351,6 +351,13 @@ Then("the email says the backup failed", function (this: SpecWorld) {
 });
 
 Then(
+  "the email subject is {string}",
+  function (this: SpecWorld, subject: string) {
+    assert.equal(lastEmail(this).subject, subject);
+  },
+);
+
+Then(
   "the email says the file is called {string}",
   function (this: SpecWorld, name: string) {
     assert.ok(emailText(this).includes(`The file is called ${name}.`));

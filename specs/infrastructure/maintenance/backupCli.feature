@@ -220,6 +220,15 @@ Feature: Backing up the website's events and accounts' keys to a file
       When the backup is run
       Then the email says the backup failed
 
+    Scenario: A success's subject says the backup worked, with no warning
+      When the backup is run
+      Then the email subject is "Croquet Scores database backup worked"
+
+    Scenario: A failure's subject begins with a warning and says the backup failed
+      Given pg_dump fails
+      When the backup is run
+      Then the email subject is "WARNING: Croquet Scores database backup FAILED"
+
     Scenario: A failure says the dump could not be made
       Given pg_dump fails
       When the backup is run

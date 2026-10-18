@@ -1,84 +1,65 @@
-# BETA.md — The beta testing plan
+Subject: Would you help me test the new Croquet Scores website?
 
-How the beta is run, for whoever runs it and for the testers. It can be handed to somebody who has never seen the site.
+Hello,
 
-The beta runs for two weeks: a week for half a dozen people the operator chose, then a week for anybody who wants to try. It is a try of the whole site by people playing the parts it is for, not a hunt for typing mistakes. A tester who does what a tournament manager or a reader would do on a Saturday, and says where it got in their way, has done the job.
+I am writing to ask if you would be one of the first people to try the new Croquet Scores website. It is the place where tournament managers record scores and everybody else follows the results, and before I open it to everyone I need a few people to use it the way they would on a tournament day, and to tell me where it got in their way.
 
----
+If you are willing, please reply to this email and say so. If you would rather not, that is fine, and there is no need to give a reason. If you are not sure, reply and ask me anything first.
 
-## 1. Before the first tester starts
+Here is what taking part involves. The site to try is at https://beta.croquetscores.com and you can start as soon as you have replied. The testing runs for about two weeks, and I will tell you when it ends.
 
-The operator fills these in below and sends the plan only then.
+IMPORTANT: this is a try-out. Anything you enter may be lost or removed at any time, so please do not put in anything you need to keep. If you already have an account on croquetscores.com, it has been copied to this try-out and you can use it here. What you do to the copy, such as changing its password or forgetting it, does not touch your real account, and is lost when the try-out closes.
 
-| What                                     | Fill in              |
-| ---------------------------------------- | -------------------- |
-| The address of the beta site             | `__________________` |
-| Where a tester reports a problem         | `__________________` |
-| Who looks at the logs, and how often     | `__________________` |
-| What the testers are told about the data | Entries may be lost. |
+WHAT I WOULD LIKE YOU TO DO
 
-The last row is not a blank: whatever is entered during the beta may not be kept (TODO.md says why), and every tester is told so before they begin.
+Please do these in order, because each step needs the one before. If you cannot finish a step, stop there and tell me, rather than finding another way round. That is the most useful thing you can tell me.
 
----
+1. Register with an email address and a password, if you do not already have an account on croquetscores.com. If you do, skip this step and start at step 2. Confirm your email address from the email that arrives, and tell me how long the email took.
 
-## 2. What a tester is asked to do
+2. Sign in and sign out.
 
-In this order, because each step needs the one before. A tester who cannot finish a step stops there and says so, rather than finding another way round.
+3. Say you have forgotten your password, and set a new one from the link that is emailed to you.
 
-1. **Register with an email address and a password.** Confirm the email address from the email that arrives. Say how long the email took.
-2. **Sign out, and sign in again.**
-3. **Forget the password and set a new one** from the link that is emailed.
-4. **Sign in with Google**, with an account that has not been used on the site, if Google is offered.
-5. **Change the name** the site shows, and look at the profile.
-6. **Create a tournament**, following _Running a standard tournament_ in the help (`/help`), or _Running a tournament played by teams_ for a team event. Enter its players, make a block, and enter the scores of some games.
-7. **Look at what the public sees**: the tournament's pages, the block's table, a player's page, the rankings, signed out and on a phone.
-8. **Start a commentary** on the tournament, add a comment, and edit it.
-9. **Make somebody else a manager** and have them change something, where two testers are working together.
-10. **Search** for a player and a tournament.
-11. **Forget the account**, last, if the tester is willing.
+4. If you have a Google account, sign out and try signing in with Google.
 
-Each tester does these on a phone as well as a computer, at least once: most people reading a score will be on one.
+5. Change the name the site shows for you, and look at your profile.
 
----
+6. Create a tournament. The help at https://beta.croquetscores.com/help has a page called "Running a standard tournament", or "Running a tournament played by teams" for a team event. Enter some players, make a block, and enter the scores of some games.
 
-## 3. How a problem is reported
+7. Look at what the public sees: the tournament's pages, the block's table, a player's page and the rankings. Look signed out, and look on a phone.
 
-A report says four things: what was being tried, what was expected, what happened, and the address of the page. A screenshot where there is one. A report need not say why.
+8. Start a commentary on your tournament, add a comment, and edit it.
 
-A problem is reported when it happens, not at the end of the week.
+9. If you and another tester are working together, make the other person a manager of your tournament and ask them to change something.
 
----
+10. Search for a player and for a tournament.
 
-## 4. What counts as a problem
+11. Last of all, if you are willing, forget your account.
 
-| Kind                                                             | What is done                                                                    |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| A tester cannot register, sign in, or get back in                | Stops the beta until it is understood                                           |
-| A score or an entry is lost, or somebody sees what is not theirs | Stops the beta until it is understood                                           |
-| An email does not arrive in a quarter of an hour                 | Looked at the same day; the mail provider's records are the first place to look |
-| A page is wrong, slow, or broken on a phone                      | Written down, and mended in the order it hurt                                   |
-| Something is awkward but works                                   | Written down, and weighed against the others at the end                         |
+Please do these on a phone as well as a computer, at least once. Most people reading a score will be on a phone.
 
----
+IF SOMETHING GOES WRONG
 
-## 5. Looking at the logs
+Email me at croquetscores@gmail.com as soon as it happens, not at the end of the week. Please say:
 
-Whoever is named in section 1 reads the log once each morning for the first week, looking for `500` answers (each carries a correlation id, which a tester's report can be matched to), emails that failed to send, and emails to the administrator saying the database could not be reached. Each is a problem to be reported by the operator as a tester's would be.
+- what you were trying to do,
+- what you expected to happen,
+- what happened instead, and
+- the address of the page you were on.
 
----
+A screenshot helps if you can take one.
 
-## 6. Before the second week opens to anybody
+Please tell me straight away if you cannot register, sign in or get back in, if a score or an entry you made is lost, or if you can see something that is not yours. Those stop the beta until I understand them.
 
-All of these, and the second week is not opened until they are:
+If an email from the site has not arrived after a quarter of an hour, please tell me that too.
 
-- Nothing under "stops the beta" in section 4 is open.
-- Every email the first week sent arrived.
-- A backup has been restored into an empty database, and the site read from it.
-- Every tester has been asked whether anything stopped them that they did not report.
-- The operator has said, in writing here, what changed because of the first week.
+Something that is awkward but works is worth telling me as well. I will weigh those at the end.
 
----
+AT THE END
 
-## 7. What the two weeks are judged by
+I will ask you whether anything stopped you that you did not tell me about, so please mention anything you remember, even if it seems small.
 
-The beta has done its job when a tournament manager who had never seen the site ran a tournament from creating it to its results being public, with nobody beside them, and a reader found the results on a phone. Where that did not happen, the report says where it stopped, and production waits for it.
+Thank you for considering it. Whatever you decide, I am grateful that you read this far.
+
+Tim Murphy
+croquetscores@gmail.com
