@@ -199,7 +199,10 @@ The script also writes what it says to `/srv/croquetscores/deploy.log`, so that 
 
 ```bash
 ssh-keygen -t ed25519 -C croquetscores-github-deploy -f croquetscores_github_deploy
+cat croquetscores_github_deploy.pub
 ```
+
+The second command prints the public half, the one line starting `ssh-ed25519`, which step 2 puts on the server. It is not secret. (In PowerShell, `Get-Content croquetscores_github_deploy.pub`.) The private half, the file without `.pub`, is what step 3 puts in GitHub.
 
 **2. On the server, as `deploy`, install the script and allow the key to run it and nothing else.** The script is installed from the checkout, and again whenever it changes in a pull request (the deploy says so, with a warning, when the commit it has put up has a different one):
 
@@ -220,14 +223,14 @@ ssh -i croquetscores_github_deploy deploy@<the server's address> $(git rev-parse
 
 **3. In GitHub, Settings, Environments, New environment, `production`.** Add:
 
-- Secret `DEPLOY_SSH_KEY`: the private half, the whole file including its first and last lines.
-- Secret `DEPLOY_SSH_HOST`: the server's address.
-- Secret `DEPLOY_SSH_HOST_KEY`: the server's own key, as a `known_hosts` line. Get it from a computer that has already signed in to the server and been shown its fingerprint: `ssh-keygen -F <the server's address>` prints it. It is pinned so that the workflow cannot be talked into signing in to something that is not the server.
+- Secret `DEPLOY_SSH_KEY`: the private half, the file `croquetscores_github_deploy` (the one without `.pub`), the whole of it including its first and last lines, `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`. Print it with `cat croquetscores_github_deploy` (in PowerShell, `Get-Content croquetscores_github_deploy`) and paste it in.
+- Secret `DEPLOY_SSH_HOST`: the server's IP address and nothing else, as `83.229.75.252` is written, with no `deploy@` before it, no port and no name. The workflow adds the `deploy@` itself.
+- Secret `DEPLOY_SSH_HOST_KEY`: the server's own key, as a `known_hosts` line. Get it **on your own computer, not on the server:** the file `~/.ssh/known_hosts` there lists the servers that computer has signed in to, and the server has never signed in to itself, so on the server this prints nothing. `ssh-keygen -F <the server's IP address>` prints it on a computer that has already signed in to the server and been shown its fingerprint. Ask for it by the IP address, the same as `DEPLOY_SSH_HOST`, since the workflow signs in by that and a `known_hosts` line is matched on exactly what was typed. It prints `# Host … found: line N`, which is a comment, and then the line itself, or a line for each kind of key the server offered: copy the lines that are not the comment, starting `|1|` or the address, and paste them all as the secret. A line starting `|1|` is the same address written so that it cannot be read back, and works just as well. It is pinned so that the workflow cannot be talked into signing in to something that is not the server.
 - Variable `SITE_ADDRESS`: the site's name, as the health check in §2 uses it.
 
 Under "Deployment branches", choose **Selected branches** and name `main`, so that no other branch's workflow can read the key. If you want a person to look before each deploy, add yourself under "Required reviewers"; the deploy then waits for approval in GitHub.
 
-**4. Delete the key file on your computer** once it is in GitHub, or keep it with the other secrets (recovery.md §2). It is not needed again unless the server's `authorized_keys` is lost.
+**4. Delete the private key file on your computer,** `croquetscores_github_deploy` (the one without `.pub`), once it is in GitHub, or keep it with the other secrets (recovery.md §2). It is not needed again unless the server's `authorized_keys` is lost. Its other half, `croquetscores_github_deploy.pub`, is not secret and can go too: the server has its line in `authorized_keys`. Delete them from the folder you ran `ssh-keygen` in, and from the Recycle Bin if you are on Windows, since a deleted file is still there until that is emptied.
 
 ### Turning it off
 
