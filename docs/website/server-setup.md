@@ -367,7 +367,7 @@ If the first prints nothing, the shell has not picked the group up: sign out and
 
 ### Step 5. Install, build and migrate
 
-The scripts need the settings, but only while each one runs, so make a small helper that loads the settings file for one command and then forgets it. The keys and passwords in the file are then not left in your shell for everything you type afterwards, such as the install scripts that `npm ci` runs for the packages it installs. It is a script on the path and not a function in `~/.bashrc`, so that every shell finds it, including the one `ssh deploy@server 'command'` starts. Once:
+The scripts need the settings, but only while each one runs, so make a small helper that loads the settings file for one command and then forgets it. The command, and what it starts, has the settings, and nothing else you type does, `git` and the install scripts of `npm ci` among them. It is a script on the path and not a function in `~/.bashrc`, so that every shell finds it, including the one `ssh deploy@server 'command'` starts. This is the one place the command is written; deploying.md §1 refers to it. Once:
 
 ```bash
 sudo tee /usr/local/bin/withsettings >/dev/null <<'EOF'
@@ -380,10 +380,11 @@ EOF
 sudo chmod 755 /usr/local/bin/withsettings
 ```
 
-First check that the settings file follows the rule for how a value is written (configuration.md §1), since the shell and systemd read some values differently. This prints the number of any line that breaks it, and nothing when none does:
+First check that the settings file follows the rule for how a value is written (configuration.md §1), since the shell and systemd read some values differently. The first command prints the number of any line that breaks it, and the second the number of any line with a backslash in it, which the shell and systemd read differently even in single quotes. Nothing printed is good:
 
 ```bash
 grep -nvE -e "^[A-Z][A-Z0-9_]*=('[^']*'|[A-Za-z0-9_./:@%+=,-]*)$" -e '^#' -e '^$' /etc/croquetscores/environment | cut -d: -f1
+grep -n '\\' /etc/croquetscores/environment | cut -d: -f1
 ```
 
 If it prints a number, open the file (`sudo nano /etc/croquetscores/environment`) at that line and put the value in single quotes. Then:
