@@ -6,7 +6,7 @@ Putting a new build of the website up, and taking it down again. The server is a
 
 ## 1. Running a script on the server
 
-The site's scripts (`npm run db:migrate` and the others) read their settings from the environment, as the site does, and there is no `.env` on the server. So they are run with the service's settings loaded **for that one command**. Make a helper for it, once, as `deploy`:
+The site's scripts (`npm run db:migrate` and the others) read their settings from the environment, as the site does, and there is no `.env` on the server. So they are run with the service's settings loaded **for that one command**. Make a helper for it, once, as `deploy` (server-setup.md, "Install, build and migrate", already made it; check `grep -c withsettings ~/.bashrc` is 1 before adding it again):
 
 ```bash
 cat >> ~/.bashrc <<'EOF'
@@ -167,9 +167,8 @@ Which migrations cannot be lived with by the older code is for the pull request 
 
 ## 7. Rehearsal
 
-TODO.md asks that this be written down by doing it. The first time:
+TODO.md asks that this be written down by doing it. **The operator has followed the sequences in §2 and §4 on the real server** (October 2026) and reports that they worked, so the commands there are no longer only what the repository suggests. The rest of the rehearsal is still to do:
 
-- Do §2 on the real server with nothing on it, and write down every place the commands here were wrong.
 - Do §5's going back once, by the rename, to see that the older build comes up.
 - Do backup-and-restore.md §7 steps 2–6 into a throwaway database, and time step 5.
 - Say in README.md that they have now been followed start to finish, and on what date.

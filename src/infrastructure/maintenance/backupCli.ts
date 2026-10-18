@@ -143,7 +143,7 @@ export const runBackup = async (
       await world.send({
         to: administrator,
         // A failure says WARNING first, so that it stands out in an inbox
-        // among the successes, which arrive every day and are not read.
+        // among the successes, which arrive every day and are only skimmed.
         subject: worked
           ? "Croquet Scores database backup worked"
           : "WARNING: Croquet Scores database backup FAILED",

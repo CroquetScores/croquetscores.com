@@ -367,7 +367,13 @@ EOF
 . ~/.bashrc
 ```
 
-Then:
+First check that the settings file follows the rule for how a value is written (configuration.md §1), since the shell and systemd read some values differently. This prints the number of any line that breaks it, and nothing when none does:
+
+```bash
+grep -nvE -e "^[A-Z][A-Z0-9_]*=('[^']*'|[A-Za-z0-9_./:@%+=,-]*)$" -e '^#' -e '^$' /etc/croquetscores/environment | cut -d: -f1
+```
+
+If it prints a number, open the file (`sudo nano /etc/croquetscores/environment`) at that line and put the value in single quotes. Then:
 
 ```bash
 cd /srv/croquetscores/site &&

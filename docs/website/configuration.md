@@ -16,7 +16,13 @@ Every setting the website reads, which it must have, and what happens when one i
 
 In the environment of the process. On the server that is a file the service reads, `/etc/croquetscores/environment`, owned by root and readable only by the account the site runs as and the operator (server-setup.md §6), and not the repository's `.env`. The site does read a `.env` in its folder if there is one, so a leftover development `.env` there would be read too. **There is none on the server.**
 
-The file is plain `NAME=value` lines, with no `export`. It is read in three ways: by systemd when it starts the site, by the site itself, and by your shell, for one command at a time, when you run a script with `withsettings` in front of it (deploying.md §1). **A value with a space, or with a character the shell treats specially such as `$`, `#`, `&`, `;` or `!`, is written in single quotes**, such as `ADMINISTRATOR_EMAIL_FROM_NAME='Tim Murphy'`. Without them the shell takes `Tim Murphy` as the value `Tim` for a command called `Murphy`, and says `Murphy: command not found`. **Do not put `NODE_ENV` in this file.** Loading the file exports every setting in it to whatever runs, and with `NODE_ENV=production` set, `npm ci` leaves out the development packages that `npm run build` and the scripts need (deploying.md §1). The site does not read it. All three readers take single quotes to mean "exactly what is inside". A value that itself has a single quote in it cannot be written this way, so do not choose one (a generated password from `openssl rand -hex` never has one).
+The file is plain `NAME=value` lines, with no `export`. It is read in three ways: by systemd when it starts the site, by the site itself, and by your shell, for one command at a time, when you run a script with `withsettings` in front of it (deploying.md §1). **A value with a space, or with a character the shell treats specially such as `$`, `#`, `&`, `;` or `!`, is written in single quotes**, such as `ADMINISTRATOR_EMAIL_FROM_NAME='Tim Murphy'`. Without them the shell takes `Tim Murphy` as the value `Tim` for a command called `Murphy`, and says `Murphy: command not found`. **Do not put `NODE_ENV` in this file.** Loading the file exports every setting in it to whatever runs, and with `NODE_ENV=production` set, `npm ci` leaves out the development packages that `npm run build` and the scripts need (deploying.md §1). The site does not read it. All three readers take single quotes to mean "exactly what is inside". A value is written one of two ways and no other: in single quotes, or made only of letters, digits and `_ . / : @ % + = , -`. Those are read the same by all three, and anything else, such as a bare `&`, `$` or space, or a value in double quotes, may be read differently by the shell and by systemd, and the first sign is a site that starts while every script fails. **Check the file whenever it is made or changed;** this prints the number of any line that breaks the rule, and prints nothing when none does (it does not print the values, which are secrets):
+
+```bash
+grep -nvE -e "^[A-Z][A-Z0-9_]*=('[^']*'|[A-Za-z0-9_./:@%+=,-]*)$" -e '^#' -e '^$' /etc/croquetscores/environment | cut -d: -f1
+```
+
+A value that itself has a single quote in it cannot be written this way, so do not choose one (a generated password from `openssl rand -hex` never has one).
 
 The file on the server is not committed, and neither is the one it is copied from. `.env.example` is committed, with every name and no value, for development. `.env.production` is the production file, on the operator's computer, **ignored by git** because it holds the keys. It has every setting a production server needs, with a value. A deployment script, still to be written, is to check that it exists and that every setting in it has a value, and to stop if not, before copying it to `/etc/croquetscores/environment`. So a setting that is not wanted (Facebook's, until its app is reviewed) is left out of the file and not left blank. Until the script exists, check it by hand and copy it by hand.
 
@@ -77,7 +83,7 @@ LastPass is a copy, and a copy goes out of date. **Update the note whenever the 
 
 ## 5. Changing a setting
 
-1. Edit `/etc/croquetscores/environment`.
+1. Edit `/etc/croquetscores/environment`, and run the check in §1 above.
 2. `sudo systemctl restart croquetscores`. The site reads its settings only at start.
 3. Look at the log (operations.md §2). A setting that is wrong says so in the first lines and the service does not stay up.
 

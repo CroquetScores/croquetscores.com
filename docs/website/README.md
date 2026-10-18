@@ -2,7 +2,7 @@
 
 How the website is put on a Kamatera server with a Postgres database, kept up to date, and looked after. For whoever runs it. It can be handed to somebody who has never seen the repository.
 
-**These documents were reviewed and put into effect on 17 October 2026.** They will be kept up to date when something is known to change. The websites of the third parties they name (Kamatera, Cloudflare, Brevo, Google, Caddy, NodeSource and the Postgres project) change their screens, settings and install steps without telling anybody here, so where a step does not match what is on the screen, trust the screen, and then correct the step (TODO.md, "A deployment and rollback runbook").
+**These documents were reviewed and put into effect on 17 October 2026.** The deploy sequences in deploying.md have been followed on the real server; going back by the rename and the restore into a throwaway database have not. They will be kept up to date when something is known to change. The websites of the third parties they name (Kamatera, Cloudflare, Brevo, Google, Caddy, NodeSource and the Postgres project) change their screens, settings and install steps without telling anybody here, so where a step does not match what is on the screen, trust the screen, and then correct the step (TODO.md, "A deployment and rollback runbook").
 
 - [server-setup.md](server-setup.md) — Making the Kamatera server, Postgres, the proxy that faces the internet, and the service. Done once, at the start
 - [configuration.md](configuration.md) — Every setting, which are required, and which must never change
