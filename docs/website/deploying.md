@@ -51,8 +51,8 @@ Then look (operations.md §1): `curl -s https://<the site's name>/api/v1/health`
 What each step does, and what can go wrong:
 
 - **`cp -a site site.previous`** is what makes going back a rename (§5). If `site.previous` is not there, the way back is to build the old version again, which is slower and can fail.
-- **`npm ci` and `npm run build`** replace `node_modules` and rewrite `dist/` **while the site is running from them.** The site has its code in memory, so most requests go on being answered, but a file it loads late (an admin or help page, say) can be missing for the minutes this takes, and a request for it fails. At the size of a beta that is accepted: do it at a quiet time. If you would rather not take the risk, or the release needs the site off anyway, stop the site first and use the sequence in §4.
-- **A build that fails** leaves `dist/` half written, and **the next time the site starts it starts from that**, whether you restart it, or the server reboots, or the site crashes and systemd starts it again. The `&&` stops the restart, but it does not make the running site safe. If the build fails, put `site.previous` back before anything else (§5), then find out why it failed.
+- **`npm ci` and `npm run build`** replace `node_modules` and rewrite `dist/` **while the site is running from them.** The site has its code in memory, so most requests go on being answered, but a file it loads late (an admin or help page, say) can be missing for the minutes this takes, and a request for it fails. Building into a separate folder and switching to it at the restart would remove this, and is not done: it is more to set up and more to keep, for a beta of a few people. At the size of a beta that is accepted: do it at a quiet time. If you would rather not take the risk, or the release needs the site off anyway, stop the site first and use the sequence in §4.
+- **A build that fails** leaves `dist/` half written, and **the next time the site starts it starts from that**, whether you restart it, or the server reboots, or the site crashes and systemd starts it again. The `&&` stops the restart, but it does not make the running site safe. If the build fails, put `site.previous` back before anything else (§5), then find out why it failed. **Do not run the sequence again first.** Its second line deletes `site.previous` and its third copies the folder as it is now, so a second run after a failure replaces the good copy with the failed one.
 - **`withsettings npm run db:migrate`** applies the numbered SQL files in `src/infrastructure/database/migrations/` that have not been applied, each in a transaction with its record in `schema_migrations`. It is safe to run when there is nothing to do, and says `Applied: …` or `Database is up to date.` It reads the SQL from the source folder, which is why the source is on the server.
 - **`systemctl restart`** stops the site with SIGTERM, which lets the email being sent finish, and starts it again. Readers are told nothing for the few seconds it takes; a request in that time fails and a reader's browser retries on a reload. At the size of a beta, that is accepted.
 
@@ -108,7 +108,7 @@ withsettings npm run db:rebuild-read-models -- --minutes 30 &&
 sudo systemctl start croquetscores
 ```
 
-Leave the rebuild line out where the release does not need it. **If a step fails the site is left stopped, on purpose:** it must not be started on a build that did not finish, or on a schema half changed. Find out why it failed. To put the old version back, see §5.
+Leave the rebuild line out where the release does not need it. **After a failure, put `site.previous` back (§5) before running this again**, for the reason given in §2. **If a step fails the site is left stopped, on purpose:** it must not be started on a build that did not finish, or on a schema half changed. Find out why it failed. To put the old version back, see §5.
 
 ## 5. Going back
 

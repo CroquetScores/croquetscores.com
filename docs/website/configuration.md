@@ -40,7 +40,7 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 
 ### Required: the site does not start without these
 
-- **`DATABASE_URL`** — The site's Postgres: `postgres://user:password@127.0.0.1:5432/croquetscores`. A password with `@`, `:` or `/` in it is written percent-encoded. _Change it later:_ Yes, with the site stopped
+- **`DATABASE_URL`** — The site's Postgres: `postgres://user:password@127.0.0.1:5432/croquetscores`. The password is made of letters and digits only, with LastPass's generator or `openssl rand -hex 24` (server-setup.md §3), and goes in as it is. A password made some other way, with any of `@ : / ? # % + =` or a space in it, is written percent-encoded (`@` is `%40`), or the URL is read wrongly and `db:migrate` fails to sign in. _Change it later:_ Yes, with the site stopped
 - **`SESSION_COOKIE_SECRET`** — Signs the cookie that keeps a reader signed in. _Change it later:_ Yes. Everybody is signed out
 - **`TOKEN_SIGNING_KEY`** — Signs the links in emails and the other tokens the site hands out. _Change it later:_ Yes. Links already sent stop working
 - **`ACCOUNT_ENCRYPTION_KEY`** — Seals each account's own key, which seals that account's name and email address. _Change it later:_ **Only with `npm run db:change-site-key`.** Set to another any other way, every account's name and email address is unreadable for good

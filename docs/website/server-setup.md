@@ -91,11 +91,11 @@ On Kamatera's image (found out by doing this once) the file sets `PermitRootLogi
 - **SSH uses the first value it meets for a setting.** Adding `PermitRootLogin no` at the end of the file, or in a file in `sshd_config.d/`, changes nothing. The lines that already say `yes` have to be changed where they are.
 - **Files in `sshd_config.d/` are not read** while the `Include` line is commented out. Do not rely on them.
 
-Change each line in place, finding it by its name and not by a line number, since the numbers differ from one server to the next. This changes every line that sets either setting and is not a comment (the lines that start with `#` are the file's defaults, and are left alone):
+Change each line in place, finding it by its name and not by a line number, since the numbers differ from one server to the next. This changes every line that sets either setting and is not a comment (the lines that start with `#` are the file's defaults, and are left alone), **down to the first `Match` line and no further**: what follows a `Match` is a setting for some users or addresses only, and is not the global one that has to be closed:
 
 ```bash
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.before     # a copy to go back to
-sudo sed -i -E 's/^[[:space:]]*PermitRootLogin[[:space:]].*/PermitRootLogin no/; s/^[[:space:]]*PasswordAuthentication[[:space:]].*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i -E '1,/^[[:space:]]*Match[[:space:]]/{s/^[[:space:]]*PermitRootLogin[[:space:]].*/PermitRootLogin no/;s/^[[:space:]]*PasswordAuthentication[[:space:]].*/PasswordAuthentication no/}' /etc/ssh/sshd_config
 ```
 
 or by hand, in the editor:
@@ -194,10 +194,10 @@ sudo ss -ltnp | grep 5432                        # where it listens
 
 - **The service's name** is what the commands in operations.md use as `postgresql`. Where it is `postgresql@18-main`, as on the server this was written on, use that instead.
 
-Make a long random password for the site's database user, and keep it; it goes in `DATABASE_URL` (below):
+Make a long random password for the site's database user, and keep it; it goes in `DATABASE_URL` (below). **Use letters and digits only,** so that it can go into the URL as it is: `/`, `+`, `=` and the like have to be encoded in a URL. LastPass's password generator does this with only the letter and digit options ticked, and 24 or more characters. The same can be made on the server:
 
 ```bash
-openssl rand -base64 24
+openssl rand -hex 24
 ```
 
 Then make the site's database and its own user, putting that password where `<the password>` is:
@@ -354,7 +354,16 @@ sudo nano /etc/croquetscores/environment
 
 In `nano`, paste in the whole of your `.env.production` from your own computer (`Ctrl+A` and `Ctrl+C` there, then right-click or `Ctrl+Shift+V` in the server window). It already has `DATABASE_ACCESS_FILE=/srv/croquetscores/state/database-access`. Save with `Ctrl+O` then Enter, and leave with `Ctrl+X`.
 
-**Now sign out of the server and sign in again.** The group change in `usermod` takes effect at the next sign-in, and step 5 needs it.
+**Now sign out of the server and sign in again.** The group change in `usermod` takes effect at the next sign-in, and step 5 needs it. A fresh `ssh` is a new sign-in; a session kept open in `tmux` or `screen` from before is not. Check that the group has taken effect, and that `deploy` can make a file in the maintenance folder for the site to read. The first command should print `croquetscores`, and the `ls` should show the group `croquetscores` on the file and a mode of `-rw-r--r--` (readable by the group and by everyone):
+
+```bash
+id -nG | tr ' ' '\n' | grep -x croquetscores
+touch /srv/croquetscores/state/write-test
+ls -l /srv/croquetscores/state/write-test
+rm /srv/croquetscores/state/write-test
+```
+
+If the first prints nothing, the shell has not picked the group up: sign out and in again, from a new terminal. If the `touch` is refused, step 3's `chown` or `chmod` was not done.
 
 ### Step 5. Install, build and migrate
 

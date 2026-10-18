@@ -91,7 +91,7 @@ The tunnel needs a key of its own, because the scheduled task cannot type a pass
    postgres://croquetscores:<the password>@127.0.0.1:55432/croquetscores
    ```
 
-   with the `croquetscores` user's password from server-setup.md §3, percent-encoded if it has `@`, `:`, `/`, `+` or `=` in it. The tunnel has to be up for as long as `npm run db:backup` is running, and for no longer.
+   with the `croquetscores` user's password from server-setup.md §3, written as it is, being letters and digits (configuration.md §3 says when a password has to be percent-encoded). The tunnel has to be up for as long as `npm run db:backup` is running, and for no longer.
 
 ### Running it every day
 
