@@ -91,11 +91,11 @@ On Kamatera's image (found out by doing this once) the file sets `PermitRootLogi
 - **SSH uses the first value it meets for a setting.** Adding `PermitRootLogin no` at the end of the file, or in a file in `sshd_config.d/`, changes nothing. The lines that already say `yes` have to be changed where they are.
 - **Files in `sshd_config.d/` are not read** while the `Include` line is commented out. Do not rely on them.
 
-Change each line in place. With the line numbers `grep` printed (41 and 65 on the server this was written on; **use yours**):
+Change each line in place, finding it by its name and not by a line number, since the numbers differ from one server to the next. This changes every line that sets either setting and is not a comment (the lines that start with `#` are the file's defaults, and are left alone):
 
 ```bash
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.before     # a copy to go back to
-sudo sed -i -E '41s/.*/PermitRootLogin no/; 65s/.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i -E 's/^[[:space:]]*PermitRootLogin[[:space:]].*/PermitRootLogin no/; s/^[[:space:]]*PasswordAuthentication[[:space:]].*/PasswordAuthentication no/' /etc/ssh/sshd_config
 ```
 
 or by hand, in the editor:
@@ -114,7 +114,7 @@ grep -ri 'PasswordAuthentication\|PermitRootLogin' /etc/ssh/sshd_config.d/
 
 and change any `yes` it finds the same way.
 
-Then check the result and not the files. `sshd -t` and `sshd -T` must be run as root, because they read the server's private host keys; without `sudo` they say `sshd: no hostkeys available -- exiting`, which is not a fault in the server:
+If the `grep` above showed no line for one of the two settings, there is nothing for `sed` to change: add the line with `echo 'PermitRootLogin no' | sudo tee -a /etc/ssh/sshd_config` (or `PasswordAuthentication no`). Then check the result and not the files. `sshd -t` and `sshd -T` must be run as root, because they read the server's private host keys; without `sudo` they say `sshd: no hostkeys available -- exiting`, which is not a fault in the server:
 
 ```bash
 sudo sshd -t                               # prints nothing if the settings are valid; fix what it says if not
@@ -334,7 +334,7 @@ The key has no passphrase, because nobody is there to type one, so anyone who ca
 
 ### Step 3. Make the folder for the maintenance switch
 
-The switch that turns the site's database access off for maintenance is a small file (operations.md §3). **Only the scripts you run as `deploy` write it** (`npm run db:access`, and `npm run db:rebuild-read-models`, which turns it off while it runs and on again). The running site only reads it, at each request. So `deploy` must be able to write in its folder, and the site must be able to read what it writes. The folder belongs to the site's account and to its group, which `deploy` joins in step 4, and the `2775` makes the folder writable by that group and the files made there belong to it:
+The switch that turns the site's database access off for maintenance is a small file (operations.md §3). **Only the scripts you run as `deploy` write it** (`npm run db:access`, and `npm run db:rebuild-read-models`, which turns it off while it runs and on again). The running site only reads it, at each request. So `deploy` must be able to write in its folder, and the site must be able to read what it writes. The folder belongs to the site's account and to its group, which `deploy` joins in step 4, and the `2775` makes the folder writable by that group and the files made there belong to it. **`deploy` cannot write there until it has signed out and in again after step 4**, so do not run `db:access` or `db:rebuild-read-models` before then; they would fail on the first write, with nothing changed:
 
 ```bash
 sudo mkdir -p /srv/croquetscores/state
@@ -402,6 +402,14 @@ PrivateTmp=true
 [Install]
 WantedBy=multi-user.target
 ```
+
+`postgresql.service` here is the umbrella unit that Ubuntu's Postgres packages have for all clusters, and the cluster's own unit (`postgresql@18-main.service`, if that is the name from §3) is started before it, so waiting for `postgresql.service` is waiting for the database. Check that this is so on your server: the cluster unit's `Before=` should list `postgresql.service`.
+
+```bash
+systemctl show postgresql@18-main -p Before
+```
+
+If it does not, or the unit has another name, put the cluster's own unit name in `After=` and `Wants=` instead.
 
 `Restart=on-failure` is for the site dying. It does not restart a site that will not start because a setting is wrong (that exits straight away, and systemd gives up after a few tries), which is the behaviour wanted: look at the log.
 

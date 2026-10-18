@@ -29,13 +29,15 @@ and read the email that says it worked (its subject says `worked`, and a failure
 cd /srv/croquetscores/site
 set -a; . /etc/croquetscores/environment; set +a
 
-git fetch --tags
-git checkout <the tag or commit>       # §3: never "whatever is on main"
-npm ci
-npm run build                          # tsc, the admin application, and the help
-npm run db:migrate                     # "Applied: …" or "Database is up to date."
+git fetch --tags &&
+git checkout <the tag or commit> &&
+npm ci &&
+npm run build &&
+npm run db:migrate &&
 sudo systemctl restart croquetscores
 ```
+
+The lines are joined with `&&` so that if one fails the rest do not run, and in particular the site is not restarted after a failed build (see `npm run build` below). Use the tag or commit, not "whatever is on main" (§3). `build` is the tsc, the admin application and the help, and `db:migrate` says `Applied: …` or `Database is up to date.`
 
 This sequence does not turn the site off, so it is for a release whose migrations only add (see "The old process runs against the new schema", below). A release that removes or renames, or that says in its pull request that the old code cannot live with the new schema, is put up with the site turned off first (§4).
 
@@ -97,9 +99,9 @@ Two kinds of thing are put up, and they go back differently.
 **The code: always possible.**
 
 ```bash
-git checkout <the previous tag>
-npm ci
-npm run build
+git checkout <the previous tag> &&
+npm ci &&
+npm run build &&
 sudo systemctl restart croquetscores
 ```
 
