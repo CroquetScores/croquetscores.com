@@ -383,6 +383,7 @@ import { registerTeamSummaryPage } from "./public/teamSummary.js";
 import { knockoutView } from "./public/knockout.js";
 import { knockoutSummaryView } from "./public/knockoutSummary.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
+import { readBuiltVersion } from "../infrastructure/version/buildVersion.js";
 import { helpLibraryIn, type HelpLibrary } from "./common/helpLibrary.js";
 import { registerHelpPages } from "./public/help.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
@@ -579,6 +580,7 @@ const registerAdmin = async (
   page: string | undefined,
   build: () => string,
   help: HelpLibrary,
+  version: number | undefined,
 ): Promise<void> => {
   if (page === undefined) {
     // A fresh clone has not built the SPA yet. Say so, rather than 404ing as
@@ -636,11 +638,20 @@ const registerAdmin = async (
       .header("cache-control", "private, no-cache")
       .header("vary", "Cookie, Accept-Language")
       .type("text/html; charset=utf-8")
-      .send(adminPage(built, request, build(), await alertFor(request)));
+      .send(
+        adminPage(built, request, build(), await alertFor(request), version),
+      );
   });
 };
 
 export interface ApplicationOptions {
+  /**
+   * Which version of the website this is, or null where it has none. Left out,
+   * it is what the build wrote down (buildVersion.feature), which is none in
+   * development; the specs give it so that what the footer says does not
+   * depend on whether whoever runs them has built the site.
+   */
+  readonly version?: number | null;
   /**
    * Off for the specs, whose output is the scenario list and not a request
    * log. Fastify's own word for where the log goes, so that a scenario about
@@ -785,7 +796,14 @@ export const buildApplication = async (
     trustProxy: sendersBelieved(config.trustedProxies),
   });
   const pool = createPool(config.databaseUrl);
-  const assets = readAssets(join(repositoryRoot, "assets"));
+  // Which version of the website this is: what the build wrote down, unless a
+  // scenario says which. Null is a scenario saying none, as undefined is the
+  // option left out.
+  const version =
+    options.version === undefined
+      ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
+      : (options.version ?? undefined);
+  const assets = readAssets(join(repositoryRoot, "assets"), version);
   const unitOfWork = new UnitOfWork(pool);
   // Handed to the two handlers that set a password, each of which asks it
   // between the transaction it reads in and the one it writes in, where the
@@ -1457,7 +1475,7 @@ export const buildApplication = async (
   const help =
     options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help"));
 
-  await registerAdmin(server, adminRoot, adminPageBuilt, build, help);
+  await registerAdmin(server, adminRoot, adminPageBuilt, build, help, version);
 
   registerThemeRoute(server);
   registerLanguageRoute(server);

@@ -207,12 +207,14 @@ Then(
 );
 
 // Each language in the list is named in its own language, which is the point of
-// the list, so those names are left out with the site's.
+// the list, so those names are left out with the site's. So is the version,
+// which is a number and in no language (layout.feature says so).
 Then(
   "every word in the footer is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "footer.site-footer", [
       "#language-choice option",
+      ".site-version",
     ]);
     assert.deepEqual(stray, [], "Words in the footer came from elsewhere.");
   },

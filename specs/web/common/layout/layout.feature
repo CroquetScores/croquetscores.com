@@ -229,3 +229,51 @@ Feature: What every page is set in
     Scenario: A tournament with no subtitle shows none in the header
       When the page at "/2026/ac/spring-open" is opened
       Then the header shows no subtitle
+
+  Rule: The footer says which version of the website the page came from
+
+    A reader who reports a problem can say which build they were looking at,
+    and an operator who has just deployed can see on any page that the new
+    build is the one being served (`buildVersion.feature` says what the number
+    is). It is a number in the footer's own line, small, after the copyright.
+
+    It is not in any language: a number is the same in every one of them, and
+    a word beside it would have to be put into all of them for the sake of a
+    line nobody reads except to say it back. Every page has it, the admin's
+    among them, since the footer is the shell's and not any page's.
+
+    Where the site has no version, as in development, the footer says nothing
+    of one. It does not say "unknown", which would be one more thing on every
+    page for the sake of saying that nothing is known.
+
+    Scenario: The footer carries the version
+      Given a viewport 1200 pixels wide
+      And a site running version 276
+      When the sign in page is opened
+      Then the footer carries the version "v276"
+
+    Scenario: The admin's footer carries it too
+      Given a viewport 1200 pixels wide
+      And a site running version 276
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the footer carries the version "v276"
+
+    Scenario: A page saying something went wrong carries it
+      Given a viewport 1200 pixels wide
+      And a site running version 276
+      When a page that is not there is opened
+      Then the footer carries the version "v276"
+
+    Scenario: The version is the same in every language
+      Given a viewport 1200 pixels wide
+      And a site running version 276
+      And a browser that asks for "en-XA"
+      When the sign in page is opened
+      Then the footer carries the version "v276"
+
+    Scenario: A site with no version says nothing of one
+      Given a viewport 1200 pixels wide
+      And a site running no version
+      When the sign in page is opened
+      Then the footer carries no version

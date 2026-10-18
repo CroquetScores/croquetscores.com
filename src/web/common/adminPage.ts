@@ -107,6 +107,8 @@ export const adminPage = (
   build: string,
   // The alert about what's new, already drawn, where the reader is to be told.
   alert = "",
+  // Which version of the website this is, where it is known.
+  version?: number,
 ): string => {
   const siteName = siteNameOf(request);
   const theme = themeOf(request);
@@ -157,7 +159,7 @@ export const adminPage = (
       .replace(
         bodyEnd,
         () =>
-          `${siteFooter({ speaking, siteName, theme, path: request.url })}\n  ${bodyEnd}`,
+          `${siteFooter({ speaking, siteName, theme, path: request.url, version })}\n  ${bodyEnd}`,
       )
   );
 };
