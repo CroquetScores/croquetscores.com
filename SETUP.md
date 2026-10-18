@@ -279,9 +279,24 @@ services:
       retries: 30
 ```
 
-The credentials here are not a secret: they reach a development container on a developer's own machine, and writing them down is what lets a fresh clone run the specs without anyone being told anything first. Anything real is configured per environment (§6.1). A Postgres already listening on 5432 must be stopped before bringing this one up.
+The credentials here are not a secret: they reach a development container on a developer's own machine, and writing them down is what lets a fresh clone run the specs without anyone being told anything first. Anything real is configured per environment (§6.1). A Postgres already listening on 5432 must be stopped before bringing this one up, or used in place of it (below).
 
 Postgres is told not to wait for the disk: `fsync`, `synchronous_commit` and `full_page_writes` are off. Every `@postgres` scenario makes a database and drops it (§8.1), and with six at a time most of that was Postgres waiting on writes being made safe against a crash, for databases that last one scenario. Dropping one went from 256 milliseconds to 48, and the `@postgres` scenarios from 11 minutes to 9. The development database runs the same way, since it is the same container, and after a crash of the machine or of Docker it may not come back; `npm run db:down` and `npm run db:up` make it again, as they would anyway. Anything real runs on a Postgres configured for its environment, never this one.
+
+**A Postgres already installed can stand in for the container.** Docker is a convenience and not a requirement: the specs ask only for a Postgres at the address `DATABASE_URL` names, with a database of that name already in it, and a role that may create and drop databases, which the `postgres` superuser does. Each `@postgres` scenario makes and drops a database of its own (§8.1), named with the `zzz_delete_me_spec_` prefix, and touches nothing else. It was tried on a Windows install of Postgres 18.6, from WSL 2. Three things are different from the container:
+
+- `DATABASE_URL` in `.env` names that Postgres's own password for `postgres`, in place of the container's `postgres`. `.env` is git-ignored, so this stays on the machine.
+- It is slower. The container has `fsync` and its two companions off; an install has them on, and every scenario's database is made and dropped. They can be turned off in its `postgresql.conf` for a Postgres that holds nothing worth keeping, as the container's are, and only for one.
+- Nothing here starts or stops it, so `npm run db:up` and `npm run db:down` are not used, and the message the harness gives when no database answers still names `db:up`, which is the way to fix it only for the container.
+
+**From WSL 2 to a Postgres installed in Windows,** `localhost` is not Windows by default. WSL is on a network of its own, Windows Firewall drops the connection from it, and `pg_hba.conf` accepts only `127.0.0.1` and `::1` as installed. Opening all of that for a development machine is more settings to keep right than the alternative, which is **mirrored networking**: in `C:\Users\<you>\.wslconfig`,
+
+```
+[wsl2]
+networkingMode=mirrored
+```
+
+and then `wsl --shutdown` in PowerShell, and WSL is started again. `wslinfo --networking-mode` says `mirrored` when it has taken. `localhost` in WSL is then `localhost` in Windows, the connection arrives from `127.0.0.1`, and neither Postgres nor the firewall is changed. It applies to everything run in WSL, not just this repository, and removing the file and shutting WSL down again puts it back. The `psql` that WSL has is only a wrapper until a `postgresql-client` package is installed; the specs do not use it, and use the `pg` package the application does.
 
 ### 6.1 Configuration
 
