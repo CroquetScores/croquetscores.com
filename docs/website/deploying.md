@@ -187,11 +187,11 @@ TODO.md asks that this be written down by doing it. **The operator followed the 
 **What it does differently from §2:**
 
 - **The copy of the data is taken on the server,** with the same `pg_dump` of the same two tables as `npm run db:backup`, into `/srv/croquetscores/before-deploy/`, and the last five are kept. A deploy does not go on if it fails. It is not the off-site backup (backup-and-restore.md): that is still the daily one from the operator's computer, and a copy on the server is lost with the server. It is there so that a migration that goes wrong can be restored from without anybody having remembered to run the backup first. Restore it as backup-and-restore.md §7 says.
-- **A failure before the migration puts the old build back by itself** (§5, the rename), because the database has not been touched. It leaves the failed folder as `site.failed`. A failure in or after the migration does not: the old code may not live with the new schema, so the site is left for a person, and `deploy-finished` is not made, so the next deploy refuses to run until §5 has been followed.
+- **A failure before the migration puts the old build back by itself** (§5, the rename), because the database has not been touched. That includes the run being stopped (the workflow's twenty-minute limit, a cancelled run, a dropped connection). It marks the deploy finished only when the old build answers its health address. It leaves the failed folder as `site.failed`. A failure in or after the migration does not: the old code may not live with the new schema, so the site is left for a person, and `deploy-finished` is not made, so the next deploy refuses to run until §5 has been followed.
 - **It looks at the site after the restart:** the health address on the server for up to a minute, and then from the workflow through the proxy.
-- **It refuses to put an older commit over a newer one,** so that a run started again from GitHub's Actions page after a later merge does no harm, and does nothing where the commit is already running.
+- **It only puts up a commit that comes after the one running,** so that a run started again from GitHub's Actions page after a later merge does no harm, and does nothing where the commit is already running. Where what is running is not on `main`'s line (a branch deployed by hand), it refuses, and the way back onto the line is a deploy by hand (§2).
 
-A failed run shows red in GitHub and emails whoever is set to be told of failed runs in their GitHub notification settings. Its log says which step failed.
+The script also writes what it says to `/srv/croquetscores/deploy.log`, so that what happened is there when the connection was lost and the run's own log stops short. A failed run shows red in GitHub and emails whoever is set to be told of failed runs in their GitHub notification settings. Its log says which step failed.
 
 ### Setting it up, once
 

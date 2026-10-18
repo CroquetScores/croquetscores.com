@@ -55,6 +55,10 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           COMMIT: ${{ github.sha }}
+        # Named, because a step without a shell is run by `bash -e`, which has no
+        # pipefail: the pipe to tee would then end with tee's status and a deploy
+        # that failed would show as green.
+        shell: bash
         run: |
           ssh -i ~/.ssh/deploy \
             -o IdentitiesOnly=yes \
@@ -68,8 +72,9 @@ jobs:
       # log, which nobody reads in a green run, so it is made a warning on the
       # run's page.
       - name: Say if the installed script is out of date
+        if: always()
         run: |
-          if grep -q '^deploy: WARNING' "$RUNNER_TEMP/deploy.log"; then
+          if [ -f "$RUNNER_TEMP/deploy.log" ] && grep -q '^deploy: WARNING' "$RUNNER_TEMP/deploy.log"; then
             echo "::warning title=Deploy script out of date::The deploy script installed on the server differs from scripts/deploy.sh in this commit. Install it again (deploying.md section 8)."
           fi
 
