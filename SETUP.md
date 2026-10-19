@@ -8,24 +8,22 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 
 ## 1. Requirements, and the decisions they force
 
-| Requirement                                       | Decision                                                                                                   |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| TypeScript                                        | Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`                                                     |
-| Postgres in Docker                                | `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI                           |
-| Auth: email address + password                    | argon2id hashing, opaque session cookie for browsers                                                       |
-| Auth: Google and Facebook                         | Google over OIDC, Facebook over OAuth 2.0 + Graph                                                          |
-| Auth: an API for mobile apps                      | Bearer JWT access token + rotating refresh token, same endpoints as the web API                            |
-| Web: an API                                       | `/api/v1`, JSON, one API serving both mobile apps and the admin SPA                                        |
-| Web: static pages for the public side             | Server-rendered HTML, no client framework, works without JavaScript                                        |
-| Web: a SPA at `/admin`                            | React built by Vite, served as static files with a history fallback                                        |
-| Gherkin                                           | Cucumber.js, the only test runner                                                                          |
-| CI via GitHub                                     | Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database |
-| Roll its own mediator, CQRS, event store          | Written in `src/application` and `src/infrastructure`; no framework decides their shape                    |
-| Layers: web, infrastructure, application, domain  | Enforced by ESLint, not by good intentions                                                                 |
-| `/src` for source, `/specs` for `.feature` files  | Steps live beside their feature                                                                            |
-| No `/tests` folder                                | Stated as a rule below so nobody adds one back                                                             |
-| No ambient clock                                  | Every command carries `requestedAt`; the domain is told the time, never asks for it                        |
-| A real browser for what only a browser can answer | Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one            |
+- **TypeScript**: Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`
+- **Postgres in Docker**: `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI
+- **Auth: email address + password**: argon2id hashing, opaque session cookie for browsers
+- **Auth: Google and Facebook**: Google over OIDC, Facebook over OAuth 2.0 + Graph
+- **Auth: an API for mobile apps**: Bearer JWT access token + rotating refresh token, same endpoints as the web API
+- **Web: an API**: `/api/v1`, JSON, one API serving both mobile apps and the admin SPA
+- **Web: static pages for the public side**: Server-rendered HTML, no client framework, works without JavaScript
+- **Web: a SPA at `/admin`**: React built by Vite, served as static files with a history fallback
+- **Gherkin**: Cucumber.js, the only test runner
+- **CI via GitHub**: Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database
+- **Roll its own mediator, CQRS, event store**: Written in `src/application` and `src/infrastructure`; no framework decides their shape
+- **Layers: web, infrastructure, application, domain**: Enforced by ESLint, not by good intentions
+- **`/src` for source, `/specs` for `.feature` files**: Steps live beside their feature
+- **No `/tests` folder**: Stated as a rule below so nobody adds one back
+- **No ambient clock**: Every command carries `requestedAt`; the domain is told the time, never asks for it
+- **A real browser for what only a browser can answer**: Playwright drives Chromium from Cucumber steps: a driver under the one runner, not a second one
 
 **Two decisions confirmed, and recorded here so they are not reopened by accident:**
 
@@ -454,13 +452,11 @@ That is one hook on the server, in front of every route, rather than a token thr
 
 `src/web/server.ts` is the composition root and the only file outside `infrastructure` naming a concrete implementation. It builds the container, registers handlers with the mediator, and mounts:
 
-| Mount                | Serves                                                              |
-| -------------------- | ------------------------------------------------------------------- |
-| `/api/v1/*`          | JSON. Mobile apps and the admin SPA. Bearer token or session cookie |
-| `/auth/*`            | Sign-in, sign-out, OAuth redirect and callback, token and refresh   |
-| `/assets/*`          | `/assets` — css and images, hashed filenames, long cache            |
-| `/admin`, `/admin/*` | The built SPA; every path falls back to its `index.html`, rendered  |
-| `/*`                 | Server-rendered public pages                                        |
+- `/api/v1/*`: JSON. Mobile apps and the admin SPA. Bearer token or session cookie
+- `/auth/*`: Sign-in, sign-out, OAuth redirect and callback, token and refresh
+- `/assets/*`: `/assets` — css and images, hashed filenames, long cache
+- `/admin`, `/admin/*`: The built SPA; every path falls back to its `index.html`, rendered
+- `/*`: Server-rendered public pages
 
 A public page is a module exporting the query it needs and a function returning HTML. It sets `ETag` and `Cache-Control` and works with JavaScript switched off. The admin SPA builds from `src/web/admin/` into `dist/admin/`; in development Vite's dev server proxies `/api` and `/auth` to Fastify.
 
@@ -472,14 +468,12 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 `scripts/cucumber.mjs` holds a profile for each npm script that runs scenarios. It is in `scripts/` and not in the root, where Cucumber looks for its configuration unless it is told otherwise, so every script that runs Cucumber says `--config scripts/cucumber.mjs`, and a person running it by hand, or an editor's Cucumber extension, has to as well. The paths and the loader in it are still read from the root, which is where it is run from. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
 
-| Profile     | Script                              | Runs                                          | Reports under                |
-| ----------- | ----------------------------------- | --------------------------------------------- | ---------------------------- |
-| `default`   | `npm test`, `npm run test:features` | every feature                                 | `reports/cucumber`           |
-| `nodb`      | `npm run test:nodb`                 | every feature, less `@postgres`               | `reports/cucumber-nodb`      |
-| `db`        | `npm run test:db`                   | every feature, only `@postgres`               | `reports/cucumber-db`        |
-| `browser`   | `npm run test:browser`              | every feature, only `@browser`                | `reports/cucumber-browser`   |
-| `nobrowser` | `npm run test:nobrowser`            | every feature, less `@browser`                | `reports/cucumber-nobrowser` |
-| `changed`   | `npm run test:changed`              | the features `scripts/test-changed.mjs` names | `reports/cucumber-changed`   |
+- `default`, from `npm test` and `npm run test:features`: every feature. Reports under `reports/cucumber`.
+- `nodb`, from `npm run test:nodb`: every feature, less `@postgres`. Reports under `reports/cucumber-nodb`.
+- `db`, from `npm run test:db`: every feature, only `@postgres`. Reports under `reports/cucumber-db`.
+- `browser`, from `npm run test:browser`: every feature, only `@browser`. Reports under `reports/cucumber-browser`.
+- `nobrowser`, from `npm run test:nobrowser`: every feature, less `@browser`. Reports under `reports/cucumber-nobrowser`.
+- `changed`, from `npm run test:changed`: the features `scripts/test-changed.mjs` names. Reports under `reports/cucumber-changed`.
 
 - JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Six copies of them in JSON would be six things to keep in step, and a support folder added to five and missed in the sixth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
 - Every profile writes two reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
