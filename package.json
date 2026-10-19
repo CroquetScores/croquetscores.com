@@ -44,7 +44,7 @@
     "type": "git",
     "url": "git+https://github.com/CroquetScores/next.croquetscores.com.git"
   },
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/CroquetScores/next.croquetscores.com/issues"
   },

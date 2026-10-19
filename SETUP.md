@@ -127,7 +127,7 @@ Rules across the tree:
 
 ```bash
 npm init -y
-npm pkg set name="next-croquetscores" type="module" private=true license="UNLICENSED"
+npm pkg set name="next-croquetscores" type="module" private=true license="AGPL-3.0-only"
 npm pkg set engines.node=">=22.13.0"
 ```
 
@@ -723,27 +723,15 @@ It says what this is, how to get it running — including the browser the scenar
 
 ### LICENSE
 
-All rights are reserved. This is not open source, and nothing about the repository should suggest otherwise: no permission is granted to anyone by the act of publishing it.
+The GNU Affero General Public License, version 3, as the Free Software Foundation publishes it, unchanged: the text at <https://www.gnu.org/licenses/agpl-3.0.txt>. The code is open source. Until this change it was proprietary ("all rights reserved").
 
-```
-Copyright (c) 2026 Tim Murphy. All rights reserved.
+The Affero license, and not the ordinary GPL, because the code is a website. The GPL asks nothing of someone who changes it and runs it as a service, since they distribute nothing; the AGPL asks them to offer their users the source of what they run, which is what stops a changed copy of the site being kept closed. It does not stop anyone using the code commercially, and does not try to: no license that did could be called open source.
 
-This software and its source code are proprietary. No permission is granted
-to use, copy, modify, merge, publish, distribute, sublicense or sell any part
-of this software, by any means, without the prior written permission of the
-copyright holder.
+It is `AGPL-3.0-only` and not `-or-later`: this is a decision to be bound by version 3 and not by whatever a later version says. Moving to `-or-later` can be done by the copyright holder at any time; moving back cannot.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
+The file is named `LICENSE` with no extension, which is where GitHub looks, and GitHub recognises it and shows the badge. `package.json` carries `"license": "AGPL-3.0-only"`, which is the SPDX name, and `"private": true` (§4), which stays: it is what stops the site being published to npm by accident, and says nothing about the license.
 
-The file is named `LICENSE` with no extension, which is where GitHub looks. Because the licence is not one GitHub recognises, the repository shows no licence badge, and that is the correct outcome rather than a problem to solve. `package.json` carries `"license": "UNLICENSED"` and `"private": true` (§4), which is how npm says the same thing and what stops a publish by accident.
-
-The warranty disclaimer is there because reserving rights is not the same as accepting liability, and a file that grants nothing should still disclaim.
+The code is Tim Murphy's alone, apart from the dependency updates Dependabot proposes, so the license could be chosen without asking anyone. Contributions from others would need to be accepted under the same license, and say so in whatever asks for them.
 
 ---
 

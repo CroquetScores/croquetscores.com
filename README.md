@@ -44,4 +44,10 @@ and an event store written here rather than installed.
 
 ## Licence
 
-Copyright © 2026 Tim Murphy. All rights reserved. See `LICENSE`.
+Copyright © 2026 Tim Murphy. Free software under the GNU Affero General Public
+License, version 3 only (`AGPL-3.0-only`): see `LICENSE`.
+
+Anyone may read, use and change it. Anyone who runs a changed version as a
+website must offer the people using it the source of what they run, under the
+same license. That is the point of the Affero license over the ordinary GPL,
+which asks nothing of a website that is only used over a network.
