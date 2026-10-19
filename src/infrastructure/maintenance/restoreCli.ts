@@ -4,6 +4,7 @@ import type { Pool } from "pg";
 import { migrate } from "../database/migrate.js";
 import { createPool } from "../database/pool.js";
 import { pgRestoreProgramFor } from "./pgRestore.js";
+import { withoutAddress } from "./withoutAddress.js";
 
 export interface RestoreOutcome {
   readonly exitCode: 0 | 1;
@@ -43,25 +44,6 @@ export interface RestoreWorld {
 // identifier, quoted, so what is allowed is what needs no more than that; and
 // a name with a hyphen, as the development database has, is one.
 const A_NAME = /^[A-Za-z0-9_-]{1,63}$/;
-
-// Neither the address nor the password of the server is said, whatever the
-// words of a failure were: a refused connection names where it was going.
-const withoutAddress = (text: string, address: string): string => {
-  const hidden = new Set<string>([address]);
-  try {
-    const url = new URL(address);
-    for (const part of [url.password, url.host, url.username]) {
-      if (part !== "") hidden.add(decodeURIComponent(part));
-    }
-  } catch {
-    // Not an address, and so said as it is.
-  }
-  let said = text;
-  for (const part of [...hidden].sort((a, b) => b.length - a.length)) {
-    said = said.split(part).join("(a database)");
-  }
-  return said;
-};
 
 const isAFile = async (path: string): Promise<boolean> => {
   try {
