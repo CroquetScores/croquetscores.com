@@ -12,7 +12,7 @@ Anything else you notice that is wrong goes in your report, not in the diff (AI.
 
 Inside out, and the next layer does not start until the one before it is merged, because it would be rebasing onto shared types that are still moving.
 
-1. `src/domain` (in progress in another session)
+1. `src/domain` (completed)
 2. `src/application`
 3. `src/infrastructure`
 4. `src/web`, split by area (admin, public pages, shared view helpers), one session each
