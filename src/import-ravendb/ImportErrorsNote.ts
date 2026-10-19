@@ -9,7 +9,10 @@ import { ManagerNoteDescription } from "../domain/aggregates/tournaments/value-o
 import { ManagerNoteTitle } from "../domain/aggregates/tournaments/value-objects/ManagerNoteTitle.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { tournamentBecome } from "./ImportTournamentPlayers.js";
+import {
+  tournamentBecome,
+  writerMadeManager,
+} from "./ImportTournamentPlayers.js";
 import type { SeeNotes } from "./SeeNotes.js";
 import { plainPlayerReasonOf, plainReasonOf } from "./errorSummaries.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
@@ -102,13 +105,7 @@ export class ImportErrorsNote {
         website,
         tournamentDocumentId,
       );
-      // Done as the tournament's first manager, who created it, when it was
-      // created.
-      const [by] = tournament.managers;
-      if (by === undefined) throw new Error("The tournament has no manager.");
-      const at = tournament.starts;
-      tournament.addManager(writer, by, at);
-      await this.tournaments.save(tournament);
+      const at = await writerMadeManager(this.tournaments, tournament, writer);
 
       const section = `### ${competition}\n\n${games.join("\n\n")}`;
       const title = ManagerNoteTitle.from(IMPORT_ERRORS_TITLE);

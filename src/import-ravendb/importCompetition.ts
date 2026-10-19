@@ -34,6 +34,7 @@ import {
   addOldPlayer,
   playerNamed,
   isOldBye,
+  firstManagerOf,
   tournamentBecome,
 } from "./ImportTournamentPlayers.js";
 import { ImportRefused } from "./ImportRefused.js";
@@ -754,11 +755,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         : (number, failure) => notedPlayers.push({ number, failure }),
     );
 
-    // Done as the tournament's first manager, who created it, when it was
-    // created.
-    const [by] = tournament.managers;
-    if (by === undefined) throw new Error("The tournament has no manager.");
-    const at = tournament.starts;
+    const { by, at } = firstManagerOf(tournament);
 
     const bye = TournamentPlayerId.bye().value;
     const listed: Listed[] = [];

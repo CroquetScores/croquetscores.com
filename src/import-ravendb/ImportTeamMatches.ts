@@ -27,7 +27,11 @@ import {
   withWinnersFromScores,
 } from "./importCompetition.js";
 import { ImportRefused } from "./ImportRefused.js";
-import { flagOf, tournamentBecome } from "./ImportTournamentPlayers.js";
+import {
+  firstManagerOf,
+  flagOf,
+  tournamentBecome,
+} from "./ImportTournamentPlayers.js";
 import {
   nameToImport,
   numberedApart,
@@ -332,11 +336,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           : (number, failure) => notedPlayers.push({ number, failure }),
       );
 
-      // Done as the tournament's first manager, who created it, when it was
-      // created.
-      const [by] = tournament.managers;
-      if (by === undefined) throw new Error("The tournament has no manager.");
-      const at = tournament.starts;
+      const { by, at } = firstManagerOf(tournament);
       const first = this.#teamCalled(tournament, written[0], by, at);
       const second = this.#teamCalled(tournament, written[1], by, at);
 
