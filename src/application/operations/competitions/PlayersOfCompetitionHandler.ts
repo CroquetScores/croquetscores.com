@@ -12,6 +12,7 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import { askedBy, tournamentFor } from "../tournaments/tournamentOperations.js";
 import {
   type Competitions,
+  competitionFound,
   competitionOf,
   toldOf,
 } from "./competitionOperations.js";
@@ -51,14 +52,7 @@ export class PlayersOfCompetitionHandler extends QueryHandler<
       );
     }
     const id = CompetitionId.from(query.competition);
-    if (
-      !tournament.competitions.some(({ reference }) => reference.id.equals(id))
-    ) {
-      throw new TournamentRefused(
-        "Tournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
+    competitionFound(tournament, id);
     const competition = await competitionOf(this.competitions, id);
     const told = toldOf(tournament, id);
     // What the person is, said once, by the tournament.
