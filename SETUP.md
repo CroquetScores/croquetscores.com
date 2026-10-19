@@ -106,7 +106,8 @@ ESLint enforces all of this (§9); breaking it fails CI.
   /support                 World, hooks, the example requests and events, shared
                            step helpers
   /domain /application /infrastructure /web /import-ravendb
-/scripts                   one-off development tooling
+/scripts                   the repository's own tooling: building, testing,
+                           deploying, and looking after the database and the site
 /assets                    css and images served as static files
 /docs/help                 the help, in Markdown, one folder for each language
 ```
@@ -469,7 +470,7 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 
 ## 8. Cucumber
 
-`cucumber.mjs` holds a profile for each npm script that runs scenarios. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
+`scripts/cucumber.mjs` holds a profile for each npm script that runs scenarios. It is in `scripts/` and not in the root, where Cucumber looks for its configuration unless it is told otherwise, so every script that runs Cucumber says `--config scripts/cucumber.mjs`, and a person running it by hand, or an editor's Cucumber extension, has to as well. The paths and the loader in it are still read from the root, which is where it is run from. What they share is written once and spread into each; what tells them apart is which features they run and where they report:
 
 | Profile     | Script                              | Runs                                          | Reports under                |
 | ----------- | ----------------------------------- | --------------------------------------------- | ---------------------------- |
@@ -486,7 +487,7 @@ Errors map in one place. A request refused for breaking its rules is thrown as `
 - The globs match by extension at any depth, which is what lets a `.feature` and its `.steps.ts` share a folder.
 - Undefined and pending steps fail the run, so an unimplemented feature file cannot report green.
 - Scenarios run six at a time, each on a worker thread of its own, because one at a time the whole suite took twenty-four minutes and six at a time it takes five. Six is the cores of the machine it is worked on; CI has two, and asks for two with `npm run test:nobrowser -- --parallel 2`, which overrides the file. Not `npm test -- --parallel 2`: `test` runs `test:features` through a second `npm run`, and what follows the `--` never reaches Cucumber, which is why CI asks of a script that runs Cucumber directly. The scenarios were already kept apart: every `@postgres` scenario has a database of its own, every worker claims a run number of its own (§8.1), and every server a scenario stands up listens on a port the operating system chose.
-- tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
+- tsx is applied twice over, once to each kind of thread. The npm script runs Cucumber's bin through tsx, which is what the main thread loads the steps with. A worker thread does not inherit that, so `loader` names `scripts/cucumber-loader.mjs`, which Cucumber registers in each worker before loading anything: tsx's own hooks, handed the empty options that Cucumber does not give them and without which tsx takes itself to have been started with Node's deprecated `--loader` flag and refuses to run. Steps execute as TypeScript with no build step either way.
 
 ### 8.1 Scenarios that need a database
 
@@ -682,11 +683,11 @@ npm pkg set scripts.typecheck="tsc --noEmit && tsc --noEmit -p src/web/admin"
 npm pkg set scripts.lint="eslint ."
 npm pkg set scripts.format="prettier --write ."
 npm pkg set scripts.test="npm run test:features"
-npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js"
-npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nodb"
-npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile db"
-npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile browser"
-npm pkg set scripts.test:nobrowser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --profile nobrowser"
+npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs"
+npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile nodb"
+npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile db"
+npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile browser"
+npm pkg set scripts.test:nobrowser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile nobrowser"
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"
