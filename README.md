@@ -42,6 +42,10 @@ and an event store written here rather than installed.
 | `TODO.md`   | What is known to be wrong, and what to do about it when it bites  |
 | `BETA.md`   | What the beta's testers are asked to do, to paste into an email   |
 
+To contribute, read `CONTRIBUTING.md` first, and then `CLA.md`, the agreement
+every contributor signs. Open an issue before you start, however small the
+change.
+
 ## Licence
 
 Copyright © 2026 Tim Murphy. Free software under the GNU Affero General Public
