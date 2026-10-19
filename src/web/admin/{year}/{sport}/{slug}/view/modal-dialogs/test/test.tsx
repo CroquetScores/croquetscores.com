@@ -6,6 +6,8 @@ import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./test.css";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
+import { DialogStatus } from "../../../../../../DialogStatus.js";
+import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
 
 // The test dialog (test.feature), over a tournament's Tests tab: opened by Add
 // Test to add tests a round at a time, and by Edit to change one. It reads in
@@ -245,13 +247,7 @@ export const TestDialog = ({
     setSending(false);
   };
 
-  // The reader is taken to the first field refused, as every refused form
-  // takes them.
-  useEffect(() => {
-    document
-      .querySelector<HTMLElement>('dialog[open] [aria-invalid="true"]')
-      ?.focus();
-  }, [refused]);
+  useFocusFirstRefused(refused);
 
   const refusedFor = (part: Part | undefined): Refusal[] =>
     refused.filter((each) => each.part === part);
@@ -366,11 +362,9 @@ export const TestDialog = ({
       cancel={close}
       busy={sending}
     >
-      {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
+      <DialogStatus>
         {added === undefined ? null : say("admin.test.added", { name: added })}
-      </p>
+      </DialogStatus>
       <DialogProblems refused={above} />
       {team("firstTeam", "admin.test.firstTeam", 0)}
       {team("secondTeam", "admin.test.secondTeam", 1)}

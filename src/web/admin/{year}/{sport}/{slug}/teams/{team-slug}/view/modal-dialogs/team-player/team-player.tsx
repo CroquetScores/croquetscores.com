@@ -10,6 +10,7 @@ import {
 } from "../../../../../WorldRankingPlayers.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import { DialogProblems } from "../../../../../../../../DialogProblems.js";
+import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 
 // The team player dialog (team-player.feature), over a team's page: the player
 // dialog of a Standard tournament without its Representing and its Flag, since
@@ -198,13 +199,11 @@ export const TeamPlayerDialog = ({
       cancel={close}
       busy={sending}
     >
-      {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
+      <DialogStatus>
         {added === undefined
           ? null
           : say("admin.player.added", { name: added })}
-      </p>
+      </DialogStatus>
       <DialogProblems refused={above} />
       <Field
         name="name"

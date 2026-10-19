@@ -5,6 +5,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
 import { idInAddress } from "../../../../../../api.js";
+import { DialogStatus } from "../../../../../../DialogStatus.js";
 
 // The player dialog (player.feature), over a tournament's page: opened by Add
 // Player to add players one after another, and by a player's name to change
@@ -243,13 +244,11 @@ export const PlayerDialog = ({
         cancel={close}
         busy={sending}
       >
-        {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-        <p className="dialog-status" role="status">
+        <DialogStatus>
           {added === undefined
             ? null
             : say("admin.player.added", { name: added })}
-        </p>
+        </DialogStatus>
         {above.length > 0 ? (
           <div className="dialog-problems">
             {above.map(({ code, words }) => (

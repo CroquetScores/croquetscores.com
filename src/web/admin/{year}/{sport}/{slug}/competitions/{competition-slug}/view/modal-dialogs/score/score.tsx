@@ -6,6 +6,7 @@ import { knows, say } from "../../../../../../../../words.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import "./score.css";
 import { DialogProblems } from "../../../../../../../../DialogProblems.js";
+import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 
 // The score dialog (score-modal-dialog.feature), over a competition's Scores
 // tab: the winner and their score, "beat", the loser and theirs, as the result
@@ -431,11 +432,9 @@ export const ScoreDialog = ({
       cancel={close}
       busy={sending}
     >
-      {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
+      <DialogStatus>
         {added === undefined ? null : say("admin.score.added", added)}
-      </p>
+      </DialogStatus>
       <DialogProblems refused={above} />
       <div className="score-row">
         {choosing("winner", "admin.score.winner")}
