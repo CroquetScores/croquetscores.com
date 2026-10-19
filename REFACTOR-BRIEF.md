@@ -81,9 +81,11 @@ At the end: clusters merged, clusters deliberately left and why, scenarios missi
 
 Updated in the commit that does the work, so each entry names what that commit merged.
 
-### application (in progress)
+### application (done, two clusters left for a later pass)
 
 Baseline at `--min-lines 6 --min-tokens 40`: 183 clones, 1,819 duplicated lines, 10.22% of 17,791. Most of what is left at that threshold is the import block at the top of every handler and the one-class-to-a-command shape (a command, its handler, its constructor taking the same repositories), which is by design and is left alone.
+
+After: 170 clones, 1,628 duplicated lines, 9.19% at the same threshold.
 
 Scenarios were run against a local Postgres 16 started for the purpose, not the compose one.
 
@@ -98,7 +100,7 @@ Scenarios were run against a local Postgres 16 started for the purpose, not the 
 
 Left in the application layer, for a later pass: the handlers that read a link and then set a password (confirming, setting a new one, changing one) share about fourteen lines, and the Swiss, knockout and block public pages share about twelve lines of ranking. Neither was merged here because each would be a larger change than the others and wants its own look.
 
-### infrastructure (in progress)
+### infrastructure (done)
 
 Baseline at `--min-lines 6 --min-tokens 40`: 23 clones, 285 duplicated lines, 3.97% of 7,177.
 
@@ -107,3 +109,5 @@ The `project` and `rebuildFromStream` methods repeated across the nine read mode
 1. `TournamentsByAccount`: the row type and the mapping of a row to a tournament were written out three times, and the mapping of a row to a year three times. Each SQL statement is left as it was. 62 scenarios pass; naming the wrong part turned 1 red and dropping a year turned 8 red.
 2. Backup and restore: `withoutAddress`, which hides the database's address and password from what a failure says, was written out in both command lines. Now `maintenance/withoutAddress.ts`. The copies differed: backup also hid the bare host name and accepted no address at all; restore did neither. One behaviour change follows: restore now hides the host name as well, which can only say less. 56 backup and 42 restore scenarios pass.
    Not covered, and not added because a scenario means changing a `.feature` (AI.md §1): nothing in the restore scenarios notices if the hiding is removed altogether, and nothing in either set notices if the password is not hidden. Removing the hiding turned 2 backup scenarios red; removing the password from the parts hidden turned none red.
+
+After: 18 clones, 235 duplicated lines, 3.28% at the same threshold. Left as they are on purpose: the `pgDump` and `pgRestore` runners and the account event sealing's `seal` and `open`, which mirror each other with their own error classes and messages.
