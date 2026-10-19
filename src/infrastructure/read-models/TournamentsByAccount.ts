@@ -18,6 +18,33 @@ import type { Website } from "../../domain/common/Website.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 import type { StoredEvent } from "../event-store/PostgresEventStore.js";
 
+// What each of the listing queries selects of a tournament, whichever columns
+// it takes them from: the days are text, since the server's own reading of a
+// date would move it by the zone it happens to be in.
+interface TournamentRow {
+  tournament_id: string;
+  name: string;
+  starts: string;
+  finishes: string;
+  address: string;
+  archived: boolean;
+}
+
+const listed = (
+  row: TournamentRow,
+  part: TournamentOfAccount["part"],
+): TournamentOfAccount => ({
+  id: row.tournament_id,
+  name: row.name,
+  starts: row.starts,
+  finishes: row.finishes,
+  address: row.address,
+  archived: row.archived,
+  part,
+});
+
+const yearOf = ({ year }: { year: number }): number => year;
+
 /**
  * The tournaments each account manages or scores, kept in step with every
  * append, so that the admin can list a reader's tournaments and the years they
@@ -64,18 +91,12 @@ export class TournamentsByAccount implements Projection, Asked {
     website: Website,
     year: number,
   ): Promise<readonly TournamentOfAccount[]> {
-    const { rows } = await this.unitOfWork.connection().query<{
-      tournament_id: string;
-      name: string;
-      starts: string;
-      finishes: string;
-      address: string;
-      archived: boolean;
-      part: "manager" | "scorer";
-    }>(
-      // The days as text, since pg makes a date into a moment at midnight
-      // wherever the server happens to be, and a day is what is kept.
-      `select d.tournament_id, d.name,
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<TournamentRow & { part: "manager" | "scorer" }>(
+        // The days as text, since pg makes a date into a moment at midnight
+        // wherever the server happens to be, and a day is what is kept.
+        `select d.tournament_id, d.name,
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, a.part
@@ -84,17 +105,9 @@ export class TournamentsByAccount implements Projection, Asked {
         where a.account_id = $1 and d.website = $2
           and extract(year from d.starts) = $3
         order by d.archived, d.starts desc, d.name`,
-      [account.value, website.host, year],
-    );
-    return rows.map((row) => ({
-      id: row.tournament_id,
-      name: row.name,
-      starts: row.starts,
-      finishes: row.finishes,
-      address: row.address,
-      archived: row.archived,
-      part: row.part,
-    }));
+        [account.value, website.host, year],
+      );
+    return rows.map((row) => listed(row, row.part));
   }
 
   async yearsOf(
@@ -109,7 +122,7 @@ export class TournamentsByAccount implements Projection, Asked {
           order by year desc`,
       [account.value, website.host],
     );
-    return rows.map(({ year }) => year);
+    return rows.map(yearOf);
   }
 
   // From the details alone, which hold each tournament once whoever has a
@@ -118,14 +131,7 @@ export class TournamentsByAccount implements Projection, Asked {
     website: Website,
     year: number,
   ): Promise<readonly TournamentOfAccount[]> {
-    const { rows } = await this.unitOfWork.connection().query<{
-      tournament_id: string;
-      name: string;
-      starts: string;
-      finishes: string;
-      address: string;
-      archived: boolean;
-    }>(
+    const { rows } = await this.unitOfWork.connection().query<TournamentRow>(
       `select tournament_id, name,
               to_char(starts, 'YYYY-MM-DD') as starts,
               to_char(finishes, 'YYYY-MM-DD') as finishes,
@@ -135,15 +141,7 @@ export class TournamentsByAccount implements Projection, Asked {
         order by archived, starts desc, name`,
       [website.host, year],
     );
-    return rows.map((row) => ({
-      id: row.tournament_id,
-      name: row.name,
-      starts: row.starts,
-      finishes: row.finishes,
-      address: row.address,
-      archived: row.archived,
-      part: "manager",
-    }));
+    return rows.map((row) => listed(row, "manager"));
   }
 
   async everyYear(website: Website): Promise<readonly number[]> {
@@ -154,7 +152,7 @@ export class TournamentsByAccount implements Projection, Asked {
         order by year desc`,
       [website.host],
     );
-    return rows.map(({ year }) => year);
+    return rows.map(yearOf);
   }
 
   // From the details, as every tournament is, joined to the account's own part
@@ -168,16 +166,10 @@ export class TournamentsByAccount implements Projection, Asked {
     year: number,
     sports: readonly string[],
   ): Promise<readonly TournamentOfAccount[]> {
-    const { rows } = await this.unitOfWork.connection().query<{
-      tournament_id: string;
-      name: string;
-      starts: string;
-      finishes: string;
-      address: string;
-      archived: boolean;
-      part: "manager" | "scorer" | null;
-    }>(
-      `select d.tournament_id, d.name,
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<TournamentRow & { part: "manager" | "scorer" | null }>(
+        `select d.tournament_id, d.name,
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, a.part
@@ -189,17 +181,9 @@ export class TournamentsByAccount implements Projection, Asked {
                or (split_part(d.address, '/', 2) = any($4)
                    and d.counts_towards_world_rankings))
         order by d.archived, d.starts desc, d.name`,
-      [account.value, website.host, year, sports],
-    );
-    return rows.map((row) => ({
-      id: row.tournament_id,
-      name: row.name,
-      starts: row.starts,
-      finishes: row.finishes,
-      address: row.address,
-      archived: row.archived,
-      part: row.part ?? "rankingOfficer",
-    }));
+        [account.value, website.host, year, sports],
+      );
+    return rows.map((row) => listed(row, row.part ?? "rankingOfficer"));
   }
 
   async yearsOfRankingOfficer(
@@ -219,7 +203,7 @@ export class TournamentsByAccount implements Projection, Asked {
         order by year desc`,
       [account.value, website.host, sports],
     );
-    return rows.map(({ year }) => year);
+    return rows.map(yearOf);
   }
 
   // Each written so that writing it twice leaves what writing it once did,

@@ -97,3 +97,11 @@ Scenarios were run against a local Postgres 16 started for the purpose, not the 
 6. Accounts, the inbox limit: five handlers counted the emails written to an inbox in the last hour against the limit, in the same two lines each. Now `inboxIsFull` beside the limit in `emailsAnHour.ts`. The administrator's report of an unreachable service asks for none in the hour and not for fewer than three, so it keeps its own. 330 account scenarios pass; making the limit one more than it is turned 15 red.
 
 Left in the application layer, for a later pass: the handlers that read a link and then set a password (confirming, setting a new one, changing one) share about fourteen lines, and the Swiss, knockout and block public pages share about twelve lines of ranking. Neither was merged here because each would be a larger change than the others and wants its own look.
+
+### infrastructure (in progress)
+
+Baseline at `--min-lines 6 --min-tokens 40`: 23 clones, 285 duplicated lines, 3.97% of 7,177.
+
+The `project` and `rebuildFromStream` methods repeated across the nine read models are most of what the detector reports. They come in two shapes (events one at a time, or all together), each with its own comment saying why that read model's rebuild is safe in any order, so a base class would take the comments' place with more indirection than it removes. Left alone.
+
+1. `TournamentsByAccount`: the row type and the mapping of a row to a tournament were written out three times, and the mapping of a row to a year three times. Each SQL statement is left as it was. 62 scenarios pass; naming the wrong part turned 1 red and dropping a year turned 8 red.
