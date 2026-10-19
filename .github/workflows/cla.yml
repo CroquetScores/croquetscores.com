@@ -1,0 +1,58 @@
+name: CLA
+
+# Asks the author of a pull request to sign the Contributor License Agreement
+# (CLA.md), keeps who has, and shows on the pull request whether it is signed:
+# a status called CLA, which can be made one a pull request must have before it
+# is merged (Settings, Branches, the rule for main, require status checks).
+#
+# Written here and not taken from an action. The one for this, the CLA
+# Assistant's, was archived by its owner in March 2026 and runs on a version of
+# Node that GitHub is retiring, and this has to be given the right to write to a
+# pull request from anybody. The work is in .github/scripts/cla.mjs, which is
+# short enough to read, and the only action used is GitHub's own.
+on:
+  # The pull request as it is on the base repository's side, so that it has the
+  # rights to comment and to set a status on a pull request from a fork, which
+  # an ordinary pull_request run does not. That is safe only because nothing
+  # from the pull request is ever checked out or run here: the code that runs
+  # is main's, and what the pull request contributes is read as data through the
+  # API. Do not add a step that checks out the pull request's code.
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  # The comment that signs, and "recheck".
+  issue_comment:
+    types: [created]
+
+# One at a time, so that two people signing together do not each write the
+# signatures file over the other's.
+concurrency:
+  group: cla
+  cancel-in-progress: false
+
+jobs:
+  cla:
+    # Not a comment on an issue, which is not about a pull request.
+    if: github.event_name == 'pull_request_target' || github.event.issue.pull_request != null
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    permissions:
+      # The branch that holds the signatures.
+      contents: write
+      # The comment the bot keeps on the pull request.
+      pull-requests: write
+      # The CLA status.
+      statuses: write
+
+    steps:
+      # The base branch's code (the default for both of the events above), and
+      # no credentials left behind for a later step.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const { run } = await import(`${process.env.GITHUB_WORKSPACE}/.github/scripts/cla.mjs`);
+            await run({ github, context });

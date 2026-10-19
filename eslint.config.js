@@ -21,7 +21,13 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ["*.js", "*.ts", "*.mjs", "scripts/*.mjs"],
+          allowDefaultProject: [
+            "*.js",
+            "*.ts",
+            "*.mjs",
+            "scripts/*.mjs",
+            ".github/scripts/*.mjs",
+          ],
           // The scripts and the configuration files are plain JavaScript with
           // no project of their own, and there are now more of them than the
           // default of eight allows for.
@@ -39,7 +45,11 @@ export default tseslint.config(
     languageOptions: {
       // Named rather than pulled from a globals package: this is the whole list
       // these files use, and a short list that is true beats a long one.
-      globals: { console: "readonly", process: "readonly" },
+      globals: {
+        Buffer: "readonly",
+        console: "readonly",
+        process: "readonly",
+      },
     },
   },
   // The admin SPA has its own tsconfig, which the project service finds.

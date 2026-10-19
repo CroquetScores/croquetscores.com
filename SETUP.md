@@ -774,6 +774,8 @@ code-review.md
 
 ## 13. CI
 
+`.github/workflows/cla.yml` is the other workflow that runs on a pull request, and it is not CI. It asks the author of a pull request to sign the agreement in `CLA.md`, records who has in a file on a branch of its own (`cla-signatures`), and sets a `CLA` status. It is written here, in `.github/scripts/cla.mjs`, with GitHub's own `actions/github-script` and no other action, because the usual one for this (the CLA Assistant's) was archived by its owner and runs on a Node that GitHub is retiring, and a workflow that may write to any pull request is not one to leave on code nobody keeps. It runs on `pull_request_target`, which gives it the rights to comment on a pull request from a fork, so it never checks out the pull request's code: what a pull request contributes is read as data through the API. Making the `CLA` status required before a merge is a setting on `main`'s branch rule, not something the workflow can do.
+
 `.github/workflows/ci.yml` runs on every pull request and on nothing else, since `main` is only reached by squash-merging a pull request whose run passed on its own branch. It is two jobs, and the file itself is where what each does is said, with why beside it:
 
 - `build` installs, lints, typechecks and builds.
