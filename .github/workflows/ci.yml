@@ -65,7 +65,7 @@ jobs:
       - run: npm run db:up
 
       # Everything but the @browser scenarios, so no browser is installed.
-      # Two workers rather than the six cucumber.mjs asks for: the runner has
+      # Two workers rather than the six scripts/cucumber.mjs asks for: the runner has
       # two cores, and workers beyond them only wait their turn for one.
       - run: npm run test:nobrowser -- --parallel 2 --shard ${{ matrix.shard }}/4
 

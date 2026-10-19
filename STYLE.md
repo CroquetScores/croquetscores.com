@@ -8,16 +8,14 @@ One vocabulary for how this site looks, shared by the server-rendered public pag
 
 ## 1. Decisions
 
-| Decision                                                   | Why                                                                                                                                                                                                                       |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No CSS framework and no preprocessor                       | Grid, flexbox, custom properties and `clamp()` cover a site of this shape. A framework would have to be learnt, updated and worked around                                                                                 |
-| One stylesheet, `assets/site.css`                          | Both halves of the site load the same file, so they cannot drift apart. One file also means no build step and no second request                                                                                           |
-| Tokens are custom properties with semantic names           | `--ink` and `--surface` survive a change of palette. `--grey-700` does not                                                                                                                                                |
-| A theme follows the machine, until a reader says otherwise | `color-scheme: light dark` with `light-dark()` values, so the choice is one property rather than a second palette. The reader's choice is a cookie the server reads, because the public side has no JavaScript to keep it |
-| Fluid type through `clamp()`                               | A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them                                                                                                         |
-| The public navigation is a `<details>` element             | `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all                                                          |
-| Breakpoints are written out, not tokenised                 | `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice                                                                              |
-| A modal dialog is a `<dialog>` opened with `showModal()`   | The browser then makes everything outside it unreachable, closes it on Escape and lays it over everything else, so none of that is scripting of the site's own to get wrong                                               |
+- **No CSS framework and no preprocessor**: Grid, flexbox, custom properties and `clamp()` cover a site of this shape. A framework would have to be learnt, updated and worked around
+- **One stylesheet, `assets/site.css`**: Both halves of the site load the same file, so they cannot drift apart. One file also means no build step and no second request
+- **Tokens are custom properties with semantic names**: `--ink` and `--surface` survive a change of palette. `--grey-700` does not
+- **A theme follows the machine, until a reader says otherwise**: `color-scheme: light dark` with `light-dark()` values, so the choice is one property rather than a second palette. The reader's choice is a cookie the server reads, because the public side has no JavaScript to keep it
+- **Fluid type through `clamp()`**: A type scale that interpolates needs no breakpoint of its own, and no size is ever unreadable between two of them
+- **The public navigation is a `<details>` element**: `SETUP.md` decision 1 says the public pages work with JavaScript switched off. `<details>` opens, closes, takes focus and announces itself with no script at all
+- **Breakpoints are written out, not tokenised**: `@media` cannot read a custom property. A token that only worked in half the places it was wanted would be worse than a number written twice
+- **A modal dialog is a `<dialog>` opened with `showModal()`**: The browser then makes everything outside it unreachable, closes it on Escape and lays it over everything else, so none of that is scripting of the site's own to get wrong
 
 ---
 

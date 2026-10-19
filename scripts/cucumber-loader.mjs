@@ -1,7 +1,7 @@
 // tsx for Cucumber's workers. Run in parallel, each worker is a thread of its
 // own, and a thread does not inherit the hooks tsx put on the main one — not
 // from running Cucumber through tsx, and not from node --import tsx either —
-// so every .steps.ts failed to load. Cucumber registers whatever cucumber.mjs
+// so every .steps.ts failed to load. Cucumber registers whatever scripts/cucumber.mjs
 // names as a loader in each worker before it imports anything, and this is
 // that loader.
 //

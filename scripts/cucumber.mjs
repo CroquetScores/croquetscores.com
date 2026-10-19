@@ -1,4 +1,7 @@
 // Cucumber's settings, one profile to each npm script that runs scenarios.
+// Cucumber finds a configuration file in the project's root unless it is told
+// otherwise, so every script that runs it says --config scripts/cucumber.mjs.
+// The paths and the loader below are still from the root, where it is run.
 //
 // JavaScript rather than JSON so that what every profile shares is written
 // once. A support folder added to one copy of the import list and missed in
@@ -13,8 +16,8 @@ const shared = {
     "specs/web/support/**/*.ts",
   ],
   // Registered in each worker thread, which does not inherit the tsx the main
-  // thread was started with. cucumber-loader.mjs says why it is needed.
-  loader: ["./cucumber-loader.mjs"],
+  // thread was started with. scripts/cucumber-loader.mjs says why it is needed.
+  loader: ["./scripts/cucumber-loader.mjs"],
   // One at a time, the whole suite took twenty-four minutes; six at a time it
   // takes five. Six is the cores of the machine this is worked on, and CI asks
   // for its own number on the command line, which overrides this one.

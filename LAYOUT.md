@@ -8,12 +8,10 @@ Taking the shape of https://croquetscores.com/ — its green header, its dark gr
 
 ## 1. What is copied, and what is not
 
-|                |                                                                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Copied**     | The header bar, the secondary navigation bar, the footer bar: their colours, their proportions, the way they stack, and how they behave as the screen narrows                                                                         |
-| **Copied**     | Content sitting in a white panel on a coloured page, which is the arrangement the current site's tables already have and the reason the page behind them can be tinted at all                                                         |
-| **Not copied** | The body content. Tables of tournaments, game scores, commentary — all of it arrives with its own feature and is specified there                                                                                                      |
-| **Not copied** | The current site's markup and CSS. This is a rebuild to the same result, not a transplant: the current navigation is a plain always-visible list, and what replaces it is the `<details>` disclosure the public side already requires |
+- **Copied**: The header bar, the secondary navigation bar, the footer bar: their colours, their proportions, the way they stack, and how they behave as the screen narrows
+- **Copied**: Content sitting in a white panel on a coloured page, which is the arrangement the current site's tables already have and the reason the page behind them can be tinted at all
+- **Not copied**: The body content. Tables of tournaments, game scores, commentary — all of it arrives with its own feature and is specified there
+- **Not copied**: The current site's markup and CSS. This is a rebuild to the same result, not a transplant: the current navigation is a plain always-visible list, and what replaces it is the `<details>` disclosure the public side already requires
 
 ---
 
@@ -21,23 +19,21 @@ Taking the shape of https://croquetscores.com/ — its green header, its dark gr
 
 Measured from the live site, rather than taken from a screenshot by eye. Recorded here because a value nobody wrote down is a value somebody will later guess at.
 
-| Thing                                 | Value                                                                                       |
-| ------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Header and footer green               | `rgb(70, 165, 70)` — `#46a546`                                                              |
-| Secondary navigation green            | `rgb(7, 134, 0)` — `#078600`                                                                |
-| Body background                       | `#ffffff`                                                                                   |
-| Body text                             | `#333333`                                                                                   |
-| Family                                | `"Helvetica Neue", Helvetica, Arial, sans-serif` at `14px`                                  |
-| Site name                             | `28px`, bold, white                                                                         |
-| Page title, second line of the header | `24.5px`, bold, white                                                                       |
-| Header navigation links               | `15.4px`, regular, white, `5px 10px` padding                                                |
-| Secondary navigation tabs             | `15.4px`, white, `8px 12px` padding, `5px` radius                                           |
-| The tab you are on                    | Black background, white text — not a lighter green                                          |
-| Header height                         | `40px` for the bar alone; `147px` with a page title beneath it                              |
-| Secondary navigation height           | `62px`                                                                                      |
-| Footer height                         | `87px`                                                                                      |
-| Content width                         | Full width. No centred column, and a gutter of about `20px`                                 |
-| The top bar                           | `position: fixed; top: 0` — pinned. The page title and the section bar below it scroll away |
+- **Header and footer green**: `rgb(70, 165, 70)` — `#46a546`
+- **Secondary navigation green**: `rgb(7, 134, 0)` — `#078600`
+- **Body background**: `#ffffff`
+- **Body text**: `#333333`
+- **Family**: `"Helvetica Neue", Helvetica, Arial, sans-serif` at `14px`
+- **Site name**: `28px`, bold, white
+- **Page title, second line of the header**: `24.5px`, bold, white
+- **Header navigation links**: `15.4px`, regular, white, `5px 10px` padding
+- **Secondary navigation tabs**: `15.4px`, white, `8px 12px` padding, `5px` radius
+- **The tab you are on**: Black background, white text — not a lighter green
+- **Header height**: `40px` for the bar alone; `147px` with a page title beneath it
+- **Secondary navigation height**: `62px`
+- **Footer height**: `87px`
+- **Content width**: Full width. No centred column, and a gutter of about `20px`
+- **The top bar**: `position: fixed; top: 0` — pinned. The page title and the section bar below it scroll away
 
 ---
 

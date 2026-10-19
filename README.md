@@ -33,14 +33,12 @@ Four things pass before anything here is called done: `npm run typecheck`,
 Four layers — web, infrastructure, application, domain — with a mediator, CQRS
 and an event store written here rather than installed.
 
-| Document    | What it says                                                      |
-| ----------- | ----------------------------------------------------------------- |
-| `AI.md`     | How work is done here, for people and for agents. Read this first |
-| `SETUP.md`  | How the repository is built, and why it was built that way        |
-| `STYLE.md`  | What things are called, and what the scales are                   |
-| `LAYOUT.md` | What the site looks like                                          |
-| `TODO.md`   | What is known to be wrong, and what to do about it when it bites  |
-| `BETA.md`   | What the beta's testers are asked to do, to paste into an email   |
+- `AI.md`: How work is done here, for people and for agents. Read this first
+- `SETUP.md`: How the repository is built, and why it was built that way
+- `STYLE.md`: What things are called, and what the scales are
+- `LAYOUT.md`: What the site looks like
+- `TODO.md`: What is known to be wrong, and what to do about it when it bites
+- `BETA.md`: What the beta's testers are asked to do, to paste into an email
 
 To contribute, read `CONTRIBUTING.md` first, and then `CLA.md`, the agreement
 every contributor signs. Open an issue before you start, however small the
