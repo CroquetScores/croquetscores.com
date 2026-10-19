@@ -4,6 +4,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
+import { DialogProblems } from "../../../../../../DialogProblems.js";
 
 // The team dialog (team.feature), over a tournament's Teams tab: opened by Add
 // Team to add teams a few at a time, and by a team's name or Edit to change
@@ -160,16 +161,7 @@ export const TeamDialog = ({
       <p className="dialog-status" role="status">
         {added === undefined ? null : say("admin.team.added", { name: added })}
       </p>
-      {above.length > 0 ? (
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      <DialogProblems refused={above} />
       <Field
         name="name"
         label={say("admin.team.name")}

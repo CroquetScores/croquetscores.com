@@ -5,6 +5,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./test.css";
+import { DialogProblems } from "../../../../../../DialogProblems.js";
 
 // The test dialog (test.feature), over a tournament's Tests tab: opened by Add
 // Test to add tests a round at a time, and by Edit to change one. It reads in
@@ -370,16 +371,7 @@ export const TestDialog = ({
       <p className="dialog-status" role="status">
         {added === undefined ? null : say("admin.test.added", { name: added })}
       </p>
-      {above.length > 0 ? (
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      <DialogProblems refused={above} />
       {team("firstTeam", "admin.test.firstTeam", 0)}
       {team("secondTeam", "admin.test.secondTeam", 1)}
       {day("starts", "admin.test.starts")}

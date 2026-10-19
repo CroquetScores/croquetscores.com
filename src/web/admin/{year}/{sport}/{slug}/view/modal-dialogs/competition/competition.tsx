@@ -5,6 +5,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./competition.css";
+import { DialogProblems } from "../../../../../../DialogProblems.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -259,18 +260,7 @@ export const CompetitionDialog = ({
           ? null
           : say("admin.competition.added", { name: said })}
       </p>
-      {above.length > 0 ? (
-        // The codes as well as the words, as a field's refusals carry them,
-        // so that what was refused can be told apart from how it is said.
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      <DialogProblems refused={above} />
       <Field
         name="name"
         label={say("admin.competition.name")}

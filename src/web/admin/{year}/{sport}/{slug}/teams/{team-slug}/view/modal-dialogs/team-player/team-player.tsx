@@ -9,6 +9,7 @@ import {
   useMatching,
 } from "../../../../../WorldRankingPlayers.js";
 import { idInAddress } from "../../../../../../../../api.js";
+import { DialogProblems } from "../../../../../../../../DialogProblems.js";
 
 // The team player dialog (team-player.feature), over a team's page: the player
 // dialog of a Standard tournament without its Representing and its Flag, since
@@ -204,16 +205,7 @@ export const TeamPlayerDialog = ({
           ? null
           : say("admin.player.added", { name: added })}
       </p>
-      {above.length > 0 ? (
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      <DialogProblems refused={above} />
       <Field
         name="name"
         label={say("admin.player.name")}
