@@ -76,3 +76,15 @@ One cluster to a commit, in paragraphs: what was duplicated, where the shared co
 ## Report
 
 At the end: clusters merged, clusters deliberately left and why, scenarios missing, the jscpd figure before and after, and anything else noticed that was out of scope.
+
+## Status
+
+Updated in the commit that does the work, so each entry names what that commit merged.
+
+### application (in progress)
+
+Baseline at `--min-lines 6 --min-tokens 40`: 183 clones, 1,819 duplicated lines, 10.22% of 17,791. Most of what is left at that threshold is the import block at the top of every handler and the one-class-to-a-command shape (a command, its handler, its constructor taking the same repositories), which is by design and is left alone.
+
+Scenarios were run against a local Postgres 16 started for the purpose, not the compose one.
+
+1. Accounts: the hour, `shiftedBy`, the inbox limit and the confirmation link's lifetime were each defined in up to seven handlers. Now `common/moments.ts`, `accounts/emailsAnHour.ts` and `confirmationLinks.ts`. 330 scenarios in `specs/application/operations/accounts` pass, and go red when the limit or the hour is broken.

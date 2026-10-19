@@ -40,6 +40,12 @@ export type ConfirmationLinkJudged =
   | { readonly worth: "Link.Works"; readonly account: Account }
   | { readonly worth: Exclude<ConfirmationLinkWorth, "Link.Works"> };
 
+/**
+ * How long a link to confirm an address works, in hours. Confirming says why.
+ * Said here, where the link is judged, as setting a new password's is.
+ */
+export const CONFIRMATION_LINK_WORKS_FOR_HOURS = 24;
+
 const noLongerWorks = {
   worth: "Link.NoLongerWorks",
 } as const satisfies ConfirmationLinkJudged;

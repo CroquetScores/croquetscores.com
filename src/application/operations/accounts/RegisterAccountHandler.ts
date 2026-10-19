@@ -2,7 +2,6 @@ import { Website } from "../../../domain/common/Website.js";
 import { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -13,6 +12,9 @@ import type { EmailsWritten } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { ReservesAddress } from "./accountsByAddress.js";
 import { RegisterAccount } from "./RegisterAccount.js";
+import { AN_HOUR, shiftedBy } from "../../common/moments.js";
+import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { CONFIRMATION_LINK_WORKS_FOR_HOURS } from "./confirmationLinks.js";
 
 // What registering writes, and what link each carries: the purpose the link is
 // made for, or nothing where the email carries none of registering's own. Said
@@ -33,17 +35,6 @@ type Kind =
   | "Email.ConfirmAddress"
   | "Email.ConfirmAddressAgain"
   | "Email.AlreadyRegistered";
-
-/** How long a link to confirm an address works. Confirming says why. */
-const LINK_WORKS_FOR_HOURS = 24;
-
-/** How many emails registering may fill an account's inbox with, per hour. */
-const EMAILS_AN_HOUR = 3;
-
-const AN_HOUR = 60 * 60 * 1000;
-
-const shiftedBy = (moment: ReadOnlyDate, milliseconds: number): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(moment.toDate().getTime() + milliseconds));
 
 /**
  * Registering an account.
@@ -169,7 +160,7 @@ export class RegisterAccountHandler extends CommandHandler<
     const purpose = emails[kind].link;
     const until = shiftedBy(
       command.requestedAt,
-      LINK_WORKS_FOR_HOURS * AN_HOUR,
+      CONFIRMATION_LINK_WORKS_FOR_HOURS * AN_HOUR,
     );
 
     await this.queue.queue({

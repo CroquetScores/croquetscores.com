@@ -1,7 +1,6 @@
 import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
@@ -12,19 +11,13 @@ import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import { AskToSetPassword } from "./AskToSetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
+import { AN_HOUR, shiftedBy } from "../../common/moments.js";
+import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
 
 /** Every way asking to set a password is refused. */
 export type AskToSetPasswordErrorCode = "AskToSetPassword.HasPassword";
 
 export class AskToSetPasswordRefused extends Refused<AskToSetPasswordErrorCode> {}
-
-/** How many emails an inbox may be filled with, per hour. */
-const EMAILS_AN_HOUR = 3;
-
-const AN_HOUR = 60 * 60 * 1000;
-
-const shiftedBy = (moment: ReadOnlyDate, milliseconds: number): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(moment.toDate().getTime() + milliseconds));
 
 /**
  * Asking for a link to set a password: an email of its own, carrying the link

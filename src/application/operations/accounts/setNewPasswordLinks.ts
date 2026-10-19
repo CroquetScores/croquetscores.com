@@ -11,6 +11,7 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
+import { AN_HOUR } from "../../common/moments.js";
 
 /**
  * What a link to set a new password is worth. Named by the codes setting one
@@ -34,8 +35,6 @@ export const spent = (link: string): string =>
  * carries when it stops working and nothing else.
  */
 export const SET_NEW_PASSWORD_LINK_HOURS = 1;
-
-const AN_HOUR = 60 * 60 * 1000;
 
 export type SetNewPasswordLinkJudged =
   | { readonly worth: "Link.Works"; readonly account: Account }
