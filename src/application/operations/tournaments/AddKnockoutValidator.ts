@@ -3,7 +3,7 @@ import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { KnockoutDraw } from "../../../domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
-import { brokenBy } from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { AddKnockout } from "./AddKnockout.js";
 
 /**

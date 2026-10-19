@@ -1,6 +1,6 @@
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { SetNewPassword } from "./SetNewPassword.js";
@@ -17,15 +17,8 @@ export class SetNewPasswordValidator extends CommandValidator<SetNewPassword> {
   readonly validates: RequestType<SetNewPassword> = SetNewPassword;
 
   validate(command: SetNewPassword): readonly BrokenRule[] {
-    const broken: BrokenRule[] = [];
-    try {
-      Password.from(command.password);
-    } catch (failure) {
-      if (!(failure instanceof ValidationError)) throw failure;
-      const named = failure as ValidationError<string>;
-      broken.push({ code: named.code, fields: ["password"] });
-      return broken;
-    }
+    const broken = brokenBy("password", () => Password.from(command.password));
+    if (broken.length > 0) return broken;
 
     // Asked only once the password itself is sound: told both that it is too
     // short and that it was typed differently, a reader has two messages about

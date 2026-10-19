@@ -10,10 +10,8 @@ import type { TournamentId } from "../../../domain/aggregates/tournaments/primit
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
-import {
-  brokenBy,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
+import { TournamentOperationRefused } from "./tournamentOperations.js";
 
 /** Every rule of its own a note's `title` and `description` break. */
 export const brokenByManagerNote = ({

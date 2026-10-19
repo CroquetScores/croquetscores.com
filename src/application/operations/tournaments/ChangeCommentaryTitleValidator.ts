@@ -2,7 +2,7 @@ import { CommentaryTitle } from "../../../domain/aggregates/tournaments/value-ob
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { brokenBy } from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { ChangeCommentaryTitle } from "./ChangeCommentaryTitle.js";
 
 /** What a commentary's new title must be, asked on the way in. */

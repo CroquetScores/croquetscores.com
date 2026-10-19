@@ -23,8 +23,8 @@ import { TournamentSubtitle } from "../../../domain/aggregates/tournaments/value
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { brokenBy } from "../../common/brokenBy.js";
 
 /** Why an operation on a tournament is refused, besides the tournament's own. */
 export type TournamentOperationErrorCode =
@@ -298,29 +298,6 @@ export const takenFor = async (
     tournament,
   );
   return (address) => taken.has(address.toString());
-};
-
-/**
- * The rule `making` breaks, as the field `field`, or nothing when it breaks
- * none. A value is asked about by being made, which is the only way each
- * offers, and throws naming the first rule it breaks.
- */
-export const brokenBy = (
-  field: string,
-  making: () => unknown,
-): BrokenRule[] => {
-  try {
-    making();
-    return [];
-  } catch (failure) {
-    // Named as a validation error of some code: the class is generic, and
-    // narrowing by instanceof alone leaves its code as anything at all.
-    if (failure instanceof ValidationError) {
-      const named = failure as ValidationError<string>;
-      return [{ code: named.code, fields: [field] }];
-    }
-    throw failure;
-  }
 };
 
 /**

@@ -1,7 +1,7 @@
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { ConfirmEmailAddress } from "./ConfirmEmailAddress.js";
@@ -16,29 +16,6 @@ import { ConfirmEmailAddress } from "./ConfirmEmailAddress.js";
  */
 export type ConfirmEmailAddressBrokenRule =
   "Password.ConfirmationDiffers" | "Password.Breached";
-
-// Each value object is asked about what the command carries by being made from
-// it, which is the only way it offers: it throws naming the first rule broken.
-// So the command hears one rule per field, and a reader is told what is wrong
-// with each of the things they typed at once, which is what the whole list is
-// for.
-const ruleBrokenBy = (
-  make: () => unknown,
-  field: string,
-): BrokenRule | undefined => {
-  try {
-    make();
-    return undefined;
-  } catch (failure) {
-    // Named as a validation error of some code: the class is generic, and
-    // narrowing by instanceof alone leaves its code as anything at all.
-    if (failure instanceof ValidationError) {
-      const named = failure as ValidationError<string>;
-      return { code: named.code, fields: [field] };
-    }
-    throw failure;
-  }
-};
 
 /**
  * What a confirmation must carry, asked on the way in.
@@ -58,17 +35,13 @@ export class ConfirmEmailAddressValidator extends CommandValidator<ConfirmEmailA
   readonly validates: RequestType<ConfirmEmailAddress> = ConfirmEmailAddress;
 
   validate(command: ConfirmEmailAddress): readonly BrokenRule[] {
-    const broken: BrokenRule[] = [];
-    const add = (rule: BrokenRule | undefined): void => {
-      if (rule !== undefined) broken.push(rule);
-    };
-
-    add(ruleBrokenBy(() => PersonName.from(command.name), "name"));
-    const password = ruleBrokenBy(
-      () => Password.from(command.password),
-      "password",
+    const password = brokenBy("password", () =>
+      Password.from(command.password),
     );
-    add(password);
+    const broken = [
+      ...brokenBy("name", () => PersonName.from(command.name)),
+      ...password,
+    ];
 
     // The confirmation is only asked about once the password itself is sound.
     // Told both that their password is too short and that they typed it
@@ -77,10 +50,10 @@ export class ConfirmEmailAddressValidator extends CommandValidator<ConfirmEmailA
     // password will be kept, which is trimmed: a confirmation differing only
     // by the spaces around it is the same password typed twice.
     if (
-      password === undefined &&
+      password.length === 0 &&
       command.password.trim() !== command.passwordConfirmation.trim()
     ) {
-      add({
+      broken.push({
         code: "Password.ConfirmationDiffers",
         fields: ["passwordConfirmation"],
       });

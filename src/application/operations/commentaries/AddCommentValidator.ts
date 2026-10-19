@@ -2,7 +2,7 @@ import { CommentText } from "../../../domain/aggregates/tournaments/commentaries
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
-import { brokenBy } from "../tournaments/tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { AddComment } from "./AddComment.js";
 
 /** What a comment to be added must say, asked on the way in. */
