@@ -14,7 +14,7 @@ import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { ResetPassword } from "./ResetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
 import { AN_HOUR, shiftedBy } from "../../common/moments.js";
-import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 
 // What each kind of email carries, said here once rather than worked out from
 // its name where it is queued, so that the next kind added has to say.
@@ -81,8 +81,7 @@ export class ResetPasswordHandler extends CommandHandler<ResetPassword, void> {
       id === undefined
         ? { emailAddressHash: this.addresses.hash(address) }
         : { account: id };
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(whom, since)) >= EMAILS_AN_HOUR) return;
+    if (await inboxIsFull(this.written, whom, command.requestedAt)) return;
 
     // To the address the account holds where there is one, never the one this
     // asking typed: an address differing only in case is the same address, and

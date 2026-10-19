@@ -13,7 +13,7 @@ import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { ReservesAddress } from "./accountsByAddress.js";
 import { RegisterAccount } from "./RegisterAccount.js";
 import { AN_HOUR, shiftedBy } from "../../common/moments.js";
-import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 import { CONFIRMATION_LINK_WORKS_FOR_HOURS } from "./confirmationLinks.js";
 
 // What registering writes, and what link each carries: the purpose the link is
@@ -129,10 +129,7 @@ export class RegisterAccountHandler extends CommandHandler<
     // Counting holds the account until this transaction ends, so registrations
     // arriving at once are counted one after another: side by side, each would
     // count before any had recorded, and all of them would send.
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if (
-      (await this.written.countSince({ account: id }, since)) >= EMAILS_AN_HOUR
-    )
+    if (await inboxIsFull(this.written, { account: id }, command.requestedAt))
       return;
 
     // To the address the account holds, never the one this registration typed:

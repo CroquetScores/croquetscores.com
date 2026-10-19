@@ -15,8 +15,7 @@ import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { AskToChangeEmailAddress } from "./AskToChangeEmailAddress.js";
 import { ChangeEmailAddressRefused } from "./ChangeEmailAddressRefused.js";
 import { MOVING_LINK_WORKS_FOR_MILLISECONDS } from "./movingLinks.js";
-import { AN_HOUR, shiftedBy } from "../../common/moments.js";
-import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 
 /**
  * Asking to move the account the reader is signed in to, to another address.
@@ -92,8 +91,7 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
       holder === undefined
         ? { emailAddressHash: this.addresses.hash(address) }
         : { account: holder };
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(whom, since)) >= EMAILS_AN_HOUR) return;
+    if (await inboxIsFull(this.written, whom, command.requestedAt)) return;
 
     if (holder !== undefined) {
       await this.queue.queue({

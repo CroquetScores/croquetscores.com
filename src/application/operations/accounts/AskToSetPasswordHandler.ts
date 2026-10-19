@@ -12,7 +12,7 @@ import type { Links } from "../../services/Links.js";
 import { AskToSetPassword } from "./AskToSetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
 import { AN_HOUR, shiftedBy } from "../../common/moments.js";
-import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 
 /** Every way asking to set a password is refused. */
 export type AskToSetPasswordErrorCode = "AskToSetPassword.HasPassword";
@@ -69,8 +69,7 @@ export class AskToSetPasswordHandler extends CommandHandler<
 
     // Counting holds the account until this transaction ends.
     const whom = { account: id };
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(whom, since)) >= EMAILS_AN_HOUR) return;
+    if (await inboxIsFull(this.written, whom, command.requestedAt)) return;
 
     const until = shiftedBy(
       command.requestedAt,

@@ -11,7 +11,7 @@ import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import { SendConfirmationLinkAgain } from "./SendConfirmationLinkAgain.js";
 import { AN_HOUR, shiftedBy } from "../../common/moments.js";
-import { EMAILS_AN_HOUR } from "./emailsAnHour.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 import { CONFIRMATION_LINK_WORKS_FOR_HOURS } from "./confirmationLinks.js";
 
 /** Every way sending the link again is refused. */
@@ -85,10 +85,7 @@ export class SendConfirmationLinkAgainHandler extends CommandHandler<
       );
     }
 
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if (
-      (await this.written.countSince({ account: id }, since)) >= EMAILS_AN_HOUR
-    ) {
+    if (await inboxIsFull(this.written, { account: id }, command.requestedAt)) {
       throw new SendingRefused(
         "EmailsWritten.TooManyLately",
         "The account has been written to as often as it is to be this hour.",
