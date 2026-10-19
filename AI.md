@@ -121,7 +121,7 @@ A pull request is where to say that one is worth asking for. When a pull request
 
 Wait for CI to go green first, and say so: a review of code that does not yet pass its own scenarios spends itself on faults the scenarios were about to name. Reminding is the whole of it — whoever opened the pull request decides whether the review happens.
 
-Its report is written to the top of `code-review.md`, above whatever is already there, with a `---` line between the new report and the ones before it, so that the newest is the first thing read and nothing earlier is lost. The file is not committed; `.gitignore` keeps it out. `code-review-template.md` is the shape a report takes: the heading says when the review was run, then a heading for each file by its path from the root of the repository, and under each the status and what was found.
+Its report is written to the top of `code-review.md`, above whatever is already there, with a `---` line between the new report and the ones before it, so that the newest is the first thing read and nothing earlier is lost. The file is not committed; `.gitignore` keeps it out. A report's heading says when the review was run, then comes a heading for each file by its path from the root of the repository, and under each the status and what was found.
 
 A reviewer told to find faults will report some that are not, so a finding is checked against the code before it is acted on, and one that turns out to be wrong is recorded as wrong rather than quietly dropped. A finding that stands is either fixed or answered with the reason it stands.
 
