@@ -1,5 +1,5 @@
 import { Slug } from "../../common/Slug.js";
-import { Validator } from "../../common/validation/Validator.js";
+import { orderRules } from "../../common/orders.js";
 import type { CompetitionId } from "./primitives/CompetitionId.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
 
@@ -7,22 +7,10 @@ import { CompetitionName } from "./value-objects/CompetitionName.js";
 export type CompetitionReferenceErrorCode =
   "CompetitionReference.OrderNotWhole" | "CompetitionReference.OrderTooSmall";
 
-// A whole number the platform holds exactly. One beyond that is not reliably
-// the number it was given, so two orders could be told apart by nothing.
-const orders = new Validator<number, CompetitionReferenceErrorCode>({
-  fields: [
-    {
-      field: "order",
-      code: "CompetitionReference.OrderNotWhole",
-      isBrokenBy: (order) => !Number.isSafeInteger(order),
-    },
-    {
-      field: "order",
-      code: "CompetitionReference.OrderTooSmall",
-      isBrokenBy: (order) => order < 1,
-    },
-  ],
-});
+const orders = orderRules<CompetitionReferenceErrorCode>(
+  "CompetitionReference.OrderNotWhole",
+  "CompetitionReference.OrderTooSmall",
+);
 
 /** What a reference is, as it is given, before anything is asked of it. */
 export interface CompetitionReferenceDetails {
