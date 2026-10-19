@@ -1,6 +1,7 @@
 import type { AccountId } from "../../accounts/AccountId.js";
 import { AggregateRoot } from "../../../common/AggregateRoot.js";
 import type { DomainEvent } from "../../../common/DomainEvent.js";
+import { ORDER_STEP, orderPast } from "../../../common/orders.js";
 import type { ReadOnlyDate } from "../../../common/ReadOnlyDate.js";
 import { Refused } from "../../../common/Refused.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
@@ -104,10 +105,6 @@ export class CompetitionRefused extends Refused<CompetitionErrorCode> {}
 const refuse = (code: CompetitionErrorCode, message: string): never => {
   throw new CompetitionRefused(code, message);
 };
-
-// How far apart players are put when the players are spaced out, as the
-// tournament's are.
-const ORDER_STEP = 10_000;
 
 /**
  * One of a tournament's competitions — a block, a knockout or a Swiss — and
@@ -250,10 +247,10 @@ export class Competition extends AggregateRoot {
     );
     let order: number | undefined = tournamentOrder;
     if (holder >= 0) {
-      order = this.#orderPast(holder, "down");
+      order = orderPast(this.#orders, holder, "down");
       if (order === undefined) {
         this.#spaceOut(by, at);
-        order = this.#orderPast(holder, "down");
+        order = orderPast(this.#orders, holder, "down");
       }
       if (order === undefined) {
         throw new Error("Spaced out, there was still no room to enter into.");
@@ -1168,10 +1165,10 @@ export class Competition extends AggregateRoot {
     const past = this.players.findIndex(
       (player) => player.order === passed.order,
     );
-    let to = this.#orderPast(past, direction);
+    let to = orderPast(this.#orders, past, direction);
     if (to === undefined) {
       this.#spaceOut(by, at);
-      to = this.#orderPast(past, direction);
+      to = orderPast(this.#orders, past, direction);
     }
     // Spaced 10,000 apart, there is always room, so none here is a mistake in
     // the spacing rather than something to refuse.
@@ -1193,21 +1190,8 @@ export class Competition extends AggregateRoot {
     );
   }
 
-  // The order a player moved past the one at `at` in the competition's order
-  // is given: just before them when moving up, just after them when moving
-  // down, halfway into the room between them and whoever lies next to them,
-  // withdrawn or not. Nothing, where there is no whole number left in the room.
-  #orderPast(at: number, direction: "up" | "down"): number | undefined {
-    const all = this.players;
-    const orderAt = (index: number): number | undefined => all[index]?.order;
-    const [lower, upper] =
-      direction === "up"
-        ? [orderAt(at - 1) ?? 0, orderAt(at)]
-        : [orderAt(at), orderAt(at + 1)];
-    if (lower === undefined) return undefined;
-    if (upper === undefined) return lower + ORDER_STEP;
-    const halfway = Math.floor((lower + upper) / 2);
-    return halfway > lower && halfway < upper ? halfway : undefined;
+  get #orders(): number[] {
+    return this.players.map(({ order }) => order);
   }
 
   #playerFound(id: GamePlayerId): CompetitionPlayer {

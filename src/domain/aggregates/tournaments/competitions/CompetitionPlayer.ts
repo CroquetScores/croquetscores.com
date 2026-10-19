@@ -1,4 +1,4 @@
-import { Validator } from "../../../common/validation/Validator.js";
+import { orderAfter, orderRules } from "../../../common/orders.js";
 import { ValidationError } from "../../../common/validation/ValidationError.js";
 import type { TournamentPlayerId } from "../primitives/TournamentPlayerId.js";
 import { CompetitionPlayerId } from "./primitives/CompetitionPlayerId.js";
@@ -11,26 +11,10 @@ export type CompetitionPlayerErrorCode =
   | "CompetitionPlayer.HasGames"
   | "CompetitionPlayer.Withdrawn";
 
-// The gap left between one player's order and the next, so that a player can
-// later be put between two others without either of them moving.
-const ORDER_STEP = 10_000;
-
-// A whole number the platform holds exactly. One beyond that is not reliably
-// the number it was given, so two orders could be told apart by nothing.
-const orders = new Validator<number, CompetitionPlayerErrorCode>({
-  fields: [
-    {
-      field: "order",
-      code: "CompetitionPlayer.OrderNotWhole",
-      isBrokenBy: (order) => !Number.isSafeInteger(order),
-    },
-    {
-      field: "order",
-      code: "CompetitionPlayer.OrderTooSmall",
-      isBrokenBy: (order) => order < 1,
-    },
-  ],
-});
+const orders = orderRules<CompetitionPlayerErrorCode>(
+  "CompetitionPlayer.OrderNotWhole",
+  "CompetitionPlayer.OrderTooSmall",
+);
 
 /** What a new player in a competition is, before anything is asked of it. */
 export interface CompetitionPlayerDetails {
@@ -107,10 +91,7 @@ export class CompetitionPlayer {
    * with them.
    */
   static orderAfter(players: readonly CompetitionPlayer[]): number {
-    return (
-      players.reduce((highest, player) => Math.max(highest, player.#order), 0) +
-      ORDER_STEP
-    );
+    return orderAfter(players.map((player) => player.#order));
   }
 
   get id(): CompetitionPlayerId {

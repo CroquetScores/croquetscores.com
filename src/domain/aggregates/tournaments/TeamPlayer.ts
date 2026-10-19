@@ -1,7 +1,8 @@
 import type { Slug } from "../../common/Slug.js";
-import { Validator } from "../../common/validation/Validator.js";
+import { orderRules } from "../../common/orders.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
+import { isNamedBye } from "./isNamedBye.js";
 import type { TeamPlayerId } from "./primitives/TeamPlayerId.js";
 import { WorldRankingName } from "./value-objects/WorldRankingName.js";
 
@@ -13,21 +14,10 @@ export type TeamPlayerErrorCode =
   | "TeamPlayer.Archived"
   | "TeamPlayer.NamedBye";
 
-// A whole number the platform holds exactly, as a tournament player's order is.
-const orders = new Validator<number, TeamPlayerErrorCode>({
-  fields: [
-    {
-      field: "order",
-      code: "TeamPlayer.OrderNotWhole",
-      isBrokenBy: (order) => !Number.isSafeInteger(order),
-    },
-    {
-      field: "order",
-      code: "TeamPlayer.OrderTooSmall",
-      isBrokenBy: (order) => order < 1,
-    },
-  ],
-});
+const orders = orderRules<TeamPlayerErrorCode>(
+  "TeamPlayer.OrderNotWhole",
+  "TeamPlayer.OrderTooSmall",
+);
 
 // What a player is called, in the tournament and in the world rankings.
 interface Named {
@@ -116,7 +106,7 @@ export class TeamPlayer {
   // for a tournament's player, so "Bye 2" is a bye and "Byers" is a name.
   static #namedOf(details: TeamPlayerDetails): Named {
     const name = PersonName.from(details.name);
-    if (/^bye(?!\p{L})/iu.test(details.name.trim())) {
+    if (isNamedBye(details.name)) {
       throw new ValidationError<TeamPlayerErrorCode>("TeamPlayer.NamedBye");
     }
     return {

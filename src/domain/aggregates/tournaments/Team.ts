@@ -1,5 +1,5 @@
 import type { Slug } from "../../common/Slug.js";
-import { Validator } from "../../common/validation/Validator.js";
+import { orderRules } from "../../common/orders.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import type { TeamId } from "./primitives/TeamId.js";
 import type { TeamPlayer } from "./TeamPlayer.js";
@@ -17,21 +17,10 @@ export type TeamErrorCode =
   | "Team.Archived"
   | "Team.InATest";
 
-// A whole number the platform holds exactly, as a player's order is.
-const orders = new Validator<number, TeamErrorCode>({
-  fields: [
-    {
-      field: "order",
-      code: "Team.OrderNotWhole",
-      isBrokenBy: (order) => !Number.isSafeInteger(order),
-    },
-    {
-      field: "order",
-      code: "Team.OrderTooSmall",
-      isBrokenBy: (order) => order < 1,
-    },
-  ],
-});
+const orders = orderRules<TeamErrorCode>(
+  "Team.OrderNotWhole",
+  "Team.OrderTooSmall",
+);
 
 /** What a team is, as it is given, before anything is asked of it. */
 export interface TeamDetails {

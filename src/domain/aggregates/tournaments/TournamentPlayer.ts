@@ -1,8 +1,9 @@
 import type { Slug } from "../../common/Slug.js";
-import { Validator } from "../../common/validation/Validator.js";
+import { orderRules } from "../../common/orders.js";
 import { ValidationError } from "../../common/validation/ValidationError.js";
 import { PersonName } from "../accounts/value-objects/PersonName.js";
 import type { TournamentPlayerId } from "./primitives/TournamentPlayerId.js";
+import { isNamedBye } from "./isNamedBye.js";
 import type { Flag } from "./value-objects/Flag.js";
 import { Flags } from "./value-objects/Flags.js";
 import { WorldRankingName } from "./value-objects/WorldRankingName.js";
@@ -17,31 +18,10 @@ export type TournamentPlayerErrorCode =
   | "TournamentPlayer.NamedBye"
   | "TournamentPlayer.NoLetterOrDigit";
 
-/**
- * Whether `name` names a bye rather than a person, which a tournament player
- * is refused for: a name that begins with "bye", in any case, where no letter
- * follows it, since the word ends where anything but a letter comes. So
- * "Bye 2" is a bye and "Byers" is a name.
- */
-export const isNamedBye = (name: string): boolean =>
-  /^bye(?!\p{L})/iu.test(name.trim());
-
-// A whole number the platform holds exactly. One beyond that is not reliably
-// the number it was given, so two orders could be told apart by nothing.
-const orders = new Validator<number, TournamentPlayerErrorCode>({
-  fields: [
-    {
-      field: "order",
-      code: "TournamentPlayer.OrderNotWhole",
-      isBrokenBy: (order) => !Number.isSafeInteger(order),
-    },
-    {
-      field: "order",
-      code: "TournamentPlayer.OrderTooSmall",
-      isBrokenBy: (order) => order < 1,
-    },
-  ],
-});
+const orders = orderRules<TournamentPlayerErrorCode>(
+  "TournamentPlayer.OrderNotWhole",
+  "TournamentPlayer.OrderTooSmall",
+);
 
 /** What a player is, as it is given, before anything is asked of it. */
 export interface TournamentPlayerDetails {

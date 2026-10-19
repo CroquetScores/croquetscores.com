@@ -17,7 +17,7 @@ import {
 import { oldFlagOf } from "./oldSites.js";
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
-import { isNamedBye } from "../domain/aggregates/tournaments/TournamentPlayer.js";
+import { isNamedBye } from "../domain/aggregates/tournaments/isNamedBye.js";
 
 /**
  * Whether the old sites' player called `name` was a bye: "Bye", or one of
