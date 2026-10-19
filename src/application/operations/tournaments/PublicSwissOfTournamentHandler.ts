@@ -19,15 +19,13 @@ import {
   type SwissToRead,
 } from "./PublicSwissOfTournament.js";
 import {
+  competitionOfKindForReaders,
   competitionsInUse,
   tournamentForReaders,
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
-import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicSwissOfTournamentHandler extends QueryHandler<
   PublicSwissOfTournament,
@@ -54,23 +52,16 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicSwissOfTournament",
     );
-    const found = tournament.competitions.find(
-      ({ reference }) =>
-        !reference.archived && reference.slug.toString() === query.slug,
+    const { reference } = competitionOfKindForReaders(
+      tournament,
+      query.slug,
+      "swiss",
+      {
+        noSuchCompetition: "PublicSwissOfTournament.NoSuchCompetition",
+        notOfKind: "PublicSwissOfTournament.NotASwiss",
+        sentence: "The competition is not a Swiss.",
+      },
     );
-    if (found === undefined) {
-      throw new TournamentOperationRefused(
-        "PublicSwissOfTournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
-    const { reference, shape } = found;
-    if (shape.kind !== "swiss") {
-      throw new TournamentOperationRefused(
-        "PublicSwissOfTournament.NotASwiss",
-        "The competition is not a Swiss.",
-      );
-    }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
     const address = tournament.address.toString();

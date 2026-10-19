@@ -17,16 +17,14 @@ import {
   type TestToRead,
 } from "./PublicTestOfTournament.js";
 import {
+  competitionOfKindForReaders,
   competitionsInUse,
   playersOf,
   tournamentForReaders,
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
-import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicTestOfTournamentHandler extends QueryHandler<
   PublicTestOfTournament,
@@ -53,23 +51,16 @@ export class PublicTestOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicTestOfTournament",
     );
-    const found = tournament.competitions.find(
-      ({ reference }) =>
-        !reference.archived && reference.slug.toString() === query.slug,
+    const { reference, shape } = competitionOfKindForReaders(
+      tournament,
+      query.slug,
+      "test",
+      {
+        noSuchCompetition: "PublicTestOfTournament.NoSuchCompetition",
+        notOfKind: "PublicTestOfTournament.NotATest",
+        sentence: "The competition is not a test.",
+      },
     );
-    if (found === undefined) {
-      throw new TournamentOperationRefused(
-        "PublicTestOfTournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
-    const { reference, shape } = found;
-    if (shape.kind !== "test") {
-      throw new TournamentOperationRefused(
-        "PublicTestOfTournament.NotATest",
-        "The competition is not a test.",
-      );
-    }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
     const first = shape.firstTeam.value;
