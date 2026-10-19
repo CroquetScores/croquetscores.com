@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { say } from "../../../../../../../words.js";
 import { noOption, optionFace } from "../../../../../../../optionFace.js";
@@ -7,6 +7,7 @@ import {
   type TeamPlayerAsTheyAre,
 } from "../modal-dialogs/team-player/team-player.js";
 import { idInAddress } from "../../../../../../../api.js";
+import { useListed } from "../../../../../../../useListed.js";
 import "../../../../../../../listed.css";
 
 // A team's players (team-players.feature), which are its page: those in use in
@@ -50,37 +51,15 @@ export const TeamPlayers = ({
   worldRankingSport,
   manages,
 }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly Listed[] | undefined>();
-  // Counted up to ask again, once something has been pressed or kept.
-  const [asking, setAsking] = useState(0);
-  const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
   const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
 
-  useEffect(() => {
-    let current = true;
-    void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { players: Listed[] }).players
-          : undefined,
-      )
-      .catch(() => undefined)
-      .then((players) => {
-        if (!current) return;
-        setListed(players);
-        setAnswered(asking);
-      });
-    return () => {
-      current = false;
-    };
-  }, [at, asking]);
-
-  const askAgain = (): void => {
-    setAsking((count) => count + 1);
-  };
+  const { listed, asking, answered, askAgain } = useListed<Listed>(
+    at,
+    "players",
+  );
 
   const act = async (player: Listed, action: Action): Promise<void> => {
     setActing(true);

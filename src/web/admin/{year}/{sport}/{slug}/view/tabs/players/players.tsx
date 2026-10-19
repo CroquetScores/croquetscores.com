@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { say } from "../../../../../../words.js";
@@ -10,6 +10,7 @@ import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
 import { go } from "../../../../../../navigation.js";
 import "../../../../../../listed.css";
+import { useListed } from "../../../../../../useListed.js";
 
 // The Players tab (players-tab.feature): the players in use in the
 // tournament's order, each with what they represent and the flag they fly,
@@ -55,10 +56,6 @@ export const PlayersTab = ({
   worldRankingSport,
   manages,
 }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly Listed[] | undefined>();
-  // Counted up to ask again, once something has been pressed or kept.
-  const [asking, setAsking] = useState(0);
-  const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
   const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
@@ -66,28 +63,10 @@ export const PlayersTab = ({
   const [archiving, setArchiving] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
 
-  useEffect(() => {
-    let current = true;
-    void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { players: Listed[] }).players
-          : undefined,
-      )
-      .catch(() => undefined)
-      .then((players) => {
-        if (!current) return;
-        setListed(players);
-        setAnswered(asking);
-      });
-    return () => {
-      current = false;
-    };
-  }, [at, asking]);
-
-  const askAgain = (): void => {
-    setAsking((count) => count + 1);
-  };
+  const { listed, asking, answered, askAgain } = useListed<Listed>(
+    at,
+    "players",
+  );
 
   // None asks first: each is undone by pressing the other way, and nothing is
   // lost, but for archiving one who is in competitions, which asks.

@@ -111,3 +111,9 @@ The `project` and `rebuildFromStream` methods repeated across the nine read mode
    Not covered, and not added because a scenario means changing a `.feature` (AI.md §1): nothing in the restore scenarios notices if the hiding is removed altogether, and nothing in either set notices if the password is not hidden. Removing the hiding turned 2 backup scenarios red; removing the password from the parts hidden turned none red.
 
 After: 18 clones, 235 duplicated lines, 3.28% at the same threshold. Left as they are on purpose: the `pgDump` and `pgRestore` runners and the account event sealing's `seal` and `open`, which mirror each other with their own error classes and messages.
+
+### web (in progress)
+
+Baseline at `--min-lines 6 --min-tokens 40`: 170 clones, 1,916 duplicated lines, 7.45% of the layer. These are browser features, so the admin is rebuilt (`npm run build:admin:alongside`) before they are run, and they are run with a throwaway cucumber configuration naming only the features concerned.
+
+1. Admin tabs: six components (the tournament's players tab, the team's players, the competition's scores tab, and the teams, notes and competitions tabs) each kept a list, a count of askings and a count of the answered one, and had the same effect asking the API and the same function asking again. Now `useListed` in `src/web/admin`. The 412 scenarios in the six tabs' features pass; making asking again do nothing turned 9 of the 92 in two of them red.

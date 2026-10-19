@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { say } from "../../../../../../words.js";
 import {
@@ -8,6 +8,7 @@ import {
 import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
 import "../../../../../../listed.css";
+import { useListed } from "../../../../../../useListed.js";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
 // the tournament's order, each offering Edit, View, Archive, Up and Down, and
@@ -41,33 +42,15 @@ export const CompetitionsTab = ({
   address,
   part,
 }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly Listed[] | undefined>();
-  // Counted up to ask again, once something has been pressed.
-  const [asking, setAsking] = useState(0);
-  const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions`;
 
-  useEffect(() => {
-    let current = true;
-    void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { competitions: Listed[] }).competitions
-          : undefined,
-      )
-      .catch(() => undefined)
-      .then((competitions) => {
-        if (!current) return;
-        setListed(competitions);
-        setAnswered(asking);
-      });
-    return () => {
-      current = false;
-    };
-  }, [at, asking]);
+  const { listed, asking, answered, askAgain } = useListed<Listed>(
+    at,
+    "competitions",
+  );
 
   const act = async (
     competition: Listed,
@@ -83,7 +66,7 @@ export const CompetitionsTab = ({
     } catch {
       // A request that never arrived is said by the list asked for again.
     } finally {
-      setAsking((count) => count + 1);
+      askAgain();
       setActing(false);
     }
   };
@@ -226,7 +209,7 @@ export const CompetitionsTab = ({
           tournament={tournament}
           competition={editing}
           kept={() => {
-            setAsking((count) => count + 1);
+            askAgain();
           }}
           close={() => {
             setAdding(false);
