@@ -91,7 +91,7 @@ export class CompetitionPlayer {
    * with them.
    */
   static orderAfter(players: readonly CompetitionPlayer[]): number {
-    return orderAfter(players.map((player) => player.#order));
+    return orderAfter(players);
   }
 
   get id(): CompetitionPlayerId {

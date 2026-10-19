@@ -6,6 +6,11 @@ import { Validator } from "./validation/Validator.js";
  */
 export const ORDER_STEP = 10_000;
 
+/** Whatever is listed by order, lowest first. */
+export interface Ordered {
+  readonly order: number;
+}
+
 /**
  * The rules an order must keep, for something whose error codes are named
  * `<owner>.OrderNotWhole` and `<owner>.OrderTooSmall`. Every kind of thing
@@ -36,12 +41,18 @@ export const orderRules = <TCode extends string>(
   });
 
 /**
- * ORDER_STEP more than the highest of `orders`, for something put last: one
- * added, or one archived. Every order counts, whether the thing is archived or
- * not, so that no order is ever given twice.
+ * ORDER_STEP more than the highest order among `ordered`, for something put
+ * last: one added, or one archived. Every one counts, whether archived or not,
+ * so that no order is ever given twice.
+ *
+ * Found by looking at each in turn rather than by giving them all to Math.max,
+ * since a list long enough would be more arguments than a call can take.
  */
-export const orderAfter = (orders: Iterable<number>): number =>
-  Math.max(0, ...orders) + ORDER_STEP;
+export const orderAfter = (ordered: Iterable<Ordered>): number => {
+  let highest = 0;
+  for (const { order } of ordered) highest = Math.max(highest, order);
+  return highest + ORDER_STEP;
+};
 
 /**
  * The order something moved past the one at `at` in `orders`, lowest first, is
@@ -52,14 +63,15 @@ export const orderAfter = (orders: Iterable<number>): number =>
  * left in the room.
  */
 export const orderPast = (
-  orders: readonly number[],
+  ordered: readonly Ordered[],
   at: number,
   direction: "up" | "down",
 ): number | undefined => {
+  const orderAt = (index: number): number | undefined => ordered[index]?.order;
   const [lower, upper] =
     direction === "up"
-      ? [orders[at - 1] ?? 0, orders[at]]
-      : [orders[at], orders[at + 1]];
+      ? [orderAt(at - 1) ?? 0, orderAt(at)]
+      : [orderAt(at), orderAt(at + 1)];
   if (lower === undefined) return undefined;
   if (upper === undefined) return lower + ORDER_STEP;
   const halfway = Math.floor((lower + upper) / 2);

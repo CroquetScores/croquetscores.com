@@ -247,10 +247,10 @@ export class Competition extends AggregateRoot {
     );
     let order: number | undefined = tournamentOrder;
     if (holder >= 0) {
-      order = orderPast(this.#orders, holder, "down");
+      order = orderPast(this.players, holder, "down");
       if (order === undefined) {
         this.#spaceOut(by, at);
-        order = orderPast(this.#orders, holder, "down");
+        order = orderPast(this.players, holder, "down");
       }
       if (order === undefined) {
         throw new Error("Spaced out, there was still no room to enter into.");
@@ -302,13 +302,13 @@ export class Competition extends AggregateRoot {
    * below. They are given the order halfway between the two they now come
    * between, rounded down, and nobody else moves, as a tournament's
    * competition is moved. Put first, they are given half the order of the one
-   * they come before, and put last, 10,000 more than the highest order there
+   * they come before, and put last, a step more than the highest order there
    * is.
    *
    * A withdrawn player keeps their order and still counts, so the room
    * between two players ends at one lying between them. Where there is no
    * whole number left in the room, every player is spaced out again first,
-   * 10,000 apart in the order they are in. Moving the first up or the last
+   * a step apart in the order they are in. Moving the first up or the last
    * down records nothing, since there is nowhere for them to go. A withdrawn
    * player can only have their withdrawal reversed, so moving one is refused,
    * as the player says.
@@ -1165,12 +1165,12 @@ export class Competition extends AggregateRoot {
     const past = this.players.findIndex(
       (player) => player.order === passed.order,
     );
-    let to = orderPast(this.#orders, past, direction);
+    let to = orderPast(this.players, past, direction);
     if (to === undefined) {
       this.#spaceOut(by, at);
-      to = orderPast(this.#orders, past, direction);
+      to = orderPast(this.players, past, direction);
     }
-    // Spaced 10,000 apart, there is always room, so none here is a mistake in
+    // Spaced a step apart, there is always room, so none here is a mistake in
     // the spacing rather than something to refuse.
     const from = this.players[mover]?.order;
     if (to === undefined || from === undefined) {
@@ -1179,7 +1179,7 @@ export class Competition extends AggregateRoot {
     return { from, to };
   }
 
-  // Every player and bye given an order 10,000 apart, in the order they are in.
+  // Every player and bye given an order a step apart, in the order they are in.
   #spaceOut(by: AccountId, at: ReadOnlyDate): void {
     this.record(
       new CompetitionPlayersSpacedOut(
@@ -1188,10 +1188,6 @@ export class Competition extends AggregateRoot {
         at,
       ),
     );
-  }
-
-  get #orders(): number[] {
-    return this.players.map(({ order }) => order);
   }
 
   #playerFound(id: GamePlayerId): CompetitionPlayer {

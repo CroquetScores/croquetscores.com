@@ -704,7 +704,7 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
-   * That a player was added, as `details` say, given 10,000 more than the
+   * That a player was added, as `details` say, given a step more than the
    * highest order there is. Refused when another player has the id, or the
    * name, archived or not.
    */
@@ -775,7 +775,7 @@ export class Tournament extends AggregateRoot {
    * That the player `id` is set aside. Whether they have played any games is
    * not the tournament's to know, so whatever asks says, and the player
    * refuses if they have. They are out of the way, so they are put last, given
-   * 10,000 more than the highest order there is, and keep that order if they
+   * a step more than the highest order there is, and keep that order if they
    * are restored. Archiving one who is archived records nothing.
    */
   archivePlayer(
@@ -1010,7 +1010,7 @@ export class Tournament extends AggregateRoot {
    * is restored. A test is not once any of its matches has started, since it
    * has then been played; what has been played in it is not the tournament's
    * to know, so whatever asks says, as `played`, and says nothing of any other
-   * kind. It is out of the way, so it is put last, given 10,000 more than the
+   * kind. It is out of the way, so it is put last, given a step more than the
    * highest order there is, and keeps that order if it is restored. Archiving
    * one that is archived records nothing.
    */
@@ -1039,12 +1039,12 @@ export class Tournament extends AggregateRoot {
    * given the order halfway between the two it now comes between, rounded
    * down, and nothing else moves, as a competition put anywhere in the list
    * would be. Put first, it is given half the order of the one it comes
-   * before, and put last, 10,000 more than the highest order there is.
+   * before, and put last, a step more than the highest order there is.
    *
    * An archived competition keeps its order and still counts, so the room
    * between two competitions ends at one lying between them. Where there is
    * no whole number left in the room, every competition is spaced out again
-   * first, 10,000 apart in the order they are in. Moving the first up or the
+   * first, a step apart in the order they are in. Moving the first up or the
    * last down records nothing, since there is nowhere for it to go.
    */
   moveCompetition(
@@ -1076,7 +1076,7 @@ export class Tournament extends AggregateRoot {
       );
       order = this.#orderPast(passed.reference.id, direction);
     }
-    // Spaced 10,000 apart, there is always room, so none here is a mistake in
+    // Spaced a step apart, there is always room, so none here is a mistake in
     // the spacing rather than something to refuse.
     if (order === undefined) {
       throw new Error("Spaced out, there was still no room to move into.");
@@ -1104,7 +1104,7 @@ export class Tournament extends AggregateRoot {
 
   /**
    * That a team was added, as `details` say, found at a slug of its short
-   * name no other team has, and given 10,000 more than the highest order
+   * name no other team has, and given a step more than the highest order
    * there is. Only a tournament played by teams has teams. Refused when
    * another team has the id, or the name or the short name however it is
    * capitalised, archived or not.
@@ -1242,7 +1242,7 @@ export class Tournament extends AggregateRoot {
 
   /**
    * That a player was added to the team `teamId`, as `details` say, given
-   * 10,000 more than the highest order in the team. Refused when the team is
+   * a step more than the highest order in the team. Refused when the team is
    * archived, when a player in any team has the id, and when another player
    * in the team has the name, however it is capitalised, archived or not.
    */
@@ -1272,7 +1272,7 @@ export class Tournament extends AggregateRoot {
     );
     const player = TeamPlayer.from(id, details, {
       slug,
-      order: nextOrderIn(team.players),
+      order: orderAfter(team.players),
     });
     // Unique in every team, since a game in a test is between two teams and
     // names its players by their ids alone.
@@ -1352,7 +1352,7 @@ export class Tournament extends AggregateRoot {
       new TeamPlayerArchived(
         teamId.value,
         id.value,
-        nextOrderIn(team.players),
+        orderAfter(team.players),
         by,
         at,
       ),
@@ -2076,19 +2076,19 @@ export class Tournament extends AggregateRoot {
     );
   }
 
-  // 10,000 more than the highest order there is, for a player put last: one
+  // A step more than the highest order there is, for a player put last: one
   // added, or one archived. Archived players still count, so that no order is
   // ever given twice.
   get #nextPlayerOrder(): number {
-    return orderAfter([...this.#players.values()].map(({ order }) => order));
+    return orderAfter(this.#players.values());
   }
 
-  // 10,000 more than the highest order there is, for a competition put last:
+  // A step more than the highest order there is, for a competition put last:
   // one added, or one archived. Archived competitions still count, so that no
   // order is ever given twice.
   get #nextOrder(): number {
     return orderAfter(
-      [...this.#competitions.values()].map(({ reference }) => reference.order),
+      [...this.#competitions.values()].map(({ reference }) => reference),
     );
   }
 
@@ -2171,7 +2171,7 @@ export class Tournament extends AggregateRoot {
   ): number | undefined {
     const all = this.#competitionsByOrder;
     return orderPast(
-      all.map(({ reference }) => reference.order),
+      all.map(({ reference }) => reference),
       all.findIndex(({ reference }) => reference.id.equals(passed)),
       direction,
     );
@@ -2285,7 +2285,7 @@ export class Tournament extends AggregateRoot {
   }
 
   get #nextTeamOrder(): number {
-    return nextOrderIn([...this.#teams.values()]);
+    return orderAfter(this.#teams.values());
   }
 
   // The order the thing `id` is given, moved a place among `byOrder()` not
@@ -2304,7 +2304,7 @@ export class Tournament extends AggregateRoot {
     const orderPastPassed = (): number | undefined => {
       const all = byOrder();
       return orderPast(
-        all.map(({ order }) => order),
+        all,
         all.findIndex((each) => each.id.equals(passed.id)),
         direction,
       );
@@ -2420,10 +2420,6 @@ interface Ordered {
   readonly order: number;
   readonly archived: boolean;
 }
-
-// For something put last: one added, or one archived.
-const nextOrderIn = (ordered: readonly { readonly order: number }[]): number =>
-  orderAfter(ordered.map(({ order }) => order));
 
 // Another player in `team` with the player's name, archived or not, however
 // it is capitalised. A player in another team may have it, since a player is
