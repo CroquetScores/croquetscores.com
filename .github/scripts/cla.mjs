@@ -18,6 +18,11 @@ export const signingWords =
 // told by the type GitHub gives the account and not by its name.
 const owners = ["TimMurphy"];
 
+// The exception to that: Claude Code can act under an ordinary user account
+// called `claude`, which GitHub types as a User and not a Bot, so it would be
+// asked to sign an agreement it cannot. Named here because the type cannot say.
+const botLogins = ["claude"];
+
 // Kept apart from the code, on a branch of its own that holds nothing else, so
 // that a signature is not a commit on main and is not in the history of the
 // site. A file on a branch rather than a comment, because a comment can be
@@ -33,7 +38,9 @@ const statusName = "CLA";
 const marker = "<!-- cla-bot -->";
 
 const needsToSign = (person) =>
-  person.type !== "Bot" && !owners.includes(person.login);
+  person.type !== "Bot" &&
+  !owners.includes(person.login) &&
+  !botLogins.includes(person.login.toLowerCase());
 
 const decoded = (content) =>
   JSON.parse(Buffer.from(content, "base64").toString("utf8"));
