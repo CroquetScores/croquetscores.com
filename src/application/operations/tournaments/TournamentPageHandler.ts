@@ -10,8 +10,9 @@ import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import {
   type TournamentAddresses,
-  TournamentOperationRefused,
   readerAs,
+  tournamentAtAddress,
+  unlessArchived,
 } from "./tournamentOperations.js";
 import { type TournamentAsPaged, TournamentPage } from "./TournamentPage.js";
 
@@ -30,15 +31,11 @@ export class TournamentPageHandler extends QueryHandler<
   }
 
   async handle(query: TournamentPage): Promise<TournamentAsPaged> {
-    const id = await this.addresses.tournamentAt(query.address);
-    const tournament =
-      id === undefined ? undefined : await this.tournaments.load(id);
-    if (tournament === undefined) {
-      throw new TournamentOperationRefused(
-        "UpdateTournament.NoSuchTournament",
-        "No tournament has been found at that address.",
-      );
-    }
+    const tournament = await tournamentAtAddress(
+      this.tournaments,
+      this.addresses,
+      query.address,
+    );
     const reader = await readerAs(this.accounts, query.account);
     const mayChangeWorldRankingNames =
       tournament.mayChangeWorldRankingNames(reader);
@@ -55,12 +52,7 @@ export class TournamentPageHandler extends QueryHandler<
         "Only a manager or a scorer of the tournament has a page of it.",
       );
     }
-    if (tournament.archived) {
-      throw new TournamentRefused(
-        "Tournament.Archived",
-        "An archived tournament can only be restored.",
-      );
-    }
+    unlessArchived(tournament);
     return {
       id: tournament.id.value,
       address: tournament.address.toString(),

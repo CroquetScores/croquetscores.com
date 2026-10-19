@@ -162,6 +162,42 @@ export const tournamentFor = async (
 };
 
 /**
+ * The tournament found at `address`, now or before, or refused as
+ * `UpdateTournament`'s `NoSuchTournament`. The pages a manager or a scorer
+ * is shown are found by the address in the browser and refuse as changing the
+ * tournament would, whichever page asks.
+ */
+export const tournamentAtAddress = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  addresses: TournamentAddresses,
+  address: string,
+): Promise<Tournament> => {
+  const id = await addresses.tournamentAt(address);
+  const tournament = id === undefined ? undefined : await tournaments.load(id);
+  if (tournament === undefined) {
+    throw new TournamentOperationRefused(
+      "UpdateTournament.NoSuchTournament",
+      "No tournament has been found at that address.",
+    );
+  }
+  return tournament;
+};
+
+/**
+ * Refused as `Tournament.Archived` where `tournament` is archived, since the
+ * only thing to be done to one is to restore it. The pages ask it after who
+ * may see them, so that is the first refusal a reader who may not is given.
+ */
+export const unlessArchived = (tournament: Tournament): void => {
+  if (tournament.archived) {
+    throw new TournamentRefused(
+      "Tournament.Archived",
+      "An archived tournament can only be restored.",
+    );
+  }
+};
+
+/**
  * The tournament `written`, once `account` is known to be asking and to
  * manage it: refused as a command asking would be, in the order a command
  * asks, so that a manager's list refuses as changing the tournament would.

@@ -11,8 +11,9 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import { type TeamAsPaged, TeamPage } from "./TeamPage.js";
 import {
   type TournamentAddresses,
-  TournamentOperationRefused,
   readerAs,
+  tournamentAtAddress,
+  unlessArchived,
 } from "./tournamentOperations.js";
 
 export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
@@ -27,15 +28,11 @@ export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
   }
 
   async handle(query: TeamPage): Promise<TeamAsPaged> {
-    const id = await this.addresses.tournamentAt(query.address);
-    const tournament =
-      id === undefined ? undefined : await this.tournaments.load(id);
-    if (tournament === undefined) {
-      throw new TournamentOperationRefused(
-        "UpdateTournament.NoSuchTournament",
-        "No tournament has been found at that address.",
-      );
-    }
+    const tournament = await tournamentAtAddress(
+      this.tournaments,
+      this.addresses,
+      query.address,
+    );
     const reader = await readerAs(this.accounts, query.account);
     if (!tournament.mayChangeWorldRankingNames(reader)) {
       throw new TournamentRefused(
@@ -43,12 +40,7 @@ export class TeamPageHandler extends QueryHandler<TeamPage, TeamAsPaged> {
         "Only a manager of the tournament sees its teams.",
       );
     }
-    if (tournament.archived) {
-      throw new TournamentRefused(
-        "Tournament.Archived",
-        "An archived tournament can only be restored.",
-      );
-    }
+    unlessArchived(tournament);
     const team = tournament.teams.find(
       ({ slug }) => slug.toString() === query.slug,
     );
