@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { go } from "../../../../../../navigation.js";
-import { knows, say } from "../../../../../../words.js";
+import { say } from "../../../../../../words.js";
 import { ScoresTab } from "../../../competitions/{competition-slug}/view/tabs/scores/scores.js";
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TestPlayed } from "../../../view/tabs/tests/tests.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../teams/{team-slug}/view/view.css";
+import { RefusedPage } from "../../../RefusedPage.js";
 
 // A test's page (view.feature beneath the test): headed by its teams' names,
 // as "Australia v England", and beneath that how it is played, as the Tests
@@ -50,11 +51,6 @@ type Asked =
   | { readonly is: "asking" }
   | { readonly is: "refused"; readonly code: string }
   | { readonly is: "found"; readonly test: Found; readonly listed: Listed };
-
-// What a refusal says in place of the scores: its words, by its code, or the
-// words for any where it has none.
-const wordsFor = (code: string): string =>
-  say(knows(code) ? code : "admin.testView.otherwise");
 
 export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
@@ -112,16 +108,11 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
 
   if (asked.is === "refused") {
     return (
-      <main id="content">
-        <div className="page">
-          <div className="panel stack">
-            <h1>{say("admin.title")}</h1>
-            <p className="page-refused" data-refused={asked.code}>
-              {wordsFor(asked.code)}
-            </p>
-          </div>
-        </div>
-      </main>
+      <RefusedPage
+        heading={say("admin.title")}
+        code={asked.code}
+        otherwise="admin.testView.otherwise"
+      />
     );
   }
 
