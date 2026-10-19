@@ -112,9 +112,9 @@ The `project` and `rebuildFromStream` methods repeated across the nine read mode
 
 After: 18 clones, 235 duplicated lines, 3.28% at the same threshold. Left as they are on purpose: the `pgDump` and `pgRestore` runners and the account event sealing's `seal` and `open`, which mirror each other with their own error classes and messages.
 
-### web (in progress)
+### web (partly done: the shared pieces are out, the page-sized copies are not)
 
-Baseline at `--min-lines 6 --min-tokens 40`: 170 clones, 1,916 duplicated lines, 7.45% of the layer. These are browser features, so the admin is rebuilt (`npm run build:admin:alongside`) before they are run, and they are run with a throwaway cucumber configuration naming only the features concerned.
+Baseline at `--min-lines 6 --min-tokens 40`: 170 clones, 1,916 duplicated lines, 7.45% of the layer. After: 143 clones, 1,516 duplicated lines, 5.94%. These are browser features, so the admin is rebuilt (`npm run build:admin:alongside`) before they are run, and they are run with a throwaway cucumber configuration naming only the features concerned.
 
 1. Admin tabs: six components (the tournament's players tab, the team's players, the competition's scores tab, and the teams, notes and competitions tabs) each kept a list, a count of askings and a count of the answered one, and had the same effect asking the API and the same function asking again. Now `useListed` in `src/web/admin`. The 412 scenarios in the six tabs' features pass; making asking again do nothing turned 9 of the 92 in two of them red.
 2. Dialogs: six modal dialogs (team player, carry forward, score, competition, team, test) drew what was refused about the dialog as a whole in the same fourteen lines. Now `DialogProblems` beside `Field`. The player dialog, the note panel and the tournament form draw theirs differently on purpose (no codes, codes on each line, a block that takes the focus) and keep their own. The 597 scenarios in the six dialogs' features pass; dropping the codes turned 9 red.
@@ -124,8 +124,20 @@ Baseline at `--min-lines 6 --min-tokens 40`: 170 clones, 1,916 duplicated lines,
 
 ### import-ravendb (done)
 
-Baseline at `--min-lines 6 --min-tokens 40`: 5 clones, 47 duplicated lines, 0.73% of the layer.
+Baseline at `--min-lines 6 --min-tokens 40`: 5 clones, 47 duplicated lines, 0.73% of the layer. After: 5 clones, 41 duplicated lines, 0.63%.
 
 1. Acting as a tournament's first manager: five places took the tournament's first manager and the moment it was created (and refused one with no manager), and two of them also made the writer a manager and kept the tournament. Now `firstManagerOf` and `writerMadeManager` beside `tournamentBecome`. The 871 scenarios in `specs/import-ravendb` pass; not keeping the tournament after adding the writer turned 4 red. Using the wrong moment turned none red, so no scenario asserts when the first manager acted.
 
 Left alone: the two methods in `RavenDbDocuments` that make a document into an id and a document in the same way. They talk to a live RavenDB server, no scenario here reaches them (the scenarios use fakes) and no server was available, so changing them would be blind.
+
+## What is left
+
+Not merged, each for a reason that wants a decision and not just work:
+
+- **web, admin**: the tournament's players tab and the team's players page (about 100 lines in five clones), and the player, team player, team, competition, test and score dialogs' own `send` handling. They are parallel by design and differ in small, scenario-relied-on ways, so a shared component would need to name those differences. Worth doing with someone who knows which differences are meant.
+- **web, public**: `forgetAccount` with `setNewPassword`, `year` with `yearSport`, `register` with `signIn`, and `commentaries` with `notes`.
+- **application**: the handlers that read a link and then set a password (confirming, setting a new one, changing one), and the ranking code the Swiss, knockout and block public pages share.
+- **infrastructure and domain**: the projection boilerplate across read models, on purpose.
+- **import-ravendb**: `RavenDbDocuments`, which cannot be tested here.
+
+Found and not touched: two private `managedOrScoredBy` that refuse with different codes; the restore command's address hiding and both commands' password hiding have no scenario; and three scenarios already fail on the branch's base (`commentary.feature:465` and `:604`, `player.feature:444`).
