@@ -68,10 +68,13 @@ export class Website {
   );
   // Development is where the site is worked on rather than somewhere readers
   // are sent, so it is Croquet Scores as readers have it and not a try website.
+  // It keeps and reads croquetscores.com's, as the beta site does, because the
+  // data a developer restores is a copy of that site's.
   static readonly development = new Website(
     "localhost:3000",
     "croquetScores",
     false,
+    Website.croquetScores,
   );
 
   /**
