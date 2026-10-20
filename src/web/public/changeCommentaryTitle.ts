@@ -15,7 +15,6 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { ChangeCommentaryTitle } from "../../application/operations/tournaments/ChangeCommentaryTitle.js";
 import type { TournamentCommentaryToRead } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
-import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Assets } from "../common/assets.js";
@@ -31,7 +30,7 @@ import {
   commentaryOf,
   goneSinceAsked,
 } from "./commentary.js";
-import { toSignIn } from "./profile.js";
+import { accountForgotten, toSignIn } from "./profile.js";
 import { yearInPath } from "./year.js";
 
 // What the commentary refuses of a title that is the title's to put right,
@@ -144,12 +143,7 @@ export const registerChangeCommentaryTitlePage = (
     } catch (failure) {
       // Forgetting an account ends its sessions afterwards, not with it, so a
       // form sent in between comes from a reader signed in to nothing.
-      if (
-        failure instanceof AccountRefused &&
-        failure.code === "Account.Forgotten"
-      ) {
-        return toSignIn(request, reply);
-      }
+      if (accountForgotten(failure)) return toSignIn(request, reply);
       if (failure instanceof RequestInvalid) return refused(failure.broken);
       if (
         failure instanceof CommentaryRefused &&

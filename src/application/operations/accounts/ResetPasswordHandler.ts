@@ -2,7 +2,6 @@ import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -14,6 +13,8 @@ import type { LinkPurpose, Links } from "../../services/Links.js";
 import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { ResetPassword } from "./ResetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
+import { AN_HOUR, shiftedBy } from "../../common/moments.js";
+import { inboxIsFull } from "./emailsAnHour.js";
 
 // What each kind of email carries, said here once rather than worked out from
 // its name where it is queued, so that the next kind added has to say.
@@ -32,14 +33,6 @@ type Kind =
   | "Email.SetNewPassword"
   | "Email.ConfirmAddressAgain"
   | "Email.RegisterInstead";
-
-/** How many emails an inbox may be filled with, per hour. */
-const EMAILS_AN_HOUR = 3;
-
-const AN_HOUR = 60 * 60 * 1000;
-
-const shiftedBy = (moment: ReadOnlyDate, milliseconds: number): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(moment.toDate().getTime() + milliseconds));
 
 /**
  * Asking for a way back in.
@@ -88,8 +81,7 @@ export class ResetPasswordHandler extends CommandHandler<ResetPassword, void> {
       id === undefined
         ? { emailAddressHash: this.addresses.hash(address) }
         : { account: id };
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if ((await this.written.countSince(whom, since)) >= EMAILS_AN_HOUR) return;
+    if (await inboxIsFull(this.written, whom, command.requestedAt)) return;
 
     // To the address the account holds where there is one, never the one this
     // asking typed: an address differing only in case is the same address, and

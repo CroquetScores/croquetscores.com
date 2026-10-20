@@ -12,6 +12,7 @@ import type { Game } from "../../../domain/aggregates/tournaments/competitions/G
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
+  type CompetitionInTournament,
   type Tournament,
   TournamentRefused,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
@@ -20,6 +21,7 @@ import {
   askedBy,
   managedBy,
   tournamentFor,
+  unlessArchived,
 } from "../tournaments/tournamentOperations.js";
 
 // The tournament `written`, and who asks, once `account` is known to manage it
@@ -57,13 +59,14 @@ export const competitionOf = async (
   (await competitions.load(id)) ?? Competition.rebuiltFrom(id, []);
 
 /**
- * What `tournament` tells its competition `id` of itself: what kind of
- * competition it is, with a knockout's draw, and whether drawn games are
- * allowed. A test is told who plays for which team too, every team's players
- * among them, so that it can say of one who plays for neither of its own that
- * the test does not have them.
+ * The competition `id` of `tournament`, or refused as
+ * `Tournament.NoSuchCompetition`: archived or not, since an archived one is
+ * still the tournament's and what it tells of itself is still true.
  */
-export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
+export const competitionFound = (
+  tournament: Tournament,
+  id: CompetitionId,
+): CompetitionInTournament => {
   const found = tournament.competitions.find(({ reference }) =>
     reference.id.equals(id),
   );
@@ -73,6 +76,37 @@ export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
       "The tournament has no such competition.",
     );
   }
+  return found;
+};
+
+/**
+ * The competition `id` of `tournament` as `competitionFound` has it, and
+ * refused as `Tournament.CompetitionArchived` where it is archived, since the
+ * only thing to be done to one is to restore it.
+ */
+export const competitionInUse = (
+  tournament: Tournament,
+  id: CompetitionId,
+): CompetitionInTournament => {
+  const found = competitionFound(tournament, id);
+  if (found.reference.archived) {
+    throw new TournamentRefused(
+      "Tournament.CompetitionArchived",
+      "An archived competition can only be restored.",
+    );
+  }
+  return found;
+};
+
+/**
+ * What `tournament` tells its competition `id` of itself: what kind of
+ * competition it is, with a knockout's draw, and whether drawn games are
+ * allowed. A test is told who plays for which team too, every team's players
+ * among them, so that it can say of one who plays for neither of its own that
+ * the test does not have them.
+ */
+export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
+  const found = competitionFound(tournament, id);
   if (found.shape.kind !== "test") {
     return { shape: found.shape, drawsAllowed: tournament.drawsAllowed };
   }
@@ -145,28 +179,9 @@ export const competitionManagedBy = async (
         request.tournament,
         operation,
       );
-  if (tournament.archived) {
-    throw new TournamentRefused(
-      "Tournament.Archived",
-      "An archived tournament can only be restored.",
-    );
-  }
+  unlessArchived(tournament);
   const id = CompetitionId.from(request.competition);
-  const found = tournament.competitions.find(({ reference }) =>
-    reference.id.equals(id),
-  );
-  if (found === undefined) {
-    throw new TournamentRefused(
-      "Tournament.NoSuchCompetition",
-      "The tournament has no such competition.",
-    );
-  }
-  if (found.reference.archived) {
-    throw new TournamentRefused(
-      "Tournament.CompetitionArchived",
-      "An archived competition can only be restored.",
-    );
-  }
+  competitionInUse(tournament, id);
   return {
     by,
     tournament,

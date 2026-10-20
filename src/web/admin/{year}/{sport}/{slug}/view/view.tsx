@@ -4,7 +4,7 @@ import { go } from "../../../../navigation.js";
 import { TabControl } from "../../../../TabControl.js";
 import { HeldPage } from "../HeldPage.js";
 import { TournamentSections } from "../TournamentSections.js";
-import { knows, say } from "../../../../words.js";
+import { say } from "../../../../words.js";
 import { CompetitionsTab } from "./tabs/competitions/competitions.js";
 import { ManagersTab } from "./tabs/managers/managers.js";
 import { NotesTab } from "./tabs/notes/notes.js";
@@ -14,6 +14,7 @@ import { ScorersTab } from "./tabs/scorers/scorers.js";
 import { TeamsTab } from "./tabs/teams/teams.js";
 import { TestsTab } from "./tabs/tests/tests.js";
 import { refusalOf } from "../../../../api.js";
+import { RefusedPage } from "../RefusedPage.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in six tabs beneath it, and the section bar leading to its
@@ -113,11 +114,6 @@ const offeredTo = ({
 const partInCompetitions = (part: Found["part"]): "manager" | "scorer" =>
   part === "manager" ? "manager" : "scorer";
 
-// What a refusal says in place of the tabs: its words, by its code, or the
-// words for any where it has none.
-const wordsFor = (code: string): string =>
-  say(knows(code) ? code : "admin.view.otherwise");
-
 export const ViewTournament = ({ address }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
   const [chosen, setChosen] = useState<Tab>("players");
@@ -152,16 +148,11 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
 
   if (asked.is === "refused") {
     return (
-      <main id="content">
-        <div className="page">
-          <div className="panel stack">
-            <h1>{say("admin.title")}</h1>
-            <p className="page-refused" data-refused={asked.code}>
-              {wordsFor(asked.code)}
-            </p>
-          </div>
-        </div>
-      </main>
+      <RefusedPage
+        heading={say("admin.title")}
+        code={asked.code}
+        otherwise="admin.view.otherwise"
+      />
     );
   }
 

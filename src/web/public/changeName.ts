@@ -11,7 +11,6 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { AccountProfile } from "../../application/operations/accounts/AccountProfile.js";
 import { ChangeName } from "../../application/operations/accounts/ChangeName.js";
-import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import type { Assets } from "../common/assets.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
@@ -20,7 +19,7 @@ import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
-import { profilePath, toSignIn } from "./profile.js";
+import { accountForgotten, profilePath, toSignIn } from "./profile.js";
 
 export const changeNamePath = "/account/change-name";
 
@@ -105,12 +104,7 @@ export const registerChangeNamePage = (
       // Forgetting an account ends its sessions afterwards, not with it, so a
       // form sent in between comes from a reader signed in to nothing, and is
       // answered as the page itself answers one.
-      if (
-        failure instanceof AccountRefused &&
-        failure.code === "Account.Forgotten"
-      ) {
-        return toSignIn(request, reply);
-      }
+      if (accountForgotten(failure)) return toSignIn(request, reply);
       if (!(failure instanceof RequestInvalid)) throw failure;
       return show(
         request,

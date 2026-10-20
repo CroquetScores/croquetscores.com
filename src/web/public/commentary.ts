@@ -18,7 +18,6 @@ import {
   type TournamentCommentaryToRead,
 } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
-import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { CommentaryOperationRefused } from "../../application/operations/commentaries/commentaryOperations.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import { TournamentRefused } from "../../domain/aggregates/tournaments/Tournament.js";
@@ -38,6 +37,7 @@ import { sendPage } from "./tournamentLists.js";
 import { type Reads, readsOf, rememberRead } from "./read.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
+import { accountForgotten } from "./profile.js";
 
 export type CommentaryParams = {
   year: string;
@@ -645,12 +645,7 @@ export const registerCommentaryPage = (
           ),
         );
       } catch (failure) {
-        if (
-          failure instanceof AccountRefused &&
-          failure.code === "Account.Forgotten"
-        ) {
-          return toSignInHere();
-        }
+        if (accountForgotten(failure)) return toSignInHere();
         // Only its writer is offered the box, so anybody else sending it is
         // asking of a page that is not there for them.
         if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {

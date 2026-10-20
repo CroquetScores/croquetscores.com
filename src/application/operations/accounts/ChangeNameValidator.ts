@@ -1,6 +1,6 @@
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { ChangeName } from "./ChangeName.js";
@@ -15,17 +15,6 @@ export class ChangeNameValidator extends CommandValidator<ChangeName> {
   readonly validates: RequestType<ChangeName> = ChangeName;
 
   validate(command: ChangeName): readonly BrokenRule[] {
-    try {
-      PersonName.from(command.name);
-      return [];
-    } catch (failure) {
-      // Named as a validation error of some code: the class is generic, and
-      // narrowing by instanceof alone leaves its code as anything at all.
-      if (failure instanceof ValidationError) {
-        const named = failure as ValidationError<string>;
-        return [{ code: named.code, fields: ["name"] }];
-      }
-      throw failure;
-    }
+    return brokenBy("name", () => PersonName.from(command.name));
   }
 }

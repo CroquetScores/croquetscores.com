@@ -4,7 +4,7 @@ import type { RequestType } from "../../common/Mediator.js";
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
-import { brokenBy } from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { AddBlock } from "./AddBlock.js";
 
 /**

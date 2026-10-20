@@ -5,8 +5,9 @@ import {
   type Begins,
   TournamentForm,
 } from "../../../../tournaments/TournamentForm.js";
-import { knows, say } from "../../../../words.js";
+import { say } from "../../../../words.js";
 import { refusalOf } from "../../../../api.js";
+import { RefusedPage } from "../RefusedPage.js";
 
 // Where a manager changes a tournament (edit.feature): the form every
 // tournament is created and changed with, beginning as the tournament is.
@@ -15,12 +16,6 @@ interface Props {
   /** Where the tournament was asked for, as "2026/ac/spring-open". */
   readonly address: string;
 }
-
-// What a refusal of the page says in place of the form: its words, by its
-// code, or the words for any where it has none. The code is the contract; the
-// words are only what it says.
-const wordsFor = (code: string): string =>
-  say(knows(code) ? code : "admin.editTournament.otherwise");
 
 type Asked =
   | { readonly is: "asking" }
@@ -58,16 +53,11 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
 
   if (asked.is === "refused") {
     return (
-      <main id="content">
-        <div className="page">
-          <div className="panel stack">
-            <h1>{say("admin.editTournament.title")}</h1>
-            <p className="page-refused" data-refused={asked.code}>
-              {wordsFor(asked.code)}
-            </p>
-          </div>
-        </div>
-      </main>
+      <RefusedPage
+        heading={say("admin.editTournament.title")}
+        code={asked.code}
+        otherwise="admin.editTournament.otherwise"
+      />
     );
   }
 

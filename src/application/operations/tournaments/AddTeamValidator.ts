@@ -2,7 +2,7 @@ import type { BrokenRule } from "../../../domain/common/validation/Validator.js"
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { Team } from "../../../domain/aggregates/tournaments/Team.js";
-import { brokenBy } from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { AddTeam } from "./AddTeam.js";
 
 /**

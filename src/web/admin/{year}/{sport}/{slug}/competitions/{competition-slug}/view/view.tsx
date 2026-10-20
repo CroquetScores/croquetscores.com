@@ -4,10 +4,11 @@ import { go } from "../../../../../../navigation.js";
 import { TabControl } from "../../../../../../TabControl.js";
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
-import { knows, say } from "../../../../../../words.js";
+import { say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
 import { ScoresTab } from "./tabs/scores/scores.js";
 import { refusalOf } from "../../../../../../api.js";
+import { RefusedPage } from "../../../RefusedPage.js";
 
 // A competition's page (view.feature beneath the competition): headed by its
 // name, with what there is to run in two tabs, laid out and chosen as the
@@ -45,11 +46,6 @@ type Tab = (typeof tabs)[number];
 
 const offeredTo = (part: Found["part"]): readonly Tab[] =>
   part === "manager" ? tabs : ["scores"];
-
-// What a refusal says in place of the tabs: its words, by its code, or the
-// words for any where it has none.
-const wordsFor = (code: string): string =>
-  say(knows(code) ? code : "admin.competitionView.otherwise");
 
 export const ViewCompetition = ({
   address,
@@ -89,16 +85,11 @@ export const ViewCompetition = ({
 
   if (asked.is === "refused") {
     return (
-      <main id="content">
-        <div className="page">
-          <div className="panel stack">
-            <h1>{say("admin.title")}</h1>
-            <p className="page-refused" data-refused={asked.code}>
-              {wordsFor(asked.code)}
-            </p>
-          </div>
-        </div>
-      </main>
+      <RefusedPage
+        heading={say("admin.title")}
+        code={asked.code}
+        otherwise="admin.competitionView.otherwise"
+      />
     );
   }
 

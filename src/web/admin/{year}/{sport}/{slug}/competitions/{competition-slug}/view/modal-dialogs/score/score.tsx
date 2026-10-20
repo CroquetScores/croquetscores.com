@@ -5,6 +5,8 @@ import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import "./score.css";
+import { DialogProblems } from "../../../../../../../../DialogProblems.js";
+import { DialogStatus } from "../../../../../../../../DialogStatus.js";
 
 // The score dialog (score-modal-dialog.feature), over a competition's Scores
 // tab: the winner and their score, "beat", the loser and theirs, as the result
@@ -430,23 +432,10 @@ export const ScoreDialog = ({
       cancel={close}
       busy={sending}
     >
-      {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
+      <DialogStatus>
         {added === undefined ? null : say("admin.score.added", added)}
-      </p>
-      {above.length > 0 ? (
-        // The codes as well as the words, as a field's refusals carry them,
-        // so that what was refused can be told apart from how it is said.
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      </DialogStatus>
+      <DialogProblems refused={above} />
       <div className="score-row">
         {choosing("winner", "admin.score.winner")}
         {typing("winnerScore", "admin.score.winnerScore")}

@@ -19,15 +19,13 @@ import {
   PublicBlockOfTournament,
 } from "./PublicBlockOfTournament.js";
 import {
+  competitionOfKindForReaders,
   competitionsInUse,
   tournamentForReaders,
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
-import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicBlockOfTournamentHandler extends QueryHandler<
   PublicBlockOfTournament,
@@ -54,23 +52,16 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicBlockOfTournament",
     );
-    const found = tournament.competitions.find(
-      ({ reference }) =>
-        !reference.archived && reference.slug.toString() === query.slug,
+    const { reference, shape } = competitionOfKindForReaders(
+      tournament,
+      query.slug,
+      "block",
+      {
+        noSuchCompetition: "PublicBlockOfTournament.NoSuchCompetition",
+        notOfKind: "PublicBlockOfTournament.NotABlock",
+        sentence: "The competition is not a block.",
+      },
     );
-    if (found === undefined) {
-      throw new TournamentOperationRefused(
-        "PublicBlockOfTournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
-    const { reference, shape } = found;
-    if (shape.kind !== "block") {
-      throw new TournamentOperationRefused(
-        "PublicBlockOfTournament.NotABlock",
-        "The competition is not a block.",
-      );
-    }
     const competition = await competitionOf(this.competitions, reference.id);
     const games = competition.games.filter((game) => !game.archived);
     // What counts for nothing is still shown, and answered as withdrawn, so

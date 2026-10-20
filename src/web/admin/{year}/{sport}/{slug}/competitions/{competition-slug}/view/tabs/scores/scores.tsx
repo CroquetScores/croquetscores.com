@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
@@ -7,6 +7,7 @@ import { ScoreDialog } from "../../modal-dialogs/score/score.js";
 import { idInAddress, refusalOf } from "../../../../../../../../api.js";
 import "../../../../../../../../listed.css";
 import "./scores.css";
+import { useListed } from "../../../../../../../../useListed.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
@@ -98,9 +99,6 @@ export const ScoresTab = ({
   kind,
   teams,
 }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly Listed[] | undefined>();
-  const [asking, setAsking] = useState(0);
-  const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
   // Why Add Score did not open the dialog, said until OK is pressed.
@@ -112,28 +110,7 @@ export const ScoresTab = ({
   const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
 
-  useEffect(() => {
-    let current = true;
-    void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { games: Listed[] }).games
-          : undefined,
-      )
-      .catch(() => undefined)
-      .then((games) => {
-        if (!current) return;
-        setListed(games);
-        setAnswered(asking);
-      });
-    return () => {
-      current = false;
-    };
-  }, [at, asking]);
-
-  const askAgain = (): void => {
-    setAsking((count) => count + 1);
-  };
+  const { listed, asking, answered, askAgain } = useListed<Listed>(at, "games");
 
   // None asks first: each is undone by another, and nothing is lost.
   const act = async (

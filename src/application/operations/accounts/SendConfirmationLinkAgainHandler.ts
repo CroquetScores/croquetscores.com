@@ -1,7 +1,6 @@
 import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
@@ -11,6 +10,9 @@ import type { EmailsWritten } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import { SendConfirmationLinkAgain } from "./SendConfirmationLinkAgain.js";
+import { AN_HOUR, shiftedBy } from "../../common/moments.js";
+import { inboxIsFull } from "./emailsAnHour.js";
+import { CONFIRMATION_LINK_WORKS_FOR_HOURS } from "./confirmationLinks.js";
 
 /** Every way sending the link again is refused. */
 export type SendConfirmationLinkAgainErrorCode =
@@ -24,17 +26,6 @@ export type SendConfirmationLinkAgainErrorCode =
  * contract: what a reader is shown for each is the page's to decide.
  */
 export class SendingRefused extends Refused<SendConfirmationLinkAgainErrorCode> {}
-
-/** How long a link to confirm an address works. Confirming says why. */
-const LINK_WORKS_FOR_HOURS = 24;
-
-/** How many emails an account's inbox may be filled with, per hour. */
-const EMAILS_AN_HOUR = 3;
-
-const AN_HOUR = 60 * 60 * 1000;
-
-const shiftedBy = (moment: ReadOnlyDate, milliseconds: number): ReadOnlyDate =>
-  ReadOnlyDate.from(new Date(moment.toDate().getTime() + milliseconds));
 
 /**
  * Sending the link that confirms an account's email address again.
@@ -94,10 +85,7 @@ export class SendConfirmationLinkAgainHandler extends CommandHandler<
       );
     }
 
-    const since = shiftedBy(command.requestedAt, -AN_HOUR);
-    if (
-      (await this.written.countSince({ account: id }, since)) >= EMAILS_AN_HOUR
-    ) {
+    if (await inboxIsFull(this.written, { account: id }, command.requestedAt)) {
       throw new SendingRefused(
         "EmailsWritten.TooManyLately",
         "The account has been written to as often as it is to be this hour.",
@@ -106,7 +94,7 @@ export class SendConfirmationLinkAgainHandler extends CommandHandler<
 
     const until = shiftedBy(
       command.requestedAt,
-      LINK_WORKS_FOR_HOURS * AN_HOUR,
+      CONFIRMATION_LINK_WORKS_FOR_HOURS * AN_HOUR,
     );
     // To the address the account holds, and never one given with the asking.
     await this.queue.queue({

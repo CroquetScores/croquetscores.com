@@ -4,6 +4,9 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
+import { DialogProblems } from "../../../../../../DialogProblems.js";
+import { DialogStatus } from "../../../../../../DialogStatus.js";
+import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
 
 // The team dialog (team.feature), over a tournament's Teams tab: opened by Add
 // Team to add teams a few at a time, and by a team's name or Edit to change
@@ -130,13 +133,7 @@ export const TeamDialog = ({
     setSending(false);
   };
 
-  // The reader is taken to the first field refused, as every refused form
-  // takes them.
-  useEffect(() => {
-    document
-      .querySelector<HTMLElement>('dialog[open] [aria-invalid="true"]')
-      ?.focus();
-  }, [refused]);
+  useFocusFirstRefused(refused);
 
   const above = refusedFor(undefined);
 
@@ -155,21 +152,10 @@ export const TeamDialog = ({
       cancel={close}
       busy={sending}
     >
-      {/* Told to a screen reader as it changes, since nothing else on the
-          dialog changes where the reader is. */}
-      <p className="dialog-status" role="status">
+      <DialogStatus>
         {added === undefined ? null : say("admin.team.added", { name: added })}
-      </p>
-      {above.length > 0 ? (
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      </DialogStatus>
+      <DialogProblems refused={above} />
       <Field
         name="name"
         label={say("admin.team.name")}

@@ -5,6 +5,7 @@ import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import "./carry-forward.css";
+import { DialogProblems } from "../../../../../../../../DialogProblems.js";
 
 // The carry forward dialog (carry-forward.feature), over a competition's
 // Players tab: the six counts a player brings into the competition from play
@@ -142,16 +143,7 @@ export const CarryForwardDialog = ({
       cancel={close}
       busy={sending}
     >
-      {above.length > 0 ? (
-        <div
-          className="dialog-problems"
-          data-refused={above.map(({ code }) => code).join(" ")}
-        >
-          {above.map(({ code, words }) => (
-            <p key={code}>{words}</p>
-          ))}
-        </div>
-      ) : null}
+      <DialogProblems refused={above} />
       <div className="carry-forward-counts">
         {COUNTS.map((count) => (
           <Field

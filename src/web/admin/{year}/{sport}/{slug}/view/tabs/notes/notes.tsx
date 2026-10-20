@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../../../../listed.css";
+import { useListed } from "../../../../../../useListed.js";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
 // for its readers, the most recently written first, each by its title and
@@ -19,10 +20,6 @@ interface Props {
 }
 
 export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
-  const [listed, setListed] = useState<readonly NoteListed[] | undefined>();
-  // Counted up to ask again, once something has been kept or deleted.
-  const [asking, setAsking] = useState(0);
-  const [answered, setAnswered] = useState<number | undefined>();
   const [acting, setActing] = useState(false);
   // What the panel is shown for: to add, or to edit a note, or nothing, when
   // the list is shown instead.
@@ -33,34 +30,16 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
   const [refused, setRefused] = useState<string | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/notes`;
 
-  useEffect(() => {
-    let current = true;
-    void fetch(at, { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { notes: NoteListed[] }).notes
-          : undefined,
-      )
-      .catch(() => undefined)
-      .then((notes) => {
-        if (!current) return;
-        setListed(notes);
-        setAnswered(asking);
-      });
-    return () => {
-      current = false;
-    };
-  }, [at, asking]);
+  const { listed, asking, answered, askAgain } = useListed<NoteListed>(
+    at,
+    "notes",
+  );
 
   // The panel shown to add or to edit a note, and a delete refused before it
   // no longer said, since what the reader does now is something else.
   const write = (what: "adding" | NoteListed): void => {
     setRefused(undefined);
     setWriting(what);
-  };
-
-  const askAgain = (): void => {
-    setAsking((count) => count + 1);
   };
 
   // Asked again whether or not it was done, since the list is to say what the

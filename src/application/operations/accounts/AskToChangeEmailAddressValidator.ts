@@ -1,6 +1,6 @@
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AskToChangeEmailAddress } from "./AskToChangeEmailAddress.js";
@@ -16,13 +16,8 @@ export class AskToChangeEmailAddressValidator extends CommandValidator<AskToChan
     AskToChangeEmailAddress;
 
   validate(command: AskToChangeEmailAddress): readonly BrokenRule[] {
-    try {
-      EmailAddress.from(command.emailAddress);
-      return [];
-    } catch (failure) {
-      if (!(failure instanceof ValidationError)) throw failure;
-      const named = failure as ValidationError<string>;
-      return [{ code: named.code, fields: ["emailAddress"] }];
-    }
+    return brokenBy("emailAddress", () =>
+      EmailAddress.from(command.emailAddress),
+    );
   }
 }

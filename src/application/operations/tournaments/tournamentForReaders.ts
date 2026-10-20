@@ -3,7 +3,10 @@
 // and what its section bar leads to.
 import type { TeamId } from "../../../domain/aggregates/tournaments/primitives/TeamId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type {
+  CompetitionInTournament,
+  Tournament,
+} from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { Website } from "../../../domain/common/Website.js";
 import type { PlayerInGame } from "./GamesOfTournament.js";
@@ -11,6 +14,7 @@ import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
   type TournamentAddresses,
+  type TournamentOperationErrorCode,
   TournamentOperationRefused,
 } from "./tournamentOperations.js";
 
@@ -60,6 +64,52 @@ export const tournamentForReaders = async (
     );
   }
   return tournament;
+};
+
+/**
+ * The competition of `tournament` a reader asked for by `slug`, which is one of
+ * the kind `kind`, or refused: as `refusals.noSuchCompetition` where there is
+ * none by that slug, an archived one being none since a reader is not sent to
+ * it, and as `refusals.notOfKind`, saying so in `refusals.sentence`, where
+ * there is one of another kind.
+ *
+ * The codes are the caller's to give, whole, rather than made here from the
+ * operation's name: they are the contract, and written out at the call they
+ * are found by searching for them.
+ */
+export const competitionOfKindForReaders = <
+  Kind extends CompetitionInTournament["shape"]["kind"],
+>(
+  tournament: Tournament,
+  slug: string,
+  kind: Kind,
+  refusals: {
+    readonly noSuchCompetition: TournamentOperationErrorCode;
+    readonly notOfKind: TournamentOperationErrorCode;
+    readonly sentence: string;
+  },
+): {
+  readonly reference: CompetitionInTournament["reference"];
+  readonly shape: Extract<CompetitionInTournament["shape"], { kind: Kind }>;
+} => {
+  const found = tournament.competitions.find(
+    ({ reference }) =>
+      !reference.archived && reference.slug.toString() === slug,
+  );
+  if (found === undefined) {
+    throw new TournamentOperationRefused(
+      refusals.noSuchCompetition,
+      "The tournament has no such competition.",
+    );
+  }
+  const { reference, shape } = found;
+  if (shape.kind !== kind) {
+    throw new TournamentOperationRefused(refusals.notOfKind, refusals.sentence);
+  }
+  return {
+    reference,
+    shape: shape as Extract<CompetitionInTournament["shape"], { kind: Kind }>,
+  };
 };
 
 /**

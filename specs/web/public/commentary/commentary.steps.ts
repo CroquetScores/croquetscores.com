@@ -3,10 +3,10 @@
 // sent by its button.
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import type { Locator } from "playwright";
+import type { Locator, Route } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
-import { withScripting } from "../../support/browser.js";
+import { addressingOf, withScripting } from "../../support/browser.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -481,6 +481,18 @@ When(
 
 // What the server answers, held back or spoilt --------------------------------------
 
+// A request fetched by the scenario itself does not go through the context's
+// route that says which website the browser is addressing, so it says so
+// again; without it the server places the request on development, where the
+// tournament is not, and answers that it is not there. Nor does it carry the
+// Sec-Fetch-Site a browser puts on its own requests and a script cannot read
+// back, so the page's own post, which is from this site, says that it is.
+const askedAs = (world: SpecWorld, route: Route): Record<string, string> => ({
+  ...route.request().headers(),
+  ...addressingOf(world),
+  "sec-fetch-site": "same-origin",
+});
+
 // The next comment sent is kept by the server, as any is, and its answer then
 // lost to an error, as one would be by a failure after it was kept.
 Given(
@@ -490,7 +502,7 @@ Given(
       (url) => url.pathname.endsWith("/comments"),
       async (route) => {
         if (route.request().method() !== "POST") return route.fallback();
-        await route.fetch();
+        await route.fetch({ headers: askedAs(this, route) });
         await route.fulfill({
           status: 500,
           contentType: "text/html",
@@ -521,7 +533,7 @@ const holdBack = async (world: SpecWorld, method: string): Promise<void> => {
     (url) => url.pathname.endsWith("/comments"),
     async (route) => {
       if (route.request().method() !== method) return route.fallback();
-      const answer = await route.fetch();
+      const answer = await route.fetch({ headers: askedAs(world, route) });
       hold(() => route.fulfill({ response: answer }));
     },
     { times: 1 },

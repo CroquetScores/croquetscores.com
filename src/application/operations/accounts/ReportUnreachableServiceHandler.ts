@@ -1,11 +1,9 @@
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import { ReportUnreachableService } from "./ReportUnreachableService.js";
-
-const AN_HOUR = 60 * 60 * 1000;
+import { AN_HOUR, shiftedBy } from "../../common/moments.js";
 
 /**
  * Telling the administrator a service the site needs cannot be reached, at
@@ -35,9 +33,7 @@ export class ReportUnreachableServiceHandler extends CommandHandler<
 
   async handle(command: ReportUnreachableService): Promise<void> {
     const whom: WrittenTo = { administratorAbout: command.service };
-    const since = ReadOnlyDate.from(
-      new Date(command.requestedAt.toDate().getTime() - AN_HOUR),
-    );
+    const since = shiftedBy(command.requestedAt, -AN_HOUR);
     if ((await this.written.countSince(whom, since)) > 0) return;
 
     await this.queue.queue({

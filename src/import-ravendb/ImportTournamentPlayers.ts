@@ -100,6 +100,36 @@ export const addOldPlayer = (
 };
 
 /**
+ * Who the import acts as in a tournament it brought over, and when: its first
+ * manager, who created it, at the moment it was created. A tournament with no
+ * manager is a fault in the import, since creating one makes its creator its
+ * first.
+ */
+export const firstManagerOf = (
+  tournament: Tournament,
+): { readonly by: AccountId; readonly at: ReadOnlyDate } => {
+  const [by] = tournament.managers;
+  if (by === undefined) throw new Error("The tournament has no manager.");
+  return { by, at: tournament.starts };
+};
+
+/**
+ * Makes `writer` a manager of `tournament`, as its first manager, and keeps
+ * it, so that what the writer then writes to it is theirs to write. Says when
+ * it was done, which is when what the writer writes is written.
+ */
+export const writerMadeManager = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  tournament: Tournament,
+  writer: AccountId,
+): Promise<ReadOnlyDate> => {
+  const { by, at } = firstManagerOf(tournament);
+  tournament.addManager(writer, by, at);
+  await tournaments.save(tournament);
+  return at;
+};
+
+/**
  * Loads the tournament the tournament document `documentId` on `website`
  * became. Whatever names a tournament is brought over only once the
  * tournament is (ImportWholeTournaments.feature), so one that was not is a
@@ -158,11 +188,7 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
       );
       if (tournament.format.isTeamFormat) return;
 
-      // Done as the tournament's first manager, who created it, when it was
-      // created.
-      const [by] = tournament.managers;
-      if (by === undefined) throw new Error("The tournament has no manager.");
-      const at = tournament.starts;
+      const { by, at } = firstManagerOf(tournament);
       const added: { readonly number: number; readonly id: string }[] = [];
 
       for (const player of document._Players) {

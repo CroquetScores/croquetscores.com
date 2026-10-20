@@ -21,15 +21,13 @@ import {
   type WhichSide,
 } from "./PublicKnockoutOfTournament.js";
 import {
+  competitionOfKindForReaders,
   competitionsInUse,
   tournamentForReaders,
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
-import {
-  type TournamentAddresses,
-  TournamentOperationRefused,
-} from "./tournamentOperations.js";
+import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicKnockoutOfTournamentHandler extends QueryHandler<
   PublicKnockoutOfTournament,
@@ -56,23 +54,16 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicKnockoutOfTournament",
     );
-    const found = tournament.competitions.find(
-      ({ reference }) =>
-        !reference.archived && reference.slug.toString() === query.slug,
+    const { reference, shape } = competitionOfKindForReaders(
+      tournament,
+      query.slug,
+      "knockout",
+      {
+        noSuchCompetition: "PublicKnockoutOfTournament.NoSuchCompetition",
+        notOfKind: "PublicKnockoutOfTournament.NotAKnockout",
+        sentence: "The competition is not a knockout.",
+      },
     );
-    if (found === undefined) {
-      throw new TournamentOperationRefused(
-        "PublicKnockoutOfTournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
-    const { reference, shape } = found;
-    if (shape.kind !== "knockout") {
-      throw new TournamentOperationRefused(
-        "PublicKnockoutOfTournament.NotAKnockout",
-        "The competition is not a knockout.",
-      );
-    }
     const competition = await competitionOf(this.competitions, reference.id);
     const address = tournament.address.toString();
 

@@ -9,7 +9,12 @@ import {
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
-import { askedBy, tournamentFor } from "../tournaments/tournamentOperations.js";
+import {
+  askedBy,
+  tournamentFor,
+  unlessArchived,
+} from "../tournaments/tournamentOperations.js";
+import { competitionInUse } from "./competitionOperations.js";
 import { PlayersOfTest, type TeamInTest } from "./PlayersOfTest.js";
 
 export class PlayersOfTestHandler extends QueryHandler<
@@ -40,29 +45,11 @@ export class PlayersOfTestHandler extends QueryHandler<
     }
     // Listed to enter its scores, which an archived tournament and an
     // archived test take none of.
-    if (tournament.archived) {
-      throw new TournamentRefused(
-        "Tournament.Archived",
-        "An archived tournament can only be restored.",
-      );
-    }
-    const id = CompetitionId.from(query.test);
-    const found = tournament.competitions.find(({ reference }) =>
-      reference.id.equals(id),
+    unlessArchived(tournament);
+    const { shape } = competitionInUse(
+      tournament,
+      CompetitionId.from(query.test),
     );
-    if (found === undefined) {
-      throw new TournamentRefused(
-        "Tournament.NoSuchCompetition",
-        "The tournament has no such competition.",
-      );
-    }
-    if (found.reference.archived) {
-      throw new TournamentRefused(
-        "Tournament.CompetitionArchived",
-        "An archived competition can only be restored.",
-      );
-    }
-    const { shape } = found;
     if (shape.kind !== "test") {
       throw new TournamentRefused(
         "Tournament.NotATest",

@@ -25,7 +25,6 @@ import type {
   PublicComment,
   TournamentCommentaryToRead,
 } from "../../application/operations/tournaments/PublicCommentaryOfTournament.js";
-import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
@@ -46,7 +45,7 @@ import {
   goneSinceAsked,
   deletePathOf,
 } from "./commentary.js";
-import { toSignIn } from "./profile.js";
+import { accountForgotten, toSignIn } from "./profile.js";
 import { readsOf } from "./read.js";
 import { sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
@@ -177,12 +176,7 @@ ${commentBox(speakingOf(request), {
           ),
         );
       } catch (failure) {
-        if (
-          failure instanceof AccountRefused &&
-          failure.code === "Account.Forgotten"
-        ) {
-          return toSignIn(request, reply);
-        }
+        if (accountForgotten(failure)) return toSignIn(request, reply);
         if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
           return reply.callNotFound();
         }
@@ -255,12 +249,7 @@ ${commentBox(speakingOf(request), {
           ),
         );
       } catch (failure) {
-        if (
-          failure instanceof AccountRefused &&
-          failure.code === "Account.Forgotten"
-        ) {
-          return toSignIn(request, reply);
-        }
+        if (accountForgotten(failure)) return toSignIn(request, reply);
         if (failure instanceof CommentaryRefused || goneSinceAsked(failure)) {
           return reply.callNotFound();
         }

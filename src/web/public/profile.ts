@@ -13,6 +13,7 @@
 // It needs no scripting.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
+import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { AccountProfile } from "../../application/operations/accounts/AccountProfile.js";
 import type { Assets } from "../common/assets.js";
 import { offeredTo } from "../common/accountMenu.js";
@@ -62,6 +63,15 @@ export const toSignIn = (request: FastifyRequest, reply: FastifyReply) =>
     `${signInPath}?return=${encodeURIComponent(request.url)}`,
     303,
   );
+
+/**
+ * Whether `failure` says the account asking has been forgotten. Forgetting an
+ * account ends its sessions afterwards, not with it, so a form sent in between
+ * comes from a reader signed in to nothing, and is answered as though they
+ * were not signed in at all.
+ */
+export const accountForgotten = (failure: unknown): boolean =>
+  failure instanceof AccountRefused && failure.code === "Account.Forgotten";
 
 export const registerProfilePage = (
   server: FastifyInstance,

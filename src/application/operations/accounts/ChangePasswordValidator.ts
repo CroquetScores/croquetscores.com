@@ -1,6 +1,6 @@
 import { Password } from "../../../domain/aggregates/accounts/value-objects/Password.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { ChangePassword } from "./ChangePassword.js";
@@ -19,13 +19,10 @@ export class ChangePasswordValidator extends CommandValidator<ChangePassword> {
   readonly validates: RequestType<ChangePassword> = ChangePassword;
 
   validate(command: ChangePassword): readonly BrokenRule[] {
-    try {
-      Password.from(command.password);
-    } catch (failure) {
-      if (!(failure instanceof ValidationError)) throw failure;
-      const named = failure as ValidationError<string>;
-      return [{ code: named.code, fields: ["password"] }];
-    }
+    const password = brokenBy("password", () =>
+      Password.from(command.password),
+    );
+    if (password.length > 0) return password;
 
     // Asked only once the password itself is sound, for the reason setting a
     // new password gives: two messages about one piece of typing, and the

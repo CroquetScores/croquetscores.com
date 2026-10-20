@@ -23,8 +23,8 @@ import { TournamentSubtitle } from "../../../domain/aggregates/tournaments/value
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { brokenBy } from "../../common/brokenBy.js";
 
 /** Why an operation on a tournament is refused, besides the tournament's own. */
 export type TournamentOperationErrorCode =
@@ -159,6 +159,42 @@ export const tournamentFor = async (
     );
   }
   return tournament;
+};
+
+/**
+ * The tournament found at `address`, now or before, or refused as
+ * `UpdateTournament`'s `NoSuchTournament`. The pages a manager or a scorer
+ * is shown are found by the address in the browser and refuse as changing the
+ * tournament would, whichever page asks.
+ */
+export const tournamentAtAddress = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  addresses: TournamentAddresses,
+  address: string,
+): Promise<Tournament> => {
+  const id = await addresses.tournamentAt(address);
+  const tournament = id === undefined ? undefined : await tournaments.load(id);
+  if (tournament === undefined) {
+    throw new TournamentOperationRefused(
+      "UpdateTournament.NoSuchTournament",
+      "No tournament has been found at that address.",
+    );
+  }
+  return tournament;
+};
+
+/**
+ * Refused as `Tournament.Archived` where `tournament` is archived, since the
+ * only thing to be done to one is to restore it. The pages ask it after who
+ * may see them, so that is the first refusal a reader who may not is given.
+ */
+export const unlessArchived = (tournament: Tournament): void => {
+  if (tournament.archived) {
+    throw new TournamentRefused(
+      "Tournament.Archived",
+      "An archived tournament can only be restored.",
+    );
+  }
 };
 
 /**
@@ -298,29 +334,6 @@ export const takenFor = async (
     tournament,
   );
   return (address) => taken.has(address.toString());
-};
-
-/**
- * The rule `making` breaks, as the field `field`, or nothing when it breaks
- * none. A value is asked about by being made, which is the only way each
- * offers, and throws naming the first rule it breaks.
- */
-export const brokenBy = (
-  field: string,
-  making: () => unknown,
-): BrokenRule[] => {
-  try {
-    making();
-    return [];
-  } catch (failure) {
-    // Named as a validation error of some code: the class is generic, and
-    // narrowing by instanceof alone leaves its code as anything at all.
-    if (failure instanceof ValidationError) {
-      const named = failure as ValidationError<string>;
-      return [{ code: named.code, fields: [field] }];
-    }
-    throw failure;
-  }
 };
 
 /**

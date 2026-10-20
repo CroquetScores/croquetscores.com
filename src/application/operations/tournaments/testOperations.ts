@@ -8,7 +8,7 @@ import { ExpectedMatches } from "../../../domain/aggregates/tournaments/value-ob
 import { TestGroup } from "../../../domain/aggregates/tournaments/value-objects/TestGroup.js";
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { brokenBy } from "./tournamentOperations.js";
+import { brokenBy } from "../../common/brokenBy.js";
 
 /** What a request says a test is, as it was chosen and typed. */
 export interface TestRequest {

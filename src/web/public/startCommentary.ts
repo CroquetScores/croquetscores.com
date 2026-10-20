@@ -19,7 +19,6 @@ import {
 } from "../../application/operations/tournaments/PublicCommentariesOfTournament.js";
 import { StartCommentary } from "../../application/operations/tournaments/StartCommentary.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
-import { AccountRefused } from "../../domain/aggregates/accounts/Account.js";
 import { CommentaryRefused } from "../../domain/aggregates/tournaments/commentaries/Commentary.js";
 import type { BrokenRule } from "../../domain/common/validation/Validator.js";
 import type { Assets } from "../common/assets.js";
@@ -31,7 +30,7 @@ import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { goneSinceAsked } from "./commentary.js";
-import { toSignIn } from "./profile.js";
+import { accountForgotten, toSignIn } from "./profile.js";
 import { yearInPath } from "./year.js";
 
 type Params = { year: string; sport: string; slug: string };
@@ -176,12 +175,7 @@ export const registerStartCommentaryPage = (
     } catch (failure) {
       // Forgetting an account ends its sessions afterwards, not with it, so a
       // form sent in between comes from a reader signed in to nothing.
-      if (
-        failure instanceof AccountRefused &&
-        failure.code === "Account.Forgotten"
-      ) {
-        return toSignIn(request, reply);
-      }
+      if (accountForgotten(failure)) return toSignIn(request, reply);
       if (failure instanceof RequestInvalid) return refused(failure.broken);
       if (
         failure instanceof CommentaryRefused &&

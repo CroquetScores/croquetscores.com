@@ -1,6 +1,6 @@
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import { brokenBy } from "../../common/brokenBy.js";
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { ResetPassword } from "./ResetPassword.js";
@@ -17,15 +17,8 @@ export class ResetPasswordValidator extends CommandValidator<ResetPassword> {
   readonly validates: RequestType<ResetPassword> = ResetPassword;
 
   validate(command: ResetPassword): readonly BrokenRule[] {
-    try {
-      EmailAddress.from(command.emailAddress);
-      return [];
-    } catch (failure) {
-      if (failure instanceof ValidationError) {
-        const named = failure as ValidationError<string>;
-        return [{ code: named.code, fields: ["emailAddress"] }];
-      }
-      throw failure;
-    }
+    return brokenBy("emailAddress", () =>
+      EmailAddress.from(command.emailAddress),
+    );
   }
 }

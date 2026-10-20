@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
 import { go } from "../../../../../../navigation.js";
-import { knows, say } from "../../../../../../words.js";
+import { say } from "../../../../../../words.js";
 import { HeldPage } from "../../../HeldPage.js";
 import { TournamentSections } from "../../../TournamentSections.js";
 import { TeamPlayers } from "./players/players.js";
 import { refusalOf } from "../../../../../../api.js";
 import "./view.css";
+import { RefusedPage } from "../../../RefusedPage.js";
 
 // A team's page (view.feature beneath the team): headed by the team's name
 // with its short name in brackets, as the Teams tab shows a team, its flag
@@ -43,11 +44,6 @@ type Asked =
   | { readonly is: "refused"; readonly code: string }
   | { readonly is: "found"; readonly team: Found };
 
-// What a refusal says in place of the players: its words, by its code, or the
-// words for any where it has none.
-const wordsFor = (code: string): string =>
-  say(knows(code) ? code : "admin.teamView.otherwise");
-
 export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
 
@@ -81,16 +77,11 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
 
   if (asked.is === "refused") {
     return (
-      <main id="content">
-        <div className="page">
-          <div className="panel stack">
-            <h1>{say("admin.title")}</h1>
-            <p className="page-refused" data-refused={asked.code}>
-              {wordsFor(asked.code)}
-            </p>
-          </div>
-        </div>
-      </main>
+      <RefusedPage
+        heading={say("admin.title")}
+        code={asked.code}
+        otherwise="admin.teamView.otherwise"
+      />
     );
   }
 

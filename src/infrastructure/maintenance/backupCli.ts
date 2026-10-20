@@ -1,5 +1,6 @@
 import { rename, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
+import { withoutAddress } from "./withoutAddress.js";
 
 export interface BackupOutcome {
   readonly exitCode: 0 | 1;
@@ -75,27 +76,6 @@ export const dumpNameOf = (moment: Date): string =>
     twoDigits(moment.getUTCMinutes()),
     twoDigits(moment.getUTCSeconds()),
   ].join("-") + ".dump";
-
-// Neither the database's address nor its password is said anywhere, whatever
-// the failure's own words were: a connection that is refused names where it
-// was trying to reach.
-const withoutAddress = (text: string, address: string | undefined): string => {
-  if (address === undefined || address === "") return text;
-  const hidden = new Set<string>([address]);
-  try {
-    const url = new URL(address);
-    for (const part of [url.password, url.host, url.hostname, url.username]) {
-      if (part !== "") hidden.add(decodeURIComponent(part));
-    }
-  } catch {
-    // Not an address, and so said as it is.
-  }
-  let said = text;
-  for (const part of [...hidden].sort((a, b) => b.length - a.length)) {
-    said = said.split(part).join("(a database)");
-  }
-  return said;
-};
 
 // Text in an element needs only what would be read as markup escaped: a
 // quotation mark or an apostrophe is not one there.

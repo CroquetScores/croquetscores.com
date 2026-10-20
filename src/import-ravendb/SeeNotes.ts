@@ -12,7 +12,10 @@ import { ManagerNoteTitle } from "../domain/aggregates/tournaments/value-objects
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import { newSitePathOf } from "./AcceptedImportErrors.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { tournamentBecome } from "./ImportTournamentPlayers.js";
+import {
+  tournamentBecome,
+  writerMadeManager,
+} from "./ImportTournamentPlayers.js";
 
 /** Who the notes are written by, and who is asked about them. */
 export const NOTES_ADDRESS = "croquetscores@gmail.com";
@@ -71,13 +74,7 @@ export class SeeNotes {
         website,
         tournamentDocumentId,
       );
-      // Done as the tournament's first manager, who created it, when it was
-      // created.
-      const [by] = tournament.managers;
-      if (by === undefined) throw new Error("The tournament has no manager.");
-      const at = tournament.starts;
-      tournament.addManager(writer, by, at);
-      await this.tournaments.save(tournament);
+      const at = await writerMadeManager(this.tournaments, tournament, writer);
 
       const path = newSitePathOf(tournament, swiss);
       // At the website the tournament was on, croquetscores.com or
