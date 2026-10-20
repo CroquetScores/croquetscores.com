@@ -108,6 +108,64 @@ Feature: What a failed request is answered with is decided in one place
       When the example range is sent to the example route
       Then the answer does not name "Mediator.Unhandled"
 
+  Rule: A page where the server failed tells the reader what to do about it
+
+    A reader who meets this page can do nothing to put it right, but can help
+    whoever can. The failure is recorded with its reference, and the
+    administrator reads that record, so the page says so rather than leaving
+    the reader to wonder whether anyone knows. It does not say the
+    administrator has been told, because nothing tells them at the moment it
+    happens: that is only done where the database cannot be reached. What
+    helps most is the reader saying what they were doing, which the record
+    cannot know, so the page offers a message to the administrator that
+    already carries the reference and asks for exactly that.
+
+    Scenario: The page says the failure has been recorded for the administrator
+      Given the site's administrator's email address is "administrator@example.com"
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
+      When the example range is sent to the example route
+      Then the page says the failure has been recorded for the administrator
+
+    Scenario: The page offers a message to the administrator
+      Given the site's administrator's email address is "administrator@example.com"
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
+      When the example range is sent to the example route
+      Then the page offers a message to "administrator@example.com"
+
+    Scenario: The message is about the failure the page gives a reference for
+      Given the site's administrator's email address is "administrator@example.com"
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
+      When the example range is sent to the example route
+      Then the page gives a reference to find the failure by
+      And the subject of the message names that reference
+
+    Scenario: The message asks what the reader was doing
+      Given the site's administrator's email address is "administrator@example.com"
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      And it ends at 5
+      When the example range is sent to the example route
+      Then the message asks what the reader was doing
+
+    Scenario: A page for a request that broke a rule offers no message
+      Given a validator registered for the example command
+      And a handler registered for the example command
+      And an example page that sends the example command for the range it is given
+      And an example range
+      And it starts at 1
+      When the example range is sent to the example route
+      Then the page offers no message to the administrator
+
   Rule: An error page is kept for nobody but the reader it was made for
 
     An error page wears the same shell as any other page of the site, and the

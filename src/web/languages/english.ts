@@ -295,6 +295,11 @@ export const english: Language = {
     "errors.sorryDetail": "That request could not be dealt with.",
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
+    "errors.recorded":
+      "The failure has been recorded for the administrator, who reads the record every day. It helps to email the administrator with the reference and a description of what you were doing.",
+    "errors.message": "Email the administrator",
+    "errors.messageSubject": "Error {reference} on {siteName}",
+    "errors.messageBody": "What I was doing when this happened:\n\n",
     "errors.unavailable": "The site is unavailable",
     "errors.unavailableDetail":
       "The site cannot reach what it needs just now. Please try again later.",
