@@ -62,11 +62,11 @@
   --action: #066b00;
   --action-ink: #ffffff;
   --danger: #b3261e;
-  /* The alert that there is something new to read: a light yellow of its own, so
-     that it is the one thing on the page that is neither the brand's green nor
-     a fault's red. The same in light and dark, since yellow is bright enough
-     to stand out from either and takes the same near-black ink (15:1). */
-  --notice: #fff48f;
+  /* The alert that there is something new to read: the beta banner's yellow, so
+     that the two notices read as one kind of thing and neither is the brand's
+     green or a fault's red. The same in light and dark, since yellow is bright
+     enough to stand out from either and takes the same near-black ink (15:1). */
+  --notice: #ffeb3b;
   --notice-ink: #16181c;
   /* Where nothing can be, such as where a player meets themselves in a block's
      grid: blacked out, as the old site had it. */
