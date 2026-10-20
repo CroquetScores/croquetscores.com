@@ -1437,7 +1437,13 @@ export const buildApplication = async (
     writer,
     sender: emailSender,
   });
-  registerErrorMapping(server, assets, databaseOutage, errorReport);
+  registerErrorMapping(
+    server,
+    assets,
+    databaseOutage,
+    errorReport,
+    config.administratorEmailAddress,
+  );
 
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);

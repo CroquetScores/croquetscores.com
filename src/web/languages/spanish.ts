@@ -282,6 +282,11 @@ export const spanish: Language = {
     "errors.sorryDetail": "No se ha podido atender esa petición.",
     "errors.failed": "Algo ha ido mal",
     "errors.reference": "Referencia {reference}.",
+    "errors.recorded":
+      "El error se ha registrado y se ha enviado un correo electrónico al administrador. Ayuda escribir al administrador con la referencia y una descripción de lo que estabas haciendo.",
+    "errors.message": "Escribir un correo electrónico al administrador",
+    "errors.messageSubject": "Error {reference} en {siteName}",
+    "errors.messageBody": "Lo que estaba haciendo cuando ocurrió:\n\n",
     "errors.unavailable": "El sitio no está disponible",
     "errors.unavailableDetail":
       "El sitio no puede acceder ahora a lo que necesita. Inténtalo de nuevo más tarde.",

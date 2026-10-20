@@ -288,6 +288,11 @@ export const german: Language = {
     "errors.sorryDetail": "Diese Anfrage konnte nicht bearbeitet werden.",
     "errors.failed": "Etwas ist schiefgegangen",
     "errors.reference": "Referenz {reference}.",
+    "errors.recorded":
+      "Der Fehler wurde protokolliert und eine E-Mail an den Administrator gesendet. Es hilft, dem Administrator eine E-Mail mit der Referenz und einer Beschreibung zu schicken, was du gerade gemacht hast.",
+    "errors.message": "E-Mail an den Administrator",
+    "errors.messageSubject": "Fehler {reference} auf {siteName}",
+    "errors.messageBody": "Was ich gemacht habe, als das passiert ist:\n\n",
     "errors.unavailable": "Die Website ist nicht verfügbar",
     "errors.unavailableDetail":
       "Die Website kann im Moment nicht erreichen, was sie braucht. Bitte versuche es später noch einmal.",

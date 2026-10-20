@@ -43,6 +43,7 @@ const page = (
   heading: string,
   detail?: string,
   fill?: Readonly<Record<string, string>>,
+  more = "",
 ): string => {
   const speaking = speakingOf(request);
   const title = speaking.say(heading);
@@ -60,7 +61,7 @@ const page = (
       detail === undefined
         ? ""
         : `\n          <p>${escape(speaking.say(detail, fill))}</p>`
-    }
+    }${more}
           <p><a href="/">${escape(speaking.say("errors.backHome", { siteName: siteNameOf(request) }))}</a></p>`,
   });
 };
@@ -77,12 +78,13 @@ const sendPage = (
   heading: string,
   detail?: string,
   fill?: Readonly<Record<string, string>>,
+  more?: string,
 ): FastifyReply =>
   reply
     .header("cache-control", "private, no-cache")
     .header("vary", "Cookie, Accept-Language")
     .type("text/html; charset=utf-8")
-    .send(page(assets, request, heading, detail, fill));
+    .send(page(assets, request, heading, detail, fill, more));
 
 // An API failure is kept by nobody, the caller included. The API answers to a
 // bearer token or the session cookie, so a failure can be about whoever asked,
@@ -102,6 +104,7 @@ export const registerErrorMapping = (
   assets: Assets,
   databaseOutage: DatabaseOutage,
   errorReport: ErrorReport,
+  administrator: string,
 ): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) {
@@ -228,6 +231,17 @@ export const registerErrorMapping = (
     if (wantsJson(request)) {
       return sendJson(reply.code(500), { error: "Internal", correlationId });
     }
+    // The administrator has been told and the log has the cause. What the
+    // reader can add is what neither can hold: what they were doing. The
+    // message is a link and not a form because the site has nowhere to keep a
+    // reply and the reader's own mail program already knows who they are.
+    const speaking = speakingOf(request);
+    const subject = speaking.say("errors.messageSubject", {
+      reference: correlationId,
+      siteName: siteNameOf(request),
+    });
+    const body = speaking.say("errors.messageBody");
+    const message = `mailto:${administrator}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     return sendPage(
       reply.code(500),
       assets,
@@ -235,6 +249,9 @@ export const registerErrorMapping = (
       "errors.failed",
       "errors.reference",
       { reference: correlationId },
+      `
+          <p>${escape(speaking.say("errors.recorded"))}</p>
+          <p><a href="${escape(message)}">${escape(speaking.say("errors.message"))}</a></p>`,
     );
   });
 };

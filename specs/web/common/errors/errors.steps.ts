@@ -6,6 +6,7 @@ import type { Range } from "../../../support/exampleRange.js";
 import { ExampleCommand, ExampleQuery } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { builtFor } from "../../support/application.js";
+import { englishForScenarios } from "../../support/languages.js";
 
 // The API answers anything under /api/ as JSON, and anything else as a page,
 // so which of the two a route is decides only where it is mounted.
@@ -202,6 +203,83 @@ Then(
     );
   },
 );
+
+// What a page where the server failed offers the reader ------------------------
+
+const words = (key: string): string => {
+  const said = englishForScenarios.words[key];
+  assert.ok(said !== undefined, `English has no words for ${key}.`);
+  return said;
+};
+
+const referencePattern =
+  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+
+// The message the page offers, as a browser would open it: who it is to, and
+// what its subject and body already say. Nothing where the page offers none.
+const messageOf = (
+  world: SpecWorld,
+): { to: string; subject: string; body: string } | undefined => {
+  const found = /href="mailto:([^"?]*)\?([^"]*)"/.exec(answered(world).body);
+  if (found === null) return undefined;
+  // The attribute is escaped as HTML, so its & is &amp; until it is read.
+  const parts = new URLSearchParams(found[2]!.replaceAll("&amp;", "&"));
+  return {
+    to: decodeURIComponent(found[1]!),
+    subject: parts.get("subject") ?? "",
+    body: parts.get("body") ?? "",
+  };
+};
+
+const offered = (world: SpecWorld) => {
+  const message = messageOf(world);
+  assert.ok(message !== undefined, "The page offers no message.");
+  return message;
+};
+
+Then(
+  "the page says the failure has been recorded for the administrator",
+  function (this: SpecWorld) {
+    assert.ok(answered(this).body.includes(words("errors.recorded")));
+  },
+);
+
+Then(
+  "the page offers a message to {string}",
+  function (this: SpecWorld, emailAddress: string) {
+    assert.equal(offered(this).to, emailAddress);
+  },
+);
+
+Then(
+  "the page offers no message to the administrator",
+  function (this: SpecWorld) {
+    assert.equal(messageOf(this), undefined);
+  },
+);
+
+Then(
+  "the page gives a reference to find the failure by",
+  function (this: SpecWorld) {
+    assert.match(answered(this).body, referencePattern);
+  },
+);
+
+Then(
+  "the subject of the message names that reference",
+  function (this: SpecWorld) {
+    const reference = referencePattern.exec(answered(this).body)?.[0];
+    assert.ok(reference !== undefined, "The page gives no reference.");
+    assert.ok(
+      offered(this).subject.includes(reference),
+      `The subject is "${offered(this).subject}".`,
+    );
+  },
+);
+
+Then("the message asks what the reader was doing", function (this: SpecWorld) {
+  assert.equal(offered(this).body, words("errors.messageBody"));
+});
 
 // What a page's answer says about keeping it -----------------------------------
 

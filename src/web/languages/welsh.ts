@@ -290,6 +290,11 @@ export const welsh: Language = {
     "errors.sorryDetail": "Ni ellid ateb y cais hwnnw.",
     "errors.failed": "Aeth rhywbeth o'i le",
     "errors.reference": "Cyfeirnod {reference}.",
+    "errors.recorded":
+      "Mae’r gwall wedi’i logio ac mae e-bost wedi’i anfon at y gweinyddwr. Mae’n help e-bostio’r gweinyddwr gyda’r cyfeirnod a disgrifiad o’r hyn roeddech chi’n ei wneud.",
+    "errors.message": "E-bostiwch y gweinyddwr",
+    "errors.messageSubject": "Gwall {reference} ar {siteName}",
+    "errors.messageBody": "Beth roeddwn i’n ei wneud pan ddigwyddodd hyn:\n\n",
     "errors.unavailable": "Nid yw’r wefan ar gael",
     "errors.unavailableDetail":
       "Ni all y wefan gyrraedd yr hyn sydd ei angen arni ar hyn o bryd. Rhowch gynnig arni eto yn nes ymlaen.",
