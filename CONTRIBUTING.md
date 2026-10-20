@@ -40,7 +40,7 @@ If you are contributing on behalf of an employer, or your employer may have righ
 - **Comments say why, not what.** Plain words over jargon. A commit message says what changed and why, in paragraphs, not a list of files.
 - An email address is always an email address, in code, in settings and in words, and never `email` on its own. An email is what is sent.
 
-The other documents say what the repository is: [`SETUP.md`](SETUP.md) how it is built and why, [`STYLE.md`](STYLE.md) what things are called, [`LAYOUT.md`](LAYOUT.md) what the site looks like, and [`TODO.md`](TODO.md) what is known to be wrong.
+The other documents say what the repository is: [`SETUP.md`](SETUP.md) how it is built and why, [`STYLE.md`](STYLE.md) what things are called, and [`LAYOUT.md`](LAYOUT.md) what the site looks like.
 
 ## Running it
 

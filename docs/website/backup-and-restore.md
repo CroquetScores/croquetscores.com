@@ -276,7 +276,7 @@ The steps above are for any new website. This is the same restore done on the se
 
 Everyone is signed out afterwards, and emails that were waiting in the queue when the file was made are not in it.
 
-**Practise it.** A backup that has not been restored from is a hope. Do steps 2–6 once into a throwaway database (a name you will then drop) before the beta opens (TODO.md, Backups), and write down how long step 5 took, which is what you will tell people the site is down for.
+**Practise it.** A backup that has not been restored from is a hope. Do steps 2–6 once into a throwaway database (a name you will then drop) before the beta opens, and write down how long step 5 took, which is what you will tell people the site is down for. I, Tim Murphy, have practised restore without issue.
 
 ## 8. What this does not do
 

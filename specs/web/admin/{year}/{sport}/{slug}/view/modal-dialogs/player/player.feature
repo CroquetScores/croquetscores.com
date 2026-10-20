@@ -25,11 +25,6 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   Cancelling keeps nothing that was not already kept, and the reader is back
   where they pressed to open it.
 
-  The dialog is on its Player tab, which is what this feature is about. What a
-  player is in each competition they play in is to be on the dialog's other
-  tabs, which are to be specified with the competitions and are not written
-  yet (`TODO.md`), so until they are the dialog has only this one.
-
   Adding and changing are the one dialog, so that the two cannot come to ask
   different things. Opened by "Add Player", it is titled "Add Player", begins
   empty and its button is Add. Opened on a player, it is titled "Edit Player",

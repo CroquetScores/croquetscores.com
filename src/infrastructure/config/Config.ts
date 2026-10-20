@@ -65,7 +65,7 @@ export interface Config {
   // reader for a person, which is what it did before there was a check at all.
   // It belongs on the deployment checklist beside TRUSTED_PROXY, because a
   // production site without it has an open form that emails whoever it is told
-  // to (TODO.md says more).
+  // to.
   readonly recaptcha: RecaptchaKeys | undefined;
   // The mail server the site's emails are handed to. Absent in development,
   // where an email is written to a file instead and nothing leaves the machine.

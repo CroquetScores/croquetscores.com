@@ -19,7 +19,7 @@ What a tester is told is in `BETA.md`, which is what is sent, and **is written t
 
 **The beta's data is a copy, and is thrown away.** The new site's database was filled from a copy of the old site's production data, taken just before the beta opened. Nothing a tester does on the beta site is written to the old site's production data, so a tester who already has an account on croquetscores.com has a copy of it here: what they do to it here, including changing its password or forgetting it, does not touch their real account. Inside the new site, the beta site counts as `croquetscores.com` for what is kept and read (README.md §2), so what is entered on one is seen on the other, and is all in that copy.
 
-**When the beta closes, nothing entered during it is kept.** The new site is made the live one, and the old site's production data is imported into an empty database for it (TODO.md, The cutover from the old sites). That import is also what should be rehearsed and timed before the day. Anyone who made a real change on the old site between the copy and the closing is in that import, and anything done on the beta site is not.
+**When the beta closes, nothing entered during it is kept.** The new site is made the live one, and the old site's production data is imported into an empty database for it (https://github.com/CroquetScores/croquetscores.com/issues/286, The cutover from the old sites). That import is also what should be rehearsed and timed before the day. Anyone who made a real change on the old site between the copy and the closing is in that import, and anything done on the beta site is not.
 
 ## 2. What counts as a problem
 

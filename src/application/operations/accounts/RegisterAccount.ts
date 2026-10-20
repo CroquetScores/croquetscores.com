@@ -18,7 +18,7 @@ export type RegisterAccountRefusedCode = "RegisterAccount.RequestIdMissing";
  * was made, and the same id sent again says "this is that request, not another
  * one". Registering needs it because it mints a new account id each time it is
  * sent, so the event store cannot catch the retry the way it catches a second
- * change to something already there (TODO.md says more).
+ * change to something already there.
  *
  * A registration made with no request id is refused here, as a command made
  * without saying when is: sent twice it would register twice, and the first

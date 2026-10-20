@@ -219,7 +219,7 @@ DNS is at Cloudflare. In the domain's DNS records there:
 
 - **`A` records** — one for each of the four names: `@` and `try` in the `croquetscores.com` zone, and `@` and `try` in the `gateballscores.com` zone, all to the server's address. Add `beta` in the `croquetscores.com` zone too, for the beta site (README.md §2). **Set the proxy status to "DNS only" (the grey cloud),** for the reason below.
 - **`AAAA` record** — only if the server was given an IPv6 address, and the same proxy status.
-- **Brevo's records** — SPF (a `TXT`), DKIM (a `TXT` or `CNAME`) and DMARC (a `TXT` at `_dmarc`), exactly as Brevo's dashboard gives them. Without these the emails go to spam (TODO.md, Hosting). Cloudflare only proxies `A`, `AAAA` and `CNAME` records, and a `CNAME` that Brevo gives for DKIM must also be "DNS only", or Brevo cannot see it and says the domain is not verified.
+- **Brevo's records** — SPF (a `TXT`), DKIM (a `TXT` or `CNAME`) and DMARC (a `TXT` at `_dmarc`), exactly as Brevo's dashboard gives them. Without these the emails go to spam (https://github.com/CroquetScores/croquetscores.com/issues/279, Email and DNS). Cloudflare only proxies `A`, `AAAA` and `CNAME` records, and a `CNAME` that Brevo gives for DKIM must also be "DNS only", or Brevo cannot see it and says the domain is not verified.
 
 Wait for every `A` record to answer before starting the proxy. Run this once for each of the names, the beta's included, and it should print the server's address:
 
@@ -283,7 +283,7 @@ sudo journalctl -u caddy -n 50
 
 Caddy asks for each name's certificate when it first needs it, so the `A` records (§4) have to be answering first. If the proxy moves to another machine, `TRUSTED_PROXY` becomes that machine's address, and the firewall opens 3000 to it alone.
 
-HTTPS headers are not sent by the site yet (TODO.md, Security headers). Caddy can add `Strict-Transport-Security` in the meantime, but that is a decision for the operator, since a mistake in it is remembered by browsers for as long as it says.
+HTTPS headers are not sent by the site yet (https://github.com/CroquetScores/croquetscores.com/issues/286, Security headers). Caddy can add `Strict-Transport-Security` in the meantime, but that is a decision for the operator, since a mistake in it is remembered by browsers for as long as it says.
 
 ## 6. The site as a service
 

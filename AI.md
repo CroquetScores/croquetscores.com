@@ -1,6 +1,6 @@
 # AI.md — Working in this repository
 
-For whoever is working here with an AI agent, and for the agent. The other documents say what the repository is: `SETUP.md` how it is built and why, `STYLE.md` what things are called and what the scales are, `LAYOUT.md` what the site looks like, `TODO.md` what is known to be wrong. This says how to work in it, and it is the shortest of them on purpose.
+For whoever is working here with an AI agent, and for the agent. The other documents say what the repository is: `SETUP.md` how it is built and why, `STYLE.md` what things are called and what the scales are, `LAYOUT.md` what the site looks like. This says how to work in it, and it is the shortest of them on purpose.
 
 ---
 

@@ -87,7 +87,7 @@ withsettings npm run db:rebuild-read-models -- --minutes 30
 
 It turns the site's database access off itself, for the minutes given, so that the site says it is down for maintenance rather than answer from read models that are about to change. It turns access on again when it is done, reports every ten seconds how many streams it has made, and says how long it took. It makes them all in one transaction, so a failure leaves them as they were, turns access on, and says what failed. The site does not have to be stopped.
 
-**Give it more minutes than you expect,** since it is the number readers are told. How long it takes is not yet known for real data (TODO.md, A truer rebuild estimate), and the first rebuild on the real events should be timed and written here.
+**Give it more minutes than you expect,** since it is the number readers are told. A rebuild has been timed at 3.8 minutes. How long it takes follows the number of events, since every one is replayed, so time it again when there are many more, and write the new time here.
 
 **Do not turn access off first with `db:access`.** The rebuild refuses when access is already off, saying `Database access is already off.`, because that means somebody else is doing maintenance. If it says so and nobody is, `npm run db:access -- on` (operations.md §3) turns it on.
 
@@ -173,7 +173,7 @@ Which migrations cannot be lived with by the older code is for the pull request 
 
 ## 7. Rehearsal
 
-TODO.md asks that this be written down by doing it. **The operator followed the sequences in §2 and §4 on the real server** (October 2026) and reported that they worked. They have been changed since (the copy under another name, the `deploy-finished` file, the check before going back), and **the changed form has not been run yet.** The rest of the rehearsal is still to do:
+The issue https://github.com/CroquetScores/croquetscores.com/issues/286 (A deployment and rollback runbook) asks that this be written down by doing it. **The operator followed the sequences in §2 and §4 on the real server** (October 2026) and reported that they worked. They have been changed since (the copy under another name, the `deploy-finished` file, the check before going back), and **the changed form has not been run yet.** The rest of the rehearsal is still to do:
 
 - Run the changed §2 once on the real server, and read that it makes `deploy-finished` again.
 - Do §5's going back once, by the rename, to see that the older build comes up.

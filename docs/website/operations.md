@@ -12,7 +12,7 @@ Knowing it is up, reading what it says, turning the database off on purpose, and
 
 **After every deployment, and on first set-up, do all five.** The health check alone is not an answer.
 
-**An outside check that runs by itself is not set up** (TODO.md, Seeing a failure before a user says so). Until it is, nobody learns of an outage at night until the morning. Point an uptime service at `/api/v1/health` and have it email the operator; any will do, and a free tier is enough for a beta.
+**An outside check that runs by itself is not set up** (https://github.com/CroquetScores/croquetscores.com/issues/286, Seeing a failure before a user says so). Until it is, nobody learns of an outage at night until the morning. Point an uptime service at `/api/v1/health` and have it email the operator; any will do, and a free tier is enough for a beta.
 
 ## 2. The logs
 
@@ -98,9 +98,9 @@ backup-and-restore.md §7. It needs the file, the two account keys from where th
 
 ## 6. Not yet done
 
-Collected from TODO.md, so they are not forgotten when this is read as if it were finished:
+Collected from https://github.com/CroquetScores/croquetscores.com/issues/286, so they are not forgotten when this is read as if it were finished:
 
 - An outside check on `/api/v1/health` that emails the operator (§1).
-- Security headers (TODO.md, Before Production Release). The proxy can send some in the meantime.
-- Rate limiting beyond sign-in, password reset and registering (TODO.md).
+- Security headers. The proxy can send some in the meantime.
+- Rate limiting beyond sign-in, password reset and registering.
 - A measured busy tournament: how many readers one server stands, and the pool size against Postgres's connection limit.
