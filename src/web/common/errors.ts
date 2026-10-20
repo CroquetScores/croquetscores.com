@@ -26,6 +26,7 @@ import { escape } from "./escape.js";
 import { render } from "./layout.js";
 import { themeOf } from "./theme.js";
 import type { DatabaseOutage } from "./databaseOutage.js";
+import type { ErrorReport } from "./errorReport.js";
 import { hasPassword, readerKnown, signedIn } from "./reader.js";
 
 // The API answers JSON and the public pages answer HTML, including when they
@@ -100,6 +101,7 @@ export const registerErrorMapping = (
   server: FastifyInstance,
   assets: Assets,
   databaseOutage: DatabaseOutage,
+  errorReport: ErrorReport,
 ): void => {
   server.setNotFoundHandler((request, reply) => {
     if (wantsJson(request)) {
@@ -222,6 +224,7 @@ export const registerErrorMapping = (
     // log with the cause, and to the caller without it.
     const correlationId = randomUUID();
     request.log.error({ err: error, correlationId }, "Unhandled error");
+    errorReport.tell(request, correlationId);
     if (wantsJson(request)) {
       return sendJson(reply.code(500), { error: "Internal", correlationId });
     }

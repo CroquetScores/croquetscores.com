@@ -336,6 +336,7 @@ import {
   type GoogleSignIn,
 } from "./auth/google.js";
 import { tellingTheAdministrator } from "./common/databaseOutage.js";
+import { tellingOfFailures } from "./common/errorReport.js";
 import { registerErrorMapping } from "./common/errors.js";
 import { refuseWhileDatabaseAccessIsOff } from "./common/maintenance.js";
 import type { RebuildProgress } from "../application/common/RebuildProgress.js";
@@ -498,6 +499,12 @@ export interface Application {
    * not wait for it, so whatever wants to see the email waits here instead.
    */
   readonly databaseOutageTold: () => Promise<void>;
+  /**
+   * Resolves once the administrator has been told, or has failed to be, of
+   * everything that went wrong: the database being gone, and the site failing
+   * on a request.
+   */
+  readonly administratorTold: () => Promise<void>;
   /** The switch that turns the database off for maintenance. */
   readonly databaseAccess: DatabaseAccess;
   /**
@@ -1424,7 +1431,13 @@ export const buildApplication = async (
     writer,
     sender: emailSender,
   });
-  registerErrorMapping(server, assets, databaseOutage);
+  const errorReport = tellingOfFailures({
+    administrator: config.administratorEmailAddress,
+    from: config.administratorEmailAddress,
+    writer,
+    sender: emailSender,
+  });
+  registerErrorMapping(server, assets, databaseOutage, errorReport);
 
   const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
@@ -1638,6 +1651,10 @@ export const buildApplication = async (
     rebuildReadModels,
     changeSiteKey,
     databaseOutageTold: () => databaseOutage.settled(),
+    administratorTold: async () => {
+      await databaseOutage.settled();
+      await errorReport.settled();
+    },
     databaseAccess,
     emailSender,
   };

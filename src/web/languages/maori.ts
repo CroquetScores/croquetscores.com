@@ -1845,5 +1845,23 @@ export const maori: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "I rahua te {siteName} i tētahi tono",
+    "Email.UnhandledError.body": `
+<p>Tēnā koe:</p>
+
+<p>
+    I rahua te {siteName} i {when} i tētahi tono mō {asked}. I whakaaturia ki te kaipānui te tohutoro {reference}, ā, kei raro i tērā te take i te rārangi tuhinga.
+</p>
+
+<p>
+    He maha ngā wā ka rahua ia tono ina pakaru te pae, nō reira e tae mai ana he īmēra mō ngā rahunga kia 4 anake i ia haora. Ko ērā atu kei te rārangi tuhinga tonu.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

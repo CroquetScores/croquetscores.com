@@ -1805,5 +1805,23 @@ export const swedish: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} misslyckades med en förfrågan",
+    "Email.UnhandledError.body": `
+<p>Hej,</p>
+
+<p>
+    {siteName} misslyckades klockan {when} med en förfrågan om {asked}. Läsaren fick se referensen {reference}, och loggen har orsaken under den.
+</p>
+
+<p>
+    En webbplats som är trasig misslyckas oftast med varje förfrågan, så du får högst 4 e-postmeddelanden i timmen om fel. De följande finns ändå i loggen.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

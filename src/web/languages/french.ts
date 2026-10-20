@@ -1833,5 +1833,23 @@ export const french: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} a échoué sur une requête",
+    "Email.UnhandledError.body": `
+<p>Bonjour,</p>
+
+<p>
+    {siteName} a échoué à {when} sur une requête pour {asked}. Le lecteur a vu la référence {reference}, et le journal a la cause sous celle-ci.
+</p>
+
+<p>
+    Un site en panne échoue en général à chaque requête : vous recevrez donc au plus 4 e-mails par heure au sujet des échecs. Les suivants figurent quand même dans le journal.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

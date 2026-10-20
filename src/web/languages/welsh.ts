@@ -1827,5 +1827,23 @@ export const welsh: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "Methodd {siteName} ar gais",
+    "Email.UnhandledError.body": `
+<p>Helo,</p>
+
+<p>
+    Methodd {siteName} am {when} ar gais am {asked}. Dangoswyd y cyfeirnod {reference} i’r darllenydd, ac mae’r achos yn y log oddi tano.
+</p>
+
+<p>
+    Mae gwefan sydd wedi torri yn tueddu i fethu ar bob cais, felly cewch eich e-bostio am fethiannau 4 gwaith yr awr ar y mwyaf. Mae’r lleill yn y log o hyd.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

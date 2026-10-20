@@ -1757,5 +1757,23 @@ export const korean: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName}에서 요청 처리에 실패했어요",
+    "Email.UnhandledError.body": `
+<p>안녕하세요.</p>
+
+<p>
+    {siteName}에서 {when}에 {asked} 요청을 처리하지 못했어요. 독자에게는 참조 번호 {reference}가 표시되었고, 로그에서 이 번호 아래에 원인을 볼 수 있어요.
+</p>
+
+<p>
+    고장 난 사이트는 모든 요청에서 실패하기 쉬워서, 실패에 대한 이메일은 한 시간에 최대 4통만 보내드려요. 그 뒤의 실패도 로그에는 그대로 남아요.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

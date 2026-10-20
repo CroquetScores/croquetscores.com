@@ -1666,5 +1666,23 @@ export const english: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} failed on a request",
+    "Email.UnhandledError.body": `
+<p>Hi,</p>
+
+<p>
+    {siteName} failed at {when} on a request for {asked}. The reader was shown the reference {reference}, and the log has the cause under it.
+</p>
+
+<p>
+    A site that is broken tends to fail on every request, so you will be emailed about failures at most 4 times in an hour. The ones after that are in the log all the same.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

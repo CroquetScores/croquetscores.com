@@ -1807,5 +1807,23 @@ export const portuguese: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} falhou em uma requisição",
+    "Email.UnhandledError.body": `
+<p>Olá,</p>
+
+<p>
+    {siteName} falhou às {when} em uma requisição para {asked}. O leitor viu a referência {reference}, e o registro tem a causa logo abaixo dela.
+</p>
+
+<p>
+    Um site quebrado costuma falhar em toda requisição, então você receberá no máximo 4 emails por hora sobre falhas. As seguintes ficam no registro do mesmo jeito.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

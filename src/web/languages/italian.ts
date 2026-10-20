@@ -1830,5 +1830,24 @@ export const italian: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject":
+      "{siteName} ha avuto un errore in una richiesta",
+    "Email.UnhandledError.body": `
+<p>Ciao,</p>
+
+<p>
+    {siteName} ha avuto un errore alle {when} in una richiesta per {asked}. Al lettore è stato mostrato il riferimento {reference}, e nel registro la causa si trova sotto di esso.
+</p>
+
+<p>
+    Un sito guasto di solito fallisce a ogni richiesta, quindi riceverai al massimo 4 email all’ora sugli errori. Quelli successivi sono comunque nel registro.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };
