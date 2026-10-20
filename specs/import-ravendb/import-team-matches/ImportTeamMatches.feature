@@ -2122,7 +2122,7 @@ Feature: Importing the old sites' team matches
       And game 1 was lost by player 8
       And game 1's loser scored "3"
       When the team match is imported
-      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "The following games could not be added to the new version of Croquet Scores"
+      Then the note called "Import Errors" of the tournament kept for "tournaments/13" on "croquetscores.com" says "The following could not be added to the new version of Croquet Scores"
 
     Scenario: The note has a section for the team match
       Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"

@@ -1672,6 +1672,71 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament is imported
       Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/12" on "croquetscores.com"
 
+  Rule: A document of a tournament that is refused is said in a note of the tournament
+
+    The error kept against a refused document is for whoever runs the import.
+    The people who manage the tournament never see it, and would find the
+    competition, the players or the commentary missing with nothing to say
+    why. So each is also said in the note of the tournament called Import
+    Errors, which is where the games that could not be added are said, with a
+    section for it and the reason in words for a reader of the tournament. It
+    is still kept as an error, since it was not brought over. Where no user was
+    brought over to write the note there is no note, as for a game.
+
+    Tournaments that started before 2026 are kept as they were, with a
+    Swiss and a note of its own (see below), so these are of one that
+    started in 2026.
+
+    A tournament that is itself refused has no note to say it in: nothing was
+    brought over for the note to be of.
+
+    Background:
+      Given a user "users/90" on "croquetscores.com" is imported as "croquetscores@gmail.com"
+      And the tournament started on "2026-01-01T00:00:00.0000000"
+
+    Scenario: A refused competition is said in a note called Import Errors
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has a note called "Import Errors"
+
+    Scenario: The note says which competition could not be brought over
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/12" on "croquetscores.com" says "blocks/30"
+
+    Scenario: The note says why the competition could not be brought over
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/12" on "croquetscores.com" says "could not be brought over because the new site's rules do not allow it"
+
+    Scenario: A refused competition is still kept as an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      When the tournament is imported
+      Then the error kept for "croquetscores.com/blocks/30" says "CompetitionName.Missing"
+
+    Scenario: A refused commentary is said in the note
+      Given the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called ""
+      When the tournament is imported
+      Then the note called "Import Errors" of the tournament kept for "tournaments/12" on "croquetscores.com" says "commentaries/5"
+
+    Scenario: Two refused documents are said in the one note
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block "blocks/30" is called ""
+      And the commentary "commentaries/5" of "tournaments/12" on "croquetscores.com"
+      And the commentary was called ""
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 note
+
+    Scenario: A competition that is brought over is not said in a note
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has no note
+
   Rule: An archived tournament is left behind with everything that names it
 
     The old sites archived a tournament to be rid of it. Nothing that names it

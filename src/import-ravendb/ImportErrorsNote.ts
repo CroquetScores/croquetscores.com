@@ -21,7 +21,7 @@ import type { Game as OldGame } from "./ravendb-models/Competition.js";
 export const IMPORT_ERRORS_TITLE = "Import Errors";
 
 const INTRO =
-  "The following games could not be added to the new version of Croquet Scores. The reason is given with each game.";
+  "The following could not be added to the new version of Croquet Scores. The reason is given with each.";
 
 // A player of a game as the note says them: their name, and the team or club
 // they represented where they had one, as "Ann Able (New Zealand)".
@@ -44,6 +44,13 @@ export const playerNoteLineOf = (
 };
 
 /**
+ * A document of the tournament the site refused as a line of the note: what
+ * kind of document it was, and why, said for a reader of the tournament.
+ */
+export const refusedLineOf = (kind: string, failure: unknown): string =>
+  `The ${kind} could not be brought over because ${plainReasonOf(failure)}.`;
+
+/**
  * A game that could not be added as a line of the note: who beat whom, with
  * each one's team or club and score, and why it could not be added, said for a
  * reader of the tournament.
@@ -64,9 +71,9 @@ export const noteLineOf = (
 };
 
 /**
- * Says, in a note of the tournament's, the games of its team matches that
- * could not be brought over, a section for each team match and a line for
- * each game (ImportTeamMatches.feature): one note for the tournament, which
+ * Says, in a note of the tournament's, what could not be brought over of it:
+ * the games of its team matches, a section for each team match and a line for
+ * each game, and each document the site refused, a section for each (ImportTeamMatches.feature): one note for the tournament, which
  * each team match adds its section to. croquetscores@gmail.com, who writes
  * it, is made a manager of the tournament.
  */
