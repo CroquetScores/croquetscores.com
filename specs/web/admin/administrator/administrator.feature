@@ -44,6 +44,11 @@ Feature: Only an administrator may open the administrator's pages
       When the page at "/admin/administrator/accounts" is opened
       Then the page is not found
 
+    Scenario: The server's log is not found by a manager
+      Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
+      When the page at "/admin/administrator/logs" is opened
+      Then the page is not found
+
     Scenario: The administrator's pages are not found once the role is taken away
       Given the reader has signed in as "admin@example.com" with the password "another horse battery staple"
       And "admin@example.com" has had the role "Administrator" taken away

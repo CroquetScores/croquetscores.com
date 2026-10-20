@@ -12,6 +12,7 @@ import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachabl
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
 import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
+import { LogEntriesRefused } from "../../application/operations/logs/LogEntriesHandler.js";
 import { ImportErrorKeptRefused } from "../../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { WorldRankingPlayersRefused } from "../../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ManagerNoteRefused } from "../../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
@@ -185,6 +186,7 @@ export const registerErrorMapping = (
         error instanceof RoleOperationRefused ||
         error instanceof WorldRankingPlayersRefused ||
         error instanceof ImportErrorKeptRefused ||
+        error instanceof LogEntriesRefused ||
         error instanceof CompetitionRefused ||
         error instanceof ManagerNoteRefused ||
         error instanceof ValidationError) &&

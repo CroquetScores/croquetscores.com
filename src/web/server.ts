@@ -230,6 +230,10 @@ import { Argon2id } from "../infrastructure/identity/Argon2id.js";
 import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
+import { LogEntriesHandler } from "../application/operations/logs/LogEntriesHandler.js";
+import { PruneLogHandler } from "../application/operations/logs/PruneLogHandler.js";
+import { PostgresServerLog } from "../infrastructure/database/PostgresServerLog.js";
+import { ServerLogStream } from "../infrastructure/logging/ServerLogStream.js";
 import { PostgresKeptImportErrors } from "../infrastructure/database/PostgresKeptImportErrors.js";
 import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
 import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebsite.js";
@@ -782,8 +786,20 @@ export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
 ): Promise<Application> => {
+  const pool = createPool(config.databaseUrl);
+  // The log goes where it always has, to standard output, and a copy of each
+  // line is kept in the database for an administrator to read. A scenario that
+  // says where its log goes keeps no copy, since it is not asking about this.
+  const serverLogStream =
+    options.logger === undefined
+      ? new ServerLogStream({
+          file: process.stdout,
+          database: pool,
+          now: options.clock ?? machineClock,
+        })
+      : undefined;
   const server = Fastify({
-    logger: options.logger ?? true,
+    logger: options.logger ?? { stream: serverLogStream! },
     // An admin address with a malformed escape, as "%E0%A4%A", is refused by
     // the router before any handler is asked, with a 400 that is no page of
     // the admin's. It is the admin's to say there is no such document, as it
@@ -795,7 +811,13 @@ export const buildApplication = async (
     // the setting that names what forwards to this site (trustedProxy.ts).
     trustProxy: sendersBelieved(config.trustedProxies),
   });
-  const pool = createPool(config.databaseUrl);
+  // Lines still waiting to be kept are kept before the pool they are kept
+  // through is closed, which the caller of `close` does after it.
+  if (serverLogStream !== undefined) {
+    server.addHook("onClose", async () => {
+      await serverLogStream.flush();
+    });
+  }
   // Which version of the website this is: what the build wrote down, unless a
   // scenario says which. Null is a scenario saying none, as undefined is the
   // option left out.
@@ -1043,6 +1065,9 @@ export const buildApplication = async (
   const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
   mediator.handleQuery(new ImportErrorsKeptHandler(accounts, keptImportErrors));
   mediator.handleQuery(new ImportErrorKeptHandler(accounts, keptImportErrors));
+  const serverLog = new PostgresServerLog(unitOfWork);
+  mediator.handleQuery(new LogEntriesHandler(accounts, serverLog));
+  mediator.handleCommand(new PruneLogHandler(accounts, serverLog));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(

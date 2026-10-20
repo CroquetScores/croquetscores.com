@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Accounts } from "./administrator/accounts/accounts.js";
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { ImportError } from "./administrator/import-errors/importError.js";
+import { Logs } from "./administrator/logs/logs.js";
 import { ImportErrors } from "./administrator/import-errors/importErrors.js";
 import { ImportWorldRankingPlayers } from "./administrator/import-world-ranking-players/importWorldRankingPlayers.js";
 import { NewTournament } from "./tournaments/new/new.js";
@@ -90,7 +91,7 @@ export const App = (): React.JSX.Element => {
   // beneath it, named by its id as one segment, which is why the address keeps
   // its %2F rather than reading it as a slash.
   const administrator =
-    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors)?(\/.*)?$/.exec(
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs)?(\/.*)?$/.exec(
       path,
     );
   if (administrator !== null) {
@@ -102,6 +103,8 @@ export const App = (): React.JSX.Element => {
     const onImportErrors = administrator[1] === "/import-errors";
     const theImportErrorsPage =
       onImportErrors && (administrator[2] ?? "/") === "/";
+    const theLogsPage =
+      administrator[1] === "/logs" && (administrator[2] ?? "/") === "/";
     const importErrorOf = onImportErrors
       ? /^\/([^/]+)\/?$/.exec(administrator[2] ?? "")?.[1]
       : undefined;
@@ -115,7 +118,9 @@ export const App = (): React.JSX.Element => {
                 ? "world-rankings"
                 : onImportErrors
                   ? "import-errors"
-                  : undefined
+                  : administrator[1] === "/logs"
+                    ? "logs"
+                    : undefined
           }
         />
         <main id="content">
@@ -127,6 +132,8 @@ export const App = (): React.JSX.Element => {
                 <ImportWorldRankingPlayers />
               ) : theImportErrorsPage ? (
                 <ImportErrors />
+              ) : theLogsPage ? (
+                <Logs />
               ) : importErrorOf !== undefined ? (
                 <ImportError
                   key={importErrorOf}

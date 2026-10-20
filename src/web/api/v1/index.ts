@@ -69,6 +69,8 @@ import { AccountsWithRole } from "../../../application/operations/accounts/Accou
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
+import { LogEntries } from "../../../application/operations/logs/LogEntries.js";
+import { PruneLog } from "../../../application/operations/logs/PruneLog.js";
 import { ImportErrorKept } from "../../../application/operations/import-errors/ImportErrorKept.js";
 import { ImportErrorsKept } from "../../../application/operations/import-errors/ImportErrorsKept.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
@@ -1081,6 +1083,35 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       return reply.header("cache-control", "no-store").send(kept);
     },
   );
+
+  // The server's log, newest first, narrowed to a severity and more severe and
+  // to the lines that mention some text. Refused to anybody who is not an
+  // administrator, for the same reason as the import errors are.
+  server.get<{ Querystring: { severity?: string; text?: string } }>(
+    "/logs",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const entries = await request.server.mediator.query(
+        new LogEntries(
+          reader.value,
+          request.query.severity,
+          request.query.text,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ entries });
+    },
+  );
+
+  // The log from before the last hour removed, and how many entries that was.
+  server.post("/logs/prune", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const removed = await request.server.mediator.send(
+      new PruneLog(reader.value, request.requestedAt),
+    );
+    return reply.header("cache-control", "no-store").send({ removed });
+  });
 
   // A flag, as a reader sees it: its picture, and the name of the place it is
   // the flag of, in the reader's language.
