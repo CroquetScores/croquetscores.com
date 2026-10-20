@@ -288,6 +288,8 @@ export const afrikaans: Language = {
     "errors.sorryDetail": "Daardie versoek kon nie hanteer word nie.",
     "errors.failed": "Iets het skeefgeloop",
     "errors.reference": "Verwysing {reference}.",
+    "errors.recorded":
+      "Die fout is aangeteken en ’n e-pos is aan die administrateur gestuur. Dit help om die administrateur te e-pos met die verwysing en ’n beskrywing van wat jy gedoen het.",
     "errors.unavailable": "Die webwerf is nie beskikbaar nie",
     "errors.unavailableDetail":
       "Die webwerf kan nou nie bykom wat dit nodig het nie. Probeer asseblief later weer.",

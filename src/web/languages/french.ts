@@ -288,6 +288,8 @@ export const french: Language = {
     "errors.sorryDetail": "Cette demande n’a pas pu être traitée.",
     "errors.failed": "Quelque chose s’est mal passé",
     "errors.reference": "Référence {reference}.",
+    "errors.recorded":
+      "L’erreur a été consignée et un e-mail a été envoyé à l’administrateur. Il est utile d’envoyer un e-mail à l’administrateur avec la référence et une description de ce que vous faisiez.",
     "errors.unavailable": "Le site est indisponible",
     "errors.unavailableDetail":
       "Le site ne parvient pas à joindre ce dont il a besoin pour le moment. Veuillez réessayer plus tard.",

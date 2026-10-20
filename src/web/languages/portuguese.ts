@@ -283,6 +283,8 @@ export const portuguese: Language = {
     "errors.sorryDetail": "Não foi possível atender a esse pedido.",
     "errors.failed": "Algo deu errado",
     "errors.reference": "Referência {reference}.",
+    "errors.recorded":
+      "O erro foi registrado e um email foi enviado ao administrador. Ajuda enviar um email ao administrador com a referência e uma descrição do que você estava fazendo.",
     "errors.unavailable": "O site está indisponível",
     "errors.unavailableDetail":
       "O site não consegue acessar o que precisa neste momento. Tente novamente mais tarde.",

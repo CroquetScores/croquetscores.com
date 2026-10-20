@@ -282,6 +282,8 @@ export const korean: Language = {
     "errors.sorryDetail": "그 요청을 처리할 수 없었어요.",
     "errors.failed": "문제가 생겼어요",
     "errors.reference": "참조 번호 {reference}.",
+    "errors.recorded":
+      "오류가 기록되었고 관리자에게 이메일이 전송되었어요. 참조 번호와 그때 하고 있던 일을 적어 관리자에게 이메일을 보내 주시면 도움이 돼요.",
     "errors.unavailable": "사이트를 사용할 수 없어요",
     "errors.unavailableDetail":
       "사이트가 지금 필요한 것에 연결할 수 없어요. 나중에 다시 시도해 주세요.",

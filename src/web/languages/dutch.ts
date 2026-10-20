@@ -281,6 +281,8 @@ export const dutch: Language = {
     "errors.sorryDetail": "Dat verzoek kon niet worden afgehandeld.",
     "errors.failed": "Er is iets misgegaan",
     "errors.reference": "Referentie {reference}.",
+    "errors.recorded":
+      "De fout is vastgelegd en er is een e-mail naar de beheerder gestuurd. Het helpt als je de beheerder een e-mail stuurt met de referentie en een beschrijving van wat je aan het doen was.",
     "errors.unavailable": "De site is niet beschikbaar",
     "errors.unavailableDetail":
       "De site kan op dit moment niet bij wat hij nodig heeft. Probeer het later opnieuw.",

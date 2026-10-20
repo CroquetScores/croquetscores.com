@@ -283,6 +283,8 @@ export const egyptian: Language = {
     "errors.sorryDetail": "مقدرناش ننفّذ الطلب ده.",
     "errors.failed": "حصلت مشكلة",
     "errors.reference": "الرقم المرجعي {reference}.",
+    "errors.recorded":
+      "الخطأ اتسجّل واتبعت رسالة بريد إلكتروني للمسؤول. هيفيد لو بعتّ للمسؤول رسالة بريد إلكتروني فيها الرقم المرجعي ووصف للي كنت بتعمله.",
     "errors.unavailable": "الموقع مش متاح",
     "errors.unavailableDetail":
       "الموقع مش قادر يوصل للي محتاجه دلوقتي. جرّب تاني بعدين.",

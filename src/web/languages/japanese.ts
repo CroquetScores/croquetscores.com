@@ -282,6 +282,8 @@ export const japanese: Language = {
     "errors.sorryDetail": "そのリクエストは処理できませんでした。",
     "errors.failed": "問題が発生しました",
     "errors.reference": "参照番号 {reference}。",
+    "errors.recorded":
+      "エラーは記録され、管理者にメールが送信されました。参照番号と、そのときの操作を書いて管理者にメールをいただけると助かります。",
     "errors.unavailable": "サイトは現在ご利用いただけません",
     "errors.unavailableDetail":
       "サイトは現在、必要なものに接続できません。しばらくしてからもう一度お試しください。",

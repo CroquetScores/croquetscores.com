@@ -296,7 +296,7 @@ export const english: Language = {
     "errors.failed": "Something went wrong",
     "errors.reference": "Reference {reference}.",
     "errors.recorded":
-      "The failure has been recorded for the administrator, who reads the record every day. It helps to email the administrator with the reference and a description of what you were doing.",
+      "The error has been logged and an email sent to the administrator. It helps to email the administrator with the reference and a description of what you were doing.",
     "errors.message": "Email the administrator",
     "errors.messageSubject": "Error {reference} on {siteName}",
     "errors.messageBody": "What I was doing when this happened:\n\n",

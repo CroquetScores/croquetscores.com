@@ -282,6 +282,8 @@ export const italian: Language = {
     "errors.sorryDetail": "Non è stato possibile gestire quella richiesta.",
     "errors.failed": "Qualcosa è andato storto",
     "errors.reference": "Riferimento {reference}.",
+    "errors.recorded":
+      "L’errore è stato registrato e una email è stata inviata all’amministratore. È utile scrivere una email all’amministratore con il riferimento e una descrizione di ciò che stavi facendo.",
     "errors.unavailable": "Il sito non è disponibile",
     "errors.unavailableDetail":
       "Il sito non riesce a raggiungere ciò che gli serve in questo momento. Riprova più tardi.",
