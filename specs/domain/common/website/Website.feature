@@ -82,6 +82,9 @@ Feature: The website a site is served as
     address, so a link in an email takes its reader back to it, and it says
     that it is a beta (`betaSite.feature`). So a request addressed to it is for
     the beta site, which counts as croquetscores.com for what is kept and read.
+    Development counts as croquetscores.com in the same way, since the data a
+    developer has to work with is a copy of that site's and none is kept under
+    development's own name.
     It is the only other name, so www.croquetscores.com and the like are still
     refused.
 
@@ -123,7 +126,10 @@ Feature: The website a site is served as
         | croquetscores.com      |
         | try.croquetscores.com  |
         | gateballscores.com     |
-        | localhost:3000         |
+
+    Scenario: Development counts as croquetscores.com
+      When a request addressed to "localhost:3000" is placed
+      Then it counts as the website "croquetscores.com"
 
     Scenario Outline: A request addressed to a local address is for development
       When a request addressed to "<host>" is placed
