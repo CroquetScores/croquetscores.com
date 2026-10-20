@@ -162,11 +162,17 @@ export const PlayerDialog = ({
                   name,
                   representing,
                   flag,
-                  // Asked for only where the sport has world rankings; elsewhere a
-                  // player keeps whatever they had, as none was asked of them.
+                  // Asked for only where the sport has world rankings. Elsewhere
+                  // a player is known by their name, so a corrected name is
+                  // their new world ranking name too; but one the import gave
+                  // them that is not their name is kept, as none was asked of
+                  // the reader to change it.
                   worldRankingName: asksWorldRankingName
                     ? worldRankingNameSent
-                    : (player?.worldRankingName ?? ""),
+                    : player?.worldRankingName === undefined ||
+                        player.worldRankingName === player.name
+                      ? name
+                      : player.worldRankingName,
                 },
           ),
         },
