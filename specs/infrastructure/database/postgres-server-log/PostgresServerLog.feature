@@ -58,10 +58,44 @@ Feature: The server's log, kept in the database for an administrator to read
       And the log is flushed
       Then the newest entry says "Second"
 
+    Scenario: A backslash and the characters u0000 in a line are kept as written
+      When the server logs "Path" at the severity Info with the reference "C:\u0000"
+      And the log is flushed
+      Then the newest entry carries the reference "C:\u0000"
+
+    Scenario: A null character in a line is left out, and the line is kept
+      When the server logs "Path" at the severity Info with a null character in its reference
+      And the log is flushed
+      Then the newest entry carries the reference "ab"
+
     Scenario: A line that is not a log line is kept as it is
       When the server writes "not a log line at all" to its log
       And the log is flushed
       Then the newest entry says "not a log line at all"
+
+  Rule: A link a reader was sent is not kept
+
+    A link in an email carries a signature that lets whoever holds it set a
+    password or confirm an address. The log file already holds the addresses
+    requests were made to, but the file is read on the machine, and this copy
+    is read on a page, so what in an address would let somebody act as a reader
+    is left out of it. The rest of the address is kept, so that a request is
+    still found by what else it carried.
+
+    Scenario: The link in an address is left out
+      When the server logs "incoming request" at the severity Info for the address "/set-new-password?link=abc.def&request=r1"
+      And the log is flushed
+      Then the newest entry's address is "/set-new-password?link=[removed]&request=r1"
+
+    Scenario: The link is left out when it is the last thing in the address
+      When the server logs "incoming request" at the severity Info for the address "/confirm?request=r1&link=abc.def"
+      And the log is flushed
+      Then the newest entry's address is "/confirm?request=r1&link=[removed]"
+
+    Scenario: An address with no link is kept as it is
+      When the server logs "incoming request" at the severity Info for the address "/search?q=croquet"
+      And the log is flushed
+      Then the newest entry's address is "/search?q=croquet"
 
   Rule: The file is written as it always was
 
@@ -100,6 +134,28 @@ Feature: The server's log, kept in the database for an administrator to read
       When the server logs "Kept" at the severity Info
       And the log is flushed
       Then the newest entry says "Kept"
+
+  Rule: Many lines waiting are not kept without limit
+
+    A burst of lines, or a database slow to answer, would otherwise grow what
+    is waiting without limit. Up to ten thousand lines wait; a line that
+    arrives after that is let go, and said once on standard error. It is still
+    in the file.
+
+    Scenario: Ten thousand lines are kept
+      When the server logs 10000 lines at the severity Info
+      And the log is flushed
+      Then 10000 entries are kept
+
+    Scenario: A line beyond ten thousand is let go
+      When the server logs 10001 lines at the severity Info
+      And the log is flushed
+      Then 10000 entries are kept
+
+    Scenario: Letting go is said once, however many are let go
+      When the server logs 10003 lines at the severity Info
+      And the log is flushed
+      Then standard error says the log could not be kept
 
   Rule: An entry is removed after seven days
 
@@ -145,6 +201,25 @@ Feature: The server's log, kept in the database for an administrator to read
       When the server logs "Second" at the severity Info
       And the log is flushed
       Then no entry says "Older again"
+
+  Rule: Removing old entries that fails is tried again
+
+    Scenario: A line is kept when removing old entries fails
+      Given the database cannot remove entries
+      When the server logs "First" at the severity Info
+      And the log is flushed
+      Then an entry says "First"
+
+    Scenario: Removing old entries is tried again at the next line, not an hour later
+      Given an entry written at "2026-10-01T10:00:00Z" saying "Old"
+      And the database cannot remove entries
+      And the server logs "First" at the severity Info
+      And the log is flushed
+      And the database can be written to again
+      And the moment "2026-10-09T10:05:00Z"
+      When the server logs "Second" at the severity Info
+      And the log is flushed
+      Then no entry says "Old"
 
   Rule: Entries are read back newest first
 

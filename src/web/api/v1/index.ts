@@ -126,6 +126,10 @@ const signedInOrRefused = (
 // What a caller sent under `field`, where it is text, and nothing typed where
 // it is not: a value of any other kind was not typed into anything, and is
 // refused as nothing typed would be rather than failing on the way in.
+// A query parameter where it was given once, as text.
+const oneOf = (given: unknown): string | undefined =>
+  typeof given === "string" ? given : undefined;
+
 const textOf = (body: unknown, field: string): string => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return typeof value === "string" ? value : "";
@@ -1087,16 +1091,18 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   // The server's log, newest first, narrowed to a severity and more severe and
   // to the lines that mention some text. Refused to anybody who is not an
   // administrator, for the same reason as the import errors are.
-  server.get<{ Querystring: { severity?: string; text?: string } }>(
+  server.get<{ Querystring: { severity?: unknown; text?: unknown } }>(
     "/logs",
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
       if (reader === undefined) return reply;
       const entries = await request.server.mediator.query(
+        // A parameter given twice arrives as a list, which is no text and so
+        // asks for none.
         new LogEntries(
           reader.value,
-          request.query.severity,
-          request.query.text,
+          oneOf(request.query.severity),
+          oneOf(request.query.text),
         ),
       );
       return reply.header("cache-control", "no-store").send({ entries });

@@ -23,6 +23,7 @@ interface Kept {
   readonly file: string[];
   readonly said: string[];
   failing: boolean;
+  failingRemoval: boolean;
   raised: unknown;
   read: readonly LogEntry[];
   removed: number;
@@ -50,6 +51,7 @@ Given("a server log kept in the database", function (this: SpecWorld) {
     file,
     said,
     failing: false,
+    failingRemoval: false,
     raised: undefined,
     read: [],
     removed: 0,
@@ -57,7 +59,10 @@ Given("a server log kept in the database", function (this: SpecWorld) {
       file: { write: (line) => file.push(line) },
       database: {
         query: ((text: string, values?: unknown[]) => {
-          if (state.failing) {
+          if (
+            state.failing ||
+            (state.failingRemoval && text.startsWith("delete"))
+          ) {
             return Promise.reject(new Error("The database is away."));
           }
           return this.database.query(text, values);
@@ -77,8 +82,13 @@ Given("the database cannot be written to", function (this: SpecWorld) {
   keptOf(this).failing = true;
 });
 
+Given("the database cannot remove entries", function (this: SpecWorld) {
+  keptOf(this).failingRemoval = true;
+});
+
 Given("the database can be written to again", function (this: SpecWorld) {
   keptOf(this).failing = false;
+  keptOf(this).failingRemoval = false;
 });
 
 // A line as the logger writes it: its level and time, what it said, and
@@ -88,6 +98,7 @@ const lineOf = (
   message: string,
   severity: string,
   reference?: string,
+  url?: string,
 ): string => {
   assert.ok(world.moment !== undefined, "No moment has been named.");
   const level = levelOf[severity as keyof typeof levelOf];
@@ -97,6 +108,7 @@ const lineOf = (
     time: world.moment.getTime(),
     msg: message,
     ...(reference === undefined ? {} : { correlationId: reference }),
+    ...(url === undefined ? {} : { req: { method: "GET", url } }),
   })}\n`;
 };
 
@@ -118,6 +130,31 @@ When(
     reference: string | null,
   ) {
     writing(this, lineOf(this, message, severity, reference ?? undefined));
+  },
+);
+
+// A reference with a null character in it, which Postgres will not keep in
+// text, written as the logger writes one: escaped.
+When(
+  /^the server logs "([^"]*)" at the severity (\w+) with a null character in its reference$/,
+  function (this: SpecWorld, message: string, severity: string) {
+    writing(this, lineOf(this, message, severity, "a\u0000b"));
+  },
+);
+
+When(
+  /^the server logs "([^"]*)" at the severity (\w+) for the address "([^"]*)"$/,
+  function (this: SpecWorld, message: string, severity: string, url: string) {
+    writing(this, lineOf(this, message, severity, undefined, url));
+  },
+);
+
+When(
+  /^the server logs (\d+) lines at the severity (\w+)$/,
+  function (this: SpecWorld, count: string, severity: string) {
+    for (let each = 0; each < Number(count); each++) {
+      writing(this, lineOf(this, `Line ${each}`, severity));
+    }
   },
 );
 
@@ -185,6 +222,14 @@ Then(
       (await newest(this)).written_at.toISOString(),
       new Date(moment).toISOString(),
     );
+  },
+);
+
+Then(
+  "the newest entry's address is {string}",
+  async function (this: SpecWorld, address: string) {
+    const request = (await newest(this)).details["req"] as { url?: string };
+    assert.equal(request.url, address);
   },
 );
 

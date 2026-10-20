@@ -32,6 +32,16 @@ export interface ServerLogStreamOptions {
 const aSecond = 1000;
 const anHour = 60 * 60 * 1000;
 const sevenDays = 7 * 24 * anHour;
+// What may wait to be kept. Past this a line is let go, still in the file,
+// rather than growing memory against a burst or a database that is slow.
+const mostWaiting = 10_000;
+
+// A link a reader was sent carries a signature that lets whoever holds it act
+// as the reader, so it is not kept where an administrator reads it.
+const link = /([?&]link=)[^&\s"]*/g;
+const withoutSecrets = (text: string): string =>
+  // Postgres will not keep a null character in text, escaped or not.
+  text.replaceAll("\u0000", "").replace(link, "$1[removed]");
 
 interface Row {
   readonly writtenAt: Date;
@@ -45,12 +55,22 @@ export class ServerLogStream {
   private flushing: Promise<void> = Promise.resolve();
   private lastPruned: number | undefined;
   private timer: NodeJS.Timeout | undefined;
+  private saidLettingGo = false;
 
   constructor(private readonly options: ServerLogStreamOptions) {}
 
   /** Called by the logger with each line it writes, whole, line ending too. */
   write(line: string): void {
     this.options.file.write(line);
+    if (this.waiting.length >= mostWaiting) {
+      // Said once for the lines let go, not for each, which would be a flood
+      // on top of the one that caused it.
+      if (!this.saidLettingGo) {
+        this.saidLettingGo = true;
+        this.complain(new Error("too many lines were waiting"));
+      }
+      return;
+    }
     try {
       this.waiting.push(this.rowOf(line));
     } catch (failure) {
@@ -85,6 +105,7 @@ export class ServerLogStream {
   private async keepWhatIsWaiting(): Promise<void> {
     const rows = this.waiting;
     this.waiting = [];
+    this.saidLettingGo = false;
     if (rows.length === 0) return;
     try {
       await this.options.database.query(
@@ -98,6 +119,13 @@ export class ServerLogStream {
           rows.map((row) => row.details),
         ],
       );
+    } catch (failure) {
+      this.complain(failure);
+      return;
+    }
+    // On its own, so that lines that were kept are not said to have failed,
+    // and so that removing is tried again at the next flush.
+    try {
       await this.removeWhatIsOld();
     } catch (failure) {
       this.complain(failure);
@@ -109,11 +137,13 @@ export class ServerLogStream {
   private async removeWhatIsOld(): Promise<void> {
     const now = this.options.now().getTime();
     if (this.lastPruned !== undefined && now - this.lastPruned < anHour) return;
-    this.lastPruned = now;
     await this.options.database.query(
       "delete from server_log where written_at < $1",
       [new Date(now - sevenDays)],
     );
+    // Only once it worked, so that a removal that failed is not put off for an
+    // hour while the table grows.
+    this.lastPruned = now;
   }
 
   private rowOf(line: string): Row {
@@ -144,9 +174,14 @@ export class ServerLogStream {
           ? written
           : this.options.now(),
       level,
-      // Postgres will not keep a null character in text, even escaped.
-      message: message.replaceAll("\u0000", ""),
-      details: JSON.stringify(fields).replaceAll("\\u0000", ""),
+      message: withoutSecrets(message),
+      // Cleaned value by value, as they are written, and not as the finished
+      // text: a backslash before the characters u0000 is a backslash and
+      // those characters, and cutting them out of the text would leave the
+      // backslash escaping the quote after it.
+      details: JSON.stringify(fields, (_key, value: unknown) =>
+        typeof value === "string" ? withoutSecrets(value) : value,
+      ),
     };
   }
 

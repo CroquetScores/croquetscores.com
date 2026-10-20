@@ -790,16 +790,13 @@ export const buildApplication = async (
   // The log goes where it always has, to standard output, and a copy of each
   // line is kept in the database for an administrator to read. A scenario that
   // says where its log goes keeps no copy, since it is not asking about this.
-  const serverLogStream =
-    options.logger === undefined
-      ? new ServerLogStream({
-          file: process.stdout,
-          database: pool,
-          now: options.clock ?? machineClock,
-        })
-      : undefined;
+  const serverLogStream = new ServerLogStream({
+    file: process.stdout,
+    database: pool,
+    now: options.clock ?? machineClock,
+  });
   const server = Fastify({
-    logger: options.logger ?? { stream: serverLogStream! },
+    logger: options.logger ?? { stream: serverLogStream },
     // An admin address with a malformed escape, as "%E0%A4%A", is refused by
     // the router before any handler is asked, with a 400 that is no page of
     // the admin's. It is the admin's to say there is no such document, as it
@@ -813,7 +810,7 @@ export const buildApplication = async (
   });
   // Lines still waiting to be kept are kept before the pool they are kept
   // through is closed, which the caller of `close` does after it.
-  if (serverLogStream !== undefined) {
+  if (options.logger === undefined) {
     server.addHook("onClose", async () => {
       await serverLogStream.flush();
     });

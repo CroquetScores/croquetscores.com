@@ -71,6 +71,7 @@ export const Logs = (): React.JSX.Element => {
 
   const prune = useCallback(async () => {
     setPruning(false);
+    setRemoved(undefined);
     try {
       const response = await fetch("/api/v1/logs/prune", {
         method: "POST",
@@ -78,6 +79,7 @@ export const Logs = (): React.JSX.Element => {
       });
       if (response.ok) {
         const body = (await response.json()) as { removed: number };
+        setRefused(undefined);
         setRemoved(body.removed);
         setReadAgain((times) => times + 1);
       } else {
