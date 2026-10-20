@@ -462,6 +462,8 @@ A public page is a module exporting the query it needs and a function returning 
 
 Errors map in one place. A request refused for breaking its rules is thrown as `Request.Invalid` rather than returned, and becomes `422` carrying every rule it broke, by code — except from a form, which shows itself again with each rule beneath its field (`src/web/common/form.ts`). An unknown route becomes `404`, and anything else unhandled, the mediator's other refusals included, `500` with a correlation id written to the log and nothing else said to the caller.
 
+The log is written where it always was, to standard output, and a copy of each line is kept in Postgres for seven days (`server_log`, `src/infrastructure/logging/ServerLogStream.ts`) so that an administrator can read it at `/admin/administrator/logs` and find the line for a correlation id a reader was shown, without being on the machine. The file stays the log and the copy is a convenience: a line goes to the file first, untouched, and a database that cannot be written to is said on standard error and never stops the server. Old entries are removed as new ones are kept, at most once an hour, so nothing has to run only to do it. A scenario that says where its log goes keeps no copy.
+
 ---
 
 ## 8. Cucumber

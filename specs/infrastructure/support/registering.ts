@@ -54,6 +54,9 @@ import { AccountsWithRoleHandler } from "../../../src/application/operations/acc
 import type { ImportWorldRankingPlayers } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import { ImportErrorKeptHandler } from "../../../src/application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../../../src/application/operations/import-errors/ImportErrorsKeptHandler.js";
+import { LogEntriesHandler } from "../../../src/application/operations/logs/LogEntriesHandler.js";
+import { PruneLogHandler } from "../../../src/application/operations/logs/PruneLogHandler.js";
+import { PostgresServerLog } from "../../../src/infrastructure/database/PostgresServerLog.js";
 import { PostgresKeptImportErrors } from "../../../src/infrastructure/database/PostgresKeptImportErrors.js";
 import { ImportWorldRankingPlayersHandler } from "../../../src/application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
 import { PostgresWorldRankingPlayers } from "../../../src/infrastructure/database/PostgresWorldRankingPlayers.js";
@@ -364,6 +367,9 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
   mediator.handleQuery(
     new ImportErrorKeptHandler(repository, keptImportErrors),
   );
+  const serverLog = new PostgresServerLog(unitOfWork);
+  mediator.handleQuery(new LogEntriesHandler(repository, serverLog));
+  mediator.handleCommand(new PruneLogHandler(repository, serverLog));
   validation.register(new AskToChangeEmailAddressValidator());
   mediator.handleCommand(
     new AskToChangeEmailAddressHandler(
@@ -881,6 +887,12 @@ Given("the application's accounts", function (this: SpecWorld) {
 // The same mediator over the same accounts, said in its own words because a
 // scenario about the errors the import kept is not about registering.
 Given("the application's import errors", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
+// The same mediator over the same accounts, said in its own words because a
+// scenario about the server's log is not about registering.
+Given("the application's server log", function (this: SpecWorld) {
   standUpFor(this);
 });
 

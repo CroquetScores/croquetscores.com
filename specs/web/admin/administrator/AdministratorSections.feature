@@ -9,7 +9,8 @@ Feature: The section bar of the administrator's pages
   the world rankings know are imported, as World Rankings
   (`importWorldRankingPlayers.feature`); and to the documents the import from
   the old sites refused, as Import Errors (`importErrors.feature`), which
-  comes fourth, after World Rankings.
+  comes fourth, after World Rankings; and to the server's log, as Logs
+  (`logs.feature`), which comes fifth, after Import Errors.
 
   Tournaments comes first, since it is the admin an administrator came from,
   then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
@@ -83,6 +84,23 @@ Feature: The section bar of the administrator's pages
       Given the page at "/admin/administrator" is open
       When the section "Import Errors" is pressed
       Then the address is "/admin/administrator/import-errors"
+
+    Scenario: The section bar offers the logs
+      When the page at "/admin/administrator" is opened
+      Then the section "Logs" is offered
+
+    Scenario: Logs comes fifth
+      When the page at "/admin/administrator" is opened
+      Then the fifth section is "Logs"
+
+    Scenario: Logs leads to the page of the server's log
+      When the page at "/admin/administrator" is opened
+      Then the section "Logs" leads to "/admin/administrator/logs"
+
+    Scenario: Pressing Logs opens the page of the server's log
+      Given the page at "/admin/administrator" is open
+      When the section "Logs" is pressed
+      Then the address is "/admin/administrator/logs"
 
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened
@@ -169,6 +187,18 @@ Feature: The section bar of the administrator's pages
     Scenario: Import Errors is marked on the page of one document
       When the page at "/admin/administrator/import-errors/users%2F1-A" is opened
       Then the section "Import Errors" is marked as current
+
+    Scenario: The page of the server's log has a section bar
+      When the page at "/admin/administrator/logs" is opened
+      Then the page has a section bar
+
+    Scenario: Logs is marked on the page of the server's log
+      When the page at "/admin/administrator/logs" is opened
+      Then the section "Logs" is marked as current
+
+    Scenario: Import Errors is not marked on the page of the server's log
+      When the page at "/admin/administrator/logs" is opened
+      Then the section "Import Errors" is not marked as current
 
     Scenario: Accounts is not marked on the page of the documents the import refused
       When the page at "/admin/administrator/import-errors" is opened

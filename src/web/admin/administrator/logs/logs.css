@@ -1,0 +1,64 @@
+/* The server's log (logs.feature): the narrowing above, and below it a line
+   for each entry, which is pressed to open the rest of what it carried. Lines
+   wrap rather than being cut short or scrolled sideways on a phone. */
+
+.log-narrowing {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.log-narrowing label {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.log-entries {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.log-entry {
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+/* As tall as a thumb, with the severity first, then the moment, above what it
+   said. The severity's column is as wide as the longest name, so the moments
+   line up down the page. */
+.log-entry summary {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  min-height: 44px;
+  padding-block: var(--space-3);
+  cursor: pointer;
+}
+
+.log-entry-written {
+  color: var(--ink-muted);
+}
+
+.log-entry-severity {
+  font-weight: 600;
+}
+
+/* Only what needs attention is drawn as it, since a log is mostly lines
+   that do not. */
+.log-entry-severity[data-severity="Error"],
+.log-entry-severity[data-severity="Fatal"] {
+  color: var(--danger);
+}
+
+.log-entry-message {
+  grid-column: 1 / -1;
+}
+
+.log-entry-details {
+  margin: 0;
+  padding-block: var(--space-3);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono, monospace);
+}
