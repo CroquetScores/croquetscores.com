@@ -290,6 +290,9 @@ export const polish: Language = {
     "errors.reference": "Numer referencyjny {reference}.",
     "errors.recorded":
       "Błąd został zapisany w dzienniku, a do administratora wysłano e-mail. Pomoże, jeśli napiszesz do administratora e-mail z numerem referencyjnym i opisem tego, co robisz.",
+    "errors.message": "Napisz e-mail do administratora",
+    "errors.messageSubject": "Błąd {reference} w serwisie {siteName}",
+    "errors.messageBody": "Co robiłem(-am), gdy to się stało:\n\n",
     "errors.unavailable": "Serwis jest niedostępny",
     "errors.unavailableDetail":
       "Serwis nie może teraz połączyć się z tym, czego potrzebuje. Spróbuj ponownie później.",

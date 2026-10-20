@@ -287,6 +287,9 @@ export const swedish: Language = {
     "errors.reference": "Referens {reference}.",
     "errors.recorded":
       "Felet har loggats och ett e-postmeddelande har skickats till administratören. Det hjälper om du e-postar administratören med referensen och en beskrivning av vad du gjorde.",
+    "errors.message": "E-posta administratören",
+    "errors.messageSubject": "Fel {reference} på {siteName}",
+    "errors.messageBody": "Vad jag gjorde när det hände:\n\n",
     "errors.unavailable": "Webbplatsen är inte tillgänglig",
     "errors.unavailableDetail":
       "Webbplatsen kan just nu inte nå det den behöver. Försök igen senare.",

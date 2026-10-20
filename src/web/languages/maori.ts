@@ -288,6 +288,9 @@ export const maori: Language = {
     "errors.reference": "Tohutoro {reference}.",
     "errors.recorded":
       "Kua tuhia te hapa, kua tukua hoki he īmēra ki te kaiwhakahaere. He āwhina mēnā ka tukua he īmēra ki te kaiwhakahaere me te tohutoro me te whakaahuatanga o tāu e mahi ana.",
+    "errors.message": "Tukua he īmēra ki te kaiwhakahaere",
+    "errors.messageSubject": "Hapa {reference} i {siteName}",
+    "errors.messageBody": "Tāku i mahi ai i te wā i pēnei ai:\n\n",
     "errors.unavailable": "Kāore te pae e wātea ana",
     "errors.unavailableDetail":
       "Kāore e taea e te pae te whakapā atu ki ana mea e hiahiatia ana i tēnei wā. Tēnā koa, whakamātauria anō a muri ake.",

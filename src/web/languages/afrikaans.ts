@@ -290,6 +290,9 @@ export const afrikaans: Language = {
     "errors.reference": "Verwysing {reference}.",
     "errors.recorded":
       "Die fout is aangeteken en ’n e-pos is aan die administrateur gestuur. Dit help om die administrateur te e-pos met die verwysing en ’n beskrywing van wat jy gedoen het.",
+    "errors.message": "E-pos die administrateur",
+    "errors.messageSubject": "Fout {reference} op {siteName}",
+    "errors.messageBody": "Wat ek gedoen het toe dit gebeur het:\n\n",
     "errors.unavailable": "Die webwerf is nie beskikbaar nie",
     "errors.unavailableDetail":
       "Die webwerf kan nou nie bykom wat dit nodig het nie. Probeer asseblief later weer.",

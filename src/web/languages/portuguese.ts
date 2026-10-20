@@ -285,6 +285,9 @@ export const portuguese: Language = {
     "errors.reference": "Referência {reference}.",
     "errors.recorded":
       "O erro foi registrado e um email foi enviado ao administrador. Ajuda enviar um email ao administrador com a referência e uma descrição do que você estava fazendo.",
+    "errors.message": "Enviar email ao administrador",
+    "errors.messageSubject": "Erro {reference} em {siteName}",
+    "errors.messageBody": "O que eu estava fazendo quando isso aconteceu:\n\n",
     "errors.unavailable": "O site está indisponível",
     "errors.unavailableDetail":
       "O site não consegue acessar o que precisa neste momento. Tente novamente mais tarde.",

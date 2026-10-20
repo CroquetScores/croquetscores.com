@@ -284,6 +284,9 @@ export const japanese: Language = {
     "errors.reference": "参照番号 {reference}。",
     "errors.recorded":
       "エラーは記録され、管理者にメールが送信されました。参照番号と、そのときの操作を書いて管理者にメールをいただけると助かります。",
+    "errors.message": "管理者にメールする",
+    "errors.messageSubject": "{siteName} のエラー {reference}",
+    "errors.messageBody": "これが起きたときにしていた操作：\n\n",
     "errors.unavailable": "サイトは現在ご利用いただけません",
     "errors.unavailableDetail":
       "サイトは現在、必要なものに接続できません。しばらくしてからもう一度お試しください。",

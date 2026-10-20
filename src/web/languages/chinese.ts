@@ -277,6 +277,9 @@ export const chinese: Language = {
     "errors.reference": "参考编号 {reference}。",
     "errors.recorded":
       "该错误已记录，并已向管理员发送电子邮件。建议您携带参考编号，给管理员发一封电子邮件，说明您当时在做什么。",
+    "errors.message": "给管理员发电子邮件",
+    "errors.messageSubject": "{siteName} 上的错误 {reference}",
+    "errors.messageBody": "出现问题时我正在做的事：\n\n",
     "errors.unavailable": "网站暂时无法使用",
     "errors.unavailableDetail": "网站暂时无法连接到所需的内容。请稍后再试。",
     "errors.maintenance": "网站正在维护中。",
