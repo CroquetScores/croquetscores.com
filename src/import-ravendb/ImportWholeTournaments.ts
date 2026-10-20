@@ -16,6 +16,7 @@ import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js
 import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import type { SeeNotes } from "./SeeNotes.js";
+import { type ImportErrorsNote, refusedLineOf } from "./ImportErrorsNote.js";
 
 /** One of the old sites' databases, asked for what names a tournament. */
 export interface TournamentDocuments {
@@ -222,6 +223,14 @@ const SEE_NOTES_SUFFIX = " - See Notes";
 const BLOCK_SUFFIX = " - Block";
 
 // What a kind of competition is called in what is said of it.
+// What each kind of document that names a tournament is called, for the note
+// of what was refused.
+const DOCUMENTS: Readonly<Record<string, string>> = {
+  TournamentPlayers: "players",
+  TeamMatches: "team match",
+  Commentaries: "commentary",
+};
+
 const KINDS: Readonly<Record<string, string>> = {
   Blocks: "block",
   Knockouts: "knockout",
@@ -284,6 +293,8 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly correcting: AcceptedImportErrors,
     /** What writes the note of a competition that could not be brought over. */
     private readonly seeNotes?: SeeNotes,
+    /** What says, in a note, each document of a tournament that was refused. */
+    private readonly importErrors?: ImportErrorsNote,
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
@@ -532,10 +543,46 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
                   : {}),
               },
         );
+        if (tournamentId === id)
+          await this.#refusedInNotes(read, each, failure);
       }
       if (tournamentId === id) {
         await this.#seenInNotes(read, setUp, each);
       }
+    }
+  }
+
+  /**
+   * Says in the tournament's note of what could not be brought over that
+   * `each`, a document that names it, was refused, as the games that could not
+   * be added are said (ImportWholeTournaments.feature). Nothing where no user
+   * was brought over to write the note. A failure to write the note is not
+   * allowed to hide the error already kept against the document.
+   */
+  async #refusedInNotes(
+    read: ReadDocument<OldTournament>,
+    each: Named,
+    failure: unknown,
+  ): Promise<void> {
+    const writer = await this.importErrors?.writer();
+    if (this.importErrors === undefined || writer === undefined) return;
+    const { Name: name } = each.document as { Name?: unknown };
+    const heading =
+      typeof name === "string" && name.trim() !== "" ? name.trim() : each.id;
+    const kind =
+      KINDS[each.importer.collection] ??
+      DOCUMENTS[each.importer.collection] ??
+      "document";
+    try {
+      await this.importErrors.add(
+        read.website,
+        read.id,
+        heading,
+        [refusedLineOf(kind, failure)],
+        writer,
+      );
+    } catch {
+      // The error against the document stands, and says why it was refused.
     }
   }
 

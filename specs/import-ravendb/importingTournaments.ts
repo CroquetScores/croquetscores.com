@@ -397,6 +397,7 @@ export const importingOf = (world: SpecWorld): Importing => {
           database,
           corrected,
           seeNotes,
+          importErrorsNote,
         ),
       tournaments: tournamentImporter,
       players,
