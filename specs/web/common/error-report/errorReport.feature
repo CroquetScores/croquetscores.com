@@ -95,7 +95,7 @@ Feature: The administrator is emailed when the site fails, but not more than fou
 
     Scenario: The reader is still given the answer when the email cannot be sent
       Given an example page that fails
-      And the email cannot be sent
+      And emails cannot be sent
       When the example page is asked for
       Then the page says the server failed
 
@@ -183,11 +183,11 @@ Feature: The administrator is emailed when the site fails, but not more than fou
 
     Scenario: A failure to send counts as one of the 4
       Given an example page that fails
-      And the email cannot be sent
+      And emails cannot be sent
       And the example page is asked for
       And the example page is asked for
       And the example page is asked for
       And the example page is asked for
-      And the email can be sent again
+      And emails can be sent again
       When the example page is asked for
       Then no email is sent

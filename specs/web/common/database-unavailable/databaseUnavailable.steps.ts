@@ -488,7 +488,7 @@ Given("the site is restarted", async function (this: SpecWorld) {
 // The answer to a reader does not wait for the administrator to be told, so
 // whatever looks at what was sent, or logged, waits for it here.
 const afterTheAdministratorIsTold = (world: SpecWorld): Promise<void> =>
-  builtFor(world).application.databaseOutageTold();
+  builtFor(world).application.administratorTold();
 
 const sentTo = (world: SpecWorld, address: string) =>
   senderOf(world).sent.filter((email) => email.to === address);
@@ -529,6 +529,16 @@ Then(
     const email = sentTo(this, address)[0];
     assert.ok(email !== undefined, `${address} was sent nothing.`);
     assert.match(unmarked(email.subject), /database/i);
+  },
+);
+
+Then(
+  "the email sent to {string} does not say the database cannot be reached",
+  async function (this: SpecWorld, address: string) {
+    await afterTheAdministratorIsTold(this);
+    const email = sentTo(this, address)[0];
+    assert.ok(email !== undefined, `${address} was sent nothing.`);
+    assert.doesNotMatch(unmarked(email.subject), /database/i);
   },
 );
 

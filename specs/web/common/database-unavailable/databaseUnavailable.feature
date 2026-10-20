@@ -400,11 +400,12 @@ Feature: The site says so when it cannot reach its database
       Then the page says the server failed
       And the page does not say the site is unavailable
 
-    Scenario: It is not told to the administrator as the database being down
+    Scenario: It is told to the administrator as the site failing, not as the database being down
       Given the site's administrator's email address is "administrator@example.com"
       And an example page that fails reaching another service while it holds the database
       When the example page is asked for
-      Then no email is sent
+      Then the email sent to "administrator@example.com" says the site failed
+      And the email sent to "administrator@example.com" does not say the database cannot be reached
 
   Rule: A failure to email the administrator is not the reader's to meet
 
