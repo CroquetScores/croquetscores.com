@@ -1664,5 +1664,23 @@ export const chinese: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} 在处理请求时出错",
+    "Email.UnhandledError.body": `
+<p>你好，</p>
+
+<p>
+    {siteName} 在 {when} 处理对 {asked} 的请求时出错。读者看到的参考编号是 {reference}，日志中该编号下有出错原因。
+</p>
+
+<p>
+    出故障的网站往往每个请求都会出错，所以每小时最多只会就出错给您发送 4 封电子邮件。之后的错误同样会记录在日志中。
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

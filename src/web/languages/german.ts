@@ -1853,5 +1853,24 @@ export const german: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject":
+      "{siteName} ist bei einer Anfrage fehlgeschlagen",
+    "Email.UnhandledError.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} ist um {when} bei einer Anfrage nach {asked} fehlgeschlagen. Dem Leser wurde die Referenz {reference} gezeigt, und im Protokoll steht die Ursache darunter.
+</p>
+
+<p>
+    Eine kaputte Website scheitert meist bei jeder Anfrage, deshalb bekommst du höchstens 4 E-Mails pro Stunde über Fehler. Die weiteren stehen trotzdem im Protokoll.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

@@ -1746,5 +1746,24 @@ export const japanese: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject":
+      "{siteName} でリクエストの処理に失敗しました",
+    "Email.UnhandledError.body": `
+<p>こんにちは。</p>
+
+<p>
+    {siteName} は {when} に、{asked} へのリクエストの処理に失敗しました。読者には参照番号 {reference} が表示されており、ログではその番号の下に原因が記録されています。
+</p>
+
+<p>
+    壊れているサイトは、ほとんどのリクエストで失敗します。そのため、失敗についてのメールは1時間に最大4通までです。それ以降の失敗も、ログには記録されます。
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

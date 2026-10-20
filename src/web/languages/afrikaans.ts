@@ -1809,5 +1809,23 @@ export const afrikaans: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} het op ’n versoek misluk",
+    "Email.UnhandledError.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} het om {when} misluk met ’n versoek om {asked}. Die leser is die verwysing {reference} gewys, en die log het die oorsaak daaronder.
+</p>
+
+<p>
+    ’n Webwerf wat stukkend is, misluk gewoonlik by elke versoek, so jy sal hoogstens 4 keer in ’n uur oor mislukkings ge-e-pos word. Die res staan steeds in die log.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

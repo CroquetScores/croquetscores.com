@@ -1806,5 +1806,23 @@ export const spanish: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} falló en una solicitud",
+    "Email.UnhandledError.body": `
+<p>Hola:</p>
+
+<p>
+    {siteName} falló a las {when} en una solicitud de {asked}. Al lector se le mostró la referencia {reference}, y el registro tiene la causa debajo de ella.
+</p>
+
+<p>
+    Un sitio roto suele fallar en cada solicitud, así que recibirás como máximo 4 correos electrónicos por hora sobre fallos. Los siguientes quedan igualmente en el registro.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

@@ -1729,5 +1729,23 @@ export const egyptian: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} فشل في طلب",
+    "Email.UnhandledError.body": `
+<p dir="rtl">أهلاً،</p>
+
+<p dir="rtl">
+    {siteName} فشل الساعة {when} في طلب لـ {asked}. القارئ اتعرض له الرقم المرجعي {reference}، وفي السجل السبب تحته.
+</p>
+
+<p dir="rtl">
+    الموقع المعطّل غالباً بيفشل في كل طلب، فهتوصلك رسائل بريد إلكتروني عن الأخطاء 4 مرات كحد أقصى في الساعة. الباقي موجود في السجل برضه.
+</p>
+
+<p dir="rtl">
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

@@ -1809,5 +1809,23 @@ export const dutch: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} is mislukt bij een verzoek",
+    "Email.UnhandledError.body": `
+<p>Hallo,</p>
+
+<p>
+    {siteName} is om {when} mislukt bij een verzoek om {asked}. De lezer kreeg de referentie {reference} te zien, en in het logboek staat de oorzaak eronder.
+</p>
+
+<p>
+    Een site die kapot is, faalt meestal bij elk verzoek, dus je krijgt per uur hooguit 4 e-mails over fouten. De rest staat wel gewoon in het logboek.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };

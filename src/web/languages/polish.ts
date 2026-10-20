@@ -1793,5 +1793,23 @@ export const polish: Language = {
     {siteName}
 </p>
 `,
+
+    "Email.UnhandledError.subject": "{siteName} nie obsłużył żądania",
+    "Email.UnhandledError.body": `
+<p>Cześć,</p>
+
+<p>
+    {siteName} nie obsłużył o {when} żądania dotyczącego {asked}. Czytelnik zobaczył numer referencyjny {reference}, a w dzienniku pod tym numerem jest przyczyna.
+</p>
+
+<p>
+    Zepsuty serwis zwykle zawodzi przy każdym żądaniu, więc o błędach dostaniesz najwyżej 4 e-maile na godzinę. Pozostałe i tak są w dzienniku.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
   },
 };
