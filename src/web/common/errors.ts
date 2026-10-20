@@ -231,11 +231,10 @@ export const registerErrorMapping = (
     if (wantsJson(request)) {
       return sendJson(reply.code(500), { error: "Internal", correlationId });
     }
-    // The log is read, not watched, so the page does not claim the
-    // administrator has been told. What the reader can add is what the log
-    // cannot hold: what they were doing. The message is a link and not a form
-    // because the site has nowhere to keep a reply and the reader's own mail
-    // program already knows who they are.
+    // The administrator has been told and the log has the cause. What the
+    // reader can add is what neither can hold: what they were doing. The
+    // message is a link and not a form because the site has nowhere to keep a
+    // reply and the reader's own mail program already knows who they are.
     const speaking = speakingOf(request);
     const subject = speaking.say("errors.messageSubject", {
       reference: correlationId,

@@ -111,14 +111,12 @@ Feature: What a failed request is answered with is decided in one place
   Rule: A page where the server failed tells the reader what to do about it
 
     A reader who meets this page can do nothing to put it right, but can help
-    whoever can. The failure is recorded with its reference, and the
-    administrator reads that record, so the page says so rather than leaving
-    the reader to wonder whether anyone knows. It does not say the
-    administrator has been told, because nothing tells them at the moment it
-    happens: that is only done where the database cannot be reached. What
-    helps most is the reader saying what they were doing, which the record
-    cannot know, so the page offers a message to the administrator that
-    already carries the reference and asks for exactly that.
+    whoever can. The failure is logged with its reference and the
+    administrator is emailed, so the page says so rather than leaving the
+    reader to wonder whether anyone knows. What helps most is the reader
+    saying what they were doing, which neither the log nor the email can
+    know, so the page offers a message to the administrator that already
+    carries the reference and asks for exactly that.
 
     Scenario: The page says the failure has been recorded for the administrator
       Given the site's administrator's email address is "administrator@example.com"
