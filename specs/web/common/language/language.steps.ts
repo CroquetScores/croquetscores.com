@@ -138,7 +138,7 @@ When("a page that fails is opened", async function (this: SpecWorld) {
 // the page that is not there is the fourth, and is asked for by a step of its
 // own. Each of these three is reached by asking for it and nothing else, so the
 // name in that link can be looked at without a database. The four left come at
-// the end of something written down and wait on one (TODO.md).
+// the end of something written down and wait on one.
 //
 // Asked for by the address the page itself is served at, rather than by one
 // written out again here. A page that is not there carries the same link back,

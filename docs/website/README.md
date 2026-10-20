@@ -2,7 +2,7 @@
 
 How the website is put on a Kamatera server with a Postgres database, kept up to date, and looked after. For whoever runs it. It can be handed to somebody who has never seen the repository.
 
-**These documents were reviewed and put into effect on 17 October 2026.** The deploy sequences in deploying.md have been followed on the real server; going back by the rename and the restore into a throwaway database have not. They will be kept up to date when something is known to change. The websites of the third parties they name (Kamatera, Cloudflare, Brevo, Google, Caddy, NodeSource and the Postgres project) change their screens, settings and install steps without telling anybody here, so where a step does not match what is on the screen, trust the screen, and then correct the step (TODO.md, "A deployment and rollback runbook").
+**These documents were reviewed and put into effect on 17 October 2026.** The deploy sequences in deploying.md have been followed on the real server; going back by the rename and the restore into a throwaway database have not. They will be kept up to date when something is known to change. The websites of the third parties they name (Kamatera, Cloudflare, Brevo, Google, Caddy, NodeSource and the Postgres project) change their screens, settings and install steps without telling anybody here, so where a step does not match what is on the screen, trust the screen, and then correct the step (https://github.com/CroquetScores/croquetscores.com/issues/286, "A deployment and rollback runbook").
 
 - [server-setup.md](server-setup.md) — Making the Kamatera server, Postgres, the proxy that faces the internet, and the service. Done once, at the start
 - [configuration.md](configuration.md) — Every setting, which are required, and which must never change
@@ -12,7 +12,7 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
 - [backup-and-restore.md](backup-and-restore.md) — Copying the events to another machine, and rebuilding the website from the copy
 
-The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why, `TODO.md` what is still to be done before beta and before production, `BETA.md` what the beta's testers are asked to do.
+The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why, and `BETA.md` what the beta's testers are asked to do. What is still to be done before production is the issue https://github.com/CroquetScores/croquetscores.com/issues/286.
 
 ---
 

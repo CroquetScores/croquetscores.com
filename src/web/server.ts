@@ -1483,7 +1483,7 @@ export const buildApplication = async (
   // which has no keys to give — every reader is taken for a person, which is
   // what the page did before there was a check at all. A production site
   // without the keys has an open form that emails whoever it is told to, so
-  // the keys belong on the deployment checklist (TODO.md says so).
+  // the keys belong on the deployment checklist.
   const readers: ReaderCheck =
     options.readerCheck ??
     (config.recaptcha === undefined
