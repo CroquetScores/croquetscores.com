@@ -165,7 +165,7 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is found at "2014/ac/canterbury-open-1"
 
-  Rule: A tournament is in the country its time zone says, and in no region
+  Rule: A tournament is in the country its time zone says, and in no region but Western Australia's
 
     The old sites kept no country, which the site asks of every tournament.
     The time zone each tournament was kept in is the nearest thing to one.
@@ -182,6 +182,12 @@ Feature: Importing the old sites' tournaments
     the sea keeps, and "South Sudan Standard Time", whose country the site
     does not have. A tournament kept in one, with no time zone, or with one
     not on the list, is refused rather than guessed at.
+
+    "China Standard Time" is the one time zone the import does not take at its
+    word: a tournament kept in it is in Australia, in the region Western
+    Australia. It is the only time zone that is given a region, since it is
+    not a country's time zone that says which region of it a tournament was in.
+    A manager can move one played elsewhere.
 
     "GMT Standard Time" and "W. Europe Standard Time" are each kept by several
     countries, and are taken as England's, where the old sites' tournaments kept
@@ -231,6 +237,20 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
+
+    Scenario: A tournament kept in China's time zone is in Australia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament kept in China's time zone is in Western Australia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the region "wa"
 
     Scenario: A tournament is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"

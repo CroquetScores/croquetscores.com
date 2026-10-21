@@ -184,6 +184,10 @@ factOf(
   (t) => t.country.code,
 );
 factOf(
+  "the tournament kept for {string} on {string} is in the region {string}",
+  (t) => t.region?.code,
+);
+factOf(
   "the tournament kept for {string} on {string} has the subtitle {string}",
   (t) => t.subtitle?.markdown,
 );
