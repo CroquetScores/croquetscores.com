@@ -41,7 +41,7 @@ export const korean: Language = {
       "이곳은 베타 사이트예요. 데이터는 언제든 초기화될 수 있어요.",
     "privacy.contact":
       "이 페이지나 보관 중인 회원님의 정보에 대한 문의: {emailAddress}",
-    "termsOfUse.agree": "이용약관에 동의합니다",
+    "termsOfUse.agree": "이용약관에 동의해요",
     "termsOfUse.link": "이용약관",
     "termsOfUse.report":
       "작성된 내용을 신고하거나 이 약관에 대해 문의하기: {emailAddress}",
@@ -296,10 +296,11 @@ export const korean: Language = {
     "errors.unavailable": "사이트를 사용할 수 없어요",
     "errors.unavailableDetail":
       "사이트가 지금 필요한 것에 연결할 수 없어요. 나중에 다시 시도해 주세요.",
-    "errors.maintenance": "사이트가 점검 중입니다.",
-    "errors.maintenanceMinutes": "약 {minutes}분 후에 복구될 예정입니다.",
-    "errors.maintenanceMinute": "약 1분 후에 복구될 예정입니다.",
-    "errors.maintenanceLonger": "예상보다 오래 걸리고 있습니다. 곧 복구됩니다.",
+    "errors.maintenance": "사이트가 점검 중이에요.",
+    "errors.maintenanceMinutes": "{minutes}분 뒤에 복구될 예정이에요.",
+    "errors.maintenanceMinute": "1분 뒤에 복구될 예정이에요.",
+    "errors.maintenanceLonger":
+      "예상보다 오래 걸리고 있어요. 곧 복구될 거예요.",
 
     "home.recentResults": "최근 결과",
     "home.recentResults.none": "지난 7일 동안 추가된 경기가 없어요.",
@@ -331,12 +332,12 @@ export const korean: Language = {
     "search.label": "검색",
     "search.tournaments": "대회",
     "search.competitions": "경기 종목",
-    "search.nothingFound": "아무것도 찾지 못했습니다.",
+    "search.nothingFound": "아무것도 찾지 못했어요.",
     "players.search.label": "선수 검색",
     "players.search.prompt": "선수 이름을 입력해 찾아보세요.",
-    "players.search.none": "선수를 찾지 못했습니다.",
+    "players.search.none": "선수를 찾지 못했어요.",
     "search.more":
-      "처음 {count}개만 표시됩니다. 이름을 더 입력해 검색을 좁혀 보세요.",
+      "처음 {count}개만 보여 드려요. 이름을 더 입력해 검색을 좁혀 보세요.",
     "websitePlayer.tournament": "대회",
     "tournament.test": "{first} 대 {second}",
     "tournament.notes": "공지",
@@ -347,7 +348,7 @@ export const korean: Language = {
     "tournament.ago.minutes": "{count}분",
     "tournament.ago.hour": "1시간",
     "tournament.ago.hours": "{count}시간",
-    "tournament.none": "아직 경기가 없어요.",
+    "tournament.none": "아직 치른 게임이 없어요.",
     "players.none": "아직 추가된 선수가 없어요.",
     "commentaries.by": "작성자",
     "commentaries.start": "새 해설 시작하기",
@@ -465,24 +466,25 @@ export const korean: Language = {
     "admin.view.scorers": "기록원",
     "admin.view.rankings": "랭킹",
     "admin.rankings.textFile":
-      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 텍스트 파일로 세계 랭킹에 전송됩니다.",
+      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 텍스트 파일로 세계 랭킹에 전송돼요.",
     "admin.rankings.spreadsheet":
-      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 스프레드시트로 세계 랭킹에 전송됩니다.",
+      "대회 결과는 입력된 경기를 바탕으로 사이트가 작성한 스프레드시트로 세계 랭킹에 전송돼요.",
     "admin.rankings.fillInWinners":
-      "사이트는 각 경기 종목의 우승자를 추측할 수만 있으므로, 파일을 보내기 전에 각 항목의 Winner 줄을 확인하세요.",
+      "사이트는 각 경기 종목의 우승자를 추측할 수만 있으므로, 파일을 보내기 전에 각 항목의 우승자(Winner) 줄을 확인해 주세요.",
     "admin.rankings.fillInWinner":
-      "사이트는 대회 우승자를 알 수 없으므로, 보내기 전에 스프레드시트 맨 아래에 입력하세요.",
-    "admin.rankings.sendIt": "그런 다음 파일을 세계 랭킹 담당자에게 보내세요.",
+      "사이트는 대회 우승자를 알 수 없으므로, 보내기 전에 스프레드시트 맨 아래에 입력해 주세요.",
+    "admin.rankings.sendIt":
+      "그런 다음 파일을 세계 랭킹 담당자에게 보내 주세요.",
     "admin.rankings.download": "랭킹 다운로드",
-    "rankings.notAvailable": "랭킹을 사용할 수 없습니다",
+    "rankings.notAvailable": "랭킹을 사용할 수 없어요",
     "rankings.notAvailable.sport":
-      "이 대회의 종목에는 세계 랭킹이 없으므로 보낼 랭킹이 없습니다.",
+      "이 대회의 종목에는 세계 랭킹이 없으므로 보낼 랭킹이 없어요.",
     "rankings.notAvailable.handicap":
-      "이 대회는 핸디캡으로 진행되므로 세계 랭킹에 반영되지 않습니다.",
+      "이 대회는 핸디캡으로 진행되므로 세계 랭킹에 반영되지 않아요.",
     "rankings.notAvailable.drawnGames":
-      "이 대회는 무승부를 허용하므로 세계 랭킹에 반영되지 않습니다.",
+      "이 대회는 무승부를 허용하므로 세계 랭킹에 반영되지 않아요.",
     "rankings.notAvailable.notCounted":
-      "이 대회의 관리자가 세계 랭킹에 반영하지 않기로 설정했습니다.",
+      "이 대회의 운영자가 세계 랭킹에 반영하지 않기로 설정했어요.",
     "admin.view.otherwise": "이 대회는 여기서 운영할 수 없어요.",
     "admin.competitionView.tabs": "경기 종목",
     "admin.competitionView.players": "선수",
@@ -497,25 +499,25 @@ export const korean: Language = {
     "admin.administrator.sections.logs": "로그",
     "admin.administrator.sections.databaseStatus": "데이터베이스 접근",
     "admin.databaseStatus.title": "데이터베이스 접근",
-    "admin.databaseStatus.on": "데이터베이스 접근이 켜져 있습니다.",
-    "admin.databaseStatus.off": "데이터베이스 접근이 꺼져 있습니다.",
+    "admin.databaseStatus.on": "데이터베이스 접근이 켜져 있어요.",
+    "admin.databaseStatus.off": "데이터베이스 접근이 꺼져 있어요.",
     "admin.databaseStatus.expected":
-      "사이트는 {minutes}분 후에 복구될 예정입니다.",
-    "admin.databaseStatus.expectedOne": "사이트는 1분 후에 복구될 예정입니다.",
-    "admin.databaseStatus.longer": "예상보다 오래 걸리고 있습니다.",
+      "사이트는 {minutes}분 뒤에 복구될 예정이에요.",
+    "admin.databaseStatus.expectedOne": "사이트는 1분 뒤에 복구될 예정이에요.",
+    "admin.databaseStatus.longer": "예상보다 오래 걸리고 있어요.",
     "admin.databaseStatus.told": "방문자에게 표시: {words}",
-    "admin.databaseStatus.toldUsual": "방문자에게 평소 문구를 표시합니다.",
+    "admin.databaseStatus.toldUsual": "방문자에게 평소 문구를 보여 줘요.",
     "admin.databaseStatus.minutes": "예상 시간(분)",
     "admin.databaseStatus.words": "방문자용 문구",
     "admin.databaseStatus.turnOff": "끄기",
     "admin.databaseStatus.change": "변경",
     "admin.databaseStatus.turnOn": "켜기",
-    "admin.databaseStatus.minutesNeeded": "분을 입력해야 합니다.",
-    "admin.databaseStatus.otherwise": "사이트에서 문제가 발생했습니다.",
-    "DatabaseAccess.MinutesNotWhole": "분은 정수여야 합니다.",
-    "DatabaseAccess.MinutesOutOfRange": "분은 1에서 1440 사이여야 합니다.",
-    "DatabaseAccess.WordsTooLong": "문구는 500자를 넘을 수 없습니다.",
-    "DatabaseAccess.NotOff": "데이터베이스 접근이 꺼져 있지 않습니다.",
+    "admin.databaseStatus.minutesNeeded": "분을 입력해야 해요.",
+    "admin.databaseStatus.otherwise": "사이트에 문제가 생겼어요.",
+    "DatabaseAccess.MinutesNotWhole": "분은 정수여야 해요.",
+    "DatabaseAccess.MinutesOutOfRange": "분은 1에서 1440 사이여야 해요.",
+    "DatabaseAccess.WordsTooLong": "문구는 500자를 넘을 수 없어요.",
+    "DatabaseAccess.NotOff": "데이터베이스 접근이 꺼져 있지 않아요.",
     "admin.administrator.title": "관리자",
     "admin.accounts.title": "계정",
     "admin.roles.add": "추가",
@@ -557,8 +559,8 @@ export const korean: Language = {
     "admin.logs.show": "표시",
     "admin.logs.prune": "정리",
     "admin.logs.pruneAsk":
-      "최근 한 시간 이전의 로그를 삭제할까요? 되돌릴 수 없습니다.",
-    "admin.logs.removed": "항목 {count}개를 삭제했습니다",
+      "최근 한 시간 이전의 로그를 삭제할까요? 되돌릴 수 없어요.",
+    "admin.logs.removed": "항목 {count}개를 삭제했어요",
     "admin.logs.none": "로그 항목 없음",
     "admin.logs.otherwise": "사이트에 문제가 생겼어요.",
     "admin.hover.logs.show": "일치하는 항목 표시",
@@ -1758,11 +1760,11 @@ export const korean: Language = {
 <p>안녕하세요.</p>
 
 <p>
-    {siteName}에서 {when}에 {asked} 요청을 처리하지 못했어요. 독자에게는 참조 번호 {reference}가 표시되었고, 로그에서 이 번호 아래에 원인을 볼 수 있어요.
+    {siteName}에서 {when}에 {asked} 요청을 처리하지 못했어요. 방문자에게는 참조 번호 {reference}가 표시되었고, 로그에서 이 번호 아래에 원인을 볼 수 있어요.
 </p>
 
 <p>
-    고장 난 사이트는 모든 요청에서 실패하기 쉬워서, 실패에 대한 이메일은 한 시간에 최대 4통만 보내드려요. 그 뒤의 실패도 로그에는 그대로 남아요.
+    고장 난 사이트는 모든 요청에서 실패하기 쉬워서, 실패에 대한 이메일은 한 시간에 최대 4통만 보내 드려요. 그 뒤의 실패도 로그에는 그대로 남아요.
 </p>
 
 <p>

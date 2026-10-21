@@ -38,7 +38,7 @@ export const dutch: Language = {
     "termsOfUse.agree": "Ik ga akkoord met de gebruiksvoorwaarden",
     "termsOfUse.link": "gebruiksvoorwaarden",
     "termsOfUse.report":
-      "Iets wat geschreven is melden, of vragen over deze voorwaarden: {emailAddress}",
+      "Meld wat er is geschreven, of stel een vraag over deze voorwaarden: {emailAddress}",
     "TermsOfUse.NotAgreed":
       "Vink het vakje aan om akkoord te gaan met de gebruiksvoorwaarden.",
     "tryWebsite.banner":
@@ -119,13 +119,13 @@ export const dutch: Language = {
 
     "forgotPassword.title": "Wachtwoord vergeten?",
     "forgotPassword.emailAddress": "E-mailadres",
-    "forgotPassword.submit": "Stuur me een weg terug naar binnen",
+    "forgotPassword.submit": "Stuur me een link om weer in te loggen",
     "forgotPassword.home": "Terug naar {siteName}",
     "forgotPassword.sent.title": "Controleer je e-mail",
     "forgotPassword.sent.explanation":
       "Als dat adres een account heeft, is er een link onderweg om een nieuw wachtwoord in te stellen. Volg die binnen een uur. Komt er over een paar minuten niets binnen, kijk dan in je map met ongewenste e-mail of spam.",
     "forgotPassword.tryAgainLater":
-      "Er zijn de laatste tijd te veel wegen terug naar binnen aangevraagd vanaf deze plek. Wacht een uur en probeer het opnieuw.",
+      "Er zijn de laatste tijd te veel verzoeken om weer in te loggen gedaan vanaf deze plek. Wacht een uur en probeer het opnieuw.",
 
     "setNewPassword.title": "Een nieuw wachtwoord instellen",
     "setNewPassword.password": "Wachtwoord",
@@ -477,7 +477,7 @@ export const dutch: Language = {
     "admin.rankings.spreadsheet":
       "De uitslagen van het toernooi worden als spreadsheet naar de wereldranglijst gestuurd, die de site schrijft uit de ingevoerde partijen.",
     "admin.rankings.fillInWinners":
-      "De site kan alleen raden wie elke competitie won, dus controleer de regel Winner van elk voordat je het bestand verstuurt.",
+      "De site kan alleen raden wie elke competitie won, dus controleer de regel van de winnaar (Winner) van elk voordat je het bestand verstuurt.",
     "admin.rankings.fillInWinner":
       "De site kan niet weten wie het toernooi won, dus vul dat onderaan de spreadsheet in voordat je die verstuurt.",
     "admin.rankings.sendIt":
@@ -636,7 +636,7 @@ export const dutch: Language = {
     "BestOf.TooSmall":
       "Een wedstrijd moet de beste van minstens 1 partij zijn.",
     "Rounds.NotWhole": "Voer een geheel aantal rondes in.",
-    "Rounds.TooSmall": "Een blok moet in minstens 1 ronde worden gespeeld.",
+    "Rounds.TooSmall": "Een poule moet in minstens 1 ronde worden gespeeld.",
     "KnockoutDraw.EvenBestOf":
       "Een wedstrijd in een knock-out moet een winnaar hebben, dus hij is de beste van een oneven aantal partijen.",
     "admin.hover.tournaments.new": "Een nieuw toernooi aanmaken",
@@ -1726,8 +1726,8 @@ export const dutch: Language = {
 
 <p>
     Je hebt gevraagd je <strong>{siteName}</strong>-account te laten vergeten.<br />
-    Volg de knop hieronder om te zien wat dat betekent, en om zeker te zeggen
-    dat je het wilt:
+    Klik op de knop hieronder om te zien wat dat betekent, en om zeker te laten
+    weten dat je het wilt:
 </p>
 
 <p>

@@ -476,11 +476,11 @@ export const spanish: Language = {
     "admin.rankings.spreadsheet":
       "Los resultados del torneo se envían al ranking mundial como una hoja de cálculo, que el sitio escribe a partir de las partidas introducidas.",
     "admin.rankings.fillInWinners":
-      "El sitio solo puede adivinar quién ganó cada competición, así que revise la línea Winner de cada una antes de enviar el archivo.",
+      "El sitio solo puede adivinar quién ganó cada competición, así que revisa la línea del ganador (Winner) de cada una antes de enviar el archivo.",
     "admin.rankings.fillInWinner":
-      "El sitio no puede saber quién ganó el torneo, así que anótelo al final de la hoja de cálculo antes de enviarla.",
+      "El sitio no puede saber quién ganó el torneo, así que anótalo al final de la hoja de cálculo antes de enviarla.",
     "admin.rankings.sendIt":
-      "Después envíe el archivo a los responsables del ranking mundial.",
+      "Después envía el archivo a los responsables del ranking mundial.",
     "admin.rankings.download": "Descargar rankings",
     "rankings.notAvailable": "Los rankings no están disponibles",
     "rankings.notAvailable.sport":
@@ -781,8 +781,8 @@ export const spanish: Language = {
     "admin.carryForward.otherwise": "No se puede guardar este arrastre.",
     "admin.carryForward.matchWins": "Partidos ganados",
     "admin.carryForward.matchLosses": "Partidos perdidos",
-    "admin.carryForward.gameWins": "Juegos ganados",
-    "admin.carryForward.gameLosses": "Juegos perdidos",
+    "admin.carryForward.gameWins": "Partidas ganadas",
+    "admin.carryForward.gameLosses": "Partidas perdidas",
     "admin.carryForward.hoopsFor": "Aros a favor",
     "admin.carryForward.hoopsAgainst": "Aros en contra",
     "CarryForward.MatchWinsNotWhole":
@@ -792,11 +792,11 @@ export const spanish: Language = {
       "Escribe un número entero de partidos perdidos.",
     "CarryForward.MatchLossesBelowZero": "Escribe 0 o más partidos perdidos.",
     "CarryForward.GameWinsNotWhole":
-      "Escribe un número entero de juegos ganados.",
-    "CarryForward.GameWinsBelowZero": "Escribe 0 o más juegos ganados.",
+      "Escribe un número entero de partidas ganadas.",
+    "CarryForward.GameWinsBelowZero": "Escribe 0 o más partidas ganadas.",
     "CarryForward.GameLossesNotWhole":
-      "Escribe un número entero de juegos perdidos.",
-    "CarryForward.GameLossesBelowZero": "Escribe 0 o más juegos perdidos.",
+      "Escribe un número entero de partidas perdidas.",
+    "CarryForward.GameLossesBelowZero": "Escribe 0 o más partidas perdidas.",
     "CarryForward.HoopsForNotWhole":
       "Escribe un número entero de aros a favor.",
     "CarryForward.HoopsForBelowZero": "Escribe 0 o más aros a favor.",

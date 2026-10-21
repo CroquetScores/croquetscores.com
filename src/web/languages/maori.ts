@@ -45,7 +45,7 @@ export const maori: Language = {
     "termsOfUse.report":
       "Pūrongotia ngā mea i tuhia, pātai rānei mō ēnei tikanga: {emailAddress}",
     "TermsOfUse.NotAgreed":
-      "Tīkina te pouaka hei whakaae ki ngā tikanga whakamahi.",
+      "Tohua te pouaka hei whakaae ki ngā tikanga whakamahi.",
     "tryWebsite.banner":
       "He wāhi haumaru tēnei hei ako i a {siteName}. Ka taea te muku i ngā mea katoa e whakauru ai koe ki konei i ngā wā katoa.",
 
@@ -88,7 +88,7 @@ export const maori: Language = {
     "Google.Unreachable":
       "Kāore i taea te whakapā atu ki a Google i tēnei wā. Whakamātau anō i muri i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
     "Registration.NotAPerson":
-      "Kāore tēnei i te āhua no tētahi tangata. Whakamātau anō, ā, mēnā ka puta tonu, tatari ki ētahi meneti, ka hoki mai.",
+      "Kāore tēnei i te āhua nō tētahi tangata. Whakamātau anō, ā, mēnā ka puta tonu, tatari ki ētahi meneti, ka hoki mai.",
 
     "EmailAddress.Missing": "Whakauruhia he wāhitau īmēra.",
     "EmailAddress.NoAt": "He @ tō te wāhitau īmēra.",
@@ -482,7 +482,7 @@ export const maori: Language = {
     "admin.rankings.spreadsheet":
       "Ka tukuna ngā otinga o te whakataetae ki te raupapa o te ao hei pepa tātai, ka tuhia e te pae mai i ngā tākaro kua uruhia.",
     "admin.rankings.fillInWinners":
-      "Ka āhei noa te pae ki te whakaaro mā wai tētahi whakataetae i toa, nā reira arotakea te rārangi Winner o ia whakataetae i mua i te tuku i te kōnae.",
+      "Ka āhei noa te pae ki te whakaaro mā wai tētahi whakataetae i toa, nā reira arotakea te rārangi toa (Winner) o ia whakataetae i mua i te tuku i te kōnae.",
     "admin.rankings.fillInWinner":
       "Kāore e taea e te pae te mōhio mā wai te whakataetae i toa, nā reira whakaurua ki raro o te pepa tātai i mua i te tuku.",
     "admin.rankings.sendIt":
@@ -590,7 +590,7 @@ export const maori: Language = {
     "admin.logs.pruneAsk":
       "Tangohia te pūkete i mua i te haora whakamutunga? Kāore he mea e whakahoki mai.",
     "admin.logs.removed": "{count} ngā urunga i tangohia",
-    "admin.logs.none": "Karekau he urunga pūkete",
+    "admin.logs.none": "Kāore he urunga pūkete",
     "admin.logs.otherwise": "I hē tētahi mea i te pae.",
     "admin.hover.logs.show": "Whakaaturia ngā urunga e ōrite ana",
     "admin.hover.logs.prune":
@@ -1613,7 +1613,7 @@ export const maori: Language = {
 
 <p>
     Kua whakarerekētia tō kupuhipa mō tō pūkete <strong>{siteName}</strong>,
-    ā, kua takiputa i ētahi atu pūtirotiro katoa i takiuru ai.<br />
+    ā, kua takiputa koe i ētahi atu pūtirotiro katoa i takiuru ai koe.<br />
     Mēnā nāu tēnei, kāore he mea hei mahi mōu.
 </p>
 

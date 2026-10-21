@@ -136,7 +136,7 @@ export const italian: Language = {
     "setNewPassword.askAgain": "Richiedi un nuovo link",
     "setNewPassword.changed.title": "La tua password è stata cambiata",
     "setNewPassword.changed.explanation":
-      "Sei uscito da ogni posto in cui avevi effettuato l'accesso. Accedi con la tua nuova password.",
+      "Ogni sessione in cui avevi effettuato l'accesso è stata chiusa. Accedi con la tua nuova password.",
     "setNewPassword.expired.title": "Quel link è scaduto",
     "setNewPassword.expired.explanation":
       "Un link per impostare una nuova password funziona per un'ora. Richiedine un altro e sarà inviato allo stesso indirizzo.",
@@ -160,7 +160,7 @@ export const italian: Language = {
     "forgetAccount.confirm.submit": "Dimentica il mio account",
     "forgetAccount.forgotten.title": "Il tuo account è stato dimenticato",
     "forgetAccount.forgotten.explanation":
-      "Il tuo nome e il tuo indirizzo email non possono più essere letti, e sei uscito da ogni posto in cui avevi effettuato l'accesso.",
+      "Il tuo nome e il tuo indirizzo email non possono più essere letti, e ogni sessione in cui avevi effettuato l'accesso è stata chiusa.",
     "forgetAccount.noLongerWorks.title": "Quel link non funziona più",
     "forgetAccount.noLongerWorks.explanation":
       "Potrebbe essere scaduto, essere già stato usato, o riguardare un account a cui non hai effettuato l'accesso. Se vuoi ancora che venga dimenticato, richiedilo di nuovo dal tuo account.",
@@ -236,7 +236,7 @@ export const italian: Language = {
     "ChangeEmailAddress.WrongPassword": "Quella non è la tua password.",
     "ChangeEmailAddress.Unchanged": "Il tuo account ha già questo indirizzo.",
     "ChangeEmailAddress.Taken":
-      "Quell'indirizzo email ha ormai un account suo, quindi il tuo non può essere spostato lì.",
+      "Quell'indirizzo email ha ormai un account proprio, quindi il tuo non può essere spostato lì.",
 
     "confirmEmailAddress.title": "Conferma il tuo indirizzo email",
     "confirmEmailAddress.name": "Nome",
@@ -290,8 +290,8 @@ export const italian: Language = {
     "errors.failed": "Qualcosa è andato storto",
     "errors.reference": "Riferimento {reference}.",
     "errors.recorded":
-      "L’errore è stato registrato e una email è stata inviata all’amministratore. È utile scrivere una email all’amministratore con il riferimento e una descrizione di ciò che stavi facendo.",
-    "errors.message": "Scrivi una email all’amministratore",
+      "L'errore è stato registrato e un'email è stata inviata all'amministratore. Conviene scrivere un'email all'amministratore con il riferimento e una descrizione di ciò che stavi facendo.",
+    "errors.message": "Scrivi un'email all'amministratore",
     "errors.messageSubject": "Errore {reference} su {siteName}",
     "errors.messageBody": "Cosa stavo facendo quando è successo:\n\n",
     "errors.unavailable": "Il sito non è disponibile",
@@ -476,7 +476,7 @@ export const italian: Language = {
     "admin.rankings.spreadsheet":
       "I risultati del torneo vengono inviati alle classifiche mondiali come foglio di calcolo, che il sito scrive a partire dalle partite inserite.",
     "admin.rankings.fillInWinners":
-      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga Winner di ciascuna prima di inviare il file.",
+      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga del vincitore (Winner) di ciascuna prima di inviare il file.",
     "admin.rankings.fillInWinner":
       "Il sito non può sapere chi ha vinto il torneo, quindi inseriscilo in fondo al foglio di calcolo prima di inviarlo.",
     "admin.rankings.sendIt":
@@ -505,8 +505,8 @@ export const italian: Language = {
     "admin.administrator.sections.logs": "Registri",
     "admin.administrator.sections.databaseStatus": "Accesso al database",
     "admin.databaseStatus.title": "Accesso al database",
-    "admin.databaseStatus.on": "L’accesso al database è attivo.",
-    "admin.databaseStatus.off": "L’accesso al database è disattivato.",
+    "admin.databaseStatus.on": "L'accesso al database è attivo.",
+    "admin.databaseStatus.off": "L'accesso al database è disattivato.",
     "admin.databaseStatus.expected":
       "Il sito dovrebbe tornare tra {minutes} minuti.",
     "admin.databaseStatus.expectedOne":
@@ -525,7 +525,7 @@ export const italian: Language = {
       "I minuti devono essere un numero intero.",
     "DatabaseAccess.MinutesOutOfRange": "I minuti devono essere da 1 a 1440.",
     "DatabaseAccess.WordsTooLong": "Il testo non può superare i 500 caratteri.",
-    "DatabaseAccess.NotOff": "L’accesso al database non è disattivato.",
+    "DatabaseAccess.NotOff": "L'accesso al database non è disattivato.",
     "admin.administrator.title": "Amministratore",
     "admin.accounts.title": "Account",
     "admin.roles.add": "Aggiungi",
@@ -857,7 +857,7 @@ export const italian: Language = {
     "Competition.NotDrawnToMeet":
       "Questi giocatori al momento non sono sorteggiati per giocare l'uno contro l'altro nel tabellone.",
     "Competition.WinnerHasPlayedOn":
-      "Il vincitore di questo incontro ha già giocato la partita successiva, quindi chi lo ha vinto non può cambiare.",
+      "Il vincitore di questo incontro ha già giocato la partita successiva, quindi il vincitore non può cambiare.",
     "CompetitionPlayer.Withdrawn": "Un giocatore ritirato non gioca più.",
     "admin.players.add": "Aggiungi giocatore",
     "admin.players.none": "Nessun giocatore",
@@ -1055,7 +1055,7 @@ export const italian: Language = {
     "Tournament.BestOfBelowGamesPlayed":
       "Due giocatori hanno già giocato più partite di così.",
     "Competition.ExpectedMatchesReached":
-      "Questo test ha già fatto iniziare tutti gli incontri che deve avere.",
+      "Questo test ha già iniziato tutti gli incontri previsti.",
     "Competition.SameTeam":
       "Due giocatori della stessa squadra non giocano l'uno contro l'altro.",
     "AddManager.NoSuchAccount":
@@ -1076,7 +1076,7 @@ export const italian: Language = {
     "RemoveRole.NoSuchAccount": "Questo account non esiste.",
     "RemoveRole.NoSuchRole": "Questo ruolo non esiste.",
     "RemoveRole.Yourself":
-      "Non puoi toglierti il ruolo di amministratore da solo.",
+      "Non puoi toglierti da te il ruolo di amministratore.",
     "AccountsWithRole.NoSuchRole": "Questo ruolo non esiste.",
     "Tournament.AlreadyAManager":
       "Quell'account gestisce già il torneo e può fare tutto ciò che può fare un segnapunti.",
@@ -1551,7 +1551,7 @@ export const italian: Language = {
 
 <p>
     Qualcuno che ha effettuato l'accesso a un account <strong>{siteName}</strong> ha chiesto di spostarlo
-    a questo indirizzo email, che ha già un account suo. Non è stato
+    a questo indirizzo email, che ha già un account proprio. Non è stato
     spostato nulla, e nulla del tuo account è cambiato.
 </p>
 
@@ -1769,7 +1769,7 @@ export const italian: Language = {
 <p>
     Se non lo hai chiesto tu, non succederà nulla a meno che il link non venga seguito.
     Però qualcuno che ha effettuato l'accesso al tuo account lo ha chiesto, quindi imposta una nuova password
-    dalla pagina della password dimenticata per essere sicuro che non possa accedere di nuovo.
+    dalla pagina della password dimenticata per assicurarti che non possa accedere di nuovo.
 </p>
 
 <p>
@@ -1815,11 +1815,11 @@ export const italian: Language = {
 </p>
 
 <p>
-    Non c’è nulla da sbloccare. Ogni richiesta chiede di nuovo una connessione, e il sito torna a funzionare nel momento in cui il database risponde.
+    Non c'è nulla da sbloccare. Ogni richiesta chiede di nuovo una connessione, e il sito torna a funzionare nel momento in cui il database risponde.
 </p>
 
 <p>
-    Finché il database resta irraggiungibile, riceverai al massimo un’email al riguardo ogni {minutes} minuti.
+    Finché il database resta irraggiungibile, riceverai al massimo un'email al riguardo ogni {minutes} minuti.
 </p>
 
 <p>
@@ -1838,7 +1838,7 @@ export const italian: Language = {
 </p>
 
 <p>
-    Un sito guasto di solito fallisce a ogni richiesta, quindi riceverai al massimo 4 email all’ora sugli errori. Quelli successivi sono comunque nel registro.
+    Un sito guasto di solito fallisce a ogni richiesta, quindi riceverai al massimo 4 email all'ora sugli errori. Quelli successivi sono comunque nel registro.
 </p>
 
 <p>

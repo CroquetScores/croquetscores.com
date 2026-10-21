@@ -36,11 +36,11 @@ export const french: Language = {
     "beta.banner":
       "Ceci est un site bêta. Les données peuvent être réinitialisées à tout moment.",
     "privacy.contact":
-      "Des questions sur cette page, ou sur ce qui est conservé à votre sujet : {emailAddress}",
+      "Des questions sur cette page, ou sur ce qui est conservé à votre sujet : {emailAddress}",
     "termsOfUse.agree": "J’accepte les conditions d’utilisation",
     "termsOfUse.link": "conditions d’utilisation",
     "termsOfUse.report":
-      "Signaler ce qui a été écrit, ou poser une question sur ces conditions : {emailAddress}",
+      "Signaler ce qui a été écrit, ou poser une question sur ces conditions : {emailAddress}",
     "TermsOfUse.NotAgreed":
       "Cochez la case pour accepter les conditions d’utilisation.",
     "tryWebsite.banner":
@@ -167,7 +167,7 @@ export const french: Language = {
       "Votre nom et votre adresse e-mail ne peuvent plus être lus, et vous avez été déconnecté de tous les endroits où vous étiez connecté.",
     "forgetAccount.noLongerWorks.title": "Ce lien ne fonctionne plus",
     "forgetAccount.noLongerWorks.explanation":
-      "Il a peut-être expiré, déjà servi, ou appartient à un compte auquel vous n’êtes pas connecté. Redemandez-le depuis votre compte si vous voulez toujours qu’il soit oublié.",
+      "Il a peut-être expiré, a déjà servi ou concerne un compte auquel vous n’êtes pas connecté. Redemandez-le depuis votre compte si vous voulez toujours qu’il soit oublié.",
     "forgetAccount.lastAdministrator.title":
       "Votre compte ne peut pas être oublié",
     "forgetAccount.lastAdministrator.explanation":
@@ -228,7 +228,7 @@ export const french: Language = {
     "changeEmailAddress.submit": "Envoyer un lien de confirmation",
     "changeEmailAddress.sent.title": "Consultez votre messagerie",
     "changeEmailAddress.sent.explanation":
-      "Un lien pour confirmer le déménagement a été envoyé à la nouvelle adresse e-mail. Suivez-le, une fois connecté, pour y déplacer votre compte.",
+      "Un lien pour confirmer le déplacement a été envoyé à la nouvelle adresse e-mail. Suivez-le, une fois connecté, pour y déplacer votre compte.",
     "changeEmailAddress.confirm.title": "Déplacez votre compte",
     "changeEmailAddress.confirm.explanation":
       "Votre compte sera déplacé vers {emailAddress}. Désormais, vous vous connecterez avec cette adresse.",
@@ -288,7 +288,7 @@ export const french: Language = {
 
     "errors.backHome": "Retour à {siteName}",
     "errors.notFound": "Introuvable",
-    "errors.refused": "Impossible à faire",
+    "errors.refused": "Cela n’a pas pu être fait",
     "errors.refusedDetail":
       "Quelque chose dans ce qui a été envoyé n’allait pas.",
     "errors.sorry": "Désolé",
@@ -299,7 +299,7 @@ export const french: Language = {
       "L’erreur a été consignée et un e-mail a été envoyé à l’administrateur. Il est utile d’envoyer un e-mail à l’administrateur avec la référence et une description de ce que vous faisiez.",
     "errors.message": "Envoyer un e-mail à l’administrateur",
     "errors.messageSubject": "Erreur {reference} sur {siteName}",
-    "errors.messageBody": "Ce que je faisais quand cela s’est produit :\n\n",
+    "errors.messageBody": "Ce que je faisais quand cela s’est produit :\n\n",
     "errors.unavailable": "Le site est indisponible",
     "errors.unavailableDetail":
       "Le site ne parvient pas à joindre ce dont il a besoin pour le moment. Veuillez réessayer plus tard.",
@@ -308,7 +308,7 @@ export const french: Language = {
       "Il devrait être de retour dans {minutes} minutes.",
     "errors.maintenanceMinute": "Il devrait être de retour dans 1 minute.",
     "errors.maintenanceLonger":
-      "Cela prend plus de temps que prévu ; le site sera bientôt de retour.",
+      "Cela prend plus de temps que prévu ; le site sera bientôt de retour.",
 
     "home.recentResults": "Résultats récents",
     "home.recentResults.none":
@@ -333,7 +333,7 @@ export const french: Language = {
     "yearSport.none": "Aucun tournoi de {sport} ne commence en {year}.",
     "tournament.recent": "Récents",
     "tournament.summary": "Résumé",
-    "test.bestOf": "Chaque rencontre se joue au meilleur des {count} parties.",
+    "test.bestOf": "Chaque match se joue au meilleur des {count} parties.",
     "test.vs": "contre",
     "test.matches": "Matchs",
     "test.games": "Parties",
@@ -352,10 +352,10 @@ export const french: Language = {
     "search.label": "Rechercher",
     "search.tournaments": "Tournois",
     "search.competitions": "Compétitions",
-    "search.nothingFound": "Rien n'a été trouvé.",
+    "search.nothingFound": "Rien n’a été trouvé.",
     "players.search.label": "Rechercher des joueurs",
-    "players.search.prompt": "Saisissez le nom d'un joueur pour le trouver.",
-    "players.search.none": "Aucun joueur n'a été trouvé.",
+    "players.search.prompt": "Saisissez le nom d’un joueur pour le trouver.",
+    "players.search.none": "Aucun joueur n’a été trouvé.",
     "search.more":
       "Seuls les {count} premiers sont affichés. Ajoutez une partie du nom pour affiner la recherche.",
     "websitePlayer.tournament": "Tournoi",
@@ -405,7 +405,7 @@ export const french: Language = {
     "player.noGames": "Aucune partie n’a encore été jouée.",
     "player.noCompetitions": "Pas encore inscrit à une compétition.",
     "block.wins": "Victoires",
-    "block.matches": "Rencontres",
+    "block.matches": "Matchs",
     "block.netGames": "Parties nettes",
     "block.games": "Parties",
     "block.netHoops": "Arceaux nets",
@@ -420,7 +420,7 @@ export const french: Language = {
     "competition.view.summary": "Résumé",
     "competition.view.orderOfPlay": "Ordre de jeu",
     "blockSummary.ranking":
-      "Classement selon la proportion de rencontres gagnées, puis selon les arceaux nets. Le règlement d’un tournoi peut classer ses joueurs autrement.",
+      "Classement selon la proportion de matchs gagnés, puis selon les arceaux nets. Le règlement d’un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n’a encore été jouée.",
     "knockout.round.final": "Finale",
     "knockout.round.semis": "Demi-finales",
@@ -483,21 +483,21 @@ export const french: Language = {
     "admin.rankings.spreadsheet":
       "Les résultats du tournoi sont envoyés au classement mondial sous forme de tableur, que le site écrit à partir des parties saisies.",
     "admin.rankings.fillInWinners":
-      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne Winner de chacune avant d'envoyer le fichier.",
+      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne du vainqueur (Winner) de chacune avant d’envoyer le fichier.",
     "admin.rankings.fillInWinner":
-      "Le site ne peut pas savoir qui a gagné le tournoi ; indiquez-le donc en bas du tableur avant de l'envoyer.",
+      "Le site ne peut pas savoir qui a gagné le tournoi ; indiquez-le donc en bas du tableur avant de l’envoyer.",
     "admin.rankings.sendIt":
       "Envoyez ensuite le fichier aux responsables du classement mondial.",
     "admin.rankings.download": "Télécharger les classements",
     "rankings.notAvailable": "Les classements ne sont pas disponibles",
     "rankings.notAvailable.sport":
-      "Le sport de ce tournoi n'a pas de classement mondial, il n'y a donc aucun classement à envoyer.",
+      "Le sport de ce tournoi n’a pas de classement mondial ; il n’y a donc aucun classement à envoyer.",
     "rankings.notAvailable.handicap":
-      "Ce tournoi se joue avec handicap, il ne compte donc pas pour le classement mondial.",
+      "Ce tournoi se joue avec handicap ; il ne compte donc pas pour le classement mondial.",
     "rankings.notAvailable.drawnGames":
-      "Ce tournoi autorise les parties nulles, il ne compte donc pas pour le classement mondial.",
+      "Ce tournoi autorise les parties nulles ; il ne compte donc pas pour le classement mondial.",
     "rankings.notAvailable.notCounted":
-      "L'organisateur de ce tournoi a indiqué qu'il ne compte pas pour le classement mondial.",
+      "L’organisateur de ce tournoi a indiqué qu’il ne compte pas pour le classement mondial.",
     "admin.view.otherwise": "Ce tournoi ne peut pas être géré d’ici.",
     "admin.competitionView.tabs": "Compétition",
     "admin.competitionView.players": "Joueurs",
@@ -519,7 +519,7 @@ export const french: Language = {
     "admin.databaseStatus.expectedOne":
       "Le site devrait être de retour dans 1 minute.",
     "admin.databaseStatus.longer": "Cela prend plus de temps que prévu.",
-    "admin.databaseStatus.told": "Les lecteurs lisent : {words}",
+    "admin.databaseStatus.told": "Les lecteurs lisent : {words}",
     "admin.databaseStatus.toldUsual":
       "Les lecteurs lisent la phrase habituelle.",
     "admin.databaseStatus.minutes": "Minutes prévues",
@@ -586,14 +586,14 @@ export const french: Language = {
     "admin.logs.show": "Afficher",
     "admin.logs.prune": "Purger",
     "admin.logs.pruneAsk":
-      "Supprimer le journal d'avant la dernière heure ? Rien ne le ramène.",
+      "Supprimer le journal d’avant la dernière heure ? Rien ne le ramène.",
     "admin.logs.removed": "{count} entrées ont été supprimées",
     "admin.logs.none": "Aucune entrée dans le journal",
     "admin.logs.otherwise": "Quelque chose a échoué sur le site.",
     "admin.hover.logs.show": "Afficher les entrées correspondantes",
-    "admin.hover.logs.prune": "Supprimer le journal d'avant la dernière heure",
+    "admin.hover.logs.prune": "Supprimer le journal d’avant la dernière heure",
     "admin.hover.logs.pruneAgree":
-      "Supprimer le journal d'avant la dernière heure",
+      "Supprimer le journal d’avant la dernière heure",
     "admin.importError.title": "Erreur d’importation",
     "admin.importError.documentId": "Identifiant du document",
     "admin.importError.tournament": "Tournoi",
@@ -644,11 +644,11 @@ export const french: Language = {
       "Une autre compétition de ce tournoi porte déjà ce nom.",
     "BestOf.NotWhole": "Saisissez un nombre entier de parties.",
     "BestOf.TooSmall":
-      "Une rencontre doit se jouer au meilleur d’au moins 1 partie.",
+      "Un match doit se jouer au meilleur d’au moins 1 partie.",
     "Rounds.NotWhole": "Saisissez un nombre entier de tours.",
-    "Rounds.TooSmall": "Un bloc doit se jouer en au moins 1 tour.",
+    "Rounds.TooSmall": "Une poule doit se jouer en au moins 1 tour.",
     "KnockoutDraw.EvenBestOf":
-      "Une rencontre d’élimination directe doit avoir un vainqueur ; elle se joue donc au meilleur d’un nombre impair de parties.",
+      "Un match d’élimination directe doit avoir un vainqueur ; il se joue donc au meilleur d’un nombre impair de parties.",
     "admin.hover.tournaments.new": "Créer un nouveau tournoi",
     "admin.hover.tournaments.manage":
       "Gérer les joueurs, les équipes, les compétitions et les résultats de ce tournoi",
@@ -755,7 +755,7 @@ export const french: Language = {
     "admin.modal.ok": "OK",
     "admin.people.emailAddress": "Adresse e-mail",
     "admin.people.remove": "Retirer",
-    "admin.people.otherwise": "Impossible à faire.",
+    "admin.people.otherwise": "Cela n’a pas pu être fait.",
     "admin.managers.you": "Vous",
     "admin.managers.add": "Ajouter un gestionnaire",
     "admin.managers.none": "Aucun gestionnaire",
@@ -827,7 +827,7 @@ export const french: Language = {
     "admin.scores.withdraw": "Retirer",
     "admin.scores.unwithdraw": "Annuler le retrait",
     "admin.scores.withdrawnSaid": "Retiré",
-    "admin.scores.otherwise": "Impossible à faire.",
+    "admin.scores.otherwise": "Cela n’a pas pu être fait.",
     "admin.score.title": "Ajouter un résultat",
     "admin.score.add": "Ajouter la partie",
     "admin.score.winner": "Vainqueur",
@@ -860,7 +860,8 @@ export const french: Language = {
       "Aucun résultat ne peut être ajouté tant que chaque place du tableau n’a pas un joueur ou un exempt.",
     "Competition.ByeOutsideKnockout":
       "Seule une élimination directe peut avoir des exempts.",
-    "Competition.NotDrawnToMeet": "Ils ne sont pas censés se rencontrer.",
+    "Competition.NotDrawnToMeet":
+      "Ces joueurs ne sont pas actuellement tirés au sort pour se rencontrer dans l’élimination directe.",
     "Competition.WinnerHasPlayedOn":
       "Le vainqueur de ce match a déjà joué sa partie suivante ; on ne peut donc pas changer qui l’a gagné.",
     "CompetitionPlayer.Withdrawn": "Un joueur forfait ne joue plus.",
@@ -937,7 +938,7 @@ export const french: Language = {
     "admin.notes.deleteQuestion": "Supprimer la note « {title} » ?",
     "admin.notes.delete.explanation":
       "Une note supprimée disparaît pour toujours et ne peut pas être récupérée.",
-    "admin.notes.otherwise": "Impossible à faire.",
+    "admin.notes.otherwise": "Cela n’a pas pu être fait.",
     "admin.note.addTitle": "Ajouter une note",
     "admin.note.editTitle": "Modifier la note",
     "admin.note.title": "Titre",
@@ -1012,11 +1013,11 @@ export const french: Language = {
     "admin.tests.archived": "Tests archivés",
     "admin.tests.twoTeamsNeeded":
       "Un test oppose deux équipes ; il faut donc d’abord deux équipes.",
-    "admin.tests.toTeams": "Aller aux Équipes",
+    "admin.tests.toTeams": "Aller aux équipes",
     "admin.tests.matches.one": "{count} match",
     "admin.tests.matches.other": "{count} matchs",
     "admin.tests.bestOf": "au meilleur des {games}",
-    "admin.tests.otherwise": "Impossible à faire.",
+    "admin.tests.otherwise": "Cela n’a pas pu être fait.",
     "admin.test.addTitle": "Ajouter un test",
     "admin.test.editTitle": "Modifier le test",
     "admin.test.firstTeam": "Équipe A",
@@ -1377,7 +1378,7 @@ export const french: Language = {
 <p>
     Merci d’avoir créé un compte sur <strong>{siteName}</strong>.<br />
     Avant de commencer à utiliser votre compte, confirmez votre adresse e-mail
-    en cliquant sur le bouton ci-dessous :
+    en cliquant sur le bouton ci-dessous\u00A0:
 </p>
 
 <p>
@@ -1395,7 +1396,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si le bouton ne fonctionne pas, vous pouvez aussi confirmer votre adresse e-mail en ouvrant ce lien dans votre navigateur :<br />
+    Si le bouton ne fonctionne pas, vous pouvez aussi confirmer votre adresse e-mail en ouvrant ce lien dans votre navigateur\u00A0:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1416,7 +1417,7 @@ export const french: Language = {
 
 <p>
     Vous avez demandé récemment un nouvel e-mail pour confirmer votre adresse e-mail pour <strong>{siteName}</strong>.<br />
-    Confirmez votre adresse e-mail en cliquant sur le bouton ci-dessous :
+    Confirmez votre adresse e-mail en cliquant sur le bouton ci-dessous\u00A0:
 </p>
 
 <p>
@@ -1434,7 +1435,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si le bouton ne fonctionne pas, vous pouvez aussi confirmer votre adresse e-mail en ouvrant ce lien dans votre navigateur :<br />
+    Si le bouton ne fonctionne pas, vous pouvez aussi confirmer votre adresse e-mail en ouvrant ce lien dans votre navigateur\u00A0:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1460,7 +1461,7 @@ export const french: Language = {
 <p>
     Quelqu’un a essayé de s’inscrire sur <strong>{siteName}</strong> avec cette
     adresse e-mail, qui a déjà un compte. Rien n’a changé dans votre compte.<br />
-    Si c’était vous, vous avez déjà un compte et pouvez vous y connecter :
+    Si c’était vous, vous avez déjà un compte et pouvez vous y connecter\u00A0:
 </p>
 
 <p>
@@ -1478,7 +1479,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser ici :
+    Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser ici\u00A0:
 </p>
 
 <p>
@@ -1532,7 +1533,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Ou copiez cette adresse dans votre navigateur :<br />
+    Ou copiez cette adresse dans votre navigateur\u00A0:<br />
     {link}
 </p>
 
@@ -1603,7 +1604,7 @@ export const french: Language = {
 
 <p>
     Si ce n’était pas vous, quelqu’un d’autre a votre mot de passe. Définissez-en
-    un nouveau ici et cette personne sera déconnectée :
+    un nouveau ici et cette personne sera déconnectée\u00A0:
 </p>
 
 <p>
@@ -1633,7 +1634,7 @@ export const french: Language = {
 
 <p>
     Vous avez demandé récemment à réinitialiser votre mot de passe <strong>{siteName}</strong>.<br />
-    Vous pouvez le réinitialiser en cliquant sur le bouton ci-dessous :
+    Vous pouvez le réinitialiser en cliquant sur le bouton ci-dessous\u00A0:
 </p>
 
 <p>
@@ -1651,7 +1652,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si le bouton ne fonctionne pas, vous pouvez aussi réinitialiser votre mot de passe en ouvrant ce lien dans votre navigateur :<br />
+    Si le bouton ne fonctionne pas, vous pouvez aussi réinitialiser votre mot de passe en ouvrant ce lien dans votre navigateur\u00A0:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1670,9 +1671,9 @@ export const french: Language = {
 <p>Bonjour,</p>
 
 <p>
-    Votre compte <strong>{siteName}</strong> n’a pas de mot de passe : vous vous connectez avec Google.<br />
+    Votre compte <strong>{siteName}</strong> n’a pas de mot de passe\u00A0: vous vous connectez avec Google.<br />
     Vous avez demandé à en définir un, pour pouvoir aussi vous connecter avec votre adresse e-mail et un mot de passe.
-    Vous pouvez le définir en cliquant sur le bouton ci-dessous :
+    Vous pouvez le définir en cliquant sur le bouton ci-dessous\u00A0:
 </p>
 
 <p>
@@ -1690,7 +1691,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si le bouton ne fonctionne pas, vous pouvez aussi définir votre mot de passe en ouvrant ce lien dans votre navigateur :<br />
+    Si le bouton ne fonctionne pas, vous pouvez aussi définir votre mot de passe en ouvrant ce lien dans votre navigateur\u00A0:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1715,7 +1716,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si vous souhaitez utiliser notre service, vous pouvez créer un nouveau compte ici :<br />
+    Si vous souhaitez utiliser notre service, vous pouvez créer un nouveau compte ici\u00A0:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
@@ -1737,7 +1738,7 @@ export const french: Language = {
 <p>
     Vous avez demandé que votre compte <strong>{siteName}</strong> soit oublié.<br />
     Cliquez sur le bouton ci-dessous pour voir ce que cela signifie, et pour
-    confirmer en toute sécurité que c’est bien ce que vous voulez :
+    dire avec certitude que c’est bien ce que vous voulez\u00A0:
 </p>
 
 <p>
@@ -1755,7 +1756,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Si le bouton ne fonctionne pas, vous pouvez aussi ouvrir ce lien dans votre navigateur :<br />
+    Si le bouton ne fonctionne pas, vous pouvez aussi ouvrir ce lien dans votre navigateur\u00A0:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1774,7 +1775,7 @@ export const french: Language = {
 <p>
     Si ce n’est pas vous qui l’avez demandé, il ne se passera rien tant que
     personne ne suit le lien. Cela dit, la demande a été faite par quelqu’un
-    de connecté à votre compte ; définissez donc un nouveau mot de passe depuis
+    de connecté à votre compte\u00A0; définissez donc un nouveau mot de passe depuis
     la page du mot de passe oublié pour vous assurer que cette personne ne
     puisse plus s’y connecter.
 </p>
@@ -1798,7 +1799,7 @@ export const french: Language = {
 
 <p>
     Il n’y a rien à débloquer. Chaque tentative interroge de nouveau {service}, et les
-    pages refonctionnent dès qu’il répond.
+    pages fonctionnent de nouveau dès qu’il répond.
 </p>
 
 <p>
@@ -1822,7 +1823,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Il n’y a rien à débloquer. Chaque requête demande une connexion de nouveau, et le site refonctionne dès que la base de données répond.
+    Il n’y a rien à débloquer. Chaque requête redemande une connexion, et le site fonctionne de nouveau dès que la base de données répond.
 </p>
 
 <p>
@@ -1844,7 +1845,7 @@ export const french: Language = {
 </p>
 
 <p>
-    Un site en panne échoue en général à chaque requête : vous recevrez donc au plus 4 e-mails par heure au sujet des échecs. Les suivants figurent quand même dans le journal.
+    Un site en panne échoue en général à chaque requête\u00A0: vous recevrez donc au plus 4 e-mails par heure au sujet des échecs. Les suivants figurent quand même dans le journal.
 </p>
 
 <p>

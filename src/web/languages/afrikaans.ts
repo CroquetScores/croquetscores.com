@@ -172,7 +172,7 @@ export const afrikaans: Language = {
     "forgetAccount.lastAdministrator.title":
       "Jou rekening kan nie vergeet word nie",
     "forgetAccount.lastAdministrator.explanation":
-      "Jy is die enigste administrateur van hierdie werf. Gee die administrateurrol aan iemand anders, en dan kan jou rekening vergeet word.",
+      "Jy is die enigste administrateur van hierdie webwerf. Gee die administrateurrol aan iemand anders, en dan kan jou rekening vergeet word.",
     "forgetAccount.askAgain": "Vra weer",
     "forgetAccount.home": "Terug na {siteName}",
 
@@ -180,7 +180,7 @@ export const afrikaans: Language = {
     "registrationsSuspended.explanation":
       "'n Diens wat registrasie nodig het kan op die oomblik nie bereik word nie, so niemand kan registreer totdat dit weer antwoord nie. Niks wat jy getik het, is gestoor nie.",
     "registrationsSuspended.tryAgainLater":
-      "Probeer oor 'n rukkie weer. Die administrateur van die werf is in kennis gestel.",
+      "Probeer oor 'n rukkie weer. Die administrateur van die webwerf is in kennis gestel.",
     "registrationsSuspended.home": "Terug na {siteName}",
 
     "signIn.title": "Meld aan",
@@ -279,11 +279,11 @@ export const afrikaans: Language = {
     "Password.ConfirmationDiffers":
       "Dit stem nie ooreen met die wagwoord hierbo nie. Tik dit weer.",
     "Password.Breached":
-      "Hierdie wagwoord het in 'n datalek op 'n ander werf verskyn, so dit is nie veilig om hier te gebruik nie. Kies 'n ander een.",
+      "Hierdie wagwoord het in 'n datalek op 'n ander webwerf verskyn, so dit is nie veilig om hier te gebruik nie. Kies 'n ander een.",
 
     "javaScriptRequired.title": "JavaScript is nodig",
     "javaScriptRequired.explanation":
-      "Om te registreer moet JavaScript vir hierdie werf aan wees, sodat daar nagegaan kan word dat dit 'n mens is wat registreer. Skakel dit aan en registreer weer.",
+      "Om te registreer moet JavaScript vir hierdie webwerf aan wees, sodat daar nagegaan kan word dat dit 'n mens is wat registreer. Skakel dit aan en registreer weer.",
     "javaScriptRequired.register": "Terug na registrasie",
     "javaScriptRequired.home": "Terug na {siteName}",
 
@@ -363,7 +363,7 @@ export const afrikaans: Language = {
     "tournament.commentary": "Kommentaar",
     "tournament.beat": "het gewen teen",
     "tournament.drewWith": "het gelykop gespeel teen",
-    "tournament.ago.seconds": "{count} s",
+    "tournament.ago.seconds": "{count} sek",
     "tournament.ago.minutes": "{count} min",
     "tournament.ago.hour": "1 uur",
     "tournament.ago.hours": "{count} uur",
@@ -435,7 +435,8 @@ export const afrikaans: Language = {
     "years.label": "Jare",
     "years.earlier": "Vroeër jare",
 
-    "admin.newerBuild.message": "Daar is 'n nuwer weergawe van hierdie werf.",
+    "admin.newerBuild.message":
+      "Daar is 'n nuwer weergawe van hierdie webwerf.",
     "admin.newerBuild.reload": "Laai weer",
     "admin.title": "Administrasie",
     "admin.tournaments.new": "Nuwe toernooi",
@@ -457,7 +458,7 @@ export const afrikaans: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Streek",
     "admin.tournament.subtitle": "Onderskrif",
-    "admin.tournament.handicap": "Met voorgee gespeel",
+    "admin.tournament.handicap": "Met handicap gespeel",
     "admin.tournament.drawsAllowed": "Laat gelykopuitslae toe",
     "admin.tournament.levelTestsDrawn": "Gelyke toetse is gelykop",
     "admin.tournament.worldRankings": "Tel vir die wêreldranglys",
@@ -482,7 +483,7 @@ export const afrikaans: Language = {
     "admin.rankings.spreadsheet":
       "Die uitslae van die toernooi word as 'n sigblad aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
     "admin.rankings.fillInWinners":
-      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die Winner-reël van elkeen voordat jy die leer stuur.",
+      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die wenner-reël (Winner) van elkeen voordat jy die leer stuur.",
     "admin.rankings.fillInWinner":
       "Die webwerf kan nie weet wie die toernooi gewen het nie, so vul dit onderaan die sigblad in voordat jy dit stuur.",
     "admin.rankings.sendIt":
@@ -540,7 +541,7 @@ export const afrikaans: Language = {
     "admin.roles.administrator.none": "Geen ander administrateurs nie",
     "admin.roles.administrator.removeTitle": "Verwyder administrateur",
     "admin.roles.administrator.removeExplanation":
-      "{name} sal nie meer 'n administrateur van hierdie werf wees nie.",
+      "{name} sal nie meer 'n administrateur van hierdie webwerf wees nie.",
     "admin.roles.world-ranking-officer.heading":
       "Beamptes vir die wêreldranglys",
     "admin.roles.world-ranking-officer.none":
@@ -566,14 +567,14 @@ export const afrikaans: Language = {
       "Die golf croquet-lys kon nie gelees word nie, so sy spelers is gelaat soos hulle was.",
     "admin.worldRankings.finished": "Klaar",
     "admin.worldRankings.failed": "Die invoer is nie voltooi nie.",
-    "admin.worldRankings.otherwise": "Iets het op die werf skeefgeloop.",
+    "admin.worldRankings.otherwise": "Iets het op die webwerf skeefgeloop.",
     "WorldRankingLists.Unreachable":
-      "Die wêreldranglyswerf kon nie bereik word nie.",
+      "Die wêreldranglys-webwerf kon nie bereik word nie.",
     "WorldRankingLists.Unreadable":
       "Die lys het nie die vorm van die wêreldranglyste nie: 'n reël kon nie gelees word nie, het niemand in nie, of is nie in UTF-8 geskryf nie.",
     "admin.importErrors.title": "Invoerfoute",
     "admin.importErrors.none": "Geen invoerfoute nie",
-    "admin.importErrors.otherwise": "Iets het op die werf skeefgeloop.",
+    "admin.importErrors.otherwise": "Iets het op die webwerf skeefgeloop.",
     "admin.logs.title": "Logboeke",
     "admin.logs.severity": "Erns",
     "admin.logs.text": "Soek",
@@ -583,7 +584,7 @@ export const afrikaans: Language = {
       "Die logboek van voor die laaste uur verwyder? Niks bring dit terug nie.",
     "admin.logs.removed": "{count} inskrywings is verwyder",
     "admin.logs.none": "Geen logboekinskrywings nie",
-    "admin.logs.otherwise": "Iets het op die werf skeefgeloop.",
+    "admin.logs.otherwise": "Iets het op die webwerf skeefgeloop.",
     "admin.hover.logs.show": "Wys die inskrywings wat ooreenstem",
     "admin.hover.logs.prune": "Verwyder die logboek van voor die laaste uur",
     "admin.hover.logs.pruneAgree":
@@ -592,8 +593,8 @@ export const afrikaans: Language = {
     "admin.importError.documentId": "Dokument-id",
     "admin.importError.tournament": "Toernooi",
     "admin.importError.competition": "Kompetisie",
-    "admin.importError.newSite": "Nuwe werf",
-    "admin.importError.oldSite": "Ou werf",
+    "admin.importError.newSite": "Nuwe webwerf",
+    "admin.importError.oldSite": "Ou webwerf",
     "ImportErrorKept.NotFound":
       "Die invoer het geen fout vir daardie dokument gehou nie.",
     "admin.competitionView.otherwise":
@@ -843,13 +844,13 @@ export const afrikaans: Language = {
       "'n Regstelling behou die uitslag: 'n gewonne spel bly gewonne, en 'n gelykopspel bly gelykop.",
     "Competition.MatchDecided": "Hul wedstryd is reeds beslis.",
     "Competition.DrawFull":
-      "Die speler kan nie bygevoeg word nie omdat die rooster vol is.",
+      "Die speler kan nie bygevoeg word nie omdat die uitskakelingsrooster vol is.",
     "Competition.DrawNotFilled":
-      "Uitslae kan nie bygevoeg word voordat elke plek in die rooster 'n speler of 'n bye het nie.",
+      "Uitslae kan nie bygevoeg word voordat elke plek in die uitskakelingsrooster 'n speler of 'n bye het nie.",
     "Competition.ByeOutsideKnockout":
       "Net 'n uitskakelingskompetisie kan byes hê.",
     "Competition.NotDrawnToMeet":
-      "Hulle is nie getrek om teen mekaar te speel nie.",
+      "Hierdie spelers is nie tans getrek om teen mekaar in die uitskakeling te speel nie.",
     "Competition.WinnerHasPlayedOn":
       "Die wenner van hierdie wedstryd het reeds sy volgende wedstryd gespeel, so wie dit gewen het, kan nie verander nie.",
     "CompetitionPlayer.Withdrawn": "'n Onttrekte speler speel nie meer nie.",
@@ -1724,7 +1725,7 @@ export const afrikaans: Language = {
 
 <p>
     Jy het gevra dat jou <strong>{siteName}</strong>-rekening vergeet word.<br />
-    Volg die knoppie hieronder om te sien wat dit beteken, en om veilig te
+    Klik op die knoppie hieronder om te sien wat dit beteken, en om veilig te
     bevestig dat dit is wat jy wil hê:
 </p>
 

@@ -297,13 +297,13 @@ export const welsh: Language = {
     "errors.failed": "Aeth rhywbeth o'i le",
     "errors.reference": "Cyfeirnod {reference}.",
     "errors.recorded":
-      "Mae’r gwall wedi’i logio ac mae e-bost wedi’i anfon at y gweinyddwr. Mae’n help e-bostio’r gweinyddwr gyda’r cyfeirnod a disgrifiad o’r hyn roeddech chi’n ei wneud.",
+      "Cofnodwyd y gwall ac anfonwyd e-bost at y gweinyddwr. Mae'n help anfon e-bost at y gweinyddwr gyda'r cyfeirnod a disgrifiad o'r hyn roeddech yn ei wneud.",
     "errors.message": "E-bostiwch y gweinyddwr",
     "errors.messageSubject": "Gwall {reference} ar {siteName}",
-    "errors.messageBody": "Beth roeddwn i’n ei wneud pan ddigwyddodd hyn:\n\n",
-    "errors.unavailable": "Nid yw’r wefan ar gael",
+    "errors.messageBody": "Yr hyn roeddwn yn ei wneud pan ddigwyddodd hyn:\n\n",
+    "errors.unavailable": "Nid yw'r safle ar gael",
     "errors.unavailableDetail":
-      "Ni all y wefan gyrraedd yr hyn sydd ei angen arni ar hyn o bryd. Rhowch gynnig arni eto yn nes ymlaen.",
+      "Ni all y safle gyrraedd yr hyn sydd ei angen arno ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.",
     "errors.maintenance": "Mae'r safle i lawr ar gyfer gwaith cynnal a chadw.",
     "errors.maintenanceMinutes":
       "Disgwylir iddo ddychwelyd ymhen {minutes} munud.",
@@ -484,7 +484,7 @@ export const welsh: Language = {
     "admin.rankings.spreadsheet":
       "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel taenlen, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
     "admin.rankings.fillInWinners":
-      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch linell Winner ym mhob un cyn anfon y ffeil.",
+      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch llinell yr enillydd (Winner) ym mhob un cyn anfon y ffeil.",
     "admin.rankings.fillInWinner":
       "Ni all y wefan wybod pwy enillodd y twrnamaint, felly llenwch hynny ar waelod y daenlen cyn ei hanfon.",
     "admin.rankings.sendIt":
@@ -492,7 +492,7 @@ export const welsh: Language = {
     "admin.rankings.download": "Lawrlwytho safleoedd",
     "rankings.notAvailable": "Nid yw safleoedd ar gael",
     "rankings.notAvailable.sport":
-      "Does gan chwaraeon y twrnamaint hwn ddim safleoedd y byd, felly does dim safleoedd i'w hanfon.",
+      "Nid oes gan gamp y twrnamaint hwn Safleoedd y Byd, felly nid oes safleoedd i'w hanfon.",
     "rankings.notAvailable.handicap":
       "Mae'r twrnamaint hwn yn cael ei chwarae gyda handicap, felly nid yw'n cyfrif tuag at Safleoedd y Byd.",
     "rankings.notAvailable.drawnGames":
@@ -511,16 +511,16 @@ export const welsh: Language = {
     "admin.administrator.sections.worldRankings": "Safleoedd y Byd",
     "admin.administrator.sections.importErrors": "Gwallau mewnforio",
     "admin.administrator.sections.logs": "Logiau",
-    "admin.administrator.sections.databaseStatus": "Mynediad i’r gronfa ddata",
-    "admin.databaseStatus.title": "Mynediad i’r gronfa ddata",
-    "admin.databaseStatus.on": "Mae mynediad i’r gronfa ddata ymlaen.",
+    "admin.administrator.sections.databaseStatus": "Mynediad i'r gronfa ddata",
+    "admin.databaseStatus.title": "Mynediad i'r gronfa ddata",
+    "admin.databaseStatus.on": "Mae mynediad i'r gronfa ddata ymlaen.",
     "admin.databaseStatus.off":
-      "Mae mynediad i’r gronfa ddata wedi’i ddiffodd.",
+      "Mae mynediad i'r gronfa ddata wedi'i ddiffodd.",
     "admin.databaseStatus.expected":
-      "Disgwylir i’r wefan ddod yn ôl ymhen {minutes} munud.",
+      "Disgwylir i'r safle ddod yn ôl ymhen {minutes} munud.",
     "admin.databaseStatus.expectedOne":
-      "Disgwylir i’r wefan ddod yn ôl ymhen 1 munud.",
-    "admin.databaseStatus.longer": "Mae’n cymryd mwy o amser na’r disgwyl.",
+      "Disgwylir i'r safle ddod yn ôl ymhen 1 munud.",
+    "admin.databaseStatus.longer": "Mae'n cymryd mwy o amser na'r disgwyl.",
     "admin.databaseStatus.told": "Mae darllenwyr yn gweld: {words}",
     "admin.databaseStatus.toldUsual":
       "Mae darllenwyr yn gweld y frawddeg arferol.",
@@ -530,12 +530,13 @@ export const welsh: Language = {
     "admin.databaseStatus.change": "Newid",
     "admin.databaseStatus.turnOn": "Troi ymlaen",
     "admin.databaseStatus.minutesNeeded": "Mae angen y munudau.",
-    "admin.databaseStatus.otherwise": "Aeth rhywbeth o’i le ar y wefan.",
-    "DatabaseAccess.MinutesNotWhole": "Rhaid i’r munudau fod yn rif cyflawn.",
-    "DatabaseAccess.MinutesOutOfRange": "Rhaid i’r munudau fod o 1 i 1440.",
-    "DatabaseAccess.WordsTooLong": "Ni all y geiriau fod yn hirach na 500 nod.",
+    "admin.databaseStatus.otherwise": "Aeth rhywbeth o'i le ar y safle.",
+    "DatabaseAccess.MinutesNotWhole": "Rhaid i'r munudau fod yn rif cyflawn.",
+    "DatabaseAccess.MinutesOutOfRange": "Rhaid i'r munudau fod o 1 i 1440.",
+    "DatabaseAccess.WordsTooLong":
+      "Ni all y geiriau fod yn hirach na 500 cymeriad.",
     "DatabaseAccess.NotOff":
-      "Nid yw mynediad i’r gronfa ddata wedi’i ddiffodd.",
+      "Nid yw mynediad i'r gronfa ddata wedi'i ddiffodd.",
     "admin.administrator.title": "Gweinyddwr",
     "admin.accounts.title": "Cyfrifon",
     "admin.roles.add": "Ychwanegu",
@@ -731,7 +732,7 @@ export const welsh: Language = {
     "admin.hover.competitionPlayers.withdraw":
       "Tynnu'r chwaraewr hwn yn ôl o'r gystadleuaeth",
     "admin.hover.competitionPlayers.unwithdraw":
-      "Rhoi'r chwaraewr hwn a dynnwyd yn ôl yn ôl yn y gystadleuaeth",
+      "Dychwelyd y chwaraewr hwn, a dynnwyd yn ôl, i'r gystadleuaeth",
     "admin.hover.competitionPlayers.carryForward":
       "Cario canlyniadau'r chwaraewr hwn ymlaen o gystadleuaeth arall",
     "admin.hover.notes.add":
@@ -1810,11 +1811,11 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Ni allai {siteName} gyrraedd ei gronfa ddata am {when}. Nes ei bod yn ateb, mae pob tudalen sydd ei hangen yn dweud wrth ddarllenwyr nad yw’r wefan ar gael ac i roi cynnig arni eto yn nes ymlaen.
+    Ni allai {siteName} gyrraedd ei gronfa ddata am {when}. Nes ei bod yn ateb, mae pob tudalen sydd ei hangen yn dweud wrth ddarllenwyr nad yw'r safle ar gael ac i roi cynnig arall arni yn nes ymlaen.
 </p>
 
 <p>
-    Nid oes angen dadflocio dim. Mae pob cais yn gofyn am gysylltiad o’r newydd, ac mae’r wefan yn gweithio eto’r eiliad y mae’r gronfa ddata’n ateb.
+    Nid oes angen dadflocio dim. Mae pob cais yn gofyn am gysylltiad o'r newydd, ac mae'r safle yn gweithio eto'r eiliad y mae'r gronfa ddata yn ateb.
 </p>
 
 <p>
@@ -1832,11 +1833,11 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Methodd {siteName} am {when} ar gais am {asked}. Dangoswyd y cyfeirnod {reference} i’r darllenydd, ac mae’r achos yn y log oddi tano.
+    Methodd {siteName} am {when} ar gais am {asked}. Dangoswyd y cyfeirnod {reference} i'r darllenydd, ac mae'r achos yn y log oddi tano.
 </p>
 
 <p>
-    Mae gwefan sydd wedi torri yn tueddu i fethu ar bob cais, felly cewch eich e-bostio am fethiannau 4 gwaith yr awr ar y mwyaf. Mae’r lleill yn y log o hyd.
+    Mae safle sydd wedi torri yn tueddu i fethu ar bob cais, felly cewch e-bost am fethiannau 4 gwaith yr awr ar y mwyaf. Mae'r lleill yn y log o hyd.
 </p>
 
 <p>

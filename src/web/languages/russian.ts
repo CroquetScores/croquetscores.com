@@ -61,7 +61,7 @@ export const russian: Language = {
     "account.menu": "Учётная запись",
     "account.register": "Зарегистрироваться",
     "account.signIn": "Войти",
-    "account.forgotPassword": "Я забыл пароль",
+    "account.forgotPassword": "Забыли пароль?",
     "account.signOut": "Выйти",
     "account.profile": "Профиль",
     "account.changePassword": "Сменить пароль",
@@ -292,10 +292,10 @@ export const russian: Language = {
     "errors.failed": "Что-то пошло не так",
     "errors.reference": "Номер обращения: {reference}.",
     "errors.recorded":
-      "Ошибка записана в журнал, администратору отправлено письмо по электронной почте. Вы можете помочь, написав администратору на электронную почту: укажите номер обращения и опишите, что вы делали.",
+      "Ошибка записана в журнал, а администратору отправлено письмо. Вы можете помочь, написав администратору по электронной почте: укажите номер обращения и опишите, что вы делали.",
     "errors.message": "Написать администратору",
     "errors.messageSubject": "Ошибка {reference} на {siteName}",
-    "errors.messageBody": "Что я делал, когда это произошло:\n\n",
+    "errors.messageBody": "Что происходило, когда это случилось:\n\n",
     "errors.unavailable": "Сайт недоступен",
     "errors.unavailableDetail":
       "Сайт сейчас не может получить доступ к тому, что ему нужно. Пожалуйста, попробуйте позже.",
@@ -477,7 +477,7 @@ export const russian: Language = {
     "admin.rankings.spreadsheet":
       "Результаты турнира отправляются в мировой рейтинг в виде электронной таблицы, которую сайт составляет из введённых партий.",
     "admin.rankings.fillInWinners":
-      "Сайт может только предположить, кто выиграл каждое соревнование, поэтому перед отправкой файла проверьте строку «Winner» в каждом из них.",
+      "Сайт может только предположить, кто выиграл каждое соревнование, поэтому перед отправкой файла проверьте строку победителя («Winner») в каждом из них.",
     "admin.rankings.fillInWinner":
       "Сайт не может знать, кто выиграл турнир, поэтому впишите это внизу таблицы перед отправкой.",
     "admin.rankings.sendIt":
@@ -633,7 +633,7 @@ export const russian: Language = {
     "BestOf.NotWhole": "Введите целое число партий.",
     "BestOf.TooSmall": "Встреча должна быть лучшей минимум из 1 партии.",
     "Rounds.NotWhole": "Введите целое число туров.",
-    "Rounds.TooSmall": "Блок должен играться минимум в 1 тур.",
+    "Rounds.TooSmall": "Группа должна играться минимум в 1 тур.",
     "KnockoutDraw.EvenBestOf":
       "У встречи на вылет должен быть победитель, поэтому она играется как лучшая из нечётного числа партий.",
     "admin.hover.tournaments.new": "Создать новый турнир",
@@ -728,7 +728,7 @@ export const russian: Language = {
     "admin.hover.note.add": "Сохранить эту заметку и добавить её в турнир",
     "admin.hover.note.save": "Сохранить изменения этой заметки",
     "admin.hover.people.add": "Дать эту роль этому человеку",
-    "admin.hover.people.remove": "Отобрать эту роль у этого человека",
+    "admin.hover.people.remove": "Лишить этого человека этой роли",
     "admin.hover.worldRankings.import":
       "Получить мировые рейтинги и добавить их игроков",
     "admin.modal.cancel": "Отмена",
@@ -831,12 +831,12 @@ export const russian: Language = {
     "Game.ResultChanged":
       "Исправление сохраняет исход: выигранная партия остаётся выигранной, а сыгранная вничью остаётся ничьей.",
     "Competition.MatchDecided": "Их матч уже решён.",
-    "Competition.DrawFull":
-      "Игрока нельзя добавить, потому что сетка заполнена.",
+    "Competition.DrawFull": "Игрока нельзя добавить: сетка заполнена.",
     "Competition.DrawNotFilled":
       "Результаты нельзя добавлять, пока на каждом месте сетки нет игрока или бая.",
-    "Competition.ByeOutsideKnockout": "Баи бывают только на вылет.",
-    "Competition.NotDrawnToMeet": "Им не предстоит играть друг с другом.",
+    "Competition.ByeOutsideKnockout": "Бай бывает только в турнире на вылет.",
+    "Competition.NotDrawnToMeet":
+      "По сетке эти игроки сейчас не должны играть друг с другом.",
     "Competition.WinnerHasPlayedOn":
       "Победитель этого матча уже сыграл следующую партию, поэтому менять, кто победил, нельзя.",
     "CompetitionPlayer.Withdrawn": "Снятый игрок больше не играет.",
@@ -1008,7 +1008,7 @@ export const russian: Language = {
     "UpdateTest.FirstTeamMissing": "Выберите первую команду.",
     "UpdateTest.SecondTeamMissing": "Выберите вторую команду.",
     "ExpectedMatches.NotWhole": "Введите целое число матчей.",
-    "ExpectedMatches.TooSmall": "В тесте должен быть ожидаемым хотя бы 1 матч.",
+    "ExpectedMatches.TooSmall": "В тесте должен ожидаться хотя бы 1 матч.",
     "TestGroup.TooLong": "Эта группа слишком длинная.",
     "Tournament.TestAgainstItself": "Команда не играет тест против самой себя.",
     "Tournament.TestFinishesBeforeStarts":
@@ -1036,7 +1036,7 @@ export const russian: Language = {
     "AddRole.NoSuchRole": "Такой роли нет.",
     "RemoveRole.NoSuchAccount": "Такой учётной записи нет.",
     "RemoveRole.NoSuchRole": "Такой роли нет.",
-    "RemoveRole.Yourself": "Нельзя отобрать у самого себя роль администратора.",
+    "RemoveRole.Yourself": "Нельзя лишить себя роли администратора.",
     "AccountsWithRole.NoSuchRole": "Такой роли нет.",
     "admin.scorers.add": "Добавить секретаря",
     "admin.scorers.none": "Секретарей нет",
@@ -1463,7 +1463,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Я забыл пароль
+        Забыли пароль?
     </a>
 </p>
 
@@ -1555,7 +1555,7 @@ export const russian: Language = {
 
 <p>
     Если это были не вы, ваша учётная запись у кого-то другого. Ответьте на
-    это письмо и расскажите нам об этом.
+    это письмо и сообщите нам.
 </p>
 
 <p>
@@ -1590,7 +1590,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Я забыл пароль
+        Забыли пароль?
     </a>
 </p>
 
@@ -1709,7 +1709,7 @@ export const russian: Language = {
 
 <p>
     Вы попросили забыть вашу учётную запись на <strong>{siteName}</strong>.<br />
-    Нажмите на кнопку ниже, чтобы увидеть, что это значит, и безопасно
+    Нажмите на кнопку ниже, чтобы увидеть, что это значит, и окончательно
     подтвердить, что вы этого хотите:
 </p>
 
@@ -1816,7 +1816,7 @@ export const russian: Language = {
 </p>
 
 <p>
-    Сломанный сайт обычно не справляется с каждым запросом, поэтому письма об ошибках будут приходить не чаще 4 раз в час. Остальные ошибки всё равно попадут в журнал.
+    Неисправный сайт обычно даёт сбой на каждом запросе, поэтому письма о сбоях будут приходить не чаще 4 раз в час. Остальные сбои всё равно попадут в журнал.
 </p>
 
 <p>

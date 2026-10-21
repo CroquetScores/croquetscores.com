@@ -299,7 +299,7 @@ export const polish: Language = {
       "Błąd został zapisany w dzienniku, a do administratora wysłano e-mail. Pomoże, jeśli napiszesz do administratora e-mail z numerem referencyjnym i opisem tego, co robisz.",
     "errors.message": "Napisz e-mail do administratora",
     "errors.messageSubject": "Błąd {reference} w serwisie {siteName}",
-    "errors.messageBody": "Co robiłem(-am), gdy to się stało:\n\n",
+    "errors.messageBody": "Co się działo, gdy to się stało:\n\n",
     "errors.unavailable": "Serwis jest niedostępny",
     "errors.unavailableDetail":
       "Serwis nie może teraz połączyć się z tym, czego potrzebuje. Spróbuj ponownie później.",
@@ -482,7 +482,7 @@ export const polish: Language = {
     "admin.rankings.spreadsheet":
       "Wyniki turnieju są wysyłane do rankingu światowego jako arkusz kalkulacyjny, który strona tworzy z wprowadzonych gier.",
     "admin.rankings.fillInWinners":
-      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz Winner w każdych z nich.",
+      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz zwycięzcy (Winner) w każdych z nich.",
     "admin.rankings.fillInWinner":
       "Strona nie może wiedzieć, kto wygrał turniej, więc uzupełnij to na dole arkusza przed jego wysłaniem.",
     "admin.rankings.sendIt":
@@ -1798,7 +1798,7 @@ export const polish: Language = {
 </p>
 
 <p>
-    Dopóki baza danych nie odpowiada, dostaniesz o tym e-mail najwyżej raz na {minutes} minut.
+    Dopóki baza danych nie odpowiada, dostaniesz o tym e-mail najwyżej raz na {minutes} min.
 </p>
 
 <p>

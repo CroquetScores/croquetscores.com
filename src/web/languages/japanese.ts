@@ -475,7 +475,7 @@ export const japanese: Language = {
     "admin.rankings.spreadsheet":
       "大会の結果は、入力された試合からサイトが作成するスプレッドシートとして世界ランキングに送られます。",
     "admin.rankings.fillInWinners":
-      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「Winner」の行を確認してください。",
+      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「優勝者（Winner）」の行を確認してください。",
     "admin.rankings.fillInWinner":
       "サイトは大会の優勝者を知ることができません。送る前に、スプレッドシートの最下部に記入してください。",
     "admin.rankings.sendIt":
@@ -510,7 +510,7 @@ export const japanese: Language = {
       "サイトは {minutes} 分後に復旧する見込みです。",
     "admin.databaseStatus.expectedOne": "サイトは 1 分後に復旧する見込みです。",
     "admin.databaseStatus.longer": "予定より時間がかかっています。",
-    "admin.databaseStatus.told": "閲覧者に表示する文言: {words}",
+    "admin.databaseStatus.told": "閲覧者に表示する文言：{words}",
     "admin.databaseStatus.toldUsual": "閲覧者にはいつもの文を表示します。",
     "admin.databaseStatus.minutes": "見込み時間（分）",
     "admin.databaseStatus.words": "閲覧者向けの文言",
@@ -571,7 +571,7 @@ export const japanese: Language = {
     "admin.logs.show": "表示",
     "admin.logs.prune": "整理",
     "admin.logs.pruneAsk":
-      "直近1時間より前のログを削除しますか?元に戻すことはできません。",
+      "直近1時間より前のログを削除しますか？元に戻すことはできません。",
     "admin.logs.removed": "{count} 件のエントリを削除しました",
     "admin.logs.none": "ログのエントリはありません",
     "admin.logs.otherwise": "サイトで問題が発生しました。",
@@ -1718,7 +1718,7 @@ export const japanese: Language = {
 <p>こんにちは。</p>
 
 <p>
-    {siteName}は{when}に{service}に接続できませんでした。応答が戻るまでは、登録や新しいパスワードの設定のためにそれが必要な方には、後でもう一度お試しいただくようお知らせしています。
+    {siteName}は{when}に{service}に接続できませんでした。応答が戻るまでは、登録や新しいパスワードの設定にそれが必要な方に、しばらくしてからもう一度お試しいただくよう案内します。
 </p>
 
 <p>
@@ -1726,7 +1726,7 @@ export const japanese: Language = {
 </p>
 
 <p>
-    {service}が止まっている間は、これについてのメールは1時間に1回までです。
+    {service}が止まっている間は、これについてのメールは1時間に1通までお送りします。
 </p>
 
 <p>
@@ -1741,15 +1741,15 @@ export const japanese: Language = {
 <p>こんにちは。</p>
 
 <p>
-    {siteName}は{when}にデータベースに接続できませんでした。応答するまでの間、データベースが必要なページはすべて、サイトが利用できないこととしばらくしてから再度お試しいただくことを読者にお伝えします。
+    {siteName}は{when}にデータベースに接続できませんでした。応答するまでの間、データベースが必要なページはすべて、サイトが利用できないことと、しばらくしてからもう一度お試しいただくことを読者にお伝えします。
 </p>
 
 <p>
-    解除する必要のあるものはありません。各リクエストは毎回あらためて接続を求め、データベースが応答した時点でサイトは再び動作します。
+    対応は必要ありません。各リクエストは毎回あらためて接続を求め、データベースが応答した時点でサイトは再び動作します。
 </p>
 
 <p>
-    データベースが停止している間、これについてのメールは{minutes}分に最大1通お送りします。
+    データベースが停止している間、これについてのメールは{minutes}分に1通までお送りします。
 </p>
 
 <p>
@@ -1768,7 +1768,7 @@ export const japanese: Language = {
 </p>
 
 <p>
-    壊れているサイトは、ほとんどのリクエストで失敗します。そのため、失敗についてのメールは1時間に最大4通までです。それ以降の失敗も、ログには記録されます。
+    壊れているサイトは、ほとんどのリクエストで失敗します。そのため、失敗についてのメールは1時間に4通までです。それ以降の失敗も、ログには記録されます。
 </p>
 
 <p>
