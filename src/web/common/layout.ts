@@ -20,6 +20,12 @@ import { themes, type Theme } from "./theme.js";
 export interface NavigationLink {
   readonly href: string;
   readonly words: string;
+  /**
+   * Drawn in place of the words, which stay in the link hidden from the eye so
+   * that a screen reader still says them. Markup, written into the page as it
+   * is, so it is only ever the site's own.
+   */
+  readonly icon?: string | undefined;
 }
 
 export interface Section {
@@ -143,13 +149,18 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
     : `
     <noscript><meta http-equiv="refresh" content="0; url=${escape(path)}" /></noscript>`;
 
+// The way home is a house and not the word, drawn inline as the magnifying
+// glass is. Its word stays in the link, hidden from the eye, so that a screen
+// reader still says "Home" and the link is still found by it.
+const house = `<svg class="menu-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h4.5v-5.5h3V20H18v-9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 // The way home and the way to help, for every reader, and the way to the admin
 // for a reader who is signed in: the admin shows nothing to anybody else, so
 // offering it to them would only send them to sign in. Everything to do with
 // an account is in the account menu beside them rather than here, so that the
 // bar carries one item for an account however many pages an account has.
 const everyone: readonly NavigationLink[] = [
-  { href: "/", words: "navigation.home" },
+  { href: "/", words: "navigation.home", icon: house },
   { href: "/players", words: "tournament.players" },
   { href: "/help", words: "navigation.help" },
 ];
@@ -190,21 +201,16 @@ ${accountItems(bar).join("\n")}
               </nav>`;
 };
 
-// The way home is a house and not the word, drawn inline as the magnifying
-// glass is. Its word stays in the link, hidden from the eye, so that a screen
-// reader still says "Home" and the link is still found by it.
-const house = `<svg class="menu-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h4.5v-5.5h3V20H18v-9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
 const menu = (bar: AccountMenu, search = ""): string => {
   const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
-    .map(({ href, words }) => {
+    .map(({ href, words, icon }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
       const said = escape(speaking.say(words));
       const inside =
-        href === "/"
-          ? `${house}<span class="visually-hidden">${said}</span>`
-          : said;
+        icon === undefined
+          ? said
+          : `${icon}<span class="visually-hidden">${said}</span>`;
       return `            <li><a href="${href}"${here}>${inside}</a></li>`;
     })
     .join("\n");
@@ -389,14 +395,24 @@ const magnifyingGlass = `<svg class="site-search-icon" viewBox="0 0 24 24" width
 // something typed lets the form be sent. It is written beside the form and
 // not in a file of its own, because it runs before the header is first
 // painted and so the field is never seen open and then closed; a field that
-// arrives holding what was typed is left open for the same reader's sake.
+// arrives holding what was typed is left open for the same reader's sake. A
+// browser that puts back what was typed on Back or on reload does so after
+// this has run, so the field is looked at again when the page is shown, and a
+// field holding anything is opened then. The form is found from the header's
+// own markup and not from where this script sits, so that something put
+// between them does not break it.
 const searchScript = `          <script>
             (function () {
-              var form = document.currentScript.previousElementSibling;
+              var form = document.currentScript.parentElement.querySelector(".site-search");
               var field = form.querySelector("input");
               var glass = form.querySelector("button");
               var closed = "site-search-closed";
-              if (field.value === "") form.classList.add(closed);
+              var show = function () {
+                if (field.value === "") form.classList.add(closed);
+                else form.classList.remove(closed);
+              };
+              show();
+              window.addEventListener("pageshow", show);
               glass.addEventListener("click", function (event) {
                 if (form.classList.contains(closed)) {
                   event.preventDefault();
@@ -404,7 +420,15 @@ const searchScript = `          <script>
                   field.focus();
                 } else if (field.value.trim() === "") {
                   event.preventDefault();
+                  field.value = "";
                   form.classList.add(closed);
+                }
+              });
+              // Enter in a field with nothing in it asks for nothing, and does
+              // not close the box under the reader's hands.
+              field.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && field.value.trim() === "") {
+                  event.preventDefault();
                 }
               });
             })();

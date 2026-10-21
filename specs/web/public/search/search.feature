@@ -148,6 +148,20 @@ Feature: A reader searches the website for tournaments, players and competitions
       When the header's magnifying glass is pressed
       Then the address is "/"
 
+    Scenario: Pressing the magnifying glass with only spaces typed closes the search box and empties it
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      And "   " is typed as the header's search box
+      When the header's magnifying glass is pressed
+      Then the header's search box is not shown
+      And the header's search box is empty
+
+    Scenario: Pressing Enter with nothing typed leaves the search box open
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      When Enter is pressed in the header's search box
+      Then the header's search box is shown
+
     Scenario: Without scripting the search box is shown beside the magnifying glass
       When the page at "/" is opened with scripting off
       Then the header's search box is shown

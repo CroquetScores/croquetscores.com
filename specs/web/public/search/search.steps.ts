@@ -157,9 +157,15 @@ When(
   },
 );
 
+// Like the glass, it searches only with something typed; with nothing it does
+// nothing, and there is no page to wait for.
 When(
   "Enter is pressed in the header's search box",
   async function (this: SpecWorld) {
+    if ((await box(this).inputValue()).trim() === "") {
+      await box(this).press("Enter");
+      return;
+    }
     await Promise.all([
       this.browserPage.waitForNavigation(),
       box(this).press("Enter"),
