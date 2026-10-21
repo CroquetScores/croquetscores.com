@@ -18,7 +18,7 @@ Press **Add Player**, above the list. A dialog opens over the page.
 
 **World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports whose players the world rankings keep a list of. American 6 Wicket's players are known to the rankings by their own names, so it is not asked for there, and each player's world ranking name is always their name. While you add a player it follows the name as you type it, and stops following once you type in it. Left empty, it is kept as the player's name. As you type, the players the world rankings know whose names begin that way are offered, and beside the world ranking name a tick says the rankings know the name and a question mark says they do not. It is only advice: a name the rankings do not know is kept as readily as one they do.
 
-A player is never called "Bye": a name whose first word is "bye" is refused.
+A player is never called "Bye": a name that is "Bye", or "Bye" with a number, as "Bye 2", "Bye-2" or "Bye (2)", is refused. A name that only begins with the word, as "Bye / Bassett" does, is a person's.
 
 Press **Add**. The player is added, the dialog says so, and its fields are emptied for the next, with the cursor back in the name. Add the whole team this way, then press **Cancel** to close the dialog.
 

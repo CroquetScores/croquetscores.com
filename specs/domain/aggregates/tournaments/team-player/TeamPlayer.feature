@@ -19,11 +19,12 @@ Feature: A player in a team
   answer to the same question.
 
   A player in a team is never named as a bye, as a tournament's player is not
-  (`TournamentPlayer.feature`), and by the same rule: a name whose first word
-  is "bye", in capitals or not, once the whitespace at either end is taken
-  off, is refused with `TeamPlayer.NamedBye`, whether the player is made with
-  it or updated to it, and the word ends where anything but a letter comes,
-  so "Bye 2" and "Bye-1" are byes but "Byers" is a name. A test has no draw
+  (`TournamentPlayer.feature`), and by the same rule: a name that is "bye",
+  in capitals or not, or "bye" numbered, as "Bye 2", "Bye-2" and "Bye (2)",
+  once the whitespace at either end is taken off, is refused with
+  `TeamPlayer.NamedBye`, whether the player is made with it or updated to
+  it. A name that only begins with the word, as "Bye / Bassett" does, is a
+  person's. A test has no draw
   and no byes, but a score against "Bye" reads as a match nobody played, and
   a manager who has learned that a player is never a bye should not find
   that true in one kind of tournament and not the other.
@@ -72,7 +73,7 @@ Feature: A player in a team
 
   Rule: A player in a team is not named as a bye
 
-    Scenario Outline: A name whose first word is "bye" is refused
+    Scenario Outline: A name that is a bye, or a bye numbered, is refused
       When a team player named "<name>" is made
       Then it is refused for breaking "TeamPlayer.NamedBye"
 
@@ -83,23 +84,27 @@ Feature: A player in a team
         | BYE         |
         | Bye 2       |
         | Bye-1       |
-        | Bye Someone |
+        | Bye (2)     |
+        | bye 13      |
 
-    Scenario: A name whose first word is "bye" after spaces is refused
+    Scenario: A name that is a bye after spaces is refused
       When a team player named "  Bye" is made
       Then it is refused for breaking "TeamPlayer.NamedBye"
 
-    Scenario Outline: A name with "bye" in it but not as its first word is kept
+    Scenario Outline: A name with "bye" in it that is not a bye, or a bye numbered, is kept
       When a team player named "<name>" is made
       Then the team player's name is "<name>"
 
       Examples:
-        | name        |
-        | Byers Kim   |
-        | Sam Goodbye |
-        | Sam Bye     |
+        | name          |
+        | Byers Kim     |
+        | Sam Goodbye   |
+        | Sam Bye       |
+        | Bye / Bassett |
+        | Bye Someone   |
+        | Bob Bye       |
 
-    Scenario: A player updated to a name whose first word is "bye" is refused
+    Scenario: A player updated to a name that is a bye is refused
       Given a team player named "Sam Someone"
       When the team player is updated to be called "Bye"
       Then it is refused for breaking "TeamPlayer.NamedBye"

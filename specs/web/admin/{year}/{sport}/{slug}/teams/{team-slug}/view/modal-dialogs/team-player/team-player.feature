@@ -36,8 +36,8 @@ Feature: A player is added to a team, or changed, in a modal dialog
   player dialog explains its refusal in a dialog of its own, since a manager
   who types a bye there is looking for a knockout's byes, which are offered
   where its players are entered. A test has no byes to point the reader to,
-  so there is nothing to explain beyond the refusal: a name whose first word
-  is "bye" is refused beneath the name, with `TeamPlayer.NamedBye`, as any
+  so there is nothing to explain beyond the refusal: a name that is a bye, or
+  a bye numbered, is refused beneath the name, with `TeamPlayer.NamedBye`, as any
   other name that breaks a rule is, and the dialog about byes does not open.
 
   The admin draws the dialog itself, so every scenario here runs scripts, and
@@ -290,7 +290,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
       When "Add" is pressed
       Then the team player dialog is open
 
-  Rule: A name whose first word is "bye" is refused beneath the name
+  Rule: A name that is a bye is refused beneath the name
 
     Scenario Outline: A name as a bye is refused beside the name
       Given the page of the team "Australia" in "Spring Tests" is open
@@ -303,7 +303,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
         | name        |
         | Bye         |
         | Bye 2       |
-        | Bye Someone |
+        | Bye (2)     |
 
     Scenario: A player named as a bye is not added
       Given the page of the team "Australia" in "Spring Tests" is open
@@ -327,12 +327,18 @@ Feature: A player is added to a team, or changed, in a modal dialog
       When "Save" is pressed
       Then the team "Australia" of "Spring Tests" has the player "Sam Someone"
 
-    Scenario: A name with "bye" in it but not as its first word is added
+    Scenario Outline: A name with "bye" in it that is not a bye is added
       Given the page of the team "Australia" in "Spring Tests" is open
       And "Add Player" is pressed
-      And "Byers Kim" is typed as the "Name"
+      And "<name>" is typed as the "Name"
       When "Add" is pressed
-      Then the team "Australia" of "Spring Tests" has the player "Byers Kim"
+      Then the team "Australia" of "Spring Tests" has the player "<name>"
+
+      Examples:
+        | name          |
+        | Byers Kim     |
+        | Bye / Bassett |
+        | Bye Someone   |
 
   Rule: The dialog offers the world ranking players and marks the world ranking name as the player dialog does
 
