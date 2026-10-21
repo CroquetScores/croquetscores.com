@@ -30,10 +30,17 @@ export const italian: Language = {
       "Ti piace {siteName}? Fai una donazione per aiutarci a continuare a svilupparlo.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
+    "footer.termsOfUse": "Condizioni d'uso",
     "beta.banner":
       "Questo è un sito beta. I dati possono essere azzerati in qualsiasi momento.",
     "privacy.contact":
       "Domande su questa pagina, o su ciò che viene conservato su di te: {emailAddress}",
+    "termsOfUse.agree": "Accetto le condizioni d'uso",
+    "termsOfUse.link": "condizioni d'uso",
+    "termsOfUse.report":
+      "Per segnalare ciò che è stato scritto o chiedere di queste condizioni: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Seleziona la casella per accettare le condizioni d'uso.",
     "tryWebsite.banner":
       "Questo è uno spazio sicuro per imparare a usare {siteName}. Tutto ciò che inserisci qui può essere cancellato in qualsiasi momento.",
 
@@ -348,44 +355,6 @@ export const italian: Language = {
     "players.none": "Non è ancora stato aggiunto nessun giocatore.",
     "commentaries.by": "di",
     "commentaries.start": "Inizia una nuova cronaca",
-    "commentaries.disclaimer.heading": "Avvertenza",
-    "commentaries.disclaimer":
-      "Le opinioni espresse in questi commenti sono quelle degli autori e non riflettono necessariamente quelle di Tim Murphy o di {site}.",
-    "commentaries.guidelines.heading": "Linee guida",
-    "commentaries.guidelines.responsible":
-      "Sei responsabile della tua cronaca.",
-    "commentaries.guidelines.purpose":
-      "La cronaca serve a far sapere che cosa sta succedendo al torneo. Non è pensata come uno spazio da «social media» per mandare auguri e simili.",
-    "commentaries.guidelines.hatred":
-      "Non pubblicare materiale che possa incitare alla violenza o all'odio. Non tolleriamo commenti che umiliano gli altri per razza, religione, origine etnica, genere, età, disabilità mentale o fisica o orientamento sessuale.",
-    "commentaries.guidelines.abuse":
-      "Gli insulti gratuiti non saranno tollerati. La regola generale è che i commenti devono parlare dell'argomento e non attaccare la persona, cioè non attaccare qualcuno personalmente ma riguardare la questione in discussione.",
-    "commentaries.guidelines.unlawful":
-      "Qualsiasi commento legalmente discutibile, come possibili violazioni del diritto d'autore o materiale potenzialmente diffamatorio, sarà rimosso.",
-    "commentaries.guidelines.shouting":
-      "Per favore, nei commenti non usare parolacce e non scrivere tutto in maiuscolo.",
-    "commentaries.guidelines.selling":
-      "Non usare la sezione dei commenti per scopi commerciali o per lo spam. I commenti che pubblicizzano, promuovono o sollecitano beni o servizi saranno rimossi.",
-    "commentaries.guidelines.links":
-      "Per favore, limita l'uso di link nei commenti. I commenti che contengono link a materiale inadatto saranno rimossi.",
-    "commentaries.guidelines.impersonating":
-      "Non spacciarti per altre persone nella sezione dei commenti e non pubblicare dati personali – numeri di telefono, indirizzi postali o indirizzi email – che potrebbero mettere qualcuno in pericolo senza volerlo.",
-    "commentaries.reporting.heading": "Segnalare un commento",
-    "commentaries.reporting.before":
-      "Per favore, segnala i commenti che non rispettano queste linee guida a",
-    "commentaries.reporting.after":
-      ". Indica l'indirizzo web e il commento discutibile, ad esempio:",
-    "commentaries.reporting.exampleComment":
-      "«un commento che dovrebbe essere rimosso»",
-    "commentaries.reporting.exampleReason":
-      "Questo commento dovrebbe essere rimosso perché...",
-    "commentaries.reporting.reviewed":
-      "Segnalare un problema non significa rimozione automatica, ma tutte le segnalazioni saranno esaminate.",
-    "commentaries.reporting.reserved":
-      "{site} si riserva il diritto di rimuovere i commenti.",
-    "commentaries.reporting.subject": "Segnalazione di un commento su {site}",
-    "commentaries.reporting.body":
-      "Indica l'indirizzo web, il commento discutibile e perché dovrebbe essere rimosso.",
     "startCommentary.title": "Inizia una nuova cronaca",
     "startCommentary.titleField": "Titolo",
     "startCommentary.submit": "Inizia la cronaca",

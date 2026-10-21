@@ -32,10 +32,16 @@ export const welsh: Language = {
       "Ydych chi'n mwynhau {siteName}? Rhowch rodd i helpu i'w ddatblygu ymhellach.",
     "footer.copyright": "© Hawlfraint {years}, {owner}",
     "footer.privacy": "Preifatrwydd",
+    "footer.termsOfUse": "Telerau defnyddio",
     "beta.banner":
       "Gwefan beta yw hon. Gall data gael ei ailosod ar unrhyw adeg.",
     "privacy.contact":
       "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch chi: {emailAddress}",
+    "termsOfUse.agree": "Rwy'n cytuno i'r telerau defnyddio",
+    "termsOfUse.link": "telerau defnyddio",
+    "termsOfUse.report":
+      "Rhoi gwybod am rywbeth a ysgrifennwyd, neu holi am y telerau hyn: {emailAddress}",
+    "TermsOfUse.NotAgreed": "Ticiwch y blwch i gytuno i'r telerau defnyddio.",
     "tryWebsite.banner":
       "Mae hwn yn lle diogel i ddysgu {siteName}. Gellir dileu popeth a roddwch yma ar unrhyw adeg.",
 
@@ -367,43 +373,6 @@ export const welsh: Language = {
     "players.none": "Nid oes chwaraewr wedi'i ychwanegu eto.",
     "commentaries.by": "gan",
     "commentaries.start": "Dechrau sylwebaeth newydd",
-    "commentaries.disclaimer.heading": "Ymwadiad",
-    "commentaries.disclaimer":
-      "Barn eu hawduron yw'r farn a fynegir yn y sylwebaethau hyn, ac nid ydynt o reidrwydd yn adlewyrchu barn Tim Murphy na {site}.",
-    "commentaries.guidelines.heading": "Canllawiau",
-    "commentaries.guidelines.responsible":
-      "Chi sy'n gyfrifol am eich sylwadau.",
-    "commentaries.guidelines.purpose":
-      "Pwrpas y sylwebaethau yw adrodd beth sy'n digwydd yn y twrnamaint. Nid ydynt wedi'u bwriadu fel \"rhwydwaith cymdeithasol\" i anfon dymuniadau da ac ati.",
-    "commentaries.guidelines.hatred":
-      "Peidiwch â chyhoeddi dim a allai annog trais neu gasineb. Ni fyddwn yn goddef sylwadau sy'n bychanu eraill oherwydd eu hil, eu crefydd, eu cefndir ethnig, eu rhyw, eu hoedran, anabledd meddyliol neu gorfforol, na'u cyfeiriadedd rhywiol.",
-    "commentaries.guidelines.abuse":
-      "Ni fyddwn yn goddef sarhau diangen. Y rheol gyffredinol yw chwarae'r bêl ac nid y chwaraewr, hynny yw, peidio ag ymosod ar neb yn bersonol ond trafod y mater dan sylw.",
-    "commentaries.guidelines.unlawful":
-      "Caiff unrhyw sylw o gyfreithlondeb amheus ei ddileu, megis torri hawlfraint posibl neu ddeunydd a allai fod yn enllibus.",
-    "commentaries.guidelines.shouting":
-      "Peidiwch â rhegi na theipio popeth mewn prif lythrennau yn y sylwadau, os gwelwch yn dda.",
-    "commentaries.guidelines.selling":
-      "Peidiwch â defnyddio'r sylwadau at ddibenion masnachol nac i anfon sbam. Caiff sylwadau sy'n hysbysebu, yn hyrwyddo neu'n cynnig nwyddau neu wasanaethau eu dileu.",
-    "commentaries.guidelines.links":
-      "Cyfyngwch ar y dolenni yn y sylwadau, os gwelwch yn dda. Caiff sylwadau â dolenni i ddeunydd amhriodol eu dileu.",
-    "commentaries.guidelines.impersonating":
-      "Peidiwch â smalio bod yn rhywun arall yn y sylwadau, na chyhoeddi manylion personol – rhifau ffôn, cyfeiriadau post na chyfeiriadau e-bost – a allai roi rhywun mewn perygl yn ddiarwybod.",
-    "commentaries.reporting.heading": "Adrodd am sylwadau",
-    "commentaries.reporting.before":
-      "Adroddwch am unrhyw sylwadau nad ydynt yn cydymffurfio â'r canllawiau hyn i",
-    "commentaries.reporting.after":
-      ". Cyfeiriwch at y cyfeiriad gwe a'r sylw amheus. Er enghraifft:",
-    "commentaries.reporting.exampleComment": '"sylw a ddylai gael ei ddileu"',
-    "commentaries.reporting.exampleReason":
-      "Dylid dileu'r sylw hwn oherwydd...",
-    "commentaries.reporting.reviewed":
-      "Nid yw adrodd am rywbeth yn golygu y caiff ei ddileu'n awtomatig, ond caiff pob adroddiad ei adolygu.",
-    "commentaries.reporting.reserved":
-      "Mae {site} yn cadw'r hawl i ddileu sylwadau.",
-    "commentaries.reporting.subject": "{site} Adroddiad am sylw",
-    "commentaries.reporting.body":
-      "Cyfeiriwch at y cyfeiriad gwe, y sylw amheus a pham y dylid ei ddileu.",
     "startCommentary.title": "Dechrau sylwebaeth newydd",
     "startCommentary.titleField": "Teitl",
     "startCommentary.submit": "Dechrau'r sylwebaeth",

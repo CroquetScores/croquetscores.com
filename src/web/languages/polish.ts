@@ -36,10 +36,17 @@ export const polish: Language = {
       "Podoba ci się {siteName}? Wesprzyj nas darowizną, by pomóc w dalszym rozwoju.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Prywatność",
+    "footer.termsOfUse": "Warunki korzystania",
     "beta.banner":
       "To jest strona w wersji beta. Dane mogą zostać zresetowane w dowolnej chwili.",
     "privacy.contact":
       "Pytania o tę stronę lub o to, co jest o tobie przechowywane: {emailAddress}",
+    "termsOfUse.agree": "Akceptuję warunki korzystania",
+    "termsOfUse.link": "warunki korzystania",
+    "termsOfUse.report":
+      "Zgłoś to, co zostało napisane, lub zapytaj o te warunki: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Zaznacz pole, aby zaakceptować warunki korzystania.",
     "tryWebsite.banner":
       "To bezpieczne miejsce do nauki {siteName}. Wszystko, co tu wpiszesz, może zostać usunięte w dowolnej chwili.",
 
@@ -356,42 +363,6 @@ export const polish: Language = {
     "players.none": "Nie dodano jeszcze żadnych zawodników.",
     "commentaries.by": "autor:",
     "commentaries.start": "Rozpocznij nową relację",
-    "commentaries.disclaimer.heading": "Zastrzeżenie",
-    "commentaries.disclaimer":
-      "Poglądy i opinie wyrażone w tych relacjach należą do ich autorów i niekoniecznie odzwierciedlają poglądy Tima Murphy'ego ani {site}.",
-    "commentaries.guidelines.heading": "Zasady",
-    "commentaries.guidelines.responsible": "Za swoją relację odpowiadasz ty.",
-    "commentaries.guidelines.purpose":
-      "Relacje służą do przekazywania szczegółów tego, co dzieje się na turnieju. Nie są przeznaczone na miejsce w „mediach społecznościowych” do przekazywania życzeń itp.",
-    "commentaries.guidelines.hatred":
-      "Nie publikuj treści, które mogą podżegać do przemocy lub nienawiści. Nie będziemy tolerować komentarzy poniżających innych ze względu na rasę, religię, pochodzenie etniczne, płeć, wiek, niepełnosprawność umysłową lub fizyczną czy orientację seksualną.",
-    "commentaries.guidelines.abuse":
-      "Nie będziemy tolerować bezpodstawnych obelg. Ogólna zasada brzmi: komentarze mają dotyczyć gry, a nie człowieka, czyli nie atakować nikogo osobiście, lecz odnosić się do omawianej sprawy.",
-    "commentaries.guidelines.unlawful":
-      "Komentarze budzące wątpliwości prawne, na przykład możliwe naruszenia praw autorskich lub potencjalnie zniesławiające treści, zostaną usunięte.",
-    "commentaries.guidelines.shouting":
-      "Nie przeklinaj ani nie pisz w relacji samymi wielkimi literami.",
-    "commentaries.guidelines.selling":
-      "Nie wykorzystuj sekcji komentarzy do celów komercyjnych ani do spamu. Komentarze reklamujące, promujące lub oferujące jakiekolwiek towary lub usługi zostaną usunięte.",
-    "commentaries.guidelines.links":
-      "Ogranicz używanie linków w komentarzach. Komentarze zawierające linki do nieodpowiednich treści zostaną usunięte.",
-    "commentaries.guidelines.impersonating":
-      "Nie podszywaj się pod innych w sekcji komentarzy ani nie publikuj danych osobowych – numerów telefonów, adresów pocztowych czy adresów e-mail – które mogłyby nieumyślnie narazić kogoś na niebezpieczeństwo.",
-    "commentaries.reporting.heading": "Zgłaszanie relacji",
-    "commentaries.reporting.before":
-      "Relacje, które nie spełniają tych zasad, zgłaszaj na adres",
-    "commentaries.reporting.after":
-      ". Podaj adres strony i budzącą wątpliwości relację, np.",
-    "commentaries.reporting.exampleComment": "„komentarz, który należy usunąć”",
-    "commentaries.reporting.exampleReason":
-      "Ten komentarz należy usunąć, ponieważ...",
-    "commentaries.reporting.reviewed":
-      "Zgłoszenie nie oznacza automatycznego usunięcia, ale wszystkie zgłoszenia zostaną rozpatrzone.",
-    "commentaries.reporting.reserved":
-      "{site} zastrzega sobie prawo do usuwania relacji.",
-    "commentaries.reporting.subject": "Zgłoszenie relacji w {site}",
-    "commentaries.reporting.body":
-      "Podaj adres strony, budzący wątpliwości komentarz i powód, dla którego należy go usunąć.",
     "startCommentary.title": "Rozpocznij nową relację",
     "startCommentary.titleField": "Tytuł",
     "startCommentary.submit": "Rozpocznij relację",

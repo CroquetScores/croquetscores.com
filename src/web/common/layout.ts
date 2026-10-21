@@ -433,6 +433,7 @@ export const siteFooter = (footer: SiteFooter): string => `
           <p class="site-version">v${String(footer.version)}</p>`
           }
           <p><a href="/privacy">${escape(footer.speaking.say("footer.privacy"))}</a></p>
+          <p><a href="/terms-of-use">${escape(footer.speaking.say("footer.termsOfUse"))}</a></p>
         </div>
         <div class="site-footer-theme">
 ${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(footer.speaking, footer.path)}

@@ -38,10 +38,16 @@ export const egyptian: Language = {
     "footer.plea": "عجبك {siteName}؟ تبرّع علشان نكمّل نطوّره.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "الخصوصية",
+    "footer.termsOfUse": "شروط الاستخدام",
     "beta.banner":
       "ده موقع تجريبي (بيتا). البيانات ممكن تتمسح وتبدأ من الأول في أي وقت.",
     "privacy.contact":
       "لو عندك أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
+    "termsOfUse.agree": "أنا موافق على شروط الاستخدام",
+    "termsOfUse.link": "شروط الاستخدام",
+    "termsOfUse.report":
+      "بلّغ عن اللي اتكتب، أو اسأل عن الشروط دي: {emailAddress}",
+    "TermsOfUse.NotAgreed": "علّم على المربع عشان توافق على شروط الاستخدام.",
     "tryWebsite.banner":
       "ده مكان آمن تتعلّم فيه {siteName}. أي حاجة تكتبها هنا ممكن تتمسح في أي وقت.",
 
@@ -355,40 +361,6 @@ export const egyptian: Language = {
     "players.none": "لسه ما اتضافش أي لاعب.",
     "commentaries.by": "بواسطة",
     "commentaries.start": "ابدأ تعليق جديد",
-    "commentaries.disclaimer.heading": "تنبيه",
-    "commentaries.disclaimer":
-      "الآراء في التعليقات دي بتعبّر عن أصحابها، ومش بالضرورة عن رأي Tim Murphy ولا {site}.",
-    "commentaries.guidelines.heading": "القواعد",
-    "commentaries.guidelines.responsible": "إنت مسؤول عن تعليقاتك.",
-    "commentaries.guidelines.purpose":
-      'التعليقات علشان تحكي اللي بيحصل في البطولة. مش مقصود بيها تكون "سوشيال ميديا" لتبادل التمنّيات وكده.',
-    "commentaries.guidelines.hatred":
-      "ما تنشرش أي حاجة ممكن تحرّض على العنف أو الكراهية. مش هنقبل تعليقات بتهين حد بسبب عرقه أو دينه أو أصله أو نوعه أو سنّه أو إعاقته الذهنية أو الجسدية أو ميوله الجنسية.",
-    "commentaries.guidelines.abuse":
-      "الشتيمة من غير سبب مش مقبولة. القاعدة العامة إن التعليق يلعب الكورة مش اللاعب، يعني ما يهاجمش حد بشخصه، لكن يتكلم في الموضوع نفسه.",
-    "commentaries.guidelines.unlawful":
-      "أي تعليق قانونيته مشكوك فيها، زي احتمال التعدّي على حقوق النشر أو كلام ممكن يكون فيه تشهير، هيتشال.",
-    "commentaries.guidelines.shouting":
-      "من فضلك ما تستخدمش ألفاظ بذيئة في التعليقات.",
-    "commentaries.guidelines.selling":
-      "ما تستخدمش التعليقات للتجارة ولا للسبام. أي تعليق بيعلن أو بيروّج أو بيعرض بضاعة أو خدمات هيتشال.",
-    "commentaries.guidelines.links":
-      "من فضلك قلّل اللينكات في التعليقات. التعليقات اللي فيها لينكات لمحتوى مش مناسب هتتشال.",
-    "commentaries.guidelines.impersonating":
-      "ما تنتحلش شخصية حد في التعليقات، وما تنشرش بيانات شخصية – أرقام تليفونات أو عناوين سكن أو عناوين بريد إلكتروني – ممكن تعرّض حد للخطر من غير قصد.",
-    "commentaries.reporting.heading": "الإبلاغ عن التعليقات",
-    "commentaries.reporting.before":
-      "من فضلك بلّغ عن أي تعليق مش ماشي مع القواعد دي على",
-    "commentaries.reporting.after":
-      ". اكتب عنوان الصفحة والتعليق المشكوك فيه. مثلاً:",
-    "commentaries.reporting.exampleComment": '"تعليق المفروض يتشال"',
-    "commentaries.reporting.exampleReason": "التعليق ده المفروض يتشال علشان...",
-    "commentaries.reporting.reviewed":
-      "الإبلاغ مش معناه إن التعليق هيتشال تلقائي، لكن كل البلاغات هتتراجع.",
-    "commentaries.reporting.reserved": "{site} له حق إزالة التعليقات.",
-    "commentaries.reporting.subject": "{site} بلاغ عن تعليق",
-    "commentaries.reporting.body":
-      "من فضلك اكتب عنوان الصفحة والتعليق المشكوك فيه وليه المفروض يتشال.",
     "startCommentary.title": "ابدأ تعليق جديد",
     "startCommentary.titleField": "العنوان",
     "startCommentary.submit": "ابدأ التعليق",

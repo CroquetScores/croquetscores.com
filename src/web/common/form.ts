@@ -88,16 +88,20 @@ export const refusedForm = (
         ? undefined
         : { messages: above, autofocus: first === undefined },
     // What was typed is put back, except into a password field, which has
-    // nowhere to hold it: a password is never sent back to the reader.
+    // nowhere to hold it: a password is never sent back to the reader. A box
+    // is ticked again where it was ticked, which a browser says by sending it
+    // at all.
     fields: dialog.fields.map((field): Field => {
       const said = {
         messages: beneath.get(field.name),
         invalid: beneath.has(field.name),
         autofocus: field === first,
       };
-      return field.type === "password"
-        ? { ...field, ...said }
-        : { ...field, ...said, value: typed[field.name] };
+      if (field.type === "password") return { ...field, ...said };
+      if (field.type === "checkbox") {
+        return { ...field, ...said, checked: typed[field.name] !== undefined };
+      }
+      return { ...field, ...said, value: typed[field.name] };
     }),
   };
 };

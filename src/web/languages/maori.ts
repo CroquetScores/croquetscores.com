@@ -35,10 +35,17 @@ export const maori: Language = {
       "E pai ana koe ki a {siteName}? Hoatu he koha hei āwhina i te whakawhanake tonu i a ia.",
     "footer.copyright": "© Manatā tuhi {years}, {owner}",
     "footer.privacy": "Matatapu",
+    "footer.termsOfUse": "Ngā tikanga whakamahi",
     "beta.banner":
       "He pae whakamātau (beta) tēnei. Ka taea te tautuhi anō ngā raraunga i ngā wā katoa.",
     "privacy.contact":
       "He pātai mō tēnei whārangi, mō ngā mea e puritia ana mōu rānei: {emailAddress}",
+    "termsOfUse.agree": "E whakaae ana ahau ki ngā tikanga whakamahi",
+    "termsOfUse.link": "ngā tikanga whakamahi",
+    "termsOfUse.report":
+      "Pūrongotia ngā mea i tuhia, pātai rānei mō ēnei tikanga: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Tīkina te pouaka hei whakaae ki ngā tikanga whakamahi.",
     "tryWebsite.banner":
       "He wāhi haumaru tēnei hei ako i a {siteName}. Ka taea te muku i ngā mea katoa e whakauru ai koe ki konei i ngā wā katoa.",
 
@@ -364,42 +371,6 @@ export const maori: Language = {
     "players.none": "Kāore anō kia tāpiritia he kaitākaro.",
     "commentaries.by": "nā",
     "commentaries.start": "Tīmata i tētahi kōrero hou",
-    "commentaries.disclaimer.heading": "Whakatūpato",
-    "commentaries.disclaimer":
-      "Ko ngā whakaaro e whakapuakina ana i ēnei kōrero nā ō rātou kaituhi, ā, kāore pea e rite ana ki ērā a Tim Murphy, a {site} rānei.",
-    "commentaries.guidelines.heading": "Ngā aratohu",
-    "commentaries.guidelines.responsible": "Nāu anō te kawenga mō āu kōrero.",
-    "commentaries.guidelines.purpose":
-      'Hei kōrero i ngā mahi o te whakataetae ēnei kōrero. Ehara i te "pae pāpāho pāpori" hei tuku i ngā mihi, i ērā atu pēnei.',
-    "commentaries.guidelines.hatred":
-      "Kaua e tāngia he mea hei whakaoho i te tūkino, i te kino rānei ki tētahi atu. Kāore e whakaaetia ngā kōrero e whakaiti ana i ētahi atu mō tō rātou iwi, whakapono, taketake, ira tangata, pakeke, hauātanga hinengaro, tinana rānei, whakaaro ira tangata rānei.",
-    "commentaries.guidelines.abuse":
-      "Kāore e whakaaetia te tuku kupu taunu noa. Ko te ture whānui, me tākaro te poro, kaua te kaitākaro: arā, kaua e whakaeke ki tētahi tangata, engari me kōrero mō te take.",
-    "commentaries.guidelines.unlawful":
-      "Ka tangohia ngā kōrero e pīrangi ana te ture, pēnei i ngā takahi manatārua, i ngā mea e whakakino ana pea i te ingoa o tētahi.",
-    "commentaries.guidelines.shouting":
-      "Tēnā, kaua e whakamahi kupu kino, kaua hoki e tuhi i ngā kōrero katoa ki ngā pūmatua.",
-    "commentaries.guidelines.selling":
-      "Kaua e whakamahi i ngā kōrero hei hokohoko, hei spam rānei. Ka tangohia ngā kōrero e pānui ana, e whakatairanga ana, e tuku ana rānei i ngā taonga, i ngā ratonga rānei.",
-    "commentaries.guidelines.links":
-      "Tēnā, whakaititia ngā hononga i ngā kōrero. Ka tangohia ngā kōrero he hononga ki ngā mea kāore e tika.",
-    "commentaries.guidelines.impersonating":
-      "Kaua e whakaahua i ētahi atu i ngā kōrero, kaua hoki e tāngia he raraunga whaiaro – ngā nama waea, ngā wāhitau poutāpeta, ngā wāhitau īmēra rānei – tērā pea ka whakawehi i tētahi i te kore e mōhio.",
-    "commentaries.reporting.heading": "Te pūrongo i ngā kōrero",
-    "commentaries.reporting.before":
-      "Tēnā, pūrongotia ngā kōrero kāore e rite ana ki ēnei aratohu ki",
-    "commentaries.reporting.after":
-      ". Whakahuatia te wāhitau paetukutuku me te kōrero e ātaahuatia ana. Hei tauira:",
-    "commentaries.reporting.exampleComment": '"he kōrero me tango"',
-    "commentaries.reporting.exampleReason":
-      "Me tango tēnei kōrero nā te mea...",
-    "commentaries.reporting.reviewed":
-      "Ehara i te mea ka tangohia aunoatia te kōrero ina pūrongotia, engari ka arohia ngā pūrongo katoa.",
-    "commentaries.reporting.reserved":
-      "Kei a {site} te mana ki te tango kōrero.",
-    "commentaries.reporting.subject": "{site} Pūrongo kōrero",
-    "commentaries.reporting.body":
-      "Tēnā, whakahuatia te wāhitau paetukutuku, te kōrero e ātaahuatia ana, me te take me tango.",
     "startCommentary.title": "Tīmata i tētahi kōrero hou",
     "startCommentary.titleField": "Taitara",
     "startCommentary.submit": "Tīmata i te kōrero",

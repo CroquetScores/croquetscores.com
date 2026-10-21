@@ -32,10 +32,17 @@ export const portuguese: Language = {
       "Está gostando do {siteName}? Faça uma doação para ajudar a continuar o desenvolvimento.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacidade",
+    "footer.termsOfUse": "Termos de uso",
     "beta.banner":
       "Este é um site beta. Os dados podem ser redefinidos a qualquer momento.",
     "privacy.contact":
       "Dúvidas sobre esta página, ou sobre o que é guardado sobre você: {emailAddress}",
+    "termsOfUse.agree": "Concordo com os termos de uso",
+    "termsOfUse.link": "termos de uso",
+    "termsOfUse.report":
+      "Para denunciar o que foi escrito ou perguntar sobre estes termos: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Marque a caixa para concordar com os termos de uso.",
     "tryWebsite.banner":
       "Este é um lugar seguro para aprender a usar o {siteName}. Tudo o que for inserido aqui pode ser removido a qualquer momento.",
 
@@ -349,44 +356,6 @@ export const portuguese: Language = {
     "players.none": "Nenhum jogador foi adicionado ainda.",
     "commentaries.by": "por",
     "commentaries.start": "Iniciar novo comentário",
-    "commentaries.disclaimer.heading": "Aviso legal",
-    "commentaries.disclaimer":
-      "As opiniões expressas nestes comentários são as dos seus autores e não refletem necessariamente as de Tim Murphy ou do {site}.",
-    "commentaries.guidelines.heading": "Diretrizes",
-    "commentaries.guidelines.responsible":
-      "Você é responsável pelo seu comentário.",
-    "commentaries.guidelines.purpose":
-      'O recurso de comentários serve para transmitir o que está acontecendo no torneio. Não foi pensado como um espaço de "rede social" para transmitir votos de boa sorte e coisas do tipo.',
-    "commentaries.guidelines.hatred":
-      "Não publique material que possa incitar violência ou ódio. Não toleraremos comentários que humilhem outras pessoas por raça, religião, etnia, gênero, idade, deficiência mental ou física, ou orientação sexual.",
-    "commentaries.guidelines.abuse":
-      "Ofensas gratuitas não serão toleradas. A regra geral aqui é que os comentários devem jogar a bola, não o jogador, isto é, não atacar alguém pessoalmente, mas tratar do assunto em questão.",
-    "commentaries.guidelines.unlawful":
-      "Comentários juridicamente questionáveis, como possíveis violações de direitos autorais ou material potencialmente difamatório, serão removidos.",
-    "commentaries.guidelines.shouting":
-      "Não xingue nem escreva tudo em maiúsculas nos comentários.",
-    "commentaries.guidelines.selling":
-      "Não use a seção de comentários para fins comerciais ou spam. Comentários que anunciem, promovam ou solicitem quaisquer bens ou serviços serão removidos.",
-    "commentaries.guidelines.links":
-      "Limite o uso de links nos comentários. Comentários com links para material inadequado serão removidos.",
-    "commentaries.guidelines.impersonating":
-      "Não se passe por outras pessoas na seção de comentários, nem publique dados pessoais – números de telefone, endereços postais ou de email – que possam colocar alguém em perigo sem querer.",
-    "commentaries.reporting.heading": "Denunciar um comentário",
-    "commentaries.reporting.before":
-      "Denuncie os comentários que não cumpram estas diretrizes para",
-    "commentaries.reporting.after":
-      ". Cite o endereço da página e o comentário questionável. Por exemplo:",
-    "commentaries.reporting.exampleComment":
-      '"um comentário que deveria ser removido"',
-    "commentaries.reporting.exampleReason":
-      "Este comentário deveria ser removido porque...",
-    "commentaries.reporting.reviewed":
-      "Denunciar um problema não significa remoção automática, mas todas as denúncias serão analisadas.",
-    "commentaries.reporting.reserved":
-      "O {site} se reserva o direito de remover comentários.",
-    "commentaries.reporting.subject": "Denúncia de comentário no {site}",
-    "commentaries.reporting.body":
-      "Cite o endereço da página, o comentário questionável e por que ele deveria ser removido.",
     "startCommentary.title": "Iniciar novo comentário",
     "startCommentary.titleField": "Título",
     "startCommentary.submit": "Iniciar comentário",

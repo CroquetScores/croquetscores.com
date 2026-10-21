@@ -28,10 +28,17 @@ export const spanish: Language = {
       "¿Te está gustando {siteName}? Haz un donativo para ayudar a seguir desarrollándolo.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacidad",
+    "footer.termsOfUse": "Condiciones de uso",
     "beta.banner":
       "Este es un sitio beta. Los datos pueden restablecerse en cualquier momento.",
     "privacy.contact":
       "Preguntas sobre esta página, o sobre lo que se guarda de ti: {emailAddress}",
+    "termsOfUse.agree": "Acepto las condiciones de uso",
+    "termsOfUse.link": "condiciones de uso",
+    "termsOfUse.report":
+      "Para denunciar lo escrito o preguntar por estas condiciones: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Marca la casilla para aceptar las condiciones de uso.",
     "tryWebsite.banner":
       "Este es un lugar seguro para aprender {siteName}. Todo lo que introduzcas aquí puede borrarse en cualquier momento.",
 
@@ -359,44 +366,6 @@ export const spanish: Language = {
     "players.none": "Aún no se ha añadido ningún jugador.",
     "commentaries.by": "por",
     "commentaries.start": "Empezar un comentario nuevo",
-    "commentaries.disclaimer.heading": "Aviso",
-    "commentaries.disclaimer":
-      "Las opiniones expresadas en estos comentarios son de sus autores y no reflejan necesariamente las de Tim Murphy ni las de {site}.",
-    "commentaries.guidelines.heading": "Normas",
-    "commentaries.guidelines.responsible":
-      "Eres responsable de tus comentarios.",
-    "commentaries.guidelines.purpose":
-      'Los comentarios sirven para contar lo que está pasando en el torneo. No están pensados como una "red social" para mandar buenos deseos, etc.',
-    "commentaries.guidelines.hatred":
-      "No publiques nada que pueda incitar a la violencia o al odio. No toleraremos comentarios que humillen a otros por su raza, religión, origen étnico, género, edad, discapacidad mental o física, u orientación sexual.",
-    "commentaries.guidelines.abuse":
-      "No se tolerarán los insultos gratuitos. La norma general es que los comentarios jueguen la bola y no al jugador, es decir, que no ataquen a nadie personalmente sino que traten del asunto en cuestión.",
-    "commentaries.guidelines.unlawful":
-      "Se retirará cualquier comentario de legalidad dudosa, como posibles infracciones de derechos de autor o material que pueda ser difamatorio.",
-    "commentaries.guidelines.shouting":
-      "Por favor, no digas palabrotas ni escribas todo en mayúsculas en los comentarios.",
-    "commentaries.guidelines.selling":
-      "No uses los comentarios con fines comerciales ni para spam. Se retirarán los comentarios que anuncien, promocionen u ofrezcan bienes o servicios.",
-    "commentaries.guidelines.links":
-      "Por favor, limita los enlaces en los comentarios. Se retirarán los comentarios con enlaces a material inapropiado.",
-    "commentaries.guidelines.impersonating":
-      "No te hagas pasar por otros en los comentarios, ni publiques datos personales – números de teléfono, direcciones postales o de correo electrónico – que puedan poner a alguien en peligro sin querer.",
-    "commentaries.reporting.heading": "Denunciar comentarios",
-    "commentaries.reporting.before":
-      "Por favor, denuncia los comentarios que no cumplan estas normas a",
-    "commentaries.reporting.after":
-      ". Cita la dirección web y el comentario dudoso. Por ejemplo:",
-    "commentaries.reporting.exampleComment":
-      '"un comentario que debería retirarse"',
-    "commentaries.reporting.exampleReason":
-      "Este comentario debería retirarse porque...",
-    "commentaries.reporting.reviewed":
-      "Denunciar algo no significa que se retire automáticamente, pero se revisarán todas las denuncias.",
-    "commentaries.reporting.reserved":
-      "{site} se reserva el derecho a retirar comentarios.",
-    "commentaries.reporting.subject": "{site} Denuncia de comentario",
-    "commentaries.reporting.body":
-      "Por favor, cita la dirección web, el comentario dudoso y por qué debería retirarse.",
     "startCommentary.title": "Empezar un comentario nuevo",
     "startCommentary.titleField": "Título",
     "startCommentary.submit": "Empezar el comentario",

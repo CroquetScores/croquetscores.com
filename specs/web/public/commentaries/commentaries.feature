@@ -111,7 +111,7 @@ Feature: A tournament's commentaries page is the old site's
 
     Scenario Outline: The page has none of the old site's terms
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the content does not have the heading "<heading>"
+      Then the content has no heading "<heading>"
 
       Examples:
         | heading              |

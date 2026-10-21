@@ -35,9 +35,14 @@ export const chinese: Language = {
     "footer.plea": "喜欢 {siteName} 吗？请捐赠，帮助我们继续开发。",
     "footer.copyright": "© 版权所有 {years}，{owner}",
     "footer.privacy": "隐私",
+    "footer.termsOfUse": "使用条款",
     "beta.banner": "这是测试版网站，数据可能随时被重置。",
     "privacy.contact":
       "关于本页，或关于我们保存的您的信息，如有疑问请联系：{emailAddress}",
+    "termsOfUse.agree": "我同意使用条款",
+    "termsOfUse.link": "使用条款",
+    "termsOfUse.report": "举报所写内容，或询问这些条款：{emailAddress}",
+    "TermsOfUse.NotAgreed": "请勾选此框以同意使用条款。",
     "tryWebsite.banner":
       "这里是学习 {siteName} 的安全场所。在这里输入的任何内容都可能随时被删除。",
 
@@ -336,38 +341,6 @@ export const chinese: Language = {
     "players.none": "还没有添加任何选手。",
     "commentaries.by": "作者：",
     "commentaries.start": "发起新评论",
-    "commentaries.disclaimer.heading": "免责声明",
-    "commentaries.disclaimer":
-      "这些评论中表达的观点和意见仅代表作者本人，不一定代表 Tim Murphy 或 {site} 的观点。",
-    "commentaries.guidelines.heading": "准则",
-    "commentaries.guidelines.responsible": "你要对自己的评论负责。",
-    "commentaries.guidelines.purpose":
-      "评论功能是用来传达锦标赛现场情况的，并非用来传达问候等内容的“社交媒体”场所。",
-    "commentaries.guidelines.hatred":
-      "请勿发布可能煽动暴力或仇恨的内容。我们不容忍基于种族、宗教、族裔、性别、年龄、精神或身体残疾或性取向而羞辱他人的评论。",
-    "commentaries.guidelines.abuse":
-      "无端的辱骂不会被容忍。这里的一般原则是评论应对事不对人，即不要对某人进行人身攻击，而是围绕手头的话题。",
-    "commentaries.guidelines.unlawful":
-      "任何在法律上存疑的评论，例如可能侵犯版权或可能构成诽谤的内容，都将被删除。",
-    "commentaries.guidelines.shouting":
-      "请勿在评论中说脏话，也不要全部使用大写字母。",
-    "commentaries.guidelines.selling":
-      "请勿将评论区用于商业目的或发送垃圾信息。宣传、推广或招揽任何商品或服务的评论将被删除。",
-    "commentaries.guidelines.links":
-      "请尽量少在评论中使用链接。含有不当内容链接的评论将被删除。",
-    "commentaries.guidelines.impersonating":
-      "请勿在评论区冒充他人，也不要发布可能无意中使他人陷入危险的个人信息，例如电话号码、邮寄地址或电子邮件地址。",
-    "commentaries.reporting.heading": "举报评论",
-    "commentaries.reporting.before": "如果评论不符合这些准则，请举报至",
-    "commentaries.reporting.after": "。请写明网址和有问题的评论。例如：",
-    "commentaries.reporting.exampleComment": "“应该删除的评论”",
-    "commentaries.reporting.exampleReason": "应该删除这条评论，因为……",
-    "commentaries.reporting.reviewed":
-      "举报问题并不意味着会自动删除，但所有举报都会被审核。",
-    "commentaries.reporting.reserved": "{site} 保留删除评论的权利。",
-    "commentaries.reporting.subject": "{site} 评论举报",
-    "commentaries.reporting.body":
-      "请写明网址、有问题的评论以及为什么应该删除。",
     "startCommentary.title": "发起新评论",
     "startCommentary.titleField": "标题",
     "startCommentary.submit": "发起评论",

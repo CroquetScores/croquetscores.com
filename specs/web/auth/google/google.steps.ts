@@ -161,12 +161,22 @@ Given(
   },
 );
 
+// Pressed as a reader who means to register presses it, having agreed to the
+// terms of use first (google.feature).
 const registerWithGoogle = async function (this: SpecWorld): Promise<void> {
+  await this.browserPage.check('section.dialog input[name="termsOfUse"]');
   await pressTheOffer(this, offer);
 };
 
 When("the reader registers with Google", registerWithGoogle);
 Given("the reader has registered with Google", registerWithGoogle);
+
+When(
+  "the reader registers with Google without agreeing to the terms of use",
+  async function (this: SpecWorld) {
+    await pressTheOffer(this, offer);
+  },
+);
 
 When(
   "the reader follows the same way back from Google again",
@@ -193,12 +203,14 @@ When(
 // Where the site sent the reader to ask Google, kept to be read: the address it
 // told Google to send them back to is in it. Followed no further than the site's
 // own answer, because the address it names is not one the scenarios' browser
-// can reach.
+// can reach. Followed as the register page sends a reader along it once they
+// have ticked the box agreeing to the terms of use, since one who has not is
+// sent back rather than to Google.
 const sentTo = new WeakMap<SpecWorld, URL>();
 
 When("the way to Google is followed", async function (this: SpecWorld) {
   const answer = await this.browserPage.request.get(
-    `${this.baseUrl!}/auth/google`,
+    `${this.baseUrl!}/auth/google?termsOfUse=on`,
     { headers: addressingOf(this), maxRedirects: 0, failOnStatusCode: false },
   );
   const location = answer.headers()["location"];

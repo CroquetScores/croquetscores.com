@@ -47,8 +47,18 @@ const fillIn = async (world: SpecWorld, address: string): Promise<void> => {
   );
 };
 
+// Filled in as a reader who means to register fills it in, which is agreeing
+// to the terms of use as well as giving an address (register.feature).
 Given(
   "the register form is filled in for {string}",
+  async function (this: SpecWorld, address: string) {
+    await fillIn(this, address);
+    await this.browserPage.check(`${dialog} input[name="termsOfUse"]`);
+  },
+);
+
+Given(
+  "the register form is filled in for {string} without agreeing to the terms of use",
   async function (this: SpecWorld, address: string) {
     await fillIn(this, address);
   },
@@ -68,6 +78,7 @@ When(
     const form: Record<string, string> = {
       emailAddress: address,
       [tokenField]: aToken,
+      termsOfUse: "on",
     };
     for (let sent = 0; sent < 2; sent++) {
       const answer: APIResponse = await this.browserPage.request.post(

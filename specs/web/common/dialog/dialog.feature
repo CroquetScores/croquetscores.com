@@ -346,6 +346,25 @@ Feature: Forms are shown in a dialog
         | light |
         | dark  |
 
+  Rule: A box to tick has its words beside it, and pressing them ticks it
+
+    A box to tick is drawn as boxes are everywhere, before its words, with
+    nothing around them that looks like somewhere to type. Its words are its
+    label, so that a reader who aims at the words rather than at the small box
+    still ticks it. The register page's box to agree to the terms of use is the
+    one these scenarios look at.
+
+    Scenario: The words are to the right of the box
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the terms of use box has its words to its right
+
+    Scenario: Pressing the words ticks the box
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      When the words beside the terms of use box are pressed
+      Then the terms of use box is ticked
+
   Rule: A field the browser fills in looks like any other field that has been filled in
 
     A browser that has an email address and a password saved for the site

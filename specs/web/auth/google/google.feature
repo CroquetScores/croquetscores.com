@@ -24,6 +24,13 @@ Feature: Registering with Google
   address is. A reader who comes back from Google has been through Google's
   own sign-in, and that is more than reCAPTCHA would have asked of them.
 
+  Registering with Google is agreeing to the terms of use for those who
+  write, as registering by email address is (`register.feature`), so the box
+  that agrees to them must be ticked before the offer is pressed. A reader
+  who presses it without is brought back to the register page before Google
+  is asked anything, with the box said to need ticking. Where a scenario
+  registers with Google and says nothing of the box, it is ticked.
+
   Google is not asked by these scenarios. A stand-in plays its part, saying
   whatever each scenario has it say, and signs what it says with a key of the
   scenarios' own for the site to check as it would Google's.
@@ -157,6 +164,38 @@ Feature: Registering with Google
       And the register page is open with scripting on
       When the reader registers with Google
       Then the admin is shown
+
+  Rule: Registering with Google needs the terms of use agreed to first
+
+    Scenario: A reader who has not agreed is brought back to the register page
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And the register page is open with scripting on
+      When the reader registers with Google without agreeing to the terms of use
+      Then the register page is shown
+
+    Scenario: A reader who has not agreed is told to tick the box
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And the register page is open with scripting on
+      When the reader registers with Google without agreeing to the terms of use
+      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+
+    Scenario: A reader who has not agreed is given no account
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And the register page is open with scripting on
+      When the reader registers with Google without agreeing to the terms of use
+      Then "someone@example.com" has no account
 
   Rule: A way back from Google is taken only from a reader this site sent there
 

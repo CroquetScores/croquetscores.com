@@ -33,10 +33,17 @@ export const afrikaans: Language = {
       "Hou jy van {siteName}? Maak 'n skenking om te help dat dit verder ontwikkel word.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privaatheid",
+    "footer.termsOfUse": "Gebruiksvoorwaardes",
     "beta.banner":
       "Dit is 'n beta-webwerf. Data kan enige tyd teruggestel word.",
     "privacy.contact":
       "Vrae oor hierdie bladsy, of oor wat oor jou bewaar word: {emailAddress}",
+    "termsOfUse.agree": "Ek stem in tot die gebruiksvoorwaardes",
+    "termsOfUse.link": "gebruiksvoorwaardes",
+    "termsOfUse.report":
+      "Rapporteer wat geskryf is, of vra oor hierdie voorwaardes: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Merk die blokkie om tot die gebruiksvoorwaardes in te stem.",
     "tryWebsite.banner":
       "Dit is 'n veilige plek om {siteName} te leer ken. Alles wat jy hier invoer, kan enige tyd uitgevee word.",
 
@@ -364,44 +371,6 @@ export const afrikaans: Language = {
     "players.none": "Nog geen speler is bygevoeg nie.",
     "commentaries.by": "deur",
     "commentaries.start": "Begin 'n nuwe kommentaar",
-    "commentaries.disclaimer.heading": "Vrywaring",
-    "commentaries.disclaimer":
-      "Die menings wat in hierdie kommentaar uitgespreek word, is dié van hul skrywers en weerspieël nie noodwendig dié van Tim Murphy of {site} nie.",
-    "commentaries.guidelines.heading": "Riglyne",
-    "commentaries.guidelines.responsible":
-      "Jy is verantwoordelik vir jou kommentaar.",
-    "commentaries.guidelines.purpose":
-      'Kommentaar is bedoel om te vertel wat in die toernooi aan die gang is. Dit is nie bedoel as \'n "sosiale netwerk" om goeie wense en so meer te stuur nie.',
-    "commentaries.guidelines.hatred":
-      "Moenie iets plaas wat tot geweld of haat kan aanhits nie. Ons sal nie kommentaar duld wat ander verneder op grond van hul ras, godsdiens, etniese herkoms, geslag, ouderdom, verstandelike of liggaamlike gestremdheid, of seksuele oriëntasie nie.",
-    "commentaries.guidelines.abuse":
-      "Growwe beledigings sal nie geduld word nie. Die algemene reël is dat kommentaar die bal speel en nie die man nie, dit wil sê, dit moet nie iemand persoonlik aanval nie maar oor die saak self gaan.",
-    "commentaries.guidelines.unlawful":
-      "Enige kommentaar wat moontlik onwettig is, soos moontlike skendings van outeursreg of materiaal wat lasterlik kan wees, sal verwyder word.",
-    "commentaries.guidelines.shouting":
-      "Moet asseblief nie vloek of alles in hoofletters skryf in kommentaar nie.",
-    "commentaries.guidelines.selling":
-      "Moenie kommentaar vir handelsdoeleindes of spam gebruik nie. Kommentaar wat goedere of dienste adverteer, bevorder of aanbied, sal verwyder word.",
-    "commentaries.guidelines.links":
-      "Beperk asseblief skakels in kommentaar. Kommentaar met skakels na onvanpaste materiaal sal verwyder word.",
-    "commentaries.guidelines.impersonating":
-      "Moenie jou in kommentaar as iemand anders voordoen nie, en moenie persoonlike besonderhede plaas nie – telefoonnommers, posadresse of e-posadresse – wat iemand per ongeluk in gevaar kan stel.",
-    "commentaries.reporting.heading": "Rapporteer kommentaar",
-    "commentaries.reporting.before":
-      "Rapporteer asseblief kommentaar wat nie aan hierdie riglyne voldoen nie aan",
-    "commentaries.reporting.after":
-      ". Noem die webadres en die betwiste kommentaar. Byvoorbeeld:",
-    "commentaries.reporting.exampleComment":
-      '"\'n kommentaar wat verwyder behoort te word"',
-    "commentaries.reporting.exampleReason":
-      "Hierdie kommentaar behoort verwyder te word omdat...",
-    "commentaries.reporting.reviewed":
-      "Om iets te rapporteer beteken nie dit word outomaties verwyder nie, maar elke verslag sal nagegaan word.",
-    "commentaries.reporting.reserved":
-      "{site} behou die reg voor om kommentaar te verwyder.",
-    "commentaries.reporting.subject": "{site} Kommentaarverslag",
-    "commentaries.reporting.body":
-      "Noem asseblief die webadres, die betwiste kommentaar en hoekom dit verwyder behoort te word.",
     "startCommentary.title": "Begin 'n nuwe kommentaar",
     "startCommentary.titleField": "Titel",
     "startCommentary.submit": "Begin die kommentaar",

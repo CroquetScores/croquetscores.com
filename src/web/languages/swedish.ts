@@ -32,10 +32,17 @@ export const swedish: Language = {
       "Gillar du {siteName}? Donera gärna för att hjälpa till med den fortsatta utvecklingen.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Integritet",
+    "footer.termsOfUse": "Användarvillkor",
     "beta.banner":
       "Det här är en betawebbplats. Data kan återställas när som helst.",
     "privacy.contact":
       "Frågor om den här sidan, eller om vad som sparas om dig: {emailAddress}",
+    "termsOfUse.agree": "Jag godkänner användarvillkoren",
+    "termsOfUse.link": "användarvillkoren",
+    "termsOfUse.report":
+      "Anmäl det som skrivits, eller fråga om villkoren: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Kryssa i rutan för att godkänna användarvillkoren.",
     "tryWebsite.banner":
       "Det här är en trygg plats att lära sig {siteName} på. Allt som skrivs in här kan tas bort när som helst.",
 
@@ -352,43 +359,6 @@ export const swedish: Language = {
     "players.none": "Inga spelare har lagts till ännu.",
     "commentaries.by": "av",
     "commentaries.start": "Starta en ny livekommentar",
-    "commentaries.disclaimer.heading": "Ansvarsfriskrivning",
-    "commentaries.disclaimer":
-      "De åsikter och synpunkter som uttrycks i dessa livekommentarer är skribenternas egna och speglar inte nödvändigtvis åsikterna hos Tim Murphy eller {site}.",
-    "commentaries.guidelines.heading": "Riktlinjer",
-    "commentaries.guidelines.responsible": "Du ansvarar för din livekommentar.",
-    "commentaries.guidelines.purpose":
-      'Livekommentarerna är till för att förmedla vad som händer på turneringen. De är inte tänkta som en plats för "sociala medier" där man skickar hälsningar och liknande.',
-    "commentaries.guidelines.hatred":
-      "Lägg inte upp material som kan uppmana till våld eller hat. Vi accepterar inga kommentarer som förnedrar andra på grund av ras, religion, etnicitet, kön, ålder, psykisk eller fysisk funktionsnedsättning eller sexuell läggning.",
-    "commentaries.guidelines.abuse":
-      "Onödiga påhopp accepteras inte. Den allmänna regeln här är att kommentarer ska handla om sakfrågan och inte angripa någon personligen.",
-    "commentaries.guidelines.unlawful":
-      "Kommentarer som är juridiskt tveksamma, till exempel möjliga intrång i upphovsrätt eller material som kan vara ärekränkande, tas bort.",
-    "commentaries.guidelines.shouting":
-      "Svär inte och skriv inte med enbart versaler i livekommentarer.",
-    "commentaries.guidelines.selling":
-      "Använd inte kommentarsfältet för kommersiella syften eller skräppost. Kommentarer som marknadsför, främjar eller efterfrågar varor eller tjänster tas bort.",
-    "commentaries.guidelines.links":
-      "Begränsa gärna användningen av länkar i kommentarer. Kommentarer med länkar till olämpligt material tas bort.",
-    "commentaries.guidelines.impersonating":
-      "Utge dig inte för att vara någon annan i kommentarsfältet, och lägg inte upp personuppgifter – telefonnummer, postadresser eller e-postadresser – som av misstag kan försätta någon i fara.",
-    "commentaries.reporting.heading": "Anmäla en livekommentar",
-    "commentaries.reporting.before":
-      "Anmäl livekommentarer som inte följer dessa riktlinjer till",
-    "commentaries.reporting.after":
-      ". Ange webbadressen och den tveksamma kommentaren, t.ex.",
-    "commentaries.reporting.exampleComment":
-      '"en kommentar som borde tas bort"',
-    "commentaries.reporting.exampleReason":
-      "Den här kommentaren borde tas bort eftersom...",
-    "commentaries.reporting.reviewed":
-      "En anmälan innebär inte att kommentaren tas bort automatiskt, men alla anmälningar granskas.",
-    "commentaries.reporting.reserved":
-      "{site} förbehåller sig rätten att ta bort livekommentarer.",
-    "commentaries.reporting.subject": "Anmälan av livekommentar på {site}",
-    "commentaries.reporting.body":
-      "Ange webbadressen, den tveksamma kommentaren och varför den bör tas bort.",
     "startCommentary.title": "Starta en ny livekommentar",
     "startCommentary.titleField": "Rubrik",
     "startCommentary.submit": "Starta livekommentar",

@@ -38,7 +38,7 @@ Feature: A reader can see the terms the site is used on
   privacy statement.
 
   Scenarios here read pages and nothing more, so none need a browser or a
-  database.
+  database. A page is read as a reader who is not signed in reads it.
 
   Rule: The terms for readers are a page of their own
 
@@ -67,10 +67,9 @@ Feature: A reader can see the terms the site is used on
       When the terms of use for those who write are opened
       Then the page is the terms of use for those who write
 
-    Scenario: A reader not signed in is shown the terms for those who write
-      Given nobody is signed in
+    Scenario: A reader not signed in is not sent to sign in first
       When the terms of use for those who write are opened
-      Then the page is the terms of use for those who write
+      Then the page opens
 
     Scenario: The terms for those who write are not also in the help
       When the help page "admin/terms-of-use" is looked at

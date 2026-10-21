@@ -30,10 +30,17 @@ export const german: Language = {
       "Gefällt dir {siteName}? Bitte spende, damit es weiterentwickelt werden kann.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Datenschutz",
+    "footer.termsOfUse": "Nutzungsbedingungen",
     "beta.banner":
       "Dies ist eine Beta-Website. Daten können jederzeit zurückgesetzt werden.",
     "privacy.contact":
       "Fragen zu dieser Seite oder dazu, was über dich gespeichert ist: {emailAddress}",
+    "termsOfUse.agree": "Ich stimme den Nutzungsbedingungen zu",
+    "termsOfUse.link": "Nutzungsbedingungen",
+    "termsOfUse.report":
+      "Geschriebenes melden oder Fragen zu diesen Bedingungen: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Kreuzen Sie das Kästchen an, um den Nutzungsbedingungen zuzustimmen.",
     "tryWebsite.banner":
       "Das hier ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was du hier eingibst, kann jederzeit gelöscht werden.",
 
@@ -367,44 +374,6 @@ export const german: Language = {
     "players.none": "Es wurde noch kein Spieler hinzugefügt.",
     "commentaries.by": "von",
     "commentaries.start": "Neuen Kommentarstrang beginnen",
-    "commentaries.disclaimer.heading": "Hinweis",
-    "commentaries.disclaimer":
-      "Die in diesen Kommentaren geäußerten Meinungen sind die ihrer Verfasser und geben nicht unbedingt die von Tim Murphy oder {site} wieder.",
-    "commentaries.guidelines.heading": "Richtlinien",
-    "commentaries.guidelines.responsible":
-      "Du bist für deine Kommentare selbst verantwortlich.",
-    "commentaries.guidelines.purpose":
-      "Kommentare dienen dazu, zu berichten, was im Turnier passiert. Sie sind nicht als „soziales Netzwerk“ gedacht, um Glückwünsche und Ähnliches auszutauschen.",
-    "commentaries.guidelines.hatred":
-      "Schreibe nichts, was zu Gewalt oder Hass aufstacheln könnte. Kommentare, die andere wegen ihrer Rasse, Religion, ethnischen Herkunft, ihres Geschlechts, Alters, ihrer geistigen oder körperlichen Behinderung oder ihrer sexuellen Orientierung herabsetzen, dulden wir nicht.",
-    "commentaries.guidelines.abuse":
-      "Grundlose Beschimpfungen werden nicht geduldet. Die Faustregel lautet: den Ball spielen und nicht den Mann, also niemanden persönlich angreifen, sondern bei der Sache bleiben.",
-    "commentaries.guidelines.unlawful":
-      "Kommentare, die rechtlich fragwürdig sind, etwa mögliche Urheberrechtsverletzungen oder Inhalte, die verleumderisch sein könnten, werden entfernt.",
-    "commentaries.guidelines.shouting":
-      "Bitte fluche in Kommentaren nicht und schreibe nicht alles in Großbuchstaben.",
-    "commentaries.guidelines.selling":
-      "Nutze Kommentare nicht für Werbung oder Spam. Kommentare, die Waren oder Dienstleistungen bewerben, anpreisen oder anbieten, werden entfernt.",
-    "commentaries.guidelines.links":
-      "Bitte beschränke Links in Kommentaren. Kommentare mit Links auf unangemessene Inhalte werden entfernt.",
-    "commentaries.guidelines.impersonating":
-      "Gib dich in Kommentaren nicht als andere aus und veröffentliche keine persönlichen Daten – Telefonnummern, Post- oder E-Mail-Adressen –, die jemanden unbeabsichtigt gefährden könnten.",
-    "commentaries.reporting.heading": "Kommentare melden",
-    "commentaries.reporting.before":
-      "Bitte melde Kommentare, die diese Richtlinien nicht erfüllen, an",
-    "commentaries.reporting.after":
-      ". Nenne die Webadresse und den fragwürdigen Kommentar. Zum Beispiel:",
-    "commentaries.reporting.exampleComment":
-      "„ein Kommentar, der entfernt werden sollte“",
-    "commentaries.reporting.exampleReason":
-      "Dieser Kommentar sollte entfernt werden, weil ...",
-    "commentaries.reporting.reviewed":
-      "Eine Meldung bedeutet nicht, dass ein Kommentar automatisch entfernt wird, aber alle Meldungen werden geprüft.",
-    "commentaries.reporting.reserved":
-      "{site} behält sich das Recht vor, Kommentare zu entfernen.",
-    "commentaries.reporting.subject": "{site} Kommentar-Meldung",
-    "commentaries.reporting.body":
-      "Bitte nenne die Webadresse, den fragwürdigen Kommentar und den Grund, warum er entfernt werden sollte.",
     "startCommentary.title": "Neuen Kommentarstrang beginnen",
     "startCommentary.titleField": "Titel",
     "startCommentary.submit": "Kommentarstrang beginnen",
