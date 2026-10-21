@@ -10,6 +10,7 @@ import { randomUUID } from "node:crypto";
 
 import { DatabaseUnreachable } from "../../application/common/DatabaseUnreachable.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
+import { DatabaseAccessRefused } from "../../application/common/DatabaseAccess.js";
 import { RoleOperationRefused } from "../../application/operations/accounts/roleOperations.js";
 import { TournamentOperationRefused } from "../../application/operations/tournaments/tournamentOperations.js";
 import { LogEntriesRefused } from "../../application/operations/logs/LogEntriesHandler.js";
@@ -184,11 +185,13 @@ export const registerErrorMapping = (
     // So is a refusal to give, take or list a role, which the accounts page
     // says beneath the field it is about, and a refusal to find world ranking
     // players of a sport that has none, and to read the error of a document the
-    // import kept none against.
+    // import kept none against, and the minutes or words database access is
+    // asked to be turned off with when they are not allowed.
     if (
       (error instanceof TournamentRefused ||
         error instanceof TournamentOperationRefused ||
         error instanceof RoleOperationRefused ||
+        error instanceof DatabaseAccessRefused ||
         error instanceof WorldRankingPlayersRefused ||
         error instanceof ImportErrorKeptRefused ||
         error instanceof LogEntriesRefused ||

@@ -504,6 +504,31 @@ export const dutch: Language = {
     "admin.administrator.sections.worldRankings": "Wereldranglijsten",
     "admin.administrator.sections.importErrors": "Importfouten",
     "admin.administrator.sections.logs": "Logboeken",
+    "admin.administrator.sections.databaseStatus": "Databasetoegang",
+    "admin.databaseStatus.title": "Databasetoegang",
+    "admin.databaseStatus.on": "De databasetoegang staat aan.",
+    "admin.databaseStatus.off": "De databasetoegang staat uit.",
+    "admin.databaseStatus.expected":
+      "De site is naar verwachting over {minutes} minuten terug.",
+    "admin.databaseStatus.expectedOne":
+      "De site is naar verwachting over 1 minuut terug.",
+    "admin.databaseStatus.longer": "Het duurt langer dan verwacht.",
+    "admin.databaseStatus.told": "Bezoekers lezen: {words}",
+    "admin.databaseStatus.toldUsual": "Bezoekers lezen de gebruikelijke zin.",
+    "admin.databaseStatus.minutes": "Verwachte minuten",
+    "admin.databaseStatus.words": "Tekst voor bezoekers",
+    "admin.databaseStatus.turnOff": "Uitzetten",
+    "admin.databaseStatus.change": "Wijzigen",
+    "admin.databaseStatus.turnOn": "Aanzetten",
+    "admin.databaseStatus.minutesNeeded": "De minuten zijn nodig.",
+    "admin.databaseStatus.otherwise": "Er is iets misgegaan op de site.",
+    "DatabaseAccess.MinutesNotWhole":
+      "De minuten moeten een geheel getal zijn.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "De minuten moeten van 1 tot 1440 zijn.",
+    "DatabaseAccess.WordsTooLong":
+      "De tekst mag maximaal 500 tekens lang zijn.",
+    "DatabaseAccess.NotOff": "De databasetoegang staat niet uit.",
     "admin.administrator.title": "Beheerder",
     "admin.accounts.title": "Accounts",
     "admin.roles.add": "Toevoegen",

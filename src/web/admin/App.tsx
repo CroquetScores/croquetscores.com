@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Accounts } from "./administrator/accounts/accounts.js";
+import { DatabaseStatus } from "./administrator/database-status/databaseStatus.js";
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { ImportError } from "./administrator/import-errors/importError.js";
 import { Logs } from "./administrator/logs/logs.js";
@@ -91,7 +92,7 @@ export const App = (): React.JSX.Element => {
   // beneath it, named by its id as one segment, which is why the address keeps
   // its %2F rather than reading it as a slash.
   const administrator =
-    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs)?(\/.*)?$/.exec(
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs|\/database-status)?(\/.*)?$/.exec(
       path,
     );
   if (administrator !== null) {
@@ -99,6 +100,9 @@ export const App = (): React.JSX.Element => {
     const theAccountsPage = onAccounts && (administrator[2] ?? "/") === "/";
     const theImportPage =
       administrator[1] === "/import-world-ranking-players" &&
+      (administrator[2] ?? "/") === "/";
+    const theDatabaseStatusPage =
+      administrator[1] === "/database-status" &&
       (administrator[2] ?? "/") === "/";
     const onImportErrors = administrator[1] === "/import-errors";
     const theImportErrorsPage =
@@ -120,7 +124,9 @@ export const App = (): React.JSX.Element => {
                   ? "import-errors"
                   : administrator[1] === "/logs"
                     ? "logs"
-                    : undefined
+                    : theDatabaseStatusPage
+                      ? "database-status"
+                      : undefined
           }
         />
         <main id="content">
@@ -134,6 +140,8 @@ export const App = (): React.JSX.Element => {
                 <ImportErrors />
               ) : theLogsPage ? (
                 <Logs />
+              ) : theDatabaseStatusPage ? (
+                <DatabaseStatus />
               ) : importErrorOf !== undefined ? (
                 <ImportError
                   key={importErrorOf}

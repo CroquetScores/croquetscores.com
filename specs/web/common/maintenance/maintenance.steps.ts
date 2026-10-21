@@ -2,7 +2,9 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { LightMyRequestResponse } from "fastify";
 
+import type { DatabaseAccess } from "../../../../src/application/common/DatabaseAccess.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { applicationFor } from "../../support/browser.js";
 import { builtFor, mount, senderOf } from "../../support/application.js";
 import { clockFor } from "../../support/clock.js";
 import { englishForScenarios } from "../../support/languages.js";
@@ -76,31 +78,71 @@ const attempt = async (
   }
 };
 
+// The switch of the application the scenario built, whether it is reached
+// in process or through a browser, or nothing where the scenario built no
+// application and the switch is the file's own.
+const applicationsSwitch = (
+  world: SpecWorld,
+): { readonly access: DatabaseAccess; readonly now: Date } | undefined => {
+  if (inTheApplication(world)) {
+    watching(world);
+    return {
+      access: builtFor(world).application.databaseAccess,
+      now: clockFor(world).now,
+    };
+  }
+  try {
+    return {
+      access: applicationFor(world).databaseAccess,
+      now: clockFor(world).now,
+    };
+  } catch {
+    return undefined;
+  }
+};
+
+const turnedOff = async (
+  world: SpecWorld,
+  minutes: string,
+  words: string | undefined,
+): Promise<void> => {
+  const held = applicationsSwitch(world);
+  if (held !== undefined) {
+    await held.access.turnOff(Number(minutes), held.now, words);
+    return;
+  }
+  await attempt(world, () =>
+    accessInHand(world).writer.turnOff(Number(minutes), momentIn(world), words),
+  );
+};
+
 Given(
   /^database access is turned off for (-?[\d.]+) minutes$/,
   async function (this: SpecWorld, minutes: string) {
-    if (inTheApplication(this)) {
-      watching(this);
-      await builtFor(this).application.databaseAccess.turnOff(
-        Number(minutes),
-        clockFor(this).now,
-      );
-      return;
-    }
-    await attempt(this, () =>
-      accessInHand(this).writer.turnOff(Number(minutes), momentIn(this)),
-    );
+    await turnedOff(this, minutes, undefined);
+  },
+);
+
+Given(
+  /^database access is turned off for (-?[\d.]+) minutes with the words "([^"]*)"$/,
+  async function (this: SpecWorld, minutes: string, words: string) {
+    await turnedOff(this, minutes, words);
+  },
+);
+
+Given(
+  /^database access is turned off for (\d+) minutes with (\d+) characters of words$/,
+  async function (this: SpecWorld, minutes: string, count: string) {
+    await turnedOff(this, minutes, "w".repeat(Number(count)));
   },
 );
 
 Given(
   /^the expected return is moved to (-?[\d.]+) minutes from now$/,
   async function (this: SpecWorld, minutes: string) {
-    if (inTheApplication(this)) {
-      await builtFor(this).application.databaseAccess.moveReturn(
-        Number(minutes),
-        clockFor(this).now,
-      );
+    const held = applicationsSwitch(this);
+    if (held !== undefined) {
+      await held.access.moveReturn(Number(minutes), held.now);
       return;
     }
     await attempt(this, () =>
@@ -109,9 +151,28 @@ Given(
   },
 );
 
+Given(
+  /^the expected return is moved to (-?[\d.]+) minutes from now with the words "([^"]*)"$/,
+  async function (this: SpecWorld, minutes: string, words: string) {
+    const held = applicationsSwitch(this);
+    if (held !== undefined) {
+      await held.access.moveReturn(Number(minutes), held.now, words);
+      return;
+    }
+    await attempt(this, () =>
+      accessInHand(this).writer.moveReturn(
+        Number(minutes),
+        momentIn(this),
+        words,
+      ),
+    );
+  },
+);
+
 Given("database access is turned on", async function (this: SpecWorld) {
-  if (inTheApplication(this)) {
-    await builtFor(this).application.databaseAccess.turnOn();
+  const held = applicationsSwitch(this);
+  if (held !== undefined) {
+    await held.access.turnOn();
     return;
   }
   await attempt(this, () => accessInHand(this).writer.turnOn());
@@ -149,6 +210,26 @@ Then(
     assert.ok(
       !answered(this).body.includes(words("errors.maintenance")),
       "The page says the site is down for maintenance.",
+    );
+  },
+);
+
+Then(
+  "the page tells the reader {string}",
+  function (this: SpecWorld, said: string) {
+    assert.ok(
+      answered(this).body.includes(said),
+      `The page does not tell the reader "${said}".`,
+    );
+  },
+);
+
+Then(
+  "the page does not hold the markup {string}",
+  function (this: SpecWorld, markup: string) {
+    assert.ok(
+      !answered(this).body.includes(markup),
+      `The page contains "${markup}".`,
     );
   },
 );
@@ -221,6 +302,14 @@ Then(
   function (this: SpecWorld, minutes: number) {
     const answer: { minutes?: unknown } = answered(this).json();
     assert.equal(answer.minutes, minutes);
+  },
+);
+
+Then(
+  "the answer says the words are {string}",
+  function (this: SpecWorld, said: string) {
+    const answer: { words?: unknown } = answered(this).json();
+    assert.equal(answer.words, said);
   },
 );
 

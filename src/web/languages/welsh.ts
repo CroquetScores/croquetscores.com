@@ -511,6 +511,31 @@ export const welsh: Language = {
     "admin.administrator.sections.worldRankings": "Safleoedd y Byd",
     "admin.administrator.sections.importErrors": "Gwallau mewnforio",
     "admin.administrator.sections.logs": "Logiau",
+    "admin.administrator.sections.databaseStatus": "Mynediad i’r gronfa ddata",
+    "admin.databaseStatus.title": "Mynediad i’r gronfa ddata",
+    "admin.databaseStatus.on": "Mae mynediad i’r gronfa ddata ymlaen.",
+    "admin.databaseStatus.off":
+      "Mae mynediad i’r gronfa ddata wedi’i ddiffodd.",
+    "admin.databaseStatus.expected":
+      "Disgwylir i’r wefan ddod yn ôl ymhen {minutes} munud.",
+    "admin.databaseStatus.expectedOne":
+      "Disgwylir i’r wefan ddod yn ôl ymhen 1 munud.",
+    "admin.databaseStatus.longer": "Mae’n cymryd mwy o amser na’r disgwyl.",
+    "admin.databaseStatus.told": "Mae darllenwyr yn gweld: {words}",
+    "admin.databaseStatus.toldUsual":
+      "Mae darllenwyr yn gweld y frawddeg arferol.",
+    "admin.databaseStatus.minutes": "Munudau disgwyliedig",
+    "admin.databaseStatus.words": "Geiriau i ddarllenwyr",
+    "admin.databaseStatus.turnOff": "Diffodd",
+    "admin.databaseStatus.change": "Newid",
+    "admin.databaseStatus.turnOn": "Troi ymlaen",
+    "admin.databaseStatus.minutesNeeded": "Mae angen y munudau.",
+    "admin.databaseStatus.otherwise": "Aeth rhywbeth o’i le ar y wefan.",
+    "DatabaseAccess.MinutesNotWhole": "Rhaid i’r munudau fod yn rif cyflawn.",
+    "DatabaseAccess.MinutesOutOfRange": "Rhaid i’r munudau fod o 1 i 1440.",
+    "DatabaseAccess.WordsTooLong": "Ni all y geiriau fod yn hirach na 500 nod.",
+    "DatabaseAccess.NotOff":
+      "Nid yw mynediad i’r gronfa ddata wedi’i ddiffodd.",
     "admin.administrator.title": "Gweinyddwr",
     "admin.accounts.title": "Cyfrifon",
     "admin.roles.add": "Ychwanegu",

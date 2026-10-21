@@ -15,10 +15,17 @@ Feature: The site says so when its database access is turned off for maintenance
   an outage nobody did, and is told how long to wait by the same header.
 
   The site does not use its database at all while access is off: not to read a
-  page, not to look up a session, not to record that a request was handled. It
-  is turned off by a script (`databaseAccess.feature`), which keeps the
+  page, not to look up a session, not to record that a request was handled. The
+  one exception is the page where an administrator turns access on again, and
+  what it asks of the site, where the session is looked up so that only an
+  administrator is let through (`databaseStatus.feature`). It is turned off by
+  a script (`databaseAccess.feature`), which keeps the
   switch where the site can read it without the database
   (`FileDatabaseAccess.feature`), and is turned on by the same script.
+
+  The administrator may also give words for readers (`databaseAccess.feature`),
+  and the page says them in place of its usual sentence that the site is down
+  for maintenance. They are put on the page as text, whatever is in them.
 
   The estimate is the minutes the script was given, counted from the moment it
   was turned off or from the moment it was last moved, and the page says how
@@ -297,6 +304,103 @@ Feature: The site says so when its database access is turned off for maintenance
       And an example page that reads from the database
       When the example page is asked for
       Then the page says the site is expected back in 90 minutes
+
+  Rule: Words for readers take the place of the usual sentence
+
+    Scenario: A page tells the reader the words
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the page tells the reader "Back after the move"
+
+    Scenario: A page does not also say the usual sentence
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the page does not say the site is down for maintenance
+
+    Scenario: A page still says how many minutes are expected
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the page says the site is expected back in 30 minutes
+
+    Scenario: A page puts the words on as text
+      Given database access is turned off for 30 minutes with the words "<b>Back</b>"
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the page does not hold the markup "<b>Back</b>"
+
+    Scenario: A page without words says the usual sentence
+      Given database access is turned off for 30 minutes
+      And an example page that reads from the database
+      When the example page is asked for
+      Then the page says the site is down for maintenance
+
+    Scenario: An API request is told the words
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example API route that reads from the database
+      When the example API route is asked for
+      Then the answer says the words are "Back after the move"
+
+    Scenario: Moving the return keeps the words
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example page that reads from the database
+      And the expected return is moved to 45 minutes from now
+      When the example page is asked for
+      Then the page tells the reader "Back after the move"
+
+    Scenario: Moving the return with words changes them
+      Given database access is turned off for 30 minutes with the words "Back after the move"
+      And an example page that reads from the database
+      And the expected return is moved to 45 minutes from now with the words "Back tomorrow"
+      When the example page is asked for
+      Then the page tells the reader "Back tomorrow"
+
+  Rule: An administrator is let through to turn access on again
+
+    The page where an administrator turns access on again, and what it asks of
+    the site, are the one place a session is looked up while access is off, so
+    that the only way to turn access on is not the script on the machine the
+    site runs on (`databaseStatus.feature`). Nobody else is let through, and
+    nobody is where the database cannot say who is asking.
+
+    Background:
+      Given "admin@example.com" has an account, confirmed
+      And "admin@example.com" has been given the role "Administrator"
+      And "someone@example.com" has an account, confirmed
+      And the route for the status of database access
+
+    Scenario: An administrator is answered
+      Given the reader is signed in as "admin@example.com"
+      And database access is turned off for 30 minutes
+      When the route for the status of database access is asked for
+      Then the route answers with the status of database access
+
+    Scenario: Somebody who is not an administrator is told the site is unavailable
+      Given the reader is signed in as "someone@example.com"
+      And database access is turned off for 30 minutes
+      When the route for the status of database access is asked for
+      Then the route answers that the site is unavailable
+
+    Scenario: Somebody who is not signed in is told the site is unavailable
+      Given database access is turned off for 30 minutes
+      When the route for the status of database access is asked for
+      Then the route answers that the site is unavailable
+
+    Scenario: An administrator is told the site is unavailable where the database cannot say who they are
+      Given the reader is signed in as "admin@example.com"
+      And database access is turned off for 30 minutes
+      And the database cannot be reached
+      When the route for the status of database access is asked for
+      Then the route answers that the site is unavailable
+
+    Scenario: An administrator is not let through to any other route
+      Given the reader is signed in as "admin@example.com"
+      And database access is turned off for 30 minutes
+      And an example API route that reads from the database
+      When the example API route is asked for
+      Then the route answers that the site is unavailable
 
   Rule: Maintenance is not the database being down
 

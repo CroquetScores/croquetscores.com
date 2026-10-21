@@ -1,7 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import type { DatabaseAccessState } from "../../../src/application/common/DatabaseAccess.js";
 import type { SpecWorld } from "../../support/world.js";
+import { addressingOf, applicationFor } from "../../web/support/browser.js";
+import { englishForScenarios } from "../../web/support/languages.js";
 import {
   accessInHand,
   aFileThatIsNotThere,
@@ -123,24 +126,54 @@ When("database access is read", async function (this: SpecWorld) {
 
 // What was read -----------------------------------------------------------------
 
-const read = (world: SpecWorld) => {
-  const { state } = accessInHand(world);
-  assert.ok(state !== undefined, "Database access has not been read.");
-  return state;
+// What the scenario read of its own file, or, where it has none because it is
+// about a site, what the site's switch says now.
+const stateOf = async (world: SpecWorld): Promise<DatabaseAccessState> => {
+  let held: ReturnType<typeof accessInHand> | undefined;
+  try {
+    held = accessInHand(world);
+  } catch {
+    held = undefined;
+  }
+  if (held === undefined) return applicationFor(world).databaseAccess.current();
+  assert.ok(held.state !== undefined, "Database access has not been read.");
+  return held.state;
 };
 
-Then("database access is on", function (this: SpecWorld) {
-  assert.equal(read(this).off, false);
+const read = stateOf;
+
+// A site is changed by a browser pressing a button, which returns before the
+// site has done what it was asked, so a scenario about a site is given a
+// moment to be right. One about a file is not: it is already as it will be.
+const eventually = async (check: () => Promise<void>): Promise<void> => {
+  const until = Date.now() + 3000;
+  for (;;) {
+    try {
+      await check();
+      return;
+    } catch (failure) {
+      if (Date.now() > until) throw failure;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  }
+};
+
+Then("database access is on", async function (this: SpecWorld) {
+  await eventually(async () => {
+    assert.equal((await read(this)).off, false);
+  });
 });
 
-Then("database access is off", function (this: SpecWorld) {
-  assert.equal(read(this).off, true);
+Then("database access is off", async function (this: SpecWorld) {
+  await eventually(async () => {
+    assert.equal((await read(this)).off, true);
+  });
 });
 
 Then(
   "access is expected back at {string}",
-  function (this: SpecWorld, moment: string) {
-    const state = read(this);
+  async function (this: SpecWorld, moment: string) {
+    const state = await read(this);
     assert.ok(state.off, "Database access is on.");
     assert.equal(
       state.expectedBackAt.toISOString(),
@@ -151,8 +184,8 @@ Then(
 
 Then(
   "access was turned off at {string}",
-  function (this: SpecWorld, moment: string) {
-    const state = read(this);
+  async function (this: SpecWorld, moment: string) {
+    const state = await read(this);
     assert.ok(state.off, "Database access is on.");
     assert.equal(
       state.turnedOffAt.toISOString(),
@@ -173,5 +206,75 @@ Then(
   /^(\d+) faults? (?:is|are) logged$/,
   function (this: SpecWorld, count: string) {
     assert.equal(accessInHand(this).faults.length, Number(count));
+  },
+);
+
+// What a reader is told while access is off. Of the file where the scenario is
+// about the file, and of the site itself where it is about a site, by asking it
+// for a page as a reader would and reading what comes back.
+const toldOnTheSite = async (world: SpecWorld): Promise<string> => {
+  assert.ok(world.baseUrl !== undefined, "The scenario has no site.");
+  const answer = await fetch(`${world.baseUrl}/`, {
+    headers: addressingOf(world),
+  });
+  return answer.text();
+};
+
+const hasFile = (world: SpecWorld): boolean => {
+  try {
+    accessInHand(world);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+Then(
+  "readers are told {string}",
+  async function (this: SpecWorld, words: string) {
+    if (hasFile(this)) {
+      const state = await read(this);
+      assert.ok(state.off, "Database access is on.");
+      assert.equal(state.words, words);
+      return;
+    }
+    await eventually(async () => {
+      assert.ok(
+        (await toldOnTheSite(this)).includes(words),
+        `The site does not tell readers "${words}".`,
+      );
+    });
+  },
+);
+
+Then("readers are told the usual sentence", async function (this: SpecWorld) {
+  if (hasFile(this)) {
+    const state = await read(this);
+    assert.ok(state.off, "Database access is on.");
+    assert.equal(state.words, undefined);
+    return;
+  }
+  const usual = englishForScenarios.words["errors.maintenance"];
+  assert.ok(usual !== undefined, "English has no usual sentence.");
+  await eventually(async () => {
+    assert.ok(
+      (await toldOnTheSite(this)).includes(usual),
+      "The site does not tell readers the usual sentence.",
+    );
+  });
+});
+
+Given(
+  "a database access file holding words that are not text",
+  function (this: SpecWorld) {
+    aFileThatIsNotThere(this);
+    holding(
+      this,
+      JSON.stringify({
+        turnedOffAt: "2026-10-13T10:00:00.000Z",
+        expectedBackAt: "2026-10-13T10:30:00.000Z",
+        words: 7,
+      }),
+    );
   },
 );

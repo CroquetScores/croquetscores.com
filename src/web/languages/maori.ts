@@ -510,6 +510,34 @@ export const maori: Language = {
     "admin.administrator.sections.worldRankings": "Raupapa o te ao",
     "admin.administrator.sections.importErrors": "Ngā hapa kawemai",
     "admin.administrator.sections.logs": "Ngā Pūkete",
+    "admin.administrator.sections.databaseStatus":
+      "Whakauru ki te pūnaha raraunga",
+    "admin.databaseStatus.title": "Whakauru ki te pūnaha raraunga",
+    "admin.databaseStatus.on":
+      "Kei te whakahohe te whakauru ki te pūnaha raraunga.",
+    "admin.databaseStatus.off": "Kua monoa te whakauru ki te pūnaha raraunga.",
+    "admin.databaseStatus.expected":
+      "Ka hoki mai te pae i roto i te {minutes} meneti.",
+    "admin.databaseStatus.expectedOne":
+      "Ka hoki mai te pae i roto i te 1 meneti.",
+    "admin.databaseStatus.longer": "He roa ake i te mea i whakaarohia.",
+    "admin.databaseStatus.told": "Ka kite ngā kaipānui: {words}",
+    "admin.databaseStatus.toldUsual":
+      "Ka kite ngā kaipānui i te rerenga kōrero tūmau.",
+    "admin.databaseStatus.minutes": "Ngā meneti e tūmanakohia ana",
+    "admin.databaseStatus.words": "Ngā kupu mō ngā kaipānui",
+    "admin.databaseStatus.turnOff": "Monoa",
+    "admin.databaseStatus.change": "Whakarerekē",
+    "admin.databaseStatus.turnOn": "Whakahohe",
+    "admin.databaseStatus.minutesNeeded": "Me whai meneti.",
+    "admin.databaseStatus.otherwise": "I raru tētahi mea i te pae.",
+    "DatabaseAccess.MinutesNotWhole": "Me tau katoa ngā meneti.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "Me tīmata ngā meneti i te 1 ki te 1440.",
+    "DatabaseAccess.WordsTooLong":
+      "Kaua e neke atu i te 500 ngā pūāhua o ngā kupu.",
+    "DatabaseAccess.NotOff":
+      "Kāore te whakauru ki te pūnaha raraunga i te monoa.",
     "admin.administrator.title": "Kaiwhakahaere pae",
     "admin.accounts.title": "Ngā pūkete",
     "admin.roles.add": "Tāpiri",

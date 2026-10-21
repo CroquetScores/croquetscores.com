@@ -510,6 +510,33 @@ export const french: Language = {
     "admin.administrator.sections.worldRankings": "Classement mondial",
     "admin.administrator.sections.importErrors": "Erreurs d’importation",
     "admin.administrator.sections.logs": "Journaux",
+    "admin.administrator.sections.databaseStatus": "Accès à la base de données",
+    "admin.databaseStatus.title": "Accès à la base de données",
+    "admin.databaseStatus.on": "L’accès à la base de données est activé.",
+    "admin.databaseStatus.off": "L’accès à la base de données est désactivé.",
+    "admin.databaseStatus.expected":
+      "Le site devrait être de retour dans {minutes} minutes.",
+    "admin.databaseStatus.expectedOne":
+      "Le site devrait être de retour dans 1 minute.",
+    "admin.databaseStatus.longer": "Cela prend plus de temps que prévu.",
+    "admin.databaseStatus.told": "Les lecteurs lisent : {words}",
+    "admin.databaseStatus.toldUsual":
+      "Les lecteurs lisent la phrase habituelle.",
+    "admin.databaseStatus.minutes": "Minutes prévues",
+    "admin.databaseStatus.words": "Mots pour les lecteurs",
+    "admin.databaseStatus.turnOff": "Désactiver",
+    "admin.databaseStatus.change": "Modifier",
+    "admin.databaseStatus.turnOn": "Activer",
+    "admin.databaseStatus.minutesNeeded": "Les minutes sont requises.",
+    "admin.databaseStatus.otherwise": "Une erreur s’est produite sur le site.",
+    "DatabaseAccess.MinutesNotWhole":
+      "Les minutes doivent être un nombre entier.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "Les minutes doivent être comprises entre 1 et 1440.",
+    "DatabaseAccess.WordsTooLong":
+      "Les mots ne doivent pas dépasser 500 caractères.",
+    "DatabaseAccess.NotOff":
+      "L’accès à la base de données n’est pas désactivé.",
     "admin.administrator.title": "Administrateur",
     "admin.accounts.title": "Comptes",
     "admin.roles.add": "Ajouter",

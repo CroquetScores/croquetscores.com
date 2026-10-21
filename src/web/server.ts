@@ -436,10 +436,14 @@ const googleAsASignIn = (google: GoogleOpenIdConnect): GoogleSignIn => ({
 });
 
 // A route reaches the mediator as request.server.mediator, and nothing else of
-// the application. Declared here, beside the one place that puts it there.
+// the application, except the switch for database access, which is kept outside
+// the database and so cannot be reached through the mediator, whose every
+// request is in a transaction. Declared here, beside the one place that puts
+// them there.
 declare module "fastify" {
   interface FastifyInstance {
     readonly mediator: Mediator;
+    readonly databaseAccess: DatabaseAccess;
   }
 }
 
@@ -1465,23 +1469,32 @@ export const buildApplication = async (
           server.log.error({ err: details }, message),
       },
     });
-  refuseWhileDatabaseAccessIsOff(server, assets, databaseAccess);
   // A page reads and writes through this, and knows nothing else of the
   // database.
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
 
   const sessions = new PostgresSessions(unitOfWork);
-  knowTheReader(
-    server,
+  const reader: Reader =
     options.reader ??
-      readerFromSessions(sessions, inTransaction, async (account) => {
-        const profile = await mediator.query(new AccountProfile(account.value));
-        return {
-          hasPassword: profile?.hasPassword ?? false,
-          isAdministrator: profile?.isAdministrator ?? false,
-        };
-      }),
+    readerFromSessions(sessions, inTransaction, async (account) => {
+      const profile = await mediator.query(new AccountProfile(account.value));
+      return {
+        hasPassword: profile?.hasPassword ?? false,
+        isAdministrator: profile?.isAdministrator ?? false,
+      };
+    });
+  // Asked of the reader while access is off, for the one page an
+  // administrator turns it on again from. The reader is asked again by the
+  // hook that follows, which is for the page itself.
+  refuseWhileDatabaseAccessIsOff(
+    server,
+    assets,
+    databaseAccess,
+    async (request, reply) =>
+      (await reader(request, reply))?.isAdministrator === true,
   );
+  server.decorate("databaseAccess", databaseAccess);
+  knowTheReader(server, reader);
 
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
