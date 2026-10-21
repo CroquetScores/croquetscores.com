@@ -567,9 +567,8 @@ body > .site-footer {
   margin-inline-start: auto;
 }
 
-/* The site's search, beside the menu on the right of the pinned bar, and
-   wrapping beneath the names on a phone with the rest of the bar rather than
-   pushing it wider than the window. */
+/* The site's search, in the menu's panel before the links: beside them in the
+   bar, and at the top of what the menu button opens on a phone. */
 .site-search {
   display: flex;
   align-items: center;
@@ -577,13 +576,9 @@ body > .site-footer {
      name is beneath the site's, rather than left at the top with the menu. */
   align-self: center;
   gap: var(--space-1);
-  margin-inline-start: auto;
   min-width: 0;
   max-width: 100%;
-}
-
-.site-search + .menu {
-  margin-inline-start: 0;
+  margin-block-end: var(--space-2);
 }
 
 /* Read against the page's own surface and ink, as a field is everywhere, and
@@ -603,7 +598,9 @@ body > .site-footer {
 /* In the secondary navigation's colours, and filled as its tab being read is
    when it is hovered, since a hover in the bar's own green would be nothing. */
 .site-search button {
-  padding: var(--space-1) var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
   border: 1px solid transparent;
   border-radius: var(--radius-2);
   background: var(--accent-strong);
@@ -614,6 +611,17 @@ body > .site-footer {
 .site-search button:hover {
   background: var(--current);
   color: var(--current-ink);
+}
+
+/* The way home is a house, which sits on the line with the words beside it. */
+.menu-icon {
+  display: block;
+}
+
+/* Closed until the glass is pressed, which only a page with scripting does
+   (layout.ts): without it nothing could open the field. */
+.site-search-closed input {
+  display: none;
 }
 
 /* The page of players' own search, in the content as the results are. */
@@ -930,6 +938,17 @@ body > .site-footer {
 @media (min-width: 40rem) {
   .menu > summary {
     display: none;
+  }
+
+  /* The search and the links on one line, the search first. */
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .site-search {
+    margin-block-end: 0;
   }
 
   /* A closed <details> hides everything but its summary, so hiding the summary

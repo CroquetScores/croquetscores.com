@@ -20,6 +20,12 @@ import { themes, type Theme } from "./theme.js";
 export interface NavigationLink {
   readonly href: string;
   readonly words: string;
+  /**
+   * Drawn in place of the words, which stay in the link hidden from the eye so
+   * that a screen reader still says them. Markup, written into the page as it
+   * is, so it is only ever the site's own.
+   */
+  readonly icon?: string | undefined;
 }
 
 export interface Section {
@@ -143,13 +149,18 @@ const sendAwayWithoutScripting = (path: string | undefined): string =>
     : `
     <noscript><meta http-equiv="refresh" content="0; url=${escape(path)}" /></noscript>`;
 
+// The way home is a house and not the word, drawn inline as the magnifying
+// glass is. Its word stays in the link, hidden from the eye, so that a screen
+// reader still says "Home" and the link is still found by it.
+const house = `<svg class="menu-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h4.5v-5.5h3V20H18v-9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
 // The way home and the way to help, for every reader, and the way to the admin
 // for a reader who is signed in: the admin shows nothing to anybody else, so
 // offering it to them would only send them to sign in. Everything to do with
 // an account is in the account menu beside them rather than here, so that the
 // bar carries one item for an account however many pages an account has.
 const everyone: readonly NavigationLink[] = [
-  { href: "/", words: "navigation.home" },
+  { href: "/", words: "navigation.home", icon: house },
   { href: "/players", words: "tournament.players" },
   { href: "/help", words: "navigation.help" },
 ];
@@ -190,19 +201,24 @@ ${accountItems(bar).join("\n")}
               </nav>`;
 };
 
-const menu = (bar: AccountMenu): string => {
+const menu = (bar: AccountMenu, search = ""): string => {
   const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
-    .map(({ href, words }) => {
+    .map(({ href, words, icon }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
-      return `            <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
+      const said = escape(speaking.say(words));
+      const inside =
+        icon === undefined
+          ? said
+          : `${icon}<span class="visually-hidden">${said}</span>`;
+      return `            <li><a href="${href}"${here}>${inside}</a></li>`;
     })
     .join("\n");
 
   return `          <details class="menu">
           <summary><span class="visually-hidden">${escape(speaking.say("navigation.menu"))}</span></summary>
             <div class="menu-panel">
-              <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
+${search}              <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
                 <ul>
 ${items}
                 </ul>
@@ -367,17 +383,71 @@ export type SiteBar = Pick<
   readonly withSearch?: boolean | undefined;
 };
 
-// The site's search, a form of its own that is sent as any is and so needs no
-// scripting (search.feature). A search type rather than a text one, so that a
-// phone offers what is typed to be cleared.
+// A magnifying glass, drawn inline as Google's mark is (googleOffer.ts): it is
+// small, it costs no request, and it takes the ink of the button around it.
+// Hidden from a screen reader, which has the button's name.
+const magnifyingGlass = `<svg class="site-search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+
+// What the glass does once the page has scripting (search.feature). Without
+// it the field is simply there beside the glass, which is the search as the
+// site had it: the form is sent as any is and needs nothing more. With it, the
+// field is closed until the glass is pressed, and pressing the glass with
+// something typed lets the form be sent. It is written beside the form and
+// not in a file of its own, because it runs before the header is first
+// painted and so the field is never seen open and then closed; a field that
+// arrives holding what was typed is left open for the same reader's sake. A
+// browser that puts back what was typed on Back or on reload does so after
+// this has run, so the field is looked at again when the page is shown, and a
+// field holding anything is opened then. The form is found from the header's
+// own markup and not from where this script sits, so that something put
+// between them does not break it.
+const searchScript = `          <script>
+            (function () {
+              var form = document.currentScript.parentElement.querySelector(".site-search");
+              var field = form.querySelector("input");
+              var glass = form.querySelector("button");
+              var closed = "site-search-closed";
+              var show = function () {
+                if (field.value === "") form.classList.add(closed);
+                else form.classList.remove(closed);
+              };
+              show();
+              window.addEventListener("pageshow", show);
+              glass.addEventListener("click", function (event) {
+                if (form.classList.contains(closed)) {
+                  event.preventDefault();
+                  form.classList.remove(closed);
+                  field.focus();
+                } else if (field.value.trim() === "") {
+                  event.preventDefault();
+                  field.value = "";
+                  form.classList.add(closed);
+                }
+              });
+              // Enter in a field with nothing in it asks for nothing, and does
+              // not close the box under the reader's hands.
+              field.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" && field.value.trim() === "") {
+                  event.preventDefault();
+                }
+              });
+            })();
+          </script>
+`;
+
+// The site's search is in the navigation's menu, before the links: beside them
+// in the bar where they are inline, and in what the menu button opens where
+// they are behind it, so that the bar holds the same few things at any width.
+// A form of its own that is sent as any is. A search type
+// rather than a text one, so that a phone offers what is typed to be cleared.
 const searchBox = (bar: SiteBar): string => {
   if (bar.withSearch !== true) return "";
   const label = escape(bar.speaking.say("search.label"));
   return `          <form class="site-search" role="search" action="/search" method="get">
             <input type="search" name="q" aria-label="${label}" value="${escape(bar.searchText ?? "")}" />
-            <button type="submit">${label}</button>
+            <button type="submit" aria-label="${label}">${magnifyingGlass}</button>
           </form>
-`;
+${searchScript}`;
 };
 
 // Said by the admin's page too (adminPage.ts), so that there is one header
@@ -390,7 +460,7 @@ export const siteBar = (bar: SiteBar): string => `
           <div class="site-names">
             <a class="site-name" href="/">${escape(bar.siteName)}</a>
 ${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}${bar.pageName === undefined ? "" : `            <a class="site-page" href="${escape(bar.pageName.href)}">${escape(bar.pageName.name)}</a>\n`}          </div>
-${searchBox(bar)}${menu(bar)}
+${menu(bar, searchBox(bar))}
 ${accountMenu(bar)}
         </div>
       </div>

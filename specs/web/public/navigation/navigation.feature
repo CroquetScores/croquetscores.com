@@ -41,6 +41,12 @@ Feature: Finding your way around the public site
       When the home page is opened
       Then the first link in the navigation is "Home"
 
+    Scenario: The way home is drawn as a house and not as a word
+      Given a viewport 1200 pixels wide
+      And nobody is signed in
+      When the home page is opened
+      Then the link "Home" is drawn as a picture
+
     Scenario: A reader not signed in is offered the players second
       Given a viewport 1200 pixels wide
       And nobody is signed in

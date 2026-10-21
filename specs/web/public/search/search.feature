@@ -1,9 +1,9 @@
 @browser @postgres
 Feature: A reader searches the website for tournaments, players and competitions
 
-  Every page of the public site has a search box in its header, a text field
-  and a button, both called "Search", so that a reader who knows a name need
-  not find where it is kept. Pressing the button asks the site for what the
+  Every page of the public site has a search in its header, a magnifying glass
+  that opens a text field, so that a reader who knows a name need
+  not find where it is kept. Pressing the glass again asks the site for what the
   words typed are found in (`Search.feature`) and opens the results at
   "/search", with what was typed in the address, as "/search?q=spring open". It
   is a form of the page's own that is sent as any is, and needs no scripting,
@@ -67,16 +67,115 @@ Feature: A reader searches the website for tournaments, players and competitions
       When the page at "/" is opened
       Then the header's search box is called "Search"
 
-    Scenario: The button is called Search
+  Rule: The header shows a magnifying glass, which opens the search box
+
+    The header carries a magnifying glass where it carried a text field and
+    a button called "Search". Pressing it opens the field, with the cursor in
+    it. Pressing it again searches for what was typed. A reader who opened the
+    field and typed nothing, then pressed it again, has changed their mind,
+    and the field closes rather than asking for a search of nothing. The
+    glass is called "Search" for a reader who cannot see it.
+
+    The glass is the first thing in the navigation's menu: before the links, on
+    their line, where they are inline in the header, and at the top of what the
+    menu button opens, where they are behind it.
+
+    Without scripting there is nothing to open the field, so the field is
+    shown beside the glass and pressing the glass searches, as the button did.
+    A page that is the answer to a search shows its field open, holding what
+    was typed, so that a reader who found too much can add a word.
+
+    Scenario: The header shows a magnifying glass and no search box
       When the page at "/" is opened
-      Then the header's search button is called "Search"
+      Then the header shows a magnifying glass
+      And the header's search box is not shown
+
+    Scenario: On a wide screen the magnifying glass is before the navigation, on its line
+      Given a viewport 1200 pixels wide
+      When the page at "/" is opened
+      Then the header's magnifying glass is before the link "Home" on the same line
+
+    Scenario: On a phone the magnifying glass is behind the menu button
+      Given a viewport 375 pixels wide
+      When the page at "/" is opened
+      Then the header shows no magnifying glass
+
+    Scenario: On a phone pressing the menu button shows the magnifying glass
+      Given a viewport 375 pixels wide
+      And the page at "/" is open
+      When the menu button is pressed
+      Then the header shows a magnifying glass
+
+    Scenario: The magnifying glass is called Search
+      When the page at "/" is opened
+      Then the header's magnifying glass is called "Search"
+
+    Scenario: Pressing the magnifying glass shows the search box
+      Given the page at "/" is opened
+      When the header's magnifying glass is pressed
+      Then the header's search box is shown
+
+    Scenario: The cursor is in the search box when it is shown
+      Given the page at "/" is opened
+      When the header's magnifying glass is pressed
+      Then the cursor is in the header's search box
+
+    Scenario: Pressing the magnifying glass with something typed searches
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      And "spring" is typed as the header's search box
+      When the header's magnifying glass is pressed
+      Then the address is "/search"
+      And the address asks for "spring"
+
+    Scenario: Pressing Enter in the search box searches
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      And "spring" is typed as the header's search box
+      When Enter is pressed in the header's search box
+      Then the address is "/search"
+      And the address asks for "spring"
+
+    Scenario: Pressing the magnifying glass with nothing typed closes the search box
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      When the header's magnifying glass is pressed
+      Then the header's search box is not shown
+
+    Scenario: Pressing the magnifying glass with nothing typed does not leave the page
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      When the header's magnifying glass is pressed
+      Then the address is "/"
+
+    Scenario: Pressing the magnifying glass with only spaces typed closes the search box and empties it
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      And "   " is typed as the header's search box
+      When the header's magnifying glass is pressed
+      Then the header's search box is not shown
+      And the header's search box is empty
+
+    Scenario: Pressing Enter with nothing typed leaves the search box open
+      Given the page at "/" is opened
+      And the header's magnifying glass is pressed
+      When Enter is pressed in the header's search box
+      Then the header's search box is shown
+
+    Scenario: Without scripting the search box is shown beside the magnifying glass
+      When the page at "/" is opened with scripting off
+      Then the header's search box is shown
 
     Scenario: A search is made without scripting
       Given the page at "/" is opened with scripting off
       And "spring" is typed as the header's search box
-      When the header's search button is pressed
+      When the header's magnifying glass is pressed
       Then the address is "/search"
       And the address asks for "spring"
+
+    Scenario: The results page shows the search box open
+      When the page at "/search?q=spring" is opened
+      Then the header's search box is shown
 
   Rule: The page names itself in the header, beneath the site's name
 
@@ -112,13 +211,13 @@ Feature: A reader searches the website for tournaments, players and competitions
     Scenario: A search is made from the header
       Given the page at "/" is opened
       And "spring" is typed as the header's search box
-      When the header's search button is pressed
+      When the header's magnifying glass is pressed
       Then "Spring Open" is among the tournaments in the results
 
     Scenario: A search is made from the results page
       Given the page at "/search" is opened
       And "someone" is typed as the header's search box
-      When the header's search button is pressed
+      When the header's magnifying glass is pressed
       Then "Sam Someone" is among the players in the results
 
     Scenario: A search is made by words in another order

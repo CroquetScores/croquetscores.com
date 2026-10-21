@@ -52,9 +52,59 @@ Then(
 );
 
 Then(
-  "the header's search button is called {string}",
+  "the header's magnifying glass is called {string}",
   async function (this: SpecWorld, name: string) {
-    assert.equal((await button(this).innerText()).trim(), name);
+    assert.equal(await button(this).getAttribute("aria-label"), name);
+  },
+);
+
+// A picture and no words, so what makes it a magnifying glass is a drawing
+// inside the button.
+Then("the header shows a magnifying glass", async function (this: SpecWorld) {
+  assert.equal(await button(this).locator("svg").count(), 1);
+  assert.ok(await button(this).isVisible(), "The glass is not shown.");
+});
+
+Then("the header shows no magnifying glass", async function (this: SpecWorld) {
+  assert.ok(!(await button(this).isVisible()), "The glass is shown.");
+});
+
+Then(
+  "the header's magnifying glass is before the link {string} on the same line",
+  async function (this: SpecWorld, label: string) {
+    const glass = await button(this).boundingBox();
+    const link = await this.browserPage
+      .locator(`.menu-links a:text-is("${label}")`)
+      .boundingBox();
+    assert.ok(glass !== null && link !== null, "Nothing to measure.");
+    assert.ok(
+      glass.x + glass.width <= link.x + 0.5,
+      "The glass is not before.",
+    );
+    assert.ok(
+      glass.y < link.y + link.height && link.y < glass.y + glass.height,
+      "The glass and the link are not on one line.",
+    );
+  },
+);
+
+Then("the header's search box is shown", async function (this: SpecWorld) {
+  assert.ok(await box(this).isVisible(), "The search box is not shown.");
+});
+
+Then("the header's search box is not shown", async function (this: SpecWorld) {
+  assert.ok(!(await box(this).isVisible()), "The search box is shown.");
+});
+
+Then(
+  "the cursor is in the header's search box",
+  async function (this: SpecWorld) {
+    assert.ok(
+      await this.browserPage.evaluate<boolean>(
+        `document.activeElement?.getAttribute("name") === "q"`,
+      ),
+      "The cursor is not in the search box.",
+    );
   },
 );
 
@@ -72,17 +122,57 @@ Then("the header's search box is empty", async function (this: SpecWorld) {
 Given(
   "{string} is typed as the header's search box",
   async function (this: SpecWorld, text: string) {
+    // A reader opens the box before typing in it, where it is closed.
+    if (!(await box(this).isVisible())) await button(this).click();
     await box(this).fill(text);
   },
 );
 
-When("the header's search button is pressed", async function (this: SpecWorld) {
+// Pressed with something typed, the glass asks for a search and the page
+// changes; pressed with nothing, it only opens or closes the box.
+const pressed = async (world: SpecWorld): Promise<void> => {
+  const searching = (await box(world).inputValue()).trim() !== "";
+  if (!searching) {
+    await button(world).click();
+    return;
+  }
   await Promise.all([
-    this.browserPage.waitForNavigation(),
-    button(this).click(),
+    world.browserPage.waitForNavigation(),
+    button(world).click(),
   ]);
-  await settled(this);
-});
+  await settled(world);
+};
+
+Given(
+  "the header's magnifying glass is pressed",
+  async function (this: SpecWorld) {
+    await pressed(this);
+  },
+);
+
+When(
+  "the header's magnifying glass is pressed",
+  async function (this: SpecWorld) {
+    await pressed(this);
+  },
+);
+
+// Like the glass, it searches only with something typed; with nothing it does
+// nothing, and there is no page to wait for.
+When(
+  "Enter is pressed in the header's search box",
+  async function (this: SpecWorld) {
+    if ((await box(this).inputValue()).trim() === "") {
+      await box(this).press("Enter");
+      return;
+    }
+    await Promise.all([
+      this.browserPage.waitForNavigation(),
+      box(this).press("Enter"),
+    ]);
+    await settled(this);
+  },
+);
 
 Then("the address asks for {string}", function (this: SpecWorld, text: string) {
   const url = new URL(this.browserPage.url());

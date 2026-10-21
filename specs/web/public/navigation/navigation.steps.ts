@@ -127,6 +127,18 @@ Then(
   },
 );
 
+// A picture in the link, with the word kept for those who cannot see it, so
+// the link is found by its word all the same.
+Then(
+  "the link {string} is drawn as a picture",
+  async function (this: SpecWorld, label: string) {
+    assert.equal(
+      await this.browserPage.locator(`${link(label)} svg`).count(),
+      1,
+    );
+  },
+);
+
 Then(
   "the link {string} leads to {string}",
   async function (this: SpecWorld, label: string, address: string) {
