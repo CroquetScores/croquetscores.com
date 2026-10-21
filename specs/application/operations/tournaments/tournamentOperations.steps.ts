@@ -272,6 +272,23 @@ Given(
   },
 );
 
+// Without its region, which is one of the country it leaves and so would be
+// refused in the one it arrives in.
+Given(
+  "{string} has moved the tournament {string} to the country {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    name: string,
+    country: string,
+  ) {
+    await updated(this, address, tournamentNamed(this, name), {
+      country,
+      region: undefined,
+    });
+  },
+);
+
 Given(
   "{string} has moved the tournament {string} to start at {string} and finish at {string}",
   async function (

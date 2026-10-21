@@ -89,6 +89,7 @@ const blockOf = (
     `Date ${whenOf(rankings.starts, rankings.finishes)}`,
     `Winner ${winnerOf(results, type)}`,
     `Type ${type}`,
+    `Country ${rankings.country}`,
     "Order firstname",
     "",
     ...results.map(

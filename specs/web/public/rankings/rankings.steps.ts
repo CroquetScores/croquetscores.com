@@ -130,6 +130,8 @@ const ordinals = [
   "fourteenth",
   "fifteenth",
   "sixteenth",
+  "seventeenth",
+  "eighteenth",
 ];
 
 const ORDINAL = `(${ordinals.join("|")})`;
