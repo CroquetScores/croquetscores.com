@@ -591,6 +591,10 @@ export const chinese: Language = {
     "CompetitionName.NoLetterOrDigit": "名称中至少要有一个字母或数字。",
     "Tournament.KnockoutPlayerHasGames":
       "这个抽签中的选手已有比赛，所以不能更改名额。",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "已有分出胜负的比赛的轮次不能改为更少的局数。",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "后面的轮次已有比赛后，不能再更改这一轮。",
     "Tournament.CompetitionNameTaken":
       "这个锦标赛中的另一个赛事已经用了这个名称。",
     "BestOf.NotWhole": "请输入整数的局数。",

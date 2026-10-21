@@ -642,6 +642,10 @@ export const maori: Language = {
     "CompetitionName.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa.",
     "Tournament.KnockoutPlayerHasGames":
       "He tukinga ā ētahi kaitākaro o tēnei tūtohi, nō reira kāore e taea te whakarerekē i ō rātou tūnga.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Kāore e taea te whakapoto i tētahi rāwhiti kua whakatauhia he tukinga.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Kāore e taea te whakarerekē i tētahi rāwhiti i muri i te tukinga i tētahi rāwhiti o muri mai.",
     "Tournament.CompetitionNameTaken":
       "Kei tētahi atu tauwhāinga o tēnei whakataetae taua ingoa kē.",
     "BestOf.NotWhole": "Whakauruhia he tau katoa o ngā tākaro.",

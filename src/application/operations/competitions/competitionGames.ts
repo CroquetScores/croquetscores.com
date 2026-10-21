@@ -1,13 +1,16 @@
+import type { Match } from "../../../domain/aggregates/tournaments/competitions/KnockoutPlay.js";
 import type { Competition } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { TeamPlayerId } from "../../../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import type { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type {
+  KnockoutRoundsPlayed,
   TestPlayed,
   Tournament,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { KnockoutDraw } from "../../../domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import type { Games } from "../../services/Games.js";
 import type { Competitions } from "./competitionOperations.js";
 
@@ -33,9 +36,10 @@ const playedInTest = (competition: Competition | undefined): TestPlayed => {
 /**
  * The application's games: the ones its tournaments' competitions keep,
  * archived competitions among them, tests among them. Only the games in use
- * count: an archived game counts for nothing. A knockout's draw is fixed once
- * it has a game in use, so a change to the draw of one that has one moves a
- * player who has played.
+ * count: an archived game counts for nothing. A knockout's places are fixed once
+ * it has a game in use, so a change to the places of one that has one moves a
+ * player who has played. What its rounds are the best of is not where anybody
+ * is, so a change to only that moves nobody.
  */
 export const gamesKeptByCompetitions = (
   tournaments: AggregateRepository<Tournament, TournamentId>,
@@ -77,12 +81,47 @@ export const gamesKeptByCompetitions = (
         ),
       ),
     movesAPlayerWhoHasPlayed: async (
-      _tournament: TournamentId,
+      tournament: TournamentId,
       competition: CompetitionId,
-    ) =>
-      (await competitions.load(competition))?.games.some(
-        (game) => !game.archived,
-      ) ?? false,
+      draw: KnockoutDraw,
+    ) => {
+      const shape = (await tournaments.load(tournament))?.competitions.find(
+        ({ reference }) => reference.id.equals(competition),
+      )?.shape;
+      // Where the knockout is not found there is no draw to move anybody
+      // in, and the tournament refuses the update for it.
+      if (shape?.kind !== "knockout" || shape.draw.places === draw.places) {
+        return false;
+      }
+      return (
+        (await competitions.load(competition))?.games.some(
+          (game) => !game.archived,
+        ) ?? false
+      );
+    },
+    knockoutRoundsPlayed: async (
+      tournament: TournamentId,
+      competition: CompetitionId,
+    ): Promise<KnockoutRoundsPlayed> => {
+      const found = (await tournaments.load(tournament))?.competitions.find(
+        ({ reference }) => reference.id.equals(competition),
+      );
+      const kept = await competitions.load(competition);
+      if (found === undefined || kept === undefined) {
+        return { roundsWithDecidedMatch: [], roundsWithGames: [] };
+      }
+      const matches = kept.knockoutMatches({
+        shape: found.shape,
+        drawsAllowed: true,
+      });
+      const rounds = (keep: (match: Match) => boolean): number[] => [
+        ...new Set(matches.filter(keep).map((match) => match.round)),
+      ];
+      return {
+        roundsWithDecidedMatch: rounds((match) => match.wonByPlaying),
+        roundsWithGames: rounds((match) => match.games.length > 0),
+      };
+    },
     teamPlayerHasPlayed: async (
       tournament: TournamentId,
       player: TeamPlayerId,

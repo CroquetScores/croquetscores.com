@@ -54,6 +54,28 @@ When(
 );
 
 When(
+  "the games are asked whether making the final of {string} of {string} the best of {int} moves a player who has played",
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    games: number,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const id = await competitionIn(this, tournament, competition);
+    // A knockout as the scenarios add it: four places, each round the best of
+    // 1. Only its last round, the final, is given another best-of.
+    this.answer = await this.asARequest(() =>
+      inHandOf(this).games.movesAPlayerWhoHasPlayed(
+        tournament,
+        id,
+        KnockoutDraw.from(4, [1, games]),
+      ),
+    );
+  },
+);
+
+When(
   "the games are asked whether the player {string} of the team {string} of {string} has played",
   async function (this: SpecWorld, player: string, team: string, name: string) {
     const tournament = tournamentNamed(this, name);

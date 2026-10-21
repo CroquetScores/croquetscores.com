@@ -100,6 +100,10 @@ interface Scenario {
   drawRounds: number[];
   competitionsWithGames: Set<string>;
   updateMovesAPlayerWithGames: boolean;
+  // The rounds of a knockout, by its name and counted from 0, that whatever
+  // asks says have a decided match, and a game.
+  roundsWithDecidedMatch: Map<string, Set<number>>;
+  roundsWithGames: Map<string, Set<number>>;
 }
 
 // The tournament a scenario is about when it does not say which.
@@ -130,6 +134,8 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
       drawRounds: [],
       competitionsWithGames: new Set(),
       updateMovesAPlayerWithGames: false,
+      roundsWithDecidedMatch: new Map(),
+      roundsWithGames: new Map(),
     };
     scenarios.set(world, scenario);
   }

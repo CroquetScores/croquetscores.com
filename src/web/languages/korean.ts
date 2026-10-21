@@ -609,6 +609,10 @@ export const korean: Language = {
     "CompetitionName.NoLetterOrDigit": "이름에는 글자나 숫자가 있어야 해요.",
     "Tournament.KnockoutPlayerHasGames":
       "이 대진표의 선수들에게 게임이 있어서 자리를 바꿀 수 없어요.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "승부가 난 경기가 있는 라운드는 경기 수를 줄일 수 없어요.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "뒤 라운드에서 게임이 치러진 뒤에는 이 라운드를 바꿀 수 없어요.",
     "Tournament.CompetitionNameTaken":
       "이 대회의 다른 경기 종목이 이미 그 이름을 쓰고 있어요.",
     "BestOf.NotWhole": "게임 수를 정수로 입력해 주세요.",

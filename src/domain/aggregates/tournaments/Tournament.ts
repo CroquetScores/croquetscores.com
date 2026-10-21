@@ -112,6 +112,8 @@ export type TournamentErrorCode =
   | "Tournament.NotAKnockout"
   | "Tournament.NotASwiss"
   | "Tournament.KnockoutPlayerHasGames"
+  | "Tournament.KnockoutRoundHasDecidedMatch"
+  | "Tournament.KnockoutLaterRoundHasGames"
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
@@ -200,6 +202,15 @@ export interface TestDetails {
 export interface TestPlayed {
   readonly matchesStarted: number;
   readonly mostGamesBetweenTwo: number;
+}
+
+/**
+ * What has been played in a knockout, by round, the first being 0: those with
+ * a match won by playing it, and those with any game in use.
+ */
+export interface KnockoutRoundsPlayed {
+  readonly roundsWithDecidedMatch: readonly number[];
+  readonly roundsWithGames: readonly number[];
 }
 
 /** What each kind of competition is besides what every competition is. */
@@ -948,14 +959,18 @@ export class Tournament extends AggregateRoot {
   /**
    * That the knockout `id` is now called `name` and has a draw of `draw`'s
    * shape. A draw can be changed after games are played in it, but not so as
-   * to move a player who has games. Where each player is in the draw is not
-   * the tournament's to know, so whatever asks says whether the change does.
+   * to move a player who has games, nor so as to make a round with a decided
+   * match a shorter best-of, nor so as to change a round when a game has
+   * been played in a later one: the players of a later round are whoever won
+   * the matches before it. Where each player is in the draw, and which rounds
+   * have been played, are not the tournament's to know, so whatever asks says.
    */
   updateKnockout(
     id: CompetitionId,
     name: CompetitionName,
     draw: KnockoutDraw,
     movesAPlayerWithGames: boolean,
+    played: KnockoutRoundsPlayed,
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
@@ -969,6 +984,31 @@ export class Tournament extends AggregateRoot {
         "The change to the draw moves a player who has games.",
       );
     }
+    // Decided first: a round that was shortened under a decided match is the
+    // more specific thing to tell whoever asked.
+    found.shape.draw.rounds.forEach((was, round) => {
+      const now = draw.rounds[round];
+      if (now === undefined || now.equals(was)) return;
+      if (
+        now.games < was.games &&
+        played.roundsWithDecidedMatch.includes(round)
+      ) {
+        refuse(
+          "Tournament.KnockoutRoundHasDecidedMatch",
+          "A round with a decided match cannot be made a shorter best-of.",
+        );
+      }
+    });
+    found.shape.draw.rounds.forEach((was, round) => {
+      const now = draw.rounds[round];
+      if (now === undefined || now.equals(was)) return;
+      if (played.roundsWithGames.some((later) => later > round)) {
+        refuse(
+          "Tournament.KnockoutLaterRoundHasGames",
+          "A round cannot be changed once a game has been played in a later one.",
+        );
+      }
+    });
     if (found.reference.name.equals(name) && !drawChanged) return;
     this.record(
       new KnockoutUpdated(

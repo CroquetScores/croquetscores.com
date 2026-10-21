@@ -634,6 +634,10 @@ export const afrikaans: Language = {
     "CompetitionName.NoLetterOrDigit": "'n Naam het 'n letter of syfer nodig.",
     "Tournament.KnockoutPlayerHasGames":
       "Spelers in hierdie rooster het wedstryde, so hul plekke kan nie verander nie.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "'n Ronde met 'n beslote wedstryd kan nie korter gemaak word nie.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "'n Ronde kan nie verander word nie nadat 'n wedstryd in 'n latere ronde gespeel is.",
     "Tournament.CompetitionNameTaken":
       "Nog 'n kompetisie in hierdie toernooi het reeds daardie naam.",
     "BestOf.NotWhole": "Voer 'n heelgetal spelle in.",

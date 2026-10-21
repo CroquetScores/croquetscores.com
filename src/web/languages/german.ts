@@ -645,6 +645,10 @@ export const german: Language = {
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
     "Tournament.KnockoutPlayerHasGames":
       "Spieler dieser Auslosung haben Spiele, deshalb können ihre Plätze nicht geändert werden.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Eine Runde mit einem entschiedenen Spiel kann nicht auf weniger Gewinnspiele gekürzt werden.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Eine Runde kann nicht mehr geändert werden, sobald in einer späteren Runde gespielt wurde.",
     "Tournament.CompetitionNameTaken":
       "Ein anderer Wettbewerb dieses Turniers hat schon diesen Namen.",
     "BestOf.NotWhole": "Gib eine ganze Zahl von Spielen ein.",

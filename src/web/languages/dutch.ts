@@ -630,6 +630,10 @@ export const dutch: Language = {
       "Een naam moet een letter of een cijfer bevatten.",
     "Tournament.KnockoutPlayerHasGames":
       "Spelers in deze loting hebben partijen, dus de plaatsen kunnen niet veranderen.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Een ronde met een beslist duel kan niet korter worden gemaakt.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Een ronde kan niet meer worden gewijzigd zodra in een latere ronde is gespeeld.",
     "Tournament.CompetitionNameTaken":
       "Een andere competitie in dit toernooi heeft die naam al.",
     "BestOf.NotWhole": "Voer een geheel aantal partijen in.",
