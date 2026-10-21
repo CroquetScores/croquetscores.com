@@ -14,7 +14,16 @@ const forbid = (message, ...groups) => ({
 });
 
 export default tseslint.config(
-  { ignores: ["dist", "reports", "node_modules", "assets"] },
+  {
+    ignores: [
+      "dist",
+      "reports",
+      "node_modules",
+      "assets",
+      // Runs in k6's own runtime, which has its own globals and imports.
+      "scripts/*.k6.js",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
