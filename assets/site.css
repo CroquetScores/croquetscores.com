@@ -1469,6 +1469,25 @@ main {
   fill: var(--danger);
 }
 
+/* A page's heading with what can be done to the thing it names beside it, such
+   as a tournament's Edit. The name wraps within its own room rather than the
+   button dropping beneath it, so that on a phone the button is still beside
+   the name it is about. */
+.page-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page-heading h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.page-heading .button {
+  flex-shrink: 0;
+}
+
 /* The one that does what the form is for, and the only one that looks like it. */
 .button-submit {
   border-color: var(--action);

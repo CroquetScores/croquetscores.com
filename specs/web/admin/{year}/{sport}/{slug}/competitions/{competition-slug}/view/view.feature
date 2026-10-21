@@ -63,6 +63,41 @@ Feature: A competition's page in the admin
       When the page of the competition "Block A" in "Spring Open" is opened
       Then the page is headed "Block A"
 
+  Rule: A manager can edit the competition from beside its name
+
+    Beside the name is a pencil, named Edit, that opens the competition dialog
+    (`competition.feature`), as Edit does on the Competitions tab. It is the
+    manager's, as editing is: a scorer is there to enter scores, so is not
+    offered it. Keeping the change closes the dialog and the page says the name
+    the competition has now.
+
+    Scenario: A manager is offered Edit beside the competition's name
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then Edit is beside the page's heading
+
+    Scenario: Edit beside the competition's name is a pencil
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then Edit beside the page's heading is a pencil
+
+    Scenario: Edit beside the competition's name opens the competition dialog
+      Given the page of the competition "Block A" in "Spring Open" is open
+      When Edit beside the page's heading is pressed
+      Then the competition dialog is titled "Edit Competition"
+
+    Scenario: A name kept from there is the name the page is headed by
+      Given the page of the competition "Block A" in "Spring Open" is open
+      And Edit beside the page's heading is pressed
+      And "Block B" is typed as the "Name"
+      When "Save" is pressed
+      Then the page is headed "Block B"
+
+    Scenario: A scorer is not offered Edit beside the competition's name
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then Edit is not offered beside the page's heading
+
   Rule: What there is to run is in two tabs, in the panel beneath the competition's name
 
     Scenario Outline: The page has each tab

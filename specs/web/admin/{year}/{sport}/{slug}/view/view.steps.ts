@@ -7,6 +7,7 @@ import {
   tournamentNamed,
 } from "../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../support/world.js";
+import { eventually } from "../../../../../support/tournamentPage.js";
 import {
   announcedAs,
   isMarked,
@@ -53,7 +54,10 @@ Then(
   async function (this: SpecWorld, name: string) {
     const heading = this.browserPage.locator("main h1").first();
     await heading.waitFor();
-    assert.equal((await heading.innerText()).trim(), name);
+    // A name kept from beside the heading is redrawn a moment after it is.
+    await eventually(this, async () => {
+      assert.equal((await heading.innerText()).trim(), name);
+    });
   },
 );
 
@@ -112,6 +116,58 @@ Then(
         .count(),
       1,
     );
+  },
+);
+
+// The pencil beside the heading, by the name it is given: a link where it
+// leads to a page, as a tournament's does, and a button where it opens a
+// dialog, as a competition's does.
+const editBesideHeading = (world: SpecWorld): Locator => {
+  const heading = world.browserPage.locator("main .page-heading");
+  return heading
+    .getByRole("link", { name: "Edit", exact: true })
+    .or(heading.getByRole("button", { name: "Edit", exact: true }));
+};
+
+Then("Edit is beside the page's heading", async function (this: SpecWorld) {
+  const edit = editBesideHeading(this);
+  await edit.waitFor();
+  const heading = await this.browserPage
+    .locator("main h1")
+    .first()
+    .boundingBox();
+  const box = await edit.boundingBox();
+  assert.ok(heading !== null && box !== null, "One is not laid out.");
+  // On the heading's line, and after it.
+  assert.ok(
+    box.y < heading.y + heading.height && heading.y < box.y + box.height,
+    `Edit is not on the heading's line: ${JSON.stringify({ heading, box })}`,
+  );
+  assert.ok(box.x >= heading.x + heading.width, "Edit is not after it.");
+});
+
+Then(
+  "Edit beside the page's heading is a pencil",
+  async function (this: SpecWorld) {
+    const edit = editBesideHeading(this);
+    await edit.waitFor();
+    assert.equal(await edit.locator(".icon-pencil").count(), 1);
+    assert.equal(((await edit.textContent()) ?? "").trim(), "");
+  },
+);
+
+When(
+  "Edit beside the page's heading is pressed",
+  async function (this: SpecWorld) {
+    await editBesideHeading(this).click();
+  },
+);
+
+Then(
+  "Edit is not offered beside the page's heading",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("main h1").first().waitFor();
+    assert.equal(await editBesideHeading(this).count(), 0);
   },
 );
 

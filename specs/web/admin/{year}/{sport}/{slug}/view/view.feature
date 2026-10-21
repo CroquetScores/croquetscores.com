@@ -85,6 +85,33 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the page is headed "Spring Open"
 
+  Rule: A manager can edit the tournament from beside its name
+
+    Beside the name is a pencil, named Edit, that leads to the page that edits
+    the tournament itself (`edit.feature`), as Edit does in the list of
+    tournaments (`tournaments.feature`). It is the manager's, as the editing
+    is: a scorer has no tournament to edit, so is not offered it.
+
+    Scenario: A manager is offered Edit beside the tournament's name
+      When the page of "Spring Open" is opened
+      Then Edit is beside the page's heading
+
+    Scenario: Edit beside the tournament's name is a pencil
+      When the page of "Spring Open" is opened
+      Then Edit beside the page's heading is a pencil
+
+    Scenario: Edit beside the tournament's name leads to editing the tournament
+      Given the page of "Spring Open" is open
+      When Edit beside the page's heading is pressed
+      Then the address is "/admin/2026/ac/spring-open/edit"
+
+    Scenario: A scorer is not offered Edit beside the tournament's name
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then Edit is not offered beside the page's heading
+
   Rule: What there is to run is in six tabs, in the panel beneath the tournament's name
 
     Scenario Outline: The page has each tab

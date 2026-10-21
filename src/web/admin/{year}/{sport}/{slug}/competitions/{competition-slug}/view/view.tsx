@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { go } from "../../../../../../navigation.js";
 import { TabControl } from "../../../../../../TabControl.js";
@@ -7,7 +7,12 @@ import { TournamentSections } from "../../../TournamentSections.js";
 import { say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
 import { ScoresTab } from "./tabs/scores/scores.js";
-import { refusalOf } from "../../../../../../api.js";
+import { idInAddress, refusalOf } from "../../../../../../api.js";
+import { Pencil } from "../../../../../../Pencil.js";
+import {
+  CompetitionDialog,
+  type CompetitionAsItIs,
+} from "../../../view/modal-dialogs/competition/competition.js";
 import { RefusedPage } from "../../../RefusedPage.js";
 
 // A competition's page (view.feature beneath the competition): headed by its
@@ -53,6 +58,14 @@ export const ViewCompetition = ({
 }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
   const [chosen, setChosen] = useState<Tab>("players");
+  // The competition being changed, once the dialog is open, and a count of the
+  // times it has been kept, so that the page asks for the competition again and
+  // says what it is now.
+  const [editing, setEditing] = useState<CompetitionAsItIs | undefined>();
+  const [kept, setKept] = useState(0);
+  // Whether the page has been drawn once, after which asking again keeps the
+  // tab the reader is on.
+  const drawn = useRef(false);
 
   useEffect(() => {
     void fetch(`/api/v1/tournaments/at/${address}/competitions/${slug}/page`, {
@@ -74,12 +87,13 @@ export const ViewCompetition = ({
           return;
         }
         setAsked({ is: "found", competition: answer });
-        setChosen(offeredTo(answer.part)[0] ?? "scores");
+        if (!drawn.current) setChosen(offeredTo(answer.part)[0] ?? "scores");
+        drawn.current = true;
       })
       .catch(() => {
         setAsked({ is: "refused", code: "Unknown" });
       });
-  }, [address, slug]);
+  }, [address, slug, kept]);
 
   if (asked.is === "asking") return <HeldPage />;
 
@@ -103,7 +117,39 @@ export const ViewCompetition = ({
       <main id="content">
         <div className="page">
           <div className="panel stack">
-            <h1>{asked.competition.name}</h1>
+            <div className="page-heading">
+              <h1>{asked.competition.name}</h1>
+              {/* A manager's, as editing is: a scorer is there to enter
+                  scores (view.feature). The dialog is given the competition
+                  as the tournament lists it, which has its shape. */}
+              {asked.competition.part === "manager" ? (
+                <button
+                  type="button"
+                  className="button"
+                  title={say("admin.hover.competitions.edit")}
+                  aria-label={say("admin.competitions.edit")}
+                  onClick={() => {
+                    void fetch(
+                      `/api/v1/tournaments/${idInAddress(asked.competition.tournament)}/competitions`,
+                      { headers: { accept: "application/json" } },
+                    )
+                      .then(async (response) => {
+                        const listed = (await response.json()) as {
+                          readonly competitions: readonly CompetitionAsItIs[];
+                        };
+                        setEditing(
+                          listed.competitions.find(
+                            ({ id }) => id === asked.competition.id,
+                          ),
+                        );
+                      })
+                      .catch(() => undefined);
+                  }}
+                >
+                  <Pencil />
+                </button>
+              ) : null}
+            </div>
             <TabControl
               tabs={offeredTo(asked.competition.part)}
               chosen={chosen}
@@ -128,6 +174,18 @@ export const ViewCompetition = ({
           </div>
         </div>
       </main>
+      {editing === undefined ? null : (
+        <CompetitionDialog
+          tournament={asked.competition.tournament}
+          competition={editing}
+          kept={() => {
+            setKept((count) => count + 1);
+          }}
+          close={() => {
+            setEditing(undefined);
+          }}
+        />
+      )}
     </>
   );
 };
