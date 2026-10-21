@@ -10,7 +10,8 @@ Feature: Association Croquet's rankings are a text file of who beat whom
   For each competition that has a result, in the tournament's order, it has a
   block of lines: "Event" and the competition's name, "Date" and the days it
   was played, "Winner" and who won it, "Type" and whether it was matches or
-  single games, "Order firstname", a blank line, then a numbered line for
+  single games, "Country" and the name of the country the tournament was
+  played in, "Order firstname", a blank line, then a numbered line for
   each result, and "End". A blank line comes between one competition's block
   and the next.
 
@@ -97,20 +98,38 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the second line is "Date 30.12.26-2.1.27"
 
+    Scenario: The country is the tournament's, by its name
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the fifth line is "Country Australia"
+
+    Scenario: The country is another where the tournament was played in another
+      Given the tournament is to be played in the country "nz"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Autumn Open"
+      And the block is to be the best of 1
+      And "organiser@example.com" has added the block "Block A" to "Autumn Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Autumn Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Autumn Open"
+      When the text file of that tournament's rankings is read
+      Then the fifth line is "Country New Zealand"
+
     Scenario: The order is by first name
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the fifth line is "Order firstname"
+      Then the sixth line is "Order firstname"
 
     Scenario: A blank line comes before the results
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the sixth line is blank
+      Then the seventh line is blank
 
     Scenario: The block ends with End
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the eighth line is "End"
+      Then the ninth line is "End"
 
     Scenario: A competition with no result has no block
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
@@ -125,7 +144,7 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the ninth line is blank
+      Then the tenth line is blank
 
     Scenario: The next competition's block follows
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
@@ -134,40 +153,40 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the tenth line is "Event Spring Open Block B"
+      Then the eleventh line is "Event Spring Open Block B"
 
   Rule: A result's line says who beat whom, and the scores
 
     Scenario: The line is numbered
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line starts " 1 Sam Someone beat Alex Another"
+      Then the eighth line starts " 1 Sam Someone beat Alex Another"
 
     Scenario: The line ends with the score
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line ends "+9"
+      Then the eighth line ends "+9"
 
     Scenario: A score carries the winner's peels
       Given "Sam Someone" has beaten "Alex Another" 26tp to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line ends "+9tp"
+      Then the eighth line ends "+9tp"
 
     Scenario: A score carries the loser's peels after the winner's
       Given "Sam Someone" has beaten "Alex Another" 26tp to 17tp in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line ends "+9tptp"
+      Then the eighth line ends "+9tptp"
 
     Scenario: A game won on equal hoops has no plus
       Given "Sam Someone" has beaten "Alex Another" 17w to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line ends "0w"
+      Then the eighth line ends "0w"
 
     Scenario: The results are in the order the games were added
       Given "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the eighth line starts " 2 Sam Someone  beat Alex Another"
+      Then the ninth line starts " 2 Sam Someone  beat Alex Another"
 
     Scenario: The numbers start again in each competition
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
@@ -176,20 +195,20 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the sixteenth line starts " 1 Alex Another beat Sam Someone"
+      Then the eighteenth line starts " 1 Alex Another beat Sam Someone"
 
     Scenario: Names are padded so that the lines line up
       Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line is " 1 Sam Someone  beat Chris Third +9"
+      Then the eighth line is " 1 Sam Someone  beat Chris Third +9"
 
     Scenario: A name with an accent is written without it
       Given "organiser@example.com" has added the player "José Ñandú" to "Spring Open"
       And "organiser@example.com" has entered the player "José Ñandú" in "Block A" of "Spring Open"
       And "José Ñandú" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line starts " 1 Jose Nandu beat Alex Another"
+      Then the eighth line starts " 1 Jose Nandu beat Alex Another"
 
   Rule: A knockout's match is a line of its own with each game's score
 
@@ -207,14 +226,14 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Finals" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line is " 1 Sam Someone beat Alex Another +9, +23"
+      Then the eighth line is " 1 Sam Someone beat Alex Another +9, +23"
 
     Scenario: A game the match's winner lost is its score from the winner's side
       Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Finals" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Finals" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 20 in "Finals" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line is " 1 Sam Someone beat Alex Another -9, +23, +6"
+      Then the eighth line is " 1 Sam Someone beat Alex Another -9, +23, +6"
 
     Scenario: A match decided by a bye has no line
       Given "organiser@example.com" has added the knockout "Plate" to "Spring Open"
@@ -294,10 +313,10 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line starts " 1 Sam Someone beat Alex Another"
+      Then the eighth line starts " 1 Sam Someone beat Alex Another"
 
     Scenario: A game of a player who has withdrawn has a line
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the seventh line starts " 1 Sam Someone beat Alex Another"
+      Then the eighth line starts " 1 Sam Someone beat Alex Another"

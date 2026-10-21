@@ -48,6 +48,8 @@ export interface RankingsToRead {
   readonly address: string;
   /** The sport's code, as "ac". */
   readonly sport: string;
+  /** The name of the country it is played in, as "Australia". */
+  readonly country: string;
   /** The days it starts and finishes on, each as "2026-10-03". */
   readonly starts: string;
   readonly finishes: string;
