@@ -634,6 +634,10 @@ export const welsh: Language = {
     "CompetitionName.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw.",
     "Tournament.KnockoutPlayerHasGames":
       "Mae gan rai chwaraewyr yn y siart hon gornestau, felly ni ellir newid eu lleoedd.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Ni ellir byrhau rownd sydd â chornest wedi'i phenderfynu.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Ni ellir newid rownd ar ôl chwarae gêm mewn rownd ddiweddarach.",
     "Tournament.CompetitionNameTaken":
       "Mae gan gystadleuaeth arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
     "BestOf.NotWhole": "Rhowch nifer cyflawn o gemau.",

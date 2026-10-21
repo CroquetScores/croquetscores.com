@@ -13,9 +13,11 @@ Feature: Changing what a tournament's knockout is
   know. The application asks its games (`Games.feature`). A knockout's places
   are fixed once it has a game in use (`addGame.feature`), so the games say a
   change to the places of a knockout that has one moves a player who has
-  played. What a round is the best of moves nobody, so it can be changed
-  at any time. An archived game counts for nothing, so a knockout whose only games
-  are archived can have its draw changed.
+  played. What a round is the best of moves nobody, but it cannot be made
+  shorter once a match in that round is decided (`updateKnockout.feature`),
+  and whether one is decided is not the tournament's to know either. The
+  application asks its games. An archived game counts for nothing, so a
+  knockout whose only games are archived can have its draw changed.
 
   This says again only enough of what updating a block says to show that it
   holds for a knockout.
@@ -97,6 +99,77 @@ Feature: Changing what a tournament's knockout is
       And its second round is to be the best of 3
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
       Then the tournament's competition "Main Event" has its second round the best of 3
+
+  Rule: A round with a decided match is not made a shorter best-of
+
+    Scenario: A round with a decided match is made a longer best-of
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Robin Rival" to "Spring Open"
+      And "organiser@example.com" has added the player "Taylor Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Robin Rival" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Taylor Third" in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 3
+      And its second round is to be the best of 3
+      When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
+      Then the tournament's competition "Main Event" has its first round the best of 3
+      And the tournament's competition "Main Event" has its second round the best of 3
+
+    Scenario: A round with a decided match is refused a shorter best-of, though the final has been played
+      Given the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 3
+      And its second round is to be the best of 3
+      And "organiser@example.com" has updated the knockout "Main Event" in "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Robin Rival" to "Spring Open"
+      And "organiser@example.com" has added the player "Taylor Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Robin Rival" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Taylor Third" in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 12 in "Main Event" of "Spring Open"
+      And "Robin Rival" has beaten "Taylor Third" 26 to 10 in "Main Event" of "Spring Open"
+      And "Robin Rival" has beaten "Taylor Third" 26 to 14 in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Robin Rival" 26 to 20 in "Main Event" of "Spring Open"
+      And the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 1
+      And its second round is to be the best of 3
+      When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
+      Then it is refused with "Tournament.KnockoutRoundHasDecidedMatch"
+
+  Rule: A round's best-of is not changed once a game has been played in a later round
+
+    The players in a later round are whoever won the matches before it. Changing
+    what an earlier round is the best of could undo one of those wins, and
+    leave the games played after it between players who no longer got there.
+
+    Scenario: A round is refused a different best-of when a game has been played in the final
+      Given the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 1
+      And its second round is to be the best of 3
+      And "organiser@example.com" has updated the knockout "Main Event" in "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Robin Rival" to "Spring Open"
+      And "organiser@example.com" has added the player "Taylor Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Robin Rival" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Taylor Third" in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And "Robin Rival" has beaten "Taylor Third" 26 to 10 in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Robin Rival" 26 to 20 in "Main Event" of "Spring Open"
+      And the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 3
+      And its second round is to be the best of 3
+      When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
+      Then it is refused with "Tournament.KnockoutLaterRoundHasGames"
 
   Rule: What the tournament asks is the tournament's to refuse
 

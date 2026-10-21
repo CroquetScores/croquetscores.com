@@ -49,6 +49,7 @@ export class UpdateKnockoutHandler extends CommandHandler<
         competition,
         draw,
       ),
+      await this.games.knockoutRoundsPlayed(tournament.id, competition),
       by,
       command.requestedAt,
     );

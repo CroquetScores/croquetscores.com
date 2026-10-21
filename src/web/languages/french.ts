@@ -640,6 +640,10 @@ export const french: Language = {
       "Un nom doit contenir une lettre ou un chiffre.",
     "Tournament.KnockoutPlayerHasGames":
       "Des joueurs de ce tableau ont des matchs ; leurs places ne peuvent donc pas changer.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Une manche dont un match est décidé ne peut pas être raccourcie.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Une manche ne peut plus être modifiée dès qu'une partie a été jouée dans une manche suivante.",
     "Tournament.CompetitionNameTaken":
       "Une autre compétition de ce tournoi porte déjà ce nom.",
     "BestOf.NotWhole": "Saisissez un nombre entier de parties.",

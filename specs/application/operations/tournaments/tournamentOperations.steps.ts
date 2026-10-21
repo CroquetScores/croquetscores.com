@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 
 import { AddBlock } from "../../../../src/application/operations/tournaments/AddBlock.js";
 import { AddKnockout } from "../../../../src/application/operations/tournaments/AddKnockout.js";
+import { UpdateKnockout } from "../../../../src/application/operations/tournaments/UpdateKnockout.js";
 import { AddManager } from "../../../../src/application/operations/tournaments/AddManager.js";
 import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
 import { AddScorer } from "../../../../src/application/operations/tournaments/AddScorer.js";
@@ -491,6 +492,34 @@ Given(
         ),
       ),
     );
+  },
+);
+
+// The draw the scenario has said, as the update that follows says it again.
+Given(
+  "{string} has updated the knockout {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    knockout: string,
+    name: string,
+  ) {
+    const places = domainScenarioOf(this).drawPlaces ?? 4;
+    await doneTo(this, address, name, async (account, tournament) => {
+      const id = await competitionIn(this, tournament, knockout);
+      return new UpdateKnockout(
+        account,
+        tournament.value,
+        id.value,
+        knockout,
+        places,
+        Array.from(
+          { length: Math.log2(places) },
+          (_, round) => domainScenarioOf(this).drawRounds[round] ?? 1,
+        ),
+        momentOf(this),
+      );
+    });
   },
 );
 

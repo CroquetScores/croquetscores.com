@@ -628,6 +628,10 @@ export const swedish: Language = {
       "Ett namn måste innehålla en bokstav eller en siffra.",
     "Tournament.KnockoutPlayerHasGames":
       "Spelare i den här lottningen har partier, så dess platser kan inte ändras.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "En omgång med en avgjord match kan inte göras kortare.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "En omgång kan inte ändras när ett parti har spelats i en senare omgång.",
     "Tournament.CompetitionNameTaken":
       "En annan tävling i den här turneringen har redan det namnet.",
     "BestOf.NotWhole": "Ange ett helt antal partier.",

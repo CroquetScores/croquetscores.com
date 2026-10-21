@@ -629,6 +629,10 @@ export const italian: Language = {
       "Un nome deve contenere una lettera o una cifra.",
     "Tournament.KnockoutPlayerHasGames":
       "I giocatori di questo tabellone hanno delle partite, quindi i suoi posti non possono cambiare.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Un turno con un incontro deciso non può essere accorciato.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Un turno non può più essere modificato dopo che si è giocata una partita in un turno successivo.",
     "Tournament.CompetitionNameTaken":
       "Un'altra competizione di questo torneo ha già quel nome.",
     "BestOf.NotWhole": "Inserisci un numero intero di partite.",

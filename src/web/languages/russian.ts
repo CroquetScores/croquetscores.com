@@ -628,6 +628,10 @@ export const russian: Language = {
       "В названии нужна хотя бы одна буква или цифра.",
     "Tournament.KnockoutPlayerHasGames":
       "У некоторых игроков этой сетки есть партии, поэтому их места менять нельзя.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Нельзя сократить раунд, в котором есть решённый матч.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Раунд нельзя менять, если в более позднем раунде уже сыграна партия.",
     "Tournament.CompetitionNameTaken":
       "У другого соревнования этого турнира уже есть такое название.",
     "BestOf.NotWhole": "Введите целое число партий.",

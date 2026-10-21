@@ -700,6 +700,10 @@ export const english: Language = {
       "A name needs a letter or a digit in it.",
     "Tournament.KnockoutPlayerHasGames":
       "Players in this draw have games, so its places cannot change.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "A round with a decided match cannot be made a shorter best-of.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "A round cannot be changed once a game has been played in a later round.",
     "Tournament.CompetitionNameTaken":
       "Another competition in this tournament already has that name.",
     "BestOf.NotWhole": "Enter a whole number of games.",

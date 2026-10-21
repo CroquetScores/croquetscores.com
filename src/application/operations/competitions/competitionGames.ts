@@ -1,9 +1,11 @@
+import type { Match } from "../../../domain/aggregates/tournaments/competitions/KnockoutPlay.js";
 import type { Competition } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
 import type { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { TeamPlayerId } from "../../../domain/aggregates/tournaments/primitives/TeamPlayerId.js";
 import type { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type {
+  KnockoutRoundsPlayed,
   TestPlayed,
   Tournament,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
@@ -96,6 +98,29 @@ export const gamesKeptByCompetitions = (
           (game) => !game.archived,
         ) ?? false
       );
+    },
+    knockoutRoundsPlayed: async (
+      tournament: TournamentId,
+      competition: CompetitionId,
+    ): Promise<KnockoutRoundsPlayed> => {
+      const found = (await tournaments.load(tournament))?.competitions.find(
+        ({ reference }) => reference.id.equals(competition),
+      );
+      const kept = await competitions.load(competition);
+      if (found === undefined || kept === undefined) {
+        return { roundsWithDecidedMatch: [], roundsWithGames: [] };
+      }
+      const matches = kept.knockoutMatches({
+        shape: found.shape,
+        drawsAllowed: true,
+      });
+      const rounds = (keep: (match: Match) => boolean): number[] => [
+        ...new Set(matches.filter(keep).map((match) => match.round)),
+      ];
+      return {
+        roundsWithDecidedMatch: rounds((match) => match.wonByPlaying),
+        roundsWithGames: rounds((match) => match.games.length > 0),
+      };
     },
     teamPlayerHasPlayed: async (
       tournament: TournamentId,

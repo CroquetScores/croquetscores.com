@@ -609,6 +609,10 @@ export const egyptian: Language = {
     "CompetitionName.NoLetterOrDigit": "الاسم لازم فيه حرف أو رقم.",
     "Tournament.KnockoutPlayerHasGames":
       "في لاعبين في الجدول ده ليهم ماتشات، فأماكنهم مينفعش تتغيّر.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "الدور اللي فيه ماتش اتحسم مينفعش نقلل عدد ألعابه.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "الدور مينفعش يتغيّر بعد ما اتلعبت لعبة في دور بعده.",
     "Tournament.CompetitionNameTaken":
       "في مسابقة تانية في البطولة دي بنفس الاسم.",
     "BestOf.NotWhole": "اكتب عدد صحيح من الجيمات.",

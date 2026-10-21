@@ -632,6 +632,10 @@ export const polish: Language = {
     "CompetitionName.NoLetterOrDigit": "Nazwa musi zawierać literę lub cyfrę.",
     "Tournament.KnockoutPlayerHasGames":
       "Zawodnicy w tym losowaniu mają rozegrane partie, więc jego miejsc nie można zmienić.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Rundy z rozstrzygniętym meczem nie można skrócić.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Rundy nie można zmienić, gdy w późniejszej rundzie rozegrano już partię.",
     "Tournament.CompetitionNameTaken":
       "Inna konkurencja w tym turnieju ma już taką nazwę.",
     "BestOf.NotWhole": "Wpisz całkowitą liczbę partii.",

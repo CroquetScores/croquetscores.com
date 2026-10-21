@@ -634,6 +634,10 @@ export const portuguese: Language = {
       "Um nome precisa ter uma letra ou um dígito.",
     "Tournament.KnockoutPlayerHasGames":
       "Os jogadores deste sorteio têm jogos, então as suas vagas não podem mudar.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Uma rodada com uma partida decidida não pode ser encurtada.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Uma rodada não pode ser alterada depois de se jogar numa rodada posterior.",
     "Tournament.CompetitionNameTaken":
       "Outra competição deste torneio já tem esse nome.",
     "BestOf.NotWhole": "Insira um número inteiro de jogos.",

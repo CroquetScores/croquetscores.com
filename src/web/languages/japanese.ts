@@ -620,6 +620,10 @@ export const japanese: Language = {
     "CompetitionName.NoLetterOrDigit": "名称には文字か数字を含めてください。",
     "Tournament.KnockoutPlayerHasGames":
       "この組み合わせの選手には試合があるため、順位数は変更できません。",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "勝敗が決まった試合があるラウンドは、ゲーム数を減らせません。",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "後のラウンドで試合が行われたあとは、このラウンドを変更できません。",
     "Tournament.CompetitionNameTaken":
       "この大会のほかの部門が、すでにその名称を使っています。",
     "BestOf.NotWhole": "ゲーム数は整数で入力してください。",

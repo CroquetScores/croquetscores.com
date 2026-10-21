@@ -634,6 +634,10 @@ export const spanish: Language = {
       "Un nombre necesita una letra o un número.",
     "Tournament.KnockoutPlayerHasGames":
       "Hay jugadores de este cuadro con partidos, así que sus plazas no pueden cambiar.",
+    "Tournament.KnockoutRoundHasDecidedMatch":
+      "Una ronda con un partido decidido no puede acortarse.",
+    "Tournament.KnockoutLaterRoundHasGames":
+      "Una ronda no puede cambiarse una vez jugada una partida en una ronda posterior.",
     "Tournament.CompetitionNameTaken":
       "Otra competición de este torneo ya tiene ese nombre.",
     "BestOf.NotWhole": "Introduce un número entero de partidas.",
