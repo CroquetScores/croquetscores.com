@@ -1,16 +1,17 @@
 // What a listed row's option shows. Up and Down are arrows, which say which
 // way they move a row in less room than their words, so that a row's options
-// fit a phone, Edit is a pencil, and Archive and Delete are a trash can, as they are
-// wherever else they are offered;
-// they are named by their words for a reader who cannot see them. Every
-// option says what it does to one who points at it, in `hover`.
+// fit a phone. Edit is a pencil, and Archive and Delete are a trash can, as
+// they are wherever else they are offered. Each is named by its words for a
+// reader who cannot see it. Every option says what it does to one who points
+// at it, in `hover`.
 
 import { Pencil } from "./Pencil.js";
 import { TrashCan } from "./TrashCan.js";
 
 const arrows = { up: "↑", down: "↓" } as const;
 
-const faceOf = (action: string, words: string): React.JSX.Element | string =>
+// The picture an action is drawn as, or nothing where it is drawn as its words.
+const pictureOf = (action: string): React.JSX.Element | undefined =>
   action === "up" || action === "down" ? (
     <span className="option-arrow" aria-hidden="true">
       {arrows[action]}
@@ -19,9 +20,7 @@ const faceOf = (action: string, words: string): React.JSX.Element | string =>
     <Pencil />
   ) : action === "archive" || action === "delete" ? (
     <TrashCan />
-  ) : (
-    words
-  );
+  ) : undefined;
 
 /**
  * What the button for `action` shows, given the `words` it is named by and
@@ -37,22 +36,12 @@ export const optionFace = (
       readonly "aria-label": string;
       readonly title: string;
       readonly children: React.JSX.Element;
-    } =>
-  action === "up" || action === "down"
-    ? {
-        "aria-label": words,
-        title: hover,
-        children: (
-          <span className="option-arrow" aria-hidden="true">
-            {arrows[action]}
-          </span>
-        ),
-      }
-    : action === "edit"
-      ? { "aria-label": words, title: hover, children: <Pencil /> }
-      : action === "archive" || action === "delete"
-        ? { "aria-label": words, title: hover, children: <TrashCan /> }
-        : { title: hover, children: words };
+    } => {
+  const picture = pictureOf(action);
+  return picture === undefined
+    ? { title: hover, children: words }
+    : { "aria-label": words, title: hover, children: picture };
+};
 
 /**
  * The room the button for `action` would take, on a row that does not offer
@@ -64,6 +53,6 @@ export const optionFace = (
  */
 export const noOption = (action: string, words: string): React.JSX.Element => (
   <span key={`no-${action}`} className="button option-space" aria-hidden="true">
-    {faceOf(action, words)}
+    {pictureOf(action) ?? words}
   </span>
 );

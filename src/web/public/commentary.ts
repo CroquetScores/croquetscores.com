@@ -38,6 +38,7 @@ import { type Reads, readsOf, rememberRead } from "./read.js";
 import { ago, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
 import { accountForgotten } from "./profile.js";
+import { pencilPath, trashCanPath } from "../common/iconPaths.js";
 
 export type CommentaryParams = {
   year: string;
@@ -120,8 +121,8 @@ export const commentDrawn = (text: string): string => markdown.render(text);
 // menu's is: they cost no request, and they take the colour of the link they
 // are in. Hidden from anyone reading the page aloud, since each link says in
 // words what it is for.
-export const pencil = `<svg class="icon icon-pencil" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25Zm17.7-10.2a1 1 0 0 0 0-1.42l-2.33-2.33a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83Z" /></svg>`;
-const trashCan = `<svg class="icon icon-trash-can" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z" /></svg>`;
+export const pencil = `<svg class="icon icon-pencil" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${pencilPath}" /></svg>`;
+const trashCan = `<svg class="icon icon-trash-can" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${trashCanPath}" /></svg>`;
 
 /**
  * What scripting adds to a commentary's pages, where there is scripting. A

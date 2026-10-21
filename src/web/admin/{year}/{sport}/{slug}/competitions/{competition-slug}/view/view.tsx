@@ -63,6 +63,9 @@ export const ViewCompetition = ({
   // says what it is now.
   const [editing, setEditing] = useState<CompetitionAsItIs | undefined>();
   const [kept, setKept] = useState(0);
+  // Whether the competition's list is being asked for, so that pressing the
+  // pencil again meanwhile does not ask twice.
+  const [opening, setOpening] = useState(false);
   // Whether the page has been drawn once, after which asking again keeps the
   // tab the reader is on.
   const drawn = useRef(false);
@@ -77,7 +80,10 @@ export const ViewCompetition = ({
       .then(async (response) => {
         if (!response.ok) {
           const code = await refusalOf(response);
-          if (current) setAsked({ is: "refused", code });
+          // A page already drawn is kept when asking again fails: the change
+          // was kept, and a failure of the second question is not a reason
+          // to take the page away.
+          if (current && !drawn.current) setAsked({ is: "refused", code });
           return;
         }
         const answer = (await response.json()) as Found;
@@ -96,7 +102,9 @@ export const ViewCompetition = ({
         drawn.current = true;
       })
       .catch(() => {
-        if (current) setAsked({ is: "refused", code: "Unknown" });
+        if (current && !drawn.current) {
+          setAsked({ is: "refused", code: "Unknown" });
+        }
       });
     return () => {
       current = false;
@@ -136,7 +144,9 @@ export const ViewCompetition = ({
                   className="button"
                   title={say("admin.hover.competitions.edit")}
                   aria-label={say("admin.competitions.edit")}
+                  disabled={opening}
                   onClick={() => {
+                    setOpening(true);
                     void fetch(
                       `/api/v1/tournaments/${idInAddress(asked.competition.tournament)}/competitions`,
                       { headers: { accept: "application/json" } },
@@ -154,7 +164,10 @@ export const ViewCompetition = ({
                           ),
                         );
                       })
-                      .catch(() => undefined);
+                      .catch(() => undefined)
+                      .finally(() => {
+                        setOpening(false);
+                      });
                   }}
                 >
                   <Pencil />
