@@ -48,6 +48,7 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
       address: tournament.address.toString(),
       sport: tournament.sport.code,
       country: tournament.country.name,
+      playedByTeams: tournament.format.isTeamFormat,
       starts: tournament.starts.toISOString().slice(0, 10),
       finishes: tournament.finishes.toISOString().slice(0, 10),
     };

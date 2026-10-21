@@ -38,6 +38,11 @@ Feature: Association Croquet's rankings are a text file of who beat whom
   name, for the manager to fill in, and a space left after the word is not
   significant.
 
+  Who won a competition between teams is not a player's to be, so the winner of
+  a tournament played by teams is left for the manager: its blocks say
+  "Winner" and no name, whatever the games say, as the rankings would
+  otherwise take a team's best player for the winner of the test.
+
   The file's names are padded so that each result's "beat" and scores line
   up down the block, by the longest winner's name and the longest loser's
   name in that competition.
@@ -294,6 +299,28 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       And "Chris Third" has beaten "Sam Someone" 26 to 3 in "Finals" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the third line is "Winner Chris Third"
+
+  Rule: The winner of a tournament played by teams is left for the manager
+
+    Background:
+      Given the tournament is to be played in the format "Teams"
+      And "organiser@example.com" has created the tournament "Spring Tests"
+      And the team is to be known for short as "AUS"
+      And "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the team is to be known for short as "ENG"
+      And "organiser@example.com" has added the team "England" to "Spring Tests"
+      And "organiser@example.com" has added the player "Pat Player" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+
+    Scenario: A test's winner is left empty
+      When the text file at "/2026/ac/spring-tests/rankings" is read
+      Then the third line is "Winner"
+
+    Scenario: A test is still single games
+      When the text file at "/2026/ac/spring-tests/rankings" is read
+      Then the fourth line is "Type single"
 
   Rule: Every game but an archived one is in it
 

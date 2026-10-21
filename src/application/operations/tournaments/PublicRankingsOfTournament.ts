@@ -50,6 +50,11 @@ export interface RankingsToRead {
   readonly sport: string;
   /** The name of the country it is played in, as "Australia". */
   readonly country: string;
+  /**
+   * Whether it is played by teams, whose competitions are tests between them,
+   * so that who won one is not a player's to be.
+   */
+  readonly playedByTeams: boolean;
   /** The days it starts and finishes on, each as "2026-10-03". */
   readonly starts: string;
   readonly finishes: string;

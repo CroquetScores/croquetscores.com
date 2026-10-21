@@ -59,11 +59,15 @@ const typeOf = (results: readonly ResultOfRanking[]): "match" | "single" =>
 
 // A guess, as the old site's own code said, which the manager corrects: in a
 // competition of matches the winner of the last, and in one of single games
-// whoever has won strictly more than anybody else.
+// whoever has won strictly more than anybody else. Nobody in a tournament
+// played by teams, where a test is won by a team and the best of its players
+// is no winner of it (rankingsTextFile.feature).
 const winnerOf = (
   results: readonly ResultOfRanking[],
   type: "match" | "single",
+  playedByTeams: boolean,
 ): string => {
+  if (playedByTeams) return "";
   if (type === "match") return results[results.length - 1]?.winner ?? "";
   const wins = new Map<string, number>();
   for (const { winner } of results) {
@@ -87,7 +91,7 @@ const blockOf = (
   return [
     `Event ${rankings.name}${several ? ` ${competition.name}` : ""}`,
     `Date ${whenOf(rankings.starts, rankings.finishes)}`,
-    `Winner ${winnerOf(results, type)}`,
+    `Winner ${winnerOf(results, type, rankings.playedByTeams)}`,
     `Type ${type}`,
     `Country ${rankings.country}`,
     "Order firstname",

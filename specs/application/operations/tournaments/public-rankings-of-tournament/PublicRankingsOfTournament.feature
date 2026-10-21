@@ -103,6 +103,10 @@ Feature: A tournament's results, as the world rankings are sent them
       When the rankings of the tournament at "2026/ac/spring-open" are asked for
       Then the tournament answered is for the sport "ac"
 
+    Scenario: A tournament played by players is answered as not played by teams
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the tournament answered is not played by teams
+
   Rule: A game of a block is a result of its own, in the order they were added
 
     Scenario: A game is a result
@@ -232,6 +236,11 @@ Feature: A tournament's results, as the world rankings are sent them
       When the rankings of the tournament at "2026/ac/spring-tests" are asked for
       Then the first competition of the rankings answered is "AUS v ENG"
       And the first competition of the rankings answered has 1 result
+
+    Scenario: A tournament played by teams is answered as played by teams
+      Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the rankings of the tournament at "2026/ac/spring-tests" are asked for
+      Then the tournament answered is played by teams
 
   Rule: Only an archived game is not a result
 
