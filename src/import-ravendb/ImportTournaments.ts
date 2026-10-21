@@ -17,7 +17,7 @@ import { tournamentNameToImport } from "./names.js";
 import { dayOf } from "./newtonsoft.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
-import { countryOfTimeZone } from "./timeZones.js";
+import { placeOfTimeZone } from "./timeZones.js";
 
 // The site's sport for each the old sites named, by the code they kept, in
 // small letters. The old sites kept a code in whatever case it was written
@@ -71,23 +71,25 @@ const formatOf = (type: string): TournamentFormat => {
 export const isPlayedByTeams = (type: string): boolean =>
   formats[type.trim().toLowerCase()]?.isTeamFormat ?? false;
 
-const countryOf = (timeZone: string | null): Country => {
+const placeOf = (
+  timeZone: string | null,
+): { readonly country: Country; readonly region?: string | undefined } => {
   if (timeZone === null || timeZone.trim() === "") {
     throw new ImportRefused(
       "ImportTournaments.NoTimeZone",
       "The tournament was kept in no time zone, so its country is not known.",
     );
   }
-  const code = countryOfTimeZone(timeZone);
+  const place = placeOfTimeZone(timeZone);
   const country =
-    code === undefined ? undefined : Countries.thereAre.find(code);
+    place === undefined ? undefined : Countries.thereAre.find(place.country);
   if (country === undefined) {
     throw new ImportRefused(
       "ImportTournaments.UnknownTimeZone",
       `The import does not know which country ${timeZone} is.`,
     );
   }
-  return country;
+  return { country, region: place?.region };
 };
 
 // The subtitle the old sites' notes make, read as the old sites showed them,
@@ -131,7 +133,7 @@ export class ImportTournaments implements Importer<OldTournament> {
     await this.unitOfWork.inTransaction(async () => {
       const format = formatOf(document.TournamentType);
       const sport = sportOf(document.SportType);
-      const country = countryOf(document.TimeZoneId);
+      const { country, region } = placeOf(document.TimeZoneId);
       // The old sites kept no moment a tournament was created at, so it was
       // created when it started, as far as anything here says.
       const at = dayOf(document.Start);
@@ -151,6 +153,7 @@ export class ImportTournaments implements Importer<OldTournament> {
           format,
           sport,
           country,
+          region,
           subtitle: subtitleOf(document.Notes),
           // Nothing the old sites never said is claimed: none of them allowed
           // a drawn game, but for those the import found a tie marked in text

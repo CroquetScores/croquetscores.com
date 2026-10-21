@@ -35,3 +35,28 @@ export const countryOfTimeZone = (timeZone: string): string | undefined => {
   const read = readAs[timeZone] ?? timeZone;
   return chosen[read] ?? windowsTimeZones[read];
 };
+
+/** Where a tournament kept in a time zone is: its country, and its region where the import gives it one. */
+export interface PlaceOfTimeZone {
+  readonly country: string;
+  readonly region?: string | undefined;
+}
+
+// The one time zone the import does not take at its word: a tournament kept in
+// China's is in Western Australia, which keeps the same hours. The only time
+// zone given a region, since a time zone does not otherwise say which of a
+// country's regions a tournament was in (ImportTournaments.feature).
+const placedAs: Readonly<Record<string, PlaceOfTimeZone>> = {
+  "China Standard Time": { country: "au", region: "wa" },
+};
+
+/** The place `timeZone` means, or nothing where the import does not know it. */
+export const placeOfTimeZone = (
+  timeZone: string,
+): PlaceOfTimeZone | undefined => {
+  const read = readAs[timeZone] ?? timeZone;
+  const placed = placedAs[read];
+  if (placed !== undefined) return placed;
+  const country = countryOfTimeZone(timeZone);
+  return country === undefined ? undefined : { country };
+};
