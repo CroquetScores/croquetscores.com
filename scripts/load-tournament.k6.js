@@ -3,6 +3,12 @@
 //   k6 run scripts/load-tournament.k6.js
 //   k6 run -e BASE_URL=http://localhost:3000 -e TOURNAMENT=/2016/ac/aust-eire-cup scripts/load-tournament.k6.js
 //
+// To find where the site gives way rather than to check it copes, raise the
+// peak number of readers and take away their pauses, so that each one asks for
+// the next page as soon as the last has come:
+//
+//   k6 run -e PEAK=500 -e PAUSE=0 scripts/load-tournament.k6.js
+//
 // Each virtual reader opens the tournament's page and then follows the links on
 // it that stay inside the tournament, which is what a spectator does. Links are
 // read from the page rather than listed here, so the test follows whatever the
@@ -16,13 +22,19 @@ import { check, sleep } from "k6";
 
 const baseUrl = (__ENV.BASE_URL || "http://localhost:3000").replace(/\/$/, "");
 const tournament = __ENV.TOURNAMENT || "/2016/ac/aust-eire-cup";
+const peak = Number(__ENV.PEAK || 100);
+// A reader pauses between pages, as a person does. Without the pauses each
+// reader is far heavier than a person, so the same PEAK asks much more of the
+// site; that is the point of turning them off.
+const pause = __ENV.PAUSE !== "0";
 
-// Ramp up, hold, ramp down. Thresholds make the run fail, and k6 exit non-zero,
-// when readers would have noticed: slow pages or any that errored.
+// Ramp up to a fifth of the peak, then to the peak, then down. Thresholds make
+// the run fail, and k6 exit non-zero, when readers would have noticed: slow
+// pages or any that errored.
 export const options = {
   stages: [
-    { duration: "30s", target: 20 },
-    { duration: "1m", target: 100 },
+    { duration: "30s", target: Math.ceil(peak / 5) },
+    { duration: "1m", target: peak },
     { duration: "30s", target: 0 },
   ],
   thresholds: {
@@ -59,6 +71,6 @@ export default function (data) {
     const path = data.paths[Math.floor(Math.random() * data.paths.length)];
     const response = http.get(`${baseUrl}${path}`, { tags: { name: path } });
     check(response, { "linked page is 200": (r) => r.status === 200 });
-    sleep(1 + Math.random() * 2);
+    if (pause) sleep(1 + Math.random() * 2);
   }
 }
