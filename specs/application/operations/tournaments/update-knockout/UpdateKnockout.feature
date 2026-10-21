@@ -10,10 +10,11 @@ Feature: Changing what a tournament's knockout is
 
   A draw cannot be changed so as to move a player who has games
   (`updateKnockout.feature`), and whether it does is not the tournament's to
-  know. The application asks its games (`Games.feature`). A knockout's draw
-  is fixed once it has a game in use (`addGame.feature`), so the games say a
-  change to the draw of a knockout that has one moves a player who has
-  played. An archived game counts for nothing, so a knockout whose only games
+  know. The application asks its games (`Games.feature`). A knockout's places
+  are fixed once it has a game in use (`addGame.feature`), so the games say a
+  change to the places of a knockout that has one moves a player who has
+  played. What a round is the best of moves nobody, so it can be changed
+  at any time. An archived game counts for nothing, so a knockout whose only games
   are archived can have its draw changed.
 
   This says again only enough of what updating a block says to show that it
@@ -80,6 +81,22 @@ Feature: Changing what a tournament's knockout is
       Given the update gives the knockout a draw of 8 places
       When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
       Then the tournament's competition "Main Event" has a draw of 8 places
+
+  Rule: A change to what a round is the best of is kept whatever games the knockout has
+
+    Scenario: The final of a knockout with a game is made the best of 3
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Main Event" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Main Event" of "Spring Open"
+      And the update gives the knockout a draw of 4 places
+      And its first round is to be the best of 1
+      And its second round is to be the best of 3
+      When the reader signed in to the account for "organiser@example.com" updates the knockout "Main Event" in "Spring Open"
+      Then the tournament's competition "Main Event" has its second round the best of 3
 
   Rule: What the tournament asks is the tournament's to refuse
 

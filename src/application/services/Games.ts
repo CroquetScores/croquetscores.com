@@ -20,7 +20,8 @@ export interface Games {
 
   /**
    * Whether changing the knockout `competition` in `tournament` to a draw of
-   * `draw`'s shape moves a player who has played in it.
+   * `draw`'s shape moves a player who has played in it. Only a change to its
+   * places does.
    */
   movesAPlayerWhoHasPlayed(
     tournament: TournamentId,

@@ -8,6 +8,7 @@ import type {
   Tournament,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import type { KnockoutDraw } from "../../../domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import type { Games } from "../../services/Games.js";
 import type { Competitions } from "./competitionOperations.js";
 
@@ -33,9 +34,10 @@ const playedInTest = (competition: Competition | undefined): TestPlayed => {
 /**
  * The application's games: the ones its tournaments' competitions keep,
  * archived competitions among them, tests among them. Only the games in use
- * count: an archived game counts for nothing. A knockout's draw is fixed once
- * it has a game in use, so a change to the draw of one that has one moves a
- * player who has played.
+ * count: an archived game counts for nothing. A knockout's places are fixed once
+ * it has a game in use, so a change to the places of one that has one moves a
+ * player who has played. What its rounds are the best of is not where anybody
+ * is, so a change to only that moves nobody.
  */
 export const gamesKeptByCompetitions = (
   tournaments: AggregateRepository<Tournament, TournamentId>,
@@ -77,12 +79,24 @@ export const gamesKeptByCompetitions = (
         ),
       ),
     movesAPlayerWhoHasPlayed: async (
-      _tournament: TournamentId,
+      tournament: TournamentId,
       competition: CompetitionId,
-    ) =>
-      (await competitions.load(competition))?.games.some(
-        (game) => !game.archived,
-      ) ?? false,
+      draw: KnockoutDraw,
+    ) => {
+      const shape = (await tournaments.load(tournament))?.competitions.find(
+        ({ reference }) => reference.id.equals(competition),
+      )?.shape;
+      // Where the knockout is not found there is no draw to move anybody
+      // in, and the tournament refuses the update for it.
+      if (shape?.kind !== "knockout" || shape.draw.places === draw.places) {
+        return false;
+      }
+      return (
+        (await competitions.load(competition))?.games.some(
+          (game) => !game.archived,
+        ) ?? false
+      );
+    },
     teamPlayerHasPlayed: async (
       tournament: TournamentId,
       player: TeamPlayerId,

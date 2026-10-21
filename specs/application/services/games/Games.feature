@@ -98,7 +98,7 @@ Feature: Asking whether games have been played
       When the games are asked whether the player "Sam Someone" of "Spring Open" has played
       Then they say no
 
-  Rule: A change to the draw of a knockout that has a game in use moves a player who has played
+  Rule: A change to the places of a knockout that has a game in use moves a player who has played
 
     Background:
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -127,6 +127,20 @@ Feature: Asking whether games have been played
     Scenario: A game in another competition moves nobody in the knockout
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the games are asked whether changing the draw of "Final Stage" of "Spring Open" to 8 places moves a player who has played
+      Then they say no
+
+  Rule: A change to what a round of a knockout is the best of moves nobody
+
+    Background:
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+
+    Scenario: A change to the best-of of the final of a knockout with a game moves nobody who has played
+      When the games are asked whether making the final of "Final Stage" of "Spring Open" the best of 3 moves a player who has played
       Then they say no
 
   Rule: A player in a team has played if they won or lost a game in any of the tournament's tests
