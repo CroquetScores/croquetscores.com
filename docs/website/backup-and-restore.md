@@ -235,11 +235,13 @@ The steps above are for any new website. This is the same restore done on the se
    sudo -u postgres psql -c "alter user croquetscores createdb;"
    ```
 
+   Postgres has no separate permission to drop or rename a database. To **drop** one a user must own it, which is what lets `db:restore` drop the database it made when it fails. To **rename** one a user must own it and have `createdb`, which this gives. The two databases in steps 5 and 8 are renamed and dropped as `postgres` instead, so nothing more is given to `croquetscores` for them.
+
 4. **Restore into a new database,** with the site's settings, through `withsettings` (deploying.md §1):
 
    ```bash
    cd /srv/croquetscores/site
-   withsettings npm run db:restore -- croquetscores_restored ~/2026-10-15-21-40-20.dump
+   withsettings npm run db:restore -- croquetscores_restored ~/2026-10-20-19-37-10.dump
    ```
 
    It says each step as it goes. If it fails it drops the database it made, so the same name can be tried again.
@@ -247,7 +249,7 @@ The steps above are for any new website. This is the same restore done on the se
 5. **Swap the names,** so that `DATABASE_URL` and the backup's settings do not change. The empty database is kept, renamed, until you are sure:
 
    ```bash
-   sudo -u postgres psql -c 'alter database croquetscores rename to croquetscores_empty;'
+   sudo -u postgres psql -c 'alter database croquetscores rename to croquetscores_before_restore;'
    sudo -u postgres psql -c 'alter database croquetscores_restored rename to croquetscores;'
    ```
 
@@ -270,7 +272,7 @@ The steps above are for any new website. This is the same restore done on the se
 
    ```bash
    rm ~/2026-10-15-21-40-20.dump
-   sudo -u postgres psql -c 'drop database croquetscores_empty;'
+   sudo -u postgres psql -c 'drop database croquetscores_before_restore;'
    sudo -u postgres psql -c "alter user croquetscores nocreatedb;"
    ```
 
