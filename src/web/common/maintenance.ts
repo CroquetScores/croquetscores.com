@@ -3,12 +3,14 @@
 // While it is off nothing is asked of the database: not the page, not who is
 // reading it, not that the request was handled. So this is the first thing a
 // request meets after it is stamped and the site named, before anything that
-// would ask, and the answer it gives is built from the request alone.
+// would ask, and the answer it gives is built from the request alone. The one
+// exception is an administrator's page for turning access on again, where
+// who is asking is looked up, and only there.
 //
 // It is the site being unavailable as it is when the database cannot be
 // reached, said with what is known: that it is for maintenance, and about how
 // long. Nobody is emailed, since the administrator turned it off.
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import type { DatabaseAccess } from "../../application/common/DatabaseAccess.js";
 import { assetsPath, type Assets } from "./assets.js";
@@ -19,6 +21,26 @@ import { siteNameOf, websiteOf } from "./site.js";
 import { themeOf } from "./theme.js";
 
 const A_MINUTE = 60 * 1000;
+
+// The page where an administrator turns access on again, and what it asks of
+// the site. They are let through while access is off, to an administrator and
+// to nobody else, since otherwise the only way to turn access on would be the
+// script on the machine the site runs on (databaseStatus.feature).
+const administratorsLetThrough: readonly RegExp[] = [
+  /^\/admin\/administrator\/database-status\/?(?:\?.*)?$/,
+  /^\/api\/v1\/database-access(?:[/?].*)?$/,
+];
+
+/**
+ * Whether the reader of a request is an administrator, which is the database's
+ * to say, since that is where sessions are kept. A request it cannot say for is
+ * not an administrator's: the failure is the database not being there, and the
+ * script is what an administrator has then.
+ */
+export type AdministratorReader = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+) => Promise<boolean>;
 
 // Where a program is told to ask again once the estimate has passed: by then
 // it is the administrator's to revise, and asking more often only adds load
@@ -56,12 +78,19 @@ export const refuseWhileDatabaseAccessIsOff = (
   server: FastifyInstance,
   assets: Assets,
   access: DatabaseAccess,
+  isAdministrator: AdministratorReader,
 ): void => {
   server.addHook("onRequest", async (request, reply) => {
     if (filesServed.some((prefix) => request.url.startsWith(prefix))) return;
     if (request.url === healthCheck) return;
     const state = await access.current();
     if (!state.off) return;
+    if (
+      administratorsLetThrough.some((address) => address.test(request.url)) &&
+      (await isAdministrator(request, reply).catch(() => false))
+    ) {
+      return;
+    }
 
     const back = returnSaid(state.expectedBackAt, request.requestedAt.toDate());
     const seconds = back?.seconds ?? ASK_AGAIN_AFTER_THE_ESTIMATE_SECONDS;
@@ -74,6 +103,7 @@ export const refuseWhileDatabaseAccessIsOff = (
         .send({
           error: "Database.Maintenance",
           ...(back === undefined ? {} : { minutes: back.minutes }),
+          ...(state.words === undefined ? {} : { words: state.words }),
         });
     }
 
@@ -107,7 +137,7 @@ export const refuseWhileDatabaseAccessIsOff = (
           tryWebsite: websiteOf(request).isTry,
           path: request.url,
           body: `          <h1>${escape(heading)}</h1>
-          <p>${escape(say("errors.maintenance"))}</p>
+          <p>${escape(state.words ?? say("errors.maintenance"))}</p>
           <p>${escape(detail)}</p>
           <p><a href="/">${escape(say("errors.backHome", { siteName: siteNameOf(request) }))}</a></p>`,
         }),

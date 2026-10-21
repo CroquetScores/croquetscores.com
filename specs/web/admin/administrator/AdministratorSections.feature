@@ -9,8 +9,10 @@ Feature: The section bar of the administrator's pages
   the world rankings know are imported, as World Rankings
   (`importWorldRankingPlayers.feature`); and to the documents the import from
   the old sites refused, as Import Errors (`importErrors.feature`), which
-  comes fourth, after World Rankings; and to the server's log, as Logs
-  (`logs.feature`), which comes fifth, after Import Errors.
+  comes fourth, after World Rankings; to the server's log, as Logs
+  (`logs.feature`), which comes fifth, after Import Errors; and to the page
+  where whether the site may use its database is seen and set, as Database
+  Access (`databaseStatus.feature`), which comes sixth.
 
   Tournaments comes first, since it is the admin an administrator came from,
   then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
@@ -101,6 +103,22 @@ Feature: The section bar of the administrator's pages
       Given the page at "/admin/administrator" is open
       When the section "Logs" is pressed
       Then the address is "/admin/administrator/logs"
+
+    Scenario: The section bar offers the database access
+      When the page at "/admin/administrator" is opened
+      Then the section "Database Access" is offered
+
+    Scenario: Database Access comes sixth
+      When the page at "/admin/administrator" is opened
+      Then the sixth section is "Database Access"
+
+    Scenario: Database Access leads to the page where access is seen and set
+      When the page at "/admin/administrator" is opened
+      Then the section "Database Access" leads to "/admin/administrator/database-status"
+
+    Scenario: Database Access is marked on the page where access is seen and set
+      When the page at "/admin/administrator/database-status" is opened
+      Then the section "Database Access" is marked as current
 
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened

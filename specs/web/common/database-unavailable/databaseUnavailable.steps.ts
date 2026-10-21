@@ -206,6 +206,17 @@ Given("the example page is asked for", ask);
 
 Given("the example API route is asked for", ask);
 
+// The API's own route for the status of database access, which is not an
+// example: it is asked for as the example routes are, with the reader's cookie.
+Given(
+  "the route for the status of database access",
+  function (this: SpecWorld) {
+    builtFor(this).route = { method: "GET", url: "/api/v1/database-access" };
+  },
+);
+
+Given("the route for the status of database access is asked for", ask);
+
 // What the page and the answer say --------------------------------------------
 
 Then("the reader is told the site is unavailable", function (this: SpecWorld) {
@@ -256,6 +267,19 @@ Then(
         `"${piece}" is not in the test locale.`,
       );
     }
+  },
+);
+
+Then(
+  "the route answers with the status of database access",
+  function (this: SpecWorld) {
+    const response = answered(this);
+    assert.equal(
+      response.statusCode,
+      200,
+      `The route answered ${response.statusCode}: ${response.body}`,
+    );
+    assert.equal(response.json<{ off?: unknown }>().off, true);
   },
 );
 

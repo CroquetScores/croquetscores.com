@@ -41,19 +41,42 @@ After(function (this: SpecWorld) {
   settingWas.delete(this);
 });
 
+const run = async (
+  world: SpecWorld,
+  words: readonly string[],
+): Promise<void> => {
+  const held = accessInHand(world);
+  outcomes.set(
+    world,
+    await runDatabaseAccess(words, held.writer, () => momentIn(world)),
+  );
+  // What the site would find, so that "database access is off" is about the
+  // file the script left and not about what the reader remembered.
+  held.state = await held.reader.current();
+};
+
 // Said as a Given and as a When alike.
 When(
   "the script is run with {string}",
   async function (this: SpecWorld, said: string) {
-    const words = said.split(/\s+/).filter((word) => word !== "");
-    const held = accessInHand(this);
-    outcomes.set(
+    await run(
       this,
-      await runDatabaseAccess(words, held.writer, () => momentIn(this)),
+      said.split(/\s+/).filter((word) => word !== ""),
     );
-    // What the site would find, so that "database access is off" is about the
-    // file the script left and not about what the reader remembered.
-    held.state = await held.reader.current();
+  },
+);
+
+// Words too many to write into the scenario.
+When(
+  /^the script is run for (\d+) minutes with (\d+) characters of words$/,
+  async function (this: SpecWorld, minutes: string, count: string) {
+    await run(this, [
+      "off",
+      "--minutes",
+      String(minutes),
+      "--text",
+      "w".repeat(Number(count)),
+    ]);
   },
 );
 
@@ -91,6 +114,13 @@ Then(
   /^the script says (\d+) minutes are now expected$/,
   function (this: SpecWorld, minutes: string) {
     says(this, `${minutes} minutes are now expected`);
+  },
+);
+
+Then(
+  "the script says the words must be no more than 500 characters",
+  function (this: SpecWorld) {
+    says(this, "no more than 500 characters");
   },
 );
 

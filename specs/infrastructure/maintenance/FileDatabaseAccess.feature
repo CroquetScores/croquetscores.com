@@ -26,6 +26,13 @@ Feature: Database access is switched in a file the site can read without the dat
   they will see it is still answering and fix the file. Whatever the file said
   is logged as a fault, so that it is seen.
 
+  The file may also hold words for readers, which the site says in place of
+  its usual sentence that it is down for maintenance (`maintenance.feature`).
+  They are kept with the moments and not apart from them, so that they are
+  replaced whole with the rest when access is turned off again, and are kept
+  as they were when only the return is moved. They are optional, and are kept
+  to 500 characters because they are put on every page the site answers.
+
   Turning access off writes the file whole and then moves it into place, so
   that a site reading it while it is written reads the old one or the new one
   and never half of either.
@@ -219,6 +226,75 @@ Feature: Database access is switched in a file the site can read without the dat
       When the expected return is moved to 0 minutes from now
       And database access is read
       Then access is expected back at "2026-10-13T10:30:00Z"
+
+  Rule: Words for readers are kept with the switch
+
+    Scenario: Words given with the minutes are kept
+      When database access is turned off for 30 minutes with the words "Back after the move"
+      And database access is read
+      Then readers are told "Back after the move"
+
+    Scenario: No words are the usual sentence
+      When database access is turned off for 30 minutes
+      And database access is read
+      Then readers are told the usual sentence
+
+    Scenario: Words of nothing but spaces are the usual sentence
+      When database access is turned off for 30 minutes with the words "   "
+      And database access is read
+      Then readers are told the usual sentence
+
+    Scenario: Words are kept without the spaces around them
+      When database access is turned off for 30 minutes with the words "  Back soon  "
+      And database access is read
+      Then readers are told "Back soon"
+
+    Scenario: Turning access off again replaces the words
+      Given database access is turned off for 30 minutes with the words "Back soon"
+      When database access is turned off for 30 minutes
+      And database access is read
+      Then readers are told the usual sentence
+
+    Scenario: Moving the return keeps the words
+      Given database access is turned off for 30 minutes with the words "Back soon"
+      When the expected return is moved to 45 minutes from now
+      And database access is read
+      Then readers are told "Back soon"
+
+    Scenario: Moving the return with words replaces them
+      Given database access is turned off for 30 minutes with the words "Back soon"
+      When the expected return is moved to 45 minutes from now with the words "Back later"
+      And database access is read
+      Then readers are told "Back later"
+
+    Scenario: Moving the return with empty words takes them away
+      Given database access is turned off for 30 minutes with the words "Back soon"
+      When the expected return is moved to 45 minutes from now with the words ""
+      And database access is read
+      Then readers are told the usual sentence
+
+    Scenario: The most words allowed are accepted
+      When database access is turned off for 30 minutes with 500 characters of words
+      Then it is not refused
+
+    Scenario: More words than allowed are refused
+      When database access is turned off for 30 minutes with 501 characters of words
+      Then it is refused with "DatabaseAccess.WordsTooLong"
+
+    Scenario: Refused words change nothing
+      When database access is turned off for 30 minutes with 501 characters of words
+      And database access is read
+      Then database access is on
+
+    Scenario: A file whose words are not text is access on
+      Given a database access file holding words that are not text
+      When database access is read
+      Then database access is on
+
+    Scenario: A file whose words are not text is logged as a fault
+      Given a database access file holding words that are not text
+      When database access is read
+      Then a fault is logged
 
   Rule: Turning access on removes the file
 

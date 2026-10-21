@@ -12,6 +12,7 @@
 // or fail by the order they ran in, and a scenario that has to move the clock
 // cannot move one the next scenario is reading.
 import { AfterAll, Before, After } from "@cucumber/cucumber";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium, type Browser, type BrowserContext } from "playwright";
@@ -365,9 +366,20 @@ const itsOwn = async (
   loadEnvFile();
   const clock = clockFor(world);
   const google = await standInGoogleFor(world);
+  // A switch of the scenario's own, which is not there until a scenario turns
+  // access off: a shared one would have a scenario that turns access off take
+  // the site from every scenario running beside it (databaseStatus.feature).
+  const folder = mkdtempSync(join(tmpdir(), "database-access-"));
+  world.closeBeforeDropping.push(() => {
+    rmSync(folder, { recursive: true, force: true });
+    return Promise.resolve();
+  });
   const scenario = await buildApplication(
     {
-      ...loadConfig({ ...process.env, DATABASE_ACCESS_FILE: noSwitch }),
+      ...loadConfig({
+        ...process.env,
+        DATABASE_ACCESS_FILE: join(folder, ".database-access"),
+      }),
       databaseUrl,
       // The scenarios' own, so that an account brought over from the old site
       // can be made and signed in to whether or not whoever runs them has the

@@ -13,6 +13,7 @@ import {
   DatabaseAccessRefused,
   type DatabaseAccessState,
   MOST_MINUTES_OFF,
+  MOST_WORDS,
 } from "../../application/common/DatabaseAccess.js";
 
 const A_MINUTE = 60 * 1000;
@@ -50,6 +51,19 @@ const ensureMinutes = (minutes: number): void => {
       `The minutes must be from 1 to ${String(MOST_MINUTES_OFF)}.`,
     );
   }
+};
+
+// Words that are not too long, and none where they are only spaces, which
+// would leave a reader a page with a blank where the sentence was.
+const ensureWords = (words: string | undefined): string | undefined => {
+  const trimmed = words?.trim();
+  if (trimmed !== undefined && trimmed.length > MOST_WORDS) {
+    throw new DatabaseAccessRefused(
+      "DatabaseAccess.WordsTooLong",
+      `The words must be no more than ${String(MOST_WORDS)} characters.`,
+    );
+  }
+  return trimmed === "" ? undefined : trimmed;
 };
 
 /**
@@ -101,13 +115,15 @@ export class FileDatabaseAccess implements DatabaseAccess {
     return state;
   }
 
-  async turnOff(minutes: number, at: Date): Promise<void> {
+  async turnOff(minutes: number, at: Date, words?: string): Promise<void> {
     ensureMinutes(minutes);
-    await this.#write(at, new Date(at.getTime() + minutes * A_MINUTE));
+    const kept = ensureWords(words);
+    await this.#write(at, new Date(at.getTime() + minutes * A_MINUTE), kept);
   }
 
-  async turnOffIfOn(minutes: number, at: Date): Promise<void> {
+  async turnOffIfOn(minutes: number, at: Date, words?: string): Promise<void> {
     ensureMinutes(minutes);
+    const kept = ensureWords(words);
     const { path } = this.#options;
     await mkdir(dirname(path), { recursive: true });
     const beside = `${path}.${String(process.pid)}.tmp`;
@@ -119,6 +135,7 @@ export class FileDatabaseAccess implements DatabaseAccess {
           expectedBackAt: new Date(
             at.getTime() + minutes * A_MINUTE,
           ).toISOString(),
+          ...(kept === undefined ? {} : { words: kept }),
         }),
       );
       try {
@@ -144,8 +161,9 @@ export class FileDatabaseAccess implements DatabaseAccess {
     this.#changed();
   }
 
-  async moveReturn(minutes: number, at: Date): Promise<void> {
+  async moveReturn(minutes: number, at: Date, words?: string): Promise<void> {
     ensureMinutes(minutes);
+    const given = words === undefined ? undefined : (ensureWords(words) ?? "");
     // Read afresh: what is moved is what is there, not what was there a
     // moment ago.
     const state = await this.#read();
@@ -158,6 +176,7 @@ export class FileDatabaseAccess implements DatabaseAccess {
     await this.#write(
       state.turnedOffAt,
       new Date(at.getTime() + minutes * A_MINUTE),
+      given === undefined ? state.words : given === "" ? undefined : given,
     );
   }
 
@@ -177,7 +196,11 @@ export class FileDatabaseAccess implements DatabaseAccess {
     this.#cached = undefined;
   }
 
-  async #write(turnedOffAt: Date, expectedBackAt: Date): Promise<void> {
+  async #write(
+    turnedOffAt: Date,
+    expectedBackAt: Date,
+    words: string | undefined,
+  ): Promise<void> {
     const { path } = this.#options;
     await mkdir(dirname(path), { recursive: true });
     // Beside it, so that the move is within one directory and is atomic.
@@ -188,6 +211,7 @@ export class FileDatabaseAccess implements DatabaseAccess {
         JSON.stringify({
           turnedOffAt: turnedOffAt.toISOString(),
           expectedBackAt: expectedBackAt.toISOString(),
+          ...(words === undefined ? {} : { words }),
         }),
       );
       await rename(beside, path);
@@ -224,8 +248,18 @@ export class FileDatabaseAccess implements DatabaseAccess {
       ) {
         throw new Error("The file does not say when access was turned off.");
       }
+      // Words that are not text are a fault like any other part of the file.
+      const words = written["words"];
+      if (words !== undefined && typeof words !== "string") {
+        throw new Error("The words in the file are not text.");
+      }
       this.#lastFault = undefined;
-      return { off: true, turnedOffAt, expectedBackAt };
+      return {
+        off: true,
+        turnedOffAt,
+        expectedBackAt,
+        ...(words === undefined || words === "" ? {} : { words }),
+      };
     } catch (failure) {
       this.#fault(
         failure,

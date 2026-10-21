@@ -4,6 +4,7 @@ Feature: A script turns database access on and off
   and on again after it, with a script, from the machine the site runs on:
 
       npm run db:access -- off --minutes 30
+      npm run db:access -- off --minutes 30 --text Back after the move
       npm run db:access -- change --from-now 45
       npm run db:access -- on
 
@@ -24,6 +25,13 @@ Feature: A script turns database access on and off
   the minutes now expected, as the page does. Where access is not off there is
   nothing to revise, and it is refused rather than turning access off by the
   back door.
+
+  Either can also say what readers are told while access is off, in place of
+  the usual sentence that the site is down for maintenance, with `--text`.
+  The words are the whole of what follows it, so they need no quoting, and
+  are last. `change` without `--text` keeps the words as they were, and with
+  it replaces them. The same is done from the browser
+  (`databaseStatus.feature`).
 
   The script changes the switch the running site reads
   (`FileDatabaseAccess.feature`) and nothing else: it does not stop the site,
@@ -272,3 +280,45 @@ Feature: A script turns database access on and off
       And database access is turned off for 30 minutes
       When the script is run with "on"
       Then the script exits with success
+
+  Rule: Off and change can say what readers are told
+
+    Scenario: Words given with off are kept
+      When the script is run with "off --minutes 30 --text Back after the move"
+      Then readers are told "Back after the move"
+
+    Scenario: Off without words tells readers the usual sentence
+      When the script is run with "off --minutes 30"
+      Then readers are told the usual sentence
+
+    Scenario: Off with the flag and no words tells readers the usual sentence
+      When the script is run with "off --minutes 30 --text"
+      Then readers are told the usual sentence
+
+    Scenario: Words are the whole of what follows the flag
+      When the script is run with "off --text Back soon --minutes 30"
+      Then the script says the minutes are needed
+
+    Scenario: Change with words replaces them
+      Given the script is run with "off --minutes 30 --text Back soon"
+      And the moment "2026-10-13T10:00:05Z"
+      When the script is run with "change --from-now 45 --text Back later"
+      Then readers are told "Back later"
+
+    Scenario: Change without words keeps them
+      Given the script is run with "off --minutes 30 --text Back soon"
+      And the moment "2026-10-13T10:00:05Z"
+      When the script is run with "change --from-now 45"
+      Then readers are told "Back soon"
+
+    Scenario: Words that are too long are refused
+      When the script is run for 30 minutes with 501 characters of words
+      Then the script exits with failure
+
+    Scenario: Words that are too long say how many are allowed
+      When the script is run for 30 minutes with 501 characters of words
+      Then the script says the words must be no more than 500 characters
+
+    Scenario: Words that are too long change nothing
+      When the script is run for 30 minutes with 501 characters of words
+      Then database access is on

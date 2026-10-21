@@ -544,6 +544,32 @@ export const german: Language = {
     "admin.administrator.sections.worldRankings": "Weltrangliste",
     "admin.administrator.sections.importErrors": "Importfehler",
     "admin.administrator.sections.logs": "Protokolle",
+    "admin.administrator.sections.databaseStatus": "Datenbankzugriff",
+    "admin.databaseStatus.title": "Datenbankzugriff",
+    "admin.databaseStatus.on": "Der Datenbankzugriff ist eingeschaltet.",
+    "admin.databaseStatus.off": "Der Datenbankzugriff ist ausgeschaltet.",
+    "admin.databaseStatus.expected":
+      "Die Website sollte in {minutes} Minuten wieder da sein.",
+    "admin.databaseStatus.expectedOne":
+      "Die Website sollte in 1 Minute wieder da sein.",
+    "admin.databaseStatus.longer": "Es dauert länger als erwartet.",
+    "admin.databaseStatus.told": "Besucher lesen: {words}",
+    "admin.databaseStatus.toldUsual": "Besucher lesen den üblichen Satz.",
+    "admin.databaseStatus.minutes": "Erwartete Minuten",
+    "admin.databaseStatus.words": "Text für Besucher",
+    "admin.databaseStatus.turnOff": "Ausschalten",
+    "admin.databaseStatus.change": "Ändern",
+    "admin.databaseStatus.turnOn": "Einschalten",
+    "admin.databaseStatus.minutesNeeded": "Die Minuten werden benötigt.",
+    "admin.databaseStatus.otherwise":
+      "Auf der Website ist etwas schiefgelaufen.",
+    "DatabaseAccess.MinutesNotWhole":
+      "Die Minuten müssen eine ganze Zahl sein.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "Die Minuten müssen zwischen 1 und 1440 liegen.",
+    "DatabaseAccess.WordsTooLong":
+      "Der Text darf höchstens 500 Zeichen lang sein.",
+    "DatabaseAccess.NotOff": "Der Datenbankzugriff ist nicht ausgeschaltet.",
     "admin.administrator.title": "Administrator",
     "admin.accounts.title": "Konten",
     "admin.roles.add": "Hinzufügen",

@@ -100,7 +100,7 @@ import {
   gateballScoresFormats,
 } from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
 import { speakingOf } from "../../common/language.js";
-import { readerOf } from "../../common/reader.js";
+import { isAdministrator, readerOf } from "../../common/reader.js";
 import { websiteOf } from "../../common/site.js";
 
 // A year as an address writes one: four digits, the first not a nought.
@@ -996,6 +996,88 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // Whether the site may use its database, as an administrator sees and sets
+  // it from the page for it (databaseStatus.feature). The switch is kept
+  // outside the database, so it is reached as the server's own and not through
+  // the mediator, whose every request is in a transaction. Refused as the
+  // routes above are to anybody who is not an administrator.
+  const databaseAccessStatus = async (
+    request: FastifyRequest,
+  ): Promise<Record<string, unknown>> => {
+    const state = await request.server.databaseAccess.current();
+    if (!state.off) return { off: false };
+    const left =
+      state.expectedBackAt.getTime() - request.requestedAt.toDate().getTime();
+    return {
+      off: true,
+      turnedOffAt: state.turnedOffAt.toISOString(),
+      expectedBackAt: state.expectedBackAt.toISOString(),
+      // Rounded up, as the page readers are shown is, and none once the
+      // estimate has passed.
+      ...(left > 0 ? { minutes: Math.ceil(left / 60000) } : {}),
+      ...(state.words === undefined ? {} : { words: state.words }),
+    };
+  };
+
+  const administratorOrRefused = (
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ): boolean => {
+    if (signedInOrRefused(request, reply) === undefined) return false;
+    if (!isAdministrator(request)) {
+      void reply
+        .code(422)
+        .header("cache-control", "no-store")
+        .send({ error: "Account.NotAnAdministrator" });
+      return false;
+    }
+    return true;
+  };
+
+  server.get("/database-access", async (request, reply) => {
+    if (!administratorOrRefused(request, reply)) return reply;
+    return reply
+      .header("cache-control", "no-store")
+      .send(await databaseAccessStatus(request));
+  });
+
+  server.post("/database-access/off", async (request, reply) => {
+    if (!administratorOrRefused(request, reply)) return reply;
+    await request.server.databaseAccess.turnOff(
+      numberOf(request.body, "minutes"),
+      request.requestedAt.toDate(),
+      textOf(request.body, "words"),
+    );
+    return reply
+      .header("cache-control", "no-store")
+      .send(await databaseAccessStatus(request));
+  });
+
+  // The words are kept as they were where none are sent, and replaced where
+  // some are, which is none at all where they are empty.
+  server.post("/database-access/change", async (request, reply) => {
+    if (!administratorOrRefused(request, reply)) return reply;
+    const sent =
+      typeof (request.body as Record<string, unknown> | null)?.["words"] ===
+      "string";
+    await request.server.databaseAccess.moveReturn(
+      numberOf(request.body, "minutes"),
+      request.requestedAt.toDate(),
+      sent ? textOf(request.body, "words") : undefined,
+    );
+    return reply
+      .header("cache-control", "no-store")
+      .send(await databaseAccessStatus(request));
+  });
+
+  server.post("/database-access/on", async (request, reply) => {
+    if (!administratorOrRefused(request, reply)) return reply;
+    await request.server.databaseAccess.turnOn();
+    return reply
+      .header("cache-control", "no-store")
+      .send(await databaseAccessStatus(request));
+  });
 
   // The players the world rankings know, imported as an administrator asks
   // from the page for it. Answered as it goes, a line of JSON for each thing

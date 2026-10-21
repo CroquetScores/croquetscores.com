@@ -534,6 +534,32 @@ export const spanish: Language = {
     "admin.administrator.sections.worldRankings": "Ranking mundial",
     "admin.administrator.sections.importErrors": "Errores de importación",
     "admin.administrator.sections.logs": "Registros",
+    "admin.administrator.sections.databaseStatus": "Acceso a la base de datos",
+    "admin.databaseStatus.title": "Acceso a la base de datos",
+    "admin.databaseStatus.on": "El acceso a la base de datos está activado.",
+    "admin.databaseStatus.off":
+      "El acceso a la base de datos está desactivado.",
+    "admin.databaseStatus.expected":
+      "Se espera que el sitio vuelva en {minutes} minutos.",
+    "admin.databaseStatus.expectedOne":
+      "Se espera que el sitio vuelva en 1 minuto.",
+    "admin.databaseStatus.longer": "Está tardando más de lo previsto.",
+    "admin.databaseStatus.told": "Los lectores ven: {words}",
+    "admin.databaseStatus.toldUsual": "Los lectores ven la frase habitual.",
+    "admin.databaseStatus.minutes": "Minutos previstos",
+    "admin.databaseStatus.words": "Texto para los lectores",
+    "admin.databaseStatus.turnOff": "Desactivar",
+    "admin.databaseStatus.change": "Cambiar",
+    "admin.databaseStatus.turnOn": "Activar",
+    "admin.databaseStatus.minutesNeeded": "Se necesitan los minutos.",
+    "admin.databaseStatus.otherwise": "Algo salió mal en el sitio.",
+    "DatabaseAccess.MinutesNotWhole": "Los minutos deben ser un número entero.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "Los minutos deben estar entre 1 y 1440.",
+    "DatabaseAccess.WordsTooLong":
+      "El texto no puede superar los 500 caracteres.",
+    "DatabaseAccess.NotOff":
+      "El acceso a la base de datos no está desactivado.",
     "admin.administrator.title": "Administrador",
     "admin.accounts.title": "Cuentas",
     "admin.roles.add": "Añadir",
