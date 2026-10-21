@@ -24,9 +24,16 @@ import {
   waysBackFollowed,
 } from "../../support/googleOffer.js";
 import { standInGoogleFor } from "../../../infrastructure/support/google.js";
+import { englishForScenarios } from "../../support/languages.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 const offer = 'a[href="/auth/google"]';
+
+// Not the form's own box, which agrees to the terms for registering by email
+// address; this one belongs to the offer (google.feature).
+const boxBeneathTheOffer =
+  'section.dialog input[type="checkbox"][name="termsOfUseForGoogle"]';
+const formsBox = 'section.dialog input[type="checkbox"][name="termsOfUse"]';
 
 const dialog = "section.dialog";
 const emailAddressField = `${dialog} label.field-box[for="field-emailAddress"]`;
@@ -164,12 +171,93 @@ Given(
 // Pressed as a reader who means to register presses it, having agreed to the
 // terms of use first (google.feature).
 const registerWithGoogle = async function (this: SpecWorld): Promise<void> {
-  await this.browserPage.check('section.dialog input[name="termsOfUse"]');
+  await this.browserPage.check(boxBeneathTheOffer);
   await pressTheOffer(this, offer);
 };
 
 When("the reader registers with Google", registerWithGoogle);
 Given("the reader has registered with Google", registerWithGoogle);
+
+When(
+  "the reader registers with Google having agreed to the terms of use only beneath the email address field",
+  async function (this: SpecWorld) {
+    await this.browserPage.check(formsBox);
+    await pressTheOffer(this, offer);
+  },
+);
+
+Then(
+  "the dialog asks the reader to agree to the terms of use beneath the offer to register with Google",
+  async function (this: SpecWorld) {
+    const found = await this.browserPage.evaluate<{
+      label: string;
+      href: string | null;
+      below: boolean;
+    } | null>(`(() => {
+      const box = document.querySelector(${JSON.stringify(boxBeneathTheOffer)});
+      const offer = document.querySelector(${JSON.stringify(offer)});
+      const label = box?.labels?.[0];
+      if (!box || !offer || !label) return null;
+      return {
+        label: label.textContent.trim(),
+        href: label.querySelector("a")?.getAttribute("href") ?? null,
+        below: box.getBoundingClientRect().top >= offer.getBoundingClientRect().bottom - 0.5,
+      };
+    })()`);
+    assert.ok(found !== null, "The offer has no box beneath it.");
+    assert.equal(found.label, englishForScenarios.words["termsOfUse.agree"]);
+    assert.ok(found.below, "The box is not beneath the offer.");
+  },
+);
+
+Then(
+  "the box beneath the offer to register with Google links to the terms of use for those who write",
+  async function (this: SpecWorld) {
+    const href = await this.browserPage.evaluate<string | null>(`(() =>
+      document
+        .querySelector(${JSON.stringify(boxBeneathTheOffer)})
+        ?.labels?.[0]?.querySelector("a")
+        ?.getAttribute("href") ?? null)()`);
+    assert.equal(href, "/admin/terms-of-use");
+  },
+);
+
+Then(
+  "the box beneath the offer to register with Google is above the line saying {string}",
+  async function (this: SpecWorld, said: string) {
+    const line = await lineSaying(this, said);
+    const box = await boxOf(this, boxBeneathTheOffer);
+    assert.ok(
+      box.y + box.height <= line.y + 0.5,
+      `The box does not end above ${said}.`,
+    );
+  },
+);
+
+Then(
+  "the dialog has one box agreeing to the terms of use",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage
+        .locator(`${dialog} input[type="checkbox"]`)
+        .count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the box beneath the offer to register with Google says the message for {string}",
+  async function (this: SpecWorld, code: string) {
+    const said = await this.browserPage.evaluate<string | null>(`(() => {
+      const box = document.querySelector(${JSON.stringify(boxBeneathTheOffer)});
+      const id = box?.getAttribute("aria-describedby");
+      const message = id ? document.getElementById(id) : null;
+      return message ? message.textContent.trim() : null;
+    })()`);
+    assert.equal(said, englishForScenarios.words[code]);
+  },
+);
 
 When(
   "the reader registers with Google without agreeing to the terms of use",

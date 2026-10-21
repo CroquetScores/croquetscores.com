@@ -14,11 +14,14 @@
 // Registering is where a reader begins to be able to write, so they are asked
 // to agree to the terms of use for those who write, by ticking a box. A
 // registration without it is shown again with the box said to need ticking,
-// and records nothing. The offer to register with Google needs it ticked too:
-// it is a link, and the page's script adds the box to it as it is followed,
-// since the box is in the form and the link is not a way of sending the form.
-// Google's way in turns away a reader who came from here without it, and they
-// are brought back with the box said to need ticking (auth/google.ts).
+// and records nothing. The offer to register with Google needs it ticked too,
+// and has a box of its own beneath it for the purpose: a reader who means to
+// use Google should not have to look past the "or" and a field they will not
+// fill in for the box that lets the button work. It is a link, and the page's
+// script adds that box to it as it is followed, since the link is not a way of
+// sending the form. Google's way in turns away a reader who came from here
+// without it, and they are brought back with that box said to need ticking
+// (auth/google.ts).
 //
 // The page is guarded by reCAPTCHA, which runs in the reader's browser and
 // hands the form a token. Registering asks for no password and hashes nothing,
@@ -56,6 +59,7 @@ import {
   agreeingTo,
   notAgreed,
   termsOfUseField,
+  termsOfUseForGoogleField,
 } from "./termsOfUse.js";
 import { welcomePath } from "./welcome.js";
 
@@ -133,7 +137,7 @@ const googleScript = (googleOffered: boolean): string =>
     <script>
       (function () {
         var offer = document.querySelector("a.dialog-alternative");
-        var box = document.getElementsByName(${JSON.stringify(termsOfUseField)})[0];
+        var box = document.getElementsByName(${JSON.stringify(termsOfUseForGoogleField)})[0];
         if (!offer || !box) return;
         offer.addEventListener("click", function () {
           var to = new URL(offer.href);
@@ -152,6 +156,7 @@ const formFor = (
   requestId: string,
   typed: Typed,
   googleOffered: boolean,
+  googleNotAgreedTo = false,
 ): Dialog => ({
   title: speaking.say("register.title"),
   action: `${registerPath}?request=${encodeURIComponent(requestId)}`,
@@ -176,6 +181,18 @@ const formFor = (
         speaking.say("register.withGoogle"),
         speaking.say("register.or"),
         googlePath,
+        {
+          ...agreeingTo(speaking, {}, termsOfUseForGoogleField),
+          // Said beneath this box and not the form's, because it is this one
+          // the reader pressed the offer without ticking.
+          ...(googleNotAgreedTo
+            ? {
+                messages: [speaking.say(notAgreed.code)],
+                invalid: true,
+                autofocus: true,
+              }
+            : {}),
+        },
       )
     : undefined,
 });
@@ -233,13 +250,13 @@ export const registerRegisterPage = (
       const speaking = speakingOf(request);
       const dialog = formFor(speaking, randomUUID(), {}, googleOffered);
       const refused = request.query.refused;
-      // Brought back from the way to Google for not having ticked the box,
-      // which is said beneath the box, as it is when the form is sent.
+      // Brought back from the way to Google for not having ticked the box
+      // beneath the offer, which is said beneath that box.
       if (refused === notAgreed.code) {
         return show(
           request,
           reply,
-          refusedForm(dialog, {}, [notAgreed], speaking),
+          formFor(speaking, randomUUID(), {}, googleOffered, true),
           speaking,
         );
       }

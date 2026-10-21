@@ -22,9 +22,20 @@ export const writersTermsOfUsePath = "/admin/terms-of-use";
 /** The name the box is sent under. */
 export const termsOfUseField = "termsOfUse";
 
+/**
+ * The name of the box beneath the offer to register with Google. Not the
+ * form's own box's name, because the two are not kept in step: each belongs to
+ * the way in it sits with, and the form is sent without this one being read.
+ */
+export const termsOfUseForGoogleField = "termsOfUseForGoogle";
+
 /** The box, ticked again where it was ticked when the form was refused. */
-export const agreeingTo = (speaking: Speaking, typed: Typed): Field => ({
-  name: termsOfUseField,
+export const agreeingTo = (
+  speaking: Speaking,
+  typed: Typed,
+  name: string = termsOfUseField,
+): Extract<Field, { type: "checkbox" }> => ({
+  name,
   label: speaking.say("termsOfUse.agree"),
   type: "checkbox",
   autocomplete: "off",

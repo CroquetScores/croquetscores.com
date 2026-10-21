@@ -89,6 +89,12 @@ export interface Alternative {
   readonly icon: string;
   /** The word that stands between it and the fields. */
   readonly or: string;
+  /**
+   * A box to tick that the alternative needs ticked, drawn directly beneath it
+   * and above the word. Its own, rather than one of the form's fields, because
+   * the form's are sent with the form and this one is wanted by the link alone.
+   */
+  readonly agreeing?: Extract<Field, { type: "checkbox" }> | undefined;
 }
 
 export interface Dialog {
@@ -287,7 +293,7 @@ ${said.messages.map((text) => `                <p>${escape(text)}</p>`).join("\n
 const alternative = (other: Alternative | undefined): string =>
   other === undefined
     ? ""
-    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>
+    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>${other.agreeing === undefined ? "" : `\n${field(other.agreeing)}`}
               <p class="dialog-or">${escape(other.or)}</p>
 `;
 
@@ -310,6 +316,7 @@ const buttons = (dialog: Dialog): string =>
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
+  dialog.alternative?.agreeing?.autofocus === true ||
   dialog.fields.some((field) => field.autofocus === true);
 
 // Written last, inside the form and after everything a reader sees: a hidden

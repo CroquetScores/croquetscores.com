@@ -26,7 +26,8 @@ Feature: Registering with Google
 
   Registering with Google is agreeing to the terms of use for those who
   write, as registering by email address is (`register.feature`), so the box
-  that agrees to them must be ticked before the offer is pressed. A reader
+  that agrees to them, which the offer has beneath it, must be ticked before
+  the offer is pressed. A reader
   who presses it without is brought back to the register page before Google
   is asked anything, with the box said to need ticking. Where a scenario
   registers with Google and says nothing of the box, it is ticked.
@@ -132,6 +133,47 @@ Feature: Registering with Google
       When the register page is opened with scripting on
       Then the dialog has no line saying "OR"
 
+  Rule: The offer to register with Google has a box of its own beneath it for agreeing to the terms of use
+
+    The box under the email address field agrees to the terms for registering
+    by email address. A reader who means to use Google should not have to
+    look past the "OR" and a field they will not fill in to find the box that
+    lets the button work, so the offer carries its own, directly beneath it
+    and above the "OR". The two boxes are not kept in step: each belongs to
+    the way in it sits with, and pressing the offer reads only the one
+    beneath it.
+
+    Scenario: The offer has a box agreeing to the terms of use beneath it
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the dialog asks the reader to agree to the terms of use beneath the offer to register with Google
+
+    Scenario: The box is above the line saying "OR"
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the box beneath the offer to register with Google is above the line saying "OR"
+
+    Scenario: The box links to the terms of use for those who write
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the box beneath the offer to register with Google links to the terms of use for those who write
+
+    Scenario: A site without Google's credentials has only the form's box
+      Given a viewport 1200 pixels wide
+      And a site that has not been given Google's credentials
+      When the register page is opened with scripting on
+      Then the dialog has one box agreeing to the terms of use
+
+    Scenario: Agreeing only beneath the email address field is not agreeing for Google
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And Google gives the email address "someone@example.com"
+      And Google has verified the email address
+      And Google calls the reader "Sam Someone"
+      And the register page is open with scripting on
+      When the reader registers with Google having agreed to the terms of use only beneath the email address field
+      Then the box beneath the offer to register with Google says the message for "TermsOfUse.NotAgreed"
+
   Rule: Registering with Google signs the reader in, and takes them to the admin
 
     Scenario: A reader new to the site is signed in to a new account
@@ -185,7 +227,7 @@ Feature: Registering with Google
       And Google calls the reader "Sam Someone"
       And the register page is open with scripting on
       When the reader registers with Google without agreeing to the terms of use
-      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+      Then the box beneath the offer to register with Google says the message for "TermsOfUse.NotAgreed"
 
     Scenario: A reader who has not agreed is given no account
       Given a viewport 1200 pixels wide
