@@ -190,19 +190,29 @@ ${accountItems(bar).join("\n")}
               </nav>`;
 };
 
-const menu = (bar: AccountMenu): string => {
+// The way home is a house and not the word, drawn inline as the magnifying
+// glass is. Its word stays in the link, hidden from the eye, so that a screen
+// reader still says "Home" and the link is still found by it.
+const house = `<svg class="menu-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h4.5v-5.5h3V20H18v-9.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const menu = (bar: AccountMenu, search = ""): string => {
   const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
     .map(({ href, words }) => {
       const here = href === currentPath ? ' aria-current="page"' : "";
-      return `            <li><a href="${href}"${here}>${escape(speaking.say(words))}</a></li>`;
+      const said = escape(speaking.say(words));
+      const inside =
+        href === "/"
+          ? `${house}<span class="visually-hidden">${said}</span>`
+          : said;
+      return `            <li><a href="${href}"${here}>${inside}</a></li>`;
     })
     .join("\n");
 
   return `          <details class="menu">
           <summary><span class="visually-hidden">${escape(speaking.say("navigation.menu"))}</span></summary>
             <div class="menu-panel">
-              <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
+${search}              <nav class="menu-links" aria-label="${escape(speaking.say("navigation.label"))}">
                 <ul>
 ${items}
                 </ul>
@@ -367,17 +377,53 @@ export type SiteBar = Pick<
   readonly withSearch?: boolean | undefined;
 };
 
-// The site's search, a form of its own that is sent as any is and so needs no
-// scripting (search.feature). A search type rather than a text one, so that a
-// phone offers what is typed to be cleared.
+// A magnifying glass, drawn inline as Google's mark is (googleOffer.ts): it is
+// small, it costs no request, and it takes the ink of the button around it.
+// Hidden from a screen reader, which has the button's name.
+const magnifyingGlass = `<svg class="site-search-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+
+// What the glass does once the page has scripting (search.feature). Without
+// it the field is simply there beside the glass, which is the search as the
+// site had it: the form is sent as any is and needs nothing more. With it, the
+// field is closed until the glass is pressed, and pressing the glass with
+// something typed lets the form be sent. It is written beside the form and
+// not in a file of its own, because it runs before the header is first
+// painted and so the field is never seen open and then closed; a field that
+// arrives holding what was typed is left open for the same reader's sake.
+const searchScript = `          <script>
+            (function () {
+              var form = document.currentScript.previousElementSibling;
+              var field = form.querySelector("input");
+              var glass = form.querySelector("button");
+              var closed = "site-search-closed";
+              if (field.value === "") form.classList.add(closed);
+              glass.addEventListener("click", function (event) {
+                if (form.classList.contains(closed)) {
+                  event.preventDefault();
+                  form.classList.remove(closed);
+                  field.focus();
+                } else if (field.value.trim() === "") {
+                  event.preventDefault();
+                  form.classList.add(closed);
+                }
+              });
+            })();
+          </script>
+`;
+
+// The site's search is in the navigation's menu, before the links: beside them
+// in the bar where they are inline, and in what the menu button opens where
+// they are behind it, so that the bar holds the same few things at any width.
+// A form of its own that is sent as any is. A search type
+// rather than a text one, so that a phone offers what is typed to be cleared.
 const searchBox = (bar: SiteBar): string => {
   if (bar.withSearch !== true) return "";
   const label = escape(bar.speaking.say("search.label"));
   return `          <form class="site-search" role="search" action="/search" method="get">
             <input type="search" name="q" aria-label="${label}" value="${escape(bar.searchText ?? "")}" />
-            <button type="submit">${label}</button>
+            <button type="submit" aria-label="${label}">${magnifyingGlass}</button>
           </form>
-`;
+${searchScript}`;
 };
 
 // Said by the admin's page too (adminPage.ts), so that there is one header
@@ -390,7 +436,7 @@ export const siteBar = (bar: SiteBar): string => `
           <div class="site-names">
             <a class="site-name" href="/">${escape(bar.siteName)}</a>
 ${bar.tournament === undefined ? "" : `            <a class="site-tournament" href="/${escape(bar.tournament.address)}">${escape(bar.tournament.name)}</a>\n`}${bar.pageName === undefined ? "" : `            <a class="site-page" href="${escape(bar.pageName.href)}">${escape(bar.pageName.name)}</a>\n`}          </div>
-${searchBox(bar)}${menu(bar)}
+${menu(bar, searchBox(bar))}
 ${accountMenu(bar)}
         </div>
       </div>
