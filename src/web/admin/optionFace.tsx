@@ -1,10 +1,12 @@
 // What a listed row's option shows. Up and Down are arrows, which say which
 // way they move a row in less room than their words, so that a row's options
-// fit a phone, and Edit is a pencil, as it is wherever else it is offered;
+// fit a phone, Edit is a pencil, and Archive and Delete are a trash can, as they are
+// wherever else they are offered;
 // they are named by their words for a reader who cannot see them. Every
 // option says what it does to one who points at it, in `hover`.
 
 import { Pencil } from "./Pencil.js";
+import { TrashCan } from "./TrashCan.js";
 
 const arrows = { up: "↑", down: "↓" } as const;
 
@@ -13,6 +15,10 @@ const faceOf = (action: string, words: string): React.JSX.Element | string =>
     <span className="option-arrow" aria-hidden="true">
       {arrows[action]}
     </span>
+  ) : action === "edit" ? (
+    <Pencil />
+  ) : action === "archive" || action === "delete" ? (
+    <TrashCan />
   ) : (
     words
   );
@@ -44,7 +50,9 @@ export const optionFace = (
       }
     : action === "edit"
       ? { "aria-label": words, title: hover, children: <Pencil /> }
-      : { title: hover, children: words };
+      : action === "archive" || action === "delete"
+        ? { "aria-label": words, title: hover, children: <TrashCan /> }
+        : { title: hover, children: words };
 
 /**
  * The room the button for `action` would take, on a row that does not offer

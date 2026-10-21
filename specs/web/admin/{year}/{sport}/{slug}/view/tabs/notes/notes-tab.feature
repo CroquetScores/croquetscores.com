@@ -92,6 +92,11 @@ Feature: The notes tab of a tournament's page
       When the notes of "Spring Open" are opened
       Then Edit for the note "Lunch is at noon" is a pencil
 
+    Scenario: Delete is drawn as a trash can
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      When the notes of "Spring Open" are opened
+      Then Delete for the note "Lunch is at noon" is a trash can
+
     Scenario: The pencil is still called Edit
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the notes of "Spring Open" are opened

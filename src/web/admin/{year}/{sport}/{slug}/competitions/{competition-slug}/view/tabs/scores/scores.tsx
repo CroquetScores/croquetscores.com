@@ -9,6 +9,7 @@ import "../../../../../../../../listed.css";
 import "./scores.css";
 import { useListed } from "../../../../../../../../useListed.js";
 import { Pencil } from "../../../../../../../../Pencil.js";
+import { TrashCan } from "../../../../../../../../TrashCan.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
@@ -268,9 +269,10 @@ export const ScoresTab = ({
           type="button"
           className="button"
           title={say("admin.hover.scores.archive")}
+          aria-label={say("admin.scores.archive")}
           onClick={() => void act(game, "archive")}
         >
-          {say("admin.scores.archive")}
+          <TrashCan />
         </button>
       ) : inUse.some(({ archivable }) => archivable) ? (
         // Its room, where other games offer Archive, so that what is beside
