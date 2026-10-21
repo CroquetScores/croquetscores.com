@@ -493,24 +493,45 @@ const askedAs = (world: SpecWorld, route: Route): Record<string, string> => ({
   "sec-fetch-site": "same-origin",
 });
 
+// Takes the next request to the comments made by `method`, and passes every
+// other on. Playwright's own `times` is not used for it: that counts each
+// request the handler is shown, the ones passed on among them, so a page asking
+// for the comments again before the comment is sent used the one turn up, and
+// the comment was then sent unheld. Once it has taken its request it passes on
+// every other, which is as good as being taken away: it is not taken away from
+// inside itself, since a route still being held is then taken for handled and
+// is answered by nobody.
+const takeNextRequest = async (
+  world: SpecWorld,
+  method: string,
+  take: (route: Route) => Promise<void>,
+): Promise<void> => {
+  let taken = false;
+  await world.browserPage.route(
+    (url) => url.pathname.endsWith("/comments"),
+    async (route) => {
+      if (taken || route.request().method() !== method) {
+        return route.fallback();
+      }
+      taken = true;
+      await take(route);
+    },
+  );
+};
+
 // The next comment sent is kept by the server, as any is, and its answer then
 // lost to an error, as one would be by a failure after it was kept.
 Given(
   "the next comment sent is kept and answered with a server error",
   async function (this: SpecWorld) {
-    await this.browserPage.route(
-      (url) => url.pathname.endsWith("/comments"),
-      async (route) => {
-        if (route.request().method() !== "POST") return route.fallback();
-        await route.fetch({ headers: askedAs(this, route) });
-        await route.fulfill({
-          status: 500,
-          contentType: "text/html",
-          body: "Something went wrong.",
-        });
-      },
-      { times: 1 },
-    );
+    await takeNextRequest(this, "POST", async (route) => {
+      await route.fetch({ headers: askedAs(this, route) });
+      await route.fulfill({
+        status: 500,
+        contentType: "text/html",
+        body: "Something went wrong.",
+      });
+    });
   },
 );
 
@@ -529,15 +550,10 @@ const holdBack = async (world: SpecWorld, method: string): Promise<void> => {
       hold = resolve;
     }),
   );
-  await world.browserPage.route(
-    (url) => url.pathname.endsWith("/comments"),
-    async (route) => {
-      if (route.request().method() !== method) return route.fallback();
-      const answer = await route.fetch({ headers: askedAs(world, route) });
-      hold(() => route.fulfill({ response: answer }));
-    },
-    { times: 1 },
-  );
+  await takeNextRequest(world, method, async (route) => {
+    const answer = await route.fetch({ headers: askedAs(world, route) });
+    hold(() => route.fulfill({ response: answer }));
+  });
 };
 
 Given(

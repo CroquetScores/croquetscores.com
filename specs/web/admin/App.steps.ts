@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../support/world.js";
+import { menuLink } from "../support/menuLink.js";
 
 // Whether the admin moved in place or had the browser load the page again,
 // told by a value left on the window: it survives anything the admin does,
@@ -58,7 +59,7 @@ Then(
 When(
   "the link {string} in the header is pressed",
   async function (this: SpecWorld, label: string) {
-    await this.browserPage.click(`header .menu-links a:text-is("${label}")`);
+    await this.browserPage.click(menuLink(label));
   },
 );
 

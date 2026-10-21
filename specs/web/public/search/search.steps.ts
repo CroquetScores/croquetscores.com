@@ -3,7 +3,8 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
-import { unmarkedWithin } from "../../support/marks.js";
+import { isMarked, unmarkedWithin } from "../../support/marks.js";
+import { menuLink } from "../../support/menuLink.js";
 
 // The site's search and the page of its results, drawn by the server with no
 // scripting (`search.feature`).
@@ -73,9 +74,7 @@ Then(
   "the header's magnifying glass is before the link {string} on the same line",
   async function (this: SpecWorld, label: string) {
     const glass = await button(this).boundingBox();
-    const link = await this.browserPage
-      .locator(`.menu-links a:text-is("${label}")`)
-      .boundingBox();
+    const link = await this.browserPage.locator(menuLink(label)).boundingBox();
     assert.ok(glass !== null && link !== null, "Nothing to measure.");
     assert.ok(
       glass.x + glass.width <= link.x + 0.5,
@@ -142,13 +141,6 @@ const pressed = async (world: SpecWorld): Promise<void> => {
   ]);
   await settled(world);
 };
-
-Given(
-  "the header's magnifying glass is pressed",
-  async function (this: SpecWorld) {
-    await pressed(this);
-  },
-);
 
 When(
   "the header's magnifying glass is pressed",
@@ -285,8 +277,29 @@ Then(
 Then(
   "every word in the header's search box is in the test locale",
   async function (this: SpecWorld) {
-    const stray = await unmarkedWithin(this, "header.site-bar .site-search");
-    assert.deepEqual(stray, [], "Words in the box came from elsewhere.");
+    // The box is a field and a picture, so what it says is in the attributes a
+    // reader is told rather than in text. Every one of them is read, so that a
+    // placeholder or a title added later is held to the language too, and so
+    // is any text that is added.
+    const said = await this.browserPage.evaluate<string[]>(`(() => {
+      const form = document.querySelector("header.site-bar .site-search");
+      const found = [];
+      for (const each of [form, ...form.querySelectorAll("*")]) {
+        for (const name of ["aria-label", "placeholder", "title", "alt"]) {
+          const value = each.getAttribute(name);
+          if (value !== null) found.push(value);
+        }
+      }
+      const text = form.textContent.trim();
+      if (/\\p{L}/u.test(text)) found.push(text);
+      return found;
+    })()`);
+    assert.ok(said.length > 0, "The search box says nothing.");
+    assert.deepEqual(
+      said.filter((words) => !isMarked(words)),
+      [],
+      "Words in the box came from elsewhere.",
+    );
   },
 );
 

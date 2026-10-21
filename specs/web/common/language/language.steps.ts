@@ -185,14 +185,16 @@ Then(
 );
 
 // The site's name is not a word of the reader's language, so it is left out of
-// what is read for marks; the account menu inside the header has its own
-// scenarios (accountMenu.feature).
+// what is read for marks, and neither is the source of the script that opens
+// the search, which is text in the page and no word a reader sees; the account
+// menu inside the header has its own scenarios (accountMenu.feature).
 Then(
   "every word in the header is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "header.site-bar", [
       ".site-name",
       ".site-tournament",
+      "script",
     ]);
     assert.deepEqual(stray, [], "Words in the header came from elsewhere.");
   },
