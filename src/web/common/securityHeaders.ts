@@ -13,6 +13,13 @@
 // which a form is sent on to. Chrome holds a redirect after a form to
 // form-action too, which is why the sign-in is named there.
 //
+// It is therefore not a defence against a script slipped into a page, and is
+// not to be leaned on as one: inline scripts run, and so does anything Google
+// serves from its address as a whole.
+//
+// An answer that already carries one of these keeps it, so that a page that
+// needs a stricter policy, or to be framed, can say so.
+//
 // Strict-Transport-Security does not name the sites beneath this one. They are
 // not all this site's to commit to a year of secure connections, and a browser
 // holds the promise for the whole year.
@@ -26,7 +33,7 @@ const policy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "connect-src 'self' https://www.google.com",
-  "frame-src https://www.google.com",
+  "frame-src 'self' https://www.google.com",
   "form-action 'self' https://www.paypal.com https://accounts.google.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
@@ -35,11 +42,14 @@ const policy = [
 
 export const registerSecurityHeaders = (server: FastifyInstance): void => {
   server.addHook("onSend", (_request, reply, payload, done) => {
-    reply.header("strict-transport-security", `max-age=${oneYear}`);
-    reply.header("x-content-type-options", "nosniff");
+    const unlessSet = (name: string, value: string): void => {
+      if (!reply.hasHeader(name)) reply.header(name, value);
+    };
+    unlessSet("strict-transport-security", `max-age=${oneYear}`);
+    unlessSet("x-content-type-options", "nosniff");
     // For browsers that read this and not frame-ancestors; both say the same.
-    reply.header("x-frame-options", "DENY");
-    reply.header("content-security-policy", policy);
+    unlessSet("x-frame-options", "DENY");
+    unlessSet("content-security-policy", policy);
     done(null, payload);
   });
 };

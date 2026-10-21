@@ -14,6 +14,12 @@ const asked = async (world: SpecWorld, url: string): Promise<void> => {
   server.get("/a-page", (_request, reply) =>
     reply.type("text/html; charset=utf-8").send("<p>a page</p>"),
   );
+  server.get("/its-own", (_request, reply) =>
+    reply
+      .header("content-security-policy", "default-src 'none'")
+      .type("text/html; charset=utf-8")
+      .send("<p>a page with a policy of its own</p>"),
+  );
   server.get("/a-file", (_request, reply) =>
     reply.type("image/png").send(Buffer.from("not really a picture")),
   );
@@ -51,6 +57,13 @@ When(
   "a reader asks for a page that is not there",
   async function (this: SpecWorld) {
     await asked(this, "/nothing-here");
+  },
+);
+
+When(
+  "a reader asks for a page that sets its own policy",
+  async function (this: SpecWorld) {
+    await asked(this, "/its-own");
   },
 );
 
@@ -155,3 +168,42 @@ Then(
     assert.ok(policyFor(this, "connect-src").includes(place));
   },
 );
+
+Then("its policy is the page's own", function (this: SpecWorld) {
+  assert.equal(header(this, "content-security-policy"), "default-src 'none'");
+});
+
+Then("its policy allows frames from the site", function (this: SpecWorld) {
+  assert.ok(policyFor(this, "frame-src").includes("'self'"));
+});
+
+// A directive is held to the places named for it, so that a place added to one
+// by mistake is noticed, and not only the places the scenarios above ask for.
+const onlyThese = (world: SpecWorld, directive: string, named: string[]) => {
+  assert.deepEqual([...policyFor(world, directive)].sort(), [...named].sort());
+};
+
+Then("its policy allows scripts from nowhere else", function (this: SpecWorld) {
+  onlyThese(this, "script-src", [
+    "'self'",
+    "'unsafe-inline'",
+    "https://www.google.com",
+    "https://www.gstatic.com",
+  ]);
+});
+
+Then("its policy allows requests to nowhere else", function (this: SpecWorld) {
+  onlyThese(this, "connect-src", ["'self'", "https://www.google.com"]);
+});
+
+Then("its policy allows images from nowhere else", function (this: SpecWorld) {
+  onlyThese(this, "img-src", ["'self'", "data:"]);
+});
+
+Then("its policy allows styles from nowhere else", function (this: SpecWorld) {
+  onlyThese(this, "style-src", ["'self'", "'unsafe-inline'"]);
+});
+
+Then("its policy allows frames from nowhere else", function (this: SpecWorld) {
+  onlyThese(this, "frame-src", ["'self'", "https://www.google.com"]);
+});

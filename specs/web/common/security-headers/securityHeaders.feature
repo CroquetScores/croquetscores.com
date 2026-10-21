@@ -16,6 +16,14 @@ Feature: Telling the reader's browser how to treat what it is sent
   except the few the site uses: Google's reCAPTCHA, to tell people from
   programs, and PayPal and Google's sign-in, which a form is sent on to.
 
+  The policy is not a defence against a script slipped into a page: inline
+  scripts are allowed, and Google's address as a whole is, so it is not to be
+  leaned on for that. What it stops is a page loading from, sending a form to,
+  or being framed by places the site has not named.
+
+  An answer that already carries its own policy keeps it, so that a page that
+  needs a stricter one, or to be framed, can say so.
+
   These scenarios run against a server built for the headers alone, and say
   nothing about what a page holds, which is each page's own.
 
@@ -83,9 +91,33 @@ Feature: Telling the reader's browser how to treat what it is sent
       When a reader asks for a page
       Then its policy allows forms to be sent to nowhere else
 
+    Scenario: A page may not run a script from any other place
+      When a reader asks for a page
+      Then its policy allows scripts from nowhere else
+
+    Scenario: A page may not ask any other place for anything
+      When a reader asks for a page
+      Then its policy allows requests to nowhere else
+
+    Scenario: A page may not load an image from any other place
+      When a reader asks for a page
+      Then its policy allows images from nowhere else
+
+    Scenario: A page may not load a style from any other place
+      When a reader asks for a page
+      Then its policy allows styles from nowhere else
+
+    Scenario: A page may not be framed from any other place
+      When a reader asks for a page
+      Then its policy allows frames from nowhere else
+
     Scenario: A page may carry the frame reCAPTCHA is shown in
       When a reader asks for a page
       Then its policy allows frames from "https://www.google.com"
+
+    Scenario: A page may carry a frame of the site's own
+      When a reader asks for a page
+      Then its policy allows frames from the site
 
     Scenario: A page may ask reCAPTCHA for its answer
       When a reader asks for a page
@@ -106,3 +138,8 @@ Feature: Telling the reader's browser how to treat what it is sent
       And it asks that its kind is not guessed
       And it asks not to be framed
       And it has a policy
+
+    Scenario: An answer that sets its own policy keeps it
+      When a reader asks for a page that sets its own policy
+      Then its policy is the page's own
+      And it asks that its kind is not guessed
