@@ -8,12 +8,6 @@ Feature: The players tab of a tournament's page
 
   Add Player, above the list, opens the player dialog to add players, and a
   player's name or their Edit opens it to change them (`player.feature`).
-  Edit Tournament, after Add Player, leads to the page that edits the
-  tournament itself (`edit.feature`), so that a manager who has just entered
-  the players and sees something about the tournament that is wrong need not
-  go back to the list of tournaments to change it. It is a manager's, as
-  Add Player is: a world ranking officer shown the players has no tournament
-  to edit.
   Edit says in a button what the name does as a link, for a reader who does
   not think to press a name, and comes before Archive, as it does for a
   competition, so that changing a player is offered ahead of setting them
@@ -144,31 +138,13 @@ Feature: The players tab of a tournament's page
       When the players of "Spring Open" are opened
       Then the player "Sam Someone" is shown flying no flag
 
-  Rule: Edit Tournament, after Add Player, leads to editing the tournament
+  Rule: The tab does not edit the tournament
 
-    Scenario: The tab offers Edit Tournament
+    Editing the tournament is from beside its name (`view.feature`), above
+    every tab, so the Players tab does not offer it a second time.
+
+    Scenario: The tab does not offer Edit Tournament
       When the players of "Spring Open" are opened
-      Then the tab offers "Edit Tournament"
-
-    Scenario: Edit Tournament is after Add Player
-      When the players of "Spring Open" are opened
-      Then "Edit Tournament" is after "Add Player"
-
-    Scenario: Edit Tournament is above the players
-      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
-      When the players of "Spring Open" are opened
-      Then "Edit Tournament" is above the players
-
-    Scenario: Edit Tournament leads to editing the tournament
-      Given the players of "Spring Open" are open
-      When "Edit Tournament" is pressed
-      Then the address is "/admin/2026/ac/spring-open/edit"
-
-    Scenario: A world ranking officer is not offered Edit Tournament
-      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
-      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
-      When the players of "Spring Open" are open
       Then the tab does not offer "Edit Tournament"
 
   Rule: Add Player, a player's name and Edit open the player dialog

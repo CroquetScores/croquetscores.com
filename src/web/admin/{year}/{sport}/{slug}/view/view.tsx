@@ -15,6 +15,7 @@ import { TeamsTab } from "./tabs/teams/teams.js";
 import { TestsTab } from "./tabs/tests/tests.js";
 import { refusalOf } from "../../../../api.js";
 import { RefusedPage } from "../RefusedPage.js";
+import { Pencil } from "../../../../Pencil.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in six tabs beneath it, and the section bar leading to its
@@ -166,7 +167,21 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
       <main id="content">
         <div className="page">
           <div className="panel stack">
-            <h1>{asked.tournament.name}</h1>
+            <div className="page-heading">
+              <h1>{asked.tournament.name}</h1>
+              {/* A manager's, as editing the tournament is: a scorer has no
+                  tournament to edit (view.feature). */}
+              {asked.tournament.part === "manager" ? (
+                <a
+                  className="button"
+                  href={`/admin/${asked.tournament.address}/edit`}
+                  title={say("admin.hover.tournaments.edit")}
+                  aria-label={say("admin.tournaments.edit")}
+                >
+                  <Pencil />
+                </a>
+              ) : null}
+            </div>
             <TabControl
               tabs={offeredTo(asked.tournament)}
               chosen={chosen}
@@ -177,7 +192,6 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "players" ? (
                 <PlayersTab
                   tournament={asked.tournament.id}
-                  address={asked.tournament.address}
                   worldRankingSport={asked.tournament.worldRankingSport}
                   manages={asked.tournament.part === "manager"}
                 />
