@@ -87,6 +87,16 @@ Feature: The notes tab of a tournament's page
       When the notes of "Spring Open" are opened
       Then the note "Lunch is at noon" offers Edit before Delete
 
+    Scenario: Edit is drawn as a pencil
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      When the notes of "Spring Open" are opened
+      Then Edit for the note "Lunch is at noon" is a pencil
+
+    Scenario: The pencil is still called Edit
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      When the notes of "Spring Open" are opened
+      Then Edit for the note "Lunch is at noon" is named by its label
+
     Scenario: A note added in the panel is listed
       Given the notes of "Spring Open" are open
       And "Add Note" is pressed

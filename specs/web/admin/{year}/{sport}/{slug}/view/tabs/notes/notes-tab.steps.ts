@@ -90,6 +90,23 @@ Then(
 );
 
 Then(
+  "Edit for the note {string} is a pencil",
+  async function (this: SpecWorld, title: string) {
+    const edit = rowOf(this, title).locator('button[data-action="edit"]');
+    assert.equal(await edit.locator(".icon-pencil").count(), 1);
+    assert.equal((await edit.innerText()).trim(), "");
+  },
+);
+
+Then(
+  "Edit for the note {string} is named by its label",
+  async function (this: SpecWorld, title: string) {
+    const edit = rowOf(this, title).locator('button[data-action="edit"]');
+    assert.ok((await edit.getAttribute("aria-label"))?.length);
+  },
+);
+
+Then(
   "every word in the tab but the notes' titles is in the test locale",
   async function (this: SpecWorld) {
     await eventually(this, async () => {
