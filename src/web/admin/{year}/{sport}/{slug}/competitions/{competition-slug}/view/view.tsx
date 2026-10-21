@@ -68,15 +68,20 @@ export const ViewCompetition = ({
   const drawn = useRef(false);
 
   useEffect(() => {
+    // An answer that arrives after a newer question was asked is not the page
+    // as it is now, so it is let go rather than drawn over it.
+    let current = true;
     void fetch(`/api/v1/tournaments/at/${address}/competitions/${slug}/page`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
         if (!response.ok) {
-          setAsked({ is: "refused", code: await refusalOf(response) });
+          const code = await refusalOf(response);
+          if (current) setAsked({ is: "refused", code });
           return;
         }
         const answer = (await response.json()) as Found;
+        if (!current) return;
         // An address the tournament has moved on from sends the reader to the
         // competition where it is now.
         if (answer.tournamentAddress !== address) {
@@ -91,8 +96,11 @@ export const ViewCompetition = ({
         drawn.current = true;
       })
       .catch(() => {
-        setAsked({ is: "refused", code: "Unknown" });
+        if (current) setAsked({ is: "refused", code: "Unknown" });
       });
+    return () => {
+      current = false;
+    };
   }, [address, slug, kept]);
 
   if (asked.is === "asking") return <HeldPage />;
@@ -134,6 +142,9 @@ export const ViewCompetition = ({
                       { headers: { accept: "application/json" } },
                     )
                       .then(async (response) => {
+                        // Left alone when the list cannot be had: the page is
+                        // still good, and pressing the pencil again asks again.
+                        if (!response.ok) return;
                         const listed = (await response.json()) as {
                           readonly competitions: readonly CompetitionAsItIs[];
                         };
