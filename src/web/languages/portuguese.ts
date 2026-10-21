@@ -7,9 +7,14 @@
 // Where Brazilian and European Portuguese differ and one word cannot serve
 // both (senha for a password, arquivar for archive), the Brazilian word is
 // used, because most of the site's Portuguese readers are in Brazil; the verbs
-// are the ones both spell alike (insira, not digite or introduza). Items in
-// menus and on buttons are written in sentence case, as Portuguese writes
-// them, where the English capitalises each word.
+// are the ones both spell alike (insira for "enter" and escreva for "type",
+// not digite or introduza). Items in menus and on buttons are written in
+// sentence case, as Portuguese writes them, where the English capitalises
+// each word.
+//
+// A commentary is a narração and what is written beneath it a comentário,
+// because the English has two words there and one Portuguese word would make
+// "Another comentário already has that title" ambiguous.
 import type { Language } from "../common/language.js";
 
 export const portuguese: Language = {
@@ -272,7 +277,7 @@ export const portuguese: Language = {
     "Password.Missing": "Insira uma senha.",
     "Password.TooShort": "Uma senha precisa ter pelo menos 12 caracteres.",
     "Password.ConfirmationDiffers":
-      "Isto não é igual à senha acima. Digite-a novamente.",
+      "Isto não é igual à senha acima. Escreva-a novamente.",
     "Password.Breached":
       "Esta senha já apareceu em um vazamento de dados em outro lugar, então não é segura para usar aqui. Escolha outra.",
 
@@ -302,7 +307,7 @@ export const portuguese: Language = {
     "errors.maintenanceMinutes": "Deverá voltar em {minutes} minutos.",
     "errors.maintenanceMinute": "Deverá voltar em 1 minuto.",
     "errors.maintenanceLonger":
-      "Está a demorar mais do que o esperado e voltará em breve.",
+      "Está demorando mais do que o esperado e voltará em breve.",
 
     "home.recentResults": "Resultados recentes",
     "home.recentResults.none":
@@ -338,14 +343,14 @@ export const portuguese: Language = {
     "search.competitions": "Competições",
     "search.nothingFound": "Nada foi encontrado.",
     "players.search.label": "Pesquisar jogadores",
-    "players.search.prompt": "Digite o nome de um jogador para o encontrar.",
+    "players.search.prompt": "Escreva o nome de um jogador para encontrá-lo.",
     "players.search.none": "Nenhum jogador foi encontrado.",
     "search.more":
       "Só são mostrados os primeiros {count}. Acrescente mais do nome para restringir a pesquisa.",
     "websitePlayer.tournament": "Torneio",
     "tournament.test": "{first} x {second}",
     "tournament.notes": "Notas",
-    "tournament.commentary": "Comentários",
+    "tournament.commentary": "Narrações",
     "tournament.beat": "venceu",
     "tournament.drewWith": "empatou com",
     "tournament.ago.seconds": "{count} s",
@@ -355,10 +360,10 @@ export const portuguese: Language = {
     "tournament.none": "Nenhum jogo foi disputado ainda.",
     "players.none": "Nenhum jogador foi adicionado ainda.",
     "commentaries.by": "por",
-    "commentaries.start": "Iniciar novo comentário",
-    "startCommentary.title": "Iniciar novo comentário",
+    "commentaries.start": "Iniciar nova narração",
+    "startCommentary.title": "Iniciar nova narração",
     "startCommentary.titleField": "Título",
-    "startCommentary.submit": "Iniciar comentário",
+    "startCommentary.submit": "Iniciar narração",
     "marks.new": "novo",
     "notes.none": "Os organizadores ainda não escreveram nenhuma nota.",
     "note.edited": "editada",
@@ -396,9 +401,9 @@ export const portuguese: Language = {
     "block.lost": "perdido",
     "block.drawn": "empatado",
     "block.withdrawn": "desistiu",
-    "block.gameWithdrawn": "desistência",
+    "block.gameWithdrawn": "anulado",
     "block.losses": "Derrotas",
-    "competition.views": "Visões",
+    "competition.views": "Visualizações",
     "competition.view.grid": "Grade",
     "competition.view.summary": "Resumo",
     "competition.view.orderOfPlay": "Ordem de jogo",
@@ -473,13 +478,13 @@ export const portuguese: Language = {
     "admin.view.scorers": "Apontadores",
     "admin.view.rankings": "Rankings",
     "admin.rankings.textFile":
-      "Os resultados do torneio são enviados aos rankings mundiais como um arquivo de texto, que o site escreve a partir das partidas inseridas.",
+      "Os resultados do torneio são enviados aos rankings mundiais como um arquivo de texto, que o site escreve a partir dos jogos inseridos.",
     "admin.rankings.spreadsheet":
-      "Os resultados do torneio são enviados aos rankings mundiais como uma planilha, que o site escreve a partir das partidas inseridas.",
+      "Os resultados do torneio são enviados aos rankings mundiais como uma planilha, que o site escreve a partir dos jogos inseridos.",
     "admin.rankings.fillInWinners":
-      "O site só pode adivinhar quem ganhou cada competição, por isso verifique a linha Winner de cada uma antes de enviar o arquivo.",
+      "O site só pode adivinhar quem ganhou cada competição, por isso verifique a linha do vencedor (Winner) de cada uma antes de enviar o arquivo.",
     "admin.rankings.fillInWinner":
-      "O site não pode saber quem ganhou o torneio, por isso preencha-o no fim da planilha antes de enviá-la.",
+      "O site não pode saber quem ganhou o torneio, por isso preencha isso no fim da planilha antes de enviá-la.",
     "admin.rankings.sendIt":
       "Depois envie o arquivo aos responsáveis pelos rankings mundiais.",
     "admin.rankings.download": "Baixar rankings",
@@ -503,16 +508,16 @@ export const portuguese: Language = {
     "admin.administrator.sections.accounts": "Contas",
     "admin.administrator.sections.worldRankings": "Rankings mundiais",
     "admin.administrator.sections.importErrors": "Erros de importação",
-    "admin.administrator.sections.logs": "Registos",
-    "admin.administrator.sections.databaseStatus": "Acesso à base de dados",
-    "admin.databaseStatus.title": "Acesso à base de dados",
-    "admin.databaseStatus.on": "O acesso à base de dados está ativado.",
-    "admin.databaseStatus.off": "O acesso à base de dados está desativado.",
+    "admin.administrator.sections.logs": "Registros",
+    "admin.administrator.sections.databaseStatus": "Acesso ao banco de dados",
+    "admin.databaseStatus.title": "Acesso ao banco de dados",
+    "admin.databaseStatus.on": "O acesso ao banco de dados está ativado.",
+    "admin.databaseStatus.off": "O acesso ao banco de dados está desativado.",
     "admin.databaseStatus.expected":
       "Espera-se que o site volte em {minutes} minutos.",
     "admin.databaseStatus.expectedOne":
       "Espera-se que o site volte em 1 minuto.",
-    "admin.databaseStatus.longer": "Está a demorar mais do que o previsto.",
+    "admin.databaseStatus.longer": "Está demorando mais do que o previsto.",
     "admin.databaseStatus.told": "Os leitores veem: {words}",
     "admin.databaseStatus.toldUsual": "Os leitores veem a frase habitual.",
     "admin.databaseStatus.minutes": "Minutos previstos",
@@ -521,13 +526,14 @@ export const portuguese: Language = {
     "admin.databaseStatus.change": "Alterar",
     "admin.databaseStatus.turnOn": "Ativar",
     "admin.databaseStatus.minutesNeeded": "Os minutos são necessários.",
-    "admin.databaseStatus.otherwise": "Algo correu mal no site.",
+    "admin.databaseStatus.otherwise": "Algo deu errado no site.",
     "DatabaseAccess.MinutesNotWhole":
-      "Os minutos têm de ser um número inteiro.",
-    "DatabaseAccess.MinutesOutOfRange": "Os minutos têm de ser de 1 a 1440.",
+      "Os minutos precisam ser um número inteiro.",
+    "DatabaseAccess.MinutesOutOfRange":
+      "Os minutos precisam estar entre 1 e 1440.",
     "DatabaseAccess.WordsTooLong":
       "O texto não pode ter mais de 500 caracteres.",
-    "DatabaseAccess.NotOff": "O acesso à base de dados não está desativado.",
+    "DatabaseAccess.NotOff": "O acesso ao banco de dados não está desativado.",
     "admin.administrator.title": "Administrador",
     "admin.accounts.title": "Contas",
     "admin.roles.add": "Adicionar",
@@ -570,19 +576,19 @@ export const portuguese: Language = {
     "admin.importErrors.title": "Erros de importação",
     "admin.importErrors.none": "Nenhum erro de importação",
     "admin.importErrors.otherwise": "Algo deu errado no site.",
-    "admin.logs.title": "Registos",
+    "admin.logs.title": "Registros",
     "admin.logs.severity": "Gravidade",
     "admin.logs.text": "Pesquisar",
     "admin.logs.show": "Mostrar",
     "admin.logs.prune": "Limpar",
     "admin.logs.pruneAsk":
-      "Remover o registo anterior à última hora? Nada o recupera.",
+      "Remover o registro anterior à última hora? Nada o recupera.",
     "admin.logs.removed": "Foram removidas {count} entradas",
-    "admin.logs.none": "Sem entradas no registo",
+    "admin.logs.none": "Nenhuma entrada no registro",
     "admin.logs.otherwise": "Algo deu errado no site.",
     "admin.hover.logs.show": "Mostrar as entradas correspondentes",
-    "admin.hover.logs.prune": "Remover o registo anterior à última hora",
-    "admin.hover.logs.pruneAgree": "Remover o registo anterior à última hora",
+    "admin.hover.logs.prune": "Remover o registro anterior à última hora",
+    "admin.hover.logs.pruneAgree": "Remover o registro anterior à última hora",
     "admin.importError.title": "Erro de importação",
     "admin.importError.documentId": "Id do documento",
     "admin.importError.tournament": "Torneio",
@@ -593,7 +599,7 @@ export const portuguese: Language = {
       "A importação não salvou nenhum erro para esse documento.",
     "admin.competitionView.otherwise":
       "Esta competição não pode ser gerenciada daqui.",
-    "admin.competitions.block": "Grupo",
+    "admin.competitions.block": "Bloco",
     "admin.competitions.knockout": "Eliminatória",
     "admin.competitions.swiss": "Suíço",
     "admin.competitions.view": "Ver",
@@ -632,7 +638,7 @@ export const portuguese: Language = {
       "Outra competição deste torneio já tem esse nome.",
     "BestOf.NotWhole": "Insira um número inteiro de jogos.",
     "BestOf.TooSmall": "Uma partida precisa ser melhor de pelo menos 1 jogo.",
-    "Rounds.NotWhole": "Digite um número inteiro de rodadas.",
+    "Rounds.NotWhole": "Insira um número inteiro de rodadas.",
     "Rounds.TooSmall": "Um bloco precisa ser jogado em pelo menos 1 rodada.",
     "KnockoutDraw.EvenBestOf":
       "A partida de uma eliminatória precisa ter um vencedor, então é melhor de um número ímpar de jogos.",
@@ -797,7 +803,7 @@ export const portuguese: Language = {
     "admin.scores.add": "Adicionar placar",
     "admin.scores.none": "Nenhum placar",
     "admin.scores.edit": "Editar",
-    "admin.scores.drawNotFilledTitle": "Chave incompleta",
+    "admin.scores.drawNotFilledTitle": "Sorteio incompleto",
     "admin.scores.archive": "Arquivar",
     "admin.scores.up": "Subir",
     "admin.scores.down": "Descer",
@@ -822,9 +828,9 @@ export const portuguese: Language = {
     "admin.score.save": "Salvar",
     "admin.score.notCorrected": "Não foi possível corrigir o placar.",
     "Game.WinnerMissing": "Escolha o vencedor.",
-    "Game.WinnerScoreMissing": "Digite o placar do vencedor.",
+    "Game.WinnerScoreMissing": "Escreva o placar do vencedor.",
     "Game.LoserMissing": "Escolha o perdedor.",
-    "Game.LoserScoreMissing": "Digite o placar do perdedor.",
+    "Game.LoserScoreMissing": "Escreva o placar do perdedor.",
     "Score.NoPoints": "Um placar começa com o seu número de pontos.",
     "Game.SamePlayer": "Ninguém joga contra si mesmo.",
     "Game.WinnerNotAhead":
@@ -948,11 +954,11 @@ export const portuguese: Language = {
       "Essa nota não está mais lá. Outro organizador pode tê-la excluído.",
     "ManagerNote.Deleted":
       "Essa nota foi excluída. Outro organizador pode tê-la excluído.",
-    "CommentaryTitle.Missing": "Dê um título ao comentário.",
+    "CommentaryTitle.Missing": "Dê um título à narração.",
     "CommentaryTitle.TooLong": "Esse título é longo demais.",
     "CommentaryTitle.NoLetterOrDigit":
       "Um título precisa ter uma letra ou um dígito.",
-    "Commentary.TitleTaken": "Outro comentário já tem esse título.",
+    "Commentary.TitleTaken": "Outra narração já tem esse título.",
     "CommentText.Missing": "Escreva algo no comentário.",
     "CommentText.TooLong": "Esse comentário é longo demais.",
     "TeamShortName.Missing": "Dê um nome abreviado à equipe.",
@@ -1784,20 +1790,20 @@ export const portuguese: Language = {
 `,
 
     "Email.DatabaseUnreachable.subject":
-      "{siteName} não consegue acessar o banco de dados",
+      "O {siteName} não consegue acessar o banco de dados",
     "Email.DatabaseUnreachable.body": `
 <p>Olá,</p>
 
 <p>
-    {siteName} não conseguiu acessar o banco de dados às {when}. Até que ele responda, cada página que precisa dele diz aos leitores que o site está indisponível e para tentarem novamente mais tarde.
+    O {siteName} não conseguiu acessar o banco de dados em {when}. Até que ele responda, cada página que precisa dele diz aos leitores que o site está indisponível e para tentarem novamente mais tarde.
 </p>
 
 <p>
-    Não há nada a desbloquear. Cada requisição pede uma conexão de novo, e o site volta a funcionar assim que o banco de dados responde.
+    Não é preciso liberar nada. Cada requisição pede uma conexão de novo, e o site volta a funcionar assim que o banco de dados responde.
 </p>
 
 <p>
-    Enquanto o banco de dados continuar fora do ar, você receberá no máximo um e-mail sobre isso a cada {minutes} minutos.
+    Enquanto o banco de dados continuar fora do ar, você receberá no máximo um email sobre isso a cada {minutes} minutos.
 </p>
 
 <p>
@@ -1806,16 +1812,16 @@ export const portuguese: Language = {
 </p>
 `,
 
-    "Email.UnhandledError.subject": "{siteName} falhou em uma requisição",
+    "Email.UnhandledError.subject": "O {siteName} falhou em uma requisição",
     "Email.UnhandledError.body": `
 <p>Olá,</p>
 
 <p>
-    {siteName} falhou às {when} em uma requisição para {asked}. O leitor viu a referência {reference}, e o registro tem a causa logo abaixo dela.
+    O {siteName} falhou, em {when}, em uma requisição para {asked}. O leitor viu a referência {reference}, e o registro tem a causa logo abaixo dela.
 </p>
 
 <p>
-    Um site quebrado costuma falhar em toda requisição, então você receberá no máximo 4 emails por hora sobre falhas. As seguintes ficam no registro do mesmo jeito.
+    Um site quebrado costuma falhar em toda requisição, então você receberá no máximo 4 emails por hora sobre falhas. As falhas seguintes ficam no registro mesmo assim.
 </p>
 
 <p>

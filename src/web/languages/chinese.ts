@@ -281,7 +281,7 @@ export const chinese: Language = {
     "errors.failed": "出了点问题",
     "errors.reference": "参考编号 {reference}。",
     "errors.recorded":
-      "该错误已记录，并已向管理员发送电子邮件。建议您携带参考编号，给管理员发一封电子邮件，说明您当时在做什么。",
+      "该错误已记录，并已向管理员发送电子邮件。建议你带上参考编号，给管理员发一封电子邮件，说明你当时在做什么。",
     "errors.message": "给管理员发电子邮件",
     "errors.messageSubject": "{siteName} 上的错误 {reference}",
     "errors.messageBody": "出现问题时我正在做的事：\n\n",
@@ -458,7 +458,7 @@ export const chinese: Language = {
     "admin.rankings.spreadsheet":
       "世界排名收到的是以电子表格形式发送的比赛结果，由网站根据已录入的比赛生成。",
     "admin.rankings.fillInWinners":
-      "网站只能推测每项比赛的获胜者，因此发送文件前请检查每项比赛的“Winner”一行。",
+      "网站只能推测每项比赛的获胜者，因此发送文件前请检查每项比赛的“获胜者（Winner）”一行。",
     "admin.rankings.fillInWinner":
       "网站无法知道谁赢得了锦标赛，因此发送前请在电子表格底部填写。",
     "admin.rankings.sendIt": "然后将文件发送给世界排名负责人。",
@@ -543,7 +543,7 @@ export const chinese: Language = {
     "admin.logs.text": "查找",
     "admin.logs.show": "显示",
     "admin.logs.prune": "清理",
-    "admin.logs.pruneAsk": "删除最近一小时之前的日志?删除后无法恢复。",
+    "admin.logs.pruneAsk": "删除最近一小时之前的日志？删除后无法恢复。",
     "admin.logs.removed": "已删除 {count} 条记录",
     "admin.logs.none": "没有日志记录",
     "admin.logs.otherwise": "本站出了点问题。",
@@ -1685,7 +1685,7 @@ export const chinese: Language = {
 </p>
 
 <p>
-    出故障的网站往往每个请求都会出错，所以每小时最多只会就出错给您发送 4 封电子邮件。之后的错误同样会记录在日志中。
+    出故障的网站往往每个请求都会出错，所以每小时最多只会就出错给你发送 4 封电子邮件。之后的错误同样会记录在日志中。
 </p>
 
 <p>

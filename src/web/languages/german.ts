@@ -40,7 +40,7 @@ export const german: Language = {
     "termsOfUse.report":
       "Geschriebenes melden oder Fragen zu diesen Bedingungen: {emailAddress}",
     "TermsOfUse.NotAgreed":
-      "Kreuzen Sie das Kästchen an, um den Nutzungsbedingungen zuzustimmen.",
+      "Setze das Häkchen, um den Nutzungsbedingungen zuzustimmen.",
     "tryWebsite.banner":
       "Das hier ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was du hier eingibst, kann jederzeit gelöscht werden.",
 
@@ -101,7 +101,7 @@ export const german: Language = {
     "welcome.home": "Zurück zu {siteName}",
     "newConfirmationLink.title": "Neuen Link anfordern",
     "newConfirmationLink.explanation":
-      "Der Link zum Bestätigen deiner E-Mail-Adresse ist abgelaufen. Fordere einen neuen an, er wird an die Adresse geschickt, mit der du dich registriert hast.",
+      "Der Link zum Bestätigen deiner E-Mail-Adresse ist abgelaufen. Fordere einen neuen an, dann wird er an die Adresse geschickt, mit der du dich registriert hast.",
     "newConfirmationLink.send": "Schick mir einen neuen Link",
     "newConfirmationLink.home": "Zurück zu {siteName}",
     "newConfirmationLink.signIn": "Anmelden",
@@ -142,7 +142,7 @@ export const german: Language = {
       "Du wurdest überall abgemeldet, wo du angemeldet warst. Melde dich mit deinem neuen Passwort an.",
     "setNewPassword.expired.title": "Dieser Link ist abgelaufen",
     "setNewPassword.expired.explanation":
-      "Ein Link zum Festlegen eines neuen Passworts funktioniert eine Stunde lang. Fordere einen neuen an, er wird an dieselbe Adresse geschickt.",
+      "Ein Link zum Festlegen eines neuen Passworts funktioniert eine Stunde lang. Fordere einen neuen an, dann wird er an dieselbe Adresse geschickt.",
     "setNewPassword.noLongerWorks.title": "Dieser Link funktioniert nicht mehr",
     "setNewPassword.noLongerWorks.explanation":
       "Vielleicht wurde er schon benutzt, oder am Ende fehlt etwas. Fordere einen neuen an, wenn du ihn noch brauchst.",
@@ -170,7 +170,7 @@ export const german: Language = {
     "forgetAccount.lastAdministrator.title":
       "Dein Konto kann nicht vergessen werden",
     "forgetAccount.lastAdministrator.explanation":
-      "Du bist der einzige Administrator dieser Website. Gib die Administratorrolle an jemand anderen, danach kann dein Konto vergessen werden.",
+      "Du bist der einzige Administrator dieser Website. Gib die Administratorrolle an eine andere Person, danach kann dein Konto vergessen werden.",
     "forgetAccount.askAgain": "Erneut anfordern",
     "forgetAccount.home": "Zurück zu {siteName}",
 
@@ -255,7 +255,7 @@ export const german: Language = {
       "Dein Konto ist bereit. Melde dich mit der E-Mail-Adresse und dem Passwort an, die du gerade angegeben hast.",
     "confirmEmailAddress.expired.title": "Dieser Link ist abgelaufen",
     "confirmEmailAddress.expired.explanation":
-      "Ein Link zum Bestätigen einer E-Mail-Adresse funktioniert 24 Stunden lang. Fordere einen neuen an, er wird an dieselbe Adresse geschickt.",
+      "Ein Link zum Bestätigen einer E-Mail-Adresse funktioniert 24 Stunden lang. Fordere einen neuen an, dann wird er an dieselbe Adresse geschickt.",
     "confirmEmailAddress.expired.newLink": "Schick mir einen neuen Link",
     "confirmEmailAddress.noLongerWorks.title":
       "Dieser Link funktioniert nicht mehr",
@@ -329,9 +329,9 @@ export const german: Language = {
     "tournamentList.filter.submit": "Filtern",
     "home.allTournaments": "Alle Turniere {year}",
     "year.heading": "Turniere {year}",
-    "year.none": "{year} beginnt kein Turnier.",
+    "year.none": "In {year} beginnt kein Turnier.",
     "yearSport.heading": "{sport}-Turniere {year}",
-    "yearSport.none": "{year} beginnt kein {sport}-Turnier.",
+    "yearSport.none": "In {year} beginnt kein {sport}-Turnier.",
     "tournament.recent": "Aktuell",
     "tournament.summary": "Übersicht",
     "test.bestOf": "Jede Begegnung geht über höchstens {count} Spiele.",
@@ -486,11 +486,11 @@ export const german: Language = {
     "admin.rankings.spreadsheet":
       "Die Ergebnisse des Turniers werden der Weltrangliste als Tabelle geschickt, die die Website aus den eingegebenen Spielen erstellt.",
     "admin.rankings.fillInWinners":
-      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfen Sie daher die Zeile Winner jedes Wettbewerbs, bevor Sie die Datei senden.",
+      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfe daher die Zeile „Sieger“ (Winner) jedes Wettbewerbs, bevor du die Datei sendest.",
     "admin.rankings.fillInWinner":
-      "Die Website kann nicht wissen, wer das Turnier gewonnen hat. Tragen Sie es daher unten in der Tabelle ein, bevor Sie sie senden.",
+      "Die Website kann nicht wissen, wer das Turnier gewonnen hat. Trage es daher unten in der Tabelle ein, bevor du sie sendest.",
     "admin.rankings.sendIt":
-      "Senden Sie die Datei dann an die Verantwortlichen der Weltrangliste.",
+      "Sende die Datei dann an die Verantwortlichen der Weltrangliste.",
     "admin.rankings.download": "Ranglisten herunterladen",
     "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
     "rankings.notAvailable.sport":
@@ -644,14 +644,14 @@ export const german: Language = {
     "CompetitionName.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
     "Tournament.KnockoutPlayerHasGames":
-      "Spieler dieser Runde haben Begegnungen, deshalb können ihre Plätze nicht geändert werden.",
+      "Spieler dieser Auslosung haben Spiele, deshalb können ihre Plätze nicht geändert werden.",
     "Tournament.CompetitionNameTaken":
       "Ein anderer Wettbewerb dieses Turniers hat schon diesen Namen.",
     "BestOf.NotWhole": "Gib eine ganze Zahl von Spielen ein.",
     "BestOf.TooSmall": "Eine Begegnung muss mindestens über 1 Spiel gehen.",
     "Rounds.NotWhole": "Gib eine ganze Zahl an Runden ein.",
     "Rounds.TooSmall":
-      "Ein Block muss über mindestens 1 Runde gespielt werden.",
+      "Eine Gruppe muss über mindestens 1 Runde gespielt werden.",
     "KnockoutDraw.EvenBestOf":
       "Eine Begegnung in einer K.-o.-Runde braucht einen Sieger, deshalb geht sie über eine ungerade Zahl von Spielen.",
     "admin.hover.tournaments.new": "Ein neues Turnier anlegen",
@@ -801,7 +801,7 @@ export const german: Language = {
       "{name} wird aus dem Wettbewerb genommen. Das lässt sich nicht rückgängig machen.",
     "admin.competitionPlayers.withdrawTitle": "Spieler zurückziehen",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} spielt im Wettbewerb nicht weiter, und die nicht gespielten Spiele werden ohne seine Teilnahme entschieden.",
+      "{name} spielt im Wettbewerb nicht weiter, und die Spiele, die noch nicht gespielt wurden, werden ohne diesen Spieler entschieden.",
     "admin.competitionPlayers.carryForward": "Übertrag",
     "admin.carryForward.title": "Übertrag - {name}",
     "admin.carryForward.save": "Speichern",
@@ -864,7 +864,7 @@ export const german: Language = {
     "Game.WinnerScoreMissing": "Gib die Punkte des Siegers ein.",
     "Game.LoserMissing": "Wähle den Verlierer.",
     "Game.LoserScoreMissing": "Gib die Punkte des Verlierers ein.",
-    "Score.NoPoints": "Punkte beginnen mit einer Zahl.",
+    "Score.NoPoints": "Ein Ergebnis beginnt mit der Zahl der Punkte.",
     "Game.SamePlayer": "Niemand spielt gegen sich selbst.",
     "Game.WinnerNotAhead":
       "Die Punkte des Siegers müssen höher sein als die des Verlierers, oder als gewonnen markiert sein.",
@@ -872,7 +872,8 @@ export const german: Language = {
       "Die Punkte des Verlierers können nicht als gewonnen markiert werden.",
     "Game.ResultChanged":
       "Eine Korrektur behält das Ergebnis bei: Ein gewonnenes Spiel bleibt gewonnen, und ein unentschiedenes bleibt unentschieden.",
-    "Competition.MatchDecided": "Ihre Begegnung ist bereits entschieden.",
+    "Competition.MatchDecided":
+      "Die Begegnung dieser Spieler ist bereits entschieden.",
     "Competition.DrawFull":
       "Der Spieler kann nicht hinzugefügt werden, weil die Auslosung voll ist.",
     "Competition.DrawNotFilled":
@@ -1857,7 +1858,7 @@ export const german: Language = {
 </p>
 
 <p>
-    Es muss nichts aufgehoben werden. Jede Anfrage verlangt neu eine Verbindung, und die Website funktioniert wieder, sobald die Datenbank antwortet.
+    Es muss nichts wieder freigeschaltet werden. Jede Anfrage verlangt neu eine Verbindung, und die Website funktioniert wieder, sobald die Datenbank antwortet.
 </p>
 
 <p>

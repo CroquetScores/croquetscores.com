@@ -478,7 +478,7 @@ export const swedish: Language = {
     "admin.rankings.spreadsheet":
       "Turneringens resultat skickas till världsrankingen som ett kalkylblad, som webbplatsen skriver utifrån de inmatade matcherna.",
     "admin.rankings.fillInWinners":
-      "Webbplatsen kan bara gissa vem som vann varje tävling, så kontrollera raden Winner för var och en innan du skickar filen.",
+      "Webbplatsen kan bara gissa vem som vann varje tävling, så kontrollera raden för vinnaren (Winner) för var och en innan du skickar filen.",
     "admin.rankings.fillInWinner":
       "Webbplatsen kan inte veta vem som vann turneringen, så fyll i det längst ned i kalkylbladet innan du skickar det.",
     "admin.rankings.sendIt":
@@ -1710,8 +1710,8 @@ export const swedish: Language = {
 <p>
     Du bad om att ditt konto hos <strong>{siteName}</strong> skulle
     glömmas.<br />
-    Följ knappen nedan för att se vad det innebär, och för att säga säkert
-    att du vill det:
+    Klicka på knappen nedan för att se vad det innebär, och för att säga
+    säkert att du vill det:
 </p>
 
 <p>
@@ -1739,13 +1739,13 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Länken fungerar en gång, till 15 minuter efter att du bad om den, och bara
+    Länken fungerar en gång, i 15 minuter efter att du bad om den, och bara
     medan du är inloggad på det här kontot. Därefter får du be om en ny från
     ditt konto.
 </p>
 
 <p>
-    Om du inte bad om det händer ingenting om inte länken följs. Någon som var
+    Om du inte bad om det händer ingenting så länge länken inte följs. Någon som var
     inloggad på ditt konto bad dock om det, så ange ett nytt lösenord från sidan
     för glömt lösenord för att vara säker på att de inte kan logga in igen.
 </p>
@@ -1762,13 +1762,13 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    {siteName} kunde inte nå {service} klockan {when}. Tills den svarar får
-    läsare som behöver den, för att registrera sig eller ange ett nytt lösenord,
-    veta att de ska försöka igen senare.
+    {siteName} kunde inte nå {service} klockan {when}. Tills den svarar blir
+    besökare som behöver den, för att registrera sig eller ange ett nytt
+    lösenord, uppmanade att försöka igen senare.
 </p>
 
 <p>
-    Inget behöver häva. Varje försök frågar {service} på nytt, och sidorna
+    Inget behöver hävas. Varje försök frågar {service} på nytt, och sidorna
     fungerar igen i samma stund som den svarar.
 </p>
 
@@ -1787,7 +1787,7 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    {siteName} kunde inte nå sin databas {when}. Tills den svarar säger varje sida som behöver den till läsarna att webbplatsen inte är tillgänglig och att de ska försöka igen senare.
+    {siteName} kunde inte nå sin databas klockan {when}. Tills den svarar säger varje sida som behöver den till läsarna att webbplatsen inte är tillgänglig och att de ska försöka igen senare.
 </p>
 
 <p>
