@@ -2,13 +2,14 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { menuLink } from "../../support/menuLink.js";
 
 // Named rather than left as "header summary" and "header a": the header also
 // holds the account menu, which has a summary and links of its own, and a step
 // about the primary navigation that lands on the first match in the page is one
 // the order of the markup decides.
 const menuButton = "header details.menu > summary";
-const link = (label: string): string => `.menu-links a:text-is("${label}")`;
+const link = menuLink;
 const section = (label: string): string =>
   `.site-sections a:text-is("${label}")`;
 

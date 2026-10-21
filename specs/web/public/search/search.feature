@@ -86,6 +86,7 @@ Feature: A reader searches the website for tournaments, players and competitions
     was typed, so that a reader who found too much can add a word.
 
     Scenario: The header shows a magnifying glass and no search box
+      Given a browser that runs scripts
       When the page at "/" is opened
       Then the header shows a magnifying glass
       And the header's search box is not shown
@@ -111,17 +112,20 @@ Feature: A reader searches the website for tournaments, players and competitions
       Then the header's magnifying glass is called "Search"
 
     Scenario: Pressing the magnifying glass shows the search box
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       When the header's magnifying glass is pressed
       Then the header's search box is shown
 
     Scenario: The cursor is in the search box when it is shown
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       When the header's magnifying glass is pressed
       Then the cursor is in the header's search box
 
     Scenario: Pressing the magnifying glass with something typed searches
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       And "spring" is typed as the header's search box
       When the header's magnifying glass is pressed
@@ -129,7 +133,8 @@ Feature: A reader searches the website for tournaments, players and competitions
       And the address asks for "spring"
 
     Scenario: Pressing Enter in the search box searches
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       And "spring" is typed as the header's search box
       When Enter is pressed in the header's search box
@@ -137,19 +142,22 @@ Feature: A reader searches the website for tournaments, players and competitions
       And the address asks for "spring"
 
     Scenario: Pressing the magnifying glass with nothing typed closes the search box
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       When the header's magnifying glass is pressed
       Then the header's search box is not shown
 
     Scenario: Pressing the magnifying glass with nothing typed does not leave the page
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       When the header's magnifying glass is pressed
       Then the address is "/"
 
     Scenario: Pressing the magnifying glass with only spaces typed closes the search box and empties it
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       And "   " is typed as the header's search box
       When the header's magnifying glass is pressed
@@ -157,7 +165,8 @@ Feature: A reader searches the website for tournaments, players and competitions
       And the header's search box is empty
 
     Scenario: Pressing Enter with nothing typed leaves the search box open
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And the header's magnifying glass is pressed
       When Enter is pressed in the header's search box
       Then the header's search box is shown

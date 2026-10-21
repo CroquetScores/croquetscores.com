@@ -3,7 +3,8 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
-import { unmarkedWithin } from "../../support/marks.js";
+import { isMarked, unmarkedWithin } from "../../support/marks.js";
+import { menuLink } from "../../support/menuLink.js";
 
 // The site's search and the page of its results, drawn by the server with no
 // scripting (`search.feature`).
@@ -73,9 +74,7 @@ Then(
   "the header's magnifying glass is before the link {string} on the same line",
   async function (this: SpecWorld, label: string) {
     const glass = await button(this).boundingBox();
-    const link = await this.browserPage
-      .locator(`.menu-links a:text-is("${label}")`)
-      .boundingBox();
+    const link = await this.browserPage.locator(menuLink(label)).boundingBox();
     assert.ok(glass !== null && link !== null, "Nothing to measure.");
     assert.ok(
       glass.x + glass.width <= link.x + 0.5,
@@ -142,13 +141,6 @@ const pressed = async (world: SpecWorld): Promise<void> => {
   ]);
   await settled(world);
 };
-
-Given(
-  "the header's magnifying glass is pressed",
-  async function (this: SpecWorld) {
-    await pressed(this);
-  },
-);
 
 When(
   "the header's magnifying glass is pressed",
@@ -285,8 +277,17 @@ Then(
 Then(
   "every word in the header's search box is in the test locale",
   async function (this: SpecWorld) {
-    const stray = await unmarkedWithin(this, "header.site-bar .site-search");
-    assert.deepEqual(stray, [], "Words in the box came from elsewhere.");
+    // The box has no text to read, only the names the field and the glass are
+    // announced by.
+    for (const name of [
+      await box(this).getAttribute("aria-label"),
+      await button(this).getAttribute("aria-label"),
+    ]) {
+      assert.ok(
+        name !== null && isMarked(name),
+        `${JSON.stringify(name)} came from elsewhere.`,
+      );
+    }
   },
 );
 
