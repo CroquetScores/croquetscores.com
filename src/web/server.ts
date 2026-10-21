@@ -266,6 +266,7 @@ import { assetsPath, readAssets, type Assets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
+import { registerSecurityHeaders } from "./common/securityHeaders.js";
 import { registerBetaBanner } from "./common/betaSite.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import {
@@ -1499,6 +1500,7 @@ export const buildApplication = async (
   // Before any route, so nothing that changes something can be reached from
   // another site by forgetting to ask.
   refuseCrossSite(server);
+  registerSecurityHeaders(server);
   registerSearchEngines(server, config.searchEnginesWelcome);
   registerBetaBanner(server);
 
