@@ -6,6 +6,7 @@ import { type NoteListed, NotePanel } from "./notePanel.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../../../../listed.css";
 import { useListed } from "../../../../../../useListed.js";
+import { Pencil } from "../../../../../../Pencil.js";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
 // for its readers, the most recently written first, each by its title and
@@ -86,11 +87,12 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           className="button"
           data-action="edit"
           title={say("admin.hover.notes.edit")}
+          aria-label={say("admin.notes.edit")}
           onClick={() => {
             write(note);
           }}
         >
-          {say("admin.notes.edit")}
+          <Pencil />
         </button>
         <button
           type="button"

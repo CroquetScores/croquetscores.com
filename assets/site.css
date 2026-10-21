@@ -1448,6 +1448,21 @@ main {
 }
 
 /* The one that does what the form is for, and the only one that looks like it. */
+/* A button drawn as a picture alone, such as Edit's pencil, or as an arrow, as
+   Up and Down are. Each picture is given the same room inside the button's
+   ordinary padding, so that all of them are exactly as wide as one another
+   and a row's options line up; what a button does is said by its label and
+   its hover text. */
+.option-arrow,
+.button > .icon-pencil {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  text-align: center;
+  line-height: 1.25rem;
+  fill: currentcolor;
+}
+
 .button-submit {
   border-color: var(--action);
   background: var(--action);

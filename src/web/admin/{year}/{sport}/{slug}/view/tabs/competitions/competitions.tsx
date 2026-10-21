@@ -9,6 +9,7 @@ import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
 import "../../../../../../listed.css";
 import { useListed } from "../../../../../../useListed.js";
+import { Pencil } from "../../../../../../Pencil.js";
 
 // The Competitions tab (competitions-tab.feature): the competitions in use in
 // the tournament's order, each offering Edit, View, Archive, Up and Down, and
@@ -149,11 +150,12 @@ export const CompetitionsTab = ({
                         type="button"
                         className="button"
                         title={say("admin.hover.competitions.edit")}
+                        aria-label={say("admin.competitions.edit")}
                         onClick={() => {
                           setEditing(competition);
                         }}
                       >
-                        {say("admin.competitions.edit")}
+                        <Pencil />
                       </button>,
                     ]
                   : []),

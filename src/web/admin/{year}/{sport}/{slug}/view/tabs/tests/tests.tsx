@@ -6,6 +6,7 @@ import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
 import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../../../../listed.css";
+import { Pencil } from "../../../../../../Pencil.js";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
 // does for its tests what the Competitions tab does for a Standard
@@ -268,11 +269,12 @@ export const TestsTab = ({
                         className="button"
                         data-action="edit"
                         title={say("admin.hover.tests.edit")}
+                        aria-label={say("admin.tests.edit")}
                         onClick={() => {
                           setEditing(test);
                         }}
                       >
-                        {say("admin.tests.edit")}
+                        <Pencil />
                       </button>,
                     ]
                   : []),

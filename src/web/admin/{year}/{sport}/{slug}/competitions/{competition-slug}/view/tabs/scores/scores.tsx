@@ -8,6 +8,7 @@ import { idInAddress, refusalOf } from "../../../../../../../../api.js";
 import "../../../../../../../../listed.css";
 import "./scores.css";
 import { useListed } from "../../../../../../../../useListed.js";
+import { Pencil } from "../../../../../../../../Pencil.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
 // in use, in the order they were entered, each saying the winner and their
@@ -245,11 +246,12 @@ export const ScoresTab = ({
           className="button"
           data-action="edit"
           title={say("admin.hover.scores.edit")}
+          aria-label={say("admin.scores.edit")}
           onClick={() => {
             setCorrecting(game);
           }}
         >
-          {say("admin.scores.edit")}
+          <Pencil />
         </button>
       )}
       {game.archived ? (
