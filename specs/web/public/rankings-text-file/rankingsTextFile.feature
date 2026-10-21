@@ -99,21 +99,15 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       Then the second line is "Date 30.12.26-2.1.27"
 
     Scenario: The country is the tournament's, by its name
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      Given "organiser@example.com" has moved the tournament "Spring Open" to the country "au"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the fifth line is "Country Australia"
 
     Scenario: The country is another where the tournament was played in another
-      Given the tournament is to be played in the country "nz"
-      And "organiser@example.com" has created the tournament "Autumn Open"
-      And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
-      And "organiser@example.com" has added the player "Alex Another" to "Autumn Open"
-      And the block is to be the best of 1
-      And "organiser@example.com" has added the block "Block A" to "Autumn Open"
-      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
-      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Autumn Open"
-      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Autumn Open"
-      When the text file of that tournament's rankings is read
+      Given "organiser@example.com" has moved the tournament "Spring Open" to the country "nz"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
       Then the fifth line is "Country New Zealand"
 
     Scenario: The order is by first name
