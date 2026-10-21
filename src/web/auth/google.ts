@@ -29,6 +29,7 @@ import type { InTransaction } from "../common/database.js";
 import { startSession } from "../common/session.js";
 import { googlePath, type SentFrom } from "../public/googleOffer.js";
 import { registerPath } from "../public/register.js";
+import { notAgreed, termsOfUseField } from "../public/termsOfUse.js";
 import { goBackTo, signInPath } from "../public/signIn.js";
 
 const callbackPath = `${googlePath}/callback`;
@@ -188,36 +189,47 @@ export const registerGoogleRoutes = (
     return `${address}${callbackPath}`;
   };
 
-  server.get<{ Querystring: { from?: string; return?: string } }>(
-    googlePath,
-    (request, reply) => {
-      const sentFrom = sentFromOf(request.query.from);
-      const pending: Pending = {
-        state: aSecret(),
-        nonce: aSecret(),
-        codeVerifier: aSecret(),
-        sentFrom,
-        // Judged by the sign in page's own rule, so that which page is gone back
-        // to does not depend on which way the reader came in.
-        goBack:
-          sentFrom === "sign-in" ? goBackTo(request.query.return) : landing,
-        sentAt: Date.now(),
-      };
-      reply.setCookie(pendingCookie, JSON.stringify(pending), {
-        ...cookieOptions,
-        maxAge: PENDING_SECONDS,
-      });
+  server.get<{
+    Querystring: { from?: string; return?: string; [termsOfUseField]?: string };
+  }>(googlePath, (request, reply) => {
+    const sentFrom = sentFromOf(request.query.from);
+    // Registering is agreeing to the terms of use for those who write, by
+    // Google as by email address (register.ts). A reader sent from the
+    // register page without the box ticked is brought back to tick it,
+    // before Google is asked anything.
+    if (
+      sentFrom === "register" &&
+      request.query[termsOfUseField] === undefined
+    ) {
       return reply.redirect(
-        options.google.whereToSend({
-          redirectUri: redirectUriFor(request),
-          state: pending.state,
-          nonce: pending.nonce,
-          codeChallenge: challengeOf(pending.codeVerifier),
-        }),
+        `${registerPath}?refused=${encodeURIComponent(notAgreed.code)}`,
         303,
       );
-    },
-  );
+    }
+    const pending: Pending = {
+      state: aSecret(),
+      nonce: aSecret(),
+      codeVerifier: aSecret(),
+      sentFrom,
+      // Judged by the sign in page's own rule, so that which page is gone back
+      // to does not depend on which way the reader came in.
+      goBack: sentFrom === "sign-in" ? goBackTo(request.query.return) : landing,
+      sentAt: Date.now(),
+    };
+    reply.setCookie(pendingCookie, JSON.stringify(pending), {
+      ...cookieOptions,
+      maxAge: PENDING_SECONDS,
+    });
+    return reply.redirect(
+      options.google.whereToSend({
+        redirectUri: redirectUriFor(request),
+        state: pending.state,
+        nonce: pending.nonce,
+        codeChallenge: challengeOf(pending.codeVerifier),
+      }),
+      303,
+    );
+  });
 
   server.get<{
     Querystring: { state?: string; code?: string; error?: string };

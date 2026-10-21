@@ -5,12 +5,16 @@ Feature: A tournament's commentaries page is the old site's
   followed by "commentaries", as "/2026/ac/spring-open/commentaries", where
   the old site had it (`tournament.feature`). The page is the old site's, as
   it was, so that a reader who knew that page knows this one: headed
-  "Commentary", the commentaries listed beneath, then the old site's
-  Disclaimer, Guidelines and Reporting Commentary in its own words. The one
-  change is the way to start a new commentary, which the old site left as a
-  link at the foot of the page: here it is a button, between the list and
-  the Disclaimer, where a reader who has looked down the list for a
-  commentary and not found it is looking next.
+  "Commentary", with the commentaries listed beneath. The one change is the
+  way to start a new commentary, which the old site left as a link at the
+  foot of the page: here it is a button, beneath the list, where a reader who
+  has looked down the list for a commentary and not found it is looking
+  next.
+
+  The old site's page ended with its Disclaimer, Guidelines and Reporting
+  Commentary. They were terms for whoever writes, and are now the terms of
+  use for everybody who does, on a page of their own
+  (`termsOfUse.feature`), so this page no longer says them.
 
   A commentary is one writer's account of the tournament as it is played.
   Each is listed as the old site listed it, by its title and its writer's
@@ -22,14 +26,6 @@ Feature: A tournament's commentaries page is the old site's
   is plain text, and is listed as the words it is, with any Markdown in it
   not drawn (`CommentaryTitle.feature`). A tournament with no commentaries
   lists none, and says nothing of it, as the old site did not.
-
-  Where the old site's words name croquetscores.com, they name the website
-  being read, so that another website served from here names itself. A
-  commentary is reported to Tim Murphy by email, at the address the old site
-  gave, croquetscores@gmail.com, with the subject and the body the old site
-  filled in. The example of a report gives an address as this site makes
-  them, with https and a commentary's slug, where the old site's gave
-  "http://www." and a commentary's number.
 
   The button to start a new commentary is a link drawn as a button, so that
   it needs no scripting, and leads to the page that does
@@ -111,11 +107,11 @@ Feature: A tournament's commentaries page is the old site's
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "**Day one**" is among the commentaries
 
-  Rule: The page says what the old site's did, in its words
+  Rule: The page does not say the terms of use
 
-    Scenario Outline: The page has each of the old site's headings
+    Scenario Outline: The page has none of the old site's terms
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the content has the heading "<heading>"
+      Then the content has no heading "<heading>"
 
       Examples:
         | heading              |
@@ -123,27 +119,7 @@ Feature: A tournament's commentaries page is the old site's
         | Guidelines           |
         | Reporting Commentary |
 
-    Scenario: The old site's headings come in its order
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the content's headings are "Disclaimer", "Guidelines" and "Reporting Commentary", in that order
-
-    Scenario: The disclaimer names the website being read
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the page says "The views and opinions expressed in these commentaries are those of the authors and do not necessarily reflect those of Tim Murphy or croquetscores.com."
-
-    Scenario: The guidelines begin by saying who is responsible
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the page says "You are responsible for your commentary." in bold
-
-    Scenario: A commentary is reported to Tim Murphy by email
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then "Tim Murphy" leads to "mailto:croquetscores@gmail.com?subject=croquetscores.com%20Commentary%20Report&body=Please%20quote%20web%20address%2C%20questionable%20comment%20and%20why%20it%20should%20be%20removed."
-
-    Scenario: The example of a report gives an address as this site makes them
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the page says "https://croquetscores.com/2015/gc/tournament-name/commentaries/day-one"
-
-  Rule: Anybody is offered a button to start a new commentary, between the list and the Disclaimer
+  Rule: Anybody is offered a button to start a new commentary, beneath the list
 
     Scenario: A reader signed in is offered a way to start a commentary
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -163,10 +139,6 @@ Feature: A tournament's commentaries page is the old site's
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries" is opened
       Then "Start new commentary" comes after the list of commentaries
-
-    Scenario: Start new commentary comes before the Disclaimer
-      When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then "Start new commentary" comes before the heading "Disclaimer"
 
   Rule: A commentary the reader has not read as it is now is marked with a red asterisk
 

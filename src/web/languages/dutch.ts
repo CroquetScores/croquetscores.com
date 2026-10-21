@@ -30,10 +30,17 @@ export const dutch: Language = {
       "Bevalt {siteName} je? Doneer dan om de verdere ontwikkeling te helpen betalen.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
+    "footer.termsOfUse": "Gebruiksvoorwaarden",
     "beta.banner":
       "Dit is een bètawebsite. Gegevens kunnen op elk moment worden gereset.",
     "privacy.contact":
       "Vragen over deze pagina, of over wat er van je wordt bewaard: {emailAddress}",
+    "termsOfUse.agree": "Ik ga akkoord met de gebruiksvoorwaarden",
+    "termsOfUse.link": "gebruiksvoorwaarden",
+    "termsOfUse.report":
+      "Iets wat geschreven is melden, of vragen over deze voorwaarden: {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Vink het vakje aan om akkoord te gaan met de gebruiksvoorwaarden.",
     "tryWebsite.banner":
       "Dit is een veilige plek om {siteName} te leren kennen. Alles wat je hier invoert, kan op elk moment worden verwijderd.",
 
@@ -349,44 +356,6 @@ export const dutch: Language = {
     "players.none": "Er zijn nog geen spelers toegevoegd.",
     "commentaries.by": "door",
     "commentaries.start": "Nieuw commentaar starten",
-    "commentaries.disclaimer.heading": "Disclaimer",
-    "commentaries.disclaimer":
-      "De standpunten en meningen in dit commentaar zijn die van de schrijvers en komen niet noodzakelijk overeen met die van Tim Murphy of {site}.",
-    "commentaries.guidelines.heading": "Richtlijnen",
-    "commentaries.guidelines.responsible":
-      "Je bent zelf verantwoordelijk voor je commentaar.",
-    "commentaries.guidelines.purpose":
-      'Het commentaar is bedoeld om door te geven wat er op het toernooi gebeurt. Het is niet bedoeld als "sociale media"-plek om goede wensen en dergelijke door te geven.',
-    "commentaries.guidelines.hatred":
-      "Plaats geen materiaal dat kan aanzetten tot geweld of haat. We tolereren geen opmerkingen die anderen vernederen op grond van ras, geloof, etniciteit, geslacht, leeftijd, een verstandelijke of lichamelijke beperking of seksuele geaardheid.",
-    "commentaries.guidelines.abuse":
-      "Nodeloze scheldpartijen worden niet getolereerd. De algemene regel is dat opmerkingen de bal moeten spelen en niet de man, dus niemand persoonlijk aanvallen maar het over de zaak zelf hebben.",
-    "commentaries.guidelines.unlawful":
-      "Opmerkingen die juridisch twijfelachtig zijn, zoals mogelijke schendingen van het auteursrecht of mogelijk smadelijk materiaal, worden verwijderd.",
-    "commentaries.guidelines.shouting":
-      "Vloek niet en schrijf geen commentaar in hoofdletters.",
-    "commentaries.guidelines.selling":
-      "Gebruik het opmerkingengedeelte niet voor commerciële doeleinden of spam. Opmerkingen die reclame maken voor goederen of diensten, ze aanprijzen of erom vragen, worden verwijderd.",
-    "commentaries.guidelines.links":
-      "Beperk het gebruik van links in opmerkingen. Opmerkingen met links naar ongepast materiaal worden verwijderd.",
-    "commentaries.guidelines.impersonating":
-      "Geef je in de opmerkingen niet uit voor een ander en plaats geen persoonlijke gegevens – telefoonnummers, post- of e-mailadressen – waarmee iemand onbedoeld in gevaar kan komen.",
-    "commentaries.reporting.heading": "Commentaar melden",
-    "commentaries.reporting.before":
-      "Meld commentaar dat niet aan deze richtlijnen voldoet aan",
-    "commentaries.reporting.after":
-      ". Vermeld het webadres en het twijfelachtige commentaar, bijvoorbeeld:",
-    "commentaries.reporting.exampleComment":
-      '"een opmerking die verwijderd moet worden"',
-    "commentaries.reporting.exampleReason":
-      "Deze opmerking moet worden verwijderd omdat...",
-    "commentaries.reporting.reviewed":
-      "Een melding betekent niet dat het commentaar automatisch wordt verwijderd, maar alle meldingen worden beoordeeld.",
-    "commentaries.reporting.reserved":
-      "{site} behoudt zich het recht voor commentaar te verwijderen.",
-    "commentaries.reporting.subject": "Melding van commentaar op {site}",
-    "commentaries.reporting.body":
-      "Vermeld het webadres, de twijfelachtige opmerking en waarom die verwijderd moet worden.",
     "startCommentary.title": "Nieuw commentaar starten",
     "startCommentary.titleField": "Titel",
     "startCommentary.submit": "Commentaar starten",

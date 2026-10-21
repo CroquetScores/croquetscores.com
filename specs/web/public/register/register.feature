@@ -34,6 +34,14 @@ Feature: Registering an account
   shown, and the same id sent twice sends one email, counted once towards the
   address's limit.
 
+  Registering is where a reader begins to be able to write on the site, so
+  the page asks them to agree to the terms of use for those who write
+  (`termsOfUse.feature`), with a box to tick beside a link to them. A
+  registration is not made until it is ticked: one sent without it is said
+  beneath the box, with what was typed put back, and records nothing.
+  Nothing is kept of the agreement itself. Where a scenario fills the form
+  in and says nothing of the box, it is ticked.
+
   When reCAPTCHA cannot be reached, the reader is sent to the registrations
   suspended page, which is specified with it.
 
@@ -98,6 +106,34 @@ Feature: Registering an account
       And the register form is filled in for "someone@example"
       When the dialog is submitted
       Then "someone@example" has no account
+
+  Rule: The reader must agree to the terms of use
+
+    Scenario: The page links to the terms of use for those who write
+      Given a viewport 1200 pixels wide
+      When the register page is opened with scripting on
+      Then the dialog asks the reader to agree to the terms of use for those who write
+
+    Scenario: A registration sent without agreeing is said beneath the box
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com" without agreeing to the terms of use
+      When the dialog is submitted
+      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+
+    Scenario: A registration sent without agreeing records nothing
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com" without agreeing to the terms of use
+      When the dialog is submitted
+      Then "someone@example.com" has no account
+
+    Scenario: The address is put back when the terms of use were not agreed to
+      Given a viewport 1200 pixels wide
+      And the register page is open with scripting on
+      And the register form is filled in for "someone@example.com" without agreeing to the terms of use
+      When the dialog is submitted
+      Then the email address field holds "someone@example.com"
 
   Rule: Registering ends at the welcome page, whoever the address belongs to
 

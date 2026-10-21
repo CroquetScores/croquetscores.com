@@ -24,6 +24,7 @@ import {
   rememberRead,
   releaseOf,
 } from "../common/whatsNew.js";
+import { termsOfUsePath, writersTermsOfUsePath } from "./termsOfUse.js";
 
 const imageTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
@@ -46,6 +47,24 @@ const pictured = (html: string, tag: string): string =>
 // an address of its own so that it can be linked to from every page.
 export const privacyPath = "/privacy";
 const privacyName = "privacy";
+
+// Each page with an address of its own, by its name in the library. The terms
+// of use have theirs for the reason the privacy statement does: they are
+// linked to from outside the help, from the footer and from the forms that ask
+// for them to be agreed to.
+const ownAddresses: ReadonlyMap<string, string> = new Map([
+  [privacyName, privacyPath],
+  ["terms-of-use", termsOfUsePath],
+  ["admin/terms-of-use", writersTermsOfUsePath],
+]);
+
+// The pages that end by saying who to ask, by the words they say it in: the
+// privacy statement, about what is kept, and the terms for those who write,
+// which is who something written is reported to.
+const contacts: ReadonlyMap<string, string> = new Map([
+  [privacyName, "privacy.contact"],
+  ["admin/terms-of-use", "termsOfUse.report"],
+]);
 
 // The sentence that says who to ask, with the address in it made a link that
 // opens a new message to it. The words are the catalogue's, so the address is
@@ -110,8 +129,8 @@ export const registerHelpPages = (
     name: string,
     atItsOwnAddress = false,
   ): Promise<FastifyReply> => {
-    // The statement has one address, which is its own and not the help's.
-    if (name === privacyName && !atItsOwnAddress) {
+    // A page with an address of its own has that one, and not the help's.
+    if (ownAddresses.has(name) && !atItsOwnAddress) {
       reply.callNotFound();
       return reply;
     }
@@ -138,6 +157,7 @@ export const registerHelpPages = (
       if (released !== undefined) rememberRead(request, reply, kind, released);
     }
 
+    const contact = contacts.get(name);
     const html = render(assets, {
       title: page.title,
       theme: themeOf(request),
@@ -146,17 +166,17 @@ export const registerHelpPages = (
       speaking,
       siteName: siteNameOf(request),
       tryWebsite: websiteOf(request).isTry,
-      path: name === privacyName ? privacyPath : helpPath,
+      path: ownAddresses.get(name) ?? helpPath,
       // The article says which language it is in and which page it is, so that
       // a reader's browser and screen reader read it in the language it is
       // written in even where the site around it is in another.
       body: `          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
 ${pictured(page.html, writtenIn.tag)}
           </article>${
-            name === privacyName
-              ? `
-          <p>${asking(speaking.say("privacy.contact", { emailAddress: administrator }), administrator)}</p>`
-              : ""
+            contact === undefined
+              ? ""
+              : `
+          <p>${asking(speaking.say(contact, { emailAddress: administrator }), administrator)}</p>`
           }`,
     });
 
@@ -167,9 +187,12 @@ ${pictured(page.html, writtenIn.tag)}
       .send(html);
   };
 
-  server.get(privacyPath, (request, reply) =>
-    show(request, reply, privacyName, true),
-  );
+  // The terms for those who write are beneath the admin, where most of the
+  // writing is done, but are not the admin's: they are read before an account
+  // is registered, so they are sent to anybody, unlike the rest of the admin.
+  for (const [name, path] of ownAddresses) {
+    server.get(path, (request, reply) => show(request, reply, name, true));
+  }
   server.get(helpPath, (request, reply) => show(request, reply, ""));
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
     const name = request.params["*"].replace(/\/+$/, "");

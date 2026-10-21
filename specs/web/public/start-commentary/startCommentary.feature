@@ -25,6 +25,14 @@ Feature: A reader signed in can start a commentary on a tournament
   needs no scripting. An archived tournament has no such page, nor one the
   website has never had.
 
+  Starting a commentary is where a reader begins to write on the site, so
+  the page asks them to agree to the terms of use for those who write
+  (`termsOfUse.feature`), with a box to tick beside a link to them. A
+  commentary is not started until it is ticked: one sent without it is
+  said beneath the box, with the title typed put back. Nothing is kept of
+  the agreement, which the reader gives again with each commentary they
+  start.
+
   Background:
     Given a viewport 1200 pixels wide
     And a site served as "croquetscores.com"
@@ -50,8 +58,37 @@ Feature: A reader signed in can start a commentary on a tournament
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the account for "writer@example.com" has been forgotten
       And the title "Day one" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the sign in page is shown
+
+  Rule: The reader must agree to the terms of use
+
+    Scenario: The page links to the terms of use for those who write
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      When the page at "/2026/ac/spring-open/commentaries/create" is opened
+      Then the dialog asks the reader to agree to the terms of use for those who write
+
+    Scenario: A commentary sent without agreeing is said beneath the box
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/create" is open
+      And the title "Day one" is typed
+      When the dialog is submitted
+      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+
+    Scenario: A commentary sent without agreeing starts nothing
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/create" is open
+      And the title "Day one" is typed
+      When the dialog is submitted
+      Then the tournament "Spring Open" has no commentaries
+
+    Scenario: The title is put back when the terms of use were not agreed to
+      Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
+      And the page at "/2026/ac/spring-open/commentaries/create" is open
+      And the title "Day one" is typed
+      When the dialog is submitted
+      Then the title field holds "Day one"
 
   Rule: A sound title starts the commentary, and the reader is taken to it
 
@@ -59,6 +96,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day one" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the tournament "Spring Open" has the commentary "Day one"
 
@@ -66,6 +104,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day one" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the writer of the commentary "Day one" of "Spring Open" is the account for "writer@example.com"
 
@@ -73,6 +112,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "День два" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the content has the heading "День два"
 
@@ -80,6 +120,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day one" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the address is "/2026/ac/spring-open/commentaries/day-one"
 
@@ -89,6 +130,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "   " is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the title field says the message for "CommentaryTitle.Missing"
 
@@ -96,6 +138,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And a title of 101 characters is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the title field says the message for "CommentaryTitle.TooLong"
 
@@ -103,6 +146,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And a title of 100 characters with spaces around it is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the tournament "Spring Open" has a commentary with a title of 100 characters
 
@@ -110,6 +154,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "???" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the title field says the message for "CommentaryTitle.NoLetterOrDigit"
 
@@ -118,6 +163,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day One" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the title field says the message for "Commentary.TitleTaken"
 
@@ -126,6 +172,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day One" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the title field holds "Day One"
 
@@ -133,6 +180,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "   " is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the tournament "Spring Open" has no commentaries
 
@@ -142,6 +190,7 @@ Feature: A reader signed in can start a commentary on a tournament
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       And the page at "/2026/ac/spring-open/commentaries/create" is open with scripting off
       And the title "Day one" is typed
+      And the terms of use are agreed to
       When the dialog is submitted
       Then the address is "/2026/ac/spring-open/commentaries/day-one"
 

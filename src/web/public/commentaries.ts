@@ -1,13 +1,13 @@
 // A tournament's commentaries page, as the old site's was: headed
 // "Commentary", every commentary on it listed as its title by its writer, the
-// most recently started first, then a button to start a new commentary, and
-// the old site's Disclaimer, Guidelines and Reporting Commentary in its own
-// words. The button is the one change from the old site, which left a link at
+// most recently started first, then a button to start a new commentary. The
+// old site's Disclaimer, Guidelines and Reporting Commentary are not here: they
+// are the terms of use for everybody who writes now, on a page of their own
+// (termsOfUse.feature). The button is a change from the old site, which left a link at
 // the foot of the page: it is where a reader who has looked down the list and
 // not found what they want looks next. It is a link drawn as a button, so it
 // needs no scripting, and it is offered to anybody, since a reader not signed
-// in is asked to sign in where it leads. Where those words name croquetscores.com they name
-// the website being read. A commentary the reader has not read as it is now is
+// in is asked to sign in where it leads. A commentary the reader has not read as it is now is
 // marked with a red asterisk, as the Commentary section is on every page of the
 // tournament while there is one (tournamentPages.ts). The tournament is named in the bar beneath the
 // site's name, and its sections are the tournament's, with Commentary marked.
@@ -31,23 +31,6 @@ import { yearInPath } from "./year.js";
 const notThere: readonly string[] = [
   "PublicCommentariesOfTournament.NoSuchTournament",
 ];
-
-// Where a commentary is reported, and what the email is filled in with, as
-// the old site had them.
-const REPORT_TO = "croquetscores@gmail.com";
-
-// The old site's guidelines, a paragraph each, after the first, which is said
-// in bold.
-const GUIDELINES = [
-  "purpose",
-  "hatred",
-  "abuse",
-  "unlawful",
-  "shouting",
-  "selling",
-  "links",
-  "impersonating",
-] as const;
 
 export const registerCommentariesPage = (
   server: FastifyInstance,
@@ -85,8 +68,6 @@ export const registerCommentariesPage = (
       const speaking = speakingOf(request);
       const { say } = speaking;
       const reads = readsOf(request);
-      const site = website.host;
-      const report = `mailto:${REPORT_TO}?subject=${encodeURIComponent(say("commentaries.reporting.subject", { site }))}&body=${encodeURIComponent(say("commentaries.reporting.body"))}`;
       // As the old site listed them, a list that is empty where there are
       // none, saying nothing of it.
       const commentaries = `          <ul class="commentaries">
@@ -120,22 +101,6 @@ ${asked.commentaries
           body: `          <h1>${escape(say("tournament.commentary"))}</h1>
 ${commentaries}
           <p class="commentaries-start"><a class="button button-submit" href="/${escape(asked.address)}/commentaries/create">${escape(say("commentaries.start"))}</a></p>
-          <section class="commentaries-about">
-            <h2>${escape(say("commentaries.disclaimer.heading"))}</h2>
-            <p>${escape(say("commentaries.disclaimer", { site }))}</p>
-            <h2>${escape(say("commentaries.guidelines.heading"))}</h2>
-            <p><strong>${escape(say("commentaries.guidelines.responsible"))}</strong></p>
-${GUIDELINES.map((each) => `            <p>${escape(say(`commentaries.guidelines.${each}`))}</p>`).join("\n")}
-            <h2>${escape(say("commentaries.reporting.heading"))}</h2>
-            <p>${escape(say("commentaries.reporting.before"))} <a href="${escape(report)}">Tim Murphy</a>${escape(say("commentaries.reporting.after"))}</p>
-            <div class="commentaries-example">
-              <p>https://${escape(site)}/2015/gc/tournament-name/commentaries/day-one</p>
-              <p>${escape(say("commentaries.reporting.exampleComment"))}</p>
-              <p>${escape(say("commentaries.reporting.exampleReason"))}</p>
-            </div>
-            <p>${escape(say("commentaries.reporting.reviewed"))}</p>
-            <p>${escape(say("commentaries.reporting.reserved", { site }))}</p>
-          </section>
 `,
         }),
       );

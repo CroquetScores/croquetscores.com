@@ -32,10 +32,17 @@ export const french: Language = {
       "{siteName} vous plaît ? Faites un don pour aider à poursuivre son développement.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Confidentialité",
+    "footer.termsOfUse": "Conditions d’utilisation",
     "beta.banner":
       "Ceci est un site bêta. Les données peuvent être réinitialisées à tout moment.",
     "privacy.contact":
       "Des questions sur cette page, ou sur ce qui est conservé à votre sujet : {emailAddress}",
+    "termsOfUse.agree": "J’accepte les conditions d’utilisation",
+    "termsOfUse.link": "conditions d’utilisation",
+    "termsOfUse.report":
+      "Signaler ce qui a été écrit, ou poser une question sur ces conditions : {emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "Cochez la case pour accepter les conditions d’utilisation.",
     "tryWebsite.banner":
       "Ici, vous pouvez apprendre {siteName} sans risque. Tout ce que vous saisissez peut être effacé à tout moment.",
 
@@ -365,44 +372,6 @@ export const french: Language = {
     "players.none": "Aucun joueur n’a encore été ajouté.",
     "commentaries.by": "par",
     "commentaries.start": "Commencer un nouveau commentaire",
-    "commentaries.disclaimer.heading": "Avertissement",
-    "commentaries.disclaimer":
-      "Les opinions exprimées dans ces commentaires sont celles de leurs auteurs et ne reflètent pas nécessairement celles de Tim Murphy ni de {site}.",
-    "commentaries.guidelines.heading": "Règles",
-    "commentaries.guidelines.responsible":
-      "Vous êtes responsable de vos commentaires.",
-    "commentaries.guidelines.purpose":
-      "Les commentaires servent à raconter ce qui se passe dans le tournoi. Ils ne sont pas conçus comme un « réseau social » où échanger des vœux, etc.",
-    "commentaries.guidelines.hatred":
-      "Ne publiez rien qui puisse inciter à la violence ou à la haine. Nous ne tolérerons pas les commentaires qui rabaissent autrui à cause de sa race, de sa religion, de son origine ethnique, de son genre, de son âge, d’un handicap mental ou physique, ou de son orientation sexuelle.",
-    "commentaries.guidelines.abuse":
-      "Les injures gratuites ne seront pas tolérées. La règle générale est de jouer la balle et non le joueur : ne vous en prenez à personne, mais traitez le sujet en question.",
-    "commentaries.guidelines.unlawful":
-      "Tout commentaire d’une légalité douteuse, comme une possible atteinte au droit d’auteur ou un contenu pouvant être diffamatoire, sera retiré.",
-    "commentaries.guidelines.shouting":
-      "Dans les commentaires, merci de ne pas être grossier ni d’écrire tout en majuscules.",
-    "commentaries.guidelines.selling":
-      "N’utilisez pas les commentaires à des fins commerciales ni pour du spam. Les commentaires qui font de la publicité, promeuvent ou proposent des biens ou des services seront retirés.",
-    "commentaries.guidelines.links":
-      "Merci de limiter les liens dans les commentaires. Les commentaires contenant des liens vers des contenus inappropriés seront retirés.",
-    "commentaries.guidelines.impersonating":
-      "Ne vous faites pas passer pour quelqu’un d’autre dans les commentaires, et ne publiez pas de données personnelles – numéros de téléphone, adresses postales ou adresses e-mail – qui pourraient mettre quelqu’un en danger sans le vouloir.",
-    "commentaries.reporting.heading": "Signaler des commentaires",
-    "commentaries.reporting.before":
-      "Merci de signaler les commentaires qui ne respectent pas ces règles à",
-    "commentaries.reporting.after":
-      ". Indiquez l’adresse web et le commentaire en cause. Par exemple :",
-    "commentaries.reporting.exampleComment":
-      "« un commentaire qui devrait être retiré »",
-    "commentaries.reporting.exampleReason":
-      "Ce commentaire devrait être retiré parce que...",
-    "commentaries.reporting.reviewed":
-      "Un signalement n’entraîne pas automatiquement le retrait, mais tous les signalements seront examinés.",
-    "commentaries.reporting.reserved":
-      "{site} se réserve le droit de retirer des commentaires.",
-    "commentaries.reporting.subject": "{site} Signalement d’un commentaire",
-    "commentaries.reporting.body":
-      "Merci d’indiquer l’adresse web, le commentaire en cause et pourquoi il devrait être retiré.",
     "startCommentary.title": "Commencer un nouveau commentaire",
     "startCommentary.titleField": "Titre",
     "startCommentary.submit": "Commencer le commentaire",

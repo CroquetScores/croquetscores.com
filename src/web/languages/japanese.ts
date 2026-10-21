@@ -35,10 +35,17 @@ export const japanese: Language = {
       "{siteName}をお楽しみいただけていますか？今後の開発を支えるため、ぜひご寄付をお願いします。",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "プライバシー",
+    "footer.termsOfUse": "利用規約",
     "beta.banner":
       "これはベータ版のサイトです。データはいつでもリセットされる可能性があります。",
     "privacy.contact":
       "このページや、保管されているあなたの情報についてのご質問は：{emailAddress}",
+    "termsOfUse.agree": "利用規約に同意します",
+    "termsOfUse.link": "利用規約",
+    "termsOfUse.report":
+      "書かれた内容の報告、またはこの規約についてのお問い合わせ：{emailAddress}",
+    "TermsOfUse.NotAgreed":
+      "利用規約に同意するには、チェックボックスをオンにしてください。",
     "tryWebsite.banner":
       "ここは{siteName}を安心して試せる場所です。ここに入力した内容は、いつでも削除されることがあります。",
 
@@ -347,43 +354,6 @@ export const japanese: Language = {
 
     "commentaries.by": "投稿者：",
     "commentaries.start": "新しい実況を始める",
-    "commentaries.disclaimer.heading": "免責事項",
-    "commentaries.disclaimer":
-      "これらの実況に述べられた見解や意見は投稿者個人のものであり、Tim Murphyや{site}の見解を表すとは限りません。",
-    "commentaries.guidelines.heading": "ガイドライン",
-    "commentaries.guidelines.responsible":
-      "実況の内容は、投稿した本人の責任となります。",
-    "commentaries.guidelines.purpose":
-      "実況機能は、大会で起きていることを伝えるためのものです。応援の言葉などを伝える「ソーシャルメディア」の場としては作られていません。",
-    "commentaries.guidelines.hatred":
-      "暴力や憎悪をあおるおそれのある内容は投稿しないでください。人種、宗教、民族、性別、年齢、心身の障害、性的指向を理由に他人を貶めるコメントは認めません。",
-    "commentaries.guidelines.abuse":
-      "理由のない中傷は認めません。基本の考え方として、コメントは人ではなく話題そのものに向けてください。つまり、個人を攻撃せず、目の前の問題について書いてください。",
-    "commentaries.guidelines.unlawful":
-      "著作権の侵害や名誉毀損のおそれがあるなど、法的に問題のあるコメントは削除します。",
-    "commentaries.guidelines.shouting":
-      "実況では、汚い言葉や、すべて大文字での書き込みはお控えください。",
-    "commentaries.guidelines.selling":
-      "コメント欄を商用目的やスパムに使わないでください。商品やサービスの宣伝、販売促進、勧誘をするコメントは削除します。",
-    "commentaries.guidelines.links":
-      "コメントへのリンクの使用は控えめにしてください。不適切な内容へのリンクを含むコメントは削除します。",
-    "commentaries.guidelines.impersonating":
-      "コメント欄で他人になりすましたり、電話番号、住所、メールアドレスなど、うっかり誰かを危険にさらしかねない個人情報を投稿したりしないでください。",
-    "commentaries.reporting.heading": "実況の報告",
-    "commentaries.reporting.before":
-      "このガイドラインに沿わない実況を見つけたら、",
-    "commentaries.reporting.after":
-      "までご報告ください。その際は、ウェブアドレスと問題のある実況を引用してください。例：",
-    "commentaries.reporting.exampleComment": "「削除すべきコメント」",
-    "commentaries.reporting.exampleReason":
-      "このコメントは、次の理由で削除すべきです……",
-    "commentaries.reporting.reviewed":
-      "報告しても自動的に削除されるわけではありませんが、すべての報告を確認します。",
-    "commentaries.reporting.reserved":
-      "{site}は、実況を削除する権利を有します。",
-    "commentaries.reporting.subject": "{site} 実況の報告",
-    "commentaries.reporting.body":
-      "ウェブアドレス、問題のあるコメント、削除すべき理由を書いてください。",
 
     "startCommentary.title": "新しい実況を始める",
     "startCommentary.titleField": "タイトル",

@@ -8,6 +8,11 @@
 // with the spaces at either end taken out; a title too long is said beneath
 // it as any rule is.
 //
+// Starting one is where a reader begins to write, so they are asked to agree
+// to the terms of use for those who write, by ticking a box. A commentary is
+// not started without it: the box is said to need ticking beneath it, and the
+// title is put back, before the commentary is asked for at all.
+//
 // Any account will do, and a reader who is not signed in is sent to sign in
 // and brought back. It needs no scripting.
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -31,6 +36,7 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { goneSinceAsked } from "./commentary.js";
 import { accountForgotten, toSignIn } from "./profile.js";
+import { agreed, agreeingTo, notAgreed } from "./termsOfUse.js";
 import { yearInPath } from "./year.js";
 
 type Params = { year: string; sport: string; slug: string };
@@ -55,6 +61,7 @@ const formFor = (speaking: Speaking, action: string, typed: Typed): Dialog => ({
       autocomplete: "off",
       value: typed["title"],
     },
+    agreeingTo(speaking, typed),
   ],
   submit: speaking.say("startCommentary.submit"),
 });
@@ -162,6 +169,7 @@ export const registerStartCommentaryPage = (
         ),
         422,
       );
+    if (!agreed(typed)) return refused([notAgreed]);
     let started;
     try {
       started = await request.server.mediator.send(

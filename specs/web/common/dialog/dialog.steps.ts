@@ -1028,3 +1028,47 @@ Then(
     assert.ok(focused, `The reader was not taken to the ${field} field.`);
   },
 );
+
+// A box to tick ------------------------------------------------------------------
+
+const termsBox = `${dialog} input[type="checkbox"][name="termsOfUse"]`;
+
+// Its own words, found as the box's label rather than by what they say, so that
+// words drawn beside it and not tied to it do not count. Pressed where the link
+// in them is not, since a link pressed goes where it leads.
+const wordsOf = (world: SpecWorld) =>
+  world.browserPage.locator(`${dialog} label[for="field-termsOfUse"]`);
+
+Then(
+  "the terms of use box has its words to its right",
+  async function (this: SpecWorld) {
+    const drawn = await this.browserPage.locator(termsBox).boundingBox();
+    const words = await wordsOf(this).boundingBox();
+    assert.ok(
+      drawn !== null && words !== null,
+      "There is no box, or no words.",
+    );
+    assert.ok(
+      words.x >= drawn.x + drawn.width,
+      "The words do not begin to the right of the box.",
+    );
+    assert.ok(
+      words.y < drawn.y + drawn.height && drawn.y < words.y + words.height,
+      "The words are not beside the box.",
+    );
+  },
+);
+
+When(
+  "the words beside the terms of use box are pressed",
+  async function (this: SpecWorld) {
+    await wordsOf(this).click({ position: { x: 2, y: 2 } });
+  },
+);
+
+Then("the terms of use box is ticked", async function (this: SpecWorld) {
+  assert.ok(
+    await this.browserPage.locator(termsBox).isChecked(),
+    "The box is not ticked.",
+  );
+});

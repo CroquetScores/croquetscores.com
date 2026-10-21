@@ -1343,6 +1343,27 @@ main {
   font-weight: 700;
 }
 
+/* A box to tick, before its words and as tall as anything else pressed with a
+   thumb, with the words wrapping beside it rather than beneath it. */
+.field-tick-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+
+.field-tick-row input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.field-tick-label {
+  cursor: pointer;
+}
+
 /* A line to each rule the field broke. */
 .field-message span {
   display: block;
@@ -1915,20 +1936,6 @@ main {
 
 .commentaries-start {
   margin-block: var(--space-4);
-}
-
-/* The example of a report, set apart as the old site set it, on the page's
-   tint, so that it reads as what to send rather than what the page says. */
-.commentaries-example {
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-1);
-  background: var(--surface);
-  overflow-wrap: anywhere;
-}
-
-.commentaries-example > p {
-  margin: 0;
 }
 
 /* A commentary's title with, for its writer, the pencil that changes it to

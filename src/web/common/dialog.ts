@@ -50,7 +50,23 @@ export type Field =
   | (FieldCommon & {
       readonly type: "password";
       readonly value?: never;
+    })
+  | (FieldCommon & {
+      readonly type: "checkbox";
+      /** Whether it is ticked, as it was when the form was refused. */
+      readonly checked?: boolean | undefined;
+      /**
+       * Words of the label that lead somewhere, such as to the terms a reader
+       * is agreeing to by ticking it.
+       */
+      readonly link?: Link | undefined;
     });
+
+/** Words of a label that lead somewhere, found in the label as written. */
+export interface Link {
+  readonly words: string;
+  readonly href: string;
+}
 
 /** What needs saying above the fields, about no one of them. */
 export interface Problems {
@@ -73,6 +89,12 @@ export interface Alternative {
   readonly icon: string;
   /** The word that stands between it and the fields. */
   readonly or: string;
+  /**
+   * A box to tick that the alternative needs ticked, drawn directly beneath it
+   * and above the word. Its own, rather than one of the form's fields, because
+   * the form's are sent with the form and this one is wanted by the link alone.
+   */
+  readonly agreeing?: Extract<Field, { type: "checkbox" }> | undefined;
 }
 
 export interface Dialog {
@@ -141,16 +163,53 @@ export interface Dialog {
 // Autofocus takes the reader to the field when the page arrives, which works
 // with scripting switched off, and is how a refused form starts a screen reader
 // at the first thing that needs attention.
-const field = ({
-  name,
-  label,
-  type,
-  autocomplete,
-  messages = [],
-  invalid,
-  value,
-  autofocus,
-}: Field): string => {
+// The words beside a box, with those that lead somewhere made a link. Where
+// the words are not found in the label, a translation that put them some other
+// way, the whole label is the link rather than none of it: the reader is still
+// taken to what they are agreeing to. The link opens beside the form rather
+// than in its place, so that what has been typed is still there when the
+// reader comes back to tick the box.
+const labelOf = (label: string, link: Link | undefined): string => {
+  if (link === undefined) return escape(label);
+  const words = escape(link.words);
+  const anchor = (inside: string): string =>
+    `<a href="${escape(link.href)}" target="_blank" rel="noopener">${inside}</a>`;
+  const written = escape(label);
+  // A function, so that what is in the words is not read as a replacement
+  // pattern.
+  return written.includes(words)
+    ? written.replace(words, () => anchor(words))
+    : anchor(written);
+};
+
+// A box to tick sits before its words, as boxes do everywhere, rather than
+// inside a border the way a field to type in does: there is nothing to type,
+// and a border around a box and a line of words would look like somewhere to
+// type. Its label is beside it and not around it, because the words may hold
+// a link, and a link inside a label is pressed as both. What needs attention
+// is said beneath it, as it is beneath any field.
+const box = (
+  field: Extract<Field, { type: "checkbox" }>,
+  id: string,
+  attributes: string,
+  beneath: string,
+): string => `              <div class="field field-tick">
+                <div class="field-tick-row">
+                  <input id="${id}" name="${escape(field.name)}" type="checkbox"${field.checked === true ? " checked" : ""}${attributes} />
+                  <label class="field-tick-label" for="${id}">${labelOf(field.label, field.link)}</label>
+                </div>${beneath}
+              </div>`;
+
+const field = (given: Field): string => {
+  const {
+    name,
+    label,
+    type,
+    autocomplete,
+    messages = [],
+    invalid,
+    autofocus,
+  } = given;
   // Escaped, because these are attribute values like any other and a field name
   // is the caller's string. The same escaping on both ends of a reference keeps
   // the two spellings identical, which is what makes the reference hold.
@@ -162,9 +221,11 @@ const field = ({
   // A password field can be given no value, and is asked about here all the
   // same: this is the last place one could be written into a page.
   const kept =
-    type === "password" || value === undefined
+    given.type === "password" ||
+    given.type === "checkbox" ||
+    given.value === undefined
       ? ""
-      : ` value="${escape(value)}"`;
+      : ` value="${escape(given.value)}"`;
   const focused = autofocus === true ? " autofocus" : "";
   // One element beneath the field, holding a line for each rule, so that the
   // field is described by it once and a screen reader reads every rule with it.
@@ -174,6 +235,10 @@ const field = ({
       : `\n                <p class="field-message" id="${messageId}">${messages
           .map((text) => `<span>${escape(text)}</span>`)
           .join(" ")}</p>`;
+
+  if (given.type === "checkbox") {
+    return box(given, id, `${described}${wrong}${focused}`, beneath);
+  }
 
   return `              <div class="field">
                 <label class="field-box" for="${id}">
@@ -228,7 +293,7 @@ ${said.messages.map((text) => `                <p>${escape(text)}</p>`).join("\n
 const alternative = (other: Alternative | undefined): string =>
   other === undefined
     ? ""
-    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>
+    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>${other.agreeing === undefined ? "" : `\n${field(other.agreeing)}`}
               <p class="dialog-or">${escape(other.or)}</p>
 `;
 
@@ -251,6 +316,7 @@ const buttons = (dialog: Dialog): string =>
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
+  dialog.alternative?.agreeing?.autofocus === true ||
   dialog.fields.some((field) => field.autofocus === true);
 
 // Written last, inside the form and after everything a reader sees: a hidden

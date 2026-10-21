@@ -11,6 +11,18 @@
 // here looks at what registering did, and the address is never put in an
 // address a browser keeps: it goes in the body of a post and nowhere else.
 //
+// Registering is where a reader begins to be able to write, so they are asked
+// to agree to the terms of use for those who write, by ticking a box. A
+// registration without it is shown again with the box said to need ticking,
+// and records nothing. The offer to register with Google needs it ticked too,
+// and has a box of its own beneath it for the purpose: a reader who means to
+// use Google should not have to look past the "or" and a field they will not
+// fill in for the box that lets the button work. It is a link, and the page's
+// script adds that box to it as it is followed, since the link is not a way of
+// sending the form. Google's way in turns away a reader who came from here
+// without it, and they are brought back with that box said to need ticking
+// (auth/google.ts).
+//
 // The page is guarded by reCAPTCHA, which runs in the reader's browser and
 // hands the form a token. Registering asks for no password and hashes nothing,
 // so this is all that stands between a program and somebody's inbox: without
@@ -42,6 +54,13 @@ import { reportUnreachable } from "../common/unreachableServices.js";
 import { googlePath, refusalsFromGoogle, withGoogle } from "./googleOffer.js";
 import { javaScriptRequiredPath } from "./javaScriptRequired.js";
 import { registrationsSuspendedPath } from "./registrationsSuspended.js";
+import {
+  agreed,
+  agreeingTo,
+  notAgreed,
+  termsOfUseField,
+  termsOfUseForGoogleField,
+} from "./termsOfUse.js";
 import { welcomePath } from "./welcome.js";
 
 export const registerPath = "/account/register";
@@ -107,6 +126,28 @@ const script = (siteKey: string | undefined): string =>
       })();
     </script>`;
 
+// The offer to register with Google carries the box as it is followed, ticked
+// or not as it is then. Without scripting it carries nothing, and the reader
+// is brought back to tick it, which is no loss: registering needs scripting
+// anyway.
+const googleScript = (googleOffered: boolean): string =>
+  !googleOffered
+    ? ""
+    : `
+    <script>
+      (function () {
+        var offer = document.querySelector("a.dialog-alternative");
+        var box = document.getElementsByName(${JSON.stringify(termsOfUseForGoogleField)})[0];
+        if (!offer || !box) return;
+        offer.addEventListener("click", function () {
+          var to = new URL(offer.href);
+          if (box.checked) to.searchParams.set(${JSON.stringify(termsOfUseField)}, "on");
+          else to.searchParams.delete(${JSON.stringify(termsOfUseField)});
+          offer.href = to.toString();
+        });
+      })();
+    </script>`;
+
 // The request id travels in the form's own address, minted when the form is
 // shown, so that a form sent twice — pressed twice, or gone back to and sent
 // again — registers once.
@@ -115,6 +156,7 @@ const formFor = (
   requestId: string,
   typed: Typed,
   googleOffered: boolean,
+  googleNotAgreedTo = false,
 ): Dialog => ({
   title: speaking.say("register.title"),
   action: `${registerPath}?request=${encodeURIComponent(requestId)}`,
@@ -130,6 +172,7 @@ const formFor = (
       autocomplete: "email",
       value: typed["emailAddress"],
     },
+    agreeingTo(speaking, typed),
   ],
   submit: speaking.say("register.submit"),
   // The way to Google that names no page is this one's, which offered it first.
@@ -138,6 +181,18 @@ const formFor = (
         speaking.say("register.withGoogle"),
         speaking.say("register.or"),
         googlePath,
+        {
+          ...agreeingTo(speaking, {}, termsOfUseForGoogleField),
+          // Said beneath this box and not the form's, because it is this one
+          // the reader pressed the offer without ticking.
+          ...(googleNotAgreedTo
+            ? {
+                messages: [speaking.say(notAgreed.code)],
+                invalid: true,
+                autofocus: true,
+              }
+            : {}),
+        },
       )
     : undefined,
 });
@@ -171,7 +226,7 @@ export const registerRegisterPage = (
       // how reCAPTCHA is meant to be sent and needs no hidden-field support of
       // its own: the dialog draws the fields a reader fills in, and this one
       // is written beside it.
-      body: `${renderDialog(dialog)}${script(readers.siteKey)}`,
+      body: `${renderDialog(dialog)}${script(readers.siteKey)}${googleScript(googleOffered)}`,
     });
 
   const show = (
@@ -195,6 +250,16 @@ export const registerRegisterPage = (
       const speaking = speakingOf(request);
       const dialog = formFor(speaking, randomUUID(), {}, googleOffered);
       const refused = request.query.refused;
+      // Brought back from the way to Google for not having ticked the box
+      // beneath the offer, which is said beneath that box.
+      if (refused === notAgreed.code) {
+        return show(
+          request,
+          reply,
+          formFor(speaking, randomUUID(), {}, googleOffered, true),
+          speaking,
+        );
+      }
       if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
         return show(request, reply, dialog, speaking);
       }
@@ -247,6 +312,16 @@ export const registerRegisterPage = (
               autofocus: true,
             },
           },
+          speaking,
+          422,
+        );
+      }
+
+      if (!agreed(typed)) {
+        return show(
+          request,
+          reply,
+          refusedForm(dialog, typed, [notAgreed], speaking),
           speaking,
           422,
         );

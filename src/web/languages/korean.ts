@@ -36,10 +36,16 @@ export const korean: Language = {
       "{siteName}이(가) 마음에 드시나요? 앞으로의 개발을 위해 후원해 주세요.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "개인정보",
+    "footer.termsOfUse": "이용약관",
     "beta.banner":
       "이곳은 베타 사이트예요. 데이터는 언제든 초기화될 수 있어요.",
     "privacy.contact":
       "이 페이지나 보관 중인 회원님의 정보에 대한 문의: {emailAddress}",
+    "termsOfUse.agree": "이용약관에 동의합니다",
+    "termsOfUse.link": "이용약관",
+    "termsOfUse.report":
+      "작성된 내용을 신고하거나 이 약관에 대해 문의하기: {emailAddress}",
+    "TermsOfUse.NotAgreed": "이용약관에 동의하려면 확인란을 선택하세요.",
     "tryWebsite.banner":
       "여기는 {siteName}을(를) 안전하게 익혀 볼 수 있는 곳이에요. 여기에 입력한 내용은 언제든 지워질 수 있어요.",
 
@@ -345,43 +351,6 @@ export const korean: Language = {
     "players.none": "아직 추가된 선수가 없어요.",
     "commentaries.by": "작성자",
     "commentaries.start": "새 해설 시작하기",
-    "commentaries.disclaimer.heading": "면책 사항",
-    "commentaries.disclaimer":
-      "이 해설에 담긴 견해와 의견은 작성자의 것이며, Tim Murphy나 {site}의 견해를 반드시 대변하는 것은 아니에요.",
-    "commentaries.guidelines.heading": "지침",
-    "commentaries.guidelines.responsible":
-      "해설에 대한 책임은 작성자에게 있어요.",
-    "commentaries.guidelines.purpose":
-      '해설 기능은 대회에서 일어나는 일을 전하기 위한 것이에요. 응원이나 덕담을 주고받는 "소셜 미디어" 공간으로 만든 것이 아니에요.',
-    "commentaries.guidelines.hatred":
-      "폭력이나 혐오를 부추길 수 있는 글을 올리지 마세요. 인종, 종교, 민족, 성별, 나이, 정신적 또는 신체적 장애, 성적 지향을 이유로 다른 사람을 모욕하는 글은 허용하지 않아요.",
-    "commentaries.guidelines.abuse":
-      "이유 없는 욕설은 허용하지 않아요. 여기서의 기본 원칙은 사람이 아니라 경기를 다루라는 거예요. 즉 누군가를 개인적으로 공격하지 말고 눈앞의 문제에 관해서 쓰세요.",
-    "commentaries.guidelines.unlawful":
-      "저작권 침해 가능성이 있거나 명예를 훼손할 수 있는 글처럼 법적으로 문제의 소지가 있는 댓글은 삭제해요.",
-    "commentaries.guidelines.shouting":
-      "해설에 욕설을 쓰거나 모두 대문자로 쓰지 말아 주세요.",
-    "commentaries.guidelines.selling":
-      "댓글란을 상업적 목적이나 스팸에 쓰지 마세요. 상품이나 서비스를 광고하거나 홍보하거나 권유하는 댓글은 삭제해요.",
-    "commentaries.guidelines.links":
-      "댓글에는 링크를 되도록 적게 써 주세요. 부적절한 내용으로 연결되는 링크가 담긴 댓글은 삭제해요.",
-    "commentaries.guidelines.impersonating":
-      "댓글란에서 다른 사람을 사칭하거나, 의도치 않게 누군가를 위험에 빠뜨릴 수 있는 전화번호, 우편 주소, 이메일 주소 같은 개인 정보를 올리지 마세요.",
-    "commentaries.reporting.heading": "해설 신고하기",
-    "commentaries.reporting.before":
-      "이 지침에 맞지 않는 해설은 다음 주소로 신고해 주세요:",
-    "commentaries.reporting.after":
-      ". 웹 주소와 문제가 되는 해설을 함께 적어 주세요. 예:",
-    "commentaries.reporting.exampleComment": '"삭제해야 할 댓글"',
-    "commentaries.reporting.exampleReason":
-      "이 댓글은 다음 이유로 삭제해야 해요...",
-    "commentaries.reporting.reviewed":
-      "신고한다고 해서 바로 삭제되는 것은 아니지만, 모든 신고는 검토해요.",
-    "commentaries.reporting.reserved":
-      "{site}은(는) 해설을 삭제할 권리가 있어요.",
-    "commentaries.reporting.subject": "{site} 해설 신고",
-    "commentaries.reporting.body":
-      "웹 주소, 문제가 되는 댓글, 삭제해야 하는 이유를 적어 주세요.",
     "startCommentary.title": "새 해설 시작하기",
     "startCommentary.titleField": "제목",
     "startCommentary.submit": "해설 시작",
