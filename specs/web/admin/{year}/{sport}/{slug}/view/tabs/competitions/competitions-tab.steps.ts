@@ -254,8 +254,8 @@ const leadsTo = async (link: Locator, path: string): Promise<void> => {
   assert.equal(await link.getAttribute("href"), path);
 };
 
-// In the order the row offers them, read by what each shows: Edit and View are
-// words, where Up and Down are arrows with nothing shown.
+// In the order the row offers them, read by the name each is given: its words
+// or, where it is drawn as a picture, its label.
 Then(
   said("Q on the WHAT Q comes before Q"),
   async function (
@@ -265,9 +265,15 @@ Then(
     after: string,
   ) {
     await eventually(this, async () => {
-      const shown = (
-        await rowOf(this, name).locator(".listed-options > *").allInnerTexts()
-      ).map((text) => text.trim());
+      const shown: string[] = [];
+      for (const each of await rowOf(this, name)
+        .locator(".listed-options > *")
+        .all()) {
+        shown.push(
+          (await each.getAttribute("aria-label")) ??
+            ((await each.textContent()) ?? "").trim(),
+        );
+      }
       const first = shown.indexOf(option);
       const second = shown.indexOf(after);
       assert.ok(

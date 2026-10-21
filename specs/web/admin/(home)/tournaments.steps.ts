@@ -91,10 +91,14 @@ const inNameOf = async <T>(
   );
 };
 
-const optionOf = (world: SpecWorld, name: string, option: string): Locator =>
-  rowOf(world, name)
-    .locator(".tournament-options")
-    .locator("a, button", { hasText: exactly(option) });
+// By the name it is given, which is its words or, where it is drawn as a
+// picture, its label.
+const optionOf = (world: SpecWorld, name: string, option: string): Locator => {
+  const options = rowOf(world, name).locator(".tournament-options");
+  return options
+    .getByRole("button", { name: option, exact: true })
+    .or(options.getByRole("link", { name: option, exact: true }));
+};
 
 // The years bar, the one seen rather than the copy it measures with. The
 // admin's and the home page's: the admin fits the years to the window by

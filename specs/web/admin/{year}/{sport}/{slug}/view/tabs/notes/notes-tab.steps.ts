@@ -99,6 +99,15 @@ Then(
 );
 
 Then(
+  "Delete for the note {string} is a trash can",
+  async function (this: SpecWorld, title: string) {
+    const remove = rowOf(this, title).locator('button[data-action="delete"]');
+    assert.equal(await remove.locator(".icon-trash-can").count(), 1);
+    assert.equal((await remove.innerText()).trim(), "");
+  },
+);
+
+Then(
   "Edit for the note {string} is named by its label",
   async function (this: SpecWorld, title: string) {
     const edit = rowOf(this, title).locator('button[data-action="edit"]');

@@ -7,6 +7,7 @@ import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../../../../listed.css";
 import { useListed } from "../../../../../../useListed.js";
 import { Pencil } from "../../../../../../Pencil.js";
+import { TrashCan } from "../../../../../../TrashCan.js";
 
 // The Notes tab (notes-tab.feature): the notes a tournament's managers wrote
 // for its readers, the most recently written first, each by its title and
@@ -99,11 +100,12 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
           className="button"
           data-action="delete"
           title={say("admin.hover.notes.delete")}
+          aria-label={say("admin.notes.delete")}
           onClick={() => {
             setDeleting(note);
           }}
         >
-          {say("admin.notes.delete")}
+          <TrashCan />
         </button>
       </span>
     </li>

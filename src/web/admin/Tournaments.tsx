@@ -6,6 +6,7 @@ import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
 import "./tournaments.css";
 import { Pencil } from "./Pencil.js";
+import { TrashCan } from "./TrashCan.js";
 
 // The admin's front door: the tournaments the reader manages or scores on this
 // website, one year at a time, and what they can do with each. The months are
@@ -178,9 +179,10 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         type="button"
         className="button"
         title={say("admin.hover.tournaments.archive")}
+        aria-label={say("admin.tournaments.archive")}
         onClick={() => void act(tournament, "archive")}
       >
-        {say("admin.tournaments.archive")}
+        <TrashCan />
       </button>,
     ];
   };
