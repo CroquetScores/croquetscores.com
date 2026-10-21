@@ -277,17 +277,29 @@ Then(
 Then(
   "every word in the header's search box is in the test locale",
   async function (this: SpecWorld) {
-    // The box has no text to read, only the names the field and the glass are
-    // announced by.
-    for (const name of [
-      await box(this).getAttribute("aria-label"),
-      await button(this).getAttribute("aria-label"),
-    ]) {
-      assert.ok(
-        name !== null && isMarked(name),
-        `${JSON.stringify(name)} came from elsewhere.`,
-      );
-    }
+    // The box is a field and a picture, so what it says is in the attributes a
+    // reader is told rather than in text. Every one of them is read, so that a
+    // placeholder or a title added later is held to the language too, and so
+    // is any text that is added.
+    const said = await this.browserPage.evaluate<string[]>(`(() => {
+      const form = document.querySelector("header.site-bar .site-search");
+      const found = [];
+      for (const each of [form, ...form.querySelectorAll("*")]) {
+        for (const name of ["aria-label", "placeholder", "title", "alt"]) {
+          const value = each.getAttribute(name);
+          if (value !== null) found.push(value);
+        }
+      }
+      const text = form.textContent.trim();
+      if (/\\p{L}/u.test(text)) found.push(text);
+      return found;
+    })()`);
+    assert.ok(said.length > 0, "The search box says nothing.");
+    assert.deepEqual(
+      said.filter((words) => !isMarked(words)),
+      [],
+      "Words in the box came from elsewhere.",
+    );
   },
 );
 

@@ -196,7 +196,8 @@ Feature: A reader searches the website's players by name
       Then the header has a search box
 
     Scenario: The site's search finds more than players
-      Given the page at "/players" is opened
+      Given a browser that runs scripts
+      And the page at "/players" is opened
       And "spring" is typed as the header's search box
       When the header's magnifying glass is pressed
       Then "Spring Open" is among the tournaments in the results

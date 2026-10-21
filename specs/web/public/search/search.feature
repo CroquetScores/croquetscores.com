@@ -218,13 +218,15 @@ Feature: A reader searches the website for tournaments, players and competitions
       Then the competition "Block A" is shown with the tournament "Spring Open"
 
     Scenario: A search is made from the header
-      Given the page at "/" is opened
+      Given a browser that runs scripts
+      And the page at "/" is opened
       And "spring" is typed as the header's search box
       When the header's magnifying glass is pressed
       Then "Spring Open" is among the tournaments in the results
 
     Scenario: A search is made from the results page
-      Given the page at "/search" is opened
+      Given a browser that runs scripts
+      And the page at "/search" is opened
       And "someone" is typed as the header's search box
       When the header's magnifying glass is pressed
       Then "Sam Someone" is among the players in the results

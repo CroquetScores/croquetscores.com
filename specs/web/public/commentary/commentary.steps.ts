@@ -497,7 +497,10 @@ const askedAs = (world: SpecWorld, route: Route): Record<string, string> => ({
 // other on. Playwright's own `times` is not used for it: that counts each
 // request the handler is shown, the ones passed on among them, so a page asking
 // for the comments again before the comment is sent used the one turn up, and
-// the comment was then sent unheld.
+// the comment was then sent unheld. Once it has taken its request it passes on
+// every other, which is as good as being taken away: it is not taken away from
+// inside itself, since a route still being held is then taken for handled and
+// is answered by nobody.
 const takeNextRequest = async (
   world: SpecWorld,
   method: string,
