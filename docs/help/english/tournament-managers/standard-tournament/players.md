@@ -26,7 +26,7 @@ Press **Add**. The player is added, the dialog says so, and its fields are empti
 
 ![The dialog after a player is added](images/add-player-dialog-added.png)
 
-A player is never called "Bye". A knockout's byes are added in the knockout itself, wherever its players are entered, so a name whose first word is "bye" is refused, and the dialog explains why.
+A player is never called "Bye". A knockout's byes are added in the knockout itself, wherever its players are entered, so a name that is "Bye", or "Bye" with a number, as "Bye 2", "Bye-2" or "Bye (2)", is refused, and the dialog explains why.
 
 ## Correcting a player
 

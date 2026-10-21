@@ -15,11 +15,13 @@ Feature: A player in a tournament
   as byes (`enterPlayer.feature`), offered wherever players are entered in a
   knockout, so a tournament player standing in for one would be a bye the
   knockout could not tell was one: it would be drawn, and played, as a
-  person. So a name whose first word is "bye", in capitals or not, once the
-  whitespace at either end is taken off, is refused with
-  `TournamentPlayer.NamedBye`, whether the player is made with it or updated
-  to it. The word ends where anything but a letter comes, so "Bye 2" and
-  "Bye-1" are byes, but "Byers" is a name like any other.
+  person. So a name that is "bye", in capitals or not, once the whitespace at
+  either end is taken off, is refused with `TournamentPlayer.NamedBye`,
+  whether the player is made with it or updated to it. So is "bye" numbered,
+  as the old sites' managers numbered theirs: "Bye 2", "Bye-2" and "Bye (2)",
+  with a whole number of one digit or more. Nothing else is a bye. A name
+  that only begins with the word, as "Bye / Bassett" does, is the name of a
+  person, and there is one: Bob Bye.
 
   A player is found at an address made from their name (`addPlayer.feature`),
   and an address is made of letters and digits (`Slug.feature`), so a name
@@ -95,7 +97,7 @@ Feature: A player in a tournament
 
   Rule: A player is not named as a bye
 
-    Scenario Outline: A name whose first word is "bye" is refused
+    Scenario Outline: A name that is a bye, or a bye numbered, is refused
       When a player named "<name>" is made
       Then it is refused for breaking "TournamentPlayer.NamedBye"
 
@@ -106,12 +108,16 @@ Feature: A player in a tournament
         | BYE       |
         | Bye 2     |
         | Bye-1     |
+        | Bye (2)   |
+        | bye 13    |
+        | BYE-104   |
+        | BYE (10)  |
 
-    Scenario: A name whose first word is "bye" after spaces is refused
+    Scenario: A name that is a bye after spaces is refused
       When a player named "  Bye" is made
       Then it is refused for breaking "TournamentPlayer.NamedBye"
 
-    Scenario Outline: A name with "bye" in it but not as its first word is kept
+    Scenario Outline: A name with "bye" in it that is not a bye, or a bye numbered, is kept
       When a player named "<name>" is made
       Then the player's name is "<name>"
 
@@ -120,8 +126,18 @@ Feature: A player in a tournament
         | Byers Kim   |
         | Sam Goodbye |
         | Sam Bye     |
+        | Bye / Bassett |
+        | Bob Bye |
+        | Bye Someone |
+        | Bye-Bassett |
+        | Bye Bassett (2) |
+        | Bye # |
+        | Bye 2a |
+        | Bye () |
+        | Bye (2 |
+        | Bye2 |
 
-    Scenario: A player updated to a name whose first word is "bye" is refused
+    Scenario: A player updated to a name that is a bye is refused
       Given a player named "Sam Someone"
       When the player is updated to be called "Bye"
       Then it is refused for breaking "TournamentPlayer.NamedBye"

@@ -62,7 +62,7 @@ Feature: Changing what a tournament's player is
       Then it is refused with "Request.Invalid"
       And the first rule broken is "PersonName.TooShort"
 
-    Scenario: A name whose first word is "bye" is refused for it
+    Scenario: A name that is a bye is refused for it
       Given the update calls the player "Bye"
       When the reader signed in to the account for "organiser@example.com" updates the player "Sam Someone" in "Spring Open"
       Then it is refused with "Request.Invalid"

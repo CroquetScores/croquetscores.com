@@ -80,7 +80,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   A player is never a bye (`TournamentPlayer.feature`): a knockout's byes are
   offered wherever its players are entered (`competition-players-tab.feature`),
   and a manager who types one in as a player has not yet found them there. So
-  a name whose first word is "bye" is refused, and rather than a line beneath the
+  a name that is a bye, or a bye numbered, is refused, and rather than a line beneath the
   name, the reader is told why in a dialog of its own over the player dialog:
   that byes need no adding, since a knockout offers them when its players are
   entered. It has one button, OK, and Escape does what OK does. Either closes
@@ -632,7 +632,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Añadir jugador" is pressed
       Then the flag "Alemania" is offered before the flag "Argentina"
 
-  Rule: A name whose first word is "bye" is explained in a dialog of its own
+  Rule: A name that is a bye is explained in a dialog of its own
 
     Scenario: Adding a player named as a bye opens the dialog about byes
       Given the page of "Spring Open" is open

@@ -102,8 +102,8 @@ export class TeamPlayer {
 
   // A test has no byes, but a score against "Bye" reads as a match nobody
   // played, and a player is never a bye in one kind of tournament and a name
-  // in another. The word ends where anything but a letter comes, as it does
-  // for a tournament's player, so "Bye 2" is a bye and "Byers" is a name.
+  // in another. What is a bye is what it is for a tournament's player, so "Bye
+  // 2" is a bye and "Bye / Bassett" is a name.
   static #namedOf(details: TeamPlayerDetails): Named {
     const name = PersonName.from(details.name);
     if (isNamedBye(details.name)) {
