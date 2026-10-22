@@ -189,10 +189,10 @@ Feature: Importing the old sites' tournaments
     not a country's time zone that says which region of it a tournament was in.
     A manager can move one played elsewhere.
 
-    "GMT Standard Time" and "W. Europe Standard Time" are each kept by several
-    countries. The first is taken as England's, where the old sites'
-    tournaments kept in it were played, and the second as Spain's; a manager can
-    move one played elsewhere.
+    "GMT Standard Time", "W. Europe Standard Time" and "Romance Standard Time"
+    are each kept by several countries. The first is taken as England's, where
+    the old sites' tournaments kept in it were played, and the other two as
+    Spain's; a manager can move one played elsewhere.
 
     Three that mean no country are taken as one all the same, since the old
     sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
@@ -224,7 +224,7 @@ Feature: Importing the old sites' tournaments
         | GMT Standard Time            | england |
         | W. Europe Standard Time      | es      |
         | Morocco Standard Time        | ma      |
-        | Romance Standard Time        | fr      |
+        | Romance Standard Time        | es      |
         | Arabian Standard Time        | ae      |
         | Argentina Standard Time      | ar      |
         | Canada Central Standard Time | ca      |
