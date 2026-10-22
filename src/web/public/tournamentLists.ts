@@ -317,11 +317,21 @@ ${choices}
               </select>
             </span>`;
 
-/** The form that narrows every list on the page, sent back to the page. */
+// Tournaments were given regions from November 2026, so a region chosen
+// leaves out every earlier one. Below this many shown, the reader is more
+// likely to be missing tournaments than to have found the few there are.
+const FEW_TO_SHOW = 20;
+
+/**
+ * The form that narrows every list on the page, sent back to the page. With
+ * a region chosen and fewer than twenty tournaments shown across the page's
+ * lists, it is followed by a note on why there are so few.
+ */
 export const filter = (
   request: FastifyRequest,
   asked: Asked,
   speaking: Speaking,
+  shown: number,
 ): string => {
   const { say } = speaking;
   const byName = new Intl.Collator(speaking.language.tag);
@@ -390,7 +400,12 @@ ${[
     : []),
 ].join("\n")}
             <button type="submit">${escape(say("tournamentList.filter.submit"))}</button>
-          </form>`;
+          </form>${
+            asked.chose.region !== undefined && shown < FEW_TO_SHOW
+              ? `
+          <p class="notice tournament-filter-notice">${escape(say("tournamentList.filter.noRegionsBefore"))}</p>`
+              : ""
+          }`;
 };
 
 // The years ----------------------------------------------------------------------------

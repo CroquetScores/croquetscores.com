@@ -529,6 +529,16 @@ Then("no region is offered", async function (this: SpecWorld) {
   assert.deepEqual(await offeredIn(this, "region"), []);
 });
 
+Then(
+  /^the notice about tournaments before November 2026 is (not )?shown$/,
+  async function (this: SpecWorld, not: string | null) {
+    assert.equal(
+      await this.browserPage.locator(".tournament-filter-notice").count(),
+      not === null ? 1 : 0,
+    );
+  },
+);
+
 // Not even the list to choose one from, as on a sport's own page.
 Then("no sport is offered", async function (this: SpecWorld) {
   assert.equal(await filterField(this, "sport").count(), 0);

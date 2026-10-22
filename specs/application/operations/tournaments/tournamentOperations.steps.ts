@@ -127,6 +127,24 @@ Given(
   },
 );
 
+// Each as the one above is made, and called "Tournament 1", "Tournament 2" and
+// so on, for a scenario that wants many and cares about none of them.
+Given(
+  "{string} has created {int} tournaments",
+  async function (this: SpecWorld, address: string, count: number) {
+    for (let each = 1; each <= count; each++) {
+      await createdBefore(
+        this,
+        address,
+        aTournament(`Tournament ${String(each)}`, {
+          format: this.tournamentFormat?.name ?? "Standard",
+          ...saidOfNext(this),
+        }),
+      );
+    }
+  },
+);
+
 // Each said of the next tournament the scenario creates, in the words the
 // tournament's own features say it in.
 Given(

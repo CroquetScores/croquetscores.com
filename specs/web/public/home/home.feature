@@ -740,6 +740,30 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then "Summer Open" is in the upcoming tournaments
 
+  Rule: A region chosen with few tournaments to show says why
+
+    Tournaments from before November 2026 have no region, so a region narrows
+    a list to far fewer than the reader may expect, and the page says so rather
+    than leaving them to think tournaments are missing.
+
+    Scenario: A region chosen with fewer than 20 tournaments shows the notice
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is shown
+
+    Scenario: A country chosen without a region shows no notice
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is not shown
+
   Rule: A filter that cannot be is the reader's mistake
 
     Scenario: A country there is not is refused
