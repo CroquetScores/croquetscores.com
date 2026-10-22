@@ -1084,8 +1084,8 @@ export const italian: Language = {
     "TournamentName.Missing": "Scrivi come si chiama il torneo.",
     "TournamentName.TooShort": "Quel nome è troppo corto.",
     "TournamentName.TooLong": "Quel nome è troppo lungo.",
-    "TournamentName.AllLowerCase": "Un nome non si scrive tutto in minuscolo.",
-    "TournamentName.AllCapitals": "Un nome non si scrive tutto in maiuscolo.",
+    "TournamentName.AllLowerCase": "Un nome non può essere tutto in minuscolo.",
+    "TournamentName.AllCapitals": "Un nome non può essere tutto in maiuscolo.",
     "TournamentName.NoLetterOrDigit":
       "Un nome deve contenere una lettera o una cifra.",
     "ReadOnlyDate.Unreadable": "Indica il giorno.",

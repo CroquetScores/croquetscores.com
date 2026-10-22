@@ -1083,9 +1083,9 @@ export const dutch: Language = {
     "TournamentName.TooShort": "Die naam is te kort.",
     "TournamentName.TooLong": "Die naam is te lang.",
     "TournamentName.AllLowerCase":
-      "Een naam wordt niet helemaal in kleine letters geschreven.",
+      "Een naam mag niet helemaal uit kleine letters bestaan.",
     "TournamentName.AllCapitals":
-      "Een naam wordt niet helemaal in hoofdletters geschreven.",
+      "Een naam mag niet helemaal uit hoofdletters bestaan.",
     "TournamentName.NoLetterOrDigit":
       "Een naam moet een letter of een cijfer bevatten.",
     "ReadOnlyDate.Unreadable": "Geef de dag.",

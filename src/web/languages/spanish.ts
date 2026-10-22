@@ -1068,9 +1068,8 @@ export const spanish: Language = {
     "TournamentName.Missing": "Di cómo se llama el torneo.",
     "TournamentName.TooShort": "Ese nombre es demasiado corto.",
     "TournamentName.TooLong": "Ese nombre es demasiado largo.",
-    "TournamentName.AllLowerCase":
-      "Un nombre no se escribe todo en minúsculas.",
-    "TournamentName.AllCapitals": "Un nombre no se escribe todo en mayúsculas.",
+    "TournamentName.AllLowerCase": "Un nombre no puede ir todo en minúsculas.",
+    "TournamentName.AllCapitals": "Un nombre no puede ir todo en mayúsculas.",
     "TournamentName.NoLetterOrDigit":
       "Un nombre necesita una letra o un número.",
     "ReadOnlyDate.Unreadable": "Indica el día.",

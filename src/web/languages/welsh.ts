@@ -1078,9 +1078,9 @@ export const welsh: Language = {
     "TournamentName.TooShort": "Mae'r enw hwnnw'n rhy fyr.",
     "TournamentName.TooLong": "Mae'r enw hwnnw'n rhy hir.",
     "TournamentName.AllLowerCase":
-      "Ni chaiff enw ei ysgrifennu i gyd mewn llythrennau bach.",
+      "Ni chaiff enw fod i gyd mewn llythrennau bach.",
     "TournamentName.AllCapitals":
-      "Ni chaiff enw ei ysgrifennu i gyd mewn prif lythrennau.",
+      "Ni chaiff enw fod i gyd mewn prif lythrennau.",
     "TournamentName.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw.",
     "ReadOnlyDate.Unreadable": "Rhowch y diwrnod.",
     "Tournament.FinishesBeforeStarts":

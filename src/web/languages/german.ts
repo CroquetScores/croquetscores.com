@@ -1114,9 +1114,9 @@ export const german: Language = {
     "TournamentName.TooShort": "Dieser Name ist zu kurz.",
     "TournamentName.TooLong": "Dieser Name ist zu lang.",
     "TournamentName.AllLowerCase":
-      "Ein Name wird nicht komplett kleingeschrieben.",
+      "Ein Name darf nicht komplett kleingeschrieben sein.",
     "TournamentName.AllCapitals":
-      "Ein Name wird nicht komplett großgeschrieben.",
+      "Ein Name darf nicht komplett großgeschrieben sein.",
     "TournamentName.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
     "ReadOnlyDate.Unreadable": "Gib den Tag an.",

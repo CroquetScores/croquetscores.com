@@ -1053,9 +1053,9 @@ export const russian: Language = {
     "TournamentName.TooShort": "Это название слишком короткое.",
     "TournamentName.TooLong": "Это название слишком длинное.",
     "TournamentName.AllLowerCase":
-      "Название не пишется целиком строчными буквами.",
+      "Название не может состоять только из строчных букв.",
     "TournamentName.AllCapitals":
-      "Название не пишется целиком заглавными буквами.",
+      "Название не может состоять только из заглавных букв.",
     "TournamentName.NoLetterOrDigit":
       "В названии нужна хотя бы одна буква или цифра.",
     "ReadOnlyDate.Unreadable": "Укажите день.",
