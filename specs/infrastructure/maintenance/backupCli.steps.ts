@@ -23,14 +23,16 @@ import type { SpecWorld } from "../../support/world.js";
 // sender is the scenario's for the same reason, and the clock is the moment
 // the shared step gives the world (`ReadOnlyDate.steps.ts`).
 
+// On the tunnel's port, which is the only place the script will dump from.
 const WEBSITES_ADDRESS =
-  "postgres://backup:secret-word@website.example:5432/croquetscores";
+  "postgres://backup:secret-word@127.0.0.1:55432/croquetscores";
 
 interface Backup {
   folder: string | undefined;
   folderIsNamed: boolean;
   administrator: string;
   websiteNamed: boolean;
+  websiteAddress: string;
   program: string | undefined;
   dumpWrites: string;
   dumpFails: boolean;
@@ -59,6 +61,7 @@ const backupOf = (world: SpecWorld): Backup => {
       folderIsNamed: true,
       administrator: "",
       websiteNamed: true,
+      websiteAddress: WEBSITES_ADDRESS,
       program: undefined,
       dumpWrites: "a dump",
       dumpFails: false,
@@ -109,6 +112,13 @@ Given("the website's database is named", function (this: SpecWorld) {
 Given("the website's database is not named", function (this: SpecWorld) {
   backupOf(this).websiteNamed = false;
 });
+
+Given(
+  "the website's database is at {string}",
+  function (this: SpecWorld, address: string) {
+    backupOf(this).websiteAddress = address;
+  },
+);
 
 Given("no folder is named", function (this: SpecWorld) {
   backupOf(this).folderIsNamed = false;
@@ -191,7 +201,7 @@ const run = async (
   const outcome = await runBackup(args, {
     settings: {
       administrator: backup.administrator,
-      websiteDatabase: backup.websiteNamed ? WEBSITES_ADDRESS : undefined,
+      websiteDatabase: backup.websiteNamed ? backup.websiteAddress : undefined,
       folder: backup.folderIsNamed ? backup.folder : undefined,
       program: backup.program,
     },
@@ -400,6 +410,17 @@ Then(
     assert.ok(
       emailText(this).includes(
         "The failure was that the website's database is not named.",
+      ),
+    );
+  },
+);
+
+Then(
+  "the email says the failure was that the website's database is not reached through the tunnel",
+  function (this: SpecWorld) {
+    assert.ok(
+      emailText(this).includes(
+        "The failure was that the website's database is not reached through the tunnel.",
       ),
     );
   },

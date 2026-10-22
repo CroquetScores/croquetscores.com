@@ -48,6 +48,29 @@ export interface BackupWorld {
   readonly say: (line: string) => void;
 }
 
+/**
+ * The port on this computer that the SSH tunnel to the website's database is
+ * opened on (backup-and-restore.md).
+ */
+const TUNNELS_PORT = "55432";
+
+// The address is a setting in the file that development uses too, where it is
+// easily left naming a database on this computer. That backup would succeed
+// every night and be of nothing, so only the tunnel's port is dumped from.
+// The port rather than the database's name, because the port is what the
+// tunnel is and a name is only what somebody called it.
+const isThroughTheTunnel = (address: string): boolean => {
+  try {
+    const { hostname, port } = new URL(address);
+    return (
+      port === TUNNELS_PORT &&
+      (hostname === "127.0.0.1" || hostname === "localhost")
+    );
+  } catch {
+    return false;
+  }
+};
+
 const A_MINUTE = 60 * 1000;
 
 // Under a twentieth of a minute is not "0.0 minutes", which says nothing was
@@ -162,6 +185,12 @@ export const runBackup = async (
   const { websiteDatabase, folder } = settings;
   if (websiteDatabase === undefined || websiteDatabase === "") {
     return failed("that the website's database is not named", undefined);
+  }
+  if (!isThroughTheTunnel(websiteDatabase)) {
+    return failed(
+      "that the website's database is not reached through the tunnel",
+      undefined,
+    );
   }
   if (folder === undefined || folder === "") {
     return failed("that the folder is not named", undefined);
