@@ -155,17 +155,6 @@ export class ImportTournaments implements Importer<OldTournament> {
           country,
           region,
           subtitle: subtitleOf(document.Notes),
-          // Nothing the old sites never said is claimed: none of them allowed
-          // a drawn game, but for those the import found a tie marked in text
-          // in (ImportWholeTournaments.feature), and none said the rest.
-          handicap: false,
-          drawsAllowed: document.DrawsAllowed === true,
-          // What the old sites sent to the world rankings is what the site now
-          // counts, a sport's whole, so a tournament of a sport that counts is
-          // brought over counting. Not where it allows drawn games, which
-          // cannot count and would be refused (ImportTournaments.feature).
-          worldRankings:
-            sport.countsTowardsWorldRankings && document.DrawsAllowed !== true,
           national: false,
           international: false,
           // Said only of a tournament played by teams, which alone has tests,

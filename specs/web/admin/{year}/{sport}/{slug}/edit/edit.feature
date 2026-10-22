@@ -6,8 +6,7 @@ Feature: A tournament is changed in the admin
   (`tournaments.feature`). It is the form that creates a tournament
   (`new.feature`), asking the same things, offering what the website offers,
   and held to the same rules: a choice with nothing to choose is not asked
-  for, the world rankings are asked about only where they can be counted, a
-  tournament is never both national and international, and fields read
+  for, a tournament is never both national and international, and fields read
   together are side by side. The same form draws both, so those rules are
   specified once, there, and this says what changing a tournament adds to
   them.
@@ -71,9 +70,6 @@ Feature: A tournament is changed in the admin
         | Format                       |
         | Country                      |
         | Subtitle                     |
-        | Played with handicaps        |
-        | Allows drawn results         |
-        | Counts toward world rankings |
         | National‑level event         |
         | International‑level event    |
 
@@ -131,29 +127,10 @@ Feature: A tournament is changed in the admin
       When the page to edit "Spring Open" is opened
       Then no region is chosen
 
-    Scenario: A tournament played under handicap is ticked as one
-      Given the tournament "Spring Open" is played under handicap
-      When the page to edit "Spring Open" is opened
-      Then "Played with handicaps" is ticked
-
-    Scenario: A tournament allowing drawn games is ticked as one
-      Given the tournament "Spring Open" allows drawn games
-      When the page to edit "Spring Open" is opened
-      Then "Allows drawn results" is ticked
-
-    Scenario: A tournament not allowing drawn games is not ticked as one
-      When the page to edit "Spring Open" is opened
-      Then "Allows drawn results" is not ticked
-
     Scenario: A national tournament is ticked as one
       Given the tournament "Spring Open" is national
       When the page to edit "Spring Open" is opened
       Then "National‑level event" is ticked
-
-    Scenario: A tournament that does not count towards the world rankings is not ticked as counting
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the page to edit "Spring Open" is opened
-      Then "Counts toward world rankings" is not ticked
 
     Scenario: A tournament played by teams drawing level tests is ticked as one
       Given the tournament "Spring Open" is played in the format "Teams"

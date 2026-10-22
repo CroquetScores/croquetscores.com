@@ -14,12 +14,14 @@ Feature: A tournament's rankings are a file to send to the world rankings
   Anybody who knows the address may have it, signed in or not, as the old
   site allowed: it holds only what the tournament's pages already show.
 
-  Only a tournament that counts towards the world rankings has a file, since
-  those are the only ones the rankings are ever sent. Not one of a sport with
-  no world rankings, as Ricochet and Gateball have none, nor one played under
-  handicap or allowing drawn games, which cannot count
+  Only a tournament with a competition that counts towards the world rankings
+  has a file, since those are the only results the rankings are ever sent, and
+  only those competitions are in it (`PublicRankingsOfTournament.feature`).
+  Not one of a sport with no world rankings, as Ricochet and Gateball have
+  none, nor one none of whose competitions counts: each is played under
+  handicap or allows drawn games, which cannot count
   (`Tournament.NoWorldRankings`, `Tournament.HandicapInWorldRankings`,
-  `Tournament.DrawsInWorldRankings`), nor one its manager has said is not to.
+  `Tournament.DrawsInWorldRankings`), or its manager has said it is not to.
   The old site gave a file for every tournament and left it to the officers
   to throw out what they could not use. Here a tournament that does not count
   has a page at the address instead, which says that there are no rankings
@@ -37,9 +39,9 @@ Feature: A tournament's rankings are a file to send to the world rankings
   has moved on from leads to where the tournament is now, file or page.
 
   Where a scenario says nothing else, the tournament "Spring Open" is for
-  the sport "ac" and starts on 3 October 2026, counts towards the world
-  rankings, as a tournament of its sport does unless it is said not to, and
-  "Sam Someone" has beaten "Alex Another" 26 to 17 in its block "Block A".
+  the sport "ac" and starts on 3 October 2026, and "Sam Someone" has beaten
+  "Alex Another" 26 to 17 in its block "Block A", which counts towards the
+  world rankings, as a competition of its sport does unless it is said not to.
 
   Background:
     Given a site served as "croquetscores.com"
@@ -104,50 +106,38 @@ Feature: A tournament's rankings are a file to send to the world rankings
       When the address "/2026/ac/spring-open-plate/rankings" is requested
       Then the file given is called "Spring- Open-Plate.txt"
 
-  Rule: A tournament that does not count towards the world rankings is a page that says why
+  Rule: A tournament with nothing that counts towards the world rankings is a page that says why
 
     The page is headed as the rankings are not available, names the tournament,
     gives the one reason that applies, and leads back to the tournament. Where
-    more than one would apply it gives the first of: the sport has none,
-    it is played under handicap, it allows drawn games, its manager has said
-    it is not to count; the same order the tournament refuses them in.
+    both would apply it gives the first of: the sport has none, none of its
+    competitions counts.
+
+    Background:
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has created the tournament "Handicap Open"
+      And "organiser@example.com" has added the block "Block A" to "Handicap Open"
 
     Scenario: The page says the rankings are not available
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the page at "/2026/ac/spring-open/rankings" is opened
+      When the page at "/2026/ac/handicap-open/rankings" is opened
       Then the page says the words for "rankings.notAvailable"
 
     Scenario: The page is not a file
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the address "/2026/ac/spring-open/rankings" is requested
+      When the address "/2026/ac/handicap-open/rankings" is requested
       Then no file is given
 
     Scenario: The page names the tournament
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the page at "/2026/ac/spring-open/rankings" is opened
-      Then the page names the tournament "Spring Open"
+      When the page at "/2026/ac/handicap-open/rankings" is opened
+      Then the page names the tournament "Handicap Open"
 
     Scenario: A reader not signed in is shown the page
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And nobody is signed in
-      When the page at "/2026/ac/spring-open/rankings" is opened
+      Given nobody is signed in
+      When the page at "/2026/ac/handicap-open/rankings" is opened
       Then the page says the words for "rankings.notAvailable"
 
-    Scenario: A tournament its manager has said is not to count says so
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the page at "/2026/ac/spring-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.notCounted"
-
-    Scenario: A tournament played under handicap says so
-      Given "organiser@example.com" has created the tournament "Handicap Open"
-      And the tournament "Handicap Open" is played under handicap
+    Scenario: A tournament none of whose competitions counts says so
       When the page at "/2026/ac/handicap-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.handicap"
-
-    Scenario: A tournament allowing drawn games says so
-      Given "organiser@example.com" has created the tournament "Draws Open" allowing drawn games
-      When the page at "/2026/ac/draws-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.drawnGames"
+      Then the page says the words for "rankings.notAvailable.notCounted"
 
     Scenario: A tournament of a sport with no world rankings says so
       Given the tournament is to be for the sport "rc"
@@ -156,32 +146,26 @@ Feature: A tournament's rankings are a file to send to the world rankings
       Then the page says the words for "rankings.notAvailable.sport"
 
     Scenario: Only the reason that applies is said
-      Given "organiser@example.com" has created the tournament "Draws Open" allowing drawn games
-      When the page at "/2026/ac/draws-open/rankings" is opened
-      Then the page does not say the words for "rankings.notAvailable.handicap"
-
-    Scenario: A tournament played under handicap that also allows drawn games gives the first reason
-      Given "organiser@example.com" has created the tournament "Both Open" allowing drawn games
-      And the tournament "Both Open" is played under handicap
-      When the page at "/2026/ac/both-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.handicap"
+      Given the tournament is to be for the sport "rc"
+      And "organiser@example.com" has created the tournament "Ricochet Open"
+      And "organiser@example.com" has added the block "Block A" to "Ricochet Open"
+      When the page at "/2026/rc/ricochet-open/rankings" is opened
+      Then the page does not say the words for "rankings.notAvailable.notCounted"
 
     Scenario: The page leads back to the tournament
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And the page at "/2026/ac/spring-open/rankings" is open
-      When the link "Spring Open" is pressed
-      Then the address is "/2026/ac/spring-open"
+      Given the page at "/2026/ac/handicap-open/rankings" is open
+      When the link "Handicap Open" is pressed
+      Then the address is "/2026/ac/handicap-open"
 
-    Scenario: A tournament put back to counting is given the file again
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And the tournament "Spring Open" counts towards the world rankings
-      When the address "/2026/ac/spring-open/rankings" is requested
+    Scenario: A tournament one of whose competitions counts is given the file
+      Given nothing is said of how the competition is played and counted
+      And "organiser@example.com" has added the block "Block B" to "Handicap Open"
+      When the address "/2026/ac/handicap-open/rankings" is requested
       Then a file is given
 
     Scenario: The page is in the reader's language
       Given a browser that asks for "en-XA"
-      And the tournament "Spring Open" does not count towards the world rankings
-      When the page at "/2026/ac/spring-open/rankings" is opened
+      When the page at "/2026/ac/handicap-open/rankings" is opened
       Then every word in the page's content but the tournament's own is in the test locale
 
   Rule: An address with no tournament a reader is sent to is not a file or a page of reasons
@@ -196,9 +180,11 @@ Feature: A tournament's rankings are a file to send to the world rankings
       Then the page says the words for "errors.notFound"
 
     Scenario: An archived tournament that did not count is not found either
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And "organiser@example.com" has archived the tournament "Spring Open"
-      When the page at "/2026/ac/spring-open/rankings" is opened
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has created the tournament "Handicap Open"
+      And "organiser@example.com" has added the block "Block A" to "Handicap Open"
+      And "organiser@example.com" has archived the tournament "Handicap Open"
+      When the page at "/2026/ac/handicap-open/rankings" is opened
       Then the page says the words for "errors.notFound"
 
     Scenario: An old address leads to the file where the tournament is now

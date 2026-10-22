@@ -5,6 +5,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./test.css";
+import { useRules } from "../../../../../../RulesTicks.js";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
@@ -32,6 +33,9 @@ export interface TestAsItIs {
   readonly bestOf: number;
   readonly group: string | undefined;
   readonly hasGames: boolean;
+  readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
+  readonly worldRankings: boolean;
 }
 
 /** A team as the API lists the tournament's. */
@@ -47,6 +51,8 @@ interface Props {
   readonly tournament: string;
   /** Where the tournament is found, for the days it is played. */
   readonly address: string;
+  /** Whether the tournament's sport has world rankings, which a test may count towards. */
+  readonly ranked: boolean;
   /** Nothing when adding, and the test when changing one. */
   readonly test?: TestAsItIs | undefined;
   /** Once a test is kept, so that the list says so. */
@@ -114,10 +120,12 @@ const isPart = (field: string | undefined): field is Part =>
 export const TestDialog = ({
   tournament,
   address,
+  ranked,
   test,
   kept,
   close,
 }: Props): React.JSX.Element => {
+  const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
   // The days the tournament is played, which a test is played within.
   const [days, setDays] = useState<
@@ -204,6 +212,7 @@ export const TestDialog = ({
             expectedMatches: typedNumber(said.expectedMatches),
             bestOf: typedNumber(said.bestOf),
             group: said.group,
+            ...rules.said,
           }),
         },
       );
@@ -373,6 +382,7 @@ export const TestDialog = ({
       {typed("expectedMatches", "admin.test.expectedMatches")}
       {typed("bestOf", "admin.test.bestOf")}
       {typed("group", "admin.test.group")}
+      {rules.ticks}
     </ModalDialog>
   );
 };

@@ -1,5 +1,6 @@
 import { Command } from "../../common/Command.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
 /**
  * Correcting one of a tournament's Swisses: its name, and what each of its
@@ -16,6 +17,11 @@ export class UpdateSwiss extends Command<void> {
     readonly name: string,
     readonly bestOf: number,
     requestedAt: ReadOnlyDate,
+    /**
+     * How it is played and counted, as the dialog sent it, or nothing to leave
+     * that to the tournament: what it was when it is updated.
+     */
+    readonly rules?: CompetitionRulesSaid | undefined,
   ) {
     super(requestedAt);
   }

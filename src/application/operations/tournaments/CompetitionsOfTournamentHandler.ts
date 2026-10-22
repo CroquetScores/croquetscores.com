@@ -64,12 +64,15 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
       ),
     );
     const listed: ListedCompetition[] = [];
-    for (const { reference, shape } of answered) {
+    for (const { reference, shape, rules } of answered) {
       const about = {
         id: reference.id.value,
         name: reference.name.toString(),
         slug: reference.slug.toString(),
         archived: reference.archived,
+        handicap: rules.handicap,
+        drawsAllowed: rules.drawsAllowed,
+        worldRankings: rules.worldRankings,
       };
       if (shape.kind === "knockout") {
         listed.push({

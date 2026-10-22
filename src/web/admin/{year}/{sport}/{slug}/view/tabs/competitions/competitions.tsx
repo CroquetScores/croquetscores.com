@@ -23,6 +23,8 @@ interface Props {
   readonly tournament: string;
   /** Where the tournament is found, as "2026/ac/spring-open". */
   readonly address: string;
+  /** Whether its sport has world rankings, which a competition may count towards. */
+  readonly ranked: boolean;
   /**
    * The reader's part in the tournament. A scorer is shown the competitions in
    * use alone, as the API answers them, and can only view them: adding them,
@@ -42,6 +44,7 @@ export const CompetitionsTab = ({
   tournament,
   address,
   part,
+  ranked,
 }: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -209,6 +212,7 @@ export const CompetitionsTab = ({
       {adding || editing !== undefined ? (
         <CompetitionDialog
           tournament={tournament}
+          ranked={ranked}
           competition={editing}
           kept={() => {
             askAgain();

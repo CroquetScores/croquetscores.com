@@ -357,6 +357,7 @@ export const testRequestFor = async (
     expectedMatches: said.expectedMatches ?? 1,
     bestOf: said.bestOf ?? 1,
     ...(group === undefined ? {} : { group }),
+    rules: domainScenarioOf(world).competition.rules,
   };
 };
 
@@ -427,6 +428,7 @@ export const updateTest = async (
           (shape === undefined ? "2026-10-03" : dayOf(shape.finishes)),
         expectedMatches:
           changed.expectedMatches ?? shape?.expectedMatches.count ?? 1,
+        rules: domainScenarioOf(world).competitionUpdate.rules,
         bestOf: changed.bestOf ?? shape?.bestOf.games ?? 1,
         ...(group === undefined ? {} : { group }),
       },

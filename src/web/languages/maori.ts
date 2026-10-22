@@ -457,10 +457,10 @@ export const maori: Language = {
     "admin.tournament.country": "Whenua",
     "admin.tournament.region": "Rohe",
     "admin.tournament.subtitle": "Taitara iti",
-    "admin.tournament.handicap": "Tākarohia ki te hanikapa",
-    "admin.tournament.drawsAllowed": "Ka whakaaetia ngā taurite",
+    "admin.rules.handicap": "Tākarohia ki te hanikapa",
+    "admin.rules.drawsAllowed": "Ka whakaaetia ngā taurite",
     "admin.tournament.levelTestsDrawn": "He taurite ngā Test ōrite",
-    "admin.tournament.worldRankings": "Ka whakaarohia mō te raupapa o te ao",
+    "admin.rules.worldRankings": "Ka whakaarohia mō te raupapa o te ao",
     "admin.tournament.national": "Takunetanga ā-motu",
     "admin.tournament.international": "Takunetanga ā-ao",
     "admin.tournament.otherwise": "Kāore e taea te whakaae ki tēnei pēnei.",
@@ -491,12 +491,8 @@ export const maori: Language = {
     "rankings.notAvailable": "Kāore ngā raupapa e wātea",
     "rankings.notAvailable.sport":
       "Kāore he raupapa o te ao mō te hākinakina o tēnei whakataetae, nō reira kāore he raupapa hei tuku.",
-    "rankings.notAvailable.handicap":
-      "Ka tākarohia tēnei whakataetae me te haukape, nō reira kāore e whakaarohia mō te raupapa o te ao.",
-    "rankings.notAvailable.drawnGames":
-      "Ka whakaaetia ngā tākaro ōrite i tēnei whakataetae, nō reira kāore e whakaarohia mō te raupapa o te ao.",
     "rankings.notAvailable.notCounted":
-      "Kua kī te kaiwhakahaere o tēnei whakataetae kāore e whakaarohia mō te raupapa o te ao.",
+      "Kāore tētahi o ngā whakataetae o tēnei whakataetae e kiia ana mō ngā tūnga o te ao.",
     "admin.view.otherwise":
       "Kāore e taea te whakahaere i tēnei whakataetae i konei.",
     "admin.competitionView.tabs": "Tauwhāinga",

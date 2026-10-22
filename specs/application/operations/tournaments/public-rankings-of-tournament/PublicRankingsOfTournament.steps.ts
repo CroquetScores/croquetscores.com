@@ -97,9 +97,7 @@ Then("the rankings answered are not available", function (this: SpecWorld) {
 // The reasons, in the words the feature says them in.
 const reasons: Readonly<Record<string, WhyNoRankings>> = {
   "the sport": "sport",
-  handicap: "handicap",
-  "drawn games": "drawnGames",
-  "its manager's choice": "notCounted",
+  "none of its competitions counts": "notCounted",
 };
 
 Then(
@@ -110,6 +108,17 @@ Then(
     assert.equal(
       rankings.is === "not available" ? rankings.because : undefined,
       reasons[reason],
+    );
+  },
+);
+
+Then(
+  /^(\d+) competitions? (?:is|are) counted in the rankings answered$/,
+  function (this: SpecWorld, count: string) {
+    const { rankings } = answered(this);
+    assert.equal(
+      rankings.is === "available" ? rankings.competitionCount : undefined,
+      Number(count),
     );
   },
 );
@@ -129,6 +138,17 @@ Then(
   /^the (first|second|third) competition of the rankings answered is "(.*)"$/,
   function (this: SpecWorld, which: string, name: string) {
     assert.equal(competitionsOf(this)[placeOf(which)]?.name, name);
+  },
+);
+
+Then(
+  "there is no second competition in the rankings answered",
+  function (this: SpecWorld) {
+    const { rankings } = answered(this);
+    assert.equal(
+      rankings.is === "available" ? rankings.competitions.length : 0,
+      1,
+    );
   },
 );
 

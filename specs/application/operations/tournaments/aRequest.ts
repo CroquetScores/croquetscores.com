@@ -231,9 +231,6 @@ export const creationOf = (world: SpecWorld): TournamentRequest => {
       : typeof said.subtitle === "string"
         ? { subtitle: said.subtitle }
         : {}),
-    handicap: said.handicap,
-    drawsAllowed: said.drawsAllowed,
-    worldRankings: said.worldRankings,
     national: said.national,
     international: said.international,
   };
@@ -260,10 +257,7 @@ export const updateOf = (
     country: says.country ?? tournament.country.code,
     region: changed.region ?? tournament.region?.code,
     ...(typeof subtitle === "string" ? { subtitle } : {}),
-    handicap: changed.handicap ?? tournament.handicap,
-    drawsAllowed: changed.drawsAllowed ?? tournament.drawsAllowed,
     levelTestsDrawn: tournament.levelTestsDrawn,
-    worldRankings: tournament.worldRankings,
     national: tournament.national,
     international: changed.international ?? tournament.international,
   };

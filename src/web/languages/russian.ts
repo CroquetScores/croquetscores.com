@@ -453,10 +453,10 @@ export const russian: Language = {
     "admin.tournament.country": "Страна",
     "admin.tournament.region": "Регион",
     "admin.tournament.subtitle": "Подзаголовок",
-    "admin.tournament.handicap": "Играется с гандикапом",
-    "admin.tournament.drawsAllowed": "Ничьи разрешены",
+    "admin.rules.handicap": "Играется с гандикапом",
+    "admin.rules.drawsAllowed": "Ничьи разрешены",
     "admin.tournament.levelTestsDrawn": "Равные тесты считаются ничьёй",
-    "admin.tournament.worldRankings": "Учитывается в мировом рейтинге",
+    "admin.rules.worldRankings": "Учитывается в мировом рейтинге",
     "admin.tournament.national": "Событие национального уровня",
     "admin.tournament.international": "Событие международного уровня",
     "admin.tournament.otherwise": "В таком виде это принять нельзя.",
@@ -486,12 +486,8 @@ export const russian: Language = {
     "rankings.notAvailable": "Рейтинги недоступны",
     "rankings.notAvailable.sport":
       "У вида спорта этого турнира нет мирового рейтинга, поэтому отправлять нечего.",
-    "rankings.notAvailable.handicap":
-      "Этот турнир проводится с гандикапом, поэтому не учитывается в мировом рейтинге.",
-    "rankings.notAvailable.drawnGames":
-      "В этом турнире допускаются ничьи, поэтому он не учитывается в мировом рейтинге.",
     "rankings.notAvailable.notCounted":
-      "Организатор этого турнира указал, что он не учитывается в мировом рейтинге.",
+      "Ни одно из соревнований этого турнира не идёт в мировой рейтинг.",
     "admin.view.otherwise": "Отсюда этим турниром управлять нельзя.",
     "admin.competitionView.tabs": "Соревнование",
     "admin.competitionView.players": "Игроки",

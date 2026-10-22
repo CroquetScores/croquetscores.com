@@ -446,10 +446,10 @@ export const korean: Language = {
     "admin.tournament.country": "나라",
     "admin.tournament.region": "지역",
     "admin.tournament.subtitle": "부제",
-    "admin.tournament.handicap": "핸디캡 적용",
-    "admin.tournament.drawsAllowed": "무승부 허용",
+    "admin.rules.handicap": "핸디캡 적용",
+    "admin.rules.drawsAllowed": "무승부 허용",
     "admin.tournament.levelTestsDrawn": "동점 테스트는 무승부",
-    "admin.tournament.worldRankings": "세계 랭킹에 반영",
+    "admin.rules.worldRankings": "세계 랭킹에 반영",
     "admin.tournament.national": "국내 수준 대회",
     "admin.tournament.international": "국제 수준 대회",
     "admin.tournament.otherwise": "이 내용은 그대로 받아들일 수 없어요.",
@@ -479,12 +479,8 @@ export const korean: Language = {
     "rankings.notAvailable": "랭킹을 사용할 수 없어요",
     "rankings.notAvailable.sport":
       "이 대회의 종목에는 세계 랭킹이 없으므로 보낼 랭킹이 없어요.",
-    "rankings.notAvailable.handicap":
-      "이 대회는 핸디캡으로 진행되므로 세계 랭킹에 반영되지 않아요.",
-    "rankings.notAvailable.drawnGames":
-      "이 대회는 무승부를 허용하므로 세계 랭킹에 반영되지 않아요.",
     "rankings.notAvailable.notCounted":
-      "이 대회의 운영자가 세계 랭킹에 반영하지 않기로 설정했어요.",
+      "이 대회의 어떤 경기도 세계 랭킹에 반영되지 않아요.",
     "admin.view.otherwise": "이 대회는 여기서 운영할 수 없어요.",
     "admin.competitionView.tabs": "경기 종목",
     "admin.competitionView.players": "선수",

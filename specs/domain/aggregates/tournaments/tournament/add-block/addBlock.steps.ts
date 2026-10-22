@@ -81,6 +81,9 @@ Given(
           (at + 1) * 10_000,
           1,
           1,
+          false,
+          false,
+          true,
           byOf(this),
           now(this),
         ),
@@ -118,6 +121,7 @@ When("the block {string} is added", function (this: SpecWorld, name: string) {
       Rounds.from(rounds ?? 1),
       byOf(this),
       now(this),
+      scenarioOf(this).competition.rules,
     ),
   );
 });

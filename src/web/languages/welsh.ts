@@ -460,10 +460,10 @@ export const welsh: Language = {
     "admin.tournament.country": "Gwlad",
     "admin.tournament.region": "Rhanbarth",
     "admin.tournament.subtitle": "Isdeitl",
-    "admin.tournament.handicap": "Chwarae gyda handicap",
-    "admin.tournament.drawsAllowed": "Caniatáu gemau cyfartal",
+    "admin.rules.handicap": "Chwarae gyda handicap",
+    "admin.rules.drawsAllowed": "Caniatáu gemau cyfartal",
     "admin.tournament.levelTestsDrawn": "Mae testau cyfartal yn gyfartal",
-    "admin.tournament.worldRankings": "Yn cyfrif tuag at Safleoedd y Byd",
+    "admin.rules.worldRankings": "Yn cyfrif tuag at Safleoedd y Byd",
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
     "admin.tournament.otherwise": "Ni ellir derbyn hyn fel y mae.",
@@ -493,12 +493,8 @@ export const welsh: Language = {
     "rankings.notAvailable": "Nid yw safleoedd ar gael",
     "rankings.notAvailable.sport":
       "Nid oes gan gamp y twrnamaint hwn Safleoedd y Byd, felly nid oes safleoedd i'w hanfon.",
-    "rankings.notAvailable.handicap":
-      "Mae'r twrnamaint hwn yn cael ei chwarae gyda handicap, felly nid yw'n cyfrif tuag at Safleoedd y Byd.",
-    "rankings.notAvailable.drawnGames":
-      "Mae'r twrnamaint hwn yn caniatáu gemau cyfartal, felly nid yw'n cyfrif tuag at Safleoedd y Byd.",
     "rankings.notAvailable.notCounted":
-      "Mae rheolwr y twrnamaint hwn wedi dweud nad yw'n cyfrif tuag at Safleoedd y Byd.",
+      "Nid oes yr un o gystadlaethau'r twrnamaint hwn yn cyfrif tuag at y rhestr safleoedd byd.",
     "admin.view.otherwise": "Ni ellir rheoli'r twrnamaint hwn o'r fan hon.",
     "admin.competitionView.tabs": "Cystadleuaeth",
     "admin.competitionView.players": "Chwaraewyr",

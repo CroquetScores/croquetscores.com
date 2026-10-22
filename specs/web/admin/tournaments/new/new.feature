@@ -6,9 +6,9 @@ Feature: A new tournament is created in the admin
   for everything a tournament begins with, as creating one says it
   (`create.feature`): its name, when it starts and finishes, the sport and
   the format it is played in, the country and the region it is played in, any
-  subtitle, whether it is played under handicap, whether it allows drawn games,
-  whether it counts towards the world rankings, whether it is national and
-  whether it is international.
+  subtitle, whether it is national and whether it is international. How its
+  competitions are played and counted is each competition's to say, in the
+  dialog that adds it (`competition.feature`).
 
   What it asks is what the website being read offers. The sports and formats
   are the ones its site offers, in the order the site gives them, since a
@@ -23,12 +23,8 @@ Feature: A new tournament is created in the admin
 
   What can be decided for the reader is decided, so that a tournament of the
   ordinary kind is a name, two days and a country away: the first sport the
-  site offers and the Standard format are chosen to begin with, it is not
-  played under handicap, it does not allow drawn games, and it is neither
-  national nor international. The world rankings are asked about only where
-  they can be counted, which is Association Croquet or Golf Croquet neither
-  played under handicap nor allowing drawn games, and there it counts unless
-  the reader says it does not, as creating one has it.
+  site offers and the Standard format are chosen to begin with, and it is
+  neither national nor international.
   National and international are asked separately, and cannot both be
   true: a tournament said to be both is refused (`create.feature`). So the
   form never lets them be ticked together, rather than letting the reader
@@ -86,9 +82,6 @@ Feature: A new tournament is created in the admin
         | Format                       |
         | Country                      |
         | Subtitle                     |
-        | Played with handicaps        |
-        | Allows drawn results         |
-        | Counts toward world rankings |
         | National‑level event         |
         | International‑level event    |
 
@@ -218,14 +211,6 @@ Feature: A new tournament is created in the admin
       When the new tournament page is opened
       Then the format chosen is "Standard"
 
-    Scenario: A new tournament is not played under handicap to begin with
-      When the new tournament page is opened
-      Then "Played with handicaps" is not ticked
-
-    Scenario: A new tournament does not allow drawn games to begin with
-      When the new tournament page is opened
-      Then "Allows drawn results" is not ticked
-
     Scenario: A new tournament is not national to begin with
       When the new tournament page is opened
       Then "National‑level event" is not ticked
@@ -237,47 +222,6 @@ Feature: A new tournament is created in the admin
     Scenario: Nothing else is filled in to begin with
       When the new tournament page is opened
       Then "Name" is empty
-
-  Rule: The world rankings are asked about only where they can be counted
-
-    Scenario: A tournament that can count towards them counts to begin with
-      When the new tournament page is opened
-      Then "Counts toward world rankings" is ticked
-
-    Scenario: Golf Croquet is asked about the world rankings
-      Given the new tournament page is open
-      When the sport "Golf Croquet" is chosen
-      Then the form asks for "Counts toward world rankings"
-
-    Scenario Outline: A sport without world rankings is not asked about them
-      Given the new tournament page is open
-      When the sport "<sport>" is chosen
-      Then the form does not ask for "Counts toward world rankings"
-
-      Examples:
-        | sport             |
-        | American 6 Wicket |
-        | Ricochet          |
-
-    Scenario: A tournament played under handicap is not asked about them
-      Given the new tournament page is open
-      When the reader ticks "Played with handicaps"
-      Then the form does not ask for "Counts toward world rankings"
-
-    Scenario: A tournament allowing drawn games is not asked about them
-      Given the new tournament page is open
-      When the reader ticks "Allows drawn results"
-      Then the form does not ask for "Counts toward world rankings"
-
-    Scenario: A tournament allowing drawn games is created allowing them
-      Given the new tournament page is open
-      And "Spring Open" is typed as the "Name"
-      And "2026-10-03" is typed as the "Starts"
-      And "2026-10-05" is typed as the "Finishes"
-      And the country "Fiji" is chosen
-      And the reader ticks "Allows drawn results"
-      When "Create Tournament" is pressed
-      Then the tournament "Spring Open" is kept allowing drawn games
 
   Rule: Drawing a level test is asked about only where the format is played by teams
 

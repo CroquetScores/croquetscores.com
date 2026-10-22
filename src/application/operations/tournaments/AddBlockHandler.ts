@@ -42,6 +42,7 @@ export class AddBlockHandler extends CommandHandler<AddBlock, CompetitionId> {
       Rounds.from(command.rounds),
       by,
       command.requestedAt,
+      command.rules,
     );
     await this.tournaments.save(tournament);
     return id;

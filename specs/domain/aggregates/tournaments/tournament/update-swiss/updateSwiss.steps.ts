@@ -13,6 +13,7 @@ import {
   happened,
   nameAndBestOf,
   now,
+  scenarioOf,
 } from "../aTournament.js";
 
 Given(
@@ -40,6 +41,7 @@ When("the Swiss {string} is updated", function (this: SpecWorld, name: string) {
       bestOf,
       byOf(this),
       now(this),
+      scenarioOf(this).competitionUpdate.rules,
     );
   });
 });

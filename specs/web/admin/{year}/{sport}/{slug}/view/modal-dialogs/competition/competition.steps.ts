@@ -298,6 +298,64 @@ const competitionsOf = async (
 ): Promise<readonly CompetitionInTournament[]> =>
   (await load(world, tournamentNamed(world, tournament))).competitions;
 
+const rulesOf = async (
+  world: SpecWorld,
+  tournament: string,
+  name: string,
+): Promise<CompetitionInTournament["rules"]> => {
+  let found: CompetitionInTournament | undefined;
+  await eventually(world, async () => {
+    found = (await competitionsOf(world, tournament)).find(
+      ({ reference }) => reference.name.toString() === name,
+    );
+    assert.ok(found !== undefined, `${tournament} has no competition ${name}.`);
+  });
+  assert.ok(found !== undefined);
+  return found.rules;
+};
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" (is|is not) played under handicap$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    is: string,
+  ) {
+    assert.equal((await rulesOf(this, tournament, name)).handicap, is === "is");
+  },
+);
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" (allows|does not allow) drawn results$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    allows: string,
+  ) {
+    assert.equal(
+      (await rulesOf(this, tournament, name)).drawsAllowed,
+      allows === "allows",
+    );
+  },
+);
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" (counts|does not count) towards the world rankings$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    counts: string,
+  ) {
+    assert.equal(
+      (await rulesOf(this, tournament, name)).worldRankings,
+      counts === "counts",
+    );
+  },
+);
+
 const shapeOf = async (
   world: SpecWorld,
   tournament: string,

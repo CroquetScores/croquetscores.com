@@ -30,6 +30,7 @@ When(
         drawOf(this),
         byOf(this),
         now(this),
+        scenarioOf(this).competition.rules,
       ),
     );
   },

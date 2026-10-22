@@ -1302,16 +1302,26 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the tournament kept for "tournaments/13" on "croquetscores.com" has a note called "Import Errors"
 
-  Rule: A tournament with a score marked in text as a tie allows drawn games
+  Rule: A competition with a score marked in text as a tie allows drawn results
 
     Some scorers wrote a game on equal points as a tie in words or a sign, as
     "2 Tied", "5 Draw", "5=" or "6w tie". Such a game was not won by anybody,
-    which the site keeps only where the tournament allows drawn games
-    (`addGame.feature`). So a tournament with a score in any of its
-    competitions marked as "Tied", "Draw", "tie" or "=" allows drawn games,
-    and is said as corrected (`AcceptedImportErrors.feature`).
+    which the site keeps only in a competition that allows drawn results
+    (`addGame.feature`). So a competition with a score marked as "Tied",
+    "Draw", "tie" or "=" allows drawn results, and the tournament is said as
+    corrected (`AcceptedImportErrors.feature`).
 
-    Scenario Outline: A tournament with a tie marked in text allows drawn games
+    The old sites sent a tournament's results to the world rankings, and what
+    they sent was what the site now counts: a competition of Association
+    Croquet, Golf Croquet or American 6 Wicket (`Sport.feature`). So a
+    competition of one of those is brought over counting towards them, and one
+    of any other sport is not. It is ticked only where it can be: one that
+    allows drawn results cannot count (`Tournament.DrawsInWorldRankings`), so
+    a competition in which the import found a tie marked in text does not.
+    The old sites did not say whether a competition was played under handicap,
+    and nothing is claimed for one that the old site never said.
+
+    Scenario Outline: A competition with a tie marked in text allows drawn results
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
       And the tournament lists "blocks/30"
@@ -1323,7 +1333,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was lost by player 2
       And game 1's loser scored "<mark>"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the tournament kept for "tournaments/13" on "croquetscores.com" allows drawn games
+      Then the competition kept for "blocks/30" on "croquetscores.com" allows drawn results
 
       Examples:
         | mark   |
@@ -1347,7 +1357,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/13" on "croquetscores.com" is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" has 1 game
 
-    Scenario: A tournament with no tie marked in text does not allow drawn games
+    Scenario: A competition with no tie marked in text does not allow drawn results
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
       And the tournament lists "blocks/30"
@@ -1359,9 +1369,9 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was lost by player 2
       And game 1's loser scored "3"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the tournament kept for "tournaments/13" on "croquetscores.com" does not allow drawn games
+      Then the competition kept for "blocks/30" on "croquetscores.com" does not allow drawn results
 
-    Scenario Outline: A tournament of a ranked sport with a tie marked in text does not count towards the world rankings
+    Scenario Outline: A competition of a ranked sport with a tie marked in text does not count towards the world rankings
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is in the sport "<sport>"
       And the tournament lists nothing
@@ -1374,7 +1384,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was lost by player 2
       And game 1's loser scored "2 Tied"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the tournament kept for "tournaments/13" on "croquetscores.com" does not count towards the world rankings
+      Then the competition kept for "blocks/30" on "croquetscores.com" does not count towards the world rankings
 
       Examples:
         | sport |
@@ -1382,7 +1392,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
         | gc    |
         | a6w   |
 
-    Scenario Outline: A tournament of a ranked sport with no tie marked in text counts towards the world rankings
+    Scenario Outline: A competition of a ranked sport with no tie marked in text counts towards the world rankings
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament is in the sport "<sport>"
       And the tournament lists nothing
@@ -1395,7 +1405,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And game 1 was lost by player 2
       And game 1's loser scored "3"
       When the tournament "tournaments/13" on "croquetscores.com" is imported
-      Then the tournament kept for "tournaments/13" on "croquetscores.com" counts towards the world rankings
+      Then the competition kept for "blocks/30" on "croquetscores.com" counts towards the world rankings
 
       Examples:
         | sport |
@@ -1403,7 +1413,36 @@ Feature: Importing each of the old sites' tournaments with everything that names
         | gc    |
         | a6w   |
 
-    Scenario: A tournament that allows drawn games for a tie marked in text is said as corrected
+    Scenario: A competition of Ricochet does not count towards the world rankings
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament is in the sport "rc"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "26tp"
+      And game 1 was lost by player 2
+      And game 1's loser scored "3"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" does not count towards the world rankings
+
+    Scenario: A competition is not played under handicap
+      Given a tournament "tournaments/13" on "croquetscores.com"
+      And the tournament lists nothing
+      And the tournament lists "blocks/30"
+      And the block "blocks/30" of "tournaments/13" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 2 is in the competition
+      And game 1 was won by player 1
+      And game 1's winner scored "26tp"
+      And game 1 was lost by player 2
+      And game 1's loser scored "3"
+      When the tournament "tournaments/13" on "croquetscores.com" is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is not played under handicap
+
+    Scenario: A tournament with a tie marked in text is said as corrected
       Given a tournament "tournaments/13" on "croquetscores.com"
       And the tournament lists nothing
       And the tournament lists "blocks/30"

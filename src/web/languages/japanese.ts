@@ -451,10 +451,10 @@ export const japanese: Language = {
     "admin.tournament.country": "国",
     "admin.tournament.region": "地域",
     "admin.tournament.subtitle": "サブタイトル",
-    "admin.tournament.handicap": "ハンディキャップ制",
-    "admin.tournament.drawsAllowed": "引き分けを認める",
+    "admin.rules.handicap": "ハンディキャップ制",
+    "admin.rules.drawsAllowed": "引き分けを認める",
     "admin.tournament.levelTestsDrawn": "同点のテストは引き分け",
-    "admin.tournament.worldRankings": "世界ランキングの対象",
+    "admin.rules.worldRankings": "世界ランキングの対象",
     "admin.tournament.national": "全国レベルの大会",
     "admin.tournament.international": "国際レベルの大会",
     "admin.tournament.otherwise": "この内容では受け付けられません。",
@@ -484,12 +484,8 @@ export const japanese: Language = {
     "rankings.notAvailable": "ランキングは利用できません",
     "rankings.notAvailable.sport":
       "この大会の競技には世界ランキングがないため、送るランキングはありません。",
-    "rankings.notAvailable.handicap":
-      "この大会はハンディキャップ制で行われるため、世界ランキングの対象になりません。",
-    "rankings.notAvailable.drawnGames":
-      "この大会は引き分けを認めているため、世界ランキングの対象になりません。",
     "rankings.notAvailable.notCounted":
-      "この大会の運営者が、世界ランキングの対象にしないと設定しています。",
+      "この大会の競技は、どれも世界ランキングの対象ではありません。",
     "admin.view.otherwise": "この大会はここから運営できません。",
     "admin.competitionView.tabs": "部門",
     "admin.competitionView.players": "選手",

@@ -39,6 +39,7 @@ export class AddSwissHandler extends CommandHandler<AddSwiss, CompetitionId> {
       BestOf.from(command.bestOf),
       by,
       command.requestedAt,
+      command.rules,
     );
     await this.tournaments.save(tournament);
     return id;

@@ -9,6 +9,7 @@ import { TestGroup } from "../../../domain/aggregates/tournaments/value-objects/
 import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import { brokenBy } from "../../common/brokenBy.js";
+import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
 /** What a request says a test is, as it was chosen and typed. */
 export interface TestRequest {
@@ -22,6 +23,8 @@ export interface TestRequest {
   readonly bestOf: number;
   /** Nothing, or nothing but whitespace, where the test is in no group. */
   readonly group?: string | undefined;
+  /** How it is played and counted, or nothing to leave that to the tournament. */
+  readonly rules?: CompetitionRulesSaid | undefined;
 }
 
 // The start of the day `written` in UTC, which is what a test's day is. A
@@ -71,4 +74,5 @@ export const testDetailsFrom = (request: TestRequest): TestDetails => ({
   expectedMatches: ExpectedMatches.from(request.expectedMatches),
   bestOf: BestOf.from(request.bestOf),
   group: TestGroup.from(request.group ?? ""),
+  rules: request.rules,
 });

@@ -24,6 +24,8 @@ interface Props {
   readonly tournament: string;
   /** Where the tournament is found, as "2026/ac/spring-tests". */
   readonly address: string;
+  /** Whether its sport has world rankings, which a competition may count towards. */
+  readonly ranked: boolean;
   /**
    * The reader's part in the tournament. A scorer is shown the tests in use
    * alone, as the API answers them, and can only view them.
@@ -98,6 +100,7 @@ export const TestsTab = ({
   address,
   part,
   toTeams,
+  ranked,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // How many teams are in use, which is whether a test can be added. A
@@ -327,6 +330,7 @@ export const TestsTab = ({
       {adding || editing !== undefined ? (
         <TestDialog
           tournament={tournament}
+          ranked={ranked}
           address={address}
           test={editing}
           kept={() => {

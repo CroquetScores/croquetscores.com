@@ -458,10 +458,10 @@ export const afrikaans: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Streek",
     "admin.tournament.subtitle": "Onderskrif",
-    "admin.tournament.handicap": "Met handicap gespeel",
-    "admin.tournament.drawsAllowed": "Laat gelykopuitslae toe",
+    "admin.rules.handicap": "Met handicap gespeel",
+    "admin.rules.drawsAllowed": "Laat gelykopuitslae toe",
     "admin.tournament.levelTestsDrawn": "Gelyke toetse is gelykop",
-    "admin.tournament.worldRankings": "Tel vir die wêreldranglys",
+    "admin.rules.worldRankings": "Tel vir die wêreldranglys",
     "admin.tournament.national": "Byeenkoms op nasionale vlak",
     "admin.tournament.international": "Byeenkoms op internasionale vlak",
     "admin.tournament.otherwise": "Dit kan nie aanvaar word soos dit is nie.",
@@ -492,12 +492,8 @@ export const afrikaans: Language = {
     "rankings.notAvailable": "Ranglyste is nie beskikbaar nie",
     "rankings.notAvailable.sport":
       "Hierdie toernooi se sportsoort het geen wêreldranglys nie, so daar is geen ranglyste om te stuur nie.",
-    "rankings.notAvailable.handicap":
-      "Hierdie toernooi word met handicap gespeel, so dit tel nie vir die wêreldranglys nie.",
-    "rankings.notAvailable.drawnGames":
-      "Hierdie toernooi laat gelykopwedstryde toe, so dit tel nie vir die wêreldranglys nie.",
     "rankings.notAvailable.notCounted":
-      "Die bestuurder van hierdie toernooi het gesê dit tel nie vir die wêreldranglys nie.",
+      "Nie een van hierdie toernooi se kompetisies tel vir die wêreldranglys nie.",
     "admin.view.otherwise":
       "Hierdie toernooi kan nie van hier af bestuur word nie.",
     "admin.competitionView.tabs": "Kompetisie",

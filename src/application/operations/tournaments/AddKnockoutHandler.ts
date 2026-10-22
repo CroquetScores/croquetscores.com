@@ -42,6 +42,7 @@ export class AddKnockoutHandler extends CommandHandler<
       KnockoutDraw.from(command.places, command.rounds),
       by,
       command.requestedAt,
+      command.rules,
     );
     await this.tournaments.save(tournament);
     return id;

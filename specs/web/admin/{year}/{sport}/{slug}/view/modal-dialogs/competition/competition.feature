@@ -61,6 +61,16 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
   (`KnockoutDraw.feature`). A refusal about no one field is said above the
   fields. Nothing refused is kept, and the dialog stays open.
 
+  Every kind asks how it is played and counted, after its shape: "Played with
+  handicaps", "Allows drawn results" and "Counts toward world rankings"
+  (`competitionRules.feature`). A new competition is not played with handicaps
+  and does not allow drawn results, and counts towards the world rankings
+  unless the reader says it does not, as adding one has it. Counting is asked
+  only where it can be: in Association Croquet or Golf Croquet, for a
+  competition neither played with handicaps nor allowing drawn results. A
+  competition being changed begins as it is, and a test is asked the same in
+  its own dialog (`test.feature`).
+
   The admin draws the dialog itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
 
@@ -388,6 +398,99 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       Given "Add Competition" is pressed
       When "Cancel" is pressed
       Then "Add Competition" has the focus
+
+  Rule: A competition asks how it is played and counted
+
+    Scenario Outline: The dialog asks for each
+      Given "Add Competition" is pressed
+      Then the competition dialog asks for "<field>"
+
+      Examples:
+        | field                        |
+        | Played with handicaps        |
+        | Allows drawn results         |
+        | Counts toward world rankings |
+
+    Scenario: A new competition is not played with handicaps to begin with
+      When "Add Competition" is pressed
+      Then "Played with handicaps" is not ticked
+
+    Scenario: A new competition does not allow drawn results to begin with
+      When "Add Competition" is pressed
+      Then "Allows drawn results" is not ticked
+
+    Scenario: A new competition counts towards the world rankings to begin with
+      When "Add Competition" is pressed
+      Then "Counts toward world rankings" is ticked
+
+    Scenario: Golf Croquet is asked about the world rankings
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog asks for "Counts toward world rankings"
+
+    Scenario Outline: A sport without world rankings is not asked about them
+      Given the tournament "Spring Open" is for the sport "<sport>"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog does not ask for "Counts toward world rankings"
+
+      Examples:
+        | sport |
+        | a6w   |
+        | rc    |
+
+    Scenario: A competition played with handicaps is not asked about the world rankings
+      Given "Add Competition" is pressed
+      When the reader ticks "Played with handicaps"
+      Then the competition dialog does not ask for "Counts toward world rankings"
+
+    Scenario: A competition allowing drawn results is not asked about the world rankings
+      Given "Add Competition" is pressed
+      When the reader ticks "Allows drawn results"
+      Then the competition dialog does not ask for "Counts toward world rankings"
+
+    Scenario: A competition added played with handicaps is kept so
+      Given "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      And the reader ticks "Played with handicaps"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" is played under handicap
+
+    Scenario: A competition added allowing drawn results is kept so
+      Given "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      And the reader ticks "Allows drawn results"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" allows drawn results
+
+    Scenario: A competition added counting towards the world rankings is kept so
+      Given "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" counts towards the world rankings
+
+    Scenario: A competition added not counting towards the world rankings is kept so
+      Given "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      And the reader unticks "Counts toward world rankings"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" does not count towards the world rankings
+
+    Scenario: A competition changed begins as it is played
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Played with handicaps" is ticked
+
+    Scenario: A competition changed to allow drawn results is kept so
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader ticks "Allows drawn results"
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" allows drawn results
 
   Rule: Add adds the competition as it was asked for
 

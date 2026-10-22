@@ -72,6 +72,9 @@ export class CompetitionPageHandler extends QueryHandler<
       tournamentAddress: tournament.address.toString(),
       slug: found.reference.slug.toString(),
       part,
+      worldRankingSport: tournament.sport.hasWorldRankings
+        ? tournament.sport.code
+        : undefined,
     };
   }
 }

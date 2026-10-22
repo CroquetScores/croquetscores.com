@@ -102,6 +102,7 @@ import {
 import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
 import { websiteOf } from "../../common/site.js";
+import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
 // A year as an address writes one: four digits, the first not a nought.
 const aYear = /^[1-9]\d{3}$/;
@@ -174,6 +175,20 @@ const yesOrNoOf = (body: unknown, field: string): boolean | undefined => {
   return typeof value === "boolean" ? value : undefined;
 };
 
+// How a competition is played and counted, as its dialog sends it: each said
+// or not. Nothing where none is, which an update takes as leaving them as they
+// were.
+const rulesOf = (body: unknown): CompetitionRulesSaid | undefined => {
+  const handicap = yesOrNoOf(body, "handicap");
+  const drawsAllowed = yesOrNoOf(body, "drawsAllowed");
+  const worldRankings = yesOrNoOf(body, "worldRankings");
+  return handicap === undefined &&
+    drawsAllowed === undefined &&
+    worldRankings === undefined
+    ? undefined
+    : { handicap, drawsAllowed, worldRankings };
+};
+
 // A game's player as the score dialog sends them: a competition's player by
 // the part of their id after "competition-player/", and a test's, who is a
 // player in one of its teams, by their whole id, since a test's players are
@@ -200,10 +215,7 @@ const tournamentFrom = (body: unknown): TournamentRequest => {
     country: textOf(body, "country"),
     ...(region === "" ? {} : { region }),
     ...(subtitle === "" ? {} : { subtitle }),
-    handicap: yesOrNoOf(body, "handicap"),
-    drawsAllowed: yesOrNoOf(body, "drawsAllowed"),
     levelTestsDrawn: yesOrNoOf(body, "levelTestsDrawn"),
-    worldRankings: yesOrNoOf(body, "worldRankings"),
     national: yesOrNoOf(body, "national"),
     international: yesOrNoOf(body, "international"),
   };
@@ -471,6 +483,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
               numberOf(body, "places"),
               numbersOf(body, "rounds"),
               at,
+              rulesOf(body),
             )
           : kind === "swiss"
             ? new AddSwiss(
@@ -479,6 +492,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 name,
                 numberOf(body, "bestOf"),
                 at,
+                rulesOf(body),
               )
             : new AddBlock(
                 reader.value,
@@ -487,6 +501,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 numberOf(body, "bestOf"),
                 numberOf(body, "rounds"),
                 at,
+                rulesOf(body),
               ),
       );
       return reply
@@ -522,6 +537,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
               numberOf(body, "places"),
               numbersOf(body, "rounds"),
               at,
+              rulesOf(body),
             )
           : kind === "swiss"
             ? new UpdateSwiss(
@@ -531,6 +547,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 name,
                 numberOf(body, "bestOf"),
                 at,
+                rulesOf(body),
               )
             : new UpdateBlock(
                 reader.value,
@@ -540,6 +557,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
                 numberOf(body, "bestOf"),
                 numberOf(body, "rounds"),
                 at,
+                rulesOf(body),
               ),
       );
       return reply.code(204).header("cache-control", "no-store").send();
@@ -1706,6 +1724,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       expectedMatches: numberOf(body, "expectedMatches"),
       bestOf: numberOf(body, "bestOf"),
       group: textOf(body, "group"),
+      rules: rulesOf(body),
     };
   };
 

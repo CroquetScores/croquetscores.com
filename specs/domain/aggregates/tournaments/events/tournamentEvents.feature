@@ -174,12 +174,6 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
-    Scenario: A tournament created before drawn games were asked about is read back not allowing them
-      Given an event of a tournament being created that says nothing of drawn games
-      When the event is written down through the registry
-      And what was kept is read back through the registry
-      Then what was read back does not allow drawn games
-
     Scenario: A player added representing nothing is read back representing nothing
       Given an event of a player being added who represents nothing
       When the event is written down through the registry
@@ -236,6 +230,10 @@ Feature: The names a tournament's events are kept under
         | the tournament's players being spaced out | playerIds       |
         | a block being added                       | order           |
         | a block being added                       | rounds          |
+        | a block being added                       | handicap        |
+        | a block being added                       | drawsAllowed    |
+        | a block being added                       | worldRankings   |
+        | a test being added                        | worldRankings   |
         | a block being updated                     | rounds          |
         | a knockout being added                    | rounds          |
         | a competition being archived              | competitionId   |
@@ -270,8 +268,9 @@ Feature: The names a tournament's events are kept under
 
       Examples:
         | happening                  | field        | written                     |
-        | a tournament being created | handicap     | the text "no"               |
-        | a tournament being created | drawsAllowed | the text "no"               |
+        | a block being added        | handicap     | the text "no"               |
+        | a block being added        | drawsAllowed | the text "no"               |
+        | a block being added        | worldRankings | the text "no"              |
         | a block being added        | order        | the text "10000"            |
         | a knockout being added     | rounds       | the text "1, 3"             |
         | a knockout being added     | rounds       | a list holding the text "3" |

@@ -445,10 +445,10 @@ export const egyptian: Language = {
     "admin.tournament.country": "البلد",
     "admin.tournament.region": "المنطقة",
     "admin.tournament.subtitle": "العنوان الفرعي",
-    "admin.tournament.handicap": "بتتلعب بهانديكاب",
-    "admin.tournament.drawsAllowed": "التعادل مسموح",
+    "admin.rules.handicap": "بتتلعب بهانديكاب",
+    "admin.rules.drawsAllowed": "التعادل مسموح",
     "admin.tournament.levelTestsDrawn": "التيست المتعادل بيتحسب تعادل",
-    "admin.tournament.worldRankings": "بتتحسب في التصنيف العالمي",
+    "admin.rules.worldRankings": "بتتحسب في التصنيف العالمي",
     "admin.tournament.national": "حدث على مستوى البلد",
     "admin.tournament.international": "حدث دولي",
     "admin.tournament.otherwise": "مينفعش نقبل ده زي ما هو.",
@@ -477,12 +477,8 @@ export const egyptian: Language = {
     "rankings.notAvailable": "التصنيفات مش متاحة",
     "rankings.notAvailable.sport":
       "رياضة البطولة دي مالهاش تصنيف عالمي، فمفيش تصنيفات تتبعت.",
-    "rankings.notAvailable.handicap":
-      "البطولة دي بتتلعب بالهانديكاب، فمش بتتحسب في التصنيف العالمي.",
-    "rankings.notAvailable.drawnGames":
-      "البطولة دي بتسمح بالتعادل، فمش بتتحسب في التصنيف العالمي.",
     "rankings.notAvailable.notCounted":
-      "مدير البطولة دي قال إنها مش بتتحسب في التصنيف العالمي.",
+      "ولا واحدة من مسابقات البطولة دي بتتحسب في التصنيف العالمي.",
     "admin.view.otherwise": "البطولة دي مينفعش تتدار من هنا.",
     "admin.competitionView.tabs": "المسابقة",
     "admin.competitionView.players": "اللاعبين",

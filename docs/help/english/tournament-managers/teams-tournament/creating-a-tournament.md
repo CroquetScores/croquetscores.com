@@ -25,13 +25,7 @@ Standard is the one format not played by teams, and is not what you want here. G
 
 **Subtitle.** Whatever you want readers to know that has no field of its own: where to park, when lunch is, who to ring. It is shown beneath the tournament's name on every public page. It is written in Markdown, so a word can be made bold with asterisks around it and a list made with a dash at the start of each line. It can be up to 2000 characters, and can be left empty.
 
-**Played with handicaps.** Tick this for a handicap event.
-
-**Allows drawn results.** Tick this where a game can end with neither player the winner. Where it is ticked, a score entered with equal points and no mark is kept as a draw; where it is not, a game on equal points has to say who won it by a mark after the winner's score, such as "6w".
-
-**Level tests are drawn.** Asked only once a format played by teams is chosen. A test is won by the team that wins more of its matches, and one level on matches is decided by net games, then by net hoops, unless this is ticked, in which case a test level on matches is drawn, as some team events have it. It begins unticked for Teams, and ticked for the GC World Team Championship, which has always drawn a level test.
-
-**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet, Golf Croquet or American 6 Wicket that is neither played with handicaps nor allows drawn results. It is ticked to begin with.
+How its tests are played and counted, whether with handicaps, with drawn results, and towards the world rankings, is each test's to say when it is added.
 
 **National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
 

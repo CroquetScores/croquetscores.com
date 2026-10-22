@@ -336,3 +336,36 @@ Feature: Adding a test to a tournament
       And the tournament is rebuilt from the stream
       When the test between "Australia" and "England" is added
       Then it is refused with "Tournament.Archived"
+
+  Rule: A test is played and counted as it is said to be
+
+    A test has the same rules as any competition has (`competitionRules.feature`).
+
+    Scenario: A test added without saying is not played under handicap
+      Given the tournament is rebuilt from the stream
+      When the test between "Australia" and "England" is added
+      Then the tournament's competition "AUS v ENG" is not played under handicap
+
+    Scenario: A test added without saying does not allow drawn results
+      Given the tournament is rebuilt from the stream
+      When the test between "Australia" and "England" is added
+      Then the tournament's competition "AUS v ENG" does not allow drawn results
+
+    Scenario: A test said to allow drawn results does
+      Given the tournament is rebuilt from the stream
+      And the competition is to allow drawn results
+      When the test between "Australia" and "England" is added
+      Then the tournament's competition "AUS v ENG" allows drawn results
+
+    Scenario: A test said to be played under handicap is
+      Given the tournament is rebuilt from the stream
+      And the competition is to be played under handicap
+      When the test between "Australia" and "England" is added
+      Then the tournament's competition "AUS v ENG" is played under handicap
+
+    Scenario: A test allowing drawn results said to count towards the world rankings is refused
+      Given the tournament is rebuilt from the stream
+      And the competition is to allow drawn results
+      And the competition is said to count towards the world rankings
+      When the test between "Australia" and "England" is added
+      Then it is refused with "Tournament.DrawsInWorldRankings"

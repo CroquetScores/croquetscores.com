@@ -1,3 +1,4 @@
+import { hasTieMarked } from "./tiesMarked.js";
 import { toldOf } from "../application/operations/competitions/competitionOperations.js";
 import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
@@ -355,6 +356,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           expectedMatches: ExpectedMatches.from(expectedMatches),
           bestOf: bestOfImported(document.BestOf),
           group: TestGroup.from(document.Group ?? ""),
+          rules: { drawsAllowed: hasTieMarked(document) },
         },
         by,
         at,

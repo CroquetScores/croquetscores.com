@@ -199,6 +199,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "competitions" ? (
                 <CompetitionsTab
                   tournament={asked.tournament.id}
+                  ranked={asked.tournament.worldRankingSport !== undefined}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                 />
@@ -213,6 +214,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               {chosen === "tests" ? (
                 <TestsTab
                   tournament={asked.tournament.id}
+                  ranked={asked.tournament.worldRankingSport !== undefined}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                   toTeams={() => {

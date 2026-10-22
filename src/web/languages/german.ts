@@ -460,11 +460,11 @@ export const german: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Region",
     "admin.tournament.subtitle": "Untertitel",
-    "admin.tournament.handicap": "Mit Handicap gespielt",
-    "admin.tournament.drawsAllowed": "Unentschieden erlaubt",
+    "admin.rules.handicap": "Mit Handicap gespielt",
+    "admin.rules.drawsAllowed": "Unentschieden erlaubt",
     "admin.tournament.levelTestsDrawn":
       "Ausgeglichene Tests gelten als unentschieden",
-    "admin.tournament.worldRankings": "Zählt für die Weltrangliste",
+    "admin.rules.worldRankings": "Zählt für die Weltrangliste",
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
     "admin.tournament.otherwise": "Das kann so nicht angenommen werden.",
@@ -495,12 +495,8 @@ export const german: Language = {
     "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
     "rankings.notAvailable.sport":
       "Die Sportart dieses Turniers hat keine Weltrangliste, daher gibt es keine Ranglisten zu senden.",
-    "rankings.notAvailable.handicap":
-      "Dieses Turnier wird mit Vorgabe gespielt und zählt daher nicht für die Weltrangliste.",
-    "rankings.notAvailable.drawnGames":
-      "Dieses Turnier erlaubt Unentschieden und zählt daher nicht für die Weltrangliste.",
     "rankings.notAvailable.notCounted":
-      "Der Veranstalter dieses Turniers hat festgelegt, dass es nicht für die Weltrangliste zählt.",
+      "Keiner der Wettbewerbe dieses Turniers zählt für die Weltrangliste.",
     "admin.view.otherwise": "Dieses Turnier kann hier nicht verwaltet werden.",
     "admin.competitionView.tabs": "Wettbewerb",
     "admin.competitionView.players": "Spieler",

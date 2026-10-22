@@ -10,8 +10,9 @@ Feature: A tournament's page in the admin
   the competitions, and before who runs the tournament. Rankings is last, as
   the one thing done once the rest is: it is where the tournament's results
   are had as the file the world rankings are sent (`rankings-tab.feature`).
-  It is only in the page of a tournament that counts towards the world
-  rankings, the same as the file is (`rankings.feature`).
+  It is only in the page of a tournament of a sport with world rankings, the
+  same as the file is (`rankings.feature`): which of its competitions count is
+  each competition's to say, and the page says when none does.
 
   A scorer enters scores and does nothing else to a tournament
   (`addScorer.feature`), and scores are entered in its competitions. So a
@@ -269,7 +270,7 @@ Feature: A tournament's page in the admin
         | Interstate Shield          |
         | GC World Team Championship |
 
-    Scenario Outline: A tournament that counts towards the world rankings has the Rankings tab
+    Scenario Outline: A tournament of a sport with world rankings has the Rankings tab
       Given the tournament "Spring Open" is for the sport "<sport>"
       When the page of "Spring Open" is opened
       Then the tab "Rankings" is offered
@@ -280,14 +281,8 @@ Feature: A tournament's page in the admin
         | gc    |
         | a6w   |
 
-    Scenario: A tournament that does not count towards the world rankings has no Rankings tab
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the page of "Spring Open" is opened
-      Then the tab "Rankings" is not offered
-
     Scenario: A tournament of a sport with no world rankings has no Rankings tab
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And the tournament "Spring Open" is for the sport "rc"
+      Given the tournament "Spring Open" is for the sport "rc"
       When the page of "Spring Open" is opened
       Then the tab "Rankings" is not offered
 

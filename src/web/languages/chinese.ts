@@ -434,10 +434,10 @@ export const chinese: Language = {
     "admin.tournament.country": "国家或地区",
     "admin.tournament.region": "地区",
     "admin.tournament.subtitle": "副标题",
-    "admin.tournament.handicap": "采用让分",
-    "admin.tournament.drawsAllowed": "允许平局",
+    "admin.rules.handicap": "采用让分",
+    "admin.rules.drawsAllowed": "允许平局",
     "admin.tournament.levelTestsDrawn": "打平的对抗赛算平局",
-    "admin.tournament.worldRankings": "计入世界排名",
+    "admin.rules.worldRankings": "计入世界排名",
     "admin.tournament.national": "全国级赛事",
     "admin.tournament.international": "国际级赛事",
     "admin.tournament.otherwise": "无法按现在的样子接受。",
@@ -466,11 +466,7 @@ export const chinese: Language = {
     "rankings.notAvailable": "排名不可用",
     "rankings.notAvailable.sport":
       "本赛事的运动项目没有世界排名，因此没有可发送的排名。",
-    "rankings.notAvailable.handicap":
-      "本赛事按让分制进行，因此不计入世界排名。",
-    "rankings.notAvailable.drawnGames": "本赛事允许平局，因此不计入世界排名。",
-    "rankings.notAvailable.notCounted":
-      "本赛事的管理员已声明其不计入世界排名。",
+    "rankings.notAvailable.notCounted": "这个赛事没有任何比赛计入世界排名。",
     "admin.view.otherwise": "无法在这里管理这个锦标赛。",
     "admin.competitionView.tabs": "赛事",
     "admin.competitionView.players": "选手",

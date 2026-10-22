@@ -60,12 +60,8 @@ const A_TOURNAMENT: WrittenTournament = {
   country: "au",
   region: "vic",
   subtitle: "Lunch is at noon.",
-  handicap: false,
-  // Allowed, so that one read back as not allowing them is found.
-  drawsAllowed: true,
   // Drawn, for the same reason.
   levelTestsDrawn: true,
-  worldRankings: true,
   national: true,
   international: false,
   address: "2026/ac/spring-open",
@@ -91,17 +87,6 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       causedBy,
       happenedAt,
     ),
-  // As a tournament created before drawn games were asked about was kept.
-  "a tournament being created that says nothing of drawn games": () => {
-    const created = new TournamentCreated(
-      "croquetscores.com",
-      A_TOURNAMENT,
-      causedBy,
-      happenedAt,
-    );
-    Reflect.deleteProperty(created, "drawsAllowed");
-    return created;
-  },
   "a tournament being created with no subtitle": () =>
     new TournamentCreated(
       "croquetscores.com",
@@ -200,11 +185,26 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       // More than the 1 a block is played in unless it says, so that one read
       // back as played once is found.
       3,
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
   "a block being updated": () =>
-    new BlockUpdated(COMPETITION, "Block One", 3, 2, causedBy, happenedAt),
+    new BlockUpdated(
+      COMPETITION,
+      "Block One",
+      3,
+      2,
+      true,
+      true,
+      false,
+      causedBy,
+      happenedAt,
+    ),
   "a knockout being added": () =>
     new KnockoutAdded(
       COMPETITION,
@@ -213,6 +213,11 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       20000,
       4,
       [1, 3],
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
@@ -222,6 +227,11 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "Main Draw",
       8,
       [1, 1, 3],
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
@@ -232,11 +242,25 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       "swiss",
       30000,
       2,
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
   "a Swiss being updated": () =>
-    new SwissUpdated(COMPETITION, "Swiss Stage", 3, causedBy, happenedAt),
+    new SwissUpdated(
+      COMPETITION,
+      "Swiss Stage",
+      3,
+      true,
+      true,
+      false,
+      causedBy,
+      happenedAt,
+    ),
   "a competition being archived": () =>
     new CompetitionArchived(COMPETITION, 40000, causedBy, happenedAt),
   "an account being made a manager": () =>
@@ -345,6 +369,11 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       21,
       3,
       "Group A",
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
@@ -360,6 +389,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       21,
       3,
       undefined,
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
@@ -373,6 +405,11 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       9,
       2,
       "Group B",
+      // Each the opposite of what a competition has unless it is said, so
+      // that one read back as the default is found.
+      true,
+      true,
+      false,
       causedBy,
       happenedAt,
     ),
@@ -490,17 +527,5 @@ Then(
       JSON.parse(JSON.stringify(readBackOf(this))),
       JSON.parse(JSON.stringify(writtenOf(this))),
     );
-  },
-);
-
-Then(
-  "what was read back does not allow drawn games",
-  function (this: SpecWorld) {
-    const read = readBackOf(this);
-    assert.ok(
-      read instanceof TournamentCreated,
-      `It was read back as ${inspect(read)}.`,
-    );
-    assert.equal(read.drawsAllowed, false);
   },
 );

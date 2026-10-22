@@ -1,3 +1,4 @@
+import { scenarioOf } from "./aTournament.js";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -191,9 +192,9 @@ export const testNamed = (
     found !== undefined,
     `The tournament has no test ${name}: ${inspect(tournament.competitions.map(({ reference }) => String(reference)))}`,
   );
-  const { reference, shape } = found;
+  const { reference, shape, rules } = found;
   assert.ok(shape.kind === "test", `${name} is a ${shape.kind}.`);
-  return { reference, shape };
+  return { reference, shape, rules };
 };
 
 /** The start of the day `written` in UTC. */
@@ -229,6 +230,7 @@ export const testToAdd = (
       said.group === undefined || said.group === null
         ? undefined
         : TestGroup.from(said.group),
+    rules: scenarioOf(world).competition.rules,
   };
 };
 
@@ -272,6 +274,7 @@ export const testUpdateOf = (
     ),
     bestOf: BestOf.from(changed.bestOf ?? shape?.bestOf.games ?? 1),
     group,
+    rules: scenarioOf(world).competitionUpdate.rules,
   };
 };
 

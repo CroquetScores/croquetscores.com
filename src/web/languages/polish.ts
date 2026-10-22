@@ -458,10 +458,10 @@ export const polish: Language = {
     "admin.tournament.country": "Kraj",
     "admin.tournament.region": "Region",
     "admin.tournament.subtitle": "Podtytuł",
-    "admin.tournament.handicap": "Rozgrywany z handicapami",
-    "admin.tournament.drawsAllowed": "Dopuszcza remisy",
+    "admin.rules.handicap": "Rozgrywany z handicapami",
+    "admin.rules.drawsAllowed": "Dopuszcza remisy",
     "admin.tournament.levelTestsDrawn": "Wyrównane testy kończą się remisem",
-    "admin.tournament.worldRankings": "Liczy się do rankingów światowych",
+    "admin.rules.worldRankings": "Liczy się do rankingów światowych",
     "admin.tournament.national": "Wydarzenie rangi krajowej",
     "admin.tournament.international": "Wydarzenie rangi międzynarodowej",
     "admin.tournament.otherwise": "Tego nie można przyjąć w tej postaci.",
@@ -491,12 +491,8 @@ export const polish: Language = {
     "rankings.notAvailable": "Rankingi są niedostępne",
     "rankings.notAvailable.sport":
       "Dyscyplina tego turnieju nie ma rankingu światowego, więc nie ma rankingów do wysłania.",
-    "rankings.notAvailable.handicap":
-      "Ten turniej rozgrywany jest z handicapem, więc nie liczy się do rankingu światowego.",
-    "rankings.notAvailable.drawnGames":
-      "Ten turniej dopuszcza remisy, więc nie liczy się do rankingu światowego.",
     "rankings.notAvailable.notCounted":
-      "Organizator tego turnieju zdecydował, że nie liczy się on do rankingu światowego.",
+      "Żadne z zawodów tego turnieju nie liczy się do światowego rankingu.",
     "admin.view.otherwise": "Tym turniejem nie można stąd zarządzać.",
     "admin.competitionView.tabs": "Konkurencja",
     "admin.competitionView.players": "Zawodnicy",

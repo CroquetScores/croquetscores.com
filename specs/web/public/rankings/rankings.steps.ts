@@ -1,4 +1,4 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import {
@@ -7,7 +7,6 @@ import {
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { english } from "../../../../src/web/languages/english.js";
-import { changeTournament } from "../../support/tournaments.js";
 import { fileNameOf, givenTo, isAFile, linesRead, request } from "./theFile.js";
 
 // The file asked for, and the lines of it a scenario reads. Which kind of file
@@ -101,15 +100,6 @@ Then(
 );
 
 // A tournament put back --------------------------------------------------------------
-
-Given(
-  "the tournament {string} counts towards the world rankings",
-  async function (this: SpecWorld, name: string) {
-    // Said as the manager would say it, so that a tournament that cannot count
-    // is refused here as it is anywhere.
-    await changeTournament(this, name, { worldRankings: true });
-  },
-);
 
 // Lines --------------------------------------------------------------------------------
 

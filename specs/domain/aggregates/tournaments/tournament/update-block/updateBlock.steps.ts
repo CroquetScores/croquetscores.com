@@ -74,6 +74,7 @@ When("the block {string} is updated", function (this: SpecWorld, name: string) {
       roundsOf(this, found),
       byOf(this),
       now(this),
+      scenarioOf(this).competitionUpdate.rules,
     );
   });
 });
@@ -90,6 +91,7 @@ When(
         roundsOf(this, undefined),
         byOf(this),
         now(this),
+        scenarioOf(this).competitionUpdate.rules,
       );
     });
   },

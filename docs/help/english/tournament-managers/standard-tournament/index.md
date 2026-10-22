@@ -12,7 +12,7 @@ Everything a manager does is done in the admin section of the website. The publi
 
 ## The pages in order
 
-1. [Creating a tournament](creating-a-tournament.md): its name, its days, its sport, where it is played, and what it counts toward.
+1. [Creating a tournament](creating-a-tournament.md): its name, its days, its sport, where it is played, and whether it is a national or an international event.
 2. [Players](players.md): entering the tournament's players, correcting them, and setting aside the ones entered by mistake.
 3. [Competitions](competitions.md): adding blocks, knockouts and Swisses, and putting them in order.
 4. [Entering players in a competition](entering-players-in-a-competition.md): who plays in each competition, byes in a knockout, carry forwards, removing and withdrawing.

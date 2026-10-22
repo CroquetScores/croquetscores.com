@@ -264,6 +264,7 @@ export const addBlock = (
       // Played once, where the scenario says nothing else.
       domainScenarioOf(world).competition.rounds ?? 1,
       momentOf(world),
+      domainScenarioOf(world).competition.rules,
     ),
     tournament,
   );
@@ -282,6 +283,7 @@ export const addSwiss = (
       name,
       domainScenarioOf(world).competition.bestOf ?? 1,
       momentOf(world),
+      domainScenarioOf(world).competition.rules,
     ),
     tournament,
   );
@@ -319,6 +321,7 @@ export const addKnockout = (
       draw.places,
       draw.rounds,
       momentOf(world),
+      domainScenarioOf(world).competition.rules,
     ),
     tournament,
   );
@@ -365,6 +368,7 @@ export const updateBlock = async (
       update.bestOf,
       domainScenarioOf(world).competitionUpdate.rounds ?? 1,
       momentOf(world),
+      domainScenarioOf(world).competitionUpdate.rules,
     ),
     tournament,
   );
@@ -386,6 +390,7 @@ export const updateSwiss = async (
       update.name,
       update.bestOf,
       momentOf(world),
+      domainScenarioOf(world).competitionUpdate.rules,
     ),
     tournament,
   );
@@ -420,6 +425,7 @@ export const updateKnockout = async (
       draw.places,
       draw.rounds,
       momentOf(world),
+      domainScenarioOf(world).competitionUpdate.rules,
     ),
     tournament,
   );

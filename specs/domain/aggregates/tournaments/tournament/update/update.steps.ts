@@ -5,7 +5,6 @@ import type { SpecWorld } from "../../../../../support/world.js";
 import {
   assertFirstRecorded,
   byOf,
-  createdAlso,
   createdAs,
   happened,
   now,
@@ -81,37 +80,9 @@ Given(
 );
 
 Given(
-  /^a stream where a tournament was created (not )?allowing drawn games$/,
-  function (this: SpecWorld, not: string | null) {
-    createdAs(this, { drawsAllowed: not === null });
-  },
-);
-
-Given(
-  /^the update (allows|does not allow) drawn games$/,
-  function (this: SpecWorld, allows: string) {
-    scenarioOf(this).updating.drawsAllowed = allows === "allows";
-  },
-);
-
-Given(
-  "a stream where a tournament was created not played under handicap",
-  function (this: SpecWorld) {
-    createdAs(this, { handicap: false });
-  },
-);
-
-Given(
   "a stream where a tournament was created as a national event",
   function (this: SpecWorld) {
     createdAs(this, { national: true });
-  },
-);
-
-Given(
-  "it was created counting towards the world rankings",
-  function (this: SpecWorld) {
-    createdAlso(this, { worldRankings: true });
   },
 );
 
@@ -195,10 +166,6 @@ Given(
     scenarioOf(this).updating.subtitle = subtitle;
   },
 );
-
-Given("the update plays it under handicap", function (this: SpecWorld) {
-  scenarioOf(this).updating.handicap = true;
-});
 
 Given("the update makes it an international event", function (this: SpecWorld) {
   scenarioOf(this).updating.international = true;

@@ -294,17 +294,6 @@ Then(
   },
 );
 
-Then(
-  /^the tournament (allows|does not allow) drawn games$/,
-  function (this: SpecWorld, allows: string) {
-    assert.equal(tournamentOf(this).drawsAllowed, allows === "allows");
-  },
-);
-
-Then("the tournament is played under handicap", function (this: SpecWorld) {
-  assert.equal(tournamentOf(this).handicap, true);
-});
-
 Then("the tournament is archived", function (this: SpecWorld) {
   assert.equal(tournamentOf(this).archived, true);
 });

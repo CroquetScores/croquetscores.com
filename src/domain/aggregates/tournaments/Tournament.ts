@@ -70,6 +70,10 @@ import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
 import { TestGroup } from "./value-objects/TestGroup.js";
 import { Countries } from "./value-objects/Countries.js";
 import type { Country } from "./value-objects/Country.js";
+import type {
+  CompetitionRules,
+  CompetitionRulesSaid,
+} from "./value-objects/CompetitionRules.js";
 import { KnockoutDraw } from "./value-objects/KnockoutDraw.js";
 import type { Region } from "./value-objects/Region.js";
 import { Sport } from "./value-objects/Sport.js";
@@ -149,10 +153,9 @@ export class TournamentRefused extends Refused<TournamentErrorCode> {}
 /**
  * What creating a tournament says, and updating it says again. Its region, if
  * it has one, is given by its code and found among its country's, so that a
- * region of another country is the tournament's to refuse. Handicap, world
- * rankings, national, international and whether a level test is drawn may
- * each be left unsaid, and what a tournament is when they are is its own to
- * decide.
+ * region of another country is the tournament's to refuse. National,
+ * international and whether a level test is drawn may each be left unsaid, and
+ * what a tournament is when they are is its own to decide.
  */
 export interface TournamentDetails {
   readonly name: TournamentName;
@@ -163,10 +166,7 @@ export interface TournamentDetails {
   readonly country: Country;
   readonly region?: string | undefined;
   readonly subtitle?: TournamentSubtitle | undefined;
-  readonly handicap?: boolean | undefined;
-  readonly drawsAllowed?: boolean | undefined;
   readonly levelTestsDrawn?: boolean | undefined;
-  readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
 }
@@ -192,6 +192,8 @@ export interface TestDetails {
   readonly expectedMatches: ExpectedMatches;
   readonly bestOf: BestOf;
   readonly group?: TestGroup | undefined;
+  /** How it is played and counted, or nothing to leave that to the tournament. */
+  readonly rules?: CompetitionRulesSaid | undefined;
 }
 
 /**
@@ -237,6 +239,7 @@ export type CompetitionShape =
 export interface CompetitionInTournament {
   readonly reference: CompetitionReference;
   readonly shape: CompetitionShape;
+  readonly rules: CompetitionRules;
 }
 
 // Everything a tournament is apart from its players and its competitions, as
@@ -251,10 +254,7 @@ interface Settled {
   readonly country: Country;
   readonly region: Region | undefined;
   readonly subtitle: TournamentSubtitle | undefined;
-  readonly handicap: boolean;
-  readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
-  readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
   readonly address: TournamentAddress;
@@ -417,28 +417,12 @@ export class Tournament extends AggregateRoot {
     return this.#now.subtitle;
   }
 
-  get handicap(): boolean {
-    return this.#now.handicap;
-  }
-
-  /**
-   * Whether a game on equal points with no mark saying who won is kept, which
-   * few tournaments allow. Not unless it is said to.
-   */
-  get drawsAllowed(): boolean {
-    return this.#now.drawsAllowed;
-  }
-
   /**
    * Whether a test level on matches is drawn, rather than decided by net
    * games and then net hoops. Only a tournament played by teams draws one.
    */
   get levelTestsDrawn(): boolean {
     return this.#now.levelTestsDrawn;
-  }
-
-  get worldRankings(): boolean {
-    return this.#now.worldRankings;
   }
 
   get national(): boolean {
@@ -858,9 +842,11 @@ export class Tournament extends AggregateRoot {
     rounds: Rounds,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
+    const settled = this.#rulesFor(rules);
     this.record(
       new BlockAdded(
         id.value,
@@ -869,6 +855,9 @@ export class Tournament extends AggregateRoot {
         order,
         bestOf.games,
         rounds.count,
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -882,9 +871,11 @@ export class Tournament extends AggregateRoot {
     draw: KnockoutDraw,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
+    const settled = this.#rulesFor(rules);
     this.record(
       new KnockoutAdded(
         id.value,
@@ -893,6 +884,9 @@ export class Tournament extends AggregateRoot {
         order,
         draw.places,
         draw.rounds.map((round) => round.games),
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -906,9 +900,11 @@ export class Tournament extends AggregateRoot {
     bestOf: BestOf,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
+    const settled = this.#rulesFor(rules);
     this.record(
       new SwissAdded(
         id.value,
@@ -916,6 +912,9 @@ export class Tournament extends AggregateRoot {
         slug,
         order,
         bestOf.games,
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -934,14 +933,17 @@ export class Tournament extends AggregateRoot {
     rounds: Rounds,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "block", name);
     if (found.shape.kind !== "block") return;
+    const settled = this.#rulesToUpdate(found, rules);
     if (
       found.reference.name.equals(name) &&
       found.shape.bestOf.equals(bestOf) &&
-      found.shape.rounds.equals(rounds)
+      found.shape.rounds.equals(rounds) &&
+      sameRules(found.rules, settled)
     )
       return;
     this.record(
@@ -950,6 +952,9 @@ export class Tournament extends AggregateRoot {
         name.toString(),
         bestOf.games,
         rounds.count,
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -973,6 +978,7 @@ export class Tournament extends AggregateRoot {
     played: KnockoutRoundsPlayed,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "knockout", name);
@@ -1009,13 +1015,22 @@ export class Tournament extends AggregateRoot {
         );
       }
     });
-    if (found.reference.name.equals(name) && !drawChanged) return;
+    const settled = this.#rulesToUpdate(found, rules);
+    if (
+      found.reference.name.equals(name) &&
+      !drawChanged &&
+      sameRules(found.rules, settled)
+    )
+      return;
     this.record(
       new KnockoutUpdated(
         id.value,
         name.toString(),
         draw.places,
         draw.rounds.map((round) => round.games),
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -1033,14 +1048,29 @@ export class Tournament extends AggregateRoot {
     bestOf: BestOf,
     by: AccountId,
     at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
   ): void {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "swiss", name);
     if (found.shape.kind !== "swiss") return;
-    if (found.reference.name.equals(name) && found.shape.bestOf.equals(bestOf))
+    const settled = this.#rulesToUpdate(found, rules);
+    if (
+      found.reference.name.equals(name) &&
+      found.shape.bestOf.equals(bestOf) &&
+      sameRules(found.rules, settled)
+    )
       return;
     this.record(
-      new SwissUpdated(id.value, name.toString(), bestOf.games, by, at),
+      new SwissUpdated(
+        id.value,
+        name.toString(),
+        bestOf.games,
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
+        by,
+        at,
+      ),
     );
   }
 
@@ -1467,6 +1497,7 @@ export class Tournament extends AggregateRoot {
       );
     }
     this.#refuseUnlessATestCanBe(details);
+    const settled = this.#rulesFor(details.rules);
     this.record(
       new TestAdded(
         id.value,
@@ -1479,6 +1510,9 @@ export class Tournament extends AggregateRoot {
         details.expectedMatches.count,
         details.bestOf.games,
         details.group?.toString(),
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -1537,8 +1571,10 @@ export class Tournament extends AggregateRoot {
         "Two players have played more games than a match would be the best of.",
       );
     }
+    const settled = this.#rulesToUpdate(found, details.rules);
     if (
       sameTeams &&
+      sameRules(found.rules, settled) &&
       dayOf(details.starts) === dayOf(shape.starts) &&
       dayOf(details.finishes) === dayOf(shape.finishes) &&
       details.expectedMatches.equals(shape.expectedMatches) &&
@@ -1557,6 +1593,9 @@ export class Tournament extends AggregateRoot {
         details.expectedMatches.count,
         details.bestOf.games,
         details.group?.toString(),
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
         by,
         at,
       ),
@@ -1646,21 +1685,36 @@ export class Tournament extends AggregateRoot {
         bestOf: BestOf.from(event.bestOf),
       });
     } else if (event instanceof BlockUpdated) {
-      this.#competitionUpdated(event.competitionId, event.name, {
-        kind: "block",
-        bestOf: BestOf.from(event.bestOf),
-        rounds: Rounds.from(event.rounds),
-      });
+      this.#competitionUpdated(
+        event.competitionId,
+        event.name,
+        {
+          kind: "block",
+          bestOf: BestOf.from(event.bestOf),
+          rounds: Rounds.from(event.rounds),
+        },
+        rulesOf(event),
+      );
     } else if (event instanceof KnockoutUpdated) {
-      this.#competitionUpdated(event.competitionId, event.name, {
-        kind: "knockout",
-        draw: KnockoutDraw.from(event.places, event.rounds),
-      });
+      this.#competitionUpdated(
+        event.competitionId,
+        event.name,
+        {
+          kind: "knockout",
+          draw: KnockoutDraw.from(event.places, event.rounds),
+        },
+        rulesOf(event),
+      );
     } else if (event instanceof SwissUpdated) {
-      this.#competitionUpdated(event.competitionId, event.name, {
-        kind: "swiss",
-        bestOf: BestOf.from(event.bestOf),
-      });
+      this.#competitionUpdated(
+        event.competitionId,
+        event.name,
+        {
+          kind: "swiss",
+          bestOf: BestOf.from(event.bestOf),
+        },
+        rulesOf(event),
+      );
     } else if (event instanceof ManagerAdded) {
       this.#managers.add(event.account);
       this.#scorers.delete(event.account);
@@ -1752,6 +1806,7 @@ export class Tournament extends AggregateRoot {
           order: event.order,
         }),
         shape,
+        rules: rulesOf(event),
       });
     } else if (event instanceof TestUpdated) {
       const shape = testShapeOf(event);
@@ -1759,6 +1814,7 @@ export class Tournament extends AggregateRoot {
         event.competitionId,
         this.#testNameFor(shape),
         shape,
+        rulesOf(event),
       );
     }
   }
@@ -1835,14 +1891,6 @@ export class Tournament extends AggregateRoot {
             "Tournament.RegionNotInCountry",
             "The region is not one of the country's.",
           ));
-    const handicap = details.handicap ?? false;
-    const drawsAllowed = details.drawsAllowed ?? false;
-    const worldRankings = this.#worldRankingsFor(
-      sport,
-      handicap,
-      drawsAllowed,
-      details.worldRankings,
-    );
     const national = details.national ?? false;
     const international = details.international ?? false;
     if (national && international) {
@@ -1862,44 +1910,55 @@ export class Tournament extends AggregateRoot {
       country,
       region,
       subtitle: details.subtitle,
-      handicap,
-      drawsAllowed,
       levelTestsDrawn,
-      worldRankings,
       national,
       international,
       address: addressIn(TournamentAddress.yearOf(starts), sport),
     };
   }
 
-  // Only a tournament in a sport with world rankings, not under handicap and
-  // not allowing drawn games, counts towards them, and does unless it is said not to. Saying one counts
-  // when it cannot is refused rather than quietly undone, since whoever said so
-  // meant something the tournament cannot be.
-  #worldRankingsFor(
-    sport: Sport,
-    handicap: boolean,
-    drawsAllowed: boolean,
-    said: boolean | undefined,
-  ): boolean {
-    const hasRankings = sport.countsTowardsWorldRankings;
-    if (said === true && !hasRankings) {
+  // What a competition's rules are when it is added and `said` is what was
+  // said of them. Only a competition in a sport with world rankings, not played
+  // under handicap and not allowing drawn games, counts towards them, and does
+  // unless it is said not to. Saying one counts when it cannot is refused
+  // rather than quietly undone, since whoever said so meant something the
+  // competition cannot be.
+  #rulesFor(said: CompetitionRulesSaid | undefined): CompetitionRules {
+    const handicap = said?.handicap ?? false;
+    const drawsAllowed = said?.drawsAllowed ?? false;
+    const hasRankings = this.#now.sport.countsTowardsWorldRankings;
+    if (said?.worldRankings === true && !hasRankings) {
       refuse("Tournament.NoWorldRankings", "The sport has no world rankings.");
     }
-    if (said === true && handicap) {
+    if (said?.worldRankings === true && handicap) {
       refuse(
         "Tournament.HandicapInWorldRankings",
-        "A handicap tournament does not count towards the world rankings.",
+        "A competition played under handicap does not count towards the world rankings.",
       );
     }
     // Nor does a drawn one say who is better.
-    if (said === true && drawsAllowed) {
+    if (said?.worldRankings === true && drawsAllowed) {
       refuse(
         "Tournament.DrawsInWorldRankings",
-        "A tournament allowing drawn games does not count towards the world rankings.",
+        "A competition allowing drawn games does not count towards the world rankings.",
       );
     }
-    return said ?? (hasRankings && !handicap && !drawsAllowed);
+    return {
+      handicap,
+      drawsAllowed,
+      worldRankings:
+        said?.worldRankings ?? (hasRankings && !handicap && !drawsAllowed),
+    };
+  }
+
+  // What the rules of `found` are once it is updated and `said` is what the
+  // update says of them: as they were where it says nothing, and all of them
+  // again, as adding one does, where it says any.
+  #rulesToUpdate(
+    found: CompetitionInTournament,
+    said: CompetitionRulesSaid | undefined,
+  ): CompetitionRules {
+    return said === undefined ? found.rules : this.#rulesFor(said);
   }
 
   // Where a tournament named `name`, starting at `starts` and played in `sport`
@@ -1953,10 +2012,7 @@ export class Tournament extends AggregateRoot {
         written.subtitle === undefined
           ? undefined
           : TournamentSubtitle.from(written.subtitle),
-      handicap: written.handicap,
-      drawsAllowed: written.drawsAllowed,
       levelTestsDrawn: written.levelTestsDrawn,
-      worldRankings: written.worldRankings,
       national: written.national,
       international: written.international,
       address,
@@ -2181,13 +2237,14 @@ export class Tournament extends AggregateRoot {
       readonly name: string;
       readonly slug: string;
       readonly order: number;
-    },
+    } & WrittenRules,
     shape: CompetitionShape,
   ): void {
     const id = CompetitionId.from(event.competitionId);
     this.#competitions.set(id.value, {
       reference: CompetitionReference.from(id, event),
       shape,
+      rules: rulesOf(event),
     });
   }
 
@@ -2195,12 +2252,14 @@ export class Tournament extends AggregateRoot {
     written: string,
     name: string,
     shape: CompetitionShape,
+    rules: CompetitionRules,
   ): void {
     const found = this.#competitions.get(written);
     if (found === undefined) return;
     this.#competitions.set(written, {
       reference: referenceWith(found.reference, { name }),
       shape,
+      rules,
     });
   }
 
@@ -2429,7 +2488,7 @@ export class Tournament extends AggregateRoot {
   // A team called by another short name gives every test it is in another
   // name with it. The tests keep their slugs, as a competition renamed does.
   #renameTestsOf(written: string): void {
-    for (const { reference, shape } of this.#competitions.values()) {
+    for (const { reference, shape, rules } of this.#competitions.values()) {
       if (
         shape.kind === "test" &&
         (shape.firstTeam.value === written ||
@@ -2440,11 +2499,30 @@ export class Tournament extends AggregateRoot {
             name: this.#testNameFor(shape),
           }),
           shape,
+          rules,
         });
       }
     }
   }
 }
+
+// What an event adding or updating a competition says of its rules.
+type WrittenRules = CompetitionRules;
+
+const rulesOf = ({
+  handicap,
+  drawsAllowed,
+  worldRankings,
+}: WrittenRules): CompetitionRules => ({
+  handicap,
+  drawsAllowed,
+  worldRankings,
+});
+
+const sameRules = (one: CompetitionRules, other: CompetitionRules): boolean =>
+  one.handicap === other.handicap &&
+  one.drawsAllowed === other.drawsAllowed &&
+  one.worldRankings === other.worldRankings;
 
 const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
   block: "Tournament.NotABlock",
@@ -2554,10 +2632,7 @@ const writtenFrom = (settled: Settled): WrittenTournament => ({
   country: settled.country.code,
   region: settled.region?.code,
   subtitle: settled.subtitle?.markdown,
-  handicap: settled.handicap,
-  drawsAllowed: settled.drawsAllowed,
   levelTestsDrawn: settled.levelTestsDrawn,
-  worldRankings: settled.worldRankings,
   national: settled.national,
   international: settled.international,
   address: settled.address.toString(),

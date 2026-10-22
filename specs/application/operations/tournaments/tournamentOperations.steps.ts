@@ -188,19 +188,6 @@ Given(
   },
 );
 
-// Left to the tournament to decide it does not count towards the world
-// rankings, as one allowing drawn games cannot (create.feature).
-Given(
-  "{string} has created the tournament {string} allowing drawn games",
-  async function (this: SpecWorld, address: string, name: string) {
-    await createdBefore(
-      this,
-      address,
-      aTournament(name, { drawsAllowed: true }),
-    );
-  },
-);
-
 // What `as` is, said again with `changed`, since an update says everything the
 // tournament is, and one without its subtitle would take it away.
 const requestFor = (
@@ -215,10 +202,7 @@ const requestFor = (
   country: as.country.code,
   region: as.region?.code,
   ...(as.subtitle === undefined ? {} : { subtitle: as.subtitle.markdown }),
-  handicap: as.handicap,
-  drawsAllowed: as.drawsAllowed,
   levelTestsDrawn: as.levelTestsDrawn,
-  worldRankings: as.worldRankings,
   national: as.national,
   international: as.international,
   ...changed,
@@ -462,6 +446,7 @@ Given(
           domainScenarioOf(this).competition.bestOf ?? 1,
           domainScenarioOf(this).competition.rounds ?? 1,
           momentOf(this),
+          domainScenarioOf(this).competition.rules,
         ),
       ),
     );
@@ -478,7 +463,14 @@ Given(
   ) {
     await doneTo(this, address, name, (account, tournament) =>
       Promise.resolve(
-        new AddSwiss(account, tournament.value, swiss, 1, momentOf(this)),
+        new AddSwiss(
+          account,
+          tournament.value,
+          swiss,
+          1,
+          momentOf(this),
+          domainScenarioOf(this).competition.rules,
+        ),
       ),
     );
   },
@@ -506,6 +498,7 @@ Given(
             (_, round) => domainScenarioOf(this).drawRounds[round] ?? 1,
           ),
           momentOf(this),
+          domainScenarioOf(this).competition.rules,
         ),
       ),
     );

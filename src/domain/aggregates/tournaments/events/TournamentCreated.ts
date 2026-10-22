@@ -22,12 +22,9 @@ export interface WrittenTournament {
   readonly region: string | undefined;
   // Nothing when there is no subtitle, which JSON leaves out.
   readonly subtitle: string | undefined;
-  readonly handicap: boolean;
-  readonly drawsAllowed: boolean;
   // Whether a test level on matches is drawn rather than decided by net games
   // and hoops, which only a tournament played by teams can say.
   readonly levelTestsDrawn: boolean;
-  readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
   // Where the tournament is found from then on, which the tournament decided
@@ -54,10 +51,7 @@ export class TournamentCreated
   readonly country: string;
   readonly region: string | undefined;
   readonly subtitle: string | undefined;
-  readonly handicap: boolean;
-  readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
-  readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
   readonly address: string;
@@ -78,10 +72,7 @@ export class TournamentCreated
     this.country = written.country;
     this.region = written.region;
     this.subtitle = written.subtitle;
-    this.handicap = written.handicap;
-    this.drawsAllowed = written.drawsAllowed;
     this.levelTestsDrawn = written.levelTestsDrawn;
-    this.worldRankings = written.worldRankings;
     this.national = written.national;
     this.international = written.international;
     this.address = written.address;

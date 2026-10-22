@@ -128,6 +128,7 @@ When(
         },
         byOf(this),
         now(this),
+        scenario.competitionUpdate.rules,
       );
     });
   },

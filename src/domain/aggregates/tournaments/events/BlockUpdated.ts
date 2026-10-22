@@ -13,6 +13,10 @@ export class BlockUpdated extends DomainEvent {
     readonly name: string,
     readonly bestOf: number,
     readonly rounds: number,
+    // How the competition is played and counted (CompetitionRules).
+    readonly handicap: boolean,
+    readonly drawsAllowed: boolean,
+    readonly worldRankings: boolean,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

@@ -1,3 +1,4 @@
+import { hasTieMarked } from "./tiesMarked.js";
 import {
   type ImportingCompetitions,
   importCompetition,
@@ -276,6 +277,7 @@ export class ImportBlocks implements Importer<Block> {
               Rounds.from(rounds ?? 1),
               by,
               at,
+              { drawsAllowed: hasTieMarked(document) },
             );
           },
         };

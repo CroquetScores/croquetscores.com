@@ -8,6 +8,11 @@ Feature: The competitions of a tournament, as its managers and scorers list them
   knockout or a Swiss — its slug, which is where it is found under the
   tournament, and whether it is archived.
 
+  Each is answered with how it is played and counted as well: whether it is
+  played under handicap, allows drawn results, and counts towards the world
+  rankings (`competitionRules.feature`), so that the competition dialog and
+  the test dialog begin on what it is.
+
   Each is answered with its shape too, so that a manager can change it
   starting from what it is (`competition.feature`): what each match of a
   block or a Swiss is the best of, and how many places a knockout's draw has
@@ -111,6 +116,36 @@ Feature: The competitions of a tournament, as its managers and scorers list them
       And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
       Then the second round of the knockout "Main Event" is answered as the best of 3
+
+  Rule: Every competition is answered with how it is played and counted
+
+    Scenario: A competition added without saying is answered as not played under handicap
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as not played under handicap
+
+    Scenario: A competition played under handicap is answered as such
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as played under handicap
+
+    Scenario: A competition allowing drawn results is answered as such
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as allowing drawn results
+
+    Scenario: A competition counting towards the world rankings is answered as such
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as counting towards the world rankings
+
+    Scenario: A competition not counting towards the world rankings is answered as such
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as not counting towards the world rankings
 
   Rule: A test is answered with its teams and its days
 
