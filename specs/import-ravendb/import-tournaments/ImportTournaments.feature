@@ -210,6 +210,10 @@ Feature: Importing the old sites' tournaments
     and some managers on the Pacific coast chose Mexico's, which keeps the same
     hours.
 
+    A tournament called "Oktober GC" is in Norway whatever time zone it was
+    kept in, since it was played there and the time zone it was kept in does
+    not say so. A manager can move it.
+
     Scenario: A tournament is in the country of its time zone
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament's time zone is "New Zealand Standard Time"
@@ -261,6 +265,22 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the region "wa"
+
+    Scenario: A tournament called "Oktober GC" is in Norway
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Oktober GC"
+      And the tournament's time zone is "W. Europe Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "no"
+
+    Scenario: A tournament called "Oktober GC" is in Norway whatever its time zone was
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Oktober GC"
+      And the tournament has no time zone
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "no"
 
     Scenario: A tournament is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"

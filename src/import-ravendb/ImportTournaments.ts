@@ -71,9 +71,19 @@ const formatOf = (type: string): TournamentFormat => {
 export const isPlayedByTeams = (type: string): boolean =>
   formats[type.trim().toLowerCase()]?.isTeamFormat ?? false;
 
+// Tournaments whose name says where they were played better than their time
+// zone does, by name, whatever time zone they were kept in
+// (ImportTournaments.feature).
+const countryOfName: Readonly<Record<string, string>> = {
+  "Oktober GC": "no",
+};
+
 const placeOf = (
   timeZone: string | null,
+  name: string,
 ): { readonly country: Country; readonly region?: string | undefined } => {
+  const named = Countries.thereAre.find(countryOfName[name.trim()] ?? "");
+  if (named !== undefined) return { country: named };
   if (timeZone === null || timeZone.trim() === "") {
     throw new ImportRefused(
       "ImportTournaments.NoTimeZone",
@@ -133,7 +143,7 @@ export class ImportTournaments implements Importer<OldTournament> {
     await this.unitOfWork.inTransaction(async () => {
       const format = formatOf(document.TournamentType);
       const sport = sportOf(document.SportType);
-      const { country, region } = placeOf(document.TimeZoneId);
+      const { country, region } = placeOf(document.TimeZoneId, document.Name);
       // The old sites kept no moment a tournament was created at, so it was
       // created when it started, as far as anything here says.
       const at = dayOf(document.Start);
