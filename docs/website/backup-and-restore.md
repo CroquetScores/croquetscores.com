@@ -164,6 +164,7 @@ The email, and the screen, say which step failed and why.
 
 - **making the dump** — Read the reason: it is pg_dump's own words. Nothing was kept. See below for the ones that are usual
 - **that the website's database is not named** — `WEBSITE_DATABASE_URL` is blank
+- **that the website's database is not reached through the tunnel** — `WEBSITE_DATABASE_URL` is not `127.0.0.1` or `localhost` on port 55432. The usual cause is that it still names the development database on this computer (`localhost:5432`), which the backup would otherwise have dumped every night and called a success. Nothing was made
 - **that the folder is not named** — `DATABASE_BACKUP_FOLDER` is blank
 - **that the folder is not there** — The folder named does not exist, or its disk is not plugged in. Nothing was made
 

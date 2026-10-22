@@ -327,6 +327,81 @@ Feature: Backing up the website's events and accounts' keys to a file
       When the backup is run with "--all"
       Then pg_dump was not run
 
+  Rule: The website's database is reached through the tunnel
+
+    The website's database listens on the server only, and this computer
+    reaches it through an SSH tunnel on its own port 55432
+    (`backup-and-restore.md`). The address is a setting in a file that is
+    also used for development, where it is easily left pointing at a
+    database on this computer. A backup of that would run every night, send
+    a success each time, and be of nothing worth keeping, so any other
+    address is refused before anything is dumped.
+
+    Scenario: A database on this computer's own Postgres is refused
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      When the backup is run
+      Then the backup exits with failure
+
+    Scenario: A database on another computer is refused
+      Given the website's database is at "postgres://backup:secret-word@website.example:5432/croquetscores"
+      When the backup is run
+      Then the backup exits with failure
+
+    Scenario: A database that is refused tells the administrator
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: A database that is refused is not dumped
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      When the backup is run
+      Then pg_dump was not run
+
+    Scenario: A database that is refused writes nothing
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      When the backup is run
+      Then the folder has 0 files
+
+    Scenario: An address that is not an address is refused
+      Given the website's database is at "not an address"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: A port beside the tunnel's is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55433/croquetscores"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address with no port is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1/croquetscores"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address that names another host after the question mark is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores?host=website.example"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address that names another host after the question mark is not dumped
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores?host=website.example"
+      When the backup is run
+      Then pg_dump was not run
+
+    Scenario: The tunnel's port by the number address is accepted
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores"
+      When the backup is run
+      Then the backup exits with success
+
+    Scenario: The tunnel's port by the number address of the newer kind is accepted
+      Given the website's database is at "postgres://backup:secret-word@[::1]:55432/croquetscores"
+      When the backup is run
+      Then the backup exits with success
+
+    Scenario: The tunnel's port by the name localhost is accepted
+      Given the website's database is at "postgres://backup:secret-word@localhost:55432/croquetscores"
+      When the backup is run
+      Then the backup exits with success
+
   Rule: What it says on the screen is what the email says
 
     Scenario: The file is said
