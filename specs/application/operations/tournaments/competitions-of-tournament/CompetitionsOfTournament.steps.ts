@@ -114,6 +114,27 @@ Then(
   },
 );
 
+Then(
+  /^the competition "([^"]*)" is answered as (not )?played under handicap$/,
+  function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(competitionCalled(this, name).handicap, not === null);
+  },
+);
+
+Then(
+  /^the competition "([^"]*)" is answered as allowing drawn results$/,
+  function (this: SpecWorld, name: string) {
+    assert.equal(competitionCalled(this, name).drawsAllowed, true);
+  },
+);
+
+Then(
+  /^the competition "([^"]*)" is answered as (not )?counting towards the world rankings$/,
+  function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(competitionCalled(this, name).worldRankings, not === null);
+  },
+);
+
 // Said as the features say a kind, "a Swiss" among them, and answered as the
 // application writes one.
 Then(

@@ -39,6 +39,7 @@ interface Found {
   readonly tournamentAddress: string;
   readonly slug: string;
   readonly part: "manager" | "scorer";
+  readonly worldRankingSport: string | undefined;
 }
 
 type Asked =
@@ -201,6 +202,7 @@ export const ViewCompetition = ({
       {editing === undefined ? null : (
         <CompetitionDialog
           tournament={asked.competition.tournament}
+          ranked={asked.competition.worldRankingSport !== undefined}
           competition={editing}
           kept={() => {
             setKept((count) => count + 1);

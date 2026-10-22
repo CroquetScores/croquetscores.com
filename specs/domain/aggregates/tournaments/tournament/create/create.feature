@@ -3,10 +3,11 @@ Feature: Creating a tournament
   A tournament begins when it is created, on the website it is to be run on.
   Creating it says everything it begins with: its name, when it starts and
   finishes, the format and the sport it is played in, the country and the
-  region of that country it is played in, and any subtitle. It also says whether
-  it is played under handicap rules, whether its results count towards the
-  world rankings, whether it is a national or an international event, and
-  whether drawn games are allowed.
+  region of that country it is played in, and any subtitle. It also says
+  whether it is a national or an international event, and whether a level test
+  is drawn. How its competitions are played and counted, whether with
+  handicaps, with drawn results, and towards the world rankings, is each
+  competition's to say (`competitionRules.feature`).
 
   The tournament's own id is given it by whatever creates it, and names its
   stream. Creating it is its first event. What it is given is refused as each
@@ -32,21 +33,9 @@ Feature: Creating a tournament
   of them be taken, the slug is followed by the tournament id's own
   characters, which nobody else can have.
 
-  Handicap, world ranking, national and international are each said or left
-  unsaid. A tournament created without saying is not played under handicap,
-  and is neither a national event nor an international one. The world
-  rankings are kept for Association Croquet, Golf Croquet and American 6
-  Wicket alone, so a tournament in any of them counts towards them unless it is said not to, it is
-  played under handicap, or it allows drawn games: a handicap result says
-  nothing about who is better, and neither does a drawn one.
-  A tournament in any other sport never counts towards them. Saying one does
-  when it cannot is refused rather than quietly undone, as is saying it is
-  both national and international.
-
-  A game is won by one of its players, on more points or on equal points
-  marked as won (`Game.feature`), so a tournament does not allow drawn games
-  unless it is said to: few do. Where one does, a game on equal points is
-  kept as it was entered, without saying who won.
+  National and international are each said or left unsaid. A tournament created
+  without saying is neither a national event nor an international one. Saying it
+  is both is refused rather than quietly undone.
 
   A test between two teams is won by the team that wins more of its matches.
   One level on matches is decided by net games, then by net hoops, unless the
@@ -389,93 +378,6 @@ Feature: Creating a tournament
       When a tournament is created
       Then the tournament is found at "2026/ac/spring-open"
 
-  Rule: A tournament allows drawn games only when it is said to
-
-    Scenario: A tournament created without saying does not allow drawn games
-      Given nothing is said of drawn games
-      When a tournament is created
-      Then the tournament does not allow drawn games
-
-    Scenario: A tournament said to allow drawn games does
-      Given the tournament is said to allow drawn games
-      When a tournament is created
-      Then the tournament allows drawn games
-
-  Rule: A tournament is played under handicap only when it is said to be
-
-    Scenario: A tournament created without saying is not played under handicap
-      Given nothing is said of handicap
-      When a tournament is created
-      Then the tournament is not played under handicap
-
-    Scenario: A tournament said to be played under handicap is
-      Given the tournament is said to be played under handicap
-      When a tournament is created
-      Then the tournament is played under handicap
-
-  Rule: Only an Association Croquet or Golf Croquet tournament not under handicap and not allowing drawn games counts towards the world rankings
-
-    Scenario Outline: A tournament in a sport with world rankings counts towards them unless it is said not to
-      Given the sport "<sport>"
-      And nothing is said of the world rankings
-      When a tournament is created
-      Then the tournament counts towards the world rankings
-
-      Examples:
-        | sport |
-        | ac    |
-        | gc    |
-
-    Scenario: A tournament said not to count towards the world rankings does not
-      Given the sport "ac"
-      And the tournament is said not to count towards the world rankings
-      When a tournament is created
-      Then the tournament does not count towards the world rankings
-
-    Scenario: A handicap tournament created without saying does not count towards the world rankings
-      Given the sport "ac"
-      And the tournament is said to be played under handicap
-      And nothing is said of the world rankings
-      When a tournament is created
-      Then the tournament does not count towards the world rankings
-
-    Scenario: A tournament allowing drawn games created without saying does not count towards the world rankings
-      Given the sport "ac"
-      And the tournament is said to allow drawn games
-      And nothing is said of the world rankings
-      When a tournament is created
-      Then the tournament does not count towards the world rankings
-
-    Scenario: A tournament allowing drawn games said to count towards the world rankings is refused
-      Given the sport "ac"
-      And the tournament is said to allow drawn games
-      And the tournament is said to count towards the world rankings
-      When a tournament is created
-      Then it is refused with "Tournament.DrawsInWorldRankings"
-
-    Scenario: A handicap tournament said to count towards the world rankings is refused
-      Given the sport "ac"
-      And the tournament is said to be played under handicap
-      And the tournament is said to count towards the world rankings
-      When a tournament is created
-      Then it is refused with "Tournament.HandicapInWorldRankings"
-
-    Scenario Outline: A tournament in a sport without world rankings created without saying does not count towards them
-      Given the sport "<sport>"
-      And nothing is said of the world rankings
-      When a tournament is created
-      Then the tournament does not count towards the world rankings
-
-      Examples:
-        | sport |
-        | rc    |
-
-    Scenario: A tournament in a sport without world rankings said to count towards them is refused
-      Given the sport "rc"
-      And the tournament is said to count towards the world rankings
-      When a tournament is created
-      Then it is refused with "Tournament.NoWorldRankings"
-
   Rule: A test level on matches is drawn only when a tournament played by teams says so
 
     Scenario: A tournament played by teams created without saying decides a level test on net games and hoops
@@ -582,11 +484,6 @@ Feature: Creating a tournament
       Given a stream where a tournament was created on the website "gateballscores.com"
       When the tournament is rebuilt from the stream
       Then the tournament is on the website "gateballscores.com"
-
-    Scenario: A tournament rebuilt from its creation counts towards the world rankings as it was created to
-      Given a stream where a tournament was created not counting towards the world rankings
-      When the tournament is rebuilt from the stream
-      Then the tournament does not count towards the world rankings
 
     Scenario: A tournament rebuilt from its creation is not archived
       Given a stream where a tournament was created as "Spring Open"

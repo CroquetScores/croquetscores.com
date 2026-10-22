@@ -8,7 +8,6 @@ import type { SpecWorld } from "../../../../../support/world.js";
 import {
   assertFirstRecorded,
   byOf,
-  createdAs,
   detailsOf,
   now,
   scenarioOf,
@@ -84,28 +83,6 @@ Given(
 );
 
 // Each is said once and left unsaid otherwise, and unsaid is what these say.
-Given("nothing is said of handicap", function (this: SpecWorld) {
-  delete scenarioOf(this).creating.handicap;
-});
-
-Given(
-  "the tournament is said to be played under handicap",
-  function (this: SpecWorld) {
-    scenarioOf(this).creating.handicap = true;
-  },
-);
-
-Given("nothing is said of drawn games", function (this: SpecWorld) {
-  delete scenarioOf(this).creating.drawsAllowed;
-});
-
-Given(
-  "the tournament is said to allow drawn games",
-  function (this: SpecWorld) {
-    scenarioOf(this).creating.drawsAllowed = true;
-  },
-);
-
 Given("nothing is said of level tests", function (this: SpecWorld) {
   delete scenarioOf(this).creating.levelTestsDrawn;
 });
@@ -114,24 +91,6 @@ Given(
   /^the tournament is said (not )?to draw a level test$/,
   function (this: SpecWorld, not: string | null) {
     scenarioOf(this).creating.levelTestsDrawn = not === null;
-  },
-);
-
-Given("nothing is said of the world rankings", function (this: SpecWorld) {
-  delete scenarioOf(this).creating.worldRankings;
-});
-
-Given(
-  "the tournament is said to count towards the world rankings",
-  function (this: SpecWorld) {
-    scenarioOf(this).creating.worldRankings = true;
-  },
-);
-
-Given(
-  "the tournament is said not to count towards the world rankings",
-  function (this: SpecWorld) {
-    scenarioOf(this).creating.worldRankings = false;
   },
 );
 
@@ -156,13 +115,6 @@ Given("the tournament is said to be national", function (this: SpecWorld) {
 Given("the tournament is said to be international", function (this: SpecWorld) {
   scenarioOf(this).creating.international = true;
 });
-
-Given(
-  "a stream where a tournament was created not counting towards the world rankings",
-  function (this: SpecWorld) {
-    createdAs(this, { worldRankings: false });
-  },
-);
 
 // Creating it ----------------------------------------------------------------
 
@@ -245,24 +197,6 @@ Then("the tournament has no players", function (this: SpecWorld) {
 Then("the tournament has no competitions", function (this: SpecWorld) {
   assert.deepEqual(tournamentOf(this).competitions, []);
 });
-
-Then("the tournament is not played under handicap", function (this: SpecWorld) {
-  assert.equal(tournamentOf(this).handicap, false);
-});
-
-Then(
-  "the tournament counts towards the world rankings",
-  function (this: SpecWorld) {
-    assert.equal(tournamentOf(this).worldRankings, true);
-  },
-);
-
-Then(
-  "the tournament does not count towards the world rankings",
-  function (this: SpecWorld) {
-    assert.equal(tournamentOf(this).worldRankings, false);
-  },
-);
 
 Then("the tournament is a national event", function (this: SpecWorld) {
   assert.equal(tournamentOf(this).national, true);

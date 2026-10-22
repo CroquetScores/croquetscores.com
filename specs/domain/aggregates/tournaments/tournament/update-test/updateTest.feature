@@ -381,3 +381,19 @@ Feature: Changing a test
       And the update has the test's second team be "Scotland"
       When the test "AUS v ENG" is updated
       Then it is refused with "Tournament.Archived"
+
+  Rule: Updating a test says how it is played and counted again
+
+    Scenario: A test updated to allow drawn results does
+      Given the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      And the update allows drawn results in the competition
+      When the test "AUS v ENG" is updated
+      Then the tournament's competition "AUS v ENG" allows drawn results
+
+    Scenario: A test updated saying nothing of them keeps them
+      Given the tournament is rebuilt from the stream
+      And the test "AUS v ENG" has no games
+      And the update has the test's second team be "Scotland"
+      When the test "AUS v ENG" is updated
+      Then the tournament's competition "AUS v SCO" counts towards the world rankings

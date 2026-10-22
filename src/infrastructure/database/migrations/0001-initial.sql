@@ -218,10 +218,9 @@ create table tournaments_by_address (
 -- tournament is one row to change. The website is kept as it was created,
 -- since a tournament keeps the one it was created on.
 --
--- Whether a tournament counts towards the world rankings is kept for a world
--- ranking officer's list, which is every tournament that does of the sports
--- whose players it looks after, and not every tournament of them. One counts
--- unless it is said not to (create.feature).
+-- A world ranking officer's list is every tournament of the sports whose
+-- players it looks after. Whether a tournament counts towards the world
+-- rankings is not kept here, since each of its competitions says for itself.
 create table tournaments_by_account_details (
     tournament_id                 text    primary key,
     website                       text    not null,
@@ -229,8 +228,7 @@ create table tournaments_by_account_details (
     starts                        date    not null,
     finishes                      date    not null,
     address                       text    not null,
-    archived                      boolean not null default false,
-    counts_towards_world_rankings boolean not null default true
+    archived                      boolean not null default false
 );
 
 -- Each account's part in a tournament: one row an account, since an account

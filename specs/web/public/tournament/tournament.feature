@@ -225,9 +225,10 @@ Feature: A tournament's page lists its games, the most recent first
   Rule: A drawn game says the two drew
 
     Scenario: A drawn game says "drew with"
-      Given "organiser@example.com" has created the tournament "Autumn Open" allowing drawn games
+      Given "organiser@example.com" has created the tournament "Autumn Open"
       And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
       And "organiser@example.com" has added the player "Alex Another" to "Autumn Open"
+      And the competition is to allow drawn results
       And "organiser@example.com" has added the block "Block A" to "Autumn Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Autumn Open"

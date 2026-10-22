@@ -11,6 +11,10 @@ export class SwissUpdated extends DomainEvent {
     readonly competitionId: string,
     readonly name: string,
     readonly bestOf: number,
+    // How the competition is played and counted (CompetitionRules).
+    readonly handicap: boolean,
+    readonly drawsAllowed: boolean,
+    readonly worldRankings: boolean,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

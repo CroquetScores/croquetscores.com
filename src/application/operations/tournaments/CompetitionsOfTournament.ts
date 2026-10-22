@@ -10,6 +10,10 @@ export type ListedCompetition = {
   /** Where it is found under the tournament. */
   readonly slug: string;
   readonly archived: boolean;
+  /** How it is played and counted. */
+  readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
+  readonly worldRankings: boolean;
 } & (
   | {
       readonly kind: "block";

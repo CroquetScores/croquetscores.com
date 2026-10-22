@@ -125,6 +125,41 @@ Then(
   },
 );
 
+// How the competition is played and counted, which each says for itself.
+Then(
+  /^the competition kept for "(.*)" on "(.*)" (allows|does not allow) drawn results$/,
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    allows: string,
+  ) {
+    const { inTournament } = await competitionKeptFor(this, id, website);
+    assert.equal(inTournament.rules.drawsAllowed, allows === "allows");
+  },
+);
+
+Then(
+  /^the competition kept for "(.*)" on "(.*)" (is|is not) played under handicap$/,
+  async function (this: SpecWorld, id: string, website: string, is: string) {
+    const { inTournament } = await competitionKeptFor(this, id, website);
+    assert.equal(inTournament.rules.handicap, is === "is");
+  },
+);
+
+Then(
+  /^the competition kept for "(.*)" on "(.*)" (counts|does not count) towards the world rankings$/,
+  async function (
+    this: SpecWorld,
+    id: string,
+    website: string,
+    counts: string,
+  ) {
+    const { inTournament } = await competitionKeptFor(this, id, website);
+    assert.equal(inTournament.rules.worldRankings, counts === "counts");
+  },
+);
+
 Then(
   /^the competition kept for "(.*)" on "(.*)" has (\d+) players?$/,
   async function (this: SpecWorld, id: string, website: string, count: string) {

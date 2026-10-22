@@ -91,10 +91,7 @@ export const changeTournament = async (
         ...(as.subtitle === undefined
           ? {}
           : { subtitle: as.subtitle.markdown }),
-        handicap: as.handicap,
-        drawsAllowed: as.drawsAllowed,
         levelTestsDrawn: as.levelTestsDrawn,
-        worldRankings: as.worldRankings,
         national: as.national,
         international: as.international,
         ...changed,

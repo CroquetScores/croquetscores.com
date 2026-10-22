@@ -262,31 +262,6 @@ yesOrNo(
   undefined,
 );
 yesOrNo(
-  "the tournament kept for {string} on {string} allows drawn games",
-  (t) => t.drawsAllowed,
-  true,
-);
-yesOrNo(
-  "the tournament kept for {string} on {string} does not allow drawn games",
-  (t) => t.drawsAllowed,
-  false,
-);
-yesOrNo(
-  "the tournament kept for {string} on {string} is not played under handicap",
-  (t) => t.handicap,
-  false,
-);
-yesOrNo(
-  "the tournament kept for {string} on {string} does not count towards the world rankings",
-  (t) => t.worldRankings,
-  false,
-);
-yesOrNo(
-  "the tournament kept for {string} on {string} counts towards the world rankings",
-  (t) => t.worldRankings,
-  true,
-);
-yesOrNo(
   "the tournament kept for {string} on {string} is not a national event",
   (t) => t.national,
   false,

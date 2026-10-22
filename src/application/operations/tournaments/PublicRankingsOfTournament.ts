@@ -35,10 +35,11 @@ export interface CompetitionOfRanking {
 
 /**
  * Why a tournament has no rankings, the first that applies: its sport is not
- * ranked, it is played under handicap, it allows drawn games, or its manager
- * has said it is not to count.
+ * ranked, or none of its competitions counts towards them, whether because its
+ * manager has said so or because each is played under handicap or allows drawn
+ * games.
  */
-export type WhyNoRankings = "sport" | "handicap" | "drawnGames" | "notCounted";
+export type WhyNoRankings = "sport" | "notCounted";
 
 /** A tournament's rankings: what is sent, or why there is nothing to send. */
 export interface RankingsToRead {

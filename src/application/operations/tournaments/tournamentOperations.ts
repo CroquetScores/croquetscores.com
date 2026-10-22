@@ -97,10 +97,7 @@ export interface TournamentRequest {
   readonly country: string;
   readonly region?: string | undefined;
   readonly subtitle?: string | undefined;
-  readonly handicap?: boolean | undefined;
-  readonly drawsAllowed?: boolean | undefined;
   readonly levelTestsDrawn?: boolean | undefined;
-  readonly worldRankings?: boolean | undefined;
   readonly national?: boolean | undefined;
   readonly international?: boolean | undefined;
 }
@@ -309,10 +306,7 @@ export const detailsFrom = (request: TournamentRequest): TournamentDetails => {
       request.subtitle === undefined
         ? undefined
         : TournamentSubtitle.from(request.subtitle),
-    handicap: request.handicap,
-    drawsAllowed: request.drawsAllowed,
     levelTestsDrawn: request.levelTestsDrawn,
-    worldRankings: request.worldRankings,
     national: request.national,
     international: request.international,
   };

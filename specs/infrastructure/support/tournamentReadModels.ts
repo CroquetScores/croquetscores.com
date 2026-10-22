@@ -222,13 +222,6 @@ Given(
 );
 
 Given(
-  "{string} to not count towards the world rankings",
-  function (this: SpecWorld, name: string) {
-    toBeChanged(this, name, { worldRankings: false });
-  },
-);
-
-Given(
   "{string} to be for the sport {string}",
   function (this: SpecWorld, name: string, sport: string) {
     toBeChanged(this, name, { sport });
@@ -292,10 +285,7 @@ export const update = (
       sport: tournament.sport.code,
       country: tournament.country.code,
       region: tournament.region?.code,
-      handicap: tournament.handicap,
-      drawsAllowed: tournament.drawsAllowed,
       levelTestsDrawn: tournament.levelTestsDrawn,
-      worldRankings: tournament.worldRankings,
       national: tournament.national,
       international: tournament.international,
       ...changed,
@@ -323,20 +313,6 @@ Given(
     await updated(this, name, { name: renamed });
     const { byName } = scenarioOf(this);
     byName.set(renamed, tournamentNamed(this, name));
-  },
-);
-
-Given(
-  "{string} is updated to count towards the world rankings",
-  async function (this: SpecWorld, name: string) {
-    await updated(this, name, { worldRankings: true });
-  },
-);
-
-Given(
-  "{string} is updated not to count towards the world rankings",
-  async function (this: SpecWorld, name: string) {
-    await updated(this, name, { worldRankings: false });
   },
 );
 

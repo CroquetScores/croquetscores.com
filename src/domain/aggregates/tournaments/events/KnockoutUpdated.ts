@@ -16,6 +16,10 @@ export class KnockoutUpdated extends DomainEvent {
     readonly name: string,
     readonly places: number,
     rounds: readonly number[],
+    // How the competition is played and counted (CompetitionRules).
+    readonly handicap: boolean,
+    readonly drawsAllowed: boolean,
+    readonly worldRankings: boolean,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

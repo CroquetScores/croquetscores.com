@@ -354,6 +354,50 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Cancel" is pressed
       Then "Add Test" has the focus
 
+  Rule: A test asks how it is played and counted
+
+    A test is asked the three that every competition is (`competition.feature`):
+    "Played with handicaps", "Allows drawn results" and "Counts toward world
+    rankings", the last only where it can be counted.
+
+    Scenario Outline: The dialog asks for each
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog asks for "<field>"
+
+      Examples:
+        | field                        |
+        | Played with handicaps        |
+        | Allows drawn results         |
+        | Counts toward world rankings |
+
+    Scenario: A new test is not played with handicaps to begin with
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then "Played with handicaps" is not ticked
+
+    Scenario: A test allowing drawn results is not asked about the world rankings
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the reader ticks "Allows drawn results"
+      Then the test dialog does not ask for "Counts toward world rankings"
+
+    Scenario: A test added allowing drawn results is kept so
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      And the team "Australia" is chosen as "Team A"
+      And the team "England" is chosen as "Team B"
+      And the reader ticks "Allows drawn results"
+      When "Add" is pressed
+      Then the competition "AUS v ENG" of "Spring Tests" allows drawn results
+
+    Scenario: A test changed begins as it is played
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then "Played with handicaps" is ticked
+
   Rule: Add adds the test as it was asked for
 
     Scenario: The test added is one of the tournament's tests

@@ -28,6 +28,7 @@ When("the Swiss {string} is added", function (this: SpecWorld, name: string) {
       BestOf.from(scenarioOf(this).competition.bestOf ?? 1),
       byOf(this),
       now(this),
+      scenarioOf(this).competition.rules,
     ),
   );
 });

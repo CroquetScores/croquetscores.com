@@ -141,8 +141,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
       Then "Name" is empty
 
     Scenario: A tournament of another sport asks for no world ranking name
-      Given the tournament "Spring Tests" does not count towards the world rankings
-      And the tournament "Spring Tests" is for the sport "rc"
+      Given the tournament "Spring Tests" is for the sport "rc"
       And the page of the team "Australia" in "Spring Tests" is open
       When "Add Player" is pressed
       Then the team player dialog does not ask for "World Ranking Player Name"

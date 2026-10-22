@@ -3,10 +3,10 @@ Feature: Changing what a tournament is
   Everything a tournament was created with can be changed afterwards except
   its id and the website it is run on (`create.feature`). Updating says all of
   it again: the name, when it starts and finishes, the format, the sport, the
-  country, the region, the subtitle, and whether it is played under handicap,
-  counts towards the world rankings, is a national or an international event,
-  allows drawn games, and draws a test level on matches. What is asked of those together when a tournament is created is
-  asked again when it is updated, of the website it was created on.
+  country, the region, the subtitle, whether it is a national or an international
+  event, and whether it draws a test level on matches. What is asked of those
+  together when a tournament is created is asked again when it is updated, of
+  the website it was created on.
 
   A tournament keeps its address when its name is corrected, so that a link
   somebody has already sent still finds it where it was. Its address changes
@@ -98,27 +98,6 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then the tournament's subtitle is "Lunch is at noon."
 
-    Scenario: An updated tournament is played under handicap when it was updated to be
-      Given a stream where a tournament was created not played under handicap
-      And the tournament is rebuilt from the stream
-      And the update plays it under handicap
-      When the tournament is updated
-      Then the tournament is played under handicap
-
-    Scenario: An updated tournament allows drawn games when it was updated to
-      Given a stream where a tournament was created not allowing drawn games
-      And the tournament is rebuilt from the stream
-      And the update allows drawn games
-      When the tournament is updated
-      Then the tournament allows drawn games
-
-    Scenario: An updated tournament no longer allows drawn games when it was updated not to
-      Given a stream where a tournament was created allowing drawn games
-      And the tournament is rebuilt from the stream
-      And the update does not allow drawn games
-      When the tournament is updated
-      Then the tournament does not allow drawn games
-
     Scenario: An updated tournament is on the website it was created on
       Given a stream where a tournament was created on the website "gateballscores.com"
       And the tournament is rebuilt from the stream
@@ -191,30 +170,6 @@ Feature: Changing what a tournament is
       And the update puts it in the region "can"
       When the tournament is updated
       Then it is refused with "Tournament.RegionNotInCountry"
-
-    Scenario: Updating a tournament in world rankings to be played under handicap is refused
-      Given a stream where a tournament was created in the sport "ac"
-      And it was created counting towards the world rankings
-      And the tournament is rebuilt from the stream
-      And the update plays it under handicap
-      When the tournament is updated
-      Then it is refused with "Tournament.HandicapInWorldRankings"
-
-    Scenario: Updating a tournament in world rankings to allow drawn games is refused
-      Given a stream where a tournament was created in the sport "ac"
-      And it was created counting towards the world rankings
-      And the tournament is rebuilt from the stream
-      And the update allows drawn games
-      When the tournament is updated
-      Then it is refused with "Tournament.DrawsInWorldRankings"
-
-    Scenario: Updating to a sport without world rankings while counting towards them is refused
-      Given a stream where a tournament was created in the sport "ac"
-      And it was created counting towards the world rankings
-      And the tournament is rebuilt from the stream
-      And the update plays it in the sport "rc"
-      When the tournament is updated
-      Then it is refused with "Tournament.NoWorldRankings"
 
     Scenario: Updating to be both national and international is refused
       Given a stream where a tournament was created as a national event

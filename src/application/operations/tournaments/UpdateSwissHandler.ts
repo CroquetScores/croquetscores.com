@@ -38,6 +38,7 @@ export class UpdateSwissHandler extends CommandHandler<UpdateSwiss, void> {
       BestOf.from(command.bestOf),
       by,
       command.requestedAt,
+      command.rules,
     );
     await this.tournaments.save(tournament);
   }

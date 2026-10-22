@@ -42,30 +42,8 @@ When(
   },
 );
 
-// What the tournament is before the page is opened. A tournament played under
-// handicap or allowing drawn games does not count towards the world rankings,
-// and one that is national is not international, since the tournament refuses
-// any of those (create.feature).
-
-Given(
-  "the tournament {string} is played under handicap",
-  async function (this: SpecWorld, name: string) {
-    await changeTournament(this, name, {
-      handicap: true,
-      worldRankings: false,
-    });
-  },
-);
-
-Given(
-  "the tournament {string} allows drawn games",
-  async function (this: SpecWorld, name: string) {
-    await changeTournament(this, name, {
-      drawsAllowed: true,
-      worldRankings: false,
-    });
-  },
-);
+// What the tournament is before the page is opened. One that is national is
+// not international, since the tournament refuses both (create.feature).
 
 Given(
   "the tournament {string} is in no region",
@@ -90,13 +68,6 @@ Given(
       national: true,
       international: false,
     });
-  },
-);
-
-Given(
-  "the tournament {string} does not count towards the world rankings",
-  async function (this: SpecWorld, name: string) {
-    await changeTournament(this, name, { worldRankings: false });
   },
 );
 

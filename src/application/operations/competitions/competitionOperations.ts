@@ -108,11 +108,11 @@ export const competitionInUse = (
 export const toldOf = (tournament: Tournament, id: CompetitionId): Told => {
   const found = competitionFound(tournament, id);
   if (found.shape.kind !== "test") {
-    return { shape: found.shape, drawsAllowed: tournament.drawsAllowed };
+    return { shape: found.shape, drawsAllowed: found.rules.drawsAllowed };
   }
   return {
     shape: found.shape,
-    drawsAllowed: tournament.drawsAllowed,
+    drawsAllowed: found.rules.drawsAllowed,
     teamPlayers: tournament.teams.flatMap((team) =>
       team.players.map((player) => ({
         id: player.id,

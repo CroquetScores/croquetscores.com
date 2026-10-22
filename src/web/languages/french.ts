@@ -459,10 +459,10 @@ export const french: Language = {
     "admin.tournament.country": "Pays",
     "admin.tournament.region": "Région",
     "admin.tournament.subtitle": "Sous-titre",
-    "admin.tournament.handicap": "Joué avec handicap",
-    "admin.tournament.drawsAllowed": "Matchs nuls autorisés",
+    "admin.rules.handicap": "Joué avec handicap",
+    "admin.rules.drawsAllowed": "Matchs nuls autorisés",
     "admin.tournament.levelTestsDrawn": "Les tests à égalité sont nuls",
-    "admin.tournament.worldRankings": "Compte pour le classement mondial",
+    "admin.rules.worldRankings": "Compte pour le classement mondial",
     "admin.tournament.national": "Épreuve de niveau national",
     "admin.tournament.international": "Épreuve de niveau international",
     "admin.tournament.otherwise": "Cela ne peut pas être accepté en l’état.",
@@ -492,12 +492,8 @@ export const french: Language = {
     "rankings.notAvailable": "Les classements ne sont pas disponibles",
     "rankings.notAvailable.sport":
       "Le sport de ce tournoi n’a pas de classement mondial ; il n’y a donc aucun classement à envoyer.",
-    "rankings.notAvailable.handicap":
-      "Ce tournoi se joue avec handicap ; il ne compte donc pas pour le classement mondial.",
-    "rankings.notAvailable.drawnGames":
-      "Ce tournoi autorise les parties nulles ; il ne compte donc pas pour le classement mondial.",
     "rankings.notAvailable.notCounted":
-      "L’organisateur de ce tournoi a indiqué qu’il ne compte pas pour le classement mondial.",
+      "Aucune des compétitions de ce tournoi ne compte pour le classement mondial.",
     "admin.view.otherwise": "Ce tournoi ne peut pas être géré d’ici.",
     "admin.competitionView.tabs": "Compétition",
     "admin.competitionView.players": "Joueurs",

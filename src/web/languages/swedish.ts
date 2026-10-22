@@ -454,10 +454,10 @@ export const swedish: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Region",
     "admin.tournament.subtitle": "Underrubrik",
-    "admin.tournament.handicap": "Spelas med handikapp",
-    "admin.tournament.drawsAllowed": "Tillåter oavgjorda resultat",
+    "admin.rules.handicap": "Spelas med handikapp",
+    "admin.rules.drawsAllowed": "Tillåter oavgjorda resultat",
     "admin.tournament.levelTestsDrawn": "Lika testmatcher är oavgjorda",
-    "admin.tournament.worldRankings": "Räknas med i världsrankingen",
+    "admin.rules.worldRankings": "Räknas med i världsrankingen",
     "admin.tournament.national": "Tävling på nationell nivå",
     "admin.tournament.international": "Tävling på internationell nivå",
     "admin.tournament.otherwise": "Det här kan inte godtas som det är.",
@@ -487,12 +487,8 @@ export const swedish: Language = {
     "rankings.notAvailable": "Rankingar är inte tillgängliga",
     "rankings.notAvailable.sport":
       "Turneringens sport har ingen världsranking, så det finns inga rankingar att skicka.",
-    "rankings.notAvailable.handicap":
-      "Den här turneringen spelas med handicap och räknas därför inte med i världsrankingen.",
-    "rankings.notAvailable.drawnGames":
-      "Den här turneringen tillåter oavgjorda matcher och räknas därför inte med i världsrankingen.",
     "rankings.notAvailable.notCounted":
-      "Turneringens arrangör har angett att den inte räknas med i världsrankingen.",
+      "Ingen av turneringens tävlingar räknas med i världsrankingen.",
     "admin.view.otherwise": "Den här turneringen kan inte skötas härifrån.",
     "admin.competitionView.tabs": "Tävling",
     "admin.competitionView.players": "Spelare",

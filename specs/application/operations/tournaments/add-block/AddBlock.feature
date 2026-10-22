@@ -16,6 +16,11 @@ Feature: Adding a block to a tournament
   here of adding a block is said of adding a knockout (`AddKnockout.feature`)
   and a Swiss (`AddSwiss.feature`) too.
 
+  How the block is played and counted is asked as well: whether it is played
+  under handicap, allows drawn results and counts towards the world rankings
+  (`competitionRules.feature`). What the tournament refuses of those
+  together is the tournament's to refuse, and so is said here as it refuses.
+
   A forgotten account adds nothing, and is refused with `Account.Forgotten`.
 
   These scenarios run against Postgres, with the application's event store and
@@ -54,6 +59,33 @@ Feature: Adding a block to a tournament
     Scenario: Adding the block is recorded as done by whoever asked
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
+
+  Rule: How the block is played and counted is kept
+
+    Scenario: A block asked to be played under handicap is
+      Given the competition is to be played under handicap
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" is played under handicap
+
+    Scenario: A block asked to allow drawn results does
+      Given the competition is to allow drawn results
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" allows drawn results
+
+    Scenario: A block asked nothing counts towards the world rankings
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" counts towards the world rankings
+
+    Scenario: A block asked not to count towards the world rankings does not
+      Given the competition is said not to count towards the world rankings
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" does not count towards the world rankings
+
+    Scenario: A block played under handicap asked to count towards the world rankings is refused as the tournament refuses it
+      Given the competition is to be played under handicap
+      And the competition is said to count towards the world rankings
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then it is refused with "Tournament.HandicapInWorldRankings"
 
   Rule: Each value must break none of its own rules
 

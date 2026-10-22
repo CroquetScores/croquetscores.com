@@ -412,8 +412,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
         | gc    |
 
     Scenario Outline: A tournament of another sport asks for none
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And the tournament "Spring Open" is for the sport "<sport>"
+      Given the tournament "Spring Open" is for the sport "<sport>"
       And the page of "Spring Open" is open
       When "Add Player" is pressed
       Then the player dialog does not ask for "World Ranking Player Name"
@@ -446,8 +445,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Then the player "Samantha Someone" of "Spring Open" has the world ranking name "Samantha Someone"
 
     Scenario: A player added in a tournament of another sport has their name as their world ranking name
-      Given the tournament "Spring Open" does not count towards the world rankings
-      And the tournament "Spring Open" is for the sport "rc"
+      Given the tournament "Spring Open" is for the sport "rc"
       And the page of "Spring Open" is open
       And "Add Player" is pressed
       And "Sam Someone" is typed as the "Name"

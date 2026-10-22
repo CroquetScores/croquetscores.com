@@ -25,10 +25,7 @@ export interface ChangingTournament {
   readonly country: string;
   readonly region: string | undefined;
   readonly subtitle: string | undefined;
-  readonly handicap: boolean;
-  readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
-  readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
 }

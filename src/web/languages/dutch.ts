@@ -452,10 +452,10 @@ export const dutch: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Regio",
     "admin.tournament.subtitle": "Ondertitel",
-    "admin.tournament.handicap": "Gespeeld met handicaps",
-    "admin.tournament.drawsAllowed": "Gelijkspel toegestaan",
+    "admin.rules.handicap": "Gespeeld met handicaps",
+    "admin.rules.drawsAllowed": "Gelijkspel toegestaan",
     "admin.tournament.levelTestsDrawn": "Gelijke testmatches zijn gelijkspel",
-    "admin.tournament.worldRankings": "Telt mee voor de wereldranglijst",
+    "admin.rules.worldRankings": "Telt mee voor de wereldranglijst",
     "admin.tournament.national": "Evenement op nationaal niveau",
     "admin.tournament.international": "Evenement op internationaal niveau",
     "admin.tournament.otherwise":
@@ -486,12 +486,8 @@ export const dutch: Language = {
     "rankings.notAvailable": "Ranglijsten zijn niet beschikbaar",
     "rankings.notAvailable.sport":
       "De sport van dit toernooi heeft geen wereldranglijst, dus er zijn geen ranglijsten om te versturen.",
-    "rankings.notAvailable.handicap":
-      "Dit toernooi wordt met handicap gespeeld, dus het telt niet mee voor de wereldranglijst.",
-    "rankings.notAvailable.drawnGames":
-      "Dit toernooi staat gelijkspel toe, dus het telt niet mee voor de wereldranglijst.",
     "rankings.notAvailable.notCounted":
-      "De beheerder van dit toernooi heeft aangegeven dat het niet meetelt voor de wereldranglijst.",
+      "Geen van de competities van dit toernooi telt mee voor de wereldranglijst.",
     "admin.view.otherwise": "Dit toernooi kan van hieruit niet worden beheerd.",
     "admin.competitionView.tabs": "Competitie",
     "admin.competitionView.players": "Spelers",

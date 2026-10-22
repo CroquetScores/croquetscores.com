@@ -15,7 +15,6 @@ import {
   PublicRankingsOfTournament,
   type RankingsToRead,
   type ResultOfRanking,
-  type WhyNoRankings,
 } from "./PublicRankingsOfTournament.js";
 import { tournamentForReaders } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
@@ -52,10 +51,23 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
       starts: tournament.starts.toISOString().slice(0, 10),
       finishes: tournament.finishes.toISOString().slice(0, 10),
     };
-    if (!tournament.worldRankings) {
+    // A competition counts or not for itself, so a tournament has rankings
+    // where its sport does and, unless it has none yet, some competition in use
+    // counts.
+    const inUse = tournament.competitions.filter(
+      ({ reference }) => !reference.archived,
+    );
+    const counted = inUse.filter(({ rules }) => rules.worldRankings);
+    if (!tournament.sport.countsTowardsWorldRankings) {
       return {
         ...answered,
-        rankings: { is: "not available", because: whyNot(tournament) },
+        rankings: { is: "not available", because: "sport" },
+      };
+    }
+    if (inUse.length > 0 && counted.length === 0) {
+      return {
+        ...answered,
+        rankings: { is: "not available", because: "notCounted" },
       };
     }
 
@@ -82,8 +94,8 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
     ]);
 
     const competitions: CompetitionOfRanking[] = [];
-    for (const { reference, shape } of tournament.competitions) {
-      if (reference.archived) continue;
+    for (const { reference, shape, rules } of tournament.competitions) {
+      if (reference.archived || !rules.worldRankings) continue;
       const competition = await competitionOf(this.competitions, reference.id);
       // A competition's player by their name, through the tournament player
       // they were entered as.
@@ -167,18 +179,8 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
       rankings: {
         is: "available",
         competitions,
-        competitionCount: tournament.competitions.filter(
-          ({ reference }) => !reference.archived,
-        ).length,
+        competitionCount: counted.length,
       },
     };
   }
 }
-
-// The first reason that applies, in the order the tournament refuses them in.
-const whyNot = (tournament: Tournament): WhyNoRankings => {
-  if (!tournament.sport.countsTowardsWorldRankings) return "sport";
-  if (tournament.handicap) return "handicap";
-  if (tournament.drawsAllowed) return "drawnGames";
-  return "notCounted";
-};

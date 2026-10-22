@@ -4,6 +4,7 @@ import { Field, type Refusal } from "../Field.js";
 import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
+import { Tick } from "../RulesTicks.js";
 
 // The form a tournament is created with (new.feature) and changed with
 // (edit.feature): one form, so that the two cannot come to ask different
@@ -32,9 +33,6 @@ interface Offered {
   }[];
 }
 
-// The world rankings are kept for these alone (create.feature).
-const withWorldRankings = ["ac", "gc"];
-
 // The field each of the tournament's own refusals is about, since it names a
 // rule of the values together rather than a field. One not here is said above
 // the fields.
@@ -45,9 +43,6 @@ const fieldOfRefusal: Readonly<Record<string, string>> = {
   "Tournament.RegionNotInCountry": "region",
   "Tournament.SportNotOffered": "sport",
   "Tournament.FormatNotOffered": "format",
-  "Tournament.HandicapInWorldRankings": "worldRankings",
-  "Tournament.DrawsInWorldRankings": "worldRankings",
-  "Tournament.NoWorldRankings": "worldRankings",
   "Tournament.NationalAndInternational": "international",
 };
 
@@ -88,29 +83,6 @@ const placed = (
   return { byField, above };
 };
 
-interface TickProps {
-  readonly name: string;
-  readonly label: string;
-  readonly ticked: boolean;
-  readonly tick: (ticked: boolean) => void;
-}
-
-const Tick = ({ name, label, ticked, tick }: TickProps): React.JSX.Element => (
-  <div className="field-tick">
-    <label htmlFor={`field-${name}`}>
-      <input
-        id={`field-${name}`}
-        type="checkbox"
-        checked={ticked}
-        onChange={(event) => {
-          tick(event.target.checked);
-        }}
-      />
-      <span>{label}</span>
-    </label>
-  </div>
-);
-
 /** What the form begins as: a tournament as it is, when one is being changed. */
 export interface Begins {
   readonly name: string;
@@ -122,10 +94,7 @@ export interface Begins {
   /** Nothing where the tournament is in no region. */
   readonly region: string | undefined;
   readonly subtitle: string | undefined;
-  readonly handicap: boolean;
-  readonly drawsAllowed: boolean;
   readonly levelTestsDrawn: boolean;
-  readonly worldRankings: boolean;
   readonly national: boolean;
   readonly international: boolean;
 }
@@ -161,18 +130,10 @@ export const TournamentForm = ({
   const [country, setCountry] = useState(begins?.country ?? "");
   const [region, setRegion] = useState(begins?.region ?? "");
   const [subtitle, setSubtitle] = useState(begins?.subtitle ?? "");
-  const [handicap, setHandicap] = useState(begins?.handicap ?? false);
-  const [drawsAllowed, setDrawsAllowed] = useState(
-    begins?.drawsAllowed ?? false,
-  );
   // Unsaid until the reader ticks or unticks it, when it is whatever the
   // format draws to begin with; a tournament being changed has said already.
   const [levelTestsSaid, setLevelTestsSaid] = useState<boolean | undefined>(
     begins?.levelTestsDrawn,
-  );
-  // Counting unless the reader says it does not, as creating one has it.
-  const [worldRankings, setWorldRankings] = useState(
-    begins?.worldRankings ?? true,
   );
   const [national, setNational] = useState(begins?.national ?? false);
   const [international, setInternational] = useState(
@@ -226,8 +187,6 @@ export const TournamentForm = ({
   // A country that is not divided is its own one region, and there is
   // nothing to ask.
   const asksForRegion = regions.length > 1;
-  const asksAboutWorldRankings =
-    withWorldRankings.includes(sport) && !handicap && !drawsAllowed;
   // Only a tournament played by teams has tests, and saying one that is not
   // draws them is refused (create.feature), so the form does not ask.
   const formatChosen = offered.formats.find(({ code }) => code === format);
@@ -252,13 +211,7 @@ export const TournamentForm = ({
         country,
         region: asksForRegion ? region : (regions[0]?.code ?? ""),
         subtitle,
-        handicap,
-        drawsAllowed,
         ...(asksAboutLevelTests ? { levelTestsDrawn } : {}),
-        // Unsaid where it is not asked, which the tournament decides for
-        // itself: a sport without world rankings, a handicap tournament, or
-        // one allowing drawn games, does not count towards them.
-        ...(asksAboutWorldRankings ? { worldRankings } : {}),
         national,
         international,
       });
@@ -489,32 +442,12 @@ export const TournamentForm = ({
                   />
                 )}
               </Field>
-              <Tick
-                name="handicap"
-                label={say("admin.tournament.handicap")}
-                ticked={handicap}
-                tick={setHandicap}
-              />
-              <Tick
-                name="drawsAllowed"
-                label={say("admin.tournament.drawsAllowed")}
-                ticked={drawsAllowed}
-                tick={setDrawsAllowed}
-              />
               {asksAboutLevelTests ? (
                 <Tick
                   name="levelTestsDrawn"
                   label={say("admin.tournament.levelTestsDrawn")}
                   ticked={levelTestsDrawn}
                   tick={setLevelTestsSaid}
-                />
-              ) : null}
-              {asksAboutWorldRankings ? (
-                <Tick
-                  name="worldRankings"
-                  label={say("admin.tournament.worldRankings")}
-                  ticked={worldRankings}
-                  tick={setWorldRankings}
                 />
               ) : null}
               {/* Never both: a tournament said to be both is refused, so

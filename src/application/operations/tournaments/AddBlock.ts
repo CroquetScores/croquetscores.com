@@ -1,6 +1,7 @@
 import { Command } from "../../common/Command.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
 /**
  * Adding a block to a tournament: its name, what each of its matches is the
@@ -16,6 +17,11 @@ export class AddBlock extends Command<CompetitionId> {
     readonly bestOf: number,
     readonly rounds: number,
     requestedAt: ReadOnlyDate,
+    /**
+     * How it is played and counted, as the dialog sent it, or nothing to leave
+     * that to the tournament: what it was when it is updated.
+     */
+    readonly rules?: CompetitionRulesSaid | undefined,
   ) {
     super(requestedAt);
   }

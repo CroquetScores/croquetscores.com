@@ -1,3 +1,4 @@
+import type { CompetitionRulesSaid } from "../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -49,10 +50,7 @@ export interface Said {
   country?: string;
   region?: string | null;
   subtitle?: string | null;
-  handicap?: boolean;
-  drawsAllowed?: boolean;
   levelTestsDrawn?: boolean;
-  worldRankings?: boolean;
   national?: boolean;
   international?: boolean;
 }
@@ -72,6 +70,8 @@ interface CompetitionSaid {
   name?: string;
   bestOf?: number;
   rounds?: number;
+  // How it is to be played and counted, where the scenario says.
+  rules?: CompetitionRulesSaid;
 }
 
 interface Scenario {
@@ -228,10 +228,7 @@ export const detailsOf = (said: Said): TournamentDetails => {
       said.subtitle === undefined || said.subtitle === null
         ? undefined
         : TournamentSubtitle.from(said.subtitle),
-    handicap: said.handicap,
-    drawsAllowed: said.drawsAllowed,
     levelTestsDrawn: said.levelTestsDrawn,
-    worldRankings: said.worldRankings,
     national: said.national,
     international: said.international,
   };
@@ -268,13 +265,6 @@ const creationOf = (world: SpecWorld, said: Said): DomainEvent => {
 /** That the stream begins by creating a tournament as `said` says. */
 export const createdAs = (world: SpecWorld, said: Said): void => {
   scenarioOf(world).created = said;
-};
-
-/** That the tournament the stream begins with was created as `said` says too. */
-export const createdAlso = (world: SpecWorld, said: Said): void => {
-  const scenario = scenarioOf(world);
-  assert.ok(scenario.created !== undefined, "No stream has been begun.");
-  scenario.created = { ...scenario.created, ...said };
 };
 
 /**
@@ -359,17 +349,16 @@ export const ask = (
 };
 
 /**
- * What `tournament` is, said again with `changed`. What an update says of the
- * world rankings, and of level tests, is what the tournament was created
- * saying of them, and left unsaid when it was created without saying, so that
- * each is decided again by the update as it was by creating it.
+ * What `tournament` is, said again with `changed`. What an update says of
+ * level tests is what the tournament was created saying of them, and left
+ * unsaid when it was created without saying, so that it is decided again by
+ * the update as it was by creating it.
  */
 export const updateOf = (
   world: SpecWorld,
   tournament: Tournament,
   changed: Said,
 ): TournamentDetails => {
-  const worldRankings = scenarioOf(world).created?.worldRankings;
   const levelTestsDrawn = scenarioOf(world).created?.levelTestsDrawn;
   const said: TournamentDetails = {
     name: tournament.name,
@@ -380,12 +369,8 @@ export const updateOf = (
     country: tournament.country,
     region: tournament.region?.code,
     subtitle: tournament.subtitle,
-    handicap: tournament.handicap,
-    drawsAllowed: tournament.drawsAllowed,
     levelTestsDrawn:
       levelTestsDrawn === undefined ? undefined : tournament.levelTestsDrawn,
-    worldRankings:
-      worldRankings === undefined ? undefined : tournament.worldRankings,
     national: tournament.national,
     international: tournament.international,
   };
@@ -410,10 +395,6 @@ export const updateOf = (
     ...(changed.subtitle === undefined || changed.subtitle === null
       ? {}
       : { subtitle: TournamentSubtitle.from(changed.subtitle) }),
-    ...(changed.handicap === undefined ? {} : { handicap: changed.handicap }),
-    ...(changed.drawsAllowed === undefined
-      ? {}
-      : { drawsAllowed: changed.drawsAllowed }),
     ...(changed.levelTestsDrawn === undefined
       ? {}
       : { levelTestsDrawn: changed.levelTestsDrawn }),

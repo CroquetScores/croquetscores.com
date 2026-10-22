@@ -29,19 +29,10 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: [
-            "*.js",
-            "*.ts",
-            "*.mjs",
-            "scripts/*.mjs",
-            ".github/scripts/*.mjs",
-          ],
-          // The scripts and the configuration files are plain JavaScript with
-          // no project of their own, and there are now more of them than the
-          // default of eight allows for.
-          maximumDefaultProjectFileMatchCount_THIS_WILL_SLOW_DOWN_LINTING: 16,
-        },
+        // Only the TypeScript configuration at the root belongs to no project.
+        // The scripts and the other configuration are plain JavaScript, and are
+        // parsed without one (below), so they do not count towards its limit.
+        projectService: { allowDefaultProject: ["*.ts"] },
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -52,6 +43,10 @@ export default tseslint.config(
     files: ["**/*.js", "**/*.mjs"],
     ...tseslint.configs.disableTypeChecked,
     languageOptions: {
+      // Kept from the line above, which this object would otherwise replace:
+      // without it these files are still parsed against the default project,
+      // and each one counts towards its limit.
+      ...tseslint.configs.disableTypeChecked.languageOptions,
       // Named rather than pulled from a globals package: this is the whole list
       // these files use, and a short list that is true beats a long one.
       globals: {

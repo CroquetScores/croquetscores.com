@@ -325,62 +325,13 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" has no subtitle
 
-  Rule: A tournament allows no drawn games, and counts towards the world rankings where its sport does
+  Rule: A tournament is neither national nor international
 
-    The old sites refused a drawn game, so none of their tournaments allowed
-    one. Nor did they say whether a tournament was played under handicap, or
-    was a national or an international event, and nothing is claimed for one
-    that the old site never said.
-
-    They did send a tournament's results to the world rankings, and what they
-    sent was what the site now counts: a tournament of Association Croquet,
-    Golf Croquet or American 6 Wicket (`Sport.feature`). So one of those is
-    brought over counting towards them, and one of any other sport is not. It
-    is ticked only where it can be: one that allows drawn games cannot count
-    (`Tournament.DrawsInWorldRankings`), so a tournament in which the import
-    found a tie marked in text is not (`ImportWholeTournaments.feature`).
-
-    Scenario: A tournament does not allow drawn games
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" does not allow drawn games
-
-    Scenario: A tournament is not played under handicap
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is not played under handicap
-
-    Scenario Outline: A tournament of a ranked sport counts towards the world rankings
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is in the sport "<old sport>"
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" counts towards the world rankings
-
-      Examples:
-        | old sport |
-        | AC        |
-        | ac        |
-        | GC        |
-        | gc        |
-        | A6W       |
-        | a6w       |
-
-    Scenario: A tournament of Ricochet does not count towards the world rankings
-      Given a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament is in the sport "rc"
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" does not count towards the world rankings
-
-    Scenario: A tournament of Gateball does not count towards the world rankings
-      Given a tournament "tournaments/12" on "gateballscores.com"
-      And the tournament is in the sport "GB"
-      And the tournament was created by "users/1"
-      When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "gateballscores.com" does not count towards the world rankings
+    The old sites did not say whether a tournament was a national or an
+    international event, and nothing is claimed for one that the old site never
+    said. How its competitions are played and counted, with handicaps, with
+    drawn results, and towards the world rankings, is each competition's, and
+    is brought over with it (`ImportWholeTournaments.feature`).
 
     Scenario: A tournament is not a national event
       Given a tournament "tournaments/12" on "croquetscores.com"

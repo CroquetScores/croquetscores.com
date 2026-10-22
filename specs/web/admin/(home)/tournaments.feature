@@ -185,18 +185,18 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
 
-  Rule: A world ranking officer's list adds every tournament of a sport with world rankings that counts towards them
+  Rule: A world ranking officer's list adds every tournament of a sport with world rankings
 
     An account that holds the World Ranking Officer role may change the world
     ranking name of any player (`changeWorldRankingName.feature`), and only
     association croquet and golf croquet have players known by name to the
     world rankings (`Sport.feature`). So its list is of the tournaments it
     manages or scores, offering what its part allows, and every tournament of
-    those two sports on the website that counts towards the world rankings
-    besides, each offering its players, which is what the officer is there for.
-    A tournament that does not count has no rankings to look after, so it is
-    listed only where the officer manages or scores it. The years are those
-    any of them is in.
+    those two sports on the website besides, each offering its players, which
+    is what the officer is there for. Whether any of a tournament's
+    competitions counts towards the world rankings is each competition's to
+    say (`competitionRules.feature`), so it is not asked of the list. The years
+    are those any of them is in.
 
     Scenario: A tournament of a sport with world rankings is listed for a world ranking officer
       Given "organiser@example.com" has been given the role "World Ranking Officer"
@@ -239,43 +239,9 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" does not count towards the world rankings
       And the tournament "Autumn Open" is for the sport "rc"
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
-
-    Scenario: A tournament that does not count towards the world rankings is not listed for a world ranking officer with no part in it
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
-      And "other@example.com" has an account, confirmed
-      And "other@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" does not count towards the world rankings
-      When the admin is opened
-      Then the tournament "Autumn Open" is not listed
-
-    Scenario: A tournament that does not count towards the world rankings is listed for a world ranking officer who manages it
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
-      And "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" does not count towards the world rankings
-      When the admin is opened
-      Then the tournament "Spring Open" is listed
-
-    Scenario: A tournament that does not count towards the world rankings is listed for a world ranking officer who scores it
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
-      And "other@example.com" has an account, confirmed
-      And "other@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" does not count towards the world rankings
-      And "other@example.com" has made "organiser@example.com" a scorer of "Autumn Open"
-      When the admin is opened
-      Then the tournament "Autumn Open" is listed
-
-    Scenario: A year of a tournament that does not count towards the world rankings is not offered to a world ranking officer with no part in it
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
-      And "other@example.com" has an account, confirmed
-      And "other@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" starts on "2024-10-03"
-      And the tournament "Autumn Open" does not count towards the world rankings
-      When the admin is opened
-      Then the year 2024 is not offered
 
     Scenario: A year of a tournament of a sport with world rankings is offered to a world ranking officer
       Given "organiser@example.com" has been given the role "World Ranking Officer"

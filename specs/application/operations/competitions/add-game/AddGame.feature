@@ -23,8 +23,8 @@ Feature: Adding a game's score to a competition
   as the winner's
   (`Game.LoserMarked`), and a winner's score that is fewer than the loser's,
   or equal to it with no mark where drawn games are not allowed
-  (`Game.WinnerNotAhead`). Whether drawn games are allowed is the
-  tournament's (`create.feature`), and in a knockout they never are.
+  (`Game.WinnerNotAhead`). Whether drawn results are allowed is the
+  competition's (`competitionRules.feature`), and in a knockout they never are.
 
   The competition keeps its games, and knows nothing of who may add them, or
   of what kind it is, so the application asks the tournament first. A scorer
@@ -128,10 +128,19 @@ Feature: Adding a game's score to a competition
       When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 6w to 6 in "Block A" of "Spring Open"
       Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 6w to 6
 
-    Scenario: A game on equal points with no mark is kept where the tournament allows drawn games
-      Given the tournament "Spring Open" allows drawn games
+    Scenario: A game on equal points with no mark is kept where the competition allows drawn results
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 6 to 6 in "Block B" of "Spring Open"
+      Then "Block B" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 6 to 6
+
+    Scenario: A game on equal points with no mark is refused in a competition that does not allow drawn results though another does
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 6 to 6 in "Block A" of "Spring Open"
-      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 6 to 6
+      Then it is refused with "Game.WinnerNotAhead"
 
     Scenario: A loser's score marked as the winner's is refused as the game refuses it
       When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17w in "Block A" of "Spring Open"

@@ -164,9 +164,13 @@ Feature: Correcting a game's score entered wrongly
         | 17           | 17          | Game.WinnerNotAhead |
         | 26           | 17w         | Game.LoserMarked    |
 
-    Scenario: Corrected scores that would draw a game won are refused where drawn games are allowed
-      Given the tournament "Spring Open" allows drawn games
-      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 17 to 17
+    Scenario: Corrected scores that would draw a game won are refused where drawn results are allowed
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block B" of "Spring Open" to 17 to 17
       Then it is refused with "Game.ResultChanged"
 
     Scenario: An archived score is refused

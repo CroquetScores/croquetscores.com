@@ -1,3 +1,4 @@
+import { hasTieMarked } from "./tiesMarked.js";
 import { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
@@ -181,28 +182,6 @@ const OWN_TOURNAMENT: ReadonlySet<string> = new Set([
   "croquetscores.com/blocks/95636",
 ]);
 
-// A score marked in text as a tie: "2 Tied", "5 Draw", "5=" or "6w tie".
-const TIE = /(^|[^a-z])(?:tied|tie|draw)(?![a-z])|=/i;
-
-// Whether any game of `document` has a score marked in text as a tie.
-const hasTieMarked = (document: object): boolean =>
-  (
-    (
-      document as {
-        Games?: {
-          _Games?: readonly {
-            Winner: { Score: { _Score: string } };
-            Loser: { Score: { _Score: string } };
-          }[];
-        };
-      }
-    ).Games?._Games ?? []
-  ).some((game) =>
-    [game.Winner.Score._Score, game.Loser.Score._Score].some((score) =>
-      TIE.test(score),
-    ),
-  );
-
 // Tournaments that started before this keep what could not be brought over in
 // a Swiss, with a note (ImportWholeTournaments.feature).
 const BEFORE_NOTES = "2026-01-01";
@@ -373,17 +352,15 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     ].map(tried);
     await this.database.recordTournamentRead(website, id);
     // A tie marked in text in any of its competitions, which the site keeps
-    // only where the tournament allows drawn games.
+    // only in a competition that allows drawn games, as each of those is
+    // brought over (ImportBlocks.ts).
     const drawn = named.some(
       ({ document: each }) => !isArchived(each) && hasTieMarked(each),
     );
     try {
       await this.parts.tournament.importDocument({
         ...read,
-        document: {
-          ...heldOverItsTeamMatches(setUp, named),
-          ...(drawn ? { DrawsAllowed: true } : {}),
-        },
+        document: heldOverItsTeamMatches(setUp, named),
       });
     } catch (failure) {
       for (const each of named) {
@@ -403,7 +380,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         document,
         undefined,
         "ImportWholeTournaments.DrawsAllowed",
-        `${document.Name} had scores marked in text as a tie, as "2 Tied", and is brought over allowing drawn games.`,
+        `${document.Name} had scores marked in text as a tie, as "2 Tied", and the competitions with them are brought over allowing drawn games.`,
       );
     }
 

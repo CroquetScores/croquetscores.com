@@ -46,17 +46,20 @@ Feature: A tournament's results, as the world rankings are sent them
   rankings file was always for anybody who knew the address, as the
   tournament's own pages are, and every scenario asks with nobody signed in.
 
-  Only a tournament that counts towards the world rankings has a file, since
-  those are the only ones the rankings are ever sent. A drawn game is
-  therefore never a result: a tournament allowing them does not count
-  (`Tournament.DrawsInWorldRankings`). Neither does one played under
-  handicap, one of a sport with no world rankings, or one its manager has
-  said is not to. Asked for the rankings of one
-  of those, the application does not refuse: it answers the tournament, with
-  no competitions however many games it has, and the reason there are none
-  for the page that says why (`rankings.feature`). The reason is the first
-  that applies of: the sport, handicap, drawn games, its manager's choice,
-  the order the tournament refuses them in.
+  Only a competition that counts towards the world rankings is in the answer,
+  since those are the only results the rankings are ever sent. Each says for
+  itself whether it does (`competitionRules.feature`): a drawn game is
+  therefore never a result, as a competition allowing them does not count
+  (`Tournament.DrawsInWorldRankings`), and neither does one played under
+  handicap, one of a sport with no world rankings, or one its manager has said
+  is not to. Asked for the rankings of a tournament of a sport with none, or
+  none of whose competitions in use counts, the application does not refuse:
+  it answers the tournament, with no competitions however many games it has,
+  and the reason there are none for the page that says why
+  (`rankings.feature`). The reason is the sport where the sport has none, and
+  otherwise that none of its competitions counts. A tournament with no
+  competition yet has none to leave out, so its rankings are available and
+  empty.
 
   An address no tournament of the website has been found at, or an archived
   tournament's, is refused as `PublicRankingsOfTournament.NoSuchTournament`.
@@ -64,8 +67,8 @@ Feature: A tournament's results, as the world rankings are sent them
   answered with where it is found now.
 
   Where a scenario says nothing else, the tournament is for the sport "ac",
-  counts towards the world rankings, starts on 3 October 2026 and finishes on 5 October 2026, and its block "Block
-  A" is the best of 1 with "Sam Someone", "Alex Another" and "Chris Third"
+  starts on 3 October 2026 and finishes on 5 October 2026, and its block "Block
+  A" counts towards the world rankings and is the best of 1 with "Sam Someone", "Alex Another" and "Chris Third"
   entered in it.
 
   These scenarios run against Postgres, with the application's event store and
@@ -297,7 +300,7 @@ Feature: A tournament's results, as the world rankings are sent them
       When the rankings of the tournament at "2026/ac/spring-open" are asked for
       Then the winner of the first result is "Sam Someone"
 
-  Rule: Only a tournament that counts towards the world rankings has a file
+  Rule: Only a competition that counts towards the world rankings is in the answer
 
     Scenario Outline: A tournament of a sport the rankings are sent counts
       Given the tournament is to be for the sport "<sport>"
@@ -311,32 +314,71 @@ Feature: A tournament's results, as the world rankings are sent them
         | gc    |
         | a6w   |
 
-    Scenario: A tournament its manager has said is not to count has none
-      Given the tournament "Spring Open" does not count towards the world rankings
+    Scenario: A tournament with no competition yet has rankings, with nothing in them
+      Given "organiser@example.com" has created the tournament "New Open"
+      When the rankings of the tournament at "2026/ac/new-open" are asked for
+      Then the rankings answered are available
+
+    Scenario: A competition its manager has said is not to count is not answered
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
       When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the first competition of the rankings answered is "Block A"
+      And there is no second competition in the rankings answered
+
+    Scenario: A competition played under handicap is not answered
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then there is no second competition in the rankings answered
+
+    Scenario: The competitions that count are counted for the file
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then 1 competition is counted in the rankings answered
+
+    Scenario: A tournament none of whose competitions counts has none
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has created the tournament "None Open"
+      And "organiser@example.com" has added the block "Block A" to "None Open"
+      When the rankings of the tournament at "2026/ac/none-open" are asked for
       Then the rankings answered are not available
 
-    Scenario: The reason is its manager's choice
-      Given the tournament "Spring Open" does not count towards the world rankings
-      When the rankings of the tournament at "2026/ac/spring-open" are asked for
-      Then the reason the rankings answered are not available is "its manager's choice"
+    Scenario: The reason is that none of its competitions counts
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has created the tournament "None Open"
+      And "organiser@example.com" has added the block "Block A" to "None Open"
+      When the rankings of the tournament at "2026/ac/none-open" are asked for
+      Then the reason the rankings answered are not available is "none of its competitions counts"
 
-    Scenario: A tournament with games and no rankings is answered with no competitions
-      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
-      And the tournament "Spring Open" does not count towards the world rankings
-      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+    Scenario: A tournament of games none of which counts is answered with no competitions
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has created the tournament "Handicap Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Handicap Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Handicap Open"
+      And "organiser@example.com" has added the block "Block A" to "Handicap Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Handicap Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Handicap Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Handicap Open"
+      When the rankings of the tournament at "2026/ac/handicap-open" are asked for
       Then no competition is answered
 
-    Scenario: A tournament played under handicap has none
-      Given "organiser@example.com" has created the tournament "Handicap Open"
-      And the tournament "Handicap Open" is played under handicap
-      When the rankings of the tournament at "2026/ac/handicap-open" are asked for
-      Then the reason the rankings answered are not available is "handicap"
-
-    Scenario: A tournament allowing drawn games has none
-      Given "organiser@example.com" has created the tournament "Draws Open" allowing drawn games
+    Scenario: A tournament whose only competition allows drawn results has none
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has created the tournament "Draws Open"
+      And "organiser@example.com" has added the block "Block A" to "Draws Open"
       When the rankings of the tournament at "2026/ac/draws-open" are asked for
-      Then the reason the rankings answered are not available is "drawn games"
+      Then the reason the rankings answered are not available is "none of its competitions counts"
 
     Scenario: Ricochet has none
       Given the tournament is to be for the sport "rc"
@@ -344,11 +386,13 @@ Feature: A tournament's results, as the world rankings are sent them
       When the rankings of the tournament at "2026/rc/ricochet-open" are asked for
       Then the reason the rankings answered are not available is "the sport"
 
-    Scenario: Where more than one applies the first is the reason
-      Given "organiser@example.com" has created the tournament "Both Open" allowing drawn games
-      And the tournament "Both Open" is played under handicap
-      When the rankings of the tournament at "2026/ac/both-open" are asked for
-      Then the reason the rankings answered are not available is "handicap"
+    Scenario: Where the sport has none the sport is the reason, whatever its competitions say
+      Given the tournament is to be for the sport "rc"
+      And "organiser@example.com" has created the tournament "Ricochet Open"
+      And the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Ricochet Open"
+      When the rankings of the tournament at "2026/rc/ricochet-open" are asked for
+      Then the reason the rankings answered are not available is "the sport"
 
   Rule: Only a tournament of the website a reader is sent to is answered
 

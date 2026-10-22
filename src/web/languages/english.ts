@@ -510,10 +510,10 @@ export const english: Language = {
     "admin.tournament.country": "Country",
     "admin.tournament.region": "Region",
     "admin.tournament.subtitle": "Subtitle",
-    "admin.tournament.handicap": "Played with handicaps",
-    "admin.tournament.drawsAllowed": "Allows drawn results",
+    "admin.rules.handicap": "Played with handicaps",
+    "admin.rules.drawsAllowed": "Allows drawn results",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
-    "admin.tournament.worldRankings": "Counts toward world rankings",
+    "admin.rules.worldRankings": "Counts toward world rankings",
     "admin.tournament.national": "National‑level event",
     "admin.tournament.international": "International‑level event",
     // A refusal with no words of its own, above the fields.
@@ -546,12 +546,8 @@ export const english: Language = {
     "rankings.notAvailable": "Rankings are not available",
     "rankings.notAvailable.sport":
       "This tournament's sport has no world rankings, so there are no rankings to send.",
-    "rankings.notAvailable.handicap":
-      "This tournament is played under handicap, so it does not count towards the world rankings.",
-    "rankings.notAvailable.drawnGames":
-      "This tournament allows drawn games, so it does not count towards the world rankings.",
     "rankings.notAvailable.notCounted":
-      "This tournament's manager has said it does not count towards the world rankings.",
+      "None of this tournament's competitions counts towards the world rankings.",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
     // A competition's page, and the tabs what there is to run is in.

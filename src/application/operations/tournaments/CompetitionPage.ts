@@ -24,6 +24,11 @@ export interface CompetitionAsPaged {
    * both its tabs to a manager, and its scores alone to a scorer.
    */
   readonly part: "manager" | "scorer";
+  /**
+   * The tournament's sport, by its code, where it has world rankings, which a
+   * competition of it may count towards. Nothing where it has none.
+   */
+  readonly worldRankingSport: string | undefined;
 }
 
 /**

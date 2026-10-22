@@ -28,13 +28,23 @@ A draw has as many rounds as it takes to halve its places to one, so a draw of 8
 
 ![The Add Competition dialog for a knockout of 4 places](images/add-competition-knockout.png)
 
+### How it is played and counted
+
+Every kind asks the same three things beneath its shape.
+
+**Played with handicaps.** Tick this for a competition played with handicaps.
+
+**Allows drawn results.** Tick this where a game can end with neither player the winner. Most competitions do not allow it. Where it is ticked, a score entered with equal points and no mark is kept as a draw; where it is not, a game on equal points has to say who won it by a mark after the winner's score, such as "6w". A knockout's match always has a winner, so a drawn game does not decide one.
+
+**Counts toward world rankings.** Asked only where it can be counted: a competition in Association Croquet or Golf Croquet that is neither played with handicaps nor allows drawn results. It is ticked to begin with, so untick it for a competition that is not to count.
+
 ### Adding several at once
 
 Press **Add**. The competition is added, the dialog says so, and the name is emptied for the next, with the kind and its shape left as they were: competitions added together are mostly alike, so "Block B" after "Block A" is its name alone. Press **Cancel** to close the dialog once they are all in.
 
 ## Changing a competition
 
-**Edit** opens the same dialog on the competition, titled Edit Competition, with its name and its shape as they are. Its kind is not asked, since a block is not made a knockout by changing it: a competition of the wrong kind is archived and added again. Press **Save** to keep the change and close the dialog.
+**Edit** opens the same dialog on the competition, titled Edit Competition, with its name, its shape and how it is played and counted as they are. Its kind is not asked, since a block is not made a knockout by changing it: a competition of the wrong kind is archived and added again. Press **Save** to keep the change and close the dialog.
 
 A knockout that has a game has players placed in its draw, and a change to its places would move them, so it is refused once a game has been entered. Its rounds' best-ofs can still be changed.
 

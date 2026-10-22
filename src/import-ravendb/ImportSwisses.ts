@@ -1,3 +1,4 @@
+import { hasTieMarked } from "./tiesMarked.js";
 import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
 import {
   type ImportingCompetitions,
@@ -28,10 +29,12 @@ export class ImportSwisses implements Importer<Swiss> {
         (document.CarryForwardCompetitions ?? []).map(({ Id }) => Id),
       // A bye has no place in a Swiss, which has no draw: the site has byes
       // only in a knockout, so one the old sites listed here is left out.
-      shape: (_document, listed) => ({
+      shape: (document, listed) => ({
         entries: listed.filter((entry) => !entry.bye),
         add: (tournament, id, name, by, at) => {
-          tournament.addSwiss(id, name, BestOf.from(SINGLE_GAMES), by, at);
+          tournament.addSwiss(id, name, BestOf.from(SINGLE_GAMES), by, at, {
+            drawsAllowed: hasTieMarked(document),
+          });
         },
       }),
     });

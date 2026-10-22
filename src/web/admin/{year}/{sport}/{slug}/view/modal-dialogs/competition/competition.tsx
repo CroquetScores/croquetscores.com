@@ -8,6 +8,7 @@ import "./competition.css";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
+import { useRules } from "../../../../../../RulesTicks.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -29,6 +30,9 @@ const placesOffered = [2, 4, 8, 16, 32, 64, 128] as const;
 export type CompetitionAsItIs = {
   readonly id: string;
   readonly name: string;
+  readonly handicap: boolean;
+  readonly drawsAllowed: boolean;
+  readonly worldRankings: boolean;
 } & (
   | {
       readonly kind: "block";
@@ -46,6 +50,8 @@ export type CompetitionAsItIs = {
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
+  /** Whether the tournament's sport has world rankings, which a competition may count towards. */
+  readonly ranked: boolean;
   /** Nothing when adding, and the competition when changing one. */
   readonly competition?: CompetitionAsItIs | undefined;
   /** Once a competition is kept, so that the list says so. */
@@ -108,10 +114,12 @@ const roundLabel = (round: number, count: number): string => {
 
 export const CompetitionDialog = ({
   tournament,
+  ranked,
   competition,
   kept,
   close,
 }: Props): React.JSX.Element => {
+  const rules = useRules(competition, ranked);
   // A competition being changed begins as it is; one being added begins as a
   // block, the best of 1, or a knockout of 8 places each round the best of 1.
   const [name, setName] = useState(competition?.name ?? "");
@@ -181,15 +189,27 @@ export const CompetitionDialog = ({
           },
           body: JSON.stringify(
             kind === "knockout"
-              ? { kind, name, places, rounds: rounds.map(typedNumber) }
+              ? {
+                  kind,
+                  name,
+                  places,
+                  rounds: rounds.map(typedNumber),
+                  ...rules.said,
+                }
               : kind === "block"
                 ? {
                     kind,
                     name,
                     bestOf: typedNumber(bestOf),
                     rounds: typedNumber(playedIn),
+                    ...rules.said,
                   }
-                : { kind, name, bestOf: typedNumber(bestOf) },
+                : {
+                    kind,
+                    name,
+                    bestOf: typedNumber(bestOf),
+                    ...rules.said,
+                  },
           ),
         },
       );
@@ -405,6 +425,7 @@ export const CompetitionDialog = ({
           ) : null}
         </>
       )}
+      {rules.ticks}
     </ModalDialog>
   );
 };

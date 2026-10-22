@@ -23,6 +23,10 @@ export class TestAdded extends DomainEvent {
     readonly bestOf: number,
     // Nothing when the test is in no group, which JSON leaves out.
     readonly group: string | undefined,
+    // How the competition is played and counted (CompetitionRules).
+    readonly handicap: boolean,
+    readonly drawsAllowed: boolean,
+    readonly worldRankings: boolean,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

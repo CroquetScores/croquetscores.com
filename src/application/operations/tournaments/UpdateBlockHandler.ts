@@ -40,6 +40,7 @@ export class UpdateBlockHandler extends CommandHandler<UpdateBlock, void> {
       Rounds.from(command.rounds),
       by,
       command.requestedAt,
+      command.rules,
     );
     await this.tournaments.save(tournament);
   }

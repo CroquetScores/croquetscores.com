@@ -46,9 +46,9 @@ Feature: A player of a tournament, for anybody to read
   A player is for anybody to read, so nobody need be signed in to ask, and
   every scenario here asks with nobody signed in.
 
-  Where a scenario says nothing else, the tournament allows drawn games, so
-  that a game on equal points is drawn, and its block is the best of 3, so
-  that two players can meet more than once.
+  Where a scenario says nothing else, its block allows drawn results, so
+  that a game on equal points is drawn, and is the best of 3, so that two
+  players can meet more than once.
 
   The tournament's subtitle is answered with it, in Markdown as it is kept
   (`TournamentSubtitle.feature`), since every page of a tournament shows it
@@ -71,11 +71,12 @@ Feature: A player of a tournament, for anybody to read
     Given the application's tournaments
     And the moment "2026-09-26T10:00:00Z"
     And "organiser@example.com" has an account, confirmed, called "Ollie Organiser"
-    And "organiser@example.com" has created the tournament "Spring Open" allowing drawn games
+    And "organiser@example.com" has created the tournament "Spring Open"
     And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
     And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
     And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
     And the block is to be the best of 3
+    And the competition is to allow drawn results
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
     And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
     And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"

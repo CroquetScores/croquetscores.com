@@ -20,11 +20,7 @@ The form asks for everything a tournament begins with. A tournament of the ordin
 
 **Subtitle.** Whatever you want readers to know that has no field of its own: where to park, when lunch is, who to ring. It is shown beneath the tournament's name on every public page. It is written in Markdown, so a word can be made bold with asterisks around it and a list made with a dash at the start of each line. It can be up to 2000 characters, and can be left empty.
 
-**Played with handicaps.** Tick this for a handicap tournament.
-
-**Allows drawn results.** Tick this where a game can end with neither player the winner. Most tournaments do not allow it. Where it is ticked, a score entered with equal points and no mark is kept as a draw; where it is not, a game on equal points has to say who won it by a mark after the winner's score, such as "6w".
-
-**Counts toward world rankings.** Asked only where it can be counted: a tournament of Association Croquet, Golf Croquet or American 6 Wicket that is neither played with handicaps nor allows drawn results. It is ticked to begin with, so untick it for a tournament that is not to count.
+How its competitions are played and counted, whether with handicaps, with drawn results, and towards the world rankings, is each competition's to say when it is added.
 
 **National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
 
