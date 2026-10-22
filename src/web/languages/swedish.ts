@@ -539,7 +539,7 @@ export const swedish: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Ta bort världsrankingansvarig (Associationscroquet)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} kommer inte längre att vara världsrankingansvarig.",
+      "{name} kommer inte längre att vara världsrankingansvarig (Associationscroquet).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Världsrankingansvariga (Golfcroquet)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -547,7 +547,7 @@ export const swedish: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Ta bort världsrankingansvarig (Golfcroquet)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} kommer inte längre att vara världsrankingansvarig.",
+      "{name} kommer inte längre att vara världsrankingansvarig (Golfcroquet).",
     "admin.worldRankings.title": "Importera spelare från världsrankingen",
     "admin.worldRankings.import": "Importera",
     "admin.worldRankings.log": "Så gick importen",

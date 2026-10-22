@@ -529,7 +529,7 @@ export const korean: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "세계 랭킹 담당자 제외 (어소시에이션 크로켓)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} 님은 더 이상 세계 랭킹 담당자가 아니게 돼요.",
+      "{name} 님은 더 이상 세계 랭킹 담당자가 아니게 돼요 (어소시에이션 크로켓).",
     "admin.roles.gc-world-ranking-officer.heading":
       "세계 랭킹 담당자 (골프 크로켓)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -537,7 +537,7 @@ export const korean: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "세계 랭킹 담당자 제외 (골프 크로켓)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} 님은 더 이상 세계 랭킹 담당자가 아니게 돼요.",
+      "{name} 님은 더 이상 세계 랭킹 담당자가 아니게 돼요 (골프 크로켓).",
     "admin.worldRankings.title": "세계 랭킹 선수 가져오기",
     "admin.worldRankings.import": "가져오기",
     "admin.worldRankings.log": "가져오기 진행 기록",

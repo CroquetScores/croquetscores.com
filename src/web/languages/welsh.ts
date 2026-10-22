@@ -548,7 +548,7 @@ export const welsh: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Tynnu swyddog Safleoedd y Byd (Croce Cymdeithas)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach.",
+      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach (Croce Cymdeithas).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Swyddogion Safleoedd y Byd (Croce Golff)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -556,7 +556,7 @@ export const welsh: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Tynnu swyddog Safleoedd y Byd (Croce Golff)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach.",
+      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach (Croce Golff).",
     "admin.worldRankings.title": "Mewnforio chwaraewyr Safleoedd y Byd",
     "admin.worldRankings.import": "Mewnforio",
     "admin.worldRankings.log": "Sut aeth y mewnforio",

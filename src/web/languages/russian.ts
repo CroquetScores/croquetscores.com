@@ -538,7 +538,7 @@ export const russian: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Убрать ответственного за мировой рейтинг (Ассоциационный крокет)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} перестанет быть ответственным за мировой рейтинг.",
+      "{name} перестанет быть ответственным за мировой рейтинг (Ассоциационный крокет).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Ответственные за мировой рейтинг (Гольф-крокет)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -546,7 +546,7 @@ export const russian: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Убрать ответственного за мировой рейтинг (Гольф-крокет)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} перестанет быть ответственным за мировой рейтинг.",
+      "{name} перестанет быть ответственным за мировой рейтинг (Гольф-крокет).",
     "admin.worldRankings.title": "Импорт игроков мирового рейтинга",
     "admin.worldRankings.import": "Импортировать",
     "admin.worldRankings.log": "Как прошёл импорт",

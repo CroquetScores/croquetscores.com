@@ -543,7 +543,7 @@ export const polish: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Usuń osobę odpowiedzialną za rankingi światowe (Association Croquet)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} nie będzie już osobą odpowiedzialną za rankingi światowe.",
+      "{name} nie będzie już osobą odpowiedzialną za rankingi światowe (Association Croquet).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Odpowiedzialni za rankingi światowe (Golf Croquet)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -551,7 +551,7 @@ export const polish: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Usuń osobę odpowiedzialną za rankingi światowe (Golf Croquet)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} nie będzie już osobą odpowiedzialną za rankingi światowe.",
+      "{name} nie będzie już osobą odpowiedzialną za rankingi światowe (Golf Croquet).",
     "admin.worldRankings.title": "Import zawodników z rankingów światowych",
     "admin.worldRankings.import": "Importuj",
     "admin.worldRankings.log": "Jak poszedł import",

@@ -1,7 +1,9 @@
 /**
  * Every role an account can hold, as it is kept in an event. Once kept, a
  * role is spelled this way for good, since a stream written years ago has to
- * be read back as it was written.
+ * be read back as it was written. The one exception is "world-ranking-officer",
+ * split into a role for each sport before any site held it, and so not kept
+ * readable.
  */
 export const roles = [
   "administrator",

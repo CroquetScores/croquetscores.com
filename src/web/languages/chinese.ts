@@ -513,7 +513,7 @@ export const chinese: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "移除世界排名负责人 (协会槌球)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} 将不再是世界排名负责人。",
+      "{name} 将不再是世界排名负责人 (协会槌球)。",
     "admin.roles.gc-world-ranking-officer.heading":
       "世界排名负责人 (高尔夫槌球)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -521,7 +521,7 @@ export const chinese: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "移除世界排名负责人 (高尔夫槌球)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} 将不再是世界排名负责人。",
+      "{name} 将不再是世界排名负责人 (高尔夫槌球)。",
     "admin.worldRankings.title": "导入世界排名选手",
     "admin.worldRankings.import": "导入",
     "admin.worldRankings.log": "导入的过程",

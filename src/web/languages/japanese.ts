@@ -535,7 +535,7 @@ export const japanese: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "世界ランキング担当者の解除 (アソシエーションクロッケー)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name}は世界ランキング担当者ではなくなります。",
+      "{name}は世界ランキング担当者ではなくなります (アソシエーションクロッケー)。",
     "admin.roles.gc-world-ranking-officer.heading":
       "世界ランキング担当者 (ゴルフクロッケー)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -543,7 +543,7 @@ export const japanese: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "世界ランキング担当者の解除 (ゴルフクロッケー)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name}は世界ランキング担当者ではなくなります。",
+      "{name}は世界ランキング担当者ではなくなります (ゴルフクロッケー)。",
     "admin.worldRankings.title": "世界ランキングの選手のインポート",
     "admin.worldRankings.import": "インポート",
     "admin.worldRankings.log": "インポートの経過",

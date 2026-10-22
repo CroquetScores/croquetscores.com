@@ -540,7 +540,7 @@ export const dutch: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Functionaris wereldranglijst verwijderen (Associatiecroquet)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} is niet langer functionaris wereldranglijst.",
+      "{name} is niet langer functionaris wereldranglijst (Associatiecroquet).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Functionarissen wereldranglijst (Golfcroquet)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -548,7 +548,7 @@ export const dutch: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Functionaris wereldranglijst verwijderen (Golfcroquet)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} is niet langer functionaris wereldranglijst.",
+      "{name} is niet langer functionaris wereldranglijst (Golfcroquet).",
     "admin.worldRankings.title": "Spelers van de wereldranglijst importeren",
     "admin.worldRankings.import": "Importeren",
     "admin.worldRankings.log": "Hoe de import is verlopen",

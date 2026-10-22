@@ -549,7 +549,7 @@ export const maori: Language = {
     "admin.roles.ac-world-ranking-officer.removeTitle":
       "Tango kaiwhakahaere raupapa o te ao (Association Croquet)",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao.",
+      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao (Association Croquet).",
     "admin.roles.gc-world-ranking-officer.heading":
       "Ngā kaiwhakahaere raupapa o te ao (Golf Croquet)",
     "admin.roles.gc-world-ranking-officer.none":
@@ -557,7 +557,7 @@ export const maori: Language = {
     "admin.roles.gc-world-ranking-officer.removeTitle":
       "Tango kaiwhakahaere raupapa o te ao (Golf Croquet)",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao.",
+      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao (Golf Croquet).",
     "admin.worldRankings.title": "Kawemai i ngā kaitākaro o te raupapa o te ao",
     "admin.worldRankings.import": "Kawemai",
     "admin.worldRankings.log": "Te haere o te kawemai",

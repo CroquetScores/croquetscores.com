@@ -198,15 +198,16 @@ export class Account extends AggregateRoot {
    * The account as it asks for something (asker.feature): known to be an
    * administrator while it holds the Administrator role, a world ranking
    * officer, of the sports it holds the role for, while it holds one alone,
-   * since an administrator may do all a world ranking officer may, and otherwise by its id alone. A forgotten
-   * account holds no role, so asks as its id.
+   * since an administrator may do all a world ranking officer may, and
+   * otherwise by its id alone. A forgotten account holds no role, so asks as
+   * its id.
    */
   get asker(): AccountId {
-    return this.isAdministrator
-      ? Administrator.of(this.id)
-      : this.worldRankingSports.length > 0
-        ? WorldRankingOfficer.of(this.id, this.worldRankingSports)
-        : this.id;
+    if (this.isAdministrator) return Administrator.of(this.id);
+    const sports = this.worldRankingSports;
+    return sports.length > 0
+      ? WorldRankingOfficer.of(this.id, sports)
+      : this.id;
   }
 
   /**
