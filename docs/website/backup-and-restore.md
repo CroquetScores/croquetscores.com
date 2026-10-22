@@ -218,7 +218,7 @@ The steps above are for any new website. This is the same restore done on the se
 
 **First check the account keys.** `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY` in `/etc/croquetscores/environment` must be the same as the ones that sealed the data in the file (§4). Different keys leave every name and email address in it unreadable for good.
 
-1. **Copy the file to the server,** from your own computer. In WSL, `C:\DatabaseBackups` is `/mnt/c/DatabaseBackups`:
+1. **Copy the file to the server,** from your own computer. In WSL, `C:\DatabaseBackups\CroquetScores.Postgres` is `/mnt/c/DatabaseBackups/CroquetScores.Postgres`:
 
    ```bash
    scp "/mnt/c/DatabaseBackups/CroquetScores.Postgres/<file name>.dump" deploy@<server ip address>:~/
@@ -242,7 +242,7 @@ The steps above are for any new website. This is the same restore done on the se
 
    ```bash
    cd /srv/croquetscores/site
-   withsettings npm run db:restore -- croquetscores_restored ~/2026-10-20-19-37-10.dump
+   withsettings npm run db:restore -- croquetscores_restored ~/<file name>.dump
    ```
 
    It says each step as it goes. If it fails it drops the database it made, so the same name can be tried again.
@@ -272,7 +272,7 @@ The steps above are for any new website. This is the same restore done on the se
 8. **Clean up.** Delete the copy of the file, and when you are sure, the empty database, and take back the permission to make databases:
 
    ```bash
-   rm ~/2026-10-15-21-40-20.dump
+   rm ~/<file name>.dump
    sudo -u postgres psql -c 'drop database croquetscores_before_restore;'
    sudo -u postgres psql -c "alter user croquetscores nocreatedb;"
    ```
