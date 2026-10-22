@@ -7,16 +7,16 @@ import { windowsTimeZones } from "./windowsTimeZones.js";
 
 // Zones taken as a country other than the one they mean for the world as a
 // whole. "GMT Standard Time" is Great Britain's, Ireland's and Portugal's
-// alike, and "W. Europe Standard Time" is kept by much of western Europe. Each
-// is taken as England's, where the old tournaments kept in it were played; a
-// manager can move one played elsewhere.
+// alike, and "W. Europe Standard Time" is kept by much of western Europe. The
+// first is taken as England's, where the old tournaments kept in it were
+// played, and the second as Spain's; a manager can move one played elsewhere.
 //
 // Three zones that mean no country are taken as one all the same, since the
 // old sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
 // as England's, and "UTC+13" as New Zealand's.
 const chosen: Readonly<Record<string, string>> = {
   "GMT Standard Time": "england",
-  "W. Europe Standard Time": "england",
+  "W. Europe Standard Time": "es",
   UTC: "england",
   "Dateline Standard Time": "england",
   "UTC+13": "nz",
