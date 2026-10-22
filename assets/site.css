@@ -1740,6 +1740,12 @@ main {
   gap: var(--space-3);
 }
 
+/* Set off from the form above and the lists below, which the notice's own
+   padding does not do. */
+.tournament-filter-notice {
+  margin-block: var(--space-3);
+}
+
 /* No wider than the form, however long the longest country's name is. */
 .tournament-filter-field {
   display: flex;
