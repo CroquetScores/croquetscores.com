@@ -367,8 +367,33 @@ Feature: Backing up the website's events and accounts' keys to a file
       When the backup is run
       Then the email says the failure was that the website's database is not reached through the tunnel
 
+    Scenario: A port beside the tunnel's is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55433/croquetscores"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address with no port is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1/croquetscores"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address that names another host after the question mark is refused
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores?host=website.example"
+      When the backup is run
+      Then the email says the failure was that the website's database is not reached through the tunnel
+
+    Scenario: An address that names another host after the question mark is not dumped
+      Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores?host=website.example"
+      When the backup is run
+      Then pg_dump was not run
+
     Scenario: The tunnel's port by the number address is accepted
       Given the website's database is at "postgres://backup:secret-word@127.0.0.1:55432/croquetscores"
+      When the backup is run
+      Then the backup exits with success
+
+    Scenario: The tunnel's port by the number address of the newer kind is accepted
+      Given the website's database is at "postgres://backup:secret-word@[::1]:55432/croquetscores"
       When the backup is run
       Then the backup exits with success
 

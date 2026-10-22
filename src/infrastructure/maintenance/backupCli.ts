@@ -61,10 +61,16 @@ const TUNNELS_PORT = "55432";
 // tunnel is and a name is only what somebody called it.
 const isThroughTheTunnel = (address: string): boolean => {
   try {
-    const { hostname, port } = new URL(address);
+    const { hostname, port, search, hash } = new URL(address);
+    // Anything after the path is refused, since pg_dump reads a "host" there
+    // in place of the one before the colon, and the check would be of a host
+    // that is not the one dumped from.
+    if (search !== "" || hash !== "") return false;
     return (
       port === TUNNELS_PORT &&
-      (hostname === "127.0.0.1" || hostname === "localhost")
+      (hostname === "127.0.0.1" ||
+        hostname === "[::1]" ||
+        hostname === "localhost")
     );
   } catch {
     return false;
