@@ -15,6 +15,10 @@ import { windowsTimeZones } from "./windowsTimeZones.js";
 // Three zones that mean no country are taken as one all the same, since the
 // old sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
 // as England's, and "UTC+13" as New Zealand's.
+//
+// Every time zone of Russia is taken as New Zealand's, since the old sites'
+// tournaments kept in them were played there. They are found by name rather
+// than listed, so that a zone Windows adds later is taken the same way.
 const chosen: Readonly<Record<string, string>> = {
   "GMT Standard Time": "england",
   "W. Europe Standard Time": "es",
@@ -35,6 +39,9 @@ const readAs: Readonly<Record<string, string>> = {
 /** The code of the country `timeZone` means, or nothing where the import does not know it. */
 export const countryOfTimeZone = (timeZone: string): string | undefined => {
   const read = readAs[timeZone] ?? timeZone;
+  if (read === "Russian Standard Time" || read.startsWith("Russia Time Zone")) {
+    return "nz";
+  }
   return chosen[read] ?? windowsTimeZones[read];
 };
 

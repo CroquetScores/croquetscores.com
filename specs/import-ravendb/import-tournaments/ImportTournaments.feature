@@ -199,6 +199,11 @@ Feature: Importing the old sites' tournaments
     as England's, and "UTC+13" as New Zealand's. A manager can move one played
     elsewhere.
 
+    Every time zone of Russia, "Russian Standard Time" and each "Russia Time
+    Zone", is taken as New Zealand's all the same, since the old sites'
+    tournaments kept in them were played there. A manager can move one played
+    elsewhere.
+
     A tournament kept in "Pacific Standard Time (Mexico)" is read as kept in
     "Pacific Standard Time", whose tournaments were played in the United
     States: the old sites offered the time zones of the machine they ran on,
@@ -231,6 +236,10 @@ Feature: Importing the old sites' tournaments
         | UTC                          | england |
         | Dateline Standard Time       | england |
         | UTC+13                       | nz      |
+        | Russian Standard Time        | nz      |
+        | Russia Time Zone 3           | nz      |
+        | Russia Time Zone 10          | nz      |
+        | Russia Time Zone 11          | nz      |
 
     Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
       Given a tournament "tournaments/12" on "croquetscores.com"
