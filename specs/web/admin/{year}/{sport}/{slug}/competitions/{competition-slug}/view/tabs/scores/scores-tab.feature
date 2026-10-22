@@ -692,6 +692,54 @@ Feature: The scores tab of a competition's page
       When "Unwithdraw" is pressed on the score of "Sam Someone" beating "Alex Another"
       Then the tab is refused with "CompetitionPlayer.Withdrawn"
 
+  Rule: A refused Restore is said beneath the score it was pressed on
+
+    Restore is refused where the score could not be added now: where one of its
+    players has withdrawn since, or where the match it was played in has been
+    decided by another score. The list may be long, so the refusal is said
+    beneath the score, where the reader pressed Restore, and not above the whole
+    list, away from it. Any other refusal is still said above the list.
+
+    Scenario: A refused Restore is said beneath the score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Restore" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Alex Another" says it was refused with "CompetitionPlayer.Withdrawn"
+
+    Scenario: A refused Restore is not said above the list
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Restore" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Alex Another" says it was refused with "CompetitionPlayer.Withdrawn"
+      And nothing is said above the list of scores
+
+    Scenario: A score that was not refused says nothing beneath it
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Chris Third" in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Restore" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Chris Third" says nothing was refused
+
+    Scenario: A refused Restore in a knockout is said beneath the score
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Restore" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the score of "Sam Someone" beating "Alex Another" says it was refused with "Competition.MatchDecided"
+
   Rule: Every word the tab says is in the reader's language
 
     The test locale shows it (`language.feature`). A player's name is what

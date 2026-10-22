@@ -53,6 +53,15 @@
   gap: var(--space-2);
 }
 
+/* Why a score could not be restored, beneath the score it was pressed on and
+   across the whole of its row, so that it is read with the score and not
+   above the list, away from it. */
+.listed-score-refused {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--danger);
+}
+
 /* Where a button would be on a row that does not offer it (optionFace.tsx). */
 .option-space {
   visibility: hidden;
