@@ -1061,8 +1061,10 @@ export const swedish: Language = {
     "TournamentName.Missing": "Ange vad turneringen heter.",
     "TournamentName.TooShort": "Det namnet är för kort.",
     "TournamentName.TooLong": "Det namnet är för långt.",
-    "TournamentName.AllLowerCase": "Ett namn skrivs inte helt med gemener.",
-    "TournamentName.AllCapitals": "Ett namn skrivs inte helt med versaler.",
+    "TournamentName.AllLowerCase":
+      "Ett namn får inte vara skrivet helt med gemener.",
+    "TournamentName.AllCapitals":
+      "Ett namn får inte vara skrivet helt med versaler.",
     "TournamentName.NoLetterOrDigit":
       "Ett namn måste innehålla en bokstav eller en siffra.",
     "ReadOnlyDate.Unreadable": "Ange dagen.",

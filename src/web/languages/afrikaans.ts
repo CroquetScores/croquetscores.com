@@ -1077,9 +1077,9 @@ export const afrikaans: Language = {
     "TournamentName.TooShort": "Daardie naam is te kort.",
     "TournamentName.TooLong": "Daardie naam is te lank.",
     "TournamentName.AllLowerCase":
-      "'n Naam word nie heeltemal in kleinletters geskryf nie.",
+      "'n Naam mag nie heeltemal in kleinletters wees nie.",
     "TournamentName.AllCapitals":
-      "'n Naam word nie heeltemal in hoofletters geskryf nie.",
+      "'n Naam mag nie heeltemal in hoofletters wees nie.",
     "TournamentName.NoLetterOrDigit": "'n Naam het 'n letter of syfer nodig.",
     "ReadOnlyDate.Unreadable": "Gee die dag.",
     "Tournament.FinishesBeforeStarts":

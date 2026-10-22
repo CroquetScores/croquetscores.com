@@ -1154,8 +1154,8 @@ export const english: Language = {
     "TournamentName.Missing": "Say what the tournament is called.",
     "TournamentName.TooShort": "That name is too short.",
     "TournamentName.TooLong": "That name is too long.",
-    "TournamentName.AllLowerCase": "A name is not written all in lower case.",
-    "TournamentName.AllCapitals": "A name is not written all in capitals.",
+    "TournamentName.AllLowerCase": "A name may not be all lower case.",
+    "TournamentName.AllCapitals": "A name may not be all capitals.",
     "TournamentName.NoLetterOrDigit": "A name needs a letter or a digit in it.",
     "ReadOnlyDate.Unreadable": "Give the day.",
     "Tournament.FinishesBeforeStarts":

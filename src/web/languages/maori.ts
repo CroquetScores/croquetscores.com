@@ -1099,9 +1099,9 @@ export const maori: Language = {
     "TournamentName.TooShort": "He poto rawa taua ingoa.",
     "TournamentName.TooLong": "He roa rawa taua ingoa.",
     "TournamentName.AllLowerCase":
-      "Kāore te ingoa e tuhia ki ngā pūriki anake.",
+      "Kāore e tika kia tuhia te ingoa ki ngā pūriki anake.",
     "TournamentName.AllCapitals":
-      "Kāore te ingoa e tuhia ki ngā pūmatua anake.",
+      "Kāore e tika kia tuhia te ingoa ki ngā pūmatua anake.",
     "TournamentName.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa.",
     "ReadOnlyDate.Unreadable": "Hoatu te rā.",
     "Tournament.FinishesBeforeStarts":

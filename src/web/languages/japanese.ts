@@ -1046,8 +1046,8 @@ export const japanese: Language = {
     "TournamentName.Missing": "大会の名称を入力してください。",
     "TournamentName.TooShort": "その名称は短すぎます。",
     "TournamentName.TooLong": "その名称は長すぎます。",
-    "TournamentName.AllLowerCase": "名称をすべて小文字で書くことはできません。",
-    "TournamentName.AllCapitals": "名称をすべて大文字で書くことはできません。",
+    "TournamentName.AllLowerCase": "名称をすべて小文字にすることはできません。",
+    "TournamentName.AllCapitals": "名称をすべて大文字にすることはできません。",
     "TournamentName.NoLetterOrDigit": "名称には文字か数字を含めてください。",
     "ReadOnlyDate.Unreadable": "日付を入力してください。",
     "Tournament.FinishesBeforeStarts":

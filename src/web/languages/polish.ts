@@ -1064,9 +1064,9 @@ export const polish: Language = {
     "TournamentName.TooShort": "Ta nazwa jest zbyt krótka.",
     "TournamentName.TooLong": "Ta nazwa jest zbyt długa.",
     "TournamentName.AllLowerCase":
-      "Nazwy nie pisze się samymi małymi literami.",
+      "Nazwa nie może składać się wyłącznie z małych liter.",
     "TournamentName.AllCapitals":
-      "Nazwy nie pisze się samymi wielkimi literami.",
+      "Nazwa nie może składać się wyłącznie z wielkich liter.",
     "TournamentName.NoLetterOrDigit": "Nazwa musi zawierać literę lub cyfrę.",
     "ReadOnlyDate.Unreadable": "Podaj dzień.",
     "Tournament.FinishesBeforeStarts":
