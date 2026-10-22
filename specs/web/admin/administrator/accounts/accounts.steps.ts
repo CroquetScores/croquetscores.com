@@ -222,10 +222,12 @@ When(
 // By its place rather than its words, which are in whatever language the page
 // is in.
 When(
-  "the way to remove the first world ranking officer is pressed",
-  async function (this: SpecWorld) {
+  "the way to remove the first {string} world ranking officer is pressed",
+  async function (this: SpecWorld, sport: string) {
     const row = this.browserPage
-      .locator('ul.listed[data-listed="world-ranking-officer"] > .listed-item')
+      .locator(
+        `ul.listed[data-listed="${sport}-world-ranking-officer"] > .listed-item`,
+      )
       .first();
     await eventually(this, async () => {
       assert.equal(await row.locator(".listed-options button").count(), 1);

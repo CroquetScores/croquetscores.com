@@ -388,7 +388,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
     Scenario: The name is shown and cannot be changed
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of the team "Australia" in "Spring Tests" is open
       When the name of the player "Sam Someone" is pressed
@@ -397,7 +397,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
     Scenario: The world ranking name can be changed
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of the team "Australia" in "Spring Tests" is open
       When the name of the player "Sam Someone" is pressed
@@ -406,7 +406,7 @@ Feature: A player is added to a team, or changed, in a modal dialog
     Scenario: The world ranking name changed is kept
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of the team "Australia" in "Spring Tests" is open
       And the name of the player "Sam Someone" is pressed

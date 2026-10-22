@@ -21,7 +21,7 @@ export const momentOf = (world: SpecWorld): ReadOnlyDate => {
 };
 
 /**
- * A role as a feature names it, "Administrator" or "World Ranking Officer",
+ * A role as a feature names it, "Administrator" or "AC World Ranking Officer",
  * written as a request carries it. Not checked against the roles there are,
  * since some scenarios name one there is not, to see it refused.
  */
@@ -72,8 +72,10 @@ export const holds = async (
   switch (roleWritten(role)) {
     case "administrator":
       return account.isAdministrator;
-    case "world-ranking-officer":
-      return account.isWorldRankingOfficer;
+    case "ac-world-ranking-officer":
+      return account.worldRankingSports.includes("ac");
+    case "gc-world-ranking-officer":
+      return account.worldRankingSports.includes("gc");
     default:
       throw new Error(`There is no role called ${role}.`);
   }

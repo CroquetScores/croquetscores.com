@@ -45,11 +45,12 @@ Given(
   },
 );
 
-// As the account would ask while holding the World Ranking Officer role.
+// As the account would ask while holding the World Ranking Officer role for
+// the sport.
 Given(
-  "it is asked for by {string}, who is a world ranking officer",
-  function (this: SpecWorld, account: string) {
-    askedByAWorldRankingOfficer(this, account);
+  "it is asked for by {string}, who is a world ranking officer for {string}",
+  function (this: SpecWorld, account: string, sport: string) {
+    askedByAWorldRankingOfficer(this, account, sport);
   },
 );
 
@@ -279,8 +280,10 @@ const holds = (world: SpecWorld, role: string): boolean => {
   switch (roleNamed(role)) {
     case "administrator":
       return account.isAdministrator;
-    case "world-ranking-officer":
-      return account.isWorldRankingOfficer;
+    case "ac-world-ranking-officer":
+      return account.worldRankingSports.includes("ac");
+    case "gc-world-ranking-officer":
+      return account.worldRankingSports.includes("gc");
   }
 };
 

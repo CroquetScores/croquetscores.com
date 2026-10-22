@@ -56,9 +56,10 @@ Feature: Forgetting an account
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: An account rebuilt after it was forgotten holds no role
       Given a stream where an account was registered at "someone@example.com"
@@ -69,9 +70,10 @@ Feature: Forgetting an account
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
   Rule: A forgotten account says it is forgotten, whether or not it was confirmed
 

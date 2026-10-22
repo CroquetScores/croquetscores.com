@@ -2,7 +2,6 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { Administrator } from "../../../domain/aggregates/accounts/Administrator.js";
 import { WorldRankingOfficer } from "../../../domain/aggregates/accounts/WorldRankingOfficer.js";
-import { Sport } from "../../../domain/aggregates/tournaments/value-objects/Sport.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -13,12 +12,6 @@ import {
   type TournamentsByAccount,
   TournamentsOfAccount,
 } from "./TournamentsOfAccount.js";
-
-// The sports whose tournaments a world ranking officer looks after: those with
-// world rankings (Sport.feature).
-const rankedSports = Sport.all
-  .filter(({ hasWorldRankings }) => hasWorldRankings)
-  .map(({ code }) => code);
 
 export class TournamentsOfAccountHandler extends QueryHandler<
   TournamentsOfAccount,
@@ -45,7 +38,7 @@ export class TournamentsOfAccountHandler extends QueryHandler<
             reader,
             website,
             query.year,
-            rankedSports,
+            reader.sports,
           )
         : this.byAccount.tournamentsOf(reader, website, query.year);
   }

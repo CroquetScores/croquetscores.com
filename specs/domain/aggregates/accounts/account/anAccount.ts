@@ -46,8 +46,9 @@ export const askedBy = (world: SpecWorld, account: string): void => {
 export const askedByAWorldRankingOfficer = (
   world: SpecWorld,
   account: string,
+  sport: string,
 ): void => {
-  world.askedBy = WorldRankingOfficer.of(AccountId.from(account));
+  world.askedBy = WorldRankingOfficer.of(AccountId.from(account), [sport]);
 };
 
 export const askedByAnAdministrator = (
@@ -69,7 +70,8 @@ export const askerOf = (world: SpecWorld): AccountId =>
 // A role as a feature names it, and as the account knows it.
 const named: Readonly<Record<string, Role>> = {
   Administrator: "administrator",
-  "World Ranking Officer": "world-ranking-officer",
+  "AC World Ranking Officer": "ac-world-ranking-officer",
+  "GC World Ranking Officer": "gc-world-ranking-officer",
 };
 
 export const roleNamed = (name: string): Role => {

@@ -38,31 +38,32 @@ Feature: The accounts holding a role, as an administrator lists them
       Then the account "Sam Someone" is answered
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: An account without the role is not answered
       Given "someone@example.com" has been given the role "Administrator"
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then the account "Sam Someone" is not answered
 
     Scenario: An account the role was taken from is not answered
-      Given "someone@example.com" has been given the role "World Ranking Officer"
-      And "someone@example.com" has had the role "World Ranking Officer" taken away
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
+      And "someone@example.com" has had the role "AC World Ranking Officer" taken away
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then the account "Sam Someone" is not answered
 
     Scenario: The accounts are answered in alphabetical order
-      Given "someone@example.com" has been given the role "World Ranking Officer"
-      And "other@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then the first account answered is "Alex Another"
 
     Scenario: A name changed is answered as it is now
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the reader signed in to the account for "someone@example.com" changes its name to "Samantha Someone"
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then the account "Samantha Someone" is answered
 
   Rule: The administrator asking is not among the administrators
@@ -77,22 +78,22 @@ Feature: The accounts holding a role, as an administrator lists them
       Then the account "Sam Someone" is answered
 
     Scenario: The administrator asking is answered among the world ranking officers
-      Given "admin@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      Given "admin@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then the account "Ada Administrator" is answered
 
   Rule: A forgotten account is not answered
 
     Scenario: A forgotten account is not answered
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the account for "someone@example.com" has been forgotten
-      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then no account is answered
 
   Rule: Only an administrator can list them, of a role there is
 
     Scenario: A reader who is not an administrator is refused
-      When the reader signed in to the account for "someone@example.com" lists the accounts with the role "World Ranking Officer"
+      When the reader signed in to the account for "someone@example.com" lists the accounts with the role "AC World Ranking Officer"
       Then it is refused with "Account.NotAnAdministrator"
 
     Scenario: A role there is not is refused

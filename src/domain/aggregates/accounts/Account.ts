@@ -20,7 +20,7 @@ import { Administrator } from "./Administrator.js";
 import { WorldRankingOfficer } from "./WorldRankingOfficer.js";
 import { EmailAddress } from "./value-objects/EmailAddress.js";
 import { PersonName } from "./value-objects/PersonName.js";
-import type { Role } from "./value-objects/Role.js";
+import { type Role, sportOfWorldRankingOfficer } from "./value-objects/Role.js";
 
 /** Why an account will not do what it was asked. */
 export type AccountErrorCode =
@@ -183,23 +183,31 @@ export class Account extends AggregateRoot {
     return this.#roles.has("administrator");
   }
 
-  get isWorldRankingOfficer(): boolean {
-    return this.#roles.has("world-ranking-officer");
+  /**
+   * The codes of the sports whose rankings it looks after, one for each World
+   * Ranking Officer role it holds: none where it holds no such role.
+   */
+  get worldRankingSports(): readonly string[] {
+    return [...this.#roles].flatMap((role) => {
+      const sport = sportOfWorldRankingOfficer[role];
+      return sport === undefined ? [] : [sport];
+    });
   }
 
   /**
    * The account as it asks for something (asker.feature): known to be an
    * administrator while it holds the Administrator role, a world ranking
-   * officer while it holds that role alone, since an administrator may do all
-   * a world ranking officer may, and otherwise by its id alone. A forgotten
-   * account holds no role, so asks as its id.
+   * officer, of the sports it holds the role for, while it holds one alone,
+   * since an administrator may do all a world ranking officer may, and
+   * otherwise by its id alone. A forgotten account holds no role, so asks as
+   * its id.
    */
   get asker(): AccountId {
-    return this.isAdministrator
-      ? Administrator.of(this.id)
-      : this.isWorldRankingOfficer
-        ? WorldRankingOfficer.of(this.id)
-        : this.id;
+    if (this.isAdministrator) return Administrator.of(this.id);
+    const sports = this.worldRankingSports;
+    return sports.length > 0
+      ? WorldRankingOfficer.of(this.id, sports)
+      : this.id;
   }
 
   /**

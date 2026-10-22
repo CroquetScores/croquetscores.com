@@ -530,14 +530,22 @@ export const afrikaans: Language = {
     "admin.roles.administrator.removeTitle": "Verwyder administrateur",
     "admin.roles.administrator.removeExplanation":
       "{name} sal nie meer 'n administrateur van hierdie webwerf wees nie.",
-    "admin.roles.world-ranking-officer.heading":
-      "Beamptes vir die wêreldranglys",
-    "admin.roles.world-ranking-officer.none":
-      "Geen beamptes vir die wêreldranglys nie",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Verwyder beampte vir die wêreldranglys",
-    "admin.roles.world-ranking-officer.removeExplanation":
-      "{name} sal nie meer 'n beampte vir die wêreldranglys wees nie.",
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Beamptes vir die wêreldranglys (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Geen beamptes vir die wêreldranglys nie (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Verwyder beampte vir die wêreldranglys (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} sal nie meer 'n beampte vir die wêreldranglys wees nie (Association Croquet).",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Beamptes vir die wêreldranglys (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Geen beamptes vir die wêreldranglys nie (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Verwyder beampte vir die wêreldranglys (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
+      "{name} sal nie meer 'n beampte vir die wêreldranglys wees nie (Golf Croquet).",
     "admin.worldRankings.title": "Voer wêreldranglyspelers in",
     "admin.worldRankings.import": "Voer in",
     "admin.worldRankings.log": "Hoe die invoer verloop het",

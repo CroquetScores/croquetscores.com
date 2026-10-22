@@ -1009,7 +1009,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
     Scenario Outline: Everything but the world ranking name is shown and cannot be changed
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of "Spring Open" is open
       When the name of the player "Sam Someone" is pressed
@@ -1024,7 +1024,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
     Scenario: The world ranking name can be changed
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of "Spring Open" is open
       When the name of the player "Sam Someone" is pressed
@@ -1033,7 +1033,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
     Scenario: The world ranking name changed is kept
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of "Spring Open" is open
       And the name of the player "Sam Someone" is pressed
@@ -1044,7 +1044,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
     Scenario: Saving closes the dialog
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the page of "Spring Open" is open
       And the name of the player "Sam Someone" is pressed

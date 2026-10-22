@@ -38,25 +38,26 @@ Feature: Taking a role away from an account
       Then the account for "someone@example.com" does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Taking one role leaves the other
       Given "someone@example.com" has been given the role "Administrator"
-      And "someone@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "admin@example.com" takes the role "World Ranking Officer" from "someone@example.com"
+      And "someone@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" takes the role "AC World Ranking Officer" from "someone@example.com"
       Then the account for "someone@example.com" holds the role "Administrator"
 
     Scenario: Taking a role is recorded as done by whoever asked
-      Given "someone@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "admin@example.com" takes the role "World Ranking Officer" from "someone@example.com"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" takes the role "AC World Ranking Officer" from "someone@example.com"
       Then the last thing the account for "someone@example.com" recorded was caused by the account for "admin@example.com"
 
     Scenario: An administrator can take a world ranking officer's role from themselves
-      Given "admin@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "admin@example.com" takes the role "World Ranking Officer" from "admin@example.com"
-      Then the account for "admin@example.com" does not hold the role "World Ranking Officer"
+      Given "admin@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" takes the role "AC World Ranking Officer" from "admin@example.com"
+      Then the account for "admin@example.com" does not hold the role "AC World Ranking Officer"
 
   Rule: An administrator cannot take the Administrator role from themselves
 
@@ -97,7 +98,7 @@ Feature: Taking a role away from an account
   Rule: Only an account there is can have a role taken from it
 
     Scenario: An account there is not is refused
-      When the reader signed in to the account for "admin@example.com" takes the role "World Ranking Officer" from an account there is not
+      When the reader signed in to the account for "admin@example.com" takes the role "AC World Ranking Officer" from an account there is not
       Then it is refused with "RemoveRole.NoSuchAccount"
 
   Rule: Only a role there is can be taken
@@ -109,6 +110,6 @@ Feature: Taking a role away from an account
   Rule: Only an administrator can take a role away
 
     Scenario: A reader who is not an administrator is refused
-      Given "someone@example.com" has been given the role "World Ranking Officer"
-      When the reader signed in to the account for "someone@example.com" takes the role "World Ranking Officer" from "someone@example.com"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "someone@example.com" takes the role "AC World Ranking Officer" from "someone@example.com"
       Then it is refused with "Account.NotAnAdministrator"

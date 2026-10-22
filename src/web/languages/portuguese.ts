@@ -530,14 +530,22 @@ export const portuguese: Language = {
     "admin.roles.administrator.removeTitle": "Remover administrador",
     "admin.roles.administrator.removeExplanation":
       "{name} deixará de ser administrador deste site.",
-    "admin.roles.world-ranking-officer.heading":
-      "Responsáveis pelo ranking mundial",
-    "admin.roles.world-ranking-officer.none":
-      "Nenhum responsável pelo ranking mundial",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Remover responsável pelo ranking mundial",
-    "admin.roles.world-ranking-officer.removeExplanation":
-      "{name} deixará de ser responsável pelo ranking mundial.",
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Responsáveis pelo ranking mundial (Croquet de Associação)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Nenhum responsável pelo ranking mundial (Croquet de Associação)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Remover responsável pelo ranking mundial (Croquet de Associação)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} deixará de ser responsável pelo ranking mundial (Croquet de Associação).",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Responsáveis pelo ranking mundial (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Nenhum responsável pelo ranking mundial (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Remover responsável pelo ranking mundial (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
+      "{name} deixará de ser responsável pelo ranking mundial (Golf Croquet).",
     "admin.worldRankings.title": "Importar jogadores do ranking mundial",
     "admin.worldRankings.import": "Importar",
     "admin.worldRankings.log": "Como foi a importação",

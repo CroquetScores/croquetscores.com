@@ -22,7 +22,7 @@ Feature: Changing a team player's world ranking name alone
     And "organiser@example.com" has added the team "Australia" to "Spring Tests"
     And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
     And "ranker@example.com" has an account, confirmed, called "Rae Ranker"
-    And "ranker@example.com" has been given the role "World Ranking Officer"
+    And "ranker@example.com" has been given the role "AC World Ranking Officer"
 
   Rule: A world ranking officer or a manager changes it
 

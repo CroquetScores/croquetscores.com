@@ -62,7 +62,7 @@ Feature: Importing the players the world rankings know
       Then the import is refused with "Account.NotAnAdministrator"
 
     Scenario: A world ranking officer who is not an administrator is refused
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       When the reader signed in to the account for "organiser@example.com" imports the world ranking players
       Then the import is refused with "Account.NotAnAdministrator"
 

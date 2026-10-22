@@ -22,7 +22,7 @@ export class AccountsWithRole extends Query<readonly AccountWithRole[]> {
   constructor(
     /** The account the reader is signed in to, from the session. */
     readonly account: string,
-    /** The role, as one is kept: "administrator" or "world-ranking-officer". */
+    /** The role, as one is kept: "administrator", "ac-world-ranking-officer" or "gc-world-ranking-officer". */
     readonly role: string,
   ) {
     super();

@@ -506,13 +506,16 @@ export class Tournament extends AggregateRoot {
    * Whether `by` may change its players' world ranking names
    * (changeWorldRankingName.feature): whoever may manage it, or an account
    * asking as a world ranking officer (WorldRankingOfficer.ts), which may do
-   * that to every tournament of a sport ranked across the world and nothing
-   * else. In any other sport there are no rankings for it to look after.
+   * that to every tournament of a sport ranked across the world that it holds
+   * the role for, and nothing else. In any other sport there are no rankings
+   * for it to look after, and in one it holds no role for they are not its to.
    */
   mayChangeWorldRankingNames(by: AccountId): boolean {
     return (
       this.mayManage(by) ||
-      (by instanceof WorldRankingOfficer && this.sport.hasWorldRankings)
+      (by instanceof WorldRankingOfficer &&
+        this.sport.hasWorldRankings &&
+        by.looksAfter(this.sport.code))
     );
   }
 

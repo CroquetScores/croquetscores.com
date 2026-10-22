@@ -513,12 +513,22 @@ export const egyptian: Language = {
     "admin.roles.administrator.removeTitle": "شيل مسؤول",
     "admin.roles.administrator.removeExplanation":
       "{name} مش هيبقى مسؤول عن الموقع ده تاني.",
-    "admin.roles.world-ranking-officer.heading": "المسؤولين عن التصنيف العالمي",
-    "admin.roles.world-ranking-officer.none": "مفيش مسؤولين عن التصنيف العالمي",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "شيل المسؤول عن التصنيف العالمي",
-    "admin.roles.world-ranking-officer.removeExplanation":
-      "{name} مش هيبقى مسؤول عن التصنيف العالمي تاني.",
+    "admin.roles.ac-world-ranking-officer.heading":
+      "المسؤولين عن التصنيف العالمي (أسوشيشن كروكيه)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "مفيش مسؤولين عن التصنيف العالمي (أسوشيشن كروكيه)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "شيل المسؤول عن التصنيف العالمي (أسوشيشن كروكيه)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} مش هيبقى مسؤول عن التصنيف العالمي تاني (أسوشيشن كروكيه).",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "المسؤولين عن التصنيف العالمي (جولف كروكيه)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "مفيش مسؤولين عن التصنيف العالمي (جولف كروكيه)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "شيل المسؤول عن التصنيف العالمي (جولف كروكيه)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
+      "{name} مش هيبقى مسؤول عن التصنيف العالمي تاني (جولف كروكيه).",
     "admin.worldRankings.title": "استيراد لاعبين التصنيف العالمي",
     "admin.worldRankings.import": "استورد",
     "admin.worldRankings.log": "إزاي مشي الاستيراد",

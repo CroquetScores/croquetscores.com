@@ -30,9 +30,10 @@ Feature: Removing a role from an account
       And the first thing it recorded is its losing a role
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: What removing a role recorded says which role was removed
       Given a stream where an account was registered at "someone@example.com"
@@ -43,9 +44,10 @@ Feature: Removing a role from an account
       Then its losing a role says the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: What removing a role recorded says who removed it
       Given a stream where an account was registered at "someone@example.com"
@@ -64,9 +66,10 @@ Feature: Removing a role from an account
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: An account rebuilt after a role was removed does not hold it
       Given a stream where an account was registered at "someone@example.com"
@@ -77,9 +80,10 @@ Feature: Removing a role from an account
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
   Rule: Removing one role leaves the other
 
@@ -87,15 +91,15 @@ Feature: Removing a role from an account
       Given a stream where an account was registered at "someone@example.com"
       And its email address was confirmed as "Sam Someone"
       And the role "Administrator" was added to it
-      And the role "World Ranking Officer" was added to it
+      And the role "AC World Ranking Officer" was added to it
       And the account is rebuilt from the stream
       When the role "<removed>" is removed from the account
       Then the account holds the role "<kept>"
 
       Examples:
-        | removed               | kept                  |
-        | Administrator         | World Ranking Officer |
-        | World Ranking Officer | Administrator         |
+        | removed                  | kept                     |
+        | Administrator            | AC World Ranking Officer |
+        | AC World Ranking Officer | Administrator            |
 
   Rule: Removing a role the account does not hold records nothing
 
@@ -107,9 +111,10 @@ Feature: Removing a role from an account
       Then it has recorded 0 events
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Removing a role already removed records nothing
       Given a stream where an account was registered at "someone@example.com"

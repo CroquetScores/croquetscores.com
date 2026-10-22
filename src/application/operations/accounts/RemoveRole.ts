@@ -9,7 +9,7 @@ export class RemoveRole extends Command<void> {
   constructor(
     /** The account the reader is signed in to, from the session. */
     readonly account: string,
-    /** The role, as one is kept: "administrator" or "world-ranking-officer". */
+    /** The role, as one is kept: "administrator", "ac-world-ranking-officer" or "gc-world-ranking-officer". */
     readonly role: string,
     /** Whoever is to lose it, by their account's id. */
     readonly holder: string,

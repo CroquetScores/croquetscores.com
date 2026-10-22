@@ -522,14 +522,22 @@ export const italian: Language = {
     "admin.roles.administrator.removeTitle": "Rimuovi amministratore",
     "admin.roles.administrator.removeExplanation":
       "{name} non sarà più un amministratore di questo sito.",
-    "admin.roles.world-ranking-officer.heading":
-      "Responsabili delle classifiche mondiali",
-    "admin.roles.world-ranking-officer.none":
-      "Nessun responsabile delle classifiche mondiali",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Rimuovi responsabile delle classifiche mondiali",
-    "admin.roles.world-ranking-officer.removeExplanation":
-      "{name} non sarà più un responsabile delle classifiche mondiali.",
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Responsabili delle classifiche mondiali (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Nessun responsabile delle classifiche mondiali (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Rimuovi responsabile delle classifiche mondiali (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} non sarà più un responsabile delle classifiche mondiali (Association Croquet).",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Responsabili delle classifiche mondiali (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Nessun responsabile delle classifiche mondiali (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Rimuovi responsabile delle classifiche mondiali (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
+      "{name} non sarà più un responsabile delle classifiche mondiali (Golf Croquet).",
     "admin.worldRankings.title":
       "Importa i giocatori della classifica mondiale",
     "admin.worldRankings.import": "Importa",

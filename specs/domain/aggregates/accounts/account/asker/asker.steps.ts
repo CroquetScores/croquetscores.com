@@ -30,6 +30,25 @@ Then(
 );
 
 Then(
+  "the account asks as a world ranking officer for {string}",
+  function (this: SpecWorld, sport: string) {
+    const asker = accountOf(this).asker;
+    assert.ok(asker instanceof WorldRankingOfficer);
+    assert.ok(asker.looksAfter(sport));
+  },
+);
+
+Then(
+  "the account does not ask as a world ranking officer for {string}",
+  function (this: SpecWorld, sport: string) {
+    const asker = accountOf(this).asker;
+    assert.ok(
+      !(asker instanceof WorldRankingOfficer) || !asker.looksAfter(sport),
+    );
+  },
+);
+
+Then(
   "the account asks as {string}",
   function (this: SpecWorld, account: string) {
     assert.ok(

@@ -26,7 +26,7 @@ Feature: Changing a player in a team's world ranking name alone
 
     Scenario: A world ranking officer changes a team player's world ranking name
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
       Then the team "Australia"'s player "Sam Someone" has the world ranking name "Samuel Someone"
 
@@ -46,7 +46,7 @@ Feature: Changing a player in a team's world ranking name alone
     Scenario: A world ranking officer is refused in a sport the world does not rank
       Given it was updated with the sport "rc"
       And the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 
@@ -54,7 +54,7 @@ Feature: Changing a player in a team's world ranking name alone
 
     Scenario: The player keeps their name
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" of the team "Australia" is changed to "Samuel Someone"
       Then the team "Australia" has the player "Sam Someone"
 

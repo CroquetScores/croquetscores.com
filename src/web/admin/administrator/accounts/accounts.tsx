@@ -7,7 +7,8 @@ import { People, type Person } from "../../people.js";
 // Drawn as a tournament's Managers and Scorers tabs are (people.tsx), since a
 // role is given and taken as a part in a tournament is.
 
-type Role = "administrator" | "world-ranking-officer";
+type Role =
+  "administrator" | "ac-world-ranking-officer" | "gc-world-ranking-officer";
 
 const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => (
   <People
@@ -32,6 +33,7 @@ export const Accounts = (): React.JSX.Element => (
   <div className="stack">
     <h1>{say("admin.accounts.title")}</h1>
     <RoleSection role="administrator" />
-    <RoleSection role="world-ranking-officer" />
+    <RoleSection role="ac-world-ranking-officer" />
+    <RoleSection role="gc-world-ranking-officer" />
   </div>
 );

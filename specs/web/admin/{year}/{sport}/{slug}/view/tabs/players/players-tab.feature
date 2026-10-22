@@ -707,7 +707,7 @@ Feature: The players tab of a tournament's page
     Scenario: A world ranking officer is shown the players
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" is listed
@@ -716,14 +716,14 @@ Feature: The players tab of a tournament's page
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" is listed among the archived
 
     Scenario: A world ranking officer is not offered Add Player
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the tab does not offer "Add Player"
@@ -732,7 +732,7 @@ Feature: The players tab of a tournament's page
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" does not offer "<option>"
@@ -746,7 +746,7 @@ Feature: The players tab of a tournament's page
     Scenario: A world ranking officer is offered Edit
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" offers "Edit"
@@ -755,7 +755,7 @@ Feature: The players tab of a tournament's page
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" does not offer "Restore"
