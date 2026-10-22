@@ -631,16 +631,19 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       Then the score dialog says "Competition.DrawNotFilled" above the fields
       And the modal dialog says the words for "Competition.DrawNotFilled"
 
-    Scenario: A winner's score equal to the loser's with no mark is added where the tournament allows drawn games
-      Given the tournament "Spring Open" allows drawn games
-      And the scores of "Block A" in "Spring Open" are open
+    Scenario: A winner's score equal to the loser's with no mark is added where the competition allows drawn results
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And the scores of "Block B" in "Spring Open" are open
       And "Add Score" is pressed
       And "Sam Someone" is chosen as the "Winner"
       And "6" is typed as the "Winner's score"
       And "Alex Another" is chosen as the "Loser"
       And "6" is typed as the "Loser's score"
       When "Add Game" is pressed
-      Then "Block A" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 6 to 6
+      Then "Block B" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" 6 to 6
 
     Scenario: A winner's score one more than the loser's is added
       Given the scores of "Block A" in "Spring Open" are open
@@ -1071,7 +1074,13 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And the modal dialog says the words for "Game.LoserMarked"
 
     Scenario: Scores that would draw a game won are refused above the fields
-      Given the tournament "Spring Open" allows drawn games
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And the scores of "Block B" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
       And "17" is typed as the "Winner's score"
       And "17" is typed as the "Loser's score"
       When "Save" is pressed

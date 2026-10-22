@@ -484,6 +484,31 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Edit" is pressed on the competition "Block A"
       Then "Played with handicaps" is ticked
 
+    Scenario: A competition said not to count is changed still not counting
+      Given the competition is said not to count towards the world rankings
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Counts toward world rankings" is not ticked
+
+    # It did not count because of the handicaps, and not because anybody chose
+    # that it should not, so once they are taken off it counts as one added would.
+    Scenario: A competition no longer played with handicaps begins counting
+      Given the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      When the reader unticks "Played with handicaps"
+      Then "Counts toward world rankings" is ticked
+
+    Scenario: A competition no longer allowing drawn results begins counting
+      Given the competition is to allow drawn results
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      When the reader unticks "Allows drawn results"
+      Then "Counts toward world rankings" is ticked
+
     Scenario: A competition changed to allow drawn results is kept so
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the competitions of "Spring Open" are open

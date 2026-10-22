@@ -64,8 +64,15 @@ export const useRules = (
   const [drawsAllowed, setDrawsAllowed] = useState(
     begins?.drawsAllowed ?? false,
   );
+  // One that does not count under handicap or with drawn results does not for
+  // that reason, and not because anybody chose it, so taking those off should
+  // not leave it uncounted without the reader having said so. Only one that
+  // is neither, and does not count, was chosen not to.
   const [worldRankings, setWorldRankings] = useState(
-    begins?.worldRankings ?? true,
+    begins === undefined ||
+      begins.worldRankings ||
+      begins.handicap ||
+      begins.drawsAllowed,
   );
   const asksAboutWorldRankings = ranked && !handicap && !drawsAllowed;
   return {
