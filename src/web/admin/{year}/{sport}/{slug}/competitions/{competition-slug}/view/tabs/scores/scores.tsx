@@ -106,8 +106,12 @@ export const ScoresTab = ({
   // Why Add Score did not open the dialog, said until OK is pressed.
   const [unfilled, setUnfilled] = useState(false);
   // What was refused of what was last pressed, by its code: a game whose
-  // player has been archived since is not restored until they are.
-  const [refused, setRefused] = useState<string | undefined>();
+  // player has been archived since is not restored until they are. The game
+  // it is said beneath where it is a game's own, as a refused Restore is, and
+  // above the list where it is not.
+  const [refused, setRefused] = useState<
+    { readonly code: string; readonly game?: string } | undefined
+  >();
   // The game Edit was pressed on, which the dialog corrects.
   const [correcting, setCorrecting] = useState<Listed | undefined>();
   const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
@@ -121,15 +125,19 @@ export const ScoresTab = ({
   ): Promise<void> => {
     setActing(true);
     setRefused(undefined);
+    // Said beneath a score the reader pressed Restore on, since a long list
+    // would put the refusal away from it, and above the list otherwise.
+    const placed = (code: string) =>
+      action === "restore" ? { code, game: game.id } : { code };
     try {
       const response = await fetch(`${at}/${idInAddress(game.id)}/${action}`, {
         method: "POST",
       });
       if (!response.ok) {
-        setRefused(await refusalOf(response));
+        setRefused(placed(await refusalOf(response)));
       }
     } catch {
-      setRefused("Unknown");
+      setRefused(placed("Unknown"));
     } finally {
       askAgain();
       setActing(false);
@@ -154,6 +162,25 @@ export const ScoresTab = ({
       </span>
     ) : null;
 
+  // Whether the refusal is said beneath a score that is in the list. One whose
+  // score is not, because the list has changed since, is said above it
+  // rather than not at all.
+  const shownBeneath =
+    refused?.game !== undefined &&
+    (listed ?? []).some((game) => game.id === refused.game);
+
+  // Beneath the game that could not be restored, by its code.
+  const refusedBeneath = (game: Listed): React.JSX.Element | null =>
+    shownBeneath && refused?.game === game.id ? (
+      <p
+        className="listed-score-refused"
+        role="alert"
+        data-refused={refused.code}
+      >
+        {say(knows(refused.code) ? refused.code : "admin.scores.otherwise")}
+      </p>
+    ) : null;
+
   const row = (game: Listed): React.JSX.Element => (
     <li
       key={game.id}
@@ -172,6 +199,7 @@ export const ScoresTab = ({
       {archivedSaid(game)}
       {withdrawnSaid(game)}
       {options(game)}
+      {refusedBeneath(game)}
     </li>
   );
 
@@ -201,6 +229,7 @@ export const ScoresTab = ({
         <td>
           {archivedSaid(game)}
           {options(game)}
+          {refusedBeneath(game)}
         </td>
       </tr>
     );
@@ -360,9 +389,9 @@ export const ScoresTab = ({
           {say("admin.scores.add")}
         </button>
       </p>
-      {refused === undefined ? null : (
-        <p className="listed-refused" data-refused={refused}>
-          {say(knows(refused) ? refused : "admin.scores.otherwise")}
+      {refused === undefined || shownBeneath ? null : (
+        <p className="listed-refused" data-refused={refused.code}>
+          {say(knows(refused.code) ? refused.code : "admin.scores.otherwise")}
         </p>
       )}
       {listed === undefined ? null : listed.length === 0 ? (

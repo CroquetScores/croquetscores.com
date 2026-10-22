@@ -499,3 +499,44 @@ Given(
       Number(games);
   },
 );
+
+// Beneath the score it was pressed on, by the refusal's code: the words beside
+// it are only its words.
+Then(
+  /^the score of "([^"]*)" beating "([^"]*)" says it was refused with "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    code: string,
+  ) {
+    await eventually(this, async () => {
+      const row = await rowOf(this, winner, loser);
+      assert.equal(
+        await row
+          .locator(".listed-score-refused")
+          .getAttribute("data-refused", { timeout: 500 }),
+        code,
+      );
+    });
+  },
+);
+
+Then(
+  /^the score of "([^"]*)" beating "([^"]*)" says nothing was refused$/,
+  async function (this: SpecWorld, winner: string, loser: string) {
+    const row = await rowOf(this, winner, loser);
+    assert.equal(await row.locator(".listed-score-refused").count(), 0);
+  },
+);
+
+Then(
+  "nothing is said above the list of scores",
+  async function (this: SpecWorld) {
+    // Once the list has been asked for again after the press.
+    await eventually(this, async () => {
+      assert.ok((await rows(this).count()) > 0);
+    });
+    assert.equal(await tabPanel(this).locator(".listed-refused").count(), 0);
+  },
+);
