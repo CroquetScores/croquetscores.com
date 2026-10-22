@@ -24,7 +24,7 @@ Feature: Changing a tournament player's world ranking name alone
     And "organiser@example.com" has created the tournament "Spring Open"
     And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
     And "ranker@example.com" has an account, confirmed, called "Rae Ranker"
-    And "ranker@example.com" has been given the role "World Ranking Officer"
+    And "ranker@example.com" has been given the role "AC World Ranking Officer"
 
   Rule: A world ranking officer or a manager changes it
 
@@ -49,7 +49,7 @@ Feature: Changing a tournament player's world ranking name alone
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 
     Scenario: An account the role was taken from is refused
-      Given "ranker@example.com" has had the role "World Ranking Officer" taken away
+      Given "ranker@example.com" has had the role "AC World Ranking Officer" taken away
       When the reader signed in to the account for "ranker@example.com" changes the world ranking name of the player "Sam Someone" of "Spring Open" to "Samuel Someone"
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 

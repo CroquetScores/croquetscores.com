@@ -109,8 +109,10 @@ const holds = async (
   switch (roleCalled(role)) {
     case "administrator":
       return account.isAdministrator;
-    case "world-ranking-officer":
-      return account.isWorldRankingOfficer;
+    case "ac-world-ranking-officer":
+      return account.worldRankingSports.includes("ac");
+    case "gc-world-ranking-officer":
+      return account.worldRankingSports.includes("gc");
   }
 };
 

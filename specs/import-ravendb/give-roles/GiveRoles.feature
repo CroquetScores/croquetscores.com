@@ -1,8 +1,8 @@
 @postgres
 Feature: Giving the site's roles once the users are imported
 
-  An account can hold two roles, Administrator and World Ranking Officer
-  (`addRole.feature`). Nothing on the site gives a role yet, and the import
+  An account can hold three roles, Administrator, AC World Ranking Officer and
+  GC World Ranking Officer (`addRole.feature`). Nothing on the site gives a role yet, and the import
   empties the database before it brings anything over, so the import gives
   them: once the users of croquetscores.com are brought over, each address
   it names for a role is given that role. Which addresses hold which role is
@@ -43,31 +43,32 @@ Feature: Giving the site's roles once the users are imported
       Then the account at "someone@example.com" holds the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Every user named for a role is given it
       Given a user "users/1" on "croquetscores.com" is imported as "chris@example.com"
       And a user "users/2" on "croquetscores.com" is imported as "richard@example.com"
-      And "chris@example.com" is named to hold the role "World Ranking Officer"
-      And "richard@example.com" is named to hold the role "World Ranking Officer"
+      And "chris@example.com" is named to hold the role "AC World Ranking Officer"
+      And "richard@example.com" is named to hold the role "AC World Ranking Officer"
       When the roles are given
-      Then the account at "richard@example.com" holds the role "World Ranking Officer"
+      Then the account at "richard@example.com" holds the role "AC World Ranking Officer"
 
     Scenario: A user named for one role is not given the other
       Given a user "users/1" on "croquetscores.com" is imported as "chris@example.com"
-      And "chris@example.com" is named to hold the role "World Ranking Officer"
+      And "chris@example.com" is named to hold the role "AC World Ranking Officer"
       When the roles are given
       Then the account at "chris@example.com" does not hold the role "Administrator"
 
     Scenario: A user named for both roles is given both
       Given a user "users/1" on "croquetscores.com" is imported as "someone@example.com"
       And "someone@example.com" is named to hold the role "Administrator"
-      And "someone@example.com" is named to hold the role "World Ranking Officer"
+      And "someone@example.com" is named to hold the role "AC World Ranking Officer"
       When the roles are given
       Then the account at "someone@example.com" holds the role "Administrator"
-      And the account at "someone@example.com" holds the role "World Ranking Officer"
+      And the account at "someone@example.com" holds the role "AC World Ranking Officer"
 
     Scenario: A user not named for a role is not given it
       Given a user "users/1" on "croquetscores.com" is imported as "tim@example.com"
@@ -97,7 +98,7 @@ Feature: Giving the site's roles once the users are imported
   Rule: An address no user was brought over as is named, and the rest are given their roles
 
     Scenario: An address with no account is named
-      Given "nobody@example.com" is named to hold the role "World Ranking Officer"
+      Given "nobody@example.com" is named to hold the role "AC World Ranking Officer"
       When the roles are given
       Then "nobody@example.com" is named as having no account
 

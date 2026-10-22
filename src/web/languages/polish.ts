@@ -536,13 +536,21 @@ export const polish: Language = {
     "admin.roles.administrator.removeTitle": "Usuń administratora",
     "admin.roles.administrator.removeExplanation":
       "{name} nie będzie już administratorem tej strony.",
-    "admin.roles.world-ranking-officer.heading":
-      "Odpowiedzialni za rankingi światowe",
-    "admin.roles.world-ranking-officer.none":
-      "Brak osób odpowiedzialnych za rankingi światowe",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Usuń osobę odpowiedzialną za rankingi światowe",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Odpowiedzialni za rankingi światowe (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Brak osób odpowiedzialnych za rankingi światowe (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Usuń osobę odpowiedzialną za rankingi światowe (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} nie będzie już osobą odpowiedzialną za rankingi światowe.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Odpowiedzialni za rankingi światowe (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Brak osób odpowiedzialnych za rankingi światowe (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Usuń osobę odpowiedzialną za rankingi światowe (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "{name} nie będzie już osobą odpowiedzialną za rankingi światowe.",
     "admin.worldRankings.title": "Import zawodników z rankingów światowych",
     "admin.worldRankings.import": "Importuj",

@@ -82,7 +82,8 @@ export interface TournamentsByAccount {
  * The tournaments the account the reader is signed in to manages or scores on
  * the website being read, starting in `year`: every one there, as one it
  * manages, where the account administers the site, and every one of a sport
- * with world rankings besides its own where it is a world ranking officer.
+ * of a sport it looks after the rankings of besides its own where it is a world
+ * ranking officer.
  *
  * It names the account the reader is signed in to, never one they chose, so
  * nobody can list another account's tournaments.

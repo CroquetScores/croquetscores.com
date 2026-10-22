@@ -75,9 +75,9 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Sam Someone" is listed in "<section>"
 
       Examples:
-        | role                  | section                |
-        | Administrator         | Administrators         |
-        | World Ranking Officer | World Ranking Officers |
+        | role                     | section                |
+        | Administrator            | Administrators         |
+        | AC World Ranking Officer | World Ranking Officers |
 
     Scenario: An account is not listed in the section of a role it does not hold
       Given "someone@example.com" has been given the role "Administrator"
@@ -89,14 +89,14 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Ada Administrator" is not listed in "Administrators"
 
     Scenario: The reader is listed among the world ranking officers
-      Given "admin@example.com" has been given the role "World Ranking Officer"
+      Given "admin@example.com" has been given the role "AC World Ranking Officer"
       When the accounts page is opened
       Then "Ada Administrator" is listed in "World Ranking Officers"
 
     Scenario: The accounts are listed in alphabetical order
       Given "other@example.com" has an account, confirmed, called "Alex Another"
-      And "someone@example.com" has been given the role "World Ranking Officer"
-      And "other@example.com" has been given the role "World Ranking Officer"
+      And "someone@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has been given the role "AC World Ranking Officer"
       When the accounts page is opened
       Then the first listed in "World Ranking Officers" is "Alex Another"
 
@@ -106,9 +106,9 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Sam Someone" in "<section>" offers "Remove"
 
       Examples:
-        | role                  | section                |
-        | Administrator         | Administrators         |
-        | World Ranking Officer | World Ranking Officers |
+        | role                     | section                |
+        | Administrator            | Administrators         |
+        | AC World Ranking Officer | World Ranking Officers |
 
   Rule: Somebody is given a role by their email address
 
@@ -158,7 +158,7 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Email address" in "World Ranking Officers" has the focus
 
     Scenario: Giving a role to an account that holds it lists them once
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "someone@example.com" is typed as the "Email address" in "World Ranking Officers"
       When "Add" is pressed in "World Ranking Officers"
@@ -200,7 +200,7 @@ Feature: The accounts page, where an administrator gives and takes roles
   Rule: Every Remove asks first
 
     Scenario: Removing asks first
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       When "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       Then the modal dialog titled "Remove World Ranking Officer" is open
@@ -212,19 +212,19 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then the modal dialog titled "Remove Administrator" is open
 
     Scenario: Asking first names whose role will be taken
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       When "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       Then the modal dialog names "Sam Someone"
 
     Scenario: Asking first offers Remove first
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       When "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       Then the modal dialog's first button is "Remove"
 
     Scenario: Asking first offers Cancel
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       When "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       Then the modal dialog's second button is "Cancel"
@@ -239,12 +239,12 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Sam Someone" is not listed in "<section>"
 
       Examples:
-        | role                  | section                |
-        | Administrator         | Administrators         |
-        | World Ranking Officer | World Ranking Officers |
+        | role                     | section                |
+        | Administrator            | Administrators         |
+        | AC World Ranking Officer | World Ranking Officers |
 
     Scenario: A role taken is kept taken
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       And "Remove" is pressed in the modal dialog
@@ -253,14 +253,14 @@ Feature: The accounts page, where an administrator gives and takes roles
 
     Scenario: Removing from one section leaves the other
       Given "someone@example.com" has been given the role "Administrator"
-      And "someone@example.com" has been given the role "World Ranking Officer"
+      And "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       When "Remove" is pressed in the modal dialog
       Then "Sam Someone" is listed in "Administrators"
 
     Scenario: Removing closes the modal dialog
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       When "Remove" is pressed in the modal dialog
@@ -269,14 +269,14 @@ Feature: The accounts page, where an administrator gives and takes roles
   Rule: Cancel in the modal dialog takes nothing away
 
     Scenario: Cancelling keeps the account listed
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       When "Cancel" is pressed in the modal dialog
       Then "Sam Someone" is listed in "World Ranking Officers"
 
     Scenario: Cancelling closes the modal dialog
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       When "Cancel" is pressed in the modal dialog
@@ -292,7 +292,7 @@ Feature: The accounts page, where an administrator gives and takes roles
     command's to say (`RemoveRole.feature`).
 
     Scenario: Removing once the reader's role has been taken says so
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
       And "Remove" is pressed on "Sam Someone" in "World Ranking Officers"
       And "admin@example.com" has had the role "Administrator" taken away
@@ -306,7 +306,7 @@ Feature: The accounts page, where an administrator gives and takes roles
     that there is nobody in it, which would look like a page still loading.
 
     Scenario: A list the site fails to answer says so
-      Given the accounts holding the role "World Ranking Officer" are answered with a server error
+      Given the accounts holding the role "AC World Ranking Officer" are answered with a server error
       When the accounts page is opened
       Then the section "World Ranking Officers" says it was refused with "Unknown"
 
@@ -317,15 +317,15 @@ Feature: The accounts page, where an administrator gives and takes roles
 
     Scenario: The page is in the reader's language
       Given a browser that asks for "en-XA"
-      And "someone@example.com" has been given the role "World Ranking Officer"
+      And "someone@example.com" has been given the role "AC World Ranking Officer"
       When the accounts page is opened
       Then every word in the admin's content but the accounts' names is in the test locale
 
     Scenario: Asking before removing is in the reader's language
       Given a browser that asks for "en-XA"
-      And "someone@example.com" has been given the role "World Ranking Officer"
+      And "someone@example.com" has been given the role "AC World Ranking Officer"
       And the accounts page is open
-      When the way to remove the first world ranking officer is pressed
+      When the way to remove the first "ac" world ranking officer is pressed
       Then every word in the modal dialog but the account's name is in the test locale
 
   Rule: The page is laid out for a phone first
@@ -335,11 +335,11 @@ Feature: The accounts page, where an administrator gives and takes roles
       Then "Add" in "World Ranking Officers" is at least 44 pixels tall
 
     Scenario: Remove can be pressed with a thumb
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       When the accounts page is opened
       Then "Remove" on "Sam Someone" in "World Ranking Officers" is at least 44 pixels tall
 
     Scenario: The page is no wider than the window
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       When the accounts page is opened
       Then the page is no wider than the window

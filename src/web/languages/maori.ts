@@ -542,13 +542,21 @@ export const maori: Language = {
     "admin.roles.administrator.removeTitle": "Tango kaiwhakahaere pae",
     "admin.roles.administrator.removeExplanation":
       "Ka kore a {name} e noho hei kaiwhakahaere pae mō tēnei pae.",
-    "admin.roles.world-ranking-officer.heading":
-      "Ngā kaiwhakahaere raupapa o te ao",
-    "admin.roles.world-ranking-officer.none":
-      "Kāore he kaiwhakahaere raupapa o te ao",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Tango kaiwhakahaere raupapa o te ao",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Ngā kaiwhakahaere raupapa o te ao (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Kāore he kaiwhakahaere raupapa o te ao (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Tango kaiwhakahaere raupapa o te ao (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Ngā kaiwhakahaere raupapa o te ao (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Kāore he kaiwhakahaere raupapa o te ao (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Tango kaiwhakahaere raupapa o te ao (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao.",
     "admin.worldRankings.title": "Kawemai i ngā kaitākaro o te raupapa o te ao",
     "admin.worldRankings.import": "Kawemai",

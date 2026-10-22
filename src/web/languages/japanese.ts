@@ -528,11 +528,21 @@ export const japanese: Language = {
     "admin.roles.administrator.removeTitle": "管理者の解除",
     "admin.roles.administrator.removeExplanation":
       "{name}はこのサイトの管理者ではなくなります。",
-    "admin.roles.world-ranking-officer.heading": "世界ランキング担当者",
-    "admin.roles.world-ranking-officer.none": "世界ランキング担当者はいません",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "世界ランキング担当者の解除",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "世界ランキング担当者 (アソシエーションクロッケー)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "世界ランキング担当者はいません (アソシエーションクロッケー)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "世界ランキング担当者の解除 (アソシエーションクロッケー)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name}は世界ランキング担当者ではなくなります。",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "世界ランキング担当者 (ゴルフクロッケー)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "世界ランキング担当者はいません (ゴルフクロッケー)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "世界ランキング担当者の解除 (ゴルフクロッケー)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "{name}は世界ランキング担当者ではなくなります。",
     "admin.worldRankings.title": "世界ランキングの選手のインポート",
     "admin.worldRankings.import": "インポート",

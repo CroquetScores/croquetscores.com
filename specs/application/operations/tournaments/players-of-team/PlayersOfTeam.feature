@@ -134,7 +134,7 @@ Feature: The players of a tournament's team, as a manager lists them
 
     Scenario: A world ranking officer lists them
       Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       When the reader signed in to the account for "ranker@example.com" lists the players of the team "Australia" of "Spring Tests"
       Then the player "Sam Someone" is answered

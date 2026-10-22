@@ -38,40 +38,41 @@ Feature: Giving an account a role
       Then the account for "someone@example.com" holds the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Giving a role is recorded as done by whoever asked
-      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "AC World Ranking Officer"
       Then the last thing the account for "someone@example.com" recorded was caused by the account for "admin@example.com"
 
     Scenario: An email address typed in capitals names the same account
-      When the reader signed in to the account for "admin@example.com" gives "SOMEONE@EXAMPLE.COM" the role "World Ranking Officer"
-      Then the account for "someone@example.com" holds the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "SOMEONE@EXAMPLE.COM" the role "AC World Ranking Officer"
+      Then the account for "someone@example.com" holds the role "AC World Ranking Officer"
 
     Scenario: Giving a role emails nothing
-      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "AC World Ranking Officer"
       Then nothing is queued to be sent
 
   Rule: Only an address with a confirmed account can be given a role
 
     Scenario: An address nobody has registered is refused
-      When the reader signed in to the account for "admin@example.com" gives "nobody@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "nobody@example.com" the role "AC World Ranking Officer"
       Then it is refused with "AddRole.NoSuchAccount"
 
     Scenario: An address waiting to be confirmed is refused the same way
       Given "waiting@example.com" has an account, not confirmed
-      When the reader signed in to the account for "admin@example.com" gives "waiting@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "waiting@example.com" the role "AC World Ranking Officer"
       Then it is refused with "AddRole.NoSuchAccount"
 
     Scenario: The address of a forgotten account is refused the same way
       Given the account for "someone@example.com" has been forgotten
-      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "AC World Ranking Officer"
       Then it is refused with "AddRole.NoSuchAccount"
 
     Scenario: An address that is not one is refused for it
-      When the reader signed in to the account for "admin@example.com" gives "someone" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "someone" the role "AC World Ranking Officer"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "EmailAddress.NoAt"
 
@@ -88,11 +89,11 @@ Feature: Giving an account a role
       Then it is refused with "Account.NotAnAdministrator"
 
     Scenario: A world ranking officer is refused
-      Given "someone@example.com" has been given the role "World Ranking Officer"
+      Given "someone@example.com" has been given the role "AC World Ranking Officer"
       When the reader signed in to the account for "someone@example.com" gives "someone@example.com" the role "Administrator"
       Then it is refused with "Account.NotAnAdministrator"
 
     Scenario: An account the role was taken from is refused
       Given "admin@example.com" has had the role "Administrator" taken away
-      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "World Ranking Officer"
+      When the reader signed in to the account for "admin@example.com" gives "someone@example.com" the role "AC World Ranking Officer"
       Then it is refused with "Account.NotAnAdministrator"

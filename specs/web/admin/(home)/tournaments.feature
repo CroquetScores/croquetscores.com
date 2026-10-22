@@ -185,42 +185,46 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
 
-  Rule: A world ranking officer's list adds every tournament of a sport with world rankings
+  Rule: A world ranking officer's list adds every tournament of a sport it looks after
 
-    An account that holds the World Ranking Officer role may change the world
-    ranking name of any player (`changeWorldRankingName.feature`), and only
-    association croquet and golf croquet have players known by name to the
-    world rankings (`Sport.feature`). So its list is of the tournaments it
-    manages or scores, offering what its part allows, and every tournament of
-    those two sports on the website besides, each offering its players, which
-    is what the officer is there for. Whether any of a tournament's
+    An account that holds the AC World Ranking Officer or the GC World Ranking
+    Officer role may change the world ranking name of any player in a
+    tournament of that role's sport (`changeWorldRankingName.feature`), and
+    only association croquet and golf croquet have players known by name to
+    the world rankings (`Sport.feature`). So its list is of the tournaments it
+    manages or scores, of any sport, offering what its part allows, and every
+    tournament of the sport or sports it holds a role for on the website
+    besides, each
+    offering its players, which is what the officer is there for. A
+    tournament of the other of the two is not in it, since the officers of one
+    sport are not those of the other. Whether any of a tournament's
     competitions counts towards the world rankings is each competition's to
     say (`competitionRules.feature`), so it is not asked of the list. The years
     are those any of them is in.
 
     Scenario: A tournament of a sport with world rankings is listed for a world ranking officer
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       When the admin is opened
       Then the tournament "Autumn Open" is listed
 
     Scenario: A tournament a world ranking officer has no part in offers its players
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       When the admin is opened
       Then the tournament "Autumn Open" offers "Players"
 
     Scenario: A tournament a world ranking officer has no part in offers nothing a manager is offered
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       When the admin is opened
       Then the tournament "Autumn Open" does not offer "Manage"
 
     Scenario: Players leads to the tournament in the admin
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-10-03"
@@ -230,21 +234,82 @@ Feature: The admin lists the reader's tournaments
       Then the address is "/admin/2026/ac/autumn-open"
 
     Scenario: A tournament a world ranking officer manages offers what a manager does
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the admin is opened
       Then the tournament "Spring Open" offers "Manage"
 
+    Scenario: A Golf Croquet tournament is not listed for an AC world ranking officer
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" is for the sport "gc"
+      When the admin is opened
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: An Association Croquet tournament is not listed for a GC world ranking officer
+      Given "organiser@example.com" has been given the role "GC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" is for the sport "ac"
+      When the admin is opened
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A Golf Croquet tournament is listed for a GC world ranking officer
+      Given "organiser@example.com" has been given the role "GC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" is for the sport "gc"
+      When the admin is opened
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: Both sports' tournaments are listed for an officer of both
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "organiser@example.com" has been given the role "GC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And "other@example.com" has created the tournament "Winter Open"
+      And the tournament "Autumn Open" is for the sport "ac"
+      And the tournament "Winter Open" is for the sport "gc"
+      When the admin is opened
+      Then the tournament "Autumn Open" is listed
+      And the tournament "Winter Open" is listed
+
+    Scenario: A Golf Croquet tournament an AC world ranking officer manages is still listed
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" is for the sport "gc"
+      When the admin is opened
+      Then the tournament "Autumn Open" offers "Manage"
+
+    Scenario: A Golf Croquet tournament an AC world ranking officer scores is still listed
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "other@example.com" has made "organiser@example.com" a scorer of "Autumn Open"
+      When the admin is opened
+      Then the tournament "Autumn Open" is listed
+
     Scenario: A tournament of a sport without world rankings is not listed for a world ranking officer
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" is for the sport "rc"
       When the admin is opened
       Then the tournament "Autumn Open" is not listed
 
+    Scenario: A year of a tournament of the other sport is not offered to a world ranking officer
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2024-10-03"
+      And the tournament "Autumn Open" is for the sport "gc"
+      When the admin is opened
+      Then the year 2024 is not offered
+
     Scenario: A year of a tournament of a sport with world rankings is offered to a world ranking officer
-      Given "organiser@example.com" has been given the role "World Ranking Officer"
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2024-10-03"

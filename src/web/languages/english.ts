@@ -596,12 +596,22 @@ export const english: Language = {
     "admin.roles.administrator.removeTitle": "Remove Administrator",
     "admin.roles.administrator.removeExplanation":
       "{name} will no longer be an administrator of this site.",
-    "admin.roles.world-ranking-officer.heading": "World Ranking Officers",
-    "admin.roles.world-ranking-officer.none": "No world ranking officers",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Remove World Ranking Officer",
-    "admin.roles.world-ranking-officer.removeExplanation":
-      "{name} will no longer be a world ranking officer.",
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Association Croquet World Ranking Officers",
+    "admin.roles.ac-world-ranking-officer.none":
+      "No Association Croquet world ranking officers",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Remove Association Croquet World Ranking Officer",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} will no longer be an Association Croquet world ranking officer.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Golf Croquet World Ranking Officers",
+    "admin.roles.gc-world-ranking-officer.none":
+      "No Golf Croquet world ranking officers",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Remove Golf Croquet World Ranking Officer",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
+      "{name} will no longer be a Golf Croquet world ranking officer.",
     // For a refusal with no words of its own, beneath the field or in place
     // of the list. Not about the address, since it may be the session that
     // ended or the site that failed.

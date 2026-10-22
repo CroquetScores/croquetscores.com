@@ -1,8 +1,9 @@
 Feature: Adding a role to an account
 
-  An account can hold two roles: Administrator and World Ranking Officer. Each
-  lets whoever holds it do something an account without it cannot, and each
-  is held or not on its own: holding one says nothing about the other.
+  An account can hold three roles: Administrator, AC World Ranking Officer and
+  GC World Ranking Officer. Each lets whoever holds it do something an account
+  without it cannot, and each is held or not on its own: holding one says
+  nothing about the others.
 
   Adding a role is an event of its own, saying which role was added, so that
   rebuilding the account from its stream gives the roles it holds now. Unlike
@@ -42,9 +43,10 @@ Feature: Adding a role to an account
       And the first thing it recorded is its being given a role
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: What adding a role recorded says which role was added
       Given a stream where an account was registered at "someone@example.com"
@@ -54,9 +56,10 @@ Feature: Adding a role to an account
       Then its being given a role says the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: What adding a role recorded says who gave it
       Given a stream where an account was registered at "someone@example.com"
@@ -73,9 +76,10 @@ Feature: Adding a role to an account
       Then the account holds the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: A role is added to an account brought over from the old site
       Given a stream where an account was brought over as "Sam Someone" at "someone@example.com"
@@ -84,9 +88,10 @@ Feature: Adding a role to an account
       Then the account holds the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario Outline: An account rebuilt after a role was added holds it
       Given a stream where an account was registered at "someone@example.com"
@@ -96,11 +101,12 @@ Feature: Adding a role to an account
       Then the account holds the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
-  Rule: Holding one role says nothing about the other
+  Rule: Holding one role says nothing about the others
 
     Scenario Outline: Adding one role does not add the other
       Given a stream where an account was registered at "someone@example.com"
@@ -110,18 +116,20 @@ Feature: Adding a role to an account
       Then the account does not hold the role "<other>"
 
       Examples:
-        | added                 | other                 |
-        | Administrator         | World Ranking Officer |
-        | World Ranking Officer | Administrator         |
+        | added                    | other                    |
+        | Administrator            | AC World Ranking Officer |
+        | AC World Ranking Officer | Administrator            |
+        | AC World Ranking Officer | GC World Ranking Officer |
+        | GC World Ranking Officer | AC World Ranking Officer |
 
     Scenario: An account can hold both roles
       Given a stream where an account was registered at "someone@example.com"
       And its email address was confirmed as "Sam Someone"
       And the role "Administrator" was added to it
-      And the role "World Ranking Officer" was added to it
+      And the role "AC World Ranking Officer" was added to it
       When the account is rebuilt from the stream
       Then the account holds the role "Administrator"
-      And the account holds the role "World Ranking Officer"
+      And the account holds the role "AC World Ranking Officer"
 
   Rule: A role is added once
 
@@ -134,9 +142,10 @@ Feature: Adding a role to an account
       Then it has recorded 0 events
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
   Rule: A role is added only to a confirmed account that is not forgotten
 

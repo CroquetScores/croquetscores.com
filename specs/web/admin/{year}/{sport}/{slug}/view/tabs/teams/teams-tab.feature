@@ -432,7 +432,7 @@ Feature: The teams tab of a tournament's page
     Scenario: A world ranking officer is shown the teams
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the teams of "Spring Tests" are open
       Then the first team listed is "Australia"
@@ -440,7 +440,7 @@ Feature: The teams tab of a tournament's page
     Scenario: A world ranking officer is not offered Add Team
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the teams of "Spring Tests" are open
       Then the tab does not offer "Add Team"
@@ -449,7 +449,7 @@ Feature: The teams tab of a tournament's page
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "organiser@example.com" has added the team "England" to "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the teams of "Spring Tests" are open
       Then the team "Australia" does not offer "<option>"
@@ -463,7 +463,7 @@ Feature: The teams tab of a tournament's page
     Scenario: A world ranking officer is offered the team's page
       Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the teams of "Spring Tests" are open
       Then the team "Australia" offers "View"

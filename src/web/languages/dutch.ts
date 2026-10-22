@@ -533,13 +533,21 @@ export const dutch: Language = {
     "admin.roles.administrator.removeTitle": "Beheerder verwijderen",
     "admin.roles.administrator.removeExplanation":
       "{name} is niet langer beheerder van deze site.",
-    "admin.roles.world-ranking-officer.heading":
-      "Functionarissen wereldranglijst",
-    "admin.roles.world-ranking-officer.none":
-      "Geen functionarissen wereldranglijst",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Functionaris wereldranglijst verwijderen",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Functionarissen wereldranglijst (Associatiecroquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Geen functionarissen wereldranglijst (Associatiecroquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Functionaris wereldranglijst verwijderen (Associatiecroquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} is niet langer functionaris wereldranglijst.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Functionarissen wereldranglijst (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Geen functionarissen wereldranglijst (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Functionaris wereldranglijst verwijderen (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "{name} is niet langer functionaris wereldranglijst.",
     "admin.worldRankings.title": "Spelers van de wereldranglijst importeren",
     "admin.worldRankings.import": "Importeren",

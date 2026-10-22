@@ -8,14 +8,17 @@ Feature: Who an account asks as
   without the tournament having to know anything of anybody's roles. An
   account asks as an administrator only while it holds the role: one never
   given it, and one it was taken from, asks as itself and nothing more, and
-  so does a forgotten account, whatever it held. Holding the World Ranking
+  so does a forgotten account, whatever it held. Holding a World Ranking
   Officer role says nothing about it.
 
-  An account that holds the World Ranking Officer role asks as a world
-  ranking officer, the same id known to be one, so that it may change the
-  world ranking name of any player (`changeWorldRankingName.feature`) without
-  the tournament having to know anything of anybody's roles. An account
-  holding both roles asks as an administrator, who may do that and more.
+  An account that holds the AC World Ranking Officer role or the GC World
+  Ranking Officer role asks as a world ranking officer, the same id known to
+  be one, and known to look after the rankings of the sport or sports it holds
+  a role for, so that it may change the world ranking name of any player in a
+  tournament of one (`changeWorldRankingName.feature`) without the tournament
+  having to know anything of anybody's roles. An account holding a World
+  Ranking Officer role and the Administrator role asks as an administrator,
+  who may do that and more.
 
   Background:
     Given the account "account/123e4567-e89b-42d3-a456-426614174000"
@@ -47,14 +50,14 @@ Feature: Who an account asks as
       Then the account does not ask as an administrator
 
     Scenario: An account holding only the World Ranking Officer role does not ask as an administrator
-      Given the role "World Ranking Officer" was added to it
+      Given the role "AC World Ranking Officer" was added to it
       When the account is rebuilt from the stream
       Then the account does not ask as an administrator
 
   Rule: An account asks as a world ranking officer while it holds that role
 
     Scenario: An account given the World Ranking Officer role asks as a world ranking officer
-      Given the role "World Ranking Officer" was added to it
+      Given the role "AC World Ranking Officer" was added to it
       When the account is rebuilt from the stream
       Then the account asks as a world ranking officer
 
@@ -63,13 +66,40 @@ Feature: Who an account asks as
       Then the account does not ask as a world ranking officer
 
     Scenario: An account the role was taken from does not ask as a world ranking officer
-      Given the role "World Ranking Officer" was added to it
-      And the role "World Ranking Officer" was removed from it
+      Given the role "AC World Ranking Officer" was added to it
+      And the role "AC World Ranking Officer" was removed from it
       When the account is rebuilt from the stream
       Then the account does not ask as a world ranking officer
 
+    Scenario: An account given the AC World Ranking Officer role looks after Association Croquet
+      Given the role "AC World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account asks as a world ranking officer for "ac"
+
+    Scenario: An account given the AC World Ranking Officer role does not look after Golf Croquet
+      Given the role "AC World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account does not ask as a world ranking officer for "gc"
+
+    Scenario: An account given the GC World Ranking Officer role looks after Golf Croquet
+      Given the role "GC World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account asks as a world ranking officer for "gc"
+
+    Scenario: An account given the GC World Ranking Officer role does not look after Association Croquet
+      Given the role "GC World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account does not ask as a world ranking officer for "ac"
+
+    Scenario: An account given both roles looks after both sports
+      Given the role "AC World Ranking Officer" was added to it
+      And the role "GC World Ranking Officer" was added to it
+      When the account is rebuilt from the stream
+      Then the account asks as a world ranking officer for "ac"
+      And the account asks as a world ranking officer for "gc"
+
     Scenario: An account holding both roles asks as an administrator
-      Given the role "World Ranking Officer" was added to it
+      Given the role "AC World Ranking Officer" was added to it
       And the role "Administrator" was added to it
       When the account is rebuilt from the stream
       Then the account asks as an administrator

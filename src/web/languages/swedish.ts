@@ -532,11 +532,21 @@ export const swedish: Language = {
     "admin.roles.administrator.removeTitle": "Ta bort administratör",
     "admin.roles.administrator.removeExplanation":
       "{name} kommer inte längre att vara administratör för den här webbplatsen.",
-    "admin.roles.world-ranking-officer.heading": "Världsrankingansvariga",
-    "admin.roles.world-ranking-officer.none": "Inga världsrankingansvariga",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Ta bort världsrankingansvarig",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Världsrankingansvariga (Associationscroquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Inga världsrankingansvariga (Associationscroquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Ta bort världsrankingansvarig (Associationscroquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} kommer inte längre att vara världsrankingansvarig.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Världsrankingansvariga (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Inga världsrankingansvariga (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Ta bort världsrankingansvarig (Golfcroquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "{name} kommer inte längre att vara världsrankingansvarig.",
     "admin.worldRankings.title": "Importera spelare från världsrankingen",
     "admin.worldRankings.import": "Importera",

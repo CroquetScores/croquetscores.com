@@ -3,14 +3,15 @@ Feature: Changing a player's world ranking name alone
   A player's world ranking name is the name the world rankings know them by
   (`WorldRankingName.feature`). A tournament's managers change it with
   everything else about a player (`updatePlayer.feature`). An account that
-  holds the World Ranking Officer role, and asks as a world ranking officer
+  holds a World Ranking Officer role, and asks as a world ranking officer
   (`asker.feature`), looks after the names the rankings know players by in
-  every tournament of a sport ranked across the world (`Sport.feature`), so
-  it may change a player's world ranking name there, and that alone, whether
-  or not it has any part in the tournament. In a sport the world does not
-  rank there are no rankings for it to look after, and it is refused as
-  anybody else is. The tournament's
-  managers may change it this way too, since they may change all of it.
+  every tournament of a sport ranked across the world (`Sport.feature`) that
+  it holds the role for, Association Croquet's or Golf Croquet's, so it may
+  change a player's world ranking name there, and that alone, whether or not
+  it has any part in the tournament. In a sport the world does not rank there
+  are no rankings for it to look after, and in one it holds no role for they
+  are not its to, and it is refused in either as anybody else is. The
+  tournament's managers may change it this way too, since they may change all of it.
   Anybody else, a scorer among them, is refused with
   `Tournament.NotAManagerOrRankingOfficer`, asked before anything else.
 
@@ -36,15 +37,22 @@ Feature: Changing a player's world ranking name alone
 
     Scenario: A world ranking officer changes a player's world ranking name
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
     Scenario: What a world ranking officer changes is recorded as theirs
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then what it recorded was caused by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: A world ranking officer changes it in Golf Croquet
+      Given it was updated with the sport "gc"
+      And the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "gc"
+      When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
+      Then the tournament's player "Sam Someone" has the world ranking name "Samuel Someone"
 
     Scenario: A manager changes a player's world ranking name
       Given the tournament is rebuilt from the stream
@@ -53,7 +61,7 @@ Feature: Changing a player's world ranking name alone
 
     Scenario: A world ranking officer does not manage the tournament for having changed it
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then the account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" does not manage the tournament
 
@@ -74,20 +82,26 @@ Feature: Changing a player's world ranking name alone
     Scenario: A world ranking officer is refused in American 6 Wicket, whose players have no world ranking name to look after
       Given it was updated with the sport "a6w"
       And the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
+      When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
+      Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
+
+    Scenario: A world ranking officer is refused in a sport it does not look after
+      Given the tournament is rebuilt from the stream
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "gc"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 
     Scenario: A world ranking officer is refused in a sport the world does not rank
       Given it was updated with the sport "rc"
       And the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then it is refused with "Tournament.NotAManagerOrRankingOfficer"
 
     Scenario: A world ranking officer may do nothing else to the tournament
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the update calls the player "Samantha Someone"
       And the player "Sam Someone" is updated
       Then it is refused with "Tournament.NotAManager"
@@ -96,7 +110,7 @@ Feature: Changing a player's world ranking name alone
 
     Scenario: The player keeps their name
       Given the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Sam Someone" is changed to "Samuel Someone"
       Then the tournament has the player "Sam Someone"
 
@@ -104,7 +118,7 @@ Feature: Changing a player's world ranking name alone
       Given the player is to represent "Canterbury Croquet Club"
       And the player "Alex Another" was added to it
       And the tournament is rebuilt from the stream
-      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer
+      And it is asked for by "account/7c9e6679-7425-40de-944b-e07fc1f90ae7", who is a world ranking officer for "ac"
       When the world ranking name of the player "Alex Another" is changed to "Alexander Another"
       Then the tournament's player "Alex Another" represents "Canterbury Croquet Club"
 

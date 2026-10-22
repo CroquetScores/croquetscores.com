@@ -543,13 +543,21 @@ export const german: Language = {
     "admin.roles.administrator.removeTitle": "Administrator entfernen",
     "admin.roles.administrator.removeExplanation":
       "{name} ist danach kein Administrator dieser Website mehr.",
-    "admin.roles.world-ranking-officer.heading":
-      "Verantwortliche für die Weltrangliste",
-    "admin.roles.world-ranking-officer.none":
-      "Keine Verantwortlichen für die Weltrangliste",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Verantwortliche für die Weltrangliste entfernen",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Verantwortliche für die Weltrangliste (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Keine Verantwortlichen für die Weltrangliste (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Verantwortliche für die Weltrangliste entfernen (Association Croquet)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "{name} ist danach nicht mehr für die Weltrangliste verantwortlich.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Verantwortliche für die Weltrangliste (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Keine Verantwortlichen für die Weltrangliste (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Verantwortliche für die Weltrangliste entfernen (Golf Croquet)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "{name} ist danach nicht mehr für die Weltrangliste verantwortlich.",
     "admin.worldRankings.title": "Spieler der Weltrangliste importieren",
     "admin.worldRankings.import": "Importieren",

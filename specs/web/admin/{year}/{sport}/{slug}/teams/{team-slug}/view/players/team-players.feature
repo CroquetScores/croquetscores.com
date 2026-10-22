@@ -334,14 +334,14 @@ Feature: The players of a team, on the team's page
     Scenario: A world ranking officer is shown the team's players
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of the team "Australia" in "Spring Tests" are open
       Then the first player listed is "Sam Someone"
 
     Scenario: A world ranking officer is not offered Add Player
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of the team "Australia" in "Spring Tests" are open
       Then the page does not offer "Add Player"
@@ -350,7 +350,7 @@ Feature: The players of a team, on the team's page
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "organiser@example.com" has added the player "Alex Another" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of the team "Australia" in "Spring Tests" are open
       Then the player "Sam Someone" does not offer "Archive"
@@ -358,7 +358,7 @@ Feature: The players of a team, on the team's page
     Scenario: A world ranking officer is offered Edit
       Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
       And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of the team "Australia" in "Spring Tests" are open
       Then the player "Sam Someone" offers "Edit"

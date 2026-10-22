@@ -96,9 +96,12 @@ class StoppedBeforeRankings extends Error {}
 // old sites (GiveRoles.feature).
 const ROLE_HOLDERS: RoleHolders = {
   administrator: ["tim@26tp.com", "croquetscores@gmail.com"],
-  "world-ranking-officer": [
+  "ac-world-ranking-officer": [
     "chris@butedock.com",
+  ],
+  "gc-world-ranking-officer": [
     "richard.bilton30@talktalk.net",
+    "pfreer@gmail.com",
   ],
 };
 

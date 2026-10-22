@@ -958,7 +958,7 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
   );
 
   // The accounts holding a role, as an administrator lists them. The role is
-  // named as one is kept, "administrator" or "world-ranking-officer".
+  // named as one is kept, "administrator", "ac-world-ranking-officer" or "gc-world-ranking-officer".
   //
   // Somebody who is not an administrator asking this or either route below is
   // refused, as any refusal is, rather than told the route is not found as the

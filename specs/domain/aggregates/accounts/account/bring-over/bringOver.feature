@@ -40,9 +40,10 @@ Feature: Bringing an account over from the old site
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Being brought over records the hash of the email address it was given
       When an account is brought over as "Sam Someone" at "someone@example.com" with the email address hash "hash-of-someone"

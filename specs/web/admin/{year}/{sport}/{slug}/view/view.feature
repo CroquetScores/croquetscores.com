@@ -430,14 +430,14 @@ Feature: A tournament's page in the admin
 
     Scenario: A world ranking officer with no part is offered the Players tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the page of "Spring Open" is opened
       Then the tab "Players" is the one being read
 
     Scenario: A world ranking officer with no part is refused a tournament in a sport the world does not rank
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the tournament is to be for the sport "rc"
       And "organiser@example.com" has created the tournament "Spring Ricochet"
@@ -446,7 +446,7 @@ Feature: A tournament's page in the admin
 
     Scenario Outline: A world ranking officer with no part is not offered the managers' tabs
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the page of "Spring Open" is opened
       Then the tab "<tab>" is not offered
@@ -461,7 +461,7 @@ Feature: A tournament's page in the admin
 
     Scenario: A world ranking officer who scores the tournament is offered the Competitions tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
       When the page of "Spring Open" is opened
@@ -469,7 +469,7 @@ Feature: A tournament's page in the admin
 
     Scenario: A world ranking officer who scores the tournament is offered the Players tab too
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
       When the page of "Spring Open" is opened
@@ -477,7 +477,7 @@ Feature: A tournament's page in the admin
 
     Scenario: A world ranking officer is offered a tournament played by teams' Teams tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
-      And "ranker@example.com" has been given the role "World Ranking Officer"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       And the tournament is to be played in the format "Teams"
       And "organiser@example.com" has created the tournament "Spring Tests"

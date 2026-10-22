@@ -541,11 +541,21 @@ export const welsh: Language = {
     "admin.roles.administrator.removeTitle": "Tynnu gweinyddwr",
     "admin.roles.administrator.removeExplanation":
       "Ni fydd {name} yn weinyddwr y safle hwn mwyach.",
-    "admin.roles.world-ranking-officer.heading": "Swyddogion Safleoedd y Byd",
-    "admin.roles.world-ranking-officer.none": "Dim swyddogion Safleoedd y Byd",
-    "admin.roles.world-ranking-officer.removeTitle":
-      "Tynnu swyddog Safleoedd y Byd",
-    "admin.roles.world-ranking-officer.removeExplanation":
+    "admin.roles.ac-world-ranking-officer.heading":
+      "Swyddogion Safleoedd y Byd (Croce Cymdeithas)",
+    "admin.roles.ac-world-ranking-officer.none":
+      "Dim swyddogion Safleoedd y Byd (Croce Cymdeithas)",
+    "admin.roles.ac-world-ranking-officer.removeTitle":
+      "Tynnu swyddog Safleoedd y Byd (Croce Cymdeithas)",
+    "admin.roles.ac-world-ranking-officer.removeExplanation":
+      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach.",
+    "admin.roles.gc-world-ranking-officer.heading":
+      "Swyddogion Safleoedd y Byd (Croce Golff)",
+    "admin.roles.gc-world-ranking-officer.none":
+      "Dim swyddogion Safleoedd y Byd (Croce Golff)",
+    "admin.roles.gc-world-ranking-officer.removeTitle":
+      "Tynnu swyddog Safleoedd y Byd (Croce Golff)",
+    "admin.roles.gc-world-ranking-officer.removeExplanation":
       "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach.",
     "admin.worldRankings.title": "Mewnforio chwaraewyr Safleoedd y Byd",
     "admin.worldRankings.import": "Mewnforio",

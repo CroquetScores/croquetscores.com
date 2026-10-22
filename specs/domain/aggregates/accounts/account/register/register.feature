@@ -52,9 +52,10 @@ Feature: Registering an account
       Then the account does not hold the role "<role>"
 
       Examples:
-        | role                  |
-        | Administrator         |
-        | World Ranking Officer |
+        | role                     |
+        | Administrator            |
+        | AC World Ranking Officer |
+        | GC World Ranking Officer |
 
     Scenario: Registering records the hash of the email address it was given
       When an account is registered at "someone@example.com" with the email address hash "hash-of-someone"
