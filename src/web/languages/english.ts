@@ -532,16 +532,8 @@ export const english: Language = {
     "admin.view.notes": "Notes",
     "admin.view.scorers": "Scorers",
     "admin.view.rankings": "Rankings",
-    "admin.rankings.textFile":
-      "The world rankings are sent the tournament's results as a text file, which the site writes from the games entered.",
-    "admin.rankings.spreadsheet":
-      "The world rankings are sent the tournament's results as a spreadsheet, which the site writes from the games entered.",
-    "admin.rankings.fillInWinners":
-      "The site can only guess who won each competition, so check the Winner line of each one before sending the file.",
-    "admin.rankings.fillInWinner":
-      "The site cannot know who won the tournament, so fill that in at the bottom of the spreadsheet before sending it.",
-    "admin.rankings.sendIt":
-      "Then send the file to the world rankings officers.",
+    "admin.rankings.file":
+      "The world rankings will user the tournament's results, using this function and managers do not need to action anything.",
     "admin.rankings.download": "Download rankings",
     "rankings.notAvailable": "Rankings are not available",
     "rankings.notAvailable.sport":

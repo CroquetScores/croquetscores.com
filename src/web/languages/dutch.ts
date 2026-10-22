@@ -472,16 +472,8 @@ export const dutch: Language = {
     "admin.view.notes": "Notities",
     "admin.view.scorers": "Scorers",
     "admin.view.rankings": "Ranglijsten",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "De uitslagen van het toernooi worden als tekstbestand naar de wereldranglijst gestuurd, dat de site schrijft uit de ingevoerde partijen.",
-    "admin.rankings.spreadsheet":
-      "De uitslagen van het toernooi worden als spreadsheet naar de wereldranglijst gestuurd, die de site schrijft uit de ingevoerde partijen.",
-    "admin.rankings.fillInWinners":
-      "De site kan alleen raden wie elke competitie won, dus controleer de regel van de winnaar (Winner) van elk voordat je het bestand verstuurt.",
-    "admin.rankings.fillInWinner":
-      "De site kan niet weten wie het toernooi won, dus vul dat onderaan de spreadsheet in voordat je die verstuurt.",
-    "admin.rankings.sendIt":
-      "Stuur het bestand daarna naar de functionarissen van de wereldranglijst.",
     "admin.rankings.download": "Ranglijsten downloaden",
     "rankings.notAvailable": "Ranglijsten zijn niet beschikbaar",
     "rankings.notAvailable.sport":

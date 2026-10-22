@@ -471,16 +471,8 @@ export const spanish: Language = {
     "admin.view.notes": "Notas",
     "admin.view.scorers": "Anotadores",
     "admin.view.rankings": "Rankings",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Los resultados del torneo se envían al ranking mundial como un archivo de texto, que el sitio escribe a partir de las partidas introducidas.",
-    "admin.rankings.spreadsheet":
-      "Los resultados del torneo se envían al ranking mundial como una hoja de cálculo, que el sitio escribe a partir de las partidas introducidas.",
-    "admin.rankings.fillInWinners":
-      "El sitio solo puede adivinar quién ganó cada competición, así que revisa la línea del ganador (Winner) de cada una antes de enviar el archivo.",
-    "admin.rankings.fillInWinner":
-      "El sitio no puede saber quién ganó el torneo, así que anótalo al final de la hoja de cálculo antes de enviarla.",
-    "admin.rankings.sendIt":
-      "Después envía el archivo a los responsables del ranking mundial.",
     "admin.rankings.download": "Descargar rankings",
     "rankings.notAvailable": "Los rankings no están disponibles",
     "rankings.notAvailable.sport":

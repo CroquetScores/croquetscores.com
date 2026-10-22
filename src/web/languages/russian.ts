@@ -472,16 +472,8 @@ export const russian: Language = {
     "admin.view.notes": "Заметки",
     "admin.view.scorers": "Секретари",
     "admin.view.rankings": "Рейтинги",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Результаты турнира отправляются в мировой рейтинг в виде текстового файла, который сайт составляет из введённых партий.",
-    "admin.rankings.spreadsheet":
-      "Результаты турнира отправляются в мировой рейтинг в виде электронной таблицы, которую сайт составляет из введённых партий.",
-    "admin.rankings.fillInWinners":
-      "Сайт может только предположить, кто выиграл каждое соревнование, поэтому перед отправкой файла проверьте строку победителя («Winner») в каждом из них.",
-    "admin.rankings.fillInWinner":
-      "Сайт не может знать, кто выиграл турнир, поэтому впишите это внизу таблицы перед отправкой.",
-    "admin.rankings.sendIt":
-      "Затем отправьте файл ответственным за мировой рейтинг.",
     "admin.rankings.download": "Скачать рейтинги",
     "rankings.notAvailable": "Рейтинги недоступны",
     "rankings.notAvailable.sport":

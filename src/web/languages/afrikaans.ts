@@ -478,16 +478,8 @@ export const afrikaans: Language = {
     "admin.view.notes": "Notas",
     "admin.view.scorers": "Telers",
     "admin.view.rankings": "Ranglyste",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Die uitslae van die toernooi word as 'n teksleer aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
-    "admin.rankings.spreadsheet":
-      "Die uitslae van die toernooi word as 'n sigblad aan die wêreldranglys gestuur, wat die webwerf uit die ingevoerde wedstryde skryf.",
-    "admin.rankings.fillInWinners":
-      "Die webwerf kan net raai wie elke kompetisie gewen het, so kontroleer die wenner-reël (Winner) van elkeen voordat jy die leer stuur.",
-    "admin.rankings.fillInWinner":
-      "Die webwerf kan nie weet wie die toernooi gewen het nie, so vul dit onderaan die sigblad in voordat jy dit stuur.",
-    "admin.rankings.sendIt":
-      "Stuur dan die leer na die beamptes van die wêreldranglys.",
     "admin.rankings.download": "Laai ranglyste af",
     "rankings.notAvailable": "Ranglyste is nie beskikbaar nie",
     "rankings.notAvailable.sport":

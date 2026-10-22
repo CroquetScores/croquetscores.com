@@ -479,16 +479,8 @@ export const welsh: Language = {
     "admin.view.notes": "Nodiadau",
     "admin.view.scorers": "Sgorwyr",
     "admin.view.rankings": "Safleoedd",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel ffeil destun, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
-    "admin.rankings.spreadsheet":
-      "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel taenlen, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
-    "admin.rankings.fillInWinners":
-      "Dim ond dyfalu pwy enillodd bob cystadleuaeth y gall y wefan ei wneud, felly gwiriwch llinell yr enillydd (Winner) ym mhob un cyn anfon y ffeil.",
-    "admin.rankings.fillInWinner":
-      "Ni all y wefan wybod pwy enillodd y twrnamaint, felly llenwch hynny ar waelod y daenlen cyn ei hanfon.",
-    "admin.rankings.sendIt":
-      "Yna anfonwch y ffeil at swyddogion Safleoedd y Byd.",
     "admin.rankings.download": "Lawrlwytho safleoedd",
     "rankings.notAvailable": "Nid yw safleoedd ar gael",
     "rankings.notAvailable.sport":

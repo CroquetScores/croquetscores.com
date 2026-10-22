@@ -477,16 +477,8 @@ export const polish: Language = {
     "admin.view.notes": "Notatki",
     "admin.view.scorers": "Wprowadzający wyniki",
     "admin.view.rankings": "Rankingi",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Wyniki turnieju są wysyłane do rankingu światowego jako plik tekstowy, który strona tworzy z wprowadzonych gier.",
-    "admin.rankings.spreadsheet":
-      "Wyniki turnieju są wysyłane do rankingu światowego jako arkusz kalkulacyjny, który strona tworzy z wprowadzonych gier.",
-    "admin.rankings.fillInWinners":
-      "Strona może tylko zgadywać, kto wygrał każde rozgrywki, więc przed wysłaniem pliku sprawdź wiersz zwycięzcy (Winner) w każdych z nich.",
-    "admin.rankings.fillInWinner":
-      "Strona nie może wiedzieć, kto wygrał turniej, więc uzupełnij to na dole arkusza przed jego wysłaniem.",
-    "admin.rankings.sendIt":
-      "Następnie wyślij plik do osób odpowiedzialnych za ranking światowy.",
     "admin.rankings.download": "Pobierz rankingi",
     "rankings.notAvailable": "Rankingi są niedostępne",
     "rankings.notAvailable.sport":

@@ -9,12 +9,8 @@ Feature: The rankings tab of a tournament's page
   what to do with it, since a manager sending results is not likely to know
   an address.
 
-  The tab says what the file is, which depends on the sport as the file
-  does: a text file for Association Croquet, a spreadsheet for Golf Croquet and American 6 Wicket. It says what is left to do by hand, which is who won
-  each competition for a text file and who won the tournament for a
-  spreadsheet, since the site only guesses the first and cannot know the
-  second (`rankingsTextFile.feature`, `rankingsWorkbook.feature`), and that
-  the file is then to be sent to the rankings officers.
+  The tab says what the file is, in the same words whatever the sport, since
+  what is done with it afterwards is not the tab's to tell.
 
   Beneath that is one link, "Download rankings", which leads to the file. It
   is a link rather than a button because it goes to an address and changes
@@ -42,38 +38,9 @@ Feature: The rankings tab of a tournament's page
 
   Rule: The tab says what the file is
 
-    Scenario: Association Croquet's is said to be a text file
+    Scenario: The file is explained
       When the rankings of "Spring Open" are opened
-      Then the tab says the words for "admin.rankings.textFile"
-
-    Scenario: Association Croquet's is not said to be a spreadsheet
-      When the rankings of "Spring Open" are opened
-      Then the tab does not say the words for "admin.rankings.spreadsheet"
-
-    Scenario Outline: Golf Croquet's and American 6 Wicket's are said to be a spreadsheet
-      Given the tournament "Spring Open" is for the sport "<sport>"
-      When the rankings of "Spring Open" are opened
-      Then the tab says the words for "admin.rankings.spreadsheet"
-
-      Examples:
-        | sport |
-        | gc    |
-        | a6w   |
-
-  Rule: The tab says what is left for the manager to do
-
-    Scenario: A text file's manager is told to fill in each winner
-      When the rankings of "Spring Open" are opened
-      Then the tab says the words for "admin.rankings.fillInWinners"
-
-    Scenario: A spreadsheet's manager is told to fill in the tournament's winner
-      Given the tournament "Spring Open" is for the sport "gc"
-      When the rankings of "Spring Open" are opened
-      Then the tab says the words for "admin.rankings.fillInWinner"
-
-    Scenario: The manager is told to send the file on
-      When the rankings of "Spring Open" are opened
-      Then the tab says the words for "admin.rankings.sendIt"
+      Then the tab says the words for "admin.rankings.file"
 
   Rule: One link leads to the file
 
