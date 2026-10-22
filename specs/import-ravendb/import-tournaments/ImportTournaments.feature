@@ -189,13 +189,19 @@ Feature: Importing the old sites' tournaments
     not a country's time zone that says which region of it a tournament was in.
     A manager can move one played elsewhere.
 
-    "GMT Standard Time" and "W. Europe Standard Time" are each kept by several
-    countries, and are taken as England's, where the old sites' tournaments kept
-    in them were played; a manager can move one played elsewhere.
+    "GMT Standard Time", "W. Europe Standard Time" and "Romance Standard Time"
+    are each kept by several countries. The first is taken as England's, where
+    the old sites' tournaments kept in it were played, and the other two as
+    Spain's; a manager can move one played elsewhere.
 
     Three that mean no country are taken as one all the same, since the old
     sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
     as England's, and "UTC+13" as New Zealand's. A manager can move one played
+    elsewhere.
+
+    Every time zone of Russia, "Russian Standard Time" and each "Russia Time
+    Zone", is taken as New Zealand's all the same, since the old sites'
+    tournaments kept in them were played there. A manager can move one played
     elsewhere.
 
     A tournament kept in "Pacific Standard Time (Mexico)" is read as kept in
@@ -203,6 +209,10 @@ Feature: Importing the old sites' tournaments
     States: the old sites offered the time zones of the machine they ran on,
     and some managers on the Pacific coast chose Mexico's, which keeps the same
     hours.
+
+    A tournament called "Oktober GC" is in Norway whatever time zone it was
+    kept in, since it was played there and the time zone it was kept in does
+    not say so. A manager can move it.
 
     Scenario: A tournament is in the country of its time zone
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -221,15 +231,19 @@ Feature: Importing the old sites' tournaments
       Examples:
         | time zone                    | country |
         | GMT Standard Time            | england |
-        | W. Europe Standard Time      | england |
+        | W. Europe Standard Time      | es      |
         | Morocco Standard Time        | ma      |
-        | Romance Standard Time        | fr      |
+        | Romance Standard Time        | es      |
         | Arabian Standard Time        | ae      |
         | Argentina Standard Time      | ar      |
         | Canada Central Standard Time | ca      |
         | UTC                          | england |
         | Dateline Standard Time       | england |
         | UTC+13                       | nz      |
+        | Russian Standard Time        | nz      |
+        | Russia Time Zone 3           | nz      |
+        | Russia Time Zone 10          | nz      |
+        | Russia Time Zone 11          | nz      |
 
     Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -251,6 +265,22 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the region "wa"
+
+    Scenario: A tournament called "Oktober GC" is in Norway
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Oktober GC"
+      And the tournament's time zone is "W. Europe Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "no"
+
+    Scenario: A tournament called "Oktober GC" is in Norway whatever its time zone was
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Oktober GC"
+      And the tournament has no time zone
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "no"
 
     Scenario: A tournament is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"
