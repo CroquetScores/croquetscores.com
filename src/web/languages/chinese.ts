@@ -453,15 +453,8 @@ export const chinese: Language = {
     "admin.view.notes": "备注",
     "admin.view.scorers": "记分员",
     "admin.view.rankings": "排名",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "世界排名收到的是以文本文件形式发送的比赛结果，由网站根据已录入的比赛生成。",
-    "admin.rankings.spreadsheet":
-      "世界排名收到的是以电子表格形式发送的比赛结果，由网站根据已录入的比赛生成。",
-    "admin.rankings.fillInWinners":
-      "网站只能推测每项比赛的获胜者，因此发送文件前请检查每项比赛的“获胜者（Winner）”一行。",
-    "admin.rankings.fillInWinner":
-      "网站无法知道谁赢得了锦标赛，因此发送前请在电子表格底部填写。",
-    "admin.rankings.sendIt": "然后将文件发送给世界排名负责人。",
     "admin.rankings.download": "下载排名",
     "rankings.notAvailable": "排名不可用",
     "rankings.notAvailable.sport":

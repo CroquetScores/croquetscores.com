@@ -477,16 +477,8 @@ export const maori: Language = {
     "admin.view.notes": "Ngā tuhipoka",
     "admin.view.scorers": "Ngā kaikaute",
     "admin.view.rankings": "Ngā raupapa",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Ka tukuna ngā otinga o te whakataetae ki te raupapa o te ao hei kōnae kuputuhi, ka tuhia e te pae mai i ngā tākaro kua uruhia.",
-    "admin.rankings.spreadsheet":
-      "Ka tukuna ngā otinga o te whakataetae ki te raupapa o te ao hei pepa tātai, ka tuhia e te pae mai i ngā tākaro kua uruhia.",
-    "admin.rankings.fillInWinners":
-      "Ka āhei noa te pae ki te whakaaro mā wai tētahi whakataetae i toa, nā reira arotakea te rārangi toa (Winner) o ia whakataetae i mua i te tuku i te kōnae.",
-    "admin.rankings.fillInWinner":
-      "Kāore e taea e te pae te mōhio mā wai te whakataetae i toa, nā reira whakaurua ki raro o te pepa tātai i mua i te tuku.",
-    "admin.rankings.sendIt":
-      "Ka tukuna te kōnae ki ngā āpiha o te raupapa o te ao.",
     "admin.rankings.download": "Tikiake i ngā raupapa",
     "rankings.notAvailable": "Kāore ngā raupapa e wātea",
     "rankings.notAvailable.sport":

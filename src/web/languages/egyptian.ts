@@ -464,15 +464,8 @@ export const egyptian: Language = {
     "admin.view.notes": "الملاحظات",
     "admin.view.scorers": "مسجّلي النتايج",
     "admin.view.rankings": "التصنيفات",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "نتايج البطولة بتتبعت للتصنيف العالمي كملف نصي، والموقع بيكتبه من المباريات اللي اتسجلت.",
-    "admin.rankings.spreadsheet":
-      "نتايج البطولة بتتبعت للتصنيف العالمي كجدول بيانات، والموقع بيكتبه من المباريات اللي اتسجلت.",
-    "admin.rankings.fillInWinners":
-      "الموقع مش بيقدر غير يخمّن مين كسب كل مسابقة، فراجع سطر الفايز (Winner) في كل واحدة قبل ما تبعت الملف.",
-    "admin.rankings.fillInWinner":
-      "الموقع مش ممكن يعرف مين كسب البطولة، فاكتبه في آخر جدول البيانات قبل ما تبعته.",
-    "admin.rankings.sendIt": "وبعدين ابعت الملف لمسؤولي التصنيف العالمي.",
     "admin.rankings.download": "تنزيل التصنيفات",
     "rankings.notAvailable": "التصنيفات مش متاحة",
     "rankings.notAvailable.sport":

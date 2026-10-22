@@ -478,16 +478,8 @@ export const french: Language = {
     "admin.view.notes": "Notes",
     "admin.view.scorers": "Marqueurs",
     "admin.view.rankings": "Classements",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Les résultats du tournoi sont envoyés au classement mondial sous forme de fichier texte, que le site écrit à partir des parties saisies.",
-    "admin.rankings.spreadsheet":
-      "Les résultats du tournoi sont envoyés au classement mondial sous forme de tableur, que le site écrit à partir des parties saisies.",
-    "admin.rankings.fillInWinners":
-      "Le site ne peut que deviner qui a gagné chaque compétition ; vérifiez donc la ligne du vainqueur (Winner) de chacune avant d’envoyer le fichier.",
-    "admin.rankings.fillInWinner":
-      "Le site ne peut pas savoir qui a gagné le tournoi ; indiquez-le donc en bas du tableur avant de l’envoyer.",
-    "admin.rankings.sendIt":
-      "Envoyez ensuite le fichier aux responsables du classement mondial.",
     "admin.rankings.download": "Télécharger les classements",
     "rankings.notAvailable": "Les classements ne sont pas disponibles",
     "rankings.notAvailable.sport":

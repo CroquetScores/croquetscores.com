@@ -471,16 +471,8 @@ export const italian: Language = {
     "admin.view.notes": "Note",
     "admin.view.scorers": "Segnapunti",
     "admin.view.rankings": "Classifiche",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "I risultati del torneo vengono inviati alle classifiche mondiali come file di testo, che il sito scrive a partire dalle partite inserite.",
-    "admin.rankings.spreadsheet":
-      "I risultati del torneo vengono inviati alle classifiche mondiali come foglio di calcolo, che il sito scrive a partire dalle partite inserite.",
-    "admin.rankings.fillInWinners":
-      "Il sito può solo indovinare chi ha vinto ogni competizione, quindi controlla la riga del vincitore (Winner) di ciascuna prima di inviare il file.",
-    "admin.rankings.fillInWinner":
-      "Il sito non può sapere chi ha vinto il torneo, quindi inseriscilo in fondo al foglio di calcolo prima di inviarlo.",
-    "admin.rankings.sendIt":
-      "Poi invia il file ai responsabili delle classifiche mondiali.",
     "admin.rankings.download": "Scarica le classifiche",
     "rankings.notAvailable": "Le classifiche non sono disponibili",
     "rankings.notAvailable.sport":

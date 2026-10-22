@@ -481,16 +481,8 @@ export const german: Language = {
     "admin.view.notes": "Hinweise",
     "admin.view.scorers": "Ergebniserfasser",
     "admin.view.rankings": "Ranglisten",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "Die Ergebnisse des Turniers werden der Weltrangliste als Textdatei geschickt, die die Website aus den eingegebenen Spielen erstellt.",
-    "admin.rankings.spreadsheet":
-      "Die Ergebnisse des Turniers werden der Weltrangliste als Tabelle geschickt, die die Website aus den eingegebenen Spielen erstellt.",
-    "admin.rankings.fillInWinners":
-      "Die Website kann nur raten, wer jeden Wettbewerb gewonnen hat. Prüfe daher die Zeile „Sieger“ (Winner) jedes Wettbewerbs, bevor du die Datei sendest.",
-    "admin.rankings.fillInWinner":
-      "Die Website kann nicht wissen, wer das Turnier gewonnen hat. Trage es daher unten in der Tabelle ein, bevor du sie sendest.",
-    "admin.rankings.sendIt":
-      "Sende die Datei dann an die Verantwortlichen der Weltrangliste.",
     "admin.rankings.download": "Ranglisten herunterladen",
     "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
     "rankings.notAvailable.sport":

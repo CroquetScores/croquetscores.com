@@ -470,16 +470,8 @@ export const japanese: Language = {
     "admin.view.notes": "お知らせ",
     "admin.view.scorers": "記録係",
     "admin.view.rankings": "ランキング",
-    "admin.rankings.textFile":
+    "admin.rankings.file":
       "大会の結果は、入力された試合からサイトが作成するテキストファイルとして世界ランキングに送られます。",
-    "admin.rankings.spreadsheet":
-      "大会の結果は、入力された試合からサイトが作成するスプレッドシートとして世界ランキングに送られます。",
-    "admin.rankings.fillInWinners":
-      "サイトは各競技の優勝者を推測することしかできません。ファイルを送る前に、それぞれの「優勝者（Winner）」の行を確認してください。",
-    "admin.rankings.fillInWinner":
-      "サイトは大会の優勝者を知ることができません。送る前に、スプレッドシートの最下部に記入してください。",
-    "admin.rankings.sendIt":
-      "その後、ファイルを世界ランキングの担当者に送ってください。",
     "admin.rankings.download": "ランキングをダウンロード",
     "rankings.notAvailable": "ランキングは利用できません",
     "rankings.notAvailable.sport":
