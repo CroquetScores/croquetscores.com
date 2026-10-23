@@ -334,7 +334,7 @@ Feature: A test's page in the admin
       And "organiser@example.com" has archived the player "Chris Third" of the team "England" of "Spring Tests"
       And the page of the test "AUS v ENG" in "Spring Tests" is open
       When "Restore" is pressed on the score of "Sam Someone" beating "Chris Third"
-      Then the page is refused above the list with "TeamPlayer.Archived"
+      Then the score of "Sam Someone" beating "Chris Third" says it was refused with "TeamPlayer.Archived"
 
   Rule: A scorer sees the same page
 

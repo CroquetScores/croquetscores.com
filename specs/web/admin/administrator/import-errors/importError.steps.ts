@@ -7,10 +7,12 @@ import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
 
-// Retried for three seconds, which leaves a step time to fail with what it
-// found rather than with Cucumber's word that it took too long.
+// Retried for ten seconds, which leaves a step time to fail with what it
+// found rather than with Cucumber's word that it took too long. Three was not
+// enough with the whole suite running at once: the page asks a second time for
+// the tournament, and seven scenarios gave up before that answer was drawn.
 export const eventually = async (check: () => Promise<void>): Promise<void> => {
-  const until = Date.now() + 3000;
+  const until = Date.now() + 10_000;
   for (;;) {
     try {
       await check();

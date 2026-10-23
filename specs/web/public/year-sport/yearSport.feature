@@ -386,4 +386,4 @@ Feature: A sport's page in a year lists every tournament of it starting then
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the page for "ac" in 2026 is opened
-      Then the content has the heading "Torneos de Croquet Asociación en 2026"
+      Then the content has the heading "Torneos de Croquet de asociación de 2026"

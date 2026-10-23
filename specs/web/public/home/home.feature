@@ -297,7 +297,7 @@ Feature: The home page lists recent results and upcoming tournaments
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the home page is opened
-      Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos en Nueva Zelanda"
+      Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos de Nueva Zelanda"
 
   Rule: Pressing a column heading sorts the table by it
 
