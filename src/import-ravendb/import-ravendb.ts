@@ -101,6 +101,10 @@ const ROLE_HOLDERS: RoleHolders = {
     "richard.bilton30@talktalk.net",
     "pfreer@netspeed.com.au",
     "pfreer@gmail.com",
+    "eduardorochagolf@hotmail.com",
+    "jeff@ipsedixit.net",
+    "johnchristie8@gmail.com",
+    "snmulliner@gmail.com",
   ],
 };
 
