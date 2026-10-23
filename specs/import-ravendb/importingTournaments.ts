@@ -13,6 +13,7 @@ import { AggregateRepository } from "../../src/application/common/AggregateRepos
 import { ProjectingEventStore } from "../../src/application/common/ProjectingEventStore.js";
 import { CommentariesByTournament } from "../../src/infrastructure/read-models/CommentariesByTournament.js";
 import { ManagerNotesByTournament } from "../../src/infrastructure/read-models/ManagerNotesByTournament.js";
+import { eventsGivenTo } from "./world-ranking-events/rankedEvents.js";
 import { SeeNotes } from "../../src/import-ravendb/SeeNotes.js";
 import { ImportErrorsNote } from "../../src/import-ravendb/ImportErrorsNote.js";
 import { ManagerNote } from "../../src/domain/aggregates/tournaments/manager-notes/ManagerNote.js";
@@ -373,6 +374,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     tournaments,
     importedAccounts,
     database,
+    () => eventsGivenTo(world),
   );
   const sites = new Map<string, WrittenSite>();
   const made: Importing = {

@@ -315,6 +315,195 @@ Feature: Importing the old sites' tournaments
         | UTC-11                    |
         | South Sudan Standard Time |
 
+  Rule: A tournament the world rankings list is in the country they give
+
+    The time zone says little of where a tournament was played, and the world
+    rankings know: they keep a list of the Association Croquet and Golf Croquet
+    events they have ranked, each with its country (`WorldRankingEvents.feature`).
+    A tournament of either sport that is found in its sport's list, by its days
+    and its name, is in the country the list gives, over its time zone's. One
+    that is not found is in its time zone's country, and one in any other sport
+    is not looked for.
+
+    The list is only a better word for the country, and does not stand in for a
+    time zone: a tournament that is refused for its time zone is refused all the
+    same. A region is a country's, so a tournament moved to another country by
+    the list is in none, and one kept in its own is in the region it was.
+
+    Scenario: A tournament of the list is in its country, over its time zone's
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "NZ Wellington Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "nz"
+
+    Scenario: A Golf Croquet tournament of the list is in its country
+      Given a Golf Croquet event "Wellington Open" starting on "2012-01-26" in "NZL"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament is in the sport "GC"
+      And the tournament was called "Wellington Open"
+      And the tournament started on "2012-01-26T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "nz"
+
+    Scenario: A tournament not in the list is in its time zone's country
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Sydney Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament of another sport is not looked for
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "gateballscores.com"
+      And the tournament is in the sport "GB"
+      And the tournament was called "Wellington Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "gateballscores.com" is in the country "au"
+
+    Scenario: A tournament of the list that the time zone refuses is refused all the same
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Wellington Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament has no time zone
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then importing the tournament is refused with "ImportTournaments.NoTimeZone"
+
+    Scenario: A tournament kept in China's time zone is in no region once the list moves it
+      Given an Association Croquet event "Perth Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Perth Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament the list keeps in its country keeps its region
+      Given an Association Croquet event "Perth Open" played on "27-30.12.11" in "Australia"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Perth Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the region "wa"
+
+  Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
+
+    Whoever runs the import is told on screen, at the end, how many tournaments
+    of Association Croquet and of Golf Croquet it brought over and how many of
+    them took their country from the world rankings' lists, so that they can
+    see whether the lists found what they were expected to. What is shown is
+    for whoever is watching, and is not specified here; what is counted is.
+
+    A tournament is counted once it is brought over, and one that is refused is
+    not. Only the two sports the world rankings keep a list for are counted.
+
+    Scenario: An Association Croquet tournament brought over is counted
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then 1 Association Croquet tournament is counted
+
+    Scenario: A Golf Croquet tournament is counted apart from Association Croquet's
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament is in the sport "GC"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then 1 Golf Croquet tournament is counted
+      And no Association Croquet tournament is counted
+
+    Scenario: A tournament of another sport is not counted
+      Given a tournament "tournaments/12" on "gateballscores.com"
+      And the tournament is in the sport "GB"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then no Association Croquet tournament is counted
+      And no Golf Croquet tournament is counted
+
+    Scenario: A tournament that is refused is not counted
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament has no time zone
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then no Association Croquet tournament is counted
+
+    Scenario: A tournament the site refuses is not counted
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament started on "2014-03-03T00:00:00.0000000"
+      And the tournament finished on "2014-03-01T00:00:00.0000000"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then no Association Croquet tournament is counted
+
+    Scenario: A tournament found in the list is counted as taking its country
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Wellington Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then 1 Association Croquet tournament took the world rankings' country
+
+    Scenario: A Golf Croquet tournament found in the list is counted as taking its country
+      Given a Golf Croquet event "Wellington Open" starting on "2012-01-26" in "NZL"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament is in the sport "GC"
+      And the tournament was called "Wellington Open"
+      And the tournament started on "2012-01-26T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then 1 Golf Croquet tournament took the world rankings' country
+
+    Scenario: A tournament not found in the list is not counted as taking its country
+      Given an Association Croquet event "Wellington Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Sydney Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then no Association Croquet tournament took the world rankings' country
+
+    Scenario: A tournament found in the list in the country its time zone gave is counted as taking it
+      Given an Association Croquet event "Sydney Open" played on "27-30.12.11" in "Australia"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Sydney Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then 1 Association Croquet tournament took the world rankings' country
+
   Rule: A tournament's subtitle is read as the old site showed it
 
     What the old sites called a tournament's notes is its subtitle here. They
