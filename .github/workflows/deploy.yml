@@ -1,17 +1,19 @@
 name: Deploy
 
-# Only on a push to main, and main is only ever reached by squash-merging a pull
-# request whose CI run passed (ci.yml), so a commit arriving here has already
-# passed every scenario. Running them again would say nothing new.
+# Started by hand, from the Actions page or `gh workflow run deploy.yml`, and
+# not by a merge: a deploy is a decision, and the migration it runs cannot be
+# undone. It deploys the branch it is run on, which is main unless another is
+# chosen in "Use workflow from". The production environment below only lets
+# main read the key (deploying.md §8), so another branch is refused there and
+# not here; a branch is put up from the administrator's computer instead
+# (`npm run deploy`).
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 # One deploy at a time, and the one running is never cancelled for a newer
-# merge: a deploy stopped half way is the state deploying.md §5 is about. GitHub
+# run: a deploy stopped half way is the state deploying.md §5 is about. GitHub
 # keeps one run waiting, and cancels an older one that is waiting when another
-# merge arrives. That is harmless, since the newest commit has what they had,
-# but those runs show as cancelled in the history.
+# is started.
 concurrency:
   group: deploy
   cancel-in-progress: false

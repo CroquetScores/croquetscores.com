@@ -6,7 +6,7 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 
 - [server-setup.md](server-setup.md) — Making the Kamatera server, Postgres, the proxy that faces the internet, and the service. Done once, at the start
 - [configuration.md](configuration.md) — Every setting, which are required, and which must never change
-- [deploying.md](deploying.md) — Putting a new build up, migrating, rebuilding the read models, taking a build down again, and the automatic deploy on a merge to main
+- [deploying.md](deploying.md) — Putting a new build up, migrating, rebuilding the read models, taking a build down again, and deploying with a script from your computer or from GitHub
 - [operations.md](operations.md) — Knowing it is up, reading the logs, turning the database off for maintenance, and when it goes wrong
 - [beta.md](beta.md) — Running the beta: what counts as a problem, who reads the logs, and what must be true before the second week
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
