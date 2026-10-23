@@ -10,6 +10,7 @@ import type { SpecWorld } from "../../support/world.js";
 import { importDatabaseOf } from "../importing.js";
 import {
   aTournament,
+  importingOf,
   startWriting,
   tournamentKeptFor,
   tournamentWritten,
@@ -402,5 +403,57 @@ Then(
       accountsOf(this).store.getEvents(id),
     );
     assert.equal(Account.rebuiltFrom(id, events).forgotten, true);
+  },
+);
+
+// What the import counted of the tournaments of a sport the world rankings keep
+// a list for ----------------------------------------------------------------
+
+const counted = (world: SpecWorld, sport: "ac" | "gc") =>
+  importingOf(world).importers.tournaments.counted[sport];
+
+Then(
+  /^(\d+) Association Croquet tournaments? (?:is|are) counted$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(counted(this, "ac").tournaments, Number(count));
+  },
+);
+
+Then(
+  /^(\d+) Golf Croquet tournaments? (?:is|are) counted$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(counted(this, "gc").tournaments, Number(count));
+  },
+);
+
+Then(
+  "no Association Croquet tournament is counted",
+  function (this: SpecWorld) {
+    assert.equal(counted(this, "ac").tournaments, 0);
+  },
+);
+
+Then("no Golf Croquet tournament is counted", function (this: SpecWorld) {
+  assert.equal(counted(this, "gc").tournaments, 0);
+});
+
+Then(
+  /^(\d+) Association Croquet tournaments? took the world rankings' country$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(counted(this, "ac").tookListedCountry, Number(count));
+  },
+);
+
+Then(
+  /^(\d+) Golf Croquet tournaments? took the world rankings' country$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(counted(this, "gc").tookListedCountry, Number(count));
+  },
+);
+
+Then(
+  "no Association Croquet tournament took the world rankings' country",
+  function (this: SpecWorld) {
+    assert.equal(counted(this, "ac").tookListedCountry, 0);
   },
 );

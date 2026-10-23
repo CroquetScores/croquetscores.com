@@ -71,6 +71,7 @@ import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
 import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
+import { WorldRankingEvents } from "./WorldRankingEvents.js";
 import { ImportUsers } from "./ImportUsers.js";
 import { ImportWholeTournaments } from "./ImportWholeTournaments.js";
 import { SeeNotes } from "./SeeNotes.js";
@@ -177,6 +178,10 @@ try {
   );
   const began = new Date();
   await correcting.begin(began, errorsBefore);
+
+  const worldRankingEvents = await WorldRankingEvents.readFrom(
+    join(import.meta.dirname, "world-ranking-events"),
+  );
 
   console.log(`Emptying ${where(config.databaseUrl)}`);
   await database.reset();
@@ -295,6 +300,7 @@ try {
       tournaments,
       importedAccounts,
       database,
+      () => worldRankingEvents,
     ),
     players: new ImportTournamentPlayers(
       unitOfWork,
@@ -450,6 +456,19 @@ try {
   const errors =
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
   await correcting.end(kept);
+
+  // How many tournaments the world rankings' lists had a say in the country of,
+  // which is how whoever ran the import sees whether they found what they were
+  // expected to. Said before the total, which is the last thing said.
+  for (const [sport, name] of [
+    ["ac", "AC"],
+    ["gc", "GC"],
+  ] as const) {
+    const { tournaments, tookListedCountry } = parts.tournament.counted[sport];
+    console.log(
+      `${numbers.format(tournaments)} ${name} tournaments, ${numbers.format(tookListedCountry)} used world ranking's country`,
+    );
+  }
 
   console.log(
     stopped

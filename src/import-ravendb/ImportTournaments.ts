@@ -18,6 +18,7 @@ import { dayOf } from "./newtonsoft.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { placeOfTimeZone } from "./timeZones.js";
+import type { RankedSport, WorldRankingEvents } from "./WorldRankingEvents.js";
 
 // The site's sport for each the old sites named, by the code they kept, in
 // small letters. The old sites kept a code in whatever case it was written
@@ -115,6 +116,18 @@ const subtitleOf = (
         notes.replaceAll("&lt;", "<").replaceAll("&gt;", ">"),
       );
 
+/** What the import counts of the tournaments of one sport. */
+export interface TournamentsCounted {
+  tournaments: number;
+  tookListedCountry: number;
+}
+
+// The sport of a tournament the world rankings keep a list for, if it is one.
+const rankedSportOf = (document: OldTournament): RankedSport | undefined => {
+  const sport = document.SportType.trim().toLowerCase();
+  return sport === "ac" || sport === "gc" ? sport : undefined;
+};
+
 /**
  * Brings one of the old sites' tournaments over, found where they found it,
  * and keeps which tournament it became (ImportTournaments.feature). Which
@@ -128,11 +141,24 @@ const subtitleOf = (
 export class ImportTournaments implements Importer<OldTournament> {
   readonly collection = "Tournaments";
 
+  /**
+   * How many tournaments of each sport the world rankings keep a list for were
+   * brought over, and how many of them took their country from it
+   * (ImportTournaments.feature), for the import to say when it is done.
+   */
+  readonly counted: Readonly<Record<RankedSport, TournamentsCounted>> = {
+    ac: { tournaments: 0, tookListedCountry: 0 },
+    gc: { tournaments: 0, tookListedCountry: 0 },
+  };
+
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: ImportedAccounts,
     private readonly database: ImportDatabase,
+    // Asked for at each import and not held, so that a scenario can give the
+    // lists after the importer is made.
+    private readonly events: () => WorldRankingEvents,
   ) {}
 
   async importDocument({
@@ -140,10 +166,24 @@ export class ImportTournaments implements Importer<OldTournament> {
     id,
     document,
   }: ReadDocument<OldTournament>): Promise<void> {
+    let counting: RankedSport | undefined;
+    let tookListedCountry = false;
     await this.unitOfWork.inTransaction(async () => {
       const format = formatOf(document.TournamentType);
       const sport = sportOf(document.SportType);
-      const { country, region } = placeOf(document.TimeZoneId, document.Name);
+      const timeZones = placeOf(document.TimeZoneId, document.Name);
+      // The time zone is only the nearest thing to a country, so the world
+      // rankings' word for where the tournament was played is taken over it
+      // (ImportTournaments.feature). A region is a country's, so it is kept
+      // only where the country is the same.
+      const listed = this.#countryInTheLists(document);
+      counting = rankedSportOf(document);
+      tookListedCountry = listed !== undefined;
+      const country = listed ?? timeZones.country;
+      const region =
+        listed === undefined || listed.code === timeZones.country.code
+          ? timeZones.region
+          : undefined;
       // The old sites kept no moment a tournament was created at, so it was
       // created when it started, as far as anything here says.
       const at = dayOf(document.Start);
@@ -202,5 +242,24 @@ export class ImportTournaments implements Importer<OldTournament> {
         tournament.id.value,
       );
     });
+    // Once the tournament is kept, so that one refused, or one whose
+    // transaction fails, is not counted.
+    if (counting !== undefined) {
+      this.counted[counting].tournaments += 1;
+      if (tookListedCountry) this.counted[counting].tookListedCountry += 1;
+    }
+  }
+
+  // The country the world rankings' list of the tournament's sport gives it,
+  // for a sport they keep one for.
+  #countryInTheLists(document: OldTournament): Country | undefined {
+    const sport = rankedSportOf(document);
+    if (sport === undefined) return undefined;
+    return this.events().countryOf(
+      sport,
+      dayOf(document.Start).toISOString().slice(0, 10),
+      dayOf(document.Finish).toISOString().slice(0, 10),
+      tournamentNameToImport(document.Name),
+    );
   }
 }
