@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../../../../../support/world.js";
+import { assertDrawnAsTrashCan } from "../../../../../../../support/icons.js";
 import {
   isMarked,
   unmarkedWithin,
@@ -101,6 +102,18 @@ When(
     );
     await archive.waitFor();
     await archive.click();
+  },
+);
+
+Then(
+  "Remove for the player {string} is a trash can",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const remove = rowOf(this, name).locator(
+        '.listed-options button[data-action="remove"]',
+      );
+      await assertDrawnAsTrashCan(remove);
+    });
   },
 );
 

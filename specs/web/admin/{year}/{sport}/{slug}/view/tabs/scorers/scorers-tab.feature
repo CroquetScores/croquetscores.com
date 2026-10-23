@@ -203,6 +203,11 @@ Feature: The scorers tab of a tournament's page
       When the scorers of "Spring Open" are opened
       Then the scorer "Sam Someone" offers "Remove"
 
+    Scenario: Remove is drawn as a trash can
+      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
+      When the scorers of "Spring Open" are opened
+      Then Remove for the scorer "Sam Someone" is a trash can
+
     Scenario: Removing a scorer asks first
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       And the scorers of "Spring Open" are open

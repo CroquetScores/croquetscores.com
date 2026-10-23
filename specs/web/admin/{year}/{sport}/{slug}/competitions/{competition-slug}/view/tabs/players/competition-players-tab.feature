@@ -531,6 +531,11 @@ Feature: The players tab of a competition's page
       When the players of "Block A" in "Spring Open" are opened
       Then the player "Sam Someone" does not offer "Down"
 
+    Scenario: Remove is drawn as a trash can
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      When the players of "Block A" in "Spring Open" are opened
+      Then Remove for the player "Sam Someone" is a trash can
+
     Scenario: A player who has played is not offered Remove
       Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
