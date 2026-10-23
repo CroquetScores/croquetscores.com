@@ -20,11 +20,13 @@ Premi **Aggiungi test**, sopra l'elenco. Si apre una finestra di dialogo sopra l
 
 **Squadra A** e **Squadra B** si scelgono ciascuna tra le squadre in uso del torneo, per nome, nell'ordine del torneo. All'inizio non è scelta nessuna delle due, così un test non viene mai aggiunto tra squadre che non hai scelto. Squadra B propone ogni squadra tranne quella scelta come Squadra A, perché una squadra non gioca un test contro se stessa. Squadra A è la prima squadra: i suoi giocatori stanno a sinistra sulla pagina del test e sulla pagina pubblica. Un test non ha un nome suo da scrivere; si chiama con i nomi brevi delle sue squadre.
 
-**Inizia** e **Finisce** sono i giorni in cui si gioca il test, che cominciano dal primo giorno del torneo. Un test si gioca all'interno del suo torneo, quindi giorni prima che il torneo cominci o dopo che finisce vengono rifiutati.
+**Inizio** e **Fine** sono i giorni in cui si gioca il test, che cominciano dal primo giorno del torneo. Un test si gioca all'interno del suo torneo, quindi giorni prima che il torneo cominci o dopo che finisce vengono rifiutati.
 
 **Incontri previsti** è quanti incontri il test deve avere, fissato dall'evento prima che cominci, così chi legge i suoi punteggi può vedere a che punto è. È un numero intero da 1 in su. È anche un limite: una volta che sono cominciati tanti incontri quanti il test deve avere, una partita che ne comincerebbe un altro viene rifiutata, mentre gli incontri già cominciati si giocano fino in fondo. Un test che deve averne di più si modifica perché li preveda.
 
 **Al meglio di** è di quante partite è al meglio ciascun incontro. Può essere pari, perché un incontro può finire in parità.
+
+**Si gioca con handicap**, **Ammette i pareggi** e **Vale per le classifiche mondiali** vengono chiesti come per qualsiasi competizione. L'ultimo viene chiesto solo quando può valere: un test di Association Croquet o di Golf Croquet che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato.
 
 **Gruppo** è il gruppo in cui il test si trova, quando l'evento si gioca a gruppi, come "Block A". È facoltativo: lasciato vuoto, il test non è in nessuno. I test di un gruppo hanno una pagina loro sul sito pubblico, che mostra la classifica delle squadre del gruppo.
 

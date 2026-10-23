@@ -1,6 +1,6 @@
 # Konkurencje
 
-Karta **Konkurencje** na stronie turnieju to miejsce, gdzie dodaje się jego konkurencje, ustawia je w kolejności i odkłada na bok. Konkurencja to blok, system pucharowy albo system szwajcarski. Każda ma własną stronę, na której zgłasza się jej zawodników i wprowadza jej wyniki.
+Karta **Konkurencje** na stronie turnieju to miejsce, gdzie dodaje się jego konkurencje, ustawia je w kolejności i odkłada na bok. Konkurencja jest grupowa, pucharowa albo szwajcarska. Każda ma własną stronę, na której zgłasza się jej zawodników i wprowadza jej wyniki.
 
 ![Karta Konkurencje, z konkurencjami każdego rodzaju i jedną zarchiwizowaną](images/competitions-tab.png)
 
@@ -8,25 +8,35 @@ Karta **Konkurencje** na stronie turnieju to miejsce, gdzie dodaje się jego kon
 
 Naciśnij **Dodaj konkurencję**, nad listą. Nad stroną otwiera się okno dialogowe, które pyta o nazwę konkurencji, jej rodzaj i kształt, jaki ma ten rodzaj.
 
-**Nazwa** to to, czego zawodnicy szukają na stronie turnieju, by znaleźć swoje partie. Ma od 1 do 254 znaków i wystarczy sama litera, bo blok często nazywa się jedną. Dwie konkurencje w jednym turnieju nie mogą mieć tej samej nazwy.
+**Nazwa** to to, czego zawodnicy szukają na stronie turnieju, by znaleźć swoje gry. Ma od 1 do 254 znaków i wystarczy sama litera, bo konkurencję grupową często nazywa się jedną. Dwie konkurencje w jednym turnieju nie mogą mieć tej samej nazwy.
 
-**Rodzaj** to blok, system pucharowy albo system szwajcarski. Okno zaczyna na bloku, którym jest większość konkurencji.
+**Rodzaj** to Grupowa, Pucharowa albo Szwajcarska. Okno zaczyna na rodzaju Grupowa, którym jest większość konkurencji.
 
-### Blok albo system szwajcarski
+### Grupowa albo szwajcarska
 
-Blok i system szwajcarski pytają tylko, z ilu partii każdy mecz jest **najlepszy z**, co zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie partie. Może to być liczba parzysta, bo w bloku albo w systemie szwajcarskim zawodnika szereguje się według wygranych partii, a mecz z dwóch partii podzielonych po jednej jest rezultatem jak każdy inny.
+Konkurencja grupowa i szwajcarska pytają tylko, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**), co zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie gry. Może to być liczba parzysta, bo w konkurencji grupowej albo szwajcarskiej zawodnika szereguje się według wygranych gier, a mecz z dwóch gier podzielonych po jednej jest rezultatem jak każdy inny.
 
-![Okno Dodaj konkurencję dla bloku](images/add-competition-block.png)
+![Okno Dodaj konkurencję dla konkurencji grupowej](images/add-competition-block.png)
 
-![Okno Dodaj konkurencję dla systemu szwajcarskiego](images/add-competition-swiss.png)
+![Okno Dodaj konkurencję dla konkurencji szwajcarskiej](images/add-competition-swiss.png)
 
-### System pucharowy
+### Pucharowa
 
-System pucharowy pyta, ile **miejsc** ma jego drabinka i z ilu partii najlepsza jest każda runda. Miejsca są oferowane jako 2, 4, 8, 16, 32, 64 i 128, bo żadna inna liczba nie dzieliłaby się na pół runda po rundzie aż do finału, a okno zaczyna na 8. Miejsca pozostałe po zgłoszeniu zawodników wypełnia się wolnymi losami, które dodaje się tam, gdzie zawodników.
+Konkurencja pucharowa pyta, ile ma miejsc jej drabinka (pole **Miejsca**) i z ilu gier najlepsza jest każda runda. Miejsca są oferowane jako 2, 4, 8, 16, 32, 64 i 128, bo żadna inna liczba nie dzieliłaby się na pół runda po rundzie aż do finału, a okno zaczyna na 8. Miejsca pozostałe po zgłoszeniu zawodników wypełnia się Bye, które dodaje się tam, gdzie zawodników.
 
-Drabinka ma tyle rund, ile trzeba, by zmniejszyć o połowę jej miejsca do jednego, więc drabinka o 8 miejscach ma trzy rundy. Okno pyta, z ilu partii najlepsza jest każda z nich, razem pod **Najlepszy z, według rund**, w kolejności rozgrywania. Ostatnie trzy nazywają się tak, jak mówi się o rundach drabinki, **Ćwierćfinały**, **Półfinały** i **Finał**, a wcześniejsze – numerem, od Rundy 1. Wybranie więcej miejsc dodaje rundy na początku drabinki, a wybranie mniej odbiera je od początku, więc to, co wpisano dla finału, nadal należy do finału. Każda runda jest najlepsza z nieparzystej liczby partii, bo mecz pucharowy musi mieć zwycięzcę.
+Drabinka ma tyle rund, ile trzeba, by zmniejszyć o połowę jej miejsca do jednego, więc drabinka o 8 miejscach ma trzy rundy. Okno pyta, z ilu gier najlepsza jest każda z nich, razem pod **Do wygranych gier w rundach**, w kolejności rozgrywania. Ostatnie trzy nazywają się tak, jak mówi się o rundach drabinki, **Ćwierćfinały**, **Półfinały** i **Finał**, a wcześniejsze – numerem, od Rundy 1. Wybranie więcej miejsc dodaje rundy na początku drabinki, a wybranie mniej odbiera je od początku, więc to, co wpisano dla finału, nadal należy do finału. Każda runda jest najlepsza z nieparzystej liczby gier, bo mecz pucharowy musi mieć zwycięzcę.
 
-![Okno Dodaj konkurencję dla systemu pucharowego o 4 miejscach](images/add-competition-knockout.png)
+![Okno Dodaj konkurencję dla konkurencji pucharowej o 4 miejscach](images/add-competition-knockout.png)
+
+### Jak jest rozgrywana i liczona
+
+Każdy rodzaj pyta pod swoim kształtem o te same trzy rzeczy.
+
+**Rozgrywany z handicapem.** Zaznacz to dla konkurencji rozgrywanej z handicapami.
+
+**Dopuszcza remisy.** Zaznacz to tam, gdzie gra może skończyć się bez zwycięzcy. Większość konkurencji na to nie pozwala. Gdy jest zaznaczone, wynik wprowadzony z równymi punktami i bez oznaczenia jest zachowywany jako remis; gdy nie jest, gra na równych punktach musi mówić, kto ją wygrał, oznaczeniem po wyniku zwycięzcy, na przykład „6w". Mecz w konkurencji pucharowej zawsze ma zwycięzcę, więc zremisowana gra go nie rozstrzyga.
+
+**Liczy się do rankingów światowych.** Pytanie pojawia się tylko tam, gdzie może się liczyć: w konkurencji krokieta klasycznego lub krokieta golfowego, która nie jest rozgrywana z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone, więc odznacz je dla konkurencji, która nie ma się liczyć.
 
 ### Dodawanie kilku naraz
 
@@ -34,9 +44,9 @@ Naciśnij **Dodaj**. Konkurencja zostaje dodana, okno o tym mówi, a nazwa jest 
 
 ## Zmiana konkurencji
 
-**Edytuj** otwiera to samo okno na konkurencji, zatytułowane Edytuj konkurencję, z jej nazwą i kształtem takimi, jakie są. O rodzaj nie pyta, bo bloku nie zmienia się w system pucharowy przez edycję: konkurencję niewłaściwego rodzaju archiwizuje się i dodaje ponownie. Naciśnij **Zapisz**, by zachować zmianę i zamknąć okno.
+**Edytuj** otwiera to samo okno na konkurencji, zatytułowane Edytuj konkurencję, z jej nazwą, kształtem oraz sposobem rozgrywania i liczenia takimi, jakie są. O rodzaj nie pyta, bo konkurencji grupowej nie zmienia się w pucharową przez edycję: konkurencję niewłaściwego rodzaju archiwizuje się i dodaje ponownie. Naciśnij **Zapisz**, by zachować zmianę i zamknąć okno.
 
-System pucharowy, który ma partię, ma zawodników rozmieszczonych w drabince, a zmiana liczby miejsc przesunęłaby ich, więc po wprowadzeniu partii jest odrzucana. Liczbę partii w rundach nadal można zmieniać.
+Konkurencja pucharowa, która ma grę, ma zawodników rozmieszczonych w drabince, a zmiana liczby miejsc przesunęłaby ich, więc po wprowadzeniu gry jest odrzucana. Liczbę gier w rundach nadal można zmieniać.
 
 ## Kolejność
 
@@ -48,6 +58,6 @@ Nazwa konkurencji albo **Zobacz** otwiera jej stronę, na której zgłasza się 
 
 ## Archiwizowanie konkurencji
 
-**Archiwizuj** odkłada konkurencję na bok, niezależnie od tego, czy ma partie – są zachowywane razem z nią i wracają, gdy zostanie przywrócona. Zarchiwizowana konkurencja jest wymieniona pod **Zarchiwizowane konkurencje**, przekreślona, oferuje tylko **Przywróć** i nie ma jej na stronach publicznych. Archiwizowanie nie pyta najpierw, bo przywrócenie je cofa.
+**Archiwizuj** odkłada konkurencję na bok, niezależnie od tego, czy ma gry – są zachowywane razem z nią i wracają, gdy zostanie przywrócona. Zarchiwizowana konkurencja jest wymieniona pod **Zarchiwizowane konkurencje**, przekreślona, oferuje tylko **Przywróć** i nie ma jej na stronach publicznych. Archiwizowanie nie pyta najpierw, bo przywrócenie je cofa.
 
 Dalej: [Zgłaszanie zawodników do konkurencji](entering-players-in-a-competition.md).

@@ -1,6 +1,6 @@
 # Wyniki
 
-Stronę testu otwiera się z jego nazwy na karcie Testy albo z ciemnozielonego paska. Jej nagłówkiem są pełne nazwy jego drużyn, jak „Australia v New Zealand", a pod nim to, ile meczów test ma mieć i z ilu partii każdy jest najlepszy. Jego wyniki są całą stroną, bez kart. Organizator i wprowadzający wyniki widzą tę samą stronę, bo wprowadzający wyniki może zrobić z wynikiem wszystko to, co organizator.
+Stronę testu otwiera się z jego nazwy na karcie Testy albo z ciemnozielonego paska. Jej nagłówkiem są pełne nazwy jego drużyn, jak „Australia v New Zealand", a pod nim to, ile meczów test ma mieć i z ilu gier każdy jest najlepszy. Jego wyniki są całą stroną, bez kart. Organizator i osoba wprowadzająca wyniki widzą tę samą stronę, bo osoba wprowadzająca wyniki może zrobić z wynikiem wszystko to, co organizator.
 
 ![Strona testu, z jego wynikami](images/test-page-panel.png)
 
@@ -14,27 +14,27 @@ Naciśnij **Dodaj wynik**, nad listą. Okno czyta się tak, jak mówi się rezul
 
 ![Okno Dodaj wynik na stronie testu](images/add-test-score-dialog.png)
 
-Zwycięzcę wybiera się spośród zawodników w użyciu obu drużyn, pod nazwą każdej drużyny, najpierw zawodników pierwszej drużyny, a zawodników każdej drużyny w kolejności drużyny. Na początku nikt nie jest wybrany. Gdy zwycięzca jest wybrany, przegrany jest oferowany tylko z drugiej drużyny, bo partia między dwoma zawodnikami tej samej drużyny nie jest partią między drużynami. Zarchiwizowany zawodnik nie jest oferowany.
+Zwycięzcę wybiera się spośród zawodników w użyciu obu drużyn, pod nazwą każdej drużyny, najpierw zawodników pierwszej drużyny, a zawodników każdej drużyny w kolejności drużyny. Na początku nikt nie jest wybrany. Gdy zwycięzca jest wybrany, przegrany jest oferowany tylko z drugiej drużyny, bo gra między dwoma zawodnikami tej samej drużyny nie jest grą między drużynami. Zarchiwizowany zawodnik nie jest oferowany.
 
 Wynik wpisuje się tak, jak zapisał go sędzia: liczba punktów i to, co po niej następuje, co jest zachowywane i pokazywane tak, jak wpisano, jak „26tp" dla 26 bramek i triple peela. Liczba to cyfry, od których wynik się zaczyna; wynik, który nie zaczyna się od cyfry, jest odrzucany.
 
-Partia wygrana przy równych punktach, jak wtedy, gdy przerwano ją z powodu czasu i rozstrzygnięto w inny sposób, mówi, kto ją wygrał, oznaczeniem po wyniku zwycięzcy: „6w" wygrywa z „6". Oznaczenia to „w", „won" i „winner". Wynik zwycięzcy musi być wyższy niż przegranego albo oznaczony, chyba że turniej dopuszcza remisy – wtedy równe punkty bez oznaczenia są zachowywane jako remis.
+Gra wygrana przy równych punktach, jak wtedy, gdy przerwano ją z powodu czasu i rozstrzygnięto w inny sposób, mówi, kto ją wygrał, oznaczeniem po wyniku zwycięzcy: „6w" wygrywa z „6". Oznaczenia to „w", „won" i „winner". Wynik zwycięzcy musi być wyższy niż przegranego albo oznaczony, chyba że turniej dopuszcza remisy – wtedy równe punkty bez oznaczenia są zachowywane jako remis.
 
-Naciśnij **Dodaj partię**. Partia zostaje dodana, okno mówi która, a pola są opróżniane dla następnej, bo wyniki przychodzą partiami, odczytane z tablicy na koniec sesji. Naciśnij **Anuluj**, gdy wszystkie są już wprowadzone.
+Naciśnij **Dodaj grę**. Gra zostaje dodana, okno mówi która, a pola są opróżniane dla następnej, bo wyniki przychodzą grami, odczytane z tablicy na koniec sesji. Naciśnij **Anuluj**, gdy wszystkie są już wprowadzone.
 
 ## Mecze
 
-Dwoje zawodników, którzy się spotykają, rozgrywa mecz najlepszy z tylu partii, ile ustalono dla testu. Partie między nimi są partiami tego meczu, a partia między dwoma zawodnikami, których mecz jest już rozstrzygnięty, jest odrzucana: jeden z nich wygrał więcej partii, niż drugi mógłby jeszcze wygrać, albo rozegrano każdą partię meczu.
+Dwoje zawodników, którzy się spotykają, rozgrywa mecz najlepszy z tylu gier, ile ustalono dla testu. Gry między nimi są grami tego meczu, a gra między dwoma zawodnikami, których mecz jest już rozstrzygnięty, jest odrzucana: jeden z nich wygrał więcej gier, niż drugi mógłby jeszcze wygrać, albo rozegrano każdą grę meczu.
 
-Mecz jest rozpoczęty, gdy jego dwoje zawodników ma partię w użyciu. Test nie rozpoczyna więcej meczów, niż ma mieć: gdy rozpoczęło się ich tyle, partia między dwoma zawodnikami, którzy się nie spotkali, jest odrzucana, a kolejna partia już rozpoczętego meczu jest przyjmowana. Gdy test ma mieć więcej meczów, zmień go na karcie Testy, by ich oczekiwał.
+Mecz jest rozpoczęty, gdy jego dwoje zawodników ma grę w użyciu. Test nie rozpoczyna więcej meczów, niż ma mieć: gdy rozpoczęło się ich tyle, gra między dwoma zawodnikami, którzy się nie spotkali, jest odrzucana, a kolejna gra już rozpoczętego meczu jest przyjmowana. Gdy test ma mieć więcej meczów, zmień go na karcie Testy, by ich oczekiwał.
 
 ## Poprawianie wyniku
 
-**Edytuj** otwiera to samo okno na tym wyniku, zatytułowane Edytuj wynik, z wybranymi zawodnikami i wynikami takimi, jak je wpisano. Można zmienić zarówno jego zawodników, jak i wyniki, wybierając ich tak jak przy dodawaniu. Naciśnij **Zapisz**, by zachować poprawkę i zamknąć okno. Poprawka zachowuje rezultat: wygrana partia pozostaje wygrana, a zremisowana – zremisowana. Partię, której rezultat był błędny, archiwizuje się i wprowadza ponownie.
+**Edytuj** otwiera to samo okno na tym wyniku, zatytułowane Edytuj wynik, z wybranymi zawodnikami i wynikami takimi, jak je wpisano. Można zmienić zarówno jego zawodników, jak i wyniki, wybierając ich tak jak przy dodawaniu. Naciśnij **Zapisz**, by zachować poprawkę i zamknąć okno. Poprawka zachowuje rezultat: wygrana gra pozostaje wygrana, a zremisowana – zremisowana. Grę, której rezultat był błędny, archiwizuje się i wprowadza ponownie.
 
 ## Ustawianie wyników w kolejności
 
-Wyniki przychodzą w takiej kolejności, w jakiej je wprowadzono, więc każdy wynik w użyciu oferuje **W górę** i **W dół**, które zamieniają go z sąsiednim wynikiem, by listę można było ustawić w kolejności, w jakiej rozegrano partie.
+Wyniki przychodzą w takiej kolejności, w jakiej je wprowadzono, więc każdy wynik w użyciu oferuje **W górę** i **W dół**, które zamieniają go z sąsiednim wynikiem, by listę można było ustawić w kolejności, w jakiej rozegrano gry.
 
 ## Archiwizowanie wyniku
 

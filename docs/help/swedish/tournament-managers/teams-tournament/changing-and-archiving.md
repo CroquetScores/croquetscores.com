@@ -6,11 +6,11 @@ I listan över turneringar i administrationen, tryck på **Redigera** på turner
 
 ![Formuläret Redigera turnering](images/edit-tournament.png)
 
-Turneringens dagar kan vidgas här där en testmatch behöver en dag utanför dem, eftersom en testmatch spelas inom sin turnering. Ett format som spelas av lag kan bytas mot ett annat, eftersom turneringen innehåller samma saker i vart och ett. När turneringen innehåller något lag eller någon testmatch, arkiverade inräknade, kan den inte ändras till formatet Standard, som har spelare och tävlingar i stället.
+Turneringens dagar kan vidgas här där en landskamp behöver en dag utanför dem, eftersom en landskamp spelas inom sin turnering. Ett format som spelas av lag kan bytas mot ett annat, eftersom turneringen innehåller samma saker i vart och ett. När turneringen innehåller något lag eller någon landskamp, arkiverade inräknade, kan den inte ändras till formatet Standard, som har spelare och tävlingar i stället.
 
 En turnering behåller sin adress när namnet rättas, så att en länk någon redan har skickat fortfarande hittar den. Den flyttar bara när det år den startar eller dess sport ändras, och då leder dess gamla adress till den nya. När du sparar förs du till turneringen där den nu finns.
 
-Bara en turneringsledare kan ändra en turnering. En resultatförare, eller vem som helst annan, får veta det i stället för att visas formuläret.
+Bara en arrangör kan ändra en turnering. En resultatförare, eller vem som helst annan, får veta det i stället för att visas formuläret.
 
 ## Listan över turneringar
 

@@ -7,4 +7,4 @@ Hay dos clases de torneo, y una guía para cada una. Cada guía se sostiene por 
 - [Llevar un torneo estándar](standard-tournament/index.md): un torneo que se juega entre jugadores inscritos uno a uno, en bloques, eliminatorias y suizos. Un fin de semana de club, un abierto, un campeonato.
 - [Llevar un torneo por equipos](teams-tournament/index.md): un torneo que se juega entre equipos, como tests entre dos bandos formados por partidos entre sus jugadores. Una serie de tests, un interstate shield, un campeonato mundial por equipos.
 
-De qué clase es un torneo lo decide su **Formato** al crearlo: Estándar para la primera, y Por equipos, Eire Cup, Interstate Shield o GC World Team Championship para la segunda.
+De qué clase es un torneo lo decide su **Formato** al crearlo: Estándar para la primera, y Equipos, Copa Eire, Escudo Interestatal o Campeonato Mundial por Equipos de Croquet Golf para la segunda.

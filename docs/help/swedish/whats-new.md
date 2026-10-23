@@ -14,8 +14,8 @@ Koden är nu öppen källkod, under GNU Affero General Public License version 3 
 ### Följa en turnering
 
 - **Anteckningar från arrangörerna.** En turnerings arrangörer kan nu skriva anteckningar för att berätta för spelarna vad de behöver veta medan turneringen spelas: formatet, en ändring i speltablån, tiden för lunchen. De finns i turneringens nya avdelning Anteckningar, med de nyaste överst och hur länge sedan varje anteckning skrevs.
-- **En asterisk (\*) markerar det du inte har läst.** En anteckning har en tills du öppnar den, och igen om den ändras efter att du läst den. Så länge någon anteckning är oläst har avdelningen Anteckningar också en, på varje sida i turneringen, så att du ser att det finns nyheter utan att behöva gå och titta. Livekommentarer markeras på samma sätt. Din webbläsare kommer ihåg vad du har läst, så du behöver inte logga in. En annan telefon eller dator börjar med ingenting läst.
-- **Livekommentarerna är lättare att följa.** På den gamla webbplatsen kastade varje ny kommentar sidan längst ned, så den som bläddrade tillbaka bland tidigare kommentarer tappade sin plats. Nu flyttas sidan ned till en ny kommentar bara om du redan är längst ned och läser den senaste. Om du har bläddrat tillbaka för att läsa tidigare kommentarer lämnar den dig där du är.
+- **En asterisk (\*) markerar det du inte har läst.** En anteckning har en tills du öppnar den, och igen om den ändras efter att du läst den. Så länge någon anteckning är oläst har avdelningen Anteckningar också en, på varje sida i turneringen, så att du ser att det finns nyheter utan att behöva gå och titta. Kommentarer markeras på samma sätt. Din webbläsare kommer ihåg vad du har läst, så du behöver inte logga in. En annan telefon eller dator börjar med ingenting läst.
+- **Kommentarerna är lättare att följa.** På den gamla webbplatsen kastade varje nytt inlägg sidan längst ned, så den som bläddrade tillbaka bland tidigare inlägg tappade sin plats. Nu flyttas sidan ned till ett nytt inlägg bara om du redan är längst ned och läser den senaste. Om du har bläddrat tillbaka för att läsa tidigare inlägg lämnar den dig där du är.
 
 ### Webbplatsen
 

@@ -8,7 +8,7 @@ La page du tournoi est à son année, son sport et son nom, comme `/2026/ac/spri
 
 ![La page publique du tournoi](images/public-tournament.png)
 
-La barre vert foncé propose les rubriques du tournoi : **Récents**, qui est cette page, **Joueurs**, **Notes** et **Commentaires**, puis chaque compétition en service, dans l’ordre de l’onglet Compétitions. Notes est marquée d’un astérisque rouge tant qu’il y a une note que le lecteur n’a pas lue.
+La barre vert foncé propose les rubriques du tournoi : **Récent**, qui est cette page, **Joueurs**, **Notes** et **Commentaires**, puis chaque compétition en service, dans l’ordre de l’onglet Compétitions. Notes est marquée d’un astérisque rouge tant qu’il y a une note que le lecteur n’a pas lue.
 
 ## Une poule
 
@@ -16,7 +16,7 @@ La page d’une poule montre ses résultats en grille : une ligne et une colonn
 
 ![La grille d’une poule](images/public-block-grid.png)
 
-Une poule se présente de trois façons, proposées sur la ligne de son nom : **Tableau**, **Résumé** et **Ordre de jeu**. Le résumé est celui qui convient à un téléphone : les joueurs classés, avec leurs victoires, leurs défaites et leurs arceaux nets. L’ordre de jeu liste chaque partie, la plus ancienne en premier. Un lecteur qui choisit une vue la garde pour chaque compétition jusqu’à ce qu’il en choisisse une autre.
+Une poule se présente de trois façons, proposées sur la ligne de son nom : **Grille**, **Récapitulatif** et **Ordre de jeu**. Le récapitulatif est celui qui convient à un téléphone : les joueurs classés, avec leurs victoires, leurs défaites et leurs arceaux nets. L’ordre de jeu liste chaque partie, la plus ancienne en premier. Un lecteur qui choisit une vue la garde pour chaque compétition jusqu’à ce qu’il en choisisse une autre.
 
 ![Le résumé d’une poule](images/public-block-summary.png)
 

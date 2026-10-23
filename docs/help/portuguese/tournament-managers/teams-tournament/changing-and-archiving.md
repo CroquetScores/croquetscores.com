@@ -8,9 +8,9 @@ Na lista de torneios na administração, pressione **Editar** no torneio. O form
 
 Os dias do torneio podem ser ampliados aqui quando um teste precisa de um dia fora deles, porque um teste é disputado dentro do seu torneio. Um formato disputado por equipes pode ser trocado por outro, porque o torneio guarda as mesmas coisas em cada um. Depois que o torneio tem alguma equipe ou teste, contando os arquivados, ele não pode ser mudado para o formato Padrão, que tem jogadores e competições em vez disso.
 
-Um torneio mantém o seu endereço quando o nome é corrigido, para que um link que alguém já enviou continue a encontrá-lo. Ele só muda quando o ano em que começa ou a sua modalidade muda, e então o endereço antigo leva ao novo. Salvar leva você ao torneio onde quer que ele esteja agora.
+Um torneio mantém o seu endereço quando o nome é corrigido, para que um link que alguém já enviou continue a encontrá-lo. Ele só muda quando o ano em que começa ou o seu esporte muda, e então o endereço antigo leva ao novo. Salvar leva você ao torneio onde quer que ele esteja agora.
 
-Só um organizador pode alterar um torneio. Um apontador, ou qualquer outra pessoa, é avisado disso em vez de ver o formulário.
+Só um organizador pode alterar um torneio. Um anotador, ou qualquer outra pessoa, é avisado disso em vez de ver o formulário.
 
 ## A lista de torneios
 

@@ -25,13 +25,7 @@ Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie w
 
 **Onderskrif.** Wat jy ook al wil hê lesers moet weet wat geen eie veld het nie: waar om te parkeer, wanneer middagete is, wie om te bel. Dit word onder die toernooi se naam op elke openbare bladsy gewys. Dit word in Markdown geskryf, so 'n woord kan vetgedruk gemaak word met sterretjies daarom, en 'n lys met 'n strepie aan die begin van elke reël. Dit kan tot 2000 karakters lank wees, en kan leeg gelaat word.
 
-**Met voorgee gespeel.** Merk dit vir 'n voorgeebyeenkoms.
-
-**Laat gelykopuitslae toe.** Merk dit waar 'n spel kan eindig sonder dat een van die spelers die wenner is. Waar dit gemerk is, word 'n uitslag wat met gelyke punte en geen merk ingevoer is as gelykop gehou; waar dit nie gemerk is nie, moet 'n spel op gelyke punte sê wie dit gewen het, met 'n merk ná die wenner se punte, soos "6w".
-
-**Gelyke toetse is gelykop.** Word eers gevra sodra 'n formaat tussen spanne gekies is. 'n Toets word gewen deur die span wat meer van sy wedstryde wen, en een wat gelyk is op wedstryde word deur netto spelle beslis, dan deur netto hoepels, tensy dit gemerk is, in welke geval 'n toets wat gelyk is op wedstryde gelykop is, soos sommige spanbyeenkomste dit het. Dit begin ongemerk vir Spanne, en gemerk vir die GC World Team Championship, wat 'n gelyke toets nog altyd as gelykop beskou het.
-
-**Tel vir die wêreldranglys.** Word net gevra waar dit getel kan word: 'n toernooi van Association Croquet, Golf Croquet of Amerikaanse 6-hoepel-croquet wat nie met voorgee gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk.
+Hoe sy toetse gespeel en getel word, of met voorgifte, met gelykopuitslae, en vir die wêreldranglyste, sê elke toets self wanneer dit bygevoeg word.
 
 **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
 

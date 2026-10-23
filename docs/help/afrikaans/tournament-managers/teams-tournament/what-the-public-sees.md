@@ -28,7 +28,7 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 !['n Toets se bladsy](images/public-test.png)
 
-'n Toets word op twee maniere gewys, aangebied op die reël van sy naam: **Rooster**, wat hierdie tabel is, en **Speelorde**, wat elke spel van die toets lys, oudste eerste. 'n Toets in 'n groep bied sy groep se Opsomming en toetse in 'n ry bo sy opskrif aan, met hierdie toets gemerk.
+'n Toets word op twee maniere gewys, aangebied op die reël van sy naam: **Rooster**, wat hierdie tabel is, en **Speelvolgorde**, wat elke spel van die toets lys, oudste eerste. 'n Toets in 'n groep bied sy groep se Opsomming en toetse in 'n ry bo sy opskrif aan, met hierdie toets gemerk.
 
 ## Spelers
 

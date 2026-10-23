@@ -4,7 +4,7 @@ Ambas opciones están al pie de cada página y ambas se recuerdan, así que las 
 
 ## El tema
 
-**Tema** ofrece **Claro**, **Oscuro** y **Sistema**. **Sistema**, que es lo que tienes hasta que eliges, sigue a tu móvil o a tu ordenador: el sitio es oscuro cuando el dispositivo lo es, y claro cuando no. Elige **Claro** u **Oscuro** para tener el sitio así hagas lo que haga tu dispositivo.
+**Tema** ofrece **Claro**, **Oscuro** y **Del sistema**. **Del sistema**, que es lo que tienes hasta que eliges, sigue a tu móvil o a tu ordenador: el sitio es oscuro cuando el dispositivo lo es, y claro cuando no. Elige **Claro** u **Oscuro** para tener el sitio así hagas lo que haga tu dispositivo.
 
 ## El idioma
 

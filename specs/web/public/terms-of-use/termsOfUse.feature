@@ -52,6 +52,7 @@ Feature: A reader can see the terms the site is used on
 
     Scenario: The terms for readers are shown in English to a reader of another language
       Given a browser that asks for Welsh
+      And the help has no Welsh terms of use
       When the terms of use are opened
       Then the terms are in English
 
@@ -77,6 +78,7 @@ Feature: A reader can see the terms the site is used on
 
     Scenario: The terms for those who write are shown in English to a reader of another language
       Given a browser that asks for Welsh
+      And the help has no Welsh terms of use for those who write
       When the terms of use for those who write are opened
       Then the terms are in English
 

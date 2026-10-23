@@ -26,7 +26,7 @@ Druk op **Toevoegen**. De speler wordt toegevoegd, het dialoogvenster zegt dat, 
 
 ![Het dialoogvenster nadat een speler is toegevoegd](images/add-player-dialog-added.png)
 
-Een speler heet nooit "Bye". De vrijlotingen van een knock-out worden in de knock-out zelf toegevoegd, waar ook de spelers worden geplaatst, dus een naam waarvan het eerste woord het Engelse "bye" is, wordt geweigerd, en het dialoogvenster legt uit waarom.
+Een speler heet nooit "Bye". De byes van een knock-out worden in de knock-out zelf toegevoegd, waar ook de spelers worden geplaatst, dus een naam waarvan het eerste woord het Engelse "bye" is, wordt geweigerd, en het dialoogvenster legt uit waarom.
 
 ## Een speler corrigeren
 

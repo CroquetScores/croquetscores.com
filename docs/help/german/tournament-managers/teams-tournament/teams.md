@@ -6,7 +6,7 @@ Auf dem Reiter **Mannschaften** der Turnierseite werden die Mannschaften des Tur
 
 ## Eine Mannschaft hinzufügen
 
-Drücke **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
+Drücken Sie **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
 
 ![Der Dialog Mannschaft hinzufügen, ausgefüllt](images/add-team-dialog.png)
 
@@ -16,13 +16,13 @@ Drücke **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich übe
 
 **Flagge** wird überall neben dem Namen der Mannschaft gezeigt. Sie kann auf „keine“ bleiben, etwa bei der Mannschaft eines Vereins oder einer Region.
 
-Drücke **Hinzufügen**. Die Mannschaft wird hinzugefügt, der Dialog sagt es, und seine Felder werden für die nächste geleert. Gib so die ganze Liste ein und drücke dann **Abbrechen**, um den Dialog zu schließen. Abbrechen speichert nichts, was nicht schon hinzugefügt war.
+Drücken Sie **Hinzufügen**. Die Mannschaft wird hinzugefügt, der Dialog sagt es, und seine Felder werden für die nächste geleert. Geben Sie so die ganze Liste ein und drücken Sie dann **Abbrechen**, um den Dialog zu schließen. Abbrechen speichert nichts, was nicht schon hinzugefügt war.
 
 ![Der Dialog, nachdem eine Mannschaft hinzugefügt wurde](images/add-team-dialog-added.png)
 
 ## Eine Mannschaft korrigieren
 
-Drücke das **Bearbeiten** einer Mannschaft, um denselben Dialog für diese Mannschaft zu öffnen, mit dem Titel Mannschaft bearbeiten. Ändere, was falsch ist, und drücke **Speichern**. Eine Mannschaft, deren Kurzname sich ändert, heißt überall nach dem neuen, ihre Tests werden also mit ihm umbenannt.
+Drücken Sie das **Bearbeiten** einer Mannschaft, um denselben Dialog für diese Mannschaft zu öffnen, mit dem Titel Mannschaft bearbeiten. Ändern Sie, was falsch ist, und drücken Sie **Speichern**. Eine Mannschaft, deren Kurzname sich ändert, heißt überall nach dem neuen, ihre Tests werden also mit ihm umbenannt.
 
 ![Der Dialog Mannschaft bearbeiten](images/edit-team-dialog.png)
 

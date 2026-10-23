@@ -1,75 +1,79 @@
-// The site's words in Swedish. Keyed as the English catalogue is, which is
-// what a word missing here falls back to.
-//
-// Written to the reader as du rather than ni: Swedish dropped ni as the polite
-// form decades ago and uses du to everybody, and the English it is written
-// from is plain and direct rather than formal. Items in menus and on buttons
-// are written in sentence case, as Swedish writes them, where the English
-// capitalises each word.
-//
-// The croquet words are the ones Swedish players use: hoops are bågar, and a
-// bye is a frilott. The sports and formats that have no established Swedish
-// name keep the English one, as a name is not translated.
+// Svenska. Läsaren tiltalas med "du". Menyval, knappar och rubriker skrivs
+// som vanliga svenska satser: bara första ordet har stor bokstav ("Byt
+// e-postadress", inte "Byt E-postadress"). Vi säger "e-postadress" om adressen
+// och "e-post" om själva meddelandet. Ord vi har bestämt oss för: turnering,
+// tävling, block, utslagning, schweizer, bågar (hoops), match, parti (game),
+// arkivera/återställ, ta bort (remove) och radera (delete). "Bye" behålls som
+// på engelska, eftersom webbplatsen själv känner igen det ordet.
 import type { Language } from "../common/language.js";
 
 export const swedish: Language = {
   tag: "sv",
   name: "Svenska",
   words: {
+    // Webbplatsens egna fält. Webbplatsens namn är inte ett ord i någons språk
+    // och sätts därför in i uppmaningen som nämner det.
     "site.skipToContent": "Hoppa till innehållet",
     "navigation.menu": "Meny",
     "navigation.label": "Huvudmeny",
     "navigation.home": "Hem",
     "navigation.help": "Hjälp",
-    "navigation.admin": "Administration",
-    "sections.label": "Avdelningar",
+    "navigation.admin": "Admin",
+    "sections.label": "Avsnitt",
     "theme.label": "Tema",
     "theme.light": "Ljust",
     "theme.dark": "Mörkt",
     "theme.system": "System",
     "footer.donate": "Donera",
     "footer.plea":
-      "Gillar du {siteName}? Donera gärna för att hjälpa till med den fortsatta utvecklingen.",
+      "Gillar du {siteName}? Donera gärna och hjälp oss utveckla sidan vidare.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Integritet",
     "footer.termsOfUse": "Användarvillkor",
     "beta.banner":
-      "Det här är en betawebbplats. Data kan återställas när som helst.",
+      "Det här är en betawebbplats. Data kan nollställas när som helst.",
     "privacy.contact":
       "Frågor om den här sidan, eller om vad som sparas om dig: {emailAddress}",
+    // Rutan som läsaren kryssar i för att godkänna användarvillkoren för dem
+    // som skriver. Länkens ord letas upp i rutans ord och görs till länken,
+    // så de måste skrivas exakt som där.
     "termsOfUse.agree": "Jag godkänner användarvillkoren",
     "termsOfUse.link": "användarvillkoren",
+    // Under villkoren för dem som skriver, som privacy.contact står under
+    // integritetstexten.
     "termsOfUse.report":
-      "Anmäl det som skrivits, eller fråga om villkoren: {emailAddress}",
+      "Anmäl vad som skrivits, eller fråga om villkoren: {emailAddress}",
     "TermsOfUse.NotAgreed":
       "Kryssa i rutan för att godkänna användarvillkoren.",
+    // Sägs på varje sida på en prova-på-webbplats, under webbplatsfältet.
     "tryWebsite.banner":
-      "Det här är en trygg plats att lära sig {siteName} på. Allt som skrivs in här kan tas bort när som helst.",
+      "Här kan du lära dig {siteName} utan risk. Allt som skrivs in här kan tas bort när som helst.",
 
     "language.label": "Språk",
     "language.choose": "Byt",
 
-    // The alert that tells a reader there is something new to read.
+    // Aviseringen som talar om att det finns något nytt att läsa.
     "whatsNew.public.message": "Det finns något nytt att läsa.",
     "whatsNew.admin.message":
-      "Det finns något nytt för dig som arrangerar turneringar.",
-    "whatsNew.view": "Se vad som är nytt",
+      "Det finns något nytt för dem som driver turneringar.",
+    "whatsNew.view": "Visa vad som är nytt",
     "whatsNew.later": "Påminn mig nästa gång",
-    "whatsNew.never": "Visa aldrig det här meddelandet igen",
+    "whatsNew.never": "Visa aldrig den här aviseringen igen",
 
     "form.otherwise":
-      "Något stämmer inte här. Kontrollera det du skrev in och försök igen.",
+      "Något här stämmer inte. Kontrollera vad du skrev och försök igen.",
 
+    // Kontomenyn i sidhuvudet: vad personen står för, och alla val den öppnar.
     "account.menu": "Konto",
     "account.register": "Registrera dig",
     "account.signIn": "Logga in",
-    "account.forgotPassword": "Jag har glömt mitt lösenord",
+    "account.forgotPassword": "Glömt lösenord",
     "account.signOut": "Logga ut",
     "account.profile": "Profil",
     "account.changePassword": "Byt lösenord",
     "account.changeEmailAddress": "Byt e-postadress",
     "account.changeName": "Byt namn",
-    "account.setPassword": "Ange lösenord",
+    "account.setPassword": "Skapa lösenord",
     "account.forgetAccount": "Glöm kontot",
 
     "register.title": "Registrera dig",
@@ -77,38 +81,44 @@ export const swedish: Language = {
     "register.submit": "Registrera dig",
     "register.withGoogle": "Registrera dig med Google",
     "register.or": "eller",
+    // Sägs ovanför formuläret när Google skickade tillbaka läsaren utan att
+    // släppa in hen, var och en efter koden som vägen tillbaka gav. Både
+    // registreringssidan och inloggningssidan säger dem, så de säger
+    // "använd din e-postadress" i stället för att nämna vad varje formulär
+    // gör med den.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Google har inte bekräftat att den e-postadressen är din, så den kan inte användas här med Google. Använd din e-postadress nedan i stället.",
+      "Google har inte bekräftat att den e-postadressen är din, så den kan inte användas med Google här. Använd din e-postadress nedan i stället.",
     "SignInWithGoogle.LinkedToAnother":
-      "Den e-postadressen har redan ett konto, som är kopplat till ett annat Google-konto. Logga in med det Google-kontot, eller med din e-postadress och ditt lösenord.",
+      "Den e-postadressen har redan ett konto, länkat till ett annat Google-konto. Logga in med det Google-kontot, eller med din e-postadress och ditt lösenord.",
     "SignInWithGoogle.NameMissing":
-      "Google berättade inte vad du heter, och ett konto behöver ett namn. Använd din e-postadress nedan i stället.",
+      "Google berättade inte vad du heter, och ett konto måste ha ett namn. Använd din e-postadress nedan i stället.",
     "Google.Unreachable":
-      "Google gick inte att nå just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
+      "Det gick inte att nå Google just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
     "Registration.NotAPerson":
       "Det här såg inte ut att komma från en människa. Försök igen, och om det fortsätter, vänta några minuter och kom tillbaka.",
 
+    // En regel som adressen kan bryta, sagd under fältet den gäller.
     "EmailAddress.Missing": "Ange en e-postadress.",
     "EmailAddress.NoAt": "En e-postadress innehåller ett @.",
     "EmailAddress.MoreThanOneAt": "En e-postadress innehåller ett enda @.",
     "EmailAddress.NoDomain":
       "En e-postadress har en domän efter @, till exempel example.com.",
 
-    "welcome.title": "Kontrollera din e-post",
+    "welcome.title": "Kolla din e-post",
     "welcome.checkEmail":
       "Ett e-postmeddelande är på väg till adressen du angav. Följ länken i det för att gå vidare.",
     "welcome.nothingArrived":
-      "Om inget kommer inom några minuter, titta i skräppostmappen.",
+      "Om inget kommer inom några minuter, titta i skräpposten.",
     "welcome.home": "Tillbaka till {siteName}",
     "newConfirmationLink.title": "Hämta en ny länk",
     "newConfirmationLink.explanation":
-      "Länken för att bekräfta din e-postadress har gått ut. Be om en ny så skickas den till adressen du registrerade dig med.",
+      "Länken för att bekräfta din e-postadress har gått ut. Be om en ny, så skickas den till adressen du registrerade dig med.",
     "newConfirmationLink.send": "Skicka en ny länk till mig",
     "newConfirmationLink.home": "Tillbaka till {siteName}",
     "newConfirmationLink.signIn": "Logga in",
-    "newConfirmationLink.sent.title": "Kontrollera din e-post",
+    "newConfirmationLink.sent.title": "Kolla din e-post",
     "newConfirmationLink.sent.explanation":
-      "En ny länk är på väg. Följ den för att bekräfta din e-postadress. Om inget kommer inom några minuter, titta i skräppostmappen.",
+      "En ny länk är på väg. Följ den för att bekräfta din e-postadress. Om inget kommer inom några minuter, titta i skräpposten.",
     "newConfirmationLink.alreadyConfirmed.title":
       "Den e-postadressen är redan bekräftad",
     "newConfirmationLink.alreadyConfirmed.explanation":
@@ -116,25 +126,25 @@ export const swedish: Language = {
     "newConfirmationLink.noLongerWorks.title":
       "Den länken fungerar inte längre",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Kontrollera att du följde hela länken från e-postmeddelandet, utan att något saknas i slutet av den. Om den ändå inte fungerar, registrera dig igen så skickas en ny länk.",
+      "Kontrollera att du följde hela länken från e-postmeddelandet, utan att något saknas i slutet. Fungerar den ändå inte, registrera dig igen så skickas en ny länk.",
     "newConfirmationLink.tooMany.title": "Försök igen senare",
     "newConfirmationLink.tooMany.explanation":
-      "Flera länkar har nyligen skickats till den här adressen. Vänta en timme och be om en ny, och titta under tiden i skräppostmappen.",
+      "Flera länkar har nyligen skickats till den här adressen. Vänta en timme och be om en ny, och titta under tiden i skräpposten.",
 
     "forgotPassword.title": "Har du glömt ditt lösenord?",
     "forgotPassword.emailAddress": "E-postadress",
-    "forgotPassword.submit": "Skicka mig en väg tillbaka in",
+    "forgotPassword.submit": "Skicka mig en väg in",
     "forgotPassword.home": "Tillbaka till {siteName}",
-    "forgotPassword.sent.title": "Kontrollera din e-post",
+    "forgotPassword.sent.title": "Kolla din e-post",
     "forgotPassword.sent.explanation":
-      "Om den adressen har ett konto är en länk för att ange ett nytt lösenord på väg. Följ den inom en timme. Om inget kommer inom några minuter, titta i skräppostmappen.",
+      "Om den adressen har ett konto är en länk för att skapa ett nytt lösenord på väg. Följ den inom en timme. Om inget kommer inom några minuter, titta i skräpposten.",
     "forgotPassword.tryAgainLater":
-      "Det har nyligen begärts för många vägar tillbaka in härifrån. Vänta en timme och försök igen.",
+      "För många vägar in har begärts härifrån på sistone. Vänta en timme och försök igen.",
 
-    "setNewPassword.title": "Ange ett nytt lösenord",
+    "setNewPassword.title": "Skapa ett nytt lösenord",
     "setNewPassword.password": "Lösenord",
     "setNewPassword.confirmPassword": "Bekräfta lösenordet",
-    "setNewPassword.submit": "Ange mitt nya lösenord",
+    "setNewPassword.submit": "Spara mitt nya lösenord",
     "setNewPassword.home": "Tillbaka till {siteName}",
     "setNewPassword.signIn": "Logga in",
     "setNewPassword.askAgain": "Be om en ny länk",
@@ -143,40 +153,41 @@ export const swedish: Language = {
       "Du har loggats ut överallt där du var inloggad. Logga in med ditt nya lösenord.",
     "setNewPassword.expired.title": "Den länken har gått ut",
     "setNewPassword.expired.explanation":
-      "En länk för att ange ett nytt lösenord fungerar i en timme. Be om en till, så skickas den till samma adress.",
+      "En länk för att skapa ett nytt lösenord fungerar i en timme. Be om en ny, så skickas den till samma adress.",
     "setNewPassword.noLongerWorks.title": "Den länken fungerar inte längre",
     "setNewPassword.noLongerWorks.explanation":
       "Den kan redan ha använts, eller så kan något saknas i slutet av den. Be om en ny om du fortfarande behöver en.",
 
+    // Sägs ovanför fälten när kontrollen mot läckta lösenord inte kan göras.
     "BreachedPasswords.Unreachable":
       "Ditt lösenord kan inte kontrolleras just nu, så det har inte ändrats. Försök igen om några minuter; din länk fungerar tills den går ut.",
 
     "forgetAccount.title": "Glöm ditt konto",
     "forgetAccount.explanation":
-      "Ditt namn och din e-postadress kan göras oläsliga för alltid, och ditt konto stängas. För att vara säkra på att det är du skickar vi först en länk till kontots adress, och ingenting glöms förrän du följer den.",
+      "Ditt namn och din e-postadress kan göras oläsliga för alltid, och ditt konto stängas. För att vara säkra på att det är du skickar vi först en länk till kontots adress, och inget glöms förrän du följer den.",
     "forgetAccount.submit": "Skicka länken till mig",
-    "forgetAccount.sent.title": "Kontrollera din e-post",
+    "forgetAccount.sent.title": "Kolla din e-post",
     "forgetAccount.sent.explanation":
       "Vi har skickat en länk till kontots adress. Den fungerar i 15 minuter, och bara medan du är inloggad på det här kontot.",
     "forgetAccount.confirm.title": "Glömma ditt konto för alltid?",
     "forgetAccount.confirm.explanation":
-      "När kontot är glömt kan ditt namn och din e-postadress aldrig läsas igen, av någon, och det går inte att logga in på kontot. Det kan inte ångras.",
+      "När det är glömt kan ditt namn och din e-postadress aldrig läsas igen, av någon, och det går inte att logga in på kontot. Det kan inte ångras.",
     "forgetAccount.confirm.submit": "Glöm mitt konto",
     "forgetAccount.forgotten.title": "Ditt konto har glömts",
     "forgetAccount.forgotten.explanation":
       "Ditt namn och din e-postadress kan inte längre läsas, och du har loggats ut överallt där du var inloggad.",
     "forgetAccount.noLongerWorks.title": "Den länken fungerar inte längre",
     "forgetAccount.noLongerWorks.explanation":
-      "Den kan ha gått ut, redan ha använts, eller höra till ett konto som du inte är inloggad på. Be om en ny från ditt konto om du fortfarande vill att det ska glömmas.",
+      "Den kan ha gått ut, redan ha använts eller höra till ett konto du inte är inloggad på. Be om en ny från ditt konto om du fortfarande vill att det ska glömmas.",
     "forgetAccount.lastAdministrator.title": "Ditt konto kan inte glömmas",
     "forgetAccount.lastAdministrator.explanation":
-      "Du är den här webbplatsens enda administratör. Ge rollen administratör till någon annan, så kan ditt konto glömmas.",
-    "forgetAccount.askAgain": "Be om en ny länk",
+      "Du är den här webbplatsens enda administratör. Ge rollen som administratör till någon annan, så kan ditt konto glömmas.",
+    "forgetAccount.askAgain": "Fråga igen",
     "forgetAccount.home": "Tillbaka till {siteName}",
 
-    "registrationsSuspended.title": "Registreringen är tillfälligt avstängd",
+    "registrationsSuspended.title": "Registreringen är pausad för tillfället",
     "registrationsSuspended.explanation":
-      "En tjänst som registreringen behöver går inte att nå just nu, så ingen kan registrera sig förrän den svarar igen. Ingenting av det du skrev in sparades.",
+      "En tjänst som registreringen behöver går inte att nå just nu, så ingen kan registrera sig förrän den svarar igen. Inget av det du skrev sparades.",
     "registrationsSuspended.tryAgainLater":
       "Försök igen om en stund. Webbplatsens administratör har fått veta.",
     "registrationsSuspended.home": "Tillbaka till {siteName}",
@@ -185,16 +196,19 @@ export const swedish: Language = {
     "signIn.emailAddress": "E-postadress",
     "signIn.password": "Lösenord",
     "signIn.submit": "Logga in",
-    "signIn.forgotPassword": "Har du glömt lösenordet?",
+    "signIn.forgotPassword": "Glömt lösenord?",
     "signIn.register": "Registrera dig",
     "signIn.withGoogle": "Logga in med Google",
     "signIn.or": "eller",
     "signIn.tryAgainLater":
-      "Det har nyligen gjorts för många försök. Vänta en timme och försök igen.",
+      "För många försök har gjorts på sistone. Vänta en timme och försök igen.",
 
+    // Det enda svaret på ett felaktigt lösenord och på en adress ingen har
+    // registrerat. Det säger varken vilket det var eller inte var.
     "SignIn.Failed": "E-postadressen eller lösenordet är fel. Försök igen.",
 
     "profile.title": "Profil",
+    // En etiketts kolon hör till dess ord, eftersom språk sätter det olika.
     "profile.name": "Namn:",
     "profile.emailAddress": "E-postadress:",
 
@@ -202,28 +216,29 @@ export const swedish: Language = {
     "changeName.name": "Namn",
     "changeName.submit": "Byt namn",
 
-    "setPassword.title": "Ange ett lösenord",
+    "setPassword.title": "Skapa ett lösenord",
     "setPassword.explanation":
-      "Ditt konto har inget lösenord: du loggar in med Google. För att kunna logga in med ett lösenord också skickar vi en länk för att ange ett till {emailAddress}.",
+      "Ditt konto har inget lösenord: du loggar in med Google. För att också kunna logga in med lösenord skickar vi en länk för att skapa ett till {emailAddress}.",
     "setPassword.submit": "Skicka en länk till mig",
-    "setPassword.sent.title": "Kontrollera din e-post",
+    "setPassword.sent.title": "Kolla din e-post",
     "setPassword.sent.explanation":
-      "Vi har skickat en länk till dig för att ange ett lösenord. Den fungerar i en timme.",
+      "Vi har skickat en länk för att skapa ett lösenord. Den fungerar i en timme.",
     "setPassword.profile": "Tillbaka till din profil",
 
     "changePassword.title": "Byt lösenord",
     "changePassword.currentPassword": "Nuvarande lösenord",
     "changePassword.password": "Nytt lösenord",
     "changePassword.passwordConfirmation": "Bekräfta lösenordet",
-    "changePassword.forgotPassword": "Har du glömt lösenordet?",
+    "changePassword.forgotPassword": "Glömt lösenord?",
     "changePassword.submit": "Byt lösenord",
+    // Under det nuvarande lösenordet, som det gäller.
     "ChangePassword.WrongPassword": "Det är inte ditt lösenord.",
 
     "changeEmailAddress.title": "Byt e-postadress",
     "changeEmailAddress.emailAddress": "Ny e-postadress",
     "changeEmailAddress.currentPassword": "Nuvarande lösenord",
-    "changeEmailAddress.submit": "Skicka en länk för att bekräfta",
-    "changeEmailAddress.sent.title": "Kontrollera din e-post",
+    "changeEmailAddress.submit": "Skicka en länk att bekräfta",
+    "changeEmailAddress.sent.title": "Kolla din e-post",
     "changeEmailAddress.sent.explanation":
       "En länk för att bekräfta flytten har skickats till den nya e-postadressen. Följ den, inloggad, för att flytta ditt konto dit.",
     "changeEmailAddress.confirm.title": "Flytta ditt konto",
@@ -233,13 +248,14 @@ export const swedish: Language = {
     "changeEmailAddress.noLongerWorks.title":
       "Den här länken fungerar inte längre",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Den har gått ut, har redan använts eller skickades inte för det konto du är inloggad på. Be om en ny från din profil.",
+      "Den har gått ut, har använts eller skickades inte för kontot du är inloggad på. Be om en ny från din profil.",
     "changeEmailAddress.taken.title": "Ditt konto har inte flyttats",
     "changeEmailAddress.profile": "Tillbaka till din profil",
+    // Under fältet var och en gäller.
     "ChangeEmailAddress.WrongPassword": "Det är inte ditt lösenord.",
     "ChangeEmailAddress.Unchanged": "Ditt konto har redan den här adressen.",
     "ChangeEmailAddress.Taken":
-      "Den e-postadressen har numera ett eget konto, så ditt kan inte flyttas dit.",
+      "Den e-postadressen har nu ett eget konto, så ditt kan inte flyttas dit.",
 
     "confirmEmailAddress.title": "Bekräfta din e-postadress",
     "confirmEmailAddress.name": "Namn",
@@ -258,29 +274,31 @@ export const swedish: Language = {
     "confirmEmailAddress.noLongerWorks.title":
       "Den länken fungerar inte längre",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "Kontrollera att du följde hela länken från e-postmeddelandet, utan att något saknas i slutet av den. Om den ändå inte fungerar, registrera dig igen så skickas en ny länk.",
+      "Kontrollera att du följde hela länken från e-postmeddelandet, utan att något saknas i slutet. Fungerar den ändå inte, registrera dig igen så skickas en ny länk.",
     "confirmEmailAddress.alreadyConfirmed.title":
       "Den e-postadressen är redan bekräftad",
     "confirmEmailAddress.alreadyConfirmed.explanation":
       "Det finns inget mer att göra. Logga in med lösenordet du angav när du bekräftade den.",
 
+    // En regel som brutits, nycklad med sin kod så att varje formulär som
+    // säger den säger den likadant. Sägs till den som skrev, under fältet.
     "PersonName.Missing": "Ange ett namn.",
-    "PersonName.TooShort": "Ett namn måste vara minst 3 tecken långt.",
-    "PersonName.TooLong": "Ett namn får vara högst 254 tecken långt.",
+    "PersonName.TooShort": "Ett namn måste vara minst 3 tecken.",
+    "PersonName.TooLong": "Ett namn får vara högst 254 tecken.",
     "WorldRankingName.TooShort":
-      "Ett namn på världsranking måste vara minst 3 tecken långt.",
+      "Ett namn på världsrankingen måste vara minst 3 tecken.",
     "WorldRankingName.TooLong":
-      "Ett namn på världsranking får vara högst 254 tecken långt.",
+      "Ett namn på världsrankingen får vara högst 254 tecken.",
     "Password.Missing": "Ange ett lösenord.",
-    "Password.TooShort": "Ett lösenord måste vara minst 12 tecken långt.",
+    "Password.TooShort": "Ett lösenord måste vara minst 12 tecken.",
     "Password.ConfirmationDiffers":
       "Det här är inte samma som lösenordet ovan. Skriv det igen.",
     "Password.Breached":
       "Det här lösenordet har förekommit i ett dataintrång någon annanstans, så det är inte säkert att använda här. Välj ett annat.",
 
-    "javaScriptRequired.title": "Skript behövs",
+    "javaScriptRequired.title": "JavaScript krävs",
     "javaScriptRequired.explanation":
-      "För att registrera dig måste skript vara påslagna för den här webbplatsen, så att den kan kontrollera att den som registrerar sig är en människa. Slå på dem och registrera dig sedan igen.",
+      "För att registrera dig måste JavaScript vara aktiverat för den här webbplatsen, så att den kan kontrollera att den som registrerar sig är en människa. Aktivera det och registrera dig sedan igen.",
     "javaScriptRequired.register": "Tillbaka till registreringen",
     "javaScriptRequired.home": "Tillbaka till {siteName}",
 
@@ -288,44 +306,54 @@ export const swedish: Language = {
     "errors.notFound": "Hittades inte",
     "errors.refused": "Det gick inte att göra",
     "errors.refusedDetail": "Något i det som skickades stämde inte.",
-    "errors.sorry": "Förlåt",
-    "errors.sorryDetail": "Den begäran kunde inte hanteras.",
+    "errors.sorry": "Tyvärr",
+    "errors.sorryDetail": "Den begäran gick inte att hantera.",
     "errors.failed": "Något gick fel",
     "errors.reference": "Referens {reference}.",
     "errors.recorded":
-      "Felet har loggats och ett e-postmeddelande har skickats till administratören. Det hjälper om du e-postar administratören med referensen och en beskrivning av vad du gjorde.",
-    "errors.message": "E-posta administratören",
+      "Felet har loggats och ett e-postmeddelande har skickats till administratören. Det hjälper om du mejlar administratören med referensen och en beskrivning av vad du gjorde.",
+    "errors.message": "Mejla administratören",
     "errors.messageSubject": "Fel {reference} på {siteName}",
-    "errors.messageBody": "Vad jag gjorde när det hände:\n\n",
-    "errors.unavailable": "Webbplatsen är inte tillgänglig",
+    "errors.messageBody": "Det här gjorde jag när det hände:\n\n",
+    "errors.unavailable": "Webbplatsen är otillgänglig",
     "errors.unavailableDetail":
-      "Webbplatsen kan just nu inte nå det den behöver. Försök igen senare.",
+      "Webbplatsen når inte det den behöver just nu. Försök igen senare.",
     "errors.maintenance": "Webbplatsen är nere för underhåll.",
     "errors.maintenanceMinutes":
       "Den väntas vara tillbaka om {minutes} minuter.",
     "errors.maintenanceMinute": "Den väntas vara tillbaka om 1 minut.",
     "errors.maintenanceLonger":
-      "Det tar längre tid än väntat och den är snart tillbaka.",
+      "Det tar längre tid än väntat, men den är snart tillbaka.",
 
+    // Startsidans två listor, vad var och en säger när den är tom, och vägen
+    // under dem till alla turneringar i år.
     "home.recentResults": "Senaste resultat",
     "home.recentResults.none":
-      "Inga matcher har lagts till de senaste sju dagarna.",
+      "Inga partier har lagts till de senaste sju dagarna.",
     "home.upcomingTournaments": "Kommande turneringar",
     "home.upcomingTournaments.none":
-      "Inga turneringar startar de kommande sextio dagarna.",
+      "Inga turneringar startar de närmaste sextio dagarna.",
     "home.allTournaments": "Alla turneringar {year}",
+    // Ett års sida: dess rubrik, och vad den säger när den är tom.
     "year.heading": "Turneringar {year}",
     "year.none": "Inga turneringar startar {year}.",
+    // En sports sida under ett år: samma sak, för sporten ensam.
     "yearSport.heading": "{sport}-turneringar {year}",
     "yearSport.none": "Inga {sport}-turneringar startar {year}.",
+    // En turnerings sida: dess avsnitt, vad den säger om ett parti, hur länge
+    // sedan ett lades till, och vad den säger när den inte har några.
     "tournament.recent": "Senaste",
     "tournament.summary": "Sammanfattning",
-    "test.bestOf": "Varje match spelas bäst av {count}.",
+    // Sammanfattningen för en turnering som spelas av lag: tabellens grupper
+    // och kolumner.
+    // En landskamps rutnät: vad varje match är bäst av, ordet mellan lagen,
+    // och summorna under matcherna.
+    "test.bestOf": "Varje match är bäst av {count}.",
     "test.vs": "mot",
     "test.matches": "Matcher",
     "test.games": "Partier",
     "test.hoops": "Bågar",
-    "teamSummary.tests": "Testmatcher",
+    "teamSummary.tests": "Landskamper",
     "teamSummary.matches": "Matcher",
     "teamSummary.games": "Partier",
     "teamSummary.hoops": "Bågar",
@@ -333,7 +361,7 @@ export const swedish: Language = {
     "teamSummary.losses": "Förluster",
     "teamSummary.draws": "Oavgjorda",
     "teamSummary.for": "För",
-    "teamSummary.against": "Emot",
+    "teamSummary.against": "Mot",
     "teamSummary.net": "Netto",
     "tournament.players": "Spelare",
     "search.label": "Sök",
@@ -341,86 +369,116 @@ export const swedish: Language = {
     "search.competitions": "Tävlingar",
     "search.nothingFound": "Inget hittades.",
     "players.search.label": "Sök spelare",
-    "players.search.prompt": "Skriv en spelares namn för att hitta dem.",
+    "players.search.prompt": "Skriv en spelares namn för att hitta hen.",
     "players.search.none": "Inga spelare hittades.",
     "search.more":
       "Bara de första {count} visas. Skriv mer av namnet för att begränsa sökningen.",
     "websitePlayer.tournament": "Turnering",
+    // En landskamp i en turnerings avsnitt: de två lagens korta namn.
     "tournament.test": "{first} mot {second}",
     "tournament.notes": "Anteckningar",
-    "tournament.commentary": "Livekommentarer",
-    "tournament.beat": "besegrade",
+    "tournament.commentary": "Kommentarer",
+    "tournament.beat": "slog",
     "tournament.drewWith": "spelade oavgjort mot",
     "tournament.ago.seconds": "{count} sek",
     "tournament.ago.minutes": "{count} min",
     "tournament.ago.hour": "1 timme",
     "tournament.ago.hours": "{count} timmar",
-    "tournament.none": "Inga partier har spelats ännu.",
-    "players.none": "Inga spelare har lagts till ännu.",
+    "tournament.none": "Inga partier har spelats än.",
+    // Sidan med en turnerings spelare, när den inte har några.
+    "players.none": "Inga spelare har lagts till än.",
+    // Sidan med en turnerings kommentarer, med den gamla webbplatsens ord: hur
+    // en kommentar listas, och länken för att starta en.
     "commentaries.by": "av",
-    "commentaries.start": "Starta en ny livekommentar",
-    "startCommentary.title": "Starta en ny livekommentar",
+    "commentaries.start": "Starta ny kommentar",
+    // Sidan som startar en kommentar.
+    "startCommentary.title": "Starta ny kommentar",
     "startCommentary.titleField": "Rubrik",
-    "startCommentary.submit": "Starta livekommentar",
+    "startCommentary.submit": "Starta kommentar",
+    // "Ny" sägs till en skärmläsare i stället för den röda asterisken som
+    // markerar en anteckning eller kommentar som inte är läst som den är nu.
     "marks.new": "ny",
-    "notes.none": "Turneringsledarna har inte skrivit några anteckningar ännu.",
+    // En turnerings sida med anteckningar, och en antecknings egen sida.
+    "notes.none": "Arrangörerna har inte skrivit några anteckningar än.",
     "note.edited": "redigerad",
-    "commentary.none": "Inga kommentarer har skrivits ännu.",
+    // En kommentars sida: vad den säger när den saknar inlägg, vad den säger
+    // om ett inlägg, och rutan där skribenten skriver nästa.
+    "commentary.none": "Inga inlägg har skrivits än.",
     "commentary.edited": "redigerad",
     "commentary.edit": "Redigera",
-    "commentary.delete": "Ta bort",
-    "commentary.comment": "Kommentar",
-    "commentary.add": "Lägg till kommentar",
+    "commentary.delete": "Radera",
+    "commentary.comment": "Inlägg",
+    "commentary.add": "Lägg till inlägg",
     "commentary.notSent":
-      "Kommentaren kunde inte skickas. Läs in sidan igen för att se om den sparades.",
+      "Inlägget kunde inte skickas. Ladda om sidan för att se om det sparades.",
+    // Sidan som ändrar en kommentars rubrik.
     "changeCommentaryTitle.title": "Byt rubrik",
     "changeCommentaryTitle.submit": "Spara",
-    "editComment.title": "Redigera kommentar",
+    // Ett inläggs egen sida, där skribenten redigerar eller raderar det, och
+    // sidan som frågar innan det raderas.
+    "editComment.title": "Redigera inlägg",
     "editComment.save": "Spara",
-    "deleteComment.title": "Ta bort kommentar",
-    "deleteComment.question":
-      "Ta bort den här kommentaren? Det kan inte ångras.",
-    "deleteComment.confirm": "Ta bort kommentaren",
-    "deleteComment.keep": "Behåll den",
+    "deleteComment.title": "Radera inlägg",
+    "deleteComment.question": "Radera det här inlägget? Det kan inte ångras.",
+    "deleteComment.confirm": "Radera inlägg",
+    "deleteComment.keep": "Behåll det",
+    // En spelares sida: dess två delar, hur ett parti sägs så som spelaren
+    // spelade det, och vad varje del säger när den är tom.
     "player.games": "Partier",
     "player.competitions": "Tävlingar",
-    "player.beat": "besegrade",
+    "player.beat": "slog",
     "player.lostTo": "förlorade mot",
     "player.drewWith": "spelade oavgjort mot",
     "player.score": "{score} mot {opponent}",
-    "player.noGames": "Inga partier har spelats ännu.",
-    "player.noCompetitions": "Har ännu inte anmälts till någon tävling.",
+    "player.noGames": "Inga partier har spelats än.",
+    "player.noCompetitions": "Inte anmäld till någon tävling än.",
+    // Ett blocks sida: rutnätets summor, vad ett resultat är för radens
+    // spelare, sagt högt i stället för visat, och en spelare som har dragit
+    // sig ur.
     "block.wins": "Vinster",
     "block.matches": "Matcher",
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
-    "block.won": "vunnit",
-    "block.lost": "förlorat",
+    "block.won": "vann",
+    "block.lost": "förlorade",
     "block.drawn": "oavgjort",
-    "block.withdrawn": "tillbakadragen",
-    "block.gameWithdrawn": "tillbakadraget",
+    "block.withdrawn": "utgått",
+    // Ett parti som dragits tillbaka, vilket spanskan säger annorlunda än en
+    // spelare.
+    "block.gameWithdrawn": "utgått",
     "block.losses": "Förluster",
+    // Ett blocks tre vyer, som erbjuds under rubriken.
     "competition.views": "Vyer",
-    "competition.view.grid": "Tabell",
+    "competition.view.grid": "Rutnät",
     "competition.view.summary": "Sammanfattning",
-    "competition.view.orderOfPlay": "Spelordning",
+    "competition.view.orderOfPlay": "Speltabell",
     "blockSummary.ranking":
-      "Rangordnade efter andelen vunna matcher, sedan efter nettobågar. En turnerings egna regler kan placera dess spelare på annat sätt.",
-    "orderOfPlay.none": "Inga partier har spelats ännu.",
+      "Rankad efter andelen vunna matcher, därefter efter nettobågar. En turnerings egna regler kan placera spelarna annorlunda.",
+    "orderOfPlay.none": "Inga partier har spelats än.",
+    // En utslagnings ronder, benämnda som den gamla webbplatsen gjorde, räknade
+    // bakifrån från den sista, och en bye ritad i stället för en spelare.
     "knockout.round.final": "Final",
     "knockout.round.semis": "Semifinaler",
     "knockout.round.quarters": "Kvartsfinaler",
-    "knockout.round.number": "Omgång {number}",
-    "knockout.bye": "Frilott",
+    "knockout.round.number": "Rond {number}",
+    "knockout.bye": "Bye",
+    // En schweizertabell: vad varje spelare har spelat och vunnit, och deras
+    // resultat.
     "swiss.games": "Partier",
     "swiss.wins": "Vinster",
-    "swiss.winShare": "Vinst %",
+    "swiss.winShare": "Vinst-%",
     "swiss.results": "Resultat",
-    "knockout.onward": "Senare omgångar",
-    "knockout.back": "Tidigare omgångar",
+    // Pilarna som rullar en utslagnings rutnät fram till finalen, och tillbaka
+    // till första ronden.
+    "knockout.onward": "Senare ronder",
+    "knockout.back": "Tidigare ronder",
+    // Det som alla turneringslistor delar, på startsidan och på ett års sida:
+    // kolumnerna som var och en är en tabell av, och det som begränsar dem.
     "tournamentList.column.date": "Datum",
     "tournamentList.column.name": "Namn",
+    // En flagga, som begränsar listorna till sitt land, benämnd efter vad den
+    // gör.
     "tournamentList.onlyIn": "Bara turneringar i {country}",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Alla länder",
@@ -429,15 +487,22 @@ export const swedish: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Alla sporter",
     "tournamentList.filter.submit": "Filtrera",
+    // Åren det finns turneringar i, den sekundära navigeringen för båda.
     "years.label": "År",
+    // Rullgardinslistan med de år som inte får plats som flikar.
     "years.earlier": "Tidigare år",
 
+    // Adminens ord. Admin ritar dem i webbläsaren, så servern säger dem i sin
+    // sida när den skickar den (adminPage.ts): dessa, och turneringens
+    // avslag nedan.
     "admin.newerBuild.message": "En nyare version av webbplatsen finns.",
-    "admin.newerBuild.reload": "Läs in igen",
-    "admin.title": "Administration",
+    "admin.newerBuild.reload": "Ladda om",
+    "admin.title": "Admin",
     "admin.tournaments.new": "Ny turnering",
     "admin.tournaments.none": "Inga turneringar",
     "admin.tournaments.filter.none": "Inga turneringar matchar",
+    // Sägs till en skärmläsare, eftersom ett streck genom ett namn inte läses
+    // upp.
     "admin.tournaments.archived": "Arkiverad",
     "admin.tournaments.manage": "Hantera",
     "admin.tournaments.edit": "Redigera",
@@ -446,9 +511,10 @@ export const swedish: Language = {
     "admin.tournaments.scores": "Resultat",
     "admin.tournaments.players": "Spelare",
     "admin.years.label": "År",
+    // Vad rullgardinslistan med år säger medan det valda året är en flik.
     "admin.years.earlier": "Tidigare år",
     "admin.tournament.name": "Namn",
-    "admin.tournament.starts": "Startar",
+    "admin.tournament.starts": "Börjar",
     "admin.tournament.finishes": "Slutar",
     "admin.tournament.format": "Format",
     "admin.tournament.sport": "Sport",
@@ -457,41 +523,48 @@ export const swedish: Language = {
     "admin.tournament.subtitle": "Underrubrik",
     "admin.rules.handicap": "Spelas med handikapp",
     "admin.rules.drawsAllowed": "Tillåter oavgjorda resultat",
-    "admin.tournament.levelTestsDrawn": "Lika testmatcher är oavgjorda",
+    "admin.tournament.levelTestsDrawn": "Jämna landskamper blir oavgjorda",
     "admin.rules.worldRankings": "Räknas med i världsrankingen",
-    "admin.tournament.national": "Tävling på nationell nivå",
-    "admin.tournament.international": "Tävling på internationell nivå",
+    "admin.tournament.national": "Nationell tävling",
+    "admin.tournament.international": "Internationell tävling",
+    // Ett avslag utan egna ord, ovanför fälten.
     "admin.tournament.otherwise": "Det här kan inte godtas som det är.",
     "admin.newTournament.title": "Ny turnering",
     "admin.newTournament.submit": "Skapa turnering",
     "admin.editTournament.title": "Redigera turnering",
     "admin.editTournament.submit": "Uppdatera turnering",
+    // Sägs i stället för formuläret, för ett avslag utan egna ord.
     "admin.editTournament.otherwise": "Den här turneringen kan inte ändras.",
+    // En turnerings sida, och flikarna det som ska drivas finns i.
     "admin.view.tabs": "Turnering",
     "admin.view.players": "Spelare",
     "admin.view.competitions": "Tävlingar",
-    "admin.view.managers": "Turneringsledare",
+    "admin.view.managers": "Arrangörer",
     "admin.view.notes": "Anteckningar",
     "admin.view.scorers": "Resultatförare",
     "admin.view.rankings": "Rankingar",
     "admin.rankings.file":
-      "Turneringens resultat skickas till världsrankingen som en textfil, som webbplatsen skriver utifrån de inmatade matcherna.",
-    "admin.rankings.download": "Ladda ned rankingar",
+      "Världsrankingen använder turneringens resultat via den här funktionen, så arrangörerna behöver inte göra något.",
+    "admin.rankings.download": "Ladda ner rankingar",
     "rankings.notAvailable": "Rankingar är inte tillgängliga",
     "rankings.notAvailable.sport":
-      "Turneringens sport har ingen världsranking, så det finns inga rankingar att skicka.",
+      "Den här turneringens sport har ingen världsranking, så det finns inga rankingar att skicka.",
     "rankings.notAvailable.notCounted":
-      "Ingen av turneringens tävlingar räknas med i världsrankingen.",
-    "admin.view.otherwise": "Den här turneringen kan inte skötas härifrån.",
+      "Ingen av den här turneringens tävlingar räknas med i världsrankingen.",
+    // Sägs i stället för flikarna, för ett avslag utan egna ord.
+    "admin.view.otherwise": "Den här turneringen kan inte drivas härifrån.",
+    // En tävlings sida, och flikarna det som ska drivas finns i.
     "admin.competitionView.tabs": "Tävling",
     "admin.competitionView.players": "Spelare",
     "admin.competitionView.scores": "Resultat",
+    // Avsnittsfältet på en turnerings sida och dess tävlingars sidor.
     "admin.sections.label": "Turneringen och dess tävlingar",
     "admin.sections.tournament": "Turnering",
+    // Avsnittsfältet på administratörens sidor.
     "admin.administrator.sections.label": "Administratörens sidor",
     "admin.administrator.sections.tournaments": "Turneringar",
     "admin.administrator.sections.accounts": "Konton",
-    "admin.administrator.sections.worldRankings": "Världsranking",
+    "admin.administrator.sections.worldRankings": "Världsrankingen",
     "admin.administrator.sections.importErrors": "Importfel",
     "admin.administrator.sections.logs": "Loggar",
     "admin.administrator.sections.databaseStatus": "Databasåtkomst",
@@ -503,10 +576,10 @@ export const swedish: Language = {
     "admin.databaseStatus.expectedOne":
       "Webbplatsen väntas vara tillbaka om 1 minut.",
     "admin.databaseStatus.longer": "Det tar längre tid än väntat.",
-    "admin.databaseStatus.told": "Besökarna läser: {words}",
-    "admin.databaseStatus.toldUsual": "Besökarna läser den vanliga meningen.",
+    "admin.databaseStatus.told": "Läsarna får veta: {words}",
+    "admin.databaseStatus.toldUsual": "Läsarna får den vanliga meningen.",
     "admin.databaseStatus.minutes": "Förväntade minuter",
-    "admin.databaseStatus.words": "Text till besökarna",
+    "admin.databaseStatus.words": "Ord till läsarna",
     "admin.databaseStatus.turnOff": "Stäng av",
     "admin.databaseStatus.change": "Ändra",
     "admin.databaseStatus.turnOn": "Slå på",
@@ -515,9 +588,10 @@ export const swedish: Language = {
     "DatabaseAccess.MinutesNotWhole": "Minuterna måste vara ett heltal.",
     "DatabaseAccess.MinutesOutOfRange":
       "Minuterna måste vara från 1 till 1440.",
-    "DatabaseAccess.WordsTooLong": "Texten får vara högst 500 tecken.",
+    "DatabaseAccess.WordsTooLong": "Orden får vara högst 500 tecken.",
     "DatabaseAccess.NotOff": "Databasåtkomsten är inte avstängd.",
     "admin.administrator.title": "Administratör",
+    // Kontosidan, ett avsnitt för varje roll.
     "admin.accounts.title": "Konton",
     "admin.roles.add": "Lägg till",
     "admin.roles.administrator.heading": "Administratörer",
@@ -526,51 +600,59 @@ export const swedish: Language = {
     "admin.roles.administrator.removeExplanation":
       "{name} kommer inte längre att vara administratör för den här webbplatsen.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Världsrankingansvariga (Associationscroquet)",
+      "Rankingansvariga för association croquet",
     "admin.roles.ac-world-ranking-officer.none":
-      "Inga världsrankingansvariga (Associationscroquet)",
+      "Inga rankingansvariga för association croquet",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Ta bort världsrankingansvarig (Associationscroquet)",
+      "Ta bort rankingansvarig för association croquet",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} kommer inte längre att vara världsrankingansvarig (Associationscroquet).",
+      "{name} kommer inte längre att vara rankingansvarig för association croquet.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Världsrankingansvariga (Golfcroquet)",
+      "Rankingansvariga för golfcroquet",
     "admin.roles.gc-world-ranking-officer.none":
-      "Inga världsrankingansvariga (Golfcroquet)",
+      "Inga rankingansvariga för golfcroquet",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Ta bort världsrankingansvarig (Golfcroquet)",
+      "Ta bort rankingansvarig för golfcroquet",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} kommer inte längre att vara världsrankingansvarig (Golfcroquet).",
-    "admin.worldRankings.title": "Importera spelare från världsrankingen",
+      "{name} kommer inte längre att vara rankingansvarig för golfcroquet.",
+    // För ett avslag utan egna ord, under fältet eller i stället för listan.
+    // Inte om adressen, eftersom det kan vara sessionen som tog slut eller
+    // webbplatsen som föll.
+    // Sidan där världsrankingens spelare importeras, och dess logg, en rad för
+    // varje sak importen säger. Ett antal sägs efter ett kolon, så att en
+    // spelare och många sägs på samma sätt.
+    "admin.worldRankings.title": "Importera världsrankingens spelare",
     "admin.worldRankings.import": "Importera",
-    "admin.worldRankings.log": "Så gick importen",
-    "admin.worldRankings.ac.reading": "Läser listan för associationscroquet",
+    "admin.worldRankings.log": "Hur importen gick",
+    "admin.worldRankings.ac.reading": "Läser listan för association croquet",
     "admin.worldRankings.ac.read":
-      "Spelare i associationscroquet som lästes: {players}",
+      "Spelare i association croquet som lästs: {players}",
     "admin.worldRankings.ac.kept":
-      "Spelare i associationscroquet som behölls: {players}",
+      "Spelare i association croquet som behållits: {players}",
     "admin.worldRankings.ac.refused":
-      "Listan för associationscroquet gick inte att läsa, så dess spelare lämnades som de var.",
+      "Listan för association croquet gick inte att läsa, så dess spelare lämnades som de var.",
     "admin.worldRankings.gc.reading": "Läser listan för golfcroquet",
-    "admin.worldRankings.gc.read":
-      "Spelare i golfcroquet som lästes: {players}",
+    "admin.worldRankings.gc.read": "Spelare i golfcroquet som lästs: {players}",
     "admin.worldRankings.gc.kept":
-      "Spelare i golfcroquet som behölls: {players}",
+      "Spelare i golfcroquet som behållits: {players}",
     "admin.worldRankings.gc.refused":
       "Listan för golfcroquet gick inte att läsa, så dess spelare lämnades som de var.",
     "admin.worldRankings.finished": "Klart",
     "admin.worldRankings.failed": "Importen blev inte klar.",
+    // För ett avslag utan egna ord, som ett fel hos webbplatsen.
     "admin.worldRankings.otherwise": "Något gick fel på webbplatsen.",
     "WorldRankingLists.Unreachable":
-      "Världsrankingens webbplats gick inte att nå.",
+      "Det gick inte att nå världsrankingens webbplats.",
     "WorldRankingLists.Unreadable":
-      "Listan är inte upplagd som världsrankingen lägger upp sina: en rad i den gick inte att läsa, ingen finns med i den, eller så är den inte skriven i UTF-8.",
+      "Listan är inte uppställd som världsrankingen ställer upp sin: en rad i den gick inte att läsa, ingen finns med på den, eller så är den inte skriven i UTF-8.",
+    // Dokumenten som importen från de gamla webbplatserna avvisade, och sidan
+    // för ett av dem.
     "admin.importErrors.title": "Importfel",
     "admin.importErrors.none": "Inga importfel",
     "admin.importErrors.otherwise": "Något gick fel på webbplatsen.",
     "admin.logs.title": "Loggar",
     "admin.logs.severity": "Allvarlighet",
-    "admin.logs.text": "Sök",
+    "admin.logs.text": "Slå upp",
     "admin.logs.show": "Visa",
     "admin.logs.prune": "Rensa",
     "admin.logs.pruneAsk":
@@ -578,7 +660,7 @@ export const swedish: Language = {
     "admin.logs.removed": "{count} poster togs bort",
     "admin.logs.none": "Inga loggposter",
     "admin.logs.otherwise": "Något gick fel på webbplatsen.",
-    "admin.hover.logs.show": "Visa de poster som matchar",
+    "admin.hover.logs.show": "Visa posterna som matchar",
     "admin.hover.logs.prune": "Ta bort loggen från före den senaste timmen",
     "admin.hover.logs.pruneAgree":
       "Ta bort loggen från före den senaste timmen",
@@ -591,226 +673,234 @@ export const swedish: Language = {
     "ImportErrorKept.NotFound":
       "Importen sparade inget fel för det dokumentet.",
     "admin.competitionView.otherwise":
-      "Den här tävlingen kan inte skötas härifrån.",
+      "Den här tävlingen kan inte drivas härifrån.",
+    // Fliken Tävlingar: varje tävlings slag, vad som kan göras med den, och
+    // rubriken de arkiverade står under.
     "admin.competitions.block": "Block",
-    "admin.competitions.knockout": "Utslagsturnering",
+    "admin.competitions.knockout": "Utslagning",
     "admin.competitions.swiss": "Schweizer",
     "admin.competitions.view": "Visa",
     "admin.competitions.edit": "Redigera",
     "admin.competitions.up": "Upp",
-    "admin.competitions.down": "Ned",
+    "admin.competitions.down": "Ner",
     "admin.competitions.archive": "Arkivera",
     "admin.competitions.restore": "Återställ",
     "admin.competitions.archived": "Arkiverade tävlingar",
     "admin.competitions.none": "Inga tävlingar",
     "admin.competitions.add": "Lägg till tävling",
+    // Tävlingsdialogen.
     "admin.competition.addTitle": "Lägg till tävling",
     "admin.competition.editTitle": "Redigera tävling",
     "admin.competition.name": "Namn",
-    "admin.competition.kind": "Sort",
+    "admin.competition.kind": "Slag",
     "admin.competition.bestOf": "Bäst av",
-    "admin.competition.rounds": "Omgångar",
+    "admin.competition.rounds": "Ronder",
     "admin.competition.places": "Platser",
-    "admin.competition.round": "Omgång {number}",
-    "admin.competition.bestOfs": "Bäst av per omgång",
+    "admin.competition.round": "Rond {number}",
+    "admin.competition.bestOfs": "Bäst av per rond",
     "admin.competition.quarters": "Kvartsfinaler",
     "admin.competition.semis": "Semifinaler",
     "admin.competition.final": "Final",
     "admin.competition.add": "Lägg till",
     "admin.competition.save": "Spara",
     "admin.competition.added": "{name} lades till.",
+    // Ovanför fälten, för ett avslag utan egna ord.
     "admin.competition.otherwise":
       "Den här tävlingen kan inte sparas som den är.",
     "CompetitionName.Missing": "Ange ett namn.",
-    "CompetitionName.TooLong": "Ett namn får vara högst 254 tecken långt.",
+    "CompetitionName.TooLong": "Ett namn får vara högst 254 tecken.",
     "CompetitionName.NoLetterOrDigit":
       "Ett namn måste innehålla en bokstav eller en siffra.",
     "Tournament.KnockoutPlayerHasGames":
       "Spelare i den här lottningen har partier, så dess platser kan inte ändras.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "En omgång med en avgjord match kan inte göras kortare.",
+      "En rond med en avgjord match kan inte få ett kortare bäst-av.",
     "Tournament.KnockoutLaterRoundHasGames":
-      "En omgång kan inte ändras när ett parti har spelats i en senare omgång.",
+      "En rond kan inte ändras när ett parti har spelats i en senare rond.",
     "Tournament.CompetitionNameTaken":
       "En annan tävling i den här turneringen har redan det namnet.",
-    "BestOf.NotWhole": "Ange ett helt antal partier.",
-    "BestOf.TooSmall": "En match måste spelas bäst av minst 1 parti.",
-    "Rounds.NotWhole": "Ange ett helt antal omgångar.",
-    "Rounds.TooSmall": "Ett block måste spelas i minst 1 omgång.",
+    "BestOf.NotWhole": "Ange ett heltal för antalet partier.",
+    "BestOf.TooSmall": "En match måste vara bäst av minst 1 parti.",
+    "Rounds.NotWhole": "Ange ett heltal för antalet ronder.",
+    "Rounds.TooSmall": "Ett block måste spelas i minst 1 rond.",
     "KnockoutDraw.EvenBestOf":
-      "En match i en utslagsturnering måste ha en vinnare, så den spelas bäst av ett udda antal partier.",
+      "En match i en utslagning måste ha en vinnare, så den är bäst av ett udda antal partier.",
+    // Varje modal dialogs väg ut, eftersom sidan under inte kan nås.
     "admin.hover.tournaments.new": "Skapa en ny turnering",
     "admin.hover.tournaments.manage":
       "Hantera den här turneringens spelare, lag, tävlingar och resultat",
     "admin.hover.tournaments.edit": "Ändra den här turneringens uppgifter",
     "admin.hover.tournaments.scores": "Skriv in den här turneringens resultat",
-    "admin.hover.tournaments.players": "Sköt om den här turneringens spelare",
+    "admin.hover.tournaments.players":
+      "Ta hand om den här turneringens spelare",
     "admin.hover.competitions.view":
       "Öppna den här tävlingen för att se och skriva in dess spelare och resultat",
     "admin.hover.tests.view":
-      "Öppna den här testmatchen för att se och skriva in dess resultat",
+      "Öppna den här landskampen för att se och skriva in dess resultat",
     "admin.hover.teams.view":
       "Öppna det här laget för att se och hantera dess spelare",
     "admin.hover.dialog.player.add": "Lägg till spelaren i turneringen",
-    "admin.hover.dialog.player.save": "Spara ändringarna för den här spelaren",
+    "admin.hover.dialog.player.save": "Spara ändringarna för spelaren",
     "admin.hover.dialog.team.add": "Lägg till laget i turneringen",
-    "admin.hover.dialog.team.save": "Spara ändringarna för det här laget",
-    "admin.hover.dialog.test.add": "Lägg till testmatchen i turneringen",
-    "admin.hover.dialog.test.save": "Spara ändringarna för den här testmatchen",
+    "admin.hover.dialog.team.save": "Spara ändringarna för laget",
+    "admin.hover.dialog.test.add": "Lägg till landskampen i turneringen",
+    "admin.hover.dialog.test.save": "Spara ändringarna för landskampen",
     "admin.hover.dialog.competition.add": "Lägg till tävlingen i turneringen",
-    "admin.hover.dialog.competition.save":
-      "Spara ändringarna för den här tävlingen",
+    "admin.hover.dialog.competition.save": "Spara ändringarna för tävlingen",
     "admin.hover.dialog.score.add": "Lägg till resultatet i tävlingen",
-    "admin.hover.dialog.score.save": "Spara rättelsen av det här resultatet",
-    "admin.hover.dialog.carryForward.save":
-      "För över den här spelarens resultat",
-    "admin.hover.dialog.tournament.new": "Skapa den här turneringen",
-    "admin.hover.dialog.tournament.edit":
-      "Spara ändringarna för den här turneringen",
+    "admin.hover.dialog.score.save": "Spara rättelsen av resultatet",
+    "admin.hover.dialog.carryForward.save": "För spelarens resultat vidare",
+    "admin.hover.dialog.tournament.new": "Skapa turneringen",
+    "admin.hover.dialog.tournament.edit": "Spara ändringarna för turneringen",
     "admin.hover.modal.cancel": "Stäng utan att spara något",
     "admin.hover.modal.ok": "Stäng meddelandet",
     "admin.hover.tab": "Visa fliken {name}",
     "admin.hover.tournaments.archive":
-      "Arkivera den här turneringen; den kan återställas",
+      "Arkivera turneringen; den kan återställas",
     "admin.hover.tournaments.restore":
-      "Hämta tillbaka den här arkiverade turneringen",
-    "admin.hover.players.add": "Lägg till en spelare i den här turneringen",
-    "admin.hover.players.edit": "Ändra den här spelarens uppgifter",
-    "admin.hover.players.up": "Flytta spelaren uppåt i listan",
-    "admin.hover.players.down": "Flytta spelaren nedåt i listan",
-    "admin.hover.players.archive":
-      "Arkivera den här spelaren; spelaren kan återställas",
-    "admin.hover.players.restore": "Hämta tillbaka den här arkiverade spelaren",
-    "admin.hover.teams.add": "Lägg till ett lag i den här turneringen",
-    "admin.hover.teams.edit": "Ändra det här lagets uppgifter",
-    "admin.hover.teams.up": "Flytta laget uppåt i listan",
-    "admin.hover.teams.down": "Flytta laget nedåt i listan",
-    "admin.hover.teams.archive": "Arkivera det här laget; det kan återställas",
-    "admin.hover.teams.restore": "Hämta tillbaka det här arkiverade laget",
-    "admin.hover.competitions.add":
-      "Lägg till en tävling i den här turneringen",
-    "admin.hover.competitions.edit": "Ändra den här tävlingens uppgifter",
-    "admin.hover.competitions.up": "Flytta tävlingen uppåt i listan",
-    "admin.hover.competitions.down": "Flytta tävlingen nedåt i listan",
+      "Hämta tillbaka den arkiverade turneringen",
+    "admin.hover.players.add": "Lägg till en spelare i turneringen",
+    "admin.hover.players.edit": "Ändra spelarens uppgifter",
+    "admin.hover.players.up": "Flytta spelaren upp i listan",
+    "admin.hover.players.down": "Flytta spelaren ner i listan",
+    "admin.hover.players.archive": "Arkivera spelaren; hen kan återställas",
+    "admin.hover.players.restore": "Hämta tillbaka den arkiverade spelaren",
+    "admin.hover.teams.add": "Lägg till ett lag i turneringen",
+    "admin.hover.teams.edit": "Ändra lagets uppgifter",
+    "admin.hover.teams.up": "Flytta laget upp i listan",
+    "admin.hover.teams.down": "Flytta laget ner i listan",
+    "admin.hover.teams.archive": "Arkivera laget; det kan återställas",
+    "admin.hover.teams.restore": "Hämta tillbaka det arkiverade laget",
+    "admin.hover.competitions.add": "Lägg till en tävling i turneringen",
+    "admin.hover.competitions.edit": "Ändra tävlingens uppgifter",
+    "admin.hover.competitions.up": "Flytta tävlingen upp i listan",
+    "admin.hover.competitions.down": "Flytta tävlingen ner i listan",
     "admin.hover.competitions.archive":
-      "Arkivera den här tävlingen; den kan återställas",
+      "Arkivera tävlingen; den kan återställas",
     "admin.hover.competitions.restore":
-      "Hämta tillbaka den här arkiverade tävlingen",
-    "admin.hover.tests.add": "Lägg till en testmatch mellan två lag",
-    "admin.hover.tests.edit": "Ändra den här testmatchens uppgifter",
-    "admin.hover.tests.up": "Flytta testmatchen uppåt i listan",
-    "admin.hover.tests.down": "Flytta testmatchen nedåt i listan",
-    "admin.hover.tests.archive":
-      "Arkivera den här testmatchen; den kan återställas",
-    "admin.hover.tests.restore":
-      "Hämta tillbaka den här arkiverade testmatchen",
+      "Hämta tillbaka den arkiverade tävlingen",
+    "admin.hover.tests.add": "Lägg till en landskamp mellan två lag",
+    "admin.hover.tests.edit": "Ändra landskampens uppgifter",
+    "admin.hover.tests.up": "Flytta landskampen upp i listan",
+    "admin.hover.tests.down": "Flytta landskampen ner i listan",
+    "admin.hover.tests.archive": "Arkivera landskampen; den kan återställas",
+    "admin.hover.tests.restore": "Hämta tillbaka den arkiverade landskampen",
     "admin.hover.tests.toTeams":
-      "Gå till fliken Lag för att lägga till de lag en testmatch behöver",
-    "admin.hover.scores.add": "Lägg till resultatet av ett parti i tävlingen",
-    "admin.hover.scores.edit": "Rätta det här resultatet",
+      "Gå till fliken Lag för att lägga till lagen en landskamp behöver",
+    "admin.hover.scores.add": "Lägg till ett partis resultat i tävlingen",
+    "admin.hover.scores.edit": "Rätta resultatet",
     "admin.hover.scores.archive":
-      "Arkivera det här resultatet så att det slutar räknas; det kan återställas",
+      "Arkivera resultatet så att det slutar räknas; det kan återställas",
     "admin.hover.scores.restore":
-      "Hämta tillbaka det här arkiverade resultatet, så att det räknas igen",
+      "Hämta tillbaka det arkiverade resultatet, så att det räknas igen",
     "admin.hover.scores.withdraw":
-      "Behåll det här resultatet i listan men låt det sluta räknas",
+      "Behåll resultatet i listan men låt det sluta räknas",
     "admin.hover.scores.unwithdraw":
-      "Låt det här tillbakadragna resultatet räknas igen",
+      "Låt det tillbakadragna resultatet räknas igen",
     "admin.hover.scores.up": "Flytta resultatet tidigare i listan",
     "admin.hover.scores.down": "Flytta resultatet senare i listan",
-    "admin.hover.competitionPlayers.add":
-      "Lägg den valda spelaren i den här tävlingen",
-    "admin.hover.competitionPlayers.up": "Flytta spelaren uppåt i listan",
-    "admin.hover.competitionPlayers.down": "Flytta spelaren nedåt i listan",
+    "admin.hover.competitionPlayers.add": "Lägg den valda spelaren i tävlingen",
+    "admin.hover.competitionPlayers.up": "Flytta spelaren upp i listan",
+    "admin.hover.competitionPlayers.down": "Flytta spelaren ner i listan",
     "admin.hover.competitionPlayers.remove": "Ta bort spelaren från tävlingen",
     "admin.hover.competitionPlayers.withdraw":
       "Dra tillbaka spelaren från tävlingen",
     "admin.hover.competitionPlayers.unwithdraw":
       "Sätt tillbaka den tillbakadragna spelaren i tävlingen",
     "admin.hover.competitionPlayers.carryForward":
-      "För över spelarens resultat från en annan tävling",
-    "admin.hover.notes.add": "Skriv en ny anteckning för den här turneringen",
-    "admin.hover.notes.edit": "Ändra den här anteckningen",
-    "admin.hover.notes.delete": "Ta bort den här anteckningen",
+      "För spelarens resultat vidare från en annan tävling",
+    "admin.hover.notes.add": "Skriv en ny anteckning för turneringen",
+    "admin.hover.notes.edit": "Ändra anteckningen",
+    "admin.hover.notes.delete": "Radera anteckningen",
     "admin.hover.note.add":
-      "Spara den här anteckningen och lägg till den i turneringen",
-    "admin.hover.note.save": "Spara ändringarna i den här anteckningen",
+      "Spara anteckningen och lägg till den i turneringen",
+    "admin.hover.note.save": "Spara ändringarna för anteckningen",
     "admin.hover.people.add": "Ge personen rollen",
-    "admin.hover.people.remove": "Ta bort rollen från personen",
+    "admin.hover.people.remove": "Ta rollen från personen",
     "admin.hover.worldRankings.import":
       "Hämta världsrankingen och lägg till dess spelare",
     "admin.modal.cancel": "Avbryt",
+    // Den enda knappen i en modal dialog som bara berättar något för läsaren.
     "admin.modal.ok": "OK",
+    // Flikarna Arrangörer och Resultatförare, där man gör någon till det med
+    // dess e-postadress och tar bort en.
     "admin.people.emailAddress": "E-postadress",
     "admin.people.remove": "Ta bort",
     "admin.people.otherwise": "Det gick inte att göra.",
+    // Bredvid läsarens eget namn bland arrangörerna.
     "admin.managers.you": "Du",
-    "admin.managers.add": "Lägg till turneringsledare",
-    "admin.managers.none": "Inga turneringsledare",
-    "admin.managers.removeTitle": "Ta bort turneringsledare",
+    "admin.managers.add": "Lägg till arrangör",
+    // Sägs aldrig, eftersom en turnering alltid har en arrangör, men en lista
+    // säger något när den är tom.
+    "admin.managers.none": "Inga arrangörer",
+    "admin.managers.removeTitle": "Ta bort arrangör",
     "admin.managers.removeExplanation":
-      "{name} kommer inte längre att kunna leda den här turneringen.",
+      "{name} kommer inte längre att kunna driva den här turneringen.",
     "admin.managers.removeYourself.explanation":
-      "Du kommer inte längre att kunna leda den här turneringen, och ingen här kan ångra det åt dig. En annan turneringsledare kan göra dig till turneringsledare igen.",
-    "admin.managers.otherwise":
-      "Den adressen kan inte göras till turneringsledare.",
+      "Du kommer inte längre att kunna driva den här turneringen, och ingen här kan ångra det åt dig. En annan arrangör kan göra dig till arrangör igen.",
+    "admin.managers.otherwise": "Den adressen kan inte göras till arrangör.",
+    // Fliken Spelare.
+    // En tävlings flik Spelare.
     "admin.competitionPlayers.add": "Lägg till spelare",
-    "admin.competitionPlayers.otherwise":
-      "Den här spelaren kan inte läggas till.",
+    // Under rullgardinslistan, för ett avslag utan egna ord.
+    "admin.competitionPlayers.otherwise": "Spelaren kan inte läggas till.",
     "admin.competitionPlayers.choose": "Spelare att lägga till",
     "admin.competitionPlayers.nobody": "Välj en spelare",
-    "admin.competitionPlayers.bye": "Frilott",
+    // Erbjuds i en utslagnings rullgardinslista, och vad en bye listas som.
+    "admin.competitionPlayers.bye": "Bye",
     "admin.competitionPlayers.all": "Alla spelare är med i tävlingen",
     "admin.competitionPlayers.none": "Inga spelare",
     "admin.competitionPlayers.up": "Upp",
-    "admin.competitionPlayers.down": "Ned",
+    "admin.competitionPlayers.down": "Ner",
     "admin.competitionPlayers.remove": "Ta bort",
     "admin.competitionPlayers.withdraw": "Dra tillbaka",
-    "admin.competitionPlayers.unwithdraw": "Ta tillbaka",
+    "admin.competitionPlayers.unwithdraw": "Återinsätt",
     "admin.competitionPlayers.withdrawn": "Tillbakadragna spelare",
     "admin.competitionPlayers.removeTitle": "Ta bort spelare",
     "admin.competitionPlayers.removeQuestion":
       "{name} tas bort från tävlingen. Det kan inte ångras.",
     "admin.competitionPlayers.withdrawTitle": "Dra tillbaka spelare",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} spelar inte mer i tävlingen, och de partier som inte har spelats avgörs utan spelaren.",
-    "admin.competitionPlayers.carryForward": "För över resultat",
-    "admin.carryForward.title": "För över resultat - {name}",
+      "{name} spelar inte mer i tävlingen, och partierna hen inte har spelat avgörs utan hen.",
+    "admin.competitionPlayers.carryForward": "För vidare",
+    // Dialogen För vidare, över en tävlings flik Spelare.
+    "admin.carryForward.title": "För vidare - {name}",
     "admin.carryForward.save": "Spara",
-    "admin.carryForward.otherwise":
-      "Det här överförda resultatet kan inte sparas.",
-    "admin.carryForward.matchWins": "Vunna matcher",
-    "admin.carryForward.matchLosses": "Förlorade matcher",
-    "admin.carryForward.gameWins": "Vunna partier",
-    "admin.carryForward.gameLosses": "Förlorade partier",
+    // Ovanför antalen, för ett avslag utan egna ord.
+    "admin.carryForward.otherwise": "Det här kan inte sparas.",
+    "admin.carryForward.matchWins": "Matchvinster",
+    "admin.carryForward.matchLosses": "Matchförluster",
+    "admin.carryForward.gameWins": "Partivinster",
+    "admin.carryForward.gameLosses": "Partiförluster",
     "admin.carryForward.hoopsFor": "Bågar för",
-    "admin.carryForward.hoopsAgainst": "Bågar emot",
-    "CarryForward.MatchWinsNotWhole": "Ange ett helt antal vunna matcher.",
-    "CarryForward.MatchWinsBelowZero": "Ange 0 eller fler vunna matcher.",
-    "CarryForward.MatchLossesNotWhole":
-      "Ange ett helt antal förlorade matcher.",
-    "CarryForward.MatchLossesBelowZero": "Ange 0 eller fler förlorade matcher.",
-    "CarryForward.GameWinsNotWhole": "Ange ett helt antal vunna partier.",
-    "CarryForward.GameWinsBelowZero": "Ange 0 eller fler vunna partier.",
-    "CarryForward.GameLossesNotWhole": "Ange ett helt antal förlorade partier.",
-    "CarryForward.GameLossesBelowZero": "Ange 0 eller fler förlorade partier.",
-    "CarryForward.HoopsForNotWhole": "Ange ett helt antal bågar för.",
+    "admin.carryForward.hoopsAgainst": "Bågar mot",
+    "CarryForward.MatchWinsNotWhole": "Ange ett heltal för matchvinster.",
+    "CarryForward.MatchWinsBelowZero": "Ange 0 eller fler matchvinster.",
+    "CarryForward.MatchLossesNotWhole": "Ange ett heltal för matchförluster.",
+    "CarryForward.MatchLossesBelowZero": "Ange 0 eller fler matchförluster.",
+    "CarryForward.GameWinsNotWhole": "Ange ett heltal för partivinster.",
+    "CarryForward.GameWinsBelowZero": "Ange 0 eller fler partivinster.",
+    "CarryForward.GameLossesNotWhole": "Ange ett heltal för partiförluster.",
+    "CarryForward.GameLossesBelowZero": "Ange 0 eller fler partiförluster.",
+    "CarryForward.HoopsForNotWhole": "Ange ett heltal för bågar för.",
     "CarryForward.HoopsForBelowZero": "Ange 0 eller fler bågar för.",
-    "CarryForward.HoopsAgainstNotWhole": "Ange ett helt antal bågar emot.",
-    "CarryForward.HoopsAgainstBelowZero": "Ange 0 eller fler bågar emot.",
+    "CarryForward.HoopsAgainstNotWhole": "Ange ett heltal för bågar mot.",
+    "CarryForward.HoopsAgainstBelowZero": "Ange 0 eller fler bågar mot.",
+    // En tävlings flik Resultat och resultatdialogen.
     "admin.scores.add": "Lägg till resultat",
     "admin.scores.none": "Inga resultat",
     "admin.scores.edit": "Redigera",
     "admin.scores.drawNotFilledTitle": "Lottningen är inte fylld",
     "admin.scores.archive": "Arkivera",
     "admin.scores.up": "Upp",
-    "admin.scores.down": "Ned",
+    "admin.scores.down": "Ner",
     "admin.scores.restore": "Återställ",
     "admin.scores.archived": "Arkiverade resultat",
     "admin.scores.archivedSaid": "Arkiverat",
     "admin.scores.withdraw": "Dra tillbaka",
-    "admin.scores.unwithdraw": "Ta tillbaka",
+    "admin.scores.unwithdraw": "Återinsätt",
     "admin.scores.withdrawnSaid": "Tillbakadraget",
+    // Ovanför listan, för ett avslag utan egna ord.
     "admin.scores.otherwise": "Det gick inte att göra.",
     "admin.score.title": "Lägg till resultat",
     "admin.score.add": "Lägg till parti",
@@ -818,34 +908,33 @@ export const swedish: Language = {
     "admin.score.winnerScore": "Vinnarens resultat",
     "admin.score.loser": "Förlorare",
     "admin.score.loserScore": "Förlorarens resultat",
-    "admin.score.beat": "besegrade",
+    "admin.score.beat": "slog",
     "admin.score.added": "Partiet som {winner} vann mot {loser} lades till.",
     "admin.score.otherwise": "Partiet kunde inte läggas till.",
     "admin.score.correctTitle": "Redigera resultat",
     "admin.score.save": "Spara",
     "admin.score.notCorrected": "Resultatet kunde inte rättas.",
     "Game.WinnerMissing": "Välj vinnaren.",
-    "Game.WinnerScoreMissing": "Skriv in vinnarens resultat.",
+    "Game.WinnerScoreMissing": "Skriv vinnarens resultat.",
     "Game.LoserMissing": "Välj förloraren.",
-    "Game.LoserScoreMissing": "Skriv in förlorarens resultat.",
-    "Score.NoPoints": "Ett resultat börjar med sitt antal poäng.",
+    "Game.LoserScoreMissing": "Skriv förlorarens resultat.",
+    "Score.NoPoints": "Ett resultat börjar med antalet poäng.",
     "Game.SamePlayer": "Ingen spelar mot sig själv.",
     "Game.WinnerNotAhead":
-      "Vinnarens resultat måste vara högre än förlorarens, eller markeras som vunnet.",
+      "Vinnarens resultat måste vara högre än förlorarens, eller markerat som vunnet.",
     "Game.LoserMarked": "Förlorarens resultat kan inte markeras som vunnet.",
     "Game.ResultChanged":
-      "En rättelse behåller utgången: ett vunnet parti förblir vunnet, och ett oavgjort parti förblir oavgjort.",
+      "En rättelse behåller resultatet: ett vunnet parti förblir vunnet, och ett oavgjort förblir oavgjort.",
     "Competition.MatchDecided": "Deras match är redan avgjord.",
     "Competition.DrawFull":
-      "Spelaren kan inte läggas till eftersom utslagsturneringen är full.",
+      "Spelaren kan inte läggas till eftersom utslagningen är full.",
     "Competition.DrawNotFilled":
-      "Resultat kan inte läggas till förrän varje plats i utslagsturneringen är fylld med en spelare eller en frilott.",
-    "Competition.ByeOutsideKnockout":
-      "Bara en utslagsturnering kan ha en frilott.",
+      "Resultat kan inte läggas till förrän varje plats i utslagningen är fylld med en spelare eller en bye.",
+    "Competition.ByeOutsideKnockout": "Bara en utslagning kan ha en bye.",
     "Competition.NotDrawnToMeet":
-      "De här spelarna är för närvarande inte lottade att möta varandra i utslagsturneringen.",
+      "De här spelarna är för tillfället inte lottade att möta varandra i utslagningen.",
     "Competition.WinnerHasPlayedOn":
-      "Vinnaren av den här matchen har redan spelat sitt nästa parti, så vem som vann den kan inte ändras.",
+      "Vinnaren av den här matchen har redan spelat sitt nästa parti, så vem som vann kan inte ändras.",
     "CompetitionPlayer.Withdrawn": "En tillbakadragen spelare spelar inte mer.",
     "admin.players.add": "Lägg till spelare",
     "admin.players.none": "Inga spelare",
@@ -853,38 +942,49 @@ export const swedish: Language = {
     "admin.players.archive": "Arkivera",
     "admin.players.restore": "Återställ",
     "admin.players.up": "Upp",
-    "admin.players.down": "Ned",
+    "admin.players.down": "Ner",
+    // Frågas innan en spelare som är med i tävlingar arkiveras, eftersom
+    // arkiveringen tar bort hen från varje, och återställningen sätter inte
+    // tillbaka hen.
     "admin.players.archiveTitle": "Arkivera spelare",
     "admin.players.archiveQuestion": "{name} tas bort från de här tävlingarna:",
     "admin.players.archive.explanation":
-      "Om spelaren återställs hamnar den inte tillbaka i de här tävlingarna.",
+      "Att återställa hen sätter inte tillbaka hen i de här tävlingarna.",
     "admin.players.archived": "Arkiverade spelare",
+    // Sägs till en skärmläsare, eftersom ett streck genom ett namn inte läses
+    // upp.
     "admin.players.archivedSaid": "Arkiverad",
+    // Spelardialogen.
     "admin.player.addTitle": "Lägg till spelare",
     "admin.player.editTitle": "Redigera spelare",
     "admin.player.name": "Namn",
     "admin.player.representing": "Representerar",
     "admin.player.worldRankingName": "Spelarens namn i världsrankingen",
+    // Bredvid namnet i världsrankingen: om världsrankingen känner till det.
     "admin.player.worldRankingKnown":
       "Världsrankingen känner till det här namnet.",
     "admin.player.worldRankingQuestioned":
-      "Världsrankingen har ingen spelare med det här namnet. Det kan vara felstavat, eller så kan spelaren vara ny i rankingen.",
+      "Världsrankingen har ingen spelare med det här namnet. Det kan vara felstavat, eller så är spelaren ny i rankingen.",
     "admin.player.flag": "Flagga",
     "admin.player.add": "Lägg till",
     "admin.player.save": "Spara",
     "admin.player.added": "{name} lades till.",
-    "admin.player.otherwise": "Den här spelaren kan inte sparas som den är.",
+    // Ovanför fälten, för ett avslag utan egna ord.
+    "admin.player.otherwise": "Den här spelaren kan inte sparas som hen är.",
     "Tournament.PlayerNameTaken":
       "En annan spelare i den här turneringen har redan det namnet.",
     "TournamentPlayer.NoSuchFlag": "Välj en av de flaggor som finns.",
-    "TournamentPlayer.NamedBye": "En spelare kan inte heta Frilott.",
+    "TournamentPlayer.NamedBye": "En spelare kan inte heta Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Ett namn måste innehålla en bokstav eller en siffra.",
-    "admin.player.byesTitle": "Frilotter behöver inte läggas till",
+    // Dialogen över spelardialogen när en spelare får namnet bye.
+    "admin.player.byesTitle": "Byes behöver inte läggas till",
     "admin.player.byes":
-      "En frilott är ingen av turneringens spelare. En utslagsturnering erbjuder Frilott varje gång dess spelare läggs till, så många gånger som lottningen behöver.",
+      "En bye är ingen av turneringens spelare. En utslagning erbjuder Bye varje gång dess spelare läggs till, så många gånger som lottningen behöver.",
+    // En turnering som spelas av lag (view.feature): flikarna Lag och
+    // Landskamper, ett lags sida och deras dialoger.
     "admin.view.teams": "Lag",
-    "admin.view.tests": "Testmatcher",
+    "admin.view.tests": "Landskamper",
     "admin.teams.add": "Lägg till lag",
     "admin.teams.none": "Inga lag",
     "admin.teams.edit": "Redigera",
@@ -892,7 +992,7 @@ export const swedish: Language = {
     "admin.teams.archive": "Arkivera",
     "admin.teams.restore": "Återställ",
     "admin.teams.up": "Upp",
-    "admin.teams.down": "Ned",
+    "admin.teams.down": "Ner",
     "admin.teams.archived": "Arkiverade lag",
     "admin.teams.archivedSaid": "Arkiverat",
     "admin.team.addTitle": "Lägg till lag",
@@ -900,11 +1000,12 @@ export const swedish: Language = {
     "admin.team.name": "Namn",
     "admin.team.shortName": "Kortnamn",
     "admin.team.shortName.explanation":
-      "Det som lagets testmatcher kallas med, till exempel AUS v ENG.",
+      "Det som lagets landskamper kallas, som AUS v ENG.",
     "admin.team.flag": "Flagga",
     "admin.team.add": "Lägg till",
     "admin.team.save": "Spara",
     "admin.team.added": "{name} lades till.",
+    // Ovanför fälten, för ett avslag utan egna ord.
     "admin.team.otherwise": "Det här laget kan inte sparas som det är.",
     "admin.teamView.otherwise": "Det här laget kan inte visas härifrån.",
     "admin.teamView.players": "Spelare",
@@ -913,12 +1014,17 @@ export const swedish: Language = {
     "admin.notes.add": "Lägg till anteckning",
     "admin.notes.none": "Inga anteckningar",
     "admin.notes.edit": "Redigera",
-    "admin.notes.delete": "Ta bort",
-    "admin.notes.deleteTitle": "Ta bort anteckning",
-    "admin.notes.deleteQuestion": "Ta bort anteckningen ”{title}”?",
+    "admin.notes.delete": "Radera",
+    // Frågas innan en anteckning raderas, eftersom en raderad anteckning är
+    // borta för gott.
+    "admin.notes.deleteTitle": "Radera anteckning",
+    "admin.notes.deleteQuestion": "Radera anteckningen ”{title}”?",
     "admin.notes.delete.explanation":
-      "En borttagen anteckning är borta för alltid och kan inte hämtas tillbaka.",
+      "En raderad anteckning är borta för gott och kan inte hämtas tillbaka.",
+    // Ovanför listan, för ett avslag utan egna ord.
     "admin.notes.otherwise": "Det gick inte att göra.",
+    // Anteckningsdialogen, beskrivningens flikar och verktygsfältet ovanför
+    // rutan.
     "admin.note.addTitle": "Lägg till anteckning",
     "admin.note.editTitle": "Redigera anteckning",
     "admin.note.title": "Rubrik",
@@ -927,8 +1033,8 @@ export const swedish: Language = {
     "admin.note.preview": "Förhandsgranska",
     "admin.note.toolbar": "Formatering",
     "admin.note.tool.heading": "Rubrik",
-    "admin.note.tool.bold": "Fet stil",
-    "admin.note.tool.italic": "Kursiv stil",
+    "admin.note.tool.bold": "Fet",
+    "admin.note.tool.italic": "Kursiv",
     "admin.note.tool.quote": "Citat",
     "admin.note.tool.code": "Kod",
     "admin.note.tool.link": "Länk",
@@ -937,6 +1043,7 @@ export const swedish: Language = {
     "admin.note.tool.taskList": "Uppgiftslista",
     "admin.note.add": "Lägg till",
     "admin.note.save": "Spara",
+    // Ovanför fälten, för ett avslag utan egna ord.
     "admin.note.otherwise": "Den här anteckningen kan inte sparas som den är.",
     "ManagerNoteTitle.Missing": "Ge anteckningen en rubrik.",
     "ManagerNoteTitle.TooLong": "Den rubriken är för lång.",
@@ -944,32 +1051,32 @@ export const swedish: Language = {
       "En rubrik måste innehålla en bokstav eller en siffra.",
     "ManagerNoteDescription.TooLong": "Den beskrivningen är för lång.",
     "ManagerNoteToEdit.NoSuchManagerNote":
-      "Den anteckningen finns inte längre. En annan turneringsledare kan ha tagit bort den.",
+      "Den anteckningen finns inte längre. En annan arrangör kan ha raderat den.",
     "EditManagerNote.NoSuchManagerNote":
-      "Den anteckningen finns inte längre. En annan turneringsledare kan ha tagit bort den.",
+      "Den anteckningen finns inte längre. En annan arrangör kan ha raderat den.",
     "DeleteManagerNote.NoSuchManagerNote":
-      "Den anteckningen finns inte längre. En annan turneringsledare kan ha tagit bort den.",
+      "Den anteckningen finns inte längre. En annan arrangör kan ha raderat den.",
     "ManagerNote.Deleted":
-      "Den anteckningen har tagits bort. En annan turneringsledare kan ha tagit bort den.",
-    "CommentaryTitle.Missing": "Ge livekommentaren en rubrik.",
+      "Den anteckningen har raderats. En annan arrangör kan ha raderat den.",
+    "CommentaryTitle.Missing": "Ge kommentaren en rubrik.",
     "CommentaryTitle.TooLong": "Den rubriken är för lång.",
     "CommentaryTitle.NoLetterOrDigit":
       "En rubrik måste innehålla en bokstav eller en siffra.",
-    "Commentary.TitleTaken": "En annan livekommentar har redan den rubriken.",
-    "CommentText.Missing": "Skriv något i kommentaren.",
-    "CommentText.TooLong": "Den kommentaren är för lång.",
+    "Commentary.TitleTaken": "En annan kommentar har redan den rubriken.",
+    "CommentText.Missing": "Skriv något i inlägget.",
+    "CommentText.TooLong": "Det inlägget är för långt.",
     "TeamShortName.Missing": "Ge laget ett kortnamn.",
-    "TeamShortName.TooLong": "Ett kortnamn får vara högst 10 tecken långt.",
+    "TeamShortName.TooLong": "Ett kortnamn får vara högst 10 tecken.",
     "TeamShortName.NoLetterOrDigit":
       "Ett kortnamn måste innehålla en bokstav eller en siffra.",
     "Team.ShortNameLongerThanName":
       "Ett kortnamn kan inte vara längre än lagets namn.",
     "Team.NoSuchFlag": "Välj en av de flaggor som finns.",
     "Team.Archived": "Det laget är arkiverat och måste återställas först.",
-    "Team.InATest": "Det laget spelar i en testmatch och kan inte arkiveras.",
+    "Team.InATest": "Det laget spelar i en landskamp och kan inte arkiveras.",
     "Team.PlayerNameTaken":
       "En annan spelare i det här laget har redan det namnet.",
-    "TeamPlayer.NamedBye": "En spelare kan inte heta Frilott.",
+    "TeamPlayer.NamedBye": "En spelare kan inte heta Bye.",
     "TeamPlayer.Archived":
       "Den spelaren är arkiverad och måste återställas först.",
     "TeamPlayer.HasGames": "Den spelaren har spelat och kan inte arkiveras.",
@@ -981,28 +1088,29 @@ export const swedish: Language = {
       "Den här turneringen har inget lag på den här adressen.",
     "Tournament.TeamArchived":
       "Det här laget är arkiverat och kan bara återställas från fliken Lag.",
-    "admin.tests.add": "Lägg till testmatch",
-    "admin.tests.none": "Inga testmatcher",
+    "admin.tests.add": "Lägg till landskamp",
+    "admin.tests.none": "Inga landskamper",
     "admin.tests.edit": "Redigera",
     "admin.tests.view": "Visa",
     "admin.tests.archive": "Arkivera",
     "admin.tests.restore": "Återställ",
     "admin.tests.up": "Upp",
-    "admin.tests.down": "Ned",
-    "admin.tests.archived": "Arkiverade testmatcher",
+    "admin.tests.down": "Ner",
+    "admin.tests.archived": "Arkiverade landskamper",
     "admin.tests.twoTeamsNeeded":
-      "En testmatch spelas mellan två lag, så två lag behövs först.",
+      "En landskamp spelas mellan två lag, så två lag behövs först.",
     "admin.tests.toTeams": "Gå till Lag",
     "admin.tests.matches.one": "{count} match",
     "admin.tests.matches.other": "{count} matcher",
     "admin.tests.bestOf": "bäst av {games}",
+    // Bredvid listan, för ett avslag utan egna ord.
     "admin.tests.otherwise": "Det gick inte att göra.",
-    "admin.test.addTitle": "Lägg till testmatch",
-    "admin.test.editTitle": "Redigera testmatch",
+    "admin.test.addTitle": "Lägg till landskamp",
+    "admin.test.editTitle": "Redigera landskamp",
     "admin.test.firstTeam": "Lag A",
     "admin.test.secondTeam": "Lag B",
     "admin.test.versus": "v",
-    "admin.test.starts": "Startar",
+    "admin.test.starts": "Börjar",
     "admin.test.finishes": "Slutar",
     "admin.test.expectedMatches": "Förväntade matcher",
     "admin.test.bestOf": "Bäst av",
@@ -1010,57 +1118,62 @@ export const swedish: Language = {
     "admin.test.add": "Lägg till",
     "admin.test.save": "Spara",
     "admin.test.added": "{name} lades till.",
-    "admin.test.otherwise": "Den här testmatchen kan inte sparas som den är.",
-    "admin.testView.otherwise": "Den här testmatchen kan inte visas härifrån.",
+    "admin.test.otherwise": "Den här landskampen kan inte sparas som den är.",
+    "admin.testView.otherwise": "Den här landskampen kan inte visas härifrån.",
     "AddTest.FirstTeamMissing": "Välj det första laget.",
     "AddTest.SecondTeamMissing": "Välj det andra laget.",
     "UpdateTest.FirstTeamMissing": "Välj det första laget.",
     "UpdateTest.SecondTeamMissing": "Välj det andra laget.",
-    "ExpectedMatches.NotWhole": "Ange ett helt antal matcher.",
+    "ExpectedMatches.NotWhole": "Ange ett heltal för antalet matcher.",
     "ExpectedMatches.TooSmall":
-      "En testmatch måste förväntas ha minst 1 match.",
+      "En landskamp måste förväntas ha minst 1 match.",
     "TestGroup.TooLong": "Den gruppen är för lång.",
     "Tournament.TestAgainstItself":
-      "Ett lag spelar inte testmatch mot sig självt.",
+      "Ett lag spelar inte landskamp mot sig självt.",
     "Tournament.TestFinishesBeforeStarts":
-      "En testmatch kan inte sluta innan den startar.",
+      "En landskamp kan inte sluta innan den börjar.",
     "Tournament.TestStartsBeforeTournament":
-      "En testmatch kan inte starta före sin turnering.",
+      "En landskamp kan inte börja före sin turnering.",
     "Tournament.TestFinishesAfterTournament":
-      "En testmatch kan inte sluta efter sin turnering.",
+      "En landskamp kan inte sluta efter sin turnering.",
     "Tournament.TestHasGamesInUse":
-      "Den här testmatchen har partier, så den kan inte arkiveras förrän de är arkiverade.",
+      "Den här landskampen har partier, så den kan inte arkiveras förrän de är det.",
     "Tournament.TestHasGames":
-      "Den här testmatchen har nu partier, så dess lag kan inte längre ändras.",
+      "Den här landskampen har nu partier, så dess lag kan inte längre ändras.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Fler matcher än så har redan startat.",
     "Tournament.BestOfBelowGamesPlayed":
       "Två spelare har redan spelat fler partier än så.",
     "Competition.ExpectedMatchesReached":
-      "Den här testmatchen har startat lika många matcher som den förväntas ha.",
+      "Den här landskampen har startat lika många matcher som den förväntas ha.",
     "Competition.SameTeam": "Två spelare i samma lag spelar inte mot varandra.",
     "AddManager.NoSuchAccount":
-      "Den adressen har inget konto som kan göras till turneringsledare.",
+      "Den adressen har inget konto som kan göras till arrangör.",
     "admin.scorers.add": "Lägg till resultatförare",
     "admin.scorers.none": "Inga resultatförare",
     "admin.scorers.removeTitle": "Ta bort resultatförare",
     "admin.scorers.removeExplanation":
       "{name} kommer inte längre att kunna skriva in den här turneringens resultat.",
+    // Under fältet, för ett avslag utan egna ord.
     "admin.scorers.otherwise":
       "Den adressen kan inte göras till resultatförare.",
     "AddScorer.NoSuchAccount":
       "Den adressen har inget konto som kan göras till resultatförare.",
+    // Att ge, ta bort och lista roller, vilket bara en administratör kan göra.
     "Account.NotAnAdministrator": "Bara en administratör kan göra det.",
     "AddRole.NoSuchAccount": "Den adressen har inget konto som kan få rollen.",
     "AddRole.NoSuchRole": "Det finns ingen sådan roll.",
     "RemoveRole.NoSuchAccount": "Det finns inget sådant konto.",
     "RemoveRole.NoSuchRole": "Det finns ingen sådan roll.",
     "RemoveRole.Yourself":
-      "Du kan inte ta rollen administratör från dig själv.",
+      "Du kan inte ta administratörsrollen från dig själv.",
     "AccountsWithRole.NoSuchRole": "Det finns ingen sådan roll.",
     "Tournament.AlreadyAManager":
-      "Det kontot leder redan turneringen och kan göra allt en resultatförare kan.",
+      "Det kontot är redan arrangör för turneringen och kan göra allt en resultatförare kan.",
 
+    // En turnerings avslag, nycklade med sina koder som varje brutet regel.
+    // Under fältet var och en gäller, eller i stället för formuläret där
+    // själva sidan avvisas.
     "TournamentName.Missing": "Ange vad turneringen heter.",
     "TournamentName.TooShort": "Det namnet är för kort.",
     "TournamentName.TooLong": "Det namnet är för långt.",
@@ -1072,26 +1185,25 @@ export const swedish: Language = {
       "Ett namn måste innehålla en bokstav eller en siffra.",
     "ReadOnlyDate.Unreadable": "Ange dagen.",
     "Tournament.FinishesBeforeStarts":
-      "En turnering kan inte sluta innan den startar.",
+      "En turnering kan inte sluta innan den börjar.",
     "Tournament.StartsAfterNextYear":
-      "En turnering kan inte starta efter nästa år.",
+      "En turnering kan inte börja efter nästa år.",
     "Tournament.FinishesAfterNextYear":
       "En turnering kan inte sluta efter nästa år.",
-    "CreateTournament.NoSuchCountry": "Välj landet.",
-    "TournamentSubtitle.TooLong":
-      "En underrubrik får vara högst 2000 tecken lång.",
+    "CreateTournament.NoSuchCountry": "Välj land.",
+    "TournamentSubtitle.TooLong": "En underrubrik får vara högst 2000 tecken.",
     "Tournament.NotAManager":
-      "Bara en turneringsledare för den här turneringen kan ändra den.",
+      "Bara en arrangör av den här turneringen kan ändra den.",
     "Tournament.NotAManagerOrScorer":
-      "Bara en turneringsledare eller resultatförare för den här turneringen kan se den.",
+      "Bara en arrangör eller resultatförare av den här turneringen kan se den.",
     "Tournament.Archived":
       "Den här turneringen är arkiverad och återställs innan den kan ändras.",
     "UpdateTournament.NoSuchTournament":
       "Det finns ingen turnering på den här adressen.",
 
-    // The sports and formats that have no established Swedish name keep the
-    // English one, and a format named for a competition keeps its name.
-    "sport.ac": "Associationscroquet",
+    // Vad en turnering spelas i och var, per kod, så som API:et erbjuder dem
+    // till adminens formulär.
+    "sport.ac": "Association croquet",
     "sport.gc": "Golfcroquet",
     "sport.a6w": "Amerikansk 6-bågars croquet",
     "sport.rc": "Ricochet",
@@ -1100,7 +1212,8 @@ export const swedish: Language = {
     "format.teams": "Lag",
     "format.eire-cup": "Eire Cup",
     "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.gc-world-team-championship":
+      "Världsmästerskapet för lag i golfcroquet",
     "country.ad": "Andorra",
     "country.ae": "Förenade Arabemiraten",
     "country.af": "Afghanistan",
@@ -1347,17 +1460,24 @@ export const swedish: Language = {
     "country.zm": "Zambia",
     "country.zw": "Zimbabwe",
 
-    // The emails are written in Swedish rather than translated line by line;
-    // the placeholders each fills in are english.ts's, and say there what
-    // they are.
+    // Ett e-postmeddelande är två poster: ämnet, som är text, och innehållet,
+    // som är hela dess markup. Det är det enda stället i en katalog som rymmer
+    // markup, eftersom ett e-postmeddelande skrivs och översätts som ett
+    // stycke text. Bara det som fyller i ett meddelande escapas; markupen här
+    // är webbplatsens egen. `{link}` är länken meddelandet bär, `{site}`
+    // webbplatsens adress, `{buttonBackgroundColour}` och `{buttonTextColour}`
+    // knappens färger, `{emailFromName}` namnet meddelandena skickas från och
+    // signeras med, och `{siteName}` vad webbplatsen heter. Inget hälsar
+    // läsaren vid namn.
+
     "Email.ConfirmAddress.subject": "Bekräfta din e-postadress för {siteName}",
     "Email.ConfirmAddress.body": `
 <p>Hej,</p>
 
 <p>
     Tack för att du skapade ett konto hos <strong>{siteName}</strong>.<br />
-    Innan du kan börja använda ditt konto behöver du bekräfta din e-postadress genom
-    att klicka på knappen nedan:
+    Innan du kan börja använda ditt konto behöver du bekräfta din e-postadress
+    genom att klicka på knappen nedan:
 </p>
 
 <p>
@@ -1375,12 +1495,12 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om knappen inte fungerar kan du också bekräfta din e-postadress genom att öppna den här länken i webbläsaren:<br />
+    Om knappen inte fungerar kan du också bekräfta din e-postadress genom att öppna den här länken i din webbläsare:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Om du inte skapade det här kontot kan du bortse från det här e-postmeddelandet.
+    Om du inte skapade det här kontot kan du tryggt bortse från det här meddelandet.
 </p>
 
 <p>
@@ -1395,7 +1515,7 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    Du har nyligen bett om ett nytt e-postmeddelande för att bekräfta din e-postadress för <strong>{siteName}</strong>.<br />
+    Du har nyligen begärt ett nytt meddelande för att bekräfta din e-postadress för <strong>{siteName}</strong>.<br />
     Bekräfta din e-postadress genom att klicka på knappen nedan:
 </p>
 
@@ -1414,7 +1534,7 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om knappen inte fungerar kan du också bekräfta din e-postadress genom att öppna den här länken i webbläsaren:<br />
+    Om knappen inte fungerar kan du också bekräfta din e-postadress genom att öppna den här länken i din webbläsare:<br />
     <a href="{link}">{link}</a>
 </p>
 
@@ -1423,7 +1543,7 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om du inte bad om det här e-postmeddelandet kan du bortse från det.
+    Om du inte begärde det här meddelandet kan du tryggt bortse från det.
 </p>
 
 <p>
@@ -1477,8 +1597,8 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om det inte var du behöver du inte göra något. Ingen har fått en väg in på
-    ditt konto.
+    Om det inte var du behöver du inte göra något. Ingen har fått någon väg in
+    på ditt konto.
 </p>
 
 <p>
@@ -1488,13 +1608,13 @@ export const swedish: Language = {
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "Bekräfta flytten av ditt konto på {siteName} till den här adressen",
+      "Bekräfta att ditt konto hos {siteName} flyttas till den här adressen",
     "Email.ConfirmNewEmailAddress.body": `
 <p>Hej,</p>
 
 <p>
-    Någon som var inloggad på ett konto hos <strong>{siteName}</strong> bad om att
-    flytta det till den här e-postadressen. Om det var du, bekräfta det här,
+    Någon som var inloggad på ett konto hos <strong>{siteName}</strong> bad om
+    att flytta det till den här e-postadressen. Om det var du, bekräfta det här,
     inloggad på det kontot. Länken fungerar i 24 timmar.
 </p>
 
@@ -1513,7 +1633,7 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Eller kopiera den här adressen till webbläsaren:<br />
+    Eller kopiera den här adressen till din webbläsare:<br />
     {link}
 </p>
 
@@ -1533,8 +1653,8 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    Någon som var inloggad på ett konto hos <strong>{siteName}</strong> bad om att
-    flytta det till den här e-postadressen, som redan har ett eget konto.
+    Någon som var inloggad på ett konto hos <strong>{siteName}</strong> bad om
+    att flytta det till den här e-postadressen, som redan har ett eget konto.
     Ingenting har flyttats, och ingenting har ändrats på ditt konto.
 </p>
 
@@ -1550,18 +1670,18 @@ export const swedish: Language = {
 `,
 
     "Email.EmailAddressChanged.subject":
-      "Ditt konto på {siteName} har flyttats",
+      "Ditt konto hos {siteName} har flyttats",
     "Email.EmailAddressChanged.body": `
 <p>Hej,</p>
 
 <p>
-    Ditt konto hos <strong>{siteName}</strong> flyttades nyss till en annan
+    Ditt konto hos <strong>{siteName}</strong> har just flyttats till en annan
     e-postadress, {emailAddress}, och du loggar in med den adressen från och med nu.
 </p>
 
 <p>
-    Om det inte var du har någon annan tillgång till ditt konto. Svara på det här
-    e-postmeddelandet och berätta för oss.
+    Om det inte var du har någon annan tagit över ditt konto. Svara på det här
+    meddelandet och berätta.
 </p>
 
 <p>
@@ -1570,18 +1690,18 @@ export const swedish: Language = {
 </p>
 `,
 
-    "Email.PasswordChanged.subject": "Ditt lösenord på {siteName} ändrades",
+    "Email.PasswordChanged.subject": "Ditt lösenord hos {siteName} har ändrats",
     "Email.PasswordChanged.body": `
 <p>Hej,</p>
 
 <p>
-    Lösenordet till ditt konto hos <strong>{siteName}</strong> ändrades nyss, och
-    alla andra webbläsare som var inloggade på det loggades ut.<br />
+    Lösenordet för ditt konto hos <strong>{siteName}</strong> har just
+    ändrats, och alla andra webbläsare som var inloggade på det har loggats ut.<br />
     Om det var du behöver du inte göra något.
 </p>
 
 <p>
-    Om det inte var du har någon annan ditt lösenord. Ange ett nytt här, så
+    Om det inte var du har någon annan ditt lösenord. Skapa ett nytt här, så
     loggas de ut:
 </p>
 
@@ -1605,13 +1725,13 @@ export const swedish: Language = {
 </p>
 `,
 
-    "Email.SetNewPassword.subject": "Ange ett nytt lösenord för {siteName}",
+    "Email.SetNewPassword.subject": "Skapa ett nytt lösenord för {siteName}",
     "Email.SetNewPassword.body": `
 <p>Hej,</p>
 
 <p>
-    Du har nyligen bett om att återställa ditt lösenord för <strong>{siteName}</strong>.<br />
-    Du kan återställa ditt lösenord genom att klicka på knappen nedan:
+    Du har nyligen begärt att återställa ditt lösenord för <strong>{siteName}</strong>.<br />
+    Du kan återställa lösenordet genom att klicka på knappen nedan:
 </p>
 
 <p>
@@ -1629,12 +1749,12 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om knappen inte fungerar kan du också återställa ditt lösenord genom att öppna den här länken i webbläsaren:<br />
+    Om knappen inte fungerar kan du också återställa lösenordet genom att öppna den här länken i din webbläsare:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Om du inte bad om att få återställa lösenordet kan du bortse från det här e-postmeddelandet.
+    Om du inte begärde en återställning av lösenordet kan du tryggt bortse från det här meddelandet.
 </p>
 
 <p>
@@ -1643,14 +1763,14 @@ export const swedish: Language = {
 </p>
 `,
 
-    "Email.SetPassword.subject": "Ange ett lösenord för {siteName}",
+    "Email.SetPassword.subject": "Skapa ett lösenord för {siteName}",
     "Email.SetPassword.body": `
 <p>Hej,</p>
 
 <p>
     Ditt konto hos <strong>{siteName}</strong> har inget lösenord: du loggar in med Google.<br />
-    Du bad om att få ange ett, så att du också kan logga in med din e-postadress och ett lösenord.
-    Du kan ange det genom att klicka på knappen nedan:
+    Du bad om att skapa ett, så att du också kan logga in med din e-postadress och ett lösenord.
+    Du kan skapa det genom att klicka på knappen nedan:
 </p>
 
 <p>
@@ -1663,17 +1783,17 @@ export const swedish: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Ange lösenord
+        Skapa lösenord
     </a>
 </p>
 
 <p>
-    Om knappen inte fungerar kan du också ange ditt lösenord genom att öppna den här länken i webbläsaren:<br />
+    Om knappen inte fungerar kan du också skapa lösenordet genom att öppna den här länken i din webbläsare:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Länken fungerar i en timme. Om du inte bad om att få ange ett lösenord kan du bortse från det här e-postmeddelandet.
+    Länken fungerar i en timme. Om du inte bad om att skapa ett lösenord kan du tryggt bortse från det här meddelandet.
 </p>
 
 <p>
@@ -1688,17 +1808,17 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    En begäran gjordes om att återställa lösenordet för en e-postadress som inte
-    hör till något konto hos <strong>{siteName}</strong>.
+    En begäran gjordes om att återställa lösenordet för en e-postadress som
+    inte hör till något konto hos <strong>{siteName}</strong>.
 </p>
 
 <p>
-    Om du vill använda vår tjänst kan du skapa ett nytt konto här:<br />
+    Om du vill använda vår tjänst kan du skapa ett nytt konto genom att besöka:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    Om du inte gjorde den här begäran kan du bortse från det här e-postmeddelandet.
+    Om du inte gjorde den här begäran kan du tryggt bortse från det här meddelandet.
 </p>
 
 <p>
@@ -1708,15 +1828,15 @@ export const swedish: Language = {
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Bekräfta att ditt konto på {siteName} ska glömmas",
+      "Bekräfta att ditt konto hos {siteName} ska glömmas",
     "Email.ConfirmForgetting.body": `
 <p>Hej,</p>
 
 <p>
-    Du bad om att ditt konto hos <strong>{siteName}</strong> skulle
+    Du bad om att ditt konto hos <strong>{siteName}</strong> ska
     glömmas.<br />
-    Klicka på knappen nedan för att se vad det innebär, och för att säga
-    säkert att du vill det:
+    Följ knappen nedan för att se vad det innebär, och för att säga säkert
+    att du vill det:
 </p>
 
 <p>
@@ -1734,24 +1854,24 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Om knappen inte fungerar kan du också öppna den här länken i webbläsaren:<br />
+    Om knappen inte fungerar kan du också öppna den här länken i din webbläsare:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    När kontot är glömt kan ditt namn och din e-postadress aldrig läsas igen, av
+    När det är glömt kan ditt namn och din e-postadress aldrig läsas igen, av
     någon, och det går inte att logga in på kontot. Det kan inte ångras.
 </p>
 
 <p>
-    Länken fungerar en gång, i 15 minuter efter att du bad om den, och bara
+    Länken fungerar en gång, till 15 minuter efter att du bad om den, och bara
     medan du är inloggad på det här kontot. Därefter får du be om en ny från
     ditt konto.
 </p>
 
 <p>
-    Om du inte bad om det händer ingenting så länge länken inte följs. Någon som var
-    inloggad på ditt konto bad dock om det, så ange ett nytt lösenord från sidan
+    Om du inte bad om det händer ingenting om inte länken följs. Någon som var
+    inloggad på ditt konto bad om det, så skapa ett nytt lösenord från sidan
     för glömt lösenord för att vara säker på att de inte kan logga in igen.
 </p>
 
@@ -1762,14 +1882,14 @@ export const swedish: Language = {
 `,
 
     "Email.RegistrationsSuspended.subject":
-      "Registreringen är avstängd: {service} går inte att nå",
+      "Registreringen är pausad: {service} går inte att nå",
     "Email.RegistrationsSuspended.body": `
 <p>Hej,</p>
 
 <p>
-    {siteName} kunde inte nå {service} klockan {when}. Tills den svarar blir
-    besökare som behöver den, för att registrera sig eller ange ett nytt
-    lösenord, uppmanade att försöka igen senare.
+    {siteName} kunde inte nå {service} kl. {when}. Tills den svarar får
+    läsare som behöver den, för att registrera sig eller skapa ett nytt
+    lösenord, veta att de ska försöka igen senare.
 </p>
 
 <p>
@@ -1778,7 +1898,7 @@ export const swedish: Language = {
 </p>
 
 <p>
-    Medan {service} ligger nere får du e-post om det högst en gång i timmen.
+    Medan {service} är nere får du e-post om det högst en gång i timmen.
 </p>
 
 <p>
@@ -1787,20 +1907,20 @@ export const swedish: Language = {
 </p>
 `,
 
-    "Email.DatabaseUnreachable.subject": "{siteName} kan inte nå sin databas",
+    "Email.DatabaseUnreachable.subject": "{siteName} når inte sin databas",
     "Email.DatabaseUnreachable.body": `
 <p>Hej,</p>
 
 <p>
-    {siteName} kunde inte nå sin databas klockan {when}. Tills den svarar säger varje sida som behöver den till läsarna att webbplatsen inte är tillgänglig och att de ska försöka igen senare.
+    {siteName} kunde inte nå sin databas kl. {when}. Tills den svarar talar varje sida som behöver den om för läsarna att webbplatsen är otillgänglig och att de ska försöka igen senare.
 </p>
 
 <p>
-    Inget behöver hävas. Varje förfrågan ber om en anslutning på nytt, och webbplatsen fungerar igen i samma stund som databasen svarar.
+    Inget behöver hävas. Varje begäran ber om en anslutning på nytt, och webbplatsen fungerar igen i samma stund som databasen svarar.
 </p>
 
 <p>
-    Så länge databasen är nere får du högst ett e-postmeddelande om det per {minutes} minuter.
+    Medan databasen är nere får du e-post om det högst en gång var {minutes}:e minut.
 </p>
 
 <p>
@@ -1809,16 +1929,16 @@ export const swedish: Language = {
 </p>
 `,
 
-    "Email.UnhandledError.subject": "{siteName} misslyckades med en förfrågan",
+    "Email.UnhandledError.subject": "{siteName} misslyckades med en begäran",
     "Email.UnhandledError.body": `
 <p>Hej,</p>
 
 <p>
-    {siteName} misslyckades klockan {when} med en förfrågan om {asked}. Läsaren fick se referensen {reference}, och loggen har orsaken under den.
+    {siteName} misslyckades kl. {when} med en begäran om {asked}. Läsaren fick se referensen {reference}, och loggen har orsaken under den.
 </p>
 
 <p>
-    En webbplats som är trasig misslyckas oftast med varje förfrågan, så du får högst 4 e-postmeddelanden i timmen om fel. De följande finns ändå i loggen.
+    En trasig webbplats brukar misslyckas med varje begäran, så du får e-post om misslyckanden högst 4 gånger i timmen. De därefter finns ändå i loggen.
 </p>
 
 <p>

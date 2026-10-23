@@ -14,17 +14,13 @@ O formulário pede tudo com que um torneio começa. Um torneio do tipo comum est
 
 **Formato.** Escolha **Padrão** para um torneio disputado entre jogadores. Os outros formatos são para torneios disputados entre equipes, que têm um guia próprio.
 
-**Modalidade.** As modalidades que o site oferece, na sua ordem: Croquet de Associação, Golf Croquet, Croquet Americano de 6 Arcos e Ricochet no Croquet Scores. O Gateball Scores não pede modalidade nem formato, porque todo torneio lá é um torneio padrão de gateball.
+**Esporte.** Os esportes que o site oferece, na sua ordem: Croquet de Associação, Croquet de Golfe, Croquet Americano de 6 Arcos e Ricochet no Croquet Scores. O Gateball Scores não pede esporte nem formato, porque todo torneio lá é um torneio padrão de gateball.
 
 **País** e **Região.** Onde o torneio é disputado. A região só é pedida quando o país escolhido é dividido em regiões, como os estados da Austrália; um país que é a sua própria e única região não pede nenhuma. A região não precisa ser escolhida mesmo quando é oferecida.
 
 **Subtítulo.** Tudo o que você quer que os leitores saibam e não tem um campo próprio: onde estacionar, a que hora é o almoço, para quem telefonar. É mostrado abaixo do nome do torneio em todas as páginas públicas. É escrito em Markdown, então uma palavra fica em negrito com asteriscos em volta e uma lista se faz com um traço no início de cada linha. Pode ter até 2000 caracteres, e pode ficar vazio.
 
-**Disputado com handicaps.** Marque para um torneio com handicaps.
-
-**Permite resultados empatados.** Marque quando um jogo pode terminar sem que nenhum dos jogadores seja o vencedor. A maioria dos torneios não permite. Quando está marcado, um placar inserido com pontos iguais e sem marca é guardado como empate; quando não está, um jogo com pontos iguais precisa dizer quem o ganhou com uma marca depois do placar do vencedor, como "6w".
-
-**Vale para os rankings mundiais.** Só é pedido quando pode valer: um torneio de Croquet de Associação, de Golf Croquet ou de Croquet Americano de 6 Arcos que não é disputado com handicaps nem permite resultados empatados. Começa marcado, então desmarque-o para um torneio que não deve valer.
+Como as suas competições são jogadas e contadas, se com handicaps, se com empates e se para os rankings mundiais, é cada competição que diz ao ser adicionada.
 
 **Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro.
 
@@ -32,7 +28,7 @@ O formulário pede tudo com que um torneio começa. Um torneio do tipo comum est
 
 Pressione **Criar torneio**. Você é levado à página do torneio na administração, de onde ele é administrado, e passa a ser o seu primeiro organizador. Ele é listado na administração sob o ano em que começa.
 
-O endereço público do torneio é formado pelo seu ano, a sua modalidade e o seu nome, como `/2026/ac/spring-open`. Ele mantém esse endereço quando o nome é corrigido mais tarde, para que um link já enviado continue a encontrá-lo; ele só muda quando o ano em que começa, ou a modalidade, muda.
+O endereço público do torneio é formado pelo seu ano, o seu esporte e o seu nome, como `/2026/ac/spring-open`. Ele mantém esse endereço quando o nome é corrigido mais tarde, para que um link já enviado continue a encontrá-lo; ele só muda quando o ano em que começa, ou o esporte, muda.
 
 ## Se algo for recusado
 

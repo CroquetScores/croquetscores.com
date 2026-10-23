@@ -14,8 +14,8 @@ Kod jest teraz otwarty, na licencji GNU Affero General Public License w wersji 3
 ### Śledzenie turnieju
 
 - **Notatki od organizatorów.** Organizatorzy turnieju mogą teraz pisać notatki, by przekazać zawodnikom to, co muszą wiedzieć w trakcie gry: format, zmianę kolejności gier, godzinę obiadu. Są w nowej sekcji turnieju **Notatki**, od najnowszej, z informacją, jak dawno każda została napisana.
-- **Gwiazdka (\*) oznacza to, czego nie przeczytano.** Notatka ma ją, dopóki jej nie otworzysz, i ponownie, jeśli zmieniono ją po przeczytaniu. Gdy jakakolwiek notatka jest nieprzeczytana, sekcja Notatki też ma gwiazdkę, na każdej stronie turnieju, więc widzisz, że są wieści, bez zaglądania. Relacje są oznaczane tak samo. Przeglądarka zapamiętuje, co przeczytano, więc nie musisz się logować. Inny telefon lub komputer zaczyna bez niczego przeczytanego.
-- **Relację łatwiej śledzić.** Na starej stronie każdy nowy komentarz zrzucał stronę na sam dół, więc kto przeglądał wcześniejsze komentarze, tracił miejsce. Teraz strona przesuwa się do nowego komentarza tylko wtedy, gdy już jesteś na dole i czytasz najnowsze. Jeśli przewinąłeś wstecz, by czytać wcześniejsze komentarze, zostajesz tam, gdzie jesteś.
+- **Gwiazdka (\*) oznacza to, czego nie przeczytano.** Notatka ma ją, dopóki jej nie otworzysz, i ponownie, jeśli zmieniono ją po przeczytaniu. Gdy jakakolwiek notatka jest nieprzeczytana, sekcja Notatki też ma gwiazdkę, na każdej stronie turnieju, więc widzisz, że są wieści, bez zaglądania. Komentarze są oznaczane tak samo. Przeglądarka zapamiętuje, co przeczytano, więc nie musisz się logować. Inny telefon lub komputer zaczyna bez niczego przeczytanego.
+- **Komentarz łatwiej śledzić.** Na starej stronie każdy nowy komentarz zrzucał stronę na sam dół, więc kto przeglądał wcześniejsze komentarze, tracił miejsce. Teraz strona przesuwa się do nowego komentarza tylko wtedy, gdy już jesteś na dole i czytasz najnowsze. Jeśli przewinąłeś wstecz, by czytać wcześniejsze komentarze, zostajesz tam, gdzie jesteś.
 
 ### Strona
 

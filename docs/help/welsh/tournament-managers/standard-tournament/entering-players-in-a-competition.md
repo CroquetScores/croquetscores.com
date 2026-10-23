@@ -1,6 +1,6 @@
 # Rhoi chwaraewyr mewn cystadleuaeth
 
-Agorir tudalen cystadleuaeth o'i henw ar y tab Cystadlaethau, neu o'r bar gwyrdd tywyll. Enw'r gystadleuaeth sydd ar ei phen, â dau dab oddi tano: **Chwaraewyr** a **Canlyniadau**. Mae'n agor ar Chwaraewyr, gan fod y chwaraewyr yn cael eu rhoi i mewn cyn i ddim gael ei chwarae.
+Agorir tudalen cystadleuaeth o'i henw ar y tab Cystadlaethau, neu o'r bar gwyrdd tywyll. Enw'r gystadleuaeth sydd ar ei phen, â dau dab oddi tano: **Chwaraewyr** a **Sgorau**. Mae'n agor ar Chwaraewyr, gan fod y chwaraewyr yn cael eu rhoi i mewn cyn i ddim gael ei chwarae.
 
 Mae chwaraewr mewn cystadleuaeth yn un o chwaraewyr y twrnamaint, felly caiff ei roi i mewn trwy ei ddewis yn hytrach na'i deipio. Caiff popeth amdano, ac eithrio ei le yn y gystadleuaeth a'r hyn y mae'n ei gario ymlaen iddi, ei newid ar dab Chwaraewyr y twrnamaint.
 
@@ -12,29 +12,29 @@ Uwchben y rhestr, mae cwymplen yn cynnig pob chwaraewr yn y twrnamaint nad yw yn
 
 Ni chynigir chwaraewyr y twrnamaint sydd wedi'u harchifo.
 
-## Byes mewn cystadleuaeth taro allan
+## Byes mewn cystadleuaeth cnoc-owt
 
-Chwaraeir cystadleuaeth taro allan dim ond unwaith y bydd pob lle yn ei siart wedi'i lenwi, a chaiff y lleoedd y mae ei chwaraewyr yn eu gadael ar ôl eu llenwi â byes. Felly mewn cystadleuaeth taro allan mae'r gwymplen yn cynnig **Bye** yn gyntaf, cyn y chwaraewyr, ac yn dal i'w gynnig faint bynnag o byes a ychwanegir, gan y gall siart fod ag angen sawl un.
+Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd pob lle yn ei siart wedi'i lenwi, a chaiff y lleoedd y mae ei chwaraewyr yn eu gadael ar ôl eu llenwi â byes. Felly mewn cystadleuaeth cnoc-owt mae'r gwymplen yn cynnig **Bye** yn gyntaf, cyn y chwaraewyr, ac yn dal i'w gynnig faint bynnag o byes a ychwanegir, gan y gall siart fod ag angen sawl un.
 
-![Cystadleuaeth taro allan o bedwar lle â thri chwaraewr a bye](images/knockout-players.png)
+![Cystadleuaeth cnoc-owt o bedwar lle â thri chwaraewr a bye](images/knockout-players.png)
 
-Gosodir bye yn y siart fel y gosodir chwaraewr: gellir ei symud i fyny ac i lawr a'i dynnu, ond ni all dynnu'n ôl, gan nad yw'n chwarae dim. Gwrthodir chwaraewr a roddir mewn cystadleuaeth taro allan y mae pob lle ynddi wedi'i lenwi, ac mae'r tab yn dweud hynny o dan y gwymplen.
+Gosodir bye yn y siart fel y gosodir chwaraewr: gellir ei symud i fyny ac i lawr a'i dynnu, ond ni all dynnu'n ôl, gan nad yw'n chwarae dim. Gwrthodir chwaraewr a roddir mewn cystadleuaeth cnoc-owt y mae pob lle ynddi wedi'i lenwi, ac mae'r tab yn dweud hynny o dan y gwymplen.
 
-Trefn chwaraewyr cystadleuaeth taro allan yw ei siart. Mae'r ddau le cyntaf yn cwrdd yn y gornest gyntaf, y ddau nesaf yn y nesaf, ac felly ymlaen. Rhowch y chwaraewyr yn y drefn y mae'r siart i'w chwarae ynddi cyn rhoi unrhyw ganlyniad i mewn, gan fod ei chwaraewyr yn sefydlog unwaith y bydd gan y gystadleuaeth gêm yn ei lle: ni ellir ychwanegu, tynnu na symud neb. Gall chwaraewr dynnu'n ôl o hyd.
+Trefn chwaraewyr cystadleuaeth cnoc-owt yw ei siart. Mae'r ddau le cyntaf yn cwrdd yn y gêm gyntaf, y ddau nesaf yn y nesaf, ac felly ymlaen. Rhowch y chwaraewyr yn y drefn y mae'r siart i'w chwarae ynddi cyn rhoi unrhyw ganlyniad i mewn, gan fod ei chwaraewyr yn sefydlog unwaith y bydd gan y gystadleuaeth gêm yn ei lle: ni ellir ychwanegu, tynnu na symud neb. Gall chwaraewr dynnu'n ôl o hyd.
 
-![Cystadleuaeth taro allan unwaith y rhoddwyd gêm i mewn: ni ellir ychwanegu, symud na thynnu neb](images/knockout-players-fixed.png)
+![Cystadleuaeth cnoc-owt unwaith y rhoddwyd gêm i mewn: ni ellir ychwanegu, symud na thynnu neb](images/knockout-players-fixed.png)
 
 ## Trefn
 
-Rhestrir y chwaraewyr yn nhrefn y gystadleuaeth, sef y drefn y caiff cystadleuaeth taro allan ei thynnu ynddi a'r drefn y rhestrir bloc ynddi ar ei dudalen gyhoeddus. Mae **I fyny** ac **I lawr** yn symud chwaraewr un lle.
+Rhestrir y chwaraewyr yn nhrefn y gystadleuaeth, sef y drefn y caiff cystadleuaeth cnoc-owt ei thynnu ynddi a'r drefn y rhestrir bloc ynddi ar ei dudalen gyhoeddus. Mae **I fyny** ac **I lawr** yn symud chwaraewr un lle.
 
 ## Cario ymlaen
 
-Mae **Cario ymlaen** yn dweud beth y mae chwaraewr yn ei ddod i gystadleuaeth o chwarae na chafodd ei sgorio ynddi: canlyniadau cam cynharach, neu gemau a chwaraewyd cyn i'r gystadleuaeth gael ei sgorio yma. Cynigir ef mewn bloc a chystadleuaeth Swisaidd, sydd â safleoedd iddo gyfrif ynddynt, ac nid mewn cystadleuaeth taro allan.
+Mae **Cario ymlaen** yn dweud beth y mae chwaraewr yn ei ddod i gystadleuaeth o chwarae na chafodd ei sgorio ynddi: canlyniadau cam cynharach, neu gemau a chwaraewyd cyn i'r gystadleuaeth gael ei sgorio yma. Cynigir ef mewn bloc a chystadleuaeth Swisaidd, sydd â safleoedd iddo gyfrif ynddynt, ac nid mewn cystadleuaeth cnoc-owt.
 
 ![Y ddeialog Cario ymlaen](images/carry-forward-dialog.png)
 
-Mae'r ddeialog yn gofyn am chwe chyfrif: gornestau a enillwyd ac a gollwyd, gemau a enillwyd ac a gollwyd, a chylchoedd dros ac yn erbyn. Mae pob cyfrif yn ddewisol. Nid yw cyfrif a adewir yn wag yn cario dim ymlaen, nad yw'r un peth â chario 0 ymlaen, fel bod pwy bynnag sy'n ei newid yn ddiweddarach yn ei weld fel y'i gadawyd. Pwyswch **Cadw** i gadw'r chwech.
+Mae'r ddeialog yn gofyn am chwe chyfrif: gemau a enillwyd ac a gollwyd, gemau unigol a enillwyd ac a gollwyd, a chylchau dros ac yn erbyn. Mae pob cyfrif yn ddewisol. Nid yw cyfrif a adewir yn wag yn cario dim ymlaen, nad yw'r un peth â chario 0 ymlaen, fel bod pwy bynnag sy'n ei newid yn ddiweddarach yn ei weld fel y'i gadawyd. Pwyswch **Cadw** i gadw'r chwech.
 
 ## Tynnu chwaraewr
 
@@ -46,14 +46,14 @@ Ni ellir tynnu chwaraewr sydd ag unrhyw gêm yn ei lle yn y gystadleuaeth, gan y
 
 ## Tynnu chwaraewr yn ôl
 
-Mae **Tynnu'n ôl** ar gyfer chwaraewr na fydd yn chwarae rhagor o'r gystadleuaeth. Mae'n parhau ynddi, â'r gemau y mae wedi'u chwarae, a chaiff ei restru o dan **Chwaraewyr a dynnwyd yn ôl** ar ôl y rhai sy'n dal i chwarae. Mewn cystadleuaeth taro allan, mae ei wrthwynebydd mewn gornest nad yw wedi'i phenderfynu eto yn mynd drwodd.
+Mae **Tynnu'n ôl** ar gyfer chwaraewr na fydd yn chwarae rhagor o'r gystadleuaeth. Mae'n parhau ynddi, â'r gemau y mae wedi'u chwarae, a chaiff ei restru o dan **Chwaraewyr a dynnwyd yn ôl** ar ôl y rhai sy'n dal i chwarae. Mewn cystadleuaeth cnoc-owt, mae ei wrthwynebydd mewn gêm nad yw wedi'i phenderfynu eto yn mynd drwodd.
 
 Mae Tynnu'n ôl yn gofyn yn gyntaf, gan ei fod yn newid canlyniad y gystadleuaeth: caiff y gemau nad yw'r chwaraewr wedi'u chwarae eu penderfynu hebddo.
 
 ![Y cwestiwn a ofynnir cyn tynnu chwaraewr yn ôl](images/withdraw-player-asks.png)
 
-Dim ond **Dadwneud tynnu'n ôl** a gynigir i chwaraewr a dynnwyd yn ôl, sy'n ei roi yn ôl ymhlith y rhai sy'n chwarae, ar ôl y rhai a arhosodd, heb ofyn.
+Dim ond **Dad-dynnu'n ôl** a gynigir i chwaraewr a dynnwyd yn ôl, sy'n ei roi yn ôl ymhlith y rhai sy'n chwarae, ar ôl y rhai a arhosodd, heb ofyn.
 
 ![Bloc â chwaraewr a dynnwyd yn ôl](images/competition-players-withdrawn.png)
 
-Nesaf: [Canlyniadau](scores.md).
+Nesaf: [Sgorau](scores.md).

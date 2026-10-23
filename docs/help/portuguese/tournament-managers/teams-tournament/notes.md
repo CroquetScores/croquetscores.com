@@ -30,4 +30,4 @@ Uma nota que não vale mais é excluída. Uma nota excluída desaparece para sem
 
 ![A pergunta feita antes de excluir uma nota](images/delete-note-asks.png)
 
-A seguir: [Organizadores e apontadores](managers-and-scorers.md).
+A seguir: [Organizadores e anotadores](managers-and-scorers.md).

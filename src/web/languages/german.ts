@@ -1,19 +1,21 @@
-// The site's words in German. Keyed as the English catalogue is, which is
-// what a word missing here falls back to.
-//
-// Written to the reader as du rather than Sie: the site talks to people
-// scoring and following croquet, a pastime where players are on first-name
-// terms, and the English it is written from is plain and direct rather than
-// formal. Menu items and buttons are written as German writes them, with
-// nouns capitalised but the rest of a phrase in lower case, where the English
-// capitalises each word. "E-Mail-Adresse" is always the address; "E-Mail"
-// alone is only ever what is sent or received.
+// Die Wörter der Website auf Deutsch. Die Leserin und der Leser werden gesiezt.
+// Menü- und Schaltflächentexte folgen der deutschen Rechtschreibung: Nomen
+// groß, alles andere klein („Passwort ändern“, „Zurück zu {siteName}“), also
+// keine englische Großschreibung jedes Wortes. „E-Mail-Adresse“ steht für
+// „email address“, „anmelden“/„abmelden“ für sign in/out, „registrieren“ für
+// register. „Konto vergessen“ ist das Löschen der Daten ohne Wiederkehr
+// („forget“), „Turnier“ für tournament, „Wettbewerb“ für competition. Für
+// Gruppen stehen die Wörter „Block“, „Spielreihenfolge“ und „Freilos“ („Bye“
+// bleibt als Wort, das die Website selbst prüft, unübersetzt, wo das Englische es so
+// vorgibt).
 import type { Language } from "../common/language.js";
 
 export const german: Language = {
   tag: "de",
   name: "Deutsch",
   words: {
+    // Die Leisten der Website. Ihr Name gehört keiner Sprache und wird in den
+    // Satz eingesetzt, der ihn nennt (site.ts).
     "site.skipToContent": "Zum Inhalt springen",
     "navigation.menu": "Menü",
     "navigation.label": "Hauptnavigation",
@@ -27,41 +29,50 @@ export const german: Language = {
     "theme.system": "System",
     "footer.donate": "Spenden",
     "footer.plea":
-      "Gefällt dir {siteName}? Bitte spende, damit es weiterentwickelt werden kann.",
+      "Gefällt Ihnen {siteName}? Bitte spenden Sie, um die Weiterentwicklung zu unterstützen.",
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Datenschutz",
     "footer.termsOfUse": "Nutzungsbedingungen",
     "beta.banner":
-      "Dies ist eine Beta-Website. Daten können jederzeit zurückgesetzt werden.",
+      "Dies ist eine Beta-Website. Die Daten können jederzeit zurückgesetzt werden.",
     "privacy.contact":
-      "Fragen zu dieser Seite oder dazu, was über dich gespeichert ist: {emailAddress}",
+      "Fragen zu dieser Seite oder zu den über Sie gespeicherten Daten: {emailAddress}",
+    // Das Kästchen, das man anhakt, um den Nutzungsbedingungen für
+    // Schreibende zuzustimmen. Die Wörter des Links werden im Text des
+    // Kästchens gesucht und zum Link gemacht, also müssen sie dort genau so
+    // stehen.
     "termsOfUse.agree": "Ich stimme den Nutzungsbedingungen zu",
     "termsOfUse.link": "Nutzungsbedingungen",
+    // Unter den Bedingungen für Schreibende, wie privacy.contact unter der
+    // Datenschutzerklärung.
     "termsOfUse.report":
-      "Geschriebenes melden oder Fragen zu diesen Bedingungen: {emailAddress}",
+      "Melden Sie Geschriebenes oder fragen Sie zu diesen Bedingungen: {emailAddress}",
     "TermsOfUse.NotAgreed":
-      "Setze das Häkchen, um den Nutzungsbedingungen zuzustimmen.",
+      "Haken Sie das Kästchen an, um den Nutzungsbedingungen zuzustimmen.",
+    // Auf jeder Seite einer Übungswebsite, unter der Leiste der Website.
     "tryWebsite.banner":
-      "Das hier ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was du hier eingibst, kann jederzeit gelöscht werden.",
+      "Dies ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was hier eingegeben wird, kann jederzeit entfernt werden.",
 
     "language.label": "Sprache",
     "language.choose": "Ändern",
 
-    // The alert that tells a reader there is something new to read.
+    // Der Hinweis, dass es etwas Neues zu lesen gibt.
     "whatsNew.public.message": "Es gibt etwas Neues zu lesen.",
     "whatsNew.admin.message":
       "Es gibt etwas Neues für alle, die Turniere leiten.",
     "whatsNew.view": "Neuigkeiten ansehen",
     "whatsNew.later": "Beim nächsten Mal erinnern",
-    "whatsNew.never": "Diesen Hinweis nie wieder anzeigen",
+    "whatsNew.never": "Diesen Hinweis nicht mehr anzeigen",
 
     "form.otherwise":
-      "Etwas stimmt nicht. Prüfe deine Eingaben und versuche es noch einmal.",
+      "Etwas stimmt hier nicht. Prüfen Sie Ihre Eingaben und versuchen Sie es erneut.",
 
+    // Das Kontomenü in der Kopfzeile: wofür die Person steht und jeder
+    // Eintrag, der sich darin öffnet.
     "account.menu": "Konto",
     "account.register": "Registrieren",
     "account.signIn": "Anmelden",
-    "account.forgotPassword": "Ich habe mein Passwort vergessen",
+    "account.forgotPassword": "Passwort vergessen",
     "account.signOut": "Abmelden",
     "account.profile": "Profil",
     "account.changePassword": "Passwort ändern",
@@ -75,60 +86,65 @@ export const german: Language = {
     "register.submit": "Registrieren",
     "register.withGoogle": "Mit Google registrieren",
     "register.or": "oder",
+    // Steht über dem Formular, wenn Google die Person zurückgeschickt hat,
+    // ohne sie einzulassen, je nach Code des Rückwegs. Die Seiten zum
+    // Registrieren und zum Anmelden sagen sie beide, deshalb heißt es „Nutzen
+    // Sie Ihre E-Mail-Adresse“, ohne zu nennen, was das Formular damit tut.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Google hat nicht bestätigt, dass diese E-Mail-Adresse dir gehört, deshalb kann sie hier nicht mit Google verwendet werden. Nutze unten deine E-Mail-Adresse.",
+      "Google hat nicht bestätigt, dass diese E-Mail-Adresse Ihnen gehört, daher kann sie hier nicht mit Google verwendet werden. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
     "SignInWithGoogle.LinkedToAnother":
-      "Zu dieser E-Mail-Adresse gibt es bereits ein Konto, das mit einem anderen Google-Konto verknüpft ist. Melde dich mit diesem Google-Konto an oder mit deiner E-Mail-Adresse und deinem Passwort.",
+      "Zu dieser E-Mail-Adresse gibt es bereits ein Konto, das mit einem anderen Google-Konto verknüpft ist. Melden Sie sich mit diesem Google-Konto an oder mit Ihrer E-Mail-Adresse und Ihrem Passwort.",
     "SignInWithGoogle.NameMissing":
-      "Google hat uns deinen Namen nicht mitgeteilt, und ein Konto braucht einen. Nutze unten deine E-Mail-Adresse.",
+      "Google hat uns Ihren Namen nicht mitgeteilt, ein Konto braucht aber einen. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
     "Google.Unreachable":
-      "Google ist gerade nicht erreichbar. Versuche es in ein paar Minuten noch einmal oder nutze unten deine E-Mail-Adresse.",
+      "Google war gerade nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
     "Registration.NotAPerson":
-      "Das sah nicht nach einem Menschen aus. Versuche es noch einmal, und wenn es wieder passiert, warte ein paar Minuten und komm dann zurück.",
+      "Das sah nicht so aus, als käme es von einem Menschen. Versuchen Sie es erneut. Wenn es weiter passiert, warten Sie einige Minuten und kommen Sie dann wieder.",
 
-    "EmailAddress.Missing": "Gib eine E-Mail-Adresse ein.",
+    // Eine Regel, gegen die die Adresse verstoßen kann, unter dem Feld
+    // gesagt, um das es geht.
+    "EmailAddress.Missing": "Geben Sie eine E-Mail-Adresse ein.",
     "EmailAddress.NoAt": "Eine E-Mail-Adresse enthält ein @.",
-    "EmailAddress.MoreThanOneAt":
-      "Eine E-Mail-Adresse enthält nur ein einziges @.",
+    "EmailAddress.MoreThanOneAt": "Eine E-Mail-Adresse enthält genau ein @.",
     "EmailAddress.NoDomain":
-      "Eine E-Mail-Adresse hat nach dem @ eine Domain, wie example.com.",
+      "Eine E-Mail-Adresse hat nach dem @ eine Domain, zum Beispiel example.com.",
 
-    "welcome.title": "Sieh in deinem Postfach nach",
+    "welcome.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "welcome.checkEmail":
-      "Wir haben eine E-Mail an die Adresse geschickt, die du angegeben hast. Folge dem Link darin, um fortzufahren.",
+      "Eine E-Mail ist an die von Ihnen angegebene Adresse unterwegs. Folgen Sie dem Link darin, um fortzufahren.",
     "welcome.nothingArrived":
-      "Wenn in ein paar Minuten nichts ankommt, sieh in deinem Spam-Ordner nach.",
+      "Wenn nach einigen Minuten nichts ankommt, sehen Sie in Ihrem Spam-Ordner nach.",
     "welcome.home": "Zurück zu {siteName}",
     "newConfirmationLink.title": "Neuen Link anfordern",
     "newConfirmationLink.explanation":
-      "Der Link zum Bestätigen deiner E-Mail-Adresse ist abgelaufen. Fordere einen neuen an, dann wird er an die Adresse geschickt, mit der du dich registriert hast.",
-    "newConfirmationLink.send": "Schick mir einen neuen Link",
+      "Der Link zur Bestätigung Ihrer E-Mail-Adresse ist abgelaufen. Fordern Sie einen neuen an, er wird an die Adresse geschickt, mit der Sie sich registriert haben.",
+    "newConfirmationLink.send": "Neuen Link senden",
     "newConfirmationLink.home": "Zurück zu {siteName}",
     "newConfirmationLink.signIn": "Anmelden",
-    "newConfirmationLink.sent.title": "Sieh in deinem Postfach nach",
+    "newConfirmationLink.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "newConfirmationLink.sent.explanation":
-      "Wir haben dir einen neuen Link geschickt. Folge ihm, um deine E-Mail-Adresse zu bestätigen. Wenn in ein paar Minuten nichts ankommt, sieh in deinem Spam-Ordner nach.",
+      "Ein neuer Link ist unterwegs. Folgen Sie ihm, um Ihre E-Mail-Adresse zu bestätigen. Wenn nach einigen Minuten nichts ankommt, sehen Sie in Ihrem Spam-Ordner nach.",
     "newConfirmationLink.alreadyConfirmed.title":
       "Diese E-Mail-Adresse ist bereits bestätigt",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "Es gibt nichts mehr zu bestätigen. Melde dich mit dem Passwort an, das du beim Bestätigen angegeben hast.",
+      "Es gibt nichts mehr zu bestätigen. Melden Sie sich mit dem Passwort an, das Sie bei der Bestätigung angegeben haben.",
     "newConfirmationLink.noLongerWorks.title":
       "Dieser Link funktioniert nicht mehr",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Prüfe, ob du dem vollständigen Link aus der E-Mail gefolgt bist und am Ende nichts fehlt. Wenn er immer noch nicht funktioniert, registriere dich erneut, dann wird dir ein neuer Link geschickt.",
-    "newConfirmationLink.tooMany.title": "Versuche es später noch einmal",
+      "Prüfen Sie, ob Sie dem ganzen Link aus der E-Mail gefolgt sind, ohne dass am Ende etwas fehlt. Funktioniert er immer noch nicht, registrieren Sie sich erneut, dann wird ein neuer Link gesendet.",
+    "newConfirmationLink.tooMany.title": "Versuchen Sie es später erneut",
     "newConfirmationLink.tooMany.explanation":
-      "An diese Adresse sind in letzter Zeit mehrere Links geschickt worden. Warte eine Stunde und fordere dann einen neuen an, und sieh in der Zwischenzeit in deinem Spam-Ordner nach.",
+      "An diese Adresse wurden in letzter Zeit mehrere Links gesendet. Warten Sie eine Stunde und fordern Sie dann erneut einen an. Sehen Sie in der Zwischenzeit in Ihrem Spam-Ordner nach.",
 
     "forgotPassword.title": "Passwort vergessen?",
     "forgotPassword.emailAddress": "E-Mail-Adresse",
-    "forgotPassword.submit": "Schick mir einen Weg zurück ins Konto",
+    "forgotPassword.submit": "Weg zurück ins Konto senden",
     "forgotPassword.home": "Zurück zu {siteName}",
-    "forgotPassword.sent.title": "Sieh in deinem Postfach nach",
+    "forgotPassword.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "forgotPassword.sent.explanation":
-      "Wenn es zu dieser Adresse ein Konto gibt, haben wir dir einen Link zum Festlegen eines neuen Passworts geschickt. Folge ihm innerhalb einer Stunde. Wenn in ein paar Minuten nichts ankommt, sieh in deinem Spam-Ordner nach.",
+      "Wenn zu dieser Adresse ein Konto gehört, ist ein Link zum Festlegen eines neuen Passworts unterwegs. Folgen Sie ihm innerhalb einer Stunde. Wenn nach einigen Minuten nichts ankommt, sehen Sie in Ihrem Spam-Ordner nach.",
     "forgotPassword.tryAgainLater":
-      "Von hier aus sind in letzter Zeit zu viele Wege zurück ins Konto angefordert worden. Warte eine Stunde und versuche es dann noch einmal.",
+      "Von hier aus wurden in letzter Zeit zu viele Wege zurück ins Konto angefordert. Warten Sie eine Stunde und versuchen Sie es dann erneut.",
 
     "setNewPassword.title": "Neues Passwort festlegen",
     "setNewPassword.password": "Passwort",
@@ -137,48 +153,50 @@ export const german: Language = {
     "setNewPassword.home": "Zurück zu {siteName}",
     "setNewPassword.signIn": "Anmelden",
     "setNewPassword.askAgain": "Neuen Link anfordern",
-    "setNewPassword.changed.title": "Dein Passwort wurde geändert",
+    "setNewPassword.changed.title": "Ihr Passwort wurde geändert",
     "setNewPassword.changed.explanation":
-      "Du wurdest überall abgemeldet, wo du angemeldet warst. Melde dich mit deinem neuen Passwort an.",
+      "Sie wurden überall abgemeldet, wo Sie angemeldet waren. Melden Sie sich mit Ihrem neuen Passwort an.",
     "setNewPassword.expired.title": "Dieser Link ist abgelaufen",
     "setNewPassword.expired.explanation":
-      "Ein Link zum Festlegen eines neuen Passworts funktioniert eine Stunde lang. Fordere einen neuen an, dann wird er an dieselbe Adresse geschickt.",
+      "Ein Link zum Festlegen eines neuen Passworts gilt eine Stunde lang. Fordern Sie einen neuen an, er wird an dieselbe Adresse geschickt.",
     "setNewPassword.noLongerWorks.title": "Dieser Link funktioniert nicht mehr",
     "setNewPassword.noLongerWorks.explanation":
-      "Vielleicht wurde er schon benutzt, oder am Ende fehlt etwas. Fordere einen neuen an, wenn du ihn noch brauchst.",
+      "Möglicherweise wurde er schon benutzt oder am Ende fehlt etwas. Fordern Sie einen neuen an, wenn Sie noch einen brauchen.",
 
+    // Steht über den Feldern, wenn die Prüfung auf bekannte, kompromittierte
+    // Passwörter nicht möglich ist.
     "BreachedPasswords.Unreachable":
-      "Dein Passwort kann gerade nicht geprüft werden und wurde deshalb nicht geändert. Versuche es in ein paar Minuten noch einmal; dein Link funktioniert, bis er abläuft.",
+      "Ihr Passwort kann gerade nicht geprüft werden und wurde deshalb nicht geändert. Versuchen Sie es in einigen Minuten erneut; Ihr Link bleibt bis zu seinem Ablauf gültig.",
 
-    "forgetAccount.title": "Dein Konto vergessen",
+    "forgetAccount.title": "Ihr Konto vergessen",
     "forgetAccount.explanation":
-      "Dein Name und deine E-Mail-Adresse können für immer unlesbar gemacht und dein Konto geschlossen werden. Damit wir sicher sind, dass du es bist, schicken wir zuerst einen Link an die Adresse deines Kontos, und nichts wird vergessen, bevor du ihm folgst.",
-    "forgetAccount.submit": "Schick mir den Link",
-    "forgetAccount.sent.title": "Sieh in deinem Postfach nach",
+      "Ihr Name und Ihre E-Mail-Adresse können für immer unlesbar gemacht und Ihr Konto geschlossen werden. Um sicherzugehen, dass Sie es sind, senden wir zuerst einen Link an die Adresse Ihres Kontos, und nichts wird vergessen, bevor Sie ihm folgen.",
+    "forgetAccount.submit": "Link per E-Mail senden",
+    "forgetAccount.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "forgetAccount.sent.explanation":
-      "Wir haben einen Link an die Adresse deines Kontos geschickt. Er funktioniert 15 Minuten lang und nur, solange du in diesem Konto angemeldet bist.",
-    "forgetAccount.confirm.title": "Dein Konto für immer vergessen?",
+      "Wir haben einen Link an die Adresse Ihres Kontos gesendet. Er gilt 15 Minuten lang und nur, solange Sie bei diesem Konto angemeldet sind.",
+    "forgetAccount.confirm.title": "Ihr Konto endgültig vergessen?",
     "forgetAccount.confirm.explanation":
-      "Sobald es vergessen ist, kann niemand mehr deinen Namen oder deine E-Mail-Adresse lesen, und niemand kann sich mehr in deinem Konto anmelden. Das lässt sich nicht rückgängig machen.",
+      "Sobald es vergessen ist, kann niemand Ihren Namen und Ihre E-Mail-Adresse je wieder lesen, und man kann sich nicht mehr in Ihrem Konto anmelden. Das lässt sich nicht rückgängig machen.",
     "forgetAccount.confirm.submit": "Mein Konto vergessen",
-    "forgetAccount.forgotten.title": "Dein Konto wurde vergessen",
+    "forgetAccount.forgotten.title": "Ihr Konto wurde vergessen",
     "forgetAccount.forgotten.explanation":
-      "Dein Name und deine E-Mail-Adresse sind nicht mehr lesbar, und du wurdest überall abgemeldet, wo du angemeldet warst.",
+      "Ihr Name und Ihre E-Mail-Adresse können nicht mehr gelesen werden, und Sie wurden überall abgemeldet, wo Sie angemeldet waren.",
     "forgetAccount.noLongerWorks.title": "Dieser Link funktioniert nicht mehr",
     "forgetAccount.noLongerWorks.explanation":
-      "Vielleicht ist er abgelaufen, wurde schon benutzt oder gehört zu einem Konto, in dem du nicht angemeldet bist. Fordere ihn in deinem Konto erneut an, wenn es noch vergessen werden soll.",
+      "Er ist möglicherweise abgelaufen, wurde schon benutzt oder gehört zu einem Konto, bei dem Sie nicht angemeldet sind. Fordern Sie ihn in Ihrem Konto erneut an, wenn es noch vergessen werden soll.",
     "forgetAccount.lastAdministrator.title":
-      "Dein Konto kann nicht vergessen werden",
+      "Ihr Konto kann nicht vergessen werden",
     "forgetAccount.lastAdministrator.explanation":
-      "Du bist der einzige Administrator dieser Website. Gib die Administratorrolle an eine andere Person, danach kann dein Konto vergessen werden.",
+      "Sie sind der einzige Administrator dieser Website. Geben Sie die Rolle Administrator an jemand anderen, dann kann Ihr Konto vergessen werden.",
     "forgetAccount.askAgain": "Erneut anfordern",
     "forgetAccount.home": "Zurück zu {siteName}",
 
     "registrationsSuspended.title": "Die Registrierung ist vorerst ausgesetzt",
     "registrationsSuspended.explanation":
-      "Ein Dienst, den die Registrierung braucht, ist gerade nicht erreichbar, deshalb kann sich niemand registrieren, bis er wieder antwortet. Von dem, was du eingegeben hast, wurde nichts gespeichert.",
+      "Ein Dienst, den die Registrierung braucht, ist gerade nicht erreichbar, daher kann sich niemand registrieren, bis er wieder antwortet. Nichts von dem, was Sie eingegeben haben, wurde gespeichert.",
     "registrationsSuspended.tryAgainLater":
-      "Versuche es in einer Weile noch einmal. Der Administrator der Website wurde benachrichtigt.",
+      "Versuchen Sie es in Kürze erneut. Der Administrator der Website wurde informiert.",
     "registrationsSuspended.home": "Zurück zu {siteName}",
 
     "signIn.title": "Anmelden",
@@ -190,12 +208,17 @@ export const german: Language = {
     "signIn.withGoogle": "Mit Google anmelden",
     "signIn.or": "oder",
     "signIn.tryAgainLater":
-      "Es gab in letzter Zeit zu viele Versuche. Warte eine Stunde und versuche es dann noch einmal.",
+      "Es gab in letzter Zeit zu viele Versuche. Warten Sie eine Stunde und versuchen Sie es dann erneut.",
 
+    // Die eine Antwort auf ein falsches Passwort und auf eine Adresse, die
+    // niemand registriert hat. Sie sagt weder, was von beidem es war, noch
+    // was nicht.
     "SignIn.Failed":
-      "Die E-Mail-Adresse oder das Passwort ist nicht richtig. Versuche es noch einmal.",
+      "Die E-Mail-Adresse oder das Passwort ist falsch. Bitte versuchen Sie es erneut.",
 
     "profile.title": "Profil",
+    // Der Doppelpunkt eines Etiketts gehört zu seinen Wörtern, da Sprachen
+    // ihn unterschiedlich setzen.
     "profile.name": "Name:",
     "profile.emailAddress": "E-Mail-Adresse:",
 
@@ -205,12 +228,12 @@ export const german: Language = {
 
     "setPassword.title": "Passwort festlegen",
     "setPassword.explanation":
-      "Dein Konto hat kein Passwort: Du meldest dich mit Google an. Damit du dich auch mit einem Passwort anmelden kannst, schicken wir einen Link zum Festlegen an {emailAddress}.",
-    "setPassword.submit": "Schick mir einen Link",
-    "setPassword.sent.title": "Sieh in deinem Postfach nach",
+      "Ihr Konto hat kein Passwort: Sie melden sich mit Google an. Um sich auch mit einem Passwort anmelden zu können, senden wir einen Link zum Festlegen eines Passworts an {emailAddress}.",
+    "setPassword.submit": "Link per E-Mail senden",
+    "setPassword.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "setPassword.sent.explanation":
-      "Wir haben dir einen Link zum Festlegen eines Passworts geschickt. Er funktioniert eine Stunde lang.",
-    "setPassword.profile": "Zurück zu deinem Profil",
+      "Wir haben Ihnen einen Link zum Festlegen eines Passworts gesendet. Er gilt eine Stunde lang.",
+    "setPassword.profile": "Zurück zu Ihrem Profil",
 
     "changePassword.title": "Passwort ändern",
     "changePassword.currentPassword": "Aktuelles Passwort",
@@ -218,129 +241,134 @@ export const german: Language = {
     "changePassword.passwordConfirmation": "Passwort bestätigen",
     "changePassword.forgotPassword": "Passwort vergessen?",
     "changePassword.submit": "Passwort ändern",
-    "ChangePassword.WrongPassword": "Das ist nicht dein Passwort.",
+    // Unter dem aktuellen Passwort, um das es geht.
+    "ChangePassword.WrongPassword": "Das ist nicht Ihr Passwort.",
 
     "changeEmailAddress.title": "E-Mail-Adresse ändern",
     "changeEmailAddress.emailAddress": "Neue E-Mail-Adresse",
     "changeEmailAddress.currentPassword": "Aktuelles Passwort",
     "changeEmailAddress.submit": "Bestätigungslink senden",
-    "changeEmailAddress.sent.title": "Sieh in deinem Postfach nach",
+    "changeEmailAddress.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "changeEmailAddress.sent.explanation":
-      "An die neue E-Mail-Adresse wurde ein Link zum Bestätigen des Umzugs geschickt. Folge ihm, während du angemeldet bist, um dein Konto dorthin zu verschieben.",
-    "changeEmailAddress.confirm.title": "Dein Konto verschieben",
+      "Ein Link zur Bestätigung des Wechsels wurde an die neue E-Mail-Adresse gesendet. Folgen Sie ihm angemeldet, um Ihr Konto dorthin zu verschieben.",
+    "changeEmailAddress.confirm.title": "Ihr Konto verschieben",
     "changeEmailAddress.confirm.explanation":
-      "Dein Konto wird nach {emailAddress} verschoben. Ab jetzt meldest du dich mit dieser Adresse an.",
+      "Ihr Konto wird auf {emailAddress} verschoben. Sie melden sich von nun an mit dieser Adresse an.",
     "changeEmailAddress.confirm.submit": "Mein Konto verschieben",
     "changeEmailAddress.noLongerWorks.title":
       "Dieser Link funktioniert nicht mehr",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Er ist abgelaufen, wurde schon benutzt oder wurde nicht für das Konto geschickt, in dem du angemeldet bist. Fordere ihn in deinem Profil erneut an.",
-    "changeEmailAddress.taken.title": "Dein Konto wurde nicht verschoben",
-    "changeEmailAddress.profile": "Zurück zu deinem Profil",
-    "ChangeEmailAddress.WrongPassword": "Das ist nicht dein Passwort.",
-    "ChangeEmailAddress.Unchanged":
-      "Dein Konto gehört schon zu dieser Adresse.",
+      "Er ist abgelaufen, wurde schon benutzt oder wurde nicht für das Konto gesendet, bei dem Sie angemeldet sind. Fordern Sie ihn in Ihrem Profil erneut an.",
+    "changeEmailAddress.taken.title": "Ihr Konto wurde nicht verschoben",
+    "changeEmailAddress.profile": "Zurück zu Ihrem Profil",
+    // Unter dem Feld, um das es jeweils geht.
+    "ChangeEmailAddress.WrongPassword": "Das ist nicht Ihr Passwort.",
+    "ChangeEmailAddress.Unchanged": "Ihr Konto hat bereits diese Adresse.",
     "ChangeEmailAddress.Taken":
-      "Zu dieser E-Mail-Adresse gibt es bereits ein eigenes Konto, deshalb kann deines nicht dorthin verschoben werden.",
+      "Zu dieser E-Mail-Adresse gibt es inzwischen ein eigenes Konto, daher kann Ihres nicht dorthin verschoben werden.",
 
-    "confirmEmailAddress.title": "Bestätige deine E-Mail-Adresse",
+    "confirmEmailAddress.title": "Bestätigen Sie Ihre E-Mail-Adresse",
     "confirmEmailAddress.name": "Name",
     "confirmEmailAddress.password": "Passwort",
     "confirmEmailAddress.confirmPassword": "Passwort bestätigen",
     "confirmEmailAddress.submit": "Meine E-Mail-Adresse bestätigen",
     "confirmEmailAddress.signIn": "Anmelden",
     "confirmEmailAddress.home": "Zurück zu {siteName}",
-    "confirmEmailAddress.confirmed.title": "Deine E-Mail-Adresse ist bestätigt",
+    "confirmEmailAddress.confirmed.title": "Ihre E-Mail-Adresse ist bestätigt",
     "confirmEmailAddress.confirmed.explanation":
-      "Dein Konto ist bereit. Melde dich mit der E-Mail-Adresse und dem Passwort an, die du gerade angegeben hast.",
+      "Ihr Konto ist bereit. Melden Sie sich mit der E-Mail-Adresse und dem Passwort an, die Sie gerade angegeben haben.",
     "confirmEmailAddress.expired.title": "Dieser Link ist abgelaufen",
     "confirmEmailAddress.expired.explanation":
-      "Ein Link zum Bestätigen einer E-Mail-Adresse funktioniert 24 Stunden lang. Fordere einen neuen an, dann wird er an dieselbe Adresse geschickt.",
-    "confirmEmailAddress.expired.newLink": "Schick mir einen neuen Link",
+      "Ein Link zur Bestätigung einer E-Mail-Adresse gilt 24 Stunden lang. Fordern Sie einen neuen an, er wird an dieselbe Adresse geschickt.",
+    "confirmEmailAddress.expired.newLink": "Neuen Link senden",
     "confirmEmailAddress.noLongerWorks.title":
       "Dieser Link funktioniert nicht mehr",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "Prüfe, ob du dem vollständigen Link aus der E-Mail gefolgt bist und am Ende nichts fehlt. Wenn er immer noch nicht funktioniert, registriere dich erneut, dann wird dir ein neuer Link geschickt.",
+      "Prüfen Sie, ob Sie dem ganzen Link aus der E-Mail gefolgt sind, ohne dass am Ende etwas fehlt. Funktioniert er immer noch nicht, registrieren Sie sich erneut, dann wird ein neuer Link gesendet.",
     "confirmEmailAddress.alreadyConfirmed.title":
       "Diese E-Mail-Adresse ist bereits bestätigt",
     "confirmEmailAddress.alreadyConfirmed.explanation":
-      "Es gibt nichts mehr zu tun. Melde dich mit dem Passwort an, das du beim Bestätigen angegeben hast.",
+      "Es gibt nichts mehr zu tun. Melden Sie sich mit dem Passwort an, das Sie bei der Bestätigung angegeben haben.",
 
-    "PersonName.Missing": "Gib einen Namen ein.",
+    // Eine verletzte Regel, nach ihrem Code benannt, damit jedes Formular sie
+    // gleich ausdrückt. Sie wird der Person unter dem Feld gesagt, das sie
+    // gelesen hat.
+    "PersonName.Missing": "Geben Sie einen Namen ein.",
     "PersonName.TooShort": "Ein Name muss mindestens 3 Zeichen lang sein.",
     "PersonName.TooLong": "Ein Name darf höchstens 254 Zeichen lang sein.",
     "WorldRankingName.TooShort":
-      "Der Name in der Weltrangliste muss mindestens 3 Zeichen lang sein.",
+      "Ein Weltranglistenname muss mindestens 3 Zeichen lang sein.",
     "WorldRankingName.TooLong":
-      "Der Name in der Weltrangliste darf höchstens 254 Zeichen lang sein.",
-    "Password.Missing": "Gib ein Passwort ein.",
+      "Ein Weltranglistenname darf höchstens 254 Zeichen lang sein.",
+    "Password.Missing": "Geben Sie ein Passwort ein.",
     "Password.TooShort": "Ein Passwort muss mindestens 12 Zeichen lang sein.",
     "Password.ConfirmationDiffers":
-      "Das stimmt nicht mit dem Passwort oben überein. Gib es noch einmal ein.",
+      "Das stimmt nicht mit dem Passwort oben überein. Geben Sie es erneut ein.",
     "Password.Breached":
-      "Dieses Passwort ist bei einem Datenleck auf einer anderen Website aufgetaucht und deshalb hier nicht sicher. Wähle ein anderes.",
+      "Dieses Passwort ist an anderer Stelle bei einem Datenleck aufgetaucht und daher hier nicht sicher. Wählen Sie ein anderes.",
 
-    "javaScriptRequired.title": "JavaScript ist erforderlich",
+    "javaScriptRequired.title": "JavaScript erforderlich",
     "javaScriptRequired.explanation":
-      "Zum Registrieren muss JavaScript für diese Website aktiviert sein, damit geprüft werden kann, dass sich ein Mensch registriert. Aktiviere es und registriere dich noch einmal.",
+      "Für die Registrierung muss JavaScript für diese Website eingeschaltet sein, damit geprüft werden kann, ob die registrierende Person ein Mensch ist. Schalten Sie es ein und registrieren Sie sich dann erneut.",
     "javaScriptRequired.register": "Zurück zur Registrierung",
     "javaScriptRequired.home": "Zurück zu {siteName}",
 
     "errors.backHome": "Zurück zu {siteName}",
     "errors.notFound": "Nicht gefunden",
-    "errors.refused": "Das ging nicht",
-    "errors.refusedDetail":
-      "Etwas von dem, was gesendet wurde, war nicht in Ordnung.",
-    "errors.sorry": "Das tut uns leid",
+    "errors.refused": "Das konnte nicht ausgeführt werden",
+    "errors.refusedDetail": "Etwas an dem Gesendeten war nicht in Ordnung.",
+    "errors.sorry": "Entschuldigung",
     "errors.sorryDetail": "Diese Anfrage konnte nicht bearbeitet werden.",
     "errors.failed": "Etwas ist schiefgegangen",
     "errors.reference": "Referenz {reference}.",
     "errors.recorded":
-      "Der Fehler wurde protokolliert und eine E-Mail an den Administrator gesendet. Es hilft, dem Administrator eine E-Mail mit der Referenz und einer Beschreibung zu schicken, was du gerade gemacht hast.",
-    "errors.message": "E-Mail an den Administrator",
+      "Der Fehler wurde protokolliert und eine E-Mail an den Administrator gesendet. Es hilft, dem Administrator mit der Referenz und einer Beschreibung zu schreiben, was Sie gerade getan haben.",
+    "errors.message": "Dem Administrator schreiben",
     "errors.messageSubject": "Fehler {reference} auf {siteName}",
-    "errors.messageBody": "Was ich gemacht habe, als das passiert ist:\n\n",
+    "errors.messageBody": "Das habe ich getan, als dies passierte:\n\n",
     "errors.unavailable": "Die Website ist nicht verfügbar",
     "errors.unavailableDetail":
-      "Die Website kann im Moment nicht erreichen, was sie braucht. Bitte versuche es später noch einmal.",
-    "errors.maintenance":
-      "Die Seite ist wegen Wartungsarbeiten nicht verfügbar.",
+      "Die Website erreicht gerade nicht, was sie braucht. Bitte versuchen Sie es später erneut.",
+    "errors.maintenance": "Die Website wird gerade gewartet.",
     "errors.maintenanceMinutes":
-      "Sie sollte in {minutes} Minuten wieder da sein.",
-    "errors.maintenanceMinute": "Sie sollte in 1 Minute wieder da sein.",
+      "Sie ist voraussichtlich in {minutes} Minuten wieder da.",
+    "errors.maintenanceMinute":
+      "Sie ist voraussichtlich in 1 Minute wieder da.",
     "errors.maintenanceLonger":
-      "Es dauert länger als erwartet; die Seite ist bald wieder da.",
+      "Es dauert länger als erwartet, sie ist aber bald wieder da.",
 
-    "home.recentResults": "Aktuelle Ergebnisse",
+    // Die beiden Listen der Startseite, was jede sagt, wenn sie leer ist, und
+    // der Weg darunter zu allen Turnieren dieses Jahres.
+    "home.recentResults": "Neueste Ergebnisse",
     "home.recentResults.none":
-      "In den letzten sieben Tagen wurde kein Spiel hinzugefügt.",
+      "In den letzten sieben Tagen wurden keine Spiele hinzugefügt.",
     "home.upcomingTournaments": "Kommende Turniere",
     "home.upcomingTournaments.none":
-      "In den nächsten sechzig Tagen beginnt kein Turnier.",
-    "tournamentList.column.date": "Datum",
-    "tournamentList.column.name": "Name",
-    "tournamentList.onlyIn": "Nur Turniere in {country}",
-    "tournamentList.filter.country": "Land",
-    "tournamentList.filter.anyCountry": "Jedes Land",
-    "tournamentList.filter.region": "Region",
-    "tournamentList.filter.anyRegion": "Jede Region",
-    "tournamentList.filter.sport": "Sportart",
-    "tournamentList.filter.anySport": "Jede Sportart",
-    "tournamentList.filter.submit": "Filtern",
+      "In den nächsten sechzig Tagen beginnen keine Turniere.",
     "home.allTournaments": "Alle Turniere {year}",
+    // Die Seite eines Jahres: ihre Überschrift und was sie sagt, wenn sie
+    // leer ist.
     "year.heading": "Turniere {year}",
-    "year.none": "In {year} beginnt kein Turnier.",
+    "year.none": "{year} beginnen keine Turniere.",
+    // Die Seite einer Sportart in einem Jahr: dasselbe, nur für diese Sportart.
     "yearSport.heading": "{sport}-Turniere {year}",
-    "yearSport.none": "In {year} beginnt kein {sport}-Turnier.",
-    "tournament.recent": "Aktuell",
-    "tournament.summary": "Übersicht",
-    "test.bestOf": "Jede Begegnung geht über höchstens {count} Spiele.",
+    "yearSport.none": "{year} beginnen keine {sport}-Turniere.",
+    // Die Seite eines Turniers: ihre Bereiche, was sie über ein Spiel sagt,
+    // wie lange es her ist, dass eines hinzugefügt wurde, und was sie sagt,
+    // wenn sie keines hat.
+    "tournament.recent": "Neueste",
+    "tournament.summary": "Zusammenfassung",
+    // Die Zusammenfassung eines Turniers, das mit Mannschaften gespielt wird:
+    // die Gruppen und Spalten ihrer Tabelle.
+    // Das Raster eines Tests: wovon jedes Match das Beste ist, das Wort
+    // zwischen seinen Mannschaften und seine Summen unter den Matches.
+    "test.bestOf": "Jedes Match geht über maximal {count} Spiele.",
     "test.vs": "gegen",
-    "test.matches": "Begegnungen",
+    "test.matches": "Matches",
     "test.games": "Spiele",
     "test.hoops": "Tore",
     "teamSummary.tests": "Tests",
-    "teamSummary.matches": "Begegnungen",
+    "teamSummary.matches": "Matches",
     "teamSummary.games": "Spiele",
     "teamSummary.hoops": "Tore",
     "teamSummary.wins": "Siege",
@@ -356,58 +384,79 @@ export const german: Language = {
     "search.nothingFound": "Nichts gefunden.",
     "players.search.label": "Spieler suchen",
     "players.search.prompt":
-      "Gib den Namen eines Spielers ein, um ihn zu finden.",
+      "Geben Sie den Namen eines Spielers ein, um ihn zu finden.",
     "players.search.none": "Keine Spieler gefunden.",
     "search.more":
-      "Es werden nur die ersten {count} angezeigt. Gib mehr vom Namen ein, um die Suche einzugrenzen.",
+      "Es werden nur die ersten {count} angezeigt. Geben Sie mehr vom Namen ein, um die Suche einzugrenzen.",
     "websitePlayer.tournament": "Turnier",
+    // Ein Test in den Bereichen eines Turniers: die Kurznamen seiner beiden
+    // Mannschaften.
     "tournament.test": "{first} gegen {second}",
-    "tournament.notes": "Hinweise",
-    "tournament.commentary": "Kommentare",
+    "tournament.notes": "Notizen",
+    "tournament.commentary": "Kommentar",
     "tournament.beat": "schlug",
     "tournament.drewWith": "spielte unentschieden gegen",
     "tournament.ago.seconds": "{count} Sek.",
     "tournament.ago.minutes": "{count} Min.",
     "tournament.ago.hour": "1 Stunde",
     "tournament.ago.hours": "{count} Stunden",
-    "tournament.none": "Es wurde noch kein Spiel gespielt.",
-    "players.none": "Es wurde noch kein Spieler hinzugefügt.",
+    "tournament.none": "Es wurden noch keine Spiele gespielt.",
+    // Die Spielerseite eines Turniers, wenn es keine hat.
+    "players.none": "Es wurden noch keine Spieler hinzugefügt.",
+    // Die Kommentarseite eines Turniers, in den Worten der alten Website: wie
+    // ein Kommentar aufgeführt wird und der Link, um einen zu beginnen.
     "commentaries.by": "von",
-    "commentaries.start": "Neuen Kommentarstrang beginnen",
-    "startCommentary.title": "Neuen Kommentarstrang beginnen",
+    "commentaries.start": "Neuen Kommentar beginnen",
+    // Die Seite, die einen Kommentar beginnt.
+    "startCommentary.title": "Neuen Kommentar beginnen",
     "startCommentary.titleField": "Titel",
-    "startCommentary.submit": "Kommentarstrang beginnen",
-    // A tournament's Notes page, and a note's own page, as the English says.
-    "notes.none": "Die Turnierleitung hat noch keine Hinweise geschrieben.",
+    "startCommentary.submit": "Kommentar beginnen",
+    // „Neu“ wird einer Screenreader-Nutzerin anstelle des roten Sterns
+    // gesagt, der eine Notiz oder einen Kommentar kennzeichnet, die noch
+    // nicht gelesen wurden, wie sie jetzt sind.
     "marks.new": "neu",
+    // Die Notizenseite eines Turniers und die Seite einer Notiz.
+    "notes.none": "Die Verantwortlichen haben noch keine Notizen geschrieben.",
     "note.edited": "bearbeitet",
-    "commentary.none": "Es wurde noch nichts geschrieben.",
+    // Die Seite eines Kommentars: was sie sagt, wenn er keine Beiträge hat,
+    // was sie zu einem Beitrag sagt und das Feld, in dem seine Verfasserin
+    // den nächsten schreibt.
+    "commentary.none": "Es wurden noch keine Beiträge geschrieben.",
     "commentary.edited": "bearbeitet",
     "commentary.edit": "Bearbeiten",
     "commentary.delete": "Löschen",
-    "commentary.comment": "Kommentar",
-    "commentary.add": "Hinzufügen",
+    "commentary.comment": "Beitrag",
+    "commentary.add": "Beitrag hinzufügen",
     "commentary.notSent":
-      "Der Kommentar konnte nicht gesendet werden. Lade die Seite neu, um zu sehen, ob er gespeichert wurde.",
+      "Der Beitrag konnte nicht gesendet werden. Laden Sie die Seite neu, um zu sehen, ob er gespeichert wurde.",
+    // Die Seite, die den Titel eines Kommentars ändert.
     "changeCommentaryTitle.title": "Titel ändern",
     "changeCommentaryTitle.submit": "Speichern",
-    "editComment.title": "Kommentar bearbeiten",
+    // Die eigene Seite eines Beitrags, auf der seine Verfasserin ihn
+    // bearbeitet oder löscht, und die Seite, die vor dem Löschen fragt.
+    "editComment.title": "Beitrag bearbeiten",
     "editComment.save": "Speichern",
-    "deleteComment.title": "Kommentar löschen",
+    "deleteComment.title": "Beitrag löschen",
     "deleteComment.question":
-      "Diesen Kommentar löschen? Das lässt sich nicht rückgängig machen.",
-    "deleteComment.confirm": "Kommentar löschen",
+      "Diesen Beitrag löschen? Das lässt sich nicht rückgängig machen.",
+    "deleteComment.confirm": "Beitrag löschen",
     "deleteComment.keep": "Behalten",
+    // Die Seite eines Spielers: ihre zwei Teile, wie ein Spiel gesagt wird,
+    // so wie der Spieler es gespielt hat, und was jeder Teil sagt, wenn er
+    // leer ist.
     "player.games": "Spiele",
     "player.competitions": "Wettbewerbe",
     "player.beat": "schlug",
     "player.lostTo": "verlor gegen",
     "player.drewWith": "spielte unentschieden gegen",
     "player.score": "{score} zu {opponent}",
-    "player.noGames": "Es wurde noch kein Spiel gespielt.",
-    "player.noCompetitions": "Noch für keinen Wettbewerb gemeldet.",
+    "player.noGames": "Es wurden noch keine Spiele gespielt.",
+    "player.noCompetitions": "Noch zu keinem Wettbewerb gemeldet.",
+    // Die Seite eines Blocks: die Summen seines Rasters, was ein Ergebnis für
+    // den Spieler der Zeile ist, gesprochen statt angezeigt, und ein Spieler,
+    // der zurückgezogen hat.
     "block.wins": "Siege",
-    "block.matches": "Begegnungen",
+    "block.matches": "Matches",
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
@@ -415,35 +464,66 @@ export const german: Language = {
     "block.lost": "verloren",
     "block.drawn": "unentschieden",
     "block.withdrawn": "zurückgezogen",
+    // Ein zurückgezogenes Spiel, das das Spanische anders sagt als einen
+    // Spieler.
     "block.gameWithdrawn": "zurückgezogen",
     "block.losses": "Niederlagen",
+    // Die drei Ansichten eines Blocks, unter seiner Überschrift angeboten.
     "competition.views": "Ansichten",
-    "competition.view.grid": "Tabelle",
-    "competition.view.summary": "Übersicht",
-    "competition.view.orderOfPlay": "Spielplan",
+    "competition.view.grid": "Raster",
+    "competition.view.summary": "Zusammenfassung",
+    "competition.view.orderOfPlay": "Spielreihenfolge",
     "blockSummary.ranking":
-      "Gereiht nach dem Anteil gewonnener Begegnungen und dann nach der Tordifferenz. Die Regeln eines Turniers können seine Spieler anders ordnen.",
-    "orderOfPlay.none": "Es wurde noch kein Spiel gespielt.",
+      "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
+    "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
+    // Die Runden eines K.-o.-Turniers, wie die alte Website sie nannte, von
+    // der letzten aus zurückgezählt, und ein Freilos anstelle eines Spielers.
     "knockout.round.final": "Finale",
     "knockout.round.semis": "Halbfinale",
     "knockout.round.quarters": "Viertelfinale",
     "knockout.round.number": "Runde {number}",
     "knockout.bye": "Freilos",
+    // Die Tabelle eines Schweizer Systems: was jeder Spieler gespielt und
+    // gewonnen hat, und seine Ergebnisse.
     "swiss.games": "Spiele",
     "swiss.wins": "Siege",
-    "swiss.winShare": "Siegquote",
+    "swiss.winShare": "Siege %",
     "swiss.results": "Ergebnisse",
+    // Die Pfeile, die das Raster eines K.-o.-Turniers zum Finale und zurück
+    // zur ersten Runde scrollen.
     "knockout.onward": "Spätere Runden",
     "knockout.back": "Frühere Runden",
+    // Was jede Turnierliste auf der Startseite und der eines Jahres
+    // gemeinsam hat: die Spalten der Tabelle und was sie eingrenzt.
+    "tournamentList.column.date": "Datum",
+    "tournamentList.column.name": "Name",
+    // Eine Flagge, die die Listen auf ihr Land eingrenzt, benannt nach dem,
+    // was sie tut.
+    "tournamentList.onlyIn": "Nur Turniere in {country}",
+    "tournamentList.filter.country": "Land",
+    "tournamentList.filter.anyCountry": "Jedes Land",
+    "tournamentList.filter.region": "Region",
+    "tournamentList.filter.anyRegion": "Jede Region",
+    "tournamentList.filter.sport": "Sportart",
+    "tournamentList.filter.anySport": "Jede Sportart",
+    "tournamentList.filter.submit": "Filtern",
+    // Die Jahre, in denen es Turniere gibt, die Zweitnavigation beider.
     "years.label": "Jahre",
+    // Die Auswahlliste mit den Jahren, die nicht als Reiter passen.
     "years.earlier": "Frühere Jahre",
 
-    "admin.newerBuild.message": "Es gibt eine neuere Version dieser Website.",
+    // Die Wörter der Verwaltung. Die Verwaltung zeichnet sie im Browser, also
+    // sagt der Server sie in seine Seite hinein, wenn er sie sendet
+    // (adminPage.ts): diese und die Ablehnungen des Turniers weiter unten.
+    "admin.newerBuild.message":
+      "Eine neuere Version dieser Website ist verfügbar.",
     "admin.newerBuild.reload": "Neu laden",
     "admin.title": "Verwaltung",
     "admin.tournaments.new": "Neues Turnier",
     "admin.tournaments.none": "Keine Turniere",
     "admin.tournaments.filter.none": "Keine passenden Turniere",
+    // Wird einer Screenreader-Nutzerin gesagt, da ein durchgestrichener Name
+    // nicht vorgelesen wird.
     "admin.tournaments.archived": "Archiviert",
     "admin.tournaments.manage": "Verwalten",
     "admin.tournaments.edit": "Bearbeiten",
@@ -452,6 +532,8 @@ export const german: Language = {
     "admin.tournaments.scores": "Ergebnisse",
     "admin.tournaments.players": "Spieler",
     "admin.years.label": "Jahre",
+    // Was die Auswahlliste der Jahre sagt, solange das gewählte Jahr ein
+    // Reiter ist.
     "admin.years.earlier": "Frühere Jahre",
     "admin.tournament.name": "Name",
     "admin.tournament.starts": "Beginn",
@@ -461,45 +543,56 @@ export const german: Language = {
     "admin.tournament.country": "Land",
     "admin.tournament.region": "Region",
     "admin.tournament.subtitle": "Untertitel",
-    "admin.rules.handicap": "Mit Handicap gespielt",
-    "admin.rules.drawsAllowed": "Unentschieden erlaubt",
+    "admin.rules.handicap": "Mit Vorgaben gespielt",
+    "admin.rules.drawsAllowed": "Lässt Unentschieden zu",
     "admin.tournament.levelTestsDrawn":
-      "Ausgeglichene Tests gelten als unentschieden",
-    "admin.rules.worldRankings": "Zählt für die Weltrangliste",
+      "Gleichstand in Tests ist unentschieden",
+    "admin.rules.worldRankings": "Zählt für die Weltranglisten",
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
+    // Eine Ablehnung ohne eigene Worte, über den Feldern.
     "admin.tournament.otherwise": "Das kann so nicht angenommen werden.",
     "admin.newTournament.title": "Neues Turnier",
     "admin.newTournament.submit": "Turnier anlegen",
     "admin.editTournament.title": "Turnier bearbeiten",
     "admin.editTournament.submit": "Turnier aktualisieren",
+    // Anstelle des Formulars gesagt, bei einer Ablehnung ohne eigene Worte.
     "admin.editTournament.otherwise":
       "Dieses Turnier kann nicht geändert werden.",
+    // Die Seite eines Turniers und die Reiter, in denen steht, was zu leiten
+    // ist.
     "admin.view.tabs": "Turnier",
     "admin.view.players": "Spieler",
     "admin.view.competitions": "Wettbewerbe",
-    "admin.view.managers": "Turnierleitung",
-    "admin.view.notes": "Hinweise",
+    "admin.view.managers": "Verantwortliche",
+    "admin.view.notes": "Notizen",
     "admin.view.scorers": "Ergebniserfasser",
     "admin.view.rankings": "Ranglisten",
     "admin.rankings.file":
-      "Die Ergebnisse des Turniers werden der Weltrangliste als Textdatei geschickt, die die Website aus den eingegebenen Spielen erstellt.",
+      "Die Weltranglisten verwenden die Ergebnisse des Turniers mit dieser Funktion, die Verantwortlichen müssen nichts weiter tun.",
     "admin.rankings.download": "Ranglisten herunterladen",
     "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
     "rankings.notAvailable.sport":
-      "Die Sportart dieses Turniers hat keine Weltrangliste, daher gibt es keine Ranglisten zu senden.",
+      "Für die Sportart dieses Turniers gibt es keine Weltranglisten, also gibt es keine Ranglisten zu senden.",
     "rankings.notAvailable.notCounted":
-      "Keiner der Wettbewerbe dieses Turniers zählt für die Weltrangliste.",
-    "admin.view.otherwise": "Dieses Turnier kann hier nicht verwaltet werden.",
+      "Keiner der Wettbewerbe dieses Turniers zählt für die Weltranglisten.",
+    // Anstelle der Reiter gesagt, bei einer Ablehnung ohne eigene Worte.
+    "admin.view.otherwise":
+      "Dieses Turnier kann von hier aus nicht geleitet werden.",
+    // Die Seite eines Wettbewerbs und die Reiter, in denen steht, was zu
+    // leiten ist.
     "admin.competitionView.tabs": "Wettbewerb",
     "admin.competitionView.players": "Spieler",
     "admin.competitionView.scores": "Ergebnisse",
+    // Die Bereichsleiste der Seite eines Turniers und der Seiten seiner
+    // Wettbewerbe.
     "admin.sections.label": "Das Turnier und seine Wettbewerbe",
     "admin.sections.tournament": "Turnier",
-    "admin.administrator.sections.label": "Die Seiten der Administration",
+    // Die Bereichsleiste der Seiten des Administrators.
+    "admin.administrator.sections.label": "Die Seiten des Administrators",
     "admin.administrator.sections.tournaments": "Turniere",
     "admin.administrator.sections.accounts": "Konten",
-    "admin.administrator.sections.worldRankings": "Weltrangliste",
+    "admin.administrator.sections.worldRankings": "Weltranglisten",
     "admin.administrator.sections.importErrors": "Importfehler",
     "admin.administrator.sections.logs": "Protokolle",
     "admin.administrator.sections.databaseStatus": "Datenbankzugriff",
@@ -507,77 +600,89 @@ export const german: Language = {
     "admin.databaseStatus.on": "Der Datenbankzugriff ist eingeschaltet.",
     "admin.databaseStatus.off": "Der Datenbankzugriff ist ausgeschaltet.",
     "admin.databaseStatus.expected":
-      "Die Website sollte in {minutes} Minuten wieder da sein.",
+      "Die Website ist voraussichtlich in {minutes} Minuten wieder da.",
     "admin.databaseStatus.expectedOne":
-      "Die Website sollte in 1 Minute wieder da sein.",
+      "Die Website ist voraussichtlich in 1 Minute wieder da.",
     "admin.databaseStatus.longer": "Es dauert länger als erwartet.",
-    "admin.databaseStatus.told": "Besucher lesen: {words}",
-    "admin.databaseStatus.toldUsual": "Besucher lesen den üblichen Satz.",
+    "admin.databaseStatus.told": "Den Lesern wird gesagt: {words}",
+    "admin.databaseStatus.toldUsual":
+      "Den Lesern wird der übliche Satz gesagt.",
     "admin.databaseStatus.minutes": "Erwartete Minuten",
-    "admin.databaseStatus.words": "Text für Besucher",
+    "admin.databaseStatus.words": "Worte für die Leser",
     "admin.databaseStatus.turnOff": "Ausschalten",
     "admin.databaseStatus.change": "Ändern",
     "admin.databaseStatus.turnOn": "Einschalten",
     "admin.databaseStatus.minutesNeeded": "Die Minuten werden benötigt.",
     "admin.databaseStatus.otherwise":
-      "Auf der Website ist etwas schiefgelaufen.",
+      "Auf der Website ist etwas schiefgegangen.",
     "DatabaseAccess.MinutesNotWhole":
       "Die Minuten müssen eine ganze Zahl sein.",
     "DatabaseAccess.MinutesOutOfRange":
-      "Die Minuten müssen zwischen 1 und 1440 liegen.",
+      "Die Minuten müssen von 1 bis 1440 reichen.",
     "DatabaseAccess.WordsTooLong":
       "Der Text darf höchstens 500 Zeichen lang sein.",
     "DatabaseAccess.NotOff": "Der Datenbankzugriff ist nicht ausgeschaltet.",
     "admin.administrator.title": "Administrator",
+    // Die Kontenseite, ein Abschnitt für jede Rolle.
     "admin.accounts.title": "Konten",
     "admin.roles.add": "Hinzufügen",
     "admin.roles.administrator.heading": "Administratoren",
-    "admin.roles.administrator.none": "Keine anderen Administratoren",
+    "admin.roles.administrator.none": "Keine weiteren Administratoren",
     "admin.roles.administrator.removeTitle": "Administrator entfernen",
     "admin.roles.administrator.removeExplanation":
-      "{name} ist danach kein Administrator dieser Website mehr.",
+      "{name} ist künftig kein Administrator dieser Website mehr.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Verantwortliche für die Weltrangliste (Association Croquet)",
+      "Weltranglistenbeauftragte für Association Croquet",
     "admin.roles.ac-world-ranking-officer.none":
-      "Keine Verantwortlichen für die Weltrangliste (Association Croquet)",
+      "Keine Weltranglistenbeauftragten für Association Croquet",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Verantwortliche für die Weltrangliste entfernen (Association Croquet)",
+      "Weltranglistenbeauftragten für Association Croquet entfernen",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} ist danach nicht mehr für die Weltrangliste verantwortlich (Association Croquet).",
+      "{name} ist künftig kein Weltranglistenbeauftragter für Association Croquet mehr.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Verantwortliche für die Weltrangliste (Golf Croquet)",
+      "Weltranglistenbeauftragte für Golf Croquet",
     "admin.roles.gc-world-ranking-officer.none":
-      "Keine Verantwortlichen für die Weltrangliste (Golf Croquet)",
+      "Keine Weltranglistenbeauftragten für Golf Croquet",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Verantwortliche für die Weltrangliste entfernen (Golf Croquet)",
+      "Weltranglistenbeauftragten für Golf Croquet entfernen",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} ist danach nicht mehr für die Weltrangliste verantwortlich (Golf Croquet).",
-    "admin.worldRankings.title": "Spieler der Weltrangliste importieren",
+      "{name} ist künftig kein Weltranglistenbeauftragter für Golf Croquet mehr.",
+    // Für eine Ablehnung ohne eigene Worte, unter dem Feld oder anstelle der
+    // Liste. Es geht nicht um die Adresse, denn es kann die beendete
+    // Sitzung sein oder ein Fehler der Website.
+    // Die Seite, auf der die Weltranglistenspieler importiert werden, und ihr
+    // Protokoll, eine Zeile für alles, was der Import sagt. Eine Anzahl steht
+    // nach einem Doppelpunkt, damit ein Spieler und viele gleich gesagt
+    // werden.
+    "admin.worldRankings.title": "Weltranglistenspieler importieren",
     "admin.worldRankings.import": "Importieren",
-    "admin.worldRankings.log": "Wie der Import verlaufen ist",
+    "admin.worldRankings.log": "Wie der Import verlief",
     "admin.worldRankings.ac.reading":
       "Die Liste für Association Croquet wird gelesen",
     "admin.worldRankings.ac.read":
       "Gelesene Spieler für Association Croquet: {players}",
     "admin.worldRankings.ac.kept":
-      "Gespeicherte Spieler für Association Croquet: {players}",
+      "Beibehaltene Spieler für Association Croquet: {players}",
     "admin.worldRankings.ac.refused":
-      "Die Liste für Association Croquet konnte nicht gelesen werden, deshalb blieben ihre Spieler, wie sie waren.",
+      "Die Liste für Association Croquet konnte nicht gelesen werden, daher blieben ihre Spieler, wie sie waren.",
     "admin.worldRankings.gc.reading": "Die Liste für Golf Croquet wird gelesen",
     "admin.worldRankings.gc.read":
       "Gelesene Spieler für Golf Croquet: {players}",
     "admin.worldRankings.gc.kept":
-      "Gespeicherte Spieler für Golf Croquet: {players}",
+      "Beibehaltene Spieler für Golf Croquet: {players}",
     "admin.worldRankings.gc.refused":
-      "Die Liste für Golf Croquet konnte nicht gelesen werden, deshalb blieben ihre Spieler, wie sie waren.",
-    "admin.worldRankings.finished": "Fertig",
+      "Die Liste für Golf Croquet konnte nicht gelesen werden, daher blieben ihre Spieler, wie sie waren.",
+    "admin.worldRankings.finished": "Abgeschlossen",
     "admin.worldRankings.failed": "Der Import wurde nicht abgeschlossen.",
+    // Für eine Ablehnung ohne eigene Worte, als Fehler der Website.
     "admin.worldRankings.otherwise":
       "Auf der Website ist etwas schiefgegangen.",
     "WorldRankingLists.Unreachable":
-      "Die Website der Weltrangliste war nicht erreichbar.",
+      "Die Website der Weltranglisten war nicht erreichbar.",
     "WorldRankingLists.Unreadable":
-      "Die Liste hat nicht die Form der Listen der Weltrangliste: Eine Zeile konnte nicht gelesen werden, sie enthält niemanden oder ist nicht in UTF-8 geschrieben.",
+      "Die Liste ist nicht so aufgebaut, wie die Weltranglisten ihre aufbauen: eine Zeile darin war nicht lesbar, sie enthält niemanden oder sie ist nicht in UTF-8 geschrieben.",
+    // Die Dokumente, die der Import von den alten Websites abgelehnt hat, und
+    // die Seite eines davon.
     "admin.importErrors.title": "Importfehler",
     "admin.importErrors.none": "Keine Importfehler",
     "admin.importErrors.otherwise": "Auf der Website ist etwas schiefgegangen.",
@@ -587,15 +692,14 @@ export const german: Language = {
     "admin.logs.show": "Anzeigen",
     "admin.logs.prune": "Bereinigen",
     "admin.logs.pruneAsk":
-      "Das Protokoll von vor der letzten Stunde entfernen? Nichts bringt es zurück.",
+      "Das Protokoll vor der letzten Stunde entfernen? Nichts holt es zurück.",
     "admin.logs.removed": "{count} Einträge wurden entfernt",
     "admin.logs.none": "Keine Protokolleinträge",
     "admin.logs.otherwise": "Auf der Website ist etwas schiefgegangen.",
     "admin.hover.logs.show": "Die passenden Einträge anzeigen",
-    "admin.hover.logs.prune":
-      "Das Protokoll von vor der letzten Stunde entfernen",
+    "admin.hover.logs.prune": "Das Protokoll vor der letzten Stunde entfernen",
     "admin.hover.logs.pruneAgree":
-      "Das Protokoll von vor der letzten Stunde entfernen",
+      "Das Protokoll vor der letzten Stunde entfernen",
     "admin.importError.title": "Importfehler",
     "admin.importError.documentId": "Dokument-ID",
     "admin.importError.tournament": "Turnier",
@@ -603,11 +707,13 @@ export const german: Language = {
     "admin.importError.newSite": "Neue Website",
     "admin.importError.oldSite": "Alte Website",
     "ImportErrorKept.NotFound":
-      "Der Import hat zu diesem Dokument keinen Fehler gespeichert.",
+      "Der Import hat zu diesem Dokument keinen Fehler festgehalten.",
     "admin.competitionView.otherwise":
-      "Dieser Wettbewerb kann hier nicht verwaltet werden.",
-    "admin.competitions.block": "Gruppe",
-    "admin.competitions.knockout": "K.-o.-Runde",
+      "Dieser Wettbewerb kann von hier aus nicht geleitet werden.",
+    // Der Reiter Wettbewerbe: die Art jedes Wettbewerbs, was man mit ihm tun
+    // kann, und die Überschrift, unter der die archivierten stehen.
+    "admin.competitions.block": "Block",
+    "admin.competitions.knockout": "K.-o.-Turnier",
     "admin.competitions.swiss": "Schweizer System",
     "admin.competitions.view": "Ansehen",
     "admin.competitions.edit": "Bearbeiten",
@@ -618,7 +724,7 @@ export const german: Language = {
     "admin.competitions.archived": "Archivierte Wettbewerbe",
     "admin.competitions.none": "Keine Wettbewerbe",
     "admin.competitions.add": "Wettbewerb hinzufügen",
-    // The competition dialog.
+    // Der Dialog des Wettbewerbs.
     "admin.competition.addTitle": "Wettbewerb hinzufügen",
     "admin.competition.editTitle": "Wettbewerb bearbeiten",
     "admin.competition.name": "Name",
@@ -627,40 +733,42 @@ export const german: Language = {
     "admin.competition.rounds": "Runden",
     "admin.competition.places": "Plätze",
     "admin.competition.round": "Runde {number}",
-    "admin.competition.bestOfs": "Best of",
+    "admin.competition.bestOfs": "Best of je Runde",
     "admin.competition.quarters": "Viertelfinale",
     "admin.competition.semis": "Halbfinale",
     "admin.competition.final": "Finale",
     "admin.competition.add": "Hinzufügen",
     "admin.competition.save": "Speichern",
     "admin.competition.added": "{name} wurde hinzugefügt.",
+    // Über den Feldern, für eine Ablehnung ohne eigene Worte.
     "admin.competition.otherwise":
       "Dieser Wettbewerb kann so nicht gespeichert werden.",
-    "CompetitionName.Missing": "Gib einen Namen ein.",
+    "CompetitionName.Missing": "Geben Sie einen Namen ein.",
     "CompetitionName.TooLong": "Ein Name darf höchstens 254 Zeichen lang sein.",
     "CompetitionName.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
     "Tournament.KnockoutPlayerHasGames":
-      "Spieler dieser Auslosung haben Spiele, deshalb können ihre Plätze nicht geändert werden.",
+      "Spieler in dieser Auslosung haben Spiele, daher können sich ihre Plätze nicht ändern.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "Eine Runde mit einem entschiedenen Spiel kann nicht auf weniger Gewinnspiele gekürzt werden.",
+      "Eine Runde mit einem entschiedenen Match kann nicht auf ein kürzeres Best of gesetzt werden.",
     "Tournament.KnockoutLaterRoundHasGames":
-      "Eine Runde kann nicht mehr geändert werden, sobald in einer späteren Runde gespielt wurde.",
+      "Eine Runde kann nicht geändert werden, sobald in einer späteren Runde ein Spiel gespielt wurde.",
     "Tournament.CompetitionNameTaken":
-      "Ein anderer Wettbewerb dieses Turniers hat schon diesen Namen.",
-    "BestOf.NotWhole": "Gib eine ganze Zahl von Spielen ein.",
-    "BestOf.TooSmall": "Eine Begegnung muss mindestens über 1 Spiel gehen.",
-    "Rounds.NotWhole": "Gib eine ganze Zahl an Runden ein.",
-    "Rounds.TooSmall":
-      "Eine Gruppe muss über mindestens 1 Runde gespielt werden.",
+      "Ein anderer Wettbewerb in diesem Turnier hat bereits diesen Namen.",
+    "BestOf.NotWhole": "Geben Sie eine ganze Zahl von Spielen ein.",
+    "BestOf.TooSmall": "Ein Match muss über mindestens 1 Spiel gehen.",
+    "Rounds.NotWhole": "Geben Sie eine ganze Zahl von Runden ein.",
+    "Rounds.TooSmall": "Ein Block muss in mindestens 1 Runde gespielt werden.",
     "KnockoutDraw.EvenBestOf":
-      "Eine Begegnung in einer K.-o.-Runde braucht einen Sieger, deshalb geht sie über eine ungerade Zahl von Spielen.",
+      "Ein Match im K.-o.-Turnier muss einen Sieger haben, daher geht es über eine ungerade Zahl von Spielen.",
+    // Der Ausweg jedes modalen Dialogs, da die Seite darunter nicht erreichbar
+    // ist.
     "admin.hover.tournaments.new": "Ein neues Turnier anlegen",
     "admin.hover.tournaments.manage":
-      "Die Spieler, Mannschaften, Wettbewerbe und Ergebnisse dieses Turniers verwalten",
+      "Spieler, Mannschaften, Wettbewerbe und Ergebnisse dieses Turniers verwalten",
     "admin.hover.tournaments.edit": "Die Angaben zu diesem Turnier ändern",
     "admin.hover.tournaments.scores": "Die Ergebnisse dieses Turniers eingeben",
-    "admin.hover.tournaments.players": "Die Spieler dieses Turniers verwalten",
+    "admin.hover.tournaments.players": "Die Spieler dieses Turniers betreuen",
     "admin.hover.competitions.view":
       "Diesen Wettbewerb öffnen, um seine Spieler und Ergebnisse zu sehen und einzugeben",
     "admin.hover.tests.view":
@@ -669,25 +777,25 @@ export const german: Language = {
       "Diese Mannschaft öffnen, um ihre Spieler zu sehen und zu verwalten",
     "admin.hover.dialog.player.add": "Diesen Spieler zum Turnier hinzufügen",
     "admin.hover.dialog.player.save":
-      "Die Änderungen an diesem Spieler speichern",
+      "Die Änderungen an diesem Spieler behalten",
     "admin.hover.dialog.team.add": "Diese Mannschaft zum Turnier hinzufügen",
     "admin.hover.dialog.team.save":
-      "Die Änderungen an dieser Mannschaft speichern",
+      "Die Änderungen an dieser Mannschaft behalten",
     "admin.hover.dialog.test.add": "Diesen Test zum Turnier hinzufügen",
-    "admin.hover.dialog.test.save": "Die Änderungen an diesem Test speichern",
+    "admin.hover.dialog.test.save": "Die Änderungen an diesem Test behalten",
     "admin.hover.dialog.competition.add":
       "Diesen Wettbewerb zum Turnier hinzufügen",
     "admin.hover.dialog.competition.save":
-      "Die Änderungen an diesem Wettbewerb speichern",
+      "Die Änderungen an diesem Wettbewerb behalten",
     "admin.hover.dialog.score.add": "Dieses Ergebnis zum Wettbewerb hinzufügen",
     "admin.hover.dialog.score.save":
-      "Die Korrektur dieses Ergebnisses speichern",
+      "Die Korrektur dieses Ergebnisses behalten",
     "admin.hover.dialog.carryForward.save":
       "Die Ergebnisse dieses Spielers übertragen",
     "admin.hover.dialog.tournament.new": "Dieses Turnier anlegen",
     "admin.hover.dialog.tournament.edit":
-      "Die Änderungen an diesem Turnier speichern",
-    "admin.hover.modal.cancel": "Dies schließen, ohne etwas zu speichern",
+      "Die Änderungen an diesem Turnier behalten",
+    "admin.hover.modal.cancel": "Dies schließen, ohne etwas zu behalten",
     "admin.hover.modal.ok": "Diese Meldung schließen",
     "admin.hover.tab": "Den Reiter {name} anzeigen",
     "admin.hover.tournaments.archive":
@@ -730,7 +838,7 @@ export const german: Language = {
     "admin.hover.tests.toTeams":
       "Zum Reiter Mannschaften wechseln, um die Mannschaften hinzuzufügen, die ein Test braucht",
     "admin.hover.scores.add":
-      "Das Ergebnis einer Begegnung zu diesem Wettbewerb hinzufügen",
+      "Das Ergebnis eines Spiels zu diesem Wettbewerb hinzufügen",
     "admin.hover.scores.edit": "Dieses Ergebnis korrigieren",
     "admin.hover.scores.archive":
       "Dieses Ergebnis archivieren, damit es nicht mehr zählt; es lässt sich wiederherstellen",
@@ -757,87 +865,102 @@ export const german: Language = {
       "Diesen zurückgezogenen Spieler wieder in den Wettbewerb aufnehmen",
     "admin.hover.competitionPlayers.carryForward":
       "Die Ergebnisse dieses Spielers aus einem anderen Wettbewerb übertragen",
-    "admin.hover.notes.add": "Einen neuen Hinweis für dieses Turnier schreiben",
-    "admin.hover.notes.edit": "Diesen Hinweis ändern",
-    "admin.hover.notes.delete": "Diesen Hinweis löschen",
-    "admin.hover.note.add":
-      "Diesen Hinweis speichern und zum Turnier hinzufügen",
-    "admin.hover.note.save": "Die Änderungen an diesem Hinweis speichern",
+    "admin.hover.notes.add": "Eine neue Notiz für dieses Turnier schreiben",
+    "admin.hover.notes.edit": "Diese Notiz ändern",
+    "admin.hover.notes.delete": "Diese Notiz löschen",
+    "admin.hover.note.add": "Diese Notiz behalten und zum Turnier hinzufügen",
+    "admin.hover.note.save": "Die Änderungen an dieser Notiz behalten",
     "admin.hover.people.add": "Dieser Person die Rolle geben",
     "admin.hover.people.remove": "Dieser Person die Rolle nehmen",
     "admin.hover.worldRankings.import":
       "Die Weltranglisten abrufen und ihre Spieler hinzufügen",
     "admin.modal.cancel": "Abbrechen",
+    // Die eine Schaltfläche eines modalen Dialogs, der der Leserin nur etwas
+    // mitteilt.
     "admin.modal.ok": "OK",
+    // Die Reiter Verantwortliche und Ergebniserfasser, in denen man jemanden
+    // über die E-Mail-Adresse dazu macht und wieder entfernt.
     "admin.people.emailAddress": "E-Mail-Adresse",
     "admin.people.remove": "Entfernen",
-    "admin.people.otherwise": "Das ging nicht.",
-    "admin.managers.you": "Du",
-    "admin.managers.add": "Turnierleiter hinzufügen",
-    "admin.managers.none": "Keine Turnierleiter",
-    "admin.managers.removeTitle": "Turnierleiter entfernen",
+    "admin.people.otherwise": "Das konnte nicht ausgeführt werden.",
+    // Neben dem eigenen Namen der Leserin unter den Verantwortlichen.
+    "admin.managers.you": "Sie",
+    "admin.managers.add": "Verantwortlichen hinzufügen",
+    // Wird nie gesagt, da ein Turnier immer einen Verantwortlichen hat, aber
+    // eine Liste sagt, was sie sagt, wenn sie leer ist.
+    "admin.managers.none": "Keine Verantwortlichen",
+    "admin.managers.removeTitle": "Verantwortlichen entfernen",
     "admin.managers.removeExplanation":
-      "{name} kann dieses Turnier danach nicht mehr verwalten.",
+      "{name} kann dieses Turnier künftig nicht mehr leiten.",
     "admin.managers.removeYourself.explanation":
-      "Du kannst dieses Turnier danach nicht mehr verwalten, und hier kann das niemand für dich rückgängig machen. Ein anderer Turnierleiter kann dich wieder zum Turnierleiter machen.",
+      "Sie können dieses Turnier künftig nicht mehr leiten, und niemand hier kann das für Sie rückgängig machen. Ein anderer Verantwortlicher kann Sie wieder dazu machen.",
     "admin.managers.otherwise":
-      "Diese Adresse kann nicht zur Turnierleitung gemacht werden.",
+      "Diese Adresse kann nicht zum Verantwortlichen gemacht werden.",
+    // Der Reiter Spieler.
+    // Der Reiter Spieler eines Wettbewerbs.
     "admin.competitionPlayers.add": "Spieler hinzufügen",
-    // Beneath the drop-down, for a refusal with no words of its own.
+    // Unter der Auswahlliste, für eine Ablehnung ohne eigene Worte.
     "admin.competitionPlayers.otherwise":
       "Dieser Spieler kann nicht hinzugefügt werden.",
-    "admin.competitionPlayers.choose": "Spieler zum Hinzufügen",
-    "admin.competitionPlayers.nobody": "Wähle einen Spieler",
+    "admin.competitionPlayers.choose": "Hinzuzufügender Spieler",
+    "admin.competitionPlayers.nobody": "Spieler wählen",
+    // In der Auswahlliste eines K.-o.-Turniers angeboten, und als was ein
+    // Freilos aufgeführt wird.
     "admin.competitionPlayers.bye": "Freilos",
-    "admin.competitionPlayers.all": "Alle Spieler sind im Wettbewerb",
+    "admin.competitionPlayers.all": "Jeder Spieler ist im Wettbewerb",
     "admin.competitionPlayers.none": "Keine Spieler",
     "admin.competitionPlayers.up": "Nach oben",
     "admin.competitionPlayers.down": "Nach unten",
     "admin.competitionPlayers.remove": "Entfernen",
     "admin.competitionPlayers.withdraw": "Zurückziehen",
-    "admin.competitionPlayers.unwithdraw": "Rückzug aufheben",
+    "admin.competitionPlayers.unwithdraw": "Zurückziehen aufheben",
     "admin.competitionPlayers.withdrawn": "Zurückgezogene Spieler",
     "admin.competitionPlayers.removeTitle": "Spieler entfernen",
     "admin.competitionPlayers.removeQuestion":
       "{name} wird aus dem Wettbewerb genommen. Das lässt sich nicht rückgängig machen.",
     "admin.competitionPlayers.withdrawTitle": "Spieler zurückziehen",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} spielt im Wettbewerb nicht weiter, und die Spiele, die noch nicht gespielt wurden, werden ohne diesen Spieler entschieden.",
-    "admin.competitionPlayers.carryForward": "Übertrag",
-    "admin.carryForward.title": "Übertrag - {name}",
+      "{name} spielt den Rest des Wettbewerbs nicht mehr, und die Spiele, die nicht gespielt wurden, werden ohne den Spieler entschieden.",
+    "admin.competitionPlayers.carryForward": "Übertragen",
+    // Der Dialog zum Übertragen, über dem Reiter Spieler eines Wettbewerbs.
+    "admin.carryForward.title": "Übertragen - {name}",
     "admin.carryForward.save": "Speichern",
+    // Über den Zahlen, für eine Ablehnung ohne eigene Worte.
     "admin.carryForward.otherwise":
-      "Dieser Übertrag kann nicht gespeichert werden.",
-    "admin.carryForward.matchWins": "Gewonnene Begegnungen",
-    "admin.carryForward.matchLosses": "Verlorene Begegnungen",
-    "admin.carryForward.gameWins": "Gewonnene Spiele",
-    "admin.carryForward.gameLosses": "Verlorene Spiele",
+      "Diese Übertragung kann nicht gespeichert werden.",
+    "admin.carryForward.matchWins": "Match-Siege",
+    "admin.carryForward.matchLosses": "Match-Niederlagen",
+    "admin.carryForward.gameWins": "Spielsiege",
+    "admin.carryForward.gameLosses": "Spielniederlagen",
     "admin.carryForward.hoopsFor": "Erzielte Tore",
-    "admin.carryForward.hoopsAgainst": "Gegnerische Tore",
+    "admin.carryForward.hoopsAgainst": "Zugelassene Tore",
     "CarryForward.MatchWinsNotWhole":
-      "Gib eine ganze Zahl gewonnener Begegnungen ein.",
-    "CarryForward.MatchWinsBelowZero":
-      "Gib 0 oder mehr gewonnene Begegnungen ein.",
+      "Geben Sie eine ganze Zahl von Match-Siegen ein.",
+    "CarryForward.MatchWinsBelowZero": "Geben Sie 0 oder mehr Match-Siege ein.",
     "CarryForward.MatchLossesNotWhole":
-      "Gib eine ganze Zahl verlorener Begegnungen ein.",
+      "Geben Sie eine ganze Zahl von Match-Niederlagen ein.",
     "CarryForward.MatchLossesBelowZero":
-      "Gib 0 oder mehr verlorene Begegnungen ein.",
+      "Geben Sie 0 oder mehr Match-Niederlagen ein.",
     "CarryForward.GameWinsNotWhole":
-      "Gib eine ganze Zahl gewonnener Spiele ein.",
-    "CarryForward.GameWinsBelowZero": "Gib 0 oder mehr gewonnene Spiele ein.",
+      "Geben Sie eine ganze Zahl von Spielsiegen ein.",
+    "CarryForward.GameWinsBelowZero": "Geben Sie 0 oder mehr Spielsiege ein.",
     "CarryForward.GameLossesNotWhole":
-      "Gib eine ganze Zahl verlorener Spiele ein.",
-    "CarryForward.GameLossesBelowZero": "Gib 0 oder mehr verlorene Spiele ein.",
-    "CarryForward.HoopsForNotWhole": "Gib eine ganze Zahl erzielter Tore ein.",
-    "CarryForward.HoopsForBelowZero": "Gib 0 oder mehr erzielte Tore ein.",
+      "Geben Sie eine ganze Zahl von Spielniederlagen ein.",
+    "CarryForward.GameLossesBelowZero":
+      "Geben Sie 0 oder mehr Spielniederlagen ein.",
+    "CarryForward.HoopsForNotWhole":
+      "Geben Sie eine ganze Zahl erzielter Tore ein.",
+    "CarryForward.HoopsForBelowZero":
+      "Geben Sie 0 oder mehr erzielte Tore ein.",
     "CarryForward.HoopsAgainstNotWhole":
-      "Gib eine ganze Zahl gegnerischer Tore ein.",
+      "Geben Sie eine ganze Zahl zugelassener Tore ein.",
     "CarryForward.HoopsAgainstBelowZero":
-      "Gib 0 oder mehr gegnerische Tore ein.",
+      "Geben Sie 0 oder mehr zugelassene Tore ein.",
+    // Der Reiter Ergebnisse eines Wettbewerbs und der Ergebnisdialog.
     "admin.scores.add": "Ergebnis hinzufügen",
     "admin.scores.none": "Keine Ergebnisse",
     "admin.scores.edit": "Bearbeiten",
-    "admin.scores.drawNotFilledTitle": "Auslosung unvollständig",
+    "admin.scores.drawNotFilledTitle": "Auslosung nicht vollständig",
     "admin.scores.archive": "Archivieren",
     "admin.scores.up": "Nach oben",
     "admin.scores.down": "Nach unten",
@@ -845,15 +968,16 @@ export const german: Language = {
     "admin.scores.archived": "Archivierte Ergebnisse",
     "admin.scores.archivedSaid": "Archiviert",
     "admin.scores.withdraw": "Zurückziehen",
-    "admin.scores.unwithdraw": "Rückzug aufheben",
+    "admin.scores.unwithdraw": "Zurückziehen aufheben",
     "admin.scores.withdrawnSaid": "Zurückgezogen",
-    "admin.scores.otherwise": "Das ging nicht.",
+    // Über der Liste, für eine Ablehnung ohne eigene Worte.
+    "admin.scores.otherwise": "Das konnte nicht ausgeführt werden.",
     "admin.score.title": "Ergebnis hinzufügen",
     "admin.score.add": "Spiel hinzufügen",
     "admin.score.winner": "Sieger",
-    "admin.score.winnerScore": "Punkte des Siegers",
+    "admin.score.winnerScore": "Ergebnis des Siegers",
     "admin.score.loser": "Verlierer",
-    "admin.score.loserScore": "Punkte des Verlierers",
+    "admin.score.loserScore": "Ergebnis des Verlierers",
     "admin.score.beat": "schlug",
     "admin.score.added":
       "Das Spiel, das {winner} gegen {loser} gewonnen hat, wurde hinzugefügt.",
@@ -861,30 +985,29 @@ export const german: Language = {
     "admin.score.correctTitle": "Ergebnis bearbeiten",
     "admin.score.save": "Speichern",
     "admin.score.notCorrected": "Das Ergebnis konnte nicht korrigiert werden.",
-    "Game.WinnerMissing": "Wähle den Sieger.",
-    "Game.WinnerScoreMissing": "Gib die Punkte des Siegers ein.",
-    "Game.LoserMissing": "Wähle den Verlierer.",
-    "Game.LoserScoreMissing": "Gib die Punkte des Verlierers ein.",
-    "Score.NoPoints": "Ein Ergebnis beginnt mit der Zahl der Punkte.",
+    "Game.WinnerMissing": "Wählen Sie den Sieger.",
+    "Game.WinnerScoreMissing": "Geben Sie das Ergebnis des Siegers ein.",
+    "Game.LoserMissing": "Wählen Sie den Verlierer.",
+    "Game.LoserScoreMissing": "Geben Sie das Ergebnis des Verlierers ein.",
+    "Score.NoPoints": "Ein Ergebnis beginnt mit seiner Punktzahl.",
     "Game.SamePlayer": "Niemand spielt gegen sich selbst.",
     "Game.WinnerNotAhead":
-      "Die Punkte des Siegers müssen höher sein als die des Verlierers, oder als gewonnen markiert sein.",
+      "Das Ergebnis des Siegers muss höher sein als das des Verlierers oder als gewonnen markiert.",
     "Game.LoserMarked":
-      "Die Punkte des Verlierers können nicht als gewonnen markiert werden.",
+      "Das Ergebnis des Verlierers kann nicht als gewonnen markiert werden.",
     "Game.ResultChanged":
-      "Eine Korrektur behält das Ergebnis bei: Ein gewonnenes Spiel bleibt gewonnen, und ein unentschiedenes bleibt unentschieden.",
-    "Competition.MatchDecided":
-      "Die Begegnung dieser Spieler ist bereits entschieden.",
+      "Eine Korrektur behält das Resultat: ein gewonnenes Spiel bleibt gewonnen, und ein unentschiedenes bleibt unentschieden.",
+    "Competition.MatchDecided": "Ihr Match ist bereits entschieden.",
     "Competition.DrawFull":
-      "Der Spieler kann nicht hinzugefügt werden, weil die Auslosung voll ist.",
+      "Der Spieler kann nicht hinzugefügt werden, weil das K.-o.-Turnier voll ist.",
     "Competition.DrawNotFilled":
-      "Ergebnisse können erst hinzugefügt werden, wenn jeder Platz der Auslosung einen Spieler oder ein Freilos hat.",
+      "Ergebnisse können erst hinzugefügt werden, wenn jeder Platz im K.-o.-Turnier mit einem Spieler oder einem Freilos besetzt ist.",
     "Competition.ByeOutsideKnockout":
-      "Nur eine K.-o.-Runde kann Freilose haben.",
+      "Nur ein K.-o.-Turnier kann ein Freilos haben.",
     "Competition.NotDrawnToMeet":
-      "Diese Spieler sind in der K.-o.-Runde derzeit nicht gegeneinander gelost.",
+      "Diese Spieler sind im K.-o.-Turnier derzeit nicht für ein Spiel gegeneinander ausgelost.",
     "Competition.WinnerHasPlayedOn":
-      "Der Sieger dieser Begegnung hat seine nächste Begegnung schon gespielt, deshalb kann nicht mehr geändert werden, wer sie gewonnen hat.",
+      "Der Sieger dieses Matches hat sein nächstes Spiel schon gespielt, daher kann sich nicht mehr ändern, wer es gewonnen hat.",
     "CompetitionPlayer.Withdrawn":
       "Ein zurückgezogener Spieler spielt nicht mehr.",
     "admin.players.add": "Spieler hinzufügen",
@@ -894,36 +1017,49 @@ export const german: Language = {
     "admin.players.restore": "Wiederherstellen",
     "admin.players.up": "Nach oben",
     "admin.players.down": "Nach unten",
+    // Gefragt, bevor ein Spieler archiviert wird, der in Wettbewerben ist,
+    // denn das Archivieren nimmt ihn aus jedem heraus, und das
+    // Wiederherstellen setzt ihn nicht wieder hinein.
     "admin.players.archiveTitle": "Spieler archivieren",
     "admin.players.archiveQuestion":
-      "{name} wird aus diesen Wettbewerben genommen:",
+      "{name} wird aus diesen Wettbewerben entfernt:",
     "admin.players.archive.explanation":
-      "Wird der Spieler wiederhergestellt, kommt er nicht in diese Wettbewerbe zurück.",
+      "Das Wiederherstellen setzt den Spieler nicht wieder in diese Wettbewerbe.",
     "admin.players.archived": "Archivierte Spieler",
+    // Wird einer Screenreader-Nutzerin gesagt, da ein durchgestrichener Name
+    // nicht vorgelesen wird.
     "admin.players.archivedSaid": "Archiviert",
+    // Der Spielerdialog.
     "admin.player.addTitle": "Spieler hinzufügen",
     "admin.player.editTitle": "Spieler bearbeiten",
     "admin.player.name": "Name",
     "admin.player.representing": "Vertritt",
-    "admin.player.worldRankingName": "Name in der Weltrangliste",
-    "admin.player.worldRankingKnown": "Die Weltrangliste kennt diesen Namen.",
+    "admin.player.worldRankingName": "Name des Weltranglistenspielers",
+    // Neben dem Weltranglistennamen: ob die Weltranglisten ihn kennen.
+    "admin.player.worldRankingKnown": "Die Weltranglisten kennen diesen Namen.",
     "admin.player.worldRankingQuestioned":
-      "Die Weltrangliste hat keinen Spieler mit diesem Namen. Vielleicht ist er falsch geschrieben, oder der Spieler ist neu in der Rangliste.",
+      "Die Weltranglisten haben keinen Spieler mit diesem Namen. Er könnte falsch geschrieben sein, oder der Spieler ist neu in den Ranglisten.",
     "admin.player.flag": "Flagge",
     "admin.player.add": "Hinzufügen",
     "admin.player.save": "Speichern",
     "admin.player.added": "{name} wurde hinzugefügt.",
+    // Über den Feldern, für eine Ablehnung ohne eigene Worte.
     "admin.player.otherwise":
       "Dieser Spieler kann so nicht gespeichert werden.",
     "Tournament.PlayerNameTaken":
-      "Ein anderer Spieler dieses Turniers hat schon diesen Namen.",
-    "TournamentPlayer.NoSuchFlag": "Wähle eine der vorhandenen Flaggen.",
-    "TournamentPlayer.NamedBye": "Ein Spieler kann nicht „Freilos“ heißen.",
+      "Ein anderer Spieler in diesem Turnier hat bereits diesen Namen.",
+    "TournamentPlayer.NoSuchFlag": "Wählen Sie eine der vorhandenen Flaggen.",
+    "TournamentPlayer.NamedBye": "Ein Spieler kann nicht Bye heißen.",
     "TournamentPlayer.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
-    "admin.player.byesTitle": "Freilose werden nicht hinzugefügt",
+    // Der Dialog über dem Spielerdialog, wenn ein Spieler als Freilos benannt
+    // wird.
+    "admin.player.byesTitle": "Freilose müssen nicht hinzugefügt werden",
     "admin.player.byes":
-      "Ein Freilos ist kein Spieler des Turniers. Eine K.-o.-Runde bietet ein Freilos an, wenn ihre Spieler hinzugefügt werden, so oft, wie ihre Auslosung es braucht.",
+      "Ein Freilos gehört nicht zu den Spielern des Turniers. Ein K.-o.-Turnier bietet Bye an, sooft Spieler hinzugefügt werden, so oft, wie seine Auslosung es braucht.",
+    // Ein Turnier, das mit Mannschaften gespielt wird (view.feature): seine
+    // Reiter Mannschaften und Tests, die Seite einer Mannschaft und ihre
+    // Dialoge.
     "admin.view.teams": "Mannschaften",
     "admin.view.tests": "Tests",
     "admin.teams.add": "Mannschaft hinzufügen",
@@ -941,29 +1077,35 @@ export const german: Language = {
     "admin.team.name": "Name",
     "admin.team.shortName": "Kurzname",
     "admin.team.shortName.explanation":
-      "Wie die Tests der Mannschaft heißen, zum Beispiel AUS v ENG.",
+      "Wie die Tests der Mannschaft benannt werden, zum Beispiel AUS v ENG.",
     "admin.team.flag": "Flagge",
     "admin.team.add": "Hinzufügen",
     "admin.team.save": "Speichern",
     "admin.team.added": "{name} wurde hinzugefügt.",
+    // Über den Feldern, für eine Ablehnung ohne eigene Worte.
     "admin.team.otherwise":
       "Diese Mannschaft kann so nicht gespeichert werden.",
     "admin.teamView.otherwise":
-      "Diese Mannschaft kann hier nicht angesehen werden.",
+      "Diese Mannschaft kann von hier aus nicht angesehen werden.",
     "admin.teamView.players": "Spieler",
-    "TeamName.Missing": "Gib der Mannschaft einen Namen.",
+    "TeamName.Missing": "Sagen Sie, wie die Mannschaft heißt.",
     "TeamName.TooLong": "Dieser Name ist zu lang.",
-    "admin.notes.add": "Hinweis hinzufügen",
-    "admin.notes.none": "Keine Hinweise",
+    "admin.notes.add": "Notiz hinzufügen",
+    "admin.notes.none": "Keine Notizen",
     "admin.notes.edit": "Bearbeiten",
     "admin.notes.delete": "Löschen",
-    "admin.notes.deleteTitle": "Hinweis löschen",
-    "admin.notes.deleteQuestion": "Den Hinweis „{title}“ löschen?",
+    // Gefragt, bevor eine Notiz gelöscht wird, denn eine gelöschte Notiz ist
+    // für immer weg.
+    "admin.notes.deleteTitle": "Notiz löschen",
+    "admin.notes.deleteQuestion": "Die Notiz „{title}“ löschen?",
     "admin.notes.delete.explanation":
-      "Ein gelöschter Hinweis ist für immer weg und lässt sich nicht zurückholen.",
-    "admin.notes.otherwise": "Das ging nicht.",
-    "admin.note.addTitle": "Hinweis hinzufügen",
-    "admin.note.editTitle": "Hinweis bearbeiten",
+      "Eine gelöschte Notiz ist für immer weg und lässt sich nicht zurückholen.",
+    // Über der Liste, für eine Ablehnung ohne eigene Worte.
+    "admin.notes.otherwise": "Das konnte nicht ausgeführt werden.",
+    // Der Notizdialog, die Reiter seiner Beschreibung und die Werkzeugleiste
+    // über seinem Feld.
+    "admin.note.addTitle": "Notiz hinzufügen",
+    "admin.note.editTitle": "Notiz bearbeiten",
     "admin.note.title": "Titel",
     "admin.note.description": "Beschreibung",
     "admin.note.write": "Schreiben",
@@ -980,51 +1122,51 @@ export const german: Language = {
     "admin.note.tool.taskList": "Aufgabenliste",
     "admin.note.add": "Hinzufügen",
     "admin.note.save": "Speichern",
-    "admin.note.otherwise": "Dieser Hinweis kann so nicht gespeichert werden.",
-    "ManagerNoteTitle.Missing": "Gib dem Hinweis einen Titel.",
+    // Über den Feldern, für eine Ablehnung ohne eigene Worte.
+    "admin.note.otherwise": "Diese Notiz kann so nicht gespeichert werden.",
+    "ManagerNoteTitle.Missing": "Geben Sie der Notiz einen Titel.",
     "ManagerNoteTitle.TooLong": "Dieser Titel ist zu lang.",
     "ManagerNoteTitle.NoLetterOrDigit":
       "Ein Titel braucht einen Buchstaben oder eine Ziffer.",
     "ManagerNoteDescription.TooLong": "Diese Beschreibung ist zu lang.",
     "ManagerNoteToEdit.NoSuchManagerNote":
-      "Diesen Hinweis gibt es nicht mehr. Vielleicht hat ihn ein anderer Turnierleiter gelöscht.",
+      "Diese Notiz gibt es nicht mehr. Ein anderer Verantwortlicher hat sie vielleicht gelöscht.",
     "EditManagerNote.NoSuchManagerNote":
-      "Diesen Hinweis gibt es nicht mehr. Vielleicht hat ihn ein anderer Turnierleiter gelöscht.",
+      "Diese Notiz gibt es nicht mehr. Ein anderer Verantwortlicher hat sie vielleicht gelöscht.",
     "DeleteManagerNote.NoSuchManagerNote":
-      "Diesen Hinweis gibt es nicht mehr. Vielleicht hat ihn ein anderer Turnierleiter gelöscht.",
+      "Diese Notiz gibt es nicht mehr. Ein anderer Verantwortlicher hat sie vielleicht gelöscht.",
     "ManagerNote.Deleted":
-      "Dieser Hinweis wurde gelöscht. Vielleicht hat ihn ein anderer Turnierleiter gelöscht.",
-    "CommentaryTitle.Missing": "Gib dem Kommentarstrang einen Titel.",
+      "Diese Notiz wurde gelöscht. Ein anderer Verantwortlicher hat sie vielleicht gelöscht.",
+    "CommentaryTitle.Missing": "Geben Sie dem Kommentar einen Titel.",
     "CommentaryTitle.TooLong": "Dieser Titel ist zu lang.",
     "CommentaryTitle.NoLetterOrDigit":
       "Ein Titel braucht einen Buchstaben oder eine Ziffer.",
-    "Commentary.TitleTaken":
-      "Ein anderer Kommentarstrang hat schon diesen Titel.",
-    "CommentText.Missing": "Schreibe etwas in den Kommentar.",
-    "CommentText.TooLong": "Dieser Kommentar ist zu lang.",
-    "TeamShortName.Missing": "Gib der Mannschaft einen Kurznamen.",
+    "Commentary.TitleTaken": "Ein anderer Kommentar hat bereits diesen Titel.",
+    "CommentText.Missing": "Schreiben Sie etwas in den Beitrag.",
+    "CommentText.TooLong": "Dieser Beitrag ist zu lang.",
+    "TeamShortName.Missing": "Geben Sie der Mannschaft einen Kurznamen.",
     "TeamShortName.TooLong":
       "Ein Kurzname darf höchstens 10 Zeichen lang sein.",
     "TeamShortName.NoLetterOrDigit":
       "Ein Kurzname braucht einen Buchstaben oder eine Ziffer.",
     "Team.ShortNameLongerThanName":
       "Ein Kurzname darf nicht länger sein als der Name der Mannschaft.",
-    "Team.NoSuchFlag": "Wähle eine der vorhandenen Flaggen.",
+    "Team.NoSuchFlag": "Wählen Sie eine der vorhandenen Flaggen.",
     "Team.Archived":
-      "Diese Mannschaft ist archiviert und muss zuerst wiederhergestellt werden.",
+      "Diese Mannschaft ist archiviert und wird zuerst wiederhergestellt.",
     "Team.InATest":
       "Diese Mannschaft spielt in einem Test und kann nicht archiviert werden.",
     "Team.PlayerNameTaken":
-      "Ein anderer Spieler dieser Mannschaft hat schon diesen Namen.",
-    "TeamPlayer.NamedBye": "Ein Spieler kann nicht „Freilos“ heißen.",
+      "Ein anderer Spieler in dieser Mannschaft hat bereits diesen Namen.",
+    "TeamPlayer.NamedBye": "Ein Spieler kann nicht Bye heißen.",
     "TeamPlayer.Archived":
-      "Dieser Spieler ist archiviert und muss zuerst wiederhergestellt werden.",
+      "Dieser Spieler ist archiviert und wird zuerst wiederhergestellt.",
     "TeamPlayer.HasGames":
       "Dieser Spieler hat gespielt und kann nicht archiviert werden.",
     "Tournament.TeamNameTaken":
-      "Eine andere Mannschaft dieses Turniers hat schon diesen Namen.",
+      "Eine andere Mannschaft in diesem Turnier hat bereits diesen Namen.",
     "Tournament.TeamShortNameTaken":
-      "Eine andere Mannschaft dieses Turniers hat schon diesen Kurznamen.",
+      "Eine andere Mannschaft in diesem Turnier hat bereits diesen Kurznamen.",
     "Tournament.NoSuchTeam":
       "Dieses Turnier hat unter dieser Adresse keine Mannschaft.",
     "Tournament.TeamArchived":
@@ -1039,12 +1181,13 @@ export const german: Language = {
     "admin.tests.down": "Nach unten",
     "admin.tests.archived": "Archivierte Tests",
     "admin.tests.twoTeamsNeeded":
-      "Ein Test findet zwischen zwei Mannschaften statt, deshalb braucht es zuerst zwei Mannschaften.",
+      "Ein Test findet zwischen zwei Mannschaften statt, daher braucht es zuerst zwei Mannschaften.",
     "admin.tests.toTeams": "Zu den Mannschaften",
-    "admin.tests.matches.one": "{count} Begegnung",
-    "admin.tests.matches.other": "{count} Begegnungen",
+    "admin.tests.matches.one": "{count} Match",
+    "admin.tests.matches.other": "{count} Matches",
     "admin.tests.bestOf": "Best of {games}",
-    "admin.tests.otherwise": "Das ging nicht.",
+    // Neben der Liste, für eine Ablehnung ohne eigene Worte.
+    "admin.tests.otherwise": "Das konnte nicht ausgeführt werden.",
     "admin.test.addTitle": "Test hinzufügen",
     "admin.test.editTitle": "Test bearbeiten",
     "admin.test.firstTeam": "Mannschaft A",
@@ -1052,21 +1195,21 @@ export const german: Language = {
     "admin.test.versus": "v",
     "admin.test.starts": "Beginn",
     "admin.test.finishes": "Ende",
-    "admin.test.expectedMatches": "Erwartete Begegnungen",
+    "admin.test.expectedMatches": "Erwartete Matches",
     "admin.test.bestOf": "Best of",
     "admin.test.group": "Gruppe",
     "admin.test.add": "Hinzufügen",
     "admin.test.save": "Speichern",
     "admin.test.added": "{name} wurde hinzugefügt.",
     "admin.test.otherwise": "Dieser Test kann so nicht gespeichert werden.",
-    "admin.testView.otherwise": "Dieser Test kann hier nicht angesehen werden.",
-    "AddTest.FirstTeamMissing": "Wähle die erste Mannschaft.",
-    "AddTest.SecondTeamMissing": "Wähle die zweite Mannschaft.",
-    "UpdateTest.FirstTeamMissing": "Wähle die erste Mannschaft.",
-    "UpdateTest.SecondTeamMissing": "Wähle die zweite Mannschaft.",
-    "ExpectedMatches.NotWhole": "Gib eine ganze Zahl von Begegnungen ein.",
-    "ExpectedMatches.TooSmall":
-      "Bei einem Test muss mindestens 1 Begegnung erwartet werden.",
+    "admin.testView.otherwise":
+      "Dieser Test kann von hier aus nicht angesehen werden.",
+    "AddTest.FirstTeamMissing": "Wählen Sie die erste Mannschaft.",
+    "AddTest.SecondTeamMissing": "Wählen Sie die zweite Mannschaft.",
+    "UpdateTest.FirstTeamMissing": "Wählen Sie die erste Mannschaft.",
+    "UpdateTest.SecondTeamMissing": "Wählen Sie die zweite Mannschaft.",
+    "ExpectedMatches.NotWhole": "Geben Sie eine ganze Zahl von Matches ein.",
+    "ExpectedMatches.TooSmall": "Ein Test muss mindestens 1 Match haben.",
     "TestGroup.TooLong": "Diese Gruppe ist zu lang.",
     "Tournament.TestAgainstItself":
       "Eine Mannschaft spielt keinen Test gegen sich selbst.",
@@ -1077,82 +1220,87 @@ export const german: Language = {
     "Tournament.TestFinishesAfterTournament":
       "Ein Test kann nicht nach seinem Turnier enden.",
     "Tournament.TestHasGamesInUse":
-      "Dieser Test hat Spiele und kann deshalb erst archiviert werden, wenn diese archiviert sind.",
+      "Dieser Test hat Spiele, daher kann er erst archiviert werden, wenn diese es sind.",
     "Tournament.TestHasGames":
-      "Dieser Test hat bereits Spiele, deshalb können seine Mannschaften nicht mehr geändert werden.",
+      "Dieser Test hat jetzt Spiele, daher können seine Mannschaften nicht mehr geändert werden.",
     "Tournament.ExpectedMatchesBelowStarted":
-      "Es haben bereits mehr Begegnungen begonnen.",
+      "Mehr Matches als das haben bereits begonnen.",
     "Tournament.BestOfBelowGamesPlayed":
-      "Zwei Spieler haben bereits mehr Spiele gespielt.",
+      "Zwei Spieler haben bereits mehr Spiele gespielt als das.",
     "Competition.ExpectedMatchesReached":
-      "In diesem Test haben bereits alle erwarteten Begegnungen begonnen.",
+      "In diesem Test haben bereits so viele Matches begonnen, wie erwartet werden.",
     "Competition.SameTeam":
       "Zwei Spieler derselben Mannschaft spielen nicht gegeneinander.",
     "AddManager.NoSuchAccount":
-      "Zu dieser Adresse gibt es kein Konto, das zur Turnierleitung gemacht werden kann.",
-    "Account.NotAnAdministrator": "Das kann nur ein Administrator tun.",
+      "Zu dieser Adresse gibt es kein Konto, das zum Verantwortlichen gemacht werden kann.",
+    "admin.scorers.add": "Ergebniserfasser hinzufügen",
+    "admin.scorers.none": "Keine Ergebniserfasser",
+    "admin.scorers.removeTitle": "Ergebniserfasser entfernen",
+    "admin.scorers.removeExplanation":
+      "{name} kann die Ergebnisse dieses Turniers künftig nicht mehr eingeben.",
+    // Unter dem Feld, für eine Ablehnung ohne eigene Worte.
+    "admin.scorers.otherwise":
+      "Diese Adresse kann nicht zum Ergebniserfasser gemacht werden.",
+    "AddScorer.NoSuchAccount":
+      "Zu dieser Adresse gibt es kein Konto, das zum Ergebniserfasser gemacht werden kann.",
+    // Rollen vergeben, nehmen und auflisten, was nur ein Administrator kann.
+    "Account.NotAnAdministrator": "Das kann nur ein Administrator.",
     "AddRole.NoSuchAccount":
       "Zu dieser Adresse gibt es kein Konto, dem die Rolle gegeben werden kann.",
     "AddRole.NoSuchRole": "Diese Rolle gibt es nicht.",
     "RemoveRole.NoSuchAccount": "Dieses Konto gibt es nicht.",
     "RemoveRole.NoSuchRole": "Diese Rolle gibt es nicht.",
     "RemoveRole.Yourself":
-      "Du kannst dir die Administratorrolle nicht selbst nehmen.",
+      "Sie können sich die Rolle Administrator nicht selbst nehmen.",
     "AccountsWithRole.NoSuchRole": "Diese Rolle gibt es nicht.",
-    "admin.scorers.add": "Ergebniserfasser hinzufügen",
-    "admin.scorers.none": "Keine Ergebniserfasser",
-    "admin.scorers.removeTitle": "Ergebniserfasser entfernen",
-    "admin.scorers.removeExplanation":
-      "{name} kann die Ergebnisse dieses Turniers danach nicht mehr erfassen.",
-    "admin.scorers.otherwise":
-      "Diese Adresse kann nicht zum Ergebniserfasser gemacht werden.",
-    "AddScorer.NoSuchAccount":
-      "Zu dieser Adresse gibt es kein Konto, das zum Ergebniserfasser gemacht werden kann.",
     "Tournament.AlreadyAManager":
-      "Dieses Konto verwaltet das Turnier bereits und kann alles, was ein Ergebniserfasser kann.",
+      "Dieses Konto leitet das Turnier bereits und kann alles, was ein Ergebniserfasser kann.",
 
-    "TournamentName.Missing": "Gib dem Turnier einen Namen.",
+    // Die Ablehnungen eines Turniers, nach ihren Codes benannt, wie jede
+    // verletzte Regel. Unter dem Feld, um das es jeweils geht, oder anstelle
+    // des Formulars, wenn die Seite selbst abgelehnt wird.
+    "TournamentName.Missing": "Sagen Sie, wie das Turnier heißt.",
     "TournamentName.TooShort": "Dieser Name ist zu kurz.",
     "TournamentName.TooLong": "Dieser Name ist zu lang.",
     "TournamentName.AllLowerCase":
-      "Ein Name darf nicht komplett kleingeschrieben sein.",
+      "Ein Name darf nicht nur aus Kleinbuchstaben bestehen.",
     "TournamentName.AllCapitals":
-      "Ein Name darf nicht komplett großgeschrieben sein.",
+      "Ein Name darf nicht nur aus Großbuchstaben bestehen.",
     "TournamentName.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",
-    "ReadOnlyDate.Unreadable": "Gib den Tag an.",
+    "ReadOnlyDate.Unreadable": "Geben Sie den Tag an.",
     "Tournament.FinishesBeforeStarts":
       "Ein Turnier kann nicht enden, bevor es beginnt.",
     "Tournament.StartsAfterNextYear":
       "Ein Turnier kann nicht nach dem nächsten Jahr beginnen.",
     "Tournament.FinishesAfterNextYear":
       "Ein Turnier kann nicht nach dem nächsten Jahr enden.",
-    "CreateTournament.NoSuchCountry": "Wähle das Land.",
+    "CreateTournament.NoSuchCountry": "Wählen Sie das Land.",
     "TournamentSubtitle.TooLong":
-      "Der Untertitel darf höchstens 2000 Zeichen lang sein.",
+      "Ein Untertitel darf höchstens 2000 Zeichen lang sein.",
     "Tournament.NotAManager":
-      "Nur wer dieses Turnier verwaltet, kann es ändern.",
+      "Nur ein Verantwortlicher dieses Turniers kann es ändern.",
     "Tournament.NotAManagerOrScorer":
-      "Nur wer dieses Turnier verwaltet oder darin Ergebnisse erfasst, kann es ansehen.",
+      "Nur ein Verantwortlicher oder Ergebniserfasser dieses Turniers kann es sehen.",
     "Tournament.Archived":
-      "Dieses Turnier ist archiviert und muss wiederhergestellt werden, bevor es geändert werden kann.",
+      "Dieses Turnier ist archiviert und wird wiederhergestellt, bevor es geändert werden kann.",
     "UpdateTournament.NoSuchTournament":
       "Unter dieser Adresse gibt es kein Turnier.",
 
-    // The sports keep the names their players use in German, which are the
-    // English ones, as German croquet players say Golf Croquet and Ricochet
-    // too. The formats named for a competition keep its name, as a name is
-    // not translated.
+    // Worin ein Turnier gespielt wird und wo, nach Code, wie die API sie dem
+    // Formular der Verwaltung anbietet.
     "sport.ac": "Association Croquet",
     "sport.gc": "Golf Croquet",
     "sport.a6w": "American 6 Wicket",
     "sport.rc": "Ricochet",
     "sport.gb": "Gateball",
+
     "format.standard": "Standard",
     "format.teams": "Mannschaften",
     "format.eire-cup": "Eire Cup",
     "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.gc-world-team-championship": "GC-Mannschaftsweltmeisterschaft",
+
     "country.ad": "Andorra",
     "country.ae": "Vereinigte Arabische Emirate",
     "country.af": "Afghanistan",
@@ -1166,7 +1314,7 @@ export const german: Language = {
     "country.at": "Österreich",
     "country.au": "Australien",
     "country.aw": "Aruba",
-    "country.ax": "Ålandinseln",
+    "country.ax": "Åland",
     "country.az": "Aserbaidschan",
     "country.ba": "Bosnien und Herzegowina",
     "country.bb": "Barbados",
@@ -1184,7 +1332,7 @@ export const german: Language = {
     "country.bs": "Bahamas",
     "country.bt": "Bhutan",
     "country.bv": "Bouvetinsel",
-    "country.bw": "Botsuana",
+    "country.bw": "Botswana",
     "country.by": "Belarus",
     "country.bz": "Belize",
     "country.ca": "Kanada",
@@ -1194,7 +1342,7 @@ export const german: Language = {
     "country.cf": "Zentralafrikanische Republik",
     "country.cg": "Republik Kongo",
     "country.ch": "Schweiz",
-    "country.ci": "Elfenbeinküste",
+    "country.ci": "Côte d'Ivoire",
     "country.ck": "Cookinseln",
     "country.cl": "Chile",
     "country.cm": "Kamerun",
@@ -1350,7 +1498,7 @@ export const german: Language = {
     "country.sg": "Singapur",
     "country.sh": "St. Helena",
     "country.si": "Slowenien",
-    "country.sj": "Spitzbergen und Jan Mayen",
+    "country.sj": "Svalbard und Jan Mayen",
     "country.sk": "Slowakei",
     "country.sl": "Sierra Leone",
     "country.sm": "San Marino",
@@ -1399,19 +1547,20 @@ export const german: Language = {
     "country.zm": "Sambia",
     "country.zw": "Simbabwe",
 
-    // The emails are the English ones, rewritten rather than translated line
-    // by line; the placeholders each fills in are english.ts's, and say there
-    // what they are.
+    // Eine E-Mail besteht aus zwei Einträgen: ihrem Betreff, der Text ist, und ihrem
+    // Inhalt, der ihr gesamtes Markup ist. Das Markup ist das der Website selbst;
+    // die Platzhalter in geschweiften Klammern sind dieselben wie im Englischen.
+    // Keine E-Mail spricht die Person mit Namen an („Guten Tag,“), damit nichts
+    // über eine Person außer der Adresse in die Warteschlange muss.
 
     "Email.ConfirmAddress.subject":
-      "Bestätige deine E-Mail-Adresse für {siteName}",
+      "Bestätigen Sie Ihre E-Mail-Adresse für {siteName}",
     "Email.ConfirmAddress.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    vielen Dank, dass du ein Konto bei <strong>{siteName}</strong> angelegt hast.<br />
-    Bevor du dein Konto nutzen kannst, bestätige bitte deine E-Mail-Adresse
-    mit einem Klick auf die Schaltfläche unten:
+    Vielen Dank, dass Sie ein Konto bei <strong>{siteName}</strong> angelegt haben.<br />
+    Bevor Sie Ihr Konto nutzen können, bestätigen Sie bitte Ihre E-Mail-Adresse, indem Sie auf die Schaltfläche unten klicken:
 </p>
 
 <p>
@@ -1429,12 +1578,12 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn die Schaltfläche nicht funktioniert, kannst du deine E-Mail-Adresse auch bestätigen, indem du diesen Link in deinem Browser öffnest:<br />
+    Wenn die Schaltfläche nicht funktioniert, können Sie Ihre E-Mail-Adresse auch bestätigen, indem Sie diesen Link in Ihrem Browser öffnen:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Wenn du dieses Konto nicht angelegt hast, kannst du diese E-Mail einfach ignorieren.
+    Wenn Sie dieses Konto nicht angelegt haben, können Sie diese E-Mail einfach ignorieren.
 </p>
 
 <p>
@@ -1444,13 +1593,13 @@ export const german: Language = {
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "Ein neuer Link zum Bestätigen deiner E-Mail-Adresse für {siteName}",
+      "Ein neuer Link zur Bestätigung Ihrer E-Mail-Adresse für {siteName}",
     "Email.ConfirmAddressAgain.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    du hast vor Kurzem eine neue E-Mail zum Bestätigen deiner E-Mail-Adresse für <strong>{siteName}</strong> angefordert.<br />
-    Bestätige deine E-Mail-Adresse mit einem Klick auf die Schaltfläche unten:
+    Sie haben kürzlich eine neue E-Mail zur Bestätigung Ihrer E-Mail-Adresse für <strong>{siteName}</strong> angefordert.<br />
+    Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf die Schaltfläche unten klicken:
 </p>
 
 <p>
@@ -1468,16 +1617,16 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn die Schaltfläche nicht funktioniert, kannst du deine E-Mail-Adresse auch bestätigen, indem du diesen Link in deinem Browser öffnest:<br />
+    Wenn die Schaltfläche nicht funktioniert, können Sie Ihre E-Mail-Adresse auch bestätigen, indem Sie diesen Link in Ihrem Browser öffnen:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Sobald sie bestätigt ist, kannst du dein Konto ohne Unterbrechung weiter nutzen.
+    Nach der Bestätigung können Sie Ihr Konto ohne Unterbrechung weiter nutzen.
 </p>
 
 <p>
-    Wenn du diese E-Mail nicht angefordert hast, kannst du sie einfach ignorieren.
+    Wenn Sie diese E-Mail nicht angefordert haben, können Sie sie einfach ignorieren.
 </p>
 
 <p>
@@ -1487,15 +1636,13 @@ export const german: Language = {
 `,
 
     "Email.AlreadyRegistered.subject":
-      "Jemand hat versucht, sich mit deiner E-Mail-Adresse zu registrieren",
+      "Jemand hat versucht, sich mit Ihrer E-Mail-Adresse zu registrieren",
     "Email.AlreadyRegistered.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Jemand hat versucht, sich bei <strong>{siteName}</strong> mit dieser
-    E-Mail-Adresse zu registrieren, zu der es schon ein Konto gibt. An deinem
-    Konto hat sich nichts geändert.<br />
-    Wenn du es warst: Du hast bereits ein Konto und kannst dich darin anmelden:
+    Jemand hat versucht, sich mit dieser E-Mail-Adresse bei <strong>{siteName}</strong> zu registrieren. Zu ihr gibt es bereits ein Konto. An Ihrem Konto hat sich nichts geändert.<br />
+    Wenn Sie es waren: Sie haben bereits ein Konto und können sich darin anmelden:
 </p>
 
 <p>
@@ -1513,7 +1660,7 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn du dein Passwort vergessen hast, kannst du es hier zurücksetzen:
+    Wenn Sie Ihr Passwort vergessen haben, können Sie es hier zurücksetzen:
 </p>
 
 <p>
@@ -1526,13 +1673,12 @@ export const german: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Ich habe mein Passwort vergessen
+        Passwort vergessen
     </a>
 </p>
 
 <p>
-    Wenn du es nicht warst, musst du nichts tun. Niemand hat einen Weg
-    in dein Konto bekommen.
+    Wenn Sie es nicht waren, müssen Sie nichts tun. Niemand hat einen Zugang zu Ihrem Konto erhalten.
 </p>
 
 <p>
@@ -1542,15 +1688,12 @@ export const german: Language = {
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "Bestätige den Umzug deines Kontos bei {siteName} zu dieser Adresse",
+      "Bestätigen Sie den Umzug Ihres {siteName}-Kontos auf diese Adresse",
     "Email.ConfirmNewEmailAddress.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Jemand, der in einem Konto bei <strong>{siteName}</strong> angemeldet ist,
-    hat darum gebeten, es zu dieser E-Mail-Adresse zu verschieben. Wenn du es
-    warst, bestätige es hier, während du in diesem Konto angemeldet bist. Der
-    Link funktioniert 24 Stunden lang.
+    Jemand, der bei einem <strong>{siteName}</strong>-Konto angemeldet war, hat darum gebeten, es auf diese E-Mail-Adresse zu verschieben. Wenn Sie es waren, bestätigen Sie es hier, angemeldet bei diesem Konto. Der Link gilt 24 Stunden lang.
 </p>
 
 <p>
@@ -1568,12 +1711,12 @@ export const german: Language = {
 </p>
 
 <p>
-    Oder kopiere diese Adresse in deinen Browser:<br />
+    Oder kopieren Sie diese Adresse in Ihren Browser:<br />
     {link}
 </p>
 
 <p>
-    Wenn du es nicht warst, musst du nichts tun. Es wird kein Konto hierher verschoben.
+    Wenn Sie es nicht waren, müssen Sie nichts tun. Es wird kein Konto hierher verschoben.
 </p>
 
 <p>
@@ -1583,20 +1726,16 @@ export const german: Language = {
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "Jemand wollte ein Konto zu deiner E-Mail-Adresse verschieben",
+      "Jemand hat darum gebeten, ein Konto auf Ihre E-Mail-Adresse zu verschieben",
     "Email.AlreadyHasAnAccount.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Jemand, der in einem Konto bei <strong>{siteName}</strong> angemeldet ist,
-    hat darum gebeten, es zu dieser E-Mail-Adresse zu verschieben, zu der es
-    schon ein eigenes Konto gibt. Es wurde nichts verschoben, und an deinem
-    Konto hat sich nichts geändert.
+    Jemand, der bei einem <strong>{siteName}</strong>-Konto angemeldet war, hat darum gebeten, es auf diese E-Mail-Adresse zu verschieben, zu der es bereits ein eigenes Konto gibt. Nichts wurde verschoben, und an Ihrem Konto hat sich nichts geändert.
 </p>
 
 <p>
-    Wenn du es warst: Du hast bereits ein Konto mit dieser Adresse und kannst
-    dich darin anmelden.
+    Wenn Sie es waren: Sie haben unter dieser Adresse bereits ein Konto und können sich darin anmelden.
 </p>
 
 <p>
@@ -1606,19 +1745,16 @@ export const german: Language = {
 `,
 
     "Email.EmailAddressChanged.subject":
-      "Dein Konto bei {siteName} wurde verschoben",
+      "Ihr {siteName}-Konto wurde verschoben",
     "Email.EmailAddressChanged.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Dein Konto bei <strong>{siteName}</strong> wurde gerade zu einer anderen
-    E-Mail-Adresse verschoben, {emailAddress}, und die Anmeldung erfolgt ab
-    jetzt mit dieser Adresse.
+    Ihr <strong>{siteName}</strong>-Konto wurde gerade auf eine andere E-Mail-Adresse verschoben, {emailAddress}, und Sie melden sich von nun an mit dieser Adresse an.
 </p>
 
 <p>
-    Wenn du es nicht warst, hat jemand anderes dein Konto. Antworte auf diese
-    E-Mail und sag es uns.
+    Wenn Sie es nicht waren, hat jemand anderes Ihr Konto. Antworten Sie auf diese E-Mail und teilen Sie es uns mit.
 </p>
 
 <p>
@@ -1627,20 +1763,17 @@ export const german: Language = {
 </p>
 `,
 
-    "Email.PasswordChanged.subject":
-      "Dein Passwort bei {siteName} wurde geändert",
+    "Email.PasswordChanged.subject": "Ihr {siteName}-Passwort wurde geändert",
     "Email.PasswordChanged.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Das Passwort deines Kontos bei <strong>{siteName}</strong> wurde gerade geändert,
-    und du wurdest in allen anderen Browsern abgemeldet, in denen du angemeldet warst.<br />
-    Wenn du es warst, musst du nichts tun.
+    Das Passwort für Ihr <strong>{siteName}</strong>-Konto wurde gerade geändert, und jeder andere Browser, der bei diesem Konto angemeldet war, wurde abgemeldet.<br />
+    Wenn Sie es waren, müssen Sie nichts tun.
 </p>
 
 <p>
-    Wenn du es nicht warst, hat jemand anderes dein Passwort. Lege hier ein
-    neues fest, dann wird diese Person abgemeldet:
+    Wenn Sie es nicht waren, hat jemand anderes Ihr Passwort. Legen Sie hier ein neues fest, dann wird diese Person abgemeldet:
 </p>
 
 <p>
@@ -1653,7 +1786,7 @@ export const german: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Ich habe mein Passwort vergessen
+        Passwort vergessen
     </a>
 </p>
 
@@ -1663,14 +1796,13 @@ export const german: Language = {
 </p>
 `,
 
-    "Email.SetNewPassword.subject":
-      "Lege ein neues Passwort für {siteName} fest",
+    "Email.SetNewPassword.subject": "Neues Passwort für {siteName} festlegen",
     "Email.SetNewPassword.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    du hast vor Kurzem darum gebeten, dein Passwort für <strong>{siteName}</strong> zurückzusetzen.<br />
-    Das kannst du mit einem Klick auf die Schaltfläche unten tun:
+    Sie haben kürzlich angefordert, Ihr Passwort für <strong>{siteName}</strong> zurückzusetzen.<br />
+    Sie können Ihr Passwort zurücksetzen, indem Sie auf die Schaltfläche unten klicken:
 </p>
 
 <p>
@@ -1688,12 +1820,12 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn die Schaltfläche nicht funktioniert, kannst du dein Passwort auch zurücksetzen, indem du diesen Link in deinem Browser öffnest:<br />
+    Wenn die Schaltfläche nicht funktioniert, können Sie Ihr Passwort auch zurücksetzen, indem Sie diesen Link in Ihrem Browser öffnen:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Wenn du nicht darum gebeten hast, dein Passwort zurückzusetzen, kannst du diese E-Mail einfach ignorieren.
+    Wenn Sie das Zurücksetzen des Passworts nicht angefordert haben, können Sie diese E-Mail einfach ignorieren.
 </p>
 
 <p>
@@ -1702,14 +1834,14 @@ export const german: Language = {
 </p>
 `,
 
-    "Email.SetPassword.subject": "Lege ein Passwort für {siteName} fest",
+    "Email.SetPassword.subject": "Passwort für {siteName} festlegen",
     "Email.SetPassword.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Dein Konto bei <strong>{siteName}</strong> hat kein Passwort: Du meldest dich mit Google an.<br />
-    Du hast darum gebeten, eines festzulegen, damit du dich auch mit deiner E-Mail-Adresse und einem Passwort anmelden kannst.
-    Das kannst du mit einem Klick auf die Schaltfläche unten tun:
+    Ihr <strong>{siteName}</strong>-Konto hat kein Passwort: Sie melden sich mit Google an.<br />
+    Sie haben darum gebeten, eines festzulegen, damit Sie sich auch mit Ihrer E-Mail-Adresse und einem Passwort anmelden können.
+    Sie können es festlegen, indem Sie auf die Schaltfläche unten klicken:
 </p>
 
 <p>
@@ -1727,12 +1859,12 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn die Schaltfläche nicht funktioniert, kannst du dein Passwort auch festlegen, indem du diesen Link in deinem Browser öffnest:<br />
+    Wenn die Schaltfläche nicht funktioniert, können Sie Ihr Passwort auch festlegen, indem Sie diesen Link in Ihrem Browser öffnen:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Der Link funktioniert eine Stunde lang. Wenn du nicht darum gebeten hast, ein Passwort festzulegen, kannst du diese E-Mail einfach ignorieren.
+    Der Link gilt eine Stunde lang. Wenn Sie nicht darum gebeten haben, ein Passwort festzulegen, können Sie diese E-Mail einfach ignorieren.
 </p>
 
 <p>
@@ -1742,22 +1874,21 @@ export const german: Language = {
 `,
 
     "Email.RegisterInstead.subject":
-      "Zu dieser E-Mail-Adresse gibt es kein Konto bei {siteName}",
+      "Zu dieser E-Mail-Adresse gibt es kein {siteName}-Konto",
     "Email.RegisterInstead.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Jemand hat darum gebeten, das Passwort für eine E-Mail-Adresse
-    zurückzusetzen, die zu keinem Konto bei <strong>{siteName}</strong> gehört.
+    Es wurde angefordert, das Passwort für eine E-Mail-Adresse zurückzusetzen, die zu keinem Konto bei <strong>{siteName}</strong> gehört.
 </p>
 
 <p>
-    Wenn du unseren Dienst nutzen möchtest, kannst du hier ein neues Konto anlegen:<br />
+    Wenn Sie unseren Dienst nutzen möchten, können Sie ein neues Konto anlegen unter:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail einfach ignorieren.
+    Wenn Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail einfach ignorieren.
 </p>
 
 <p>
@@ -1767,14 +1898,14 @@ export const german: Language = {
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Bestätige, dass dein Konto bei {siteName} vergessen werden soll",
+      "Bestätigen Sie, dass Ihr {siteName}-Konto vergessen werden soll",
     "Email.ConfirmForgetting.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    Du hast darum gebeten, dein Konto bei <strong>{siteName}</strong> zu vergessen.<br />
-    Folge der Schaltfläche unten, um zu sehen, was das bedeutet, und um sicher
-    zu bestätigen, dass du das willst:
+    Sie haben darum gebeten, dass Ihr <strong>{siteName}</strong>-Konto vergessen wird.<br />
+    Folgen Sie der Schaltfläche unten, um zu sehen, was das bedeutet, und um sicher zu sagen,
+    dass Sie es wollen:
 </p>
 
 <p>
@@ -1792,27 +1923,20 @@ export const german: Language = {
 </p>
 
 <p>
-    Wenn die Schaltfläche nicht funktioniert, kannst du auch diesen Link in deinem Browser öffnen:<br />
+    Wenn die Schaltfläche nicht funktioniert, können Sie diesen Link auch in Ihrem Browser öffnen:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Sobald es vergessen ist, kann niemand mehr deinen Namen oder deine
-    E-Mail-Adresse lesen, und niemand kann sich mehr in deinem Konto anmelden.
-    Das lässt sich nicht rückgängig machen.
+    Sobald es vergessen ist, kann niemand Ihren Namen und Ihre E-Mail-Adresse je wieder lesen, und man kann sich nicht mehr in Ihrem Konto anmelden. Das lässt sich nicht rückgängig machen.
 </p>
 
 <p>
-    Der Link funktioniert nur einmal, bis zu 15 Minuten nach deiner Anfrage,
-    und nur, solange du in diesem Konto angemeldet bist. Danach fordere ihn in
-    deinem Konto erneut an.
+    Der Link gilt einmal, bis 15 Minuten nachdem Sie ihn angefordert haben, und nur, solange Sie bei diesem Konto angemeldet sind. Danach fordern Sie ihn erneut in Ihrem Konto an.
 </p>
 
 <p>
-    Wenn du es nicht angefordert hast, passiert nichts, solange niemand dem
-    Link folgt. Trotzdem hat es jemand angefordert, der in deinem Konto
-    angemeldet war. Lege deshalb auf der Seite „Passwort vergessen“ ein neues
-    Passwort fest, damit diese Person sich nicht wieder anmelden kann.
+    Wenn Sie nicht darum gebeten haben, geschieht nichts, solange dem Link niemand folgt. Jemand, der bei Ihrem Konto angemeldet war, hat jedoch darum gebeten. Legen Sie deshalb auf der Seite „Passwort vergessen“ ein neues Passwort fest, um sicherzugehen, dass sich diese Person nicht erneut anmelden kann.
 </p>
 
 <p>
@@ -1824,23 +1948,18 @@ export const german: Language = {
     "Email.RegistrationsSuspended.subject":
       "Die Registrierung ist ausgesetzt: {service} ist nicht erreichbar",
     "Email.RegistrationsSuspended.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    {siteName} konnte {service} um {when} nicht erreichen. Bis der Dienst
-    wieder antwortet, wird allen, die ihn brauchen, um sich zu registrieren
-    oder ein neues Passwort festzulegen, gesagt, dass sie es später noch
-    einmal versuchen sollen.
+    {siteName} konnte {service} um {when} nicht erreichen. Bis es antwortet, wird Lesern, die es brauchen, um sich zu registrieren oder ein neues Passwort festzulegen, gesagt, es später erneut zu versuchen.
 </p>
 
 <p>
-    Es gibt nichts wieder freizuschalten. Jeder Versuch fragt {service} erneut
-    an, und die Seiten funktionieren wieder, sobald er antwortet.
+    Es muss nichts aufgehoben werden. Jeder Versuch fragt {service} neu an, und die Seiten funktionieren wieder, sobald es antwortet.
 </p>
 
 <p>
-    Solange {service} nicht antwortet, bekommst du dazu höchstens eine E-Mail
-    pro Stunde.
+    Solange {service} ausfällt, erhalten Sie dazu höchstens einmal pro Stunde eine E-Mail.
 </p>
 
 <p>
@@ -1850,20 +1969,20 @@ export const german: Language = {
 `,
 
     "Email.DatabaseUnreachable.subject":
-      "{siteName} kann seine Datenbank nicht erreichen",
+      "{siteName} erreicht seine Datenbank nicht",
     "Email.DatabaseUnreachable.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    {siteName} konnte seine Datenbank um {when} nicht erreichen. Bis sie antwortet, sagt jede Seite, die sie braucht, den Lesern, dass die Website nicht verfügbar ist und sie es später noch einmal versuchen sollen.
+    {siteName} konnte seine Datenbank um {when} nicht erreichen. Bis sie antwortet, sagt jede Seite, die sie braucht, den Lesern, dass die Website nicht verfügbar ist und sie es später erneut versuchen sollen.
 </p>
 
 <p>
-    Es muss nichts wieder freigeschaltet werden. Jede Anfrage verlangt neu eine Verbindung, und die Website funktioniert wieder, sobald die Datenbank antwortet.
+    Es muss nichts aufgehoben werden. Jede Anfrage fordert neu eine Verbindung an, und die Website funktioniert wieder, sobald die Datenbank antwortet.
 </p>
 
 <p>
-    Solange die Datenbank nicht erreichbar ist, bekommst du darüber höchstens alle {minutes} Minuten eine E-Mail.
+    Solange die Datenbank ausfällt, erhalten Sie dazu höchstens alle {minutes} Minuten eine E-Mail.
 </p>
 
 <p>
@@ -1875,14 +1994,14 @@ export const german: Language = {
     "Email.UnhandledError.subject":
       "{siteName} ist bei einer Anfrage fehlgeschlagen",
     "Email.UnhandledError.body": `
-<p>Hallo,</p>
+<p>Guten Tag,</p>
 
 <p>
-    {siteName} ist um {when} bei einer Anfrage nach {asked} fehlgeschlagen. Dem Leser wurde die Referenz {reference} gezeigt, und im Protokoll steht die Ursache darunter.
+    {siteName} ist um {when} bei einer Anfrage nach {asked} fehlgeschlagen. Dem Leser wurde die Referenz {reference} angezeigt, und das Protokoll enthält darunter die Ursache.
 </p>
 
 <p>
-    Eine kaputte Website scheitert meist bei jeder Anfrage, deshalb bekommst du höchstens 4 E-Mails pro Stunde über Fehler. Die weiteren stehen trotzdem im Protokoll.
+    Eine defekte Website scheitert meist bei jeder Anfrage, daher erhalten Sie höchstens 4-mal pro Stunde eine E-Mail zu Fehlern. Die späteren stehen trotzdem im Protokoll.
 </p>
 
 <p>

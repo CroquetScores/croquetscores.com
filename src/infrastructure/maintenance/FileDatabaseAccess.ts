@@ -7,6 +7,7 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { dirname } from "node:path";
+import { randomUUID } from "node:crypto";
 
 import {
   type DatabaseAccess,
@@ -35,6 +36,8 @@ export interface FileDatabaseAccessOptions {
 }
 
 const on: DatabaseAccessState = { off: false };
+const besidePath = (path: string): string =>
+  `${path}.${String(process.pid)}.${randomUUID()}.tmp`;
 
 // A whole number of minutes from 1 to the most, said as the code that says
 // which rule it broke.
@@ -126,7 +129,7 @@ export class FileDatabaseAccess implements DatabaseAccess {
     const kept = ensureWords(words);
     const { path } = this.#options;
     await mkdir(dirname(path), { recursive: true });
-    const beside = `${path}.${String(process.pid)}.tmp`;
+    const beside = besidePath(path);
     try {
       await writeFile(
         beside,
@@ -204,7 +207,7 @@ export class FileDatabaseAccess implements DatabaseAccess {
     const { path } = this.#options;
     await mkdir(dirname(path), { recursive: true });
     // Beside it, so that the move is within one directory and is atomic.
-    const beside = `${path}.${String(process.pid)}.tmp`;
+    const beside = besidePath(path);
     try {
       await writeFile(
         beside,

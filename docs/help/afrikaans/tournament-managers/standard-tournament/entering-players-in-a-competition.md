@@ -30,11 +30,11 @@ Die spelers word in die kompetisie se volgorde gelys, wat die volgorde is waarin
 
 ## Oordrag
 
-**Oordrag** sê wat 'n speler in 'n kompetisie inbring uit spel wat dit nie aangeteken het nie: die uitslae van 'n vroeëre stadium, of van spelle wat gespeel is voordat die kompetisie hier aangeteken is. Dit word aangebied in 'n blok en 'n Switserse kompetisie, wat 'n ranglys het waarin dit kan tel, en nie in 'n uitskakeling nie.
+**Dra oor** sê wat 'n speler in 'n kompetisie inbring uit spel wat dit nie aangeteken het nie: die uitslae van 'n vroeëre stadium, of van spelle wat gespeel is voordat die kompetisie hier aangeteken is. Dit word aangebied in 'n blok en 'n Switserse kompetisie, wat 'n ranglys het waarin dit kan tel, en nie in 'n uitskakeling nie.
 
 ![Die dialoog Oordrag](images/carry-forward-dialog.png)
 
-Die dialoog vra vir ses tellings: wedstryde gewen en verloor, spelle gewen en verloor, en hoepels vir en teen. Elke telling is opsioneel. 'n Telling wat leeg gelaat word, dra niks oor nie, wat nie dieselfde is as om 0 oor te dra nie, sodat wie dit ook al later verander dit sien soos dit gelaat is. Druk op **Stoor** om al ses te hou.
+Die dialoog vra vir ses tellings: wedstryde gewen en verloor, spelle gewen en verloor, en hoepels vir en teen. Elke telling is opsioneel. 'n Telling wat leeg gelaat word, dra niks oor nie, wat nie dieselfde is as om 0 oor te dra nie, sodat wie dit ook al later verander dit sien soos dit gelaat is. Druk op **Bewaar** om al ses te hou.
 
 ## Hoe om 'n speler te verwyder
 
@@ -52,7 +52,7 @@ Trek terug vra eers, want dit verander die uitkoms van die kompetisie: die spell
 
 ![Die vraag wat gevra word voordat 'n speler onttrek word](images/withdraw-player-asks.png)
 
-'n Onttrekte speler bied net **Maak die onttrekking ongedaan** aan, wat hulle terugsit tussen dié wat speel, ná dié wat gebly het, sonder om te vra.
+'n Onttrekte speler bied net **Herroep onttrekking** aan, wat hulle terugsit tussen dié wat speel, ná dié wat gebly het, sonder om te vra.
 
 !['n Blok met 'n onttrekte speler](images/competition-players-withdrawn.png)
 

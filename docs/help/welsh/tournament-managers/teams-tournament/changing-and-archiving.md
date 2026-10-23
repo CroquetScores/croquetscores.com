@@ -2,15 +2,15 @@
 
 ## Newid manylion y twrnamaint
 
-Yn y rhestr o dwrnameintiau yn yr adran weinyddu, pwyswch **Golygu** ar y twrnamaint. Y ffurflen yw'r un a'i creodd, wedi'i dechrau fel y mae'r twrnamaint. Newidiwch beth sydd o'i le a phwyswch **Diweddaru'r twrnamaint**.
+Yn y rhestr o dwrnameintiau yn yr adran weinyddu, pwyswch **Golygu** ar y twrnamaint. Y ffurflen yw'r un a'i creodd, wedi'i dechrau fel y mae'r twrnamaint. Newidiwch beth sydd o'i le a phwyswch **Diweddaru twrnamaint**.
 
 ![Y ffurflen Golygu twrnamaint](images/edit-tournament.png)
 
-Gellir lledu dyddiau'r twrnamaint yma lle mae ar test angen diwrnod y tu allan iddynt, gan y chwaraeir test o fewn ei dwrnamaint. Gellir newid un fformat a chwaraeir gan dimau am un arall, gan fod y twrnamaint yn cynnwys yr un pethau ym mhob un. Unwaith y bydd gan y twrnamaint unrhyw dîm neu test, a'r rhai a archifwyd yn cyfrif, ni ellir ei newid i'r fformat Safonol, sydd â chwaraewyr a chystadlaethau yn eu lle.
+Gellir lledu dyddiau'r twrnamaint yma lle mae ar brawf angen diwrnod y tu allan iddynt, gan y chwaraeir prawf o fewn ei dwrnamaint. Gellir newid un fformat a chwaraeir gan dimau am un arall, gan fod y twrnamaint yn cynnwys yr un pethau ym mhob un. Unwaith y bydd gan y twrnamaint unrhyw dîm neu brawf, a'r rhai a archifwyd yn cyfrif, ni ellir ei newid i'r fformat Safonol, sydd â chwaraewyr a chystadlaethau yn eu lle.
 
 Mae twrnamaint yn cadw ei gyfeiriad pan gaiff ei enw ei gywiro, fel bod dolen y mae rhywun eisoes wedi'i hanfon yn dal i ddod o hyd iddo. Mae'n symud dim ond pan fydd y flwyddyn y mae'n dechrau ynddi neu ei gamp yn newid, ac wedyn mae ei hen gyfeiriad yn arwain at yr un newydd. Mae cadw yn eich tywys i'r twrnamaint lle bynnag y'i ceir yn awr.
 
-Dim ond rheolwr all newid twrnamaint. Dywedir hynny wrth sgoriwr, neu unrhyw un arall, yn hytrach na dangos y ffurflen iddo.
+Dim ond rheolwr all newid twrnamaint. Dywedir hynny wrth sgorwr, neu unrhyw un arall, yn hytrach na dangos y ffurflen iddo.
 
 ## Y rhestr o dwrnameintiau
 

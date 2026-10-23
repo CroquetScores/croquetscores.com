@@ -8,7 +8,7 @@ O código agora é de código aberto, sob a Licença Pública Geral GNU Affero v
 
 ### Encontrar as coisas
 
-- **Pesquisar.** Toda página tem uma caixa de pesquisa no alto. Digite um nome e pressione Pesquisar para encontrar torneios, competições e jogadores. Os resultados vêm em três listas, e uma lista vazia é omitida. Se houver mais de cem de um mesmo tipo, a página avisa, e acrescentar uma palavra à pesquisa a restringe.
+- **Buscar.** Toda página tem uma caixa de pesquisa no alto. Digite um nome e pressione Buscar para encontrar torneios, competições e jogadores. Os resultados vêm em três listas, e uma lista vazia é omitida. Se houver mais de cem de um mesmo tipo, a página avisa, e acrescentar uma palavra à pesquisa a restringe.
 - **Restrinja os torneios por país, região e esporte.** Na página inicial, escolha um país para ver só os torneios disputados nele. Depois de escolher um país, você pode escolher um estado ou província dele, e também um esporte. O que você escolheu fica no endereço da página, então você pode salvá-lo nos favoritos ou enviá-lo a alguém, e o botão de voltar desfaz a escolha. **Escolher um estado ou província só encontra torneios novos.** Os mais antigos não receberam estado nem província, então escolher um deixa esses de fora.
 
 ### Acompanhar um torneio

@@ -24,9 +24,19 @@ Une poule et un système suisse ne demandent que **au meilleur des** combien de 
 
 Une élimination directe demande combien de **places** compte son tableau, et au meilleur de combien de parties se joue chaque tour. Les places proposées sont 2, 4, 8, 16, 32, 64 et 128, puisque tout autre nombre ne pourrait pas se diviser par deux tour après tour jusqu’à une finale, et la boîte de dialogue s’ouvre sur 8. Les places qui restent une fois les joueurs inscrits sont remplies par des exempts, qui s’ajoutent là où s’ajoutent les joueurs.
 
-Un tableau a autant de tours qu’il en faut pour ramener ses places à une, de sorte qu’un tableau de 8 places a trois tours. La boîte de dialogue demande au meilleur de combien se joue chacun, ensemble sous **Au meilleur des**, dans l’ordre où ils se jouent. Les trois derniers sont nommés comme on parle des tours d’un tableau, **Quarts**, **Demis** et **Finale**, et ceux d’avant par leur numéro, Tour 1 en premier. Choisir plus de places ajoute des tours au début du tableau, et en choisir moins en retire au début, de sorte que ce qui a été tapé pour la finale reste celui de la finale. Chaque tour se joue au meilleur d’un nombre impair de parties, puisqu’une rencontre d’élimination directe doit avoir un vainqueur.
+Un tableau a autant de tours qu’il en faut pour ramener ses places à une, de sorte qu’un tableau de 8 places a trois tours. La boîte de dialogue demande au meilleur de combien se joue chacun, ensemble sous **Meilleur des**, dans l’ordre où ils se jouent. Les trois derniers sont nommés comme on parle des tours d’un tableau, **Quarts**, **Demi-finales** et **Finale**, et ceux d’avant par leur numéro, Tour 1 en premier. Choisir plus de places ajoute des tours au début du tableau, et en choisir moins en retire au début, de sorte que ce qui a été tapé pour la finale reste celui de la finale. Chaque tour se joue au meilleur d’un nombre impair de parties, puisqu’une rencontre d’élimination directe doit avoir un vainqueur.
 
 ![La boîte de dialogue Ajouter une compétition pour une élimination directe de 4 places](images/add-competition-knockout.png)
+
+### Comment elle se joue et se compte
+
+Chaque type demande les trois mêmes choses sous sa forme.
+
+**Joué avec handicaps.** Cochez cette case pour une compétition jouée avec handicaps.
+
+**Autorise les matchs nuls.** Cochez cette case là où une partie peut finir sans qu’aucun joueur ne gagne. La plupart des compétitions ne l’autorisent pas. Quand elle est cochée, un résultat saisi à points égaux et sans marque est gardé comme un match nul ; quand elle ne l’est pas, une partie à points égaux doit dire qui l’a gagnée par une marque après les points du vainqueur, comme « 6w ». Le match d’une élimination directe a toujours un vainqueur : une partie nulle n’en décide donc pas.
+
+**Compte pour les classements mondiaux.** Demandé seulement là où cela peut compter : une compétition de croquet association ou de croquet golf qui n’est ni jouée avec handicaps ni ouverte aux matchs nuls. La case est cochée au départ ; décochez-la pour une compétition qui ne doit pas compter.
 
 ### En ajouter plusieurs à la suite
 
@@ -34,7 +44,7 @@ Appuyez sur **Ajouter**. La compétition est ajoutée, la boîte de dialogue le 
 
 ## Modifier une compétition
 
-**Modifier** ouvre la même boîte de dialogue sur la compétition, intitulée Modifier la compétition, avec son nom et sa forme tels qu’ils sont. Son type n’est pas demandé, puisqu’une poule ne devient pas une élimination directe en la modifiant : une compétition du mauvais type s’archive et s’ajoute de nouveau. Appuyez sur **Enregistrer** pour garder la modification et fermer la boîte de dialogue.
+**Modifier** ouvre la même boîte de dialogue sur la compétition, intitulée Modifier la compétition, avec son nom, sa forme, et la façon dont elle se joue et se compte, tels qu’ils sont. Son type n’est pas demandé, puisqu’une poule ne devient pas une élimination directe en la modifiant : une compétition du mauvais type s’archive et s’ajoute de nouveau. Appuyez sur **Enregistrer** pour garder la modification et fermer la boîte de dialogue.
 
 Une élimination directe qui a une partie a des joueurs placés dans son tableau, et un changement de ses places les déplacerait ; il est donc refusé dès qu’une partie a été saisie. Le nombre de parties de ses tours peut encore être changé.
 

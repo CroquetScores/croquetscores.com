@@ -8,7 +8,7 @@ In die lys toernooie in die administrasie, druk op **Wysig** by die toernooi. Di
 
 Sodra die toernooi enige speler of kompetisie bevat, geargiveerdes ingereken, kan sy formaat nie verander word na een wat tussen spanne gespeel word nie, wat in plaas daarvan spanne en toetse het.
 
-'n Toernooi hou sy adres wanneer sy naam reggestel word, sodat 'n skakel wat iemand reeds gestuur het dit steeds vind. Dit skuif net wanneer die jaar waarin dit begin of sy sport verander, en dan lei sy ou adres na die nuwe een. Stoor neem jou na die toernooi waar dit ook al nou gevind word.
+'n Toernooi hou sy adres wanneer sy naam reggestel word, sodat 'n skakel wat iemand reeds gestuur het dit steeds vind. Dit skuif net wanneer die jaar waarin dit begin of sy sport verander, en dan lei sy ou adres na die nuwe een. Om te bewaar neem jou na die toernooi waar dit ook al nou gevind word.
 
 Net 'n bestuurder kan 'n toernooi verander. 'n Teller, of enigiemand anders, word so gesê eerder as om die vorm te sien.
 

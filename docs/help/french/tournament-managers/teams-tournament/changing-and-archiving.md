@@ -6,11 +6,11 @@ Dans la liste des tournois dans l’administration, appuyez sur **Modifier** sur
 
 ![Le formulaire Modifier le tournoi](images/edit-tournament.png)
 
-Les dates du tournoi peuvent être élargies ici quand un test a besoin d’un jour en dehors d’elles, puisqu’un test se joue au sein de son tournoi. Un format par équipes peut être changé pour un autre, puisque le tournoi contient les mêmes choses dans chacun. Dès que le tournoi contient une équipe ou un test, archivés compris, il ne peut plus être changé pour le format Standard, qui a des joueurs et des compétitions à la place.
+Les dates du tournoi peuvent être élargies ici quand une rencontre a besoin d’un jour en dehors d’elles, puisqu’une rencontre se joue au sein de son tournoi. Un format par équipes peut être changé pour un autre, puisque le tournoi contient les mêmes choses dans chacun. Dès que le tournoi contient une équipe ou une rencontre, archivées comprises, il ne peut plus être changé pour le format Standard, qui a des joueurs et des compétitions à la place.
 
 Un tournoi garde son adresse quand son nom est corrigé, pour qu’un lien que quelqu’un a déjà envoyé le retrouve. Il ne déménage que si l’année où il commence ou son sport change, et son ancienne adresse mène alors à la nouvelle. Enregistrer vous amène au tournoi, là où il se trouve désormais.
 
-Seul un gestionnaire peut modifier un tournoi. Un marqueur, ou quiconque d’autre, en est averti au lieu de voir le formulaire.
+Seul un organisateur peut modifier un tournoi. Un marqueur, ou quiconque d’autre, en est averti au lieu de voir le formulaire.
 
 ## La liste des tournois
 

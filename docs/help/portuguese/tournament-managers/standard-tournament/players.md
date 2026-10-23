@@ -18,7 +18,7 @@ Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a págin
 
 **Bandeira** é a bandeira mostrada ao lado do nome do jogador. Pode ficar como nenhuma, como está para a maioria dos jogadores. O que um jogador representa e que bandeira ele leva são coisas separadas, porque um jogador pode jogar por um clube de um país e levar a bandeira de outro.
 
-**Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Golf Croquet, as duas modalidades cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, porque a maioria dos jogadores é conhecida nos rankings pelo próprio nome, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador.
+**Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Croquet de Golfe, os dois esportes cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, porque a maioria dos jogadores é conhecida nos rankings pelo próprio nome, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador.
 
 Conforme você digita um nome, são oferecidos os jogadores que os rankings mundiais conhecem cujos nomes começam daquele jeito, para que você possa tomar o nome como os rankings o escrevem em vez de digitá-lo por inteiro. Ao lado do nome no ranking mundial, uma marca de certo diz que os rankings conhecem o nome, e um ponto de interrogação diz que não: o nome pode estar escrito errado, ou o jogador pode ser novo nos rankings. É só um aviso. Um nome que os rankings não conhecem é guardado tão prontamente quanto um que conhecem.
 
@@ -26,7 +26,7 @@ Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus
 
 ![O diálogo depois que um jogador é adicionado](images/add-player-dialog-added.png)
 
-Um jogador nunca se chama "Bye". Os byes de uma eliminatória são adicionados na própria eliminatória, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
+Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
 
 ## Corrigir um jogador
 
@@ -38,7 +38,7 @@ Um jogador corrigido aqui é corrigido em todo lugar: em todas as competições 
 
 ## Colocar os jogadores em ordem
 
-Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que uma eliminatória é sorteada. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
+Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteada. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
 
 ## Arquivar um jogador
 

@@ -1,6 +1,6 @@
 # Scores
 
-Het tabblad **Scores** van de pagina van een competitie is waar haar partijen worden ingevoerd, gecorrigeerd en opzijgezet. Een scorer ziet alleen dit tabblad, en kan erop alles doen wat een beheerder kan.
+Het tabblad **Scores** van de pagina van een competitie is waar haar partijen worden ingevoerd, gecorrigeerd en opzijgezet. Een scorebijhouder ziet alleen dit tabblad, en kan erop alles doen wat een toernooileider kan.
 
 ![Het tabblad Scores van een poule, met scores in gebruik, een teruggetrokken score en een gearchiveerde](images/scores-tab.png)
 
@@ -12,7 +12,7 @@ Druk op **Score toevoegen**, boven de lijst. Het dialoogvenster leest zoals een 
 
 De winnaar en de verliezer worden elk gekozen uit de spelende spelers van de competitie, in de volgorde van de competitie. Om te beginnen is niemand gekozen, zodat een partij nooit wordt genoteerd op naam van een speler die je niet hebt gekozen. In een knock-out kiest het kiezen van de winnaar ook tegen wie die is geloot als verliezer, waar je het kunt zien en een ander kunt kiezen.
 
-Een score wordt getypt zoals de scorer die heeft opgeschreven: het aantal punten, en wat erop volgt, dat wordt bewaard en getoond zoals getypt, als "26tp" voor 26 poortjes en een triple peel. Het getal zijn de cijfers waarmee de score begint; een score die niet met een cijfer begint, wordt geweigerd.
+Een score wordt getypt zoals de scorebijhouder die heeft opgeschreven: het aantal punten, en wat erop volgt, dat wordt bewaard en getoond zoals getypt, als "26tp" voor 26 poortjes en een triple peel. Het getal zijn de cijfers waarmee de score begint; een score die niet met een cijfer begint, wordt geweigerd.
 
 Een partij die met gelijke punten is gewonnen, zoals wanneer ze door de tijd wordt afgebroken en op een andere manier wordt beslist, zegt wie heeft gewonnen met een markering achter de score van de winnaar: "6w" versloeg "6". Op Croquet Scores zijn de markeringen "w", "won" en "winner"; Gateball Scores neemt ook "cb" en "so". De score van een winnaar moet hoger zijn dan die van de verliezer, of gemarkeerd, tenzij het toernooi gelijkspel toestaat, in welk geval gelijke punten zonder markering worden bewaard als gelijkspel.
 
@@ -24,7 +24,7 @@ Wat wordt geweigerd, staat onder het veld waar het over gaat: een winnaar of ver
 
 ## De loting van een knock-out moet eerst gevuld zijn
 
-Een knock-out wordt pas gespeeld wanneer elke plaats in de loting een speler of een vrijloting bevat. Tot dan legt Score toevoegen uit waarom er geen scores kunnen worden toegevoegd, in plaats van het dialoogvenster te openen.
+Een knock-out wordt pas gespeeld wanneer elke plaats in de loting een speler of een bye bevat. Tot dan legt Score toevoegen uit waarom er geen scores kunnen worden toegevoegd, in plaats van het dialoogvenster te openen.
 
 ![Wat Score toevoegen zegt in een knock-out waarvan de loting niet is gevuld](images/draw-not-filled.png)
 
@@ -52,6 +52,6 @@ In een knock-out gaat de winnaar van een wedstrijd door naar de volgende ronde, 
 
 Een speler die een competitie verlaat, wordt daar gewoonlijk uit teruggetrokken, op het tabblad Spelers, en dat is alles wat nodig is: die speelt niet meer, en de partijen die die wel speelde blijven staan, maar tellen niet meer mee voor winst/verlies en poortjes. Een score terugtrekken is voor het zeldzamere geval dat een gespeelde partij niet mag meetellen. In de Australische President's Eights bijvoorbeeld blijven de uitslagen van de eerste ronde staan wanneer een speler zich terugtrekt, en worden alleen zijn partijen uit de tweede ronde uit de telling gehaald: trek die partijen terug.
 
-In een poule of een Zwitsers systeem wordt een score die is gespeeld maar niet mag meetellen teruggetrokken in plaats van gearchiveerd. **Terugtrekken** houdt haar tussen de scores in gebruik, op haar plaats, maar doorgestreept en voor niets meetellend op de openbare pagina's. **Weer laten meetellen** laat haar weer meetellen. Geen van beide vraagt eerst. De scores van een knock-out krijgen geen Terugtrekken, omdat een score daar meer beslist dan de stand.
+In een poule of een Zwitsers systeem wordt een score die is gespeeld maar niet mag meetellen teruggetrokken in plaats van gearchiveerd. **Terugtrekken** houdt haar tussen de scores in gebruik, op haar plaats, maar doorgestreept en voor niets meetellend op de openbare pagina's. **Hervatten** laat haar weer meetellen. Geen van beide vraagt eerst. De scores van een knock-out krijgen geen Terugtrekken, omdat een score daar meer beslist dan de stand.
 
 Volgende: [Notities](notes.md).

@@ -1,6 +1,6 @@
 # Anteckningar
 
-Fliken **Anteckningar** på en turnerings sida är där dess turneringsledare skriver det spelarna behöver veta medan turneringen pågår: spelordningen, en ändring av banorna, lunchtiden. Läsarna hittar dem på turneringens offentliga sida Anteckningar, och en anteckning de inte har läst markeras där med en röd asterisk, som också markerar avdelningen Anteckningar på varje sida i turneringen tills de öppnar den.
+Fliken **Anteckningar** på en turnerings sida är där dess arrangörer skriver det spelarna behöver veta medan turneringen pågår: spelordningen, en ändring av banorna, lunchtiden. Läsarna hittar dem på turneringens offentliga sida Anteckningar, och en anteckning de inte har läst markeras där med en röd asterisk, som också markerar avdelningen Anteckningar på varje sida i turneringen tills de öppnar den.
 
 ![Fliken Anteckningar](images/notes-tab.png)
 
@@ -26,8 +26,8 @@ Tryck på en antecknings rubrik, eller på dess **Redigera**, för att öppna pa
 
 ## Ta bort en anteckning
 
-En anteckning som inte längre gäller tas bort. En borttagen anteckning är borta för gott, så **Ta bort** frågar först.
+En anteckning som inte längre gäller tas bort. En borttagen anteckning är borta för gott, så **Radera** frågar först.
 
 ![Frågan som ställs innan en anteckning tas bort](images/delete-note-asks.png)
 
-Nästa: [Turneringsledare och resultatförare](managers-and-scorers.md).
+Nästa: [Arrangörer och resultatförare](managers-and-scorers.md).

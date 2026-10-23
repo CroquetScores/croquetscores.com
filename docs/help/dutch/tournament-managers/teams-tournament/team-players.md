@@ -1,6 +1,6 @@
 # De spelers van een team
 
-De pagina van een team open je via zijn naam, of via **Bekijken**, op het tabblad Teams. Ze heeft de naam van het team als kop, met de korte naam tussen haakjes, en zijn vlag, zodat een beheerder die bij het verkeerde team is uitgekomen dat meteen ziet. Ze heeft één ding te tonen, de spelers van het team, dus de lijst is de pagina.
+De pagina van een team open je via zijn naam, of via **Bekijken**, op het tabblad Teams. Ze heeft de naam van het team als kop, met de korte naam tussen haakjes, en zijn vlag, zodat een toernooileider die bij het verkeerde team is uitgekomen dat meteen ziet. Ze heeft één ding te tonen, de spelers van het team, dus de lijst is de pagina.
 
 ![De pagina van een team, met zijn spelers en één gearchiveerde](images/team-page.png)
 
@@ -28,12 +28,12 @@ Druk op de naam van een speler, of op **Bewerken**, om hetzelfde dialoogvenster 
 
 ## Volgorde
 
-De spelers staan in de volgorde van het team, wat de volgorde is waarin ze worden aangeboden wanneer een score van een testmatch wordt ingevoerd. **Omhoog** en **Omlaag** verplaatsen een speler één plaats binnen het team.
+De spelers staan in de volgorde van het team, wat de volgorde is waarin ze worden aangeboden wanneer een score van een test wordt ingevoerd. **Omhoog** en **Omlaag** verplaatsen een speler één plaats binnen het team.
 
 ## Een speler archiveren
 
 **Archiveren** zet een speler opzij: per ongeluk ingevoerd, of niet meer bij het team. Een gearchiveerde speler staat onder **Gearchiveerde spelers**, doorgestreept, na de spelers in gebruik, en biedt alleen **Herstellen**. Archiveren vraagt nooit eerst, omdat een speler in een team nergens anders is ingevoerd en herstellen alles terugzet.
 
-Een speler die een partij in gebruik heeft gespeeld in een testmatch, kan niet worden gearchiveerd, omdat de partijen dan tegen iemand zouden zijn die er niet meer is, dus zo'n speler krijgt geen Archiveren. Een speler van wie alle partijen gearchiveerd zijn, kan wel worden gearchiveerd.
+Een speler die een partij in gebruik heeft gespeeld in een test, kan niet worden gearchiveerd, omdat de partijen dan tegen iemand zouden zijn die er niet meer is, dus zo'n speler krijgt geen Archiveren. Een speler van wie alle partijen gearchiveerd zijn, kan wel worden gearchiveerd.
 
-Volgende: [Testmatches](tests.md).
+Volgende: [Tests](tests.md).

@@ -1,6 +1,6 @@
-# Organizatorzy i wprowadzający wyniki
+# Organizatorzy i osoby wprowadzające wyniki
 
-Turniej ma organizatorów, którzy mogą robić z nim wszystko, co można z nim zrobić, i może mieć wprowadzających wyniki, którzy wprowadzają jego wyniki i nic więcej. Ten, kto utworzył turniej, jest jego pierwszym organizatorem.
+Turniej ma organizatorów, którzy mogą robić z nim wszystko, co można z nim zrobić, i może mieć osoby wprowadzające wyniki, które wprowadzają jego wyniki i nic więcej. Ten, kto utworzył turniej, jest jego pierwszym organizatorem.
 
 ## Organizatorzy
 
@@ -8,7 +8,7 @@ Karta **Organizatorzy** wymienia, kto prowadzi turniej, w kolejności, w jakiej 
 
 ![Karta Organizatorzy](images/managers-tab.png)
 
-Kogoś czyni się organizatorem przez jego adres e-mail. Wpisz go w pole nad listą i naciśnij **Dodaj organizatora**. Adres musi należeć do konta, które jest zarejestrowane i potwierdzone; adres bez takiego konta jest odrzucany pod polem, a strona nie mówi o tym nic więcej. Wprowadzający wyniki uczyniony organizatorem przestaje być wprowadzającym wyniki.
+Kogoś czyni się organizatorem przez jego adres e-mail. Wpisz go w pole nad listą i naciśnij **Dodaj organizatora**. Adres musi należeć do konta, które jest zarejestrowane i potwierdzone; adres bez takiego konta jest odrzucany pod polem, a strona nie mówi o tym nic więcej. Osoba wprowadzająca wyniki uczyniona organizatorem przestaje być osobą wprowadzającą wyniki.
 
 ![Adres, którego nie można uczynić organizatorem](images/managers-tab-refused.png)
 
@@ -18,16 +18,16 @@ Kogoś czyni się organizatorem przez jego adres e-mail. Wpisz go w pole nad lis
 
 Możesz usunąć samego siebie. Pytanie mówi wtedy, co to znaczy: tracisz własną drogę powrotu do turnieju i nikt na tej stronie nie może tego za ciebie cofnąć. Inny organizator może ponownie uczynić cię organizatorem.
 
-## Wprowadzający wyniki
+## Osoby wprowadzające wyniki
 
-Karta **Wprowadzający wyniki** to karta Organizatorzy dla wprowadzających wyniki i działa tak samo: adres e-mail i **Dodaj osobę wprowadzającą wyniki** nad listą oraz **Usuń** przy każdym.
+Karta **Osoby wprowadzające wyniki** to karta Organizatorzy dla osób wprowadzających wyniki i działa tak samo: adres e-mail i **Dodaj osobę wprowadzającą wyniki** nad listą oraz **Usuń** przy każdym.
 
-![Karta Wprowadzający wyniki](images/scorers-tab.png)
+![Karta Osoby wprowadzające wyniki](images/scorers-tab.png)
 
-Wprowadzający wyniki widzi turniej na swojej własnej liście w administracji, z **Wyniki** w miejsce Zarządzaj, i oferowane są mu tylko jego konkurencje: żadnych zawodników, notatek, organizatorów, wprowadzających wyniki ani rankingów. Na stronie konkurencji widzi tylko kartę Wyniki, na której może wprowadzać, poprawiać, archiwizować i przywracać wyniki tak jak organizator. O tym, kto gra w konkurencji, decydują organizatorzy.
+Osoba wprowadzająca wyniki widzi turniej na swojej własnej liście w administracji, z **Wyniki** w miejsce Zarządzaj, i oferowane są mu tylko jego konkurencje: żadnych zawodników, notatek, organizatorów, osób wprowadzających wyniki ani rankingów. Na stronie konkurencji widzi tylko kartę Wyniki, na której może wprowadzać, poprawiać, archiwizować i przywracać wyniki tak jak organizator. O tym, kto gra w konkurencji, decydują organizatorzy.
 
-![Widok strony turnieju dla wprowadzającego wyniki](images/scorer-tournament-page.png)
+![Widok strony turnieju dla osoby wprowadzającej wyniki](images/scorer-tournament-page.png)
 
-Organizatora nie czyni się wprowadzającym wyniki, bo organizator może już robić wszystko to, co wprowadzający wyniki. Turniej nie potrzebuje wprowadzającego wyniki, więc każdego z nich można usunąć, także ostatniego.
+Organizatora nie czyni się osobą wprowadzającą wyniki, bo organizator może już robić wszystko to, co osoba wprowadzająca wyniki. Turniej nie potrzebuje osoby wprowadzającej wyniki, więc każdą z nich można usunąć, także ostatnią.
 
 Dalej: [Rankingi](rankings.md).

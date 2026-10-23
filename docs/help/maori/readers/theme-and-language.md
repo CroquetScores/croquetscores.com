@@ -10,7 +10,7 @@ Ka tāpaetia e **Kaupapa tae** ko **Marama**, ko **Pōuri** me **Pūnaha**. Ko *
 
 Kia kōwhiri noa koe, ka kōrero te pae i te reo tuatahi e kī ana tō pūtirotiro e pānui ana koe, ā, kei te pae. Ki te kore he reo o ēnei kei a ia, ka kōrero Pākehā.
 
-Hei kōwhiri i tētahi atu, kōwhiria i te rārangi **Reo**, ka pēhi i **Whakarerekē**. Ka hoki mai te whārangi i taua reo, pēnei anō hoki ngā whārangi katoa i muri mai, i tēnei haerenga, i te haerenga e whai ake nei hoki. Ka tuwhera te rārangi i te reo e pānui ana koe.
+Hei kōwhiri i tētahi atu, kōwhiria i te rārangi **Reo**, ka pēhi i **Huri**. Ka hoki mai te whārangi i taua reo, pēnei anō hoki ngā whārangi katoa i muri mai, i tēnei haerenga, i te haerenga e whai ake nei hoki. Ka tuwhera te rārangi i te reo e pānui ana koe.
 
 Ko tētahi whārangi o tēnei āwhina kāore anō kia whakapākehātia ki tō reo, ka whakaatuhia i te reo Pākehā, kaua e huna.
 

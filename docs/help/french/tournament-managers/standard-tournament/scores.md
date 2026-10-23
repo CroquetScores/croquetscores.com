@@ -1,12 +1,12 @@
-# Résultats
+# Scores
 
-L’onglet **Résultats** de la page d’une compétition est l’endroit où ses parties sont saisies, corrigées et mises de côté. Un marqueur ne voit que cet onglet, et peut y faire tout ce qu’un gestionnaire peut faire.
+L’onglet **Scores** de la page d’une compétition est l’endroit où ses parties sont saisies, corrigées et mises de côté. Un marqueur ne voit que cet onglet, et peut y faire tout ce qu’un organisateur peut faire.
 
-![L’onglet Résultats d’une poule, avec des résultats en service, un retiré et un archivé](images/scores-tab.png)
+![L’onglet Scores d’une poule, avec des résultats en service, un retiré et un archivé](images/scores-tab.png)
 
 ## Saisir un résultat
 
-Appuyez sur **Ajouter un résultat**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
+Appuyez sur **Ajouter un score**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
 ![La boîte de dialogue Ajouter un résultat, remplie](images/add-score-dialog.png)
 
@@ -44,7 +44,7 @@ Là où un résultat pourrait être archivé, ses joueurs peuvent être changés
 
 ## Archiver un résultat
 
-**Archiver** met un résultat de côté pour qu’il ne compte plus pour rien. Il est listé sous **Résultats archivés**, barré, et n’offre plus que **Restaurer**. Aucun des deux ne demande d’abord, puisque chacun annule l’autre.
+**Archiver** met un résultat de côté pour qu’il ne compte plus pour rien. Il est listé sous **Scores archivés**, barré, et n’offre plus que **Restaurer**. Aucun des deux ne demande d’abord, puisque chacun annule l’autre.
 
 Dans une élimination directe, le vainqueur d’une rencontre passe au tour suivant ; le résultat d’une rencontre dont le vainqueur a joué au tour suivant n’a donc pas d’Archiver. La partie du tour suivant s’archive d’abord, et ensuite celles d’avant peuvent l’être. Quand un tour se joue au meilleur des 3 ou des 5, chaque partie de la rencontre est tenue de la même façon. Une poule et un système suisse n’ont pas de tours qui dépendent l’un de l’autre, de sorte que chacun de leurs résultats peut être archivé.
 
@@ -52,6 +52,6 @@ Dans une élimination directe, le vainqueur d’une rencontre passe au tour suiv
 
 Un joueur qui quitte une compétition est d’ordinaire déclaré forfait, sur l’onglet Joueurs, et cela suffit : il ne joue plus, et les parties qu’il a jouées restent, mais elles ne comptent plus dans les victoires, les défaites et les arceaux. Retirer un résultat est pour le cas plus rare où une partie qui a été jouée ne doit pas compter. Dans les President’s Eights australiens, par exemple, les résultats du premier tour restent quand un joueur se retire, et seules ses parties du second tour sortent du décompte : retirez ces parties.
 
-Dans une poule ou un système suisse, un résultat qui a été joué mais ne doit pas compter se retire plutôt que de s’archiver. **Retirer** le garde parmi les résultats en service, à sa place, mais barré et ne comptant pour rien sur les pages publiques. **Annuler le retrait** le fait compter de nouveau. Aucun des deux ne demande d’abord. Les résultats d’une élimination directe n’ont pas de Retirer, puisque là un résultat décide de plus que le classement.
+Dans une poule ou un système suisse, un résultat qui a été joué mais ne doit pas compter se retire plutôt que de s’archiver. **Retirer** le garde parmi les résultats en service, à sa place, mais barré et ne comptant pour rien sur les pages publiques. **Réintégrer** le fait compter de nouveau. Aucun des deux ne demande d’abord. Les résultats d’une élimination directe n’ont pas de Retirer, puisque là un résultat décide de plus que le classement.
 
 Suite : [Notes](notes.md).

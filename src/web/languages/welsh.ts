@@ -1,21 +1,17 @@
-// The site's words in Welsh. Keyed as the English catalogue is, which is what
-// a word missing here falls back to.
-//
-// Written to the reader as chi rather than ti: chi is what Welsh websites,
-// software and public bodies use to a reader they do not know, and it is right
-// for the plural as well as the singular, so the same line serves a person
-// signing in and a manager speaking of the players. The English it is written
-// from is plain and direct, and chi keeps that without sounding curt. Commands
-// are the chi form (Rhowch, Dewiswch), as Welsh instructions are, while menus,
-// buttons and headings use the verbal noun (Cofrestru, Newid enw), and are
-// written in sentence case, as Welsh writes them, where the English
-// capitalises each word.
+// The site's words in Welsh (Cymraeg), written afresh rather than from another
+// language's file. The reader is addressed as "chi", the polite and plural
+// form, throughout. Menu items, buttons and headings are written in sentence
+// case, as Welsh writes them, not with a capital on every word. "Email address"
+// is "cyfeiriad e-bost" and a bare "email" is "e-bost". A label's colon belongs
+// to its words. The words the site itself looks for ("Bye" as a player's name,
+// and the words of the terms-of-use link) stay as English says them.
 import type { Language } from "../common/language.js";
 
 export const welsh: Language = {
   tag: "cy",
   name: "Cymraeg",
   words: {
+    // The site's own bars.
     "site.skipToContent": "Neidio i'r cynnwys",
     "navigation.menu": "Dewislen",
     "navigation.label": "Prif",
@@ -33,17 +29,20 @@ export const welsh: Language = {
     "footer.copyright": "© Hawlfraint {years}, {owner}",
     "footer.privacy": "Preifatrwydd",
     "footer.termsOfUse": "Telerau defnyddio",
-    "beta.banner":
-      "Gwefan beta yw hon. Gall data gael ei ailosod ar unrhyw adeg.",
+    "beta.banner": "Gwefan beta yw hon. Gellir ailosod y data ar unrhyw adeg.",
     "privacy.contact":
-      "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch chi: {emailAddress}",
+      "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch: {emailAddress}",
+    // The box a reader ticks to agree to the terms of use for those who write.
+    // The link's words are found in the box's, so they are written exactly as
+    // they are there.
     "termsOfUse.agree": "Rwy'n cytuno i'r telerau defnyddio",
     "termsOfUse.link": "telerau defnyddio",
     "termsOfUse.report":
-      "Rhoi gwybod am rywbeth a ysgrifennwyd, neu holi am y telerau hyn: {emailAddress}",
+      "Rhowch wybod am yr hyn a ysgrifennwyd, neu holwch am y telerau hyn: {emailAddress}",
     "TermsOfUse.NotAgreed": "Ticiwch y blwch i gytuno i'r telerau defnyddio.",
+    // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Mae hwn yn lle diogel i ddysgu {siteName}. Gellir dileu popeth a roddwch yma ar unrhyw adeg.",
+      "Dyma le diogel i ddysgu {siteName}. Gellir dileu unrhyw beth a roddir yma ar unrhyw adeg.",
 
     "language.label": "Iaith",
     "language.choose": "Newid",
@@ -51,18 +50,19 @@ export const welsh: Language = {
     // The alert that tells a reader there is something new to read.
     "whatsNew.public.message": "Mae rhywbeth newydd i'w ddarllen.",
     "whatsNew.admin.message":
-      "Mae rhywbeth newydd i bobl sy'n rhedeg twrnameintiau.",
-    "whatsNew.view": "Gweld beth sy'n newydd",
-    "whatsNew.later": "Atgoffa fi y tro nesaf",
-    "whatsNew.never": "Peidio byth â dangos y neges hon",
+      "Mae rhywbeth newydd i'r bobl sy'n cynnal twrnameintiau.",
+    "whatsNew.view": "Gweld yr hyn sy'n newydd",
+    "whatsNew.later": "Atgoffwch fi y tro nesaf",
+    "whatsNew.never": "Peidiwch byth â dangos y neges hon i mi",
 
     "form.otherwise":
-      "Mae rhywbeth o'i le. Gwiriwch yr hyn a roesoch a rhowch gynnig arall arni.",
+      "Mae rhywbeth o'i le yma. Gwiriwch yr hyn a roddwyd a rhowch gynnig arall arni.",
 
+    // The account menu in the header.
     "account.menu": "Cyfrif",
     "account.register": "Cofrestru",
     "account.signIn": "Mewngofnodi",
-    "account.forgotPassword": "Rwyf wedi anghofio fy nghyfrinair",
+    "account.forgotPassword": "Wedi anghofio'r cyfrinair",
     "account.signOut": "Allgofnodi",
     "account.profile": "Proffil",
     "account.changePassword": "Newid cyfrinair",
@@ -76,61 +76,64 @@ export const welsh: Language = {
     "register.submit": "Cofrestru",
     "register.withGoogle": "Cofrestru gyda Google",
     "register.or": "neu",
+    // Said above the form when Google sent the reader back without them being
+    // let in.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Nid yw Google wedi cadarnhau bod y cyfeiriad e-bost hwnnw'n eiddo i chi, felly ni ellir ei ddefnyddio yma gyda Google. Defnyddiwch eich cyfeiriad e-bost isod.",
+      "Nid yw Google wedi cadarnhau mai eich cyfeiriad e-bost chi yw hwnnw, felly ni ellir ei ddefnyddio gyda Google yma. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "SignInWithGoogle.LinkedToAnother":
       "Mae gan y cyfeiriad e-bost hwnnw gyfrif eisoes, sydd wedi'i gysylltu â chyfrif Google gwahanol. Mewngofnodwch gyda'r cyfrif Google hwnnw, neu gyda'ch cyfeiriad e-bost a'ch cyfrinair.",
     "SignInWithGoogle.NameMissing":
-      "Nid yw Google wedi dweud eich enw wrthym, ac mae angen un ar gyfrif. Defnyddiwch eich cyfeiriad e-bost isod.",
+      "Ni ddywedodd Google wrthym beth yw eich enw, ac mae ei angen ar gyfrif. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "Google.Unreachable":
       "Ni ellid cysylltu â Google ar hyn o bryd. Rhowch gynnig arall arni ymhen ychydig funudau, neu defnyddiwch eich cyfeiriad e-bost isod.",
     "Registration.NotAPerson":
-      "Nid oedd hyn i'w weld yn dod gan berson. Rhowch gynnig arall arni ac, os bydd yn digwydd eto, arhoswch ychydig funudau a dewch yn ôl.",
+      "Nid oedd hyn yn edrych fel pe bai wedi dod gan berson. Rhowch gynnig arall arni, ac os bydd yn dal i ddigwydd, arhoswch ychydig funudau a dewch yn ôl.",
 
+    // A rule the address can break, said beneath the field it is about.
     "EmailAddress.Missing": "Rhowch gyfeiriad e-bost.",
     "EmailAddress.NoAt": "Mae @ mewn cyfeiriad e-bost.",
     "EmailAddress.MoreThanOneAt": "Mae un @ yn unig mewn cyfeiriad e-bost.",
     "EmailAddress.NoDomain":
       "Mae parth ar ôl yr @ mewn cyfeiriad e-bost, fel example.com.",
 
-    "welcome.title": "Gwiriwch eich e-byst",
+    "welcome.title": "Gwiriwch eich e-bost",
     "welcome.checkEmail":
-      "Rydym wedi anfon e-bost i'r cyfeiriad a roesoch. Dilynwch y ddolen sydd ynddo i fynd yn eich blaen.",
+      "Mae e-bost ar ei ffordd i'r cyfeiriad a roesoch. Dilynwch y ddolen ynddo i fynd ymlaen.",
     "welcome.nothingArrived":
-      "Os na ddaw dim ymhen ychydig funudau, edrychwch yn eich ffolder sbam neu e-bost diangen.",
+      "Os na fydd dim yn cyrraedd ymhen ychydig funudau, edrychwch yn eich ffolder sothach neu sbam.",
     "welcome.home": "Yn ôl i {siteName}",
-    "newConfirmationLink.title": "Gofynnwch am ddolen newydd",
+    "newConfirmationLink.title": "Cael dolen newydd",
     "newConfirmationLink.explanation":
-      "Mae'r ddolen i gadarnhau eich cyfeiriad e-bost wedi dod i ben. Gofynnwch am un newydd a chaiff ei hanfon i'r cyfeiriad y gwnaethoch gofrestru ag ef.",
+      "Mae'r ddolen i gadarnhau eich cyfeiriad e-bost wedi dod i ben. Gofynnwch am un newydd a chaiff ei hanfon i'r cyfeiriad y cofrestroch gydag ef.",
     "newConfirmationLink.send": "Anfonwch ddolen newydd ataf",
     "newConfirmationLink.home": "Yn ôl i {siteName}",
     "newConfirmationLink.signIn": "Mewngofnodi",
-    "newConfirmationLink.sent.title": "Gwiriwch eich e-byst",
+    "newConfirmationLink.sent.title": "Gwiriwch eich e-bost",
     "newConfirmationLink.sent.explanation":
-      "Rydym wedi anfon dolen newydd atoch. Dilynwch hi i gadarnhau eich cyfeiriad e-bost. Os na ddaw dim ymhen ychydig funudau, edrychwch yn eich ffolder sbam neu e-bost diangen.",
+      "Mae dolen newydd ar ei ffordd. Dilynwch hi i gadarnhau eich cyfeiriad e-bost. Os na fydd dim yn cyrraedd ymhen ychydig funudau, edrychwch yn eich ffolder sothach neu sbam.",
     "newConfirmationLink.alreadyConfirmed.title":
       "Mae'r cyfeiriad e-bost hwnnw eisoes wedi'i gadarnhau",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "Nid oes dim ar ôl i'w gadarnhau. Mewngofnodwch gyda'r cyfrinair a roesoch wrth ei gadarnhau.",
+      "Nid oes dim mwy i'w gadarnhau. Mewngofnodwch gyda'r cyfrinair a roesoch pan wnaethoch ei gadarnhau.",
     "newConfirmationLink.noLongerWorks.title":
-      "Nid yw'r ddolen honno'n gweithio bellach",
+      "Nid yw'r ddolen honno'n gweithio mwyach",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Gwiriwch eich bod wedi dilyn y ddolen gyfan o'r e-bost, heb i ddim fod ar goll ar y diwedd. Os na fydd yn gweithio o hyd, cofrestrwch eto a chaiff dolen newydd ei hanfon atoch.",
+      "Gwiriwch eich bod wedi dilyn y ddolen gyfan o'r e-bost, heb i ddim fod ar goll o'i diwedd. Os na fydd yn gweithio o hyd, cofrestrwch eto a chaiff dolen newydd ei hanfon.",
     "newConfirmationLink.tooMany.title": "Rhowch gynnig arall arni nes ymlaen",
     "newConfirmationLink.tooMany.explanation":
-      "Anfonwyd sawl dolen i'r cyfeiriad hwn yn ddiweddar. Arhoswch awr a gofynnwch eto, ac yn y cyfamser edrychwch yn eich ffolder sbam neu e-bost diangen.",
+      "Anfonwyd sawl dolen i'r cyfeiriad hwn yn ddiweddar. Arhoswch awr a gofynnwch eto, ac edrychwch yn eich ffolder sothach neu sbam yn y cyfamser.",
 
     "forgotPassword.title": "Wedi anghofio eich cyfrinair?",
     "forgotPassword.emailAddress": "Cyfeiriad e-bost",
-    "forgotPassword.submit": "Anfonwch ffordd ataf i fynd yn ôl i mewn",
+    "forgotPassword.submit": "Anfonwch ffordd yn ôl i mewn ataf",
     "forgotPassword.home": "Yn ôl i {siteName}",
-    "forgotPassword.sent.title": "Gwiriwch eich e-byst",
+    "forgotPassword.sent.title": "Gwiriwch eich e-bost",
     "forgotPassword.sent.explanation":
-      "Os oes gan y cyfeiriad hwnnw gyfrif, rydym wedi anfon dolen atoch i osod cyfrinair newydd. Dilynwch hi cyn pen awr. Os na ddaw dim ymhen ychydig funudau, edrychwch yn eich ffolder sbam neu e-bost diangen.",
+      "Os oes gan y cyfeiriad hwnnw gyfrif, mae dolen i osod cyfrinair newydd ar ei ffordd. Dilynwch hi o fewn yr awr. Os na fydd dim yn cyrraedd ymhen ychydig funudau, edrychwch yn eich ffolder sothach neu sbam.",
     "forgotPassword.tryAgainLater":
-      "Gofynnwyd am ormod o ffyrdd i fynd yn ôl i mewn o'r fan hon yn ddiweddar. Arhoswch awr a rhowch gynnig arall arni.",
+      "Gofynnwyd am ormod o ffyrdd yn ôl i mewn o'r fan hon yn ddiweddar. Arhoswch awr a rhowch gynnig arall arni.",
 
-    "setNewPassword.title": "Gosodwch gyfrinair newydd",
+    "setNewPassword.title": "Gosod cyfrinair newydd",
     "setNewPassword.password": "Cyfrinair",
     "setNewPassword.confirmPassword": "Cadarnhau'r cyfrinair",
     "setNewPassword.submit": "Gosod fy nghyfrinair newydd",
@@ -139,64 +142,67 @@ export const welsh: Language = {
     "setNewPassword.askAgain": "Gofyn am ddolen newydd",
     "setNewPassword.changed.title": "Mae eich cyfrinair wedi'i newid",
     "setNewPassword.changed.explanation":
-      "Rydych wedi'ch allgofnodi ym mhob man lle'r oeddech wedi mewngofnodi. Mewngofnodwch gyda'ch cyfrinair newydd.",
+      "Rydych wedi'ch allgofnodi ym mhobman y buoch wedi mewngofnodi. Mewngofnodwch gyda'ch cyfrinair newydd.",
     "setNewPassword.expired.title": "Mae'r ddolen honno wedi dod i ben",
     "setNewPassword.expired.explanation":
-      "Mae dolen i osod cyfrinair newydd yn gweithio am awr. Gofynnwch am un arall a chaiff ei hanfon i'r un cyfeiriad.",
+      "Mae dolen i osod cyfrinair newydd yn gweithio am awr. Gofynnwch am un arall, a chaiff ei hanfon i'r un cyfeiriad.",
     "setNewPassword.noLongerWorks.title":
-      "Nid yw'r ddolen honno'n gweithio bellach",
+      "Nid yw'r ddolen honno'n gweithio mwyach",
     "setNewPassword.noLongerWorks.explanation":
-      "Efallai ei bod eisoes wedi'i defnyddio, neu fod rhywbeth ar goll ar y diwedd. Gofynnwch am un arall os oes ei hangen arnoch o hyd.",
+      "Efallai ei bod eisoes wedi'i defnyddio, neu efallai fod rhywbeth ar goll o'i diwedd. Gofynnwch am un arall os oes ei hangen arnoch o hyd.",
 
+    // Said above the fields when the breached password check cannot be asked.
     "BreachedPasswords.Unreachable":
       "Ni ellir gwirio eich cyfrinair ar hyn o bryd, felly nid yw wedi'i newid. Rhowch gynnig arall arni ymhen ychydig funudau; mae eich dolen yn dal i weithio nes iddi ddod i ben.",
 
-    "forgetAccount.title": "Anghofiwch eich cyfrif",
+    "forgetAccount.title": "Anghofio eich cyfrif",
     "forgetAccount.explanation":
-      "Gellir gwneud eich enw a'ch cyfeiriad e-bost yn annarllenadwy am byth, a chau eich cyfrif. I wneud yn siŵr mai chi sydd yno, byddwn yn anfon dolen yn gyntaf i gyfeiriad eich cyfrif, ac ni chaiff dim ei anghofio nes i chi ei dilyn.",
+      "Gellir gwneud eich enw a'ch cyfeiriad e-bost yn annarllenadwy am byth, a chau eich cyfrif. I fod yn siŵr mai chi sydd yno, byddwn yn anfon dolen mewn e-bost i gyfeiriad eich cyfrif yn gyntaf, ac ni chaiff dim ei anghofio nes y byddwch wedi ei dilyn.",
     "forgetAccount.submit": "Anfonwch y ddolen ataf",
-    "forgetAccount.sent.title": "Gwiriwch eich e-byst",
+    "forgetAccount.sent.title": "Gwiriwch eich e-bost",
     "forgetAccount.sent.explanation":
       "Rydym wedi anfon dolen i gyfeiriad eich cyfrif. Mae'n gweithio am 15 munud, a dim ond tra byddwch wedi mewngofnodi i'r cyfrif hwn.",
     "forgetAccount.confirm.title": "Anghofio eich cyfrif am byth?",
     "forgetAccount.confirm.explanation":
-      "Ar ôl ei anghofio, ni all neb ddarllen eich enw na'ch cyfeiriad e-bost eto, ac ni ellir mewngofnodi i'ch cyfrif. Ni ellir dadwneud hyn.",
+      "Unwaith y bydd wedi'i anghofio, ni all neb ddarllen eich enw a'ch cyfeiriad e-bost byth eto, ac ni ellir mewngofnodi i'ch cyfrif. Ni ellir dadwneud hyn.",
     "forgetAccount.confirm.submit": "Anghofio fy nghyfrif",
     "forgetAccount.forgotten.title": "Mae eich cyfrif wedi'i anghofio",
     "forgetAccount.forgotten.explanation":
-      "Ni ellir darllen eich enw na'ch cyfeiriad e-bost mwyach, ac rydych wedi'ch allgofnodi ym mhob man lle'r oeddech wedi mewngofnodi.",
+      "Ni ellir darllen eich enw a'ch cyfeiriad e-bost mwyach, ac rydych wedi'ch allgofnodi ym mhobman y buoch wedi mewngofnodi.",
     "forgetAccount.noLongerWorks.title":
-      "Nid yw'r ddolen honno'n gweithio bellach",
+      "Nid yw'r ddolen honno'n gweithio mwyach",
     "forgetAccount.noLongerWorks.explanation":
-      "Efallai ei bod wedi dod i ben, ei bod eisoes wedi'i defnyddio, neu ei bod ar gyfer cyfrif nad ydych wedi mewngofnodi iddo. Gofynnwch eto o'ch cyfrif os ydych am iddo gael ei anghofio o hyd.",
+      "Efallai ei bod wedi dod i ben, wedi'i defnyddio eisoes, neu'n perthyn i gyfrif nad ydych wedi mewngofnodi iddo. Gofynnwch eto o'ch cyfrif os ydych yn dal eisiau ei anghofio.",
     "forgetAccount.lastAdministrator.title": "Ni ellir anghofio eich cyfrif",
     "forgetAccount.lastAdministrator.explanation":
-      "Chi yw unig weinyddwr y safle hwn. Rhowch rôl y gweinyddwr i rywun arall, ac yna gellir anghofio eich cyfrif.",
+      "Chi yw unig weinyddwr y wefan hon. Rhowch rôl y Gweinyddwr i rywun arall, ac yna gellir anghofio eich cyfrif.",
     "forgetAccount.askAgain": "Gofyn eto",
     "forgetAccount.home": "Yn ôl i {siteName}",
 
     "registrationsSuspended.title": "Mae cofrestru wedi'i atal am y tro",
     "registrationsSuspended.explanation":
-      "Ni ellir cysylltu ar hyn o bryd â gwasanaeth y mae cofrestru ei angen, felly ni all neb gofrestru nes iddo ymateb eto. Ni chadwyd dim o'r hyn a deipiasoch.",
+      "Ni ellir cysylltu â gwasanaeth y mae cofrestru ei angen ar hyn o bryd, felly ni all neb gofrestru nes y bydd yn ateb eto. Ni chadwyd dim a deipiwyd gennych.",
     "registrationsSuspended.tryAgainLater":
-      "Rhowch gynnig arall arni ymhen ychydig. Mae gweinyddwr y safle wedi cael gwybod.",
+      "Rhowch gynnig arall arni ymhen ychydig. Mae gweinyddwr y wefan wedi cael gwybod.",
     "registrationsSuspended.home": "Yn ôl i {siteName}",
 
     "signIn.title": "Mewngofnodi",
     "signIn.emailAddress": "Cyfeiriad e-bost",
     "signIn.password": "Cyfrinair",
     "signIn.submit": "Mewngofnodi",
-    "signIn.forgotPassword": "Wedi anghofio eich cyfrinair?",
+    "signIn.forgotPassword": "Wedi anghofio'r cyfrinair?",
     "signIn.register": "Cofrestru",
     "signIn.withGoogle": "Mewngofnodi gyda Google",
     "signIn.or": "neu",
     "signIn.tryAgainLater":
       "Gwnaed gormod o ymdrechion yn ddiweddar. Arhoswch awr a rhowch gynnig arall arni.",
 
+    // The one answer to a wrong password and to an address nobody registered.
     "SignIn.Failed":
       "Mae'r cyfeiriad e-bost neu'r cyfrinair yn anghywir. Rhowch gynnig arall arni.",
 
     "profile.title": "Proffil",
+    // A label's colon is its words'.
     "profile.name": "Enw:",
     "profile.emailAddress": "Cyfeiriad e-bost:",
 
@@ -204,47 +210,49 @@ export const welsh: Language = {
     "changeName.name": "Enw",
     "changeName.submit": "Newid enw",
 
-    "setPassword.title": "Gosodwch gyfrinair",
+    "setPassword.title": "Gosod cyfrinair",
     "setPassword.explanation":
-      "Nid oes gan eich cyfrif gyfrinair: rydych yn mewngofnodi gyda Google. Er mwyn gallu mewngofnodi gyda chyfrinair hefyd, byddwn yn anfon dolen i {emailAddress} i'w osod.",
+      "Nid oes gan eich cyfrif gyfrinair: rydych yn mewngofnodi gyda Google. I fewngofnodi gyda chyfrinair hefyd, byddwn yn anfon dolen i un gael ei osod i {emailAddress}.",
     "setPassword.submit": "Anfonwch ddolen ataf",
-    "setPassword.sent.title": "Gwiriwch eich e-byst",
+    "setPassword.sent.title": "Gwiriwch eich e-bost",
     "setPassword.sent.explanation":
       "Rydym wedi anfon dolen atoch i osod cyfrinair. Mae'n gweithio am awr.",
     "setPassword.profile": "Yn ôl i'ch proffil",
 
     "changePassword.title": "Newid cyfrinair",
-    "changePassword.currentPassword": "Cyfrinair presennol",
+    "changePassword.currentPassword": "Y cyfrinair presennol",
     "changePassword.password": "Cyfrinair newydd",
     "changePassword.passwordConfirmation": "Cadarnhau'r cyfrinair",
-    "changePassword.forgotPassword": "Wedi anghofio eich cyfrinair?",
+    "changePassword.forgotPassword": "Wedi anghofio'r cyfrinair?",
     "changePassword.submit": "Newid cyfrinair",
+    // Beneath the current password, which is the one it is about.
     "ChangePassword.WrongPassword": "Nid dyna eich cyfrinair.",
 
     "changeEmailAddress.title": "Newid cyfeiriad e-bost",
     "changeEmailAddress.emailAddress": "Cyfeiriad e-bost newydd",
-    "changeEmailAddress.currentPassword": "Cyfrinair presennol",
-    "changeEmailAddress.submit": "Anfon dolen gadarnhau",
-    "changeEmailAddress.sent.title": "Gwiriwch eich e-byst",
+    "changeEmailAddress.currentPassword": "Y cyfrinair presennol",
+    "changeEmailAddress.submit": "Anfon dolen i gadarnhau",
+    "changeEmailAddress.sent.title": "Gwiriwch eich e-bost",
     "changeEmailAddress.sent.explanation":
-      "Anfonwyd dolen i'r cyfeiriad e-bost newydd i gadarnhau'r symud. Dilynwch hi, wedi mewngofnodi, i symud eich cyfrif yno.",
-    "changeEmailAddress.confirm.title": "Symudwch eich cyfrif",
+      "Mae dolen i gadarnhau'r symud wedi'i hanfon i'r cyfeiriad e-bost newydd. Dilynwch hi, wedi mewngofnodi, i symud eich cyfrif yno.",
+    "changeEmailAddress.confirm.title": "Symud eich cyfrif",
     "changeEmailAddress.confirm.explanation":
-      "Caiff eich cyfrif ei symud i {emailAddress}. O hyn ymlaen, byddwch yn mewngofnodi gyda'r cyfeiriad hwnnw.",
+      "Bydd eich cyfrif yn symud i {emailAddress}. Byddwch yn mewngofnodi gyda'r cyfeiriad hwnnw o hyn ymlaen.",
     "changeEmailAddress.confirm.submit": "Symud fy nghyfrif",
     "changeEmailAddress.noLongerWorks.title":
-      "Nid yw'r ddolen hon yn gweithio bellach",
+      "Nid yw'r ddolen hon yn gweithio mwyach",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Mae wedi dod i ben, mae eisoes wedi'i defnyddio, neu ni chafodd ei hanfon ar gyfer y cyfrif rydych wedi mewngofnodi iddo. Gofynnwch eto o'ch proffil.",
-    "changeEmailAddress.taken.title": "Nid yw eich cyfrif wedi'i symud",
+      "Mae wedi dod i ben, wedi'i defnyddio, neu ni chafodd ei hanfon ar gyfer y cyfrif rydych wedi mewngofnodi iddo. Gofynnwch eto o'ch proffil.",
+    "changeEmailAddress.taken.title": "Nid yw eich cyfrif wedi symud",
     "changeEmailAddress.profile": "Yn ôl i'ch proffil",
+    // Beneath the field each is about.
     "ChangeEmailAddress.WrongPassword": "Nid dyna eich cyfrinair.",
     "ChangeEmailAddress.Unchanged":
-      "Mae eich cyfrif eisoes ar y cyfeiriad hwn.",
+      "Mae eich cyfrif yn y cyfeiriad hwn eisoes.",
     "ChangeEmailAddress.Taken":
-      "Mae gan y cyfeiriad e-bost hwnnw gyfrif ei hun eisoes, felly ni ellir symud eich un chi yno.",
+      "Mae gan y cyfeiriad e-bost hwnnw ei gyfrif ei hun erbyn hyn, felly ni all eich cyfrif symud yno.",
 
-    "confirmEmailAddress.title": "Cadarnhewch eich cyfeiriad e-bost",
+    "confirmEmailAddress.title": "Cadarnhau eich cyfeiriad e-bost",
     "confirmEmailAddress.name": "Enw",
     "confirmEmailAddress.password": "Cyfrinair",
     "confirmEmailAddress.confirmPassword": "Cadarnhau'r cyfrinair",
@@ -254,71 +262,204 @@ export const welsh: Language = {
     "confirmEmailAddress.confirmed.title":
       "Mae eich cyfeiriad e-bost wedi'i gadarnhau",
     "confirmEmailAddress.confirmed.explanation":
-      "Mae eich cyfrif yn barod. Mewngofnodwch gyda'r cyfeiriad e-bost a'r cyfrinair y gwnaethoch eu rhoi nawr.",
+      "Mae eich cyfrif yn barod. Mewngofnodwch gyda'r cyfeiriad e-bost a'r cyfrinair rydych newydd eu rhoi.",
     "confirmEmailAddress.expired.title": "Mae'r ddolen honno wedi dod i ben",
     "confirmEmailAddress.expired.explanation":
-      "Mae dolen i gadarnhau cyfeiriad e-bost yn gweithio am 24 awr. Gofynnwch am un newydd a chaiff ei hanfon i'r un cyfeiriad.",
+      "Mae dolen i gadarnhau cyfeiriad e-bost yn gweithio am 24 awr. Gofynnwch am un newydd, a chaiff ei hanfon i'r un cyfeiriad.",
     "confirmEmailAddress.expired.newLink": "Anfonwch ddolen newydd ataf",
     "confirmEmailAddress.noLongerWorks.title":
-      "Nid yw'r ddolen honno'n gweithio bellach",
+      "Nid yw'r ddolen honno'n gweithio mwyach",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "Gwiriwch eich bod wedi dilyn y ddolen gyfan o'r e-bost, heb i ddim fod ar goll ar y diwedd. Os na fydd yn gweithio o hyd, cofrestrwch eto a chaiff dolen newydd ei hanfon atoch.",
+      "Gwiriwch eich bod wedi dilyn y ddolen gyfan o'r e-bost, heb i ddim fod ar goll o'i diwedd. Os na fydd yn gweithio o hyd, cofrestrwch eto a chaiff dolen newydd ei hanfon.",
     "confirmEmailAddress.alreadyConfirmed.title":
       "Mae'r cyfeiriad e-bost hwnnw eisoes wedi'i gadarnhau",
     "confirmEmailAddress.alreadyConfirmed.explanation":
-      "Nid oes dim ar ôl i'w wneud. Mewngofnodwch gyda'r cyfrinair a roesoch wrth ei gadarnhau.",
+      "Nid oes dim mwy i'w wneud. Mewngofnodwch gyda'r cyfrinair a roesoch pan wnaethoch ei gadarnhau.",
 
+    // A rule broken, keyed by its code. Said to whoever typed it, beneath the
+    // field it reads.
     "PersonName.Missing": "Rhowch enw.",
-    "PersonName.TooShort": "Rhaid i enw fod o leiaf 3 chymeriad.",
-    "PersonName.TooLong": "Gall enw fod hyd at 254 o gymeriadau.",
+    "PersonName.TooShort": "Rhaid i enw fod o leiaf 3 nod.",
+    "PersonName.TooLong": "Gall enw fod hyd at 254 nod ar y mwyaf.",
     "WorldRankingName.TooShort":
-      "Rhaid i'r enw ar Safleoedd y Byd fod o leiaf 3 chymeriad.",
+      "Rhaid i enw ar restr detholion y byd fod o leiaf 3 nod.",
     "WorldRankingName.TooLong":
-      "Gall yr enw ar Safleoedd y Byd fod hyd at 254 o gymeriadau.",
+      "Gall enw ar restr detholion y byd fod hyd at 254 nod ar y mwyaf.",
     "Password.Missing": "Rhowch gyfrinair.",
-    "Password.TooShort": "Rhaid i gyfrinair fod o leiaf 12 cymeriad.",
+    "Password.TooShort": "Rhaid i gyfrinair fod o leiaf 12 nod.",
     "Password.ConfirmationDiffers":
-      "Nid yw'n cyfateb i'r cyfrinair uchod. Teipiwch ef eto.",
+      "Nid yw hwn yr un fath â'r cyfrinair uchod. Teipiwch ef eto.",
     "Password.Breached":
-      "Mae'r cyfrinair hwn wedi ymddangos mewn achos o dorri data ar safle arall, felly nid yw'n ddiogel ei ddefnyddio yma. Dewiswch un arall.",
+      "Mae'r cyfrinair hwn yn un sydd wedi ymddangos mewn tor-data yn rhywle arall, felly nid yw'n ddiogel ei ddefnyddio yma. Dewiswch un arall.",
 
-    "javaScriptRequired.title": "Mae angen JavaScript",
+    "javaScriptRequired.title": "Mae angen sgriptio",
     "javaScriptRequired.explanation":
-      "I gofrestru, mae angen i JavaScript fod ymlaen ar y safle hwn, er mwyn gallu gwirio mai person sy'n cofrestru. Trowch ef ymlaen a chofrestrwch eto.",
-    "javaScriptRequired.register": "Yn ôl i gofrestru",
+      "Mae cofrestru angen sgriptio wedi'i droi ymlaen ar gyfer y wefan hon, fel y gall wirio mai person sy'n cofrestru. Trowch ef ymlaen, yna cofrestrwch eto.",
+    "javaScriptRequired.register": "Yn ôl at gofrestru",
     "javaScriptRequired.home": "Yn ôl i {siteName}",
 
     "errors.backHome": "Yn ôl i {siteName}",
     "errors.notFound": "Heb ei ganfod",
     "errors.refused": "Ni ellid gwneud hynny",
-    "errors.refusedDetail": "Roedd rhywbeth a anfonwyd yn anghywir.",
+    "errors.refusedDetail": "Roedd rhywbeth o'i le yn yr hyn a anfonwyd.",
     "errors.sorry": "Mae'n ddrwg gennym",
-    "errors.sorryDetail": "Ni ellid ateb y cais hwnnw.",
+    "errors.sorryDetail": "Ni ellid ymdrin â'r cais hwnnw.",
     "errors.failed": "Aeth rhywbeth o'i le",
     "errors.reference": "Cyfeirnod {reference}.",
     "errors.recorded":
-      "Cofnodwyd y gwall ac anfonwyd e-bost at y gweinyddwr. Mae'n help anfon e-bost at y gweinyddwr gyda'r cyfeirnod a disgrifiad o'r hyn roeddech yn ei wneud.",
-    "errors.message": "E-bostiwch y gweinyddwr",
+      "Mae'r gwall wedi'i gofnodi ac mae e-bost wedi'i anfon at y gweinyddwr. Mae'n help anfon e-bost at y gweinyddwr gyda'r cyfeirnod a disgrifiad o'r hyn roeddech yn ei wneud.",
+    "errors.message": "Anfon e-bost at y gweinyddwr",
     "errors.messageSubject": "Gwall {reference} ar {siteName}",
     "errors.messageBody": "Yr hyn roeddwn yn ei wneud pan ddigwyddodd hyn:\n\n",
-    "errors.unavailable": "Nid yw'r safle ar gael",
+    "errors.unavailable": "Nid yw'r wefan ar gael",
     "errors.unavailableDetail":
-      "Ni all y safle gyrraedd yr hyn sydd ei angen arno ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.",
-    "errors.maintenance": "Mae'r safle i lawr ar gyfer gwaith cynnal a chadw.",
+      "Ni all y wefan gyrraedd yr hyn sydd ei angen arni ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen.",
+    "errors.maintenance": "Mae'r wefan i lawr ar gyfer gwaith cynnal a chadw.",
     "errors.maintenanceMinutes":
-      "Disgwylir iddo ddychwelyd ymhen {minutes} munud.",
-    "errors.maintenanceMinute": "Disgwylir iddo ddychwelyd ymhen 1 munud.",
+      "Disgwylir iddi ddychwelyd ymhen {minutes} munud.",
+    "errors.maintenanceMinute": "Disgwylir iddi ddychwelyd ymhen 1 funud.",
     "errors.maintenanceLonger":
-      "Mae'n cymryd mwy o amser na'r disgwyl a bydd yn ôl cyn bo hir.",
+      "Mae'n cymryd yn hirach na'r disgwyl a bydd yn ôl cyn bo hir.",
 
+    // The home page's two lists, what each says when it has nothing in it,
+    // and the way beneath them to every tournament this year.
     "home.recentResults": "Canlyniadau diweddar",
     "home.recentResults.none":
-      "Nid oes gêm wedi'i hychwanegu yn ystod y saith diwrnod diwethaf.",
+      "Ni ychwanegwyd unrhyw gemau yn ystod y saith diwrnod diwethaf.",
     "home.upcomingTournaments": "Twrnameintiau i ddod",
     "home.upcomingTournaments.none":
-      "Nid oes twrnamaint yn dechrau yn ystod y chwe deg diwrnod nesaf.",
+      "Nid oes unrhyw dwrnameintiau'n dechrau yn ystod y chwe deg diwrnod nesaf.",
+    "home.allTournaments": "Pob twrnamaint yn {year}",
+    // A year's page: its heading, and what it says when it has nothing in it.
+    "year.heading": "Twrnameintiau yn {year}",
+    "year.none": "Nid oes unrhyw dwrnameintiau'n dechrau yn {year}.",
+    // A sport's page in a year: the same, of the sport alone.
+    "yearSport.heading": "Twrnameintiau {sport} yn {year}",
+    "yearSport.none":
+      "Nid oes unrhyw dwrnameintiau {sport} yn dechrau yn {year}.",
+    // A tournament's page: its sections, what it says of a game, how long ago
+    // one was added, and what it says when it has none.
+    "tournament.recent": "Diweddar",
+    "tournament.summary": "Crynodeb",
+    // A tournament played by teams' summary, and a test's grid.
+    "test.bestOf": "Yr orau o {count} yw pob gêm.",
+    "test.vs": "yn erbyn",
+    "test.matches": "Gemau",
+    "test.games": "Gemau unigol",
+    "test.hoops": "Cylchau",
+    "teamSummary.tests": "Profion",
+    "teamSummary.matches": "Gemau",
+    "teamSummary.games": "Gemau unigol",
+    "teamSummary.hoops": "Cylchau",
+    "teamSummary.wins": "Buddugoliaethau",
+    "teamSummary.losses": "Colledion",
+    "teamSummary.draws": "Gemau cyfartal",
+    "teamSummary.for": "O blaid",
+    "teamSummary.against": "Yn erbyn",
+    "teamSummary.net": "Net",
+    "tournament.players": "Chwaraewyr",
+    "search.label": "Chwilio",
+    "search.tournaments": "Twrnameintiau",
+    "search.competitions": "Cystadlaethau",
+    "search.nothingFound": "Ni ddaethpwyd o hyd i ddim.",
+    "players.search.label": "Chwilio am chwaraewyr",
+    "players.search.prompt": "Teipiwch enw chwaraewr i ddod o hyd iddo.",
+    "players.search.none": "Ni ddaethpwyd o hyd i unrhyw chwaraewyr.",
+    "search.more":
+      "Dim ond y {count} cyntaf a ddangosir. Ychwanegwch ragor o'r enw i gyfyngu'r chwiliad.",
+    "websitePlayer.tournament": "Twrnamaint",
+    // A test in a tournament's sections: its two teams' short names.
+    "tournament.test": "{first} yn erbyn {second}",
+    "tournament.notes": "Nodiadau",
+    "tournament.commentary": "Sylwebaeth",
+    "tournament.beat": "a gurodd",
+    "tournament.drewWith": "a gafodd gêm gyfartal â",
+    "tournament.ago.seconds": "{count} eiliad",
+    "tournament.ago.minutes": "{count} munud",
+    "tournament.ago.hour": "1 awr",
+    "tournament.ago.hours": "{count} awr",
+    "tournament.none": "Ni chwaraewyd unrhyw gemau eto.",
+    // A tournament's players' page, when it has none.
+    "players.none": "Ni ychwanegwyd unrhyw chwaraewyr eto.",
+    // A tournament's commentaries page.
+    "commentaries.by": "gan",
+    "commentaries.start": "Dechrau sylwebaeth newydd",
+    // The page that starts a commentary.
+    "startCommentary.title": "Dechrau sylwebaeth newydd",
+    "startCommentary.titleField": "Teitl",
+    "startCommentary.submit": "Dechrau sylwebaeth",
+    // "New" is said to a screen reader in place of the red asterisk.
+    "marks.new": "newydd",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "Nid yw'r rheolwyr wedi ysgrifennu unrhyw nodiadau eto.",
+    "note.edited": "wedi'i olygu",
+    // A commentary's page.
+    "commentary.none": "Ni ysgrifennwyd unrhyw sylwadau eto.",
+    "commentary.edited": "wedi'i olygu",
+    "commentary.edit": "Golygu",
+    "commentary.delete": "Dileu",
+    "commentary.comment": "Sylw",
+    "commentary.add": "Ychwanegu sylw",
+    "commentary.notSent":
+      "Ni ellid anfon y sylw. Llwythwch y dudalen eto i weld a gafodd ei gadw.",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "Newid teitl",
+    "changeCommentaryTitle.submit": "Cadw",
+    // A comment's own page, and the page that asks before it is deleted.
+    "editComment.title": "Golygu sylw",
+    "editComment.save": "Cadw",
+    "deleteComment.title": "Dileu sylw",
+    "deleteComment.question": "Dileu'r sylw hwn? Ni ellir ei ddadwneud.",
+    "deleteComment.confirm": "Dileu sylw",
+    "deleteComment.keep": "Ei gadw",
+    // A player's page.
+    "player.games": "Gemau",
+    "player.competitions": "Cystadlaethau",
+    "player.beat": "a gurodd",
+    "player.lostTo": "a gollodd i",
+    "player.drewWith": "a gafodd gêm gyfartal â",
+    "player.score": "{score} i {opponent}",
+    "player.noGames": "Ni chwaraewyd unrhyw gemau eto.",
+    "player.noCompetitions": "Heb gystadlu mewn unrhyw gystadleuaeth eto.",
+    // A block's page.
+    "block.wins": "Buddugoliaethau",
+    "block.matches": "Gemau",
+    "block.netGames": "Gemau net",
+    "block.games": "Gemau unigol",
+    "block.netHoops": "Cylchau net",
+    "block.won": "wedi ennill",
+    "block.lost": "wedi colli",
+    "block.drawn": "cyfartal",
+    "block.withdrawn": "wedi tynnu'n ôl",
+    // A game withdrawn, which Spanish says otherwise than a player.
+    "block.gameWithdrawn": "wedi'i dynnu'n ôl",
+    "block.losses": "Colledion",
+    // The three views of a block, offered beneath its heading.
+    "competition.views": "Golygfeydd",
+    "competition.view.grid": "Grid",
+    "competition.view.summary": "Crynodeb",
+    "competition.view.orderOfPlay": "Trefn chwarae",
+    "blockSummary.ranking":
+      "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
+    "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
+    // A knockout's rounds, and a bye drawn in place of a player.
+    "knockout.round.final": "Rownd derfynol",
+    "knockout.round.semis": "Rowndiau cyn-derfynol",
+    "knockout.round.quarters": "Rowndiau wyth olaf",
+    "knockout.round.number": "Rownd {number}",
+    "knockout.bye": "Bye",
+    // A Swiss's table.
+    "swiss.games": "Gemau unigol",
+    "swiss.wins": "Buddugoliaethau",
+    "swiss.winShare": "% a enillwyd",
+    "swiss.results": "Canlyniadau",
+    // The arrows that scroll a knockout's grid.
+    "knockout.onward": "Rowndiau diweddarach",
+    "knockout.back": "Rowndiau cynharach",
+    // What every list of tournaments shares.
     "tournamentList.column.date": "Dyddiad",
     "tournamentList.column.name": "Enw",
+    // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Twrnameintiau yn {country} yn unig",
     "tournamentList.filter.country": "Gwlad",
     "tournamentList.filter.anyCountry": "Unrhyw wlad",
@@ -327,131 +468,28 @@ export const welsh: Language = {
     "tournamentList.filter.sport": "Camp",
     "tournamentList.filter.anySport": "Unrhyw gamp",
     "tournamentList.filter.submit": "Hidlo",
-    "home.allTournaments": "Holl dwrnameintiau {year}",
-    "year.heading": "Twrnameintiau {year}",
-    "year.none": "Nid oes twrnamaint yn dechrau yn {year}.",
-    "yearSport.heading": "Twrnameintiau {sport} yn {year}",
-    "yearSport.none": "Nid oes twrnamaint {sport} yn dechrau yn {year}.",
-    "tournament.recent": "Diweddar",
-    "tournament.summary": "Crynodeb",
-    "test.bestOf": "Mae pob gornest y gorau o {count}.",
-    "test.vs": "v",
-    "test.matches": "Gornestau",
-    "test.games": "Gemau",
-    "test.hoops": "Cylchoedd",
-    "teamSummary.tests": "Testau",
-    "teamSummary.matches": "Gornestau",
-    "teamSummary.games": "Gemau",
-    "teamSummary.hoops": "Cylchoedd",
-    "teamSummary.wins": "Buddugoliaethau",
-    "teamSummary.losses": "Colledion",
-    "teamSummary.draws": "Gemau cyfartal",
-    "teamSummary.for": "Dros",
-    "teamSummary.against": "Yn erbyn",
-    "teamSummary.net": "Net",
-    "tournament.players": "Chwaraewyr",
-    "search.label": "Chwilio",
-    "search.tournaments": "Twrnameintiau",
-    "search.competitions": "Cystadlaethau",
-    "search.nothingFound": "Ni chanfuwyd dim.",
-    "players.search.label": "Chwilio am chwaraewyr",
-    "players.search.prompt": "Teipiwch enw chwaraewr i ddod o hyd iddo.",
-    "players.search.none": "Ni chanfuwyd unrhyw chwaraewyr.",
-    "search.more":
-      "Dim ond y {count} cyntaf a ddangosir. Ychwanegwch fwy o'r enw i gyfyngu'r chwilio.",
-    "websitePlayer.tournament": "Twrnamaint",
-    "tournament.test": "{first} v {second}",
-    "tournament.notes": "Nodiadau",
-    "tournament.commentary": "Sylwebaeth",
-    "tournament.beat": "a gurodd",
-    "tournament.drewWith": "a gafodd gêm gyfartal â",
-    "tournament.ago.seconds": "{count} eil",
-    "tournament.ago.minutes": "{count} munud",
-    "tournament.ago.hour": "1 awr",
-    "tournament.ago.hours": "{count} awr",
-    "tournament.none": "Nid oes gêm wedi'i chwarae eto.",
-    "players.none": "Nid oes chwaraewr wedi'i ychwanegu eto.",
-    "commentaries.by": "gan",
-    "commentaries.start": "Dechrau sylwebaeth newydd",
-    "startCommentary.title": "Dechrau sylwebaeth newydd",
-    "startCommentary.titleField": "Teitl",
-    "startCommentary.submit": "Dechrau'r sylwebaeth",
-    // A tournament's Notes page, and a note's own page, as the English says.
-    "notes.none": "Nid yw'r trefnwyr wedi ysgrifennu nodiadau eto.",
-    "marks.new": "newydd",
-    "note.edited": "wedi'i golygu",
-    "commentary.none": "Nid oes dim wedi'i ysgrifennu eto.",
-    "commentary.edited": "wedi'i olygu",
-    "commentary.edit": "Golygu",
-    "commentary.delete": "Dileu",
-    "commentary.comment": "Sylw",
-    "commentary.add": "Ychwanegu",
-    "commentary.notSent":
-      "Ni ellid anfon y sylw. Ail-lwythwch y dudalen i weld a gafodd ei gadw.",
-    "changeCommentaryTitle.title": "Newid y teitl",
-    "changeCommentaryTitle.submit": "Cadw",
-    "editComment.title": "Golygu'r sylw",
-    "editComment.save": "Cadw",
-    "deleteComment.title": "Dileu'r sylw",
-    "deleteComment.question": "Dileu'r sylw hwn? Ni ellir dadwneud hyn.",
-    "deleteComment.confirm": "Dileu'r sylw",
-    "deleteComment.keep": "Ei gadw",
-    "player.games": "Gemau",
-    "player.competitions": "Cystadlaethau",
-    "player.beat": "a gurodd",
-    "player.lostTo": "a gollodd i",
-    "player.drewWith": "a gafodd gêm gyfartal â",
-    "player.score": "{score} i {opponent}",
-    "player.noGames": "Nid oes gêm wedi'i chwarae eto.",
-    "player.noCompetitions":
-      "Nid yw wedi'i gofrestru mewn unrhyw gystadleuaeth eto.",
-    "block.wins": "Buddugoliaethau",
-    "block.matches": "Gornestau",
-    "block.netGames": "Gemau net",
-    "block.games": "Gemau",
-    "block.netHoops": "Cylchoedd net",
-    "block.won": "wedi ennill",
-    "block.lost": "wedi colli",
-    "block.drawn": "cyfartal",
-    "block.withdrawn": "wedi tynnu'n ôl",
-    "block.gameWithdrawn": "wedi tynnu'n ôl",
-    "block.losses": "Colledion",
-    "competition.views": "Golygon",
-    "competition.view.grid": "Grid",
-    "competition.view.summary": "Crynodeb",
-    "competition.view.orderOfPlay": "Trefn chwarae",
-    "blockSummary.ranking":
-      "Wedi'u trefnu yn ôl cyfran y gornestau a enillwyd ac yna yn ôl cylchoedd net. Gall rheolau twrnamaint drefnu ei chwaraewyr mewn ffordd wahanol.",
-    "orderOfPlay.none": "Nid oes gêm wedi'i chwarae eto.",
-    "knockout.round.final": "Rownd derfynol",
-    "knockout.round.semis": "Rownd gynderfynol",
-    "knockout.round.quarters": "Rownd yr wyth olaf",
-    "knockout.round.number": "Rownd {number}",
-    "knockout.bye": "Bye",
-    "swiss.games": "Gemau",
-    "swiss.wins": "Buddugoliaethau",
-    "swiss.winShare": "% o fuddugoliaethau",
-    "swiss.results": "Canlyniadau",
-    "knockout.onward": "Rowndiau diweddarach",
-    "knockout.back": "Rowndiau cynharach",
+    // The years there are tournaments in.
     "years.label": "Blynyddoedd",
+    // The drop-down list holding the years that do not fit as tabs.
     "years.earlier": "Blynyddoedd cynharach",
 
-    "admin.newerBuild.message":
-      "Mae fersiwn mwy diweddar o'r safle hwn ar gael.",
+    // The admin's words.
+    "admin.newerBuild.message": "Mae fersiwn newyddach o'r wefan hon ar gael.",
     "admin.newerBuild.reload": "Ail-lwytho",
     "admin.title": "Gweinyddu",
     "admin.tournaments.new": "Twrnamaint newydd",
     "admin.tournaments.none": "Dim twrnameintiau",
     "admin.tournaments.filter.none": "Dim twrnameintiau'n cyfateb",
+    // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Wedi'i archifo",
     "admin.tournaments.manage": "Rheoli",
     "admin.tournaments.edit": "Golygu",
     "admin.tournaments.archive": "Archifo",
     "admin.tournaments.restore": "Adfer",
-    "admin.tournaments.scores": "Canlyniadau",
+    "admin.tournaments.scores": "Sgorau",
     "admin.tournaments.players": "Chwaraewyr",
     "admin.years.label": "Blynyddoedd",
+    // What the drop-down list of years says while the year chosen is a tab.
     "admin.years.earlier": "Blynyddoedd cynharach",
     "admin.tournament.name": "Enw",
     "admin.tournament.starts": "Yn dechrau",
@@ -460,44 +498,51 @@ export const welsh: Language = {
     "admin.tournament.sport": "Camp",
     "admin.tournament.country": "Gwlad",
     "admin.tournament.region": "Rhanbarth",
-    "admin.tournament.subtitle": "Isdeitl",
-    "admin.rules.handicap": "Chwarae gyda handicap",
-    "admin.rules.drawsAllowed": "Caniatáu gemau cyfartal",
-    "admin.tournament.levelTestsDrawn": "Mae testau cyfartal yn gyfartal",
-    "admin.rules.worldRankings": "Yn cyfrif tuag at Safleoedd y Byd",
+    "admin.tournament.subtitle": "Is-deitl",
+    "admin.rules.handicap": "Chwarae gyda handicapiau",
+    "admin.rules.drawsAllowed": "Caniatáu canlyniadau cyfartal",
+    "admin.tournament.levelTestsDrawn": "Cyfrif profion cyfartal yn gyfartal",
+    "admin.rules.worldRankings": "Yn cyfrif tuag at restr detholion y byd",
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
+    // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Ni ellir derbyn hyn fel y mae.",
     "admin.newTournament.title": "Twrnamaint newydd",
     "admin.newTournament.submit": "Creu twrnamaint",
     "admin.editTournament.title": "Golygu twrnamaint",
-    "admin.editTournament.submit": "Diweddaru'r twrnamaint",
+    "admin.editTournament.submit": "Diweddaru twrnamaint",
+    // Said in place of the form, for a refusal with no words of its own.
     "admin.editTournament.otherwise": "Ni ellir newid y twrnamaint hwn.",
+    // A tournament's page, and the tabs what there is to run is in.
     "admin.view.tabs": "Twrnamaint",
     "admin.view.players": "Chwaraewyr",
     "admin.view.competitions": "Cystadlaethau",
     "admin.view.managers": "Rheolwyr",
     "admin.view.notes": "Nodiadau",
     "admin.view.scorers": "Sgorwyr",
-    "admin.view.rankings": "Safleoedd",
+    "admin.view.rankings": "Detholion",
     "admin.rankings.file":
-      "Mae canlyniadau'r twrnamaint yn cael eu hanfon at Safleoedd y Byd fel ffeil destun, y mae'r wefan yn ei hysgrifennu o'r gemau a gofnodwyd.",
-    "admin.rankings.download": "Lawrlwytho safleoedd",
-    "rankings.notAvailable": "Nid yw safleoedd ar gael",
+      "Bydd rhestr detholion y byd yn defnyddio canlyniadau'r twrnamaint drwy'r swyddogaeth hon, felly nid oes angen i'r rheolwyr wneud dim.",
+    "admin.rankings.download": "Lawrlwytho'r detholion",
+    "rankings.notAvailable": "Nid yw'r detholion ar gael",
     "rankings.notAvailable.sport":
-      "Nid oes gan gamp y twrnamaint hwn Safleoedd y Byd, felly nid oes safleoedd i'w hanfon.",
+      "Nid oes gan gamp y twrnamaint hwn restr detholion y byd, felly nid oes detholion i'w hanfon.",
     "rankings.notAvailable.notCounted":
-      "Nid oes yr un o gystadlaethau'r twrnamaint hwn yn cyfrif tuag at y rhestr safleoedd byd.",
-    "admin.view.otherwise": "Ni ellir rheoli'r twrnamaint hwn o'r fan hon.",
+      "Nid oes yr un o gystadlaethau'r twrnamaint hwn yn cyfrif tuag at restr detholion y byd.",
+    // Said in place of the tabs, for a refusal with no words of its own.
+    "admin.view.otherwise": "Ni ellir rhedeg y twrnamaint hwn o'r fan hon.",
+    // A competition's page, and the tabs what there is to run is in.
     "admin.competitionView.tabs": "Cystadleuaeth",
     "admin.competitionView.players": "Chwaraewyr",
-    "admin.competitionView.scores": "Canlyniadau",
+    "admin.competitionView.scores": "Sgorau",
+    // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Y twrnamaint a'i gystadlaethau",
     "admin.sections.tournament": "Twrnamaint",
+    // The section bar of the administrator's pages.
     "admin.administrator.sections.label": "Tudalennau'r gweinyddwr",
     "admin.administrator.sections.tournaments": "Twrnameintiau",
     "admin.administrator.sections.accounts": "Cyfrifon",
-    "admin.administrator.sections.worldRankings": "Safleoedd y Byd",
+    "admin.administrator.sections.worldRankings": "Detholion y byd",
     "admin.administrator.sections.importErrors": "Gwallau mewnforio",
     "admin.administrator.sections.logs": "Logiau",
     "admin.administrator.sections.databaseStatus": "Mynediad i'r gronfa ddata",
@@ -506,100 +551,106 @@ export const welsh: Language = {
     "admin.databaseStatus.off":
       "Mae mynediad i'r gronfa ddata wedi'i ddiffodd.",
     "admin.databaseStatus.expected":
-      "Disgwylir i'r safle ddod yn ôl ymhen {minutes} munud.",
+      "Disgwylir i'r wefan ddychwelyd ymhen {minutes} munud.",
     "admin.databaseStatus.expectedOne":
-      "Disgwylir i'r safle ddod yn ôl ymhen 1 munud.",
-    "admin.databaseStatus.longer": "Mae'n cymryd mwy o amser na'r disgwyl.",
-    "admin.databaseStatus.told": "Mae darllenwyr yn gweld: {words}",
+      "Disgwylir i'r wefan ddychwelyd ymhen 1 funud.",
+    "admin.databaseStatus.longer": "Mae'n cymryd yn hirach na'r disgwyl.",
+    "admin.databaseStatus.told": "Dywedir wrth ddarllenwyr: {words}",
     "admin.databaseStatus.toldUsual":
-      "Mae darllenwyr yn gweld y frawddeg arferol.",
-    "admin.databaseStatus.minutes": "Munudau disgwyliedig",
+      "Dywedir y frawddeg arferol wrth ddarllenwyr.",
+    "admin.databaseStatus.minutes": "Munudau a ddisgwylir",
     "admin.databaseStatus.words": "Geiriau i ddarllenwyr",
     "admin.databaseStatus.turnOff": "Diffodd",
     "admin.databaseStatus.change": "Newid",
     "admin.databaseStatus.turnOn": "Troi ymlaen",
     "admin.databaseStatus.minutesNeeded": "Mae angen y munudau.",
-    "admin.databaseStatus.otherwise": "Aeth rhywbeth o'i le ar y safle.",
-    "DatabaseAccess.MinutesNotWhole": "Rhaid i'r munudau fod yn rif cyflawn.",
-    "DatabaseAccess.MinutesOutOfRange": "Rhaid i'r munudau fod o 1 i 1440.",
-    "DatabaseAccess.WordsTooLong":
-      "Ni all y geiriau fod yn hirach na 500 cymeriad.",
+    "admin.databaseStatus.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
+    "DatabaseAccess.MinutesNotWhole": "Rhaid i'r munudau fod yn rif cyfan.",
+    "DatabaseAccess.MinutesOutOfRange": "Rhaid i'r munudau fod rhwng 1 a 1440.",
+    "DatabaseAccess.WordsTooLong": "Rhaid i'r geiriau fod yn 500 nod neu lai.",
     "DatabaseAccess.NotOff":
       "Nid yw mynediad i'r gronfa ddata wedi'i ddiffodd.",
     "admin.administrator.title": "Gweinyddwr",
+    // The accounts page, a section for each role.
     "admin.accounts.title": "Cyfrifon",
     "admin.roles.add": "Ychwanegu",
     "admin.roles.administrator.heading": "Gweinyddwyr",
     "admin.roles.administrator.none": "Dim gweinyddwyr eraill",
     "admin.roles.administrator.removeTitle": "Tynnu gweinyddwr",
     "admin.roles.administrator.removeExplanation":
-      "Ni fydd {name} yn weinyddwr y safle hwn mwyach.",
+      "Ni fydd {name} yn weinyddwr ar y wefan hon mwyach.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Swyddogion Safleoedd y Byd (Croce Cymdeithas)",
+      "Swyddogion detholion y byd Association Croquet",
     "admin.roles.ac-world-ranking-officer.none":
-      "Dim swyddogion Safleoedd y Byd (Croce Cymdeithas)",
+      "Dim swyddogion detholion y byd Association Croquet",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Tynnu swyddog Safleoedd y Byd (Croce Cymdeithas)",
+      "Tynnu swyddog detholion y byd Association Croquet",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach (Croce Cymdeithas).",
+      "Ni fydd {name} yn swyddog detholion y byd Association Croquet mwyach.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Swyddogion Safleoedd y Byd (Croce Golff)",
+      "Swyddogion detholion y byd Golf Croquet",
     "admin.roles.gc-world-ranking-officer.none":
-      "Dim swyddogion Safleoedd y Byd (Croce Golff)",
+      "Dim swyddogion detholion y byd Golf Croquet",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Tynnu swyddog Safleoedd y Byd (Croce Golff)",
+      "Tynnu swyddog detholion y byd Golf Croquet",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "Ni fydd {name} yn swyddog Safleoedd y Byd mwyach (Croce Golff).",
-    "admin.worldRankings.title": "Mewnforio chwaraewyr Safleoedd y Byd",
+      "Ni fydd {name} yn swyddog detholion y byd Golf Croquet mwyach.",
+    // The page where the world ranking players are imported, and its log.
+    "admin.worldRankings.title": "Mewnforio chwaraewyr detholion y byd",
     "admin.worldRankings.import": "Mewnforio",
     "admin.worldRankings.log": "Sut aeth y mewnforio",
-    "admin.worldRankings.ac.reading": "Darllen rhestr croce cymdeithas",
+    "admin.worldRankings.ac.reading": "Darllen rhestr Association Croquet",
     "admin.worldRankings.ac.read":
-      "Chwaraewyr croce cymdeithas a ddarllenwyd: {players}",
+      "Chwaraewyr Association Croquet a ddarllenwyd: {players}",
     "admin.worldRankings.ac.kept":
-      "Chwaraewyr croce cymdeithas a gadwyd: {players}",
+      "Chwaraewyr Association Croquet a gadwyd: {players}",
     "admin.worldRankings.ac.refused":
-      "Ni ellid darllen rhestr croce cymdeithas, felly gadawyd ei chwaraewyr fel yr oeddent.",
-    "admin.worldRankings.gc.reading": "Darllen rhestr croce golff",
+      "Ni ellid darllen rhestr Association Croquet, felly gadawyd ei chwaraewyr fel yr oeddent.",
+    "admin.worldRankings.gc.reading": "Darllen rhestr Golf Croquet",
     "admin.worldRankings.gc.read":
-      "Chwaraewyr croce golff a ddarllenwyd: {players}",
-    "admin.worldRankings.gc.kept": "Chwaraewyr croce golff a gadwyd: {players}",
+      "Chwaraewyr Golf Croquet a ddarllenwyd: {players}",
+    "admin.worldRankings.gc.kept":
+      "Chwaraewyr Golf Croquet a gadwyd: {players}",
     "admin.worldRankings.gc.refused":
-      "Ni ellid darllen rhestr croce golff, felly gadawyd ei chwaraewyr fel yr oeddent.",
+      "Ni ellid darllen rhestr Golf Croquet, felly gadawyd ei chwaraewyr fel yr oeddent.",
     "admin.worldRankings.finished": "Wedi gorffen",
     "admin.worldRankings.failed": "Ni orffennodd y mewnforio.",
-    "admin.worldRankings.otherwise": "Mae rhywbeth o'i le ar y safle.",
-    "WorldRankingLists.Unreachable": "Ni ellid cyrraedd safle Safleoedd y Byd.",
+    // For a refusal with no words of its own, as a failure of the site's.
+    "admin.worldRankings.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
+    "WorldRankingLists.Unreachable":
+      "Ni ellid cysylltu â gwefan detholion y byd.",
     "WorldRankingLists.Unreadable":
-      "Nid yw'r rhestr wedi'i threfnu fel y mae Safleoedd y Byd yn trefnu eu rhestrau: ni ellid darllen llinell ynddi, nid oes neb arni, neu nid yw wedi'i hysgrifennu mewn UTF-8.",
+      "Nid yw'r rhestr wedi'i threfnu fel y mae detholion y byd yn trefnu eu rhai hwy: ni ellid darllen llinell ynddi, nid oes neb arni, neu nid yw wedi'i hysgrifennu mewn UTF-8.",
+    // The documents the import from the old sites refused, and the page of one.
     "admin.importErrors.title": "Gwallau mewnforio",
     "admin.importErrors.none": "Dim gwallau mewnforio",
-    "admin.importErrors.otherwise": "Mae rhywbeth o'i le ar y safle.",
+    "admin.importErrors.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
     "admin.logs.title": "Logiau",
     "admin.logs.severity": "Difrifoldeb",
-    "admin.logs.text": "Chwilio",
+    "admin.logs.text": "Chwilio am",
     "admin.logs.show": "Dangos",
     "admin.logs.prune": "Tocio",
     "admin.logs.pruneAsk":
-      "Dileu'r log o cyn yr awr ddiwethaf? Does dim yn ei ddod yn ôl.",
-    "admin.logs.removed": "Tynnwyd {count} cofnod",
+      "Dileu'r log o cyn yr awr ddiwethaf? Ni all dim ei ddwyn yn ôl.",
+    "admin.logs.removed": "Dilëwyd {count} cofnod",
     "admin.logs.none": "Dim cofnodion log",
-    "admin.logs.otherwise": "Mae rhywbeth o'i le ar y safle.",
+    "admin.logs.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
     "admin.hover.logs.show": "Dangos y cofnodion sy'n cyfateb",
     "admin.hover.logs.prune": "Dileu'r log o cyn yr awr ddiwethaf",
     "admin.hover.logs.pruneAgree": "Dileu'r log o cyn yr awr ddiwethaf",
     "admin.importError.title": "Gwall mewnforio",
-    "admin.importError.documentId": "ID y ddogfen",
+    "admin.importError.documentId": "Id y ddogfen",
     "admin.importError.tournament": "Twrnamaint",
     "admin.importError.competition": "Cystadleuaeth",
-    "admin.importError.newSite": "Safle newydd",
-    "admin.importError.oldSite": "Hen safle",
+    "admin.importError.newSite": "Y wefan newydd",
+    "admin.importError.oldSite": "Yr hen wefan",
     "ImportErrorKept.NotFound":
-      "Ni chadwodd y mewnforio unrhyw wall ar gyfer y ddogfen honno.",
+      "Ni chadwodd y mewnforio unrhyw wall yn erbyn y ddogfen honno.",
     "admin.competitionView.otherwise":
-      "Ni ellir rheoli'r gystadleuaeth hon o'r fan hon.",
+      "Ni ellir rhedeg y gystadleuaeth hon o'r fan hon.",
+    // The Competitions tab.
     "admin.competitions.block": "Bloc",
-    "admin.competitions.knockout": "Taro allan",
+    "admin.competitions.knockout": "Cnoc-owt",
     "admin.competitions.swiss": "Swisaidd",
     "admin.competitions.view": "Gweld",
     "admin.competitions.edit": "Golygu",
@@ -615,84 +666,86 @@ export const welsh: Language = {
     "admin.competition.editTitle": "Golygu cystadleuaeth",
     "admin.competition.name": "Enw",
     "admin.competition.kind": "Math",
-    "admin.competition.bestOf": "Y gorau o",
+    "admin.competition.bestOf": "Yr orau o",
     "admin.competition.rounds": "Rowndiau",
     "admin.competition.places": "Lleoedd",
     "admin.competition.round": "Rownd {number}",
-    "admin.competition.bestOfs": "Y gorau o",
+    "admin.competition.bestOfs": "Yr orau o, fesul rownd",
     "admin.competition.quarters": "Wyth olaf",
-    "admin.competition.semis": "Cynderfynol",
-    "admin.competition.final": "Terfynol",
+    "admin.competition.semis": "Cyn-derfynol",
+    "admin.competition.final": "Rownd derfynol",
     "admin.competition.add": "Ychwanegu",
     "admin.competition.save": "Cadw",
     "admin.competition.added": "Ychwanegwyd {name}.",
+    // Above the fields, for a refusal with no words of its own.
     "admin.competition.otherwise":
       "Ni ellir cadw'r gystadleuaeth hon fel y mae.",
     "CompetitionName.Missing": "Rhowch enw.",
-    "CompetitionName.TooLong": "Gall enw fod hyd at 254 o gymeriadau.",
-    "CompetitionName.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw.",
+    "CompetitionName.TooLong": "Gall enw fod hyd at 254 nod ar y mwyaf.",
+    "CompetitionName.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn enw.",
     "Tournament.KnockoutPlayerHasGames":
-      "Mae gan rai chwaraewyr yn y siart hon gornestau, felly ni ellir newid eu lleoedd.",
+      "Mae gan y chwaraewyr yn y tynnu hwn gemau, felly ni ellir newid ei leoedd.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "Ni ellir byrhau rownd sydd â chornest wedi'i phenderfynu.",
+      "Ni ellir gwneud rownd sydd â gêm wedi'i phenderfynu yn orau o nifer llai.",
     "Tournament.KnockoutLaterRoundHasGames":
       "Ni ellir newid rownd ar ôl chwarae gêm mewn rownd ddiweddarach.",
     "Tournament.CompetitionNameTaken":
       "Mae gan gystadleuaeth arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
-    "BestOf.NotWhole": "Rhowch nifer cyflawn o gemau.",
-    "BestOf.TooSmall": "Rhaid i gornest fod y gorau o 1 gêm o leiaf.",
-    "Rounds.NotWhole": "Rhowch nifer cyflawn o rowndiau.",
+    "BestOf.NotWhole": "Rhowch nifer cyfan o gemau.",
+    "BestOf.TooSmall": "Rhaid i gêm fod yr orau o 1 gêm o leiaf.",
+    "Rounds.NotWhole": "Rhowch nifer cyfan o rowndiau.",
     "Rounds.TooSmall": "Rhaid chwarae bloc mewn 1 rownd o leiaf.",
     "KnockoutDraw.EvenBestOf":
-      "Rhaid i gornest taro allan gael enillydd, felly mae'n rhaid iddi fod y gorau o odrif o gemau.",
+      "Rhaid i gêm cnoc-owt gael enillydd, felly mae'n orau o nifer odrif o gemau.",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
     "admin.hover.tournaments.new": "Creu twrnamaint newydd",
     "admin.hover.tournaments.manage":
-      "Rheoli chwaraewyr, timau, cystadlaethau a chanlyniadau'r twrnamaint hwn",
+      "Rheoli chwaraewyr, timau, cystadlaethau a sgorau'r twrnamaint hwn",
     "admin.hover.tournaments.edit": "Newid manylion y twrnamaint hwn",
-    "admin.hover.tournaments.scores":
-      "Rhoi canlyniadau'r twrnamaint hwn i mewn",
+    "admin.hover.tournaments.scores": "Rhoi sgorau'r twrnamaint hwn i mewn",
     "admin.hover.tournaments.players": "Gofalu am chwaraewyr y twrnamaint hwn",
     "admin.hover.competitions.view":
-      "Agor y gystadleuaeth hon i weld a rhoi i mewn ei chwaraewyr a'i chanlyniadau",
-    "admin.hover.tests.view":
-      "Agor y test hwn i weld a rhoi i mewn ei ganlyniadau",
+      "Agor y gystadleuaeth hon i weld a rhoi i mewn ei chwaraewyr a'i sgorau",
+    "admin.hover.tests.view": "Agor y prawf hwn i weld a rhoi i mewn ei sgorau",
     "admin.hover.teams.view": "Agor y tîm hwn i weld a rheoli ei chwaraewyr",
     "admin.hover.dialog.player.add":
       "Ychwanegu'r chwaraewr hwn at y twrnamaint",
-    "admin.hover.dialog.player.save": "Cadw newidiadau'r chwaraewr hwn",
+    "admin.hover.dialog.player.save": "Cadw'r newidiadau i'r chwaraewr hwn",
     "admin.hover.dialog.team.add": "Ychwanegu'r tîm hwn at y twrnamaint",
-    "admin.hover.dialog.team.save": "Cadw newidiadau'r tîm hwn",
-    "admin.hover.dialog.test.add": "Ychwanegu'r test hwn at y twrnamaint",
-    "admin.hover.dialog.test.save": "Cadw newidiadau'r test hwn",
+    "admin.hover.dialog.team.save": "Cadw'r newidiadau i'r tîm hwn",
+    "admin.hover.dialog.test.add": "Ychwanegu'r prawf hwn at y twrnamaint",
+    "admin.hover.dialog.test.save": "Cadw'r newidiadau i'r prawf hwn",
     "admin.hover.dialog.competition.add":
       "Ychwanegu'r gystadleuaeth hon at y twrnamaint",
     "admin.hover.dialog.competition.save":
-      "Cadw newidiadau'r gystadleuaeth hon",
-    "admin.hover.dialog.score.add":
-      "Ychwanegu'r canlyniad hwn at y gystadleuaeth",
-    "admin.hover.dialog.score.save": "Cadw cywiriad y canlyniad hwn",
+      "Cadw'r newidiadau i'r gystadleuaeth hon",
+    "admin.hover.dialog.score.add": "Ychwanegu'r sgôr hwn at y gystadleuaeth",
+    "admin.hover.dialog.score.save": "Cadw'r cywiriad i'r sgôr hwn",
     "admin.hover.dialog.carryForward.save":
       "Cario canlyniadau'r chwaraewr hwn ymlaen",
     "admin.hover.dialog.tournament.new": "Creu'r twrnamaint hwn",
-    "admin.hover.dialog.tournament.edit": "Cadw newidiadau'r twrnamaint hwn",
+    "admin.hover.dialog.tournament.edit":
+      "Cadw'r newidiadau i'r twrnamaint hwn",
     "admin.hover.modal.cancel": "Cau hwn heb gadw dim",
     "admin.hover.modal.ok": "Cau'r neges hon",
     "admin.hover.tab": "Dangos y tab {name}",
     "admin.hover.tournaments.archive":
       "Archifo'r twrnamaint hwn; gellir ei adfer",
-    "admin.hover.tournaments.restore": "Cael y twrnamaint archifedig hwn yn ôl",
+    "admin.hover.tournaments.restore":
+      "Dod â'r twrnamaint archifedig hwn yn ôl",
     "admin.hover.players.add": "Ychwanegu chwaraewr at y twrnamaint hwn",
     "admin.hover.players.edit": "Newid manylion y chwaraewr hwn",
     "admin.hover.players.up": "Symud y chwaraewr hwn i fyny'r rhestr",
     "admin.hover.players.down": "Symud y chwaraewr hwn i lawr y rhestr",
     "admin.hover.players.archive": "Archifo'r chwaraewr hwn; gellir ei adfer",
-    "admin.hover.players.restore": "Cael y chwaraewr archifedig hwn yn ôl",
+    "admin.hover.players.restore": "Dod â'r chwaraewr archifedig hwn yn ôl",
     "admin.hover.teams.add": "Ychwanegu tîm at y twrnamaint hwn",
     "admin.hover.teams.edit": "Newid manylion y tîm hwn",
     "admin.hover.teams.up": "Symud y tîm hwn i fyny'r rhestr",
     "admin.hover.teams.down": "Symud y tîm hwn i lawr y rhestr",
     "admin.hover.teams.archive": "Archifo'r tîm hwn; gellir ei adfer",
-    "admin.hover.teams.restore": "Cael y tîm archifedig hwn yn ôl",
+    "admin.hover.teams.restore": "Dod â'r tîm archifedig hwn yn ôl",
     "admin.hover.competitions.add":
       "Ychwanegu cystadleuaeth at y twrnamaint hwn",
     "admin.hover.competitions.edit": "Newid manylion y gystadleuaeth hon",
@@ -702,28 +755,27 @@ export const welsh: Language = {
     "admin.hover.competitions.archive":
       "Archifo'r gystadleuaeth hon; gellir ei hadfer",
     "admin.hover.competitions.restore":
-      "Cael y gystadleuaeth archifedig hon yn ôl",
-    "admin.hover.tests.add": "Ychwanegu test rhwng dau dîm",
-    "admin.hover.tests.edit": "Newid manylion y test hwn",
-    "admin.hover.tests.up": "Symud y test hwn i fyny'r rhestr",
-    "admin.hover.tests.down": "Symud y test hwn i lawr y rhestr",
-    "admin.hover.tests.archive": "Archifo'r test hwn; gellir ei adfer",
-    "admin.hover.tests.restore": "Cael y test archifedig hwn yn ôl",
+      "Dod â'r gystadleuaeth archifedig hon yn ôl",
+    "admin.hover.tests.add": "Ychwanegu prawf rhwng dau dîm",
+    "admin.hover.tests.edit": "Newid manylion y prawf hwn",
+    "admin.hover.tests.up": "Symud y prawf hwn i fyny'r rhestr",
+    "admin.hover.tests.down": "Symud y prawf hwn i lawr y rhestr",
+    "admin.hover.tests.archive": "Archifo'r prawf hwn; gellir ei adfer",
+    "admin.hover.tests.restore": "Dod â'r prawf archifedig hwn yn ôl",
     "admin.hover.tests.toTeams":
-      "Mynd i'r tab Timau i ychwanegu'r timau y mae eu hangen ar test",
-    "admin.hover.scores.add":
-      "Ychwanegu canlyniad gornest at y gystadleuaeth hon",
-    "admin.hover.scores.edit": "Cywiro'r canlyniad hwn",
+      "Mynd i'r tab Timau i ychwanegu'r timau sydd eu hangen ar brawf",
+    "admin.hover.scores.add": "Ychwanegu sgôr gêm at y gystadleuaeth hon",
+    "admin.hover.scores.edit": "Cywiro'r sgôr hwn",
     "admin.hover.scores.archive":
-      "Archifo'r canlyniad hwn fel nad yw'n cyfrif mwyach; gellir ei adfer",
+      "Archifo'r sgôr hwn fel nad yw'n cyfrif mwyach; gellir ei adfer",
     "admin.hover.scores.restore":
-      "Cael y canlyniad archifedig hwn yn ôl, fel ei fod yn cyfrif eto",
+      "Dod â'r sgôr archifedig hwn yn ôl, fel ei fod yn cyfrif eto",
     "admin.hover.scores.withdraw":
-      "Gadael y canlyniad hwn ar y rhestr ond heb iddo gyfrif",
+      "Cadw'r sgôr hwn ar y rhestr ond rhoi'r gorau i'w gyfrif",
     "admin.hover.scores.unwithdraw":
-      "Gwneud i'r canlyniad hwn a dynnwyd yn ôl gyfrif eto",
-    "admin.hover.scores.up": "Symud y canlyniad hwn yn gynharach yn y rhestr",
-    "admin.hover.scores.down": "Symud y canlyniad hwn yn hwyrach yn y rhestr",
+      "Gwneud i'r sgôr hwn a dynnwyd yn ôl gyfrif eto",
+    "admin.hover.scores.up": "Symud y sgôr hwn yn gynharach yn y rhestr",
+    "admin.hover.scores.down": "Symud y sgôr hwn yn hwyrach yn y rhestr",
     "admin.hover.competitionPlayers.add":
       "Rhoi'r chwaraewr a ddewiswyd yn y gystadleuaeth hon",
     "admin.hover.competitionPlayers.up":
@@ -731,11 +783,11 @@ export const welsh: Language = {
     "admin.hover.competitionPlayers.down":
       "Symud y chwaraewr hwn i lawr y rhestr",
     "admin.hover.competitionPlayers.remove":
-      "Tynnu'r chwaraewr hwn o'r gystadleuaeth",
+      "Tynnu'r chwaraewr hwn allan o'r gystadleuaeth",
     "admin.hover.competitionPlayers.withdraw":
       "Tynnu'r chwaraewr hwn yn ôl o'r gystadleuaeth",
     "admin.hover.competitionPlayers.unwithdraw":
-      "Dychwelyd y chwaraewr hwn, a dynnwyd yn ôl, i'r gystadleuaeth",
+      "Rhoi'r chwaraewr hwn a dynnwyd yn ôl yn ôl yn y gystadleuaeth",
     "admin.hover.competitionPlayers.carryForward":
       "Cario canlyniadau'r chwaraewr hwn ymlaen o gystadleuaeth arall",
     "admin.hover.notes.add":
@@ -743,126 +795,131 @@ export const welsh: Language = {
     "admin.hover.notes.edit": "Newid y nodyn hwn",
     "admin.hover.notes.delete": "Dileu'r nodyn hwn",
     "admin.hover.note.add": "Cadw'r nodyn hwn a'i ychwanegu at y twrnamaint",
-    "admin.hover.note.save": "Cadw newidiadau'r nodyn hwn",
+    "admin.hover.note.save": "Cadw'r newidiadau i'r nodyn hwn",
     "admin.hover.people.add": "Rhoi'r rôl i'r person hwn",
-    "admin.hover.people.remove": "Tynnu'r rôl oddi ar y person hwn",
+    "admin.hover.people.remove": "Cymryd y rôl oddi ar y person hwn",
     "admin.hover.worldRankings.import":
-      "Nôl Safleoedd y Byd ac ychwanegu eu chwaraewyr",
-    "admin.modal.cancel": "Canslo",
+      "Nôl detholion y byd ac ychwanegu eu chwaraewyr",
+    "admin.modal.cancel": "Diddymu",
+    // The one button of a modal dialog that only tells the reader something.
     "admin.modal.ok": "Iawn",
+    // The Managers and Scorers tabs.
     "admin.people.emailAddress": "Cyfeiriad e-bost",
     "admin.people.remove": "Tynnu",
     "admin.people.otherwise": "Ni ellid gwneud hynny.",
+    // Beside the reader's own name among the managers.
     "admin.managers.you": "Chi",
     "admin.managers.add": "Ychwanegu rheolwr",
     "admin.managers.none": "Dim rheolwyr",
     "admin.managers.removeTitle": "Tynnu rheolwr",
     "admin.managers.removeExplanation":
-      "Ni fydd {name} yn gallu rheoli'r twrnamaint hwn mwyach.",
+      "Ni fydd {name} yn gallu rhedeg y twrnamaint hwn mwyach.",
     "admin.managers.removeYourself.explanation":
-      "Ni fyddwch yn gallu rheoli'r twrnamaint hwn mwyach, ac ni all neb yma ddadwneud hynny i chi. Gall rheolwr arall eich gwneud yn rheolwr eto.",
+      "Ni fyddwch yn gallu rhedeg y twrnamaint hwn mwyach, ac ni all neb yma ddadwneud hynny i chi. Gall rheolwr arall eich gwneud yn rheolwr eto.",
     "admin.managers.otherwise": "Ni ellir gwneud y cyfeiriad hwnnw'n rheolwr.",
+    // A competition's Players tab.
     "admin.competitionPlayers.add": "Ychwanegu chwaraewr",
-    // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise": "Ni ellir ychwanegu'r chwaraewr hwn.",
     "admin.competitionPlayers.choose": "Chwaraewr i'w ychwanegu",
     "admin.competitionPlayers.nobody": "Dewiswch chwaraewr",
+    // Offered in a knockout's drop-down, and what a bye is listed as.
     "admin.competitionPlayers.bye": "Bye",
-    "admin.competitionPlayers.all":
-      "Mae pob chwaraewr yn y gystadleuaeth eisoes",
+    "admin.competitionPlayers.all": "Mae pob chwaraewr yn y gystadleuaeth",
     "admin.competitionPlayers.none": "Dim chwaraewyr",
     "admin.competitionPlayers.up": "I fyny",
     "admin.competitionPlayers.down": "I lawr",
     "admin.competitionPlayers.remove": "Tynnu",
     "admin.competitionPlayers.withdraw": "Tynnu'n ôl",
-    "admin.competitionPlayers.unwithdraw": "Dadwneud tynnu'n ôl",
+    "admin.competitionPlayers.unwithdraw": "Dad-dynnu'n ôl",
     "admin.competitionPlayers.withdrawn": "Chwaraewyr a dynnwyd yn ôl",
     "admin.competitionPlayers.removeTitle": "Tynnu chwaraewr",
     "admin.competitionPlayers.removeQuestion":
-      "Caiff {name} ei dynnu o'r gystadleuaeth. Ni ellir dadwneud hyn.",
+      "Caiff {name} ei dynnu allan o'r gystadleuaeth. Ni ellir dadwneud hyn.",
     "admin.competitionPlayers.withdrawTitle": "Tynnu chwaraewr yn ôl",
     "admin.competitionPlayers.withdrawQuestion":
-      "Ni fydd {name} yn chwarae rhagor yn y gystadleuaeth, a chaiff y gemau na chwaraeodd eu penderfynu hebddo.",
+      "Ni fydd {name} yn chwarae rhagor o'r gystadleuaeth, a phenderfynir y gemau nad yw wedi'u chwarae hebddo.",
     "admin.competitionPlayers.carryForward": "Cario ymlaen",
+    // The carry forward dialog, over a competition's Players tab.
     "admin.carryForward.title": "Cario ymlaen - {name}",
     "admin.carryForward.save": "Cadw",
+    // Above the counts, for a refusal with no words of its own.
     "admin.carryForward.otherwise": "Ni ellir cadw'r cario ymlaen hwn.",
-    "admin.carryForward.matchWins": "Gornestau a enillwyd",
-    "admin.carryForward.matchLosses": "Gornestau a gollwyd",
-    "admin.carryForward.gameWins": "Gemau a enillwyd",
-    "admin.carryForward.gameLosses": "Gemau a gollwyd",
-    "admin.carryForward.hoopsFor": "Cylchoedd dros",
-    "admin.carryForward.hoopsAgainst": "Cylchoedd yn erbyn",
-    "CarryForward.MatchWinsNotWhole":
-      "Rhowch nifer cyflawn o gornestau a enillwyd.",
-    "CarryForward.MatchWinsBelowZero":
-      "Rhowch 0 neu fwy o gornestau a enillwyd.",
-    "CarryForward.MatchLossesNotWhole":
-      "Rhowch nifer cyflawn o gornestau a gollwyd.",
-    "CarryForward.MatchLossesBelowZero":
-      "Rhowch 0 neu fwy o gornestau a gollwyd.",
-    "CarryForward.GameWinsNotWhole": "Rhowch nifer cyflawn o gemau a enillwyd.",
-    "CarryForward.GameWinsBelowZero": "Rhowch 0 neu fwy o gemau a enillwyd.",
+    "admin.carryForward.matchWins": "Gemau a enillwyd",
+    "admin.carryForward.matchLosses": "Gemau a gollwyd",
+    "admin.carryForward.gameWins": "Gemau unigol a enillwyd",
+    "admin.carryForward.gameLosses": "Gemau unigol a gollwyd",
+    "admin.carryForward.hoopsFor": "Cylchau o blaid",
+    "admin.carryForward.hoopsAgainst": "Cylchau yn erbyn",
+    "CarryForward.MatchWinsNotWhole": "Rhowch nifer cyfan o gemau a enillwyd.",
+    "CarryForward.MatchWinsBelowZero": "Rhowch 0 neu fwy o gemau a enillwyd.",
+    "CarryForward.MatchLossesNotWhole": "Rhowch nifer cyfan o gemau a gollwyd.",
+    "CarryForward.MatchLossesBelowZero": "Rhowch 0 neu fwy o gemau a gollwyd.",
+    "CarryForward.GameWinsNotWhole":
+      "Rhowch nifer cyfan o gemau unigol a enillwyd.",
+    "CarryForward.GameWinsBelowZero":
+      "Rhowch 0 neu fwy o gemau unigol a enillwyd.",
     "CarryForward.GameLossesNotWhole":
-      "Rhowch nifer cyflawn o gemau a gollwyd.",
-    "CarryForward.GameLossesBelowZero": "Rhowch 0 neu fwy o gemau a gollwyd.",
-    "CarryForward.HoopsForNotWhole": "Rhowch nifer cyflawn o gylchoedd dros.",
-    "CarryForward.HoopsForBelowZero": "Rhowch 0 neu fwy o gylchoedd dros.",
+      "Rhowch nifer cyfan o gemau unigol a gollwyd.",
+    "CarryForward.GameLossesBelowZero":
+      "Rhowch 0 neu fwy o gemau unigol a gollwyd.",
+    "CarryForward.HoopsForNotWhole": "Rhowch nifer cyfan o gylchau o blaid.",
+    "CarryForward.HoopsForBelowZero": "Rhowch 0 neu fwy o gylchau o blaid.",
     "CarryForward.HoopsAgainstNotWhole":
-      "Rhowch nifer cyflawn o gylchoedd yn erbyn.",
+      "Rhowch nifer cyfan o gylchau yn erbyn.",
     "CarryForward.HoopsAgainstBelowZero":
-      "Rhowch 0 neu fwy o gylchoedd yn erbyn.",
-    "admin.scores.add": "Ychwanegu canlyniad",
-    "admin.scores.none": "Dim canlyniadau",
+      "Rhowch 0 neu fwy o gylchau yn erbyn.",
+    // A competition's Scores tab and the score dialog.
+    "admin.scores.add": "Ychwanegu sgôr",
+    "admin.scores.none": "Dim sgorau",
     "admin.scores.edit": "Golygu",
-    "admin.scores.drawNotFilledTitle": "Siart anghyflawn",
+    "admin.scores.drawNotFilledTitle": "Tynnu heb ei lenwi",
     "admin.scores.archive": "Archifo",
     "admin.scores.up": "I fyny",
     "admin.scores.down": "I lawr",
     "admin.scores.restore": "Adfer",
-    "admin.scores.archived": "Canlyniadau wedi'u harchifo",
+    "admin.scores.archived": "Sgorau wedi'u harchifo",
     "admin.scores.archivedSaid": "Wedi'i archifo",
     "admin.scores.withdraw": "Tynnu'n ôl",
-    "admin.scores.unwithdraw": "Dadwneud tynnu'n ôl",
-    "admin.scores.withdrawnSaid": "Wedi tynnu'n ôl",
+    "admin.scores.unwithdraw": "Dad-dynnu'n ôl",
+    "admin.scores.withdrawnSaid": "Wedi'i dynnu'n ôl",
+    // Above the list, for a refusal with no words of its own.
     "admin.scores.otherwise": "Ni ellid gwneud hynny.",
-    "admin.score.title": "Ychwanegu canlyniad",
+    "admin.score.title": "Ychwanegu sgôr",
     "admin.score.add": "Ychwanegu gêm",
     "admin.score.winner": "Enillydd",
-    "admin.score.winnerScore": "Pwyntiau'r enillydd",
+    "admin.score.winnerScore": "Sgôr yr enillydd",
     "admin.score.loser": "Collwr",
-    "admin.score.loserScore": "Pwyntiau'r collwr",
+    "admin.score.loserScore": "Sgôr y collwr",
     "admin.score.beat": "a gurodd",
-    "admin.score.added": "Ychwanegwyd y gêm lle gurodd {winner} {loser}.",
+    "admin.score.added":
+      "Ychwanegwyd y gêm a enillodd {winner} yn erbyn {loser}.",
     "admin.score.otherwise": "Ni ellid ychwanegu'r gêm.",
-    "admin.score.correctTitle": "Golygu canlyniad",
+    "admin.score.correctTitle": "Golygu sgôr",
     "admin.score.save": "Cadw",
-    "admin.score.notCorrected": "Ni ellid cywiro'r canlyniad.",
+    "admin.score.notCorrected": "Ni ellid cywiro'r sgôr.",
     "Game.WinnerMissing": "Dewiswch yr enillydd.",
-    "Game.WinnerScoreMissing": "Rhowch bwyntiau'r enillydd.",
+    "Game.WinnerScoreMissing": "Teipiwch sgôr yr enillydd.",
     "Game.LoserMissing": "Dewiswch y collwr.",
-    "Game.LoserScoreMissing": "Rhowch bwyntiau'r collwr.",
-    "Score.NoPoints": "Mae pwyntiau'n dechrau gyda rhif.",
-    "Game.SamePlayer": "Nid oes neb yn chwarae yn erbyn ei hun.",
+    "Game.LoserScoreMissing": "Teipiwch sgôr y collwr.",
+    "Score.NoPoints": "Mae sgôr yn dechrau gyda'i nifer o bwyntiau.",
+    "Game.SamePlayer": "Nid yw neb yn chwarae yn erbyn ei hun.",
     "Game.WinnerNotAhead":
-      "Rhaid i'r enillydd gael mwy o bwyntiau na'r collwr, neu gael ei farcio'n enillydd.",
-    "Game.LoserMarked":
-      "Ni ellir marcio pwyntiau'r collwr fel rhai a enillwyd.",
+      "Rhaid i sgôr yr enillydd fod yn fwy na sgôr y collwr, neu wedi'i farcio fel un a enillwyd.",
+    "Game.LoserMarked": "Ni ellir marcio sgôr y collwr fel un a enillwyd.",
     "Game.ResultChanged":
-      "Mae cywiriad yn cadw'r canlyniad: mae gêm a enillwyd yn parhau i fod wedi'i hennill, ac un gyfartal yn parhau'n gyfartal.",
-    "Competition.MatchDecided": "Mae eu gornest eisoes wedi'i phenderfynu.",
+      "Mae cywiriad yn cadw'r canlyniad: erys gêm a enillwyd yn gêm a enillwyd, ac erys gêm gyfartal yn gyfartal.",
+    "Competition.MatchDecided": "Mae eu gêm eisoes wedi'i phenderfynu.",
     "Competition.DrawFull":
-      "Ni ellir ychwanegu'r chwaraewr oherwydd bod y siart yn llawn.",
+      "Ni ellir ychwanegu'r chwaraewr oherwydd bod y gnoc-owt yn llawn.",
     "Competition.DrawNotFilled":
-      "Ni ellir ychwanegu canlyniadau nes bod gan bob lle yn y siart chwaraewr neu bye.",
-    "Competition.ByeOutsideKnockout":
-      "Dim ond cystadleuaeth taro allan all gael byes.",
+      "Ni ellir ychwanegu sgorau nes bod pob lle yn y gnoc-owt wedi'i lenwi â chwaraewr neu bye.",
+    "Competition.ByeOutsideKnockout": "Dim ond cnoc-owt all gael bye.",
     "Competition.NotDrawnToMeet":
-      "Nid ydynt i fod i chwarae yn erbyn ei gilydd.",
+      "Nid yw'r chwaraewyr hyn wedi'u tynnu i chwarae yn erbyn ei gilydd yn y gnoc-owt ar hyn o bryd.",
     "Competition.WinnerHasPlayedOn":
-      "Mae enillydd y gornest hon eisoes wedi chwarae ei gornest nesaf, felly ni ellir newid pwy a'i henillodd.",
+      "Mae enillydd y gêm hon eisoes wedi chwarae ei gêm nesaf, felly ni ellir newid pwy a'i henillodd.",
     "CompetitionPlayer.Withdrawn":
-      "Nid yw chwaraewr a dynnwyd yn ôl yn chwarae mwyach.",
+      "Nid yw chwaraewr a dynnwyd yn ôl yn chwarae rhagor.",
     "admin.players.add": "Ychwanegu chwaraewr",
     "admin.players.none": "Dim chwaraewyr",
     "admin.players.edit": "Golygu",
@@ -870,37 +927,46 @@ export const welsh: Language = {
     "admin.players.restore": "Adfer",
     "admin.players.up": "I fyny",
     "admin.players.down": "I lawr",
+    // Asked before archiving a player who is in competitions.
     "admin.players.archiveTitle": "Archifo chwaraewr",
     "admin.players.archiveQuestion":
       "Caiff {name} ei dynnu o'r cystadlaethau hyn:",
     "admin.players.archive.explanation":
-      "Ni fydd adfer y chwaraewr yn ei roi yn ôl yn y cystadlaethau hyn.",
+      "Ni fydd ei adfer yn ei roi yn ôl yn y cystadlaethau hyn.",
     "admin.players.archived": "Chwaraewyr wedi'u harchifo",
+    // Said to a screen reader, since a line through a name is not read out.
     "admin.players.archivedSaid": "Wedi'i archifo",
+    // The player dialog.
     "admin.player.addTitle": "Ychwanegu chwaraewr",
     "admin.player.editTitle": "Golygu chwaraewr",
     "admin.player.name": "Enw",
     "admin.player.representing": "Yn cynrychioli",
-    "admin.player.worldRankingName": "Enw ar Safleoedd y Byd",
+    "admin.player.worldRankingName": "Enw'r chwaraewr ar restr detholion y byd",
+    // Beside the world ranking name: whether the world rankings know it.
     "admin.player.worldRankingKnown":
-      "Mae Safleoedd y Byd yn adnabod yr enw hwn.",
+      "Mae detholion y byd yn adnabod yr enw hwn.",
     "admin.player.worldRankingQuestioned":
-      "Nid oes gan Safleoedd y Byd chwaraewr â'r enw hwn. Efallai ei fod wedi'i gamsillafu, neu fod y chwaraewr yn newydd i'r safleoedd.",
+      "Nid oes gan detholion y byd chwaraewr o'r enw hwn. Efallai ei fod wedi'i gamsillafu, neu efallai fod y chwaraewr yn newydd i'r detholion.",
     "admin.player.flag": "Baner",
     "admin.player.add": "Ychwanegu",
     "admin.player.save": "Cadw",
     "admin.player.added": "Ychwanegwyd {name}.",
+    // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Ni ellir cadw'r chwaraewr hwn fel y mae.",
     "Tournament.PlayerNameTaken":
       "Mae gan chwaraewr arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
     "TournamentPlayer.NoSuchFlag": "Dewiswch un o'r baneri sydd ar gael.",
-    "TournamentPlayer.NamedBye": "Ni all chwaraewr gael yr enw Bye.",
-    "TournamentPlayer.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw.",
-    "admin.player.byesTitle": "Ni chaiff byes eu hychwanegu",
+    "TournamentPlayer.NamedBye": "Ni all chwaraewr gael ei alw'n Bye.",
+    "TournamentPlayer.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn enw.",
+    // The dialog over the player dialog when a player is named as a bye.
+    "admin.player.byesTitle": "Nid oes angen ychwanegu byes",
     "admin.player.byes":
-      "Nid yw bye yn chwaraewr yn y twrnamaint. Mae cystadleuaeth taro allan yn cynnig Bye pan fydd ei chwaraewyr yn cael eu hychwanegu, cymaint o weithiau ag y mae ei siart ei angen.",
+      "Nid yw bye yn un o chwaraewyr y twrnamaint. Mae cnoc-owt yn cynnig Bye pryd bynnag yr ychwanegir ei chwaraewyr, gymaint o weithiau ag y mae ei dynnu ei angen.",
+    // A tournament played by teams: its Teams and Tests tabs, a team's page,
+    // and their dialogs.
     "admin.view.teams": "Timau",
-    "admin.view.tests": "Testau",
+    "admin.view.tests": "Profion",
     "admin.teams.add": "Ychwanegu tîm",
     "admin.teams.none": "Dim timau",
     "admin.teams.edit": "Golygu",
@@ -916,11 +982,12 @@ export const welsh: Language = {
     "admin.team.name": "Enw",
     "admin.team.shortName": "Enw byr",
     "admin.team.shortName.explanation":
-      "Sut mae testau'r tîm yn cael eu henwi, fel AUS v ENG.",
+      "Yr enw y gelwir profion y tîm ganddo, fel AUS v ENG.",
     "admin.team.flag": "Baner",
     "admin.team.add": "Ychwanegu",
     "admin.team.save": "Cadw",
     "admin.team.added": "Ychwanegwyd {name}.",
+    // Above the fields, for a refusal with no words of its own.
     "admin.team.otherwise": "Ni ellir cadw'r tîm hwn fel y mae.",
     "admin.teamView.otherwise": "Ni ellir gweld y tîm hwn o'r fan hon.",
     "admin.teamView.players": "Chwaraewyr",
@@ -930,11 +997,14 @@ export const welsh: Language = {
     "admin.notes.none": "Dim nodiadau",
     "admin.notes.edit": "Golygu",
     "admin.notes.delete": "Dileu",
+    // Asked before deleting a note, since a note deleted is gone for good.
     "admin.notes.deleteTitle": "Dileu nodyn",
     "admin.notes.deleteQuestion": "Dileu'r nodyn “{title}”?",
     "admin.notes.delete.explanation":
-      "Mae nodyn a ddilëir wedi mynd am byth ac ni ellir ei gael yn ôl.",
+      "Mae nodyn a ddilëwyd wedi mynd am byth, ac ni ellir ei ddwyn yn ôl.",
+    // Above the list, for a refusal with no words of its own.
     "admin.notes.otherwise": "Ni ellid gwneud hynny.",
+    // The note dialog, its description's tabs and the toolbar above its box.
     "admin.note.addTitle": "Ychwanegu nodyn",
     "admin.note.editTitle": "Golygu nodyn",
     "admin.note.title": "Teitl",
@@ -943,20 +1013,22 @@ export const welsh: Language = {
     "admin.note.preview": "Rhagolwg",
     "admin.note.toolbar": "Fformatio",
     "admin.note.tool.heading": "Pennawd",
-    "admin.note.tool.bold": "Print trwm",
+    "admin.note.tool.bold": "Trwm",
     "admin.note.tool.italic": "Italig",
     "admin.note.tool.quote": "Dyfyniad",
     "admin.note.tool.code": "Cod",
     "admin.note.tool.link": "Dolen",
-    "admin.note.tool.numberedList": "Rhestr wedi'i rhifo",
-    "admin.note.tool.bulletedList": "Rhestr bwyntiau bwled",
+    "admin.note.tool.numberedList": "Rhestr rifedig",
+    "admin.note.tool.bulletedList": "Rhestr bwyntiau",
     "admin.note.tool.taskList": "Rhestr tasgau",
     "admin.note.add": "Ychwanegu",
     "admin.note.save": "Cadw",
-    "admin.note.otherwise": "Ni ellir cadw'r nodyn hwn fel hyn.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.note.otherwise": "Ni ellir cadw'r nodyn hwn fel y mae.",
     "ManagerNoteTitle.Missing": "Rhowch deitl i'r nodyn.",
     "ManagerNoteTitle.TooLong": "Mae'r teitl hwnnw'n rhy hir.",
-    "ManagerNoteTitle.NoLetterOrDigit": "Mae angen llythyren neu rif ar deitl.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn teitl.",
     "ManagerNoteDescription.TooLong": "Mae'r disgrifiad hwnnw'n rhy hir.",
     "ManagerNoteToEdit.NoSuchManagerNote":
       "Nid yw'r nodyn hwnnw yno mwyach. Efallai fod rheolwr arall wedi'i ddileu.",
@@ -968,25 +1040,27 @@ export const welsh: Language = {
       "Mae'r nodyn hwnnw wedi'i ddileu. Efallai fod rheolwr arall wedi'i ddileu.",
     "CommentaryTitle.Missing": "Rhowch deitl i'r sylwebaeth.",
     "CommentaryTitle.TooLong": "Mae'r teitl hwnnw'n rhy hir.",
-    "CommentaryTitle.NoLetterOrDigit": "Mae angen llythyren neu rif ar deitl.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn teitl.",
     "Commentary.TitleTaken": "Mae gan sylwebaeth arall y teitl hwnnw eisoes.",
     "CommentText.Missing": "Ysgrifennwch rywbeth yn y sylw.",
     "CommentText.TooLong": "Mae'r sylw hwnnw'n rhy hir.",
     "TeamShortName.Missing": "Rhowch enw byr i'r tîm.",
-    "TeamShortName.TooLong": "Gall enw byr fod hyd at 10 cymeriad.",
-    "TeamShortName.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw byr.",
+    "TeamShortName.TooLong": "Gall enw byr fod hyd at 10 nod ar y mwyaf.",
+    "TeamShortName.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn enw byr.",
     "Team.ShortNameLongerThanName":
       "Ni all enw byr fod yn hirach nag enw'r tîm.",
     "Team.NoSuchFlag": "Dewiswch un o'r baneri sydd ar gael.",
     "Team.Archived":
-      "Mae'r tîm hwnnw wedi'i archifo, a rhaid ei adfer yn gyntaf.",
+      "Mae'r tîm hwnnw wedi'i archifo, a chaiff ei adfer yn gyntaf.",
     "Team.InATest":
-      "Mae'r tîm hwnnw'n chwarae mewn test, ac ni ellir ei archifo.",
+      "Mae'r tîm hwnnw'n chwarae mewn prawf, ac ni ellir ei archifo.",
     "Team.PlayerNameTaken":
       "Mae gan chwaraewr arall yn y tîm hwn yr enw hwnnw eisoes.",
-    "TeamPlayer.NamedBye": "Ni all chwaraewr gael yr enw Bye.",
+    "TeamPlayer.NamedBye": "Ni all chwaraewr gael ei alw'n Bye.",
     "TeamPlayer.Archived":
-      "Mae'r chwaraewr hwnnw wedi'i archifo, a rhaid ei adfer yn gyntaf.",
+      "Mae'r chwaraewr hwnnw wedi'i archifo, a chaiff ei adfer yn gyntaf.",
     "TeamPlayer.HasGames":
       "Mae'r chwaraewr hwnnw wedi chwarae, ac ni ellir ei archifo.",
     "Tournament.TeamNameTaken":
@@ -994,89 +1068,93 @@ export const welsh: Language = {
     "Tournament.TeamShortNameTaken":
       "Mae gan dîm arall yn y twrnamaint hwn yr enw byr hwnnw eisoes.",
     "Tournament.NoSuchTeam":
-      "Nid oes tîm yn y twrnamaint hwn yn y cyfeiriad hwn.",
+      "Nid oes gan y twrnamaint hwn dîm yn y cyfeiriad hwn.",
     "Tournament.TeamArchived":
       "Mae'r tîm hwn wedi'i archifo, a dim ond o'r tab Timau y gellir ei adfer.",
-    "admin.tests.add": "Ychwanegu test",
-    "admin.tests.none": "Dim testau",
+    "admin.tests.add": "Ychwanegu prawf",
+    "admin.tests.none": "Dim profion",
     "admin.tests.edit": "Golygu",
     "admin.tests.view": "Gweld",
     "admin.tests.archive": "Archifo",
     "admin.tests.restore": "Adfer",
     "admin.tests.up": "I fyny",
     "admin.tests.down": "I lawr",
-    "admin.tests.archived": "Testau wedi'u harchifo",
+    "admin.tests.archived": "Profion wedi'u harchifo",
     "admin.tests.twoTeamsNeeded":
-      "Mae test rhwng dau dîm, felly mae angen dau dîm yn gyntaf.",
+      "Mae prawf rhwng dau dîm, felly mae angen dau dîm yn gyntaf.",
     "admin.tests.toTeams": "Mynd i Timau",
-    "admin.tests.matches.one": "{count} gornest",
-    "admin.tests.matches.other": "{count} gornest",
-    "admin.tests.bestOf": "y gorau o {games}",
+    "admin.tests.matches.one": "{count} gêm",
+    "admin.tests.matches.other": "{count} gêm",
+    "admin.tests.bestOf": "yr orau o {games}",
+    // Beside the list, for a refusal with no words of its own.
     "admin.tests.otherwise": "Ni ellid gwneud hynny.",
-    "admin.test.addTitle": "Ychwanegu test",
-    "admin.test.editTitle": "Golygu test",
+    "admin.test.addTitle": "Ychwanegu prawf",
+    "admin.test.editTitle": "Golygu prawf",
     "admin.test.firstTeam": "Tîm A",
     "admin.test.secondTeam": "Tîm B",
     "admin.test.versus": "v",
     "admin.test.starts": "Yn dechrau",
     "admin.test.finishes": "Yn gorffen",
-    "admin.test.expectedMatches": "Gornestau disgwyliedig",
-    "admin.test.bestOf": "Y gorau o",
+    "admin.test.expectedMatches": "Gemau disgwyliedig",
+    "admin.test.bestOf": "Yr orau o",
     "admin.test.group": "Grŵp",
     "admin.test.add": "Ychwanegu",
     "admin.test.save": "Cadw",
     "admin.test.added": "Ychwanegwyd {name}.",
-    "admin.test.otherwise": "Ni ellir cadw'r test hwn fel y mae.",
-    "admin.testView.otherwise": "Ni ellir gweld y test hwn o'r fan hon.",
+    "admin.test.otherwise": "Ni ellir cadw'r prawf hwn fel y mae.",
+    "admin.testView.otherwise": "Ni ellir gweld y prawf hwn o'r fan hon.",
     "AddTest.FirstTeamMissing": "Dewiswch y tîm cyntaf.",
     "AddTest.SecondTeamMissing": "Dewiswch yr ail dîm.",
     "UpdateTest.FirstTeamMissing": "Dewiswch y tîm cyntaf.",
     "UpdateTest.SecondTeamMissing": "Dewiswch yr ail dîm.",
-    "ExpectedMatches.NotWhole": "Rhowch nifer cyflawn o gornestau.",
-    "ExpectedMatches.TooSmall": "Rhaid i test ddisgwyl 1 gornest o leiaf.",
+    "ExpectedMatches.NotWhole": "Rhowch nifer cyfan o gemau.",
+    "ExpectedMatches.TooSmall": "Rhaid disgwyl i brawf gael 1 gêm o leiaf.",
     "TestGroup.TooLong": "Mae'r grŵp hwnnw'n rhy hir.",
     "Tournament.TestAgainstItself":
-      "Nid yw tîm yn chwarae test yn erbyn ei hun.",
+      "Nid yw tîm yn chwarae prawf yn erbyn ei hun.",
     "Tournament.TestFinishesBeforeStarts":
-      "Ni all test orffen cyn iddo ddechrau.",
+      "Ni all prawf orffen cyn iddo ddechrau.",
     "Tournament.TestStartsBeforeTournament":
-      "Ni all test ddechrau cyn ei dwrnamaint.",
+      "Ni all prawf ddechrau cyn i'w dwrnamaint wneud.",
     "Tournament.TestFinishesAfterTournament":
-      "Ni all test orffen ar ôl ei dwrnamaint.",
+      "Ni all prawf orffen ar ôl i'w dwrnamaint wneud.",
     "Tournament.TestHasGamesInUse":
-      "Mae gan y test hwn gemau, felly ni ellir ei archifo nes y caiff y rheini eu harchifo.",
+      "Mae gan y prawf hwn gemau, felly ni ellir ei archifo nes y byddant hwy wedi'u harchifo.",
     "Tournament.TestHasGames":
-      "Mae gan y test hwn gemau eisoes, felly ni ellir newid ei dimau mwyach.",
+      "Mae gan y prawf hwn gemau erbyn hyn, felly ni ellir newid ei dimau mwyach.",
     "Tournament.ExpectedMatchesBelowStarted":
-      "Mae mwy o gornestau na hynny eisoes wedi dechrau.",
+      "Mae mwy o gemau na hynny wedi dechrau eisoes.",
     "Tournament.BestOfBelowGamesPlayed":
       "Mae dau chwaraewr eisoes wedi chwarae mwy o gemau na hynny.",
     "Competition.ExpectedMatchesReached":
-      "Mae'r test hwn eisoes wedi dechrau'r holl gornestau y mae'n disgwyl eu cael.",
+      "Mae'r prawf hwn wedi dechrau cymaint o gemau ag y disgwylir iddo eu cael.",
     "Competition.SameTeam":
       "Nid yw dau chwaraewr o'r un tîm yn chwarae yn erbyn ei gilydd.",
     "AddManager.NoSuchAccount":
-      "Nid oes gan y cyfeiriad hwnnw unrhyw gyfrif y gellir ei wneud yn rheolwr.",
+      "Nid oes gan y cyfeiriad hwnnw gyfrif y gellir ei wneud yn rheolwr.",
+    "admin.scorers.add": "Ychwanegu sgorwr",
+    "admin.scorers.none": "Dim sgorwyr",
+    "admin.scorers.removeTitle": "Tynnu sgorwr",
+    "admin.scorers.removeExplanation":
+      "Ni fydd {name} yn gallu rhoi sgorau'r twrnamaint hwn i mewn mwyach.",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.scorers.otherwise": "Ni ellir gwneud y cyfeiriad hwnnw'n sgorwr.",
+    "AddScorer.NoSuchAccount":
+      "Nid oes gan y cyfeiriad hwnnw gyfrif y gellir ei wneud yn sgorwr.",
+    // Giving, taking and listing roles, which only an administrator can do.
     "Account.NotAnAdministrator": "Dim ond gweinyddwr all wneud hynny.",
     "AddRole.NoSuchAccount":
-      "Nid oes gan y cyfeiriad hwnnw unrhyw gyfrif y gellir rhoi'r rôl iddo.",
+      "Nid oes gan y cyfeiriad hwnnw gyfrif y gellir rhoi'r rôl iddo.",
     "AddRole.NoSuchRole": "Nid oes rôl o'r fath.",
     "RemoveRole.NoSuchAccount": "Nid oes cyfrif o'r fath.",
     "RemoveRole.NoSuchRole": "Nid oes rôl o'r fath.",
     "RemoveRole.Yourself":
-      "Ni allwch dynnu rôl y gweinyddwr oddi arnoch eich hun.",
+      "Ni allwch gymryd rôl y Gweinyddwr oddi arnoch eich hun.",
     "AccountsWithRole.NoSuchRole": "Nid oes rôl o'r fath.",
-    "admin.scorers.add": "Ychwanegu sgoriwr",
-    "admin.scorers.none": "Dim sgorwyr",
-    "admin.scorers.removeTitle": "Tynnu sgoriwr",
-    "admin.scorers.removeExplanation":
-      "Ni fydd {name} yn gallu sgorio canlyniadau'r twrnamaint hwn mwyach.",
-    "admin.scorers.otherwise": "Ni ellir gwneud y cyfeiriad hwnnw'n sgoriwr.",
-    "AddScorer.NoSuchAccount":
-      "Nid oes gan y cyfeiriad hwnnw unrhyw gyfrif y gellir ei wneud yn sgoriwr.",
     "Tournament.AlreadyAManager":
-      "Mae'r cyfrif hwnnw eisoes yn rheoli'r twrnamaint, a gall wneud popeth y gall sgoriwr ei wneud.",
+      "Mae'r cyfrif hwnnw eisoes yn rheoli'r twrnamaint, a gall wneud popeth y gall sgorwr ei wneud.",
 
+    // A tournament's refusals, keyed by their codes as every rule broken is.
     "TournamentName.Missing": "Dywedwch beth yw enw'r twrnamaint.",
     "TournamentName.TooShort": "Mae'r enw hwnnw'n rhy fyr.",
     "TournamentName.TooLong": "Mae'r enw hwnnw'n rhy hir.",
@@ -1084,7 +1162,8 @@ export const welsh: Language = {
       "Ni chaiff enw fod i gyd mewn llythrennau bach.",
     "TournamentName.AllCapitals":
       "Ni chaiff enw fod i gyd mewn prif lythrennau.",
-    "TournamentName.NoLetterOrDigit": "Mae angen llythyren neu rif ar enw.",
+    "TournamentName.NoLetterOrDigit":
+      "Mae angen llythyren neu ddigid mewn enw.",
     "ReadOnlyDate.Unreadable": "Rhowch y diwrnod.",
     "Tournament.FinishesBeforeStarts":
       "Ni all twrnamaint orffen cyn iddo ddechrau.",
@@ -1093,45 +1172,43 @@ export const welsh: Language = {
     "Tournament.FinishesAfterNextYear":
       "Ni all twrnamaint orffen ar ôl y flwyddyn nesaf.",
     "CreateTournament.NoSuchCountry": "Dewiswch y wlad.",
-    "TournamentSubtitle.TooLong":
-      "Gall yr isdeitl fod hyd at 2000 o gymeriadau.",
+    "TournamentSubtitle.TooLong": "Ni all is-deitl fod yn hirach na 2000 nod.",
     "Tournament.NotAManager": "Dim ond rheolwr y twrnamaint hwn all ei newid.",
     "Tournament.NotAManagerOrScorer":
-      "Dim ond rheolwr neu sgoriwr y twrnamaint hwn all ei weld.",
+      "Dim ond rheolwr neu sgorwr y twrnamaint hwn all ei weld.",
     "Tournament.Archived":
-      "Mae'r twrnamaint hwn wedi'i archifo, a rhaid ei adfer cyn y gellir ei newid.",
+      "Mae'r twrnamaint hwn wedi'i archifo, a chaiff ei adfer cyn y gellir ei newid.",
     "UpdateTournament.NoSuchTournament":
       "Nid oes twrnamaint yn y cyfeiriad hwn.",
 
-    // Croquet is croce in Welsh, and the sports are named from it where a Welsh
-    // term is in use. Ricochet and Gateball, which have none, keep their names, as
-    // do the formats named for a competition, as a name is not translated.
-    "sport.ac": "Croce Cymdeithas",
-    "sport.gc": "Croce Golff",
-    "sport.a6w": "Croce Americanaidd 6 Chylch",
+    // What a tournament is played in and where, by code.
+    "sport.ac": "Association Croquet",
+    "sport.gc": "Golf Croquet",
+    "sport.a6w": "American 6 Wicket",
     "sport.rc": "Ricochet",
     "sport.gb": "Gateball",
     "format.standard": "Safonol",
     "format.teams": "Timau",
-    "format.eire-cup": "Eire Cup",
-    "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.eire-cup": "Cwpan Iwerddon",
+    "format.interstate-shield": "Tarian y Taleithiau",
+    "format.gc-world-team-championship": "Pencampwriaeth Tîm y Byd GC",
+
     "country.ad": "Andorra",
     "country.ae": "Emiradau Arabaidd Unedig",
     "country.af": "Affganistan",
-    "country.ag": "Antigwa a Barbiwda",
+    "country.ag": "Antigua a Barbuda",
     "country.ai": "Anguilla",
     "country.al": "Albania",
     "country.am": "Armenia",
     "country.ao": "Angola",
-    "country.ar": "Yr Ariannin",
+    "country.ar": "yr Ariannin",
     "country.as": "Samoa Americanaidd",
     "country.at": "Awstria",
     "country.au": "Awstralia",
     "country.aw": "Aruba",
     "country.ax": "Ynysoedd Åland",
     "country.az": "Aserbaijan",
-    "country.ba": "Bosnia a Hercegovina",
+    "country.ba": "Bosnia a Herzegovina",
     "country.bb": "Barbados",
     "country.bd": "Bangladesh",
     "country.be": "Gwlad Belg",
@@ -1140,11 +1217,11 @@ export const welsh: Language = {
     "country.bh": "Bahrain",
     "country.bi": "Burundi",
     "country.bj": "Benin",
-    "country.bm": "Bermiwda",
-    "country.bn": "Brunei",
+    "country.bm": "Bermuda",
+    "country.bn": "Brwnei",
     "country.bo": "Bolifia",
     "country.br": "Brasil",
-    "country.bs": "Y Bahamas",
+    "country.bs": "y Bahamas",
     "country.bt": "Bhwtan",
     "country.bv": "Ynys Bouvet",
     "country.bw": "Botswana",
@@ -1156,7 +1233,7 @@ export const welsh: Language = {
     "country.cd": "Gweriniaeth Ddemocrataidd y Congo",
     "country.cf": "Gweriniaeth Canolbarth Affrica",
     "country.cg": "Gweriniaeth y Congo",
-    "country.ch": "Y Swistir",
+    "country.ch": "y Swistir",
     "country.ci": "Côte d'Ivoire",
     "country.ck": "Ynysoedd Cook",
     "country.cl": "Chile",
@@ -1169,7 +1246,7 @@ export const welsh: Language = {
     "country.cx": "Ynys y Nadolig",
     "country.cy": "Cyprus",
     "country.cz": "Tsiecia",
-    "country.de": "Yr Almaen",
+    "country.de": "yr Almaen",
     "country.dj": "Djibouti",
     "country.dk": "Denmarc",
     "country.dm": "Dominica",
@@ -1177,28 +1254,28 @@ export const welsh: Language = {
     "country.dz": "Algeria",
     "country.ec": "Ecwador",
     "country.ee": "Estonia",
-    "country.eg": "Yr Aifft",
+    "country.eg": "yr Aifft",
     "country.eh": "Gorllewin Sahara",
     "country.england": "Lloegr",
     "country.er": "Eritrea",
     "country.es": "Sbaen",
     "country.et": "Ethiopia",
-    "country.fi": "Y Ffindir",
-    "country.fj": "Fiji",
-    "country.fk": "Ynysoedd y Falkland",
+    "country.fi": "y Ffindir",
+    "country.fj": "Ffiji",
+    "country.fk": "Ynysoedd Falkland",
     "country.fm": "Micronesia",
     "country.fo": "Ynysoedd Ffaro",
     "country.fr": "Ffrainc",
     "country.ga": "Gabon",
-    "country.gb": "Y Deyrnas Unedig",
+    "country.gb": "y Deyrnas Unedig",
     "country.gd": "Grenada",
     "country.ge": "Georgia",
-    "country.gf": "Guyane Ffrengig",
+    "country.gf": "Guiana Ffrengig",
     "country.gh": "Ghana",
     "country.gi": "Gibraltar",
     "country.gl": "Yr Ynys Las",
     "country.gm": "Gambia",
-    "country.gn": "Guinée",
+    "country.gn": "Guinea",
     "country.gp": "Guadeloupe",
     "country.gq": "Guinea Gyhydeddol",
     "country.gr": "Gwlad Groeg",
@@ -1207,9 +1284,9 @@ export const welsh: Language = {
     "country.gu": "Guam",
     "country.gw": "Guinea-Bissau",
     "country.gy": "Guyana",
-    "country.hk": "Hong Cong",
+    "country.hk": "Hong Kong",
     "country.hm": "Ynys Heard ac Ynysoedd McDonald",
-    "country.hn": "Hondwras",
+    "country.hn": "Honduras",
     "country.hr": "Croatia",
     "country.ht": "Haiti",
     "country.hu": "Hwngari",
@@ -1222,10 +1299,10 @@ export const welsh: Language = {
     "country.iq": "Irac",
     "country.ir": "Iran",
     "country.is": "Gwlad yr Iâ",
-    "country.it": "Yr Eidal",
+    "country.it": "yr Eidal",
     "country.je": "Jersey",
     "country.jm": "Jamaica",
-    "country.jo": "Gwlad yr Iorddonen",
+    "country.jo": "Gwlad Iorddonen",
     "country.jp": "Japan",
     "country.ke": "Kenya",
     "country.kg": "Cirgistan",
@@ -1237,7 +1314,7 @@ export const welsh: Language = {
     "country.kr": "De Corea",
     "country.kw": "Kuwait",
     "country.ky": "Ynysoedd Cayman",
-    "country.kz": "Casachstan",
+    "country.kz": "Kazakhstan",
     "country.la": "Laos",
     "country.lb": "Libanus",
     "country.lc": "Saint Lucia",
@@ -1262,11 +1339,11 @@ export const welsh: Language = {
     "country.mo": "Macao",
     "country.mp": "Ynysoedd Gogledd Mariana",
     "country.mq": "Martinique",
-    "country.mr": "Mawritania",
+    "country.mr": "Mauritania",
     "country.ms": "Montserrat",
     "country.mt": "Malta",
-    "country.mu": "Mawrisiws",
-    "country.mv": "Maldives",
+    "country.mu": "Mauritius",
+    "country.mv": "y Maldives",
     "country.mw": "Malawi",
     "country.mx": "Mecsico",
     "country.my": "Malaysia",
@@ -1276,8 +1353,8 @@ export const welsh: Language = {
     "country.ne": "Niger",
     "country.nf": "Ynys Norfolk",
     "country.ng": "Nigeria",
-    "country.ni": "Nicaragwa",
-    "country.nl": "Yr Iseldiroedd",
+    "country.ni": "Nicaragua",
+    "country.nl": "yr Iseldiroedd",
     "country.no": "Norwy",
     "country.np": "Nepal",
     "country.nr": "Nauru",
@@ -1288,7 +1365,7 @@ export const welsh: Language = {
     "country.pe": "Periw",
     "country.pf": "Polynesia Ffrengig",
     "country.pg": "Papua Guinea Newydd",
-    "country.ph": "Y Philipinau",
+    "country.ph": "Ynysoedd y Philipinau",
     "country.pk": "Pacistan",
     "country.pl": "Gwlad Pwyl",
     "country.pm": "Saint-Pierre-et-Miquelon",
@@ -1300,7 +1377,7 @@ export const welsh: Language = {
     "country.py": "Paraguay",
     "country.qa": "Qatar",
     "country.re": "Réunion",
-    "country.ro": "Romania",
+    "country.ro": "Rwmania",
     "country.rs": "Serbia",
     "country.ru": "Rwsia",
     "country.rw": "Rwanda",
@@ -1308,9 +1385,9 @@ export const welsh: Language = {
     "country.sb": "Ynysoedd Solomon",
     "country.sc": "Seychelles",
     "country.scotland": "Yr Alban",
-    "country.sd": "Swdan",
+    "country.sd": "Sudan",
     "country.se": "Sweden",
-    "country.sg": "Singapore",
+    "country.sg": "Singapôr",
     "country.sh": "Saint Helena",
     "country.si": "Slofenia",
     "country.sj": "Svalbard a Jan Mayen",
@@ -1331,7 +1408,7 @@ export const welsh: Language = {
     "country.th": "Gwlad Thai",
     "country.tj": "Tajicistan",
     "country.tk": "Tokelau",
-    "country.tl": "Dwyrain Timor",
+    "country.tl": "Timor-Leste",
     "country.tm": "Tyrcmenistan",
     "country.tn": "Tiwnisia",
     "country.to": "Tonga",
@@ -1342,9 +1419,9 @@ export const welsh: Language = {
     "country.tz": "Tansanïa",
     "country.ua": "Wcráin",
     "country.ug": "Uganda",
-    "country.um": "Mân Ynysoedd Allanol yr Unol Daleithiau",
-    "country.us": "Yr Unol Daleithiau",
-    "country.uy": "Wrwgwái",
+    "country.um": "Ynysoedd Pellennig Bach yr Unol Daleithiau",
+    "country.us": "Unol Daleithiau America",
+    "country.uy": "Uruguay",
     "country.uz": "Wsbecistan",
     "country.va": "Dinas y Fatican",
     "country.vc": "Saint Vincent a'r Grenadines",
@@ -1362,9 +1439,10 @@ export const welsh: Language = {
     "country.zm": "Zambia",
     "country.zw": "Zimbabwe",
 
-    // The emails are the English ones, rewritten rather than translated line by
-    // line; the placeholders each fills in are english.ts's, and say there what
-    // they are.
+    // An email is two entries: its subject, which is text, and its body, which
+    // is the whole of its markup. `{link}`, `{site}`, `{buttonBackgroundColour}`,
+    // `{buttonTextColour}`, `{emailFromName}` and `{siteName}` are filled in by
+    // the writer, as in the English.
 
     "Email.ConfirmAddress.subject":
       "Cadarnhewch eich cyfeiriad e-bost ar gyfer {siteName}",
@@ -1373,8 +1451,8 @@ export const welsh: Language = {
 
 <p>
     Diolch am greu cyfrif gyda <strong>{siteName}</strong>.<br />
-    Cyn y gallwch ddechrau defnyddio eich cyfrif, cadarnhewch eich cyfeiriad
-    e-bost drwy glicio ar y botwm isod:
+    Cyn y gallwch ddechrau defnyddio eich cyfrif, cadarnhewch eich cyfeiriad e-bost
+    drwy glicio ar y botwm isod:
 </p>
 
 <p>
@@ -1397,7 +1475,7 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Os na wnaethoch greu'r cyfrif hwn, gallwch anwybyddu'r e-bost hwn.
+    Os na wnaethoch chi greu'r cyfrif hwn, gallwch anwybyddu'r e-bost hwn yn ddiogel.
 </p>
 
 <p>
@@ -1412,7 +1490,7 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Yn ddiweddar, gofynnoch am e-bost newydd i gadarnhau eich cyfeiriad e-bost ar gyfer <strong>{siteName}</strong>.<br />
+    Yn ddiweddar gofynnoch am e-bost newydd i gadarnhau eich cyfeiriad e-bost ar gyfer <strong>{siteName}</strong>.<br />
     Cadarnhewch eich cyfeiriad e-bost drwy glicio ar y botwm isod:
 </p>
 
@@ -1436,11 +1514,11 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Unwaith y bydd wedi'i gadarnhau, gallwch fynd ymlaen i ddefnyddio eich cyfrif heb ymyrraeth.
+    Unwaith y bydd wedi'i gadarnhau, byddwch yn gallu parhau i ddefnyddio eich cyfrif heb ymyrraeth.
 </p>
 
 <p>
-    Os na ofynnoch am yr e-bost hwn, gallwch ei anwybyddu.
+    Os na wnaethoch chi ofyn am yr e-bost hwn, gallwch ei anwybyddu'n ddiogel.
 </p>
 
 <p>
@@ -1450,15 +1528,15 @@ export const welsh: Language = {
 `,
 
     "Email.AlreadyRegistered.subject":
-      "Mae rhywun wedi ceisio cofrestru gyda'ch cyfeiriad e-bost",
+      "Ceisiodd rhywun gofrestru gyda'ch cyfeiriad e-bost",
     "Email.AlreadyRegistered.body": `
 <p>Helo,</p>
 
 <p>
-    Mae rhywun wedi ceisio cofrestru ar <strong>{siteName}</strong> gyda'r
-    cyfeiriad e-bost hwn, sydd â chyfrif eisoes. Nid oes dim wedi newid yn eich
-    cyfrif.<br />
-    Os mai chi oedd e, mae gennych gyfrif eisoes a gallwch fewngofnodi iddo:
+    Ceisiodd rhywun gofrestru gyda <strong>{siteName}</strong> gan ddefnyddio'r
+    cyfeiriad e-bost hwn, sydd â chyfrif eisoes. Nid oes dim am eich cyfrif
+    wedi newid.<br />
+    Os mai chi oedd yno, mae gennych gyfrif eisoes, a gallwch fewngofnodi iddo:
 </p>
 
 <p>
@@ -1489,13 +1567,13 @@ export const welsh: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Rwyf wedi anghofio fy nghyfrinair
+        Wedi anghofio'r cyfrinair
     </a>
 </p>
 
 <p>
-    Os nad chi oedd e, nid oes angen i chi wneud dim. Ni chafodd neb ffordd i
-    mewn i'ch cyfrif.
+    Os nad chi oedd yno, nid oes angen i chi wneud dim. Nid oes neb wedi cael
+    ffordd i mewn i'ch cyfrif.
 </p>
 
 <p>
@@ -1510,10 +1588,9 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Mae rhywun sydd wedi mewngofnodi i gyfrif <strong>{siteName}</strong> wedi
-    gofyn am ei symud i'r cyfeiriad e-bost hwn. Os mai chi oedd e, cadarnhewch
-    hynny yma, wedi mewngofnodi i'r cyfrif hwnnw. Mae'r ddolen yn gweithio am
-    24 awr.
+    Gofynnodd rhywun a oedd wedi mewngofnodi i gyfrif <strong>{siteName}</strong>
+    am ei symud i'r cyfeiriad e-bost hwn. Os mai chi oedd yno, cadarnhewch hynny
+    yma, wedi mewngofnodi i'r cyfrif hwnnw. Mae'r ddolen yn gweithio am 24 awr.
 </p>
 
 <p>
@@ -1531,12 +1608,12 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Neu copïwch y ddolen hon i'ch porwr:<br />
+    Neu copïwch y cyfeiriad hwn i'ch porwr:<br />
     {link}
 </p>
 
 <p>
-    Os nad chi oedd e, nid oes angen i chi wneud dim. Ni chaiff unrhyw gyfrif ei symud yma.
+    Os nad chi oedd yno, nid oes angen i chi wneud dim. Ni fydd unrhyw gyfrif yn symud yma.
 </p>
 
 <p>
@@ -1546,18 +1623,18 @@ export const welsh: Language = {
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "Mae rhywun wedi gofyn am symud cyfrif i'ch cyfeiriad e-bost",
+      "Gofynnodd rhywun am symud cyfrif i'ch cyfeiriad e-bost",
     "Email.AlreadyHasAnAccount.body": `
 <p>Helo,</p>
 
 <p>
-    Mae rhywun sydd wedi mewngofnodi i gyfrif <strong>{siteName}</strong> wedi
-    gofyn am ei symud i'r cyfeiriad e-bost hwn, sydd â'i gyfrif ei hun eisoes.
-    Ni symudwyd dim, ac nid oes dim wedi newid yn eich cyfrif.
+    Gofynnodd rhywun a oedd wedi mewngofnodi i gyfrif <strong>{siteName}</strong>
+    am ei symud i'r cyfeiriad e-bost hwn, sydd â chyfrif ei hun eisoes. Nid oes
+    dim wedi symud, ac nid oes dim am eich cyfrif wedi newid.
 </p>
 
 <p>
-    Os mai chi oedd e, mae gennych gyfrif eisoes ar y cyfeiriad hwn a gallwch
+    Os mai chi oedd yno, mae gennych gyfrif yn y cyfeiriad hwn eisoes, a gallwch
     fewngofnodi iddo.
 </p>
 
@@ -1568,19 +1645,18 @@ export const welsh: Language = {
 `,
 
     "Email.EmailAddressChanged.subject":
-      "Mae eich cyfrif {siteName} wedi'i symud",
+      "Mae eich cyfrif {siteName} wedi symud",
     "Email.EmailAddressChanged.body": `
 <p>Helo,</p>
 
 <p>
     Mae eich cyfrif <strong>{siteName}</strong> newydd gael ei symud i gyfeiriad
-    e-bost arall, {emailAddress}, ac o hyn ymlaen byddwch yn mewngofnodi gyda'r
-    cyfeiriad hwnnw.
+    e-bost arall, {emailAddress}, ac mae'n mewngofnodi gyda'r cyfeiriad hwnnw o hyn ymlaen.
 </p>
 
 <p>
-    Os nad chi oedd e, mae rhywun arall wedi cael gafael ar eich cyfrif. Atebwch
-    yr e-bost hwn a rhowch wybod i ni.
+    Os nad chi oedd yno, mae rhywun arall wedi cael gafael ar eich cyfrif. Atebwch yr e-bost hwn
+    a rhowch wybod i ni.
 </p>
 
 <p>
@@ -1595,13 +1671,14 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Mae cyfrinair eich cyfrif <strong>{siteName}</strong> newydd gael ei newid, ac mae pob porwr arall a oedd wedi mewngofnodi wedi'i allgofnodi.<br />
-    Os mai chi oedd e, nid oes angen i chi wneud dim.
+    Mae cyfrinair eich cyfrif <strong>{siteName}</strong> newydd gael ei
+    newid, ac allgofnodwyd pob porwr arall a oedd wedi mewngofnodi iddo.<br />
+    Os mai chi oedd yno, nid oes angen i chi wneud dim.
 </p>
 
 <p>
-    Os nad chi oedd e, mae rhywun arall wedi cael gafael ar eich cyfrinair.
-    Gosodwch un newydd yma ac fe'i hallgofnodir:
+    Os nad chi oedd yno, mae rhywun arall wedi cael gafael ar eich cyfrinair. Gosodwch un newydd yma, a
+    chaiff y person hwnnw ei allgofnodi:
 </p>
 
 <p>
@@ -1614,7 +1691,7 @@ export const welsh: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Rwyf wedi anghofio fy nghyfrinair
+        Wedi anghofio'r cyfrinair
     </a>
 </p>
 
@@ -1630,8 +1707,8 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Yn ddiweddar, gofynnoch am ailosod eich cyfrinair <strong>{siteName}</strong>.<br />
-    Gallwch ei ailosod drwy glicio ar y botwm isod:
+    Yn ddiweddar gofynnoch am ailosod eich cyfrinair ar gyfer <strong>{siteName}</strong>.<br />
+    Gallwch ailosod eich cyfrinair drwy glicio ar y botwm isod:
 </p>
 
 <p>
@@ -1654,7 +1731,7 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Os na ofynnoch am ailosod eich cyfrinair, gallwch anwybyddu'r e-bost hwn.
+    Os na wnaethoch chi ofyn am ailosod cyfrinair, gallwch anwybyddu'r e-bost hwn yn ddiogel.
 </p>
 
 <p>
@@ -1669,7 +1746,7 @@ export const welsh: Language = {
 
 <p>
     Nid oes gan eich cyfrif <strong>{siteName}</strong> gyfrinair: rydych yn mewngofnodi gyda Google.<br />
-    Rydych wedi gofyn am osod un, er mwyn gallu mewngofnodi hefyd gyda'ch cyfeiriad e-bost a chyfrinair.
+    Gofynnoch am osod un, fel y gallwch fewngofnodi gyda'ch cyfeiriad e-bost a chyfrinair hefyd.
     Gallwch ei osod drwy glicio ar y botwm isod:
 </p>
 
@@ -1693,7 +1770,7 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Mae'r ddolen yn gweithio am awr. Os na ofynnoch am osod cyfrinair, gallwch anwybyddu'r e-bost hwn.
+    Mae'r ddolen yn gweithio am awr. Os na wnaethoch chi ofyn am osod cyfrinair, gallwch anwybyddu'r e-bost hwn yn ddiogel.
 </p>
 
 <p>
@@ -1708,17 +1785,17 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Gofynnwyd am ailosod cyfrinair ar gyfer cyfeiriad e-bost nad yw'n gysylltiedig
-    ag unrhyw gyfrif <strong>{siteName}</strong>.
+    Gofynnwyd am ailosod y cyfrinair ar gyfer cyfeiriad e-bost nad yw'n
+    gysylltiedig â chyfrif ar <strong>{siteName}</strong>.
 </p>
 
 <p>
-    Os hoffech ddefnyddio ein gwasanaeth, gallwch greu cyfrif newydd yma:<br />
+    Os hoffech ddefnyddio ein gwasanaeth, gallwch greu cyfrif newydd drwy fynd i:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    Os na wnaethoch y cais hwn, gallwch anwybyddu'r e-bost hwn.
+    Os na wnaethoch chi'r cais hwn, gallwch anwybyddu'r e-bost hwn yn ddiogel.
 </p>
 
 <p>
@@ -1728,14 +1805,15 @@ export const welsh: Language = {
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Cadarnhewch eich bod am i'ch cyfrif {siteName} gael ei anghofio",
+      "Cadarnhewch fod eich cyfrif {siteName} i'w anghofio",
     "Email.ConfirmForgetting.body": `
 <p>Helo,</p>
 
 <p>
-    Rydych wedi gofyn i'ch cyfrif <strong>{siteName}</strong> gael ei anghofio.<br />
-    Dilynwch y botwm isod i weld beth mae hynny'n ei olygu, ac i gadarnhau'n
-    ddiogel mai dyna a ddymunwch:
+    Gofynnoch i'ch cyfrif <strong>{siteName}</strong> gael ei
+    anghofio.<br />
+    Dilynwch y botwm isod i weld beth mae hynny'n ei olygu, ac i ddweud yn bendant
+    eich bod ei eisiau:
 </p>
 
 <p>
@@ -1758,21 +1836,20 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Ar ôl ei anghofio, ni all neb ddarllen eich enw na'ch cyfeiriad e-bost eto,
+    Unwaith y bydd wedi'i anghofio, ni all neb ddarllen eich enw a'ch cyfeiriad e-bost byth eto,
     ac ni ellir mewngofnodi i'ch cyfrif. Ni ellir dadwneud hyn.
 </p>
 
 <p>
-    Mae'r ddolen yn gweithio unwaith yn unig, hyd at 15 munud ar ôl i chi ofyn,
-    a dim ond tra byddwch wedi mewngofnodi i'r cyfrif hwn. Wedi hynny, gofynnwch
-    eto o'ch cyfrif.
+    Mae'r ddolen yn gweithio unwaith, hyd at 15 munud ar ôl i chi ofyn amdani, a dim ond
+    tra byddwch wedi mewngofnodi i'r cyfrif hwn. Wedi hynny, gofynnwch eto o'ch
+    cyfrif.
 </p>
 
 <p>
-    Os nad chi a ofynnodd, ni fydd dim yn digwydd oni bai bod rhywun yn dilyn y
-    ddolen. Eto i gyd, mae rhywun sydd wedi mewngofnodi i'ch cyfrif wedi gofyn,
-    felly gosodwch gyfrinair newydd o'r dudalen cyfrinair anghofiedig i wneud
-    yn siŵr na all fewngofnodi eto.
+    Os na wnaethoch chi ofyn, ni fydd dim yn digwydd oni bai y dilynir y ddolen.
+    Ond gofynnodd rhywun a oedd wedi mewngofnodi i'ch cyfrif, felly gosodwch gyfrinair newydd
+    o'r dudalen cyfrinair wedi'i anghofio i fod yn siŵr na all fewngofnodi eto.
 </p>
 
 <p>
@@ -1787,19 +1864,18 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Ni lwyddodd {siteName} i gysylltu â {service} am {when}. Hyd nes y bydd yn
-    ymateb, dywedir wrth y rhai sydd ei angen, i gofrestru neu i osod cyfrinair
-    newydd, am roi cynnig arall arni nes ymlaen.
+    Ni allai {siteName} gysylltu â {service} am {when}. Nes iddo ateb,
+    dywedir wrth ddarllenwyr sydd ei angen, i gofrestru neu i osod cyfrinair newydd, am
+    roi cynnig arall arni nes ymlaen.
 </p>
 
 <p>
-    Nid oes dim i'w godi. Mae pob ymgais yn holi {service} eto, ac mae'r
-    tudalennau'n gweithio unwaith eto cyn gynted ag y bydd yn ymateb.
+    Nid oes angen codi dim. Mae pob ymgais yn gofyn i {service} o'r newydd, ac mae'r tudalennau'n
+    gweithio eto'r eiliad y bydd yn ateb.
 </p>
 
 <p>
-    Tra bydd {service} yn dal i beidio ag ymateb, ni chewch fwy nag un e-bost yr
-    awr amdano.
+    Tra bydd {service} i lawr, cewch e-bost amdano unwaith yr awr ar y mwyaf.
 </p>
 
 <p>
@@ -1814,15 +1890,15 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Ni allai {siteName} gyrraedd ei gronfa ddata am {when}. Nes ei bod yn ateb, mae pob tudalen sydd ei hangen yn dweud wrth ddarllenwyr nad yw'r safle ar gael ac i roi cynnig arall arni yn nes ymlaen.
+    Ni allai {siteName} gyrraedd ei chronfa ddata am {when}. Nes iddo ateb, mae pob tudalen sydd ei hangen yn dweud wrth ddarllenwyr nad yw'r wefan ar gael ac i roi cynnig arall arni nes ymlaen.
 </p>
 
 <p>
-    Nid oes angen dadflocio dim. Mae pob cais yn gofyn am gysylltiad o'r newydd, ac mae'r safle yn gweithio eto'r eiliad y mae'r gronfa ddata yn ateb.
+    Nid oes angen codi dim. Mae pob cais yn gofyn am gysylltiad o'r newydd, ac mae'r wefan yn gweithio eto'r eiliad y bydd y gronfa ddata yn ateb.
 </p>
 
 <p>
-    Tra bydd y gronfa ddata i lawr, byddwch yn cael e-bost amdani unwaith bob {minutes} munud ar y mwyaf.
+    Tra bydd y gronfa ddata i lawr, cewch e-bost amdani unwaith bob {minutes} munud ar y mwyaf.
 </p>
 
 <p>
@@ -1840,7 +1916,7 @@ export const welsh: Language = {
 </p>
 
 <p>
-    Mae safle sydd wedi torri yn tueddu i fethu ar bob cais, felly cewch e-bost am fethiannau 4 gwaith yr awr ar y mwyaf. Mae'r lleill yn y log o hyd.
+    Mae gwefan sydd wedi torri yn tueddu i fethu ar bob cais, felly cewch e-bost am fethiannau 4 gwaith ar y mwyaf mewn awr. Mae'r rhai ar ôl hynny yn y log serch hynny.
 </p>
 
 <p>

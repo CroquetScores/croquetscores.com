@@ -6,11 +6,11 @@ Dans la liste des tournois dans l’administration, appuyez sur **Modifier** sur
 
 ![Le formulaire Modifier le tournoi](images/edit-tournament.png)
 
-Dès que le tournoi contient un joueur ou une compétition, archivés compris, son format ne peut plus être changé pour un format par équipes, qui a des équipes et des tests à la place.
+Dès que le tournoi contient un joueur ou une compétition, archivés compris, son format ne peut plus être changé pour un format par équipes, qui a des équipes et des rencontres à la place.
 
 Un tournoi garde son adresse quand son nom est corrigé, pour qu’un lien que quelqu’un a déjà envoyé le retrouve. Il ne déménage que si l’année où il commence ou son sport change, et son ancienne adresse mène alors à la nouvelle. Enregistrer vous amène au tournoi, là où il se trouve désormais.
 
-Seul un gestionnaire peut modifier un tournoi. Un marqueur, ou quiconque d’autre, en est averti au lieu de voir le formulaire.
+Seul un organisateur peut modifier un tournoi. Un marqueur, ou quiconque d’autre, en est averti au lieu de voir le formulaire.
 
 ## La liste des tournois
 

@@ -14,27 +14,29 @@ Ein Test findet zwischen zwei Mannschaften in Gebrauch statt; solange das Turnie
 
 ## Einen Test hinzufügen
 
-Drücke **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und liest sich in der Reihenfolge, in der ein Test gesagt wird.
+Drücken Sie **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und liest sich in der Reihenfolge, in der ein Test gesagt wird.
 
 ![Der Dialog Test hinzufügen, ausgefüllt](images/add-test-dialog.png)
 
-**Mannschaft A** und **Mannschaft B** werden jeweils aus den Mannschaften des Turniers in Gebrauch gewählt, nach Namen, in der Reihenfolge des Turniers. Zu Beginn ist keine gewählt, damit ein Test nie zwischen Mannschaften hinzugefügt wird, die du nicht gewählt hast. Mannschaft B bietet jede Mannschaft an außer der als Mannschaft A gewählten, weil eine Mannschaft keinen Test gegen sich selbst spielt. Mannschaft A ist die erste Mannschaft: Ihre Spieler stehen auf der Seite des Tests und auf der öffentlichen Seite links. Ein Test hat keinen eigenen Namen zum Eingeben; er heißt nach den Kurznamen seiner Mannschaften.
+**Mannschaft A** und **Mannschaft B** werden jeweils aus den Mannschaften des Turniers in Gebrauch gewählt, nach Namen, in der Reihenfolge des Turniers. Zu Beginn ist keine gewählt, damit ein Test nie zwischen Mannschaften hinzugefügt wird, die Sie nicht gewählt haben. Mannschaft B bietet jede Mannschaft an außer der als Mannschaft A gewählten, weil eine Mannschaft keinen Test gegen sich selbst spielt. Mannschaft A ist die erste Mannschaft: deren Spieler stehen auf der Seite des Tests und auf der öffentlichen Seite links. Ein Test hat keinen eigenen Namen zum Eingeben; er heißt nach den Kurznamen seiner Mannschaften.
 
 **Beginn** und **Ende** sind die Tage, an denen der Test gespielt wird; sie beginnen auf dem ersten Tag des Turniers. Ein Test wird innerhalb seines Turniers gespielt, Tage vor dem Beginn oder nach dem Ende des Turniers werden also abgelehnt.
 
-**Erwartete Begegnungen** ist, wie viele Begegnungen der Test haben soll, von der Veranstaltung vor Beginn festgelegt, damit, wer seine Ergebnisse liest, sieht, wie weit er ist. Es ist eine ganze Zahl ab 1. Es ist auch eine Grenze: Sobald so viele Begegnungen begonnen haben, wie der Test erwartet, wird ein Spiel, das eine weitere beginnen würde, abgelehnt, während die schon begonnenen Begegnungen zu Ende gespielt werden. Ein Test, der mehr haben soll, wird geändert, sodass er sie erwartet.
+**Erwartete Matches** ist, wie viele Begegnungen der Test haben soll, von der Veranstaltung vor Beginn festgelegt, damit, wer seine Ergebnisse liest, sieht, wie weit er ist. Es ist eine ganze Zahl ab 1. Es ist auch eine Grenze: Sobald so viele Begegnungen begonnen haben, wie der Test erwartet, wird ein Spiel, das eine weitere beginnen würde, abgelehnt, während die schon begonnenen Begegnungen zu Ende gespielt werden. Ein Test, der mehr haben soll, wird geändert, sodass er sie erwartet.
 
 **Best of** ist, über wie viele Spiele jede Begegnung höchstens geht. Die Zahl darf gerade sein, weil eine Begegnung geteilt werden kann.
 
+**Mit Vorgaben gespielt**, **Lässt Unentschieden zu** und **Zählt für die Weltranglisten** werden gefragt wie bei jedem Wettbewerb. Das letzte wird nur gefragt, wo es zählen kann: bei einem Test im Association Croquet oder Golf Croquet, der weder mit Vorgaben gespielt wird noch Unentschieden zulässt. Es ist zu Beginn angehakt.
+
 **Gruppe** ist die Gruppe, in der der Test ist, wenn die Veranstaltung in Gruppen gespielt wird, etwa „Block A“. Sie ist freiwillig: Bleibt sie leer, ist der Test in keiner. Die Tests einer Gruppe haben auf der öffentlichen Website eine eigene Seite, die zeigt, wie die Mannschaften der Gruppe stehen.
 
-Drücke **Hinzufügen**. Der Test wird hinzugefügt, der Dialog sagt mit seinem Namen welcher, und die Mannschaften werden für den nächsten geleert, während die Tage, die erwarteten Begegnungen, das Best of und die Gruppe bleiben, wie sie waren: Tests werden Runde für Runde hinzugefügt, zwischen Mannschaften, die sich am selben Tag treffen, der nächste Test der Runde sind also nur seine zwei Mannschaften. Drücke **Abbrechen**, wenn alle drin sind.
+Drücken Sie **Hinzufügen**. Der Test wird hinzugefügt, der Dialog sagt mit seinem Namen welcher, und die Mannschaften werden für den nächsten geleert, während die Tage, die erwarteten Begegnungen, das Best of und die Gruppe bleiben, wie sie waren: Tests werden Runde für Runde hinzugefügt, zwischen Mannschaften, die sich am selben Tag treffen, der nächste Test der Runde sind also nur seine zwei Mannschaften. Drücken Sie **Abbrechen**, wenn alle drin sind.
 
 ![Der Dialog, nachdem ein Test hinzugefügt wurde](images/add-test-dialog-added.png)
 
 ## Einen Test ändern
 
-**Bearbeiten** öffnet denselben Dialog für den Test, mit dem Titel Test bearbeiten, so vorbelegt, wie der Test ist. Drücke **Speichern**, um die Änderung zu speichern.
+**Bearbeiten** öffnet denselben Dialog für den Test, mit dem Titel Test bearbeiten, so vorbelegt, wie der Test ist. Drücken Sie **Speichern**, um die Änderung zu speichern.
 
 ![Der Dialog Test bearbeiten](images/edit-test-dialog.png)
 

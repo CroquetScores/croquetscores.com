@@ -30,7 +30,7 @@ Twee spelers wat mekaar ontmoet, speel 'n wedstryd van die toets se beste van. D
 
 ## Hoe om 'n uitslag reg te stel
 
-**Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Sy spelers kan sowel as sy punte verander word, gekies soos by byvoeging. Druk op **Stoor** om die regstelling te hou en die dialoog toe te maak. 'n Regstelling behou die uitslag: 'n gewonne spel bly gewonne, en 'n gelykopspel bly gelykop. 'n Spel waarvan die uitslag verkeerd was, word geargiveer en weer ingevoer.
+**Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Sy spelers kan sowel as sy punte verander word, gekies soos by byvoeging. Druk op **Bewaar** om die regstelling te hou en die dialoog toe te maak. 'n Regstelling behou die uitslag: 'n gewonne spel bly gewonne, en 'n gelykopspel bly gelykop. 'n Spel waarvan die uitslag verkeerd was, word geargiveer en weer ingevoer.
 
 ## Hoe om die uitslae in volgorde te plaas
 

@@ -28,13 +28,23 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 ![Die dialoog Voeg kompetisie by vir 'n uitskakeling van 4 plekke](images/add-competition-knockout.png)
 
+### Hoe dit gespeel en getel word
+
+Elke soort vra dieselfde drie dinge onder sy vorm.
+
+**Met voorgifte gespeel.** Merk dit vir 'n kompetisie wat met voorgifte gespeel word.
+
+**Laat gelykopuitslae toe.** Merk dit waar 'n spel kan eindig sonder dat een van die spelers die wenner is. Die meeste kompetisies laat dit nie toe nie. Waar dit gemerk is, word 'n uitslag wat met gelyke punte en geen merk ingevoer is as gelykop gehou; waar dit nie gemerk is nie, moet 'n spel op gelyke punte sê wie dit gewen het, met 'n merk ná die wenner se punte, soos "6w". 'n Uitskakeling se wedstryd het altyd 'n wenner, so 'n gelykopspel beslis nie een nie.
+
+**Tel vir wêreldranglyste.** Word net gevra waar dit getel kan word: 'n kompetisie in Association Croquet of Golf Croquet wat nie met voorgifte gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk, so ontmerk dit vir 'n kompetisie wat nie moet tel nie.
+
 ### Hoe om verskeie op 'n slag by te voeg
 
 Druk op **Voeg by**. Die kompetisie word bygevoeg, die dialoog sê so, en die naam word leeggemaak vir die volgende, met die soort en sy vorm gelaat soos hulle was: kompetisies wat saam bygevoeg word, is meestal eenders, so "Block B" ná "Block A" is net sy naam. Druk op **Kanselleer** om die dialoog toe te maak sodra hulle almal in is.
 
 ## Hoe om 'n kompetisie te verander
 
-**Wysig** maak dieselfde dialoog op die kompetisie oop, met die titel Wysig kompetisie, met sy naam en sy vorm soos hulle is. Sy soort word nie gevra nie, want 'n blok word nie 'n uitskakeling gemaak deur dit te verander nie: 'n kompetisie van die verkeerde soort word geargiveer en weer bygevoeg. Druk op **Stoor** om die verandering te hou en die dialoog toe te maak.
+**Wysig** maak dieselfde dialoog op die kompetisie oop, met die titel Wysig kompetisie, met sy naam, sy vorm en hoe dit gespeel en getel word soos hulle is. Sy soort word nie gevra nie, want 'n blok word nie 'n uitskakeling gemaak deur dit te verander nie: 'n kompetisie van die verkeerde soort word geargiveer en weer bygevoeg. Druk op **Bewaar** om die verandering te hou en die dialoog toe te maak.
 
 'n Uitskakeling wat 'n spel het, het spelers wat in sy rooster geplaas is, en 'n verandering aan sy plekke sou hulle skuif, so dit word geweier sodra 'n spel ingevoer is. Waarvan sy rondes die beste is, kan steeds verander word.
 

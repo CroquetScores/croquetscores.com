@@ -10,27 +10,23 @@ Formuläret frågar efter allt en turnering börjar med. En turnering av det van
 
 **Namn.** Det läsarna letar efter för att hitta turneringen, till exempel "Spring Open". Det är mellan 3 och 254 tecken. Ett namn helt med gemener, eller helt med versaler, godtas inte, eftersom det skulle se ut som ett misstag på varje sida det visas på. Två turneringar får ha samma namn, eftersom samma turnering spelas varje år.
 
-**Startar** och **Slutar.** De dagar turneringen pågår. En turnering kan inte sluta innan den startar, och kan inte starta eller sluta senare än slutet av nästa år. En turnering hör till det år den startar, vilket också är året i dess adress, så en som pågår över nyår listas under det år den startar.
+**Börjar** och **Slutar.** De dagar turneringen pågår. En turnering kan inte sluta innan den startar, och kan inte starta eller sluta senare än slutet av nästa år. En turnering hör till det år den startar, vilket också är året i dess adress, så en som pågår över nyår listas under det år den startar.
 
 **Format.** Välj **Standard** för en turnering som spelas mellan spelare. De övriga formaten är för turneringar som spelas mellan lag, och de har en egen guide.
 
-**Sport.** De sporter webbplatsen erbjuder, i dess ordning: Associationscroquet, Golfcroquet, Amerikansk 6-bågars croquet och Ricochet på Croquet Scores. Gateball Scores frågar varken efter sport eller format, eftersom varje turnering där är en standardturnering i gateball.
+**Sport.** De sporter webbplatsen erbjuder, i dess ordning: Association croquet, Golfcroquet, Amerikansk 6-bågars croquet och Ricochet på Croquet Scores. Gateball Scores frågar varken efter sport eller format, eftersom varje turnering där är en standardturnering i gateball.
 
 **Land** och **Region.** Var turneringen spelas. En region frågas efter bara där det land du väljer är indelat i regioner, som Australiens delstater; ett land som är sin egen enda region frågar inte efter någon. En region behöver inte väljas ens där en erbjuds.
 
 **Underrubrik.** Det du vill att läsarna ska veta och som inte har något eget fält: var man parkerar, när det är lunch, vem man ringer. Den visas under turneringens namn på varje offentlig sida. Den skrivs i Markdown, så ett ord kan göras fett med asterisker runt det och en lista kan göras med ett bindestreck först på varje rad. Den får vara upp till 2000 tecken och kan lämnas tom.
 
-**Spelas med handikapp.** Bocka för det här för en handikappturnering.
+Hur dess tävlingar spelas och räknas, med handikapp, med oavgjorda resultat och i världsrankingen, avgör varje tävling själv när den läggs till.
 
-**Tillåter oavgjorda resultat.** Bocka för det här där ett parti kan sluta utan att någon av spelarna vinner. De flesta turneringar tillåter det inte. Där det är förbockat sparas ett resultat med lika poäng och utan markering som oavgjort; där det inte är det måste ett parti med lika poäng säga vem som vann genom en markering efter vinnarens resultat, till exempel "6w".
-
-**Räknas med i världsrankingen.** Frågas bara där det kan räknas: en turnering i associationscroquet, golfcroquet eller amerikansk 6-bågars croquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början, så bocka av det för en turnering som inte ska räknas.
-
-**Tävling på nationell nivå** och **Tävling på internationell nivå.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
+**Nationell tävling** och **Internationell tävling.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
 
 ## Att skapa den
 
-Tryck på **Skapa turnering**. Du förs till turneringens sida i administrationen, där den leds från, och du är dess första turneringsledare. Den listas i administrationen under det år den startar.
+Tryck på **Skapa turnering**. Du förs till turneringens sida i administrationen, där den leds från, och du är dess första arrangör. Den listas i administrationen under det år den startar.
 
 Turneringens offentliga adress bildas av dess år, dess sport och dess namn, som `/2026/ac/spring-open`. Den behåller den adressen när namnet rättas senare, så att en länk som redan har skickats fortfarande hittar den; den flyttar bara när det år den startar, eller dess sport, ändras.
 

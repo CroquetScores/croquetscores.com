@@ -12,10 +12,10 @@ Todo lo que hace un gestor se hace en la sección de administración del sitio w
 
 ## Las páginas en orden
 
-1. [Crear un torneo](creating-a-tournament.md): su nombre, sus días, su deporte, dónde se juega y para qué cuenta.
+1. [Crear un torneo](creating-a-tournament.md): su nombre, sus días, su deporte, dónde se juega y si es un evento nacional o internacional.
 2. [Jugadores](players.md): inscribir a los jugadores del torneo, corregirlos y apartar a los inscritos por error.
-3. [Competiciones](competitions.md): añadir bloques, eliminatorias y suizos, y ponerlos en orden.
-4. [Inscribir jugadores en una competición](entering-players-in-a-competition.md): quién juega en cada competición, los byes en una eliminatoria, los arrastres, quitar y retirar.
+3. [Competiciones](competitions.md): añadir grupos, eliminatorias y suizos, y ponerlos en orden.
+4. [Inscribir jugadores en una competición](entering-players-in-a-competition.md): quién juega en cada competición, los byes en una eliminatoria, los traslados, quitar y retirar.
 5. [Resultados](scores.md): introducir resultados, corregirlos y apartar los introducidos por error.
 6. [Notas](notes.md): contar a los jugadores lo que necesitan saber según avanza el torneo.
 7. [Gestores y anotadores](managers-and-scorers.md): compartir la gestión del torneo, y dejar que alguien introduzca resultados sin poder cambiar nada más.

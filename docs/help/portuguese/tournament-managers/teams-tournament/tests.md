@@ -1,6 +1,6 @@
 # Testes
 
-A aba **Testes** da página de um torneio é onde os testes entre as suas equipes são adicionados, alterados, colocados em ordem e postos de lado. Um teste é uma das competições do torneio: um confronto entre duas equipes, chamado pelos seus nomes abreviados, como "AUS x NZ", disputado como um número de partidas entre um jogador de cada equipe. Cada teste tem uma página própria, onde os seus placares são inseridos.
+A aba **Testes** da página de um torneio é onde os testes entre as suas equipes são adicionados, alterados, colocados em ordem e postos de lado. Um teste é uma das competições do torneio: um confronto entre duas equipes, chamado pelos seus nomes abreviados, como "AUS x NZ", disputado como um número de partidas entre um jogador de cada equipe. Cada teste tem uma página própria, onde os seus resultados são inseridos.
 
 ![A aba Testes, com três testes em um grupo](images/tests-tab.png)
 
@@ -22,9 +22,11 @@ Pressione **Adicionar teste**, acima da lista. Um diálogo abre sobre a página,
 
 **Início** e **Término** são os dias em que o teste é disputado, que começam no primeiro dia do torneio. Um teste é disputado dentro do seu torneio, então dias antes de o torneio começar ou depois de ele terminar são recusados.
 
-**Partidas previstas** é quantas partidas o teste deve ter, definido pelo evento antes de começar, para que quem lê os seus placares veja em que ponto ele está. É um número inteiro a partir de 1. É também um limite: depois que começaram tantas partidas quantas o teste deve ter, um jogo que começaria outra é recusado, enquanto as partidas já começadas são disputadas até o fim. Um teste que deve ter mais é alterado para prevê-las.
+**Partidas previstas** é quantas partidas o teste deve ter, definido pelo evento antes de começar, para que quem lê os seus resultados veja em que ponto ele está. É um número inteiro a partir de 1. É também um limite: depois que começaram tantas partidas quantas o teste deve ter, um jogo que começaria outra é recusado, enquanto as partidas já começadas são disputadas até o fim. Um teste que deve ter mais é alterado para prevê-las.
 
 **Melhor de** é de quantos jogos é cada partida. Pode ser par, porque uma partida pode ser dividida.
+
+**Jogado com handicaps**, **Permite empates** e **Conta para o ranking mundial** são perguntados como em qualquer competição. O último só é pedido quando pode valer: um teste de Croquet de Associação ou de Croquet de Golfe que não é jogado com handicaps nem permite empates. Começa marcado.
 
 **Grupo** é o grupo em que o teste está, quando o evento é disputado em grupos, como "Block A". É opcional: deixado vazio, o teste não está em nenhum. Os testes de um grupo têm uma página própria no site público, mostrando a classificação das equipes do grupo.
 
@@ -46,7 +48,7 @@ Os testes são listados na ordem do torneio, que é a ordem em que aparecem nas 
 
 ## Ir a um teste
 
-O nome de um teste, ou **Ver**, abre a sua página, onde os seus placares são inseridos. A barra verde-escura também leva até lá, da página do torneio ou da de qualquer outro teste.
+O nome de um teste, ou **Ver**, abre a sua página, onde os seus resultados são inseridos. A barra verde-escura também leva até lá, da página do torneio ou da de qualquer outro teste.
 
 ## Arquivar um teste
 
@@ -54,4 +56,4 @@ O nome de um teste, ou **Ver**, abre a sua página, onde os seus placares são i
 
 Um teste com jogos em uso foi disputado, e não pode ser arquivado até que os seus jogos sejam. Um teste cujos jogos estão todos arquivados pode ser, porque um jogo arquivado não conta para nada. Um teste cuja equipe foi arquivada depois não é restaurado até que a equipe seja, e a aba diz isso.
 
-A seguir: [Placares](scores.md).
+A seguir: [Resultados](scores.md).

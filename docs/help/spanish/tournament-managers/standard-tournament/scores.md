@@ -2,7 +2,7 @@
 
 La pestaña **Resultados** de la página de una competición es donde sus partidas se introducen, se corrigen y se apartan. Un anotador ve solo esta pestaña, y puede hacer en ella todo lo que hace un gestor.
 
-![La pestaña Resultados de un bloque, con resultados en uso, uno retirado y uno archivado](images/scores-tab.png)
+![La pestaña Resultados de un grupo, con resultados en uso, uno retirado y uno archivado](images/scores-tab.png)
 
 ## Introducir un resultado
 
@@ -46,12 +46,12 @@ Cuando un resultado podría archivarse, sus jugadores pueden cambiarse igual que
 
 **Archivar** aparta un resultado para que no cuente para nada. Se lista bajo **Resultados archivados**, tachado, y ofrece solo **Restaurar**. Ninguno de los dos pregunta antes, porque cada uno deshace el otro.
 
-En una eliminatoria, el ganador de un encuentro pasa a la ronda siguiente, así que al resultado de un encuentro cuyo ganador ha jugado en la ronda siguiente no se le ofrece Archivar. Primero se archiva la partida de la ronda siguiente, y después pueden archivarse las anteriores. Cuando una ronda es al mejor de 3 o de 5, todas las partidas del encuentro se tratan igual. Un bloque y un suizo no tienen rondas que dependan unas de otras, así que todos sus resultados pueden archivarse.
+En una eliminatoria, el ganador de un partido pasa a la ronda siguiente, así que al resultado de un partido cuyo ganador ha jugado en la ronda siguiente no se le ofrece Archivar. Primero se archiva la partida de la ronda siguiente, y después pueden archivarse las anteriores. Cuando una ronda es al mejor de 3 o de 5, todas las partidas del partido se tratan igual. Un grupo y un suizo no tienen rondas que dependan unas de otras, así que todos sus resultados pueden archivarse.
 
 ## Retirar un resultado
 
 Un jugador que deja una competición normalmente se retira de ella, en la pestaña Jugadores, y con eso basta: no juega más, y las partidas que jugó se mantienen pero dejan de contar para las victorias y derrotas y para los aros. Retirar un resultado es para el caso más raro en que una partida que se jugó no debe contar. En el President's Eights australiano, por ejemplo, los resultados de la primera vuelta se mantienen cuando un jugador se retira, y solo sus partidas de la segunda vuelta se sacan del cómputo: retira esas partidas.
 
-En un bloque o en un suizo, un resultado que se jugó pero no debe contar se retira en vez de archivarse. **Retirar** lo mantiene entre los resultados en uso, en su sitio, pero tachado y sin contar para nada en las páginas públicas. **Deshacer la retirada** hace que cuente de nuevo. Ninguno de los dos pregunta antes. A los resultados de una eliminatoria no se les ofrece Retirar, porque allí un resultado decide más que la clasificación.
+En un grupo o en un suizo, un resultado que se jugó pero no debe contar se retira en vez de archivarse. **Retirar** lo mantiene entre los resultados en uso, en su sitio, pero tachado y sin contar para nada en las páginas públicas. **Anular retirada** hace que cuente de nuevo. Ninguno de los dos pregunta antes. A los resultados de una eliminatoria no se les ofrece Retirar, porque allí un resultado decide más que la clasificación.
 
 Siguiente: [Notas](notes.md).

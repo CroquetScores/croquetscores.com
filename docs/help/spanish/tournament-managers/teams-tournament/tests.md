@@ -20,11 +20,13 @@ Pulsa **Añadir test**, encima de la lista. Se abre un diálogo sobre la página
 
 **Equipo A** y **Equipo B** se eligen cada uno de entre los equipos en uso del torneo, por su nombre, en el orden del torneo. Al principio no hay ninguno elegido, para que un test nunca se añada entre equipos que no has elegido. Equipo B ofrece todos los equipos menos el elegido como Equipo A, porque un equipo no juega un test contra sí mismo. Equipo A es el primer equipo: sus jugadores van a la izquierda en la página del test y en la página pública. Un test no tiene nombre propio que escribir; se nombra por los nombres cortos de sus equipos.
 
-**Empieza** y **Termina** son los días en que se juega el test, que empiezan en el primer día del torneo. Un test se juega dentro de su torneo, así que los días anteriores a que empiece el torneo o posteriores a que termine se rechazan.
+**Comienza** y **Termina** son los días en que se juega el test, que empiezan en el primer día del torneo. Un test se juega dentro de su torneo, así que los días anteriores a que empiece el torneo o posteriores a que termine se rechazan.
 
 **Partidos previstos** es cuántos partidos va a tener el test, fijado por el evento antes de que empiece, para que quien lea sus resultados pueda ver cuánto lleva jugado. Es un número entero a partir de 1. Es también un límite: una vez que han empezado tantos partidos como el test tiene previstos, una partida que empezaría otro se rechaza, mientras que los partidos ya empezados se juegan hasta el final. Un test que va a tener más se cambia para que los prevea.
 
 **Al mejor de** es al mejor de cuántas partidas es cada partido. Puede ser par, porque un partido puede quedar repartido.
+
+**Se juega con hándicap**, **Permite resultados con empate** y **Cuenta para los rankings mundiales** se preguntan como en cualquier competición. Lo último se pregunta solo cuando puede contar: un test de Croquet de asociación o de Croquet golf que ni se juega con hándicap ni permite empates. Empieza marcado.
 
 **Grupo** es el grupo en que está el test, cuando el evento se juega por grupos, como "Block A". Es opcional: si se deja vacío, el test no está en ninguno. Los tests de un grupo tienen una página propia en el sitio público, que muestra cómo van los equipos del grupo.
 

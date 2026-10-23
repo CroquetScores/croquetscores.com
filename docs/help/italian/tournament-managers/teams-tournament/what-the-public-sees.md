@@ -28,7 +28,7 @@ La pagina di un test è intestata con i nomi completi delle sue squadre, come "A
 
 ![La pagina di un test](images/public-test.png)
 
-Un test si mostra in due modi, offerti sulla riga del suo nome: **Griglia**, che è questa tabella, e **Ordine di gioco**, che elenca ogni partita del test dalla più vecchia. Un test in un gruppo offre il Riepilogo e i test del suo gruppo in una riga sopra la sua intestazione, con questo test segnato.
+Un test si mostra in due modi, offerti sulla riga del suo nome: **Griglia**, che è questa tabella, e **Programma**, che elenca ogni partita del test dalla più vecchia. Un test in un gruppo offre il Riepilogo e i test del suo gruppo in una riga sopra la sua intestazione, con questo test segnato.
 
 ## Giocatori
 

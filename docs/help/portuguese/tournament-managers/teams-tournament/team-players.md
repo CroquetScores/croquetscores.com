@@ -16,7 +16,7 @@ Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a págin
 
 **Nome** é obrigatório, entre 3 e 254 caracteres. Dois jogadores de uma mesma equipe não podem ter o mesmo nome, sejam quais forem as maiúsculas; um jogador de outra equipe pode tê-lo.
 
-**Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Golf Croquet, as duas modalidades cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador. Conforme você digita, são oferecidos os jogadores que os rankings mundiais conhecem cujos nomes começam daquele jeito, e ao lado do nome no ranking mundial uma marca de certo diz que os rankings conhecem o nome, e um ponto de interrogação diz que não. É só um aviso: um nome que os rankings não conhecem é guardado tão prontamente quanto um que conhecem.
+**Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Croquet de Golfe, os dois esportes cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador. Conforme você digita, são oferecidos os jogadores que os rankings mundiais conhecem cujos nomes começam daquele jeito, e ao lado do nome no ranking mundial uma marca de certo diz que os rankings conhecem o nome, e um ponto de interrogação diz que não. É só um aviso: um nome que os rankings não conhecem é guardado tão prontamente quanto um que conhecem.
 
 Um jogador nunca se chama "Bye": um nome cuja primeira palavra é a palavra inglesa "bye" é recusado.
 
@@ -28,7 +28,7 @@ Pressione o nome de um jogador, ou o seu **Editar**, para abrir o mesmo diálogo
 
 ## Ordem
 
-Os jogadores são listados na ordem da equipe, que é a ordem em que são oferecidos quando o placar de um teste é inserido. **Subir** e **Descer** movem um jogador uma posição dentro da equipe.
+Os jogadores são listados na ordem da equipe, que é a ordem em que são oferecidos quando o resultado de um teste é inserido. **Subir** e **Descer** movem um jogador uma posição dentro da equipe.
 
 ## Arquivar um jogador
 

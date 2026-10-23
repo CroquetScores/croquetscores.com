@@ -14,9 +14,9 @@ Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogo
 
 ![Okno Dodaj zawodnika na stronie drużyny](images/add-team-player-dialog.png)
 
-**Imię i nazwisko** jest wymagane, od 3 do 254 znaków. Dwóch zawodników w jednej drużynie nie może mieć tej samej nazwy, niezależnie od wielkości liter; zawodnik w innej drużynie może ją mieć.
+**Nazwa** jest wymagana, od 3 do 254 znaków. Dwóch zawodników w jednej drużynie nie może mieć tej samej nazwy, niezależnie od wielkości liter; zawodnik w innej drużynie może ją mieć.
 
-**Nazwa zawodnika w rankingu światowym** to nazwa, pod którą zawodnika znają rankingi światowe. Pytanie o nią pojawia się tylko w turnieju Association Croquet lub Golf Croquet, dwóch dyscyplin, których zawodników rankingi światowe mają na liście. Zawodnicy American Six-Wicket są znani rankingom pod własnymi nazwami, więc się o nią tam nie pyta, a nazwą każdego zawodnika w rankingu światowym jest zawsze jego nazwa. Podczas dodawania zawodnika podąża ona za nazwą, którą wpisujesz, i przestaje podążać, gdy wpiszesz w nią cokolwiek. Zostawiona pusta, jest zachowywana jako nazwa zawodnika. Gdy wpisujesz, podpowiadani są zawodnicy znani rankingom światowym, których nazwy tak się zaczynają, a obok nazwy w rankingu światowym znacznik mówi, że rankingi znają tę nazwę, a znak zapytania – że nie. To tylko podpowiedź: nazwa nieznana rankingom jest zachowywana tak samo chętnie jak znana.
+**Nazwa zawodnika w rankingu światowym** to nazwa, pod którą zawodnika znają rankingi światowe. Pytanie o nią pojawia się tylko w turnieju krokieta klasycznego lub krokieta golfowego, dwóch dyscyplin, których zawodników rankingi światowe mają na liście. Zawodnicy amerykańskiego krokieta sześciobramkowego są znani rankingom pod własnymi nazwami, więc się o nią tam nie pyta, a nazwą każdego zawodnika w rankingu światowym jest zawsze jego nazwa. Podczas dodawania zawodnika podąża ona za nazwą, którą wpisujesz, i przestaje podążać, gdy wpiszesz w nią cokolwiek. Zostawiona pusta, jest zachowywana jako nazwa zawodnika. Gdy wpisujesz, podpowiadani są zawodnicy znani rankingom światowym, których nazwy tak się zaczynają, a obok nazwy w rankingu światowym znacznik mówi, że rankingi znają tę nazwę, a znak zapytania – że nie. To tylko podpowiedź: nazwa nieznana rankingom jest zachowywana tak samo chętnie jak znana.
 
 Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los): nazwa, której pierwszym słowem jest „bye", jest odrzucana.
 
@@ -24,7 +24,7 @@ Naciśnij **Dodaj**. Zawodnik zostaje dodany, okno o tym mówi, a jego pola są 
 
 ## Poprawianie zawodnika
 
-Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Naciśnij **Zapisz**, by zachować zmianę. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, z wyjątkiem American Six-Wicket, gdzie nazwą zawodnika w rankingu światowym jest zawsze jego nazwa.
+Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Naciśnij **Zapisz**, by zachować zmianę. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, z wyjątkiem amerykańskiego krokieta sześciobramkowego, gdzie nazwą zawodnika w rankingu światowym jest zawsze jego nazwa.
 
 ## Kolejność
 
@@ -34,6 +34,6 @@ Zawodnicy są wymienieni w kolejności drużyny, czyli w kolejności, w jakiej s
 
 **Archiwizuj** odkłada zawodnika na bok: zgłoszonego przez pomyłkę albo takiego, który nie jest już w drużynie. Zarchiwizowany zawodnik jest wymieniony pod **Zarchiwizowani zawodnicy**, przekreślony, po zawodnikach w użyciu, i oferuje tylko **Przywróć**. Archiwizowanie nigdy nie pyta najpierw, bo zawodnik w drużynie nie jest zgłoszony do niczego innego, a przywrócenie go przywraca wszystko.
 
-Zawodnika, który rozegrał w teście jakąkolwiek partię w użyciu, nie można zarchiwizować, bo partie byłyby wtedy przeciwko komuś, kogo już nie ma, więc takiemu zawodnikowi nie oferuje się Archiwizuj. Zawodnika, którego wszystkie partie są zarchiwizowane, można.
+Zawodnika, który rozegrał w teście jakąkolwiek grę w użyciu, nie można zarchiwizować, bo gry byłyby wtedy przeciwko komuś, kogo już nie ma, więc takiemu zawodnikowi nie oferuje się Archiwizuj. Zawodnika, którego wszystkie gry są zarchiwizowane, można.
 
 Dalej: [Testy](tests.md).

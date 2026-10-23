@@ -18,7 +18,7 @@ Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
 **Vlag** is die vlag wat langs die speler se naam gewys word. Dit kan as geen gelaat word, soos by die meeste spelers. Wat 'n speler verteenwoordig en watter vlag hulle voer, word apart gehou, want 'n speler kan vir 'n klub in een land speel en die vlag van 'n ander voer.
 
-**Naam op die wêreldranglys** is die naam waaronder die wêreldranglys die speler ken. Dit word net gevra in 'n toernooi van Association Croquet of Golf Croquet, die twee sporte van wie se spelers die wêreldranglys 'n lys hou. Amerikaanse 6-hoepel-croquet se spelers is onder hul eie name aan die ranglys bekend, so dit word nie daar gevra nie, en elke speler se naam op die wêreldranglys is altyd hul naam. Terwyl jy 'n speler byvoeg, volg dit die naam soos jy dit tik, want die meeste spelers is onder hul eie naam aan die ranglys bekend, en dit hou op volg sodra jy daarin tik. Leeg gelaat, word dit as die speler se naam gehou.
+**Wêreldranglys-spelernaam** is die naam waaronder die wêreldranglys die speler ken. Dit word net gevra in 'n toernooi van Association Croquet of Golf Croquet, die twee sporte van wie se spelers die wêreldranglys 'n lys hou. Amerikaanse 6-hoepel-croquet se spelers is onder hul eie name aan die ranglys bekend, so dit word nie daar gevra nie, en elke speler se naam op die wêreldranglys is altyd hul naam. Terwyl jy 'n speler byvoeg, volg dit die naam soos jy dit tik, want die meeste spelers is onder hul eie naam aan die ranglys bekend, en dit hou op volg sodra jy daarin tik. Leeg gelaat, word dit as die speler se naam gehou.
 
 Soos jy 'n naam tik, word die spelers wat die wêreldranglys ken en wie se name so begin aangebied, sodat jy 'n naam kan neem soos die ranglys dit spel eerder as om dit uit te tik. Langs die naam op die wêreldranglys sê 'n regmerkie dat die ranglys die naam ken, en 'n vraagteken sê dit ken dit nie: die naam is dalk verkeerd gespel, of die speler is nuut op die ranglys. Dit is net raad. 'n Naam wat die ranglys nie ken nie, word net so geredelik gehou as een wat dit wel ken.
 
@@ -30,7 +30,7 @@ Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde w
 
 ## Hoe om 'n speler reg te stel
 
-Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Verander wat verkeerd is en druk op **Stoor**, wat die verandering hou en die dialoog toemaak. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, want die ranglys ken hulle steeds daaronder. In Amerikaanse 6-hoepel-croquet is 'n speler se naam op die wêreldranglys altyd hul naam, so om die naam reg te stel, stel dit ook reg.
+Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Verander wat verkeerd is en druk op **Bewaar**, wat die verandering hou en die dialoog toemaak. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, want die ranglys ken hulle steeds daaronder. In Amerikaanse 6-hoepel-croquet is 'n speler se naam op die wêreldranglys altyd hul naam, so om die naam reg te stel, stel dit ook reg.
 
 ![Die dialoog Wysig speler](images/edit-player-dialog.png)
 

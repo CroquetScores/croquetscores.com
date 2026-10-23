@@ -2,7 +2,7 @@
 
 ## Nid oes angen yr un o'r ddau i ddarllen
 
-Mae'r tudalennau sy'n dangos twrnamaint, ei sgorau, ei chwaraewyr a'i safleoedd yn gweithio gyda sgriptio wedi'i ddiffodd. Felly hefyd dewis y thema a'r iaith.
+Mae'r tudalennau sy'n dangos twrnamaint, ei sgorau, ei chwaraewyr a'i detholion yn gweithio gyda sgriptio wedi'i ddiffodd. Felly hefyd dewis y thema a'r iaith.
 
 ## Cwcis
 
@@ -12,7 +12,7 @@ Gall porwr sy'n gwrthod cwcis ddarllen twrnamaint o hyd. Bydd yn anghofio eich d
 
 ## Mae cofrestru angen sgriptio
 
-Cofrestru yw'r unig le y mae angen sgriptio. Mae'r safle'n gofyn i Google reCAPTCHA wahaniaethu person oddi wrth raglen, ac mae hynny'n rhedeg fel sgript yn eich porwr. Os bydd sgriptio wedi'i ddiffodd pan fyddwch yn agor y dudalen gofrestru, cewch eich anfon i dudalen sy'n dweud hynny, cyn i chi lenwi dim. Trowch sgriptio ymlaen ar gyfer y safle hwn, yna ewch **Yn ôl i gofrestru**.
+Cofrestru yw'r unig le y mae angen sgriptio. Mae'r safle'n gofyn i Google reCAPTCHA wahaniaethu person oddi wrth raglen, ac mae hynny'n rhedeg fel sgript yn eich porwr. Os bydd sgriptio wedi'i ddiffodd pan fyddwch yn agor y dudalen gofrestru, cewch eich anfon i dudalen sy'n dweud hynny, cyn i chi lenwi dim. Trowch sgriptio ymlaen ar gyfer y safle hwn, yna ewch **Yn ôl at gofrestru**.
 
 Nid oes angen sgriptio i ofyn am ffordd yn ôl i gyfrif na allwch fewngofnodi iddo.
 

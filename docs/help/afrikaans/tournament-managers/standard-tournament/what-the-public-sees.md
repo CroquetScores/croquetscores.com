@@ -16,7 +16,7 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 !['n Blok se rooster](images/public-block-grid.png)
 
-'n Blok word op drie maniere gewys, aangebied op die reël van sy naam: **Rooster**, **Opsomming** en **Speelorde**. Die opsomming is dié vir 'n foon: die spelers gerangskik, met hul oorwinnings, verliese en netto hoepels. Die speelorde lys elke spel, oudste eerste. 'n Leser wat 'n aansig kies, hou dit vir elke kompetisie totdat hulle 'n ander kies.
+'n Blok word op drie maniere gewys, aangebied op die reël van sy naam: **Rooster**, **Opsomming** en **Speelvolgorde**. Die opsomming is dié vir 'n foon: die spelers gerangskik, met hul oorwinnings, verliese en netto hoepels. Die speelvolgorde lys elke spel, oudste eerste. 'n Leser wat 'n aansig kies, hou dit vir elke kompetisie totdat hulle 'n ander kies.
 
 !['n Blok se opsomming](images/public-block-summary.png)
 

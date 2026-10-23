@@ -10,28 +10,22 @@ Mae'r ffurflen yn gofyn am bopeth y mae twrnamaint yn dechrau ag ef. Y peth pwys
 
 **Enw.** Yr hyn y mae darllenwyr yn chwilio amdano i ddod o hyd i'r twrnamaint, fel "Trans-Tasman Tests". Mae rhwng 3 a 254 o gymeriadau. Gwrthodir enw sydd i gyd mewn llythrennau bach, neu i gyd mewn prif lythrennau, gan y byddai'n edrych fel camgymeriad ar bob tudalen y caiff ei ddangos arni. Gall dau dwrnamaint gael yr un enw, gan fod yr un twrnamaint yn cael ei chwarae bob blwyddyn.
 
-**Yn dechrau** ac **Yn gorffen.** Y dyddiau y mae'r twrnamaint yn rhedeg. Chwaraeir pob test o fewn iddynt, felly gosodwch hwy i gwmpasu'r digwyddiad cyfan. Ni all twrnamaint orffen cyn iddo ddechrau, ac ni all ddechrau na gorffen yn hwyrach na diwedd y flwyddyn nesaf. Mae twrnamaint yn perthyn i'r flwyddyn y mae'n dechrau ynddi, sef y flwyddyn yn ei gyfeiriad hefyd.
+**Yn dechrau** ac **Yn gorffen.** Y dyddiau y mae'r twrnamaint yn rhedeg. Chwaraeir pob prawf o fewn iddynt, felly gosodwch hwy i gwmpasu'r digwyddiad cyfan. Ni all twrnamaint orffen cyn iddo ddechrau, ac ni all ddechrau na gorffen yn hwyrach na diwedd y flwyddyn nesaf. Mae twrnamaint yn perthyn i'r flwyddyn y mae'n dechrau ynddi, sef y flwyddyn yn ei gyfeiriad hefyd.
 
 **Fformat.** Dewiswch un o'r fformatau a chwaraeir gan dimau:
 
 - **Timau** yw'r fformat cyffredinol ar gyfer unrhyw ddigwyddiad rhwng timau.
-- Mae **Eire Cup**, **Interstate Shield** a **GC World Team Championship** yn ddigwyddiadau penodol, pob un yn cael ei gadw fel fformat ei hun fel y gellir ei redeg yn y ffordd y caiff y digwyddiad hwnnw ei redeg.
+- Mae **Cwpan Iwerddon**, **Tarian y Taleithiau** a **Pencampwriaeth Tîm y Byd GC** yn ddigwyddiadau penodol, pob un yn cael ei gadw fel fformat ei hun fel y gellir ei redeg yn y ffordd y caiff y digwyddiad hwnnw ei redeg.
 
 Safonol yw'r un fformat na chwaraeir gan dimau, ac nid dyna rydych ei eisiau yma. Nid yw Gateball Scores yn cynnig fformat, gan fod pob twrnamaint yno'n dwrnamaint safonol o gateball; crëir twrnamaint a chwaraeir gan dimau ar Croquet Scores.
 
-**Camp.** Y campau y mae'r wefan yn eu cynnig, yn ei threfn: Croce Cymdeithas, Croce Golff, Croce Americanaidd 6 Chylch a Ricochet.
+**Camp.** Y campau y mae'r wefan yn eu cynnig, yn ei threfn: Association Croquet, Golf Croquet, American 6 Wicket a Ricochet.
 
 **Gwlad** a **Rhanbarth.** Lle caiff y twrnamaint ei chwarae. Gofynnir am ranbarth dim ond lle mae'r wlad a ddewiswch wedi'i rhannu'n rhanbarthau, fel taleithiau Awstralia, ac nid oes raid dewis un hyd yn oed wedyn.
 
-**Isdeitl.** Beth bynnag rydych am i ddarllenwyr ei wybod nad oes ganddo faes ei hun: lle i barcio, pryd mae cinio, pwy i'w ffonio. Caiff ei ddangos o dan enw'r twrnamaint ar bob tudalen gyhoeddus. Caiff ei ysgrifennu mewn Markdown, felly gellir gwneud gair mewn print trwm â sêr o'i gwmpas a gwneud rhestr â llinell doriad ar ddechrau pob llinell. Gall fod hyd at 2000 o gymeriadau, a gellir ei adael yn wag.
+**Is-deitl.** Beth bynnag rydych am i ddarllenwyr ei wybod nad oes ganddo faes ei hun: lle i barcio, pryd mae cinio, pwy i'w ffonio. Caiff ei ddangos o dan enw'r twrnamaint ar bob tudalen gyhoeddus. Caiff ei ysgrifennu mewn Markdown, felly gellir gwneud gair mewn print trwm â sêr o'i gwmpas a gwneud rhestr â llinell doriad ar ddechrau pob llinell. Gall fod hyd at 2000 o gymeriadau, a gellir ei adael yn wag.
 
-**Chwarae gyda handicap.** Ticiwch hwn ar gyfer digwyddiad handicap.
-
-**Caniatáu gemau cyfartal.** Ticiwch hwn lle gall gêm orffen heb i'r un o'r ddau chwaraewr fod yn enillydd. Lle mae wedi'i dicio, caiff sgôr a roddir i mewn â phwyntiau cyfartal a dim marc ei chadw fel gêm gyfartal; lle nad yw, rhaid i gêm ar bwyntiau cyfartal ddweud pwy a'i henillodd â marc ar ôl sgôr yr enillydd, fel "6w".
-
-**Mae testau cyfartal yn gyfartal.** Gofynnir amdano dim ond unwaith y dewisir fformat a chwaraeir gan dimau. Enillir test gan y tîm sy'n ennill mwy o'i ornestau, a phenderfynir un sy'n gyfartal ar ornestau yn ôl gemau net, yna yn ôl cylchoedd net, oni bai bod hwn wedi'i dicio, ac yn yr achos hwnnw mae test sy'n gyfartal ar ornestau yn gyfartal, fel y mae rhai digwyddiadau timau'n ei gael. Mae'n dechrau heb ei dicio ar gyfer Timau, ac wedi'i dicio ar gyfer y GC World Team Championship, sydd wedi cael test cyfartal yn gyfartal erioed.
-
-**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas, Croce Golff neu Groce Americanaidd 6 Chylch na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau.
+Mater i bob prawf yw dweud, pan gaiff ei ychwanegu, sut y caiff ei chwarae a'i gyfrif: gyda handicapiau, gyda chanlyniadau cyfartal, ac tuag at restr detholion y byd.
 
 **Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall.
 

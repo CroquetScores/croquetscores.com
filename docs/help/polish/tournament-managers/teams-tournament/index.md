@@ -1,6 +1,6 @@
 # Prowadzenie turnieju drużynowego
 
-Turniej drużynowy to turniej, w którym spotykają się strony, a nie zawodnicy zgłaszani pojedynczo: seria testów między dwoma krajami, interstate shield, drużynowe mistrzostwa świata. Tworzy się jego drużyny wraz z ich zawodnikami, dodaje testy między drużynami, a partie każdego testu pojawiają się na stronie w miarę rozgrywania. Ten przewodnik prowadzi organizatora od zalogowania aż po turniej, którego wyniki są dostępne publicznie.
+Turniej drużynowy to turniej, w którym spotykają się strony, a nie zawodnicy zgłaszani pojedynczo: seria testów między dwoma krajami, interstate shield, drużynowe mistrzostwa świata. Tworzy się jego drużyny wraz z ich zawodnikami, dodaje testy między drużynami, a gry każdego testu pojawiają się na stronie w miarę rozgrywania. Ten przewodnik prowadzi organizatora od zalogowania aż po turniej, którego wyniki są dostępne publicznie.
 
 Jest samodzielny. Nic w nim nie zależy od przewodnika do turnieju standardowego, który napisano osobno.
 
@@ -12,17 +12,17 @@ Wszystko, co robi organizator, robi w sekcji administracji strony. Strony public
 
 ## Słowa
 
-**Drużyna** to strona, na przykład Australia, z nazwą, skrótem nazwy, jak „AUS", i flagą. Drużyna ma własnych **zawodników**, którzy grają dla niej i dla nikogo innego. **Test** to pojedynek dwóch drużyn, nazywany ich skrótami, jak „AUS v ENG", złożony z pewnej liczby **meczów** między zawodnikiem jednej i drugiej drużyny, z których każdy jest najlepszy z pewnej liczby **partii**. Testy można umieszczać w **grupach**, jak „Block A", gdy wiele drużyn gra między sobą.
+**Drużyna** to strona, na przykład Australia, z nazwą, skrótem nazwy, jak „AUS", i flagą. Drużyna ma własnych **zawodników**, którzy grają dla niej i dla nikogo innego. **Test** to pojedynek dwóch drużyn, nazywany ich skrótami, jak „AUS v ENG", złożony z pewnej liczby **meczów** między zawodnikiem jednej i drugiej drużyny, z których każdy jest najlepszy z pewnej liczby **gier**. Testy można umieszczać w **grupach**, jak „Block A", gdy wiele drużyn gra między sobą.
 
 ## Strony po kolei
 
-1. [Tworzenie turnieju](creating-a-tournament.md): jego nazwa, dni, dyscyplina, format i miejsce rozgrywania.
+1. [Tworzenie turnieju](creating-a-tournament.md): jego nazwa, dni, dyscyplina, formuła i miejsce rozgrywania.
 2. [Drużyny](teams.md): dodawanie drużyn, z ich skrótami nazw i flagami.
 3. [Zawodnicy drużyny](team-players.md): zgłaszanie zawodników każdej drużyny na jej własnej stronie.
 4. [Testy](tests.md): dodawanie testów między drużynami, ich dni, liczby meczów w każdym i ich grup.
-5. [Wyniki](scores.md): wprowadzanie partii testu, poprawianie ich i odkładanie na bok tych, które wprowadzono przez pomyłkę.
+5. [Wyniki](scores.md): wprowadzanie gier testu, poprawianie ich i odkładanie na bok tych, które wprowadzono przez pomyłkę.
 6. [Notatki](notes.md): przekazywanie zawodnikom tego, co muszą wiedzieć w trakcie turnieju.
-7. [Organizatorzy i wprowadzający wyniki](managers-and-scorers.md): dzielenie się prowadzeniem turnieju i pozwalanie komuś na wprowadzanie wyników bez możliwości zmiany czegokolwiek innego.
+7. [Organizatorzy i osoby wprowadzające wyniki](managers-and-scorers.md): dzielenie się prowadzeniem turnieju i pozwalanie komuś na wprowadzanie wyników bez możliwości zmiany czegokolwiek innego.
 8. [Rankingi](rankings.md): plik, który wysyła się do rankingów światowych, i to, co zostaje do uzupełnienia.
 9. [Zmiana, archiwizowanie i przywracanie turnieju](changing-and-archiving.md): poprawianie szczegółów turnieju i odkładanie turnieju na bok.
 10. [Co widzą odbiorcy](what-the-public-sees.md): strony, które śledzą twoi zawodnicy, i to, jak pojawia się na nich to, co wprowadzasz.
@@ -33,7 +33,7 @@ Strona wejściowa administracji wymienia turnieje, w których masz jakąś rolę
 
 ![Lista turniejów w administracji](images/admin-list.png)
 
-Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w sześciu kartach pod jego nazwą: **Drużyny**, **Testy**, **Notatki**, **Organizatorzy**, **Wprowadzający wyniki** i **Rankingi**. Strona otwiera się na karcie Drużyny, bo drużyny są pierwszą rzeczą, którą się tworzy.
+Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w sześciu kartach pod jego nazwą: **Drużyny**, **Testy**, **Notatki**, **Organizatorzy**, **Osoby wprowadzające wyniki** i **Rankingi**. Strona otwiera się na karcie Drużyny, bo drużyny są pierwszą rzeczą, którą się tworzy.
 
 ![Strona turnieju, na karcie Testy](images/tournament-page.png)
 

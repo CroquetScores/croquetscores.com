@@ -10,21 +10,17 @@ El formulario pide todo aquello con lo que empieza un torneo. Un torneo de los c
 
 **Nombre.** Lo que buscan los lectores para encontrar el torneo, como "Spring Open". Tiene entre 3 y 254 caracteres. Un nombre todo en minúsculas, o todo en mayúsculas, se rechaza, porque parecería un error en cada página en que se muestre. Dos torneos pueden tener el mismo nombre, ya que el mismo torneo se juega cada año.
 
-**Empieza** y **Termina.** Los días en que se juega el torneo. Un torneo no puede terminar antes de empezar, ni empezar o terminar después del final del año que viene. Un torneo pertenece al año en que empieza, que es también el año de su dirección, así que uno que pasa por el cambio de año se lista en el año en que empieza.
+**Comienza** y **Termina.** Los días en que se juega el torneo. Un torneo no puede terminar antes de empezar, ni empezar o terminar después del final del año que viene. Un torneo pertenece al año en que empieza, que es también el año de su dirección, así que uno que pasa por el cambio de año se lista en el año en que empieza.
 
 **Formato.** Elige **Estándar** para un torneo que se juega entre jugadores. Los demás formatos son para torneos que se juegan entre equipos, que tienen guía propia.
 
-**Deporte.** Los deportes que ofrece el sitio web, en su orden: Croquet Asociación, Golf Croquet, Croquet americano de 6 aros y Ricochet en Croquet Scores. Gateball Scores no pide ni deporte ni formato, ya que todos sus torneos son torneos estándar de gateball.
+**Deporte.** Los deportes que ofrece el sitio web, en su orden: Croquet de asociación, Croquet golf, American 6 Wicket y Ricochet en Croquet Scores. Gateball Scores no pide ni deporte ni formato, ya que todos sus torneos son torneos estándar de gateball.
 
 **País** y **Región.** Dónde se juega el torneo. La región se pide solo cuando el país que eliges está dividido en regiones, como los estados de Australia; un país que es él mismo su única región no pide ninguna. No hace falta elegir región ni siquiera cuando se ofrece.
 
 **Subtítulo.** Lo que quieras que sepan los lectores y no tiene campo propio: dónde aparcar, a qué hora se come, a quién llamar. Se muestra bajo el nombre del torneo en todas las páginas públicas. Se escribe en Markdown, así que una palabra se pone en negrita con asteriscos alrededor y una lista se hace con un guion al principio de cada línea. Puede tener hasta 2000 caracteres, y puede dejarse vacío.
 
-**Jugado con hándicap.** Márcalo para un torneo con hándicap.
-
-**Permite empates.** Márcalo cuando una partida pueda acabar sin que ninguno de los dos jugadores gane. La mayoría de los torneos no lo permiten. Si está marcado, un resultado introducido con los puntos igualados y sin marca se guarda como empate; si no lo está, una partida con los puntos igualados tiene que decir quién ganó mediante una marca tras los puntos del ganador, como "6w".
-
-**Cuenta para el ranking mundial.** Se pregunta solo cuando puede contar: un torneo de Croquet Asociación, de Golf Croquet o de Croquet americano de 6 aros que ni se juega con hándicap ni permite empates. Empieza marcado, así que desmárcalo para un torneo que no deba contar.
+Cómo se juegan y se cuentan sus competiciones, si con hándicap, con empates y para los rankings mundiales, lo dice cada competición al añadirla.
 
 **Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro.
 

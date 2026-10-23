@@ -6,11 +6,11 @@ Druk in de lijst met toernooien in het beheer op **Bewerken** bij het toernooi. 
 
 ![Het formulier Toernooi bewerken](images/edit-tournament.png)
 
-Zodra het toernooi een speler of competitie bevat, gearchiveerde meegerekend, kan zijn toernooivorm niet meer worden gewijzigd in een vorm tussen teams, die in plaats daarvan teams en testmatches heeft.
+Zodra het toernooi een speler of competitie bevat, gearchiveerde meegerekend, kan zijn opzet niet meer worden gewijzigd in een vorm tussen teams, die in plaats daarvan teams en tests heeft.
 
 Een toernooi houdt zijn adres wanneer zijn naam wordt gecorrigeerd, zodat een link die iemand al heeft verstuurd het nog vindt. Het verhuist alleen wanneer het jaar waarin het begint of zijn sport verandert, en dan leidt het oude adres naar het nieuwe. Opslaan brengt je naar het toernooi, waar het nu ook te vinden is.
 
-Alleen een beheerder kan een toernooi wijzigen. Een scorer, of wie dan ook, krijgt dat te horen in plaats van het formulier te zien.
+Alleen een toernooileider kan een toernooi wijzigen. Een scorebijhouder, of wie dan ook, krijgt dat te horen in plaats van het formulier te zien.
 
 ## De lijst met toernooien
 

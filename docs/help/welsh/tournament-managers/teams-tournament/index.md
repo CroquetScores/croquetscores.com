@@ -1,6 +1,6 @@
 # Rhedeg twrnamaint a chwaraeir gan dimau
 
-Twrnamaint a chwaraeir gan dimau yw un lle mae ochrau'n cwrdd, yn hytrach na chwaraewyr a gofrestrir fesul un: cyfres o destau rhwng dwy wlad, tarian rhwng taleithiau, pencampwriaeth timau'r byd. Caiff ei dimau eu gosod i fyny â'u chwaraewyr, caiff y testau rhwng timau eu hychwanegu, ac mae gemau pob test yn mynd i fyny fel y cânt eu chwarae. Mae'r canllaw hwn yn mynd â rheolwr o fewngofnodi hyd at dwrnamaint y mae ei ganlyniadau ar gael i'r cyhoedd.
+Twrnamaint a chwaraeir gan dimau yw un lle mae ochrau'n cwrdd, yn hytrach na chwaraewyr a gofrestrir fesul un: cyfres o brofion rhwng dwy wlad, tarian rhwng taleithiau, pencampwriaeth timau'r byd. Caiff ei dimau eu gosod i fyny â'u chwaraewyr, caiff y profion rhwng timau eu hychwanegu, ac mae gemau pob prawf yn mynd i fyny fel y cânt eu chwarae. Mae'r canllaw hwn yn mynd â rheolwr o fewngofnodi hyd at dwrnamaint y mae ei ganlyniadau ar gael i'r cyhoedd.
 
 Mae'n sefyll ar ei ben ei hun. Nid oes dim ynddo'n dibynnu ar y canllaw i dwrnamaint safonol, sydd wedi'i ysgrifennu ar wahân.
 
@@ -12,18 +12,18 @@ Gwneir popeth a wna rheolwr yn adran weinyddu'r wefan. Caiff y tudalennau cyhoed
 
 ## Y geiriau
 
-Mae **tîm** yn ochr, fel Awstralia, ag enw, enw byr fel "AUS", a baner. Mae gan dîm **chwaraewyr** ei hun, sy'n chwarae drosto a dros neb arall. Mae **test** yn ornest rhwng dau dîm, a elwir wrth eu henwau byr, fel "AUS v ENG", sy'n cynnwys nifer o **ornestau** rhwng chwaraewr o bob tîm, pob gornest y gorau o ryw nifer o **gemau**. Gellir rhoi testau mewn **grwpiau**, fel "Block A", lle mae llawer o dimau'n chwarae ymhlith ei gilydd.
+Mae **tîm** yn ochr, fel Awstralia, ag enw, enw byr fel "AUS", a baner. Mae gan dîm **chwaraewyr** ei hun, sy'n chwarae drosto a dros neb arall. Mae **prawf** yn gornest rhwng dau dîm, a elwir wrth eu henwau byr, fel "AUS v ENG", sy'n cynnwys nifer o **gemau** rhwng chwaraewr o bob tîm, pob gêm yr orau o ryw nifer o **gemau unigol**. Gellir rhoi profion mewn **grwpiau**, fel "Block A", lle mae llawer o dimau'n chwarae ymhlith ei gilydd.
 
 ## Y tudalennau yn eu trefn
 
 1. [Creu twrnamaint](creating-a-tournament.md): ei enw, ei ddyddiau, ei gamp, ei fformat, a lle caiff ei chwarae.
 2. [Timau](teams.md): ychwanegu'r timau, â'u henwau byr a'u baneri.
 3. [Chwaraewyr tîm](team-players.md): rhoi chwaraewyr pob tîm i mewn ar dudalen y tîm ei hun.
-4. [Testau](tests.md): ychwanegu'r testau rhwng timau, eu dyddiau, sawl gornest sydd gan bob un, a'u grwpiau.
-5. [Canlyniadau](scores.md): rhoi gemau test i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
+4. [Profion](tests.md): ychwanegu'r profion rhwng timau, eu dyddiau, sawl gêm sydd gan bob un, a'u grwpiau.
+5. [Sgorau](scores.md): rhoi gemau unigol prawf i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
 6. [Nodiadau](notes.md): dweud wrth y chwaraewyr beth sydd angen iddynt ei wybod wrth i'r twrnamaint fynd rhagddo.
 7. [Rheolwyr a sgorwyr](managers-and-scorers.md): rhannu'r gwaith o redeg y twrnamaint, a gadael i rywun roi canlyniadau i mewn heb allu newid dim arall.
-8. [Safleoedd](rankings.md): y ffeil a anfonir at Safleoedd y Byd, a'r hyn sydd ar ôl i chi ei lenwi.
+8. [Detholion](rankings.md): y ffeil a anfonir at restr detholion y byd, a'r hyn sydd ar ôl i chi ei lenwi.
 9. [Newid, archifo ac adfer twrnamaint](changing-and-archiving.md): cywiro manylion y twrnamaint, a rhoi twrnamaint o'r neilltu.
 10. [Beth mae'r cyhoedd yn ei weld](what-the-public-sees.md): y tudalennau y mae eich chwaraewyr yn eu dilyn, a sut mae'r hyn a roddwch i mewn yn ymddangos arnynt.
 
@@ -33,15 +33,15 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Timau**, **Testau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Safleoedd**. Mae'r dudalen yn agor ar Timau, gan mai'r timau yw'r peth cyntaf a osodir i fyny.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Timau**, **Profion**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Timau, gan mai'r timau yw'r peth cyntaf a osodir i fyny.
 
-![Tudalen twrnamaint, ar ei thab Testau](images/tournament-page.png)
+![Tudalen twrnamaint, ar ei thab Profion](images/tournament-page.png)
 
-Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Ar dudalen y twrnamaint ac ar dudalen test mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob test wrth ei enw. Ar dudalen tîm mae'n arwain at y twrnamaint ac at bob tîm wrth ei enw byr yn lle hynny, gan fod rheolwr ar dudalen un tîm yn rhoi chwaraewyr i mewn dîm wrth dîm. Mae'r dudalen rydych arni wedi'i marcio mewn du.
+Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Ar dudalen y twrnamaint ac ar dudalen prawf mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob prawf wrth ei enw. Ar dudalen tîm mae'n arwain at y twrnamaint ac at bob tîm wrth ei enw byr yn lle hynny, gan fod rheolwr ar dudalen un tîm yn rhoi chwaraewyr i mewn dîm wrth dîm. Mae'r dudalen rydych arni wedi'i marcio mewn du.
 
 ## Pethau sy'n dal ym mhob man
 
-**Ni chaiff dim ei ddileu'n llwyr ac eithrio nodyn.** Caiff timau, chwaraewyr, testau, canlyniadau a'r twrnamaint ei hun eu harchifo yn hytrach na'u dileu: eu rhoi o'r neilltu, â llinell drwyddynt, a'u rhestru o dan bennawd eu hunain, gydag **Adfer** i'w cael yn ôl. Nid yw archifo, adfer a symud i fyny ac i lawr byth yn gofyn i chi gadarnhau, am fod pob un yn cael ei ddadwneud trwy bwyso'r ffordd arall. Mae'r pethau na ellir eu dadwneud, fel dileu nodyn neu dynnu rheolwr, yn gofyn yn gyntaf.
+**Ni chaiff dim ei ddileu'n llwyr ac eithrio nodyn.** Caiff timau, chwaraewyr, profion, canlyniadau a'r twrnamaint ei hun eu harchifo yn hytrach na'u dileu: eu rhoi o'r neilltu, â llinell drwyddynt, a'u rhestru o dan bennawd eu hunain, gydag **Adfer** i'w cael yn ôl. Nid yw archifo, adfer a symud i fyny ac i lawr byth yn gofyn i chi gadarnhau, am fod pob un yn cael ei ddadwneud trwy bwyso'r ffordd arall. Mae'r pethau na ellir eu dadwneud, fel dileu nodyn neu dynnu rheolwr, yn gofyn yn gyntaf.
 
 **Nid yw deialog dros y dudalen yn cadw dim nes i chi bwyso ei botwm.** Mae Canslo, neu'r fysell Escape, yn ei chau ac yn gadael popeth fel yr oedd. Mae deialogau sy'n ychwanegu pethau, fel Ychwanegu tîm ac Ychwanegu canlyniad, yn aros ar agor ar ôl i bob un gael ei ychwanegu, fel y gellir teipio rhestr un ar ôl y llall.
 
