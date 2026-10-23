@@ -1,11 +1,35 @@
 # He aha te mea hou mō ngā Kaiwhakahaere Whakataetae Nui
 
+## I tukuna 2026-10-23
+
+Koinei ngā panonitanga matua mai i te tukunga whakamutunga. Ia mea ka hono ki te pull request nāna i mahi.
+
+- **Ka whakaritea ngā whakaiti, ngā hua taurite me ngā whakarārangi o te ao i ia tauwhāinga.** I mua, ko te whakataetae te mea hei whakarite, nō reira kāore i taea e tētahi whakataetae te pupuri i tētahi poraka whakaiti i te taha o tētahi poraka ōrite, i tētahi whakamātau ka taea te taurite i te taha o tētahi whakawātea kāore e taea. Inaianei ka pātai ia tauwhāinga, ia whakamātau hoki, i ngā mea e toru i te wā e tāpiria ana, e whakatikahia ana rānei, ā, kāore te puka whakataetae e pātai. Ka pātaihia te whakamutunga i ngā hākinakina anake he whakarārangi o te ao ōna, ā, ka waiho te tauwhāinga kāore e kaute ki waho i te kōnae whakarārangi. Tirohia [Ngā tauwhāinga](../tournament-managers/standard-tournament/competitions.md). ([#341](https://github.com/CroquetScores/croquetscores.com/pull/341))
+
+- **Ka taea te whakawhāiti i te rārangi whakataetae o te taha whakahaere mā te whenua, te rohe me te hākinakina.** Kei te wāhitau ngā kōwhiringa, nā reira ka taea te hono ki tētahi rārangi kua tātarihia, ā, ko ngā mea anake kei tō rārangi te tukuna. Ka tukuna he rohe ina kōwhiria he whenua. Kāore he rohe o ngā whakataetae i mua i Whiringa-ā-rangi 2026, nā reira ina kōwhiria he rohe ka huna aua whakataetae, ā, ka kī ngā rārangi tūmatanui pērā. ([#354](https://github.com/CroquetScores/croquetscores.com/pull/354), [#351](https://github.com/CroquetScores/croquetscores.com/pull/351))
+
+- **Kotahi anake te tūranga mō ngā āpiha whakarārangi o te ao mō ia hākinakina.** Ka kite, ka tiaki te āpiha Association Croquet i ngā whakataetae Association Croquet, ā, ko te āpiha Golf Croquet i ērā o Golf Croquet. Ko te whakataetae e whakahaere ana, e tākohu ana rānei koe ka noho tonu ki tō rārangi, ahakoa tōna hākinakina. ([#348](https://github.com/CroquetScores/croquetscores.com/pull/348), [#356](https://github.com/CroquetScores/croquetscores.com/pull/356))
+
+- **Ka whakamāramatia te kōnae e te ripa Whakarārangi i roto i te whiti kotahi, ahakoa te hākinakina,** me te hononga tikiake ki raro iho. Tirohia [Ngā raupapa](../tournament-managers/standard-tournament/rankings.md). ([#346](https://github.com/CroquetScores/croquetscores.com/pull/346))
+
+- **Kāore e āhei te ingoa o tētahi whakataetae kia reta iti katoa, kia reta matua katoa rānei,** ā, ka kī te karere pērā hei ture inaianei. ([#345](https://github.com/CroquetScores/croquetscores.com/pull/345))
+
+- **He ipu para te Tango** i ngā ripa kaiwhakahaere me kaitākohu, i ngā kaitākaro o te tauwhāinga, me te whārangi pūkete a te kaiwhakahaere, pērā i a Whakatāpui me Muku kua pērā kē. Ka kīia tonuhia ko Tango ina tohu atu koe ki a ia, ā, ka pānuitia tonuhia ko Tango e te kaipānui mata. ([#353](https://github.com/CroquetScores/croquetscores.com/pull/353))
+
+- **He kupu hou kei ia reo.** Kua tuhia anō ngā kupu o te pae i ngā reo tekau mā ono atu katoa, ā, kua whakahāngai te āwhina ki a rātou. Kei ia reo ināianei te āwhina mō ngā kaipānui me ngā pūkete, me ngā ture whakamahi. Kāore anō kia pānuitia tētahi e tētahi kaikōrero taketake, nā reira whakamōhiotia mai mehemea he kino te pānui. ([#355](https://github.com/CroquetScores/croquetscores.com/pull/355), [#349](https://github.com/CroquetScores/croquetscores.com/pull/349), [#350](https://github.com/CroquetScores/croquetscores.com/pull/350))
+
+- **Ngā mahi i muri i te arai.** Ko te kawe mai i ngā pae tawhito ka hoatu he rohe wā ki ētahi, he whenua rerekē ki tētahi whakataetae ([#344](https://github.com/CroquetScores/croquetscores.com/pull/344)), ā, ka uta i tētahi kōnae tukuna ki te tūmau, ka hanga hoki i ngā tauira pānui mā tētahi tuhinga mahi ([#340](https://github.com/CroquetScores/croquetscores.com/pull/340)). Ka tukuna te pae mā tētahi tuhinga mahi, mai i tētahi rorohiko, i GitHub rānei, ā, kāore anō i ia whakakotahitanga ([#352](https://github.com/CroquetScores/croquetscores.com/pull/352)).
+
 ## I tukuna 2026-10-19
 
 Koinei ngā panonitanga matua mō ngā tāngata e whakahaere ana i ngā whakataetae nui. Kei te [āwhina mō ngā kaiwhakahaere whakataetae nui](../tournament-managers/index.md) ngā taipitopito katoa.
 
 - **Ka whakaurua ngā kaitākaro i te kotahi wā, ki te whakataetae nui.** I te pae tawhito, ka tāpiria ngā kaitākaro ki roto i ia tauwhāinga. Inaianei ko te ripa **Kaitākaro** o te whakataetae nui te wāhi hei tāpiri, hei whakatika, hei whakaraupapa, hei whakatāpuihi i a rātou, ā, ko te kaitākaro kua whakatikahia ki reira kua whakatikahia i ia tauwhāinga e uru ana ia, i ia whārangi tūmatanui hoki. Tirohia [Ngā kaitākaro](../tournament-managers/standard-tournament/players.md).
+
 - **Ka whakaurua ngā kaitākaro ki tētahi tauwhāinga mai i tētahi rārangi.** I te whārangi o tētahi tauwhāinga, kōwhiria he kaitākaro o te whakataetae nui mai i te rārangi taka ka pēhi i a **Tāpiri kaitākaro**. Ko ngā kaitākaro kāore anō kia uru ki te tauwhāinga anake te mea e tukuna ana e te rārangi taka. I te whakawātea ka tuku hoki i a **Bye** mō ngā wāhi toe. Tirohia [Te whakauru i ngā kaitākaro ki tētahi tauwhāinga](../tournament-managers/standard-tournament/entering-players-in-a-competition.md).
+
 - **Mā te pātene kotahi e tāpiri he tauwhāinga.** Hei utu mō ngā pātene motuhake mō te poraka hou, te Swiss hou me te whakawātea hou, pēhia a **Tāpiri tauwhāinga**. Ka pātai te pouaka ki te ingoa, me te momo (he poraka, he whakawātea, he Swiss rānei), ā, ka pātai ki ngā mea e hiahiatia ana e taua momo: te pai rawa o te hia ia tukinga, ā, mō te whakawātea ko ngā wāhi o tōna tohu. Ka noho tuwhera kia taea ai e koe te tāpiri i te maha i te wā kotahi. Kāore e taea te whakarerekē i te momo o tētahi tauwhāinga i muri mai: whakatāpuia ka tāpiri anō. Tirohia [Ngā tauwhāinga](../tournament-managers/standard-tournament/competitions.md).
+
 - **Ngā tuhinga a te kaiwhakahaere: whakamahia hei utu mō ngā kōrero hei kī atu ki ngā kaitākaro i ngā mea hei mōhio mā rātou.** Te whakatakotoranga, tētahi panoni ki te raupapa tākaro, te wā o te tina. Ka tuhia he tuhinga ki te ripa **Ngā tuhinga** o te whakataetae nui, me te taitara me te whakaahuatanga ki te Markdown, ā, ka taea e koe te arotake i mua i tō tāpiri. Ka kite ngā kaitākaro i ngā tuhinga i te whārangi Ngā tuhinga tūmatanui o te whakataetae nui. Ka tohua ki te whetū te tuhinga kāore anō kia pānuitia e rātou, pērā hoki te wāhanga Ngā tuhinga i ia whārangi o te whakataetae nui, kia tae ra ano ki te wā ka whakatuwheratia e rātou. Ka tohua anō te tuhinga ka whakatikahia e koe mō te hunga katoa kua pānui kē. Tirohia [Ngā tuhinga](../tournament-managers/standard-tournament/notes.md).
+
 - **Ko ngā tuhinga whakataetae nui o te pae tawhito ko te Taitara iti inaianei.** Ka mau tonu ngā mea i tuhia e koe ki reira hei taitara iti mō te whakataetae nui, ā, ka whakaaturia tonutia i raro i te ingoa o te whakataetae nui i ia whārangi tūmatanui. Ka tuhia ki te Markdown, ā, ka taea te 2000 tohu te roa. Mō ngā mea e tika ana kia mōhio ngā kaipānui ahakoa kei tēhea whārangi rātou. Whakamahia he tuhinga mō ngā kōrero hou ka rerekē i a ia e haere ana.
