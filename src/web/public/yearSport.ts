@@ -106,7 +106,7 @@ export const registerYearSportPage = (
             year,
             (each) => `/${String(each)}/${sport.code}`,
           ),
-          body: `${filter(request, asked, speaking)}
+          body: `${filter(request, asked, speaking, listed.length)}
 ${table(
   {
     table: "tournaments",

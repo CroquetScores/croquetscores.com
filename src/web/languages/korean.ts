@@ -473,6 +473,8 @@ export const korean: Language = {
     "tournamentList.filter.anyCountry": "모든 국가",
     "tournamentList.filter.region": "지역",
     "tournamentList.filter.anyRegion": "모든 지역",
+    "tournamentList.filter.noRegionsBefore":
+      "2026년 11월 이전 대회에는 지역 정보가 없어요.",
     "tournamentList.filter.sport": "종목",
     "tournamentList.filter.anySport": "모든 종목",
     "tournamentList.filter.submit": "적용",

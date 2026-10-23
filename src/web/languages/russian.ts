@@ -457,6 +457,8 @@ export const russian: Language = {
     "tournamentList.filter.anyCountry": "Любая страна",
     "tournamentList.filter.region": "Регион",
     "tournamentList.filter.anyRegion": "Любой регион",
+    "tournamentList.filter.noRegionsBefore":
+      "У турниров до ноября 2026 года нет региона.",
     "tournamentList.filter.sport": "Вид спорта",
     "tournamentList.filter.anySport": "Любой вид спорта",
     "tournamentList.filter.submit": "Отфильтровать",

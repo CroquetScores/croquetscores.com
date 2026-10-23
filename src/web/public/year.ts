@@ -80,7 +80,7 @@ export const registerYearPage = (
       render(assets, {
         ...shell,
         ...yearsOf(years, speaking, year),
-        body: `${filter(request, asked, speaking)}
+        body: `${filter(request, asked, speaking, listed.length)}
 ${table(
   {
     table: "tournaments",

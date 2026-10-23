@@ -87,7 +87,7 @@ export const registerHomePage = (
           await releaseOf(help, server.languages[0]?.tag, "public"),
           request.url,
         )}
-${filter(request, asked, speaking)}
+${filter(request, asked, speaking, recent.length + upcoming.length)}
           <div class="home-lists">
 ${table(
   {

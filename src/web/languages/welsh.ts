@@ -465,6 +465,8 @@ export const welsh: Language = {
     "tournamentList.filter.anyCountry": "Unrhyw wlad",
     "tournamentList.filter.region": "Rhanbarth",
     "tournamentList.filter.anyRegion": "Unrhyw ranbarth",
+    "tournamentList.filter.noRegionsBefore":
+      "Nid oes rhanbarthau i dwrnameintiau cyn Tachwedd 2026.",
     "tournamentList.filter.sport": "Camp",
     "tournamentList.filter.anySport": "Unrhyw gamp",
     "tournamentList.filter.submit": "Hidlo",

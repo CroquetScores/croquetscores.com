@@ -486,6 +486,8 @@ export const italian: Language = {
     "tournamentList.filter.anyCountry": "Qualsiasi paese",
     "tournamentList.filter.region": "Regione",
     "tournamentList.filter.anyRegion": "Qualsiasi regione",
+    "tournamentList.filter.noRegionsBefore":
+      "I tornei precedenti a novembre 2026 non hanno una regione.",
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Qualsiasi sport",
     "tournamentList.filter.submit": "Filtra",

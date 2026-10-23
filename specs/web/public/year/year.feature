@@ -385,6 +385,54 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Gateball" is not offered as a sport
 
+  Rule: A region chosen with few tournaments to show says why
+
+    Tournaments from before November 2026 have no region, so a region narrows
+    a list to far fewer than the reader may expect, and the page says so rather
+    than leaving them to think tournaments are missing.
+
+    Scenario: A region chosen with fewer than 20 tournaments shows the notice
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is shown
+
+    Scenario: A region chosen with more than 20 tournaments shows no notice
+      Given the tournament is to start at "2026-03-07T00:00:00Z"
+      And the tournament is to be played in the country "nz"
+      And the tournament is to be played in the region "can"
+      And "organiser@example.com" has created 21 tournaments
+      And the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is not shown
+
+    Scenario: A region chosen with exactly 20 tournaments shows no notice
+      Given the tournament is to start at "2026-03-07T00:00:00Z"
+      And the tournament is to be played in the country "nz"
+      And the tournament is to be played in the region "can"
+      And "organiser@example.com" has created 20 tournaments
+      And the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is not shown
+
+    Scenario: A country chosen without a region shows no notice
+      Given the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      When "Filter" is pressed
+      Then the notice about tournaments before November 2026 is not shown
+
   Rule: Pressing a flag narrows the list to its country
 
     Background:

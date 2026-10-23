@@ -451,6 +451,8 @@ export const maori: Language = {
     "tournamentList.filter.anyCountry": "Whenua ahakoa",
     "tournamentList.filter.region": "Rohe",
     "tournamentList.filter.anyRegion": "Rohe ahakoa",
+    "tournamentList.filter.noRegionsBefore":
+      "Kāore he rohe o ngā whakataetae i mua i Whiringa-ā-rangi 2026.",
     "tournamentList.filter.sport": "Hākinakina",
     "tournamentList.filter.anySport": "Hākinakina ahakoa",
     "tournamentList.filter.submit": "Tātari",

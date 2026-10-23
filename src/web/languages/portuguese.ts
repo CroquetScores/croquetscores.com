@@ -480,6 +480,8 @@ export const portuguese: Language = {
     "tournamentList.filter.anyCountry": "Qualquer país",
     "tournamentList.filter.region": "Região",
     "tournamentList.filter.anyRegion": "Qualquer região",
+    "tournamentList.filter.noRegionsBefore":
+      "Torneios anteriores a novembro de 2026 não têm região.",
     "tournamentList.filter.sport": "Esporte",
     "tournamentList.filter.anySport": "Qualquer esporte",
     "tournamentList.filter.submit": "Filtrar",
