@@ -53,11 +53,19 @@ export const settled = async (world: SpecWorld): Promise<void> => {
 // Three seconds, which leaves a step time to fail with what it found rather
 // than with Cucumber's word that it took too long. A list redrawn once
 // something is pressed is redrawn a moment after the press.
+//
+// Apart from `eventually` so that a page with no tab panel, as a public page
+// has none, can be waited on: `eventually` waits for the panel first, and on
+// such a page it waits until Cucumber gives up.
 export const eventually = async (
   world: SpecWorld,
   check: () => Promise<void>,
 ): Promise<void> => {
   await settled(world);
+  await retried(check);
+};
+
+export const retried = async (check: () => Promise<void>): Promise<void> => {
   const until = Date.now() + 3000;
   for (;;) {
     try {
