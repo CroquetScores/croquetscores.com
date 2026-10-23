@@ -99,6 +99,7 @@ const ROLE_HOLDERS: RoleHolders = {
   "ac-world-ranking-officer": ["chris@butedock.com"],
   "gc-world-ranking-officer": [
     "richard.bilton30@talktalk.net",
+    "pfreer@netspeed.com.au",
     "pfreer@gmail.com",
   ],
 };
