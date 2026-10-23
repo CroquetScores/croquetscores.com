@@ -435,6 +435,7 @@ export const dutch: Language = {
     "admin.title": "Beheer",
     "admin.tournaments.new": "Nieuw toernooi",
     "admin.tournaments.none": "Geen toernooien",
+    "admin.tournaments.filter.none": "Geen toernooien komen overeen",
     "admin.tournaments.archived": "Gearchiveerd",
     "admin.tournaments.manage": "Beheren",
     "admin.tournaments.edit": "Bewerken",

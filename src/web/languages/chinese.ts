@@ -417,6 +417,7 @@ export const chinese: Language = {
     "admin.title": "管理",
     "admin.tournaments.new": "新建锦标赛",
     "admin.tournaments.none": "没有锦标赛",
+    "admin.tournaments.filter.none": "没有符合条件的锦标赛",
     "admin.tournaments.archived": "已归档",
     "admin.tournaments.manage": "管理",
     "admin.tournaments.edit": "编辑",

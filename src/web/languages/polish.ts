@@ -441,6 +441,7 @@ export const polish: Language = {
     "admin.title": "Administracja",
     "admin.tournaments.new": "Nowy turniej",
     "admin.tournaments.none": "Brak turniejów",
+    "admin.tournaments.filter.none": "Brak pasujących turniejów",
     "admin.tournaments.archived": "Zarchiwizowany",
     "admin.tournaments.manage": "Zarządzaj",
     "admin.tournaments.edit": "Edytuj",

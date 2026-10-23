@@ -437,6 +437,7 @@ export const swedish: Language = {
     "admin.title": "Administration",
     "admin.tournaments.new": "Ny turnering",
     "admin.tournaments.none": "Inga turneringar",
+    "admin.tournaments.filter.none": "Inga turneringar matchar",
     "admin.tournaments.archived": "Arkiverad",
     "admin.tournaments.manage": "Hantera",
     "admin.tournaments.edit": "Redigera",

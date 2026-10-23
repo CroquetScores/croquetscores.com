@@ -18,6 +18,13 @@ export interface TournamentOfAccount {
   readonly address: string;
   readonly archived: boolean;
   /**
+   * The code of the country it is played in. Nothing for a tournament the read
+   * model has not been rebuilt for since countries were kept in it.
+   */
+  readonly country: string | undefined;
+  /** The code of the region of that country it is played in, where it is in one. */
+  readonly region: string | undefined;
+  /**
    * The account's part in it: a manager's or a scorer's, or, for a world
    * ranking officer with no part in it, one whose players' world ranking
    * names it looks after.

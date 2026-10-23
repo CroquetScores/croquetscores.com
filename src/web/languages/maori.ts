@@ -440,6 +440,7 @@ export const maori: Language = {
     "admin.title": "Whakahaere",
     "admin.tournaments.new": "Whakataetae hou",
     "admin.tournaments.none": "Kāore he whakataetae",
+    "admin.tournaments.filter.none": "Kāore he whakataetae e hāngai ana",
     "admin.tournaments.archived": "Kua pūrangatia",
     "admin.tournaments.manage": "Whakahaere",
     "admin.tournaments.edit": "Whakatika",

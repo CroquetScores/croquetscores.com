@@ -378,8 +378,14 @@ Given(
 
 // Where the reader is ------------------------------------------------------------
 
+// The choices after the question mark too where the address names any, since
+// the list keeps what was chosen there.
 Then("the address is {string}", async function (this: SpecWorld, path: string) {
-  await this.browserPage.waitForURL((url) => url.pathname === path);
+  await this.browserPage.waitForURL(
+    (url) =>
+      (path.includes("?") ? `${url.pathname}${url.search}` : url.pathname) ===
+      path,
+  );
 });
 
 // The list ------------------------------------------------------------------------
@@ -1047,6 +1053,86 @@ Then(
         'option:not([value=""])',
       ]);
       assert.deepEqual(stray, [], "Words in the years came from elsewhere.");
+    });
+  },
+);
+
+// The filter ---------------------------------------------------------------------
+
+When(
+  "the admin is opened at {string}",
+  async function (this: SpecWorld, path: string) {
+    await this.browserPage.goto(`${this.baseUrl!}${path}`);
+  },
+);
+
+// By what each narrows by, whatever language its label is in, as the home
+// page's filter is found.
+const filterField = (world: SpecWorld, field: string): Locator =>
+  world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
+
+// The words of what a list offers to choose, without the choice that is no
+// choice at all.
+const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
+  (
+    await filterField(world, field)
+      .locator("option:not([value=''])")
+      .allTextContents()
+  ).map((words) => words.trim());
+
+Then(
+  /^the filter (offers|does not offer) "(.*)" as a (country|region|sport)$/,
+  async function (
+    this: SpecWorld,
+    does: string,
+    choice: string,
+    field: string,
+  ) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await offeredIn(this, field)).includes(choice),
+        does === "offers",
+        `The filter ${does} ${choice}.`,
+      );
+    });
+  },
+);
+
+Then("the filter offers no region", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(await filterField(this, "region").count(), 0);
+  });
+});
+
+Then("no filter is offered", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(
+      await this.browserPage.locator("form.tournament-filter").count(),
+      0,
+    );
+  });
+});
+
+Then("the list says no tournament matches", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(
+      await this.browserPage
+        .locator(".tournaments-none[data-unmatched]")
+        .count(),
+      1,
+    );
+  });
+});
+
+// The names of countries and sports are marked, and so are the filter's own
+// words. A region is named as it was recorded and is in no catalogue, so none
+// is left chosen for the filter to offer.
+Then(
+  "every word in the filter is in the test locale",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "form.tournament-filter", []);
+      assert.deepEqual(stray, [], "Words in the filter came from elsewhere.");
     });
   },
 );

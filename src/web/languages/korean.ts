@@ -429,6 +429,7 @@ export const korean: Language = {
     "admin.title": "관리",
     "admin.tournaments.new": "새 대회",
     "admin.tournaments.none": "대회가 없어요",
+    "admin.tournaments.filter.none": "조건에 맞는 대회가 없어요",
     "admin.tournaments.archived": "보관됨",
     "admin.tournaments.manage": "운영",
     "admin.tournaments.edit": "수정",

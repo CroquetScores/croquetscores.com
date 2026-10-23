@@ -491,6 +491,7 @@ export const english: Language = {
     "admin.title": "Admin",
     "admin.tournaments.new": "New Tournament",
     "admin.tournaments.none": "No tournaments",
+    "admin.tournaments.filter.none": "No tournaments match",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Archived",
     "admin.tournaments.manage": "Manage",

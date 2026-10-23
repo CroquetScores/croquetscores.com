@@ -428,6 +428,7 @@ export const egyptian: Language = {
     "admin.title": "الإدارة",
     "admin.tournaments.new": "بطولة جديدة",
     "admin.tournaments.none": "مفيش بطولات",
+    "admin.tournaments.filter.none": "مفيش بطولات مطابقة",
     "admin.tournaments.archived": "في الأرشيف",
     "admin.tournaments.manage": "إدارة",
     "admin.tournaments.edit": "عدّل",

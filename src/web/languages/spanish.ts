@@ -435,6 +435,7 @@ export const spanish: Language = {
     "admin.title": "Administración",
     "admin.tournaments.new": "Nuevo torneo",
     "admin.tournaments.none": "No hay torneos",
+    "admin.tournaments.filter.none": "Ningún torneo coincide",
     "admin.tournaments.archived": "Archivado",
     "admin.tournaments.manage": "Gestionar",
     "admin.tournaments.edit": "Editar",
