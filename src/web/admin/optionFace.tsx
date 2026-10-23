@@ -1,7 +1,7 @@
 // What a listed row's option shows. Up and Down are arrows, which say which
 // way they move a row in less room than their words, so that a row's options
-// fit a phone. Edit is a pencil, and Archive and Delete are a trash can, as
-// they are wherever else they are offered. Each is named by its words for a
+// fit a phone. Edit is a pencil, and Archive, Delete and Remove are a trash can,
+// as they are wherever else they are offered. Each is named by its words for a
 // reader who cannot see it. Every option says what it does to one who points
 // at it, in `hover`.
 
@@ -18,7 +18,7 @@ const pictureOf = (action: string): React.JSX.Element | undefined =>
     </span>
   ) : action === "edit" ? (
     <Pencil />
-  ) : action === "archive" || action === "delete" ? (
+  ) : action === "archive" || action === "delete" || action === "remove" ? (
     <TrashCan />
   ) : undefined;
 

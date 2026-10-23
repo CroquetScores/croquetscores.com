@@ -8,6 +8,7 @@ import type { Locator } from "playwright";
 
 import { tournamentNamed } from "../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../support/world.js";
+import { assertDrawnAsTrashCan } from "./icons.js";
 import { unmarkedWithin } from "./marks.js";
 import { eventually, openTab, tabPanel } from "./tournamentPage.js";
 
@@ -33,8 +34,12 @@ const namesOf = async (world: SpecWorld, part: Part): Promise<string[]> =>
     (name) => name.trim(),
   );
 
-const optionOf = (row: Locator, option: string): Locator =>
-  row.locator(".listed-options button").filter({ hasText: exactly(option) });
+// By the name it is read out by, which for Remove is not what is shown: it is
+// drawn as a trash can.
+export const optionOf = (row: Locator, option: string): Locator =>
+  row
+    .locator(".listed-options")
+    .getByRole("button", { name: option, exact: true });
 
 When(
   /^the (scorers|managers) of "([^"]*)" are open(?:ed)?$/,
@@ -97,6 +102,18 @@ Then(
         await tabPanel(this).locator("ul[data-listed] > .listed-item").count(),
         Number(count),
       );
+    });
+  },
+);
+
+Then(
+  /^Remove for the (scorer|manager) "([^"]*)" is a trash can$/,
+  async function (this: SpecWorld, part: string, name: string) {
+    await eventually(this, async () => {
+      const remove = rowOf(this, partOf(part), name).locator(
+        '.listed-options button[data-action="remove"]',
+      );
+      await assertDrawnAsTrashCan(remove);
     });
   },
 );

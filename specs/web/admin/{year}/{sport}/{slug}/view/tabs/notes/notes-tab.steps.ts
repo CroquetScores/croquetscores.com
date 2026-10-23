@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../../../../../support/world.js";
+import { assertDrawnAsTrashCan } from "../../../../../../../support/icons.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import {
   eventually,
@@ -102,8 +103,7 @@ Then(
   "Delete for the note {string} is a trash can",
   async function (this: SpecWorld, title: string) {
     const remove = rowOf(this, title).locator('button[data-action="delete"]');
-    assert.equal(await remove.locator(".icon-trash-can").count(), 1);
-    assert.equal((await remove.innerText()).trim(), "");
+    await assertDrawnAsTrashCan(remove);
   },
 );
 

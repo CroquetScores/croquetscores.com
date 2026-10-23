@@ -7,6 +7,7 @@ import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
 import { unmarkedWithin } from "../../../support/marks.js";
+import { optionOf } from "../../../support/people.js";
 
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
@@ -143,9 +144,6 @@ const rowOf = (world: SpecWorld, heading: string, name: string): Locator =>
   rows(world, heading).filter({
     has: world.browserPage.locator(".listed-name", { hasText: exactly(name) }),
   });
-
-const optionOf = (row: Locator, option: string): Locator =>
-  row.locator(".listed-options button").filter({ hasText: exactly(option) });
 
 Then(
   "{string} is listed in {string}",

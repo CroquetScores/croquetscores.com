@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Field, type Refusal } from "./Field.js";
 import { ModalDialog } from "./ModalDialog.js";
 import { knows, say } from "./words.js";
-import { noOption } from "./optionFace.js";
+import { noOption, optionFace } from "./optionFace.js";
 import { idInAddress, refusalOf } from "./api.js";
 import "./listed.css";
 import "./people.css";
@@ -275,13 +275,16 @@ export const People = ({
                     <button
                       type="button"
                       className="button"
-                      title={say("admin.hover.people.remove")}
+                      data-action="remove"
                       onClick={() => {
                         setRemoving(person);
                       }}
-                    >
-                      {say("admin.people.remove")}
-                    </button>
+                      {...optionFace(
+                        "remove",
+                        say("admin.people.remove"),
+                        say("admin.hover.people.remove"),
+                      )}
+                    />
                   ) : listed.some((other) => removable(other, listed)) ? (
                     // Its room, where others offer Remove, so that what is
                     // beside it lines up with theirs (optionFace.tsx).
