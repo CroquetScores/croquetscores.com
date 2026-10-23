@@ -95,6 +95,102 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/12" on "croquetscores.com" is imported
       Then "blocks/31" on "croquetscores.com" is not kept as any competition
 
+  Rule: A player represents what a competition says they represent
+
+    The old sites kept what a player represented in the tournament's players
+    and again in each competition the player was in, and the two were not
+    kept in step: a player could represent nothing in the first and a club in
+    the second. The site keeps it once, with the tournament's player. Where a
+    competition says what a player represents, that is what they represent,
+    over what the tournament's players said, since it is the later of the two
+    to have been written down. A competition that says nothing leaves it as
+    it was.
+
+    Where two competitions say different things, the first of them, in the
+    order the tournament listed them, is used and the second is said as
+    corrected, so that whoever reads the import's report can see that the
+    old site did not agree with itself.
+
+    This is for a tournament not played by teams. A tournament played by
+    teams takes what its players represent from its team matches
+    (`ImportTeamMatches.feature`).
+
+    Scenario: A competition says what a player who represented nothing represents
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 1 represents nothing
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      When the tournament is imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A competition says over what the tournament's players said
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 1 represents "Otago"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      When the tournament is imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A competition that says nothing leaves what the tournament's players said
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 1 represents "Otago"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents nothing
+      When the tournament is imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Otago"
+
+    Scenario: The flag follows what a competition says
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And player 1 represents "Canterbury"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "NZ"
+      When the tournament is imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" flies the flag "nz"
+
+    Scenario: The first competition to say it is used
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Otago"
+      When the tournament is imported
+      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A second competition that disagrees is said as corrected
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Otago"
+      When the tournament is imported
+      Then "player 1" of "croquetscores.com/blocks/31" is corrected as "ImportCompetition.RepresentingListedAgain"
+
+    Scenario: A second competition that agrees is not said as corrected
+      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And player 1 is in the competition
+      And player 1 represents "Canterbury"
+      When the tournament is imported
+      Then nothing is corrected of "croquetscores.com/blocks/31"
+
   Rule: A Standard tournament that lists only team matches is played by teams
 
     Some managers on the old sites set up a tournament between teams as a

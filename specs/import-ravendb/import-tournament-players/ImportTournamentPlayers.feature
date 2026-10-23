@@ -253,7 +253,8 @@ Feature: Importing the players of the old sites' tournaments
     (`ImportTeamMatches.feature`). So players whose names are exactly the same
     are one player, the first of them, and every number the old site gave
     them is kept as that one player. What the first represented is what the
-    player represents.
+    player represents, unless a competition says otherwise
+    (`ImportWholeTournaments.feature`).
 
     A name in another case, or with a number in brackets after it, is not
     exactly the same name. The site refuses a name another player has in any
