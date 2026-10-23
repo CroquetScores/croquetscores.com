@@ -808,13 +808,16 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         const said = player.Representing?.trim() ?? "";
         const id = TournamentPlayerId.from(became);
         const here = representing.get(became);
+        // Nothing said is nothing to compare, so nothing is asked for.
         const before =
-          here ??
-          (await database.findRepresentedBy(
-            website,
-            tournamentDocument,
-            became,
-          ));
+          said === ""
+            ? undefined
+            : (here ??
+              (await database.findRepresentedBy(
+                website,
+                tournamentDocument,
+                became,
+              )));
         if (said !== "" && before === undefined) {
           // Over what the tournament's players said, since the competition's
           // list was written later. The flag goes with it: a country's

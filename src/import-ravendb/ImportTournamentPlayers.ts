@@ -49,9 +49,9 @@ export const flagOf = (representing: string | null): string | undefined => {
  * team has is (ImportTeamMatches.feature): the old sites could list one
  * person more than once, and told them apart by what they represented, which
  * the site does not. The first of them stays as they were, until a competition
- * that lists the player says what they represent (importCompetition.ts). Only the name
- * as it is kept is compared, so a name another case, or numbered apart
- * before, is not found and is numbered apart as it was.
+ * that lists the player says what they represent (importCompetition.ts). Only
+ * the name as it is kept is compared, so a name another case, or numbered
+ * apart before, is not found and is numbered apart as it was.
  */
 /**
  * The player of `tournament` the old sites' player called `name` is, where it
