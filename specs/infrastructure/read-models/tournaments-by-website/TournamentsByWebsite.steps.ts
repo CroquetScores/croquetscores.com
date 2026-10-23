@@ -37,7 +37,6 @@ import {
   foundCalled,
   scenarioOf,
   standUp,
-  toBeChanged,
   update,
   updated,
 } from "../../support/tournamentReadModels.js";
@@ -122,20 +121,6 @@ Given("the tournaments by website read model", function (this: SpecWorld) {
 });
 
 // Where a tournament is played -------------------------------------------------------
-
-Given(
-  "{string} to be played in the country {string}",
-  function (this: SpecWorld, name: string, country: string) {
-    toBeChanged(this, name, { country });
-  },
-);
-
-Given(
-  "{string} to be played in the region {string}",
-  function (this: SpecWorld, name: string, region: string) {
-    toBeChanged(this, name, { region });
-  },
-);
 
 const movingOf = (world: SpecWorld, name: string) => {
   const { moving } = ownScenarioOf(world);
@@ -567,12 +552,5 @@ Then(
       found.lastPlayed.toISOString(),
       new Date(moment).toISOString(),
     );
-  },
-);
-
-Then(
-  "{string} is held as played in the country {string}",
-  function (this: SpecWorld, name: string, country: string) {
-    assert.equal(foundCalled(ownScenarioOf(this).found, name).country, country);
   },
 );

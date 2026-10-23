@@ -443,6 +443,7 @@ export const welsh: Language = {
     "admin.title": "Gweinyddu",
     "admin.tournaments.new": "Twrnamaint newydd",
     "admin.tournaments.none": "Dim twrnameintiau",
+    "admin.tournaments.filter.none": "Dim twrnameintiau'n cyfateb",
     "admin.tournaments.archived": "Wedi'i archifo",
     "admin.tournaments.manage": "Rheoli",
     "admin.tournaments.edit": "Golygu",

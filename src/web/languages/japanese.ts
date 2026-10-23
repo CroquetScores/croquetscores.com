@@ -434,6 +434,7 @@ export const japanese: Language = {
     "admin.title": "管理",
     "admin.tournaments.new": "新しい大会",
     "admin.tournaments.none": "大会はありません",
+    "admin.tournaments.filter.none": "条件に合う大会はありません",
     "admin.tournaments.archived": "アーカイブ済み",
     "admin.tournaments.manage": "運営",
     "admin.tournaments.edit": "編集",

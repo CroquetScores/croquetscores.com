@@ -443,6 +443,7 @@ export const german: Language = {
     "admin.title": "Verwaltung",
     "admin.tournaments.new": "Neues Turnier",
     "admin.tournaments.none": "Keine Turniere",
+    "admin.tournaments.filter.none": "Keine passenden Turniere",
     "admin.tournaments.archived": "Archiviert",
     "admin.tournaments.manage": "Verwalten",
     "admin.tournaments.edit": "Bearbeiten",

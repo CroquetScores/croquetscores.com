@@ -262,6 +262,75 @@ Feature: Finding the tournaments an account has a part in
       And the tournaments of the account for "organiser@example.com" in 2026 are looked for
       Then "Spring Open" is held as not archived
 
+  Rule: The country, the region and the sport of a tournament are held, for the admin to narrow its list by
+
+    The admin narrows a reader's list by country, region and sport, and
+    offers only those the list holds (`tournaments.feature`). So what is held
+    of a tournament includes the country it is played in and the region of it,
+    where it has one. Its sport is the one its address says, as it is for a
+    world ranking officer's list, and is not held a second time.
+
+    Scenario: The tournament's country is held
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in the region "can"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as played in the country "nz"
+
+    Scenario: The tournament's region is held
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in the region "can"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as played in the region "can"
+
+    Scenario: A tournament in no region is held with no region
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in no region
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as played in no region
+
+    Scenario: A tournament moved to another country is held in it
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in the region "can"
+      When "Spring Open" is updated to be as it is to be
+      And the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as played in the country "nz"
+
+    Scenario: A tournament's country is held for an administrator's list too
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in the region "can"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is held as played in the country "nz"
+
+    Scenario: A tournament's country is held for a world ranking officer's list too
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" to finish on "2026-10-05"
+      And "Spring Open" to be for the sport "ac"
+      And "Spring Open" to be played in the country "nz"
+      And "Spring Open" to be played in the region "can"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is held as played in the country "nz"
+
   Rule: An account's years are those it has tournaments in, newest first
 
     Scenario: The year of a tournament is one of its years

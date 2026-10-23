@@ -588,6 +588,254 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the address is "/admin/"
 
+  Rule: The list is narrowed by country, region and sport, to those the reader can see
+
+    The home page narrows its lists by a country, a region of it and a sport
+    (`home.feature`), and so does this one. What is offered to choose from is
+    only what the list in front of the reader holds: the countries, regions
+    and sports of the tournaments listed for the year chosen, and so, for a
+    world ranking officer, of the tournaments of the sports it looks after,
+    and for a manager or a scorer, of the tournaments it has a part in. A
+    reader is never offered a choice that would list nothing, and never
+    learns from the filter that a tournament they cannot see is there.
+
+    Regions belong to a country, so a region is offered once a country has
+    been chosen, and then only the regions of that country the list holds. A
+    country that is not divided into regions offers none.
+
+    A choice is made as it is chosen, with no button to press, since this
+    page runs scripts as it is. It is kept in the address, as the year is
+    (`/admin/2026?country=nz`), so that it can be linked to and the browser's
+    back button undoes it. The choices belong to the year they were offered
+    from, so choosing another year clears them: a country offered in 2026 may
+    be nowhere in 2025. A choice in the address that is not offered is
+    ignored rather than refused, as an unreadable sorting is on the home page.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "nz"
+      And the tournament "Autumn Open" is played in the region "auc"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-10-24"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is played in the region "vic"
+      And the tournament "Summer Open" is for the sport "ac"
+
+    Scenario: Nothing is filtered by to begin with
+      When the admin is opened
+      Then the tournament "Spring Open" is listed
+      And the tournament "Autumn Open" is listed
+      And the tournament "Summer Open" is listed
+
+    Scenario: A country the list holds is offered
+      When the admin is opened
+      Then the filter offers "New Zealand" as a country
+
+    Scenario: A country the list does not hold is not offered
+      When the admin is opened
+      Then the filter does not offer "Japan" as a country
+
+    Scenario: A country held only by a tournament of another year is not offered
+      Given "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2025-06-07"
+      And the tournament "Winter Open" is played in the country "jp"
+      When the admin is opened
+      Then the filter does not offer "Japan" as a country
+
+    Scenario: A country held only by a tournament the reader has no part in is not offered
+      Given "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Cherry Open"
+      And the tournament "Cherry Open" starts on "2026-10-31"
+      And the tournament "Cherry Open" is played in the country "jp"
+      When the admin is opened
+      Then the filter does not offer "Japan" as a country
+
+    Scenario: A country chosen lists its tournaments
+      Given the admin is open
+      When "New Zealand" is chosen as the country
+      Then the tournament "Spring Open" is listed
+
+    Scenario: A country chosen does not list another country's tournaments
+      Given the admin is open
+      When "New Zealand" is chosen as the country
+      Then the tournament "Summer Open" is not listed
+
+    Scenario: No region is offered until a country has been chosen
+      When the admin is opened
+      Then the filter offers no region
+
+    Scenario: A region of the country chosen that the list holds is offered
+      Given the admin is open
+      When "New Zealand" is chosen as the country
+      Then the filter offers "Canterbury" as a region
+
+    Scenario: A region of the country chosen that the list does not hold is not offered
+      Given the admin is open
+      When "New Zealand" is chosen as the country
+      Then the filter does not offer "Otago" as a region
+
+    Scenario: A region of another country is not offered
+      Given the admin is open
+      When "New Zealand" is chosen as the country
+      Then the filter does not offer "Victoria" as a region
+
+    Scenario: A region chosen lists its tournaments
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When "Canterbury" is chosen as the region
+      Then the tournament "Spring Open" is listed
+
+    Scenario: A region chosen does not list another region's tournaments
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When "Canterbury" is chosen as the region
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A region chosen is dropped when another country is chosen
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And "Canterbury" is chosen as the region
+      When "Australia" is chosen as the country
+      Then the tournament "Summer Open" is listed
+
+    Scenario: A sport the list holds is offered
+      When the admin is opened
+      Then the filter offers "Golf Croquet" as a sport
+
+    Scenario: A sport the list does not hold is not offered
+      When the admin is opened
+      Then the filter does not offer "Ricochet" as a sport
+
+    Scenario: A sport chosen lists its tournaments
+      Given the admin is open
+      When "Golf Croquet" is chosen as the sport
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: A sport chosen does not list another sport's tournaments
+      Given the admin is open
+      When "Golf Croquet" is chosen as the sport
+      Then the tournament "Spring Open" is not listed
+
+    Scenario: A country and a sport chosen together narrow by both
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When "Association Croquet" is chosen as the sport
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A country and a sport chosen together still list what matches both
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When "Association Croquet" is chosen as the sport
+      Then the tournament "Spring Open" is listed
+
+    Scenario: An archived tournament is narrowed as any other is
+      Given "organiser@example.com" has archived the tournament "Summer Open"
+      And the admin is open
+      When "New Zealand" is chosen as the country
+      Then the tournament "Summer Open" is not listed
+
+    Scenario: A filter that lists nothing says so
+      Given the admin is open
+      And "Australia" is chosen as the country
+      When "Golf Croquet" is chosen as the sport
+      Then the list says no tournament matches
+
+    Scenario: What was chosen is in the address
+      Given the admin for 2026 is open
+      When "New Zealand" is chosen as the country
+      Then the address is "/admin/2026?country=nz"
+
+    Scenario: A filter in the address is chosen when the admin is opened at it
+      When the admin is opened at "/admin/2026?country=nz"
+      Then the country chosen is "New Zealand"
+
+    Scenario: A filter in the address narrows the list
+      When the admin is opened at "/admin/2026?country=nz"
+      Then the tournament "Summer Open" is not listed
+
+    Scenario: A country in the address that is not offered is ignored
+      When the admin is opened at "/admin/2026?country=jp"
+      Then the tournament "Summer Open" is listed
+
+    Scenario: The browser's back button undoes a choice
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When the browser goes back
+      Then the tournament "Summer Open" is listed
+
+    Scenario: Choosing another year clears the choices
+      Given "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2025-06-07"
+      And the tournament "Winter Open" is played in the country "au"
+      And the admin is open
+      And "New Zealand" is chosen as the country
+      When the year 2025 is chosen
+      Then the tournament "Winter Open" is listed
+
+    Scenario: A year with no tournaments offers no filter
+      When the admin for 2020 is opened
+      Then no filter is offered
+
+    Scenario: The filter says its words in the reader's language
+      Given a browser that asks for "en-XA"
+      When the admin is opened
+      Then every word in the filter is in the test locale
+
+    Scenario: The filter is no wider than a phone
+      When the admin is opened
+      Then the page is no wider than the window
+
+  Rule: A world ranking officer is offered what the tournaments it looks after hold
+
+    The same list is narrowed, so the choices are those of the tournaments of
+    the sports it holds a role for, besides its own, and never those of a
+    sport it does not.
+
+    Background:
+      Given "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "jp"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "other@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-10-24"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is for the sport "ac"
+      And "organiser@example.com" has been given the role "GC World Ranking Officer"
+
+    Scenario: A country of a tournament it looks after is offered
+      When the admin is opened
+      Then the filter offers "Japan" as a country
+
+    Scenario: A country of a tournament of a sport it does not look after is not offered
+      When the admin is opened
+      Then the filter does not offer "New Zealand" as a country
+
+    Scenario: The sport it looks after is offered
+      When the admin is opened
+      Then the filter offers "Golf Croquet" as a sport
+
+    Scenario: A sport it does not look after is not offered
+      When the admin is opened
+      Then the filter does not offer "Association Croquet" as a sport
+
+    Scenario: A country chosen narrows the tournaments it looks after
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And the admin is open
+      When "Australia" is chosen as the country
+      Then the tournament "Spring Open" is not listed
+
   Rule: The newest tournament comes first, and archived ones come last
 
     Tournaments that start on the same day are listed by name, so that the

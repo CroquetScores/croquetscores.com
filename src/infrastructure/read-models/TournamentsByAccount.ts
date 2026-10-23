@@ -28,6 +28,8 @@ interface TournamentRow {
   finishes: string;
   address: string;
   archived: boolean;
+  country: string | null;
+  region: string | null;
 }
 
 const listed = (
@@ -40,6 +42,8 @@ const listed = (
   finishes: row.finishes,
   address: row.address,
   archived: row.archived,
+  country: row.country ?? undefined,
+  region: row.region ?? undefined,
   part,
 });
 
@@ -99,7 +103,7 @@ export class TournamentsByAccount implements Projection, Asked {
         `select d.tournament_id, d.name,
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
-              d.address, d.archived, a.part
+              d.address, d.archived, d.country, d.region, a.part
          from tournaments_by_account a
          join tournaments_by_account_details d using (tournament_id)
         where a.account_id = $1 and d.website = $2
@@ -135,7 +139,7 @@ export class TournamentsByAccount implements Projection, Asked {
       `select tournament_id, name,
               to_char(starts, 'YYYY-MM-DD') as starts,
               to_char(finishes, 'YYYY-MM-DD') as finishes,
-              address, archived
+              address, archived, country, region
          from tournaments_by_account_details
         where website = $1 and extract(year from starts) = $2
         order by archived, starts desc, name`,
@@ -172,7 +176,7 @@ export class TournamentsByAccount implements Projection, Asked {
         `select d.tournament_id, d.name,
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
-              d.address, d.archived, a.part
+              d.address, d.archived, d.country, d.region, a.part
          from tournaments_by_account_details d
          left join tournaments_by_account a
            on a.tournament_id = d.tournament_id and a.account_id = $1
@@ -211,11 +215,13 @@ export class TournamentsByAccount implements Projection, Asked {
     if (event instanceof TournamentCreated) {
       await connection.query(
         `insert into tournaments_by_account_details
-           (tournament_id, website, name, starts, finishes, address)
-         values ($1, $2, $3, $4, $5, $6)
+           (tournament_id, website, name, starts, finishes, address, country,
+            region)
+         values ($1, $2, $3, $4, $5, $6, $7, $8)
          on conflict (tournament_id) do update
            set name = excluded.name, starts = excluded.starts,
-               finishes = excluded.finishes, address = excluded.address`,
+               finishes = excluded.finishes, address = excluded.address,
+               country = excluded.country, region = excluded.region`,
         [
           tournament,
           event.website,
@@ -223,15 +229,26 @@ export class TournamentsByAccount implements Projection, Asked {
           event.starts,
           event.finishes,
           event.address,
+          event.country,
+          event.region ?? null,
         ],
       );
       await this.#takesPart(tournament, event.createdBy.value, "manager");
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update tournaments_by_account_details
-            set name = $2, starts = $3, finishes = $4, address = $5
+            set name = $2, starts = $3, finishes = $4, address = $5,
+                country = $6, region = $7
           where tournament_id = $1`,
-        [tournament, event.name, event.starts, event.finishes, event.address],
+        [
+          tournament,
+          event.name,
+          event.starts,
+          event.finishes,
+          event.address,
+          event.country,
+          event.region ?? null,
+        ],
       );
     } else if (event instanceof TournamentArchived) {
       await this.#archived(tournament, true);

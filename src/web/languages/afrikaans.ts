@@ -441,6 +441,7 @@ export const afrikaans: Language = {
     "admin.title": "Administrasie",
     "admin.tournaments.new": "Nuwe toernooi",
     "admin.tournaments.none": "Geen toernooie nie",
+    "admin.tournaments.filter.none": "Geen toernooie pas nie",
     "admin.tournaments.archived": "Geargiveer",
     "admin.tournaments.manage": "Bestuur",
     "admin.tournaments.edit": "Wysig",

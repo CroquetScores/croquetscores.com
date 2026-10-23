@@ -436,6 +436,7 @@ export const russian: Language = {
     "admin.title": "Администрирование",
     "admin.tournaments.new": "Новый турнир",
     "admin.tournaments.none": "Нет турниров",
+    "admin.tournaments.filter.none": "Нет подходящих турниров",
     "admin.tournaments.archived": "В архиве",
     "admin.tournaments.manage": "Управлять",
     "admin.tournaments.edit": "Изменить",

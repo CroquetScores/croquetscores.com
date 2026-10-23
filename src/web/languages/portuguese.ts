@@ -440,6 +440,7 @@ export const portuguese: Language = {
     "admin.title": "Administração",
     "admin.tournaments.new": "Novo torneio",
     "admin.tournaments.none": "Nenhum torneio",
+    "admin.tournaments.filter.none": "Nenhum torneio corresponde",
     "admin.tournaments.archived": "Arquivado",
     "admin.tournaments.manage": "Gerenciar",
     "admin.tournaments.edit": "Editar",

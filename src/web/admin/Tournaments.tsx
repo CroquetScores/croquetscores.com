@@ -20,7 +20,31 @@ interface Listed {
   readonly finishes: string;
   readonly address: string;
   readonly archived: boolean;
+  // Nothing for a tournament the API has not been rebuilt to know the country
+  // of, which no choice of country lists.
+  readonly country?: string;
+  readonly region?: string;
   readonly part: "manager" | "scorer" | "rankingOfficer";
+}
+
+/** What names the countries, their regions and the sports, as the API gives them. */
+interface Names {
+  readonly countries: readonly {
+    readonly code: string;
+    readonly name: string;
+    readonly regions: readonly {
+      readonly code: string;
+      readonly name: string;
+    }[];
+  }[];
+  readonly sports: readonly { readonly code: string; readonly name: string }[];
+}
+
+/** What the reader chose to narrow the list by, each by its code. */
+interface Chosen {
+  readonly country: string | undefined;
+  readonly region: string | undefined;
+  readonly sport: string | undefined;
 }
 
 interface Props {
@@ -50,6 +74,39 @@ const thisYear = (): number => new Date().getFullYear();
 const offered = (years: readonly number[]): readonly number[] =>
   [...new Set([...years, thisYear()])].sort((one, other) => other - one);
 
+// A tournament's sport is the second part of its address, as 2026/ac/spring-open
+// has it.
+const sportOf = (tournament: Listed): string =>
+  tournament.address.split("/")[1] ?? "";
+
+const chosenIn = (search: string): Chosen => {
+  const query = new URLSearchParams(search);
+  const one = (name: string): string | undefined => {
+    const given = query.get(name);
+    return given === null || given === "" ? undefined : given;
+  };
+  return {
+    country: one("country"),
+    region: one("region"),
+    sport: one("sport"),
+  };
+};
+
+// What is written into the address for `chosen`, nothing where nothing is.
+const searchOf = (chosen: Chosen): string => {
+  const query = new URLSearchParams();
+  for (const name of ["country", "region", "sport"] as const) {
+    const code = chosen[name];
+    if (code !== undefined) query.set(name, code);
+  }
+  const written = query.toString();
+  return written === "" ? "" : `?${written}`;
+};
+
+const once = (codes: readonly (string | undefined)[]): string[] => [
+  ...new Set(codes.filter((code): code is string => code !== undefined)),
+];
+
 export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   const [years, setYears] = useState<readonly number[]>([]);
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
@@ -62,6 +119,12 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   const [answered, setAnswered] = useState<string | undefined>();
   const [acting, setActing] = useState(false);
   const question = `${String(year)} ${String(asking)}`;
+  // The names of what the filter offers, asked for once. Until they come, or
+  // if they never do, a choice is named by its code, which still works.
+  const [names, setNames] = useState<Names | undefined>();
+  // What is in the address after the year, which is where the choices are
+  // kept, so that the back button undoes one.
+  const [search, setSearch] = useState(window.location.search);
 
   useEffect(() => {
     let current = true;
@@ -80,6 +143,125 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       current = false;
     };
   }, [year, question]);
+
+  useEffect(() => {
+    let current = true;
+    void asked<Names>("/api/v1/tournaments/new").then((answer) => {
+      if (current) setNames(answer);
+    });
+    const moved = (): void => {
+      setSearch(window.location.search);
+    };
+    window.addEventListener("popstate", moved);
+    return () => {
+      current = false;
+      window.removeEventListener("popstate", moved);
+    };
+  }, []);
+
+  // Only what the list in front of the reader holds is offered, so a choice
+  // never lists nothing and the filter never says that a tournament the reader
+  // cannot see is there. A choice in the address that is not offered is
+  // ignored, as is a region where its country is not chosen.
+  const offeredCountries = once((listed ?? []).map((each) => each.country));
+  const wanted = chosenIn(search);
+  const country =
+    wanted.country !== undefined && offeredCountries.includes(wanted.country)
+      ? wanted.country
+      : undefined;
+  const offeredRegions =
+    country === undefined
+      ? []
+      : once(
+          (listed ?? [])
+            .filter((each) => each.country === country)
+            .map((each) => each.region),
+        );
+  const region =
+    wanted.region !== undefined && offeredRegions.includes(wanted.region)
+      ? wanted.region
+      : undefined;
+  const offeredSports = once((listed ?? []).map(sportOf));
+  const sport =
+    wanted.sport !== undefined && offeredSports.includes(wanted.sport)
+      ? wanted.sport
+      : undefined;
+
+  const narrowed = (listed ?? []).filter(
+    (each) =>
+      (country === undefined || each.country === country) &&
+      (region === undefined || each.region === region) &&
+      (sport === undefined || sportOf(each) === sport),
+  );
+
+  const choose = (chosen: Chosen): void => {
+    window.history.pushState(
+      null,
+      "",
+      `${window.location.pathname}${searchOf(chosen)}`,
+    );
+    setSearch(window.location.search);
+  };
+
+  const countryNamed = (code: string): string =>
+    names?.countries.find((each) => each.code === code)?.name ?? code;
+  const regionNamed = (code: string): string =>
+    names?.countries
+      .find((each) => each.code === country)
+      ?.regions.find((each) => each.code === code)?.name ?? code;
+  const sportNamed = (code: string): string =>
+    names?.sports.find((each) => each.code === code)?.name ?? code;
+
+  // The order the website offers its sports in, as the home page's filter
+  // does, rather than the order the list happens to meet them in; any the
+  // names do not know follow, by code.
+  const inSiteOrder = (codes: readonly string[]): string[] => {
+    const site = (names?.sports ?? []).map((each) => each.code);
+    const place = (code: string): number =>
+      site.includes(code) ? site.indexOf(code) : site.length;
+    return [...codes].sort(
+      (one, other) => place(one) - place(other) || one.localeCompare(other),
+    );
+  };
+
+  const byName = new Intl.Collator(document.documentElement.lang || "en");
+  const sorted = (
+    codes: readonly string[],
+    named: (code: string) => string,
+  ): { readonly code: string; readonly name: string }[] =>
+    codes
+      .map((code) => ({ code, name: named(code) }))
+      .sort((one, other) => byName.compare(one.name, other.name));
+
+  // One list to choose from, labelled by a label of its own rather than one
+  // wrapped round it, which would name the list by what it has chosen as well.
+  const choice = (
+    field: "country" | "region" | "sport",
+    label: string,
+    any: string,
+    from: readonly { readonly code: string; readonly name: string }[],
+    chosen: string | undefined,
+    changed: (code: string | undefined) => void,
+  ): React.JSX.Element => (
+    <span className="tournament-filter-field" key={field}>
+      <label htmlFor={`filter-${field}`}>{label}</label>
+      <select
+        id={`filter-${field}`}
+        name={field}
+        value={chosen ?? ""}
+        onChange={(event) => {
+          changed(event.target.value === "" ? undefined : event.target.value);
+        }}
+      >
+        <option value="">{any}</option>
+        {from.map((each) => (
+          <option key={each.code} value={each.code}>
+            {each.name}
+          </option>
+        ))}
+      </select>
+    </span>
+  );
 
   // The same list until the years change, since the bar measures itself again
   // whenever it is handed a different one.
@@ -214,13 +396,63 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                 {say("admin.tournaments.new")}
               </a>
             </p>
+            {listed === undefined || listed.length === 0 ? null : (
+              <form
+                className="tournament-filter"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                }}
+              >
+                {choice(
+                  "country",
+                  say("tournamentList.filter.country"),
+                  say("tournamentList.filter.anyCountry"),
+                  sorted(offeredCountries, countryNamed),
+                  country,
+                  // The region belongs to the country, so another country
+                  // chosen leaves none.
+                  (code) => {
+                    choose({ country: code, region: undefined, sport });
+                  },
+                )}
+                {country === undefined || offeredRegions.length === 0
+                  ? null
+                  : choice(
+                      "region",
+                      say("tournamentList.filter.region"),
+                      say("tournamentList.filter.anyRegion"),
+                      sorted(offeredRegions, regionNamed),
+                      region,
+                      (code) => {
+                        choose({ country, region: code, sport });
+                      },
+                    )}
+                {choice(
+                  "sport",
+                  say("tournamentList.filter.sport"),
+                  say("tournamentList.filter.anySport"),
+                  inSiteOrder(offeredSports).map((code) => ({
+                    code,
+                    name: sportNamed(code),
+                  })),
+                  sport,
+                  (code) => {
+                    choose({ country, region, sport: code });
+                  },
+                )}
+              </form>
+            )}
             {listed === undefined ? null : listed.length === 0 ? (
               <p className="tournaments-none">
                 {say("admin.tournaments.none")}
               </p>
+            ) : narrowed.length === 0 ? (
+              <p className="tournaments-none" data-unmatched="">
+                {say("admin.tournaments.filter.none")}
+              </p>
             ) : (
               <ul className="tournaments">
-                {listed.map((tournament) => (
+                {narrowed.map((tournament) => (
                   <li
                     key={tournament.id}
                     className="tournament"

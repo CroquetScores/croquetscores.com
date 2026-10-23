@@ -43,6 +43,10 @@ export interface Found {
   readonly starts: string;
   readonly finishes: string;
   readonly address: string;
+  /** The code of the country it is played in, where the read model holds it. */
+  readonly country?: string | undefined;
+  /** The code of the region of it, where it is in one. */
+  readonly region?: string | undefined;
 }
 
 /** A read model of tournaments, as its scenarios stand it up. */
@@ -228,6 +232,27 @@ Given(
   },
 );
 
+Given(
+  "{string} to be played in the country {string}",
+  function (this: SpecWorld, name: string, country: string) {
+    toBeChanged(this, name, { country });
+  },
+);
+
+Given(
+  "{string} to be played in the region {string}",
+  function (this: SpecWorld, name: string, region: string) {
+    toBeChanged(this, name, { region });
+  },
+);
+
+Given(
+  "{string} to be played in no region",
+  function (this: SpecWorld, name: string) {
+    toBeChanged(this, name, { region: undefined });
+  },
+);
+
 // What is done to it ------------------------------------------------------------------
 
 Given(
@@ -332,6 +357,17 @@ Given(
       starts: starts.toISOString(),
       finishes: (finishes < starts ? starts : finishes).toISOString(),
     });
+  },
+);
+
+// Everything it is to be but its website, which a tournament keeps as it was
+// created, said again as an update says it.
+Given(
+  "{string} is updated to be as it is to be",
+  async function (this: SpecWorld, name: string) {
+    const { website, ...request } = toBeOf(this, name);
+    void website;
+    await updated(this, name, request);
   },
 );
 
@@ -446,3 +482,24 @@ Then(
 Then("no year is found", function (this: SpecWorld) {
   assert.deepEqual(scenarioOf(this).years, []);
 });
+
+Then(
+  "{string} is held as played in the country {string}",
+  function (this: SpecWorld, name: string, country: string) {
+    assert.equal(foundCalled(scenarioOf(this).found, name).country, country);
+  },
+);
+
+Then(
+  "{string} is held as played in the region {string}",
+  function (this: SpecWorld, name: string, region: string) {
+    assert.equal(foundCalled(scenarioOf(this).found, name).region, region);
+  },
+);
+
+Then(
+  "{string} is held as played in no region",
+  function (this: SpecWorld, name: string) {
+    assert.equal(foundCalled(scenarioOf(this).found, name).region, undefined);
+  },
+);
