@@ -17,6 +17,7 @@
     "test": "npm run test:features",
     "test:features": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs",
     "test:changed": "node scripts/test-changed.mjs",
+    "deploy": "tsx scripts/deploy.mjs",
     "db:up": "docker compose up -d --wait && npm run dev:setup",
     "db:down": "docker compose down -v",
     "db:migrate": "tsx src/infrastructure/database/migrate-cli.ts",

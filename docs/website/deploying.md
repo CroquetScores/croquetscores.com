@@ -180,9 +180,14 @@ The issue https://github.com/CroquetScores/croquetscores.com/issues/286 (A deplo
 - Do backup-and-restore.md §7 steps 2–6 into a throwaway database, and time step 5.
 - Say in README.md that they have now been followed start to finish, and on what date.
 
-## 8. Deploying by itself on a merge to main
+## 8. Deploying with a script, from your computer or from GitHub
 
-`.github/workflows/deploy.yml` runs when a pull request is squash-merged to `main`, signs in to the server, and runs `scripts/deploy.sh`, which is §2 as one script. CI is not run again on `main` (§3), so a commit reaching it has already passed. The manual sequences in §2 and §4 still work, and are what to use for a release that needs the site stopped (§4): the script does not stop the site.
+Nothing deploys on a merge. A deploy is started by a person, in one of two ways, and both end in `scripts/deploy.sh`, which is §2 as one script and runs on the server. CI is not run again on `main` (§3), so what is deployed from `main` has already passed.
+
+- **From your computer: `npm run deploy`.** It deploys `origin/main`, the commit GitHub has for `main`, and not the `main` of your computer, which may be behind or ahead. It asks GitHub for what is new first. `npm run deploy -- my-branch` deploys your computer's branch of that name, and `npm run deploy -- origin/my-branch` GitHub's copy of it. A branch that is only on your computer is refused, with a reminder to push it, because the server gets its commits from GitHub. It signs in as `deploy` with your own key, as you do by hand, and needs `DEPLOY_SSH_HOST` (the server's address, as in `.env.example`) in your `.env`.
+- **From GitHub: Actions, Deploy, Run workflow** (or `gh workflow run deploy.yml`). It deploys the branch chosen in "Use workflow from", which is `main`. The `production` environment lets only `main` read the key (below), so another branch is refused there; deploy it from your computer.
+
+The manual sequences in §2 and §4 still work, and are what to use for a release that needs the site stopped (§4): the script does not stop the site.
 
 **What it does differently from §2:**
 
@@ -194,6 +199,8 @@ The issue https://github.com/CroquetScores/croquetscores.com/issues/286 (A deplo
 The script also writes what it says to `/srv/croquetscores/deploy.log`, so that what happened is there when the connection was lost and the run's own log stops short. A failed run shows red in GitHub and emails whoever is set to be told of failed runs in their GitHub notification settings. Its log says which step failed.
 
 ### Setting it up, once
+
+These are for the workflow in GitHub. `npm run deploy` needs none of it.
 
 **1. On your computer, make a key for this and nothing else,** with no passphrase because nobody is there to type one (see the warning about `-N` in backup-and-restore.md §3 if you are on PowerShell):
 
@@ -234,8 +241,8 @@ Under "Deployment branches", choose **Selected branches** and name `main`, so th
 
 ### Turning it off
 
-Disable the workflow in GitHub (Actions, Deploy, the three dots, Disable workflow), or remove the key's line from `~/.ssh/authorized_keys` on the server, which is the one that works even if GitHub has been got into.
+Disable the workflow in GitHub (Actions, Deploy, the three dots, Disable workflow), which leaves `npm run deploy` working, or remove the key's line from `~/.ssh/authorized_keys` on the server, which is the one that works even if GitHub has been got into.
 
 ### Not yet done
 
-It has not run for real. The first merge is the rehearsal: be at the server for it, and watch the run. The same goes for §7: once it has run, say so there.
+Neither way has run for real. The first run of each is the rehearsal: be at the server for it, and watch. The same goes for §7: once it has run, say so there.
