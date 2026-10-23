@@ -486,6 +486,8 @@ export const dutch: Language = {
     "tournamentList.filter.anyCountry": "Elk land",
     "tournamentList.filter.region": "Regio",
     "tournamentList.filter.anyRegion": "Elke regio",
+    "tournamentList.filter.noRegionsBefore":
+      "Toernooien van vóór november 2026 hebben geen regio.",
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Elke sport",
     "tournamentList.filter.submit": "Filteren",

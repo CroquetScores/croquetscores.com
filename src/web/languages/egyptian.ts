@@ -446,6 +446,8 @@ export const egyptian: Language = {
     "tournamentList.filter.anyCountry": "أي بلد",
     "tournamentList.filter.region": "المنطقة",
     "tournamentList.filter.anyRegion": "أي منطقة",
+    "tournamentList.filter.noRegionsBefore":
+      "البطولات اللي قبل نوفمبر 2026 معندهاش منطقة.",
     "tournamentList.filter.sport": "الرياضة",
     "tournamentList.filter.anySport": "أي رياضة",
     "tournamentList.filter.submit": "صفّي",

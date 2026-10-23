@@ -452,6 +452,8 @@ export const chinese: Language = {
     "tournamentList.filter.anyCountry": "所有国家",
     "tournamentList.filter.region": "地区",
     "tournamentList.filter.anyRegion": "所有地区",
+    "tournamentList.filter.noRegionsBefore":
+      "2026 年 11 月之前的赛事没有地区信息。",
     "tournamentList.filter.sport": "运动",
     "tournamentList.filter.anySport": "所有运动",
     "tournamentList.filter.submit": "筛选",

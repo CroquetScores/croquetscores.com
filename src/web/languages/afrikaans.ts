@@ -485,6 +485,8 @@ export const afrikaans: Language = {
     "tournamentList.filter.anyCountry": "Enige land",
     "tournamentList.filter.region": "Streek",
     "tournamentList.filter.anyRegion": "Enige streek",
+    "tournamentList.filter.noRegionsBefore":
+      "Toernooie voor November 2026 het nie streke nie.",
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Enige sport",
     "tournamentList.filter.submit": "Filtreer",

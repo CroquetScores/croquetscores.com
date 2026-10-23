@@ -454,6 +454,8 @@ export const japanese: Language = {
     "tournamentList.filter.anyCountry": "すべての国",
     "tournamentList.filter.region": "地域",
     "tournamentList.filter.anyRegion": "すべての地域",
+    "tournamentList.filter.noRegionsBefore":
+      "2026年11月より前の大会には地域がありません。",
     "tournamentList.filter.sport": "競技",
     "tournamentList.filter.anySport": "すべての競技",
     "tournamentList.filter.submit": "絞り込む",

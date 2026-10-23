@@ -434,6 +434,8 @@ export const polish: Language = {
     "tournamentList.filter.anyCountry": "Dowolny kraj",
     "tournamentList.filter.region": "Region",
     "tournamentList.filter.anyRegion": "Dowolny region",
+    "tournamentList.filter.noRegionsBefore":
+      "Turnieje sprzed listopada 2026 nie mają regionu.",
     "tournamentList.filter.sport": "Dyscyplina",
     "tournamentList.filter.anySport": "Dowolna dyscyplina",
     "tournamentList.filter.submit": "Filtruj",

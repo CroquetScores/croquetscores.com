@@ -484,6 +484,8 @@ export const swedish: Language = {
     "tournamentList.filter.anyCountry": "Alla länder",
     "tournamentList.filter.region": "Region",
     "tournamentList.filter.anyRegion": "Alla regioner",
+    "tournamentList.filter.noRegionsBefore":
+      "Turneringar före november 2026 har ingen region.",
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Alla sporter",
     "tournamentList.filter.submit": "Filtrera",
