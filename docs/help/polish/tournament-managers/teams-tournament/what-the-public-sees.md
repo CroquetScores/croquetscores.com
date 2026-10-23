@@ -4,15 +4,15 @@ Nic nie jest publikowane: strony publiczne są rysowane z tego, co przechowuje a
 
 ## Strona turnieju
 
-Strona turnieju jest pod jego rokiem, dyscypliną i nazwą, jak `/2026/ac/trans-tasman-tests`. Jej nagłówkiem jest nazwa turnieju, a pod nią podtytuł. Wymienia każdą partię w użyciu, od ostatnio dodanej, by czytelnik, który wraca, widział, co wydarzyło się od tego czasu. Każda partia mówi zwycięzcę, jego drużynę i wynik, potem przegranego i jego, razem z testem, w którym rozegrano partię, i tym, jak dawno ją dodano.
+Strona turnieju jest pod jego rokiem, dyscypliną i nazwą, jak `/2026/ac/trans-tasman-tests`. Jej nagłówkiem jest nazwa turnieju, a pod nią podtytuł. Wymienia każdą grę w użyciu, od ostatnio dodanej, by czytelnik, który wraca, widział, co wydarzyło się od tego czasu. Każda gra mówi zwycięzcę, jego drużynę i wynik, potem przegranego i jego, razem z testem, w którym rozegrano grę, i tym, jak dawno ją dodano.
 
 ![Publiczna strona turnieju](images/public-tournament.png)
 
-Ciemnozielony pasek oferuje sekcje turnieju: **Ostatnie**, czyli tę stronę, **Podsumowanie**, **Zawodnicy**, **Notatki** i **Relacja**, a potem testy. Test jest podany jako skróty nazw jego drużyn z „vs" pomiędzy, jak „AUS vs NZ". Testy w grupie nie są oferowane pojedynczo: grupa jest jedną sekcją, nazwaną tak jak grupa, stojącą tam, gdzie byłby jej pierwszy test. Notatki są oznaczone czerwoną gwiazdką, dopóki jest notatka, której czytelnik nie przeczytał.
+Ciemnozielony pasek oferuje sekcje turnieju: **Ostatnie**, czyli tę stronę, **Podsumowanie**, **Zawodnicy**, **Notatki** i **Komentarz**, a potem testy. Test jest podany jako skróty nazw jego drużyn z „vs" pomiędzy, jak „AUS vs NZ". Testy w grupie nie są oferowane pojedynczo: grupa jest jedną sekcją, nazwaną tak jak grupa, stojącą tam, gdzie byłby jej pierwszy test. Notatki są oznaczone czerwoną gwiazdką, dopóki jest notatka, której czytelnik nie przeczytał.
 
 ## Podsumowanie
 
-Turniej, którego testy nie są w żadnej grupie, ma **Podsumowanie**: jedną tabelę wszystkich drużyn, uszeregowanych, z wygranymi, przegranymi i zremisowanymi testami, wygranymi i przegranymi partiami oraz bramkami zdobytymi, straconymi i bilansem. Gdy mecze któregokolwiek testu są najlepsze z więcej niż jednej partii, wygrane i przegrane mecze idą po testach. Podsumowanie to miejsce, gdzie czytelnik szuka każdej drużyny jako całości.
+Turniej, którego testy nie są w żadnej grupie, ma **Podsumowanie**: jedną tabelę wszystkich drużyn, uszeregowanych, z wygranymi, przegranymi i zremisowanymi testami, wygranymi i przegranymi grami oraz bramkami zdobytymi, straconymi i bilansem. Gdy mecze któregokolwiek testu są najlepsze z więcej niż jednej gry, wygrane i przegrane mecze idą po testach. Podsumowanie to miejsce, gdzie czytelnik szuka każdej drużyny jako całości.
 
 Turniej z testem w grupie nie ma Podsumowania. Zamiast tego strona każdej grupy pokazuje, jak stoją drużyny tej grupy, bo jedna tabela drużyn z różnych grup, które nigdy ze sobą nie grały, nie szeregowałaby nic.
 
@@ -24,11 +24,11 @@ Strona grupy pokazuje, jak stoją drużyny grupy, licząc tylko testy grupy, w t
 
 ## Test
 
-Nagłówkiem strony testu są pełne nazwy jego drużyn, jak „Australia vs New Zealand", a strona mówi, z ilu partii najlepszy jest każdy mecz. Nagłówkiem jej tabeli są dwie drużyny, pierwsza po lewej. Każdy rozegrany mecz to wiersz, w kolejności rozpoczęcia, z zawodnikiem pierwszej drużyny po lewej, zawodnikiem drugiej po prawej i partiami meczu między nimi, każda jako wynik pierwszej strony, a potem drugiej, z oznaczonym zwycięzcą. Pod meczami są partie i bramki każdej drużyny oraz, gdy każdy mecz jest najlepszy z więcej niż jednej partii, jej wygrane mecze, po jej stronie.
+Nagłówkiem strony testu są pełne nazwy jego drużyn, jak „Australia vs New Zealand", a strona mówi, z ilu gier najlepszy jest każdy mecz. Nagłówkiem jej tabeli są dwie drużyny, pierwsza po lewej. Każdy rozegrany mecz to wiersz, w kolejności rozpoczęcia, z zawodnikiem pierwszej drużyny po lewej, zawodnikiem drugiej po prawej i grami meczu między nimi, każda jako wynik pierwszej strony, a potem drugiej, z oznaczonym zwycięzcą. Pod meczami są gry i bramki każdej drużyny oraz, gdy każdy mecz jest najlepszy z więcej niż jednej gry, jej wygrane mecze, po jej stronie.
 
 ![Strona testu](images/public-test.png)
 
-Test jest pokazywany na dwa sposoby, oferowane w wierszu z jego nazwą: **Tabela**, czyli ta tabela, i **Kolejność gier**, która wymienia każdą partię testu od najstarszej. Test w grupie oferuje Podsumowanie i testy swojej grupy w rzędzie nad nagłówkiem, z tym testem oznaczonym.
+Test jest pokazywany na dwa sposoby, oferowane w wierszu z jego nazwą: **Siatka**, czyli ta tabela, i **Kolejność gier**, która wymienia każdą grę testu od najstarszej. Test w grupie oferuje Podsumowanie i testy swojej grupy w rzędzie nad nagłówkiem, z tym testem oznaczonym.
 
 ## Zawodnicy
 
@@ -42,4 +42,4 @@ Strona Notatki wymienia notatki turnieju, od ostatnio napisanej, każda prowadzi
 
 ## Adresy, które się przenoszą
 
-Turniej zachowuje swój adres, gdy poprawia się jego nazwę. Gdy się przenosi, bo zmienił się jego rok albo dyscyplina, jego stary adres prowadzi do nowego, by zachowany wcześniej link nadal działał. Stron zarchiwizowanego turnieju nie można znaleźć, dopóki nie zostanie przywrócony.
+Turniej zachowuje swój adres, gdy poprawia się jego nazwę. Gdy się przenosi, bo zmienił się jego rok albo dyscyplina, jego stary adres prowadzi do nowego, by zachowany wcześniej odsyłacz nadal działał. Stron zarchiwizowanego turnieju nie można znaleźć, dopóki nie zostanie przywrócony.

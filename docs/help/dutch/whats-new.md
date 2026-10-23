@@ -13,7 +13,7 @@ De code is nu open source, onder de GNU Affero General Public License versie 3 (
 
 ### Een toernooi volgen
 
-- **Notities van de organisatoren.** De beheerders van een toernooi kunnen nu notities schrijven om de spelers te vertellen wat ze moeten weten terwijl het toernooi loopt: het formaat, een wijziging in de speelvolgorde, het tijdstip van de lunch. Je vindt ze in het nieuwe onderdeel Notities van het toernooi, met de nieuwste bovenaan en hoe lang geleden elke notitie is geschreven.
+- **Notities van de organisatoren.** De toernooileiders van een toernooi kunnen nu notities schrijven om de spelers te vertellen wat ze moeten weten terwijl het toernooi loopt: het formaat, een wijziging in de speelvolgorde, het tijdstip van de lunch. Je vindt ze in het nieuwe onderdeel Notities van het toernooi, met de nieuwste bovenaan en hoe lang geleden elke notitie is geschreven.
 - **Een asterisk (\*) markeert wat je nog niet hebt gelezen.** Een notitie heeft er een totdat je hem opent, en opnieuw als hij wordt gewijzigd nadat je hem las. Zolang een notitie ongelezen is, heeft ook het onderdeel Notities er een, op elke pagina van het toernooi, zodat je ziet dat er nieuws is zonder te gaan kijken. Commentaar wordt op dezelfde manier gemarkeerd. Je browser onthoudt wat je hebt gelezen, dus je hoeft niet in te loggen. Een andere telefoon of computer begint met niets gelezen.
 - **Commentaar is makkelijker te volgen.** Op de oude site gooide elke nieuwe reactie de pagina helemaal naar beneden, waardoor wie eerdere reacties terugleest zijn plek kwijtraakte. Nu schuift de pagina alleen naar een nieuwe reactie als je al onderaan bent en de nieuwste leest. Ben je teruggescrold om eerdere reacties te lezen, dan blijf je waar je bent.
 

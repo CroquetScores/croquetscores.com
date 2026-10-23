@@ -1,6 +1,6 @@
 # Ett lags spelare
 
-Ett lags sida öppnas från dess namn, eller dess **Visa**, på fliken Lag. Den har lagets namn som rubrik, med kortnamnet inom parentes, och dess flagga, så att en turneringsledare som kom till fel lag ser det på en gång. Den har en enda sak att visa, lagets spelare, så listan är sidan.
+Ett lags sida öppnas från dess namn, eller dess **Visa**, på fliken Lag. Den har lagets namn som rubrik, med kortnamnet inom parentes, och dess flagga, så att en arrangör som kom till fel lag ser det på en gång. Den har en enda sak att visa, lagets spelare, så listan är sidan.
 
 ![Ett lags sida, med dess spelare och en arkiverad](images/team-page.png)
 
@@ -16,7 +16,7 @@ Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över s
 
 **Namn** krävs, mellan 3 och 254 tecken. Två spelare i ett lag kan inte ha samma namn, hur det än skrivs med stora och små bokstäver; en spelare i ett annat lag får dela det.
 
-**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i associationscroquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn. Medan du skriver erbjuds de spelare världsrankingen känner till vars namn börjar så, och bredvid världsrankingnamnet säger en bock att rankingen känner till namnet och ett frågetecken att den inte gör det. Det är bara ett råd: ett namn rankingen inte känner till sparas lika gärna som ett den känner till.
+**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i association croquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn. Medan du skriver erbjuds de spelare världsrankingen känner till vars namn börjar så, och bredvid världsrankingnamnet säger en bock att rankingen känner till namnet och ett frågetecken att den inte gör det. Det är bara ett råd: ett namn rankingen inte känner till sparas lika gärna som ett den känner till.
 
 En spelare heter aldrig "Bye": ett namn vars första ord är det engelska "bye" godtas inte.
 
@@ -28,12 +28,12 @@ Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna sa
 
 ## Ordning
 
-Spelarna listas i lagets ordning, som är den ordning de erbjuds i när en testmatchs resultat skrivs in. **Upp** och **Ned** flyttar en spelare ett steg inom laget.
+Spelarna listas i lagets ordning, som är den ordning de erbjuds i när en landskamps resultat skrivs in. **Upp** och **Ner** flyttar en spelare ett steg inom laget.
 
 ## Arkivera en spelare
 
 **Arkivera** lägger undan en spelare: en som lades till av misstag, eller som inte längre är med i laget. En arkiverad spelare listas under **Arkiverade spelare**, överstruken, efter de spelare som är i bruk, och erbjuder bara **Återställ**. Att arkivera frågar aldrig först, eftersom en spelare i ett lag inte är insatt i något annat och att återställa spelaren sätter tillbaka allt.
 
-En spelare som har spelat något parti i bruk i en testmatch kan inte arkiveras, eftersom partierna då skulle vara mot någon som inte längre finns där, så en sådan spelare erbjuds inte Arkivera. En spelare vars enda partier är arkiverade kan arkiveras.
+En spelare som har spelat något parti i bruk i en landskamp kan inte arkiveras, eftersom partierna då skulle vara mot någon som inte längre finns där, så en sådan spelare erbjuds inte Arkivera. En spelare vars enda partier är arkiverade kan arkiveras.
 
-Nästa: [Testmatcher](tests.md).
+Nästa: [Landskamper](tests.md).

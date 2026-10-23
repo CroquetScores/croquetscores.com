@@ -1,21 +1,10 @@
-// The site's words in Egyptian Arabic. Keyed as the English catalogue is,
-// which is what a word missing here falls back to.
-//
-// Egyptian rather than Modern Standard Arabic, because the site is a place
-// people come to score and follow games, and in Egypt that is talked about in
-// the spoken dialect: Modern Standard is the language of newspapers and forms,
-// and a button or an error written in it reads as an official notice where the
-// English is plain and direct. Egyptian is also the dialect nearly every Arabic
-// speaker understands, from films and songs. It is kept readable rather than
-// slangy: the spoken forms ("عايز", "ازاي", "مفيش") where a person would say
-// them, and ordinary written Arabic spelling, so that nothing is hard to look
-// up or to read aloud. Instructions are addressed to the reader in the
-// masculine singular, as Arabic interfaces do for everyone.
-//
-// Arabic reads from right to left, so the language says so with `direction`;
-// the Western digits the site produces are kept as they are, as Egyptians use
-// them on screens. Where a placeholder, a link or the site's name sits in the
-// middle of a sentence it is left untouched.
+// The site's words in colloquial Egyptian Arabic, not Modern Standard. The
+// reader is addressed in the singular, in the plain "enta" form (اكتب, إيميلك),
+// which reads as neutral. Arabic has no capitals, so menu and button items are
+// simply written as short phrases. "Email address" is "عنوان الإيميل", and
+// "email" alone is "إيميل". A label's colon is part of its words. Hoop is
+// "طوق", match "مباراة", game "لعبة", and a test between teams "لقاء". "Bye" is
+// left in Latin letters wherever the site checks for it or offers it.
 import type { Language } from "../common/language.js";
 
 export const egyptian: Language = {
@@ -23,8 +12,9 @@ export const egyptian: Language = {
   name: "العربية (مصر)",
   direction: "rtl",
   words: {
+    // The site's own bars.
     "site.skipToContent": "روح على المحتوى",
-    "navigation.menu": "القائمة",
+    "navigation.menu": "القايمة",
     "navigation.label": "الرئيسية",
     "navigation.home": "الصفحة الرئيسية",
     "navigation.help": "المساعدة",
@@ -35,409 +25,453 @@ export const egyptian: Language = {
     "theme.dark": "غامق",
     "theme.system": "زي الجهاز",
     "footer.donate": "تبرّع",
-    "footer.plea": "عجبك {siteName}؟ تبرّع علشان نكمّل نطوّره.",
-    "footer.copyright": "© Copyright {years}, {owner}",
+    "footer.plea": "عجبك {siteName}؟ لو سمحت تبرّع عشان نكمّل التطوير.",
+    "footer.copyright": "© حقوق النشر {years}، {owner}",
     "footer.privacy": "الخصوصية",
     "footer.termsOfUse": "شروط الاستخدام",
-    "beta.banner":
-      "ده موقع تجريبي (بيتا). البيانات ممكن تتمسح وتبدأ من الأول في أي وقت.",
+    "beta.banner": "ده موقع تجريبي. ممكن البيانات تتمسح في أي وقت.",
     "privacy.contact":
-      "لو عندك أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
+      "أي أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
+    // The box a reader ticks to agree to the terms of use for those who write.
     "termsOfUse.agree": "أنا موافق على شروط الاستخدام",
     "termsOfUse.link": "شروط الاستخدام",
     "termsOfUse.report":
       "بلّغ عن اللي اتكتب، أو اسأل عن الشروط دي: {emailAddress}",
     "TermsOfUse.NotAgreed": "علّم على المربع عشان توافق على شروط الاستخدام.",
+    // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "ده مكان آمن تتعلّم فيه {siteName}. أي حاجة تكتبها هنا ممكن تتمسح في أي وقت.",
+      "ده مكان آمن تتعلّم فيه {siteName}. أي حاجة تدخلها هنا ممكن تتمسح في أي وقت.",
 
     "language.label": "اللغة",
     "language.choose": "غيّر",
 
     // The alert that tells a reader there is something new to read.
-    "whatsNew.public.message": "في حاجة جديدة تقراها.",
-    "whatsNew.admin.message": "في حاجة جديدة لمدراء البطولات.",
+    "whatsNew.public.message": "فيه حاجة جديدة تقراها.",
+    "whatsNew.admin.message": "فيه حاجة جديدة للناس اللي بتدير البطولات.",
     "whatsNew.view": "شوف الجديد",
     "whatsNew.later": "فكّرني المرة الجاية",
     "whatsNew.never": "ما تورّينيش التنبيه ده تاني",
 
-    "form.otherwise": "في حاجة مش مظبوطة. راجع اللي كتبته وجرّب تاني.",
+    "form.otherwise": "فيه حاجة مش مظبوطة. راجع اللي كتبته وجرّب تاني.",
 
+    // The account menu in the header.
     "account.menu": "الحساب",
     "account.register": "سجّل",
-    "account.signIn": "تسجيل الدخول",
+    "account.signIn": "سجّل الدخول",
     "account.forgotPassword": "نسيت كلمة السر",
-    "account.signOut": "تسجيل الخروج",
-    "account.profile": "الملف الشخصي",
+    "account.signOut": "سجّل الخروج",
+    "account.profile": "ملفّي",
     "account.changePassword": "غيّر كلمة السر",
-    "account.changeEmailAddress": "غيّر عنوان البريد الإلكتروني",
+    "account.changeEmailAddress": "غيّر عنوان الإيميل",
     "account.changeName": "غيّر الاسم",
-    "account.setPassword": "اضبط كلمة السر",
+    "account.setPassword": "حدّد كلمة سر",
     "account.forgetAccount": "انسَ الحساب",
 
-    "register.title": "سجّل",
-    "register.emailAddress": "عنوان البريد الإلكتروني",
+    "register.title": "تسجيل حساب",
+    "register.emailAddress": "عنوان الإيميل",
     "register.submit": "سجّل",
-    "register.withGoogle": "سجّل بجوجل",
+    "register.withGoogle": "سجّل بحساب Google",
     "register.or": "أو",
+    // Said above the form when Google sent the reader back without them being
+    // let in.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "جوجل ما أكّدش إن عنوان البريد الإلكتروني ده بتاعك، فمينفعش يتستخدم هنا مع جوجل. استخدم عنوان بريدك الإلكتروني تحت.",
+      "Google ما أكّدش إن عنوان الإيميل ده بتاعك، فمينفعش تستخدمه مع Google هنا. استخدم عنوان الإيميل بتاعك من تحت.",
     "SignInWithGoogle.LinkedToAnother":
-      "عنوان البريد الإلكتروني ده عليه حساب بالفعل، ومربوط بحساب جوجل تاني. سجّل الدخول بحساب جوجل ده، أو بعنوان بريدك الإلكتروني وكلمة السر.",
+      "عنوان الإيميل ده عليه حساب فعلاً، ومربوط بحساب Google تاني. سجّل الدخول بحساب Google ده، أو بعنوان الإيميل وكلمة السر.",
     "SignInWithGoogle.NameMissing":
-      "جوجل ما قالش لنا اسمك، والحساب لازم يكون له اسم. استخدم عنوان بريدك الإلكتروني تحت.",
+      "Google ما قالناش اسمك، والحساب لازم يكون له اسم. استخدم عنوان الإيميل بتاعك من تحت.",
     "Google.Unreachable":
-      "مقدرناش نوصل لجوجل دلوقتي. جرّب تاني كمان شوية، أو استخدم عنوان بريدك الإلكتروني تحت.",
+      "ما قدرناش نوصل لـ Google دلوقتي. جرّب تاني بعد شوية، أو استخدم عنوان الإيميل بتاعك من تحت.",
     "Registration.NotAPerson":
-      "الطلب ده ما بانش إنه جاي من إنسان. جرّب تاني، ولو فضل يحصل استنى كام دقيقة وارجع.",
+      "الطلب ده مش باين إنه جاي من إنسان. جرّب تاني، ولو فضل يحصل استنى كام دقيقة وارجع.",
 
-    "EmailAddress.Missing": "اكتب عنوان البريد الإلكتروني.",
-    "EmailAddress.NoAt": "عنوان البريد الإلكتروني لازم فيه @.",
-    "EmailAddress.MoreThanOneAt": "عنوان البريد الإلكتروني فيه @ واحدة بس.",
+    // A rule the address can break, said beneath the field it is about.
+    "EmailAddress.Missing": "اكتب عنوان إيميل.",
+    "EmailAddress.NoAt": "عنوان الإيميل فيه علامة @.",
+    "EmailAddress.MoreThanOneAt": "عنوان الإيميل فيه علامة @ واحدة بس.",
     "EmailAddress.NoDomain":
-      "عنوان البريد الإلكتروني لازم يكون بعد الـ @ اسم موقع، زي example.com.",
+      "عنوان الإيميل بيكون فيه نطاق بعد الـ @، زي example.com.",
 
-    "welcome.title": "بص على بريدك",
+    "welcome.title": "شوف الإيميل بتاعك",
     "welcome.checkEmail":
-      "بعتنا لك رسالة على العنوان اللي إدّيتهولنا. افتح اللينك اللي فيها علشان تكمّل.",
+      "فيه إيميل في الطريق للعنوان اللي كتبته. افتح الرابط اللي فيه عشان تكمّل.",
     "welcome.nothingArrived":
-      "لو ما وصلش حاجة بعد كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
+      "لو ما وصلش حاجة في خلال كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
     "welcome.home": "ارجع إلى {siteName}",
-    "newConfirmationLink.title": "اطلب لينك جديد",
+    "newConfirmationLink.title": "هات رابط جديد",
     "newConfirmationLink.explanation":
-      "لينك تأكيد عنوان البريد الإلكتروني انتهت مدّته. اطلب واحد جديد وهيتبعت على العنوان اللي سجّلت بيه.",
-    "newConfirmationLink.send": "ابعتلي لينك جديد",
+      "رابط تأكيد عنوان الإيميل بتاعك خلص. اطلب واحد جديد وهيتبعت للعنوان اللي سجّلت بيه.",
+    "newConfirmationLink.send": "ابعتلي رابط جديد",
     "newConfirmationLink.home": "ارجع إلى {siteName}",
-    "newConfirmationLink.signIn": "تسجيل الدخول",
-    "newConfirmationLink.sent.title": "بص على بريدك",
+    "newConfirmationLink.signIn": "سجّل الدخول",
+    "newConfirmationLink.sent.title": "شوف الإيميل بتاعك",
     "newConfirmationLink.sent.explanation":
-      "بعتنا لك لينك جديد. افتحه علشان تأكّد عنوان بريدك الإلكتروني. لو ما وصلش حاجة بعد كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
+      "رابط جديد في الطريق. افتحه عشان تأكّد عنوان الإيميل بتاعك. لو ما وصلش حاجة في خلال كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
     "newConfirmationLink.alreadyConfirmed.title":
-      "عنوان البريد الإلكتروني ده اتأكّد بالفعل",
+      "عنوان الإيميل ده اتأكّد فعلاً",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "مفيش حاجة تانية تتأكّد. سجّل الدخول بكلمة السر اللي حطّيتها وقت التأكيد.",
-    "newConfirmationLink.noLongerWorks.title": "اللينك ده ما بقاش شغّال",
+      "مفيش حاجة تانية تتأكّد. سجّل الدخول بكلمة السر اللي كتبتها وانت بتأكّده.",
+    "newConfirmationLink.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "newConfirmationLink.noLongerWorks.explanation":
-      "اتأكد إنك فتحت اللينك كله من الرسالة، من غير ما ينقص منه حاجة في الآخر. لو لسه مش شغّال، سجّل من جديد وهيتبعت لك لينك جديد.",
+      "اتأكّد إنك فتحت الرابط كله اللي في الإيميل، من غير ما يكون ناقص حاجة من آخره. لو لسه مش شغّال، سجّل من الأول وهيتبعتلك رابط جديد.",
     "newConfirmationLink.tooMany.title": "جرّب تاني بعدين",
     "newConfirmationLink.tooMany.explanation":
-      "اتبعت لينكات كتير للعنوان ده قريب. استنى ساعة واطلب تاني، وفي الوقت ده بص في فولدر الرسائل المزعجة (سبام).",
+      "اتبعت لنا العنوان ده كذا رابط في الفترة الأخيرة. استنى ساعة واطلب تاني، وفي الأثناء بص في فولدر الرسائل المزعجة (سبام).",
 
     "forgotPassword.title": "نسيت كلمة السر؟",
-    "forgotPassword.emailAddress": "عنوان البريد الإلكتروني",
-    "forgotPassword.submit": "ابعتلي طريقة أرجع بيها",
+    "forgotPassword.emailAddress": "عنوان الإيميل",
+    "forgotPassword.submit": "ابعتلي طريقة أدخل بيها",
     "forgotPassword.home": "ارجع إلى {siteName}",
-    "forgotPassword.sent.title": "بص على بريدك",
+    "forgotPassword.sent.title": "شوف الإيميل بتاعك",
     "forgotPassword.sent.explanation":
-      "لو العنوان ده عليه حساب، بعتنا لك لينك تحط بيه كلمة سر جديدة. افتحه خلال ساعة. لو ما وصلش حاجة بعد كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
+      "لو العنوان ده عليه حساب، فيه رابط لتحديد كلمة سر جديدة في الطريق. افتحه في خلال ساعة. لو ما وصلش حاجة في خلال كام دقيقة، بص في فولدر الرسائل المزعجة (سبام).",
     "forgotPassword.tryAgainLater":
-      "اتطلب من هنا طرق رجوع كتير قريب. استنى ساعة وجرّب تاني.",
+      "اتطلب من هنا طرق دخول كتير في الفترة الأخيرة. استنى ساعة وجرّب تاني.",
 
-    "setNewPassword.title": "حط كلمة سر جديدة",
+    "setNewPassword.title": "حدّد كلمة سر جديدة",
     "setNewPassword.password": "كلمة السر",
     "setNewPassword.confirmPassword": "أكّد كلمة السر",
-    "setNewPassword.submit": "اضبط كلمة السر الجديدة",
+    "setNewPassword.submit": "حدّد كلمة السر الجديدة",
     "setNewPassword.home": "ارجع إلى {siteName}",
-    "setNewPassword.signIn": "تسجيل الدخول",
-    "setNewPassword.askAgain": "اطلب لينك جديد",
+    "setNewPassword.signIn": "سجّل الدخول",
+    "setNewPassword.askAgain": "اطلب رابط جديد",
     "setNewPassword.changed.title": "كلمة السر اتغيّرت",
     "setNewPassword.changed.explanation":
-      "اتعمل لك تسجيل خروج من كل الأماكن اللي كنت داخل منها. سجّل الدخول بكلمة السر الجديدة.",
-    "setNewPassword.expired.title": "اللينك ده انتهت مدّته",
+      "اتسجّل خروجك من كل مكان كنت داخل منه. سجّل الدخول بكلمة السر الجديدة.",
+    "setNewPassword.expired.title": "الرابط ده خلص",
     "setNewPassword.expired.explanation":
-      "لينك كلمة السر الجديدة بيشتغل ساعة واحدة. اطلب واحد تاني وهيتبعت على نفس العنوان.",
-    "setNewPassword.noLongerWorks.title": "اللينك ده ما بقاش شغّال",
+      "رابط تحديد كلمة السر الجديدة شغّال لمدة ساعة. اطلب رابط تاني وهيتبعت لنفس العنوان.",
+    "setNewPassword.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "setNewPassword.noLongerWorks.explanation":
-      "ممكن يكون اتستخدم قبل كده، أو ينقص منه حاجة في الآخر. اطلب واحد تاني لو لسه محتاجه.",
+      "ممكن يكون اتستخدم قبل كده، أو ممكن يكون ناقص حاجة من آخره. اطلب رابط تاني لو لسه محتاج.",
 
+    // Said above the fields when the breached password check cannot be asked.
     "BreachedPasswords.Unreachable":
-      "مقدرناش نفحص كلمة السر دلوقتي، فما اتغيّرتش. جرّب تاني كمان شوية؛ اللينك بتاعك فاضل شغّال لحد ما تنتهي مدّته.",
+      "ما قدرناش نفحص كلمة السر دلوقتي، فما اتغيّرتش. جرّب تاني بعد شوية؛ الرابط بتاعك لسه شغّال لحد ما يخلص.",
 
     "forgetAccount.title": "انسَ حسابك",
     "forgetAccount.explanation":
-      "اسمك وعنوان بريدك الإلكتروني ممكن يتحوّلوا لحاجة ما تتقريش للأبد، وحسابك يتقفل. علشان نتأكد إنه إنت، هنبعت الأول لينك على عنوان حسابك، ومفيش حاجة بتتنسي لحد ما تفتحه.",
-    "forgetAccount.submit": "ابعتلي اللينك",
-    "forgetAccount.sent.title": "بص على بريدك",
+      "اسمك وعنوان الإيميل بتاعك ممكن يتحوّلوا لحاجة مش مقروءة للأبد، والحساب يتقفل. وعشان نتأكّد إنه انت، هنبعت رابط على عنوان حسابك الأول، ومفيش حاجة هتتنسي غير لما تفتحه.",
+    "forgetAccount.submit": "ابعتلي الرابط على الإيميل",
+    "forgetAccount.sent.title": "شوف الإيميل بتاعك",
     "forgetAccount.sent.explanation":
-      "بعتنا لينك على عنوان حسابك. بيشتغل 15 دقيقة، وطول ما إنت داخل على الحساب ده بس.",
+      "بعتنالك رابط على عنوان حسابك. شغّال لمدة 15 دقيقة، وبس وانت داخل على الحساب ده.",
     "forgetAccount.confirm.title": "تنسى حسابك للأبد؟",
     "forgetAccount.confirm.explanation":
-      "أول ما الحساب يتنسي، مفيش حد هيقدر يقرأ اسمك ولا عنوان بريدك الإلكتروني تاني، ومحدش هيقدر يدخل على حسابك. مينفعش ترجّع ده.",
+      "أول ما يتنسي، اسمك وعنوان الإيميل بتاعك مش هيتقروا تاني أبداً، من أي حد، ومش هتقدر تدخل على الحساب. ومينفعش ترجّع ده.",
     "forgetAccount.confirm.submit": "انسَ حسابي",
     "forgetAccount.forgotten.title": "حسابك اتنسي",
     "forgetAccount.forgotten.explanation":
-      "اسمك وعنوان بريدك الإلكتروني ما بقوش يتقروا، واتعمل لك تسجيل خروج من كل الأماكن اللي كنت داخل منها.",
-    "forgetAccount.noLongerWorks.title": "اللينك ده ما بقاش شغّال",
+      "اسمك وعنوان الإيميل بتاعك مبقوش يتقروا، واتسجّل خروجك من كل مكان كنت داخل منه.",
+    "forgetAccount.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "forgetAccount.noLongerWorks.explanation":
-      "ممكن تكون مدّته انتهت، أو اتستخدم قبل كده، أو يكون لحساب مش داخل عليه. اطلبه تاني من حسابك لو لسه عايز الحساب يتنسي.",
-    "forgetAccount.lastAdministrator.title": "الحساب ده مينفعش يتنسي",
+      "ممكن يكون خلص، أو اتستخدم قبل كده، أو يكون لحساب مش داخل عليه. اطلب تاني من حسابك لو لسه عايز تنسيه.",
+    "forgetAccount.lastAdministrator.title": "مينفعش ننسى حسابك",
     "forgetAccount.lastAdministrator.explanation":
-      "إنت المسؤول الوحيد عن الموقع ده. إدّي دور المسؤول لحد تاني، وبعدها حسابك يقدر يتنسي.",
-    "forgetAccount.askAgain": "اطلبه تاني",
+      "انت المدير الوحيد للموقع ده. اِدّي دور المدير لحد تاني، وبعدها نقدر ننسى حسابك.",
+    "forgetAccount.askAgain": "اطلب تاني",
     "forgetAccount.home": "ارجع إلى {siteName}",
 
-    "registrationsSuspended.title": "التسجيل واقف دلوقتي",
+    "registrationsSuspended.title": "التسجيل متوقّف دلوقتي",
     "registrationsSuspended.explanation":
-      "في خدمة التسجيل محتاجها مش بتردّ دلوقتي، فمحدش يقدر يسجّل لحد ما ترجع تشتغل. اللي كتبته ما اتحفظش.",
+      "فيه خدمة التسجيل محتاجاها ومش قادرين نوصلها دلوقتي، فمحدش يقدر يسجّل لحد ما ترد تاني. اللي كتبته ما اتحفظش.",
     "registrationsSuspended.tryAgainLater":
-      "جرّب تاني بعد شوية. مسؤول الموقع اتبلّغ.",
+      "جرّب تاني بعد شوية. مدير الموقع اتبلّغ.",
     "registrationsSuspended.home": "ارجع إلى {siteName}",
 
     "signIn.title": "تسجيل الدخول",
-    "signIn.emailAddress": "عنوان البريد الإلكتروني",
+    "signIn.emailAddress": "عنوان الإيميل",
     "signIn.password": "كلمة السر",
-    "signIn.submit": "تسجيل الدخول",
+    "signIn.submit": "سجّل الدخول",
     "signIn.forgotPassword": "نسيت كلمة السر؟",
     "signIn.register": "سجّل",
-    "signIn.withGoogle": "ادخل بجوجل",
+    "signIn.withGoogle": "سجّل الدخول بحساب Google",
     "signIn.or": "أو",
-    "signIn.tryAgainLater": "اتعملت محاولات كتير قريب. استنى ساعة وجرّب تاني.",
+    "signIn.tryAgainLater":
+      "حصلت محاولات كتير في الفترة الأخيرة. استنى ساعة وجرّب تاني.",
 
-    "SignIn.Failed": "عنوان البريد الإلكتروني أو كلمة السر مش صح. جرّب تاني.",
+    // The one answer to a wrong password and to an address nobody registered.
+    // It says neither which it was nor which it was not.
+    "SignIn.Failed": "عنوان الإيميل أو كلمة السر مش صح. لو سمحت جرّب تاني.",
 
-    "profile.title": "الملف الشخصي",
+    "profile.title": "ملفّي",
+    // A label's colon is its words', since languages set it differently.
     "profile.name": "الاسم:",
-    "profile.emailAddress": "عنوان البريد الإلكتروني:",
+    "profile.emailAddress": "عنوان الإيميل:",
 
-    "changeName.title": "غيّر الاسم",
+    "changeName.title": "تغيير الاسم",
     "changeName.name": "الاسم",
     "changeName.submit": "غيّر الاسم",
 
-    "setPassword.title": "اضبط كلمة سر",
+    "setPassword.title": "حدّد كلمة سر",
     "setPassword.explanation":
-      "حسابك ملوش كلمة سر: إنت بتدخل بجوجل. علشان تقدر تدخل بكلمة سر كمان، هنبعت لينك لضبطها على {emailAddress}.",
-    "setPassword.submit": "ابعتلي لينك",
-    "setPassword.sent.title": "بص على بريدك",
+      "حسابك ملوش كلمة سر: بتدخل بحساب Google. وعشان تقدر تدخل بكلمة سر كمان، هنبعت رابط لتحديدها على {emailAddress}.",
+    "setPassword.submit": "ابعتلي رابط على الإيميل",
+    "setPassword.sent.title": "شوف الإيميل بتاعك",
     "setPassword.sent.explanation":
-      "بعتنا لك لينك لضبط كلمة السر. بيشتغل ساعة واحدة.",
-    "setPassword.profile": "ارجع إلى ملفك الشخصي",
+      "بعتنالك رابط لتحديد كلمة السر. شغّال لمدة ساعة.",
+    "setPassword.profile": "ارجع لملفّك",
 
-    "changePassword.title": "غيّر كلمة السر",
+    "changePassword.title": "تغيير كلمة السر",
     "changePassword.currentPassword": "كلمة السر الحالية",
     "changePassword.password": "كلمة السر الجديدة",
     "changePassword.passwordConfirmation": "أكّد كلمة السر",
     "changePassword.forgotPassword": "نسيت كلمة السر؟",
     "changePassword.submit": "غيّر كلمة السر",
+    // Beneath the current password, which is the one it is about.
     "ChangePassword.WrongPassword": "دي مش كلمة السر بتاعتك.",
 
-    "changeEmailAddress.title": "غيّر عنوان البريد الإلكتروني",
-    "changeEmailAddress.emailAddress": "عنوان البريد الإلكتروني الجديد",
+    "changeEmailAddress.title": "تغيير عنوان الإيميل",
+    "changeEmailAddress.emailAddress": "عنوان الإيميل الجديد",
     "changeEmailAddress.currentPassword": "كلمة السر الحالية",
-    "changeEmailAddress.submit": "ابعت لينك التأكيد",
-    "changeEmailAddress.sent.title": "بص على بريدك",
+    "changeEmailAddress.submit": "ابعت رابط التأكيد",
+    "changeEmailAddress.sent.title": "شوف الإيميل بتاعك",
     "changeEmailAddress.sent.explanation":
-      "اتبعت لعنوان البريد الإلكتروني الجديد لينك لتأكيد النقل. افتحه وإنت داخل على حسابك علشان تنقل حسابك هناك.",
+      "رابط لتأكيد النقل اتبعت لعنوان الإيميل الجديد. افتحه وانت داخل على حسابك عشان ننقل حسابك هناك.",
     "changeEmailAddress.confirm.title": "انقل حسابك",
     "changeEmailAddress.confirm.explanation":
-      "حسابك هيتنقل إلى {emailAddress}. من دلوقتي هتدخل بالعنوان ده.",
+      "حسابك هيتنقل إلى {emailAddress}. هتدخل بالعنوان ده من دلوقتي.",
     "changeEmailAddress.confirm.submit": "انقل حسابي",
-    "changeEmailAddress.noLongerWorks.title": "اللينك ده ما بقاش شغّال",
+    "changeEmailAddress.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "changeEmailAddress.noLongerWorks.explanation":
-      "ممكن تكون مدّته انتهت، أو اتستخدم قبل كده، أو ما اتبعتش للحساب اللي إنت داخل عليه. اطلبه تاني من ملفك الشخصي.",
+      "ممكن يكون خلص، أو اتستخدم قبل كده، أو ما اتبعتش للحساب اللي داخل عليه. اطلب تاني من ملفّك.",
     "changeEmailAddress.taken.title": "حسابك ما اتنقلش",
-    "changeEmailAddress.profile": "ارجع إلى ملفك الشخصي",
+    "changeEmailAddress.profile": "ارجع لملفّك",
+    // Beneath the field each is about.
     "ChangeEmailAddress.WrongPassword": "دي مش كلمة السر بتاعتك.",
-    "ChangeEmailAddress.Unchanged": "حسابك أصلاً على العنوان ده.",
+    "ChangeEmailAddress.Unchanged": "حسابك على العنوان ده فعلاً.",
     "ChangeEmailAddress.Taken":
-      "عنوان البريد الإلكتروني ده عليه حساب تاني، فحسابك مينفعش يتنقل له.",
+      "عنوان الإيميل ده بقى عليه حساب تاني، فحسابك مينفعش يتنقل له.",
 
-    "confirmEmailAddress.title": "أكّد عنوان بريدك الإلكتروني",
+    "confirmEmailAddress.title": "أكّد عنوان الإيميل بتاعك",
     "confirmEmailAddress.name": "الاسم",
     "confirmEmailAddress.password": "كلمة السر",
     "confirmEmailAddress.confirmPassword": "أكّد كلمة السر",
-    "confirmEmailAddress.submit": "أكّد عنوان بريدي الإلكتروني",
-    "confirmEmailAddress.signIn": "تسجيل الدخول",
+    "confirmEmailAddress.submit": "أكّد عنوان الإيميل بتاعي",
+    "confirmEmailAddress.signIn": "سجّل الدخول",
     "confirmEmailAddress.home": "ارجع إلى {siteName}",
-    "confirmEmailAddress.confirmed.title": "عنوان بريدك الإلكتروني اتأكّد",
+    "confirmEmailAddress.confirmed.title": "عنوان الإيميل بتاعك اتأكّد",
     "confirmEmailAddress.confirmed.explanation":
-      "حسابك جاهز. سجّل الدخول بعنوان البريد الإلكتروني وكلمة السر اللي لسه كاتبهم.",
-    "confirmEmailAddress.expired.title": "اللينك ده انتهت مدّته",
+      "حسابك جاهز. سجّل الدخول بعنوان الإيميل وكلمة السر اللي كتبتهم دلوقتي.",
+    "confirmEmailAddress.expired.title": "الرابط ده خلص",
     "confirmEmailAddress.expired.explanation":
-      "لينك تأكيد عنوان البريد الإلكتروني بيشتغل 24 ساعة. اطلب واحد جديد وهيتبعت على نفس العنوان.",
-    "confirmEmailAddress.expired.newLink": "ابعتلي لينك جديد",
-    "confirmEmailAddress.noLongerWorks.title": "اللينك ده ما بقاش شغّال",
+      "رابط تأكيد عنوان الإيميل شغّال لمدة 24 ساعة. اطلب رابط جديد وهيتبعت لنفس العنوان.",
+    "confirmEmailAddress.expired.newLink": "ابعتلي رابط جديد",
+    "confirmEmailAddress.noLongerWorks.title": "الرابط ده مبقاش شغّال",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "اتأكد إنك فتحت اللينك كله من الرسالة، من غير ما ينقص منه حاجة في الآخر. لو لسه مش شغّال، سجّل من جديد وهيتبعت لك لينك جديد.",
+      "اتأكّد إنك فتحت الرابط كله اللي في الإيميل، من غير ما يكون ناقص حاجة من آخره. لو لسه مش شغّال، سجّل من الأول وهيتبعتلك رابط جديد.",
     "confirmEmailAddress.alreadyConfirmed.title":
-      "عنوان البريد الإلكتروني ده اتأكّد بالفعل",
+      "عنوان الإيميل ده اتأكّد فعلاً",
     "confirmEmailAddress.alreadyConfirmed.explanation":
-      "مفيش حاجة تانية تعملها. سجّل الدخول بكلمة السر اللي حطّيتها وقت التأكيد.",
+      "مفيش حاجة تانية تعملها. سجّل الدخول بكلمة السر اللي كتبتها وانت بتأكّده.",
 
-    "PersonName.Missing": "اكتب الاسم.",
+    // A rule broken, keyed by its code, so that every form saying it says it
+    // the same way. Said to whoever typed it, beneath the field it reads.
+    "PersonName.Missing": "اكتب اسم.",
     "PersonName.TooShort": "الاسم لازم يكون 3 حروف على الأقل.",
-    "PersonName.TooLong": "الاسم أطول حاجة 254 حرف.",
+    "PersonName.TooLong": "الاسم ممكن يوصل 254 حرف على الأكتر.",
     "WorldRankingName.TooShort":
-      "الاسم في التصنيف العالمي لازم يكون 3 حروف على الأقل.",
-    "WorldRankingName.TooLong": "الاسم في التصنيف العالمي أطول حاجة 254 حرف.",
-    "Password.Missing": "اكتب كلمة السر.",
+      "اسم التصنيف العالمي لازم يكون 3 حروف على الأقل.",
+    "WorldRankingName.TooLong":
+      "اسم التصنيف العالمي ممكن يوصل 254 حرف على الأكتر.",
+    "Password.Missing": "اكتب كلمة سر.",
     "Password.TooShort": "كلمة السر لازم تكون 12 حرف على الأقل.",
-    "Password.ConfirmationDiffers": "مش زي كلمة السر اللي فوق. اكتبها تاني.",
+    "Password.ConfirmationDiffers": "دي مش زي كلمة السر اللي فوق. اكتبها تاني.",
     "Password.Breached":
-      "كلمة السر دي ظهرت في تسريب بيانات من موقع تاني، فمش آمن تستخدمها هنا. اختار واحدة تانية.",
+      "كلمة السر دي ظهرت قبل كده في تسريب بيانات في مكان تاني، فمش آمنة تستخدمها هنا. اختار واحدة تانية.",
 
-    "javaScriptRequired.title": "لازم JavaScript",
+    "javaScriptRequired.title": "لازم تشغّل السكربتات",
     "javaScriptRequired.explanation":
-      "علشان تسجّل لازم JavaScript يكون شغّال على الموقع ده، علشان نتأكد إن اللي بيسجّل إنسان. شغّله وسجّل من جديد.",
+      "التسجيل محتاج السكربتات تكون شغّالة للموقع ده، عشان نتأكّد إن اللي بيسجّل إنسان. شغّلها وبعدين سجّل تاني.",
     "javaScriptRequired.register": "ارجع للتسجيل",
     "javaScriptRequired.home": "ارجع إلى {siteName}",
 
     "errors.backHome": "ارجع إلى {siteName}",
     "errors.notFound": "مش موجود",
-    "errors.refused": "مقدرناش نعمل ده",
-    "errors.refusedDetail": "في حاجة مما اتبعت مش مظبوطة.",
-    "errors.sorry": "آسفين",
-    "errors.sorryDetail": "مقدرناش ننفّذ الطلب ده.",
+    "errors.refused": "ما قدرناش نعمل ده",
+    "errors.refusedDetail": "فيه حاجة في اللي اتبعت مش مظبوطة.",
+    "errors.sorry": "معلش",
+    "errors.sorryDetail": "ما قدرناش نتعامل مع الطلب ده.",
     "errors.failed": "حصلت مشكلة",
     "errors.reference": "الرقم المرجعي {reference}.",
     "errors.recorded":
-      "الخطأ اتسجّل واتبعت رسالة بريد إلكتروني للمسؤول. هيفيد لو بعتّ للمسؤول رسالة بريد إلكتروني فيها الرقم المرجعي ووصف للي كنت بتعمله.",
-    "errors.message": "ابعت بريد إلكتروني للمسؤول",
-    "errors.messageSubject": "خطأ {reference} على {siteName}",
+      "الخطأ اتسجّل واتبعت إيميل لمدير الموقع. حاجة كويسة إنك تبعت إيميل لمدير الموقع بالرقم المرجعي ووصف اللي كنت بتعمله.",
+    "errors.message": "ابعت إيميل لمدير الموقع",
+    "errors.messageSubject": "الخطأ {reference} في {siteName}",
     "errors.messageBody": "اللي كنت بعمله لما ده حصل:\n\n",
     "errors.unavailable": "الموقع مش متاح",
     "errors.unavailableDetail":
-      "الموقع مش قادر يوصل للي محتاجه دلوقتي. جرّب تاني بعدين.",
+      "الموقع مش قادر يوصل للي محتاجه دلوقتي. لو سمحت جرّب تاني بعدين.",
     "errors.maintenance": "الموقع واقف للصيانة.",
-    "errors.maintenanceMinutes": "متوقع يرجع بعد {minutes} دقيقة.",
-    "errors.maintenanceMinute": "متوقع يرجع بعد دقيقة.",
-    "errors.maintenanceLonger": "الموضوع واخد وقت أطول من المتوقع وهيرجع قريب.",
+    "errors.maintenanceMinutes": "متوقّع يرجع بعد {minutes} دقيقة.",
+    "errors.maintenanceMinute": "متوقّع يرجع بعد دقيقة.",
+    "errors.maintenanceLonger":
+      "الموضوع واخد وقت أطول من المتوقّع وهيرجع قريب.",
 
+    // The home page's two lists.
     "home.recentResults": "آخر النتايج",
-    "home.recentResults.none": "مفيش أي جيم اتضاف في آخر سبعة أيام.",
+    "home.recentResults.none": "ما اتضافتش أي لعبة في آخر سبعة أيام.",
     "home.upcomingTournaments": "البطولات الجاية",
-    "home.upcomingTournaments.none": "مفيش بطولة بتبدأ في الستين يوم الجايين.",
-    "tournamentList.column.date": "التاريخ",
-    "tournamentList.column.name": "الاسم",
-    "tournamentList.onlyIn": "بطولات في {country} بس",
-    "tournamentList.filter.country": "البلد",
-    "tournamentList.filter.anyCountry": "أي بلد",
-    "tournamentList.filter.region": "المنطقة",
-    "tournamentList.filter.anyRegion": "أي منطقة",
-    "tournamentList.filter.sport": "الرياضة",
-    "tournamentList.filter.anySport": "أي رياضة",
-    "tournamentList.filter.submit": "فلتر",
-    "home.allTournaments": "كل بطولات {year}",
+    "home.upcomingTournaments.none": "مفيش بطولات بتبدأ في الستين يوم الجايين.",
+    "home.allTournaments": "كل البطولات في {year}",
+    // A year's page.
     "year.heading": "بطولات {year}",
-    "year.none": "مفيش بطولة بتبدأ في {year}.",
+    "year.none": "مفيش بطولات بتبدأ في {year}.",
+    // A sport's page in a year.
     "yearSport.heading": "بطولات {sport} في {year}",
-    "yearSport.none": "مفيش بطولة {sport} بتبدأ في {year}.",
+    "yearSport.none": "مفيش بطولات {sport} بتبدأ في {year}.",
+    // A tournament's page.
     "tournament.recent": "الأحدث",
     "tournament.summary": "الملخّص",
-    "test.bestOf": "كل ماتش بأفضل {count}.",
+    // A test's grid.
+    "test.bestOf": "كل مباراة أحسن {count}.",
     "test.vs": "ضد",
-    "test.matches": "الماتشات",
-    "test.games": "الجيمات",
+    "test.matches": "المباريات",
+    "test.games": "الألعاب",
     "test.hoops": "الأطواق",
-    "teamSummary.tests": "التيستات",
-    "teamSummary.matches": "الماتشات",
-    "teamSummary.games": "الجيمات",
+    "teamSummary.tests": "اللقاءات",
+    "teamSummary.matches": "المباريات",
+    "teamSummary.games": "الألعاب",
     "teamSummary.hoops": "الأطواق",
     "teamSummary.wins": "الفوز",
-    "teamSummary.losses": "الخسارة",
+    "teamSummary.losses": "الهزايم",
     "teamSummary.draws": "التعادل",
     "teamSummary.for": "له",
     "teamSummary.against": "عليه",
-    "teamSummary.net": "الفرق",
+    "teamSummary.net": "الصافي",
     "tournament.players": "اللاعبين",
-    "search.label": "ابحث",
+    "search.label": "بحث",
     "search.tournaments": "البطولات",
-    "search.competitions": "المسابقات",
-    "search.nothingFound": "ما اتلقاش حاجة.",
-    "players.search.label": "ابحث عن لاعبين",
-    "players.search.prompt": "اكتب اسم اللاعب علشان تلاقيه.",
-    "players.search.none": "ما اتلقاش لاعبين.",
-    "search.more": "بيتعرض بس أول {count}. زوّد من الاسم علشان تضيّق البحث.",
+    "search.competitions": "المنافسات",
+    "search.nothingFound": "ما لقيناش حاجة.",
+    "players.search.label": "دوّر على لاعبين",
+    "players.search.prompt": "اكتب اسم لاعب عشان تلاقيه.",
+    "players.search.none": "ما لقيناش لاعبين.",
+    "search.more":
+      "بنعرض أول {count} بس. اكتب جزء أكتر من الاسم عشان البحث يضيق.",
     "websitePlayer.tournament": "البطولة",
+    // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} ضد {second}",
     "tournament.notes": "الملاحظات",
-    "tournament.commentary": "التعليقات",
-    "tournament.beat": "غلب",
+    "tournament.commentary": "التعليق",
+    "tournament.beat": "هزم",
     "tournament.drewWith": "اتعادل مع",
     "tournament.ago.seconds": "{count} ث",
     "tournament.ago.minutes": "{count} د",
     "tournament.ago.hour": "ساعة",
     "tournament.ago.hours": "{count} ساعات",
-    "tournament.none": "لسه ما اتلعبش أي جيم.",
-    "players.none": "لسه ما اتضافش أي لاعب.",
-    "commentaries.by": "بواسطة",
+    "tournament.none": "لسه محدش لعب أي لعبة.",
+    // A tournament's players' page, when it has none.
+    "players.none": "لسه ما اتضافش أي لاعبين.",
+    // A tournament's commentaries page.
+    "commentaries.by": "بقلم",
     "commentaries.start": "ابدأ تعليق جديد",
+    // The page that starts a commentary.
     "startCommentary.title": "ابدأ تعليق جديد",
     "startCommentary.titleField": "العنوان",
     "startCommentary.submit": "ابدأ التعليق",
-    // A tournament's Notes page, and a note's own page, as the English says.
-    "notes.none": "المنظّمين لسه ما كتبوش ملاحظات.",
+    // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "جديد",
-    "note.edited": "اتعدّلت",
-    "commentary.none": "لسه ما اتكتبش حاجة.",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "المديرين لسه ما كتبوش أي ملاحظات.",
+    "note.edited": "اتعدّل",
+    // A commentary's page.
+    "commentary.none": "لسه ما اتكتبش أي تعليقات.",
     "commentary.edited": "اتعدّل",
     "commentary.edit": "عدّل",
     "commentary.delete": "امسح",
     "commentary.comment": "تعليق",
-    "commentary.add": "أضف",
-    "commentary.notSent": "التعليق ما اتبعتش. حمّل الصفحة تاني وشوف لو اتحفظ.",
+    "commentary.add": "ضيف تعليق",
+    "commentary.notSent":
+      "ما قدرناش نبعت التعليق. حمّل الصفحة تاني عشان تشوف لو اتحفظ.",
+    // The page that changes a commentary's title.
     "changeCommentaryTitle.title": "غيّر العنوان",
     "changeCommentaryTitle.submit": "احفظ",
+    // A comment's own page, and the page that asks before it is deleted.
     "editComment.title": "عدّل التعليق",
     "editComment.save": "احفظ",
     "deleteComment.title": "امسح التعليق",
     "deleteComment.question": "تمسح التعليق ده؟ مينفعش ترجّعه.",
     "deleteComment.confirm": "امسح التعليق",
     "deleteComment.keep": "سيبه",
-    "player.games": "الجيمات",
-    "player.competitions": "المسابقات",
-    "player.beat": "غلب",
-    "player.lostTo": "اتغلب من",
+    // A player's page.
+    "player.games": "الألعاب",
+    "player.competitions": "المنافسات",
+    "player.beat": "هزم",
+    "player.lostTo": "خسر قدّام",
     "player.drewWith": "اتعادل مع",
     "player.score": "{score} مقابل {opponent}",
-    "player.noGames": "لسه ما اتلعبش أي جيم.",
-    "player.noCompetitions": "لسه مش مسجّل في أي مسابقة.",
+    "player.noGames": "لسه محدش لعب أي لعبة.",
+    "player.noCompetitions": "لسه مش مشترك في أي منافسة.",
+    // A block's page.
     "block.wins": "الفوز",
-    "block.matches": "الماتشات",
-    "block.netGames": "صافي الجيمات",
-    "block.games": "الجيمات",
+    "block.matches": "المباريات",
+    "block.netGames": "صافي الألعاب",
+    "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
-    "block.won": "فوز",
-    "block.lost": "خسارة",
+    "block.won": "فاز",
+    "block.lost": "خسر",
     "block.drawn": "تعادل",
     "block.withdrawn": "انسحب",
-    "block.gameWithdrawn": "انسحاب",
-    "block.losses": "الخسارة",
+    // A game withdrawn, which Spanish says otherwise than a player.
+    "block.gameWithdrawn": "اتسحبت",
+    "block.losses": "الهزايم",
+    // The three views of a block.
     "competition.views": "العروض",
     "competition.view.grid": "الجدول",
     "competition.view.summary": "الملخّص",
     "competition.view.orderOfPlay": "ترتيب اللعب",
     "blockSummary.ranking":
-      "الترتيب بنسبة الماتشات اللي اتكسبت، وبعدها بصافي الأطواق. لائحة البطولة ممكن ترتّب لاعبيها بشكل تاني.",
-    "orderOfPlay.none": "لسه ما اتلعبش أي جيم.",
+      "الترتيب على حسب نسبة المباريات اللي اتكسبت، وبعدين صافي الأطواق. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
+    "orderOfPlay.none": "لسه محدش لعب أي لعبة.",
+    // A knockout's rounds.
     "knockout.round.final": "النهائي",
     "knockout.round.semis": "نصف النهائي",
     "knockout.round.quarters": "ربع النهائي",
     "knockout.round.number": "الدور {number}",
-    "knockout.bye": "إعفاء",
-    "swiss.games": "الجيمات",
+    "knockout.bye": "Bye",
+    // A Swiss's table.
+    "swiss.games": "الألعاب",
     "swiss.wins": "الفوز",
     "swiss.winShare": "نسبة الفوز %",
     "swiss.results": "النتايج",
+    // The arrows that scroll a knockout's grid.
     "knockout.onward": "الأدوار الجاية",
     "knockout.back": "الأدوار اللي فاتت",
+    // What every list of tournaments shares.
+    "tournamentList.column.date": "التاريخ",
+    "tournamentList.column.name": "الاسم",
+    "tournamentList.onlyIn": "بطولات {country} بس",
+    "tournamentList.filter.country": "البلد",
+    "tournamentList.filter.anyCountry": "أي بلد",
+    "tournamentList.filter.region": "المنطقة",
+    "tournamentList.filter.anyRegion": "أي منطقة",
+    "tournamentList.filter.sport": "الرياضة",
+    "tournamentList.filter.anySport": "أي رياضة",
+    "tournamentList.filter.submit": "صفّي",
+    // The years there are tournaments in.
     "years.label": "السنين",
-    "years.earlier": "سنين فاتت",
+    // The drop-down list holding the years that do not fit as tabs.
+    "years.earlier": "سنين أقدم",
 
-    "admin.newerBuild.message": "في نسخة أحدث من الموقع ده.",
+    // The admin's words.
+    "admin.newerBuild.message": "فيه نسخة أحدث من الموقع متاحة.",
     "admin.newerBuild.reload": "حمّل تاني",
     "admin.title": "الإدارة",
     "admin.tournaments.new": "بطولة جديدة",
     "admin.tournaments.none": "مفيش بطولات",
     "admin.tournaments.filter.none": "مفيش بطولات مطابقة",
-    "admin.tournaments.archived": "في الأرشيف",
+    // Said to a screen reader, since a line through a name is not read out.
+    "admin.tournaments.archived": "مؤرشفة",
     "admin.tournaments.manage": "إدارة",
     "admin.tournaments.edit": "عدّل",
-    "admin.tournaments.archive": "أرشِف",
-    "admin.tournaments.restore": "رجّع",
+    "admin.tournaments.archive": "أرشف",
+    "admin.tournaments.restore": "استرجع",
     "admin.tournaments.scores": "النتايج",
     "admin.tournaments.players": "اللاعبين",
     "admin.years.label": "السنين",
-    "admin.years.earlier": "سنين فاتت",
+    // What the drop-down list of years says while the year chosen is a tab.
+    "admin.years.earlier": "سنين أقدم",
     "admin.tournament.name": "الاسم",
     "admin.tournament.starts": "بتبدأ",
     "admin.tournament.finishes": "بتخلص",
@@ -446,40 +480,47 @@ export const egyptian: Language = {
     "admin.tournament.country": "البلد",
     "admin.tournament.region": "المنطقة",
     "admin.tournament.subtitle": "العنوان الفرعي",
-    "admin.rules.handicap": "بتتلعب بهانديكاب",
+    "admin.rules.handicap": "بتتلعب بالهانديكاب",
     "admin.rules.drawsAllowed": "التعادل مسموح",
-    "admin.tournament.levelTestsDrawn": "التيست المتعادل بيتحسب تعادل",
+    "admin.tournament.levelTestsDrawn": "اللقاءات المتعادلة بتتحسب تعادل",
     "admin.rules.worldRankings": "بتتحسب في التصنيف العالمي",
-    "admin.tournament.national": "حدث على مستوى البلد",
-    "admin.tournament.international": "حدث دولي",
+    "admin.tournament.national": "حدث على المستوى الوطني",
+    "admin.tournament.international": "حدث على المستوى الدولي",
+    // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "مينفعش نقبل ده زي ما هو.",
     "admin.newTournament.title": "بطولة جديدة",
     "admin.newTournament.submit": "أنشئ البطولة",
     "admin.editTournament.title": "عدّل البطولة",
     "admin.editTournament.submit": "حدّث البطولة",
-    "admin.editTournament.otherwise": "البطولة دي مينفعش تتغيّر.",
+    // Said in place of the form, for a refusal with no words of its own.
+    "admin.editTournament.otherwise": "مينفعش نغيّر البطولة دي.",
+    // A tournament's page, and the tabs what there is to run is in.
     "admin.view.tabs": "البطولة",
     "admin.view.players": "اللاعبين",
-    "admin.view.competitions": "المسابقات",
+    "admin.view.competitions": "المنافسات",
     "admin.view.managers": "المديرين",
     "admin.view.notes": "الملاحظات",
     "admin.view.scorers": "مسجّلي النتايج",
     "admin.view.rankings": "التصنيفات",
     "admin.rankings.file":
-      "نتايج البطولة بتتبعت للتصنيف العالمي كملف نصي، والموقع بيكتبه من المباريات اللي اتسجلت.",
-    "admin.rankings.download": "تنزيل التصنيفات",
+      "التصنيف العالمي هيستخدم نتايج البطولة عن طريق الوظيفة دي، والمديرين مش محتاجين يعملوا حاجة.",
+    "admin.rankings.download": "نزّل التصنيفات",
     "rankings.notAvailable": "التصنيفات مش متاحة",
     "rankings.notAvailable.sport":
-      "رياضة البطولة دي مالهاش تصنيف عالمي، فمفيش تصنيفات تتبعت.",
+      "رياضة البطولة دي ملهاش تصنيف عالمي، فمفيش تصنيفات تتبعت.",
     "rankings.notAvailable.notCounted":
-      "ولا واحدة من مسابقات البطولة دي بتتحسب في التصنيف العالمي.",
-    "admin.view.otherwise": "البطولة دي مينفعش تتدار من هنا.",
-    "admin.competitionView.tabs": "المسابقة",
+      "ولا منافسة من منافسات البطولة دي بتتحسب في التصنيف العالمي.",
+    // Said in place of the tabs, for a refusal with no words of its own.
+    "admin.view.otherwise": "مينفعش ندير البطولة دي من هنا.",
+    // A competition's page, and the tabs what there is to run is in.
+    "admin.competitionView.tabs": "المنافسة",
     "admin.competitionView.players": "اللاعبين",
     "admin.competitionView.scores": "النتايج",
-    "admin.sections.label": "البطولة ومسابقاتها",
+    // The section bar of a tournament's page and its competitions' pages.
+    "admin.sections.label": "البطولة ومنافساتها",
     "admin.sections.tournament": "البطولة",
-    "admin.administrator.sections.label": "صفحات المسؤول",
+    // The section bar of the administrator's pages.
+    "admin.administrator.sections.label": "صفحات المدير",
     "admin.administrator.sections.tournaments": "البطولات",
     "admin.administrator.sections.accounts": "الحسابات",
     "admin.administrator.sections.worldRankings": "التصنيف العالمي",
@@ -488,568 +529,593 @@ export const egyptian: Language = {
     "admin.administrator.sections.databaseStatus": "الوصول لقاعدة البيانات",
     "admin.databaseStatus.title": "الوصول لقاعدة البيانات",
     "admin.databaseStatus.on": "الوصول لقاعدة البيانات شغّال.",
-    "admin.databaseStatus.off": "الوصول لقاعدة البيانات واقف.",
-    "admin.databaseStatus.expected":
-      "متوقع إن الموقع يرجع بعد {minutes} دقيقة.",
-    "admin.databaseStatus.expectedOne": "متوقع إن الموقع يرجع بعد دقيقة.",
-    "admin.databaseStatus.longer": "الموضوع واخد وقت أطول من المتوقع.",
-    "admin.databaseStatus.told": "الزوار هيشوفوا: {words}",
-    "admin.databaseStatus.toldUsual": "الزوار هيشوفوا الجملة المعتادة.",
-    "admin.databaseStatus.minutes": "الدقايق المتوقعة",
-    "admin.databaseStatus.words": "كلام للزوار",
-    "admin.databaseStatus.turnOff": "وقّف",
-    "admin.databaseStatus.change": "عدّل",
+    "admin.databaseStatus.off": "الوصول لقاعدة البيانات مقفول.",
+    "admin.databaseStatus.expected": "متوقّع الموقع يرجع بعد {minutes} دقيقة.",
+    "admin.databaseStatus.expectedOne": "متوقّع الموقع يرجع بعد دقيقة.",
+    "admin.databaseStatus.longer": "الموضوع واخد وقت أطول من المتوقّع.",
+    "admin.databaseStatus.told": "القرّاء بيتقالهم: {words}",
+    "admin.databaseStatus.toldUsual": "القرّاء بيتقالهم الجملة المعتادة.",
+    "admin.databaseStatus.minutes": "الدقايق المتوقّعة",
+    "admin.databaseStatus.words": "كلام للقرّاء",
+    "admin.databaseStatus.turnOff": "اقفل",
+    "admin.databaseStatus.change": "غيّر",
     "admin.databaseStatus.turnOn": "شغّل",
     "admin.databaseStatus.minutesNeeded": "لازم تكتب الدقايق.",
-    "admin.databaseStatus.otherwise": "حصل خطأ في الموقع.",
+    "admin.databaseStatus.otherwise": "حصلت مشكلة في الموقع.",
     "DatabaseAccess.MinutesNotWhole": "الدقايق لازم تكون رقم صحيح.",
     "DatabaseAccess.MinutesOutOfRange": "الدقايق لازم تكون من 1 لـ 1440.",
     "DatabaseAccess.WordsTooLong": "الكلام لازم ميزيدش عن 500 حرف.",
-    "DatabaseAccess.NotOff": "الوصول لقاعدة البيانات مش واقف.",
-    "admin.administrator.title": "المسؤول",
+    "DatabaseAccess.NotOff": "الوصول لقاعدة البيانات مش مقفول.",
+    "admin.administrator.title": "المدير",
+    // The accounts page, a section for each role.
     "admin.accounts.title": "الحسابات",
-    "admin.roles.add": "أضف",
-    "admin.roles.administrator.heading": "المسؤولين",
-    "admin.roles.administrator.none": "مفيش مسؤولين تانيين",
-    "admin.roles.administrator.removeTitle": "شيل مسؤول",
+    "admin.roles.add": "ضيف",
+    "admin.roles.administrator.heading": "المديرين",
+    "admin.roles.administrator.none": "مفيش مديرين تانيين",
+    "admin.roles.administrator.removeTitle": "شيل مدير",
     "admin.roles.administrator.removeExplanation":
-      "{name} مش هيبقى مسؤول عن الموقع ده تاني.",
+      "{name} مش هيبقى مدير للموقع ده تاني.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "المسؤولين عن التصنيف العالمي (أسوشيشن كروكيه)",
+      "مسؤولو التصنيف العالمي لكروكيه الأسوشييشن",
     "admin.roles.ac-world-ranking-officer.none":
-      "مفيش مسؤولين عن التصنيف العالمي (أسوشيشن كروكيه)",
+      "مفيش مسؤولين عن التصنيف العالمي لكروكيه الأسوشييشن",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "شيل المسؤول عن التصنيف العالمي (أسوشيشن كروكيه)",
+      "شيل مسؤول التصنيف العالمي لكروكيه الأسوشييشن",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} مش هيبقى مسؤول عن التصنيف العالمي تاني (أسوشيشن كروكيه).",
+      "{name} مش هيبقى مسؤول عن التصنيف العالمي لكروكيه الأسوشييشن تاني.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "المسؤولين عن التصنيف العالمي (جولف كروكيه)",
+      "مسؤولو التصنيف العالمي لكروكيه الجولف",
     "admin.roles.gc-world-ranking-officer.none":
-      "مفيش مسؤولين عن التصنيف العالمي (جولف كروكيه)",
+      "مفيش مسؤولين عن التصنيف العالمي لكروكيه الجولف",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "شيل المسؤول عن التصنيف العالمي (جولف كروكيه)",
+      "شيل مسؤول التصنيف العالمي لكروكيه الجولف",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} مش هيبقى مسؤول عن التصنيف العالمي تاني (جولف كروكيه).",
-    "admin.worldRankings.title": "استيراد لاعبين التصنيف العالمي",
+      "{name} مش هيبقى مسؤول عن التصنيف العالمي لكروكيه الجولف تاني.",
+    // The page where the world ranking players are imported, and its log.
+    "admin.worldRankings.title": "استيراد لاعبي التصنيف العالمي",
     "admin.worldRankings.import": "استورد",
-    "admin.worldRankings.log": "إزاي مشي الاستيراد",
-    "admin.worldRankings.ac.reading": "بنقرأ قايمة أسوشيشن كروكيه",
+    "admin.worldRankings.log": "الاستيراد مشي إزاي",
+    "admin.worldRankings.ac.reading": "بنقرا قايمة كروكيه الأسوشييشن",
     "admin.worldRankings.ac.read":
-      "لاعبين أسوشيشن كروكيه اللي اتقروا: {players}",
+      "لاعبو كروكيه الأسوشييشن اللي اتقروا: {players}",
     "admin.worldRankings.ac.kept":
-      "لاعبين أسوشيشن كروكيه اللي اتحفظوا: {players}",
+      "لاعبو كروكيه الأسوشييشن اللي فضلوا: {players}",
     "admin.worldRankings.ac.refused":
-      "مقدرناش نقرأ قايمة أسوشيشن كروكيه، فسبنا لاعبينها زي ما هما.",
-    "admin.worldRankings.gc.reading": "بنقرأ قايمة جولف كروكيه",
-    "admin.worldRankings.gc.read": "لاعبين جولف كروكيه اللي اتقروا: {players}",
-    "admin.worldRankings.gc.kept": "لاعبين جولف كروكيه اللي اتحفظوا: {players}",
+      "ما قدرناش نقرا قايمة كروكيه الأسوشييشن، فسبنا لاعبيها زي ما هم.",
+    "admin.worldRankings.gc.reading": "بنقرا قايمة كروكيه الجولف",
+    "admin.worldRankings.gc.read": "لاعبو كروكيه الجولف اللي اتقروا: {players}",
+    "admin.worldRankings.gc.kept": "لاعبو كروكيه الجولف اللي فضلوا: {players}",
     "admin.worldRankings.gc.refused":
-      "مقدرناش نقرأ قايمة جولف كروكيه، فسبنا لاعبينها زي ما هما.",
+      "ما قدرناش نقرا قايمة كروكيه الجولف، فسبنا لاعبيها زي ما هم.",
     "admin.worldRankings.finished": "خلص",
     "admin.worldRankings.failed": "الاستيراد ما خلصش.",
+    // For a refusal with no words of its own, as a failure of the site's.
     "admin.worldRankings.otherwise": "حصلت مشكلة في الموقع.",
-    "WorldRankingLists.Unreachable": "مقدرناش نوصل لموقع التصنيف العالمي.",
+    "WorldRankingLists.Unreachable": "ما قدرناش نوصل لموقع التصنيف العالمي.",
     "WorldRankingLists.Unreadable":
-      "القايمة مش بالشكل بتاع قوايم التصنيف العالمي: سطر ما اتقراش، أو مفيهوش حد، أو مش مكتوب بـ UTF-8.",
+      "القايمة مش مكتوبة بالشكل اللي التصنيف العالمي بيكتب بيه قوايمه: فيه سطر مش مفهوم، أو مفيهاش حد، أو مش مكتوبة بـ UTF-8.",
+    // The documents the import from the old sites refused, and the page of one.
     "admin.importErrors.title": "أخطاء الاستيراد",
     "admin.importErrors.none": "مفيش أخطاء استيراد",
     "admin.importErrors.otherwise": "حصلت مشكلة في الموقع.",
     "admin.logs.title": "السجلات",
     "admin.logs.severity": "الخطورة",
-    "admin.logs.text": "بحث",
+    "admin.logs.text": "دوّر",
     "admin.logs.show": "اعرض",
     "admin.logs.prune": "نضّف",
-    "admin.logs.pruneAsk":
-      "تمسح السجل اللي أقدم من آخر ساعة؟ مفيش حاجة بترجّعه.",
-    "admin.logs.removed": "اتمسح {count} من الإدخالات",
-    "admin.logs.none": "مفيش إدخالات في السجل",
+    "admin.logs.pruneAsk": "تمسح السجل اللي قبل آخر ساعة؟ مفيش حاجة هترجّعه.",
+    "admin.logs.removed": "اتمسح {count} سطر",
+    "admin.logs.none": "مفيش أسطر في السجل",
     "admin.logs.otherwise": "حصلت مشكلة في الموقع.",
-    "admin.hover.logs.show": "اعرض الإدخالات المطابقة",
-    "admin.hover.logs.prune": "امسح السجل اللي أقدم من آخر ساعة",
-    "admin.hover.logs.pruneAgree": "امسح السجل اللي أقدم من آخر ساعة",
+    "admin.hover.logs.show": "اعرض الأسطر المطابقة",
+    "admin.hover.logs.prune": "امسح السجل اللي قبل آخر ساعة",
+    "admin.hover.logs.pruneAgree": "امسح السجل اللي قبل آخر ساعة",
     "admin.importError.title": "خطأ استيراد",
     "admin.importError.documentId": "رقم المستند",
     "admin.importError.tournament": "البطولة",
-    "admin.importError.competition": "المسابقة",
+    "admin.importError.competition": "المنافسة",
     "admin.importError.newSite": "الموقع الجديد",
     "admin.importError.oldSite": "الموقع القديم",
     "ImportErrorKept.NotFound": "الاستيراد ما حفظش أي خطأ للمستند ده.",
-    "admin.competitionView.otherwise": "المسابقة دي مينفعش تتدار من هنا.",
-    "admin.competitions.block": "مجموعات",
+    "admin.competitionView.otherwise": "مينفعش ندير المنافسة دي من هنا.",
+    // The Competitions tab.
+    "admin.competitions.block": "مجموعة",
     "admin.competitions.knockout": "خروج المغلوب",
     "admin.competitions.swiss": "سويسري",
-    "admin.competitions.view": "شوف",
+    "admin.competitions.view": "اعرض",
     "admin.competitions.edit": "عدّل",
-    "admin.competitions.up": "فوق",
-    "admin.competitions.down": "تحت",
-    "admin.competitions.archive": "أرشِف",
-    "admin.competitions.restore": "رجّع",
-    "admin.competitions.archived": "مسابقات في الأرشيف",
-    "admin.competitions.none": "مفيش مسابقات",
-    "admin.competitions.add": "أضف مسابقة",
+    "admin.competitions.up": "لفوق",
+    "admin.competitions.down": "لتحت",
+    "admin.competitions.archive": "أرشف",
+    "admin.competitions.restore": "استرجع",
+    "admin.competitions.archived": "المنافسات المؤرشفة",
+    "admin.competitions.none": "مفيش منافسات",
+    "admin.competitions.add": "ضيف منافسة",
     // The competition dialog.
-    "admin.competition.addTitle": "أضف مسابقة",
-    "admin.competition.editTitle": "عدّل المسابقة",
+    "admin.competition.addTitle": "ضيف منافسة",
+    "admin.competition.editTitle": "عدّل المنافسة",
     "admin.competition.name": "الاسم",
     "admin.competition.kind": "النوع",
-    "admin.competition.bestOf": "بأفضل",
-    "admin.competition.rounds": "الجولات",
+    "admin.competition.bestOf": "أحسن",
+    "admin.competition.rounds": "الأدوار",
     "admin.competition.places": "الأماكن",
     "admin.competition.round": "الدور {number}",
-    "admin.competition.bestOfs": "بأفضل",
+    "admin.competition.bestOfs": "عدد الألعاب في المباراة",
     "admin.competition.quarters": "ربع النهائي",
     "admin.competition.semis": "نصف النهائي",
     "admin.competition.final": "النهائي",
-    "admin.competition.add": "أضف",
+    "admin.competition.add": "ضيف",
     "admin.competition.save": "احفظ",
-    "admin.competition.added": "اتضافت {name}.",
-    "admin.competition.otherwise": "المسابقة دي مينفعش تتحفظ زي ما هي.",
-    "CompetitionName.Missing": "اكتب الاسم.",
-    "CompetitionName.TooLong": "الاسم أطول حاجة 254 حرف.",
-    "CompetitionName.NoLetterOrDigit": "الاسم لازم فيه حرف أو رقم.",
+    "admin.competition.added": "{name} اتضافت.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.competition.otherwise": "مينفعش نحفظ المنافسة دي زي ما هي.",
+    "CompetitionName.Missing": "اكتب اسم.",
+    "CompetitionName.TooLong": "الاسم ممكن يوصل 254 حرف على الأكتر.",
+    "CompetitionName.NoLetterOrDigit": "الاسم لازم يكون فيه حرف أو رقم.",
     "Tournament.KnockoutPlayerHasGames":
-      "في لاعبين في الجدول ده ليهم ماتشات، فأماكنهم مينفعش تتغيّر.",
+      "اللاعبين في القرعة دي ليهم ألعاب، فأماكنهم مينفعش تتغيّر.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "الدور اللي فيه ماتش اتحسم مينفعش نقلل عدد ألعابه.",
+      "الدور اللي فيه مباراة اتحسمت مينفعش يتعمل أحسن عدد ألعاب أقل.",
     "Tournament.KnockoutLaterRoundHasGames":
-      "الدور مينفعش يتغيّر بعد ما اتلعبت لعبة في دور بعده.",
+      "الدور مينفعش يتغيّر بعد ما تتلعب لعبة في دور بعده.",
     "Tournament.CompetitionNameTaken":
-      "في مسابقة تانية في البطولة دي بنفس الاسم.",
-    "BestOf.NotWhole": "اكتب عدد صحيح من الجيمات.",
-    "BestOf.TooSmall": "الماتش لازم يكون بأفضل جيم واحد على الأقل.",
-    "Rounds.NotWhole": "اكتب عدد صحيح من الجولات.",
-    "Rounds.TooSmall": "البلوك لازم يتلعب في جولة واحدة على الأقل.",
+      "فيه منافسة تانية في البطولة دي بنفس الاسم.",
+    "BestOf.NotWhole": "اكتب عدد صحيح من الألعاب.",
+    "BestOf.TooSmall": "المباراة لازم تكون أحسن لعبة واحدة على الأقل.",
+    "Rounds.NotWhole": "اكتب عدد صحيح من الأدوار.",
+    "Rounds.TooSmall": "المجموعة لازم تتلعب في دور واحد على الأقل.",
     "KnockoutDraw.EvenBestOf":
-      "ماتش خروج المغلوب لازم يطلع له فايز، فبيكون بأفضل عدد فردي من الجيمات.",
+      "مباراة الخروج المغلوب لازم يكون لها فايز، فهي أحسن عدد فردي من الألعاب.",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
     "admin.hover.tournaments.new": "أنشئ بطولة جديدة",
     "admin.hover.tournaments.manage":
-      "إدارة لاعبين البطولة دي وفرقها ومسابقاتها ونتايجها",
-    "admin.hover.tournaments.edit": "غيّر بيانات البطولة دي",
-    "admin.hover.tournaments.scores": "اكتب نتايج البطولة دي",
+      "أدر لاعبين البطولة دي وفرقها ومنافساتها ونتايجها",
+    "admin.hover.tournaments.edit": "غيّر تفاصيل البطولة دي",
+    "admin.hover.tournaments.scores": "سجّل نتايج البطولة دي",
     "admin.hover.tournaments.players": "اهتم بلاعبين البطولة دي",
     "admin.hover.competitions.view":
-      "افتح المسابقة دي علشان تشوف لاعبينها ونتايجها وتكتبهم",
-    "admin.hover.tests.view": "افتح التيست ده علشان تشوف نتايجه وتكتبها",
-    "admin.hover.teams.view": "افتح الفريق ده علشان تشوف لاعبينه وتديرهم",
+      "افتح المنافسة دي عشان تشوف لاعبينها ونتايجها وتسجّلهم",
+    "admin.hover.tests.view": "افتح اللقاء ده عشان تشوف نتايجه وتسجّلها",
+    "admin.hover.teams.view": "افتح الفريق ده عشان تشوف لاعبينه وتديرهم",
     "admin.hover.dialog.player.add": "ضيف اللاعب ده للبطولة",
-    "admin.hover.dialog.player.save": "احفظ تغييرات اللاعب ده",
+    "admin.hover.dialog.player.save": "احفظ التغييرات على اللاعب ده",
     "admin.hover.dialog.team.add": "ضيف الفريق ده للبطولة",
-    "admin.hover.dialog.team.save": "احفظ تغييرات الفريق ده",
-    "admin.hover.dialog.test.add": "ضيف التيست ده للبطولة",
-    "admin.hover.dialog.test.save": "احفظ تغييرات التيست ده",
-    "admin.hover.dialog.competition.add": "ضيف المسابقة دي للبطولة",
-    "admin.hover.dialog.competition.save": "احفظ تغييرات المسابقة دي",
-    "admin.hover.dialog.score.add": "ضيف النتيجة دي للمسابقة",
+    "admin.hover.dialog.team.save": "احفظ التغييرات على الفريق ده",
+    "admin.hover.dialog.test.add": "ضيف اللقاء ده للبطولة",
+    "admin.hover.dialog.test.save": "احفظ التغييرات على اللقاء ده",
+    "admin.hover.dialog.competition.add": "ضيف المنافسة دي للبطولة",
+    "admin.hover.dialog.competition.save": "احفظ التغييرات على المنافسة دي",
+    "admin.hover.dialog.score.add": "ضيف النتيجة دي للمنافسة",
     "admin.hover.dialog.score.save": "احفظ تصحيح النتيجة دي",
     "admin.hover.dialog.carryForward.save": "رحّل نتايج اللاعب ده",
     "admin.hover.dialog.tournament.new": "أنشئ البطولة دي",
-    "admin.hover.dialog.tournament.edit": "احفظ تغييرات البطولة دي",
+    "admin.hover.dialog.tournament.edit": "احفظ التغييرات على البطولة دي",
     "admin.hover.modal.cancel": "اقفل ده من غير ما تحفظ حاجة",
     "admin.hover.modal.ok": "اقفل الرسالة دي",
     "admin.hover.tab": "اعرض تبويب {name}",
-    "admin.hover.tournaments.archive": "أرشِف البطولة دي؛ ممكن ترجّعها بعدين",
-    "admin.hover.tournaments.restore": "رجّع البطولة دي من الأرشيف",
+    "admin.hover.tournaments.archive": "أرشف البطولة دي؛ ممكن ترجّعها",
+    "admin.hover.tournaments.restore": "رجّع البطولة المؤرشفة دي",
     "admin.hover.players.add": "ضيف لاعب للبطولة دي",
-    "admin.hover.players.edit": "غيّر بيانات اللاعب ده",
-    "admin.hover.players.up": "طلّع اللاعب ده فوق في القايمة",
-    "admin.hover.players.down": "نزّل اللاعب ده تحت في القايمة",
-    "admin.hover.players.archive": "أرشِف اللاعب ده؛ ممكن ترجّعه بعدين",
-    "admin.hover.players.restore": "رجّع اللاعب ده من الأرشيف",
+    "admin.hover.players.edit": "غيّر تفاصيل اللاعب ده",
+    "admin.hover.players.up": "اطلّع اللاعب ده لفوق في القايمة",
+    "admin.hover.players.down": "نزّل اللاعب ده لتحت في القايمة",
+    "admin.hover.players.archive": "أرشف اللاعب ده؛ ممكن ترجّعه",
+    "admin.hover.players.restore": "رجّع اللاعب المؤرشف ده",
     "admin.hover.teams.add": "ضيف فريق للبطولة دي",
-    "admin.hover.teams.edit": "غيّر بيانات الفريق ده",
-    "admin.hover.teams.up": "طلّع الفريق ده فوق في القايمة",
-    "admin.hover.teams.down": "نزّل الفريق ده تحت في القايمة",
-    "admin.hover.teams.archive": "أرشِف الفريق ده؛ ممكن ترجّعه بعدين",
-    "admin.hover.teams.restore": "رجّع الفريق ده من الأرشيف",
-    "admin.hover.competitions.add": "ضيف مسابقة للبطولة دي",
-    "admin.hover.competitions.edit": "غيّر بيانات المسابقة دي",
-    "admin.hover.competitions.up": "طلّع المسابقة دي فوق في القايمة",
-    "admin.hover.competitions.down": "نزّل المسابقة دي تحت في القايمة",
-    "admin.hover.competitions.archive": "أرشِف المسابقة دي؛ ممكن ترجّعها بعدين",
-    "admin.hover.competitions.restore": "رجّع المسابقة دي من الأرشيف",
-    "admin.hover.tests.add": "ضيف تيست بين فريقين",
-    "admin.hover.tests.edit": "غيّر بيانات التيست ده",
-    "admin.hover.tests.up": "طلّع التيست ده فوق في القايمة",
-    "admin.hover.tests.down": "نزّل التيست ده تحت في القايمة",
-    "admin.hover.tests.archive": "أرشِف التيست ده؛ ممكن ترجّعه بعدين",
-    "admin.hover.tests.restore": "رجّع التيست ده من الأرشيف",
+    "admin.hover.teams.edit": "غيّر تفاصيل الفريق ده",
+    "admin.hover.teams.up": "اطلّع الفريق ده لفوق في القايمة",
+    "admin.hover.teams.down": "نزّل الفريق ده لتحت في القايمة",
+    "admin.hover.teams.archive": "أرشف الفريق ده؛ ممكن ترجّعه",
+    "admin.hover.teams.restore": "رجّع الفريق المؤرشف ده",
+    "admin.hover.competitions.add": "ضيف منافسة للبطولة دي",
+    "admin.hover.competitions.edit": "غيّر تفاصيل المنافسة دي",
+    "admin.hover.competitions.up": "اطلّع المنافسة دي لفوق في القايمة",
+    "admin.hover.competitions.down": "نزّل المنافسة دي لتحت في القايمة",
+    "admin.hover.competitions.archive": "أرشف المنافسة دي؛ ممكن ترجّعها",
+    "admin.hover.competitions.restore": "رجّع المنافسة المؤرشفة دي",
+    "admin.hover.tests.add": "ضيف لقاء بين فريقين",
+    "admin.hover.tests.edit": "غيّر تفاصيل اللقاء ده",
+    "admin.hover.tests.up": "اطلّع اللقاء ده لفوق في القايمة",
+    "admin.hover.tests.down": "نزّل اللقاء ده لتحت في القايمة",
+    "admin.hover.tests.archive": "أرشف اللقاء ده؛ ممكن ترجّعه",
+    "admin.hover.tests.restore": "رجّع اللقاء المؤرشف ده",
     "admin.hover.tests.toTeams":
-      "روح على تبويب الفرق علشان تضيف الفرق اللي التيست محتاجها",
-    "admin.hover.scores.add": "ضيف نتيجة ماتش للمسابقة دي",
+      "روح على تبويب الفرق عشان تضيف الفرق اللي اللقاء محتاجها",
+    "admin.hover.scores.add": "ضيف نتيجة لعبة للمنافسة دي",
     "admin.hover.scores.edit": "صحّح النتيجة دي",
     "admin.hover.scores.archive":
-      "أرشِف النتيجة دي علشان ما تتحسبش؛ ممكن ترجّعها بعدين",
-    "admin.hover.scores.restore": "رجّع النتيجة دي من الأرشيف علشان تتحسب تاني",
-    "admin.hover.scores.withdraw": "سيب النتيجة دي في القايمة بس ما تتحسبش",
+      "أرشف النتيجة دي عشان تبطّل تتحسب؛ ممكن ترجّعها",
+    "admin.hover.scores.restore": "رجّع النتيجة المؤرشفة دي عشان تتحسب تاني",
+    "admin.hover.scores.withdraw":
+      "سيب النتيجة دي في القايمة بس خلّيها ما تتحسبش",
     "admin.hover.scores.unwithdraw": "خلّي النتيجة المسحوبة دي تتحسب تاني",
     "admin.hover.scores.up": "قدّم النتيجة دي في القايمة",
     "admin.hover.scores.down": "أخّر النتيجة دي في القايمة",
     "admin.hover.competitionPlayers.add":
-      "حط اللاعب اللي اخترته في المسابقة دي",
-    "admin.hover.competitionPlayers.up": "طلّع اللاعب ده فوق في القايمة",
-    "admin.hover.competitionPlayers.down": "نزّل اللاعب ده تحت في القايمة",
-    "admin.hover.competitionPlayers.remove": "شيل اللاعب ده من المسابقة",
-    "admin.hover.competitionPlayers.withdraw": "اسحب اللاعب ده من المسابقة",
+      "حط اللاعب اللي اخترته في المنافسة دي",
+    "admin.hover.competitionPlayers.up": "اطلّع اللاعب ده لفوق في القايمة",
+    "admin.hover.competitionPlayers.down": "نزّل اللاعب ده لتحت في القايمة",
+    "admin.hover.competitionPlayers.remove": "طلّع اللاعب ده من المنافسة",
+    "admin.hover.competitionPlayers.withdraw": "اسحب اللاعب ده من المنافسة",
     "admin.hover.competitionPlayers.unwithdraw":
-      "رجّع اللاعب المسحوب ده للمسابقة",
+      "رجّع اللاعب المنسحب ده للمنافسة",
     "admin.hover.competitionPlayers.carryForward":
-      "رحّل نتايج اللاعب ده من مسابقة تانية",
+      "رحّل نتايج اللاعب ده من منافسة تانية",
     "admin.hover.notes.add": "اكتب ملاحظة جديدة للبطولة دي",
     "admin.hover.notes.edit": "غيّر الملاحظة دي",
     "admin.hover.notes.delete": "امسح الملاحظة دي",
     "admin.hover.note.add": "احفظ الملاحظة دي وضيفها للبطولة",
-    "admin.hover.note.save": "احفظ تغييرات الملاحظة دي",
-    "admin.hover.people.add": "إدّي الدور ده للشخص ده",
-    "admin.hover.people.remove": "شيل الدور ده من الشخص ده",
-    "admin.hover.worldRankings.import": "هات التصنيفات العالمية وضيف لاعبينها",
+    "admin.hover.note.save": "احفظ التغييرات على الملاحظة دي",
+    "admin.hover.people.add": "اديّ الشخص ده الدور",
+    "admin.hover.people.remove": "شيل الدور من الشخص ده",
+    "admin.hover.worldRankings.import": "هات التصنيف العالمي وضيف لاعبينه",
     "admin.modal.cancel": "إلغاء",
+    // The one button of a modal dialog that only tells the reader something.
     "admin.modal.ok": "تمام",
-    "admin.people.emailAddress": "عنوان البريد الإلكتروني",
+    // The Managers and Scorers tabs.
+    "admin.people.emailAddress": "عنوان الإيميل",
     "admin.people.remove": "شيل",
-    "admin.people.otherwise": "مقدرناش نعمل ده.",
-    "admin.managers.you": "إنت",
-    "admin.managers.add": "أضف مدير",
+    "admin.people.otherwise": "ما قدرناش نعمل ده.",
+    // Beside the reader's own name among the managers.
+    "admin.managers.you": "انت",
+    "admin.managers.add": "ضيف مدير",
+    // Never said, since a tournament always has a manager.
     "admin.managers.none": "مفيش مديرين",
     "admin.managers.removeTitle": "شيل مدير",
     "admin.managers.removeExplanation": "{name} مش هيقدر يدير البطولة دي تاني.",
     "admin.managers.removeYourself.explanation":
-      "مش هتقدر تدير البطولة دي تاني، ومحدش هنا يقدر يرجّعها لك. أي مدير تاني يقدر يخليك مدير من جديد.",
+      "انت مش هتقدر تدير البطولة دي تاني، ومحدش هنا يقدر يرجّع ده ليك. أي مدير تاني يقدر يخليك مدير تاني.",
     "admin.managers.otherwise": "العنوان ده مينفعش يتعمل مدير.",
-    "admin.competitionPlayers.add": "أضف لاعب",
+    // The Players tab.
+    // A competition's Players tab.
+    "admin.competitionPlayers.add": "ضيف لاعب",
     // Beneath the drop-down, for a refusal with no words of its own.
-    "admin.competitionPlayers.otherwise": "اللاعب ده مينفعش يتضاف.",
+    "admin.competitionPlayers.otherwise": "مينفعش نضيف اللاعب ده.",
     "admin.competitionPlayers.choose": "اللاعب اللي هيتضاف",
     "admin.competitionPlayers.nobody": "اختار لاعب",
-    "admin.competitionPlayers.bye": "إعفاء",
-    "admin.competitionPlayers.all": "كل اللاعبين في المسابقة",
+    // Offered in a knockout's drop-down, and what a bye is listed as.
+    "admin.competitionPlayers.bye": "Bye",
+    "admin.competitionPlayers.all": "كل اللاعبين في المنافسة",
     "admin.competitionPlayers.none": "مفيش لاعبين",
-    "admin.competitionPlayers.up": "فوق",
-    "admin.competitionPlayers.down": "تحت",
+    "admin.competitionPlayers.up": "لفوق",
+    "admin.competitionPlayers.down": "لتحت",
     "admin.competitionPlayers.remove": "شيل",
     "admin.competitionPlayers.withdraw": "اسحب",
-    "admin.competitionPlayers.unwithdraw": "الغي السحب",
-    "admin.competitionPlayers.withdrawn": "لاعبين مسحوبين",
+    "admin.competitionPlayers.unwithdraw": "رجّع",
+    "admin.competitionPlayers.withdrawn": "اللاعبين المنسحبين",
     "admin.competitionPlayers.removeTitle": "شيل لاعب",
     "admin.competitionPlayers.removeQuestion":
-      "{name} هيخرج من المسابقة. مينفعش ترجّع ده.",
+      "{name} هيتشال من المنافسة. مينفعش ترجّع ده.",
     "admin.competitionPlayers.withdrawTitle": "اسحب لاعب",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} مش هيلعب في المسابقة تاني، والجيمات اللي ما لعبهاش هتتحسم من غيره.",
-    "admin.competitionPlayers.carryForward": "ترحيل",
+      "{name} مش هيلعب باقي المنافسة، والألعاب اللي ما لعبهاش هتتحسم من غيره.",
+    "admin.competitionPlayers.carryForward": "رحّل",
+    // The carry forward dialog, over a competition's Players tab.
     "admin.carryForward.title": "ترحيل - {name}",
     "admin.carryForward.save": "احفظ",
-    "admin.carryForward.otherwise": "الترحيل ده مينفعش يتحفظ.",
-    "admin.carryForward.matchWins": "ماتشات مكسوبة",
-    "admin.carryForward.matchLosses": "ماتشات مخسورة",
-    "admin.carryForward.gameWins": "جيمات مكسوبة",
-    "admin.carryForward.gameLosses": "جيمات مخسورة",
+    // Above the counts, for a refusal with no words of its own.
+    "admin.carryForward.otherwise": "مينفعش نحفظ الترحيل ده.",
+    "admin.carryForward.matchWins": "مباريات مكسوبة",
+    "admin.carryForward.matchLosses": "مباريات مخسورة",
+    "admin.carryForward.gameWins": "ألعاب مكسوبة",
+    "admin.carryForward.gameLosses": "ألعاب مخسورة",
     "admin.carryForward.hoopsFor": "أطواق له",
     "admin.carryForward.hoopsAgainst": "أطواق عليه",
-    "CarryForward.MatchWinsNotWhole": "اكتب عدد صحيح من الماتشات المكسوبة.",
-    "CarryForward.MatchWinsBelowZero": "اكتب 0 أو أكتر من الماتشات المكسوبة.",
-    "CarryForward.MatchLossesNotWhole": "اكتب عدد صحيح من الماتشات المخسورة.",
-    "CarryForward.MatchLossesBelowZero": "اكتب 0 أو أكتر من الماتشات المخسورة.",
-    "CarryForward.GameWinsNotWhole": "اكتب عدد صحيح من الجيمات المكسوبة.",
-    "CarryForward.GameWinsBelowZero": "اكتب 0 أو أكتر من الجيمات المكسوبة.",
-    "CarryForward.GameLossesNotWhole": "اكتب عدد صحيح من الجيمات المخسورة.",
-    "CarryForward.GameLossesBelowZero": "اكتب 0 أو أكتر من الجيمات المخسورة.",
+    "CarryForward.MatchWinsNotWhole": "اكتب عدد صحيح من المباريات المكسوبة.",
+    "CarryForward.MatchWinsBelowZero": "اكتب 0 أو أكتر من المباريات المكسوبة.",
+    "CarryForward.MatchLossesNotWhole": "اكتب عدد صحيح من المباريات المخسورة.",
+    "CarryForward.MatchLossesBelowZero":
+      "اكتب 0 أو أكتر من المباريات المخسورة.",
+    "CarryForward.GameWinsNotWhole": "اكتب عدد صحيح من الألعاب المكسوبة.",
+    "CarryForward.GameWinsBelowZero": "اكتب 0 أو أكتر من الألعاب المكسوبة.",
+    "CarryForward.GameLossesNotWhole": "اكتب عدد صحيح من الألعاب المخسورة.",
+    "CarryForward.GameLossesBelowZero": "اكتب 0 أو أكتر من الألعاب المخسورة.",
     "CarryForward.HoopsForNotWhole": "اكتب عدد صحيح من الأطواق له.",
     "CarryForward.HoopsForBelowZero": "اكتب 0 أو أكتر من الأطواق له.",
     "CarryForward.HoopsAgainstNotWhole": "اكتب عدد صحيح من الأطواق عليه.",
     "CarryForward.HoopsAgainstBelowZero": "اكتب 0 أو أكتر من الأطواق عليه.",
-    "admin.scores.add": "أضف نتيجة",
+    // A competition's Scores tab and the score dialog.
+    "admin.scores.add": "ضيف نتيجة",
     "admin.scores.none": "مفيش نتايج",
     "admin.scores.edit": "عدّل",
-    "admin.scores.drawNotFilledTitle": "الجدول لسه ناقص",
-    "admin.scores.archive": "أرشِف",
-    "admin.scores.up": "فوق",
-    "admin.scores.down": "تحت",
-    "admin.scores.restore": "رجّع",
-    "admin.scores.archived": "نتايج في الأرشيف",
-    "admin.scores.archivedSaid": "في الأرشيف",
+    "admin.scores.drawNotFilledTitle": "القرعة مش مكتملة",
+    "admin.scores.archive": "أرشف",
+    "admin.scores.up": "لفوق",
+    "admin.scores.down": "لتحت",
+    "admin.scores.restore": "استرجع",
+    "admin.scores.archived": "النتايج المؤرشفة",
+    "admin.scores.archivedSaid": "مؤرشفة",
     "admin.scores.withdraw": "اسحب",
-    "admin.scores.unwithdraw": "الغي السحب",
+    "admin.scores.unwithdraw": "رجّع",
     "admin.scores.withdrawnSaid": "مسحوبة",
-    "admin.scores.otherwise": "مقدرناش نعمل ده.",
-    "admin.score.title": "أضف نتيجة",
-    "admin.score.add": "أضف جيم",
+    // Above the list, for a refusal with no words of its own.
+    "admin.scores.otherwise": "ما قدرناش نعمل ده.",
+    "admin.score.title": "ضيف نتيجة",
+    "admin.score.add": "ضيف اللعبة",
     "admin.score.winner": "الفايز",
-    "admin.score.winnerScore": "نقاط الفايز",
-    "admin.score.loser": "الخسران",
-    "admin.score.loserScore": "نقاط الخسران",
-    "admin.score.beat": "غلب",
-    "admin.score.added": "اتضاف الجيم اللي كسبه {winner} على {loser}.",
-    "admin.score.otherwise": "مقدرناش نضيف الجيم.",
+    "admin.score.winnerScore": "نتيجة الفايز",
+    "admin.score.loser": "الخاسر",
+    "admin.score.loserScore": "نتيجة الخاسر",
+    "admin.score.beat": "هزم",
+    "admin.score.added": "اتضافت اللعبة اللي كسبها {winner} قدّام {loser}.",
+    "admin.score.otherwise": "ما قدرناش نضيف اللعبة.",
     "admin.score.correctTitle": "عدّل النتيجة",
     "admin.score.save": "احفظ",
-    "admin.score.notCorrected": "مقدرناش نصحّح النتيجة.",
+    "admin.score.notCorrected": "ما قدرناش نصحّح النتيجة.",
     "Game.WinnerMissing": "اختار الفايز.",
-    "Game.WinnerScoreMissing": "اكتب نقاط الفايز.",
-    "Game.LoserMissing": "اختار الخسران.",
-    "Game.LoserScoreMissing": "اكتب نقاط الخسران.",
-    "Score.NoPoints": "النقاط بتبدأ برقم.",
-    "Game.SamePlayer": "مفيش حد بيلعب ضد نفسه.",
+    "Game.WinnerScoreMissing": "اكتب نتيجة الفايز.",
+    "Game.LoserMissing": "اختار الخاسر.",
+    "Game.LoserScoreMissing": "اكتب نتيجة الخاسر.",
+    "Score.NoPoints": "النتيجة بتبدأ بعدد النقط.",
+    "Game.SamePlayer": "محدش بيلعب ضد نفسه.",
     "Game.WinnerNotAhead":
-      "الفايز لازم نقاطه أكتر من الخسران، أو يتعلّم إنه فايز.",
-    "Game.LoserMarked": "نقاط الخسران مينفعش تتعلّم إنها مكسوبة.",
+      "نتيجة الفايز لازم تكون أكتر من نتيجة الخاسر، أو تتعلّم إنها فوز.",
+    "Game.LoserMarked": "نتيجة الخاسر مينفعش تتعلّم إنها فوز.",
     "Game.ResultChanged":
-      "التصحيح بيحافظ على النتيجة: الجيم المكسوب يفضل مكسوب، والمتعادل يفضل متعادل.",
-    "Competition.MatchDecided": "الماتش بتاعهم اتحسم خلاص.",
-    "Competition.DrawFull": "اللاعب ده مينفعش يتضاف لأن الجدول مليان.",
+      "التصحيح بيحافظ على النتيجة: اللعبة المكسوبة تفضل مكسوبة، والمتعادلة تفضل متعادلة.",
+    "Competition.MatchDecided": "المباراة بينهم اتحسمت فعلاً.",
+    "Competition.DrawFull": "مينفعش نضيف اللاعب لأن الخروج المغلوب ممتلي.",
     "Competition.DrawNotFilled":
-      "مينفعش تتضاف نتايج لحد ما كل مكان في الجدول يبقى فيه لاعب أو إعفاء.",
+      "مينفعش نضيف نتايج لحد ما كل مكان في الخروج المغلوب يتملي بلاعب أو Bye.",
     "Competition.ByeOutsideKnockout":
-      "خروج المغلوب بس هو اللي ممكن يبقى فيه إعفاء.",
-    "Competition.NotDrawnToMeet": "القرعة ما جابتهمش يلعبوا مع بعض.",
+      "الخروج المغلوب بس هو اللي ممكن يكون فيه Bye.",
+    "Competition.NotDrawnToMeet":
+      "اللاعبين دول مش واقعين دلوقتي في القرعة عشان يلعبوا ضد بعض في الخروج المغلوب.",
     "Competition.WinnerHasPlayedOn":
-      "فايز الماتش ده لعب ماتشه اللي بعده خلاص، فمينفعش نغيّر مين كسبه.",
-    "CompetitionPlayer.Withdrawn": "اللاعب المسحوب ما بيلعبش تاني.",
-    "admin.players.add": "أضف لاعب",
+      "فايز المباراة دي لعب لعبته اللي بعدها فعلاً، فمينفعش نغيّر مين كسبها.",
+    "CompetitionPlayer.Withdrawn": "اللاعب المنسحب مبيلعبش تاني.",
+    "admin.players.add": "ضيف لاعب",
     "admin.players.none": "مفيش لاعبين",
     "admin.players.edit": "عدّل",
-    "admin.players.archive": "أرشِف",
-    "admin.players.restore": "رجّع",
-    "admin.players.up": "فوق",
-    "admin.players.down": "تحت",
-    "admin.players.archiveTitle": "أرشِف لاعب",
-    "admin.players.archiveQuestion": "{name} هيتشال من المسابقات دي:",
-    "admin.players.archive.explanation":
-      "لما ترجّع اللاعب مش هيرجع للمسابقات دي.",
-    "admin.players.archived": "لاعبين في الأرشيف",
-    "admin.players.archivedSaid": "في الأرشيف",
-    "admin.player.addTitle": "أضف لاعب",
-    "admin.player.editTitle": "عدّل اللاعب",
+    "admin.players.archive": "أرشف",
+    "admin.players.restore": "استرجع",
+    "admin.players.up": "لفوق",
+    "admin.players.down": "لتحت",
+    // Asked before archiving a player who is in competitions.
+    "admin.players.archiveTitle": "أرشف لاعب",
+    "admin.players.archiveQuestion": "{name} هيتشال من المنافسات دي:",
+    "admin.players.archive.explanation": "لما ترجّعه مش هيرجع للمنافسات دي.",
+    "admin.players.archived": "اللاعبين المؤرشفين",
+    // Said to a screen reader, since a line through a name is not read out.
+    "admin.players.archivedSaid": "مؤرشف",
+    // The player dialog.
+    "admin.player.addTitle": "ضيف لاعب",
+    "admin.player.editTitle": "عدّل لاعب",
     "admin.player.name": "الاسم",
     "admin.player.representing": "بيمثّل",
-    "admin.player.worldRankingName": "الاسم في التصنيف العالمي",
+    "admin.player.worldRankingName": "اسم اللاعب في التصنيف العالمي",
+    // Beside the world ranking name: whether the world rankings know it.
     "admin.player.worldRankingKnown": "التصنيف العالمي يعرف الاسم ده.",
     "admin.player.worldRankingQuestioned":
-      "مفيش في التصنيف العالمي لاعب بالاسم ده. ممكن يكون مكتوب غلط، أو اللاعب جديد على التصنيف.",
+      "التصنيف العالمي مفيهوش لاعب بالاسم ده. ممكن يكون مكتوب غلط، أو اللاعب جديد على التصنيف.",
     "admin.player.flag": "العلم",
-    "admin.player.add": "أضف",
+    "admin.player.add": "ضيف",
     "admin.player.save": "احفظ",
-    "admin.player.added": "اتضاف {name}.",
-    "admin.player.otherwise": "اللاعب ده مينفعش يتحفظ زي ما هو.",
-    "Tournament.PlayerNameTaken": "في لاعب تاني في البطولة دي بنفس الاسم.",
+    "admin.player.added": "{name} اتضاف.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.player.otherwise": "مينفعش نحفظ اللاعب ده زي ما هو.",
+    "Tournament.PlayerNameTaken": "فيه لاعب تاني في البطولة دي بنفس الاسم.",
     "TournamentPlayer.NoSuchFlag": "اختار علم من الأعلام الموجودة.",
-    "TournamentPlayer.NamedBye": "اللاعب مينفعش اسمه إعفاء.",
-    "TournamentPlayer.NoLetterOrDigit": "الاسم لازم فيه حرف أو رقم.",
-    "admin.player.byesTitle": "الإعفاءات ما بتتضافش",
+    "TournamentPlayer.NamedBye": "اللاعب مينفعش يتسمّى Bye.",
+    "TournamentPlayer.NoLetterOrDigit": "الاسم لازم يكون فيه حرف أو رقم.",
+    // The dialog over the player dialog when a player is named as a bye.
+    "admin.player.byesTitle": "الـ Bye مش محتاج إضافة",
     "admin.player.byes":
-      "الإعفاء مش لاعب في البطولة. خروج المغلوب بيعرض الإعفاء لما تضيف لاعبينه، بعدد المرات اللي الجدول محتاجها.",
+      "الـ Bye مش من لاعبين البطولة. الخروج المغلوب بيقدّم Bye كل ما بتضيف لاعبين، بعدد المرات اللي القرعة محتاجاها.",
+    // A tournament played by teams: its Teams and Tests tabs.
     "admin.view.teams": "الفرق",
-    "admin.view.tests": "التيستات",
-    "admin.teams.add": "أضف فريق",
+    "admin.view.tests": "اللقاءات",
+    "admin.teams.add": "ضيف فريق",
     "admin.teams.none": "مفيش فرق",
     "admin.teams.edit": "عدّل",
-    "admin.teams.view": "شوف",
-    "admin.teams.archive": "أرشِف",
-    "admin.teams.restore": "رجّع",
-    "admin.teams.up": "فوق",
-    "admin.teams.down": "تحت",
-    "admin.teams.archived": "فرق في الأرشيف",
-    "admin.teams.archivedSaid": "في الأرشيف",
-    "admin.team.addTitle": "أضف فريق",
-    "admin.team.editTitle": "عدّل الفريق",
+    "admin.teams.view": "اعرض",
+    "admin.teams.archive": "أرشف",
+    "admin.teams.restore": "استرجع",
+    "admin.teams.up": "لفوق",
+    "admin.teams.down": "لتحت",
+    "admin.teams.archived": "الفرق المؤرشفة",
+    "admin.teams.archivedSaid": "مؤرشف",
+    "admin.team.addTitle": "ضيف فريق",
+    "admin.team.editTitle": "عدّل فريق",
     "admin.team.name": "الاسم",
     "admin.team.shortName": "الاسم المختصر",
     "admin.team.shortName.explanation":
-      "بيتسمّى بيه تيستات الفريق، زي AUS v ENG.",
+      "الاسم اللي بتتسمّى بيه لقاءات الفريق، زي AUS v ENG.",
     "admin.team.flag": "العلم",
-    "admin.team.add": "أضف",
+    "admin.team.add": "ضيف",
     "admin.team.save": "احفظ",
-    "admin.team.added": "اتضاف {name}.",
-    "admin.team.otherwise": "الفريق ده مينفعش يتحفظ زي ما هو.",
-    "admin.teamView.otherwise": "الفريق ده مينفعش يتشاف من هنا.",
+    "admin.team.added": "{name} اتضاف.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.team.otherwise": "مينفعش نحفظ الفريق ده زي ما هو.",
+    "admin.teamView.otherwise": "مينفعش نعرض الفريق ده من هنا.",
     "admin.teamView.players": "اللاعبين",
-    "TeamName.Missing": "قول اسم الفريق إيه.",
+    "TeamName.Missing": "اكتب اسم الفريق.",
     "TeamName.TooLong": "الاسم ده طويل أوي.",
-    "admin.notes.add": "أضف ملاحظة",
+    "admin.notes.add": "ضيف ملاحظة",
     "admin.notes.none": "مفيش ملاحظات",
     "admin.notes.edit": "عدّل",
     "admin.notes.delete": "امسح",
+    // Asked before deleting a note.
     "admin.notes.deleteTitle": "امسح ملاحظة",
-    "admin.notes.deleteQuestion": "تمسح الملاحظة «{title}»؟",
+    "admin.notes.deleteQuestion": "تمسح الملاحظة “{title}”؟",
     "admin.notes.delete.explanation":
-      "الملاحظة اللي بتتمسح بتروح للأبد ومينفعش ترجّعها.",
-    "admin.notes.otherwise": "مقدرناش نعمل ده.",
-    "admin.note.addTitle": "أضف ملاحظة",
-    "admin.note.editTitle": "عدّل الملاحظة",
+      "الملاحظة اللي بتتمسح بتروح للأبد، ومينفعش ترجّعها.",
+    // Above the list, for a refusal with no words of its own.
+    "admin.notes.otherwise": "ما قدرناش نعمل ده.",
+    // The note dialog, its description's tabs and the toolbar above its box.
+    "admin.note.addTitle": "ضيف ملاحظة",
+    "admin.note.editTitle": "عدّل ملاحظة",
     "admin.note.title": "العنوان",
     "admin.note.description": "الوصف",
     "admin.note.write": "اكتب",
     "admin.note.preview": "معاينة",
     "admin.note.toolbar": "التنسيق",
     "admin.note.tool.heading": "عنوان",
-    "admin.note.tool.bold": "غامق",
+    "admin.note.tool.bold": "عريض",
     "admin.note.tool.italic": "مائل",
     "admin.note.tool.quote": "اقتباس",
     "admin.note.tool.code": "كود",
-    "admin.note.tool.link": "لينك",
+    "admin.note.tool.link": "رابط",
     "admin.note.tool.numberedList": "قايمة مرقّمة",
     "admin.note.tool.bulletedList": "قايمة بنقط",
     "admin.note.tool.taskList": "قايمة مهام",
-    "admin.note.add": "أضف",
+    "admin.note.add": "ضيف",
     "admin.note.save": "احفظ",
-    "admin.note.otherwise": "الملاحظة دي مينفعش تتحفظ كده.",
-    "ManagerNoteTitle.Missing": "حط عنوان للملاحظة.",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.note.otherwise": "مينفعش نحفظ الملاحظة دي زي ما هي.",
+    "ManagerNoteTitle.Missing": "اكتب عنوان للملاحظة.",
     "ManagerNoteTitle.TooLong": "العنوان ده طويل أوي.",
-    "ManagerNoteTitle.NoLetterOrDigit": "العنوان لازم فيه حرف أو رقم.",
+    "ManagerNoteTitle.NoLetterOrDigit": "العنوان لازم يكون فيه حرف أو رقم.",
     "ManagerNoteDescription.TooLong": "الوصف ده طويل أوي.",
     "ManagerNoteToEdit.NoSuchManagerNote":
-      "الملاحظة دي مبقتش موجودة. ممكن يكون منظّم تاني مسحها.",
+      "الملاحظة دي مبقتش موجودة. ممكن يكون مدير تاني مسحها.",
     "EditManagerNote.NoSuchManagerNote":
-      "الملاحظة دي مبقتش موجودة. ممكن يكون منظّم تاني مسحها.",
+      "الملاحظة دي مبقتش موجودة. ممكن يكون مدير تاني مسحها.",
     "DeleteManagerNote.NoSuchManagerNote":
-      "الملاحظة دي مبقتش موجودة. ممكن يكون منظّم تاني مسحها.",
-    "ManagerNote.Deleted": "الملاحظة دي اتمسحت. ممكن يكون منظّم تاني مسحها.",
-    "CommentaryTitle.Missing": "حط عنوان للتعليق.",
+      "الملاحظة دي مبقتش موجودة. ممكن يكون مدير تاني مسحها.",
+    "ManagerNote.Deleted": "الملاحظة دي اتمسحت. ممكن يكون مدير تاني مسحها.",
+    "CommentaryTitle.Missing": "اكتب عنوان للتعليق.",
     "CommentaryTitle.TooLong": "العنوان ده طويل أوي.",
-    "CommentaryTitle.NoLetterOrDigit": "العنوان لازم فيه حرف أو رقم.",
-    "Commentary.TitleTaken": "في تعليق تاني بنفس العنوان ده.",
+    "CommentaryTitle.NoLetterOrDigit": "العنوان لازم يكون فيه حرف أو رقم.",
+    "Commentary.TitleTaken": "فيه تعليق تاني بنفس العنوان.",
     "CommentText.Missing": "اكتب حاجة في التعليق.",
     "CommentText.TooLong": "التعليق ده طويل أوي.",
-    "TeamShortName.Missing": "حط للفريق اسم مختصر.",
-    "TeamShortName.TooLong": "الاسم المختصر أطول حاجة 10 حروف.",
-    "TeamShortName.NoLetterOrDigit": "الاسم المختصر لازم فيه حرف أو رقم.",
+    "TeamShortName.Missing": "اكتب اسم مختصر للفريق.",
+    "TeamShortName.TooLong": "الاسم المختصر ممكن يوصل 10 حروف على الأكتر.",
+    "TeamShortName.NoLetterOrDigit": "الاسم المختصر لازم يكون فيه حرف أو رقم.",
     "Team.ShortNameLongerThanName":
       "الاسم المختصر مينفعش يكون أطول من اسم الفريق.",
     "Team.NoSuchFlag": "اختار علم من الأعلام الموجودة.",
-    "Team.Archived": "الفريق ده في الأرشيف، ولازم الأول ترجّعه.",
-    "Team.InATest": "الفريق ده بيلعب في تيست، فمينفعش يتأرشف.",
-    "Team.PlayerNameTaken": "في لاعب تاني في الفريق ده بنفس الاسم.",
-    "TeamPlayer.NamedBye": "اللاعب مينفعش اسمه إعفاء.",
-    "TeamPlayer.Archived": "اللاعب ده في الأرشيف، ولازم الأول ترجّعه.",
-    "TeamPlayer.HasGames": "اللاعب ده لعب، فمينفعش يتأرشف.",
-    "Tournament.TeamNameTaken": "في فريق تاني في البطولة دي بنفس الاسم.",
+    "Team.Archived": "الفريق ده مؤرشف، ولازم يترجّع الأول.",
+    "Team.InATest": "الفريق ده بيلعب في لقاء، ومينفعش يتأرشف.",
+    "Team.PlayerNameTaken": "فيه لاعب تاني في الفريق ده بنفس الاسم.",
+    "TeamPlayer.NamedBye": "اللاعب مينفعش يتسمّى Bye.",
+    "TeamPlayer.Archived": "اللاعب ده مؤرشف، ولازم يترجّع الأول.",
+    "TeamPlayer.HasGames": "اللاعب ده لعب، ومينفعش يتأرشف.",
+    "Tournament.TeamNameTaken": "فيه فريق تاني في البطولة دي بنفس الاسم.",
     "Tournament.TeamShortNameTaken":
-      "في فريق تاني في البطولة دي بنفس الاسم المختصر.",
-    "Tournament.NoSuchTeam": "البطولة دي ملهاش فريق على العنوان ده.",
+      "فيه فريق تاني في البطولة دي بنفس الاسم المختصر.",
+    "Tournament.NoSuchTeam": "البطولة دي مفيهاش فريق على العنوان ده.",
     "Tournament.TeamArchived":
-      "الفريق ده في الأرشيف، ومينفعش ترجّعه غير من تبويب الفرق.",
-    "admin.tests.add": "أضف تيست",
-    "admin.tests.none": "مفيش تيستات",
+      "الفريق ده مؤرشف، وميتسترجعش غير من تبويب الفرق.",
+    "admin.tests.add": "ضيف لقاء",
+    "admin.tests.none": "مفيش لقاءات",
     "admin.tests.edit": "عدّل",
-    "admin.tests.view": "شوف",
-    "admin.tests.archive": "أرشِف",
-    "admin.tests.restore": "رجّع",
-    "admin.tests.up": "فوق",
-    "admin.tests.down": "تحت",
-    "admin.tests.archived": "تيستات في الأرشيف",
+    "admin.tests.view": "اعرض",
+    "admin.tests.archive": "أرشف",
+    "admin.tests.restore": "استرجع",
+    "admin.tests.up": "لفوق",
+    "admin.tests.down": "لتحت",
+    "admin.tests.archived": "اللقاءات المؤرشفة",
     "admin.tests.twoTeamsNeeded":
-      "التيست بين فريقين، فلازم الأول يبقى عندك فريقين.",
+      "اللقاء بيكون بين فريقين، فلازم فريقين الأول.",
     "admin.tests.toTeams": "روح على الفرق",
-    "admin.tests.matches.one": "{count} ماتش",
-    "admin.tests.matches.other": "{count} ماتشات",
-    "admin.tests.bestOf": "بأفضل {games}",
-    "admin.tests.otherwise": "مقدرناش نعمل ده.",
-    "admin.test.addTitle": "أضف تيست",
-    "admin.test.editTitle": "عدّل التيست",
+    "admin.tests.matches.one": "{count} مباراة",
+    "admin.tests.matches.other": "{count} مباريات",
+    "admin.tests.bestOf": "أحسن {games}",
+    // Beside the list, for a refusal with no words of its own.
+    "admin.tests.otherwise": "ما قدرناش نعمل ده.",
+    "admin.test.addTitle": "ضيف لقاء",
+    "admin.test.editTitle": "عدّل لقاء",
     "admin.test.firstTeam": "الفريق أ",
     "admin.test.secondTeam": "الفريق ب",
     "admin.test.versus": "ضد",
     "admin.test.starts": "بيبدأ",
     "admin.test.finishes": "بيخلص",
-    "admin.test.expectedMatches": "الماتشات المتوقّعة",
-    "admin.test.bestOf": "بأفضل",
+    "admin.test.expectedMatches": "المباريات المتوقّعة",
+    "admin.test.bestOf": "أحسن",
     "admin.test.group": "المجموعة",
-    "admin.test.add": "أضف",
+    "admin.test.add": "ضيف",
     "admin.test.save": "احفظ",
-    "admin.test.added": "اتضاف {name}.",
-    "admin.test.otherwise": "التيست ده مينفعش يتحفظ زي ما هو.",
-    "admin.testView.otherwise": "التيست ده مينفعش يتشاف من هنا.",
+    "admin.test.added": "{name} اتضاف.",
+    "admin.test.otherwise": "مينفعش نحفظ اللقاء ده زي ما هو.",
+    "admin.testView.otherwise": "مينفعش نعرض اللقاء ده من هنا.",
     "AddTest.FirstTeamMissing": "اختار الفريق الأول.",
     "AddTest.SecondTeamMissing": "اختار الفريق التاني.",
     "UpdateTest.FirstTeamMissing": "اختار الفريق الأول.",
     "UpdateTest.SecondTeamMissing": "اختار الفريق التاني.",
-    "ExpectedMatches.NotWhole": "اكتب عدد صحيح من الماتشات.",
-    "ExpectedMatches.TooSmall":
-      "التيست لازم يكون متوقّع فيه ماتش واحد على الأقل.",
+    "ExpectedMatches.NotWhole": "اكتب عدد صحيح من المباريات.",
+    "ExpectedMatches.TooSmall": "اللقاء لازم يتوقّع له مباراة واحدة على الأقل.",
     "TestGroup.TooLong": "المجموعة دي طويلة أوي.",
-    "Tournament.TestAgainstItself": "الفريق مبيلعبش تيست ضد نفسه.",
-    "Tournament.TestFinishesBeforeStarts": "التيست مينفعش يخلص قبل ما يبدأ.",
-    "Tournament.TestStartsBeforeTournament":
-      "التيست مينفعش يبدأ قبل البطولة بتاعته.",
-    "Tournament.TestFinishesAfterTournament":
-      "التيست مينفعش يخلص بعد البطولة بتاعته.",
+    "Tournament.TestAgainstItself": "الفريق مبيلعبش لقاء ضد نفسه.",
+    "Tournament.TestFinishesBeforeStarts": "اللقاء مينفعش يخلص قبل ما يبدأ.",
+    "Tournament.TestStartsBeforeTournament": "اللقاء مينفعش يبدأ قبل بطولته.",
+    "Tournament.TestFinishesAfterTournament": "اللقاء مينفعش يخلص بعد بطولته.",
     "Tournament.TestHasGamesInUse":
-      "التيست ده فيه جيمات، فمينفعش يتأرشف لحد ما الجيمات تتأرشف.",
-    "Tournament.TestHasGames": "التيست ده فيه جيمات خلاص، فمينفعش نغيّر فرقه.",
+      "اللقاء ده فيه ألعاب، فمينفعش يتأرشف لحد ما هي تتأرشف.",
+    "Tournament.TestHasGames":
+      "اللقاء ده فيه ألعاب دلوقتي، فمبقاش ينفع نغيّر فرقه.",
     "Tournament.ExpectedMatchesBelowStarted":
-      "اتبدأ ماتشات أكتر من كده بالفعل.",
+      "اتبدأت مباريات أكتر من كده فعلاً.",
     "Tournament.BestOfBelowGamesPlayed":
-      "لاعبين اتنين لعبوا جيمات أكتر من كده بالفعل.",
+      "فيه لاعبين لعبوا ألعاب أكتر من كده فعلاً.",
     "Competition.ExpectedMatchesReached":
-      "التيست ده بدأ كل الماتشات المتوقّعة فيه خلاص.",
-    "Competition.SameTeam": "لاعبين من نفس الفريق مبيلعبوش ضد بعض.",
-    "AddManager.NoSuchAccount":
-      "عنوان البريد الإلكتروني ده ملوش حساب ينفع يتعمل مدير.",
-    "Account.NotAnAdministrator": "المسؤول بس هو اللي يقدر يعمل ده.",
-    "AddRole.NoSuchAccount":
-      "عنوان البريد الإلكتروني ده ملوش حساب ينفع نديله الدور.",
-    "AddRole.NoSuchRole": "الدور ده مش موجود.",
-    "RemoveRole.NoSuchAccount": "الحساب ده مش موجود.",
-    "RemoveRole.NoSuchRole": "الدور ده مش موجود.",
-    "RemoveRole.Yourself": "مينفعش تشيل دور المسؤول من نفسك.",
-    "AccountsWithRole.NoSuchRole": "الدور ده مش موجود.",
-    "admin.scorers.add": "أضف مسجّل نتايج",
+      "اللقاء ده بدأ عدد المباريات اللي متوقّع يبقى فيه.",
+    "Competition.SameTeam": "لاعبين الفريق الواحد مبيلعبوش ضد بعض.",
+    "AddManager.NoSuchAccount": "العنوان ده ملوش حساب ينفع يتعمل مدير.",
+    "admin.scorers.add": "ضيف مسجّل نتايج",
     "admin.scorers.none": "مفيش مسجّلين نتايج",
     "admin.scorers.removeTitle": "شيل مسجّل نتايج",
     "admin.scorers.removeExplanation":
       "{name} مش هيقدر يسجّل نتايج البطولة دي تاني.",
-    "admin.scorers.otherwise":
-      "عنوان البريد الإلكتروني ده مينفعش يتعمل مسجّل نتايج.",
-    "AddScorer.NoSuchAccount":
-      "عنوان البريد الإلكتروني ده ملوش حساب ينفع يتعمل مسجّل نتايج.",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.scorers.otherwise": "العنوان ده مينفعش يتعمل مسجّل نتايج.",
+    "AddScorer.NoSuchAccount": "العنوان ده ملوش حساب ينفع يتعمل مسجّل نتايج.",
+    // Giving, taking and listing roles, which only an administrator can do.
+    "Account.NotAnAdministrator": "المدير بس هو اللي يقدر يعمل ده.",
+    "AddRole.NoSuchAccount": "العنوان ده ملوش حساب ينفع ياخد الدور.",
+    "AddRole.NoSuchRole": "مفيش دور بالشكل ده.",
+    "RemoveRole.NoSuchAccount": "مفيش حساب بالشكل ده.",
+    "RemoveRole.NoSuchRole": "مفيش دور بالشكل ده.",
+    "RemoveRole.Yourself": "مينفعش تشيل دور المدير من نفسك.",
+    "AccountsWithRole.NoSuchRole": "مفيش دور بالشكل ده.",
     "Tournament.AlreadyAManager":
-      "الحساب ده بيدير البطولة أصلاً، وبيقدر يعمل كل اللي مسجّل النتايج بيعمله.",
+      "الحساب ده بيدير البطولة فعلاً، وبيقدر يعمل كل اللي مسجّل النتايج يقدر يعمله.",
 
-    "TournamentName.Missing": "قول اسم البطولة إيه.",
+    // A tournament's refusals, keyed by their codes as every rule broken is.
+    "TournamentName.Missing": "اكتب اسم البطولة.",
     "TournamentName.TooShort": "الاسم ده قصير أوي.",
     "TournamentName.TooLong": "الاسم ده طويل أوي.",
-    "TournamentName.AllLowerCase": "الاسم مينفعش يبقى كله بحروف صغيرة.",
-    "TournamentName.AllCapitals": "الاسم مينفعش يبقى كله بحروف كبيرة.",
-    "TournamentName.NoLetterOrDigit": "الاسم لازم فيه حرف أو رقم.",
-    "ReadOnlyDate.Unreadable": "حدّد اليوم.",
+    "TournamentName.AllLowerCase": "الاسم مينفعش يكون كله حروف صغيرة.",
+    "TournamentName.AllCapitals": "الاسم مينفعش يكون كله حروف كبيرة.",
+    "TournamentName.NoLetterOrDigit": "الاسم لازم يكون فيه حرف أو رقم.",
+    "ReadOnlyDate.Unreadable": "اكتب اليوم.",
     "Tournament.FinishesBeforeStarts": "البطولة مينفعش تخلص قبل ما تبدأ.",
     "Tournament.StartsAfterNextYear": "البطولة مينفعش تبدأ بعد السنة الجاية.",
     "Tournament.FinishesAfterNextYear": "البطولة مينفعش تخلص بعد السنة الجاية.",
     "CreateTournament.NoSuchCountry": "اختار البلد.",
-    "TournamentSubtitle.TooLong": "العنوان الفرعي أطول حاجة 2000 حرف.",
-    "Tournament.NotAManager": "اللي بيدير البطولة دي بس هو اللي يغيّرها.",
+    "TournamentSubtitle.TooLong": "العنوان الفرعي ميزيدش عن 2000 حرف.",
+    "Tournament.NotAManager": "مدير البطولة دي بس هو اللي يقدر يغيّرها.",
     "Tournament.NotAManagerOrScorer":
-      "اللي بيدير البطولة دي أو بيسجّل نتايجها بس هو اللي يشوفها.",
-    "Tournament.Archived":
-      "البطولة دي في الأرشيف، ولازم ترجّعها قبل ما تغيّرها.",
+      "مدير البطولة دي أو مسجّل نتايجها بس هو اللي يقدر يشوفها.",
+    "Tournament.Archived": "البطولة دي مؤرشفة، ولازم تتسترجع قبل ما تتغيّر.",
     "UpdateTournament.NoSuchTournament": "مفيش بطولة على العنوان ده.",
 
-    // The sports keep the names their players use in Egypt, which are mostly
-    // the English names written in Arabic letters, and the formats named for
-    // a competition keep its name, as a name is not translated.
-    "sport.ac": "أسوشيشن كروكيه",
-    "sport.gc": "جولف كروكيه",
+    // What a tournament is played in and where, by code.
+    "sport.ac": "كروكيه الأسوشييشن",
+    "sport.gc": "كروكيه الجولف",
     "sport.a6w": "الكروكيه الأمريكي بستة أطواق",
     "sport.rc": "ريكوشيه",
     "sport.gb": "جيت بول",
     "format.standard": "عادي",
     "format.teams": "فرق",
-    "format.eire-cup": "Eire Cup",
-    "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.eire-cup": "كأس إيري",
+    "format.interstate-shield": "درع الولايات",
+    "format.gc-world-team-championship": "بطولة العالم للفرق في كروكيه الجولف",
     "country.ad": "أندورا",
-    "country.ae": "الإمارات",
+    "country.ae": "الإمارات العربية المتحدة",
     "country.af": "أفغانستان",
-    "country.ag": "أنتيجوا وبربودا",
-    "country.ai": "أنجويلا",
+    "country.ag": "أنتيغوا وبربودا",
+    "country.ai": "أنغويلا",
     "country.al": "ألبانيا",
     "country.am": "أرمينيا",
-    "country.ao": "أنجولا",
+    "country.ao": "أنغولا",
     "country.ar": "الأرجنتين",
     "country.as": "ساموا الأمريكية",
     "country.at": "النمسا",
     "country.au": "أستراليا",
     "country.aw": "أروبا",
-    "country.ax": "جزر آلاند",
+    "country.ax": "جزر أولاند",
     "country.az": "أذربيجان",
     "country.ba": "البوسنة والهرسك",
     "country.bb": "بربادوس",
@@ -1064,7 +1130,7 @@ export const egyptian: Language = {
     "country.bn": "بروناي",
     "country.bo": "بوليفيا",
     "country.br": "البرازيل",
-    "country.bs": "جزر البهاما",
+    "country.bs": "الباهاما",
     "country.bt": "بوتان",
     "country.bv": "جزيرة بوفيه",
     "country.bw": "بوتسوانا",
@@ -1072,14 +1138,14 @@ export const egyptian: Language = {
     "country.bz": "بليز",
     "country.ca": "كندا",
     "country.catalonia": "كتالونيا",
-    "country.cc": "جزر كوكوس",
-    "country.cd": "الكونغو الديمقراطية",
+    "country.cc": "جزر كوكوس (كيلينغ)",
+    "country.cd": "جمهورية الكونغو الديمقراطية",
     "country.cf": "جمهورية أفريقيا الوسطى",
     "country.cg": "جمهورية الكونغو",
     "country.ch": "سويسرا",
     "country.ci": "ساحل العاج",
     "country.ck": "جزر كوك",
-    "country.cl": "تشيلي",
+    "country.cl": "شيلي",
     "country.cm": "الكاميرون",
     "country.cn": "الصين",
     "country.co": "كولومبيا",
@@ -1093,7 +1159,7 @@ export const egyptian: Language = {
     "country.dj": "جيبوتي",
     "country.dk": "الدنمارك",
     "country.dm": "دومينيكا",
-    "country.do": "الدومينيكان",
+    "country.do": "جمهورية الدومينيكان",
     "country.dz": "الجزائر",
     "country.ec": "الإكوادور",
     "country.ee": "إستونيا",
@@ -1111,23 +1177,23 @@ export const egyptian: Language = {
     "country.fr": "فرنسا",
     "country.ga": "الجابون",
     "country.gb": "المملكة المتحدة",
-    "country.gd": "جرينادا",
+    "country.gd": "غرينادا",
     "country.ge": "جورجيا",
     "country.gf": "غيانا الفرنسية",
     "country.gh": "غانا",
     "country.gi": "جبل طارق",
     "country.gl": "جرينلاند",
-    "country.gm": "جامبيا",
+    "country.gm": "غامبيا",
     "country.gn": "غينيا",
-    "country.gp": "جوادلوب",
+    "country.gp": "غوادلوب",
     "country.gq": "غينيا الاستوائية",
     "country.gr": "اليونان",
     "country.gs": "جورجيا الجنوبية وجزر ساندويتش الجنوبية",
-    "country.gt": "جواتيمالا",
-    "country.gu": "جوام",
+    "country.gt": "غواتيمالا",
+    "country.gu": "غوام",
     "country.gw": "غينيا بيساو",
     "country.gy": "غيانا",
-    "country.hk": "هونج كونج",
+    "country.hk": "هونغ كونغ",
     "country.hm": "جزيرة هيرد وجزر ماكدونالد",
     "country.hn": "هندوراس",
     "country.hr": "كرواتيا",
@@ -1166,7 +1232,7 @@ export const egyptian: Language = {
     "country.lr": "ليبيريا",
     "country.ls": "ليسوتو",
     "country.lt": "ليتوانيا",
-    "country.lu": "لوكسمبورج",
+    "country.lu": "لوكسمبورغ",
     "country.lv": "لاتفيا",
     "country.ly": "ليبيا",
     "country.ma": "المغرب",
@@ -1187,7 +1253,7 @@ export const egyptian: Language = {
     "country.mt": "مالطا",
     "country.mu": "موريشيوس",
     "country.mv": "جزر المالديف",
-    "country.mw": "مالاوي",
+    "country.mw": "ملاوي",
     "country.mx": "المكسيك",
     "country.my": "ماليزيا",
     "country.mz": "موزمبيق",
@@ -1196,7 +1262,7 @@ export const egyptian: Language = {
     "country.ne": "النيجر",
     "country.nf": "جزيرة نورفولك",
     "country.ng": "نيجيريا",
-    "country.ni": "نيكاراجوا",
+    "country.ni": "نيكاراغوا",
     "country.nl": "هولندا",
     "country.no": "النرويج",
     "country.np": "نيبال",
@@ -1217,7 +1283,7 @@ export const egyptian: Language = {
     "country.ps": "فلسطين",
     "country.pt": "البرتغال",
     "country.pw": "بالاو",
-    "country.py": "باراجواي",
+    "country.py": "باراغواي",
     "country.qa": "قطر",
     "country.re": "ريونيون",
     "country.ro": "رومانيا",
@@ -1231,9 +1297,9 @@ export const egyptian: Language = {
     "country.sd": "السودان",
     "country.se": "السويد",
     "country.sg": "سنغافورة",
-    "country.sh": "سانت هيلينا",
+    "country.sh": "سانت هيلانة",
     "country.si": "سلوفينيا",
-    "country.sj": "سفالبارد وجان ماين",
+    "country.sj": "سفالبارد وجان مايان",
     "country.sk": "سلوفاكيا",
     "country.sl": "سيراليون",
     "country.sm": "سان مارينو",
@@ -1247,16 +1313,16 @@ export const egyptian: Language = {
     "country.tc": "جزر تركس وكايكوس",
     "country.td": "تشاد",
     "country.tf": "الأقاليم الجنوبية الفرنسية",
-    "country.tg": "توجو",
+    "country.tg": "توغو",
     "country.th": "تايلاند",
     "country.tj": "طاجيكستان",
     "country.tk": "توكيلاو",
     "country.tl": "تيمور الشرقية",
     "country.tm": "تركمانستان",
     "country.tn": "تونس",
-    "country.to": "تونجا",
+    "country.to": "تونغا",
     "country.tr": "تركيا",
-    "country.tt": "ترينيداد وتوباجو",
+    "country.tt": "ترينيداد وتوباغو",
     "country.tv": "توفالو",
     "country.tw": "تايوان",
     "country.tz": "تنزانيا",
@@ -1264,7 +1330,7 @@ export const egyptian: Language = {
     "country.ug": "أوغندا",
     "country.um": "جزر الولايات المتحدة النائية",
     "country.us": "الولايات المتحدة",
-    "country.uy": "أوروجواي",
+    "country.uy": "أوروغواي",
     "country.uz": "أوزبكستان",
     "country.va": "الفاتيكان",
     "country.vc": "سانت فنسنت وجزر غرينادين",
@@ -1282,22 +1348,21 @@ export const egyptian: Language = {
     "country.zm": "زامبيا",
     "country.zw": "زيمبابوي",
 
-    // The emails are the English ones, rewritten rather than translated line
-    // by line; the placeholders each fills in are english.ts's, and say there
-    // what they are.
+    // An email is two entries: its subject, which is text, and its body, which
+    // is the whole of its markup. `{link}`, `{site}`, `{siteName}`,
+    // `{emailFromName}` and the button colours are filled in by the site.
 
-    "Email.ConfirmAddress.subject":
-      "أكّد عنوان بريدك الإلكتروني على {siteName}",
+    "Email.ConfirmAddress.subject": "أكّد عنوان الإيميل بتاعك على {siteName}",
     "Email.ConfirmAddress.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
+<p>
     شكراً إنك عملت حساب على <strong>{siteName}</strong>.<br />
-    قبل ما تبدأ تستخدم حسابك، أكّد عنوان بريدك الإلكتروني
+    قبل ما تبدأ تستخدم حسابك، أكّد عنوان الإيميل بتاعك
     بالضغط على الزرار اللي تحت:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1307,36 +1372,36 @@ export const egyptian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        أكّد عنوان بريدي الإلكتروني
+        أكّد عنوان الإيميل بتاعي
     </a>
 </p>
 
-<p dir="rtl">
-    لو الزرار مش شغّال، تقدر برضه تأكّد عنوان بريدك الإلكتروني بفتح اللينك ده في المتصفح:<br />
+<p>
+    لو الزرار مش شغّال، تقدر برضه تأكّد عنوان الإيميل بتاعك بفتح الرابط ده في المتصفح:<br />
     <a href="{link}">{link}</a>
 </p>
 
-<p dir="rtl">
-    لو إنت ما عملتش الحساب ده، تجاهل الرسالة دي وماتقلقش.
+<p>
+    لو انت ما عملتش الحساب ده، تقدر تتجاهل الإيميل ده بأمان.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "لينك جديد لتأكيد عنوان بريدك الإلكتروني على {siteName}",
+      "رابط جديد لتأكيد عنوان الإيميل بتاعك على {siteName}",
     "Email.ConfirmAddressAgain.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    من شوية طلبت رسالة جديدة لتأكيد عنوان بريدك الإلكتروني على <strong>{siteName}</strong>.<br />
-    أكّد عنوان بريدك الإلكتروني بالضغط على الزرار اللي تحت:
+<p>
+    انت طلبت من شوية إيميل جديد لتأكيد عنوان الإيميل بتاعك على <strong>{siteName}</strong>.<br />
+    لو سمحت أكّد عنوان الإيميل بتاعك بالضغط على الزرار اللي تحت:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1346,40 +1411,40 @@ export const egyptian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        أكّد عنوان بريدي الإلكتروني
+        أكّد عنوان الإيميل بتاعي
     </a>
 </p>
 
-<p dir="rtl">
-    لو الزرار مش شغّال، تقدر برضه تأكّد عنوان بريدك الإلكتروني بفتح اللينك ده في المتصفح:<br />
+<p>
+    لو الزرار مش شغّال، تقدر برضه تأكّد عنوان الإيميل بتاعك بفتح الرابط ده في المتصفح:<br />
     <a href="{link}">{link}</a>
 </p>
 
-<p dir="rtl">
-    أول ما تأكّده، هتقدر تكمّل استخدام حسابك من غير أي مشاكل.
+<p>
+    أول ما تأكّده، هتقدر تكمّل استخدام حسابك من غير أي مشكلة.
 </p>
 
-<p dir="rtl">
-    لو إنت ما طلبتش الرسالة دي، تجاهلها وماتقلقش.
+<p>
+    لو انت ما طلبتش الإيميل ده، تقدر تتجاهله بأمان.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
-    "Email.AlreadyRegistered.subject": "حد حاول يسجّل بعنوان بريدك الإلكتروني",
+    "Email.AlreadyRegistered.subject": "حد حاول يسجّل بعنوان الإيميل بتاعك",
     "Email.AlreadyRegistered.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    حد حاول يسجّل على <strong>{siteName}</strong> بعنوان البريد الإلكتروني ده،
-    وعليه حساب بالفعل. ما اتغيّرش أي حاجة في حسابك.<br />
-    لو إنت اللي عملت كده، عندك حساب بالفعل وتقدر تسجّل الدخول عليه:
+<p>
+    حد حاول يسجّل على <strong>{siteName}</strong> بعنوان الإيميل ده،
+    وعليه حساب فعلاً. مفيش حاجة في حسابك اتغيّرت.<br />
+    لو كنت انت، فعندك حساب فعلاً، وتقدر تدخل عليه:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{site}/account/sign-in" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1389,15 +1454,15 @@ export const egyptian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        تسجيل الدخول
+        سجّل الدخول
     </a>
 </p>
 
-<p dir="rtl">
-    لو نسيت كلمة السر، تقدر تظبطها من هنا:
+<p>
+    ولو نسيت كلمة السر، تقدر تغيّرها من هنا:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{site}/account/forgot-password" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1411,30 +1476,28 @@ export const egyptian: Language = {
     </a>
 </p>
 
-<p dir="rtl">
-    لو مش إنت، مش مطلوب منك أي حاجة. محدش وصله أي طريقة يدخل بيها على
-    حسابك.
+<p>
+    ولو ماكنتش انت، ماتعملش حاجة. محدش اتدّاله طريق لحسابك.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "أكّد نقل حسابك على {siteName} إلى العنوان ده",
+      "أكّد نقل حسابك على {siteName} للعنوان ده",
     "Email.ConfirmNewEmailAddress.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    حد داخل على حساب على <strong>{siteName}</strong>
-    طلب ينقله إلى عنوان البريد الإلكتروني ده. لو إنت اللي طلبت،
-    أكّد من هنا، وإنت داخل على الحساب ده. اللينك بيشتغل
-    24 ساعة.
+<p>
+    حد داخل على حساب على <strong>{siteName}</strong> طلب ينقله
+    لعنوان الإيميل ده. لو كنت انت، أكّد من هنا، وانت داخل على
+    الحساب ده. الرابط شغّال لمدة 24 ساعة.
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1448,38 +1511,37 @@ export const egyptian: Language = {
     </a>
 </p>
 
-<p dir="rtl">
-    أو انسخ اللينك ده في المتصفح:<br />
+<p>
+    أو انسخ العنوان ده في المتصفح:<br />
     {link}
 </p>
 
-<p dir="rtl">
-    لو مش إنت، مش مطلوب منك أي حاجة. مفيش حساب هيتنقل هنا.
+<p>
+    ولو ماكنتش انت، ماتعملش حاجة. مفيش حساب هيتنقل هنا.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "حد طلب ينقل حساب إلى عنوان بريدك الإلكتروني",
+      "حد طلب ينقل حساب لعنوان الإيميل بتاعك",
     "Email.AlreadyHasAnAccount.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    حد داخل على حساب على <strong>{siteName}</strong>
-    طلب ينقله إلى عنوان البريد الإلكتروني ده، وعليه حساب
-    بالفعل. ما اتنقلش حاجة، وما اتغيّرش أي حاجة في حسابك.
+<p>
+    حد داخل على حساب على <strong>{siteName}</strong> طلب ينقله
+    لعنوان الإيميل ده، وعليه حساب بتاعه فعلاً. مفيش حاجة اتنقلت،
+    ومفيش حاجة في حسابك اتغيّرت.
 </p>
 
-<p dir="rtl">
-    لو إنت اللي طلبت، عندك حساب على العنوان ده وتقدر تسجّل الدخول
-    عليه.
+<p>
+    لو كنت انت، فعندك حساب على العنوان ده فعلاً، وتقدر تدخل عليه.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
@@ -1487,19 +1549,19 @@ export const egyptian: Language = {
 
     "Email.EmailAddressChanged.subject": "حسابك على {siteName} اتنقل",
     "Email.EmailAddressChanged.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    حسابك على <strong>{siteName}</strong> لسه متنقل إلى عنوان بريد إلكتروني
-    تاني، {emailAddress}، ومن دلوقتي بتدخل بالعنوان ده.
+<p>
+    حسابك على <strong>{siteName}</strong> اتنقل دلوقتي لعنوان إيميل
+    تاني، {emailAddress}، وهتدخل بالعنوان ده من دلوقتي.
 </p>
 
-<p dir="rtl">
-    لو مش إنت، يبقى حد تاني معاه حسابك. ردّ على الرسالة دي
-    وقول لنا.
+<p>
+    لو ماكنتش انت، يبقى حد تاني معاه حسابك. ردّ على الإيميل ده
+    وقولنا.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
@@ -1507,20 +1569,20 @@ export const egyptian: Language = {
 
     "Email.PasswordChanged.subject": "كلمة السر بتاعتك على {siteName} اتغيّرت",
     "Email.PasswordChanged.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    كلمة سر حسابك على <strong>{siteName}</strong> لسه متغيّرة،
-    واتعمل تسجيل خروج من كل المتصفحات التانية اللي كانت داخلة عليه.<br />
-    لو إنت اللي غيّرتها، مش مطلوب منك أي حاجة.
+<p>
+    كلمة السر لحسابك على <strong>{siteName}</strong> اتغيّرت دلوقتي،
+    واتسجّل خروج كل متصفح تاني كان داخل عليه.<br />
+    لو كنت انت، ماتعملش حاجة.
 </p>
 
-<p dir="rtl">
-    لو مش إنت، يبقى حد تاني معاه كلمة السر بتاعتك. حط كلمة سر جديدة
-    من هنا وهيتعمل له تسجيل خروج:
+<p>
+    ولو ماكنتش انت، يبقى حد تاني معاه كلمة السر بتاعتك. حدّد واحدة
+    جديدة من هنا، وهيتسجّل خروجه:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{site}/account/forgot-password" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1534,22 +1596,22 @@ export const egyptian: Language = {
     </a>
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
-    "Email.SetNewPassword.subject": "حط كلمة سر جديدة لـ {siteName}",
+    "Email.SetNewPassword.subject": "حدّد كلمة سر جديدة لـ {siteName}",
     "Email.SetNewPassword.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    من شوية طلبت تغيّر كلمة السر بتاعتك على <strong>{siteName}</strong>.<br />
+<p>
+    انت طلبت من شوية تغيير كلمة السر بتاعتك على <strong>{siteName}</strong>.<br />
     تقدر تغيّرها بالضغط على الزرار اللي تحت:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1563,32 +1625,32 @@ export const egyptian: Language = {
     </a>
 </p>
 
-<p dir="rtl">
-    لو الزرار مش شغّال، تقدر برضه تغيّر كلمة السر بفتح اللينك ده في المتصفح:<br />
+<p>
+    لو الزرار مش شغّال، تقدر برضه تغيّر كلمة السر بفتح الرابط ده في المتصفح:<br />
     <a href="{link}">{link}</a>
 </p>
 
-<p dir="rtl">
-    لو إنت ما طلبتش تغيّر كلمة السر، تجاهل الرسالة دي وماتقلقش.
+<p>
+    لو انت ما طلبتش تغيير كلمة السر، تقدر تتجاهل الإيميل ده بأمان.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
-    "Email.SetPassword.subject": "اضبط كلمة سر لـ {siteName}",
+    "Email.SetPassword.subject": "حدّد كلمة سر لـ {siteName}",
     "Email.SetPassword.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    حسابك على <strong>{siteName}</strong> ملوش كلمة سر: إنت بتدخل بجوجل.<br />
-    طلبت تضبط واحدة، علشان تقدر تدخل كمان بعنوان بريدك الإلكتروني وكلمة سر.
-    تقدر تضبطها بالضغط على الزرار اللي تحت:
+<p>
+    حسابك على <strong>{siteName}</strong> ملوش كلمة سر: بتدخل بحساب Google.<br />
+    انت طلبت تحدّد واحدة، عشان تقدر تدخل بعنوان الإيميل وكلمة سر كمان.
+    تقدر تحدّدها بالضغط على الزرار اللي تحت:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1598,45 +1660,45 @@ export const egyptian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        اضبط كلمة السر
+        حدّد كلمة السر
     </a>
 </p>
 
-<p dir="rtl">
-    لو الزرار مش شغّال، تقدر برضه تضبط كلمة السر بفتح اللينك ده في المتصفح:<br />
+<p>
+    لو الزرار مش شغّال، تقدر برضه تحدّد كلمة السر بفتح الرابط ده في المتصفح:<br />
     <a href="{link}">{link}</a>
 </p>
 
-<p dir="rtl">
-    اللينك بيشتغل ساعة واحدة. لو إنت ما طلبتش تضبط كلمة سر، تجاهل الرسالة دي وماتقلقش.
+<p>
+    الرابط شغّال لمدة ساعة. لو انت ما طلبتش تحدّد كلمة سر، تقدر تتجاهل الإيميل ده بأمان.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.RegisterInstead.subject":
-      "مفيش حساب على {siteName} لعنوان البريد الإلكتروني ده",
+      "مفيش حساب على {siteName} لعنوان الإيميل ده",
     "Email.RegisterInstead.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    اتطلب تغيير كلمة السر لعنوان بريد إلكتروني
-    مش مربوط بأي حساب على <strong>{siteName}</strong>.
+<p>
+    اتطلب تغيير كلمة السر لعنوان إيميل مش مرتبط بأي حساب على
+    <strong>{siteName}</strong>.
 </p>
 
-<p dir="rtl">
+<p>
     لو عايز تستخدم خدمتنا، تقدر تعمل حساب جديد من هنا:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
-<p dir="rtl">
-    لو إنت ما عملتش الطلب ده، تجاهل الرسالة دي وماتقلقش.
+<p>
+    لو انت ما طلبتش ده، تقدر تتجاهل الإيميل ده بأمان.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
@@ -1645,15 +1707,15 @@ export const egyptian: Language = {
     "Email.ConfirmForgetting.subject":
       "أكّد إنك عايز حسابك على {siteName} يتنسي",
     "Email.ConfirmForgetting.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    طلبت إن حسابك على <strong>{siteName}</strong> يتنسي.<br />
-    اضغط على الزرار اللي تحت علشان تشوف ده معناه إيه، وتأكّد
-    إنه فعلاً اللي إنت عايزه:
+<p>
+    انت طلبت إن حسابك على <strong>{siteName}</strong> يتنسي.<br />
+    دوس على الزرار اللي تحت عشان تشوف ده معناه إيه، وتقول بتأكيد
+    إنك عايزه:
 </p>
 
-<p dir="rtl">
+<p>
     <a href="{link}" style="
         background-color:{buttonBackgroundColour};
         color:{buttonTextColour};
@@ -1667,80 +1729,78 @@ export const egyptian: Language = {
     </a>
 </p>
 
-<p dir="rtl">
-    لو الزرار مش شغّال، تقدر برضه تفتح اللينك ده في المتصفح:<br />
+<p>
+    لو الزرار مش شغّال، تقدر تفتح الرابط ده في المتصفح:<br />
     <a href="{link}">{link}</a>
 </p>
 
-<p dir="rtl">
-    أول ما الحساب يتنسي، مفيش حد هيقدر يقرأ اسمك ولا عنوان
-    بريدك الإلكتروني تاني، ومحدش هيقدر يدخل على حسابك. مينفعش
-    ترجّع ده.
+<p>
+    أول ما يتنسي، اسمك وعنوان الإيميل بتاعك مش هيتقروا تاني أبداً،
+    من أي حد، ومش هتقدر تدخل على الحساب. ومينفعش ترجّع ده.
 </p>
 
-<p dir="rtl">
-    اللينك بيشتغل مرة واحدة بس، لحد 15 دقيقة بعد ما طلبته،
-    وطول ما إنت داخل على الحساب ده بس. بعد كده،
-    اطلبه تاني من حسابك.
+<p>
+    الرابط بيشتغل مرة واحدة، لحد 15 دقيقة بعد ما طلبته، وبس وانت
+    داخل على الحساب ده. بعد كده اطلب تاني من حسابك.
 </p>
 
-<p dir="rtl">
-    لو إنت ما طلبتش ده، مش هيحصل حاجة إلا لو حد فتح اللينك.
-    ومع كده، اللي طلبه حد داخل على حسابك، فحط كلمة سر جديدة من
-    صفحة نسيت كلمة السر علشان تتأكد إنه مش هيقدر يدخل تاني.
+<p>
+    لو انت ما طلبتش، مفيش حاجة هتحصل غير لو الرابط اتفتح. بس حد
+    داخل على حسابك هو اللي طلب، فحدّد كلمة سر جديدة من صفحة
+    نسيت كلمة السر عشان تتأكّد إنه مش هيقدر يدخل تاني.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.RegistrationsSuspended.subject":
-      "التسجيل واقف: مقدرناش نوصل لـ {service}",
+      "التسجيل متوقّف: مش قادرين نوصل لـ {service}",
     "Email.RegistrationsSuspended.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    {siteName} ما قدرش يوصل لـ {service} الساعة {when}. لحد ما يردّ،
-    أي حد محتاجه، سواء علشان يسجّل أو يحط كلمة سر جديدة،
-    بيتقاله يجرّب تاني بعدين.
+<p>
+    {siteName} ما قدرش يوصل لـ {service} الساعة {when}. لحد ما يرد،
+    القرّاء اللي محتاجينه، عشان يسجّلوا أو يحدّدوا كلمة سر جديدة،
+    بيتقالهم يجرّبوا تاني بعدين.
 </p>
 
-<p dir="rtl">
-    مفيش حاجة محتاجة تتعمل. كل محاولة بتسأل {service} من جديد، والصفحات
-    بترجع تشتغل أول ما يردّ.
+<p>
+    مفيش حاجة محتاجة تتفك. كل محاولة بتسأل {service} من جديد،
+    والصفحات بترجع تشتغل أول ما يرد.
 </p>
 
-<p dir="rtl">
-    وطول ما {service} مش بيردّ، هتوصلك رسالة واحدة بس في الساعة
-    في الأكتر عن الموضوع ده.
+<p>
+    وطول ما {service} واقف، هيجيلك إيميل عن ده مرة واحدة في
+    الساعة على الأكتر.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
 `,
 
     "Email.DatabaseUnreachable.subject":
-      "{siteName} مش قادر يوصل لقاعدة البيانات",
+      "{siteName} مش قادر يوصل لقاعدة بياناته",
     "Email.DatabaseUnreachable.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    {siteName} ما قدرش يوصل لقاعدة البيانات الساعة {when}. لحد ما ترد، كل صفحة محتاجاها بتقول للقرّاء إن الموقع مش متاح وإنهم يجرّبوا تاني بعدين.
+<p>
+    {siteName} ما قدرش يوصل لقاعدة بياناته الساعة {when}. لحد ما ترد، كل صفحة محتاجاها بتقول للقرّاء إن الموقع مش متاح وإنهم يجرّبوا تاني بعدين.
 </p>
 
-<p dir="rtl">
-    مفيش حاجة محتاجة تتفك. كل طلب بيطلب اتصال من جديد، والموقع بيشتغل تاني أول ما قاعدة البيانات ترد.
+<p>
+    مفيش حاجة محتاجة تتفك. كل طلب بيطلب اتصال من جديد، والموقع بيرجع يشتغل أول ما قاعدة البيانات ترد.
 </p>
 
-<p dir="rtl">
-    طول ما قاعدة البيانات واقعة، هتوصلك رسالة عنها مرة واحدة على الأكتر كل {minutes} دقيقة.
+<p>
+    وطول ما قاعدة البيانات واقفة، هيجيلك إيميل عن ده مرة كل {minutes} دقيقة على الأكتر.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>
@@ -1748,17 +1808,17 @@ export const egyptian: Language = {
 
     "Email.UnhandledError.subject": "{siteName} فشل في طلب",
     "Email.UnhandledError.body": `
-<p dir="rtl">أهلاً،</p>
+<p>أهلاً،</p>
 
-<p dir="rtl">
-    {siteName} فشل الساعة {when} في طلب لـ {asked}. القارئ اتعرض له الرقم المرجعي {reference}، وفي السجل السبب تحته.
+<p>
+    {siteName} فشل الساعة {when} في طلب {asked}. القارئ اتعرض له الرقم المرجعي {reference}، والسجل فيه السبب تحته.
 </p>
 
-<p dir="rtl">
-    الموقع المعطّل غالباً بيفشل في كل طلب، فهتوصلك رسائل بريد إلكتروني عن الأخطاء 4 مرات كحد أقصى في الساعة. الباقي موجود في السجل برضه.
+<p>
+    الموقع المعطّل بيفشل غالباً في كل طلب، فهيجيلك إيميل عن الأعطال 4 مرات في الساعة على الأكتر. اللي بعد كده موجودة في السجل برضه.
 </p>
 
-<p dir="rtl">
+<p>
     {emailFromName}<br />
     {siteName}
 </p>

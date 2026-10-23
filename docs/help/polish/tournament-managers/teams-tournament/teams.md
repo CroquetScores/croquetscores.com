@@ -12,7 +12,7 @@ Naciśnij **Dodaj drużynę**, nad listą. Nad stroną otwiera się okno dialogo
 
 **Nazwa** jest wymagana: pełna nazwa drużyny, jak „Australia", która jest nagłówkiem strony drużyny i tabel na stronach publicznych. Dwie drużyny w jednym turnieju nie mogą mieć tej samej nazwy.
 
-**Skrót nazwy** też jest wymagany: to, czym nazywa się testy drużyny, jak „AUS v ENG", i czym ciemnozielony pasek nazywa drużynę. Ma co najwyżej 10 znaków i nie jest dłuższy niż nazwa, bo skrót dłuższy niż nazwa, którą skraca, to te dwa wpisane na odwrót. Dwie drużyny nie mogą też mieć tego samego skrótu nazwy.
+**Skrót** też jest wymagany: to, czym nazywa się testy drużyny, jak „AUS v ENG", i czym ciemnozielony pasek nazywa drużynę. Ma co najwyżej 10 znaków i nie jest dłuższy niż nazwa, bo skrót dłuższy niż nazwa, którą skraca, to te dwa wpisane na odwrót. Dwie drużyny nie mogą też mieć tego samego skrótu nazwy.
 
 **Flaga** jest pokazywana obok nazwy drużyny wszędzie, gdzie ta się pojawia. Można zostawić brak flagi, jak dla drużyny klubu albo regionu.
 

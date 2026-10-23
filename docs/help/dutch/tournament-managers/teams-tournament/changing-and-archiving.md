@@ -6,11 +6,11 @@ Druk in de lijst met toernooien in het beheer op **Bewerken** bij het toernooi. 
 
 ![Het formulier Toernooi bewerken](images/edit-tournament.png)
 
-De dagen van het toernooi kunnen hier worden verruimd waar een testmatch een dag buiten die dagen nodig heeft, omdat een testmatch binnen haar toernooi wordt gespeeld. De ene toernooivorm tussen teams kan worden gewijzigd in een andere, omdat het toernooi in elk ervan dezelfde dingen bevat. Zodra het toernooi een team of testmatch bevat, gearchiveerde meegerekend, kan het niet meer worden gewijzigd in de vorm Standaard, die in plaats daarvan spelers en competities heeft.
+De dagen van het toernooi kunnen hier worden verruimd waar een test een dag buiten die dagen nodig heeft, omdat een test binnen haar toernooi wordt gespeeld. De ene opzet tussen teams kan worden gewijzigd in een andere, omdat het toernooi in elk ervan dezelfde dingen bevat. Zodra het toernooi een team of test bevat, gearchiveerde meegerekend, kan het niet meer worden gewijzigd in de vorm Standaard, die in plaats daarvan spelers en competities heeft.
 
 Een toernooi houdt zijn adres wanneer zijn naam wordt gecorrigeerd, zodat een link die iemand al heeft verstuurd het nog vindt. Het verhuist alleen wanneer het jaar waarin het begint of zijn sport verandert, en dan leidt het oude adres naar het nieuwe. Opslaan brengt je naar het toernooi, waar het nu ook te vinden is.
 
-Alleen een beheerder kan een toernooi wijzigen. Een scorer, of wie dan ook, krijgt dat te horen in plaats van het formulier te zien.
+Alleen een toernooileider kan een toernooi wijzigen. Een scorebijhouder, of wie dan ook, krijgt dat te horen in plaats van het formulier te zien.
 
 ## De lijst met toernooien
 

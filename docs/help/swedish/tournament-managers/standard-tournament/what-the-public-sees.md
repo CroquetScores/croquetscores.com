@@ -1,6 +1,6 @@
 # Vad allmänheten ser
 
-Ingenting publiceras: de offentliga sidorna hämtas från det administrationen innehåller, så ett resultat som skrivs in finns på dem på en gång. De kräver varken konto eller skript, och är utformade för en telefon.
+Ingenting publiceras: de offentliga sidorna hämtas från det administrationen innehåller, så ett resultat som skrivs in finns på dem på en gång. De kräver varken konto eller JavaScript, och är utformade för en telefon.
 
 ## Turneringens sida
 
@@ -8,7 +8,7 @@ Turneringens sida finns på dess år, dess sport och dess namn, som `/2026/ac/sp
 
 ![Turneringens offentliga sida](images/public-tournament.png)
 
-Det mörkgröna fältet erbjuder turneringens avdelningar: **Senaste**, som är den här sidan, **Spelare**, **Anteckningar** och **Livekommentarer**, sedan varje tävling i bruk, i den ordning fliken Tävlingar har dem. Anteckningar markeras med en röd asterisk så länge det finns en anteckning läsaren inte har läst.
+Det mörkgröna fältet erbjuder turneringens avdelningar: **Senaste**, som är den här sidan, **Spelare**, **Anteckningar** och **Kommentarer**, sedan varje tävling i bruk, i den ordning fliken Tävlingar har dem. Anteckningar markeras med en röd asterisk så länge det finns en anteckning läsaren inte har läst.
 
 ## Ett block
 
@@ -16,17 +16,17 @@ Ett blocks sida visar dess resultat som en tabell: en rad och en kolumn för var
 
 ![Ett blocks tabell](images/public-block-grid.png)
 
-Ett block visas på tre sätt, som erbjuds på raden med dess namn: **Tabell**, **Sammanfattning** och **Spelordning**. Sammanfattningen är den för en telefon: spelarna rangordnade, med sina vinster, förluster och nettobågar. Spelordningen listar varje parti äldst först. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
+Ett block visas på tre sätt, som erbjuds på raden med dess namn: **Rutnät**, **Sammanfattning** och **Speltabell**. Sammanfattningen är den för en telefon: spelarna rangordnade, med sina vinster, förluster och nettobågar. Spelordningen listar varje parti äldst först. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
 
 ![Ett blocks sammanfattning](images/public-block-summary.png)
 
 En tillbakadragen spelares rad säger det. Ett tillbakadraget resultat visas överstruket och räknas inte. Ett arkiverat resultat visas inte.
 
-## En utslagsturnering
+## En utslagning
 
-En utslagsturnerings sida ritar upp dess lottning omgång för omgång, en kolumn för varje omgång från den första till finalen, med varje matchs två sidor över varandra och en cell för varje parti matchen spelas bäst av. En senare omgångs match står bredvid de två matcher vars vinnare den spelas mellan. På en telefon rullar lottningen i sidled, med pilar till finalen och tillbaka.
+En utslagnings sida ritar upp dess lottning rond för rond, en kolumn för varje rond från den första till finalen, med varje matchs två sidor över varandra och en cell för varje parti matchen spelas bäst av. En senare ronds match står bredvid de två matcher vars vinnare den spelas mellan. På en telefon rullar lottningen i sidled, med pilar till finalen och tillbaka.
 
-![En utslagsturnerings lottning](images/public-knockout.png)
+![En utslagnings lottning](images/public-knockout.png)
 
 ## En schweizer
 

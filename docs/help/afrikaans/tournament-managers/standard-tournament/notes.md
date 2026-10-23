@@ -1,6 +1,6 @@
 # Notas
 
-Die **Notas**-oortjie van 'n toernooi se bladsy is waar sy bestuurders skryf wat die spelers moet weet terwyl die toernooi aan die gang is: die formaat, 'n verandering aan die speelorde, die tyd van middagete. Lesers vind hulle op die toernooi se openbare Notas-bladsy, en 'n nota wat hulle nie gelees het nie, word daar met 'n rooi sterretjie gemerk, wat ook die Notas-afdeling op elke bladsy van die toernooi merk totdat hulle dit oopmaak.
+Die **Notas**-oortjie van 'n toernooi se bladsy is waar sy bestuurders skryf wat die spelers moet weet terwyl die toernooi aan die gang is: die formaat, 'n verandering aan die speelvolgorde, die tyd van middagete. Lesers vind hulle op die toernooi se openbare Notas-bladsy, en 'n nota wat hulle nie gelees het nie, word daar met 'n rooi sterretjie gemerk, wat ook die Notas-afdeling op elke bladsy van die toernooi merk totdat hulle dit oopmaak.
 
 ![Die Notas-oortjie, met twee notas](images/notes-tab.png)
 
@@ -22,7 +22,7 @@ Druk op **Voeg by**. Die nota word gehou, die lys kom terug met dit bo-aan, en d
 
 ## Hoe om 'n nota te wysig
 
-Druk op 'n nota se titel, of op sy **Wysig**, om die paneel op daardie nota oop te maak. Druk op **Stoor** om die verandering te hou. 'n Nota wat gewysig is sedert 'n leser dit gelees het, word weer vir hulle gemerk.
+Druk op 'n nota se titel, of op sy **Wysig**, om die paneel op daardie nota oop te maak. Druk op **Bewaar** om die verandering te hou. 'n Nota wat gewysig is sedert 'n leser dit gelees het, word weer vir hulle gemerk.
 
 ## Hoe om 'n nota te skrap
 

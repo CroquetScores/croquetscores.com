@@ -13,7 +13,7 @@ Mae'r cod bellach yn ffynhonnell agored, o dan Drwydded Gyhoeddus Gyffredinol GN
 
 ### Dilyn twrnamaint
 
-- **Nodiadau gan y rheolwyr.** Gall rheolwyr twrnamaint bellach ysgrifennu nodiadau i ddweud wrth ei chwaraewyr beth sydd angen iddynt ei wybod wrth iddo gael ei chwarae: y fformat, newid i drefn y chwarae, amser cinio. Maent yn adran newydd y twrnamaint, **Nodiadau**, gyda'r diweddaraf gyntaf a faint o amser yn ôl yr ysgrifennwyd pob un.
+- **Nodiadau gan y rheolwyr.** Gall rheolwyr twrnamaint bellach ysgrifennu nodiadau i ddweud wrth ei chwaraewyr beth sydd angen iddynt ei wybod wrth iddo gael ei chwarae: y fformat, newid i drefn y chwarae, amser cinio. Maent yn adran newydd y twrnamaint, Nodiadau, gyda'r diweddaraf gyntaf a faint o amser yn ôl yr ysgrifennwyd pob un.
 - **Mae seren (\*) yn nodi'r hyn nad ydych wedi'i ddarllen.** Mae gan nodyn un nes i chi ei agor, ac eto os caiff ei newid ar ôl i chi ei ddarllen. Tra bo unrhyw nodyn heb ei ddarllen, mae gan yr adran Nodiadau un hefyd, ar bob tudalen o'r twrnamaint, felly gallwch weld bod newyddion heb fynd i edrych. Nodir sylwebaeth yn yr un modd. Mae eich porwr yn cofio'r hyn rydych wedi'i ddarllen, felly nid oes angen i chi fewngofnodi. Mae ffôn neu gyfrifiadur arall yn dechrau heb ddim wedi'i ddarllen.
 - **Mae sylwebaeth yn haws ei dilyn.** Ar yr hen wefan, roedd pob sylw newydd yn taflu'r dudalen i'r gwaelod, felly byddai unrhyw un oedd yn edrych yn ôl drwy sylwadau cynharach yn colli ei le. Nawr dim ond i sylw newydd y mae'r dudalen yn symud i lawr os ydych eisoes ar y gwaelod, yn darllen y diweddaraf. Os ydych wedi sgrolio'n ôl i ddarllen sylwadau cynharach, mae'n eich gadael lle rydych.
 

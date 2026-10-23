@@ -10,9 +10,9 @@ O site define um cookie para manter você conectado, um para o tema que você es
 
 Um navegador que recusa cookies ainda pode ler um torneio. Ele esquecerá as suas escolhas a cada visita e não consegue continuar conectado.
 
-## Registrar exige scripts
+## Cadastrar-se exige scripts
 
-Registrar é o único lugar em que os scripts são necessários. O site pede ao Google reCAPTCHA que distinga uma pessoa de um programa, e isso roda como um script no seu navegador. Se os scripts estiverem desativados quando você abrir a página de registro, você é levado a uma página que diz isso, antes de preencher qualquer coisa. Ative os scripts para este site e depois use **Voltar ao registro**.
+Cadastrar-se é o único lugar em que os scripts são necessários. O site pede ao Google reCAPTCHA que distinga uma pessoa de um programa, e isso roda como um script no seu navegador. Se os scripts estiverem desativados quando você abrir a página de cadastro, você é levado a uma página que diz isso, antes de preencher qualquer coisa. Ative os scripts para este site e depois use **Voltar ao cadastro**.
 
 Pedir um jeito de voltar a uma conta em que você não consegue entrar não exige scripts.
 

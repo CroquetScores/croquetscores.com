@@ -12,7 +12,7 @@ Tutto ciò che fa un organizzatore lo fa nella sezione di amministrazione del si
 
 ## Le pagine in ordine
 
-1. [Creare un torneo](creating-a-tournament.md): il suo nome, i suoi giorni, il suo sport, dove si gioca e per che cosa vale.
+1. [Creare un torneo](creating-a-tournament.md): il suo nome, i suoi giorni, il suo sport, dove si gioca e se è un evento nazionale o internazionale.
 2. [Giocatori](players.md): inserire i giocatori del torneo, correggerli e mettere da parte quelli inseriti per errore.
 3. [Competizioni](competitions.md): aggiungere gironi, eliminazioni dirette e sistemi svizzeri, e metterli in ordine.
 4. [Inserire i giocatori in una competizione](entering-players-in-a-competition.md): chi gioca in ciascuna competizione, i bye in un'eliminazione diretta, i riporti, la rimozione e il ritiro.

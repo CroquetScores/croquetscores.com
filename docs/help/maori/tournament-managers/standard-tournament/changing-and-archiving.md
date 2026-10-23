@@ -1,27 +1,27 @@
-# Te whakarerekē, te pūranga me te whakahoki i tētahi whakataetae
+# Te whakarerekē, te whakatāpui me te whakahoki i tētahi whakataetae
 
 ## Te whakarerekē i ngā taipitopito o te whakataetae
 
-I te rārangi whakataetae i te Whakahaere, pēhia **Whakatika** ki te whakataetae. Ko te puka tērā nāna i waihanga, ka tīmata pērā i te whakataetae. Whakarerekētia te mea e hē ana, ka pēhi i **Whakahou whakataetae**.
+I te rārangi whakataetae i te Kaiwhakahaere, pēhia **Whakatika** ki te whakataetae. Ko te puka tērā nāna i waihanga, ka tīmata pērā i te whakataetae. Whakarerekētia te mea e hē ana, ka pēhi i **Whakahou whakataetae**.
 
 ![Te puka Whakatika whakataetae](images/edit-tournament.png)
 
-Ina whai kaitākaro, tauwhāinga rānei te whakataetae, tae atu ki ērā kua pūrangatia, kāore e taea te whakarerekē i tōna hōputu ki tētahi ā-kapa, he kapa, he Test kē ōna.
+Ina whai kaitākaro, tauwhāinga rānei te whakataetae, tae atu ki ērā kua whakatāpuia, kāore e taea te whakarerekē i tōna hōputu ki tētahi ā-tīma, he tīma, he whakamātau kē ōna.
 
 Ka mau tonu i te whakataetae tōna wāhitau ina whakatikaina tōna ingoa, kia kitea tonu ai e te hononga kua tukuna kē e tētahi. Ka neke anake ina rerekē te tau e tīmata ai, tōna hākinakina rānei, ā, i tērā ka arahi tōna wāhitau tawhito ki te hou. Ka kawea koe e te penapena ki te whakataetae i te wāhi kei reira ia ināianei.
 
-Ko te kaiwhakahaere anake e taea ai te whakarerekē i tētahi whakataetae. Ka kōrerotia ki te kaikaute, ki tētahi atu rānei, i pērā, kaua te whakaatu i te puka.
+Ko te kaiwhakahaere anake e taea ai te whakarerekē i tētahi whakataetae. Ka kōrerotia ki te kaitākohu, ki tētahi atu rānei, i pērā, kaua te whakaatu i te puka.
 
 ## Te rārangi whakataetae
 
-Ka rārangi te Whakahaere kotahi te tau i te wā kotahi, ka tīmata ki tēnei tau, ko te whakataetae hou rawa i te tuatahi. Ko ngā tau e whai whakataetae ai koe he ripa i te pae kākāriki pōuri, ko te hou rawa i te tuatahi; ina nui ake te maha i tō te waea pūkoro e whai wāhi ai, kei te rārangi taka iho i te pito o te haupae ngā mea tawhito rawa. Kei te wāhitau te tau, nō reira ka taea te hono ki tētahi tau.
+Ka rārangi te Kaiwhakahaere kotahi te tau i te wā kotahi, ka tīmata ki tēnei tau, ko te whakataetae hou rawa i te tuatahi. Ko ngā tau e whai whakataetae ai koe he ripa i te pae kākāriki pōuri, ko te hou rawa i te tuatahi; ina nui ake te maha i tō te waea pūkoro e whai wāhi ai, kei te rārangi taka iho i te pito o te haupae ngā mea tawhito rawa. Kei te wāhitau te tau, nō reira ka taea te hono ki tētahi tau.
 
 ![Te rārangi whakataetae](images/admin-list.png)
 
-## Te pūranga i tētahi whakataetae
+## Te whakatāpui i tētahi whakataetae
 
-Ka whakatārewatia e **Pūrangahia** ki tētahi whakataetae i te rārangi taua whakataetae. Ka rārangitia tonu, me te rārangi mā roto, i muri i ngā whakataetae e whakamahia ana, engari ko **Whakahoki** anake tāna e tuku ai: ka katia tōna whārangi i te Whakahaere, me ōna whārangi tūmatanui, kia whakahokia ra anō. Kāore te pūranga e pātai i te tuatahi, nā te mea ka whakakorea e te whakahoki.
+Ka whakatārewatia e **Whakatāpui** ki tētahi whakataetae i te rārangi taua whakataetae. Ka rārangitia tonu, me te rārangi mā roto, i muri i ngā whakataetae e whakamahia ana, engari ko **Whakahokia mai** anake tāna e tuku ai: ka katia tōna whārangi i te Kaiwhakahaere, me ōna whārangi tūmatanui, kia whakahokia ra anō. Kāore te whakatāpui e pātai i te tuatahi, nā te mea ka whakakorea e te whakahoki.
 
-![Te whakataetae kua pūrangatia i te rārangi](images/admin-list-archived.png)
+![Te whakataetae kua whakatāpuia i te rārangi](images/admin-list-archived.png)
 
 E whai ake nei: [Tā te marea e kite ai](what-the-public-sees.md).

@@ -1,8 +1,8 @@
 # Resultat
 
-En testmatchs sida öppnas från dess namn på fliken Testmatcher, eller från det mörkgröna fältet. Den har lagens fullständiga namn som rubrik, som "Australia v New Zealand", med hur många matcher den förväntas ha och vad var och en spelas bäst av under. Dess resultat är sidan, utan flikar. En turneringsledare och en resultatförare ser samma sida, eftersom en resultatförare kan göra allt med ett resultat som en turneringsledare kan.
+En landskamps sida öppnas från dess namn på fliken Landskamper, eller från det mörkgröna fältet. Den har lagens fullständiga namn som rubrik, som "Australia v New Zealand", med hur många matcher den förväntas ha och vad var och en spelas bäst av under. Dess resultat är sidan, utan flikar. En arrangör och en resultatförare ser samma sida, eftersom en resultatförare kan göra allt med ett resultat som en arrangör kan.
 
-![En testmatchs sida, med dess resultat](images/test-page-panel.png)
+![En landskamps sida, med dess resultat](images/test-page-panel.png)
 
 ## Så är resultaten uppställda
 
@@ -12,7 +12,7 @@ Resultaten är uppställda lag för lag i stället för efter vem som vann, i en
 
 Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
 
-![Dialogrutan Lägg till resultat på en testmatchs sida](images/add-test-score-dialog.png)
+![Dialogrutan Lägg till resultat på en landskamps sida](images/add-test-score-dialog.png)
 
 Vinnaren väljs bland båda lagens spelare i bruk, under varje lags namn, det första lagets spelare först och varje lags i lagets ordning. Ingen är vald från början. När vinnaren är vald erbjuds förloraren bara från det andra laget, eftersom ett parti mellan två spelare i samma lag inte är ett parti mellan lagen. En arkiverad spelare erbjuds inte.
 
@@ -24,9 +24,9 @@ Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, 
 
 ## Matcher
 
-Två spelare som möts spelar en match på testmatchens bäst av. Partierna mellan dem är den matchens partier, och ett parti mellan två spelare vars match redan är avgjord godtas inte: en av dem har vunnit fler partier än den andra fortfarande kan vinna, eller varje parti i den har spelats.
+Två spelare som möts spelar en match på landskampens bäst av. Partierna mellan dem är den matchens partier, och ett parti mellan två spelare vars match redan är avgjord godtas inte: en av dem har vunnit fler partier än den andra fortfarande kan vinna, eller varje parti i den har spelats.
 
-En match startas när dess två spelare har ett parti i bruk. En testmatch startar inte fler matcher än den förväntas ha: när så många har startat godtas inte ett parti mellan två spelare som inte har mötts, medan ännu ett parti i en match som redan startat godtas. Där testmatchen ska ha fler matcher, ändra den på fliken Testmatcher till att förvänta dem.
+En match startas när dess två spelare har ett parti i bruk. En landskamp startar inte fler matcher än den förväntas ha: när så många har startat godtas inte ett parti mellan två spelare som inte har mötts, medan ännu ett parti i en match som redan startat godtas. Där landskampen ska ha fler matcher, ändra den på fliken Landskamper till att förvänta dem.
 
 ## Rätta ett resultat
 
@@ -34,11 +34,11 @@ En match startas när dess två spelare har ett parti i bruk. En testmatch start
 
 ## Ordna resultaten
 
-Resultaten kommer i den ordning de skrivs in, så varje resultat i bruk erbjuder **Upp** och **Ned**, som byter plats på det och resultatet bredvid, så att listan kan läggas i den ordning partierna spelades.
+Resultaten kommer i den ordning de skrivs in, så varje resultat i bruk erbjuder **Upp** och **Ner**, som byter plats på det och resultatet bredvid, så att listan kan läggas i den ordning partierna spelades.
 
 ## Arkivera ett resultat
 
-**Arkivera** lägger undan ett resultat så att det inte räknas. Det listas under **Arkiverade resultat**, överstruket, och erbjuder bara **Återställ**. Ingetdera frågar först, eftersom vart och ett ångrar det andra. Varje resultat i en testmatch kan arkiveras, eftersom en testmatch inte har några omgångar som beror på varandra.
+**Arkivera** lägger undan ett resultat så att det inte räknas. Det listas under **Arkiverade resultat**, överstruket, och erbjuder bara **Återställ**. Ingetdera frågar först, eftersom vart och ett ångrar det andra. Varje resultat i en landskamp kan arkiveras, eftersom en landskamp inte har några ronder som beror på varandra.
 
 Ett resultat vars spelare har arkiverats sedan dess återställs inte förrän spelaren är det, och sidan säger det.
 

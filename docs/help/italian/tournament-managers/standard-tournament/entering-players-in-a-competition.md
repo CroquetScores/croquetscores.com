@@ -30,7 +30,7 @@ I giocatori sono elencati nell'ordine della competizione, che è l'ordine in cui
 
 ## Riporto
 
-**Riporto** dice ciò che un giocatore porta in una competizione da un gioco che questa non ha segnato: i risultati di una fase precedente, o di partite giocate prima che la competizione fosse segnata qui. Viene offerto in un girone e in un sistema svizzero, che hanno una classifica in cui contarlo, e non in un'eliminazione diretta.
+**Riporta avanti** dice ciò che un giocatore porta in una competizione da un gioco che questa non ha segnato: i risultati di una fase precedente, o di partite giocate prima che la competizione fosse segnata qui. Viene offerto in un girone e in un sistema svizzero, che hanno una classifica in cui contarlo, e non in un'eliminazione diretta.
 
 ![La finestra Riporto](images/carry-forward-dialog.png)
 

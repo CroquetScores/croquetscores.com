@@ -14,7 +14,7 @@ Druk op **Competitie toevoegen**, boven de lijst. Er opent een dialoogvenster ov
 
 ### Een poule of een Zwitsers systeem
 
-Een poule en een Zwitsers systeem vragen alleen waarvan elke wedstrijd de **Beste van** is, wat op 1 begint. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule of een Zwitsers systeem een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
+Een poule en een Zwitsers systeem vragen alleen waarvan elke wedstrijd de **Best of** is, wat op 1 begint. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule of een Zwitsers systeem een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
 
 ![Het dialoogvenster Competitie toevoegen voor een poule](images/add-competition-block.png)
 
@@ -22,11 +22,21 @@ Een poule en een Zwitsers systeem vragen alleen waarvan elke wedstrijd de **Best
 
 ### Een knock-out
 
-Een knock-out vraagt hoeveel **Plaatsen** de loting heeft, en waarvan elke ronde de beste is. De plaatsen worden aangeboden als 2, 4, 8, 16, 32, 64 en 128, omdat elk ander aantal niet ronde na ronde kan halveren tot een finale, en het dialoogvenster begint op 8. Plaatsen die overblijven nadat de spelers zijn geplaatst, worden gevuld met vrijlotingen, die worden toegevoegd waar de spelers staan.
+Een knock-out vraagt hoeveel **Plaatsen** de loting heeft, en waarvan elke ronde de beste is. De plaatsen worden aangeboden als 2, 4, 8, 16, 32, 64 en 128, omdat elk ander aantal niet ronde na ronde kan halveren tot een finale, en het dialoogvenster begint op 8. Plaatsen die overblijven nadat de spelers zijn geplaatst, worden gevuld met byes, die worden toegevoegd waar de spelers staan.
 
-Een loting heeft zoveel rondes als nodig is om de plaatsen te halveren tot één, dus een loting van 8 plaatsen heeft drie rondes. Het dialoogvenster vraagt waarvan elke ronde de beste is, samen onder **Beste van per ronde**, in de volgorde waarin ze worden gespeeld. De laatste drie heten zoals de rondes van een loting worden genoemd, **Kwartfinales**, **Halve finales** en **Finale**, en de rondes daarvóór bij hun nummer, Ronde 1 eerst. Meer plaatsen kiezen voegt rondes toe aan het begin van de loting, en minder kiezen haalt ze weg aan het begin, zodat wat voor de finale is getypt nog steeds van de finale is. Elke ronde is de beste van een oneven aantal partijen, omdat een wedstrijd in een knock-out een winnaar moet hebben.
+Een loting heeft zoveel rondes als nodig is om de plaatsen te halveren tot één, dus een loting van 8 plaatsen heeft drie rondes. Het dialoogvenster vraagt waarvan elke ronde de beste is, samen onder **Best-ofs**, in de volgorde waarin ze worden gespeeld. De laatste drie heten zoals de rondes van een loting worden genoemd, **Kwartfinales**, **Halve finales** en **Finale**, en de rondes daarvóór bij hun nummer, Ronde 1 eerst. Meer plaatsen kiezen voegt rondes toe aan het begin van de loting, en minder kiezen haalt ze weg aan het begin, zodat wat voor de finale is getypt nog steeds van de finale is. Elke ronde is de beste van een oneven aantal partijen, omdat een wedstrijd in een knock-out een winnaar moet hebben.
 
 ![Het dialoogvenster Competitie toevoegen voor een knock-out van 4 plaatsen](images/add-competition-knockout.png)
+
+### Hoe het wordt gespeeld en geteld
+
+Elke soort vraagt hetzelfde drie dingen onder zijn vorm.
+
+**Gespeeld met handicaps.** Vink dit aan voor een competitie die met handicaps wordt gespeeld.
+
+**Gelijkspel toegestaan.** Vink dit aan waar een partij kan eindigen zonder dat een van beide spelers heeft gewonnen. De meeste competities staan het niet toe. Waar het is aangevinkt, wordt een score met gelijke punten en zonder markering bewaard als gelijkspel; waar het niet is aangevinkt, moet een partij met gelijke punten zeggen wie heeft gewonnen, met een markering achter de score van de winnaar, zoals "6w". Een wedstrijd in een knock-out heeft altijd een winnaar, dus een gelijkgespeelde partij beslist er geen.
+
+**Telt mee voor de wereldranglijsten.** Wordt alleen gevraagd waar het kan meetellen: een competitie in Associatiecroquet of Golfcroquet die niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt, dus vink het uit voor een competitie die niet mag meetellen.
 
 ### Meerdere tegelijk toevoegen
 
@@ -34,7 +44,7 @@ Druk op **Toevoegen**. De competitie wordt toegevoegd, het dialoogvenster zegt d
 
 ## Een competitie wijzigen
 
-**Bewerken** opent hetzelfde dialoogvenster op de competitie, met de titel Competitie bewerken, met haar naam en haar vorm zoals ze zijn. De soort wordt niet gevraagd, omdat je van een poule geen knock-out maakt door haar te wijzigen: een competitie van de verkeerde soort archiveer je en voeg je opnieuw toe. Druk op **Opslaan** om de wijziging te bewaren en het dialoogvenster te sluiten.
+**Bewerken** opent hetzelfde dialoogvenster op de competitie, met de titel Competitie bewerken, met haar naam, haar vorm en hoe ze wordt gespeeld en geteld zoals ze zijn. De soort wordt niet gevraagd, omdat je van een poule geen knock-out maakt door haar te wijzigen: een competitie van de verkeerde soort archiveer je en voeg je opnieuw toe. Druk op **Opslaan** om de wijziging te bewaren en het dialoogvenster te sluiten.
 
 Een knock-out met een partij heeft spelers op een plaats in de loting, en een wijziging van de plaatsen zou ze verschuiven, dus die wordt geweigerd zodra een partij is ingevoerd. De beste-van van de rondes kan nog wel worden gewijzigd.
 

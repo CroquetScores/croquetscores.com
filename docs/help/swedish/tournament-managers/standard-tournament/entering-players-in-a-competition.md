@@ -12,25 +12,25 @@ Ovanför listan erbjuder en rullgardinslista varje spelare i turneringen som int
 
 Turneringens arkiverade spelare erbjuds inte.
 
-## Frilotter i en utslagsturnering
+## Byes i en utslagning
 
-En utslagsturnering spelas först när varje plats i dess lottning är fylld, och de platser spelarna lämnar över fylls med frilotter. Så i en utslagsturnering erbjuder rullgardinslistan **Frilott** först, före spelarna, och fortsätter erbjuda den hur många frilotter som än läggs till, eftersom en lottning kan behöva flera.
+En utslagning spelas först när varje plats i dess lottning är fylld, och de platser spelarna lämnar över fylls med byes. Så i en utslagning erbjuder rullgardinslistan **Bye** först, före spelarna, och fortsätter erbjuda den hur många byes som än läggs till, eftersom en lottning kan behöva flera.
 
-![En utslagsturnering med fyra platser, med tre spelare och en frilott](images/knockout-players.png)
+![En utslagning med fyra platser, med tre spelare och en bye](images/knockout-players.png)
 
-En frilott placeras i lottningen som en spelare: den kan flyttas upp och ned och tas bort, men den kan inte dras tillbaka, eftersom den inte spelar något. En spelare som sätts in i en utslagsturnering vars alla platser är fyllda godtas inte, och fliken säger det under rullgardinslistan.
+En bye placeras i lottningen som en spelare: den kan flyttas upp och ned och tas bort, men den kan inte dras tillbaka, eftersom den inte spelar något. En spelare som sätts in i en utslagning vars alla platser är fyllda godtas inte, och fliken säger det under rullgardinslistan.
 
-Ordningen på en utslagsturnerings spelare är dess lottning. De två första platserna möts i den första matchen, de två nästa i den nästa, och så vidare. Lägg spelarna i den ordning lottningen ska spelas i innan något resultat skrivs in, eftersom spelarna ligger fast när utslagsturneringen har ett parti i bruk: ingen kan läggas till, tas bort eller flyttas. En spelare kan fortfarande dras tillbaka.
+Ordningen på en utslagnings spelare är dess lottning. De två första platserna möts i den första matchen, de två nästa i den nästa, och så vidare. Lägg spelarna i den ordning lottningen ska spelas i innan något resultat skrivs in, eftersom spelarna ligger fast när utslagningen har ett parti i bruk: ingen kan läggas till, tas bort eller flyttas. En spelare kan fortfarande dras tillbaka.
 
-![En utslagsturnering när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](images/knockout-players-fixed.png)
+![En utslagning när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](images/knockout-players-fixed.png)
 
 ## Ordning
 
-Spelarna listas i tävlingens ordning, som är den ordning en utslagsturnering lottas i och ett block listas i på sin offentliga sida. **Upp** och **Ned** flyttar en spelare ett steg.
+Spelarna listas i tävlingens ordning, som är den ordning en utslagning lottas i och ett block listas i på sin offentliga sida. **Upp** och **Ner** flyttar en spelare ett steg.
 
 ## Föra över resultat
 
-**För över resultat** säger vad en spelare tar med sig in i en tävling från spel som inte fördes här: resultaten från ett tidigare skede, eller från partier som spelades innan tävlingen fördes här. Det erbjuds i ett block och en schweizer, som har en ställning för det att räknas i, och inte i en utslagsturnering.
+**För vidare** säger vad en spelare tar med sig in i en tävling från spel som inte fördes här: resultaten från ett tidigare skede, eller från partier som spelades innan tävlingen fördes här. Det erbjuds i ett block och en schweizer, som har en ställning för det att räknas i, och inte i en utslagning.
 
 ![Dialogrutan För över resultat](images/carry-forward-dialog.png)
 
@@ -46,13 +46,13 @@ En spelare som har något parti i bruk i tävlingen kan inte tas bort, eftersom 
 
 ## Dra tillbaka en spelare
 
-**Dra tillbaka** är för en spelare som inte spelar mer i tävlingen. Spelaren stannar i den, med de partier spelaren har spelat, och listas under **Tillbakadragna spelare** efter dem som fortfarande spelar. I en utslagsturnering går spelarens motståndare i en match som inte är avgjord vidare.
+**Dra tillbaka** är för en spelare som inte spelar mer i tävlingen. Spelaren stannar i den, med de partier spelaren har spelat, och listas under **Tillbakadragna spelare** efter dem som fortfarande spelar. I en utslagning går spelarens motståndare i en match som inte är avgjord vidare.
 
 Dra tillbaka frågar först, eftersom det ändrar tävlingens utgång: de partier spelaren inte har spelat avgörs utan spelaren.
 
 ![Frågan som ställs innan en spelare dras tillbaka](images/withdraw-player-asks.png)
 
-En tillbakadragen spelare erbjuder bara **Ta tillbaka**, som sätter spelaren tillbaka bland dem som spelar, efter dem som stannade, utan att fråga.
+En tillbakadragen spelare erbjuder bara **Återinsätt**, som sätter spelaren tillbaka bland dem som spelar, efter dem som stannade, utan att fråga.
 
 ![Ett block med en tillbakadragen spelare](images/competition-players-withdrawn.png)
 

@@ -8,7 +8,7 @@ La página del torneo está en su año, su deporte y su nombre, como `/2026/ac/t
 
 ![La página pública del torneo](images/public-tournament.png)
 
-La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es esta página, **Resumen**, **Jugadores**, **Notas** y **Comentarios**, y después los tests. Un test se dice como los nombres cortos de sus equipos con "vs" en medio, como "AUS vs NZ". Los tests de un grupo no se ofrecen uno a uno: el grupo es una sola sección, con el nombre del grupo, en el lugar donde iría su primer test. Notas se marca con un asterisco rojo mientras haya una nota que el lector no ha leído.
+La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es esta página, **Resumen**, **Jugadores**, **Notas** y **Crónica**, y después los tests. Un test se dice como los nombres cortos de sus equipos con "vs" en medio, como "AUS vs NZ". Los tests de un grupo no se ofrecen uno a uno: el grupo es una sola sección, con el nombre del grupo, en el lugar donde iría su primer test. Notas se marca con un asterisco rojo mientras haya una nota que el lector no ha leído.
 
 ## El resumen
 
@@ -28,7 +28,7 @@ La página de un test la encabezan los nombres completos de sus equipos, como "A
 
 ![La página de un test](images/public-test.png)
 
-Un test se muestra de dos maneras, ofrecidas en la línea de su nombre: **Cuadro**, que es esta tabla, y **Orden de juego**, que lista todas las partidas del test, la más antigua primero. Un test de un grupo ofrece el Resumen y los tests de su grupo en una fila sobre su encabezado, con este test marcado.
+Un test se muestra de dos maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, que es esta tabla, y **Orden de juego**, que lista todas las partidas del test, la más antigua primero. Un test de un grupo ofrece el Resumen y los tests de su grupo en una fila sobre su encabezado, con este test marcado.
 
 ## Jugadores
 

@@ -6,7 +6,7 @@ Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turni
 
 ## Einen Wettbewerb hinzufügen
 
-Drücke **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und fragt nach dem Namen des Wettbewerbs, seiner Art und der Gestalt, die seine Art hat.
+Drücken Sie **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und fragt nach dem Namen des Wettbewerbs, seiner Art und der Gestalt, die seine Art hat.
 
 **Name** ist das, wonach die Spieler auf der Turnierseite suchen, um ihre Spiele zu finden. Er ist zwischen 1 und 254 Zeichen lang, und ein einzelner Buchstabe genügt, weil eine Gruppe oft nur so heißt. Zwei Wettbewerbe eines Turniers können nicht denselben Namen haben.
 
@@ -24,17 +24,27 @@ Eine Gruppe und ein Schweizer System fragen nur, über wie viele Spiele jede Beg
 
 Eine K.-o.-Runde fragt, wie viele **Plätze** ihre Auslosung hat und über wie viele Spiele jede Runde höchstens geht. Die Plätze werden als 2, 4, 8, 16, 32, 64 und 128 angeboten, weil sich keine andere Zahl Runde um Runde bis zu einem Finale halbieren ließe, und der Dialog beginnt auf 8. Plätze, die nach dem Aufnehmen der Spieler übrig bleiben, werden mit Freilosen gefüllt, die dort hinzugefügt werden, wo die Spieler sind.
 
-Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu halbieren; eine Auslosung mit 8 Plätzen hat also drei Runden. Der Dialog fragt für jede, über wie viele Spiele sie höchstens geht, zusammen unter **Best of**, in der Reihenfolge, in der sie gespielt werden. Die letzten drei heißen so, wie man von den Runden einer Auslosung spricht, **Viertelfinale**, **Halbfinale** und **Finale**, und alle davor nach ihrer Nummer, Runde 1 zuerst. Mehr Plätze zu wählen fügt Runden am Anfang der Auslosung hinzu, und weniger zu wählen nimmt sie am Anfang weg, sodass das, was für das Finale eingegeben wurde, weiterhin das des Finales ist. Jede Runde geht über eine ungerade Zahl von Spielen, weil eine Begegnung in einer K.-o.-Runde einen Sieger braucht.
+Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu halbieren; eine Auslosung mit 8 Plätzen hat also drei Runden. Der Dialog fragt für jede, über wie viele Spiele sie höchstens geht, zusammen unter **Best of je Runde**, in der Reihenfolge, in der sie gespielt werden. Die letzten drei heißen so, wie man von den Runden einer Auslosung spricht, **Viertelfinale**, **Halbfinale** und **Finale**, und alle davor nach ihrer Nummer, Runde 1 zuerst. Mehr Plätze zu wählen fügt Runden am Anfang der Auslosung hinzu, und weniger zu wählen nimmt sie am Anfang weg, sodass das, was für das Finale eingegeben wurde, weiterhin das des Finales ist. Jede Runde geht über eine ungerade Zahl von Spielen, weil eine Begegnung in einer K.-o.-Runde einen Sieger braucht.
 
 ![Der Dialog Wettbewerb hinzufügen für eine K.-o.-Runde mit 4 Plätzen](images/add-competition-knockout.png)
 
+### Wie gespielt und gezählt wird
+
+Jede Art fragt unter ihrer Gestalt dasselbe dreifach.
+
+**Mit Vorgaben gespielt.** Haken Sie das für einen Wettbewerb an, der mit Vorgaben gespielt wird.
+
+**Lässt Unentschieden zu.** Haken Sie das an, wenn ein Spiel enden kann, ohne dass einer der Spieler gewinnt. Die meisten Wettbewerbe erlauben das nicht. Ist es angehakt, wird ein Ergebnis mit gleichen Punkten und ohne Markierung als Unentschieden gespeichert; ist es nicht angehakt, muss ein Spiel mit gleichen Punkten durch eine Markierung hinter den Punkten des Siegers sagen, wer gewonnen hat, etwa „6w“. Das Match einer K.-o.-Runde hat immer einen Sieger, ein unentschiedenes Spiel entscheidet es also nicht.
+
+**Zählt für die Weltranglisten.** Wird nur gefragt, wo es zählen kann: bei einem Wettbewerb im Association Croquet oder Golf Croquet, der weder mit Vorgaben gespielt wird noch Unentschieden zulässt. Es ist zu Beginn angehakt, nehmen Sie den Haken also weg bei einem Wettbewerb, der nicht zählen soll.
+
 ### Mehrere auf einmal hinzufügen
 
-Drücke **Hinzufügen**. Der Wettbewerb wird hinzugefügt, der Dialog sagt es, und der Name wird für den nächsten geleert, während die Art und ihre Gestalt bleiben, wie sie waren: Zusammen hinzugefügte Wettbewerbe gleichen sich meist, „Block B“ nach „Block A“ ist also nur sein Name. Drücke **Abbrechen**, um den Dialog zu schließen, wenn alle drin sind.
+Drücken Sie **Hinzufügen**. Der Wettbewerb wird hinzugefügt, der Dialog sagt es, und der Name wird für den nächsten geleert, während die Art und ihre Gestalt bleiben, wie sie waren: Zusammen hinzugefügte Wettbewerbe gleichen sich meist, „Block B“ nach „Block A“ ist also nur sein Name. Drücken Sie **Abbrechen**, um den Dialog zu schließen, wenn alle drin sind.
 
 ## Einen Wettbewerb ändern
 
-**Bearbeiten** öffnet denselben Dialog für den Wettbewerb, mit dem Titel Wettbewerb bearbeiten, mit seinem Namen und seiner Gestalt, wie sie sind. Nach seiner Art wird nicht gefragt, weil aus einer Gruppe durch Ändern keine K.-o.-Runde wird: Ein Wettbewerb der falschen Art wird archiviert und neu hinzugefügt. Drücke **Speichern**, um die Änderung zu speichern und den Dialog zu schließen.
+**Bearbeiten** öffnet denselben Dialog für den Wettbewerb, mit dem Titel Wettbewerb bearbeiten, mit seinem Namen, seiner Gestalt und der Art, wie er gespielt und gezählt wird, wie sie sind. Nach seiner Art wird nicht gefragt, weil aus einer Gruppe durch Ändern keine K.-o.-Runde wird: Ein Wettbewerb der falschen Art wird archiviert und neu hinzugefügt. Drücken Sie **Speichern**, um die Änderung zu speichern und den Dialog zu schließen.
 
 Eine K.-o.-Runde mit einem Spiel hat Spieler, die in ihrer Auslosung platziert sind, und eine Änderung ihrer Plätze würde sie verschieben; sie wird deshalb abgelehnt, sobald ein Spiel eingegeben ist. Die Best of ihrer Runden lassen sich weiterhin ändern.
 

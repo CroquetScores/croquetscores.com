@@ -1,9 +1,37 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { join } from "node:path";
 
+import {
+  helpLibraryIn,
+  helpLibraryWithout,
+} from "../../../../src/web/common/helpLibrary.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { anApplicationWithHelp } from "../../support/browser.js";
 import { englishForScenarios } from "../../support/languages.js";
-import { look, lookedAt } from "../../support/lookedAt.js";
+import { look, lookOn, lookedAt } from "../../support/lookedAt.js";
+
+const dist = join(import.meta.dirname, "..", "..", "..", "..", "dist", "help");
+
+// Welsh has the terms now, so the scenarios that show a language without them
+// the English ones take them away, as the privacy statement's do
+// (privacy.feature).
+Given("the help has no Welsh terms of use", async function (this: SpecWorld) {
+  const without = helpLibraryWithout(helpLibraryIn(dist), "cy", "terms-of-use");
+  lookOn(this, await anApplicationWithHelp(this, without));
+});
+
+Given(
+  "the help has no Welsh terms of use for those who write",
+  async function (this: SpecWorld) {
+    const without = helpLibraryWithout(
+      helpLibraryIn(dist),
+      "cy",
+      "admin/terms-of-use",
+    );
+    lookOn(this, await anApplicationWithHelp(this, without));
+  },
+);
 
 // The pages -------------------------------------------------------------------
 

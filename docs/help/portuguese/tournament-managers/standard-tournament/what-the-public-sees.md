@@ -1,10 +1,10 @@
 # O que o público vê
 
-Nada é publicado: as páginas públicas são geradas a partir do que a administração guarda, então um placar inserido aparece nelas na mesma hora. Elas não precisam de conta nem de scripts, e são feitas para um telefone.
+Nada é publicado: as páginas públicas são geradas a partir do que a administração guarda, então um resultado inserido aparece nelas na mesma hora. Elas não precisam de conta nem de scripts, e são feitas para um telefone.
 
 ## A página do torneio
 
-A página do torneio fica no seu ano, na sua modalidade e no seu nome, como `/2026/ac/spring-open`. Tem como cabeçalho o nome do torneio, com o subtítulo abaixo. Lista todos os jogos em uso, o adicionado mais recentemente primeiro, para que um leitor que volta veja o que aconteceu desde então. Cada jogo diz o vencedor, o que ele representa, a sua bandeira e o seu placar, depois o perdedor e o dele, com a competição em que foi disputado e há quanto tempo foi adicionado.
+A página do torneio fica no seu ano, no seu esporte e no seu nome, como `/2026/ac/spring-open`. Tem como cabeçalho o nome do torneio, com o subtítulo abaixo. Lista todos os jogos em uso, o adicionado mais recentemente primeiro, para que um leitor que volta veja o que aconteceu desde então. Cada jogo diz o vencedor, o que ele representa, a sua bandeira e o seu resultado, depois o perdedor e o dele, com a competição em que foi disputado e há quanto tempo foi adicionado.
 
 ![A página pública do torneio](images/public-tournament.png)
 
@@ -12,7 +12,7 @@ A barra verde-escura oferece as seções do torneio: **Recentes**, que é esta p
 
 ## Um grupo
 
-A página de um grupo mostra os seus resultados como uma grade: uma linha e uma coluna para cada jogador, na ordem do grupo, com os jogos entre dois jogadores onde a linha encontra a coluna, cada um marcado como ganho, perdido ou empatado para o jogador da linha. Depois das colunas dos jogadores vêm os totais de cada jogador. Quando cada partida é um único jogo, são vitórias e saldo de arcos; quando uma partida é melhor de mais de um, são partidas, saldo de jogos, jogos e saldo de arcos.
+A página de um grupo mostra os seus resultados como uma grade: uma linha e uma coluna para cada jogador, na ordem do grupo, com os jogos entre dois jogadores onde a linha encontra a coluna, cada um marcado como vitória, derrota ou empate para o jogador da linha. Depois das colunas dos jogadores vêm os totais de cada jogador. Quando cada partida é um único jogo, são vitórias e saldo de arcos; quando uma partida é melhor de mais de um, são partidas, saldo de jogos, jogos e saldo de arcos.
 
 ![A grade de um grupo](images/public-block-grid.png)
 
@@ -20,13 +20,13 @@ Um grupo é mostrado de três formas, oferecidas na linha do seu nome: **Grade**
 
 ![O resumo de um grupo](images/public-block-summary.png)
 
-A linha de um jogador retirado diz que ele desistiu. Um placar anulado é mostrado riscado e não conta para nada. Um placar arquivado não é mostrado.
+A linha de um jogador retirado diz que ele é desistente. Um resultado anulado é mostrado riscado e não conta para nada. Um resultado arquivado não é mostrado.
 
-## Uma eliminatória
+## Um mata-mata
 
-A página de uma eliminatória desenha a sua chave rodada a rodada, uma coluna para cada rodada, da primeira até a final, com os dois lados de cada partida um acima do outro e uma célula para cada jogo de que a partida é melhor de. A partida de uma rodada posterior fica ao lado das duas partidas cujos vencedores ela enfrenta. Em um telefone a chave rola para o lado, com setas para a final e de volta.
+A página de um mata-mata desenha a sua chave rodada a rodada, uma coluna para cada rodada, da primeira até a final, com os dois lados de cada partida um acima do outro e uma célula para cada jogo de que a partida é melhor de. A partida de uma rodada posterior fica ao lado das duas partidas cujos vencedores ela enfrenta. Em um telefone a chave rola para o lado, com setas para a final e de volta.
 
-![A chave de uma eliminatória](images/public-knockout.png)
+![A chave de um mata-mata](images/public-knockout.png)
 
 ## Um suíço
 
@@ -44,4 +44,4 @@ A página Notas lista as notas do torneio, a escrita mais recentemente primeiro,
 
 ## Endereços que mudam
 
-Um torneio mantém o seu endereço quando o nome é corrigido. Quando ele muda, porque o ano ou a modalidade mudou, o endereço antigo leva ao novo, para que um link guardado de antes continue a funcionar. As páginas de um torneio arquivado não são encontradas até que ele seja restaurado.
+Um torneio mantém o seu endereço quando o nome é corrigido. Quando ele muda, porque o ano ou o esporte mudou, o endereço antigo leva ao novo, para que um link guardado de antes continue a funcionar. As páginas de um torneio arquivado não são encontradas até que ele seja restaurado.

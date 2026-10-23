@@ -534,7 +534,7 @@ export const english: Language = {
     "admin.view.scorers": "Scorers",
     "admin.view.rankings": "Rankings",
     "admin.rankings.file":
-      "The world rankings will user the tournament's results, using this function and managers do not need to action anything.",
+      "The world rankings will use the tournament's results through this function, so managers do not need to do anything.",
     "admin.rankings.download": "Download rankings",
     "rankings.notAvailable": "Rankings are not available",
     "rankings.notAvailable.sport":

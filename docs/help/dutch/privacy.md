@@ -20,7 +20,7 @@ De website zet een cookie om je ingelogd te houden, een voor het thema dat je ko
 
 ## Wie het kan zien
 
-Je naam wordt versleuteld opgeslagen en alleen je mede-toernooibeheerders kunnen die zien. Ook je e-mailadres wordt versleuteld bewaard, en de website leest het alleen om te doen wat je haar vroeg, zoals je een e-mail sturen. De mensen die de website beheren, beheren de database waarin het wordt bewaard.
+Je naam wordt versleuteld opgeslagen en alleen je mede-toernooileiders kunnen die zien. Ook je e-mailadres wordt versleuteld bewaard, en de website leest het alleen om te doen wat je haar vroeg, zoals je een e-mail sturen. De mensen die de website beheren, beheren de database waarin het wordt bewaard.
 
 ## E-mail
 

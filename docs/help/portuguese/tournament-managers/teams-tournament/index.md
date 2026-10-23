@@ -6,9 +6,9 @@ Ele é completo em si mesmo. Nada nele depende do guia de um torneio padrão, qu
 
 ## Antes de começar
 
-Você precisa de uma conta. Clique [aqui](/account/register) para registrar uma conta.
+Você precisa de uma conta. Clique [aqui](/account/register) para cadastrar uma conta.
 
-Tudo o que um organizador faz é feito na seção de administração do site. As páginas públicas, onde jogadores e espectadores acompanham o torneio, são geradas a partir do que a administração guarda, então nada precisa ser publicado: um placar inserido aparece nas páginas públicas na mesma hora.
+Tudo o que um organizador faz é feito na seção de administração do site. As páginas públicas, onde jogadores e espectadores acompanham o torneio, são geradas a partir do que a administração guarda, então nada precisa ser publicado: um resultado inserido aparece nas páginas públicas na mesma hora.
 
 ## As palavras
 
@@ -16,13 +16,13 @@ Uma **equipe** é um lado, como a Austrália, com um nome, um nome abreviado com
 
 ## As páginas em ordem
 
-1. [Criar um torneio](creating-a-tournament.md): o seu nome, os seus dias, a sua modalidade, o seu formato e onde é disputado.
+1. [Criar um torneio](creating-a-tournament.md): o seu nome, os seus dias, o seu esporte, o seu formato e onde é disputado.
 2. [Equipes](teams.md): adicionar as equipes, com os seus nomes abreviados e bandeiras.
 3. [Os jogadores de uma equipe](team-players.md): inscrever os jogadores de cada equipe na página da própria equipe.
 4. [Testes](tests.md): adicionar os testes entre equipes, os seus dias, quantas partidas cada um tem e os seus grupos.
-5. [Placares](scores.md): inserir os jogos de um teste, corrigi-los e pôr de lado os que foram inseridos por engano.
+5. [Resultados](scores.md): inserir os jogos de um teste, corrigi-los e pôr de lado os que foram inseridos por engano.
 6. [Notas](notes.md): dizer aos jogadores o que eles precisam saber enquanto o torneio acontece.
-7. [Organizadores e apontadores](managers-and-scorers.md): compartilhar a administração do torneio, e deixar que alguém insira placares sem poder alterar mais nada.
+7. [Organizadores e anotadores](managers-and-scorers.md): compartilhar a administração do torneio, e deixar que alguém insira resultados sem poder alterar mais nada.
 8. [Rankings](rankings.md): o arquivo enviado aos rankings mundiais, e o que fica para você preencher.
 9. [Alterar, arquivar e restaurar um torneio](changing-and-archiving.md): corrigir os detalhes do torneio, e pôr um torneio de lado.
 10. [O que o público vê](what-the-public-sees.md): as páginas que os seus jogadores acompanham, e como o que você insere aparece nelas.
@@ -33,7 +33,7 @@ A porta de entrada da administração lista os torneios de que você participa, 
 
 ![A lista de torneios na administração](images/admin-list.png)
 
-Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores**, **Apontadores** e **Rankings**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
+Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores**, **Anotadores** e **Rankings**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
 
 ![A página de um torneio, na aba Testes](images/tournament-page.png)
 
@@ -41,9 +41,9 @@ A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. 
 
 ## O que vale em todo lugar
 
-**Nada é excluído de vez, a não ser uma nota.** Equipes, jogadores, testes, placares e o próprio torneio são arquivados em vez de excluídos: postos de lado, riscados e listados sob um título próprio, com **Restaurar** para trazê-los de volta. Arquivar, restaurar e subir ou descer nunca pedem confirmação, porque cada um é desfeito pressionando o contrário. As coisas que não podem ser desfeitas, como excluir uma nota ou remover um organizador, perguntam antes.
+**Nada é excluído de vez, a não ser uma nota.** Equipes, jogadores, testes, resultados e o próprio torneio são arquivados em vez de excluídos: postos de lado, riscados e listados sob um título próprio, com **Restaurar** para trazê-los de volta. Arquivar, restaurar e subir ou descer nunca pedem confirmação, porque cada um é desfeito pressionando o contrário. As coisas que não podem ser desfeitas, como excluir uma nota ou remover um organizador, perguntam antes.
 
-**Um diálogo sobre a página não guarda nada até que você pressione o seu botão.** Cancelar, ou a tecla Escape, fecha-o e deixa tudo como estava. Os diálogos que adicionam coisas, como Adicionar equipe e Adicionar placar, continuam abertos depois de cada adição, para que uma lista possa ser digitada de uma vez, um item após o outro.
+**Um diálogo sobre a página não guarda nada até que você pressione o seu botão.** Cancelar, ou a tecla Escape, fecha-o e deixa tudo como estava. Os diálogos que adicionam coisas, como Adicionar equipe e Adicionar resultado, continuam abertos depois de cada adição, para que uma lista possa ser digitada de uma vez, um item após o outro.
 
 **O que é recusado é dito ao lado do campo a que se refere.** Nada do que é recusado é guardado, e o que você digitou continua digitado, para que possa ser corrigido em vez de digitado de novo.
 

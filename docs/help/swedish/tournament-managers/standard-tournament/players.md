@@ -18,7 +18,7 @@ Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över s
 
 **Flagga** är den flagga som visas bredvid spelarens namn. Den kan lämnas som ingen, vilket de flesta spelare har. Vad en spelare representerar och vilken flagga spelaren för hålls isär, eftersom en spelare kan spela för en klubb i ett land och föra ett annat lands flagga.
 
-**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i associationscroquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, eftersom de flesta spelare är kända i rankingen under sitt eget namn, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn.
+**Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i association croquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, eftersom de flesta spelare är kända i rankingen under sitt eget namn, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn.
 
 Medan du skriver ett namn erbjuds de spelare världsrankingen känner till vars namn börjar så, så att du kan ta ett namn så som rankingen stavar det i stället för att skriva ut det. Bredvid världsrankingnamnet säger en bock att rankingen känner till namnet, och ett frågetecken att den inte gör det: namnet kan vara felstavat, eller så kan spelaren vara ny i rankingen. Det är bara ett råd. Ett namn rankingen inte känner till sparas lika gärna som ett den känner till.
 
@@ -26,7 +26,7 @@ Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fäl
 
 ![Dialogrutan efter att en spelare har lagts till](images/add-player-dialog-added.png)
 
-En spelare heter aldrig "Bye". En utslagsturnerings frilotter läggs till i själva utslagsturneringen, där dess spelare sätts in, så ett namn vars första ord är det engelska "bye" godtas inte, och dialogrutan förklarar varför.
+En spelare heter aldrig "Bye". En utslagnings byes läggs till i själva utslagningen, där dess spelare sätts in, så ett namn vars första ord är det engelska "bye" godtas inte, och dialogrutan förklarar varför.
 
 ## Rätta en spelare
 
@@ -38,7 +38,7 @@ En spelare som rättas här rättas överallt: i varje tävling spelaren är med
 
 ## Ordna spelarna
 
-Spelarna listas i turneringens ordning, som är den ordning de erbjuds i när de sätts in i tävlingar, och den ordning en utslagsturnering lottas i. **Upp** och **Ned**, pilarna i slutet av varje rad, flyttar en spelare ett steg. Den första spelaren erbjuds inte Upp och den sista erbjuds inte Ned.
+Spelarna listas i turneringens ordning, som är den ordning de erbjuds i när de sätts in i tävlingar, och den ordning en utslagning lottas i. **Upp** och **Ner**, pilarna i slutet av varje rad, flyttar en spelare ett steg. Den första spelaren erbjuds inte Upp och den sista erbjuds inte Ned.
 
 ## Arkivera en spelare
 

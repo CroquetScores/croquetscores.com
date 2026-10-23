@@ -1,10 +1,10 @@
 # O que o público vê
 
-Nada é publicado: as páginas públicas são geradas a partir do que a administração guarda, então um placar inserido aparece nelas na mesma hora. Elas não precisam de conta nem de scripts, e são feitas para um telefone.
+Nada é publicado: as páginas públicas são geradas a partir do que a administração guarda, então um resultado inserido aparece nelas na mesma hora. Elas não precisam de conta nem de scripts, e são feitas para um telefone.
 
 ## A página do torneio
 
-A página do torneio fica no seu ano, na sua modalidade e no seu nome, como `/2026/ac/trans-tasman-tests`. Tem como cabeçalho o nome do torneio, com o subtítulo abaixo. Lista todos os jogos em uso, o adicionado mais recentemente primeiro, para que um leitor que volta veja o que aconteceu desde então. Cada jogo diz o vencedor, a sua equipe e o seu placar, depois o perdedor e o dele, com o teste em que foi disputado e há quanto tempo foi adicionado.
+A página do torneio fica no seu ano, no seu esporte e no seu nome, como `/2026/ac/trans-tasman-tests`. Tem como cabeçalho o nome do torneio, com o subtítulo abaixo. Lista todos os jogos em uso, o adicionado mais recentemente primeiro, para que um leitor que volta veja o que aconteceu desde então. Cada jogo diz o vencedor, a sua equipe e o seu resultado, depois o perdedor e o dele, com o teste em que foi disputado e há quanto tempo foi adicionado.
 
 ![A página pública do torneio](images/public-tournament.png)
 
@@ -24,7 +24,7 @@ A página de um grupo mostra a classificação das equipes do grupo, contando s�
 
 ## Um teste
 
-A página de um teste tem como cabeçalho os nomes completos das suas equipes, como "Australia x New Zealand", e diz de quantos jogos é cada partida. A sua tabela é encabeçada pelas duas equipes, a primeira à esquerda. Cada partida disputada é uma linha, na ordem em que começou, com o jogador da primeira equipe à esquerda, o da segunda à direita, e os jogos da partida entre eles, cada um com o placar do primeiro lado e depois o do segundo, o do vencedor marcado. Abaixo das partidas ficam os jogos e os arcos de cada equipe e, quando cada partida é melhor de mais de um, as suas partidas ganhas, cada uma do seu lado.
+A página de um teste tem como cabeçalho os nomes completos das suas equipes, como "Australia x New Zealand", e diz de quantos jogos é cada partida. A sua tabela é encabeçada pelas duas equipes, a primeira à esquerda. Cada partida disputada é uma linha, na ordem em que começou, com o jogador da primeira equipe à esquerda, o da segunda à direita, e os jogos da partida entre eles, cada um com o resultado do primeiro lado e depois o do segundo, o do vencedor marcado. Abaixo das partidas ficam os jogos e os arcos de cada equipe e, quando cada partida é melhor de mais de um, as suas partidas ganhas, cada uma do seu lado.
 
 ![A página de um teste](images/public-test.png)
 
@@ -42,4 +42,4 @@ A página Notas lista as notas do torneio, a escrita mais recentemente primeiro,
 
 ## Endereços que mudam
 
-Um torneio mantém o seu endereço quando o nome é corrigido. Quando ele muda, porque o ano ou a modalidade mudou, o endereço antigo leva ao novo, para que um link guardado de antes continue a funcionar. As páginas de um torneio arquivado não são encontradas até que ele seja restaurado.
+Um torneio mantém o seu endereço quando o nome é corrigido. Quando ele muda, porque o ano ou o esporte mudou, o endereço antigo leva ao novo, para que um link guardado de antes continue a funcionar. As páginas de um torneio arquivado não são encontradas até que ele seja restaurado.

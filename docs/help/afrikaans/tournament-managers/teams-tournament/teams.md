@@ -22,7 +22,7 @@ Druk op **Voeg by**. Die span word bygevoeg, die dialoog sê so, en sy velde wor
 
 ## Hoe om 'n span reg te stel
 
-Druk op 'n span se **Wysig** om dieselfde dialoog op daardie span oop te maak, met die titel Wysig span. Verander wat verkeerd is en druk op **Stoor**. 'n Span waarvan die kortnaam verander, word oral by die nuwe een genoem, so sy toetse word daarmee saam hernoem.
+Druk op 'n span se **Wysig** om dieselfde dialoog op daardie span oop te maak, met die titel Wysig span. Verander wat verkeerd is en druk op **Bewaar**. 'n Span waarvan die kortnaam verander, word oral by die nuwe een genoem, so sy toetse word daarmee saam hernoem.
 
 ![Die dialoog Wysig span](images/edit-team-dialog.png)
 

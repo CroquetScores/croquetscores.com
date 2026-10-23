@@ -12,7 +12,7 @@ Un navigateur qui refuse les cookies peut tout de même lire un tournoi. Il oubl
 
 ## S’inscrire exige les scripts
 
-S’inscrire est le seul endroit où les scripts sont nécessaires. Le site demande à Google reCAPTCHA de distinguer une personne d’un programme, et cela s’exécute comme un script dans votre navigateur. Si les scripts sont désactivés quand vous ouvrez la page d’inscription, vous êtes envoyé vers une page qui le dit, avant d’avoir rempli quoi que ce soit. Activez les scripts pour ce site, puis cliquez sur **Retour à l’inscription**.
+S’inscrire est le seul endroit où les scripts sont nécessaires. Le site demande à Google reCAPTCHA de distinguer une personne d’un programme, et cela s’exécute comme un script dans votre navigateur. Si les scripts sont désactivés quand vous ouvrez la page d’inscription, vous êtes envoyé vers une page qui le dit, avant d’avoir rempli quoi que ce soit. Activez les scripts pour ce site, puis cliquez sur **Retour à l'inscription**.
 
 Demander un moyen de retrouver l’accès à un compte auquel vous ne pouvez pas vous connecter n’exige pas les scripts.
 

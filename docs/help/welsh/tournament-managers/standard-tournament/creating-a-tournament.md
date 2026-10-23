@@ -14,17 +14,13 @@ Mae'r ffurflen yn gofyn am bopeth y mae twrnamaint yn dechrau ag ef. Nid yw twrn
 
 **Fformat.** Dewiswch **Safonol** ar gyfer twrnamaint a chwaraeir rhwng chwaraewyr. Mae'r fformatau eraill ar gyfer twrnameintiau a chwaraeir rhwng timau, sydd â chanllaw eu hunain.
 
-**Camp.** Y campau y mae'r wefan yn eu cynnig, yn ei threfn: Croce Cymdeithas, Croce Golff, Croce Americanaidd 6 Chylch a Ricochet ar Croquet Scores. Nid yw Gateball Scores yn gofyn am gamp na fformat, gan fod pob twrnamaint yno'n dwrnamaint safonol o gateball.
+**Camp.** Y campau y mae'r wefan yn eu cynnig, yn ei threfn: Association Croquet, Golf Croquet, American 6 Wicket a Ricochet ar Croquet Scores. Nid yw Gateball Scores yn gofyn am gamp na fformat, gan fod pob twrnamaint yno'n dwrnamaint safonol o gateball.
 
 **Gwlad** a **Rhanbarth.** Lle caiff y twrnamaint ei chwarae. Gofynnir am ranbarth dim ond lle mae'r wlad a ddewiswch wedi'i rhannu'n rhanbarthau, fel taleithiau Awstralia; nid yw gwlad sy'n un rhanbarth ynddi ei hun yn gofyn am un. Nid oes raid dewis rhanbarth hyd yn oed lle cynigir un.
 
-**Isdeitl.** Beth bynnag rydych am i ddarllenwyr ei wybod nad oes ganddo faes ei hun: lle i barcio, pryd mae cinio, pwy i'w ffonio. Caiff ei ddangos o dan enw'r twrnamaint ar bob tudalen gyhoeddus. Caiff ei ysgrifennu mewn Markdown, felly gellir gwneud gair mewn print trwm â sêr o'i gwmpas a gwneud rhestr â llinell doriad ar ddechrau pob llinell. Gall fod hyd at 2000 o gymeriadau, a gellir ei adael yn wag.
+**Is-deitl.** Beth bynnag rydych am i ddarllenwyr ei wybod nad oes ganddo faes ei hun: lle i barcio, pryd mae cinio, pwy i'w ffonio. Caiff ei ddangos o dan enw'r twrnamaint ar bob tudalen gyhoeddus. Caiff ei ysgrifennu mewn Markdown, felly gellir gwneud gair mewn print trwm â sêr o'i gwmpas a gwneud rhestr â llinell doriad ar ddechrau pob llinell. Gall fod hyd at 2000 o gymeriadau, a gellir ei adael yn wag.
 
-**Chwarae gyda handicap.** Ticiwch hwn ar gyfer twrnamaint handicap.
-
-**Caniatáu gemau cyfartal.** Ticiwch hwn lle gall gêm orffen heb i'r un o'r ddau chwaraewr fod yn enillydd. Nid yw'r mwyafrif o dwrnameintiau'n ei ganiatáu. Lle mae wedi'i dicio, caiff sgôr a roddir i mewn â phwyntiau cyfartal a dim marc ei chadw fel gêm gyfartal; lle nad yw, rhaid i gêm ar bwyntiau cyfartal ddweud pwy a'i henillodd â marc ar ôl sgôr yr enillydd, fel "6w".
-
-**Yn cyfrif tuag at Safleoedd y Byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: twrnamaint Croce Cymdeithas, Croce Golff neu Groce Americanaidd 6 Chylch na chaiff ei chwarae gyda handicap ac nad yw'n caniatáu gemau cyfartal. Mae wedi'i dicio i ddechrau, felly dad-diciwch ef ar gyfer twrnamaint nad yw i gyfrif.
+Mater i bob cystadleuaeth yw dweud, pan gaiff ei hychwanegu, sut y caiff ei chwarae a'i chyfrif: gyda handicapiau, gyda chanlyniadau cyfartal, ac tuag at restr detholion y byd.
 
 **Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall.
 

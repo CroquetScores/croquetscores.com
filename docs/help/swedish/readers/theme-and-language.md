@@ -16,6 +16,6 @@ En sida i den här hjälpen som ännu inte har översatts till ditt språk visas
 
 ## Om ett val glöms
 
-Webbplatsen kommer ihåg varje val i en kaka, så en webbläsare som rensar sina kakor, eller är inställd på att inte spara dem, glömmer och ber dig välja igen. [Skript och kakor](scripting-and-cookies.md) berättar vad webbplatsen sparar.
+Webbplatsen kommer ihåg varje val i en kaka, så en webbläsare som rensar sina kakor, eller är inställd på att inte spara dem, glömmer och ber dig välja igen. [JavaScript och kakor](scripting-and-cookies.md) berättar vad webbplatsen sparar.
 
-Nästa: [Skript och kakor](scripting-and-cookies.md).
+Nästa: [JavaScript och kakor](scripting-and-cookies.md).

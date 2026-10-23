@@ -4,7 +4,7 @@ Ni chyhoeddir dim: caiff y tudalennau cyhoeddus eu llunio o'r hyn sydd gan yr ad
 
 ## Tudalen y twrnamaint
 
-Mae tudalen y twrnamaint yn ei flwyddyn, ei gamp a'i enw, fel `/2026/ac/spring-open`. Enw'r twrnamaint sydd ar ei phen, â'i isdeitl oddi tano. Mae'n rhestru pob gêm sydd yn ei lle, yr un a ychwanegwyd ddiweddaraf yn gyntaf, fel bod darllenydd sy'n dod yn ôl yn gweld beth sydd wedi digwydd ers hynny. Mae pob gêm yn dweud yr enillydd, yr hyn y mae'n ei gynrychioli, ei faner a'i sgôr, yna'r collwr a'i rai yntau, â'r gystadleuaeth y chwaraewyd hi ynddi a pha mor bell yn ôl y'i hychwanegwyd.
+Mae tudalen y twrnamaint yn ei flwyddyn, ei gamp a'i enw, fel `/2026/ac/spring-open`. Enw'r twrnamaint sydd ar ei phen, â'i is-deitl oddi tano. Mae'n rhestru pob gêm sydd yn ei lle, yr un a ychwanegwyd ddiweddaraf yn gyntaf, fel bod darllenydd sy'n dod yn ôl yn gweld beth sydd wedi digwydd ers hynny. Mae pob gêm yn dweud yr enillydd, yr hyn y mae'n ei gynrychioli, ei faner a'i sgôr, yna'r collwr a'i rai yntau, â'r gystadleuaeth y chwaraewyd hi ynddi a pha mor bell yn ôl y'i hychwanegwyd.
 
 ![Tudalen gyhoeddus y twrnamaint](images/public-tournament.png)
 
@@ -12,21 +12,21 @@ Mae'r bar gwyrdd tywyll yn cynnig adrannau'r twrnamaint: **Diweddar**, sef y dud
 
 ## Bloc
 
-Mae tudalen bloc yn dangos ei ganlyniadau fel grid: rhes a cholofn i bob chwaraewr yn nhrefn y bloc, â'r gemau rhwng dau chwaraewr lle mae'r rhes yn cwrdd â'r golofn, pob un wedi'i marcio fel un a enillwyd, a gollwyd neu'n gyfartal i chwaraewr y rhes. Ar ôl colofnau'r chwaraewyr daw cyfansymiau pob chwaraewr. Lle mae pob gornest yn un gêm, buddugoliaethau a chylchoedd net yw'r rheini; lle mae gornest y gorau o fwy nag un, gornestau, gemau net, gemau a chylchoedd net ydynt.
+Mae tudalen bloc yn dangos ei ganlyniadau fel grid: rhes a cholofn i bob chwaraewr yn nhrefn y bloc, â'r gemau rhwng dau chwaraewr lle mae'r rhes yn cwrdd â'r golofn, pob un wedi'i marcio fel un a enillwyd, a gollwyd neu'n gyfartal i chwaraewr y rhes. Ar ôl colofnau'r chwaraewyr daw cyfansymiau pob chwaraewr. Lle mae pob gêm yn un gêm unigol, buddugoliaethau a chylchau net yw'r rheini; lle mae gêm yr orau o fwy nag un, gemau, gemau net, gemau unigol a chylchau net ydynt.
 
 ![Grid bloc](images/public-block-grid.png)
 
-Dangosir bloc mewn tair ffordd, a gynigir ar linell ei enw: **Grid**, **Crynodeb** a **Trefn chwarae**. Y crynodeb yw'r un ar gyfer ffôn: y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion a'u cylchoedd net. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
+Dangosir bloc mewn tair ffordd, a gynigir ar linell ei enw: **Grid**, **Crynodeb** a **Trefn chwarae**. Y crynodeb yw'r un ar gyfer ffôn: y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion a'u cylchau net. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
 
 ![Crynodeb bloc](images/public-block-summary.png)
 
 Mae rhes chwaraewr a dynnwyd yn ôl yn dweud hynny. Dangosir canlyniad a dynnwyd yn ôl â llinell drwyddo ac nid yw'n cyfrif dim. Ni ddangosir canlyniad a archifwyd.
 
-## Cystadleuaeth taro allan
+## Cystadleuaeth cnoc-owt
 
-Mae tudalen cystadleuaeth taro allan yn llunio ei siart rownd wrth rownd, colofn i bob rownd o'r gyntaf i'r rownd derfynol, â dwy ochr pob gornest un uwchben y llall a chell i bob gêm y mae'r ornest y gorau ohonynt. Mae gornest rownd ddiweddarach yn sefyll wrth ochr y ddwy ornest y mae rhwng eu henillwyr. Ar ffôn mae'r siart yn sgrolio ar draws, â saethau i'r rownd derfynol ac yn ôl.
+Mae tudalen cystadleuaeth cnoc-owt yn llunio ei siart rownd wrth rownd, colofn i bob rownd o'r gyntaf i'r rownd derfynol, â dwy ochr pob gêm un uwchben y llall a chell i bob gêm unigol y mae'r gêm yr orau ohonynt. Mae gêm rownd ddiweddarach yn sefyll wrth ochr y ddwy gêm y mae rhwng eu henillwyr. Ar ffôn mae'r siart yn sgrolio ar draws, â saethau i'r rownd derfynol ac yn ôl.
 
-![Siart cystadleuaeth taro allan](images/public-knockout.png)
+![Siart cystadleuaeth cnoc-owt](images/public-knockout.png)
 
 ## Cystadleuaeth Swisaidd
 

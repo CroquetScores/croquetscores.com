@@ -16,7 +16,7 @@ Premi **Aggiungi giocatore**, sopra l'elenco. Si apre una finestra di dialogo so
 
 **Nome** è obbligatorio, tra 3 e 254 caratteri. Due giocatori di una stessa squadra non possono avere lo stesso nome, comunque siano scritte le maiuscole; un giocatore di un'altra squadra può averlo uguale.
 
-**Nome del giocatore nella classifica mondiale** è il nome con cui le classifiche mondiali conoscono il giocatore. Viene chiesto solo in un torneo di Association Croquet o di Golf Croquet, i due sport di cui le classifiche mondiali tengono un elenco di giocatori. I giocatori del Croquet americano a 6 archetti sono noti alle classifiche con il proprio nome, quindi lì non viene chiesto, e il nome nella classifica mondiale di ogni giocatore è sempre il suo nome. Mentre aggiungi un giocatore segue il nome man mano che lo scrivi, e smette di seguirlo appena ci scrivi dentro. Lasciato vuoto, viene conservato come il nome del giocatore. Mentre scrivi, vengono proposti i giocatori noti alle classifiche mondiali il cui nome comincia così, e accanto al nome nella classifica mondiale una spunta dice che le classifiche conoscono il nome e un punto interrogativo dice che non lo conoscono. È solo un consiglio: un nome che le classifiche non conoscono viene conservato come uno che conoscono.
+**Nome del giocatore nella classifica mondiale** è il nome con cui le classifiche mondiali conoscono il giocatore. Viene chiesto solo in un torneo di Association Croquet o di Golf Croquet, i due sport di cui le classifiche mondiali tengono un elenco di giocatori. I giocatori dell'American 6 Wicket sono noti alle classifiche con il proprio nome, quindi lì non viene chiesto, e il nome nella classifica mondiale di ogni giocatore è sempre il suo nome. Mentre aggiungi un giocatore segue il nome man mano che lo scrivi, e smette di seguirlo appena ci scrivi dentro. Lasciato vuoto, viene conservato come il nome del giocatore. Mentre scrivi, vengono proposti i giocatori noti alle classifiche mondiali il cui nome comincia così, e accanto al nome nella classifica mondiale una spunta dice che le classifiche conoscono il nome e un punto interrogativo dice che non lo conoscono. È solo un consiglio: un nome che le classifiche non conoscono viene conservato come uno che conoscono.
 
 Un giocatore non si chiama mai "Bye": un nome la cui prima parola è "bye" viene rifiutato.
 
@@ -24,7 +24,7 @@ Premi **Aggiungi**. Il giocatore viene aggiunto, la finestra lo dice, e i suoi c
 
 ## Correggere un giocatore
 
-Premi il nome di un giocatore, o il suo **Modifica**, per aprire la stessa finestra su quel giocatore, intitolata Modifica giocatore. Premi **Salva** per conservare la modifica. Un giocatore il cui nome viene corretto mantiene il nome nella classifica mondiale che aveva, tranne nel Croquet americano a 6 archetti, dove il nome di un giocatore nella classifica mondiale è sempre il suo nome.
+Premi il nome di un giocatore, o il suo **Modifica**, per aprire la stessa finestra su quel giocatore, intitolata Modifica giocatore. Premi **Salva** per conservare la modifica. Un giocatore il cui nome viene corretto mantiene il nome nella classifica mondiale che aveva, tranne nell'American 6 Wicket, dove il nome di un giocatore nella classifica mondiale è sempre il suo nome.
 
 ## Ordine
 

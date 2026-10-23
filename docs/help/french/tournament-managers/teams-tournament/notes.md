@@ -1,6 +1,6 @@
 # Notes
 
-L’onglet **Notes** de la page d’un tournoi est l’endroit où ses gestionnaires écrivent ce que les joueurs ont besoin de savoir au fil du tournoi : l’ordre de jeu, un changement de terrains, l’heure du déjeuner. Les lecteurs les trouvent sur la page publique Notes du tournoi, et une note qu’ils n’ont pas lue y est marquée d’un astérisque rouge, qui marque aussi la rubrique Notes sur chaque page du tournoi jusqu’à ce qu’ils l’ouvrent.
+L’onglet **Notes** de la page d’un tournoi est l’endroit où ses organisateurs écrivent ce que les joueurs ont besoin de savoir au fil du tournoi : l’ordre de jeu, un changement de terrains, l’heure du déjeuner. Les lecteurs les trouvent sur la page publique Notes du tournoi, et une note qu’ils n’ont pas lue y est marquée d’un astérisque rouge, qui marque aussi la rubrique Notes sur chaque page du tournoi jusqu’à ce qu’ils l’ouvrent.
 
 ![L’onglet Notes](images/notes-tab.png)
 
@@ -30,4 +30,4 @@ Une note qui ne s’applique plus se supprime. Une note supprimée est perdue po
 
 ![La question posée avant de supprimer une note](images/delete-note-asks.png)
 
-Suite : [Gestionnaires et marqueurs](managers-and-scorers.md).
+Suite : [Organisateurs et marqueurs](managers-and-scorers.md).

@@ -12,7 +12,7 @@ Pressione **Adicionar equipe**, acima da lista. Um diálogo abre sobre a página
 
 **Nome** é obrigatório: o nome completo da equipe, como "Australia", que encabeça a página da equipe e as tabelas das páginas públicas. Duas equipes de um mesmo torneio não podem ter o mesmo nome.
 
-**Nome abreviado** também é obrigatório: é como os testes da equipe são chamados, como "AUS x ENG", e como a barra verde-escura chama a equipe. Tem no máximo 10 caracteres, e não é mais longo que o nome, porque um nome abreviado mais longo que o nome que abrevia são os dois digitados ao contrário. Duas equipes também não podem ter o mesmo nome abreviado.
+**Nome curto** também é obrigatório: é como os testes da equipe são chamados, como "AUS x ENG", e como a barra verde-escura chama a equipe. Tem no máximo 10 caracteres, e não é mais longo que o nome, porque um nome abreviado mais longo que o nome que abrevia são os dois digitados ao contrário. Duas equipes também não podem ter o mesmo nome abreviado.
 
 **Bandeira** é mostrada ao lado do nome da equipe onde quer que ele apareça. Pode ficar como nenhuma, como para a equipe de um clube ou de uma região.
 

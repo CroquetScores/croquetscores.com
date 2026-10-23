@@ -13,7 +13,7 @@ El código ahora es de código abierto, con la Licencia Pública General de GNU 
 
 ### Seguir un torneo
 
-- **Notas de los responsables.** Los responsables de un torneo ahora pueden escribir notas para decir a los jugadores lo que necesitan saber mientras se juega: el formato, un cambio en el orden de juego, la hora de la comida. Están en la nueva sección Notas del torneo, con las más recientes primero y el tiempo que hace que se escribió cada una.
+- **Notas de los gestores.** Los gestores de un torneo ahora pueden escribir notas para decir a los jugadores lo que necesitan saber mientras se juega: el formato, un cambio en el orden de juego, la hora de la comida. Están en la nueva sección Notas del torneo, con las más recientes primero y el tiempo que hace que se escribió cada una.
 - **Un asterisco (\*) marca lo que no has leído.** Una nota lo tiene hasta que la abres, y de nuevo si se modifica después de que la leas. Mientras haya una nota sin leer, la sección Notas también lo tiene, en todas las páginas del torneo, así ves que hay novedades sin ir a mirar. Los comentarios se marcan de la misma manera. Tu navegador recuerda lo que has leído, así que no necesitas iniciar sesión. Otro teléfono u ordenador empieza sin nada leído.
 - **Los comentarios son más fáciles de seguir.** En el sitio antiguo, cada comentario nuevo llevaba la página hasta el final, y quien repasaba comentarios anteriores perdía el sitio. Ahora la página solo baja hasta un comentario nuevo si ya estás al final, leyendo el último. Si has subido para leer comentarios anteriores, te deja donde estás.
 

@@ -1,6 +1,6 @@
 # Prowadzenie turnieju standardowego
 
-Turniej standardowy to turniej rozgrywany między zawodnikami zgłaszanymi pojedynczo: weekend klubowy, turniej otwarty, mistrzostwa. Jego zawodników zgłasza się do bloków, systemów pucharowych i szwajcarskich, a wyniki pojawiają się na stronie w miarę rozgrywania partii. Ten przewodnik prowadzi organizatora od zalogowania aż po turniej, którego wyniki są dostępne publicznie.
+Turniej standardowy to turniej rozgrywany między zawodnikami zgłaszanymi pojedynczo: weekend klubowy, turniej otwarty, mistrzostwa. Jego zawodników zgłasza się do konkurencji grupowych, pucharowych i szwajcarskich, a wyniki pojawiają się na stronie w miarę rozgrywania gier. Ten przewodnik prowadzi organizatora od zalogowania aż po turniej, którego wyniki są dostępne publicznie.
 
 Jest samodzielny. Nic w nim nie zależy od przewodnika do turnieju drużynowego, który napisano osobno.
 
@@ -12,13 +12,13 @@ Wszystko, co robi organizator, robi w sekcji administracji strony. Strony public
 
 ## Strony po kolei
 
-1. [Tworzenie turnieju](creating-a-tournament.md): jego nazwa, dni, dyscyplina, miejsce rozgrywania i do czego się liczy.
+1. [Tworzenie turnieju](creating-a-tournament.md): jego nazwa, dni, dyscyplina, miejsce rozgrywania i to, czy jest wydarzeniem rangi krajowej, czy międzynarodowej.
 2. [Zawodnicy](players.md): zgłaszanie zawodników turnieju, poprawianie ich i odkładanie na bok tych, których zgłoszono przez pomyłkę.
-3. [Konkurencje](competitions.md): dodawanie bloków, systemów pucharowych i szwajcarskich oraz ustawianie ich w kolejności.
-4. [Zgłaszanie zawodników do konkurencji](entering-players-in-a-competition.md): kto gra w której konkurencji, wolne losy w systemie pucharowym, przenoszenie wyników, usuwanie i wycofywanie.
+3. [Konkurencje](competitions.md): dodawanie konkurencji grupowych, pucharowych i szwajcarskich oraz ustawianie ich w kolejności.
+4. [Zgłaszanie zawodników do konkurencji](entering-players-in-a-competition.md): kto gra w której konkurencji, Bye w konkurencji pucharowej, przenoszenie wyników, usuwanie i wycofywanie.
 5. [Wyniki](scores.md): wprowadzanie rezultatów, poprawianie ich i odkładanie na bok tych, które wprowadzono przez pomyłkę.
 6. [Notatki](notes.md): przekazywanie zawodnikom tego, co muszą wiedzieć w trakcie turnieju.
-7. [Organizatorzy i wprowadzający wyniki](managers-and-scorers.md): dzielenie się prowadzeniem turnieju i pozwalanie komuś na wprowadzanie wyników bez możliwości zmiany czegokolwiek innego.
+7. [Organizatorzy i osoby wprowadzające wyniki](managers-and-scorers.md): dzielenie się prowadzeniem turnieju i pozwalanie komuś na wprowadzanie wyników bez możliwości zmiany czegokolwiek innego.
 8. [Rankingi](rankings.md): plik, który wysyła się do rankingów światowych, i to, co zostaje do uzupełnienia.
 9. [Zmiana, archiwizowanie i przywracanie turnieju](changing-and-archiving.md): poprawianie szczegółów turnieju i odkładanie turnieju na bok.
 10. [Co widzą odbiorcy](what-the-public-sees.md): strony, które śledzą twoi zawodnicy, i to, jak pojawia się na nich to, co wprowadzasz.
@@ -29,7 +29,7 @@ Strona wejściowa administracji wymienia turnieje, w których masz jakąś rolę
 
 ![Lista turniejów w administracji](images/admin-list.png)
 
-Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w sześciu kartach pod jego nazwą: **Zawodnicy**, **Konkurencje**, **Notatki**, **Organizatorzy**, **Wprowadzający wyniki** i **Rankingi**. Strona otwiera się na karcie Zawodnicy, bo zawodnicy są pierwszą rzeczą, którą się wprowadza.
+Naciśnięcie nazwy turnieju albo **Zarządzaj** otwiera jego stronę. Wszystko, co jest do prowadzenia, mieści się w sześciu kartach pod jego nazwą: **Zawodnicy**, **Konkurencje**, **Notatki**, **Organizatorzy**, **Osoby wprowadzające wyniki** i **Rankingi**. Strona otwiera się na karcie Zawodnicy, bo zawodnicy są pierwszą rzeczą, którą się wprowadza.
 
 ![Strona turnieju, na karcie Konkurencje](images/tournament-page.png)
 

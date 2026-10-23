@@ -8,17 +8,17 @@ Die Seite des Turniers liegt unter seinem Jahr, seiner Sportart und seinem Namen
 
 ![Die öffentliche Seite des Turniers](images/public-tournament.png)
 
-Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Aktuell**, was diese Seite ist, **Übersicht**, **Spieler**, **Hinweise** und **Kommentare**, dann die Tests. Ein Test wird als die Kurznamen seiner Mannschaften mit „gegen“ dazwischen gesagt, etwa „AUS gegen NZ“. Tests in einer Gruppe werden nicht einzeln angeboten: Die Gruppe ist ein Bereich, benannt wie die Gruppe, an der Stelle, an der ihr erster Test stünde. Hinweise ist mit einem roten Sternchen markiert, solange es einen Hinweis gibt, den der Leser nicht gelesen hat.
+Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Neueste**, was diese Seite ist, **Zusammenfassung**, **Spieler**, **Notizen** und **Kommentar**, dann die Tests. Ein Test wird als die Kurznamen seiner Mannschaften mit „gegen“ dazwischen gesagt, etwa „AUS gegen NZ“. Tests in einer Gruppe werden nicht einzeln angeboten: Die Gruppe ist ein Bereich, benannt wie die Gruppe, an der Stelle, an der ihr erster Test stünde. Notizen ist mit einem roten Sternchen markiert, solange es eine Notiz gibt, die der Leser nicht gelesen hat.
 
 ## Die Übersicht
 
-Ein Turnier, dessen Tests in keiner Gruppe sind, hat eine **Übersicht**: eine Tabelle aller Mannschaften, gereiht, mit den gewonnenen, verlorenen und unentschiedenen Tests, den gewonnenen und verlorenen Spielen und den erzielten und gegnerischen Toren sowie der Tordifferenz. Geht in irgendeinem Test eine Begegnung über mehr als ein Spiel, kommen nach den Tests die gewonnenen und verlorenen Begegnungen. In der Übersicht sucht ein Leser jede Mannschaft als Ganzes.
+Ein Turnier, dessen Tests in keiner Gruppe sind, hat eine **Zusammenfassung**: eine Tabelle aller Mannschaften, gereiht, mit den gewonnenen, verlorenen und unentschiedenen Tests, den gewonnenen und verlorenen Spielen und den erzielten und gegnerischen Toren sowie der Tordifferenz. Geht in irgendeinem Test eine Begegnung über mehr als ein Spiel, kommen nach den Tests die gewonnenen und verlorenen Begegnungen. In der Zusammenfassung sucht ein Leser jede Mannschaft als Ganzes.
 
-Ein Turnier mit einem Test in einer Gruppe hat keine Übersicht. Stattdessen zeigt die Seite jeder Gruppe, wie die Mannschaften dieser Gruppe stehen, weil eine einzige Tabelle von Mannschaften über Gruppen hinweg, die nie gegeneinander gespielt haben, nichts reihen würde.
+Ein Turnier mit einem Test in einer Gruppe hat keine Zusammenfassung. Stattdessen zeigt die Seite jeder Gruppe, wie die Mannschaften dieser Gruppe stehen, weil eine einzige Tabelle von Mannschaften über Gruppen hinweg, die nie gegeneinander gespielt haben, nichts reihen würde.
 
 ## Eine Gruppe
 
-Die Seite einer Gruppe zeigt, wie die Mannschaften der Gruppe stehen, nur nach den Tests der Gruppe gezählt, in der Tabelle, die die Übersicht verwendet. Über der Tabelle, in einer eigenen Zeile, bietet sie **Übersicht** an, was diese Seite ist, und jeden Test der Gruppe, der zur Seite des Tests führt.
+Die Seite einer Gruppe zeigt, wie die Mannschaften der Gruppe stehen, nur nach den Tests der Gruppe gezählt, in der Tabelle, die die Zusammenfassung verwendet. Über der Tabelle, in einer eigenen Zeile, bietet sie **Zusammenfassung** an, was diese Seite ist, und jeden Test der Gruppe, der zur Seite des Tests führt.
 
 ![Die Seite einer Gruppe](images/public-group.png)
 
@@ -28,7 +28,7 @@ Die Überschrift der Seite eines Tests sind die vollen Namen seiner Mannschaften
 
 ![Die Seite eines Tests](images/public-test.png)
 
-Ein Test wird auf zwei Arten gezeigt, angeboten in der Zeile seines Namens: **Tabelle**, was diese Tabelle ist, und **Spielplan**, der jedes Spiel des Tests listet, das älteste zuerst. Ein Test in einer Gruppe bietet die Übersicht und die Tests seiner Gruppe in einer Zeile über seiner Überschrift an, mit diesem Test markiert.
+Ein Test wird auf zwei Arten gezeigt, angeboten in der Zeile seines Namens: **Raster**, was diese Tabelle ist, und **Spielreihenfolge**, die jedes Spiel des Tests listet, das älteste zuerst. Ein Test in einer Gruppe bietet die Zusammenfassung und die Tests seiner Gruppe in einer Zeile über seiner Überschrift an, mit diesem Test markiert.
 
 ## Spieler
 
@@ -36,9 +36,9 @@ Die Seite Spieler listet die Spieler Mannschaft für Mannschaft: jede Mannschaft
 
 ![Die öffentliche Seite Spieler des Turniers](images/public-players.png)
 
-## Hinweise
+## Notizen
 
-Die Seite Hinweise listet die Hinweise des Turniers, den zuletzt geschriebenen zuerst; jeder führt zu seiner eigenen Seite und sagt, wie lange es her ist, dass er geschrieben wurde. Ein Hinweis, den der Leser nicht gelesen hat, ist mit einem roten Sternchen markiert, bis er ihn öffnet.
+Die Seite Notizen listet die Notizen des Turniers, die zuletzt geschriebene zuerst; jede führt zu ihrer eigenen Seite und sagt, wie lange es her ist, dass sie geschrieben wurde. Eine Notiz, die der Leser nicht gelesen hat, ist mit einem roten Sternchen markiert, bis er sie öffnet.
 
 ## Adressen, die sich ändern
 

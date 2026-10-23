@@ -6,15 +6,15 @@ Na liście turniejów w administracji naciśnij **Edytuj** przy turnieju. Formul
 
 ![Formularz Edytuj turniej](images/edit-tournament.png)
 
-Gdy turniej ma już jakiegokolwiek zawodnika lub konkurencję, licząc też zarchiwizowane, jego formatu nie można zmienić na drużynowy, który zamiast tego ma drużyny i testy.
+Gdy turniej ma już jakiegokolwiek zawodnika lub konkurencję, licząc też zarchiwizowane, jego formuły nie można zmienić na drużynową, który zamiast tego ma drużyny i testy.
 
-Turniej zachowuje swój adres, gdy poprawia się jego nazwę, by link, który ktoś już wysłał, nadal go znajdował. Przenosi się tylko wtedy, gdy zmieni się rok, w którym się zaczyna, albo jego dyscyplina, a wtedy jego stary adres prowadzi do nowego. Zapisanie przenosi cię do turnieju tam, gdzie teraz się znajduje.
+Turniej zachowuje swój adres, gdy poprawia się jego nazwę, by odsyłacz, który ktoś już wysłał, nadal go znajdował. Przenosi się tylko wtedy, gdy zmieni się rok, w którym się zaczyna, albo jego dyscyplina, a wtedy jego stary adres prowadzi do nowego. Zapisanie przenosi cię do turnieju tam, gdzie teraz się znajduje.
 
-Turniej może zmienić tylko organizator. Wprowadzający wyniki, jak każdy inny, dowiaduje się o tym zamiast zobaczyć formularz.
+Turniej może zmienić tylko organizator. Osoba wprowadzająca wyniki, jak każdy inny, dowiaduje się o tym zamiast zobaczyć formularz.
 
 ## Lista turniejów
 
-Administracja wymienia jeden rok naraz, zaczynając od bieżącego, od najnowszego turnieju. Lata, w których masz turniej, są kartami na ciemnozielonym pasku, od najnowszego; gdy jest ich więcej, niż mieści się na telefonie, najstarsze są na liście rozwijanej na końcu rzędu. Rok jest w adresie, więc do roku można podać link.
+Administracja wymienia jeden rok naraz, zaczynając od bieżącego, od najnowszego turnieju. Lata, w których masz turniej, są kartami na ciemnozielonym pasku, od najnowszego; gdy jest ich więcej, niż mieści się na telefonie, najstarsze są na liście rozwijanej na końcu rzędu. Rok jest w adresie, więc do roku można podać odsyłacz.
 
 ![Lista turniejów](images/admin-list.png)
 

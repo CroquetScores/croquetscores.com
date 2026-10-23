@@ -1,71 +1,68 @@
-// The site's words in Māori (te reo Māori). Keyed as the English catalogue is,
-// which is what a word missing here falls back to.
-//
-// Written to the reader as koe, in plain direct sentences, because the English
-// it is written from is plain and direct, and te reo has no formal and
-// informal "you" to choose between. Words are those the Māori Language
-// Commission (Te Taura Whiri i te Reo Māori) and everyday use have settled on
-// where there are some (kupuhipa for password, pūkete for account, wāhitau
-// īmēra for email address, takiuru for sign in); where none is settled a
-// borrowed word is written in Māori spelling (hupa for hoop) or the English
-// word is kept (Test, Bye, Swiss). Te reo marks number with the article and not
-// the noun, so plurals are "ngā" before an unchanged word. Menu items and
-// buttons are in sentence case, where the English capitalises each word.
-// Macrons are written throughout, since a vowel without one is a different
-// word.
+// The site's words in Te Reo Māori, written fresh against english.ts.
+// The reader is addressed as "koe" (singular), plainly, with "tō" and "ōu" for
+// what is theirs. Buttons, menu items and headings are in sentence case, as
+// Māori does not capitalise each word. Terms settled on: "wāhitau īmēra" for
+// email address, "kupuhipa" for password, "pūkete" for account, "whakataetae"
+// for tournament, "tauwhāinga" for competition, "kēmu" for game, "kaitākaro"
+// for player, "tākohu" for score, "hupa" for hoop. "Bye" stays English where
+// the site checks for it. Sport and some format names have no usual Māori
+// name, so they stay as the loan names.
 import type { Language } from "../common/language.js";
 
 export const maori: Language = {
   tag: "mi",
   name: "Te Reo Māori",
   words: {
+    // The site's own bars.
     "site.skipToContent": "Peke ki te ihirangi",
     "navigation.menu": "Tahua",
     "navigation.label": "Matua",
     "navigation.home": "Kāinga",
     "navigation.help": "Āwhina",
-    "navigation.admin": "Whakahaere",
-    "sections.label": "Ngā wāhanga",
+    "navigation.admin": "Kaiwhakahaere",
+    "sections.label": "Wāhanga",
     "theme.label": "Kaupapa tae",
     "theme.light": "Marama",
     "theme.dark": "Pōuri",
     "theme.system": "Pūnaha",
     "footer.donate": "Koha",
     "footer.plea":
-      "E pai ana koe ki a {siteName}? Hoatu he koha hei āwhina i te whakawhanake tonu i a ia.",
-    "footer.copyright": "© Manatā tuhi {years}, {owner}",
-    "footer.privacy": "Matatapu",
-    "footer.termsOfUse": "Ngā tikanga whakamahi",
+      "Kei te pai ki a koe {siteName}? Tēnā koa, koha mai hei tautoko i te whanaketanga.",
+    "footer.copyright": "© Manatārua {years}, {owner}",
+    "footer.privacy": "Tūmataiti",
+    "footer.termsOfUse": "Ngā kupu whakamahi",
     "beta.banner":
-      "He pae whakamātau (beta) tēnei. Ka taea te tautuhi anō ngā raraunga i ngā wā katoa.",
+      "He pae beta tēnei. Ka taea te tautuhi anō i ngā raraunga i ngā wā katoa.",
     "privacy.contact":
-      "He pātai mō tēnei whārangi, mō ngā mea e puritia ana mōu rānei: {emailAddress}",
-    "termsOfUse.agree": "E whakaae ana ahau ki ngā tikanga whakamahi",
-    "termsOfUse.link": "ngā tikanga whakamahi",
+      "He pātai mō tēnei whārangi, mō ngā mōhiohio e puritia ana mōu rānei: {emailAddress}",
+    "termsOfUse.agree": "Whakaae ana ahau ki ngā kupu whakamahi",
+    "termsOfUse.link": "kupu whakamahi",
     "termsOfUse.report":
-      "Pūrongotia ngā mea i tuhia, pātai rānei mō ēnei tikanga: {emailAddress}",
+      "Whakamōhio mai i te mea i tuhia, pātai mai rānei mō ēnei kupu: {emailAddress}",
     "TermsOfUse.NotAgreed":
-      "Tohua te pouaka hei whakaae ki ngā tikanga whakamahi.",
+      "Tohua te pouaka hei whakaae ki ngā kupu whakamahi.",
     "tryWebsite.banner":
-      "He wāhi haumaru tēnei hei ako i a {siteName}. Ka taea te muku i ngā mea katoa e whakauru ai koe ki konei i ngā wā katoa.",
+      "He wāhi haumaru tēnei hei ako i a {siteName}. Ka taea te tango i ngā mea katoa ka tāurua ki konei i ngā wā katoa.",
 
     "language.label": "Reo",
-    "language.choose": "Whakarerekē",
+    "language.choose": "Huri",
 
     // The alert that tells a reader there is something new to read.
     "whatsNew.public.message": "He mea hou hei pānui.",
-    "whatsNew.admin.message": "He mea hou mō ngā kaiwhakahaere whakataetae.",
+    "whatsNew.admin.message":
+      "He mea hou mā te hunga e whakahaere ana i ngā whakataetae.",
     "whatsNew.view": "Tirohia ngā mea hou",
     "whatsNew.later": "Whakamahara mai a muri ake",
-    "whatsNew.never": "Kaua rawa e whakaatu anō i tēnei whakamōhiotanga",
+    "whatsNew.never": "Kaua e whakaatu anō i tēnei whakatūpato",
 
     "form.otherwise":
-      "He hē tētahi mea. Tirohia ngā mea i whakauru ai koe, ka whakamātau anō.",
+      "He hē tētahi mea i konei. Tirohia ngā mea i tāurua, ka whakamātau anō.",
 
+    // The account menu in the header.
     "account.menu": "Pūkete",
     "account.register": "Rēhita",
     "account.signIn": "Takiuru",
-    "account.forgotPassword": "Kua wareware ki taku kupuhipa",
+    "account.forgotPassword": "Kua warewaretia te kupuhipa",
     "account.signOut": "Takiputa",
     "account.profile": "Kōtaha",
     "account.changePassword": "Whakarerekē kupuhipa",
@@ -80,57 +77,59 @@ export const maori: Language = {
     "register.withGoogle": "Rēhita mā Google",
     "register.or": "rānei",
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Kāore a Google i whakaū mōu taua wāhitau īmēra, nō reira kāore e taea te whakamahi i konei mā Google. Whakamahia tō wāhitau īmēra i raro nei.",
+      "Kāore a Google i whakaū ko tōu tēnei wāhitau īmēra, nā reira e kore e taea te whakamahi ki konei mā Google. Whakamahia tō wāhitau īmēra i raro nei.",
     "SignInWithGoogle.LinkedToAnother":
-      "He pūkete tō taua wāhitau īmēra kē, he mea hono ki tētahi atu pūkete Google. Takiuru mā taua pūkete Google, mā tō wāhitau īmēra me tō kupuhipa rānei.",
+      "Kei te whai pūkete kē taua wāhitau īmēra, he mea hono ki tētahi atu pūkete Google. Takiuru mā taua pūkete Google, mā tō wāhitau īmēra me tō kupuhipa rānei.",
     "SignInWithGoogle.NameMissing":
-      "Kāore a Google i kī mai i tō ingoa, ā, me whai ingoa te pūkete. Whakamahia tō wāhitau īmēra i raro nei.",
+      "Kīhai a Google i whāki mai i tō ingoa, ā, me whai ingoa te pūkete. Whakamahia tō wāhitau īmēra i raro nei.",
     "Google.Unreachable":
-      "Kāore i taea te whakapā atu ki a Google i tēnei wā. Whakamātau anō i muri i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
+      "Kāore i taea te whakapā atu ki a Google i tēnei wā. Whakamātauria anō i roto i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
     "Registration.NotAPerson":
-      "Kāore tēnei i te āhua nō tētahi tangata. Whakamātau anō, ā, mēnā ka puta tonu, tatari ki ētahi meneti, ka hoki mai.",
+      "Kāore i te rite ki te mea nō tētahi tangata tēnei. Whakamātauria anō, ā, mehemea ka tūpono tonu, tatari ētahi meneti ka hoki mai.",
 
-    "EmailAddress.Missing": "Whakauruhia he wāhitau īmēra.",
-    "EmailAddress.NoAt": "He @ tō te wāhitau īmēra.",
-    "EmailAddress.MoreThanOneAt": "Kotahi anake te @ o te wāhitau īmēra.",
+    // A rule the address can break.
+    "EmailAddress.Missing": "Tāurua he wāhitau īmēra.",
+    "EmailAddress.NoAt": "He @ kei roto i te wāhitau īmēra.",
+    "EmailAddress.MoreThanOneAt":
+      "Kotahi anake te @ kei roto i te wāhitau īmēra.",
     "EmailAddress.NoDomain":
-      "He rohe tō te wāhitau īmēra i muri i te @, pēnei i a example.com.",
+      "He rohe kei muri i te @ i te wāhitau īmēra, pēnei i example.com.",
 
     "welcome.title": "Tirohia tō īmēra",
     "welcome.checkEmail":
-      "Kua tukuna atu he īmēra ki te wāhitau i hoatu e koe. Whāia te hononga kei roto hei haere tonu.",
+      "Kei te haere mai he īmēra ki te wāhitau i hoatu e koe. Whāia te hono kei roto hei haere tonu.",
     "welcome.nothingArrived":
-      "Mēnā kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki spam.",
+      "Mehemea kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki paraurehe, spam rānei.",
     "welcome.home": "Hoki ki {siteName}",
-    "newConfirmationLink.title": "Tonoa he hononga hou",
+    "newConfirmationLink.title": "Tiki hono hou",
     "newConfirmationLink.explanation":
-      "Kua pau te wā o te hononga hei whakaū i tō wāhitau īmēra. Tonoa he hou, ā, ka tukuna ki te wāhitau i rēhita ai koe.",
-    "newConfirmationLink.send": "Tukuna mai he hononga hou",
+      "Kua pau te wā o te hono hei whakaū i tō wāhitau īmēra. Tonoa he mea hou, ā, ka tukuna ki te wāhitau i rēhitatia ai koe.",
+    "newConfirmationLink.send": "Tukua mai he hono hou",
     "newConfirmationLink.home": "Hoki ki {siteName}",
     "newConfirmationLink.signIn": "Takiuru",
     "newConfirmationLink.sent.title": "Tirohia tō īmēra",
     "newConfirmationLink.sent.explanation":
-      "Kua tukuna atu he hononga hou. Whāia hei whakaū i tō wāhitau īmēra. Mēnā kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki spam.",
+      "Kei te haere mai he hono hou. Whāia hei whakaū i tō wāhitau īmēra. Mehemea kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki paraurehe, spam rānei.",
     "newConfirmationLink.alreadyConfirmed.title":
-      "Kua oti kē te whakaū i taua wāhitau īmēra",
+      "Kua whakaūngia kētia taua wāhitau īmēra",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "Kāore he mea hei whakaū. Takiuru mā te kupuhipa i hoatu e koe i te wā i whakaū ai koe.",
-    "newConfirmationLink.noLongerWorks.title": "Kua kore taua hononga e mahi",
+      "Kāore he mea anō hei whakaū. Takiuru mā te kupuhipa i hoatu e koe i tō whakaūnga.",
+    "newConfirmationLink.noLongerWorks.title": "Kua kore taua hono e mahi",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Tirohia i whāia e koe te hononga katoa o te īmēra, kāore he mea i ngaro i te pito. Mēnā kāore anō kia mahi, rēhita anō, ā, ka tukuna atu he hononga hou.",
-    "newConfirmationLink.tooMany.title": "Whakamātau anō a muri ake nei",
+      "Tirohia kua whāia e koe te hono katoa i te īmēra, kāore he wāhanga i ngaro i tōna pito. Mehemea kāore anō kia mahi, rēhita anō ka tukuna he hono hou.",
+    "newConfirmationLink.tooMany.title": "Whakamātau anō a muri ake",
     "newConfirmationLink.tooMany.explanation":
-      "He maha ngā hononga kua tukuna ki tēnei wāhitau i ēnei rā tata nei. Tatari mō te hāora, ka tono anō, ā, i tēnei wā tirohia tō kōpaki spam.",
+      "He maha ngā hono kua tukuna ki tēnei wāhitau i ēnei rā tata nei. Tatari kia kotahi hāora, ka tono anō, ā, i tēnei wā tirohia tō kōpaki paraurehe, spam rānei.",
 
-    "forgotPassword.title": "Kua wareware koe ki tō kupuhipa?",
+    "forgotPassword.title": "Kua wareware i a koe tō kupuhipa?",
     "forgotPassword.emailAddress": "Wāhitau īmēra",
-    "forgotPassword.submit": "Tukuna mai he huarahi hei hoki atu",
+    "forgotPassword.submit": "Tukua mai he huarahi hoki atu",
     "forgotPassword.home": "Hoki ki {siteName}",
     "forgotPassword.sent.title": "Tirohia tō īmēra",
     "forgotPassword.sent.explanation":
-      "Mēnā he pūkete tō taua wāhitau, kua tukuna atu he hononga hei tautuhi i tētahi kupuhipa hou. Whāia i mua i te pahi o te hāora. Mēnā kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki spam.",
+      "Mehemea he pūkete tō taua wāhitau, kei te haere mai he hono hei tautuhi i tētahi kupuhipa hou. Whāia i roto i te hāora. Mehemea kāore he mea i tae mai i roto i ētahi meneti, tirohia tō kōpaki paraurehe, spam rānei.",
     "forgotPassword.tryAgainLater":
-      "He maha rawa ngā tono huarahi hoki atu mai i konei i ēnei rā tata nei. Tatari mō te hāora, ka whakamātau anō.",
+      "He maha rawa ngā tono huarahi hoki atu i tukuna mai i konei i ēnei rā tata nei. Tatari kia kotahi hāora ka whakamātau anō.",
 
     "setNewPassword.title": "Tautuhia he kupuhipa hou",
     "setNewPassword.password": "Kupuhipa",
@@ -138,64 +137,66 @@ export const maori: Language = {
     "setNewPassword.submit": "Tautuhia taku kupuhipa hou",
     "setNewPassword.home": "Hoki ki {siteName}",
     "setNewPassword.signIn": "Takiuru",
-    "setNewPassword.askAgain": "Tono i tētahi hononga hou",
+    "setNewPassword.askAgain": "Tono mai i tētahi hono hou",
     "setNewPassword.changed.title": "Kua whakarerekētia tō kupuhipa",
     "setNewPassword.changed.explanation":
       "Kua takiputa koe i ngā wāhi katoa i takiuru ai koe. Takiuru mā tō kupuhipa hou.",
-    "setNewPassword.expired.title": "Kua pau te wā o taua hononga",
+    "setNewPassword.expired.title": "Kua pau te wā o taua hono",
     "setNewPassword.expired.explanation":
-      "He hāora te roa e mahi ai te hononga hei tautuhi i tētahi kupuhipa hou. Tonoa tētahi atu, ā, ka tukuna ki taua wāhitau tonu.",
-    "setNewPassword.noLongerWorks.title": "Kua kore taua hononga e mahi",
+      "Kotahi hāora te roa e mahi ai te hono hei tautuhi kupuhipa hou. Tonoa tētahi atu, ā, ka tukuna ki taua wāhitau tonu.",
+    "setNewPassword.noLongerWorks.title": "Kua kore taua hono e mahi",
     "setNewPassword.noLongerWorks.explanation":
-      "Akene kua whakamahia kētia, kua ngaro rānei tētahi mea i te pito. Tonoa tētahi atu mēnā e hiahia tonu ana koe.",
+      "Tērā kua whakamahia kētia, kua ngaro rānei tētahi wāhanga i tōna pito. Tonoa tētahi atu mehemea e hiahia tonu ana koe.",
 
+    // Said above the fields when the breached password check cannot be asked.
     "BreachedPasswords.Unreachable":
-      "Kāore e taea te tirotiro i tō kupuhipa i tēnei wā, nō reira kāore i whakarerekētia. Whakamātau anō i muri i ētahi meneti; ka mahi tonu tō hononga kia pau noa tōna wā.",
+      "Kāore e taea te tirotiro i tō kupuhipa i tēnei wā, nā reira kāore anō kia whakarerekētia. Whakamātauria anō i roto i ētahi meneti; ka mahi tonu tō hono kia pau noa tōna wā.",
 
     "forgetAccount.title": "Warewaretia tō pūkete",
     "forgetAccount.explanation":
-      "Ka taea te whakarerekē i tō ingoa me tō wāhitau īmēra kia kore e taea te pānui ake, ā, ka katia tō pūkete. Hei whakaū ko koe tēnei, ka tukuna tuatahitia he hononga ki te wāhitau o tō pūkete, ā, kāore he mea e warewaretia kia whāia ra anō e koe.",
-    "forgetAccount.submit": "Tukuna mai te hononga",
+      "Ka taea te whakarūnā tūturu i tō ingoa me tō wāhitau īmēra, ā, ka katia tō pūkete. Kia tika ai ko koe tēnei, ka īmēra atu mātou i tētahi hono ki te wāhitau o tō pūkete i te tuatahi, ā, e kore tētahi mea e warewaretia kia whāia ra anō e koe.",
+    "forgetAccount.submit": "Īmēra mai i te hono",
     "forgetAccount.sent.title": "Tirohia tō īmēra",
     "forgetAccount.sent.explanation":
-      "Kua tukuna he hononga ki te wāhitau o tō pūkete. E 15 meneti te roa e mahi ai, ā, i te wā anake e takiuru ana koe ki tēnei pūkete.",
-    "forgetAccount.confirm.title": "Warewaretia tō pūkete ake tonu atu?",
+      "Kua īmēra atu mātou i tētahi hono ki te wāhitau o tō pūkete. E 15 meneti te roa e mahi ai, ā, mēnā anake kei te takiuru tonu koe ki tēnei pūkete.",
+    "forgetAccount.confirm.title": "Warewaretia tūturutia tō pūkete?",
     "forgetAccount.confirm.explanation":
-      "Ina warewaretia, kāore he tangata e kite anō i tō ingoa, i tō wāhitau īmēra rānei, ā, kāore e taea te takiuru ki tō pūkete. Kāore e taea te whakahoki.",
+      "Ina warewaretia, e kore e taea anō e tētahi te pānui i tō ingoa me tō wāhitau īmēra, ā, e kore e taea te takiuru ki tō pūkete. Kāore e taea te whakahoki.",
     "forgetAccount.confirm.submit": "Warewaretia taku pūkete",
     "forgetAccount.forgotten.title": "Kua warewaretia tō pūkete",
     "forgetAccount.forgotten.explanation":
-      "Kua kore e taea te pānui i tō ingoa me tō wāhitau īmēra, ā, kua takiputa koe i ngā wāhi katoa i takiuru ai koe.",
-    "forgetAccount.noLongerWorks.title": "Kua kore taua hononga e mahi",
+      "Kāore e taea anō te pānui i tō ingoa me tō wāhitau īmēra, ā, kua takiputa koe i ngā wāhi katoa i takiuru ai koe.",
+    "forgetAccount.noLongerWorks.title": "Kua kore taua hono e mahi",
     "forgetAccount.noLongerWorks.explanation":
-      "Akene kua pau tōna wā, kua whakamahia kētia rānei, nō tētahi pūkete rānei kāore koe e takiuru ana. Tonoa anō mai i tō pūkete mēnā e hiahia tonu ana koe kia warewaretia.",
+      "Tērā kua pau tōna wā, kua whakamahia kētia rānei, mō tētahi pūkete rānei kāore koe e takiuru ana. Tonoa anō mai i tō pūkete mehemea e hiahia tonu ana koe kia warewaretia.",
     "forgetAccount.lastAdministrator.title":
       "Kāore e taea te warewaretia tō pūkete",
     "forgetAccount.lastAdministrator.explanation":
-      "Ko koe anake te kaiwhakahaere pae o tēnei pae. Hoatu te tūranga kaiwhakahaere pae ki tētahi atu tangata, ā, ka taea te warewaretia tō pūkete.",
+      "Ko koe anake te kaiwhakahaere o tēnei pae. Hoatu te tūranga Kaiwhakahaere ki tētahi atu, ā, ka taea te warewaretia tō pūkete.",
     "forgetAccount.askAgain": "Tono anō",
     "forgetAccount.home": "Hoki ki {siteName}",
 
-    "registrationsSuspended.title": "Kua whakatārewatia te rēhita i tēnei wā",
+    "registrationsSuspended.title": "Kua whakatārewatia te rēhita mō tēnei wā",
     "registrationsSuspended.explanation":
-      "Kāore e taea te whakapā atu i tēnei wā ki tētahi ratonga e hiahiatia ana e te rēhita, nō reira kāore he tangata e taea te rēhita kia whakahoki kupu mai ra anō. Kāore he mea i tuhia e koe i penapenahia.",
+      "Kāore e taea te whakapā atu ki tētahi ratonga e hiahiatia ana e te rēhita i tēnei wā, nā reira e kore e taea e tētahi te rēhita kia whakahoki kōrero mai anō. Kāore he mea i tāurua e koe i puritia.",
     "registrationsSuspended.tryAgainLater":
-      "Whakamātau anō i muri i tētahi wā. Kua whakamōhiotia te kaiwhakahaere pae.",
+      "Whakamātauria anō i muri i tētahi wā poto. Kua whakamōhiotia te kaiwhakahaere o te pae.",
     "registrationsSuspended.home": "Hoki ki {siteName}",
 
     "signIn.title": "Takiuru",
     "signIn.emailAddress": "Wāhitau īmēra",
     "signIn.password": "Kupuhipa",
     "signIn.submit": "Takiuru",
-    "signIn.forgotPassword": "Kua wareware koe ki tō kupuhipa?",
+    "signIn.forgotPassword": "Kua warewaretia te kupuhipa?",
     "signIn.register": "Rēhita",
     "signIn.withGoogle": "Takiuru mā Google",
     "signIn.or": "rānei",
     "signIn.tryAgainLater":
-      "He maha rawa ngā whakamātau i ēnei rā tata nei. Tatari mō te hāora, ka whakamātau anō.",
+      "He maha rawa ngā whakamātau i ēnei rā tata nei. Tatari kia kotahi hāora ka whakamātau anō.",
 
+    // The one answer to a wrong password and to an address nobody registered.
     "SignIn.Failed":
-      "Kāore i tika te wāhitau īmēra, te kupuhipa rānei. Whakamātau anō.",
+      "He hē te wāhitau īmēra, te kupuhipa rānei. Tēnā koa, whakamātauria anō.",
 
     "profile.title": "Kōtaha",
     "profile.name": "Ingoa:",
@@ -207,41 +208,41 @@ export const maori: Language = {
 
     "setPassword.title": "Tautuhia he kupuhipa",
     "setPassword.explanation":
-      "Kāore he kupuhipa a tō pūkete: ka takiuru koe mā Google. Kia taea ai hoki te takiuru mā te kupuhipa, ka tukuna atu he hononga hei tautuhi i tētahi ki {emailAddress}.",
-    "setPassword.submit": "Tukuna mai he hononga",
+      "Kāore he kupuhipa o tō pūkete: ka takiuru koe mā Google. Hei takiuru mā te kupuhipa hoki, ka īmēra atu mātou i tētahi hono hei tautuhi i tētahi ki {emailAddress}.",
+    "setPassword.submit": "Īmēra mai i tētahi hono",
     "setPassword.sent.title": "Tirohia tō īmēra",
     "setPassword.sent.explanation":
-      "Kua tukuna atu he hononga hei tautuhi i tētahi kupuhipa. He hāora te roa e mahi ai.",
+      "Kua īmēra atu mātou i tētahi hono hei tautuhi kupuhipa. Kotahi hāora te roa e mahi ai.",
     "setPassword.profile": "Hoki ki tō kōtaha",
 
     "changePassword.title": "Whakarerekē kupuhipa",
     "changePassword.currentPassword": "Kupuhipa o nāianei",
     "changePassword.password": "Kupuhipa hou",
     "changePassword.passwordConfirmation": "Whakaūngia te kupuhipa",
-    "changePassword.forgotPassword": "Kua wareware koe ki tō kupuhipa?",
+    "changePassword.forgotPassword": "Kua warewaretia te kupuhipa?",
     "changePassword.submit": "Whakarerekē kupuhipa",
     "ChangePassword.WrongPassword": "Ehara tērā i tō kupuhipa.",
 
     "changeEmailAddress.title": "Whakarerekē wāhitau īmēra",
     "changeEmailAddress.emailAddress": "Wāhitau īmēra hou",
     "changeEmailAddress.currentPassword": "Kupuhipa o nāianei",
-    "changeEmailAddress.submit": "Tukuna he hononga whakaū",
+    "changeEmailAddress.submit": "Tukua he hono hei whakaū",
     "changeEmailAddress.sent.title": "Tirohia tō īmēra",
     "changeEmailAddress.sent.explanation":
-      "Kua tukuna ki te wāhitau īmēra hou he hononga hei whakaū i te nuku. Whāia, ka takiuru ana koe, hei nuku i tō pūkete ki reira.",
-    "changeEmailAddress.confirm.title": "Nukuna tō pūkete",
+      "Kua tukuna he hono hei whakaū i te nekeneke ki te wāhitau īmēra hou. Whāia, ka takiuru, hei neke i tō pūkete ki reira.",
+    "changeEmailAddress.confirm.title": "Nekehia tō pūkete",
     "changeEmailAddress.confirm.explanation":
-      "Ka nukuna tō pūkete ki {emailAddress}. Mai i tēnei wā ka takiuru koe mā taua wāhitau.",
-    "changeEmailAddress.confirm.submit": "Nukuna taku pūkete",
-    "changeEmailAddress.noLongerWorks.title": "Kua kore tēnei hononga e mahi",
+      "Ka neke tō pūkete ki {emailAddress}. Ka takiuru koe mā taua wāhitau mai i tēnei wā.",
+    "changeEmailAddress.confirm.submit": "Nekehia taku pūkete",
+    "changeEmailAddress.noLongerWorks.title": "Kua kore tēnei hono e mahi",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Kua pau tōna wā, kua whakamahia kētia rānei, kāore rānei i tukuna mō te pūkete e takiuru ana koe. Tonoa anō mai i tō kōtaha.",
-    "changeEmailAddress.taken.title": "Kāore tō pūkete i nukuna",
+      "Kua pau tōna wā, kua whakamahia kētia, kāore rānei i tukuna mō te pūkete e takiuru nei koe. Tonoa anō mai i tō kōtaha.",
+    "changeEmailAddress.taken.title": "Kāore anō tō pūkete kia neke",
     "changeEmailAddress.profile": "Hoki ki tō kōtaha",
     "ChangeEmailAddress.WrongPassword": "Ehara tērā i tō kupuhipa.",
     "ChangeEmailAddress.Unchanged": "Kei tēnei wāhitau kē tō pūkete.",
     "ChangeEmailAddress.Taken":
-      "He pūkete tō taua wāhitau īmēra kē, nō reira kāore e taea te nuku tō pūkete ki reira.",
+      "Kei te whai pūkete tōna ake taua wāhitau īmēra i nāianei, nā reira e kore e taea e tōu te neke ki reira.",
 
     "confirmEmailAddress.title": "Whakaūngia tō wāhitau īmēra",
     "confirmEmailAddress.name": "Ingoa",
@@ -252,69 +253,197 @@ export const maori: Language = {
     "confirmEmailAddress.home": "Hoki ki {siteName}",
     "confirmEmailAddress.confirmed.title": "Kua whakaūngia tō wāhitau īmēra",
     "confirmEmailAddress.confirmed.explanation":
-      "Kua rite tō pūkete. Takiuru mā te wāhitau īmēra me te kupuhipa i hoatu e koe inaianei.",
-    "confirmEmailAddress.expired.title": "Kua pau te wā o taua hononga",
+      "Kua rite tō pūkete. Takiuru mā te wāhitau īmēra me te kupuhipa i hoatu e koe nā tata nei.",
+    "confirmEmailAddress.expired.title": "Kua pau te wā o taua hono",
     "confirmEmailAddress.expired.explanation":
-      "E 24 hāora te roa e mahi ai te hononga hei whakaū i tētahi wāhitau īmēra. Tonoa he hou, ā, ka tukuna ki taua wāhitau tonu.",
-    "confirmEmailAddress.expired.newLink": "Tukuna mai he hononga hou",
-    "confirmEmailAddress.noLongerWorks.title": "Kua kore taua hononga e mahi",
+      "E 24 hāora te roa e mahi ai te hono hei whakaū i tētahi wāhitau īmēra. Tonoa he mea hou, ā, ka tukuna ki taua wāhitau tonu.",
+    "confirmEmailAddress.expired.newLink": "Tukua mai he hono hou",
+    "confirmEmailAddress.noLongerWorks.title": "Kua kore taua hono e mahi",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "Tirohia i whāia e koe te hononga katoa o te īmēra, kāore he mea i ngaro i te pito. Mēnā kāore anō kia mahi, rēhita anō, ā, ka tukuna atu he hononga hou.",
+      "Tirohia kua whāia e koe te hono katoa i te īmēra, kāore he wāhanga i ngaro i tōna pito. Mehemea kāore anō kia mahi, rēhita anō ka tukuna he hono hou.",
     "confirmEmailAddress.alreadyConfirmed.title":
-      "Kua oti kē te whakaū i taua wāhitau īmēra",
+      "Kua whakaūngia kētia taua wāhitau īmēra",
     "confirmEmailAddress.alreadyConfirmed.explanation":
-      "Kāore he mea hei mahi. Takiuru mā te kupuhipa i hoatu e koe i te wā i whakaū ai koe.",
+      "Kāore he mea anō hei mahi. Takiuru mā te kupuhipa i hoatu e koe i tō whakaūnga.",
 
-    "PersonName.Missing": "Whakauruhia he ingoa.",
-    "PersonName.TooShort": "Me 3 ngā pūāhua te iti rawa o te ingoa.",
-    "PersonName.TooLong": "Kāore e neke i te 254 ngā pūāhua o te ingoa.",
+    // A rule broken, keyed by its code.
+    "PersonName.Missing": "Tāuruatia he ingoa.",
+    "PersonName.TooShort": "Me neke atu i te 3 ngā pūāhua o te ingoa.",
+    "PersonName.TooLong": "Kia 254 pūāhua te nuinga rawa o te ingoa.",
     "WorldRankingName.TooShort":
-      "Me 3 ngā pūāhua te iti rawa o te ingoa i te raupapa o te ao.",
+      "Me neke atu i te 3 ngā pūāhua o te ingoa mō te whakarārangi o te ao.",
     "WorldRankingName.TooLong":
-      "Kāore e neke i te 254 ngā pūāhua o te ingoa i te raupapa o te ao.",
-    "Password.Missing": "Whakauruhia he kupuhipa.",
-    "Password.TooShort": "Me 12 ngā pūāhua te iti rawa o te kupuhipa.",
+      "Kia 254 pūāhua te nuinga rawa o te ingoa mō te whakarārangi o te ao.",
+    "Password.Missing": "Tāuruatia he kupuhipa.",
+    "Password.TooShort": "Me neke atu i te 12 ngā pūāhua o te kupuhipa.",
     "Password.ConfirmationDiffers":
-      "Kāore i ōrite ki te kupuhipa i runga ake nei. Tuhia anō.",
+      "Kāore tēnei i te rite ki te kupuhipa i runga ake nei. Patohia anō.",
     "Password.Breached":
-      "Kua puta tēnei kupuhipa i tētahi pakarutanga raraunga i tētahi atu pae, nō reira kāore i te haumaru te whakamahi i konei. Kōwhiria tētahi atu.",
+      "Kua puta tēnei kupuhipa i tētahi pakarutanga raraunga iwhea atu, nā reira kāore he haumaru hei whakamahi ki konei. Kōwhiria tētahi atu.",
 
-    "javaScriptRequired.title": "Me whai JavaScript",
+    "javaScriptRequired.title": "E hiahiatia ana te tuhinga whakahaere",
     "javaScriptRequired.explanation":
-      "Hei rēhita me whakahohe te JavaScript i tēnei pae, kia taea ai te whakaū he tangata te rēhita ana. Whakahohea, ā, rēhita anō.",
+      "Me whakahohe te tuhinga whakahaere (JavaScript) mō tēnei pae hei rēhita, kia taea ai te tirotiro he tangata te rēhita ana. Whakahohea, ka rēhita anō.",
     "javaScriptRequired.register": "Hoki ki te rēhita",
     "javaScriptRequired.home": "Hoki ki {siteName}",
 
     "errors.backHome": "Hoki ki {siteName}",
     "errors.notFound": "Kāore i kitea",
-    "errors.refused": "Kāore i taea te mahi",
-    "errors.refusedDetail": "He hē tētahi mea i tukuna mai.",
+    "errors.refused": "Kāore i taea tērā",
+    "errors.refusedDetail": "He hē tētahi mea i roto i te mea i tukuna.",
     "errors.sorry": "Aroha mai",
-    "errors.sorryDetail": "Kāore i taea te whakaoti taua tono.",
-    "errors.failed": "I hē tētahi mea",
+    "errors.sorryDetail": "Kāore i taea te whakahaere i taua tono.",
+    "errors.failed": "I hapa tētahi mea",
     "errors.reference": "Tohutoro {reference}.",
     "errors.recorded":
-      "Kua tuhia te hapa, kua tukua hoki he īmēra ki te kaiwhakahaere. He āwhina mēnā ka tukua he īmēra ki te kaiwhakahaere me te tohutoro me te whakaahuatanga o tāu e mahi ana.",
-    "errors.message": "Tukua he īmēra ki te kaiwhakahaere",
+      "Kua tuhia te hapa, ā, kua tukuna he īmēra ki te kaiwhakahaere. He āwhina mehemea ka īmēra koe ki te kaiwhakahaere me te tohutoro me tētahi whakaahuatanga o tāu e mahi ana.",
+    "errors.message": "Īmēra ki te kaiwhakahaere",
     "errors.messageSubject": "Hapa {reference} i {siteName}",
-    "errors.messageBody": "Tāku i mahi ai i te wā i pēnei ai:\n\n",
+    "errors.messageBody": "Tāku e mahi ana i te wā i puta ai tēnei:\n\n",
     "errors.unavailable": "Kāore te pae e wātea ana",
     "errors.unavailableDetail":
-      "Kāore e taea e te pae te whakapā atu ki ana mea e hiahiatia ana i tēnei wā. Tēnā koa, whakamātauria anō a muri ake.",
-    "errors.maintenance": "Kei te whakahaeretia te pae mō te whakatika.",
+      "Kāore e taea e te pae te whakapā atu ki ngā mea e hiahiatia ana e ia i tēnei wā. Tēnā koa, whakamātauria anō a muri ake.",
+    "errors.maintenance": "Kei raro te pae mō te pupuri.",
     "errors.maintenanceMinutes":
-      "E tūmanakohia ana kia hoki mai i roto i te {minutes} meneti.",
+      "E tūmanakohia ana ka hoki mai i roto i te {minutes} meneti.",
     "errors.maintenanceMinute":
-      "E tūmanakohia ana kia hoki mai i roto i te 1 meneti.",
+      "E tūmanakohia ana ka hoki mai i roto i te 1 meneti.",
     "errors.maintenanceLonger":
-      "Kei te roa ake i te mea i whakaarohia, ā, ka hoki mai a muri ake nei.",
+      "Kei te roa ake i te tūmanako, ā, ka hoki mai a muri tata.",
 
+    // The home page's two lists.
     "home.recentResults": "Ngā hua tata nei",
     "home.recentResults.none":
-      "Kāore he tākaro i tāpiritia i roto i ngā rā e whitu kua pahure.",
-    "home.upcomingTournaments": "Ngā whakataetae e tū mai ana",
+      "Kāore he kēmu i tāpiritia i roto i ngā rā e whitu kua pahure.",
+    "home.upcomingTournaments": "Ngā whakataetae e haere mai ana",
     "home.upcomingTournaments.none":
-      "Kāore he whakataetae e tīmata ana i roto i ngā rā e ono tekau e tū mai nei.",
+      "Kāore he whakataetae e tīmata ana i roto i ngā rā e ono tekau e haere mai nei.",
+    "home.allTournaments": "Ngā whakataetae katoa i {year}",
+    // A year's page.
+    "year.heading": "Ngā whakataetae i {year}",
+    "year.none": "Kāore he whakataetae e tīmata ana i {year}.",
+    // A sport's page in a year.
+    "yearSport.heading": "Ngā whakataetae {sport} i {year}",
+    "yearSport.none": "Kāore he whakataetae {sport} e tīmata ana i {year}.",
+    // A tournament's page.
+    "tournament.recent": "Tata nei",
+    "tournament.summary": "Whakarāpopototanga",
+    // A test's grid.
+    "test.bestOf": "Ko ia tukinga te pai rawa o te {count}.",
+    "test.vs": "ki",
+    "test.matches": "Tukinga",
+    "test.games": "Kēmu",
+    "test.hoops": "Hupa",
+    "teamSummary.tests": "Whakamātau",
+    "teamSummary.matches": "Tukinga",
+    "teamSummary.games": "Kēmu",
+    "teamSummary.hoops": "Hupa",
+    "teamSummary.wins": "Wikitoria",
+    "teamSummary.losses": "Hinganga",
+    "teamSummary.draws": "Taurite",
+    "teamSummary.for": "Mō",
+    "teamSummary.against": "Whakahē",
+    "teamSummary.net": "Kupenga",
+    "tournament.players": "Kaitākaro",
+    "search.label": "Rapua",
+    "search.tournaments": "Whakataetae",
+    "search.competitions": "Tauwhāinga",
+    "search.nothingFound": "Kāore i kitea he mea.",
+    "players.search.label": "Rapua kaitākaro",
+    "players.search.prompt":
+      "Patohia te ingoa o tētahi kaitākaro hei rapu i a ia.",
+    "players.search.none": "Kāore i kitea he kaitākaro.",
+    "search.more":
+      "Ko te {count} tuatahi anake e whakaatuhia ana. Tāpirihia ake te ingoa hei whakamāmā i te rapu.",
+    "websitePlayer.tournament": "Whakataetae",
+    // A test in a tournament's sections.
+    "tournament.test": "{first} ki {second}",
+    "tournament.notes": "Ngā tuhinga",
+    "tournament.commentary": "Kōrero whakaahua",
+    "tournament.beat": "i hinga i a",
+    "tournament.drewWith": "i taurite ki a",
+    "tournament.ago.seconds": "{count} hēkona",
+    "tournament.ago.minutes": "{count} meneti",
+    "tournament.ago.hour": "1 hāora",
+    "tournament.ago.hours": "{count} hāora",
+    "tournament.none": "Kāore anō kia tākarohia he kēmu.",
+    // A tournament's players' page, when it has none.
+    "players.none": "Kāore anō kia tāpiritia he kaitākaro.",
+    // A tournament's commentaries page.
+    "commentaries.by": "nā",
+    "commentaries.start": "Tīmata i tētahi kōrero whakaahua hou",
+    // The page that starts a commentary.
+    "startCommentary.title": "Tīmata i tētahi kōrero whakaahua hou",
+    "startCommentary.titleField": "Taitara",
+    "startCommentary.submit": "Tīmata i te kōrero whakaahua",
+    // "New" is said to a screen reader.
+    "marks.new": "hou",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "Kāore anō kia tuhia he tuhinga e ngā kaiwhakahaere.",
+    "note.edited": "kua whakatikatikaina",
+    // A commentary's page.
+    "commentary.none": "Kāore anō kia tuhia he kōrero.",
+    "commentary.edited": "kua whakatikatikaina",
+    "commentary.edit": "Whakatika",
+    "commentary.delete": "Mukua",
+    "commentary.comment": "Kōrero",
+    "commentary.add": "Tāpiri kōrero",
+    "commentary.notSent":
+      "Kāore i taea te tuku i te kōrero. Uta anō i te whārangi kia kite mēnā i puritia.",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "Whakarerekē taitara",
+    "changeCommentaryTitle.submit": "Penapena",
+    // A comment's own page.
+    "editComment.title": "Whakatika kōrero",
+    "editComment.save": "Penapena",
+    "deleteComment.title": "Muku kōrero",
+    "deleteComment.question": "Mukua tēnei kōrero? Kāore e taea te whakahoki.",
+    "deleteComment.confirm": "Muku kōrero",
+    "deleteComment.keep": "Waiho",
+    // A player's page.
+    "player.games": "Kēmu",
+    "player.competitions": "Tauwhāinga",
+    "player.beat": "i hinga i a",
+    "player.lostTo": "i hinga ki a",
+    "player.drewWith": "i taurite ki a",
+    "player.score": "{score} ki {opponent}",
+    "player.noGames": "Kāore anō kia tākarohia he kēmu.",
+    "player.noCompetitions": "Kāore anō kia uru ki tētahi tauwhāinga.",
+    // A block's page.
+    "block.wins": "Wikitoria",
+    "block.matches": "Tukinga",
+    "block.netGames": "Kupenga kēmu",
+    "block.games": "Kēmu",
+    "block.netHoops": "Kupenga hupa",
+    "block.won": "wikitoria",
+    "block.lost": "hinga",
+    "block.drawn": "taurite",
+    "block.withdrawn": "kua unu",
+    "block.gameWithdrawn": "kua unu",
+    "block.losses": "Hinganga",
+    // The three views of a block.
+    "competition.views": "Ngā tirohanga",
+    "competition.view.grid": "Whakatakotoranga",
+    "competition.view.summary": "Whakarāpopototanga",
+    "competition.view.orderOfPlay": "Raupapa tākaro",
+    "blockSummary.ranking":
+      "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
+    "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",
+    // A knockout's rounds.
+    "knockout.round.final": "Whakamutunga",
+    "knockout.round.semis": "Hawhe-whakamutunga",
+    "knockout.round.quarters": "Hauwhā-whakamutunga",
+    "knockout.round.number": "Rauna {number}",
+    "knockout.bye": "Bye",
+    // A Swiss's table.
+    "swiss.games": "Kēmu",
+    "swiss.wins": "Wikitoria",
+    "swiss.winShare": "% wikitoria",
+    "swiss.results": "Ngā hua",
+    // The arrows that scroll a knockout's grid.
+    "knockout.onward": "Ngā rauna o muri",
+    "knockout.back": "Ngā rauna o mua",
+    // What every list of tournaments shares.
     "tournamentList.column.date": "Rā",
     "tournamentList.column.name": "Ingoa",
     "tournamentList.onlyIn": "Ngā whakataetae i {country} anake",
@@ -325,295 +454,190 @@ export const maori: Language = {
     "tournamentList.filter.sport": "Hākinakina",
     "tournamentList.filter.anySport": "Hākinakina ahakoa",
     "tournamentList.filter.submit": "Tātari",
-    "home.allTournaments": "Ngā whakataetae katoa o {year}",
-    "year.heading": "Ngā whakataetae o {year}",
-    "year.none": "Kāore he whakataetae e tīmata ana i {year}.",
-    "yearSport.heading": "Ngā whakataetae {sport} o {year}",
-    "yearSport.none": "Kāore he whakataetae {sport} e tīmata ana i {year}.",
-    "tournament.recent": "Tata nei",
-    "tournament.summary": "Whakarāpopototanga",
-    "test.bestOf": "Ko te pai rawa o te {count} ia tukinga.",
-    "test.vs": "ki",
-    "test.matches": "Ngā tukinga",
-    "test.games": "Ngā tākaro",
-    "test.hoops": "Ngā hupa",
-    "teamSummary.tests": "Ngā Test",
-    "teamSummary.matches": "Ngā tukinga",
-    "teamSummary.games": "Ngā tākaro",
-    "teamSummary.hoops": "Ngā hupa",
-    "teamSummary.wins": "Ngā toa",
-    "teamSummary.losses": "Ngā hinga",
-    "teamSummary.draws": "Ngā taurite",
-    "teamSummary.for": "Mō",
-    "teamSummary.against": "Ki",
-    "teamSummary.net": "Tapeke",
-    "tournament.players": "Ngā kaitākaro",
-    "search.label": "Rapua",
-    "search.tournaments": "Ngā whakataetae nui",
-    "search.competitions": "Ngā whakataetae",
-    "search.nothingFound": "Kāore i kitea tētahi mea.",
-    "players.search.label": "Rapua ngā kaitākaro",
-    "players.search.prompt": "Patohia te ingoa o te kaitākaro hei kimi i a ia.",
-    "players.search.none": "Kāore ngā kaitākaro i kitea.",
-    "search.more":
-      "Ko ngā {count} tuatahi anake e whakaatuhia ana. Tāpirihia ētahi atu o te ingoa hei whakatika i te rapunga.",
-    "websitePlayer.tournament": "Whakataetae nui",
-    "tournament.test": "{first} ki {second}",
-    "tournament.notes": "Ngā tuhipoka",
-    "tournament.commentary": "Ngā kōrero",
-    "tournament.beat": "i toa i a",
-    "tournament.drewWith": "i taurite ki a",
-    "tournament.ago.seconds": "{count} hēkona",
-    "tournament.ago.minutes": "{count} meneti",
-    "tournament.ago.hour": "1 hāora",
-    "tournament.ago.hours": "{count} hāora",
-    "tournament.none": "Kāore anō kia tākarohia he tākaro.",
-    "players.none": "Kāore anō kia tāpiritia he kaitākaro.",
-    "commentaries.by": "nā",
-    "commentaries.start": "Tīmata i tētahi kōrero hou",
-    "startCommentary.title": "Tīmata i tētahi kōrero hou",
-    "startCommentary.titleField": "Taitara",
-    "startCommentary.submit": "Tīmata i te kōrero",
-    // A tournament's Notes page, and a note's own page, as the English says.
-    "notes.none": "Kāore anō ngā kaiwhakahaere kia tuhi tuhipoka.",
-    "marks.new": "hou",
-    "note.edited": "kua whakatikaina",
-    "commentary.none": "Kāore anō kia tuhia he mea.",
-    "commentary.edited": "kua whakatikaina",
-    "commentary.edit": "Whakatika",
-    "commentary.delete": "Muku",
-    "commentary.comment": "Whakaaro",
-    "commentary.add": "Tāpiri",
-    "commentary.notSent":
-      "Kāore i taea te tuku i te whakaaro. Uta anō te whārangi hei kite mēnā i penapenahia.",
-    "changeCommentaryTitle.title": "Whakarerekē i te taitara",
-    "changeCommentaryTitle.submit": "Penapena",
-    "editComment.title": "Whakatika i te whakaaro",
-    "editComment.save": "Penapena",
-    "deleteComment.title": "Muku i te whakaaro",
-    "deleteComment.question":
-      "Mukua tēnei whakaaro? Kāore e taea te whakahoki.",
-    "deleteComment.confirm": "Muku i te whakaaro",
-    "deleteComment.keep": "Waiho",
-    "player.games": "Ngā tākaro",
-    "player.competitions": "Ngā tauwhāinga",
-    "player.beat": "i toa i a",
-    "player.lostTo": "i hinga ki a",
-    "player.drewWith": "i taurite ki a",
-    "player.score": "{score} ki {opponent}",
-    "player.noGames": "Kāore anō kia tākarohia he tākaro.",
-    "player.noCompetitions": "Kāore anō kia rēhitatia ki tētahi tauwhāinga.",
-    "block.wins": "Ngā toa",
-    "block.matches": "Ngā tukinga",
-    "block.netGames": "Tapeke tākaro",
-    "block.games": "Ngā tākaro",
-    "block.netHoops": "Tapeke hupa",
-    "block.won": "toa",
-    "block.lost": "hinga",
-    "block.drawn": "taurite",
-    "block.withdrawn": "kua unuhia",
-    "block.gameWithdrawn": "kua unuhia",
-    "block.losses": "Ngā hinga",
-    "competition.views": "Ngā tirohanga",
-    "competition.view.grid": "Tūtohi",
-    "competition.view.summary": "Whakarāpopototanga",
-    "competition.view.orderOfPlay": "Raupapa tākaro",
-    "blockSummary.ranking":
-      "Kua raupapatia mā te ōwehenga o ngā tukinga i toa, ā, muri iho mā ngā hupa tapeke. Ka taea e ngā ture o tētahi whakataetae te raupapa i ana kaitākaro i tētahi atu huarahi.",
-    "orderOfPlay.none": "Kāore anō kia tākarohia he tākaro.",
-    "knockout.round.final": "Whakamutunga",
-    "knockout.round.semis": "Haurua whakamutunga",
-    "knockout.round.quarters": "Hauwhā whakamutunga",
-    "knockout.round.number": "Rauna {number}",
-    "knockout.bye": "Bye",
-    "swiss.games": "Ngā tākaro",
-    "swiss.wins": "Ngā toa",
-    "swiss.winShare": "% toa",
-    "swiss.results": "Ngā hua",
-    "knockout.onward": "Ngā rauna e whai ake nei",
-    "knockout.back": "Ngā rauna o mua",
     "years.label": "Ngā tau",
     "years.earlier": "Ngā tau o mua",
 
-    "admin.newerBuild.message": "He putanga hou ake o tēnei pae.",
+    // The admin's words.
+    "admin.newerBuild.message": "Kei te wātea he putanga hou o tēnei pae.",
     "admin.newerBuild.reload": "Uta anō",
-    "admin.title": "Whakahaere",
+    "admin.title": "Kaiwhakahaere",
     "admin.tournaments.new": "Whakataetae hou",
     "admin.tournaments.none": "Kāore he whakataetae",
-    "admin.tournaments.filter.none": "Kāore he whakataetae e hāngai ana",
-    "admin.tournaments.archived": "Kua pūrangatia",
+    "admin.tournaments.filter.none": "Kāore he whakataetae e ōrite ana",
+    "admin.tournaments.archived": "Kua whakatāpuia",
     "admin.tournaments.manage": "Whakahaere",
     "admin.tournaments.edit": "Whakatika",
-    "admin.tournaments.archive": "Pūrangahia",
-    "admin.tournaments.restore": "Whakahoki",
-    "admin.tournaments.scores": "Ngā hua",
-    "admin.tournaments.players": "Ngā kaitākaro",
+    "admin.tournaments.archive": "Whakatāpui",
+    "admin.tournaments.restore": "Whakahokia mai",
+    "admin.tournaments.scores": "Ngā tākohu",
+    "admin.tournaments.players": "Kaitākaro",
     "admin.years.label": "Ngā tau",
     "admin.years.earlier": "Ngā tau o mua",
     "admin.tournament.name": "Ingoa",
-    "admin.tournament.starts": "Te tīmata",
+    "admin.tournament.starts": "Te tīmatanga",
     "admin.tournament.finishes": "Te mutunga",
     "admin.tournament.format": "Hōputu",
     "admin.tournament.sport": "Hākinakina",
     "admin.tournament.country": "Whenua",
     "admin.tournament.region": "Rohe",
     "admin.tournament.subtitle": "Taitara iti",
-    "admin.rules.handicap": "Tākarohia ki te hanikapa",
-    "admin.rules.drawsAllowed": "Ka whakaaetia ngā taurite",
-    "admin.tournament.levelTestsDrawn": "He taurite ngā Test ōrite",
-    "admin.rules.worldRankings": "Ka whakaarohia mō te raupapa o te ao",
+    "admin.rules.handicap": "Ka tākarohia me ngā whakaiti",
+    "admin.rules.drawsAllowed": "Ka whakaaetia ngā hua taurite",
+    "admin.tournament.levelTestsDrawn": "Ka taurite ngā whakamātau ōrite",
+    "admin.rules.worldRankings": "Ka kaute ki ngā whakarārangi o te ao",
     "admin.tournament.national": "Takunetanga ā-motu",
     "admin.tournament.international": "Takunetanga ā-ao",
-    "admin.tournament.otherwise": "Kāore e taea te whakaae ki tēnei pēnei.",
+    "admin.tournament.otherwise": "Kāore e taea te whakaae pēnei.",
     "admin.newTournament.title": "Whakataetae hou",
     "admin.newTournament.submit": "Waihanga whakataetae",
     "admin.editTournament.title": "Whakatika whakataetae",
     "admin.editTournament.submit": "Whakahou whakataetae",
     "admin.editTournament.otherwise":
       "Kāore e taea te whakarerekē i tēnei whakataetae.",
+    // A tournament's page, and its tabs.
     "admin.view.tabs": "Whakataetae",
-    "admin.view.players": "Ngā kaitākaro",
-    "admin.view.competitions": "Ngā tauwhāinga",
-    "admin.view.managers": "Ngā kaiwhakahaere",
-    "admin.view.notes": "Ngā tuhipoka",
-    "admin.view.scorers": "Ngā kaikaute",
-    "admin.view.rankings": "Ngā raupapa",
+    "admin.view.players": "Kaitākaro",
+    "admin.view.competitions": "Tauwhāinga",
+    "admin.view.managers": "Kaiwhakahaere",
+    "admin.view.notes": "Ngā tuhinga",
+    "admin.view.scorers": "Kaitākohu",
+    "admin.view.rankings": "Whakarārangi",
     "admin.rankings.file":
-      "Ka tukuna ngā otinga o te whakataetae ki te raupapa o te ao hei kōnae kuputuhi, ka tuhia e te pae mai i ngā tākaro kua uruhia.",
-    "admin.rankings.download": "Tikiake i ngā raupapa",
-    "rankings.notAvailable": "Kāore ngā raupapa e wātea",
+      "Ka whakamahia ngā hua o te whakataetae e ngā whakarārangi o te ao mā tēnei mahi, ā, kāore he mahi a ngā kaiwhakahaere.",
+    "admin.rankings.download": "Tikiake i ngā whakarārangi",
+    "rankings.notAvailable": "Kāore e wātea ana ngā whakarārangi",
     "rankings.notAvailable.sport":
-      "Kāore he raupapa o te ao mō te hākinakina o tēnei whakataetae, nō reira kāore he raupapa hei tuku.",
+      "Kāore he whakarārangi o te ao mō te hākinakina o tēnei whakataetae, nā reira kāore he whakarārangi hei tuku.",
     "rankings.notAvailable.notCounted":
-      "Kāore tētahi o ngā whakataetae o tēnei whakataetae e kiia ana mō ngā tūnga o te ao.",
+      "Kāore tētahi o ngā tauwhāinga o tēnei whakataetae e kaute ana ki ngā whakarārangi o te ao.",
     "admin.view.otherwise":
-      "Kāore e taea te whakahaere i tēnei whakataetae i konei.",
+      "Kāore e taea te whakahaere i tēnei whakataetae mai i konei.",
+    // A competition's page.
     "admin.competitionView.tabs": "Tauwhāinga",
-    "admin.competitionView.players": "Ngā kaitākaro",
-    "admin.competitionView.scores": "Ngā hua",
+    "admin.competitionView.players": "Kaitākaro",
+    "admin.competitionView.scores": "Ngā tākohu",
     "admin.sections.label": "Te whakataetae me ōna tauwhāinga",
     "admin.sections.tournament": "Whakataetae",
-    "admin.administrator.sections.label": "Ngā whārangi a te kaiwhakahaere pae",
-    "admin.administrator.sections.tournaments": "Ngā whakataetae",
-    "admin.administrator.sections.accounts": "Ngā pūkete",
-    "admin.administrator.sections.worldRankings": "Raupapa o te ao",
-    "admin.administrator.sections.importErrors": "Ngā hapa kawemai",
-    "admin.administrator.sections.logs": "Ngā Pūkete",
-    "admin.administrator.sections.databaseStatus":
-      "Whakauru ki te pūnaha raraunga",
-    "admin.databaseStatus.title": "Whakauru ki te pūnaha raraunga",
-    "admin.databaseStatus.on":
-      "Kei te whakahohe te whakauru ki te pūnaha raraunga.",
-    "admin.databaseStatus.off": "Kua monoa te whakauru ki te pūnaha raraunga.",
+    "admin.administrator.sections.label": "Ngā whārangi a te kaiwhakahaere",
+    "admin.administrator.sections.tournaments": "Whakataetae",
+    "admin.administrator.sections.accounts": "Pūkete",
+    "admin.administrator.sections.worldRankings": "Whakarārangi o te ao",
+    "admin.administrator.sections.importErrors": "Hapa kawemai",
+    "admin.administrator.sections.logs": "Ngā rekoata",
+    "admin.administrator.sections.databaseStatus": "Urunga pātengi raraunga",
+    "admin.databaseStatus.title": "Urunga pātengi raraunga",
+    "admin.databaseStatus.on": "Kua hohe te urunga pātengi raraunga.",
+    "admin.databaseStatus.off": "Kua weto te urunga pātengi raraunga.",
     "admin.databaseStatus.expected":
-      "Ka hoki mai te pae i roto i te {minutes} meneti.",
+      "E tūmanakohia ana ka hoki mai te pae i roto i te {minutes} meneti.",
     "admin.databaseStatus.expectedOne":
-      "Ka hoki mai te pae i roto i te 1 meneti.",
-    "admin.databaseStatus.longer": "He roa ake i te mea i whakaarohia.",
-    "admin.databaseStatus.told": "Ka kite ngā kaipānui: {words}",
+      "E tūmanakohia ana ka hoki mai te pae i roto i te 1 meneti.",
+    "admin.databaseStatus.longer": "Kei te roa ake i te tūmanako.",
+    "admin.databaseStatus.told": "Ko tā ngā kaipānui i kōrerotia ai: {words}",
     "admin.databaseStatus.toldUsual":
-      "Ka kite ngā kaipānui i te rerenga kōrero tūmau.",
+      "Ko te rerenga kōrero tuku iho tā ngā kaipānui i kōrerotia ai.",
     "admin.databaseStatus.minutes": "Ngā meneti e tūmanakohia ana",
-    "admin.databaseStatus.words": "Ngā kupu mō ngā kaipānui",
-    "admin.databaseStatus.turnOff": "Monoa",
-    "admin.databaseStatus.change": "Whakarerekē",
-    "admin.databaseStatus.turnOn": "Whakahohe",
-    "admin.databaseStatus.minutesNeeded": "Me whai meneti.",
-    "admin.databaseStatus.otherwise": "I raru tētahi mea i te pae.",
-    "DatabaseAccess.MinutesNotWhole": "Me tau katoa ngā meneti.",
+    "admin.databaseStatus.words": "Ngā kupu mā ngā kaipānui",
+    "admin.databaseStatus.turnOff": "Whakawetohia",
+    "admin.databaseStatus.change": "Huri",
+    "admin.databaseStatus.turnOn": "Whakahohea",
+    "admin.databaseStatus.minutesNeeded": "E hiahiatia ana ngā meneti.",
+    "admin.databaseStatus.otherwise": "I hapa tētahi mea i te pae.",
+    "DatabaseAccess.MinutesNotWhole": "Me tau tōpū ngā meneti.",
     "DatabaseAccess.MinutesOutOfRange":
-      "Me tīmata ngā meneti i te 1 ki te 1440.",
-    "DatabaseAccess.WordsTooLong":
-      "Kaua e neke atu i te 500 ngā pūāhua o ngā kupu.",
-    "DatabaseAccess.NotOff":
-      "Kāore te whakauru ki te pūnaha raraunga i te monoa.",
-    "admin.administrator.title": "Kaiwhakahaere pae",
-    "admin.accounts.title": "Ngā pūkete",
+      "Me tīmata mai i te 1 ki te 1440 ngā meneti.",
+    "DatabaseAccess.WordsTooLong": "Kaua e neke atu i te 500 pūāhua ngā kupu.",
+    "DatabaseAccess.NotOff": "Kāore te urunga pātengi raraunga i te weto.",
+    "admin.administrator.title": "Kaiwhakahaere",
+    // The accounts page, a section for each role.
+    "admin.accounts.title": "Pūkete",
     "admin.roles.add": "Tāpiri",
-    "admin.roles.administrator.heading": "Ngā kaiwhakahaere pae",
-    "admin.roles.administrator.none": "Kāore he kaiwhakahaere pae kē atu",
-    "admin.roles.administrator.removeTitle": "Tango kaiwhakahaere pae",
+    "admin.roles.administrator.heading": "Ngā kaiwhakahaere",
+    "admin.roles.administrator.none": "Kāore he kaiwhakahaere kē atu",
+    "admin.roles.administrator.removeTitle": "Tangohia te kaiwhakahaere",
     "admin.roles.administrator.removeExplanation":
-      "Ka kore a {name} e noho hei kaiwhakahaere pae mō tēnei pae.",
+      "Kāore a {name} e noho hei kaiwhakahaere o tēnei pae.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Ngā kaiwhakahaere raupapa o te ao (Association Croquet)",
+      "Ngā āpiha whakarārangi o te ao mō Association Croquet",
     "admin.roles.ac-world-ranking-officer.none":
-      "Kāore he kaiwhakahaere raupapa o te ao (Association Croquet)",
+      "Kāore he āpiha whakarārangi o te ao mō Association Croquet",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Tango kaiwhakahaere raupapa o te ao (Association Croquet)",
+      "Tangohia te āpiha whakarārangi o te ao mō Association Croquet",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao (Association Croquet).",
+      "Kāore a {name} e noho hei āpiha whakarārangi o te ao mō Association Croquet.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Ngā kaiwhakahaere raupapa o te ao (Golf Croquet)",
+      "Ngā āpiha whakarārangi o te ao mō Golf Croquet",
     "admin.roles.gc-world-ranking-officer.none":
-      "Kāore he kaiwhakahaere raupapa o te ao (Golf Croquet)",
+      "Kāore he āpiha whakarārangi o te ao mō Golf Croquet",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Tango kaiwhakahaere raupapa o te ao (Golf Croquet)",
+      "Tangohia te āpiha whakarārangi o te ao mō Golf Croquet",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "Ka kore a {name} e noho hei kaiwhakahaere raupapa o te ao (Golf Croquet).",
-    "admin.worldRankings.title": "Kawemai i ngā kaitākaro o te raupapa o te ao",
+      "Kāore a {name} e noho hei āpiha whakarārangi o te ao mō Golf Croquet.",
+    // The page where the world ranking players are imported.
+    "admin.worldRankings.title": "Kawemai i ngā kaitākaro whakarārangi o te ao",
     "admin.worldRankings.import": "Kawemai",
     "admin.worldRankings.log": "Te haere o te kawemai",
     "admin.worldRankings.ac.reading":
-      "E pānui ana i te rārangi croquet association",
+      "E pānui ana i te rārangi association croquet",
     "admin.worldRankings.ac.read":
-      "Ngā kaitākaro croquet association kua pānuitia: {players}",
+      "Ngā kaitākaro association croquet kua pānuitia: {players}",
     "admin.worldRankings.ac.kept":
-      "Ngā kaitākaro croquet association kua penapenahia: {players}",
+      "Ngā kaitākaro association croquet kua puritia: {players}",
     "admin.worldRankings.ac.refused":
-      "Kāore i taea te pānui i te rārangi croquet association, nō reira kua waihotia ōna kaitākaro pēnei i mua.",
+      "Kāore i taea te pānui i te rārangi association croquet, nā reira i waihotia ōna kaitākaro pēnei i tō rātou ahua.",
     "admin.worldRankings.gc.reading": "E pānui ana i te rārangi golf croquet",
     "admin.worldRankings.gc.read":
       "Ngā kaitākaro golf croquet kua pānuitia: {players}",
     "admin.worldRankings.gc.kept":
-      "Ngā kaitākaro golf croquet kua penapenahia: {players}",
+      "Ngā kaitākaro golf croquet kua puritia: {players}",
     "admin.worldRankings.gc.refused":
-      "Kāore i taea te pānui i te rārangi golf croquet, nō reira kua waihotia ōna kaitākaro pēnei i mua.",
+      "Kāore i taea te pānui i te rārangi golf croquet, nā reira i waihotia ōna kaitākaro pēnei i tō rātou ahua.",
     "admin.worldRankings.finished": "Kua oti",
     "admin.worldRankings.failed": "Kāore i oti te kawemai.",
-    "admin.worldRankings.otherwise": "I hē tētahi mea i te pae.",
+    "admin.worldRankings.otherwise": "I hapa tētahi mea i te pae.",
     "WorldRankingLists.Unreachable":
-      "Kāore i taea te whakapā atu ki te pae raupapa o te ao.",
+      "Kāore i taea te whakapā atu ki te pae o ngā whakarārangi o te ao.",
     "WorldRankingLists.Unreadable":
-      "Kāore te rārangi i te āhua o ngā rārangi raupapa o te ao: kāore i taea te pānui i tētahi rārangi, kāore he tangata, kāore rānei i tuhia ki te UTF-8.",
-    "admin.importErrors.title": "Ngā hapa kawemai",
+      "Kāore te rārangi i te whakatakoto pēnei i tā ngā whakarārangi o te ao: kāore i taea te pānui i tētahi rārangi i roto, kāore he tangata i roto, kāore rānei i tuhia ki te UTF-8.",
+    // The documents the import from the old sites refused.
+    "admin.importErrors.title": "Hapa kawemai",
     "admin.importErrors.none": "Kāore he hapa kawemai",
-    "admin.importErrors.otherwise": "I hē tētahi mea i te pae.",
-    "admin.logs.title": "Ngā Pūkete",
+    "admin.importErrors.otherwise": "I hapa tētahi mea i te pae.",
+    "admin.logs.title": "Ngā rekoata",
     "admin.logs.severity": "Taumahatanga",
     "admin.logs.text": "Rapua",
-    "admin.logs.show": "Whakaaturia",
-    "admin.logs.prune": "Whakakorea",
+    "admin.logs.show": "Whakaatu",
+    "admin.logs.prune": "Tapahia",
     "admin.logs.pruneAsk":
-      "Tangohia te pūkete i mua i te haora whakamutunga? Kāore he mea e whakahoki mai.",
+      "Tangohia te rekoata o mua i te hāora kua pahure? Kāore he mea e whakahoki mai.",
     "admin.logs.removed": "{count} ngā urunga i tangohia",
-    "admin.logs.none": "Kāore he urunga pūkete",
-    "admin.logs.otherwise": "I hē tētahi mea i te pae.",
-    "admin.hover.logs.show": "Whakaaturia ngā urunga e ōrite ana",
-    "admin.hover.logs.prune":
-      "Tangohia te pūkete i mua i te haora whakamutunga",
+    "admin.logs.none": "Kāore he urunga rekoata",
+    "admin.logs.otherwise": "I hapa tētahi mea i te pae.",
+    "admin.hover.logs.show": "Whakaatu i ngā urunga e ōrite ana",
+    "admin.hover.logs.prune": "Tangohia te rekoata o mua i te hāora kua pahure",
     "admin.hover.logs.pruneAgree":
-      "Tangohia te pūkete i mua i te haora whakamutunga",
+      "Tangohia te rekoata o mua i te hāora kua pahure",
     "admin.importError.title": "Hapa kawemai",
-    "admin.importError.documentId": "Id tuhinga",
+    "admin.importError.documentId": "Tuakiri tuhinga",
     "admin.importError.tournament": "Whakataetae",
     "admin.importError.competition": "Tauwhāinga",
     "admin.importError.newSite": "Pae hou",
     "admin.importError.oldSite": "Pae tawhito",
     "ImportErrorKept.NotFound":
-      "Kāore te kawemai i penapena i tētahi hapa mō taua tuhinga.",
+      "Kāore he hapa i puritia e te kawemai mō taua tuhinga.",
     "admin.competitionView.otherwise":
-      "Kāore e taea te whakahaere i tēnei tauwhāinga i konei.",
+      "Kāore e taea te whakahaere i tēnei tauwhāinga mai i konei.",
+    // The Competitions tab.
     "admin.competitions.block": "Poraka",
-    "admin.competitions.knockout": "Whakawātea",
+    "admin.competitions.knockout": "Whakaweto",
     "admin.competitions.swiss": "Swiss",
-    "admin.competitions.view": "Titiro",
+    "admin.competitions.view": "Tirohia",
     "admin.competitions.edit": "Whakatika",
-    "admin.competitions.up": "Piki",
-    "admin.competitions.down": "Heke",
-    "admin.competitions.archive": "Pūrangahia",
-    "admin.competitions.restore": "Whakahoki",
-    "admin.competitions.archived": "Ngā tauwhāinga kua pūrangatia",
+    "admin.competitions.up": "Whakarunga",
+    "admin.competitions.down": "Whakararo",
+    "admin.competitions.archive": "Whakatāpui",
+    "admin.competitions.restore": "Whakahokia mai",
+    "admin.competitions.archived": "Ngā tauwhāinga kua whakatāpuia",
     "admin.competitions.none": "Kāore he tauwhāinga",
     "admin.competitions.add": "Tāpiri tauwhāinga",
     // The competition dialog.
@@ -621,489 +645,519 @@ export const maori: Language = {
     "admin.competition.editTitle": "Whakatika tauwhāinga",
     "admin.competition.name": "Ingoa",
     "admin.competition.kind": "Momo",
-    "admin.competition.bestOf": "Te pai rawa o te",
+    "admin.competition.bestOf": "Pai rawa o te",
     "admin.competition.rounds": "Ngā rauna",
     "admin.competition.places": "Ngā tūnga",
     "admin.competition.round": "Rauna {number}",
-    "admin.competition.bestOfs": "Te pai rawa o te",
-    "admin.competition.quarters": "Hauwhā",
-    "admin.competition.semis": "Haurua",
+    "admin.competition.bestOfs": "Ngā pai rawa o te",
+    "admin.competition.quarters": "Hauwhā-whakamutunga",
+    "admin.competition.semis": "Hawhe-whakamutunga",
     "admin.competition.final": "Whakamutunga",
     "admin.competition.add": "Tāpiri",
     "admin.competition.save": "Penapena",
     "admin.competition.added": "Kua tāpiritia a {name}.",
     "admin.competition.otherwise":
-      "Kāore e taea te penapena i tēnei tauwhāinga pēnei.",
-    "CompetitionName.Missing": "Whakauruhia he ingoa.",
-    "CompetitionName.TooLong": "Kāore e neke i te 254 ngā pūāhua o te ingoa.",
-    "CompetitionName.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa.",
+      "Kāore e taea te pupuri i tēnei tauwhāinga pēnei.",
+    "CompetitionName.Missing": "Tāuruatia he ingoa.",
+    "CompetitionName.TooLong": "Kia 254 pūāhua te nuinga rawa o te ingoa.",
+    "CompetitionName.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te ingoa.",
     "Tournament.KnockoutPlayerHasGames":
-      "He tukinga ā ētahi kaitākaro o tēnei tūtohi, nō reira kāore e taea te whakarerekē i ō rātou tūnga.",
+      "He kēmu ā ngā kaitākaro o tēnei tuhi, nā reira e kore e taea te whakarerekē i ōna tūnga.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "Kāore e taea te whakapoto i tētahi rāwhiti kua whakatauhia he tukinga.",
+      "Kāore e taea te whakaiti i te pai rawa o te rauna kua whakatauhia tētahi tukinga.",
     "Tournament.KnockoutLaterRoundHasGames":
-      "Kāore e taea te whakarerekē i tētahi rāwhiti i muri i te tukinga i tētahi rāwhiti o muri mai.",
+      "Kāore e taea te whakarerekē i tētahi rauna ina kua tākarohia he kēmu i tētahi rauna o muri.",
     "Tournament.CompetitionNameTaken":
-      "Kei tētahi atu tauwhāinga o tēnei whakataetae taua ingoa kē.",
-    "BestOf.NotWhole": "Whakauruhia he tau katoa o ngā tākaro.",
-    "BestOf.TooSmall":
-      "Me kotahi te iti rawa o ngā tākaro i te pai rawa o tētahi tukinga.",
-    "Rounds.NotWhole": "Whakauruhia he tau tōpū o ngā rauna.",
-    "Rounds.TooSmall":
-      "Me kotahi te iti rawa o ngā rauna hei tākaro mō tētahi poraka.",
+      "Kei tētahi atu tauwhāinga o tēnei whakataetae kua whai i taua ingoa.",
+    "BestOf.NotWhole": "Tāuruatia he tau tōpū o ngā kēmu.",
+    "BestOf.TooSmall": "Me pai rawa o te 1 kēmu ia tukinga i te iti rawa.",
+    "Rounds.NotWhole": "Tāuruatia he tau tōpū o ngā rauna.",
+    "Rounds.TooSmall": "Me tākaro te poraka i te 1 rauna i te iti rawa.",
     "KnockoutDraw.EvenBestOf":
-      "Me whai toa tētahi tukinga whakawātea, nō reira ko te pai rawa o tētahi tau kāore e wehea ki te rua o ngā tākaro.",
-    "admin.hover.tournaments.new": "Waihangatia he whakataetae hou",
+      "Me whai toa te tukinga o te whakaweto, nā reira me pai rawa o te tau kehe o ngā kēmu.",
+    // Every modal dialog's way out.
+    "admin.hover.tournaments.new": "Waihanga i tētahi whakataetae hou",
     "admin.hover.tournaments.manage":
-      "Whakahaerehia ngā kaitākaro, ngā kapa, ngā tauwhāinga me ngā hua o tēnei whakataetae",
+      "Whakahaere i ngā kaitākaro, ngā tīma, ngā tauwhāinga me ngā tākohu o tēnei whakataetae",
     "admin.hover.tournaments.edit":
-      "Whakarerekētia ngā taipitopito o tēnei whakataetae",
-    "admin.hover.tournaments.scores": "Whakauruhia ngā hua o tēnei whakataetae",
+      "Whakarerekē i ngā taipitopito o tēnei whakataetae",
+    "admin.hover.tournaments.scores": "Tāuru i ngā tākohu o tēnei whakataetae",
     "admin.hover.tournaments.players":
-      "Tiakina ngā kaitākaro o tēnei whakataetae",
+      "Tiaki i ngā kaitākaro o tēnei whakataetae",
     "admin.hover.competitions.view":
-      "Whakatuwheratia tēnei tauwhāinga hei kite, hei whakauru i ōna kaitākaro me ōna hua",
+      "Huakina tēnei tauwhāinga hei kite me te tāuru i ōna kaitākaro me ōna tākohu",
     "admin.hover.tests.view":
-      "Whakatuwheratia tēnei Test hei kite, hei whakauru i ōna hua",
+      "Huakina tēnei whakamātau hei kite me te tāuru i ōna tākohu",
     "admin.hover.teams.view":
-      "Whakatuwheratia tēnei kapa hei kite, hei whakahaere i ōna kaitākaro",
+      "Huakina tēnei tīma hei kite me te whakahaere i ōna kaitākaro",
     "admin.hover.dialog.player.add":
-      "Tāpiria tēnei kaitākaro ki te whakataetae",
-    "admin.hover.dialog.player.save":
-      "Penapenahia ngā huringa o tēnei kaitākaro",
-    "admin.hover.dialog.team.add": "Tāpiria tēnei kapa ki te whakataetae",
-    "admin.hover.dialog.team.save": "Penapenahia ngā huringa o tēnei kapa",
-    "admin.hover.dialog.test.add": "Tāpiria tēnei Test ki te whakataetae",
-    "admin.hover.dialog.test.save": "Penapenahia ngā huringa o tēnei Test",
+      "Tāpiri i tēnei kaitākaro ki te whakataetae",
+    "admin.hover.dialog.player.save": "Pupuri i ngā huringa ki tēnei kaitākaro",
+    "admin.hover.dialog.team.add": "Tāpiri i tēnei tīma ki te whakataetae",
+    "admin.hover.dialog.team.save": "Pupuri i ngā huringa ki tēnei tīma",
+    "admin.hover.dialog.test.add":
+      "Tāpiri i tēnei whakamātau ki te whakataetae",
+    "admin.hover.dialog.test.save": "Pupuri i ngā huringa ki tēnei whakamātau",
     "admin.hover.dialog.competition.add":
-      "Tāpiria tēnei tauwhāinga ki te whakataetae",
+      "Tāpiri i tēnei tauwhāinga ki te whakataetae",
     "admin.hover.dialog.competition.save":
-      "Penapenahia ngā huringa o tēnei tauwhāinga",
-    "admin.hover.dialog.score.add": "Tāpiria tēnei hua ki te tauwhāinga",
-    "admin.hover.dialog.score.save": "Penapenahia te whakatika o tēnei hua",
+      "Pupuri i ngā huringa ki tēnei tauwhāinga",
+    "admin.hover.dialog.score.add": "Tāpiri i tēnei tākohu ki te tauwhāinga",
+    "admin.hover.dialog.score.save":
+      "Pupuri i te whakatikatika ki tēnei tākohu",
     "admin.hover.dialog.carryForward.save":
       "Kawea whakamua ngā hua o tēnei kaitākaro",
-    "admin.hover.dialog.tournament.new": "Waihangatia tēnei whakataetae",
+    "admin.hover.dialog.tournament.new": "Waihanga i tēnei whakataetae",
     "admin.hover.dialog.tournament.edit":
-      "Penapenahia ngā huringa o tēnei whakataetae",
-    "admin.hover.modal.cancel": "Kati i tēnei me te kore penapena i tētahi mea",
-    "admin.hover.modal.ok": "Katia tēnei kōrero",
-    "admin.hover.tab": "Whakaaturia te ripa {name}",
+      "Pupuri i ngā huringa ki tēnei whakataetae",
+    "admin.hover.modal.cancel": "Katia tēnei me te kore pupuri i tētahi mea",
+    "admin.hover.modal.ok": "Katia tēnei karere",
+    "admin.hover.tab": "Whakaatu i te ripa {name}",
     "admin.hover.tournaments.archive":
-      "Pūrangahia tēnei whakataetae; ka taea te whakahoki",
+      "Whakatāpui i tēnei whakataetae; ka taea te whakahoki mai",
     "admin.hover.tournaments.restore":
-      "Whakahokia mai tēnei whakataetae kua pūrangatia",
-    "admin.hover.players.add": "Tāpiria he kaitākaro ki tēnei whakataetae",
+      "Whakahoki mai i tēnei whakataetae kua whakatāpuia",
+    "admin.hover.players.add": "Tāpiri i tētahi kaitākaro ki tēnei whakataetae",
     "admin.hover.players.edit":
-      "Whakarerekētia ngā taipitopito o tēnei kaitākaro",
-    "admin.hover.players.up": "Hapainga tēnei kaitākaro i te rārangi",
-    "admin.hover.players.down": "Whakahekea tēnei kaitākaro i te rārangi",
+      "Whakarerekē i ngā taipitopito o tēnei kaitākaro",
+    "admin.hover.players.up": "Nekehia tēnei kaitākaro ki runga i te rārangi",
+    "admin.hover.players.down": "Nekehia tēnei kaitākaro ki raro i te rārangi",
     "admin.hover.players.archive":
-      "Pūrangahia tēnei kaitākaro; ka taea te whakahoki",
+      "Whakatāpui i tēnei kaitākaro; ka taea te whakahoki mai",
     "admin.hover.players.restore":
-      "Whakahokia mai tēnei kaitākaro kua pūrangatia",
-    "admin.hover.teams.add": "Tāpiria he kapa ki tēnei whakataetae",
-    "admin.hover.teams.edit": "Whakarerekētia ngā taipitopito o tēnei kapa",
-    "admin.hover.teams.up": "Hapainga tēnei kapa i te rārangi",
-    "admin.hover.teams.down": "Whakahekea tēnei kapa i te rārangi",
-    "admin.hover.teams.archive": "Pūrangahia tēnei kapa; ka taea te whakahoki",
-    "admin.hover.teams.restore": "Whakahokia mai tēnei kapa kua pūrangatia",
+      "Whakahoki mai i tēnei kaitākaro kua whakatāpuia",
+    "admin.hover.teams.add": "Tāpiri i tētahi tīma ki tēnei whakataetae",
+    "admin.hover.teams.edit": "Whakarerekē i ngā taipitopito o tēnei tīma",
+    "admin.hover.teams.up": "Nekehia tēnei tīma ki runga i te rārangi",
+    "admin.hover.teams.down": "Nekehia tēnei tīma ki raro i te rārangi",
+    "admin.hover.teams.archive":
+      "Whakatāpui i tēnei tīma; ka taea te whakahoki mai",
+    "admin.hover.teams.restore": "Whakahoki mai i tēnei tīma kua whakatāpuia",
     "admin.hover.competitions.add":
-      "Tāpiria he tauwhāinga ki tēnei whakataetae",
+      "Tāpiri i tētahi tauwhāinga ki tēnei whakataetae",
     "admin.hover.competitions.edit":
-      "Whakarerekētia ngā taipitopito o tēnei tauwhāinga",
-    "admin.hover.competitions.up": "Hapainga tēnei tauwhāinga i te rārangi",
-    "admin.hover.competitions.down": "Whakahekea tēnei tauwhāinga i te rārangi",
+      "Whakarerekē i ngā taipitopito o tēnei tauwhāinga",
+    "admin.hover.competitions.up":
+      "Nekehia tēnei tauwhāinga ki runga i te rārangi",
+    "admin.hover.competitions.down":
+      "Nekehia tēnei tauwhāinga ki raro i te rārangi",
     "admin.hover.competitions.archive":
-      "Pūrangahia tēnei tauwhāinga; ka taea te whakahoki",
+      "Whakatāpui i tēnei tauwhāinga; ka taea te whakahoki mai",
     "admin.hover.competitions.restore":
-      "Whakahokia mai tēnei tauwhāinga kua pūrangatia",
-    "admin.hover.tests.add": "Tāpiria he Test i waenganui i ngā kapa e rua",
-    "admin.hover.tests.edit": "Whakarerekētia ngā taipitopito o tēnei Test",
-    "admin.hover.tests.up": "Hapainga tēnei Test i te rārangi",
-    "admin.hover.tests.down": "Whakahekea tēnei Test i te rārangi",
-    "admin.hover.tests.archive": "Pūrangahia tēnei Test; ka taea te whakahoki",
-    "admin.hover.tests.restore": "Whakahokia mai tēnei Test kua pūrangatia",
+      "Whakahoki mai i tēnei tauwhāinga kua whakatāpuia",
+    "admin.hover.tests.add":
+      "Tāpiri i tētahi whakamātau i waenga i ngā tīma e rua",
+    "admin.hover.tests.edit":
+      "Whakarerekē i ngā taipitopito o tēnei whakamātau",
+    "admin.hover.tests.up": "Nekehia tēnei whakamātau ki runga i te rārangi",
+    "admin.hover.tests.down": "Nekehia tēnei whakamātau ki raro i te rārangi",
+    "admin.hover.tests.archive":
+      "Whakatāpui i tēnei whakamātau; ka taea te whakahoki mai",
+    "admin.hover.tests.restore":
+      "Whakahoki mai i tēnei whakamātau kua whakatāpuia",
     "admin.hover.tests.toTeams":
-      "Haere ki te ripa Ngā kapa hei tāpiri i ngā kapa e hiahiatia ana e tētahi Test",
+      "Haere ki te ripa Tīma hei tāpiri i ngā tīma e hiahiatia ana e tētahi whakamātau",
     "admin.hover.scores.add":
-      "Tāpiria te hua o tētahi tukinga ki tēnei tauwhāinga",
-    "admin.hover.scores.edit": "Whakatikaina tēnei hua",
+      "Tāpiri i te tākohu o tētahi kēmu ki tēnei tauwhāinga",
+    "admin.hover.scores.edit": "Whakatikatika i tēnei tākohu",
     "admin.hover.scores.archive":
-      "Pūrangahia tēnei hua kia kore ai e kaute; ka taea te whakahoki",
+      "Whakatāpui i tēnei tākohu kia kore ai e kaute; ka taea te whakahoki mai",
     "admin.hover.scores.restore":
-      "Whakahokia mai tēnei hua kua pūrangatia, kia kaute anō ai",
+      "Whakahoki mai i tēnei tākohu kua whakatāpuia, kia kaute anō ai",
     "admin.hover.scores.withdraw":
-      "Waihotia tēnei hua ki te rārangi engari kaua e kaute",
-    "admin.hover.scores.unwithdraw":
-      "Meinga kia kaute anō tēnei hua kua unuhia",
-    "admin.hover.scores.up": "Nukuna tēnei hua ki mua i te rārangi",
-    "admin.hover.scores.down": "Nukuna tēnei hua ki muri i te rārangi",
+      "Waiho tēnei tākohu ki te rārangi engari kia kore e kaute",
+    "admin.hover.scores.unwithdraw": "Me kaute anō tēnei tākohu kua unuhia",
+    "admin.hover.scores.up": "Nekehia tēnei tākohu ki mua i te rārangi",
+    "admin.hover.scores.down": "Nekehia tēnei tākohu ki muri i te rārangi",
     "admin.hover.competitionPlayers.add":
       "Whakaurua te kaitākaro kua kōwhiria ki tēnei tauwhāinga",
     "admin.hover.competitionPlayers.up":
-      "Hapainga tēnei kaitākaro i te rārangi",
+      "Nekehia tēnei kaitākaro ki runga i te rārangi",
     "admin.hover.competitionPlayers.down":
-      "Whakahekea tēnei kaitākaro i te rārangi",
+      "Nekehia tēnei kaitākaro ki raro i te rārangi",
     "admin.hover.competitionPlayers.remove":
       "Tangohia tēnei kaitākaro i te tauwhāinga",
     "admin.hover.competitionPlayers.withdraw":
       "Unuhia tēnei kaitākaro i te tauwhāinga",
     "admin.hover.competitionPlayers.unwithdraw":
-      "Whakahokia tēnei kaitākaro kua unuhia ki te tauwhāinga",
+      "Whakahokia mai tēnei kaitākaro kua unuhia ki te tauwhāinga",
     "admin.hover.competitionPlayers.carryForward":
-      "Kawea mai ngā hua o tēnei kaitākaro i tētahi atu tauwhāinga",
-    "admin.hover.notes.add": "Tuhia he tuhipoka hou mō tēnei whakataetae",
-    "admin.hover.notes.edit": "Whakarerekētia tēnei tuhipoka",
-    "admin.hover.notes.delete": "Mukua tēnei tuhipoka",
+      "Kawea whakamua ngā hua o tēnei kaitākaro mai i tētahi atu tauwhāinga",
+    "admin.hover.notes.add": "Tuhia he tuhinga hou mō tēnei whakataetae",
+    "admin.hover.notes.edit": "Whakarerekē i tēnei tuhinga",
+    "admin.hover.notes.delete": "Mukua tēnei tuhinga",
     "admin.hover.note.add":
-      "Penapenahia tēnei tuhipoka, ka tāpiri ki te whakataetae",
-    "admin.hover.note.save": "Penapenahia ngā huringa o tēnei tuhipoka",
+      "Pupuri i tēnei tuhinga me te tāpiri ki te whakataetae",
+    "admin.hover.note.save": "Pupuri i ngā huringa ki tēnei tuhinga",
     "admin.hover.people.add": "Hoatu te tūranga ki tēnei tangata",
     "admin.hover.people.remove": "Tangohia te tūranga i tēnei tangata",
     "admin.hover.worldRankings.import":
-      "Tikina ngā raupapa o te ao, ka tāpiri i ō rātou kaitākaro",
+      "Tikina ngā whakarārangi o te ao me te tāpiri i ō rātou kaitākaro",
     "admin.modal.cancel": "Whakakore",
-    "admin.modal.ok": "Pai",
+    "admin.modal.ok": "Āe",
+    // The Managers and Scorers tabs.
     "admin.people.emailAddress": "Wāhitau īmēra",
     "admin.people.remove": "Tango",
-    "admin.people.otherwise": "Kāore i taea te mahi.",
+    "admin.people.otherwise": "Kāore i taea tērā.",
     "admin.managers.you": "Koe",
     "admin.managers.add": "Tāpiri kaiwhakahaere",
     "admin.managers.none": "Kāore he kaiwhakahaere",
-    "admin.managers.removeTitle": "Tango kaiwhakahaere",
+    "admin.managers.removeTitle": "Tangohia te kaiwhakahaere",
     "admin.managers.removeExplanation":
-      "Ka kore a {name} e taea te whakahaere i tēnei whakataetae.",
+      "Kāore a {name} e taea te whakahaere i tēnei whakataetae.",
     "admin.managers.removeYourself.explanation":
-      "Ka kore koe e taea te whakahaere i tēnei whakataetae, ā, kāore he tangata i konei e taea te whakahoki mōu. Ka taea e tētahi atu kaiwhakahaere te meinga anō koe hei kaiwhakahaere.",
+      "Kāore koe e taea te whakahaere i tēnei whakataetae, ā, kāore he tangata i konei e taea te whakahoki i tērā mōu. Ka taea e tētahi atu kaiwhakahaere te whakahoki i a koe hei kaiwhakahaere anō.",
     "admin.managers.otherwise":
-      "Kāore e taea te meinga taua wāhitau hei kaiwhakahaere.",
+      "Kāore e taea te whakanoho i taua wāhitau hei kaiwhakahaere.",
+    // The Players tab.
     "admin.competitionPlayers.add": "Tāpiri kaitākaro",
-    // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise":
       "Kāore e taea te tāpiri i tēnei kaitākaro.",
-    "admin.competitionPlayers.choose": "Te kaitākaro hei tāpiri",
+    "admin.competitionPlayers.choose": "Kaitākaro hei tāpiri",
     "admin.competitionPlayers.nobody": "Kōwhiria he kaitākaro",
     "admin.competitionPlayers.bye": "Bye",
     "admin.competitionPlayers.all": "Kei te tauwhāinga ngā kaitākaro katoa",
     "admin.competitionPlayers.none": "Kāore he kaitākaro",
-    "admin.competitionPlayers.up": "Piki",
-    "admin.competitionPlayers.down": "Heke",
+    "admin.competitionPlayers.up": "Whakarunga",
+    "admin.competitionPlayers.down": "Whakararo",
     "admin.competitionPlayers.remove": "Tango",
     "admin.competitionPlayers.withdraw": "Unuhia",
-    "admin.competitionPlayers.unwithdraw": "Whakakore i te unuhanga",
+    "admin.competitionPlayers.unwithdraw": "Whakahokia mai",
     "admin.competitionPlayers.withdrawn": "Ngā kaitākaro kua unuhia",
-    "admin.competitionPlayers.removeTitle": "Tango kaitākaro",
+    "admin.competitionPlayers.removeTitle": "Tangohia te kaitākaro",
     "admin.competitionPlayers.removeQuestion":
       "Ka tangohia a {name} i te tauwhāinga. Kāore e taea te whakahoki.",
     "admin.competitionPlayers.withdrawTitle": "Unuhia te kaitākaro",
     "admin.competitionPlayers.withdrawQuestion":
-      "Ka kore a {name} e tākaro anō i te tauwhāinga, ā, ka whakatauhia ngā tākaro kāore anō kia tākarohia me te kore ia.",
-    "admin.competitionPlayers.carryForward": "Kawe whakamua",
-    "admin.carryForward.title": "Kawe whakamua - {name}",
+      "Kāore a {name} e tākaro anō i te tauwhāinga, ā, ka whakatauhia ngā kēmu kāore anō kia tākarohia me te kore ia.",
+    "admin.competitionPlayers.carryForward": "Kawea whakamua",
+    // The carry forward dialog.
+    "admin.carryForward.title": "Kawea whakamua - {name}",
     "admin.carryForward.save": "Penapena",
     "admin.carryForward.otherwise":
-      "Kāore e taea te penapena i tēnei kawe whakamua.",
-    "admin.carryForward.matchWins": "Ngā tukinga i toa",
-    "admin.carryForward.matchLosses": "Ngā tukinga i hinga",
-    "admin.carryForward.gameWins": "Ngā tākaro i toa",
-    "admin.carryForward.gameLosses": "Ngā tākaro i hinga",
-    "admin.carryForward.hoopsFor": "Ngā hupa mō",
-    "admin.carryForward.hoopsAgainst": "Ngā hupa ki",
-    "CarryForward.MatchWinsNotWhole": "Tuhia he tau katoa o ngā tukinga i toa.",
+      "Kāore e taea te pupuri i tēnei kawe whakamua.",
+    "admin.carryForward.matchWins": "Wikitoria tukinga",
+    "admin.carryForward.matchLosses": "Hinganga tukinga",
+    "admin.carryForward.gameWins": "Wikitoria kēmu",
+    "admin.carryForward.gameLosses": "Hinganga kēmu",
+    "admin.carryForward.hoopsFor": "Hupa mō",
+    "admin.carryForward.hoopsAgainst": "Hupa whakahē",
+    "CarryForward.MatchWinsNotWhole":
+      "Tāuruatia he tau tōpū o ngā wikitoria tukinga.",
     "CarryForward.MatchWinsBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā tukinga i toa.",
+      "Tāuruatia te 0 neke atu rānei o ngā wikitoria tukinga.",
     "CarryForward.MatchLossesNotWhole":
-      "Tuhia he tau katoa o ngā tukinga i hinga.",
+      "Tāuruatia he tau tōpū o ngā hinganga tukinga.",
     "CarryForward.MatchLossesBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā tukinga i hinga.",
-    "CarryForward.GameWinsNotWhole": "Tuhia he tau katoa o ngā tākaro i toa.",
+      "Tāuruatia te 0 neke atu rānei o ngā hinganga tukinga.",
+    "CarryForward.GameWinsNotWhole":
+      "Tāuruatia he tau tōpū o ngā wikitoria kēmu.",
     "CarryForward.GameWinsBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā tākaro i toa.",
+      "Tāuruatia te 0 neke atu rānei o ngā wikitoria kēmu.",
     "CarryForward.GameLossesNotWhole":
-      "Tuhia he tau katoa o ngā tākaro i hinga.",
+      "Tāuruatia he tau tōpū o ngā hinganga kēmu.",
     "CarryForward.GameLossesBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā tākaro i hinga.",
-    "CarryForward.HoopsForNotWhole": "Tuhia he tau katoa o ngā hupa mō.",
+      "Tāuruatia te 0 neke atu rānei o ngā hinganga kēmu.",
+    "CarryForward.HoopsForNotWhole": "Tāuruatia he tau tōpū o ngā hupa mō.",
     "CarryForward.HoopsForBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā hupa mō.",
-    "CarryForward.HoopsAgainstNotWhole": "Tuhia he tau katoa o ngā hupa ki.",
+      "Tāuruatia te 0 neke atu rānei o ngā hupa mō.",
+    "CarryForward.HoopsAgainstNotWhole":
+      "Tāuruatia he tau tōpū o ngā hupa whakahē.",
     "CarryForward.HoopsAgainstBelowZero":
-      "Tuhia te 0 neke atu rānei o ngā hupa ki.",
-    "admin.scores.add": "Tāpiri hua",
-    "admin.scores.none": "Kāore he hua",
+      "Tāuruatia te 0 neke atu rānei o ngā hupa whakahē.",
+    // A competition's Scores tab and the score dialog.
+    "admin.scores.add": "Tāpiri tākohu",
+    "admin.scores.none": "Kāore he tākohu",
     "admin.scores.edit": "Whakatika",
-    "admin.scores.drawNotFilledTitle": "Kāore anō kia kī te tūtohi",
-    "admin.scores.archive": "Pūrangahia",
-    "admin.scores.up": "Piki",
-    "admin.scores.down": "Heke",
-    "admin.scores.restore": "Whakahoki",
-    "admin.scores.archived": "Ngā hua kua pūrangatia",
-    "admin.scores.archivedSaid": "Kua pūrangatia",
+
+    "admin.scores.drawNotFilledTitle": "Kāore anō kia kī te tuhi",
+    "admin.scores.archive": "Whakatāpui",
+    "admin.scores.up": "Whakarunga",
+    "admin.scores.down": "Whakararo",
+    "admin.scores.restore": "Whakahokia mai",
+    "admin.scores.archived": "Ngā tākohu kua whakatāpuia",
+    "admin.scores.archivedSaid": "Kua whakatāpuia",
     "admin.scores.withdraw": "Unuhia",
-    "admin.scores.unwithdraw": "Whakakore i te unuhanga",
+    "admin.scores.unwithdraw": "Whakahokia mai",
     "admin.scores.withdrawnSaid": "Kua unuhia",
-    "admin.scores.otherwise": "Kāore i taea te mahi.",
-    "admin.score.title": "Tāpiri hua",
-    "admin.score.add": "Tāpiri tākaro",
+    "admin.scores.otherwise": "Kāore i taea tērā.",
+    "admin.score.title": "Tāpiri tākohu",
+    "admin.score.add": "Tāpiri kēmu",
     "admin.score.winner": "Te toa",
-    "admin.score.winnerScore": "Ngā tohu a te toa",
+    "admin.score.winnerScore": "Tākohu a te toa",
     "admin.score.loser": "Te hinga",
-    "admin.score.loserScore": "Ngā tohu a te hinga",
-    "admin.score.beat": "i toa i a",
+    "admin.score.loserScore": "Tākohu a te hinga",
+    "admin.score.beat": "i hinga i a",
     "admin.score.added":
-      "Kua tāpiritia te tākaro i toa ai a {winner} i a {loser}.",
-    "admin.score.otherwise": "Kāore i taea te tāpiri i te tākaro.",
-    "admin.score.correctTitle": "Whakatika hua",
+      "Kua tāpiritia te kēmu i wikitoria ai a {winner} i a {loser}.",
+    "admin.score.otherwise": "Kāore i taea te tāpiri i te kēmu.",
+    "admin.score.correctTitle": "Whakatika tākohu",
     "admin.score.save": "Penapena",
-    "admin.score.notCorrected": "Kāore i taea te whakatika i te hua.",
+    "admin.score.notCorrected": "Kāore i taea te whakatika i te tākohu.",
     "Game.WinnerMissing": "Kōwhiria te toa.",
-    "Game.WinnerScoreMissing": "Tuhia ngā tohu a te toa.",
+    "Game.WinnerScoreMissing": "Patohia te tākohu a te toa.",
     "Game.LoserMissing": "Kōwhiria te hinga.",
-    "Game.LoserScoreMissing": "Tuhia ngā tohu a te hinga.",
-    "Score.NoPoints": "Ka tīmata ngā tohu ki tētahi tau.",
-    "Game.SamePlayer": "Kāore he tangata e tākaro ana ki a ia anō.",
+    "Game.LoserScoreMissing": "Patohia te tākohu a te hinga.",
+    "Score.NoPoints": "Ka tīmata te tākohu ki tōna tau pointi.",
+    "Game.SamePlayer": "Kāore te tangata e tākaro i a ia anō.",
     "Game.WinnerNotAhead":
-      "Me nui ake ngā tohu a te toa i ērā a te hinga, me tohua rānei hei toa.",
-    "Game.LoserMarked": "Kāore e taea te tohu i ngā tohu a te hinga hei toa.",
+      "Me nui ake te tākohu a te toa i tō te hinga, me tohu rānei hei wikitoria.",
+    "Game.LoserMarked":
+      "Kāore e taea te tohu i te tākohu a te hinga hei wikitoria.",
     "Game.ResultChanged":
-      "Ka puritia te hua i te whakatika: he toa tonu te tākaro i toa, he taurite tonu te tākaro i taurite.",
-    "Competition.MatchDecided": "Kua whakatauhia kētia tā rāua tukinga.",
+      "Ka puritia te hua i te whakatikatika: ka noho wikitoria tonu te kēmu i wikitoria, ka noho taurite tonu te kēmu i taurite.",
+    "Competition.MatchDecided": "Kua whakatauhia kētia tō rāua tukinga.",
     "Competition.DrawFull":
-      "Kāore e taea te tāpiri i te kaitākaro nā te mea kua kī te tūtohi.",
+      "Kāore e taea te tāpiri i te kaitākaro nā te mea kua ki te whakaweto.",
     "Competition.DrawNotFilled":
-      "Kāore e taea te tāpiri hua kia whai kaitākaro, kia whai Bye rānei ia tūranga o te tūtohi.",
-    "Competition.ByeOutsideKnockout": "Ko te whakawātea anake e whai Bye ai.",
+      "Kāore e taea te tāpiri tākohu kia ki ngā tūnga katoa o te whakaweto i tētahi kaitākaro, i tētahi bye rānei.",
+    "Competition.ByeOutsideKnockout":
+      "Ko te whakaweto anake e taea te whai bye.",
     "Competition.NotDrawnToMeet":
-      "Kāore rāua i tohaina kia tākaro ki a rāua anō.",
+      "Kāore ēnei kaitākaro i tuhia ināianei kia tākaro tētahi ki tētahi i te whakaweto.",
     "Competition.WinnerHasPlayedOn":
-      "Kua tākaro kētia te toa o tēnei tukinga i tāna tukinga e whai ake nei, nō reira kāore e taea te whakarerekē ko wai te toa.",
+      "Kua tākaro kētia te toa o tēnei tukinga i tāna kēmu e whai ake nei, nā reira e kore e taea te whakarerekē ko wai te toa.",
     "CompetitionPlayer.Withdrawn":
       "Kāore te kaitākaro kua unuhia e tākaro anō.",
     "admin.players.add": "Tāpiri kaitākaro",
     "admin.players.none": "Kāore he kaitākaro",
     "admin.players.edit": "Whakatika",
-    "admin.players.archive": "Pūrangahia",
-    "admin.players.restore": "Whakahoki",
-    "admin.players.up": "Piki",
-    "admin.players.down": "Heke",
-    "admin.players.archiveTitle": "Pūrangahia te kaitākaro",
+    "admin.players.archive": "Whakatāpui",
+    "admin.players.restore": "Whakahokia mai",
+    "admin.players.up": "Whakarunga",
+    "admin.players.down": "Whakararo",
+    // Asked before archiving a player who is in competitions.
+    "admin.players.archiveTitle": "Whakatāpuia te kaitākaro",
     "admin.players.archiveQuestion": "Ka tangohia a {name} i ēnei tauwhāinga:",
     "admin.players.archive.explanation":
-      "Ina whakahokia te kaitākaro, kāore ia e hoki ki ēnei tauwhāinga.",
-    "admin.players.archived": "Ngā kaitākaro kua pūrangatia",
-    "admin.players.archivedSaid": "Kua pūrangatia",
+      "Mā te whakahoki mai i a ia e kore ia e hoki ki ēnei tauwhāinga.",
+    "admin.players.archived": "Ngā kaitākaro kua whakatāpuia",
+    "admin.players.archivedSaid": "Kua whakatāpuia",
+    // The player dialog.
     "admin.player.addTitle": "Tāpiri kaitākaro",
     "admin.player.editTitle": "Whakatika kaitākaro",
     "admin.player.name": "Ingoa",
-    "admin.player.representing": "E tohu ana i a",
-    "admin.player.worldRankingName": "Ingoa i te raupapa o te ao",
+    "admin.player.representing": "E māngai ana i",
+    "admin.player.worldRankingName": "Ingoa kaitākaro whakarārangi o te ao",
     "admin.player.worldRankingKnown":
-      "E mōhio ana te raupapa o te ao ki tēnei ingoa.",
+      "E mōhio ana ngā whakarārangi o te ao ki tēnei ingoa.",
     "admin.player.worldRankingQuestioned":
-      "Kāore he kaitākaro o te raupapa o te ao i whai i tēnei ingoa. Akene he hapa te tuhi, he hou rānei te kaitākaro ki te raupapa.",
+      "Kāore he kaitākaro o tēnei ingoa i ngā whakarārangi o te ao. Tērā pea he hē te tuhi, he hou rānei te kaitākaro ki ngā whakarārangi.",
     "admin.player.flag": "Haki",
     "admin.player.add": "Tāpiri",
     "admin.player.save": "Penapena",
     "admin.player.added": "Kua tāpiritia a {name}.",
-    "admin.player.otherwise":
-      "Kāore e taea te penapena i tēnei kaitākaro pēnei.",
+    "admin.player.otherwise": "Kāore e taea te pupuri i tēnei kaitākaro pēnei.",
     "Tournament.PlayerNameTaken":
-      "Kei tētahi atu kaitākaro o tēnei whakataetae taua ingoa kē.",
+      "Kei tētahi atu kaitākaro o tēnei whakataetae kua whai i taua ingoa.",
     "TournamentPlayer.NoSuchFlag": "Kōwhiria tētahi o ngā haki e wātea ana.",
-    "TournamentPlayer.NamedBye": "Kāore e taea te whakaingoa kaitākaro ko Bye.",
-    "TournamentPlayer.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa.",
-    "admin.player.byesTitle": "Kāore ngā Bye e tāpiritia",
+    "TournamentPlayer.NamedBye":
+      "Kāore e taea te whakaingoa i tētahi kaitākaro ko Bye.",
+    "TournamentPlayer.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te ingoa.",
+    "admin.player.byesTitle": "Kāore e tāpiri i ngā bye",
     "admin.player.byes":
-      "Ehara te Bye i te kaitākaro o te whakataetae. Ka tukuna e te whakawātea he Bye ina tāpiritia ōna kaitākaro, kia rite ki te maha e hiahiatia ana e tōna tūtohi.",
-    "admin.view.teams": "Ngā kapa",
-    "admin.view.tests": "Ngā Test",
-    "admin.teams.add": "Tāpiri kapa",
-    "admin.teams.none": "Kāore he kapa",
+      "Ehara te bye i tētahi o ngā kaitākaro o te whakataetae. Ka tuku te whakaweto i a Bye ina tāpiritia ana ōna kaitākaro, kia rite ki te maha e hiahiatia ana e tōna tuhi.",
+    // A tournament played by teams.
+    "admin.view.teams": "Tīma",
+    "admin.view.tests": "Whakamātau",
+    "admin.teams.add": "Tāpiri tīma",
+    "admin.teams.none": "Kāore he tīma",
     "admin.teams.edit": "Whakatika",
-    "admin.teams.view": "Titiro",
-    "admin.teams.archive": "Pūrangahia",
-    "admin.teams.restore": "Whakahoki",
-    "admin.teams.up": "Piki",
-    "admin.teams.down": "Heke",
-    "admin.teams.archived": "Ngā kapa kua pūrangatia",
-    "admin.teams.archivedSaid": "Kua pūrangatia",
-    "admin.team.addTitle": "Tāpiri kapa",
-    "admin.team.editTitle": "Whakatika kapa",
+    "admin.teams.view": "Tirohia",
+    "admin.teams.archive": "Whakatāpui",
+    "admin.teams.restore": "Whakahokia mai",
+    "admin.teams.up": "Whakarunga",
+    "admin.teams.down": "Whakararo",
+    "admin.teams.archived": "Ngā tīma kua whakatāpuia",
+    "admin.teams.archivedSaid": "Kua whakatāpuia",
+    "admin.team.addTitle": "Tāpiri tīma",
+    "admin.team.editTitle": "Whakatika tīma",
     "admin.team.name": "Ingoa",
     "admin.team.shortName": "Ingoa poto",
     "admin.team.shortName.explanation":
-      "Te ingoa e whakaingoatia ai ngā Test a te kapa, pēnei i a AUS v ENG.",
+      "Te ingoa e tapaina ai ngā whakamātau a te tīma, pēnei i AUS v ENG.",
     "admin.team.flag": "Haki",
     "admin.team.add": "Tāpiri",
     "admin.team.save": "Penapena",
     "admin.team.added": "Kua tāpiritia a {name}.",
-    "admin.team.otherwise": "Kāore e taea te penapena i tēnei kapa pēnei.",
-    "admin.teamView.otherwise": "Kāore e taea te titiro i tēnei kapa i konei.",
-    "admin.teamView.players": "Ngā kaitākaro",
-    "TeamName.Missing": "Whakaingoatia te kapa.",
-    "TeamName.TooLong": "He roa rawa taua ingoa.",
-    "admin.notes.add": "Tāpiri tuhipoka",
-    "admin.notes.none": "Kāore he tuhipoka",
+    "admin.team.otherwise": "Kāore e taea te pupuri i tēnei tīma pēnei.",
+    "admin.teamView.otherwise":
+      "Kāore e taea te tiro i tēnei tīma mai i konei.",
+    "admin.teamView.players": "Kaitākaro",
+    "TeamName.Missing": "Whakaingoatia te tīma.",
+    "TeamName.TooLong": "Kua roa rawa taua ingoa.",
+    "admin.notes.add": "Tāpiri tuhinga",
+    "admin.notes.none": "Kāore he tuhinga",
     "admin.notes.edit": "Whakatika",
     "admin.notes.delete": "Muku",
-    "admin.notes.deleteTitle": "Muku tuhipoka",
-    "admin.notes.deleteQuestion": "Mukua te tuhipoka «{title}»?",
+    "admin.notes.deleteTitle": "Muku tuhinga",
+    "admin.notes.deleteQuestion": "Mukua te tuhinga “{title}”?",
     "admin.notes.delete.explanation":
-      "Ka ngaro tonu atu te tuhipoka kua mukua, ā, kāore e taea te whakahoki.",
-    "admin.notes.otherwise": "Kāore i taea te mahi.",
-    "admin.note.addTitle": "Tāpiri tuhipoka",
-    "admin.note.editTitle": "Whakatika tuhipoka",
+      "Ka ngaro tūturu te tuhinga kua mukua, ā, kāore e taea te whakahoki mai.",
+    "admin.notes.otherwise": "Kāore i taea tērā.",
+    // The note dialog.
+    "admin.note.addTitle": "Tāpiri tuhinga",
+    "admin.note.editTitle": "Whakatika tuhinga",
     "admin.note.title": "Taitara",
     "admin.note.description": "Whakaahuatanga",
     "admin.note.write": "Tuhi",
     "admin.note.preview": "Arokite",
-    "admin.note.toolbar": "Hōputu",
+    "admin.note.toolbar": "Whakatakoto",
     "admin.note.tool.heading": "Pane",
-    "admin.note.tool.bold": "Rarahi",
+    "admin.note.tool.bold": "Matotoru",
     "admin.note.tool.italic": "Tītaha",
     "admin.note.tool.quote": "Kupu tāpiri",
     "admin.note.tool.code": "Waehere",
-    "admin.note.tool.link": "Hononga",
+    "admin.note.tool.link": "Hono",
     "admin.note.tool.numberedList": "Rārangi tau",
-    "admin.note.tool.bulletedList": "Rārangi kōpae",
+    "admin.note.tool.bulletedList": "Rārangi marau",
     "admin.note.tool.taskList": "Rārangi mahi",
     "admin.note.add": "Tāpiri",
     "admin.note.save": "Penapena",
-    "admin.note.otherwise": "Kāore e taea te penapena i tēnei tuhipoka pēnei.",
-    "ManagerNoteTitle.Missing": "Hoatu he taitara ki te tuhipoka.",
-    "ManagerNoteTitle.TooLong": "He roa rawa taua taitara.",
-    "ManagerNoteTitle.NoLetterOrDigit": "Me whai pūrei, tau rānei te taitara.",
-    "ManagerNoteDescription.TooLong": "He roa rawa taua whakaahuatanga.",
+    "admin.note.otherwise": "Kāore e taea te pupuri i tēnei tuhinga pēnei.",
+    "ManagerNoteTitle.Missing": "Hoatu he taitara ki te tuhinga.",
+    "ManagerNoteTitle.TooLong": "Kua roa rawa taua taitara.",
+    "ManagerNoteTitle.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te taitara.",
+    "ManagerNoteDescription.TooLong": "Kua roa rawa taua whakaahuatanga.",
     "ManagerNoteToEdit.NoSuchManagerNote":
-      "Kua kore taua tuhipoka. Akene nā tētahi atu kaiwhakahaere i muku.",
+      "Kua kore taua tuhinga i reira. Tērā pea nā tētahi atu kaiwhakahaere i muku.",
     "EditManagerNote.NoSuchManagerNote":
-      "Kua kore taua tuhipoka. Akene nā tētahi atu kaiwhakahaere i muku.",
+      "Kua kore taua tuhinga i reira. Tērā pea nā tētahi atu kaiwhakahaere i muku.",
     "DeleteManagerNote.NoSuchManagerNote":
-      "Kua kore taua tuhipoka. Akene nā tētahi atu kaiwhakahaere i muku.",
+      "Kua kore taua tuhinga i reira. Tērā pea nā tētahi atu kaiwhakahaere i muku.",
     "ManagerNote.Deleted":
-      "Kua mukua taua tuhipoka. Akene nā tētahi atu kaiwhakahaere i muku.",
-    "CommentaryTitle.Missing": "Hoatu he taitara ki te kōrero.",
-    "CommentaryTitle.TooLong": "He roa rawa taua taitara.",
-    "CommentaryTitle.NoLetterOrDigit": "Me whai pūrei, tau rānei te taitara.",
-    "Commentary.TitleTaken": "Kei tētahi atu kōrero taua taitara kē.",
-    "CommentText.Missing": "Tuhia tētahi mea ki te whakaaro.",
-    "CommentText.TooLong": "He roa rawa taua whakaaro.",
-    "TeamShortName.Missing": "Hoatu he ingoa poto ki te kapa.",
-    "TeamShortName.TooLong": "Kāore e neke i te 10 ngā pūāhua o te ingoa poto.",
-    "TeamShortName.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa poto.",
+      "Kua mukua taua tuhinga. Tērā pea nā tētahi atu kaiwhakahaere i muku.",
+    "CommentaryTitle.Missing": "Hoatu he taitara ki te kōrero whakaahua.",
+    "CommentaryTitle.TooLong": "Kua roa rawa taua taitara.",
+    "CommentaryTitle.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te taitara.",
+    "Commentary.TitleTaken":
+      "Kei tētahi atu kōrero whakaahua kua whai i taua taitara.",
+    "CommentText.Missing": "Tuhia tētahi mea ki te kōrero.",
+    "CommentText.TooLong": "Kua roa rawa taua kōrero.",
+    "TeamShortName.Missing": "Hoatu he ingoa poto ki te tīma.",
+    "TeamShortName.TooLong": "Kia 10 pūāhua te nuinga rawa o te ingoa poto.",
+    "TeamShortName.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te ingoa poto.",
     "Team.ShortNameLongerThanName":
-      "Kāore e roa ake te ingoa poto i te ingoa o te kapa.",
+      "Kāore e taea e te ingoa poto te roa ake i te ingoa o te tīma.",
     "Team.NoSuchFlag": "Kōwhiria tētahi o ngā haki e wātea ana.",
-    "Team.Archived": "Kua pūrangatia taua kapa, ā, me whakahoki tuatahi.",
+    "Team.Archived":
+      "Kua whakatāpuia taua tīma, ā, me whakahoki mai i te tuatahi.",
     "Team.InATest":
-      "Kei tētahi Test taua kapa e tākaro ana, nō reira kāore e taea te pūranga.",
+      "Kei tētahi whakamātau taua tīma e tākaro ana, nā reira e kore e taea te whakatāpui.",
     "Team.PlayerNameTaken":
-      "Kei tētahi atu kaitākaro o tēnei kapa taua ingoa kē.",
-    "TeamPlayer.NamedBye": "Kāore e taea te whakaingoa kaitākaro ko Bye.",
+      "Kei tētahi atu kaitākaro o tēnei tīma kua whai i taua ingoa.",
+    "TeamPlayer.NamedBye":
+      "Kāore e taea te whakaingoa i tētahi kaitākaro ko Bye.",
     "TeamPlayer.Archived":
-      "Kua pūrangatia taua kaitākaro, ā, me whakahoki tuatahi.",
+      "Kua whakatāpuia taua kaitākaro, ā, me whakahoki mai i te tuatahi.",
     "TeamPlayer.HasGames":
-      "Kua tākaro taua kaitākaro, nō reira kāore e taea te pūranga.",
+      "Kua tākaro taua kaitākaro, nā reira e kore e taea te whakatāpui.",
     "Tournament.TeamNameTaken":
-      "Kei tētahi atu kapa o tēnei whakataetae taua ingoa kē.",
+      "Kei tētahi atu tīma o tēnei whakataetae kua whai i taua ingoa.",
     "Tournament.TeamShortNameTaken":
-      "Kei tētahi atu kapa o tēnei whakataetae taua ingoa poto kē.",
+      "Kei tētahi atu tīma o tēnei whakataetae kua whai i taua ingoa poto.",
     "Tournament.NoSuchTeam":
-      "Kāore he kapa a tēnei whakataetae i tēnei wāhitau.",
+      "Kāore he tīma o tēnei whakataetae i tēnei wāhitau.",
     "Tournament.TeamArchived":
-      "Kua pūrangatia tēnei kapa, ā, ka taea anake te whakahoki mai i te ripa Ngā kapa.",
-    "admin.tests.add": "Tāpiri Test",
-    "admin.tests.none": "Kāore he Test",
+      "Kua whakatāpuia tēnei tīma, ā, ka taea anake te whakahoki mai mai i te ripa Tīma.",
+    "admin.tests.add": "Tāpiri whakamātau",
+    "admin.tests.none": "Kāore he whakamātau",
     "admin.tests.edit": "Whakatika",
-    "admin.tests.view": "Titiro",
-    "admin.tests.archive": "Pūrangahia",
-    "admin.tests.restore": "Whakahoki",
-    "admin.tests.up": "Piki",
-    "admin.tests.down": "Heke",
-    "admin.tests.archived": "Ngā Test kua pūrangatia",
+    "admin.tests.view": "Tirohia",
+    "admin.tests.archive": "Whakatāpui",
+    "admin.tests.restore": "Whakahokia mai",
+    "admin.tests.up": "Whakarunga",
+    "admin.tests.down": "Whakararo",
+    "admin.tests.archived": "Ngā whakamātau kua whakatāpuia",
     "admin.tests.twoTeamsNeeded":
-      "He Test i waenganui i ngā kapa e rua, nō reira me rua ngā kapa i te tuatahi.",
-    "admin.tests.toTeams": "Haere ki Ngā kapa",
+      "I waenga i ngā tīma e rua te whakamātau, nā reira me rua ngā tīma i te tuatahi.",
+    "admin.tests.toTeams": "Haere ki Tīma",
     "admin.tests.matches.one": "{count} tukinga",
     "admin.tests.matches.other": "{count} tukinga",
-    "admin.tests.bestOf": "te pai rawa o te {games}",
-    "admin.tests.otherwise": "Kāore i taea te mahi.",
-    "admin.test.addTitle": "Tāpiri Test",
-    "admin.test.editTitle": "Whakatika Test",
-    "admin.test.firstTeam": "Kapa A",
-    "admin.test.secondTeam": "Kapa B",
+    "admin.tests.bestOf": "pai rawa o te {games}",
+    "admin.tests.otherwise": "Kāore i taea tērā.",
+    "admin.test.addTitle": "Tāpiri whakamātau",
+    "admin.test.editTitle": "Whakatika whakamātau",
+    "admin.test.firstTeam": "Tīma A",
+    "admin.test.secondTeam": "Tīma B",
     "admin.test.versus": "v",
-    "admin.test.starts": "Te tīmata",
+    "admin.test.starts": "Te tīmatanga",
     "admin.test.finishes": "Te mutunga",
     "admin.test.expectedMatches": "Ngā tukinga e tūmanakohia ana",
-    "admin.test.bestOf": "Te pai rawa o te",
+    "admin.test.bestOf": "Pai rawa o te",
     "admin.test.group": "Rōpū",
     "admin.test.add": "Tāpiri",
     "admin.test.save": "Penapena",
     "admin.test.added": "Kua tāpiritia a {name}.",
-    "admin.test.otherwise": "Kāore e taea te penapena i tēnei Test pēnei.",
-    "admin.testView.otherwise": "Kāore e taea te titiro i tēnei Test i konei.",
-    "AddTest.FirstTeamMissing": "Kōwhiria te kapa tuatahi.",
-    "AddTest.SecondTeamMissing": "Kōwhiria te kapa tuarua.",
-    "UpdateTest.FirstTeamMissing": "Kōwhiria te kapa tuatahi.",
-    "UpdateTest.SecondTeamMissing": "Kōwhiria te kapa tuarua.",
-    "ExpectedMatches.NotWhole": "Tuhia he tau katoa o ngā tukinga.",
+    "admin.test.otherwise": "Kāore e taea te pupuri i tēnei whakamātau pēnei.",
+    "admin.testView.otherwise":
+      "Kāore e taea te tiro i tēnei whakamātau mai i konei.",
+    "AddTest.FirstTeamMissing": "Kōwhiria te tīma tuatahi.",
+    "AddTest.SecondTeamMissing": "Kōwhiria te tīma tuarua.",
+    "UpdateTest.FirstTeamMissing": "Kōwhiria te tīma tuatahi.",
+    "UpdateTest.SecondTeamMissing": "Kōwhiria te tīma tuarua.",
+    "ExpectedMatches.NotWhole": "Tāuruatia he tau tōpū o ngā tukinga.",
     "ExpectedMatches.TooSmall":
-      "Me kotahi te iti rawa o ngā tukinga e tūmanakohia ana mō tētahi Test.",
-    "TestGroup.TooLong": "He roa rawa taua rōpū.",
+      "Me tūmanakohia kia 1 te tukinga i te iti rawa o tētahi whakamātau.",
+    "TestGroup.TooLong": "Kua roa rawa taua rōpū.",
     "Tournament.TestAgainstItself":
-      "Kāore te kapa e tākaro i tētahi Test ki a ia anō.",
+      "Kāore te tīma e tākaro i tētahi whakamātau i a ia anō.",
     "Tournament.TestFinishesBeforeStarts":
-      "Kāore e taea e tētahi Test te mutu i mua i tōna tīmatanga.",
+      "Kāore e taea e tētahi whakamātau te mutu i mua i tōna tīmatanga.",
     "Tournament.TestStartsBeforeTournament":
-      "Kāore e taea e tētahi Test te tīmata i mua i tōna whakataetae.",
+      "Kāore e taea e tētahi whakamātau te tīmata i mua i tō tōna whakataetae.",
     "Tournament.TestFinishesAfterTournament":
-      "Kāore e taea e tētahi Test te mutu i muri i tōna whakataetae.",
+      "Kāore e taea e tētahi whakamātau te mutu i muri i tō tōna whakataetae.",
     "Tournament.TestHasGamesInUse":
-      "He tākaro tō tēnei Test, nō reira kāore e taea te pūranga kia pūrangatia ērā.",
+      "He kēmu tō tēnei whakamātau, nā reira e kore e taea te whakatāpui kia whakatāpuia aua kēmu.",
     "Tournament.TestHasGames":
-      "He tākaro tō tēnei Test kētia, nō reira kāore e taea anō te whakarerekē i ōna kapa.",
+      "He kēmu tō tēnei whakamātau ināianei, nā reira e kore e taea te whakarerekē i ōna tīma.",
     "Tournament.ExpectedMatchesBelowStarted":
-      "He maha ake ngā tukinga kua tīmata i ērā.",
+      "Neke atu i taua tau ngā tukinga kua tīmata kētia.",
     "Tournament.BestOfBelowGamesPlayed":
-      "He maha ake ngā tākaro kua tākarohia e ngā kaitākaro e rua i ērā.",
+      "Neke atu i taua tau ngā kēmu kua tākarohia e ngā kaitākaro e rua.",
     "Competition.ExpectedMatchesReached":
-      "Kua tīmata kētia e tēnei Test ngā tukinga katoa e tūmanakohia ana mōna.",
+      "Kua tīmata tēnei whakamātau i te maha o ngā tukinga e tūmanakohia ana.",
     "Competition.SameTeam":
-      "Kāore ngā kaitākaro e rua o te kapa kotahi e tākaro ki a rāua anō.",
+      "Kāore ngā kaitākaro e rua o te tīma kotahi e tākaro tētahi ki tētahi.",
     "AddManager.NoSuchAccount":
-      "Kāore he pūkete a taua wāhitau e taea ai te meinga hei kaiwhakahaere.",
-    "Account.NotAnAdministrator":
-      "Ko te kaiwhakahaere pae anake e taea ai tērā.",
-    "AddRole.NoSuchAccount":
-      "Kāore he pūkete a taua wāhitau e taea ai te hoatu i te tūranga.",
-    "AddRole.NoSuchRole": "Kāore taua tūranga.",
-    "RemoveRole.NoSuchAccount": "Kāore taua pūkete.",
-    "RemoveRole.NoSuchRole": "Kāore taua tūranga.",
-    "RemoveRole.Yourself":
-      "Kāore e taea e koe te tango i tō anō tūranga kaiwhakahaere pae.",
-    "AccountsWithRole.NoSuchRole": "Kāore taua tūranga.",
-    "admin.scorers.add": "Tāpiri kaikaute",
-    "admin.scorers.none": "Kāore he kaikaute",
-    "admin.scorers.removeTitle": "Tango kaikaute",
+      "Kāore he pūkete o taua wāhitau e taea te whakanoho hei kaiwhakahaere.",
+    "admin.scorers.add": "Tāpiri kaitākohu",
+    "admin.scorers.none": "Kāore he kaitākohu",
+    "admin.scorers.removeTitle": "Tangohia te kaitākohu",
     "admin.scorers.removeExplanation":
-      "Ka kore a {name} e taea te tuhi i ngā hua o tēnei whakataetae.",
+      "Kāore a {name} e taea te tāuru i ngā tākohu o tēnei whakataetae.",
     "admin.scorers.otherwise":
-      "Kāore e taea te meinga taua wāhitau hei kaikaute.",
+      "Kāore e taea te whakanoho i taua wāhitau hei kaitākohu.",
     "AddScorer.NoSuchAccount":
-      "Kāore he pūkete a taua wāhitau e taea ai te meinga hei kaikaute.",
+      "Kāore he pūkete o taua wāhitau e taea te whakanoho hei kaitākohu.",
+    // Giving, taking and listing roles.
+    "Account.NotAnAdministrator":
+      "Ko te kaiwhakahaere anake e taea te mahi i tērā.",
+    "AddRole.NoSuchAccount":
+      "Kāore he pūkete o taua wāhitau e taea te hoatu te tūranga.",
+    "AddRole.NoSuchRole": "Kāore he tūranga pēnei.",
+    "RemoveRole.NoSuchAccount": "Kāore he pūkete pēnei.",
+    "RemoveRole.NoSuchRole": "Kāore he tūranga pēnei.",
+    "RemoveRole.Yourself":
+      "Kāore e taea e koe te tango i te tūranga Kaiwhakahaere i a koe anō.",
+    "AccountsWithRole.NoSuchRole": "Kāore he tūranga pēnei.",
     "Tournament.AlreadyAManager":
-      "Kei te whakahaere kē taua pūkete i te whakataetae, ā, ka taea e ia ngā mea katoa e taea ana e te kaikaute.",
+      "Kei te whakahaere kētia taua pūkete i te whakataetae, ā, ka taea e ia ngā mea katoa ka taea e te kaitākohu.",
 
+    // A tournament's refusals.
     "TournamentName.Missing": "Whakaingoatia te whakataetae.",
-    "TournamentName.TooShort": "He poto rawa taua ingoa.",
-    "TournamentName.TooLong": "He roa rawa taua ingoa.",
-    "TournamentName.AllLowerCase":
-      "Kāore e tika kia tuhia te ingoa ki ngā pūriki anake.",
-    "TournamentName.AllCapitals":
-      "Kāore e tika kia tuhia te ingoa ki ngā pūmatua anake.",
-    "TournamentName.NoLetterOrDigit": "Me whai pūrei, tau rānei te ingoa.",
+    "TournamentName.TooShort": "Kua poto rawa taua ingoa.",
+    "TournamentName.TooLong": "Kua roa rawa taua ingoa.",
+    "TournamentName.AllLowerCase": "Kaua e puta katoa te ingoa ki te reta iti.",
+    "TournamentName.AllCapitals": "Kaua e puta katoa te ingoa ki te reta nui.",
+    "TournamentName.NoLetterOrDigit":
+      "Me whai reta, tau rānei i roto i te ingoa.",
     "ReadOnlyDate.Unreadable": "Hoatu te rā.",
     "Tournament.FinishesBeforeStarts":
       "Kāore e taea e tētahi whakataetae te mutu i mua i tōna tīmatanga.",
@@ -1113,87 +1167,85 @@ export const maori: Language = {
       "Kāore e taea e tētahi whakataetae te mutu i muri i te tau e haere mai nei.",
     "CreateTournament.NoSuchCountry": "Kōwhiria te whenua.",
     "TournamentSubtitle.TooLong":
-      "Kāore e neke i te 2000 ngā pūāhua o te taitara iti.",
+      "Kaua e neke atu i te 2000 pūāhua te taitara iti.",
     "Tournament.NotAManager":
-      "Ko te kaiwhakahaere o tēnei whakataetae anake e taea ai te whakarerekē.",
+      "Ko te kaiwhakahaere anake o tēnei whakataetae e taea te whakarerekē.",
     "Tournament.NotAManagerOrScorer":
-      "Ko te kaiwhakahaere, te kaikaute rānei o tēnei whakataetae anake e taea ai te titiro.",
+      "Ko te kaiwhakahaere, te kaitākohu rānei o tēnei whakataetae anake e taea te kite.",
     "Tournament.Archived":
-      "Kua pūrangatia tēnei whakataetae, ā, me whakahoki i mua i te whakarerekē.",
+      "Kua whakatāpuia tēnei whakataetae, ā, me whakahoki mai i mua i te whakarerekē.",
     "UpdateTournament.NoSuchTournament":
       "Kāore he whakataetae i tēnei wāhitau.",
 
-    // The sports keep the names their players use in te reo Māori, which are
-    // the English ones, and the formats named for a competition keep its
-    // name, as a name is not translated.
+    // What a tournament is played in and where, by code.
     "sport.ac": "Association Croquet",
     "sport.gc": "Golf Croquet",
     "sport.a6w": "American 6 Wicket",
     "sport.rc": "Ricochet",
     "sport.gb": "Gateball",
     "format.standard": "Paerewa",
-    "format.teams": "Ā-kapa",
+    "format.teams": "Tīma",
     "format.eire-cup": "Eire Cup",
     "format.interstate-shield": "Interstate Shield",
     "format.gc-world-team-championship": "GC World Team Championship",
-    "country.ad": "Anorra",
-    "country.ae": "Ngā Emiriti Arapi Kotahi",
-    "country.af": "Āwhekenetāna",
-    "country.ag": "Anitikua me Pāpura",
-    "country.ai": "Ānguira",
-    "country.al": "Āpania",
+    "country.ad": "Anatōra",
+    "country.ae": "Ngā Whakakotahitanga o ngā Emira Arapi",
+    "country.af": "Awhekenihitana",
+    "country.ag": "Anatika me Pāpura",
+    "country.ai": "Anguilla",
+    "country.al": "Arapeinia",
     "country.am": "Āmenia",
     "country.ao": "Angora",
     "country.ar": "Āketina",
     "country.as": "Hāmoa Amerika",
-    "country.at": "Ahitereia",
+    "country.at": "Ateria",
     "country.au": "Ahitereiria",
     "country.aw": "Aruba",
-    "country.ax": "Ngā Moutere o Ōrana",
-    "country.az": "Atapaihānia",
-    "country.ba": "Pōhia me Herekōwina",
-    "country.bb": "Pāpatohe",
+    "country.ax": "Ngā Motu o Åland",
+    "country.az": "Ahapāriana",
+    "country.ba": "Pōniha me Herekōmina",
+    "country.bb": "Pāpatohi",
     "country.bd": "Pākaratēhi",
-    "country.be": "Pērihi",
-    "country.bf": "Pākina Fahō",
+    "country.be": "Pēruiama",
+    "country.bf": "Burkina Faso",
     "country.bg": "Purukāria",
-    "country.bh": "Pāreina",
+    "country.bh": "Pahareini",
     "country.bi": "Puruniti",
-    "country.bj": "Penina",
-    "country.bm": "Pāmura",
+    "country.bj": "Penīna",
+    "country.bm": "Pēmuta",
     "country.bn": "Poronai",
     "country.bo": "Poriwia",
-    "country.br": "Parīhi",
+    "country.br": "Parahi",
     "country.bs": "Pahama",
-    "country.bt": "Pūtāne",
-    "country.bv": "Te Moutere o Pōwhete",
+    "country.bt": "Pūtana",
+    "country.bv": "Motu Bouvet",
     "country.bw": "Poriwana",
     "country.by": "Pērara",
-    "country.bz": "Perihi",
+    "country.bz": "Perīhi",
     "country.ca": "Kānata",
     "country.catalonia": "Katarōnia",
-    "country.cc": "Ngā Moutere Kokoh",
-    "country.cd": "Te Tōrangapū Manapori o Kōngo",
-    "country.cf": "Te Tōrangapū o Āwherika Waenga",
-    "country.cg": "Te Tōrangapū o Kōngo",
+    "country.cc": "Ngā Motu Cocos (Keeling)",
+    "country.cd": "Te Whenua Tuku Iho Manapori o Kongo",
+    "country.cf": "Te Whenua Tuku Iho o Awherika Waenga",
+    "country.cg": "Te Whenua Tuku Iho o Kongo",
     "country.ch": "Huiterangi",
-    "country.ci": "Te Takutai Aivori",
-    "country.ck": "Kūki Airani",
+    "country.ci": "Côte d'Ivoire",
+    "country.ck": "Ngā Motu Kuki",
     "country.cl": "Hiri",
     "country.cm": "Kamarūna",
     "country.cn": "Haina",
-    "country.co": "Kolomōpia",
-    "country.cr": "Kōhita Rika",
+    "country.co": "Koromōpia",
+    "country.cr": "Koto Rika",
     "country.cu": "Kiupa",
-    "country.cv": "Te Kūrae Matomato",
-    "country.cx": "Te Moutere Kirihimete",
+    "country.cv": "Kēpa Wēti",
+    "country.cx": "Motu Kirihimete",
     "country.cy": "Haipara",
     "country.cz": "Tiekia",
     "country.de": "Tiamana",
     "country.dj": "Tipūti",
     "country.dk": "Tenemāka",
     "country.dm": "Tominika",
-    "country.do": "Te Tōrangapū o Tominika",
+    "country.do": "Te Whenua Tuku Iho o Tominika",
     "country.dz": "Aratiria",
     "country.ec": "Ekuatoa",
     "country.ee": "Ehetōnia",
@@ -1201,101 +1253,101 @@ export const maori: Language = {
     "country.eh": "Hahāra ki te Uru",
     "country.england": "Ingarangi",
     "country.er": "Eritēria",
-    "country.es": "Pāniora",
+    "country.es": "Peina",
     "country.et": "Etiopia",
     "country.fi": "Whinarana",
     "country.fj": "Whītī",
-    "country.fk": "Ngā Moutere o Falkland",
+    "country.fk": "Ngā Motu Falkland",
     "country.fm": "Mikironīhia",
-    "country.fo": "Ngā Moutere Wharo",
+    "country.fo": "Ngā Motu Faroe",
     "country.fr": "Wīwī",
     "country.ga": "Kāpona",
-    "country.gb": "Te Kīngitanga Whakakotahi",
+    "country.gb": "Te Basileia Kotahi",
     "country.gd": "Kerenāta",
     "country.ge": "Hōria",
-    "country.gf": "Kaiana Wīwī",
+    "country.gf": "Kuiana Wīwī",
     "country.gh": "Kāna",
-    "country.gi": "Hiparata",
-    "country.gl": "Kirinirangi",
+    "country.gi": "Kiripaltā",
+    "country.gl": "Kirīrangi",
     "country.gm": "Kamopia",
     "country.gn": "Kini",
-    "country.gp": "Kuaterupe",
+    "country.gp": "Kuatarupe",
     "country.gq": "Kini Ekuatoria",
     "country.gr": "Kirihi",
-    "country.gs": "Hōria ki te Tonga me Ngā Moutere Hanawiti ki te Tonga",
-    "country.gt": "Kuatamāra",
+    "country.gs": "Hōria ki te Tonga me Ngā Motu Sandwich ki te Tonga",
+    "country.gt": "Kuatemāra",
     "country.gu": "Kuama",
     "country.gw": "Kini-Pihao",
     "country.gy": "Kaiana",
-    "country.hk": "Hongipua",
-    "country.hm": "Ngā Moutere Heard me McDonald",
+    "country.hk": "Hongakonga",
+    "country.hm": "Te Motu Heard me Ngā Motu McDonald",
     "country.hn": "Honurahi",
     "country.hr": "Koroātia",
     "country.ht": "Haiti",
     "country.hu": "Hanekari",
     "country.id": "Initonīhia",
-    "country.ie": "Airangi",
+    "country.ie": "Airani",
     "country.il": "Iharaira",
-    "country.im": "Te Moutere o Man",
-    "country.in": "Īnia",
-    "country.io": "Te Rohe o Ingarangi i te Moana Īnia",
-    "country.iq": "Irāki",
+    "country.im": "Te Motu o Man",
+    "country.in": "Initia",
+    "country.io": "Te Rohe o Te Moana Initia o Ingarangi",
+    "country.iq": "Iraka",
     "country.ir": "Irāna",
-    "country.is": "Aihirana",
+    "country.is": "Tiorangi",
     "country.it": "Itāria",
-    "country.je": "Hōti",
-    "country.jm": "Hemeika",
-    "country.jo": "Hōtana",
+    "country.je": "Jersey",
+    "country.jm": "Hemeka",
+    "country.jo": "Hōrano",
     "country.jp": "Hapani",
-    "country.ke": "Kenia",
-    "country.kg": "Kirikitāna",
+    "country.ke": "Kēnia",
+    "country.kg": "Kiketā",
     "country.kh": "Kamapōtia",
-    "country.ki": "Kiribati",
+    "country.ki": "Kiripati",
     "country.km": "Komoro",
     "country.kn": "Hato Kiti me Newhi",
     "country.kp": "Kōrea ki te Raki",
     "country.kr": "Kōrea ki te Tonga",
     "country.kw": "Kuwaiti",
-    "country.ky": "Ngā Moutere Keimana",
-    "country.kz": "Kahahatāna",
+    "country.ky": "Ngā Motu Kēmana",
+    "country.kz": "Kahakitāna",
     "country.la": "Rāoho",
     "country.lb": "Repanona",
     "country.lc": "Hato Ruhia",
-    "country.li": "Rihitenetini",
+    "country.li": "Rihitenahi",
     "country.lk": "Hiri Rānka",
-    "country.lr": "Raipīria",
+    "country.lr": "Raiperia",
     "country.ls": "Teroto",
-    "country.lt": "Rituānia",
-    "country.lu": "Rakahimipeka",
-    "country.lv": "Ratawia",
+    "country.lt": "Rihuānia",
+    "country.lu": "Ruhemipēki",
+    "country.lv": "Rātvia",
     "country.ly": "Ripia",
     "country.ma": "Moroko",
     "country.mc": "Monako",
     "country.md": "Moratawia",
-    "country.me": "Monetenīkara",
-    "country.mg": "Madakāhika",
-    "country.mh": "Ngā Moutere Mahara",
+    "country.me": "Monitenīkero",
+    "country.mg": "Madagāhika",
+    "country.mh": "Ngā Motu Marshall",
     "country.mk": "Makerōnia ki te Raki",
     "country.ml": "Māri",
-    "country.mm": "Mianima",
-    "country.mn": "Mōngōria",
+    "country.mm": "Mianama",
+    "country.mn": "Mongōria",
     "country.mo": "Makau",
-    "country.mp": "Ngā Moutere Mariana ki te Raki",
-    "country.mq": "Matiniki",
+    "country.mp": "Ngā Motu Mariana ki te Raki",
+    "country.mq": "Mātiniki",
     "country.mr": "Mauritānia",
-    "country.ms": "Monatarāta",
+    "country.ms": "Monoserā",
     "country.mt": "Mārata",
-    "country.mu": "Mōrihi",
-    "country.mv": "Maratiwi",
+    "country.mu": "Mōrehu",
+    "country.mv": "Maratiri",
     "country.mw": "Marāwi",
     "country.mx": "Mēhiko",
     "country.my": "Mareia",
     "country.mz": "Mohapiki",
-    "country.na": "Namipia",
-    "country.nc": "Nūkarētōnia",
+    "country.na": "Namīpia",
+    "country.nc": "Kaleronia Hou",
     "country.ne": "Ngāika",
-    "country.nf": "Te Moutere Norfolk",
-    "country.ng": "Ngāitiria",
+    "country.nf": "Te Motu o Norfolk",
+    "country.ng": "Ngāīria",
     "country.ni": "Nikarāhua",
     "country.nl": "Hōrana",
     "country.no": "Nōwei",
@@ -1307,93 +1359,88 @@ export const maori: Language = {
     "country.pa": "Panama",
     "country.pe": "Peru",
     "country.pf": "Pōrinīhia Wīwī",
-    "country.pg": "Papua Niu Kini",
+    "country.pg": "Papua Nūkini",
     "country.ph": "Piripīni",
-    "country.pk": "Pakitāne",
+    "country.pk": "Pakistan",
     "country.pl": "Pōrana",
-    "country.pm": "Hato Piere me Mikerona",
-    "country.pn": "Pitikeane",
-    "country.pr": "Puerto Riko",
+    "country.pm": "Hato Pierre me Mikerona",
+    "country.pn": "Ngā Motu Pitcairn",
+    "country.pr": "Puerto Rico",
     "country.ps": "Parihitini",
-    "country.pt": "Pōtukara",
-    "country.pw": "Parau",
+    "country.pt": "Potukara",
+    "country.pw": "Paraü",
     "country.py": "Parakai",
     "country.qa": "Katā",
-    "country.re": "Reūnio",
-    "country.ro": "Romeinia",
+    "country.re": "Réunion",
+    "country.ro": "Romēnia",
     "country.rs": "Herepia",
     "country.ru": "Rūhia",
-    "country.rw": "Rowanda",
-    "country.sa": "Hauri Arabia",
-    "country.sb": "Ngā Moutere o Horomona",
+    "country.rw": "Rawanda",
+    "country.sa": "Hauri Arāpia",
+    "country.sb": "Ngā Motu Horomona",
     "country.sc": "Heihere",
-    "country.scotland": "Kotirana",
+    "country.scotland": "Kōtirana",
     "country.sd": "Hūtāne",
     "country.se": "Huitene",
     "country.sg": "Hingapoa",
-    "country.sh": "Hato Hērena",
+    "country.sh": "Hato Herena",
     "country.si": "Horowinia",
-    "country.sj": "Whapāra me Iana Maiene",
+    "country.sj": "Svalbard me Jan Mayen",
     "country.sk": "Horowākia",
-    "country.sl": "Hiera Rione",
+    "country.sl": "Sierra Leone",
     "country.sm": "Hato Marino",
     "country.sn": "Henekara",
-    "country.so": "Hūmārie",
-    "country.sr": "Hurināme",
-    "country.st": "Hato Tomo me Pirinihipi",
-    "country.sv": "Hāwhatoa",
+    "country.so": "Homāria",
+    "country.sr": "Huriname",
+    "country.st": "São Tomé me Príncipe",
+    "country.sv": "El Salvador",
     "country.sy": "Hiria",
-    "country.sz": "Ehuatini",
-    "country.tc": "Ngā Moutere Turks me Caicos",
-    "country.td": "Tāti",
-    "country.tf": "Ngā Rohe ki te Tonga o Wīwī",
+    "country.sz": "Eswatini",
+    "country.tc": "Ngā Motu Turks me Caicos",
+    "country.td": "Chad",
+    "country.tf": "Ngā Rohe o Wīwī ki te Tonga",
     "country.tg": "Toko",
-    "country.th": "Tairana",
-    "country.tj": "Tājikitāna",
+    "country.th": "Tai",
+    "country.tj": "Tajikistan",
     "country.tk": "Tokelau",
-    "country.tl": "Timor Rāwhiti",
-    "country.tm": "Tākamenitāna",
+    "country.tl": "Timor-Leste",
+    "country.tm": "Turkmenistan",
     "country.tn": "Tūnihia",
     "country.to": "Tonga",
-    "country.tr": "Tākei",
-    "country.tt": "Tirinaki me Tōpako",
-    "country.tv": "Tūwaru",
+    "country.tr": "Türkiye",
+    "country.tt": "Tirinaka me Tobago",
+    "country.tv": "Tuwaru",
     "country.tw": "Taiwana",
-    "country.tz": "Tānahānia",
-    "country.ua": "Ukareina",
-    "country.ug": "Ukāna",
-    "country.um": "Ngā Moutere Iti o Amerika",
+    "country.tz": "Tanahānia",
+    "country.ua": "Ukareine",
+    "country.ug": "Ukanda",
+    "country.um": "Ngā Motu Iti o Amerika",
     "country.us": "Amerika",
-    "country.uy": "Urukoi",
-    "country.uz": "Uhipeketāna",
-    "country.va": "Wātikana",
-    "country.vc": "Hato Wānihēta me ngā Kerenātini",
-    "country.ve": "Penehuera",
-    "country.vg": "Ngā Moutere Wākini o Piritānia",
-    "country.vi": "Ngā Moutere Wākini o Amerika",
+    "country.uy": "Urukuwai",
+    "country.uz": "Uzbekistan",
+    "country.va": "Te Pā o Vatikana",
+    "country.vc": "Hato Wītene me Ngā Kerenātini",
+    "country.ve": "Wenehuera",
+    "country.vg": "Ngā Motu Wēkini o Ingarangi",
+    "country.vi": "Ngā Motu Wēkini o Amerika",
     "country.vn": "Whitināmu",
-    "country.vu": "Wanuatu",
-    "country.wales": "Waero",
-    "country.wf": "Warihi me Whutuna",
+    "country.vu": "Vanuatu",
+    "country.wales": "Weera",
+    "country.wf": "Wallis me Futuna",
     "country.ws": "Hāmoa",
-    "country.ye": "Emene",
-    "country.yt": "Maioto",
-    "country.za": "Āwherika ki te Tonga",
-    "country.zm": "Hāmipia",
-    "country.zw": "Timipapuwe",
-
-    // The emails are the English ones, rewritten rather than translated line
-    // by line; the placeholders each fills in are english.ts's, and say there
-    // what they are.
+    "country.ye": "Īmene",
+    "country.yt": "Mayotte",
+    "country.za": "Awherika ki te Tonga",
+    "country.zm": "Zambia",
+    "country.zw": "Zimbabwe",
 
     "Email.ConfirmAddress.subject": "Whakaūngia tō wāhitau īmēra mō {siteName}",
     "Email.ConfirmAddress.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Mauruuru mō te waihanga i tētahi pūkete ki <strong>{siteName}</strong>.<br />
-    I mua i te tīmata ki te whakamahi i tō pūkete, whakaūngia tō wāhitau īmēra
-    mā te pēhi i te pātene i raro nei:
+    Mīharo te mihi mō te waihanga i tētahi pūkete ki <strong>{siteName}</strong>.<br />
+    I mua i tō tīmata ki te whakamahi i tō pūkete, tēnā koa whakaūngia tō wāhitau īmēra mā te pāwhiri i te pātene i raro nei:
 </p>
 
 <p>
@@ -1411,12 +1458,12 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kāore te pātene e mahi, ka taea hoki e koe te whakaū i tō wāhitau īmēra mā te whakatuwhera i tēnei hononga i tō pūtirotiro:<br />
+    Mehemea kāore te pātene e mahi, ka taea hoki e koe te whakaū i tō wāhitau īmēra mā te huaki i tēnei hono ki tō kaitirotiro:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Mēnā kāore koe i waihanga i tēnei pūkete, ka taea noa te whakahore i tēnei īmēra.
+    Mehemea kāore koe i waihanga i tēnei pūkete, ka taea e koe te whakahawea i tēnei īmēra.
 </p>
 
 <p>
@@ -1426,13 +1473,13 @@ export const maori: Language = {
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "He hononga hou hei whakaū i tō wāhitau īmēra mō {siteName}",
+      "He hono hou hei whakaū i tō wāhitau īmēra mō {siteName}",
     "Email.ConfirmAddressAgain.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    I tono koe i tērā rā tata nei i tētahi īmēra hou hei whakaū i tō wāhitau īmēra mō <strong>{siteName}</strong>.<br />
-    Whakaūngia tō wāhitau īmēra mā te pēhi i te pātene i raro nei:
+    I tono koe nā tata nei i tētahi īmēra hou hei whakaū i tō wāhitau īmēra mō <strong>{siteName}</strong>.<br />
+    Tēnā koa, whakaūngia tō wāhitau īmēra mā te pāwhiri i te pātene i raro nei:
 </p>
 
 <p>
@@ -1450,16 +1497,16 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kāore te pātene e mahi, ka taea hoki e koe te whakaū i tō wāhitau īmēra mā te whakatuwhera i tēnei hononga i tō pūtirotiro:<br />
+    Mehemea kāore te pātene e mahi, ka taea hoki e koe te whakaū i tō wāhitau īmēra mā te huaki i tēnei hono ki tō kaitirotiro:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Ina oti te whakaū, ka taea e koe te whakamahi tonu i tō pūkete me te kore haukotinga.
+    Ina whakaūngia, ka taea e koe te haere tonu ki te whakamahi i tō pūkete me te kore whakararu.
 </p>
 
 <p>
-    Mēnā kāore koe i tono i tēnei īmēra, ka taea noa te whakahore.
+    Mehemea kāore koe i tono i tēnei īmēra, ka taea e koe te whakahawea.
 </p>
 
 <p>
@@ -1471,13 +1518,11 @@ export const maori: Language = {
     "Email.AlreadyRegistered.subject":
       "I whakamātau tētahi ki te rēhita mā tō wāhitau īmēra",
     "Email.AlreadyRegistered.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    I whakamātau tētahi ki te rēhita ki <strong>{siteName}</strong> mā tēnei
-    wāhitau īmēra, he pūkete tō reira kētia. Kāore he mea i rerekē i tō
-    pūkete.<br />
-    Mēnā nāu tēnei, he pūkete tāu kētia, ā, ka taea e koe te takiuru ki reira:
+    I whakamātau tētahi ki te rēhita ki <strong>{siteName}</strong> mā tēnei wāhitau īmēra, he pūkete tōna kētia. Kāore he mea mō tō pūkete i whakarerekē.<br />
+    Mehemea nāu, he pūkete tāu kētia, ā, ka taea e koe te takiuru:
 </p>
 
 <p>
@@ -1495,7 +1540,7 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kua wareware koe ki tō kupuhipa, ka taea e koe te tautuhi anō i konei:
+    Mehemea kua wareware koe i tō kupuhipa, ka taea e koe te tautuhi anō i konei:
 </p>
 
 <p>
@@ -1508,13 +1553,12 @@ export const maori: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Kua wareware ki taku kupuhipa
+        Kua warewaretia te kupuhipa
     </a>
 </p>
 
 <p>
-    Mēnā ehara i a koe tēnei, kāore he mea hei mahi mōu. Kāore he tangata i whai
-    huarahi ki tō pūkete.
+    Mehemea ehara nāu, kāore he mahi māu. Kāore he tangata i whai huarahi ki tō pūkete.
 </p>
 
 <p>
@@ -1524,15 +1568,12 @@ export const maori: Language = {
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "Whakaūngia te nuku o tō pūkete {siteName} ki tēnei wāhitau",
+      "Whakaūngia te nekeneke i tō pūkete {siteName} ki tēnei wāhitau",
     "Email.ConfirmNewEmailAddress.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kua tono tētahi kua takiuru ki tētahi pūkete <strong>{siteName}</strong>
-    kia nukuna taua pūkete ki tēnei wāhitau īmēra. Mēnā nāu tēnei,
-    whakaūngia i konei, ka takiuru ana koe ki taua pūkete. E 24 hāora te roa
-    e mahi ai te hononga.
+    I tono tētahi kua takiuru ki tētahi pūkete <strong>{siteName}</strong> kia neke atu ki tēnei wāhitau īmēra. Mehemea nāu, whakaūngia i konei, ka takiuru ki taua pūkete. E 24 hāora te roa e mahi ai te hono.
 </p>
 
 <p>
@@ -1545,17 +1586,17 @@ export const maori: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Nukuna taku pūkete
+        Nekehia taku pūkete
     </a>
 </p>
 
 <p>
-    Tāruatia rānei tēnei wāhitau ki tō pūtirotiro:<br />
+    Tāpirihia rānei tēnei wāhitau ki tō kaitirotiro:<br />
     {link}
 </p>
 
 <p>
-    Mēnā ehara i a koe tēnei, kāore he mea hei mahi mōu. Kāore he pūkete e nukuna ki konei.
+    Mehemea ehara nāu, kāore he mahi māu. Kāore he pūkete e neke mai ki konei.
 </p>
 
 <p>
@@ -1565,19 +1606,16 @@ export const maori: Language = {
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "I tono tētahi kia nukuna he pūkete ki tō wāhitau īmēra",
+      "I tono tētahi kia neke he pūkete ki tō wāhitau īmēra",
     "Email.AlreadyHasAnAccount.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kua tono tētahi kua takiuru ki tētahi pūkete <strong>{siteName}</strong>
-    kia nukuna taua pūkete ki tēnei wāhitau īmēra, he pūkete tō reira
-    kētia. Kāore he mea i nukuna, ā, kāore he mea i rerekē i tō pūkete.
+    I tono tētahi kua takiuru ki tētahi pūkete <strong>{siteName}</strong> kia neke atu ki tēnei wāhitau īmēra, he pūkete tōna ake kētia. Kāore he mea i neke, ā, kāore he mea mō tō pūkete i whakarerekē.
 </p>
 
 <p>
-    Mēnā nāu tēnei, he pūkete tāu kētia i tēnei wāhitau, ā, ka taea e koe te
-    takiuru ki reira.
+    Mehemea nāu, he pūkete tāu kētia i tēnei wāhitau, ā, ka taea e koe te takiuru.
 </p>
 
 <p>
@@ -1586,19 +1624,16 @@ export const maori: Language = {
 </p>
 `,
 
-    "Email.EmailAddressChanged.subject": "Kua nukuna tō pūkete {siteName}",
+    "Email.EmailAddressChanged.subject": "Kua neke tō pūkete {siteName}",
     "Email.EmailAddressChanged.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kua nukuna tō pūkete <strong>{siteName}</strong> ki tētahi atu
-    wāhitau īmēra, ki {emailAddress}, ā, mai i tēnei wā ka takiuru mā taua
-    wāhitau.
+    Kua neke tō pūkete <strong>{siteName}</strong> nā tata nei ki tētahi atu wāhitau īmēra, {emailAddress}, ā, ka takiuru mā taua wāhitau mai i tēnei wā.
 </p>
 
 <p>
-    Mēnā ehara i a koe tēnei, kei tētahi atu tangata tō pūkete. Whakahokia mai
-    tēnei īmēra, ka kōrero mai ki a mātou.
+    Mehemea ehara nāu, kei a tētahi atu tō pūkete. Whakahokia mai tēnei īmēra ka kōrero mai ki a mātou.
 </p>
 
 <p>
@@ -1610,17 +1645,15 @@ export const maori: Language = {
     "Email.PasswordChanged.subject":
       "Kua whakarerekētia tō kupuhipa {siteName}",
     "Email.PasswordChanged.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kua whakarerekētia tō kupuhipa mō tō pūkete <strong>{siteName}</strong>,
-    ā, kua takiputa koe i ētahi atu pūtirotiro katoa i takiuru ai koe.<br />
-    Mēnā nāu tēnei, kāore he mea hei mahi mōu.
+    Kua whakarerekētia nā tata nei te kupuhipa o tō pūkete <strong>{siteName}</strong>, ā, kua takiputa ngā kaitirotiro katoa i takiuru ki reira.<br />
+    Mehemea nāu, kāore he mahi māu.
 </p>
 
 <p>
-    Mēnā ehara i a koe tēnei, kei tētahi atu tangata tō kupuhipa. Tautuhia he
-    kupuhipa hou i konei, ā, ka takiputa ia:
+    Mehemea ehara nāu, kei a tētahi atu tō kupuhipa. Tautuhia he mea hou i konei, ā, ka takiputa ia:
 </p>
 
 <p>
@@ -1633,7 +1666,7 @@ export const maori: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Kua wareware ki taku kupuhipa
+        Kua warewaretia te kupuhipa
     </a>
 </p>
 
@@ -1645,11 +1678,11 @@ export const maori: Language = {
 
     "Email.SetNewPassword.subject": "Tautuhia he kupuhipa hou mō {siteName}",
     "Email.SetNewPassword.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    I tono koe i tērā rā tata nei kia tautuhia anō tō kupuhipa <strong>{siteName}</strong>.<br />
-    Ka taea e koe te tautuhi anō mā te pēhi i te pātene i raro nei:
+    I tono koe nā tata nei kia tautuhi anō i tō kupuhipa mō <strong>{siteName}</strong>.<br />
+    Ka taea e koe te tautuhi anō i tō kupuhipa mā te pāwhiri i te pātene i raro nei:
 </p>
 
 <p>
@@ -1667,12 +1700,12 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kāore te pātene e mahi, ka taea hoki e koe te tautuhi anō i tō kupuhipa mā te whakatuwhera i tēnei hononga i tō pūtirotiro:<br />
+    Mehemea kāore te pātene e mahi, ka taea hoki e koe te tautuhi anō i tō kupuhipa mā te huaki i tēnei hono ki tō kaitirotiro:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Mēnā kāore koe i tono kia tautuhia anō tō kupuhipa, ka taea noa te whakahore i tēnei īmēra.
+    Mehemea kāore koe i tono kia tautuhi anō i te kupuhipa, ka taea e koe te whakahawea i tēnei īmēra.
 </p>
 
 <p>
@@ -1683,12 +1716,12 @@ export const maori: Language = {
 
     "Email.SetPassword.subject": "Tautuhia he kupuhipa mō {siteName}",
     "Email.SetPassword.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kāore he kupuhipa a tō pūkete <strong>{siteName}</strong>: ka takiuru koe mā Google.<br />
-    I tono koe kia tautuhia tētahi, kia taea ai hoki te takiuru mā tō wāhitau īmēra me tētahi kupuhipa.
-    Ka taea e koe te tautuhi mā te pēhi i te pātene i raro nei:
+    Kāore he kupuhipa o tō pūkete <strong>{siteName}</strong>: ka takiuru koe mā Google.<br />
+    I tono koe kia tautuhi i tētahi, kia taea ai te takiuru mā tō wāhitau īmēra me te kupuhipa hoki.
+    Ka taea e koe te tautuhi mā te pāwhiri i te pātene i raro nei:
 </p>
 
 <p>
@@ -1706,12 +1739,12 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kāore te pātene e mahi, ka taea hoki e koe te tautuhi i tō kupuhipa mā te whakatuwhera i tēnei hononga i tō pūtirotiro:<br />
+    Mehemea kāore te pātene e mahi, ka taea hoki e koe te tautuhi i tō kupuhipa mā te huaki i tēnei hono ki tō kaitirotiro:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    He hāora te roa e mahi ai te hononga. Mēnā kāore koe i tono kia tautuhia he kupuhipa, ka taea noa te whakahore i tēnei īmēra.
+    Kotahi hāora te roa e mahi ai te hono. Mehemea kāore koe i tono kia tautuhi kupuhipa, ka taea e koe te whakahawea i tēnei īmēra.
 </p>
 
 <p>
@@ -1723,20 +1756,19 @@ export const maori: Language = {
     "Email.RegisterInstead.subject":
       "Kāore he pūkete {siteName} mō tēnei wāhitau īmēra",
     "Email.RegisterInstead.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    I tonoa he tautuhi anō i te kupuhipa mō tētahi wāhitau īmēra kāore
-    e hono ana ki tētahi pūkete <strong>{siteName}</strong>.
+    I tukuna he tono kia tautuhi anō i te kupuhipa mō tētahi wāhitau īmēra kāore e hono ana ki tētahi pūkete i <strong>{siteName}</strong>.
 </p>
 
 <p>
-    Mēnā e hiahia ana koe ki te whakamahi i a mātou ratonga, ka taea e koe te waihanga i tētahi pūkete hou i konei:<br />
+    Mehemea e hiahia ana koe ki te whakamahi i tā mātou ratonga, ka taea e koe te waihanga i tētahi pūkete hou mā te haere ki:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    Mēnā kāore koe i tono i tēnei, ka taea noa te whakahore i tēnei īmēra.
+    Mehemea ehara nāu tēnei tono, ka taea e koe te whakahawea i tēnei īmēra.
 </p>
 
 <p>
@@ -1746,14 +1778,13 @@ export const maori: Language = {
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Whakaūngia e hiahia ana koe kia warewaretia tō pūkete {siteName}",
+      "Whakaūngia me warewaretia tō pūkete {siteName}",
     "Email.ConfirmForgetting.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
     I tono koe kia warewaretia tō pūkete <strong>{siteName}</strong>.<br />
-    Whāia te pātene i raro nei hei kite he aha te tikanga, ā, hei whakaū
-    haumaru ko tēnā tāu e hiahia ana:
+    Whāia te pātene i raro nei hei kite i te tikanga o tērā, me te whakaae pono e hiahia ana koe:
 </p>
 
 <p>
@@ -1771,27 +1802,20 @@ export const maori: Language = {
 </p>
 
 <p>
-    Mēnā kāore te pātene e mahi, ka taea hoki e koe te whakatuwhera i tēnei hononga i tō pūtirotiro:<br />
+    Mehemea kāore te pātene e mahi, ka taea hoki e koe te huaki i tēnei hono ki tō kaitirotiro:<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    Ina warewaretia, kāore he tangata e kite anō i tō ingoa, i tō wāhitau
-    īmēra rānei, ā, kāore e taea te takiuru ki tō pūkete. Kāore e taea te
-    whakahoki.
+    Ina warewaretia, e kore e taea anō e tētahi te pānui i tō ingoa me tō wāhitau īmēra, ā, e kore e taea te takiuru ki tō pūkete. Kāore e taea te whakahoki.
 </p>
 
 <p>
-    Kotahi anake te wā e mahi ai te hononga, tae noa ki te 15 meneti i muri i tō
-    tono, ā, i te wā anake e takiuru ana koe ki tēnei pūkete. Whai muri, tonoa
-    anō mai i tō pūkete.
+    Kotahi te whakamahinga o te hono, kia pau noa te 15 meneti i muri i tō tono, ā, mēnā anake kei te takiuru tonu koe ki tēnei pūkete. I muri i tērā, tonoa anō mai i tō pūkete.
 </p>
 
 <p>
-    Mēnā ehara nāu i tono, kāore he mea e puta mēnā ka kore tētahi e whai i te
-    hononga. Heoi anō, nā tētahi kua takiuru ki tō pūkete i tono, nō reira
-    tautuhia he kupuhipa hou mai i te whārangi kupuhipa kua wareware kia
-    mōhio ai koe kāore ia e taea te takiuru anō.
+    Mehemea kāore koe i tono, kāore he mea e puta ki te kore e whāia te hono. Heoi, nā tētahi kua takiuru ki tō pūkete i tono, nā reira tautuhia he kupuhipa hou mai i te whārangi kua warewaretia te kupuhipa kia tino mōhio kāore ia e taea te takiuru anō.
 </p>
 
 <p>
@@ -1803,23 +1827,18 @@ export const maori: Language = {
     "Email.RegistrationsSuspended.subject":
       "Kua whakatārewatia te rēhita: kāore e taea te whakapā atu ki a {service}",
     "Email.RegistrationsSuspended.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kāore a {siteName} i taea te whakapā atu ki a {service} i te {when}. Kia
-    whakahoki kupu mai ra anō ia, ka whakamōhiotia ngā tangata e hiahia ana
-    ki te rēhita, ki te tautuhi rānei i tētahi kupuhipa hou, kia whakamātau anō a
-    muri ake nei.
+    Kāore i taea e {siteName} te whakapā atu ki a {service} i {when}. Kia whakahoki kōrero mai ra anō, ka kīia ngā kaipānui e hiahia ana ki a ia, hei rēhita, hei tautuhi kupuhipa hou rānei, kia whakamātau anō a muri ake.
 </p>
 
 <p>
-    Kāore he mea hei whakawātea. Ia whakamātau ka pātai anō ki a {service}, ā, ka
-    mahi anō ngā whārangi ina whakahoki kupu mai ia.
+    Kāore he mea hei hiki. Ia whakamātau ka pātai anō ki a {service}, ā, ka mahi anō ngā whārangi ina whakahoki kōrero mai ia.
 </p>
 
 <p>
-    I te wā e kore tonu ana a {service} e whakahoki kupu, kotahi anake te īmēra mō
-    tēnei ia hāora ka tae atu ki a koe.
+    I te wā e hinga tonu ana a {service}, ka īmēra atu mātou ki a koe mō tēnei kotahi anake i ia hāora.
 </p>
 
 <p>
@@ -1829,20 +1848,20 @@ export const maori: Language = {
 `,
 
     "Email.DatabaseUnreachable.subject":
-      "Kāore e taea e {siteName} te whakapā atu ki tāna pātengi raraunga",
+      "Kāore e taea e {siteName} te whakapā atu ki tōna pātengi raraunga",
     "Email.DatabaseUnreachable.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    Kāore i taea e {siteName} te whakapā atu ki tāna pātengi raraunga i {when}. Kia tae rā anō ki tana whakautu, ka kī ia whārangi e hiahia ana ki a ia ki ngā kaipānui kāore te pae e wātea ana, me whakamātau anō a muri ake.
+    Kāore i taea e {siteName} te whakapā atu ki tōna pātengi raraunga i {when}. Kia whakahoki kōrero mai ra anō, ka kī ia whārangi e hiahia ana ki a ia ki ngā kaipānui kāore te pae e wātea ana, ā, me whakamātau anō a muri ake.
 </p>
 
 <p>
-    Kāore he mea hei tuku. Ia tono, ka tono anō i tētahi hononga, ā, ka mahi anō te pae i te wā ka whakautu te pātengi raraunga.
+    Kāore he mea hei hiki. Ia tono ka pātai anō mō tētahi hononga, ā, ka mahi anō te pae ina whakahoki kōrero mai te pātengi raraunga.
 </p>
 
 <p>
-    I te wā e kore ana te pātengi raraunga, ka whiwhi īmēra koe mō tēnei kia kotahi noa iho i ia {minutes} meneti.
+    I te wā e hinga tonu ana te pātengi raraunga, ka īmēra atu mātou ki a koe mō tēnei kotahi anake i ia {minutes} meneti.
 </p>
 
 <p>
@@ -1851,16 +1870,16 @@ export const maori: Language = {
 </p>
 `,
 
-    "Email.UnhandledError.subject": "I rahua te {siteName} i tētahi tono",
+    "Email.UnhandledError.subject": "I hinga a {siteName} i tētahi tono",
     "Email.UnhandledError.body": `
-<p>Tēnā koe:</p>
+<p>Tēnā koe,</p>
 
 <p>
-    I rahua te {siteName} i {when} i tētahi tono mō {asked}. I whakaaturia ki te kaipānui te tohutoro {reference}, ā, kei raro i tērā te take i te rārangi tuhinga.
+    I hinga a {siteName} i {when} i tētahi tono mō {asked}. I whakaatu ki te kaipānui i te tohutoro {reference}, ā, kei te rekoata te take i raro iho.
 </p>
 
 <p>
-    He maha ngā wā ka rahua ia tono ina pakaru te pae, nō reira e tae mai ana he īmēra mō ngā rahunga kia 4 anake i ia haora. Ko ērā atu kei te rārangi tuhinga tonu.
+    Ka hinga tonu pea tētahi pae kua pakaru i ia tono, nā reira ka īmēra atu mātou ki a koe mō ngā hinganga neke atu i te 4 kāore i ia hāora. Ko ērā i muri mai kei te rekoata ahakoa.
 </p>
 
 <p>

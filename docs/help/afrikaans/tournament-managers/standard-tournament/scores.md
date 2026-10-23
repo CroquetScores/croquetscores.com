@@ -34,7 +34,7 @@ Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, ouds
 
 ## Hoe om 'n uitslag reg te stel
 
-**Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Druk op **Stoor** om die regstelling te hou en die dialoog toe te maak.
+**Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Druk op **Bewaar** om die regstelling te hou en die dialoog toe te maak.
 
 ![Die dialoog Wysig uitslag](images/edit-score-dialog.png)
 
@@ -52,6 +52,6 @@ In 'n uitskakeling gaan die wenner van 'n wedstryd deur na die volgende ronde, s
 
 'n Speler wat 'n kompetisie verlaat, word gewoonlik daaruit onttrek, op die Spelers-oortjie, en dit is al wat nodig is: hulle speel niks meer nie, en die spelle wat hulle wel gespeel het, bly staan, maar hul spelle tel nie meer vir oorwinnings/verliese en hoepels nie. Om 'n uitslag te onttrek is vir die skaarser geval waar 'n spel wat gespeel is, nie moet tel nie. In die Australiese President's Eights, byvoorbeeld, bly die eerste ronde se uitslae staan wanneer 'n speler onttrek, en net hul spelle in die tweede ronde word uit die berekening gehaal: onttrek daardie spelle.
 
-In 'n blok of 'n Switserse kompetisie word 'n uitslag wat gespeel is maar nie moet tel nie, onttrek eerder as geargiveer. **Trek terug** hou dit tussen die uitslae in gebruik, op sy plek, maar deurgehaal en tel vir niks op die openbare bladsye nie. **Maak die onttrekking ongedaan** laat dit weer tel. Nie een van die twee vra eers nie. 'n Uitskakeling se uitslae kry nie Trek terug aangebied nie, want daar beslis 'n uitslag meer as net die ranglys.
+In 'n blok of 'n Switserse kompetisie word 'n uitslag wat gespeel is maar nie moet tel nie, onttrek eerder as geargiveer. **Trek terug** hou dit tussen die uitslae in gebruik, op sy plek, maar deurgehaal en tel vir niks op die openbare bladsye nie. **Herroep onttrekking** laat dit weer tel. Nie een van die twee vra eers nie. 'n Uitskakeling se uitslae kry nie Trek terug aangebied nie, want daar beslis 'n uitslag meer as net die ranglys.
 
 Volgende: [Notas](notes.md).

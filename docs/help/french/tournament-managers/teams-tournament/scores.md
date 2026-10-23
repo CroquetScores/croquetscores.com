@@ -1,8 +1,8 @@
-# Résultats
+# Scores
 
-La page d’un test s’ouvre depuis son nom sur l’onglet Tests, ou depuis la barre vert foncé. Elle est coiffée des noms complets de ses équipes, comme « Australia v New Zealand », avec dessous le nombre de matchs qu’il doit avoir et au meilleur de combien de parties se joue chacun. Ses résultats sont la page, sans onglets. Un gestionnaire et un marqueur voient la même page, puisqu’un marqueur peut faire à un résultat tout ce qu’un gestionnaire peut faire.
+La page d’une rencontre s’ouvre depuis son nom sur l’onglet Rencontres, ou depuis la barre vert foncé. Elle est coiffée des noms complets de ses équipes, comme « Australia v New Zealand », avec dessous le nombre de matchs qu’elle doit avoir et au meilleur de combien de parties se joue chacun. Ses résultats sont la page, sans onglets. Un organisateur et un marqueur voient la même page, puisqu’un marqueur peut faire à un résultat tout ce qu’un organisateur peut faire.
 
-![La page d’un test, avec ses résultats](images/test-page-panel.png)
+![La page d’une rencontre, avec ses résultats](images/test-page-panel.png)
 
 ## Comment les résultats sont présentés
 
@@ -10,9 +10,9 @@ Les résultats sont présentés par équipe plutôt que par vainqueur, dans une 
 
 ## Saisir un résultat
 
-Appuyez sur **Ajouter un résultat**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
+Appuyez sur **Ajouter un score**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
-![La boîte de dialogue Ajouter un résultat sur la page d’un test](images/add-test-score-dialog.png)
+![La boîte de dialogue Ajouter un résultat sur la page d’une rencontre](images/add-test-score-dialog.png)
 
 Le vainqueur se choisit parmi les joueurs en service des deux équipes, sous le nom de chaque équipe, les joueurs de la première équipe en premier et ceux de chaque équipe dans l’ordre de l’équipe. Personne n’est choisi au départ. Une fois le vainqueur choisi, le perdant n’est proposé que dans l’autre équipe, puisqu’une partie entre deux joueurs de la même équipe n’est pas une partie entre les équipes. Un joueur archivé n’est pas proposé.
 
@@ -24,9 +24,9 @@ Appuyez sur **Ajouter la partie**. La partie est ajoutée, la boîte de dialogue
 
 ## Matchs
 
-Deux joueurs qui se rencontrent jouent un match au nombre de parties du test. Les parties entre eux sont les parties de ce match, et une partie entre deux joueurs dont le match est déjà décidé est refusée : l’un d’eux a gagné plus de parties que l’autre ne pourrait encore en gagner, ou toutes les parties du match ont été jouées.
+Deux joueurs qui se rencontrent jouent un match au nombre de parties de la rencontre. Les parties entre eux sont les parties de ce match, et une partie entre deux joueurs dont le match est déjà décidé est refusée : l’un d’eux a gagné plus de parties que l’autre ne pourrait encore en gagner, ou toutes les parties du match ont été jouées.
 
-Un match commence quand ses deux joueurs ont une partie en service. Un test ne commence pas plus de matchs qu’il ne doit en avoir : une fois qu’autant ont commencé, une partie entre deux joueurs qui ne se sont pas rencontrés est refusée, tandis qu’une autre partie d’un match déjà commencé est acceptée. Si le test doit avoir plus de matchs, modifiez-le sur l’onglet Tests pour les prévoir.
+Un match commence quand ses deux joueurs ont une partie en service. Une rencontre ne commence pas plus de matchs qu’elle ne doit en avoir : une fois qu’autant ont commencé, une partie entre deux joueurs qui ne se sont pas rencontrés est refusée, tandis qu’une autre partie d’un match déjà commencé est acceptée. Si la rencontre doit avoir plus de matchs, modifiez-la sur l’onglet Rencontres pour les prévoir.
 
 ## Corriger un résultat
 
@@ -38,7 +38,7 @@ Les résultats arrivent dans l’ordre où on les saisit ; chaque résultat en 
 
 ## Archiver un résultat
 
-**Archiver** met un résultat de côté pour qu’il ne compte plus pour rien. Il est listé sous **Résultats archivés**, barré, et n’offre plus que **Restaurer**. Aucun des deux ne demande d’abord, puisque chacun annule l’autre. Chaque résultat d’un test peut être archivé, puisqu’un test n’a pas de tours qui dépendent l’un de l’autre.
+**Archiver** met un résultat de côté pour qu’il ne compte plus pour rien. Il est listé sous **Scores archivés**, barré, et n’offre plus que **Restaurer**. Aucun des deux ne demande d’abord, puisque chacun annule l’autre. Chaque résultat d’une rencontre peut être archivé, puisqu’une rencontre n’a pas de tours qui dépendent l’un de l’autre.
 
 Un résultat dont le joueur a été archivé depuis n’est pas restauré tant que le joueur ne l’est pas, et la page le dit.
 

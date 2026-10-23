@@ -20,17 +20,13 @@ Le formulaire demande tout ce avec quoi un tournoi commence. Un tournoi de la so
 
 **Sous-titre.** Tout ce que vous voulez faire savoir aux lecteurs et qui n’a pas de champ à lui : où se garer, à quelle heure est le déjeuner, qui appeler. Il s’affiche sous le nom du tournoi sur chaque page publique. Il s’écrit en Markdown : un mot se met en gras entre des astérisques, et une liste se fait avec un tiret au début de chaque ligne. Il peut compter jusqu’à 2000 caractères, et peut rester vide.
 
-**Joué avec handicap.** Cochez cette case pour un tournoi à handicap.
+La façon dont se jouent et se comptent ses compétitions, avec ou sans handicap, avec ou sans matchs nuls, et pour le classement mondial ou non, est à dire pour chacune au moment où elle est ajoutée.
 
-**Matchs nuls autorisés.** Cochez cette case là où une partie peut finir sans qu’aucun joueur ne gagne. La plupart des tournois ne l’autorisent pas. Quand elle est cochée, un résultat saisi à points égaux et sans marque est gardé comme un match nul ; quand elle ne l’est pas, une partie à points égaux doit dire qui l’a gagnée par une marque après les points du vainqueur, comme « 6w ».
-
-**Compte pour le classement mondial.** Demandé seulement là où cela peut compter : un tournoi de croquet association, de croquet golf ou de croquet américain à 6 arceaux qui n’est ni joué avec handicap ni ouvert aux matchs nuls. La case est cochée au départ ; décochez-la pour un tournoi qui ne doit pas compter.
-
-**Épreuve de niveau national** et **Épreuve de niveau international.** Un tournoi peut être l’un, l’autre, ou aucun des deux, mais jamais les deux : cocher l’un décoche l’autre.
+**Événement de niveau national** et **Événement de niveau international.** Un tournoi peut être l’un, l’autre, ou aucun des deux, mais jamais les deux : cocher l’un décoche l’autre.
 
 ## Le créer
 
-Appuyez sur **Créer le tournoi**. Vous arrivez sur la page du tournoi dans l’administration, d’où il s’organise, et vous êtes son premier gestionnaire. Il est listé dans l’administration sous l’année où il commence.
+Appuyez sur **Créer le tournoi**. Vous arrivez sur la page du tournoi dans l’administration, d’où il s’organise, et vous êtes son premier organisateur. Il est listé dans l’administration sous l’année où il commence.
 
 L’adresse publique du tournoi est faite de son année, de son sport et de son nom, comme `/2026/ac/spring-open`. Il garde cette adresse quand son nom est corrigé plus tard, pour qu’un lien déjà envoyé le retrouve ; il ne déménage que si l’année où il commence, ou son sport, change.
 

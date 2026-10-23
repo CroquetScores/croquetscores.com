@@ -16,7 +16,7 @@ De pagina van een poule toont haar uitslagen als een rooster: een rij en een kol
 
 ![Het rooster van een poule](images/public-block-grid.png)
 
-Een poule wordt op drie manieren getoond, aangeboden op de regel van haar naam: **Rooster**, **Overzicht** en **Speelschema**. Het overzicht is de weergave voor een telefoon: de spelers gerangschikt, met hun gewonnen en verloren partijen en poortjessaldo. Het speelschema toont elke partij, oudste eerst. Een lezer die een weergave kiest, houdt die voor elke competitie totdat die een andere kiest.
+Een poule wordt op drie manieren getoond, aangeboden op de regel van haar naam: **Schema**, **Overzicht** en **Speelvolgorde**. Het overzicht is de weergave voor een telefoon: de spelers gerangschikt, met hun gewonnen en verloren partijen en poortjessaldo. Het speelschema toont elke partij, oudste eerst. Een lezer die een weergave kiest, houdt die voor elke competitie totdat die een andere kiest.
 
 ![Het overzicht van een poule](images/public-block-summary.png)
 

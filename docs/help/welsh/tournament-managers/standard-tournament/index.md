@@ -1,6 +1,6 @@
 # Rhedeg twrnamaint safonol
 
-Twrnamaint safonol yw un a chwaraeir rhwng chwaraewyr a gofrestrir fesul un: penwythnos clwb, pencampwriaeth agored, pencampwriaeth. Caiff ei chwaraewyr eu rhoi mewn blociau, cystadlaethau taro allan a chystadlaethau Swisaidd, ac mae ei ganlyniadau'n mynd i fyny fel y cânt eu chwarae. Mae'r canllaw hwn yn mynd â rheolwr o fewngofnodi hyd at dwrnamaint y mae ei ganlyniadau ar gael i'r cyhoedd.
+Twrnamaint safonol yw un a chwaraeir rhwng chwaraewyr a gofrestrir fesul un: penwythnos clwb, pencampwriaeth agored, pencampwriaeth. Caiff ei chwaraewyr eu rhoi mewn blociau, cystadlaethau cnoc-owt a chystadlaethau Swisaidd, ac mae ei ganlyniadau'n mynd i fyny fel y cânt eu chwarae. Mae'r canllaw hwn yn mynd â rheolwr o fewngofnodi hyd at dwrnamaint y mae ei ganlyniadau ar gael i'r cyhoedd.
 
 Mae'n sefyll ar ei ben ei hun. Nid oes dim ynddo'n dibynnu ar y canllaw i dwrnamaint a chwaraeir gan dimau, sydd wedi'i ysgrifennu ar wahân.
 
@@ -12,14 +12,14 @@ Gwneir popeth a wna rheolwr yn adran weinyddu'r wefan. Caiff y tudalennau cyhoed
 
 ## Y tudalennau yn eu trefn
 
-1. [Creu twrnamaint](creating-a-tournament.md): ei enw, ei ddyddiau, ei gamp, lle caiff ei chwarae, a beth y mae'n cyfrif tuag ato.
+1. [Creu twrnamaint](creating-a-tournament.md): ei enw, ei ddyddiau, ei gamp, lle caiff ei chwarae, ac a yw'n ddigwyddiad cenedlaethol neu'n ddigwyddiad rhyngwladol.
 2. [Chwaraewyr](players.md): rhoi chwaraewyr y twrnamaint i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
-3. [Cystadlaethau](competitions.md): ychwanegu blociau, cystadlaethau taro allan a chystadlaethau Swisaidd, a'u rhoi mewn trefn.
-4. [Rhoi chwaraewyr mewn cystadleuaeth](entering-players-in-a-competition.md): pwy sy'n chwarae ym mhob cystadleuaeth, byes mewn cystadleuaeth taro allan, cario ymlaen, tynnu a thynnu'n ôl.
-5. [Canlyniadau](scores.md): rhoi canlyniadau i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
+3. [Cystadlaethau](competitions.md): ychwanegu blociau, cystadlaethau cnoc-owt a chystadlaethau Swisaidd, a'u rhoi mewn trefn.
+4. [Rhoi chwaraewyr mewn cystadleuaeth](entering-players-in-a-competition.md): pwy sy'n chwarae ym mhob cystadleuaeth, byes mewn cystadleuaeth cnoc-owt, cario ymlaen, tynnu a thynnu'n ôl.
+5. [Sgorau](scores.md): rhoi canlyniadau i mewn, eu cywiro, a rhoi'r rhai a roddwyd i mewn trwy gamgymeriad o'r neilltu.
 6. [Nodiadau](notes.md): dweud wrth y chwaraewyr beth sydd angen iddynt ei wybod wrth i'r twrnamaint fynd rhagddo.
 7. [Rheolwyr a sgorwyr](managers-and-scorers.md): rhannu'r gwaith o redeg y twrnamaint, a gadael i rywun roi canlyniadau i mewn heb allu newid dim arall.
-8. [Safleoedd](rankings.md): y ffeil a anfonir at Safleoedd y Byd, a'r hyn sydd ar ôl i chi ei lenwi.
+8. [Detholion](rankings.md): y ffeil a anfonir at restr detholion y byd, a'r hyn sydd ar ôl i chi ei lenwi.
 9. [Newid, archifo ac adfer twrnamaint](changing-and-archiving.md): cywiro manylion y twrnamaint, a rhoi twrnamaint o'r neilltu.
 10. [Beth mae'r cyhoedd yn ei weld](what-the-public-sees.md): y tudalennau y mae eich chwaraewyr yn eu dilyn, a sut mae'r hyn a roddwch i mewn yn ymddangos arnynt.
 
@@ -29,7 +29,7 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Safleoedd**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
 
 ![Tudalen twrnamaint, ar ei thab Cystadlaethau](images/tournament-page.png)
 

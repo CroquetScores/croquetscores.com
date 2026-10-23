@@ -1,24 +1,22 @@
-// The site's words in Russian. Keyed as the English catalogue is, which is
-// what a word missing here falls back to.
-//
-// Written to the reader as вы rather than ты: Russian websites that ask
-// people for an account or a password speak to them as вы,
-// and ты from a site a reader has just met reads as too familiar. The
-// English it is written from is plain and direct, so the commands are kept
-// short and the sentences plain rather than stiff. Items in menus and on
-// buttons are written in sentence case, as Russian writes them, where the
-// English capitalises each word. A result is told in the present tense
-// ("выигрывает у") because the past tense would have to choose between a
-// man and a woman for every player, and the English does not.
+// The site's words in Russian. Decisions a reader of this file needs:
+// - The reader is addressed as «вы» (lower case), politely and plainly.
+// - Buttons, menu items and headings are written in sentence case, as Russian
+//   does: only the first word (and proper names) is capitalised.
+// - "Email address" is «адрес электронной почты»; a bare "email" is «письмо»
+//   when it is a message and «почта» when it is the mailbox.
+// - "Sign in" is «Войти», "Register" is «Зарегистрироваться» (as a verb on a
+//   button) and «Регистрация» (as a title), "Sign out" is «Выйти».
+// - "Bye" stays «Bye» wherever the site itself checks for the word.
 import type { Language } from "../common/language.js";
 
 export const russian: Language = {
   tag: "ru",
   name: "Русский",
   words: {
+    // The site's own bars.
     "site.skipToContent": "Перейти к содержимому",
     "navigation.menu": "Меню",
-    "navigation.label": "Основная",
+    "navigation.label": "Основная навигация",
     "navigation.home": "Главная",
     "navigation.help": "Справка",
     "navigation.admin": "Администрирование",
@@ -29,155 +27,162 @@ export const russian: Language = {
     "theme.system": "Системная",
     "footer.donate": "Пожертвовать",
     "footer.plea":
-      "Нравится {siteName}? Сделайте пожертвование, чтобы помочь развивать сайт дальше.",
-    "footer.copyright": "© Copyright {years}, {owner}",
+      "Нравится {siteName}? Пожалуйста, поддержите дальнейшую разработку пожертвованием.",
+    "footer.copyright": "© {years}, {owner}. Все права защищены",
     "footer.privacy": "Конфиденциальность",
     "footer.termsOfUse": "Условия использования",
-    "beta.banner": "Это бета-сайт. Данные могут быть сброшены в любой момент.",
+    "beta.banner":
+      "Это бета-версия сайта. Данные могут быть сброшены в любой момент.",
     "privacy.contact":
-      "Вопросы об этой странице или о том, что хранится о вас: {emailAddress}",
-    "termsOfUse.agree": "Я принимаю условия использования",
-    "termsOfUse.link": "условия использования",
+      "Вопросы об этой странице или о том, что о вас хранится: {emailAddress}",
+    // The box a reader ticks to agree to the terms of use.
+    "termsOfUse.agree": "Я согласен с условиями использования",
+    "termsOfUse.link": "условиями использования",
     "termsOfUse.report":
       "Сообщить о написанном или задать вопрос об этих условиях: {emailAddress}",
     "TermsOfUse.NotAgreed":
-      "Отметьте флажок, чтобы принять условия использования.",
+      "Поставьте галочку, чтобы принять условия использования.",
+    // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Это безопасное место, чтобы освоить {siteName}. Всё, что вы здесь введёте, может быть удалено в любой момент.",
+      "Здесь можно безопасно освоить {siteName}. Всё, что введено здесь, может быть удалено в любой момент.",
 
     "language.label": "Язык",
-    "language.choose": "Сменить",
+    "language.choose": "Изменить",
 
     // The alert that tells a reader there is something new to read.
-    "whatsNew.public.message": "Есть новости, которые стоит прочитать.",
+    "whatsNew.public.message": "Есть что почитать нового.",
     "whatsNew.admin.message": "Есть новости для тех, кто проводит турниры.",
     "whatsNew.view": "Посмотреть, что нового",
     "whatsNew.later": "Напомнить в следующий раз",
     "whatsNew.never": "Больше не показывать это уведомление",
 
     "form.otherwise":
-      "Что-то не так. Проверьте введённое и попробуйте ещё раз.",
+      "Что-то введено неверно. Проверьте введённое и попробуйте ещё раз.",
 
-    "account.menu": "Учётная запись",
-    "account.register": "Зарегистрироваться",
+    // The account menu in the header.
+    "account.menu": "Аккаунт",
+    "account.register": "Регистрация",
     "account.signIn": "Войти",
-    "account.forgotPassword": "Забыли пароль?",
+    "account.forgotPassword": "Забыли пароль",
     "account.signOut": "Выйти",
     "account.profile": "Профиль",
-    "account.changePassword": "Сменить пароль",
-    "account.changeEmailAddress": "Сменить адрес электронной почты",
-    "account.changeName": "Сменить имя",
+    "account.changePassword": "Изменить пароль",
+    "account.changeEmailAddress": "Изменить адрес электронной почты",
+    "account.changeName": "Изменить имя",
     "account.setPassword": "Задать пароль",
-    "account.forgetAccount": "Забыть учётную запись",
+    "account.forgetAccount": "Забыть аккаунт",
 
     "register.title": "Регистрация",
     "register.emailAddress": "Адрес электронной почты",
     "register.submit": "Зарегистрироваться",
     "register.withGoogle": "Зарегистрироваться через Google",
     "register.or": "или",
+    // Said above the form when Google sent the reader back without them being
+    // let in.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Google не подтвердил, что этот адрес электронной почты принадлежит вам, поэтому войти с ним через Google нельзя. Воспользуйтесь адресом электронной почты ниже.",
+      "Google не подтвердил, что этот адрес электронной почты принадлежит вам, поэтому использовать его здесь с Google нельзя. Воспользуйтесь адресом электронной почты ниже.",
     "SignInWithGoogle.LinkedToAnother":
-      "У этого адреса электронной почты уже есть учётная запись, связанная с другой учётной записью Google. Войдите через ту учётную запись Google или с помощью адреса электронной почты и пароля.",
+      "У этого адреса электронной почты уже есть аккаунт, связанный с другим аккаунтом Google. Войдите через тот аккаунт Google или по адресу электронной почты и паролю.",
     "SignInWithGoogle.NameMissing":
-      "Google не сообщил нам вашего имени, а оно нужно для учётной записи. Воспользуйтесь адресом электронной почты ниже.",
+      "Google не сообщил нам ваше имя, а оно нужно для аккаунта. Воспользуйтесь адресом электронной почты ниже.",
     "Google.Unreachable":
       "Сейчас не удалось связаться с Google. Попробуйте ещё раз через несколько минут или воспользуйтесь адресом электронной почты ниже.",
     "Registration.NotAPerson":
-      "Похоже, это сделал не человек. Попробуйте ещё раз, а если это повторится, подождите несколько минут и вернитесь.",
+      "Похоже, это сделал не человек. Попробуйте ещё раз, а если это повторяется, подождите несколько минут и вернитесь.",
 
+    // A rule the address can break, said beneath the field it is about.
     "EmailAddress.Missing": "Введите адрес электронной почты.",
     "EmailAddress.NoAt": "В адресе электронной почты должен быть знак @.",
     "EmailAddress.MoreThanOneAt":
-      "В адресе электронной почты должен быть только один знак @.",
+      "В адресе электронной почты должен быть ровно один знак @.",
     "EmailAddress.NoDomain":
-      "В адресе электронной почты после знака @ должен стоять домен, например example.com.",
+      "После знака @ в адресе электронной почты должен быть домен, например example.com.",
 
     "welcome.title": "Проверьте почту",
     "welcome.checkEmail":
-      "Мы отправили письмо на указанный вами адрес. Перейдите по ссылке в нём, чтобы продолжить.",
+      "На указанный вами адрес отправлено письмо. Перейдите по ссылке в нём, чтобы продолжить.",
     "welcome.nothingArrived":
-      "Если через несколько минут ничего не придёт, загляните в папку «Спам».",
+      "Если письмо не придёт в течение нескольких минут, загляните в папку «Спам».",
     "welcome.home": "Вернуться на {siteName}",
-    "newConfirmationLink.title": "Запросите новую ссылку",
+    "newConfirmationLink.title": "Получить новую ссылку",
     "newConfirmationLink.explanation":
-      "Ссылка для подтверждения вашего адреса электронной почты устарела. Запросите новую, и её пришлют на адрес, с которым вы регистрировались.",
-    "newConfirmationLink.send": "Пришлите мне новую ссылку",
+      "Срок действия ссылки для подтверждения адреса электронной почты истёк. Запросите новую, и она будет отправлена на адрес, с которым вы регистрировались.",
+    "newConfirmationLink.send": "Отправить мне новую ссылку",
     "newConfirmationLink.home": "Вернуться на {siteName}",
     "newConfirmationLink.signIn": "Войти",
     "newConfirmationLink.sent.title": "Проверьте почту",
     "newConfirmationLink.sent.explanation":
-      "Мы отправили вам новую ссылку. Перейдите по ней, чтобы подтвердить адрес электронной почты. Если через несколько минут ничего не придёт, загляните в папку «Спам».",
+      "Новая ссылка отправлена. Перейдите по ней, чтобы подтвердить адрес электронной почты. Если письмо не придёт в течение нескольких минут, загляните в папку «Спам».",
     "newConfirmationLink.alreadyConfirmed.title":
       "Этот адрес электронной почты уже подтверждён",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "Подтверждать больше нечего. Войдите с паролем, который вы задали при подтверждении.",
+      "Больше подтверждать нечего. Войдите с паролем, который вы задали при подтверждении.",
     "newConfirmationLink.noLongerWorks.title": "Эта ссылка больше не работает",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Проверьте, что вы перешли по всей ссылке из письма, и в её конце ничего не потерялось. Если она всё равно не работает, зарегистрируйтесь снова, и вам пришлют новую ссылку.",
+      "Убедитесь, что вы открыли ссылку из письма целиком, и в её конце ничего не потерялось. Если она всё равно не работает, зарегистрируйтесь заново, и вам отправят новую ссылку.",
     "newConfirmationLink.tooMany.title": "Попробуйте позже",
     "newConfirmationLink.tooMany.explanation":
-      "На этот адрес недавно отправили несколько ссылок. Подождите час и запросите снова, а пока загляните в папку «Спам».",
+      "На этот адрес в последнее время отправлено несколько ссылок. Подождите час и запросите снова, а пока загляните в папку «Спам».",
 
     "forgotPassword.title": "Забыли пароль?",
     "forgotPassword.emailAddress": "Адрес электронной почты",
-    "forgotPassword.submit": "Пришлите мне способ войти снова",
+    "forgotPassword.submit": "Отправить мне ссылку для входа",
     "forgotPassword.home": "Вернуться на {siteName}",
     "forgotPassword.sent.title": "Проверьте почту",
     "forgotPassword.sent.explanation":
-      "Если у этого адреса есть учётная запись, мы отправили ссылку для задания нового пароля. Перейдите по ней в течение часа. Если через несколько минут ничего не придёт, загляните в папку «Спам».",
+      "Если у этого адреса есть аккаунт, ему отправлена ссылка для задания нового пароля. Перейдите по ней в течение часа. Если письмо не придёт в течение нескольких минут, загляните в папку «Спам».",
     "forgotPassword.tryAgainLater":
-      "Отсюда недавно запросили слишком много способов войти снова. Подождите час и попробуйте ещё раз.",
+      "Отсюда в последнее время запрошено слишком много ссылок для входа. Подождите час и попробуйте снова.",
 
     "setNewPassword.title": "Задайте новый пароль",
     "setNewPassword.password": "Пароль",
     "setNewPassword.confirmPassword": "Подтвердите пароль",
-    "setNewPassword.submit": "Задать мой новый пароль",
+    "setNewPassword.submit": "Задать новый пароль",
     "setNewPassword.home": "Вернуться на {siteName}",
     "setNewPassword.signIn": "Войти",
     "setNewPassword.askAgain": "Запросить новую ссылку",
     "setNewPassword.changed.title": "Ваш пароль изменён",
     "setNewPassword.changed.explanation":
-      "Вы вышли из учётной записи везде, где были в неё вошли. Войдите с новым паролем.",
-    "setNewPassword.expired.title": "Эта ссылка устарела",
+      "Вы вышли из аккаунта везде, где были в него выполнены вход. Войдите с новым паролем.",
+    "setNewPassword.expired.title": "Срок действия ссылки истёк",
     "setNewPassword.expired.explanation":
-      "Ссылка для задания нового пароля действует один час. Запросите другую, и её пришлют на тот же адрес.",
+      "Ссылка для задания нового пароля действует один час. Запросите другую, и она будет отправлена на тот же адрес.",
     "setNewPassword.noLongerWorks.title": "Эта ссылка больше не работает",
     "setNewPassword.noLongerWorks.explanation":
-      "Возможно, ею уже воспользовались или в её конце чего-то не хватает. Если она всё ещё нужна, запросите другую.",
+      "Возможно, она уже использована или в её конце чего-то не хватает. Если она всё ещё нужна, запросите другую.",
 
+    // Said above the fields when the breached password check cannot be asked.
     "BreachedPasswords.Unreachable":
       "Сейчас не удаётся проверить ваш пароль, поэтому он не изменён. Попробуйте ещё раз через несколько минут; ваша ссылка действует до истечения срока.",
 
-    "forgetAccount.title": "Забыть вашу учётную запись",
+    "forgetAccount.title": "Забыть ваш аккаунт",
     "forgetAccount.explanation":
-      "Ваше имя и адрес электронной почты можно сделать нечитаемыми навсегда, а учётную запись закрыть. Чтобы убедиться, что это вы, мы сначала отправим ссылку на адрес вашей учётной записи, и ничего не будет забыто, пока вы по ней не перейдёте.",
-    "forgetAccount.submit": "Пришлите мне ссылку",
+      "Ваши имя и адрес электронной почты можно сделать навсегда нечитаемыми, а аккаунт закрыть. Чтобы убедиться, что это вы, мы сначала отправим ссылку на адрес вашего аккаунта, и ничего не будет забыто, пока вы не перейдёте по ней.",
+    "forgetAccount.submit": "Отправить мне ссылку",
     "forgetAccount.sent.title": "Проверьте почту",
     "forgetAccount.sent.explanation":
-      "Мы отправили ссылку на адрес вашей учётной записи. Она действует 15 минут и только пока вы остаётесь в этой учётной записи.",
-    "forgetAccount.confirm.title": "Забыть вашу учётную запись навсегда?",
+      "Мы отправили ссылку на адрес вашего аккаунта. Она действует 15 минут и только пока вы вошли в этот аккаунт.",
+    "forgetAccount.confirm.title": "Забыть ваш аккаунт навсегда?",
     "forgetAccount.confirm.explanation":
-      "После этого никто больше не сможет прочитать ваше имя и адрес электронной почты, а войти в вашу учётную запись будет нельзя. Это нельзя отменить.",
-    "forgetAccount.confirm.submit": "Забыть мою учётную запись",
-    "forgetAccount.forgotten.title": "Ваша учётная запись забыта",
+      "После этого ваши имя и адрес электронной почты больше никто и никогда не сможет прочитать, а войти в аккаунт будет нельзя. Это невозможно отменить.",
+    "forgetAccount.confirm.submit": "Забыть мой аккаунт",
+    "forgetAccount.forgotten.title": "Ваш аккаунт забыт",
     "forgetAccount.forgotten.explanation":
-      "Ваше имя и адрес электронной почты больше нельзя прочитать, а вы вышли из учётной записи везде, где были в неё вошли.",
+      "Ваши имя и адрес электронной почты больше нельзя прочитать, и вы вышли из аккаунта везде, где были в него выполнены вход.",
     "forgetAccount.noLongerWorks.title": "Эта ссылка больше не работает",
     "forgetAccount.noLongerWorks.explanation":
-      "Возможно, срок её действия истёк, ею уже воспользовались, или она от учётной записи, в которую вы не вошли. Если вы всё ещё хотите, чтобы учётную запись забыли, запросите ссылку снова из вашей учётной записи.",
-    "forgetAccount.lastAdministrator.title":
-      "Вашу учётную запись нельзя забыть",
+      "Возможно, срок её действия истёк, она уже использована или относится к аккаунту, в который вы не вошли. Если вы всё ещё хотите, чтобы аккаунт был забыт, запросите ссылку снова из своего аккаунта.",
+    "forgetAccount.lastAdministrator.title": "Ваш аккаунт нельзя забыть",
     "forgetAccount.lastAdministrator.explanation":
-      "Вы единственный администратор этого сайта. Передайте роль администратора кому-нибудь ещё, и тогда вашу учётную запись можно будет забыть.",
+      "Вы единственный администратор этого сайта. Передайте роль администратора кому-нибудь другому, и тогда ваш аккаунт можно будет забыть.",
     "forgetAccount.askAgain": "Запросить снова",
     "forgetAccount.home": "Вернуться на {siteName}",
 
-    "registrationsSuspended.title": "Регистрация пока приостановлена",
+    "registrationsSuspended.title": "Регистрация временно приостановлена",
     "registrationsSuspended.explanation":
-      "Сейчас не удаётся связаться со службой, которая нужна для регистрации, поэтому никто не может зарегистрироваться, пока она не ответит. Ничего из введённого вами не сохранено.",
+      "Сейчас не удаётся связаться со службой, необходимой для регистрации, поэтому никто не может зарегистрироваться, пока она не ответит. Введённые вами данные не сохранены.",
     "registrationsSuspended.tryAgainLater":
-      "Попробуйте ещё раз немного позже. Администратору сайта уже сообщили.",
+      "Попробуйте ещё раз немного позже. Администратор сайта уведомлён.",
     "registrationsSuspended.home": "Вернуться на {siteName}",
 
     "signIn.title": "Вход",
@@ -189,147 +194,146 @@ export const russian: Language = {
     "signIn.withGoogle": "Войти через Google",
     "signIn.or": "или",
     "signIn.tryAgainLater":
-      "Недавно было слишком много попыток. Подождите час и попробуйте ещё раз.",
+      "В последнее время сделано слишком много попыток. Подождите час и попробуйте снова.",
 
+    // The one answer to a wrong password and to an address nobody registered.
     "SignIn.Failed":
-      "Адрес электронной почты или пароль неверны. Попробуйте ещё раз.",
+      "Адрес электронной почты или пароль неверны. Пожалуйста, попробуйте ещё раз.",
 
     "profile.title": "Профиль",
+    // A label's colon is its words'.
     "profile.name": "Имя:",
     "profile.emailAddress": "Адрес электронной почты:",
 
-    "changeName.title": "Сменить имя",
+    "changeName.title": "Изменение имени",
     "changeName.name": "Имя",
-    "changeName.submit": "Сменить имя",
+    "changeName.submit": "Изменить имя",
 
     "setPassword.title": "Задайте пароль",
     "setPassword.explanation":
-      "У вашей учётной записи нет пароля: вы входите через Google. Чтобы можно было входить и с паролем, мы отправим на {emailAddress} ссылку для его задания.",
-    "setPassword.submit": "Пришлите мне ссылку",
+      "У вашего аккаунта нет пароля: вы входите через Google. Чтобы входить ещё и по паролю, мы отправим на {emailAddress} ссылку для его задания.",
+    "setPassword.submit": "Отправить мне ссылку",
     "setPassword.sent.title": "Проверьте почту",
     "setPassword.sent.explanation":
       "Мы отправили вам ссылку для задания пароля. Она действует один час.",
-    "setPassword.profile": "Вернуться в профиль",
+    "setPassword.profile": "Назад в профиль",
 
-    "changePassword.title": "Сменить пароль",
+    "changePassword.title": "Изменение пароля",
     "changePassword.currentPassword": "Текущий пароль",
     "changePassword.password": "Новый пароль",
     "changePassword.passwordConfirmation": "Подтвердите пароль",
     "changePassword.forgotPassword": "Забыли пароль?",
-    "changePassword.submit": "Сменить пароль",
+    "changePassword.submit": "Изменить пароль",
+    // Beneath the current password, which is the one it is about.
     "ChangePassword.WrongPassword": "Это не ваш пароль.",
 
-    "changeEmailAddress.title": "Сменить адрес электронной почты",
+    "changeEmailAddress.title": "Изменение адреса электронной почты",
     "changeEmailAddress.emailAddress": "Новый адрес электронной почты",
     "changeEmailAddress.currentPassword": "Текущий пароль",
     "changeEmailAddress.submit": "Отправить ссылку для подтверждения",
     "changeEmailAddress.sent.title": "Проверьте почту",
     "changeEmailAddress.sent.explanation":
-      "На новый адрес электронной почты отправлена ссылка для подтверждения переноса. Перейдите по ней, оставаясь в учётной записи, чтобы перенести её на этот адрес.",
-    "changeEmailAddress.confirm.title": "Перенесите вашу учётную запись",
+      "Ссылка для подтверждения переноса отправлена на новый адрес электронной почты. Перейдите по ней, войдя в аккаунт, чтобы перенести аккаунт на этот адрес.",
+    "changeEmailAddress.confirm.title": "Перенос аккаунта",
     "changeEmailAddress.confirm.explanation":
-      "Ваша учётная запись будет перенесена на {emailAddress}. Отныне вы будете входить с этим адресом.",
-    "changeEmailAddress.confirm.submit": "Перенести мою учётную запись",
+      "Ваш аккаунт будет перенесён на {emailAddress}. Отныне вы будете входить с этим адресом.",
+    "changeEmailAddress.confirm.submit": "Перенести мой аккаунт",
     "changeEmailAddress.noLongerWorks.title": "Эта ссылка больше не работает",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Срок её действия истёк, ею уже воспользовались, или она отправлена не для той учётной записи, в которую вы вошли. Запросите её снова в вашем профиле.",
-    "changeEmailAddress.taken.title": "Ваша учётная запись не перенесена",
-    "changeEmailAddress.profile": "Вернуться в профиль",
+      "Срок её действия истёк, она уже использована или отправлена не для того аккаунта, в который вы вошли. Запросите её снова в своём профиле.",
+    "changeEmailAddress.taken.title": "Ваш аккаунт не перенесён",
+    "changeEmailAddress.profile": "Назад в профиль",
+    // Beneath the field each is about.
     "ChangeEmailAddress.WrongPassword": "Это не ваш пароль.",
-    "ChangeEmailAddress.Unchanged": "Ваша учётная запись уже на этом адресе.",
+    "ChangeEmailAddress.Unchanged": "Ваш аккаунт уже на этом адресе.",
     "ChangeEmailAddress.Taken":
-      "У этого адреса электронной почты уже есть своя учётная запись, поэтому вашу туда перенести нельзя.",
+      "У этого адреса электронной почты теперь есть собственный аккаунт, поэтому ваш аккаунт нельзя на него перенести.",
 
     "confirmEmailAddress.title": "Подтвердите адрес электронной почты",
     "confirmEmailAddress.name": "Имя",
     "confirmEmailAddress.password": "Пароль",
     "confirmEmailAddress.confirmPassword": "Подтвердите пароль",
-    "confirmEmailAddress.submit": "Подтвердить мой адрес электронной почты",
+    "confirmEmailAddress.submit": "Подтвердить адрес электронной почты",
     "confirmEmailAddress.signIn": "Войти",
     "confirmEmailAddress.home": "Вернуться на {siteName}",
     "confirmEmailAddress.confirmed.title":
       "Ваш адрес электронной почты подтверждён",
     "confirmEmailAddress.confirmed.explanation":
-      "Ваша учётная запись готова. Войдите с адресом электронной почты и паролем, которые вы только что указали.",
-    "confirmEmailAddress.expired.title": "Эта ссылка устарела",
+      "Ваш аккаунт готов. Войдите с адресом электронной почты и паролем, которые вы только что указали.",
+    "confirmEmailAddress.expired.title": "Срок действия ссылки истёк",
     "confirmEmailAddress.expired.explanation":
-      "Ссылка для подтверждения адреса электронной почты действует 24 часа. Запросите новую, и её пришлют на тот же адрес.",
-    "confirmEmailAddress.expired.newLink": "Пришлите мне новую ссылку",
+      "Ссылка для подтверждения адреса электронной почты действует 24 часа. Запросите новую, и она будет отправлена на тот же адрес.",
+    "confirmEmailAddress.expired.newLink": "Отправить мне новую ссылку",
     "confirmEmailAddress.noLongerWorks.title": "Эта ссылка больше не работает",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "Проверьте, что вы перешли по всей ссылке из письма, и в её конце ничего не потерялось. Если она всё равно не работает, зарегистрируйтесь снова, и вам пришлют новую ссылку.",
+      "Убедитесь, что вы открыли ссылку из письма целиком, и в её конце ничего не потерялось. Если она всё равно не работает, зарегистрируйтесь заново, и вам отправят новую ссылку.",
     "confirmEmailAddress.alreadyConfirmed.title":
       "Этот адрес электронной почты уже подтверждён",
     "confirmEmailAddress.alreadyConfirmed.explanation":
       "Больше ничего делать не нужно. Войдите с паролем, который вы задали при подтверждении.",
 
+    // A rule broken, keyed by its code. Said beneath the field it reads.
     "PersonName.Missing": "Введите имя.",
-    "PersonName.TooShort": "Имя должно состоять не менее чем из 3 символов.",
-    "PersonName.TooLong": "Имя может состоять не более чем из 254 символов.",
+    "PersonName.TooShort": "Имя должно содержать не менее 3 символов.",
+    "PersonName.TooLong": "Имя может содержать не более 254 символов.",
     "WorldRankingName.TooShort":
-      "Имя в мировом рейтинге должно состоять не менее чем из 3 символов.",
+      "Имя в мировом рейтинге должно содержать не менее 3 символов.",
     "WorldRankingName.TooLong":
-      "Имя в мировом рейтинге может состоять не более чем из 254 символов.",
+      "Имя в мировом рейтинге может содержать не более 254 символов.",
     "Password.Missing": "Введите пароль.",
-    "Password.TooShort": "Пароль должен состоять не менее чем из 12 символов.",
+    "Password.TooShort": "Пароль должен содержать не менее 12 символов.",
     "Password.ConfirmationDiffers":
-      "Не совпадает с паролем выше. Введите его ещё раз.",
+      "Это не совпадает с паролем выше. Введите его ещё раз.",
     "Password.Breached":
-      "Этот пароль встречался в утечке данных на другом сайте, поэтому использовать его здесь небезопасно. Выберите другой.",
+      "Этот пароль уже встречался в утечке данных в другом месте, поэтому использовать его здесь небезопасно. Выберите другой.",
 
-    "javaScriptRequired.title": "Нужен JavaScript",
+    "javaScriptRequired.title": "Нужны скрипты",
     "javaScriptRequired.explanation":
-      "Для регистрации на этом сайте должен быть включён JavaScript, чтобы можно было проверить, что регистрируется человек. Включите его и зарегистрируйтесь снова.",
+      "Для регистрации на этом сайте должны быть включены скрипты, чтобы можно было проверить, что регистрируется человек. Включите их и зарегистрируйтесь снова.",
     "javaScriptRequired.register": "Вернуться к регистрации",
     "javaScriptRequired.home": "Вернуться на {siteName}",
 
     "errors.backHome": "Вернуться на {siteName}",
     "errors.notFound": "Не найдено",
     "errors.refused": "Это не удалось сделать",
-    "errors.refusedDetail": "Что-то из отправленного было неверным.",
-    "errors.sorry": "Приносим извинения",
+    "errors.refusedDetail": "Что-то в отправленном было неверно.",
+    "errors.sorry": "Извините",
     "errors.sorryDetail": "Этот запрос не удалось обработать.",
     "errors.failed": "Что-то пошло не так",
-    "errors.reference": "Номер обращения: {reference}.",
+    "errors.reference": "Номер ошибки: {reference}.",
     "errors.recorded":
-      "Ошибка записана в журнал, а администратору отправлено письмо. Вы можете помочь, написав администратору по электронной почте: укажите номер обращения и опишите, что вы делали.",
+      "Ошибка записана в журнал, а администратору отправлено письмо. Напишите администратору, указав номер ошибки и описав, что вы делали.",
     "errors.message": "Написать администратору",
     "errors.messageSubject": "Ошибка {reference} на {siteName}",
-    "errors.messageBody": "Что происходило, когда это случилось:\n\n",
+    "errors.messageBody": "Что я делал, когда это произошло:\n\n",
     "errors.unavailable": "Сайт недоступен",
     "errors.unavailableDetail":
-      "Сайт сейчас не может получить доступ к тому, что ему нужно. Пожалуйста, попробуйте позже.",
+      "Сейчас сайт не может получить то, что ему нужно. Пожалуйста, попробуйте позже.",
     "errors.maintenance": "Сайт закрыт на техническое обслуживание.",
-    "errors.maintenanceMinutes": "Он вернётся примерно через {minutes} мин.",
-    "errors.maintenanceMinute": "Он вернётся примерно через 1 мин.",
+    "errors.maintenanceMinutes":
+      "Ожидается, что он заработает через {minutes} мин.",
+    "errors.maintenanceMinute": "Ожидается, что он заработает через 1 минуту.",
     "errors.maintenanceLonger":
-      "Это занимает больше времени, чем ожидалось; сайт скоро вернётся.",
+      "Это занимает больше времени, чем ожидалось, но скоро сайт заработает.",
 
-    "home.recentResults": "Последние результаты",
-    "home.recentResults.none":
-      "За последние семь дней не добавлено ни одной партии.",
-    "home.upcomingTournaments": "Ближайшие турниры",
+    // The home page's two lists.
+    "home.recentResults": "Недавние результаты",
+    "home.recentResults.none": "За последние семь дней игр не добавлено.",
+    "home.upcomingTournaments": "Предстоящие турниры",
     "home.upcomingTournaments.none":
-      "В ближайшие шестьдесят дней не начинается ни одного турнира.",
-    "tournamentList.column.date": "Дата",
-    "tournamentList.column.name": "Название",
-    "tournamentList.onlyIn": "Только турниры: {country}",
-    "tournamentList.filter.country": "Страна",
-    "tournamentList.filter.anyCountry": "Любая страна",
-    "tournamentList.filter.region": "Регион",
-    "tournamentList.filter.anyRegion": "Любой регион",
-    "tournamentList.filter.sport": "Вид спорта",
-    "tournamentList.filter.anySport": "Любой вид спорта",
-    "tournamentList.filter.submit": "Отфильтровать",
+      "В ближайшие шестьдесят дней турниров не начинается.",
     "home.allTournaments": "Все турниры {year} года",
+    // A year's page.
     "year.heading": "Турниры {year} года",
-    "year.none": "В {year} году не начинается ни одного турнира.",
-    "yearSport.heading": "Турниры ({sport}) {year} года",
-    "yearSport.none":
-      "В {year} году не начинается ни одного турнира ({sport}).",
+    "year.none": "В {year} году турниров не начинается.",
+    // A sport's page in a year.
+    "yearSport.heading": "{sport}: турниры {year} года",
+    "yearSport.none": "{sport}: в {year} году турниров не начинается.",
+    // A tournament's page.
     "tournament.recent": "Недавние",
-    "tournament.summary": "Сводка",
-    "test.bestOf": "Каждая встреча играется как лучшая из {count}.",
+    "tournament.summary": "Итоги",
+    // A test's grid.
+    "test.bestOf": "Каждый матч играется из {count} партий.",
     "test.vs": "против",
     "test.matches": "Матчи",
     "test.games": "Партии",
@@ -353,94 +357,126 @@ export const russian: Language = {
     "players.search.prompt": "Введите имя игрока, чтобы найти его.",
     "players.search.none": "Игроки не найдены.",
     "search.more":
-      "Показаны только первые {count}. Введите больше из названия, чтобы сузить поиск.",
+      "Показаны только первые {count}. Введите больше букв имени, чтобы сузить поиск.",
     "websitePlayer.tournament": "Турнир",
+    // A test in a tournament's sections.
     "tournament.test": "{first} против {second}",
     "tournament.notes": "Заметки",
     "tournament.commentary": "Комментарии",
-    "tournament.beat": "выигрывает у",
-    "tournament.drewWith": "играет вничью с",
+    "tournament.beat": "победил",
+    "tournament.drewWith": "сыграл вничью с",
     "tournament.ago.seconds": "{count} с",
     "tournament.ago.minutes": "{count} мин",
-    "tournament.ago.hour": "1 ч",
+    "tournament.ago.hour": "1 час",
     "tournament.ago.hours": "{count} ч",
-    "tournament.none": "Ни одной партии ещё не сыграно.",
-    "players.none": "Ни одного игрока ещё не добавлено.",
+    "tournament.none": "Игр ещё не сыграно.",
+    // A tournament's players' page, when it has none.
+    "players.none": "Игроки ещё не добавлены.",
+    // A tournament's commentaries page.
     "commentaries.by": "автор:",
     "commentaries.start": "Начать новое обсуждение",
+    // The page that starts a commentary.
     "startCommentary.title": "Начать новое обсуждение",
     "startCommentary.titleField": "Заголовок",
     "startCommentary.submit": "Начать обсуждение",
-    // A tournament's Notes page, and a note's own page, as the English says.
-    "notes.none": "Организаторы ещё не написали заметок.",
+    // Said to a screen reader in place of the red asterisk.
     "marks.new": "новое",
-    "note.edited": "изменена",
-    "commentary.none": "Пока ничего не написано.",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "Организаторы ещё не написали заметок.",
+    "note.edited": "изменено",
+    // A commentary's page.
+    "commentary.none": "Комментариев ещё нет.",
     "commentary.edited": "изменено",
     "commentary.edit": "Изменить",
     "commentary.delete": "Удалить",
     "commentary.comment": "Комментарий",
-    "commentary.add": "Добавить",
+    "commentary.add": "Добавить комментарий",
     "commentary.notSent":
       "Комментарий не удалось отправить. Перезагрузите страницу, чтобы проверить, сохранился ли он.",
-    "changeCommentaryTitle.title": "Изменить заголовок",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "Изменение заголовка",
     "changeCommentaryTitle.submit": "Сохранить",
-    "editComment.title": "Изменить комментарий",
+    // A comment's own page, and the page that asks before it is deleted.
+    "editComment.title": "Изменение комментария",
     "editComment.save": "Сохранить",
-    "deleteComment.title": "Удалить комментарий",
-    "deleteComment.question": "Удалить этот комментарий? Это нельзя отменить.",
+    "deleteComment.title": "Удаление комментария",
+    "deleteComment.question":
+      "Удалить этот комментарий? Это невозможно отменить.",
     "deleteComment.confirm": "Удалить комментарий",
     "deleteComment.keep": "Оставить",
+    // A player's page.
     "player.games": "Партии",
     "player.competitions": "Соревнования",
-    "player.beat": "выигрывает у",
-    "player.lostTo": "проигрывает",
-    "player.drewWith": "играет вничью с",
-    "player.score": "{score} против {opponent}",
-    "player.noGames": "Ни одной партии ещё не сыграно.",
-    "player.noCompetitions": "Пока не заявлен ни на одно соревнование.",
+    "player.beat": "победил",
+    "player.lostTo": "проиграл",
+    "player.drewWith": "сыграл вничью с",
+    "player.score": "{score}: {opponent}",
+    "player.noGames": "Игр ещё не сыграно.",
+    "player.noCompetitions": "Пока не участвует ни в одном соревновании.",
+    // A block's page.
     "block.wins": "Победы",
-    "block.matches": "Встречи",
-    "block.netGames": "Разница по партиям",
+    "block.matches": "Матчи",
+    "block.netGames": "Разница партий",
     "block.games": "Партии",
-    "block.netHoops": "Разница по воротцам",
-    "block.won": "выиграна",
-    "block.lost": "проиграна",
+    "block.netHoops": "Разница ворот",
+    "block.won": "выиграно",
+    "block.lost": "проиграно",
     "block.drawn": "вничью",
-    "block.withdrawn": "снят",
+    "block.withdrawn": "снялся",
+    // A game withdrawn, said otherwise than a player is.
     "block.gameWithdrawn": "снята",
     "block.losses": "Поражения",
-    "competition.views": "Представления",
+    // The three views of a block, offered beneath its heading.
+    "competition.views": "Виды",
     "competition.view.grid": "Таблица",
-    "competition.view.summary": "Сводка",
+    "competition.view.summary": "Итоги",
     "competition.view.orderOfPlay": "Порядок игр",
     "blockSummary.ranking":
-      "Места определяются долей выигранных встреч, затем разницей по воротцам. Регламент турнира может упорядочивать игроков иначе.",
-    "orderOfPlay.none": "Ни одной партии ещё не сыграно.",
+      "Места определяются долей выигранных матчей, затем разницей ворот. Регламент самого турнира может расставлять игроков иначе.",
+    "orderOfPlay.none": "Игр ещё не сыграно.",
+    // A knockout's rounds.
     "knockout.round.final": "Финал",
     "knockout.round.semis": "Полуфиналы",
     "knockout.round.quarters": "Четвертьфиналы",
     "knockout.round.number": "Раунд {number}",
-    "knockout.bye": "Бай",
+    "knockout.bye": "Bye",
+    // A Swiss's table.
     "swiss.games": "Партии",
     "swiss.wins": "Победы",
     "swiss.winShare": "% побед",
     "swiss.results": "Результаты",
+    // The arrows that scroll a knockout's grid.
     "knockout.onward": "Следующие раунды",
     "knockout.back": "Предыдущие раунды",
+    // What every list of tournaments shares.
+    "tournamentList.column.date": "Дата",
+    "tournamentList.column.name": "Название",
+    // A flag, which narrows the lists to its country.
+    "tournamentList.onlyIn": "Только турниры: {country}",
+    "tournamentList.filter.country": "Страна",
+    "tournamentList.filter.anyCountry": "Любая страна",
+    "tournamentList.filter.region": "Регион",
+    "tournamentList.filter.anyRegion": "Любой регион",
+    "tournamentList.filter.sport": "Вид спорта",
+    "tournamentList.filter.anySport": "Любой вид спорта",
+    "tournamentList.filter.submit": "Отфильтровать",
+    // The years there are tournaments in.
     "years.label": "Годы",
+    // The drop-down list holding the years that do not fit as tabs.
     "years.earlier": "Более ранние годы",
 
-    "admin.newerBuild.message": "Есть более новая версия этого сайта.",
+    // The admin's words.
+    "admin.newerBuild.message": "Доступна более новая версия этого сайта.",
     "admin.newerBuild.reload": "Перезагрузить",
     "admin.title": "Администрирование",
     "admin.tournaments.new": "Новый турнир",
-    "admin.tournaments.none": "Нет турниров",
-    "admin.tournaments.filter.none": "Нет подходящих турниров",
+    "admin.tournaments.none": "Турниров нет",
+    "admin.tournaments.filter.none": "Подходящих турниров нет",
+    // Said to a screen reader.
     "admin.tournaments.archived": "В архиве",
-    "admin.tournaments.manage": "Управлять",
+    "admin.tournaments.manage": "Управление",
     "admin.tournaments.edit": "Изменить",
-    "admin.tournaments.archive": "Архивировать",
+    "admin.tournaments.archive": "В архив",
     "admin.tournaments.restore": "Восстановить",
     "admin.tournaments.scores": "Результаты",
     "admin.tournaments.players": "Игроки",
@@ -454,92 +490,100 @@ export const russian: Language = {
     "admin.tournament.country": "Страна",
     "admin.tournament.region": "Регион",
     "admin.tournament.subtitle": "Подзаголовок",
-    "admin.rules.handicap": "Играется с гандикапом",
-    "admin.rules.drawsAllowed": "Ничьи разрешены",
+    "admin.rules.handicap": "Играется с форой",
+    "admin.rules.drawsAllowed": "Допускаются ничьи",
     "admin.tournament.levelTestsDrawn": "Равные тесты считаются ничьёй",
-    "admin.rules.worldRankings": "Учитывается в мировом рейтинге",
+    "admin.rules.worldRankings": "Учитывается в мировых рейтингах",
     "admin.tournament.national": "Событие национального уровня",
     "admin.tournament.international": "Событие международного уровня",
-    "admin.tournament.otherwise": "В таком виде это принять нельзя.",
+    // A refusal with no words of its own, above the fields.
+    "admin.tournament.otherwise": "Это нельзя принять в таком виде.",
     "admin.newTournament.title": "Новый турнир",
     "admin.newTournament.submit": "Создать турнир",
-    "admin.editTournament.title": "Изменить турнир",
+    "admin.editTournament.title": "Изменение турнира",
     "admin.editTournament.submit": "Обновить турнир",
     "admin.editTournament.otherwise": "Этот турнир нельзя изменить.",
+    // A tournament's page, and the tabs.
     "admin.view.tabs": "Турнир",
     "admin.view.players": "Игроки",
     "admin.view.competitions": "Соревнования",
-    "admin.view.managers": "Управляющие",
+    "admin.view.managers": "Организаторы",
     "admin.view.notes": "Заметки",
     "admin.view.scorers": "Секретари",
     "admin.view.rankings": "Рейтинги",
     "admin.rankings.file":
-      "Результаты турнира отправляются в мировой рейтинг в виде текстового файла, который сайт составляет из введённых партий.",
+      "Мировые рейтинги будут использовать результаты турнира с помощью этой функции, и организаторам ничего делать не нужно.",
     "admin.rankings.download": "Скачать рейтинги",
     "rankings.notAvailable": "Рейтинги недоступны",
     "rankings.notAvailable.sport":
-      "У вида спорта этого турнира нет мирового рейтинга, поэтому отправлять нечего.",
+      "У вида спорта этого турнира нет мировых рейтингов, поэтому отправлять нечего.",
     "rankings.notAvailable.notCounted":
-      "Ни одно из соревнований этого турнира не идёт в мировой рейтинг.",
-    "admin.view.otherwise": "Отсюда этим турниром управлять нельзя.",
+      "Ни одно соревнование этого турнира не учитывается в мировых рейтингах.",
+    "admin.view.otherwise": "Этим турниром нельзя управлять отсюда.",
+    // A competition's page, and the tabs.
     "admin.competitionView.tabs": "Соревнование",
     "admin.competitionView.players": "Игроки",
     "admin.competitionView.scores": "Результаты",
+    // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Турнир и его соревнования",
     "admin.sections.tournament": "Турнир",
+    // The section bar of the administrator's pages.
     "admin.administrator.sections.label": "Страницы администратора",
     "admin.administrator.sections.tournaments": "Турниры",
-    "admin.administrator.sections.accounts": "Учётные записи",
-    "admin.administrator.sections.worldRankings": "Мировой рейтинг",
+    "admin.administrator.sections.accounts": "Аккаунты",
+    "admin.administrator.sections.worldRankings": "Мировые рейтинги",
     "admin.administrator.sections.importErrors": "Ошибки импорта",
-    "admin.administrator.sections.logs": "Журналы",
+    "admin.administrator.sections.logs": "Журнал",
     "admin.administrator.sections.databaseStatus": "Доступ к базе данных",
     "admin.databaseStatus.title": "Доступ к базе данных",
     "admin.databaseStatus.on": "Доступ к базе данных включён.",
-    "admin.databaseStatus.off": "Доступ к базе данных отключён.",
+    "admin.databaseStatus.off": "Доступ к базе данных выключен.",
     "admin.databaseStatus.expected":
-      "Ожидаемое время возвращения сайта: {minutes} мин.",
+      "Ожидается, что сайт заработает через {minutes} мин.",
     "admin.databaseStatus.expectedOne":
-      "Ожидаемое время возвращения сайта: 1 мин.",
+      "Ожидается, что сайт заработает через 1 минуту.",
     "admin.databaseStatus.longer":
       "Это занимает больше времени, чем ожидалось.",
-    "admin.databaseStatus.told": "Читатели видят: {words}",
-    "admin.databaseStatus.toldUsual": "Читатели видят обычную фразу.",
-    "admin.databaseStatus.minutes": "Ожидаемые минуты",
+    "admin.databaseStatus.told": "Читателям сообщается: {words}",
+    "admin.databaseStatus.toldUsual": "Читателям сообщается обычная фраза.",
+    "admin.databaseStatus.minutes": "Ожидаемое число минут",
     "admin.databaseStatus.words": "Текст для читателей",
-    "admin.databaseStatus.turnOff": "Отключить",
+    "admin.databaseStatus.turnOff": "Выключить",
     "admin.databaseStatus.change": "Изменить",
     "admin.databaseStatus.turnOn": "Включить",
     "admin.databaseStatus.minutesNeeded": "Нужно указать минуты.",
     "admin.databaseStatus.otherwise": "На сайте что-то пошло не так.",
-    "DatabaseAccess.MinutesNotWhole": "Минуты должны быть целым числом.",
-    "DatabaseAccess.MinutesOutOfRange": "Минуты должны быть от 1 до 1440.",
-    "DatabaseAccess.WordsTooLong": "Текст не должен быть длиннее 500 символов.",
-    "DatabaseAccess.NotOff": "Доступ к базе данных не отключён.",
+    "DatabaseAccess.MinutesNotWhole": "Число минут должно быть целым.",
+    "DatabaseAccess.MinutesOutOfRange": "Число минут должно быть от 1 до 1440.",
+    "DatabaseAccess.WordsTooLong":
+      "Текст должен содержать не более 500 символов.",
+    "DatabaseAccess.NotOff": "Доступ к базе данных не выключен.",
     "admin.administrator.title": "Администратор",
-    "admin.accounts.title": "Учётные записи",
+    // The accounts page, a section for each role.
+    "admin.accounts.title": "Аккаунты",
     "admin.roles.add": "Добавить",
     "admin.roles.administrator.heading": "Администраторы",
     "admin.roles.administrator.none": "Других администраторов нет",
-    "admin.roles.administrator.removeTitle": "Убрать администратора",
+    "admin.roles.administrator.removeTitle": "Удаление администратора",
     "admin.roles.administrator.removeExplanation":
-      "{name} перестанет быть администратором этого сайта.",
+      "{name} больше не будет администратором этого сайта.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Ответственные за мировой рейтинг (Ассоциационный крокет)",
+      "Ответственные за мировой рейтинг по ассоциационному крокету",
     "admin.roles.ac-world-ranking-officer.none":
-      "Ответственных за мировой рейтинг нет (Ассоциационный крокет)",
+      "Нет ответственных за мировой рейтинг по ассоциационному крокету",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Убрать ответственного за мировой рейтинг (Ассоциационный крокет)",
+      "Удаление ответственного за мировой рейтинг по ассоциационному крокету",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} перестанет быть ответственным за мировой рейтинг (Ассоциационный крокет).",
+      "{name} больше не будет ответственным за мировой рейтинг по ассоциационному крокету.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Ответственные за мировой рейтинг (Гольф-крокет)",
+      "Ответственные за мировой рейтинг по гольф-крокету",
     "admin.roles.gc-world-ranking-officer.none":
-      "Ответственных за мировой рейтинг нет (Гольф-крокет)",
+      "Нет ответственных за мировой рейтинг по гольф-крокету",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Убрать ответственного за мировой рейтинг (Гольф-крокет)",
+      "Удаление ответственного за мировой рейтинг по гольф-крокету",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} перестанет быть ответственным за мировой рейтинг (Гольф-крокет).",
+      "{name} больше не будет ответственным за мировой рейтинг по гольф-крокету.",
+    // The page where the world ranking players are imported, and its log.
     "admin.worldRankings.title": "Импорт игроков мирового рейтинга",
     "admin.worldRankings.import": "Импортировать",
     "admin.worldRankings.log": "Как прошёл импорт",
@@ -555,29 +599,30 @@ export const russian: Language = {
     "admin.worldRankings.gc.kept": "Сохранено игроков гольф-крокета: {players}",
     "admin.worldRankings.gc.refused":
       "Список гольф-крокета не удалось прочитать, поэтому его игроки оставлены как были.",
-    "admin.worldRankings.finished": "Завершено",
-    "admin.worldRankings.failed": "Импорт не завершился.",
-    "admin.worldRankings.otherwise": "На сайте что-то сломалось.",
+    "admin.worldRankings.finished": "Готово",
+    "admin.worldRankings.failed": "Импорт не завершён.",
+    "admin.worldRankings.otherwise": "На сайте что-то пошло не так.",
     "WorldRankingLists.Unreachable":
-      "Не удалось связаться с сайтом мирового рейтинга.",
+      "Не удалось связаться с сайтом мировых рейтингов.",
     "WorldRankingLists.Unreadable":
-      "Список не похож на списки мирового рейтинга: строку не удалось прочитать, в ней никого нет или она написана не в UTF-8.",
+      "Список составлен не так, как составляют свои списки мировые рейтинги: одну из строк не удалось прочитать, в списке никого нет или он записан не в UTF-8.",
+    // The documents the import from the old sites refused.
     "admin.importErrors.title": "Ошибки импорта",
     "admin.importErrors.none": "Ошибок импорта нет",
-    "admin.importErrors.otherwise": "На сайте что-то сломалось.",
-    "admin.logs.title": "Журналы",
+    "admin.importErrors.otherwise": "На сайте что-то пошло не так.",
+    "admin.logs.title": "Журнал",
     "admin.logs.severity": "Важность",
-    "admin.logs.text": "Поиск",
+    "admin.logs.text": "Найти",
     "admin.logs.show": "Показать",
     "admin.logs.prune": "Очистить",
     "admin.logs.pruneAsk":
-      "Удалить журнал старше последнего часа? Восстановить его будет нельзя.",
+      "Удалить журнал за время до последнего часа? Вернуть его будет нельзя.",
     "admin.logs.removed": "Удалено записей: {count}",
     "admin.logs.none": "Записей в журнале нет",
-    "admin.logs.otherwise": "На сайте что-то сломалось.",
+    "admin.logs.otherwise": "На сайте что-то пошло не так.",
     "admin.hover.logs.show": "Показать подходящие записи",
-    "admin.hover.logs.prune": "Удалить журнал старше последнего часа",
-    "admin.hover.logs.pruneAgree": "Удалить журнал старше последнего часа",
+    "admin.hover.logs.prune": "Удалить журнал за время до последнего часа",
+    "admin.hover.logs.pruneAgree": "Удалить журнал за время до последнего часа",
     "admin.importError.title": "Ошибка импорта",
     "admin.importError.documentId": "Идентификатор документа",
     "admin.importError.tournament": "Турнир",
@@ -585,70 +630,72 @@ export const russian: Language = {
     "admin.importError.newSite": "Новый сайт",
     "admin.importError.oldSite": "Старый сайт",
     "ImportErrorKept.NotFound":
-      "Импорт не сохранил ни одной ошибки для этого документа.",
+      "Импорт не сохранил ошибки для этого документа.",
     "admin.competitionView.otherwise":
-      "Отсюда этим соревнованием управлять нельзя.",
+      "Этим соревнованием нельзя управлять отсюда.",
+    // The Competitions tab.
     "admin.competitions.block": "Группа",
-    "admin.competitions.knockout": "На вылет",
-    "admin.competitions.swiss": "Швейцарская",
+    "admin.competitions.knockout": "Плей-офф",
+    "admin.competitions.swiss": "Швейцарская система",
     "admin.competitions.view": "Открыть",
     "admin.competitions.edit": "Изменить",
-    "admin.competitions.up": "Выше",
-    "admin.competitions.down": "Ниже",
-    "admin.competitions.archive": "Архивировать",
+    "admin.competitions.up": "Вверх",
+    "admin.competitions.down": "Вниз",
+    "admin.competitions.archive": "В архив",
     "admin.competitions.restore": "Восстановить",
     "admin.competitions.archived": "Соревнования в архиве",
-    "admin.competitions.none": "Нет соревнований",
+    "admin.competitions.none": "Соревнований нет",
     "admin.competitions.add": "Добавить соревнование",
     // The competition dialog.
-    "admin.competition.addTitle": "Добавить соревнование",
-    "admin.competition.editTitle": "Изменить соревнование",
+    "admin.competition.addTitle": "Добавление соревнования",
+    "admin.competition.editTitle": "Изменение соревнования",
     "admin.competition.name": "Название",
     "admin.competition.kind": "Тип",
-    "admin.competition.bestOf": "Лучшая из",
+    "admin.competition.bestOf": "Партий в матче",
     "admin.competition.rounds": "Туры",
     "admin.competition.places": "Места",
     "admin.competition.round": "Раунд {number}",
-    "admin.competition.bestOfs": "Лучшая из",
+    "admin.competition.bestOfs": "Партий в матчах",
     "admin.competition.quarters": "Четвертьфиналы",
     "admin.competition.semis": "Полуфиналы",
     "admin.competition.final": "Финал",
     "admin.competition.add": "Добавить",
     "admin.competition.save": "Сохранить",
-    "admin.competition.added": "Добавлено: {name}.",
+    "admin.competition.added": "{name}: добавлено.",
     "admin.competition.otherwise":
-      "В таком виде это соревнование сохранить нельзя.",
+      "Это соревнование нельзя сохранить в таком виде.",
     "CompetitionName.Missing": "Введите название.",
     "CompetitionName.TooLong":
-      "Название может состоять не более чем из 254 символов.",
+      "Название может содержать не более 254 символов.",
     "CompetitionName.NoLetterOrDigit":
-      "В названии нужна хотя бы одна буква или цифра.",
+      "В названии должна быть буква или цифра.",
     "Tournament.KnockoutPlayerHasGames":
-      "У некоторых игроков этой сетки есть партии, поэтому их места менять нельзя.",
+      "У игроков этой сетки есть игры, поэтому её места менять нельзя.",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "Нельзя сократить раунд, в котором есть решённый матч.",
+      "Раунд с решённым матчем нельзя сделать короче.",
     "Tournament.KnockoutLaterRoundHasGames":
-      "Раунд нельзя менять, если в более позднем раунде уже сыграна партия.",
+      "Раунд нельзя изменить, если в следующем раунде уже сыграна игра.",
     "Tournament.CompetitionNameTaken":
-      "У другого соревнования этого турнира уже есть такое название.",
+      "Другое соревнование этого турнира уже называется так.",
     "BestOf.NotWhole": "Введите целое число партий.",
-    "BestOf.TooSmall": "Встреча должна быть лучшей минимум из 1 партии.",
+    "BestOf.TooSmall": "Матч должен играться как минимум до 1 партии.",
     "Rounds.NotWhole": "Введите целое число туров.",
-    "Rounds.TooSmall": "Группа должна играться минимум в 1 тур.",
+    "Rounds.TooSmall": "Группа должна играться как минимум в 1 тур.",
     "KnockoutDraw.EvenBestOf":
-      "У встречи на вылет должен быть победитель, поэтому она играется как лучшая из нечётного числа партий.",
+      "В матче плей-офф должен быть победитель, поэтому он играется до нечётного числа партий.",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
     "admin.hover.tournaments.new": "Создать новый турнир",
     "admin.hover.tournaments.manage":
       "Управлять игроками, командами, соревнованиями и результатами этого турнира",
-    "admin.hover.tournaments.edit": "Изменить сведения об этом турнире",
+    "admin.hover.tournaments.edit": "Изменить данные этого турнира",
     "admin.hover.tournaments.scores": "Ввести результаты этого турнира",
-    "admin.hover.tournaments.players": "Заняться игроками этого турнира",
+    "admin.hover.tournaments.players": "Заниматься игроками этого турнира",
     "admin.hover.competitions.view":
-      "Открыть это соревнование, чтобы увидеть и ввести его игроков и результаты",
+      "Открыть это соревнование, чтобы видеть и вводить его игроков и результаты",
     "admin.hover.tests.view":
-      "Открыть этот тест, чтобы увидеть и ввести его результаты",
+      "Открыть этот тест, чтобы видеть и вводить его результаты",
     "admin.hover.teams.view":
-      "Открыть эту команду, чтобы увидеть её игроков и управлять ими",
+      "Открыть эту команду, чтобы видеть её игроков и управлять ими",
     "admin.hover.dialog.player.add": "Добавить этого игрока в турнир",
     "admin.hover.dialog.player.save": "Сохранить изменения этого игрока",
     "admin.hover.dialog.team.add": "Добавить эту команду в турнир",
@@ -667,56 +714,58 @@ export const russian: Language = {
     "admin.hover.modal.ok": "Закрыть это сообщение",
     "admin.hover.tab": "Показать вкладку «{name}»",
     "admin.hover.tournaments.archive":
-      "Архивировать этот турнир; его можно восстановить",
+      "Отправить этот турнир в архив; его можно будет восстановить",
     "admin.hover.tournaments.restore": "Вернуть этот турнир из архива",
     "admin.hover.players.add": "Добавить игрока в этот турнир",
-    "admin.hover.players.edit": "Изменить сведения об этом игроке",
-    "admin.hover.players.up": "Поднять этого игрока выше в списке",
-    "admin.hover.players.down": "Опустить этого игрока ниже в списке",
+    "admin.hover.players.edit": "Изменить данные этого игрока",
+    "admin.hover.players.up": "Переместить этого игрока выше в списке",
+    "admin.hover.players.down": "Переместить этого игрока ниже в списке",
     "admin.hover.players.archive":
-      "Архивировать этого игрока; его можно восстановить",
+      "Отправить этого игрока в архив; его можно будет восстановить",
     "admin.hover.players.restore": "Вернуть этого игрока из архива",
     "admin.hover.teams.add": "Добавить команду в этот турнир",
-    "admin.hover.teams.edit": "Изменить сведения об этой команде",
-    "admin.hover.teams.up": "Поднять эту команду выше в списке",
-    "admin.hover.teams.down": "Опустить эту команду ниже в списке",
+    "admin.hover.teams.edit": "Изменить данные этой команды",
+    "admin.hover.teams.up": "Переместить эту команду выше в списке",
+    "admin.hover.teams.down": "Переместить эту команду ниже в списке",
     "admin.hover.teams.archive":
-      "Архивировать эту команду; её можно восстановить",
+      "Отправить эту команду в архив; её можно будет восстановить",
     "admin.hover.teams.restore": "Вернуть эту команду из архива",
     "admin.hover.competitions.add": "Добавить соревнование в этот турнир",
-    "admin.hover.competitions.edit": "Изменить сведения об этом соревновании",
-    "admin.hover.competitions.up": "Поднять это соревнование выше в списке",
-    "admin.hover.competitions.down": "Опустить это соревнование ниже в списке",
+    "admin.hover.competitions.edit": "Изменить данные этого соревнования",
+    "admin.hover.competitions.up": "Переместить это соревнование выше в списке",
+    "admin.hover.competitions.down":
+      "Переместить это соревнование ниже в списке",
     "admin.hover.competitions.archive":
-      "Архивировать это соревнование; его можно восстановить",
+      "Отправить это соревнование в архив; его можно будет восстановить",
     "admin.hover.competitions.restore": "Вернуть это соревнование из архива",
     "admin.hover.tests.add": "Добавить тест между двумя командами",
-    "admin.hover.tests.edit": "Изменить сведения об этом тесте",
-    "admin.hover.tests.up": "Поднять этот тест выше в списке",
-    "admin.hover.tests.down": "Опустить этот тест ниже в списке",
+    "admin.hover.tests.edit": "Изменить данные этого теста",
+    "admin.hover.tests.up": "Переместить этот тест выше в списке",
+    "admin.hover.tests.down": "Переместить этот тест ниже в списке",
     "admin.hover.tests.archive":
-      "Архивировать этот тест; его можно восстановить",
+      "Отправить этот тест в архив; его можно будет восстановить",
     "admin.hover.tests.restore": "Вернуть этот тест из архива",
     "admin.hover.tests.toTeams":
-      "Перейти на вкладку «Команды», чтобы добавить команды, нужные для теста",
-    "admin.hover.scores.add": "Добавить в это соревнование результат матча",
+      "Перейти на вкладку «Команды», чтобы добавить команды для теста",
+    "admin.hover.scores.add": "Добавить результат партии в это соревнование",
     "admin.hover.scores.edit": "Исправить этот результат",
     "admin.hover.scores.archive":
-      "Архивировать этот результат, чтобы он больше не учитывался; его можно восстановить",
+      "Отправить этот результат в архив, чтобы он не учитывался; его можно будет восстановить",
     "admin.hover.scores.restore":
       "Вернуть этот результат из архива, чтобы он снова учитывался",
     "admin.hover.scores.withdraw":
       "Оставить этот результат в списке, но не учитывать его",
     "admin.hover.scores.unwithdraw": "Снова учитывать этот снятый результат",
-    "admin.hover.scores.up": "Переместить этот результат выше в списке",
-    "admin.hover.scores.down": "Переместить этот результат ниже в списке",
+    "admin.hover.scores.up": "Переместить этот результат раньше в списке",
+    "admin.hover.scores.down": "Переместить этот результат позже в списке",
     "admin.hover.competitionPlayers.add":
-      "Включить выбранного игрока в это соревнование",
-    "admin.hover.competitionPlayers.up": "Поднять этого игрока выше в списке",
+      "Добавить выбранного игрока в это соревнование",
+    "admin.hover.competitionPlayers.up":
+      "Переместить этого игрока выше в списке",
     "admin.hover.competitionPlayers.down":
-      "Опустить этого игрока ниже в списке",
+      "Переместить этого игрока ниже в списке",
     "admin.hover.competitionPlayers.remove":
-      "Исключить этого игрока из соревнования",
+      "Убрать этого игрока из соревнования",
     "admin.hover.competitionPlayers.withdraw":
       "Снять этого игрока с соревнования",
     "admin.hover.competitionPlayers.unwithdraw":
@@ -728,54 +777,60 @@ export const russian: Language = {
     "admin.hover.notes.delete": "Удалить эту заметку",
     "admin.hover.note.add": "Сохранить эту заметку и добавить её в турнир",
     "admin.hover.note.save": "Сохранить изменения этой заметки",
-    "admin.hover.people.add": "Дать эту роль этому человеку",
-    "admin.hover.people.remove": "Лишить этого человека этой роли",
+    "admin.hover.people.add": "Дать этому человеку роль",
+    "admin.hover.people.remove": "Забрать роль у этого человека",
     "admin.hover.worldRankings.import":
       "Получить мировые рейтинги и добавить их игроков",
     "admin.modal.cancel": "Отмена",
-    "admin.modal.ok": "ОК",
+    // The one button of a modal dialog that only tells the reader something.
+    "admin.modal.ok": "OK",
+    // The Managers and Scorers tabs.
     "admin.people.emailAddress": "Адрес электронной почты",
-    "admin.people.remove": "Убрать",
+    "admin.people.remove": "Удалить",
     "admin.people.otherwise": "Это не удалось сделать.",
+    // Beside the reader's own name among the managers.
     "admin.managers.you": "Вы",
-    "admin.managers.add": "Добавить управляющего",
-    "admin.managers.none": "Управляющих нет",
-    "admin.managers.removeTitle": "Убрать управляющего",
+    "admin.managers.add": "Добавить организатора",
+    "admin.managers.none": "Организаторов нет",
+    "admin.managers.removeTitle": "Удаление организатора",
     "admin.managers.removeExplanation":
-      "{name} больше не сможет управлять этим турниром.",
+      "{name} больше не сможет проводить этот турнир.",
     "admin.managers.removeYourself.explanation":
-      "Вы больше не сможете управлять этим турниром, и здесь никто не сможет отменить это за вас. Другой управляющий может снова сделать вас управляющим.",
-    "admin.managers.otherwise": "Этот адрес нельзя сделать управляющим.",
+      "Вы больше не сможете проводить этот турнир, и никто здесь не сможет отменить это за вас. Другой организатор может снова сделать вас организатором.",
+    "admin.managers.otherwise": "Этот адрес нельзя сделать организатором.",
+    // A competition's Players tab.
     "admin.competitionPlayers.add": "Добавить игрока",
-    // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise": "Этого игрока нельзя добавить.",
-    "admin.competitionPlayers.choose": "Игрок для добавления",
+    "admin.competitionPlayers.choose": "Добавляемый игрок",
     "admin.competitionPlayers.nobody": "Выберите игрока",
-    "admin.competitionPlayers.bye": "Бай",
+    // Offered in a knockout's drop-down, and what a bye is listed as.
+    "admin.competitionPlayers.bye": "Bye",
     "admin.competitionPlayers.all": "Все игроки уже в соревновании",
-    "admin.competitionPlayers.none": "Нет игроков",
-    "admin.competitionPlayers.up": "Выше",
-    "admin.competitionPlayers.down": "Ниже",
-    "admin.competitionPlayers.remove": "Убрать",
+    "admin.competitionPlayers.none": "Игроков нет",
+    "admin.competitionPlayers.up": "Вверх",
+    "admin.competitionPlayers.down": "Вниз",
+    "admin.competitionPlayers.remove": "Удалить",
     "admin.competitionPlayers.withdraw": "Снять",
-    "admin.competitionPlayers.unwithdraw": "Отменить снятие",
-    "admin.competitionPlayers.withdrawn": "Снятые игроки",
-    "admin.competitionPlayers.removeTitle": "Убрать игрока",
+    "admin.competitionPlayers.unwithdraw": "Вернуть",
+    "admin.competitionPlayers.withdrawn": "Снявшиеся игроки",
+    "admin.competitionPlayers.removeTitle": "Удаление игрока",
     "admin.competitionPlayers.removeQuestion":
-      "{name} будет исключён из соревнования. Это нельзя отменить.",
-    "admin.competitionPlayers.withdrawTitle": "Снять игрока",
+      "{name} будет убран из соревнования. Это невозможно отменить.",
+    "admin.competitionPlayers.withdrawTitle": "Снятие игрока",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} больше не будет играть в соревновании, а несыгранные им партии будут решены без его участия.",
-    "admin.competitionPlayers.carryForward": "Перенос",
-    "admin.carryForward.title": "Перенос – {name}",
+      "{name} не будет играть в соревновании дальше, а несыгранные им игры будут решены без него.",
+    "admin.competitionPlayers.carryForward": "Перенос результатов",
+    // The carry forward dialog.
+    "admin.carryForward.title": "Перенос результатов - {name}",
     "admin.carryForward.save": "Сохранить",
-    "admin.carryForward.otherwise": "Этот перенос сохранить нельзя.",
+    "admin.carryForward.otherwise":
+      "Этот перенос результатов нельзя сохранить.",
     "admin.carryForward.matchWins": "Выигранные матчи",
     "admin.carryForward.matchLosses": "Проигранные матчи",
     "admin.carryForward.gameWins": "Выигранные партии",
     "admin.carryForward.gameLosses": "Проигранные партии",
-    "admin.carryForward.hoopsFor": "Воротца за",
-    "admin.carryForward.hoopsAgainst": "Воротца против",
+    "admin.carryForward.hoopsFor": "Ворот за",
+    "admin.carryForward.hoopsAgainst": "Ворот против",
     "CarryForward.MatchWinsNotWhole": "Введите целое число выигранных матчей.",
     "CarryForward.MatchWinsBelowZero":
       "Введите 0 или больше выигранных матчей.",
@@ -789,138 +844,145 @@ export const russian: Language = {
       "Введите целое число проигранных партий.",
     "CarryForward.GameLossesBelowZero":
       "Введите 0 или больше проигранных партий.",
-    "CarryForward.HoopsForNotWhole": "Введите целое число воротец за.",
-    "CarryForward.HoopsForBelowZero": "Введите 0 или больше воротец за.",
-    "CarryForward.HoopsAgainstNotWhole": "Введите целое число воротец против.",
-    "CarryForward.HoopsAgainstBelowZero":
-      "Введите 0 или больше воротец против.",
+    "CarryForward.HoopsForNotWhole": "Введите целое число ворот за.",
+    "CarryForward.HoopsForBelowZero": "Введите 0 или больше ворот за.",
+    "CarryForward.HoopsAgainstNotWhole": "Введите целое число ворот против.",
+    "CarryForward.HoopsAgainstBelowZero": "Введите 0 или больше ворот против.",
+    // A competition's Scores tab and the score dialog.
     "admin.scores.add": "Добавить результат",
-    "admin.scores.none": "Нет результатов",
+    "admin.scores.none": "Результатов нет",
     "admin.scores.edit": "Изменить",
     "admin.scores.drawNotFilledTitle": "Сетка не заполнена",
-    "admin.scores.archive": "Архивировать",
-    "admin.scores.up": "Выше",
-    "admin.scores.down": "Ниже",
+    "admin.scores.archive": "В архив",
+    "admin.scores.up": "Вверх",
+    "admin.scores.down": "Вниз",
     "admin.scores.restore": "Восстановить",
     "admin.scores.archived": "Результаты в архиве",
     "admin.scores.archivedSaid": "В архиве",
     "admin.scores.withdraw": "Снять",
-    "admin.scores.unwithdraw": "Отменить снятие",
+    "admin.scores.unwithdraw": "Вернуть",
     "admin.scores.withdrawnSaid": "Снят",
     "admin.scores.otherwise": "Это не удалось сделать.",
-    "admin.score.title": "Добавить результат",
+    "admin.score.title": "Добавление результата",
     "admin.score.add": "Добавить партию",
     "admin.score.winner": "Победитель",
-    "admin.score.winnerScore": "Очки победителя",
+    "admin.score.winnerScore": "Счёт победителя",
     "admin.score.loser": "Проигравший",
-    "admin.score.loserScore": "Очки проигравшего",
-    "admin.score.beat": "выигрывает у",
-    "admin.score.added": "Добавлена партия: {winner} выигрывает у {loser}.",
+    "admin.score.loserScore": "Счёт проигравшего",
+    "admin.score.beat": "победил",
+    "admin.score.added":
+      "Партия, в которой {winner} победил {loser}, добавлена.",
     "admin.score.otherwise": "Партию не удалось добавить.",
-    "admin.score.correctTitle": "Изменить результат",
+    "admin.score.correctTitle": "Изменение результата",
     "admin.score.save": "Сохранить",
     "admin.score.notCorrected": "Результат не удалось исправить.",
     "Game.WinnerMissing": "Выберите победителя.",
-    "Game.WinnerScoreMissing": "Введите очки победителя.",
+    "Game.WinnerScoreMissing": "Введите счёт победителя.",
     "Game.LoserMissing": "Выберите проигравшего.",
-    "Game.LoserScoreMissing": "Введите очки проигравшего.",
-    "Score.NoPoints": "Очки начинаются с числа.",
-    "Game.SamePlayer": "Никто не играет против самого себя.",
+    "Game.LoserScoreMissing": "Введите счёт проигравшего.",
+    "Score.NoPoints": "Счёт должен начинаться с числа очков.",
+    "Game.SamePlayer": "Игрок не может играть сам с собой.",
     "Game.WinnerNotAhead":
-      "У победителя должно быть больше очков, чем у проигравшего, либо он должен быть отмечен как победитель.",
-    "Game.LoserMarked": "Очки проигравшего нельзя отметить как выигранные.",
+      "Счёт победителя должен быть больше счёта проигравшего или отмечен как победный.",
+    "Game.LoserMarked": "Счёт проигравшего нельзя отметить как победный.",
     "Game.ResultChanged":
-      "Исправление сохраняет исход: выигранная партия остаётся выигранной, а сыгранная вничью остаётся ничьей.",
+      "Исправление сохраняет результат: выигранная партия остаётся выигранной, а сыгранная вничью остаётся ничьей.",
     "Competition.MatchDecided": "Их матч уже решён.",
-    "Competition.DrawFull": "Игрока нельзя добавить: сетка заполнена.",
+    "Competition.DrawFull":
+      "Игрока нельзя добавить, потому что сетка плей-офф заполнена.",
     "Competition.DrawNotFilled":
-      "Результаты нельзя добавлять, пока на каждом месте сетки нет игрока или бая.",
-    "Competition.ByeOutsideKnockout": "Бай бывает только в турнире на вылет.",
+      "Результаты нельзя добавлять, пока каждое место в сетке плей-офф не занято игроком или Bye.",
+    "Competition.ByeOutsideKnockout": "Bye бывает только в плей-офф.",
     "Competition.NotDrawnToMeet":
-      "По сетке эти игроки сейчас не должны играть друг с другом.",
+      "Эти игроки сейчас не должны играть друг с другом в плей-офф.",
     "Competition.WinnerHasPlayedOn":
-      "Победитель этого матча уже сыграл следующую партию, поэтому менять, кто победил, нельзя.",
-    "CompetitionPlayer.Withdrawn": "Снятый игрок больше не играет.",
+      "Победитель этого матча уже сыграл свою следующую игру, поэтому изменить, кто победил, нельзя.",
+    "CompetitionPlayer.Withdrawn": "Снявшийся игрок больше не играет.",
     "admin.players.add": "Добавить игрока",
-    "admin.players.none": "Нет игроков",
+    "admin.players.none": "Игроков нет",
     "admin.players.edit": "Изменить",
-    "admin.players.archive": "Архивировать",
+    "admin.players.archive": "В архив",
     "admin.players.restore": "Восстановить",
-    "admin.players.up": "Выше",
-    "admin.players.down": "Ниже",
-    "admin.players.archiveTitle": "Архивировать игрока",
+    "admin.players.up": "Вверх",
+    "admin.players.down": "Вниз",
+    // Asked before archiving a player who is in competitions.
+    "admin.players.archiveTitle": "Архивирование игрока",
     "admin.players.archiveQuestion": "{name} будет убран из этих соревнований:",
     "admin.players.archive.explanation":
-      "Восстановление игрока не вернёт его в эти соревнования.",
+      "При восстановлении игрок не вернётся в эти соревнования.",
     "admin.players.archived": "Игроки в архиве",
     "admin.players.archivedSaid": "В архиве",
-    "admin.player.addTitle": "Добавить игрока",
-    "admin.player.editTitle": "Изменить игрока",
+    // The player dialog.
+    "admin.player.addTitle": "Добавление игрока",
+    "admin.player.editTitle": "Изменение игрока",
     "admin.player.name": "Имя",
     "admin.player.representing": "Представляет",
-    "admin.player.worldRankingName": "Имя в мировом рейтинге",
+    "admin.player.worldRankingName": "Имя игрока в мировом рейтинге",
     "admin.player.worldRankingKnown": "Мировой рейтинг знает это имя.",
     "admin.player.worldRankingQuestioned":
-      "В мировом рейтинге нет игрока с таким именем. Возможно, оно написано с ошибкой или игрок новый в рейтинге.",
+      "В мировом рейтинге нет игрока с таким именем. Возможно, оно написано с ошибкой или игрок новичок в рейтинге.",
     "admin.player.flag": "Флаг",
     "admin.player.add": "Добавить",
     "admin.player.save": "Сохранить",
-    "admin.player.added": "Добавлен игрок: {name}.",
-    "admin.player.otherwise": "В таком виде этого игрока сохранить нельзя.",
+    "admin.player.added": "{name}: добавлено.",
+    "admin.player.otherwise": "Этого игрока нельзя сохранить в таком виде.",
     "Tournament.PlayerNameTaken":
-      "У другого игрока этого турнира уже есть такое имя.",
+      "Другой игрок этого турнира уже носит такое имя.",
     "TournamentPlayer.NoSuchFlag": "Выберите один из имеющихся флагов.",
-    "TournamentPlayer.NamedBye": "Игрока нельзя назвать Бай.",
-    "TournamentPlayer.NoLetterOrDigit":
-      "В имени нужна хотя бы одна буква или цифра.",
-    "admin.player.byesTitle": "Баи не добавляются",
+    "TournamentPlayer.NamedBye": "Игрока нельзя назвать Bye.",
+    "TournamentPlayer.NoLetterOrDigit": "В имени должна быть буква или цифра.",
+    // The dialog over the player dialog when a player is named as a bye.
+    "admin.player.byesTitle": "Bye добавлять не нужно",
     "admin.player.byes":
-      "Бай не является игроком турнира. Турнир на вылет предлагает Бай при добавлении его игроков, столько раз, сколько нужно его сетке.",
+      "Bye не входит в число игроков турнира. Плей-офф предлагает Bye всякий раз при добавлении игроков, столько раз, сколько нужно его сетке.",
+    // A tournament played by teams.
     "admin.view.teams": "Команды",
     "admin.view.tests": "Тесты",
     "admin.teams.add": "Добавить команду",
-    "admin.teams.none": "Нет команд",
+    "admin.teams.none": "Команд нет",
     "admin.teams.edit": "Изменить",
     "admin.teams.view": "Открыть",
-    "admin.teams.archive": "Архивировать",
+    "admin.teams.archive": "В архив",
     "admin.teams.restore": "Восстановить",
-    "admin.teams.up": "Выше",
-    "admin.teams.down": "Ниже",
+    "admin.teams.up": "Вверх",
+    "admin.teams.down": "Вниз",
     "admin.teams.archived": "Команды в архиве",
     "admin.teams.archivedSaid": "В архиве",
-    "admin.team.addTitle": "Добавить команду",
-    "admin.team.editTitle": "Изменить команду",
+    "admin.team.addTitle": "Добавление команды",
+    "admin.team.editTitle": "Изменение команды",
     "admin.team.name": "Название",
     "admin.team.shortName": "Краткое название",
     "admin.team.shortName.explanation":
-      "Как называются тесты команды, например AUS v ENG.",
+      "Так называются тесты команды, например AUS v ENG.",
     "admin.team.flag": "Флаг",
     "admin.team.add": "Добавить",
     "admin.team.save": "Сохранить",
-    "admin.team.added": "Добавлено: {name}.",
-    "admin.team.otherwise": "В таком виде эту команду сохранить нельзя.",
-    "admin.teamView.otherwise": "Отсюда эту команду посмотреть нельзя.",
+    "admin.team.added": "{name}: добавлено.",
+    "admin.team.otherwise": "Эту команду нельзя сохранить в таком виде.",
+    "admin.teamView.otherwise": "Эту команду нельзя просмотреть отсюда.",
     "admin.teamView.players": "Игроки",
     "TeamName.Missing": "Укажите название команды.",
     "TeamName.TooLong": "Это название слишком длинное.",
     "admin.notes.add": "Добавить заметку",
-    "admin.notes.none": "Нет заметок",
+    "admin.notes.none": "Заметок нет",
     "admin.notes.edit": "Изменить",
     "admin.notes.delete": "Удалить",
-    "admin.notes.deleteTitle": "Удалить заметку",
+    // Asked before deleting a note.
+    "admin.notes.deleteTitle": "Удаление заметки",
     "admin.notes.deleteQuestion": "Удалить заметку «{title}»?",
     "admin.notes.delete.explanation":
-      "Удалённая заметка исчезает навсегда, и её нельзя вернуть.",
+      "Удалённая заметка исчезает навсегда, и вернуть её нельзя.",
     "admin.notes.otherwise": "Это не удалось сделать.",
-    "admin.note.addTitle": "Добавить заметку",
-    "admin.note.editTitle": "Изменить заметку",
+    // The note dialog.
+    "admin.note.addTitle": "Добавление заметки",
+    "admin.note.editTitle": "Изменение заметки",
     "admin.note.title": "Заголовок",
     "admin.note.description": "Описание",
     "admin.note.write": "Текст",
-    "admin.note.preview": "Предпросмотр",
+    "admin.note.preview": "Просмотр",
     "admin.note.toolbar": "Форматирование",
     "admin.note.tool.heading": "Заголовок",
-    "admin.note.tool.bold": "Жирный",
+    "admin.note.tool.bold": "Полужирный",
     "admin.note.tool.italic": "Курсив",
     "admin.note.tool.quote": "Цитата",
     "admin.note.tool.code": "Код",
@@ -930,11 +992,11 @@ export const russian: Language = {
     "admin.note.tool.taskList": "Список задач",
     "admin.note.add": "Добавить",
     "admin.note.save": "Сохранить",
-    "admin.note.otherwise": "В таком виде эту заметку сохранить нельзя.",
+    "admin.note.otherwise": "Эту заметку нельзя сохранить в таком виде.",
     "ManagerNoteTitle.Missing": "Дайте заметке заголовок.",
     "ManagerNoteTitle.TooLong": "Этот заголовок слишком длинный.",
     "ManagerNoteTitle.NoLetterOrDigit":
-      "В заголовке нужна хотя бы одна буква или цифра.",
+      "В заголовке должна быть буква или цифра.",
     "ManagerNoteDescription.TooLong": "Это описание слишком длинное.",
     "ManagerNoteToEdit.NoSuchManagerNote":
       "Этой заметки больше нет. Возможно, её удалил другой организатор.",
@@ -947,140 +1009,138 @@ export const russian: Language = {
     "CommentaryTitle.Missing": "Дайте обсуждению заголовок.",
     "CommentaryTitle.TooLong": "Этот заголовок слишком длинный.",
     "CommentaryTitle.NoLetterOrDigit":
-      "В заголовке нужна хотя бы одна буква или цифра.",
-    "Commentary.TitleTaken": "У другого обсуждения уже есть такой заголовок.",
+      "В заголовке должна быть буква или цифра.",
+    "Commentary.TitleTaken": "Другое обсуждение уже имеет такой заголовок.",
     "CommentText.Missing": "Напишите что-нибудь в комментарии.",
     "CommentText.TooLong": "Этот комментарий слишком длинный.",
     "TeamShortName.Missing": "Дайте команде краткое название.",
     "TeamShortName.TooLong":
-      "Краткое название может состоять не более чем из 10 символов.",
+      "Краткое название может содержать не более 10 символов.",
     "TeamShortName.NoLetterOrDigit":
-      "В кратком названии нужна хотя бы одна буква или цифра.",
+      "В кратком названии должна быть буква или цифра.",
     "Team.ShortNameLongerThanName":
       "Краткое название не может быть длиннее названия команды.",
     "Team.NoSuchFlag": "Выберите один из имеющихся флагов.",
-    "Team.Archived": "Эта команда в архиве, и сначала её нужно восстановить.",
+    "Team.Archived": "Эта команда в архиве; сначала её нужно восстановить.",
     "Team.InATest": "Эта команда играет в тесте, и её нельзя архивировать.",
-    "Team.PlayerNameTaken": "У другого игрока этой команды уже есть такое имя.",
-    "TeamPlayer.NamedBye": "Игрока нельзя назвать Бай.",
+    "Team.PlayerNameTaken": "Другой игрок этой команды уже носит такое имя.",
+    "TeamPlayer.NamedBye": "Игрока нельзя назвать Bye.",
     "TeamPlayer.Archived":
-      "Этот игрок в архиве, и сначала его нужно восстановить.",
-    "TeamPlayer.HasGames": "Этот игрок играл, и его нельзя архивировать.",
+      "Этот игрок в архиве; сначала его нужно восстановить.",
+    "TeamPlayer.HasGames": "Этот игрок уже играл, и его нельзя архивировать.",
     "Tournament.TeamNameTaken":
-      "У другой команды этого турнира уже есть такое название.",
+      "Другая команда этого турнира уже называется так.",
     "Tournament.TeamShortNameTaken":
-      "У другой команды этого турнира уже есть такое краткое название.",
+      "У другой команды этого турнира уже такое краткое название.",
     "Tournament.NoSuchTeam": "В этом турнире нет команды по этому адресу.",
     "Tournament.TeamArchived":
       "Эта команда в архиве, и восстановить её можно только на вкладке «Команды».",
     "admin.tests.add": "Добавить тест",
-    "admin.tests.none": "Нет тестов",
+    "admin.tests.none": "Тестов нет",
     "admin.tests.edit": "Изменить",
     "admin.tests.view": "Открыть",
-    "admin.tests.archive": "Архивировать",
+    "admin.tests.archive": "В архив",
     "admin.tests.restore": "Восстановить",
-    "admin.tests.up": "Выше",
-    "admin.tests.down": "Ниже",
+    "admin.tests.up": "Вверх",
+    "admin.tests.down": "Вниз",
     "admin.tests.archived": "Тесты в архиве",
     "admin.tests.twoTeamsNeeded":
-      "Тест играют две команды, поэтому сначала нужны две команды.",
+      "Тест проходит между двумя командами, поэтому сначала нужны две команды.",
     "admin.tests.toTeams": "Перейти к командам",
     "admin.tests.matches.one": "{count} матч",
-    "admin.tests.matches.other": "матчей: {count}",
-    "admin.tests.bestOf": "лучшая из {games}",
+    "admin.tests.matches.other": "Матчей: {count}",
+    "admin.tests.bestOf": "из {games} партий",
     "admin.tests.otherwise": "Это не удалось сделать.",
-    "admin.test.addTitle": "Добавить тест",
-    "admin.test.editTitle": "Изменить тест",
+    "admin.test.addTitle": "Добавление теста",
+    "admin.test.editTitle": "Изменение теста",
     "admin.test.firstTeam": "Команда A",
     "admin.test.secondTeam": "Команда B",
     "admin.test.versus": "v",
     "admin.test.starts": "Начало",
     "admin.test.finishes": "Окончание",
-    "admin.test.expectedMatches": "Ожидаемые матчи",
-    "admin.test.bestOf": "Лучшая из",
+    "admin.test.expectedMatches": "Ожидаемое число матчей",
+    "admin.test.bestOf": "Партий в матче",
     "admin.test.group": "Группа",
     "admin.test.add": "Добавить",
     "admin.test.save": "Сохранить",
-    "admin.test.added": "Добавлено: {name}.",
-    "admin.test.otherwise": "В таком виде этот тест сохранить нельзя.",
-    "admin.testView.otherwise": "Отсюда этот тест посмотреть нельзя.",
+    "admin.test.added": "{name}: добавлено.",
+    "admin.test.otherwise": "Этот тест нельзя сохранить в таком виде.",
+    "admin.testView.otherwise": "Этот тест нельзя просмотреть отсюда.",
     "AddTest.FirstTeamMissing": "Выберите первую команду.",
     "AddTest.SecondTeamMissing": "Выберите вторую команду.",
     "UpdateTest.FirstTeamMissing": "Выберите первую команду.",
     "UpdateTest.SecondTeamMissing": "Выберите вторую команду.",
     "ExpectedMatches.NotWhole": "Введите целое число матчей.",
-    "ExpectedMatches.TooSmall": "В тесте должен ожидаться хотя бы 1 матч.",
+    "ExpectedMatches.TooSmall": "В тесте должен ожидаться как минимум 1 матч.",
     "TestGroup.TooLong": "Эта группа слишком длинная.",
-    "Tournament.TestAgainstItself": "Команда не играет тест против самой себя.",
+    "Tournament.TestAgainstItself": "Команда не играет тест сама с собой.",
     "Tournament.TestFinishesBeforeStarts":
-      "Тест не может закончиться раньше, чем начался.",
+      "Тест не может закончиться раньше, чем начнётся.",
     "Tournament.TestStartsBeforeTournament":
       "Тест не может начаться раньше своего турнира.",
     "Tournament.TestFinishesAfterTournament":
       "Тест не может закончиться позже своего турнира.",
     "Tournament.TestHasGamesInUse":
-      "В этом тесте есть партии, поэтому его нельзя архивировать, пока они не будут архивированы.",
+      "В этом тесте есть игры, поэтому его нельзя архивировать, пока они не заархивированы.",
     "Tournament.TestHasGames":
-      "В этом тесте уже есть партии, поэтому его команды больше менять нельзя.",
+      "В этом тесте уже есть игры, поэтому его команды больше нельзя менять.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Начато уже больше матчей, чем это число.",
     "Tournament.BestOfBelowGamesPlayed":
-      "Двое игроков уже сыграли больше партий, чем это число.",
+      "Два игрока уже сыграли больше партий, чем это число.",
     "Competition.ExpectedMatchesReached":
-      "В этом тесте уже начаты все ожидаемые матчи.",
-    "Competition.SameTeam": "Два игрока одной команды друг с другом не играют.",
+      "В этом тесте начато столько матчей, сколько в нём ожидается.",
+    "Competition.SameTeam": "Два игрока одной команды не играют друг с другом.",
     "AddManager.NoSuchAccount":
-      "У этого адреса нет учётной записи, которую можно сделать управляющей.",
-    "Account.NotAnAdministrator": "Это может сделать только администратор.",
-    "AddRole.NoSuchAccount":
-      "У этого адреса нет учётной записи, которой можно дать роль.",
-    "AddRole.NoSuchRole": "Такой роли нет.",
-    "RemoveRole.NoSuchAccount": "Такой учётной записи нет.",
-    "RemoveRole.NoSuchRole": "Такой роли нет.",
-    "RemoveRole.Yourself": "Нельзя лишить себя роли администратора.",
-    "AccountsWithRole.NoSuchRole": "Такой роли нет.",
+      "У этого адреса нет аккаунта, который можно сделать организатором.",
     "admin.scorers.add": "Добавить секретаря",
     "admin.scorers.none": "Секретарей нет",
-    "admin.scorers.removeTitle": "Убрать секретаря",
+    "admin.scorers.removeTitle": "Удаление секретаря",
     "admin.scorers.removeExplanation":
       "{name} больше не сможет вводить результаты этого турнира.",
     "admin.scorers.otherwise": "Этот адрес нельзя сделать секретарём.",
     "AddScorer.NoSuchAccount":
-      "У этого адреса нет учётной записи, которую можно сделать секретарём.",
+      "У этого адреса нет аккаунта, который можно сделать секретарём.",
+    // Giving, taking and listing roles, which only an administrator can do.
+    "Account.NotAnAdministrator": "Это может сделать только администратор.",
+    "AddRole.NoSuchAccount":
+      "У этого адреса нет аккаунта, которому можно дать роль.",
+    "AddRole.NoSuchRole": "Такой роли нет.",
+    "RemoveRole.NoSuchAccount": "Такого аккаунта нет.",
+    "RemoveRole.NoSuchRole": "Такой роли нет.",
+    "RemoveRole.Yourself": "Вы не можете забрать у себя роль администратора.",
+    "AccountsWithRole.NoSuchRole": "Такой роли нет.",
     "Tournament.AlreadyAManager":
-      "Эта учётная запись уже управляет турниром и может делать всё, что делает секретарь.",
+      "Этот аккаунт уже управляет турниром и может делать всё, что может секретарь.",
 
+    // A tournament's refusals.
     "TournamentName.Missing": "Укажите название турнира.",
     "TournamentName.TooShort": "Это название слишком короткое.",
     "TournamentName.TooLong": "Это название слишком длинное.",
     "TournamentName.AllLowerCase":
-      "Название не может состоять только из строчных букв.",
+      "Название не может быть целиком из строчных букв.",
     "TournamentName.AllCapitals":
-      "Название не может состоять только из заглавных букв.",
-    "TournamentName.NoLetterOrDigit":
-      "В названии нужна хотя бы одна буква или цифра.",
+      "Название не может быть целиком из заглавных букв.",
+    "TournamentName.NoLetterOrDigit": "В названии должна быть буква или цифра.",
     "ReadOnlyDate.Unreadable": "Укажите день.",
     "Tournament.FinishesBeforeStarts":
-      "Турнир не может закончиться раньше, чем начался.",
+      "Турнир не может закончиться раньше, чем начнётся.",
     "Tournament.StartsAfterNextYear":
       "Турнир не может начаться позже следующего года.",
     "Tournament.FinishesAfterNextYear":
       "Турнир не может закончиться позже следующего года.",
     "CreateTournament.NoSuchCountry": "Выберите страну.",
     "TournamentSubtitle.TooLong":
-      "Подзаголовок может состоять не более чем из 2000 символов.",
+      "Подзаголовок не может быть длиннее 2000 символов.",
     "Tournament.NotAManager":
-      "Изменять этот турнир может только тот, кто им управляет.",
+      "Изменить этот турнир может только его организатор.",
     "Tournament.NotAManagerOrScorer":
-      "Смотреть этот турнир может только тот, кто им управляет или вводит его результаты.",
+      "Видеть этот турнир может только его организатор или секретарь.",
     "Tournament.Archived":
-      "Этот турнир в архиве, и его нужно восстановить, прежде чем изменять.",
-    "UpdateTournament.NoSuchTournament":
-      "По этому адресу нет ни одного турнира.",
+      "Этот турнир в архиве; чтобы его изменить, сначала нужно его восстановить.",
+    "UpdateTournament.NoSuchTournament": "По этому адресу нет турнира.",
 
-    // The sports keep the names their players use in Russian, falling back to
-    // the English where there is no established term, and the formats named
-    // for a competition keep its name, as a name is not translated.
+    // What a tournament is played in and where, by code.
     "sport.ac": "Ассоциационный крокет",
     "sport.gc": "Гольф-крокет",
     "sport.a6w": "Американский крокет на 6 воротах",
@@ -1088,9 +1148,10 @@ export const russian: Language = {
     "sport.gb": "Гейтбол",
     "format.standard": "Стандартный",
     "format.teams": "Командный",
-    "format.eire-cup": "Eire Cup",
-    "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.eire-cup": "Кубок Эйре",
+    "format.interstate-shield": "Межштатный щит",
+    "format.gc-world-team-championship":
+      "Командный чемпионат мира по гольф-крокету",
     "country.ad": "Андорра",
     "country.ae": "Объединённые Арабские Эмираты",
     "country.af": "Афганистан",
@@ -1119,7 +1180,7 @@ export const russian: Language = {
     "country.bn": "Бруней",
     "country.bo": "Боливия",
     "country.br": "Бразилия",
-    "country.bs": "Багамы",
+    "country.bs": "Багамские острова",
     "country.bt": "Бутан",
     "country.bv": "Остров Буве",
     "country.bw": "Ботсвана",
@@ -1211,7 +1272,7 @@ export const russian: Language = {
     "country.kp": "Северная Корея",
     "country.kr": "Южная Корея",
     "country.kw": "Кувейт",
-    "country.ky": "Каймановы острова",
+    "country.ky": "Острова Кайман",
     "country.kz": "Казахстан",
     "country.la": "Лаос",
     "country.lb": "Ливан",
@@ -1229,7 +1290,7 @@ export const russian: Language = {
     "country.md": "Молдова",
     "country.me": "Черногория",
     "country.mg": "Мадагаскар",
-    "country.mh": "Маршалловы острова",
+    "country.mh": "Маршалловы Острова",
     "country.mk": "Северная Македония",
     "country.ml": "Мали",
     "country.mm": "Мьянма",
@@ -1280,8 +1341,8 @@ export const russian: Language = {
     "country.ru": "Россия",
     "country.rw": "Руанда",
     "country.sa": "Саудовская Аравия",
-    "country.sb": "Соломоновы острова",
-    "country.sc": "Сейшелы",
+    "country.sb": "Соломоновы Острова",
+    "country.sc": "Сейшельские Острова",
     "country.scotland": "Шотландия",
     "country.sd": "Судан",
     "country.se": "Швеция",
@@ -1299,7 +1360,7 @@ export const russian: Language = {
     "country.sv": "Сальвадор",
     "country.sy": "Сирия",
     "country.sz": "Эсватини",
-    "country.tc": "Теркс и Кайкос",
+    "country.tc": "Острова Тёркс и Кайкос",
     "country.td": "Чад",
     "country.tf": "Французские Южные территории",
     "country.tg": "Того",
@@ -1307,7 +1368,7 @@ export const russian: Language = {
     "country.tj": "Таджикистан",
     "country.tk": "Токелау",
     "country.tl": "Восточный Тимор",
-    "country.tm": "Туркмения",
+    "country.tm": "Туркменистан",
     "country.tn": "Тунис",
     "country.to": "Тонга",
     "country.tr": "Турция",
@@ -1333,13 +1394,12 @@ export const russian: Language = {
     "country.ws": "Самоа",
     "country.ye": "Йемен",
     "country.yt": "Майотта",
-    "country.za": "Южно-Африканская Республика",
+    "country.za": "Южная Африка",
     "country.zm": "Замбия",
     "country.zw": "Зимбабве",
 
-    // The emails are the English ones, rewritten rather than translated line
-    // by line; the placeholders each fills in are english.ts's, and say there
-    // what they are.
+    // An email is two entries: its subject, and its body, which is the whole of
+    // its markup. Placeholders and markup stay exactly as in English.
 
     "Email.ConfirmAddress.subject":
       "Подтвердите адрес электронной почты для {siteName}",
@@ -1347,9 +1407,9 @@ export const russian: Language = {
 <p>Здравствуйте!</p>
 
 <p>
-    Спасибо, что создали учётную запись на <strong>{siteName}</strong>.<br />
-    Прежде чем начать пользоваться учётной записью, подтвердите адрес
-    электронной почты, нажав на кнопку ниже:
+    Спасибо, что создали аккаунт на <strong>{siteName}</strong>.<br />
+    Прежде чем начать пользоваться аккаунтом, подтвердите адрес электронной почты,
+    нажав кнопку ниже:
 </p>
 
 <p>
@@ -1362,7 +1422,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Подтвердить мой адрес электронной почты
+        Подтвердить адрес электронной почты
     </a>
 </p>
 
@@ -1372,7 +1432,7 @@ export const russian: Language = {
 </p>
 
 <p>
-    Если вы не создавали эту учётную запись, просто проигнорируйте это письмо.
+    Если вы не создавали этот аккаунт, просто проигнорируйте это письмо.
 </p>
 
 <p>
@@ -1388,7 +1448,7 @@ export const russian: Language = {
 
 <p>
     Недавно вы запросили новое письмо для подтверждения адреса электронной почты для <strong>{siteName}</strong>.<br />
-    Подтвердите адрес электронной почты, нажав на кнопку ниже:
+    Подтвердите адрес электронной почты, нажав кнопку ниже:
 </p>
 
 <p>
@@ -1401,7 +1461,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Подтвердить мой адрес электронной почты
+        Подтвердить адрес электронной почты
     </a>
 </p>
 
@@ -1411,7 +1471,7 @@ export const russian: Language = {
 </p>
 
 <p>
-    После подтверждения вы сможете продолжать пользоваться учётной записью без перерывов.
+    После подтверждения вы сможете продолжить пользоваться аккаунтом без перерыва.
 </p>
 
 <p>
@@ -1425,15 +1485,13 @@ export const russian: Language = {
 `,
 
     "Email.AlreadyRegistered.subject":
-      "Кто-то попытался зарегистрироваться с вашим адресом электронной почты",
+      "Кто-то пытался зарегистрироваться с вашим адресом электронной почты",
     "Email.AlreadyRegistered.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Кто-то попытался зарегистрироваться на <strong>{siteName}</strong> с этим
-    адресом электронной почты, у которого уже есть учётная запись. В вашей
-    учётной записи ничего не изменилось.<br />
-    Если это были вы, у вас уже есть учётная запись, и вы можете в неё войти:
+    Кто-то пытался зарегистрироваться на <strong>{siteName}</strong> с этим адресом электронной почты, у которого уже есть аккаунт. В вашем аккаунте ничего не изменилось.<br />
+    Если это были вы, то аккаунт у вас уже есть, и вы можете войти в него:
 </p>
 
 <p>
@@ -1464,13 +1522,12 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Забыли пароль?
+        Забыли пароль
     </a>
 </p>
 
 <p>
-    Если это были не вы, делать ничего не нужно. Никто не получил способа
-    войти в вашу учётную запись.
+    Если это были не вы, ничего делать не нужно. Никто не получил доступа к вашему аккаунту.
 </p>
 
 <p>
@@ -1480,15 +1537,12 @@ export const russian: Language = {
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "Подтвердите перенос вашей учётной записи {siteName} на этот адрес",
+      "Подтвердите перенос вашего аккаунта {siteName} на этот адрес",
     "Email.ConfirmNewEmailAddress.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Кто-то, вошедший в учётную запись на <strong>{siteName}</strong>,
-    попросил перенести её на этот адрес электронной почты. Если это были вы,
-    подтвердите это здесь, оставаясь в этой учётной записи. Ссылка действует
-    24 часа.
+    Кто-то, войдя в аккаунт <strong>{siteName}</strong>, попросил перенести его на этот адрес электронной почты. Если это были вы, подтвердите перенос здесь, войдя в этот аккаунт. Ссылка действует 24 часа.
 </p>
 
 <p>
@@ -1501,7 +1555,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Перенести мою учётную запись
+        Перенести мой аккаунт
     </a>
 </p>
 
@@ -1511,7 +1565,7 @@ export const russian: Language = {
 </p>
 
 <p>
-    Если это были не вы, делать ничего не нужно. Никакая учётная запись сюда перенесена не будет.
+    Если это были не вы, ничего делать не нужно. Ни один аккаунт сюда не будет перенесён.
 </p>
 
 <p>
@@ -1521,20 +1575,16 @@ export const russian: Language = {
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "Кто-то попросил перенести учётную запись на ваш адрес электронной почты",
+      "Кто-то попросил перенести аккаунт на ваш адрес электронной почты",
     "Email.AlreadyHasAnAccount.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Кто-то, вошедший в учётную запись на <strong>{siteName}</strong>,
-    попросил перенести её на этот адрес электронной почты, у которого уже есть
-    своя учётная запись. Ничего не перенесено, и в вашей учётной записи
-    ничего не изменилось.
+    Кто-то, войдя в аккаунт <strong>{siteName}</strong>, попросил перенести его на этот адрес электронной почты, у которого уже есть собственный аккаунт. Ничего не перенесено, и в вашем аккаунте ничего не изменилось.
 </p>
 
 <p>
-    Если это были вы, у вас уже есть учётная запись с этим адресом, и вы
-    можете в неё войти.
+    Если это были вы, то аккаунт по этому адресу у вас уже есть, и вы можете в него войти.
 </p>
 
 <p>
@@ -1543,20 +1593,16 @@ export const russian: Language = {
 </p>
 `,
 
-    "Email.EmailAddressChanged.subject":
-      "Ваша учётная запись {siteName} перенесена",
+    "Email.EmailAddressChanged.subject": "Ваш аккаунт {siteName} перенесён",
     "Email.EmailAddressChanged.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Ваша учётная запись на <strong>{siteName}</strong> только что была
-    перенесена на другой адрес электронной почты, {emailAddress}, и теперь
-    вход выполняется с этим адресом.
+    Ваш аккаунт <strong>{siteName}</strong> только что перенесён на другой адрес электронной почты, {emailAddress}, и теперь вход выполняется с этим адресом.
 </p>
 
 <p>
-    Если это были не вы, ваша учётная запись у кого-то другого. Ответьте на
-    это письмо и сообщите нам.
+    Если это были не вы, ваш аккаунт у кого-то другого. Ответьте на это письмо и сообщите нам.
 </p>
 
 <p>
@@ -1565,20 +1611,18 @@ export const russian: Language = {
 </p>
 `,
 
-    "Email.PasswordChanged.subject": "Ваш пароль {siteName} изменён",
+    "Email.PasswordChanged.subject":
+      "Пароль вашего аккаунта {siteName} изменён",
     "Email.PasswordChanged.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Пароль вашей учётной записи на <strong>{siteName}</strong> только что был
-    изменён, и во всех остальных браузерах, где вы были в неё вошли, вход
-    закрыт.<br />
-    Если это были вы, делать ничего не нужно.
+    Пароль вашего аккаунта <strong>{siteName}</strong> только что изменён, а все остальные браузеры, в которых выполнен вход, вышли из аккаунта.<br />
+    Если это были вы, ничего делать не нужно.
 </p>
 
 <p>
-    Если это были не вы, ваш пароль у кого-то другого. Задайте новый здесь, и
-    тот человек будет выведен из учётной записи:
+    Если это были не вы, ваш пароль знает кто-то другой. Задайте новый здесь, и этот человек будет выведен из аккаунта:
 </p>
 
 <p>
@@ -1591,7 +1635,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Забыли пароль?
+        Забыли пароль
     </a>
 </p>
 
@@ -1607,7 +1651,7 @@ export const russian: Language = {
 
 <p>
     Недавно вы запросили сброс пароля для <strong>{siteName}</strong>.<br />
-    Вы можете сбросить его, нажав на кнопку ниже:
+    Сбросить пароль можно, нажав кнопку ниже:
 </p>
 
 <p>
@@ -1644,9 +1688,9 @@ export const russian: Language = {
 <p>Здравствуйте!</p>
 
 <p>
-    У вашей учётной записи на <strong>{siteName}</strong> нет пароля: вы входите через Google.<br />
-    Вы попросили задать его, чтобы можно было входить ещё и с адресом электронной почты и паролем.
-    Задать его можно, нажав на кнопку ниже:
+    У вашего аккаунта <strong>{siteName}</strong> нет пароля: вы входите через Google.<br />
+    Вы попросили задать его, чтобы входить ещё и по адресу электронной почты и паролю.
+    Задать пароль можно, нажав кнопку ниже:
 </p>
 
 <p>
@@ -1669,7 +1713,7 @@ export const russian: Language = {
 </p>
 
 <p>
-    Ссылка действует один час. Если вы не просили задать пароль, просто проигнорируйте это письмо.
+    Ссылка действует один час. Если вы не просили задавать пароль, просто проигнорируйте это письмо.
 </p>
 
 <p>
@@ -1679,22 +1723,21 @@ export const russian: Language = {
 `,
 
     "Email.RegisterInstead.subject":
-      "Для этого адреса электронной почты нет учётной записи {siteName}",
+      "Для этого адреса электронной почты нет аккаунта {siteName}",
     "Email.RegisterInstead.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Был запрошен сброс пароля для адреса электронной почты, который не связан
-    ни с одной учётной записью на <strong>{siteName}</strong>.
+    Был запрошен сброс пароля для адреса электронной почты, который не связан ни с одним аккаунтом на <strong>{siteName}</strong>.
 </p>
 
 <p>
-    Если вы хотите пользоваться нашим сервисом, вы можете создать новую учётную запись здесь:<br />
+    Если вы хотите пользоваться нашим сервисом, вы можете создать новый аккаунт, перейдя по адресу:<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    Если вы не делали этого запроса, просто проигнорируйте это письмо.
+    Если вы не делали этот запрос, просто проигнорируйте это письмо.
 </p>
 
 <p>
@@ -1704,14 +1747,13 @@ export const russian: Language = {
 `,
 
     "Email.ConfirmForgetting.subject":
-      "Подтвердите, что хотите забыть вашу учётную запись {siteName}",
+      "Подтвердите, что ваш аккаунт {siteName} нужно забыть",
     "Email.ConfirmForgetting.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    Вы попросили забыть вашу учётную запись на <strong>{siteName}</strong>.<br />
-    Нажмите на кнопку ниже, чтобы увидеть, что это значит, и окончательно
-    подтвердить, что вы этого хотите:
+    Вы попросили забыть ваш аккаунт <strong>{siteName}</strong>.<br />
+    Нажмите кнопку ниже, чтобы увидеть, что это значит, и твёрдо подтвердить своё желание:
 </p>
 
 <p>
@@ -1724,7 +1766,7 @@ export const russian: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        Забыть мою учётную запись
+        Забыть мой аккаунт
     </a>
 </p>
 
@@ -1734,22 +1776,15 @@ export const russian: Language = {
 </p>
 
 <p>
-    После этого никто больше не сможет прочитать ваше имя и адрес
-    электронной почты, а войти в вашу учётную запись будет нельзя. Это нельзя
-    отменить.
+    После этого ваши имя и адрес электронной почты больше никто и никогда не сможет прочитать, а войти в аккаунт будет нельзя. Это невозможно отменить.
 </p>
 
 <p>
-    Ссылка срабатывает только один раз, в течение 15 минут после запроса, и
-    только пока вы остаётесь в этой учётной записи. После этого запросите её
-    снова из вашей учётной записи.
+    Ссылка срабатывает один раз, в течение 15 минут после вашего запроса, и только пока вы вошли в этот аккаунт. После этого запросите её снова из своего аккаунта.
 </p>
 
 <p>
-    Если это были не вы, ничего не произойдёт, пока кто-нибудь не перейдёт по
-    ссылке. Тем не менее запрос отправил кто-то, вошедший в вашу учётную
-    запись, поэтому задайте новый пароль на странице «Забыли пароль?», чтобы
-    он не смог войти снова.
+    Если вы не просили об этом, ничего не произойдёт, пока по ссылке не перейдут. Но запрос отправил кто-то, вошедший в ваш аккаунт, поэтому задайте новый пароль на странице «Забыли пароль», чтобы он наверняка не смог войти снова.
 </p>
 
 <p>
@@ -1759,24 +1794,20 @@ export const russian: Language = {
 `,
 
     "Email.RegistrationsSuspended.subject":
-      "Регистрация приостановлена: не удаётся связаться с {service}",
+      "Регистрация приостановлена: {service} недоступен",
     "Email.RegistrationsSuspended.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    {siteName} не смог связаться с {service} в {when}. Пока он не ответит,
-    тем, кому он нужен, чтобы зарегистрироваться или задать новый пароль,
-    говорят попробовать ещё раз позже.
+    {siteName} не удалось связаться с {service} в {when}. Пока он не ответит, читателям, которым он нужен для регистрации или задания нового пароля, предлагается попробовать позже.
 </p>
 
 <p>
-    Ничего снимать не нужно. Каждая попытка снова обращается к {service}, и
-    страницы снова заработают, как только он ответит.
+    Ничего снимать не нужно. Каждая попытка обращается к {service} заново, и страницы заработают, как только он ответит.
 </p>
 
 <p>
-    Пока {service} не отвечает, вы будете получать об этом не больше одного
-    письма в час.
+    Пока {service} недоступен, письмо об этом будет приходить не чаще раза в час.
 </p>
 
 <p>
@@ -1786,20 +1817,20 @@ export const russian: Language = {
 `,
 
     "Email.DatabaseUnreachable.subject":
-      "{siteName} не может связаться с базой данных",
+      "{siteName} не может связаться со своей базой данных",
     "Email.DatabaseUnreachable.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    {siteName} не смог связаться с базой данных в {when}. Пока она не ответит, каждая страница, которой она нужна, сообщает читателям, что сайт недоступен и что нужно попробовать позже.
+    {siteName} не удалось связаться со своей базой данных в {when}. Пока она не ответит, каждая страница, которой она нужна, сообщает читателям, что сайт недоступен и нужно попробовать позже.
 </p>
 
 <p>
-    Ничего снимать не нужно. Каждый запрос заново просит соединение, и сайт снова работает, как только база данных отвечает.
+    Ничего снимать не нужно. Каждый запрос заново запрашивает соединение, и сайт заработает, как только база данных ответит.
 </p>
 
 <p>
-    Пока база данных остаётся недоступной, вы будете получать письмо об этом не чаще одного раза в {minutes} минут.
+    Пока база данных недоступна, письмо об этом будет приходить не чаще одного раза в {minutes} мин.
 </p>
 
 <p>
@@ -1808,16 +1839,16 @@ export const russian: Language = {
 </p>
 `,
 
-    "Email.UnhandledError.subject": "{siteName} не смог обработать запрос",
+    "Email.UnhandledError.subject": "Сбой {siteName} при обработке запроса",
     "Email.UnhandledError.body": `
 <p>Здравствуйте!</p>
 
 <p>
-    {siteName} не смог обработать запрос к {asked} в {when}. Читателю показан номер обращения {reference}, а причина записана в журнале под этим номером.
+    {siteName} дал сбой в {when} при запросе {asked}. Читателю показан номер ошибки {reference}, а причина записана в журнале под ним.
 </p>
 
 <p>
-    Неисправный сайт обычно даёт сбой на каждом запросе, поэтому письма о сбоях будут приходить не чаще 4 раз в час. Остальные сбои всё равно попадут в журнал.
+    Неисправный сайт обычно даёт сбой на каждом запросе, поэтому письма о сбоях будут приходить не чаще 4 раз в час. Остальные всё равно попадут в журнал.
 </p>
 
 <p>

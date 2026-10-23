@@ -8,11 +8,11 @@ Karta **Notatki** na stronie turnieju to miejsce, gdzie jego organizatorzy pisz�
 
 Naciśnij **Dodaj notatkę**, nad listą. Miejsce listy zajmuje panel, bo notatkę pisze się obszernie i potrzebuje ona miejsca.
 
-![Panel notatki, na karcie Pisanie](images/note-panel.png)
+![Panel notatki, na karcie Pisz](images/note-panel.png)
 
 **Tytuł** jest wymagany i to po nim notatka jest wymieniana. Jest zwykłym tekstem.
 
-**Opis** pisze się w Markdownie i można go zostawić pusty, gdy tytuł mówi wszystko, co jest do powiedzenia. Pasek narzędzi nad polem pisze Markdown za ciebie: Nagłówek, Pogrubienie, Kursywa, Cytat, Kod, Link, Lista numerowana, Lista punktowana i Lista zadań. Każde działa na tym, co zaznaczono, albo na początku każdego zaznaczonego wiersza, albo ustawia kursor tam, gdzie mają trafić słowa.
+**Opis** pisze się w Markdownie i można go zostawić pusty, gdy tytuł mówi wszystko, co jest do powiedzenia. Pasek narzędzi nad polem pisze Markdown za ciebie: Nagłówek, Pogrubienie, Kursywa, Cytat, Kod, Odsyłacz, Lista numerowana, Lista punktowana i Lista zadań. Każde działa na tym, co zaznaczono, albo na początku każdego zaznaczonego wiersza, albo ustawia kursor tam, gdzie mają trafić słowa.
 
 **Podgląd** pokazuje notatkę tak, jak zobaczy ją czytelnik na jej stronie.
 
@@ -30,4 +30,4 @@ Notatkę, która już nie obowiązuje, usuwa się. Usunięta notatka znika na do
 
 ![Pytanie zadawane przed usunięciem notatki](images/delete-note-asks.png)
 
-Dalej: [Organizatorzy i wprowadzający wyniki](managers-and-scorers.md).
+Dalej: [Organizatorzy i osoby wprowadzające wyniki](managers-and-scorers.md).

@@ -1,25 +1,20 @@
-// The site's words in Chinese. Keyed as the English catalogue is, which is
-// what a word missing here falls back to.
-//
-// Simplified rather than Traditional characters: they are what is read in
-// mainland China and Singapore, which is most of the people who read Chinese,
-// and a reader of Traditional characters is not left without, since the two
-// are close enough to be followed. The tag is the bare "zh" so that a browser
-// asking for zh-CN or zh-SG gets this; one asking for zh-TW or zh-HK also
-// gets it, as no Traditional catalogue is offered to prefer.
-//
-// Written to the reader as 你 rather than the courteous 您: the site talks to
-// people scoring and following croquet, and the English it is written from is
-// plain and direct rather than formal. Chinese has no capitals, so the
-// English's capitalised menu items need nothing done to them. Punctuation is
-// the full-width kind Chinese is set in, except inside the addresses and
-// numbers it sits next to.
+// The site's words in Simplified Chinese (简体中文).
+// The reader is addressed as 您, politely, throughout. Chinese has no capital
+// letters, so menu, button and heading items are written plainly, as short
+// verb phrases. An email address is 电子邮件地址 (never just 邮箱) and a
+// password is 密码. A tournament is 赛事, a competition inside it 项目, a
+// block 小组, and a hoop 球门; game, match and test are 局, 场 and 对抗赛.
+// "Forget an account" is 抹除账户, since the name and address are made
+// unreadable. The site's own checked word "Bye" stays in English wherever a
+// person types it or chooses it from a list, and is 轮空 where only read.
+// Punctuation is full-width, and a label's colon is part of its words.
 import type { Language } from "../common/language.js";
 
 export const chinese: Language = {
   tag: "zh",
   name: "中文",
   words: {
+    // The site's own bars.
     "site.skipToContent": "跳到正文",
     "navigation.menu": "菜单",
     "navigation.label": "主导航",
@@ -32,99 +27,107 @@ export const chinese: Language = {
     "theme.dark": "深色",
     "theme.system": "跟随系统",
     "footer.donate": "捐赠",
-    "footer.plea": "喜欢 {siteName} 吗？请捐赠，帮助我们继续开发。",
+    "footer.plea": "喜欢 {siteName} 吗？欢迎捐赠，支持网站继续开发。",
     "footer.copyright": "© 版权所有 {years}，{owner}",
     "footer.privacy": "隐私",
     "footer.termsOfUse": "使用条款",
-    "beta.banner": "这是测试版网站，数据可能随时被重置。",
+    "beta.banner": "这是测试版网站，数据随时可能被重置。",
     "privacy.contact":
-      "关于本页，或关于我们保存的您的信息，如有疑问请联系：{emailAddress}",
+      "对本页内容或我们保存的您的信息有疑问，请联系：{emailAddress}",
+    // The box a reader ticks to agree to the terms of use. The link's words
+    // are found in the box's and made the link, so they must be written
+    // exactly as they are there.
     "termsOfUse.agree": "我同意使用条款",
     "termsOfUse.link": "使用条款",
-    "termsOfUse.report": "举报所写内容，或询问这些条款：{emailAddress}",
-    "TermsOfUse.NotAgreed": "请勾选此框以同意使用条款。",
+    "termsOfUse.report": "举报所写的内容，或咨询这些条款：{emailAddress}",
+    "TermsOfUse.NotAgreed": "请勾选方框，同意使用条款。",
+    // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "这里是学习 {siteName} 的安全场所。在这里输入的任何内容都可能随时被删除。",
+      "这里是学习使用 {siteName} 的安全空间。在此输入的任何内容都可能随时被删除。",
 
     "language.label": "语言",
-    "language.choose": "更改",
+    "language.choose": "更换",
 
     // The alert that tells a reader there is something new to read.
     "whatsNew.public.message": "有新内容可以阅读。",
-    "whatsNew.admin.message": "有适用于赛事管理者的新内容。",
+    "whatsNew.admin.message": "有面向赛事管理者的新内容。",
     "whatsNew.view": "查看新内容",
     "whatsNew.later": "下次再提醒我",
-    "whatsNew.never": "不再显示此提示",
+    "whatsNew.never": "不再显示此提醒",
 
-    "form.otherwise": "有些地方不对。请检查输入的内容，然后再试一次。",
+    "form.otherwise": "有些地方不对。请检查所填内容后重试。",
 
+    // The account menu in the header.
     "account.menu": "账户",
     "account.register": "注册",
     "account.signIn": "登录",
     "account.forgotPassword": "忘记密码",
     "account.signOut": "退出登录",
     "account.profile": "个人资料",
-    "account.changePassword": "更改密码",
-    "account.changeEmailAddress": "更改电子邮件地址",
-    "account.changeName": "更改姓名",
+    "account.changePassword": "修改密码",
+    "account.changeEmailAddress": "修改电子邮件地址",
+    "account.changeName": "修改姓名",
     "account.setPassword": "设置密码",
-    "account.forgetAccount": "注销账户",
+    "account.forgetAccount": "抹除账户",
 
     "register.title": "注册",
     "register.emailAddress": "电子邮件地址",
     "register.submit": "注册",
     "register.withGoogle": "使用 Google 注册",
     "register.or": "或",
+    // Said above the form when Google sent the reader back without them being
+    // let in.
     "SignInWithGoogle.EmailAddressNotVerified":
-      "Google 没有确认该电子邮件地址属于你，所以不能在这里通过 Google 使用。请改用下面的电子邮件地址。",
+      "Google 未确认该电子邮件地址属于您，因此无法在这里通过 Google 使用。请改用下方的电子邮件地址。",
     "SignInWithGoogle.LinkedToAnother":
-      "该电子邮件地址已经有一个账户，并且关联着另一个 Google 账号。请使用那个 Google 账号登录，或使用你的电子邮件地址和密码登录。",
+      "该电子邮件地址已有账户，并已关联到另一个 Google 账号。请使用那个 Google 账号登录，或使用电子邮件地址和密码登录。",
     "SignInWithGoogle.NameMissing":
-      "Google 没有告诉我们你的姓名，而账户需要姓名。请改用下面的电子邮件地址。",
+      "Google 没有告诉我们您的姓名，而账户需要姓名。请改用下方的电子邮件地址。",
     "Google.Unreachable":
-      "暂时无法连接 Google。请几分钟后再试，或使用下面的电子邮件地址。",
+      "暂时无法连接 Google。请几分钟后重试，或使用下方的电子邮件地址。",
     "Registration.NotAPerson":
-      "这看起来不像是真人操作。请再试一次；如果仍然如此，请等几分钟后再来。",
+      "这看起来不像是真人操作。请重试；如果仍然如此，请等几分钟后再来。",
 
+    // A rule the address can break, said beneath the field it is about.
     "EmailAddress.Missing": "请输入电子邮件地址。",
     "EmailAddress.NoAt": "电子邮件地址中要有 @。",
     "EmailAddress.MoreThanOneAt": "电子邮件地址中只能有一个 @。",
     "EmailAddress.NoDomain":
       "电子邮件地址的 @ 后面要有域名，例如 example.com。",
 
-    "welcome.title": "请查收电子邮件",
+    "welcome.title": "请查收邮件",
     "welcome.checkEmail":
-      "一封电子邮件正在发往你填写的地址。请点击其中的链接继续。",
+      "一封邮件正在发往您提供的地址。请点击邮件中的链接继续。",
     "welcome.nothingArrived": "如果几分钟后仍未收到，请查看垃圾邮件文件夹。",
     "welcome.home": "返回 {siteName}",
     "newConfirmationLink.title": "获取新链接",
     "newConfirmationLink.explanation":
-      "用于确认你的电子邮件地址的链接已过期。请申请一个新的，它会发送到你注册时使用的地址。",
-    "newConfirmationLink.send": "给我发一个新链接",
+      "确认电子邮件地址的链接已过期。请申请新链接，它会发送到您注册时使用的地址。",
+    "newConfirmationLink.send": "给我发送新链接",
     "newConfirmationLink.home": "返回 {siteName}",
     "newConfirmationLink.signIn": "登录",
-    "newConfirmationLink.sent.title": "请查收电子邮件",
+    "newConfirmationLink.sent.title": "请查收邮件",
     "newConfirmationLink.sent.explanation":
-      "新链接正在发送中。请点击它来确认你的电子邮件地址。如果几分钟后仍未收到，请查看垃圾邮件文件夹。",
-    "newConfirmationLink.alreadyConfirmed.title": "该电子邮件地址已经确认过了",
+      "新链接正在发送。请点击它来确认您的电子邮件地址。如果几分钟后仍未收到，请查看垃圾邮件文件夹。",
+    "newConfirmationLink.alreadyConfirmed.title": "该电子邮件地址已确认",
     "newConfirmationLink.alreadyConfirmed.explanation":
-      "没有需要再确认的了。请使用你确认时设置的密码登录。",
+      "无需再确认。请使用确认时设置的密码登录。",
     "newConfirmationLink.noLongerWorks.title": "该链接已失效",
     "newConfirmationLink.noLongerWorks.explanation":
-      "请检查你点击的是电子邮件中的完整链接，结尾没有缺少任何内容。如果仍然无效，请重新注册，我们会发送一个新链接。",
+      "请检查您是否点击了邮件中的完整链接，末尾没有缺失任何内容。如果仍然无效，请重新注册，我们会发送新链接。",
     "newConfirmationLink.tooMany.title": "请稍后再试",
     "newConfirmationLink.tooMany.explanation":
-      "最近已向这个地址发送了多个链接。请等一小时后再申请，期间请查看垃圾邮件文件夹。",
+      "最近已向该地址发送了多个链接。请等待一小时后再申请，期间请留意垃圾邮件文件夹。",
 
     "forgotPassword.title": "忘记密码了？",
     "forgotPassword.emailAddress": "电子邮件地址",
-    "forgotPassword.submit": "给我发一个重新登录的方法",
+    "forgotPassword.submit": "给我发送重新登录的方式",
     "forgotPassword.home": "返回 {siteName}",
-    "forgotPassword.sent.title": "请查收电子邮件",
+    "forgotPassword.sent.title": "请查收邮件",
     "forgotPassword.sent.explanation":
-      "如果该地址有账户，设置新密码的链接正在发送中。请在一小时内点击它。如果几分钟后仍未收到，请查看垃圾邮件文件夹。",
+      "如果该地址有账户，设置新密码的链接正在发送。请在一小时内点击。如果几分钟后仍未收到，请查看垃圾邮件文件夹。",
     "forgotPassword.tryAgainLater":
-      "最近从这里申请重新登录的次数太多。请等一小时后再试。",
+      "最近从这里申请重新登录的次数过多。请等待一小时后再试。",
 
     "setNewPassword.title": "设置新密码",
     "setNewPassword.password": "密码",
@@ -133,47 +136,48 @@ export const chinese: Language = {
     "setNewPassword.home": "返回 {siteName}",
     "setNewPassword.signIn": "登录",
     "setNewPassword.askAgain": "申请新链接",
-    "setNewPassword.changed.title": "你的密码已更改",
+    "setNewPassword.changed.title": "您的密码已修改",
     "setNewPassword.changed.explanation":
-      "你已在所有登录过的地方退出登录。请使用新密码登录。",
+      "您在所有地方的登录都已退出。请使用新密码登录。",
     "setNewPassword.expired.title": "该链接已过期",
     "setNewPassword.expired.explanation":
-      "设置新密码的链接有效期为一小时。请再申请一个，它会发送到同一个地址。",
+      "设置新密码的链接有效期为一小时。请再申请一个，它会发送到同一地址。",
     "setNewPassword.noLongerWorks.title": "该链接已失效",
     "setNewPassword.noLongerWorks.explanation":
-      "它可能已被使用过，或者结尾缺少了内容。如果仍需要，请再申请一个。",
+      "它可能已被使用过，或者末尾缺失了内容。如果仍需要，请再申请一个。",
 
+    // Said above the fields when the breached password check cannot be asked.
     "BreachedPasswords.Unreachable":
-      "暂时无法检查你的密码，所以密码没有更改。请几分钟后再试；你的链接在过期之前仍然有效。",
+      "暂时无法检查您的密码，因此密码尚未修改。请几分钟后重试；您的链接在过期前仍然有效。",
 
-    "forgetAccount.title": "注销你的账户",
+    "forgetAccount.title": "抹除您的账户",
     "forgetAccount.explanation":
-      "你的姓名和电子邮件地址可以被永久抹去，账户也会被关闭。为确认是你本人，我们会先向你账户的地址发送一封带链接的电子邮件，在你点击链接之前不会抹去任何内容。",
+      "您的姓名和电子邮件地址可以被永久抹除为不可读，账户也会被关闭。为确认是您本人，我们会先向账户地址发送一封带链接的邮件，在您点击链接之前不会抹除任何内容。",
     "forgetAccount.submit": "给我发送链接",
-    "forgetAccount.sent.title": "请查收电子邮件",
+    "forgetAccount.sent.title": "请查收邮件",
     "forgetAccount.sent.explanation":
-      "我们已向你账户的地址发送了一个链接。它的有效期为 15 分钟，并且只有在你登录此账户时才有效。",
-    "forgetAccount.confirm.title": "永久注销你的账户吗？",
+      "我们已向您的账户地址发送了一个链接。它的有效期为 15 分钟，并且只在您登录此账户时有效。",
+    "forgetAccount.confirm.title": "永久抹除您的账户？",
     "forgetAccount.confirm.explanation":
-      "一旦注销，任何人都再也无法读取你的姓名和电子邮件地址，你的账户也无法再登录。此操作无法撤销。",
-    "forgetAccount.confirm.submit": "注销我的账户",
-    "forgetAccount.forgotten.title": "你的账户已注销",
+      "一旦抹除，任何人都再也无法读取您的姓名和电子邮件地址，该账户也无法再登录。此操作无法撤销。",
+    "forgetAccount.confirm.submit": "抹除我的账户",
+    "forgetAccount.forgotten.title": "您的账户已被抹除",
     "forgetAccount.forgotten.explanation":
-      "你的姓名和电子邮件地址已无法再被读取，你也已在所有登录过的地方退出登录。",
+      "您的姓名和电子邮件地址已无法读取，您在所有地方的登录也都已退出。",
     "forgetAccount.noLongerWorks.title": "该链接已失效",
     "forgetAccount.noLongerWorks.explanation":
-      "它可能已过期、已被使用，或者属于你当前未登录的账户。如果你仍想注销，请从你的账户中重新申请。",
-    "forgetAccount.lastAdministrator.title": "你的账户无法注销",
+      "它可能已过期、已被使用，或属于您当前未登录的账户。如果仍想抹除账户，请从您的账户中重新申请。",
+    "forgetAccount.lastAdministrator.title": "无法抹除您的账户",
     "forgetAccount.lastAdministrator.explanation":
-      "你是本站唯一的管理员。请先把管理员角色交给其他人，然后才能注销你的账户。",
+      "您是本网站唯一的管理员。请先把管理员角色授予其他人，然后才能抹除您的账户。",
     "forgetAccount.askAgain": "重新申请",
     "forgetAccount.home": "返回 {siteName}",
 
-    "registrationsSuspended.title": "注册暂时停止",
+    "registrationsSuspended.title": "暂时无法注册",
     "registrationsSuspended.explanation":
-      "注册所需的某项服务暂时无法连接，在它恢复之前，任何人都无法注册。你输入的内容没有被保存。",
+      "注册所需的某项服务暂时无法连接，在其恢复之前没有人能够注册。您输入的内容均未保存。",
     "registrationsSuspended.tryAgainLater":
-      "请稍后再试。本站管理员已经收到通知。",
+      "请稍后再试。网站管理员已收到通知。",
     "registrationsSuspended.home": "返回 {siteName}",
 
     "signIn.title": "登录",
@@ -184,291 +188,345 @@ export const chinese: Language = {
     "signIn.register": "注册",
     "signIn.withGoogle": "使用 Google 登录",
     "signIn.or": "或",
-    "signIn.tryAgainLater": "最近尝试的次数太多。请等一小时后再试。",
+    "signIn.tryAgainLater": "最近尝试的次数过多。请等待一小时后再试。",
 
-    "SignIn.Failed": "电子邮件地址或密码不正确。请再试一次。",
+    // The one answer to a wrong password and to an address nobody registered.
+    // It says neither which it was nor which it was not.
+    "SignIn.Failed": "电子邮件地址或密码不正确。请重试。",
 
     "profile.title": "个人资料",
+    // A label's colon is its words', since languages set it differently.
     "profile.name": "姓名：",
     "profile.emailAddress": "电子邮件地址：",
 
-    "changeName.title": "更改姓名",
+    "changeName.title": "修改姓名",
     "changeName.name": "姓名",
-    "changeName.submit": "更改姓名",
+    "changeName.submit": "修改姓名",
 
     "setPassword.title": "设置密码",
     "setPassword.explanation":
-      "你的账户没有密码：你是通过 Google 登录的。若想同时也能用密码登录，我们会向 {emailAddress} 发送一封电子邮件，其中有设置密码的链接。",
+      "您的账户没有密码：您是通过 Google 登录的。如果还想用密码登录，我们会向 {emailAddress} 发送一个设置密码的链接。",
     "setPassword.submit": "给我发送链接",
-    "setPassword.sent.title": "请查收电子邮件",
+    "setPassword.sent.title": "请查收邮件",
     "setPassword.sent.explanation":
-      "我们已给你发送了设置密码的链接。它的有效期为一小时。",
-    "setPassword.profile": "返回你的个人资料",
+      "我们已给您发送了设置密码的链接。它的有效期为一小时。",
+    "setPassword.profile": "返回个人资料",
 
-    "changePassword.title": "更改密码",
+    "changePassword.title": "修改密码",
     "changePassword.currentPassword": "当前密码",
     "changePassword.password": "新密码",
     "changePassword.passwordConfirmation": "确认密码",
     "changePassword.forgotPassword": "忘记密码？",
-    "changePassword.submit": "更改密码",
-    "ChangePassword.WrongPassword": "这不是你的密码。",
+    "changePassword.submit": "修改密码",
+    // Beneath the current password, which is the one it is about.
+    "ChangePassword.WrongPassword": "这不是您的密码。",
 
-    "changeEmailAddress.title": "更改电子邮件地址",
+    "changeEmailAddress.title": "修改电子邮件地址",
     "changeEmailAddress.emailAddress": "新的电子邮件地址",
     "changeEmailAddress.currentPassword": "当前密码",
     "changeEmailAddress.submit": "发送确认链接",
-    "changeEmailAddress.sent.title": "请查收电子邮件",
+    "changeEmailAddress.sent.title": "请查收邮件",
     "changeEmailAddress.sent.explanation":
-      "确认迁移的链接已发送到新的电子邮件地址。请在登录状态下点击它，把你的账户迁移到那里。",
-    "changeEmailAddress.confirm.title": "迁移你的账户",
+      "确认迁移的链接已发送到新的电子邮件地址。请在登录状态下点击它，把您的账户迁移过去。",
+    "changeEmailAddress.confirm.title": "迁移您的账户",
     "changeEmailAddress.confirm.explanation":
-      "你的账户将迁移到 {emailAddress}。从现在起，你将使用该地址登录。",
+      "您的账户将迁移到 {emailAddress}。今后您将使用该地址登录。",
     "changeEmailAddress.confirm.submit": "迁移我的账户",
     "changeEmailAddress.noLongerWorks.title": "该链接已失效",
     "changeEmailAddress.noLongerWorks.explanation":
-      "它已过期、已被使用，或者不是为你当前登录的账户发送的。请从你的个人资料中重新申请。",
-    "changeEmailAddress.taken.title": "你的账户没有迁移",
-    "changeEmailAddress.profile": "返回你的个人资料",
-    "ChangeEmailAddress.WrongPassword": "这不是你的密码。",
-    "ChangeEmailAddress.Unchanged": "你的账户已经在这个地址了。",
+      "它已过期、已被使用，或不是为您当前登录的账户发送的。请从您的个人资料中重新申请。",
+    "changeEmailAddress.taken.title": "您的账户尚未迁移",
+    "changeEmailAddress.profile": "返回个人资料",
+    // Beneath the field each is about.
+    "ChangeEmailAddress.WrongPassword": "这不是您的密码。",
+    "ChangeEmailAddress.Unchanged": "您的账户已经使用这个地址。",
     "ChangeEmailAddress.Taken":
-      "该电子邮件地址现在已有自己的账户，所以你的账户无法迁移到那里。",
+      "该电子邮件地址现在已有自己的账户，因此您的账户无法迁移过去。",
 
-    "confirmEmailAddress.title": "确认你的电子邮件地址",
+    "confirmEmailAddress.title": "确认您的电子邮件地址",
     "confirmEmailAddress.name": "姓名",
     "confirmEmailAddress.password": "密码",
     "confirmEmailAddress.confirmPassword": "确认密码",
     "confirmEmailAddress.submit": "确认我的电子邮件地址",
     "confirmEmailAddress.signIn": "登录",
     "confirmEmailAddress.home": "返回 {siteName}",
-    "confirmEmailAddress.confirmed.title": "你的电子邮件地址已确认",
+    "confirmEmailAddress.confirmed.title": "您的电子邮件地址已确认",
     "confirmEmailAddress.confirmed.explanation":
-      "你的账户已就绪。请使用你刚才填写的电子邮件地址和密码登录。",
+      "您的账户已就绪。请使用您刚才提供的电子邮件地址和密码登录。",
     "confirmEmailAddress.expired.title": "该链接已过期",
     "confirmEmailAddress.expired.explanation":
-      "确认电子邮件地址的链接有效期为 24 小时。请申请一个新的，它会发送到同一个地址。",
-    "confirmEmailAddress.expired.newLink": "给我发一个新链接",
+      "确认电子邮件地址的链接有效期为 24 小时。请申请新链接，它会发送到同一地址。",
+    "confirmEmailAddress.expired.newLink": "给我发送新链接",
     "confirmEmailAddress.noLongerWorks.title": "该链接已失效",
     "confirmEmailAddress.noLongerWorks.explanation":
-      "请检查你点击的是电子邮件中的完整链接，结尾没有缺少任何内容。如果仍然无效，请重新注册，我们会发送一个新链接。",
-    "confirmEmailAddress.alreadyConfirmed.title": "该电子邮件地址已经确认过了",
+      "请检查您是否点击了邮件中的完整链接，末尾没有缺失任何内容。如果仍然无效，请重新注册，我们会发送新链接。",
+    "confirmEmailAddress.alreadyConfirmed.title": "该电子邮件地址已确认",
     "confirmEmailAddress.alreadyConfirmed.explanation":
-      "没有需要再做的了。请使用你确认时设置的密码登录。",
+      "无需再做任何事。请使用确认时设置的密码登录。",
 
+    // A rule broken, keyed by its code. Said to whoever typed it, beneath the
+    // field it reads.
     "PersonName.Missing": "请输入姓名。",
     "PersonName.TooShort": "姓名至少要有 3 个字符。",
-    "PersonName.TooLong": "姓名最多只能有 254 个字符。",
-    "WorldRankingName.TooShort": "世界排名用名至少要有 3 个字符。",
-    "WorldRankingName.TooLong": "世界排名用名最多只能有 254 个字符。",
+    "PersonName.TooLong": "姓名最多可以有 254 个字符。",
+    "WorldRankingName.TooShort": "世界排名姓名至少要有 3 个字符。",
+    "WorldRankingName.TooLong": "世界排名姓名最多可以有 254 个字符。",
     "Password.Missing": "请输入密码。",
     "Password.TooShort": "密码至少要有 12 个字符。",
-    "Password.ConfirmationDiffers": "这与上面的密码不一致。请再输入一次。",
+    "Password.ConfirmationDiffers": "这与上面的密码不一致。请再输入一遍。",
     "Password.Breached":
-      "这个密码曾在别处的数据泄露事件中出现过，所以在这里使用不安全。请换一个。",
+      "这个密码曾在别处的数据泄露中出现过，在这里使用不安全。请换一个。",
 
     "javaScriptRequired.title": "需要启用脚本",
     "javaScriptRequired.explanation":
-      "注册需要为本站启用脚本，以便确认注册的是真人。请启用脚本，然后重新注册。",
+      "注册需要为本网站启用脚本，以便确认注册的是真人。请启用后重新注册。",
     "javaScriptRequired.register": "返回注册",
     "javaScriptRequired.home": "返回 {siteName}",
 
     "errors.backHome": "返回 {siteName}",
     "errors.notFound": "未找到",
     "errors.refused": "无法完成该操作",
-    "errors.refusedDetail": "发送的内容有些地方不对。",
+    "errors.refusedDetail": "所发送的内容有些地方不对。",
     "errors.sorry": "抱歉",
     "errors.sorryDetail": "无法处理该请求。",
-    "errors.failed": "出了点问题",
+    "errors.failed": "出错了",
     "errors.reference": "参考编号 {reference}。",
     "errors.recorded":
-      "该错误已记录，并已向管理员发送电子邮件。建议你带上参考编号，给管理员发一封电子邮件，说明你当时在做什么。",
-    "errors.message": "给管理员发电子邮件",
+      "该错误已记录，并已向管理员发送邮件。给管理员发邮件时，请附上参考编号，并说明您当时在做什么，这会有所帮助。",
+    "errors.message": "给管理员发邮件",
     "errors.messageSubject": "{siteName} 上的错误 {reference}",
-    "errors.messageBody": "出现问题时我正在做的事：\n\n",
+    "errors.messageBody": "发生这个错误时我正在做的事：\n\n",
     "errors.unavailable": "网站暂时无法使用",
-    "errors.unavailableDetail": "网站暂时无法连接到所需的内容。请稍后再试。",
+    "errors.unavailableDetail": "网站暂时无法连接所需的服务。请稍后再试。",
     "errors.maintenance": "网站正在维护中。",
     "errors.maintenanceMinutes": "预计 {minutes} 分钟后恢复。",
     "errors.maintenanceMinute": "预计 1 分钟后恢复。",
     "errors.maintenanceLonger": "耗时比预期更长，很快就会恢复。",
 
-    "home.recentResults": "近期结果",
-    "home.recentResults.none": "最近七天没有添加任何比赛。",
-    "home.upcomingTournaments": "即将举行的锦标赛",
-    "home.upcomingTournaments.none": "未来六十天内没有锦标赛开始。",
-    "home.allTournaments": "{year} 年的所有锦标赛",
-    "year.heading": "{year} 年的锦标赛",
-    "year.none": "{year} 年没有锦标赛开始。",
-    "yearSport.heading": "{year} 年的{sport}锦标赛",
-    "yearSport.none": "{year} 年没有{sport}锦标赛开始。",
-    "tournament.recent": "近期",
-    "tournament.summary": "概要",
-    "test.bestOf": "每场比赛为 {count} 局决胜制。",
+    // The home page's two lists, what each says when it has nothing in it,
+    // and the way beneath them to every tournament this year.
+    "home.recentResults": "最新成绩",
+    "home.recentResults.none": "过去七天内没有新增的比赛。",
+    "home.upcomingTournaments": "即将举行的赛事",
+    "home.upcomingTournaments.none": "未来六十天内没有赛事开始。",
+    "home.allTournaments": "{year} 年的所有赛事",
+    // A year's page: its heading, and what it says when it has nothing in it.
+    "year.heading": "{year} 年的赛事",
+    "year.none": "{year} 年没有赛事开始。",
+    // A sport's page in a year: the same, of the sport alone.
+    "yearSport.heading": "{year} 年的{sport}赛事",
+    "yearSport.none": "{year} 年没有{sport}赛事开始。",
+    // A tournament's page: its sections, what it says of a game, how long ago
+    // one was added, and what it says when it has none.
+    "tournament.recent": "最新",
+    "tournament.summary": "汇总",
+    // A tournament played by teams' summary: its table's groups and columns.
+    // A test's grid: what each match is the best of, the word between its
+    // teams, and its totals beneath the matches.
+    "test.bestOf": "每场比赛采用{count}局制。",
     "test.vs": "对",
-    "test.matches": "比赛",
-    "test.games": "局",
+    "test.matches": "场次",
+    "test.games": "局数",
     "test.hoops": "球门",
     "teamSummary.tests": "对抗赛",
-    "teamSummary.matches": "比赛",
-    "teamSummary.games": "局",
+    "teamSummary.matches": "场次",
+    "teamSummary.games": "局数",
     "teamSummary.hoops": "球门",
     "teamSummary.wins": "胜",
     "teamSummary.losses": "负",
     "teamSummary.draws": "平",
     "teamSummary.for": "得",
     "teamSummary.against": "失",
-    "teamSummary.net": "净胜",
+    "teamSummary.net": "净值",
     "tournament.players": "选手",
     "search.label": "搜索",
-    "search.tournaments": "锦标赛",
-    "search.competitions": "比赛项目",
+    "search.tournaments": "赛事",
+    "search.competitions": "项目",
     "search.nothingFound": "没有找到任何内容。",
-    "players.search.label": "搜索球员",
-    "players.search.prompt": "输入球员姓名以查找。",
-    "players.search.none": "没有找到球员。",
-    "search.more": "仅显示前 {count} 项。请输入更多名称以缩小搜索范围。",
-    "websitePlayer.tournament": "锦标赛",
+    "players.search.label": "搜索选手",
+    "players.search.prompt": "输入选手姓名来查找。",
+    "players.search.none": "没有找到选手。",
+    "search.more": "只显示前 {count} 个。请多输入一些姓名来缩小搜索范围。",
+    "websitePlayer.tournament": "赛事",
+    // A test in a tournament's sections: its two teams' short names.
     "tournament.test": "{first} 对 {second}",
-    "tournament.notes": "备注",
+    "tournament.notes": "通知",
     "tournament.commentary": "评论",
-    "tournament.beat": "击败",
-    "tournament.drewWith": "战平",
+    "tournament.beat": "胜",
+    "tournament.drewWith": "平",
     "tournament.ago.seconds": "{count} 秒",
     "tournament.ago.minutes": "{count} 分钟",
     "tournament.ago.hour": "1 小时",
     "tournament.ago.hours": "{count} 小时",
     "tournament.none": "还没有进行任何比赛。",
+    // A tournament's players' page, when it has none.
     "players.none": "还没有添加任何选手。",
+    // A tournament's commentaries page, in the old site's words: how a
+    // commentary is listed, and the link to start one.
     "commentaries.by": "作者：",
     "commentaries.start": "发起新评论",
+    // The page that starts a commentary.
     "startCommentary.title": "发起新评论",
     "startCommentary.titleField": "标题",
     "startCommentary.submit": "发起评论",
+    // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "新",
-    "notes.none": "管理员还没有写任何备注。",
+    // A tournament's Notes page, and a note's own page.
+    "notes.none": "管理者还没有写任何通知。",
     "note.edited": "已编辑",
-    "commentary.none": "还没有人写评论。",
+    // A commentary's page: what it says when it has no comments, what it says
+    // of a comment, and the box its writer writes the next one in.
+    "commentary.none": "还没有任何留言。",
     "commentary.edited": "已编辑",
     "commentary.edit": "编辑",
     "commentary.delete": "删除",
-    "commentary.comment": "评论",
-    "commentary.add": "添加评论",
-    "commentary.notSent": "评论无法发送。请重新加载页面，查看它是否已保存。",
-    "changeCommentaryTitle.title": "更改标题",
+    "commentary.comment": "留言",
+    "commentary.add": "添加留言",
+    "commentary.notSent": "留言未能发送。请重新加载页面，看看是否已保存。",
+    // The page that changes a commentary's title.
+    "changeCommentaryTitle.title": "修改标题",
     "changeCommentaryTitle.submit": "保存",
-    "editComment.title": "编辑评论",
+    // A comment's own page, where its writer edits it or deletes it, and the
+    // page that asks before it is deleted.
+    "editComment.title": "编辑留言",
     "editComment.save": "保存",
-    "deleteComment.title": "删除评论",
-    "deleteComment.question": "删除这条评论吗？此操作无法撤销。",
-    "deleteComment.confirm": "删除评论",
+    "deleteComment.title": "删除留言",
+    "deleteComment.question": "删除这条留言？此操作无法撤销。",
+    "deleteComment.confirm": "删除留言",
     "deleteComment.keep": "保留",
+    // A player's page: its two parts, how a game is said as the player played
+    // it, and what each part says when it has nothing in it.
     "player.games": "比赛",
-    "player.competitions": "赛事",
-    "player.beat": "击败",
+    "player.competitions": "项目",
+    "player.beat": "胜",
     "player.lostTo": "负于",
-    "player.drewWith": "战平",
+    "player.drewWith": "平",
     "player.score": "{score} 比 {opponent}",
     "player.noGames": "还没有进行任何比赛。",
-    "player.noCompetitions": "还没有参加任何赛事。",
+    "player.noCompetitions": "还没有参加任何项目。",
+    // A block's page: its grid's totals, what a score is for the row's player,
+    // said aloud rather than shown, and a player who has withdrawn.
     "block.wins": "胜",
-    "block.matches": "比赛",
+    "block.matches": "场次",
     "block.netGames": "净胜局",
-    "block.games": "局",
+    "block.games": "局数",
     "block.netHoops": "净胜球门",
     "block.won": "胜",
     "block.lost": "负",
     "block.drawn": "平",
     "block.withdrawn": "已退赛",
-    "block.gameWithdrawn": "已退赛",
+    // A game withdrawn, which Spanish says otherwise than a player.
+    "block.gameWithdrawn": "已撤销",
     "block.losses": "负",
+    // The three views of a block, offered beneath its heading.
     "competition.views": "视图",
     "competition.view.grid": "表格",
-    "competition.view.summary": "概要",
+    "competition.view.summary": "汇总",
     "competition.view.orderOfPlay": "比赛顺序",
     "blockSummary.ranking":
-      "按胜场比例排名，其次按净胜球门排名。锦标赛自己的规程可能会以其他方式排定选手的名次。",
+      "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",
+    // A knockout's rounds, named as the old site named them, counted back from
+    // the last, and a bye drawn in place of a player.
     "knockout.round.final": "决赛",
     "knockout.round.semis": "半决赛",
     "knockout.round.quarters": "四分之一决赛",
     "knockout.round.number": "第 {number} 轮",
     "knockout.bye": "轮空",
-    "swiss.games": "局",
+    // A Swiss's table: what each player has played and won, and their results.
+    "swiss.games": "局数",
     "swiss.wins": "胜",
     "swiss.winShare": "胜率",
-    "swiss.results": "结果",
+    "swiss.results": "成绩",
+    // The arrows that scroll a knockout's grid across to its final, and back
+    // to its first round.
     "knockout.onward": "后面的轮次",
     "knockout.back": "前面的轮次",
+    // What every list of tournaments shares, on the home page and a year's:
+    // the columns each is a table of, and what narrows them.
     "tournamentList.column.date": "日期",
     "tournamentList.column.name": "名称",
-    "tournamentList.onlyIn": "仅显示{country}的锦标赛",
-    "tournamentList.filter.country": "国家或地区",
-    "tournamentList.filter.anyCountry": "任何国家或地区",
+    // A flag, which narrows the lists to its country, named by what it does.
+    "tournamentList.onlyIn": "仅显示{country}的赛事",
+    "tournamentList.filter.country": "国家",
+    "tournamentList.filter.anyCountry": "所有国家",
     "tournamentList.filter.region": "地区",
-    "tournamentList.filter.anyRegion": "任何地区",
-    "tournamentList.filter.sport": "项目",
-    "tournamentList.filter.anySport": "任何项目",
+    "tournamentList.filter.anyRegion": "所有地区",
+    "tournamentList.filter.sport": "运动",
+    "tournamentList.filter.anySport": "所有运动",
     "tournamentList.filter.submit": "筛选",
+    // The years there are tournaments in, the secondary navigation of both.
     "years.label": "年份",
+    // The drop-down list holding the years that do not fit as tabs.
     "years.earlier": "更早的年份",
 
-    "admin.newerBuild.message": "本站有了较新的版本。",
+    // The admin's words.
+    "admin.newerBuild.message": "本网站有新版本可用。",
     "admin.newerBuild.reload": "重新加载",
     "admin.title": "管理",
-    "admin.tournaments.new": "新建锦标赛",
-    "admin.tournaments.none": "没有锦标赛",
-    "admin.tournaments.filter.none": "没有符合条件的锦标赛",
+    "admin.tournaments.new": "新建赛事",
+    "admin.tournaments.none": "没有赛事",
+    "admin.tournaments.filter.none": "没有符合条件的赛事",
+    // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "已归档",
     "admin.tournaments.manage": "管理",
     "admin.tournaments.edit": "编辑",
     "admin.tournaments.archive": "归档",
     "admin.tournaments.restore": "恢复",
-    "admin.tournaments.scores": "比分",
+    "admin.tournaments.scores": "成绩",
     "admin.tournaments.players": "选手",
     "admin.years.label": "年份",
+    // What the drop-down list of years says while the year chosen is a tab.
     "admin.years.earlier": "更早的年份",
     "admin.tournament.name": "名称",
     "admin.tournament.starts": "开始",
     "admin.tournament.finishes": "结束",
     "admin.tournament.format": "赛制",
-    "admin.tournament.sport": "项目",
-    "admin.tournament.country": "国家或地区",
+    "admin.tournament.sport": "运动",
+    "admin.tournament.country": "国家",
     "admin.tournament.region": "地区",
     "admin.tournament.subtitle": "副标题",
-    "admin.rules.handicap": "采用让分",
+    "admin.rules.handicap": "使用差点",
     "admin.rules.drawsAllowed": "允许平局",
-    "admin.tournament.levelTestsDrawn": "打平的对抗赛算平局",
+    "admin.tournament.levelTestsDrawn": "对抗赛打平算平局",
     "admin.rules.worldRankings": "计入世界排名",
-    "admin.tournament.national": "全国级赛事",
+    "admin.tournament.national": "国家级赛事",
     "admin.tournament.international": "国际级赛事",
-    "admin.tournament.otherwise": "无法按现在的样子接受。",
-    "admin.newTournament.title": "新建锦标赛",
-    "admin.newTournament.submit": "创建锦标赛",
-    "admin.editTournament.title": "编辑锦标赛",
-    "admin.editTournament.submit": "更新锦标赛",
-    "admin.editTournament.otherwise": "无法更改这个锦标赛。",
-    "admin.view.tabs": "锦标赛",
+    // A refusal with no words of its own, above the fields.
+    "admin.tournament.otherwise": "无法按现状接受。",
+    "admin.newTournament.title": "新建赛事",
+    "admin.newTournament.submit": "创建赛事",
+    "admin.editTournament.title": "编辑赛事",
+    "admin.editTournament.submit": "更新赛事",
+    // Said in place of the form, for a refusal with no words of its own.
+    "admin.editTournament.otherwise": "无法修改这个赛事。",
+    // A tournament's page, and the tabs what there is to run is in.
+    "admin.view.tabs": "赛事",
     "admin.view.players": "选手",
-    "admin.view.competitions": "赛事",
-    "admin.view.managers": "管理员",
-    "admin.view.notes": "备注",
+    "admin.view.competitions": "项目",
+    "admin.view.managers": "管理者",
+    "admin.view.notes": "通知",
     "admin.view.scorers": "记分员",
     "admin.view.rankings": "排名",
     "admin.rankings.file":
-      "世界排名收到的是以文本文件形式发送的比赛结果，由网站根据已录入的比赛生成。",
+      "世界排名将使用该赛事的成绩，并通过此功能获取，管理者无需进行任何操作。",
     "admin.rankings.download": "下载排名",
-    "rankings.notAvailable": "排名不可用",
+    "rankings.notAvailable": "无法提供排名",
     "rankings.notAvailable.sport":
-      "本赛事的运动项目没有世界排名，因此没有可发送的排名。",
-    "rankings.notAvailable.notCounted": "这个赛事没有任何比赛计入世界排名。",
-    "admin.view.otherwise": "无法在这里管理这个锦标赛。",
-    "admin.competitionView.tabs": "赛事",
+      "该赛事的运动没有世界排名，所以没有可发送的排名。",
+    "rankings.notAvailable.notCounted": "该赛事的所有项目都不计入世界排名。",
+    // Said in place of the tabs, for a refusal with no words of its own.
+    "admin.view.otherwise": "无法从这里管理这个赛事。",
+    // A competition's page, and the tabs what there is to run is in.
+    "admin.competitionView.tabs": "项目",
     "admin.competitionView.players": "选手",
-    "admin.competitionView.scores": "比分",
-    "admin.sections.label": "锦标赛及其赛事",
-    "admin.sections.tournament": "锦标赛",
-    "admin.administrator.sections.label": "站点管理员的页面",
-    "admin.administrator.sections.tournaments": "锦标赛",
+    "admin.competitionView.scores": "成绩",
+    // The section bar of a tournament's page and its competitions' pages.
+    "admin.sections.label": "赛事及其项目",
+    "admin.sections.tournament": "赛事",
+    // The section bar of the administrator's pages.
+    "admin.administrator.sections.label": "管理员页面",
+    "admin.administrator.sections.tournaments": "赛事",
     "admin.administrator.sections.accounts": "账户",
     "admin.administrator.sections.worldRankings": "世界排名",
     "admin.administrator.sections.importErrors": "导入错误",
@@ -480,84 +538,90 @@ export const chinese: Language = {
     "admin.databaseStatus.expected": "预计网站将在 {minutes} 分钟后恢复。",
     "admin.databaseStatus.expectedOne": "预计网站将在 1 分钟后恢复。",
     "admin.databaseStatus.longer": "耗时比预期更长。",
-    "admin.databaseStatus.told": "访客看到：{words}",
-    "admin.databaseStatus.toldUsual": "访客看到的是通常的提示语。",
+    "admin.databaseStatus.told": "向读者显示的说明：{words}",
+    "admin.databaseStatus.toldUsual": "向读者显示的是通常的说明。",
     "admin.databaseStatus.minutes": "预计分钟数",
-    "admin.databaseStatus.words": "给访客的文字",
+    "admin.databaseStatus.words": "给读者的说明",
     "admin.databaseStatus.turnOff": "关闭",
-    "admin.databaseStatus.change": "更改",
+    "admin.databaseStatus.change": "修改",
     "admin.databaseStatus.turnOn": "开启",
     "admin.databaseStatus.minutesNeeded": "需要填写分钟数。",
     "admin.databaseStatus.otherwise": "网站出了点问题。",
     "DatabaseAccess.MinutesNotWhole": "分钟数必须是整数。",
     "DatabaseAccess.MinutesOutOfRange": "分钟数必须在 1 到 1440 之间。",
-    "DatabaseAccess.WordsTooLong": "文字不能超过 500 个字符。",
+    "DatabaseAccess.WordsTooLong": "说明不得超过 500 个字符。",
     "DatabaseAccess.NotOff": "数据库访问并未关闭。",
-    "admin.administrator.title": "站点管理员",
+    "admin.administrator.title": "管理员",
+    // The accounts page, a section for each role.
     "admin.accounts.title": "账户",
     "admin.roles.add": "添加",
-    "admin.roles.administrator.heading": "站点管理员",
-    "admin.roles.administrator.none": "没有其他站点管理员",
-    "admin.roles.administrator.removeTitle": "移除站点管理员",
+    "admin.roles.administrator.heading": "管理员",
+    "admin.roles.administrator.none": "没有其他管理员",
+    "admin.roles.administrator.removeTitle": "移除管理员",
     "admin.roles.administrator.removeExplanation":
-      "{name} 将不再是本站的站点管理员。",
-    "admin.roles.ac-world-ranking-officer.heading": "世界排名负责人 (协会槌球)",
-    "admin.roles.ac-world-ranking-officer.none":
-      "没有世界排名负责人 (协会槌球)",
+      "{name} 将不再是本网站的管理员。",
+    "admin.roles.ac-world-ranking-officer.heading": "协会槌球世界排名负责人",
+    "admin.roles.ac-world-ranking-officer.none": "没有协会槌球世界排名负责人",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "移除世界排名负责人 (协会槌球)",
+      "移除协会槌球世界排名负责人",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} 将不再是世界排名负责人 (协会槌球)。",
-    "admin.roles.gc-world-ranking-officer.heading":
-      "世界排名负责人 (高尔夫槌球)",
-    "admin.roles.gc-world-ranking-officer.none":
-      "没有世界排名负责人 (高尔夫槌球)",
+      "{name} 将不再是协会槌球世界排名负责人。",
+    "admin.roles.gc-world-ranking-officer.heading": "高尔夫槌球世界排名负责人",
+    "admin.roles.gc-world-ranking-officer.none": "没有高尔夫槌球世界排名负责人",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "移除世界排名负责人 (高尔夫槌球)",
+      "移除高尔夫槌球世界排名负责人",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} 将不再是世界排名负责人 (高尔夫槌球)。",
+      "{name} 将不再是高尔夫槌球世界排名负责人。",
+    // For a refusal with no words of its own, beneath the field or in place
+    // of the list.
+    // The page where the world ranking players are imported, and its log, a
+    // line for each thing the import says. A count is said after a colon.
     "admin.worldRankings.title": "导入世界排名选手",
     "admin.worldRankings.import": "导入",
-    "admin.worldRankings.log": "导入的过程",
+    "admin.worldRankings.log": "导入情况",
     "admin.worldRankings.ac.reading": "正在读取协会槌球名单",
     "admin.worldRankings.ac.read": "已读取的协会槌球选手：{players}",
-    "admin.worldRankings.ac.kept": "保留的协会槌球选手：{players}",
+    "admin.worldRankings.ac.kept": "已保留的协会槌球选手：{players}",
     "admin.worldRankings.ac.refused":
-      "无法读取协会槌球名单，所以其中的选手保持原样。",
+      "无法读取协会槌球名单，因此其中的选手保持原样。",
     "admin.worldRankings.gc.reading": "正在读取高尔夫槌球名单",
     "admin.worldRankings.gc.read": "已读取的高尔夫槌球选手：{players}",
-    "admin.worldRankings.gc.kept": "保留的高尔夫槌球选手：{players}",
+    "admin.worldRankings.gc.kept": "已保留的高尔夫槌球选手：{players}",
     "admin.worldRankings.gc.refused":
-      "无法读取高尔夫槌球名单，所以其中的选手保持原样。",
+      "无法读取高尔夫槌球名单，因此其中的选手保持原样。",
     "admin.worldRankings.finished": "已完成",
-    "admin.worldRankings.failed": "导入没有完成。",
-    "admin.worldRankings.otherwise": "本站出了点问题。",
+    "admin.worldRankings.failed": "导入未能完成。",
+    // For a refusal with no words of its own, as a failure of the site's.
+    "admin.worldRankings.otherwise": "网站出了点问题。",
     "WorldRankingLists.Unreachable": "无法连接世界排名的网站。",
     "WorldRankingLists.Unreadable":
-      "该名单的排版与世界排名网站的不一致：其中某一行无法读取、名单里没有任何人，或者不是 UTF-8 编码。",
+      "名单的格式与世界排名网站的格式不一致：其中有一行无法读取、名单里没有任何人，或者不是 UTF-8 编码。",
+    // The documents the import from the old sites refused, and the page of one.
     "admin.importErrors.title": "导入错误",
     "admin.importErrors.none": "没有导入错误",
-    "admin.importErrors.otherwise": "本站出了点问题。",
+    "admin.importErrors.otherwise": "网站出了点问题。",
     "admin.logs.title": "日志",
     "admin.logs.severity": "严重程度",
     "admin.logs.text": "查找",
     "admin.logs.show": "显示",
     "admin.logs.prune": "清理",
-    "admin.logs.pruneAsk": "删除最近一小时之前的日志？删除后无法恢复。",
+    "admin.logs.pruneAsk": "删除一小时之前的日志？删除后无法找回。",
     "admin.logs.removed": "已删除 {count} 条记录",
     "admin.logs.none": "没有日志记录",
-    "admin.logs.otherwise": "本站出了点问题。",
-    "admin.hover.logs.show": "显示匹配的记录",
-    "admin.hover.logs.prune": "删除最近一小时之前的日志",
-    "admin.hover.logs.pruneAgree": "删除最近一小时之前的日志",
+    "admin.logs.otherwise": "网站出了点问题。",
+    "admin.hover.logs.show": "显示符合条件的记录",
+    "admin.hover.logs.prune": "删除一小时之前的日志",
+    "admin.hover.logs.pruneAgree": "删除一小时之前的日志",
     "admin.importError.title": "导入错误",
     "admin.importError.documentId": "文档编号",
-    "admin.importError.tournament": "锦标赛",
-    "admin.importError.competition": "赛事",
-    "admin.importError.newSite": "新站点",
-    "admin.importError.oldSite": "旧站点",
+    "admin.importError.tournament": "赛事",
+    "admin.importError.competition": "项目",
+    "admin.importError.newSite": "新网站",
+    "admin.importError.oldSite": "旧网站",
     "ImportErrorKept.NotFound": "导入没有为该文档保留任何错误。",
-    "admin.competitionView.otherwise": "无法在这里管理这个赛事。",
+    "admin.competitionView.otherwise": "无法从这里管理这个项目。",
+    // The Competitions tab: each competition's kind, what can be done with it,
+    // and the heading the archived ones are under.
     "admin.competitions.block": "小组赛",
     "admin.competitions.knockout": "淘汰赛",
     "admin.competitions.swiss": "瑞士制",
@@ -567,137 +631,148 @@ export const chinese: Language = {
     "admin.competitions.down": "下移",
     "admin.competitions.archive": "归档",
     "admin.competitions.restore": "恢复",
-    "admin.competitions.archived": "已归档的赛事",
-    "admin.competitions.none": "没有赛事",
-    "admin.competitions.add": "添加赛事",
-    "admin.competition.addTitle": "添加赛事",
-    "admin.competition.editTitle": "编辑赛事",
+    "admin.competitions.archived": "已归档的项目",
+    "admin.competitions.none": "没有项目",
+    "admin.competitions.add": "添加项目",
+    // The competition dialog.
+    "admin.competition.addTitle": "添加项目",
+    "admin.competition.editTitle": "编辑项目",
     "admin.competition.name": "名称",
     "admin.competition.kind": "类型",
-    "admin.competition.bestOf": "几局决胜",
+    "admin.competition.bestOf": "几局制",
     "admin.competition.rounds": "轮数",
     "admin.competition.places": "名额",
     "admin.competition.round": "第 {number} 轮",
-    "admin.competition.bestOfs": "各轮几局决胜",
+    "admin.competition.bestOfs": "各轮几局制",
     "admin.competition.quarters": "四分之一决赛",
     "admin.competition.semis": "半决赛",
     "admin.competition.final": "决赛",
     "admin.competition.add": "添加",
     "admin.competition.save": "保存",
     "admin.competition.added": "已添加 {name}。",
-    "admin.competition.otherwise": "无法按现在的样子保存这个赛事。",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.competition.otherwise": "无法按现状保存这个项目。",
     "CompetitionName.Missing": "请输入名称。",
-    "CompetitionName.TooLong": "名称最多只能有 254 个字符。",
-    "CompetitionName.NoLetterOrDigit": "名称中至少要有一个字母或数字。",
+    "CompetitionName.TooLong": "名称最多可以有 254 个字符。",
+    "CompetitionName.NoLetterOrDigit": "名称中要有文字或数字。",
     "Tournament.KnockoutPlayerHasGames":
-      "这个抽签中的选手已有比赛，所以不能更改名额。",
+      "这个签表中的选手已有比赛，因此名额不能更改。",
     "Tournament.KnockoutRoundHasDecidedMatch":
-      "已有分出胜负的比赛的轮次不能改为更少的局数。",
+      "已有分出胜负的比赛的轮次，不能改为更少的局数。",
     "Tournament.KnockoutLaterRoundHasGames":
-      "后面的轮次已有比赛后，不能再更改这一轮。",
-    "Tournament.CompetitionNameTaken":
-      "这个锦标赛中的另一个赛事已经用了这个名称。",
-    "BestOf.NotWhole": "请输入整数的局数。",
-    "BestOf.TooSmall": "一场比赛至少要是 1 局决胜。",
+      "后面的轮次一旦已有比赛，这一轮就不能再更改。",
+    "Tournament.CompetitionNameTaken": "本赛事中已有另一个项目使用这个名称。",
+    "BestOf.NotWhole": "请输入整数局数。",
+    "BestOf.TooSmall": "一场比赛至少要采用 1 局制。",
     "Rounds.NotWhole": "请输入整数轮数。",
-    "Rounds.TooSmall": "一个组至少要打 1 轮。",
+    "Rounds.TooSmall": "小组赛至少要进行 1 轮。",
     "KnockoutDraw.EvenBestOf":
-      "淘汰赛的每场比赛必须分出胜负，所以局数要是奇数的决胜制。",
-    "admin.hover.tournaments.new": "创建新的锦标赛",
-    "admin.hover.tournaments.manage": "管理这个锦标赛的选手、队伍、赛事和比分",
-    "admin.hover.tournaments.edit": "更改这个锦标赛的详情",
-    "admin.hover.tournaments.scores": "录入这个锦标赛的比分",
-    "admin.hover.tournaments.players": "管理这个锦标赛的选手",
-    "admin.hover.competitions.view": "打开这个赛事，查看并录入其选手和比分",
-    "admin.hover.tests.view": "打开这场对抗赛，查看并录入其比分",
-    "admin.hover.teams.view": "打开这支队伍，查看并管理其选手",
-    "admin.hover.dialog.player.add": "把这位选手添加到锦标赛",
-    "admin.hover.dialog.player.save": "保存对这位选手的更改",
-    "admin.hover.dialog.team.add": "把这支队伍添加到锦标赛",
-    "admin.hover.dialog.team.save": "保存对这支队伍的更改",
-    "admin.hover.dialog.test.add": "把这场对抗赛添加到锦标赛",
-    "admin.hover.dialog.test.save": "保存对这场对抗赛的更改",
-    "admin.hover.dialog.competition.add": "把这个赛事添加到锦标赛",
-    "admin.hover.dialog.competition.save": "保存对这个赛事的更改",
-    "admin.hover.dialog.score.add": "把这个比分添加到赛事",
-    "admin.hover.dialog.score.save": "保存对这个比分的更正",
+      "淘汰赛的每场比赛必须分出胜负，因此局数必须是奇数。",
+    // Every modal dialog's way out, since the page beneath cannot be reached.
+    "admin.hover.tournaments.new": "创建新赛事",
+    "admin.hover.tournaments.manage": "管理这个赛事的选手、队伍、项目和成绩",
+    "admin.hover.tournaments.edit": "修改这个赛事的详情",
+    "admin.hover.tournaments.scores": "录入这个赛事的成绩",
+    "admin.hover.tournaments.players": "管理这个赛事的选手",
+    "admin.hover.competitions.view": "打开这个项目，查看并录入选手和成绩",
+    "admin.hover.tests.view": "打开这场对抗赛，查看并录入成绩",
+    "admin.hover.teams.view": "打开这支队伍，查看并管理队员",
+    "admin.hover.dialog.player.add": "把这位选手添加到赛事",
+    "admin.hover.dialog.player.save": "保存对这位选手的修改",
+    "admin.hover.dialog.team.add": "把这支队伍添加到赛事",
+    "admin.hover.dialog.team.save": "保存对这支队伍的修改",
+    "admin.hover.dialog.test.add": "把这场对抗赛添加到赛事",
+    "admin.hover.dialog.test.save": "保存对这场对抗赛的修改",
+    "admin.hover.dialog.competition.add": "把这个项目添加到赛事",
+    "admin.hover.dialog.competition.save": "保存对这个项目的修改",
+    "admin.hover.dialog.score.add": "把这个成绩添加到项目",
+    "admin.hover.dialog.score.save": "保存对这个成绩的更正",
     "admin.hover.dialog.carryForward.save": "结转这位选手的成绩",
-    "admin.hover.dialog.tournament.new": "创建这个锦标赛",
-    "admin.hover.dialog.tournament.edit": "保存对这个锦标赛的更改",
-    "admin.hover.modal.cancel": "关闭此窗口，不保存任何内容",
+    "admin.hover.dialog.tournament.new": "创建这个赛事",
+    "admin.hover.dialog.tournament.edit": "保存对这个赛事的修改",
+    "admin.hover.modal.cancel": "关闭，不保存任何内容",
     "admin.hover.modal.ok": "关闭此消息",
     "admin.hover.tab": "显示“{name}”标签页",
-    "admin.hover.tournaments.archive": "归档这个锦标赛；可以恢复",
-    "admin.hover.tournaments.restore": "恢复这个已归档的锦标赛",
-    "admin.hover.players.add": "向这个锦标赛添加选手",
-    "admin.hover.players.edit": "更改这位选手的详情",
+    "admin.hover.tournaments.archive": "归档这个赛事；可以恢复",
+    "admin.hover.tournaments.restore": "恢复这个已归档的赛事",
+    "admin.hover.players.add": "向这个赛事添加选手",
+    "admin.hover.players.edit": "修改这位选手的详情",
     "admin.hover.players.up": "把这位选手在列表中上移",
     "admin.hover.players.down": "把这位选手在列表中下移",
     "admin.hover.players.archive": "归档这位选手；可以恢复",
     "admin.hover.players.restore": "恢复这位已归档的选手",
-    "admin.hover.teams.add": "向这个锦标赛添加队伍",
-    "admin.hover.teams.edit": "更改这支队伍的详情",
+    "admin.hover.teams.add": "向这个赛事添加队伍",
+    "admin.hover.teams.edit": "修改这支队伍的详情",
     "admin.hover.teams.up": "把这支队伍在列表中上移",
     "admin.hover.teams.down": "把这支队伍在列表中下移",
     "admin.hover.teams.archive": "归档这支队伍；可以恢复",
     "admin.hover.teams.restore": "恢复这支已归档的队伍",
-    "admin.hover.competitions.add": "向这个锦标赛添加赛事",
-    "admin.hover.competitions.edit": "更改这个赛事的详情",
-    "admin.hover.competitions.up": "把这个赛事在列表中上移",
-    "admin.hover.competitions.down": "把这个赛事在列表中下移",
-    "admin.hover.competitions.archive": "归档这个赛事；可以恢复",
-    "admin.hover.competitions.restore": "恢复这个已归档的赛事",
+    "admin.hover.competitions.add": "向这个赛事添加项目",
+    "admin.hover.competitions.edit": "修改这个项目的详情",
+    "admin.hover.competitions.up": "把这个项目在列表中上移",
+    "admin.hover.competitions.down": "把这个项目在列表中下移",
+    "admin.hover.competitions.archive": "归档这个项目；可以恢复",
+    "admin.hover.competitions.restore": "恢复这个已归档的项目",
     "admin.hover.tests.add": "添加两支队伍之间的对抗赛",
-    "admin.hover.tests.edit": "更改这场对抗赛的详情",
+    "admin.hover.tests.edit": "修改这场对抗赛的详情",
     "admin.hover.tests.up": "把这场对抗赛在列表中上移",
     "admin.hover.tests.down": "把这场对抗赛在列表中下移",
     "admin.hover.tests.archive": "归档这场对抗赛；可以恢复",
     "admin.hover.tests.restore": "恢复这场已归档的对抗赛",
     "admin.hover.tests.toTeams": "前往“队伍”标签页，添加对抗赛所需的队伍",
-    "admin.hover.scores.add": "向这个赛事添加一局的比分",
-    "admin.hover.scores.edit": "更正这个比分",
-    "admin.hover.scores.archive": "归档这个比分，使它不再计入；可以恢复",
-    "admin.hover.scores.restore": "恢复这个已归档的比分，使它重新计入",
-    "admin.hover.scores.withdraw": "把这个比分保留在列表中，但不再计入",
-    "admin.hover.scores.unwithdraw": "让这个已作废的比分重新计入",
-    "admin.hover.scores.up": "把这个比分在列表中前移",
-    "admin.hover.scores.down": "把这个比分在列表中后移",
-    "admin.hover.competitionPlayers.add": "把所选选手加入这个赛事",
+    "admin.hover.scores.add": "向这个项目添加一局的成绩",
+    "admin.hover.scores.edit": "更正这个成绩",
+    "admin.hover.scores.archive": "归档这个成绩，使其不再计入；可以恢复",
+    "admin.hover.scores.restore": "恢复这个已归档的成绩，使其重新计入",
+    "admin.hover.scores.withdraw": "把这个成绩留在列表中，但不再计入",
+    "admin.hover.scores.unwithdraw": "让这个已撤销的成绩重新计入",
+    "admin.hover.scores.up": "把这个成绩在列表中前移",
+    "admin.hover.scores.down": "把这个成绩在列表中后移",
+    "admin.hover.competitionPlayers.add": "把所选的选手加入这个项目",
     "admin.hover.competitionPlayers.up": "把这位选手在列表中上移",
     "admin.hover.competitionPlayers.down": "把这位选手在列表中下移",
-    "admin.hover.competitionPlayers.remove": "把这位选手从赛事中移出",
-    "admin.hover.competitionPlayers.withdraw": "让这位选手退出赛事",
-    "admin.hover.competitionPlayers.unwithdraw":
-      "让这位已退赛的选手重新回到赛事中",
+    "admin.hover.competitionPlayers.remove": "把这位选手移出项目",
+    "admin.hover.competitionPlayers.withdraw": "让这位选手退出项目",
+    "admin.hover.competitionPlayers.unwithdraw": "让这位已退赛的选手回到项目中",
     "admin.hover.competitionPlayers.carryForward":
-      "从另一个赛事结转这位选手的成绩",
-    "admin.hover.notes.add": "为这个锦标赛写一条新备注",
-    "admin.hover.notes.edit": "更改这条备注",
-    "admin.hover.notes.delete": "删除这条备注",
-    "admin.hover.note.add": "保存这条备注，并添加到锦标赛",
-    "admin.hover.note.save": "保存对这条备注的更改",
-    "admin.hover.people.add": "给这个人该角色",
-    "admin.hover.people.remove": "取消这个人的该角色",
-    "admin.hover.worldRankings.import": "获取世界排名，并添加其中的选手",
+      "从另一个项目结转这位选手的成绩",
+    "admin.hover.notes.add": "为这个赛事写一条新通知",
+    "admin.hover.notes.edit": "修改这条通知",
+    "admin.hover.notes.delete": "删除这条通知",
+    "admin.hover.note.add": "保存这条通知并添加到赛事",
+    "admin.hover.note.save": "保存对这条通知的修改",
+    "admin.hover.people.add": "授予此人该角色",
+    "admin.hover.people.remove": "收回此人的该角色",
+    "admin.hover.worldRankings.import": "获取世界排名并添加其中的选手",
     "admin.modal.cancel": "取消",
+    // The one button of a modal dialog that only tells the reader something.
     "admin.modal.ok": "确定",
+    // The Managers and Scorers tabs, each of which makes somebody one by their
+    // email address and takes one off.
     "admin.people.emailAddress": "电子邮件地址",
     "admin.people.remove": "移除",
     "admin.people.otherwise": "无法完成该操作。",
-    "admin.managers.you": "你",
-    "admin.managers.add": "添加管理员",
-    "admin.managers.none": "没有管理员",
-    "admin.managers.removeTitle": "移除管理员",
-    "admin.managers.removeExplanation": "{name} 将不再能够管理这个锦标赛。",
+    // Beside the reader's own name among the managers.
+    "admin.managers.you": "您",
+    "admin.managers.add": "添加管理者",
+    // Never said, since a tournament always has a manager, but a list says
+    // what it says when it is empty.
+    "admin.managers.none": "没有管理者",
+    "admin.managers.removeTitle": "移除管理者",
+    "admin.managers.removeExplanation": "{name} 将不能再管理这个赛事。",
     "admin.managers.removeYourself.explanation":
-      "你将不再能够管理这个锦标赛，这里没有人能替你撤销。其他管理员可以让你重新成为管理员。",
-    "admin.managers.otherwise": "该地址无法成为管理员。",
+      "您将不能再管理这个赛事，而且这里没有人能为您撤销。只有其他管理者才能让您重新成为管理者。",
+    "admin.managers.otherwise": "无法把该地址设为管理者。",
+    // The Players tab.
+    // A competition's Players tab.
     "admin.competitionPlayers.add": "添加选手",
+    // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise": "无法添加这位选手。",
     "admin.competitionPlayers.choose": "要添加的选手",
-    "admin.competitionPlayers.nobody": "请选择一位选手",
-    "admin.competitionPlayers.bye": "轮空",
-    "admin.competitionPlayers.all": "所有选手都在这个赛事中",
+    "admin.competitionPlayers.nobody": "选择选手",
+    // Offered in a knockout's drop-down, and what a bye is listed as.
+    "admin.competitionPlayers.bye": "Bye",
+    "admin.competitionPlayers.all": "所有选手都已在项目中",
     "admin.competitionPlayers.none": "没有选手",
     "admin.competitionPlayers.up": "上移",
     "admin.competitionPlayers.down": "下移",
@@ -707,76 +782,79 @@ export const chinese: Language = {
     "admin.competitionPlayers.withdrawn": "已退赛的选手",
     "admin.competitionPlayers.removeTitle": "移除选手",
     "admin.competitionPlayers.removeQuestion":
-      "{name} 将被移出这个赛事。此操作无法撤销。",
+      "{name} 将被移出项目。此操作无法撤销。",
     "admin.competitionPlayers.withdrawTitle": "让选手退赛",
     "admin.competitionPlayers.withdrawQuestion":
-      "{name} 将不再参加这个赛事的比赛，尚未进行的比赛将在没有他们的情况下判定。",
+      "{name} 将不再参加该项目的比赛，尚未进行的比赛将在没有该选手的情况下判定。",
     "admin.competitionPlayers.carryForward": "结转",
+    // The carry forward dialog, over a competition's Players tab.
     "admin.carryForward.title": "结转 - {name}",
     "admin.carryForward.save": "保存",
+    // Above the counts, for a refusal with no words of its own.
     "admin.carryForward.otherwise": "无法保存这次结转。",
-    "admin.carryForward.matchWins": "比赛胜场",
-    "admin.carryForward.matchLosses": "比赛负场",
+    "admin.carryForward.matchWins": "胜场",
+    "admin.carryForward.matchLosses": "负场",
     "admin.carryForward.gameWins": "胜局",
     "admin.carryForward.gameLosses": "负局",
     "admin.carryForward.hoopsFor": "得球门",
     "admin.carryForward.hoopsAgainst": "失球门",
-    "CarryForward.MatchWinsNotWhole": "请输入整数的比赛胜场数。",
-    "CarryForward.MatchWinsBelowZero": "比赛胜场数请输入 0 或更大的数。",
-    "CarryForward.MatchLossesNotWhole": "请输入整数的比赛负场数。",
-    "CarryForward.MatchLossesBelowZero": "比赛负场数请输入 0 或更大的数。",
-    "CarryForward.GameWinsNotWhole": "请输入整数的胜局数。",
-    "CarryForward.GameWinsBelowZero": "胜局数请输入 0 或更大的数。",
-    "CarryForward.GameLossesNotWhole": "请输入整数的负局数。",
-    "CarryForward.GameLossesBelowZero": "负局数请输入 0 或更大的数。",
-    "CarryForward.HoopsForNotWhole": "请输入整数的得球门数。",
-    "CarryForward.HoopsForBelowZero": "得球门数请输入 0 或更大的数。",
-    "CarryForward.HoopsAgainstNotWhole": "请输入整数的失球门数。",
-    "CarryForward.HoopsAgainstBelowZero": "失球门数请输入 0 或更大的数。",
-    "admin.scores.add": "添加比分",
-    "admin.scores.none": "没有比分",
+    "CarryForward.MatchWinsNotWhole": "请为胜场输入整数。",
+    "CarryForward.MatchWinsBelowZero": "胜场请输入 0 或更大的数。",
+    "CarryForward.MatchLossesNotWhole": "请为负场输入整数。",
+    "CarryForward.MatchLossesBelowZero": "负场请输入 0 或更大的数。",
+    "CarryForward.GameWinsNotWhole": "请为胜局输入整数。",
+    "CarryForward.GameWinsBelowZero": "胜局请输入 0 或更大的数。",
+    "CarryForward.GameLossesNotWhole": "请为负局输入整数。",
+    "CarryForward.GameLossesBelowZero": "负局请输入 0 或更大的数。",
+    "CarryForward.HoopsForNotWhole": "请为得球门输入整数。",
+    "CarryForward.HoopsForBelowZero": "得球门请输入 0 或更大的数。",
+    "CarryForward.HoopsAgainstNotWhole": "请为失球门输入整数。",
+    "CarryForward.HoopsAgainstBelowZero": "失球门请输入 0 或更大的数。",
+    // A competition's Scores tab and the score dialog.
+    "admin.scores.add": "添加成绩",
+    "admin.scores.none": "没有成绩",
     "admin.scores.edit": "编辑",
-    "admin.scores.drawNotFilledTitle": "抽签未排满",
+    "admin.scores.drawNotFilledTitle": "签表尚未排满",
     "admin.scores.archive": "归档",
     "admin.scores.up": "上移",
     "admin.scores.down": "下移",
     "admin.scores.restore": "恢复",
-    "admin.scores.archived": "已归档的比分",
+    "admin.scores.archived": "已归档的成绩",
     "admin.scores.archivedSaid": "已归档",
-    "admin.scores.withdraw": "作废",
-    "admin.scores.unwithdraw": "取消作废",
-    "admin.scores.withdrawnSaid": "已作废",
+    "admin.scores.withdraw": "撤销",
+    "admin.scores.unwithdraw": "取消撤销",
+    "admin.scores.withdrawnSaid": "已撤销",
+    // Above the list, for a refusal with no words of its own.
     "admin.scores.otherwise": "无法完成该操作。",
-    "admin.score.title": "添加比分",
-    "admin.score.add": "添加这一局",
+    "admin.score.title": "添加成绩",
+    "admin.score.add": "添加一局",
     "admin.score.winner": "胜者",
-    "admin.score.winnerScore": "胜者的得分",
+    "admin.score.winnerScore": "胜者得分",
     "admin.score.loser": "负者",
-    "admin.score.loserScore": "负者的得分",
-    "admin.score.beat": "击败",
-    "admin.score.added": "已添加 {winner} 战胜 {loser} 的这一局。",
+    "admin.score.loserScore": "负者得分",
+    "admin.score.beat": "胜",
+    "admin.score.added": "已添加{winner}战胜{loser}的一局。",
     "admin.score.otherwise": "无法添加这一局。",
-    "admin.score.correctTitle": "编辑比分",
+    "admin.score.correctTitle": "编辑成绩",
     "admin.score.save": "保存",
-    "admin.score.notCorrected": "无法更正这个比分。",
+    "admin.score.notCorrected": "无法更正这个成绩。",
     "Game.WinnerMissing": "请选择胜者。",
     "Game.WinnerScoreMissing": "请输入胜者的得分。",
     "Game.LoserMissing": "请选择负者。",
     "Game.LoserScoreMissing": "请输入负者的得分。",
-    "Score.NoPoints": "比分要以得分数开头。",
+    "Score.NoPoints": "成绩要以得分的数字开头。",
     "Game.SamePlayer": "选手不能和自己比赛。",
-    "Game.WinnerNotAhead": "胜者的得分必须高于负者的得分，或者标记为获胜。",
+    "Game.WinnerNotAhead": "胜者的得分必须高于负者，或标记为获胜。",
     "Game.LoserMarked": "负者的得分不能标记为获胜。",
-    "Game.ResultChanged":
-      "更正不改变结果：获胜的一局仍是获胜，平局的一局仍是平局。",
+    "Game.ResultChanged": "更正不能改变结果：胜的仍是胜，平的仍是平。",
     "Competition.MatchDecided": "他们的比赛已经分出胜负。",
-    "Competition.DrawFull": "无法添加选手，因为淘汰赛已满。",
+    "Competition.DrawFull": "无法添加该选手，因为淘汰赛的名额已满。",
     "Competition.DrawNotFilled":
-      "淘汰赛的每个名额都排上选手或轮空之前，无法添加比分。",
+      "在淘汰赛的每个位置都排上选手或轮空之前，不能添加成绩。",
     "Competition.ByeOutsideKnockout": "只有淘汰赛才能有轮空。",
-    "Competition.NotDrawnToMeet": "这些选手目前没有被抽到淘汰赛中相互比赛。",
+    "Competition.NotDrawnToMeet": "这两位选手目前没有在淘汰赛中被抽到对阵。",
     "Competition.WinnerHasPlayedOn":
-      "这场比赛的胜者已经打了下一场，所以谁获胜不能再更改。",
+      "这场比赛的胜者已经打过下一场，因此不能再更改谁获胜。",
     "CompetitionPlayer.Withdrawn": "已退赛的选手不再比赛。",
     "admin.players.add": "添加选手",
     "admin.players.none": "没有选手",
@@ -785,31 +863,40 @@ export const chinese: Language = {
     "admin.players.restore": "恢复",
     "admin.players.up": "上移",
     "admin.players.down": "下移",
+    // Asked before archiving a player who is in competitions, since archiving
+    // removes them from each, and restoring them does not put them back.
     "admin.players.archiveTitle": "归档选手",
-    "admin.players.archiveQuestion": "{name} 将被移出以下赛事：",
-    "admin.players.archive.explanation": "恢复他们不会把他们放回这些赛事。",
+    "admin.players.archiveQuestion": "{name} 将被移出以下项目：",
+    "admin.players.archive.explanation": "恢复该选手不会让其回到这些项目中。",
     "admin.players.archived": "已归档的选手",
+    // Said to a screen reader, since a line through a name is not read out.
     "admin.players.archivedSaid": "已归档",
+    // The player dialog.
     "admin.player.addTitle": "添加选手",
     "admin.player.editTitle": "编辑选手",
     "admin.player.name": "姓名",
     "admin.player.representing": "代表",
-    "admin.player.worldRankingName": "世界排名中的选手姓名",
+    "admin.player.worldRankingName": "世界排名选手姓名",
+    // Beside the world ranking name: whether the world rankings know it.
     "admin.player.worldRankingKnown": "世界排名中有这个姓名。",
     "admin.player.worldRankingQuestioned":
-      "世界排名中没有这个姓名的选手。可能拼写有误，也可能该选手是新进入排名的。",
+      "世界排名中没有这个姓名的选手。可能是拼写有误，也可能这位选手是新加入排名的。",
     "admin.player.flag": "旗帜",
     "admin.player.add": "添加",
     "admin.player.save": "保存",
     "admin.player.added": "已添加 {name}。",
-    "admin.player.otherwise": "无法按现在的样子保存这位选手。",
-    "Tournament.PlayerNameTaken": "这个锦标赛中的另一位选手已经用了这个姓名。",
-    "TournamentPlayer.NoSuchFlag": "请从现有的旗帜中选择一个。",
-    "TournamentPlayer.NamedBye": "选手不能叫“轮空”。",
-    "TournamentPlayer.NoLetterOrDigit": "姓名中至少要有一个字母或数字。",
-    "admin.player.byesTitle": "轮空无需添加",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.player.otherwise": "无法按现状保存这位选手。",
+    "Tournament.PlayerNameTaken": "本赛事中已有另一位选手使用这个姓名。",
+    "TournamentPlayer.NoSuchFlag": "请从现有的旗帜中选择。",
+    "TournamentPlayer.NamedBye": "选手不能取名为“Bye”。",
+    "TournamentPlayer.NoLetterOrDigit": "姓名中要有文字或数字。",
+    // The dialog over the player dialog when a player is named as a bye.
+    "admin.player.byesTitle": "无需添加 Bye",
     "admin.player.byes":
-      "轮空不是锦标赛的选手。每当添加选手时，淘汰赛都会提供“轮空”，抽签需要几个就有几个。",
+      "Bye 不是赛事的选手。淘汰赛在添加选手时会提供“Bye”这个选项，签表需要多少个就可以选多少次。",
+    // A tournament played by teams (view.feature): its Teams and Tests tabs,
+    // a team's page, and their dialogs.
     "admin.view.teams": "队伍",
     "admin.view.tests": "对抗赛",
     "admin.teams.add": "添加队伍",
@@ -827,26 +914,30 @@ export const chinese: Language = {
     "admin.team.name": "名称",
     "admin.team.shortName": "简称",
     "admin.team.shortName.explanation":
-      "队伍的对抗赛用它来称呼，如 AUS v ENG。",
+      "对抗赛中用来称呼这支队伍的名字，如 AUS v ENG。",
     "admin.team.flag": "旗帜",
     "admin.team.add": "添加",
     "admin.team.save": "保存",
     "admin.team.added": "已添加 {name}。",
-    "admin.team.otherwise": "无法按现在的样子保存这支队伍。",
-    "admin.teamView.otherwise": "无法在这里查看这支队伍。",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.team.otherwise": "无法按现状保存这支队伍。",
+    "admin.teamView.otherwise": "无法从这里查看这支队伍。",
     "admin.teamView.players": "选手",
-    "TeamName.Missing": "请写明队伍叫什么。",
-    "TeamName.TooLong": "这个名称太长。",
-    "admin.notes.add": "添加备注",
-    "admin.notes.none": "没有备注",
+    "TeamName.Missing": "请填写队伍的名称。",
+    "TeamName.TooLong": "这个名称太长了。",
+    "admin.notes.add": "添加通知",
+    "admin.notes.none": "没有通知",
     "admin.notes.edit": "编辑",
     "admin.notes.delete": "删除",
-    "admin.notes.deleteTitle": "删除备注",
-    "admin.notes.deleteQuestion": "删除备注“{title}”吗？",
-    "admin.notes.delete.explanation": "备注一旦删除就永远消失，无法找回。",
+    // Asked before deleting a note, since a note deleted is gone for good.
+    "admin.notes.deleteTitle": "删除通知",
+    "admin.notes.deleteQuestion": "删除通知“{title}”？",
+    "admin.notes.delete.explanation": "通知一旦删除就永远消失，无法找回。",
+    // Above the list, for a refusal with no words of its own.
     "admin.notes.otherwise": "无法完成该操作。",
-    "admin.note.addTitle": "添加备注",
-    "admin.note.editTitle": "编辑备注",
+    // The note dialog, its description's tabs and the toolbar above its box.
+    "admin.note.addTitle": "添加通知",
+    "admin.note.editTitle": "编辑通知",
     "admin.note.title": "标题",
     "admin.note.description": "说明",
     "admin.note.write": "编写",
@@ -863,40 +954,40 @@ export const chinese: Language = {
     "admin.note.tool.taskList": "任务列表",
     "admin.note.add": "添加",
     "admin.note.save": "保存",
-    "admin.note.otherwise": "无法按现在的样子保存这条备注。",
-    "ManagerNoteTitle.Missing": "请给备注写一个标题。",
-    "ManagerNoteTitle.TooLong": "这个标题太长。",
-    "ManagerNoteTitle.NoLetterOrDigit": "标题中至少要有一个字母或数字。",
-    "ManagerNoteDescription.TooLong": "这段说明太长。",
+    // Above the fields, for a refusal with no words of its own.
+    "admin.note.otherwise": "无法按现状保存这条通知。",
+    "ManagerNoteTitle.Missing": "请给通知起个标题。",
+    "ManagerNoteTitle.TooLong": "这个标题太长了。",
+    "ManagerNoteTitle.NoLetterOrDigit": "标题中要有文字或数字。",
+    "ManagerNoteDescription.TooLong": "这段说明太长了。",
     "ManagerNoteToEdit.NoSuchManagerNote":
-      "那条备注已经不在了。可能是其他管理员删除了它。",
+      "这条通知已不存在。可能是其他管理者删除了它。",
     "EditManagerNote.NoSuchManagerNote":
-      "那条备注已经不在了。可能是其他管理员删除了它。",
+      "这条通知已不存在。可能是其他管理者删除了它。",
     "DeleteManagerNote.NoSuchManagerNote":
-      "那条备注已经不在了。可能是其他管理员删除了它。",
-    "ManagerNote.Deleted": "那条备注已被删除。可能是其他管理员删除了它。",
-    "CommentaryTitle.Missing": "请给评论写一个标题。",
-    "CommentaryTitle.TooLong": "这个标题太长。",
-    "CommentaryTitle.NoLetterOrDigit": "标题中至少要有一个字母或数字。",
-    "Commentary.TitleTaken": "另一条评论已经用了这个标题。",
-    "CommentText.Missing": "请在评论中写点内容。",
-    "CommentText.TooLong": "这条评论太长。",
-    "TeamShortName.Missing": "请给队伍写一个简称。",
-    "TeamShortName.TooLong": "简称最多只能有 10 个字符。",
-    "TeamShortName.NoLetterOrDigit": "简称中至少要有一个字母或数字。",
+      "这条通知已不存在。可能是其他管理者删除了它。",
+    "ManagerNote.Deleted": "这条通知已被删除。可能是其他管理者删除了它。",
+    "CommentaryTitle.Missing": "请给评论起个标题。",
+    "CommentaryTitle.TooLong": "这个标题太长了。",
+    "CommentaryTitle.NoLetterOrDigit": "标题中要有文字或数字。",
+    "Commentary.TitleTaken": "已有另一条评论使用这个标题。",
+    "CommentText.Missing": "请在留言中写点内容。",
+    "CommentText.TooLong": "这条留言太长了。",
+    "TeamShortName.Missing": "请给队伍起个简称。",
+    "TeamShortName.TooLong": "简称最多可以有 10 个字符。",
+    "TeamShortName.NoLetterOrDigit": "简称中要有文字或数字。",
     "Team.ShortNameLongerThanName": "简称不能比队伍的名称长。",
-    "Team.NoSuchFlag": "请从现有的旗帜中选择一个。",
+    "Team.NoSuchFlag": "请从现有的旗帜中选择。",
     "Team.Archived": "这支队伍已归档，需要先恢复。",
     "Team.InATest": "这支队伍参加了对抗赛，不能归档。",
-    "Team.PlayerNameTaken": "这支队伍中的另一位选手已经用了这个姓名。",
-    "TeamPlayer.NamedBye": "选手不能叫“轮空”。",
+    "Team.PlayerNameTaken": "本队中已有另一位队员使用这个姓名。",
+    "TeamPlayer.NamedBye": "选手不能取名为“Bye”。",
     "TeamPlayer.Archived": "这位选手已归档，需要先恢复。",
     "TeamPlayer.HasGames": "这位选手已经比过赛，不能归档。",
-    "Tournament.TeamNameTaken": "这个锦标赛中的另一支队伍已经用了这个名称。",
-    "Tournament.TeamShortNameTaken":
-      "这个锦标赛中的另一支队伍已经用了这个简称。",
-    "Tournament.NoSuchTeam": "这个锦标赛在这个地址没有队伍。",
-    "Tournament.TeamArchived": "这支队伍已归档，只能在“队伍”标签页中恢复。",
+    "Tournament.TeamNameTaken": "本赛事中已有另一支队伍使用这个名称。",
+    "Tournament.TeamShortNameTaken": "本赛事中已有另一支队伍使用这个简称。",
+    "Tournament.NoSuchTeam": "本赛事在这个地址没有队伍。",
+    "Tournament.TeamArchived": "这支队伍已归档，只能从“队伍”标签页恢复。",
     "admin.tests.add": "添加对抗赛",
     "admin.tests.none": "没有对抗赛",
     "admin.tests.edit": "编辑",
@@ -908,10 +999,11 @@ export const chinese: Language = {
     "admin.tests.archived": "已归档的对抗赛",
     "admin.tests.twoTeamsNeeded":
       "对抗赛在两支队伍之间进行，所以要先有两支队伍。",
-    "admin.tests.toTeams": "前往“队伍”",
+    "admin.tests.toTeams": "前往队伍",
     "admin.tests.matches.one": "{count} 场比赛",
     "admin.tests.matches.other": "{count} 场比赛",
-    "admin.tests.bestOf": "{games} 局决胜",
+    "admin.tests.bestOf": "{games}局制",
+    // Beside the list, for a refusal with no words of its own.
     "admin.tests.otherwise": "无法完成该操作。",
     "admin.test.addTitle": "添加对抗赛",
     "admin.test.editTitle": "编辑对抗赛",
@@ -920,79 +1012,84 @@ export const chinese: Language = {
     "admin.test.versus": "对",
     "admin.test.starts": "开始",
     "admin.test.finishes": "结束",
-    "admin.test.expectedMatches": "预计比赛场数",
-    "admin.test.bestOf": "几局决胜",
+    "admin.test.expectedMatches": "预计场次",
+    "admin.test.bestOf": "几局制",
     "admin.test.group": "分组",
     "admin.test.add": "添加",
     "admin.test.save": "保存",
     "admin.test.added": "已添加 {name}。",
-    "admin.test.otherwise": "无法按现在的样子保存这场对抗赛。",
-    "admin.testView.otherwise": "无法在这里查看这场对抗赛。",
+    "admin.test.otherwise": "无法按现状保存这场对抗赛。",
+    "admin.testView.otherwise": "无法从这里查看这场对抗赛。",
     "AddTest.FirstTeamMissing": "请选择第一支队伍。",
     "AddTest.SecondTeamMissing": "请选择第二支队伍。",
     "UpdateTest.FirstTeamMissing": "请选择第一支队伍。",
     "UpdateTest.SecondTeamMissing": "请选择第二支队伍。",
-    "ExpectedMatches.NotWhole": "请输入整数的比赛场数。",
-    "ExpectedMatches.TooSmall": "对抗赛预计至少要有 1 场比赛。",
-    "TestGroup.TooLong": "这个分组太长。",
-    "Tournament.TestAgainstItself": "一支队伍不和自己进行对抗赛。",
+    "ExpectedMatches.NotWhole": "请输入整数场次。",
+    "ExpectedMatches.TooSmall": "一场对抗赛预计至少要有 1 场比赛。",
+    "TestGroup.TooLong": "这个分组名称太长了。",
+    "Tournament.TestAgainstItself": "一支队伍不能和自己进行对抗赛。",
     "Tournament.TestFinishesBeforeStarts": "对抗赛不能在开始之前结束。",
-    "Tournament.TestStartsBeforeTournament": "对抗赛不能早于所属锦标赛开始。",
-    "Tournament.TestFinishesAfterTournament": "对抗赛不能晚于所属锦标赛结束。",
+    "Tournament.TestStartsBeforeTournament": "对抗赛不能早于所属赛事开始。",
+    "Tournament.TestFinishesAfterTournament": "对抗赛不能晚于所属赛事结束。",
     "Tournament.TestHasGamesInUse":
-      "这场对抗赛有比赛，所以在这些比赛归档之前，它无法归档。",
-    "Tournament.TestHasGames": "这场对抗赛现在已有比赛，所以不能再更改其队伍。",
-    "Tournament.ExpectedMatchesBelowStarted": "已经开始的比赛比这个数还多。",
-    "Tournament.BestOfBelowGamesPlayed": "已经有两位选手打了比这更多的局数。",
+      "这场对抗赛已有比赛，所以要等这些比赛都归档之后才能归档。",
+    "Tournament.TestHasGames": "这场对抗赛现在已有比赛，因此不能再更改其队伍。",
+    "Tournament.ExpectedMatchesBelowStarted": "已开始的比赛场次比这个数更多。",
+    "Tournament.BestOfBelowGamesPlayed": "已有两位选手打了比这更多的局数。",
     "Competition.ExpectedMatchesReached":
-      "这场对抗赛已开始的比赛场数已达到预计的场数。",
-    "Competition.SameTeam": "同一支队伍的两位选手之间不比赛。",
-    "AddManager.NoSuchAccount": "该地址没有可以成为管理员的账户。",
+      "这场对抗赛已开始的比赛场次已达到预计场次。",
+    "Competition.SameTeam": "同一队的两位选手之间不进行比赛。",
+    "AddManager.NoSuchAccount": "该地址没有可以设为管理者的账户。",
     "admin.scorers.add": "添加记分员",
     "admin.scorers.none": "没有记分员",
     "admin.scorers.removeTitle": "移除记分员",
-    "admin.scorers.removeExplanation":
-      "{name} 将不再能够录入这个锦标赛的比分。",
-    "admin.scorers.otherwise": "该地址无法成为记分员。",
-    "AddScorer.NoSuchAccount": "该地址没有可以成为记分员的账户。",
-    "Account.NotAnAdministrator": "只有站点管理员才能这样做。",
-    "AddRole.NoSuchAccount": "该地址没有可以被授予该角色的账户。",
+    "admin.scorers.removeExplanation": "{name} 将不能再录入这个赛事的成绩。",
+    // Beneath the field, for a refusal with no words of its own.
+    "admin.scorers.otherwise": "无法把该地址设为记分员。",
+    "AddScorer.NoSuchAccount": "该地址没有可以设为记分员的账户。",
+    // Giving, taking and listing roles, which only an administrator can do.
+    "Account.NotAnAdministrator": "只有管理员才能这样做。",
+    "AddRole.NoSuchAccount": "该地址没有可以授予该角色的账户。",
     "AddRole.NoSuchRole": "没有这个角色。",
     "RemoveRole.NoSuchAccount": "没有这个账户。",
     "RemoveRole.NoSuchRole": "没有这个角色。",
-    "RemoveRole.Yourself": "你不能取消自己的站点管理员角色。",
+    "RemoveRole.Yourself": "您不能收回自己的管理员角色。",
     "AccountsWithRole.NoSuchRole": "没有这个角色。",
     "Tournament.AlreadyAManager":
-      "该账户已经是这个锦标赛的管理员，并且可以做记分员能做的一切。",
+      "该账户已经在管理这个赛事，并且可以做记分员能做的一切。",
 
-    "TournamentName.Missing": "请写明锦标赛叫什么。",
-    "TournamentName.TooShort": "这个名称太短。",
-    "TournamentName.TooLong": "这个名称太长。",
-    "TournamentName.AllLowerCase": "名称不能全部是小写字母。",
-    "TournamentName.AllCapitals": "名称不能全部是大写字母。",
-    "TournamentName.NoLetterOrDigit": "名称中至少要有一个字母或数字。",
-    "ReadOnlyDate.Unreadable": "请给出日期。",
-    "Tournament.FinishesBeforeStarts": "锦标赛不能在开始之前结束。",
-    "Tournament.StartsAfterNextYear": "锦标赛不能在明年之后开始。",
-    "Tournament.FinishesAfterNextYear": "锦标赛不能在明年之后结束。",
-    "CreateTournament.NoSuchCountry": "请选择国家或地区。",
-    "TournamentSubtitle.TooLong": "副标题最多只能有 2000 个字符。",
-    "Tournament.NotAManager": "只有这个锦标赛的管理员才能更改它。",
+    // A tournament's refusals, keyed by their codes as every rule broken is.
+    "TournamentName.Missing": "请填写赛事的名称。",
+    "TournamentName.TooShort": "这个名称太短了。",
+    "TournamentName.TooLong": "这个名称太长了。",
+    "TournamentName.AllLowerCase": "名称不能全部是小写。",
+    "TournamentName.AllCapitals": "名称不能全部是大写。",
+    "TournamentName.NoLetterOrDigit": "名称中要有文字或数字。",
+    "ReadOnlyDate.Unreadable": "请填写日期。",
+    "Tournament.FinishesBeforeStarts": "赛事不能在开始之前结束。",
+    "Tournament.StartsAfterNextYear": "赛事不能晚于明年开始。",
+    "Tournament.FinishesAfterNextYear": "赛事不能晚于明年结束。",
+    "CreateTournament.NoSuchCountry": "请选择国家。",
+    "TournamentSubtitle.TooLong": "副标题不能超过 2000 个字符。",
+    "Tournament.NotAManager": "只有这个赛事的管理者才能修改它。",
     "Tournament.NotAManagerOrScorer":
-      "只有这个锦标赛的管理员或记分员才能查看它。",
-    "Tournament.Archived": "这个锦标赛已归档，需要先恢复才能更改。",
-    "UpdateTournament.NoSuchTournament": "这个地址没有锦标赛。",
+      "只有这个赛事的管理者或记分员才能查看它。",
+    "Tournament.Archived": "这个赛事已归档，需要先恢复才能修改。",
+    "UpdateTournament.NoSuchTournament": "这个地址没有赛事。",
 
+    // What a tournament is played in and where, by code, as the API offers
+    // them to the admin's form.
     "sport.ac": "协会槌球",
     "sport.gc": "高尔夫槌球",
     "sport.a6w": "美式六门槌球",
-    "sport.rc": "Ricochet",
+    "sport.rc": "回弹槌球",
     "sport.gb": "门球",
-    "format.standard": "标准",
-    "format.teams": "团体",
-    "format.eire-cup": "Eire Cup",
-    "format.interstate-shield": "Interstate Shield",
-    "format.gc-world-team-championship": "GC World Team Championship",
+    "format.standard": "标准赛制",
+    "format.teams": "团体赛",
+    "format.eire-cup": "爱尔兰杯",
+    "format.interstate-shield": "州际盾杯",
+    "format.gc-world-team-championship": "高尔夫槌球世界团体锦标赛",
+
     "country.ad": "安道尔",
     "country.ae": "阿拉伯联合酋长国",
     "country.af": "阿富汗",
@@ -1079,12 +1176,12 @@ export const chinese: Language = {
     "country.gp": "瓜德罗普",
     "country.gq": "赤道几内亚",
     "country.gr": "希腊",
-    "country.gs": "南乔治亚和南桑威奇群岛",
+    "country.gs": "南乔治亚岛和南桑威奇群岛",
     "country.gt": "危地马拉",
     "country.gu": "关岛",
     "country.gw": "几内亚比绍",
     "country.gy": "圭亚那",
-    "country.hk": "香港",
+    "country.hk": "中国香港",
     "country.hm": "赫德岛和麦克唐纳群岛",
     "country.hn": "洪都拉斯",
     "country.hr": "克罗地亚",
@@ -1136,7 +1233,7 @@ export const chinese: Language = {
     "country.ml": "马里",
     "country.mm": "缅甸",
     "country.mn": "蒙古",
-    "country.mo": "澳门",
+    "country.mo": "中国澳门",
     "country.mp": "北马里亚纳群岛",
     "country.mq": "马提尼克",
     "country.mr": "毛里塔尼亚",
@@ -1215,7 +1312,7 @@ export const chinese: Language = {
     "country.tr": "土耳其",
     "country.tt": "特立尼达和多巴哥",
     "country.tv": "图瓦卢",
-    "country.tw": "台湾",
+    "country.tw": "中国台湾",
     "country.tz": "坦桑尼亚",
     "country.ua": "乌克兰",
     "country.ug": "乌干达",
@@ -1239,13 +1336,21 @@ export const chinese: Language = {
     "country.zm": "赞比亚",
     "country.zw": "津巴布韦",
 
-    "Email.ConfirmAddress.subject": "确认你在 {siteName} 的电子邮件地址",
+    // An email is two entries: its subject, which is text, and its body, which
+    // is the whole of its markup. Only what fills an email in is escaped; the
+    // markup here is the site's own. `{link}` is the link the email carries,
+    // `{site}` the site's address, `{buttonBackgroundColour}` and
+    // `{buttonTextColour}` what a button is painted with, `{emailFromName}`
+    // the name each email is signed off with, and `{siteName}` what the site
+    // is called. None greets its reader by name.
+
+    "Email.ConfirmAddress.subject": "请确认您在 {siteName} 的电子邮件地址",
     "Email.ConfirmAddress.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    感谢你在 <strong>{siteName}</strong> 创建账户。<br />
-    在开始使用账户之前，请点击下面的按钮确认你的电子邮件地址：
+    感谢您在 <strong>{siteName}</strong> 创建账户。<br />
+    在开始使用账户之前，请点击下方按钮确认您的电子邮件地址：
 </p>
 
 <p>
@@ -1263,12 +1368,12 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果按钮无法使用，你也可以在浏览器中打开下面的链接来确认你的电子邮件地址：<br />
+    如果按钮无法使用，您也可以在浏览器中打开下面的链接来确认电子邮件地址：<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    如果你没有创建这个账户，可以放心忽略这封电子邮件。
+    如果您没有创建过这个账户，可以放心忽略这封邮件。
 </p>
 
 <p>
@@ -1278,13 +1383,13 @@ export const chinese: Language = {
 `,
 
     "Email.ConfirmAddressAgain.subject":
-      "确认你在 {siteName} 的电子邮件地址的新链接",
+      "确认您在 {siteName} 的电子邮件地址的新链接",
     "Email.ConfirmAddressAgain.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你最近申请了一封新的电子邮件，用来确认你在 <strong>{siteName}</strong> 的电子邮件地址。<br />
-    请点击下面的按钮确认你的电子邮件地址：
+    您最近申请了一封新邮件，用于确认您在 <strong>{siteName}</strong> 的电子邮件地址。<br />
+    请点击下方按钮确认您的电子邮件地址：
 </p>
 
 <p>
@@ -1302,16 +1407,16 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果按钮无法使用，你也可以在浏览器中打开下面的链接来确认你的电子邮件地址：<br />
+    如果按钮无法使用，您也可以在浏览器中打开下面的链接来确认电子邮件地址：<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    确认之后，你就可以不受打扰地继续使用你的账户。
+    确认之后，您就可以不受打扰地继续使用账户。
 </p>
 
 <p>
-    如果你没有申请这封电子邮件，可以放心忽略它。
+    如果您没有申请这封邮件，可以放心忽略它。
 </p>
 
 <p>
@@ -1320,14 +1425,14 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.AlreadyRegistered.subject": "有人试图用你的电子邮件地址注册",
+    "Email.AlreadyRegistered.subject": "有人尝试用您的电子邮件地址注册",
     "Email.AlreadyRegistered.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    有人试图用这个电子邮件地址在 <strong>{siteName}</strong> 注册，
-    而这个地址已经有账户了。你的账户没有任何变化。<br />
-    如果是你本人，你已经有账户了，可以直接登录：
+    有人尝试用这个电子邮件地址在 <strong>{siteName}</strong> 注册，
+    而这个地址已经有账户了。您的账户没有任何变化。<br />
+    如果是您本人，说明您已有账户，可以直接登录：
 </p>
 
 <p>
@@ -1345,7 +1450,7 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果你忘记了密码，可以在这里重置：
+    如果您忘记了密码，可以在这里重置：
 </p>
 
 <p>
@@ -1363,7 +1468,7 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果不是你本人，你无需做任何事。没有人获得进入你账户的途径。
+    如果不是您本人，则无需做任何事。没有人获得进入您账户的途径。
 </p>
 
 <p>
@@ -1373,13 +1478,13 @@ export const chinese: Language = {
 `,
 
     "Email.ConfirmNewEmailAddress.subject":
-      "确认把你的 {siteName} 账户迁移到这个地址",
+      "请确认把您的 {siteName} 账户迁移到这个地址",
     "Email.ConfirmNewEmailAddress.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
     有人登录了一个 <strong>{siteName}</strong> 账户，并申请把它迁移到这个电子邮件地址。
-    如果是你本人，请在登录该账户的状态下在这里确认。链接 24 小时内有效。
+    如果是您本人，请在登录该账户的状态下在这里确认。链接的有效期为 24 小时。
 </p>
 
 <p>
@@ -1402,7 +1507,7 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果不是你本人，你无需做任何事。没有账户会迁移到这里。
+    如果不是您本人，则无需做任何事。不会有账户迁移到这里。
 </p>
 
 <p>
@@ -1412,17 +1517,18 @@ export const chinese: Language = {
 `,
 
     "Email.AlreadyHasAnAccount.subject":
-      "有人申请把一个账户迁移到你的电子邮件地址",
+      "有人申请把一个账户迁移到您的电子邮件地址",
     "Email.AlreadyHasAnAccount.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
     有人登录了一个 <strong>{siteName}</strong> 账户，并申请把它迁移到这个电子邮件地址，
-    而这个地址已经有自己的账户了。没有任何账户被迁移，你的账户也没有任何变化。
+    而这个地址已经有自己的账户了。没有任何账户被迁移，
+    您的账户也没有任何变化。
 </p>
 
 <p>
-    如果是你本人，你在这个地址上已经有账户了，可以直接登录。
+    如果是您本人，说明您在这个地址上已有账户，可以直接登录。
 </p>
 
 <p>
@@ -1431,17 +1537,17 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.EmailAddressChanged.subject": "你的 {siteName} 账户已迁移",
+    "Email.EmailAddressChanged.subject": "您的 {siteName} 账户已迁移",
     "Email.EmailAddressChanged.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你的 <strong>{siteName}</strong> 账户刚刚被迁移到另一个电子邮件地址
-    {emailAddress}，从现在起使用该地址登录。
+    您的 <strong>{siteName}</strong> 账户刚刚被迁移到另一个电子邮件地址
+    {emailAddress}，今后将使用该地址登录。
 </p>
 
 <p>
-    如果不是你本人，说明别人控制了你的账户。请回复这封电子邮件告诉我们。
+    如果不是您本人，说明别人掌握了您的账户。请回复这封邮件告诉我们。
 </p>
 
 <p>
@@ -1450,18 +1556,19 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.PasswordChanged.subject": "你的 {siteName} 密码已更改",
+    "Email.PasswordChanged.subject": "您的 {siteName} 密码已修改",
     "Email.PasswordChanged.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你的 <strong>{siteName}</strong> 账户的密码刚刚被更改，
-    其他所有登录了该账户的浏览器都已退出登录。<br />
-    如果是你本人，你无需做任何事。
+    您的 <strong>{siteName}</strong> 账户的密码刚刚被修改，
+    其他已登录该账户的浏览器都已退出登录。<br />
+    如果是您本人，则无需做任何事。
 </p>
 
 <p>
-    如果不是你本人，说明别人拿到了你的密码。请在这里设置一个新密码，他们就会被退出登录：
+    如果不是您本人，说明别人掌握了您的密码。请在这里设置新密码，
+    对方将被退出登录：
 </p>
 
 <p>
@@ -1484,13 +1591,13 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.SetNewPassword.subject": "为 {siteName} 设置新密码",
+    "Email.SetNewPassword.subject": "设置 {siteName} 的新密码",
     "Email.SetNewPassword.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你最近申请重置你在 <strong>{siteName}</strong> 的密码。<br />
-    你可以点击下面的按钮重置密码：
+    您最近申请重置 <strong>{siteName}</strong> 的密码。<br />
+    您可以点击下方按钮重置密码：
 </p>
 
 <p>
@@ -1508,12 +1615,12 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果按钮无法使用，你也可以在浏览器中打开下面的链接来重置密码：<br />
+    如果按钮无法使用，您也可以在浏览器中打开下面的链接来重置密码：<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    如果你没有申请重置密码，可以放心忽略这封电子邮件。
+    如果您没有申请重置密码，可以放心忽略这封邮件。
 </p>
 
 <p>
@@ -1522,14 +1629,14 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.SetPassword.subject": "为 {siteName} 设置密码",
+    "Email.SetPassword.subject": "设置 {siteName} 的密码",
     "Email.SetPassword.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你的 <strong>{siteName}</strong> 账户没有密码：你是通过 Google 登录的。<br />
-    你申请设置一个密码，这样你也可以用电子邮件地址和密码登录。
-    你可以点击下面的按钮设置密码：
+    您的 <strong>{siteName}</strong> 账户没有密码：您是通过 Google 登录的。<br />
+    您申请设置密码，以便也能用电子邮件地址和密码登录。
+    您可以点击下方按钮来设置：
 </p>
 
 <p>
@@ -1547,12 +1654,12 @@ export const chinese: Language = {
 </p>
 
 <p>
-    如果按钮无法使用，你也可以在浏览器中打开下面的链接来设置密码：<br />
+    如果按钮无法使用，您也可以在浏览器中打开下面的链接来设置密码：<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    链接一小时内有效。如果你没有申请设置密码，可以放心忽略这封电子邮件。
+    链接的有效期为一小时。如果您没有申请设置密码，可以放心忽略这封邮件。
 </p>
 
 <p>
@@ -1561,22 +1668,22 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.RegisterInstead.subject":
-      "没有使用这个电子邮件地址的 {siteName} 账户",
+    "Email.RegisterInstead.subject": "这个电子邮件地址在 {siteName} 没有账户",
     "Email.RegisterInstead.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    有人为一个在 <strong>{siteName}</strong> 上没有账户的电子邮件地址申请了重置密码。
+    有人为一个在 <strong>{siteName}</strong> 上没有关联账户的电子邮件地址
+    申请了重置密码。
 </p>
 
 <p>
-    如果你想使用我们的服务，可以访问下面的地址创建新账户：<br />
+    如果您想使用我们的服务，可以访问下面的地址创建新账户：<br />
     <a href="{site}/account/register">{site}/account/register</a>
 </p>
 
 <p>
-    如果这不是你的申请，可以放心忽略这封电子邮件。
+    如果这不是您的请求，可以放心忽略这封邮件。
 </p>
 
 <p>
@@ -1585,13 +1692,13 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.ConfirmForgetting.subject": "确认注销你的 {siteName} 账户",
+    "Email.ConfirmForgetting.subject": "请确认要抹除您的 {siteName} 账户",
     "Email.ConfirmForgetting.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    你申请注销你的 <strong>{siteName}</strong> 账户。<br />
-    点击下面的按钮，了解这意味着什么，并明确表示你确实要这样做：
+    您申请抹除您的 <strong>{siteName}</strong> 账户。<br />
+    请点击下方按钮，了解这意味着什么，并明确表示您确实要这样做：
 </p>
 
 <p>
@@ -1604,28 +1711,28 @@ export const chinese: Language = {
         text-decoration:none;
         display:inline-block;
     ">
-        注销我的账户
+        抹除我的账户
     </a>
 </p>
 
 <p>
-    如果按钮无法使用，你也可以在浏览器中打开下面的链接：<br />
+    如果按钮无法使用，您也可以在浏览器中打开下面的链接：<br />
     <a href="{link}">{link}</a>
 </p>
 
 <p>
-    一旦注销，任何人都再也无法读取你的姓名和电子邮件地址，你的账户也无法再登录。此操作无法撤销。
+    一旦抹除，任何人都再也无法读取您的姓名和电子邮件地址，该账户也无法再登录。此操作无法撤销。
 </p>
 
 <p>
-    链接只能使用一次，在你申请后 15 分钟内有效，并且只有在你登录此账户时才有效。
-    过期后，请从你的账户中重新申请。
+    该链接只能使用一次，有效期到您申请后 15 分钟为止，并且只在您登录此账户时有效。
+    过期后，请从您的账户中重新申请。
 </p>
 
 <p>
-    如果不是你申请的，只要没有人点击链接，就不会发生任何事。
-    不过，有人登录了你的账户并提出了申请，所以请在忘记密码页面设置一个新密码，
-    以确保他们无法再次登录。
+    如果不是您申请的，只要没有人点击这个链接，就不会发生任何事。
+    不过，是有人登录了您的账户才提出申请的，所以请在“忘记密码”页面设置新密码，
+    以确保对方无法再次登录。
 </p>
 
 <p>
@@ -1636,20 +1743,20 @@ export const chinese: Language = {
 
     "Email.RegistrationsSuspended.subject": "注册已暂停：无法连接 {service}",
     "Email.RegistrationsSuspended.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
     {siteName} 在 {when} 无法连接 {service}。在它恢复响应之前，
-    需要它的读者（用于注册或设置新密码）会被告知稍后再试。
+    需要用到它的读者（注册或设置新密码）会被告知稍后再试。
 </p>
 
 <p>
-    无需做任何解除操作。每次尝试都会重新询问 {service}，
-    它一恢复响应，页面就会重新正常工作。
+    您无需解除任何设置。每次尝试都会重新向 {service} 发出请求，
+    一旦它恢复响应，这些页面就会立即恢复正常。
 </p>
 
 <p>
-    在 {service} 持续不可用期间，我们最多每小时给你发一封关于此事的电子邮件。
+    在 {service} 持续不可用期间，我们最多每小时给您发送一封相关邮件。
 </p>
 
 <p>
@@ -1660,18 +1767,18 @@ export const chinese: Language = {
 
     "Email.DatabaseUnreachable.subject": "{siteName} 无法连接数据库",
     "Email.DatabaseUnreachable.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    {siteName} 在 {when} 无法连接数据库。在数据库恢复响应之前，每个需要它的页面都会告诉读者网站暂时无法使用，请稍后再试。
+    {siteName} 在 {when} 无法连接数据库。在数据库恢复响应之前，每个需要它的页面都会告知读者网站不可用，请稍后再试。
 </p>
 
 <p>
-    无需任何操作。每个请求都会重新申请连接，数据库一恢复响应，网站就会恢复正常。
+    您无需解除任何设置。每个请求都会重新申请连接，数据库一旦恢复响应，网站就会立即恢复正常。
 </p>
 
 <p>
-    在数据库持续无法连接期间，每隔 {minutes} 分钟最多会就此给你发送一封电子邮件。
+    在数据库持续不可用期间，我们最多每 {minutes} 分钟给您发送一封相关邮件。
 </p>
 
 <p>
@@ -1680,16 +1787,16 @@ export const chinese: Language = {
 </p>
 `,
 
-    "Email.UnhandledError.subject": "{siteName} 在处理请求时出错",
+    "Email.UnhandledError.subject": "{siteName} 处理请求时失败",
     "Email.UnhandledError.body": `
-<p>你好，</p>
+<p>您好，</p>
 
 <p>
-    {siteName} 在 {when} 处理对 {asked} 的请求时出错。读者看到的参考编号是 {reference}，日志中该编号下有出错原因。
+    {siteName} 在 {when} 处理对 {asked} 的请求时失败。读者看到的参考编号是 {reference}，日志中其下记录了原因。
 </p>
 
 <p>
-    出故障的网站往往每个请求都会出错，所以每小时最多只会就出错给你发送 4 封电子邮件。之后的错误同样会记录在日志中。
+    出了故障的网站往往每个请求都会失败，所以我们每小时最多给您发送 4 封关于故障的邮件。之后的故障同样会记录在日志中。
 </p>
 
 <p>

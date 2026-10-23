@@ -6,11 +6,11 @@ Wanneer een toernooi meetelt voor de wereldranglijst, worden de uitslagen als be
 
 Open de pagina van het toernooi en kies **Ranglijsten**, het laatste van de tabbladen. Het zegt wat het bestand is: een tekstbestand voor Associatiecroquet, een spreadsheet voor Golfcroquet en Amerikaans croquet met 6 poortjes. Het zegt wat er nog met de hand moet gebeuren, en dat het bestand daarna naar de functionarissen van de wereldranglijst moet worden gestuurd. Daaronder staat **Ranglijsten downloaden**, dat het bestand opslaat. Het staat er al voordat er één score is ingevoerd, en geeft een bestand zonder inhoud totdat er een is.
 
-Het tabblad staat alleen op de pagina van een toernooi dat meetelt voor de wereldranglijst, en alleen voor de beheerders: een scorer krijgt het niet aangeboden. Het bestand zelf staat op het eigen adres van het toernooi gevolgd door `/rankings`, zoals `/2026/ac/spring-open/rankings`, het adres dat de site het altijd heeft gegeven, en iedereen die het adres heeft, kan het openen.
+Het tabblad staat alleen op de pagina van een toernooi dat meetelt voor de wereldranglijst, en alleen voor de toernooileiders: een scorebijhouder krijgt het niet aangeboden. Het bestand zelf staat op het eigen adres van het toernooi gevolgd door `/rankings`, zoals `/2026/ac/spring-open/rankings`, het adres dat de site het altijd heeft gegeven, en iedereen die het adres heeft, kan het openen.
 
 ## Wat er in het bestand staat
 
-Elke score die is ingevoerd en niet is gearchiveerd, staat erin, in de volgorde waarin die is ingevoerd, ook een score die is teruggetrokken, en die van een speler die zich heeft teruggetrokken. Een gearchiveerde score staat er niet in. Een wedstrijd die is gewonnen door een vrijloting of een walkover is niet gespeeld, dus die heeft geen regel.
+Elke score die is ingevoerd en niet is gearchiveerd, staat erin, in de volgorde waarin die is ingevoerd, ook een score die is teruggetrokken, en die van een speler die zich heeft teruggetrokken. Een gearchiveerde score staat er niet in. Een wedstrijd die is gewonnen door een bye of een walkover is niet gespeeld, dus die heeft geen regel.
 
 Een speler wordt gegeven met de naam op de wereldranglijst, wat zijn naam is als hij er geen andere heeft gekregen.
 

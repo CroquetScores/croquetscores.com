@@ -1,6 +1,6 @@
 # Notities
 
-Het tabblad **Notities** van de pagina van een toernooi is waar zijn beheerders schrijven wat de spelers moeten weten terwijl het toernooi loopt: het speelschema, een wijziging van de velden, het tijdstip van de lunch. Lezers vinden ze op de openbare pagina Notities van het toernooi, en een notitie die ze niet hebben gelezen is daar gemarkeerd met een rood sterretje, dat ook het onderdeel Notities op elke pagina van het toernooi markeert totdat ze haar openen.
+Het tabblad **Notities** van de pagina van een toernooi is waar zijn toernooileiders schrijven wat de spelers moeten weten terwijl het toernooi loopt: het speelschema, een wijziging van de velden, het tijdstip van de lunch. Lezers vinden ze op de openbare pagina Notities van het toernooi, en een notitie die ze niet hebben gelezen is daar gemarkeerd met een rood sterretje, dat ook het onderdeel Notities op elke pagina van het toernooi markeert totdat ze haar openen.
 
 ![Het tabblad Notities](images/notes-tab.png)
 
@@ -26,8 +26,8 @@ Druk op de titel van een notitie, of op haar **Bewerken**, om het paneel op die 
 
 ## Een notitie verwijderen
 
-Een notitie die niet meer van toepassing is, wordt verwijderd. Een verwijderde notitie is voorgoed weg, dus **Verwijderen** vraagt eerst.
+Een notitie die niet meer van toepassing is, wordt verwijderd. Een verwijderde notitie is voorgoed weg, dus **Wissen** vraagt eerst.
 
 ![De vraag die wordt gesteld voordat een notitie wordt verwijderd](images/delete-note-asks.png)
 
-Volgende: [Beheerders en scorers](managers-and-scorers.md).
+Volgende: [Toernooileiders en scorebijhouders](managers-and-scorers.md).

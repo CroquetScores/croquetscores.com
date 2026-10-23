@@ -6,11 +6,11 @@ I listan över turneringar i administrationen, tryck på **Redigera** på turner
 
 ![Formuläret Redigera turnering](images/edit-tournament.png)
 
-När turneringen innehåller någon spelare eller tävling, arkiverade inräknade, kan dess format inte ändras till ett som spelas av lag, som har lag och testmatcher i stället.
+När turneringen innehåller någon spelare eller tävling, arkiverade inräknade, kan dess format inte ändras till ett som spelas av lag, som har lag och landskamper i stället.
 
 En turnering behåller sin adress när namnet rättas, så att en länk någon redan har skickat fortfarande hittar den. Den flyttar bara när det år den startar eller dess sport ändras, och då leder dess gamla adress till den nya. När du sparar förs du till turneringen där den nu finns.
 
-Bara en turneringsledare kan ändra en turnering. En resultatförare, eller vem som helst annan, får veta det i stället för att visas formuläret.
+Bara en arrangör kan ändra en turnering. En resultatförare, eller vem som helst annan, får veta det i stället för att visas formuläret.
 
 ## Listan över turneringar
 

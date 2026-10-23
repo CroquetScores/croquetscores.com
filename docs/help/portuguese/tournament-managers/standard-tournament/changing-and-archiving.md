@@ -8,9 +8,9 @@ Na lista de torneios na administração, pressione **Editar** no torneio. O form
 
 Depois que o torneio tem algum jogador ou competição, contando os arquivados, o seu formato não pode ser mudado para um disputado por equipes, que tem equipes e testes em vez disso.
 
-Um torneio mantém o seu endereço quando o nome é corrigido, para que um link que alguém já enviou continue a encontrá-lo. Ele só muda quando o ano em que começa ou a sua modalidade muda, e então o endereço antigo leva ao novo. Salvar leva você ao torneio onde quer que ele esteja agora.
+Um torneio mantém o seu endereço quando o nome é corrigido, para que um link que alguém já enviou continue a encontrá-lo. Ele só muda quando o ano em que começa ou o seu esporte muda, e então o endereço antigo leva ao novo. Salvar leva você ao torneio onde quer que ele esteja agora.
 
-Só um organizador pode alterar um torneio. Um apontador, ou qualquer outra pessoa, é avisado disso em vez de ver o formulário.
+Só um organizador pode alterar um torneio. Um anotador, ou qualquer outra pessoa, é avisado disso em vez de ver o formulário.
 
 ## A lista de torneios
 

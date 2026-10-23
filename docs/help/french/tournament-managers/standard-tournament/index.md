@@ -1,6 +1,6 @@
 # Organiser un tournoi standard
 
-Un tournoi standard se joue entre des joueurs inscrits un par un : un week-end de club, un open, un championnat. Ses joueurs sont inscrits dans des poules, des tableaux à élimination directe et des systèmes suisses, et ses résultats sont publiés à mesure que les parties se jouent. Ce guide accompagne un gestionnaire de la connexion jusqu’à un tournoi dont les résultats sont visibles du public.
+Un tournoi standard se joue entre des joueurs inscrits un par un : un week-end de club, un open, un championnat. Ses joueurs sont inscrits dans des poules, des tableaux à élimination directe et des systèmes suisses, et ses résultats sont publiés à mesure que les parties se jouent. Ce guide accompagne un organisateur de la connexion jusqu’à un tournoi dont les résultats sont visibles du public.
 
 Il se suffit à lui-même. Rien n’y dépend du guide du tournoi par équipes, qui est écrit à part.
 
@@ -8,17 +8,17 @@ Il se suffit à lui-même. Rien n’y dépend du guide du tournoi par équipes, 
 
 Il vous faut un compte. Cliquez [ici](/account/register) pour en créer un.
 
-Tout ce que fait un gestionnaire se fait dans la partie administration du site. Les pages publiques, où joueurs et spectateurs suivent le tournoi, sont tirées de ce que contient l’administration, si bien qu’il n’y a rien à publier : un résultat saisi est aussitôt sur les pages publiques.
+Tout ce que fait un organisateur se fait dans la partie administration du site. Les pages publiques, où joueurs et spectateurs suivent le tournoi, sont tirées de ce que contient l’administration, si bien qu’il n’y a rien à publier : un résultat saisi est aussitôt sur les pages publiques.
 
 ## Les pages dans l’ordre
 
-1. [Créer un tournoi](creating-a-tournament.md) : son nom, ses dates, son sport, le lieu où il se joue, et ce pour quoi il compte.
+1. [Créer un tournoi](creating-a-tournament.md) : son nom, ses dates, son sport, le lieu où il se joue, et s’il est un événement national ou international.
 2. [Joueurs](players.md) : inscrire les joueurs du tournoi, les corriger, et mettre de côté ceux inscrits par erreur.
 3. [Compétitions](competitions.md) : ajouter des poules, des éliminations directes et des systèmes suisses, et les mettre en ordre.
 4. [Inscrire des joueurs dans une compétition](entering-players-in-a-competition.md) : qui joue dans chaque compétition, les exempts d’une élimination directe, les reports, le retrait et le forfait.
-5. [Résultats](scores.md) : saisir les résultats, les corriger, et mettre de côté ceux saisis par erreur.
+5. [Scores](scores.md) : saisir les résultats, les corriger, et mettre de côté ceux saisis par erreur.
 6. [Notes](notes.md) : dire aux joueurs ce qu’ils ont besoin de savoir au fil du tournoi.
-7. [Gestionnaires et marqueurs](managers-and-scorers.md) : partager l’organisation du tournoi, et laisser quelqu’un saisir les résultats sans pouvoir rien changer d’autre.
+7. [Organisateurs et marqueurs](managers-and-scorers.md) : partager l’organisation du tournoi, et laisser quelqu’un saisir les résultats sans pouvoir rien changer d’autre.
 8. [Classements](rankings.md) : le fichier envoyé au classement mondial, et ce qu’il vous reste à y remplir.
 9. [Modifier, archiver et restaurer un tournoi](changing-and-archiving.md) : corriger les détails du tournoi, et mettre un tournoi de côté.
 10. [Ce que voit le public](what-the-public-sees.md) : les pages que vos joueurs suivent, et comment ce que vous saisissez y apparaît.
@@ -29,7 +29,7 @@ La page d’entrée de l’administration liste les tournois auxquels vous parti
 
 ![La liste des tournois dans l’administration](images/admin-list.png)
 
-Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans six onglets sous son nom : **Joueurs**, **Compétitions**, **Notes**, **Gestionnaires**, **Marqueurs** et **Classements**. La page s’ouvre sur Joueurs, puisque les joueurs sont la première chose que l’on saisit.
+Appuyer sur le nom d’un tournoi, ou sur **Gérer**, ouvre sa page. Tout ce qu’il y a à organiser tient dans six onglets sous son nom : **Joueurs**, **Compétitions**, **Notes**, **Organisateurs**, **Marqueurs** et **Classements**. La page s’ouvre sur Joueurs, puisque les joueurs sont la première chose que l’on saisit.
 
 ![La page d’un tournoi, sur son onglet Compétitions](images/tournament-page.png)
 

@@ -16,7 +16,7 @@ La pagina di un girone mostra i suoi risultati come una griglia: una riga e una 
 
 ![La griglia di un girone](images/public-block-grid.png)
 
-Un girone si mostra in tre modi, offerti sulla riga del suo nome: **Griglia**, **Riepilogo** e **Ordine di gioco**. Il riepilogo è quello per un telefono: i giocatori classificati, con le loro vittorie, sconfitte e differenza archetti. L'ordine di gioco elenca ogni partita dalla più vecchia. Un lettore che sceglie una vista la mantiene per ogni competizione finché non ne sceglie un'altra.
+Un girone si mostra in tre modi, offerti sulla riga del suo nome: **Griglia**, **Riepilogo** e **Programma**. Il riepilogo è quello per un telefono: i giocatori classificati, con le loro vittorie, sconfitte e differenza archetti. Il programma elenca ogni partita dalla più vecchia. Un lettore che sceglie una vista la mantiene per ogni competizione finché non ne sceglie un'altra.
 
 ![Il riepilogo di un girone](images/public-block-summary.png)
 

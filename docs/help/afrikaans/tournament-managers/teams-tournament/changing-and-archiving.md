@@ -8,7 +8,7 @@ In die lys toernooie in die administrasie, druk op **Wysig** by die toernooi. Di
 
 Die toernooi se dae kan hier verbreed word waar 'n toets 'n dag buite hulle nodig het, want 'n toets word binne sy toernooi gespeel. Een formaat tussen spanne kan vir 'n ander verruil word, want die toernooi bevat in elkeen dieselfde dinge. Sodra die toernooi enige span of toets bevat, geargiveerdes ingereken, kan dit nie na die formaat Standaard verander word nie, wat in plaas daarvan spelers en kompetisies het.
 
-'n Toernooi hou sy adres wanneer sy naam reggestel word, sodat 'n skakel wat iemand reeds gestuur het dit steeds vind. Dit skuif net wanneer die jaar waarin dit begin of sy sport verander, en dan lei sy ou adres na die nuwe een. Stoor neem jou na die toernooi waar dit ook al nou gevind word.
+'n Toernooi hou sy adres wanneer sy naam reggestel word, sodat 'n skakel wat iemand reeds gestuur het dit steeds vind. Dit skuif net wanneer die jaar waarin dit begin of sy sport verander, en dan lei sy ou adres na die nuwe een. Om te bewaar neem jou na die toernooi waar dit ook al nou gevind word.
 
 Net 'n bestuurder kan 'n toernooi verander. 'n Teller, of enigiemand anders, word so gesê eerder as om die vorm te sien.
 
