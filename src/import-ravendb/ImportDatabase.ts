@@ -139,6 +139,18 @@ export class ImportDatabase implements ImportErrors {
           primary key (website, tournament_document_id, player_number)
       )
     `);
+    // What a competition said a tournament player represents, by the first
+    // competition to say it, so that a later competition saying otherwise is
+    // the one that gives way (importCompetition.ts).
+    await this.#pool.query(`
+      create table competition_representing (
+          website                text not null,
+          tournament_document_id text not null,
+          player_id              text not null,
+          representing           text not null,
+          primary key (website, tournament_document_id, player_id)
+      )
+    `);
     await this.#pool.query(`
       create table imported_competitions (
           website        text not null,
@@ -313,6 +325,40 @@ export class ImportDatabase implements ImportErrors {
       [website, tournamentDocumentId.toLowerCase(), playerNumber],
     );
     return rows[0]?.player_id;
+  }
+
+  /**
+   * Keeps that a competition said the player `playerId` of the tournament
+   * represents `representing`. Said already, it is kept as it was: the first
+   * competition to say it is the one that counts.
+   */
+  async recordRepresentedBy(
+    website: string,
+    tournamentDocumentId: string,
+    playerId: string,
+    representing: string,
+  ): Promise<void> {
+    await this.#queryable().query(
+      `insert into competition_representing
+           (website, tournament_document_id, player_id, representing)
+       values ($1, $2, $3, $4)
+       on conflict do nothing`,
+      [website, tournamentDocumentId.toLowerCase(), playerId, representing],
+    );
+  }
+
+  /** What the first competition to say it said the player represents, if any has. */
+  async findRepresentedBy(
+    website: string,
+    tournamentDocumentId: string,
+    playerId: string,
+  ): Promise<string | undefined> {
+    const { rows } = await this.#queryable().query<{ representing: string }>(
+      `select representing from competition_representing
+       where website = $1 and tournament_document_id = $2 and player_id = $3`,
+      [website, tournamentDocumentId.toLowerCase(), playerId],
+    );
+    return rows[0]?.representing;
   }
 
   /** Keeps which competition of which tournament a competition of the old sites became. */

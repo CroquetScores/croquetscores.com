@@ -676,7 +676,7 @@ export interface ApplicationOptions {
   readonly logger?: FastifyServerOptions["logger"];
   /**
    * What takes an email the rest of the way, for the queue and for what the
-   * site must send without it. A file in temp/, unless a scenario says
+   * site must send without it. A file in temp/emails/, unless a scenario says
    * otherwise: a spec run has nobody to send to, and what it would send is
    * what a scenario asks about.
    */
@@ -929,7 +929,7 @@ export const buildApplication = async (
 
   // Emails are written from the site's catalogues, with links made from the
   // address of the website each is for and never a request's host, and written
-  // to files in temp/ unless a mail server is set (SMTP_HOST).
+  // to files in temp/emails/ unless a mail server is set (SMTP_HOST).
   const languages = options.languages ?? offeredLanguages;
   const writer = emailWriter(languages, {
     fromName: config.administratorEmailFromName,
@@ -937,7 +937,7 @@ export const buildApplication = async (
   const emailSender =
     options.emailSender ??
     (config.smtp === undefined
-      ? new FileEmailSender(join(repositoryRoot, "temp"))
+      ? new FileEmailSender(join(repositoryRoot, "temp", "emails"))
       : new SmtpEmailSender(config.smtp));
   const emailQueue = new PostgresEmailQueue(
     unitOfWork,

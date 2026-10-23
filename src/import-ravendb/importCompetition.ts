@@ -32,6 +32,7 @@ import {
 } from "./ImportErrorsNote.js";
 import {
   addOldPlayer,
+  flagOf,
   playerNamed,
   isOldBye,
   firstManagerOf,
@@ -769,6 +770,11 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     // were not added again (addOldPlayer).
     const listedAgain = new Set<number>();
     const refused = new Set<number>();
+    // What this competition says each tournament player represents, by the
+    // player, and the numbers it said otherwise of than an earlier competition
+    // or an earlier number of its own did.
+    const representing = new Map<string, string>();
+    const saidOtherwise = new Map<number, string>();
     for (const player of document.Players._Players) {
       let became =
         broughtOver.get(player._Id) ??
@@ -792,6 +798,47 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         } catch (failure) {
           refused.add(player._Id);
           await errors.playerRefused(player._Id, player.Name, failure);
+        }
+      }
+      if (
+        became !== undefined &&
+        became !== bye &&
+        !tournament.format.isTeamFormat
+      ) {
+        const said = player.Representing?.trim() ?? "";
+        const id = TournamentPlayerId.from(became);
+        const here = representing.get(became);
+        // Nothing said is nothing to compare, so nothing is asked for.
+        const before =
+          said === ""
+            ? undefined
+            : (here ??
+              (await database.findRepresentedBy(
+                website,
+                tournamentDocument,
+                became,
+              )));
+        if (said !== "" && before === undefined) {
+          // Over what the tournament's players said, since the competition's
+          // list was written later. The flag goes with it: a country's
+          // replaced by a club's leaves none.
+          const found = tournament.players.find((each) => each.id.equals(id));
+          if (found !== undefined && found.representing !== said) {
+            tournament.updatePlayer(
+              id,
+              {
+                name: found.name.toString(),
+                worldRankingName: found.worldRankingName?.toString(),
+                representing: said,
+                flag: flagOf(said),
+              },
+              by,
+              at,
+            );
+          }
+          representing.set(became, said);
+        } else if (said !== "" && before !== said) {
+          saidOtherwise.set(player._Id, said);
         }
       }
       if (became === bye) byes.add(player._Id);
@@ -834,6 +881,21 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       tournament.id.value,
       competitionId.value,
     );
+    for (const [playerId, said] of representing) {
+      await database.recordRepresentedBy(
+        website,
+        tournamentDocument,
+        playerId,
+        said,
+      );
+    }
+    for (const [number, said] of saidOtherwise) {
+      await errors.corrected(
+        `player ${String(number)}`,
+        "ImportCompetition.RepresentingListedAgain",
+        `Player ${nameOfIn(document)(number)} in ${errors.place} represents ${said}, where an earlier competition said otherwise, and what the earlier one said is kept.`,
+      );
+    }
     for (const [number, playerId] of broughtOver) {
       await database.recordImportedPlayer(
         website,

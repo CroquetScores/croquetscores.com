@@ -40,7 +40,7 @@ One Node process, one Postgres, and a proxy in front.
 - **The site** is Node 22.13 or later, started with `node dist/web/server.js` from the repository's folder. It serves the public pages, the admin application, the API and the help, all from the one process. It listens on `PORT` (3000 unless told otherwise) on every address, so the server's firewall, not the site, is what keeps it from being reached directly.
 - **Postgres** is version 18, preinstalled by Kamatera's PostgreSQL image, and `pg_dump` for the backup must be at least that. The site keeps everything it knows as events in it, and makes its lists and pages (the read models) from them.
 - **The proxy** is Caddy in these documents, because it gets and renews certificates by itself. Anything that does the same is as good. What matters is in [server-setup.md](server-setup.md) §5: that it passes the reader's own address along, that it forwards the host the reader typed as `X-Forwarded-Host`, and that `TRUSTED_PROXY` says the site may believe it.
-- **Brevo** sends the site's emails, over SMTP, always encrypted. Without it set, an email is written to a file in `temp/` and goes nowhere.
+- **Brevo** sends the site's emails, over SMTP, always encrypted. Without it set, an email is written to a file in `temp/emails/` and goes nowhere.
 
 The database and the site can share one Kamatera server, which is how these documents set it up: the beta is a few people, and one server is less to look after.
 
