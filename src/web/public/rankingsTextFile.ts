@@ -8,8 +8,9 @@ import type {
   ResultOfRanking,
 } from "../../application/operations/tournaments/PublicRankingsOfTournament.js";
 
-// "3-5.10.26", "30.9-2.10.26" or "30.12.26-2.1.27": the days, said as short
-// as is clear.
+// "3.10.26", "3-5.10.26", "30.9-2.10.26" or "30.12.26-2.1.27": the days, said as
+// short as is clear. A tournament of one day is dated by that day, as the
+// world rankings' own lists date one, and not as a range of "3-3".
 const whenOf = (starts: string, finishes: string): string => {
   const [startYear, startMonth, startDay] = starts.split("-").map(Number) as [
     number,
@@ -23,6 +24,7 @@ const whenOf = (starts: string, finishes: string): string => {
   ];
   const short = (value: number): string => String(value % 100).padStart(2, "0");
   const finish = `${String(day)}.${String(month)}.${short(year)}`;
+  if (starts === finishes) return finish;
   if (startYear === year && startMonth === month) {
     return `${String(startDay)}-${finish}`;
   }

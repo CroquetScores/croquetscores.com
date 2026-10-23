@@ -83,7 +83,7 @@ Feature: Association Croquet's rankings are a text file of who beat whom
     Scenario: The date is one day where the tournament was played in one
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
-      Then the second line is "Date 3-3.10.26"
+      Then the second line is "Date 3.10.26"
 
     Scenario: The date is the days in one month said with the month once
       Given "organiser@example.com" has set the days of the tournament "Spring Open" to start on "2026-10-03" and finish on "2026-10-05"
