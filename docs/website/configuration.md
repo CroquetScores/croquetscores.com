@@ -53,7 +53,7 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 
 - **`TRUSTED_PROXY`** — The addresses the proxy connects from, separated by commas: `127.0.0.1` when Caddy is on the same server. The reader's own address is believed from these and nowhere else. Blank, every reader is counted as the proxy, and the limits on failed sign-ins and password-reset requests hold everybody to one reader's share. `0.0.0.0/0` is refused
 - **`RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`** — Both or neither. Without them the register form is open and emails whoever it is told to. Made at google.com/recaptcha for the site's domain
-- **`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER_NAME`, `SMTP_PASSWORD`** — All four or none. Brevo's: `smtp-relay.brevo.com`, `587`, and the user name and key Brevo gives for SMTP (not the account's sign-in). None, and every email is written to `temp/` and nobody is sent anything. The connection is always encrypted, and a server that will not encrypt is not sent to
+- **`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER_NAME`, `SMTP_PASSWORD`** — All four or none. Brevo's: `smtp-relay.brevo.com`, `587`, and the user name and key Brevo gives for SMTP (not the account's sign-in). None, and every email is written to `temp/emails/` and nobody is sent anything. The connection is always encrypted, and a server that will not encrypt is not sent to
 - **`SEARCH_ENGINES_WELCOME`** — `true` or `false`, blank is `false`. **Leave it `false` for the beta**, and for any try website. `true` only when the site is meant to be found
 
 ### Optional

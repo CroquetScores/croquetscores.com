@@ -60,7 +60,7 @@ The administrator is emailed once, and then again no sooner than `DATABASE_UNREA
 
 ### Emails are not arriving
 
-1. Is `SMTP_HOST` set at all? Without it emails are written to `temp/` in the site's folder, and nothing is sent. `sudo ls /srv/croquetscores/site/temp` shows them.
+1. Is `SMTP_HOST` set at all? Without it emails are written to `temp/emails/` in the site's folder, and nothing is sent. `sudo ls /srv/croquetscores/site/temp/emails` shows them.
 2. Look in the log for the server's own words. An email the server refused is **kept in the queue and tried again**, so nothing is lost while the setting is wrong. Fix it and restart.
 3. At Brevo: is the sender's domain verified, and are the SPF, DKIM and DMARC records answering? Email that is sent and lands in spam is these (server-setup.md §4).
 4. The Brevo key is the SMTP key and not the account's password.

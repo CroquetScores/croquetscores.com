@@ -136,7 +136,7 @@ Each run emails `ADMINISTRATOR_EMAIL_ADDRESS` through Brevo, in the same way as 
 - **A success:** `Croquet Scores database backup worked`
 - **A failure:** `WARNING: Croquet Scores database backup FAILED`. Any failure, whichever step it was, so a subject that begins `WARNING:` is the one to read.
 
-**With none of the four `SMTP_` settings in `.env`, nothing is sent.** The email is written as a file in `temp/` of this repository, as the website's are in development, and nothing arrives in `croquetscores@gmail.com`. The screen and the scheduler's last result still say how it went. A part-set mail server (some of the four, not all) stops the script starting, and says which are missing.
+**With none of the four `SMTP_` settings in `.env`, nothing is sent.** The email is written as a file in `temp/emails/` of this repository, as the website's are in development, and nothing arrives in `croquetscores@gmail.com`. The screen and the scheduler's last result still say how it went. A part-set mail server (some of the four, not all) stops the script starting, and says which are missing.
 
 **Check it once, by hand:** run `npm run db:backup` (with the tunnel up) and see that the success email arrives in `croquetscores@gmail.com`, and not in the spam folder. If it lands in spam, mark it as not spam, and make a filter for the subject `Croquet Scores database backup`. Do not rely on a failure email arriving until you have seen a success one.
 
