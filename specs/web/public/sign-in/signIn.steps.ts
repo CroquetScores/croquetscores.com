@@ -148,6 +148,13 @@ Given(
     const id = await application.unitOfWork.inTransaction(() =>
       application.sessions.start(account, at),
     );
+    // Out of the page the reader was on first. The site renews the session
+    // cookie on every request that carries one, with the id the request came
+    // with, so a request of the old page still under way when the new cookie is
+    // added is answered with the old id, which then replaces the new one: a
+    // scenario that signs in as a second reader after its background signed in
+    // as a first came out as the first, one run in a few hundred.
+    await this.browserPage.goto("about:blank");
     // As the site sets it (src/web/common/session.ts), 90 days and all: a
     // cookie with no end is one a browser drops when it is closed, and a
     // scenario that closes the browser and opens it again would find itself

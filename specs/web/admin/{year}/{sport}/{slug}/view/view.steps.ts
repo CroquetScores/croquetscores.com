@@ -192,17 +192,23 @@ Then("the tabs are named in the test locale", async function (this: SpecWorld) {
   assert.ok(isMarked(named), `The tabs are named ${JSON.stringify(named)}.`);
 });
 
+// Retried, since the tabs are measured one after another and the page can
+// still be settling, which moved the last two a line down from the first four
+// in one run of a few thousand: a row that really wraps is still wrapped when
+// the retries are over.
 Then("the tabs are on one row", async function (this: SpecWorld) {
   const tabs = this.browserPage.locator(tabBar).getByRole("tab");
   await tabs.first().waitFor();
-  const tops = await Promise.all(
-    (await tabs.all()).map(async (tab) => {
-      const box = await tab.boundingBox();
-      assert.ok(box !== null, "A tab is not laid out.");
-      return Math.round(box.y);
-    }),
-  );
-  assert.equal(new Set(tops).size, 1, `The tabs start at ${String(tops)}.`);
+  await retried(async () => {
+    const tops = await Promise.all(
+      (await tabs.all()).map(async (tab) => {
+        const box = await tab.boundingBox();
+        assert.ok(box !== null, "A tab is not laid out.");
+        return Math.round(box.y);
+      }),
+    );
+    assert.equal(new Set(tops).size, 1, `The tabs start at ${String(tops)}.`);
+  });
 });
 
 Then(
