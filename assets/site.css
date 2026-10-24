@@ -1735,8 +1735,8 @@ main {
 
 /* New Tournament and, for a world ranking officer, the toggles that narrow its
    list, on one row, wrapping beneath each other where a phone has no room. The
-   toggles look as they did in the filter: :where keeps this below the pressed
-   toggle's own rule, so that one that is on still looks on. */
+   toggles are buttons like New Tournament is, and say they are on with a tick
+   (tournaments.css). */
 .tournaments-bar {
   display: flex;
   flex-wrap: wrap;
@@ -1749,12 +1749,6 @@ main {
   flex-wrap: wrap;
   gap: var(--space-2);
   max-width: 100%;
-}
-
-.tournaments-bar :where(.tournament-filter-toggle) {
-  border-color: var(--action);
-  background: var(--action);
-  color: var(--action-ink);
 }
 
 .tournament-filter {

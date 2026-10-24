@@ -476,6 +476,12 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                         );
                       }}
                     >
+                      <span
+                        className="tournament-toggle-tick"
+                        aria-hidden="true"
+                      >
+                        ✓
+                      </span>
                       {say(`admin.tournaments.${name}`)}
                     </button>
                   ))}

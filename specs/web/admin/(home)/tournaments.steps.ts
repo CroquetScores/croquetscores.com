@@ -1203,6 +1203,61 @@ Then(
   },
 );
 
+// The tick is drawn for a toggle that is off too, and hidden, so that it is
+// whether it can be seen that says.
+Then(
+  /^the toggle "([^"]*)" shows (a tick|no tick)$/,
+  async function (this: SpecWorld, name: string, which: string) {
+    const tick = toggleNamed(this, name).locator(".tournament-toggle-tick");
+    await eventually(this, async () => {
+      assert.equal(await tick.isVisible(), which === "a tick");
+    });
+  },
+);
+
+// What the specs are not compiled to know of the page itself.
+interface ButtonStylesInThePage {
+  getComputedStyle(element: unknown): {
+    readonly color: string;
+    readonly backgroundColor: string;
+    readonly borderTopColor: string;
+    readonly borderTopWidth: string;
+    readonly borderTopLeftRadius: string;
+    readonly fontWeight: string;
+    readonly minHeight: string;
+  };
+}
+
+// What a button looks like, as the browser works it out: the colours, the
+// border and the weight, which is what makes two buttons look alike.
+const lookOf = (element: Locator): Promise<Record<string, string>> =>
+  element.evaluate((found) => {
+    const style = (
+      globalThis as unknown as ButtonStylesInThePage
+    ).getComputedStyle(found);
+    return {
+      color: style.color,
+      backgroundColor: style.backgroundColor,
+      borderColor: style.borderTopColor,
+      borderWidth: style.borderTopWidth,
+      borderRadius: style.borderTopLeftRadius,
+      fontWeight: style.fontWeight,
+      minHeight: style.minHeight,
+    };
+  });
+
+Then(
+  "the toggle {string} looks as {string} does",
+  async function (this: SpecWorld, name: string, link: string) {
+    assert.deepEqual(
+      await lookOf(toggleNamed(this, name)),
+      await lookOf(
+        this.browserPage.getByRole("link", { name: link, exact: true }),
+      ),
+    );
+  },
+);
+
 // On one row where their middles are within a toggle's own height of each
 // other, which a toggle wrapped beneath the button is not.
 Then(

@@ -94,11 +94,13 @@
   }
 }
 
-/* A toggle says it is on by looking like the page's other chosen things do,
-   not by colour alone: the weight changes too. */
-.tournament-filter-toggle[aria-pressed="true"] {
-  border: 1px solid var(--accent-ink);
-  background: var(--accent-strong);
-  color: var(--accent-ink);
-  font-weight: bold;
+/* A toggle says it is on with a tick before its words, which is drawn for one
+   that is off too, but hidden, so that the button is the same width either
+   way and the others do not move when it is pressed. */
+.tournament-filter-toggle {
+  gap: var(--space-1);
+}
+
+.tournament-filter-toggle[aria-pressed="false"] .tournament-toggle-tick {
+  visibility: hidden;
 }
