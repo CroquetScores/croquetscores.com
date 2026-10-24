@@ -88,6 +88,22 @@ Feature: Finding whatever names a tournament that was never there
       When the documents no tournament took are looked for
       Then no error is kept for "croquetscores.com/blocks/30"
 
+    # Left out of the days the import was asked for (importArguments.feature):
+    # the old site still has it, so it is not a missing tournament.
+    Scenario: A document of a tournament outside the days asked for is not an error
+      Given the import is only of tournaments from "2015-01-01"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the tournament "tournaments/12" on "croquetscores.com" is imported
+      When the documents no tournament took are looked for
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: A document of a tournament outside the days asked for is not said to name a missing tournament
+      Given the import is only of tournaments from "2015-01-01"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the tournament "tournaments/12" on "croquetscores.com" is imported
+      When the documents no tournament took are looked for
+      Then "croquetscores.com/blocks/30" is not said to name a missing tournament
+
     Scenario: A document of a refused tournament is kept as one error
       Given the tournament is in the sport "XX"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"

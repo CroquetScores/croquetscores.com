@@ -1985,6 +1985,88 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament is imported
       Then "tournaments/12" on "croquetscores.com" is kept as a tournament
 
+  Rule: A tournament that started outside the days asked for is left behind with everything that names it
+
+    The import can be asked for only the tournaments that started within some
+    days (`importArguments.feature`). The days are those the old site wrote
+    for the start, as they were written, and the first and the last are in
+    them. When it finishes does not matter: a tournament that started in the
+    days is brought over whole however long it went on. One that started
+    outside them is left behind with everything that names it, as an archived
+    one is, and that is not an error, since nothing went wrong and it was not
+    asked for.
+
+    Scenario: A tournament that started before the first day is not kept as any tournament
+      Given the import is only of tournaments from "2015-01-01"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: A tournament that started after the last day is not kept as any tournament
+      Given the import is only of tournaments to "2026-03-31"
+      And the tournament started on "2026-04-01T00:00:00.0000000"
+      And the tournament finished on "2026-04-02T00:00:00.0000000"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: Leaving a tournament outside the days behind is not refused
+      Given the import is only of tournaments from "2015-01-01"
+      When the tournament is imported
+      Then importing the tournament is not refused
+
+    Scenario: A competition of a tournament outside the days is not kept as any competition
+      Given the import is only of tournaments from "2015-01-01"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then "blocks/30" on "croquetscores.com" is not kept as any competition
+
+    Scenario: Leaving a competition of a tournament outside the days behind is not an error
+      Given the import is only of tournaments from "2015-01-01"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: Leaving the players of a tournament outside the days behind is not an error
+      Given the import is only of tournaments from "2015-01-01"
+      And the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone"
+      When the tournament is imported
+      Then no error is kept for "croquetscores.com/tournamentplayers/40"
+
+    Scenario: A tournament that started on the first day is kept
+      Given the import is only of tournaments from "2026-03-01"
+      And the tournament started on "2026-03-01T00:00:00.0000000"
+      And the tournament finished on "2026-03-02T00:00:00.0000000"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+    Scenario: A tournament that started on the last day is kept
+      Given the import is only of tournaments to "2026-03-31"
+      And the tournament started on "2026-03-31T00:00:00.0000000"
+      And the tournament finished on "2026-04-02T00:00:00.0000000"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+    Scenario: A tournament that started between the days is kept
+      Given the import is only of tournaments from "2026-03-01"
+      And the import is only of tournaments to "2026-03-31"
+      And the tournament started on "2026-03-15T00:00:00.0000000"
+      And the tournament finished on "2026-03-16T00:00:00.0000000"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+    Scenario: A tournament that started in the days and finished after them is kept
+      Given the import is only of tournaments to "2026-03-31"
+      And the tournament started on "2026-03-30T00:00:00.0000000"
+      And the tournament finished on "2026-04-05T00:00:00.0000000"
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+    Scenario: A competition of a tournament inside the days is kept with it
+      Given the import is only of tournaments from "2014-03-01"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the tournament is imported
+      Then "blocks/30" on "croquetscores.com" is kept as a competition of the tournament kept for "tournaments/12" on "croquetscores.com"
+
   Rule: A tournament whose documents cannot be asked for is not brought over
 
     The old site is asked for what names a tournament before anything is

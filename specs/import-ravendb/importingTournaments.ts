@@ -259,6 +259,8 @@ interface Importing {
   /** The notes of each tournament, as the read model of them has them. */
   readonly managerNotesByTournament: ManagerNotesByTournament;
   readonly importers: Importers;
+  /** The days the scenario asks the import for the tournaments of. */
+  readonly days: { from?: string; to?: string };
   readonly accepted: AcceptedInScenario;
   /** What the scenario's import corrected, kept the same way. */
   readonly corrected: AcceptedInScenario;
@@ -377,6 +379,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     () => eventsGivenTo(world),
   );
   const sites = new Map<string, WrittenSite>();
+  const days: { from?: string; to?: string } = {};
   const made: Importing = {
     tournaments,
     competitions,
@@ -384,6 +387,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     commentariesByTournament,
     managerNotes,
     managerNotesByTournament,
+    days,
     accepted,
     corrected,
     importers: {
@@ -400,6 +404,7 @@ export const importingOf = (world: SpecWorld): Importing => {
           corrected,
           seeNotes,
           importErrorsNote,
+          days,
         ),
       tournaments: tournamentImporter,
       players,

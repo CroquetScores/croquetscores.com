@@ -45,6 +45,22 @@ Given(
   },
 );
 
+// The days the import is asked for the tournaments of, as year-month-day
+// (importArguments.feature).
+Given(
+  "the import is only of tournaments from {string}",
+  function (this: SpecWorld, day: string) {
+    importingOf(this).days.from = day;
+  },
+);
+
+Given(
+  "the import is only of tournaments to {string}",
+  function (this: SpecWorld, day: string) {
+    importingOf(this).days.to = day;
+  },
+);
+
 When(
   "the tournament {string} on {string} is imported",
   async function (this: SpecWorld, id: string, website: string) {

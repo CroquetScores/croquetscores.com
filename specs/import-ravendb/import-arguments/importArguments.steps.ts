@@ -70,6 +70,28 @@ Then(
   },
 );
 
+Then("the import is not asked for a first day", function (this: SpecWorld) {
+  assert.equal(readOf(this).from, undefined);
+});
+
+Then("the import is not asked for a last day", function (this: SpecWorld) {
+  assert.equal(readOf(this).to, undefined);
+});
+
+Then(
+  "the import is asked for tournaments from {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(readOf(this).from, day);
+  },
+);
+
+Then(
+  "the import is asked for tournaments to {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(readOf(this).to, day);
+  },
+);
+
 Then(
   "running the import is refused with {string}",
   function (this: SpecWorld, code: string) {
