@@ -1203,6 +1203,26 @@ Then(
   },
 );
 
+// On one row where their middles are within a toggle's own height of each
+// other, which a toggle wrapped beneath the button is not.
+Then(
+  "the toggle {string} is on the row of {string}",
+  async function (this: SpecWorld, name: string, link: string) {
+    const toggle = await toggleNamed(this, name).boundingBox();
+    const button = await this.browserPage
+      .getByRole("link", { name: link, exact: true })
+      .boundingBox();
+    assert.ok(toggle !== null, `The toggle ${name} is not drawn.`);
+    assert.ok(button !== null, `${link} is not drawn.`);
+    const middle = (box: { y: number; height: number }): number =>
+      box.y + box.height / 2;
+    assert.ok(
+      Math.abs(middle(toggle) - middle(button)) < toggle.height / 2,
+      `${name} is at ${String(middle(toggle))} and ${link} at ${String(middle(button))}.`,
+    );
+  },
+);
+
 Then(
   /^the toggle "([^"]*)" is (offered|not offered)$/,
   async function (this: SpecWorld, name: string, offered: string) {

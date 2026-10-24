@@ -1733,6 +1733,30 @@ main {
   image-rendering: pixelated;
 }
 
+/* New Tournament and, for a world ranking officer, the toggles that narrow its
+   list, on one row, wrapping beneath each other where a phone has no room. The
+   toggles look as they did in the filter: :where keeps this below the pressed
+   toggle's own rule, so that one that is on still looks on. */
+.tournaments-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tournaments-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+.tournaments-bar :where(.tournament-filter-toggle) {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--action-ink);
+}
+
 .tournament-filter {
   display: flex;
   flex-wrap: wrap;

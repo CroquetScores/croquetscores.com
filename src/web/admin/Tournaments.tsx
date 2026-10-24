@@ -449,7 +449,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
             {/* Above the list rather than beneath it, where a long one would
                 push it off a phone's screen. Offered to every reader, since
                 anybody signed in can create a tournament and manage it. */}
-            <p>
+            <div className="tournaments-bar">
               <a
                 className="button"
                 href="/admin/tournaments/new"
@@ -457,7 +457,31 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
               >
                 {say("admin.tournaments.new")}
               </a>
-            </p>
+              {officer && listed !== undefined && listed.length > 0 ? (
+                <span
+                  className="tournaments-toggles"
+                  role="group"
+                  aria-label={say("admin.tournaments.show")}
+                >
+                  {Object.values(shownNames).map((name) => (
+                    <button
+                      key={name}
+                      type="button"
+                      className="button tournament-filter-toggle"
+                      aria-pressed={shown[name]}
+                      onClick={() => {
+                        choose(
+                          { country, region, sport },
+                          { ...shown, [name]: !shown[name] },
+                        );
+                      }}
+                    >
+                      {say(`admin.tournaments.${name}`)}
+                    </button>
+                  ))}
+                </span>
+              ) : null}
+            </div>
             {listed === undefined || listed.length === 0 ? null : (
               <form
                 className="tournament-filter"
@@ -465,30 +489,6 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   event.preventDefault();
                 }}
               >
-                {officer ? (
-                  <span
-                    className="tournament-filter-field"
-                    role="group"
-                    aria-label={say("admin.tournaments.show")}
-                  >
-                    {Object.values(shownNames).map((name) => (
-                      <button
-                        key={name}
-                        type="button"
-                        className="button tournament-filter-toggle"
-                        aria-pressed={shown[name]}
-                        onClick={() => {
-                          choose(
-                            { country, region, sport },
-                            { ...shown, [name]: !shown[name] },
-                          );
-                        }}
-                      >
-                        {say(`admin.tournaments.${name}`)}
-                      </button>
-                    ))}
-                  </span>
-                ) : null}
                 {choice(
                   "country",
                   say("tournamentList.filter.country"),

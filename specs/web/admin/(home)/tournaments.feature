@@ -353,6 +353,16 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the toggle "Manager/Scorer" is offered
 
+    Scenario: The toggles are on the row of New Tournament where the screen is wide enough
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the toggle "Manager/Scorer" is on the row of "New Tournament"
+
+    Scenario: The toggles are on the row of New Tournament for each toggle
+      Given a viewport 1200 pixels wide
+      When the admin is opened
+      Then the toggle "Not World Ranking" is on the row of "New Tournament"
+
     Scenario: Manager/Scorer is on to begin with
       When the admin is opened
       Then the toggle "Manager/Scorer" is on
