@@ -524,6 +524,10 @@ export const german: Language = {
     "admin.tournaments.new": "Neues Turnier",
     "admin.tournaments.none": "Keine Turniere",
     "admin.tournaments.filter.none": "Keine passenden Turniere",
+    "admin.tournaments.show": "Anzeigen",
+    "admin.tournaments.managerScorer": "Leiter/Schreiber",
+    "admin.tournaments.worldRanking": "Weltrangliste",
+    "admin.tournaments.notWorldRanking": "Nicht Weltrangliste",
     // Wird einer Screenreader-Nutzerin gesagt, da ein durchgestrichener Name
     // nicht vorgelesen wird.
     "admin.tournaments.archived": "Archiviert",

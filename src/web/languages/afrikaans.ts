@@ -505,6 +505,10 @@ export const afrikaans: Language = {
     "admin.tournaments.new": "Nuwe toernooi",
     "admin.tournaments.none": "Geen toernooie nie",
     "admin.tournaments.filter.none": "Geen toernooie pas nie",
+    "admin.tournaments.show": "Wys",
+    "admin.tournaments.managerScorer": "Bestuurder/Telbeampte",
+    "admin.tournaments.worldRanking": "Wêreldranglys",
+    "admin.tournaments.notWorldRanking": "Nie wêreldranglys nie",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Geargiveer",
     "admin.tournaments.manage": "Bestuur",

@@ -471,6 +471,10 @@ export const japanese: Language = {
     "admin.tournaments.new": "新しい大会",
     "admin.tournaments.none": "大会がありません",
     "admin.tournaments.filter.none": "該当する大会がありません",
+    "admin.tournaments.show": "表示",
+    "admin.tournaments.managerScorer": "運営者/記録係",
+    "admin.tournaments.worldRanking": "世界ランキング",
+    "admin.tournaments.notWorldRanking": "世界ランキング対象外",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "アーカイブ済み",
     "admin.tournaments.manage": "運営",

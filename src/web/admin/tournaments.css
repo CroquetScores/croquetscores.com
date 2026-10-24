@@ -93,3 +93,12 @@
     grid-column: auto;
   }
 }
+
+/* A toggle says it is on by looking like the page's other chosen things do,
+   not by colour alone: the weight changes too. */
+.tournament-filter-toggle[aria-pressed="true"] {
+  border: 1px solid var(--accent-ink);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-weight: bold;
+}

@@ -482,6 +482,10 @@ export const welsh: Language = {
     "admin.tournaments.new": "Twrnamaint newydd",
     "admin.tournaments.none": "Dim twrnameintiau",
     "admin.tournaments.filter.none": "Dim twrnameintiau'n cyfateb",
+    "admin.tournaments.show": "Dangos",
+    "admin.tournaments.managerScorer": "Rheolwr/Sgoriwr",
+    "admin.tournaments.worldRanking": "Safle'r Byd",
+    "admin.tournaments.notWorldRanking": "Ddim yn Safle'r Byd",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Wedi'i archifo",
     "admin.tournaments.manage": "Rheoli",

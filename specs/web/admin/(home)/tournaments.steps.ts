@@ -6,6 +6,7 @@ import {
   type CreatedTournament,
   CreateTournament,
 } from "../../../../src/application/operations/tournaments/CreateTournament.js";
+import { AddBlock } from "../../../../src/application/operations/tournaments/AddBlock.js";
 import { Website } from "../../../../src/domain/common/Website.js";
 import { signOutPath } from "../../../../src/web/common/accountMenu.js";
 import { signInPath } from "../../../../src/web/public/signIn.js";
@@ -13,7 +14,9 @@ import {
   accountFor,
   created,
   inHandOf,
+  load,
   momentOf,
+  tournamentNamed,
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
@@ -1133,6 +1136,81 @@ Then(
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "form.tournament-filter", []);
       assert.deepEqual(stray, [], "Words in the filter came from elsewhere.");
+    });
+  },
+);
+
+// Its competitions -------------------------------------------------------------
+
+const addBlockTo = async (
+  world: SpecWorld,
+  name: string,
+  worldRankings: boolean,
+): Promise<void> => {
+  const id = tournamentNamed(world, name);
+  const manager = (await load(world, id)).managers[0];
+  assert.ok(manager !== undefined, `${name} has no manager.`);
+  await inHandOf(world).send(
+    new AddBlock(manager.value, id.value, "Block A", 1, 1, momentOf(world), {
+      worldRankings,
+    }),
+  );
+};
+
+Given(
+  "the tournament {string} has a block that counts towards the world rankings",
+  async function (this: SpecWorld, name: string) {
+    await addBlockTo(this, name, true);
+  },
+);
+
+Given(
+  "the tournament {string} has a block that does not count towards the world rankings",
+  async function (this: SpecWorld, name: string) {
+    await addBlockTo(this, name, false);
+  },
+);
+
+// The world ranking toggles ------------------------------------------------------
+
+const toggleNamed = (world: SpecWorld, name: string): Locator =>
+  world.browserPage.getByRole("button", { name, exact: true });
+
+const pressToggle = async function (
+  this: SpecWorld,
+  name: string,
+): Promise<void> {
+  await settled(this);
+  await toggleNamed(this, name).click();
+  await settled(this);
+};
+
+When("the toggle {string} is pressed", pressToggle);
+
+When("the page is loaded again", async function (this: SpecWorld) {
+  await this.browserPage.reload();
+});
+
+Then(
+  /^the toggle "([^"]*)" is (on|off)$/,
+  async function (this: SpecWorld, name: string, state: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await toggleNamed(this, name).getAttribute("aria-pressed"),
+        state === "on" ? "true" : "false",
+      );
+    });
+  },
+);
+
+Then(
+  /^the toggle "([^"]*)" is (offered|not offered)$/,
+  async function (this: SpecWorld, name: string, offered: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await toggleNamed(this, name).count(),
+        offered === "offered" ? 1 : 0,
+      );
     });
   },
 );

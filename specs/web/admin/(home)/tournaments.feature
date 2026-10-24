@@ -199,13 +199,14 @@ Feature: The admin lists the reader's tournaments
     tournament of the other of the two is not in it, since the officers of one
     sport are not those of the other. Whether any of a tournament's
     competitions counts towards the world rankings is each competition's to
-    say (`competitionRules.feature`), so it is not asked of the list. The years
-    are those any of them is in.
+    say (`competitionRules.feature`), and the officer narrows the list by it
+    (the rule below). The years are those any of them is in.
 
     Scenario: A tournament of a sport with world rankings is listed for a world ranking officer
       Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       When the admin is opened
       Then the tournament "Autumn Open" is listed
 
@@ -213,6 +214,7 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       When the admin is opened
       Then the tournament "Autumn Open" offers "Players"
 
@@ -220,6 +222,7 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       When the admin is opened
       Then the tournament "Autumn Open" does not offer "Manage"
 
@@ -227,6 +230,7 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "AC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       And the tournament "Autumn Open" starts on "2026-10-03"
       And the tournament "Autumn Open" is for the sport "ac"
       And the admin is open
@@ -259,6 +263,7 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has been given the role "GC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       And the tournament "Autumn Open" is for the sport "gc"
       When the admin is opened
       Then the tournament "Autumn Open" is listed
@@ -268,7 +273,9 @@ Feature: The admin lists the reader's tournaments
       And "organiser@example.com" has been given the role "GC World Ranking Officer"
       And "other@example.com" has an account, confirmed
       And "other@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       And "other@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" has a block that counts towards the world rankings
       And the tournament "Autumn Open" is for the sport "ac"
       And the tournament "Winter Open" is for the sport "gc"
       When the admin is opened
@@ -315,6 +322,92 @@ Feature: The admin lists the reader's tournaments
       And the tournament "Autumn Open" starts on "2024-10-03"
       When the admin is opened
       Then the year 2024 is offered
+
+  Rule: A world ranking officer narrows its list by what the tournaments count towards
+
+    Every tournament of the sports an officer looks after is more than it
+    wants to read down, so its list has three toggles. "Manager/Scorer" lists
+    the tournaments it manages or scores. "World Ranking" lists those with a
+    competition in use that counts towards the world rankings, and "Not World
+    Ranking" those with none. A tournament is listed when any toggle that
+    applies to it is on, so each one adds tournaments rather than taking them
+    away. To begin with "Manager/Scorer" and "World Ranking" are on, which is
+    its own tournaments and the ones it is there to look after.
+
+    Only an officer is offered them: a manager or a scorer has nothing in
+    their list that is not theirs to narrow it by. Like the other choices
+    they are kept in the address, so that the back button undoes one, and
+    belong to nobody but the reader who made them.
+
+    Background:
+      Given "organiser@example.com" has been given the role "AC World Ranking Officer"
+      And "other@example.com" has an account, confirmed
+      And "other@example.com" has created the tournament "Ranked Open"
+      And the tournament "Ranked Open" has a block that counts towards the world rankings
+      And "other@example.com" has created the tournament "Social Open"
+      And the tournament "Social Open" has a block that does not count towards the world rankings
+      And "organiser@example.com" has created the tournament "Own Open"
+      And the tournament "Own Open" has a block that does not count towards the world rankings
+
+    Scenario: The toggles are offered to an officer
+      When the admin is opened
+      Then the toggle "Manager/Scorer" is offered
+
+    Scenario: Manager/Scorer is on to begin with
+      When the admin is opened
+      Then the toggle "Manager/Scorer" is on
+
+    Scenario: World Ranking is on to begin with
+      When the admin is opened
+      Then the toggle "World Ranking" is on
+
+    Scenario: Not World Ranking is off to begin with
+      When the admin is opened
+      Then the toggle "Not World Ranking" is off
+
+    Scenario: A tournament that counts is listed to begin with
+      When the admin is opened
+      Then the tournament "Ranked Open" is listed
+
+    Scenario: A tournament the officer manages is listed to begin with
+      When the admin is opened
+      Then the tournament "Own Open" is listed
+
+    Scenario: A tournament that does not count and is not the officer's is not listed to begin with
+      When the admin is opened
+      Then the tournament "Social Open" is not listed
+
+    Scenario: Not World Ranking lists a tournament that does not count
+      Given the admin is open
+      When the toggle "Not World Ranking" is pressed
+      Then the tournament "Social Open" is listed
+
+    Scenario: World Ranking turned off does not list a tournament that counts
+      Given the admin is open
+      When the toggle "World Ranking" is pressed
+      Then the tournament "Ranked Open" is not listed
+
+    Scenario: Manager/Scorer turned off does not list a tournament the officer manages
+      Given the admin is open
+      When the toggle "Manager/Scorer" is pressed
+      Then the tournament "Own Open" is not listed
+
+    Scenario: A toggle pressed is on
+      Given the admin is open
+      When the toggle "Not World Ranking" is pressed
+      Then the toggle "Not World Ranking" is on
+
+    Scenario: A toggle pressed is kept when the page is loaded again
+      Given the admin is open
+      When the toggle "Not World Ranking" is pressed
+      And the page is loaded again
+      Then the toggle "Not World Ranking" is on
+
+    Scenario: The back button undoes a toggle
+      Given the admin is open
+      And the toggle "Not World Ranking" is pressed
+      When the browser goes back
+      Then the toggle "Not World Ranking" is off
 
   Rule: The list is of the website it is read on
 
@@ -628,6 +721,10 @@ Feature: The admin lists the reader's tournaments
       And the tournament "Summer Open" is played in the region "vic"
       And the tournament "Summer Open" is for the sport "ac"
 
+    Scenario: A reader who is not an officer is not offered the toggles
+      When the admin is opened
+      Then the toggle "Manager/Scorer" is not offered
+
     Scenario: Nothing is filtered by to begin with
       When the admin is opened
       Then the tournament "Spring Open" is listed
@@ -804,14 +901,17 @@ Feature: The admin lists the reader's tournaments
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is for the sport "ac"
+      And the tournament "Spring Open" has a block that counts towards the world rankings
       And "other@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-10-17"
       And the tournament "Autumn Open" is played in the country "jp"
       And the tournament "Autumn Open" is for the sport "gc"
+      And the tournament "Autumn Open" has a block that counts towards the world rankings
       And "other@example.com" has created the tournament "Summer Open"
       And the tournament "Summer Open" starts on "2026-10-24"
       And the tournament "Summer Open" is played in the country "au"
       And the tournament "Summer Open" is for the sport "ac"
+      And the tournament "Summer Open" has a block that counts towards the world rankings
       And "organiser@example.com" has been given the role "GC World Ranking Officer"
 
     Scenario: A country of a tournament it looks after is offered

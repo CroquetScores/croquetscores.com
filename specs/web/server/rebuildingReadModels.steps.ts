@@ -16,6 +16,7 @@ const READ_MODEL_TABLES = [
   "tournaments_by_address",
   "tournaments_by_account",
   "tournaments_by_account_details",
+  "tournaments_by_account_competitions",
   "tournaments_by_website",
   "tournaments_by_website_competitions",
   "tournaments_by_website_games",

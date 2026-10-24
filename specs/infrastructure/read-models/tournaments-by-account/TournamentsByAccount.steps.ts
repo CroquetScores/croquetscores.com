@@ -2,6 +2,10 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { TournamentOfAccount } from "../../../../src/application/operations/tournaments/TournamentsOfAccount.js";
+import { CompetitionId } from "../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { BestOf } from "../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
+import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import { Rounds } from "../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
 import { Website } from "../../../../src/domain/common/Website.js";
 import { TournamentsByAccount } from "../../../../src/infrastructure/read-models/TournamentsByAccount.js";
 import type { SpecWorld } from "../../../support/world.js";
@@ -74,6 +78,113 @@ Given(
   async function (this: SpecWorld, address: string, name: string) {
     await doneTo(this, name, (tournament, by) => {
       tournament.removeScorer(accountFor(this, address), by, at);
+    });
+  },
+);
+
+// Its competitions ---------------------------------------------------------------------
+
+// Each block by its name and its tournament's, written "Block A of Spring
+// Open", since two tournaments can each have a "Block A".
+const blocks = new WeakMap<SpecWorld, Map<string, CompetitionId>>();
+
+const blockNamed = (
+  world: SpecWorld,
+  block: string,
+  tournament: string,
+): CompetitionId => {
+  const id = blocks.get(world)?.get(`${block} of ${tournament}`);
+  assert.ok(id !== undefined, `${tournament} has no ${block}.`);
+  return id;
+};
+
+const addBlock = async (
+  world: SpecWorld,
+  tournament: string,
+  block: string,
+  worldRankings: boolean,
+): Promise<void> => {
+  const id = CompetitionId.create();
+  const own = blocks.get(world) ?? new Map<string, CompetitionId>();
+  own.set(`${block} of ${tournament}`, id);
+  blocks.set(world, own);
+  await doneTo(world, tournament, (each, by) => {
+    each.addBlock(
+      id,
+      CompetitionName.from(block),
+      BestOf.from(1),
+      Rounds.from(1),
+      by,
+      at,
+      { worldRankings },
+    );
+  });
+};
+
+const changeBlock = async (
+  world: SpecWorld,
+  block: string,
+  tournament: string,
+  worldRankings: boolean,
+): Promise<void> => {
+  const id = blockNamed(world, block, tournament);
+  await doneTo(world, tournament, (each, by) => {
+    each.updateBlock(
+      id,
+      CompetitionName.from(block),
+      BestOf.from(1),
+      Rounds.from(1),
+      by,
+      at,
+      { worldRankings },
+    );
+  });
+};
+
+Given(
+  "{string} has a block {string} that counts towards the world rankings",
+  async function (this: SpecWorld, tournament: string, block: string) {
+    await addBlock(this, tournament, block, true);
+  },
+);
+
+Given(
+  "{string} has a block {string} that does not count towards the world rankings",
+  async function (this: SpecWorld, tournament: string, block: string) {
+    await addBlock(this, tournament, block, false);
+  },
+);
+
+Given(
+  "the block {string} of {string} is changed to count towards the world rankings",
+  async function (this: SpecWorld, block: string, tournament: string) {
+    await changeBlock(this, block, tournament, true);
+  },
+);
+
+Given(
+  "the block {string} of {string} is changed not to count towards the world rankings",
+  async function (this: SpecWorld, block: string, tournament: string) {
+    await changeBlock(this, block, tournament, false);
+  },
+);
+
+Given(
+  "the block {string} of {string} is archived",
+  async function (this: SpecWorld, block: string, tournament: string) {
+    const id = blockNamed(this, block, tournament);
+    await doneTo(this, tournament, (each, by) => {
+      each.archiveCompetition(id, by, at);
+    });
+  },
+);
+
+Given(
+  "the block {string} of {string} is restored",
+  async function (this: SpecWorld, block: string, tournament: string) {
+    const id = blockNamed(this, block, tournament);
+    await doneTo(this, tournament, (each, by) => {
+      each.restoreCompetition(id, by, at);
     });
   },
 );
@@ -229,5 +340,19 @@ Then(
   "{string} is held as not archived",
   function (this: SpecWorld, name: string) {
     assert.equal(found(this, name).archived, false);
+  },
+);
+
+Then(
+  "{string} is held as counting towards the world rankings",
+  function (this: SpecWorld, name: string) {
+    assert.equal(found(this, name).worldRankings, true);
+  },
+);
+
+Then(
+  "{string} is held as not counting towards the world rankings",
+  function (this: SpecWorld, name: string) {
+    assert.equal(found(this, name).worldRankings, false);
   },
 );

@@ -494,6 +494,10 @@ export const english: Language = {
     "admin.tournaments.new": "New Tournament",
     "admin.tournaments.none": "No tournaments",
     "admin.tournaments.filter.none": "No tournaments match",
+    "admin.tournaments.show": "Show",
+    "admin.tournaments.managerScorer": "Manager/Scorer",
+    "admin.tournaments.worldRanking": "World Ranking",
+    "admin.tournaments.notWorldRanking": "Not World Ranking",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Archived",
     "admin.tournaments.manage": "Manage",

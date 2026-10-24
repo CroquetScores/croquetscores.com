@@ -24,6 +24,8 @@ interface Listed {
   // of, which no choice of country lists.
   readonly country?: string;
   readonly region?: string;
+  // Whether a competition in use counts towards the world rankings.
+  readonly worldRankings: boolean;
   readonly part: "manager" | "scorer" | "rankingOfficer";
 }
 
@@ -38,6 +40,18 @@ interface Names {
     }[];
   }[];
   readonly sports: readonly { readonly code: string; readonly name: string }[];
+}
+
+/**
+ * Which of a world ranking officer's tournaments are listed: those they
+ * manage or score, those with a competition counting towards the world
+ * rankings, and those with none. A tournament is listed when any one that
+ * applies to it is on.
+ */
+interface Shown {
+  readonly managerScorer: boolean;
+  readonly worldRanking: boolean;
+  readonly notWorldRanking: boolean;
 }
 
 /** What the reader chose to narrow the list by, each by its code. */
@@ -79,6 +93,35 @@ const offered = (years: readonly number[]): readonly number[] =>
 const sportOf = (tournament: Listed): string =>
   tournament.address.split("/")[1] ?? "";
 
+// Those the officer is there for, and those they run, are on to begin with;
+// the rest of the world's tournaments are one press away.
+const shownToBegin: Shown = {
+  managerScorer: true,
+  worldRanking: true,
+  notWorldRanking: false,
+};
+
+const shownNames = {
+  managerScorer: "managerScorer",
+  worldRanking: "worldRanking",
+  notWorldRanking: "notWorldRanking",
+} as const;
+
+// Each written into the address only where it is not as it begins, so that
+// the address of an unfiltered list stays as it was.
+const shownIn = (search: string): Shown => {
+  const query = new URLSearchParams(search);
+  const one = (name: keyof Shown): boolean => {
+    const given = query.get(name);
+    return given === "1" ? true : given === "0" ? false : shownToBegin[name];
+  };
+  return {
+    managerScorer: one("managerScorer"),
+    worldRanking: one("worldRanking"),
+    notWorldRanking: one("notWorldRanking"),
+  };
+};
+
 const chosenIn = (search: string): Chosen => {
   const query = new URLSearchParams(search);
   const one = (name: string): string | undefined => {
@@ -92,12 +135,18 @@ const chosenIn = (search: string): Chosen => {
   };
 };
 
-// What is written into the address for `chosen`, nothing where nothing is.
-const searchOf = (chosen: Chosen): string => {
+// What is written into the address for `chosen` and `shown`, nothing where
+// nothing is.
+const searchOf = (chosen: Chosen, shown: Shown): string => {
   const query = new URLSearchParams();
   for (const name of ["country", "region", "sport"] as const) {
     const code = chosen[name];
     if (code !== undefined) query.set(name, code);
+  }
+  for (const name of Object.values(shownNames)) {
+    if (shown[name] !== shownToBegin[name]) {
+      query.set(name, shown[name] ? "1" : "0");
+    }
   }
   const written = query.toString();
   return written === "" ? "" : `?${written}`;
@@ -159,11 +208,24 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     };
   }, []);
 
+  // Only an officer is a reader with tournaments that are not theirs, and
+  // only they have more than their own to narrow. Decided from the whole
+  // list, so that turning every kind off does not take the toggles away.
+  const officer = (listed ?? []).some((each) => each.part === "rankingOfficer");
+  const shown = shownIn(search);
+  const shownList = (listed ?? []).filter(
+    (each) =>
+      !officer ||
+      (shown.managerScorer && each.part !== "rankingOfficer") ||
+      (shown.worldRanking && each.worldRankings) ||
+      (shown.notWorldRanking && !each.worldRankings),
+  );
+
   // Only what the list in front of the reader holds is offered, so a choice
   // never lists nothing and the filter never says that a tournament the reader
   // cannot see is there. A choice in the address that is not offered is
   // ignored, as is a region where its country is not chosen.
-  const offeredCountries = once((listed ?? []).map((each) => each.country));
+  const offeredCountries = once(shownList.map((each) => each.country));
   const wanted = chosenIn(search);
   const country =
     wanted.country !== undefined && offeredCountries.includes(wanted.country)
@@ -173,7 +235,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     country === undefined
       ? []
       : once(
-          (listed ?? [])
+          shownList
             .filter((each) => each.country === country)
             .map((each) => each.region),
         );
@@ -181,24 +243,24 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     wanted.region !== undefined && offeredRegions.includes(wanted.region)
       ? wanted.region
       : undefined;
-  const offeredSports = once((listed ?? []).map(sportOf));
+  const offeredSports = once(shownList.map(sportOf));
   const sport =
     wanted.sport !== undefined && offeredSports.includes(wanted.sport)
       ? wanted.sport
       : undefined;
 
-  const narrowed = (listed ?? []).filter(
+  const narrowed = shownList.filter(
     (each) =>
       (country === undefined || each.country === country) &&
       (region === undefined || each.region === region) &&
       (sport === undefined || sportOf(each) === sport),
   );
 
-  const choose = (chosen: Chosen): void => {
+  const choose = (chosen: Chosen, showing: Shown = shown): void => {
     window.history.pushState(
       null,
       "",
-      `${window.location.pathname}${searchOf(chosen)}`,
+      `${window.location.pathname}${searchOf(chosen, showing)}`,
     );
     setSearch(window.location.search);
   };
@@ -403,6 +465,30 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   event.preventDefault();
                 }}
               >
+                {officer ? (
+                  <span
+                    className="tournament-filter-field"
+                    role="group"
+                    aria-label={say("admin.tournaments.show")}
+                  >
+                    {Object.values(shownNames).map((name) => (
+                      <button
+                        key={name}
+                        type="button"
+                        className="button tournament-filter-toggle"
+                        aria-pressed={shown[name]}
+                        onClick={() => {
+                          choose(
+                            { country, region, sport },
+                            { ...shown, [name]: !shown[name] },
+                          );
+                        }}
+                      >
+                        {say(`admin.tournaments.${name}`)}
+                      </button>
+                    ))}
+                  </span>
+                ) : null}
                 {choice(
                   "country",
                   say("tournamentList.filter.country"),

@@ -506,6 +506,10 @@ export const italian: Language = {
     "admin.tournaments.new": "Nuovo torneo",
     "admin.tournaments.none": "Nessun torneo",
     "admin.tournaments.filter.none": "Nessun torneo corrisponde",
+    "admin.tournaments.show": "Mostra",
+    "admin.tournaments.managerScorer": "Gestore/Segnapunti",
+    "admin.tournaments.worldRanking": "Classifica mondiale",
+    "admin.tournaments.notWorldRanking": "Fuori classifica mondiale",
     // Detto a chi usa un lettore di schermo, perché una riga sul nome non viene letta.
     "admin.tournaments.archived": "Archiviato",
     "admin.tournaments.manage": "Gestisci",

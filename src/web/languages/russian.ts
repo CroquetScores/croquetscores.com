@@ -474,6 +474,10 @@ export const russian: Language = {
     "admin.tournaments.new": "Новый турнир",
     "admin.tournaments.none": "Турниров нет",
     "admin.tournaments.filter.none": "Подходящих турниров нет",
+    "admin.tournaments.show": "Показать",
+    "admin.tournaments.managerScorer": "Организатор/Счётчик",
+    "admin.tournaments.worldRanking": "Мировой рейтинг",
+    "admin.tournaments.notWorldRanking": "Вне мирового рейтинга",
     // Said to a screen reader.
     "admin.tournaments.archived": "В архиве",
     "admin.tournaments.manage": "Управление",
