@@ -797,6 +797,7 @@ export const korean: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "나",
     "admin.managers.add": "운영자 추가",
+    "admin.managers.email": "운영자에게 이메일 보내기",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "운영자가 없어요",

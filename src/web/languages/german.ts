@@ -888,6 +888,7 @@ export const german: Language = {
     // Neben dem eigenen Namen der Leserin unter den Verantwortlichen.
     "admin.managers.you": "Sie",
     "admin.managers.add": "Verantwortlichen hinzufügen",
+    "admin.managers.email": "Verantwortlichen mailen",
     // Wird nie gesagt, da ein Turnier immer einen Verantwortlichen hat, aber
     // eine Liste sagt, was sie sagt, wenn sie leer ist.
     "admin.managers.none": "Keine Verantwortlichen",

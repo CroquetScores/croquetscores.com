@@ -832,6 +832,7 @@ export const swedish: Language = {
     // Bredvid läsarens eget namn bland arrangörerna.
     "admin.managers.you": "Du",
     "admin.managers.add": "Lägg till arrangör",
+    "admin.managers.email": "Mejla arrangörerna",
     // Sägs aldrig, eftersom en turnering alltid har en arrangör, men en lista
     // säger något när den är tom.
     "admin.managers.none": "Inga arrangörer",

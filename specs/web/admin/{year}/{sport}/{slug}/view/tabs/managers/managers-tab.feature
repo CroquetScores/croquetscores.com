@@ -190,6 +190,129 @@ Feature: The managers tab of a tournament's page
       When "someone@example.com" is typed as the "Email address"
       Then nothing is said beneath "Email address"
 
+  Rule: An administrator and a world ranking officer are offered a link to write to every manager
+
+    The world rankings write to a tournament's managers about its results, and
+    a manager's email address is not otherwise shown to anybody. So an
+    administrator, and a world ranking officer of the tournament's sport, are
+    offered a link, Email Managers, that opens their email program to a message
+    to every manager listed, with the subject "Croquet Scores". The link is a
+    `mailto:` address (the managers' email addresses, a comma between each),
+    which is how a page asks the reader's own email program to write, so that
+    nothing is sent from the site. A manager reading the tab is not offered it,
+    nor shown any email address.
+
+    Scenario: An administrator is offered the link
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab offers the link "Email Managers"
+
+    Scenario: A world ranking officer is offered the link
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab offers the link "Email Managers"
+
+    Scenario: A manager is not offered the link
+      When the managers of "Spring Open" are opened
+      Then the tab does not offer the link "Email Managers"
+
+    Scenario: The link writes to the creator
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then "Email Managers" writes to "organiser@example.com"
+
+    Scenario: The link writes to every manager
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then "Email Managers" writes to "someone@example.com"
+
+    Scenario: The link writes to nobody else
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then "Email Managers" does not write to "admin@example.com"
+
+    Scenario: The link has the subject Croquet Scores
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then "Email Managers" has the subject "Croquet Scores"
+
+    Scenario: A manager made is written to once the list is asked for again
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      And the managers of "Spring Open" are open
+      And "someone@example.com" is typed as the "Email address"
+      When "Add Manager" is pressed
+      Then "Email Managers" writes to "someone@example.com"
+
+  Rule: A world ranking officer's tab lists the managers and changes none
+
+    A world ranking officer has no part in the tournament, so it cannot make
+    anybody a manager or take one off. Its tab has the list and the link, and
+    no field for an email address and no Remove. That is so of one that is
+    neither a manager nor an administrator: an administrator may do anything to
+    a tournament, so one that is an officer as well has the whole tab.
+
+    Scenario: A world ranking officer is listed the managers
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the manager "Ollie Organiser" is listed
+
+    Scenario: A world ranking officer is not offered the field
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab does not ask for "Email address"
+
+    Scenario: A world ranking officer is not offered Remove
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the manager "Sam Someone" does not offer "Remove"
+
+    Scenario: An administrator who is also a world ranking officer is offered the field
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And "admin@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab asks for "Email address"
+
+    Scenario: An administrator who is also a world ranking officer is offered Remove
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And "admin@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the manager "Sam Someone" offers "Remove"
+
+    Scenario: An administrator who is also a world ranking officer is offered the link
+      Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "admin@example.com" has been given the role "Administrator"
+      And "admin@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "admin@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab offers the link "Email Managers"
+
   Rule: Every Remove asks first
 
     Scenario: Each manager offers Remove where there is more than one

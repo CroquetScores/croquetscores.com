@@ -444,7 +444,14 @@ Feature: A tournament's page in the admin
       When the page of "Spring Ricochet" is opened
       Then the page is refused with "Tournament.NotAManager"
 
-    Scenario Outline: A world ranking officer with no part is not offered the managers' tabs
+    Scenario: A world ranking officer with no part is offered the Managers tab, to write to the managers
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Managers" is offered
+
+    Scenario Outline: A world ranking officer with no part is offered the Managers tab and no other of the managers' tabs
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
       And "ranker@example.com" has been given the role "AC World Ranking Officer"
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
@@ -455,7 +462,6 @@ Feature: A tournament's page in the admin
         | tab          |
         | Competitions |
         | Notes        |
-        | Managers     |
         | Scorers      |
         | Rankings     |
 

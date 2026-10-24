@@ -847,6 +847,7 @@ export const dutch: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Jij",
     "admin.managers.add": "Toernooileider toevoegen",
+    "admin.managers.email": "Toernooileiders mailen",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "Geen toernooileiders",
