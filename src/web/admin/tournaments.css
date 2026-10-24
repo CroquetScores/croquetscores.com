@@ -94,11 +94,31 @@
   }
 }
 
-/* A toggle says it is on by looking like the page's other chosen things do,
-   not by colour alone: the weight changes too. */
-.tournament-filter-toggle[aria-pressed="true"] {
-  border: 1px solid var(--accent-ink);
-  background: var(--accent-strong);
-  color: var(--accent-ink);
-  font-weight: bold;
+/* New Tournament and, for a world ranking officer, the toggles that narrow its
+   list, on one row, wrapping beneath each other where a phone has no room. The
+   toggles are buttons like New Tournament is, and say they are on with a tick
+   below. */
+.tournaments-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.tournaments-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+/* A toggle says it is on with a tick before its words, which is drawn for one
+   that is off too, but hidden, so that the button is the same width either
+   way and the others do not move when it is pressed. */
+.tournament-filter-toggle {
+  gap: var(--space-1);
+}
+
+.tournament-filter-toggle[aria-pressed="false"] .tournament-toggle-tick {
+  visibility: hidden;
 }

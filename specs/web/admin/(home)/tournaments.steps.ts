@@ -1203,6 +1203,98 @@ Then(
   },
 );
 
+// The tick is drawn for a toggle that is off too, and hidden, so that it is
+// whether it can be seen that says.
+Then(
+  /^the toggle "([^"]*)" shows (a tick|no tick)$/,
+  async function (this: SpecWorld, name: string, which: string) {
+    const tick = toggleNamed(this, name).locator(".tournament-toggle-tick");
+    await eventually(this, async () => {
+      assert.equal(await tick.isVisible(), which === "a tick");
+    });
+  },
+);
+
+// What the specs are not compiled to know of the page itself.
+interface ButtonStylesInThePage {
+  getComputedStyle(element: unknown): {
+    readonly color: string;
+    readonly backgroundColor: string;
+    readonly borderTopColor: string;
+    readonly borderTopWidth: string;
+    readonly borderTopLeftRadius: string;
+    readonly fontWeight: string;
+    readonly minHeight: string;
+    readonly paddingTop: string;
+    readonly paddingRight: string;
+    readonly paddingBottom: string;
+    readonly paddingLeft: string;
+  };
+}
+
+// What a button looks like, as the browser works it out: the colours, the
+// border, the weight and the room inside it, which is what makes two buttons
+// look alike.
+const lookOf = (element: Locator): Promise<Record<string, string>> =>
+  element.evaluate((found) => {
+    const style = (
+      globalThis as unknown as ButtonStylesInThePage
+    ).getComputedStyle(found);
+    return {
+      color: style.color,
+      backgroundColor: style.backgroundColor,
+      borderColor: style.borderTopColor,
+      borderWidth: style.borderTopWidth,
+      borderRadius: style.borderTopLeftRadius,
+      fontWeight: style.fontWeight,
+      minHeight: style.minHeight,
+      paddingTop: style.paddingTop,
+      paddingRight: style.paddingRight,
+      paddingBottom: style.paddingBottom,
+      paddingLeft: style.paddingLeft,
+    };
+  });
+
+Then(
+  "the toggle {string} looks as {string} does",
+  async function (this: SpecWorld, name: string, link: string) {
+    assert.deepEqual(
+      await lookOf(toggleNamed(this, name)),
+      await lookOf(
+        this.browserPage.getByRole("link", { name: link, exact: true }),
+      ),
+    );
+  },
+);
+
+// On one row where their middles are within a toggle's own height of each
+// other, which a toggle wrapped beneath the button is not, and beside it:
+// after it, and not overlapping it, which one drawn before it or across it
+// would not be. Waited for, since the layout settles as the list arrives.
+Then(
+  "the toggle {string} is on the row of {string}",
+  async function (this: SpecWorld, name: string, link: string) {
+    await eventually(this, async () => {
+      const toggle = await toggleNamed(this, name).boundingBox();
+      const button = await this.browserPage
+        .getByRole("link", { name: link, exact: true })
+        .boundingBox();
+      assert.ok(toggle !== null, `The toggle ${name} is not drawn.`);
+      assert.ok(button !== null, `${link} is not drawn.`);
+      const middle = (box: { y: number; height: number }): number =>
+        box.y + box.height / 2;
+      assert.ok(
+        Math.abs(middle(toggle) - middle(button)) < toggle.height / 2,
+        `${name} is at ${String(middle(toggle))} and ${link} at ${String(middle(button))}.`,
+      );
+      assert.ok(
+        toggle.x >= button.x + button.width,
+        `${name} at ${String(toggle.x)} is not after ${link}, which ends at ${String(button.x + button.width)}.`,
+      );
+    });
+  },
+);
+
 Then(
   /^the toggle "([^"]*)" is (offered|not offered)$/,
   async function (this: SpecWorld, name: string, offered: string) {
