@@ -520,6 +520,22 @@ export class Tournament extends AggregateRoot {
   }
 
   /**
+   * Whether `by` may write to its managers (ManagersOfTournament.feature): an
+   * account asking as an administrator, or as a world ranking officer of a
+   * sport ranked across the world that it holds the role for, as for its
+   * players' world ranking names. Whether it may also be one of the managers
+   * is {@link mayManage}'s; this lets an officer see them, and change none.
+   */
+  mayWriteToManagers(by: AccountId): boolean {
+    return (
+      by instanceof Administrator ||
+      (by instanceof WorldRankingOfficer &&
+        this.sport.hasWorldRankings &&
+        by.looksAfter(this.sport.code))
+    );
+  }
+
+  /**
    * That the player `id`'s world ranking name is now `worldRankingName`,
    * their name where it is blank, and nothing else about them changed. Refused
    * unless `by` may change world ranking names, as an update is for the rest,

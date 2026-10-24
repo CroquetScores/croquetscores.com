@@ -782,6 +782,7 @@ export const japanese: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "あなた",
     "admin.managers.add": "運営者を追加",
+    "admin.managers.email": "運営者にメールする",
     "admin.managers.none": "運営者がいません",
     "admin.managers.removeTitle": "運営者を外す",
     "admin.managers.removeExplanation":

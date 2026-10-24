@@ -243,6 +243,38 @@ export const managedOrRankedBy = async (
 };
 
 /**
+ * The tournament `written`, once `account` is known to be asking and to manage
+ * it, or to write to its managers as an administrator, or as a world ranking
+ * officer of its sport does: refused as a manager's list is otherwise, by the
+ * same code. Says which of the two it may, since an officer reads the managers
+ * and changes none.
+ */
+export const managedOrWrittenToBy = async (
+  tournaments: AggregateRepository<Tournament, TournamentId>,
+  accounts: AggregateRepository<Account, AccountId>,
+  account: string,
+  written: string,
+  operation: string,
+): Promise<{
+  readonly by: AccountId;
+  readonly tournament: Tournament;
+  readonly mayChange: boolean;
+  readonly mayWrite: boolean;
+}> => {
+  const by = await askedBy(accounts, account);
+  const tournament = await tournamentFor(tournaments, written, operation);
+  const mayChange = tournament.mayManage(by);
+  const mayWrite = tournament.mayWriteToManagers(by);
+  if (!mayChange && !mayWrite) {
+    throw new TournamentRefused(
+      "Tournament.NotAManager",
+      "Only a manager of the tournament, an administrator or a world ranking officer of its sport can ask for this.",
+    );
+  }
+  return { by, tournament, mayChange, mayWrite };
+};
+
+/**
  * The tournament `written`, and the part `account` has in it, once it is known
  * to be asking and to manage or score it: refused as a manager's list is, but
  * letting a scorer in as well, for what a scorer is shown.
@@ -275,12 +307,16 @@ export const managedOrScoredBy = async (
 export const namesOf = async (
   accounts: AggregateRepository<Account, AccountId>,
   ids: readonly AccountId[],
-): Promise<{ readonly id: AccountId; readonly name: string }[]> => {
-  const named: { id: AccountId; name: string }[] = [];
+): Promise<
+  { readonly id: AccountId; readonly name: string; readonly account: Account }[]
+> => {
+  const named: { id: AccountId; name: string; account: Account }[] = [];
   for (const id of ids) {
     const account = await accounts.load(id);
     const name = account?.forgotten === false ? account.name : undefined;
-    if (name !== undefined) named.push({ id, name: name.toString() });
+    if (account !== undefined && name !== undefined) {
+      named.push({ id, name: name.toString(), account });
+    }
   }
   return named;
 };

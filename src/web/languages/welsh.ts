@@ -812,6 +812,7 @@ export const welsh: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Chi",
     "admin.managers.add": "Ychwanegu rheolwr",
+    "admin.managers.email": "E-bostio'r rheolwyr",
     "admin.managers.none": "Dim rheolwyr",
     "admin.managers.removeTitle": "Tynnu rheolwr",
     "admin.managers.removeExplanation":

@@ -1,5 +1,6 @@
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import type { Locator } from "playwright";
 
 import { english } from "../../../../../../../../../src/web/languages/english.js";
 import {
@@ -83,5 +84,93 @@ Then(
     await this.browserPage.waitForURL((url) => url.pathname === "/admin/");
     const tournament = await load(this, tournamentNamed(this, name));
     assert.equal(tournament.manages(await accountFor(this, address)), false);
+  },
+);
+
+// The link that writes to the managers, by its words, and where it goes: a
+// `mailto:` address of the managers' email addresses, a comma between each,
+// with a subject (managers-tab.feature).
+const emailLink = (world: SpecWorld, words: string): Locator =>
+  tabPanel(world).getByRole("link", { name: words, exact: true });
+
+const writtenTo = async (
+  world: SpecWorld,
+  words: string,
+): Promise<string[]> => {
+  const href = await emailLink(world, words).getAttribute("href", {
+    timeout: 500,
+  });
+  assert.ok(
+    href !== null && href.startsWith("mailto:"),
+    `The link goes to ${String(href)}.`,
+  );
+  const [addresses = ""] = href.slice("mailto:".length).split("?");
+  return addresses.split(",").map((address) => decodeURIComponent(address));
+};
+
+Then(
+  "the tab offers the link {string}",
+  async function (this: SpecWorld, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await emailLink(this, words).count(), 1);
+    });
+  },
+);
+
+Then(
+  "the tab does not offer the link {string}",
+  async function (this: SpecWorld, words: string) {
+    // Once the list has been drawn, so that one not drawn yet is not taken
+    // for one not offered.
+    await eventually(this, async () => {
+      assert.ok(
+        (await tabPanel(this).locator("ul.listed").count()) > 0,
+        "The list is not drawn.",
+      );
+    });
+    assert.equal(await emailLink(this, words).count(), 0);
+  },
+);
+
+Then(
+  "{string} writes to {string}",
+  async function (this: SpecWorld, words: string, address: string) {
+    await eventually(this, async () => {
+      assert.ok((await writtenTo(this, words)).includes(address));
+    });
+  },
+);
+
+Then(
+  "{string} does not write to {string}",
+  async function (this: SpecWorld, words: string, address: string) {
+    await eventually(this, async () => {
+      assert.ok(!(await writtenTo(this, words)).includes(address));
+    });
+  },
+);
+
+Then(
+  "{string} has the subject {string}",
+  async function (this: SpecWorld, words: string, subject: string) {
+    const href = await emailLink(this, words).getAttribute("href");
+    const query = new URLSearchParams(href?.split("?")[1] ?? "");
+    assert.equal(query.get("subject"), subject);
+  },
+);
+
+Then(
+  "the tab does not ask for {string}",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.ok(
+        (await tabPanel(this).locator("ul.listed").count()) > 0,
+        "The list is not drawn.",
+      );
+    });
+    assert.equal(
+      await tabPanel(this).getByLabel(label, { exact: true }).count(),
+      0,
+    );
   },
 );

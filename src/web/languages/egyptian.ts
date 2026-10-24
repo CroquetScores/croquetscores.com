@@ -761,6 +761,7 @@ export const egyptian: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "انت",
     "admin.managers.add": "ضيف مدير",
+    "admin.managers.email": "ابعت إيميل للمديرين",
     // Never said, since a tournament always has a manager.
     "admin.managers.none": "مفيش مديرين",
     "admin.managers.removeTitle": "شيل مدير",

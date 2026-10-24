@@ -842,6 +842,7 @@ export const spanish: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Tú",
     "admin.managers.add": "Añadir gestor",
+    "admin.managers.email": "Escribir a los gestores",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "Ningún gestor",

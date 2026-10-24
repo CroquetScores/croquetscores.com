@@ -911,13 +911,15 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
     async (request, reply) => {
       const reader = signedInOrRefused(request, reply);
       if (reader === undefined) return reply;
-      const managers = await request.server.mediator.query(
+      const { managers, mayChange } = await request.server.mediator.query(
         new ManagersOfTournament(
           reader.value,
           `tournament/${request.params.id}`,
         ),
       );
-      return reply.header("cache-control", "no-store").send({ managers });
+      return reply
+        .header("cache-control", "no-store")
+        .send({ managers, mayChange });
     },
   );
 

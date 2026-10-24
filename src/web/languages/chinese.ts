@@ -757,6 +757,7 @@ export const chinese: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "您",
     "admin.managers.add": "添加管理者",
+    "admin.managers.email": "给管理者发邮件",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "没有管理者",

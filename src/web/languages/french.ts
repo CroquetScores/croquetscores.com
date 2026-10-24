@@ -851,6 +851,7 @@ export const french: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Vous",
     "admin.managers.add": "Ajouter un organisateur",
+    "admin.managers.email": "Écrire aux organisateurs",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "Aucun organisateur",

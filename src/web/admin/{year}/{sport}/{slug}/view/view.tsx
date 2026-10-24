@@ -45,6 +45,8 @@ interface Found {
   readonly part: "manager" | "scorer" | "rankingOfficer";
   /** Whether the reader may change its players' world ranking names. */
   readonly mayChangeWorldRankingNames: boolean;
+  /** Whether the reader may write to its managers, from the Managers tab. */
+  readonly mayWriteToManagers: boolean;
   /** Whether it is played by teams, which gives it other tabs. */
   readonly playedByTeams: boolean;
   /** Its sport, by its code, where it has world rankings, for its players' dialog. */
@@ -82,18 +84,20 @@ type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 // alone to a scorer, since scores are entered in a tournament's competitions
 // and the rest is the managers' to change. A world ranking officer is offered
 // the players besides, whose world ranking names it may change: after the
-// competitions where it scores, and alone where it has no part. The page
-// opens on the first.
+// competitions where it scores, and where it has no part, with the managers it
+// may write to after them. The page opens on the first.
 const offeredTo = ({
   part,
   playedByTeams,
   mayChangeWorldRankingNames,
+  mayWriteToManagers,
   countsTowardsWorldRankings,
 }: Pick<
   Found,
   | "part"
   | "playedByTeams"
   | "mayChangeWorldRankingNames"
+  | "mayWriteToManagers"
   | "countsTowardsWorldRankings"
 >): readonly Tab[] => {
   if (part === "manager") {
@@ -106,8 +110,12 @@ const offeredTo = ({
   const players: readonly Tab[] = mayChangeWorldRankingNames
     ? [playedByTeams ? "teams" : "players"]
     : [];
-  if (part === "rankingOfficer") return players;
-  return [playedByTeams ? "tests" : "competitions", ...players];
+  // The managers besides, to write to them, and to read and not change them
+  // (managers-tab.feature): the one tab of the managers' an officer has,
+  // whether or not it scores.
+  const managers: readonly Tab[] = mayWriteToManagers ? ["managers"] : [];
+  if (part === "rankingOfficer") return [...players, ...managers];
+  return [playedByTeams ? "tests" : "competitions", ...players, ...managers];
 };
 
 // The part a reader has in the competitions and tests, which a world ranking

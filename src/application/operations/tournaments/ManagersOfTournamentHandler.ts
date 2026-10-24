@@ -7,13 +7,14 @@ import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import {
   type ListedManager,
+  type ManagersListed,
   ManagersOfTournament,
 } from "./ManagersOfTournament.js";
-import { managedBy, namesOf } from "./tournamentOperations.js";
+import { managedOrWrittenToBy, namesOf } from "./tournamentOperations.js";
 
 export class ManagersOfTournamentHandler extends QueryHandler<
   ManagersOfTournament,
-  readonly ListedManager[]
+  ManagersListed
 > {
   readonly handles: RequestType<ManagersOfTournament> = ManagersOfTournament;
 
@@ -24,16 +25,23 @@ export class ManagersOfTournamentHandler extends QueryHandler<
     super();
   }
 
-  async handle(query: ManagersOfTournament): Promise<readonly ListedManager[]> {
-    const { by, tournament } = await managedBy(
+  async handle(query: ManagersOfTournament): Promise<ManagersListed> {
+    const { by, tournament, mayChange, mayWrite } = await managedOrWrittenToBy(
       this.tournaments,
       this.accounts,
       query.account,
       query.tournament,
       "ManagersOfTournament",
     );
-    return (await namesOf(this.accounts, tournament.managers)).map(
-      ({ id, name }) => ({ id: id.value, name, isReader: id.equals(by) }),
+    const managers = (await namesOf(this.accounts, tournament.managers)).map(
+      ({ id, name, account }): ListedManager => ({
+        id: id.value,
+        name,
+        isReader: id.equals(by),
+        // Only those who write to the managers are told another's address.
+        ...(mayWrite ? { emailAddress: account.emailAddress.toString() } : {}),
+      }),
     );
+    return { managers, mayChange };
   }
 }

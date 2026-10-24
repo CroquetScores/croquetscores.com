@@ -16,7 +16,8 @@ Feature: The managers of a tournament, as a manager lists them
 
   It answers the account the reader is signed in to, and never one the reader
   chose. Only the tournament's managers can ask, since the list is for
-  managing them: anybody else, a scorer among them, is refused with
+  managing them, and an administrator and a world ranking officer of its sport,
+  who write to them: anybody else, a scorer among them, is refused with
   `Tournament.NotAManager`. A tournament there is not is refused as
   `ManagersOfTournament.NoSuchTournament`.
 
@@ -95,6 +96,77 @@ Feature: The managers of a tournament, as a manager lists them
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       When the reader signed in to the account for "someone@example.com" lists the managers of "Spring Open"
       Then it is refused with "Tournament.NotAManager"
+
+  Rule: A world ranking officer of the tournament's sport can list them too
+
+    A world ranking officer may write to a tournament's managers, whatever part
+    it has in the tournament, so it is answered the list as a manager is,
+    though only for a tournament of a sport whose rankings it looks after.
+
+    Scenario: A world ranking officer of the tournament's sport lists them
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "ranker@example.com" lists the managers of "Spring Open"
+      Then the manager "Ollie Organiser" is answered
+
+    Scenario: A world ranking officer of another sport is refused
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "GC World Ranking Officer"
+      When the reader signed in to the account for "ranker@example.com" lists the managers of "Spring Open"
+      Then it is refused with "Tournament.NotAManager"
+
+  Rule: Each manager's email address is answered only to an administrator and a world ranking officer
+
+    An email address is what they are written to by, which a manager has no
+    need of for another manager and a reader of the list is not otherwise
+    shown. So only an administrator, who may do anything to a tournament, and
+    a world ranking officer, who writes to its managers, are answered them.
+
+    Scenario: An administrator is answered the creator's email address
+      Given "admin@example.com" has an account, confirmed, called "Ada Administrator"
+      And "admin@example.com" has been given the role "Administrator"
+      When the reader signed in to the account for "admin@example.com" lists the managers of "Spring Open"
+      Then the manager "Ollie Organiser" is answered with the email address "organiser@example.com"
+
+    Scenario: An administrator is answered a manager made's email address
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And "admin@example.com" has an account, confirmed, called "Ada Administrator"
+      And "admin@example.com" has been given the role "Administrator"
+      When the reader signed in to the account for "admin@example.com" lists the managers of "Spring Open"
+      Then the manager "Sam Someone" is answered with the email address "someone@example.com"
+
+    Scenario: A world ranking officer is answered the creator's email address
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "ranker@example.com" lists the managers of "Spring Open"
+      Then the manager "Ollie Organiser" is answered with the email address "organiser@example.com"
+
+    Scenario: A manager is answered no email address
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the managers of "Spring Open"
+      Then the manager "Sam Someone" is answered with no email address
+
+  Rule: Whether the reader may change the managers is answered with them
+
+    A manager and an administrator may make somebody a manager and take one
+    off. A world ranking officer with no part in the tournament only reads
+    them.
+
+    Scenario: A manager is answered as able to change them
+      When the reader signed in to the account for "organiser@example.com" lists the managers of "Spring Open"
+      Then the managers are answered as ones the reader may change
+
+    Scenario: An administrator is answered as able to change them
+      Given "admin@example.com" has an account, confirmed, called "Ada Administrator"
+      And "admin@example.com" has been given the role "Administrator"
+      When the reader signed in to the account for "admin@example.com" lists the managers of "Spring Open"
+      Then the managers are answered as ones the reader may change
+
+    Scenario: A world ranking officer is answered as unable to change them
+      Given "ranker@example.com" has an account, confirmed, called "Rae Ranker"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      When the reader signed in to the account for "ranker@example.com" lists the managers of "Spring Open"
+      Then the managers are answered as ones the reader may not change
 
   Rule: A forgotten account lists nothing
 

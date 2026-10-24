@@ -793,6 +793,7 @@ export const russian: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Вы",
     "admin.managers.add": "Добавить организатора",
+    "admin.managers.email": "Написать организаторам",
     "admin.managers.none": "Организаторов нет",
     "admin.managers.removeTitle": "Удаление организатора",
     "admin.managers.removeExplanation":

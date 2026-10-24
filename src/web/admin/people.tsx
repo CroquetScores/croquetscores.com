@@ -22,6 +22,11 @@ export interface Person {
   readonly name: string;
   /** Whether it is the reader, which only a manager can be. */
   readonly isReader?: boolean;
+  /**
+   * Their email address, where the reader is one who writes to them and so is
+   * told it (managers-tab.feature).
+   */
+  readonly emailAddress?: string;
 }
 
 /** What a part's words are, by the key each is under. */
@@ -61,6 +66,8 @@ interface Props {
   readonly explanation: (person: Person) => string;
   /** Once `person` no longer has the part, what happens next. */
   readonly removed?: (person: Person) => void;
+  /** What the tab says above its list, given the people listed. */
+  readonly above?: (people: readonly Person[]) => React.ReactNode;
 }
 
 export const People = ({
@@ -73,8 +80,17 @@ export const People = ({
   removable = () => true,
   explanation,
   removed,
+  above,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Person[] | undefined>();
+  // Whether the reader may give the part and take it away, if the list has
+  // said. A field and a Remove are not drawn until the list is answered, which
+  // would show them to a reader who may not, such as a world ranking officer
+  // reading a tournament's managers. After it they are drawn unless it said
+  // the reader may not: a list that failed has said nothing, and the reader
+  // can still try (managers-tab.feature), and the API says it only of a list
+  // read by somebody who may not.
+  const [changeable, setChangeable] = useState<boolean | undefined>();
   // Counted up to ask again, once somebody is given the part or has it taken.
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
@@ -97,24 +113,35 @@ export const People = ({
   const adding = useRef(false);
   const field = useRef<HTMLInputElement>(null);
   const headingId = `${name}-heading`;
+  const mayChange = answered !== undefined && changeable !== false;
 
   useEffect(() => {
     let current = true;
     void fetch(at, { headers: { accept: "application/json" } })
       .then(async (response) => {
         if (response.ok) {
-          const people = ((await response.json()) as Record<string, Person[]>)[
-            listedUnder
-          ];
-          if (current) setListRefused(undefined);
+          const answer = (await response.json()) as Record<string, unknown>;
+          const people = answer[listedUnder] as Person[];
+          if (current) {
+            setListRefused(undefined);
+            setChangeable(answer.mayChange !== false);
+          }
           return people;
         }
         const code = await refusalOf(response);
-        if (current) setListRefused(code);
+        if (current) {
+          setListRefused(code);
+          // Nothing said now of what the reader may do, not what an earlier
+          // list said.
+          setChangeable(undefined);
+        }
         return undefined;
       })
       .catch(() => {
-        if (current) setListRefused("Unknown");
+        if (current) {
+          setListRefused("Unknown");
+          setChangeable(undefined);
+        }
         return undefined;
       })
       .then((people) => {
@@ -244,7 +271,8 @@ export const People = ({
         </h2>
       )}
       <div className="people-body stack">
-        {fieldAbove ? form : null}
+        {fieldAbove && mayChange ? form : null}
+        {listed === undefined ? null : above?.(listed)}
         {/* One said at a time, the Remove's first, since it is what the
             reader last asked for, and where the reader is no longer allowed
             the list either the two are the same refusal. Not the words for a
@@ -271,7 +299,7 @@ export const People = ({
                   </span>
                 ) : null}
                 <span className="listed-options">
-                  {removable(person, listed) ? (
+                  {!mayChange ? null : removable(person, listed) ? (
                     <button
                       type="button"
                       className="button"
@@ -295,7 +323,7 @@ export const People = ({
             ))}
           </ul>
         )}
-        {fieldAbove ? null : form}
+        {fieldAbove || !mayChange ? null : form}
       </div>
       {removing === undefined ? null : (
         <ModalDialog

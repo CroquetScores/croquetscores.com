@@ -804,6 +804,7 @@ export const maori: Language = {
     "admin.people.otherwise": "Kāore i taea tērā.",
     "admin.managers.you": "Koe",
     "admin.managers.add": "Tāpiri kaiwhakahaere",
+    "admin.managers.email": "Īmēra ki ngā kaiwhakahaere",
     "admin.managers.none": "Kāore he kaiwhakahaere",
     "admin.managers.removeTitle": "Tangohia te kaiwhakahaere",
     "admin.managers.removeExplanation":

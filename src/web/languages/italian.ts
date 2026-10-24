@@ -857,6 +857,7 @@ export const italian: Language = {
     // Accanto al nome di chi legge tra gli organizzatori.
     "admin.managers.you": "Tu",
     "admin.managers.add": "Aggiungi organizzatore",
+    "admin.managers.email": "Scrivi agli organizzatori",
     // Non viene mai detto, perché un torneo ha sempre un organizzatore, ma una
     // lista dice qualcosa quando è vuota.
     "admin.managers.none": "Nessun organizzatore",

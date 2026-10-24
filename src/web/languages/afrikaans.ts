@@ -839,6 +839,7 @@ export const afrikaans: Language = {
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Jy",
     "admin.managers.add": "Voeg bestuurder by",
+    "admin.managers.email": "Stuur e-pos aan die bestuurders",
     // Never said, since a tournament always has a manager, but a list says
     // what it says when it is empty.
     "admin.managers.none": "Geen bestuurders nie",

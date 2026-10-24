@@ -3,6 +3,7 @@ import { strict as assert } from "node:assert";
 
 import {
   type ListedManager,
+  type ManagersListed,
   ManagersOfTournament,
 } from "../../../../../src/application/operations/tournaments/ManagersOfTournament.js";
 import type { SpecWorld } from "../../../../support/world.js";
@@ -17,14 +18,17 @@ import {
 // The managers answered, once the list was not refused: a step reading them
 // from a refused list would say nobody manages when the truth is that nobody
 // was told.
-const answered = (world: SpecWorld): readonly ListedManager[] => {
+const listed = (world: SpecWorld): ManagersListed => {
   assert.equal(
     world.failure,
     undefined,
     `The list was refused: ${String(world.failure)}`,
   );
-  return world.answer as readonly ListedManager[];
+  return world.answer as ManagersListed;
 };
+
+const answered = (world: SpecWorld): readonly ListedManager[] =>
+  listed(world).managers;
 
 const names = (world: SpecWorld): string[] =>
   answered(world).map(({ name }) => name);
@@ -116,5 +120,33 @@ Then(
   "the manager {string} is not answered as the reader",
   function (this: SpecWorld, name: string) {
     assert.equal(managerCalled(this, name).isReader, false);
+  },
+);
+
+Then(
+  "the manager {string} is answered with the email address {string}",
+  function (this: SpecWorld, name: string, emailAddress: string) {
+    assert.equal(managerCalled(this, name).emailAddress, emailAddress);
+  },
+);
+
+Then(
+  "the manager {string} is answered with no email address",
+  function (this: SpecWorld, name: string) {
+    assert.equal(managerCalled(this, name).emailAddress, undefined);
+  },
+);
+
+Then(
+  "the managers are answered as ones the reader may change",
+  function (this: SpecWorld) {
+    assert.equal(listed(this).mayChange, true);
+  },
+);
+
+Then(
+  "the managers are answered as ones the reader may not change",
+  function (this: SpecWorld) {
+    assert.equal(listed(this).mayChange, false);
   },
 );

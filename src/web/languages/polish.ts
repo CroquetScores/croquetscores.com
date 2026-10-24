@@ -756,6 +756,7 @@ export const polish: Language = {
     "admin.people.otherwise": "Tego nie udało się zrobić.",
     "admin.managers.you": "Ty",
     "admin.managers.add": "Dodaj organizatora",
+    "admin.managers.email": "Napisz do organizatorów",
     "admin.managers.none": "Brak organizatorów",
     "admin.managers.removeTitle": "Usuń organizatora",
     "admin.managers.removeExplanation":
