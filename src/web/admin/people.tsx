@@ -129,11 +129,19 @@ export const People = ({
           return people;
         }
         const code = await refusalOf(response);
-        if (current) setListRefused(code);
+        if (current) {
+          setListRefused(code);
+          // Nothing said now of what the reader may do, not what an earlier
+          // list said.
+          setChangeable(undefined);
+        }
         return undefined;
       })
       .catch(() => {
-        if (current) setListRefused("Unknown");
+        if (current) {
+          setListRefused("Unknown");
+          setChangeable(undefined);
+        }
         return undefined;
       })
       .then((people) => {

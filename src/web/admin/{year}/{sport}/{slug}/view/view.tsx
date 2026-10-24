@@ -45,6 +45,8 @@ interface Found {
   readonly part: "manager" | "scorer" | "rankingOfficer";
   /** Whether the reader may change its players' world ranking names. */
   readonly mayChangeWorldRankingNames: boolean;
+  /** Whether the reader may write to its managers, from the Managers tab. */
+  readonly mayWriteToManagers: boolean;
   /** Whether it is played by teams, which gives it other tabs. */
   readonly playedByTeams: boolean;
   /** Its sport, by its code, where it has world rankings, for its players' dialog. */
@@ -88,12 +90,14 @@ const offeredTo = ({
   part,
   playedByTeams,
   mayChangeWorldRankingNames,
+  mayWriteToManagers,
   countsTowardsWorldRankings,
 }: Pick<
   Found,
   | "part"
   | "playedByTeams"
   | "mayChangeWorldRankingNames"
+  | "mayWriteToManagers"
   | "countsTowardsWorldRankings"
 >): readonly Tab[] => {
   if (part === "manager") {
@@ -108,11 +112,8 @@ const offeredTo = ({
     : [];
   // The managers besides, to write to them, and to read and not change them
   // (managers-tab.feature): the one tab of the managers' an officer has,
-  // whether or not it scores. Only an officer may change world ranking names
-  // here, since a manager has been dealt with above.
-  const managers: readonly Tab[] = mayChangeWorldRankingNames
-    ? ["managers"]
-    : [];
+  // whether or not it scores.
+  const managers: readonly Tab[] = mayWriteToManagers ? ["managers"] : [];
   if (part === "rankingOfficer") return [...players, ...managers];
   return [playedByTeams ? "tests" : "competitions", ...players, ...managers];
 };

@@ -23,6 +23,12 @@ export interface TournamentAsPaged {
    */
   readonly mayChangeWorldRankingNames: boolean;
   /**
+   * Whether the reader may write to its managers, as an administrator and a
+   * world ranking officer of its sport may, and so is offered the Managers tab
+   * to do it from, whatever part it has in the tournament.
+   */
+  readonly mayWriteToManagers: boolean;
+  /**
    * Whether it is played by teams, which have tests where a Standard
    * tournament's players have competitions, and so other tabs.
    */
