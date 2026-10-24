@@ -469,6 +469,10 @@ export const chinese: Language = {
     "admin.tournaments.new": "新建赛事",
     "admin.tournaments.none": "没有赛事",
     "admin.tournaments.filter.none": "没有符合条件的赛事",
+    "admin.tournaments.show": "显示",
+    "admin.tournaments.managerScorer": "管理员/记分员",
+    "admin.tournaments.worldRanking": "世界排名",
+    "admin.tournaments.notWorldRanking": "非世界排名",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "已归档",
     "admin.tournaments.manage": "管理",

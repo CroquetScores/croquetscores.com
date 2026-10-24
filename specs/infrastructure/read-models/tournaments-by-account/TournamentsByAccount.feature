@@ -27,9 +27,9 @@ Feature: Finding the tournaments an account has a part in
   looks after, so they can be asked for together, in the same order and by the
   same year, a tournament's sport being the one its address says. Whether any
   of a tournament's competitions counts towards the world rankings is each
-  competition's to say (`competitionRules.feature`), and is not kept here, so
-  the officer is listed a tournament none of whose competitions counts too and
-  finds that out on its page.
+  competition's to say (`competitionRules.feature`). Every list says whether
+  the tournament counts, so that the officer can narrow theirs by it and is
+  not left to find out on each tournament's page.
 
   An account that administers the site is listed every tournament on the
   website, as a manager of each, since it may do to every one what a manager
@@ -507,6 +507,99 @@ Feature: Finding the tournaments an account has a part in
       And "Spring Open" is created by the account for "organiser@example.com"
       When the years of the account for "ranker@example.com" as a world ranking officer of association and golf croquet are looked for
       Then no year is found
+
+  Rule: A tournament is held as counting towards the world rankings when a competition in use does
+
+    A world ranking officer narrows its list by whether a tournament counts
+    towards the world rankings (`tournaments.feature`), and the list cannot
+    ask each tournament's competitions, so the read model keeps the answer.
+    Each competition says for itself, so one that counts makes the
+    tournament count, and one that is archived is out of use, so it does not
+    count for it until it is restored.
+
+    Scenario: A tournament with no competition does not count
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as not counting towards the world rankings
+
+    Scenario: A tournament with a competition that counts does
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: A tournament whose only competition does not count does not
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that does not count towards the world rankings
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as not counting towards the world rankings
+
+    Scenario: One competition that counts is enough
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that does not count towards the world rankings
+      And "Spring Open" has a block "Block B" that counts towards the world rankings
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: A competition changed to count makes the tournament count
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that does not count towards the world rankings
+      And the block "Block A" of "Spring Open" is changed to count towards the world rankings
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: A competition changed not to count stops the tournament counting
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      And the block "Block A" of "Spring Open" is changed not to count towards the world rankings
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as not counting towards the world rankings
+
+    Scenario: A competition archived stops the tournament counting
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      And the block "Block A" of "Spring Open" is archived
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as not counting towards the world rankings
+
+    Scenario: A competition restored makes the tournament count again
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      And the block "Block A" of "Spring Open" is archived
+      And the block "Block A" of "Spring Open" is restored
+      When the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: It is held for a world ranking officer's list too
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      When the tournaments of the account for "ranker@example.com" as a world ranking officer of association and golf croquet in 2026 are looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: It is held for an administrator's list too
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      When every tournament on "croquetscores.com" in 2026 is looked for
+      Then "Spring Open" is held as counting towards the world rankings
+
+    Scenario: It is held once the read model is rebuilt
+      Given a tournament "Spring Open" to start on "2026-10-03"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" has a block "Block A" that counts towards the world rankings
+      When the read model is rebuilt from the events
+      And the tournaments of the account for "organiser@example.com" in 2026 are looked for
+      Then it is rebuilt without failing
+      And "Spring Open" is held as counting towards the world rankings
 
   Rule: Projecting the same events again changes nothing
 

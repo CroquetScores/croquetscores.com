@@ -506,6 +506,10 @@ export const dutch: Language = {
     "admin.tournaments.new": "Nieuw toernooi",
     "admin.tournaments.none": "Geen toernooien",
     "admin.tournaments.filter.none": "Geen toernooien gevonden",
+    "admin.tournaments.show": "Tonen",
+    "admin.tournaments.managerScorer": "Leider/Scorebijhouder",
+    "admin.tournaments.worldRanking": "Wereldranglijst",
+    "admin.tournaments.notWorldRanking": "Niet wereldranglijst",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Gearchiveerd",
     "admin.tournaments.manage": "Beheren",

@@ -500,6 +500,10 @@ export const portuguese: Language = {
     "admin.tournaments.new": "Novo torneio",
     "admin.tournaments.none": "Nenhum torneio",
     "admin.tournaments.filter.none": "Nenhum torneio corresponde",
+    "admin.tournaments.show": "Mostrar",
+    "admin.tournaments.managerScorer": "Gestor/Marcador",
+    "admin.tournaments.worldRanking": "Ranking mundial",
+    "admin.tournaments.notWorldRanking": "Fora do ranking mundial",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Arquivado",
     "admin.tournaments.manage": "Gerenciar",

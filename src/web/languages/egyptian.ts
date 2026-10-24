@@ -463,6 +463,10 @@ export const egyptian: Language = {
     "admin.tournaments.new": "بطولة جديدة",
     "admin.tournaments.none": "مفيش بطولات",
     "admin.tournaments.filter.none": "مفيش بطولات مطابقة",
+    "admin.tournaments.show": "عرض",
+    "admin.tournaments.managerScorer": "مدير/مسجّل",
+    "admin.tournaments.worldRanking": "التصنيف العالمي",
+    "admin.tournaments.notWorldRanking": "خارج التصنيف العالمي",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "مؤرشفة",
     "admin.tournaments.manage": "إدارة",

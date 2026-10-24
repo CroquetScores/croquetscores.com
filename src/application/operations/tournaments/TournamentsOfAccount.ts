@@ -25,6 +25,11 @@ export interface TournamentOfAccount {
   /** The code of the region of that country it is played in, where it is in one. */
   readonly region: string | undefined;
   /**
+   * Whether any competition of it that is in use counts towards the world
+   * rankings, which a world ranking officer narrows its list by.
+   */
+  readonly worldRankings: boolean;
+  /**
    * The account's part in it: a manager's or a scorer's, or, for a world
    * ranking officer with no part in it, one whose players' world ranking
    * names it looks after.

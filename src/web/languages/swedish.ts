@@ -503,6 +503,10 @@ export const swedish: Language = {
     "admin.tournaments.new": "Ny turnering",
     "admin.tournaments.none": "Inga turneringar",
     "admin.tournaments.filter.none": "Inga turneringar matchar",
+    "admin.tournaments.show": "Visa",
+    "admin.tournaments.managerScorer": "Ansvarig/Poängräknare",
+    "admin.tournaments.worldRanking": "Världsranking",
+    "admin.tournaments.notWorldRanking": "Utanför världsrankingen",
     // Sägs till en skärmläsare, eftersom ett streck genom ett namn inte läses
     // upp.
     "admin.tournaments.archived": "Arkiverad",

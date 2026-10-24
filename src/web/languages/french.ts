@@ -506,6 +506,10 @@ export const french: Language = {
     "admin.tournaments.new": "Nouveau tournoi",
     "admin.tournaments.none": "Aucun tournoi",
     "admin.tournaments.filter.none": "Aucun tournoi ne correspond",
+    "admin.tournaments.show": "Afficher",
+    "admin.tournaments.managerScorer": "Responsable/Marqueur",
+    "admin.tournaments.worldRanking": "Classement mondial",
+    "admin.tournaments.notWorldRanking": "Hors classement mondial",
     // Said to a screen reader, since a line through a name is not read out.
     "admin.tournaments.archived": "Archivé",
     "admin.tournaments.manage": "Gérer",
