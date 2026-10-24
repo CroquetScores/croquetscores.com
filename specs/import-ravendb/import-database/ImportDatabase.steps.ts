@@ -10,6 +10,7 @@ import {
   aSiteKey,
   keepAccounts,
 } from "../../infrastructure/support/accounts.js";
+import type { KeptError } from "../../../src/import-ravendb/ImportDatabase.js";
 import { importDatabaseOf } from "../importing.js";
 
 // Read from where the migration runner reads them, so that a migration added
@@ -124,9 +125,12 @@ When("the errors kept are counted", async function (this: SpecWorld) {
   counted.set(this, await importDatabaseOf(this).errorCount());
 });
 
-Then("{int} errors are counted", function (this: SpecWorld, count: number) {
-  assert.equal(counted.get(this), count);
-});
+Then(
+  /^(\d+) errors? (?:is|are) counted$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(counted.get(this), Number(count));
+  },
+);
 
 Given(
   "{string} on {string} is kept as an account at {string}",
@@ -280,3 +284,68 @@ Then(
 Then("no account imported is found", function (this: SpecWorld) {
   assert.equal(keptOf(this).lookedFor, undefined);
 });
+
+// Whoever asked to be told of each error kept, and what they were told.
+const told = new WeakMap<SpecWorld, KeptError[]>();
+
+const toldOf = (world: SpecWorld): KeptError[] => {
+  const found = told.get(world);
+  assert.ok(found !== undefined, "Nobody asked to be told.");
+  return found;
+};
+
+Given("someone asks to be told of each error kept", function (this: SpecWorld) {
+  const heard: KeptError[] = [];
+  told.set(this, heard);
+  importDatabaseOf(this).afterErrorKept((error) => {
+    heard.push(error);
+    return Promise.resolve();
+  });
+});
+
+Then(
+  /^they were told of (\d+) errors?$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(toldOf(this).length, Number(count));
+  },
+);
+
+Then(
+  "they were told of an error for {string}",
+  function (this: SpecWorld, documentId: string) {
+    assert.equal(toldOf(this)[0]?.documentId, documentId);
+  },
+);
+
+Then(
+  "they were told of an error saying {string}",
+  function (this: SpecWorld, message: string) {
+    assert.equal(toldOf(this)[0]?.message, message);
+  },
+);
+
+Then(
+  "they were told of an error said for a person as {string}",
+  function (this: SpecWorld, summary: string) {
+    assert.equal(toldOf(this)[0]?.summary, summary);
+  },
+);
+
+Then(
+  "they were told of an error at {string} on the new site and {string} on the old site",
+  function (this: SpecWorld, newSite: string, oldSite: string) {
+    const of = toldOf(this)[0]?.of;
+    assert.equal(of?.newSitePath, newSite);
+    assert.equal(of?.oldSitePath, oldSite);
+  },
+);
+
+Then(
+  "they were told of {string} and then of {string}",
+  function (this: SpecWorld, first: string, second: string) {
+    assert.deepEqual(
+      toldOf(this).map(({ documentId }) => documentId),
+      [first, second],
+    );
+  },
+);

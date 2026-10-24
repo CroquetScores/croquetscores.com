@@ -1,6 +1,3 @@
-import { appendFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
-
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import type { ErrorOf, ImportErrors } from "./ImportDatabase.js";
@@ -14,7 +11,6 @@ import {
 } from "./errorSummaries.js";
 import { describedFailure } from "./ImportRefused.js";
 import type { Game as OldGame } from "./ravendb-models/Competition.js";
-import { numbers } from "./runImporter.js";
 
 /**
  * What the import accepted of one document rather than keeping it as an
@@ -43,148 +39,10 @@ export interface Accepted {
   readonly description: string;
 }
 
-/** Where what the import accepted is said (AcceptedImportErrors.feature). */
+/** Where what the import accepted is said (ImportFiles.feature). */
 export interface AcceptedImportErrors {
   accept(accepted: Accepted): Promise<void>;
 }
-
-/**
- * What a file of what the import said is headed, what it counts what it says
- * as, and what it says it holds.
- */
-export interface Saying {
-  readonly title: string;
-  /** As "accepted import errors", after a number. */
-  readonly counted: string;
-  readonly about: string;
-}
-
-/** The file of errors the import accepted rather than keeping. */
-export const ACCEPTED: Saying = {
-  title: "Accepted import errors",
-  counted: "accepted import errors",
-  about:
-    "What the last import accepted from the old sites rather than keeping " +
-    "as an error, each with where it is on the new site and the old.",
-};
-
-/**
- * The file of what the import corrected of what the old sites kept, as a
- * team match's expected matches where its games say more.
- */
-export const CORRECTED: Saying = {
-  title: "Import corrections",
-  counted: "import corrections",
-  about:
-    "What the last import corrected of what the old sites kept, each with " +
-    "where it is on the new site and the old.",
-};
-
-/**
- * Says what the import accepts in a Markdown file, each under a heading of its
- * code and its document, with the document's whole address on the new site,
- * at `newSite`, and on the old site it was on, written out rather than as
- * links, and what was accepted said for a person. The import begins by
- * emptying it, so that the file says only what the last import accepted.
- * Written as each is accepted rather than once importing is finished, so that
- * an import that stops partway through still says what it accepted before it
- * stopped.
- *
- * It begins by saying when the import began, by the machine's own clock, and
- * how many errors and things accepted the import before kept, counted before
- * either is emptied, and ends by saying how many this one kept, so that one
- * import can be held against the last.
- *
- * What the import corrected is said in a file of its own the same way, headed
- * and counted as `saying` says.
- */
-export class AcceptedImportErrorsFile implements AcceptedImportErrors {
-  #accepted = 0;
-
-  constructor(
-    private readonly path: string,
-    private readonly newSite: string,
-    private readonly saying: Saying = ACCEPTED,
-  ) {}
-
-  /**
-   * Deletes what the last import said, and begins the file again, saying
-   * that it began `at`, and that the last import kept `errorsBefore` errors,
-   * or that they could not be counted.
-   */
-  async begin(at: Date, errorsBefore: number | undefined): Promise<void> {
-    const acceptedBefore = await this.#acceptedInFile();
-    this.#accepted = 0;
-    await rm(this.path, { force: true });
-    await mkdir(dirname(this.path), { recursive: true });
-    const { title, counted: noun, about } = this.saying;
-    await writeFile(
-      this.path,
-      `# ${title}\n\n` +
-        `Import began ${at.toLocaleString()}.\n\n` +
-        `Previous import: ${counted(errorsBefore)} import errors, ${counted(acceptedBefore)} ${noun}.\n\n` +
-        `${about} Written by \`npm run import:ravendb\`, which deletes it first.\n\n`,
-    );
-  }
-
-  /**
-   * Ends the file, saying that this import kept `errors` errors. What it
-   * follows ends with a blank line already.
-   */
-  async end(errors: number): Promise<void> {
-    await this.#putInOrder();
-    await appendFile(
-      this.path,
-      `This import: ${counted(errors)} import errors, ${counted(this.#accepted)} ${this.saying.counted}.\n`,
-    );
-  }
-
-  async accept(accepted: Accepted): Promise<void> {
-    this.#accepted += 1;
-    const what = accepted.what === "" ? "" : ` ${accepted.what}`;
-    await appendFile(
-      this.path,
-      `## ${accepted.code}: ${accepted.documentId}${what}\n\n` +
-        `New site: ${accepted.newSitePath === undefined ? "not brought over" : `${this.newSite}/${accepted.newSitePath}`}\n` +
-        `Old site: https://${accepted.website}/${accepted.oldSitePath}\n\n` +
-        `${accepted.description}\n\n`,
-    );
-  }
-
-  // The file with what it says in order of the code each is said under, so
-  // that all of one kind are together, and those of one code in the order they
-  // were found (a sort that keeps the order of equals).
-  async #putInOrder(): Promise<void> {
-    const said = await readFile(this.path, "utf8");
-    const [header = "", ...entries] = said.split(/^(?=## )/m);
-    const codeOf = (entry: string): string =>
-      /^## ([^:\n]*)/.exec(entry)?.[1] ?? "";
-    entries.sort((one, other) => {
-      const first = codeOf(one);
-      const second = codeOf(other);
-      return first < second ? -1 : first > second ? 1 : 0;
-    });
-    await writeFile(this.path, header + entries.join(""));
-  }
-
-  // How many things the file says were accepted, a heading each, or a line
-  // each as the file was written before, or nothing where there is no file
-  // to count.
-  async #acceptedInFile(): Promise<number | undefined> {
-    try {
-      const said = await readFile(this.path, "utf8");
-      return said
-        .split("\n")
-        .filter((line) => line.startsWith("## ") || line.startsWith("- ["))
-        .length;
-    } catch {
-      return undefined;
-    }
-  }
-}
-
-const counted = (count: number | undefined): string =>
-  count === undefined ? "uncounted" : numbers.format(count);
 
 /**
  * An error that has been looked at and accepted: the old site's, not wrong,

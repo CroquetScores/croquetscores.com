@@ -26,7 +26,7 @@ Feature: Importing the old sites' knockouts
   put as their games say they were drawn, each first against whoever they
   first played, and each round's winner against whoever they played next,
   those who played nobody against a bye. That is said as corrected
-  (`AcceptedImportErrors.feature`). A knockout with more players than places
+  (`ImportFiles.feature`). A knockout with more players than places
   is left behind without an error: there is nothing a person could put
   right in it that the import could then bring over.
 
@@ -630,7 +630,7 @@ Feature: Importing the old sites' knockouts
     for croquetscores.com's knockouts/10088, whose games the site refuses as
     between players not drawn to meet. An error is accepted for one document and one
     refusal's code, whichever of the document's games it names, and is said
-    with the tournament it is of (`AcceptedImportErrors.feature`) rather than
+    with the tournament it is of (`ImportFiles.feature`) rather than
     kept among the import's errors. An error of another document is kept as
     any is.
 
@@ -1066,7 +1066,7 @@ Feature: Importing the old sites' knockouts
     game and plays none from then on, that player is withdrawn, which gives
     the match to their opponent (`withdrawPlayer.feature`), and the game is
     added after all. That is said as corrected
-    (`AcceptedImportErrors.feature`). Whoever plays on, later in the order
+    (`ImportFiles.feature`). Whoever plays on, later in the order
     the games are added, gave no walkover, and the game is refused as it
     always was.
 

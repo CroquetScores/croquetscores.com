@@ -170,7 +170,7 @@ export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
     private readonly unitOfWork: UnitOfWork,
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly database: ImportDatabase,
-    /** Where what the import corrected is said (AcceptedImportErrors.feature). */
+    /** Where what the import corrected is said (ImportFiles.feature). */
     private readonly correcting: AcceptedImportErrors,
   ) {}
 

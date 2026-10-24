@@ -197,7 +197,7 @@ Feature: Importing one of the old sites' competitions
     finds the one player. One named as a bye is kept as the bye. That is not
     an error, since nothing was lost, and is said as corrected, with where it
     is on the new site and the old, in the file of import corrections
-    (`AcceptedImportErrors.feature`), and not said as accepted. A player the
+    (`ImportFiles.feature`), and not said as accepted. A player the
     site refuses is kept as an error naming them, and the rest are entered.
 
     Scenario: A player the tournament did not list is entered in the competition
@@ -389,7 +389,7 @@ Feature: Importing one of the old sites' competitions
     against it through without a game. So a game against a bye is left out,
     whichever kind of competition it is in, and said as corrected, with
     where it is on the new site and the old, in the file of import
-    corrections (`AcceptedImportErrors.feature`), rather than kept as an
+    corrections (`ImportFiles.feature`), rather than kept as an
     error or said as accepted. The other games are added as they were.
 
     Scenario: A game against a bye in a block is not added
@@ -582,7 +582,7 @@ Feature: Importing one of the old sites' competitions
     lost, and the winner never went on. A loser's 0 marked so, against a
     winner's score that is not, has its "W" written "w/o", as "0w/o", which
     is no mark, and the game is added. That is said as corrected
-    (`AcceptedImportErrors.feature`). A loser's score of more than 0 marked
+    (`ImportFiles.feature`). A loser's score of more than 0 marked
     so, or one against a winner's that is marked too, is refused as it
     always was.
 
@@ -654,7 +654,7 @@ Feature: Importing one of the old sites' competitions
     points, where the score is no more than its digits. One with both marked
     is won by whoever the old site said, and the loser's mark is taken off,
     as "6w" against "6". That is said
-    as corrected (`AcceptedImportErrors.feature`), and
+    as corrected (`ImportFiles.feature`), and
     everything worked out from who won, as a knockout's draw, is worked out
     from who won by the scores (`ImportKnockouts.feature`).
 
@@ -862,7 +862,7 @@ Feature: Importing one of the old sites' competitions
     for: a score's points are the number it begins with, so "3.5" against "3"
     was a game won on equal points. A score written with a fraction that is
     more than nothing is rounded up to the next whole number, as "3.5" to
-    "4", and said as corrected (`AcceptedImportErrors.feature`). What follows
+    "4", and said as corrected (`ImportFiles.feature`). What follows
     it is kept.
 
     Scenario: A winner's half point is rounded up
@@ -937,7 +937,7 @@ Feature: Importing one of the old sites' competitions
     mark, as "5 w (5)" against "5": the mark and the count in brackets are
     taken off, leaving the points, and the game is then a game on equal
     points won by whoever the old site said, as the rule above says. That is
-    said as corrected (`AcceptedImportErrors.feature`).
+    said as corrected (`ImportFiles.feature`).
 
     Scenario: A winner's mark with a count in brackets is a game won on equal points
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -1000,7 +1000,7 @@ Feature: Importing one of the old sites' competitions
     very same scores, as a scorer saving what they had already saved. Where
     the second would be refused because the two players' match was already
     decided (`addGame.feature`), it is left out, and that is not an error.
-    Said as corrected (`AcceptedImportErrors.feature`). Where it would not,
+    Said as corrected (`ImportFiles.feature`). Where it would not,
     two games are two games, as two matches of the best of 5 can have the
     same scores. A game with other scores is not the same game, and is
     refused as it always was, and one won by the other player with the same
@@ -1190,7 +1190,7 @@ Feature: Importing one of the old sites' competitions
     line for each game, who beat whom with each one's team or club and score,
     and why it could not be added, in words for a reader of the tournament
     rather than for whoever reads the import. It is said as corrected
-    (`AcceptedImportErrors.feature`), for each game and once for the
+    (`ImportFiles.feature`), for each game and once for the
     competition, and is not kept as an error. It is done only where a user was
     brought over as croquetscores@gmail.com, and only for a game that was
     refused: one put right, left out as a duplicate or against a bye is not.
