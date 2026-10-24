@@ -40,23 +40,24 @@ export class ManagersOfTournamentHandler extends QueryHandler<
     if (!mayChange && !mayWrite) {
       throw new TournamentRefused(
         "Tournament.NotAManager",
-        "Only a manager of the tournament can ask for this.",
+        "Only a manager of the tournament, an administrator or a world ranking officer of its sport can ask for this.",
       );
     }
+    // The accounts are loaded again only for their addresses, which only those
+    // who write to the managers are told.
     const managers: ListedManager[] = [];
     for (const { id, name } of await namesOf(
       this.accounts,
       tournament.managers,
     )) {
-      const account = await this.accounts.load(id);
+      const emailAddress = mayWrite
+        ? (await this.accounts.load(id))?.emailAddress.toString()
+        : undefined;
       managers.push({
         id: id.value,
         name,
         isReader: id.equals(by),
-        // Only to those who write to them: no other reader is shown another's.
-        ...(mayWrite && account !== undefined
-          ? { emailAddress: account.emailAddress.toString() }
-          : {}),
+        ...(emailAddress === undefined ? {} : { emailAddress }),
       });
     }
     return { managers, mayChange };

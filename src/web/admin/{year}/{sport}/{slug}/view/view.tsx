@@ -107,9 +107,14 @@ const offeredTo = ({
     ? [playedByTeams ? "teams" : "players"]
     : [];
   // The managers besides, to write to them, and to read and not change them
-  // (managers-tab.feature): the one tab of the managers' an officer has.
-  if (part === "rankingOfficer") return [...players, "managers"];
-  return [playedByTeams ? "tests" : "competitions", ...players];
+  // (managers-tab.feature): the one tab of the managers' an officer has,
+  // whether or not it scores. Only an officer may change world ranking names
+  // here, since a manager has been dealt with above.
+  const managers: readonly Tab[] = mayChangeWorldRankingNames
+    ? ["managers"]
+    : [];
+  if (part === "rankingOfficer") return [...players, ...managers];
+  return [playedByTeams ? "tests" : "competitions", ...players, ...managers];
 };
 
 // The part a reader has in the competitions and tests, which a world ranking

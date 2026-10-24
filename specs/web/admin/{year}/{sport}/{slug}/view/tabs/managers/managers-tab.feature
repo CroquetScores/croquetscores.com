@@ -263,7 +263,8 @@ Feature: The managers tab of a tournament's page
     A world ranking officer has no part in the tournament, so it cannot make
     anybody a manager or take one off. Its tab has the list and the link, and
     no field for an email address and no Remove. That is so of one that is
-    neither a manager nor an administrator: an administrator may do anything to
+    neither a manager nor an administrator, whether or not it scores the
+    tournament: an administrator may do anything to
     a tournament, so one that is an officer as well has the whole tab.
 
     Scenario: A world ranking officer is listed the managers
@@ -287,6 +288,22 @@ Feature: The managers tab of a tournament's page
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the managers of "Spring Open" are opened
       Then the manager "Sam Someone" does not offer "Remove"
+
+    Scenario: A world ranking officer who scores the tournament is offered the link
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab offers the link "Email Managers"
+
+    Scenario: A world ranking officer who scores the tournament is not offered the field
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the managers of "Spring Open" are opened
+      Then the tab does not ask for "Email address"
 
     Scenario: An administrator who is also a world ranking officer is offered the field
       Given "admin@example.com" has an account, confirmed, with the password "another horse battery staple"

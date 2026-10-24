@@ -83,10 +83,14 @@ export const People = ({
   above,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Person[] | undefined>();
-  // Whether the reader may give the part and take it away. The API says it
-  // only of a list that is read by somebody who may not, as a world ranking
-  // officer reads a tournament's managers, so it is taken to be so otherwise.
-  const [mayChange, setMayChange] = useState(true);
+  // Whether the reader may give the part and take it away, if the list has
+  // said. A field and a Remove are not drawn until the list is answered, which
+  // would show them to a reader who may not, such as a world ranking officer
+  // reading a tournament's managers. After it they are drawn unless it said
+  // the reader may not: a list that failed has said nothing, and the reader
+  // can still try (managers-tab.feature), and the API says it only of a list
+  // read by somebody who may not.
+  const [changeable, setChangeable] = useState<boolean | undefined>();
   // Counted up to ask again, once somebody is given the part or has it taken.
   const [asking, setAsking] = useState(0);
   const [answered, setAnswered] = useState<number | undefined>();
@@ -109,6 +113,7 @@ export const People = ({
   const adding = useRef(false);
   const field = useRef<HTMLInputElement>(null);
   const headingId = `${name}-heading`;
+  const mayChange = answered !== undefined && changeable !== false;
 
   useEffect(() => {
     let current = true;
@@ -119,7 +124,7 @@ export const People = ({
           const people = answer[listedUnder] as Person[];
           if (current) {
             setListRefused(undefined);
-            setMayChange(answer.mayChange !== false);
+            setChangeable(answer.mayChange !== false);
           }
           return people;
         }
