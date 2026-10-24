@@ -34,6 +34,16 @@ export interface TournamentDocuments {
   load(id: string): Promise<object | undefined>;
 }
 
+/**
+ * The days the import was asked for the tournaments of (importArguments.feature):
+ * those that started on the first day or after it and on the last day or
+ * before it, each as year-month-day. A day left out leaves that end open.
+ */
+export interface DaysAskedFor {
+  readonly from?: string | undefined;
+  readonly to?: string | undefined;
+}
+
 /** What brings over a tournament, and each kind of document that names one. */
 export interface TournamentParts {
   readonly tournament: Importer<OldTournament>;
@@ -274,10 +284,26 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly seeNotes?: SeeNotes,
     /** What says, in a note, each document of a tournament that was refused. */
     private readonly importErrors?: ImportErrorsNote,
+    /** Only the tournaments that started within these days are brought over. */
+    private readonly days: DaysAskedFor = {},
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
     const { website, id, document } = read;
+    // Left behind with everything that names it, as an archived one is, and
+    // kept as read for the same reason: nothing went wrong, and RefuseLeftOvers
+    // would otherwise take what names it for the document of a tournament the
+    // old site no longer had. The day is as the old site wrote it, which is
+    // the day the tournament was held and not a moment, and so is read without
+    // the time zone the tournament is brought over in.
+    const started = document.Start.slice(0, 10);
+    if (
+      (this.days.from !== undefined && started < this.days.from) ||
+      (this.days.to !== undefined && started > this.days.to)
+    ) {
+      await this.database.recordTournamentRead(website, id);
+      return;
+    }
     // Left behind with everything that names it, as an archived one is: one
     // that lists no competition was started on the old sites and never
     // played, whatever names it.
