@@ -212,6 +212,9 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   // only they have more than their own to narrow. Decided from the whole
   // list, so that turning every kind off does not take the toggles away.
   const officer = (listed ?? []).some((each) => each.part === "rankingOfficer");
+  // Whether there is a list to narrow: the toggles beside New Tournament and
+  // the filter beneath it are drawn for one and for no other.
+  const hasList = listed !== undefined && listed.length > 0;
   const shown = shownIn(search);
   const shownList = (listed ?? []).filter(
     (each) =>
@@ -457,7 +460,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
               >
                 {say("admin.tournaments.new")}
               </a>
-              {officer && listed !== undefined && listed.length > 0 ? (
+              {officer && hasList ? (
                 <span
                   className="tournaments-toggles"
                   role="group"
@@ -488,7 +491,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                 </span>
               ) : null}
             </div>
-            {listed === undefined || listed.length === 0 ? null : (
+            {hasList ? (
               <form
                 className="tournament-filter"
                 onSubmit={(event) => {
@@ -533,7 +536,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   },
                 )}
               </form>
-            )}
+            ) : null}
             {listed === undefined ? null : listed.length === 0 ? (
               <p className="tournaments-none">
                 {say("admin.tournaments.none")}
