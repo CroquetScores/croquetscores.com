@@ -96,8 +96,8 @@ class StoppedBeforeRankings extends Error {}
 // Who holds each of the site's roles, by the addresses their users had on the
 // old sites (GiveRoles.feature).
 const ROLE_HOLDERS: RoleHolders = {
-  administrator: ["tim@26tp.com", "croquetscores@gmail.com"],
-  "ac-world-ranking-officer": ["chris@butedock.com"],
+  administrator: ["tim@26tp.com"],
+  "ac-world-ranking-officer": ["chris@butedock.com", "croquetscores@gmail.com"],
   "gc-world-ranking-officer": [
     "richard.bilton30@talktalk.net",
     "pfreer@netspeed.com.au",
