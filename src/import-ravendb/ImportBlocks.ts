@@ -105,10 +105,42 @@ const NAMED_TOURNAMENTS: ReadonlyMap<
 ]);
 
 /**
- * Whether every pair of the `players` of a block played exactly `bestOf`
- * games of `games` between them, and no pair or player more: the block was
- * played in rounds of single games, whatever it was kept as the best of
- * (ImportBlocks.feature).
+ * Whether the games `pair` played, in the order the old site numbered them,
+ * would have a match of the best of `bestOf` decided before the last of them:
+ * one of the two ahead by more than the games left to play, as the site
+ * decides a match (matchesBetween.ts). A game after that would be refused,
+ * which is why a block kept as the best of 3 with a pair's games won 2-0 and
+ * then 1-0 has to be played in rounds. A pair whose last game is the one that
+ * decides their match needs nothing done.
+ */
+const decidedBeforeTheLast = (
+  pair: readonly Game[],
+  bestOf: number,
+): boolean => {
+  const ordered = [...pair].sort((one, other) => one.Id - other.Id);
+  const first = ordered[0];
+  if (first === undefined) return false;
+  let ahead = 0;
+  for (const [index, game] of ordered.entries()) {
+    if (index === ordered.length - 1) break;
+    if (game.Winner.PlayerId === first.Winner.PlayerId) ahead += 1;
+    const played = index + 1;
+    const behind = played - ahead;
+    const left = bestOf - played;
+    if (ahead > behind + left || behind > ahead + left) return true;
+  }
+  return false;
+};
+
+/**
+ * Whether the block was played in rounds of single games, whatever it was
+ * kept as the best of: every pair of the `players` played exactly `bestOf`
+ * games between them, and no pair or player more, and some pair's match of
+ * that best-of would have been decided before their last game, so that a
+ * block kept as it was would refuse that game (ImportBlocks.feature). Where
+ * every pair's last game is the one that decides their match, as with the
+ * best of 2 and two games each, the block is kept as it was kept: all the
+ * players played the same number of games, and nothing needs changing.
  */
 const playedInRounds = (
   players: readonly number[],
@@ -116,24 +148,25 @@ const playedInRounds = (
   bestOf: number,
 ): boolean => {
   if (bestOf <= 1 || players.length < 2) return false;
-  const between = new Map<string, number>();
+  const between = new Map<string, Game[]>();
   for (const game of games) {
     const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
       .sort((one, other) => one - other)
       .join(" ");
-    between.set(pair, (between.get(pair) ?? 0) + 1);
+    between.set(pair, [...(between.get(pair) ?? []), game]);
   }
   const pairs = (players.length * (players.length - 1)) / 2;
   return (
     between.size === pairs &&
-    [...between.values()].every((count) => count === bestOf) &&
+    [...between.values()].every((played) => played.length === bestOf) &&
     players.every((one) =>
       players.every(
         (other) =>
           one === other ||
-          between.has([one, other].sort((a, b) => a - b).join(" ")),
+          between.has([one, other].sort((x, y) => x - y).join(" ")),
       ),
-    )
+    ) &&
+    [...between.values()].some((played) => decidedBeforeTheLast(played, bestOf))
   );
 };
 

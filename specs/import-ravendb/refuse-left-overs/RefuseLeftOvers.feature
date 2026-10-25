@@ -39,7 +39,6 @@ Feature: Finding whatever names a tournament that was never there
 
       Examples:
         | kind       | document             |
-        | players    | tournamentplayers/40 |
         | block      | blocks/30            |
         | knockout   | knockouts/30         |
         | Swiss      | swisses/30           |

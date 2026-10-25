@@ -54,7 +54,6 @@ When(
       },
     };
     const collections = [
-      importers.players,
       importers.blocks,
       importers.knockouts,
       importers.swisses,

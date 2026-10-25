@@ -2,17 +2,18 @@
 Feature: Importing each of the old sites' tournaments with everything that names it
 
   The old sites kept a tournament as a document, and everything of it as
-  documents of their own that name it: its players in one, each block,
-  knockout, Swiss and team match in another, and each commentary in
-  another. A tournament is brought over whole: its own document is read,
-  then every document that names it, and the tournament is brought over,
-  then its players, then its competitions, then its commentaries. Its
-  competitions are added in the order it listed them, so that nothing has
-  to be put in order afterwards.
+  documents of their own that name it: each block, knockout, Swiss and team
+  match in one, and each commentary in another. They kept its players in a
+  document too, which the import does not read: each competition lists the
+  players it was played by, and a tournament's own list of players was copied
+  into them and not kept in step (`importCompetition.feature`). A tournament
+  is brought over whole: its own document is read, then every document that
+  names it, and the tournament is brought over, then its competitions, each
+  with its players, then its commentaries. Its competitions are added in the
+  order it listed them, so that nothing has to be put in order afterwards.
 
   What is brought over of each document is said where it always was: the
-  tournament in `ImportTournaments.feature`, its players in
-  `ImportTournamentPlayers.feature`, a competition in
+  tournament in `ImportTournaments.feature`, a competition and its players in
   `importCompetition.feature` and the feature of its kind, a team match in
   `ImportTeamMatches.feature`, a commentary in `ImportCommentaries.feature`.
   What is said here is which documents are a tournament's, the order they go
@@ -38,12 +39,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
     And a tournament "tournaments/12" on "croquetscores.com"
 
   Rule: Everything that names a tournament is brought over with it
-
-    Scenario: The tournament's players are brought over
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 7 is called "Sam Someone"
-      When the tournament is imported
-      Then player 7 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone"
 
     Scenario Outline: A block or a Swiss that names the tournament is brought over
       Given the <kind> "<document>" of "tournaments/12" on "croquetscores.com"
@@ -97,18 +92,16 @@ Feature: Importing each of the old sites' tournaments with everything that names
 
   Rule: A player represents what a competition says they represent
 
-    The old sites kept what a player represented in the tournament's players
-    and again in each competition the player was in, and the two were not
-    kept in step: a player could represent nothing in the first and a club in
-    the second. The site keeps it once, with the tournament's player. Where a
-    competition says what a player represents, that is what they represent,
-    over what the tournament's players said, since it is the later of the two
-    to have been written down. A competition that says nothing leaves it as
-    it was.
+    The old sites kept what a player represented in each competition the
+    player was in, and the copies were not kept in step. The site keeps it
+    once, with the tournament's player, and the tournament's own list of
+    players is not read (`importCompetition.feature`). A player who
+    represents nothing takes what a competition says they represent. A
+    competition that says nothing leaves it as it was.
 
     Where two competitions say different things, the first of them, in the
     order the tournament listed them, is used and the second is said as
-    corrected, so that whoever reads the import's report can see that the
+    corrected, so that whoever reads the import's files can see that the
     old site did not agree with itself.
 
     This is for a tournament not played by teams. A tournament played by
@@ -124,26 +117,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And player 1 represents "Canterbury"
       When the tournament is imported
       Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
-
-    Scenario: A competition says over what the tournament's players said
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      And player 1 represents "Otago"
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 1 is in the competition
-      And player 1 represents "Canterbury"
-      When the tournament is imported
-      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
-
-    Scenario: A competition that says nothing leaves what the tournament's players said
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      And player 1 represents "Otago"
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 1 is in the competition
-      And player 1 represents nothing
-      When the tournament is imported
-      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Otago"
 
     Scenario: The flag follows what a competition says
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
@@ -2108,12 +2081,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       When the tournament is imported
       Then the error kept for "croquetscores.com/blocks/30" says "ImportWholeTournaments.TournamentRefused"
-
-    Scenario: The players of a refused tournament are kept as an error
-      Given the tournament is in the sport "XX"
-      And the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      When the tournament is imported
-      Then the error kept for "croquetscores.com/tournamentplayers/40" says "ImportWholeTournaments.TournamentRefused"
 
     Scenario: An archived competition of a refused tournament is not an error
       Given the tournament is in the sport "XX"

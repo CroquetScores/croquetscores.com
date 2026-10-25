@@ -132,20 +132,3 @@ Then(
     );
   },
 );
-
-Then(
-  "player {int} of {string} on {string} is kept as {string}",
-  async function (
-    this: SpecWorld,
-    number: number,
-    id: string,
-    website: string,
-    name: string,
-  ) {
-    const kept = await importDatabaseOf(this).findPlayerOf(website, id, number);
-    assert.ok(kept !== undefined, `Player ${String(number)} is not kept.`);
-    const tournament = await tournamentKeptFor(this, id, website);
-    const player = tournament.players.find((each) => each.id.value === kept);
-    assert.equal(player?.name.toString(), name);
-  },
-);

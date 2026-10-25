@@ -5,18 +5,13 @@ import { TournamentPlayerId } from "../domain/aggregates/tournaments/primitives/
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
-import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-import { type AcceptedImportErrors, errorOf } from "./AcceptedImportErrors.js";
-import { describedFailure } from "./ImportRefused.js";
 import {
   nameToImport,
   numberedApart,
   worldRankingNameToImport,
 } from "./names.js";
 import { oldFlagOf } from "./oldSites.js";
-import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
-import type { Importer, ReadDocument } from "./runImporter.js";
 import { isNamedBye } from "../domain/aggregates/tournaments/isNamedBye.js";
 
 /**
@@ -152,91 +147,3 @@ export const tournamentBecome = async (
   }
   return tournament;
 };
-
-/**
- * Adds each player of the old sites' tournaments to the tournament it became,
- * in the order the document lists them, and keeps what each became, by the
- * number the old sites gave them (ImportTournamentPlayers.feature).
- *
- * A player the site refuses is kept as an error naming them, and the rest are
- * added all the same. The bye is kept as a bye, for a knockout to find. A
- * tournament played by teams has no players of its own, so its players are
- * left for its team matches.
- */
-export class ImportTournamentPlayers implements Importer<TournamentPlayers> {
-  readonly collection = "TournamentPlayers";
-
-  constructor(
-    private readonly unitOfWork: UnitOfWork,
-    private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
-    private readonly database: ImportDatabase,
-    /** Where what the import corrected is said (ImportFiles.feature). */
-    private readonly correcting: AcceptedImportErrors,
-  ) {}
-
-  async importDocument({
-    website,
-    id,
-    document,
-  }: ReadDocument<TournamentPlayers>): Promise<void> {
-    await this.unitOfWork.inTransaction(async () => {
-      const tournamentDocument = document.Tournament.Id;
-      const tournament = await tournamentBecome(
-        this.database,
-        this.tournaments,
-        website,
-        tournamentDocument,
-      );
-      if (tournament.format.isTeamFormat) return;
-
-      const { by, at } = firstManagerOf(tournament);
-      const added: { readonly number: number; readonly id: string }[] = [];
-
-      for (const player of document._Players) {
-        if (isOldBye(player.Name)) {
-          added.push({
-            number: player._Id,
-            id: TournamentPlayerId.bye().value,
-          });
-          continue;
-        }
-        try {
-          const listedAgain = playerNamed(tournament, player.Name);
-          const playerId = addOldPlayer(tournament, player, by, at);
-          added.push({ number: player._Id, id: playerId.value });
-          // One person listed twice is brought over once, which is said, since
-          // what the second was is not kept: what they represented, and their
-          // flag.
-          if (listedAgain !== undefined) {
-            const where = errorOf(tournament);
-            await this.correcting.accept({
-              documentId: `${website}/${id}`,
-              website,
-              newSitePath: where.newSitePath,
-              oldSitePath: where.oldSitePath,
-              what: `player ${String(player._Id)}`,
-              code: "ImportTournamentPlayers.PlayerListedAgain",
-              description: `Player ${player.Name.trim()} in ${tournament.name.toString()} has the name of a player the tournament already had, and is brought over as that player.`,
-            });
-          }
-        } catch (failure) {
-          await this.database.recordError(
-            `${website}/${id}`,
-            `player ${String(player._Id)}: ${describedFailure(failure)}`,
-            errorOf(tournament),
-          );
-        }
-      }
-
-      await this.tournaments.save(tournament);
-      for (const { number, id: playerId } of added) {
-        await this.database.recordImportedPlayer(
-          website,
-          tournamentDocument,
-          number,
-          playerId,
-        );
-      }
-    });
-  }
-}

@@ -33,7 +33,6 @@ import {
 import {
   addOldPlayer,
   flagOf,
-  playerNamed,
   isOldBye,
   firstManagerOf,
   tournamentBecome,
@@ -761,14 +760,16 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const bye = TournamentPlayerId.bye().value;
     const listed: Listed[] = [];
     const byes = new Set<number>();
-    // Each player the tournament's players no longer listed, brought over from
-    // the competition's own list, and kept by their number once the
-    // tournament is, so that every competition listing them finds the one
-    // player. One the site refuses is kept as an error once, here.
+    // Each player of the competition, brought over from the competition's own
+    // list by the number it gives them, which is the competition's own: the old
+    // sites copied a tournament's players into each competition and let a
+    // manager change the copy, so a number says nothing of who the same number
+    // is in another competition, and the tournament's own list of players is
+    // not read at all. A player of exactly the name one the tournament already
+    // has is that player (addOldPlayer), which is how a competition finds a
+    // player another brought over. One the site refuses is kept as an error
+    // once, here.
     const broughtOver = new Map<number, string>();
-    // Of them, the numbers of players the tournament had by the same name, which
-    // were not added again (addOldPlayer).
-    const listedAgain = new Set<number>();
     const refused = new Set<number>();
     // What this competition says each tournament player represents, by the
     // player, and the numbers it said otherwise of than an earlier competition
@@ -776,21 +777,13 @@ export const importCompetition = async <TDocument extends OldCompetition>(
     const representing = new Map<string, string>();
     const saidOtherwise = new Map<number, string>();
     for (const player of document.Players._Players) {
-      let became =
-        broughtOver.get(player._Id) ??
-        (await database.findPlayerOf(website, tournamentDocument, player._Id));
+      let became = broughtOver.get(player._Id);
       if (
         became === undefined &&
         !refused.has(player._Id) &&
         !tournament.format.isTeamFormat
       ) {
         try {
-          if (
-            !isOldBye(player.Name) &&
-            playerNamed(tournament, player.Name) !== undefined
-          ) {
-            listedAgain.add(player._Id);
-          }
           became = isOldBye(player.Name)
             ? bye
             : addOldPlayer(tournament, player, by, at).value;
@@ -896,27 +889,6 @@ export const importCompetition = async <TDocument extends OldCompetition>(
         `Player ${nameOfIn(document)(number)} in ${errors.place} represents ${said}, where an earlier competition said otherwise, and what the earlier one said is kept.`,
       );
     }
-    for (const [number, playerId] of broughtOver) {
-      await database.recordImportedPlayer(
-        website,
-        tournamentDocument,
-        number,
-        playerId,
-      );
-      if (listedAgain.has(number)) {
-        await errors.corrected(
-          `player ${String(number)}`,
-          "ImportCompetition.PlayerListedAgain",
-          `Player ${nameOfIn(document)(number)} in ${errors.place} has the name of a player the tournament already had, and is brought over as that player.`,
-        );
-        continue;
-      }
-      await errors.corrected(
-        `player ${String(number)}`,
-        "ImportCompetition.PlayerNotInTournament",
-        `Player ${nameOfIn(document)(number)} in ${errors.place} was brought over from the competition's own list, because the tournament's players no longer listed them.`,
-      );
-    }
 
     const competition = Competition.rebuiltFrom(competitionId, []);
     const told = toldOf(tournament, competitionId);
@@ -939,11 +911,7 @@ export const importCompetition = async <TDocument extends OldCompetition>(
       const { player } = entry;
       if (refused.has(player._Id)) continue;
       try {
-        const became = await database.findPlayerOf(
-          website,
-          tournamentDocument,
-          player._Id,
-        );
+        const became = broughtOver.get(player._Id);
         if (became === undefined) {
           throw new ImportRefused(
             "ImportCompetition.PlayerNotBroughtOver",

@@ -70,7 +70,6 @@ import { ImportErrorsNote } from "./ImportErrorsNote.js";
 import { ImportKnockouts } from "./ImportKnockouts.js";
 import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
-import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { WorldRankingEvents } from "./WorldRankingEvents.js";
 import { ImportUsers } from "./ImportUsers.js";
@@ -298,12 +297,6 @@ try {
       database,
       () => worldRankingEvents,
     ),
-    players: new ImportTournamentPlayers(
-      unitOfWork,
-      tournaments,
-      database,
-      correcting,
-    ),
     competitions: [
       new ImportBlocks(importing),
       new ImportKnockouts(importing),
@@ -319,11 +312,7 @@ try {
       commentariesByTournament,
     ),
   };
-  const leftOvers = [
-    parts.players,
-    ...parts.competitions,
-    parts.commentaries,
-  ].map(
+  const leftOvers = [...parts.competitions, parts.commentaries].map(
     ({ collection }) => new RefuseLeftOvers(collection, database, correcting),
   );
 
