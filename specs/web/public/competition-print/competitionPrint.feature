@@ -108,6 +108,11 @@ Feature: A competition's page can be printed
       And the page is laid out for the printer
       Then the results are printed
 
+    Scenario: Links are not underlined
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      And the page is laid out for the printer
+      Then no link is underlined
+
     Scenario: The site's bars are not printed
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       And the page is laid out for the printer

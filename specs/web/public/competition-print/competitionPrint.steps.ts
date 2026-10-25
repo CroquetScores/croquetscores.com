@@ -331,3 +331,25 @@ Then(
     assert.deepEqual(pieces, whole);
   },
 );
+
+interface Underlinable {
+  getComputedStyle(element: unknown): { readonly textDecorationLine: string };
+}
+
+// Every link of the page, whether or not it is on the paper, since a link
+// drawn in some place the printer is shown is one that is looked at.
+Then("no link is underlined", async function (this: SpecWorld) {
+  const links = this.browserPage.locator("main a");
+  assert.ok((await links.count()) > 0);
+  const lines = await links.evaluateAll((elements) =>
+    elements.map(
+      (element) =>
+        (globalThis as unknown as Underlinable).getComputedStyle(element)
+          .textDecorationLine,
+    ),
+  );
+  assert.deepEqual(
+    lines.filter((line) => line.includes("underline")),
+    [],
+  );
+});

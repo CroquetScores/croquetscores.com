@@ -3228,6 +3228,17 @@ a.player-name[data-withdrawn] {
     font-size: var(--text-2xl);
   }
 
+  /* A link on paper goes nowhere, and an underline under it only reads as
+     something to press. A withdrawn player's name keeps the line through it,
+     which says they withdrew (above). */
+  a {
+    text-decoration-line: none;
+  }
+
+  a.player-name[data-withdrawn] {
+    text-decoration-line: line-through;
+  }
+
   /* Everything on paper, not what fits a window. */
   .block-grid-scroll,
   .knockout-scroll,
