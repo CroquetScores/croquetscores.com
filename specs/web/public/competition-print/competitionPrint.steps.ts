@@ -18,12 +18,56 @@ const results = (world: SpecWorld): Locator =>
   );
 
 interface InThePage {
-  getComputedStyle(element: unknown): { readonly page: string };
+  getComputedStyle(element: unknown): {
+    readonly page: string;
+    readonly fontSize: string;
+  };
   readonly document: { readonly body: unknown };
 }
 
+interface Eventing {
+  dispatchEvent(event: unknown): boolean;
+}
+
+interface InTheDocument {
+  readonly document: {
+    readonly documentElement: {
+      readonly style: { setProperty(name: string, value: string): void };
+    };
+  };
+}
+
+// What the paper is wide enough for is the page's own, kept as a setting of
+// the stylesheet's, which a scenario narrows so that a few players are already
+// too many.
+When(
+  "the paper is {int} pixels wide",
+  async function (this: SpecWorld, width: number) {
+    await this.browserPage.evaluate((pixels) => {
+      const inThePage = globalThis as unknown as InTheDocument;
+      inThePage.document.documentElement.style.setProperty(
+        "--print-width",
+        `${String(pixels)}px`,
+      );
+    }, width);
+  },
+);
+
+// The events a browser sends the page just before it lays it out for the
+// printer and just after it is printed, which the page cuts a wide grid up
+// between.
 When("the page is laid out for the printer", async function (this: SpecWorld) {
   await this.browserPage.emulateMedia({ media: "print" });
+  await this.browserPage.evaluate(() => {
+    (globalThis as unknown as Eventing).dispatchEvent(new Event("beforeprint"));
+  });
+});
+
+When("the printing is done", async function (this: SpecWorld) {
+  await this.browserPage.evaluate(() => {
+    (globalThis as unknown as Eventing).dispatchEvent(new Event("afterprint"));
+  });
+  await this.browserPage.emulateMedia({ media: "screen" });
 });
 
 Then("the print button is offered", async function (this: SpecWorld) {
@@ -75,7 +119,11 @@ const sizeOf = (world: SpecWorld, selector: string): Promise<number> =>
   world.browserPage
     .locator(selector)
     .first()
-    .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+    .evaluate((element) =>
+      parseFloat(
+        (globalThis as unknown as InThePage).getComputedStyle(element).fontSize,
+      ),
+    );
 
 Then(
   "the printed tournament name is larger than the printed competition name",
@@ -147,5 +195,137 @@ Then(
       return inThePage.getComputedStyle(inThePage.document.body).page;
     });
     assert.equal(named, shape);
+  },
+);
+
+// A grid or a draw is printed in as many pieces as are drawn, the whole of it
+// that the printer is not shown being hidden for it.
+const drawn = (world: SpecWorld, selector: string): Locator =>
+  world.browserPage.locator(`main ${selector}`).locator("visible=true");
+
+interface InThePageStyle {
+  readonly document: {
+    readonly body: { appendChild(element: unknown): void };
+    createElement(tag: string): {
+      readonly style: { cssText: string };
+      getBoundingClientRect(): { readonly width: number };
+      remove(): void;
+    };
+  };
+}
+
+const widthOfPaper = (world: SpecWorld): Promise<number> =>
+  world.browserPage.evaluate(() => {
+    const inThePage = globalThis as unknown as InThePageStyle;
+    const ruler = inThePage.document.createElement("div");
+    ruler.style.cssText = "position:absolute;width:var(--print-width)";
+    inThePage.document.body.appendChild(ruler);
+    const width = ruler.getBoundingClientRect().width;
+    ruler.remove();
+    return width;
+  });
+
+Then(
+  "the block's grid is printed in one piece",
+  async function (this: SpecWorld) {
+    assert.equal(await drawn(this, "table.block-grid").count(), 1);
+  },
+);
+
+Then(
+  "the block's grid is printed in more than one piece",
+  async function (this: SpecWorld) {
+    assert.ok((await drawn(this, "table.block-grid").count()) > 1);
+  },
+);
+
+Then("the block's grid is in one piece", async function (this: SpecWorld) {
+  const grids = this.browserPage.locator("main table.block-grid");
+  assert.equal(await grids.count(), 1);
+  assert.equal(await grids.isVisible(), true);
+});
+
+Then(
+  "no piece of the block's grid is wider than the paper",
+  async function (this: SpecWorld) {
+    const paper = await widthOfPaper(this);
+    for (const piece of await drawn(this, "table.block-grid").all()) {
+      const box = await piece.boundingBox();
+      assert.ok(box !== null && box.width <= paper, String(box?.width));
+    }
+  },
+);
+
+Then(
+  "each piece of the block's grid names the player {string}",
+  async function (this: SpecWorld, name: string) {
+    const pieces = await drawn(this, "table.block-grid").all();
+    assert.ok(pieces.length > 0);
+    for (const piece of pieces) {
+      const named = piece.locator("th.block-grid-player").getByText(name);
+      assert.equal(await named.count(), 1);
+    }
+  },
+);
+
+Then(
+  "the pieces of the block's grid have every column once",
+  async function (this: SpecWorld) {
+    const headings = async (selector: string): Promise<string[]> =>
+      (
+        await this.browserPage
+          .locator(`main ${selector} thead th`)
+          .allTextContents()
+      ).map((text) => text.trim());
+    const whole = await headings(".block-grid-scroll[data-print-split]");
+    const pieces = await headings(".block-grid-scroll:not([data-print-split])");
+    assert.ok(whole.length > 0);
+    // Each piece has the column of names again, which heads no column of the
+    // grid's and is read as nothing.
+    assert.deepEqual(
+      pieces.filter((heading) => heading !== ""),
+      whole.filter((heading) => heading !== ""),
+    );
+  },
+);
+
+Then(
+  "the knockout's draw is printed in one piece",
+  async function (this: SpecWorld) {
+    assert.equal(await drawn(this, ".knockout").count(), 1);
+  },
+);
+
+Then(
+  "the knockout's draw is printed in more than one piece",
+  async function (this: SpecWorld) {
+    assert.ok((await drawn(this, ".knockout").count()) > 1);
+  },
+);
+
+Then(
+  "no piece of the knockout's draw is wider than the paper",
+  async function (this: SpecWorld) {
+    const paper = await widthOfPaper(this);
+    for (const piece of await drawn(this, ".knockout").all()) {
+      const box = await piece.boundingBox();
+      assert.ok(box !== null && box.width <= paper, String(box?.width));
+    }
+  },
+);
+
+Then(
+  "the pieces of the knockout's draw have every round once",
+  async function (this: SpecWorld) {
+    const rounds = async (selector: string): Promise<string[]> =>
+      (
+        await this.browserPage
+          .locator(`main ${selector} .knockout-round-name`)
+          .allTextContents()
+      ).map((text) => text.trim());
+    const whole = await rounds(".knockout[data-print-split]");
+    const pieces = await rounds(".knockout:not([data-print-split])");
+    assert.ok(whole.length > 1);
+    assert.deepEqual(pieces, whole);
   },
 );

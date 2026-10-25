@@ -126,6 +126,73 @@ Feature: A competition's page can be printed
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the tournament name is not seen
 
+  Rule: What is wider than the paper is printed on pages after the first
+
+    A browser cuts off what runs past the edge of the paper and never goes on
+    with it beside, so a block with many players, or a knockout with many
+    rounds, would lose its right-hand side. Just before the page is printed it
+    is cut into pieces that each fit the paper, one after another on pages of
+    their own. A block's grid has the players' names again at the left of each
+    piece, so that a score is never printed with no one to say whose it is; a
+    knockout's rounds are cut between one round and the next. It takes
+    scripting to do, so with none a wide page is cut off at the edge as before.
+
+    What fits is printed whole, and once the page is printed it is as it was.
+
+    Scenario: A grid that fits the paper is printed whole
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the page is laid out for the printer
+      Then the block's grid is printed in one piece
+
+    Scenario: A grid wider than the paper is printed in pieces
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then the block's grid is printed in more than one piece
+
+    Scenario: No piece of a grid is wider than the paper
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then no piece of the block's grid is wider than the paper
+
+    Scenario: Each piece of a grid says whose scores they are
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then each piece of the block's grid names the player "Sam Someone"
+      And each piece of the block's grid names the player "Alex Another"
+
+    Scenario: The pieces of a grid have every column once
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then the pieces of the block's grid have every column once
+
+    Scenario: Once the page is printed the grid is whole again
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      And the printing is done
+      Then the block's grid is in one piece
+
+    Scenario: A knockout that fits the paper is printed whole
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened with scripting on
+      And the page is laid out for the printer
+      Then the knockout's draw is printed in one piece
+
+    Scenario: A knockout wider than the paper is printed in pieces
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Player" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Player" in "Finals" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then the knockout's draw is printed in more than one piece
+      And no piece of the knockout's draw is wider than the paper
+      And the pieces of the knockout's draw have every round once
+
   Rule: A block and a knockout are printed across the paper, a Swiss and a test up it
 
     Scenario Outline: A competition is printed on paper of its shape

@@ -3144,10 +3144,20 @@ a.player-name[data-withdrawn] {
    across, and a Swiss's table and a test's are long and want it up. */
 @page landscape {
   size: landscape;
+  margin: 10mm;
 }
 
 @page portrait {
   size: portrait;
+  margin: 10mm;
+}
+
+/* What the paper is wide enough for, which the page cannot ask the printer,
+   so it is less than any paper it is likely to be printed on is, less the
+   margins: Letter across is 11in, 279mm, and the margin set above is 10mm on
+   each side (printPieces.ts). */
+:root {
+  --print-width: 259mm;
 }
 
 @media print {
@@ -3173,8 +3183,21 @@ a.player-name[data-withdrawn] {
   .site-footer,
   .group-links,
   .competition-views,
-  .print-button {
+  .print-button,
+  .knockout-edge,
+  .knockout-arrow {
     display: none;
+  }
+
+  /* What is wider than the paper is cut into pieces just before it is printed
+     (printPieces.ts), the whole of it not printed, and each piece after the
+     first on a page of its own. */
+  [data-print-split] {
+    display: none;
+  }
+
+  .print-piece + .print-piece {
+    break-before: page;
   }
 
   main {
