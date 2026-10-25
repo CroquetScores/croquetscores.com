@@ -68,7 +68,7 @@ Feature: A test's page shows its matches, the first team down one side
 
     Scenario: The page is headed by the test
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
-      Then the page is headed "Australia vs England"
+      Then the competition is headed "Australia vs England"
 
     Scenario: The page says what each match is the best of
       Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3

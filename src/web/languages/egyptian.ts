@@ -421,6 +421,7 @@ export const egyptian: Language = {
     "competition.view.grid": "الجدول",
     "competition.view.summary": "الملخّص",
     "competition.view.orderOfPlay": "ترتيب اللعب",
+    "competition.print": "اطبع",
     "blockSummary.ranking":
       "الترتيب على حسب نسبة المباريات اللي اتكسبت، وبعدين صافي الأطواق. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",

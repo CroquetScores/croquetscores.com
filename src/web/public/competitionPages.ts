@@ -47,6 +47,8 @@ import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { printerPath } from "../common/iconPaths.js";
+import { printPiecesScript } from "./printPieces.js";
 import { readsOf } from "./read.js";
 import { groupAddress, groupLinks, sectionsOf } from "./tournamentPages.js";
 import { yearInPath } from "./year.js";
@@ -86,6 +88,29 @@ ${views
   .join("\n")}
             </ul>
           </nav>`;
+
+// A printer, pressed to print the page. It is drawn hidden and shown by the
+// script beside it, since without scripting pressing it does nothing, and a
+// button that does nothing is worse than none. The script is written beside
+// the button, as the search's is (layout.ts), so that the button is never
+// seen and then taken away. The button is found from the heading's own
+// markup and not from where the script sits, so that something put between
+// them does not break it.
+const printButton = (
+  speaking: Speaking,
+): string => `            <button type="button" class="print-button" hidden>
+              <svg class="icon icon-printer" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${printerPath}" /></svg>
+              <span class="visually-hidden">${escape(speaking.say("competition.print"))}</span>
+            </button>
+            <script>
+              (function () {
+                var button = document.currentScript.parentElement.querySelector(".print-button");
+                button.hidden = false;
+                button.addEventListener("click", function () {
+                  window.print();
+                });
+              })();
+            </script>`;
 
 // Named for the block, whose pages had views first, and kept so, since a
 // reader's choice made then is still theirs.
@@ -373,6 +398,21 @@ export const registerCompetitionPages = (
               : asked.competitions.filter(
                   (each) => each.group?.slug === group.slug,
                 );
+          // A block's grid is as wide as it has players and a knockout's draw
+          // as wide as it has rounds, so they are printed across the paper;
+          // a Swiss's table and a test's are narrow and long, so up it.
+          // Said for each kind, so that a kind added is not printed up the
+          // paper by default.
+          const paper = ((): "landscape" | "portrait" => {
+            switch (found.kind) {
+              case "block":
+              case "knockout":
+                return "landscape";
+              case "swiss":
+              case "test":
+                return "portrait";
+            }
+          })();
           return sendPage(
             reply,
             request,
@@ -396,11 +436,14 @@ export const registerCompetitionPages = (
               siteName: siteNameOf(request),
               tryWebsite: website.isTry,
               path: request.url,
-              body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <div class="competition-heading">
-            <h1 id="competition-heading">${escape(found.name)}</h1>
+              body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <h1 class="print-tournament visually-hidden">${escape(asked.name)}</h1>
+          <div class="competition-heading" data-print="${paper}">
+            <h2 id="competition-heading">${escape(found.name)}</h2>
 ${viewsOffered(here, offered, view, speaking)}
+${printButton(speaking)}
           </div>
-${draw(found, view, speaking, request)}`,
+${draw(found, view, speaking, request)}
+${printPiecesScript}`,
             }),
           );
         },

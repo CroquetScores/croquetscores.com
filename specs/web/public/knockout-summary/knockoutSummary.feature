@@ -52,7 +52,7 @@ Feature: A knockout's summary lists its matches round by round
 
     Scenario: The page is headed by the knockout's name
       When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
-      Then the page is headed "Finals"
+      Then the competition is headed "Finals"
 
     Scenario: A reader not signed in is shown the summary
       Given nobody is signed in

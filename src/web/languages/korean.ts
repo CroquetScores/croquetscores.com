@@ -444,6 +444,7 @@ export const korean: Language = {
     "competition.view.grid": "대진표",
     "competition.view.summary": "요약",
     "competition.view.orderOfPlay": "경기 순서",
+    "competition.print": "인쇄",
     "blockSummary.ranking":
       "매치 승률 순으로, 같으면 후프 득실차 순으로 순위를 매겼어요. 대회 자체 규정에 따라 순위가 다를 수 있어요.",
     "orderOfPlay.none": "아직 진행된 경기가 없어요.",

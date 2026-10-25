@@ -412,6 +412,7 @@ export const polish: Language = {
     "competition.view.grid": "Siatka",
     "competition.view.summary": "Podsumowanie",
     "competition.view.orderOfPlay": "Kolejność gier",
+    "competition.print": "Drukuj",
     "blockSummary.ranking":
       "Kolejność według odsetka wygranych meczów, potem według bilansu bramek. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
     "orderOfPlay.none": "Nie rozegrano jeszcze żadnej gry.",

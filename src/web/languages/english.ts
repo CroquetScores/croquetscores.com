@@ -446,6 +446,7 @@ export const english: Language = {
     "competition.view.grid": "Grid",
     "competition.view.summary": "Summary",
     "competition.view.orderOfPlay": "Order of Play",
+    "competition.print": "Print",
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",

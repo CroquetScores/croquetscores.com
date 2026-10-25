@@ -71,7 +71,7 @@ Feature: A Swiss's grid ranks its players with their results
 
     Scenario: The page is headed by the Swiss's name
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the page is headed "Zed"
+      Then the competition is headed "Zed"
 
     Scenario: A reader not signed in is shown the grid
       Given nobody is signed in

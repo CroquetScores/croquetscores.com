@@ -290,6 +290,18 @@ Then(
   },
 );
 
+// A competition's page is headed by the tournament's name, a first-level
+// heading said aloud and not seen, and the competition's name beneath it, the
+// second.
+Then(
+  "the competition is headed {string}",
+  async function (this: SpecWorld, name: string) {
+    const heading = this.browserPage.locator("main h2").first();
+    await heading.waitFor();
+    assert.equal((await heading.innerText()).trim(), name);
+  },
+);
+
 // Its words ----------------------------------------------------------------------------
 
 // The tournament's own words are left out, on its page, its players' page, a
@@ -302,6 +314,10 @@ Then(
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "main", [
       "main h1",
+      // The competition's name, as the tournament's is, and the script that
+      // shows the print button, which is not words.
+      ".competition-heading h2",
+      "main script",
       ".game-name",
       ".game-representing",
       ".game-score",

@@ -84,7 +84,7 @@ Feature: A knockout's grid draws its draw round by round
 
     Scenario: The page is headed by the knockout's name
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the page is headed "Finals"
+      Then the competition is headed "Finals"
 
     Scenario: A reader not signed in is shown the grid
       Given nobody is signed in

@@ -457,6 +457,7 @@ export const french: Language = {
     "competition.view.grid": "Grille",
     "competition.view.summary": "Récapitulatif",
     "competition.view.orderOfPlay": "Ordre de jeu",
+    "competition.print": "Imprimer",
     "blockSummary.ranking":
       "Classement selon la part de matchs gagnés, puis selon la différence de arceaux. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n'a encore été jouée.",

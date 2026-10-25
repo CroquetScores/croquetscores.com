@@ -53,7 +53,7 @@ Feature: A block's summary ranks its players
 
     Scenario: The page is headed by the block's name
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
-      Then the page is headed "Block A"
+      Then the competition is headed "Block A"
 
     Scenario: A reader not signed in is shown the summary
       Given nobody is signed in

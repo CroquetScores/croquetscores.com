@@ -426,6 +426,7 @@ export const maori: Language = {
     "competition.view.grid": "Whakatakotoranga",
     "competition.view.summary": "Whakarāpopototanga",
     "competition.view.orderOfPlay": "Raupapa tākaro",
+    "competition.print": "Tā",
     "blockSummary.ranking":
       "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
     "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",

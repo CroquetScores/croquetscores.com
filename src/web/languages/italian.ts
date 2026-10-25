@@ -455,6 +455,7 @@ export const italian: Language = {
     "competition.view.grid": "Griglia",
     "competition.view.summary": "Riepilogo",
     "competition.view.orderOfPlay": "Programma",
+    "competition.print": "Stampa",
     "blockSummary.ranking":
       "In classifica per quota di incontri vinti, poi per differenza archetti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
     "orderOfPlay.none": "Non è ancora stata giocata nessuna partita.",
