@@ -74,7 +74,19 @@ export const printPiecesScript = `          <script>
                 });
               };
 
+              // A grid is drawn with a cell to every column of every row. One
+              // that is not, as a row that spans, is left whole: cut by the
+              // first row's columns it would put cells in the wrong ones, or
+              // fail, and a wide page that is cut off is no worse than before.
+              var isSquare = function (table) {
+                var count = table.rows[0].cells.length;
+                return Array.prototype.every.call(table.rows, function (row) {
+                  return row.cells.length === count;
+                });
+              };
+
               var cutGrid = function (table, room) {
+                if (!isSquare(table)) return;
                 var widths = Array.prototype.map.call(table.rows[0].cells, widthOf);
                 var runs = runsOf(widths.slice(1), widths[0], room);
                 if (runs.length < 2) return;

@@ -107,7 +107,9 @@ Then("the tournament name is not seen", async function (this: SpecWorld) {
 Then(
   "the first-level heading is {string}",
   async function (this: SpecWorld, name: string) {
-    const headings = this.browserPage.locator("main h1");
+    // The whole page, not only its main part, since the layout has a first-level
+    // heading of its own on some pages, and a page has but one.
+    const headings = this.browserPage.locator("h1");
     assert.equal(await headings.count(), 1);
     assert.equal(((await headings.textContent()) ?? "").trim(), name);
   },
