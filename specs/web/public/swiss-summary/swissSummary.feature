@@ -38,7 +38,7 @@ Feature: A Swiss's summary ranks its players without their results
 
     Scenario: The page is headed by the Swiss's name
       When the page at "/2026/gc/spring-open/competitions/zed/summary" is opened
-      Then the page is headed "Zed"
+      Then the competition is headed "Zed"
 
     Scenario: The players are ranked
       Given "Alex Another" has beaten "Sam Someone" 7 to 4 in "Zed" of "Spring Open"

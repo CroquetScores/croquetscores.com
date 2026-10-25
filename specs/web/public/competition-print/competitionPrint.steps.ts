@@ -51,20 +51,28 @@ Then(
   },
 );
 
+// Said to what reads the page aloud and drawn as nothing, a box of one pixel,
+// which the browser still calls visible.
+Then("the tournament name is not seen", async function (this: SpecWorld) {
+  const box = await this.browserPage
+    .locator("main .print-tournament")
+    .boundingBox();
+  assert.ok(box !== null && box.width <= 1 && box.height <= 1);
+});
+
 Then(
-  "the printed tournament name is not shown",
-  async function (this: SpecWorld) {
-    assert.equal(
-      await this.browserPage.locator("main .print-tournament").isVisible(),
-      false,
-    );
+  "the first-level heading is {string}",
+  async function (this: SpecWorld, name: string) {
+    const headings = this.browserPage.locator("main h1");
+    assert.equal(await headings.count(), 1);
+    assert.equal(((await headings.textContent()) ?? "").trim(), name);
   },
 );
 
 Then(
   "the printed competition name is {string}",
   async function (this: SpecWorld, name: string) {
-    const heading = this.browserPage.locator("main h1");
+    const heading = this.browserPage.locator("main h2").first();
     assert.equal(await heading.isVisible(), true);
     assert.equal((await heading.innerText()).trim(), name);
   },
@@ -76,7 +84,10 @@ Then(
     const tournament = await this.browserPage
       .locator("main .print-tournament")
       .boundingBox();
-    const competition = await this.browserPage.locator("main h1").boundingBox();
+    const competition = await this.browserPage
+      .locator("main h2")
+      .first()
+      .boundingBox();
     assert.ok(tournament !== null && competition !== null);
     assert.ok(tournament.y + tournament.height <= competition.y);
   },

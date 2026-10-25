@@ -3127,11 +3127,13 @@ a.player-name[data-withdrawn] {
   fill: currentColor;
 }
 
-/* Said on paper, where the site's bars are not, so that a printed page says
-   whose results they are. On the screen the tournament's name is already in
-   the bar above. */
-.print-tournament {
-  display: none;
+/* The page's first-level heading, said on paper, where the site's bars are
+   not, so that a printed page says whose results they are. On the screen the
+   tournament's name is already in the bar above, so it is only said aloud
+   there (visually-hidden). The competition's name beneath it is the second
+   level and drawn as large as a first, as it was. */
+.competition-heading h2 {
+  font-size: var(--text-3xl);
 }
 
 /* A page printed is the competition's name and its results, and nothing that
@@ -3186,8 +3188,13 @@ a.player-name[data-withdrawn] {
   }
 
   .print-tournament {
-    display: block;
+    position: static;
+    width: auto;
+    height: auto;
     margin: 0;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
     font-size: var(--text-lg);
     font-weight: bold;
   }

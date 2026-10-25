@@ -98,7 +98,7 @@ Feature: A block's page shows its results as a grid
 
     Scenario: The page is headed by the block's name
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page is headed "Block A"
+      Then the competition is headed "Block A"
 
     Scenario: A reader not signed in is shown the grid
       Given nobody is signed in
@@ -485,7 +485,7 @@ Feature: A block's page shows its results as a grid
       And "organiser@example.com" has added the block "Block A" to "Кубок"
       And "organiser@example.com" has moved the tournament "Кубок" to the sport "gc"
       When the page at "/2026/ac/кубок/competitions/block-a" is opened
-      Then the page is headed "Block A"
+      Then the competition is headed "Block A"
 
   Rule: Every word the page says is in the reader's language
 

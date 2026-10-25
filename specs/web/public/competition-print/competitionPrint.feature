@@ -67,6 +67,20 @@ Feature: A competition's page can be printed
       Then the print button is in the page
       And the print button is not offered
 
+  Rule: The tournament's name is the page's first-level heading and the competition's the second-level
+
+    The tournament's name is said to whatever reads the page aloud as well as
+    printed, so that the page has a heading above the competition's whether
+    or not it is on paper, and the competition's name stands beneath it.
+
+    Scenario: The tournament's name is the first-level heading
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the first-level heading is "Spring Open"
+
+    Scenario: The competition's name is the second-level heading
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the second-level heading is "Block A"
+
   Rule: What is printed is the tournament, the competition and its results
 
     Scenario: The tournament's name is printed
@@ -103,9 +117,9 @@ Feature: A competition's page can be printed
       Then the views are not printed
       And the print button is not printed
 
-    Scenario: The tournament's name is not shown on the screen twice
+    Scenario: The tournament's name is not seen on the screen twice
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the printed tournament name is not shown
+      Then the tournament name is not seen
 
   Rule: A block and a knockout are printed across the paper, a Swiss and a test up it
 

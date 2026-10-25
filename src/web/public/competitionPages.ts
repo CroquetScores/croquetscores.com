@@ -435,9 +435,9 @@ export const registerCompetitionPages = (
               siteName: siteNameOf(request),
               tryWebsite: website.isTry,
               path: request.url,
-              body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <p class="print-tournament">${escape(asked.name)}</p>
+              body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <h1 class="print-tournament visually-hidden">${escape(asked.name)}</h1>
           <div class="competition-heading" data-print="${paper}">
-            <h1 id="competition-heading">${escape(found.name)}</h1>
+            <h2 id="competition-heading">${escape(found.name)}</h2>
 ${viewsOffered(here, offered, view, speaking)}
 ${printButton(speaking)}
           </div>

@@ -57,7 +57,7 @@ Feature: A competition's order of play lists its games, oldest first
 
     Scenario: The page is headed by the block's name
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
-      Then the page is headed "Block A"
+      Then the competition is headed "Block A"
 
     Scenario: A reader not signed in is shown the games
       Given nobody is signed in
@@ -256,7 +256,7 @@ Feature: A competition's order of play lists its games, oldest first
 
     Scenario: A knockout's order of play is headed by its name
       When the page at "/2026/ac/spring-open/competitions/finals/order-of-play" is opened
-      Then the page is headed "Finals"
+      Then the competition is headed "Finals"
 
     Scenario: A knockout's game added first is first
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
@@ -301,7 +301,7 @@ Feature: A competition's order of play lists its games, oldest first
 
     Scenario: A Swiss's order of play is headed by its name
       When the page at "/2026/ac/spring-open/competitions/zed/order-of-play" is opened
-      Then the page is headed "Zed"
+      Then the competition is headed "Zed"
 
     Scenario: A Swiss's game added first is first
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Zed" of "Spring Open"
@@ -348,7 +348,7 @@ Feature: A competition's order of play lists its games, oldest first
 
     Scenario: A test's order of play is headed by the test
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng/order-of-play" is opened
-      Then the page is headed "Australia vs England"
+      Then the competition is headed "Australia vs England"
 
     Scenario: A test's game is listed
       Given "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
