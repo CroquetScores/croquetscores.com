@@ -21,6 +21,12 @@ export interface TournamentOfWebsite {
   readonly address: string;
 }
 
+/** A tournament of any website, with the sport it is for. */
+export interface TournamentWithSport extends TournamentOfWebsite {
+  /** The code of its sport. */
+  readonly sport: string;
+}
+
 /** A tournament played lately, and when the last game in use was added to it. */
 export interface TournamentPlayed extends TournamentOfWebsite {
   readonly lastPlayed: ReadOnlyDate;
@@ -56,6 +62,12 @@ export interface TournamentsByWebsite {
     last: string,
     filter: TournamentFilter,
   ): Promise<readonly TournamentOfWebsite[]>;
+
+  /**
+   * Those on every website, each with its sport: the soonest starting first,
+   * and those starting on the same day by name.
+   */
+  withSports(): Promise<readonly TournamentWithSport[]>;
 
   /**
    * The years it has a tournament starting in, of `sport` where one is given,

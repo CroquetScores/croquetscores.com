@@ -5,6 +5,7 @@ import { DatabaseStatus } from "./administrator/database-status/databaseStatus.j
 import { AdministratorSections } from "./administrator/AdministratorSections.js";
 import { ImportError } from "./administrator/import-errors/importError.js";
 import { Logs } from "./administrator/logs/logs.js";
+import { Countries } from "./administrator/countries/countries.js";
 import { ImportErrors } from "./administrator/import-errors/importErrors.js";
 import { ImportWorldRankingPlayers } from "./administrator/import-world-ranking-players/importWorldRankingPlayers.js";
 import { NewTournament } from "./tournaments/new/new.js";
@@ -92,7 +93,7 @@ export const App = (): React.JSX.Element => {
   // beneath it, named by its id as one segment, which is why the address keeps
   // its %2F rather than reading it as a slash.
   const administrator =
-    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs|\/database-status)?(\/.*)?$/.exec(
+    /^\/admin\/administrator(\/accounts|\/import-world-ranking-players|\/import-errors|\/logs|\/database-status|\/countries)?(\/.*)?$/.exec(
       path,
     );
   if (administrator !== null) {
@@ -109,6 +110,8 @@ export const App = (): React.JSX.Element => {
       onImportErrors && (administrator[2] ?? "/") === "/";
     const theLogsPage =
       administrator[1] === "/logs" && (administrator[2] ?? "/") === "/";
+    const theCountriesPage =
+      administrator[1] === "/countries" && (administrator[2] ?? "/") === "/";
     const importErrorOf = onImportErrors
       ? /^\/([^/]+)\/?$/.exec(administrator[2] ?? "")?.[1]
       : undefined;
@@ -126,7 +129,9 @@ export const App = (): React.JSX.Element => {
                     ? "logs"
                     : theDatabaseStatusPage
                       ? "database-status"
-                      : undefined
+                      : administrator[1] === "/countries"
+                        ? "countries"
+                        : undefined
           }
         />
         <main id="content">
@@ -142,6 +147,8 @@ export const App = (): React.JSX.Element => {
                 <Logs />
               ) : theDatabaseStatusPage ? (
                 <DatabaseStatus />
+              ) : theCountriesPage ? (
+                <Countries />
               ) : importErrorOf !== undefined ? (
                 <ImportError
                   key={importErrorOf}

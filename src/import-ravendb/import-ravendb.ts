@@ -175,7 +175,7 @@ try {
   database.afterErrorKept((error) => correcting.keptError(error));
 
   const worldRankingEvents = await WorldRankingEvents.readFrom(
-    join(import.meta.dirname, "world-ranking-events"),
+    join(import.meta.dirname, "../infrastructure/world-rankings/events"),
   );
 
   console.log(`Emptying ${where(config.databaseUrl)}`);

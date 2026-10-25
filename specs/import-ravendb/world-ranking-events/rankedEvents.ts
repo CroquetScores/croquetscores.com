@@ -60,6 +60,6 @@ export const heldEvents = (): Promise<WorldRankingEvents> =>
   WorldRankingEvents.readFrom(
     join(
       import.meta.dirname,
-      "../../../src/import-ravendb/world-ranking-events",
+      "../../../src/infrastructure/world-rankings/events",
     ),
   );

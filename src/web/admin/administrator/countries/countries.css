@@ -1,0 +1,38 @@
+/* The tournaments played in a country the world rankings do not list
+   (countries.feature). A row is the country above the tournament on a phone,
+   and side by side where there is room, with the link to the old site as tall
+   as a thumb. Long names wrap rather than being cut short. */
+
+.countries {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.country-tournament-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  min-height: 44px;
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.country-name {
+  font-weight: 600;
+}
+
+.country-old-site {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+@media (min-width: 40rem) {
+  .country-tournament-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) auto;
+  }
+}

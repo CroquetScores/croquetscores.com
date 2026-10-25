@@ -47,6 +47,15 @@ import {
 import { readerTheScenariosSet } from "./reader.js";
 import { tournamentsThrough } from "./tournaments.js";
 
+// The countries the world rankings' lists name, as the scenarios say they do.
+// Shared by every application a scenario runs, and emptied before each, since
+// the shared application outlasts the scenario.
+const listedCountries = { ac: new Set<string>(), gc: new Set<string>() };
+const worldRankingCountries = {
+  countriesOf: (sport: "ac" | "gc"): ReadonlySet<string> =>
+    listedCountries[sport],
+};
+
 let browser: Browser | undefined;
 let application: Application | undefined;
 let baseUrl: string | undefined;
@@ -94,6 +103,7 @@ const theSharedOne = async (): Promise<string> => {
         // scenario's own, and would otherwise send whatever is queued there
         // every 10 seconds for as long as the run lasts.
         sendsTheEmailQueue: false,
+        worldRankingCountries,
       },
     );
     addExampleForm(application);
@@ -307,6 +317,7 @@ const anApplicationWith = async (
       ...versionGiven,
       reader: readerTheScenariosSet,
       sendsTheEmailQueue: false,
+      worldRankingCountries,
     },
   );
   namedApplicationsFor(world).push(named);
@@ -474,7 +485,7 @@ const itsOwn = async (
   const now = (): ReadOnlyDate =>
     ReadOnlyDate.from(new Date(clock.now.getTime()));
   world.accountsInHand = accountsThrough(scenario, now);
-  world.tournamentsInHand = tournamentsThrough(scenario, now);
+  world.tournamentsInHand = tournamentsThrough(scenario, now, listedCountries);
 
   // Closed with the scenario's database, before it is dropped, rather than by a
   // hook of its own that might run either side of the drop. The server and the
@@ -585,6 +596,8 @@ export const applicationFor = (world: SpecWorld): Application => {
 
 Before({ tags: "@browser" }, async function (this: SpecWorld) {
   const started = await theBrowser();
+  listedCountries.ac.clear();
+  listedCountries.gc.clear();
   // The @postgres hooks run first — they are loaded first — so a scenario with
   // a database of its own already has it by now.
   this.baseUrl =

@@ -4,7 +4,8 @@ import { say } from "../words.js";
 // back to the tournaments, and on to the accounts, to the page where the
 // world ranking players are imported, to the documents the import from
 // the old sites refused, to the server's log, and to the page where database
-// access is seen and set. Tournaments is never marked
+// access is seen and set, and to the tournaments played in countries the world
+// rankings do not list. Tournaments is never marked
 // here, since the tournaments are not one of the administrator's pages; and
 // the administrator's pages at /admin/administrator itself are neither
 // section, so nothing is marked there.
@@ -20,6 +21,7 @@ interface Props {
     | "import-errors"
     | "logs"
     | "database-status"
+    | "countries"
     | undefined;
 }
 
@@ -76,6 +78,14 @@ export const AdministratorSections = ({
             aria-current={reading === "database-status" ? "page" : undefined}
           >
             {say("admin.administrator.sections.databaseStatus")}
+          </a>
+        </li>
+        <li>
+          <a
+            href="/admin/administrator/countries"
+            aria-current={reading === "countries" ? "page" : undefined}
+          >
+            {say("admin.administrator.sections.countries")}
           </a>
         </li>
       </ul>

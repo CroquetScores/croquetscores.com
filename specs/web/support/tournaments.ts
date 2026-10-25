@@ -25,6 +25,7 @@ import {
 export const tournamentsThrough = (
   application: Application,
   now: () => ReadOnlyDate,
+  listedCountries: TournamentsInHand["listedCountries"],
 ): TournamentsInHand => {
   const asARequest = <T>(work: () => Promise<T>): Promise<T> =>
     application.unitOfWork.inTransaction(work);
@@ -53,6 +54,7 @@ export const tournamentsThrough = (
       );
       return Number(rows[0]?.kept ?? 0);
     },
+    listedCountries,
     games: gamesKeptByCompetitions(
       application.tournaments,
       application.competitions,

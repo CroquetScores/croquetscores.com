@@ -595,6 +595,41 @@ Feature: Finding a website's tournaments by when they were played and when they 
       When the years of "croquetscores.com" for the sport "gc" are looked for
       Then no year is found
 
+  Rule: Every website's tournaments can be listed with their sport
+
+    The administrator reads the tournaments played in countries the world
+    rankings do not list (`countries.feature`), whichever website they are on,
+    so the read model can list them all, each with its sport, the soonest
+    first and those starting on the same day by name.
+
+    Scenario: A tournament is listed
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of every website are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament of another website is listed
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be on the website "gateballscores.com"
+      And "Spring Open" to be for the sport "gb"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of every website are looked for
+      Then "Spring Open" is found
+
+    Scenario: A tournament is listed with its sport
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be for the sport "gc"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments of every website are looked for
+      Then "Spring Open" is found for the sport "gc"
+
+    Scenario: An archived tournament is not listed
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      And "Spring Open" is archived
+      When the tournaments of every website are looked for
+      Then "Spring Open" is not found
+
   Rule: Projecting the same events again changes nothing
 
     Scenario: A tournament's creation projected twice is one tournament

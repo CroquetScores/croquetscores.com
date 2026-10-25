@@ -121,6 +121,8 @@ import { RecentResultsHandler } from "../../../src/application/operations/tourna
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
 import { TournamentsInYearHandler } from "../../../src/application/operations/tournaments/TournamentsInYearHandler.js";
+import { TournamentsInUnlistedCountriesHandler } from "../../../src/application/operations/world-rankings/TournamentsInUnlistedCountriesHandler.js";
+import type { WorldRankingCountries } from "../../../src/application/services/WorldRankingCountries.js";
 import { GamesOfTournamentHandler } from "../../../src/application/operations/tournaments/GamesOfTournamentHandler.js";
 import { PublicPlayersOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicPlayersOfTournamentHandler.js";
 import { PublicPlayerOfTournamentHandler } from "../../../src/application/operations/tournaments/PublicPlayerOfTournamentHandler.js";
@@ -357,6 +359,18 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
+  // The lists the scenario says name countries, read as they are when asked.
+  const listedCountries = { ac: new Set<string>(), gc: new Set<string>() };
+  const lists: WorldRankingCountries = {
+    countriesOf: (sport) => listedCountries[sport],
+  };
+  mediator.handleQuery(
+    new TournamentsInUnlistedCountriesHandler(
+      accountRepository,
+      byWebsite,
+      lists,
+    ),
+  );
   mediator.handleQuery(
     new GamesOfTournamentHandler(
       tournaments,
@@ -464,6 +478,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
     send: (command) => mediator.send(command),
     ask: (query) => mediator.query(query),
     load: (id) => this.asARequest(() => tournaments.load(id)),
+    listedCountries,
     loadManagerNote: (id) => this.asARequest(() => managerNotes.load(id)),
     saveManagerNote: (note) => this.asARequest(() => managerNotes.save(note)),
     managerNotesOf: (id) => this.asARequest(() => byNotes.of(id)),

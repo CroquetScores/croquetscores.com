@@ -524,6 +524,13 @@ When(
 );
 
 When(
+  "the tournaments of every website are looked for",
+  async function (this: SpecWorld) {
+    looked(this, await this.asARequest(() => readModelOf(this).withSports()));
+  },
+);
+
+When(
   "the years of {string} are looked for",
   async function (this: SpecWorld, website: string) {
     scenarioOf(this).years = await this.asARequest(() =>
@@ -552,5 +559,14 @@ Then(
       found.lastPlayed.toISOString(),
       new Date(moment).toISOString(),
     );
+  },
+);
+
+Then(
+  "{string} is found for the sport {string}",
+  function (this: SpecWorld, name: string, sport: string) {
+    const found = foundCalled(ownScenarioOf(this).found, name);
+    assert.ok("sport" in found, `${name} was not looked for with its sport.`);
+    assert.equal(found.sport, sport);
   },
 );

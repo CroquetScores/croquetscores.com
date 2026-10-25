@@ -11,7 +11,7 @@ import {
   numberedApart,
   worldRankingNameToImport,
 } from "./names.js";
-import { oldFlagOf } from "./oldSites.js";
+import { oldFlagOf } from "../infrastructure/world-rankings/oldSites.js";
 import { isNamedBye } from "../domain/aggregates/tournaments/isNamedBye.js";
 
 /**
