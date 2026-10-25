@@ -1,5 +1,15 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-10-26
+
+Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.
+
+- **'n Kompetisie se bladsy kan gedruk word.** 'n Blok se bladsy, 'n uitskakeling se bladsy, 'n Switser se bladsy en 'n toets se bladsy het elk 'n drukknoppie op die reël van die kompetisie se naam, langs die aansigte. As jy dit druk, gaan die blaaier se eie drukdialoog oop. Dit het skrip nodig, so waar daar geen is nie, word die knoppie nie gewys nie. Wat gedruk word, is die toernooi se naam, bo die kompetisie se naam, en die uitslae daaronder, en niks wat net dien om die bladsy te vind nie: die werf se balke, die aansigte, die knoppie en die voetskrif. Skakels word nie op papier onderstreep nie, maar 'n onttrekte speler se naam hou die streep deur hom. 'n Blok en 'n uitskakeling word dwarsoor die papier gedruk, en 'n Switser en 'n toets regop. 'n Blok se rooster of 'n uitskakeling se trekking wat wyer as die papier is, word in stukke gesny op bladsye ná die eerste, met die spelers se name links van elke stuk van 'n rooster herhaal. Die bladsy kan nie die drukker vra hoe breed die papier is nie, so dit reken met Letter dwarsoor, en 'n leser wat die papier regop draai, kan steeds die regterkantste rand verloor. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Die ranglys-aflaai sê wat dit is.** Die skakel op die **Ranglyste**-oortjie was **Laai ranglyste af**, wat lyk of dit die ranglyste gee. Dit is nou **Laai spelle af vir die wêreldranglys**, want dit gee die toernooi se spelle, in die lêer waaruit die ranglysbeamptes dit neem. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). Die nuwe woorde in die tale anders as Engels is nog nie deur 'n moedertaalspreker gelees nie, so sê vir ons wat sleg lees. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Agter die skerms.** Die opsomming wat die invoer ná elke lopie byvoeg, word nie meer oorskryf as dit nie gelees kan word nie ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), en die pakkette waarop die werf staan, is tot hul nuutste uitgawes gebring binne die reekse wat dit toelaat ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Vrygestel 2026-10-25
 
 Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.

@@ -1,5 +1,15 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-10-26
+
+Das sind die wichtigsten Änderungen seit der letzten Veröffentlichung. Jede verweist auf den Pull Request, der sie gebracht hat.
+
+- **Die Seite eines Wettbewerbs kann gedruckt werden.** Die Seite eines Blocks, eines K.-o.-Turniers, eines Schweizer Systems und eines Tests hat je einen Druckerknopf in der Zeile mit dem Namen des Wettbewerbs, neben den Ansichten. Ein Druck darauf öffnet den eigenen Druckdialog des Browsers. Er braucht Skripte, wo es keine gibt, wird der Knopf deshalb nicht gezeigt. Gedruckt werden der Name des Turniers über dem Namen des Wettbewerbs und darunter die Ergebnisse, und nichts, was nur dem Auffinden der Seite dient: die Leisten der Seite, die Ansichten, der Knopf und die Fußzeile. Links werden auf Papier nicht unterstrichen, doch der Name eines zurückgezogenen Spielers behält den Strich durch sich. Ein Block und ein K.-o.-Turnier werden quer zum Papier gedruckt, ein Schweizer System und ein Test hochkant. Das Raster eines Blocks oder der Spielbaum eines K.-o.-Turniers, der breiter ist als das Papier, wird in Stücke geschnitten, die ab der zweiten Seite je auf einer Seite stehen, wobei die Namen der Spieler links von jedem Stück eines Rasters wiederholt werden. Die Seite kann den Drucker nicht fragen, wie breit das Papier ist, und rechnet deshalb mit Letter quer; wer das Papier hochkant dreht, kann den rechten Rand noch verlieren. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Der Download der Ranglisten sagt, was er ist.** Der Link im Tab **Ranglisten** hieß **Ranglisten herunterladen**, was klingt, als gäbe er die Ranglisten. Jetzt heißt er **Spiele für die Weltrangliste herunterladen**, denn er gibt die Spiele des Turniers, in der Datei, aus der die Ranglistenbeauftragten sie nehmen. Siehe [Ranglisten](../tournament-managers/standard-tournament/rankings.md). Die neuen Wörter in den anderen Sprachen als Englisch hat noch kein Muttersprachler gelesen; sagt uns, was schlecht klingt. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Hinter den Kulissen.** Die Zusammenfassung, die der Import nach jedem Lauf anhängt, wird nicht mehr überschrieben, wenn sie nicht gelesen werden kann ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), und die Pakete, von denen die Seite abhängt, wurden innerhalb der erlaubten Bereiche auf ihre neuesten Versionen gebracht ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Veröffentlicht am 2026-10-25
 
 Das sind die wichtigsten Änderungen seit der letzten Veröffentlichung. Jede verweist auf den Pull Request, der sie gebracht hat.

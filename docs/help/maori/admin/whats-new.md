@@ -1,5 +1,15 @@
 # He aha te mea hou mō ngā Kaiwhakahaere Whakataetae Nui
 
+## I tukuna 2026-10-26
+
+Koinei ngā panonitanga matua mai i te tukunga whakamutunga. Ia mea ka hono ki te pull request nāna i mahi.
+
+- **Ka taea te ta i te whārangi o tētahi whakataetae.** Ko te whārangi o tētahi poraka, o tētahi whakaweto, o tētahi Swiss me tētahi whakamātau, he pātene tā tā tō ia tangata i te rārangi o te ingoa o te whakataetae, i te taha o ngā tirohanga. Ka pēhia, ka tuwhera te pouaka kōrero tā a te pūtirotiro ake. E hiahia ana ki te kaupapa tuhi, nō reira ki te kore tērā, kāore te pātene e whakaaturia. Ko te mea ka tāia ko te ingoa o te whakataetae nui, kei runga i te ingoa o te whakataetae, me ngā hua kei raro, kāore he mea hei kimi noa i te whārangi: ngā pae o te pae tukutuku, ngā tirohanga, te pātene me te raro whārangi. Kāore ngā hono e raro-rārangi i runga i te pepa, engari ka mau tonu te rārangi huri noa i te ingoa o te kaitākaro kua unuhia. Ka tāia te poraka me te whakaweto ki te whānui o te pepa, ko te Swiss me te whakamātau ki te teitei. Ko te whakatakotoranga o tētahi poraka, ko te tauira whakaweto rānei e whānui ake ana i te pepa, ka tapahia hei wāhanga ki ngā whārangi i muri i te tuatahi, ka tukurua ngā ingoa kaitākaro ki te taha mauī o ia wāhanga o te whakatakotoranga. Kāore e taea e te whārangi te pātai ki te pūtaka he whānui te pepa, nō reira ka whakaaro ia ki te Letter whānui, ā, ka ngaro tonu pea te taha matau mō te kaipānui ka huri i te pepa ki te teitei. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Ka kī te tikiake whakarārangi he aha ia.** Ko te hono i te ripa **Whakarārangi** i mua ko **Tikiake i ngā whakarārangi**, he rite ki te hoatu i ngā whakarārangi. Ināianei ko **Tikiake i ngā kēmu mō te tūnga o te ao**, nā te mea ka hoatu ngā kēmu o te whakataetae, ki te kōnae e tango ai ngā āpiha whakarārangi. Tirohia [Ngā raupapa](../tournament-managers/standard-tournament/rankings.md). Kāore ano ngā kupu hou i ngā reo kē atu i te reo Pākehā kia pānuitia e te tangata whai reo taketake, nō reira whakamōhio mai he aha te mea e kino ana te pānui. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Ngā mahi i muri i te arai.** Kāore te whakarāpopototanga ka tāpiria e te kawe mai i muri i ia whakahaere e tuhia ināianei ina kāore e taea te pānui ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), ā, kua whakahouhia ngā pūkete e whakawhirinaki ai te pae tukutuku ki ō rātou putanga hou rawa i roto i ngā awhe e whakaaetia ana ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## I tukuna 2026-10-25
 
 Koinei ngā panonitanga matua mai i te tukunga whakamutunga. Ia mea ka hono ki te pull request nāna i mahi.

@@ -1,5 +1,15 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-10-26
+
+Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
+
+- **Gellir argraffu tudalen cystadleuaeth.** Mae gan dudalen bloc, tudalen cnoc-owt, tudalen Swisaidd a thudalen prawf botwm argraffydd ar linell enw'r gystadleuaeth, wrth ymyl y golygon. Mae ei wasgu yn agor blwch argraffu'r porwr ei hun. Mae angen sgriptio arno, felly lle nad oes un nid yw'r botwm yn cael ei ddangos. Yr hyn sy'n cael ei argraffu yw enw'r twrnamaint, uwchben enw'r gystadleuaeth, a'r canlyniadau oddi tano, a dim byd sydd ond ar gyfer dod o hyd i'r dudalen: bariau'r wefan, y golygon, y botwm a'r troedyn. Nid yw dolenni wedi'u tanlinellu ar bapur, ond mae enw chwaraewr a dynnwyd yn ôl yn cadw'r llinell drwyddo. Mae bloc a chnoc-owt yn cael eu hargraffu ar draws y papur, a Swisaidd a phrawf ar ei hyd. Mae grid bloc neu dynnu cnoc-owt sy'n lletach na'r papur yn cael ei dorri'n ddarnau ar dudalennau ar ôl y gyntaf, gydag enwau'r chwaraewyr wedi'u hailadrodd ar y chwith i bob darn o grid. Ni all y dudalen ofyn i'r argraffydd pa mor llydan yw'r papur, felly mae'n ystyried Letter ar draws, a gall darllenydd sy'n troi'r papur ar ei hyd golli'r ymyl dde o hyd. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Mae'r lawrlwytho detholion yn dweud beth ydyw.** Roedd y ddolen ar y tab **Detholion** yn **Lawrlwytho'r detholion**, sy'n swnio fel pe bai'n rhoi'r detholion. Erbyn hyn mae'n **Lawrlwytho gemau ar gyfer Safle'r Byd**, oherwydd mae'n rhoi gemau'r twrnamaint, yn y ffeil y mae swyddogion y detholion yn eu cymryd ohoni. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). Nid yw geiriau newydd yr ieithoedd heblaw Saesneg wedi'u darllen gan siaradwr brodorol eto, felly dywedwch wrthym beth sy'n darllen yn wael. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Y tu ôl i'r llenni.** Nid yw'r crynodeb y mae'r mewnforio yn ei ychwanegu ar ôl pob rhediad yn cael ei drosysgrifo mwyach pan na ellir ei ddarllen ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), ac mae'r pecynnau y mae'r wefan yn dibynnu arnynt wedi'u codi i'w fersiynau diweddaraf o fewn yr ystodau y mae'n eu caniatáu ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Rhyddhawyd 2026-10-25
 
 Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.

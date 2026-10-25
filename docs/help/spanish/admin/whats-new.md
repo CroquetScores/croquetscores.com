@@ -1,5 +1,15 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-10-26
+
+Estos son los cambios principales desde la última versión. Cada uno enlaza con la pull request que lo hizo.
+
+- **La página de una competición se puede imprimir.** La página de un grupo, de una eliminatoria, de un suizo y de un test tiene cada una un botón de impresora en la línea del nombre de la competición, junto a las vistas. Pulsarlo abre el cuadro de impresión del propio navegador. Necesita scripts, así que donde no los hay el botón no se muestra. Lo que se imprime es el nombre del torneo, sobre el nombre de la competición, y los resultados debajo, y nada de lo que sirve solo para encontrar la página: las barras del sitio, las vistas, el botón y el pie. Los enlaces no se subrayan en el papel, pero el nombre de un jugador retirado conserva la línea que lo tacha. Un grupo y una eliminatoria se imprimen a lo ancho del papel, un suizo y un test a lo largo. La cuadrícula de un grupo o el cuadro de una eliminatoria más anchos que el papel se cortan en trozos en páginas después de la primera, con los nombres de los jugadores repetidos a la izquierda de cada trozo de una cuadrícula. La página no puede preguntar a la impresora el ancho del papel, así que cuenta con Letter a lo ancho, y un lector que gire el papel a lo largo aún puede perder el borde derecho. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **La descarga de rankings dice qué es.** El enlace de la pestaña **Rankings** era **Descargar rankings**, lo que parece que diera los rankings. Ahora es **Descargar partidas para el ranking mundial**, porque da las partidas del torneo, en el archivo de donde los responsables de los rankings las toman. Véase [Rankings](../tournament-managers/standard-tournament/rankings.md). Las palabras nuevas en los idiomas distintos del inglés aún no las ha leído un hablante nativo; dinos qué suena mal. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Entre bastidores.** El resumen que la importación añade tras cada ejecución ya no se sobrescribe cuando no se puede leer ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), y los paquetes de los que depende el sitio se llevaron a sus últimas versiones dentro de los rangos que permite ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Publicado el 2026-10-25
 
 Estos son los cambios principales desde la última versión. Cada uno enlaza con la pull request que lo hizo.

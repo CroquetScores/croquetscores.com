@@ -1,5 +1,15 @@
 # Novidades para os organizadores de torneio
 
+## Lançado em 2026-10-26
+
+Estas são as principais mudanças desde a última versão. Cada uma tem um link para o pull request que a fez.
+
+- **A página de uma competição pode ser impressa.** A página de um grupo, de um mata-mata, de um suíço e de um teste tem cada uma um botão de impressora na linha do nome da competição, ao lado das visualizações. Apertá-lo abre a caixa de impressão do próprio navegador. Ele precisa de scripts, então onde não há o botão não é mostrado. O que se imprime é o nome do torneio, acima do nome da competição, e os resultados abaixo, e nada do que serve só para achar a página: as barras do site, as visualizações, o botão e o rodapé. Os links não são sublinhados no papel, mas o nome de um jogador anulado mantém o traço que o risca. Um grupo e um mata-mata são impressos na largura do papel, um suíço e um teste em pé. A grade de um grupo ou a chave de um mata-mata mais larga que o papel é cortada em partes em páginas depois da primeira, com os nomes dos jogadores repetidos à esquerda de cada parte de uma grade. A página não pode perguntar à impressora a largura do papel, então conta com Letter na largura, e um leitor que vire o papel em pé ainda pode perder a borda direita. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **O download dos rankings diz o que é.** O link na aba **Rankings** era **Baixar rankings**, o que parece que dava os rankings. Agora é **Baixar jogos para o ranking mundial**, porque dá os jogos do torneio, no arquivo de onde os responsáveis pelos rankings os pegam. Veja [Rankings](../tournament-managers/standard-tournament/rankings.md). As palavras novas nos idiomas além do inglês ainda não foram lidas por um falante nativo; diga-nos o que soa mal. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Nos bastidores.** O resumo que a importação acrescenta depois de cada execução deixou de ser sobrescrito quando não pode ser lido ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), e os pacotes de que o site depende foram levados às últimas versões dentro das faixas que ele permite ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Lançado em 2026-10-25
 
 Estas são as principais mudanças desde a última versão. Cada uma tem um link para o pull request que a fez.

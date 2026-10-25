@@ -1,5 +1,15 @@
 # Novità per i direttori di torneo
 
+## Pubblicato il 2026-10-26
+
+Questi sono i cambiamenti principali dall'ultima versione. Ognuno rimanda alla pull request che l'ha fatto.
+
+- **La pagina di una competizione si può stampare.** La pagina di un girone, di un'eliminazione diretta, di uno svizzero e di un test ha ciascuna un pulsante a forma di stampante sulla riga del nome della competizione, accanto alle viste. Premerlo apre la finestra di stampa del browser. Richiede gli script, quindi dove non ce ne sono il pulsante non viene mostrato. Si stampano il nome del torneo, sopra il nome della competizione, e sotto i risultati, e nulla di ciò che serve solo a trovare la pagina: le barre del sito, le viste, il pulsante e il piè di pagina. I link non sono sottolineati sulla carta, ma il nome di un giocatore ritirato mantiene la riga che lo attraversa. Un girone e un'eliminazione diretta si stampano per il largo del foglio, uno svizzero e un test per il lungo. La griglia di un girone o il tabellone di un'eliminazione diretta più larghi del foglio vengono tagliati in pezzi su pagine dopo la prima, con i nomi dei giocatori ripetuti a sinistra di ogni pezzo di una griglia. La pagina non può chiedere alla stampante quanto è largo il foglio, quindi conta su Letter per il largo, e chi gira il foglio per il lungo può ancora perdere il bordo destro. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Il download delle classifiche dice cos'è.** Il link nella scheda **Classifiche** era **Scarica le classifiche**, il che fa pensare che desse le classifiche. Ora è **Scarica le partite per la classifica mondiale**, perché dà le partite del torneo, nel file da cui i responsabili delle classifiche le prendono. Vedi [Classifiche](../tournament-managers/standard-tournament/rankings.md). Le nuove parole nelle lingue diverse dall'inglese non sono ancora state lette da un madrelingua; diteci cosa si legge male. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Dietro le quinte.** Il riepilogo che l'importazione aggiunge dopo ogni esecuzione non viene più sovrascritto quando non può essere letto ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), e i pacchetti da cui dipende il sito sono stati portati alle ultime versioni entro gli intervalli che permette ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Pubblicato il 2026-10-25
 
 Questi sono i cambiamenti principali dall'ultima versione. Ognuno rimanda alla pull request che l'ha fatto.

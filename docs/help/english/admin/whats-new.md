@@ -1,5 +1,15 @@
 # What's new for Tournament Managers
 
+## Released 2026-10-26
+
+These are the major changes since the last release. Each links to the pull request that made it.
+
+- **A competition's page can be printed.** A block's page, a knockout's, a Swiss's and a test's each have a printer button on the line of the competition's name, beside the views. Pressing it opens the browser's own print dialogue. It needs scripting, so where there is none the button is not shown. What is printed is the tournament's name, above the competition's name, and the results beneath, and nothing that is for finding the page: the site's bars, the views, the button and the footer. Links are not underlined on paper, though a withdrawn player's name keeps the line through it. A block and a knockout are printed across the paper, and a Swiss and a test up it. A block's grid or a knockout's draw that is wider than the paper is cut into pieces on pages after the first, with the players' names repeated at the left of each piece of a grid. The page cannot ask the printer how wide the paper is, so it allows for Letter across, and a reader who turns the paper up can still lose the right-hand edge. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **The rankings download says what it is.** The link on the **Rankings** tab was **Download rankings**, which reads as though it gave the rankings. It is now **Download games for world ranking**, since it gives the tournament's games, in the file the rankings officers take them from. See [Rankings](../tournament-managers/standard-tournament/rankings.md). The new words in the other sixteen languages have not been read by a native speaker yet, so tell us what reads badly. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Behind the scenes.** The summary the import adds to after every run is no longer written over when it cannot be read ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), and the packages the site depends on were brought to their latest releases within the ranges it allows ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Released 2026-10-25
 
 These are the major changes since the last release. Each links to the pull request that made it.

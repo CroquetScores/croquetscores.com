@@ -1,5 +1,15 @@
 # Co nowego dla organizatorów turniejów
 
+## Wydano 2026-10-26
+
+To główne zmiany od ostatniego wydania. Każda odsyła do pull requesta, który ją wprowadził.
+
+- **Stronę rozgrywek można wydrukować.** Strona grupy, pucharówki, systemu szwajcarskiego i testu ma każda przycisk drukarki w wierszu z nazwą rozgrywek, obok widoków. Jego naciśnięcie otwiera własne okno drukowania przeglądarki. Potrzebuje skryptów, więc tam, gdzie ich nie ma, przycisk nie jest pokazywany. Drukuje się nazwę turnieju nad nazwą rozgrywek i wyniki pod nią, a nic z tego, co służy tylko do znalezienia strony: pasków strony, widoków, przycisku i stopki. Linki nie są na papierze podkreślone, ale nazwisko wycofanego gracza zachowuje przekreślenie. Grupa i pucharówka są drukowane w poprzek papieru, system szwajcarski i test wzdłuż. Siatka grupy albo drabinka pucharówki szersza niż papier jest cięta na kawałki na stronach po pierwszej, a nazwiska graczy są powtórzone z lewej strony każdego kawałka siatki. Strona nie może zapytać drukarki, jak szeroki jest papier, więc przyjmuje Letter w poprzek, i czytelnik, który obróci papier wzdłuż, może nadal stracić prawy brzeg. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Pobieranie rankingów mówi, czym jest.** Link na karcie **Rankingi** brzmiał **Pobierz rankingi**, co wygląda, jakby dawał rankingi. Teraz brzmi **Pobierz gry do rankingu światowego**, bo daje gry turnieju, w pliku, z którego biorą je odpowiedzialni za rankingi. Zobacz [Rankingi](../tournament-managers/standard-tournament/rankings.md). Nowych słów w językach innych niż angielski nie czytał jeszcze żaden rodzimy użytkownik, więc dajcie znać, co brzmi źle. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Za kulisami.** Podsumowanie, które import dopisuje po każdym uruchomieniu, nie jest już nadpisywane, gdy nie da się go odczytać ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), a pakiety, od których zależy strona, zostały podniesione do najnowszych wydań w dozwolonych zakresach ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Wydano 2026-10-25
 
 To główne zmiany od ostatniego wydania. Każda odsyła do pull requesta, który ją wprowadził.

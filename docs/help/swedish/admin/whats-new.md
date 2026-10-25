@@ -1,5 +1,15 @@
 # Nytt för arrangörer
 
+## Släppt 2026-10-26
+
+Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
+
+- **En tävlings sida kan skrivas ut.** Sidan för ett block, en utslagning, ett Schweizer och en landskamp har var och en en skrivarknapp på raden med tävlingens namn, bredvid vyerna. Att trycka på den öppnar webbläsarens egen utskriftsdialog. Den behöver skript, så där det inte finns några visas inte knappen. Det som skrivs ut är turneringens namn, ovanför tävlingens namn, och resultaten under, och inget som bara finns för att hitta sidan: sidans fält, vyerna, knappen och sidfoten. Länkar understryks inte på papper, men en tillbakadragen spelares namn behåller strecket genom sig. Ett block och en utslagning skrivs ut på bredden av papperet, ett Schweizer och en landskamp på höjden. Ett blocks rutnät eller en utslagnings schema som är bredare än papperet skärs i delar på sidor efter den första, med spelarnas namn upprepade till vänster om varje del av ett rutnät. Sidan kan inte fråga skrivaren hur brett papperet är, så den räknar med Letter på bredden, och en läsare som vänder papperet på höjden kan fortfarande förlora högerkanten. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Nedladdningen av rankingar säger vad den är.** Länken på fliken **Rankingar** hette **Ladda ner rankingar**, vilket låter som att den gav rankingarna. Nu heter den **Ladda ner partier för världsranking**, eftersom den ger turneringens partier, i filen som rankingansvariga hämtar dem ur. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). De nya orden på andra språk än engelska har ännu inte lästs av någon med språket som modersmål, så säg till vad som läses dåligt. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Bakom kulisserna.** Sammanfattningen som importen lägger till efter varje körning skrivs inte längre över när den inte kan läsas ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), och paketen som sidan beror på har flyttats till sina senaste utgåvor inom de intervall den tillåter ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Släppt 2026-10-25
 
 Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
