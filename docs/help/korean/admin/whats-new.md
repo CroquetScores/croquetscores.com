@@ -1,5 +1,21 @@
 # 대회 운영자를 위한 새로운 소식
 
+## 출시일 2026-10-25
+
+지난 출시 이후의 주요 변경 사항이에요. 각 항목은 그 변경을 만든 풀 리퀘스트로 연결돼요.
+
+- **세계 랭킹 담당자의 대회 목록을 세계 랭킹으로 좁힐 수 있어요.** 담당자의 목록에는 담당하는 종목의 모든 대회가 들어 있어서, 훑어보기에는 너무 많아요. 이제 **새 대회** 옆에 **관리자/기록원**, **세계 랭킹**, **세계 랭킹 제외** 세 개의 버튼이 있어요. 대회에 해당하는 버튼 중 하나라도 켜져 있으면 그 대회가 목록에 나와요. 그래서 각 버튼은 대회를 없애는 것이 아니라 더해 줘요. 켜진 버튼에는 체크 표시가 있고, **관리자/기록원**과 **세계 랭킹**은 처음부터 켜져 있어요. 이 버튼들은 담당자 전용이에요. 대회를 운영하거나 기록하는 분의 목록은 전과 같아요. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
+
+- **세계 랭킹 담당자와 사이트 관리자는 대회 운영자에게 이메일을 보낼 수 있어요.** **운영자** 탭에 **운영자에게 이메일 보내기**가 나타나요. 대회의 모든 운영자에게 새 이메일을 여는 링크이고, 제목은 "Croquet Scores"예요. 사이트에서는 아무것도 보내지 않아요. 담당자는 담당하는 종목의 어느 대회에서든 이 탭을 볼 수 있어서, 운영자를 확인하고 연락할 수는 있지만 운영자를 바꿀 수는 없어요. 운영자에게는 누구의 이메일 주소도 보이지 않아요. [운영자와 기록원](../tournament-managers/standard-tournament/managers-and-scorers.md)을 보세요. ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
+
+- **하루짜리 대회는 랭킹 파일에 그날로 표시해요.** 하루 범위인 `3-3.10.26`으로 적던 것을 이제 `3.10.26`으로 적어요. 세계 랭킹의 목록이 하루를 적는 방식과 같아요. 이틀 이상인 대회는 전과 같이 표시해요. [랭킹](../tournament-managers/standard-tournament/rankings.md)을 보세요. ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
+
+- **예전 사이트에서 가져온 대회가 더 충실해졌어요.** 세계 랭킹의 어소시에이션 크로케와 골프 크로케 대회 목록에 있는 대회는, 이제 시간대가 아니라 그 목록의 국가를 써요 ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). 두 가지 변경이 더 있고 ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)), 다음 가져오기부터 적용돼요.
+  - 선수는 각 부문이 가진 자체 목록에서 가져오고, 대회의 선수 중에서 정확한 이름으로 찾아요. 예전 사이트는 대회의 선수를 각 부문에 복사하고 운영자가 그 사본을 바꿀 수 있게 했어요. 그래서 복식 부문에 "Joe Hogan & Levi Franks"로 등록한 한 쌍이 Joe Hogan 한 명과 이어졌어요. 이제는 그 쌍이 따로 한 명의 선수예요. 어느 부문에도 없는 선수는 더 이상 가져오지 않아요.
+  - 어떤 부문이 선수가 무엇을 대표하는지 말하면, 그 선수가 아무것도 대표하지 않았을 때 그것으로 정해요. 그 뒤에 다르게 말하는 부문이 있어도 바꾸지 않아요. 2판 다승제로 저장된 블록, 또는 모든 쌍이 세 번째 게임까지 한 3판 다승제 블록은 이제 그대로 유지돼요. 어떤 쌍의 경기가 마지막 게임 전에 이미 결정되었을 경우에만 1판 다승제로 바꾸는데, 그대로면 사이트가 나머지를 받지 않기 때문이에요.
+
+- **보이지 않는 곳의 변경.** 가져오기에는 두 날짜 사이에 시작한 대회만 가져오라고 시킬 수 있고 ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), 이제 한 일을 수정 종류마다 하나의 파일, 오류용 파일 하나, 가져오기마다의 요약으로 저장소의 docs 폴더에 남겨요 ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)도 보세요). 골프 크로케 세계 랭킹 담당자 네 명이 더 지정되었고 ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), 사이트 자신의 주소는 이제 사이트 관리자가 아니라 어소시에이션 크로케 담당자예요 ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). 가끔 실패하거나 사이트보다 뒤처졌던 시나리오도 바로잡았어요 ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
+
 ## 출시일 2026-10-23
 
 지난 출시 이후의 주요 변경 사항이에요. 각 항목은 그 변경을 만든 풀 리퀘스트로 연결돼요.

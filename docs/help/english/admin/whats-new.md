@@ -1,5 +1,21 @@
 # What's new for Tournament Managers
 
+## Released 2026-10-25
+
+These are the major changes since the last release. Each links to the pull request that made it.
+
+- **A world ranking officer's list of tournaments can be narrowed by the world rankings.** An officer's list holds every tournament of the sports they look after, which is more than they want to read down. It now has three buttons beside **New Tournament**: **Manager/Scorer**, **World Ranking** and **Not World Ranking**. A tournament is listed when any button that applies to it is on, so each one adds tournaments rather than taking them away. A button that is on has a tick, and **Manager/Scorer** and **World Ranking** are on to begin with. The buttons are for officers only; if you manage or score tournaments, your list is as it was. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
+
+- **A world ranking officer or an administrator can email a tournament's managers.** On the **Managers** tab they are offered **Email Managers**, a link that opens a new email to every manager of the tournament, with the subject "Croquet Scores". Nothing is sent from the site. An officer sees the tab for any tournament of the sport they look after, to read the managers and write to them but not to change them, and a manager is not shown anyone's email address. See [Managers and scorers](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
+
+- **A one-day tournament is dated by that day in the rankings file.** It was written as a range of one day, `3-3.10.26`, and is now `3.10.26`, as the world rankings' own lists write a single day. A tournament of more than one day is dated as before. See [Rankings](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
+
+- **Tournaments brought over from the old sites are more faithful.** A tournament's country is now taken from the world rankings' lists of Association Croquet and Golf Croquet events when they have it, instead of from its time zone ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Two more changes ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) apply to the next import:
+  - Players are brought over from each competition's own list, and found by their exact name among the tournament's players. The old sites copied a tournament's players into every competition and let a manager change the copy, so a pair entered in a doubles competition as "Joe Hogan & Levi Franks" was joined to Joe Hogan alone. It is now a player of its own. A player who is in no competition is no longer brought over.
+  - A competition that says what a player represents sets it when the player represented nothing, and one that disagrees afterwards does not change it. A block kept as the best of 2, or of 3 with every pair going to a third game, now keeps it. It is made the best of 1 only where a pair's match would have been decided before their last game, which the site would refuse the rest of.
+
+- **Behind the scenes.** The import can be asked for only the tournaments that started between two days ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), and now says what it did in a file for each kind of correction, one of its errors, and a summary of every import, all in the docs folder of the repository (also [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Four more Golf Croquet world ranking officers are named in it ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), and the site's own address is an Association Croquet officer and no longer an administrator ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Scenarios that failed now and then, or had fallen behind the site, were put right ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
+
 ## Released 2026-10-23
 
 These are the major changes since the last release. Each links to the pull request that made it.

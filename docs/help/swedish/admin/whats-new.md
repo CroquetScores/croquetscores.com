@@ -1,5 +1,21 @@
 # Nytt för arrangörer
 
+## Släppt 2026-10-25
+
+Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
+
+- **En rankingansvarigs lista över turneringar kan begränsas efter världsrankingen.** En ansvarigs lista har varje turnering i de sporter hen sköter, och det är mer än hen vill läsa igenom. Den har nu tre knappar bredvid **Ny turnering**: **Ansvarig/Poängräknare**, **Världsranking** och **Utanför världsrankingen**. En turnering visas när någon knapp som gäller den är på, så varje knapp lägger till turneringar i stället för att ta bort dem. En knapp som är på har en bock, och **Ansvarig/Poängräknare** och **Världsranking** är på från början. Knapparna är bara för ansvariga; om du arrangerar turneringar eller för resultat i dem är din lista som förut. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
+
+- **En rankingansvarig eller en administratör kan skriva till en turnerings arrangörer.** På fliken **Arrangörer** erbjuds de **Mejla arrangörerna**, en länk som öppnar ett nytt mejl till varje arrangör av turneringen, med ämnet ”Croquet Scores”. Inget skickas från webbplatsen. En ansvarig ser fliken för varje turnering i den sport hen sköter, för att läsa arrangörerna och skriva till dem men inte för att ändra dem, och en arrangör får ingens e-postadress visad. Se [Arrangörer och resultatförare](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
+
+- **En endagsturnering dateras med den dagen i rankingfilen.** Den skrevs som ett intervall på en dag, `3-3.10.26`, och är nu `3.10.26`, som världsrankingens egna listor skriver en enskild dag. En turnering på mer än en dag dateras som förut. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
+
+- **Turneringar som förts över från de gamla webbplatserna är mer trogna.** En turnerings land hämtas nu från världsrankingens listor över evenemang i association croquet och golfcroquet när de har det, i stället för från dess tidszon ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Ytterligare två ändringar ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) gäller nästa import:
+  - Spelare förs över från varje tävlings egen lista och hittas på sitt exakta namn bland turneringens spelare. De gamla webbplatserna kopierade en turnerings spelare till varje tävling och lät en arrangör ändra kopian, så ett par som anmälts i en dubbeltävling som ”Joe Hogan & Levi Franks” kopplades ihop med bara Joe Hogan. Nu är det en egen spelare. En spelare som inte är med i någon tävling förs inte längre över.
+  - En tävling som säger vad en spelare representerar sätter det när spelaren inte representerade något, och en som säger något annat senare ändrar det inte. Ett block som sparats som bäst av 2, eller bäst av 3 där varje par spelade en tredje match, behåller det nu. Det görs till bäst av 1 bara där ett pars match skulle ha avgjorts före deras sista parti, och webbplatsen skulle avvisa resten.
+
+- **Bakom kulisserna.** Importen kan be om att bara föra över de turneringar som började mellan två dagar ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), och den säger nu vad den gjort i en fil för varje sorts rättelse, en för sina fel och en sammanfattning av varje import, allt i mappen docs i förrådet (även [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Ytterligare fyra rankingansvariga för världsrankingen i golfcroquet nämns i den ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), och webbplatsens egen adress är en ansvarig för association croquet och inte längre administratör ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Scenarier som misslyckades då och då eller hade halkat efter webbplatsen har rättats till ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
+
 ## Släppt 2026-10-23
 
 Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
