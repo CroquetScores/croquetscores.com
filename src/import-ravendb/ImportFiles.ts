@@ -192,8 +192,13 @@ export class ImportFiles implements AcceptedImportErrors {
         .join("");
     const path = join(this.folder, SUMMARY_FILE);
     // Added to the end of the summary of the imports before, after a blank
-    // line, or the first of them, which heads it.
-    const before = await readFile(path, "utf8").catch(() => undefined);
+    // line, or the first of them, which heads it. Only a file that is not there
+    // is the first: a file that cannot be read is an error, since writing the
+    // summary afresh over it would lose every import's before.
+    const before = await readFile(path, "utf8").catch((error: unknown) => {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+      throw error;
+    });
     await (before === undefined
       ? writeFile(path, "# Import Summary\n\n" + section)
       : appendFile(path, "\n" + section));
