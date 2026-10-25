@@ -1,5 +1,21 @@
 # 赛事管理者的新功能
 
+## 发布于 2026-10-25
+
+以下是自上次发布以来的主要变化。每一项都链接到做出该改动的 pull request。
+
+- **世界排名负责人的赛事列表可以按世界排名缩小范围。** 负责人的列表包含他们负责的各项运动的每一个赛事，比他们想逐条阅读的多得多。现在**新建赛事**旁边有三个按钮：**管理员/记分员**、**世界排名**和**非世界排名**。只要有一个适用于某个赛事的按钮处于开启状态，该赛事就会列出，所以每个按钮是增加赛事，而不是减少。开启的按钮带有对勾，**管理员/记分员**和**世界排名**默认开启。这些按钮只给负责人使用；如果您管理或记分赛事，您的列表和以前一样。（[#372](https://github.com/CroquetScores/croquetscores.com/pull/372)、[#376](https://github.com/CroquetScores/croquetscores.com/pull/376)）
+
+- **世界排名负责人或管理员可以给赛事的管理者发邮件。** 在**管理者**标签页上，他们会看到**给管理者发邮件**，这是一个链接，会打开一封新邮件，收件人是该赛事的每一位管理者，主题为“Croquet Scores”。网站不会发送任何内容。负责人可以查看自己负责的运动的任何赛事的这个标签页，用来查看管理者并给他们写信，但不能更改他们；管理者看不到任何人的电子邮件地址。参见[管理者和记分员](../tournament-managers/standard-tournament/managers-and-scorers.md)。（[#369](https://github.com/CroquetScores/croquetscores.com/pull/369)）
+
+- **单日赛事在排名文件中按那一天标注日期。** 以前写成一天的范围，`3-3.10.26`，现在是 `3.10.26`，和世界排名自己的列表写单独一天的方式一样。超过一天的赛事仍按原来的方式标注日期。参见[排名](../tournament-managers/standard-tournament/rankings.md)。（[#368](https://github.com/CroquetScores/croquetscores.com/pull/368)）
+
+- **从旧网站导入的赛事更准确。** 当世界排名的协会槌球和高尔夫槌球赛事列表里有某个赛事时，赛事的国家现在取自这些列表，而不是取自它的时区（[#366](https://github.com/CroquetScores/croquetscores.com/pull/366)）。另外两项改动（[#377](https://github.com/CroquetScores/croquetscores.com/pull/377)）将用于下一次导入：
+  - 球员从每个项目自己的名单导入，并按确切的姓名在赛事的球员中查找。旧网站把赛事的球员复制到每个项目里，还允许管理者修改副本，所以在双打项目中以“Joe Hogan & Levi Franks”报名的一对，曾被并到 Joe Hogan 一个人身上。现在它是单独的一名球员。不在任何项目里的球员不再被导入。
+  - 项目说明某名球员代表谁时，如果该球员原来没有代表，就按它设置；之后有项目说法不同，也不会更改。原本是2局制的小组赛，或者每对球员都打了第三局的3局制小组赛，现在保持原样。只有当某一对的比赛会在他们最后一局之前就已决出胜负（网站会拒绝其余的局）时，才改为1局制。
+
+- **幕后改动。** 导入时可以只导入在两个日期之间开始的赛事（[#374](https://github.com/CroquetScores/croquetscores.com/pull/374)），并且现在会把所做的事写成：每种修正一个文件，错误一个文件，以及每次导入的汇总，全都放在代码仓库的 docs 文件夹中（也见[#377](https://github.com/CroquetScores/croquetscores.com/pull/377)）。导入中又加入了四名高尔夫槌球世界排名负责人（[#367](https://github.com/CroquetScores/croquetscores.com/pull/367)），网站自己的地址现在是协会槌球负责人，不再是管理员（[#375](https://github.com/CroquetScores/croquetscores.com/pull/375)）。时有时无地失败的场景，以及落后于网站的场景，已经修正（[#359](https://github.com/CroquetScores/croquetscores.com/pull/359)、[#373](https://github.com/CroquetScores/croquetscores.com/pull/373)）。
+
 ## 发布于 2026-10-23
 
 以下是自上次发布以来的主要变化。每一项都链接到做出该改动的 pull request。
