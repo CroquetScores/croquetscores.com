@@ -1,5 +1,15 @@
 # Wat is er nieuw voor toernooileiders
 
+## Uitgebracht op 2026-10-26
+
+Dit zijn de belangrijkste veranderingen sinds de vorige release. Elke verandering verwijst naar de pull request waarmee ze is gemaakt.
+
+- **De pagina van een competitie kan worden afgedrukt.** De pagina van een poule, een knock-out, een Zwitsers en een test hebben elk een printerknop op de regel van de naam van de competitie, naast de weergaven. Als je erop drukt, opent het eigen afdrukvenster van de browser. Het werkt alleen met scripts, dus waar die er niet zijn, wordt de knop niet getoond. Afgedrukt wordt de naam van het toernooi, boven de naam van de competitie, en de resultaten eronder, en niets wat alleen dient om de pagina te vinden: de balken van de site, de weergaven, de knop en de voettekst. Links worden op papier niet onderstreept, maar de naam van een teruggetrokken speler houdt de streep erdoor. Een poule en een knock-out worden over de breedte van het papier afgedrukt, een Zwitsers en een test rechtop. Een schema van een poule of een loting van een knock-out die breder is dan het papier, wordt in stukken gesneden op pagina's na de eerste, met de namen van de spelers links van elk stuk van een schema herhaald. De pagina kan de printer niet vragen hoe breed het papier is, dus houdt hij rekening met Letter in de breedte, en een lezer die het papier rechtop zet, kan de rechterrand nog steeds kwijtraken. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **De download van de ranglijsten zegt wat het is.** De link op het tabblad **Ranglijsten** was **Ranglijsten downloaden**, wat klinkt alsof het de ranglijsten gaf. Het is nu **Partijen downloaden voor de wereldranglijst**, want het geeft de partijen van het toernooi, in het bestand waaruit de ranglijstfunctionarissen ze halen. Zie [Ranglijsten](../tournament-managers/standard-tournament/rankings.md). De nieuwe woorden in de andere talen dan Engels zijn nog niet door een moedertaalspreker gelezen, dus laat het ons weten als iets slecht leest. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Achter de schermen.** Het overzicht dat de import na elke run toevoegt, wordt niet meer overschreven als het niet gelezen kan worden ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), en de pakketten waarop de site draait, zijn bijgewerkt naar hun nieuwste versies binnen de bereiken die ze toestaan ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Uitgebracht op 2026-10-25
 
 Dit zijn de belangrijkste veranderingen sinds de vorige release. Elke verandering verwijst naar de pull request waarmee ze is gemaakt.

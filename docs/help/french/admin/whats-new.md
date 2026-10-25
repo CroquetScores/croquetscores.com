@@ -1,5 +1,15 @@
 # Nouveautés pour les responsables de tournoi
 
+## Publié le 2026-10-26
+
+Voici les principaux changements depuis la dernière version. Chacun renvoie à la pull request qui l'a apportée.
+
+- **La page d'une compétition peut être imprimée.** La page d'une poule, d'une élimination directe, d'un système suisse et d'une rencontre ont chacune un bouton imprimante sur la ligne du nom de la compétition, à côté des vues. L'appuyer ouvre la boîte de dialogue d'impression du navigateur. Il faut des scripts, donc sans eux le bouton n'est pas montré. Ce qui s'imprime, c'est le nom du tournoi, au-dessus du nom de la compétition, et les résultats en dessous, et rien de ce qui sert seulement à trouver la page : les barres du site, les vues, le bouton et le pied de page. Les liens ne sont pas soulignés sur le papier, mais le nom d'un joueur retiré garde le trait qui le barre. Une poule et une élimination directe s'impriment en largeur sur le papier, un système suisse et une rencontre en hauteur. La grille d'une poule ou le tableau d'une élimination directe plus large que le papier est coupé en morceaux sur des pages après la première, avec les noms des joueurs répétés à gauche de chaque morceau d'une grille. La page ne peut pas demander à l'imprimante la largeur du papier, donc elle prévoit du Letter en largeur, et un lecteur qui tourne le papier en hauteur peut encore perdre le bord droit. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
+
+- **Le téléchargement des classements dit ce qu'il est.** Le lien de l'onglet **Classements** était **Télécharger les classements**, ce qui laisse croire qu'il donnait les classements. Il est maintenant **Télécharger les parties pour le classement mondial**, car il donne les parties du tournoi, dans le fichier où les responsables des classements les prennent. Voir [Classements](../tournament-managers/standard-tournament/rankings.md). Les nouveaux mots dans les langues autres que l'anglais n'ont pas encore été lus par un locuteur natif ; dites-nous ce qui se lit mal. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
+
+- **Dans les coulisses.** Le récapitulatif que l'import ajoute après chaque exécution n'est plus écrasé quand il ne peut pas être lu ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), et les paquets dont le site dépend ont été portés à leurs dernières versions dans les plages qu'il permet ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
+
 ## Publié le 2026-10-25
 
 Voici les principaux changements depuis la dernière version. Chacun renvoie à la pull request qui l'a apportée.
