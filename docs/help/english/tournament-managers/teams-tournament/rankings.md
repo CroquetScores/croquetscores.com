@@ -4,7 +4,7 @@ Where a competition counts toward the world rankings, its results are sent to th
 
 ## The tab
 
-Open the tournament's page and choose **Rankings**, the last of its tabs. It says what the file is: a text file for Association Croquet, a spreadsheet for Golf Croquet and American 6 Wicket. It says what is left for you to do by hand, and that the file is then to be sent to the rankings officers. Beneath that is **Download rankings**, which saves the file. It is there before a single score is entered, and gives a file with nothing in it until one is.
+Open the tournament's page and choose **Rankings**, the last of its tabs. It says what the file is: a text file for Association Croquet, a spreadsheet for Golf Croquet and American 6 Wicket. It says what is left for you to do by hand, and that the file is then to be sent to the rankings officers. Beneath that is **Download games for world ranking**, which saves the file. It is there before a single score is entered, and gives a file with nothing in it until one is.
 
 The tab is only in the page of a tournament of a sport with world rankings, and only for its managers: a scorer is not offered it. The file itself is at the tournament's own address followed by `/rankings`, as `/2026/ac/spring-open/rankings`, which is the address the site has always given it, and anybody who has the address may open it.
 

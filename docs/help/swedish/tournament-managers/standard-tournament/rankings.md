@@ -4,7 +4,7 @@ När en tävling räknas med i världsrankingen skickas dess resultat till ranki
 
 ## Fliken
 
-Öppna turneringens sida och välj **Rankingar**, den sista av dess flikar. Den säger vad filen är: en textfil för association croquet, ett kalkylblad för golfcroquet och amerikansk 6-bågars croquet. Den säger vad som återstår för dig att göra för hand, och att filen sedan ska skickas till världsrankingens funktionärer. Under det finns **Ladda ner rankingar**, som sparar filen. Den finns där innan ett enda resultat har skrivits in, och ger då en fil utan något i.
+Öppna turneringens sida och välj **Rankingar**, den sista av dess flikar. Den säger vad filen är: en textfil för association croquet, ett kalkylblad för golfcroquet och amerikansk 6-bågars croquet. Den säger vad som återstår för dig att göra för hand, och att filen sedan ska skickas till världsrankingens funktionärer. Under det finns **Ladda ner partier för världsranking**, som sparar filen. Den finns där innan ett enda resultat har skrivits in, och ger då en fil utan något i.
 
 Fliken finns bara på sidan för en turnering i en sport som har en världsranking, och bara för dess arrangörer: en resultatförare erbjuds den inte. Själva filen ligger på turneringens egen adress följd av `/rankings`, som `/2026/ac/spring-open/rankings`, vilket är den adress webbplatsen alltid har gett den, och vem som helst som har adressen kan öppna den.
 

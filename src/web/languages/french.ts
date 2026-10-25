@@ -554,7 +554,8 @@ export const french: Language = {
     "admin.view.rankings": "Classements",
     "admin.rankings.file":
       "Les classements mondiaux utiliseront les résultats du tournoi grâce à cette fonction, et les organisateurs n'ont rien à faire.",
-    "admin.rankings.download": "Télécharger les classements",
+    "admin.rankings.download":
+      "Télécharger les parties pour le classement mondial",
     "rankings.notAvailable": "Les classements ne sont pas disponibles",
     "rankings.notAvailable.sport":
       "Le sport de ce tournoi n'a pas de classements mondiaux, il n'y a donc aucun classement à envoyer.",

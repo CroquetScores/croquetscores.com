@@ -553,7 +553,7 @@ export const dutch: Language = {
     "admin.view.rankings": "Ranglijsten",
     "admin.rankings.file":
       "De wereldranglijsten gebruiken de resultaten van het toernooi via deze functie, en toernooileiders hoeven niets te doen.",
-    "admin.rankings.download": "Ranglijsten downloaden",
+    "admin.rankings.download": "Partijen downloaden voor de wereldranglijst",
     "rankings.notAvailable": "Ranglijsten zijn niet beschikbaar",
     "rankings.notAvailable.sport":
       "De sport van dit toernooi heeft geen wereldranglijsten, dus er zijn geen ranglijsten om te versturen.",

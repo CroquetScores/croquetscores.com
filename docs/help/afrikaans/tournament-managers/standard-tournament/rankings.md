@@ -4,7 +4,7 @@ Waar 'n toernooi vir die wêreldranglys tel, word sy uitslae as 'n leer aan die 
 
 ## Die oortjie
 
-Maak die toernooi se bladsy oop en kies **Ranglyste**, die laaste van sy oortjies. Dit sê wat die leer is: 'n teksleer vir Association Croquet, 'n sigblad vir Golf Croquet en Amerikaanse 6-hoepel-croquet. Dit sê wat vir jou oorbly om met die hand te doen, en dat die leer dan na die beamptes van die wêreldranglys gestuur moet word. Daaronder is **Laai ranglyste af**, wat die leer stoor. Dit is daar voordat enige uitslag ingevoer is, en gee 'n leer met niks in nie totdat daar een is.
+Maak die toernooi se bladsy oop en kies **Ranglyste**, die laaste van sy oortjies. Dit sê wat die leer is: 'n teksleer vir Association Croquet, 'n sigblad vir Golf Croquet en Amerikaanse 6-hoepel-croquet. Dit sê wat vir jou oorbly om met die hand te doen, en dat die leer dan na die beamptes van die wêreldranglys gestuur moet word. Daaronder is **Laai spelle af vir die wêreldranglys**, wat die leer stoor. Dit is daar voordat enige uitslag ingevoer is, en gee 'n leer met niks in nie totdat daar een is.
 
 Die oortjie is net in die bladsy van 'n toernooi wat vir die wêreldranglys tel, en net vir sy bestuurders: 'n teller kry dit nie aangebied nie. Die leer self is by die toernooi se eie adres gevolg deur `/rankings`, soos `/2026/ac/spring-open/rankings`, wat die adres is wat die webwerf dit nog altyd gegee het, en enigiemand wat die adres het, kan dit oopmaak.
 

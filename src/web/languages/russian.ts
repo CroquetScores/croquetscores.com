@@ -519,7 +519,7 @@ export const russian: Language = {
     "admin.view.rankings": "Рейтинги",
     "admin.rankings.file":
       "Мировые рейтинги будут использовать результаты турнира с помощью этой функции, и организаторам ничего делать не нужно.",
-    "admin.rankings.download": "Скачать рейтинги",
+    "admin.rankings.download": "Скачать партии для мирового рейтинга",
     "rankings.notAvailable": "Рейтинги недоступны",
     "rankings.notAvailable.sport":
       "У вида спорта этого турнира нет мировых рейтингов, поэтому отправлять нечего.",

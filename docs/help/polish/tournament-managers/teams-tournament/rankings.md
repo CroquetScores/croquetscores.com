@@ -4,7 +4,7 @@ Gdy konkurencja liczy się do rankingów światowych, jego wyniki są wysyłane 
 
 ## Karta
 
-Otwórz stronę turnieju i wybierz **Rankingi**, ostatnią z jego kart. Mówi ona, czym jest plik: plikiem tekstowym w krokiecie klasycznym, arkuszem kalkulacyjnym w krokiecie golfowym i amerykańskim krokiecie sześciobramkowym. Mówi też, co zostaje do zrobienia ręcznie, i że plik należy potem wysłać do osób odpowiedzialnych za rankingi. Pod spodem jest **Pobierz rankingi**, które zapisuje plik. Jest tam jeszcze przed wprowadzeniem choćby jednego wyniku i daje plik, w którym nic nie ma, dopóki jakiś wynik nie zostanie wprowadzony.
+Otwórz stronę turnieju i wybierz **Rankingi**, ostatnią z jego kart. Mówi ona, czym jest plik: plikiem tekstowym w krokiecie klasycznym, arkuszem kalkulacyjnym w krokiecie golfowym i amerykańskim krokiecie sześciobramkowym. Mówi też, co zostaje do zrobienia ręcznie, i że plik należy potem wysłać do osób odpowiedzialnych za rankingi. Pod spodem jest **Pobierz gry do rankingu światowego**, które zapisuje plik. Jest tam jeszcze przed wprowadzeniem choćby jednego wyniku i daje plik, w którym nic nie ma, dopóki jakiś wynik nie zostanie wprowadzony.
 
 Karta jest tylko na stronie turnieju w dyscyplinie, która ma rankingi światowe, i tylko dla jego organizatorów: osoba wprowadzająca wyniki jej nie dostaje. Sam plik jest pod adresem turnieju z dopisanym `/rankings`, na przykład `/2026/ac/spring-open/rankings`, który to adres strona zawsze mu nadawała, i każdy, kto zna adres, może go otworzyć.
 

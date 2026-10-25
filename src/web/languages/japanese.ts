@@ -518,7 +518,7 @@ export const japanese: Language = {
     "admin.view.rankings": "ランキング",
     "admin.rankings.file":
       "世界ランキングにはこの大会の結果が使われます。この機能を使うため、運営者が何かを行う必要はありません。",
-    "admin.rankings.download": "ランキングをダウンロード",
+    "admin.rankings.download": "世界ランキング用のゲームをダウンロード",
     "rankings.notAvailable": "ランキングは利用できません",
     "rankings.notAvailable.sport":
       "この大会の競技には世界ランキングがないため、送信するランキングはありません。",

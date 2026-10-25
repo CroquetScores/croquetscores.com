@@ -516,7 +516,7 @@ export const chinese: Language = {
     "admin.view.rankings": "排名",
     "admin.rankings.file":
       "世界排名将使用该赛事的成绩，并通过此功能获取，管理者无需进行任何操作。",
-    "admin.rankings.download": "下载排名",
+    "admin.rankings.download": "下载用于世界排名的比赛",
     "rankings.notAvailable": "无法提供排名",
     "rankings.notAvailable.sport":
       "该赛事的运动没有世界排名，所以没有可发送的排名。",

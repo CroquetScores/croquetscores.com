@@ -4,7 +4,7 @@ Quando uma competição vale para os rankings mundiais, os seus resultados são 
 
 ## A aba
 
-Abra a página do torneio e escolha **Rankings**, a última das suas abas. Ela diz o que é o arquivo: um arquivo de texto no Croquet de Associação, uma planilha no Croquet de Golfe e no Croquet Americano de 6 Arcos. Diz o que fica para você fazer à mão, e que o arquivo deve depois ser enviado aos responsáveis pelos rankings. Abaixo está **Baixar rankings**, que salva o arquivo. Ele está ali antes de qualquer resultado ser inserido, e dá um arquivo sem nada dentro até que um seja.
+Abra a página do torneio e escolha **Rankings**, a última das suas abas. Ela diz o que é o arquivo: um arquivo de texto no Croquet de Associação, uma planilha no Croquet de Golfe e no Croquet Americano de 6 Arcos. Diz o que fica para você fazer à mão, e que o arquivo deve depois ser enviado aos responsáveis pelos rankings. Abaixo está **Baixar jogos para o ranking mundial**, que salva o arquivo. Ele está ali antes de qualquer resultado ser inserido, e dá um arquivo sem nada dentro até que um seja.
 
 A aba só existe na página de um torneio de um esporte com rankings mundiais, e só para os seus organizadores: um anotador não a recebe. O arquivo em si fica no endereço do próprio torneio seguido de `/rankings`, como `/2026/ac/spring-open/rankings`, que é o endereço que o site sempre lhe deu, e qualquer pessoa que tenha o endereço pode abri-lo.
 

@@ -4,7 +4,7 @@ Quand une compétition compte pour le classement mondial, ses résultats lui son
 
 ## L’onglet
 
-Ouvrez la page du tournoi et choisissez **Classements**, le dernier de ses onglets. Il dit ce qu’est le fichier : un fichier texte pour le croquet association, un tableur pour le croquet golf et le croquet américain à 6 arceaux. Il dit ce qu’il vous reste à faire à la main, et que le fichier doit ensuite être envoyé aux responsables du classement. En dessous se trouve **Télécharger les classements**, qui enregistre le fichier. Il est là avant qu’un seul résultat soit saisi, et donne un fichier vide tant qu’il n’y en a pas.
+Ouvrez la page du tournoi et choisissez **Classements**, le dernier de ses onglets. Il dit ce qu’est le fichier : un fichier texte pour le croquet association, un tableur pour le croquet golf et le croquet américain à 6 arceaux. Il dit ce qu’il vous reste à faire à la main, et que le fichier doit ensuite être envoyé aux responsables du classement. En dessous se trouve **Télécharger les parties pour le classement mondial**, qui enregistre le fichier. Il est là avant qu’un seul résultat soit saisi, et donne un fichier vide tant qu’il n’y en a pas.
 
 L’onglet n’existe que sur la page d’un tournoi d’un sport qui a un classement mondial, et seulement pour ses organisateurs : un marqueur ne le voit pas. Le fichier lui-même se trouve à l’adresse du tournoi suivie de `/rankings`, comme `/2026/ac/spring-open/rankings`, qui est l’adresse que le site lui a toujours donnée, et toute personne qui connaît l’adresse peut l’ouvrir.
 

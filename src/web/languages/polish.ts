@@ -491,7 +491,7 @@ export const polish: Language = {
     "admin.view.rankings": "Rankingi",
     "admin.rankings.file":
       "Rankingi światowe wykorzystają wyniki turnieju za pomocą tej funkcji, więc organizatorzy nie muszą nic robić.",
-    "admin.rankings.download": "Pobierz rankingi",
+    "admin.rankings.download": "Pobierz gry do rankingu światowego",
     "rankings.notAvailable": "Rankingi są niedostępne",
     "rankings.notAvailable.sport":
       "Dyscyplina tego turnieju nie ma rankingów światowych, więc nie ma rankingów do wysłania.",

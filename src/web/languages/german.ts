@@ -576,7 +576,7 @@ export const german: Language = {
     "admin.view.rankings": "Ranglisten",
     "admin.rankings.file":
       "Die Weltranglisten verwenden die Ergebnisse des Turniers mit dieser Funktion, die Verantwortlichen müssen nichts weiter tun.",
-    "admin.rankings.download": "Ranglisten herunterladen",
+    "admin.rankings.download": "Spiele für die Weltrangliste herunterladen",
     "rankings.notAvailable": "Ranglisten sind nicht verfügbar",
     "rankings.notAvailable.sport":
       "Für die Sportart dieses Turniers gibt es keine Weltranglisten, also gibt es keine Ranglisten zu senden.",

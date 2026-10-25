@@ -4,7 +4,7 @@ Lle mae cystadleuaeth yn cyfrif tuag at restr detholion y byd, caiff ei ganlynia
 
 ## Y tab
 
-Agorwch dudalen y twrnamaint a dewiswch **Detholion**, yr olaf o'i dabiau. Mae'n dweud beth yw'r ffeil: ffeil destun ar gyfer Association Croquet, taenlen ar gyfer Golf Croquet ac American 6 Wicket. Mae'n dweud beth sydd ar ôl i chi ei wneud â llaw, ac yna bod y ffeil i'w hanfon at swyddogion detholion y byd. O dan hynny mae **Lawrlwytho'r detholion**, sy'n cadw'r ffeil. Mae yno cyn i un canlyniad gael ei roi i mewn, ac mae'n rhoi ffeil heb ddim ynddi nes bod un.
+Agorwch dudalen y twrnamaint a dewiswch **Detholion**, yr olaf o'i dabiau. Mae'n dweud beth yw'r ffeil: ffeil destun ar gyfer Association Croquet, taenlen ar gyfer Golf Croquet ac American 6 Wicket. Mae'n dweud beth sydd ar ôl i chi ei wneud â llaw, ac yna bod y ffeil i'w hanfon at swyddogion detholion y byd. O dan hynny mae **Lawrlwytho gemau ar gyfer Safle'r Byd**, sy'n cadw'r ffeil. Mae yno cyn i un canlyniad gael ei roi i mewn, ac mae'n rhoi ffeil heb ddim ynddi nes bod un.
 
 Dim ond ar dudalen twrnamaint mewn camp sydd â rhestr detholion y byd y mae'r tab, a dim ond i'w reolwyr: ni chynigir ef i sgorwr. Mae'r ffeil ei hun ar gyfeiriad y twrnamaint ei hun ac yna `/rankings`, fel `/2026/ac/spring-open/rankings`, sef y cyfeiriad y mae'r wefan bob amser wedi'i roi iddi, a gall unrhyw un sydd â'r cyfeiriad ei hagor.
 
