@@ -3195,8 +3195,14 @@ a.player-name[data-withdrawn] {
     overflow: visible;
     clip-path: none;
     white-space: normal;
-    font-size: var(--text-lg);
+    font-size: var(--text-3xl);
     font-weight: bold;
+  }
+
+  /* A step beneath the first level, as the levels are on paper, though on the
+     screen it is drawn as large as a first was. */
+  .competition-heading h2 {
+    font-size: var(--text-2xl);
   }
 
   /* Everything on paper, not what fits a window. */

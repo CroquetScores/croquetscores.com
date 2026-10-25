@@ -93,6 +93,11 @@ Feature: A competition's page can be printed
       And the page is laid out for the printer
       Then the printed tournament name is above the printed competition name
 
+    Scenario: The tournament's name is printed larger than the competition's
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      And the page is laid out for the printer
+      Then the printed tournament name is larger than the printed competition name
+
     Scenario: The competition's name is printed
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       And the page is laid out for the printer

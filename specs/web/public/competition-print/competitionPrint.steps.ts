@@ -69,6 +69,23 @@ Then(
   },
 );
 
+// A heading is as large as it is drawn, which is the size the browser reports
+// for it once the page is laid out for the printer.
+const sizeOf = (world: SpecWorld, selector: string): Promise<number> =>
+  world.browserPage
+    .locator(selector)
+    .first()
+    .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
+
+Then(
+  "the printed tournament name is larger than the printed competition name",
+  async function (this: SpecWorld) {
+    const tournament = await sizeOf(this, "main .print-tournament");
+    const competition = await sizeOf(this, "main h2");
+    assert.ok(tournament > competition, `${tournament} and ${competition}`);
+  },
+);
+
 Then(
   "the printed competition name is {string}",
   async function (this: SpecWorld, name: string) {
