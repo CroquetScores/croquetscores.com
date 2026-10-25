@@ -555,7 +555,7 @@ export const italian: Language = {
     "admin.view.rankings": "Classifiche",
     "admin.rankings.file":
       "Le classifiche mondiali useranno i risultati del torneo, tramite questa funzione, e gli organizzatori non devono fare nulla.",
-    "admin.rankings.download": "Scarica le classifiche",
+    "admin.rankings.download": "Scarica le partite per la classifica mondiale",
     "rankings.notAvailable": "Le classifiche non sono disponibili",
     "rankings.notAvailable.sport":
       "Lo sport di questo torneo non ha classifiche mondiali, quindi non c'è nulla da inviare.",

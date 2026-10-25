@@ -511,7 +511,7 @@ export const maori: Language = {
     "admin.view.rankings": "Whakarārangi",
     "admin.rankings.file":
       "Ka whakamahia ngā hua o te whakataetae e ngā whakarārangi o te ao mā tēnei mahi, ā, kāore he mahi a ngā kaiwhakahaere.",
-    "admin.rankings.download": "Tikiake i ngā whakarārangi",
+    "admin.rankings.download": "Tikiake i ngā kēmu mō te tūnga o te ao",
     "rankings.notAvailable": "Kāore e wātea ana ngā whakarārangi",
     "rankings.notAvailable.sport":
       "Kāore he whakarārangi o te ao mō te hākinakina o tēnei whakataetae, nā reira kāore he whakarārangi hei tuku.",

@@ -4,7 +4,7 @@ Wanneer een toernooi meetelt voor de wereldranglijst, worden de uitslagen als be
 
 ## Het tabblad
 
-Open de pagina van het toernooi en kies **Ranglijsten**, het laatste van de tabbladen. Het zegt wat het bestand is: een tekstbestand voor Associatiecroquet, een spreadsheet voor Golfcroquet en Amerikaans croquet met 6 poortjes. Het zegt wat er nog met de hand moet gebeuren, en dat het bestand daarna naar de functionarissen van de wereldranglijst moet worden gestuurd. Daaronder staat **Ranglijsten downloaden**, dat het bestand opslaat. Het staat er al voordat er één score is ingevoerd, en geeft een bestand zonder inhoud totdat er een is.
+Open de pagina van het toernooi en kies **Ranglijsten**, het laatste van de tabbladen. Het zegt wat het bestand is: een tekstbestand voor Associatiecroquet, een spreadsheet voor Golfcroquet en Amerikaans croquet met 6 poortjes. Het zegt wat er nog met de hand moet gebeuren, en dat het bestand daarna naar de functionarissen van de wereldranglijst moet worden gestuurd. Daaronder staat **Partijen downloaden voor de wereldranglijst**, dat het bestand opslaat. Het staat er al voordat er één score is ingevoerd, en geeft een bestand zonder inhoud totdat er een is.
 
 Het tabblad staat alleen op de pagina van een toernooi dat meetelt voor de wereldranglijst, en alleen voor de toernooileiders: een scorebijhouder krijgt het niet aangeboden. Het bestand zelf staat op het eigen adres van het toernooi gevolgd door `/rankings`, zoals `/2026/ac/spring-open/rankings`, het adres dat de site het altijd heeft gegeven, en iedereen die het adres heeft, kan het openen.
 

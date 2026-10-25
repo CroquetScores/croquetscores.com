@@ -4,7 +4,7 @@ Quando una competizione vale per le classifiche mondiali, i suoi risultati vengo
 
 ## La scheda
 
-Apri la pagina del torneo e scegli **Classifiche**, l'ultima delle sue schede. Dice che cos'è il file: un file di testo per l'Association Croquet, un foglio di calcolo per il Golf Croquet e l'American 6 Wicket. Dice che cosa resta da fare a mano, e che il file va poi inviato ai responsabili delle classifiche mondiali. Sotto c'è **Scarica le classifiche**, che salva il file. C'è prima ancora che sia inserito un solo punteggio, e dà un file senza nulla dentro finché non ce n'è uno.
+Apri la pagina del torneo e scegli **Classifiche**, l'ultima delle sue schede. Dice che cos'è il file: un file di testo per l'Association Croquet, un foglio di calcolo per il Golf Croquet e l'American 6 Wicket. Dice che cosa resta da fare a mano, e che il file va poi inviato ai responsabili delle classifiche mondiali. Sotto c'è **Scarica le partite per la classifica mondiale**, che salva il file. C'è prima ancora che sia inserito un solo punteggio, e dà un file senza nulla dentro finché non ce n'è uno.
 
 La scheda c'è solo nella pagina di un torneo di uno sport che ha classifiche mondiali, e solo per i suoi organizzatori: a un segnapunti non viene offerta. Il file stesso si trova all'indirizzo del torneo seguito da `/rankings`, come `/2026/ac/spring-open/rankings`, che è l'indirizzo che il sito gli ha sempre dato, e chiunque abbia l'indirizzo può aprirlo.
 

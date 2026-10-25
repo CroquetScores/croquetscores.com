@@ -4,7 +4,7 @@ Cuando una competición cuenta para el ranking mundial, sus resultados se envía
 
 ## La pestaña
 
-Abre la página del torneo y elige **Rankings**, la última de sus pestañas. Dice qué es el archivo: un archivo de texto para Croquet de asociación, una hoja de cálculo para Croquet golf y American 6 Wicket. Dice qué te queda por hacer a mano, y que después el archivo se ha de enviar a los responsables del ranking. Debajo está **Descargar rankings**, que guarda el archivo. Está ahí antes de introducir un solo resultado, y da un archivo sin nada dentro hasta que hay alguno.
+Abre la página del torneo y elige **Rankings**, la última de sus pestañas. Dice qué es el archivo: un archivo de texto para Croquet de asociación, una hoja de cálculo para Croquet golf y American 6 Wicket. Dice qué te queda por hacer a mano, y que después el archivo se ha de enviar a los responsables del ranking. Debajo está **Descargar partidas para el ranking mundial**, que guarda el archivo. Está ahí antes de introducir un solo resultado, y da un archivo sin nada dentro hasta que hay alguno.
 
 La pestaña solo está en la página de un torneo de un deporte con ranking mundial, y solo para sus gestores: un anotador no la tiene. El archivo mismo está en la dirección propia del torneo seguida de `/rankings`, como `/2026/ac/spring-open/rankings`, que es la dirección que el sitio siempre le ha dado, y cualquiera que tenga la dirección puede abrirlo.
 

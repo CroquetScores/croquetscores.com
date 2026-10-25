@@ -530,7 +530,7 @@ export const welsh: Language = {
     "admin.view.rankings": "Detholion",
     "admin.rankings.file":
       "Bydd rhestr detholion y byd yn defnyddio canlyniadau'r twrnamaint drwy'r swyddogaeth hon, felly nid oes angen i'r rheolwyr wneud dim.",
-    "admin.rankings.download": "Lawrlwytho'r detholion",
+    "admin.rankings.download": "Lawrlwytho gemau ar gyfer Safle'r Byd",
     "rankings.notAvailable": "Nid yw'r detholion ar gael",
     "rankings.notAvailable.sport":
       "Nid oes gan gamp y twrnamaint hwn restr detholion y byd, felly nid oes detholion i'w hanfon.",

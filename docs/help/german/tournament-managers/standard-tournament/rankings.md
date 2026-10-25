@@ -4,7 +4,7 @@ Wenn ein Wettbewerb für die Weltrangliste zählt, werden seine Ergebnisse der R
 
 ## Der Reiter
 
-Öffnen Sie die Seite des Turniers und wählen Sie **Ranglisten**, den letzten ihrer Reiter. Er sagt, was die Datei ist: eine Textdatei für Association Croquet, eine Tabelle für Golf Croquet und American 6 Wicket. Er sagt, was für Sie von Hand noch zu tun bleibt und dass die Datei danach an die Verantwortlichen der Weltrangliste zu senden ist. Darunter steht **Ranglisten herunterladen**, was die Datei speichert. Es ist schon da, bevor ein einziges Ergebnis eingegeben ist, und liefert eine Datei ohne Inhalt, bis eines da ist.
+Öffnen Sie die Seite des Turniers und wählen Sie **Ranglisten**, den letzten ihrer Reiter. Er sagt, was die Datei ist: eine Textdatei für Association Croquet, eine Tabelle für Golf Croquet und American 6 Wicket. Er sagt, was für Sie von Hand noch zu tun bleibt und dass die Datei danach an die Verantwortlichen der Weltrangliste zu senden ist. Darunter steht **Spiele für die Weltrangliste herunterladen**, was die Datei speichert. Es ist schon da, bevor ein einziges Ergebnis eingegeben ist, und liefert eine Datei ohne Inhalt, bis eines da ist.
 
 Der Reiter erscheint nur auf der Seite eines Turniers in einer Sportart mit Weltrangliste, und nur für seine Verantwortlichen: Ein Ergebniserfasser bekommt ihn nicht angeboten. Die Datei selbst liegt unter der eigenen Adresse des Turniers mit `/rankings` dahinter, etwa `/2026/ac/spring-open/rankings`, der Adresse, die die Website ihr immer gegeben hat, und jeder, der die Adresse hat, kann sie öffnen.
 

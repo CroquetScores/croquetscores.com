@@ -12,9 +12,9 @@ Feature: The rankings tab of a tournament's page
   The tab says what the file is, in the same words whatever the sport, since
   what is done with it afterwards is not the tab's to tell.
 
-  Beneath that is one link, "Download rankings", which leads to the file. It
-  is a link rather than a button because it goes to an address and changes
-  nothing, as the tournament's other links do. It is offered whether or not
+  Beneath that is one link, "Download games for world ranking", which leads to
+  the file. It is a link rather than a button because it goes to an address
+  and changes nothing, as the tournament's other links do. It is offered whether or not
   the tournament has a game yet, since a file with nothing in it is still
   what is asked for, and a manager who presses it early learns what it will
   hold.
@@ -46,27 +46,27 @@ Feature: The rankings tab of a tournament's page
 
     Scenario: The link is offered
       When the rankings of "Spring Open" are opened
-      Then the tab's link "Download rankings" is offered
+      Then the tab's link "Download games for world ranking" is offered
 
     Scenario: The link leads to the tournament's rankings
       Given the rankings of "Spring Open" are open
-      Then the tab's link "Download rankings" leads to "/2026/ac/spring-open/rankings"
+      Then the tab's link "Download games for world ranking" leads to "/2026/ac/spring-open/rankings"
 
     Scenario: Following the link gives a file
       Given the rankings of "Spring Open" are open
-      When the tab's link "Download rankings" is followed
+      When the tab's link "Download games for world ranking" is followed
       Then a file is given
 
     Scenario: The link can be pressed with a thumb
       When the rankings of "Spring Open" are opened
-      Then the tab's link "Download rankings" is at least 44 pixels tall
+      Then the tab's link "Download games for world ranking" is at least 44 pixels tall
 
   Rule: A tournament played by teams has it too
 
     Scenario: A test's tournament is offered the link
       Given the tournament "Spring Open" is played in the format "Teams"
       When the rankings of "Spring Open" are opened
-      Then the tab's link "Download rankings" is offered
+      Then the tab's link "Download games for world ranking" is offered
 
   Rule: Every word the tab says is in the reader's language
 

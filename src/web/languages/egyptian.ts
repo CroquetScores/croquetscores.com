@@ -511,7 +511,7 @@ export const egyptian: Language = {
     "admin.view.rankings": "التصنيفات",
     "admin.rankings.file":
       "التصنيف العالمي هيستخدم نتايج البطولة عن طريق الوظيفة دي، والمديرين مش محتاجين يعملوا حاجة.",
-    "admin.rankings.download": "نزّل التصنيفات",
+    "admin.rankings.download": "نزّل الألعاب للتصنيف العالمي",
     "rankings.notAvailable": "التصنيفات مش متاحة",
     "rankings.notAvailable.sport":
       "رياضة البطولة دي ملهاش تصنيف عالمي، فمفيش تصنيفات تتبعت.",

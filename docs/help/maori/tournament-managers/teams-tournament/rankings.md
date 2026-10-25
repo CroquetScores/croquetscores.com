@@ -4,7 +4,7 @@ Ina kaute tētahi tauwhāinga mō te whakarārangi o te ao, ka tukuna ōna oting
 
 ## Te ripa
 
-Tuwhera i te whārangi o te whakataetae, ka kōwhiri i **Whakarārangi**, te ripa whakamutunga. Ka kī mai he aha te kōnae: he kōnae kuputuhi mō Association Croquet, he pepa tātai mō Golf Croquet me American 6 Wicket. Ka kī mai he aha ngā mea ka toe māu e mahi ki te ringa, ā, ka tukuna te kōnae ki ngā āpiha o te whakarārangi o te ao. I raro iho ko **Tikiake i ngā whakarārangi**, hei penapena i te kōnae. Kei reira i mua i te whakaurunga o tētahi tākohu, ā, he kōnae kau te kōnae ka riro mai kia whakaurua ra anō tētahi.
+Tuwhera i te whārangi o te whakataetae, ka kōwhiri i **Whakarārangi**, te ripa whakamutunga. Ka kī mai he aha te kōnae: he kōnae kuputuhi mō Association Croquet, he pepa tātai mō Golf Croquet me American 6 Wicket. Ka kī mai he aha ngā mea ka toe māu e mahi ki te ringa, ā, ka tukuna te kōnae ki ngā āpiha o te whakarārangi o te ao. I raro iho ko **Tikiake i ngā kēmu mō te tūnga o te ao**, hei penapena i te kōnae. Kei reira i mua i te whakaurunga o tētahi tākohu, ā, he kōnae kau te kōnae ka riro mai kia whakaurua ra anō tētahi.
 
 Kei te whārangi anake o tētahi whakataetae o tētahi hākinakina he whakarārangi o te ao tāna te ripa, ā, mā ngā kaiwhakahaere anake: kāore e tukuna ki te kaitākohu. Kei te wāhitau ake o te whakataetae te kōnae, ka whai i a `/rankings`, pēnei i `/2026/ac/spring-open/rankings`, ko te wāhitau tērā kua hoatu tonu e te pae, ā, ka taea e te tangata e mōhio ana ki te wāhitau te whakatuwhera.
 

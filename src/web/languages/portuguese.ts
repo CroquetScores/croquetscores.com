@@ -548,7 +548,7 @@ export const portuguese: Language = {
     "admin.view.rankings": "Rankings",
     "admin.rankings.file":
       "O ranking mundial usará os resultados do torneio por meio desta função, e os organizadores não precisam fazer nada.",
-    "admin.rankings.download": "Baixar rankings",
+    "admin.rankings.download": "Baixar jogos para o ranking mundial",
     "rankings.notAvailable": "Os rankings não estão disponíveis",
     "rankings.notAvailable.sport":
       "O esporte deste torneio não tem ranking mundial, então não há rankings a enviar.",

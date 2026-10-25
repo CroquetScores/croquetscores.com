@@ -540,7 +540,7 @@ export const korean: Language = {
     "admin.view.rankings": "랭킹",
     "admin.rankings.file":
       "세계 랭킹은 이 대회의 결과를 이 기능으로 가져가므로, 운영자가 따로 할 일은 없어요.",
-    "admin.rankings.download": "랭킹 내려받기",
+    "admin.rankings.download": "세계 랭킹용 경기 내려받기",
     "rankings.notAvailable": "랭킹을 사용할 수 없어요",
     "rankings.notAvailable.sport":
       "이 대회의 종목에는 세계 랭킹이 없어서 보낼 랭킹도 없어요.",
