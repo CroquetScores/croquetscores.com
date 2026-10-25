@@ -3101,3 +3101,102 @@ a.player-name[data-withdrawn] {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* The button that prints a competition's page. As tall as anything else
+   pressed with a thumb, and drawn as the views beside it are. */
+.print-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-1);
+  color: inherit;
+  cursor: pointer;
+}
+
+.print-button[hidden] {
+  display: none;
+}
+
+.print-button .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
+/* Said on paper, where the site's bars are not, so that a printed page says
+   whose results they are. On the screen the tournament's name is already in
+   the bar above. */
+.print-tournament {
+  display: none;
+}
+
+/* A page printed is the competition's name and its results, and nothing that
+   is for finding the page: the site's bars, the views, the button. Black on
+   white with no panel, since ink is spent on a tint nobody reads against. The
+   paper's shape is the page's, named by the heading (competitionPages.ts),
+   because a block's grid and a knockout's draw are wide and want the paper
+   across, and a Swiss's table and a test's are long and want it up. */
+@page landscape {
+  size: landscape;
+}
+
+@page portrait {
+  size: portrait;
+}
+
+@media print {
+  body:has([data-print="landscape"]) {
+    page: landscape;
+  }
+
+  body:has([data-print="portrait"]) {
+    page: portrait;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    min-height: 0;
+  }
+
+  .try-banner,
+  .site-bar,
+  .site-sections,
+  .site-title-bar,
+  .tournament-subtitle,
+  .site-footer,
+  .group-links,
+  .competition-views,
+  .print-button {
+    display: none;
+  }
+
+  main {
+    padding-block: 0;
+  }
+
+  .panel {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .print-tournament {
+    display: block;
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: bold;
+  }
+
+  /* Everything on paper, not what fits a window. */
+  .block-grid-scroll,
+  .knockout-scroll,
+  .swiss-scroll,
+  .test-scroll {
+    overflow: visible;
+  }
+}
