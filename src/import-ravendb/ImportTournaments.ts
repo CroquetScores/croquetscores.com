@@ -79,6 +79,104 @@ const countryOfName: Readonly<Record<string, string>> = {
   "Oktober GC": "no",
 };
 
+// Countries the old sites put tournaments in that were played in another, by
+// the code of each (ImportTournaments.feature).
+const countriesPlayedInInstead: Readonly<Record<string, string>> = {
+  cl: "us",
+  iq: "eg",
+  il: "eg",
+  jo: "eg",
+  ma: "lv",
+  na: "eg",
+  sg: "au",
+  tw: "au",
+  th: "au",
+  ua: "lv",
+};
+
+// The names of Spanish clubs, which a tournament's name has as a word of its
+// own in capitals when the club ran it. Whole is no letter or digit beside it,
+// and the capitals are meant: in lower case these are plain words and names.
+// A word of its own is one with no letter or digit beside it. Its case is the
+// one it is given, unless the flags say "i".
+const wholeWord = (word: string, flags = ""): RegExp =>
+  new RegExp(`(?<![\\p{L}\\p{N}])${word}(?![\\p{L}\\p{N}])`, `${flags}u`);
+
+const spanishClubs =
+  /(?<![\p{L}\p{N}])(?:RSHECC|CCVM|VGCC|RCGVH|RCLM|RCP)(?![\p{L}\p{N}])/u;
+
+// What a tournament's name can say of the country it was played in, in the
+// order they are tried: it begins with a word, or has one anywhere in it, in
+// any case, or has a club's name as a word of its own. The first to match is
+// taken, whatever else says (ImportTournaments.feature). Each is given the
+// name as it was written.
+const namesSayingACountry: readonly {
+  readonly says: (name: string) => boolean;
+  readonly country: string;
+}[] = [
+  {
+    says: (name) => name.toLowerCase().startsWith("latvia"),
+    country: "lv",
+  },
+  { says: (name) => name.toLowerCase().includes("spanish"), country: "es" },
+  { says: (name) => spanishClubs.test(name), country: "es" },
+  {
+    says: (name) => name.toLowerCase().includes("western cape"),
+    country: "za",
+  },
+  {
+    says: (name) => /open door|stage door/i.test(name),
+    country: "za",
+  },
+  { says: (name) => /south african/i.test(name), country: "za" },
+  { says: (name) => name.toLowerCase().includes("egypt"), country: "eg" },
+  { says: (name) => wholeWord("Greece", "i").test(name), country: "gr" },
+  {
+    // Called exactly this, whichever way its apostrophe is written.
+    says: (name) =>
+      name.replaceAll("’", "'").toLowerCase() ===
+      "wgca women's intl friendship cup",
+    country: "us",
+  },
+];
+
+// An ordinal at the start of a name, as "1st", "10th" or "112th", in any case
+// and a word of its own. Only the look of one is asked: "1th" is let through.
+const startsWithAnOrdinal = /^\d+(?:st|nd|rd|th)(?![\p{L}\p{N}])/iu;
+
+// What a name says of a tournament put in one country only, by the code of the
+// country it was put in, in the order they are tried. Each is given the name as
+// it was written, and says the country the tournament was played in, or
+// nothing where the name says none (ImportTournaments.feature).
+const namesSayingACountryForOne: Readonly<
+  Record<string, (name: string) => string | undefined>
+> = {
+  // South African has South Africa in it, so the one is asked for.
+  na: (name) => (/saca|south africa/i.test(name) ? "za" : undefined),
+  ng: (name) => (/rondebosch/i.test(name) ? "za" : undefined),
+  // Western Cape is South Africa's in any country (namesSayingACountry), so
+  // only the club's initials are left to say.
+  st: (name) => (wholeWord("Surbiton", "i").test(name) ? "england" : undefined),
+  ro: (name) =>
+    /wcca/i.test(name)
+      ? "za"
+      : wholeWord("SWF").test(name)
+        ? "england"
+        : wholeWord("Ramadan").test(name)
+          ? "eg"
+          : undefined,
+  ma: (name) => (startsWithAnOrdinal.test(name) ? "es" : undefined),
+};
+
+const countryPlayedIn = (said: Country, name: string): Country => {
+  const written = name.trim();
+  const country =
+    namesSayingACountry.find(({ says }) => says(written))?.country ??
+    namesSayingACountryForOne[said.code]?.(written) ??
+    countriesPlayedInInstead[said.code];
+  return Countries.thereAre.find(country ?? "") ?? said;
+};
+
 const placeOf = (
   timeZone: string | null,
   name: string,
@@ -179,11 +277,16 @@ export class ImportTournaments implements Importer<OldTournament> {
       const listed = this.#countryInTheLists(document);
       counting = rankedSportOf(document);
       tookListedCountry = listed !== undefined;
-      const country = listed ?? timeZones.country;
+      const saidCountry = listed ?? timeZones.country;
+      // A country the old sites put a tournament in that it was never played
+      // in is the one it was, wherever the country came from, and a region is
+      // its country's, so the tournament is then in none.
+      const country = countryPlayedIn(saidCountry, document.Name);
       const region =
-        listed === undefined || listed.code === timeZones.country.code
-          ? timeZones.region
-          : undefined;
+        country.code !== saidCountry.code ||
+        (listed !== undefined && listed.code !== timeZones.country.code)
+          ? undefined
+          : timeZones.region;
       // The old sites kept no moment a tournament was created at, so it was
       // created when it started, as far as anything here says.
       const at = dayOf(document.Start);

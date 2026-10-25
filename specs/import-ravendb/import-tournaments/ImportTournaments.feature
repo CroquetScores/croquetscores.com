@@ -232,7 +232,6 @@ Feature: Importing the old sites' tournaments
         | time zone                    | country |
         | GMT Standard Time            | england |
         | W. Europe Standard Time      | es      |
-        | Morocco Standard Time        | ma      |
         | Romance Standard Time        | es      |
         | Arabian Standard Time        | ae      |
         | Argentina Standard Time      | ar      |
@@ -407,6 +406,974 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the region "wa"
+
+  Rule: A tournament is moved out of a country it was never played in, or into the one its name says
+
+    The old sites had tournaments played in the United States that their time
+    zones, and in places the world rankings' lists, put in Chile, and ones
+    played in Egypt that they put in Iraq, Israel, Jordan or Namibia, ones
+    played in Latvia that they put in Morocco or Ukraine, and ones played in
+    Australia that they put in Singapore, Taiwan or Thailand. None was played
+    where it was put, so wherever the country comes from, the time zone or a
+    list, Chile is taken as the USA, Iraq, Israel, Jordan and Namibia as
+    Egypt, Morocco and Ukraine as Latvia, and Singapore, Taiwan and Thailand
+    as Australia.
+
+    Some names say where a tournament was played better than any of that, and
+    are taken over the time zone and the lists. Each is matched in any case
+    unless it says otherwise, and the first of these to match is the one taken:
+
+    - a name that begins with Latvia is in Latvia;
+    - a name with Spanish anywhere in it is in Spain;
+    - a name with the name of a Spanish club as a word of its own, written in
+      capitals, as "RCP", is in Spain: RSHECC, CCVM, VGCC, RCGVH, RCLM and RCP.
+      A word is whole when no letter or digit is beside it, and capitals are
+      meant, since "rcp" and "Rcp" are common words and names;
+    - a name with Western Cape in it is in South Africa;
+    - a name with South African in it is in South Africa;
+    - a name with Open Door or Stage Door in it is in South Africa;
+    - a name with Egypt in it, which Egyptian has, is in Egypt;
+    - a name with Greece as a word of its own is in Greece;
+    - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
+      apostrophe straight or curled, is in the USA. A name with more in it is
+      not that tournament.
+
+    Others are for a tournament put in one country only, the country it was
+    put in being what makes them mean something, and are tried next:
+
+    - one put in Namibia with SACA, South African or South Africa in its name
+      is in South Africa, and the rest put in Namibia are in Egypt;
+    - one put in Nigeria with Rondebosch in its name is in South Africa;
+    - one put in Romania with WCCA in its name is in South Africa, as is one put
+      there with Western Cape in its name, which any name with it is;
+    - one put in São Tomé and Príncipe with Surbiton as a word of its own in
+      its name is in England;
+    - one put in Romania with SWF as a word of its own in its name, in capitals,
+      is in England, and one with Ramadan as a word of its own, capitalised as
+      it is here, is in Egypt. A word is whole when no letter or digit is
+      beside it, and the case is meant, since "swf" and "ramadan" are plain
+      words and names. Where a name has more than one of these, the first
+      listed here is the one taken;
+    - one put in Morocco whose name begins with an ordinal, as "1st", "2nd",
+      "3rd" or "10th", as a word of its own, is in Spain instead: those are the
+      Spanish club tournaments, which are numbered. The rest put in Morocco
+      are in Latvia.
+
+    A region is a country's, so a tournament moved to another country is in
+    none.
+
+    Scenario: A tournament kept in Chile's time zone is in the USA
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Pacific SA Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
+
+    Scenario: A tournament kept in Chile's time zone is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Pacific SA Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament the list puts in Chile is in the USA
+      Given an Association Croquet event "Santiago Open" played on "27-30.12.11" in "Chile"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Santiago Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
+
+    Scenario: A tournament kept in Iraq's time zone is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Arabic Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament kept in Israel's time zone is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Israel Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament kept in Jordan's time zone is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Jordan Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament the list puts in Jordan is in Egypt
+      Given an Association Croquet event "Amman Open" played on "27-30.12.11" in "Jordan"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Amman Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament the list puts in Israel is in Egypt
+      Given an Association Croquet event "Tel Aviv Open" played on "27-30.12.11" in "Israel"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Tel Aviv Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament kept in Morocco's time zone is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Morocco Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario: A tournament the list puts in Morocco is in Latvia
+      Given an Association Croquet event "Rabat Open" played on "27-30.12.11" in "Morocco"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Rabat Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario: A tournament whose name begins with Latvia is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Latvia Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario: A tournament whose name begins with Latvia in other case is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "LATVIA open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario: A tournament whose name begins with Latvia is in Latvia whatever the list says
+      Given an Association Croquet event "Latvia Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Latvia Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario: A tournament whose name begins with Latvia is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Latvia Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament whose name only has Latvia in it is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Open of Latvia"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament whose name has Spanish in it is in Spain
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spanish Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament whose name has Spanish in the middle of it is in Spain
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "The Big Spanish Championship"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament whose name has Spanish in it in other case is in Spain
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "open spanish gc"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament whose name has Spanish in it is in Spain whatever the list says
+      Given an Association Croquet event "Spanish Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spanish Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament whose name has Spanish in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spanish Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament whose name says Latvia first and Spanish after is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Latvia Spanish Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+    Scenario Outline: A tournament whose name has the name of a Spanish club in it is in Spain
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+      Examples:
+        | name                 |
+        | RSHECC Open          |
+        | Open CCVM            |
+        | The VGCC Cup         |
+        | RCGVH Trophy         |
+        | RCLM Championship    |
+        | RCP Open             |
+        | Open (RCP)           |
+        | Open-RCP-Cup         |
+        | RCP                  |
+
+    Scenario Outline: A tournament whose name does not have the name of a Spanish club as a whole word in capitals is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name           |
+        | rcp Open       |
+        | Rcp Open       |
+        | RCPX Open      |
+        | XRCP Open      |
+        | RCP2 Open      |
+        | Open RCPS      |
+        | ccvm Cup       |
+
+    Scenario: A tournament whose name has the name of a Spanish club in it is in Spain whatever the list says
+      Given an Association Croquet event "RCP Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "RCP Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament whose name has the name of a Spanish club in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "RCP Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament kept in Namibia's time zone is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Namibia Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament the list puts in Namibia is in Egypt
+      Given an Association Croquet event "Windhoek Open" played on "27-30.12.11" in "Namibia"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Windhoek Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario Outline: A tournament put in Morocco whose name begins with an ordinal is in Spain
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Morocco Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+      Examples:
+        | name              |
+        | 1st Open          |
+        | 2nd Open          |
+        | 3rd Open          |
+        | 10th Open         |
+        | 21st Open         |
+        | 112th Open        |
+        | 4TH Open          |
+        |  7th Open         |
+
+    Scenario: A tournament the list puts in Morocco whose name begins with an ordinal is in Spain
+      Given an Association Croquet event "1st Rabat Open" played on "27-30.12.11" in "Morocco"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "1st Rabat Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "es"
+
+    Scenario: A tournament put in Morocco whose name begins with an ordinal is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "1st Open"
+      And the tournament's time zone is "Morocco Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament put in Morocco whose name does not begin with an ordinal is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Morocco Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+      Examples:
+        | name           |
+        | Open 1st       |
+        | The 1st Open   |
+        | 1 Open         |
+        | 1sts Open      |
+        | 1stX Open      |
+        | First Open     |
+
+    Scenario: A tournament put in another country whose name begins with an ordinal is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "1st Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A tournament whose name has Western Cape in it is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name                        |
+        | Western Cape Open           |
+        | Open of the Western Cape    |
+        | western cape GC             |
+        | WESTERN CAPE Championship  |
+
+    Scenario Outline: A tournament whose name has Open Door or Stage Door in it is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name                       |
+        | Open Door                  |
+        | Western Province Open Door |
+        | Stage Door Cup             |
+        | the stage door GC          |
+        | OPEN DOOR 2012             |
+
+    Scenario: A tournament whose name has Western Cape or a door in it is in South Africa whatever the list says
+      Given an Association Croquet event "Western Cape Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Western Cape Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament whose name has Western Cape in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Western Cape Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament whose name has Open Window in it is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Open Window"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A tournament put in Namibia with SACA, South African or South Africa in its name is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Namibia Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name                  |
+        | SACA Open             |
+        | Windhoek SACA         |
+        | South African Open    |
+        | the south african GC  |
+        | South Africa Open     |
+        | Open of South Africa  |
+        | the south africa GC   |
+
+    Scenario: A tournament the list puts in Namibia with SACA in its name is in South Africa
+      Given an Association Croquet event "SACA Open" played on "27-30.12.11" in "Namibia"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "SACA Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament put in Namibia with SACA in its name is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "SACA Open"
+      And the tournament's time zone is "Namibia Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament put in Namibia with neither in its name is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Windhoek Open"
+      And the tournament's time zone is "Namibia Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament put in another country with SACA in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "SACA Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament put in Nigeria with Rondebosch in its name is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Rondebosch Open"
+      And the tournament's time zone is "W. Central Africa Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament put in Nigeria with Rondebosch in its name in other case is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "The RONDEBOSCH Cup"
+      And the tournament's time zone is "W. Central Africa Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament the list puts in Nigeria with Rondebosch in its name is in South Africa
+      Given an Association Croquet event "Rondebosch Open" played on "27-30.12.11" in "Nigeria"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Rondebosch Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament put in Nigeria without Rondebosch in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Lagos Open"
+      And the tournament's time zone is "W. Central Africa Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ng"
+
+    Scenario: A tournament put in another country with Rondebosch in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Rondebosch Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A tournament whose name has Egypt or Egyptian in it is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+      Examples:
+        | name                      |
+        | Egypt Open                |
+        | Egyptian Open             |
+        | The Cairo Egypt Cup       |
+        | EGYPT GC                  |
+        | egyptian championship     |
+
+    Scenario: A tournament whose name has Egypt in it is in Egypt whatever the list says
+      Given an Association Croquet event "Egypt Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Egypt Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario: A tournament whose name has Egypt in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Egypt Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament kept in Singapore's time zone is in Australia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Singapore Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament kept in Singapore's time zone is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Singapore Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament the list puts in Singapore is in Australia
+      Given an Association Croquet event "Singapore Open" played on "27-30.12.11" in "Singapore"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Singapore Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "Pacific Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A tournament put in Romania with WCCA or Western Cape in its name is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name                  |
+        | WCCA Open             |
+        | Open WCCA             |
+        | wcca GC               |
+        | Western Cape Open     |
+
+    Scenario: A tournament the list puts in Romania with WCCA in its name is in South Africa
+      Given an Association Croquet event "WCCA Open" played on "27-30.12.11" in "Romania"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "WCCA Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament put in Romania with neither in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Bucharest Open"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ro"
+
+    Scenario: A tournament put in another country with WCCA in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "WCCA Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A tournament kept in a time zone that means Taiwan, Thailand or Ukraine is moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "<time zone>"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | time zone              | country |
+        | Taipei Standard Time   | au      |
+        | SE Asia Standard Time  | au      |
+        | FLE Standard Time      | lv      |
+
+    Scenario Outline: A tournament the list puts in Taiwan, Thailand or Ukraine is moved
+      Given an Association Croquet event "Open" played on "27-30.12.11" in "<listed>"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "Pacific Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | listed   | country |
+        | Taiwan   | au      |
+        | Thailand | au      |
+        | Ukraine  | lv      |
+
+    Scenario: A tournament kept in Ukraine's time zone is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "FLE Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament called WGCA Women's Intl Friendship Cup is in the USA
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
+
+      Examples:
+        | name                                 |
+        | WGCA Women's Intl Friendship Cup     |
+        | WGCA Women’s Intl Friendship Cup     |
+        | WGCA WOMEN'S INTL FRIENDSHIP CUP     |
+
+    Scenario Outline: A tournament called something more than WGCA Women's Intl Friendship Cup is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name                                      |
+        | WGCA Women's Intl Friendship Cup 2012     |
+        | The WGCA Women's Intl Friendship Cup      |
+        | WGCA Women's Intl Friendship              |
+
+    Scenario: A tournament called WGCA Women's Intl Friendship Cup is in the USA whatever the list says
+      Given an Association Croquet event "WGCA Women's Intl Friendship Cup" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "WGCA Women's Intl Friendship Cup"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "us"
+
+    Scenario: A tournament called WGCA Women's Intl Friendship Cup is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "WGCA Women's Intl Friendship Cup"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament whose name has South African in it is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name                      |
+        | South African Open        |
+        | The South African Cup     |
+        | SOUTH AFRICAN GC          |
+        | south african champs      |
+
+    Scenario: A tournament whose name has South African in it is in South Africa whatever the list says
+      Given an Association Croquet event "South African Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "South African Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+    Scenario: A tournament whose name has South African in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "South African Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament put in Romania with SWF as a word of its own in its name is in England
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name           |
+        | SWF Open       |
+        | Open SWF       |
+        | The SWF Cup    |
+        | Open (SWF)     |
+        | Open-SWF-Cup   |
+
+    Scenario Outline: A tournament put in Romania without SWF as a word of its own in capitals is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ro"
+
+      Examples:
+        | name          |
+        | swf Open      |
+        | Swf Open      |
+        | SWFX Open     |
+        | XSWF Open     |
+        | SWF2 Open     |
+
+    Scenario Outline: A tournament put in Romania with Ramadan as a word of its own in its name is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+      Examples:
+        | name              |
+        | Ramadan Open      |
+        | Open Ramadan      |
+        | The Ramadan Cup   |
+        | Open (Ramadan)    |
+
+    Scenario Outline: A tournament put in Romania without Ramadan as a word of its own in its case is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ro"
+
+      Examples:
+        | name              |
+        | ramadan Open      |
+        | RAMADAN Open      |
+        | Ramadans Open     |
+        | XRamadan Open     |
+
+    Scenario Outline: A tournament the list puts in Romania is moved by SWF and Ramadan in its name
+      Given an Association Croquet event "<name>" played on "27-30.12.11" in "Romania"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name          | country |
+        | SWF Open      | england |
+        | Ramadan Open  | eg      |
+
+    Scenario: A tournament put in Romania with SWF and Ramadan in its name is in England
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Ramadan SWF Open"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario Outline: A tournament put in another country with SWF or Ramadan in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name          |
+        | SWF Open      |
+        | Ramadan Open  |
+
+    Scenario: A tournament put in Romania with SWF in its name is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "SWF Open"
+      And the tournament's time zone is "GTB Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament whose name has Greece as a word of its own is in Greece
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "gr"
+
+      Examples:
+        | name              |
+        | Greece Open       |
+        | Open Greece       |
+        | The Greece Cup    |
+        | Open (Greece)     |
+        | greece GC         |
+        | GREECE GC         |
+
+    Scenario Outline: A tournament whose name has Greece in it but not as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name            |
+        | Greeces Open    |
+        | NewGreece Open  |
+        | Greece2 Open    |
+
+    Scenario: A tournament whose name has Greece as a word of its own is in Greece whatever the list says
+      Given an Association Croquet event "Greece Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Greece Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "gr"
+
+    Scenario: A tournament whose name has Greece as a word of its own is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Greece Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament put in São Tomé and Príncipe with Surbiton as a word of its own in its name is in England
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Sao Tome Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name              |
+        | Surbiton Open     |
+        | Open Surbiton     |
+        | The Surbiton Cup  |
+        | Open (Surbiton)   |
+        | surbiton GC       |
+
+    Scenario Outline: A tournament put in São Tomé and Príncipe without Surbiton as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Sao Tome Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "st"
+
+      Examples:
+        | name              |
+        | Surbitons Open    |
+        | XSurbiton Open    |
+        | Sao Tome Open     |
+
+    Scenario: A tournament the list puts in São Tomé and Príncipe with Surbiton in its name is in England
+      Given an Association Croquet event "Surbiton Open" played on "27-30.12.11" in "São Tomé and Príncipe"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Surbiton Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A tournament put in another country with Surbiton in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Surbiton Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament put in São Tomé and Príncipe with Surbiton in its name is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Surbiton Open"
+      And the tournament's time zone is "Sao Tome Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament kept in another country's time zone is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament's time zone is "Argentina Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ar"
 
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
