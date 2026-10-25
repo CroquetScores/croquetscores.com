@@ -31,6 +31,7 @@ export const maori: Language = {
     "footer.copyright": "© Manatārua {years}, {owner}",
     "footer.privacy": "Tūmataiti",
     "footer.termsOfUse": "Ngā kupu whakamahi",
+    "footer.reportBug": "Pūrongo i tētahi hapa",
     "beta.banner":
       "He pae beta tēnei. Ka taea te tautuhi anō i ngā raraunga i ngā wā katoa.",
     "privacy.contact":

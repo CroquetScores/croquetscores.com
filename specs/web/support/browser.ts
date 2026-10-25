@@ -149,6 +149,19 @@ export const anApplicationRunning = (
 ): Promise<string> =>
   anApplicationWith(world, {}, undefined, undefined, version);
 
+/**
+ * An application of this scenario's own whose administrator is at
+ * `emailAddress`, and otherwise as {@link anApplicationCalled}, offering the languages the scenarios do (the
+ * test locale among them). Told the
+ * address and not left to read the developer's own, so that what the footer
+ * links to does not depend on whose machine the scenarios run on.
+ */
+export const anApplicationWhoseAdministratorIs = (
+  world: SpecWorld,
+  emailAddress: string,
+): Promise<string> =>
+  anApplicationWith(world, { administratorEmailAddress: emailAddress });
+
 // Which website each scenario's browser says it is addressing, where it says
 // one. Nothing is development, which is what the application is reached as.
 const addressed = new WeakMap<SpecWorld, string>();

@@ -33,6 +33,7 @@ export const french: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Confidentialité",
     "footer.termsOfUse": "Conditions d'utilisation",
+    "footer.reportBug": "Signaler un bogue",
     "beta.banner":
       "Ce site est en version bêta. Les données peuvent être réinitialisées à tout moment.",
     "privacy.contact":

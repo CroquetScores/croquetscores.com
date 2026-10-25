@@ -131,6 +131,7 @@ The admin SPA's page is built by Vite ahead of time, and the server says the cho
 
 - **The page title in the header** is optional from the start, so the shape is right when the first page brings one.
 - **The footer keeps the PayPal donate button**, alongside the plea and the copyright line.
+- **The footer's links are on a row of their own, at the right**: Privacy, Terms of use and Report a bug, in that order, beneath the donation, the plea and the copyright and above the theme and language choices, which they end level with (`layout.feature`). They are for finding and not for reading, so they do not share a line with what is read.
 - **The footer says which version of the site the page came from**, as `v276` after the copyright: the number of times `main` has moved, counted when the site is built (`buildVersion.feature`). It is a number and not words so that it needs no translating, and it is absent, not "unknown", where the site has none, as in development.
 - **The content green** is chosen from four candidates rendered against the real bars and a white panel. `A #f4f9f4` is so faint the panel all but disappears into it; `D #dcecdc` is definite and starts to feel heavy. **The recommendation is `C #e6f2e6`**, where the panel reads as a distinct surface and the green is unmistakably green without competing with the header. `B #eef6ee` is the quieter alternative if `C` looks too present once it is on a real page.
 

@@ -30,6 +30,7 @@ export const swedish: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Integritet",
     "footer.termsOfUse": "Användarvillkor",
+    "footer.reportBug": "Rapportera ett fel",
     "beta.banner":
       "Det här är en betawebbplats. Data kan nollställas när som helst.",
     "privacy.contact":

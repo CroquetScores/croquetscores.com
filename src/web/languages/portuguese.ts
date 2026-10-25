@@ -32,6 +32,7 @@ export const portuguese: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacidade",
     "footer.termsOfUse": "Termos de uso",
+    "footer.reportBug": "Relatar um erro",
     "beta.banner":
       "Este é um site beta. Os dados podem ser apagados a qualquer momento.",
     "privacy.contact":

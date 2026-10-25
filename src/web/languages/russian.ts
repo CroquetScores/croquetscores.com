@@ -31,6 +31,7 @@ export const russian: Language = {
     "footer.copyright": "© {years}, {owner}. Все права защищены",
     "footer.privacy": "Конфиденциальность",
     "footer.termsOfUse": "Условия использования",
+    "footer.reportBug": "Сообщить об ошибке",
     "beta.banner":
       "Это бета-версия сайта. Данные могут быть сброшены в любой момент.",
     "privacy.contact":

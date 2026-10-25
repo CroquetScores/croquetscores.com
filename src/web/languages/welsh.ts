@@ -29,6 +29,7 @@ export const welsh: Language = {
     "footer.copyright": "© Hawlfraint {years}, {owner}",
     "footer.privacy": "Preifatrwydd",
     "footer.termsOfUse": "Telerau defnyddio",
+    "footer.reportBug": "Adrodd am nam",
     "beta.banner": "Gwefan beta yw hon. Gellir ailosod y data ar unrhyw adeg.",
     "privacy.contact":
       "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch: {emailAddress}",

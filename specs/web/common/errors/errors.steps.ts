@@ -220,7 +220,10 @@ const referencePattern =
 const messageOf = (
   world: SpecWorld,
 ): { to: string; subject: string; body: string } | undefined => {
-  const found = /href="mailto:([^"?]*)\?([^"]*)"/.exec(answered(world).body);
+  // Not the footer's, which every page has and which is about a bug in the
+  // site (layout.feature), not about this failure.
+  const page = answered(world).body.replace(/<footer[\s\S]*<\/footer>/, "");
+  const found = /href="mailto:([^"?]*)\?([^"]*)"/.exec(page);
   if (found === null) return undefined;
   // The attribute is escaped as HTML, so its & is &amp; until it is read.
   const parts = new URLSearchParams(found[2]!.replaceAll("&amp;", "&"));

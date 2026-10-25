@@ -471,8 +471,21 @@ export type SiteFooter = Pick<
   Shell,
   "speaking" | "siteName" | "theme" | "path"
 > & {
+  /** Who administers the site, which a bug is reported to. */
+  readonly administratorEmailAddress: string;
   /** Which version of the website this is, where it is known. */
   readonly version?: number | undefined;
+};
+
+// A new email to the administrator about a bug, already headed with which site
+// and which build it is about, so that whoever reads it need not ask. The
+// subject is not in the reader's language, since it is the administrator who
+// reads it, and has no number where the site has no version.
+const bugReport = (footer: SiteFooter): string => {
+  const subject = [footer.siteName, footer.version, "Bug"]
+    .filter((part) => part !== undefined)
+    .join(" ");
+  return `mailto:${footer.administratorEmailAddress}?subject=${encodeURIComponent(subject)}`;
 };
 
 // Said by the admin's page too, for the reason the header is.
@@ -502,8 +515,11 @@ export const siteFooter = (footer: SiteFooter): string => `
               : `
           <p class="site-version">v${String(footer.version)}</p>`
           }
-          <p><a href="/privacy">${escape(footer.speaking.say("footer.privacy"))}</a></p>
-          <p><a href="/terms-of-use">${escape(footer.speaking.say("footer.termsOfUse"))}</a></p>
+        </div>
+        <div class="site-footer-links">
+          <a href="/privacy">${escape(footer.speaking.say("footer.privacy"))}</a>
+          <a href="/terms-of-use">${escape(footer.speaking.say("footer.termsOfUse"))}</a>
+          <a class="report-bug" href="${escape(bugReport(footer))}">${escape(footer.speaking.say("footer.reportBug"))}</a>
         </div>
         <div class="site-footer-theme">
 ${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(footer.speaking, footer.path)}
@@ -537,7 +553,11 @@ ${shell.body}
         </div>`
 }
       </div>
-    </main>${siteFooter({ ...shell, version: assets.version })}
+    </main>${siteFooter({
+      ...shell,
+      administratorEmailAddress: assets.administratorEmailAddress,
+      version: assets.version,
+    })}
   </body>
 </html>
 `;

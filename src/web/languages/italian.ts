@@ -36,6 +36,7 @@ export const italian: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
     "footer.termsOfUse": "Condizioni d'uso",
+    "footer.reportBug": "Segnala un errore",
     "beta.banner":
       "Questo è un sito beta. I dati possono essere azzerati in qualsiasi momento.",
     "privacy.contact":

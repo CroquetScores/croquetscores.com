@@ -599,6 +599,7 @@ const registerAdmin = async (
   page: string | undefined,
   build: () => string,
   help: HelpLibrary,
+  administratorEmailAddress: string,
   version: number | undefined,
 ): Promise<void> => {
   if (page === undefined) {
@@ -658,7 +659,14 @@ const registerAdmin = async (
       .header("vary", "Cookie, Accept-Language")
       .type("text/html; charset=utf-8")
       .send(
-        adminPage(built, request, build(), await alertFor(request), version),
+        adminPage(
+          built,
+          request,
+          build(),
+          await alertFor(request),
+          administratorEmailAddress,
+          version,
+        ),
       );
   });
 };
@@ -842,7 +850,11 @@ export const buildApplication = async (
     options.version === undefined
       ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
       : (options.version ?? undefined);
-  const assets = readAssets(join(repositoryRoot, "assets"), version);
+  const assets = readAssets(
+    join(repositoryRoot, "assets"),
+    config.administratorEmailAddress,
+    version,
+  );
   const unitOfWork = new UnitOfWork(pool);
   // Handed to the two handlers that set a password, each of which asks it
   // between the transaction it reads in and the one it writes in, where the
@@ -1557,7 +1569,15 @@ export const buildApplication = async (
   const help =
     options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help"));
 
-  await registerAdmin(server, adminRoot, adminPageBuilt, build, help, version);
+  await registerAdmin(
+    server,
+    adminRoot,
+    adminPageBuilt,
+    build,
+    help,
+    config.administratorEmailAddress,
+    version,
+  );
 
   registerThemeRoute(server);
   registerLanguageRoute(server);

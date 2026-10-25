@@ -31,6 +31,7 @@ export const japanese: Language = {
     "footer.copyright": "© {years} {owner}",
     "footer.privacy": "プライバシー",
     "footer.termsOfUse": "利用規約",
+    "footer.reportBug": "不具合を報告",
     "beta.banner":
       "これはベータ版のサイトです。データはいつリセットされるかわかりません。",
     "privacy.contact":
