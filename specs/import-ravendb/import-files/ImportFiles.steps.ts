@@ -136,6 +136,15 @@ Given(
   },
 );
 
+Given(
+  "{int} corrections of the code {string} are said",
+  async function (this: SpecWorld, count: number, code: string) {
+    for (let each = 0; each < count; each += 1) {
+      await said(this, code, "", "croquetscores.com/blocks/1");
+    }
+  },
+);
+
 When(
   "a document that was not brought over is said as {string}",
   async function (this: SpecWorld, code: string) {
@@ -267,6 +276,59 @@ Then(
 );
 
 Then(
+  "line {int} of the file {string} says under a heading that the import began at {string}",
+  async function (this: SpecWorld, line: number, name: string, at: string) {
+    assert.equal(
+      (await linesOf(this, name))[line - 1],
+      `## Import began ${new Date(at).toLocaleString()}.`,
+    );
+  },
+);
+
+// The line a heading of when an import began is, as the summary writes it.
+const beganHeading = (at: string): string =>
+  `## Import began ${new Date(at).toLocaleString()}.`;
+
+Then(
+  "the file {string} has a heading saying the import began at {string}",
+  async function (this: SpecWorld, name: string, at: string) {
+    assert.ok((await linesOf(this, name)).includes(beganHeading(at)));
+  },
+);
+
+Then(
+  "the file {string} has a blank line before the heading saying the import began at {string}",
+  async function (this: SpecWorld, name: string, at: string) {
+    const lines = await linesOf(this, name);
+    const heading = lines.indexOf(beganHeading(at));
+    assert.ok(heading > 0, "It has no such heading.");
+    assert.equal(lines[heading - 1], "");
+  },
+);
+
+Then(
+  "the file {string} says the import began at {string} before it says the import began at {string}",
+  async function (this: SpecWorld, name: string, first: string, then: string) {
+    const lines = await linesOf(this, name);
+    const at = lines.indexOf(beganHeading(first));
+    const after = lines.indexOf(beganHeading(then));
+    assert.ok(at !== -1, "It does not say the first.");
+    assert.ok(after !== -1, "It does not say the second.");
+    assert.ok(at < after, "The first is not before the second.");
+  },
+);
+
+Then(
+  "the file {string} has the line {string} once",
+  async function (this: SpecWorld, name: string, line: string) {
+    assert.equal(
+      (await linesOf(this, name)).filter((each) => each === line).length,
+      1,
+    );
+  },
+);
+
+Then(
   "the file {string} says {string}",
   async function (this: SpecWorld, name: string, text: string) {
     assert.ok((await contentOf(this, name)).includes(text));
@@ -329,5 +391,32 @@ Then(
   async function (this: SpecWorld, name: string, line: string) {
     const lines = (await linesOf(this, name)).filter((each) => each !== "");
     assert.equal(lines.at(-1), line);
+  },
+);
+
+// The lines of a Markdown table, which begin with a pipe.
+const tableOf = async (world: SpecWorld, name: string): Promise<string[]> =>
+  (await linesOf(world, name)).filter((line) => line.startsWith("|"));
+
+Then(
+  "every row of the table in the file {string} is as wide as the others",
+  async function (this: SpecWorld, name: string) {
+    const rows = await tableOf(this, name);
+    assert.ok(rows.length > 0, "The file has no table.");
+    assert.deepEqual(
+      [...new Set(rows.map((row) => row.length))].length,
+      1,
+      rows.join("\n"),
+    );
+  },
+);
+
+Then(
+  "the file {string} has {int} row of the code {string}",
+  async function (this: SpecWorld, name: string, count: number, code: string) {
+    const rows = (await tableOf(this, name)).filter(
+      (row) => row.split("|")[1]?.trim() === code,
+    );
+    assert.equal(rows.length, count);
   },
 );

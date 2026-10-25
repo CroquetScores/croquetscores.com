@@ -1,11 +1,22 @@
-import { appendFile, mkdir, readdir, rm, writeFile } from "node:fs/promises";
+import {
+  appendFile,
+  mkdir,
+  readdir,
+  readFile,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 import { join } from "node:path";
 
 import type { Accepted, AcceptedImportErrors } from "./AcceptedImportErrors.js";
 import type { KeptError } from "./ImportDatabase.js";
+import { numbers } from "./runImporter.js";
 
 /** The file the errors the import kept are said in. */
 const ERRORS_FILE = "import-errors.md";
+
+/** The file that says how many there were of everything, in one place. */
+const SUMMARY_FILE = "import-summary.md";
 
 /** The code an error is said under where its message has none. */
 const NO_CODE = "NoCode";
@@ -27,6 +38,10 @@ export const codeOfError = (message: string): string =>
 // underscore, and the heading in it is the code as it is.
 const fileOf = (code: string): string =>
   `${code.replaceAll(/[^A-Za-z0-9._-]/g, "_")}.md`;
+
+// Codes in order, as text, so that all of one kind are together.
+const inOrder = (one: string, other: string): number =>
+  one < other ? -1 : one > other ? 1 : 0;
 
 // An entry of the file of errors, kept with its code so that they can be put
 // in order of it once the import is finished.
@@ -65,6 +80,8 @@ export class ImportFiles implements AcceptedImportErrors {
     this.#began = `Import began ${at.toLocaleString()}.`;
     await mkdir(this.folder, { recursive: true });
     for (const name of await readdir(this.folder)) {
+      // The one file kept, since each import adds its summary to the end of it.
+      if (name === SUMMARY_FILE) continue;
       await rm(join(this.folder, name), { recursive: true, force: true });
     }
     await writeFile(
@@ -141,6 +158,45 @@ export class ImportFiles implements AcceptedImportErrors {
           .join("") +
         `\nTotal: ${String(ordered.length)}\n`,
     );
+    await this.#writeSummary(ordered.length, totals);
+  }
+
+  // How many there were of everything, last, in a table whose rows are all as
+  // wide as each other: the codes to the left, padded to the longest, and the
+  // numbers to the right, padded to the largest, with thousands separated. A
+  // code that was both corrected and an error has one row, of both added
+  // together. There is no header row, being read as it is written.
+  async #writeSummary(
+    errors: number,
+    errorsOfCode: ReadonlyMap<string, number>,
+  ): Promise<void> {
+    const ofCode = new Map(this.#counts);
+    for (const [code, count] of errorsOfCode) {
+      ofCode.set(code, (ofCode.get(code) ?? 0) + count);
+    }
+    const rows: (readonly [string, string])[] = [
+      ["import-errors", numbers.format(errors)],
+      ...[...ofCode]
+        .sort(([one], [other]) => inOrder(one, other))
+        .map(([code, count]) => [code, numbers.format(count)] as const),
+    ];
+    const codeWidth = Math.max(...rows.map(([code]) => code.length));
+    const numberWidth = Math.max(...rows.map(([, number]) => number.length));
+    const section =
+      `## ${this.#began}\n\n` +
+      rows
+        .map(
+          ([code, number]) =>
+            `| ${code.padEnd(codeWidth)} | ${number.padStart(numberWidth)} |\n`,
+        )
+        .join("");
+    const path = join(this.folder, SUMMARY_FILE);
+    // Added to the end of the summary of the imports before, after a blank
+    // line, or the first of them, which heads it.
+    const before = await readFile(path, "utf8").catch(() => undefined);
+    await (before === undefined
+      ? writeFile(path, "# Import Summary\n\n" + section)
+      : appendFile(path, "\n" + section));
   }
 
   // Every file begins with its heading, a blank line, and when the import

@@ -34,10 +34,22 @@ Feature: What the import said, in a file for each code
   many in all, so that one import can be held against the last by the numbers
   alone.
 
+  The import's last file is import-summary.md, which says how many there were of
+  everything in one place: a table of every code the import said anything under,
+  corrections and errors alike, and the errors in all, as "import-errors". The
+  table is laid out in columns of the same width in every row, the codes to the
+  left and the numbers to the right with thousands separated by commas, so that
+  they can be read down. It has no header row, being read as it is written.
+
+  It is the one file the import does not delete when it begins. Each import adds
+  its own summary to the end of it, under a heading of when that import began, so
+  that the file is a history of the imports and one can be held against the last
+  by the numbers alone. The first import to write it heads it "Import Summary".
+
   Background:
     Given a folder for the import's files, for the new site at "http://localhost:3000"
 
-  Rule: Beginning deletes every file the last import left
+  Rule: Beginning deletes every file the last import left, but the summary
 
     Scenario: A file the last import left is gone once the files are begun
       Given the import's folder has the file "ImportBlocks.GamesReordered.md" saying "left over"
@@ -53,6 +65,16 @@ Feature: What the import said, in a file for each code
       Given the import's folder is not there
       When the files are begun
       Then the import's folder is there
+
+    Scenario: The summary the last import added to is kept
+      Given the import's folder has the file "import-summary.md" saying "left over"
+      When the files are begun
+      Then the import's folder has the file "import-summary.md"
+
+    Scenario: The summary the last import added to is kept as it was
+      Given the import's folder has the file "import-summary.md" saying "left over"
+      When the files are begun
+      Then the file "import-summary.md" says "left over"
 
   Rule: Every file begins with its heading and when the import began
 
@@ -268,3 +290,200 @@ Feature: What the import said, in a file for each code
       Given the files are begun
       When the files are ended
       Then the file "import-errors.md" ends with the line "Total: 0"
+
+  Rule: The import ends with import-summary.md, which says how many there were of everything
+
+    The summary is made from what was said, and written once the import is
+    finished. It is headed "Import Summary", says when the import began, and
+    has a row for the errors in all, "import-errors", and one for every code
+    anything was said under, in order of the code. A code that both a
+    correction and an error were said under has one row, of both added
+    together. After the table come the results of each file.
+
+    Scenario: The summary begins with its heading
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      When the files are ended
+      Then line 1 of the file "import-summary.md" is "# Import Summary"
+
+    Scenario: A blank line follows the heading
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      When the files are ended
+      Then line 2 of the file "import-summary.md" is empty
+
+    Scenario: The summary says when the import began under a heading
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      When the files are ended
+      Then line 3 of the file "import-summary.md" says under a heading that the import began at "2026-10-25T04:36:12Z"
+
+    Scenario: The table follows the line saying when
+      Given the files are begun
+      When the files are ended
+      Then line 4 of the file "import-summary.md" is empty
+
+    Scenario: An import that said nothing has no errors
+      Given the files are begun
+      When the files are ended
+      Then line 5 of the file "import-summary.md" is "| import-errors | 0 |"
+
+    Scenario: The errors in all are the first row
+      Given the files are begun
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "Game.WinnerNotAhead: Error: refused"
+      And the files are told of an error for "croquetscores.com/blocks/3" saying "Game.WinnerNotAhead: Error: refused"
+      When the files are ended
+      Then line 5 of the file "import-summary.md" is "| import-errors       | 2 |"
+
+    Scenario: Every code of the errors has a row of how many there were
+      Given the files are begun
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "Game.WinnerNotAhead: Error: refused"
+      And the files are told of an error for "croquetscores.com/blocks/3" saying "Game.WinnerNotAhead: Error: refused"
+      And the files are told of an error for "croquetscores.com/blocks/4" saying "Competition.NotDrawnToMeet: Error: refused"
+      When the files are ended
+      Then the file "import-summary.md" has the line "| Game.WinnerNotAhead        | 2 |"
+
+    Scenario: Every code of the corrections has a row of how many there were
+      Given the files are begun
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportBlocks.GamesReordered | 2 |"
+
+    Scenario: What is accepted has a row too
+      Given the files are begun
+      And game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is said as "Competition.NotDrawnToMeet"
+      When the files are ended
+      Then the file "import-summary.md" has the line "| Competition.NotDrawnToMeet | 1 |"
+
+    Scenario: The codes are in order after the errors in all
+      Given the files are begun
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      When the files are ended
+      Then the file "import-summary.md" says "| ImportBlocks.GamesReordered |" before "| ImportCompetition.GameNoted |"
+
+    Scenario: A code that was both corrected and an error has one row of both
+      Given the files are begun
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "ImportCompetition.GameNoted: Error: refused"
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportCompetition.GameNoted | 2 |"
+
+    Scenario: A code is said in the table once
+      Given the files are begun
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "ImportCompetition.GameNoted: Error: refused"
+      When the files are ended
+      Then the file "import-summary.md" has 1 row of the code "ImportCompetition.GameNoted"
+
+    Scenario: The codes are padded to the longest, so that the numbers are in a column
+      Given the files are begun
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "Game.WinnerNotAhead: Error: refused"
+      When the files are ended
+      Then the file "import-summary.md" has the line "| Game.WinnerNotAhead         | 1 |"
+
+    Scenario: Every row is as wide as the others
+      Given the files are begun
+      And 12 corrections of the code "ImportBlocks.GamesReordered" are said
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      And the files are told of an error for "croquetscores.com/blocks/2" saying "Game.WinnerNotAhead: Error: refused"
+      When the files are ended
+      Then every row of the table in the file "import-summary.md" is as wide as the others
+
+    Scenario: The numbers are to the right, so that they end in the same column
+      Given the files are begun
+      And 12 corrections of the code "ImportBlocks.GamesReordered" are said
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportCompetition.GameNoted |  1 |"
+
+    Scenario: A number of a thousand or more has its thousands separated by a comma
+      Given the files are begun
+      And 1000 corrections of the code "ImportBlocks.GamesReordered" are said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportBlocks.GamesReordered | 1,000 |"
+
+    Scenario: A row of fewer digits is padded to the width of the largest number
+      Given the files are begun
+      And 1000 corrections of the code "ImportBlocks.GamesReordered" are said
+      And a correction of the code "ImportCompetition.GameNoted" is said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportCompetition.GameNoted |     1 |"
+
+    Scenario: The summary is written even though no code was said
+      Given the files are begun
+      When the files are ended
+      Then the import's folder has the file "import-summary.md"
+
+    Scenario: The summary does not give the results of a file
+      Given the files are begun
+      And game 4 of "croquetscores.com/knockouts/10088" of "2014/ac/spring-open" on "croquetscores.com" is said as "Competition.NotDrawnToMeet"
+      When the files are ended
+      Then the file "import-summary.md" does not say "## Competition.NotDrawnToMeet: croquetscores.com/knockouts/10088 game 4"
+
+  Rule: Each import adds its summary to the end of the one before's
+
+    Scenario: The first import heads the summary
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      When the files are ended
+      Then the file "import-summary.md" has the line "# Import Summary" once
+
+    Scenario: The second import does not head the summary again
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      When the files are ended
+      Then the file "import-summary.md" has the line "# Import Summary" once
+
+    Scenario: The summary says when the first import began
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      When the files are ended
+      Then the file "import-summary.md" has a heading saying the import began at "2026-10-25T04:36:12Z"
+
+    Scenario: The summary says when the second import began
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      When the files are ended
+      Then the file "import-summary.md" has a heading saying the import began at "2026-10-26T09:01:30Z"
+
+    Scenario: The second import's summary is after the first's
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      When the files are ended
+      Then the file "import-summary.md" says the import began at "2026-10-25T04:36:12Z" before it says the import began at "2026-10-26T09:01:30Z"
+
+    Scenario: The first import's totals are kept
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And 2 corrections of the code "ImportBlocks.GamesReordered" are said
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportBlocks.GamesReordered | 2 |"
+
+    Scenario: The second import's totals are added
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And 2 corrections of the code "ImportBlocks.GamesReordered" are said
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      When the files are ended
+      Then the file "import-summary.md" has the line "| ImportBlocks.GamesReordered | 1 |"
+
+    Scenario: A blank line separates the second import's summary from the first's
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And the files are ended
+      And the files are begun at "2026-10-26T09:01:30Z"
+      When the files are ended
+      Then the file "import-summary.md" has a blank line before the heading saying the import began at "2026-10-26T09:01:30Z"
+
+    Scenario: A codes file of the first import is not kept
+      Given the files are begun at "2026-10-25T04:36:12Z"
+      And a correction of the code "ImportBlocks.GamesReordered" is said
+      And the files are ended
+      When the files are begun at "2026-10-26T09:01:30Z"
+      Then the import's folder does not have the file "ImportBlocks.GamesReordered.md"
