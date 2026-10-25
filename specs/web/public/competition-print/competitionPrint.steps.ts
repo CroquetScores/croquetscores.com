@@ -30,6 +30,10 @@ Then("the print button is offered", async function (this: SpecWorld) {
   assert.equal(await printButton(this).isVisible(), true);
 });
 
+Then("the print button is in the page", async function (this: SpecWorld) {
+  assert.equal(await printButton(this).count(), 1);
+});
+
 Then("the print button is not offered", async function (this: SpecWorld) {
   assert.equal(await printButton(this).isVisible(), false);
 });
@@ -63,6 +67,18 @@ Then(
     const heading = this.browserPage.locator("main h1");
     assert.equal(await heading.isVisible(), true);
     assert.equal((await heading.innerText()).trim(), name);
+  },
+);
+
+Then(
+  "the printed tournament name is above the printed competition name",
+  async function (this: SpecWorld) {
+    const tournament = await this.browserPage
+      .locator("main .print-tournament")
+      .boundingBox();
+    const competition = await this.browserPage.locator("main h1").boundingBox();
+    assert.ok(tournament !== null && competition !== null);
+    assert.ok(tournament.y + tournament.height <= competition.y);
   },
 );
 

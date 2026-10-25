@@ -92,7 +92,9 @@ ${views
 // script beside it, since without scripting pressing it does nothing, and a
 // button that does nothing is worse than none. The script is written beside
 // the button, as the search's is (layout.ts), so that the button is never
-// seen and then taken away.
+// seen and then taken away. The button is found from the heading's own
+// markup and not from where the script sits, so that something put between
+// them does not break it.
 const printButton = (
   speaking: Speaking,
 ): string => `            <button type="button" class="print-button" hidden>
@@ -101,7 +103,7 @@ const printButton = (
             </button>
             <script>
               (function () {
-                var button = document.currentScript.previousElementSibling;
+                var button = document.currentScript.parentElement.querySelector(".print-button");
                 button.hidden = false;
                 button.addEventListener("click", function () {
                   window.print();
@@ -398,10 +400,18 @@ export const registerCompetitionPages = (
           // A block's grid is as wide as it has players and a knockout's draw
           // as wide as it has rounds, so they are printed across the paper;
           // a Swiss's table and a test's are narrow and long, so up it.
-          const paper =
-            found.kind === "block" || found.kind === "knockout"
-              ? "landscape"
-              : "portrait";
+          // Said for each kind, so that a kind added is not printed up the
+          // paper by default.
+          const paper = ((): "landscape" | "portrait" => {
+            switch (found.kind) {
+              case "block":
+              case "knockout":
+                return "landscape";
+              case "swiss":
+              case "test":
+                return "portrait";
+            }
+          })();
           return sendPage(
             reply,
             request,

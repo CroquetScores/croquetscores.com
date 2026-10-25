@@ -52,7 +52,7 @@ Feature: A competition's page can be printed
   Rule: Each kind of competition offers a print button
 
     Scenario Outline: A competition's page offers printing
-      When the page at "<page>" is opened
+      When the page at "<page>" is opened with scripting on
       Then the print button is offered
 
       Examples:
@@ -60,11 +60,12 @@ Feature: A competition's page can be printed
         | /2026/ac/spring-open/competitions/block-a       |
         | /2026/ac/spring-open/competitions/finals        |
         | /2026/gc/swiss-open/competitions/zed            |
-        | /2026/ac/spring-tests/tests/aus-v-eng           |
+        | /2026/gc/spring-tests/tests/aus-v-eng           |
 
     Scenario: A reader with no scripting is not offered one
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting off
-      Then the print button is not offered
+      Then the print button is in the page
+      And the print button is not offered
 
   Rule: What is printed is the tournament, the competition and its results
 
@@ -72,6 +73,11 @@ Feature: A competition's page can be printed
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       And the page is laid out for the printer
       Then the printed tournament name is "Spring Open"
+
+    Scenario: The tournament's name is printed above the competition's
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      And the page is laid out for the printer
+      Then the printed tournament name is above the printed competition name
 
     Scenario: The competition's name is printed
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
@@ -91,8 +97,9 @@ Feature: A competition's page can be printed
       And the footer is not printed
 
     Scenario: The views and the print button are not printed
-      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      And the page is laid out for the printer
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      Then the print button is offered
+      When the page is laid out for the printer
       Then the views are not printed
       And the print button is not printed
 
@@ -112,4 +119,4 @@ Feature: A competition's page can be printed
         | /2026/ac/spring-open/competitions/block-a       | landscape |
         | /2026/ac/spring-open/competitions/finals        | landscape |
         | /2026/gc/swiss-open/competitions/zed            | portrait  |
-        | /2026/ac/spring-tests/tests/aus-v-eng           | portrait  |
+        | /2026/gc/spring-tests/tests/aus-v-eng           | portrait  |
