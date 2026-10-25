@@ -2,17 +2,18 @@
 Feature: Importing each of the old sites' tournaments with everything that names it
 
   The old sites kept a tournament as a document, and everything of it as
-  documents of their own that name it: its players in one, each block,
-  knockout, Swiss and team match in another, and each commentary in
-  another. A tournament is brought over whole: its own document is read,
-  then every document that names it, and the tournament is brought over,
-  then its players, then its competitions, then its commentaries. Its
-  competitions are added in the order it listed them, so that nothing has
-  to be put in order afterwards.
+  documents of their own that name it: each block, knockout, Swiss and team
+  match in one, and each commentary in another. They kept its players in a
+  document too, which the import does not read: each competition lists the
+  players it was played by, and a tournament's own list of players was copied
+  into them and not kept in step (`importCompetition.feature`). A tournament
+  is brought over whole: its own document is read, then every document that
+  names it, and the tournament is brought over, then its competitions, each
+  with its players, then its commentaries. Its competitions are added in the
+  order it listed them, so that nothing has to be put in order afterwards.
 
   What is brought over of each document is said where it always was: the
-  tournament in `ImportTournaments.feature`, its players in
-  `ImportTournamentPlayers.feature`, a competition in
+  tournament in `ImportTournaments.feature`, a competition and its players in
   `importCompetition.feature` and the feature of its kind, a team match in
   `ImportTeamMatches.feature`, a commentary in `ImportCommentaries.feature`.
   What is said here is which documents are a tournament's, the order they go
@@ -38,12 +39,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
     And a tournament "tournaments/12" on "croquetscores.com"
 
   Rule: Everything that names a tournament is brought over with it
-
-    Scenario: The tournament's players are brought over
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 7 is called "Sam Someone"
-      When the tournament is imported
-      Then player 7 of "tournaments/12" on "croquetscores.com" is kept as "Sam Someone"
 
     Scenario Outline: A block or a Swiss that names the tournament is brought over
       Given the <kind> "<document>" of "tournaments/12" on "croquetscores.com"
@@ -97,18 +92,16 @@ Feature: Importing each of the old sites' tournaments with everything that names
 
   Rule: A player represents what a competition says they represent
 
-    The old sites kept what a player represented in the tournament's players
-    and again in each competition the player was in, and the two were not
-    kept in step: a player could represent nothing in the first and a club in
-    the second. The site keeps it once, with the tournament's player. Where a
-    competition says what a player represents, that is what they represent,
-    over what the tournament's players said, since it is the later of the two
-    to have been written down. A competition that says nothing leaves it as
-    it was.
+    The old sites kept what a player represented in each competition the
+    player was in, and the copies were not kept in step. The site keeps it
+    once, with the tournament's player, and the tournament's own list of
+    players is not read (`importCompetition.feature`). A player who
+    represents nothing takes what a competition says they represent. A
+    competition that says nothing leaves it as it was.
 
     Where two competitions say different things, the first of them, in the
     order the tournament listed them, is used and the second is said as
-    corrected, so that whoever reads the import's report can see that the
+    corrected, so that whoever reads the import's files can see that the
     old site did not agree with itself.
 
     This is for a tournament not played by teams. A tournament played by
@@ -124,26 +117,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And player 1 represents "Canterbury"
       When the tournament is imported
       Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
-
-    Scenario: A competition says over what the tournament's players said
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      And player 1 represents "Otago"
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 1 is in the competition
-      And player 1 represents "Canterbury"
-      When the tournament is imported
-      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
-
-    Scenario: A competition that says nothing leaves what the tournament's players said
-      Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      And player 1 is called "Sam Someone"
-      And player 1 represents "Otago"
-      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 1 is in the competition
-      And player 1 represents nothing
-      When the tournament is imported
-      Then "Sam Someone" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Otago"
 
     Scenario: The flag follows what a competition says
       Given the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
@@ -260,7 +233,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     tried as a team match (`ImportTeamMatches.feature`), played over the
     tournament's days and expected to have as many matches as its games say.
     Where that works it is brought over as one, and said as corrected
-    (`AcceptedImportErrors.feature`). Where it is not named for two teams,
+    (`ImportFiles.feature`). Where it is not named for two teams,
     or a player represents neither, or it is refused, it is refused as it
     always was, as the competition it is.
 
@@ -450,7 +423,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     for them, with the details of the
     tournament it was in, called as that is with " - Block" after it, and
     found at its slug followed by "-block". That is said as corrected
-    (`AcceptedImportErrors.feature`). Any other block of a tournament played
+    (`ImportFiles.feature`). Any other block of a tournament played
     by teams is refused as it always was.
 
     Scenario: The block is in a tournament called as its tournament is, with " - Block"
@@ -573,7 +546,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     Murphy Shield, between Southport and Leicester. Each is brought over as a
     team match, between the two teams its players represent, played over its
     tournament's days and expected to have as many matches as its games say,
-    and said as corrected (`AcceptedImportErrors.feature`). Any other block
+    and said as corrected (`ImportFiles.feature`). Any other block
     that is not named for two teams is refused as it always was.
 
     Scenario: blocks/110682 is brought over as a test
@@ -666,7 +639,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     swisses/28068, the Confirmed Entries of the Park CC Grand Prix Easter
     Teams Tournament, a list of entries with no games. Such a competition the
     import names is left behind, and that is not an error. It is said as
-    corrected, with why, as "No games" (`AcceptedImportErrors.feature`).
+    corrected, with why, as "No games" (`ImportFiles.feature`).
 
     Scenario: A competition the import names is not kept as any competition
       Given a tournament "tournaments/13" on "croquetscores.com"
@@ -754,7 +727,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     format and are recorded in order in a Swiss, and what to quote in a
     query: the Swiss's address, on croquetscores.com or gateballscores.com,
     whichever the tournament was on. That is said as corrected
-    (`AcceptedImportErrors.feature`). It is done only where a user was
+    (`ImportFiles.feature`). It is done only where a user was
     brought over as croquetscores@gmail.com, which is who writes the note.
 
     Scenario: A block that cannot be brought over is also a Swiss called as it was with See Notes
@@ -1122,7 +1095,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     its draw cannot be worked out, it is not made at all, no error is kept
     for it, and its games are in its Swiss, so that nobody reads a table or a
     draw with games missing beside a Swiss that has them all. That is said as
-    corrected, with the first game refused (`AcceptedImportErrors.feature`).
+    corrected, with the first game refused (`ImportFiles.feature`).
     A block or knockout of a tournament that started in 2026, which is given
     no Swiss, is brought over in part as it always was.
 
@@ -1405,7 +1378,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     which the site keeps only in a competition that allows drawn results
     (`addGame.feature`). So a competition with a score marked as "Tied",
     "Draw", "tie" or "=" allows drawn results, and the tournament is said as
-    corrected (`AcceptedImportErrors.feature`).
+    corrected (`ImportFiles.feature`).
 
     The old sites sent a tournament's results to the world rankings, and what
     they sent was what the site now counts: a competition of Association
@@ -1560,7 +1533,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     block in a tournament played by teams. Such a tournament the import names
     is brought over as a Standard tournament, with its competitions, as is
     tournaments/74867, the BCCC 71st Annual GC Tournament, which listed only
-    a block. That is said as corrected (`AcceptedImportErrors.feature`).
+    a block. That is said as corrected (`ImportFiles.feature`).
 
     Scenario: A tournament the import names as Standard is a Standard tournament
       Given a tournament "tournaments/80204" on "croquetscores.com"
@@ -1914,7 +1887,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
     2025, whose block and team match had no games. Such a tournament the
     import names is left behind with everything that names it, as an
     archived one is, and that is not an error. It is said as corrected, with
-    why, as "No games" (`AcceptedImportErrors.feature`), on no page of the
+    why, as "No games" (`ImportFiles.feature`), on no page of the
     new site.
 
     Scenario: A tournament the import names is not kept as any tournament
@@ -2108,12 +2081,6 @@ Feature: Importing each of the old sites' tournaments with everything that names
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       When the tournament is imported
       Then the error kept for "croquetscores.com/blocks/30" says "ImportWholeTournaments.TournamentRefused"
-
-    Scenario: The players of a refused tournament are kept as an error
-      Given the tournament is in the sport "XX"
-      And the players "tournamentplayers/40" of "tournaments/12" on "croquetscores.com"
-      When the tournament is imported
-      Then the error kept for "croquetscores.com/tournamentplayers/40" says "ImportWholeTournaments.TournamentRefused"
 
     Scenario: An archived competition of a refused tournament is not an error
       Given the tournament is in the sport "XX"

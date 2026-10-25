@@ -1,5 +1,16 @@
 import type { Reference } from "./Tournament.js";
-import type { OldPlayer } from "./TournamentPlayers.js";
+/**
+ * A player as the old sites kept one in a competition: numbered from 1 within
+ * the competition, with the name and what they represented as the competition
+ * has them. The old sites copied a tournament's players into each competition
+ * and let a manager change the copy, so the tournament's own list says
+ * nothing of who a competition's player is, and the import does not read it.
+ */
+export interface OldPlayer {
+  readonly _Id: number;
+  readonly Name: string;
+  readonly Representing: string | null;
+}
 
 /** What a player carried into a competition, each count 0 unless a manager typed another. */
 export interface CarryForward {

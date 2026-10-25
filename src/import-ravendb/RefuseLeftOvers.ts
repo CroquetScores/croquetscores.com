@@ -35,7 +35,7 @@ export class RefuseLeftOvers implements Importer<NamingATournament> {
   constructor(
     readonly collection: string,
     private readonly database: ImportDatabase,
-    /** Where what the import corrected is said (import-corrections.md). */
+    /** Where what the import corrected is said (ImportFiles.feature). */
     private readonly correcting: AcceptedImportErrors,
   ) {}
 

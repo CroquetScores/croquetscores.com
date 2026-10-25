@@ -40,7 +40,6 @@ import { ImportedAccounts } from "../../src/import-ravendb/ImportedAccounts.js";
 import { ImportKnockouts } from "../../src/import-ravendb/ImportKnockouts.js";
 import { ImportSwisses } from "../../src/import-ravendb/ImportSwisses.js";
 import { ImportTeamMatches } from "../../src/import-ravendb/ImportTeamMatches.js";
-import { ImportTournamentPlayers } from "../../src/import-ravendb/ImportTournamentPlayers.js";
 import { ImportTournaments } from "../../src/import-ravendb/ImportTournaments.js";
 import {
   ImportWholeTournaments,
@@ -206,6 +205,40 @@ export class WrittenSite implements DocumentSource, TournamentDocuments {
     return Promise.resolve(this.find(id));
   }
 
+  /**
+   * The player numbered `number` as the tournament `tournamentDocumentId`'s
+   * players document wrote them. The old sites copied a tournament's players
+   * into each competition under the same number, so a scenario's competition
+   * takes its players' names from here; the import does not read the document.
+   */
+  tournamentPlayer(
+    tournamentDocumentId: string,
+    number: number,
+  ):
+    | { readonly Name: string; readonly Representing: string | null }
+    | undefined {
+    for (const { document } of this.#collections.get(PLAYERS_COLLECTION) ??
+      []) {
+      const players = document as {
+        Tournament: { Id: string };
+        _Players: readonly {
+          _Id: number;
+          Name: string;
+          Representing: string | null;
+        }[];
+      };
+      if (
+        players.Tournament.Id.toLowerCase() !==
+        tournamentDocumentId.toLowerCase()
+      ) {
+        continue;
+      }
+      const found = players._Players.find((player) => player._Id === number);
+      if (found !== undefined) return found;
+    }
+    return undefined;
+  }
+
   // In any case, as RavenDB compares them.
   naming<TDocument extends object>(
     collection: string,
@@ -227,11 +260,14 @@ export class WrittenSite implements DocumentSource, TournamentDocuments {
   }
 }
 
+// The collection the old sites kept a tournament's players in, which the
+// import does not read.
+const PLAYERS_COLLECTION = "TournamentPlayers";
+
 interface Importers {
   /** Brings over a tournament on `website` with what names it there. */
   readonly whole: (website: string) => ImportWholeTournaments;
   readonly tournaments: ImportTournaments;
-  readonly players: ImportTournamentPlayers;
   readonly blocks: ImportBlocks;
   readonly knockouts: ImportKnockouts;
   readonly swisses: ImportSwisses;
@@ -353,12 +389,6 @@ export const importingOf = (world: SpecWorld): Importing => {
     accounts.hasher,
     database,
   );
-  const players = new ImportTournamentPlayers(
-    unitOfWork,
-    tournaments,
-    database,
-    corrected,
-  );
   const blocks = new ImportBlocks(importing);
   const knockouts = new ImportKnockouts(importing);
   const swisses = new ImportSwisses(importing);
@@ -396,7 +426,6 @@ export const importingOf = (world: SpecWorld): Importing => {
           siteOf(sites, website),
           {
             tournament: tournamentImporter,
-            players,
             competitions: [blocks, knockouts, swisses, teamMatches],
             commentaries: commentaryImporter,
           },
@@ -407,7 +436,6 @@ export const importingOf = (world: SpecWorld): Importing => {
           days,
         ),
       tournaments: tournamentImporter,
-      players,
       blocks,
       knockouts,
       swisses,
@@ -568,7 +596,9 @@ export const startWriting = (world: SpecWorld, writing: Writing): void => {
   siteOf(state.sites, writing.website).add(
     writing.kind === "tournament"
       ? "Tournaments"
-      : importerFor(state.importers, writing.kind).collection,
+      : writing.kind === "players"
+        ? PLAYERS_COLLECTION
+        : importerFor(state.importers, writing.kind).collection,
     writing.id,
     writing.document,
   );
@@ -578,10 +608,9 @@ export const startWriting = (world: SpecWorld, writing: Writing): void => {
 
 const importerFor = (
   importers: Importers,
-  kind: Exclude<Writing["kind"], "tournament">,
+  kind: Exclude<Writing["kind"], "tournament" | "players">,
 ): Importer<object> =>
   ({
-    players: importers.players,
     block: importers.blocks,
     knockout: importers.knockouts,
     swiss: importers.swisses,
@@ -605,7 +634,9 @@ const importWriting = async (
         id: writing.id,
         document: asKept(writing.document),
       });
-    } else {
+    } else if (writing.kind !== "players") {
+      // A tournament's players are written to the old site, as the old sites
+      // kept them, and are not read: the import ignores the document.
       await importerFor(state.importers, writing.kind).importDocument({
         website: writing.website,
         id: writing.id,
@@ -919,6 +950,16 @@ export const competitionPlayerWritten = (
   const found = players.find((player) => player._Id === number);
   if (found !== undefined) return found;
   const added = aCompetitionPlayer(number);
+  // As the old sites copied the tournament's players into each competition.
+  const writing = writingOf(world);
+  const copied = siteOf(
+    importingOf(world).sites,
+    writing.website,
+  ).tournamentPlayer(competitionWritten(world).Tournament.Id, number);
+  if (copied !== undefined) {
+    added.Name = copied.Name;
+    added.Representing = copied.Representing;
+  }
   players.push(added);
   return added;
 };

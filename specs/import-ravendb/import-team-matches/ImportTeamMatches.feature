@@ -182,7 +182,7 @@ Feature: Importing the old sites' team matches
     is one match. Never fewer than 1. Where its games say more, that is not
     an error, and is said as corrected, with where the team match is on the
     new site and the old, in a file of corrections of its own, written as the
-    accepted import errors are (`AcceptedImportErrors.feature`), and not
+    accepted import errors are (`ImportFiles.feature`), and not
     among them.
 
     Scenario: A test starts on the day its team match started
@@ -586,7 +586,7 @@ Feature: Importing the old sites' team matches
     order they are to be added in: where the third would come after the first
     two decided the match, and the second and third the other way round would
     all be accepted, they are added the other way round. That is said as
-    corrected (`AcceptedImportErrors.feature`).
+    corrected (`ImportFiles.feature`).
 
     Nadine El Manoufy & Mostafa Eissa beat Ghada Karam & Shukry Aziz 7 to 4
     and 7 to 5, and lost to them 4 to 7 in the game entered third, which was
@@ -702,7 +702,7 @@ Feature: Importing the old sites' team matches
     opponent was put right the same way, so is a player who played them. A
     player who played nobody of either team, or only players of neither, is
     refused as they were. That is said as corrected
-    (`AcceptedImportErrors.feature`).
+    (`ImportFiles.feature`).
 
     Ann Able represents New Zealand, and Ben Baker represents Australia, which
     is not in the match, and played her.
@@ -803,7 +803,7 @@ Feature: Importing the old sites' team matches
     on, is said in the note Import Errors of the tournament as the games are
     (the rule above), with the team or club they represented and why, and is
     not kept as an error. That is said as corrected
-    (`AcceptedImportErrors.feature`). Where no user was brought over as
+    (`ImportFiles.feature`). Where no user was brought over as
     croquetscores@gmail.com, it is kept as an error as it always was.
 
     Scenario: A player who cannot be entered is said in the note
@@ -857,7 +857,7 @@ Feature: Importing the old sites' team matches
     other team one of them has not played in the team match, of the same
     kind, single or pair, where there is one only, and the site then takes
     it. A pair is a player whose name has ",", "/", "&" or "and" in it. That
-    is said as corrected (`AcceptedImportErrors.feature`). Where there is no
+    is said as corrected (`ImportFiles.feature`). Where there is no
     one, or more than one, the two met again, and the next rule says what
     becomes of the game. Where the game has the very scores of one the two
     already played, which is the same game entered twice, it is left out, as
@@ -1158,7 +1158,7 @@ Feature: Importing the old sites' team matches
     player made for it on their team, called by their name and " - meet
     again", the first time one is needed, and the game is added between the
     winner and that player. That is said as corrected
-    (`AcceptedImportErrors.feature`). The games of the same meeting again,
+    (`ImportFiles.feature`). The games of the same meeting again,
     in a match of more than one game, are all against that player, whoever
     won them. Two players who met a third time play it against another,
     numbered apart, as "Ann Able - meet again (2)".
@@ -1316,7 +1316,7 @@ Feature: Importing the old sites' team matches
     Hess beat Charles-Eric Vilain 7-4, lost 3-7, and won 7-5, entered as
     games 6, 17 and 10 were played. The games named take the places they had
     between them, and every other game keeps its own. That is not an error,
-    and is said as corrected (`AcceptedImportErrors.feature`).
+    and is said as corrected (`ImportFiles.feature`).
 
     Scenario: The games of a team match the import names are all added
       Given the team match "TeamMatches/359" of "tournaments/13" on "croquetscores.com"
@@ -1933,7 +1933,7 @@ Feature: Importing the old sites' team matches
     the number the old site gave them in the tournament, as a tournament's
     bye is, so that every team match of the tournament knows them for one. A
     game against a bye is no game that was played, and is left out too, and
-    said as corrected (`AcceptedImportErrors.feature`). Neither is an error.
+    said as corrected (`ImportFiles.feature`). Neither is an error.
 
     Scenario: A player named as a bye is not a player of the team
       Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
@@ -2079,7 +2079,7 @@ Feature: Importing the old sites' team matches
     game, the winner, the loser and each one's team and score. There is one
     note for the tournament, and each team match with such a game adds its
     section, and why it could not be added. That is said as corrected
-    (`AcceptedImportErrors.feature`), and is not an error. Where no user was
+    (`ImportFiles.feature`), and is not an error. Where no user was
     brought over as croquetscores@gmail.com, it is kept as an error as it
     always was. Any other game the site refuses is said the same way
     (`importCompetition.feature`).

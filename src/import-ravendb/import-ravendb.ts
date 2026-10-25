@@ -3,8 +3,9 @@
 // players, its blocks, knockouts, Swisses and team matches, and its
 // commentaries, and last whatever names a tournament that was not there, as an
 // error. What it accepted rather than keeping as an error, and what it
-// corrected of what the old sites kept, are said in
-// docs/import-from-ravendb/import-corrections.md, which it deletes first. Once
+// corrected of what the old sites kept, are said in docs/import-from-ravendb,
+// a file for each code and import-errors.md for the errors it kept, every file
+// of which it deletes first (ImportFiles.feature). Once
 // every site is over, the site's roles are
 // given to whoever holds them, and the players the world rankings know are
 // imported from the rankings' own lists, since emptying the database emptied
@@ -59,7 +60,7 @@ import {
   worldRankingSportNames,
 } from "../infrastructure/services/WorldRankingWebsite.js";
 import type { ImportReport } from "../application/operations/world-rankings/ImportWorldRankingPlayers.js";
-import { AcceptedImportErrorsFile, CORRECTED } from "./AcceptedImportErrors.js";
+import { ImportFiles } from "./ImportFiles.js";
 import { GiveRoles, type RoleHolders } from "./GiveRoles.js";
 import { ImportBlocks } from "./ImportBlocks.js";
 import { ImportCommentaries } from "./ImportCommentaries.js";
@@ -69,7 +70,6 @@ import { ImportErrorsNote } from "./ImportErrorsNote.js";
 import { ImportKnockouts } from "./ImportKnockouts.js";
 import { ImportSwisses } from "./ImportSwisses.js";
 import { ImportTeamMatches } from "./ImportTeamMatches.js";
-import { ImportTournamentPlayers } from "./ImportTournamentPlayers.js";
 import { ImportTournaments } from "./ImportTournaments.js";
 import { WorldRankingEvents } from "./WorldRankingEvents.js";
 import { ImportUsers } from "./ImportUsers.js";
@@ -160,28 +160,19 @@ try {
   const unitOfWork = new UnitOfWork(pool);
   const database = new ImportDatabase(pool, unitOfWork);
 
-  // What the last import kept, counted before the database is emptied of it,
-  // and uncounted in a database no import has made the table in.
-  let errorsBefore: number | undefined;
-  try {
-    errorsBefore = await database.errorCount();
-  } catch {
-    errorsBefore = undefined;
-  }
-  // What it corrected of what the old sites kept, as a team match's expected
-  // matches, and what it accepted rather than keeping as an error, said in one
-  // file, linking to the tournaments on the development site, where an import
-  // is looked at, as well as on the old sites.
-  const correcting = new AcceptedImportErrorsFile(
-    join(
-      import.meta.dirname,
-      "../../docs/import-from-ravendb/import-corrections.md",
-    ),
+  // What it corrected of what the old sites kept, what it accepted rather than
+  // keeping as an error, and the errors it kept, said in a file for each code
+  // and one of the errors, in docs/import-from-ravendb, linking to the
+  // tournaments on the development site, where an import is looked at, as well
+  // as on the old sites. The folder is emptied first, of every file in it.
+  const correcting = new ImportFiles(
+    join(import.meta.dirname, "../../docs/import-from-ravendb"),
     "http://localhost:3000",
-    CORRECTED,
   );
-  const began = new Date();
-  await correcting.begin(began, errorsBefore);
+  await correcting.begin(new Date());
+  // Each error kept is said as it is kept, so that an import that stops
+  // partway through still says what it kept before it stopped.
+  database.afterErrorKept((error) => correcting.keptError(error));
 
   const worldRankingEvents = await WorldRankingEvents.readFrom(
     join(import.meta.dirname, "world-ranking-events"),
@@ -306,12 +297,6 @@ try {
       database,
       () => worldRankingEvents,
     ),
-    players: new ImportTournamentPlayers(
-      unitOfWork,
-      tournaments,
-      database,
-      correcting,
-    ),
     competitions: [
       new ImportBlocks(importing),
       new ImportKnockouts(importing),
@@ -327,11 +312,7 @@ try {
       commentariesByTournament,
     ),
   };
-  const leftOvers = [
-    parts.players,
-    ...parts.competitions,
-    parts.commentaries,
-  ].map(
+  const leftOvers = [...parts.competitions, parts.commentaries].map(
     ({ collection }) => new RefuseLeftOvers(collection, database, correcting),
   );
 
@@ -460,7 +441,7 @@ try {
   const kept = await database.errorCount();
   const errors =
     kept + (withNoAccount?.length ?? 0) + rolesNotGiven + worldRankingErrors;
-  await correcting.end(kept);
+  await correcting.end();
 
   // How many tournaments the world rankings' lists had a say in the country of,
   // which is how whoever ran the import sees whether they found what they were

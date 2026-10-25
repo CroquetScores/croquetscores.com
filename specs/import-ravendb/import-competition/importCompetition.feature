@@ -13,8 +13,8 @@ Feature: Importing one of the old sites' competitions
   A competition is added to the tournament its document names, once that
   tournament has been brought over (`ImportTournaments.feature`), as created
   by whoever the tournament was created by and at the moment it was. Its
-  players are entered, as the tournament players the old site's players
-  became (`ImportTournamentPlayers.feature`), and its games added, each at
+  players are entered, as the tournament players the competition's own list
+  names (`ImportTournamentPlayers.feature`), and its games added, each at
   the moment the old site kept it at.
 
   A competition is brought over a player and a game at a time. A player or a
@@ -186,35 +186,100 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the first player of the competition kept for "blocks/30" on "croquetscores.com" is "Sam Someone"
 
-  Rule: A player the tournament's players no longer listed is brought over from the competition
+  Rule: A competition's players are brought over from its own list, by name
 
-    The old sites let a manager take a player out of the tournament's players
-    while a competition still listed them, with the games they had played in
-    it. The competition's own list still says who they were, so they are
-    brought over from it, as the tournament's players are
-    (`ImportTournamentPlayers.feature`): added to the tournament, and kept by
-    the number the old site gave them, so that every competition listing them
-    finds the one player. One named as a bye is kept as the bye. That is not
-    an error, since nothing was lost, and is said as corrected, with where it
-    is on the new site and the old, in the file of import corrections
-    (`AcceptedImportErrors.feature`), and not said as accepted. A player the
-    site refuses is kept as an error naming them, and the rest are entered.
+    The old sites copied a tournament's players into each competition under
+    the same number, and let a manager change the copy: rename a player,
+    or enter a pair as one player, in one competition and not in another. So
+    the tournament's own list of players says nothing of who a competition's
+    player is, and the import does not read it (`ImportTournamentPlayers.feature`).
+    A player's number is the competition's own, and is never looked for in
+    another competition.
 
-    Scenario: A player the tournament did not list is entered in the competition
+    Each player of a competition's list is looked for by their name among the
+    players the tournament has on the site. Where one is named exactly as they
+    are, they are that player; where none is, they are added to the tournament.
+    That is not an error, since nothing was lost, and nothing is said of it.
+    One named as a bye is kept as the bye. A player the site refuses is kept
+    as an error naming them, and the rest are entered.
+
+    Scenario: A player of the competition's list is entered in the competition
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
       When the competition is imported
       Then "Pat Missing" is in the competition kept for "blocks/30" on "croquetscores.com"
 
-    Scenario: A player the tournament did not list becomes a player of the tournament
+    Scenario: A player of the competition's list becomes a player of the tournament
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
       When the competition is imported
-      Then player 9 of "tournaments/12" on "croquetscores.com" is kept as "Pat Missing"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Pat Missing"
 
-    Scenario: A player the tournament did not list is one player in every competition listing them
+    Scenario: Bringing over a player of the competition's list is not an error
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then no error is kept for "croquetscores.com/blocks/30"
+
+    Scenario: Bringing over a player of the competition's list is not said as accepted
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      When the competition is imported
+      Then nothing is accepted of "croquetscores.com/blocks/30"
+
+    Scenario: A player of the exact name the tournament has is that player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
+
+    Scenario: A player of the exact name the tournament has is entered in the competition
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      When the competition is imported
+      Then "Pat Missing" is in the competition kept for "blocks/31" on "croquetscores.com"
+
+    Scenario: A player of a name the tournament does not have is added to it
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Lee Another"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 2 players
+
+    Scenario: A name in another case is another player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "pat missing"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 2 players
+
+    Scenario: The same number in another competition is not the same player
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
@@ -222,29 +287,56 @@ Feature: Importing one of the old sites' competitions
       And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
       And the competition is called "B Block"
       And player 9 is in the competition
-      And player 9 is called "Pat Missing"
+      And player 9 is called "Lee Another"
       When the competition is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 2 players
 
-    Scenario: Two players the tournament did not list of one name are one player
+    Scenario: The player of that number in the other competition is the one it names
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 9 is in the competition
+      And player 9 is called "Lee Another"
+      When the competition is imported
+      Then "Lee Another" is in the competition kept for "blocks/31" on "croquetscores.com"
+
+    Scenario: A pair listed under the number of one of its members is a player of its own
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 12 is in the competition
+      And player 12 is called "Joe Hogan"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "Doubles Entries"
+      And player 12 is in the competition
+      And player 12 is called "Joe Hogan & Levi Franks"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Joe Hogan & Levi Franks"
+
+    Scenario: A pair listed under the number of one of its members is not that member
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 12 is in the competition
+      And player 12 is called "Joe Hogan"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "Doubles Entries"
+      And player 12 is in the competition
+      And player 12 is called "Joe Hogan & Levi Franks"
+      When the competition is imported
+      Then "Joe Hogan & Levi Franks" is in the competition kept for "blocks/31" on "croquetscores.com"
+
+    Scenario: Two of one name in a competition are one player of the tournament
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
       And player 10 is in the competition
       And player 10 is called "Pat Missing"
       When the competition is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 3 players
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
 
-    Scenario: The second of two of one name is kept as the same player
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      And player 10 is in the competition
-      And player 10 is called "Pat Missing"
-      When the competition is imported
-      Then player 10 of "tournaments/12" on "croquetscores.com" is kept as "Pat Missing"
-
-    Scenario: Two of one name are entered in the competition once
+    Scenario: Two of one name in a competition are entered in it once
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "Pat Missing"
@@ -252,39 +344,6 @@ Feature: Importing one of the old sites' competitions
       And player 10 is called "Pat Missing"
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" has 1 player
-
-    Scenario: The second of two of one name is said as corrected
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      And player 10 is in the competition
-      And player 10 is called "Pat Missing"
-      When the competition is imported
-      Then "player 10" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.PlayerListedAgain"
-
-    Scenario: A player another competition brought over under another number is said as corrected
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      And the competition is imported
-      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
-      And the competition is called "B Block"
-      And player 10 is in the competition
-      And player 10 is called "Pat Missing"
-      When the competition is imported
-      Then "player 10" of "croquetscores.com/blocks/31" is corrected as "ImportCompetition.PlayerListedAgain"
-
-    Scenario: A player brought over under another number is not said to be missing from the tournament
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      And the competition is imported
-      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
-      And the competition is called "B Block"
-      And player 10 is in the competition
-      And player 10 is called "Pat Missing"
-      When the competition is imported
-      Then "player 10" of "croquetscores.com/blocks/31" is not corrected as "ImportCompetition.PlayerNotInTournament"
 
     Scenario: Entering the second of two of one name is not an error
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -295,28 +354,7 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then no error is kept for "croquetscores.com/blocks/30"
 
-    Scenario: Bringing over a player the tournament did not list is not an error
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      When the competition is imported
-      Then no error is kept for "croquetscores.com/blocks/30"
-
-    Scenario: Bringing over a player the tournament did not list is said as corrected
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      When the competition is imported
-      Then "player 9" of "croquetscores.com/blocks/30" is corrected as "ImportCompetition.PlayerNotInTournament"
-
-    Scenario: Bringing over a player the tournament did not list is not said as accepted
-      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
-      And player 9 is in the competition
-      And player 9 is called "Pat Missing"
-      When the competition is imported
-      Then nothing is accepted of "croquetscores.com/blocks/30"
-
-    Scenario: A bye the tournament did not list is kept as the bye
+    Scenario: A bye of the competition's list is kept as the bye
       Given the Swiss "swisses/30" of "tournaments/12" on "croquetscores.com"
       And player 7 is in the competition
       And player 9 is in the competition
@@ -324,7 +362,7 @@ Feature: Importing one of the old sites' competitions
       When the competition is imported
       Then the competition kept for "swisses/30" on "croquetscores.com" has 1 player
 
-    Scenario: A player the tournament did not list, whom the site refuses, is kept as an error
+    Scenario: A player the site refuses is kept as an error
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 9 is in the competition
       And player 9 is called "????"
@@ -345,6 +383,86 @@ Feature: Importing one of the old sites' competitions
       And player 7 is in the competition
       When the competition is imported
       Then "Sam Someone" is in the competition kept for "blocks/30" on "croquetscores.com"
+
+  Rule: What a player represents is what the first competition to say anything of it said
+
+    The old sites kept what a player represented in each competition, and the
+    copies did not agree. The site keeps it once, with the tournament's
+    player. A player the tournament has that represents nothing takes what
+    the competition says they represent, with the flag of it where it has one
+    (`ImportTournamentPlayers.feature`). A player that already represents
+    something keeps it, whatever a later competition says, and that is said
+    as corrected so that whoever reads the import's files can see that the
+    old site did not agree with itself. A competition that says nothing
+    leaves it as it was.
+
+    Scenario: A competition says what a player who represented nothing represents
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      And player 4 represents "Canterbury"
+      When the competition is imported
+      Then "Pat Missing" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A competition that says nothing leaves what a player represents
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 9 represents "Canterbury"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      When the competition is imported
+      Then "Pat Missing" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A competition that says something else leaves what a player represents
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 9 represents "Canterbury"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      And player 4 represents "Otago"
+      When the competition is imported
+      Then "Pat Missing" in the tournament kept for "tournaments/12" on "croquetscores.com" represents "Canterbury"
+
+    Scenario: A competition that says something else is said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 9 represents "Canterbury"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      And player 4 represents "Otago"
+      When the competition is imported
+      Then "player 4" of "croquetscores.com/blocks/31" is corrected as "ImportCompetition.RepresentingListedAgain"
+
+    Scenario: A competition that says the same is not said as corrected
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 9 is in the competition
+      And player 9 is called "Pat Missing"
+      And player 9 represents "Canterbury"
+      And the competition is imported
+      And the block "blocks/31" of "tournaments/12" on "croquetscores.com"
+      And the competition is called "B Block"
+      And player 4 is in the competition
+      And player 4 is called "Pat Missing"
+      And player 4 represents "Canterbury"
+      When the competition is imported
+      Then "player 4" of "croquetscores.com/blocks/31" is not corrected as "ImportCompetition.RepresentingListedAgain"
 
   Rule: A bye is left out of a block or a Swiss
 
@@ -389,7 +507,7 @@ Feature: Importing one of the old sites' competitions
     against it through without a game. So a game against a bye is left out,
     whichever kind of competition it is in, and said as corrected, with
     where it is on the new site and the old, in the file of import
-    corrections (`AcceptedImportErrors.feature`), rather than kept as an
+    corrections (`ImportFiles.feature`), rather than kept as an
     error or said as accepted. The other games are added as they were.
 
     Scenario: A game against a bye in a block is not added
@@ -582,7 +700,7 @@ Feature: Importing one of the old sites' competitions
     lost, and the winner never went on. A loser's 0 marked so, against a
     winner's score that is not, has its "W" written "w/o", as "0w/o", which
     is no mark, and the game is added. That is said as corrected
-    (`AcceptedImportErrors.feature`). A loser's score of more than 0 marked
+    (`ImportFiles.feature`). A loser's score of more than 0 marked
     so, or one against a winner's that is marked too, is refused as it
     always was.
 
@@ -654,7 +772,7 @@ Feature: Importing one of the old sites' competitions
     points, where the score is no more than its digits. One with both marked
     is won by whoever the old site said, and the loser's mark is taken off,
     as "6w" against "6". That is said
-    as corrected (`AcceptedImportErrors.feature`), and
+    as corrected (`ImportFiles.feature`), and
     everything worked out from who won, as a knockout's draw, is worked out
     from who won by the scores (`ImportKnockouts.feature`).
 
@@ -862,7 +980,7 @@ Feature: Importing one of the old sites' competitions
     for: a score's points are the number it begins with, so "3.5" against "3"
     was a game won on equal points. A score written with a fraction that is
     more than nothing is rounded up to the next whole number, as "3.5" to
-    "4", and said as corrected (`AcceptedImportErrors.feature`). What follows
+    "4", and said as corrected (`ImportFiles.feature`). What follows
     it is kept.
 
     Scenario: A winner's half point is rounded up
@@ -937,7 +1055,7 @@ Feature: Importing one of the old sites' competitions
     mark, as "5 w (5)" against "5": the mark and the count in brackets are
     taken off, leaving the points, and the game is then a game on equal
     points won by whoever the old site said, as the rule above says. That is
-    said as corrected (`AcceptedImportErrors.feature`).
+    said as corrected (`ImportFiles.feature`).
 
     Scenario: A winner's mark with a count in brackets is a game won on equal points
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -1000,7 +1118,7 @@ Feature: Importing one of the old sites' competitions
     very same scores, as a scorer saving what they had already saved. Where
     the second would be refused because the two players' match was already
     decided (`addGame.feature`), it is left out, and that is not an error.
-    Said as corrected (`AcceptedImportErrors.feature`). Where it would not,
+    Said as corrected (`ImportFiles.feature`). Where it would not,
     two games are two games, as two matches of the best of 5 can have the
     same scores. A game with other scores is not the same game, and is
     refused as it always was, and one won by the other player with the same
@@ -1190,7 +1308,7 @@ Feature: Importing one of the old sites' competitions
     line for each game, who beat whom with each one's team or club and score,
     and why it could not be added, in words for a reader of the tournament
     rather than for whoever reads the import. It is said as corrected
-    (`AcceptedImportErrors.feature`), for each game and once for the
+    (`ImportFiles.feature`), for each game and once for the
     competition, and is not kept as an error. It is done only where a user was
     brought over as croquetscores@gmail.com, and only for a game that was
     refused: one put right, left out as a duplicate or against a bye is not.

@@ -21,6 +21,14 @@ export interface ErrorOf {
   readonly oldSitePath: string;
 }
 
+/** An error as it was kept, for whoever is told of each (afterErrorKept). */
+export interface KeptError {
+  readonly documentId: string;
+  readonly message: string;
+  readonly of?: ErrorOf | undefined;
+  readonly summary?: string | undefined;
+}
+
 /** Where a document the import refused is kept, with why. */
 export interface ImportErrors {
   /**
@@ -47,6 +55,7 @@ export interface ImportErrors {
 export class ImportDatabase implements ImportErrors {
   readonly #pool: Pool;
   readonly #unitOfWork: UnitOfWork;
+  readonly #told: ((error: KeptError) => Promise<void>)[] = [];
 
   constructor(pool: Pool, unitOfWork: UnitOfWork) {
     this.#pool = pool;
@@ -396,6 +405,14 @@ export class ImportDatabase implements ImportErrors {
   }
 
   /**
+   * Has `listener` told of each error kept from now on, once it is kept, in
+   * the order they were kept (ImportDatabase.feature).
+   */
+  afterErrorKept(listener: (error: KeptError) => Promise<void>): void {
+    this.#told.push(listener);
+  }
+
+  /**
    * Keeps what went wrong with one document. On the pool rather than in the
    * transaction the document was imported in, which has been rolled back.
    */
@@ -422,6 +439,9 @@ export class ImportDatabase implements ImportErrors {
         summary ?? null,
       ],
     );
+    for (const listener of this.#told) {
+      await listener({ documentId, message, of, summary });
+    }
   }
 
   /**

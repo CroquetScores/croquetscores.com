@@ -16,7 +16,7 @@ Feature: Importing the old sites' blocks
   refuse the third. A block kept as the best of more than 1 where every pair
   of its players played exactly that many games is the best of 1, played in
   rounds, which is what it was (`addGame.feature`). That is said as
-  corrected (`AcceptedImportErrors.feature`). A best-of worked out from the
+  corrected (`ImportFiles.feature`). A best-of worked out from the
   games, where it was kept as less than 1, is not kept, and is left as it is.
 
   Background:
@@ -91,7 +91,19 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
-  Rule: A block whose every pair played the best-of's number of games is the best of 1
+  Rule: A block whose every pair played the best-of's number of games is the best of 1 only where a match would be decided early
+
+    A block kept as the best of 3 in which every pair played 3 games was
+    either played as one match each, decided by the third game, or played in
+    3 rounds of single games. The site cannot take a game once its match is
+    decided: a pair that won 2-0 and then played a third game was playing a
+    second round, and the block is brought over as the best of 1, so that
+    every game is added, and said as corrected. But where every pair's last
+    game is the one that decides their match, as when each of the 3 games a
+    pair played was won one each and then by one of them, or when a block kept
+    as the best of 2 has each pair play 2 games, keeping the best-of takes
+    every game and nothing needs changing: all the players played the same
+    number of games, and that is no reason to change what the old site kept.
 
     Scenario: A block whose every pair played its best-of's games is the best of 1
       Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
@@ -108,7 +120,7 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
-    Scenario: A block of three players whose every pair played its best-of's games is the best of 1
+    Scenario: A block of three players whose every pair's third game decided their match keeps its best-of
       Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
       And player 5 of "tournaments/12" on "croquetscores.com" is imported as "Pat Third"
       And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
@@ -134,6 +146,90 @@ Feature: Importing the old sites' blocks
       And game 8 was lost by player 3
       And game 9 was won by player 3
       And game 9 was lost by player 5
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of the best of 2 whose pair played 2 games keeps its best-of
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 2
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 2
+
+    Scenario: A block of the best of 2 whose pair played 2 games is not said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 2
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+    Scenario: Every game of a block of the best of 2 whose pair played 2 games is added
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 2
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" has 2 games
+
+    Scenario: A block of the best of 3 whose pair's third game decided their match keeps its best-of
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 3
+
+    Scenario: A block of the best of 3 whose pair's third game decided their match is not said as corrected
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 3
+      And game 2 was lost by player 7
+      And game 3 was won by player 7
+      And game 3 was lost by player 3
+      When the competition is imported
+      Then nothing is corrected of "croquetscores.com/blocks/30"
+
+    Scenario: A block of the best of 3 whose pair's match was decided by the second game is the best of 1
+      Given player 3 of "tournaments/12" on "croquetscores.com" is imported as "Alex Other"
+      And the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And the block's matches are the best of 3
+      And player 7 is in the competition
+      And player 3 is in the competition
+      And game 1 was won by player 7
+      And game 1 was lost by player 3
+      And game 2 was won by player 7
+      And game 2 was lost by player 3
+      And game 3 was won by player 3
+      And game 3 was lost by player 7
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is the best of 1
 
@@ -274,7 +370,7 @@ Feature: Importing the old sites' blocks
     entered, make whole matches of the best-of, and at least one pair has
     more than one, the block keeps its best-of and is played in as many
     rounds as the most matches any pair played. That is said as corrected
-    (`AcceptedImportErrors.feature`). Where any pair has a match not
+    (`ImportFiles.feature`). Where any pair has a match not
     finished, it is not, and is brought over as it was.
 
     Scenario: A block whose pair played two matches of its best-of is played in 2 rounds
@@ -472,7 +568,7 @@ Feature: Importing the old sites' blocks
     Interclub, was a double round robin of matches of the best of 3, kept as
     the best of 5 or of 1 with every pair's games between them. Each of its
     blocks is brought over as the best of 3 and played in 2 rounds, and said
-    as corrected (`AcceptedImportErrors.feature`).
+    as corrected (`ImportFiles.feature`).
 
     Scenario: A block of tournaments/72520 is the best of 3
       Given a tournament "tournaments/72520" on "croquetscores.com" is imported
@@ -518,7 +614,7 @@ Feature: Importing the old sites' blocks
     be accepted, they are added the other way round. Where they would not, as
     where one player won all three, or the best-of is too few for a third
     game, they are added as entered, and the third is refused as it always
-    was. That is said as corrected (`AcceptedImportErrors.feature`).
+    was. That is said as corrected (`ImportFiles.feature`).
 
     Sam Someone beat Alex Other twice, and Alex beat Sam in the game entered
     third, so it was the second played.

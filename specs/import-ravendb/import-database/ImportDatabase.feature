@@ -191,3 +191,54 @@ Feature: The database an import empties and fills
       Given the import's database is emptied
       And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
       Then no summary is kept for "croquetscores.com/blocks/30"
+
+  Rule: Whoever asks is told of each error kept, with all of it
+
+    The import says each error it keeps in a file as it is kept
+    (`ImportFiles.feature`), so that one that stops partway through still says
+    what it kept before it stopped. The database tells whoever asks, once the
+    error is kept, and keeps it whether anybody asked or not.
+
+    Scenario: An error kept is told to whoever asked
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      Then they were told of 1 error
+
+    Scenario: What they are told is the document
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      Then they were told of an error for "croquetscores.com/blocks/30"
+
+    Scenario: What they are told is what went wrong
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      Then they were told of an error saying "Refused"
+
+    Scenario: What they are told is what it is said for a person as
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused", said for a person as "Game Tim 26 beat Trev 0"
+      Then they were told of an error said for a person as "Game Tim 26 beat Trev 0"
+
+    Scenario: What they are told is where it is
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused" at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+      Then they were told of an error at "2014/ac/spring-open/competitions/a-block" on the new site and "2014/ac/spring-open/competition/block-a" on the old site
+
+    Scenario: Each error kept is told in the order it was kept
+      Given the import's database is emptied
+      And someone asks to be told of each error kept
+      And an error is kept for "croquetscores.com/users/2" saying "Refused"
+      And an error is kept for "croquetscores.com/blocks/1" saying "Refused"
+      Then they were told of "croquetscores.com/users/2" and then of "croquetscores.com/blocks/1"
+
+    Scenario: An error is kept whether anyone asked or not
+      Given the import's database is emptied
+      And an error is kept for "croquetscores.com/blocks/30" saying "Refused"
+      When the errors kept are counted
+      Then 1 error is counted
+

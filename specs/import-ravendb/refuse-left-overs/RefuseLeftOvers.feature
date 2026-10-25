@@ -10,8 +10,8 @@ Feature: Finding whatever names a tournament that was never there
 
   A document naming a tournament the old site no longer had is not kept as
   an error, since there is nothing in it anyone could put right. It is said
-  instead as corrected in docs/import-from-ravendb/import-corrections.md
-  (`AcceptedImportErrors.feature`), under the code
+  instead as corrected in docs/import-from-ravendb
+  (`ImportFiles.feature`), in the file of the code
   `RefuseLeftOvers.TournamentMissing`, with the tournament it names.
 
   A tournament the old site could not be asked about is not kept as read
@@ -39,7 +39,6 @@ Feature: Finding whatever names a tournament that was never there
 
       Examples:
         | kind       | document             |
-        | players    | tournamentplayers/40 |
         | block      | blocks/30            |
         | knockout   | knockouts/30         |
         | Swiss      | swisses/30           |

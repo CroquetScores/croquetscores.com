@@ -14,7 +14,6 @@ import type {
 } from "./ravendb-models/Competition.js";
 import { isPlayedByTeams } from "./ImportTournaments.js";
 import type { Tournament as OldTournament } from "./ravendb-models/Tournament.js";
-import type { TournamentPlayers } from "./ravendb-models/TournamentPlayers.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import type { SeeNotes } from "./SeeNotes.js";
 import { type ImportErrorsNote, refusedLineOf } from "./ImportErrorsNote.js";
@@ -47,7 +46,6 @@ export interface DaysAskedFor {
 /** What brings over a tournament, and each kind of document that names one. */
 export interface TournamentParts {
   readonly tournament: Importer<OldTournament>;
-  readonly players: Importer<TournamentPlayers>;
   /** In the order a competition its tournament does not list is added in. */
   readonly competitions: readonly Importer<OldCompetition>[];
   readonly commentaries: Importer<OldCommentary>;
@@ -215,7 +213,6 @@ const BLOCK_SUFFIX = " - Block";
 // What each kind of document that names a tournament is called, for the note
 // of what was refused.
 const DOCUMENTS: Readonly<Record<string, string>> = {
-  TournamentPlayers: "players",
   TeamMatches: "team match",
   Commentaries: "commentary",
 };
@@ -255,8 +252,8 @@ const heldOverItsTeamMatches = (
 
 /**
  * Brings each of the old sites' tournaments over with everything that names
- * it (ImportWholeTournaments.feature): the tournament, then its players, then
- * its competitions in the order it listed them, then its commentaries. A
+ * it (ImportWholeTournaments.feature): the tournament, then its competitions in
+ * the order it listed them, with the players of each, then its commentaries. A
  * competition it does not list goes after those it does.
  *
  * Each document is brought over in a transaction of its own, as it was when
@@ -329,8 +326,7 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
 
     // Asked for all at once, since none waits on another's answer and each
     // is a round trip to the old site.
-    const [players, commentaries, ...competitions] = await Promise.all([
-      this.#naming(this.parts.players, id),
+    const [commentaries, ...competitions] = await Promise.all([
       this.#naming(this.parts.commentaries, id),
       ...this.parts.competitions.map((importer) => this.#naming(importer, id)),
     ]);
@@ -372,7 +368,6 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
         : each;
     };
     const named = [
-      ...players,
       ...this.#inListedOrder(document, competitions.flat()),
       ...commentaries,
     ].map(tried);
