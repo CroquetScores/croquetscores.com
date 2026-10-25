@@ -456,6 +456,7 @@ export const afrikaans: Language = {
     "competition.view.grid": "Rooster",
     "competition.view.summary": "Opsomming",
     "competition.view.orderOfPlay": "Speelvolgorde",
+    "competition.print": "Druk",
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen, dan volgens netto hoepels. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",

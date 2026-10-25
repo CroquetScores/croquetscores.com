@@ -473,6 +473,7 @@ export const german: Language = {
     "competition.view.grid": "Raster",
     "competition.view.summary": "Zusammenfassung",
     "competition.view.orderOfPlay": "Spielreihenfolge",
+    "competition.print": "Drucken",
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",

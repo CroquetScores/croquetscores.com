@@ -457,6 +457,7 @@ export const dutch: Language = {
     "competition.view.grid": "Schema",
     "competition.view.summary": "Overzicht",
     "competition.view.orderOfPlay": "Speelvolgorde",
+    "competition.print": "Afdrukken",
     "blockSummary.ranking":
       "Gerangschikt naar het aandeel gewonnen wedstrijden, daarna naar het saldo poortjes. Het eigen reglement van een toernooi kan de spelers anders plaatsen.",
     "orderOfPlay.none": "Er zijn nog geen partijen gespeeld.",

@@ -423,6 +423,7 @@ export const chinese: Language = {
     "competition.view.grid": "表格",
     "competition.view.summary": "汇总",
     "competition.view.orderOfPlay": "比赛顺序",
+    "competition.print": "打印",
     "blockSummary.ranking":
       "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",

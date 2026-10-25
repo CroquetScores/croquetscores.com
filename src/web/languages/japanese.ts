@@ -428,6 +428,7 @@ export const japanese: Language = {
     "competition.view.grid": "対戦表",
     "competition.view.summary": "サマリー",
     "competition.view.orderOfPlay": "試合順",
+    "competition.print": "印刷",
     "blockSummary.ranking":
       "試合の勝率、次にフープ差の順に並べています。大会独自の規定では、選手の順位が異なる場合があります。",
     "orderOfPlay.none": "まだゲームは行われていません。",

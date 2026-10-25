@@ -439,6 +439,7 @@ export const welsh: Language = {
     "competition.view.grid": "Grid",
     "competition.view.summary": "Crynodeb",
     "competition.view.orderOfPlay": "Trefn chwarae",
+    "competition.print": "Argraffu",
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",

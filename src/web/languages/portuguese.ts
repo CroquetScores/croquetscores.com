@@ -451,6 +451,7 @@ export const portuguese: Language = {
     "competition.view.grid": "Grade",
     "competition.view.summary": "Resumo",
     "competition.view.orderOfPlay": "Ordem de jogo",
+    "competition.print": "Imprimir",
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas e, depois, pelo saldo de arcos. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",

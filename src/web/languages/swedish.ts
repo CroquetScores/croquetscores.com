@@ -453,6 +453,7 @@ export const swedish: Language = {
     "competition.view.grid": "Rutnät",
     "competition.view.summary": "Sammanfattning",
     "competition.view.orderOfPlay": "Speltabell",
+    "competition.print": "Skriv ut",
     "blockSummary.ranking":
       "Rankad efter andelen vunna matcher, därefter efter nettobågar. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",

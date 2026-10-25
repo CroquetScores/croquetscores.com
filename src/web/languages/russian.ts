@@ -431,6 +431,7 @@ export const russian: Language = {
     "competition.view.grid": "Таблица",
     "competition.view.summary": "Итоги",
     "competition.view.orderOfPlay": "Порядок игр",
+    "competition.print": "Печать",
     "blockSummary.ranking":
       "Места определяются долей выигранных матчей, затем разницей ворот. Регламент самого турнира может расставлять игроков иначе.",
     "orderOfPlay.none": "Игр ещё не сыграно.",
