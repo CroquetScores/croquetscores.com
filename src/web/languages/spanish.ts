@@ -579,6 +579,7 @@ export const spanish: Language = {
     "admin.administrator.sections.importErrors": "Errores de importación",
     "admin.administrator.sections.logs": "Registros",
     "admin.administrator.sections.databaseStatus": "Acceso a la base de datos",
+    "admin.administrator.sections.countries": "Países",
     "admin.databaseStatus.title": "Acceso a la base de datos",
     "admin.databaseStatus.on": "El acceso a la base de datos está activado.",
     "admin.databaseStatus.off":
@@ -664,6 +665,11 @@ export const spanish: Language = {
     "admin.importErrors.title": "Errores de importación",
     "admin.importErrors.none": "Ningún error de importación",
     "admin.importErrors.otherwise": "Algo ha salido mal en el sitio.",
+    "admin.countries.title": "Países",
+    "admin.countries.none":
+      "Ningún torneo se juega en un país que las listas no nombran",
+    "admin.countries.oldSite": "Sitio antiguo",
+    "admin.countries.otherwise": "Algo ha salido mal en el sitio.",
     "admin.logs.title": "Registros",
     "admin.logs.severity": "Gravedad",
     "admin.logs.text": "Buscar",

@@ -5,10 +5,12 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { Countries } from "../domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Country } from "../domain/aggregates/tournaments/value-objects/Country.js";
 import { ImportRefused } from "./ImportRefused.js";
-import { oldFlagOf } from "./oldSites.js";
+import {
+  countryNamedInList,
+  countryOfLetters,
+} from "../infrastructure/world-rankings/countriesOfLists.js";
 
 /** The sports the world rankings keep a list for. */
 export type RankedSport = "ac" | "gc";
@@ -88,30 +90,6 @@ const daysWritten = (
 // 30th of December 1899.
 const dayOfExcel = (serial: number): Day =>
   Math.round(Date.UTC(1899, 11, 30) / MILLISECONDS_IN_A_DAY) + serial;
-
-// The names of countries the Association Croquet list gives in its own words.
-const acCountryAliases: Readonly<Record<string, string>> = {
-  "czech rep": "cz",
-  usa: "us",
-  bosnia: "ba",
-  russia: "ru",
-  palestine: "ps",
-  iran: "ir",
-};
-
-const countryNamed = (name: string): Country | undefined => {
-  const lower = name.trim().toLowerCase();
-  const alias = acCountryAliases[lower];
-  if (alias !== undefined) return Countries.thereAre.find(alias);
-  return Countries.thereAre.all.find(
-    (country) => country.name.toLowerCase() === lower,
-  );
-};
-
-const countryOfLetters = (letters: string): Country | undefined => {
-  const flag = oldFlagOf(letters.trim());
-  return flag === undefined ? undefined : Countries.thereAre.find(flag);
-};
 
 const wordsOf = (name: string): readonly string[] =>
   name
@@ -204,7 +182,7 @@ export class WorldRankingEvents {
       if (!Number.isInteger(number)) {
         throw unreadable("ac-world-ranking-countries.csv", line, "No number.");
       }
-      countries.set(number, countryNamed(fields[1] ?? ""));
+      countries.set(number, countryNamedInList(fields[1] ?? ""));
     }
 
     const ac = rowsOf("ac-world-ranking-events.csv", files.acEvents, 14).map(

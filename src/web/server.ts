@@ -44,6 +44,9 @@ import { ImportWorldRankingPlayersHandler } from "../application/operations/worl
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
+import { TournamentsInUnlistedCountriesHandler } from "../application/operations/world-rankings/TournamentsInUnlistedCountriesHandler.js";
+import type { WorldRankingCountries } from "../application/services/WorldRankingCountries.js";
+import { FileWorldRankingCountries } from "../infrastructure/world-rankings/FileWorldRankingCountries.js";
 import { AddRoleValidator } from "../application/operations/accounts/AddRoleValidator.js";
 import { RemoveRoleHandler } from "../application/operations/accounts/RemoveRoleHandler.js";
 import { AccountProfileHandler } from "../application/operations/accounts/AccountProfileHandler.js";
@@ -709,6 +712,11 @@ export interface ApplicationOptions {
   readonly events?: EventRegistry;
   readonly projections?: readonly Projection[];
   /**
+   * The countries the world rankings' lists name. The lists kept in the
+   * repository, unless a scenario says which countries they name.
+   */
+  readonly worldRankingCountries?: WorldRankingCountries;
+  /**
    * What says which account the reader of a request is signed in to. The
    * session cookie, unless a scenario says otherwise: one with no database to
    * keep sessions in hands in a way of its own.
@@ -1073,6 +1081,24 @@ export const buildApplication = async (
   );
   const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
   mediator.handleQuery(new ImportErrorsKeptHandler(accounts, keptImportErrors));
+  // The lists are read where the repository keeps them, as the help is read
+  // from where the build puts it, since a deploy builds in the repository.
+  mediator.handleQuery(
+    new TournamentsInUnlistedCountriesHandler(
+      accounts,
+      tournamentsByWebsite,
+      options.worldRankingCountries ??
+        (await FileWorldRankingCountries.readFrom(
+          join(
+            repositoryRoot,
+            "src",
+            "infrastructure",
+            "world-rankings",
+            "events",
+          ),
+        )),
+    ),
+  );
   mediator.handleQuery(new ImportErrorKeptHandler(accounts, keptImportErrors));
   const serverLog = new PostgresServerLog(unitOfWork);
   mediator.handleQuery(new LogEntriesHandler(accounts, serverLog));

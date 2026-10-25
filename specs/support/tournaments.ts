@@ -79,4 +79,10 @@ export interface TournamentsInHand {
 
   /** The application's games, as its operations ask them. */
   readonly games: Games;
+
+  /**
+   * The codes of the countries the world rankings' list of each sport names,
+   * which a scenario fills in as it says they do.
+   */
+  readonly listedCountries: Record<"ac" | "gc", Set<string>>;
 }

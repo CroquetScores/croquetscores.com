@@ -3,7 +3,11 @@
 The events the world rankings have ranked, each with the country it was played
 in, as they were given for the import on 24 October 2026. The import
 reads them to say which country a tournament was played in
-(`../WorldRankingEvents.ts`, `WorldRankingEvents.feature`).
+(`../../../import-ravendb/WorldRankingEvents.ts`,
+`WorldRankingEvents.feature`), and the site reads which countries each names
+for the administrator's page of the tournaments played in countries the
+lists do not name (`../FileWorldRankingCountries.ts`,
+`FileWorldRankingCountries.feature`, `countries.feature`).
 
 - `ac-world-ranking-events.csv`: Association Croquet. Column 4 the name, column
   5 the days it was played as text, column 10 the country, as a number into

@@ -1,6 +1,7 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
   TournamentOfWebsite,
+  TournamentWithSport,
   TournamentPlayed,
   TournamentsByWebsite as Asked,
 } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
@@ -161,6 +162,18 @@ export class TournamentsByWebsite implements Projection, Asked {
       [website.host, first, last, ...narrowed.values],
     );
     return rows.map(listed);
+  }
+
+  async withSports(): Promise<readonly TournamentWithSport[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<Row & { sport: string }>(
+        `select ${COLUMNS}, t.sport
+           from tournaments_by_website t
+          where not t.archived
+          order by t.starts, t.name`,
+      );
+    return rows.map((row) => ({ ...listed(row), sport: row.sport }));
   }
 
   async yearsOf(website: Website, sport?: Sport): Promise<readonly number[]> {

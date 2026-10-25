@@ -39,7 +39,10 @@ import {
   worldRankingNameToImport,
 } from "./names.js";
 import { dayOf } from "./newtonsoft.js";
-import { oldShortNameOf, stateNamed } from "./oldSites.js";
+import {
+  oldShortNameOf,
+  stateNamed,
+} from "../infrastructure/world-rankings/oldSites.js";
 import type {
   Game as OldGame,
   TeamMatch,

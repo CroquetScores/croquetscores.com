@@ -73,6 +73,7 @@ import { LogEntries } from "../../../application/operations/logs/LogEntries.js";
 import { PruneLog } from "../../../application/operations/logs/PruneLog.js";
 import { ImportErrorKept } from "../../../application/operations/import-errors/ImportErrorKept.js";
 import { ImportErrorsKept } from "../../../application/operations/import-errors/ImportErrorsKept.js";
+import { TournamentsInUnlistedCountries } from "../../../application/operations/world-rankings/TournamentsInUnlistedCountries.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
@@ -1189,6 +1190,18 @@ export const apiV1: FastifyPluginCallback<ApiV1Options> = (
       return reply.header("cache-control", "no-store").send(kept);
     },
   );
+
+  // The tournaments played in a country the world rankings' list of their
+  // sport does not name. Refused to anybody who is not an administrator, for
+  // the same reason as the import errors are.
+  server.get("/countries", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const tournaments = await request.server.mediator.query(
+      new TournamentsInUnlistedCountries(reader.value),
+    );
+    return reply.header("cache-control", "no-store").send({ tournaments });
+  });
 
   // The server's log, newest first, narrowed to a severity and more severe and
   // to the lines that mention some text. Refused to anybody who is not an

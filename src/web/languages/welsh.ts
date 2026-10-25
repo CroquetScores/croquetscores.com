@@ -553,6 +553,7 @@ export const welsh: Language = {
     "admin.administrator.sections.importErrors": "Gwallau mewnforio",
     "admin.administrator.sections.logs": "Logiau",
     "admin.administrator.sections.databaseStatus": "Mynediad i'r gronfa ddata",
+    "admin.administrator.sections.countries": "Gwledydd",
     "admin.databaseStatus.title": "Mynediad i'r gronfa ddata",
     "admin.databaseStatus.on": "Mae mynediad i'r gronfa ddata ymlaen.",
     "admin.databaseStatus.off":
@@ -632,6 +633,11 @@ export const welsh: Language = {
     "admin.importErrors.title": "Gwallau mewnforio",
     "admin.importErrors.none": "Dim gwallau mewnforio",
     "admin.importErrors.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
+    "admin.countries.title": "Gwledydd",
+    "admin.countries.none":
+      "Nid oes twrnamaint yn cael ei chwarae mewn gwlad nad yw'r rhestri'n ei henwi",
+    "admin.countries.oldSite": "Hen wefan",
+    "admin.countries.otherwise": "Aeth rhywbeth o'i le ar y wefan.",
     "admin.logs.title": "Logiau",
     "admin.logs.severity": "Difrifoldeb",
     "admin.logs.text": "Chwilio am",

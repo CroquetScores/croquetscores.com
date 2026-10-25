@@ -12,7 +12,9 @@ Feature: The section bar of the administrator's pages
   comes fourth, after World Rankings; to the server's log, as Logs
   (`logs.feature`), which comes fifth, after Import Errors; and to the page
   where whether the site may use its database is seen and set, as Database
-  Access (`databaseStatus.feature`), which comes sixth.
+  Access (`databaseStatus.feature`), which comes sixth; and to the tournaments
+  played in countries the world rankings do not list, as Countries
+  (`countries.feature`), which comes seventh.
 
   Tournaments comes first, since it is the admin an administrator came from,
   then Accounts, and World Rankings after it. It leads to /admin/, the admin's own address for the
@@ -119,6 +121,22 @@ Feature: The section bar of the administrator's pages
     Scenario: Database Access is marked on the page where access is seen and set
       When the page at "/admin/administrator/database-status" is opened
       Then the section "Database Access" is marked as current
+
+    Scenario: The section bar offers the countries
+      When the page at "/admin/administrator" is opened
+      Then the section "Countries" is offered
+
+    Scenario: Countries comes seventh
+      When the page at "/admin/administrator" is opened
+      Then the seventh section is "Countries"
+
+    Scenario: Countries leads to the page of the tournaments in countries the lists do not name
+      When the page at "/admin/administrator" is opened
+      Then the section "Countries" leads to "/admin/administrator/countries"
+
+    Scenario: Countries is marked on the page of the tournaments in countries the lists do not name
+      When the page at "/admin/administrator/countries" is opened
+      Then the section "Countries" is marked as current
 
     Scenario: Tournaments leads to the admin's tournaments
       When the page at "/admin/administrator" is opened
