@@ -463,6 +463,21 @@ Feature: Importing the old sites' tournaments
       beside it, and the case is meant, since "swf" and "ramadan" are plain
       words and names. Where a name has more than one of these, the first
       listed here is the one taken;
+    - one put in England with Balgreen, Scottish, Edinburgh or Auchincruive as
+      a word of its own is in Scotland, as is one with SCA as a word of its
+      own, in capitals, since "sca" begins other words and names. One put in
+      England with Dublin, Carrickmines, Leinster or Herbert Park as a word of
+      its own is in Ireland, and so is one with Mc Weeney, with or without the
+      space, as a word of its own that started in a year the McWeeney Trophy was
+      played in Ireland: it is played in each country in turn, under the same
+      name (1986, 1988, 1992, 1994, 1996, 1998, 2000, 2002, 2004, 2006, 2008,
+      2013, 2016, 2018, 2022, 2024 and 2026, from
+      http://butedock.com/cnw2/event_name.php?ename=McWeeney&country=World&order=normal
+      as it stood on 2026-10-26). Scotland
+      and Ireland have no time zone of their own, so the old sites put their
+      tournaments in England; and only there are these looked for, since
+      Dublin and Edinburgh are places elsewhere too. Where a name has both,
+      the one in Scotland is taken;
     - one put in Morocco whose name begins with an ordinal, as "1st", "2nd",
       "3rd" or "10th", as a word of its own, is in Spain instead: those are the
       Spanish club tournaments, which are numbered. The rest put in Morocco
@@ -1552,6 +1567,148 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario Outline: A tournament whose name has a Scottish place or body as a word of its own is in Scotland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
+
+      Examples:
+        | name |
+        | Balgreen Spring One-Ball |
+        | European GC Club League Balgreen Heat |
+        | Scottish CA - Spring Weekend |
+        | Malmet Trophy, Scottish Croquet Association |
+        | Appleton Match - SCA v CAI |
+        | SCA Short Croquet |
+        | Meadows (Edinburgh) Women's GC Handicap Singles |
+        | Edinburgh Tournament GC |
+        | Auchincruive D Grade Level Play |
+        | balgreen open |
+        | EDINBURGH OPEN |
+
+    Scenario Outline: A tournament whose name has an Irish place or name as a word of its own is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+      Examples:
+        | name |
+        | The Championships of County Dublin |
+        | The Dublin Golf Croquet Invitational |
+        | European GC Clubs League Grand Final - Carrickmines |
+        | South Leinster Open Championship |
+        | GC European League Heat Herbert Park |
+        | carrickmines open |
+
+    Scenario Outline: A tournament whose name has one of them in it but not as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name |
+        | Balgreens Open |
+        | Scottishness Open |
+        | Sca Open |
+        | Scarborough Open |
+        | Dublins Open |
+        | Leinsters Open |
+
+    Scenario Outline: A tournament put in another country than England with one of these words in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name                |
+        | Balgreen Open       |
+        | Edinburgh Open      |
+        | Dublin Open         |
+        | SCA Open            |
+        | Carrickmines Open   |
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 2026, a year it was played in Ireland, is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Mc Weeney CAI v CqE"
+      And the tournament started on "2026-08-15T00:00:00.0000000"
+      And the tournament finished on "2026-08-15T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 1986, a year it was played in Ireland, is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "CAI v CA McWeeney Trophy"
+      And the tournament started on "1986-08-10T00:00:00.0000000"
+      And the tournament finished on "1986-08-10T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 2013, a year it was played in Ireland, is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "McWeeney Trophy"
+      And the tournament started on "2013-09-28T00:00:00.0000000"
+      And the tournament finished on "2013-09-28T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 2025, a year it was played in England, is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "McWeeney Trophy (CqE v CAI)"
+      And the tournament started on "2025-07-05T00:00:00.0000000"
+      And the tournament finished on "2025-07-05T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 1985, a year it was played in England, is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "CA v CAI McWeeney Trophy"
+      And the tournament started on "1985-07-08T00:00:00.0000000"
+      And the tournament finished on "1985-07-08T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A tournament put in England with McWeeney in its name that started in 2023, a year it was played in England, is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Mc Weeney Trophy"
+      And the tournament started on "2023-07-15T00:00:00.0000000"
+      And the tournament finished on "2023-07-15T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A tournament put in another country than England with McWeeney in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Mc Weeney CAI v CqE"
+      And the tournament started on "2026-08-15T00:00:00.0000000"
+      And the tournament finished on "2026-08-15T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
 
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
