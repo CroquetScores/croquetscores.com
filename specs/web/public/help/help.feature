@@ -49,6 +49,10 @@ Feature: The help is read in the language the site is shown in
       Then the page is the one about players in a standard tournament
       And the page is in German
 
+    Scenario: The page for world ranking officers
+      When the help page "world-ranking-officers" is opened
+      Then the page is the one for world ranking officers
+
     Scenario: A page the help does not have
       When the help page "no-such-page" is opened
       Then the page is not found
