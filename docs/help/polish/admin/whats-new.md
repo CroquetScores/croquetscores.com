@@ -1,64 +1,6 @@
 # Co nowego dla organizatorów turniejów
 
-## Wydano 2026-10-26, później tego dnia
-
-To główne zmiany od wcześniejszego wydania z dzisiaj. Każda odsyła do pull requesta, który ją wprowadził.
-
-- **Osoba odpowiedzialna za ranking światowy widzi kartę Rankingi.** W każdym turnieju w dyscyplinie, którą się opiekuje, jako ostatnią z kart, niezależnie od tego, czy ma w turnieju swoją rolę, czy go prowadzi. To ta sama karta, którą ma kierownik, z linkiem do pobrania gier turnieju na potrzeby rankingów światowych. Osoba prowadząca wyniki, która nie jest za ranking odpowiedzialna, nadal jej nie widzi. Zobacz [Rankingi](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
-
-- **Jest pomoc dla osób odpowiedzialnych za ranking światowy.** Jedna strona mówi, co lista turniejów daje takiej osobie poza tym, co widzi każdy zalogowany czytelnik: każdy turniej dyscyplin, którymi się opiekuje, przyciski, które ją zawężają, oraz **Zawodnicy** zamiast **Zarządzaj**. Zobacz [Pomoc dla osób odpowiedzialnych za ranking światowy](../world-ranking-officers/index.md). Tej strony w pozostałych szesnastu językach nie czytał jeszcze żaden rodzimy użytkownik, więc dajcie znać, co brzmi źle. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
-
-- **Każda strona ma link do zgłoszenia błędu.** **Zgłoś błąd** jest w stopce, obok **Prywatność** i **Regulamin**, w osobnym wierszu pod darowizną i informacją o prawach autorskich. Otwiera nową wiadomość do administratora strony, z już wpisanym w temacie nazwą strony, jej wersją, jeśli ją ma, oraz angielskim słowem "Bug". Strona niczego nie wysyła. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
-
-- **Za kulisami.** Turniej przeniesiony ze starych stron trafia do kraju, który wskazuje jego nazwa, jeśli jakiś wskazuje, jak w Japan Open, i nie trafia już do kraju, w którym nigdy się nie odbył ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Administrator ma stronę turniejów rozegranych w krajach, których rankingi światowe nie wymieniają ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), a adres e-mail jednej osoby odpowiedzialnej za ranking światowy w krokiecie golfowym został poprawiony ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
-
-## Wydano 2026-10-26
-
-To główne zmiany od ostatniego wydania. Każda odsyła do pull requesta, który ją wprowadził.
-
-- **Stronę rozgrywek można wydrukować.** Strona grupy, pucharówki, systemu szwajcarskiego i testu ma każda przycisk drukarki w wierszu z nazwą rozgrywek, obok widoków. Jego naciśnięcie otwiera własne okno drukowania przeglądarki. Potrzebuje skryptów, więc tam, gdzie ich nie ma, przycisk nie jest pokazywany. Drukuje się nazwę turnieju nad nazwą rozgrywek i wyniki pod nią, a nic z tego, co służy tylko do znalezienia strony: pasków strony, widoków, przycisku i stopki. Linki nie są na papierze podkreślone, ale nazwisko wycofanego gracza zachowuje przekreślenie. Grupa i pucharówka są drukowane w poprzek papieru, system szwajcarski i test wzdłuż. Siatka grupy albo drabinka pucharówki szersza niż papier jest cięta na kawałki na stronach po pierwszej, a nazwiska graczy są powtórzone z lewej strony każdego kawałka siatki. Strona nie może zapytać drukarki, jak szeroki jest papier, więc przyjmuje Letter w poprzek, i czytelnik, który obróci papier wzdłuż, może nadal stracić prawy brzeg. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
-
-- **Pobieranie rankingów mówi, czym jest.** Link na karcie **Rankingi** brzmiał **Pobierz rankingi**, co wygląda, jakby dawał rankingi. Teraz brzmi **Pobierz gry do rankingu światowego**, bo daje gry turnieju, w pliku, z którego biorą je odpowiedzialni za rankingi. Zobacz [Rankingi](../tournament-managers/standard-tournament/rankings.md). Nowych słów w językach innych niż angielski nie czytał jeszcze żaden rodzimy użytkownik, więc dajcie znać, co brzmi źle. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
-
-- **Za kulisami.** Podsumowanie, które import dopisuje po każdym uruchomieniu, nie jest już nadpisywane, gdy nie da się go odczytać ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), a pakiety, od których zależy strona, zostały podniesione do najnowszych wydań w dozwolonych zakresach ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
-
-## Wydano 2026-10-25
-
-To główne zmiany od ostatniego wydania. Każda odsyła do pull requesta, który ją wprowadził.
-
-- **Listę turniejów osoby odpowiedzialnej za ranking światowy można zawęzić według rankingów światowych.** Lista takiej osoby zawiera każdy turniej dyscyplin, którymi się opiekuje, a to więcej, niż chce przeglądać. Obok **Nowy turniej** są teraz trzy przyciski: **Kierownik/Sędzia punktowy**, **Ranking światowy** i **Poza rankingiem światowym**. Turniej jest na liście, gdy włączony jest którykolwiek przycisk, który go dotyczy, więc każdy z nich turnieje dodaje, a nie odbiera. Włączony przycisk ma ptaszek, a **Kierownik/Sędzia punktowy** i **Ranking światowy** są na początku włączone. Przyciski są tylko dla osób odpowiedzialnych za ranking; jeśli zarządzasz turniejami lub wprowadzasz w nich wyniki, twoja lista jest taka jak była. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
-
-- **Osoba odpowiedzialna za ranking światowy lub administrator może napisać do organizatorów turnieju.** Na karcie **Organizatorzy** mają do wyboru **Napisz do organizatorów**, odsyłacz, który otwiera nową wiadomość do każdego organizatora turnieju, z tematem „Croquet Scores”. Z serwisu nic nie jest wysyłane. Taka osoba widzi kartę dla każdego turnieju dyscypliny, którą się opiekuje, żeby przeczytać organizatorów i do nich napisać, ale nie żeby ich zmieniać, a organizatorowi nie pokazuje się niczyj adres e-mail. Zobacz [Organizatorzy i osoby wprowadzające wyniki](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
-
-- **Turniej jednodniowy jest w pliku rankingu datowany tym jednym dniem.** Był zapisywany jako zakres jednego dnia, `3-3.10.26`, a teraz jest `3.10.26`, tak jak same listy rankingu światowego zapisują pojedynczy dzień. Turniej dłuższy niż jeden dzień jest datowany jak dawniej. Zobacz [Rankingi](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
-
-- **Turnieje przeniesione ze starych stron są wierniejsze.** Kraj turnieju jest teraz brany z list rankingu światowego imprez w krokiecie klasycznym i krokiecie golfowym, gdy je mają, a nie ze strefy czasowej ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Dwie kolejne zmiany ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) dotyczą następnego importu:
-  - Zawodnicy są przenoszeni z własnej listy każdej konkurencji i odnajdywani po dokładnym imieniu i nazwisku wśród zawodników turnieju. Stare strony kopiowały zawodników turnieju do każdej konkurencji i pozwalały organizatorowi zmieniać kopię, więc para wpisana w konkurencji deblowej jako „Joe Hogan & Levi Franks” była łączona z samym Joe Hoganem. Teraz jest odrębnym zawodnikiem. Zawodnik, którego nie ma w żadnej konkurencji, nie jest już przenoszony.
-  - Konkurencja, która podaje, kogo zawodnik reprezentuje, ustawia to, gdy zawodnik nikogo nie reprezentował, a taka, która później podaje coś innego, tego nie zmienia. Grupa zapisana z meczami z 2 grami, albo z 3 grami, w której każda para rozegrała trzecią grę, zachowuje to teraz. Staje się grupą z meczami z 1 grą tylko tam, gdzie mecz pary byłby rozstrzygnięty przed ich ostatnią grą, a serwis odrzuciłby resztę.
-
-- **Za kulisami.** Import można poprosić, żeby przeniósł tylko turnieje, które zaczęły się między dwoma dniami ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), a teraz mówi, co zrobił, w pliku dla każdego rodzaju poprawki, jednym na swoje błędy i w podsumowaniu każdego importu, wszystko w folderze docs repozytorium (także [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Wymieniono w nim jeszcze czterech osób odpowiedzialnych za światowy ranking w krokiecie golfowym ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), a adres samego serwisu jest teraz osobą odpowiedzialną za krokiet klasyczny, a nie administratorem ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Scenariusze, które zawodziły od czasu do czasu albo odstawały od serwisu, zostały poprawione ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
-
-## Wydano 2026-10-23
-
-To główne zmiany od ostatniego wydania. Każda odsyła do pull requesta, który ją wprowadził.
-
-- **Handicapy, remisy i rankingi światowe ustawia się w każdej konkurencji.** Kiedyś decydował o nich turniej, więc w jednym turnieju nie mogły być grupa z handicapem obok grupy bez niego ani test, który może zakończyć się remisem, obok pucharowej, w której remisu być nie może. Teraz każda konkurencja i każdy test pyta o wszystkie trzy przy dodawaniu lub edycji, a formularz turnieju już nie pyta. O ostatnie pyta się tylko tam, gdzie dyscyplina ma rankingi światowe, a konkurencja, która się nie liczy, jest pomijana w pliku rankingów. Zobacz [Konkurencje](../tournament-managers/standard-tournament/competitions.md). ([#341](https://github.com/CroquetScores/croquetscores.com/pull/341))
-
-- **Listę turniejów w administracji można zawęzić według kraju, regionu i dyscypliny.** Wybory są w adresie, więc można podać odsyłacz do przefiltrowanej listy, a do wyboru są tylko te pozycje, które ma twoja lista. Region można wybrać po wybraniu kraju. Turnieje sprzed listopada 2026 nie mają regionu, więc wybranie go je ukrywa, a listy publiczne o tym informują. ([#354](https://github.com/CroquetScores/croquetscores.com/pull/354), [#351](https://github.com/CroquetScores/croquetscores.com/pull/351))
-
-- **Osoby odpowiedzialne za ranking światowy mają teraz jedną rolę dla każdej dyscypliny.** Osoba odpowiedzialna za ranking w krokiecie klasycznym widzi turnieje w krokiecie klasycznym i się nimi opiekuje, a w krokiecie golfowym turnieje w krokiecie golfowym. Turniej, którym zarządzasz lub w którym wprowadzasz wyniki, nadal jest na twojej liście, niezależnie od dyscypliny. ([#348](https://github.com/CroquetScores/croquetscores.com/pull/348), [#356](https://github.com/CroquetScores/croquetscores.com/pull/356))
-
-- **Karta Rankingi w jednym akapicie wyjaśnia plik, niezależnie od dyscypliny,** a pod nim jest odsyłacz do pobrania. Zobacz [Rankingi](../tournament-managers/standard-tournament/rankings.md). ([#346](https://github.com/CroquetScores/croquetscores.com/pull/346))
-
-- **Nazwa turnieju nie może składać się wyłącznie z małych liter ani wyłącznie z wielkich,** a komunikat mówi teraz o tym jako o regule. ([#345](https://github.com/CroquetScores/croquetscores.com/pull/345))
-
-- **Usuń to kosz** na kartach organizatorów i osób wprowadzających wyniki, przy zawodnikach konkurencji i na stronie kont administratora, tak jak wcześniej Archiwizuj i Usuń. Po wskazaniu go kursorem nadal nazywa się Usuń, a czytnik ekranu nadal czyta Usuń. ([#353](https://github.com/CroquetScores/croquetscores.com/pull/353))
-
-- **Każdy język ma nowe słowa.** Słownictwo serwisu we wszystkich szesnastu pozostałych językach napisano od nowa, a pomoc dostosowano do niego. Pomoc dla czytelników i dla kont oraz warunki korzystania są teraz także we wszystkich językach. Żadnego z nich nie czytała jeszcze osoba, dla której jest językiem ojczystym, więc napisz nam, co brzmi źle. ([#355](https://github.com/CroquetScores/croquetscores.com/pull/355), [#349](https://github.com/CroquetScores/croquetscores.com/pull/349), [#350](https://github.com/CroquetScores/croquetscores.com/pull/350))
-
-- **Za kulisami.** Import starych stron nadaje niektórym strefom czasowym i jednemu turniejowi inny kraj ([#344](https://github.com/CroquetScores/croquetscores.com/pull/344)), a zrzut danych wczytuje na serwer i tworzy modele odczytu skryptem ([#340](https://github.com/CroquetScores/croquetscores.com/pull/340)). Serwis jest wdrażany skryptem, z komputera lub z GitHuba, i już nie przy każdym scaleniu ([#352](https://github.com/CroquetScores/croquetscores.com/pull/352)).
-
-## Wydano 2026-10-19
+## Wydano 2026-10-27
 
 To główne zmiany dla osób, które prowadzą turnieje. [Pomoc dla organizatorów turniejów](../tournament-managers/index.md) zawiera wszystkie szczegóły.
 
