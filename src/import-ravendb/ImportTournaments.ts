@@ -188,6 +188,44 @@ const mcWeeneyYearsInIreland: ReadonlySet<number> = new Set([
   2018, 2022, 2024, 2026,
 ]);
 
+// The country each match between England and Scotland was played in, by the
+// year it started: it is played in each country in turn under one name, so the
+// year is what says where. From the list of its events at
+// http://butedock.com/cgs/event_name.php?ename=england+v+scotland&country=World&order=normal
+// as it stood on 2026-10-26.
+const englandVScotlandYears: Readonly<Record<number, string>> = {
+  1985: "england",
+  1986: "england",
+  1987: "england",
+  1989: "england",
+  1990: "scotland",
+  1991: "scotland",
+  1992: "scotland",
+  1993: "england",
+  1994: "england",
+  1995: "england",
+  1996: "england",
+  1997: "england",
+  1998: "england",
+  1999: "england",
+  2000: "england",
+  2001: "ie",
+  2003: "ie",
+  2009: "ie",
+};
+
+// Whether the name is for the match between England and Scotland, with the
+// sides either way round and v or vs between them.
+const englandVScotland = (() => {
+  const england = String.raw`(?:Croquet\s+)?England`;
+  const scotland = String.raw`Scotland|Scottish\s+Croquet\s+Association`;
+  const versus = String.raw`\s+vs?\s+`;
+  return wholeWord(
+    `${england}${versus}(?:${scotland})|(?:${scotland})${versus}${england}`,
+    "i",
+  );
+})();
+
 // What a name says of a tournament put in one country only, by the code of the
 // country it was put in, in the order they are tried. Each is given the name as
 // it was written, and says the country the tournament was played in, or
@@ -233,10 +271,18 @@ const countryPlayedIn = (
   startYear: number,
 ): Country => {
   const written = name.trim();
+  const named = namesSayingACountry.find(({ says }) => says(written))?.country;
+  // Taken after the names above and before any country in the name, which
+  // would take England or Scotland for the whole match. A year the list has no
+  // event for says nothing, and so leaves the match to be in no country the
+  // name has in it.
+  const match = englandVScotland.test(written);
   const country =
-    namesSayingACountry.find(({ says }) => says(written))?.country ??
-    countryNamedIn(written) ??
-    namesSayingACountryForOne[said.code]?.(written, startYear) ??
+    named ??
+    (match
+      ? englandVScotlandYears[startYear]
+      : (countryNamedIn(written) ??
+        namesSayingACountryForOne[said.code]?.(written, startYear))) ??
     countriesPlayedInInstead[said.code];
   return Countries.thereAre.find(country ?? "") ?? said;
 };
