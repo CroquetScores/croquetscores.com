@@ -178,12 +178,22 @@ const namesSayingACountry: readonly {
 // and a word of its own. Only the look of one is asked: "1th" is let through.
 const startsWithAnOrdinal = /^\d+(?:st|nd|rd|th)(?![\p{L}\p{N}])/iu;
 
+// The years the McWeeney Trophy, between the Croquet Association and Croquet
+// Association of Ireland, was played in Ireland. It is played in each country
+// in turn, and its name is the same either way, so the year is what says where
+// (http://butedock.com/cnw2/event_name.php?ename=McWeeney&country=World&order=normal,
+// as it stood on 2026-10-26).
+const mcWeeneyYearsInIreland: ReadonlySet<number> = new Set([
+  1986, 1988, 1992, 1994, 1996, 1998, 2000, 2002, 2004, 2006, 2008, 2013, 2016,
+  2018, 2022, 2024, 2026,
+]);
+
 // What a name says of a tournament put in one country only, by the code of the
 // country it was put in, in the order they are tried. Each is given the name as
 // it was written, and says the country the tournament was played in, or
 // nothing where the name says none (ImportTournaments.feature).
 const namesSayingACountryForOne: Readonly<
-  Record<string, (name: string) => string | undefined>
+  Record<string, (name: string, startYear: number) => string | undefined>
 > = {
   // South African has South Africa in it, so the one is asked for.
   na: (name) => (/saca|south africa/i.test(name) ? "za" : undefined),
@@ -204,24 +214,29 @@ const namesSayingACountryForOne: Readonly<
   // their tournaments in England, and only there are their names looked for:
   // Dublin and Edinburgh are places elsewhere too. SCA is in capitals, since
   // "sca" begins other words and names.
-  england: (name) =>
+  england: (name, startYear) =>
     wholeWord("Balgreen|Scottish|Edinburgh|Auchincruive", "i").test(name) ||
     wholeWord("SCA").test(name)
       ? "scotland"
-      : wholeWord(
-            "Dublin|Carrickmines|Leinster|Herbert Park|Mc ?Weeney",
-            "i",
-          ).test(name)
+      : wholeWord("Dublin|Carrickmines|Leinster|Herbert Park", "i").test(
+            name,
+          ) ||
+          (wholeWord("Mc ?Weeney", "i").test(name) &&
+            mcWeeneyYearsInIreland.has(startYear))
         ? "ie"
         : undefined,
 };
 
-const countryPlayedIn = (said: Country, name: string): Country => {
+const countryPlayedIn = (
+  said: Country,
+  name: string,
+  startYear: number,
+): Country => {
   const written = name.trim();
   const country =
     namesSayingACountry.find(({ says }) => says(written))?.country ??
     countryNamedIn(written) ??
-    namesSayingACountryForOne[said.code]?.(written) ??
+    namesSayingACountryForOne[said.code]?.(written, startYear) ??
     countriesPlayedInInstead[said.code];
   return Countries.thereAre.find(country ?? "") ?? said;
 };
@@ -330,7 +345,11 @@ export class ImportTournaments implements Importer<OldTournament> {
       // A country the old sites put a tournament in that it was never played
       // in is the one it was, wherever the country came from, and a region is
       // its country's, so the tournament is then in none.
-      const country = countryPlayedIn(saidCountry, document.Name);
+      const country = countryPlayedIn(
+        saidCountry,
+        document.Name,
+        Number(dayOf(document.Start).toISOString().slice(0, 4)),
+      );
       const region =
         country.code !== saidCountry.code ||
         (listed !== undefined && listed.code !== timeZones.country.code)
