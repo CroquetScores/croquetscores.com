@@ -12,6 +12,12 @@ If you already have an account on croquetscores.com, it has been copied to the t
 
 Please use the site on a phone as well as a computer. Most people reading a score will be on a phone.
 
+## What you may notice
+
+Not every country given to a tournament is correct. With the help of Chris Williams, I hope to improve this right before the public release.
+
+The tournaments were imported from the current database. Wherever the import found something that did not fit, such as a result that could not be explained, it is noted in the tournament's notes, so look there first if something looks odd.
+
 ## Finding your way
 
 The help at https://beta.croquetscores.com/help explains how to do each job. If you want to run a tournament, it has a page called "Running a standard tournament", and another called "Running a tournament played by teams" for a team event.
@@ -40,6 +46,8 @@ If an email from the site has not arrived after a quarter of an hour, that is wo
 ## Croquet Scores is open source
 
 The code for the site is public, at https://github.com/CroquetScores/croquetscores.com, under the GNU Affero General Public License. You are welcome to read it, and if you can, to improve it. `CONTRIBUTING.md` in the repository says how.
+
+Thank you to CW, KB and PF for their help with testing before the beta.
 
 Thank you for your time. Whatever you find, I am grateful for it.
 
