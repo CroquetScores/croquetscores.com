@@ -426,7 +426,9 @@ Feature: A tournament's page in the admin
     Players tab and one played by teams' on the Teams tab, where a manager's
     are offered, besides whatever its part in the tournament offers: every
     tab to a manager, and the competitions to a scorer, with the players
-    after them.
+    after them. It is offered the Rankings tab too, which is last, since the
+    file it leads to is the world rankings' own and the same for anybody
+    (`rankings.feature`); an officer is there to take the games from it.
 
     Scenario: A world ranking officer with no part is offered the Players tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
@@ -463,7 +465,13 @@ Feature: A tournament's page in the admin
         | Competitions |
         | Notes        |
         | Scorers      |
-        | Rankings     |
+
+    Scenario: A world ranking officer with no part is offered the Rankings tab, to download the games
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is offered
 
     Scenario: A world ranking officer who scores the tournament is offered the Competitions tab
       Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
@@ -488,6 +496,21 @@ Feature: A tournament's page in the admin
       And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
       When the page of "Spring Open" is opened
       Then the tab "Managers" is offered
+
+    Scenario: A world ranking officer who scores the tournament is offered the Rankings tab too
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
+      And "organiser@example.com" has made "ranker@example.com" a scorer of "Spring Open"
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is offered
+
+    Scenario: A scorer who is no world ranking officer is not offered the Rankings tab
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "organiser@example.com" has made "other@example.com" a scorer of "Spring Open"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then the tab "Rankings" is not offered
 
     Scenario: A scorer who is no world ranking officer is not offered the Managers tab
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"

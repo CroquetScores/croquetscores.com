@@ -85,7 +85,7 @@ type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
 // and the rest is the managers' to change. A world ranking officer is offered
 // the players besides, whose world ranking names it may change: after the
 // competitions where it scores, and where it has no part, with the managers it
-// may write to after them. The page opens on the first.
+// may write to after them, and the rankings last. The page opens on the first.
 const offeredTo = ({
   part,
   playedByTeams,
@@ -114,8 +114,20 @@ const offeredTo = ({
   // (managers-tab.feature): the one tab of the managers' an officer has,
   // whether or not it scores.
   const managers: readonly Tab[] = mayWriteToManagers ? ["managers"] : [];
-  if (part === "rankingOfficer") return [...players, ...managers];
-  return [playedByTeams ? "tests" : "competitions", ...players, ...managers];
+  // The rankings last, for an officer, who takes the games from the file for
+  // the world rankings. Asked by the same thing as the players are, since an
+  // officer is the one who may change their world ranking names.
+  const rankings: readonly Tab[] =
+    mayChangeWorldRankingNames && countsTowardsWorldRankings
+      ? ["rankings"]
+      : [];
+  if (part === "rankingOfficer") return [...players, ...managers, ...rankings];
+  return [
+    playedByTeams ? "tests" : "competitions",
+    ...players,
+    ...managers,
+    ...rankings,
+  ];
 };
 
 // The part a reader has in the competitions and tests, which a world ranking

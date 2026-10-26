@@ -22,8 +22,10 @@ Feature: The rankings tab of a tournament's page
   The tab is only in the page of a tournament that counts towards the world
   rankings, since only one has a file (`rankings.feature`). A manager of one
   that does not is not offered a tab to say so; the address says why if it is
-  followed. The tab is a manager's, and is not offered to a scorer, who enters scores
-  and does nothing else to a tournament (`view.feature`). It has no address of
+  followed. The tab is a manager's, and a world ranking officer's, who takes the games
+  from the file for the world rankings; it is not offered to a scorer who is
+  no officer, who enters scores and does nothing else to a tournament
+  (`view.feature`). It has no address of
   its own, so a scenario opens the tournament's page and chooses the tab.
 
   Background:
@@ -65,6 +67,15 @@ Feature: The rankings tab of a tournament's page
 
     Scenario: A test's tournament is offered the link
       Given the tournament "Spring Open" is played in the format "Teams"
+      When the rankings of "Spring Open" are opened
+      Then the tab's link "Download games for world ranking" is offered
+
+  Rule: A world ranking officer has it too
+
+    Scenario: An officer with no part in the tournament is offered the link
+      Given "ranker@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "ranker@example.com" has been given the role "AC World Ranking Officer"
+      And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the rankings of "Spring Open" are opened
       Then the tab's link "Download games for world ranking" is offered
 
