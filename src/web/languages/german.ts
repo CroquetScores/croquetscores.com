@@ -33,6 +33,7 @@ export const german: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Datenschutz",
     "footer.termsOfUse": "Nutzungsbedingungen",
+    "footer.reportBug": "Fehler melden",
     "beta.banner":
       "Dies ist eine Beta-Website. Die Daten können jederzeit zurückgesetzt werden.",
     "privacy.contact":

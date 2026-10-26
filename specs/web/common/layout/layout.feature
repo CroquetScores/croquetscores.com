@@ -277,3 +277,145 @@ Feature: What every page is set in
       And a site running no version
       When the sign in page is opened
       Then the footer carries no version
+
+  Rule: The footer offers a link to report a bug
+
+    A reader who finds something wrong has somewhere to say so on every page:
+    a link in the footer, called Report a bug, which opens a new email to the
+    administrator's email address, the one the site is set up with. Nothing is
+    sent from the site, as with the link that writes to a tournament's
+    managers.
+
+    The email has a subject already, so that whoever reads it knows which site
+    and which build it is about: the site's name, the version of the website
+    where it is known, and the word Bug, as "Croquet Scores 276 Bug". Where
+    the site has no version, as in development, the subject has no number in
+    it. The link's words are the reader's language's; the subject is the
+    administrator's to read, and is the same in every one of them.
+
+    Every page has it, the admin's among them, since the footer is the shell's
+    and not any page's.
+
+    Scenario: The footer offers the link
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      When the sign in page is opened
+      Then the footer offers the link "Report a bug"
+
+    Scenario: The link writes to the administrator
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      When the sign in page is opened
+      Then the bug report is addressed to "admin@example.com"
+
+    Scenario: The email's subject names the site and the version
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a site running version 276
+      When the sign in page is opened
+      Then the bug report has the subject "Croquet Scores 276 Bug"
+
+    Scenario: A site with no version has no number in the subject
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a site running no version
+      When the sign in page is opened
+      Then the bug report has the subject "Croquet Scores Bug"
+
+    Scenario: The subject names the site as it is called
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a site running version 276
+      And a site served as "gateballscores.com"
+      When the sign in page is opened
+      Then the bug report has the subject "Gateball Scores 276 Bug"
+
+    Scenario: The admin's footer offers it too
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the bug report is addressed to "admin@example.com"
+
+    Scenario: A page saying something went wrong offers it
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      When a page that is not there is opened
+      Then the footer offers the link "Report a bug"
+
+    Scenario: The link is in the reader's language
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a browser that asks for "en-XA"
+      When the sign in page is opened
+      Then the bug report link is in the test locale
+
+    Scenario: The subject is the same in every language
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      And a site running version 276
+      And a browser that asks for "en-XA"
+      When the sign in page is opened
+      Then the bug report has the subject "Croquet Scores 276 Bug"
+
+  Rule: The footer's links are on a row of their own, at the right
+
+    The footer's first row is for the donation, the plea and the copyright,
+    which are read. Privacy, Terms of use and Report a bug are for finding, not
+    for reading, so they are on a row of their own beneath it, side by side in
+    that order and at the right, where the theme and language choices beneath
+    them end. The row of links comes before the choices, which are settings
+    rather than links and stay last.
+
+    Where there is not room for all three side by side, as on a phone, they
+    wrap, but are still beneath the first row and at the right.
+
+    Scenario: The links are beneath the donation and the copyright
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the footer's links are beneath the donation and the copyright
+
+    Scenario: The links are side by side
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the footer's links are side by side
+
+    Scenario: The links are in order
+      Given a viewport 1200 pixels wide
+      And a site whose administrator is "admin@example.com"
+      When the sign in page is opened
+      Then the first footer link is "Privacy"
+      And the second footer link is "Terms of use"
+      And the third footer link is "Report a bug"
+
+    Scenario: The links are at the right
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the footer's links end where the theme choice ends
+
+    Scenario: The theme choice is beneath the links
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the theme choice is beneath the footer's links
+
+    Scenario: The links are beneath the donation and the copyright on a phone
+      Given a viewport 375 pixels wide
+      When the sign in page is opened
+      Then the footer's links are beneath the donation and the copyright
+
+    Scenario: The links are at the right on a phone
+      Given a viewport 375 pixels wide
+      When the sign in page is opened
+      Then the footer's links end where the theme choice ends
+
+    Scenario: The admin's footer has them on a row of their own too
+      Given a viewport 1200 pixels wide
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the footer's links are beneath the donation and the copyright
+
+    Scenario: The admin's footer has them at the right too
+      Given a viewport 1200 pixels wide
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the footer's links end where the theme choice ends

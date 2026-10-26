@@ -35,6 +35,7 @@ export const dutch: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
     "footer.termsOfUse": "Gebruiksvoorwaarden",
+    "footer.reportBug": "Een fout melden",
     "beta.banner":
       "Dit is een bètasite. Gegevens kunnen op elk moment worden gewist.",
     "privacy.contact":

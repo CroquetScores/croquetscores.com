@@ -1112,6 +1112,18 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
+/* The links to find rather than to read, on a row of their own beneath the
+   donation and the copyright and at the right, where the theme and language
+   choices beneath them end. They wrap on a phone, and are still at the right. */
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2) var(--space-5);
+  padding-inline: var(--panel-inset);
+  padding-bottom: var(--space-3);
+}
+
 /* A row of its own beneath the footer proper. The theme is a setting rather
    than something to read, so it sits apart from the donation and the copyright
    instead of competing with them for the same line. */

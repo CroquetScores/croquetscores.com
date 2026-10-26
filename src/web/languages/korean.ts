@@ -34,6 +34,7 @@ export const korean: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "개인정보 처리",
     "footer.termsOfUse": "이용 약관",
+    "footer.reportBug": "버그 신고",
     "beta.banner":
       "이곳은 베타 사이트예요. 데이터는 언제든 초기화될 수 있어요.",
     "privacy.contact":

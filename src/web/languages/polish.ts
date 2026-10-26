@@ -29,6 +29,7 @@ export const polish: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Prywatność",
     "footer.termsOfUse": "Regulamin",
+    "footer.reportBug": "Zgłoś błąd",
     "beta.banner":
       "To jest wersja beta serwisu. Dane mogą zostać zresetowane w każdej chwili.",
     "privacy.contact":

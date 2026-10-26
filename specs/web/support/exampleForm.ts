@@ -174,6 +174,7 @@ const numberOf = (typed: string | undefined): number | undefined =>
 export const addExampleForm = (application: Application): void => {
   const assets = readAssets(
     join(import.meta.dirname, "..", "..", "..", "assets"),
+    "administrator@example.com",
   );
   const show = (request: FastifyRequest) => (shown: Dialog) => {
     const speaking = speakingOf(request);

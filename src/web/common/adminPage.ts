@@ -109,6 +109,8 @@ export const adminPage = (
   build: string,
   // The alert about what's new, already drawn, where the reader is to be told.
   alert = "",
+  // Who administers the site, which the footer offers a bug to be reported to.
+  administratorEmailAddress: string,
   // Which version of the website this is, where it is known.
   version?: number,
 ): string => {
@@ -161,7 +163,14 @@ export const adminPage = (
       .replace(
         bodyEnd,
         () =>
-          `${siteFooter({ speaking, siteName, theme, path: request.url, version })}\n  ${bodyEnd}`,
+          `${siteFooter({
+            speaking,
+            siteName,
+            theme,
+            path: request.url,
+            administratorEmailAddress,
+            version,
+          })}\n  ${bodyEnd}`,
       )
   );
 };

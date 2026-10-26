@@ -31,6 +31,7 @@ export const chinese: Language = {
     "footer.copyright": "© 版权所有 {years}，{owner}",
     "footer.privacy": "隐私",
     "footer.termsOfUse": "使用条款",
+    "footer.reportBug": "报告错误",
     "beta.banner": "这是测试版网站，数据随时可能被重置。",
     "privacy.contact":
       "对本页内容或我们保存的您的信息有疑问，请联系：{emailAddress}",

@@ -53,6 +53,12 @@ export interface Assets {
    * thing for each of dozens of pages to remember to pass on.
    */
   readonly version: number | undefined;
+  /**
+   * The email address of whoever administers the site, which the footer of
+   * every page offers a bug to be reported to. Carried here for the reason the
+   * version is: every page is already given the assets to draw itself with.
+   */
+  readonly administratorEmailAddress: string;
   /** "site.css" becomes "/assets/site.1a2b3c4d.css". */
   url(name: string): string;
   resolve(requestedName: string): ResolvedAsset | undefined;
@@ -79,7 +85,11 @@ const filesUnder = (root: string, prefix = ""): string[] =>
       : [posix.join(prefix, entry.name)],
   );
 
-export const readAssets = (root: string, version?: number): Assets => {
+export const readAssets = (
+  root: string,
+  administratorEmailAddress: string,
+  version?: number,
+): Assets => {
   const byName = new Map<string, Asset>();
 
   for (const name of filesUnder(root)) {
@@ -98,6 +108,7 @@ export const readAssets = (root: string, version?: number): Assets => {
 
   return {
     version,
+    administratorEmailAddress,
     url(name) {
       const asset = byName.get(name);
       if (asset === undefined)

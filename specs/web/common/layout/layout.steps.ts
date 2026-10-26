@@ -4,11 +4,12 @@ import type { Locator } from "playwright";
 
 import { english } from "../../../../src/web/languages/english.js";
 import {
+  anApplicationWhoseAdministratorIs,
   anApplicationRunning,
   anApplicationServedAs,
   siteNameFor,
 } from "../../support/browser.js";
-import { unmarked } from "../../support/languages.js";
+import { closes, opens, unmarked } from "../../support/languages.js";
 import { changeTournament } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../../support/world.js";
 
@@ -254,3 +255,139 @@ Then(
 Then("the footer carries no version", async function (this: SpecWorld) {
   assert.equal(await versionInFooter(this).count(), 0);
 });
+
+// The link to report a bug in the footer ---------------------------------------
+
+const bugReport = (world: SpecWorld): Locator =>
+  world.browserPage.locator("footer.site-footer a.report-bug");
+
+// The link as an address, which is a mailto: whose path is who it writes to and
+// whose subject is a parameter of it.
+const bugReportAddress = async (world: SpecWorld): Promise<URL> => {
+  const href = await bugReport(world).getAttribute("href");
+  assert.ok(href !== null, "The link has no address.");
+  return new URL(href);
+};
+
+Given(
+  "a site whose administrator is {string}",
+  async function (this: SpecWorld, emailAddress: string) {
+    this.baseUrl = await anApplicationWhoseAdministratorIs(this, emailAddress);
+  },
+);
+
+Then(
+  "the footer offers the link {string}",
+  async function (this: SpecWorld, words: string) {
+    assert.equal((await bugReport(this).innerText()).trim(), words);
+  },
+);
+
+Then(
+  "the bug report is addressed to {string}",
+  async function (this: SpecWorld, emailAddress: string) {
+    const address = await bugReportAddress(this);
+    assert.equal(address.protocol, "mailto:");
+    assert.equal(decodeURIComponent(address.pathname), emailAddress);
+  },
+);
+
+Then(
+  "the bug report has the subject {string}",
+  async function (this: SpecWorld, subject: string) {
+    assert.equal(
+      (await bugReportAddress(this)).searchParams.get("subject"),
+      subject,
+    );
+  },
+);
+
+Then(
+  "the bug report link is in the test locale",
+  async function (this: SpecWorld) {
+    const shown = (await bugReport(this).innerText()).trim();
+    assert.ok(shown.startsWith(opens) && shown.endsWith(closes), shown);
+  },
+);
+
+// Where the footer's links are ---------------------------------------------------
+
+const footerLinks = (world: SpecWorld): Locator =>
+  world.browserPage.locator("footer.site-footer .site-footer-links a");
+
+const boxOf = async (locator: Locator, what: string) => {
+  const box = await locator.boundingBox();
+  assert.ok(box !== null, `${what} is not on the page.`);
+  return box;
+};
+
+// A pixel or two either way is a rounding of where a box starts, not a place.
+const near = (one: number, other: number): boolean =>
+  Math.abs(one - other) <= 2;
+
+Then(
+  "the footer's links are beneath the donation and the copyright",
+  async function (this: SpecWorld) {
+    const bar = await boxOf(
+      this.browserPage.locator("footer.site-footer .site-footer-bar"),
+      "The footer's first row",
+    );
+    assert.equal(await footerLinks(this).count(), 3);
+    for (const link of await footerLinks(this).all()) {
+      const box = await boxOf(link, "A link");
+      assert.ok(
+        box.y >= bar.y + bar.height - 2,
+        `A link starts ${String(box.y)} down, above the end of the first row at ${String(bar.y + bar.height)}.`,
+      );
+    }
+  },
+);
+
+Then("the footer's links are side by side", async function (this: SpecWorld) {
+  const tops: number[] = [];
+  for (const link of await footerLinks(this).all()) {
+    tops.push((await boxOf(link, "A link")).y);
+  }
+  assert.equal(tops.length, 3);
+  assert.ok(
+    tops.every((top) => near(top, tops[0]!)),
+    `The links start ${tops.join(", ")} down.`,
+  );
+});
+
+Then(
+  /^the (first|second|third) footer link is "([^"]*)"$/,
+  async function (this: SpecWorld, place: string, words: string) {
+    const at = ["first", "second", "third"].indexOf(place);
+    assert.equal((await footerLinks(this).nth(at).innerText()).trim(), words);
+  },
+);
+
+Then(
+  "the footer's links end where the theme choice ends",
+  async function (this: SpecWorld) {
+    const last = await boxOf(footerLinks(this).last(), "The last link");
+    const choice = await boxOf(
+      this.browserPage
+        .locator("footer.site-footer .site-footer-theme > *")
+        .last(),
+      "The theme choice",
+    );
+    assert.ok(
+      near(last.x + last.width, choice.x + choice.width),
+      `The links end at ${String(last.x + last.width)} and the choice at ${String(choice.x + choice.width)}.`,
+    );
+  },
+);
+
+Then(
+  "the theme choice is beneath the footer's links",
+  async function (this: SpecWorld) {
+    const last = await boxOf(footerLinks(this).last(), "The last link");
+    const choice = await boxOf(
+      this.browserPage.locator("footer.site-footer .site-footer-theme"),
+      "The theme choice",
+    );
+    assert.ok(choice.y >= last.y + last.height - 2);
+  },
+);

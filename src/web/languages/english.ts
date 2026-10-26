@@ -30,6 +30,7 @@ export const english: Language = {
     "footer.copyright": "© Copyright {years}, {owner}",
     "footer.privacy": "Privacy",
     "footer.termsOfUse": "Terms of use",
+    "footer.reportBug": "Report a bug",
     "beta.banner": "This is a beta site. Data may be reset at any time.",
     "privacy.contact":
       "Questions about this page, or about what is kept about you: {emailAddress}",

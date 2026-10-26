@@ -29,6 +29,7 @@ export const egyptian: Language = {
     "footer.copyright": "© حقوق النشر {years}، {owner}",
     "footer.privacy": "الخصوصية",
     "footer.termsOfUse": "شروط الاستخدام",
+    "footer.reportBug": "بلّغ عن مشكلة",
     "beta.banner": "ده موقع تجريبي. ممكن البيانات تتمسح في أي وقت.",
     "privacy.contact":
       "أي أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",
