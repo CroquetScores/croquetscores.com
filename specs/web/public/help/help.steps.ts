@@ -159,6 +159,13 @@ Then(
   },
 );
 
+Then(
+  "the page is the one for world ranking officers",
+  function (this: SpecWorld) {
+    assert.match(article(this), /data-page="world-ranking-officers"/);
+  },
+);
+
 const everyThatLeadsSomewhere = async (
   world: SpecWorld,
   attribute: "href" | "src",
