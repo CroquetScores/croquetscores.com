@@ -106,7 +106,7 @@ const hasAny = (name: string, phrases: readonly string[]): boolean => {
 // A word of its own is one with no letter or digit beside it. Its case is the
 // one it is given, unless the flags say "i".
 const wholeWord = (word: string, flags = ""): RegExp =>
-  new RegExp(`(?<![\\p{L}\\p{N}])${word}(?![\\p{L}\\p{N}])`, `${flags}u`);
+  new RegExp(`(?<![\\p{L}\\p{N}])(?:${word})(?![\\p{L}\\p{N}])`, `${flags}u`);
 
 // Every country's whole name as a word of its own, the longest first so that
 // Papua New Guinea is taken before the Guinea in it.
@@ -200,6 +200,20 @@ const namesSayingACountryForOne: Readonly<
           ? "eg"
           : undefined,
   ma: (name) => (startsWithAnOrdinal.test(name) ? "es" : undefined),
+  // Scotland and Ireland have no time zone of their own, so the old sites put
+  // their tournaments in England, and only there are their names looked for:
+  // Dublin and Edinburgh are places elsewhere too. SCA is in capitals, since
+  // "sca" begins other words and names.
+  england: (name) =>
+    wholeWord("Balgreen|Scottish|Edinburgh|Auchincruive", "i").test(name) ||
+    wholeWord("SCA").test(name)
+      ? "scotland"
+      : wholeWord(
+            "Dublin|Carrickmines|Leinster|Herbert Park|Mc ?Weeney",
+            "i",
+          ).test(name)
+        ? "ie"
+        : undefined,
 };
 
 const countryPlayedIn = (said: Country, name: string): Country => {

@@ -463,6 +463,15 @@ Feature: Importing the old sites' tournaments
       beside it, and the case is meant, since "swf" and "ramadan" are plain
       words and names. Where a name has more than one of these, the first
       listed here is the one taken;
+    - one put in England with Balgreen, Scottish, Edinburgh or Auchincruive as
+      a word of its own is in Scotland, as is one with SCA as a word of its
+      own, in capitals, since "sca" begins other words and names. One put in
+      England with Dublin, Carrickmines, Leinster or Herbert Park as a word of
+      its own, or Mc Weeney with or without the space, is in Ireland. Scotland
+      and Ireland have no time zone of their own, so the old sites put their
+      tournaments in England; and only there are these looked for, since
+      Dublin and Edinburgh are places elsewhere too. Where a name has both,
+      the one in Scotland is taken;
     - one put in Morocco whose name begins with an ordinal, as "1st", "2nd",
       "3rd" or "10th", as a word of its own, is in Spain instead: those are the
       Spanish club tournaments, which are numbered. The rest put in Morocco
@@ -1552,6 +1561,80 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+    Scenario Outline: A tournament whose name has a Scottish place or body as a word of its own is in Scotland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
+
+      Examples:
+        | name |
+        | Balgreen Spring One-Ball |
+        | European GC Club League Balgreen Heat |
+        | Scottish CA - Spring Weekend |
+        | Malmet Trophy, Scottish Croquet Association |
+        | Appleton Match - SCA v CAI |
+        | SCA Short Croquet |
+        | Meadows (Edinburgh) Women's GC Handicap Singles |
+        | Edinburgh Tournament GC |
+        | Auchincruive D Grade Level Play |
+        | balgreen open |
+        | EDINBURGH OPEN |
+
+    Scenario Outline: A tournament whose name has an Irish place or name as a word of its own is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+      Examples:
+        | name |
+        | The Championships of County Dublin |
+        | The Dublin Golf Croquet Invitational |
+        | European GC Clubs League Grand Final - Carrickmines |
+        | South Leinster Open Championship |
+        | GC European League Heat Herbert Park |
+        | Mc Weeney CAI v CqE |
+        | McWeeney Cup |
+        | carrickmines open |
+
+    Scenario Outline: A tournament whose name has one of them in it but not as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name |
+        | Balgreens Open |
+        | Scottishness Open |
+        | Sca Open |
+        | Scarborough Open |
+        | Dublins Open |
+        | Leinsters Open |
+
+    Scenario Outline: A tournament put in another country than England with one of these words in its name is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name                |
+        | Balgreen Open       |
+        | Edinburgh Open      |
+        | Dublin Open         |
+        | SCA Open            |
+        | Carrickmines Open   |
 
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
