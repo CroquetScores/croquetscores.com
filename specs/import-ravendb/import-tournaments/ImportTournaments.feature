@@ -433,6 +433,11 @@ Feature: Importing the old sites' tournaments
     - a name with South African in it is in South Africa;
     - a name with Open Door or Stage Door in it is in South Africa;
     - a name with Egypt in it, which Egyptian has, is in Egypt;
+    - a name with Norfolk Island in it is in Norfolk Island;
+    - a name with Gauteng Provincial or Western Province Croquet Association in
+      it is in South Africa;
+    - a name with Allasch Kummel in it is in Latvia;
+    - a name with Zouzou Abdelhalim Cup or Borg Cup in it is in Egypt;
     - a name with Greece as a word of its own is in Greece;
     - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
       apostrophe straight or curled, is in the USA. A name with more in it is
@@ -1364,6 +1369,112 @@ Feature: Importing the old sites' tournaments
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Surbiton Open"
       And the tournament's time zone is "Sao Tome Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament whose name has Norfolk Island in it is in Norfolk Island
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "nf"
+
+      Examples:
+        | name |
+        | Norfolk Island Open |
+        | The Norfolk Island Cup |
+        | norfolk island GC |
+        | NORFOLK ISLAND OPEN |
+
+    Scenario Outline: A tournament whose name has Gauteng Provincial or Western Province Croquet Association in it is in South Africa
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "za"
+
+      Examples:
+        | name |
+        | Gauteng Provincial Championship |
+        | The gauteng provincial GC |
+        | Gauteng Provinicial Championship |
+        | Western Province Croquet Association Open |
+        | western province croquet association GC |
+
+    Scenario Outline: A tournament whose name has Allasch Kummel in it is in Latvia
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
+
+      Examples:
+        | name |
+        | Allasch Kummel Cup |
+        | The Allasch Kummel |
+        | allasch kummel GC |
+
+    Scenario Outline: A tournament whose name has Zouzou Abdelhalim Cup or Borg Cup in it is in Egypt
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
+
+      Examples:
+        | name |
+        | Zouzou Abdelhalim Cup |
+        | The Borg Cup |
+        | borg cup GC |
+        | ZOUZOU ABDELHALIM CUP 2012 |
+
+    Scenario Outline: A tournament whose name has only part of one of them is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name                          |
+        | Norfolk Open                  |
+        | Gauteng Open                  |
+        | Western Province Open         |
+        | Allasch Open                  |
+        | Kummel Cup                    |
+        | Zouzou Open                   |
+        | Borg Open                     |
+
+    Scenario Outline: A tournament whose name has one of them in it is moved whatever the list says
+      Given an Association Croquet event "<name>" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                                      | country |
+        | Norfolk Island Open                       | nf      |
+        | Gauteng Provincial Open                   | za      |
+        | Western Province Croquet Association Open | za      |
+        | Allasch Kummel Cup                        | lv      |
+        | Zouzou Abdelhalim Cup                     | eg      |
+        | Borg Cup                                  | eg      |
+
+    Scenario: A tournament whose name has Norfolk Island in it is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Norfolk Island Open"
+      And the tournament's time zone is "China Standard Time"
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region

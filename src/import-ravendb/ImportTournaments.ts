@@ -97,6 +97,12 @@ const countriesPlayedInInstead: Readonly<Record<string, string>> = {
 // The names of Spanish clubs, which a tournament's name has as a word of its
 // own in capitals when the club ran it. Whole is no letter or digit beside it,
 // and the capitals are meant: in lower case these are plain words and names.
+// Whether the name has any of the phrases in it, in any case.
+const hasAny = (name: string, phrases: readonly string[]): boolean => {
+  const lower = name.toLowerCase();
+  return phrases.some((phrase) => lower.includes(phrase));
+};
+
 // A word of its own is one with no letter or digit beside it. Its case is the
 // one it is given, unless the flags say "i".
 const wholeWord = (word: string, flags = ""): RegExp =>
@@ -130,6 +136,19 @@ const namesSayingACountry: readonly {
   },
   { says: (name) => /south african/i.test(name), country: "za" },
   { says: (name) => name.toLowerCase().includes("egypt"), country: "eg" },
+  { says: (name) => hasAny(name, ["norfolk island"]), country: "nf" },
+  {
+    // "Provinicial" is how some old names spell it.
+    says: (name) =>
+      /gauteng provin(?:i)?cial/i.test(name) ||
+      hasAny(name, ["western province croquet association"]),
+    country: "za",
+  },
+  { says: (name) => hasAny(name, ["allasch kummel"]), country: "lv" },
+  {
+    says: (name) => hasAny(name, ["zouzou abdelhalim cup", "borg cup"]),
+    country: "eg",
+  },
   { says: (name) => wholeWord("Greece", "i").test(name), country: "gr" },
   {
     // Called exactly this, whichever way its apostrophe is written.
