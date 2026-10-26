@@ -1,10 +1,8 @@
 # Novità
 
-## Rilasciato il 2026-10-19
+## Rilasciato il 2026-10-27
 
 Croquet Scores è stato riscritto da zero con l'IA, in TypeScript. Ecco che cosa noterai.
-
-Il codice è ora open source, con la GNU Affero General Public License versione 3 (AGPL-3.0). Chiunque può leggerlo, usarlo e modificarlo, e chiunque pubblichi come sito web una versione modificata deve condividere le sue modifiche con la stessa licenza.
 
 ### Trovare le cose
 
@@ -22,3 +20,7 @@ Il codice è ora open source, con la GNU Affero General Public License versione 
 - **La tua lingua.** Il sito è ora in diciassette lingue: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska e Cymraeg. Ti viene mostrata la prima lingua richiesta dal tuo browser che il sito ha, oppure l'inglese se non ne ha nessuna. Per sceglierne un'altra, usa l'elenco nel piè di pagina in fondo a qualsiasi pagina e premi il pulsante accanto. Se vuoi che venga aggiunta una lingua, scrivi a <croquetscores@gmail.com>.
 - **Chiaro o scuro.** Sempre nel piè di pagina: scegli Chiaro, Scuro o Sistema. Sistema segue il tuo telefono o computer. Il sito ricorda la tua scelta in ogni pagina e a ogni visita.
 - **Quale versione stai usando.** Il piè di pagina ora mostra la versione del sito che stai guardando, come v234. Se segnali un problema, per favore indica di quale versione si trattava.
+
+### Open source
+
+Il codice è ora open source, con la GNU Affero General Public License versione 3 (AGPL-3.0). Chiunque può leggerlo, usarlo e modificarlo, e chiunque pubblichi come sito web una versione modificata deve condividere le sue modifiche con la stessa licenza.

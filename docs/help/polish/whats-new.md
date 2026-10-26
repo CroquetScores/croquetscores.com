@@ -1,10 +1,8 @@
 # Co nowego
 
-## Wydano 2026-10-19
+## Wydano 2026-10-27
 
 Croquet Scores został całkowicie napisany od nowa z pomocą AI, w TypeScripcie. Poniżej opisujemy to, co zauważysz.
-
-Kod jest teraz otwarty, na licencji GNU Affero General Public License w wersji 3 (AGPL-3.0). Każdy może go czytać, używać i zmieniać, a kto uruchamia zmienioną wersję jako stronę internetową, musi udostępnić swoje zmiany na tej samej licencji.
 
 ### Znajdowanie rzeczy
 
@@ -22,3 +20,7 @@ Kod jest teraz otwarty, na licencji GNU Affero General Public License w wersji 3
 - **Twój język.** Strona jest teraz w siedemnastu językach: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska i Cymraeg. Widzisz pierwszy język, o który prosi twoja przeglądarka i który strona ma, albo angielski, jeśli nie ma żadnego. Aby wybrać inny, użyj listy w stopce na dole każdej strony i naciśnij przycisk obok niej. Jeśli chcesz, aby dodać jakiś język, napisz na <croquetscores@gmail.com>.
 - **Jasny lub ciemny.** Także w stopce: wybierz Jasny, Ciemny lub Systemowy. Systemowy podąża za twoim telefonem lub komputerem. Strona pamięta twój wybór na każdej stronie i przy każdej wizycie.
 - **Z której wersji korzystasz.** Stopka pokazuje teraz wersję oglądanej strony, na przykład v234. Gdy zgłaszasz problem, podaj, której wersji dotyczył.
+
+### Otwarty kod
+
+Kod jest teraz otwarty, na licencji GNU Affero General Public License w wersji 3 (AGPL-3.0). Każdy może go czytać, używać i zmieniać, a kto uruchamia zmienioną wersję jako stronę internetową, musi udostępnić swoje zmiany na tej samej licencji.

@@ -1,10 +1,8 @@
 # He aha te mea hou
 
-## I tukuna 2026-10-19
+## I tukuna 2026-10-27
 
 Kua tuhia katoatia anōtia a Croquet Scores ki te AI, i te TypeScript. Koinei ngā mea ka kite koe.
-
-Kua tuwhera te waehere inaianei, i raro i te GNU Affero General Public License putanga 3 (AGPL-3.0). Ka taea e te tangata te pānui, te whakamahi me te whakarerekē, ā, me tohatoha e te tangata e whakahaere ana i tētahi putanga kua whakarerekētia hei pae tukutuku āna panonitanga i raro i taua raihana ōrite.
 
 ### Te kimi i ngā mea
 
@@ -22,3 +20,7 @@ Kua tuwhera te waehere inaianei, i raro i te GNU Affero General Public License p
 - **Tō reo.** Kei ngā reo tekau mā whitu te pae inaianei: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska me Cymraeg. Ka whakaaturia ki a koe te reo tuatahi e tonoa ana e tō pūtirotiro kei te pae, te reo Ingarihi rānei mēnā kāore he reo. Hei kōwhiri i tētahi atu, whakamahia te rārangi kei te waewae o ia whārangi ka pēhi i te pātene i tōna taha. Mēnā e hiahia ana koe kia tāpirihia tētahi reo, īmēra ki a <croquetscores@gmail.com>.
 - **Marama, pōuri rānei.** Kei te waewae hoki: kōwhiria Marama, Pōuri, Pūnaha rānei. Ka whai a Pūnaha i tō waea, rorohiko rānei. Ka maumahara te pae ki tō kōwhiringa i ia whārangi, i ia toronga.
 - **Ko tēhea putanga kei a koe.** Ka whakaatu te waewae inaianei i te putanga o te pae e tiro nei koe, pēnei i a v234. Mēnā ka kōrero koe i tētahi raruraru, tēnā whakapaihia mai ko tēhea putanga.
+
+### Waehere Tuwhera
+
+Kua tuwhera te waehere inaianei, i raro i te GNU Affero General Public License putanga 3 (AGPL-3.0). Ka taea e te tangata te pānui, te whakamahi me te whakarerekē, ā, me tohatoha e te tangata e whakahaere ana i tētahi putanga kua whakarerekētia hei pae tukutuku āna panonitanga i raro i taua raihana ōrite.

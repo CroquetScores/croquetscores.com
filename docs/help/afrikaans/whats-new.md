@@ -1,10 +1,8 @@
 # Wat is nuut
 
-## Vrygestel 2026-10-19
+## Vrygestel 2026-10-27
 
 Croquet Scores is met KI heeltemal herskryf, in TypeScript. Hier volg wat jy gaan agterkom.
-
-Die kode is nou oopbron, onder die GNU Affero General Public License weergawe 3 (AGPL-3.0). Enigiemand mag dit lees, gebruik en verander, en enigiemand wat 'n veranderde weergawe as webwerf bedryf, moet sy veranderinge onder dieselfde lisensie deel.
 
 ### Dinge vind
 
@@ -22,3 +20,7 @@ Die kode is nou oopbron, onder die GNU Affero General Public License weergawe 3 
 - **Jou taal.** Die webwerf is nou in sewentien tale: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska en Cymraeg. Jy kry die eerste taal te sien wat jou blaaier vra en wat die webwerf het, of Engels as dit geen het nie. Om 'n ander te kies, gebruik die lys in die voetskrif onderaan enige bladsy en druk die knoppie langs dit. As jy wil hê 'n taal moet bygevoeg word, stuur 'n e-pos na <croquetscores@gmail.com>.
 - **Lig of donker.** Ook in die voetskrif: kies Lig, Donker of Stelsel. Stelsel volg jou foon of rekenaar. Die webwerf onthou jou keuse op elke bladsy en by elke besoek.
 - **Watter weergawe jy gebruik.** Die voetskrif wys nou die weergawe van die webwerf waarna jy kyk, soos v234. As jy 'n probleem aanmeld, sê asseblief watter weergawe dit was.
+
+### Oopbron
+
+Die kode is nou oopbron, onder die GNU Affero General Public License weergawe 3 (AGPL-3.0). Enigiemand mag dit lees, gebruik en verander, en enigiemand wat 'n veranderde weergawe as webwerf bedryf, moet sy veranderinge onder dieselfde lisensie deel.
