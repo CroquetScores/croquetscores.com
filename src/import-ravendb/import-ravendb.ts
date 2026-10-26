@@ -101,7 +101,7 @@ const ROLE_HOLDERS: RoleHolders = {
   "gc-world-ranking-officer": [
     "richard.bilton30@talktalk.net",
     "pfreer@netspeed.com.au",
-    "pfreer@gmail.com",
+    "pfreer77@gmail.com",
     "eduardorochagolf@hotmail.com",
     "jeff@ipsedixit.net",
     "johnchristie8@gmail.com",
