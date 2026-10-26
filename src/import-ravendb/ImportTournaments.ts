@@ -108,6 +108,21 @@ const hasAny = (name: string, phrases: readonly string[]): boolean => {
 const wholeWord = (word: string, flags = ""): RegExp =>
   new RegExp(`(?<![\\p{L}\\p{N}])${word}(?![\\p{L}\\p{N}])`, `${flags}u`);
 
+// Every country's whole name as a word of its own, the longest first so that
+// Papua New Guinea is taken before the Guinea in it.
+const wholeCountryNames = Countries.thereAre.all
+  .map(({ code, name }) => ({
+    code,
+    length: name.length,
+    pattern: wholeWord(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"),
+  }))
+  .sort((a, b) => b.length - a.length);
+
+// The country whose whole name the name has as a word of its own, if any. Tried
+// after every name above, which mean more than the country in them.
+const countryNamedIn = (name: string): string | undefined =>
+  wholeCountryNames.find(({ pattern }) => pattern.test(name))?.code;
+
 const spanishClubs =
   /(?<![\p{L}\p{N}])(?:RSHECC|CCVM|VGCC|RCGVH|RCLM|RCP)(?![\p{L}\p{N}])/u;
 
@@ -191,6 +206,7 @@ const countryPlayedIn = (said: Country, name: string): Country => {
   const written = name.trim();
   const country =
     namesSayingACountry.find(({ says }) => says(written))?.country ??
+    countryNamedIn(written) ??
     namesSayingACountryForOne[said.code]?.(written) ??
     countriesPlayedInInstead[said.code];
   return Countries.thereAre.find(country ?? "") ?? said;
