@@ -1,5 +1,17 @@
 # He aha te mea hou mō ngā Kaiwhakahaere Whakataetae Nui
 
+## I tukuna 2026-10-26, i muri mai i te rā
+
+Koinei ngā panonitanga matua mai i te tukunga o mua i tēnei rā. Ia mea ka hono ki te pull request nāna i mahi.
+
+- **Ka whakaatuhia te ripa Whakarārangi ki tētahi āpiha tūnga o te ao.** I ia whakataetae o te hākinakina e tiaki ana ia, hei whakamutunga i waenga i ōna ripa, ahakoa he wāhi tōna ki te whakataetae, ka kaute rānei ia i ngā kaute. Koia tonu te ripa kei tētahi kaiwhakahaere, me te hono hei tikiake i ngā kēmu o te whakataetae mō ngā tūnga o te ao. Kāore anō te kaikaute ehara i te āpiha e whakaatuhia ana ki a ia. Tirohia [Ngā raupapa](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **He āwhina tā ngā āpiha tūnga o te ao.** Ko tētahi whārangi e kī ana he aha ā te rārangi whakataetae a tētahi āpiha hei tāpiri atu ki ā te kaipānui takiuru noa: ngā whakataetae katoa o ngā hākinakina e tiaki ana ia, ngā pātene e whakamōkito ana i a ia, me **Kaitākaro** hei whakakapi i **Whakahaere**. Tirohia [Āwhina mā ngā āpiha tūnga o te ao](../world-ranking-officers/index.md). Kāore anō te whārangi i ngā reo tekau mā ono atu kia pānuitia e te tangata whai reo taketake, nō reira whakamōhio mai he aha te mea e kino ana te pānui. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **He hono ki te pūrongo i tētahi hapa kei ia whārangi.** Kei te waewae te **Pūrongo i tētahi hapa**, i te taha o **Tūmataiti** me **Ngā kupu whakamahi**, i tētahi rarangi motuhake i raro i te koha me te manatārua. Ka huaki i tētahi īmēra hou ki te kaiwhakahaere o te pae, kua whai ingoa o te pae, tōna putanga mēnā he putanga tōna, me te kupu Pākehā "Bug" hei upoko. Kāore he mea e tukuna mai i te pae. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Ngā mahi i muri i te arai.** Ko tētahi whakataetae i kawea mai i ngā pae tawhito ka whakatūria ki te whenua e kīia ana e tōna ingoa ina ingoatia tētahi, pēnei i Japan Open, kāore anō hoki ki tētahi whenua kāore i takarohia ki reira ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). He whārangi tā te kaiwhakahaere o ngā whakataetae i takarohia ki ngā whenua kāore e rārangitia e ngā tūnga o te ao ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), ā, kua whakatikaina te wāhitau īmēra o tētahi āpiha tūnga o te ao Golf Croquet ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## I tukuna 2026-10-26
 
 Koinei ngā panonitanga matua mai i te tukunga whakamutunga. Ia mea ka hono ki te pull request nāna i mahi.

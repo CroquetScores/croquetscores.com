@@ -1,5 +1,17 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-10-26, yn ddiweddarach yn y dydd
+
+Dyma'r prif newidiadau ers y datganiad yn gynharach heddiw. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
+
+- **Cynigir y tab Detholion i swyddog detholion y byd.** Ar unrhyw dwrnamaint o'r gamp y mae'n gofalu amdani, yn olaf ymhlith ei dabiau, boed ganddo ran yn y twrnamaint neu a yw'n ei sgorio. Dyma'r un tab sydd gan reolwr, gyda'r ddolen i lawrlwytho gemau'r twrnamaint ar gyfer Safle'r Byd. Nid yw sgoriwr nad yw'n swyddog yn cael ei gynnig o hyd. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **Mae cymorth i swyddogion detholion y byd.** Mae un dudalen yn dweud beth y mae rhestr twrnameintiau swyddog yn ei rhoi iddo ar wahân i'r hyn sydd gan unrhyw ddarllenydd sydd wedi mewngofnodi: pob twrnamaint o'r campau y mae'n gofalu amdanynt, y botymau sy'n ei chyfyngu, a **Chwaraewyr** yn lle **Rheoli**. Gweler [Cymorth i swyddogion detholion y byd](../world-ranking-officers/index.md). Nid yw'r dudalen yn y chwe iaith ar bymtheg arall wedi'i darllen gan siaradwr brodorol eto, felly dywedwch wrthym beth sy'n darllen yn wael. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Mae gan bob tudalen ddolen i adrodd am nam.** Mae **Adrodd am nam** yn y troedyn, wrth ymyl **Preifatrwydd** a **Telerau defnyddio**, ar res ei hun o dan y rhodd a'r hawlfraint. Mae'n agor e-bost newydd i weinyddwr y wefan, gyda'r pwnc eisoes yn cynnwys enw'r wefan, ei fersiwn os oes un, a'r gair Saesneg "Bug". Ni anfonir dim o'r wefan. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Y tu ôl i'r llenni.** Rhoddir twrnamaint a ddygwyd o'r hen wefannau yn y wlad y mae ei enw'n ei dweud lle mae'n enwi un, fel Japan Open, ac nid mewn gwlad na chafodd ei chwarae ynddi erioed mwyach ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Mae gan weinyddwr dudalen o'r twrnameintiau a chwaraewyd mewn gwledydd nad yw Safle'r Byd yn eu rhestru ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), a chywirwyd cyfeiriad e-bost un swyddog detholion y byd Golf Croquet ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Rhyddhawyd 2026-10-26
 
 Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.

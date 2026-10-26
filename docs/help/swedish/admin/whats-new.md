@@ -1,5 +1,17 @@
 # Nytt för arrangörer
 
+## Släppt 2026-10-26, senare samma dag
+
+Det här är de viktigaste ändringarna sedan utgåvan tidigare i dag. Var och en länkar till den pull request som gjorde den.
+
+- **En rankingansvarig erbjuds fliken Rankingar.** På varje turnering i den sport hen ansvarar för, sist bland flikarna, oavsett om hen har en roll i turneringen eller för protokollet i den. Det är samma flik som en turneringsledare har, med länken för att ladda ner turneringens partier till världsrankingen. En protokollförare som inte är rankingansvarig erbjuds den fortfarande inte. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **Det finns hjälp för rankingansvariga.** En sida säger vad en rankingansvarigs turneringslista ger utöver det som varje inloggad läsare har: alla turneringar i de sporter hen ansvarar för, knapparna som begränsar den och **Spelare** i stället för **Hantera**. Se [Hjälp för rankingansvariga](../world-ranking-officers/index.md). Sidan på de övriga sexton språken har ännu inte lästs av någon med språket som modersmål, så säg till vad som läses dåligt. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Varje sida har en länk för att rapportera ett fel.** **Rapportera ett fel** finns i sidfoten, bredvid **Integritet** och **Användarvillkor**, på en egen rad under donationen och upphovsrätten. Den öppnar ett nytt e-postmeddelande till sidans administratör, redan med ett ämne som har sidans namn, dess version om den har någon och det engelska ordet "Bug". Ingenting skickas från sidan. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Bakom kulisserna.** En turnering som förts över från de gamla sidorna läggs i det land som dess namn anger när det anger något, som Japan Open, och inte längre i ett land där den aldrig spelades ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). En administratör har en sida med turneringar som spelats i länder som världsrankingarna inte listar ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), och e-postadressen till en rankingansvarig för golfcroquet rättades ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Släppt 2026-10-26
 
 Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.

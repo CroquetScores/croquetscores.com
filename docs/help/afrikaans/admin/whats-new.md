@@ -1,5 +1,17 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-10-26, later die dag
+
+Dit is die belangrikste veranderinge sedert die uitgawe vroeër vandag. Elkeen skakel na die pull request wat dit gemaak het.
+
+- **'n Wêreldranglysbeampte word die Ranglyste-oortjie aangebied.** Van enige toernooi in die sportsoort wat hy of sy oppas, laaste onder sy oortjies, of hy of sy 'n rol in die toernooi het en of hy of sy die uitslae tel. Dit is dieselfde oortjie wat 'n bestuurder het, met die skakel om die toernooi se spelle vir die wêreldranglyste af te laai. 'n teller wat nie 'n beampte is nie, word dit steeds nie aangebied nie. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **Daar is hulp vir wêreldranglysbeamptes.** Een bladsy sê wat 'n beampte se lys toernooie hom of haar gee bo en behalwe wat enige aangemelde leser het: elke toernooi van die sportsoorte wat hy of sy oppas, die knoppies wat dit vernou, en **Spelers** in plaas van **Bestuur**. Sien [Wêreldranglysbeamptes](../world-ranking-officers/index.md). Die bladsy in die tale anders as Engels is nog nie deur 'n moedertaalspreker gelees nie, so sê vir ons wat sleg lees. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Elke bladsy het 'n skakel om 'n fout te rapporteer.** **Rapporteer 'n fout** is in die voetskrif, langs **Privaatheid** en **Gebruiksvoorwaardes**, op 'n reël van sy eie onder die skenking en die kopiereg. Dit open 'n nuwe e-pos aan die webwerf se administrateur, reeds getitel met die webwerf se naam, sy weergawe waar dit een het, en die woord Bug. Niks word vanaf die webwerf gestuur nie. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Agter die skerms.** 'n Toernooi wat van die ou webwerwe oorgebring is, word geplaas in die land wat sy naam noem waar dit een noem, soos Japan Open, en nie meer in 'n land waar dit nooit gespeel is nie ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). 'n Administrateur het 'n bladsy van die toernooie wat gespeel is in lande wat die wêreldranglyste nie lys nie ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), en die e-posadres van een Golf Croquet-wêreldranglysbeampte is reggestel ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Vrygestel 2026-10-26
 
 Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.

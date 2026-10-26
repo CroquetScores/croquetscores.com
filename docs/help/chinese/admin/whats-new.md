@@ -1,5 +1,17 @@
 # 赛事管理者的新功能
 
+## 发布于 2026-10-26，当天晚些时候
+
+以下是自今天早些时候的发布以来的主要变化。每一项都链接到做出该改动的 pull request。
+
+- **世界排名负责人现在可以看到排名标签页。** 对于他们所负责的运动项目的任何赛事，无论他们是否参与该赛事或负责记分，都会在其标签页的最后看到它。它与管理者所见的是同一个标签页，带有下载该赛事用于世界排名的比赛的链接。不是负责人的记分员仍然看不到它。参见 [排名](../tournament-managers/standard-tournament/rankings.md)。 ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **现在有了面向世界排名负责人的帮助。** 一个页面说明负责人的赛事列表除了任何已登录读者所拥有的之外还提供什么：他们所负责的运动项目的每一场赛事、用来缩小范围的按钮，以及用**选手**代替**管理**。参见 [世界排名负责人](../world-ranking-officers/index.md)。英语以外各种语言的该页面还没有母语者读过，如有读起来别扭的地方，请告诉我们。 ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **每个页面都有报告错误的链接。** **报告错误**位于页脚，在**隐私**和**使用条款**旁边，单独占一行，位于捐赠和版权信息下方。它会打开一封发给网站管理员的新电子邮件，主题已写好网站名称、版本（有的话）和 Bug 一词。网站不会发送任何内容。 ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **幕后改动。** 从旧网站导入的赛事，若名称中写明了国家（例如 Japan Open），就归入该国家，不再归入从未举办过的国家 ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388)、[#390](https://github.com/CroquetScores/croquetscores.com/pull/390))。管理员有了一个页面，列出在世界排名未列出的国家举办的赛事 ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386))，一位高尔夫槌球世界排名负责人的电子邮件地址也已更正 ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391))。
+
 ## 发布于 2026-10-26
 
 以下是自上次发布以来的主要变化。每一项都链接到做出该改动的 pull request。
