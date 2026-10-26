@@ -1,64 +1,6 @@
 # Wat is nuut vir toernooibestuurders
 
-## Vrygestel 2026-10-26, later die dag
-
-Dit is die belangrikste veranderinge sedert die uitgawe vroeër vandag. Elkeen skakel na die pull request wat dit gemaak het.
-
-- **'n Wêreldranglysbeampte word die Ranglyste-oortjie aangebied.** Van enige toernooi in die sportsoort wat hy of sy oppas, laaste onder sy oortjies, of hy of sy 'n rol in die toernooi het en of hy of sy die uitslae tel. Dit is dieselfde oortjie wat 'n bestuurder het, met die skakel om die toernooi se spelle vir die wêreldranglyste af te laai. 'n teller wat nie 'n beampte is nie, word dit steeds nie aangebied nie. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
-
-- **Daar is hulp vir wêreldranglysbeamptes.** Een bladsy sê wat 'n beampte se lys toernooie hom of haar gee bo en behalwe wat enige aangemelde leser het: elke toernooi van die sportsoorte wat hy of sy oppas, die knoppies wat dit vernou, en **Spelers** in plaas van **Bestuur**. Sien [Wêreldranglysbeamptes](../world-ranking-officers/index.md). Die bladsy in die tale anders as Engels is nog nie deur 'n moedertaalspreker gelees nie, so sê vir ons wat sleg lees. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
-
-- **Elke bladsy het 'n skakel om 'n fout te rapporteer.** **Rapporteer 'n fout** is in die voetskrif, langs **Privaatheid** en **Gebruiksvoorwaardes**, op 'n reël van sy eie onder die skenking en die kopiereg. Dit open 'n nuwe e-pos aan die webwerf se administrateur, reeds getitel met die webwerf se naam, sy weergawe waar dit een het, en die woord Bug. Niks word vanaf die webwerf gestuur nie. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
-
-- **Agter die skerms.** 'n Toernooi wat van die ou webwerwe oorgebring is, word geplaas in die land wat sy naam noem waar dit een noem, soos Japan Open, en nie meer in 'n land waar dit nooit gespeel is nie ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). 'n Administrateur het 'n bladsy van die toernooie wat gespeel is in lande wat die wêreldranglyste nie lys nie ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), en die e-posadres van een Golf Croquet-wêreldranglysbeampte is reggestel ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
-
-## Vrygestel 2026-10-26
-
-Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.
-
-- **'n Kompetisie se bladsy kan gedruk word.** 'n Blok se bladsy, 'n uitskakeling se bladsy, 'n Switser se bladsy en 'n toets se bladsy het elk 'n drukknoppie op die reël van die kompetisie se naam, langs die aansigte. As jy dit druk, gaan die blaaier se eie drukdialoog oop. Dit het skrip nodig, so waar daar geen is nie, word die knoppie nie gewys nie. Wat gedruk word, is die toernooi se naam, bo die kompetisie se naam, en die uitslae daaronder, en niks wat net dien om die bladsy te vind nie: die werf se balke, die aansigte, die knoppie en die voetskrif. Skakels word nie op papier onderstreep nie, maar 'n onttrekte speler se naam hou die streep deur hom. 'n Blok en 'n uitskakeling word dwarsoor die papier gedruk, en 'n Switser en 'n toets regop. 'n Blok se rooster of 'n uitskakeling se trekking wat wyer as die papier is, word in stukke gesny op bladsye ná die eerste, met die spelers se name links van elke stuk van 'n rooster herhaal. Die bladsy kan nie die drukker vra hoe breed die papier is nie, so dit reken met Letter dwarsoor, en 'n leser wat die papier regop draai, kan steeds die regterkantste rand verloor. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
-
-- **Die ranglys-aflaai sê wat dit is.** Die skakel op die **Ranglyste**-oortjie was **Laai ranglyste af**, wat lyk of dit die ranglyste gee. Dit is nou **Laai spelle af vir die wêreldranglys**, want dit gee die toernooi se spelle, in die lêer waaruit die ranglysbeamptes dit neem. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). Die nuwe woorde in die tale anders as Engels is nog nie deur 'n moedertaalspreker gelees nie, so sê vir ons wat sleg lees. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
-
-- **Agter die skerms.** Die opsomming wat die invoer ná elke lopie byvoeg, word nie meer oorskryf as dit nie gelees kan word nie ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), en die pakkette waarop die werf staan, is tot hul nuutste uitgawes gebring binne die reekse wat dit toelaat ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
-
-## Vrygestel 2026-10-25
-
-Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.
-
-- **'n Wêreldranglysbeampte se lys toernooie kan volgens die wêreldranglyste vernou word.** 'n Beampte se lys bevat elke toernooi van die sportsoorte waarna hy of sy omsien, wat meer is as wat hulle wil deurlees. Dit het nou drie knoppies langs **Nuwe toernooi**: **Bestuurder/Telbeampte**, **Wêreldranglys** en **Nie wêreldranglys nie**. 'n Toernooi word gelys as enige knoppie wat daarop van toepassing is aan is, so elkeen voeg toernooie by eerder as om dit weg te neem. 'n Knoppie wat aan is, het 'n regmerkie, en **Bestuurder/Telbeampte** en **Wêreldranglys** is aan om mee te begin. Die knoppies is net vir beamptes; as jy toernooie bestuur of tel, is jou lys soos dit was. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
-
-- **'n Wêreldranglysbeampte of 'n administrateur kan 'n toernooi se bestuurders e-pos.** Op die **Bestuurders**-oortjie word **Stuur e-pos aan die bestuurders** aangebied, 'n skakel wat 'n nuwe e-pos aan elke bestuurder van die toernooi oopmaak, met die onderwerp "Croquet Scores". Niks word van die webwerf af gestuur nie. 'n Beampte sien die oortjie vir enige toernooi van die sportsoort waarna hy of sy omsien, om die bestuurders te lees en aan hulle te skryf, maar nie om hulle te verander nie, en 'n bestuurder word niemand se e-posadres gewys nie. Sien [Bestuurders en telers](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
-
-- **'n Eendagtoernooi word in die ranglyslêer op daardie dag gedateer.** Dit is as 'n reeks van een dag geskryf, `3-3.10.26`, en is nou `3.10.26`, soos die wêreldranglyste self 'n enkele dag skryf. 'n Toernooi van meer as een dag word soos voorheen gedateer. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
-
-- **Toernooie wat van die ou webwerwe oorgebring is, is getrouer.** 'n Toernooi se land word nou uit die wêreldranglyste se lyste van Association Croquet- en Golf Croquet-geleenthede geneem wanneer hulle dit het, in plaas van uit sy tydsone ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Nog twee veranderinge ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) geld vir die volgende invoer:
-  - Spelers word uit elke kompetisie se eie lys oorgebring en op hul presiese naam onder die toernooi se spelers gevind. Die ou webwerwe het 'n toernooi se spelers in elke kompetisie gekopieer en 'n bestuurder die kopie laat verander, so 'n paar wat in 'n dubbelkompetisie as "Joe Hogan & Levi Franks" ingeskryf is, is aan Joe Hogan alleen gekoppel. Dit is nou 'n speler op sy eie. 'n Speler wat in geen kompetisie is nie, word nie meer oorgebring nie.
-  - 'n Kompetisie wat sê wat 'n speler verteenwoordig, stel dit as die speler niks verteenwoordig het nie, en een wat daarna verskil, verander dit nie. 'n Blok wat as die beste van 2 gehou is, of die beste van 3 waar elke paar 'n derde spel gespeel het, behou dit nou. Dit word net die beste van 1 gemaak waar 'n paar se wedstryd voor hul laaste spel beslis sou gewees het, wat die webwerf die res sou laat weier.
-
-- **Agter die skerms.** Die invoer kan gevra word om net die toernooie in te voer wat tussen twee dae begin het ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), en sê nou wat dit gedoen het in 'n lêer vir elke soort regstelling, een vir sy foute, en 'n opsomming van elke invoer, almal in die docs-vouer van die bewaarplek (ook [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Nog vier Golf Croquet-wêreldranglysbeamptes word daarin genoem ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), en die webwerf se eie adres is 'n Association Croquet-beampte en nie meer 'n administrateur nie ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Scenario's wat nou en dan misluk het of agter die webwerf aan was, is reggestel ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
-
-## Vrygestel 2026-10-23
-
-Dit is die belangrikste veranderinge sedert die vorige uitgawe. Elkeen skakel na die pull request wat dit gemaak het.
-
-- **Voorgifte, gelykopuitslae en die wêreldranglyste word by elke kompetisie bepaal.** Dit was vroeër 'n toernooi se saak, so een toernooi kon nie 'n voorgifteblok langs 'n gelyke een hê nie, of 'n toets wat gelykop mag eindig langs 'n uitskakeling wat dit nie mag nie. Elke kompetisie, en elke toets, vra nou vir al drie wanneer dit bygevoeg of gewysig word, en die toernooivorm doen dit nie meer nie. Laasgenoemde word net gevra waar die sport wêreldranglyste het, en 'n kompetisie wat nie tel nie, word uit die ranglyslêer gelaat. Sien [Kompetisies](../tournament-managers/standard-tournament/competitions.md). ([#341](https://github.com/CroquetScores/croquetscores.com/pull/341))
-
-- **Die admin se lys toernooie kan volgens land, streek en sport ingeperk word.** Die keuses is in die adres, sodat 'n gefiltreerde lys geskakel kan word, en net wat jou lys bevat, word aangebied. 'n Streek word aangebied sodra 'n land gekies is. Toernooie voor November 2026 het nie 'n streek nie, so as jy een kies, word hulle versteek, en die openbare lyste sê dit. ([#354](https://github.com/CroquetScores/croquetscores.com/pull/354), [#351](https://github.com/CroquetScores/croquetscores.com/pull/351))
-
-- **Wêreldranglysbeamptes is nou een rol vir elke sport.** 'n Association Croquet-beampte sien Association Croquet-toernooie en sorg daarvoor, en 'n Golf Croquet-beampte vir Golf Croquet s'n. 'n Toernooi wat jy bestuur of tel, is steeds in jou lys, watter sport dit ook al is. ([#348](https://github.com/CroquetScores/croquetscores.com/pull/348), [#356](https://github.com/CroquetScores/croquetscores.com/pull/356))
-
-- **Die Ranglyste-oortjie verduidelik die lêer in een paragraaf, watter sport ook al,** met die aflaaiskakel daaronder. Sien [Ranglyste](../tournament-managers/standard-tournament/rankings.md). ([#346](https://github.com/CroquetScores/croquetscores.com/pull/346))
-
-- **'n Toernooi se naam mag nie net kleinletters of net hoofletters wees nie,** en die boodskap sê dit nou as 'n reël. ([#345](https://github.com/CroquetScores/croquetscores.com/pull/345))
-
-- **Verwyder is 'n asblik** op die Bestuurders- en Telers-oortjies, by die kompetisie se spelers en op die administrateur se Rekeninge-bladsy, soos Argiveer en Skrap reeds was. Dit heet steeds Verwyder as jy daarop wys, en 'n skermleser lees dit steeds as Verwyder. ([#353](https://github.com/CroquetScores/croquetscores.com/pull/353))
-
-- **Elke taal het nuwe woorde.** Die webwerf se bewoording in al sestien ander tale is van voor af geskryf, en die hulp is daarmee in lyn gebring. Die hulp vir lesers en vir rekeninge, en die gebruiksvoorwaardes, is nou ook in elke taal. Nog niemand wat die taal as moedertaal praat, het dit gelees nie, so sê vir ons wat swak lees. ([#355](https://github.com/CroquetScores/croquetscores.com/pull/355), [#349](https://github.com/CroquetScores/croquetscores.com/pull/349), [#350](https://github.com/CroquetScores/croquetscores.com/pull/350))
-
-- **Agter die skerms.** Die invoer van die ou webwerwe gee sommige tydsones en een toernooi 'n ander land ([#344](https://github.com/CroquetScores/croquetscores.com/pull/344)), en laai 'n storting met 'n skrip in die bediener en maak die leesmodelle daarmee ([#340](https://github.com/CroquetScores/croquetscores.com/pull/340)). Die webwerf word met 'n skrip ontplooi, vanaf 'n rekenaar of vanaf GitHub, en nie meer by elke samevoeging nie ([#352](https://github.com/CroquetScores/croquetscores.com/pull/352)).
-
-## Vrygestel 2026-10-19
+## Vrygestel 2026-10-27
 
 Dit is die belangrikste veranderinge vir mense wat toernooie bestuur. Die [hulp vir toernooibestuurders](../tournament-managers/index.md) het al die besonderhede.
 

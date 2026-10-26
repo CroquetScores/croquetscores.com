@@ -1,64 +1,6 @@
 # Nytt för arrangörer
 
-## Släppt 2026-10-26, senare samma dag
-
-Det här är de viktigaste ändringarna sedan utgåvan tidigare i dag. Var och en länkar till den pull request som gjorde den.
-
-- **En rankingansvarig erbjuds fliken Rankingar.** På varje turnering i den sport hen ansvarar för, sist bland flikarna, oavsett om hen har en roll i turneringen eller för protokollet i den. Det är samma flik som en turneringsledare har, med länken för att ladda ner turneringens partier till världsrankingen. En protokollförare som inte är rankingansvarig erbjuds den fortfarande inte. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
-
-- **Det finns hjälp för rankingansvariga.** En sida säger vad en rankingansvarigs turneringslista ger utöver det som varje inloggad läsare har: alla turneringar i de sporter hen ansvarar för, knapparna som begränsar den och **Spelare** i stället för **Hantera**. Se [Hjälp för rankingansvariga](../world-ranking-officers/index.md). Sidan på de övriga sexton språken har ännu inte lästs av någon med språket som modersmål, så säg till vad som läses dåligt. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
-
-- **Varje sida har en länk för att rapportera ett fel.** **Rapportera ett fel** finns i sidfoten, bredvid **Integritet** och **Användarvillkor**, på en egen rad under donationen och upphovsrätten. Den öppnar ett nytt e-postmeddelande till sidans administratör, redan med ett ämne som har sidans namn, dess version om den har någon och det engelska ordet "Bug". Ingenting skickas från sidan. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
-
-- **Bakom kulisserna.** En turnering som förts över från de gamla sidorna läggs i det land som dess namn anger när det anger något, som Japan Open, och inte längre i ett land där den aldrig spelades ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). En administratör har en sida med turneringar som spelats i länder som världsrankingarna inte listar ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), och e-postadressen till en rankingansvarig för golfcroquet rättades ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
-
-## Släppt 2026-10-26
-
-Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
-
-- **En tävlings sida kan skrivas ut.** Sidan för ett block, en utslagning, ett Schweizer och en landskamp har var och en en skrivarknapp på raden med tävlingens namn, bredvid vyerna. Att trycka på den öppnar webbläsarens egen utskriftsdialog. Den behöver skript, så där det inte finns några visas inte knappen. Det som skrivs ut är turneringens namn, ovanför tävlingens namn, och resultaten under, och inget som bara finns för att hitta sidan: sidans fält, vyerna, knappen och sidfoten. Länkar understryks inte på papper, men en tillbakadragen spelares namn behåller strecket genom sig. Ett block och en utslagning skrivs ut på bredden av papperet, ett Schweizer och en landskamp på höjden. Ett blocks rutnät eller en utslagnings schema som är bredare än papperet skärs i delar på sidor efter den första, med spelarnas namn upprepade till vänster om varje del av ett rutnät. Sidan kan inte fråga skrivaren hur brett papperet är, så den räknar med Letter på bredden, och en läsare som vänder papperet på höjden kan fortfarande förlora högerkanten. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
-
-- **Nedladdningen av rankingar säger vad den är.** Länken på fliken **Rankingar** hette **Ladda ner rankingar**, vilket låter som att den gav rankingarna. Nu heter den **Ladda ner partier för världsranking**, eftersom den ger turneringens partier, i filen som rankingansvariga hämtar dem ur. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). De nya orden på andra språk än engelska har ännu inte lästs av någon med språket som modersmål, så säg till vad som läses dåligt. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
-
-- **Bakom kulisserna.** Sammanfattningen som importen lägger till efter varje körning skrivs inte längre över när den inte kan läsas ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), och paketen som sidan beror på har flyttats till sina senaste utgåvor inom de intervall den tillåter ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
-
-## Släppt 2026-10-25
-
-Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
-
-- **En rankingansvarigs lista över turneringar kan begränsas efter världsrankingen.** En ansvarigs lista har varje turnering i de sporter hen sköter, och det är mer än hen vill läsa igenom. Den har nu tre knappar bredvid **Ny turnering**: **Ansvarig/Poängräknare**, **Världsranking** och **Utanför världsrankingen**. En turnering visas när någon knapp som gäller den är på, så varje knapp lägger till turneringar i stället för att ta bort dem. En knapp som är på har en bock, och **Ansvarig/Poängräknare** och **Världsranking** är på från början. Knapparna är bara för ansvariga; om du arrangerar turneringar eller för resultat i dem är din lista som förut. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
-
-- **En rankingansvarig eller en administratör kan skriva till en turnerings arrangörer.** På fliken **Arrangörer** erbjuds de **Mejla arrangörerna**, en länk som öppnar ett nytt mejl till varje arrangör av turneringen, med ämnet ”Croquet Scores”. Inget skickas från webbplatsen. En ansvarig ser fliken för varje turnering i den sport hen sköter, för att läsa arrangörerna och skriva till dem men inte för att ändra dem, och en arrangör får ingens e-postadress visad. Se [Arrangörer och resultatförare](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
-
-- **En endagsturnering dateras med den dagen i rankingfilen.** Den skrevs som ett intervall på en dag, `3-3.10.26`, och är nu `3.10.26`, som världsrankingens egna listor skriver en enskild dag. En turnering på mer än en dag dateras som förut. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
-
-- **Turneringar som förts över från de gamla webbplatserna är mer trogna.** En turnerings land hämtas nu från världsrankingens listor över evenemang i association croquet och golfcroquet när de har det, i stället för från dess tidszon ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Ytterligare två ändringar ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) gäller nästa import:
-  - Spelare förs över från varje tävlings egen lista och hittas på sitt exakta namn bland turneringens spelare. De gamla webbplatserna kopierade en turnerings spelare till varje tävling och lät en arrangör ändra kopian, så ett par som anmälts i en dubbeltävling som ”Joe Hogan & Levi Franks” kopplades ihop med bara Joe Hogan. Nu är det en egen spelare. En spelare som inte är med i någon tävling förs inte längre över.
-  - En tävling som säger vad en spelare representerar sätter det när spelaren inte representerade något, och en som säger något annat senare ändrar det inte. Ett block som sparats som bäst av 2, eller bäst av 3 där varje par spelade en tredje match, behåller det nu. Det görs till bäst av 1 bara där ett pars match skulle ha avgjorts före deras sista parti, och webbplatsen skulle avvisa resten.
-
-- **Bakom kulisserna.** Importen kan be om att bara föra över de turneringar som började mellan två dagar ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), och den säger nu vad den gjort i en fil för varje sorts rättelse, en för sina fel och en sammanfattning av varje import, allt i mappen docs i förrådet (även [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Ytterligare fyra rankingansvariga för världsrankingen i golfcroquet nämns i den ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), och webbplatsens egen adress är en ansvarig för association croquet och inte längre administratör ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Scenarier som misslyckades då och då eller hade halkat efter webbplatsen har rättats till ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
-
-## Släppt 2026-10-23
-
-Det här är de viktigaste ändringarna sedan förra utgåvan. Var och en länkar till den pull request som gjorde den.
-
-- **Handikapp, oavgjorda resultat och världsrankingen bestäms för varje tävling.** De bestämdes förut av turneringen, så en turnering kunde inte ha ett block med handikapp bredvid ett utan, eller en landskamp som får sluta oavgjord bredvid en utslagning som inte får det. Nu frågar varje tävling, och varje landskamp, efter alla tre när den läggs till eller redigeras, och turneringsformuläret gör det inte längre. Den sista frågas bara där sporten har en världsranking, och en tävling som inte räknas lämnas utanför rankingfilen. Se [Tävlingar](../tournament-managers/standard-tournament/competitions.md). ([#341](https://github.com/CroquetScores/croquetscores.com/pull/341))
-
-- **Adminlistan över turneringar kan begränsas efter land, region och sport.** Valen ligger i adressen, så en filtrerad lista går att länka till, och bara det som din lista innehåller erbjuds. En region erbjuds när ett land är valt. Turneringar före november 2026 har ingen region, så att välja en döljer dem, och de publika listorna säger det. ([#354](https://github.com/CroquetScores/croquetscores.com/pull/354), [#351](https://github.com/CroquetScores/croquetscores.com/pull/351))
-
-- **Rankingansvariga är nu en roll för varje sport.** En rankingansvarig för association croquet ser och sköter turneringar i association croquet, och en rankingansvarig för golfcroquet turneringar i golfcroquet. En turnering som du arrangerar eller för resultat i finns kvar i din lista oavsett sport. ([#348](https://github.com/CroquetScores/croquetscores.com/pull/348), [#356](https://github.com/CroquetScores/croquetscores.com/pull/356))
-
-- **Fliken Rankingar förklarar filen i ett stycke, oavsett sport,** med nedladdningslänken under. Se [Rankingar](../tournament-managers/standard-tournament/rankings.md). ([#346](https://github.com/CroquetScores/croquetscores.com/pull/346))
-
-- **En turnerings namn får inte vara helt i gemener eller helt i versaler,** och meddelandet säger det nu som en regel. ([#345](https://github.com/CroquetScores/croquetscores.com/pull/345))
-
-- **Ta bort är en papperskorg** på flikarna för arrangörer och resultatförare, på tävlingens spelare och på administratörens kontosida, som Arkivera och Radera redan var. Den heter fortfarande Ta bort när du pekar på den, och en skärmläsare läser fortfarande upp den som Ta bort. ([#353](https://github.com/CroquetScores/croquetscores.com/pull/353))
-
-- **Alla språk har nya ord.** Webbplatsens ord på alla de andra sexton språken är skrivna på nytt, och hjälpen är justerad efter dem. Hjälpen för läsare och för konton, och användarvillkoren, finns nu också på alla språk. Ingen har ännu lästs av en modersmålstalare, så berätta för oss vad som låter dåligt. ([#355](https://github.com/CroquetScores/croquetscores.com/pull/355), [#349](https://github.com/CroquetScores/croquetscores.com/pull/349), [#350](https://github.com/CroquetScores/croquetscores.com/pull/350))
-
-- **Bakom kulisserna.** Importen av de gamla webbplatserna ger vissa tidszoner och en turnering ett annat land ([#344](https://github.com/CroquetScores/croquetscores.com/pull/344)), och läser in en dump på servern och skapar läsmodellerna med ett skript ([#340](https://github.com/CroquetScores/croquetscores.com/pull/340)). Webbplatsen driftsätts med ett skript, från en dator eller från GitHub, och inte längre vid varje sammanslagning ([#352](https://github.com/CroquetScores/croquetscores.com/pull/352)).
-
-## Släppt 2026-10-19
+## Släppt 2026-10-27
 
 Det här är de viktigaste ändringarna för den som arrangerar turneringar. [Hjälpen för arrangörer](../tournament-managers/index.md) har alla detaljer.
 

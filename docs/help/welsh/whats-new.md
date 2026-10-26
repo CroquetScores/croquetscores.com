@@ -1,10 +1,8 @@
 # Beth sy'n newydd
 
-## Rhyddhawyd 2026-10-19
+## Rhyddhawyd 2026-10-27
 
 Mae Croquet Scores wedi'i ailysgrifennu'n llwyr gydag AI, yn TypeScript. Dyma'r hyn y byddwch yn ei weld.
-
-Mae'r cod bellach yn ffynhonnell agored, o dan Drwydded Gyhoeddus Gyffredinol GNU Affero fersiwn 3 (AGPL-3.0). Gall unrhyw un ei ddarllen, ei ddefnyddio a'i newid, ac mae'n rhaid i unrhyw un sy'n rhedeg fersiwn wedi'i newid fel gwefan rannu ei newidiadau o dan yr un drwydded.
 
 ### Dod o hyd i bethau
 
@@ -22,3 +20,7 @@ Mae'r cod bellach yn ffynhonnell agored, o dan Drwydded Gyhoeddus Gyffredinol GN
 - **Eich iaith.** Mae'r wefan bellach mewn dwy ar bymtheg o ieithoedd: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska a Cymraeg. Dangosir i chi'r iaith gyntaf y mae eich porwr yn gofyn amdani sydd gan y wefan, neu Saesneg os nad oes un. I ddewis un arall, defnyddiwch y rhestr yn y troedyn ar waelod unrhyw dudalen a gwasgwch y botwm wrth ei hymyl. Os hoffech i iaith gael ei hychwanegu, anfonwch e-bost i <croquetscores@gmail.com>.
 - **Golau neu dywyll.** Hefyd yn y troedyn: dewiswch Golau, Tywyll neu System. Mae System yn dilyn eich ffôn neu gyfrifiadur. Mae'r wefan yn cofio eich dewis ar bob tudalen ac ym mhob ymweliad.
 - **Pa fersiwn rydych arni.** Mae'r troedyn bellach yn dangos fersiwn y wefan rydych yn edrych arni, megis v234. Os byddwch yn adrodd problem, dywedwch pa fersiwn oedd hi.
+
+### Ffynhonnell agored
+
+Mae'r cod bellach yn ffynhonnell agored, o dan Drwydded Gyhoeddus Gyffredinol GNU Affero fersiwn 3 (AGPL-3.0). Gall unrhyw un ei ddarllen, ei ddefnyddio a'i newid, ac mae'n rhaid i unrhyw un sy'n rhedeg fersiwn wedi'i newid fel gwefan rannu ei newidiadau o dan yr un drwydded.

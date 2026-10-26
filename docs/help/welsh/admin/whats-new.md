@@ -1,64 +1,6 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
-## Rhyddhawyd 2026-10-26, yn ddiweddarach yn y dydd
-
-Dyma'r prif newidiadau ers y datganiad yn gynharach heddiw. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
-
-- **Cynigir y tab Detholion i swyddog detholion y byd.** Ar unrhyw dwrnamaint o'r gamp y mae'n gofalu amdani, yn olaf ymhlith ei dabiau, boed ganddo ran yn y twrnamaint neu a yw'n ei sgorio. Dyma'r un tab sydd gan reolwr, gyda'r ddolen i lawrlwytho gemau'r twrnamaint ar gyfer Safle'r Byd. Nid yw sgoriwr nad yw'n swyddog yn cael ei gynnig o hyd. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
-
-- **Mae cymorth i swyddogion detholion y byd.** Mae un dudalen yn dweud beth y mae rhestr twrnameintiau swyddog yn ei rhoi iddo ar wahân i'r hyn sydd gan unrhyw ddarllenydd sydd wedi mewngofnodi: pob twrnamaint o'r campau y mae'n gofalu amdanynt, y botymau sy'n ei chyfyngu, a **Chwaraewyr** yn lle **Rheoli**. Gweler [Cymorth i swyddogion detholion y byd](../world-ranking-officers/index.md). Nid yw'r dudalen yn y chwe iaith ar bymtheg arall wedi'i darllen gan siaradwr brodorol eto, felly dywedwch wrthym beth sy'n darllen yn wael. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
-
-- **Mae gan bob tudalen ddolen i adrodd am nam.** Mae **Adrodd am nam** yn y troedyn, wrth ymyl **Preifatrwydd** a **Telerau defnyddio**, ar res ei hun o dan y rhodd a'r hawlfraint. Mae'n agor e-bost newydd i weinyddwr y wefan, gyda'r pwnc eisoes yn cynnwys enw'r wefan, ei fersiwn os oes un, a'r gair Saesneg "Bug". Ni anfonir dim o'r wefan. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
-
-- **Y tu ôl i'r llenni.** Rhoddir twrnamaint a ddygwyd o'r hen wefannau yn y wlad y mae ei enw'n ei dweud lle mae'n enwi un, fel Japan Open, ac nid mewn gwlad na chafodd ei chwarae ynddi erioed mwyach ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Mae gan weinyddwr dudalen o'r twrnameintiau a chwaraewyd mewn gwledydd nad yw Safle'r Byd yn eu rhestru ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), a chywirwyd cyfeiriad e-bost un swyddog detholion y byd Golf Croquet ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
-
-## Rhyddhawyd 2026-10-26
-
-Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
-
-- **Gellir argraffu tudalen cystadleuaeth.** Mae gan dudalen bloc, tudalen cnoc-owt, tudalen Swisaidd a thudalen prawf botwm argraffydd ar linell enw'r gystadleuaeth, wrth ymyl y golygon. Mae ei wasgu yn agor blwch argraffu'r porwr ei hun. Mae angen sgriptio arno, felly lle nad oes un nid yw'r botwm yn cael ei ddangos. Yr hyn sy'n cael ei argraffu yw enw'r twrnamaint, uwchben enw'r gystadleuaeth, a'r canlyniadau oddi tano, a dim byd sydd ond ar gyfer dod o hyd i'r dudalen: bariau'r wefan, y golygon, y botwm a'r troedyn. Nid yw dolenni wedi'u tanlinellu ar bapur, ond mae enw chwaraewr a dynnwyd yn ôl yn cadw'r llinell drwyddo. Mae bloc a chnoc-owt yn cael eu hargraffu ar draws y papur, a Swisaidd a phrawf ar ei hyd. Mae grid bloc neu dynnu cnoc-owt sy'n lletach na'r papur yn cael ei dorri'n ddarnau ar dudalennau ar ôl y gyntaf, gydag enwau'r chwaraewyr wedi'u hailadrodd ar y chwith i bob darn o grid. Ni all y dudalen ofyn i'r argraffydd pa mor llydan yw'r papur, felly mae'n ystyried Letter ar draws, a gall darllenydd sy'n troi'r papur ar ei hyd golli'r ymyl dde o hyd. ([#382](https://github.com/CroquetScores/croquetscores.com/pull/382))
-
-- **Mae'r lawrlwytho detholion yn dweud beth ydyw.** Roedd y ddolen ar y tab **Detholion** yn **Lawrlwytho'r detholion**, sy'n swnio fel pe bai'n rhoi'r detholion. Erbyn hyn mae'n **Lawrlwytho gemau ar gyfer Safle'r Byd**, oherwydd mae'n rhoi gemau'r twrnamaint, yn y ffeil y mae swyddogion y detholion yn eu cymryd ohoni. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). Nid yw geiriau newydd yr ieithoedd heblaw Saesneg wedi'u darllen gan siaradwr brodorol eto, felly dywedwch wrthym beth sy'n darllen yn wael. ([#384](https://github.com/CroquetScores/croquetscores.com/pull/384))
-
-- **Y tu ôl i'r llenni.** Nid yw'r crynodeb y mae'r mewnforio yn ei ychwanegu ar ôl pob rhediad yn cael ei drosysgrifo mwyach pan na ellir ei ddarllen ([#380](https://github.com/CroquetScores/croquetscores.com/pull/380)), ac mae'r pecynnau y mae'r wefan yn dibynnu arnynt wedi'u codi i'w fersiynau diweddaraf o fewn yr ystodau y mae'n eu caniatáu ([#383](https://github.com/CroquetScores/croquetscores.com/pull/383)).
-
-## Rhyddhawyd 2026-10-25
-
-Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
-
-- **Gellir culhau rhestr twrnameintiau swyddog detholion y byd yn ôl detholion y byd.** Mae rhestr swyddog yn cynnwys pob twrnamaint o'r campau y mae'n gofalu amdanynt, sy'n fwy nag y maent am ei ddarllen. Bellach mae ganddi dri botwm wrth ymyl **Twrnamaint newydd**: **Rheolwr/Sgoriwr**, **Safle'r Byd** a **Ddim yn Safle'r Byd**. Dangosir twrnamaint pan fo unrhyw fotwm sy'n berthnasol iddo ymlaen, felly mae pob un yn ychwanegu twrnameintiau yn hytrach na'u tynnu. Mae gan fotwm sydd ymlaen dic, ac mae **Rheolwr/Sgoriwr** a **Safle'r Byd** ymlaen ar y dechrau. Mae'r botymau ar gyfer swyddogion yn unig; os byddwch yn rheoli neu'n sgorio twrnameintiau, mae eich rhestr fel yr oedd. ([#372](https://github.com/CroquetScores/croquetscores.com/pull/372), [#376](https://github.com/CroquetScores/croquetscores.com/pull/376))
-
-- **Gall swyddog detholion y byd neu weinyddwr anfon e-bost at reolwyr twrnamaint.** Ar y tab **Rheolwyr** cynigir **E-bostio'r rheolwyr** iddynt, dolen sy'n agor e-bost newydd i bob rheolwr y twrnamaint, gyda'r pwnc "Croquet Scores". Ni anfonir dim o'r wefan. Mae swyddog yn gweld y tab ar gyfer unrhyw dwrnamaint o'r gamp y mae'n gofalu amdani, i ddarllen y rheolwyr ac ysgrifennu atynt ond nid i'w newid, ac ni ddangosir cyfeiriad e-bost neb i reolwr. Gweler [Rheolwyr a sgorwyr](../tournament-managers/standard-tournament/managers-and-scorers.md). ([#369](https://github.com/CroquetScores/croquetscores.com/pull/369))
-
-- **Dyddir twrnamaint un diwrnod yn ôl y diwrnod hwnnw yn y ffeil detholion.** Câi ei ysgrifennu fel ystod o un diwrnod, `3-3.10.26`, a bellach mae'n `3.10.26`, fel y mae rhestrau detholion y byd eu hunain yn ysgrifennu un diwrnod. Dyddir twrnamaint o fwy nag un diwrnod fel o'r blaen. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). ([#368](https://github.com/CroquetScores/croquetscores.com/pull/368))
-
-- **Mae twrnameintiau a ddygwyd o'r hen wefannau yn fwy ffyddlon.** Bellach cymerir gwlad twrnamaint o restrau detholion y byd o ddigwyddiadau Association Croquet a Golf Croquet pan fônt ganddynt, yn hytrach nag o'i barth amser ([#366](https://github.com/CroquetScores/croquetscores.com/pull/366)). Mae dau newid arall ([#377](https://github.com/CroquetScores/croquetscores.com/pull/377)) yn berthnasol i'r mewnforio nesaf:
-  - Dygir chwaraewyr o restr ei hun pob cystadleuaeth a'u canfod yn ôl eu henw union ymhlith chwaraewyr y twrnamaint. Roedd yr hen wefannau yn copïo chwaraewyr twrnamaint i bob cystadleuaeth ac yn gadael i reolwr newid y copi, felly cysylltid pâr a gofrestrwyd mewn cystadleuaeth dyblau fel "Joe Hogan & Levi Franks" â Joe Hogan yn unig. Bellach mae'n chwaraewr ar ei ben ei hun. Ni ddygir chwaraewr nad yw mewn unrhyw gystadleuaeth mwyach.
-  - Mae cystadleuaeth sy'n dweud pwy y mae chwaraewr yn ei gynrychioli yn gosod hynny pan nad oedd y chwaraewr yn cynrychioli neb, ac nid yw un sy'n dweud rhywbeth gwahanol wedyn yn ei newid. Mae bloc a gadwyd fel yr orau o 2, neu'r orau o 3 gyda phob pâr yn chwarae trydedd gêm, bellach yn cadw hynny. Dim ond yr orau o 1 y'i gwneir pan fyddai gêm pâr wedi'i phenderfynu cyn eu gêm olaf, a byddai'r wefan yn gwrthod y gweddill.
-
-- **Y tu ôl i'r llenni.** Gellir gofyn i'r mewnforio ddod â'r twrnameintiau a ddechreuodd rhwng dau ddiwrnod yn unig ([#374](https://github.com/CroquetScores/croquetscores.com/pull/374)), ac mae bellach yn dweud beth a wnaeth mewn ffeil ar gyfer pob math o gywiriad, un ar gyfer ei wallau, a chrynodeb o bob mewnforio, y cyfan yn ffolder docs y storfa (hefyd [#377](https://github.com/CroquetScores/croquetscores.com/pull/377)). Enwir pedwar swyddog arall ar gyfer detholion y byd Golf Croquet ynddo ([#367](https://github.com/CroquetScores/croquetscores.com/pull/367)), ac mae cyfeiriad y wefan ei hun yn swyddog Association Croquet ac nid yn weinyddwr mwyach ([#375](https://github.com/CroquetScores/croquetscores.com/pull/375)). Cywirwyd senarios a fethai o bryd i'w gilydd neu a oedd wedi syrthio ar ôl y wefan ([#359](https://github.com/CroquetScores/croquetscores.com/pull/359), [#373](https://github.com/CroquetScores/croquetscores.com/pull/373)).
-
-## Rhyddhawyd 2026-10-23
-
-Dyma'r prif newidiadau ers y datganiad diwethaf. Mae pob un yn cysylltu â'r pull request a'i gwnaeth.
-
-- **Gosodir handicapiau, canlyniadau cyfartal a detholion y byd ar bob cystadleuaeth.** Penderfynid ar y rhain gan y twrnamaint o'r blaen, felly ni allai un twrnamaint gynnwys bloc handicap wrth ymyl bloc cyfartal, na phrawf a all fod yn gyfartal wrth ymyl cnoc-owt na all fod. Bellach mae pob cystadleuaeth a phob prawf yn gofyn am bob un o'r tri pan fyddwch yn ychwanegu neu'n golygu un, ac nid yw ffurflen y twrnamaint yn gwneud hynny mwyach. Gofynnir am yr olaf yn unig lle mae gan y gamp detholion y byd, a gadewir cystadleuaeth nad yw'n cyfrif allan o'r ffeil detholion. Gweler [Cystadlaethau](../tournament-managers/standard-tournament/competitions.md). ([#341](https://github.com/CroquetScores/croquetscores.com/pull/341))
-
-- **Gellir cyfyngu rhestr twrnameintiau'r gweinyddwr yn ôl gwlad, rhanbarth a champ.** Mae'r dewisiadau yn y cyfeiriad, felly gellir cysylltu â rhestr wedi'i hidlo, a dim ond yr hyn y mae eich rhestr yn ei ddal a gynigir. Cynigir rhanbarth unwaith y dewisir gwlad. Nid oes rhanbarthau i dwrnameintiau cyn Tachwedd 2026, felly mae dewis un yn eu cuddio, ac mae'r rhestrau cyhoeddus yn dweud hynny. ([#354](https://github.com/CroquetScores/croquetscores.com/pull/354), [#351](https://github.com/CroquetScores/croquetscores.com/pull/351))
-
-- **Mae swyddogion detholion y byd bellach yn un rôl i bob camp.** Mae swyddog Association Croquet yn gweld ac yn gofalu am dwrnameintiau Association Croquet, a swyddog Golf Croquet am rai Golf Croquet. Mae twrnamaint rydych yn ei reoli neu'n ei sgorio yn dal yn eich rhestr beth bynnag fo'i gamp. ([#348](https://github.com/CroquetScores/croquetscores.com/pull/348), [#356](https://github.com/CroquetScores/croquetscores.com/pull/356))
-
-- **Mae tab Detholion yn egluro'r ffeil mewn un paragraff, beth bynnag fo'r gamp,** gyda'r ddolen lawrlwytho oddi tano. Gweler [Detholion](../tournament-managers/standard-tournament/rankings.md). ([#346](https://github.com/CroquetScores/croquetscores.com/pull/346))
-
-- **Ni chaiff enw twrnamaint fod yn llythrennau bach i gyd nac yn briflythrennau i gyd,** ac mae'r neges bellach yn dweud hynny fel rheol. ([#345](https://github.com/CroquetScores/croquetscores.com/pull/345))
-
-- **Mae Tynnu yn fin sbwriel** ar dabiau'r rheolwyr a'r sgorwyr, chwaraewyr y gystadleuaeth a thudalen cyfrifon y gweinyddwr, fel yr oedd Archifo a Dileu eisoes. Mae'n dal i gael ei alw'n Tynnu pan fyddwch yn pwyntio ato, ac mae darllenydd sgrin yn dal i'w ddarllen fel Tynnu. ([#353](https://github.com/CroquetScores/croquetscores.com/pull/353))
-
-- **Mae gan bob iaith eiriau newydd.** Mae geiriau'r wefan yn yr un ar bymtheg o ieithoedd eraill i gyd wedi'u hysgrifennu o'r newydd, ac mae'r cymorth wedi'i addasu i gyd-fynd â nhw. Mae'r cymorth i ddarllenwyr ac i gyfrifon, a'r telerau defnyddio, ym mhob iaith hefyd bellach. Nid oes siaradwr brodorol wedi darllen yr un ohonynt eto, felly dywedwch wrthym beth sy'n darllen yn wael. ([#355](https://github.com/CroquetScores/croquetscores.com/pull/355), [#349](https://github.com/CroquetScores/croquetscores.com/pull/349), [#350](https://github.com/CroquetScores/croquetscores.com/pull/350))
-
-- **Y tu ôl i'r llenni.** Mae mewnforio'r hen wefannau yn rhoi rhai parthau amser ac un twrnamaint mewn gwlad wahanol ([#344](https://github.com/CroquetScores/croquetscores.com/pull/344)), ac yn llwytho dymp i'r gweinydd ac yn creu'r modelau darllen gyda sgript ([#340](https://github.com/CroquetScores/croquetscores.com/pull/340)). Caiff y wefan ei lleoli gan sgript, o gyfrifiadur neu o GitHub, ac nid ar bob uno mwyach ([#352](https://github.com/CroquetScores/croquetscores.com/pull/352)).
-
-## Rhyddhawyd 2026-10-19
+## Rhyddhawyd 2026-10-27
 
 Dyma'r prif newidiadau i bobl sy'n cynnal twrnameintiau. Mae gan y [cymorth i reolwyr twrnameintiau](../tournament-managers/index.md) yr holl fanylion.
 
