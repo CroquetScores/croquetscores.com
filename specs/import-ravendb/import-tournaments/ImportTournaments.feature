@@ -441,7 +441,11 @@ Feature: Importing the old sites' tournaments
     - a name with Greece as a word of its own is in Greece;
     - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
       apostrophe straight or curled, is in the USA. A name with more in it is
-      not that tournament.
+      not that tournament;
+    - a name with the name of any other country as a word of its own, as
+      "Open of Chile" or "Samoa Cup", is in that country. A country's whole name
+      is meant, and where one name has another in it, as Papua New Guinea has
+      Guinea, the longer is the one taken.
 
     Others are for a tournament put in one country only, the country it was
     put in being what makes them mean something, and are tried next:
@@ -588,13 +592,13 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
 
-    Scenario: A tournament whose name only has Latvia in it is not moved
+    Scenario: A tournament whose name only has Latvia in it is in Latvia as any country's name is
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Open of Latvia"
       And the tournament's time zone is "AUS Eastern Standard Time"
       And the tournament was created by "users/1"
       When the tournament is imported
-      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "lv"
 
     Scenario: A tournament whose name has Spanish in it is in Spain
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -989,9 +993,9 @@ Feature: Importing the old sites' tournaments
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
 
     Scenario: A tournament the list puts in Singapore is in Australia
-      Given an Association Croquet event "Singapore Open" played on "27-30.12.11" in "Singapore"
+      Given an Association Croquet event "Lion City Open" played on "27-30.12.11" in "Singapore"
       And a tournament "tournaments/12" on "croquetscores.com"
-      And the tournament was called "Singapore Open"
+      And the tournament was called "Lion City Open"
       And the tournament started on "2011-12-27T00:00:00.0000000"
       And the tournament finished on "2011-12-30T00:00:00.0000000"
       And the tournament's time zone is "Pacific Standard Time"
@@ -1485,6 +1489,69 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ar"
+
+    Scenario Outline: A tournament whose name has the name of a country as a word of its own is in that country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                  | country |
+        | Ireland Open          | ie      |
+        | Open of Chile         | cl      |
+        | The japan Cup         | jp      |
+        | SAMOA GC              | ws      |
+        | Open (Fiji)           | fj      |
+        | Singapore Open        | sg      |
+        | Papua New Guinea Open | pg      |
+        | Guinea-Bissau Open    | gw      |
+        | American Samoa Open   | as      |
+        | Côte d'Ivoire Open    | ci      |
+
+    Scenario Outline: A tournament whose name has a country in it but not as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name           |
+        | Irelands Open  |
+        | NewFiji Open   |
+        | Japan2 Open    |
+        | Japanese Open  |
+
+    Scenario: A tournament whose name has the name of a country is in that country whatever the list says
+      Given an Association Croquet event "Japan Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Japan Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "jp"
+
+    Scenario: A tournament whose name has the name of a country is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Japan Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A name that says two countries is in the one a rule listed earlier says
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Japan Egypt Open"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "eg"
 
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
