@@ -1,5 +1,17 @@
 # Wat is er nieuw voor toernooileiders
 
+## Uitgebracht op 2026-10-26, later op de dag
+
+Dit zijn de belangrijkste veranderingen sinds de release eerder vandaag. Elke verandering verwijst naar de pull request waarmee ze is gemaakt.
+
+- **Een wereldranglijstbeheerder krijgt het tabblad Ranglijsten aangeboden.** Van elk toernooi in de sport waar hij of zij op let, als laatste onder de tabbladen, of hij of zij nu een rol heeft in het toernooi of de scores bijhoudt. Het is hetzelfde tabblad als dat van een toernooileider, met de link om de partijen van het toernooi voor de wereldranglijsten te downloaden. Een scorebijhouder die geen beheerder is, krijgt het nog steeds niet aangeboden. Zie [Ranglijsten](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **Er is help voor wereldranglijstbeheerders.** Eén pagina zegt wat de toernooilijst van een beheerder hem of haar geeft naast wat elke ingelogde lezer heeft: elk toernooi van de sporten waar hij of zij op let, de knoppen die de lijst beperken, en **Spelers** in plaats van **Beheren**. Zie [Wereldranglijstbeheerders](../world-ranking-officers/index.md). De pagina in de andere talen dan Engels is nog niet door een moedertaalspreker gelezen, dus laat het ons weten als iets slecht leest. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Elke pagina heeft een link om een fout te melden.** **Een fout melden** staat in de voettekst, naast **Privacy** en **Gebruiksvoorwaarden**, op een eigen regel onder de donatie en het copyright. Het opent een nieuwe e-mail aan de beheerder van de site, al voorzien van de naam van de site, de versie als die er is, en het woord Bug. Er wordt niets vanaf de site verstuurd. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Achter de schermen.** Een toernooi dat van de oude sites is overgenomen, wordt in het land geplaatst dat de naam ervan noemt waar die er een noemt, zoals Japan Open, en niet meer in een land waar het nooit is gespeeld ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Een beheerder heeft een pagina met de toernooien die zijn gespeeld in landen die de wereldranglijsten niet vermelden ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), en het e-mailadres van een Golfcroquet-wereldranglijstbeheerder is gecorrigeerd ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Uitgebracht op 2026-10-26
 
 Dit zijn de belangrijkste veranderingen sinds de vorige release. Elke verandering verwijst naar de pull request waarmee ze is gemaakt.

@@ -1,5 +1,17 @@
 # What's new for Tournament Managers
 
+## Released 2026-10-26, later in the day
+
+These are the major changes since the release earlier today. Each links to the pull request that made it.
+
+- **A world ranking officer is offered the Rankings tab.** Of any tournament of the sport they look after, last among its tabs, whether they have a part in the tournament or score it. It is the same tab a manager has, with the link to download the tournament's games for the world rankings. A scorer who is no officer is still not offered it. See [Rankings](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **There is help for world ranking officers.** One page says what an officer's list of tournaments gives them besides what any signed-in reader has: every tournament of the sports they look after, the buttons that narrow it, and **Players** in place of **Manage**. See [World ranking officers](../world-ranking-officers/index.md). The page in the other sixteen languages has not been read by a native speaker yet, so tell us what reads badly. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Every page has a link to report a bug.** **Report a bug** is in the footer, beside **Privacy** and **Terms of use**, on a row of its own beneath the donation and the copyright. It opens a new email to the site's administrator, already headed with the site's name, its version where it has one, and the word Bug. Nothing is sent from the site. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Behind the scenes.** A tournament brought over from the old sites is put in the country its name says where it names one, such as Japan Open, and no longer in a country it was never played in ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). An administrator has a page of the tournaments played in countries the world rankings do not list ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), and the email address of one Golf Croquet world ranking officer was corrected ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Released 2026-10-26
 
 These are the major changes since the last release. Each links to the pull request that made it.

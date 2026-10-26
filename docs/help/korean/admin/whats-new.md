@@ -1,5 +1,17 @@
 # 대회 운영자를 위한 새로운 소식
 
+## 출시일 2026-10-26, 그날 늦게
+
+오늘 앞선 출시 이후의 주요 변경 사항이에요. 각 항목은 그 변경을 만든 풀 리퀘스트로 연결돼요.
+
+- **세계 랭킹 담당자에게 랭킹 탭이 보여요.** 담당하는 종목의 모든 대회에서, 탭 가운데 맨 끝에 나타나요. 그 대회에서 맡은 역할이 있든, 기록을 하든 마찬가지예요. 운영자가 보는 것과 같은 탭이고, 대회의 경기를 세계 랭킹용으로 내려받는 링크가 있어요. 담당자가 아닌 기록원에게는 여전히 보이지 않아요. [랭킹](../tournament-managers/standard-tournament/rankings.md)을 보세요. ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **세계 랭킹 담당자를 위한 도움말이 생겼어요.** 한 페이지에서, 로그인한 독자가 누구나 보는 것 외에 담당자의 대회 목록이 무엇을 더 주는지 알려 줘요. 담당하는 종목의 모든 대회, 목록을 좁히는 버튼, 그리고 **운영** 대신 **선수**예요. [세계 랭킹 담당자를 위한 도움말](../world-ranking-officers/index.md)을 보세요. 나머지 열여섯 개 언어의 이 페이지는 아직 원어민이 읽어 보지 않았으니, 어색한 곳이 있으면 알려 주세요. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **모든 페이지에 버그를 신고하는 링크가 있어요.** **버그 신고**는 바닥글에서 **개인정보 처리**, **이용 약관** 옆에, 후원과 저작권 아래의 별도 줄에 있어요. 누르면 사이트 관리자에게 보내는 새 이메일이 열리고, 제목에는 사이트 이름과, 있는 경우 버전, 그리고 영어 단어 "Bug"가 미리 들어 있어요. 사이트에서는 아무것도 보내지 않아요. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **보이지 않는 곳의 변경.** 옛 사이트에서 가져온 대회는, 이름에 나라가 있으면, 예를 들어 Japan Open이면 그 나라에 넣고, 더 이상 치른 적 없는 나라에 넣지 않아요 ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). 관리자는 세계 랭킹이 나열하지 않는 나라에서 치른 대회의 페이지를 볼 수 있고 ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), 골프 크로케 세계 랭킹 담당자 한 분의 이메일 주소를 바로잡았어요 ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## 출시일 2026-10-26
 
 지난 출시 이후의 주요 변경 사항이에요. 각 항목은 그 변경을 만든 풀 리퀘스트로 연결돼요.

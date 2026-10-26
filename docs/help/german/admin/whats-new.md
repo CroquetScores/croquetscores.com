@@ -1,5 +1,17 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-10-26, später am Tag
+
+Das sind die wichtigsten Änderungen seit der Veröffentlichung von früher am Tag. Jede verweist auf den Pull Request, der sie gebracht hat.
+
+- **Ein Weltranglistenbeauftragter bekommt den Tab Ranglisten angeboten.** Bei jedem Turnier der Sportart, um die er sich kümmert, als letzter unter den Tabs, ob er an dem Turnier beteiligt ist oder bei ihm die Ergebnisse erfasst. Es ist derselbe Tab, den ein Verantwortlicher hat, mit dem Link zum Herunterladen der Spiele des Turniers für die Weltranglisten. Ein Ergebniserfasser, der kein Beauftragter ist, bekommt ihn weiterhin nicht angeboten. Siehe [Ranglisten](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **Es gibt Hilfe für Weltranglistenbeauftragte.** Eine Seite sagt, was die Turnierliste eines Beauftragten ihm über das hinaus gibt, was jede angemeldete Leserin und jeder angemeldete Leser hat: jedes Turnier der Sportarten, um die er sich kümmert, die Schaltflächen, die sie eingrenzen, und **Spieler** statt **Verwalten**. Siehe [Weltranglistenbeauftragte](../world-ranking-officers/index.md). Die Seite in den anderen Sprachen als Englisch hat noch kein Muttersprachler gelesen; sagt uns, was schlecht klingt. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Jede Seite hat einen Link zum Melden eines Fehlers.** **Fehler melden** steht in der Fußzeile, neben **Datenschutz** und **Nutzungsbedingungen**, in einer eigenen Zeile unter der Spende und dem Urheberrecht. Er öffnet eine neue E-Mail an den Administrator der Website, schon mit dem Namen der Website, ihrer Version, wo sie eine hat, und dem Wort Bug überschrieben. Von der Website wird nichts gesendet. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Hinter den Kulissen.** Ein von den alten Seiten übernommenes Turnier kommt in das Land, das sein Name nennt, wo er eines nennt, etwa Japan Open, und nicht mehr in ein Land, in dem es nie gespielt wurde ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Ein Administrator hat eine Seite der Turniere, die in Ländern gespielt wurden, die die Weltranglisten nicht aufführen ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), und die E-Mail-Adresse eines Golf-Croquet-Weltranglistenbeauftragten wurde berichtigt ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Veröffentlicht am 2026-10-26
 
 Das sind die wichtigsten Änderungen seit der letzten Veröffentlichung. Jede verweist auf den Pull Request, der sie gebracht hat.

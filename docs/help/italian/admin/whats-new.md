@@ -1,5 +1,17 @@
 # Novità per i direttori di torneo
 
+## Pubblicato il 2026-10-26, più tardi nella giornata
+
+Questi sono i cambiamenti principali dalla versione pubblicata prima oggi. Ognuno rimanda alla pull request che l'ha fatto.
+
+- **A un responsabile della classifica mondiale viene offerta la scheda Classifiche.** Di ogni torneo dello sport di cui si occupa, per ultima tra le sue schede, che abbia un ruolo nel torneo o ne tenga i punteggi. È la stessa scheda che ha un organizzatore, con il link per scaricare le partite del torneo per le classifiche mondiali. A un segnapunti che non è responsabile continua a non essere offerta. Vedi [Classifiche](../tournament-managers/standard-tournament/rankings.md). ([#392](https://github.com/CroquetScores/croquetscores.com/pull/392))
+
+- **C'è un aiuto per i responsabili della classifica mondiale.** Una pagina dice che cosa l'elenco dei tornei di un responsabile gli dà oltre a ciò che ha ogni lettore con l'accesso effettuato: ogni torneo degli sport di cui si occupa, i pulsanti che lo restringono e **Giocatori** al posto di **Gestisci**. Vedi [Responsabili della classifica mondiale](../world-ranking-officers/index.md). La pagina nelle lingue diverse dall'inglese non è ancora stata letta da un madrelingua; diteci cosa si legge male. ([#393](https://github.com/CroquetScores/croquetscores.com/pull/393))
+
+- **Ogni pagina ha un link per segnalare un errore.** **Segnala un errore** è nel piè di pagina, accanto a **Privacy** e **Condizioni d'uso**, su una riga a sé sotto la donazione e il copyright. Apre una nuova email all'amministratore del sito, già intestata con il nome del sito, la sua versione dove ne ha una e la parola Bug. Dal sito non viene inviato nulla. ([#387](https://github.com/CroquetScores/croquetscores.com/pull/387))
+
+- **Dietro le quinte.** Un torneo portato dai vecchi siti viene messo nel paese che il suo nome indica dove ne indica uno, come Japan Open, e non più in un paese in cui non è mai stato giocato ([#388](https://github.com/CroquetScores/croquetscores.com/pull/388), [#390](https://github.com/CroquetScores/croquetscores.com/pull/390)). Un amministratore ha una pagina dei tornei giocati in paesi che le classifiche mondiali non elencano ([#386](https://github.com/CroquetScores/croquetscores.com/pull/386)), ed è stato corretto l'indirizzo email di un responsabile della classifica mondiale di Golf Croquet ([#391](https://github.com/CroquetScores/croquetscores.com/pull/391)).
+
 ## Pubblicato il 2026-10-26
 
 Questi sono i cambiamenti principali dall'ultima versione. Ognuno rimanda alla pull request che l'ha fatto.
