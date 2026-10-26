@@ -442,6 +442,16 @@ Feature: Importing the old sites' tournaments
     - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
       apostrophe straight or curled, is in the USA. A name with more in it is
       not that tournament;
+    - a name for the match between England and Scotland, with the sides either
+      way round and v or vs between them: "England v Scotland", "England vs
+      Scotland", "Croquet England v Scottish Croquet Association" and "Croquet
+      England vs Scottish Croquet Association". It is played in each country in
+      turn, so the country is the one the list of its events at butedock.com
+      gives for the year the tournament started (as it stood on 2026-10-26):
+      England in 1985 to 1987, 1989 and 1993 to 2000, Scotland in 1990 to
+      1992, and Ireland in 2001, 2003 and 2009. A year the list has no event
+      for says nothing, and the name is then not taken for either country it
+      has in it, nor for the Scottish Croquet Association's;
     - a name with the name of any other country as a word of its own, as
       "Open of Chile" or "Samoa Cup", is in that country. A country's whole name
       is meant, and where one name has another in it, as Papua New Guinea has
@@ -1709,6 +1719,115 @@ Feature: Importing the old sites' tournaments
       And the tournament was created by "users/1"
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario Outline: A match between England and Scotland that started in 1991 is in Scotland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament started on "1991-06-15T00:00:00.0000000"
+      And the tournament finished on "1991-06-15T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
+
+      Examples:
+        | name |
+        | England v Scotland |
+        | England vs Scotland |
+        | Scotland v England |
+        | Scotland vs England |
+        | Croquet England v Scottish Croquet Association |
+        | Croquet England vs Scottish Croquet Association |
+        | Scottish Croquet Association v Croquet England |
+        | Scottish Croquet Association vs Croquet England |
+        | HI: England v Scotland |
+        | england V scotland |
+
+    Scenario Outline: A match between England and Scotland that started in 1995 is in England
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament started on "1995-06-25T00:00:00.0000000"
+      And the tournament finished on "1995-06-25T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name |
+        | England v Scotland |
+        | England vs Scotland |
+        | Scotland v England |
+        | Scotland vs England |
+        | Croquet England v Scottish Croquet Association |
+        | Croquet England vs Scottish Croquet Association |
+        | Scottish Croquet Association v Croquet England |
+        | Scottish Croquet Association vs Croquet England |
+        | HI: England v Scotland |
+        | england V scotland |
+
+    Scenario Outline: A match between England and Scotland that started in 2003 is in Ireland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament started on "2003-06-15T00:00:00.0000000"
+      And the tournament finished on "2003-06-15T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
+
+      Examples:
+        | name |
+        | England v Scotland |
+        | England vs Scotland |
+        | Scotland v England |
+        | Scotland vs England |
+        | Croquet England v Scottish Croquet Association |
+        | Croquet England vs Scottish Croquet Association |
+        | Scottish Croquet Association v Croquet England |
+        | Scottish Croquet Association vs Croquet England |
+        | HI: England v Scotland |
+        | england V scotland |
+
+    Scenario: A match between England and Scotland that started in the first year of its list is in England
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "England v Scotland"
+      And the tournament started on "1985-06-16T00:00:00.0000000"
+      And the tournament finished on "1985-06-16T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A match between England and Scotland that started in the year its list has no event for is not taken for Scotland
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "England v Scotland"
+      And the tournament started on "2010-06-12T00:00:00.0000000"
+      And the tournament finished on "2010-06-12T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A match between England and Scotland that started in a year its list has no event for is not taken for the Scottish Croquet Association's country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Croquet England v Scottish Croquet Association"
+      And the tournament started on "2010-06-12T00:00:00.0000000"
+      And the tournament finished on "2010-06-12T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario: A match between England and Scotland is in the country its list gives whatever the time zone says
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "England v Scotland"
+      And the tournament started on "1991-06-15T00:00:00.0000000"
+      And the tournament finished on "1991-06-15T00:00:00.0000000"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
 
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
