@@ -32,8 +32,8 @@ import { siteNameOf, websiteOf } from "../common/site.js";
 
 // The flags' column is not among them: a flag says what it is, so its column
 // has no heading to press.
-type Column = "date" | "name";
-type Order = "up" | "down";
+export type Column = "date" | "name";
+export type Order = "up" | "down";
 
 export interface Sorting {
   readonly column: Column;
@@ -42,19 +42,21 @@ export interface Sorting {
 
 const columns: readonly Column[] = ["date", "name"];
 
-const columnWords: Readonly<Record<Column, string>> = {
+export const columnWords: Readonly<Record<Column, string>> = {
   date: "tournamentList.column.date",
   name: "tournamentList.column.name",
 };
 
 // Written into the address as the column and which way, as "name-up".
-const sortingWritten = ({ column, order }: Sorting): string =>
+export const sortingWritten = ({ column, order }: Sorting): string =>
   `${column}-${order}`;
 
 // Anything that is not a sorting this page would write is taken as no sorting
 // at all rather than refused: sorting is a convenience, and an address that
 // says something odd about it still says what the reader came for.
-const sortingRead = (written: string | undefined): Sorting | undefined => {
+export const sortingRead = (
+  written: string | undefined,
+): Sorting | undefined => {
   const [column, order] = (written ?? "").split("-");
   return columns.includes(column as Column) &&
     (order === "up" || order === "down")
@@ -64,31 +66,31 @@ const sortingRead = (written: string | undefined): Sorting | undefined => {
 
 // Pressing the column sorted by turns it round, and any other sorts by it from
 // the smallest up.
-const pressed = (column: Column, now: Sorting | undefined): Sorting =>
+export const pressed = (column: Column, now: Sorting | undefined): Sorting =>
   now?.column === column
     ? { column, order: now.order === "up" ? "down" : "up" }
     : { column, order: "up" };
 
 // The rows of `listed` sorted by `sorting`, rows alike in it keeping the order
-// they were listed in, which a stable sort leaves them in.
-const sorted = (
-  listed: readonly TournamentOfWebsite[],
+// they were listed in, which a stable sort leaves them in. What a row is
+// sorted by is read through `keys`, so that the lists of competitions, which
+// are sorted by their tournament's days, are sorted as these are.
+export const sorted = <T>(
+  listed: readonly T[],
   sorting: Sorting | undefined,
   speaking: Speaking,
-): readonly TournamentOfWebsite[] => {
+  keys: (row: T) => { readonly starts: string; readonly name: string },
+): readonly T[] => {
   if (sorting === undefined) return listed;
   const byName = new Intl.Collator(speaking.language.tag);
-  const compare: Readonly<
-    Record<
-      Column,
-      (one: TournamentOfWebsite, other: TournamentOfWebsite) => number
-    >
-  > = {
+  const compare: Readonly<Record<Column, (one: T, other: T) => number>> = {
     // A day is written as the year, the month and the day, so its writing
     // sorts as the day does.
-    date: (one, other) =>
-      one.starts < other.starts ? -1 : one.starts > other.starts ? 1 : 0,
-    name: (one, other) => byName.compare(one.name, other.name),
+    date: (one, other) => {
+      const [first, second] = [keys(one).starts, keys(other).starts];
+      return first < second ? -1 : first > second ? 1 : 0;
+    },
+    name: (one, other) => byName.compare(keys(one).name, keys(other).name),
   };
   const by = compare[sorting.column];
   return [...listed].sort((one, other) =>
@@ -178,7 +180,7 @@ const addressWith = (
 
 // A table ---------------------------------------------------------------------------
 
-const ariaSort: Readonly<Record<Order, string>> = {
+export const ariaSort: Readonly<Record<Order, string>> = {
   up: "ascending",
   down: "descending",
 };
@@ -186,7 +188,7 @@ const ariaSort: Readonly<Record<Order, string>> = {
 // Drawn as words would be, rather than as a picture, so that it takes the
 // colour of the heading it is in. Hidden from a screen reader, which is told
 // by aria-sort instead.
-const arrows: Readonly<Record<Order, string>> = { up: "↑", down: "↓" };
+export const arrows: Readonly<Record<Order, string>> = { up: "↑", down: "↓" };
 
 /** One of a page's lists, and what it is headed and says. */
 export interface Listing {
@@ -250,7 +252,7 @@ export const table = (
     });
     return `<a href="${escape(narrowed)}" aria-label="${escape(only)}"><img src="${escape(assets.url(`images/${flag.relativePath}`))}" alt="" /></a>`;
   };
-  const rows = sorted(listing.listed, sorting, speaking)
+  const rows = sorted(listing.listed, sorting, speaking, (row) => row)
     .map(
       (tournament) => `                <tr>
                   <td class="tournament-dates">${escape(dated(tournament.starts, tournament.finishes, speaking.language.tag))}</td>

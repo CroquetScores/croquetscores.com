@@ -65,6 +65,44 @@ Feature: Searching the website for tournaments, players and competitions
     And the block is to be the best of 3
     And "organiser@example.com" has added the block "Block A" to "Spring Open"
 
+  Rule: A tournament is answered with when and where it is played
+
+    The page of results lists tournaments and competitions by the days they
+    run and the country they are played in as well as by their names, so that
+    a reader can tell two of the same name apart and can sort by the date. A
+    competition has no days or country of its own: it is answered with those of
+    its tournament.
+
+    Background:
+      Given the tournament is to be played in the country "nz"
+      And the tournament is to be played in the region "can"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Autumn Block" to "Autumn Open"
+
+    Scenario: A tournament is answered with the day it starts
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found starting on "2026-09-20"
+
+    Scenario: A tournament is answered with the day it finishes
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found finishing on "2026-10-04"
+
+    Scenario: A tournament is answered with the country it is played in
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found in the country "nz"
+
+    Scenario: A competition is answered with the day its tournament starts
+      When the website is searched for "autumn block"
+      Then the competition "Autumn Block" is found in a tournament starting on "2026-09-20"
+
+    Scenario: A competition is answered with the day its tournament finishes
+      When the website is searched for "autumn block"
+      Then the competition "Autumn Block" is found in a tournament finishing on "2026-10-04"
+
+    Scenario: A competition is answered with the country of its tournament
+      When the website is searched for "autumn block"
+      Then the competition "Autumn Block" is found in a tournament in the country "nz"
+
   Rule: A tournament is found by the words of its name
 
     Scenario: A tournament is found by a word of its name

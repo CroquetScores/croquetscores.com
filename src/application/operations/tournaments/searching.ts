@@ -52,6 +52,15 @@ export const wordsOfSearch = (text: string): readonly string[] => [
 export interface TournamentFound {
   readonly name: string;
   readonly address: string;
+  /** The day it starts, as "2026-10-03". */
+  readonly starts: string;
+  /** The day it finishes, as "2026-10-05". */
+  readonly finishes: string;
+  /**
+   * The code of the country it is played in, as "nz". None for a tournament
+   * kept before the country was, until the read models are rebuilt.
+   */
+  readonly country: string | undefined;
 }
 
 /**

@@ -28,7 +28,7 @@ const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
 const named = (world: SpecWorld, kind: string, name: string): Locator =>
-  results(world, kind).locator("a:first-child", { hasText: exactly(name) });
+  results(world, kind).locator("a.search-name", { hasText: exactly(name) });
 
 // The header's box ---------------------------------------------------------
 
@@ -207,6 +207,27 @@ Then(
   },
 );
 
+// The picture names its country by its alt, as a flag on the lists of
+// tournaments names it by the link around it, which a search does not have.
+Then(
+  /^the flag of "(.*)" in the (found tournaments|found competitions) says "(.*)"$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    which: string,
+    country: string,
+  ) {
+    const kind = which === "found tournaments" ? "tournament" : "competition";
+    assert.equal(
+      await named(this, kind, name)
+        .locator("xpath=ancestor::tr")
+        .locator(".tournament-flag img")
+        .getAttribute("alt"),
+      country,
+    );
+  },
+);
+
 Then(
   /^(\d+) players? (?:is|are) in the results$/,
   async function (this: SpecWorld, count: string) {
@@ -266,9 +287,10 @@ Then(
   "every word in the page's content but the names found is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "main", [
-      ".search-tournament a",
+      ".tournament-name",
+      ".tournament-dates",
+      ".search-of",
       ".search-player a",
-      ".search-competition a",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
@@ -320,7 +342,7 @@ Then(
   /^the blurb to refine the search is after the last (tournament|player|competition) found$/,
   async function (this: SpecWorld, kind: string) {
     const after = this.browserPage.locator(
-      `main .search-list:has(.search-${kind}) > ul + .search-more`,
+      `main .search-list:has(.search-${kind}) > :is(ul, table) + .search-more`,
     );
     assert.equal(await after.count(), 1);
   },
@@ -336,5 +358,50 @@ Then(
     const players = headings.indexOf("Players");
     assert.ok(competitions >= 0 && players >= 0, headings.join(", "));
     assert.ok(competitions < players, headings.join(", "));
+  },
+);
+
+Then(
+  /^the dates of the (found tournaments|found competitions) are on one line$/,
+  async function (this: SpecWorld, which: string) {
+    const cell = this.browserPage
+      .locator(`main section[data-list="${which.slice(6)}"] .tournament-dates`)
+      .first();
+    const { lines } = await cell.evaluate((element) => {
+      const box = element as unknown as {
+        getBoundingClientRect(): { height: number };
+        ownerDocument: {
+          defaultView: {
+            getComputedStyle(e: unknown): { lineHeight: string };
+          };
+        };
+      };
+      const line = parseFloat(
+        box.ownerDocument.defaultView.getComputedStyle(element).lineHeight,
+      );
+      return { lines: box.getBoundingClientRect().height / line };
+    });
+    assert.ok(lines < 2, "The dates are on more than one line.");
+  },
+);
+
+Then(
+  /^the country's column of the (found tournaments|found competitions) is (not )?shown$/,
+  async function (this: SpecWorld, which: string, not: string | null) {
+    const flag = this.browserPage
+      .locator(`main section[data-list="${which.slice(6)}"] td.search-flag`)
+      .first();
+    assert.equal(await flag.isVisible(), not === null);
+  },
+);
+
+Then(
+  /^the (first|second|third) player found is "(.*)"$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    const at = ["first", "second", "third"].indexOf(which);
+    assert.equal(
+      (await results(this, "player").nth(at).innerText()).trim(),
+      name,
+    );
   },
 );

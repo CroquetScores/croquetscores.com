@@ -18,7 +18,13 @@ Feature: A reader searches the website for tournaments, players and competitions
   "/players/sam-someone" (`websitePlayer.feature`), once, however many
   tournaments they have played in. A competition is shown by its name with the
   name of its tournament beside it, and leads to the competition's page. Each
-  list is in alphabetical order and has at most 100.
+  list is in alphabetical order and has at most 100. The tournaments and the
+  competitions are then shown oldest first.
+
+  The tournaments and the competitions are tables, as the lists on the home
+  page are (`home.feature`): the days they run, the flag of the country they
+  are played in, and the name, which a reader can sort by. A competition has no
+  days or country of its own, and is shown with its tournament's.
 
   Nothing found says so, in one line where the lists would be. Nothing typed,
   or nothing but spaces, is not a search: the page shows its box and nothing
@@ -239,6 +245,213 @@ Feature: A reader searches the website for tournaments, players and competitions
       Given "organiser@example.com" has added the player "José García" to "Spring Open"
       When the page at "/search?q=jose garcia" is opened
       Then "José García" is among the players in the results
+
+  Rule: The tournaments and the competitions say when and where they are
+
+    Scenario Outline: The columns are the dates, the country and the name
+      When the page at "/search?q=spring" is opened
+      Then the <place> column of the found tournaments is "<column>"
+
+      Examples:
+        | place | column |
+        | first | Date   |
+        | third | Name   |
+
+    Scenario: The country's column has no heading
+      When the page at "/search?q=spring" is opened
+      Then the second column of the found tournaments has no heading
+
+    Scenario: A tournament is dated from its start to its finish
+      Given the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" finishes on "2026-10-12"
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" is dated "10-12 Oct 2026" in the found tournaments
+
+    Scenario: The dates are as wide as they need to be and no wider
+      When the page at "/search?q=spring" is opened
+      Then the dates of the found tournaments are on one line
+
+    Scenario: On a phone the country's column is left out
+      Given a viewport 375 pixels wide
+      When the page at "/search?q=spring" is opened
+      Then the country's column of the found tournaments is not shown
+
+    Scenario: On a wide screen the country's column is shown
+      When the page at "/search?q=spring" is opened
+      Then the country's column of the found tournaments is shown
+
+    Scenario: A tournament shows the flag of its country
+      Given the tournament "Spring Open" is played in the country "nz"
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" shows the flag of "nz" in the found tournaments
+
+    Scenario: The flag is named for a screen reader by its country
+      Given the tournament "Spring Open" is played in the country "nz"
+      When the page at "/search?q=spring" is opened
+      Then the flag of "Spring Open" in the found tournaments says "New Zealand"
+
+    Scenario: The competitions have the same columns
+      When the page at "/search?q=block" is opened
+      Then the third column of the found competitions is "Name"
+
+    Scenario: A competition is dated as its tournament is
+      Given the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" finishes on "2026-10-12"
+      When the page at "/search?q=block" is opened
+      Then "Block A" is dated "10-12 Oct 2026" in the found competitions
+
+    Scenario: A competition shows the flag of its tournament's country
+      Given the tournament "Spring Open" is played in the country "nz"
+      When the page at "/search?q=block" is opened
+      Then "Block A" shows the flag of "nz" in the found competitions
+
+    Scenario: The month is named in the reader's language
+      Given a site offering the languages it is served with
+      And a browser that asks for "es"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" finishes on "2026-10-12"
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" is dated "10-12 oct 2026" in the found tournaments
+
+  Rule: Pressing the date or the name sorts a table by it
+
+    Each table is sorted apart from the other, by the column pressed, from the
+    smallest first, and the other way when it is pressed again, as the lists on
+    the home page are. A competition is sorted by the days of its tournament.
+    How a table is sorted is in the address beside what was typed, so that a
+    sorted page can be linked to. Until a column is pressed both tables are
+    sorted by their dates from the oldest to the newest, which a reader looking
+    for a tournament by when it was reads in.
+
+    Background:
+      Given the tournament "Spring Open" starts on "2026-10-10"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-11-07"
+      And "organiser@example.com" has added the block "Alpha Block" to "Autumn Open"
+
+    Scenario: The tournaments begin with the oldest
+      When the page at "/search?q=open" is opened
+      Then the first of the found tournaments is "Spring Open"
+      And the second of the found tournaments is "Autumn Open"
+
+    Scenario: The tournaments begin marked as sorted by date from the smallest
+      When the page at "/search?q=open" is opened
+      Then the column "Date" of the found tournaments is marked as sorted from the smallest
+
+    Scenario: The tournaments begin sorted by nothing else
+      When the page at "/search?q=open" is opened
+      Then the column "Name" of the found tournaments is not marked as sorted
+
+    Scenario: The competitions begin with the oldest
+      When the page at "/search?q=block" is opened
+      Then the first of the found competitions is "Block A"
+      And the second of the found competitions is "Alpha Block"
+
+    Scenario: The competitions begin marked as sorted by date from the smallest
+      When the page at "/search?q=block" is opened
+      Then the column "Date" of the found competitions is marked as sorted from the smallest
+
+    Scenario: Pressing the date turns it round, to the newest first
+      Given the page at "/search?q=open" is open
+      When the column "Date" of the found tournaments is pressed
+      Then the first of the found tournaments is "Autumn Open"
+      And the column "Date" of the found tournaments is marked as sorted from the largest
+
+    Scenario: Pressing the date twice turns it back
+      Given the page at "/search?q=open" is open
+      And the column "Date" of the found tournaments is pressed
+      When the column "Date" of the found tournaments is pressed
+      Then the first of the found tournaments is "Spring Open"
+
+    Scenario: Pressing the name sorts the tournaments from A
+      Given the page at "/search?q=open" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the first of the found tournaments is "Autumn Open"
+      And the column "Name" of the found tournaments is marked as sorted from the smallest
+
+    Scenario: Pressing the name twice sorts the tournaments from Z
+      Given the page at "/search?q=open" is open
+      And the column "Name" of the found tournaments is pressed
+      When the column "Name" of the found tournaments is pressed
+      Then the first of the found tournaments is "Spring Open"
+
+    Scenario: The column sorted by before is no longer marked
+      Given the page at "/search?q=open" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the column "Date" of the found tournaments is not marked as sorted
+
+    Scenario: The country's column cannot be pressed
+      When the page at "/search?q=open" is opened
+      Then the second column of the found tournaments cannot be pressed
+
+    Scenario: Sorting is shown by an arrow
+      Given the page at "/search?q=open" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the heading "Name" of the found tournaments begins with an arrow pointing up
+
+    Scenario: Pressing a column keeps what was typed in the address
+      Given the page at "/search?q=open" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the address asks for "open"
+
+    Scenario: Pressing a column keeps what was typed in the box
+      Given the page at "/search?q=open" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the header's search box says "open"
+
+    Scenario: A table sorted stays sorted when the page is opened again at its address
+      Given the page at "/search?q=open" is open
+      And the column "Name" of the found tournaments is pressed
+      When the page is opened again at its address
+      Then the first of the found tournaments is "Autumn Open"
+
+    Scenario: A sorting that is not one is the sorting it begins with
+      When the page at "/search?q=open&tournaments=sideways" is opened
+      Then the first of the found tournaments is "Spring Open"
+
+    Scenario: Competitions of one tournament are in alphabetical order by date
+      Given "organiser@example.com" has added the block "Zulu Block" to "Spring Open"
+      And "organiser@example.com" has added the block "Beta Block" to "Spring Open"
+      When the page at "/search?q=block" is opened
+      Then the first of the found competitions is "Beta Block"
+      And the second of the found competitions is "Block A"
+      And the third of the found competitions is "Zulu Block"
+
+    Scenario: Pressing the name sorts the competitions by their names
+      Given the page at "/search?q=block" is open
+      When the column "Name" of the found competitions is pressed
+      Then the first of the found competitions is "Alpha Block"
+
+    Scenario: Pressing the date sorts the competitions from the newest
+      Given the page at "/search?q=block" is open
+      When the column "Date" of the found competitions is pressed
+      Then the first of the found competitions is "Alpha Block"
+
+    Scenario: Sorting the competitions leaves the tournaments as they were
+      Given the page at "/search?q=o" is open
+      When the column "Name" of the found competitions is pressed
+      Then the column "Date" of the found tournaments is marked as sorted from the smallest
+
+    Scenario: Sorting the tournaments leaves the competitions as they were
+      Given the page at "/search?q=o" is open
+      When the column "Name" of the found tournaments is pressed
+      Then the column "Date" of the found competitions is marked as sorted from the smallest
+
+    Scenario: Sorting the tournaments keeps the competitions sorted
+      Given the page at "/search?q=o" is open
+      And the column "Name" of the found competitions is pressed
+      When the column "Name" of the found tournaments is pressed
+      Then the column "Name" of the found competitions is marked as sorted from the smallest
+
+  Rule: The players are listed in alphabetical order
+
+    Scenario: A name that begins with what was typed is not put first
+      Given "organiser@example.com" has added the player "Someone Else" to "Spring Open"
+      And "organiser@example.com" has added the player "Alan Someone" to "Spring Open"
+      When the page at "/search?q=someone" is opened
+      Then the first player found is "Alan Someone"
+      And the second player found is "Sam Someone"
+      And the third player found is "Someone Else"
 
   Rule: Each list has a heading, and is left out when it has nothing in it
 

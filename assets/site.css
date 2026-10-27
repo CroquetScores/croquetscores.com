@@ -716,6 +716,44 @@ body > .site-footer {
   color: var(--ink-muted);
 }
 
+/* The tournaments and the competitions found are tables, drawn as the lists of
+   tournaments are (their heading is then plain, since the table's own heads
+   are in the section bar's colours), so a list of players is the only one
+   that is a heading over a list. The tournament a competition is in is lifted
+   above the competition's link, which reaches over the whole row, and wraps
+   as a long name does. */
+.search-list.tournament-list > h2 {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* The dates take the width of the widest and no more: a cell as narrow as a
+   percentage can make it is stretched by what is in it, which does not wrap.
+   The flags' column is left out on a phone, where the room is wanted for the
+   names. */
+.search-list .tournament-dates {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.search-list .search-flag {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .search-list .search-flag {
+    display: table-cell;
+  }
+}
+
+.tournament-list .search-of {
+  position: relative;
+  z-index: 1;
+  overflow-wrap: anywhere;
+}
+
 /* The account menu: the last thing in the header, a person that opens on what
    a reader can do with their account. A disclosure at every width, unlike the
    primary navigation, because it is a menu rather than navigation that happens
