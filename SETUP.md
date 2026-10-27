@@ -93,7 +93,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
     /services              every other adapter, at the path it mirrors
   /web
     server.ts              composition root: builds everything, starts Fastify
-    /api/site                JSON endpoints, shared by mobile apps and the SPA
+    /api/site              JSON endpoints, shared by mobile apps and the SPA
     /auth                  sign-in, sign-out, OAuth redirect and callback,
                            token issue and refresh
     /public                server-rendered public pages and their templates

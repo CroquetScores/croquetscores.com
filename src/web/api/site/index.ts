@@ -233,12 +233,12 @@ const addressOf = ({ year, sport, slug }: AtAddress): string =>
   `${year}/${sport}/${slug}`;
 
 /** What the API is given besides its routes. */
-export interface ApiV1Options {
+export interface ApiSiteOptions {
   /** Where the site's own files are found, for the address of a flag's image. */
   readonly assets: Assets;
 }
 
-export const apiSite: FastifyPluginCallback<ApiV1Options> = (
+export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   server,
   { assets },
   done,
