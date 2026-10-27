@@ -246,6 +246,24 @@ Feature: Bringing a competition's players over to its tournament
       When the competition is imported
       Then "Sam Someone (NZ) (2)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
 
+    Scenario: A handicap after brackets is not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone (NZ) 2"
+      When the competition is imported
+      Then "Sam Someone (NZ) 2" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: Brackets after a handicap are not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Sam Someone 2 (NZ)"
+      When the competition is imported
+      Then "Sam Someone 2 (NZ)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Sam Someone"
+
+    Scenario: A plus sign before a number keeps the number in the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy +1"
+      When the competition is imported
+      Then "Tim Murphy +1" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy +1"
+
     Scenario: Brackets in the middle of a name are part of it
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam (Sammy) Someone"

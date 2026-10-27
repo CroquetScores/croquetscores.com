@@ -31,7 +31,7 @@ export const nameToImport = (name: string): string => lengthened(name.trim());
 // Every group of brackets and every handicap that ends a name, with the space
 // before each. A handicap needs that space, so that a number joined to the
 // last word, as in "Tim Murphy2", stays part of the name.
-const TRAILING_BRACKETS_OR_HANDICAP = /(?:\s*\([^()]*\)|\s+[-+]?\d+)+\s*$/;
+const TRAILING_BRACKETS_OR_HANDICAP = /(?:\s*\([^()]*\)|\s+-?\d+)+\s*$/;
 
 /**
  * The name the world rankings know a person by, of the name the old sites
