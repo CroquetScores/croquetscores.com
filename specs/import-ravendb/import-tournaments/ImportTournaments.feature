@@ -1650,6 +1650,106 @@ Feature: Importing the old sites' tournaments
         | SCA Open            |
         | Carrickmines Open   |
 
+    Scenario Outline: A tournament whose name begins with a word that says its country is in that country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Argentina Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                     | country  |
+        | CAI Lyons Cup            | ie       |
+        | CAI                      | ie       |
+        | Bayfield Cup             | ca       |
+        | BICC Open                | ca       |
+        | Welsh B Class            | wales    |
+        | welsh golf team          | wales    |
+        | Irish Championships      | ie       |
+        | IRISH Open               | ie       |
+        | Nottingham B Level       | england  |
+        | English National Doubles | england  |
+        | British Open Doubles     | england  |
+        | british open             | england  |
+
+    Scenario Outline: A tournament whose name has a word that says its country in it, wherever it is, is in that country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Argentina Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                         | country  |
+        | New South Wales Bronze Medal | au       |
+        | new south wales open         | au       |
+        | Aberdeen Crathes Handicap    | scotland |
+        | The Aberdeen Open            | scotland |
+        | CroqCan                      | ca       |
+        | The CroqCan Open             | ca       |
+        | Quebec Open                  | ca       |
+        | Open du QUEBEC               | ca       |
+
+    Scenario Outline: A tournament whose name has one of them but not where its rule asks is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "Argentina Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ar"
+
+      Examples:
+        | name                   |
+        | The CAI Lyons Cup      |
+        | Cairn Open             |
+        | Caia Open              |
+        | The Bayfield Cup       |
+        | Bayfields Open         |
+        | The BICC Open          |
+        | BICCs Open             |
+        | The Welsh B Class      |
+        | Welshpool Open         |
+        | The Irish Championship |
+        | Irishman Open          |
+        | The Nottingham Open    |
+        | Nottinghamshire Open   |
+        | The English Open       |
+        | Englishman Open        |
+        | The British Open       |
+        | Britishers Open        |
+        | Aberdeens Open         |
+        | CroqCans Open          |
+        | Quebecois Open         |
+
+    Scenario: A tournament whose name has New South Wales in it is in Australia, not Wales
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "NSW Bronze Medal in New South Wales"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+    Scenario: A tournament whose name begins with one of them is in that country whatever the list says
+      Given an Association Croquet event "Welsh Open" played on "27-30.12.11" in "New Zealand"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Welsh Open"
+      And the tournament started on "2011-12-27T00:00:00.0000000"
+      And the tournament finished on "2011-12-30T00:00:00.0000000"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "wales"
+
+    Scenario: A tournament whose name begins with one of them is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Bayfield Cup"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
     Scenario: A tournament put in England with McWeeney in its name that started in 2026, a year it was played in Ireland, is in Ireland
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Mc Weeney CAI v CqE"
