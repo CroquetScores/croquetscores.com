@@ -28,19 +28,22 @@ const lengthened = (trimmed: string, added = IMPORTED): string =>
  */
 export const nameToImport = (name: string): string => lengthened(name.trim());
 
-// Every group of brackets that ends a name, with the space before each.
-const TRAILING_BRACKETS = /(?:\s*\([^()]*\))+\s*$/;
+// Every group of brackets and every handicap that ends a name, with the space
+// before each. A handicap needs that space, so that a number joined to the
+// last word, as in "Tim Murphy2", stays part of the name.
+const TRAILING_BRACKETS_OR_HANDICAP = /(?:\s*\([^()]*\)|\s+-?\d+)+\s*$/;
 
 /**
  * The name the world rankings know a person by, of the name the old sites
  * gave them: that name with what is in brackets at the end of it taken off,
- * as "(NZ)" or "(2)", which is no part of it. Brackets elsewhere in the name
- * are part of it, and a name that is nothing but brackets is left as it is.
- * One too short without them says it was imported, as a name does.
+ * as "(NZ)" or "(2)", and a handicap, as "1" or "-1", which are no part of
+ * it. Brackets elsewhere in the name are part of it, and a name that is
+ * nothing but brackets or a handicap is left as it is. One too short without
+ * them says it was imported, as a name does.
  */
 export const worldRankingNameToImport = (name: string): string => {
   const trimmed = name.trim();
-  const without = trimmed.replace(TRAILING_BRACKETS, "").trim();
+  const without = trimmed.replace(TRAILING_BRACKETS_OR_HANDICAP, "").trim();
   return nameToImport(without === "" ? trimmed : without);
 };
 
