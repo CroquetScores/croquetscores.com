@@ -162,6 +162,7 @@ export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
           {
             name: player.name.toString(),
             representing: player.representing,
+            handicap: player.handicap,
             flag: player.flag === undefined ? undefined : String(player.flag),
           },
         ] as const,
@@ -174,6 +175,7 @@ export const playersOf = (tournament: Tournament): Map<string, PlayerInGame> =>
             {
               name: player.name.toString(),
               representing: team.name.toString(),
+              handicap: undefined,
               flag: team.flag === undefined ? undefined : String(team.flag),
             },
           ] as const,

@@ -37,6 +37,7 @@ export interface PlayerAsTheyAre {
   readonly id: string;
   readonly name: string;
   readonly representing: string | undefined;
+  readonly handicap: string | undefined;
   readonly flag: { readonly code: string } | undefined;
   readonly worldRankingName: string | undefined;
 }
@@ -86,6 +87,7 @@ export const PlayerDialog = ({
   const asksWorldRankingName = worldRankingSport !== undefined;
   const [flags, setFlags] = useState<readonly Flag[]>([]);
   const [name, setName] = useState(player?.name ?? "");
+  const [handicap, setHandicap] = useState(player?.handicap ?? "");
   const [representing, setRepresenting] = useState(player?.representing ?? "");
   const [flag, setFlag] = useState(player?.flag?.code ?? "");
   const [worldRankingName, setWorldRankingName] = useState(
@@ -160,6 +162,7 @@ export const PlayerDialog = ({
               ? { worldRankingName: worldRankingNameSent }
               : {
                   name,
+                  handicap,
                   representing,
                   flag,
                   // Asked for only where the sport has world rankings. Elsewhere
@@ -187,6 +190,7 @@ export const PlayerDialog = ({
         // Emptied for the next, with the reader back in the name.
         setAdded(name.trim());
         setName("");
+        setHandicap("");
         setRepresenting("");
         setFlag("");
         setWorldRankingName("");
@@ -340,6 +344,26 @@ export const PlayerDialog = ({
                 </option>
               ))}
             </select>
+          )}
+        </Field>
+        {/* Before the world ranking name, as the issue asked for. */}
+        <Field
+          name="handicap"
+          label={say("admin.player.handicap")}
+          refused={undefined}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              disabled={onlyWorldRankingName}
+              value={handicap}
+              onChange={(event) => {
+                setHandicap(event.target.value);
+              }}
+            />
           )}
         </Field>
         {asksWorldRankingName ? (

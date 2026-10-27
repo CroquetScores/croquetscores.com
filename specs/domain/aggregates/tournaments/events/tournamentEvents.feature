@@ -180,6 +180,12 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
+    Scenario: A player added with no handicap is read back with none
+      Given an event of a player being added with no handicap
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
     Scenario: A player added flying no flag is read back flying none
       Given an event of a player being added who flies no flag
       When the event is written down through the registry

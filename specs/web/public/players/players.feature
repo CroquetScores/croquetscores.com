@@ -6,8 +6,11 @@ Feature: A tournament's players' page lists its players by name
   lists every player of the tournament who is not archived, in alphabetical
   order of their names, so that a reader can find one by name
   (`PublicPlayersOfTournament.feature`). Each is shown as they are on the
-  tournament's page: their name, what they represent in brackets, drawn
-  lighter than the name, and the flag they fly, where they have either. Each
+  tournament's page: their name, their handicap and what they represent in
+  brackets, drawn lighter than the name, and the flag they fly, where they
+  have any of them. The handicap comes first, and a comma stands between it
+  and what they represent only where there are both: a player with one has
+  that one in brackets alone, and a player with neither has no brackets. Each
   leads to the player's own page, at the players' page's address followed by
   their slug, as "/2026/ac/spring-open/players/sam-someone"
   (`addPlayer.feature`), which does not exist yet and so answers `404` until
@@ -87,6 +90,27 @@ Feature: A tournament's players' page lists its players by name
       Given "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       When the page at "/2026/ac/spring-open/players" is opened
       Then the player "Alex Another" represents nothing
+
+  Rule: A player's handicap and what they represent are shown together in brackets
+
+    Scenario: A handicap and what a player represents are shown together
+      Given the player is to have the handicap "4"
+      And the player is to represent "Canterbury Croquet Club"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the player "Sam Someone" represents "(4, Canterbury Croquet Club)"
+
+    Scenario: A handicap alone is shown in brackets without a comma
+      Given the player is to have the handicap "4"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the player "Sam Someone" represents "(4)"
+
+    Scenario: What a player represents alone is shown in brackets without a comma
+      Given the player is to represent "Canterbury Croquet Club"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the page at "/2026/ac/spring-open/players" is opened
+      Then the player "Sam Someone" represents "(Canterbury Croquet Club)"
 
   Rule: Each player is shown with what they represent and their flag, and leads to their page
 

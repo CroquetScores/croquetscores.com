@@ -16,6 +16,8 @@ export interface PublicPlayer {
   readonly name: string;
   /** What they represent, or nothing where they represent nothing. */
   readonly representing?: string | undefined;
+  /** Their handicap as it was written, or nothing where they have none. */
+  readonly handicap?: string | undefined;
   /** The name of the flag they fly, or nothing where they fly none. */
   readonly flag?: string | undefined;
   /** Where their page is found, as "2026/ac/spring-open/players/sam-someone". */

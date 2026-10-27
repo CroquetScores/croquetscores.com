@@ -6,6 +6,8 @@ export interface ListedPlayer {
   readonly name: string;
   /** The club, region or country they play for, if any. */
   readonly representing: string | undefined;
+  /** Their handicap as it was written, if any. */
+  readonly handicap: string | undefined;
   /** The name of the flag they fly, if any. */
   readonly flag: string | undefined;
   /** The name the world rankings know them by, if any. */

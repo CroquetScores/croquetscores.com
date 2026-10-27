@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { say } from "../../../../../../words.js";
+import { aboutPlayer } from "../../../../../../aboutPlayer.js";
 import {
   PlayerDialog,
   type PlayerAsTheyAre,
@@ -153,7 +154,7 @@ export const PlayersTab = ({
             {player.name}
           </button>
         )}
-        <span className="listed-about">{player.representing ?? ""}</span>
+        <span className="listed-about">{aboutPlayer(player)}</span>
         {/* After the name and what they represent, named for a reader who
             cannot see it by the place it is the flag of. */}
         {player.flag === undefined ? null : (

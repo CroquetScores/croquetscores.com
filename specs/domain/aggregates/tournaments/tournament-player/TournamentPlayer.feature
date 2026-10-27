@@ -36,6 +36,12 @@ Feature: A player in a tournament
   Whitespace at either end is taken off, and what is nothing but whitespace
   represents nothing.
 
+  A player may have a handicap, written as a reader would write it, such as
+  "4" or "-1.5". It is optional, since many tournaments have no handicaps.
+  It is kept as text rather than as a number, since the sports differ in what
+  a handicap can be and the tournament only shows it. Whitespace at either end
+  is taken off, and what is nothing but whitespace is no handicap.
+
   A player may fly a flag, shown beside their name. It is optional too, and
   when there is one it is one of the flags there are, found by its name as a
   flag is, so "NZ" is New Zealand's. A name that is no flag there is is
@@ -185,6 +191,24 @@ Feature: A player in a tournament
       When a player representing "   " is made
       Then the player represents nothing
 
+  Rule: A player may have a handicap
+
+    Scenario: A player's handicap is kept as it was given
+      When a player with the handicap "-1.5" is made
+      Then the player's handicap is "-1.5"
+
+    Scenario: A player's handicap is kept without the spaces around it
+      When a player with the handicap "  4  " is made
+      Then the player's handicap is "4"
+
+    Scenario: A player need not have a handicap
+      When a player named "Bob Jackson" is made
+      Then the player has no handicap
+
+    Scenario: A player with a handicap of only whitespace has none
+      When a player with the handicap "   " is made
+      Then the player has no handicap
+
   Rule: A player may fly one of the flags there are
 
     Scenario: A player flies the flag they were given
@@ -278,6 +302,16 @@ Feature: A player in a tournament
       Given a player named "Sam Someone"
       When the player is updated to represent "Canterbury Croquet Club"
       Then the player represents "Canterbury Croquet Club"
+
+    Scenario: An updated player has the handicap they were updated to
+      Given a player named "Sam Someone"
+      When the player is updated to have the handicap "7"
+      Then the player's handicap is "7"
+
+    Scenario: An updated player keeps their handicap when their name is corrected
+      Given a player named "Sam Someone" with the handicap "7"
+      When the player is updated to be called "Samantha Someone"
+      Then the player's handicap is "7"
 
     Scenario: An updated player flies the flag they were updated to
       Given a player named "Sam Someone"

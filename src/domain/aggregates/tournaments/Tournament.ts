@@ -555,6 +555,7 @@ export class Tournament extends AggregateRoot {
     const player = found.update({
       name: found.name.toString(),
       representing: found.representing,
+      handicap: found.handicap,
       flag: found.flag === undefined ? undefined : String(found.flag),
       worldRankingName: this.#orTheName({
         name: found.name.toString(),
@@ -755,6 +756,7 @@ export class Tournament extends AggregateRoot {
         player.id.value,
         player.name.toString(),
         player.representing,
+        player.handicap,
         player.flag === undefined ? undefined : String(player.flag),
         player.worldRankingName?.toString(),
         player.slug.toString(),
@@ -2670,6 +2672,7 @@ const sameWriting = (
 const samePlayer = (one: TournamentPlayer, other: TournamentPlayer): boolean =>
   one.name.equals(other.name) &&
   one.representing === other.representing &&
+  one.handicap === other.handicap &&
   String(one.flag) === String(other.flag) &&
   sameWorldRankingName(one.worldRankingName, other.worldRankingName);
 
@@ -2685,6 +2688,7 @@ const playerEvent = <T extends DomainEvent>(
     playerId: string,
     name: string,
     representing: string | undefined,
+    handicap: string | undefined,
     flag: string | undefined,
     worldRankingName: string | undefined,
     createdBy: AccountId,
@@ -2698,6 +2702,7 @@ const playerEvent = <T extends DomainEvent>(
     player.id.value,
     player.name.toString(),
     player.representing,
+    player.handicap,
     player.flag === undefined ? undefined : String(player.flag),
     player.worldRankingName?.toString(),
     by,

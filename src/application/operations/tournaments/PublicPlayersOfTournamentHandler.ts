@@ -74,6 +74,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
         .map((player) => ({
           name: player.name.toString(),
           representing: player.representing,
+          handicap: player.handicap,
           flag: player.flag === undefined ? undefined : String(player.flag),
           address: `${address}/players/${player.slug.toString()}`,
         }))

@@ -56,6 +56,7 @@ export class PlayersOfTournamentHandler extends QueryHandler<
         id: player.id.value,
         name: player.name.toString(),
         representing: player.representing,
+        handicap: player.handicap,
         flag: player.flag === undefined ? undefined : String(player.flag),
         worldRankingName: player.worldRankingName?.toString(),
         archived: player.archived,

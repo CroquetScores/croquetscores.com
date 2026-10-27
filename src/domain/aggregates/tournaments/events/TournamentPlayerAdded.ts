@@ -13,6 +13,8 @@ export class TournamentPlayerAdded extends DomainEvent {
     readonly name: string,
     // Nothing when the player represents nothing, which JSON leaves out.
     readonly representing: string | undefined,
+    // Nothing when the player has no handicap, which JSON leaves out.
+    readonly handicap: string | undefined,
     // The name of the flag the player flies, or nothing when they fly none.
     readonly flag: string | undefined,
     // The name the world rankings know the player by, or nothing when they
