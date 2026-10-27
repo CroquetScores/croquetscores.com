@@ -22,6 +22,7 @@ import type { Country } from "../../domain/aggregates/tournaments/value-objects/
 import { sportsOffered } from "../../domain/aggregates/tournaments/value-objects/sports.js";
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 import type { Assets } from "../common/assets.js";
+import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
@@ -286,17 +287,24 @@ ${rows}
 
 // The filter --------------------------------------------------------------------------
 
+// Groups are told apart by a line, which a browser draws in its list.
 const options = (
-  choices: readonly { readonly value: string; readonly words: string }[],
+  groups: readonly (readonly {
+    readonly value: string;
+    readonly words: string;
+  }[])[],
   any: string,
   chosen: string | undefined,
 ): string =>
   [
     `                <option value="">${escape(any)}</option>`,
-    ...choices.map(
-      ({ value, words }) =>
-        `                <option value="${escape(value)}"${value === chosen ? " selected" : ""}>${escape(words)}</option>`,
-    ),
+    ...groups.flatMap((choices, at) => [
+      ...(at === 0 ? [] : ["                <hr>"]),
+      ...choices.map(
+        ({ value, words }) =>
+          `                <option value="${escape(value)}"${value === chosen ? " selected" : ""}>${escape(words)}</option>`,
+      ),
+    ]),
   ].join("\n");
 
 // A country that is not divided into regions is its own one region, coded as
@@ -334,13 +342,15 @@ export const filter = (
   shown: number,
 ): string => {
   const { say } = speaking;
-  const byName = new Intl.Collator(speaking.language.tag);
-  const countries = Countries.thereAre.all
-    .map((country) => ({
-      value: country.code,
-      words: say(`country.${country.code}`),
-    }))
-    .sort((one, other) => byName.compare(one.words, other.words));
+  const countries = inCountryGroups(
+    Countries.thereAre.all.map((country) => ({
+      code: country.code,
+      name: say(`country.${country.code}`),
+    })),
+    speaking.language.tag,
+  ).map((group) =>
+    group.map(({ code, name }) => ({ value: code, words: name })),
+  );
   const country =
     asked.chose.country === undefined
       ? undefined
@@ -376,10 +386,12 @@ ${[
           "region",
           say("tournamentList.filter.region"),
           options(
-            country.regions.map((region) => ({
-              value: region.code,
-              words: region.name,
-            })),
+            [
+              country.regions.map((region) => ({
+                value: region.code,
+                words: region.name,
+              })),
+            ],
             say("tournamentList.filter.anyRegion"),
             asked.chose.region,
           ),
@@ -391,7 +403,7 @@ ${[
           "sport",
           say("tournamentList.filter.sport"),
           options(
-            sports,
+            [sports],
             say("tournamentList.filter.anySport"),
             asked.chose.sport,
           ),

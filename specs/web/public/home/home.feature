@@ -630,6 +630,28 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then "Gateball" is not offered as a sport
 
+  Rule: The countries are offered in groups, the ones most played in first
+
+    The groups and their order are `countryOrder.feature`'s. A line is drawn
+    between them.
+
+    Scenario Outline: The countries most played in are offered first
+      When the home page is opened
+      Then the <which> country offered is "<country>"
+
+      Examples:
+        | which  | country       |
+        | first  | Australia     |
+        | second | Egypt         |
+        | third  | England       |
+        | fourth | Spain         |
+        | fifth  | United States |
+        | sixth  | Austria       |
+
+    Scenario: A line is drawn between the three groups
+      When the home page is opened
+      Then the country list has 2 lines drawn in it
+
   Rule: A long list of countries opens at a height that fits the window
 
     A drop-down list too tall for the room above and the room below its field

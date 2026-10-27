@@ -110,6 +110,10 @@ export class SpecWorld extends World {
   // Where a reader asking to return somewhere was actually sent.
   public returnPath: string | undefined;
 
+  // The countries a list is to be made of, and the groups it was made into.
+  public countriesToOrder: { code: string; name: string }[] = [];
+  public countryGroups: { code: string; name: string }[][] = [];
+
   // What the last call to the migration runner reported. Typed by its shape
   // rather than by importing AppliedMigration, for the same reason.
   public appliedMigrations: readonly { readonly name: string }[] | undefined;

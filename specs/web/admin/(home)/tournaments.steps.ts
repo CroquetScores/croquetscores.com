@@ -1101,6 +1101,32 @@ Then(
   },
 );
 
+const places = ["first", "second", "third", "fourth", "fifth", "sixth"];
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth) country in the filter is "(.*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await offeredIn(this, "country"))[places.indexOf(which)],
+        country,
+      );
+    });
+  },
+);
+
+Then(
+  /^the filter's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await filterField(this, "country").locator("hr").count(),
+        Number(count),
+      );
+    });
+  },
+);
+
 Then("the filter offers no region", async function (this: SpecWorld) {
   await eventually(this, async () => {
     assert.equal(await filterField(this, "region").count(), 0);

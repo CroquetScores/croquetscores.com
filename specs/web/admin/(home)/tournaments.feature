@@ -771,6 +771,19 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the filter offers "New Zealand" as a country
 
+    Scenario Outline: The countries the list holds are offered in groups, the ones most played in first
+      When the admin is opened
+      Then the <which> country in the filter is "<country>"
+
+      Examples:
+        | which  | country     |
+        | first  | Australia   |
+        | second | New Zealand |
+
+    Scenario: A line is drawn between the groups the list holds
+      When the admin is opened
+      Then the filter's country list has 1 line drawn in it
+
     Scenario: A country the list does not hold is not offered
       When the admin is opened
       Then the filter does not offer "Japan" as a country

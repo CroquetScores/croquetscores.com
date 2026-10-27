@@ -525,6 +525,28 @@ Then(
   },
 );
 
+const ordinals = ["first", "second", "third", "fourth", "fifth", "sixth"];
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth) country offered is "(.*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    assert.equal(
+      (await offeredIn(this, "country"))[ordinals.indexOf(which)],
+      country,
+    );
+  },
+);
+
+Then(
+  /^the country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    assert.equal(
+      await filterField(this, "country").locator("hr").count(),
+      Number(count),
+    );
+  },
+);
+
 Then("no region is offered", async function (this: SpecWorld) {
   assert.deepEqual(await offeredIn(this, "region"), []);
 });

@@ -133,10 +133,10 @@ const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
     (words) => words !== "",
   );
 
-const ordinals = ["first", "second", "third", "fourth", "fifth"];
+const ordinals = ["first", "second", "third", "fourth", "fifth", "sixth"];
 
 Then(
-  /^the (first|second|third|fourth|fifth) (sport|format) offered is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth) (sport|format) offered is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, list: string, words: string) {
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
@@ -154,6 +154,30 @@ Then(
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, label)).length, Number(count));
+    });
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth) country in the form is "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await offeredIn(this, "Country"))[ordinals.indexOf(which)],
+        country,
+      );
+    });
+  },
+);
+
+Then(
+  /^the form's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await field(this, "Country").locator("hr").count(),
+        Number(count),
+      );
     });
   },
 );
