@@ -20,6 +20,7 @@ import {
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
+import { ordinal } from "../../support/ordinals.js";
 import { changeTournament } from "../../support/tournaments.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
@@ -1101,16 +1102,11 @@ Then(
   },
 );
 
-const places = ["first", "second", "third", "fourth", "fifth", "sixth"];
-
 Then(
   /^the (first|second|third|fourth|fifth|sixth) country in the filter is "(.*)"$/,
   async function (this: SpecWorld, which: string, country: string) {
     await eventually(this, async () => {
-      assert.equal(
-        (await offeredIn(this, "country"))[places.indexOf(which)],
-        country,
-      );
+      assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
     });
   },
 );

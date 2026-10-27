@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
+import { GroupedOptions } from "./GroupedOptions.js";
 import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
 import "./tournaments.css";
@@ -305,10 +306,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     field: "country" | "region" | "sport",
     label: string,
     any: string,
-    from: readonly (readonly {
-      readonly code: string;
-      readonly name: string;
-    }[])[],
+    from: Parameters<typeof GroupedOptions>[0]["groups"],
     chosen: string | undefined,
     changed: (code: string | undefined) => void,
   ): React.JSX.Element => (
@@ -323,16 +321,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         }}
       >
         <option value="">{any}</option>
-        {from.map((group, at) => (
-          <Fragment key={at}>
-            {at === 0 ? null : <hr />}
-            {group.map((each) => (
-              <option key={each.code} value={each.code}>
-                {each.name}
-              </option>
-            ))}
-          </Fragment>
-        ))}
+        <GroupedOptions groups={from} />
       </select>
     </span>
   );
@@ -512,7 +501,10 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   say("tournamentList.filter.country"),
                   say("tournamentList.filter.anyCountry"),
                   inCountryGroups(
-                    sorted(offeredCountries, countryNamed),
+                    offeredCountries.map((code) => ({
+                      code,
+                      name: countryNamed(code),
+                    })),
                     document.documentElement.lang || "en",
                   ),
                   country,
@@ -528,7 +520,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                       "region",
                       say("tournamentList.filter.region"),
                       say("tournamentList.filter.anyRegion"),
-                      [sorted(offeredRegions, regionNamed)],
+                      sorted(offeredRegions, regionNamed),
                       region,
                       (code) => {
                         choose({ country, region: code, sport });
@@ -538,12 +530,10 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   "sport",
                   say("tournamentList.filter.sport"),
                   say("tournamentList.filter.anySport"),
-                  [
-                    inSiteOrder(offeredSports).map((code) => ({
-                      code,
-                      name: sportNamed(code),
-                    })),
-                  ],
+                  inSiteOrder(offeredSports).map((code) => ({
+                    code,
+                    name: sportNamed(code),
+                  })),
                   sport,
                   (code) => {
                     choose({ country, region, sport: code });
