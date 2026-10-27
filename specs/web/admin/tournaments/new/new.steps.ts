@@ -135,7 +135,7 @@ const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
   );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth) (sport|format) offered is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, list: string, words: string) {
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
@@ -155,7 +155,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth) country in the form is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh) country in the form is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, country: string) {
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, "Country"))[ordinal(which)], country);

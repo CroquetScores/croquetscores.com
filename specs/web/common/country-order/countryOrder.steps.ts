@@ -22,7 +22,7 @@ When(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth) country of the (first|second|third) group is "(.*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth) country of the (first|second|third) group is "(.*)"$/,
   function (this: SpecWorld, place: string, group: string, name: string) {
     assert.equal(
       this.countryGroups[ordinal(group)]?.[ordinal(place)]?.name,

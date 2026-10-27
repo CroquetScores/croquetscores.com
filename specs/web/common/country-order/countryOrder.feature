@@ -3,9 +3,9 @@ Feature: Countries are listed where a reader looks for them first
   Most tournaments are played in a few countries, so a drop-down list of
   countries that began with Afghanistan would make most readers scroll past
   a hundred and more to reach the one they want. The list is in three groups,
-  with a line between each. The first is the five countries most
+  with a line between each. The first is the six countries most
   tournaments are played in, in a fixed order: Australia, Egypt, England,
-  Spain and the United States. The second is the other countries
+  New Zealand, Spain and the United States. The second is the other countries
   tournaments have been played in since 2025, in alphabetical order. The
   third is every other country, in alphabetical order.
 
@@ -16,7 +16,7 @@ Feature: Countries are listed where a reader looks for them first
   with nothing on one side of it. The list that has the groups is made
   wherever countries are chosen from, and each draws the line itself.
 
-  Scenario Outline: The five countries most played in come first, in their own order
+  Scenario Outline: The six countries most played in come first, in their own order
     Given the country "us" named "United States"
     And the country "es" named "Spain"
     And the country "england" named "England"
@@ -31,18 +31,19 @@ Feature: Countries are listed where a reader looks for them first
       | first  | Australia     |
       | second | Egypt         |
       | third  | England       |
-      | fourth | Spain         |
-      | fifth  | United States |
+      | fourth | New Zealand   |
+      | fifth  | Spain         |
+      | sixth  | United States |
 
   Scenario: The first group holds no other country
     Given the country "au" named "Australia"
-    And the country "nz" named "New Zealand"
+    And the country "jp" named "Japan"
     When the countries are put in groups for "en"
     Then the first group has 1 country
 
   Scenario Outline: The other countries played in since 2025 are the second group, in alphabetical order
     Given the country "wales" named "Wales"
-    And the country "nz" named "New Zealand"
+    And the country "se" named "Sweden"
     And the country "ie" named "Ireland"
     And the country "lv" named "Latvia"
     And the country "au" named "Australia"
@@ -53,7 +54,7 @@ Feature: Countries are listed where a reader looks for them first
       | place  | name        |
       | first  | Ireland     |
       | second | Latvia      |
-      | third  | New Zealand |
+      | third  | Sweden      |
       | fourth | Wales       |
 
   Scenario Outline: Every other country is the third group, in alphabetical order
@@ -72,7 +73,7 @@ Feature: Countries are listed where a reader looks for them first
 
   Scenario: There are three groups where each has a country
     Given the country "au" named "Australia"
-    And the country "nz" named "New Zealand"
+    And the country "ie" named "Ireland"
     And the country "jp" named "Japan"
     When the countries are put in groups for "en"
     Then there are 3 groups

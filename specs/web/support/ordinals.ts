@@ -1,4 +1,12 @@
-const words = ["first", "second", "third", "fourth", "fifth", "sixth"];
+const words = [
+  "first",
+  "second",
+  "third",
+  "fourth",
+  "fifth",
+  "sixth",
+  "seventh",
+];
 
 /**
  * Where a step's "first", "second" and so on counts from zero. A word not here

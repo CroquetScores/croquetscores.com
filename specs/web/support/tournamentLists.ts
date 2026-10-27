@@ -519,7 +519,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth) country offered is "(.*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh) country offered is "(.*)"$/,
   async function (this: SpecWorld, which: string, country: string) {
     assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
   },

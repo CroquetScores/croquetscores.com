@@ -644,9 +644,10 @@ Feature: The home page lists recent results and upcoming tournaments
         | first  | Australia     |
         | second | Egypt         |
         | third  | England       |
-        | fourth | Spain         |
-        | fifth  | United States |
-        | sixth  | Austria       |
+        | fourth | New Zealand   |
+        | fifth  | Spain         |
+        | sixth  | United States |
+        | seventh| Austria       |
 
     Scenario: A line is drawn between the three groups
       When the home page is opened

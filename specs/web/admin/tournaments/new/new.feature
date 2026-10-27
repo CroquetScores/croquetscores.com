@@ -180,9 +180,10 @@ Feature: A new tournament is created in the admin
         | first  | Australia     |
         | second | Egypt         |
         | third  | England       |
-        | fourth | Spain         |
-        | fifth  | United States |
-        | sixth  | Austria       |
+        | fourth | New Zealand   |
+        | fifth  | Spain         |
+        | sixth  | United States |
+        | seventh| Austria       |
 
     Scenario: A line is drawn between the three groups
       When the new tournament page is opened
