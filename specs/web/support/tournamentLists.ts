@@ -149,7 +149,7 @@ When(
 );
 
 When(
-  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is pressed$/,
+  /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is pressed$/,
   async function (this: SpecWorld, which: string, name: string) {
     await follow(
       this,
@@ -300,7 +300,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) has no heading$/,
+  /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) has no heading$/,
   async function (this: SpecWorld, which: string, name: string) {
     assert.equal(
       await words(headings(this, listNamed(name)).nth(ordinal(which))),
@@ -326,7 +326,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) cannot be pressed$/,
+  /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) cannot be pressed$/,
   async function (this: SpecWorld, which: string, name: string) {
     assert.equal(
       await headings(this, listNamed(name))
@@ -396,6 +396,52 @@ Then(
     const shown = sportOf(this, name, tournament);
     assert.ok(await shown.isVisible(), "The sport is not shown.");
     assert.equal(await shown.innerText(), code);
+  },
+);
+
+// Named by the hue the badge's background works out to, so that the scenario
+// says "blue" and the stylesheet stays free to choose which blue, in light or
+// in dark.
+const hueRanges: Readonly<Record<string, readonly [number, number]>> = {
+  orange: [10, 45],
+  green: [80, 150],
+  teal: [160, 200],
+  blue: [205, 250],
+  purple: [255, 300],
+};
+
+const hueOf = (rgb: string): number => {
+  const [r, g, b] = (rgb.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map(Number);
+  const high = Math.max(r, g, b);
+  const low = Math.min(r, g, b);
+  if (high === low) return 0;
+  const spread = high - low;
+  const hue =
+    high === r
+      ? ((g - b) / spread) % 6
+      : high === g
+        ? (b - r) / spread + 2
+        : (r - g) / spread + 4;
+  return (hue * 60 + 360) % 360;
+};
+
+Then(
+  /^"(.*)" shows its sport on (orange|green|teal|blue|purple) in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
+  async function (
+    this: SpecWorld,
+    tournament: string,
+    colour: string,
+    name: string,
+  ) {
+    const background = await sportOf(this, name, tournament)
+      .locator(".sport-code")
+      .evaluate((badge) => getComputedStyle(badge).backgroundColor);
+    const hue = hueOf(background);
+    const [from, to] = hueRanges[colour];
+    assert.ok(
+      hue >= from && hue <= to,
+      `The sport is on ${background}, a hue of ${Math.round(hue)}.`,
+    );
   },
 );
 

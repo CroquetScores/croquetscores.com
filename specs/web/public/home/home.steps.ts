@@ -51,18 +51,6 @@ Then(
 );
 
 Then(
-  "the upcoming tournaments are to the right of the recent results",
-  async function (this: SpecWorld) {
-    const recent = await boxOf(list(this, "recent results"));
-    const upcoming = await boxOf(list(this, "upcoming tournaments"));
-    assert.ok(
-      upcoming.x >= recent.x + recent.width,
-      `They start ${String(upcoming.x)} pixels across.`,
-    );
-  },
-);
-
-Then(
   "the upcoming tournaments are below the recent results",
   async function (this: SpecWorld) {
     const recent = await boxOf(list(this, "recent results"));

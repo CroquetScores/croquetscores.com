@@ -230,13 +230,13 @@ export const table = (
         : `<span class="sort-arrow" aria-hidden="true">${arrows[marked]}</span>`
     }${escape(say(columnWords[column]))}</a></th>`;
   };
-  // The flags' column between the dates and the names, with nothing over it,
-  // and the sports' after the names, likewise.
+  // The sports' column after the dates and the flags' after that, with nothing
+  // over either, and then the names.
   const headings = [
     heading("date"),
+    `                <td class="tournament-sport"></td>`,
     `                <td class="tournament-flag"></td>`,
     heading("name"),
-    `                <td class="tournament-sport"></td>`,
   ].join("\n");
   // A flag leads to the page narrowed to its country, keeping how each list is
   // sorted and the sport chosen. A region chosen is dropped, since the flag is
@@ -259,9 +259,9 @@ export const table = (
     .map(
       (tournament) => `                <tr>
                   <td class="tournament-dates">${escape(dated(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
+                  <td class="tournament-sport"><span class="sport-code sport-${escape(tournament.sport)}">${escape(tournament.sport.toUpperCase())}</span></td>
                   <td class="tournament-flag">${flagOf(tournament)}</td>
                   <td><a class="tournament-name" href="/${escape(tournament.address)}">${escape(tournament.name)}</a></td>
-                  <td class="tournament-sport"><span class="sport-code">${escape(tournament.sport.toUpperCase())}</span></td>
                 </tr>`,
     )
     .join("\n");

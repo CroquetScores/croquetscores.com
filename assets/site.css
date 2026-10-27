@@ -62,6 +62,14 @@
   --action: #066b00;
   --action-ink: #ffffff;
   --danger: #b3261e;
+  /* The sport's own colour behind its code in a list, so that a reader can tell
+     them apart at a glance. White on each in light and the page's near-black on
+     each in dark, every pairing above 6:1. */
+  --sport-ac: #066b00;
+  --sport-gc: #1c5fb0;
+  --sport-a6w: #a33a00;
+  --sport-rc: #6b3fa0;
+  --sport-gb: #0a6b6b;
   /* The alert that there is something new to read: the beta banner's yellow, so
      that the two notices read as one kind of thing and neither is the brand's
      green or a fault's red. The same in light and dark, since yellow is bright
@@ -132,6 +140,11 @@
     /* What needs the reader's attention. Red in both, and never below 4.5:1 on
        the content it sits on: 6.54:1 in light, 7.42:1 in dark. */
     --danger: light-dark(#b3261e, #ff8a80);
+    --sport-ac: light-dark(#066b00, #7fd08d);
+    --sport-gc: light-dark(#1c5fb0, #8ab8f0);
+    --sport-a6w: light-dark(#a33a00, #f0a07a);
+    --sport-rc: light-dark(#6b3fa0, #c3a6e8);
+    --sport-gb: light-dark(#0a6b6b, #6fd3d0);
     /* Darker than the dark panel rather than the pale ink, which on a dark
        page would read as something to look at rather than as nothing. */
     --void: light-dark(#16181c, #050605);
@@ -1646,18 +1659,12 @@ main {
   min-height: 44px;
 }
 
-/* The home page's two lists: side by side where there is room for both, the
-   recent results first, and one above the other on a phone. */
+/* The home page's two lists, the recent results and beneath them the upcoming
+   tournaments, at every width: side by side they left each table too narrow
+   for its four columns. */
 .home-lists {
   display: grid;
-  gap: var(--space-6) var(--space-5);
-  align-items: start;
-}
-
-@media (min-width: 60rem) {
-  .home-lists {
-    grid-template-columns: 1fr 1fr;
-  }
+  gap: var(--space-6);
 }
 
 /* A list of tournaments, on the home page or a year's. */
@@ -1783,9 +1790,9 @@ main {
   image-rendering: pixelated;
 }
 
-/* The sport's code, in capitals, on the colour of the button that does what a
-   form is for: that pairing is already measured in both themes, so the badge
-   needs no colour of its own. Left out on a phone, where the room is wanted
+/* The sport's code, in capitals, on the sport's own colour (--sport-*), in the
+   ink the action buttons use, which sits on each at over 6:1 in both themes.
+   Left out on a phone, where the room is wanted
    for the names, and shown from the width the navigation is laid out inline,
    which is where a tablet begins. */
 .tournament-list .tournament-sport {
@@ -1796,6 +1803,13 @@ main {
 @media (min-width: 40rem) {
   .tournament-list .tournament-sport {
     display: table-cell;
+    padding-inline-end: 0;
+  }
+
+  /* The flag's link has its room inside it, so that it can be pressed with a
+     thumb: the gap between the code and the flag is the link's start. */
+  .tournament-list .tournament-sport + .tournament-flag a {
+    padding-inline-start: 5px;
   }
 }
 
@@ -1809,6 +1823,31 @@ main {
   font-size: var(--text-sm);
   font-weight: 700;
   text-align: center;
+}
+
+.tournament-list .sport-ac {
+  background: var(--sport-ac);
+  color: var(--action-ink);
+}
+
+.tournament-list .sport-gc {
+  background: var(--sport-gc);
+  color: var(--action-ink);
+}
+
+.tournament-list .sport-a6w {
+  background: var(--sport-a6w);
+  color: var(--action-ink);
+}
+
+.tournament-list .sport-rc {
+  background: var(--sport-rc);
+  color: var(--action-ink);
+}
+
+.tournament-list .sport-gb {
+  background: var(--sport-gb);
+  color: var(--action-ink);
 }
 
 .tournament-filter {
