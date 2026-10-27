@@ -29,7 +29,11 @@ Feature: A Swiss's grid ranks its players with their results
   two players of one name apart, as "Andrew Hobbs (2)", is left out; and the
   margin, as
   "+4" for a game won by 4, "-1" for one lost by 1 and "0" for one drawn,
-  with the opponent's whole name for whatever reads the page aloud. Each is
+  with the opponent's whole name for whatever reads the page aloud. Where
+  the scorer wrote peeling after either score, as "tp" in "26tp", it follows
+  the margin, the winner's first and then the loser's, as it does in the
+  rankings text file (`rankingsTextFile.feature`), so that a game won 26tp to
+  17 is "+9tp" to the winner and "-9tp" to the loser. Each is
   marked won, lost or drawn by more than its colour, the sign of its margin
   saying which. A withdrawn game was played, so it is among the results, but
   it counts for nothing (`withdrawGame.feature`), so it is marked as
@@ -158,6 +162,26 @@ Feature: A Swiss's grid ranks its players with their results
       Given "Sam Someone" has beaten "Chris Third" 7 to 6 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the first result of "Chris Third" in the Swiss is "S.Someone -1"
+
+    Scenario: The winner's peeling follows the margin
+      Given "Sam Someone" has beaten "Chris Third" 26tp to 17 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "C.Third +9tp"
+
+    Scenario: The loser sees the winner's peeling after their own margin
+      Given "Sam Someone" has beaten "Chris Third" 26tp to 17 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Chris Third" in the Swiss is "S.Someone -9tp"
+
+    Scenario: The loser's peeling follows the winner's
+      Given "Sam Someone" has beaten "Chris Third" 26tp to 17p in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "C.Third +9tpp"
+
+    Scenario: A game with no peeling has none shown
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "C.Third +9"
 
     Scenario: The results are in the order the games were added
       Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
