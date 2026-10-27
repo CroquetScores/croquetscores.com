@@ -12,7 +12,7 @@ type Role =
 
 const RoleSection = ({ role }: { readonly role: Role }): React.JSX.Element => (
   <People
-    at={`/api/v1/roles/${role}/accounts`}
+    at={`/api/site/roles/${role}/accounts`}
     listedUnder="accounts"
     name={role}
     heading={say(`admin.roles.${role}.heading`)}

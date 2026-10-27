@@ -63,7 +63,7 @@ For somebody who wants the order and not the reasons:
 3. Check out the repository, make the settings, keep the keys somewhere else ([configuration.md](configuration.md) §2–3).
 4. `npm ci`, `npm run build`, `npm run db:migrate` ([deploying.md](deploying.md) §2).
 5. Start the service and the proxy ([server-setup.md](server-setup.md) §5–6).
-6. Look at `/api/v1/health` from outside, then the home page ([operations.md](operations.md) §1).
+6. Look at `/api/site/health` from outside, then the home page ([operations.md](operations.md) §1).
 7. Keep a copy of the keys and `.env.production` away from this computer ([recovery.md](recovery.md) §2).
 8. Set up the backup, and **restore from it once** before anybody is invited ([backup-and-restore.md](backup-and-restore.md)).
 

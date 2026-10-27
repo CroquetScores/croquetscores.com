@@ -83,7 +83,7 @@ When(
   "the API is asked for as {string}",
   async function (this: SpecWorld, host: string) {
     const response = await this.browserPage.request.get(
-      `${this.baseUrl!}/api/v1/tournaments`,
+      `${this.baseUrl!}/api/site/tournaments`,
       { headers: forwardedFor(host), failOnStatusCode: false },
     );
     answers.set(this, await readFrom(response));
@@ -94,7 +94,7 @@ When(
   "the health check is asked for as {string}",
   async function (this: SpecWorld, host: string) {
     const response = await this.browserPage.request.get(
-      `${this.baseUrl!}/api/v1/health`,
+      `${this.baseUrl!}/api/site/health`,
       { headers: forwardedFor(host), failOnStatusCode: false },
     );
     answers.set(this, await readFrom(response));
@@ -105,7 +105,7 @@ When(
   "the health check is asked for with a query as {string}",
   async function (this: SpecWorld, host: string) {
     const response = await this.browserPage.request.get(
-      `${this.baseUrl!}/api/v1/health?probe=1`,
+      `${this.baseUrl!}/api/site/health?probe=1`,
       { headers: forwardedFor(host), failOnStatusCode: false },
     );
     answers.set(this, await readFrom(response));

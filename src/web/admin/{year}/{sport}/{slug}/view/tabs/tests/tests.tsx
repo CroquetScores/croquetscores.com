@@ -114,7 +114,7 @@ export const TestsTab = ({
   const [editing, setEditing] = useState<Listed | undefined>();
   // What the tournament refused of what was last pressed, by its code.
   const [refused, setRefused] = useState<string | undefined>();
-  const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
+  const ofTournament = `/api/site/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions`;
 
   useEffect(() => {

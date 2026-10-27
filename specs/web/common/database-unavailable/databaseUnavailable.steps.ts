@@ -211,7 +211,7 @@ Given("the example API route is asked for", ask);
 Given(
   "the route for the status of database access",
   function (this: SpecWorld) {
-    builtFor(this).route = { method: "GET", url: "/api/v1/database-access" };
+    builtFor(this).route = { method: "GET", url: "/api/site/database-access" };
   },
 );
 

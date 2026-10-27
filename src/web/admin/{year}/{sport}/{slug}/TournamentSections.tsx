@@ -81,7 +81,7 @@ export const TournamentSections = ({
   useEffect(() => {
     let current = true;
     const asked = async <T,>(path: string, empty: T): Promise<T> =>
-      fetch(`/api/v1/tournaments/${idInAddress(tournament)}/${path}`, {
+      fetch(`/api/site/tournaments/${idInAddress(tournament)}/${path}`, {
         headers: { accept: "application/json" },
       })
         .then(async (response) =>

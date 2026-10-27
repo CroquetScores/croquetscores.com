@@ -151,7 +151,7 @@ export const TournamentForm = ({
   const form = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    void fetch("/api/v1/tournaments/new", {
+    void fetch("/api/site/tournaments/new", {
       headers: { accept: "application/json" },
     })
       .then(async (response) =>

@@ -83,7 +83,7 @@ export const TeamPlayerDialog = ({
   const [sending, setSending] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
   // Nothing is offered for a name that cannot be changed, as a world ranking
   // officer's cannot, so nothing is asked for it.
   const offeredForName = useMatching(

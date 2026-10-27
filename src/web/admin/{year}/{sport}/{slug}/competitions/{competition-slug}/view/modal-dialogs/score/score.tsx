@@ -122,7 +122,7 @@ export const ScoreDialog = ({
     loser: useRef<HTMLSelectElement>(null),
     loserScore: useRef<HTMLInputElement>(null),
   };
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}`;
 
   useEffect(() => {
     // A game that keeps its players has none to choose from, and begins on
@@ -182,7 +182,7 @@ export const ScoreDialog = ({
       ?.id;
   // A competition's players are named by the part of their ids after their
   // kind, and a test's by their whole ids, since they are its teams' rather
-  // than its own (api/v1).
+  // than its own (api/site).
   const sentAs = (id: string): string => (inATest ? id : idInAddress(id));
 
   const refusal = (code: string, part: Part | undefined): Refused => ({

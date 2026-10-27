@@ -68,7 +68,7 @@ When("the accounts page is opened", openTheAccounts);
 Given(
   "the accounts holding the role {string} are answered with a server error",
   async function (this: SpecWorld, role: string) {
-    const at = `/api/v1/roles/${role.toLowerCase().replaceAll(" ", "-")}/accounts`;
+    const at = `/api/site/roles/${role.toLowerCase().replaceAll(" ", "-")}/accounts`;
     await this.browserPage.route(
       (url) => url.pathname === at,
       async (route) => {

@@ -449,7 +449,7 @@ If it does not, or the unit has another name, put the cluster's own unit name in
 sudo systemctl daemon-reload
 sudo systemctl enable --now croquetscores
 sudo systemctl status croquetscores
-curl -s http://127.0.0.1:3000/api/v1/health
+curl -s http://127.0.0.1:3000/api/site/health
 ```
 
 `status` should say `active (running)` (press `q` to leave it), and `curl` should print `{"status":"ok"}`.
@@ -486,7 +486,7 @@ sudo systemctl restart croquetscores
 From another computer, in a browser or with `curl`, which should say `{"status":"ok"}`:
 
 ```bash
-curl -s https://<the site's name>/api/v1/health
+curl -s https://<the site's name>/api/site/health
 ```
 
 Then open `https://try.croquetscores.com/` in a browser. It should load with a padlock, and show the try banner on every page, saying that anything entered may be removed at any time. Open `https://beta.croquetscores.com/` too, which should say on every page that it is a beta, and `https://croquetscores.com/`, which should have no banner at all. That shows that Caddy is sending the host the reader typed and that the site is reading it.

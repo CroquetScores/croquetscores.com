@@ -54,7 +54,7 @@ export const TeamPlayers = ({
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
   const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/teams/${idInAddress(team)}/players`;
 
   const { listed, asking, answered, askAgain } = useListed<Listed>(
     at,

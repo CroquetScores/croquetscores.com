@@ -4,7 +4,7 @@ Knowing it is up, reading what it says, turning the database off on purpose, and
 
 ## 1. Is it up?
 
-- **The process is well, from outside** — `curl -s https://<the site's name>/api/v1/health` says `{"status":"ok"}`. _What it tells:_ The proxy, the certificate and the process. **Not the database:** it asks nothing of it, on purpose, so that it still answers during maintenance
+- **The process is well, from outside** — `curl -s https://<the site's name>/api/site/health` says `{"status":"ok"}`. _What it tells:_ The proxy, the certificate and the process. **Not the database:** it asks nothing of it, on purpose, so that it still answers during maintenance
 - **The service is running** — `sudo systemctl status croquetscores`. _What it tells:_ The process, and the last lines it said
 - **The database is reached** — Open the home page, then a tournament's page. _What it tells:_ The pages are made from the database. A site that cannot reach it says so on every page, and emails `ADMINISTRATOR_EMAIL_ADDRESS`
 - **Email is leaving** — Register a new account with an address you can read. _What it tells:_ That Brevo's settings are right. Time how long the email takes
@@ -12,7 +12,7 @@ Knowing it is up, reading what it says, turning the database off on purpose, and
 
 **After every deployment, and on first set-up, do all five.** The health check alone is not an answer.
 
-**An outside check that runs by itself is not set up** (https://github.com/CroquetScores/croquetscores.com/issues/286, Seeing a failure before a user says so). Until it is, nobody learns of an outage at night until the morning. Point an uptime service at `/api/v1/health` and have it email the operator; any will do, and a free tier is enough for a beta.
+**An outside check that runs by itself is not set up** (https://github.com/CroquetScores/croquetscores.com/issues/286, Seeing a failure before a user says so). Until it is, nobody learns of an outage at night until the morning. Point an uptime service at `/api/site/health` and have it email the operator; any will do, and a free tier is enough for a beta.
 
 ## 2. The logs
 
@@ -40,7 +40,7 @@ withsettings npm run db:access -- on                    # open again
 
 Run from `/srv/croquetscores/site`, with `withsettings` in front (deploying.md §1), so that the script has the service's settings and writes the file the site is reading.
 
-While it is off, the pages, the API and the admin all answer that the site is for maintenance, with the time to come back; programs are told to ask again after the estimate. Files (styles, scripts, images) are still served, so the page looks like the site's. `/api/v1/health` still answers `ok`. Nobody is emailed that the database is unreachable, since the operator turned it off.
+While it is off, the pages, the API and the admin all answer that the site is for maintenance, with the time to come back; programs are told to ask again after the estimate. Files (styles, scripts, images) are still served, so the page looks like the site's. `/api/site/health` still answers `ok`. Nobody is emailed that the database is unreachable, since the operator turned it off.
 
 **Turn it on again.** The switch is a file, and it stays off across restarts, and `db:rebuild-read-models` turns it back on itself when it finishes. A site left off after a migration is a site down.
 
@@ -100,7 +100,7 @@ backup-and-restore.md §7. It needs the file, the two account keys from where th
 
 Collected from https://github.com/CroquetScores/croquetscores.com/issues/286, so they are not forgotten when this is read as if it were finished:
 
-- An outside check on `/api/v1/health` that emails the operator (§1).
+- An outside check on `/api/site/health` that emails the operator (§1).
 - Security headers. The proxy can send some in the meantime.
 - Rate limiting beyond sign-in, password reset and registering.
 - A measured busy tournament: how many readers one server stands, and the pool size against Postgres's connection limit.

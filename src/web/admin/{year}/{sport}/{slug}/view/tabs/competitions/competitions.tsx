@@ -49,7 +49,7 @@ export const CompetitionsTab = ({
   const [acting, setActing] = useState(false);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<Listed | undefined>();
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions`;
 
   const { listed, asking, answered, askAgain } = useListed<Listed>(
     at,

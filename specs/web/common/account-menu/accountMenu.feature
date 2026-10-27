@@ -29,7 +29,7 @@ Feature: The way to a reader's account is the last thing in the header
   link can be put in an image on another site and followed by a reader's
   browser without their asking; a post from another site is refused by the
   cross-site guard. It is posted beside the pages the menu links to rather than
-  into /api/v1, which is JSON for mobile apps and the admin SPA: a form on a
+  into /api/site, which is JSON for mobile apps and the admin SPA: a form on a
   public page posting there would be the only one that did. What signing out
   does to the session it ends is specified with sessions.
 

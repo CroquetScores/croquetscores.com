@@ -24,7 +24,7 @@ export const ImportErrors = (): React.JSX.Element => {
 
   useEffect(() => {
     let current = true;
-    void fetch("/api/v1/import-errors", {
+    void fetch("/api/site/import-errors", {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {

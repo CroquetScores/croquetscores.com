@@ -1,4 +1,4 @@
-// /api/v1 — JSON, and the same endpoints whether a mobile app or the admin SPA
+// /api/site — JSON, and the same endpoints whether a mobile app or the admin SPA
 // is asking. Operations arrive here as features are accepted.
 import { ChangePlayerWorldRankingName } from "../../../application/operations/tournaments/ChangePlayerWorldRankingName.js";
 import { ChangeTeamPlayerWorldRankingName } from "../../../application/operations/tournaments/ChangeTeamPlayerWorldRankingName.js";
@@ -238,7 +238,7 @@ export interface ApiV1Options {
   readonly assets: Assets;
 }
 
-export const apiV1: FastifyPluginCallback<ApiV1Options> = (
+export const apiSite: FastifyPluginCallback<ApiV1Options> = (
   server,
   { assets },
   done,

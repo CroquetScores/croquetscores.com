@@ -146,7 +146,7 @@ export const CompetitionDialog = ({
   const [said, setSaid] = useState<string | undefined>();
   const [sending, setSending] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions`;
 
   const refusal = (code: string): Refusal => ({
     code,

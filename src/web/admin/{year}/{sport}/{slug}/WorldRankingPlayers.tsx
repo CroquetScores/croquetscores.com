@@ -27,7 +27,7 @@ const ask = (sport: string, typed: string): Promise<Matching> => {
   const underway = asking.get(key);
   if (underway !== undefined) return underway;
   const answer = fetch(
-    `/api/v1/world-rankings/${sport}/players?typed=${encodeURIComponent(typed)}`,
+    `/api/site/world-rankings/${sport}/players?typed=${encodeURIComponent(typed)}`,
     { headers: { accept: "application/json" } },
   ).then(async (response) => {
     if (!response.ok) throw new Error(`Answered ${response.status}.`);

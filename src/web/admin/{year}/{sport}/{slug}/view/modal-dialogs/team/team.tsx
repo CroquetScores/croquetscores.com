@@ -69,10 +69,10 @@ export const TeamDialog = ({
   const [added, setAdded] = useState<string | undefined>();
   const [sending, setSending] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/teams`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/teams`;
 
   useEffect(() => {
-    void fetch("/api/v1/flags", { headers: { accept: "application/json" } })
+    void fetch("/api/site/flags", { headers: { accept: "application/json" } })
       .then(async (response) =>
         response.ok ? ((await response.json()) as { flags: Flag[] }).flags : [],
       )

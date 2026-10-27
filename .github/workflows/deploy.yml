@@ -85,4 +85,4 @@ jobs:
       - name: Look at the site
         env:
           SITE_ADDRESS: ${{ vars.SITE_ADDRESS }}
-        run: curl -fsS --retry 5 --retry-delay 5 --retry-all-errors "https://$SITE_ADDRESS/api/v1/health"
+        run: curl -fsS --retry 5 --retry-delay 5 --retry-all-errors "https://$SITE_ADDRESS/api/site/health"

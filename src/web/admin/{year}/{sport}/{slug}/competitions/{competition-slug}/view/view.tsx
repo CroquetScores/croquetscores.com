@@ -75,9 +75,12 @@ export const ViewCompetition = ({
     // An answer that arrives after a newer question was asked is not the page
     // as it is now, so it is let go rather than drawn over it.
     let current = true;
-    void fetch(`/api/v1/tournaments/at/${address}/competitions/${slug}/page`, {
-      headers: { accept: "application/json" },
-    })
+    void fetch(
+      `/api/site/tournaments/at/${address}/competitions/${slug}/page`,
+      {
+        headers: { accept: "application/json" },
+      },
+    )
       .then(async (response) => {
         if (!response.ok) {
           const code = await refusalOf(response);
@@ -149,7 +152,7 @@ export const ViewCompetition = ({
                   onClick={() => {
                     setOpening(true);
                     void fetch(
-                      `/api/v1/tournaments/${idInAddress(asked.competition.tournament)}/competitions`,
+                      `/api/site/tournaments/${idInAddress(asked.competition.tournament)}/competitions`,
                       { headers: { accept: "application/json" } },
                     )
                       .then(async (response) => {

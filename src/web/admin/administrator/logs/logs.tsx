@@ -49,7 +49,7 @@ export const Logs = (): React.JSX.Element => {
       severity: narrowed.severity,
       text: narrowed.text,
     });
-    void fetch(`/api/v1/logs?${asking.toString()}`, {
+    void fetch(`/api/site/logs?${asking.toString()}`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
@@ -73,7 +73,7 @@ export const Logs = (): React.JSX.Element => {
     setPruning(false);
     setRemoved(undefined);
     try {
-      const response = await fetch("/api/v1/logs/prune", {
+      const response = await fetch("/api/site/logs/prune", {
         method: "POST",
         headers: { accept: "application/json" },
       });

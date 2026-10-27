@@ -267,7 +267,7 @@ When(
     const answered = this.browserPage.waitForResponse(
       (response) =>
         ["POST", "PUT"].includes(response.request().method()) &&
-        new URL(response.url()).pathname.startsWith("/api/v1/tournaments/"),
+        new URL(response.url()).pathname.startsWith("/api/site/tournaments/"),
     );
     await dialogOf(this).locator('button[type="submit"]').click();
     await answered;

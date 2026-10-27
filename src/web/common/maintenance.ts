@@ -28,7 +28,7 @@ const A_MINUTE = 60 * 1000;
 // script on the machine the site runs on (databaseStatus.feature).
 const administratorsLetThrough: readonly RegExp[] = [
   /^\/admin\/administrator\/database-status\/?(?:\?.*)?$/,
-  /^\/api\/v1\/database-access(?:[/?].*)?$/,
+  /^\/api\/site\/database-access(?:[/?].*)?$/,
 ];
 
 /**
@@ -54,7 +54,7 @@ const filesServed: readonly string[] = [assetsPath, "/admin/assets/"];
 // The health check, which says the process is well and uses no database to
 // say so: a balancer or a monitor told otherwise for the whole of the
 // maintenance would take the site out of service for what was done on purpose.
-const healthCheck = "/api/v1/health";
+const healthCheck = "/api/site/health";
 
 const wantsJson = (request: FastifyRequest): boolean =>
   request.url.startsWith("/api/");

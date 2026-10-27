@@ -29,7 +29,7 @@ export const Countries = (): React.JSX.Element => {
 
   useEffect(() => {
     let current = true;
-    void fetch("/api/v1/countries", {
+    void fetch("/api/site/countries", {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {

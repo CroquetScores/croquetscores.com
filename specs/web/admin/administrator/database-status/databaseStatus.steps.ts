@@ -161,7 +161,7 @@ When(
   "the database access status is asked for",
   async function (this: SpecWorld) {
     const response = await this.browserPage.request.get(
-      `${this.baseUrl!}/api/v1/database-access`,
+      `${this.baseUrl!}/api/site/database-access`,
       { headers: addressingOf(this) },
     );
     answers.set(this, response.status());
@@ -172,7 +172,7 @@ When(
   "database access is asked to be turned off for {int} minutes",
   async function (this: SpecWorld, minutes: number) {
     const response = await this.browserPage.request.post(
-      `${this.baseUrl!}/api/v1/database-access/off`,
+      `${this.baseUrl!}/api/site/database-access/off`,
       { headers: addressingOf(this), data: { minutes, words: "" } },
     );
     answers.set(this, response.status());

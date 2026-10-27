@@ -264,7 +264,7 @@ The steps above are for any new website. This is the same restore done on the se
 
    ```bash
    sudo systemctl start croquetscores
-   curl -s http://127.0.0.1:3000/api/v1/health
+   curl -s http://127.0.0.1:3000/api/site/health
    ```
 
    Open the site, a tournament, and sign in with an account from that data. A name that shows as unreadable means the account keys are not the file's.

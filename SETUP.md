@@ -13,7 +13,7 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 - **Auth: email address + password**: argon2id hashing, opaque session cookie for browsers
 - **Auth: Google and Facebook**: Google over OIDC, Facebook over OAuth 2.0 + Graph
 - **Auth: an API for mobile apps**: Bearer JWT access token + rotating refresh token, same endpoints as the web API
-- **Web: an API**: `/api/v1`, JSON, one API serving both mobile apps and the admin SPA
+- **Web: an API**: `/api/site`, JSON, one API serving both mobile apps and the admin SPA
 - **Web: static pages for the public side**: Server-rendered HTML, no client framework, works without JavaScript
 - **Web: a SPA at `/admin`**: React built by Vite, served as static files with a history fallback
 - **Gherkin**: Cucumber.js, the only test runner
@@ -93,7 +93,7 @@ ESLint enforces all of this (§9); breaking it fails CI.
     /services              every other adapter, at the path it mirrors
   /web
     server.ts              composition root: builds everything, starts Fastify
-    /api/v1                JSON endpoints, shared by mobile apps and the SPA
+    /api/site                JSON endpoints, shared by mobile apps and the SPA
     /auth                  sign-in, sign-out, OAuth redirect and callback,
                            token issue and refresh
     /public                server-rendered public pages and their templates
@@ -438,7 +438,7 @@ What happens when a Google sign-in arrives carrying the email address of an exis
 ### 7.7 Two ways of holding a session
 
 - **Browser:** an opaque session id in an `HttpOnly`, `Secure`, `SameSite=Lax` cookie, stored hashed in a `sessions` table.
-- **Mobile:** `POST /api/v1/auth/token` returns a signed JWT access token (short-lived, EdDSA via `jose`) and an opaque refresh token, stored hashed and **rotated on every use**. A refresh token presented twice means it leaked, so the whole family is revoked.
+- **Mobile:** `POST /api/site/auth/token` returns a signed JWT access token (short-lived, EdDSA via `jose`) and an opaque refresh token, stored hashed and **rotated on every use**. A refresh token presented twice means it leaked, so the whole family is revoked.
 
 Both arrive at one `RequestContext` carrying the account id and its permissions. Nothing below the web layer knows which door was used.
 
@@ -452,7 +452,7 @@ That is one hook on the server, in front of every route, rather than a token thr
 
 `src/web/server.ts` is the composition root and the only file outside `infrastructure` naming a concrete implementation. It builds the container, registers handlers with the mediator, and mounts:
 
-- `/api/v1/*`: JSON. Mobile apps and the admin SPA. Bearer token or session cookie
+- `/api/site/*`: JSON. Mobile apps and the admin SPA. Bearer token or session cookie
 - `/auth/*`: Sign-in, sign-out, OAuth redirect and callback, token and refresh
 - `/assets/*`: `/assets` — css and images, hashed filenames, long cache
 - `/admin`, `/admin/*`: The built SPA; every path falls back to its `index.html`, rendered
@@ -789,5 +789,5 @@ and, by inspection:
 - `/tests` does not exist and nothing invites anyone to create it.
 - Nothing under `src/domain/` imports from outside `src/domain/`.
 - `src/web/server.ts` is the only file outside `src/infrastructure/` naming a concrete implementation.
-- The public side renders with JavaScript switched off, `/admin` loads the SPA on a deep link, and `/api/v1` answers a bearer token.
+- The public side renders with JavaScript switched off, `/admin` loads the SPA on a deep link, and `/api/site` answers a bearer token.
 - A fresh clone reaches green with `npm ci`, `npm run db:up`, `npm test` — and nothing else, and nobody had to be asked anything.

@@ -30,7 +30,7 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
   const [deleting, setDeleting] = useState<NoteListed | undefined>();
   // What the tournament refused of the last delete, by its code.
   const [refused, setRefused] = useState<string | undefined>();
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/notes`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/notes`;
 
   const { listed, asking, answered, askAgain } = useListed<NoteListed>(
     at,

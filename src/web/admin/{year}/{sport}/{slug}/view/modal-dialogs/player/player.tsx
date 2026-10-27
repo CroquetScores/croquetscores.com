@@ -99,7 +99,7 @@ export const PlayerDialog = ({
   const [explaining, setExplaining] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/players`;
   // Nothing is offered for a name that cannot be changed, as a world ranking
   // officer's cannot, so nothing is asked for it.
   const offeredForName = useMatching(
@@ -117,7 +117,7 @@ export const PlayerDialog = ({
   );
 
   useEffect(() => {
-    void fetch("/api/v1/flags", { headers: { accept: "application/json" } })
+    void fetch("/api/site/flags", { headers: { accept: "application/json" } })
       .then(async (response) =>
         response.ok ? ((await response.json()) as { flags: Flag[] }).flags : [],
       )

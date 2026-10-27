@@ -79,7 +79,7 @@ Given(
   "the import is answered with a server error",
   async function (this: SpecWorld) {
     await this.browserPage.route(
-      (url) => url.pathname === "/api/v1/world-ranking-players/import",
+      (url) => url.pathname === "/api/site/world-ranking-players/import",
       async (route) => {
         await route.fulfill({
           status: 500,
