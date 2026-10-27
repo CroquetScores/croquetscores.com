@@ -259,9 +259,11 @@ const heldOverItsTeamMatches = (
  * Each document is brought over in a transaction of its own, as it was when
  * each collection was brought over by itself, so that one the site refuses is
  * kept as an error against it and leaves the rest standing. A tournament
- * archived is left behind with everything naming it. One refused is kept as
- * an error by whoever runs this, and everything naming it as an error of its
- * own, so that the errors count every document not brought over.
+ * archived is left behind with everything naming it, and so is one that
+ * lists no competition and finished before the day the import is run. One
+ * refused is kept as an error by whoever runs this, and everything naming it
+ * as an error of its own, so that the errors count every document not brought
+ * over.
  *
  * Every tournament read is kept as read, so that RefuseLeftOvers can find
  * what no tournament took: an archived one at once, and any other once the
@@ -278,11 +280,17 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     private readonly database: ImportDatabase,
     private readonly correcting: AcceptedImportErrors,
     /** What writes the note of a competition that could not be brought over. */
-    private readonly seeNotes?: SeeNotes,
+    private readonly seeNotes: SeeNotes | undefined,
     /** What says, in a note, each document of a tournament that was refused. */
-    private readonly importErrors?: ImportErrorsNote,
+    private readonly importErrors: ImportErrorsNote | undefined,
     /** Only the tournaments that started within these days are brought over. */
-    private readonly days: DaysAskedFor = {},
+    private readonly days: DaysAskedFor,
+    /**
+     * The day the import is run on, as year-month-day, and the same day all
+     * the way through the run. Asked for as it is needed rather than read from
+     * a clock here, so that a scenario can say what day it is.
+     */
+    private readonly today: () => string,
   ) {}
 
   async importDocument(read: ReadDocument<OldTournament>): Promise<void> {
@@ -303,8 +311,14 @@ export class ImportWholeTournaments implements Importer<OldTournament> {
     }
     // Left behind with everything that names it, as an archived one is: one
     // that lists no competition was started on the old sites and never
-    // played, whatever names it.
-    if (document.IsArchived || document.Competitions.length === 0) {
+    // played, whatever names it. Not one that has yet to finish: its
+    // competitions are added as the days come, and it is looked for in the
+    // meantime to find when and where it is held.
+    if (
+      document.IsArchived ||
+      (document.Competitions.length === 0 &&
+        document.Finish.slice(0, 10) < this.today())
+    ) {
       await this.database.recordTournamentRead(website, id);
       return;
     }

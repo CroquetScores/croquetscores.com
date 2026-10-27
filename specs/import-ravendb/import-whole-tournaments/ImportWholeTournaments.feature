@@ -26,12 +26,15 @@ Feature: Importing each of the old sites' tournaments with everything that names
   competitions not archived are missing from the list too. Going by the list
   would leave those behind without a word.
 
-  But a tournament that lists no competition at all is left behind, with
-  everything that names it, as an archived one is: the old sites kept
-  tournaments that were started and never played, and one with nothing
-  listed is taken for one of those, even where something names it. The
-  scenarios here are of a tournament that lists a competition no document
-  is, unless they say otherwise.
+  But a tournament that lists no competition at all, and finished before the
+  day the import is run, is left behind, with everything that names it, as
+  an archived one is: the old sites kept tournaments that were started and
+  never played, and one with nothing listed is taken for one of those, even
+  where something names it. One that finishes on that day or after it is
+  brought over, since its managers have not added its competitions yet and
+  readers look for it to find when and where it is. The scenarios here are
+  of a tournament that lists a competition no document is, unless they say
+  otherwise.
 
   Background:
     Given the users are imported
@@ -1930,7 +1933,7 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament "tournaments/82149" on "croquetscores.com" is imported
       Then what is corrected of "croquetscores.com/tournaments/82149" names "No games"
 
-  Rule: A tournament that lists no competition is left behind with everything that names it
+  Rule: A tournament that lists no competition and finished before today is left behind with everything that names it
 
     Scenario: A tournament that lists no competition is not kept as any tournament
       Given the tournament lists nothing
@@ -1957,6 +1960,61 @@ Feature: Importing each of the old sites' tournaments with everything that names
     Scenario: A tournament that lists a competition is kept
       When the tournament is imported
       Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+  Rule: A tournament that lists no competition is brought over if it finishes today or after
+
+    Background:
+      Given the import is run on "2026-10-28"
+
+    Scenario Outline: A tournament that lists no competition is kept if it finishes on or after the day the import is run
+      Given the tournament started on "2026-10-26T00:00:00.0000000"
+      And the tournament finished on "<finishes>"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+      Examples:
+        | finishes                    |
+        | 2026-10-28T00:00:00.0000000 |
+        | 2026-10-29T00:00:00.0000000 |
+
+    Scenario: A tournament that lists no competition is not kept if it finished the day before
+      Given the tournament started on "2026-10-26T00:00:00.0000000"
+      And the tournament finished on "2026-10-27T00:00:00.0000000"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: An archived tournament that finishes after today is still left behind
+      Given the tournament started on "2026-10-26T00:00:00.0000000"
+      And the tournament finished on "2026-10-29T00:00:00.0000000"
+      And the tournament lists nothing
+      And the tournament was archived
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: A tournament that lists no competition is kept if it finishes later in the day the import is run
+      Given the tournament started on "2026-10-26T00:00:00.0000000"
+      And the tournament finished on "2026-10-28T23:59:00.0000000"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is kept as a tournament
+
+    Scenario: A tournament that lists no competition and starts after the days asked for is left behind
+      Given the import is only of tournaments to "2026-10-30"
+      And the tournament started on "2026-11-02T00:00:00.0000000"
+      And the tournament finished on "2026-11-03T00:00:00.0000000"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
+    Scenario: A tournament that lists no competition and starts before the days asked for is left behind
+      Given the import is only of tournaments from "2026-10-27"
+      And the tournament started on "2026-10-20T00:00:00.0000000"
+      And the tournament finished on "2026-10-28T00:00:00.0000000"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
 
   Rule: A tournament that started outside the days asked for is left behind with everything that names it
 

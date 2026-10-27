@@ -297,6 +297,13 @@ interface Importing {
   readonly importers: Importers;
   /** The days the scenario asks the import for the tournaments of. */
   readonly days: { from?: string; to?: string };
+  /**
+   * When the scenario's import is run. A day after the finish a tournament
+   * is given unless the scenario says another, so that one that lists no
+   * competition is left behind as it was before the day mattered. A scenario
+   * that writes a finish on or after it is about that day.
+   */
+  readonly run: { today: string };
   readonly accepted: AcceptedInScenario;
   /** What the scenario's import corrected, kept the same way. */
   readonly corrected: AcceptedInScenario;
@@ -410,6 +417,7 @@ export const importingOf = (world: SpecWorld): Importing => {
   );
   const sites = new Map<string, WrittenSite>();
   const days: { from?: string; to?: string } = {};
+  const run = { today: "2026-10-28" };
   const made: Importing = {
     tournaments,
     competitions,
@@ -418,6 +426,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     managerNotes,
     managerNotesByTournament,
     days,
+    run,
     accepted,
     corrected,
     importers: {
@@ -434,6 +443,7 @@ export const importingOf = (world: SpecWorld): Importing => {
           seeNotes,
           importErrorsNote,
           days,
+          () => run.today,
         ),
       tournaments: tournamentImporter,
       blocks,
