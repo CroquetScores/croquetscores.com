@@ -269,6 +269,25 @@ Feature: The home page lists recent results and upcoming tournaments
         | recent results       |
         | upcoming tournaments |
 
+    Scenario Outline: On a phone the country's column is left out
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then the country's column of the <list> is not shown
+
+      Examples:
+        | list                 |
+        | recent results       |
+        | upcoming tournaments |
+
+    Scenario Outline: On a wide screen the country's column is shown
+      When the home page is opened
+      Then the country's column of the <list> is shown
+
+      Examples:
+        | list                 |
+        | recent results       |
+        | upcoming tournaments |
+
     Scenario: A tournament is dated from its start to its finish
       When the home page is opened
       Then "Spring Open" is dated "10-12 Oct" in the upcoming tournaments

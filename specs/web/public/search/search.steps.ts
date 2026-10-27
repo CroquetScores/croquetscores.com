@@ -386,16 +386,6 @@ Then(
 );
 
 Then(
-  /^the country's column of the (found tournaments|found competitions) is (not )?shown$/,
-  async function (this: SpecWorld, which: string, not: string | null) {
-    const flag = this.browserPage
-      .locator(`main section[data-list="${which.slice(6)}"] td.search-flag`)
-      .first();
-    assert.equal(await flag.isVisible(), not === null);
-  },
-);
-
-Then(
   /^the (first|second|third) player found is "(.*)"$/,
   async function (this: SpecWorld, which: string, name: string) {
     const at = ["first", "second", "third"].indexOf(which);

@@ -108,6 +108,12 @@ const hasAny = (name: string, phrases: readonly string[]): boolean => {
 const wholeWord = (word: string, flags = ""): RegExp =>
   new RegExp(`(?<![\\p{L}\\p{N}])(?:${word})(?![\\p{L}\\p{N}])`, `${flags}u`);
 
+// Whether the name begins with one of the words, in any case, as a word of its
+// own: "Welsh" begins "Welsh Open" but not "Welshpool Open" or "The Welsh Open",
+// which the old sites' rules for it never asked after.
+const beginsWithAWord = (words: string, name: string): boolean =>
+  wholeWord(words, "i").exec(name)?.index === 0;
+
 // Every country's whole name as a word of its own, the longest first so that
 // Papua New Guinea is taken before the Guinea in it.
 const wholeCountryNames = Countries.thereAre.all
@@ -165,6 +171,29 @@ const namesSayingACountry: readonly {
     country: "eg",
   },
   { says: (name) => wholeWord("Greece", "i").test(name), country: "gr" },
+  // New South Wales is before the rules that follow and every country in a name
+  // (countryNamedIn), which would take the Wales in it for Wales.
+  {
+    says: (name) => wholeWord("New South Wales", "i").test(name),
+    country: "au",
+  },
+  { says: (name) => beginsWithAWord("CAI", name), country: "ie" },
+  { says: (name) => beginsWithAWord("Bayfield|BICC", name), country: "ca" },
+  {
+    says: (name) => wholeWord("Aberdeen", "i").test(name),
+    country: "scotland",
+  },
+  { says: (name) => beginsWithAWord("Welsh", name), country: "wales" },
+  { says: (name) => beginsWithAWord("Irish", name), country: "ie" },
+  { says: (name) => beginsWithAWord("Nottingham", name), country: "england" },
+  {
+    says: (name) => beginsWithAWord("English|British", name),
+    country: "england",
+  },
+  {
+    says: (name) => wholeWord("CroqCan|Quebec", "i").test(name),
+    country: "ca",
+  },
   {
     // Called exactly this, whichever way its apostrophe is written.
     says: (name) =>

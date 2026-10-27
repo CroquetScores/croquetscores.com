@@ -730,22 +730,10 @@ body > .site-footer {
 }
 
 /* The dates take the width of the widest and no more: a cell as narrow as a
-   percentage can make it is stretched by what is in it, which does not wrap.
-   The flags' column is left out on a phone, where the room is wanted for the
-   names. */
+   percentage can make it is stretched by what is in it, which does not wrap. */
 .search-list .tournament-dates {
   width: 1%;
   white-space: nowrap;
-}
-
-.search-list .search-flag {
-  display: none;
-}
-
-@media (min-width: 40rem) {
-  .search-list .search-flag {
-    display: table-cell;
-  }
 }
 
 .tournament-list .search-of {
@@ -1755,6 +1743,18 @@ main {
    so that it is pressed with a thumb as easily as the row is. */
 .tournament-list .tournament-flag {
   padding: 0;
+}
+
+/* Left out of every list on a phone, heading and rows alike, where the room is
+   wanted for the names. */
+.tournament-list .tournament-flag {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .tournament-list .tournament-flag {
+    display: table-cell;
+  }
 }
 
 .tournament-list .tournament-flag a {
