@@ -62,6 +62,7 @@ Feature: Countries are listed where a reader looks for them first
     And the country "br" named "Brazil"
     And the country "fr" named "France"
     And the country "nz" named "New Zealand"
+    And the country "ie" named "Ireland"
     When the countries are put in groups for "en"
     Then the <place> country of the third group is "<name>"
 
@@ -97,6 +98,8 @@ Feature: Countries are listed where a reader looks for them first
   Scenario: The alphabetical order is the reader's language's
     Given the country "ax" named "Åland"
     And the country "zw" named "Zimbabwe"
+    And the country "au" named "Australia"
+    And the country "ie" named "Ireland"
     When the countries are put in groups for "sv"
     Then the first country of the third group is "Zimbabwe"
     And the second country of the third group is "Åland"
@@ -104,5 +107,7 @@ Feature: Countries are listed where a reader looks for them first
   Scenario: Åland comes among the A countries in English
     Given the country "zw" named "Zimbabwe"
     And the country "ax" named "Åland Islands"
+    And the country "au" named "Australia"
+    And the country "ie" named "Ireland"
     When the countries are put in groups for "en"
     Then the first country of the third group is "Åland Islands"
