@@ -271,7 +271,7 @@ Given(
   /^the (scorers|managers) of "([^"]*)" are answered with a server error$/,
   async function (this: SpecWorld, part: Part, name: string) {
     const tournament = tournamentNamed(this, name).value;
-    const at = `/api/v1/tournaments/${tournament.slice(tournament.indexOf("/") + 1)}/${part}`;
+    const at = `/api/site/tournaments/${tournament.slice(tournament.indexOf("/") + 1)}/${part}`;
     await this.browserPage.route(
       (url) => url.pathname === at,
       async (route) => {

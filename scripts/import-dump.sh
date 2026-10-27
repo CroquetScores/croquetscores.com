@@ -102,7 +102,7 @@ siteStopped=no
 
 # The site takes a moment to be up.
 for _ in 1 2 3 4 5 6 7 8 9 10; do
-  if curl -fs http://127.0.0.1:3000/api/v1/health >/dev/null; then
+  if curl -fs http://127.0.0.1:3000/api/site/health >/dev/null; then
     # Only now, with the site answering on the new database: until then the
     # old one is the way back. It is the empty database the migration made, so
     # nothing is lost with it.

@@ -98,7 +98,7 @@ export const NotePanel = ({
   const selection = useRef<{ start: number; end: number } | undefined>(
     undefined,
   );
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/notes`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/notes`;
 
   useEffect(() => {
     if (note === undefined) return;

@@ -26,7 +26,7 @@ export const ManagersTab = ({
   readonly tournament: string;
 }): React.JSX.Element => (
   <People
-    at={`/api/v1/tournaments/${idInAddress(tournament)}/managers`}
+    at={`/api/site/tournaments/${idInAddress(tournament)}/managers`}
     listedUnder="managers"
     name="managers"
     fieldAbove

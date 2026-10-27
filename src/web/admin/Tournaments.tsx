@@ -178,9 +178,9 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
   useEffect(() => {
     let current = true;
     void Promise.all([
-      asked<{ years: number[] }>("/api/v1/my/tournament-years"),
+      asked<{ years: number[] }>("/api/site/my/tournament-years"),
       asked<{ tournaments: Listed[] }>(
-        `/api/v1/my/tournaments?year=${String(year)}`,
+        `/api/site/my/tournaments?year=${String(year)}`,
       ),
     ]).then(([yearsAnswer, tournamentsAnswer]) => {
       if (!current) return;
@@ -195,7 +195,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
 
   useEffect(() => {
     let current = true;
-    void asked<Names>("/api/v1/tournaments/new").then((answer) => {
+    void asked<Names>("/api/site/tournaments/new").then((answer) => {
       if (current) setNames(answer);
     });
     const moved = (): void => {
@@ -346,7 +346,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     // the tournament is now rather than what the reader pressed.
     try {
       await fetch(
-        `/api/v1/tournaments/${idInAddress(tournament.id)}/${action}`,
+        `/api/site/tournaments/${idInAddress(tournament.id)}/${action}`,
         { method: "POST" },
       );
     } catch {

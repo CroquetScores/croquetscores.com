@@ -73,7 +73,7 @@ const drawFilled = async (
   tournament: string,
   competition: string,
 ): Promise<boolean> => {
-  const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
+  const ofTournament = `/api/site/tournaments/${idInAddress(tournament)}`;
   const asked = async <T,>(path: string): Promise<T | undefined> =>
     fetch(path, { headers: { accept: "application/json" } })
       .then(async (response) =>
@@ -114,7 +114,7 @@ export const ScoresTab = ({
   >();
   // The game Edit was pressed on, which the dialog corrects.
   const [correcting, setCorrecting] = useState<Listed | undefined>();
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/games`;
 
   const { listed, asking, answered, askAgain } = useListed<Listed>(at, "games");
 

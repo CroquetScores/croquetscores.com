@@ -90,7 +90,7 @@ export const CarryForwardDialog = ({
     setSending(true);
     try {
       const response = await fetch(
-        `/api/v1/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/${idInAddress(player.id)}/carry-forward`,
+        `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}/players/${idInAddress(player.id)}/carry-forward`,
         {
           method: "PUT",
           headers: {

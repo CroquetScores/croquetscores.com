@@ -259,7 +259,7 @@ import {
   GoogleOpenIdConnectFailed,
   type GoogleEndpoints,
 } from "../infrastructure/identity/GoogleOpenIdConnect.js";
-import { apiV1 } from "./api/v1/index.js";
+import { apiSite } from "./api/site/index.js";
 import {
   adminBuildHeader,
   adminPage,
@@ -1549,11 +1549,11 @@ export const buildApplication = async (
   const builtAs = buildOf(adminPageBuilt);
   const build = (): string => options.build?.() ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
-    if (request.url.startsWith("/api/v1/"))
+    if (request.url.startsWith("/api/site/"))
       reply.header(adminBuildHeader, build());
     done(null, payload);
   });
-  await server.register(apiV1, { prefix: "/api/v1", assets });
+  await server.register(apiSite, { prefix: "/api/site", assets });
   await server.register(
     auth({
       googleConfigured: config.google !== undefined,

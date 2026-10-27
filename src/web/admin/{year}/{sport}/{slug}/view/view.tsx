@@ -142,7 +142,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
   useEffect(() => {
     // Asked as the page that edits it asks, and refused the same way: only a
     // manager runs a tournament, and an archived one can only be restored.
-    void fetch(`/api/v1/tournaments/at/${address}/page`, {
+    void fetch(`/api/site/tournaments/at/${address}/page`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {

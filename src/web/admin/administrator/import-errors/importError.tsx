@@ -43,7 +43,7 @@ export const ImportError = ({ document }: Props): React.JSX.Element => {
 
   useEffect(() => {
     let current = true;
-    void fetch(`/api/v1/import-errors/${encodeURIComponent(document)}`, {
+    void fetch(`/api/site/import-errors/${encodeURIComponent(document)}`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {

@@ -26,7 +26,7 @@ declare module "fastify" {
 }
 
 // Where the health check is (maintenance.ts says why it is let through).
-const healthCheck = "/api/v1/health";
+const healthCheck = "/api/site/health";
 
 const names: Readonly<Record<Site, string>> = {
   croquetScores: "Croquet Scores",

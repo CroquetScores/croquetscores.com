@@ -149,7 +149,7 @@ export const TestDialog = ({
   const [sending, setSending] = useState(false);
   const firstTeamField = useRef<HTMLSelectElement>(null);
   const startsField = useRef<HTMLInputElement>(null);
-  const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
+  const ofTournament = `/api/site/tournaments/${idInAddress(tournament)}`;
 
   useEffect(() => {
     const asked = async <T,>(path: string): Promise<T | undefined> =>
@@ -162,7 +162,7 @@ export const TestDialog = ({
       setTeams(answer?.teams ?? []);
     });
     void asked<{ starts: string; finishes: string }>(
-      `/api/v1/tournaments/at/${address}`,
+      `/api/site/tournaments/at/${address}`,
     ).then((answer) => {
       if (answer === undefined) return;
       setDays({ starts: answer.starts, finishes: answer.finishes });

@@ -87,7 +87,7 @@ export const ImportWorldRankingPlayers = (): React.JSX.Element => {
     // saying why.
     let last: Said | undefined;
     try {
-      const response = await fetch("/api/v1/world-ranking-players/import", {
+      const response = await fetch("/api/site/world-ranking-players/import", {
         method: "POST",
         headers: { accept: "application/x-ndjson, application/json" },
       });

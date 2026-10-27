@@ -48,7 +48,7 @@ export const ViewTeam = ({ address, slug }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
 
   useEffect(() => {
-    void fetch(`/api/v1/tournaments/at/${address}/teams/${slug}/page`, {
+    void fetch(`/api/site/tournaments/at/${address}/teams/${slug}/page`, {
       headers: { accept: "application/json" },
     })
       .then(async (response) => {

@@ -353,7 +353,7 @@ Then("the stylesheet is served", function (this: SpecWorld) {
 When("the site's health check is asked for", async function (this: SpecWorld) {
   builtFor(this).response = await builtFor(this).application.server.inject({
     method: "GET",
-    url: "/api/v1/health",
+    url: "/api/site/health",
   });
 });
 

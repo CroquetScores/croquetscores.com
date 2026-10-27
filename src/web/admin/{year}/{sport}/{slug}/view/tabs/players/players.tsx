@@ -57,7 +57,7 @@ export const PlayersTab = ({
   const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
   // The player a manager is asked about before they are archived.
   const [archiving, setArchiving] = useState<Listed | undefined>();
-  const at = `/api/v1/tournaments/${idInAddress(tournament)}/players`;
+  const at = `/api/site/tournaments/${idInAddress(tournament)}/players`;
 
   const { listed, asking, answered, askAgain } = useListed<Listed>(
     at,

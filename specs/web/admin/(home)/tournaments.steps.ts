@@ -860,9 +860,9 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
     const to = new URL(response.url()).pathname;
     const method = response.request().method();
     return from === "/admin/tournaments/new"
-      ? to === "/api/v1/tournaments" && method === "POST"
+      ? to === "/api/site/tournaments" && method === "POST"
       : from.endsWith("/edit") &&
-          to.startsWith("/api/v1/tournaments/at/") &&
+          to.startsWith("/api/site/tournaments/at/") &&
           method === "PUT";
   };
   const answered =
@@ -886,7 +886,7 @@ When("{string} is pressed", async function (this: SpecWorld, option: string) {
     ? page.waitForResponse(
         (response) =>
           ["POST", "PUT"].includes(response.request().method()) &&
-          new URL(response.url()).pathname.startsWith("/api/v1/tournaments/"),
+          new URL(response.url()).pathname.startsWith("/api/site/tournaments/"),
       )
     : undefined;
   await pressing.click();

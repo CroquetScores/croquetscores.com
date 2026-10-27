@@ -101,7 +101,7 @@ export const CompetitionPlayersTab = ({
   // The player whose carry forward is being changed, in its dialog.
   const [carrying, setCarrying] = useState<Listed | undefined>();
   const choice = useRef<HTMLSelectElement>(null);
-  const ofTournament = `/api/v1/tournaments/${idInAddress(tournament)}`;
+  const ofTournament = `/api/site/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions/${idInAddress(competition)}`;
 
   useEffect(() => {

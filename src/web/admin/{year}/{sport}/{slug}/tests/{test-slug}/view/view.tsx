@@ -63,7 +63,7 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
       // Found as a competition's page is, since a test is one of its
       // tournament's competitions, and refused the same way.
       const response = await fetch(
-        `/api/v1/tournaments/at/${address}/competitions/${slug}/page`,
+        `/api/site/tournaments/at/${address}/competitions/${slug}/page`,
         { headers: { accept: "application/json" } },
       );
       if (!response.ok) {
@@ -86,7 +86,7 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
         return;
       }
       const all = await fetch(
-        `/api/v1/tournaments/${idInAddress(answer.tournament)}/competitions`,
+        `/api/site/tournaments/${idInAddress(answer.tournament)}/competitions`,
         { headers: { accept: "application/json" } },
       );
       const listed = all.ok

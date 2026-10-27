@@ -24,7 +24,7 @@ type Asked =
 
 export const EditTournament = ({ address }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
-  const at = `/api/v1/tournaments/at/${address}`;
+  const at = `/api/site/tournaments/at/${address}`;
 
   useEffect(() => {
     void fetch(at, { headers: { accept: "application/json" } })

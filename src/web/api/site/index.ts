@@ -1,5 +1,6 @@
-// /api/v1 — JSON, and the same endpoints whether a mobile app or the admin SPA
-// is asking. Operations arrive here as features are accepted.
+// /api/site — JSON, for the website's own pages. It is not for mobile apps or
+// anybody else's software, which will have a public API of its own, apart from
+// this. Operations arrive here as features are accepted.
 import { ChangePlayerWorldRankingName } from "../../../application/operations/tournaments/ChangePlayerWorldRankingName.js";
 import { ChangeTeamPlayerWorldRankingName } from "../../../application/operations/tournaments/ChangeTeamPlayerWorldRankingName.js";
 import type {
@@ -233,12 +234,12 @@ const addressOf = ({ year, sport, slug }: AtAddress): string =>
   `${year}/${sport}/${slug}`;
 
 /** What the API is given besides its routes. */
-export interface ApiV1Options {
+export interface ApiSiteOptions {
   /** Where the site's own files are found, for the address of a flag's image. */
   readonly assets: Assets;
 }
 
-export const apiV1: FastifyPluginCallback<ApiV1Options> = (
+export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   server,
   { assets },
   done,

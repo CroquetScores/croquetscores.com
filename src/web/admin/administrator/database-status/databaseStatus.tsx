@@ -43,7 +43,7 @@ export const DatabaseStatus = (): React.JSX.Element => {
   useEffect(() => {
     void (async () => {
       try {
-        const response = await fetch("/api/v1/database-access", {
+        const response = await fetch("/api/site/database-access", {
           headers: { accept: "application/json" },
         });
         if (response.ok) shown((await response.json()) as Status);
@@ -62,7 +62,7 @@ export const DatabaseStatus = (): React.JSX.Element => {
     setRefused([]);
     setProblem(undefined);
     try {
-      const response = await fetch(`/api/v1/database-access/${what}`, {
+      const response = await fetch(`/api/site/database-access/${what}`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
