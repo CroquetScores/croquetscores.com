@@ -630,6 +630,29 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then "Gateball" is not offered as a sport
 
+  Rule: A long list of countries opens at a height that fits the window
+
+    A drop-down list too tall for the room above and the room below its field
+    is shut by Chrome as soon as it is opened, so a reader sees it flicker
+    and nothing more. With every country on offer, the list is always that
+    tall. It is given a height of its own, and scrolls inside it. It stays a
+    plain drop-down list, so a browser that cannot draw it so keeps its own.
+
+    Background:
+      Given the home page is open
+
+    Scenario: The country list opens no taller than 20 rem
+      When the country list is opened
+      Then the country list is no taller than 20 rem
+
+    Scenario: The country list is still a drop-down list
+      Then the country is chosen from a drop-down list
+
+    Scenario: The country list opens at the same height in dark
+      Given a machine that prefers dark
+      When the country list is opened
+      Then the country list is no taller than 20 rem
+
   Rule: Pressing a flag narrows the lists to its country
 
     Background:
