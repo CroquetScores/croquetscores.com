@@ -11,13 +11,19 @@ Feature: The home page lists recent results and upcoming tournaments
   to every tournament this year, for a reader after one further off or long
   finished.
 
-  Each list is a table of three columns: the tournament's dates, the flag of
-  the country it is played in, and its name. The dates are said as the admin
+  Each list is a table of up to four columns: the tournament's dates, the
+  flag of the country it is played in, its name, and, on a tablet or wider,
+  the code of its sport. The dates are said as the admin
   says them (`tournaments.feature`), the month once where both days are in
   it. The flag is named for a reader who cannot see it by what pressing it
   does, "Only tournaments in New Zealand", with the country it is the flag of
   named in the reader's language. The flags' column has no heading, since a
-  flag says what it is, and so it is not sorted by.
+  flag says what it is, and so it is not sorted by. Nor does the sport's, which
+  is the sport's code in capitals on a colour of its own, and which a phone
+  leaves out because the room there is wanted for the names. A tablet is
+  `40rem` wide, as it is for the navigation (`navigation.feature`). The same
+  column is in a year's list (`year.feature`) and a sport's in a year
+  (`yearSport.feature`).
 
   A row leads to the tournament's page, at its year, its sport and its
   name, wherever on the row it is pressed but its flag, since a row is read
@@ -317,6 +323,40 @@ Feature: The home page lists recent results and upcoming tournaments
       And a browser that asks for "es"
       When the home page is opened
       Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos de Nueva Zelanda"
+
+  Rule: A tablet or wider shows each tournament's sport
+
+    Scenario: The sport is shown as its code in capitals
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the home page is opened
+      Then "Spring Open" shows the sport "GC" in the upcoming tournaments
+
+    Scenario: The sport is shown at the narrowest a tablet is
+      Given a viewport 640 pixels wide
+      When the home page is opened
+      Then "Spring Open" shows the sport "AC" in the upcoming tournaments
+
+    Scenario: The sport is shown in the recent results as well
+      Given a viewport 768 pixels wide
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the home page is opened
+      Then "Spring Open" shows the sport "AC" in the recent results
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then "Spring Open" does not show its sport in the upcoming tournaments
+
+    Scenario: The sport's column has no heading to press
+      Given a viewport 768 pixels wide
+      When the home page is opened
+      Then the fourth column of the upcoming tournaments is ""
 
   Rule: Pressing a column heading sorts the table by it
 

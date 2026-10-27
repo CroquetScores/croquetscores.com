@@ -285,7 +285,7 @@ Then(
 // Its rows -------------------------------------------------------------------------
 
 Then(
-  /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is "(.*)"$/,
+  /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is "(.*)"$/,
   async function (
     this: SpecWorld,
     which: string,
@@ -376,6 +376,35 @@ Then(
     assert.ok(
       shown.includes(`/images/${kept!}.`),
       `The flag shown is ${shown}.`,
+    );
+  },
+);
+
+const sportOf = (world: SpecWorld, name: string, tournament: string): Locator =>
+  rowOf(world, listNamed(name), tournament).locator(".tournament-sport");
+
+// Read as the reader sees it, so that a column the stylesheet hides counts as
+// not shown.
+Then(
+  /^"(.*)" shows the sport "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
+  async function (
+    this: SpecWorld,
+    tournament: string,
+    code: string,
+    name: string,
+  ) {
+    const shown = sportOf(this, name, tournament);
+    assert.ok(await shown.isVisible(), "The sport is not shown.");
+    assert.equal(await shown.innerText(), code);
+  },
+);
+
+Then(
+  /^"(.*)" does not show its sport in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
+  async function (this: SpecWorld, tournament: string, name: string) {
+    assert.ok(
+      !(await sportOf(this, name, tournament).isVisible()),
+      "The sport is shown.",
     );
   },
 );

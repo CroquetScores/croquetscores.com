@@ -1783,6 +1783,34 @@ main {
   image-rendering: pixelated;
 }
 
+/* The sport's code, in capitals, on the colour of the button that does what a
+   form is for: that pairing is already measured in both themes, so the badge
+   needs no colour of its own. Left out on a phone, where the room is wanted
+   for the names, and shown from the width the navigation is laid out inline,
+   which is where a tablet begins. */
+.tournament-list .tournament-sport {
+  display: none;
+  padding-inline-start: 0;
+}
+
+@media (min-width: 40rem) {
+  .tournament-list .tournament-sport {
+    display: table-cell;
+  }
+}
+
+.tournament-list .sport-code {
+  display: inline-block;
+  min-width: 2.5em;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-1);
+  background: var(--action);
+  color: var(--action-ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
 .tournament-filter {
   display: flex;
   flex-wrap: wrap;

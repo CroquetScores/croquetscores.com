@@ -175,6 +175,16 @@ Feature: A sport's page in a year lists every tournament of it starting then
       When the page for "ac" in 2026 is opened
       Then the flag of "Spring Open" in the sport's tournaments is named "Only tournaments in New Zealand"
 
+    Scenario: The sport is shown as its code in capitals on a tablet
+      Given a viewport 768 pixels wide
+      When the page for "ac" in 2026 is opened
+      Then "Spring Open" shows the sport "AC" in the sport's tournaments
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the page for "ac" in 2026 is opened
+      Then "Spring Open" does not show its sport in the sport's tournaments
+
   Rule: The tournaments begin sorted by date, earliest first, and sort by a column pressed
 
     Background:

@@ -179,6 +179,17 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Spring Open" is dated "10-12 oct" in the year's tournaments
 
+    Scenario: The sport is shown as its code in capitals on a tablet
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the page for 2026 is opened
+      Then "Spring Open" shows the sport "GC" in the year's tournaments
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the page for 2026 is opened
+      Then "Spring Open" does not show its sport in the year's tournaments
+
   Rule: The tournaments begin sorted by date, earliest first
 
     Background:
