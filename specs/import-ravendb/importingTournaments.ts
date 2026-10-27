@@ -298,10 +298,10 @@ interface Importing {
   /** The days the scenario asks the import for the tournaments of. */
   readonly days: { from?: string; to?: string };
   /**
-   * When the scenario's import is run. A day after the finish every
-   * tournament a scenario writes is given (the day it says otherwise of), so
-   * that a tournament that lists no competition is left behind as it was
-   * before the day mattered.
+   * When the scenario's import is run. A day after the finish a tournament
+   * is given unless the scenario says another, so that one that lists no
+   * competition is left behind as it was before the day mattered. A scenario
+   * that writes a finish on or after it is about that day.
    */
   readonly run: { today: string };
   readonly accepted: AcceptedInScenario;

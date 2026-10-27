@@ -2008,6 +2008,14 @@ Feature: Importing each of the old sites' tournaments with everything that names
       When the tournament is imported
       Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
 
+    Scenario: A tournament that lists no competition and starts before the days asked for is left behind
+      Given the import is only of tournaments from "2026-10-27"
+      And the tournament started on "2026-10-20T00:00:00.0000000"
+      And the tournament finished on "2026-10-28T00:00:00.0000000"
+      And the tournament lists nothing
+      When the tournament is imported
+      Then "tournaments/12" on "croquetscores.com" is not kept as any tournament
+
   Rule: A tournament that started outside the days asked for is left behind with everything that names it
 
     The import can be asked for only the tournaments that started within some
