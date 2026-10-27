@@ -20,6 +20,7 @@ import {
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
+import { ordinal } from "../../support/ordinals.js";
 import { changeTournament } from "../../support/tournaments.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
@@ -1096,6 +1097,27 @@ Then(
         (await offeredIn(this, field)).includes(choice),
         does === "offers",
         `The filter ${does} ${choice}.`,
+      );
+    });
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh) country in the filter is "(.*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    await eventually(this, async () => {
+      assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
+    });
+  },
+);
+
+Then(
+  /^the filter's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await filterField(this, "country").locator("hr").count(),
+        Number(count),
       );
     });
   },

@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
+import { GroupedOptions } from "../GroupedOptions.js";
 import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
@@ -391,11 +393,12 @@ export const TournamentForm = ({
                       }}
                     >
                       <option value="" />
-                      {offered.countries.map(({ code, name: called }) => (
-                        <option key={code} value={code}>
-                          {called}
-                        </option>
-                      ))}
+                      <GroupedOptions
+                        groups={inCountryGroups(
+                          offered.countries,
+                          document.documentElement.lang || "en",
+                        )}
+                      />
                     </select>
                   )}
                 </Field>

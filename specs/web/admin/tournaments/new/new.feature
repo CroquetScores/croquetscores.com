@@ -166,6 +166,29 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then the tournament "Spring Open" is kept in the format "Standard"
 
+  Rule: The countries are offered in groups, the ones most played in first
+
+    The groups and their order are `countryOrder.feature`'s. A line is drawn
+    between them.
+
+    Scenario Outline: The countries most played in are offered first
+      When the new tournament page is opened
+      Then the <which> country in the form is "<country>"
+
+      Examples:
+        | which  | country       |
+        | first  | Australia     |
+        | second | Egypt         |
+        | third  | England       |
+        | fourth | New Zealand   |
+        | fifth  | Spain         |
+        | sixth  | United States |
+        | seventh| Austria       |
+
+    Scenario: A line is drawn between the three groups
+      When the new tournament page is opened
+      Then the form's country list has 2 lines drawn in it
+
   Rule: A region is asked for only where the country has regions
 
     Scenario: A country with regions asks for one

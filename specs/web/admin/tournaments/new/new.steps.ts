@@ -4,6 +4,7 @@ import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
 import { unmarkedWithin } from "../../../support/marks.js";
+import { ordinal } from "../../../support/ordinals.js";
 import { keptCalled } from "../../../support/tournaments.js";
 
 // The admin draws the form itself, after asking the API what the website
@@ -133,17 +134,12 @@ const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
     (words) => words !== "",
   );
 
-const ordinals = ["first", "second", "third", "fourth", "fifth"];
-
 Then(
-  /^the (first|second|third|fourth|fifth) (sport|format) offered is "([^"]*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, list: string, words: string) {
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
-      assert.equal(
-        (await offeredIn(this, label))[ordinals.indexOf(which)],
-        words,
-      );
+      assert.equal((await offeredIn(this, label))[ordinal(which)], words);
     });
   },
 );
@@ -154,6 +150,27 @@ Then(
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, label)).length, Number(count));
+    });
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh) country in the form is "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    await eventually(this, async () => {
+      assert.equal((await offeredIn(this, "Country"))[ordinal(which)], country);
+    });
+  },
+);
+
+Then(
+  /^the form's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await field(this, "Country").locator("hr").count(),
+        Number(count),
+      );
     });
   },
 );

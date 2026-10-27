@@ -16,6 +16,7 @@ import {
 } from "../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../support/world.js";
 import { unmarkedWithin } from "./marks.js";
+import { ordinal } from "./ordinals.js";
 import { changeTournament } from "./tournaments.js";
 
 // The pages are drawn by the server, with no scripting, so what is read is
@@ -74,14 +75,6 @@ const headingOf = (world: SpecWorld, name: List, column: string): Locator =>
 
 const words = async (heading: Locator): Promise<string> =>
   ((await heading.textContent()) ?? "").replace(/^[↑↓]/, "").trim();
-
-const places = ["first", "second", "third"];
-
-const placeOf = (which: string): number => {
-  const at = places.indexOf(which);
-  assert.ok(at >= 0, `There is no ${which} place.`);
-  return at;
-};
 
 // Followed, and waited on until the page it leads to has loaded, so that the
 // next step reads that page.
@@ -160,7 +153,7 @@ When(
   async function (this: SpecWorld, which: string, name: string) {
     await follow(
       this,
-      headings(this, listNamed(name)).nth(placeOf(which)).locator("a"),
+      headings(this, listNamed(name)).nth(ordinal(which)).locator("a"),
     );
   },
 );
@@ -264,7 +257,7 @@ Then(
   ) {
     assert.equal(
       await rows(this, listNamed(name))
-        .nth(placeOf(which))
+        .nth(ordinal(which))
         .locator(".tournament-name")
         .textContent(),
       tournament,
@@ -300,7 +293,7 @@ Then(
     column: string,
   ) {
     assert.equal(
-      await words(headings(this, listNamed(name)).nth(placeOf(which))),
+      await words(headings(this, listNamed(name)).nth(ordinal(which))),
       column,
     );
   },
@@ -310,7 +303,7 @@ Then(
   /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) has no heading$/,
   async function (this: SpecWorld, which: string, name: string) {
     assert.equal(
-      await words(headings(this, listNamed(name)).nth(placeOf(which))),
+      await words(headings(this, listNamed(name)).nth(ordinal(which))),
       "",
     );
   },
@@ -321,7 +314,7 @@ Then(
   async function (this: SpecWorld, which: string, name: string) {
     assert.equal(
       await headings(this, listNamed(name))
-        .nth(placeOf(which))
+        .nth(ordinal(which))
         .locator("a")
         .count(),
       0,
@@ -527,6 +520,23 @@ Then(
   },
 );
 
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh) country offered is "(.*)"$/,
+  async function (this: SpecWorld, which: string, country: string) {
+    assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
+  },
+);
+
+Then(
+  /^the country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
+    assert.equal(
+      await filterField(this, "country").locator("hr").count(),
+      Number(count),
+    );
+  },
+);
+
 Then("no region is offered", async function (this: SpecWorld) {
   assert.deepEqual(await offeredIn(this, "region"), []);
 });
@@ -628,7 +638,7 @@ const rowColour = (
   name: string,
   which: string,
 ): Promise<string> =>
-  drawnAs(rows(world, listNamed(name)).nth(placeOf(which)), "background-color");
+  drawnAs(rows(world, listNamed(name)).nth(ordinal(which)), "background-color");
 
 Then(
   /^the (second|third) of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is (not )?on the colour the first is on$/,

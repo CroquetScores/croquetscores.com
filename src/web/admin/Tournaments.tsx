@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
+import { GroupedOptions } from "./GroupedOptions.js";
 import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
 import "./tournaments.css";
@@ -304,7 +306,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     field: "country" | "region" | "sport",
     label: string,
     any: string,
-    from: readonly { readonly code: string; readonly name: string }[],
+    from: Parameters<typeof GroupedOptions>[0]["groups"],
     chosen: string | undefined,
     changed: (code: string | undefined) => void,
   ): React.JSX.Element => (
@@ -319,11 +321,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         }}
       >
         <option value="">{any}</option>
-        {from.map((each) => (
-          <option key={each.code} value={each.code}>
-            {each.name}
-          </option>
-        ))}
+        <GroupedOptions groups={from} />
       </select>
     </span>
   );
@@ -502,7 +500,13 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   "country",
                   say("tournamentList.filter.country"),
                   say("tournamentList.filter.anyCountry"),
-                  sorted(offeredCountries, countryNamed),
+                  inCountryGroups(
+                    offeredCountries.map((code) => ({
+                      code,
+                      name: countryNamed(code),
+                    })),
+                    document.documentElement.lang || "en",
+                  ),
                   country,
                   // The region belongs to the country, so another country
                   // chosen leaves none.
