@@ -54,6 +54,12 @@ Given(
   },
 );
 
+// The day the import is run on, as year-month-day, which a tournament that
+// lists no competition is measured against.
+Given("the import is run on {string}", function (this: SpecWorld, day: string) {
+  importingOf(this).run.today = day;
+});
+
 Given(
   "the import is only of tournaments to {string}",
   function (this: SpecWorld, day: string) {

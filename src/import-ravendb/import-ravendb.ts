@@ -154,6 +154,13 @@ const switches = (() => {
   }
 })();
 const started = Date.now();
+// The day of the machine the import is run on, since the old sites wrote the
+// day a tournament was held and not a moment, and that is the day its managers
+// were living. Read once, so that a run that crosses midnight judges every
+// tournament by the day it began on.
+const today = new Date(started - new Date(started).getTimezoneOffset() * 60_000)
+  .toISOString()
+  .slice(0, 10);
 
 const pool = createPool(config.databaseUrl);
 try {
@@ -358,6 +365,7 @@ try {
         seeNotes,
         importErrorsNote,
         { from: switches.from, to: switches.to },
+        () => today,
       ),
       ...leftOvers,
     ];
