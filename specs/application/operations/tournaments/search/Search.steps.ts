@@ -290,6 +290,58 @@ Then(
   },
 );
 
+const tournamentFound = (world: SpecWorld, name: string) => {
+  const tournament = found(world).tournaments.find(
+    (each) => each.name === name,
+  );
+  assert.ok(tournament !== undefined, `${name} is not found.`);
+  return tournament;
+};
+
+const competitionsTournament = (world: SpecWorld, name: string) => {
+  const competition = found(world).competitions.find(
+    (each) => each.name === name,
+  );
+  assert.ok(competition !== undefined, `${name} is not found.`);
+  return competition.tournament;
+};
+
+Then(
+  /^the tournament "(.*)" is found (starting|finishing) on "(.*)"$/,
+  function (this: SpecWorld, name: string, which: string, day: string) {
+    const tournament = tournamentFound(this, name);
+    assert.equal(
+      which === "starting" ? tournament.starts : tournament.finishes,
+      day,
+    );
+  },
+);
+
+Then(
+  "the tournament {string} is found in the country {string}",
+  function (this: SpecWorld, name: string, country: string) {
+    assert.equal(tournamentFound(this, name).country, country);
+  },
+);
+
+Then(
+  /^the competition "(.*)" is found in a tournament (starting|finishing) on "(.*)"$/,
+  function (this: SpecWorld, name: string, which: string, day: string) {
+    const tournament = competitionsTournament(this, name);
+    assert.equal(
+      which === "starting" ? tournament.starts : tournament.finishes,
+      day,
+    );
+  },
+);
+
+Then(
+  "the competition {string} is found in a tournament in the country {string}",
+  function (this: SpecWorld, name: string, country: string) {
+    assert.equal(competitionsTournament(this, name).country, country);
+  },
+);
+
 Then(
   "the search is refused as {string}",
   function (this: SpecWorld, code: string) {
