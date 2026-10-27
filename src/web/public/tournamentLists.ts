@@ -232,7 +232,7 @@ export const table = (
   // The flags' column between the dates and the names, with nothing over it.
   const headings = [
     heading("date"),
-    `                <td></td>`,
+    `                <td class="tournament-flag"></td>`,
     heading("name"),
   ].join("\n");
   // A flag leads to the page narrowed to its country, keeping how each list is

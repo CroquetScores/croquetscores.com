@@ -140,7 +140,7 @@ export const registerSearchPage = (
         // has the tournament it is in after its name, which is not sorted by.
         const headings = [
           headed("date"),
-          `                <td class="search-flag"></td>`,
+          `                <td class="tournament-flag"></td>`,
           headed("name"),
           ...(kind === "competition"
             ? [
@@ -172,7 +172,7 @@ export const registerSearchPage = (
           .map(
             (row) => `                <tr class="search-${kind}">
                   <td class="tournament-dates">${escape(datedWithYear(row.tournament.starts, row.tournament.finishes, speaking.language.tag))}</td>
-                  <td class="tournament-flag search-flag">${flagOf(row.tournament)}</td>
+                  <td class="tournament-flag">${flagOf(row.tournament)}</td>
                   <td><a class="tournament-name search-name" href="/${escape(row.address)}">${escape(row.name)}</a></td>${
                     row.of === undefined
                       ? ""

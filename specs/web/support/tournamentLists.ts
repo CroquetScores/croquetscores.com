@@ -316,6 +316,22 @@ Then(
   },
 );
 
+// Asked of the heading and of the first row, since a column left out is left
+// out of both, and a heading kept over cells that are gone, or the reverse,
+// would leave the others under the wrong words.
+Then(
+  /^the country's column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) is (not )?shown$/,
+  async function (this: SpecWorld, name: string, not: string | null) {
+    const flags = list(this, listNamed(name)).locator(".tournament-flag");
+    assert.ok(
+      (await flags.count()) >= 2,
+      `The ${name} have no flags' column to ask after.`,
+    );
+    assert.equal(await flags.first().isVisible(), not === null);
+    assert.equal(await flags.nth(1).isVisible(), not === null);
+  },
+);
+
 Then(
   /^the (first|second|third) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions) cannot be pressed$/,
   async function (this: SpecWorld, which: string, name: string) {

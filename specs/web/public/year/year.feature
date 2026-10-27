@@ -152,6 +152,15 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then the second column of the year's tournaments has no heading
 
+    Scenario: On a phone the country's column is left out
+      Given a viewport 375 pixels wide
+      When the page for 2026 is opened
+      Then the country's column of the year's tournaments is not shown
+
+    Scenario: On a wide screen the country's column is shown
+      When the page for 2026 is opened
+      Then the country's column of the year's tournaments is shown
+
     Scenario: A tournament is dated from its start to its finish
       When the page for 2026 is opened
       Then "Spring Open" is dated "10-12 Oct" in the year's tournaments
