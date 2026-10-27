@@ -71,8 +71,9 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name
   that could not be a person's, a name with neither a letter nor a digit in
-  it (`TournamentPlayer.feature`), a world ranking name that could not be one
-  (`WorldRankingName.feature`), and a name another player in the tournament
+  it (`TournamentPlayer.feature`), a handicap written any other way than a sign, up to two digits and a
+  fraction of one digit (`TournamentPlayer.feature`), a world ranking name that
+  could not be one (`WorldRankingName.feature`), and a name another player in the tournament
   already has, however it is capitalised (`addPlayer.feature`). A refusal about
   no one field is said above the fields. Nothing refused is kept, and the
   dialog stays open.
@@ -792,6 +793,14 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Sam Someone" is typed as the "Name"
       When "Save" is pressed
       Then "Name" is refused with "Tournament.PlayerNameTaken"
+
+    Scenario: A handicap written any other way is refused beside it
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "four" is typed as the "Handicap"
+      When "Add" is pressed
+      Then "Handicap" is refused with "TournamentPlayer.HandicapMalformed"
 
     Scenario: A world ranking name that could not be one is refused beside it
       Given the page of "Spring Open" is open

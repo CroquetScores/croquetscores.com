@@ -63,18 +63,20 @@ interface Props {
 const BYE = "TournamentPlayer.NamedBye";
 
 // The field each refusal is about. One about no one field is said above them.
-type FieldName = "name" | "flag" | "worldRankingName";
+type FieldName = "name" | "handicap" | "flag" | "worldRankingName";
 
 const fieldOf = (code: string): FieldName | undefined =>
   code.startsWith("PersonName.") ||
   code === "TournamentPlayer.NoLetterOrDigit" ||
   code === "Tournament.PlayerNameTaken"
     ? "name"
-    : code === "TournamentPlayer.NoSuchFlag"
-      ? "flag"
-      : code.startsWith("WorldRankingName.")
-        ? "worldRankingName"
-        : undefined;
+    : code === "TournamentPlayer.HandicapMalformed"
+      ? "handicap"
+      : code === "TournamentPlayer.NoSuchFlag"
+        ? "flag"
+        : code.startsWith("WorldRankingName.")
+          ? "worldRankingName"
+          : undefined;
 
 export const PlayerDialog = ({
   tournament,
@@ -350,7 +352,7 @@ export const PlayerDialog = ({
         <Field
           name="handicap"
           label={say("admin.player.handicap")}
-          refused={undefined}
+          refused={refusedFor("handicap")}
         >
           {(tied) => (
             <input

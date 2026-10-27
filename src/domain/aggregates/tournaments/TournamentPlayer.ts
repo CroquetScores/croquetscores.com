@@ -11,6 +11,7 @@ import { WorldRankingName } from "./value-objects/WorldRankingName.js";
 /** Every rule a player can break, besides those of a person's name. */
 export type TournamentPlayerErrorCode =
   | "TournamentPlayer.NoSuchFlag"
+  | "TournamentPlayer.HandicapMalformed"
   | "TournamentPlayer.OrderNotWhole"
   | "TournamentPlayer.OrderTooSmall"
   | "TournamentPlayer.HasGames"
@@ -94,8 +95,8 @@ export class TournamentPlayer {
   /**
    * The new player known by `id` that `details` describe, found at `slug` and
    * in `order`, not archived. Throws {@link ValidationError} naming the first
-   * rule broken: the name first, then the flag, then the world ranking name,
-   * then the order.
+   * rule broken: the name first, then the handicap, then the flag, then the
+   * world ranking name, then the order.
    */
   static from(
     id: TournamentPlayerId,
@@ -166,11 +167,24 @@ export class TournamentPlayer {
       // What is nothing but whitespace was left blank by whoever typed it, so
       // it is nothing represented rather than something called nothing.
       representing: details.representing?.trim() || undefined,
-      // Blank is none, as it is for what they represent.
-      handicap: details.handicap?.trim() || undefined,
+      handicap: TournamentPlayer.#handicapWritten(details.handicap),
       flag: TournamentPlayer.#flagNamed(details.flag),
       worldRankingName: WorldRankingName.from(details.worldRankingName ?? ""),
     };
+  }
+
+  // A sign that may be left off, one or two digits, and a fraction of one
+  // digit that may be left off. Blank is none, as it is for what they
+  // represent. Kept as written, so that "+4" is not shown as "4"; the
+  // tournament only shows it, which is why it is not turned into a number.
+  static #handicapWritten(handicap: string | undefined): string | undefined {
+    const written = handicap?.trim();
+    if (written === undefined || written === "") return undefined;
+    if (!/^[+-]?\d{1,2}(\.\d)?$/.test(written))
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.HandicapMalformed",
+      );
+    return written;
   }
 
   // Refused rather than kept as a name: a flag that is none of the flags there
