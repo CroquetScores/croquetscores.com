@@ -411,7 +411,9 @@ const hueRanges: Readonly<Record<string, readonly [number, number]>> = {
 };
 
 const hueOf = (rgb: string): number => {
-  const [r, g, b] = (rgb.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map(Number);
+  const [r = 0, g = 0, b = 0] = (rgb.match(/\d+(\.\d+)?/g) ?? [])
+    .slice(0, 3)
+    .map(Number);
   const high = Math.max(r, g, b);
   const low = Math.min(r, g, b);
   if (high === low) return 0;
@@ -425,6 +427,12 @@ const hueOf = (rgb: string): number => {
   return (hue * 60 + 360) % 360;
 };
 
+// What the browser has of its own that this asks of it, since the specs are
+// typed without the browser's own types.
+interface BadgeInThePage {
+  getComputedStyle(element: unknown): { readonly backgroundColor: string };
+}
+
 Then(
   /^"(.*)" shows its sport on (orange|green|teal|blue|purple) in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
   async function (
@@ -435,9 +443,13 @@ Then(
   ) {
     const background = await sportOf(this, name, tournament)
       .locator(".sport-code")
-      .evaluate((badge) => getComputedStyle(badge).backgroundColor);
+      .evaluate(
+        (badge) =>
+          (globalThis as unknown as BadgeInThePage).getComputedStyle(badge)
+            .backgroundColor,
+      );
     const hue = hueOf(background);
-    const [from, to] = hueRanges[colour];
+    const [from, to] = hueRanges[colour] ?? [0, 0];
     assert.ok(
       hue >= from && hue <= to,
       `The sport is on ${background}, a hue of ${Math.round(hue)}.`,
