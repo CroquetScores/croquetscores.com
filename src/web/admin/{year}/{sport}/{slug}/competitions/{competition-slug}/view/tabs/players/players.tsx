@@ -5,6 +5,7 @@ import { knows, say } from "../../../../../../../../words.js";
 import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
 import { noOption, optionFace } from "../../../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../../../api.js";
+import { aboutPlayer } from "../../../../../../../../aboutPlayer.js";
 import "../../../../../../../../listed.css";
 
 // A competition's Players tab (competition-players-tab.feature): a drop-down
@@ -40,6 +41,7 @@ interface Listed {
   readonly id: string;
   readonly name: string;
   readonly representing: string | undefined;
+  readonly handicap: string | undefined;
   readonly flag: Seen | undefined;
   readonly tournamentPlayer: string;
   readonly withdrawn: boolean;
@@ -259,7 +261,7 @@ export const CompetitionPlayersTab = ({
     >
       <span className="listed-who">
         <span className="listed-name">{nameOf(player)}</span>
-        <span className="listed-about">{player.representing ?? ""}</span>
+        <span className="listed-about">{aboutPlayer(player)}</span>
         {player.flag === undefined ? null : (
           <img
             className="listed-flag"

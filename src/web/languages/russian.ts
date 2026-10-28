@@ -930,6 +930,7 @@ export const russian: Language = {
     "admin.player.addTitle": "Добавление игрока",
     "admin.player.editTitle": "Изменение игрока",
     "admin.player.name": "Имя",
+    "admin.player.handicap": "Гандикап",
     "admin.player.representing": "Представляет",
     "admin.player.worldRankingName": "Имя игрока в мировом рейтинге",
     "admin.player.worldRankingKnown": "Мировой рейтинг знает это имя.",
@@ -943,6 +944,8 @@ export const russian: Language = {
     "Tournament.PlayerNameTaken":
       "Другой игрок этого турнира уже носит такое имя.",
     "TournamentPlayer.NoSuchFlag": "Выберите один из имеющихся флагов.",
+    "TournamentPlayer.HandicapMalformed":
+      "Запишите гандикап числом. Например: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Игрока нельзя назвать Bye.",
     "TournamentPlayer.NoLetterOrDigit": "В имени должна быть буква или цифра.",
     // The dialog over the player dialog when a player is named as a bye.

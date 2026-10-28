@@ -990,6 +990,7 @@ export const spanish: Language = {
     "admin.player.addTitle": "Añadir jugador",
     "admin.player.editTitle": "Editar jugador",
     "admin.player.name": "Nombre",
+    "admin.player.handicap": "Hándicap",
     "admin.player.representing": "Representa a",
     "admin.player.worldRankingName": "Nombre del jugador en el ranking mundial",
     // Beside the world ranking name: whether the world rankings know it.
@@ -1006,6 +1007,8 @@ export const spanish: Language = {
     "Tournament.PlayerNameTaken":
       "Otro jugador de este torneo ya tiene ese nombre.",
     "TournamentPlayer.NoSuchFlag": "Elige una de las banderas disponibles.",
+    "TournamentPlayer.HandicapMalformed":
+      "Escribe el hándicap como un número. Por ejemplo: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Un jugador no puede llamarse Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Un nombre necesita una letra o un dígito.",

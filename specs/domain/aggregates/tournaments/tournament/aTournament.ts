@@ -61,6 +61,7 @@ interface PlayerSaid {
   id?: string;
   name?: string;
   representing?: string;
+  handicap?: string;
   flag?: string;
   worldRankingName?: string;
 }

@@ -923,6 +923,7 @@ export const japanese: Language = {
     "admin.player.addTitle": "選手を追加",
     "admin.player.editTitle": "選手を編集",
     "admin.player.name": "名前",
+    "admin.player.handicap": "ハンディキャップ",
     "admin.player.representing": "代表",
     "admin.player.worldRankingName": "世界ランキングの選手名",
     // Beside the world ranking name: whether the world rankings know it.
@@ -938,6 +939,8 @@ export const japanese: Language = {
     "Tournament.PlayerNameTaken":
       "この大会のほかの選手がすでにその名前を使っています。",
     "TournamentPlayer.NoSuchFlag": "一覧にある国旗から選んでください。",
+    "TournamentPlayer.HandicapMalformed":
+      "ハンディキャップは数字で書いてください。例：-1.5、-1、0、1、2.5、24。",
     "TournamentPlayer.NamedBye": "選手に「Bye」という名前は付けられません。",
     "TournamentPlayer.NoLetterOrDigit": "名前には文字か数字が必要です。",
     // The dialog over the player dialog when a player is named as a bye.

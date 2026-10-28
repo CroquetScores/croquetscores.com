@@ -10,6 +10,7 @@ export interface ListedCompetitionPlayer {
   /** What the tournament says of the person they are. */
   readonly name: string;
   readonly representing: string | undefined;
+  readonly handicap: string | undefined;
   readonly flag: string | undefined;
   readonly withdrawn: boolean;
   /**

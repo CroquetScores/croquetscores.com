@@ -985,6 +985,7 @@ export const afrikaans: Language = {
     "admin.player.addTitle": "Voeg speler by",
     "admin.player.editTitle": "Wysig speler",
     "admin.player.name": "Naam",
+    "admin.player.handicap": "Voorgee",
     "admin.player.representing": "Verteenwoordig",
     "admin.player.worldRankingName": "Wêreldranglys-spelernaam",
     // Beside the world ranking name: whether the world rankings know it.
@@ -1000,6 +1001,8 @@ export const afrikaans: Language = {
     "Tournament.PlayerNameTaken":
       "Nog 'n speler in hierdie toernooi het reeds daardie naam.",
     "TournamentPlayer.NoSuchFlag": "Kies een van die vlae wat daar is.",
+    "TournamentPlayer.HandicapMalformed":
+      "Skryf die handicap as 'n getal. Byvoorbeeld: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "'n Speler kan nie Bye genoem word nie.",
     "TournamentPlayer.NoLetterOrDigit":
       "'n Naam moet 'n letter of syfer bevat.",

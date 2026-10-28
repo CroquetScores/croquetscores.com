@@ -973,6 +973,7 @@ export const swedish: Language = {
     "admin.player.addTitle": "Lägg till spelare",
     "admin.player.editTitle": "Redigera spelare",
     "admin.player.name": "Namn",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Representerar",
     "admin.player.worldRankingName": "Spelarens namn i världsrankingen",
     // Bredvid namnet i världsrankingen: om världsrankingen känner till det.
@@ -989,6 +990,8 @@ export const swedish: Language = {
     "Tournament.PlayerNameTaken":
       "En annan spelare i den här turneringen har redan det namnet.",
     "TournamentPlayer.NoSuchFlag": "Välj en av de flaggor som finns.",
+    "TournamentPlayer.HandicapMalformed":
+      "Skriv handicapet som ett tal. Till exempel: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "En spelare kan inte heta Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Ett namn måste innehålla en bokstav eller en siffra.",

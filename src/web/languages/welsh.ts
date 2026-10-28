@@ -955,6 +955,7 @@ export const welsh: Language = {
     "admin.player.addTitle": "Ychwanegu chwaraewr",
     "admin.player.editTitle": "Golygu chwaraewr",
     "admin.player.name": "Enw",
+    "admin.player.handicap": "Anfantais",
     "admin.player.representing": "Yn cynrychioli",
     "admin.player.worldRankingName": "Enw'r chwaraewr ar restr detholion y byd",
     // Beside the world ranking name: whether the world rankings know it.
@@ -971,6 +972,8 @@ export const welsh: Language = {
     "Tournament.PlayerNameTaken":
       "Mae gan chwaraewr arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
     "TournamentPlayer.NoSuchFlag": "Dewiswch un o'r baneri sydd ar gael.",
+    "TournamentPlayer.HandicapMalformed":
+      "Ysgrifennwch yr anfantais fel rhif. Er enghraifft: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Ni all chwaraewr gael ei alw'n Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Mae angen llythyren neu ddigid mewn enw.",

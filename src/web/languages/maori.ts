@@ -953,6 +953,7 @@ export const maori: Language = {
     "admin.player.addTitle": "Tāpiri kaitākaro",
     "admin.player.editTitle": "Whakatika kaitākaro",
     "admin.player.name": "Ingoa",
+    "admin.player.handicap": "Haihaingā",
     "admin.player.representing": "E māngai ana i",
     "admin.player.worldRankingName": "Ingoa kaitākaro whakarārangi o te ao",
     "admin.player.worldRankingKnown":
@@ -967,6 +968,8 @@ export const maori: Language = {
     "Tournament.PlayerNameTaken":
       "Kei tētahi atu kaitākaro o tēnei whakataetae kua whai i taua ingoa.",
     "TournamentPlayer.NoSuchFlag": "Kōwhiria tētahi o ngā haki e wātea ana.",
+    "TournamentPlayer.HandicapMalformed":
+      "Tuhia te haihaingā hei tau. Hei tauira: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye":
       "Kāore e taea te whakaingoa i tētahi kaitākaro ko Bye.",
     "TournamentPlayer.NoLetterOrDigit":

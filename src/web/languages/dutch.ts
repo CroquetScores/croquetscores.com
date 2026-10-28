@@ -999,6 +999,7 @@ export const dutch: Language = {
     "admin.player.addTitle": "Speler toevoegen",
     "admin.player.editTitle": "Speler bewerken",
     "admin.player.name": "Naam",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Vertegenwoordigt",
     "admin.player.worldRankingName": "Naam van de speler op de wereldranglijst",
     // Beside the world ranking name: whether the world rankings know it.
@@ -1014,6 +1015,8 @@ export const dutch: Language = {
     "Tournament.PlayerNameTaken":
       "Een andere speler in dit toernooi heeft die naam al.",
     "TournamentPlayer.NoSuchFlag": "Kies een van de bestaande vlaggen.",
+    "TournamentPlayer.HandicapMalformed":
+      "Schrijf de handicap als getal. Bijvoorbeeld: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Een speler kan niet Bye heten.",
     "TournamentPlayer.NoLetterOrDigit":
       "Een naam moet een letter of cijfer bevatten.",

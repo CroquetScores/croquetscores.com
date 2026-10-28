@@ -146,8 +146,8 @@ export const competitionNamed = (
     : say("tournament.test", competition.teams);
 
 /**
- * A player as a tournament's pages show them: their name, what they represent
- * in brackets, and the flag they fly, named by what it is the flag of. Nothing
+ * A player as a tournament's pages show them: their name, their handicap and
+ * what they represent in brackets, and the flag they fly, named by what it is the flag of. Nothing
  * is left in the place of what they have none of. Each part is marked with
  * `kind` and what it is, as "game-name", so that a page can draw its own; the
  * name leads to `href` where one is given, and is struck through where
@@ -157,10 +157,12 @@ export const playerShown = (
   {
     name,
     representing,
+    handicap,
     flag,
   }: {
     readonly name: string;
     readonly representing?: string | undefined;
+    readonly handicap?: string | undefined;
     readonly flag?: string | undefined;
   },
   kind: string,
@@ -173,16 +175,22 @@ export const playerShown = (
   withdrawn = false,
 ): string => {
   const flown = flag === undefined ? undefined : Flags.thereAre.find(flag);
+  // One pair of brackets for both, with a comma only between the two there
+  // are. Kept in the span that has always held what they represent, so that
+  // what styles or reads it need not know there is more in it now.
+  const about =
+    [handicap, representing]
+      .filter((each) => each !== undefined)
+      .join(", ")
+      .trim() || undefined;
   const marked = withdrawn ? " data-withdrawn" : "";
   return [
     href === undefined
       ? `<span class="${kind}-name"${marked}>${escape(name)}</span>`
       : `<a class="${kind}-name"${marked} href="${escape(href)}">${escape(name)}</a>`,
-    ...(representing === undefined
+    ...(about === undefined
       ? []
-      : [
-          `<span class="${kind}-representing">(${escape(representing)})</span>`,
-        ]),
+      : [`<span class="${kind}-representing">(${escape(about)})</span>`]),
     ...(flown === undefined
       ? []
       : [

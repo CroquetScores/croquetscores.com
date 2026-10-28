@@ -11,6 +11,7 @@ import { WorldRankingName } from "./value-objects/WorldRankingName.js";
 /** Every rule a player can break, besides those of a person's name. */
 export type TournamentPlayerErrorCode =
   | "TournamentPlayer.NoSuchFlag"
+  | "TournamentPlayer.HandicapMalformed"
   | "TournamentPlayer.OrderNotWhole"
   | "TournamentPlayer.OrderTooSmall"
   | "TournamentPlayer.HasGames"
@@ -28,6 +29,8 @@ export interface TournamentPlayerDetails {
   readonly name: string;
   /** The club, region or country they play for, if any. */
   readonly representing?: string | undefined;
+  /** Their handicap as a reader would write it, if any. */
+  readonly handicap?: string | undefined;
   /** The name of the flag they fly, if any. */
   readonly flag?: string | undefined;
   /**
@@ -60,6 +63,7 @@ export class TournamentPlayer {
   readonly #id: TournamentPlayerId;
   readonly #name: PersonName;
   readonly #representing: string | undefined;
+  readonly #handicap: string | undefined;
   readonly #flag: Flag | undefined;
   readonly #worldRankingName: WorldRankingName | undefined;
   readonly #slug: Slug;
@@ -70,6 +74,7 @@ export class TournamentPlayer {
     id: TournamentPlayerId,
     name: PersonName,
     representing: string | undefined,
+    handicap: string | undefined,
     flag: Flag | undefined,
     worldRankingName: WorldRankingName | undefined,
     slug: Slug,
@@ -79,6 +84,7 @@ export class TournamentPlayer {
     this.#id = id;
     this.#name = name;
     this.#representing = representing;
+    this.#handicap = handicap;
     this.#flag = flag;
     this.#worldRankingName = worldRankingName;
     this.#slug = slug;
@@ -89,8 +95,8 @@ export class TournamentPlayer {
   /**
    * The new player known by `id` that `details` describe, found at `slug` and
    * in `order`, not archived. Throws {@link ValidationError} naming the first
-   * rule broken: the name first, then the flag, then the world ranking name,
-   * then the order.
+   * rule broken: the name first, then the handicap, then the flag, then the
+   * world ranking name, then the order.
    */
   static from(
     id: TournamentPlayerId,
@@ -116,13 +122,14 @@ export class TournamentPlayer {
     order: number,
     archived: boolean,
   ): TournamentPlayer {
-    const { name, representing, flag, worldRankingName } =
+    const { name, representing, handicap, flag, worldRankingName } =
       TournamentPlayer.#detailsOf(details);
     orders.ensureValid(order);
     return new TournamentPlayer(
       id,
       name,
       representing,
+      handicap,
       flag,
       worldRankingName,
       slug,
@@ -134,6 +141,7 @@ export class TournamentPlayer {
   static #detailsOf(details: TournamentPlayerDetails): {
     readonly name: PersonName;
     readonly representing: string | undefined;
+    readonly handicap: string | undefined;
     readonly flag: Flag | undefined;
     readonly worldRankingName: WorldRankingName | undefined;
   } {
@@ -159,9 +167,24 @@ export class TournamentPlayer {
       // What is nothing but whitespace was left blank by whoever typed it, so
       // it is nothing represented rather than something called nothing.
       representing: details.representing?.trim() || undefined,
+      handicap: TournamentPlayer.#handicapWritten(details.handicap),
       flag: TournamentPlayer.#flagNamed(details.flag),
       worldRankingName: WorldRankingName.from(details.worldRankingName ?? ""),
     };
+  }
+
+  // A sign that may be left off, one or two digits, and a fraction of one
+  // digit that may be left off. Blank is none, as it is for what they
+  // represent. Kept as written, so that "+4" is not shown as "4"; the
+  // tournament only shows it, which is why it is not turned into a number.
+  static #handicapWritten(handicap: string | undefined): string | undefined {
+    const written = handicap?.trim();
+    if (written === undefined || written === "") return undefined;
+    if (!/^[+-]?\d{1,2}(\.\d)?$/.test(written))
+      throw new ValidationError<TournamentPlayerErrorCode>(
+        "TournamentPlayer.HandicapMalformed",
+      );
+    return written;
   }
 
   // Refused rather than kept as a name: a flag that is none of the flags there
@@ -187,6 +210,11 @@ export class TournamentPlayer {
   /** The club, region or country they play for, or nothing. */
   get representing(): string | undefined {
     return this.#representing;
+  }
+
+  /** Their handicap as it was written, or nothing. */
+  get handicap(): string | undefined {
+    return this.#handicap;
   }
 
   /** The flag shown beside their name, or nothing. */
@@ -292,6 +320,7 @@ export class TournamentPlayer {
       this.#id,
       this.#name,
       this.#representing,
+      this.#handicap,
       this.#flag,
       this.#worldRankingName,
       this.#slug,

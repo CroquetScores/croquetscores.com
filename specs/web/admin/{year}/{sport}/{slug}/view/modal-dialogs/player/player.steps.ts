@@ -440,6 +440,23 @@ Then(
 );
 
 Then(
+  "the player {string} of {string} has the handicap {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    handicap: string,
+  ) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await playerCalled(this, tournament, name)).handicap,
+        handicap,
+      );
+    });
+  },
+);
+
+Then(
   "the player {string} of {string} has the world ranking name {string}",
   async function (
     this: SpecWorld,

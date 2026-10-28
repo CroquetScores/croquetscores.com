@@ -97,6 +97,17 @@ Given(
 );
 
 Given(
+  "a player named {string} with the handicap {string}",
+  function (this: SpecWorld, name: string, handicap: string) {
+    this.tournamentPlayer = TournamentPlayer.from(
+      TournamentPlayerId.create(),
+      { name, handicap },
+      { slug: A_SLUG, order: AN_ORDER },
+    );
+  },
+);
+
+Given(
   "a player named {string} who is archived",
   function (this: SpecWorld, name: string) {
     this.tournamentPlayer = TournamentPlayer.from(
@@ -151,6 +162,13 @@ When(
   "a player representing {string} is made",
   function (this: SpecWorld, representing: string) {
     tryToMake(this, { representing });
+  },
+);
+
+When(
+  "a player with the handicap {string} is made",
+  function (this: SpecWorld, handicap: string) {
+    tryToMake(this, { handicap });
   },
 );
 
@@ -216,6 +234,7 @@ const updatedWith = (
     player.update({
       name: player.name.toString(),
       representing: player.representing,
+      handicap: player.handicap,
       flag: player.flag === undefined ? undefined : String(player.flag),
       worldRankingName: player.worldRankingName?.toString(),
       ...changed,
@@ -241,6 +260,13 @@ When(
   "the player is updated to represent {string}",
   function (this: SpecWorld, representing: string) {
     updatedWith(this, { representing });
+  },
+);
+
+When(
+  "the player is updated to have the handicap {string}",
+  function (this: SpecWorld, handicap: string) {
+    updatedWith(this, { handicap });
   },
 );
 
@@ -304,6 +330,17 @@ Then(
 
 Then("the player has no world ranking name", function (this: SpecWorld) {
   assert.equal(playerOfWorld(this).worldRankingName, undefined);
+});
+
+Then(
+  "the player's handicap is {string}",
+  function (this: SpecWorld, handicap: string) {
+    assert.equal(playerOfWorld(this).handicap, handicap);
+  },
+);
+
+Then("the player has no handicap", function (this: SpecWorld) {
+  assert.equal(playerOfWorld(this).handicap, undefined);
 });
 
 Then("the player represents nothing", function (this: SpecWorld) {

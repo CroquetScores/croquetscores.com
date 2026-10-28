@@ -1284,15 +1284,17 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   );
 
   // What a player is, as the player dialog sends it. What they represent,
-  // their flag and their world ranking name are left out where nothing was
+  // their handicap, their flag and their world ranking name are left out where nothing was
   // said.
   const playerFrom = (body: unknown) => {
     const representing = textOf(body, "representing");
+    const handicap = textOf(body, "handicap");
     const flag = textOf(body, "flag");
     const worldRankingName = textOf(body, "worldRankingName");
     return {
       name: textOf(body, "name"),
       ...(representing === "" ? {} : { representing }),
+      ...(handicap === "" ? {} : { handicap }),
       ...(flag === "" ? {} : { flag }),
       ...(worldRankingName === "" ? {} : { worldRankingName }),
     };

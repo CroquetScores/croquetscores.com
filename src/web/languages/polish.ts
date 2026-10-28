@@ -894,6 +894,7 @@ export const polish: Language = {
     "admin.player.addTitle": "Dodaj zawodnika",
     "admin.player.editTitle": "Edytuj zawodnika",
     "admin.player.name": "Nazwa",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Reprezentuje",
     "admin.player.worldRankingName": "Nazwa zawodnika w rankingu światowym",
     "admin.player.worldRankingKnown": "Rankingi światowe znają tę nazwę.",
@@ -908,6 +909,8 @@ export const polish: Language = {
     "Tournament.PlayerNameTaken":
       "Inny zawodnik w tym turnieju ma już taką nazwę.",
     "TournamentPlayer.NoSuchFlag": "Wybierz jedną z dostępnych flag.",
+    "TournamentPlayer.HandicapMalformed":
+      "Wpisz handicap jako liczbę. Na przykład: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Zawodnik nie może nazywać się Bye.",
     "TournamentPlayer.NoLetterOrDigit": "Nazwa musi zawierać literę lub cyfrę.",
     "admin.player.byesTitle": "Bye nie trzeba dodawać",

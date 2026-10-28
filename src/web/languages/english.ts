@@ -957,6 +957,7 @@ export const english: Language = {
     "admin.player.addTitle": "Add Player",
     "admin.player.editTitle": "Edit Player",
     "admin.player.name": "Name",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Representing",
     "admin.player.worldRankingName": "World Ranking Player Name",
     // Beside the world ranking name: whether the world rankings know it.
@@ -972,6 +973,8 @@ export const english: Language = {
     "Tournament.PlayerNameTaken":
       "Another player in this tournament already has that name.",
     "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
+    "TournamentPlayer.HandicapMalformed":
+      "Write the handicap as a number. For example: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "A player cannot be called Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "A name needs a letter or a digit in it.",

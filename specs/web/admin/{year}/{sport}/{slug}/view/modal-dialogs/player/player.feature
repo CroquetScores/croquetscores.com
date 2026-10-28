@@ -5,8 +5,8 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   pressing "Add Player", and changes one they have added by pressing their
   name (`players-tab.feature`). Either opens the player dialog over the page.
   It asks for what a player is (`TournamentPlayer.feature`): their name, what
-  they represent, if anything, the flag they fly, if any, and, beneath the
-  flag, the name the world rankings know them by, headed "World Ranking Player
+  they represent, if anything, the flag they fly, if any, their handicap, if
+  any, and, beneath that, the name the world rankings know them by, headed "World Ranking Player
   Name" (`WorldRankingName.feature`). Only association croquet and golf
   croquet have players the world rankings know by name (`Sport.feature`), so
   the world ranking name is asked for only in a tournament of one of them.
@@ -71,8 +71,9 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name
   that could not be a person's, a name with neither a letter nor a digit in
-  it (`TournamentPlayer.feature`), a world ranking name that could not be one
-  (`WorldRankingName.feature`), and a name another player in the tournament
+  it (`TournamentPlayer.feature`), a handicap written any other way than a sign, up to two digits and a
+  fraction of one digit (`TournamentPlayer.feature`), a world ranking name that
+  could not be one (`WorldRankingName.feature`), and a name another player in the tournament
   already has, however it is capitalised (`addPlayer.feature`). A refusal about
   no one field is said above the fields. Nothing refused is kept, and the
   dialog stays open.
@@ -116,6 +117,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Then "Name" is empty
       And "Representing" is empty
       And no flag is chosen
+      And "Handicap" is empty
 
     Scenario: The dialog to add a player adds with Add
       Given the page of "Spring Open" is open
@@ -132,12 +134,18 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
         | Name                      |
         | Representing              |
         | Flag                      |
+        | Handicap                  |
         | World Ranking Player Name |
 
-    Scenario: The world ranking name is asked for beneath the flag
+    Scenario: The handicap is asked for beneath the flag
       Given the page of "Spring Open" is open
       When "Add Player" is pressed
-      Then the field after "Flag" in the player dialog is "World Ranking Player Name"
+      Then the field after "Flag" in the player dialog is "Handicap"
+
+    Scenario: The world ranking name is asked for beneath the handicap
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the field after "Handicap" in the player dialog is "World Ranking Player Name"
 
   Rule: A player opened from the page opens the dialog to change them
 
@@ -298,6 +306,14 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Canterbury Croquet Club" is typed as the "Representing"
       When "Add" is pressed
       Then the player "Sam Someone" of "Spring Open" represents "Canterbury Croquet Club"
+
+    Scenario: The player added has the handicap they were added with
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "4" is typed as the "Handicap"
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" has the handicap "4"
 
     Scenario: The player added flies the flag they were added flying
       Given the page of "Spring Open" is open
@@ -777,6 +793,14 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Sam Someone" is typed as the "Name"
       When "Save" is pressed
       Then "Name" is refused with "Tournament.PlayerNameTaken"
+
+    Scenario: A handicap written any other way is refused beside it
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "four" is typed as the "Handicap"
+      When "Add" is pressed
+      Then "Handicap" is refused with "TournamentPlayer.HandicapMalformed"
 
     Scenario: A world ranking name that could not be one is refused beside it
       Given the page of "Spring Open" is open

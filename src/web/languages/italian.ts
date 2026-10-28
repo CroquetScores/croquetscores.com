@@ -1008,6 +1008,7 @@ export const italian: Language = {
     "admin.player.addTitle": "Aggiungi giocatore",
     "admin.player.editTitle": "Modifica giocatore",
     "admin.player.name": "Nome",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Rappresenta",
     "admin.player.worldRankingName":
       "Nome del giocatore nella classifica mondiale",
@@ -1026,6 +1027,8 @@ export const italian: Language = {
     "Tournament.PlayerNameTaken":
       "Un altro giocatore di questo torneo ha già questo nome.",
     "TournamentPlayer.NoSuchFlag": "Scegli una delle bandiere disponibili.",
+    "TournamentPlayer.HandicapMalformed":
+      "Scrivi l'handicap come numero. Ad esempio: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Un giocatore non può chiamarsi Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Un nome deve contenere una lettera o una cifra.",

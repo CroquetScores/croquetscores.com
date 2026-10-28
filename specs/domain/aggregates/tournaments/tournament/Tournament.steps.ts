@@ -71,6 +71,7 @@ Given(
         {
           name,
           representing: scenarioOf(this).player.representing,
+          handicap: scenarioOf(this).player.handicap,
           worldRankingName: scenarioOf(this).player.worldRankingName,
         },
         byOf(this),

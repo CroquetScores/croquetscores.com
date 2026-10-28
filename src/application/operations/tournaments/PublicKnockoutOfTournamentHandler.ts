@@ -79,6 +79,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       shown.set(entered.id.value, {
         name: player.name.toString(),
         representing: player.representing,
+        handicap: player.handicap,
         flag: player.flag === undefined ? undefined : String(player.flag),
         address: `${address}/players/${player.slug.toString()}`,
         withdrawn: entered.withdrawn,
