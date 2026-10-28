@@ -12,11 +12,19 @@ Tryck på **Lägg till tävling**, ovanför listan. En dialogruta öppnas över 
 
 **Slag** är ett block, en utslagning eller en schweizer. Dialogrutan börjar på block, vilket de flesta tävlingar är.
 
-### Ett block eller en schweizer
+### Ett block
 
-Ett block och en schweizer frågar bara vad varje match spelas **Bäst av**, vilket börjar på 1. Bäst av 3 vinns av den som vinner två partier. Det får vara ett jämnt tal, eftersom en spelare i ett block eller en schweizer rangordnas efter de partier spelaren vinner, och en match på två partier som delas ett vardera är ett resultat som vilket annat.
+Ett block frågar vad varje match spelas **Bäst av**, och i hur många **Ronder** det spelas.
+
+**Bäst av** börjar på 1. Bäst av 3 vinns av den som vinner två partier. Det får vara ett jämnt tal, eftersom en spelare i ett block rangordnas efter de partier spelaren vinner, och en match på två partier som delas ett vardera är ett resultat som vilket annat.
+
+**Ronder** är hur många gånger varje par av spelare i blocket möts, med en match i varje rond. Det börjar på 1, och 1 är nästan alltid vad ett block vill ha: varje spelare möter varje annan en gång. Höj det bara för ett block där de möts igen, som en dubbel serie, där 2 låter varje par spela två matcher.
 
 ![Dialogrutan Lägg till tävling för ett block](images/add-competition-block.png)
+
+### En schweizer
+
+En schweizer frågar bara vad varje match spelas **Bäst av**, vilket börjar på 1, precis som för ett block. Bäst av 3 vinns av den som vinner två partier. Det får vara ett jämnt tal, eftersom en spelare i en schweizer rangordnas efter de partier spelaren vinner, och en match på två partier som delas ett vardera är ett resultat som vilket annat.
 
 ![Dialogrutan Lägg till tävling för en schweizer](images/add-competition-swiss.png)
 

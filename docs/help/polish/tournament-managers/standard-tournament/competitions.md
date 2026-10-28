@@ -12,11 +12,19 @@ Naciśnij **Dodaj konkurencję**, nad listą. Nad stroną otwiera się okno dial
 
 **Rodzaj** to Grupowa, Pucharowa albo Szwajcarska. Okno zaczyna na rodzaju Grupowa, którym jest większość konkurencji.
 
-### Grupowa albo szwajcarska
+### Grupowa
 
-Konkurencja grupowa i szwajcarska pytają tylko, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**), co zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie gry. Może to być liczba parzysta, bo w konkurencji grupowej albo szwajcarskiej zawodnika szereguje się według wygranych gier, a mecz z dwóch gier podzielonych po jednej jest rezultatem jak każdy inny.
+Konkurencja grupowa pyta, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**) i w ilu rundach się go rozgrywa (pole **Rundy**).
+
+**Do wygranych gier** zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie gry. Może to być liczba parzysta, bo w konkurencji grupowej zawodnika szereguje się według wygranych gier, a mecz z dwóch gier podzielonych po jednej jest rezultatem jak każdy inny.
+
+**Rundy** to liczba spotkań każdej pary zawodników w grupie, z jednym meczem w każdej rundzie. Zaczyna się na 1, a 1 to prawie zawsze to, czego grupa potrzebuje: każdy zawodnik gra z każdym innym raz. Zwiększ to tylko dla grupy, w której spotykają się ponownie, na przykład w podwójnym round robin, gdzie przy 2 każda para gra dwa mecze.
 
 ![Okno Dodaj konkurencję dla konkurencji grupowej](images/add-competition-block.png)
+
+### Szwajcarska
+
+Konkurencja szwajcarska pyta tylko, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**), co zaczyna się na 1, tak samo jak w grupowej. Najlepszy z 3 wygrywa ten, kto wygra dwie gry. Może to być liczba parzysta, bo w konkurencji szwajcarskiej zawodnika szereguje się według wygranych gier, a mecz z dwóch gier podzielonych po jednej jest rezultatem jak każdy inny.
 
 ![Okno Dodaj konkurencję dla konkurencji szwajcarskiej](images/add-competition-swiss.png)
 

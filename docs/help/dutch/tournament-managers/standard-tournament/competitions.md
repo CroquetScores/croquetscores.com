@@ -12,11 +12,19 @@ Druk op **Competitie toevoegen**, boven de lijst. Er opent een dialoogvenster ov
 
 **Soort** is een poule, een knock-out of een Zwitsers systeem. Het dialoogvenster begint op een poule, wat de meeste competities zijn.
 
-### Een poule of een Zwitsers systeem
+### Een poule
 
-Een poule en een Zwitsers systeem vragen alleen waarvan elke wedstrijd de **Best of** is, wat op 1 begint. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule of een Zwitsers systeem een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
+Een poule vraagt waarvan elke wedstrijd de **Best of** is, en in hoeveel **Rondes** ze wordt gespeeld.
+
+**Best of** begint op 1. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
+
+**Rondes** is hoe vaak elk paar spelers in de poule elkaar ontmoet, met een wedstrijd in elke ronde. Het begint op 1, en 1 is bijna altijd wat een poule wil: elke speler speelt tegen elke andere één keer. Verhoog het alleen voor een poule waarin ze elkaar opnieuw ontmoeten, zoals een dubbele round robin, waar 2 elk paar twee wedstrijden laat spelen.
 
 ![Het dialoogvenster Competitie toevoegen voor een poule](images/add-competition-block.png)
+
+### Een Zwitsers systeem
+
+Een Zwitsers systeem vraagt alleen waarvan elke wedstrijd de **Best of** is, wat op 1 begint, net als bij een poule. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een Zwitsers systeem een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
 
 ![Het dialoogvenster Competitie toevoegen voor een Zwitsers systeem](images/add-competition-swiss.png)
 

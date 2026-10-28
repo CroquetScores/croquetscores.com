@@ -12,11 +12,19 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 **Soort** is 'n blok, 'n uitskakeling of 'n Switserse kompetisie. Die dialoog begin op 'n blok, wat die meeste kompetisies is.
 
-### 'n Blok of 'n Switserse kompetisie
+### 'n Blok
 
-'n Blok en 'n Switserse kompetisie vra net waarvan elke wedstryd die **beste van** is, wat op 1 begin. Die beste van 3 word gewen deur wie ook al twee spelle wen. Dit mag 'n ewe getal wees, want in 'n blok of 'n Switserse kompetisie word 'n speler gerangskik volgens die spelle wat hulle wen, en 'n wedstryd van twee spelle wat een elk gedeel word, is 'n uitslag soos enige ander.
+'n Blok vra waarvan elke wedstryd die **beste van** is, en in hoeveel **rondtes** dit gespeel word.
+
+**Beste van** begin op 1. Die beste van 3 word gewen deur wie ook al twee spelle wen. Dit mag 'n ewe getal wees, want in 'n blok word 'n speler gerangskik volgens die spelle wat hulle wen, en 'n wedstryd van twee spelle wat een elk gedeel word, is 'n uitslag soos enige ander.
+
+**Rondtes** is hoeveel keer elke paar spelers in die blok ontmoet, met 'n wedstryd in elke ronde. Dit begin op 1, en 1 is amper altyd wat 'n blok wil hê: elke speler speel elke ander een keer. Verhoog dit net vir 'n blok waarin hulle weer ontmoet, soos 'n dubbele rondte-robyn, waar 2 elke paar twee wedstryde laat speel.
 
 ![Die dialoog Voeg kompetisie by vir 'n blok](images/add-competition-block.png)
+
+### 'n Switserse kompetisie
+
+'n Switserse kompetisie vra net waarvan elke wedstryd die **beste van** is, wat op 1 begin, net soos by 'n blok. Die beste van 3 word gewen deur wie ook al twee spelle wen. Dit mag 'n ewe getal wees, want in 'n Switserse kompetisie word 'n speler gerangskik volgens die spelle wat hulle wen, en 'n wedstryd van twee spelle wat een elk gedeel word, is 'n uitslag soos enige ander.
 
 ![Die dialoog Voeg kompetisie by vir 'n Switserse kompetisie](images/add-competition-swiss.png)
 

@@ -210,7 +210,9 @@ async function photographIn(folder, language) {
   await page.goto("/account/sign-in");
   await page.fill("input[name=emailAddress]", address);
   await page.fill("input[name=password]", password);
-  await page.click("button[type=submit]");
+  // The form's own button, since where Google sign-in is set up the page has
+  // another submit button ahead of it.
+  await page.click("form:has(input[name=password]) button[type=submit]");
   await page.waitForLoadState("networkidle");
 
   // The new tournament form, filled in, and then created.
@@ -331,7 +333,14 @@ async function photographIn(folder, language) {
     await attempt(`add ${name}`, async () => {
       await page.fill(`${dialog} #field-name`, name);
       await page.check(`${dialog} #field-kind-${kind}`);
-      if (kind !== "knockout") await page.fill(`${dialog} #field-best-of`, "3");
+      // A block's picture keeps the 1 the dialog begins on, as the guide
+      // describes it, rather than a changed value.
+      if (kind !== "knockout") {
+        await page.fill(
+          `${dialog} #field-best-of`,
+          kind === "block" ? "1" : "3",
+        );
+      }
       if (places !== undefined) {
         await page.selectOption(`${dialog} #field-places`, places);
       }

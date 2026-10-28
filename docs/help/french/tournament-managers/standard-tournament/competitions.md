@@ -12,11 +12,19 @@ Appuyez sur **Ajouter une compétition**, au-dessus de la liste. Une boîte de d
 
 **Type** est poule, élimination directe ou système suisse. La boîte de dialogue s’ouvre sur poule, ce que sont la plupart des compétitions.
 
-### Une poule ou un système suisse
+### Une poule
 
-Une poule et un système suisse ne demandent que **au meilleur des** combien de parties se joue chaque rencontre, ce qui commence à 1. Au meilleur des 3 se gagne par celui qui remporte deux parties. Le nombre peut être pair, puisque dans une poule ou un système suisse un joueur est classé par les parties qu’il gagne, et qu’une rencontre de deux parties partagées une chacune est un résultat comme un autre.
+Une poule demande au meilleur de combien de parties se joue chaque rencontre, **au meilleur des**, et en combien de **tours** elle se joue.
+
+**Au meilleur des** commence à 1. Au meilleur des 3 se gagne par celui qui remporte deux parties. Le nombre peut être pair, puisque dans une poule un joueur est classé par les parties qu’il gagne, et qu’une rencontre de deux parties partagées une chacune est un résultat comme un autre.
+
+**Tours** est le nombre de fois que chaque paire de joueurs de la poule se rencontre, avec une rencontre à chaque tour. Il commence à 1, et 1 est presque toujours ce que veut une poule : chaque joueur joue contre chaque autre une fois. Ne l’augmentez que pour une poule où ils se rencontrent de nouveau, comme un double round robin, où 2 fait jouer deux rencontres à chaque paire.
 
 ![La boîte de dialogue Ajouter une compétition pour une poule](images/add-competition-block.png)
+
+### Un système suisse
+
+Un système suisse ne demande que **au meilleur des** combien de parties se joue chaque rencontre, ce qui commence à 1, tout comme une poule. Au meilleur des 3 se gagne par celui qui remporte deux parties. Le nombre peut être pair, puisque dans un système suisse un joueur est classé par les parties qu’il gagne, et qu’une rencontre de deux parties partagées une chacune est un résultat comme un autre.
 
 ![La boîte de dialogue Ajouter une compétition pour un système suisse](images/add-competition-swiss.png)
 

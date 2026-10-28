@@ -12,11 +12,19 @@ Premi **Aggiungi competizione**, sopra l'elenco. Si apre una finestra di dialogo
 
 **Tipo** è girone, eliminazione diretta o sistema svizzero. La finestra comincia su girone, che è ciò che è la maggior parte delle competizioni.
 
-### Un girone o un sistema svizzero
+### Un girone
 
-Un girone e un sistema svizzero chiedono solo di quante partite è **al meglio di** ciascun incontro, che comincia da 1. Al meglio di 3 vince chi vince due partite. Può essere un numero pari, perché in un girone o in un sistema svizzero un giocatore è classificato per le partite che vince, e un incontro di due partite finito una a una è un risultato come un altro.
+Un girone chiede di quante partite è **al meglio di** ciascun incontro, e in quanti **turni** si gioca.
+
+**Al meglio di** comincia da 1. Al meglio di 3 vince chi vince due partite. Può essere un numero pari, perché in un girone un giocatore è classificato per le partite che vince, e un incontro di due partite finito una a una è un risultato come un altro.
+
+**Turni** è quante volte ogni coppia di giocatori del girone si incontra, con un incontro in ogni turno. Comincia da 1, e 1 è quasi sempre ciò che vuole un girone: ogni giocatore gioca contro ogni altro una volta. Alzalo solo per un girone in cui si incontrano di nuovo, come un doppio girone all'italiana, dove 2 fa giocare a ogni coppia due incontri.
 
 ![La finestra Aggiungi competizione per un girone](images/add-competition-block.png)
+
+### Un sistema svizzero
+
+Un sistema svizzero chiede solo di quante partite è **al meglio di** ciascun incontro, che comincia da 1, proprio come un girone. Al meglio di 3 vince chi vince due partite. Può essere un numero pari, perché in un sistema svizzero un giocatore è classificato per le partite che vince, e un incontro di due partite finito una a una è un risultato come un altro.
 
 ![La finestra Aggiungi competizione per un sistema svizzero](images/add-competition-swiss.png)
 
