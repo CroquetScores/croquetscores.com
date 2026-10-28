@@ -1875,6 +1875,7 @@ main {
   font-weight: 600;
 }
 
+.tournament-filter input,
 .tournament-filter select,
 .tournament-filter button {
   max-width: 100%;
@@ -1883,19 +1884,6 @@ main {
   border: 1px solid var(--ink-muted);
   border-radius: var(--radius-1);
   background: var(--panel);
-}
-
-/* Every country is on offer, so the list is taller than the room above or
-   below the field, and Chrome shuts a list that fits neither as soon as it is
-   opened. A height of its own, with the rest scrolled, lets it stay open. It
-   is still a plain select, and a browser without this draws its own. */
-.tournament-filter select,
-.tournament-filter select::picker(select) {
-  appearance: base-select;
-}
-
-.tournament-filter select::picker(select) {
-  max-height: 20rem;
 }
 
 .tournament-filter button {

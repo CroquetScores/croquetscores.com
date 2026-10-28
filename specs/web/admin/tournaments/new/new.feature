@@ -166,10 +166,13 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then the tournament "Spring Open" is kept in the format "Standard"
 
-  Rule: The countries are offered in groups, the ones most played in first
+  Rule: The countries are offered the ones most played in first
 
-    The groups and their order are `countryOrder.feature`'s. A line is drawn
-    between them.
+    The groups and their order are `countryOrder.feature`'s. The country, the
+    region and the sport are fields the reader types into rather than lists
+    to scroll, and what is offered narrows as they type. No line is drawn
+    between the groups, since the suggestions of a field have no place for
+    one.
 
     Scenario Outline: The countries most played in are offered first
       When the new tournament page is opened
@@ -185,9 +188,72 @@ Feature: A new tournament is created in the admin
         | sixth  | United States |
         | seventh| Austria       |
 
-    Scenario: A line is drawn between the three groups
-      When the new tournament page is opened
-      Then the form's country list has 2 lines drawn in it
+  Rule: A country, a region and a sport are chosen by typing their names
+
+    Typing is a way to find what is offered, and nothing else is accepted: a
+    name that is not offered is refused beside its field by the same code a
+    country that is not there has always been, so that the reader is told
+    rather than left to find that a tournament was kept in nowhere.
+
+    Scenario: A part of a name offers the countries that have it
+      Given the new tournament page is open
+      When "Zeal" is typed as the "Country"
+      Then the form offers the country "New Zealand"
+
+    Scenario: A part of a name does not offer a country that lacks it
+      Given the new tournament page is open
+      When "Zeal" is typed as the "Country"
+      Then the form does not offer the country "Fiji"
+
+    Scenario: A part of a name offers the sports that have it
+      Given the new tournament page is open
+      When "Golf" is typed as the "Sport"
+      Then the form offers the sport "Golf Croquet"
+
+    Scenario: A part of a name does not offer a sport that lacks it
+      Given the new tournament page is open
+      When "Golf" is typed as the "Sport"
+      Then the form does not offer the sport "Ricochet"
+
+    Scenario: A part of a name offers the regions that have it
+      Given the new tournament page is open
+      And the country "Australia" is chosen
+      When "Vic" is typed as the "Region"
+      Then the form offers the region "Victoria"
+
+    Scenario: A name typed in full is chosen
+      Given the new tournament page is open
+      When the country "New Zealand" is chosen
+      Then the country chosen is "New Zealand"
+
+    Scenario: A country that is not offered is refused beside the country
+      Given the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And "Atlantis" is typed as the "Country"
+      When "Create Tournament" is pressed
+      Then "Country" is refused with "CreateTournament.NoSuchCountry"
+
+    Scenario: A sport that is not offered is refused beside the sport
+      Given the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Fiji" is chosen
+      And "Quidditch" is typed as the "Sport"
+      When "Create Tournament" is pressed
+      Then "Sport" is refused with "Tournament.SportNotOffered"
+
+    Scenario: A region that is not offered is refused beside the region
+      Given the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And the country "Australia" is chosen
+      And "Narnia" is typed as the "Region"
+      When "Create Tournament" is pressed
+      Then "Region" is refused with "Tournament.RegionNotInCountry"
 
   Rule: A region is asked for only where the country has regions
 
@@ -199,7 +265,7 @@ Feature: A new tournament is created in the admin
     Scenario: The regions offered are the country's
       Given the new tournament page is open
       When the country "Australia" is chosen
-      Then the region "Victoria" is offered
+      Then the form offers the region "Victoria"
 
     Scenario: A country that is its own one region asks for none
       Given the new tournament page is open

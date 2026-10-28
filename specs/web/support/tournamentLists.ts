@@ -179,15 +179,32 @@ When(
   },
 );
 
-// The filter's lists by what each narrows by, whatever language its label is
+// The filter's fields by what each narrows by, whatever language its label is
 // in.
 const filterField = (world: SpecWorld, field: string): Locator =>
-  world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
+  world.browserPage.locator(`form.tournament-filter input[name="${field}"]`);
+
+// Typing a name in full is how one is chosen, and typing part of one is how
+// the names that have it are found, so the two are the same keystrokes.
+const typeInto = async (
+  world: SpecWorld,
+  words: string,
+  field: string,
+): Promise<void> => {
+  await filterField(world, field).fill(words);
+};
 
 Given(
   /^"(.*)" is chosen as the (country|region|sport)$/,
   async function (this: SpecWorld, choice: string, field: string) {
-    await filterField(this, field).selectOption({ label: choice });
+    await typeInto(this, choice, field);
+  },
+);
+
+Given(
+  /^"(.*)" is typed as the (country|region|sport)$/,
+  async function (this: SpecWorld, words: string, field: string) {
+    await typeInto(this, words, field);
   },
 );
 
@@ -604,12 +621,13 @@ Then(
 
 // The filter --------------------------------------------------------------------------
 
+// The names the field suggests, in the order it suggests them.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
-    : filterField(world, field)
-        .locator('option:not([value=""])')
-        .allTextContents();
+    : filterField(world, field).evaluate<string[], undefined>(
+        `(input) => Array.from(input.list?.options ?? []).map((option) => option.value)`,
+      );
 
 Then(
   /^"(.*)" is (not )?offered as a (country|region|sport)$/,
@@ -627,16 +645,6 @@ Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) country offered is "(.*)"$/,
   async function (this: SpecWorld, which: string, country: string) {
     assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
-  },
-);
-
-Then(
-  /^the country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
-    assert.equal(
-      await filterField(this, "country").locator("hr").count(),
-      Number(count),
-    );
   },
 );
 
@@ -786,14 +794,14 @@ Then(
 
 // A tournament's name is what its manager called it, and its dates are numbers
 // and the months the browser names, so neither is in a catalogue to be marked.
-// Nor is a region's name, which is kept as it was recorded.
+// A region's name is kept as it was recorded and is in no catalogue, but it is
+// only ever a suggestion's value, which is not words on the page.
 Then(
   "every word in the page's content but the tournaments' own is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "main", [
       ".tournament-name",
       ".tournament-dates",
-      'select[name="region"] option:not([value=""])',
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

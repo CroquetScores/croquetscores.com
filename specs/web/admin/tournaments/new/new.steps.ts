@@ -129,10 +129,17 @@ Then(
 
 // What a list offers, in the order it offers it, less the choice of nothing a
 // list with nothing chosen begins with.
+// The format is still a list to choose from; the country, the region and the
+// sport are typed, and suggest the names that have what was typed.
 const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
-  (await field(world, label).locator("option").allTextContents()).filter(
-    (words) => words !== "",
-  );
+  (
+    await field(world, label).evaluate<
+      string[],
+      undefined
+    >(`(element) => element instanceof HTMLSelectElement
+        ? Array.from(element.options).map((option) => option.text)
+        : Array.from(element.list?.options ?? []).map((option) => option.value)`)
+  ).filter((words) => words !== "");
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
@@ -164,31 +171,28 @@ Then(
 );
 
 Then(
-  /^the form's country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
+  /^the form (offers|does not offer) the (country|region|sport) "([^"]*)"$/,
+  async function (this: SpecWorld, does: string, kind: string, name: string) {
+    const label =
+      kind === "country" ? "Country" : kind === "region" ? "Region" : "Sport";
     await eventually(this, async () => {
       assert.equal(
-        await field(this, "Country").locator("hr").count(),
-        Number(count),
+        (await offeredIn(this, label)).includes(name),
+        does === "offers",
+        `The form ${does} ${name}.`,
       );
     });
   },
 );
 
-Then(
-  "the region {string} is offered",
-  async function (this: SpecWorld, region: string) {
-    await eventually(this, async () => {
-      assert.ok(
-        (await offeredIn(this, "Region")).includes(region),
-        `${region} is not offered.`,
-      );
-    });
-  },
-);
-
+// What is in the box, which is the name of the choice made once it has been.
 const chosenIn = async (world: SpecWorld, label: string): Promise<string> =>
-  (await field(world, label).locator("option:checked").textContent()) ?? "";
+  field(world, label).evaluate<
+    string,
+    undefined
+  >(`(element) => element instanceof HTMLSelectElement
+      ? (element.selectedOptions[0]?.text ?? "")
+      : element.value`);
 
 Then(
   "the sport chosen is {string}",
@@ -267,7 +271,14 @@ const choose = async (
   choice: string,
 ): Promise<void> => {
   await drawn(world);
-  await field(world, label).selectOption({ label: choice });
+  const chosen = field(world, label);
+  if (
+    await chosen.evaluate("(element) => element instanceof HTMLSelectElement")
+  ) {
+    await chosen.selectOption({ label: choice });
+  } else {
+    await chosen.fill(choice);
+  }
 };
 
 Given(
@@ -286,7 +297,7 @@ Given(
 
 Given("none is chosen for the region", async function (this: SpecWorld) {
   await drawn(this);
-  await field(this, "Region").selectOption({ value: "" });
+  await field(this, "Region").fill("");
 });
 
 Given(
@@ -551,9 +562,7 @@ Then(
   "the country {string} is offered before the country {string}",
   async function (this: SpecWorld, one: string, other: string) {
     await eventually(this, async () => {
-      const countries = await this.browserPage
-        .locator("#field-country option")
-        .allTextContents();
+      const countries = await offeredIn(this, "Country");
       const [first, second] = [
         countries.indexOf(one),
         countries.indexOf(other),

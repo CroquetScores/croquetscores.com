@@ -732,8 +732,11 @@ Feature: The admin lists the reader's tournaments
     been chosen, and then only the regions of that country the list holds. A
     country that is not divided into regions offers none.
 
-    A choice is made as it is chosen, with no button to press, since this
-    page runs scripts as it is. It is kept in the address, as the year is
+    The country, the region and the sport are fields the reader types into,
+    which suggest the names that have what has been typed so far. No line is
+    drawn between the groups of countries, since the suggestions of a field
+    have no place for one. A choice is made as a name offered is chosen, with
+    no button to press, since this page runs scripts as it is. It is kept in the address, as the year is
     (`/admin/2026?country=nz`), so that it can be linked to and the browser's
     back button undoes it. The choices belong to the year they were offered
     from, so choosing another year clears them: a country offered in 2026 may
@@ -771,7 +774,7 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the filter offers "New Zealand" as a country
 
-    Scenario Outline: The countries the list holds are offered in groups, the ones most played in first
+    Scenario Outline: The countries the list holds are offered the ones most played in first
       Given "organiser@example.com" has created the tournament "Winter Open"
       And the tournament "Winter Open" starts on "2026-10-31"
       And the tournament "Winter Open" is played in the country "jp"
@@ -784,12 +787,25 @@ Feature: The admin lists the reader's tournaments
         | second | New Zealand |
         | third  | Japan       |
 
-    Scenario: A line is drawn between the groups the list holds
-      Given "organiser@example.com" has created the tournament "Winter Open"
-      And the tournament "Winter Open" starts on "2026-10-31"
-      And the tournament "Winter Open" is played in the country "jp"
-      When the admin is opened
-      Then the filter's country list has 1 line drawn in it
+    Scenario: A part of a country's name offers the countries that have it
+      Given the admin is open
+      When "Zeal" is typed as the country
+      Then the filter offers "New Zealand" as a country
+
+    Scenario: A part of a country's name does not offer a country that lacks it
+      Given the admin is open
+      When "Zeal" is typed as the country
+      Then the filter does not offer "Australia" as a country
+
+    Scenario: A part of a sport's name does not offer a sport that lacks it
+      Given the admin is open
+      When "Golf" is typed as the sport
+      Then the filter does not offer "Association Croquet" as a sport
+
+    Scenario: A name typed that is not offered lists everything, as an address that is not offered does
+      Given the admin is open
+      When "Atlantis" is typed as the country
+      Then the tournament "Summer Open" is listed
 
     Scenario: A country the list does not hold is not offered
       When the admin is opened

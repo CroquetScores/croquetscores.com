@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
-import { GroupedOptions } from "./GroupedOptions.js";
+import { NameChoice } from "./NameChoice.js";
 import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
 import "./tournaments.css";
@@ -306,23 +306,28 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     field: "country" | "region" | "sport",
     label: string,
     any: string,
-    from: Parameters<typeof GroupedOptions>[0]["groups"],
+    from: readonly { readonly code: string; readonly name: string }[],
     chosen: string | undefined,
     changed: (code: string | undefined) => void,
   ): React.JSX.Element => (
     <span className="tournament-filter-field" key={field}>
       <label htmlFor={`filter-${field}`}>{label}</label>
-      <select
+      <NameChoice
         id={`filter-${field}`}
         name={field}
+        placeholder={any}
+        choices={from}
         value={chosen ?? ""}
-        onChange={(event) => {
-          changed(event.target.value === "" ? undefined : event.target.value);
+        refusing={false}
+        onChange={(code) => {
+          // Words that name nothing choose nothing, and a choice that is
+          // already none is not made again, which would put a step in the
+          // browser's history for every letter typed.
+          if ((code === "" ? undefined : code) !== chosen) {
+            changed(code === "" ? undefined : code);
+          }
         }}
-      >
-        <option value="">{any}</option>
-        <GroupedOptions groups={from} />
-      </select>
+      />
     </span>
   );
 
@@ -506,7 +511,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                       name: countryNamed(code),
                     })),
                     document.documentElement.lang || "en",
-                  ),
+                  ).flat(),
                   country,
                   // The region belongs to the country, so another country
                   // chosen leaves none.

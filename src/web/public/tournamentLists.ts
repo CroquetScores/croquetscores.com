@@ -25,7 +25,7 @@ import type { Assets } from "../common/assets.js";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { escape } from "../common/escape.js";
-import type { Speaking } from "../common/language.js";
+import { speakingOf, type Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 
@@ -117,6 +117,10 @@ export interface Asked {
   readonly sorting: Readonly<Record<string, string | undefined>>;
 }
 
+// Capital letters are not worth a refusal in a name that is typed.
+const sameWords = (name: string, typed: string | undefined): boolean =>
+  typed !== undefined && name.toLowerCase() === typed.trim().toLowerCase();
+
 // Each as the address gives it: an empty one is a choice left at "any", which
 // is how the form sends it, and one given twice is taken as it was first given.
 const oneOf = (query: unknown, name: string): string | undefined => {
@@ -138,19 +142,35 @@ export const askedOf = (
   tables: readonly string[],
   { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): Asked => {
-  const country = oneOf(request.query, "country");
-  const region = oneOf(request.query, "region");
-  const kept =
-    region !== undefined &&
-    country !== undefined &&
-    Countries.thereAre.find(country)?.findRegion(region) !== undefined;
+  const { say } = speakingOf(request);
+  // The fields are typed into, so what arrives is a name as often as a code,
+  // and a flag's link is a code. What is neither is dropped rather than
+  // refused: a reader who typed half a name and pressed Filter has made a
+  // slip, not asked for something that is not there.
+  const country = Countries.thereAre.all.find(
+    (each) =>
+      each.code === oneOf(request.query, "country") ||
+      sameWords(say(`country.${each.code}`), oneOf(request.query, "country")),
+  );
+  const region = country?.regions.find(
+    (each) =>
+      each.code === oneOf(request.query, "region") ||
+      sameWords(each.name, oneOf(request.query, "region")),
+  );
+  const sport = offersSport
+    ? sportsOffered[websiteOf(request).site].find(
+        (each) =>
+          each.code === oneOf(request.query, "sport") ||
+          sameWords(say(`sport.${each.code}`), oneOf(request.query, "sport")),
+      )
+    : undefined;
   return {
     path,
     offersSport,
     chose: {
-      country,
-      region: kept ? region : undefined,
-      sport: offersSport ? oneOf(request.query, "sport") : undefined,
+      country: country?.code,
+      region: region?.code,
+      sport: sport?.code,
     },
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
@@ -292,43 +312,33 @@ ${rows}
 
 // The filter --------------------------------------------------------------------------
 
-// Groups are told apart by a line, which a browser draws in its list.
-const options = (
-  groups: readonly (readonly {
-    readonly value: string;
-    readonly words: string;
-  }[])[],
+// A name per line, in the order the groups come in. A field that suggests
+// names has no place for a line between groups, so the order is all of them.
+const offers = (names: readonly string[], id: string): string =>
+  `            <datalist id="${id}">
+${names.map((name) => `              <option value="${escape(name)}"></option>`).join("\n")}
+            </datalist>`;
+
+// Labelled by a label of its own rather than one wrapped round it, which would
+// name the field by what it has chosen as well as by what it is. What is
+// chosen is shown by its name, which is what the reader types and what the
+// page reads back (askedOf).
+const field = (
+  name: string,
+  label: string,
   any: string,
   chosen: string | undefined,
-): string =>
-  [
-    `                <option value="">${escape(any)}</option>`,
-    ...groups.flatMap((choices, at) => [
-      ...(at === 0 ? [] : ["                <hr>"]),
-      ...choices.map(
-        ({ value, words }) =>
-          `                <option value="${escape(value)}"${value === chosen ? " selected" : ""}>${escape(words)}</option>`,
-      ),
-    ]),
-  ].join("\n");
+  names: readonly string[],
+): string => `            <span class="tournament-filter-field">
+              <label for="filter-${name}">${escape(label)}</label>
+              <input id="filter-${name}" name="${name}" type="text" list="filter-${name}-names" autocomplete="off" placeholder="${escape(any)}" value="${escape(chosen ?? "")}" />
+${offers(names, `filter-${name}-names`)}
+            </span>`;
 
 // A country that is not divided into regions is its own one region, coded as
 // the country is, and offers nothing to narrow it further by.
 const isDivided = (country: Country): boolean =>
   country.regions.length > 1 || country.regions[0]?.code !== country.code;
-
-// Labelled by a label of its own rather than one wrapped round it, which would
-// name the list by what it has chosen as well as by what it is.
-const field = (
-  name: string,
-  label: string,
-  choices: string,
-): string => `            <span class="tournament-filter-field">
-              <label for="filter-${name}">${escape(label)}</label>
-              <select id="filter-${name}" name="${name}">
-${choices}
-              </select>
-            </span>`;
 
 // Tournaments were given regions from November 2026, so a region chosen
 // leaves out every earlier one. Below this many shown, the reader is more
@@ -353,17 +363,19 @@ export const filter = (
       name: say(`country.${country.code}`),
     })),
     speaking.language.tag,
-  ).map((group) =>
-    group.map(({ code, name }) => ({ value: code, words: name })),
-  );
+  ).flat();
   const country =
     asked.chose.country === undefined
       ? undefined
       : Countries.thereAre.find(asked.chose.country);
   const sports = sportsOffered[websiteOf(request).site].map((sport) => ({
-    value: sport.code,
-    words: say(`sport.${sport.code}`),
+    code: sport.code,
+    name: say(`sport.${sport.code}`),
   }));
+  const named = (
+    choices: readonly { readonly code: string; readonly name: string }[],
+    code: string | undefined,
+  ): string | undefined => choices.find((each) => each.code === code)?.name;
   // Kept as the reader left them, since what sorts a table is not what the form
   // is about.
   const sortings = Object.entries(asked.sorting)
@@ -378,11 +390,9 @@ ${[
   field(
     "country",
     say("tournamentList.filter.country"),
-    options(
-      countries,
-      say("tournamentList.filter.anyCountry"),
-      asked.chose.country,
-    ),
+    say("tournamentList.filter.anyCountry"),
+    named(countries, asked.chose.country),
+    countries.map((each) => each.name),
   ),
   ...(country === undefined || !isDivided(country)
     ? []
@@ -390,16 +400,9 @@ ${[
         field(
           "region",
           say("tournamentList.filter.region"),
-          options(
-            [
-              country.regions.map((region) => ({
-                value: region.code,
-                words: region.name,
-              })),
-            ],
-            say("tournamentList.filter.anyRegion"),
-            asked.chose.region,
-          ),
+          say("tournamentList.filter.anyRegion"),
+          named(country.regions, asked.chose.region),
+          country.regions.map((region) => region.name),
         ),
       ]),
   ...(asked.offersSport
@@ -407,11 +410,9 @@ ${[
         field(
           "sport",
           say("tournamentList.filter.sport"),
-          options(
-            [sports],
-            say("tournamentList.filter.anySport"),
-            asked.chose.sport,
-          ),
+          say("tournamentList.filter.anySport"),
+          named(sports, asked.chose.sport),
+          sports.map((sport) => sport.name),
         ),
       ]
     : []),

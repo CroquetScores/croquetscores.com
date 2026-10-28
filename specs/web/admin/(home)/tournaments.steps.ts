@@ -1073,16 +1073,15 @@ When(
 // By what each narrows by, whatever language its label is in, as the home
 // page's filter is found.
 const filterField = (world: SpecWorld, field: string): Locator =>
-  world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
+  world.browserPage.locator(`form.tournament-filter input[name="${field}"]`);
 
-// The words of what a list offers to choose, without the choice that is no
-// choice at all.
+// The names a field suggests, in the order it suggests them.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
-  (
-    await filterField(world, field)
-      .locator("option:not([value=''])")
-      .allTextContents()
-  ).map((words) => words.trim());
+  (await filterField(world, field).count()) === 0
+    ? []
+    : filterField(world, field).evaluate<string[], undefined>(
+        `(input) => Array.from(input.list?.options ?? []).map((option) => option.value)`,
+      );
 
 Then(
   /^the filter (offers|does not offer) "(.*)" as a (country|region|sport)$/,
@@ -1107,18 +1106,6 @@ Then(
   async function (this: SpecWorld, which: string, country: string) {
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
-    });
-  },
-);
-
-Then(
-  /^the filter's country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
-    await eventually(this, async () => {
-      assert.equal(
-        await filterField(this, "country").locator("hr").count(),
-        Number(count),
-      );
     });
   },
 );

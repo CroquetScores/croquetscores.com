@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
-import { GroupedOptions } from "../GroupedOptions.js";
+import { NameChoice } from "../NameChoice.js";
 import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
@@ -358,19 +358,12 @@ export const TournamentForm = ({
                       lifted
                     >
                       {(tied) => (
-                        <select
+                        <NameChoice
                           {...tied}
+                          choices={offered.sports}
                           value={sport}
-                          onChange={(event) => {
-                            setSport(event.target.value);
-                          }}
-                        >
-                          {offered.sports.map(({ code, name: called }) => (
-                            <option key={code} value={code}>
-                              {called}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={setSport}
+                        />
                       )}
                     </Field>
                   ) : null}
@@ -384,22 +377,18 @@ export const TournamentForm = ({
                   lifted
                 >
                   {(tied) => (
-                    <select
+                    <NameChoice
                       {...tied}
+                      choices={inCountryGroups(
+                        offered.countries,
+                        document.documentElement.lang || "en",
+                      ).flat()}
                       value={country}
-                      onChange={(event) => {
-                        setCountry(event.target.value);
+                      onChange={(code) => {
+                        setCountry(code);
                         setRegion("");
                       }}
-                    >
-                      <option value="" />
-                      <GroupedOptions
-                        groups={inCountryGroups(
-                          offered.countries,
-                          document.documentElement.lang || "en",
-                        )}
-                      />
-                    </select>
+                    />
                   )}
                 </Field>
                 {asksForRegion ? (
@@ -410,20 +399,12 @@ export const TournamentForm = ({
                     lifted
                   >
                     {(tied) => (
-                      <select
+                      <NameChoice
                         {...tied}
+                        choices={regions}
                         value={region}
-                        onChange={(event) => {
-                          setRegion(event.target.value);
-                        }}
-                      >
-                        <option value="" />
-                        {regions.map(({ code, name: called }) => (
-                          <option key={code} value={code}>
-                            {called}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={setRegion}
+                      />
                     )}
                   </Field>
                 ) : null}

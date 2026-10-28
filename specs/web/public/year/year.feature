@@ -307,6 +307,11 @@ Feature: A year's page lists every tournament starting in it
 
   Rule: The tournaments are narrowed by country, region and sport
 
+    The country, the region and the sport are fields to type into, which
+    suggest the names that have what has been typed so far, and which work
+    without scripting as the rest of the page does. A name typed that is not
+    offered narrows nothing, since it names nothing the page can narrow by.
+
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-03-07"
@@ -404,6 +409,12 @@ Feature: A year's page lists every tournament starting in it
     Scenario: The sports offered are the website's
       When the page for 2026 is opened
       Then "Gateball" is not offered as a sport
+
+    Scenario: A name typed that is not offered lists everything
+      Given the page for 2026 is open
+      And "Atlantis" is typed as the country
+      When "Filter" is pressed
+      Then "Summer Open" is in the year's tournaments
 
   Rule: A region chosen with few tournaments to show says why
 
