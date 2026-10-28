@@ -1,5 +1,27 @@
 # Co nowego
 
+## Wydano 2026-10-28
+
+### Znajdowanie rzeczy
+
+- **Wyniki wyszukiwania są tabelami.** Turnieje i konkurencje, które znajdzie wyszukiwanie, są teraz ułożone jak listy na stronie głównej: dni, w których każdy był rozgrywany, dyscyplina, flaga jego kraju i nazwa. Konkurencja pokazuje dni, dyscyplinę i flagę swojego turnieju oraz turniej, do którego należy. Daty i nazwy można sortować, każdą tabelę osobno, a sortowanie jest zapamiętane w adresie strony obok tego, co wpisano. Sortowanie zmienia kolejność tylko stu pokazanych wyników, czyli najlepiej pasujących do twoich słów, a nie wszystkich trafień.
+- **Najczęściej wybierane kraje są na początku.** Wszędzie tam, gdzie wybierasz kraj, lista zaczyna się teraz od Australii, Egiptu, Anglii, Nowej Zelandii, Hiszpanii i Stanów Zjednoczonych, potem idą pozostałe kraje, w których rozgrywano turnieje od 2025 roku, a na końcu wszystkie inne, z linią między tymi trzema grupami.
+- **Każdy turniej pokazuje swoją dyscyplinę.** Na tablecie lub szerszym ekranie listy turniejów na stronie głównej i na stronie roku pokazują dyscyplinę turnieju jako krótki kod, na przykład GC lub AC, w osobnym kolorze dla każdej dyscypliny, po datach. Na telefonie kod jest pomijany, aby zostawić miejsce na nazwy.
+- **Strona główna.** Nadchodzące turnieje na stronie głównej są teraz pod ostatnimi wynikami przy każdej szerokości ekranu.
+- **Flagi nie zaśmiecają telefonu.** Na telefonie kolumna z flagami jest pomijana w każdej liście turniejów, więc nazwy mają więcej miejsca.
+- **Lista krajów pozostaje otwarta w Chrome na Linuksie.** Naciśnięcie pola kraju na stronie głównej otwierało listę i od razu ją zamykało. Teraz pozostaje otwarta i można ją przewijać.
+
+### Śledzenie turnieju
+
+- **Handicapy.** Organizatorzy turnieju mogą teraz przypisać zawodnikowi handicap, na przykład 4, +4 lub -1.5. Jest on pokazany po nazwisku zawodnika, wraz z tym, kogo reprezentuje, jeśli coś takiego jest, jak w Tim Murphy (4, Australia).
+- **Peeling w siatce szwajcarskiej.** Wynik w siatce szwajcarskiej kończy się teraz peelingiem gry, tak jak robi to już plik tekstowy z rankingami. Gra wygrana 26tp do 17 daje +9tp dla zwycięzcy i -9tp dla przegranego. Gra bez peelingu wygląda jak dawniej.
+
+### Turnieje przeniesione ze starych stron
+
+- **Więcej z nich jest we właściwym kraju.** Wiele turniejów trafiło do złego kraju, bo stare strony znały tylko strefę czasową. Strona odczytuje teraz kraj z nazwy turnieju, gdy to możliwe, na przykład Irish, Welsh, Bayfield lub CroqCan, i umieszcza każdy mecz Anglia – Szkocja w kraju, który był gospodarzem w danym roku. Dziękujemy Chrisowi Williamsowi za pomoc.
+- **Turnieje, które dopiero się odbędą, są przenoszone** nawet jeśli ich organizatorzy nie dodali jeszcze konkurencji, więc możesz znaleźć, kiedy i gdzie się odbędą.
+- **Handicap po nazwisku zawodnika** na starych stronach, jak w Tim Murphy 1, nie jest już brany za część nazwiska przy szukaniu jego pozycji w rankingu światowym.
+
 ## Wydano 2026-10-27
 
 Croquet Scores został całkowicie napisany od nowa z pomocą AI, w TypeScripcie. Poniżej opisujemy to, co zauważysz.

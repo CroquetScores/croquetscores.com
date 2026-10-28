@@ -1,5 +1,27 @@
 # Novedades
 
+## Publicado el 2026-10-28
+
+### Encontrar cosas
+
+- **Los resultados de búsqueda son tablas.** Los torneos y las competiciones que encuentra una búsqueda ahora se presentan como las listas de la página de inicio: los días en que se jugó cada uno, el tipo de deporte, la bandera de su país y el nombre. Una competición muestra los días, el tipo de deporte y la bandera de su torneo, y el torneo en el que está. Las fechas y los nombres se pueden ordenar, cada tabla por separado, y el orden queda en la dirección de la página junto a lo que escribiste. Ordenar solo reordena los cien resultados que se muestran, que son los que mejor coinciden con tus palabras, no todos los que coinciden.
+- **Los países con más actividad van primero.** Allí donde elijas un país, la lista ahora empieza por Australia, Egipto, Inglaterra, Nueva Zelanda, España y Estados Unidos, luego los demás países en los que se han jugado torneos desde 2025, y después todos los demás, con una línea entre los tres grupos.
+- **Cada torneo muestra su deporte.** En una tableta o una pantalla más ancha, las listas de torneos de la página de inicio y de la página de un año muestran el deporte del torneo como un código corto, como GC o AC, con un color propio para cada deporte, después de las fechas. En un teléfono se omite el código para dejar espacio a los nombres.
+- **Página de inicio.** Los próximos torneos de la página de inicio ahora están debajo de los resultados recientes en cualquier ancho de pantalla.
+- **Las banderas ya no abarrotan el teléfono.** En un teléfono, la columna de banderas se omite en todas las listas de torneos, para que los nombres tengan más espacio.
+- **La lista de países se mantiene abierta en Chrome en Linux.** Al pulsar el campo del país en la página de inicio, la lista se abría y se cerraba enseguida. Ahora se mantiene abierta y se desplaza.
+
+### Seguir un torneo
+
+- **Hándicaps.** Los gestores de un torneo ahora pueden dar un hándicap a un jugador, como 4, +4 o -1.5. Se muestra después del nombre del jugador, con lo que representa si hay algo, como en Tim Murphy (4, Australia).
+- **Peeling en la cuadrícula suiza.** Un resultado en la cuadrícula suiza ahora termina con el peeling de la partida, como ya hace el archivo de texto de las clasificaciones. Una partida ganada por 26tp a 17 se lee +9tp para el ganador y -9tp para el perdedor. Una partida sin peeling se lee como antes.
+
+### Torneos traídos de los sitios antiguos
+
+- **Más torneos están en el país correcto.** Muchos torneos llegaron con el país equivocado, porque los sitios antiguos solo conocían la zona horaria. Ahora el sitio lee el país en el nombre de un torneo cuando puede, como Irish, Welsh, Bayfield o CroqCan, y pone cada partido de Inglaterra contra Escocia en el país que fue anfitrión ese año. Gracias a Chris Williams por su ayuda con esto.
+- **Se traen los torneos que aún no se han jugado** aunque sus gestores todavía no hayan añadido una competición, para que puedas encontrar cuándo y dónde se juegan.
+- **Un hándicap después del nombre de un jugador** en los sitios antiguos, como en Tim Murphy 1, ya no se toma por parte del nombre al buscar su clasificación mundial.
+
 ## Publicado el 2026-10-27
 
 Croquet Scores se ha reescrito por completo con IA, en TypeScript. Esto es lo que vas a notar.

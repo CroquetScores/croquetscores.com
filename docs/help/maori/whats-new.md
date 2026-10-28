@@ -1,5 +1,27 @@
 # He aha te mea hou
 
+## I tukuna 2026-10-28
+
+### Te kimi i ngā mea
+
+- **He ripanga ngā hua rapu.** Ko ngā whakataetae nui me ngā tauwhāinga e kitea ana e te rapu, kua whakatakotoria inaianei pēnei i ngā rārangi o te whārangi kāinga: ngā rā i tākarohia ai ia mea, te momo hākinakina, te haki o tōna whenua, me te ingoa. Ka whakaatu te tauwhāinga i ngā rā o tōna whakataetae nui, te momo hākinakina me te haki, me te whakataetae nui e noho ana ia ki roto. Ka taea te kōmaka i ngā rā me ngā ingoa, ia ripanga takitahi, ā, ka puritia te kōmaka ki te wāhitau o te whārangi i te taha o tāu i patopato ai. Ko te kōmaka e whakaraupapa anō i te rau hua e whakaaturia ana anake, arā, ngā mea tino ōrite ki ōu kupu, ehara i ngā mea katoa e ōrite ana.
+- **Ka tuatahi ngā whenua pukumahi.** Ki ngā wāhi katoa e kōwhiri ai koe i tētahi whenua, ka tīmata te rārangi inaianei ki Australia, Egypt, Ingarangi, New Zealand, Spain me United States, ā, ko ētahi atu whenua kua tākarohia ai ngā whakataetae nui mai i te 2025, ā, ko te toenga katoa, he rārangi kei waenga i ngā rōpū e toru.
+- **Ka whakaatu ia whakataetae nui i tōna hākinakina.** I runga i te papa pātuhi, i te whānui ake rānei, ka whakaatu ngā rārangi whakataetae nui i te whārangi kāinga me te whārangi o tētahi tau i te hākinakina o te whakataetae nui hei waehere poto, pēnei i a GC, AC rānei, he tae motuhake mō ia hākinakina, i muri i ngā rā. I te waea, ka waihohia te waehere kia nui ake te wāhi mō ngā ingoa.
+- **Te whārangi kāinga.** Kei raro iho i ngā hua tata nei ngā whakataetae nui e haere mai ana i te whārangi kāinga inaianei, i ia whānuitanga.
+- **Kāore ngā haki e kapi i te waea.** I te waea, ka waihohia te pou haki i ia rārangi whakataetae nui, kia nui ake te wāhi mō ngā ingoa.
+- **Ka noho tuwhera te rārangi whenua i Chrome i runga i a Linux.** I mua, ka pēhi koe i te āpure whenua i te whārangi kāinga, ka tuwhera te rārangi, ā, ka kati tonu. Ka noho tuwhera inaianei, ā, ka retireti.
+
+### Te whai i tētahi whakataetae nui
+
+- **Ngā haihaingā.** Ka taea e ngā kaiwhakahaere o tētahi whakataetae nui te hoatu he haihaingā ki tētahi kaitākaro, pēnei i a 4, +4, -1.5 rānei. Ka whakaaturia i muri i te ingoa o te kaitākaro, me tā rātou e tohu ana mēnā he mea, pēnei i a Tim Murphy (4, Australia).
+- **Te peeling i te mātiti Swiss.** Ka mutu inaianei te hua i te mātiti Swiss ki te peeling o te kēmu, pēnei i te kōnae kuputuhi tūranga kua pērā ake. Ko te kēmu i wikitoria e 26tp ki te 17 ka pānuitia hei +9tp mō te toa, -9tp mō te hinga. Ko te kēmu kāore he peeling, pērā tonu te pānui.
+
+### Ngā whakataetae nui i kawea mai i ngā pae tawhito
+
+- **He maha ake kua tika te whenua.** He maha ngā whakataetae nui i tae mai ki te whenua he, nā te mea i mōhio noa ngā pae tawhito ki te rohe wā. Ka pānui te pae inaianei i te whenua mai i te ingoa o te whakataetae nui ina taea, pēnei i a Irish, Welsh, Bayfield, CroqCan rānei, ā, ka tuku i ia tākaro England v Scotland ki te whenua i manaaki i tērā tau. Tēnā koe, e Chris Williams, mō tāu āwhina.
+- **Ka kawea mai ngā whakataetae nui kāore anō kia tākarohia**, ahakoa kāore anō kia tāpiri ōna kaiwhakahaere i tētahi tauwhāinga, kia kitea ai e koe te wā me te wāhi.
+- **Ko te haihaingā i muri i te ingoa o te kaitākaro** i ngā pae tawhito, pēnei i a Tim Murphy 1, kāore e kīia inaianei he wāhanga o te ingoa ina kimihia tōna tūranga o te ao.
+
 ## I tukuna 2026-10-27
 
 Kua tuhia katoatia anōtia a Croquet Scores ki te AI, i te TypeScript. Koinei ngā mea ka kite koe.

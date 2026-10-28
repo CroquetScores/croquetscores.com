@@ -1,5 +1,26 @@
 # What's new
 
+## Released 2026-10-28
+
+### Finding things
+
+- **Search results are tables.** The tournaments and competitions a search finds are now laid out like the lists on the home page: the days each was played, the sport type, the flag of its country, and the name. A competition shows its tournament's days, sport type and flag, and the tournament it is in. The dates and the names can be sorted, each table on its own, and the sorting is kept in the page's address beside what you typed. Sorting reorders only the hundred results shown, which are the best matches for your words, not every match. - **The busiest countries come first.** Wherever you choose a country, the list now begins with Australia, Egypt, England, New Zealand, Spain and the United States, then the other countries tournaments have been played in since 2025, then all the rest, with a line between the three groups.
+- **Each tournament shows its sport.** On a tablet or wider, the tournament lists on the home page and on a year's page show the tournament's sport as a short code, such as GC or AC, in a colour of its own for each sport, after the dates. On a phone the code is left out to leave room for names. 
+- **Home page.** The home page's upcoming tournaments are now beneath the recent results at every width.
+- **Flags no longer crowd a phone.** On a phone, the column of flags is left out of every list of tournaments, so the names have more room.
+- **The country list stays open in Chrome on Linux.** Pressing the country field on the home page used to open the list and shut it again straight away. It now stays open, and scrolls.
+
+### Following a tournament
+
+- **Handicaps.** A tournament's managers can now give a player a handicap, such as 4, +4 or -1.5. It is shown after the player's name, with what they represent if there is something, as in Tim Murphy (4, Australia).
+- **Peeling in the Swiss grid.** A result in the Swiss grid now ends with the game's peeling, as the rankings text file already does. A game won 26tp to 17 reads +9tp for the winner and -9tp for the loser. A game with no peeling reads as it did.
+
+### Tournaments brought over from the old sites
+
+- **More of them are in the right country.** Many tournaments came over in the wrong country, because the old sites only knew the time zone. The site now reads the country from a tournament's name where it can, such as Irish, Welsh, Bayfield or CroqCan, and puts each England v Scotland match in the country that played host that year. Thank you Chris Williams for his help with this.
+- **Tournaments still to be played are brought over** even if their managers have yet to add a competition, so you can find when and where they are.
+- **A handicap after a player's name** on the old sites, as in Tim Murphy 1, is no longer taken for part of the name when looking up their world ranking.
+
 ## Released 2026-10-27
 
 Croquet Scores has been completely rewritten with AI, in TypeScript. What follows is what you will notice.

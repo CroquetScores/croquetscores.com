@@ -1,5 +1,27 @@
 # Novità
 
+## Rilasciato il 2026-10-28
+
+### Trovare le cose
+
+- **I risultati della ricerca sono tabelle.** I tornei e le competizioni che una ricerca trova sono ora disposti come gli elenchi della home: i giorni in cui si è giocato ciascuno, il tipo di sport, la bandiera del suo paese e il nome. Una competizione mostra i giorni, il tipo di sport e la bandiera del suo torneo, e il torneo di cui fa parte. Le date e i nomi si possono ordinare, ogni tabella per conto suo, e l'ordinamento resta nell'indirizzo della pagina accanto a ciò che hai scritto. L'ordinamento riordina solo i cento risultati mostrati, che sono i migliori per le tue parole, non tutti quelli trovati.
+- **I paesi più frequentati vengono per primi.** Ovunque tu scelga un paese, l'elenco ora comincia con Australia, Egitto, Inghilterra, Nuova Zelanda, Spagna e Stati Uniti, poi gli altri paesi in cui si sono giocati tornei dal 2025, poi tutti gli altri, con una linea tra i tre gruppi.
+- **Ogni torneo mostra il suo sport.** Su un tablet o uno schermo più largo, gli elenchi dei tornei nella home e nella pagina di un anno mostrano lo sport del torneo come codice breve, per esempio GC o AC, di un colore diverso per ogni sport, dopo le date. Su un telefono il codice viene omesso per lasciare spazio ai nomi.
+- **Home.** I tornei in programma della home sono ora sotto i risultati recenti a qualsiasi larghezza.
+- **Le bandiere non affollano più il telefono.** Su un telefono, la colonna delle bandiere è omessa da ogni elenco di tornei, così i nomi hanno più spazio.
+- **L'elenco dei paesi resta aperto in Chrome su Linux.** Premendo il campo del paese nella home, l'elenco si apriva e si richiudeva subito. Ora resta aperto, e scorre.
+
+### Seguire un torneo
+
+- **Handicap.** I direttori di un torneo ora possono dare un handicap a un giocatore, come 4, +4 o -1.5. Viene mostrato dopo il nome del giocatore, con ciò che rappresenta se c'è qualcosa, come in Tim Murphy (4, Australia).
+- **Peeling nella griglia svizzera.** Un risultato nella griglia svizzera ora termina con il peeling della partita, come già fa il file di testo delle classifiche. Una partita vinta 26tp a 17 si legge +9tp per il vincitore e -9tp per lo sconfitto. Una partita senza peeling si legge come prima.
+
+### Tornei portati dai vecchi siti
+
+- **Più tornei sono nel paese giusto.** Molti tornei erano arrivati nel paese sbagliato, perché i vecchi siti conoscevano solo il fuso orario. Ora il sito legge il paese dal nome di un torneo dove può, come Irish, Welsh, Bayfield o CroqCan, e mette ogni incontro Inghilterra contro Scozia nel paese che ha ospitato quell'anno. Grazie a Chris Williams per il suo aiuto.
+- **I tornei ancora da giocare vengono portati** anche se i loro direttori non hanno ancora aggiunto una competizione, così puoi trovare quando e dove si giocano.
+- **Un handicap dopo il nome di un giocatore** nei vecchi siti, come in Tim Murphy 1, non è più scambiato per parte del nome quando si cerca il suo ranking mondiale.
+
 ## Rilasciato il 2026-10-27
 
 Croquet Scores è stato riscritto da zero con l'IA, in TypeScript. Ecco che cosa noterai.

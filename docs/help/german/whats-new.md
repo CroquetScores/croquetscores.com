@@ -1,5 +1,27 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-10-28
+
+### Dinge finden
+
+- **Suchergebnisse sind Tabellen.** Die Turniere und Wettbewerbe, die eine Suche findet, sind jetzt wie die Listen auf der Startseite aufgebaut: die Tage, an denen sie gespielt wurden, die Sportart, die Flagge des Landes und der Name. Bei einem Wettbewerb stehen die Tage, die Sportart und die Flagge seines Turniers sowie das Turnier, zu dem er gehört. Die Daten und die Namen lassen sich sortieren, jede Tabelle für sich, und die Sortierung steht in der Adresse der Seite neben dem, was Sie eingegeben haben. Das Sortieren ordnet nur die hundert angezeigten Ergebnisse neu, die am besten zu Ihren Wörtern passen, nicht alle Treffer.
+- **Die Länder mit den meisten Turnieren stehen zuerst.** Überall, wo Sie ein Land wählen, beginnt die Liste jetzt mit Australien, Ägypten, England, Neuseeland, Spanien und den Vereinigten Staaten, dann folgen die übrigen Länder, in denen seit 2025 Turniere gespielt wurden, dann alle anderen, mit einer Linie zwischen den drei Gruppen.
+- **Jedes Turnier zeigt seine Sportart.** Auf einem Tablet oder breiter zeigen die Turnierlisten auf der Startseite und auf der Seite eines Jahres die Sportart des Turniers nach den Daten als kurzen Code, etwa GC oder AC, in einer eigenen Farbe für jede Sportart. Auf dem Handy fehlt der Code, damit mehr Platz für die Namen bleibt.
+- **Startseite.** Die kommenden Turniere der Startseite stehen jetzt bei jeder Breite unter den letzten Ergebnissen.
+- **Flaggen drängen sich auf dem Handy nicht mehr auf.** Auf dem Handy fehlt die Spalte mit den Flaggen in jeder Turnierliste, damit die Namen mehr Platz haben.
+- **Die Länderliste bleibt in Chrome unter Linux offen.** Wenn man auf der Startseite auf das Länderfeld drückte, öffnete sich die Liste und schloss sich sofort wieder. Jetzt bleibt sie offen und lässt sich scrollen.
+
+### Einem Turnier folgen
+
+- **Vorgaben.** Die Verantwortlichen eines Turniers können einem Spieler jetzt eine Vorgabe geben, etwa 4, +4 oder -1.5. Sie steht nach dem Namen des Spielers, zusammen mit dem, was er vertritt, falls es etwas gibt, wie in Tim Murphy (4, Australien).
+- **Peeling im Schweizer Raster.** Ein Ergebnis im Schweizer Raster endet jetzt mit dem Peeling des Spiels, wie es die Rangliste als Textdatei schon tut. Ein Spiel, das 26tp zu 17 gewonnen wurde, lautet +9tp für den Sieger und -9tp für den Verlierer. Ein Spiel ohne Peeling lautet wie bisher.
+
+### Von den alten Seiten übernommene Turniere
+
+- **Mehr davon stehen im richtigen Land.** Viele Turniere kamen im falschen Land herüber, weil die alten Seiten nur die Zeitzone kannten. Die Website liest das Land jetzt, wo es geht, aus dem Namen eines Turniers, etwa Irish, Welsh, Bayfield oder CroqCan, und ordnet jedes Spiel England gegen Schottland dem Land zu, das in jenem Jahr Gastgeber war. Danke an Chris Williams für seine Hilfe dabei.
+- **Turniere, die noch gespielt werden,** werden auch übernommen, wenn ihre Verantwortlichen noch keinen Wettbewerb hinzugefügt haben, damit Sie sehen, wann und wo sie stattfinden.
+- **Eine Vorgabe nach dem Namen eines Spielers** auf den alten Seiten, wie in Tim Murphy 1, wird bei der Suche nach seiner Weltrangliste nicht mehr für einen Teil des Namens gehalten.
+
 ## Veröffentlicht am 2026-10-27
 
 Croquet Scores wurde mit KI komplett neu geschrieben, in TypeScript. Hier steht, was Ihnen auffallen wird.
