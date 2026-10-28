@@ -29,7 +29,9 @@ Feature: A tournament's results, as the world rankings are sent them
   match's winner first whoever won the game. A player is answered by their
   world ranking name, which is what the rankings know them by and so what the
   file is to say (`changePlayerWorldRankingName.feature`), and is their name
-  where none was given.
+  where none was given, less any handicap their name ends in, as "Joe Blow 4"
+  is "Joe Blow" to the rankings: a handicap is not part of who somebody is.
+  One that was given is answered as it was, since whoever gave it chose it.
 
   Every game played is a result but an archived one, which is set aside and
   counts for nothing anywhere. A withdrawn game, and the games of a player
@@ -299,6 +301,37 @@ Feature: A tournament's results, as the world rankings are sent them
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the rankings of the tournament at "2026/ac/spring-open" are asked for
       Then the winner of the first result is "Sam Someone"
+
+    Scenario Outline: A player given none, whose name ends in a handicap, is answered by their name without it
+      Given "organiser@example.com" has added the player "Joe Blow <handicap>" to "Spring Open"
+      And "organiser@example.com" has entered the player "Joe Blow <handicap>" in "Block A" of "Spring Open"
+      And "Joe Blow <handicap>" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the first result is "Joe Blow"
+
+      Examples:
+        | handicap |
+        | -1       |
+        | -0.5     |
+        | 0        |
+        | 1        |
+        | 4.5      |
+        | 22       |
+
+    Scenario: A number joined to the last word of a name is part of the name
+      Given "organiser@example.com" has added the player "Joe Blow2" to "Spring Open"
+      And "organiser@example.com" has entered the player "Joe Blow2" in "Block A" of "Spring Open"
+      And "Joe Blow2" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the first result is "Joe Blow2"
+
+    Scenario: A world ranking name given is answered as it was given, handicap or not
+      Given "organiser@example.com" has added the player "Joe Blow 4" to "Spring Open"
+      And "organiser@example.com" has changed the world ranking name of "Joe Blow 4" in "Spring Open" to "Joseph Blow 4"
+      And "organiser@example.com" has entered the player "Joe Blow 4" in "Block A" of "Spring Open"
+      And "Joe Blow 4" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the first result is "Joseph Blow 4"
 
   Rule: Only a competition that counts towards the world rankings is in the answer
 
