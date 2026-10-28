@@ -12,11 +12,19 @@ Press **Add Competition**, above the list. A dialog opens over the page, asking 
 
 **Kind** is a block, a knockout or a Swiss. The dialog begins on a block, which most competitions are.
 
-### A block or a Swiss
+### A block
 
-A block and a Swiss ask only what each match is the **best of**, which begins on 1. The best of 3 is won by whoever wins two games. It may be an even number, since in a block or a Swiss a player is ranked by the games they win, and a match of two games shared one each is a result like any other.
+A block asks what each match is the **best of**, and how many **rounds** it is played in.
+
+**Best of** begins on 1. The best of 3 is won by whoever wins two games. It may be an even number, since in a block a player is ranked by the games they win, and a match of two games shared one each is a result like any other.
+
+**Rounds** is how many times each pair of players in the block meet, with a match in each round. It begins on 1, and 1 is almost always what a block wants: every player plays every other once. Raise it only for a block in which they meet again, such as a double round robin, where 2 has each pair play two matches.
 
 ![The Add Competition dialog for a block](images/add-competition-block.png)
+
+### A Swiss
+
+A Swiss asks only what each match is the **best of**, which begins on 1, just as a block does. The best of 3 is won by whoever wins two games. It may be an even number, since in a Swiss a player is ranked by the games they win, and a match of two games shared one each is a result like any other.
 
 ![The Add Competition dialog for a Swiss](images/add-competition-swiss.png)
 

@@ -10,13 +10,21 @@ Pulsa **Añadir competición**, encima de la lista. Se abre un diálogo sobre la
 
 **Nombre** es lo que buscan los jugadores en la página del torneo para encontrar sus partidas. Tiene entre 1 y 254 caracteres, y basta con una sola letra, porque un grupo suele llamarse por una. Dos competiciones de un mismo torneo no pueden tener el mismo nombre.
 
-**Tipo** es grupo, eliminatoria o suizo. El diálogo empieza en bloque, que es lo que son la mayoría de las competiciones.
+**Tipo** es grupo, eliminatoria o suizo. El diálogo empieza en grupo, que es lo que son la mayoría de las competiciones.
 
-### Un grupo o un suizo
+### Un grupo
 
-Un grupo y un suizo preguntan solo **Al mejor de** cuántas partidas es cada partido, que empieza en 1. Al mejor de 3 lo gana quien gane dos partidas. Puede ser un número par, porque en un grupo o en un suizo un jugador se clasifica por las partidas que gana, y un partido de dos partidas repartidas una a cada uno es un resultado como cualquier otro.
+Un grupo pregunta al mejor de cuántas partidas es cada partido, **Al mejor de**, y en cuántas rondas se juega, **Rondas**.
+
+**Al mejor de** empieza en 1. Al mejor de 3 lo gana quien gane dos partidas. Puede ser un número par, porque en un grupo un jugador se clasifica por las partidas que gana, y un partido de dos partidas repartidas una a cada uno es un resultado como cualquier otro.
+
+**Rondas** es cuántas veces se enfrenta cada pareja de jugadores del grupo, con un partido en cada ronda. Empieza en 1, y 1 es casi siempre lo que un grupo necesita: cada jugador juega una vez contra cada otro. Súbelo solo para un grupo en el que se vuelven a enfrentar, como una doble liguilla, donde 2 hace que cada pareja juegue dos partidos.
 
 ![El diálogo Añadir competición para un grupo](images/add-competition-block.png)
+
+### Un suizo
+
+Un suizo pregunta solo **Al mejor de** cuántas partidas es cada partido, que empieza en 1, igual que un grupo. Al mejor de 3 lo gana quien gane dos partidas. Puede ser un número par, porque en un suizo un jugador se clasifica por las partidas que gana, y un partido de dos partidas repartidas una a cada uno es un resultado como cualquier otro.
 
 ![El diálogo Añadir competición para un suizo](images/add-competition-swiss.png)
 

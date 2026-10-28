@@ -12,11 +12,19 @@ Pwyswch **Ychwanegu cystadleuaeth**, uwchben y rhestr. Mae deialog yn agor dros 
 
 **Math** yw bloc, cystadleuaeth cnoc-owt neu gystadleuaeth Swisaidd. Mae'r ddeialog yn dechrau ar floc, sef beth yw'r mwyafrif o gystadlaethau.
 
-### Bloc neu gystadleuaeth Swisaidd
+### Bloc
 
-Nid yw bloc a chystadleuaeth Swisaidd ond yn gofyn beth yw pob gêm **Yr orau o**, sy'n dechrau ar 1. Enillir yr orau o 3 gan bwy bynnag sy'n ennill dwy gêm unigol. Gall fod yn eilrif, gan fod chwaraewr mewn bloc neu gystadleuaeth Swisaidd yn cael ei safle yn ôl y gemau unigol y mae'n eu hennill, ac mae gêm o ddwy gêm unigol wedi'u rhannu un yr un yn ganlyniad fel unrhyw un arall.
+Mae bloc yn gofyn beth yw pob gêm **Yr orau o**, a sawl rownd y caiff ei chwarae ynddynt, sef **Rowndiau**.
+
+Mae **Yr orau o** yn dechrau ar 1. Enillir yr orau o 3 gan bwy bynnag sy'n ennill dwy gêm unigol. Gall fod yn eilrif, gan fod chwaraewr mewn bloc yn cael ei safle yn ôl y gemau unigol y mae'n eu hennill, ac mae gêm o ddwy gêm unigol wedi'u rhannu un yr un yn ganlyniad fel unrhyw un arall.
+
+Mae **Rowndiau** yn dweud sawl gwaith y mae pob pâr o chwaraewyr yn y bloc yn cwrdd, â gêm ym mhob rownd. Mae'n dechrau ar 1, ac 1 yw'r hyn y mae bloc ei eisiau bron bob amser: mae pob chwaraewr yn chwarae pob un arall unwaith. Codwch ef dim ond ar gyfer bloc lle maent yn cwrdd eto, fel cystadleuaeth gron ddwbl, lle mae 2 yn gwneud i bob pâr chwarae dwy gêm.
 
 ![Y ddeialog Ychwanegu cystadleuaeth ar gyfer bloc](images/add-competition-block.png)
+
+### Cystadleuaeth Swisaidd
+
+Nid yw cystadleuaeth Swisaidd ond yn gofyn beth yw pob gêm **Yr orau o**, sy'n dechrau ar 1, yn union fel bloc. Enillir yr orau o 3 gan bwy bynnag sy'n ennill dwy gêm unigol. Gall fod yn eilrif, gan fod chwaraewr mewn cystadleuaeth Swisaidd yn cael ei safle yn ôl y gemau unigol y mae'n eu hennill, ac mae gêm o ddwy gêm unigol wedi'u rhannu un yr un yn ganlyniad fel unrhyw un arall.
 
 ![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth Swisaidd](images/add-competition-swiss.png)
 

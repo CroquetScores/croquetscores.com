@@ -12,11 +12,19 @@ Pressione **Adicionar competição**, acima da lista. Um diálogo abre sobre a p
 
 **Tipo** é grupo, mata-mata ou suíço. O diálogo começa em grupo, que é o que a maioria das competições é.
 
-### Um grupo ou um suíço
+### Um grupo
 
-Um grupo e um suíço perguntam apenas de quantos jogos cada partida é o melhor (**Melhor de**), que começa em 1. Uma melhor de 3 é ganha por quem vence dois jogos. Pode ser um número par, porque em um grupo ou em um suíço um jogador é classificado pelos jogos que ganha, e uma partida de dois jogos dividida um a um é um resultado como qualquer outro.
+Um grupo pergunta de quantos jogos cada partida é o melhor (**Melhor de**) e em quantas **Rodadas** ela é jogada.
+
+**Melhor de** começa em 1. Uma melhor de 3 é ganha por quem vence dois jogos. Pode ser um número par, porque em um grupo um jogador é classificado pelos jogos que ganha, e uma partida de dois jogos dividida um a um é um resultado como qualquer outro.
+
+**Rodadas** é quantas vezes cada par de jogadores do grupo se encontra, com uma partida em cada rodada. Começa em 1, e 1 é quase sempre o que um grupo quer: todo jogador joga contra todos os outros uma vez. Aumente apenas para um grupo em que eles se encontram de novo, como um round robin duplo, em que 2 faz cada par jogar duas partidas.
 
 ![O diálogo Adicionar competição para um grupo](images/add-competition-block.png)
+
+### Um suíço
+
+Um suíço pergunta apenas de quantos jogos cada partida é o melhor (**Melhor de**), que começa em 1, assim como em um grupo. Uma melhor de 3 é ganha por quem vence dois jogos. Pode ser um número par, porque em um suíço um jogador é classificado pelos jogos que ganha, e uma partida de dois jogos dividida um a um é um resultado como qualquer outro.
 
 ![O diálogo Adicionar competição para um suíço](images/add-competition-swiss.png)
 

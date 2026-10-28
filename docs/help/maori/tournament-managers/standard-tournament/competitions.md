@@ -12,11 +12,19 @@ Pēhia **Tāpiri tauwhāinga**, i runga i te rārangi. Ka tuwhera tētahi pouaka
 
 **Momo** he poraka, he whakawātea, he Swiss rānei. Ka tīmata te pouaka kōrero ki te poraka, ko te momo o te nuinga o ngā tauwhāinga.
 
-### He poraka, he Swiss rānei
+### He poraka
 
-Ka pātai te poraka me te Swiss i te mea anake e **Pai rawa o te** ia tukinga, ka tīmata ki te 1. Ka toa i te pai rawa o te 3 te tangata e toa ana i ngā kēmu e rua. Ka taea he tau e wehea ana ki te rua, nā te mea i roto i te poraka, i te Swiss rānei, ka raupapatia te kaitākaro mā ngā kēmu e toa ai ia, ā, ko te tukinga o ngā kēmu e rua i toa ai tētahi i tētahi he tākohu pērā i ētahi atu.
+Ka pātai te poraka i te **Pai rawa o te** o ia tukinga, me te maha o **Ngā rauna** e tākarohia ai.
+
+**Pai rawa o te** ka tīmata ki te 1. Ka toa i te pai rawa o te 3 te tangata e toa ana i ngā kēmu e rua. Ka taea he tau e wehea ana ki te rua, nā te mea i roto i te poraka ka raupapatia te kaitākaro mā ngā kēmu e toa ai ia, ā, ko te tukinga o ngā kēmu e rua i toa ai tētahi i tētahi he tākohu pērā i ētahi atu.
+
+**Ngā rauna** te maha o ngā wā e tūtaki ai ia takirua kaitākaro o te poraka, me tētahi tukinga i ia rauna. Ka tīmata ki te 1, ā, ko te 1 te mea e hiahiatia ana e te nuinga o ngā poraka: ka tākaro ia kaitākaro i ia kaitākaro atu i te kotahi. Whakarahia anake mō tētahi poraka e tūtaki anō ai rātou, pēnei i te double round robin, ka tākaro ia takirua i ngā tukinga e rua ki te 2.
 
 ![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi poraka](images/add-competition-block.png)
+
+### He Swiss
+
+Ka pātai te Swiss i te **Pai rawa o te** anake o ia tukinga, ka tīmata ki te 1, pērā i te poraka. Ka toa i te pai rawa o te 3 te tangata e toa ana i ngā kēmu e rua. Ka taea he tau e wehea ana ki te rua, nā te mea i roto i te Swiss ka raupapatia te kaitākaro mā ngā kēmu e toa ai ia, ā, ko te tukinga o ngā kēmu e rua i toa ai tētahi i tētahi he tākohu pērā i ētahi atu.
 
 ![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi Swiss](images/add-competition-swiss.png)
 

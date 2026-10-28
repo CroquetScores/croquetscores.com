@@ -12,11 +12,19 @@ Drücken Sie **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich
 
 **Art** ist Gruppe, K.-o.-Runde oder Schweizer System. Der Dialog beginnt auf Gruppe, was die meisten Wettbewerbe sind.
 
-### Eine Gruppe oder ein Schweizer System
+### Eine Gruppe
 
-Eine Gruppe und ein Schweizer System fragen nur, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, das auf 1 beginnt. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einer Gruppe oder einem Schweizer System ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
+Eine Gruppe fragt, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, und in wie vielen **Runden** sie gespielt wird.
+
+**Best of** beginnt auf 1. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einer Gruppe ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
+
+**Runden** ist, wie oft jedes Spielerpaar der Gruppe aufeinandertrifft, mit einer Begegnung in jeder Runde. Es beginnt auf 1, und 1 ist fast immer das, was eine Gruppe will: Jeder Spieler spielt einmal gegen jeden anderen. Erhöhen Sie es nur für eine Gruppe, in der man wieder aufeinandertrifft, etwa eine doppelte Jeder-gegen-jeden-Runde, in der 2 jedes Paar zwei Begegnungen spielen lässt.
 
 ![Der Dialog Wettbewerb hinzufügen für eine Gruppe](images/add-competition-block.png)
+
+### Ein Schweizer System
+
+Ein Schweizer System fragt nur, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, das wie bei einer Gruppe auf 1 beginnt. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einem Schweizer System ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
 
 ![Der Dialog Wettbewerb hinzufügen für ein Schweizer System](images/add-competition-swiss.png)
 
