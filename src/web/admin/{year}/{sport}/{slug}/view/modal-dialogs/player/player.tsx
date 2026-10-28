@@ -4,6 +4,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
+import { useRepresenting } from "../../../useRepresenting.js";
 import { idInAddress } from "../../../../../../api.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 
@@ -21,6 +22,9 @@ import { DialogStatus } from "../../../../../../DialogStatus.js";
 // when their name is corrected. Left empty, it is sent as the name. Both
 // offer the world ranking players as they are typed, and the world ranking
 // name is marked as known to the rankings or not (WorldRankingPlayers.tsx).
+//
+// What the player represents offers what players have been added
+// representing, in every sport (RepresentingMatching.feature).
 //
 // Opened by a world ranking officer who does not manage the tournament, it
 // shows everything the player is, but only the world ranking name can be
@@ -113,6 +117,11 @@ export const PlayerDialog = ({
   const offeredForWorldRankingName = useMatching(
     worldRankingSport,
     worldRankingName,
+  );
+  // Nothing is offered for what cannot be changed, as for the name.
+  const offeredForRepresenting = useRepresenting(
+    representing,
+    !onlyWorldRankingName,
   );
   // What will be kept as the world ranking name, which is what is marked.
   const markedFor = useMatching(
@@ -310,17 +319,24 @@ export const PlayerDialog = ({
           refused={undefined}
         >
           {(tied) => (
-            <input
-              {...tied}
-              type="text"
-              placeholder=" "
-              autoComplete="off"
-              disabled={onlyWorldRankingName}
-              value={representing}
-              onChange={(event) => {
-                setRepresenting(event.target.value);
-              }}
-            />
+            <>
+              <input
+                {...tied}
+                type="text"
+                placeholder=" "
+                autoComplete="off"
+                list="representing-offers"
+                disabled={onlyWorldRankingName}
+                value={representing}
+                onChange={(event) => {
+                  setRepresenting(event.target.value);
+                }}
+              />
+              <Offers
+                id="representing-offers"
+                matching={offeredForRepresenting}
+              />
+            </>
           )}
         </Field>
         <Field

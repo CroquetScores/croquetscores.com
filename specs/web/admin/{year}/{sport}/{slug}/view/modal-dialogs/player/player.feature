@@ -893,6 +893,43 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Kei" is typed as the "Name"
       Then "Name" does not offer "Keith Aiton"
 
+  Rule: What the player represents offers what players have been added representing as it is typed
+
+    Whatever the sport: what players represent is not the world rankings'
+    to know, so unlike the name it is offered in every tournament, from every
+    tournament (`RepresentingMatching.feature`). Choosing one fills the field
+    as typing it would.
+
+    Scenario: Typing the start of a word in what the player represents offers it
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Cant" is typed as the "Representing"
+      Then "Representing" offers "Canterbury Croquet Club"
+
+    Scenario: A tournament of another sport is offered it too
+      Given the tournament "Spring Open" is for the sport "rc"
+      And a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Cant" is typed as the "Representing"
+      Then "Representing" offers "Canterbury Croquet Club"
+
+    Scenario: A player being changed is offered it
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the name of the player "Sam Someone" is pressed
+      When "Cant" is typed as the "Representing"
+      Then "Representing" offers "Canterbury Croquet Club"
+
+    Scenario: Nothing is offered that the typing does not begin
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Auck" is typed as the "Representing"
+      Then "Representing" does not offer "Canterbury Croquet Club"
+
   Rule: Beside the world ranking name, a tick or a question mark says whether the world rankings know it
 
     Scenario: Nothing is marked before anything is typed

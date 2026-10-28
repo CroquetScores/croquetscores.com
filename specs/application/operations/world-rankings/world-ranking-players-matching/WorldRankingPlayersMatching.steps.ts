@@ -69,12 +69,22 @@ Then("nobody is found", function (this: SpecWorld) {
   assert.deepEqual(found(this).players, []);
 });
 
+// The names found, whichever was asked: the world ranking players a name may
+// be or what players represent (RepresentingMatching.feature), whose scenarios
+// say "the first found" and "are found" in the same words.
+const namesFound = (world: SpecWorld): readonly string[] => {
+  assert.equal(world.failure, undefined, "Finding them was refused.");
+  const answer = world.answer as
+    PlayersMatching | { readonly representing: readonly string[] };
+  return "players" in answer ? answer.players : answer.representing;
+};
+
 Then("the first found is {string}", function (this: SpecWorld, name: string) {
-  assert.equal(found(this).players[0], name);
+  assert.equal(namesFound(this)[0], name);
 });
 
 Then("{int} are found", function (this: SpecWorld, count: number) {
-  assert.equal(found(this).players.length, count);
+  assert.equal(namesFound(this).length, count);
 });
 
 Then("the name is known", function (this: SpecWorld) {

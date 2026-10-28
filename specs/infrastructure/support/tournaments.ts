@@ -117,6 +117,7 @@ import { SearchByWebsite } from "../../../src/infrastructure/read-models/SearchB
 import { SearchHandler } from "../../../src/application/operations/tournaments/SearchHandler.js";
 import { PlayerOfWebsiteHandler } from "../../../src/application/operations/tournaments/PlayerOfWebsiteHandler.js";
 import { SearchPlayersOfWebsiteHandler } from "../../../src/application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
+import { RepresentingMatchingHandler } from "../../../src/application/operations/tournaments/RepresentingMatchingHandler.js";
 import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
@@ -164,7 +165,7 @@ import { standUpFor } from "./registering.js";
 import { unitOfWorkOf } from "./transactions.js";
 import { heldAfter } from "../../support/heldAtOnce.js";
 
-Given("the application's tournaments", function (this: SpecWorld) {
+const standUpTheTournaments = function (this: SpecWorld): void {
   standUpFor(this);
   const unitOfWork = unitOfWorkOf(this);
   const accounts = accountsOf(this);
@@ -356,6 +357,7 @@ Given("the application's tournaments", function (this: SpecWorld) {
   mediator.handleQuery(new SearchHandler(bySearch));
   mediator.handleQuery(new PlayerOfWebsiteHandler(bySearch));
   mediator.handleQuery(new SearchPlayersOfWebsiteHandler(bySearch));
+  mediator.handleQuery(new RepresentingMatchingHandler(bySearch));
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
@@ -509,4 +511,14 @@ Given("the application's tournaments", function (this: SpecWorld) {
     },
   };
   this.tournamentsInHand = inHand;
-});
+};
+
+Given("the application's tournaments", standUpTheTournaments);
+
+// What the player dialog asks as the field for what a player represents is
+// typed (RepresentingMatching.feature): the same application, since what is
+// found is found among the players the tournaments keep.
+Given(
+  "the application's finding of what players represent",
+  standUpTheTournaments,
+);

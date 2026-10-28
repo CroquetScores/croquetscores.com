@@ -57,7 +57,11 @@ Then(
 Then(
   "{string} does not offer {string}",
   async function (this: SpecWorld, label: string, player: string) {
-    await mark(this).waitFor();
+    // What is represented is marked by nothing, so there is nothing to wait
+    // for: it is given as long again as the site pauses over typing before it
+    // asks, and as long as an answer takes, which is more than it needs.
+    if (label === "Representing") await this.browserPage.waitForTimeout(1000);
+    else await mark(this).waitFor();
     const offered = await offeredBy(this, label);
     assert.ok(!offered.includes(player), `Offered ${JSON.stringify(offered)}.`);
   },
