@@ -146,22 +146,30 @@ export const askedOf = (
   // The fields are typed into, so what arrives is a name as often as a code,
   // and a flag's link is a code. What is neither is dropped rather than
   // refused: a reader who typed half a name and pressed Filter has made a
-  // slip, not asked for something that is not there.
-  const country = Countries.thereAre.all.find(
-    (each) =>
-      each.code === oneOf(request.query, "country") ||
-      sameWords(say(`country.${each.code}`), oneOf(request.query, "country")),
+  // slip, not asked for something that is not there. A code is looked for
+  // first, and a name only where no code is the same, so that the names of
+  // the countries are said only for a country that was typed in words.
+  const chosenFrom = <T extends { readonly code: string }>(
+    all: readonly T[],
+    field: string,
+    nameOf: (each: T) => string,
+  ): T | undefined => {
+    const typed = oneOf(request.query, field);
+    return typed === undefined
+      ? undefined
+      : (all.find((each) => each.code === typed) ??
+          all.find((each) => sameWords(nameOf(each), typed)));
+  };
+  const country = chosenFrom(Countries.thereAre.all, "country", (each) =>
+    say(`country.${each.code}`),
   );
-  const region = country?.regions.find(
-    (each) =>
-      each.code === oneOf(request.query, "region") ||
-      sameWords(each.name, oneOf(request.query, "region")),
-  );
+  const region =
+    country === undefined
+      ? undefined
+      : chosenFrom(country.regions, "region", (each) => each.name);
   const sport = offersSport
-    ? sportsOffered[websiteOf(request).site].find(
-        (each) =>
-          each.code === oneOf(request.query, "sport") ||
-          sameWords(say(`sport.${each.code}`), oneOf(request.query, "sport")),
+    ? chosenFrom(sportsOffered[websiteOf(request).site], "sport", (each) =>
+        say(`sport.${each.code}`),
       )
     : undefined;
   return {

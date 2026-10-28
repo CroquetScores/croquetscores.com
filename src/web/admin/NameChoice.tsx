@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 interface Choice {
   readonly code: string;
@@ -50,16 +50,19 @@ export function NameChoice({
     choices.find((each) => each.code === code)?.name ?? code;
   // What is in the box, which is not the choice made while it is being typed.
   const [typed, setTyped] = useState(nameOf(value));
-  // The form changes a choice itself, as it empties the region when the
-  // country is changed, and the box says so.
+  // The last choice this box told the form of. A choice that is that one is
+  // the box's own, and the words that made it are the reader's to go on
+  // editing: a name that is half deleted names nothing, which is told as none
+  // chosen, and the form handing that back must not empty the box. Any other
+  // is the form's doing, as when it empties the region because the country was
+  // changed, or when the choices were not there yet to give the name of the
+  // choice it began with, and the box says what it is.
+  const told = useRef<string | undefined>(undefined);
   useEffect(() => {
-    setTyped((now) => {
-      const meant = choices.find((each) => sameWords(each.name, now))?.code;
-      return (meant ?? now.trim()) === value ? now : nameOf(value);
-    });
-    // Only a change of the choice is the form's own; a change of what is typed
-    // is the reader's, and must not be undone.
-  }, [value]);
+    if (value !== told.current) setTyped(nameOf(value));
+  }, [value, choices]);
+  // Narrowed to the names that have what has been typed, which is what the
+  // list is specified to hold (tournaments.feature).
   const suggested =
     typed.trim() === ""
       ? choices
@@ -78,7 +81,8 @@ export function NameChoice({
           const words = event.target.value;
           setTyped(words);
           const named = choices.find((each) => sameWords(each.name, words));
-          onChange(named?.code ?? (refusing ? words.trim() : ""));
+          told.current = named?.code ?? (refusing ? words.trim() : "");
+          onChange(told.current);
         }}
       />
       <datalist id={listId}>

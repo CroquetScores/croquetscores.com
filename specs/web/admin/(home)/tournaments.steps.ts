@@ -1110,6 +1110,17 @@ Then(
   },
 );
 
+// What the reader sees in the box, which is not always a name offered: it is
+// what they have typed.
+Then(
+  /^the (country|region|sport) box of the filter says "(.*)"$/,
+  async function (this: SpecWorld, field: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await filterField(this, field).inputValue(), words);
+    });
+  },
+);
+
 Then("the filter offers no region", async function (this: SpecWorld) {
   await eventually(this, async () => {
     assert.equal(await filterField(this, "region").count(), 0);

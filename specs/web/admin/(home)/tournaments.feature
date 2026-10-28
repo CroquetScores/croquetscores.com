@@ -807,6 +807,13 @@ Feature: The admin lists the reader's tournaments
       When "Atlantis" is typed as the country
       Then the tournament "Summer Open" is listed
 
+    Scenario: A name that is half deleted stays in the box to go on editing
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When "New Zealan" is typed as the country
+      Then the country box of the filter says "New Zealan"
+      And the tournament "Summer Open" is listed
+
     Scenario: A country the list does not hold is not offered
       When the admin is opened
       Then the filter does not offer "Japan" as a country
