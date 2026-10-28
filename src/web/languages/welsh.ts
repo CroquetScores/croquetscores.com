@@ -955,6 +955,7 @@ export const welsh: Language = {
     "admin.player.addTitle": "Ychwanegu chwaraewr",
     "admin.player.editTitle": "Golygu chwaraewr",
     "admin.player.name": "Enw",
+    "admin.player.handicap": "Anfantais",
     "admin.player.representing": "Yn cynrychioli",
     "admin.player.worldRankingName": "Enw'r chwaraewr ar restr detholion y byd",
     // Beside the world ranking name: whether the world rankings know it.

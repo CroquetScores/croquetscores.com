@@ -923,6 +923,7 @@ export const japanese: Language = {
     "admin.player.addTitle": "選手を追加",
     "admin.player.editTitle": "選手を編集",
     "admin.player.name": "名前",
+    "admin.player.handicap": "ハンディキャップ",
     "admin.player.representing": "代表",
     "admin.player.worldRankingName": "世界ランキングの選手名",
     // Beside the world ranking name: whether the world rankings know it.

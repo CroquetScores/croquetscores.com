@@ -934,6 +934,7 @@ export const korean: Language = {
     "admin.player.addTitle": "선수 추가",
     "admin.player.editTitle": "선수 수정",
     "admin.player.name": "이름",
+    "admin.player.handicap": "핸디캡",
     "admin.player.representing": "소속",
     "admin.player.worldRankingName": "세계 랭킹 선수 이름",
     // Beside the world ranking name: whether the world rankings know it.

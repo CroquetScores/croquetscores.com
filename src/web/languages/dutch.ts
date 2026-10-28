@@ -999,6 +999,7 @@ export const dutch: Language = {
     "admin.player.addTitle": "Speler toevoegen",
     "admin.player.editTitle": "Speler bewerken",
     "admin.player.name": "Naam",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Vertegenwoordigt",
     "admin.player.worldRankingName": "Naam van de speler op de wereldranglijst",
     // Beside the world ranking name: whether the world rankings know it.

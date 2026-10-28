@@ -953,6 +953,7 @@ export const maori: Language = {
     "admin.player.addTitle": "Tāpiri kaitākaro",
     "admin.player.editTitle": "Whakatika kaitākaro",
     "admin.player.name": "Ingoa",
+    "admin.player.handicap": "Haihaingā",
     "admin.player.representing": "E māngai ana i",
     "admin.player.worldRankingName": "Ingoa kaitākaro whakarārangi o te ao",
     "admin.player.worldRankingKnown":

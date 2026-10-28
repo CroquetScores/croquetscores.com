@@ -896,6 +896,7 @@ export const egyptian: Language = {
     "admin.player.addTitle": "ضيف لاعب",
     "admin.player.editTitle": "عدّل لاعب",
     "admin.player.name": "الاسم",
+    "admin.player.handicap": "الهانديكاب",
     "admin.player.representing": "بيمثّل",
     "admin.player.worldRankingName": "اسم اللاعب في التصنيف العالمي",
     // Beside the world ranking name: whether the world rankings know it.

@@ -978,6 +978,7 @@ export const portuguese: Language = {
     "admin.player.addTitle": "Adicionar jogador",
     "admin.player.editTitle": "Editar jogador",
     "admin.player.name": "Nome",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Representando",
     "admin.player.worldRankingName": "Nome do jogador no ranking mundial",
     // Beside the world ranking name: whether the world rankings know it.

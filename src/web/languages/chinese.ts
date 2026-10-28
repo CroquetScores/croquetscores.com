@@ -889,6 +889,7 @@ export const chinese: Language = {
     "admin.player.addTitle": "添加选手",
     "admin.player.editTitle": "编辑选手",
     "admin.player.name": "姓名",
+    "admin.player.handicap": "差点",
     "admin.player.representing": "代表",
     "admin.player.worldRankingName": "世界排名选手姓名",
     // Beside the world ranking name: whether the world rankings know it.

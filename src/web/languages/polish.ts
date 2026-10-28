@@ -894,6 +894,7 @@ export const polish: Language = {
     "admin.player.addTitle": "Dodaj zawodnika",
     "admin.player.editTitle": "Edytuj zawodnika",
     "admin.player.name": "Nazwa",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Reprezentuje",
     "admin.player.worldRankingName": "Nazwa zawodnika w rankingu światowym",
     "admin.player.worldRankingKnown": "Rankingi światowe znają tę nazwę.",

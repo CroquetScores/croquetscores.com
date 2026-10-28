@@ -930,6 +930,7 @@ export const russian: Language = {
     "admin.player.addTitle": "Добавление игрока",
     "admin.player.editTitle": "Изменение игрока",
     "admin.player.name": "Имя",
+    "admin.player.handicap": "Гандикап",
     "admin.player.representing": "Представляет",
     "admin.player.worldRankingName": "Имя игрока в мировом рейтинге",
     "admin.player.worldRankingKnown": "Мировой рейтинг знает это имя.",

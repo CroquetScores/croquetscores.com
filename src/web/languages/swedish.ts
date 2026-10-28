@@ -973,6 +973,7 @@ export const swedish: Language = {
     "admin.player.addTitle": "Lägg till spelare",
     "admin.player.editTitle": "Redigera spelare",
     "admin.player.name": "Namn",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Representerar",
     "admin.player.worldRankingName": "Spelarens namn i världsrankingen",
     // Bredvid namnet i världsrankingen: om världsrankingen känner till det.

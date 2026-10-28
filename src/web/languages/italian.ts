@@ -1008,6 +1008,7 @@ export const italian: Language = {
     "admin.player.addTitle": "Aggiungi giocatore",
     "admin.player.editTitle": "Modifica giocatore",
     "admin.player.name": "Nome",
+    "admin.player.handicap": "Handicap",
     "admin.player.representing": "Rappresenta",
     "admin.player.worldRankingName":
       "Nome del giocatore nella classifica mondiale",

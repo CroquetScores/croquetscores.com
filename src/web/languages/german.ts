@@ -1048,6 +1048,7 @@ export const german: Language = {
     "admin.player.addTitle": "Spieler hinzufügen",
     "admin.player.editTitle": "Spieler bearbeiten",
     "admin.player.name": "Name",
+    "admin.player.handicap": "Vorgabe",
     "admin.player.representing": "Vertritt",
     "admin.player.worldRankingName": "Name des Weltranglistenspielers",
     // Neben dem Weltranglistennamen: ob die Weltranglisten ihn kennen.
