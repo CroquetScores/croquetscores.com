@@ -1,5 +1,27 @@
 # Nytt
 
+## Släppt 2026-10-28
+
+### Hitta saker
+
+- **Sökresultaten är tabeller.** Turneringarna och tävlingarna som en sökning hittar står nu som listorna på startsidan: dagarna då varje turnering spelades, sporttypen, flaggan för dess land och namnet. En tävling visar sin turnerings dagar, sporttyp och flagga samt turneringen den ingår i. Datumen och namnen kan sorteras, varje tabell för sig, och sorteringen sparas i sidans adress bredvid det du skrev. Sorteringen ordnar bara om de hundra resultat som visas, de som bäst matchar dina ord, inte alla träffar.
+- **De mest spelade länderna står först.** Överallt där du väljer ett land börjar listan nu med Australien, Egypten, England, Nya Zeeland, Spanien och USA, sedan de andra länderna där turneringar har spelats sedan 2025, och sist alla övriga, med en linje mellan de tre grupperna.
+- **Varje turnering visar sin sport.** På en surfplatta eller något bredare visar turneringslistorna på startsidan och på ett års sida turneringens sport som en kort kod, till exempel GC eller AC, i en egen färg för varje sport, efter datumen. På en telefon utelämnas koden för att ge namnen plats.
+- **Startsidan.** Startsidans kommande turneringar står nu under de senaste resultaten i alla bredder.
+- **Flaggorna trängs inte längre på en telefon.** På en telefon utelämnas flaggkolumnen i alla turneringslistor, så namnen får mer plats.
+- **Landslistan förblir öppen i Chrome på Linux.** När du tryckte på landsfältet på startsidan öppnades listan och stängdes direkt igen. Nu förblir den öppen, och den går att rulla.
+
+### Följa en turnering
+
+- **Handikapp.** En turnerings ansvariga kan nu ge en spelare ett handikapp, till exempel 4, +4 eller -1.5. Det visas efter spelarens namn, tillsammans med vad spelaren representerar om det finns något, som i Tim Murphy (4, Australien).
+- **Poängskillnad i schweizerrutnätet.** Ett resultat i schweizerrutnätet slutar nu med partiets poängskillnad (peeling), som rankingtextfilen redan gör. Ett parti som vanns med 26tp mot 17 står som +9tp för vinnaren och -9tp för förloraren. Ett parti utan peeling står som förut.
+
+### Turneringar som förts över från de gamla webbplatserna
+
+- **Fler av dem har rätt land.** Många turneringar fördes över med fel land, eftersom de gamla webbplatserna bara kände till tidszonen. Webbplatsen läser nu landet ur en turnerings namn där det går, till exempel Irish, Welsh, Bayfield eller CroqCan, och placerar varje match mellan England och Skottland i det land som var värd det året. Tack till Chris Williams för hans hjälp med detta.
+- **Turneringar som ännu inte har spelats förs över** även om deras ansvariga ännu inte har lagt till någon tävling, så att du kan se när och var de spelas.
+- **Ett handikapp efter en spelares namn** på de gamla webbplatserna, som i Tim Murphy 1, tas inte längre för en del av namnet när spelarens världsranking slås upp.
+
 ## Släppt 2026-10-27
 
 Croquet Scores har skrivits om helt med AI, i TypeScript. Här är vad du kommer att märka.

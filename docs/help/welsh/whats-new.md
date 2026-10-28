@@ -1,5 +1,27 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-10-28
+
+### Dod o hyd i bethau
+
+- **Mae canlyniadau chwilio yn dablau.** Mae'r twrnameintiau a'r cystadlaethau y mae chwiliad yn eu canfod bellach wedi'u gosod fel y rhestrau ar yr hafan: y dyddiau y chwaraewyd pob un, y math o gamp, baner ei wlad, a'r enw. Mae cystadleuaeth yn dangos dyddiau, math o gamp a baner ei thwrnamaint, a'r twrnamaint y mae ynddo. Gellir trefnu'r dyddiadau a'r enwau, pob tabl ar wahân, ac mae'r drefn yn cael ei chadw yng nghyfeiriad y dudalen ochr yn ochr â'r hyn a deipiwyd gennych. Dim ond y cant canlyniad a ddangosir y mae trefnu yn eu haildrefnu, sef y rhai sy'n cyd-fynd orau â'ch geiriau, nid pob canlyniad.
+- **Y gwledydd prysuraf yn gyntaf.** Lle bynnag y dewiswch wlad, mae'r rhestr bellach yn dechrau gydag Awstralia, yr Aifft, Lloegr, Seland Newydd, Sbaen ac Unol Daleithiau America, yna'r gwledydd eraill y chwaraewyd twrnameintiau ynddynt ers 2025, yna'r gweddill i gyd, gyda llinell rhwng y tri grŵp.
+- **Mae pob twrnamaint yn dangos ei gamp.** Ar dabled neu'n lletach, mae'r rhestrau twrnameintiau ar yr hafan ac ar dudalen blwyddyn yn dangos camp y twrnamaint fel cod byr, fel GC neu AC, mewn lliw ei hun ar gyfer pob camp, ar ôl y dyddiadau. Ar ffôn gadewir y cod allan i adael lle i'r enwau.
+- **Hafan.** Mae twrnameintiau i ddod yr hafan bellach islaw'r canlyniadau diweddar ar bob lled.
+- **Nid yw baneri'n llenwi'r ffôn mwyach.** Ar ffôn, gadewir y golofn o faneri allan o bob rhestr o dwrnameintiau, fel bod mwy o le i'r enwau.
+- **Mae'r rhestr gwledydd yn aros ar agor yn Chrome ar Linux.** Roedd gwasgu'r maes gwlad ar yr hafan yn agor y rhestr a'i chau eto ar unwaith. Nawr mae'n aros ar agor, ac yn sgrolio.
+
+### Dilyn twrnamaint
+
+- **Handicapiau.** Gall rheolwyr twrnamaint bellach roi handicap i chwaraewr, fel 4, +4 neu -1.5. Fe'i dangosir ar ôl enw'r chwaraewr, gyda'r hyn y mae'n ei gynrychioli os oes rhywbeth, fel yn Tim Murphy (4, Awstralia).
+- **Plicio yn y grid Swiss.** Mae canlyniad yn y grid Swiss bellach yn gorffen â phlicio'r gêm, fel y mae'r ffeil destun safleoedd eisoes yn ei wneud. Mae gêm a enillwyd 26tp i 17 yn darllen +9tp i'r enillydd a -9tp i'r collwr. Mae gêm heb unrhyw blicio yn darllen fel o'r blaen.
+
+### Twrnameintiau a ddygwyd o'r hen wefannau
+
+- **Mae mwy ohonynt yn y wlad gywir.** Daeth llawer o dwrnameintiau drosodd yn y wlad anghywir, am mai dim ond y parth amser yr oedd yr hen wefannau yn ei wybod. Mae'r wefan bellach yn darllen y wlad o enw twrnamaint lle bo modd, fel Irish, Welsh, Bayfield neu CroqCan, ac yn rhoi pob gêm Lloegr v yr Alban yn y wlad a fu'n cynnal y flwyddyn honno. Diolch i Chris Williams am ei help gyda hyn.
+- **Dygir twrnameintiau sydd eto i'w chwarae drosodd** hyd yn oed os nad yw eu rheolwyr wedi ychwanegu cystadleuaeth eto, fel y gallwch ddarganfod pryd a ble y maent.
+- **Handicap ar ôl enw chwaraewr** ar yr hen wefannau, fel yn Tim Murphy 1, nid yw bellach yn cael ei gymryd am ran o'r enw wrth chwilio am ei safle byd.
+
 ## Rhyddhawyd 2026-10-27
 
 Mae Croquet Scores wedi'i ailysgrifennu'n llwyr gydag AI, yn TypeScript. Dyma'r hyn y byddwch yn ei weld.
