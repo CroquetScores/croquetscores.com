@@ -1929,6 +1929,248 @@ Feature: Importing the old sites' tournaments
       When the tournament is imported
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
 
+  Rule: A tournament the person who checked the old sites' countries named is in the country they named
+
+    Names and time zones cannot tell the country of every tournament: a club
+    in Wales plays under a name no rule above recognises, and a tournament
+    kept in Casablanca's time zone because its organiser forgot to change it
+    says nothing at all. Whoever went through the old sites' tournaments year
+    by year listed these by the address each is found at (issue 409), and
+    their word is taken over everything else, the world rankings' list and the
+    rules above included.
+
+    Scenario Outline: A tournament found at an address the list names is in the country it names
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spring Open"
+      And the tournament is in the sport "<sport>"
+      And the tournament's slug is "<slug>"
+      And the tournament started on "<year>-06-01T00:00:00.0000000"
+      And the tournament finished on "<year>-06-01T00:00:00.0000000"
+      And the tournament's time zone is "Tokyo Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | year | sport | slug | country |
+        | 2013 | gc | ramsgate-championship | england |
+        | 2013 | ac | ca-mens-championship | england |
+        | 2013 | gc | british-open-doubles-championship | england |
+        | 2013 | ac | irish-championships | ie |
+        | 2013 | ac | nsw-bronze-medal | au |
+        | 2014 | gc | swf-nailsea-v-dyffryn-1 | england |
+        | 2014 | gc | national-forest-tournament-ashby-cc-eng | england |
+        | 2014 | ac | ca-open-championship | england |
+        | 2014 | ac | ca-open-doubles-championship | england |
+        | 2014 | gc | inter-club-championship-bowdon-cc-v-ashby-cc-ca-eng | england |
+        | 2014 | ac | nailsea-b-class-advanced | england |
+        | 2014 | ac | sca-scottish-open | scotland |
+        | 2014 | ac | croqcan | ca |
+        | 2014 | gc | welsh-b-level-golf | wales |
+        | 2014 | gc | selectors-sixes-eng-ca | england |
+        | 2014 | gc | sca-v-lkf | scotland |
+        | 2014 | ac | german-vs-uruguay | de |
+        | 2014 | gc | hurlingham-level-play-singles-eng | england |
+        | 2014 | gc | doubles-weekend-ca-eng | england |
+        | 2015 | gc | 2nd-spain-latvia-friendly-tournament-1 | es |
+        | 2015 | ac | bicc-bayfield-cup | ca |
+        | 2015 | gc | swf-dyffryn-v-nailsea | england |
+        | 2015 | gc | cheltenham-ascot-qualifier | england |
+        | 2015 | ac | nailsea-district-b-class-advanced-tournament | england |
+        | 2015 | ac | qualifier-for-womens-world-championship | england |
+        | 2015 | gc | swf-level-dyffryn-v-worcester-norton | wales |
+        | 2015 | gc | swcf-dyffryn-v-c-peasdown | wales |
+        | 2015 | gc | kate-jones-memorial-eng-ca | england |
+        | 2015 | ac | usa-vs-ireland-invitational | us |
+        | 2015 | gc | surbiton-oneday-august | england |
+        | 2015 | gc | welsh-b-class | wales |
+        | 2015 | ac | ca-inter-club-final | england |
+        | 2016 | gc | northampton-level-eng-ca-a-level-series | england |
+        | 2016 | ac | inter-county-championship | england |
+        | 2016 | ac | bicc-open | ca |
+        | 2016 | gc | cheltenham-ascot-cup | england |
+        | 2016 | gc | croqcan | ca |
+        | 2016 | ac | home-internationals | england |
+        | 2016 | ac | ca-open-championship | england |
+        | 2016 | gc | national-forest-championship-eng-ashby-cc | england |
+        | 2016 | ac | mary-rose-heat | england |
+        | 2016 | ac | irish-championship | ie |
+        | 2016 | gc | swf-dyffryn-v-cheltenham | wales |
+        | 2016 | ac | ca-v-sca | england |
+        | 2016 | gc | english-national-doubles-championship-eng-ca | england |
+        | 2016 | ac | nottingham-adv-weekend | england |
+        | 2016 | ac | aberdeen-crathes-handicap | scotland |
+        | 2016 | gc | welsh-b-class-golf-open | wales |
+        | 2016 | gc | portuga-boxing-day | pt |
+        | 2017 | ac | nwf-millennium-advanced | england |
+        | 2017 | gc | student-championships | england |
+        | 2017 | gc | student-doubles-championships | england |
+        | 2017 | ac | john-beech-memorial | england |
+        | 2017 | gc | golf-croquet-a-level-series-cheltenham | england |
+        | 2017 | ac | pendle-craven-b-level | england |
+        | 2017 | ac | ca-inter-county-championship | england |
+        | 2017 | gc | cheltenham-championship | england |
+        | 2017 | ac | nottingham-b-level-weekend | england |
+        | 2017 | gc | british-doubles-championship | england |
+        | 2017 | ac | roehampton-b-level-advanced | england |
+        | 2017 | gc | national-forest-championship-eng-ashby-cc | england |
+        | 2017 | ac | the-open-championships | england |
+        | 2017 | gc | ca-inter-club-cheltenham-versus-ashby | england |
+        | 2017 | ac | league-match-of-the-century | england |
+        | 2017 | gc | cheltenham-festival-golf-day | england |
+        | 2017 | gc | belgian-open-tournament | be |
+        | 2017 | ac | the-eastern-championships | england |
+        | 2017 | ac | cowhorn-eastbourne | england |
+        | 2017 | ac | parkstone-trophy-bristol-v-cheltenham | england |
+        | 2017 | gc | secf-level-surbiton-v-sussexccc | england |
+        | 2017 | gc | welsh-b-class | wales |
+        | 2017 | ac | ic-bristol-vs-colchester | england |
+        | 2017 | gc | ca-inter-club-letchworth-versus-ashby | england |
+        | 2017 | ac | bayfield-last-of-summer-wine | ca |
+        | 2017 | gc | v-ac-challenge-match | england |
+        | 2018 | gc | sca-championship | scotland |
+        | 2018 | gc | swcf-dyffryn-v-camerton-peasdown | wales |
+        | 2018 | gc | brisbane-metropolitan-pennants | au |
+        | 2018 | ac | victoria-day | ca |
+        | 2018 | gc | croqcan | ca |
+        | 2018 | gc | quebec-open | ca |
+        | 2019 | gc | 1st-spain-england-test-match | es |
+        | 2019 | ac | egyptian | england |
+        | 2019 | gc | auckland-silver-badge | nz |
+        | 2019 | gc | skara-open-a | se |
+        | 2019 | gc | allan-wilson-classic-eastern-cape | za |
+        | 2019 | gc | wcca-open | za |
+        | 2019 | ac | newport-may-advanced-weekend | england |
+        | 2019 | gc | el-segundo-mexico-croquet-open | mx |
+        | 2019 | ac | british-columbia-vs-ontario | ca |
+        | 2019 | ac | tom-colls-cup | ca |
+        | 2019 | gc | quebec-open | ca |
+        | 2020 | gc | sweden-v-canterbury-u17 | nz |
+        | 2020 | gc | sherry-golf-inaugural-trophy | es |
+        | 2020 | gc | 1st-ireland-spain-womens-test-match | es |
+        | 2020 | ac | bayfield-cup | ca |
+        | 2020 | ac | irish-championships | ie |
+        | 2020 | gc | llandovery-v-glamorgan | wales |
+        | 2021 | gc | british-open-championship-1 | england |
+        | 2021 | gc | cai-william-shield-trophy-singles | ie |
+        | 2021 | gc | cai-john-ronan-trophy-singles | ie |
+        | 2021 | gc | cai-paddy-murphy-trophy-doubles | ie |
+        | 2021 | gc | cai-paddy-murphy-trophy-doubles-1 | ie |
+        | 2021 | gc | cai-jack-o-gorman-john-blanchard-cup-ladies-singles | ie |
+        | 2021 | gc | welsh-ca-team-golf-north | wales |
+        | 2021 | gc | welsh-ca-team-golf-south | wales |
+        | 2021 | gc | welsh-ca-team-golf-consolidated-singles | wales |
+        | 2021 | gc | the-fort-william-cup-doubles | ie |
+        | 2021 | gc | cai-lyons-cup-singles-2 | ie |
+        | 2021 | gc | cai-peggy-ronan-trophy-singles | ie |
+        | 2021 | gc | wca-welsh-team-golf-final | wales |
+        | 2021 | gc | cai-mcostrich-cup-singles | ie |
+        | 2021 | gc | nrcc-divisional-singles | au |
+        | 2021 | gc | cai-midleton-distillery-cup-doubles | ie |
+        | 2021 | ac | bayfield-cup | ca |
+        | 2021 | ac | association-canadian-open | ca |
+        | 2022 | ac | sw-fed-glamorgan-v-nailsea-1 | wales |
+        | 2022 | ac | bayfield-cup | ca |
+        | 2022 | gc | swf-hcp-glamorgan-v-worcester-norton | wales |
+        | 2022 | gc | bicc-golf-open | ca |
+        | 2022 | gc | ca-nwf-lpg-bowdon-v-crake | england |
+        | 2022 | gc | sw-fed-level-play | wales |
+        | 2022 | gc | welsh-golf-team-1 | wales |
+        | 2022 | gc | ca-nwf-llanfairfechan-v-bowdon | wales |
+        | 2022 | gc | welsh-inter-club-final | wales |
+        | 2022 | ac | autumn-bowl | ie |
+        | 2022 | gc | european-club-league-algarve-1 | pt |
+        | 2023 | gc | mexico-open-championship | mx |
+        | 2023 | ac | victoria-day-weekend-open | ca |
+        | 2023 | gc | quebec-open | ca |
+        | 2023 | gc | croquet-mx-campeonato-nacional-de-dobles | mx |
+        | 2023 | gc | san-miguel-archangel | mx |
+        | 2023 | gc | wcca-championships | za |
+        | 2024 | a6w | west-indies-open | vg |
+        | 2024 | gc | kurpfalz | de |
+        | 2024 | gc | interclub-sudwest-dechsendorf | de |
+        | 2024 | gc | interclub-sudwest-hamburg | de |
+        | 2024 | gc | wcf-erc-european-club-league-cern-cc-qualifier | ch |
+        | 2024 | ac | southwest-championships | de |
+        | 2024 | ac | national-german-doubles-championships | de |
+        | 2024 | gc | welsh-golf-team-southern-heat | wales |
+        | 2024 | ac | irish-croquet-championship | ie |
+        | 2024 | gc | southwest-championships | de |
+        | 2024 | gc | national-german-championships | de |
+        | 2024 | gc | happy-valley | ca |
+        | 2025 | gc | algarve-club-leage | pt |
+        | 2025 | gc | kurpfalz | de |
+        | 2025 | gc | welsh-league | wales |
+        | 2025 | gc | swedish-national-day-cup-benamor | pt |
+        | 2025 | gc | welsh-league-llanidloes-v-llandovery | wales |
+        | 2025 | gc | 3rd-european-league-newcastle-heat | ie |
+        | 2025 | gc | alexander-mcostrich-cup-1910-open-singles | ie |
+        | 2025 | ac | sca-v-cqe | scotland |
+        | 2025 | gc | cai-v-fec-womens-match | ie |
+        | 2025 | gc | auckland-interclub | nz |
+        | 2025 | gc | auckland-interclub-division-1 | nz |
+        | 2025 | gc | welsh-team-golf-final | wales |
+
+    Scenario: A tournament found at an address the list names is in the country it names whatever the list of rankings says
+      Given an Association Croquet event "Spring Open" played on "1.6.14" in "Latvia"
+      And a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spring Open"
+      And the tournament is in the sport "AC"
+      And the tournament's slug is "sca-scottish-open"
+      And the tournament started on "2014-06-01T00:00:00.0000000"
+      And the tournament finished on "2014-06-01T00:00:00.0000000"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "scotland"
+
+    Scenario: A tournament found at an address the list names is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spring Open"
+      And the tournament is in the sport "AC"
+      And the tournament's slug is "nsw-bronze-medal"
+      And the tournament started on "2013-06-01T00:00:00.0000000"
+      And the tournament finished on "2013-06-01T00:00:00.0000000"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario: A tournament found at an address the list names in another sport is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spring Open"
+      And the tournament is in the sport "GC"
+      And the tournament's slug is "nsw-bronze-medal"
+      And the tournament started on "2013-06-01T00:00:00.0000000"
+      And the tournament finished on "2013-06-01T00:00:00.0000000"
+      And the tournament's time zone is "Tokyo Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "jp"
+
+    Scenario: A tournament found at an address the list names in another year is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Spring Open"
+      And the tournament is in the sport "AC"
+      And the tournament's slug is "nsw-bronze-medal"
+      And the tournament started on "2014-06-01T00:00:00.0000000"
+      And the tournament finished on "2014-06-01T00:00:00.0000000"
+      And the tournament's time zone is "Tokyo Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "jp"
+
+    Scenario: A tournament on the other website found at an address the list names is not moved
+      Given a tournament "tournaments/12" on "gateballscores.com"
+      And the tournament is in the sport "GB"
+      And the tournament's slug is "croqcan"
+      And the tournament started on "2014-06-01T00:00:00.0000000"
+      And the tournament finished on "2014-06-01T00:00:00.0000000"
+      And the tournament's time zone is "Tokyo Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "gateballscores.com" is in the country "jp"
+
   Rule: The tournaments of each ranked sport are counted, and those that took the world rankings' country
 
     Whoever runs the import is told on screen, at the end, how many tournaments
