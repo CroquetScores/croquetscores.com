@@ -971,6 +971,8 @@ export const welsh: Language = {
     "Tournament.PlayerNameTaken":
       "Mae gan chwaraewr arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
     "TournamentPlayer.NoSuchFlag": "Dewiswch un o'r baneri sydd ar gael.",
+    "TournamentPlayer.HandicapMalformed":
+      "Ysgrifennwch yr anfantais fel rhif. Er enghraifft: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Ni all chwaraewr gael ei alw'n Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Mae angen llythyren neu ddigid mewn enw.",

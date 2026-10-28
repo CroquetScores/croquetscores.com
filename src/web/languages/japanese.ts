@@ -938,6 +938,8 @@ export const japanese: Language = {
     "Tournament.PlayerNameTaken":
       "この大会のほかの選手がすでにその名前を使っています。",
     "TournamentPlayer.NoSuchFlag": "一覧にある国旗から選んでください。",
+    "TournamentPlayer.HandicapMalformed":
+      "ハンディキャップは数字で書いてください。例：-1.5、-1、0、1、2.5、24。",
     "TournamentPlayer.NamedBye": "選手に「Bye」という名前は付けられません。",
     "TournamentPlayer.NoLetterOrDigit": "名前には文字か数字が必要です。",
     // The dialog over the player dialog when a player is named as a bye.

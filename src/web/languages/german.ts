@@ -1064,6 +1064,8 @@ export const german: Language = {
     "Tournament.PlayerNameTaken":
       "Ein anderer Spieler in diesem Turnier hat bereits diesen Namen.",
     "TournamentPlayer.NoSuchFlag": "Wählen Sie eine der vorhandenen Flaggen.",
+    "TournamentPlayer.HandicapMalformed":
+      "Schreiben Sie die Vorgabe als Zahl. Zum Beispiel: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Ein Spieler kann nicht Bye heißen.",
     "TournamentPlayer.NoLetterOrDigit":
       "Ein Name braucht einen Buchstaben oder eine Ziffer.",

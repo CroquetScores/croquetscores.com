@@ -1018,6 +1018,8 @@ export const french: Language = {
     "Tournament.PlayerNameTaken":
       "Un autre joueur de ce tournoi porte déjà ce nom.",
     "TournamentPlayer.NoSuchFlag": "Choisissez l'un des drapeaux proposés.",
+    "TournamentPlayer.HandicapMalformed":
+      "Écrivez le handicap sous forme de nombre. Par exemple : -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "Un joueur ne peut pas s'appeler Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "Un nom doit contenir une lettre ou un chiffre.",

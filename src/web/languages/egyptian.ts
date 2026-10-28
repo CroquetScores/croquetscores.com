@@ -910,6 +910,8 @@ export const egyptian: Language = {
     "admin.player.otherwise": "مينفعش نحفظ اللاعب ده زي ما هو.",
     "Tournament.PlayerNameTaken": "فيه لاعب تاني في البطولة دي بنفس الاسم.",
     "TournamentPlayer.NoSuchFlag": "اختار علم من الأعلام الموجودة.",
+    "TournamentPlayer.HandicapMalformed":
+      "اكتب الهانديكاب كرقم. مثلاً: -1.5، -1، 0، 1، 2.5، 24.",
     "TournamentPlayer.NamedBye": "اللاعب مينفعش يتسمّى Bye.",
     "TournamentPlayer.NoLetterOrDigit": "الاسم لازم يكون فيه حرف أو رقم.",
     // The dialog over the player dialog when a player is named as a bye.

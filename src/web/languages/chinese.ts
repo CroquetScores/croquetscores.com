@@ -903,6 +903,8 @@ export const chinese: Language = {
     "admin.player.otherwise": "无法按现状保存这位选手。",
     "Tournament.PlayerNameTaken": "本赛事中已有另一位选手使用这个姓名。",
     "TournamentPlayer.NoSuchFlag": "请从现有的旗帜中选择。",
+    "TournamentPlayer.HandicapMalformed":
+      "请把差点写成数字。例如：-1.5、-1、0、1、2.5、24。",
     "TournamentPlayer.NamedBye": "选手不能取名为“Bye”。",
     "TournamentPlayer.NoLetterOrDigit": "姓名中要有文字或数字。",
     // The dialog over the player dialog when a player is named as a bye.

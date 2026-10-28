@@ -949,6 +949,8 @@ export const korean: Language = {
     "Tournament.PlayerNameTaken":
       "이 대회의 다른 선수가 이미 그 이름을 쓰고 있어요.",
     "TournamentPlayer.NoSuchFlag": "있는 국기 중에서 선택해 주세요.",
+    "TournamentPlayer.HandicapMalformed":
+      "핸디캡을 숫자로 적어 주세요. 예: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "선수 이름을 Bye로 할 수 없어요.",
     "TournamentPlayer.NoLetterOrDigit":
       "이름에는 글자나 숫자가 하나는 있어야 해요.",

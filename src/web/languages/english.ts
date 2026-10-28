@@ -974,7 +974,7 @@ export const english: Language = {
       "Another player in this tournament already has that name.",
     "TournamentPlayer.NoSuchFlag": "Choose one of the flags there are.",
     "TournamentPlayer.HandicapMalformed":
-      "Write the handicap as a sign, if any, and up to two digits, with one digit after a point if there is a fraction, such as +4 or -1.5.",
+      "Write the handicap as a number. For example: -1.5, -1, 0, 1, 2.5, 24.",
     "TournamentPlayer.NamedBye": "A player cannot be called Bye.",
     "TournamentPlayer.NoLetterOrDigit":
       "A name needs a letter or a digit in it.",
