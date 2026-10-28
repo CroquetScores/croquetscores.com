@@ -198,6 +198,54 @@ Feature: Bringing a competition's players over to its tournament
     is left, and one that is too short without them says it was imported, as
     a name does.
 
+    Some old sites wrote a handicap after a semicolon instead, as
+    "Tim Murphy; -1.0", "Tim Murphy;4" or "Tim Murphy; 5.5". There the handicap
+    may be a decimal, and the semicolon, the handicap and any brackets after
+    it are not part of the name. A semicolon that no handicap follows is part
+    of the name.
+
+    Scenario: A decimal handicap after a semicolon is not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy; -1.0"
+      When the competition is imported
+      Then "Tim Murphy; -1.0" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy"
+
+    Scenario: A whole handicap joined to the semicolon is not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy;4"
+      When the competition is imported
+      Then "Tim Murphy;4" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy"
+
+    Scenario: A positive decimal handicap after a semicolon is not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy; 5.5"
+      When the competition is imported
+      Then "Tim Murphy; 5.5" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy"
+
+    Scenario: Brackets after a handicap after a semicolon are not part of the world ranking name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy; 5.5 (NZ)"
+      When the competition is imported
+      Then "Tim Murphy; 5.5 (NZ)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy"
+
+    Scenario: A semicolon that no handicap follows is part of the name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy; Junior"
+      When the competition is imported
+      Then "Tim Murphy; Junior" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy; Junior"
+
+    Scenario: A decimal handicap with no semicolon is part of the name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Tim Murphy 5.5"
+      When the competition is imported
+      Then "Tim Murphy 5.5" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Tim Murphy 5.5"
+
+    Scenario: A name too short before a semicolon says it was imported
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Al; 2.5"
+      When the competition is imported
+      Then "Al; 2.5" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Al - Imported"
+
     Scenario: A country in brackets is not part of the world ranking name
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And player 1 is called "Sam Someone (NZ)"
