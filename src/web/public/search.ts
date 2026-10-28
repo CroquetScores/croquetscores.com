@@ -112,6 +112,13 @@ export const registerSearchPage = (
           : `<img src="${escape(assets.url(`images/${flag.relativePath}`))}" alt="${escape(say(`country.${code}`))}" />`;
       };
 
+      // The sport's code on its colour, as the lists on the home page show
+      // it, and as plainly leading nowhere: a search is not narrowed by sport.
+      const sportOf = (tournament: TournamentFound): string =>
+        tournament.sport === undefined
+          ? ""
+          : `<span class="sport-code sport-${escape(tournament.sport)}">${escape(tournament.sport.toUpperCase())}</span>`;
+
       const byName = new Intl.Collator(speaking.language.tag);
 
       const table = (
@@ -135,11 +142,12 @@ export const registerSearchPage = (
               : `<span class="sort-arrow" aria-hidden="true">${arrows[marked]}</span>`
           }${escape(say(columnWords[column]))}</a></th>`;
         };
-        // The flags' column between the dates and the names has nothing over
-        // it, as it has on the lists of tournaments. A competition's table
+        // The sports' and the flags' columns between the dates and the names
+        // have nothing over them, as they have on the lists of tournaments. A competition's table
         // has the tournament it is in after its name, which is not sorted by.
         const headings = [
           headed("date"),
+          `                <td class="tournament-sport"></td>`,
           `                <td class="tournament-flag"></td>`,
           headed("name"),
           ...(kind === "competition"
@@ -172,6 +180,7 @@ export const registerSearchPage = (
           .map(
             (row) => `                <tr class="search-${kind}">
                   <td class="tournament-dates">${escape(datedWithYear(row.tournament.starts, row.tournament.finishes, speaking.language.tag))}</td>
+                  <td class="tournament-sport">${sportOf(row.tournament)}</td>
                   <td class="tournament-flag">${flagOf(row.tournament)}</td>
                   <td><a class="tournament-name search-name" href="/${escape(row.address)}">${escape(row.name)}</a></td>${
                     row.of === undefined

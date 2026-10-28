@@ -57,6 +57,11 @@ export interface TournamentFound {
   /** The day it finishes, as "2026-10-05". */
   readonly finishes: string;
   /**
+   * The code of the sport it is for, as "ac". None for a tournament kept
+   * before the sport was, until the read models are rebuilt.
+   */
+  readonly sport: string | undefined;
+  /**
    * The code of the country it is played in, as "nz". None for a tournament
    * kept before the country was, until the read models are rebuilt.
    */

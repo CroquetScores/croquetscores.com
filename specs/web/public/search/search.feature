@@ -22,9 +22,14 @@ Feature: A reader searches the website for tournaments, players and competitions
   competitions are then shown oldest first.
 
   The tournaments and the competitions are tables, as the lists on the home
-  page are (`home.feature`): the days they run, the flag of the country they
+  page are (`home.feature`): the days they run, the sport, the flag of the country they
   are played in, and the name, which a reader can sort by. A competition has no
   days or country of its own, and is shown with its tournament's.
+
+  Between the days and the flag is the tournament's sport, as the home page
+  shows it: the sport's code in capitals on a colour of its own, left out on a
+  phone, with no heading, since it is not sorted by. A competition is shown
+  with its tournament's sport.
 
   Nothing found says so, in one line where the lists would be. Nothing typed,
   or nothing but spaces, is not a search: the page shows its box and nothing
@@ -248,18 +253,22 @@ Feature: A reader searches the website for tournaments, players and competitions
 
   Rule: The tournaments and the competitions say when and where they are
 
-    Scenario Outline: The columns are the dates, the country and the name
+    Scenario Outline: The columns are the dates, the sport, the country and the name
       When the page at "/search?q=spring" is opened
       Then the <place> column of the found tournaments is "<column>"
 
       Examples:
-        | place | column |
-        | first | Date   |
-        | third | Name   |
+        | place  | column |
+        | first  | Date   |
+        | fourth | Name   |
+
+    Scenario: The sport's column has no heading
+      When the page at "/search?q=spring" is opened
+      Then the second column of the found tournaments has no heading
 
     Scenario: The country's column has no heading
       When the page at "/search?q=spring" is opened
-      Then the second column of the found tournaments has no heading
+      Then the third column of the found tournaments has no heading
 
     Scenario: A tournament is dated from its start to its finish
       Given the tournament "Spring Open" starts on "2026-10-10"
@@ -292,7 +301,7 @@ Feature: A reader searches the website for tournaments, players and competitions
 
     Scenario: The competitions have the same columns
       When the page at "/search?q=block" is opened
-      Then the third column of the found competitions is "Name"
+      Then the fourth column of the found competitions is "Name"
 
     Scenario: A competition is dated as its tournament is
       Given the tournament "Spring Open" starts on "2026-10-10"
@@ -312,6 +321,31 @@ Feature: A reader searches the website for tournaments, players and competitions
       And the tournament "Spring Open" finishes on "2026-10-12"
       When the page at "/search?q=spring" is opened
       Then "Spring Open" is dated "10-12 oct 2026" in the found tournaments
+
+  Rule: The tournaments and the competitions show their sport
+
+    Scenario: A tournament shows its sport as its code in capitals
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" shows the sport "GC" in the found tournaments
+
+    Scenario: A competition shows the sport of its tournament
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the page at "/search?q=block" is opened
+      Then "Block A" shows the sport "GC" in the found competitions
+
+    Scenario: The sport is on a colour of its own
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" shows its sport on blue in the found tournaments
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" does not show its sport in the found tournaments
 
   Rule: Pressing the date or the name sorts a table by it
 
@@ -380,9 +414,13 @@ Feature: A reader searches the website for tournaments, players and competitions
       When the column "Name" of the found tournaments is pressed
       Then the column "Date" of the found tournaments is not marked as sorted
 
-    Scenario: The country's column cannot be pressed
+    Scenario: The sport's column cannot be pressed
       When the page at "/search?q=open" is opened
       Then the second column of the found tournaments cannot be pressed
+
+    Scenario: The country's column cannot be pressed
+      When the page at "/search?q=open" is opened
+      Then the third column of the found tournaments cannot be pressed
 
     Scenario: Sorting is shown by an arrow
       Given the page at "/search?q=open" is open

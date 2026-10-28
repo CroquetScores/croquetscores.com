@@ -67,16 +67,18 @@ const personOf = (worldRankingName: string, name: string): string =>
     canMakeASlug(worldRankingName) ? worldRankingName : name,
   ).toString();
 
-// A tournament's days and country as a search answers them, from a row that
-// has them as the database holds them: the country of a tournament kept before
-// there was one is null there and none here.
+// A tournament's days, sport and country as a search answers them, from a row
+// that has them as the database holds them: the sport and the country of a
+// tournament kept before there were any are null there and none here.
 const whenAndWhere = (row: {
   starts: string;
   finishes: string;
+  sport: string | null;
   country: string | null;
-}): Pick<TournamentFound, "starts" | "finishes" | "country"> => ({
+}): Pick<TournamentFound, "starts" | "finishes" | "sport" | "country"> => ({
   starts: row.starts,
   finishes: row.finishes,
+  sport: row.sport ?? undefined,
   country: row.country ?? undefined,
 });
 
@@ -129,10 +131,11 @@ export class SearchByWebsite implements Projection, Asked {
       address: string;
       starts: string;
       finishes: string;
+      sport: string | null;
       country: string | null;
     }>(
       `select name, address, to_char(starts, 'YYYY-MM-DD') as starts,
-              to_char(finishes, 'YYYY-MM-DD') as finishes, country
+              to_char(finishes, 'YYYY-MM-DD') as finishes, sport, country
            from search_by_website_tournaments
           where website = $1 and not archived and folded_name like all($2)
           order by starts_with(folded_name, $4) desc, folded_name, name,
@@ -207,12 +210,14 @@ export class SearchByWebsite implements Projection, Asked {
       tournament_address: string;
       starts: string;
       finishes: string;
+      sport: string | null;
       country: string | null;
     }>(
       `select c.name, c.slug, t.name as tournament_name,
               t.address as tournament_address,
               to_char(t.starts, 'YYYY-MM-DD') as starts,
-              to_char(t.finishes, 'YYYY-MM-DD') as finishes, t.country
+              to_char(t.finishes, 'YYYY-MM-DD') as finishes, t.sport,
+              t.country
          from search_by_website_competitions c
          join search_by_website_tournaments t
            on t.tournament_id = c.tournament_id
@@ -287,12 +292,13 @@ export class SearchByWebsite implements Projection, Asked {
       await connection.query(
         `insert into search_by_website_tournaments
            (tournament_id, website, name, folded_name, address, starts,
-            finishes, country)
-         values ($1, $2, $3, $4, $5, $6, $7, $8)
+            finishes, sport, country)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          on conflict (tournament_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
                address = excluded.address, starts = excluded.starts,
-               finishes = excluded.finishes, country = excluded.country`,
+               finishes = excluded.finishes, sport = excluded.sport,
+               country = excluded.country`,
         [
           stream,
           event.website,
@@ -301,6 +307,7 @@ export class SearchByWebsite implements Projection, Asked {
           event.address,
           event.starts,
           event.finishes,
+          event.sport,
           event.country,
         ],
       );
@@ -308,7 +315,7 @@ export class SearchByWebsite implements Projection, Asked {
       await connection.query(
         `update search_by_website_tournaments
             set name = $2, folded_name = $3, address = $4, starts = $5,
-                finishes = $6, country = $7
+                finishes = $6, country = $7, sport = $8
           where tournament_id = $1`,
         [
           stream,
@@ -318,6 +325,7 @@ export class SearchByWebsite implements Projection, Asked {
           event.starts,
           event.finishes,
           event.country,
+          event.sport,
         ],
       );
     } else if (event instanceof TournamentArchived) {
