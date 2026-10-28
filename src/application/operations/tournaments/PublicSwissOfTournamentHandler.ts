@@ -1,4 +1,5 @@
 import type { CarryForwardCount } from "../../../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
+import type { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import { Website } from "../../../domain/common/Website.js";
@@ -26,6 +27,15 @@ import {
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
 import { type TournamentAddresses } from "./tournamentOperations.js";
+
+// What follows the points of a score as the scorer wrote it, as "tp" in
+// "26tp". Taken from the writing rather than asked of the score so that the
+// rankings text file, which reads it the same way, and this agree.
+const peelingOf = (score: Score): string =>
+  score
+    .toString()
+    .replace(/^\s*\d+/u, "")
+    .trim();
 
 export class PublicSwissOfTournamentHandler extends QueryHandler<
   PublicSwissOfTournament,
@@ -110,6 +120,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
             opponent: { name: opponent.name, address: opponent.address },
             result: game.drawn ? "drawn" : won ? "won" : "lost",
             margin: theirs.points - against.points,
+            peeling: peelingOf(game.winnerScore) + peelingOf(game.loserScore),
             withdrawn: countsForNothing(game),
           },
         ];

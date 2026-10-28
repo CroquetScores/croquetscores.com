@@ -17,14 +17,10 @@ export interface TournamentOfWebsite {
   readonly finishes: string;
   /** The code of the country it is played in. */
   readonly country: string;
-  /** Where it is found, as "2026/ac/spring-open". */
-  readonly address: string;
-}
-
-/** A tournament of any website, with the sport it is for. */
-export interface TournamentWithSport extends TournamentOfWebsite {
   /** The code of its sport. */
   readonly sport: string;
+  /** Where it is found, as "2026/ac/spring-open". */
+  readonly address: string;
 }
 
 /** A tournament played lately, and when the last game in use was added to it. */
@@ -67,7 +63,7 @@ export interface TournamentsByWebsite {
    * Those on every website, each with its sport: the soonest starting first,
    * and those starting on the same day by name.
    */
-  withSports(): Promise<readonly TournamentWithSport[]>;
+  withSports(): Promise<readonly TournamentOfWebsite[]>;
 
   /**
    * The years it has a tournament starting in, of `sport` where one is given,

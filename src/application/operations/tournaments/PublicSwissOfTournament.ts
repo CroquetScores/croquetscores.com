@@ -24,6 +24,12 @@ export interface ResultOfSwiss {
   /** The player's points less their opponent's, below 0 for a game lost. */
   readonly margin: number;
   /**
+   * What the scorer wrote after the scores' points, the winner's first and
+   * then the loser's, as "tp" for a game won 26tp to 17, whichever of the two
+   * the player was. Empty where neither wrote any.
+   */
+  readonly peeling: string;
+  /**
    * Whether the game was played but counts for nothing, being withdrawn
    * itself (`withdrawGame.feature`) or a withdrawn player's
    * (`withdrawPlayer.feature`), so that nothing the player is answered with

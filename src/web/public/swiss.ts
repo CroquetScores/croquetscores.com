@@ -33,7 +33,7 @@ export const shortNameOf = (name: string): string => {
 };
 
 // A margin as the old site wrote it: a plus for a game won, a minus for one
-// lost, and none for one drawn.
+// lost, and none for one drawn. The game's peeling follows it, as "+9tp".
 const marginOf = (margin: number): string =>
   margin > 0 ? `+${String(margin)}` : String(margin);
 
@@ -43,12 +43,12 @@ const marginOf = (margin: number): string =>
 // and said to be withdrawn, since it counts for nothing.
 const resultShown =
   (speaking: Speaking) =>
-  ({ opponent, result, margin, withdrawn }: ResultOfSwiss): string => {
+  ({ opponent, result, margin, peeling, withdrawn }: ResultOfSwiss): string => {
     const marked = withdrawn ? " data-withdrawn" : "";
     const said = withdrawn
       ? ` <span class="swiss-result-withdrawn visually-hidden">${escape(speaking.say("block.gameWithdrawn"))}</span>`
       : "";
-    return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin))}</span>${said}</span>`;
+    return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin) + peeling)}</span>${said}</span>`;
   };
 
 // The share of the games they have played that a player has won, to one

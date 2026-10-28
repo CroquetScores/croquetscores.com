@@ -1,7 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
   TournamentOfWebsite,
-  TournamentWithSport,
   TournamentPlayed,
   TournamentsByWebsite as Asked,
 } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
@@ -33,6 +32,7 @@ interface Row {
   starts: string;
   finishes: string;
   country: string;
+  sport: string;
   address: string;
 }
 
@@ -41,7 +41,7 @@ interface Row {
 const COLUMNS = `t.tournament_id, t.name,
        to_char(t.starts, 'YYYY-MM-DD') as starts,
        to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-       t.country, t.address`;
+       t.country, t.sport, t.address`;
 
 // What the filter narrows by, as conditions on the tournaments' table from
 // the parameter numbered `first` on, and the parameters themselves. Each is
@@ -72,6 +72,7 @@ const listed = (row: Row): TournamentOfWebsite => ({
   starts: row.starts,
   finishes: row.finishes,
   country: row.country,
+  sport: row.sport,
   address: row.address,
 });
 
@@ -164,16 +165,14 @@ export class TournamentsByWebsite implements Projection, Asked {
     return rows.map(listed);
   }
 
-  async withSports(): Promise<readonly TournamentWithSport[]> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<Row & { sport: string }>(
-        `select ${COLUMNS}, t.sport
+  async withSports(): Promise<readonly TournamentOfWebsite[]> {
+    const { rows } = await this.unitOfWork.connection().query<Row>(
+      `select ${COLUMNS}
            from tournaments_by_website t
           where not t.archived
           order by t.starts, t.name`,
-      );
-    return rows.map((row) => ({ ...listed(row), sport: row.sport }));
+    );
+    return rows.map(listed);
   }
 
   async yearsOf(website: Website, sport?: Sport): Promise<readonly number[]> {

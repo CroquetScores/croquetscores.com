@@ -141,18 +141,18 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is played in the region "can"
 
-    Scenario Outline: The columns are the dates, the country and the name
+    Scenario Outline: The columns are the dates, the sport, the country and the name
       When the page for "ac" in 2026 is opened
       Then the <place> column of the sport's tournaments is "<column>"
 
       Examples:
         | place | column |
         | first | Date   |
-        | third | Name   |
+        | fourth | Name   |
 
     Scenario: The country's column has no heading
       When the page for "ac" in 2026 is opened
-      Then the second column of the sport's tournaments has no heading
+      Then the third column of the sport's tournaments has no heading
 
     Scenario: On a phone the country's column is left out
       Given a viewport 375 pixels wide
@@ -174,6 +174,16 @@ Feature: A sport's page in a year lists every tournament of it starting then
     Scenario: The flag is named for a screen reader by what pressing it does
       When the page for "ac" in 2026 is opened
       Then the flag of "Spring Open" in the sport's tournaments is named "Only tournaments in New Zealand"
+
+    Scenario: The sport is shown as its code in capitals on a tablet
+      Given a viewport 768 pixels wide
+      When the page for "ac" in 2026 is opened
+      Then "Spring Open" shows the sport "AC" in the sport's tournaments
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the page for "ac" in 2026 is opened
+      Then "Spring Open" does not show its sport in the sport's tournaments
 
   Rule: The tournaments begin sorted by date, earliest first, and sort by a column pressed
 

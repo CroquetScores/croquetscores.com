@@ -139,18 +139,18 @@ Feature: A year's page lists every tournament starting in it
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is played in the region "can"
 
-    Scenario Outline: The columns are the dates, the country and the name
+    Scenario Outline: The columns are the dates, the sport, the country and the name
       When the page for 2026 is opened
       Then the <place> column of the year's tournaments is "<column>"
 
       Examples:
         | place | column |
         | first | Date   |
-        | third | Name   |
+        | fourth | Name   |
 
     Scenario: The country's column has no heading
       When the page for 2026 is opened
-      Then the second column of the year's tournaments has no heading
+      Then the third column of the year's tournaments has no heading
 
     Scenario: On a phone the country's column is left out
       Given a viewport 375 pixels wide
@@ -178,6 +178,17 @@ Feature: A year's page lists every tournament starting in it
       And a browser that asks for "es"
       When the page for 2026 is opened
       Then "Spring Open" is dated "10-12 oct" in the year's tournaments
+
+    Scenario: The sport is shown as its code in capitals on a tablet
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the page for 2026 is opened
+      Then "Spring Open" shows the sport "GC" in the year's tournaments
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the page for 2026 is opened
+      Then "Spring Open" does not show its sport in the year's tournaments
 
   Rule: The tournaments begin sorted by date, earliest first
 
@@ -223,7 +234,7 @@ Feature: A year's page lists every tournament starting in it
 
     Scenario: The country's column cannot be pressed to sort by it
       When the page for 2026 is opened
-      Then the second column of the year's tournaments cannot be pressed
+      Then the third column of the year's tournaments cannot be pressed
 
     Scenario: The column sorted by is turned round when pressed
       Given the page for 2026 is open

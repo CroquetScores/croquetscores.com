@@ -11,13 +11,19 @@ Feature: The home page lists recent results and upcoming tournaments
   to every tournament this year, for a reader after one further off or long
   finished.
 
-  Each list is a table of three columns: the tournament's dates, the flag of
-  the country it is played in, and its name. The dates are said as the admin
+  Each list is a table of up to four columns: the tournament's dates, on a
+  tablet or wider the code of its sport, the flag of the country it is played
+  in, and its name. The dates are said as the admin
   says them (`tournaments.feature`), the month once where both days are in
   it. The flag is named for a reader who cannot see it by what pressing it
   does, "Only tournaments in New Zealand", with the country it is the flag of
   named in the reader's language. The flags' column has no heading, since a
-  flag says what it is, and so it is not sorted by.
+  flag says what it is, and so it is not sorted by. Nor does the sport's, which
+  is the sport's code in capitals on a colour of its own, and which a phone
+  leaves out because the room there is wanted for the names. A tablet is
+  `40rem` wide, as it is for the navigation (`navigation.feature`). The same
+  column is in a year's list (`year.feature`) and a sport's in a year
+  (`yearSport.feature`).
 
   A row leads to the tournament's page, at its year, its sport and its
   name, wherever on the row it is pressed but its flag, since a row is read
@@ -71,8 +77,9 @@ Feature: The home page lists recent results and upcoming tournaments
   scripting the drop-down list is a disclosure of links rather than a list
   to choose from. The home page is not a year, so no year is marked.
 
-  On a wide screen the two tables are side by side, recent results first, and
-  on a phone the upcoming tournaments are beneath the recent results. The
+  The upcoming tournaments are beneath the recent results at every width,
+  since each table now has up to four columns and the room across the page
+  is wanted for them. The
   column headings are in the colours of the secondary navigation, every other
   row is on a colour of its own so that a row is followed across, and there
   are no lines between cells (`LAYOUT.md`).
@@ -249,20 +256,20 @@ Feature: The home page lists recent results and upcoming tournaments
       And the tournament "Spring Open" is played in the country "nz"
       And the tournament "Spring Open" is played in the region "can"
 
-    Scenario Outline: The columns are the dates, the country and the name
+    Scenario Outline: The columns are the dates, the sport, the country and the name
       When the home page is opened
       Then the <place> column of the <list> is "<column>"
 
       Examples:
         | list                 | place | column |
         | recent results       | first | Date   |
-        | recent results       | third | Name   |
+        | recent results       | fourth | Name   |
         | upcoming tournaments | first | Date   |
-        | upcoming tournaments | third | Name   |
+        | upcoming tournaments | fourth | Name   |
 
     Scenario Outline: The country's column has no heading
       When the home page is opened
-      Then the second column of the <list> has no heading
+      Then the third column of the <list> has no heading
 
       Examples:
         | list                 |
@@ -318,6 +325,54 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos de Nueva Zelanda"
 
+  Rule: A tablet or wider shows each tournament's sport
+
+    Scenario: The sport is shown as its code in capitals
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "gc"
+      When the home page is opened
+      Then "Spring Open" shows the sport "GC" in the upcoming tournaments
+
+    Scenario: The sport is shown at the narrowest a tablet is
+      Given a viewport 640 pixels wide
+      When the home page is opened
+      Then "Spring Open" shows the sport "AC" in the upcoming tournaments
+
+    Scenario: The sport is shown in the recent results as well
+      Given a viewport 768 pixels wide
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the home page is opened
+      Then "Spring Open" shows the sport "AC" in the recent results
+
+    Scenario Outline: Each sport is on a colour of its own
+      Given a viewport 768 pixels wide
+      And the tournament "Spring Open" is for the sport "<sport>"
+      When the home page is opened
+      Then "Spring Open" shows its sport on <colour> in the upcoming tournaments
+
+      Examples:
+        | sport | colour |
+        | ac    | green  |
+        | gc    | blue   |
+        | a6w   | orange |
+        | rc    | purple |
+        | gb    | teal   |
+
+    Scenario: The sport is left out on a phone
+      Given a viewport 375 pixels wide
+      When the home page is opened
+      Then "Spring Open" does not show its sport in the upcoming tournaments
+
+    Scenario: The sport's column has no heading to press
+      Given a viewport 768 pixels wide
+      When the home page is opened
+      Then the second column of the upcoming tournaments is ""
+
   Rule: Pressing a column heading sorts the table by it
 
     Background:
@@ -347,7 +402,7 @@ Feature: The home page lists recent results and upcoming tournaments
 
     Scenario: The country's column cannot be pressed to sort by it
       When the home page is opened
-      Then the second column of the upcoming tournaments cannot be pressed
+      Then the third column of the upcoming tournaments cannot be pressed
 
     Scenario: The column sorted by is turned round when pressed
       Given the home page is open
@@ -986,17 +1041,18 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the drop-down list is at least 44 pixels tall
 
-  Rule: The tables are side by side on a wide screen, and one above the other on a phone
+  Rule: The upcoming tournaments are beneath the recent results at every width
 
     Background:
       Given "organiser@example.com" has created the tournament "The Northern Counties Invitation Golf Croquet Championship"
       And the tournament "The Northern Counties Invitation Golf Croquet Championship" starts on "2026-10-10"
 
-    Scenario: On a wide screen the upcoming tournaments are beside the recent results
+    Scenario: On a wide screen the upcoming tournaments are beneath the recent results
+      Given a viewport 1280 pixels wide
       When the home page is opened
-      Then the upcoming tournaments are to the right of the recent results
+      Then the upcoming tournaments are below the recent results
 
-    Scenario: On a phone the upcoming tournaments are beneath the recent results
+    Scenario: On a phone the upcoming tournaments are beneath the recent results too
       Given a viewport 375 pixels wide
       When the home page is opened
       Then the upcoming tournaments are below the recent results
