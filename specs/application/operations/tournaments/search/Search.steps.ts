@@ -325,6 +325,20 @@ Then(
 );
 
 Then(
+  "the tournament {string} is found for the sport {string}",
+  function (this: SpecWorld, name: string, sport: string) {
+    assert.equal(tournamentFound(this, name).sport, sport);
+  },
+);
+
+Then(
+  "the competition {string} is found in a tournament for the sport {string}",
+  function (this: SpecWorld, name: string, sport: string) {
+    assert.equal(competitionsTournament(this, name).sport, sport);
+  },
+);
+
+Then(
   /^the competition "(.*)" is found in a tournament (starting|finishing) on "(.*)"$/,
   function (this: SpecWorld, name: string, which: string, day: string) {
     const tournament = competitionsTournament(this, name);
