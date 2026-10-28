@@ -2304,6 +2304,14 @@ main {
   overflow-wrap: anywhere;
 }
 
+/* A paragraph of a note is parted from the next by a full line, as a letter's
+   are. The reset above takes every paragraph's margin away, so a note of
+   several would otherwise run on as one. Set on the note and not on every
+   paragraph, so that a comment, which has its own spacing, is left as it is. */
+.note-text p + p {
+  margin-top: 1lh;
+}
+
 .note-text > :first-child {
   margin-top: 0;
 }
