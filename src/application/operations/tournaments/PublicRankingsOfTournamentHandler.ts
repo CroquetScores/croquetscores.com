@@ -19,6 +19,26 @@ import {
 import { tournamentForReaders } from "./tournamentForReaders.js";
 import type { TournamentAddresses } from "./tournamentOperations.js";
 
+// A handicap needs the space before it, so that a number joined to the last
+// word, as in "Joe Blow2", stays part of the name. Several are taken off, as
+// one written twice is still no part of who somebody is.
+const TRAILING_HANDICAP = /(?:\s+[+-]?\d{1,2}(?:\.\d)?)+\s*$/;
+
+// The name given is kept as it was: whoever gave it chose it, and may have
+// meant a number at its end. Where none was given the player's name is used
+// less a handicap typed after it, and a name that is nothing but a handicap
+// is left as it is, as it would have nothing left to go by.
+const knownToWorldRankingsAs = (player: {
+  readonly name: { toString(): string };
+  readonly worldRankingName: { toString(): string } | undefined;
+}): string => {
+  if (player.worldRankingName !== undefined)
+    return player.worldRankingName.toString();
+  const name = player.name.toString();
+  const without = name.replace(TRAILING_HANDICAP, "").trim();
+  return without === "" ? name : without;
+};
+
 export class PublicRankingsOfTournamentHandler extends QueryHandler<
   PublicRankingsOfTournament,
   RankingsToRead
@@ -76,19 +96,12 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
     // tournament player's, and a team player's in a test.
     const known = new Map<string, string>([
       ...tournament.players.map(
-        (player) =>
-          [
-            player.id.value,
-            (player.worldRankingName ?? player.name).toString(),
-          ] as const,
+        (player) => [player.id.value, knownToWorldRankingsAs(player)] as const,
       ),
       ...tournament.teams.flatMap((team) =>
         team.players.map(
           (player) =>
-            [
-              player.id.value,
-              (player.worldRankingName ?? player.name).toString(),
-            ] as const,
+            [player.id.value, knownToWorldRankingsAs(player)] as const,
         ),
       ),
     ]);
