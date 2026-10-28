@@ -100,6 +100,19 @@ Feature: Each of a tournament's managers' notes has a page of its own
       When the page at "/2026/ac/spring-open/notes/lunch" is opened
       Then the second-level heading is "**Lunch**"
 
+  Rule: A blank line parts one paragraph of the description from the next
+
+    A paragraph is set apart by a full line of space, as a letter's are, and
+    not run on from the one before it, so that a note of several paragraphs is
+    read as several.
+
+    Scenario: A paragraph is parted from the next by a full line of space
+      Given the manager note has a paragraph "Lunch is at noon"
+      And the manager note has a paragraph "Bring your own mallet"
+      And "organiser@example.com" has added the manager note "Lunch" to "Spring Open"
+      When the page at "/2026/ac/spring-open/notes/lunch" is opened
+      Then the second paragraph of the note starts a full line below the first
+
   Rule: The page says how long ago the note was written, and edited where it has been
 
     Background:
