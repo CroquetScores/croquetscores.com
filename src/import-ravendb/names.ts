@@ -28,33 +28,67 @@ const lengthened = (trimmed: string, added = IMPORTED): string =>
  */
 export const nameToImport = (name: string): string => lengthened(name.trim());
 
-// Every group of brackets and every handicap that ends a name, with the space
-// before each. A handicap needs that space, so that a number joined to the
-// last word, as in "Tim Murphy2", stays part of the name.
-const TRAILING_BRACKETS_OR_HANDICAP = /(?:\s*\([^()]*\)|\s+-?\d+)+\s*$/;
+// A handicap: a whole number or a decimal, written with a point or a comma,
+// with a sign or without.
+const NUMBER = String.raw`[+-]?\d+(?:[.,]\d+)?`;
+
+// The number after the last space of a name is a handicap, and needs that
+// space, so that a number joined to the last word, as in "Tim Murphy2", stays
+// part of the name.
+const TRAILING_HANDICAP = new RegExp(String.raw`^(.*\S)\s+${NUMBER}$`, "s");
+
+// Two numbers at the end of a name, as in "Tim Murphy 3 5": there is no
+// telling which was meant, so both are left.
+const TWO_TRAILING_NUMBERS = new RegExp(
+  String.raw`(?:^|\s)${NUMBER}\s+${NUMBER}$`,
+);
+
+// Every group of brackets that ends a name, with the space before each.
+const TRAILING_BRACKETS = /\s*\([^()]*\)$/;
 
 // A semicolon and the handicap after it, which some old sites wrote in place
-// of the space. Only here may a handicap be a decimal: "Tim Murphy 5.5" has
-// no semicolon to say that 5.5 is a handicap and not part of the name. Brackets
-// may follow it, as in "Tim Murphy; 5.5 (NZ)", as they may follow a handicap
-// without one.
-const SEMICOLON_AND_HANDICAP = /\s*;\s*-?\d+(?:\.\d+)?(?:\s*\([^()]*\))*\s*$/;
+// of the space. Brackets may follow it, as in "Tim Murphy; 5.5 (NZ)", as they
+// may follow a handicap without one.
+const SEMICOLON_AND_HANDICAP = new RegExp(
+  String.raw`\s*;\s*${NUMBER}(?:\s*\([^()]*\))*\s*$`,
+);
+
+// What the old sites added to a name that is no part of it, brackets and then
+// a handicap, in either order, as in "Sam Someone (NZ) 2" and "Sam Someone 2
+// (NZ)". Where a handicap has been taken off another is not, since the second
+// number is as likely to be part of the name.
+const withoutBracketsAndHandicap = (name: string): string => {
+  let rest = name;
+  let handicapTaken = false;
+  for (;;) {
+    const withoutBrackets = rest.replace(TRAILING_BRACKETS, "");
+    if (withoutBrackets !== rest) {
+      rest = withoutBrackets;
+      continue;
+    }
+    if (handicapTaken || TWO_TRAILING_NUMBERS.test(rest)) return rest;
+    const handicap = TRAILING_HANDICAP.exec(rest);
+    if (handicap === null) return rest;
+    rest = handicap[1]!;
+    handicapTaken = true;
+  }
+};
 
 /**
  * The name the world rankings know a person by, of the name the old sites
  * gave them: that name with what is in brackets at the end of it taken off,
- * as "(NZ)" or "(2)", and a handicap, as "1" or "-1", which are no part of
- * it. A semicolon and the handicap after it, as "; -1.0", go too. Brackets
- * elsewhere in the name are part of it, and a name that is nothing but
- * brackets or a handicap is left as it is. One too short without them says it
+ * as "(NZ)" or "(2)", and the number after its last space, as "1", "-1" or
+ * "5.5", which is a handicap and no part of it. A semicolon and the handicap
+ * after it, as "; -1.0", go too. Brackets elsewhere in the name are part of
+ * it, and so are two numbers that end it, and a name that is nothing but
+ * brackets or a number is left as it is. One too short without them says it
  * was imported, as a name does.
  */
 export const worldRankingNameToImport = (name: string): string => {
   const trimmed = name.trim();
-  const without = trimmed
-    .replace(SEMICOLON_AND_HANDICAP, "")
-    .replace(TRAILING_BRACKETS_OR_HANDICAP, "")
-    .trim();
+  const without = withoutBracketsAndHandicap(
+    trimmed.replace(SEMICOLON_AND_HANDICAP, ""),
+  ).trim();
   return nameToImport(without === "" ? trimmed : without);
 };
 
