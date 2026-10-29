@@ -1,5 +1,23 @@
 # Wat is nuut
 
+## Vrygestel 2026-10-29
+
+### Dinge vind
+
+- **Tik 'n land, streek of sport.** Die velde wat die toernooie beperk, op die tuisbladsy en op 'n jaar se bladsy, is nou kassies waarin jy tik, nie lyste om deur te blaai nie. Tik deel van 'n naam, soos Seel, en die name wat dit het, word voorgestel. Druk die pyltjie aan die einde van die kassie, of die pyl-af-sleutel, om elke naam te sien, vyf op 'n slag met die res om na te blaai. Druk 'n voorstel, of beweeg met die pyltjiesleutels en druk Enter, om dit te kies. 'n Kassie wat leeg gelaat word, beteken enige. Woorde wat nie die naam van 'n land of 'n sport is nie, kan nie in die kassie gelaat word nie: jy word gevra om een te kies, en die Escape-sleutel sit die een terug wat jy gehad het.
+- **Op 'n speler se bladsy bly elke toernooi se datums op een reël.** Op 'n foon het die datums van die toernooie op 'n speler se bladsy voorheen oor twee reëls gebreek. Hulle bly nou op een, en dit is die toernooi se naam wat oorloop na die volgende reël.
+
+### 'n Toernooi bestuur
+
+- **Kies die land, streek en sport deur te tik.** Die vorm wat 'n toernooi skep of verander, vra daarvoor in dieselfde kassies. 'n Toernooi het 'n land en 'n sport nodig, so jy word gevra om een te kies voordat jy een van die kassies kan verlaat of die vorm kan stuur. As jy die woorde van die land regstel, verloor jy nie meer die streek wat jy gekies het nie. As jy 'n ander land kies, word dit wel leeggemaak.
+- **Vlae word ook getik.** 'n Speler of 'n span se vlag word op dieselfde manier gekies. Los die kassie leeg vir geen vlag.
+- **Wat 'n speler verteenwoordig, word voorgestel.** Terwyl jy tik wat 'n speler verteenwoordig, word die klubs en lande voorgestel waarvoor spelers bygevoeg is, in enige toernooi en in enige sport. Tik twee letters om te begin. Hoogstens tien word voorgestel, in alfabetiese volgorde, en 'n naam wat net in sy hoofletters verskil, word een keer voorgestel, soos dit eerste geskryf is. Geargiveerde spelers en die spelers van 'n span word nie bekyk nie.
+- **Die hulp verduidelik 'n blok se rondtes.** Rondtes is hoeveel keer elke paar spelers in 'n blok ontmoet, met 'n wedstryd in elke ronde. Dit begin op 1, wat 'n blok amper altyd wil hê. Verhoog dit net vir 'n blok waarin hulle weer ontmoet, soos in 'n dubbele rondte-robyn. Die bladsy oor kompetisies sê so, en 'n blok en 'n Switserse kompetisie het nou elk 'n afdeling.
+
+### Toernooie van die ou webwerwe oorgebring
+
+- **Meer voorgee word van 'n wêreldranglysnaam afgehaal.** Die getal ná 'n speler se laaste spasie op die ou webwerwe, heel of met 'n desimaal soos 5.5 of 5,5, met 'n plus- of minusteken of sonder, word nie meer vir deel van hul naam aangesien wanneer hul wêreldranglys opgesoek word nie. Dit geld ook vir 'n voorgee ná 'n kommapunt, soos in Tim Murphy; 5.5. Twee getalle aan die einde, soos in Tim Murphy 3 5, word gelos, want daar is geen manier om te weet watter bedoel is nie, en so ook 'n naam wat net 'n getal is.
+
 ## Vrygestel 2026-10-28
 
 ### Dinge vind

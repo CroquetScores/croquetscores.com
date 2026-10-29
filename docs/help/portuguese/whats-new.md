@@ -1,5 +1,23 @@
 # Novidades
 
+## Lançado em 2026-10-29
+
+### Encontrar as coisas
+
+- **Digite um país, estado ou província, ou esporte.** Os campos que restringem os torneios, na página inicial e na página de um ano, agora são caixas em que você digita, não listas para rolar. Digite parte de um nome, como Zelând, e os nomes que a têm são sugeridos. Toque na seta no fim da caixa, ou na tecla de seta para baixo, para ver todos os nomes, cinco de cada vez, com o resto para rolar. Toque em uma sugestão, ou mova-se com as setas e pressione Enter, para escolhê-la. Uma caixa deixada vazia significa qualquer um. Palavras que não são o nome de um país ou de um esporte não podem ficar na caixa: você é solicitado a escolher um, e Esc devolve o que você tinha.
+- **A página de um jogador mantém as datas de cada torneio em uma linha.** Em um celular, as datas dos torneios na página de um jogador costumavam quebrar em duas linhas. Agora elas ficam em uma só, e quem quebra é o nome do torneio.
+
+### Administrar um torneio
+
+- **Escolha o país, o estado ou província e o esporte digitando.** O formulário que cria ou altera um torneio pede por eles nas mesmas caixas. Um torneio precisa de um país e de um esporte, então você é solicitado a escolher um antes de poder sair de qualquer uma das caixas ou enviar o formulário. Corrigir as palavras do país não faz mais perder o estado ou província que você tinha escolhido. Escolher outro país o limpa.
+- **As bandeiras também são digitadas.** A bandeira de um jogador ou de uma equipe é escolhida do mesmo modo. Deixe a caixa vazia para não ter bandeira.
+- **O que um jogador representa é sugerido.** Enquanto você digita o que um jogador representa, são sugeridos os clubes e países que jogadores já tiveram adicionados como representados, em qualquer torneio e em qualquer esporte. Digite duas letras para começar. No máximo dez são sugeridos, em ordem alfabética, e um nome que difere só nas maiúsculas é sugerido uma vez, como foi escrito da primeira vez. Jogadores arquivados e jogadores de uma equipe não são considerados.
+- **A ajuda explica as rodadas de um grupo.** Rodadas é quantas vezes cada par de jogadores do grupo se encontra, com uma partida em cada rodada. Começa em 1, que é o que um grupo quase sempre quer. Aumente apenas para um grupo em que eles se encontram de novo, como um round robin duplo. A página das competições explica isso, e um grupo e um suíço agora têm uma seção cada.
+
+### Torneios trazidos dos sites antigos
+
+- **Mais handicaps são tirados do nome no ranking mundial.** O número depois do último espaço do nome de um jogador nos sites antigos, inteiro ou com decimal, como 5.5 ou 5,5, com sinal de mais ou de menos ou sem, não é mais tomado como parte do nome ao procurar o ranking mundial dele. O mesmo vale para um handicap depois de um ponto e vírgula, como em Tim Murphy; 5.5. Dois números no fim, como em Tim Murphy 3 5, ficam, porque não há como saber qual era o certo, e também um nome que é só um número.
+
 ## Lançado em 2026-10-28
 
 ### Encontrar as coisas

@@ -1,5 +1,23 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-10-29
+
+### Dod o hyd i bethau
+
+- **Teipiwch wlad, rhanbarth neu gamp.** Mae'r meysydd sy'n culhau'r twrnameintiau, ar yr hafan ac ar dudalen blwyddyn, bellach yn flychau y teipiwch ynddynt, nid rhestrau i sgrolio drwyddynt. Teipiwch ran o enw, fel Seland, ac awgrymir yr enwau sy'n ei chynnwys. Pwyswch y saeth ar ddiwedd y blwch, neu'r fysell saeth i lawr, i weld pob enw, bump ar y tro a'r gweddill i sgrolio iddynt. Pwyswch awgrym, neu symudwch â'r bysellau saeth a phwyso Enter, i'w ddewis. Mae blwch gwag yn golygu unrhyw un. Ni ellir gadael geiriau nad ydynt yn enw gwlad na champ yn y blwch: gofynnir i chi ddewis un, ac mae'r fysell Escape yn rhoi'r un oedd gennych yn ôl.
+- **Mae tudalen chwaraewr yn cadw dyddiadau pob twrnamaint ar un llinell.** Ar ffôn, roedd dyddiadau'r twrnameintiau ar dudalen chwaraewr yn torri dros ddwy linell. Nawr maent yn aros ar un llinell, ac enw'r twrnamaint sy'n torri i'r llinell nesaf.
+
+### Rheoli twrnamaint
+
+- **Dewiswch y wlad, y rhanbarth a'r gamp drwy deipio.** Mae'r ffurflen sy'n creu neu'n newid twrnamaint yn gofyn amdanynt yn yr un blychau. Mae twrnamaint angen gwlad a champ, felly gofynnir i chi ddewis un cyn y gallwch adael y naill flwch na'r llall neu anfon y ffurflen. Nid yw cywiro geiriau'r wlad yn colli'r rhanbarth a ddewisoch mwyach. Mae dewis gwlad arall yn ei glirio.
+- **Teipir baneri hefyd.** Dewisir baner chwaraewr neu dîm yn yr un ffordd. Gadewch y blwch yn wag am ddim baner.
+- **Awgrymir yr hyn y mae chwaraewr yn ei gynrychioli.** Wrth i chi deipio'r hyn y mae chwaraewr yn ei gynrychioli, awgrymir y clybiau a'r gwledydd y mae chwaraewyr wedi'u hychwanegu yn eu cynrychioli, mewn unrhyw dwrnamaint ac mewn unrhyw gamp. Teipiwch ddwy lythyren i ddechrau. Awgrymir deg ar y mwyaf, yn nhrefn yr wyddor, ac awgrymir enw sy'n wahanol yn ei briflythrennau yn unig unwaith, fel y'i hysgrifennwyd gyntaf. Ni edrychir ar chwaraewyr wedi'u harchifo na chwaraewyr tîm.
+- **Mae'r cymorth yn esbonio rowndiau bloc.** **Rowndiau** yw sawl gwaith y mae pob pâr o chwaraewyr mewn bloc yn cwrdd, â gêm ym mhob rownd. Mae'n dechrau ar 1, sef yr hyn y mae bloc ei eisiau bron bob amser. Codwch ef dim ond ar gyfer bloc lle maent yn cwrdd eto, fel cystadleuaeth gron ddwbl. Mae'r dudalen ar gystadlaethau yn dweud hynny, ac mae gan floc a chystadleuaeth Swisaidd adran yr un bellach.
+
+### Twrnameintiau a ddygwyd o'r hen wefannau
+
+- **Tynnir mwy o handicapiau oddi ar enw safle byd.** Nid yw'r rhif ar ôl bwlch olaf chwaraewr ar yr hen wefannau, yn gyfan neu â degolyn fel 5.5 neu 5,5, ag arwydd plws neu finws neu hebddo, bellach yn cael ei gymryd am ran o'u henw wrth chwilio am eu safle byd. Felly hefyd handicap ar ôl hanner colon, fel yn Tim Murphy; 5.5. Gadewir dau rif ar y diwedd, fel yn Tim Murphy 3 5, gan nad oes dweud pa un oedd y bwriad, a gadewir hefyd enw sy'n rhif yn unig.
+
 ## Rhyddhawyd 2026-10-28
 
 ### Dod o hyd i bethau

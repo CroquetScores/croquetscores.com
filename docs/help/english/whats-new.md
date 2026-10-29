@@ -1,5 +1,23 @@
 # What's new
 
+## Released 2026-10-29
+
+### Finding things
+
+- **Type a country, state or province, or sport.** The fields that narrow the tournaments, on the home page and on a year's page, are now boxes you type into, not lists to scroll. Type part of a name, such as Zeal, and the names that have it are suggested. Press the arrow at the end of the box, or the down arrow key, to see every name, five at a time with the rest to scroll to. Press a suggestion, or move with the arrow keys and press Enter, to choose it. A box left empty means any. Words that are not the name of a country or a sport cannot be left in the box: you are asked to choose one, and Escape puts back the one you had.
+- **A player's page keeps each tournament's dates on one line.** On a phone, the dates of the tournaments on a player's page used to break across two lines. They now stay on one, and it is the tournament's name that wraps.
+
+### Managing a tournament
+
+- **Choose the country, state or province, and sport by typing.** The form that creates or changes a tournament asks for them in the same boxes. A tournament needs a country and a sport, so you are asked to choose one before you can leave either box or send the form. Correcting the words of the country no longer loses the state or province you had chosen. Choosing another country does clear it.
+- **Flags are typed too.** A player's or a team's flag is chosen in the same way. Leave the box empty for no flag.
+- **What a player represents is suggested.** As you type what a player represents, the clubs and countries that players have been added representing, in any tournament and in any sport, are suggested. Type two letters to begin. At most ten are suggested, in alphabetical order, and a name that differs only in its capitals is suggested once, as it was first written. Archived players and the players of a team are not looked at.
+- **The help explains a block's rounds.** Rounds is how many times each pair of players in a block meet, with a match in each round. It begins on 1, which is what a block almost always wants. Raise it only for a block in which they meet again, as in a double round robin. The page for competitions says so, and a block and a Swiss now have a section each.
+
+### Tournaments brought over from the old sites
+
+- **More handicaps are taken off a world ranking name.** The number after a player's last space on the old sites, whole or with a decimal such as 5.5 or 5,5, with a plus or a minus sign or without, is no longer taken for part of their name when looking up their world ranking. So is a handicap after a semicolon, as in Tim Murphy; 5.5. Two numbers at the end, as in Tim Murphy 3 5, are left, since there is no telling which was meant, and so is a name that is only a number.
+
 ## Released 2026-10-28
 
 ### Finding things

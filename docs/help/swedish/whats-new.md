@@ -1,5 +1,23 @@
 # Nytt
 
+## Släppt 2026-10-29
+
+### Hitta saker
+
+- **Skriv ett land, en region eller en sport.** Fälten som avgränsar turneringarna, på startsidan och på ett års sida, är nu rutor du skriver i, inte listor att rulla i. Skriv en del av ett namn, till exempel Zeel, så föreslås de namn som innehåller den. Tryck på pilen i slutet av rutan, eller på nedpilen, för att se alla namn, fem åt gången med resten att rulla till. Tryck på ett förslag, eller flytta dig med piltangenterna och tryck på Enter, för att välja det. En tom ruta betyder vilket som helst. Ord som inte är namnet på ett land eller en sport kan inte lämnas kvar i rutan: du ombeds välja ett, och Esc sätter tillbaka det du hade.
+- **En spelares sida håller varje turnerings datum på en rad.** På en telefon brukade datumen för turneringarna på en spelares sida brytas över två rader. Nu stannar de på en rad, och det är turneringens namn som bryts.
+
+### Arrangera en turnering
+
+- **Välj land, region och sport genom att skriva.** Formuläret som skapar eller ändrar en turnering frågar efter dem i samma rutor. En turnering behöver ett land och en sport, så du ombeds välja ett innan du kan lämna någon av rutorna eller skicka formuläret. Att rätta orden i landet gör inte längre att regionen du hade valt försvinner. Att välja ett annat land tar bort den.
+- **Flaggor skrivs också.** En spelares eller ett lags flagga väljs på samma sätt. Lämna rutan tom för ingen flagga.
+- **Det en spelare representerar föreslås.** När du skriver vad en spelare representerar föreslås de klubbar och länder som spelare har lagts till som representerande, i vilken turnering och vilken sport som helst. Skriv två bokstäver för att börja. Högst tio föreslås, i alfabetisk ordning, och ett namn som bara skiljer sig i versaler föreslås en gång, så som det först skrevs. Arkiverade spelare och lagens spelare tas inte med.
+- **Hjälpen förklarar ett blocks ronder.** **Ronder** är hur många gånger varje par av spelare i ett block möts, med en match i varje rond. Det börjar på 1, och 1 är nästan alltid vad ett block vill ha. Höj det bara för ett block där de möts igen, som en dubbel serie. Sidan om tävlingar säger det, och ett block och en schweizer har nu ett avsnitt var.
+
+### Turneringar som förts över från de gamla webbplatserna
+
+- **Fler handikapp tas bort från ett namn för världsrankingen.** Talet efter en spelares sista mellanslag på de gamla webbplatserna, helt eller med decimal som 5.5 eller 5,5, med plus- eller minustecken eller utan, tas inte längre för en del av namnet när spelarens världsranking slås upp. Det gäller också ett handikapp efter ett semikolon, som i Tim Murphy; 5.5. Två tal i slutet, som i Tim Murphy 3 5, lämnas kvar, eftersom det inte går att veta vilket som menades, och likaså ett namn som bara är ett tal.
+
 ## Släppt 2026-10-28
 
 ### Hitta saker

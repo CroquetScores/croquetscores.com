@@ -1,5 +1,23 @@
 # Novità
 
+## Rilasciato il 2026-10-29
+
+### Trovare le cose
+
+- **Scrivi un paese, una regione o uno sport.** I campi che restringono i tornei, nella home e nella pagina di un anno, ora sono caselle in cui si scrive, non elenchi da scorrere. Scrivi una parte di un nome, per esempio Zelan, e vengono suggeriti i nomi che la contengono. Premi la freccia in fondo alla casella, o il tasto freccia giù, per vedere tutti i nomi, cinque alla volta, con il resto da scorrere. Premi un suggerimento, oppure spostati con i tasti freccia e premi Invio, per sceglierlo. Una casella lasciata vuota significa qualsiasi. Parole che non sono il nome di un paese o di uno sport non possono restare nella casella: ti viene chiesto di sceglierne uno, e Esc rimette quello che avevi.
+- **Nella pagina di un giocatore le date di ogni torneo restano su una riga.** Su un telefono, le date dei tornei nella pagina di un giocatore andavano prima a capo su due righe. Ora restano su una, ed è il nome del torneo ad andare a capo.
+
+### Organizzare un torneo
+
+- **Scegli paese, regione e sport scrivendo.** Il modulo che crea o modifica un torneo li chiede nelle stesse caselle. Un torneo ha bisogno di un paese e di uno sport, quindi ti viene chiesto di sceglierne uno prima di poter lasciare una delle due caselle o inviare il modulo. Correggere le parole del paese non fa più perdere la regione che avevi scelto. Scegliere un altro paese invece la cancella.
+- **Anche le bandiere si scrivono.** La bandiera di un giocatore o di una squadra si sceglie allo stesso modo. Lascia la casella vuota per non avere nessuna bandiera.
+- **Ciò che rappresenta un giocatore viene suggerito.** Mentre scrivi ciò che un giocatore rappresenta, vengono suggeriti i club e i paesi che i giocatori rappresentavano quando sono stati aggiunti, in qualsiasi torneo e in qualsiasi sport. Scrivi due lettere per cominciare. Ne vengono suggeriti al massimo dieci, in ordine alfabetico, e un nome che differisce solo per le maiuscole viene suggerito una volta, come è stato scritto per primo. I giocatori archiviati e i giocatori di una squadra non vengono considerati.
+- **L'aiuto spiega i turni di un girone.** **Turni** è quante volte ogni coppia di giocatori di un girone si incontra, con un incontro in ogni turno. Comincia da 1, che è quasi sempre ciò che vuole un girone. Alzalo solo per un girone in cui si incontrano di nuovo, come in un doppio girone all'italiana. La pagina delle competizioni lo dice, e il girone e il sistema svizzero ora hanno una sezione ciascuno.
+
+### Tornei portati dai vecchi siti
+
+- **Più handicap vengono tolti dal nome per la classifica mondiale.** Il numero dopo l'ultimo spazio nel nome di un giocatore nei vecchi siti, intero o con un decimale come 5.5 o 5,5, con un segno più o meno o senza, non è più scambiato per parte del suo nome quando si cerca il suo ranking mondiale. Lo stesso vale per un handicap dopo un punto e virgola, come in Tim Murphy; 5.5. Due numeri in fondo, come in Tim Murphy 3 5, restano, perché non si può sapere quale fosse inteso, e così un nome che è solo un numero.
+
 ## Rilasciato il 2026-10-28
 
 ### Trovare le cose

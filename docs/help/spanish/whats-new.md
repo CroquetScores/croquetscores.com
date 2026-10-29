@@ -1,5 +1,23 @@
 # Novedades
 
+## Publicado el 2026-10-29
+
+### Encontrar cosas
+
+- **Escribe un país, una región o un deporte.** Los campos que acotan los torneos, en la página de inicio y en la página de un año, ahora son cuadros en los que escribes, no listas por las que desplazarte. Escribe parte de un nombre, como Zela, y se sugieren los nombres que la contienen. Pulsa la flecha del final del cuadro, o la tecla de flecha hacia abajo, para ver todos los nombres, de cinco en cinco y con el resto para desplazarse. Pulsa una sugerencia, o muévete con las teclas de flecha y pulsa Intro, para elegirla. Un cuadro vacío significa cualquiera. Las palabras que no son el nombre de un país o de un deporte no pueden quedarse en el cuadro: se te pide que elijas uno, y la tecla Escape devuelve el que tenías.
+- **La página de un jugador mantiene las fechas de cada torneo en una línea.** En un teléfono, las fechas de los torneos de la página de un jugador se partían en dos líneas. Ahora se quedan en una, y lo que se parte es el nombre del torneo.
+
+### Gestionar un torneo
+
+- **Elige el país, la región y el deporte escribiendo.** El formulario que crea o cambia un torneo los pide en los mismos cuadros. Un torneo necesita un país y un deporte, así que se te pide que elijas uno antes de poder salir de cualquiera de los cuadros o enviar el formulario. Corregir las palabras del país ya no hace perder la región que habías elegido. Elegir otro país sí la borra.
+- **Las banderas también se escriben.** La bandera de un jugador o de un equipo se elige de la misma manera. Deja el cuadro vacío si no quieres bandera.
+- **Se sugiere lo que representa un jugador.** Mientras escribes lo que representa un jugador, se sugieren los clubes y países por los que se han añadido jugadores, en cualquier torneo y en cualquier deporte. Escribe dos letras para empezar. Se sugieren como máximo diez, por orden alfabético, y un nombre que solo se diferencia en las mayúsculas se sugiere una vez, tal como se escribió la primera vez. No se miran los jugadores archivados ni los de un equipo.
+- **La ayuda explica las rondas de un grupo.** **Rondas** es cuántas veces se enfrenta cada pareja de jugadores de un grupo, con un partido en cada ronda. Empieza en 1, que es lo que casi siempre necesita un grupo. Súbelo solo para un grupo en el que se vuelven a enfrentar, como en una doble liguilla. La página de las competiciones lo explica, y un grupo y un suizo ahora tienen una sección cada uno.
+
+### Torneos traídos de los sitios antiguos
+
+- **Se quitan más hándicaps del nombre para la clasificación mundial.** El número que va después del último espacio del nombre de un jugador en los sitios antiguos, entero o con decimales como 5.5 o 5,5, con signo más o menos o sin él, ya no se toma por parte del nombre al buscar su clasificación mundial. Lo mismo vale para un hándicap después de un punto y coma, como en Tim Murphy; 5.5. Dos números al final, como en Tim Murphy 3 5, se dejan, porque no hay forma de saber cuál se quiso decir, y también se deja un nombre que es solo un número.
+
 ## Publicado el 2026-10-28
 
 ### Encontrar cosas
