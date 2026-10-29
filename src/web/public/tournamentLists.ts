@@ -206,6 +206,16 @@ const addressWith = (
   return query === "" ? asked.path : `${asked.path}?${query}`;
 };
 
+/**
+ * `path` with what the reader narrowed by, for a link that moves to another
+ * page of the same lists: a year's tournaments, say, from the home page, or
+ * another year's from this one. The filter is what the reader is looking at, so
+ * it goes with them. The sorting does not, since the lists of one page are not
+ * the lists of another and a name kept for one means nothing to the next.
+ */
+export const keepingFilter = (asked: Asked, path: string): string =>
+  addressWith({ ...asked, path, sorting: {} }, {});
+
 // A table ---------------------------------------------------------------------------
 
 export const ariaSort: Readonly<Record<Order, string>> = {

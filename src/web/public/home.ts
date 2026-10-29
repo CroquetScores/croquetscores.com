@@ -21,6 +21,7 @@ import { releaseOf, whatsNewAlert } from "../common/whatsNew.js";
 import {
   askedOf,
   filter,
+  keepingFilter,
   refusedWith,
   sendPage,
   sendRefused,
@@ -79,7 +80,9 @@ export const registerHomePage = (
       request,
       render(assets, {
         ...shell,
-        ...yearsOf(years, speaking),
+        ...yearsOf(years, speaking, undefined, (year) =>
+          keepingFilter(asked, `/${String(year)}`),
+        ),
         body: `${whatsNewAlert(
           request,
           speaking,
@@ -112,7 +115,7 @@ ${table(
     // The way to every tournament this year, for a reader after one further
     // off or long finished.
     after: `
-            <p class="home-every"><a href="/${thisYear}">${escape(say("home.allTournaments", { year: thisYear }))}</a></p>`,
+            <p class="home-every"><a href="${escape(keepingFilter(asked, `/${thisYear}`))}">${escape(say("home.allTournaments", { year: thisYear }))}</a></p>`,
   },
   asked,
   speaking,

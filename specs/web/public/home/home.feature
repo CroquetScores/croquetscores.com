@@ -1101,6 +1101,26 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the upcoming tournaments are followed by "All tournaments in 2026"
 
+  Rule: The way to this year's tournaments keeps the filter
+
+    The filter is what the reader is looking at, so moving to a year's page
+    narrows it as the home page was. Sorting is not carried over: the home
+    page's two lists and a year's list are not sorted alike.
+
+    Scenario: The way to this year's tournaments keeps the country
+      Given the home page is open
+      And "Scotland" is chosen as the country
+      And "Filter" is pressed
+      When "All tournaments in 2026" is pressed
+      Then the country chosen is "Scotland"
+
+    Scenario: The way to this year's tournaments keeps the sport
+      Given the home page is open
+      And "Association Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When "All tournaments in 2026" is pressed
+      Then the sport chosen is "Association Croquet"
+
   Rule: The years with tournaments are the secondary navigation, newest first
 
     Scenario: A year with a tournament in it is offered
@@ -1143,6 +1163,35 @@ Feature: The home page lists recent results and upcoming tournaments
       And the home page is open
       When the year 2024 is pressed
       Then the address is "/2024"
+
+    Scenario: A year keeps the country chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And the home page is open
+      And "Scotland" is chosen as the country
+      And "Filter" is pressed
+      When the year 2024 is pressed
+      Then the country chosen is "Scotland"
+
+    Scenario: A year keeps the region chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And the home page is open
+      And "Scotland" is chosen as the country
+      And "Filter" is pressed
+      And "Angus" is chosen as the region
+      And "Filter" is pressed
+      When the year 2024 is pressed
+      Then the region chosen is "Angus"
+
+    Scenario: A year keeps the sport chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And the home page is open
+      And "Association Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the year 2024 is pressed
+      Then the sport chosen is "Association Croquet"
 
     Scenario: No year is marked on the home page
       Given "organiser@example.com" has created the tournament "Spring Open"

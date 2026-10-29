@@ -26,6 +26,7 @@ import { themeOf } from "../common/theme.js";
 import {
   askedOf,
   filter,
+  keepingFilter,
   refusedWith,
   sendPage,
   sendRefused,
@@ -100,11 +101,8 @@ export const registerYearSportPage = (
         request,
         render(assets, {
           ...shell,
-          ...yearsOf(
-            years,
-            speaking,
-            year,
-            (each) => `/${String(each)}/${sport.code}`,
+          ...yearsOf(years, speaking, year, (each) =>
+            keepingFilter(asked, `/${String(each)}/${sport.code}`),
           ),
           body: `${filter(request, asked, speaking, listed.length)}
 ${table(
