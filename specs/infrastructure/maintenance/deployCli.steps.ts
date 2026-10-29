@@ -20,6 +20,8 @@ interface Scene {
   githubOutOfReach: boolean;
   serverStatus: number;
   given: string[];
+  /** Whether each deploy the server was given was told to leave the database. */
+  leftDatabaseAlone: boolean[];
   said: string[];
   outcome: DeployOutcome | undefined;
 }
@@ -37,6 +39,7 @@ const sceneOf = (world: SpecWorld): Scene => {
       githubOutOfReach: false,
       serverStatus: 0,
       given: [],
+      leftDatabaseAlone: [],
       said: [],
       outcome: undefined,
     };
@@ -110,8 +113,9 @@ const run = async (
     },
     resolve: (reference) => Promise.resolve(scene.references.get(reference)),
     onGitHub: (commit) => Promise.resolve(scene.onGitHub.has(commit)),
-    deploy: (_host, commit) => {
+    deploy: (_host, commit, options) => {
       scene.given.push(commit);
+      scene.leftDatabaseAlone.push(options.skipDatabaseUpdate);
       return Promise.resolve(scene.serverStatus);
     },
     say: (line) => scene.said.push(line),
@@ -136,6 +140,27 @@ When(
   },
 );
 
+When(
+  "the script is run with no branch and the flag {string}",
+  async function (this: SpecWorld, flag: string) {
+    await run(this, [flag]);
+  },
+);
+
+When(
+  "the script is run with the branch {string} and the flag {string}",
+  async function (this: SpecWorld, name: string, flag: string) {
+    await run(this, [name, flag]);
+  },
+);
+
+When(
+  "the script is run with the flag {string} and the branch {string}",
+  async function (this: SpecWorld, flag: string, name: string) {
+    await run(this, [flag, name]);
+  },
+);
+
 Then(
   "the server is given the commit {string}",
   function (this: SpecWorld, commit: string) {
@@ -146,6 +171,20 @@ Then(
 Then("the server is given no commit", function (this: SpecWorld) {
   assert.deepEqual(sceneOf(this).given, []);
 });
+
+Then(
+  "the server is told to leave the database alone",
+  function (this: SpecWorld) {
+    assert.deepEqual(sceneOf(this).leftDatabaseAlone, [true]);
+  },
+);
+
+Then(
+  "the server is not told to leave the database alone",
+  function (this: SpecWorld) {
+    assert.deepEqual(sceneOf(this).leftDatabaseAlone, [false]);
+  },
+);
 
 Then("GitHub was asked for what is new", function (this: SpecWorld) {
   assert.ok(sceneOf(this).fetched, "GitHub was not asked.");

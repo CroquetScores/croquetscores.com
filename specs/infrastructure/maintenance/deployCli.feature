@@ -144,3 +144,52 @@ Feature: A script deploys from the administrator's own computer
       Given the server's deploy ends with failure
       When the script is run with no branch
       Then the deploy script exits with failure
+
+  Rule: The database can be left alone
+
+    A deploy ordinarily copies the data before it changes anything and then
+    migrates the database, which is why it is slow to start and cannot be
+    undone once the migration has run. `--skip-database-update` has the server do
+    neither: it puts up the new build and restarts, and nothing is asked of
+    the database. It is for a change that has no migration, or for a server
+    whose database is being worked on and cannot be reached.
+
+    The flag does not change which commit is deployed. It is said to the
+    server beside the commit, and the server's own script does the leaving
+    alone, so the installed script has to be installed again before it
+    understands it (`deploying.md` section 8).
+
+    Scenario: A deploy leaves the database alone when asked
+      When the script is run with no branch and the flag "--skip-database-update"
+      Then the server is told to leave the database alone
+
+    Scenario: The commit is the same with the flag
+      When the script is run with no branch and the flag "--skip-database-update"
+      Then the server is given the commit "1111111111111111111111111111111111111111"
+
+    Scenario: A deploy does not leave the database alone unless asked
+      When the script is run with no branch
+      Then the server is not told to leave the database alone
+
+    Scenario: The flag can come after a branch
+      Given the branch "trial" is the commit "3333333333333333333333333333333333333333"
+      And the commit "3333333333333333333333333333333333333333" is on GitHub
+      When the script is run with the branch "trial" and the flag "--skip-database-update"
+      Then the server is given the commit "3333333333333333333333333333333333333333"
+      And the server is told to leave the database alone
+
+    Scenario: The flag can come before a branch
+      Given the branch "trial" is the commit "3333333333333333333333333333333333333333"
+      And the commit "3333333333333333333333333333333333333333" is on GitHub
+      When the script is run with the flag "--skip-database-update" and the branch "trial"
+      Then the server is given the commit "3333333333333333333333333333333333333333"
+      And the server is told to leave the database alone
+
+    Scenario: A flag the script does not know is refused
+      When the script is run with no branch and the flag "--skip-database-updat"
+      Then the deploy script exits with failure
+      And the deploy script says "Usage"
+
+    Scenario: A refused flag is not given to the server
+      When the script is run with no branch and the flag "--skip-database-updat"
+      Then the server is given no commit
