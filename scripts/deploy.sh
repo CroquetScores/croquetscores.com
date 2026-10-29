@@ -21,14 +21,25 @@ site=$root/site
 copies=$root/before-deploy
 
 # The workflow gives the commit as the command (sshd keeps it in this
-# variable). It is checked to be 40 hexadecimal digits before it goes anywhere
-# near git or a shell, so that what the key can be made to do is only to deploy
-# a commit of this repository.
-commit=${SSH_ORIGINAL_COMMAND:-${1:-}}
+# variable), and may follow it with --skip-database-update. The commit is
+# checked to be 40 hexadecimal digits and the flag to be that word exactly
+# before either goes anywhere near git or a shell, so that what the key can be
+# made to do is only to deploy a commit of this repository, with or without
+# touching its database.
+read -r -a words <<<"${SSH_ORIGINAL_COMMAND:-$*}"
+commit=${words[0]:-}
 if ! [[ $commit =~ ^[0-9a-f]{40}$ ]]; then
   echo "Give the commit to deploy, as 40 hexadecimal digits." >&2
   exit 2
 fi
+skip_database_update=no
+case ${#words[@]}:${words[1]:-} in
+  1:) ;;
+  2:--skip-database-update) skip_database_update=yes ;;
+  *)
+    echo "After the commit, only --skip-database-update may be given." >&2
+    exit 2 ;;
+esac
 
 # Runs a command without the lock (file descriptor 9), so that a process it
 # leaves running in the background, as git does to tidy up after a fetch, cannot
@@ -181,17 +192,23 @@ trap 'exit 143' TERM
 # npm run db:backup makes, taken on the server so that nobody has to be at a
 # computer with the tunnel open, and kept beside the site and not instead of the
 # daily backup, which is the one that lives somewhere else.
-mkdir -p "$copies"
-chmod 700 "$copies"
-# From a copy that was stopped half way: it is not a .dump, so the pruning below
-# would never remove it.
-rm -f "$copies"/*.partial
-copy=$copies/$(date -u +%Y-%m-%d-%H-%M-%S).dump
-say "Copying the data to $copy."
-nolock withsettings bash -c 'pg_dump --format=custom --no-password --table=events --table=account_keys --file "$1.partial" "$DATABASE_URL"' _ "$copy"
-mv "$copy.partial" "$copy"
-# Only the last few are kept: each is the size of the whole of the events.
-ls -1t "$copies"/*.dump | tail -n +6 | xargs -r rm --
+# Left out with the migration where the database is not to be touched, because
+# the copy is only of use against the migration.
+if [ "$skip_database_update" = no ]; then
+  mkdir -p "$copies"
+  chmod 700 "$copies"
+  # From a copy that was stopped half way: it is not a .dump, so the pruning
+  # below would never remove it.
+  rm -f "$copies"/*.partial
+  copy=$copies/$(date -u +%Y-%m-%d-%H-%M-%S).dump
+  say "Copying the data to $copy."
+  nolock withsettings bash -c 'pg_dump --format=custom --no-password --table=events --table=account_keys --file "$1.partial" "$DATABASE_URL"' _ "$copy"
+  mv "$copy.partial" "$copy"
+  # Only the last few are kept: each is the size of the whole of the events.
+  ls -1t "$copies"/*.dump | tail -n +6 | xargs -r rm --
+else
+  say "Leaving the database alone: no copy of the data, and no migration."
+fi
 
 stage="making site.previous"
 cd "$root"
@@ -213,8 +230,10 @@ fi
 nolock npm ci
 nolock npm run build
 
-stage="in the migration"
-nolock withsettings npm run db:migrate
+if [ "$skip_database_update" = no ]; then
+  stage="in the migration"
+  nolock withsettings npm run db:migrate
+fi
 
 stage="in the restart"
 nolock sudo systemctl restart croquetscores

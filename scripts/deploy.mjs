@@ -1,5 +1,6 @@
 // "npm run deploy", "npm run deploy -- my-branch" and
-// "npm run deploy -- origin/my-branch". Has the server put up a commit, from the
+// "npm run deploy -- origin/my-branch", each of which may be given
+// "--skip-database-update". Has the server put up a commit, from the
 // administrator's own computer (deployCli.feature). Without a branch it is
 // origin/main. The server's own script does the work and is given the commit
 // only (deploying.md section 8); this chooses which, and checks the server
@@ -52,7 +53,7 @@ const outcome = await runDeploy(process.argv.slice(2), {
   // The administrator's own key, as they sign in to the server by hand
   // (server-setup.md), so the server's script is named in full: the key the
   // workflow uses runs it without being asked, and this one does not.
-  deploy: (host, commit) =>
+  deploy: (host, commit, options) =>
     new Promise((done) => {
       const child = spawn(
         "ssh",
@@ -62,6 +63,7 @@ const outcome = await runDeploy(process.argv.slice(2), {
           `deploy@${host}`,
           "/usr/local/bin/croquetscores-deploy",
           commit,
+          ...(options.skipDatabaseUpdate ? ["--skip-database-update"] : []),
         ],
         { stdio: "inherit" },
       );

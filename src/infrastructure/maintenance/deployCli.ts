@@ -2,6 +2,14 @@ export interface DeployOutcome {
   readonly exitCode: 0 | 1;
 }
 
+/** What the administrator asked of the server's deploy besides the commit. */
+export interface DeployOptions {
+  /** Neither the copy of the data before nor the migration after. */
+  readonly skipDatabaseUpdate: boolean;
+}
+
+const skipDatabaseUpdateFlag = "--skip-database-update";
+
 /** What the script is given of the world it runs in. */
 export interface DeployWorld {
   /** The server's address (DEPLOY_SSH_HOST), as the setting gives it. */
@@ -16,14 +24,21 @@ export interface DeployWorld {
   /** Whether some branch on GitHub has the commit in its history. */
   readonly onGitHub: (commit: string) => Promise<boolean>;
   /** Has the server deploy the commit, and gives the status it ended with. */
-  readonly deploy: (host: string, commit: string) => Promise<number>;
+  readonly deploy: (
+    host: string,
+    commit: string,
+    options: DeployOptions,
+  ) => Promise<number>;
   readonly say: (line: string) => void;
 }
 
 const usage = `Usage:
   npm run deploy                     deploy origin/main
   npm run deploy -- <branch>         deploy a branch of this computer
-  npm run deploy -- origin/<branch>  deploy GitHub's copy of a branch`;
+  npm run deploy -- origin/<branch>  deploy GitHub's copy of a branch
+
+Add ${skipDatabaseUpdateFlag} to any of them to have the server leave the
+database alone: no copy of the data, and no migration.`;
 
 const failed = (world: DeployWorld, said: string): DeployOutcome => {
   world.say(said);
@@ -38,8 +53,15 @@ export const runDeploy = async (
   args: readonly string[],
   world: DeployWorld,
 ): Promise<DeployOutcome> => {
-  if (args.length > 1) return failed(world, usage);
-  const named = args[0] ?? "origin/main";
+  // Taken out before the branch is counted, so that the flag may come on either
+  // side of it. Anything else that starts with a dash is a mistyped flag and not
+  // a branch, which a branch name may not begin with.
+  const skipDatabaseUpdate = args.includes(skipDatabaseUpdateFlag);
+  const names = args.filter((arg) => arg !== skipDatabaseUpdateFlag);
+  if (names.length > 1 || names.some((name) => name.startsWith("-"))) {
+    return failed(world, usage);
+  }
+  const named = names[0] ?? "origin/main";
 
   if (world.host === undefined || world.host.trim() === "") {
     return failed(
@@ -83,7 +105,9 @@ export const runDeploy = async (
   }
 
   world.say(`Deploying ${named}, the commit ${commit}.`);
-  const status = await world.deploy(world.host.trim(), commit);
+  const status = await world.deploy(world.host.trim(), commit, {
+    skipDatabaseUpdate,
+  });
   // The server's own script says why, so this is only the verdict.
   if (status !== 0) {
     return failed(
