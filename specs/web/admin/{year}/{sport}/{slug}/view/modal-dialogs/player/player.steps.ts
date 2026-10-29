@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
@@ -10,6 +10,7 @@ import {
 } from "../../../../../../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
+import { suggestedTo } from "../../../../../../../support/suggestions.js";
 import {
   eventually,
   tabPanel,
@@ -135,32 +136,40 @@ Then(
 
 // Its flag -------------------------------------------------------------------------
 
+// A box typed into, which suggests the names of the flags: choosing one is
+// typing its name, and none is the box left empty.
 const flagList = (world: SpecWorld): Locator =>
   dialogOf(world).locator("#field-flag");
+
+// The flags are asked for once the dialog is open, so a page that has been
+// opened can be told that they will not come.
+Given("the flags do not arrive", async function (this: SpecWorld) {
+  await this.browserPage.route("**/api/site/flags", (route) => route.abort());
+});
 
 // The flags are asked for once the dialog is open, so they are waited on:
 // every flag there is, which takes a moment to arrive.
 const flagsOffered = async (world: SpecWorld): Promise<string[]> => {
-  await flagList(world)
-    .locator("option")
-    .nth(1)
-    .waitFor({ state: "attached", timeout: 10_000 });
-  return (await flagList(world).locator("option").allInnerTexts()).map(
-    (words) => words.trim(),
-  );
+  const until = Date.now() + 10_000;
+  for (;;) {
+    const names = await suggestedTo(flagList(world));
+    if (names.length > 1) return names;
+    assert.ok(Date.now() < until, "The flags did not arrive.");
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
 };
 
 When(
   "the flag {string} is chosen",
   async function (this: SpecWorld, flag: string) {
     await flagsOffered(this);
-    await flagList(this).selectOption({ label: flag });
+    await flagList(this).fill(flag);
   },
 );
 
 When("none is chosen for the flag", async function (this: SpecWorld) {
   await flagsOffered(this);
-  await flagList(this).selectOption({ value: "" });
+  await flagList(this).fill("");
 });
 
 Then("no flag is chosen", async function (this: SpecWorld) {
@@ -174,21 +183,10 @@ Then(
   async function (this: SpecWorld, flag: string) {
     await flagsOffered(this);
     await eventually(this, async () => {
-      assert.equal(
-        (await flagList(this).locator("option:checked").innerText()).trim(),
-        flag,
-      );
+      assert.equal(await flagList(this).inputValue(), flag);
     });
   },
 );
-
-Then("the first flag offered is none", async function (this: SpecWorld) {
-  await flagsOffered(this);
-  assert.equal(
-    await flagList(this).locator("option").first().getAttribute("value"),
-    "",
-  );
-});
 
 Then(
   "the flag {string} is offered",

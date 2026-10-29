@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { NameChoice } from "../../../../../../NameChoice.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
 import { idInAddress } from "../../../../../../api.js";
@@ -330,22 +331,16 @@ export const PlayerDialog = ({
           lifted
         >
           {(tied) => (
-            <select
+            // None is the box left empty, since most players fly none; what
+            // names none of the flags is not left.
+            <NameChoice
               {...tied}
               disabled={onlyWorldRankingName}
+              mustChoose={say("TournamentPlayer.NoSuchFlag")}
+              choices={flags}
               value={flag}
-              onChange={(event) => {
-                setFlag(event.target.value);
-              }}
-            >
-              {/* None first, since most players fly none. */}
-              <option value="" />
-              {flags.map(({ code, name: called }) => (
-                <option key={code} value={code}>
-                  {called}
-                </option>
-              ))}
-            </select>
+              onChange={setFlag}
+            />
           )}
         </Field>
         {/* Before the world ranking name, as the issue asked for. */}

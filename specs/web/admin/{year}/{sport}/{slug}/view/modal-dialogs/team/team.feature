@@ -28,9 +28,9 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
   The name and the short name are required, and the flag is not. The short
   name says beneath it what it is for — what the team's tests are called by,
   as "AUS v ENG" — since a reader asked for two names would otherwise wonder
-  why. The flags are offered as a player's are: by the name of the place each
-  is the flag of, in the reader's language, in order of those names, with a
-  choice of none first.
+  why. The flags are offered as a player's are, typed into: by the name of the
+  place each is the flag of, in the reader's language, in order of those
+  names. None is the box left empty.
 
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name or
@@ -363,12 +363,91 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then "Edit" on the team "Australia A" has the focus
 
+  Rule: The flag is chosen by typing its name, as a player's is
+
+    The field is the player dialog's (`player.feature`), and is held to a name
+    of one of the flags in the same way.
+
+    Scenario: The arrow at the end of the flag box offers every flag
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And the flag "Australia" is chosen
+      When the arrow at the end of the "Flag" is pressed
+      Then the flag "New Zealand" is offered
+      And the flag chosen is "Australia"
+      And the suggestions of the "Flag" are shown
+
+    Scenario: The suggestions are as the field they fill is
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      When the arrow at the end of the "Flag" is pressed
+      Then the suggestions of the "Flag" start where the field starts
+      And the suggestions of the "Flag" are as wide as the field
+      And the suggestions of the "Flag" are in the same text size as the field
+
+    Scenario: No more than five flags are in view at once
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      When the arrow at the end of the "Flag" is pressed
+      Then the suggestions of the "Flag" show 5 names
+
+    Scenario: A suggestion pressed is chosen
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And the arrow at the end of the "Flag" is pressed
+      When "Australia" is pressed among the suggestions of the "Flag"
+      Then the flag chosen is "Australia"
+      And the suggestions of the "Flag" are not shown
+
+    Scenario: Escape puts back the flag that was chosen, and the box can then be left
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And the flag "Australia" is chosen
+      And "Atlan" is typed as the "Flag"
+      And the escape key is pressed in the "Flag"
+      And the escape key is pressed in the "Flag"
+      And the tab key is pressed in the "Flag"
+      Then the flag chosen is "Australia"
+      And "Flag" does not have the focus
+
+    Scenario: What is wrong with a flag gets out of the way when a key is pressed
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And "Atlantis" is typed as the "Flag"
+      And the tab key is pressed in the "Flag"
+      And "Flag" says it needs "Choose one of the flags there are."
+      When the key "x" is pressed in the "Flag"
+      Then "Flag" says nothing is wrong
+
+    Scenario: A flag that names nothing is refused beside the flag
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And "Australia" is typed as the "Name"
+      And "AUS" is typed as the "Short Name"
+      And "Atlantis" is typed as the "Flag"
+      When "Add" is pressed
+      Then "Flag" is refused with "Team.NoSuchFlag"
+
+    Scenario: A flag that names nothing is not left
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      And "Atlantis" is typed as the "Flag"
+      When the tab key is pressed in the "Flag"
+      Then "Flag" has the focus
+      And "Flag" says it needs "Choose one of the flags there are."
+
+    Scenario: A flag box with nothing in it is left
+      Given the page of "Spring Tests" is open
+      And "Add Team" is pressed
+      When the tab key is pressed in the "Flag"
+      Then "Flag" does not have the focus
+
   Rule: The flags are named in the reader's language, in order of their names
 
-    Scenario: No flag is the first choice
+    Scenario: No flag is chosen to begin with
       Given the page of "Spring Tests" is open
       When "Add Team" is pressed
-      Then the first flag offered is none
+      Then no flag is chosen
 
     Scenario: The flags are in order of their names
       Given the page of "Spring Tests" is open

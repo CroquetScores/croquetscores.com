@@ -804,6 +804,13 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Zeal" is typed as the country
       Then the suggestions of the country box show 1 name
 
+    Scenario: The suggestions are closed once the box is emptied
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      When "" is typed as the country
+      Then the suggestions of the country box are not shown
+
     Scenario: Without scripting the down arrow leaves the country in the box
       Given the home page is open
       And "New Zealand" is chosen as the country

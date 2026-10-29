@@ -64,8 +64,9 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
   rankings do not know is kept as readily as one they do, since a player new
   to the rankings is not in them yet.
 
-  The flags are offered by the name of the place each is the flag of, in the
-  reader's language, in order of those names, with a choice of none first,
+  The flag is typed into, as a country is, and suggests the flags that have
+  what was typed, by the name of the place each is the flag of, in the
+  reader's language, in order of those names. None is the box left empty,
   since most players fly none.
 
   What is refused is said beneath the field it is about, by the refusal's
@@ -624,10 +625,10 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
 
   Rule: The flags are named in the reader's language, in order of their names
 
-    Scenario: No flag is the first choice
+    Scenario: No flag is chosen to begin with
       Given the page of "Spring Open" is open
       When "Add Player" is pressed
-      Then the first flag offered is none
+      Then no flag is chosen
 
     Scenario: A flag is offered by the name of the place it is the flag of
       Given the page of "Spring Open" is open
@@ -645,6 +646,103 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And the page of "Spring Open" is open
       When "Añadir jugador" is pressed
       Then the flag "Alemania" is offered before the flag "Argentina"
+
+  Rule: The flag is chosen by typing its name, as a country is
+
+    A name that names none of the flags is not left, as `new.feature` says of
+    a country, and is refused beside the flag if the dialog is sent, since a
+    dialog is sent for the server to refuse; the box left empty is no flag.
+
+    Scenario: The arrow at the end of the flag box offers every flag
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And the flag "New Zealand" is chosen
+      When the arrow at the end of the "Flag" is pressed
+      Then the flag "Australia" is offered
+      And the flag chosen is "New Zealand"
+      And the suggestions of the "Flag" are shown
+
+    Scenario: The suggestions are as the field they fill is
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When the arrow at the end of the "Flag" is pressed
+      Then the suggestions of the "Flag" start where the field starts
+      And the suggestions of the "Flag" are as wide as the field
+      And the suggestions of the "Flag" are in the same text size as the field
+
+    Scenario: No more than five flags are in view at once
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When the arrow at the end of the "Flag" is pressed
+      Then the suggestions of the "Flag" show 5 names
+
+    Scenario: A suggestion pressed is chosen
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And the arrow at the end of the "Flag" is pressed
+      When "Australia" is pressed among the suggestions of the "Flag"
+      Then the flag chosen is "Australia"
+      And the suggestions of the "Flag" are not shown
+
+    Scenario: A flag that names nothing is not left
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Atlantis" is typed as the "Flag"
+      When the tab key is pressed in the "Flag"
+      Then "Flag" has the focus
+      And "Flag" says it needs "Choose one of the flags there are."
+
+    Scenario: A player is saved flying the flag they have, though the flags have not arrived
+      Given the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the flags do not arrive
+      And the name of the player "Sam Someone" is pressed
+      When "Save" is pressed
+      Then the player "Sam Someone" of "Spring Open" flies the flag "nz"
+
+    Scenario: A flag box is not held while the flags have not arrived
+      Given the player is to fly the flag "nz"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      And the flags do not arrive
+      And the name of the player "Sam Someone" is pressed
+      When the tab key is pressed in the "Flag"
+      Then "Flag" does not have the focus
+
+    Scenario: A flag box with nothing in it is left, since most fly none
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When the tab key is pressed in the "Flag"
+      Then "Flag" does not have the focus
+
+    Scenario: Escape puts back the flag that was chosen, and the box can then be left
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And the flag "New Zealand" is chosen
+      And "Atlan" is typed as the "Flag"
+      And the escape key is pressed in the "Flag"
+      And the escape key is pressed in the "Flag"
+      And the tab key is pressed in the "Flag"
+      Then the flag chosen is "New Zealand"
+      And "Flag" does not have the focus
+
+    Scenario: What is wrong with a flag gets out of the way when a key is pressed
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Atlantis" is typed as the "Flag"
+      And the tab key is pressed in the "Flag"
+      And "Flag" says it needs "Choose one of the flags there are."
+      When the key "x" is pressed in the "Flag"
+      Then "Flag" says nothing is wrong
+
+    Scenario: A flag that names nothing is refused beside the flag
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Sam Someone" is typed as the "Name"
+      And "Atlantis" is typed as the "Flag"
+      When "Add" is pressed
+      Then "Flag" is refused with "TournamentPlayer.NoSuchFlag"
 
   Rule: A name that is a bye is explained in a dialog of its own
 

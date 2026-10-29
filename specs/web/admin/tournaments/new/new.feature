@@ -302,6 +302,12 @@ Feature: A new tournament is created in the admin
       When the arrow at the end of the "Sport" is pressed
       Then the suggestions of the "Sport" show 4 names
 
+    Scenario: The suggestions are closed once the box is emptied
+      Given the new tournament page is open
+      And the country "New Zealand" is chosen
+      When "" is typed as the "Country"
+      Then the suggestions of the "Country" are not shown
+
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open
       When "Golf" is typed as the "Sport"
