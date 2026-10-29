@@ -99,6 +99,8 @@ export const english: Language = {
       "Google did not tell us your name, and an account needs one. Use your email address below instead.",
     "Google.Unreachable":
       "Google could not be reached just now. Try again in a few minutes, or use your email address below.",
+    "Facebook.Refused":
+      "Facebook would not sign you in just now. Try again, or use your email address below.",
     "Facebook.Unreachable":
       "Facebook could not be reached just now. Try again in a few minutes, or use your email address below.",
     "Registration.NotAPerson":

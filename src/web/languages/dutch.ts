@@ -106,6 +106,8 @@ export const dutch: Language = {
       "Google heeft ons je naam niet doorgegeven, en een account heeft er een nodig. Gebruik hieronder je e-mailadres.",
     "Google.Unreachable":
       "Google was zojuist niet bereikbaar. Probeer het over een paar minuten opnieuw, of gebruik hieronder je e-mailadres.",
+    "Facebook.Refused":
+      "Facebook wilde je zojuist niet inloggen. Probeer het opnieuw, of gebruik hieronder je e-mailadres.",
     "Facebook.Unreachable":
       "Facebook was zojuist niet bereikbaar. Probeer het over een paar minuten opnieuw, of gebruik hieronder je e-mailadres.",
     "Registration.NotAPerson":

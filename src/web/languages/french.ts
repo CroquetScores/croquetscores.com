@@ -104,6 +104,8 @@ export const french: Language = {
       "Google ne nous a pas communiqué votre nom, or un compte en a besoin. Utilisez plutôt votre adresse e-mail ci-dessous.",
     "Google.Unreachable":
       "Google est inaccessible pour le moment. Réessayez dans quelques minutes, ou utilisez votre adresse e-mail ci-dessous.",
+    "Facebook.Refused":
+      "Facebook n'a pas pu vous connecter pour le moment. Réessayez, ou utilisez votre adresse e-mail ci-dessous.",
     "Facebook.Unreachable":
       "Facebook est inaccessible pour le moment. Réessayez dans quelques minutes, ou utilisez votre adresse e-mail ci-dessous.",
     "Registration.NotAPerson":

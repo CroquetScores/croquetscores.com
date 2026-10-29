@@ -17,20 +17,24 @@
 // sign in page, and so which one a reader Facebook did not let in is brought
 // back to, and where a reader signed in goes next.
 import { randomBytes } from "node:crypto";
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyRequest } from "fastify";
 
 import { SignInWithFacebook } from "../../application/operations/accounts/SignInWithFacebook.js";
 import { SignInWithFacebookRefused } from "../../application/operations/accounts/SignInWithFacebookHandler.js";
 import type { Sessions } from "../../application/services/Sessions.js";
-import { Website } from "../../domain/common/Website.js";
 import type { InTransaction } from "../common/database.js";
 import { startSession } from "../common/session.js";
-import { servedAsOf } from "../common/site.js";
 import { facebookPath } from "../public/facebookOffer.js";
 import type { SentFrom } from "../public/googleOffer.js";
 import { registerPath } from "../public/register.js";
 import { notAgreed, termsOfUseField } from "../public/termsOfUse.js";
-import { goBackTo, signInPath } from "../public/signIn.js";
+import { goBackTo } from "../public/signIn.js";
+import {
+  backToWhereSent,
+  notSentFromHere,
+  redirectUriFor as redirectUriForCallback,
+  sentFromOf,
+} from "./signInWithAnother.js";
 
 const callbackPath = `${facebookPath}/callback`;
 
@@ -55,6 +59,18 @@ export class FacebookUnreachable extends Error {
   }
 }
 
+/**
+ * Facebook answered, and what it answered is not to be believed: a code it
+ * will not exchange, a token it will not stand behind, or a reader it names
+ * nobody for. The sign-in did not work, and the reader is told so.
+ */
+export class FacebookNotBelieved extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "FacebookNotBelieved";
+  }
+}
+
 /** What these routes want of Facebook. */
 export interface FacebookSignIn {
   whereToSend(asking: {
@@ -64,7 +80,8 @@ export interface FacebookSignIn {
 
   /**
    * Who came back with `code`. Throws `FacebookUnreachable` when Facebook could
-   * not be asked, and anything else when its answer was not to be believed.
+   * not be asked, and `FacebookNotBelieved` when its answer was not to be
+   * believed.
    */
   whoCameBack(returned: {
     readonly code: string;
@@ -125,57 +142,12 @@ const pendingFrom = (request: FastifyRequest): Pending | undefined => {
   }
 };
 
-// A way back that is not taken is answered as a request that could not be dealt
-// with, and signs nobody in: there is nothing a reader can be told that would
-// help, and nothing a forger should be told at all.
-const notSentFromHere = (): never => {
-  throw Object.assign(
-    new Error("A way back from Facebook this site did not send the reader on."),
-    { statusCode: 400, code: "Facebook.NotSentFromHere" },
-  );
-};
-
-// Back to the page that sent the reader. The sign in page is told again where
-// the reader was going back to, so that signing in with a password from there
-// still goes there.
-const backToWhereSent = (
-  reply: FastifyReply,
-  pending: Pending,
-  refused?: string,
-): FastifyReply => {
-  const said: string[] = [];
-  if (refused !== undefined)
-    said.push(`refused=${encodeURIComponent(refused)}`);
-  if (pending.sentFrom === "sign-in") {
-    said.push(`return=${encodeURIComponent(pending.goBack)}`);
-  }
-  const page = pending.sentFrom === "sign-in" ? signInPath : registerPath;
-  return reply.redirect(
-    said.length === 0 ? page : `${page}?${said.join("&")}`,
-    303,
-  );
-};
-
-// A way to Facebook that names no page is the register page's, as it is for
-// Google.
-const sentFromOf = (given: unknown): SentFrom =>
-  given === "sign-in" ? "sign-in" : "register";
-
 export const registerFacebookRoutes = (
   server: FastifyInstance,
   options: FacebookRoutesOptions,
 ): void => {
-  // The website's own address, which Facebook is told to send the reader back
-  // to. Development is the exception: it is reached on whatever port is free,
-  // so the address the reader asked by is the truth, as it is on a machine
-  // nothing sits in front of.
-  const redirectUriFor = (request: FastifyRequest): string => {
-    const website = servedAsOf(request);
-    const address = website.equals(Website.development)
-      ? `${request.protocol}://${request.host}`
-      : website.address;
-    return `${address}${callbackPath}`;
-  };
+  const redirectUriFor = (request: FastifyRequest): string =>
+    redirectUriForCallback(request, callbackPath);
 
   server.get<{
     Querystring: { from?: string; return?: string; [termsOfUseField]?: string };
@@ -230,7 +202,7 @@ export const registerFacebookRoutes = (
       typeof state !== "string" ||
       state !== pending.state
     ) {
-      return notSentFromHere();
+      return notSentFromHere("Facebook");
     }
 
     // The reader said no to Facebook, or Facebook said no to them. Either way
@@ -251,6 +223,10 @@ export const registerFacebookRoutes = (
       if (failure instanceof FacebookUnreachable) {
         request.log.warn({ err: failure }, "Facebook could not be reached");
         return backToWhereSent(reply, pending, "Facebook.Unreachable");
+      }
+      if (failure instanceof FacebookNotBelieved) {
+        request.log.warn({ err: failure }, "Facebook was not believed");
+        return backToWhereSent(reply, pending, "Facebook.Refused");
       }
       throw failure;
     }

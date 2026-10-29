@@ -90,6 +90,8 @@ export const maori: Language = {
       "Kīhai a Google i whāki mai i tō ingoa, ā, me whai ingoa te pūkete. Whakamahia tō wāhitau īmēra i raro nei.",
     "Google.Unreachable":
       "Kāore i taea te whakapā atu ki a Google i tēnei wā. Whakamātauria anō i roto i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
+    "Facebook.Refused":
+      "Kīhai a Facebook i whakaae kia takiuru koe i tēnei wā. Whakamātauria anō, whakamahia rānei tō wāhitau īmēra i raro nei.",
     "Facebook.Unreachable":
       "Kāore i taea te whakapā atu ki a Facebook i tēnei wā. Whakamātauria anō i roto i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
     "Registration.NotAPerson":

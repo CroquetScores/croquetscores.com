@@ -6,6 +6,7 @@ import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import { Refused } from "../../../domain/common/Refused.js";
+import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -103,7 +104,7 @@ export class SignInWithFacebookHandler extends CommandHandler<
       );
     }
 
-    const address = EmailAddress.from(command.emailAddress);
+    const address = this.addressOf(command.emailAddress);
     const id = AccountId.create();
     const holder = await this.byAddress.reserve(address, id);
     const account = holder.equals(id)
@@ -140,6 +141,23 @@ export class SignInWithFacebookHandler extends CommandHandler<
     account.signIn(command.requestedAt);
     await this.accounts.save(account);
     return account.id;
+  }
+
+  // What Facebook gives as an email address is whatever the reader has told
+  // Facebook, so it may not be one: something that is not an address is no
+  // address to find or make an account by, and is refused as none was given.
+  private addressOf(given: string): EmailAddress {
+    try {
+      return EmailAddress.from(given);
+    } catch (failure) {
+      if (failure instanceof ValidationError) {
+        throw new SignInWithFacebookRefused(
+          "SignInWithFacebook.EmailAddressMissing",
+          "Facebook gave something that is not an email address.",
+        );
+      }
+      throw failure;
+    }
   }
 
   private async load(id: AccountId): Promise<Account> {

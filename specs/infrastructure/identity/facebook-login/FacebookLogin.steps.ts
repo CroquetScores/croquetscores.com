@@ -64,70 +64,87 @@ Given("the reader has been sent to Facebook", async function (this: SpecWorld) {
 });
 
 // One misbehaviour to a step, each the one thing wrong with what follows.
-const misbehave = (world: SpecWorld, how: Misbehaving): void => {
-  const { facebook } = believingOf(world);
+// Said to the scenario's own stand-in, whether or not the scenario is about
+// believing Facebook, so that a browser scenario can say the same things.
+const misbehave = async (world: SpecWorld, how: Misbehaving): Promise<void> => {
+  const facebook = await standInFacebookFor(world);
   facebook.misbehaving = { ...facebook.misbehaving, ...how };
 };
 
 Given(
   "Facebook requires proof of the site's secret",
-  function (this: SpecWorld) {
-    misbehave(this, { requiresProof: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { requiresProof: true });
   },
 );
 
-Given("Facebook will not accept the site's proof", function (this: SpecWorld) {
-  misbehave(this, { rejectsProof: true });
-});
+Given(
+  "Facebook will not accept the site's proof",
+  async function (this: SpecWorld) {
+    await misbehave(this, { rejectsProof: true });
+  },
+);
 
 Given(
   "Facebook will refuse the access token it gave",
-  function (this: SpecWorld) {
-    misbehave(this, { refusesAccessToken: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { refusesAccessToken: true });
   },
 );
 
 Given(
   "Facebook will give no access token for the code",
-  function (this: SpecWorld) {
-    misbehave(this, { givesNoAccessToken: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { givesNoAccessToken: true });
   },
 );
 
-Given("Facebook will name no id for the reader", function (this: SpecWorld) {
-  misbehave(this, { givesNoId: true });
-});
+Given(
+  "Facebook will name no id for the reader",
+  async function (this: SpecWorld) {
+    await misbehave(this, { givesNoId: true });
+  },
+);
 
-Given("Facebook will give no name for the reader", function (this: SpecWorld) {
-  misbehave(this, { givesNoName: true });
-});
+Given(
+  "Facebook will give no name for the reader",
+  async function (this: SpecWorld) {
+    await misbehave(this, { givesNoName: true });
+  },
+);
 
-Given("Facebook made the code for another site", function (this: SpecWorld) {
-  misbehave(this, { codeForAnotherSite: true });
-});
+Given(
+  "Facebook made the code for another site",
+  async function (this: SpecWorld) {
+    await misbehave(this, { codeForAnotherSite: true });
+  },
+);
 
-Given("Facebook will hang up on the exchange", function (this: SpecWorld) {
-  misbehave(this, { hangsUpOnTheExchange: true });
-});
+Given(
+  "Facebook will hang up on the exchange",
+  async function (this: SpecWorld) {
+    await misbehave(this, { hangsUpOnTheExchange: true });
+  },
+);
 
 Given(
   "Facebook will hang up on the question about the reader",
-  function (this: SpecWorld) {
-    misbehave(this, { hangsUpOnTheQuestion: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { hangsUpOnTheQuestion: true });
   },
 );
 
 Given(
   "Facebook will answer the question about the reader with a server error",
-  function (this: SpecWorld) {
-    misbehave(this, { answersTheQuestionWithAnError: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { answersTheQuestionWithAnError: true });
   },
 );
 
 Given(
   "Facebook will answer the question about the reader with something that is not an answer",
-  function (this: SpecWorld) {
-    misbehave(this, { answersTheQuestionWithNonsense: true });
+  async function (this: SpecWorld) {
+    await misbehave(this, { answersTheQuestionWithNonsense: true });
   },
 );
 

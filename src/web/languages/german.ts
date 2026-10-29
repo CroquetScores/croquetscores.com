@@ -104,6 +104,8 @@ export const german: Language = {
       "Google hat uns Ihren Namen nicht mitgeteilt, ein Konto braucht aber einen. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
     "Google.Unreachable":
       "Google war gerade nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
+    "Facebook.Refused":
+      "Facebook konnte Sie gerade nicht anmelden. Versuchen Sie es erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
     "Facebook.Unreachable":
       "Facebook war gerade nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
     "Registration.NotAPerson":

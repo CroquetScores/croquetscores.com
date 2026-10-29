@@ -343,6 +343,7 @@ const offeredLanguages = [
 ];
 import { auth } from "./auth/index.js";
 import {
+  FacebookNotBelieved,
   FacebookUnreachable,
   registerFacebookRoutes,
   type FacebookSignIn,
@@ -459,11 +460,10 @@ const facebookAsASignIn = (facebook: FacebookLogin): FacebookSignIn => ({
     try {
       return await facebook.whoCameBack(returned);
     } catch (failure) {
-      if (
-        failure instanceof FacebookLoginFailed &&
-        failure.code === "Facebook.Unreachable"
-      ) {
-        throw new FacebookUnreachable(failure.message);
+      if (failure instanceof FacebookLoginFailed) {
+        throw failure.code === "Facebook.Unreachable"
+          ? new FacebookUnreachable(failure.message)
+          : new FacebookNotBelieved(failure.message);
       }
       throw failure;
     }

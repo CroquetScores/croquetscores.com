@@ -159,6 +159,13 @@ Feature: Signing in with Facebook
       When signing in with Facebook is sent
       Then it is refused with "SignInWithFacebook.EmailAddressMissing"
 
+    Scenario: Something that is not an email address is refused as no email address
+      Given Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "this is not an address"
+      And Facebook calls the reader "Sam Someone"
+      When signing in with Facebook is sent
+      Then it is refused with "SignInWithFacebook.EmailAddressMissing"
+
     Scenario: No email address links no account
       Given "someone@example.com" has an account, confirmed
       And Facebook knows the reader as "facebook-id-1"

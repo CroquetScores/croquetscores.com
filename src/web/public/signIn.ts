@@ -61,7 +61,7 @@ import {
   withGoogle,
   type SentFrom,
 } from "./googleOffer.js";
-import type { Ending, Offered } from "./offers.js";
+import { endingTheLast, type Ending, type Offered } from "./offers.js";
 
 export const signInPath = "/account/sign-in";
 
@@ -181,9 +181,7 @@ const offersOf = (
       ),
     );
   }
-  return offers.map((offer, at) =>
-    offer(at === offers.length - 1 ? ending : undefined),
-  );
+  return endingTheLast(offers, ending);
 };
 
 export const registerSignInPage = (

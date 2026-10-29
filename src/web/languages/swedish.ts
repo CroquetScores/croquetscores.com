@@ -100,6 +100,8 @@ export const swedish: Language = {
       "Google berättade inte vad du heter, och ett konto måste ha ett namn. Använd din e-postadress nedan i stället.",
     "Google.Unreachable":
       "Det gick inte att nå Google just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
+    "Facebook.Refused":
+      "Facebook kunde inte logga in dig just nu. Försök igen, eller använd din e-postadress nedan.",
     "Facebook.Unreachable":
       "Det gick inte att nå Facebook just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
     "Registration.NotAPerson":

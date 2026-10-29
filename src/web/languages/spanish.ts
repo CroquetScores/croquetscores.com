@@ -106,6 +106,8 @@ export const spanish: Language = {
       "Google no nos ha dicho tu nombre, y una cuenta necesita uno. Usa en su lugar tu dirección de correo electrónico, más abajo.",
     "Google.Unreachable":
       "No se ha podido contactar con Google en este momento. Inténtalo de nuevo dentro de unos minutos, o usa tu dirección de correo electrónico, más abajo.",
+    "Facebook.Refused":
+      "Facebook no ha podido iniciar tu sesión ahora. Inténtalo de nuevo, o usa tu dirección de correo electrónico, más abajo.",
     "Facebook.Unreachable":
       "No se ha podido contactar con Facebook en este momento. Inténtalo de nuevo dentro de unos minutos, o usa tu dirección de correo electrónico, más abajo.",
     "Registration.NotAPerson":

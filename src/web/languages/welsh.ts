@@ -92,6 +92,8 @@ export const welsh: Language = {
       "Ni ddywedodd Google wrthym beth yw eich enw, ac mae ei angen ar gyfrif. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "Google.Unreachable":
       "Ni ellid cysylltu â Google ar hyn o bryd. Rhowch gynnig arall arni ymhen ychydig funudau, neu defnyddiwch eich cyfeiriad e-bost isod.",
+    "Facebook.Refused":
+      "Ni allai Facebook eich mewngofnodi ar hyn o bryd. Rhowch gynnig arall arni, neu defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "Facebook.Unreachable":
       "Ni ellid cysylltu â Facebook ar hyn o bryd. Rhowch gynnig arall arni ymhen ychydig funudau, neu defnyddiwch eich cyfeiriad e-bost isod.",
     "Registration.NotAPerson":

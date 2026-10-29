@@ -309,6 +309,16 @@ Feature: Signing in with Facebook
       When the reader signs in with Facebook
       Then the dialog says the message for "SignInWithFacebook.LinkedToAnother"
 
+    Scenario: Facebook turning the sign-in away is said on the sign in page
+      Given a viewport 1200 pixels wide
+      And Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Sam Someone"
+      And Facebook will refuse the access token it gave
+      And the sign in page is open
+      When the reader signs in with Facebook
+      Then the dialog says the message for "Facebook.Refused"
+
     Scenario: Facebook that cannot be reached is said on the sign in page
       Given a viewport 1200 pixels wide
       And Facebook cannot be reached

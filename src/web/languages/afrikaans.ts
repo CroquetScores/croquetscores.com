@@ -104,6 +104,8 @@ export const afrikaans: Language = {
       "Google het ons nie jou naam gegee nie, en 'n rekening het een nodig. Gebruik eerder jou e-posadres hieronder.",
     "Google.Unreachable":
       "Google kon nou nie bereik word nie. Probeer oor 'n paar minute weer, of gebruik jou e-posadres hieronder.",
+    "Facebook.Refused":
+      "Facebook wou jou nou nie aanmeld nie. Probeer weer, of gebruik jou e-posadres hieronder.",
     "Facebook.Unreachable":
       "Facebook kon nou nie bereik word nie. Probeer oor 'n paar minute weer, of gebruik jou e-posadres hieronder.",
     "Registration.NotAPerson":

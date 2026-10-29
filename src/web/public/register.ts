@@ -61,7 +61,7 @@ import {
   withFacebook,
 } from "./facebookOffer.js";
 import { googlePath, refusalsFromGoogle, withGoogle } from "./googleOffer.js";
-import type { Ending, Offered } from "./offers.js";
+import { endingTheLast, type Ending, type Offered } from "./offers.js";
 import { javaScriptRequiredPath } from "./javaScriptRequired.js";
 import { registrationsSuspendedPath } from "./registrationsSuspended.js";
 import {
@@ -225,9 +225,7 @@ const offersOf = (
       withFacebook(speaking.say("register.withFacebook"), facebookPath, last),
     );
   }
-  return offers.map((offer, at) =>
-    offer(at === offers.length - 1 ? ending : undefined),
-  );
+  return endingTheLast(offers, ending);
 };
 
 export const registerRegisterPage = (

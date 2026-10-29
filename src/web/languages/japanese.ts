@@ -93,6 +93,8 @@ export const japanese: Language = {
       "Googleから名前を受け取れませんでしたが、アカウントには名前が必要です。下のメールアドレスでお試しください。",
     "Google.Unreachable":
       "現在Googleに接続できません。数分後にもう一度お試しいただくか、下のメールアドレスをご利用ください。",
+    "Facebook.Refused":
+      "現在Facebookでサインインできませんでした。もう一度お試しいただくか、下のメールアドレスをご利用ください。",
     "Facebook.Unreachable":
       "現在Facebookに接続できません。数分後にもう一度お試しいただくか、下のメールアドレスをご利用ください。",
     "Registration.NotAPerson":
