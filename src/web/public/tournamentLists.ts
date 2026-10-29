@@ -458,9 +458,12 @@ const suggestionsScript = `            <script>
                   field.addEventListener("input", function () {
                     browsing = false;
                     active = -1;
-                    // A whole name has nothing left to suggest, and a list left
-                    // open under it covers whatever is beneath the field.
-                    open = !names.some(function (name) { return same(name, field.value); });
+                    // A whole name has nothing left to suggest, nor has a box
+                    // emptied, and a list left open under either covers whatever
+                    // is beneath the field.
+                    open =
+                      field.value.trim() !== "" &&
+                      !names.some(function (name) { return same(name, field.value); });
                     check();
                     draw();
                   });
