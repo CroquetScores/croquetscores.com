@@ -1157,6 +1157,7 @@ export const korean: Language = {
     "Tournament.FinishesAfterNextYear":
       "대회는 내년이 지난 뒤에 끝날 수 없어요.",
     "CreateTournament.NoSuchCountry": "국가를 선택해 주세요.",
+    "Sport.Unknown": "종목을 선택해 주세요.",
     "TournamentSubtitle.TooLong": "부제는 2000자 이하여야 해요.",
     "Tournament.NotAManager": "이 대회의 운영자만 바꿀 수 있어요.",
     "Tournament.NotAManagerOrScorer":

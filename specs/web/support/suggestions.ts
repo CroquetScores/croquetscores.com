@@ -36,6 +36,37 @@ export const listOf = async (field: Locator): Promise<Locator> => {
   return field.page().locator(`[id="${id}"]`);
 };
 
+/** What a browser says is wrong with a field, as it would show the reader. */
+export const saidInvalid = (field: {
+  readonly validationMessage: string;
+}): string => field.validationMessage;
+
+/**
+ * Whether `field` has the focus, asked again and again for as long as it takes:
+ * a field that is not left takes the focus back once the event that took it
+ * has finished, and a field that is left must be seen to stay left.
+ */
+export const keepsTheFocus = async (
+  field: Locator,
+  expected: boolean,
+): Promise<void> => {
+  const has = (): Promise<boolean> =>
+    field.evaluate(
+      (element: {
+        readonly ownerDocument: { readonly activeElement: unknown };
+      }) => element === element.ownerDocument.activeElement,
+    );
+  if (!expected) await new Promise((resolve) => setTimeout(resolve, 300));
+  const until = Date.now() + 3000;
+  for (;;) {
+    if ((await has()) === expected) return;
+    if (Date.now() > until) {
+      assert.fail(`The field ${expected ? "does not have" : "has"} the focus.`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+};
+
 /** The arrow `field` has at its end, which opens the list. */
 export const drawnArrowOf = (field: Locator): Locator =>
   field.locator("xpath=following-sibling::span");

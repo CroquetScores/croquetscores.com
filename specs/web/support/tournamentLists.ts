@@ -20,6 +20,8 @@ import { ordinal } from "./ordinals.js";
 import {
   checkSuggestions,
   drawnArrowOf,
+  keepsTheFocus,
+  saidInvalid,
   pressSuggestion,
   suggestedTo,
   whatOf,
@@ -216,9 +218,27 @@ When(
 );
 
 When(
-  /^the (enter|escape) key is pressed in the (country|region|sport) box$/,
+  /^the (enter|escape|tab) key is pressed in the (country|region|sport) box$/,
   async function (this: SpecWorld, key: string, field: string) {
-    await filterField(this, field).press(key === "enter" ? "Enter" : "Escape");
+    await filterField(this, field).press(
+      key === "enter" ? "Enter" : key === "tab" ? "Tab" : "Escape",
+    );
+  },
+);
+
+Then(
+  /^the (country|region|sport) box (has|does not have) the focus$/,
+  async function (this: SpecWorld, field: string, does: string) {
+    // A box that holds the focus takes it back a moment after it was left, so
+    // a box that was left is looked at again once that moment has passed.
+    await keepsTheFocus(filterField(this, field), does === "has");
+  },
+);
+
+Then(
+  /^the (country|region|sport) box says it needs "(.*)"$/,
+  async function (this: SpecWorld, field: string, words: string) {
+    assert.equal(await filterField(this, field).evaluate(saidInvalid), words);
   },
 );
 

@@ -1294,6 +1294,7 @@ export const german: Language = {
     "Tournament.FinishesAfterNextYear":
       "Ein Turnier kann nicht nach dem nächsten Jahr enden.",
     "CreateTournament.NoSuchCountry": "Wählen Sie das Land.",
+    "Sport.Unknown": "Wählen Sie die Sportart.",
     "TournamentSubtitle.TooLong":
       "Ein Untertitel darf höchstens 2000 Zeichen lang sein.",
     "Tournament.NotAManager":

@@ -700,6 +700,60 @@ Feature: The home page lists recent results and upcoming tournaments
       Then the suggestions of the country box are not shown
       And the country box of the filter says "New Zealand"
 
+    Scenario: A country that names nothing is not left
+      Given the browser has scripting on
+      And the home page is open
+      And "Atlantis" is typed as the country
+      When the tab key is pressed in the country box
+      Then the country box has the focus
+      And the country box says it needs "Choose the country."
+
+    Scenario: A country that is named is left
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: A country box with nothing in it is left, since nothing is any country
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And "" is typed as the country
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: A sport that names nothing is not left
+      Given the browser has scripting on
+      And the home page is open
+      And "Quidditch" is typed as the sport
+      When the tab key is pressed in the sport box
+      Then the sport box has the focus
+      And the sport box says it needs "Choose the sport."
+
+    Scenario: Escape puts back the country that was chosen, and the box can then be left
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And "Atlan" is typed as the country
+      And the escape key is pressed in the country box
+      And the escape key is pressed in the country box
+      Then the country box of the filter says "New Zealand"
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: The suggestions are closed once a name is typed in full
+      Given the browser has scripting on
+      And the home page is open
+      When "New Zealand" is typed as the country
+      Then the suggestions of the country box are not shown
+
+    Scenario: The suggestions are open while part of a name is typed
+      Given the browser has scripting on
+      And the home page is open
+      When "Zeal" is typed as the country
+      Then the suggestions of the country box are shown
+
     Scenario: Without scripting the down arrow leaves the country in the box
       Given the home page is open
       And "New Zealand" is chosen as the country

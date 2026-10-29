@@ -27,7 +27,22 @@ interface Props extends Omit<
    * is chosen.
    */
   readonly refusing?: boolean;
+  /**
+   * What is said, as a browser says what is wrong with a field, while the box
+   * holds words that name none of the choices. Given, the reader is held in the
+   * box until it names one: leaving it by the keys or the pointer puts the focus
+   * back and says so, and the form is not sent. Escape puts back the last choice
+   * made, so that being held is never being stuck.
+   */
+  readonly mustChoose?: string | undefined;
+  /** Whether nothing in the box is as much a fault, as where a choice is needed. */
+  readonly required?: boolean;
 }
+
+// Set while a box takes the focus back, so that the box the focus is taken from,
+// which is held too, does not take it back in its turn and the two go on for
+// ever.
+let takingTheFocusBack = false;
 
 /**
  * A field to type a country, a region or a sport into, which suggests the
@@ -47,6 +62,8 @@ export function NameChoice({
   value,
   onChange,
   refusing = true,
+  mustChoose,
+  required = false,
   onKeyDown,
   onBlur,
   ...rest
@@ -75,6 +92,27 @@ export function NameChoice({
   const [open, setOpen] = useState(false);
   const [browsing, setBrowsing] = useState(false);
   const [active, setActive] = useState(-1);
+  // Whether what is in the box names none of the choices, which a box that is
+  // held says to the browser, so that the browser too will not send the form.
+  const invalid =
+    mustChoose !== undefined &&
+    (typed.trim() === ""
+      ? required
+      : !choices.some((each) => sameWords(each.name, typed)));
+  useEffect(() => {
+    field.current?.setCustomValidity(invalid ? (mustChoose ?? "") : "");
+  }, [invalid, mustChoose]);
+  // The last choice that was valid, to put back: none where nothing is a fault
+  // and nothing was chosen, which is a choice of its own, and none where
+  // something is needed and nothing has been chosen yet.
+  const lastValid = useRef<string | undefined>(required ? undefined : "");
+  // Looked for in the words in the box and not in the choice the form has, which
+  // is none as soon as the words name none, and would put back nothing.
+  useEffect(() => {
+    const named = choices.find((each) => sameWords(each.name, typed));
+    if (named !== undefined) lastValid.current = named.code;
+    else if (typed.trim() === "" && !required) lastValid.current = "";
+  }, [typed, offered, required]);
   useEffect(() => {
     // Other choices are another list, as the regions are of another country,
     // and words typed towards the old ones say nothing of them, even where the
@@ -123,6 +161,7 @@ export function NameChoice({
   const choose = (choice: Choice): void => {
     setTyped(choice.name);
     told.current = choice.code;
+    lastValid.current = choice.code;
     onChange(choice.code);
     close();
   };
@@ -159,19 +198,52 @@ export function NameChoice({
           } else if (event.key === "Escape" && open) {
             event.preventDefault();
             close();
+          } else if (
+            event.key === "Escape" &&
+            invalid &&
+            lastValid.current !== undefined
+          ) {
+            // The way out of being held: what was chosen before is put back.
+            event.preventDefault();
+            const code = lastValid.current;
+            setTyped(nameOf(code));
+            told.current = code;
+            onChange(code);
           }
         }}
         onBlur={(event) => {
           onBlur?.(event);
           close();
+          const left = event.currentTarget;
+          // A window put behind another blurs its field and leaves it the one
+          // the page has focused, so nothing was left; and a box taking the
+          // focus back takes it from this one without this one being left.
+          if (
+            !invalid ||
+            takingTheFocusBack ||
+            left.ownerDocument.activeElement === left
+          ) {
+            return;
+          }
+          // Once the event that took the focus has finished, since a focus
+          // given back inside it is taken away again by the move in progress.
+          setTimeout(() => {
+            if (left.validity.valid) return;
+            takingTheFocusBack = true;
+            left.focus();
+            takingTheFocusBack = false;
+            left.reportValidity();
+          }, 0);
         }}
         onChange={(event) => {
           const words = event.target.value;
           setTyped(words);
           setBrowsing(false);
-          setOpen(true);
           setActive(-1);
           const named = choices.find((each) => sameWords(each.name, words));
+          // A whole name has nothing left to suggest, and a list left open
+          // under it covers whatever is beneath the field; typing on opens it.
+          setOpen(named === undefined);
           told.current = named?.code ?? (refusing ? words.trim() : "");
           onChange(told.current);
         }}

@@ -319,6 +319,15 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
         choices={from}
         value={chosen ?? ""}
         refusing={false}
+        // A region is narrowed by words as often as chosen; a country and a
+        // sport are chosen, and what names neither is not left in the box.
+        mustChoose={
+          field === "country"
+            ? say("CreateTournament.NoSuchCountry")
+            : field === "sport"
+              ? say("Sport.Unknown")
+              : undefined
+        }
         onChange={(code) => {
           // Words that name nothing choose nothing, and a choice that is
           // already none is not made again, which would put a step in the

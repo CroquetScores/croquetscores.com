@@ -1233,6 +1233,7 @@ export const dutch: Language = {
     "Tournament.FinishesAfterNextYear":
       "Een toernooi kan niet na volgend jaar eindigen.",
     "CreateTournament.NoSuchCountry": "Kies het land.",
+    "Sport.Unknown": "Kies de sport.",
     "TournamentSubtitle.TooLong":
       "Een ondertitel mag uit hooguit 2000 tekens bestaan.",
     "Tournament.NotAManager":

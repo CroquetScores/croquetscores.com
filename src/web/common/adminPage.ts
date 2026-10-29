@@ -47,7 +47,7 @@ export const adminBuildHeader = "x-admin-build";
 // is why each screen's scenarios read a refusal's own words and not only its
 // code: the words for any would pass for it otherwise.
 const saidByTheAdmin =
-  /^(admin\.|tournamentList\.filter\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator|WorldRankingLists\.|ImportErrorKept.|DatabaseAccess.)/;
+  /^(admin\.|tournamentList\.filter\.|Tournament|CreateTournament\.|UpdateTournament\.|Sport\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator|WorldRankingLists\.|ImportErrorKept.|DatabaseAccess.)/;
 
 // The admin's words in the reader's language, each one the site's first
 // language has, so that a word missing from the reader's is said in that one

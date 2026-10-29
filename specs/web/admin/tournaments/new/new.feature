@@ -246,6 +246,16 @@ Feature: A new tournament is created in the admin
       Then the sport chosen is "Golf Croquet"
       And the suggestions of the "Sport" are not shown
 
+    Scenario: The suggestions are closed once a name is typed in full
+      Given the new tournament page is open
+      When "New Zealand" is typed as the "Country"
+      Then the suggestions of the "Country" are not shown
+
+    Scenario: The suggestions are open while part of a name is typed
+      Given the new tournament page is open
+      When "Zeal" is typed as the "Country"
+      Then the suggestions of the "Country" are shown
+
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open
       When "Golf" is typed as the "Sport"
@@ -267,16 +277,52 @@ Feature: A new tournament is created in the admin
       When the country "New Zealand" is chosen
       Then the country chosen is "New Zealand"
 
-    Scenario: A country that is not offered is refused beside the country
+    Scenario: A country that is not offered is not left
+      Given the new tournament page is open
+      And "Atlantis" is typed as the "Country"
+      When the tab key is pressed in the "Country"
+      Then "Country" has the focus
+      And "Country" says it needs "Choose the country."
+
+    Scenario: A country that is named is left
+      Given the new tournament page is open
+      And the country "New Zealand" is chosen
+      When the tab key is pressed in the "Country"
+      Then "Country" does not have the focus
+
+    Scenario: A country that has not been chosen is not left
+      Given the new tournament page is open
+      When the tab key is pressed in the "Country"
+      Then "Country" has the focus
+      And "Country" says it needs "Choose the country."
+
+    Scenario: Escape puts back the country that was chosen, and the field can then be left
+      Given the new tournament page is open
+      And the country "New Zealand" is chosen
+      And "Atlan" is typed as the "Country"
+      And the escape key is pressed in the "Country"
+      And the escape key is pressed in the "Country"
+      When the tab key is pressed in the "Country"
+      Then the country chosen is "New Zealand"
+      And "Country" does not have the focus
+
+    Scenario: A country that is not offered is not sent
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
       And "2026-10-05" is typed as the "Finishes"
       And "Atlantis" is typed as the "Country"
       When "Create Tournament" is pressed
-      Then "Country" is refused with "CreateTournament.NoSuchCountry"
+      Then "Country" says it needs "Choose the country."
 
-    Scenario: A sport there is not is refused beside the sport
+    Scenario: A sport there is not is not left
+      Given the new tournament page is open
+      And "Quidditch" is typed as the "Sport"
+      When the tab key is pressed in the "Sport"
+      Then "Sport" has the focus
+      And "Sport" says it needs "Choose the sport."
+
+    Scenario: A sport there is not is not sent
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
@@ -284,7 +330,7 @@ Feature: A new tournament is created in the admin
       And the country "Fiji" is chosen
       And "Quidditch" is typed as the "Sport"
       When "Create Tournament" is pressed
-      Then "Sport" is refused with "Sport.Unknown"
+      Then "Sport" says it needs "Choose the sport."
 
     Scenario: A region that is not offered is refused beside the region
       Given the new tournament page is open
@@ -511,13 +557,14 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then "Finishes" is refused with "Tournament.FinishesAfterNextYear"
 
-    Scenario: A tournament with no country is refused beside the country
+    Scenario: A tournament with no country is not sent
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
       And "2026-10-05" is typed as the "Finishes"
       When "Create Tournament" is pressed
-      Then "Country" is refused with "CreateTournament.NoSuchCountry"
+      Then "Country" says it needs "Choose the country."
+      And "Country" has the focus
 
     Scenario: A subtitle longer than a subtitle may be is refused beside it
       Given the new tournament page is open

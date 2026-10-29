@@ -852,6 +852,53 @@ Feature: The admin lists the reader's tournaments
       Then the suggestions of the country box are not shown
       And the country box of the filter says "New Zealand"
 
+    Scenario: A country that names nothing is not left
+      Given the admin is open
+      And "Atlantis" is typed as the country
+      When the tab key is pressed in the country box
+      Then the country box has the focus
+      And the country box says it needs "Choose the country."
+
+    Scenario: A country that is named is left
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: A country box with nothing in it is left, since nothing is any country
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And "" is typed as the country
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: A sport that names nothing is not left
+      Given the admin is open
+      And "Quidditch" is typed as the sport
+      When the tab key is pressed in the sport box
+      Then the sport box has the focus
+      And the sport box says it needs "Choose the sport."
+
+    Scenario: Escape puts back the country that was chosen, and the box can then be left
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And "Atlan" is typed as the country
+      And the escape key is pressed in the country box
+      And the escape key is pressed in the country box
+      Then the country box of the filter says "New Zealand"
+      When the tab key is pressed in the country box
+      Then the country box does not have the focus
+
+    Scenario: The suggestions are closed once a name is typed in full
+      Given the admin is open
+      When "New Zealand" is typed as the country
+      Then the suggestions of the country box are not shown
+
+    Scenario: The suggestions are open while part of a name is typed
+      Given the admin is open
+      When "Zeal" is typed as the country
+      Then the suggestions of the country box are shown
+
     Scenario: A name that is half deleted stays in the box to go on editing
       Given the admin is open
       And "New Zealand" is chosen as the country

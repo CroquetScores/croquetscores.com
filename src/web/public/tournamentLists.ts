@@ -336,6 +336,7 @@ ${names.map((name) => `              <option value="${escape(name)}"></option>`)
 const suggestionsScript = `            <script>
               (function () {
                 var form = document.currentScript.parentElement;
+                var taking = { now: false };
                 var same = function (one, other) {
                   return one.trim().toLowerCase() === other.trim().toLowerCase();
                 };
@@ -367,6 +368,21 @@ const suggestionsScript = `            <script>
                   var browsing = false;
                   var active = -1;
                   var shown = [];
+                  // Where the box is to be held: words that name none of the
+                  // names are said to the browser as a fault, so that the form
+                  // is not sent, and leaving the box puts the focus back. The
+                  // last name the box held is what Escape puts back.
+                  var mustChoose = field.getAttribute("data-must-choose");
+                  var lastValid = "";
+                  var check = function () {
+                    var typed = field.value;
+                    var named = names.filter(function (name) { return same(name, typed); })[0];
+                    if (named !== undefined) lastValid = named;
+                    else if (typed.trim() === "") lastValid = "";
+                    field.setCustomValidity(
+                      mustChoose && typed.trim() !== "" && named === undefined ? mustChoose : ""
+                    );
+                  };
                   var draw = function () {
                     var typed = field.value;
                     var whole = names.some(function (name) { return same(name, typed); });
@@ -408,6 +424,7 @@ const suggestionsScript = `            <script>
                   };
                   var choose = function (name) {
                     field.value = name;
+                    check();
                     close();
                   };
                   var openAll = function () {
@@ -427,11 +444,28 @@ const suggestionsScript = `            <script>
                   });
                   field.addEventListener("input", function () {
                     browsing = false;
-                    open = true;
                     active = -1;
+                    // A whole name has nothing left to suggest, and a list left
+                    // open under it covers whatever is beneath the field.
+                    open = !names.some(function (name) { return same(name, field.value); });
+                    check();
                     draw();
                   });
-                  field.addEventListener("blur", close);
+                  field.addEventListener("blur", function () {
+                    close();
+                    // A window put behind another blurs its field and leaves it
+                    // the one the page has focused: nothing was left. A box that
+                    // takes the focus back takes it from the other, which is not
+                    // left either.
+                    if (field.validity.valid || taking.now || document.activeElement === field) return;
+                    setTimeout(function () {
+                      if (field.validity.valid) return;
+                      taking.now = true;
+                      field.focus();
+                      taking.now = false;
+                      field.reportValidity();
+                    }, 0);
+                  });
                   field.addEventListener("keydown", function (event) {
                     if (event.key === "ArrowDown") {
                       event.preventDefault();
@@ -450,8 +484,14 @@ const suggestionsScript = `            <script>
                     } else if (event.key === "Escape" && open) {
                       event.preventDefault();
                       close();
+                    } else if (event.key === "Escape" && !field.validity.valid) {
+                      event.preventDefault();
+                      field.value = lastValid;
+                      check();
+                      draw();
                     }
                   });
+                  check();
                   draw();
                 });
               })();
@@ -468,9 +508,10 @@ const field = (
   any: string,
   chosen: string | undefined,
   names: readonly string[],
+  mustChoose?: string,
 ): string => `            <span class="tournament-filter-field">
               <label for="filter-${name}">${escape(label)}</label>
-              <input id="filter-${name}" name="${name}" type="text" list="filter-${name}-names" autocomplete="off" placeholder="${escape(any)}" value="${escape(chosen ?? "")}" />
+              <input id="filter-${name}" name="${name}" type="text" list="filter-${name}-names" autocomplete="off" placeholder="${escape(any)}" value="${escape(chosen ?? "")}"${mustChoose === undefined ? "" : ` data-must-choose="${escape(mustChoose)}"`} />
 ${offers(names, `filter-${name}-names`)}
             </span>`;
 
@@ -533,6 +574,7 @@ ${[
     say("tournamentList.filter.anyCountry"),
     named(countries, asked.chose.country),
     countries.map((each) => each.name),
+    say("CreateTournament.NoSuchCountry"),
   ),
   ...(country === undefined || !isDivided(country)
     ? []
@@ -553,6 +595,7 @@ ${[
           say("tournamentList.filter.anySport"),
           named(sports, asked.chose.sport),
           sports.map((sport) => sport.name),
+          say("Sport.Unknown"),
         ),
       ]
     : []),

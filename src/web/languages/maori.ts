@@ -1184,6 +1184,7 @@ export const maori: Language = {
     "Tournament.FinishesAfterNextYear":
       "Kāore e taea e tētahi whakataetae te mutu i muri i te tau e haere mai nei.",
     "CreateTournament.NoSuchCountry": "Kōwhiria te whenua.",
+    "Sport.Unknown": "Kōwhiria te hākinakina.",
     "TournamentSubtitle.TooLong":
       "Kaua e neke atu i te 2000 pūāhua te taitara iti.",
     "Tournament.NotAManager":

@@ -1224,6 +1224,7 @@ export const afrikaans: Language = {
     "Tournament.FinishesAfterNextYear":
       "'n Toernooi kan nie na volgende jaar eindig nie.",
     "CreateTournament.NoSuchCountry": "Kies die land.",
+    "Sport.Unknown": "Kies die sport.",
     "TournamentSubtitle.TooLong":
       "'n Onderskrif mag nie langer as 2000 karakters wees nie.",
     "Tournament.NotAManager":

@@ -361,6 +361,8 @@ export const TournamentForm = ({
                         <NameChoice
                           {...tied}
                           choices={offered.sports}
+                          mustChoose={say("Sport.Unknown")}
+                          required
                           value={sport}
                           onChange={setSport}
                         />
@@ -379,6 +381,8 @@ export const TournamentForm = ({
                   {(tied) => (
                     <NameChoice
                       {...tied}
+                      mustChoose={say("CreateTournament.NoSuchCountry")}
+                      required
                       choices={inCountryGroups(
                         offered.countries,
                         document.documentElement.lang || "en",

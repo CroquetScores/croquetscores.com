@@ -7,7 +7,9 @@ import {
   checkSuggestions,
   controlOf,
   drawnArrowOf,
+  keepsTheFocus,
   pressSuggestion,
+  saidInvalid,
   suggestedTo,
   whatOf,
 } from "../../../support/suggestions.js";
@@ -265,6 +267,38 @@ Then(
         named.y + named.height / 2 < typed.y,
         `The label is at ${String(named.y)} and what is typed at ${String(typed.y)}.`,
       );
+    });
+  },
+);
+
+When(
+  "the tab key is pressed in the {string}",
+  async function (this: SpecWorld, label: string) {
+    await drawn(this);
+    await field(this, label).press("Tab");
+  },
+);
+
+When(
+  "the escape key is pressed in the {string}",
+  async function (this: SpecWorld, label: string) {
+    await drawn(this);
+    await field(this, label).press("Escape");
+  },
+);
+
+Then(
+  "{string} does not have the focus",
+  async function (this: SpecWorld, label: string) {
+    await keepsTheFocus(field(this, label), false);
+  },
+);
+
+Then(
+  "{string} says it needs {string}",
+  async function (this: SpecWorld, label: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await field(this, label).evaluate(saidInvalid), words);
     });
   },
 );
