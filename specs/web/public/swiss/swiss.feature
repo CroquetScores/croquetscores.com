@@ -197,6 +197,13 @@ Feature: A Swiss's grid ranks its players with their results
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the first result of "Sam Someone" in the Swiss is "J. Dijk +4"
 
+    Scenario: A result for a player of one word is that word
+      Given "organiser@example.com" has added the player "Madonna" to "Spring Open"
+      And "organiser@example.com" has entered the player "Madonna" in "Zed" of "Spring Open"
+      And "Sam Someone" has beaten "Madonna" 7 to 3 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "Madonna +4"
+
     Scenario: A number after a name is left out of a result
       Given "organiser@example.com" has added the player "Andrew Hobbs (2)" to "Spring Open"
       And "organiser@example.com" has entered the player "Andrew Hobbs (2)" in "Zed" of "Spring Open"
