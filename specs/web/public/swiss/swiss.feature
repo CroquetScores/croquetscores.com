@@ -24,7 +24,7 @@ Feature: A Swiss's grid ranks its players with their results
 
   A player's results are each game they played, in the order the games were
   added, each said as the old site said it: the opponent, by the first letter
-  of their first name and their last name, as "C.Denny", their last name
+  of their first name and their last name, as "C. Denny", their last name
   being their last word with a letter in it, so that a number added to tell
   two players of one name apart, as "Andrew Hobbs (2)", is left out; and the
   margin, as
@@ -156,53 +156,53 @@ Feature: A Swiss's grid ranks its players with their results
     Scenario: A game won is the opponent and the margin with a plus
       Given "Sam Someone" has beaten "Chris Third" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "C.Third +4"
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +4"
 
     Scenario: A game lost is the opponent and the margin with a minus
       Given "Sam Someone" has beaten "Chris Third" 7 to 6 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Chris Third" in the Swiss is "S.Someone -1"
+      Then the first result of "Chris Third" in the Swiss is "S. Someone -1"
 
     Scenario: The winner's peeling follows the margin
       Given "Sam Someone" has beaten "Chris Third" 26tp to 17 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "C.Third +9tp"
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +9tp"
 
     Scenario: The loser sees the winner's peeling after their own margin
       Given "Sam Someone" has beaten "Chris Third" 26tp to 17 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Chris Third" in the Swiss is "S.Someone -9tp"
+      Then the first result of "Chris Third" in the Swiss is "S. Someone -9tp"
 
     Scenario: The loser's peeling follows the winner's
       Given "Sam Someone" has beaten "Chris Third" 26tp to 17p in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "C.Third +9tpp"
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +9tpp"
 
     Scenario: A game with no peeling has none shown
       Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "C.Third +9"
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +9"
 
     Scenario: The results are in the order the games were added
       Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
       And "Chris Third" has beaten "Sam Someone" 7 to 6 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "A.Another +3"
-      And the second result of "Sam Someone" in the Swiss is "C.Third -1"
+      Then the first result of "Sam Someone" in the Swiss is "A. Another +3"
+      And the second result of "Sam Someone" in the Swiss is "C. Third -1"
 
     Scenario: A result is the opponent's last name after the first letter of their first
       Given "organiser@example.com" has added the player "Jan van Dijk" to "Spring Open"
       And "organiser@example.com" has entered the player "Jan van Dijk" in "Zed" of "Spring Open"
       And "Sam Someone" has beaten "Jan van Dijk" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "J.Dijk +4"
+      Then the first result of "Sam Someone" in the Swiss is "J. Dijk +4"
 
     Scenario: A number after a name is left out of a result
       Given "organiser@example.com" has added the player "Andrew Hobbs (2)" to "Spring Open"
       And "organiser@example.com" has entered the player "Andrew Hobbs (2)" in "Zed" of "Spring Open"
       And "Sam Someone" has beaten "Andrew Hobbs (2)" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "A.Hobbs +4"
+      Then the first result of "Sam Someone" in the Swiss is "A. Hobbs +4"
 
     Scenario: A result names the opponent in full for whatever reads the page aloud
       Given "Sam Someone" has beaten "Chris Third" 7 to 3 in "Zed" of "Spring Open"
@@ -225,7 +225,7 @@ Feature: A Swiss's grid ranks its players with their results
       Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
       And "organiser@example.com" has withdrawn the score of "Sam Someone" beating "Alex Another" in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is "A.Another +3"
+      Then the first result of "Sam Someone" in the Swiss is "A. Another +3"
 
     Scenario: A withdrawn game is marked as withdrawn
       Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Zed" of "Spring Open"
