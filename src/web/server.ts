@@ -13,12 +13,7 @@ import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
 import { createHash } from "node:crypto";
-import {
-  createReadStream,
-  existsSync,
-  readdirSync,
-  readFileSync,
-} from "node:fs";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
@@ -1548,21 +1543,6 @@ export const buildApplication = async (
   registerSecurityHeaders(server);
   registerSearchEngines(server, config.searchEnginesWelcome);
   registerBetaBanner(server);
-
-  // Plain pages for trying out how a browser behaves, served from the root as
-  // they are named. Read on each request so that a page can be edited without
-  // restarting the server.
-  const debugRoot = join(repositoryRoot, "debug");
-  if (existsSync(debugRoot)) {
-    for (const name of readdirSync(debugRoot)) {
-      if (!name.endsWith(".html")) continue;
-      server.get(`/${name}`, (_request, reply) =>
-        reply
-          .type("text/html; charset=utf-8")
-          .send(readFileSync(join(debugRoot, name))),
-      );
-    }
-  }
 
   // Every answer of the API names the build the site is serving, so that an
   // admin left open across a deploy learns of it (newerBuild.feature).
