@@ -26,6 +26,7 @@ import { themeOf } from "../common/theme.js";
 import {
   askedOf,
   filter,
+  keepingFilter,
   refusedWith,
   sendPage,
   sendRefused,
@@ -100,11 +101,13 @@ export const registerYearSportPage = (
         request,
         render(assets, {
           ...shell,
-          ...yearsOf(
-            years,
-            speaking,
-            year,
-            (each) => `/${String(each)}/${sport.code}`,
+          ...yearsOf(years, speaking, year, (each) =>
+            // The sport is in the path, so it is left out of what is kept and
+            // not said twice, where the two could disagree.
+            keepingFilter(
+              { ...asked.chose, sport: undefined },
+              `/${String(each)}/${sport.code}`,
+            ),
           ),
           body: `${filter(request, asked, speaking, listed.length)}
 ${table(

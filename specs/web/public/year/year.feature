@@ -568,6 +568,53 @@ Feature: A year's page lists every tournament starting in it
       When the year 2026 is pressed
       Then the address is "/2026"
 
+    Scenario: Another year keeps the country chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for 2024 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the year 2026 is pressed
+      Then the country chosen is "New Zealand"
+
+    Scenario: Another year keeps the region chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for 2024 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      When the year 2026 is pressed
+      Then the region chosen is "Canterbury"
+
+    Scenario: Another year keeps the sport chosen
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for 2024 is open
+      And "Association Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the year 2026 is pressed
+      Then the sport chosen is "Association Croquet"
+
+    Scenario: Another year does not keep the sorting
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for 2024 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the column "Name" of the year's tournaments is pressed
+      When the year 2026 is pressed
+      Then the address is "/2026?country=nz"
+
     Scenario: A year with no tournaments marks no year
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2024-10-03"

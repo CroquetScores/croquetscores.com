@@ -22,6 +22,7 @@ import { themeOf } from "../common/theme.js";
 import {
   askedOf,
   filter,
+  keepingFilter,
   refusedWith,
   sendPage,
   sendRefused,
@@ -79,7 +80,9 @@ export const registerYearPage = (
       request,
       render(assets, {
         ...shell,
-        ...yearsOf(years, speaking, year),
+        ...yearsOf(years, speaking, year, (each) =>
+          keepingFilter(asked.chose, `/${String(each)}`),
+        ),
         body: `${filter(request, asked, speaking, listed.length)}
 ${table(
   {
