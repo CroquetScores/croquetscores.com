@@ -185,36 +185,45 @@ export const askedOf = (
   };
 };
 
-// The page's address with the sorting `changed` and the filter `chose` said
-// of it, and everything else as asked.
-const addressWith = (
-  asked: Asked,
-  changed: Readonly<Record<string, string>>,
-  chose: FilterChosen = asked.chose,
+// The address of the page at `path` with `chose` and `sorting` said of it.
+const addressOf = (
+  path: string,
+  chose: FilterChosen,
+  sorting: Readonly<Record<string, string | undefined>>,
 ): string => {
   const said = new URLSearchParams();
   const each: [string, string | undefined][] = [
     ["country", chose.country],
     ["region", chose.region],
     ["sport", chose.sport],
-    ...Object.entries({ ...asked.sorting, ...changed }),
+    ...Object.entries(sorting),
   ];
   for (const [name, value] of each) {
     if (value !== undefined) said.set(name, value);
   }
   const query = said.toString();
-  return query === "" ? asked.path : `${asked.path}?${query}`;
+  return query === "" ? path : `${path}?${query}`;
 };
+
+// The page's address with the sorting `changed` and the filter `chose` said
+// of it, and everything else as asked.
+const addressWith = (
+  asked: Asked,
+  changed: Readonly<Record<string, string>>,
+  chose: FilterChosen = asked.chose,
+): string => addressOf(asked.path, chose, { ...asked.sorting, ...changed });
 
 /**
  * `path` with what the reader narrowed by, for a link that moves to another
  * page of the same lists: a year's tournaments, say, from the home page, or
  * another year's from this one. The filter is what the reader is looking at, so
  * it goes with them. The sorting does not, since the lists of one page are not
- * the lists of another and a name kept for one means nothing to the next.
+ * the lists of another and a name kept for one means nothing to the next. It is
+ * said to this function by what it is given and not by what else a page asked,
+ * so that something a page comes to carry is not taken to another by accident.
  */
 export const keepingFilter = (asked: Asked, path: string): string =>
-  addressWith({ ...asked, path, sorting: {} }, {});
+  addressOf(path, asked.chose, {});
 
 // A table ---------------------------------------------------------------------------
 

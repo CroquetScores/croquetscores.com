@@ -383,6 +383,29 @@ Feature: A sport's page in a year lists every tournament of it starting then
       When the year 2026 is pressed
       Then the region chosen is "Canterbury"
 
+    Scenario: Another year names the country chosen and not the sport
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for "ac" in 2024 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the year 2026 is pressed
+      Then the address is "/2026/ac?country=nz"
+
+    Scenario: Another year does not keep the sorting
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2024-10-03"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-03"
+      And the page for "ac" in 2024 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the column "Name" of the sport's tournaments is pressed
+      When the year 2026 is pressed
+      Then the address is "/2026/ac?country=nz"
+
     Scenario: A year with none of the sport's tournaments marks no year
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2024-10-03"
