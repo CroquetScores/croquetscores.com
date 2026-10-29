@@ -28,9 +28,14 @@ export const useRepresenting = (
       return;
     }
     let current = true;
+    // What is asked of a text that has been typed past is not waited for: a
+    // request left running for each pause in the typing is a query that runs
+    // for nobody.
+    const request = new AbortController();
     const paused = setTimeout(() => {
       void fetch(`/api/site/representing?typed=${encodeURIComponent(typed)}`, {
         headers: { accept: "application/json" },
+        signal: request.signal,
       })
         .then(async (response) =>
           response.ok
@@ -54,6 +59,7 @@ export const useRepresenting = (
     }, PAUSE_MILLISECONDS);
     return () => {
       current = false;
+      request.abort();
       clearTimeout(paused);
     };
   }, [typed, asking]);
