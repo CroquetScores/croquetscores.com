@@ -881,6 +881,13 @@ Feature: The admin lists the reader's tournaments
       When "Australia" is chosen as the country
       Then the tournament "Summer Open" is listed
 
+    Scenario: Words typed towards a region are cleared when another country is chosen
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And "Cant" is typed as the region
+      When "Australia" is chosen as the country
+      Then the region box of the filter says ""
+
     Scenario: A sport the list holds is offered
       When the admin is opened
       Then the filter offers "Golf Croquet" as a sport

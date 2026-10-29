@@ -59,8 +59,14 @@ export function NameChoice({
   // What the choices are rather than which array holds them, since a form that
   // builds the array again as it is drawn has not changed them.
   const offered = JSON.stringify(choices.map((each) => [each.code, each.name]));
+  const lastOffered = useRef(offered);
   useEffect(() => {
-    if (value === told.current) return;
+    // Other choices are another list, as the regions are of another country,
+    // and words typed towards the old ones say nothing of them, even where the
+    // choice made is none both before and after.
+    const another = offered !== lastOffered.current;
+    lastOffered.current = offered;
+    if (value === told.current && !another) return;
     // Taken from the form, so nothing the box told it is still the choice: were
     // it left, the form coming back to that code (the browser's Forward, say)
     // would be taken for the box's own, and the box would not say so.
