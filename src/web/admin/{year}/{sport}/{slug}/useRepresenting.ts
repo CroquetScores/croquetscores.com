@@ -7,6 +7,10 @@ import type { Matching } from "./WorldRankingPlayers.js";
 // rather than once a letter.
 const PAUSE_MILLISECONDS = 150;
 
+// What the server finds nothing for is not asked of it: one letter begins too
+// many to choose from (RepresentingMatching.feature).
+const FEWEST_CHARACTERS = 2;
+
 /**
  * What players have been added representing that `typed` may be the start of
  * (player.feature): the answer for what was typed last, kept while what is
@@ -23,7 +27,7 @@ export const useRepresenting = (
     // What was offered for what was typed before is no answer for what is
     // typed after the field has been emptied or left, so it is not kept to be
     // shown for the next.
-    if (!asking || typed.trim() === "") {
+    if (!asking || [...typed.trim()].length < FEWEST_CHARACTERS) {
       setOffered(undefined);
       return;
     }
@@ -63,5 +67,7 @@ export const useRepresenting = (
       clearTimeout(paused);
     };
   }, [typed, asking]);
-  return asking && typed.trim() !== "" ? offered : undefined;
+  return asking && [...typed.trim()].length >= FEWEST_CHARACTERS
+    ? offered
+    : undefined;
 };

@@ -7,7 +7,7 @@ interface Choice {
   readonly name: string;
 }
 
-interface Props extends Omit<
+interface Base extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "value" | "onChange" | "list" | "type" | "role"
 > {
@@ -27,17 +27,27 @@ interface Props extends Omit<
    * is chosen.
    */
   readonly refusing?: boolean;
-  /**
-   * What is said, as a browser says what is wrong with a field, while the box
-   * holds words that name none of the choices. Given, the reader is held in the
-   * box until it names one: leaving it by the keys or the pointer puts the focus
-   * back and says so, and the form is not sent. Escape puts back the last choice
-   * made, so that being held is never being stuck.
-   */
-  readonly mustChoose?: string | undefined;
-  /** Whether nothing in the box is as much a fault, as where a choice is needed. */
-  readonly required?: boolean;
 }
+
+/**
+ * A box that holds the reader. `mustChoose` is what is said, as a browser says
+ * what is wrong with a field, while the box holds words that name none of the
+ * choices: the reader is held in the box until it names one, leaving it by the
+ * keys or the pointer puts the focus back and says so, and the form is not
+ * sent. Escape puts back the last choice made, so that being held is never
+ * being stuck. `required` makes nothing in the box as much a fault, as where a
+ * choice is needed. It is a type of its own so that `required` cannot be given
+ * where nothing holds, which would do nothing.
+ */
+type Held = {
+  readonly mustChoose: string;
+  readonly required?: boolean;
+};
+type Free = {
+  readonly mustChoose?: undefined;
+  readonly required?: undefined;
+};
+type Props = Base & (Held | Free);
 
 // Set while a box takes the focus back, so that the box the focus is taken from,
 // which is held too, does not take it back in its turn and the two go on for
@@ -120,6 +130,8 @@ export function NameChoice({
     // choice made is none both before and after.
     const another = offered !== lastOffered.current;
     lastOffered.current = offered;
+    // The name the keys are on was one of the old list.
+    if (another) setActive(-1);
     if (value === told.current && !another) return;
     // Taken from the form, so nothing the box told it is still the choice: were
     // it left, the form coming back to that code (the browser's Forward, say)
@@ -197,11 +209,15 @@ export function NameChoice({
           } else if (event.key === "ArrowUp" && open) {
             event.preventDefault();
             setActive((now) => Math.max(now - 1, 0));
-          } else if (event.key === "Enter" && open && active >= 0) {
-            // Choosing is not sending the form.
+          } else if (
+            event.key === "Enter" &&
+            open &&
+            suggested[active] !== undefined
+          ) {
+            // Choosing is not sending the form: only where there is something
+            // the keys are on to choose.
             event.preventDefault();
-            const choice = suggested[active];
-            if (choice !== undefined) choose(choice);
+            choose(suggested[active]);
           } else if (event.key === "Escape" && open) {
             event.preventDefault();
             close();
