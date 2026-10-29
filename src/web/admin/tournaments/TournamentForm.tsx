@@ -131,6 +131,10 @@ export const TournamentForm = ({
   const [format, setFormat] = useState(begins?.format ?? "");
   const [country, setCountry] = useState(begins?.country ?? "");
   const [region, setRegion] = useState(begins?.region ?? "");
+  // The country the region was chosen in. It is another country that leaves
+  // none, and not the words in the box while they name none, as they do part
+  // way through a correction, or name the same country again.
+  const regionIsOf = useRef(begins?.country ?? "");
   const [subtitle, setSubtitle] = useState(begins?.subtitle ?? "");
   // Unsaid until the reader ticks or unticks it, when it is whatever the
   // format draws to begin with; a tournament being changed has said already.
@@ -390,7 +394,12 @@ export const TournamentForm = ({
                       value={country}
                       onChange={(code) => {
                         setCountry(code);
-                        setRegion("");
+                        if (
+                          offered.countries.some((each) => each.code === code)
+                        ) {
+                          if (code !== regionIsOf.current) setRegion("");
+                          regionIsOf.current = code;
+                        }
                       }}
                     />
                   )}

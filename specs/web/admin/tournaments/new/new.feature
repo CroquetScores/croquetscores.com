@@ -312,6 +312,22 @@ Feature: A new tournament is created in the admin
       When "Golf" is typed as the "Sport"
       Then the form does not offer the sport "Ricochet"
 
+    Scenario: Correcting the words of the country keeps the region it names again
+      Given the new tournament page is open
+      And the country "Australia" is chosen
+      And the region "Victoria" is chosen
+      And "Austral" is typed as the "Country"
+      When the country "Australia" is chosen
+      Then the region chosen is "Victoria"
+
+    Scenario: Another country chosen leaves no region
+      Given the new tournament page is open
+      And the country "Australia" is chosen
+      And the region "Victoria" is chosen
+      When the country "New Zealand" is chosen
+      And the country "Australia" is chosen
+      Then the region chosen is ""
+
     Scenario: A part of a name offers the regions that have it
       Given the new tournament page is open
       And the country "Australia" is chosen

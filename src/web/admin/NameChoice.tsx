@@ -236,7 +236,9 @@ export function NameChoice({
           // Once the event that took the focus has finished, since a focus
           // given back inside it is taken away again by the move in progress.
           setTimeout(() => {
-            if (left.validity.valid) return;
+            // Not a box the page has gone on from: a dialog closed or a link
+            // followed by the press that left it.
+            if (!left.isConnected || left.validity.valid) return;
             takingTheFocusBack = true;
             left.focus();
             takingTheFocusBack = false;
