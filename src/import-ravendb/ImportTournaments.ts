@@ -260,6 +260,16 @@ const countryOfAddress: Readonly<Record<string, string>> = {
   "2025/gc/auckland-interclub": "nz",
   "2025/gc/auckland-interclub-division-1": "nz",
   "2025/gc/welsh-team-golf-final": "wales",
+  "2026/ac/hurlingham-club-england-croquet-club-wolkersdorf-austria": "england",
+  "2017/gc/womens-swiss-championship": "ch",
+  "2024/gc/3rd-championship-berlin": "de",
+  "2024/gc/paske": "no",
+  "2024/gc/lutefisk-croquet": "no",
+  "2024/gc/host-croquet": "no",
+  "2024/gc/croquetvs-club-advantage-championship": "ch",
+  "2024/gc/soaad-abotaleb-cup": "eg",
+  "2024/gc/kohlhof": "de",
+  "2025/gc/zurich-advantage": "ch",
 };
 
 // The names of Spanish clubs, which a tournament's name has as a word of its
@@ -339,6 +349,18 @@ const namesSayingACountry: readonly {
     country: "eg",
   },
   { says: (name) => wholeWord("Greece", "i").test(name), country: "gr" },
+  { says: (name) => name.toLowerCase().includes("german"), country: "de" },
+  // Austrian and not Austria, which a name has for the place the other side
+  // came from as well as for where it was played.
+  { says: (name) => name.toLowerCase().includes("austrian"), country: "at" },
+  { says: (name) => beginsWithAWord("Swiss|CERN", name), country: "ch" },
+  {
+    says: (name) =>
+      beginsWithAWord("Czech", name) ||
+      name.toLowerCase().includes("czech republic"),
+    country: "cz",
+  },
+  { says: (name) => name.toLowerCase().includes("tonic"), country: "se" },
   // New South Wales is before the rules that follow and every country in a name
   // (countryNamedIn), which would take the Wales in it for Wales.
   {
