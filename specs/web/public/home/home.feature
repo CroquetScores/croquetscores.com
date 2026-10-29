@@ -649,6 +649,11 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then "Spring Open" is in the upcoming tournaments
 
+    Scenario: A country's code in capitals is the country as its code is
+      When the home page is opened for the country "NZ"
+      Then "Spring Open" is in the upcoming tournaments
+      And "Summer Open" is not in the upcoming tournaments
+
     Scenario: A country chosen does not list another country's tournaments
       Given the home page is open
       And "New Zealand" is chosen as the country

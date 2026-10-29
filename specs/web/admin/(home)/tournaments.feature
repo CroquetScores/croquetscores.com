@@ -946,6 +946,14 @@ Feature: The admin lists the reader's tournaments
       When the browser goes back
       Then the tournament "Summer Open" is listed
 
+    Scenario: The box says the country again when the browser goes back and then forward
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And the browser goes back
+      And the country box of the filter says ""
+      When the browser goes forward
+      Then the country box of the filter says "New Zealand"
+
     Scenario: Choosing another year clears the choices
       Given "organiser@example.com" has created the tournament "Winter Open"
       And the tournament "Winter Open" starts on "2025-06-07"

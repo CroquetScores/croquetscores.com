@@ -344,6 +344,10 @@ When("the browser goes back", async function (this: SpecWorld) {
   await this.browserPage.goBack();
 });
 
+When("the browser goes forward", async function (this: SpecWorld) {
+  await this.browserPage.goForward();
+});
+
 When(
   /^the window is (?:narrowed|widened) to (\d+) pixels$/,
   async function (this: SpecWorld, width: string) {

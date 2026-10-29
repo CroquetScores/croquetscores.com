@@ -25,6 +25,7 @@ import type { Assets } from "../common/assets.js";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { escape } from "../common/escape.js";
+import { sameWords } from "../common/sameWords.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
@@ -117,10 +118,6 @@ export interface Asked {
   readonly sorting: Readonly<Record<string, string | undefined>>;
 }
 
-// Capital letters are not worth a refusal in a name that is typed.
-const sameWords = (name: string, typed: string | undefined): boolean =>
-  typed !== undefined && name.toLowerCase() === typed.trim().toLowerCase();
-
 // Each as the address gives it: an empty one is a choice left at "any", which
 // is how the form sends it, and one given twice is taken as it was first given.
 const oneOf = (query: unknown, name: string): string | undefined => {
@@ -157,7 +154,7 @@ export const askedOf = (
     const typed = oneOf(request.query, field);
     return typed === undefined
       ? undefined
-      : (all.find((each) => each.code === typed) ??
+      : (all.find((each) => sameWords(each.code, typed)) ??
           all.find((each) => sameWords(nameOf(each), typed)));
   };
   const country = chosenFrom(Countries.thereAre.all, "country", (each) =>
@@ -385,7 +382,8 @@ export const filter = (
   const named = (
     choices: readonly { readonly code: string; readonly name: string }[],
     code: string | undefined,
-  ): string | undefined => choices.find((each) => each.code === code)?.name;
+  ): string | undefined =>
+    choices.find((each) => each.code === code)?.name ?? code;
   // Kept as the reader left them, since what sorts a table is not what the form
   // is about.
   const sortings = Object.entries(asked.sorting)

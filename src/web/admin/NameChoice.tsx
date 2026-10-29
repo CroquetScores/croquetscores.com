@@ -1,13 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 
+import { sameWords } from "../common/sameWords.js";
+
 interface Choice {
   readonly code: string;
   readonly name: string;
 }
-
-// Capital letters are not worth a refusal in a name that is typed.
-const sameWords = (one: string, other: string): boolean =>
-  one.trim().toLowerCase() === other.trim().toLowerCase();
 
 interface Props extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -58,9 +56,17 @@ export function NameChoice({
   // changed, or when the choices were not there yet to give the name of the
   // choice it began with, and the box says what it is.
   const told = useRef<string | undefined>(undefined);
+  // What the choices are rather than which array holds them, since a form that
+  // builds the array again as it is drawn has not changed them.
+  const offered = JSON.stringify(choices.map((each) => [each.code, each.name]));
   useEffect(() => {
-    if (value !== told.current) setTyped(nameOf(value));
-  }, [value, choices]);
+    if (value === told.current) return;
+    // Taken from the form, so nothing the box told it is still the choice: were
+    // it left, the form coming back to that code (the browser's Forward, say)
+    // would be taken for the box's own, and the box would not say so.
+    told.current = undefined;
+    setTyped(nameOf(value));
+  }, [value, offered]);
   // Narrowed to the names that have what has been typed, which is what the
   // list is specified to hold (tournaments.feature). A whole name is not
   // something to narrow by: it is a choice made, and the reader who goes on to
