@@ -1209,6 +1209,7 @@ export const swedish: Language = {
     "Tournament.FinishesAfterNextYear":
       "En turnering kan inte sluta efter nästa år.",
     "CreateTournament.NoSuchCountry": "Välj land.",
+    "Sport.Unknown": "Välj sport.",
     "TournamentSubtitle.TooLong": "En underrubrik får vara högst 2000 tecken.",
     "Tournament.NotAManager":
       "Bara en arrangör av den här turneringen kan ändra den.",

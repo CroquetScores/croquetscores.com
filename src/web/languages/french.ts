@@ -1243,6 +1243,7 @@ export const french: Language = {
     "Tournament.FinishesAfterNextYear":
       "Un tournoi ne peut pas finir après l'année prochaine.",
     "CreateTournament.NoSuchCountry": "Choisissez le pays.",
+    "Sport.Unknown": "Choisissez le sport.",
     "TournamentSubtitle.TooLong":
       "Un sous-titre ne peut pas dépasser 2000 caractères.",
     "Tournament.NotAManager":

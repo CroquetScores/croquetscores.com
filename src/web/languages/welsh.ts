@@ -1190,6 +1190,7 @@ export const welsh: Language = {
     "Tournament.FinishesAfterNextYear":
       "Ni all twrnamaint orffen ar ôl y flwyddyn nesaf.",
     "CreateTournament.NoSuchCountry": "Dewiswch y wlad.",
+    "Sport.Unknown": "Dewiswch y gamp.",
     "TournamentSubtitle.TooLong": "Ni all is-deitl fod yn hirach na 2000 nod.",
     "Tournament.NotAManager": "Dim ond rheolwr y twrnamaint hwn all ei newid.",
     "Tournament.NotAManagerOrScorer":

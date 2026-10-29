@@ -17,6 +17,16 @@ import {
 import type { SpecWorld } from "../../support/world.js";
 import { unmarkedWithin } from "./marks.js";
 import { ordinal } from "./ordinals.js";
+import {
+  checkSuggestions,
+  drawnArrowOf,
+  keepsTheFocus,
+  namesInView,
+  saidInvalid,
+  pressSuggestion,
+  suggestedTo,
+  whatOf,
+} from "./suggestions.js";
 import { changeTournament } from "./tournaments.js";
 
 // The pages are drawn by the server, with no scripting, so what is read is
@@ -179,15 +189,113 @@ When(
   },
 );
 
-// The filter's lists by what each narrows by, whatever language its label is
+// The filter's fields by what each narrows by, whatever language its label is
 // in.
 const filterField = (world: SpecWorld, field: string): Locator =>
-  world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
+  world.browserPage.locator(`form.tournament-filter input[name="${field}"]`);
+
+// Typing a name in full is how one is chosen, and typing part of one is how
+// the names that have it are found, so the two are the same keystrokes.
+const typeInto = async (
+  world: SpecWorld,
+  words: string,
+  field: string,
+): Promise<void> => {
+  await filterField(world, field).fill(words);
+};
+
+When(
+  /^the down arrow is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, field: string) {
+    await filterField(this, field).press("ArrowDown");
+  },
+);
+
+When(
+  /^the arrow at the end of the (country|region|sport) box is pressed$/,
+  async function (this: SpecWorld, field: string) {
+    await drawnArrowOf(filterField(this, field)).click();
+  },
+);
+
+When(
+  /^the (enter|escape|tab) key is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, key: string, field: string) {
+    await filterField(this, field).press(
+      key === "enter" ? "Enter" : key === "tab" ? "Tab" : "Escape",
+    );
+  },
+);
+
+Then(
+  /^the (country|region|sport) box (has|does not have) the focus$/,
+  async function (this: SpecWorld, field: string, does: string) {
+    // A box that holds the focus takes it back a moment after it was left, so
+    // a box that was left is looked at again once that moment has passed.
+    await keepsTheFocus(filterField(this, field), does === "has");
+  },
+);
+
+When(
+  /^the key "(.)" is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, key: string, field: string) {
+    await filterField(this, field).press(key);
+  },
+);
+
+Then(
+  /^the suggestions of the (country|region|sport) box show (\d+) names?$/,
+  async function (this: SpecWorld, field: string, count: string) {
+    assert.equal(await namesInView(filterField(this, field)), Number(count));
+  },
+);
+
+Then(
+  /^the (country|region|sport) box says nothing is wrong$/,
+  async function (this: SpecWorld, field: string) {
+    // The message is taken away as the key goes down, and asked for again
+    // until it has been, so that the key is not looked past.
+    const found = filterField(this, field);
+    const until = Date.now() + 3000;
+    while ((await found.evaluate(saidInvalid)) !== "") {
+      assert.ok(Date.now() < until, "The box still says what is wrong.");
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  },
+);
+
+Then(
+  /^the (country|region|sport) box says it needs "(.*)"$/,
+  async function (this: SpecWorld, field: string, words: string) {
+    assert.equal(await filterField(this, field).evaluate(saidInvalid), words);
+  },
+);
+
+When(
+  /^"(.*)" is pressed among the suggestions of the (country|region|sport) box$/,
+  async function (this: SpecWorld, name: string, field: string) {
+    await pressSuggestion(filterField(this, field), name);
+  },
+);
+
+Then(
+  /^the suggestions of the (country|region|sport) box (are shown|are not shown|start where the box starts|are as wide as the box|are in the same text size as the box)$/,
+  async function (this: SpecWorld, field: string, what: string) {
+    await checkSuggestions(filterField(this, field), whatOf(what));
+  },
+);
 
 Given(
   /^"(.*)" is chosen as the (country|region|sport)$/,
   async function (this: SpecWorld, choice: string, field: string) {
-    await filterField(this, field).selectOption({ label: choice });
+    await typeInto(this, choice, field);
+  },
+);
+
+Given(
+  /^"(.*)" is typed as the (country|region|sport)$/,
+  async function (this: SpecWorld, words: string, field: string) {
+    await typeInto(this, words, field);
   },
 );
 
@@ -604,12 +712,11 @@ Then(
 
 // The filter --------------------------------------------------------------------------
 
+// The names the field suggests, in the order it suggests them.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
-    : filterField(world, field)
-        .locator('option:not([value=""])')
-        .allTextContents();
+    : suggestedTo(filterField(world, field));
 
 Then(
   /^"(.*)" is (not )?offered as a (country|region|sport)$/,
@@ -627,16 +734,6 @@ Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) country offered is "(.*)"$/,
   async function (this: SpecWorld, which: string, country: string) {
     assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
-  },
-);
-
-Then(
-  /^the country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
-    assert.equal(
-      await filterField(this, "country").locator("hr").count(),
-      Number(count),
-    );
   },
 );
 
@@ -786,14 +883,16 @@ Then(
 
 // A tournament's name is what its manager called it, and its dates are numbers
 // and the months the browser names, so neither is in a catalogue to be marked.
-// Nor is a region's name, which is kept as it was recorded.
+// A region's name is kept as it was recorded and is in no catalogue, but it is
+// only ever a suggestion's value, which is not words on the page.
 Then(
   "every word in the page's content but the tournaments' own is in the test locale",
   async function (this: SpecWorld) {
     const stray = await unmarkedWithin(this, "main", [
       ".tournament-name",
       ".tournament-dates",
-      'select[name="region"] option:not([value=""])',
+      // A sport's code, as AC is, is a code and no word of any language.
+      ".tournament-sport",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

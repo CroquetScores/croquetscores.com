@@ -1101,6 +1101,7 @@ export const egyptian: Language = {
     "Tournament.StartsAfterNextYear": "البطولة مينفعش تبدأ بعد السنة الجاية.",
     "Tournament.FinishesAfterNextYear": "البطولة مينفعش تخلص بعد السنة الجاية.",
     "CreateTournament.NoSuchCountry": "اختار البلد.",
+    "Sport.Unknown": "اختار الرياضة.",
     "TournamentSubtitle.TooLong": "العنوان الفرعي ميزيدش عن 2000 حرف.",
     "Tournament.NotAManager": "مدير البطولة دي بس هو اللي يقدر يغيّرها.",
     "Tournament.NotAManagerOrScorer":

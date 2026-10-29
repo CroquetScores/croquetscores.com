@@ -1,9 +1,11 @@
 Feature: Countries are listed where a reader looks for them first
 
-  Most tournaments are played in a few countries, so a drop-down list of
-  countries that began with Afghanistan would make most readers scroll past
-  a hundred and more to reach the one they want. The list is in three groups,
-  with a line between each. The first is the six countries most
+  Most tournaments are played in a few countries, so a list of countries
+  that began with Afghanistan would make most readers scroll past a hundred
+  and more to reach the one they want. The list is in three groups, the
+  order of which is the order a reader is offered them in as they begin to
+  type, since a field that suggests names has no line to draw between them.
+  The first is the six countries most
   tournaments are played in, in a fixed order: Australia, Egypt, England,
   New Zealand, Spain and the United States. The second is the other countries
   tournaments have been played in since 2025, in alphabetical order. The
@@ -12,9 +14,8 @@ Feature: Countries are listed where a reader looks for them first
   A group is found by a country's code and not by its name, so that the
   groups are the same in every language. The alphabetical order is that of
   the reader's language, since that is the order a reader looks for a name
-  in. A group with no country in it is left out, so that no line is drawn
-  with nothing on one side of it. The list that has the groups is made
-  wherever countries are chosen from, and each draws the line itself.
+  in. A group with no country in it is left out. The list that has the groups
+  is made wherever countries are chosen from.
 
   Scenario Outline: The six countries most played in come first, in their own order
     Given the country "us" named "United States"
