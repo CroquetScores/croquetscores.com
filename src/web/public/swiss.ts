@@ -2,7 +2,7 @@
 // old site's was, a row for each player ranked, with their games, their wins,
 // the share of their games they have won and their results, each game they
 // played said as the opponent's initial and last name and the margin, as
-// "C.Denny +4". The summary is the same table without the results
+// "C. Denny +4". The summary is the same table without the results
 // (swissSummary.ts). What every view of a competition shares is
 // competitionPages.ts's.
 import type {
@@ -18,7 +18,7 @@ import { playerShown } from "./tournamentPages.js";
 
 /**
  * A player's name as the old site's results said it: the first letter of
- * their first name and their last name, as "C.Denny", their last name being
+ * their first name and their last name, as "C. Denny", their last name being
  * their last word with a letter in it, so that a number added to tell two
  * players of one name apart, as "Andrew Hobbs (2)", is left out. A player of
  * one such word is that word.
@@ -29,7 +29,7 @@ export const shortNameOf = (name: string): string => {
   const last = words.at(-1);
   if (first === undefined || last === undefined) return name;
   if (words.length === 1) return first;
-  return `${Array.from(first)[0] ?? ""}.${last}`;
+  return `${Array.from(first)[0] ?? ""}. ${last}`;
 };
 
 // A margin as the old site wrote it: a plus for a game won, a minus for one
