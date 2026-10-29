@@ -899,6 +899,40 @@ Feature: The admin lists the reader's tournaments
       When "Zeal" is typed as the country
       Then the suggestions of the country box are shown
 
+    Scenario: What is wrong with a country box gets out of the way when a key is pressed
+      Given the admin is open
+      And "Atlantis" is typed as the country
+      And the tab key is pressed in the country box
+      And the country box says it needs "Choose the country."
+      When the key "x" is pressed in the country box
+      Then the country box says nothing is wrong
+
+    Scenario: What is wrong with a country box gets out of the way when the down arrow is pressed
+      Given the admin is open
+      And "Atlantis" is typed as the country
+      And the tab key is pressed in the country box
+      And the country box says it needs "Choose the country."
+      When the down arrow is pressed in the country box
+      Then the country box says nothing is wrong
+
+    Scenario: What is wrong with a country box is said again when it is left again
+      Given the admin is open
+      And "Atlantis" is typed as the country
+      And the tab key is pressed in the country box
+      And the key "x" is pressed in the country box
+      When the tab key is pressed in the country box
+      Then the country box has the focus
+      And the country box says it needs "Choose the country."
+
+    Scenario: What is wrong with a country box gets out of the way when its arrow is pressed
+      Given the admin is open
+      And "Atlantis" is typed as the country
+      And the tab key is pressed in the country box
+      And the country box says it needs "Choose the country."
+      When the arrow at the end of the country box is pressed
+      Then the country box says nothing is wrong
+      And the suggestions of the country box are shown
+
     Scenario: A name that is half deleted stays in the box to go on editing
       Given the admin is open
       And "New Zealand" is chosen as the country

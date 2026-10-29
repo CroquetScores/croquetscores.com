@@ -379,9 +379,18 @@ const suggestionsScript = `            <script>
                     var named = names.filter(function (name) { return same(name, typed); })[0];
                     if (named !== undefined) lastValid = named;
                     else if (typed.trim() === "") lastValid = "";
-                    field.setCustomValidity(
-                      mustChoose && typed.trim() !== "" && named === undefined ? mustChoose : ""
-                    );
+                  };
+                  // What is wrong is said to the browser when the box is left or
+                  // the form is sent, and taken back for as long as the reader
+                  // keys on, since the bubble a browser draws stays up for as
+                  // long as it is said.
+                  var wrong = function () {
+                    var typed = field.value;
+                    var named = names.some(function (name) { return same(name, typed); });
+                    return Boolean(mustChoose) && typed.trim() !== "" && !named;
+                  };
+                  var saySo = function () {
+                    field.setCustomValidity(wrong() ? mustChoose : "");
                   };
                   var draw = function () {
                     var typed = field.value;
@@ -425,6 +434,7 @@ const suggestionsScript = `            <script>
                   var choose = function (name) {
                     field.value = name;
                     check();
+                    saySo();
                     close();
                   };
                   var openAll = function () {
@@ -439,6 +449,9 @@ const suggestionsScript = `            <script>
                   arrow.addEventListener("mousedown", function (event) {
                     event.preventDefault();
                     field.focus();
+                    // As a key does, the arrow takes back what is said to be
+                    // wrong, so that it is not left over the list it opens.
+                    field.setCustomValidity("");
                     if (open && browsing) close();
                     else openAll();
                   });
@@ -453,6 +466,7 @@ const suggestionsScript = `            <script>
                   });
                   field.addEventListener("blur", function () {
                     close();
+                    saySo();
                     // A window put behind another blurs its field and leaves it
                     // the one the page has focused: nothing was left. A box that
                     // takes the focus back takes it from the other, which is not
@@ -467,6 +481,8 @@ const suggestionsScript = `            <script>
                     }, 0);
                   });
                   field.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") saySo();
+                    else if (event.key !== "Tab") field.setCustomValidity("");
                     if (event.key === "ArrowDown") {
                       event.preventDefault();
                       if (!open) openAll();
@@ -484,14 +500,16 @@ const suggestionsScript = `            <script>
                     } else if (event.key === "Escape" && open) {
                       event.preventDefault();
                       close();
-                    } else if (event.key === "Escape" && !field.validity.valid) {
+                    } else if (event.key === "Escape" && wrong()) {
                       event.preventDefault();
                       field.value = lastValid;
                       check();
+                      saySo();
                       draw();
                     }
                   });
                   check();
+                  saySo();
                   draw();
                 });
               })();

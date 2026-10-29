@@ -99,9 +99,10 @@ export function NameChoice({
     (typed.trim() === ""
       ? required
       : !choices.some((each) => sameWords(each.name, typed)));
-  useEffect(() => {
+  const saySoToBrowser = (): void => {
     field.current?.setCustomValidity(invalid ? (mustChoose ?? "") : "");
-  }, [invalid, mustChoose]);
+  };
+  useEffect(saySoToBrowser, [invalid, mustChoose]);
   // The last choice that was valid, to put back: none where nothing is a fault
   // and nothing was chosen, which is a choice of its own, and none where
   // something is needed and nothing has been chosen yet.
@@ -183,6 +184,12 @@ export function NameChoice({
         value={typed}
         onKeyDown={(event) => {
           onKeyDown?.(event);
+          // What is wrong is said again to send the form, and taken back for
+          // as long as the reader keys on, since the bubble a browser draws
+          // stays up for as long as it is said. Leaving says it again.
+          if (event.key === "Enter") saySoToBrowser();
+          else if (event.key !== "Tab")
+            event.currentTarget.setCustomValidity("");
           if (event.key === "ArrowDown") {
             event.preventDefault();
             if (!open) openAll();
@@ -215,6 +222,7 @@ export function NameChoice({
           onBlur?.(event);
           close();
           const left = event.currentTarget;
+          saySoToBrowser();
           // A window put behind another blurs its field and leaves it the one
           // the page has focused, so nothing was left; and a box taking the
           // focus back takes it from this one without this one being left.
@@ -259,6 +267,9 @@ export function NameChoice({
         onMouseDown={(event) => {
           event.preventDefault();
           field.current?.focus();
+          // As a key does, the arrow takes back what is said to be wrong, so
+          // that it is not left over the list it opens.
+          field.current?.setCustomValidity("");
           if (open && browsing) close();
           else openAll();
         }}

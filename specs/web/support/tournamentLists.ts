@@ -235,6 +235,27 @@ Then(
   },
 );
 
+When(
+  /^the key "(.)" is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, key: string, field: string) {
+    await filterField(this, field).press(key);
+  },
+);
+
+Then(
+  /^the (country|region|sport) box says nothing is wrong$/,
+  async function (this: SpecWorld, field: string) {
+    // The message is taken away as the key goes down, and asked for again
+    // until it has been, so that the key is not looked past.
+    const found = filterField(this, field);
+    const until = Date.now() + 3000;
+    while ((await found.evaluate(saidInvalid)) !== "") {
+      assert.ok(Date.now() < until, "The box still says what is wrong.");
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  },
+);
+
 Then(
   /^the (country|region|sport) box says it needs "(.*)"$/,
   async function (this: SpecWorld, field: string, words: string) {

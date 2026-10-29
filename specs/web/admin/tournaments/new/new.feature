@@ -256,6 +256,42 @@ Feature: A new tournament is created in the admin
       When "Zeal" is typed as the "Country"
       Then the suggestions of the "Country" are shown
 
+    Scenario: What is wrong with a country gets out of the way when a key is pressed
+      Given the new tournament page is open
+      And "Atlantis" is typed as the "Country"
+      And the tab key is pressed in the "Country"
+      And "Country" says it needs "Choose the country."
+      When the key "x" is pressed in the "Country"
+      Then "Country" says nothing is wrong
+
+    Scenario: What is wrong with a country is said again when it is left again
+      Given the new tournament page is open
+      And "Atlantis" is typed as the "Country"
+      And the tab key is pressed in the "Country"
+      And the key "x" is pressed in the "Country"
+      When the tab key is pressed in the "Country"
+      Then "Country" has the focus
+      And "Country" says it needs "Choose the country."
+
+    Scenario: What is wrong with a country is said again when the form is sent
+      Given the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And "2026-10-03" is typed as the "Starts"
+      And "2026-10-05" is typed as the "Finishes"
+      And "Atlantis" is typed as the "Country"
+      And the key "x" is pressed in the "Country"
+      When "Create Tournament" is pressed
+      Then "Country" says it needs "Choose the country."
+
+    Scenario: What is wrong with a country gets out of the way when its arrow is pressed
+      Given the new tournament page is open
+      And "Atlantis" is typed as the "Country"
+      And the tab key is pressed in the "Country"
+      And "Country" says it needs "Choose the country."
+      When the arrow at the end of the "Country" is pressed
+      Then "Country" says nothing is wrong
+      And the suggestions of the "Country" are shown
+
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open
       When "Golf" is typed as the "Sport"

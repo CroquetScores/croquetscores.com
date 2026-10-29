@@ -294,6 +294,25 @@ Then(
   },
 );
 
+When(
+  "the key {string} is pressed in the {string}",
+  async function (this: SpecWorld, key: string, label: string) {
+    await drawn(this);
+    await field(this, label).press(key);
+  },
+);
+
+Then(
+  "{string} says nothing is wrong",
+  async function (this: SpecWorld, label: string) {
+    const until = Date.now() + 3000;
+    while ((await field(this, label).evaluate(saidInvalid)) !== "") {
+      assert.ok(Date.now() < until, `${label} still says what is wrong.`);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+  },
+);
+
 Then(
   "{string} says it needs {string}",
   async function (this: SpecWorld, label: string, words: string) {
