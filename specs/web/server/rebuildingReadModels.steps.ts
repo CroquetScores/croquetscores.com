@@ -12,6 +12,7 @@ import { applicationFor } from "../support/browser.js";
 const READ_MODEL_TABLES = [
   "accounts_by_email_address",
   "accounts_by_google_account",
+  "accounts_by_facebook_account",
   "accounts_by_role",
   "tournaments_by_address",
   "tournaments_by_account",
@@ -209,6 +210,18 @@ Then(
   "the account for {string} is found holding the role {string} once",
   async function (this: SpecWorld, address: string, role: string) {
     assert.equal(await heldRole(this, address, role), 1);
+  },
+);
+
+Then(
+  "the account for {string} is found by its Facebook account",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(
+      await rowsOf(this, "accounts_by_facebook_account", "account_id = $1", [
+        (await accountFound(this, address)).value,
+      ]),
+      1,
+    );
   },
 );
 

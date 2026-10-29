@@ -28,6 +28,7 @@ import { RegisterAccountHandler } from "../application/operations/accounts/Regis
 import { RegisterAccountValidator } from "../application/operations/accounts/RegisterAccountValidator.js";
 import { SendConfirmationLinkAgainHandler } from "../application/operations/accounts/SendConfirmationLinkAgainHandler.js";
 import { SignInHandler } from "../application/operations/accounts/SignInHandler.js";
+import { SignInWithFacebookHandler } from "../application/operations/accounts/SignInWithFacebookHandler.js";
 import { SignInWithGoogleHandler } from "../application/operations/accounts/SignInWithGoogleHandler.js";
 import { ResetPasswordHandler } from "../application/operations/accounts/ResetPasswordHandler.js";
 import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
@@ -243,6 +244,7 @@ import { WorldRankingWebsite } from "../infrastructure/services/WorldRankingWebs
 import { RecaptchaReaderCheck } from "../infrastructure/identity/RecaptchaReaderCheck.js";
 import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByFacebookAccount } from "../infrastructure/read-models/AccountsByFacebookAccount.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
@@ -879,6 +881,11 @@ export const buildApplication = async (
     config.accountEmailAddressHashKey,
   );
 
+  const accountsByFacebookAccount = new AccountsByFacebookAccount(
+    unitOfWork,
+    config.accountEmailAddressHashKey,
+  );
+
   const accountsByRole = new AccountsByRole(unitOfWork);
 
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
@@ -894,6 +901,7 @@ export const buildApplication = async (
   const readModels: readonly (Projection & RebuildableReadModel)[] = [
     accountsByEmailAddress,
     accountsByGoogleAccount,
+    accountsByFacebookAccount,
     accountsByRole,
     tournamentsByAddress,
     tournamentsByAccount,
@@ -1020,6 +1028,14 @@ export const buildApplication = async (
       accounts,
       accountsByEmailAddress,
       accountsByGoogleAccount,
+      emailAddresses,
+    ),
+  );
+  mediator.handleCommand(
+    new SignInWithFacebookHandler(
+      accounts,
+      accountsByEmailAddress,
+      accountsByFacebookAccount,
       emailAddresses,
     ),
   );

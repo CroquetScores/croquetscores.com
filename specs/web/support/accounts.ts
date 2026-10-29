@@ -13,6 +13,7 @@ import { AskToForgetAccount } from "../../../src/application/operations/accounts
 import { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ConfirmEmailAddress } from "../../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import { RegisterAccount } from "../../../src/application/operations/accounts/RegisterAccount.js";
+import { SignInWithFacebook } from "../../../src/application/operations/accounts/SignInWithFacebook.js";
 import { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
 import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
@@ -144,6 +145,14 @@ export const accountsThrough = (
   async linkToGoogle(address, subject) {
     await application.mediator.send(
       new SignInWithGoogle(subject, address, true, CALLED, now()),
+    );
+  },
+
+  // As for Google: by a sign-in with Facebook carrying the account's own
+  // address.
+  async linkToFacebook(address, facebookId) {
+    await application.mediator.send(
+      new SignInWithFacebook(facebookId, address, CALLED, now()),
     );
   },
 });

@@ -28,6 +28,7 @@ import { AccountKeys } from "../../../src/infrastructure/encryption/AccountKeys.
 import { KeyedEmailAddressHasher } from "../../../src/infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEventStore } from "../../../src/infrastructure/event-store/PostgresEventStore.js";
 import { AccountsByEmailAddress } from "../../../src/infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByFacebookAccount } from "../../../src/infrastructure/read-models/AccountsByFacebookAccount.js";
 import { AccountsByGoogleAccount } from "../../../src/infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../../../src/infrastructure/read-models/AccountsByRole.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -39,6 +40,7 @@ export interface Accounts {
   store: PostgresEventStore;
   readModel: AccountsByEmailAddress;
   byGoogleAccount: AccountsByGoogleAccount;
+  byFacebookAccount: AccountsByFacebookAccount;
   byRole: AccountsByRole;
   hasher: KeyedEmailAddressHasher;
   /** Every account kept, in the order they were first kept. */
@@ -92,6 +94,10 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
   const hasher = new KeyedEmailAddressHasher(aSiteKey());
   const readModel = new AccountsByEmailAddress(unitOfWork, hasher);
   const byGoogleAccount = new AccountsByGoogleAccount(unitOfWork, aSiteKey());
+  const byFacebookAccount = new AccountsByFacebookAccount(
+    unitOfWork,
+    aSiteKey(),
+  );
   const byRole = new AccountsByRole(unitOfWork);
   const { keys, store } = storesFor(world, siteKey);
   const kept: Accounts = {
@@ -100,6 +106,7 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
     store,
     readModel,
     byGoogleAccount,
+    byFacebookAccount,
     byRole,
     hasher,
     kept: [],
@@ -118,6 +125,7 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
     const projecting = new ProjectingEventStore(kept.store, [
       readModel,
       byGoogleAccount,
+      byFacebookAccount,
       byRole,
     ]);
     await world.asARequest(() =>

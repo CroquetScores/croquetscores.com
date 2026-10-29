@@ -41,6 +41,9 @@ export interface AccountsInHand {
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
 
+  /** Links the account for `address` to the Facebook account `facebookId`. */
+  linkToFacebook(address: string, facebookId: string): Promise<void>;
+
   /** Gives the account for `address` the role `role`. */
   giveRole(address: string, role: Role): Promise<void>;
 
@@ -141,6 +144,13 @@ Given(
   "{string} has had the role {string} taken away",
   async function (this: SpecWorld, address: string, role: string) {
     await inHand(this).takeRole(address, roleCalled(role));
+  },
+);
+
+Given(
+  "the account for {string} was linked to the Facebook account {string}",
+  async function (this: SpecWorld, address: string, facebookId: string) {
+    await inHand(this).linkToFacebook(address, facebookId);
   },
 );
 

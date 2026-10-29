@@ -6,6 +6,7 @@
 import type { Role } from "../../src/domain/aggregates/accounts/value-objects/Role.js";
 import type { ConfirmEmailAddress } from "../../src/application/operations/accounts/ConfirmEmailAddress.js";
 import type { SignIn } from "../../src/application/operations/accounts/SignIn.js";
+import type { SignInWithFacebook } from "../../src/application/operations/accounts/SignInWithFacebook.js";
 import type { SignInWithGoogle } from "../../src/application/operations/accounts/SignInWithGoogle.js";
 import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.js";
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
@@ -85,6 +86,25 @@ export interface Registering {
 
   /** Links the account for `address` to the Google account `subject`. */
   linkToGoogle(address: string, subject: string): Promise<void>;
+
+  /** Signs in with Facebook. Answers with the account, or throws. */
+  signInWithFacebook(command: SignInWithFacebook): Promise<AccountId>;
+
+  /**
+   * Has the next signing in with Facebook find no account by its Facebook
+   * account, as one that looked before another had linked it would.
+   */
+  lookForFacebookAccountTooEarly(): void;
+
+  /**
+   * Has the account the next signing in with Facebook finds by its Facebook
+   * account forgotten before that signing in holds it, as one forgotten while
+   * the signing in waited its turn would be.
+   */
+  forgetAccountOnceFoundByFacebook(): void;
+
+  /** Links the account for `address` to the Facebook account `facebookId`. */
+  linkToFacebook(address: string, facebookId: string): Promise<void>;
 
   /** Asks for an account to be forgotten. Throws what the mediator throws. */
   askToForget(command: AskToForgetAccount): Promise<void>;

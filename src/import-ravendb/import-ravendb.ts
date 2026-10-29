@@ -47,6 +47,7 @@ import { Argon2id } from "../infrastructure/identity/Argon2id.js";
 import { ImportedPasswordHasher } from "../infrastructure/identity/ImportedPasswordHasher.js";
 import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswordHasher.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByFacebookAccount } from "../infrastructure/read-models/AccountsByFacebookAccount.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
@@ -212,6 +213,10 @@ try {
     [
       new AccountsByEmailAddress(unitOfWork, emailAddresses),
       new AccountsByGoogleAccount(
+        unitOfWork,
+        config.accountEmailAddressHashKey,
+      ),
+      new AccountsByFacebookAccount(
         unitOfWork,
         config.accountEmailAddressHashKey,
       ),

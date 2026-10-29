@@ -89,6 +89,11 @@ import {
   type AccountsByGoogleAccount,
   SignInWithGoogleHandler,
 } from "../../../src/application/operations/accounts/SignInWithGoogleHandler.js";
+import {
+  type AccountsByFacebookAccount,
+  SignInWithFacebookHandler,
+} from "../../../src/application/operations/accounts/SignInWithFacebookHandler.js";
+import type { SignInWithFacebook } from "../../../src/application/operations/accounts/SignInWithFacebook.js";
 import type { SignInWithGoogle } from "../../../src/application/operations/accounts/SignInWithGoogle.js";
 import type { SignIn } from "../../../src/application/operations/accounts/SignIn.js";
 import type { SendConfirmationLinkAgain } from "../../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
@@ -288,6 +293,34 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       repository,
       accounts.readModel,
       byGoogleAccount,
+      accounts.hasher,
+    ),
+  );
+  // The same two ways of standing where a signing in stands that looked too
+  // early, or found its account and then waited while it was forgotten, as
+  // for Google.
+  let missNextFacebookLookup = false;
+  let forgetNextFoundByFacebook = false;
+  let foundByFacebookBeforeForgetting: AccountId | undefined;
+  const byFacebookAccount: AccountsByFacebookAccount = {
+    find: (facebookId) => {
+      if (missNextFacebookLookup) {
+        missNextFacebookLookup = false;
+        return Promise.resolve(undefined);
+      }
+      if (foundByFacebookBeforeForgetting !== undefined) {
+        const found = foundByFacebookBeforeForgetting;
+        foundByFacebookBeforeForgetting = undefined;
+        return Promise.resolve(found);
+      }
+      return accounts.byFacebookAccount.find(facebookId);
+    },
+  };
+  mediator.handleCommand(
+    new SignInWithFacebookHandler(
+      repository,
+      accounts.readModel,
+      byFacebookAccount,
       accounts.hasher,
     ),
   );
@@ -526,6 +559,37 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
         foundBeforeForgetting = found;
       }
       return mediator.send(command);
+    },
+
+    async signInWithFacebook(command: SignInWithFacebook): Promise<AccountId> {
+      await settle();
+      if (forgetNextFoundByFacebook) {
+        forgetNextFoundByFacebook = false;
+        const found = await world.asARequest(() =>
+          accounts.byFacebookAccount.find(command.facebookId),
+        );
+        assert.ok(found !== undefined, `No account for ${command.facebookId}.`);
+        const account = await readBack(world, found);
+        account.forget(now());
+        await world.keepAccount?.(account);
+        foundByFacebookBeforeForgetting = found;
+      }
+      return mediator.send(command);
+    },
+
+    lookForFacebookAccountTooEarly() {
+      missNextFacebookLookup = true;
+    },
+
+    forgetAccountOnceFoundByFacebook() {
+      forgetNextFoundByFacebook = true;
+    },
+
+    async linkToFacebook(address, facebookId) {
+      await settle();
+      const account = await readBack(world, await idFor(address));
+      account.linkFacebookAccount(facebookId, now());
+      await world.keepAccount?.(account);
     },
 
     lookForGoogleAccountTooEarly() {
@@ -845,6 +909,10 @@ Given("the application's signing in with Google", function (this: SpecWorld) {
   standUpFor(this);
 });
 
+Given("the application's signing in with Facebook", function (this: SpecWorld) {
+  standUpFor(this);
+});
+
 // The same mediator over the same accounts, said in its own words because a
 // scenario about forgetting is not about registering.
 Given("the application's forgetting of accounts", function (this: SpecWorld) {
@@ -939,6 +1007,8 @@ export const standUpFor = (world: SpecWorld): void => {
     forget: (address) => registering.forget(address),
     linkToGoogle: (address, subject) =>
       registering.linkToGoogle(address, subject),
+    linkToFacebook: (address, facebookId) =>
+      registering.linkToFacebook(address, facebookId),
     giveRole: (address, role) => registering.giveRole(address, role),
     takeRole: (address, role) => registering.takeRole(address, role),
   };

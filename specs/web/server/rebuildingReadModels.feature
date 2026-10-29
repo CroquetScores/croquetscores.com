@@ -24,6 +24,7 @@ Feature: The read models are made again from the events
     And "organiser@example.com" has an account, confirmed, called "Ollie Organiser"
     And "organiser@example.com" has been given the role "Administrator"
     And the account for "organiser@example.com" was linked to the Google account "google-123"
+    And the account for "organiser@example.com" was linked to the Facebook account "facebook-123"
     And "organiser@example.com" has created the tournament "Spring Open"
 
   Rule: A read model that is empty is made again from the events
@@ -58,6 +59,11 @@ Feature: The read models are made again from the events
       Given every read model is emptied
       When the read models are rebuilt from the events
       Then the account for "organiser@example.com" is found by its Google account
+
+    Scenario: An account is found by its Facebook account again
+      Given every read model is emptied
+      When the read models are rebuilt from the events
+      Then the account for "organiser@example.com" is found by its Facebook account
 
   Rule: A rebuild says how many streams there are and how many are done
 
