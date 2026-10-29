@@ -8,7 +8,7 @@ Wählen Sie **Profil** im Menü **Konto**. Es zeigt Ihnen **Name:** und **E-Mail
 
 ## Ihre E-Mail-Adresse
 
-**E-Mail-Adresse ändern** hat die Felder **Neue E-Mail-Adresse** und **Aktuelles Passwort** und schickt einen Link an die neue Adresse. Folgen Sie ihm, öffnet sich eine Seite, auf der **Mein Konto verschieben** das Konto verschiebt. Das Passwort wird verlangt, weil ein verschobenes Konto ein übernommenes Konto ist und Angemeldetsein allein nicht reicht. Ein mit Google angelegtes Konto, das kein Passwort hat, lässt sich so nicht verschieben.
+**E-Mail-Adresse ändern** hat die Felder **Neue E-Mail-Adresse** und **Aktuelles Passwort** und schickt einen Link an die neue Adresse. Folgen Sie ihm, öffnet sich eine Seite, auf der **Mein Konto verschieben** das Konto verschiebt. Das Passwort wird verlangt, weil ein verschobenes Konto ein übernommenes Konto ist und Angemeldetsein allein nicht reicht. Ein mit Google oder Facebook angelegtes Konto, das kein Passwort hat, lässt sich so nicht verschieben.
 
 ## Ihr Passwort
 

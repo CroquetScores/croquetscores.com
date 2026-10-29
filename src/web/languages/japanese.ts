@@ -219,7 +219,7 @@ export const japanese: Language = {
 
     "setPassword.title": "パスワードを設定",
     "setPassword.explanation":
-      "このアカウントにはパスワードがなく、Googleでサインインしています。パスワードでもサインインできるように、設定用のリンクを{emailAddress}に送信します。",
+      "このアカウントにはパスワードがなく、GoogleまたはFacebookでサインインしています。パスワードでもサインインできるように、設定用のリンクを{emailAddress}に送信します。",
     "setPassword.submit": "リンクをメールで送る",
     "setPassword.sent.title": "メールをご確認ください",
     "setPassword.sent.explanation":
@@ -1707,7 +1707,7 @@ export const japanese: Language = {
 <p>こんにちは。</p>
 
 <p>
-    <strong>{siteName}</strong>のアカウントにはパスワードがなく、Googleでサインインしています。<br />
+    <strong>{siteName}</strong>のアカウントにはパスワードがなく、GoogleまたはFacebookでサインインしています。<br />
     メールアドレスとパスワードでもサインインできるように、パスワードの設定を依頼されました。
     下のボタンを押すと設定できます。
 </p>

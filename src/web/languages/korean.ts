@@ -85,7 +85,7 @@ export const korean: Language = {
     "register.emailAddress": "이메일 주소",
     "register.submit": "가입",
     "register.withGoogle": "Google로 가입",
-    "register.withFacebook": "Facebook로 가입",
+    "register.withFacebook": "Facebook으로 가입",
     "register.or": "또는",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -208,7 +208,7 @@ export const korean: Language = {
     "signIn.forgotPassword": "비밀번호 찾기",
     "signIn.register": "가입",
     "signIn.withGoogle": "Google로 로그인",
-    "signIn.withFacebook": "Facebook로 로그인",
+    "signIn.withFacebook": "Facebook으로 로그인",
     "signIn.or": "또는",
     "signIn.tryAgainLater":
       "최근 시도 횟수가 너무 많아요. 한 시간 뒤에 다시 시도해 주세요.",
@@ -229,7 +229,7 @@ export const korean: Language = {
 
     "setPassword.title": "비밀번호 설정",
     "setPassword.explanation":
-      "이 계정에는 비밀번호가 없고 Google로 로그인하고 있어요. 비밀번호로도 로그인할 수 있도록, 비밀번호를 설정하는 링크를 {emailAddress}(으)로 보내 드릴게요.",
+      "이 계정에는 비밀번호가 없고 Google 또는 Facebook으로 로그인하고 있어요. 비밀번호로도 로그인할 수 있도록, 비밀번호를 설정하는 링크를 {emailAddress}(으)로 보내 드릴게요.",
     "setPassword.submit": "링크 보내기",
     "setPassword.sent.title": "이메일을 확인해 주세요",
     "setPassword.sent.explanation":
@@ -1735,7 +1735,7 @@ export const korean: Language = {
 <p>안녕하세요.</p>
 
 <p>
-    회원님의 <strong>{siteName}</strong> 계정에는 비밀번호가 없고 Google로 로그인하고 있습니다.<br />
+    회원님의 <strong>{siteName}</strong> 계정에는 비밀번호가 없고 Google 또는 Facebook으로 로그인하고 있습니다.<br />
     이메일 주소와 비밀번호로도 로그인할 수 있도록 비밀번호 설정을 요청하셨습니다.
     아래 버튼을 눌러 설정하실 수 있습니다.
 </p>

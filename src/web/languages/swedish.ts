@@ -227,7 +227,7 @@ export const swedish: Language = {
 
     "setPassword.title": "Skapa ett lösenord",
     "setPassword.explanation":
-      "Ditt konto har inget lösenord: du loggar in med Google. För att också kunna logga in med lösenord skickar vi en länk för att skapa ett till {emailAddress}.",
+      "Ditt konto har inget lösenord: du loggar in med Google eller Facebook. För att också kunna logga in med lösenord skickar vi en länk för att skapa ett till {emailAddress}.",
     "setPassword.submit": "Skicka en länk till mig",
     "setPassword.sent.title": "Kolla din e-post",
     "setPassword.sent.explanation":
@@ -1795,7 +1795,7 @@ export const swedish: Language = {
 <p>Hej,</p>
 
 <p>
-    Ditt konto hos <strong>{siteName}</strong> har inget lösenord: du loggar in med Google.<br />
+    Ditt konto hos <strong>{siteName}</strong> har inget lösenord: du loggar in med Google eller Facebook.<br />
     Du bad om att skapa ett, så att du också kan logga in med din e-postadress och ett lösenord.
     Du kan skapa det genom att klicka på knappen nedan:
 </p>

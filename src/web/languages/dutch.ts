@@ -234,7 +234,7 @@ export const dutch: Language = {
 
     "setPassword.title": "Een wachtwoord instellen",
     "setPassword.explanation":
-      "Je account heeft geen wachtwoord: je logt in met Google. Om ook met een wachtwoord in te kunnen loggen, mailen we een link om er een in te stellen naar {emailAddress}.",
+      "Je account heeft geen wachtwoord: je logt in met Google of Facebook. Om ook met een wachtwoord in te kunnen loggen, mailen we een link om er een in te stellen naar {emailAddress}.",
     "setPassword.submit": "Mail me een link",
     "setPassword.sent.title": "Controleer je e-mail",
     "setPassword.sent.explanation":
@@ -1803,7 +1803,7 @@ export const dutch: Language = {
 <p>Hallo,</p>
 
 <p>
-    Je <strong>{siteName}</strong>-account heeft geen wachtwoord: je logt in met Google.<br />
+    Je <strong>{siteName}</strong>-account heeft geen wachtwoord: je logt in met Google of Facebook.<br />
     Je hebt gevraagd er een in te stellen, zodat je ook met je e-mailadres en een wachtwoord kunt inloggen.
     Dat kun je doen door op de knop hieronder te klikken:
 </p>

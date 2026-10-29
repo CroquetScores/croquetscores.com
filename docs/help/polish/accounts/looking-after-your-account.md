@@ -8,7 +8,7 @@ Wybierz **Profil** w menu **Konto**. Pokazuje pola **Nazwa:** oraz **Adres e-mai
 
 ## Twój adres e-mail
 
-**Zmień adres e-mail** prosi o **Nowy adres e-mail** i **Obecne hasło** i wysyła odsyłacz na nowy adres. Po jego kliknięciu otwiera się strona, na której **Przenieś moje konto** przenosi konto. Hasło jest wymagane, bo przeniesione konto to konto przejęte, a samo bycie zalogowanym nie wystarcza. Konta utworzonego przez Google, które nie ma hasła, nie można w ten sposób przenieść.
+**Zmień adres e-mail** prosi o **Nowy adres e-mail** i **Obecne hasło** i wysyła odsyłacz na nowy adres. Po jego kliknięciu otwiera się strona, na której **Przenieś moje konto** przenosi konto. Hasło jest wymagane, bo przeniesione konto to konto przejęte, a samo bycie zalogowanym nie wystarcza. Konta utworzonego przez Google lub Facebooka, które nie ma hasła, nie można w ten sposób przenieść.
 
 ## Twoje hasło
 

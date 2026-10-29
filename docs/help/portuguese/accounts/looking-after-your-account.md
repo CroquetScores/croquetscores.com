@@ -8,7 +8,7 @@ Escolha **Perfil** no menu **Conta**. Ele mostra o seu **Nome:** e o seu **Ender
 
 ## O seu endereço de e-mail
 
-**Alterar endereço de e-mail** pede o **Novo endereço de e-mail** e a sua **Senha atual**, e envia um link para o novo endereço. Ao segui-lo, abre-se uma página em que **Mover a minha conta** move a conta. A senha é pedida porque uma conta movida é uma conta tomada, e estar conectado, por si só, não basta. Uma conta criada com o Google, que não tem senha, não pode ser movida assim.
+**Alterar endereço de e-mail** pede o **Novo endereço de e-mail** e a sua **Senha atual**, e envia um link para o novo endereço. Ao segui-lo, abre-se uma página em que **Mover a minha conta** move a conta. A senha é pedida porque uma conta movida é uma conta tomada, e estar conectado, por si só, não basta. Uma conta criada com o Google ou com o Facebook, que não tem senha, não pode ser movida assim.
 
 ## A sua senha
 

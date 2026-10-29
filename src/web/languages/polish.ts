@@ -210,7 +210,7 @@ export const polish: Language = {
 
     "setPassword.title": "Ustaw hasło",
     "setPassword.explanation":
-      "Twoje konto nie ma hasła: logujesz się przez Google. Aby logować się także hasłem, wyślemy na adres {emailAddress} odsyłacz do jego ustawienia.",
+      "Twoje konto nie ma hasła: logujesz się przez Google lub Facebooka. Aby logować się także hasłem, wyślemy na adres {emailAddress} odsyłacz do jego ustawienia.",
     "setPassword.submit": "Wyślij mi odsyłacz",
     "setPassword.sent.title": "Sprawdź pocztę",
     "setPassword.sent.explanation":
@@ -1673,7 +1673,7 @@ export const polish: Language = {
 <p>Cześć,</p>
 
 <p>
-    Twoje konto w <strong>{siteName}</strong> nie ma hasła: logujesz się przez Google.<br />
+    Twoje konto w <strong>{siteName}</strong> nie ma hasła: logujesz się przez Google lub Facebooka.<br />
     Poproszono o ustawienie hasła, aby można było logować się także adresem e-mail i hasłem.
     Możesz je ustawić, klikając poniższy przycisk:
 </p>

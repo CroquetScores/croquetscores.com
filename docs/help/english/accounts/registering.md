@@ -4,7 +4,7 @@ An account is made in two steps: you give your email address, and then you show 
 
 ## Registering
 
-Press **Register** in the **Account** menu. The page asks for your **Email address** and nothing else. Tick **I agree to the terms of use**, which is about what you write on the site, and press **Register**. You can also press **Register with Google**, which needs no password: see [Signing in](signing-in.md).
+Press **Register** in the **Account** menu. The page asks for your **Email address** and nothing else. Tick **I agree to the terms of use**, which is about what you write on the site, and press **Register**. You can also press **Register with Google** or **Register with Facebook**, which need no password: see [Signing in](signing-in.md).
 
 Registering needs scripting switched on for this site, so that the site can tell a person from a program. If it is off, you are told so before you fill in anything. [Scripting and cookies](../readers/scripting-and-cookies.md) says more.
 

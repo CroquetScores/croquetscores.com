@@ -12,9 +12,11 @@ Adres, przy którym logowanie nie powiodło się dziesięć razy w ciągu godzin
 
 Konto, którego adres e-mail nie został potwierdzony, nie ma jeszcze hasła, więc nie można się na nie zalogować. Kliknij odsyłacz w wiadomości albo zamów nowy: jak to zrobić, mówi [Rejestracja i potwierdzenie](registering.md).
 
-## Przez Google
+## Przez Google lub Facebooka
 
-**Zaloguj się przez Google** i **Zarejestruj się przez Google** korzystają z wybranego przez ciebie konta Google, więc strona nigdy nie widzi jego hasła. Konto utworzone w ten sposób nie ma hasła, dopóki o nie nie poprosisz.
+**Zaloguj się przez Google**, **Zaloguj się przez Facebook**, **Zarejestruj się przez Google** i **Zarejestruj się przez Facebook** korzystają z wybranego przez ciebie konta Google lub Facebook, więc strona nigdy nie widzi jego hasła. Konto utworzone w ten sposób nie ma hasła, dopóki o nie nie poprosisz.
+
+Facebook przekazuje witrynie twój adres e-mail tylko wtedy, gdy masz na Facebooku potwierdzony adres i zgadzasz się na jego udostępnienie. Bez niego witryna nie może znaleźć ani utworzyć twojego konta i mówi o tym: użyj zamiast tego swojego adresu e-mail.
 
 Żeby logować się także hasłem, wybierz **Ustaw hasło** w menu **Konto** i naciśnij **Wyślij mi odsyłacz**. Odsyłacz trafia na adres e-mail twojego konta i ustawia hasło tak samo jak odsyłacz przy zapomnianym haśle.
 

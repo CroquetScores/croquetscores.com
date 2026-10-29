@@ -234,7 +234,7 @@ export const spanish: Language = {
 
     "setPassword.title": "Establecer una contraseña",
     "setPassword.explanation":
-      "Tu cuenta no tiene contraseña: inicias sesión con Google. Para poder iniciar sesión también con una contraseña, enviaremos a {emailAddress} un enlace para establecerla.",
+      "Tu cuenta no tiene contraseña: inicias sesión con Google o Facebook. Para poder iniciar sesión también con una contraseña, enviaremos a {emailAddress} un enlace para establecerla.",
     "setPassword.submit": "Enviarme un enlace por correo",
     "setPassword.sent.title": "Revisa tu correo",
     "setPassword.sent.explanation":
@@ -1823,7 +1823,7 @@ export const spanish: Language = {
 <p>Hola,</p>
 
 <p>
-    Tu cuenta de <strong>{siteName}</strong> no tiene contraseña: inicias sesión con Google.<br />
+    Tu cuenta de <strong>{siteName}</strong> no tiene contraseña: inicias sesión con Google o Facebook.<br />
     Pediste establecer una, para poder iniciar sesión también con tu dirección de correo electrónico y una contraseña.
     Puedes establecerla haciendo clic en el botón de abajo:
 </p>

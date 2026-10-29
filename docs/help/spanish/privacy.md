@@ -6,7 +6,7 @@ Qué guarda este sitio sobre ti, para qué se usa y cómo hacer que se olvide.
 
 - **Tu dirección de correo electrónico y tu nombre**, si te registras. Ambos se guardan cifrados, con una clave que pertenece solo a tu cuenta. Tu dirección de correo también se guarda en una forma que permite al sitio encontrar tu cuenta cuando inicias sesión y que no se puede convertir de nuevo en la dirección.
 - **Tu contraseña**, si te registras con una, como un hash que no se puede convertir de nuevo en ella. El sitio nunca guarda la contraseña misma y no puede decirte cuál era.
-- **Con qué inicias sesión**, si inicias sesión con Google: el identificador que Google da al sitio para ti, y tu dirección de correo donde la comparte. No se guarda nada más suyo.
+- **Con qué inicias sesión**, si inicias sesión con Google o Facebook: el identificador que dan al sitio para ti, y tu dirección de correo donde la comparten. No se guarda nada más suyo.
 - **Lo que introduces**: los torneos que creas, las puntuaciones que introduces y los comentarios que escribes. Son públicos donde el sitio los muestra al público.
 - **La dirección desde la que llegó una petición**, por cada intento fallido de iniciar sesión y cada petición de una contraseña nueva, con el momento en que se hizo. Se guarda para poder frenar el adivinar contraseñas o inundar una bandeja de entrada, y para nada más.
 

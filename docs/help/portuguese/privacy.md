@@ -6,7 +6,7 @@ O que este site guarda sobre você, para que serve e como fazer com que seja esq
 
 - **Seu endereço de e-mail e seu nome**, se você se cadastrar. Os dois são guardados cifrados, com uma chave que pertence só à sua conta. Seu endereço de e-mail também é guardado numa forma que permite ao site encontrar sua conta quando você entra e que não pode ser convertida de volta no endereço.
 - **Sua senha**, se você se cadastrar com uma, como um hash que não pode ser convertido de volta nela. O site nunca guarda a senha em si e não pode dizer qual era.
-- **Com o que você entra**, se entrar com o Google: o identificador que o Google dá ao site para você, e seu endereço de e-mail onde ele o compartilha. Nada mais dele é guardado.
+- **Com o que você entra**, se entrar com o Google ou com o Facebook: o identificador que eles dão ao site para você, e seu endereço de e-mail onde eles o compartilham. Nada mais deles é guardado.
 - **O que você insere**: os torneios que você cria, as pontuações que insere e os comentários que escreve. São públicos onde o site os mostra ao público.
 - **O endereço de onde veio uma solicitação**, para cada tentativa fracassada de entrar e cada pedido de nova senha, com o momento em que foi feita. É guardado para que adivinhar senhas ou inundar uma caixa de entrada possa ser retardado, e para nada mais.
 

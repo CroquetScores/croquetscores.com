@@ -217,7 +217,7 @@ export const maori: Language = {
 
     "setPassword.title": "Tautuhia he kupuhipa",
     "setPassword.explanation":
-      "Kāore he kupuhipa o tō pūkete: ka takiuru koe mā Google. Hei takiuru mā te kupuhipa hoki, ka īmēra atu mātou i tētahi hono hei tautuhi i tētahi ki {emailAddress}.",
+      "Kāore he kupuhipa o tō pūkete: ka takiuru koe mā Google, mā Facebook rānei. Hei takiuru mā te kupuhipa hoki, ka īmēra atu mātou i tētahi hono hei tautuhi i tētahi ki {emailAddress}.",
     "setPassword.submit": "Īmēra mai i tētahi hono",
     "setPassword.sent.title": "Tirohia tō īmēra",
     "setPassword.sent.explanation":
@@ -1746,7 +1746,7 @@ export const maori: Language = {
 <p>Tēnā koe,</p>
 
 <p>
-    Kāore he kupuhipa o tō pūkete <strong>{siteName}</strong>: ka takiuru koe mā Google.<br />
+    Kāore he kupuhipa o tō pūkete <strong>{siteName}</strong>: ka takiuru koe mā Google, mā Facebook rānei.<br />
     I tono koe kia tautuhi i tētahi, kia taea ai te takiuru mā tō wāhitau īmēra me te kupuhipa hoki.
     Ka taea e koe te tautuhi mā te pāwhiri i te pātene i raro nei:
 </p>

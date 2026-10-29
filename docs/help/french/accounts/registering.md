@@ -4,7 +4,7 @@ Un compte se crée en deux étapes : vous donnez votre adresse e-mail, puis vou
 
 ## S’inscrire
 
-Choisissez **S'inscrire** dans le menu **Compte**. La page demande votre **Adresse e-mail** et rien d’autre. Cochez **J'accepte les conditions d'utilisation**, qui concernent ce que vous écrivez sur le site, puis appuyez sur **S'inscrire**. Vous pouvez aussi appuyer sur **S'inscrire avec Google**, qui n’exige pas de mot de passe : voir [Se connecter](signing-in.md).
+Choisissez **S'inscrire** dans le menu **Compte**. La page demande votre **Adresse e-mail** et rien d’autre. Cochez **J'accepte les conditions d'utilisation**, qui concernent ce que vous écrivez sur le site, puis appuyez sur **S'inscrire**. Vous pouvez aussi appuyer sur **S'inscrire avec Google** ou **S'inscrire avec Facebook**, qui n’exigent pas de mot de passe : voir [Se connecter](signing-in.md).
 
 S’inscrire exige que les scripts soient activés pour ce site, afin que le site distingue une personne d’un programme. S’ils sont désactivés, la page vous le dit avant que vous ayez rempli quoi que ce soit. [Scripts et cookies](../readers/scripting-and-cookies.md) en dit plus.
 

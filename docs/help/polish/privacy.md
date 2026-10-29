@@ -6,7 +6,7 @@ Co ta witryna przechowuje o tobie, do czego to służy i jak sprawić, by zosta�
 
 - **Twój adres e-mail i twoje imię i nazwisko**, jeśli się zarejestrujesz. Oba są przechowywane zaszyfrowane, kluczem, który należy tylko do twojego konta. Twój adres e-mail jest też przechowywany w postaci, dzięki której witryna znajduje twoje konto, gdy się logujesz, i której nie da się zamienić z powrotem na adres.
 - **Twoje hasło**, jeśli rejestrujesz się z hasłem, jako skrót, którego nie da się zamienić z powrotem na hasło. Witryna nigdy nie przechowuje samego hasła i nie może ci powiedzieć, jakie było.
-- **Czym się logujesz**, jeśli logujesz się przez Google: identyfikator, który Google daje witrynie dla ciebie, oraz twój adres e-mail, jeśli go udostępnia. Nic więcej od niego nie jest przechowywane.
+- **Czym się logujesz**, jeśli logujesz się przez Google lub Facebooka: identyfikator, który dają witrynie dla ciebie, oraz twój adres e-mail, jeśli go udostępniają. Nic więcej od nich nie jest przechowywane.
 - **To, co wpisujesz**: turnieje, które tworzysz, wyniki, które wprowadzasz, oraz komentarze, które piszesz. Są publiczne tam, gdzie witryna pokazuje je publiczności.
 - **Adres, z którego przyszło żądanie**, przy każdej nieudanej próbie logowania i każdej prośbie o nowe hasło, wraz z chwilą, w której to nastąpiło. Jest przechowywany, by można było spowolnić zgadywanie haseł lub zalewanie skrzynki, i do niczego więcej.
 

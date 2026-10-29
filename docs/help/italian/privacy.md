@@ -6,7 +6,7 @@ Che cosa conserva questo sito su di te, a che cosa serve e come farlo dimenticar
 
 - **Il tuo indirizzo email e il tuo nome**, se ti registri. Entrambi sono conservati cifrati, con una chiave che appartiene solo al tuo account. Il tuo indirizzo email è conservato anche in una forma che permette al sito di trovare il tuo account quando accedi e che non si può riconvertire nell'indirizzo.
 - **La tua password**, se ti registri con una, come hash che non si può riconvertire nella password. Il sito non conserva mai la password stessa e non può dirti qual era.
-- **Con che cosa accedi**, se accedi con Google: l'identificativo che Google dà al sito per te, e il tuo indirizzo email dove lo condivide. Nient'altro di suo viene conservato.
+- **Con che cosa accedi**, se accedi con Google o Facebook: l'identificativo che danno al sito per te, e il tuo indirizzo email dove lo condividono. Nient'altro di loro viene conservato.
 - **Che cosa inserisci**: i tornei che crei, i punteggi che inserisci e i commenti che scrivi. Sono pubblici dove il sito li mostra al pubblico.
 - **L'indirizzo da cui è arrivata una richiesta**, per ogni tentativo di accesso fallito e ogni richiesta di una nuova password, con il momento in cui è stata fatta. È conservato per poter rallentare il tentativo di indovinare le password o di inondare una casella, e per nient'altro.
 

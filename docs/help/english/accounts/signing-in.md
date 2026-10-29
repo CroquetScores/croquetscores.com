@@ -12,9 +12,11 @@ An address that has failed to sign in ten times in an hour is held for the rest 
 
 An account whose email address has not been confirmed has no password yet, so it cannot be signed in to. Follow the link in the email, or ask for a new one: [Registering and confirming](registering.md) says how.
 
-## With Google
+## With Google or Facebook
 
-**Sign in with Google** and **Register with Google** use the Google account you choose, so the site never sees a password for it. An account made this way has no password until you ask for one.
+**Sign in with Google**, **Sign in with Facebook**, **Register with Google** and **Register with Facebook** use the Google or Facebook account you choose, so the site never sees a password for it. An account made this way has no password until you ask for one.
+
+Facebook gives the site your email address only if you have one confirmed with Facebook and let it be shared. Without one the site cannot find or make your account, and says so: use your email address instead.
 
 To sign in with a password as well, choose **Set Password** in the **Account** menu and press **Email me a link**. The link goes to your account's email address and sets a password the way the link for a forgotten password does.
 

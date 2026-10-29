@@ -12,9 +12,11 @@ Un indirizzo per cui l'accesso è fallito dieci volte in un'ora viene bloccato f
 
 Un account il cui indirizzo email non è stato confermato non ha ancora una password, quindi non si può accedere. Segui il link nell'email, oppure chiedine uno nuovo: [Registrarsi e confermare](registering.md) spiega come.
 
-## Con Google
+## Con Google o Facebook
 
-**Accedi con Google** e **Registrati con Google** usano l'account Google che scegli, quindi il sito non vede mai una password per esso. Un account creato così non ha una password finché non ne chiedi una.
+**Accedi con Google**, **Accedi con Facebook**, **Registrati con Google** e **Registrati con Facebook** usano l'account Google o Facebook che scegli, quindi il sito non vede mai una password per esso. Un account creato così non ha una password finché non ne chiedi una.
+
+Facebook dà al sito il tuo indirizzo email solo se ne hai uno confermato su Facebook e permetti di condividerlo. Senza, il sito non può trovare né creare il tuo account, e te lo dice: usa invece il tuo indirizzo email.
 
 Per accedere anche con una password, scegli **Imposta password** nel menu **Account** e premi **Inviami un link per email**. Il link va all'indirizzo email del tuo account e imposta una password come fa il link per una password dimenticata.
 

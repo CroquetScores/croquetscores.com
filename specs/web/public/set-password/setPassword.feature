@@ -1,10 +1,10 @@
 @browser @postgres
 Feature: A reader whose account has no password can have a link sent to set one
 
-  An account made by signing in with Google has no password
-  (`SignInWithGoogle.feature`). Its reader signs in with Google, and one who
-  wants to sign in with a password as well asks for one on the set password
-  page, /account/set-password. The account menu and the profile offer it to
+  An account made by signing in with Google or Facebook has no password
+  (`SignInWithGoogle.feature`, `SignInWithFacebook.feature`). Its reader signs in
+  with Google or Facebook, and one who wants to sign in with a password as well
+  asks for one on the set password page, /account/set-password. The account menu and the profile offer it to
   such a reader, where they offer the change password page to everybody else
   (`accountMenu.feature`, `profile.feature`).
 
@@ -21,7 +21,7 @@ Feature: A reader whose account has no password can have a link sent to set one
 
   Setting the password signs the account out on every browser, as setting a
   new password always does, this one with the rest; the reader then signs in
-  with the password they chose, or with Google as before.
+  with the password they chose, or with Google or Facebook as before.
 
   Asking counts toward how often the account's address may be written to,
   with the emails the forgot password page, registering and the new

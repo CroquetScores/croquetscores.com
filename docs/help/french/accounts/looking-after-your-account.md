@@ -8,7 +8,7 @@ Choisissez **Profil** dans le menu **Compte**. La page montre votre **Nom :** e
 
 ## Votre adresse e-mail
 
-**Changer l'adresse e-mail** demande la **Nouvelle adresse e-mail** et votre **Mot de passe actuel**, puis envoie un lien à la nouvelle adresse. Le suivre ouvre une page où **Déplacer mon compte** déplace le compte. Le mot de passe est demandé parce qu’un compte qu’on déplace est un compte qu’on prend, et qu’être connecté ne suffit pas à lui seul. Un compte créé avec Google, qui n’a pas de mot de passe, ne peut pas être déplacé de cette façon.
+**Changer l'adresse e-mail** demande la **Nouvelle adresse e-mail** et votre **Mot de passe actuel**, puis envoie un lien à la nouvelle adresse. Le suivre ouvre une page où **Déplacer mon compte** déplace le compte. Le mot de passe est demandé parce qu’un compte qu’on déplace est un compte qu’on prend, et qu’être connecté ne suffit pas à lui seul. Un compte créé avec Google ou Facebook, qui n’a pas de mot de passe, ne peut pas être déplacé de cette façon.
 
 ## Votre mot de passe
 

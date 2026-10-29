@@ -214,7 +214,7 @@ export const egyptian: Language = {
 
     "setPassword.title": "حدّد كلمة سر",
     "setPassword.explanation":
-      "حسابك ملوش كلمة سر: بتدخل بحساب Google. وعشان تقدر تدخل بكلمة سر كمان، هنبعت رابط لتحديدها على {emailAddress}.",
+      "حسابك ملوش كلمة سر: بتدخل بحساب Google أو Facebook. وعشان تقدر تدخل بكلمة سر كمان، هنبعت رابط لتحديدها على {emailAddress}.",
     "setPassword.submit": "ابعتلي رابط على الإيميل",
     "setPassword.sent.title": "شوف الإيميل بتاعك",
     "setPassword.sent.explanation":
@@ -1671,7 +1671,7 @@ export const egyptian: Language = {
 <p>أهلاً،</p>
 
 <p>
-    حسابك على <strong>{siteName}</strong> ملوش كلمة سر: بتدخل بحساب Google.<br />
+    حسابك على <strong>{siteName}</strong> ملوش كلمة سر: بتدخل بحساب Google أو Facebook.<br />
     انت طلبت تحدّد واحدة، عشان تقدر تدخل بعنوان الإيميل وكلمة سر كمان.
     تقدر تحدّدها بالضغط على الزرار اللي تحت:
 </p>

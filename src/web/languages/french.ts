@@ -234,7 +234,7 @@ export const french: Language = {
 
     "setPassword.title": "Définir un mot de passe",
     "setPassword.explanation":
-      "Votre compte n'a pas de mot de passe : vous vous connectez avec Google. Pour pouvoir aussi vous connecter avec un mot de passe, nous enverrons à {emailAddress} un lien pour en définir un.",
+      "Votre compte n'a pas de mot de passe : vous vous connectez avec Google ou Facebook. Pour pouvoir aussi vous connecter avec un mot de passe, nous enverrons à {emailAddress} un lien pour en définir un.",
     "setPassword.submit": "M'envoyer un lien par e-mail",
     "setPassword.sent.title": "Consultez vos e-mails",
     "setPassword.sent.explanation":
@@ -1840,7 +1840,7 @@ export const french: Language = {
 <p>Bonjour,</p>
 
 <p>
-    Votre compte <strong>{siteName}</strong> n'a pas de mot de passe : vous vous connectez avec Google.<br />
+    Votre compte <strong>{siteName}</strong> n'a pas de mot de passe : vous vous connectez avec Google ou Facebook.<br />
     Vous avez demandé à en définir un, pour pouvoir aussi vous connecter avec votre adresse e-mail et un mot de passe.
     Vous pouvez le définir en cliquant sur le bouton ci-dessous :
 </p>

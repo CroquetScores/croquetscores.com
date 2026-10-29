@@ -26,7 +26,7 @@ Feature: A reader who is signed in can change their password
   typed, and nothing is changed.
 
   A reader whose account has no password, because they have only ever signed
-  in with Google, has none to give and none to change. For them the page is
+  in with Google or Facebook, has none to give and none to change. For them the page is
   not there: opening it, or posting to it, is answered as a page that does not
   exist is, and nothing leads to it (`profile.feature`, `accountMenu.feature`).
   They are offered the set password page instead, which sends a link to set

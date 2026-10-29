@@ -12,9 +12,11 @@ Ko tētahi wāhitau kua tekau ngā wā i hē ai tana takiuru i roto i te haora k
 
 Kāore anō kia whai kupuhipa tētahi pūkete kāore anō kia whakaūtia tōna wāhitau īmēra, nō reira kāore e taea te takiuru ki roto. Whāia te hononga i te īmēra, tonoa rānei he mea hou: kei [Te rēhita me te whakaū](registering.md) te huarahi.
 
-## Mā Google
+## Mā Google, mā Facebook rānei
 
-Ka whakamahi **Takiuru mā Google** me **Rēhita mā Google** i te pūkete Google e kōwhiri ana koe, nō reira kāore te pae e kite i tētahi kupuhipa mōna. Kāore he kupuhipa o tētahi pūkete i waihangatia pēnei kia tonoa ra anō e koe.
+Ka whakamahi **Takiuru mā Google**, **Takiuru mā Facebook**, **Rēhita mā Google** me **Rēhita mā Facebook** i te pūkete Google, Facebook rānei e kōwhiri ana koe, nō reira kāore te pae e kite i tētahi kupuhipa mōna. Kāore he kupuhipa o tētahi pūkete i waihangatia pēnei kia tonoa ra anō e koe.
+
+Ka hoatu a Facebook i tō wāhitau īmēra ki te pae mēnā anake he mea whakaū tōu ki a Facebook, ā, kua whakaae koe kia tohaina. Mēnā kāore, e kore e kitea e te pae tō pūkete, e kore rānei e hangaia, ā, ka kī atu ki a koe pērā: whakamahia tō wāhitau īmēra hei utu.
 
 Kia takiuru ai hoki mā te kupuhipa, kōwhiria **Tautuhi kupuhipa** i te tahua **Pūkete**, ā, pēhia **Īmēra mai i tētahi hono**. Ka haere te hononga ki te wāhitau īmēra o tō pūkete, ā, ka tautuhi i tētahi kupuhipa pērā anō i te hononga mō te kupuhipa kua wareware.
 

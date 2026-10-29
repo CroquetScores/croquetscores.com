@@ -226,7 +226,7 @@ export const english: Language = {
 
     "setPassword.title": "Set a password",
     "setPassword.explanation":
-      "Your account has no password: you sign in with Google. To sign in with a password as well, we will email a link to set one to {emailAddress}.",
+      "Your account has no password: you sign in with Google or Facebook. To sign in with a password as well, we will email a link to set one to {emailAddress}.",
     "setPassword.submit": "Email me a link",
     "setPassword.sent.title": "Check your email",
     "setPassword.sent.explanation":
@@ -1536,7 +1536,7 @@ export const english: Language = {
 <p>Hi,</p>
 
 <p>
-    Your <strong>{siteName}</strong> account has no password: you sign in with Google.<br />
+    Your <strong>{siteName}</strong> account has no password: you sign in with Google or Facebook.<br />
     You asked to set one, so that you can sign in with your email address and a password as well.
     You can set it by clicking the button below:
 </p>

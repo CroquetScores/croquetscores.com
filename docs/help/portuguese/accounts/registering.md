@@ -4,7 +4,7 @@ Uma conta é criada em dois passos: você informa o seu endereço de e-mail e de
 
 ## Cadastrando-se
 
-Escolha **Cadastrar-se** no menu **Conta**. A página pede o seu **Endereço de e-mail** e nada mais. Marque **Concordo com os termos de uso**, que tratam do que você escreve no site, e clique em **Cadastrar-se**. Você também pode clicar em **Cadastrar-se com o Google**, que não precisa de senha: veja [Entrar](signing-in.md).
+Escolha **Cadastrar-se** no menu **Conta**. A página pede o seu **Endereço de e-mail** e nada mais. Marque **Concordo com os termos de uso**, que tratam do que você escreve no site, e clique em **Cadastrar-se**. Você também pode clicar em **Cadastrar-se com o Google** ou em **Cadastrar-se com o Facebook**, que não precisam de senha: veja [Entrar](signing-in.md).
 
 Para se cadastrar, os scripts precisam estar ativados para este site, para que ele possa distinguir uma pessoa de um programa. Se estiverem desativados, você é avisado antes de preencher qualquer coisa. [Scripts e cookies](../readers/scripting-and-cookies.md) explica melhor.
 

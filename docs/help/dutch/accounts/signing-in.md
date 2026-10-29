@@ -12,9 +12,11 @@ Een adres waarmee het inloggen tien keer in een uur is mislukt, wordt de rest va
 
 Een account waarvan het e-mailadres niet is bevestigd, heeft nog geen wachtwoord, dus je kunt er niet op inloggen. Volg de link in de e-mail, of vraag een nieuwe aan: [Registreren en bevestigen](registering.md) legt uit hoe.
 
-## Met Google
+## Met Google of Facebook
 
-**Inloggen met Google** en **Registreren met Google** gebruiken het Google-account dat je kiest, dus de site ziet er nooit een wachtwoord van. Een account dat zo is gemaakt, heeft geen wachtwoord totdat je er een vraagt.
+**Inloggen met Google**, **Inloggen met Facebook**, **Registreren met Google** en **Registreren met Facebook** gebruiken het Google- of Facebook-account dat je kiest, dus de site ziet er nooit een wachtwoord van. Een account dat zo is gemaakt, heeft geen wachtwoord totdat je er een vraagt.
+
+Facebook geeft de site je e-mailadres alleen als je er een bij Facebook hebt bevestigd en het laat delen. Zonder e-mailadres kan de site je account niet vinden of maken, en dat zegt de site ook: gebruik dan je e-mailadres.
 
 Wil je ook met een wachtwoord inloggen, kies dan **Wachtwoord instellen** in het menu **Account** en kies **Mail me een link**. De link gaat naar het e-mailadres van je account en stelt een wachtwoord in op dezelfde manier als de link voor een vergeten wachtwoord.
 

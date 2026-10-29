@@ -8,7 +8,7 @@ Kies **Profiel** in het menu **Account**. Het toont je **Naam:** en **E-mailadre
 
 ## Je e-mailadres
 
-**E-mailadres wijzigen** vraagt om het **Nieuw e-mailadres** en je **Huidig wachtwoord**, en stuurt een link naar het nieuwe adres. Als je die volgt, opent een pagina waar **Mijn account verhuizen** het account verplaatst. Het wachtwoord wordt gevraagd omdat een account dat wordt verplaatst, een account is dat wordt afgenomen, en ingelogd zijn alleen niet genoeg is. Een account dat met Google is gemaakt en dus geen wachtwoord heeft, kan op deze manier niet worden verplaatst.
+**E-mailadres wijzigen** vraagt om het **Nieuw e-mailadres** en je **Huidig wachtwoord**, en stuurt een link naar het nieuwe adres. Als je die volgt, opent een pagina waar **Mijn account verhuizen** het account verplaatst. Het wachtwoord wordt gevraagd omdat een account dat wordt verplaatst, een account is dat wordt afgenomen, en ingelogd zijn alleen niet genoeg is. Een account dat met Google of Facebook is gemaakt en dus geen wachtwoord heeft, kan op deze manier niet worden verplaatst.
 
 ## Je wachtwoord
 

@@ -8,7 +8,7 @@ Elige **Perfil** en el menú **Cuenta**. Muestra tu **Nombre:** y tu **Direcció
 
 ## Tu dirección de correo electrónico
 
-**Cambiar dirección de correo electrónico** pide la **Nueva dirección de correo electrónico** y tu **Contraseña actual**, y envía un enlace a la dirección nueva. Al seguirlo se abre una página donde **Trasladar mi cuenta** traslada la cuenta. Se pide la contraseña porque una cuenta que se traslada es una cuenta que se roba, y tener la sesión iniciada no basta por sí solo. Una cuenta creada con Google, que no tiene contraseña, no se puede trasladar de este modo.
+**Cambiar dirección de correo electrónico** pide la **Nueva dirección de correo electrónico** y tu **Contraseña actual**, y envía un enlace a la dirección nueva. Al seguirlo se abre una página donde **Trasladar mi cuenta** traslada la cuenta. Se pide la contraseña porque una cuenta que se traslada es una cuenta que se roba, y tener la sesión iniciada no basta por sí solo. Una cuenta creada con Google o Facebook, que no tiene contraseña, no se puede trasladar de este modo.
 
 ## Tu contraseña
 

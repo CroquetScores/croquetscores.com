@@ -6,7 +6,7 @@ Was diese Website über Sie speichert, wofür es verwendet wird und wie Sie es v
 
 - **Ihre E-Mail-Adresse und Ihr Name**, wenn Sie sich registrieren. Beides wird verschlüsselt gespeichert, mit einem Schlüssel, der nur zu Ihrem Konto gehört. Ihre E-Mail-Adresse wird außerdem in einer Form gespeichert, mit der die Website beim Anmelden Ihr Konto findet und die sich nicht in die Adresse zurückverwandeln lässt.
 - **Ihr Passwort**, wenn Sie sich mit einem registrieren, als Hash, der sich nicht in das Passwort zurückverwandeln lässt. Die Website speichert das Passwort selbst nie und kann Ihnen nicht sagen, wie es lautete.
-- **Womit Sie sich anmelden**, wenn Sie sich mit Google anmelden: die Kennung, die Google der Website für Sie gibt, und Ihre E-Mail-Adresse, wenn Google sie weitergibt. Sonst wird nichts davon gespeichert.
+- **Womit Sie sich anmelden**, wenn Sie sich mit Google oder Facebook anmelden: die Kennung, die diese der Website für Sie geben, und Ihre E-Mail-Adresse, wenn sie sie weitergeben. Sonst wird nichts davon gespeichert.
 - **Was Sie eingeben**: Turniere, die Sie anlegen, die Ergebnisse, die Sie eintragen, und die Kommentare, die Sie schreiben. Sie sind öffentlich, wo die Website sie der Öffentlichkeit zeigt.
 - **Die Adresse, von der eine Anfrage kam**, bei jedem fehlgeschlagenen Anmeldeversuch und jeder Anfrage nach einem neuen Passwort, mit dem Zeitpunkt. Sie wird gespeichert, damit das Erraten von Passwörtern oder das Fluten eines Postfachs gebremst werden kann, und für nichts anderes.
 

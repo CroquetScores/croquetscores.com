@@ -6,7 +6,7 @@ Ngā mea e puritia ana e tēnei pae mōu, he aha te take e whakamahia ana, me te
 
 - **Tō wāhitau īmēra me tō ingoa**, mēnā ka rēhita koe. Ka puritia ngā mea e rua kua whakamunatia, me tētahi kī e whai wāhi ana ki tō pūkete anake. Ka puritia hoki tō wāhitau īmēra ki tētahi āhua e kitea ai e te pae tō pūkete ina takiuru koe, ā, e kore e taea te whakahoki ki te wāhitau.
 - **Tō kupuhipa**, mēnā ka rēhita koe me tētahi, hei hash e kore e taea te whakahoki ki te kupuhipa. E kore e purihia e te pae te kupuhipa ake, ā, e kore e taea e ia te kī atu he aha ia.
-- **Ko te mea e takiuru ai koe**, mēnā ka takiuru koe mā Google: te tohu e hoatu ai e Google ki te pae mōu, me tō wāhitau īmēra ina tohaina e rātou. Kāore he mea atu o rātou e puritia.
+- **Ko te mea e takiuru ai koe**, mēnā ka takiuru koe mā Google, mā Facebook rānei: te tohu e hoatu ai e rātou ki te pae mōu, me tō wāhitau īmēra ina tohaina e rātou. Kāore he mea atu o rātou e puritia.
 - **Ngā mea e whakauru ai koe**: ngā whakataetae e hanga ai koe, ngā kaute e tāuru ai koe, me ngā kōrero me ngā tākupu e tuhi ai koe. He mea tūmatanui ērā ki te wāhi e whakaatu ai te pae ki te marea.
 - **Te wāhitau i tae mai ai tētahi tono**, mō ia whakamātau takiuru i rahua me ia tono mō tētahi kupuhipa hou, me te wā i mahia ai. Ka puritia kia taea ai te whakaroa i te matapae kupuhipa, i te whakakī rawa rānei i tētahi pouaka mēra, ā, mō tētahi atu mea kāore.
 

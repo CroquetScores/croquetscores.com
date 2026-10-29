@@ -6,7 +6,7 @@ What this site keeps about you, what it is used for, and how to have it forgotte
 
 - **Your email address and your name**, if you register. Both are kept encrypted, with a key that belongs to your account alone. Your email address is also kept in a form that lets the site find your account when you sign in, which cannot be turned back into the address.
 - **Your password**, if you register with one, as a hash that cannot be turned back into it. The site never keeps the password itself and cannot tell you what it was.
-- **Who you sign in with**, if you sign in with Google: the identifier they give the site for you, and your email address where they share it. Nothing else of theirs is kept.
+- **Who you sign in with**, if you sign in with Google or Facebook: the identifier they give the site for you, and your email address where they share it. Nothing else of theirs is kept.
 - **What you enter**: tournaments you create, the scores you enter, and the commentary and comments you write. These are public where the site shows them to the public.
 - **The address a request came from**, for each failed attempt to sign in and each request to set a new password, with when it was made. It is kept so that guessing a password or flooding an inbox can be slowed, and for nothing else.
 

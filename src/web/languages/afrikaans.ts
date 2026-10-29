@@ -233,7 +233,7 @@ export const afrikaans: Language = {
 
     "setPassword.title": "Stel 'n wagwoord",
     "setPassword.explanation":
-      "Jou rekening het geen wagwoord nie: jy teken in met Google. Om ook met 'n wagwoord in te teken, stuur ons 'n skakel om een te stel na {emailAddress}.",
+      "Jou rekening het geen wagwoord nie: jy teken in met Google of Facebook. Om ook met 'n wagwoord in te teken, stuur ons 'n skakel om een te stel na {emailAddress}.",
     "setPassword.submit": "Stuur my 'n skakel",
     "setPassword.sent.title": "Kyk in jou e-pos",
     "setPassword.sent.explanation":
@@ -1808,7 +1808,7 @@ export const afrikaans: Language = {
 <p>Hallo,</p>
 
 <p>
-    Jou <strong>{siteName}</strong>-rekening het geen wagwoord nie: jy teken in met Google.<br />
+    Jou <strong>{siteName}</strong>-rekening het geen wagwoord nie: jy teken in met Google of Facebook.<br />
     Jy het gevra om een te stel, sodat jy ook met jou e-posadres en 'n wagwoord kan inteken.
     Jy kan dit stel deur op die knoppie hieronder te klik:
 </p>

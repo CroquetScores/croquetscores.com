@@ -6,7 +6,7 @@ Wat hierdie webwerf oor jou bewaar, waarvoor dit gebruik word en hoe jy dit kan 
 
 - **Jou e-posadres en jou naam**, as jy registreer. Albei word geënkripteer bewaar, met 'n sleutel wat net aan jou rekening behoort. Jou e-posadres word ook bewaar in 'n vorm waarmee die webwerf jou rekening vind wanneer jy aanmeld en wat nie terug in die adres omgesit kan word nie.
 - **Jou wagwoord**, as jy met een registreer, as 'n hash wat nie terug in die wagwoord omgesit kan word nie. Die webwerf bewaar nooit die wagwoord self nie en kan jou nie sê wat dit was nie.
-- **Waarmee jy aanmeld**, as jy met Google aanmeld: die identifiseerder wat Google vir jou aan die webwerf gee, en jou e-posadres waar hulle dit deel. Niks anders van hulle word bewaar nie.
+- **Waarmee jy aanmeld**, as jy met Google of Facebook aanmeld: die identifiseerder wat hulle vir jou aan die webwerf gee, en jou e-posadres waar hulle dit deel. Niks anders van hulle word bewaar nie.
 - **Wat jy invoer**: toernooie wat jy skep, die tellings wat jy invoer, en die kommentaar en opmerkings wat jy skryf. Dit is openbaar waar die webwerf dit aan die publiek wys.
 - **Die adres waarvandaan 'n versoek gekom het**, vir elke mislukte poging om aan te meld en elke versoek om 'n nuwe wagwoord, met wanneer dit gemaak is. Dit word bewaar sodat die raai van wagwoorde of die oorspoel van 'n inkassie vertraag kan word, en vir niks anders nie.
 

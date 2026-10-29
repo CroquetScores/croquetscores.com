@@ -8,7 +8,7 @@ Mae **Newid enw** yn gofyn am **Enw** newydd. Dangosir eich enw i'ch cyd-reolwyr
 
 ## Eich cyfeiriad e-bost
 
-Mae **Newid cyfeiriad e-bost** yn gofyn am y **Cyfeiriad e-bost newydd** a'ch **Y cyfrinair presennol**, ac yn anfon dolen i'r cyfeiriad newydd. Mae ei dilyn yn agor tudalen lle mae **Symud fy nghyfrif** yn symud y cyfrif. Gofynnir am y cyfrinair oherwydd bod cyfrif sy'n cael ei symud yn gyfrif sy'n cael ei gymryd, ac nid yw bod wedi mewngofnodi yn unig yn ddigon. Ni ellir symud cyfrif a wnaed gyda Google, nad oes ganddo gyfrinair, yn y modd hwn.
+Mae **Newid cyfeiriad e-bost** yn gofyn am y **Cyfeiriad e-bost newydd** a'ch **Y cyfrinair presennol**, ac yn anfon dolen i'r cyfeiriad newydd. Mae ei dilyn yn agor tudalen lle mae **Symud fy nghyfrif** yn symud y cyfrif. Gofynnir am y cyfrinair oherwydd bod cyfrif sy'n cael ei symud yn gyfrif sy'n cael ei gymryd, ac nid yw bod wedi mewngofnodi yn unig yn ddigon. Ni ellir symud cyfrif a wnaed gyda Google neu Facebook, nad oes ganddo gyfrinair, yn y modd hwn.
 
 ## Eich cyfrinair
 

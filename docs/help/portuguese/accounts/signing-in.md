@@ -12,9 +12,11 @@ Um endereço que falhou dez vezes ao entrar em uma hora fica retido pelo resto d
 
 Uma conta cujo endereço de e-mail não foi confirmado ainda não tem senha, então não é possível entrar nela. Siga o link do e-mail ou peça um novo: [Cadastrar-se e confirmar](registering.md) explica como.
 
-## Com o Google
+## Com o Google ou o Facebook
 
-**Entrar com o Google** e **Cadastrar-se com o Google** usam a conta do Google que você escolher, então o site nunca vê uma senha dela. Uma conta criada assim não tem senha até você pedir uma.
+**Entrar com o Google**, **Entrar com o Facebook**, **Cadastrar-se com o Google** e **Cadastrar-se com o Facebook** usam a conta do Google ou do Facebook que você escolher, então o site nunca vê uma senha dela. Uma conta criada assim não tem senha até você pedir uma.
+
+O Facebook só dá o seu endereço de e-mail ao site se você tiver um confirmado no Facebook e permitir que seja compartilhado. Sem ele, o site não consegue encontrar nem criar a sua conta, e diz isso: use o seu endereço de e-mail.
 
 Para entrar também com uma senha, escolha **Definir senha** no menu **Conta** e clique em **Enviar um link por e-mail**. O link vai para o endereço de e-mail da sua conta e define uma senha do mesmo modo que o link de uma senha esquecida.
 

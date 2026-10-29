@@ -234,7 +234,7 @@ export const italian: Language = {
 
     "setPassword.title": "Imposta una password",
     "setPassword.explanation":
-      "Il tuo account non ha una password: accedi con Google. Per poter accedere anche con una password, invieremo a {emailAddress} un link per impostarla.",
+      "Il tuo account non ha una password: accedi con Google o Facebook. Per poter accedere anche con una password, invieremo a {emailAddress} un link per impostarla.",
     "setPassword.submit": "Inviami un link per email",
     "setPassword.sent.title": "Controlla la tua email",
     "setPassword.sent.explanation":
@@ -1841,7 +1841,7 @@ export const italian: Language = {
 <p>Ciao,</p>
 
 <p>
-    Il tuo account <strong>{siteName}</strong> non ha una password: accedi con Google.<br />
+    Il tuo account <strong>{siteName}</strong> non ha una password: accedi con Google o Facebook.<br />
     Hai chiesto di impostarne una, per poter accedere anche con il tuo indirizzo email e una password.
     Puoi impostarla facendo clic sul pulsante qui sotto:
 </p>

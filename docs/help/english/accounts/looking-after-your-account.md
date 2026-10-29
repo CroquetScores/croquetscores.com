@@ -8,7 +8,7 @@ Choose **Profile** in the **Account** menu. It shows your **Name:** and **Email 
 
 ## Your email address
 
-**Change Email Address** asks for the **New email address** and your **Current password**, and sends a link to the new address. Following it opens a page where **Move my account** moves the account. The password is asked for since an account that is moved is an account that is taken, and being signed in on its own is not enough. An account made with Google, which has no password, cannot be moved this way.
+**Change Email Address** asks for the **New email address** and your **Current password**, and sends a link to the new address. Following it opens a page where **Move my account** moves the account. The password is asked for since an account that is moved is an account that is taken, and being signed in on its own is not enough. An account made with Google or Facebook, which has no password, cannot be moved this way.
 
 ## Your password
 

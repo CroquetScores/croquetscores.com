@@ -229,7 +229,7 @@ export const portuguese: Language = {
 
     "setPassword.title": "Definir uma senha",
     "setPassword.explanation":
-      "A sua conta não tem senha: você entra com o Google. Para entrar também com uma senha, enviaremos por e-mail um link para defini-la a {emailAddress}.",
+      "A sua conta não tem senha: você entra com o Google ou com o Facebook. Para entrar também com uma senha, enviaremos por e-mail um link para defini-la a {emailAddress}.",
     "setPassword.submit": "Enviar um link por e-mail",
     "setPassword.sent.title": "Verifique seu e-mail",
     "setPassword.sent.explanation":
@@ -1797,7 +1797,7 @@ export const portuguese: Language = {
 <p>Olá,</p>
 
 <p>
-    A sua conta do <strong>{siteName}</strong> não tem senha: você entra com o Google.<br />
+    A sua conta do <strong>{siteName}</strong> não tem senha: você entra com o Google ou com o Facebook.<br />
     Você pediu para definir uma, para também poder entrar com o seu endereço de e-mail e uma senha.
     Você pode defini-la clicando no botão abaixo:
 </p>

@@ -8,7 +8,7 @@ Välj **Profil** i menyn **Konto**. Den visar ditt **Namn:** och din **E-postadr
 
 ## Din e-postadress
 
-**Byt e-postadress** frågar efter **Ny e-postadress** och ditt **Nuvarande lösenord**, och skickar en länk till den nya adressen. När du följer den öppnas en sida där **Flytta mitt konto** flyttar kontot. Lösenordet efterfrågas eftersom ett konto som flyttas är ett konto som tas, och att vara inloggad räcker inte i sig. Ett konto som skapats med Google, som saknar lösenord, kan inte flyttas på det här sättet.
+**Byt e-postadress** frågar efter **Ny e-postadress** och ditt **Nuvarande lösenord**, och skickar en länk till den nya adressen. När du följer den öppnas en sida där **Flytta mitt konto** flyttar kontot. Lösenordet efterfrågas eftersom ett konto som flyttas är ett konto som tas, och att vara inloggad räcker inte i sig. Ett konto som skapats med Google eller Facebook, som saknar lösenord, kan inte flyttas på det här sättet.
 
 ## Ditt lösenord
 

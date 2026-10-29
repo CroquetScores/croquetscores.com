@@ -12,9 +12,11 @@ Eine Adresse, bei der die Anmeldung innerhalb einer Stunde zehnmal fehlgeschlage
 
 Ein Konto, dessen E-Mail-Adresse nicht bestätigt wurde, hat noch kein Passwort, deshalb kann man sich dort nicht anmelden. Folgen Sie dem Link in der E-Mail oder fordern Sie einen neuen an: [Registrieren und bestätigen](registering.md) sagt, wie.
 
-## Mit Google
+## Mit Google oder Facebook
 
-**Mit Google anmelden** und **Mit Google registrieren** benutzen das Google-Konto, das Sie wählen, sodass die Website nie ein Passwort dafür sieht. Ein so angelegtes Konto hat kein Passwort, bis Sie eines verlangen.
+**Mit Google anmelden**, **Mit Facebook anmelden**, **Mit Google registrieren** und **Mit Facebook registrieren** benutzen das Google- oder Facebook-Konto, das Sie wählen, sodass die Website nie ein Passwort dafür sieht. Ein so angelegtes Konto hat kein Passwort, bis Sie eines verlangen.
+
+Facebook gibt der Website Ihre E-Mail-Adresse nur, wenn Sie bei Facebook eine bestätigte haben und sie weitergeben lassen. Ohne sie kann die Website Ihr Konto weder finden noch anlegen und sagt Ihnen das: Nutzen Sie stattdessen Ihre E-Mail-Adresse.
 
 Um sich auch mit einem Passwort anmelden zu können, wählen Sie **Passwort festlegen** im Menü **Konto** und drücken Sie **Link per E-Mail senden**. Der Link geht an die E-Mail-Adresse Ihres Kontos und legt ein Passwort fest, so wie der Link für ein vergessenes Passwort.
 

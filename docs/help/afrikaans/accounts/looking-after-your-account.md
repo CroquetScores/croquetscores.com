@@ -8,7 +8,7 @@ Kies **Profiel** in die **Rekening**-kieslys. Dit wys jou **Naam:** en **E-posad
 
 ## Jou e-posadres
 
-**Verander e-posadres** vra die **Nuwe e-posadres** en jou **Huidige wagwoord**, en stuur 'n skakel na die nuwe adres. Dit volg maak 'n bladsy oop waar **Skuif my rekening** die rekening skuif. Die wagwoord word gevra omdat 'n rekening wat geskuif word, 'n rekening is wat geneem word, en aangemeld wees alleen nie genoeg is nie. 'n Rekening wat met Google gemaak is, wat geen wagwoord het nie, kan nie so geskuif word nie.
+**Verander e-posadres** vra die **Nuwe e-posadres** en jou **Huidige wagwoord**, en stuur 'n skakel na die nuwe adres. Dit volg maak 'n bladsy oop waar **Skuif my rekening** die rekening skuif. Die wagwoord word gevra omdat 'n rekening wat geskuif word, 'n rekening is wat geneem word, en aangemeld wees alleen nie genoeg is nie. 'n Rekening wat met Google of Facebook gemaak is, wat geen wagwoord het nie, kan nie so geskuif word nie.
 
 ## Jou wagwoord
 

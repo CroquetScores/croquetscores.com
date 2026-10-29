@@ -6,7 +6,7 @@ Wat deze website over je bewaart, waarvoor het wordt gebruikt en hoe je het kunt
 
 - **Je e-mailadres en je naam**, als je je registreert. Beide worden versleuteld bewaard, met een sleutel die alleen bij jouw account hoort. Je e-mailadres wordt ook bewaard in een vorm waarmee de website je account vindt als je inlogt en die niet terug te zetten is naar het adres.
 - **Je wachtwoord**, als je je met een wachtwoord registreert, als hash die niet terug te zetten is naar het wachtwoord. De website bewaart het wachtwoord zelf nooit en kan je niet vertellen wat het was.
-- **Waarmee je inlogt**, als je met Google inlogt: de identificatie die Google de website voor je geeft, en je e-mailadres als Google dat deelt. Verder wordt niets van Google bewaard.
+- **Waarmee je inlogt**, als je met Google of Facebook inlogt: de identificatie die zij de website voor je geven, en je e-mailadres als zij dat delen. Verder wordt niets van hen bewaard.
 - **Wat je invoert**: toernooien die je aanmaakt, de scores die je invoert, en de commentaren en reacties die je schrijft. Die zijn openbaar waar de website ze aan het publiek toont.
 - **Het adres waarvan een verzoek kwam**, bij elke mislukte poging om in te loggen en elk verzoek om een nieuw wachtwoord, met het tijdstip. Het wordt bewaard zodat het raden van wachtwoorden of het overspoelen van een postvak kan worden afgeremd, en voor niets anders.
 

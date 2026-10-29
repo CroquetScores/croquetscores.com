@@ -4,7 +4,7 @@ Un account si crea in due passaggi: fornisci il tuo indirizzo email, poi dimostr
 
 ## Registrarsi
 
-Scegli **Registrati** nel menu **Account**. La pagina chiede il tuo **Indirizzo email** e nient'altro. Spunta **Accetto le condizioni d'uso**, che riguardano ciò che scrivi sul sito, e premi **Registrati**. Puoi anche premere **Registrati con Google**, che non richiede una password: vedi [Accedere](signing-in.md).
+Scegli **Registrati** nel menu **Account**. La pagina chiede il tuo **Indirizzo email** e nient'altro. Spunta **Accetto le condizioni d'uso**, che riguardano ciò che scrivi sul sito, e premi **Registrati**. Puoi anche premere **Registrati con Google** o **Registrati con Facebook**, che non richiedono una password: vedi [Accedere](signing-in.md).
 
 Per registrarsi gli script devono essere attivi per questo sito, così che il sito possa distinguere una persona da un programma. Se sono disattivati, te lo dice prima che tu compili qualcosa. [Script e cookie](../readers/scripting-and-cookies.md) ne dice di più.
 

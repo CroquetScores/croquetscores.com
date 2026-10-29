@@ -4,7 +4,7 @@ Ein Konto entsteht in zwei Schritten: Sie geben Ihre E-Mail-Adresse an und zeige
 
 ## Registrieren
 
-Wählen Sie **Registrieren** im Menü **Konto**. Die Seite fragt nach Ihrer **E-Mail-Adresse** und sonst nichts. Setzen Sie den Haken bei **Ich stimme den Nutzungsbedingungen zu**, die davon handeln, was Sie auf der Website schreiben, und drücken Sie **Registrieren**. Sie können auch **Mit Google registrieren** drücken, wofür kein Passwort nötig ist: siehe [Anmelden](signing-in.md).
+Wählen Sie **Registrieren** im Menü **Konto**. Die Seite fragt nach Ihrer **E-Mail-Adresse** und sonst nichts. Setzen Sie den Haken bei **Ich stimme den Nutzungsbedingungen zu**, die davon handeln, was Sie auf der Website schreiben, und drücken Sie **Registrieren**. Sie können auch **Mit Google registrieren** oder **Mit Facebook registrieren** drücken, wofür kein Passwort nötig ist: siehe [Anmelden](signing-in.md).
 
 Zum Registrieren müssen Skripte für diese Website eingeschaltet sein, damit die Website einen Menschen von einem Programm unterscheiden kann. Sind sie aus, wird es Ihnen gesagt, bevor Sie etwas ausfüllen. [Skripte und Cookies](../readers/scripting-and-cookies.md) sagt mehr dazu.
 

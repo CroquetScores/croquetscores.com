@@ -12,9 +12,11 @@ As een van die twee verkeerd is, sê die bladsy net dat die e-posadres of wagwoo
 
 'n Rekening wie se e-posadres nie bevestig is nie, het nog geen wagwoord nie, so daar kan nie by aangemeld word nie. Volg die skakel in die e-pos, of vra vir 'n nuwe een: [Registreer en bevestig](registering.md) sê hoe.
 
-## Met Google
+## Met Google of Facebook
 
-**Teken in met Google** en **Registreer met Google** gebruik die Google-rekening wat jy kies, so die werf sien nooit 'n wagwoord daarvoor nie. 'n Rekening wat so gemaak is, het geen wagwoord totdat jy een vra nie.
+**Teken in met Google**, **Teken in met Facebook**, **Registreer met Google** en **Registreer met Facebook** gebruik die Google- of Facebook-rekening wat jy kies, so die werf sien nooit 'n wagwoord daarvoor nie. 'n Rekening wat so gemaak is, het geen wagwoord totdat jy een vra nie.
+
+Facebook gee jou e-posadres net aan die werf as jy een by Facebook bevestig het en dit laat deel. Sonder een kan die werf nie jou rekening vind of maak nie, en sê dit so: gebruik eerder jou e-posadres.
 
 Om ook met 'n wagwoord aan te meld, kies **Stel wagwoord** in die **Rekening**-kieslys en druk **Stuur my 'n skakel**. Die skakel gaan na jou rekening se e-posadres en stel 'n wagwoord op dieselfde manier as die skakel vir 'n vergete wagwoord.
 

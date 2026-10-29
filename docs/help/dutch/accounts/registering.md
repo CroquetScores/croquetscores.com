@@ -4,7 +4,7 @@ Een account maak je in twee stappen: je geeft je e-mailadres op, en daarna laat 
 
 ## Registreren
 
-Kies **Registreren** in het menu **Account**. De pagina vraagt alleen je **E-mailadres**. Vink **Ik ga akkoord met de gebruiksvoorwaarden** aan, die gaan over wat je op de site schrijft, en kies **Registreren**. Je kunt ook **Registreren met Google** kiezen, waarvoor je geen wachtwoord nodig hebt: zie [Inloggen](signing-in.md).
+Kies **Registreren** in het menu **Account**. De pagina vraagt alleen je **E-mailadres**. Vink **Ik ga akkoord met de gebruiksvoorwaarden** aan, die gaan over wat je op de site schrijft, en kies **Registreren**. Je kunt ook **Registreren met Google** of **Registreren met Facebook** kiezen, waarvoor je geen wachtwoord nodig hebt: zie [Inloggen](signing-in.md).
 
 Voor registreren moeten scripts voor deze site zijn ingeschakeld, zodat de site een mens van een programma kan onderscheiden. Als ze uit staan, krijg je dat te horen voordat je iets invult. [Scripts en cookies](../readers/scripting-and-cookies.md) vertelt meer.
 

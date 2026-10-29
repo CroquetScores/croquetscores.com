@@ -8,7 +8,7 @@ Ka pātai **Whakarerekē ingoa** i tētahi **Ingoa** hou. Ka whakaatuhia tō ing
 
 ## Tō wāhitau īmēra
 
-Ka pātai **Whakarerekē wāhitau īmēra** i te **Wāhitau īmēra hou** me tō **Kupuhipa o nāianei**, ā, ka tuku i tētahi hononga ki te wāhitau hou. Ka whāia, ka tuwhera tētahi whārangi e nuku ai te pūkete mā **Nekehia taku pūkete**. Ka pātaihia te kupuhipa nā te mea ko te pūkete e nuku ana, he pūkete e tāhaetia ana, ā, kāore i te ranea te takiuru anake. Kāore e taea te nuku pēnei i tētahi pūkete i waihangatia mā Google, kāore nei he kupuhipa.
+Ka pātai **Whakarerekē wāhitau īmēra** i te **Wāhitau īmēra hou** me tō **Kupuhipa o nāianei**, ā, ka tuku i tētahi hononga ki te wāhitau hou. Ka whāia, ka tuwhera tētahi whārangi e nuku ai te pūkete mā **Nekehia taku pūkete**. Ka pātaihia te kupuhipa nā te mea ko te pūkete e nuku ana, he pūkete e tāhaetia ana, ā, kāore i te ranea te takiuru anake. Kāore e taea te nuku pēnei i tētahi pūkete i waihangatia mā Google, mā Facebook rānei, kāore nei he kupuhipa.
 
 ## Tō kupuhipa
 

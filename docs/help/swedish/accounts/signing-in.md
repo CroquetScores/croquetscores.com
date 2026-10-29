@@ -12,9 +12,11 @@ En adress som har misslyckats med att logga in tio gånger på en timme spärras
 
 Ett konto vars e-postadress inte har bekräftats har inget lösenord än, så det går inte att logga in på. Följ länken i e-postmeddelandet eller be om en ny: [Registrera dig och bekräfta](registering.md) visar hur.
 
-## Med Google
+## Med Google eller Facebook
 
-**Logga in med Google** och **Registrera dig med Google** använder det Google-konto du väljer, så webbplatsen ser aldrig något lösenord för det. Ett konto som skapas på det här sättet har inget lösenord förrän du ber om ett.
+**Logga in med Google**, **Logga in med Facebook**, **Registrera dig med Google** och **Registrera dig med Facebook** använder det Google- eller Facebook-konto du väljer, så webbplatsen ser aldrig något lösenord för det. Ett konto som skapas på det här sättet har inget lösenord förrän du ber om ett.
+
+Facebook ger bara webbplatsen din e-postadress om du har en bekräftad hos Facebook och tillåter att den delas. Utan den kan webbplatsen varken hitta eller skapa ditt konto, och säger det: använd din e-postadress i stället.
 
 Om du vill kunna logga in med ett lösenord också, välj **Skapa lösenord** i menyn **Konto** och tryck på **Skicka en länk till mig**. Länken går till kontots e-postadress och anger ett lösenord på samma sätt som länken för ett glömt lösenord.
 

@@ -4,7 +4,7 @@
 
 ## Registreer
 
-Kies **Registreer** in die **Rekening**-kieslys. Die bladsy vra net jou **E-posadres**. Merk **Ek stem in tot die gebruiksvoorwaardes**, wat gaan oor wat jy op die werf skryf, en druk **Registreer**. Jy kan ook **Registreer met Google** druk, wat geen wagwoord nodig het nie: kyk [Aanmeld](signing-in.md).
+Kies **Registreer** in die **Rekening**-kieslys. Die bladsy vra net jou **E-posadres**. Merk **Ek stem in tot die gebruiksvoorwaardes**, wat gaan oor wat jy op die werf skryf, en druk **Registreer**. Jy kan ook **Registreer met Google** of **Registreer met Facebook** druk, wat geen wagwoord nodig het nie: kyk [Aanmeld](signing-in.md).
 
 Om te registreer moet skrip vir hierdie werf aangeskakel wees, sodat die werf 'n mens van 'n program kan onderskei. As dit af is, word jy dit vertel voordat jy iets invul. [Skrip en koekies](../readers/scripting-and-cookies.md) sê meer.
 

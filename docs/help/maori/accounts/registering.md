@@ -4,7 +4,7 @@ Ka waihangatia tētahi pūkete i ngā wāhanga e rua: ka hoatu koe i tō wāhita
 
 ## Te rēhita
 
-Pēhia **Rēhita** i te tahua **Pūkete**. Ko tō **Wāhitau īmēra** anake te mea e pātaihia ana e te whārangi. Tohua **Whakaae ana ahau ki ngā kupu whakamahi**, e pā ana ki ngā mea e tuhia ana e koe ki te pae, ā, pēhia **Rēhita**. Ka taea hoki te pēhi i **Rēhita mā Google**, kāore nei e hiahia ki tētahi kupuhipa: tirohia [Te takiuru](signing-in.md).
+Pēhia **Rēhita** i te tahua **Pūkete**. Ko tō **Wāhitau īmēra** anake te mea e pātaihia ana e te whārangi. Tohua **Whakaae ana ahau ki ngā kupu whakamahi**, e pā ana ki ngā mea e tuhia ana e koe ki te pae, ā, pēhia **Rēhita**. Ka taea hoki te pēhi i **Rēhita mā Google**, i **Rēhita mā Facebook** rānei, kāore nei e hiahia ki tētahi kupuhipa: tirohia [Te takiuru](signing-in.md).
 
 Me whakaara te tuhinga kōkiri mō tēnei pae kia rēhita ai koe, kia mōhio ai te pae he tangata koe, ehara i te hōtaka. Mēnā kua whakaweheara, ka kī atu te pae ki a koe i mua i tō whakakī i tētahi mea. Kei [Te tuhinga kōkiri me ngā pihikete](../readers/scripting-and-cookies.md) ētahi atu kōrero.
 

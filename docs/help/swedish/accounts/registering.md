@@ -4,7 +4,7 @@ Ett konto skapas i två steg: du anger din e-postadress och visar sedan att den 
 
 ## Registrera dig
 
-Tryck på **Registrera dig** i menyn **Konto**. Sidan frågar efter din **E-postadress** och inget annat. Kryssa i **Jag godkänner användarvillkoren**, som handlar om det du skriver på webbplatsen, och tryck på **Registrera dig**. Du kan också trycka på **Registrera dig med Google**, som inte kräver något lösenord: se [Logga in](signing-in.md).
+Tryck på **Registrera dig** i menyn **Konto**. Sidan frågar efter din **E-postadress** och inget annat. Kryssa i **Jag godkänner användarvillkoren**, som handlar om det du skriver på webbplatsen, och tryck på **Registrera dig**. Du kan också trycka på **Registrera dig med Google** eller **Registrera dig med Facebook**, som inte kräver något lösenord: se [Logga in](signing-in.md).
 
 För att registrera dig måste JavaScript vara aktiverat för den här webbplatsen, så att webbplatsen kan skilja en människa från ett program. Är det avstängt får du veta det innan du fyller i något. [JavaScript och kakor](../readers/scripting-and-cookies.md) berättar mer.
 

@@ -237,7 +237,7 @@ export const german: Language = {
 
     "setPassword.title": "Passwort festlegen",
     "setPassword.explanation":
-      "Ihr Konto hat kein Passwort: Sie melden sich mit Google an. Um sich auch mit einem Passwort anmelden zu können, senden wir einen Link zum Festlegen eines Passworts an {emailAddress}.",
+      "Ihr Konto hat kein Passwort: Sie melden sich mit Google oder Facebook an. Um sich auch mit einem Passwort anmelden zu können, senden wir einen Link zum Festlegen eines Passworts an {emailAddress}.",
     "setPassword.submit": "Link per E-Mail senden",
     "setPassword.sent.title": "Prüfen Sie Ihr E-Mail-Postfach",
     "setPassword.sent.explanation":
@@ -1866,7 +1866,7 @@ export const german: Language = {
 <p>Guten Tag,</p>
 
 <p>
-    Ihr <strong>{siteName}</strong>-Konto hat kein Passwort: Sie melden sich mit Google an.<br />
+    Ihr <strong>{siteName}</strong>-Konto hat kein Passwort: Sie melden sich mit Google oder Facebook an.<br />
     Sie haben darum gebeten, eines festzulegen, damit Sie sich auch mit Ihrer E-Mail-Adresse und einem Passwort anmelden können.
     Sie können es festlegen, indem Sie auf die Schaltfläche unten klicken:
 </p>

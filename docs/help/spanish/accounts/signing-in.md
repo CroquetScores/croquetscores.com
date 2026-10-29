@@ -12,9 +12,11 @@ Una dirección que ha fallado diez veces al iniciar sesión en una hora queda re
 
 Una cuenta cuya dirección de correo electrónico no se ha confirmado todavía no tiene contraseña, así que no se puede iniciar sesión en ella. Sigue el enlace del correo o pide uno nuevo: [Registrarse y confirmar](registering.md) explica cómo.
 
-## Con Google
+## Con Google o Facebook
 
-**Iniciar sesión con Google** y **Registrarse con Google** usan la cuenta de Google que elijas, así que el sitio nunca ve una contraseña para ella. Una cuenta creada así no tiene contraseña hasta que pidas una.
+**Iniciar sesión con Google**, **Iniciar sesión con Facebook**, **Registrarse con Google** y **Registrarse con Facebook** usan la cuenta de Google o de Facebook que elijas, así que el sitio nunca ve una contraseña para ella. Una cuenta creada así no tiene contraseña hasta que pidas una.
+
+Facebook solo da tu dirección de correo al sitio si tienes una confirmada en Facebook y permites que se comparta. Sin ella, el sitio no puede encontrar ni crear tu cuenta, y te lo dice: usa en su lugar tu dirección de correo electrónico.
 
 Para iniciar sesión también con contraseña, elige **Establecer contraseña** en el menú **Cuenta** y pulsa **Enviarme un enlace por correo**. El enlace va a la dirección de correo electrónico de tu cuenta y establece una contraseña igual que el enlace de una contraseña olvidada.
 

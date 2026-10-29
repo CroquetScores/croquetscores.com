@@ -214,7 +214,7 @@ export const chinese: Language = {
 
     "setPassword.title": "设置密码",
     "setPassword.explanation":
-      "您的账户没有密码：您是通过 Google 登录的。如果还想用密码登录，我们会向 {emailAddress} 发送一个设置密码的链接。",
+      "您的账户没有密码：您是通过 Google 或 Facebook 登录的。如果还想用密码登录，我们会向 {emailAddress} 发送一个设置密码的链接。",
     "setPassword.submit": "给我发送链接",
     "setPassword.sent.title": "请查收邮件",
     "setPassword.sent.explanation":
@@ -1660,7 +1660,7 @@ export const chinese: Language = {
 <p>您好，</p>
 
 <p>
-    您的 <strong>{siteName}</strong> 账户没有密码：您是通过 Google 登录的。<br />
+    您的 <strong>{siteName}</strong> 账户没有密码：您是通过 Google 或 Facebook 登录的。<br />
     您申请设置密码，以便也能用电子邮件地址和密码登录。
     您可以点击下方按钮来设置：
 </p>

@@ -221,7 +221,7 @@ export const welsh: Language = {
 
     "setPassword.title": "Gosod cyfrinair",
     "setPassword.explanation":
-      "Nid oes gan eich cyfrif gyfrinair: rydych yn mewngofnodi gyda Google. I fewngofnodi gyda chyfrinair hefyd, byddwn yn anfon dolen i un gael ei osod i {emailAddress}.",
+      "Nid oes gan eich cyfrif gyfrinair: rydych yn mewngofnodi gyda Google neu Facebook. I fewngofnodi gyda chyfrinair hefyd, byddwn yn anfon dolen i un gael ei osod i {emailAddress}.",
     "setPassword.submit": "Anfonwch ddolen ataf",
     "setPassword.sent.title": "Gwiriwch eich e-bost",
     "setPassword.sent.explanation":
@@ -1772,7 +1772,7 @@ export const welsh: Language = {
 <p>Helo,</p>
 
 <p>
-    Nid oes gan eich cyfrif <strong>{siteName}</strong> gyfrinair: rydych yn mewngofnodi gyda Google.<br />
+    Nid oes gan eich cyfrif <strong>{siteName}</strong> gyfrinair: rydych yn mewngofnodi gyda Google neu Facebook.<br />
     Gofynnoch am osod un, fel y gallwch fewngofnodi gyda'ch cyfeiriad e-bost a chyfrinair hefyd.
     Gallwch ei osod drwy glicio ar y botwm isod:
 </p>

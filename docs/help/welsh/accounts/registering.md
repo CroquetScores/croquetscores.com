@@ -4,7 +4,7 @@ Caiff cyfrif ei greu mewn dau gam: rydych yn rhoi eich cyfeiriad e-bost, ac yna'
 
 ## Cofrestru
 
-Pwyswch **Cofrestru** yn y ddewislen **Cyfrif**. Mae'r dudalen yn gofyn am eich **Cyfeiriad e-bost** a dim byd arall. Ticiwch **Rwy'n cytuno i'r telerau defnyddio**, sy'n ymwneud â'r hyn rydych yn ei ysgrifennu ar y safle, a phwyswch **Cofrestru**. Gallwch hefyd wasgu **Cofrestru gyda Google**, nad oes angen cyfrinair ar ei gyfer: gweler [Mewngofnodi](signing-in.md).
+Pwyswch **Cofrestru** yn y ddewislen **Cyfrif**. Mae'r dudalen yn gofyn am eich **Cyfeiriad e-bost** a dim byd arall. Ticiwch **Rwy'n cytuno i'r telerau defnyddio**, sy'n ymwneud â'r hyn rydych yn ei ysgrifennu ar y safle, a phwyswch **Cofrestru**. Gallwch hefyd wasgu **Cofrestru gyda Google** neu **Cofrestru gyda Facebook**, nad oes angen cyfrinair ar eu cyfer: gweler [Mewngofnodi](signing-in.md).
 
 Mae cofrestru'n gofyn bod sgriptio wedi'i alluogi ar gyfer y safle hwn, fel y gall y safle wahaniaethu rhwng person a rhaglen. Os yw wedi'i ddiffodd, dywedir wrthych cyn i chi lenwi dim. Mae [Sgriptio a chwcis](../readers/scripting-and-cookies.md) yn dweud mwy.
 

@@ -12,9 +12,11 @@ Caiff cyfeiriad sydd wedi methu mewngofnodi ddeg gwaith mewn awr ei ddal am wedd
 
 Nid oes cyfrinair eto gan gyfrif nad yw ei gyfeiriad e-bost wedi'i gadarnhau, felly ni ellir mewngofnodi iddo. Dilynwch y ddolen yn yr e-bost, neu gofynnwch am un newydd: mae [Cofrestru a chadarnhau](registering.md) yn dweud sut.
 
-## Gyda Google
+## Gyda Google neu Facebook
 
-Mae **Mewngofnodi gyda Google** a **Cofrestru gyda Google** yn defnyddio'r cyfrif Google a ddewiswch, felly nid yw'r safle byth yn gweld cyfrinair ar ei gyfer. Nid oes cyfrinair gan gyfrif a wnaed fel hyn nes i chi ofyn am un.
+Mae **Mewngofnodi gyda Google**, **Mewngofnodi gyda Facebook**, **Cofrestru gyda Google** a **Cofrestru gyda Facebook** yn defnyddio'r cyfrif Google neu Facebook a ddewiswch, felly nid yw'r safle byth yn gweld cyfrinair ar ei gyfer. Nid oes cyfrinair gan gyfrif a wnaed fel hyn nes i chi ofyn am un.
+
+Nid yw Facebook yn rhoi eich cyfeiriad e-bost i'r safle ond os oes gennych un wedi'i gadarnhau gyda Facebook a'ch bod yn caniatáu ei rannu. Hebddo, ni all y safle ddod o hyd i'ch cyfrif na'i greu, ac mae'n dweud hynny: defnyddiwch eich cyfeiriad e-bost yn lle hynny.
 
 I fewngofnodi gyda chyfrinair hefyd, dewiswch **Gosod cyfrinair** yn y ddewislen **Cyfrif** a phwyswch **Anfonwch ddolen ataf**. Mae'r ddolen yn mynd i gyfeiriad e-bost eich cyfrif ac yn gosod cyfrinair yn yr un ffordd â'r ddolen ar gyfer cyfrinair sydd wedi'i anghofio.
 

@@ -4,7 +4,7 @@ Konto powstaje w dwóch krokach: podajesz adres e-mail, a potem pokazujesz, że 
 
 ## Rejestracja
 
-Wybierz **Zarejestruj się** w menu **Konto**. Strona prosi tylko o **Adres e-mail**. Zaznacz **Akceptuję regulamin**, który dotyczy tego, co piszesz na stronie, i naciśnij **Zarejestruj się**. Możesz też nacisnąć **Zarejestruj się przez Google**, co nie wymaga hasła: zobacz [Logowanie](signing-in.md).
+Wybierz **Zarejestruj się** w menu **Konto**. Strona prosi tylko o **Adres e-mail**. Zaznacz **Akceptuję regulamin**, który dotyczy tego, co piszesz na stronie, i naciśnij **Zarejestruj się**. Możesz też nacisnąć **Zarejestruj się przez Google** lub **Zarejestruj się przez Facebook**, co nie wymaga hasła: zobacz [Logowanie](signing-in.md).
 
 Do rejestracji potrzebne są włączone skrypty dla tej strony, żeby mogła odróżnić człowieka od programu. Jeśli są wyłączone, dowiesz się o tym, zanim cokolwiek wypełnisz. Więcej mówi [Skrypty i pliki cookie](../readers/scripting-and-cookies.md).
 

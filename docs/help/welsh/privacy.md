@@ -6,7 +6,7 @@ Beth mae'r wefan hon yn ei gadw amdanoch chi, at beth y caiff ei ddefnyddio a su
 
 - **Eich cyfeiriad e-bost a'ch enw**, os cofrestrwch. Caiff y ddau eu cadw wedi'u hamgryptio, gydag allwedd sy'n perthyn i'ch cyfrif chi yn unig. Caiff eich cyfeiriad e-bost ei gadw hefyd ar ffurf sy'n gadael i'r wefan ddod o hyd i'ch cyfrif pan fyddwch yn mewngofnodi, ac na ellir ei droi'n ôl yn y cyfeiriad.
 - **Eich cyfrinair**, os cofrestrwch gydag un, fel stwnsh na ellir ei droi'n ôl yn y cyfrinair. Nid yw'r wefan byth yn cadw'r cyfrinair ei hun ac ni all ddweud wrthych beth ydoedd.
-- **Beth rydych yn mewngofnodi ag ef**, os byddwch yn mewngofnodi gyda Google: y dynodwr y mae Google yn ei roi i'r wefan ar eich cyfer, a'ch cyfeiriad e-bost lle maent yn ei rannu. Ni chaiff dim arall ganddynt ei gadw.
+- **Beth rydych yn mewngofnodi ag ef**, os byddwch yn mewngofnodi gyda Google neu Facebook: y dynodwr y maent yn ei roi i'r wefan ar eich cyfer, a'ch cyfeiriad e-bost lle maent yn ei rannu. Ni chaiff dim arall ganddynt ei gadw.
 - **Beth rydych yn ei roi i mewn**: twrnameintiau rydych yn eu creu, y sgorau rydych yn eu cofnodi, a'r sylwebaeth a'r sylwadau rydych yn eu hysgrifennu. Maent yn gyhoeddus lle mae'r wefan yn eu dangos i'r cyhoedd.
 - **Y cyfeiriad y daeth cais ohono**, ar gyfer pob ymgais aflwyddiannus i fewngofnodi a phob cais am gyfrinair newydd, gyda'r amser y'i gwnaed. Caiff ei gadw fel y gellir arafu dyfalu cyfrineiriau neu foddi mewnflwch, ac ar gyfer dim arall.
 

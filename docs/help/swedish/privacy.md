@@ -6,7 +6,7 @@ Vad den här webbplatsen sparar om dig, vad det används till och hur du kan få
 
 - **Din e-postadress och ditt namn**, om du registrerar dig. Båda sparas krypterade, med en nyckel som bara hör till ditt konto. Din e-postadress sparas också i en form som låter webbplatsen hitta ditt konto när du loggar in och som inte kan göras om till adressen.
 - **Ditt lösenord**, om du registrerar dig med ett, som en hash som inte kan göras om till lösenordet. Webbplatsen sparar aldrig själva lösenordet och kan inte tala om vad det var.
-- **Vad du loggar in med**, om du loggar in med Google: identifieraren som Google ger webbplatsen för dig, och din e-postadress där de delar den. Inget annat av deras sparas.
+- **Vad du loggar in med**, om du loggar in med Google eller Facebook: identifieraren som de ger webbplatsen för dig, och din e-postadress där de delar den. Inget annat av deras sparas.
 - **Vad du skriver in**: turneringar du skapar, resultaten du anger samt kommentarerna och inläggen du skriver. De är offentliga där webbplatsen visar dem för allmänheten.
 - **Adressen en begäran kom från**, för varje misslyckat försök att logga in och varje begäran om ett nytt lösenord, med tidpunkten. Den sparas så att gissning av lösenord eller översvämning av en inkorg kan bromsas, och för inget annat.
 

@@ -12,9 +12,11 @@ Une adresse pour laquelle la connexion a échoué dix fois en une heure est bloq
 
 Un compte dont l’adresse e-mail n’a pas été confirmée n’a pas encore de mot de passe, et on ne peut donc pas s’y connecter. Suivez le lien de l’e-mail, ou demandez-en un nouveau : [S’inscrire et confirmer](registering.md) explique comment.
 
-## Avec Google
+## Avec Google ou Facebook
 
-**Se connecter avec Google** et **S'inscrire avec Google** utilisent le compte Google que vous choisissez, si bien que le site ne voit jamais de mot de passe pour lui. Un compte créé ainsi n’a pas de mot de passe tant que vous n’en demandez pas un.
+**Se connecter avec Google**, **Se connecter avec Facebook**, **S'inscrire avec Google** et **S'inscrire avec Facebook** utilisent le compte Google ou Facebook que vous choisissez, si bien que le site ne voit jamais de mot de passe pour lui. Un compte créé ainsi n’a pas de mot de passe tant que vous n’en demandez pas un.
+
+Facebook ne donne votre adresse e-mail au site que si vous en avez une confirmée chez Facebook et que vous acceptez qu’elle soit partagée. Sans elle, le site ne peut ni trouver ni créer votre compte, et vous le dit : utilisez plutôt votre adresse e-mail.
 
 Pour pouvoir aussi vous connecter avec un mot de passe, choisissez **Définir un mot de passe** dans le menu **Compte** et appuyez sur **M'envoyer un lien par e-mail**. Le lien est envoyé à l’adresse e-mail de votre compte et sert à définir un mot de passe, comme le lien d’un mot de passe oublié.
 

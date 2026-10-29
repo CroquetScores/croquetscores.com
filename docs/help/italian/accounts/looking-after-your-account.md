@@ -8,7 +8,7 @@ Scegli **Profilo** nel menu **Account**. Mostra **Nome:** e **Indirizzo email:**
 
 ## Il tuo indirizzo email
 
-**Cambia indirizzo email** ha i campi **Nuovo indirizzo email** e **Password attuale**, e invia un link al nuovo indirizzo. Seguirlo apre una pagina dove **Trasferisci il mio account** sposta l'account. La password viene chiesta perché un account che viene spostato è un account che viene preso, ed essere connessi non basta da solo. Un account creato con Google, che non ha una password, non può essere spostato in questo modo.
+**Cambia indirizzo email** ha i campi **Nuovo indirizzo email** e **Password attuale**, e invia un link al nuovo indirizzo. Seguirlo apre una pagina dove **Trasferisci il mio account** sposta l'account. La password viene chiesta perché un account che viene spostato è un account che viene preso, ed essere connessi non basta da solo. Un account creato con Google o Facebook, che non ha una password, non può essere spostato in questo modo.
 
 ## La tua password
 

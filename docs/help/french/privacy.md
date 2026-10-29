@@ -6,7 +6,7 @@ Ce que ce site conserve à votre sujet, à quoi cela sert et comment le faire ou
 
 - **Votre adresse e-mail et votre nom**, si vous vous inscrivez. Les deux sont conservés chiffrés, avec une clé qui n’appartient qu’à votre compte. Votre adresse e-mail est aussi conservée sous une forme qui permet au site de retrouver votre compte quand vous vous connectez, et qui ne peut pas être reconvertie en adresse.
 - **Votre mot de passe**, si vous vous inscrivez avec un, sous forme d’empreinte qui ne peut pas être reconvertie en mot de passe. Le site ne conserve jamais le mot de passe lui-même et ne peut pas vous dire quel il était.
-- **Ce avec quoi vous vous connectez**, si vous vous connectez avec Google : l’identifiant que Google donne au site pour vous, et votre adresse e-mail quand il la partage. Rien d’autre ne vient de lui.
+- **Ce avec quoi vous vous connectez**, si vous vous connectez avec Google ou Facebook : l’identifiant qu’ils donnent au site pour vous, et votre adresse e-mail quand ils la partagent. Rien d’autre ne vient d’eux.
 - **Ce que vous saisissez** : les tournois que vous créez, les scores que vous saisissez, et les commentaires que vous écrivez. Ils sont publics là où le site les montre au public.
 - **L’adresse d’où venait une requête**, pour chaque tentative de connexion échouée et chaque demande de nouveau mot de passe, avec le moment où elle a eu lieu. Elle est conservée pour que le devinage de mots de passe ou l’inondation d’une boîte de réception puisse être ralenti, et pour rien d’autre.
 

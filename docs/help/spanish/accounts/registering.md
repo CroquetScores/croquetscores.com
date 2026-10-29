@@ -4,7 +4,7 @@ Una cuenta se crea en dos pasos: das tu dirección de correo electrónico y desp
 
 ## Registrarse
 
-Pulsa **Registrarse** en el menú **Cuenta**. La página te pide tu **Dirección de correo electrónico** y nada más. Marca **Acepto las condiciones de uso**, que tratan de lo que escribes en el sitio, y pulsa **Registrarse**. También puedes pulsar **Registrarse con Google**, que no necesita contraseña: consulta [Iniciar sesión](signing-in.md).
+Pulsa **Registrarse** en el menú **Cuenta**. La página te pide tu **Dirección de correo electrónico** y nada más. Marca **Acepto las condiciones de uso**, que tratan de lo que escribes en el sitio, y pulsa **Registrarse**. También puedes pulsar **Registrarse con Google** o **Registrarse con Facebook**, que no necesitan contraseña: consulta [Iniciar sesión](signing-in.md).
 
 Para registrarte hace falta tener los scripts activados en este sitio, para que el sitio pueda distinguir a una persona de un programa. Si están desactivados, se te avisa antes de que rellenes nada. [Scripts y cookies](../readers/scripting-and-cookies.md) lo explica mejor.
 

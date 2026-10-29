@@ -46,7 +46,7 @@ Feature: A reader who is signed in can change their account's email address
   account. The reader is taken to their profile, which shows the new address.
 
   A reader whose account has no password, because they have only ever signed
-  in with Google, has none to give here. For them the page is not there:
+  in with Google or Facebook, has none to give here. For them the page is not there:
   opening it, or posting to it, is answered as a page that does not exist is,
   and neither the menu nor the profile leads to it (`accountMenu.feature`,
   `profile.feature`). They set a password on the set password page first

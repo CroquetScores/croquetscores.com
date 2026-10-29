@@ -220,7 +220,7 @@ export const russian: Language = {
 
     "setPassword.title": "Задайте пароль",
     "setPassword.explanation":
-      "У вашего аккаунта нет пароля: вы входите через Google. Чтобы входить ещё и по паролю, мы отправим на {emailAddress} ссылку для его задания.",
+      "У вашего аккаунта нет пароля: вы входите через Google или Facebook. Чтобы входить ещё и по паролю, мы отправим на {emailAddress} ссылку для его задания.",
     "setPassword.submit": "Отправить мне ссылку",
     "setPassword.sent.title": "Проверьте почту",
     "setPassword.sent.explanation":
@@ -1714,7 +1714,7 @@ export const russian: Language = {
 <p>Здравствуйте!</p>
 
 <p>
-    У вашего аккаунта <strong>{siteName}</strong> нет пароля: вы входите через Google.<br />
+    У вашего аккаунта <strong>{siteName}</strong> нет пароля: вы входите через Google или Facebook.<br />
     Вы попросили задать его, чтобы входить ещё и по адресу электронной почты и паролю.
     Задать пароль можно, нажав кнопку ниже:
 </p>
