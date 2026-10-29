@@ -86,6 +86,7 @@ export const french: Language = {
     "register.emailAddress": "Adresse e-mail",
     "register.submit": "S'inscrire",
     "register.withGoogle": "S'inscrire avec Google",
+    "register.withFacebook": "S'inscrire avec Facebook",
     "register.or": "ou",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -95,10 +96,16 @@ export const french: Language = {
       "Google n'a pas confirmé que cette adresse e-mail est la vôtre, elle ne peut donc pas être utilisée ici avec Google. Utilisez plutôt votre adresse e-mail ci-dessous.",
     "SignInWithGoogle.LinkedToAnother":
       "Cette adresse e-mail a déjà un compte, lié à un autre compte Google. Connectez-vous avec ce compte Google, ou avec votre adresse e-mail et votre mot de passe.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook ne nous a pas communiqué d'adresse e-mail, or nous en avons besoin pour trouver ou créer votre compte. Utilisez plutôt votre adresse e-mail ci-dessous.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Cette adresse e-mail a déjà un compte, lié à un autre compte Facebook. Connectez-vous avec ce compte Facebook, ou avec votre adresse e-mail et votre mot de passe.",
     "SignInWithGoogle.NameMissing":
       "Google ne nous a pas communiqué votre nom, or un compte en a besoin. Utilisez plutôt votre adresse e-mail ci-dessous.",
     "Google.Unreachable":
       "Google est inaccessible pour le moment. Réessayez dans quelques minutes, ou utilisez votre adresse e-mail ci-dessous.",
+    "Facebook.Unreachable":
+      "Facebook est inaccessible pour le moment. Réessayez dans quelques minutes, ou utilisez votre adresse e-mail ci-dessous.",
     "Registration.NotAPerson":
       "Cela ne semble pas venir d'une personne. Réessayez, et si le problème persiste, attendez quelques minutes avant de revenir.",
 
@@ -206,6 +213,7 @@ export const french: Language = {
     "signIn.forgotPassword": "Mot de passe oublié ?",
     "signIn.register": "S'inscrire",
     "signIn.withGoogle": "Se connecter avec Google",
+    "signIn.withFacebook": "Se connecter avec Facebook",
     "signIn.or": "ou",
     "signIn.tryAgainLater":
       "Trop de tentatives ont été faites récemment. Attendez une heure et réessayez.",

@@ -41,7 +41,11 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { RegisterAccount } from "../../application/operations/accounts/RegisterAccount.js";
 import type { Assets } from "../common/assets.js";
-import { renderDialog, type Dialog } from "../common/dialog.js";
+import {
+  renderDialog,
+  type Alternative,
+  type Dialog,
+} from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { RequestInvalid } from "../../application/common/ValidationBehaviour.js";
@@ -51,7 +55,13 @@ import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { themeOf } from "../common/theme.js";
 import { reportUnreachable } from "../common/unreachableServices.js";
+import {
+  facebookPath,
+  refusalsFromFacebook,
+  withFacebook,
+} from "./facebookOffer.js";
 import { googlePath, refusalsFromGoogle, withGoogle } from "./googleOffer.js";
+import type { Ending, Offered } from "./offers.js";
 import { javaScriptRequiredPath } from "./javaScriptRequired.js";
 import { registrationsSuspendedPath } from "./registrationsSuspended.js";
 import {
@@ -59,7 +69,7 @@ import {
   agreeingTo,
   notAgreed,
   termsOfUseField,
-  termsOfUseForGoogleField,
+  termsOfUseForOffersField,
 } from "./termsOfUse.js";
 import { welcomePath } from "./welcome.js";
 
@@ -126,24 +136,26 @@ const script = (siteKey: string | undefined): string =>
       })();
     </script>`;
 
-// The offer to register with Google carries the box as it is followed, ticked
-// or not as it is then. Without scripting it carries nothing, and the reader
-// is brought back to tick it, which is no loss: registering needs scripting
-// anyway.
-const googleScript = (googleOffered: boolean): string =>
-  !googleOffered
+// Each offer to register with Google or Facebook carries the box as it is
+// followed, ticked or not as it is then. Without scripting it carries nothing,
+// and the reader is brought back to tick it, which is no loss: registering
+// needs scripting anyway.
+const offersScript = (offered: Offered): string =>
+  !offered.google && !offered.facebook
     ? ""
     : `
     <script>
       (function () {
-        var offer = document.querySelector("a.dialog-alternative");
-        var box = document.getElementsByName(${JSON.stringify(termsOfUseForGoogleField)})[0];
-        if (!offer || !box) return;
-        offer.addEventListener("click", function () {
-          var to = new URL(offer.href);
-          if (box.checked) to.searchParams.set(${JSON.stringify(termsOfUseField)}, "on");
-          else to.searchParams.delete(${JSON.stringify(termsOfUseField)});
-          offer.href = to.toString();
+        var offers = document.querySelectorAll("a.dialog-alternative");
+        var box = document.getElementsByName(${JSON.stringify(termsOfUseForOffersField)})[0];
+        if (!offers.length || !box) return;
+        offers.forEach(function (offer) {
+          offer.addEventListener("click", function () {
+            var to = new URL(offer.href);
+            if (box.checked) to.searchParams.set(${JSON.stringify(termsOfUseField)}, "on");
+            else to.searchParams.delete(${JSON.stringify(termsOfUseField)});
+            offer.href = to.toString();
+          });
         });
       })();
     </script>`;
@@ -155,8 +167,8 @@ const formFor = (
   speaking: Speaking,
   requestId: string,
   typed: Typed,
-  googleOffered: boolean,
-  googleNotAgreedTo = false,
+  offered: Offered,
+  notAgreedTo = false,
 ): Dialog => ({
   title: speaking.say("register.title"),
   action: `${registerPath}?request=${encodeURIComponent(requestId)}`,
@@ -175,33 +187,54 @@ const formFor = (
     agreeingTo(speaking, typed),
   ],
   submit: speaking.say("register.submit"),
-  // The way to Google that names no page is this one's, which offered it first.
-  alternative: googleOffered
-    ? withGoogle(
-        speaking.say("register.withGoogle"),
-        speaking.say("register.or"),
-        googlePath,
-        {
-          ...agreeingTo(speaking, {}, termsOfUseForGoogleField),
-          // Said beneath this box and not the form's, because it is this one
-          // the reader pressed the offer without ticking.
-          ...(googleNotAgreedTo
-            ? {
-                messages: [speaking.say(notAgreed.code)],
-                invalid: true,
-                autofocus: true,
-              }
-            : {}),
-        },
-      )
-    : undefined,
+  // Google's first, Facebook's beneath it, and the last of them ends with the
+  // box and the word. The way to Google that names no page is this one's,
+  // which offered it first.
+  alternatives: offersOf(speaking, offered, notAgreedTo),
 });
+
+// The one box serves every offer, so it is drawn once, beneath the last.
+const offersOf = (
+  speaking: Speaking,
+  offered: Offered,
+  notAgreedTo: boolean,
+): Alternative[] => {
+  const ending: Ending = {
+    or: speaking.say("register.or"),
+    agreeing: {
+      ...agreeingTo(speaking, {}, termsOfUseForOffersField),
+      // Said beneath this box and not the form's, because it is this one the
+      // reader pressed an offer without ticking.
+      ...(notAgreedTo
+        ? {
+            messages: [speaking.say(notAgreed.code)],
+            invalid: true,
+            autofocus: true,
+          }
+        : {}),
+    },
+  };
+  const offers: ((ending?: Ending) => Alternative)[] = [];
+  if (offered.google) {
+    offers.push((last) =>
+      withGoogle(speaking.say("register.withGoogle"), googlePath, last),
+    );
+  }
+  if (offered.facebook) {
+    offers.push((last) =>
+      withFacebook(speaking.say("register.withFacebook"), facebookPath, last),
+    );
+  }
+  return offers.map((offer, at) =>
+    offer(at === offers.length - 1 ? ending : undefined),
+  );
+};
 
 export const registerRegisterPage = (
   server: FastifyInstance,
   assets: Assets,
   readers: ReaderCheck,
-  googleOffered: boolean,
+  offered: Offered,
 ): void => {
   const page = (
     request: FastifyRequest,
@@ -226,7 +259,7 @@ export const registerRegisterPage = (
       // how reCAPTCHA is meant to be sent and needs no hidden-field support of
       // its own: the dialog draws the fields a reader fills in, and this one
       // is written beside it.
-      body: `${renderDialog(dialog)}${script(readers.siteKey)}${googleScript(googleOffered)}`,
+      body: `${renderDialog(dialog)}${script(readers.siteKey)}${offersScript(offered)}`,
     });
 
   const show = (
@@ -248,7 +281,7 @@ export const registerRegisterPage = (
     registerPath,
     (request, reply) => {
       const speaking = speakingOf(request);
-      const dialog = formFor(speaking, randomUUID(), {}, googleOffered);
+      const dialog = formFor(speaking, randomUUID(), {}, offered);
       const refused = request.query.refused;
       // Brought back from the way to Google for not having ticked the box
       // beneath the offer, which is said beneath that box.
@@ -256,11 +289,17 @@ export const registerRegisterPage = (
         return show(
           request,
           reply,
-          formFor(speaking, randomUUID(), {}, googleOffered, true),
+          formFor(speaking, randomUUID(), {}, offered, true),
           speaking,
         );
       }
-      if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
+      if (
+        refused === undefined ||
+        !(
+          refusalsFromGoogle.includes(refused) ||
+          refusalsFromFacebook.includes(refused)
+        )
+      ) {
         return show(request, reply, dialog, speaking);
       }
       return show(
@@ -282,7 +321,7 @@ export const registerRegisterPage = (
       const given = request.query.request;
       const requestId =
         typeof given === "string" && given.trim() !== "" ? given : randomUUID();
-      const dialog = formFor(speaking, requestId, typed, googleOffered);
+      const dialog = formFor(speaking, requestId, typed, offered);
 
       let judgement: Judgement;
       try {

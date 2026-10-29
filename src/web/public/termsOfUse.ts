@@ -23,11 +23,12 @@ export const writersTermsOfUsePath = "/admin/terms-of-use";
 export const termsOfUseField = "termsOfUse";
 
 /**
- * The name of the box beneath the offer to register with Google. Not the
- * form's own box's name, because the two are not kept in step: each belongs to
- * the way in it sits with, and the form is sent without this one being read.
+ * The name of the box beneath the offers to register with Google or Facebook,
+ * which is the one box for both. Not the form's own box's name, because the
+ * two are not kept in step: each belongs to the way in it sits with, and the
+ * form is sent without this one being read.
  */
-export const termsOfUseForGoogleField = "termsOfUseForGoogle";
+export const termsOfUseForOffersField = "termsOfUseForOffers";
 
 /** The box, ticked again where it was ticked when the form was refused. */
 export const agreeingTo = (

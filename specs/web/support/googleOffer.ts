@@ -1,7 +1,7 @@
-// The offer to come in with Google, as a reader sees it and presses it. Here
-// rather than beside one feature, because the register page and the sign in
-// page both make it, drawn the same way and followed the same way, and what
-// differs between them is only which offer is asked about.
+// The offer to come in with Google or Facebook, as a reader sees it and presses
+// it. Here rather than beside one feature, because the register page and the
+// sign in page both make it, drawn the same way and followed the same way, and
+// what differs between them is only which offer is asked about.
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../support/world.js";
@@ -9,6 +9,7 @@ import { drawnBesideAButton } from "./buttons.js";
 import { englishForScenarios, unmarked } from "./languages.js";
 
 export const callback = "/auth/google/callback";
+export const facebookCallback = "/auth/facebook/callback";
 
 const dialog = "section.dialog";
 const titleBar = `${dialog} .dialog-title`;
@@ -93,6 +94,48 @@ export const offerCarriesGooglesIcon = async (
     fills.push(((await path.getAttribute("fill")) ?? "").toUpperCase());
   }
   assert.deepEqual(fills.sort(), ["#34A853", "#4285F4", "#EA4335", "#FBBC05"]);
+};
+
+// Facebook's mark is the "f" in its blue.
+export const offerCarriesFacebooksIcon = async (
+  world: SpecWorld,
+  offer: string,
+): Promise<void> => {
+  const fills: string[] = [];
+  for (const path of await world.browserPage
+    .locator(`${offer} svg path`)
+    .all()) {
+    fills.push(((await path.getAttribute("fill")) ?? "").toUpperCase());
+  }
+  assert.deepEqual(fills, ["#1877F2"]);
+};
+
+// Directly beneath another offer: it starts where the other ends, and no more
+// than a gap of a few pixels lower.
+export const offerIsBeneathTheOffer = async (
+  world: SpecWorld,
+  offer: string,
+  other: string,
+): Promise<void> => {
+  const lower = await boxOf(world, offer);
+  const upper = await boxOf(world, other);
+  assert.ok(
+    lower.y >= upper.y + upper.height - 0.5,
+    "The offer does not start beneath the other.",
+  );
+};
+
+export const offerIsAsWideAsTheOffer = async (
+  world: SpecWorld,
+  offer: string,
+  other: string,
+): Promise<void> => {
+  const one = await boxOf(world, offer);
+  const another = await boxOf(world, other);
+  assert.ok(
+    Math.abs(one.width - another.width) <= 0.5,
+    `The offer is ${one.width} pixels wide and the other ${another.width}.`,
+  );
 };
 
 export const offerIsInTheDialog = async (
@@ -186,11 +229,12 @@ export const waysBackFollowed = (world: SpecWorld): readonly string[] =>
 export const pressTheOffer = async (
   world: SpecWorld,
   offer: string,
+  comingBackBy: string = callback,
 ): Promise<void> => {
   const followed: string[] = [];
   waysBack.set(world, followed);
   world.browserPage.on("request", (request) => {
-    if (new URL(request.url()).pathname === callback) {
+    if (new URL(request.url()).pathname === comingBackBy) {
       followed.push(request.url());
     }
   });

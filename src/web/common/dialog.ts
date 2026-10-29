@@ -77,7 +77,9 @@ export interface Problems {
 
 /**
  * Another way to do what the form is for, offered above its fields: registering
- * with Google rather than by email address, say.
+ * with Google rather than by email address, say. Where there are several they
+ * stand one beneath another, and the last carries the word that stands between
+ * them and the fields, and the box to tick that they all need ticked.
  */
 export interface Alternative {
   readonly label: string;
@@ -87,8 +89,8 @@ export interface Alternative {
    * only ever the page's own and never anything a reader sent.
    */
   readonly icon: string;
-  /** The word that stands between it and the fields. */
-  readonly or: string;
+  /** The word that stands between it and the fields, where it is the last. */
+  readonly or?: string | undefined;
   /**
    * A box to tick that the alternative needs ticked, drawn directly beneath it
    * and above the word. Its own, rather than one of the form's fields, because
@@ -124,8 +126,8 @@ export interface Dialog {
   readonly notice?: string | undefined;
   /** What is wrong with the form as a whole, when it has been refused. */
   readonly problems?: Problems | undefined;
-  /** Another way to do what the form is for, when there is one. */
-  readonly alternative?: Alternative | undefined;
+  /** Other ways to do what the form is for, when there are any. */
+  readonly alternatives?: readonly Alternative[] | undefined;
 }
 
 // The label rests inside the field's border, where the typing will go, and
@@ -290,12 +292,12 @@ ${said.messages.map((text) => `                <p>${escape(text)}</p>`).join("\n
 // beneath it is written in lower case and drawn in capitals by the stylesheet,
 // because a screen reader can spell out a word written in capitals letter by
 // letter.
-const alternative = (other: Alternative | undefined): string =>
-  other === undefined
-    ? ""
-    : `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>${other.agreeing === undefined ? "" : `\n${field(other.agreeing)}`}
-              <p class="dialog-or">${escape(other.or)}</p>
+const alternative = (other: Alternative): string =>
+  `              <a class="button dialog-alternative" href="${escape(other.href)}">${other.icon}<span>${escape(other.label)}</span></a>${other.agreeing === undefined ? "" : `\n${field(other.agreeing)}`}${other.or === undefined ? "" : `\n              <p class="dialog-or">${escape(other.or)}</p>`}
 `;
+
+const alternatives = (others: Dialog["alternatives"]): string =>
+  (others ?? []).map(alternative).join("");
 
 // Links drawn as buttons, so that they work with scripting off.
 const elsewhere = (links: Dialog["elsewhere"]): string =>
@@ -316,7 +318,8 @@ const buttons = (dialog: Dialog): string =>
 // Whether the reader is being taken to something that needs attention.
 const attentionAskedFor = (dialog: Dialog): boolean =>
   dialog.problems?.autofocus === true ||
-  dialog.alternative?.agreeing?.autofocus === true ||
+  dialog.alternatives?.some((other) => other.agreeing?.autofocus === true) ===
+    true ||
   dialog.fields.some((field) => field.autofocus === true);
 
 // Written last, inside the form and after everything a reader sees: a hidden
@@ -362,7 +365,7 @@ const renderFocused = (
           <h1 class="dialog-title" id="dialog-title">${escape(dialog.title)}</h1>
           <form class="dialog-form" method="post" action="${escape(dialog.action)}">
             <div class="dialog-content stack">
-${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternative(dialog.alternative)}${dialog.fields.map(field).join("\n")}
+${notice(dialog.notice, attentionAskedFor(dialog))}${problems(dialog.problems)}${alternatives(dialog.alternatives)}${dialog.fields.map(field).join("\n")}
             </div>
             <div class="dialog-buttons">
 ${buttons(dialog)}

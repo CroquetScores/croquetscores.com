@@ -85,6 +85,7 @@ export const korean: Language = {
     "register.emailAddress": "이메일 주소",
     "register.submit": "가입",
     "register.withGoogle": "Google로 가입",
+    "register.withFacebook": "Facebook로 가입",
     "register.or": "또는",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -94,10 +95,16 @@ export const korean: Language = {
       "Google이 이 이메일 주소가 본인 것임을 확인하지 않아서 여기서는 Google로 이용할 수 없어요. 아래에서 이메일 주소를 사용해 주세요.",
     "SignInWithGoogle.LinkedToAnother":
       "이 이메일 주소로 만든 계정이 이미 있고, 다른 Google 계정과 연결되어 있어요. 그 Google 계정으로 로그인하거나, 이메일 주소와 비밀번호로 로그인해 주세요.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook에서 이메일 주소를 받지 못했는데, 계정을 찾거나 만들려면 필요해요. 아래에서 이메일 주소를 사용해 주세요.",
+    "SignInWithFacebook.LinkedToAnother":
+      "이 이메일 주소로 만든 계정이 이미 있고, 다른 Facebook 계정과 연결되어 있어요. 그 Facebook 계정으로 로그인하거나, 이메일 주소와 비밀번호로 로그인해 주세요.",
     "SignInWithGoogle.NameMissing":
       "Google에서 이름을 받지 못했는데, 계정에는 이름이 필요해요. 아래에서 이메일 주소를 사용해 주세요.",
     "Google.Unreachable":
       "지금은 Google에 연결할 수 없어요. 몇 분 후에 다시 시도하거나, 아래에서 이메일 주소를 사용해 주세요.",
+    "Facebook.Unreachable":
+      "지금은 Facebook에 연결할 수 없어요. 몇 분 후에 다시 시도하거나, 아래에서 이메일 주소를 사용해 주세요.",
     "Registration.NotAPerson":
       "사람이 보낸 요청으로 보이지 않아요. 다시 시도해 주세요. 계속 같은 일이 생기면 몇 분 기다렸다가 다시 와 주세요.",
 
@@ -201,6 +208,7 @@ export const korean: Language = {
     "signIn.forgotPassword": "비밀번호 찾기",
     "signIn.register": "가입",
     "signIn.withGoogle": "Google로 로그인",
+    "signIn.withFacebook": "Facebook로 로그인",
     "signIn.or": "또는",
     "signIn.tryAgainLater":
       "최근 시도 횟수가 너무 많아요. 한 시간 뒤에 다시 시도해 주세요.",

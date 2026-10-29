@@ -81,6 +81,7 @@ export const swedish: Language = {
     "register.emailAddress": "E-postadress",
     "register.submit": "Registrera dig",
     "register.withGoogle": "Registrera dig med Google",
+    "register.withFacebook": "Registrera dig med Facebook",
     "register.or": "eller",
     // Sägs ovanför formuläret när Google skickade tillbaka läsaren utan att
     // släppa in hen, var och en efter koden som vägen tillbaka gav. Både
@@ -91,10 +92,16 @@ export const swedish: Language = {
       "Google har inte bekräftat att den e-postadressen är din, så den kan inte användas med Google här. Använd din e-postadress nedan i stället.",
     "SignInWithGoogle.LinkedToAnother":
       "Den e-postadressen har redan ett konto, länkat till ett annat Google-konto. Logga in med det Google-kontot, eller med din e-postadress och ditt lösenord.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook gav oss ingen e-postadress, och vi behöver en för att hitta eller skapa ditt konto. Använd din e-postadress nedan i stället.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Den e-postadressen har redan ett konto, länkat till ett annat Facebook-konto. Logga in med det Facebook-kontot, eller med din e-postadress och ditt lösenord.",
     "SignInWithGoogle.NameMissing":
       "Google berättade inte vad du heter, och ett konto måste ha ett namn. Använd din e-postadress nedan i stället.",
     "Google.Unreachable":
       "Det gick inte att nå Google just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
+    "Facebook.Unreachable":
+      "Det gick inte att nå Facebook just nu. Försök igen om några minuter, eller använd din e-postadress nedan.",
     "Registration.NotAPerson":
       "Det här såg inte ut att komma från en människa. Försök igen, och om det fortsätter, vänta några minuter och kom tillbaka.",
 
@@ -200,6 +207,7 @@ export const swedish: Language = {
     "signIn.forgotPassword": "Glömt lösenord?",
     "signIn.register": "Registrera dig",
     "signIn.withGoogle": "Logga in med Google",
+    "signIn.withFacebook": "Logga in med Facebook",
     "signIn.or": "eller",
     "signIn.tryAgainLater":
       "För många försök har gjorts på sistone. Vänta en timme och försök igen.",

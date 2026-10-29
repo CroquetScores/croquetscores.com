@@ -86,6 +86,7 @@ export const italian: Language = {
     "register.emailAddress": "Indirizzo email",
     "register.submit": "Registrati",
     "register.withGoogle": "Registrati con Google",
+    "register.withFacebook": "Registrati con Facebook",
     "register.or": "oppure",
     // Detti sopra il modulo quando Google ha rimandato indietro senza far
     // entrare, ciascuno per il codice che la via del ritorno ha dato. Li dicono
@@ -95,10 +96,16 @@ export const italian: Language = {
       "Google non ha confermato che questo indirizzo email è tuo, quindi non può essere usato qui con Google. Usa invece il tuo indirizzo email qui sotto.",
     "SignInWithGoogle.LinkedToAnother":
       "Questo indirizzo email ha già un account, collegato a un altro account Google. Accedi con quell'account Google, oppure con il tuo indirizzo email e la password.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook non ci ha dato un indirizzo email, e ci serve per trovare o creare il tuo account. Usa invece il tuo indirizzo email qui sotto.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Questo indirizzo email ha già un account, collegato a un altro account Facebook. Accedi con quell'account Facebook, oppure con il tuo indirizzo email e la password.",
     "SignInWithGoogle.NameMissing":
       "Google non ci ha detto il tuo nome, e un account ne ha bisogno. Usa invece il tuo indirizzo email qui sotto.",
     "Google.Unreachable":
       "Google non è raggiungibile in questo momento. Riprova tra qualche minuto, oppure usa il tuo indirizzo email qui sotto.",
+    "Facebook.Unreachable":
+      "Facebook non è raggiungibile in questo momento. Riprova tra qualche minuto, oppure usa il tuo indirizzo email qui sotto.",
     "Registration.NotAPerson":
       "Non sembra che questa richiesta arrivi da una persona. Riprova e, se continua a succedere, aspetta qualche minuto e torna.",
 
@@ -205,6 +212,7 @@ export const italian: Language = {
     "signIn.forgotPassword": "Password dimenticata?",
     "signIn.register": "Registrati",
     "signIn.withGoogle": "Accedi con Google",
+    "signIn.withFacebook": "Accedi con Facebook",
     "signIn.or": "oppure",
     "signIn.tryAgainLater":
       "Di recente sono stati fatti troppi tentativi. Aspetta un'ora e riprova.",

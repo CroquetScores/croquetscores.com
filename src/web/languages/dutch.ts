@@ -88,6 +88,7 @@ export const dutch: Language = {
     "register.emailAddress": "E-mailadres",
     "register.submit": "Registreren",
     "register.withGoogle": "Registreren met Google",
+    "register.withFacebook": "Registreren met Facebook",
     "register.or": "of",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -97,10 +98,16 @@ export const dutch: Language = {
       "Google heeft niet bevestigd dat dit e-mailadres van jou is, dus het kan hier niet met Google worden gebruikt. Gebruik hieronder je e-mailadres.",
     "SignInWithGoogle.LinkedToAnother":
       "Dit e-mailadres heeft al een account, dat aan een ander Google-account is gekoppeld. Log in met dat Google-account, of met je e-mailadres en wachtwoord.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook heeft ons geen e-mailadres doorgegeven, en we hebben er een nodig om je account te vinden of aan te maken. Gebruik hieronder je e-mailadres.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Dit e-mailadres heeft al een account, dat aan een ander Facebook-account is gekoppeld. Log in met dat Facebook-account, of met je e-mailadres en wachtwoord.",
     "SignInWithGoogle.NameMissing":
       "Google heeft ons je naam niet doorgegeven, en een account heeft er een nodig. Gebruik hieronder je e-mailadres.",
     "Google.Unreachable":
       "Google was zojuist niet bereikbaar. Probeer het over een paar minuten opnieuw, of gebruik hieronder je e-mailadres.",
+    "Facebook.Unreachable":
+      "Facebook was zojuist niet bereikbaar. Probeer het over een paar minuten opnieuw, of gebruik hieronder je e-mailadres.",
     "Registration.NotAPerson":
       "Dit leek niet van een mens te komen. Probeer het opnieuw, en als het blijft gebeuren, wacht dan een paar minuten en kom terug.",
 
@@ -206,6 +213,7 @@ export const dutch: Language = {
     "signIn.forgotPassword": "Wachtwoord vergeten?",
     "signIn.register": "Registreren",
     "signIn.withGoogle": "Inloggen met Google",
+    "signIn.withFacebook": "Inloggen met Facebook",
     "signIn.or": "of",
     "signIn.tryAgainLater":
       "Er zijn de laatste tijd te veel pogingen gedaan. Wacht een uur en probeer het opnieuw.",

@@ -133,9 +133,9 @@ Feature: Signing in with Google
       When the sign in page is opened
       Then the line saying "OR" is centred in the dialog
 
-    Scenario: A site without Google's credentials says no "OR"
+    Scenario: A site with neither Google's nor Facebook's credentials says no "OR"
       Given a viewport 1200 pixels wide
-      And a site that has not been given Google's credentials
+      And a site that has been given neither Google's nor Facebook's credentials
       When the sign in page is opened
       Then the dialog has no line saying "OR"
 

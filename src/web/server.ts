@@ -258,6 +258,11 @@ import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsB
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
 import {
+  FacebookLogin,
+  FacebookLoginFailed,
+  type FacebookEndpoints,
+} from "../infrastructure/identity/FacebookLogin.js";
+import {
   GoogleOpenIdConnect,
   GoogleOpenIdConnectFailed,
   type GoogleEndpoints,
@@ -337,6 +342,11 @@ const offeredLanguages = [
   welsh,
 ];
 import { auth } from "./auth/index.js";
+import {
+  FacebookUnreachable,
+  registerFacebookRoutes,
+  type FacebookSignIn,
+} from "./auth/facebook.js";
 import {
   GoogleUnreachable,
   registerGoogleRoutes,
@@ -436,6 +446,24 @@ const googleAsASignIn = (google: GoogleOpenIdConnect): GoogleSignIn => ({
         failure.code === "Google.Unreachable"
       ) {
         throw new GoogleUnreachable(failure.message);
+      }
+      throw failure;
+    }
+  },
+});
+
+// The same for the Facebook routes, over the client the infrastructure offers.
+const facebookAsASignIn = (facebook: FacebookLogin): FacebookSignIn => ({
+  whereToSend: (asking) => facebook.whereToSend(asking),
+  whoCameBack: async (returned) => {
+    try {
+      return await facebook.whoCameBack(returned);
+    } catch (failure) {
+      if (
+        failure instanceof FacebookLoginFailed &&
+        failure.code === "Facebook.Unreachable"
+      ) {
+        throw new FacebookUnreachable(failure.message);
       }
       throw failure;
     }
@@ -766,6 +794,8 @@ export interface ApplicationOptions {
    * it checks what Google says.
    */
   readonly googleEndpoints?: GoogleEndpoints;
+  /** Where Facebook answers, for the reason Google's endpoints are given. */
+  readonly facebookEndpoints?: FacebookEndpoints;
 }
 
 /**
@@ -1626,7 +1656,32 @@ export const buildApplication = async (
     });
   }
 
-  registerRegisterPage(server, assets, readers, google !== undefined);
+  // The same for Facebook.
+  const facebook =
+    config.facebook === undefined
+      ? undefined
+      : facebookAsASignIn(
+          new FacebookLogin(
+            {
+              appId: config.facebook.clientId,
+              appSecret: config.facebook.clientSecret,
+            },
+            options.facebookEndpoints,
+          ),
+        );
+  if (facebook !== undefined) {
+    registerFacebookRoutes(server, {
+      facebook,
+      sessions,
+      inTransaction,
+    });
+  }
+  const offered = {
+    google: google !== undefined,
+    facebook: facebook !== undefined,
+  };
+
+  registerRegisterPage(server, assets, readers, offered);
   registerConfirmEmailAddressPage(server, assets);
   // One count of failed signings in, shared by every page that takes a
   // password, so that guessing on one counts against guessing on the other.
@@ -1637,7 +1692,7 @@ export const buildApplication = async (
     sessions,
     failedSignIns,
     inTransaction,
-    google !== undefined,
+    offered,
   );
   registerChangePasswordPage(
     server,

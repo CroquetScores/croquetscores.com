@@ -88,6 +88,7 @@ export const spanish: Language = {
     "register.emailAddress": "Dirección de correo electrónico",
     "register.submit": "Registrarse",
     "register.withGoogle": "Registrarse con Google",
+    "register.withFacebook": "Registrarse con Facebook",
     "register.or": "o",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -97,10 +98,16 @@ export const spanish: Language = {
       "Google no ha confirmado que esa dirección de correo electrónico sea tuya, así que aquí no se puede usar con Google. Usa en su lugar tu dirección de correo electrónico, más abajo.",
     "SignInWithGoogle.LinkedToAnother":
       "Esa dirección de correo electrónico ya tiene una cuenta, vinculada a otra cuenta de Google. Inicia sesión con esa cuenta de Google, o con tu dirección de correo electrónico y tu contraseña.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook no nos ha dado una dirección de correo electrónico, y la necesitamos para encontrar o crear tu cuenta. Usa en su lugar tu dirección de correo electrónico, más abajo.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Esa dirección de correo electrónico ya tiene una cuenta, vinculada a otra cuenta de Facebook. Inicia sesión con esa cuenta de Facebook, o con tu dirección de correo electrónico y tu contraseña.",
     "SignInWithGoogle.NameMissing":
       "Google no nos ha dicho tu nombre, y una cuenta necesita uno. Usa en su lugar tu dirección de correo electrónico, más abajo.",
     "Google.Unreachable":
       "No se ha podido contactar con Google en este momento. Inténtalo de nuevo dentro de unos minutos, o usa tu dirección de correo electrónico, más abajo.",
+    "Facebook.Unreachable":
+      "No se ha podido contactar con Facebook en este momento. Inténtalo de nuevo dentro de unos minutos, o usa tu dirección de correo electrónico, más abajo.",
     "Registration.NotAPerson":
       "Esto no parece haber sido enviado por una persona. Inténtalo de nuevo y, si sigue ocurriendo, espera unos minutos y vuelve.",
 
@@ -206,6 +213,7 @@ export const spanish: Language = {
     "signIn.forgotPassword": "¿Olvidaste tu contraseña?",
     "signIn.register": "Registrarse",
     "signIn.withGoogle": "Iniciar sesión con Google",
+    "signIn.withFacebook": "Iniciar sesión con Facebook",
     "signIn.or": "o",
     "signIn.tryAgainLater":
       "Se han hecho demasiados intentos últimamente. Espera una hora e inténtalo de nuevo.",

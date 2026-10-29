@@ -81,6 +81,7 @@ export const english: Language = {
     "register.emailAddress": "Email address",
     "register.submit": "Register",
     "register.withGoogle": "Register with Google",
+    "register.withFacebook": "Register with Facebook",
     "register.or": "or",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -90,10 +91,16 @@ export const english: Language = {
       "Google has not confirmed that email address is yours, so it cannot be used with Google here. Use your email address below instead.",
     "SignInWithGoogle.LinkedToAnother":
       "That email address already has an account, linked to a different Google account. Sign in with that Google account, or with your email address and password.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook did not give us an email address, and we need one to find or make your account. Use your email address below instead.",
+    "SignInWithFacebook.LinkedToAnother":
+      "That email address already has an account, linked to a different Facebook account. Sign in with that Facebook account, or with your email address and password.",
     "SignInWithGoogle.NameMissing":
       "Google did not tell us your name, and an account needs one. Use your email address below instead.",
     "Google.Unreachable":
       "Google could not be reached just now. Try again in a few minutes, or use your email address below.",
+    "Facebook.Unreachable":
+      "Facebook could not be reached just now. Try again in a few minutes, or use your email address below.",
     "Registration.NotAPerson":
       "This did not look like it came from a person. Try again, and if it keeps happening, wait a few minutes and come back.",
 
@@ -198,6 +205,7 @@ export const english: Language = {
     "signIn.forgotPassword": "Forgot Password?",
     "signIn.register": "Register",
     "signIn.withGoogle": "Sign in with Google",
+    "signIn.withFacebook": "Sign in with Facebook",
     "signIn.or": "or",
     "signIn.tryAgainLater":
       "Too many attempts have been made lately. Wait an hour and try again.",

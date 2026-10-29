@@ -77,6 +77,7 @@ export const japanese: Language = {
     "register.emailAddress": "メールアドレス",
     "register.submit": "登録する",
     "register.withGoogle": "Googleで登録",
+    "register.withFacebook": "Facebookで登録",
     "register.or": "または",
     // Said above the form when Google sent the reader back without them being
     // let in.
@@ -84,10 +85,16 @@ export const japanese: Language = {
       "Googleがこのメールアドレスをあなたのものと確認していないため、ここではGoogleで利用できません。下のメールアドレスでお試しください。",
     "SignInWithGoogle.LinkedToAnother":
       "このメールアドレスのアカウントはすでにあり、別のGoogleアカウントと連携されています。そのGoogleアカウントでサインインするか、メールアドレスとパスワードでサインインしてください。",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebookからメールアドレスを受け取れませんでしたが、アカウントを探したり作成したりするには必要です。下のメールアドレスでお試しください。",
+    "SignInWithFacebook.LinkedToAnother":
+      "このメールアドレスのアカウントはすでにあり、別のFacebookアカウントと連携されています。そのFacebookアカウントでサインインするか、メールアドレスとパスワードでサインインしてください。",
     "SignInWithGoogle.NameMissing":
       "Googleから名前を受け取れませんでしたが、アカウントには名前が必要です。下のメールアドレスでお試しください。",
     "Google.Unreachable":
       "現在Googleに接続できません。数分後にもう一度お試しいただくか、下のメールアドレスをご利用ください。",
+    "Facebook.Unreachable":
+      "現在Facebookに接続できません。数分後にもう一度お試しいただくか、下のメールアドレスをご利用ください。",
     "Registration.NotAPerson":
       "人による操作と判断できませんでした。もう一度お試しください。何度も起こる場合は、数分待ってからやり直してください。",
 
@@ -192,6 +199,7 @@ export const japanese: Language = {
     "signIn.forgotPassword": "パスワードをお忘れの方",
     "signIn.register": "新規登録",
     "signIn.withGoogle": "Googleでサインイン",
+    "signIn.withFacebook": "Facebookでサインイン",
     "signIn.or": "または",
     "signIn.tryAgainLater":
       "最近、試行回数が多すぎます。1時間待ってからもう一度お試しください。",

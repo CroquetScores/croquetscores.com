@@ -76,15 +76,22 @@ export const maori: Language = {
     "register.emailAddress": "Wāhitau īmēra",
     "register.submit": "Rēhita",
     "register.withGoogle": "Rēhita mā Google",
+    "register.withFacebook": "Rēhita mā Facebook",
     "register.or": "rānei",
     "SignInWithGoogle.EmailAddressNotVerified":
       "Kāore a Google i whakaū ko tōu tēnei wāhitau īmēra, nā reira e kore e taea te whakamahi ki konei mā Google. Whakamahia tō wāhitau īmēra i raro nei.",
     "SignInWithGoogle.LinkedToAnother":
       "Kei te whai pūkete kē taua wāhitau īmēra, he mea hono ki tētahi atu pūkete Google. Takiuru mā taua pūkete Google, mā tō wāhitau īmēra me tō kupuhipa rānei.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Kīhai a Facebook i hoatu i tētahi wāhitau īmēra, ā, me whai wāhitau hei kimi, hei hanga rānei i tō pūkete. Whakamahia tō wāhitau īmēra i raro nei.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Kei te whai pūkete kē taua wāhitau īmēra, he mea hono ki tētahi atu pūkete Facebook. Takiuru mā taua pūkete Facebook, mā tō wāhitau īmēra me tō kupuhipa rānei.",
     "SignInWithGoogle.NameMissing":
       "Kīhai a Google i whāki mai i tō ingoa, ā, me whai ingoa te pūkete. Whakamahia tō wāhitau īmēra i raro nei.",
     "Google.Unreachable":
       "Kāore i taea te whakapā atu ki a Google i tēnei wā. Whakamātauria anō i roto i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
+    "Facebook.Unreachable":
+      "Kāore i taea te whakapā atu ki a Facebook i tēnei wā. Whakamātauria anō i roto i ētahi meneti, whakamahia rānei tō wāhitau īmēra i raro nei.",
     "Registration.NotAPerson":
       "Kāore i te rite ki te mea nō tētahi tangata tēnei. Whakamātauria anō, ā, mehemea ka tūpono tonu, tatari ētahi meneti ka hoki mai.",
 
@@ -191,6 +198,7 @@ export const maori: Language = {
     "signIn.forgotPassword": "Kua warewaretia te kupuhipa?",
     "signIn.register": "Rēhita",
     "signIn.withGoogle": "Takiuru mā Google",
+    "signIn.withFacebook": "Takiuru mā Facebook",
     "signIn.or": "rānei",
     "signIn.tryAgainLater":
       "He maha rawa ngā whakamātau i ēnei rā tata nei. Tatari kia kotahi hāora ka whakamātau anō.",

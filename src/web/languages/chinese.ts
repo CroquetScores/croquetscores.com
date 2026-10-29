@@ -75,6 +75,7 @@ export const chinese: Language = {
     "register.emailAddress": "电子邮件地址",
     "register.submit": "注册",
     "register.withGoogle": "使用 Google 注册",
+    "register.withFacebook": "使用 Facebook 注册",
     "register.or": "或",
     // Said above the form when Google sent the reader back without them being
     // let in.
@@ -82,10 +83,16 @@ export const chinese: Language = {
       "Google 未确认该电子邮件地址属于您，因此无法在这里通过 Google 使用。请改用下方的电子邮件地址。",
     "SignInWithGoogle.LinkedToAnother":
       "该电子邮件地址已有账户，并已关联到另一个 Google 账号。请使用那个 Google 账号登录，或使用电子邮件地址和密码登录。",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook 没有提供电子邮件地址，而我们需要它来查找或创建您的账户。请改用下方的电子邮件地址。",
+    "SignInWithFacebook.LinkedToAnother":
+      "该电子邮件地址已有账户，并已关联到另一个 Facebook 账号。请使用那个 Facebook 账号登录，或使用电子邮件地址和密码登录。",
     "SignInWithGoogle.NameMissing":
       "Google 没有告诉我们您的姓名，而账户需要姓名。请改用下方的电子邮件地址。",
     "Google.Unreachable":
       "暂时无法连接 Google。请几分钟后重试，或使用下方的电子邮件地址。",
+    "Facebook.Unreachable":
+      "暂时无法连接 Facebook。请几分钟后重试，或使用下方的电子邮件地址。",
     "Registration.NotAPerson":
       "这看起来不像是真人操作。请重试；如果仍然如此，请等几分钟后再来。",
 
@@ -188,6 +195,7 @@ export const chinese: Language = {
     "signIn.forgotPassword": "忘记密码？",
     "signIn.register": "注册",
     "signIn.withGoogle": "使用 Google 登录",
+    "signIn.withFacebook": "使用 Facebook 登录",
     "signIn.or": "或",
     "signIn.tryAgainLater": "最近尝试的次数过多。请等待一小时后再试。",
 

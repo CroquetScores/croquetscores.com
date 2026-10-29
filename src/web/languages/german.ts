@@ -86,6 +86,7 @@ export const german: Language = {
     "register.emailAddress": "E-Mail-Adresse",
     "register.submit": "Registrieren",
     "register.withGoogle": "Mit Google registrieren",
+    "register.withFacebook": "Mit Facebook registrieren",
     "register.or": "oder",
     // Steht über dem Formular, wenn Google die Person zurückgeschickt hat,
     // ohne sie einzulassen, je nach Code des Rückwegs. Die Seiten zum
@@ -95,10 +96,16 @@ export const german: Language = {
       "Google hat nicht bestätigt, dass diese E-Mail-Adresse Ihnen gehört, daher kann sie hier nicht mit Google verwendet werden. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
     "SignInWithGoogle.LinkedToAnother":
       "Zu dieser E-Mail-Adresse gibt es bereits ein Konto, das mit einem anderen Google-Konto verknüpft ist. Melden Sie sich mit diesem Google-Konto an oder mit Ihrer E-Mail-Adresse und Ihrem Passwort.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook hat uns keine E-Mail-Adresse mitgeteilt, wir brauchen aber eine, um Ihr Konto zu finden oder anzulegen. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Zu dieser E-Mail-Adresse gibt es bereits ein Konto, das mit einem anderen Facebook-Konto verknüpft ist. Melden Sie sich mit diesem Facebook-Konto an oder mit Ihrer E-Mail-Adresse und Ihrem Passwort.",
     "SignInWithGoogle.NameMissing":
       "Google hat uns Ihren Namen nicht mitgeteilt, ein Konto braucht aber einen. Nutzen Sie stattdessen unten Ihre E-Mail-Adresse.",
     "Google.Unreachable":
       "Google war gerade nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
+    "Facebook.Unreachable":
+      "Facebook war gerade nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder nutzen Sie unten Ihre E-Mail-Adresse.",
     "Registration.NotAPerson":
       "Das sah nicht so aus, als käme es von einem Menschen. Versuchen Sie es erneut. Wenn es weiter passiert, warten Sie einige Minuten und kommen Sie dann wieder.",
 
@@ -207,6 +214,7 @@ export const german: Language = {
     "signIn.forgotPassword": "Passwort vergessen?",
     "signIn.register": "Registrieren",
     "signIn.withGoogle": "Mit Google anmelden",
+    "signIn.withFacebook": "Mit Facebook anmelden",
     "signIn.or": "oder",
     "signIn.tryAgainLater":
       "Es gab in letzter Zeit zu viele Versuche. Warten Sie eine Stunde und versuchen Sie es dann erneut.",

@@ -84,6 +84,7 @@ export const portuguese: Language = {
     "register.emailAddress": "Endereço de e-mail",
     "register.submit": "Cadastrar-se",
     "register.withGoogle": "Cadastrar-se com o Google",
+    "register.withFacebook": "Cadastrar-se com o Facebook",
     "register.or": "ou",
     // Said above the form when Google sent the reader back without them being
     // let in, each by the code the way back gave. The register page and the
@@ -93,10 +94,16 @@ export const portuguese: Language = {
       "O Google não confirmou que esse endereço de e-mail é seu, por isso ele não pode ser usado com o Google aqui. Use o seu endereço de e-mail abaixo.",
     "SignInWithGoogle.LinkedToAnother":
       "Esse endereço de e-mail já tem uma conta, vinculada a outra conta do Google. Entre com essa conta do Google ou com o seu endereço de e-mail e senha.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "O Facebook não nos informou um endereço de e-mail, e precisamos de um para encontrar ou criar a sua conta. Use o seu endereço de e-mail abaixo.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Esse endereço de e-mail já tem uma conta, vinculada a outra conta do Facebook. Entre com essa conta do Facebook ou com o seu endereço de e-mail e senha.",
     "SignInWithGoogle.NameMissing":
       "O Google não nos informou o seu nome, e uma conta precisa de um. Use o seu endereço de e-mail abaixo.",
     "Google.Unreachable":
       "Não foi possível acessar o Google agora. Tente de novo em alguns minutos ou use o seu endereço de e-mail abaixo.",
+    "Facebook.Unreachable":
+      "Não foi possível acessar o Facebook agora. Tente de novo em alguns minutos ou use o seu endereço de e-mail abaixo.",
     "Registration.NotAPerson":
       "Isto não parece ter vindo de uma pessoa. Tente de novo e, se continuar acontecendo, espere alguns minutos e volte.",
 
@@ -201,6 +208,7 @@ export const portuguese: Language = {
     "signIn.forgotPassword": "Esqueci a senha",
     "signIn.register": "Cadastrar-se",
     "signIn.withGoogle": "Entrar com o Google",
+    "signIn.withFacebook": "Entrar com o Facebook",
     "signIn.or": "ou",
     "signIn.tryAgainLater":
       "Houve tentativas demais recentemente. Espere uma hora e tente de novo.",

@@ -32,7 +32,7 @@ const offer = 'a[href="/auth/google"]';
 // Not the form's own box, which agrees to the terms for registering by email
 // address; this one belongs to the offer (google.feature).
 const boxBeneathTheOffer =
-  'section.dialog input[type="checkbox"][name="termsOfUseForGoogle"]';
+  'section.dialog input[type="checkbox"][name="termsOfUseForOffers"]';
 const formsBox = 'section.dialog input[type="checkbox"][name="termsOfUse"]';
 
 const dialog = "section.dialog";

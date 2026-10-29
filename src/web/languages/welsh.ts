@@ -76,6 +76,7 @@ export const welsh: Language = {
     "register.emailAddress": "Cyfeiriad e-bost",
     "register.submit": "Cofrestru",
     "register.withGoogle": "Cofrestru gyda Google",
+    "register.withFacebook": "Cofrestru gyda Facebook",
     "register.or": "neu",
     // Said above the form when Google sent the reader back without them being
     // let in.
@@ -83,10 +84,16 @@ export const welsh: Language = {
       "Nid yw Google wedi cadarnhau mai eich cyfeiriad e-bost chi yw hwnnw, felly ni ellir ei ddefnyddio gyda Google yma. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "SignInWithGoogle.LinkedToAnother":
       "Mae gan y cyfeiriad e-bost hwnnw gyfrif eisoes, sydd wedi'i gysylltu â chyfrif Google gwahanol. Mewngofnodwch gyda'r cyfrif Google hwnnw, neu gyda'ch cyfeiriad e-bost a'ch cyfrinair.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Ni roddodd Facebook gyfeiriad e-bost i ni, ac mae arnom ei angen i ddod o hyd i'ch cyfrif neu ei greu. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Mae gan y cyfeiriad e-bost hwnnw gyfrif eisoes, sydd wedi'i gysylltu â chyfrif Facebook gwahanol. Mewngofnodwch gyda'r cyfrif Facebook hwnnw, neu gyda'ch cyfeiriad e-bost a'ch cyfrinair.",
     "SignInWithGoogle.NameMissing":
       "Ni ddywedodd Google wrthym beth yw eich enw, ac mae ei angen ar gyfrif. Defnyddiwch eich cyfeiriad e-bost isod yn lle hynny.",
     "Google.Unreachable":
       "Ni ellid cysylltu â Google ar hyn o bryd. Rhowch gynnig arall arni ymhen ychydig funudau, neu defnyddiwch eich cyfeiriad e-bost isod.",
+    "Facebook.Unreachable":
+      "Ni ellid cysylltu â Facebook ar hyn o bryd. Rhowch gynnig arall arni ymhen ychydig funudau, neu defnyddiwch eich cyfeiriad e-bost isod.",
     "Registration.NotAPerson":
       "Nid oedd hyn yn edrych fel pe bai wedi dod gan berson. Rhowch gynnig arall arni, ac os bydd yn dal i ddigwydd, arhoswch ychydig funudau a dewch yn ôl.",
 
@@ -194,6 +201,7 @@ export const welsh: Language = {
     "signIn.forgotPassword": "Wedi anghofio'r cyfrinair?",
     "signIn.register": "Cofrestru",
     "signIn.withGoogle": "Mewngofnodi gyda Google",
+    "signIn.withFacebook": "Mewngofnodi gyda Facebook",
     "signIn.or": "neu",
     "signIn.tryAgainLater":
       "Gwnaed gormod o ymdrechion yn ddiweddar. Arhoswch awr a rhowch gynnig arall arni.",

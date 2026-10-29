@@ -73,15 +73,22 @@ export const polish: Language = {
     "register.emailAddress": "Adres e-mail",
     "register.submit": "Zarejestruj się",
     "register.withGoogle": "Zarejestruj się przez Google",
+    "register.withFacebook": "Zarejestruj się przez Facebook",
     "register.or": "lub",
     "SignInWithGoogle.EmailAddressNotVerified":
       "Google nie potwierdziło, że ten adres e-mail należy do ciebie, więc nie można go tu użyć z Google. Użyj poniżej swojego adresu e-mail.",
     "SignInWithGoogle.LinkedToAnother":
       "Dla tego adresu e-mail istnieje już konto, powiązane z innym kontem Google. Zaloguj się tym kontem Google albo adresem e-mail i hasłem.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook nie przekazał nam adresu e-mail, a potrzebujemy go, żeby znaleźć lub założyć twoje konto. Użyj poniżej swojego adresu e-mail.",
+    "SignInWithFacebook.LinkedToAnother":
+      "Dla tego adresu e-mail istnieje już konto, powiązane z innym kontem Facebook. Zaloguj się tym kontem Facebook albo adresem e-mail i hasłem.",
     "SignInWithGoogle.NameMissing":
       "Google nie przekazało nam twojej nazwy, a konto jej wymaga. Użyj poniżej swojego adresu e-mail.",
     "Google.Unreachable":
       "Nie można teraz połączyć się z Google. Spróbuj ponownie za kilka minut albo użyj poniżej swojego adresu e-mail.",
+    "Facebook.Unreachable":
+      "Nie można teraz połączyć się z Facebook. Spróbuj ponownie za kilka minut albo użyj poniżej swojego adresu e-mail.",
     "Registration.NotAPerson":
       "To nie wyglądało na działanie człowieka. Spróbuj ponownie, a jeśli to się powtarza, odczekaj kilka minut i wróć.",
 
@@ -185,6 +192,7 @@ export const polish: Language = {
     "signIn.forgotPassword": "Nie pamiętam hasła",
     "signIn.register": "Zarejestruj się",
     "signIn.withGoogle": "Zaloguj się przez Google",
+    "signIn.withFacebook": "Zaloguj się przez Facebook",
     "signIn.or": "lub",
     "signIn.tryAgainLater":
       "W ostatnim czasie podjęto zbyt wiele prób. Odczekaj godzinę i spróbuj ponownie.",

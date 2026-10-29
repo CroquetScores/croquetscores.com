@@ -41,6 +41,10 @@ import { addExampleFailures } from "./exampleFailures.js";
 import { addExampleForm } from "./exampleForm.js";
 import { scenarioLanguages } from "./languages.js";
 import {
+  facebookCredentialsForScenarios,
+  standInFacebookFor,
+} from "../../infrastructure/support/facebook.js";
+import {
   googleCredentialsForScenarios,
   standInGoogleFor,
 } from "../../infrastructure/support/google.js";
@@ -136,6 +140,24 @@ export const anApplicationBelievingNoProxy = (
  */
 export const anApplicationWithoutGoogle = (world: SpecWorld): Promise<string> =>
   anApplicationWith(world, { google: undefined });
+
+/**
+ * An application of this scenario's own that has not been given Facebook's
+ * credentials, and otherwise as {@link anApplicationCalled}.
+ */
+export const anApplicationWithoutFacebook = (
+  world: SpecWorld,
+): Promise<string> => anApplicationWith(world, { facebook: undefined });
+
+/**
+ * An application of this scenario's own that has been given the credentials
+ * for neither Google nor Facebook, and otherwise as
+ * {@link anApplicationCalled}.
+ */
+export const anApplicationWithoutGoogleOrFacebook = (
+  world: SpecWorld,
+): Promise<string> =>
+  anApplicationWith(world, { google: undefined, facebook: undefined });
 
 /**
  * An application of this scenario's own running the version `version`, or none
@@ -390,6 +412,7 @@ const itsOwn = async (
   loadEnvFile();
   const clock = clockFor(world);
   const google = await standInGoogleFor(world);
+  const facebook = await standInFacebookFor(world);
   // A switch of the scenario's own, which is not there until a scenario turns
   // access off: a shared one would have a scenario that turns access off take
   // the site from every scenario running beside it (databaseStatus.feature).
@@ -422,6 +445,10 @@ const itsOwn = async (
       // offers registering with Google whatever is in .env. A scenario about a
       // site without them takes them away.
       google: googleCredentialsForScenarios,
+      facebook: {
+        clientId: facebookCredentialsForScenarios.appId,
+        clientSecret: facebookCredentialsForScenarios.appSecret,
+      },
       ...changed,
     },
     {
@@ -439,6 +466,8 @@ const itsOwn = async (
       // Never Google, for the reason reCAPTCHA is never asked below: a stand-in
       // of the scenario's own, which says what the scenario has Google say.
       googleEndpoints: google.endpoints,
+      // And never Facebook, for the same reason.
+      facebookEndpoints: facebook.endpoints,
       // Never the real service: a spec run has no business asking Have I Been
       // Pwned about a password, and what it would answer is not what any of
       // these scenarios is about. A scenario that is about a breached password

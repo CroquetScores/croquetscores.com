@@ -127,9 +127,9 @@ Feature: Registering with Google
       When the register page is opened with scripting on
       Then the line saying "OR" is centred in the dialog
 
-    Scenario: A site without Google's credentials says no "OR"
+    Scenario: A site with neither Google's nor Facebook's credentials says no "OR"
       Given a viewport 1200 pixels wide
-      And a site that has not been given Google's credentials
+      And a site that has been given neither Google's nor Facebook's credentials
       When the register page is opened with scripting on
       Then the dialog has no line saying "OR"
 
@@ -158,9 +158,9 @@ Feature: Registering with Google
       When the register page is opened with scripting on
       Then the box beneath the offer to register with Google links to the terms of use for those who write
 
-    Scenario: A site without Google's credentials has only the form's box
+    Scenario: A site with neither Google's nor Facebook's credentials has only the form's box
       Given a viewport 1200 pixels wide
-      And a site that has not been given Google's credentials
+      And a site that has been given neither Google's nor Facebook's credentials
       When the register page is opened with scripting on
       Then the dialog has one box agreeing to the terms of use
 

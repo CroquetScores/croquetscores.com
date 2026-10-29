@@ -77,6 +77,7 @@ export const russian: Language = {
     "register.emailAddress": "Адрес электронной почты",
     "register.submit": "Зарегистрироваться",
     "register.withGoogle": "Зарегистрироваться через Google",
+    "register.withFacebook": "Зарегистрироваться через Facebook",
     "register.or": "или",
     // Said above the form when Google sent the reader back without them being
     // let in.
@@ -84,10 +85,16 @@ export const russian: Language = {
       "Google не подтвердил, что этот адрес электронной почты принадлежит вам, поэтому использовать его здесь с Google нельзя. Воспользуйтесь адресом электронной почты ниже.",
     "SignInWithGoogle.LinkedToAnother":
       "У этого адреса электронной почты уже есть аккаунт, связанный с другим аккаунтом Google. Войдите через тот аккаунт Google или по адресу электронной почты и паролю.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook не сообщил нам адрес электронной почты, а он нужен, чтобы найти или создать ваш аккаунт. Воспользуйтесь адресом электронной почты ниже.",
+    "SignInWithFacebook.LinkedToAnother":
+      "У этого адреса электронной почты уже есть аккаунт, связанный с другим аккаунтом Facebook. Войдите через тот аккаунт Facebook или по адресу электронной почты и паролю.",
     "SignInWithGoogle.NameMissing":
       "Google не сообщил нам ваше имя, а оно нужно для аккаунта. Воспользуйтесь адресом электронной почты ниже.",
     "Google.Unreachable":
       "Сейчас не удалось связаться с Google. Попробуйте ещё раз через несколько минут или воспользуйтесь адресом электронной почты ниже.",
+    "Facebook.Unreachable":
+      "Сейчас не удалось связаться с Facebook. Попробуйте ещё раз через несколько минут или воспользуйтесь адресом электронной почты ниже.",
     "Registration.NotAPerson":
       "Похоже, это сделал не человек. Попробуйте ещё раз, а если это повторяется, подождите несколько минут и вернитесь.",
 
@@ -193,6 +200,7 @@ export const russian: Language = {
     "signIn.forgotPassword": "Забыли пароль?",
     "signIn.register": "Зарегистрироваться",
     "signIn.withGoogle": "Войти через Google",
+    "signIn.withFacebook": "Войти через Facebook",
     "signIn.or": "или",
     "signIn.tryAgainLater":
       "В последнее время сделано слишком много попыток. Подождите час и попробуйте снова.",

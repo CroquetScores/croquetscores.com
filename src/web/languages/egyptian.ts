@@ -72,6 +72,7 @@ export const egyptian: Language = {
     "register.emailAddress": "عنوان الإيميل",
     "register.submit": "سجّل",
     "register.withGoogle": "سجّل بحساب Google",
+    "register.withFacebook": "سجّل بحساب Facebook",
     "register.or": "أو",
     // Said above the form when Google sent the reader back without them being
     // let in.
@@ -79,10 +80,16 @@ export const egyptian: Language = {
       "Google ما أكّدش إن عنوان الإيميل ده بتاعك، فمينفعش تستخدمه مع Google هنا. استخدم عنوان الإيميل بتاعك من تحت.",
     "SignInWithGoogle.LinkedToAnother":
       "عنوان الإيميل ده عليه حساب فعلاً، ومربوط بحساب Google تاني. سجّل الدخول بحساب Google ده، أو بعنوان الإيميل وكلمة السر.",
+    "SignInWithFacebook.EmailAddressMissing":
+      "Facebook ما إدّاناش عنوان إيميل، واحنا محتاجينه عشان نلاقي حسابك أو نعمل لك واحد. استخدم عنوان الإيميل بتاعك من تحت.",
+    "SignInWithFacebook.LinkedToAnother":
+      "عنوان الإيميل ده عليه حساب فعلاً، ومربوط بحساب Facebook تاني. سجّل الدخول بحساب Facebook ده، أو بعنوان الإيميل وكلمة السر.",
     "SignInWithGoogle.NameMissing":
       "Google ما قالناش اسمك، والحساب لازم يكون له اسم. استخدم عنوان الإيميل بتاعك من تحت.",
     "Google.Unreachable":
       "ما قدرناش نوصل لـ Google دلوقتي. جرّب تاني بعد شوية، أو استخدم عنوان الإيميل بتاعك من تحت.",
+    "Facebook.Unreachable":
+      "ما قدرناش نوصل لـ Facebook دلوقتي. جرّب تاني بعد شوية، أو استخدم عنوان الإيميل بتاعك من تحت.",
     "Registration.NotAPerson":
       "الطلب ده مش باين إنه جاي من إنسان. جرّب تاني، ولو فضل يحصل استنى كام دقيقة وارجع.",
 
@@ -187,6 +194,7 @@ export const egyptian: Language = {
     "signIn.forgotPassword": "نسيت كلمة السر؟",
     "signIn.register": "سجّل",
     "signIn.withGoogle": "سجّل الدخول بحساب Google",
+    "signIn.withFacebook": "سجّل الدخول بحساب Facebook",
     "signIn.or": "أو",
     "signIn.tryAgainLater":
       "حصلت محاولات كتير في الفترة الأخيرة. استنى ساعة وجرّب تاني.",

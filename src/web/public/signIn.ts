@@ -37,7 +37,11 @@ import type { Sessions } from "../../application/services/Sessions.js";
 import { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Assets } from "../common/assets.js";
 import type { InTransaction } from "../common/database.js";
-import { renderDialog, type Dialog } from "../common/dialog.js";
+import {
+  renderDialog,
+  type Alternative,
+  type Dialog,
+} from "../common/dialog.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
@@ -47,11 +51,17 @@ import { startSession } from "../common/session.js";
 import { safeReturnPath, themeOf } from "../common/theme.js";
 import { ipAddressOf } from "../common/trustedProxy.js";
 import {
+  facebookPath,
+  refusalsFromFacebook,
+  withFacebook,
+} from "./facebookOffer.js";
+import {
   googlePath,
   refusalsFromGoogle,
   withGoogle,
   type SentFrom,
 } from "./googleOffer.js";
+import type { Ending, Offered } from "./offers.js";
 
 export const signInPath = "/account/sign-in";
 
@@ -113,7 +123,7 @@ const formFor = (
   speaking: Speaking,
   goBack: string,
   typed: Typed,
-  googleOffered: boolean,
+  offered: Offered,
 ): Dialog => ({
   title: speaking.say("signIn.title"),
   action: `${signInPath}?return=${encodeURIComponent(goBack)}`,
@@ -140,14 +150,41 @@ const formFor = (
     { label: speaking.say("signIn.register"), href: registerPath },
   ],
   submit: speaking.say("signIn.submit"),
-  alternative: googleOffered
-    ? withGoogle(
-        speaking.say("signIn.withGoogle"),
-        speaking.say("signIn.or"),
-        `${googlePath}?from=${sentFrom}&return=${encodeURIComponent(goBack)}`,
-      )
-    : undefined,
+  // Google's first, Facebook's beneath it, and the last of them ends with the
+  // word.
+  alternatives: offersOf(speaking, goBack, offered),
 });
+
+const offersOf = (
+  speaking: Speaking,
+  goBack: string,
+  offered: Offered,
+): Alternative[] => {
+  const ending: Ending = { or: speaking.say("signIn.or") };
+  const where = `?from=${sentFrom}&return=${encodeURIComponent(goBack)}`;
+  const offers: ((ending?: Ending) => Alternative)[] = [];
+  if (offered.google) {
+    offers.push((last) =>
+      withGoogle(
+        speaking.say("signIn.withGoogle"),
+        `${googlePath}${where}`,
+        last,
+      ),
+    );
+  }
+  if (offered.facebook) {
+    offers.push((last) =>
+      withFacebook(
+        speaking.say("signIn.withFacebook"),
+        `${facebookPath}${where}`,
+        last,
+      ),
+    );
+  }
+  return offers.map((offer, at) =>
+    offer(at === offers.length - 1 ? ending : undefined),
+  );
+};
 
 export const registerSignInPage = (
   server: FastifyInstance,
@@ -155,7 +192,7 @@ export const registerSignInPage = (
   sessions: Sessions,
   failures: FailedSignIns,
   inTransaction: InTransaction,
-  googleOffered: boolean,
+  offered: Offered,
 ): void => {
   const page = (
     request: FastifyRequest,
@@ -200,10 +237,16 @@ export const registerSignInPage = (
         speaking,
         goBackTo(request.query.return),
         {},
-        googleOffered,
+        offered,
       );
       const refused = request.query.refused;
-      if (refused === undefined || !refusalsFromGoogle.includes(refused)) {
+      if (
+        refused === undefined ||
+        !(
+          refusalsFromGoogle.includes(refused) ||
+          refusalsFromFacebook.includes(refused)
+        )
+      ) {
         return show(request, reply, dialog, speaking);
       }
       return show(
@@ -221,7 +264,7 @@ export const registerSignInPage = (
       const speaking = speakingOf(request);
       const typed = typedFrom(request.body);
       const goBack = goBackTo(request.query.return);
-      const dialog = formFor(speaking, goBack, typed, googleOffered);
+      const dialog = formFor(speaking, goBack, typed, offered);
 
       const address = countedAs(typed["emailAddress"] ?? "");
       const from = ipAddressOf(request);
