@@ -1945,13 +1945,20 @@ main {
   transform: translate(-50%, -70%) rotate(45deg);
 }
 
+/* Five names are in view at once, and the rest are scrolled to: each is as tall
+   as anything else pressed with a thumb, so that the height of five is known,
+   and the list's own borders are the two pixels over. */
 .name-choice-list {
+  --name-choice-name-height: 44px;
+  --name-choice-names-in-view: 5;
   position: absolute;
   inset-inline: 0;
   top: 100%;
   z-index: 20;
   box-sizing: border-box;
-  max-height: 20rem;
+  max-height: calc(
+    var(--name-choice-names-in-view) * var(--name-choice-name-height) + 2px
+  );
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -1964,7 +1971,11 @@ main {
 }
 
 .name-choice-list [role="option"] {
-  padding: var(--space-1) var(--space-3);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--name-choice-name-height);
+  padding: 0 var(--space-3);
   cursor: pointer;
 }
 

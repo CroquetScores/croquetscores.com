@@ -792,6 +792,18 @@ Feature: The home page lists recent results and upcoming tournaments
       Then the country box says nothing is wrong
       And the suggestions of the country box are shown
 
+    Scenario: No more than five names are in view at once
+      Given the browser has scripting on
+      And the home page is open
+      When the arrow at the end of the country box is pressed
+      Then the suggestions of the country box show 5 names
+
+    Scenario: Fewer names are all in view
+      Given the browser has scripting on
+      And the home page is open
+      When "Zeal" is typed as the country
+      Then the suggestions of the country box show 1 name
+
     Scenario: Without scripting the down arrow leaves the country in the box
       Given the home page is open
       And "New Zealand" is chosen as the country

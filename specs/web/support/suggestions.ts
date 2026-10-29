@@ -67,6 +67,30 @@ export const keepsTheFocus = async (
   }
 };
 
+/**
+ * How many of the names in the list `field` draws are to be seen at once: those
+ * that lie wholly within it, since a list that scrolls has the rest beyond its
+ * edge, drawn but cut off.
+ */
+export const namesInView = async (field: Locator): Promise<number> => {
+  const list = await listOf(field);
+  const edge = await list.boundingBox();
+  assert.ok(edge !== null, "The list is not drawn.");
+  const options = list.locator('[role="option"]');
+  let seen = 0;
+  for (let at = 0; at < (await options.count()); at++) {
+    const box = await options.nth(at).boundingBox();
+    if (
+      box !== null &&
+      box.y >= edge.y - WITHIN &&
+      box.y + box.height <= edge.y + edge.height + WITHIN
+    ) {
+      seen++;
+    }
+  }
+  return seen;
+};
+
 /** The arrow `field` has at its end, which opens the list. */
 export const drawnArrowOf = (field: Locator): Locator =>
   field.locator("xpath=following-sibling::span");

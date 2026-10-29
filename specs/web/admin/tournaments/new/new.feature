@@ -292,6 +292,16 @@ Feature: A new tournament is created in the admin
       Then "Country" says nothing is wrong
       And the suggestions of the "Country" are shown
 
+    Scenario: No more than five names are in view at once
+      Given the new tournament page is open
+      When the arrow at the end of the "Country" is pressed
+      Then the suggestions of the "Country" show 5 names
+
+    Scenario: Every sport is in view, there being fewer than five
+      Given the new tournament page is open
+      When the arrow at the end of the "Sport" is pressed
+      Then the suggestions of the "Sport" show 4 names
+
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open
       When "Golf" is typed as the "Sport"

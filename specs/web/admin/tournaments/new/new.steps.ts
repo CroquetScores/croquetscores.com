@@ -8,6 +8,7 @@ import {
   controlOf,
   drawnArrowOf,
   keepsTheFocus,
+  namesInView,
   pressSuggestion,
   saidInvalid,
   suggestedTo,
@@ -299,6 +300,14 @@ When(
   async function (this: SpecWorld, key: string, label: string) {
     await drawn(this);
     await field(this, label).press(key);
+  },
+);
+
+Then(
+  "the suggestions of the {string} show {int} name(s)",
+  async function (this: SpecWorld, label: string, count: number) {
+    await drawn(this);
+    assert.equal(await namesInView(field(this, label)), count);
   },
 );
 

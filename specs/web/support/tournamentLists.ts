@@ -21,6 +21,7 @@ import {
   checkSuggestions,
   drawnArrowOf,
   keepsTheFocus,
+  namesInView,
   saidInvalid,
   pressSuggestion,
   suggestedTo,
@@ -239,6 +240,13 @@ When(
   /^the key "(.)" is pressed in the (country|region|sport) box$/,
   async function (this: SpecWorld, key: string, field: string) {
     await filterField(this, field).press(key);
+  },
+);
+
+Then(
+  /^the suggestions of the (country|region|sport) box show (\d+) names?$/,
+  async function (this: SpecWorld, field: string, count: string) {
+    assert.equal(await namesInView(filterField(this, field)), Number(count));
   },
 );
 

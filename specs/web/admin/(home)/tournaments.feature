@@ -933,6 +933,11 @@ Feature: The admin lists the reader's tournaments
       Then the country box says nothing is wrong
       And the suggestions of the country box are shown
 
+    Scenario: Fewer names are all in view
+      Given the admin is open
+      When "Zeal" is typed as the country
+      Then the suggestions of the country box show 1 name
+
     Scenario: A name that is half deleted stays in the box to go on editing
       Given the admin is open
       And "New Zealand" is chosen as the country
