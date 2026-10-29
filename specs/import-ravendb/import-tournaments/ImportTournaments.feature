@@ -439,6 +439,17 @@ Feature: Importing the old sites' tournaments
     - a name with Allasch Kummel in it is in Latvia;
     - a name with Zouzou Abdelhalim Cup or Borg Cup in it is in Egypt;
     - a name with Greece as a word of its own is in Greece;
+    - a name with German anywhere in it, which Germany has and East German
+      too, is in Germany;
+    - a name with Austrian anywhere in it is in Austria. Austria on its own is
+      not enough: a name that has it as the place the other side came from, as
+      "Hurlingham Club England Croquet Club Wolkersdorf Austria" does, was
+      played elsewhere, so that one is named by hand below;
+    - a name that begins with Swiss or CERN, as a word of its own, is in
+      Switzerland;
+    - a name that begins with Czech, as a word of its own, or has Czech Republic
+      in it, is in Czechia, which is what the Czech Republic is now called;
+    - a name with Tonic anywhere in it is in Sweden;
     - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
       apostrophe straight or curled, is in the USA. A name with more in it is
       not that tournament;
@@ -998,6 +1009,54 @@ Feature: Importing the old sites' tournaments
     Scenario: A tournament whose name has Egypt in it is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "Egypt Open"
+      And the tournament's time zone is "China Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in no region
+
+    Scenario Outline: A tournament whose name says it is German, Austrian, Swiss, Czech or Swedish is in that country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                         | country |
+        | National German Championship | de      |
+        | German Open                  | de      |
+        | German National Doubles      | de      |
+        | East German Cup              | de      |
+        | german open                  | de      |
+        | Austrian Open                | at      |
+        | The Austrian Cup             | at      |
+        | Swiss Open                   | ch      |
+        | swiss championship           | ch      |
+        | CERN Open                    | ch      |
+        | Czech Open                   | cz      |
+        | czech championship           | cz      |
+        | Open of the Czech Republic   | cz      |
+        | Gin and Tonic Cup            | se      |
+        | TONIC OPEN                   | se      |
+
+    Scenario Outline: A tournament whose name does not begin with Swiss, CERN or Czech as a word of its own is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name           |
+        | Swissair Open  |
+        | Concern Cup    |
+        | Czechmate Open |
+
+    Scenario: A tournament whose name says German is in no region
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "German Open"
       And the tournament's time zone is "China Standard Time"
       And the tournament was created by "users/1"
       When the tournament is imported
@@ -2110,6 +2169,16 @@ Feature: Importing the old sites' tournaments
         | 2025 | gc | auckland-interclub | nz |
         | 2025 | gc | auckland-interclub-division-1 | nz |
         | 2025 | gc | welsh-team-golf-final | wales |
+        | 2026 | ac | hurlingham-club-england-croquet-club-wolkersdorf-austria | england |
+        | 2017 | gc | womens-swiss-championship | ch |
+        | 2024 | gc | 3rd-championship-berlin | de |
+        | 2024 | gc | paske | no |
+        | 2024 | gc | lutefisk-croquet | no |
+        | 2024 | gc | host-croquet | no |
+        | 2024 | gc | croquetvs-club-advantage-championship | ch |
+        | 2024 | gc | soaad-abotaleb-cup | eg |
+        | 2024 | gc | kohlhof | de |
+        | 2025 | gc | zurich-advantage | ch |
 
     Scenario: A tournament found at an address the list names is in the country it names whatever the list of rankings says
       Given an Association Croquet event "Spring Open" played on "1.6.14" in "Latvia"
