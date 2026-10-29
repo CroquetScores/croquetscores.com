@@ -75,6 +75,7 @@ import { PruneLog } from "../../../application/operations/logs/PruneLog.js";
 import { ImportErrorKept } from "../../../application/operations/import-errors/ImportErrorKept.js";
 import { ImportErrorsKept } from "../../../application/operations/import-errors/ImportErrorsKept.js";
 import { TournamentsInUnlistedCountries } from "../../../application/operations/world-rankings/TournamentsInUnlistedCountries.js";
+import { RepresentingMatching } from "../../../application/operations/tournaments/RepresentingMatching.js";
 import { WorldRankingPlayersMatching } from "../../../application/operations/world-rankings/WorldRankingPlayersMatching.js";
 import { AddManager } from "../../../application/operations/tournaments/AddManager.js";
 import { AddScorer } from "../../../application/operations/tournaments/AddScorer.js";
@@ -1163,6 +1164,20 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send(matching);
+    },
+  );
+
+  // What players have been added representing that a text typed may be the
+  // start of, as the player dialog asks as it is typed.
+  server.get<{ Querystring: { typed?: unknown } }>(
+    "/representing",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const found = await request.server.mediator.query(
+        new RepresentingMatching(oneOf(request.query.typed) ?? ""),
+      );
+      return reply.header("cache-control", "no-store").send(found);
     },
   );
 

@@ -251,6 +251,7 @@ import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.j
 import { SearchHandler } from "../application/operations/tournaments/SearchHandler.js";
 import { PlayerOfWebsiteHandler } from "../application/operations/tournaments/PlayerOfWebsiteHandler.js";
 import { SearchPlayersOfWebsiteHandler } from "../application/operations/tournaments/SearchPlayersOfWebsiteHandler.js";
+import { RepresentingMatchingHandler } from "../application/operations/tournaments/RepresentingMatchingHandler.js";
 import { TournamentsByAddress } from "../infrastructure/read-models/TournamentsByAddress.js";
 import { ManagerNotesByTournament } from "../infrastructure/read-models/ManagerNotesByTournament.js";
 import { CommentariesByTournament } from "../infrastructure/read-models/CommentariesByTournament.js";
@@ -1335,6 +1336,7 @@ export const buildApplication = async (
   mediator.handleQuery(new SearchHandler(searchByWebsite));
   mediator.handleQuery(new PlayerOfWebsiteHandler(searchByWebsite));
   mediator.handleQuery(new SearchPlayersOfWebsiteHandler(searchByWebsite));
+  mediator.handleQuery(new RepresentingMatchingHandler(searchByWebsite));
   mediator.handleQuery(
     new GamesOfTournamentHandler(
       tournaments,

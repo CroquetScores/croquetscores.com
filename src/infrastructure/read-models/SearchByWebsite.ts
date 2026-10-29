@@ -1,4 +1,5 @@
 import type { Projection } from "../../application/common/Projection.js";
+import type { PlayersRepresenting } from "../../application/services/PlayersRepresenting.js";
 import {
   type CompetitionFound,
   foldedForSearch,
@@ -90,7 +91,7 @@ const whenAndWhere = (row: {
  * A player's world ranking name is the one the event says, and a player added
  * before every player had one is known by their name.
  */
-export class SearchByWebsite implements Projection, Asked {
+export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
   constructor(private readonly unitOfWork: UnitOfWork) {}
 
   async project(
@@ -405,6 +406,7 @@ export class SearchByWebsite implements Projection, Asked {
         event.worldRankingName,
         event.teamId,
         event.slug,
+        undefined,
       );
     } else if (event instanceof TournamentPlayerAdded) {
       await this.#playerKept(
@@ -414,6 +416,7 @@ export class SearchByWebsite implements Projection, Asked {
         event.worldRankingName,
         undefined,
         event.slug,
+        event.representing,
       );
     } else if (
       event instanceof TournamentPlayerUpdated ||
@@ -426,6 +429,9 @@ export class SearchByWebsite implements Projection, Asked {
         event.worldRankingName,
         event instanceof TeamPlayerUpdated ? event.teamId : undefined,
         undefined,
+        event instanceof TournamentPlayerUpdated
+          ? event.representing
+          : undefined,
       );
     } else if (
       event instanceof TournamentPlayerArchived ||
@@ -455,6 +461,7 @@ export class SearchByWebsite implements Projection, Asked {
     worldRankingName: string | undefined,
     team: string | undefined,
     slug: string | undefined,
+    representing: string | undefined,
   ): Promise<void> {
     // A blank one is none, as the domain reads it.
     const known =
@@ -464,13 +471,14 @@ export class SearchByWebsite implements Projection, Asked {
     await this.unitOfWork.connection().query(
       `insert into search_by_website_players
          (player_id, tournament_id, team_id, name, world_ranking_name,
-          folded_name, person, slug)
-       values ($1, $2, $7, $3, $4, $5, $6, $8)
+          folded_name, person, slug, representing)
+       values ($1, $2, $7, $3, $4, $5, $6, $8, $9)
        on conflict (player_id) do update
          set name = excluded.name,
              world_ranking_name = excluded.world_ranking_name,
              folded_name = excluded.folded_name,
              person = excluded.person,
+             representing = excluded.representing,
              -- A player keeps the slug they were given when their name is
              -- corrected, which an update does not say.
              slug = case when excluded.slug <> '' then excluded.slug
@@ -484,8 +492,37 @@ export class SearchByWebsite implements Projection, Asked {
         personOf(known, name),
         team ?? null,
         slug ?? "",
+        representing === undefined || representing.trim() === ""
+          ? null
+          : representing.trim(),
       ],
     );
+  }
+
+  // Read from every player there is, as the world ranking players are: a word
+  // can begin anywhere in what is represented, which no index can find.
+  async beginning(typed: string, most: number): Promise<readonly string[]> {
+    // Every character a pattern would read as anything but itself, written so
+    // that it is read as itself. Lowered by Postgres, to the pattern and the
+    // names alike, so that the two are lowered the same way.
+    const pattern = typed.replace(/[\\%_]/g, (character) => `\\${character}`);
+    const { rows } = await this.unitOfWork.connection().query<{
+      representing: string;
+    }>(
+      `select representing
+         from (select distinct on (lower(representing)) representing
+                 from search_by_website_players
+                where not archived
+                  and representing is not null
+                  and (lower(representing) like lower($1) escape '\\'
+                    or lower(representing) like lower($2) escape '\\'
+                    or lower(representing) like lower($3) escape '\\')
+                order by lower(representing), kept) as once
+        order by representing
+        limit $4`,
+      [`${pattern}%`, `% ${pattern}%`, `%-${pattern}%`, most],
+    );
+    return rows.map((row) => row.representing);
   }
 
   async #archived(

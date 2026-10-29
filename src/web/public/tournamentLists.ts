@@ -473,7 +473,7 @@ const suggestionsScript = `            <script>
                     // left either.
                     if (field.validity.valid || taking.now || document.activeElement === field) return;
                     setTimeout(function () {
-                      if (field.validity.valid) return;
+                      if (!field.isConnected || field.validity.valid) return;
                       taking.now = true;
                       field.focus();
                       taking.now = false;
