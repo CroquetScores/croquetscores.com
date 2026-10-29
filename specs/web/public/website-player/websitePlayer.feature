@@ -331,6 +331,13 @@ Feature: A player's page lists the tournaments they have played in
       When the page at "/players/sam-someone" is opened
       Then the page is no wider than the window
 
+    Scenario: On a phone the dates of a tournament stay on one line
+      Given a viewport 375 pixels wide
+      And "organiser@example.com" has created the tournament "Bartholomew Montgomery-Fitzwilliam Memorial Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Bartholomew Montgomery-Fitzwilliam Memorial Open"
+      When the page at "/players/sam-someone" is opened
+      Then the dates of the first row are on one line
+
   Rule: Every word the page says is in the reader's language
 
     The test locale shows it (`language.feature`). What is nobody's language

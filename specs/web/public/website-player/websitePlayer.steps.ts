@@ -75,6 +75,21 @@ Then(
   },
 );
 
+// A line of words that wrapped is drawn as more than one box, one to a line.
+Then(
+  "the dates of the first row are on one line",
+  async function (this: SpecWorld) {
+    const lines = await datesOf(rows(this).first()).evaluate<number>(
+      `(cell) => {
+        const words = document.createRange();
+        words.selectNodeContents(cell);
+        return words.getClientRects().length;
+      }`,
+    );
+    assert.equal(lines, 1);
+  },
+);
+
 Then(
   /^there (is|is not) a row of "(.*)"$/,
   async function (this: SpecWorld, which: string, name: string) {
