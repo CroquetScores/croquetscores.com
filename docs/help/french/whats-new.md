@@ -1,5 +1,23 @@
 # Nouveautés
 
+## Publié le 2026-10-29
+
+### Trouver ce que vous cherchez
+
+- **Saisissez un pays, une région ou un sport.** Les champs qui restreignent les tournois, sur la page d'accueil et sur la page d'une année, sont désormais des zones où l'on tape, et non des listes à faire défiler. Saisissez une partie d'un nom, par exemple Zélan, et les noms qui la contiennent sont proposés. Appuyez sur la flèche au bout de la zone, ou sur la touche flèche vers le bas, pour voir tous les noms, cinq à la fois, le reste se faisant défiler. Appuyez sur une suggestion, ou déplacez-vous avec les touches fléchées et appuyez sur Entrée, pour la choisir. Une zone laissée vide veut dire tous. Des mots qui ne sont pas le nom d'un pays ou d'un sport ne peuvent pas rester dans la zone : on vous demande d'en choisir un, et Échap remet celui que vous aviez.
+- **Sur la page d'un joueur, les dates de chaque tournoi restent sur une seule ligne.** Sur un téléphone, les dates des tournois de la page d'un joueur se coupaient auparavant sur deux lignes. Elles restent désormais sur une seule, et c'est le nom du tournoi qui passe à la ligne.
+
+### Organiser un tournoi
+
+- **Choisissez le pays, la région et le sport en les saisissant.** Le formulaire qui crée ou modifie un tournoi les demande dans les mêmes zones. Un tournoi a besoin d'un pays et d'un sport : on vous demande d'en choisir un avant que vous puissiez quitter l'une ou l'autre zone ou envoyer le formulaire. Corriger les mots du pays ne fait plus perdre la région que vous aviez choisie. Choisir un autre pays, en revanche, l'efface.
+- **Les drapeaux se saisissent aussi.** Le drapeau d'un joueur ou d'une équipe se choisit de la même façon. Laissez la zone vide pour n'avoir aucun drapeau.
+- **Ce que représente un joueur est suggéré.** Pendant que vous saisissez ce que représente un joueur, les clubs et les pays que des joueurs représentaient lorsqu'ils ont été ajoutés, dans n'importe quel tournoi et n'importe quel sport, sont suggérés. Saisissez deux lettres pour commencer. Dix noms au plus sont suggérés, par ordre alphabétique, et un nom qui ne diffère que par ses majuscules n'est suggéré qu'une fois, tel qu'il a été écrit en premier. Les joueurs archivés et les joueurs d'une équipe ne sont pas pris en compte.
+- **L'aide explique les tours d'une poule.** **Tours** est le nombre de fois que chaque paire de joueurs d'une poule se rencontre, avec une rencontre à chaque tour. Il commence à 1, ce que veut presque toujours une poule. Ne l'augmentez que pour une poule où ils se rencontrent de nouveau, comme dans un double round robin. La page des compétitions le dit, et la poule et le système suisse ont désormais chacun une section.
+
+### Tournois repris des anciens sites
+
+- **Davantage de handicaps sont retirés du nom du classement mondial.** Le nombre placé après le dernier espace du nom d'un joueur sur les anciens sites, entier ou avec une décimale comme 5.5 ou 5,5, avec un signe plus ou moins ou sans, n'est plus pris pour une partie de son nom lors de la recherche de son classement mondial. Il en va de même d'un handicap placé après un point-virgule, comme dans Tim Murphy; 5.5. Deux nombres à la fin, comme dans Tim Murphy 3 5, sont laissés, car on ne peut pas savoir lequel était voulu, et de même un nom qui n'est qu'un nombre.
+
 ## Publié le 2026-10-28
 
 ### Trouver ce que vous cherchez

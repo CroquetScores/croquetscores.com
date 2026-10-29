@@ -1,5 +1,23 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-10-29
+
+### Dinge finden
+
+- **Land, Region oder Sportart eintippen.** Die Felder, die die Turniere eingrenzen, auf der Startseite und auf der Seite eines Jahres, sind jetzt Felder zum Eintippen und keine Listen zum Durchblättern mehr. Tippen Sie einen Teil eines Namens ein, etwa seel, und die Namen, die ihn enthalten, werden vorgeschlagen. Drücken Sie den Pfeil am Ende des Feldes oder die Pfeil-nach-unten-Taste, um alle Namen zu sehen, fünf auf einmal, der Rest zum Scrollen. Drücken Sie auf einen Vorschlag, oder bewegen Sie sich mit den Pfeiltasten und drücken Sie die Eingabetaste, um ihn zu wählen. Ein leeres Feld bedeutet jedes. Wörter, die nicht der Name eines Landes oder einer Sportart sind, können nicht im Feld bleiben: Sie werden gebeten, eines zu wählen, und die Escape-Taste stellt das wieder her, das Sie hatten.
+- **Auf der Seite eines Spielers bleiben die Daten jedes Turniers in einer Zeile.** Auf dem Handy wurden die Daten der Turniere auf der Seite eines Spielers früher auf zwei Zeilen umgebrochen. Jetzt bleiben sie in einer Zeile, und es ist der Name des Turniers, der umbricht.
+
+### Ein Turnier führen
+
+- **Land, Region und Sportart durch Eintippen wählen.** Das Formular, das ein Turnier anlegt oder ändert, fragt sie in denselben Feldern ab. Ein Turnier braucht ein Land und eine Sportart, deshalb werden Sie gebeten, eines zu wählen, bevor Sie ein Feld verlassen oder das Formular abschicken können. Wenn Sie die Wörter des Landes korrigieren, geht die gewählte Region nicht mehr verloren. Ein anderes Land zu wählen löscht sie dagegen.
+- **Auch Flaggen werden eingetippt.** Die Flagge eines Spielers oder einer Mannschaft wird auf dieselbe Weise gewählt. Lassen Sie das Feld leer, wenn es keine Flagge geben soll.
+- **Was ein Spieler vertritt, wird vorgeschlagen.** Während Sie eintippen, was ein Spieler vertritt, werden die Vereine und Länder vorgeschlagen, für die Spieler hinzugefügt wurden, in jedem Turnier und in jeder Sportart. Tippen Sie zwei Buchstaben ein, damit es beginnt. Es werden höchstens zehn vorgeschlagen, in alphabetischer Reihenfolge, und ein Name, der sich nur in der Großschreibung unterscheidet, wird einmal vorgeschlagen, so wie er zuerst geschrieben wurde. Archivierte Spieler und die Spieler einer Mannschaft werden nicht berücksichtigt.
+- **Die Hilfe erklärt die Runden einer Gruppe.** **Runden** ist, wie oft jedes Spielerpaar einer Gruppe aufeinandertrifft, mit einer Begegnung in jeder Runde. Es beginnt auf 1, und das will eine Gruppe fast immer. Erhöhen Sie es nur für eine Gruppe, in der man wieder aufeinandertrifft, etwa bei einer doppelten Jeder-gegen-jeden-Runde. Die Seite über Wettbewerbe sagt das, und die Gruppe und das Schweizer System haben jetzt je einen Abschnitt.
+
+### Von den alten Seiten übernommene Turniere
+
+- **Mehr Vorgaben werden vom Namen für die Weltrangliste abgetrennt.** Die Zahl nach dem letzten Leerzeichen im Namen eines Spielers auf den alten Seiten, ganz oder mit einer Dezimalstelle wie 5.5 oder 5,5, mit einem Plus- oder Minuszeichen oder ohne, wird bei der Suche nach seiner Weltrangliste nicht mehr für einen Teil seines Namens gehalten. Das Gleiche gilt für eine Vorgabe nach einem Semikolon, wie in Tim Murphy; 5.5. Zwei Zahlen am Ende, wie in Tim Murphy 3 5, bleiben stehen, weil sich nicht sagen lässt, welche gemeint war, und ebenso ein Name, der nur eine Zahl ist.
+
 ## Veröffentlicht am 2026-10-28
 
 ### Dinge finden

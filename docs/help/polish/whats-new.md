@@ -1,5 +1,23 @@
 # Co nowego
 
+## Wydano 2026-10-29
+
+### Znajdowanie rzeczy
+
+- **Wpisz kraj, region lub dyscyplinę.** Pola zawężające turnieje na stronie głównej i na stronie roku są teraz polami, do których się pisze, a nie listami do przewijania. Wpisz część nazwy, na przykład Zelan, a podpowiedziane zostaną nazwy, które ją zawierają. Naciśnij strzałkę na końcu pola albo klawisz strzałki w dół, aby zobaczyć wszystkie nazwy, po pięć naraz, a resztę przewijać. Naciśnij podpowiedź albo przejdź do niej strzałkami i naciśnij Enter, aby ją wybrać. Puste pole oznacza dowolny. Słów, które nie są nazwą kraju ani dyscypliny, nie można zostawić w polu: dostajesz prośbę o wybranie jednej, a Esc przywraca poprzedni wybór.
+- **Strona zawodnika trzyma daty każdego turnieju w jednym wierszu.** Na telefonie daty turniejów na stronie zawodnika łamały się na dwa wiersze. Teraz zostają w jednym, a zawija się nazwa turnieju.
+
+### Prowadzenie turnieju
+
+- **Kraj, region i dyscyplinę wybiera się, wpisując.** Formularz tworzący lub zmieniający turniej pyta o nie w tych samych polach. Turniej musi mieć kraj i dyscyplinę, więc zanim opuścisz któreś pole albo wyślesz formularz, dostajesz prośbę o wybranie jednej. Poprawienie słów kraju nie gubi już wybranego regionu. Wybór innego kraju go czyści.
+- **Flagi też się wpisuje.** Flagę zawodnika lub drużyny wybiera się tak samo. Zostaw pole puste, jeśli flagi ma nie być.
+- **Podpowiadane jest, kogo zawodnik reprezentuje.** Gdy wpisujesz, kogo reprezentuje zawodnik, podpowiadane są kluby i kraje, które zawodnicy mieli wpisane jako reprezentowane, w dowolnym turnieju i w dowolnej dyscyplinie. Podpowiedzi zaczynają się po dwóch literach. Podpowiada się najwyżej dziesięć, w kolejności alfabetycznej, a nazwa różniąca się tylko wielkością liter pojawia się raz, tak jak ją pierwszy raz zapisano. Zawodnicy zarchiwizowani i zawodnicy drużyn nie są brani pod uwagę.
+- **Pomoc wyjaśnia rundy grupy.** Rundy to liczba spotkań każdej pary zawodników w grupie, z jednym meczem w każdej rundzie. Zaczynają się od 1, czyli tego, czego grupa prawie zawsze potrzebuje. Zwiększ je tylko dla grupy, w której spotykają się ponownie, na przykład w podwójnym round robin. Mówi o tym strona o konkurencjach, a grupowa i szwajcarska mają teraz po jednej sekcji.
+
+### Turnieje przeniesione ze starych stron
+
+- **Z nazwiska w rankingu światowym zdejmowanych jest więcej handicapów.** Liczba po ostatniej spacji w nazwisku zawodnika na starych stronach, całkowita lub z częścią dziesiętną, jak 5.5 czy 5,5, ze znakiem plus lub minus albo bez, nie jest już brana za część nazwiska przy szukaniu jego pozycji w rankingu światowym. Tak samo handicap po średniku, jak w Tim Murphy; 5.5. Dwie liczby na końcu, jak w Tim Murphy 3 5, zostają, bo nie wiadomo, o którą chodziło, i tak samo nazwa, która jest tylko liczbą.
+
 ## Wydano 2026-10-28
 
 ### Znajdowanie rzeczy

@@ -1,5 +1,23 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-10-29
+
+### Dingen vinden
+
+- **Typ een land, regio of sport.** De velden die de toernooien beperken, op de homepagina en op de pagina van een jaar, zijn nu vakken waarin je typt, geen lijsten om door te scrollen. Typ een deel van een naam, zoals Zeel, en de namen die dat bevatten worden voorgesteld. Druk op de pijl aan het eind van het vak, of op de pijl-omlaagtoets, om alle namen te zien, vijf tegelijk met de rest om naartoe te scrollen. Druk op een suggestie, of ga met de pijltoetsen en druk op Enter, om te kiezen. Een leeg vak betekent elk. Woorden die niet de naam van een land of een sport zijn, kunnen niet in het vak blijven staan: je wordt gevraagd er een te kiezen, en de Escape-toets zet terug wat je had.
+- **Op de pagina van een speler blijven de datums van elk toernooi op één regel.** Op een telefoon braken de datums van de toernooien op de pagina van een speler vroeger af over twee regels. Nu blijven ze op één regel, en is het de naam van het toernooi die doorloopt op de volgende regel.
+
+### Een toernooi leiden
+
+- **Kies het land, de regio en de sport door te typen.** Het formulier waarmee je een toernooi aanmaakt of wijzigt, vraagt erom in dezelfde vakken. Een toernooi heeft een land en een sport nodig, dus je wordt gevraagd er een te kiezen voordat je een van beide vakken kunt verlaten of het formulier kunt versturen. Het verbeteren van de woorden van het land kost je niet meer de gekozen regio. Een ander land kiezen wist die wel.
+- **Vlaggen typ je ook.** De vlag van een speler of een team kies je op dezelfde manier. Laat het vak leeg voor geen vlag.
+- **Wat een speler vertegenwoordigt, wordt voorgesteld.** Terwijl je typt wat een speler vertegenwoordigt, worden de clubs en landen voorgesteld waarvoor spelers zijn toegevoegd, in elk toernooi en in elke sport. Typ twee letters om te beginnen. Er worden hooguit tien voorgesteld, op alfabet, en een naam die alleen in hoofdletters verschilt, wordt één keer voorgesteld, zoals die het eerst is geschreven. Gearchiveerde spelers en de spelers van een team worden niet bekeken.
+- **De help legt de rondes van een poule uit.** Rondes is hoe vaak elk paar spelers in een poule elkaar ontmoet, met een wedstrijd in elke ronde. Het begint op 1, wat een poule bijna altijd wil. Verhoog het alleen voor een poule waarin ze elkaar opnieuw ontmoeten, zoals een dubbele round robin. De pagina over competities zegt dat, en een poule en een Zwitsers systeem hebben nu elk een sectie.
+
+### Toernooien overgenomen van de oude sites
+
+- **Meer handicaps worden van een naam voor de wereldranglijst gehaald.** Het getal achter de laatste spatie van een speler op de oude sites, geheel of met een decimaal zoals 5.5 of 5,5, met een plus- of minteken of zonder, wordt bij het opzoeken van de wereldranglijst niet meer voor een deel van de naam aangezien. Dat geldt ook voor een handicap na een puntkomma, zoals in Tim Murphy; 5.5. Twee getallen aan het eind, zoals in Tim Murphy 3 5, blijven staan, omdat niet te zeggen is welke bedoeld was, en ook een naam die alleen een getal is.
+
 ## Uitgebracht op 2026-10-28
 
 ### Dingen vinden

@@ -1,5 +1,23 @@
 # He aha te mea hou
 
+## I tukuna 2026-10-29
+
+### Te kimi i ngā mea
+
+- **Patopatohia he whenua, he rohe, he hākinakina rānei.** Ko ngā āpure hei whakaiti i ngā whakataetae nui, i te whārangi kāinga me te whārangi o tētahi tau, he pouaka patopato inaianei, ehara i te rārangi e retireti ana. Patopatohia tētahi wāhi o te ingoa, pēnei i a Aotea, ā, ka tohutohua ngā ingoa kei reira taua wāhi. Pēhia te pere i te pito o te pouaka, te pātuhi pere whakararo rānei, kia kitea ngā ingoa katoa, e rima i ia wā, me te retireti mō te toenga. Pēhia tētahi tohutohu, neke rānei mā ngā pātuhi pere ka pēhi i te Enter, hei kōwhiri i a ia. Mēnā ka waiho kau te pouaka, ko te tikanga ko ngā mea katoa. Kāore e taea te waiho i ngā kupu ehara i te ingoa o tētahi whenua, hākinakina rānei i te pouaka: ka tonoa koe kia kōwhiri i tētahi, ā, ka whakahoki te pātuhi Escape i tāu i whai i mua.
+- **Kei tētahi rārangi anake ngā rā o ia whakataetae nui i te whārangi o tētahi kaitākaro.** I te waea, ka wāhi ngā rā o ngā whakataetae nui i te whārangi o tētahi kaitākaro ki ngā rārangi e rua. Inaianei kei tētahi rārangi anake, ā, ko te ingoa o te whakataetae nui te mea ka hoki ki te rārangi e whai ake nei.
+
+### Te whakahaere i tētahi whakataetae nui
+
+- **Kōwhiria te whenua, te rohe me te hākinakina mā te patopato.** Ka pātai te puka e waihanga ana, e whakarerekē ana rānei i tētahi whakataetae nui ki ēnei i ngā pouaka kotahi. Me whai whenua me hākinakina tētahi whakataetae nui, nā reira ka tonoa koe kia kōwhiri i tētahi i mua i te wehe i tētahi pouaka, i te tuku rānei i te puka. Ina whakatikahia ngā kupu o te whenua, kāore anō te rohe i kōwhiria e ngaro. Ka whakawātea te kōwhiri i tētahi atu whenua i a ia.
+- **Ka patopatohia hoki ngā haki.** Ka kōwhiria te haki o tētahi kaitākaro, o tētahi tīma rānei i te ara kotahi. Waiho kau te pouaka mēnā kāore he haki.
+- **Ka tohutohua te mea e māngai ana tētahi kaitākaro.** Ina patopato koe i te mea e māngai ana tētahi kaitākaro, ka tohutohua ngā karapu me ngā whenua kua tāpiria ngā kaitākaro hei māngai i a rātou, i tētahi whakataetae nui, i tētahi hākinakina rānei. Patopatohia e rua ngā reta hei tīmata. E tekau te nui rawa ka tohutohua, i te raupapa reta, ā, ko te ingoa he rerekē noa i ōna pūmatua ka tohutohua kotahi, pērā i tana tuhinga tuatahi. Kāore e tirohia ngā kaitākaro kua whakatāpuia, me ngā kaitākaro o tētahi tīma.
+- **Ka whakamāramahia e te āwhina ngā rauna o tētahi poraka.** Ko ngā rauna te maha o ngā wā e tūtaki ai ia takirua kaitākaro o te poraka, me tētahi tukinga i ia rauna. Ka tīmata ki te 1, ā, ko te 1 te mea e hiahiatia ana e te nuinga o ngā poraka. Whakarahia anake mō tētahi poraka e tūtaki anō ai rātou, pēnei i te double round robin. Ka kōrero te whārangi mō ngā tauwhāinga pēnei, ā, he wāhanga tō te poraka me te Swiss inaianei.
+
+### Ngā whakataetae nui i kawea mai i ngā pae tawhito
+
+- **He maha ake ngā haihaingā ka tangohia i te ingoa tūranga o te ao.** Ko te tau i muri i te mokowā whakamutunga o te ingoa o tētahi kaitākaro i ngā pae tawhito, he tino tau, he tau ā-ira rānei pēnei i te 5.5, 5,5 rānei, ahakoa he tohu tāpiri, tango rānei, kāore rānei, kāore e kīia inaianei he wāhanga o tōna ingoa ina kimihia tōna tūranga o te ao. Pērā anō te haihaingā i muri i te tohu ira, pēnei i a Tim Murphy; 5.5. Ko ngā tau e rua i te mutunga, pēnei i a Tim Murphy 3 5, ka waihohia, nā te mea kāore e mōhiotia ko tēhea te mea i tohua, pērā anō te ingoa he tau anake.
+
 ## I tukuna 2026-10-28
 
 ### Te kimi i ngā mea
