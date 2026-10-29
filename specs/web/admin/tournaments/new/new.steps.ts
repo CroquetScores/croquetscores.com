@@ -210,6 +210,34 @@ const chosenIn = async (world: SpecWorld, label: string): Promise<string> =>
         : element.value,
   );
 
+When(
+  "the down arrow is pressed in the {string}",
+  async function (this: SpecWorld, label: string) {
+    await drawn(this);
+    await field(this, label).press("ArrowDown");
+  },
+);
+
+When(
+  "the arrow at the end of the {string} is pressed",
+  async function (this: SpecWorld, label: string) {
+    await drawn(this);
+    const found = field(this, label);
+    const size = await found.boundingBox();
+    assert.ok(size !== null, "The field is not on the page.");
+    await found.click({ position: { x: size.width - 10, y: size.height / 2 } });
+  },
+);
+
+When("the {string} is left", async function (this: SpecWorld, label: string) {
+  await drawn(this);
+  // By the element itself: the locator's blur waits on a field whose
+  // suggestions are open.
+  await field(this, label).evaluate((element: { blur(): void }) => {
+    element.blur();
+  });
+});
+
 Then(
   "the sport chosen is {string}",
   async function (this: SpecWorld, sport: string) {

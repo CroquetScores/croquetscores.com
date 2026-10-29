@@ -2,6 +2,10 @@ import { useEffect, useId, useRef, useState } from "react";
 
 import { sameWords } from "../common/sameWords.js";
 
+// How far in from the end of a box the arrow a browser draws there reaches,
+// with room to spare, since where it is drawn is the browser's.
+const ARROW_WIDTH = 28;
+
 interface Choice {
   readonly code: string;
   readonly name: string;
@@ -41,6 +45,9 @@ export function NameChoice({
   value,
   onChange,
   refusing = true,
+  onKeyDown,
+  onMouseDown,
+  onBlur,
   ...rest
 }: Props): React.JSX.Element {
   const listId = useId();
@@ -59,6 +66,9 @@ export function NameChoice({
   // What the choices are rather than which array holds them, since a form that
   // builds the array again as it is drawn has not changed them.
   const offered = JSON.stringify(choices.map((each) => [each.code, each.name]));
+  // What was in the box when the down arrow emptied it, to put back if the
+  // reader goes without choosing anything.
+  const put = useRef<string | undefined>(undefined);
   const lastOffered = useRef(offered);
   useEffect(() => {
     // Other choices are another list, as the regions are of another country,
@@ -71,8 +81,14 @@ export function NameChoice({
     // it left, the form coming back to that code (the browser's Forward, say)
     // would be taken for the box's own, and the box would not say so.
     told.current = undefined;
+    put.current = undefined;
     setTyped(nameOf(value));
   }, [value, offered]);
+  const putBack = (): void => {
+    const before = put.current;
+    put.current = undefined;
+    if (before !== undefined) setTyped((now) => (now === "" ? before : now));
+  };
   // Narrowed to the names that have what has been typed, which is what the
   // list is specified to hold (tournaments.feature). A whole name is not
   // something to narrow by: it is a choice made, and the reader who goes on to
@@ -91,7 +107,37 @@ export function NameChoice({
         list={listId}
         autoComplete="off"
         value={typed}
+        // The down arrow, and the arrow a browser draws at the end of the box,
+        // open the suggestions, and a browser narrows them to the names that
+        // have what is in the box, which is all of what is chosen once a name
+        // is. The reader who presses either means to look at the others, so it
+        // is as though nothing were in the box; the choice made is not unmade
+        // by it, and is put back if none other is made. The drawn arrow is not
+        // an element of the page, so it is where the box is pressed near its
+        // end.
+        onMouseDown={(event) => {
+          onMouseDown?.(event);
+          const box = event.currentTarget.getBoundingClientRect();
+          if (typed !== "" && event.clientX >= box.right - ARROW_WIDTH) {
+            put.current = typed;
+            setTyped("");
+          }
+        }}
+        onKeyDown={(event) => {
+          onKeyDown?.(event);
+          if (event.key === "ArrowDown" && typed !== "") {
+            put.current = typed;
+            setTyped("");
+          } else if (event.key === "Escape") {
+            putBack();
+          }
+        }}
+        onBlur={(event) => {
+          onBlur?.(event);
+          putBack();
+        }}
         onChange={(event) => {
+          put.current = undefined;
           const words = event.target.value;
           setTyped(words);
           const named = choices.find((each) => sameWords(each.name, words));

@@ -326,6 +326,46 @@ const offers = (names: readonly string[], id: string): string =>
 ${names.map((name) => `              <option value="${escape(name)}"></option>`).join("\n")}
             </datalist>`;
 
+// A field with a name in it opens its suggestions narrowed to that name, and the
+// reader who presses the down arrow, or the arrow drawn at the end of the box,
+// means to look at the others. So the arrow empties the box, as though nothing
+// were in it, and puts what was there back when the reader leaves, or presses
+// Escape, without choosing another. The drawn arrow is no element of the page,
+// so it is where the box is pressed near its end. It is
+// written beside the form and not in a file of its own, as the site's search
+// is, and does nothing where scripts do not run, where the field is as it was.
+const suggestionsScript = `            <script>
+              (function () {
+                var form = document.currentScript.parentElement;
+                Array.prototype.forEach.call(form.querySelectorAll("input[list]"), function (field) {
+                  var put = null;
+                  var putBack = function () {
+                    if (put !== null && field.value === "") field.value = put;
+                    put = null;
+                  };
+                  field.addEventListener("mousedown", function (event) {
+                    if (field.value !== "" && event.clientX >= field.getBoundingClientRect().right - 28) {
+                      put = field.value;
+                      field.value = "";
+                    }
+                  });
+                  field.addEventListener("keydown", function (event) {
+                    if (event.key === "ArrowDown" && field.value !== "") {
+                      put = field.value;
+                      field.value = "";
+                    } else if (event.key === "Escape") {
+                      putBack();
+                    }
+                  });
+                  field.addEventListener("input", function () {
+                    put = null;
+                  });
+                  field.addEventListener("blur", putBack);
+                });
+              })();
+            </script>
+`;
+
 // Labelled by a label of its own rather than one wrapped round it, which would
 // name the field by what it has chosen as well as by what it is. What is
 // chosen is shown by its name, which is what the reader types and what the
@@ -426,12 +466,12 @@ ${[
     : []),
 ].join("\n")}
             <button type="submit">${escape(say("tournamentList.filter.submit"))}</button>
-          </form>${
-            asked.chose.region !== undefined && shown < FEW_TO_SHOW
-              ? `
+${suggestionsScript}          </form>${
+    asked.chose.region !== undefined && shown < FEW_TO_SHOW
+      ? `
           <p class="notice tournament-filter-notice">${escape(say("tournamentList.filter.noRegionsBefore"))}</p>`
-              : ""
-          }`;
+      : ""
+  }`;
 };
 
 // The years ----------------------------------------------------------------------------

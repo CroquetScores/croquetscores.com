@@ -194,6 +194,36 @@ const typeInto = async (
   await filterField(world, field).fill(words);
 };
 
+When(
+  /^the down arrow is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, field: string) {
+    await filterField(this, field).press("ArrowDown");
+  },
+);
+
+// The arrow a browser draws at the end of a field that suggests, which is not
+// an element of the page but part of the field: pressed where it is drawn.
+When(
+  /^the arrow at the end of the (country|region|sport) box is pressed$/,
+  async function (this: SpecWorld, field: string) {
+    const box = filterField(this, field);
+    const size = await box.boundingBox();
+    assert.ok(size !== null, "The box is not on the page.");
+    await box.click({ position: { x: size.width - 10, y: size.height / 2 } });
+  },
+);
+
+When(
+  /^the (country|region|sport) box is left$/,
+  async function (this: SpecWorld, field: string) {
+    // By the element itself: the locator's blur waits on a field whose
+    // suggestions are open.
+    await filterField(this, field).evaluate((element: { blur(): void }) => {
+      element.blur();
+    });
+  },
+);
+
 Given(
   /^"(.*)" is chosen as the (country|region|sport)$/,
   async function (this: SpecWorld, choice: string, field: string) {

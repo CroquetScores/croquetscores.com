@@ -649,6 +649,44 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then "Spring Open" is in the upcoming tournaments
 
+    Scenario: The down arrow in a box with a country in it offers every country
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      When the down arrow is pressed in the country box
+      Then the country box of the filter says ""
+      And the filter offers "Australia" as a country
+
+    Scenario: A country in the box is put back when the box is left after the down arrow
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And the down arrow is pressed in the country box
+      When the country box is left
+      Then the country box of the filter says "New Zealand"
+
+    Scenario: The arrow at the end of a box with a country in it offers every country
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      When the arrow at the end of the country box is pressed
+      Then the country box of the filter says ""
+      And the filter offers "Australia" as a country
+
+    Scenario: A country in the box is put back when the box is left after its arrow
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And the arrow at the end of the country box is pressed
+      When the country box is left
+      Then the country box of the filter says "New Zealand"
+
+    Scenario: Without scripting the down arrow leaves the country in the box
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      When the down arrow is pressed in the country box
+      Then the country box of the filter says "New Zealand"
+
     Scenario: A country's code in capitals is the country as its code is
       When the home page is opened for the country "NZ"
       Then "Spring Open" is in the upcoming tournaments

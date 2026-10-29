@@ -205,6 +205,41 @@ Feature: A new tournament is created in the admin
       When "Zeal" is typed as the "Country"
       Then the form does not offer the country "Fiji"
 
+    Scenario: The down arrow in a field with a sport in it offers every sport
+      Given the new tournament page is open
+      And the sport "Golf Croquet" is chosen
+      When the down arrow is pressed in the "Sport"
+      Then the sport chosen is ""
+      And 4 sports are offered
+
+    Scenario: A sport in the field is put back when the field is left after the down arrow
+      Given the new tournament page is open
+      And the sport "Golf Croquet" is chosen
+      And the down arrow is pressed in the "Sport"
+      When the "Sport" is left
+      Then the sport chosen is "Golf Croquet"
+
+    Scenario: The arrow at the end of a field with a sport in it offers every sport
+      Given the new tournament page is open
+      And the sport "Golf Croquet" is chosen
+      When the arrow at the end of the "Sport" is pressed
+      Then the sport chosen is ""
+      And 4 sports are offered
+
+    Scenario: A sport in the field is put back when the field is left after its arrow
+      Given the new tournament page is open
+      And the sport "Golf Croquet" is chosen
+      And the arrow at the end of the "Sport" is pressed
+      When the "Sport" is left
+      Then the sport chosen is "Golf Croquet"
+
+    Scenario: The down arrow in a field with a country in it offers every country
+      Given the new tournament page is open
+      And the country "New Zealand" is chosen
+      When the down arrow is pressed in the "Country"
+      Then the country chosen is ""
+      And the form offers the country "Australia"
+
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open
       When "Golf" is typed as the "Sport"

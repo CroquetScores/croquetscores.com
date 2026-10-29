@@ -807,6 +807,34 @@ Feature: The admin lists the reader's tournaments
       When "Atlantis" is typed as the country
       Then the tournament "Summer Open" is listed
 
+    Scenario: The down arrow in a box with a country in it offers every country
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When the down arrow is pressed in the country box
+      Then the country box of the filter says ""
+      And the filter offers "Australia" as a country
+
+    Scenario: A country in the box is put back when the box is left after the down arrow
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And the down arrow is pressed in the country box
+      When the country box is left
+      Then the country box of the filter says "New Zealand"
+
+    Scenario: The arrow at the end of a box with a country in it offers every country
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      When the arrow at the end of the country box is pressed
+      Then the country box of the filter says ""
+      And the filter offers "Australia" as a country
+
+    Scenario: A country in the box is put back when the box is left after its arrow
+      Given the admin is open
+      And "New Zealand" is chosen as the country
+      And the arrow at the end of the country box is pressed
+      When the country box is left
+      Then the country box of the filter says "New Zealand"
+
     Scenario: A name that is half deleted stays in the box to go on editing
       Given the admin is open
       And "New Zealand" is chosen as the country
