@@ -1138,13 +1138,6 @@ Feature: The home page lists recent results and upcoming tournaments
       When "All tournaments in 2026" is pressed
       Then the address is "/2026?country=nz"
 
-    Scenario: The way to this year's tournaments names the country chosen
-      Given the home page is open
-      And "New Zealand" is chosen as the country
-      And "Filter" is pressed
-      When "All tournaments in 2026" is pressed
-      Then the address is "/2026?country=nz"
-
   Rule: The years with tournaments are the secondary navigation, newest first
 
     Scenario: A year with a tournament in it is offered

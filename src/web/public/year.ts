@@ -81,7 +81,7 @@ export const registerYearPage = (
       render(assets, {
         ...shell,
         ...yearsOf(years, speaking, year, (each) =>
-          keepingFilter(asked, `/${String(each)}`),
+          keepingFilter(asked.chose, `/${String(each)}`),
         ),
         body: `${filter(request, asked, speaking, listed.length)}
 ${table(

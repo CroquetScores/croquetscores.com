@@ -81,7 +81,7 @@ export const registerHomePage = (
       render(assets, {
         ...shell,
         ...yearsOf(years, speaking, undefined, (year) =>
-          keepingFilter(asked, `/${String(year)}`),
+          keepingFilter(asked.chose, `/${String(year)}`),
         ),
         body: `${whatsNewAlert(
           request,
@@ -115,7 +115,7 @@ ${table(
     // The way to every tournament this year, for a reader after one further
     // off or long finished.
     after: `
-            <p class="home-every"><a href="${escape(keepingFilter(asked, `/${thisYear}`))}">${escape(say("home.allTournaments", { year: thisYear }))}</a></p>`,
+            <p class="home-every"><a href="${escape(keepingFilter(asked.chose, `/${thisYear}`))}">${escape(say("home.allTournaments", { year: thisYear }))}</a></p>`,
   },
   asked,
   speaking,

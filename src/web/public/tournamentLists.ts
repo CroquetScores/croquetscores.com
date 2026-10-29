@@ -219,11 +219,11 @@ const addressWith = (
  * another year's from this one. The filter is what the reader is looking at, so
  * it goes with them. The sorting does not, since the lists of one page are not
  * the lists of another and a name kept for one means nothing to the next. It is
- * said to this function by what it is given and not by what else a page asked,
- * so that something a page comes to carry is not taken to another by accident.
+ * given the filter and not what else a page asked, so that something a page
+ * comes to carry is not taken to another by accident.
  */
-export const keepingFilter = (asked: Asked, path: string): string =>
-  addressOf(path, asked.chose, {});
+export const keepingFilter = (chose: FilterChosen, path: string): string =>
+  addressOf(path, chose, {});
 
 // A table ---------------------------------------------------------------------------
 

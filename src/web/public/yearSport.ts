@@ -102,7 +102,12 @@ export const registerYearSportPage = (
         render(assets, {
           ...shell,
           ...yearsOf(years, speaking, year, (each) =>
-            keepingFilter(asked, `/${String(each)}/${sport.code}`),
+            // The sport is in the path, so it is left out of what is kept and
+            // not said twice, where the two could disagree.
+            keepingFilter(
+              { ...asked.chose, sport: undefined },
+              `/${String(each)}/${sport.code}`,
+            ),
           ),
           body: `${filter(request, asked, speaking, listed.length)}
 ${table(
