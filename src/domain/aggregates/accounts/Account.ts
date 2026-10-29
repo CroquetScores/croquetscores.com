@@ -8,6 +8,7 @@ import { AccountRegistered } from "./events/AccountRegistered.js";
 import { EmailAddressChangeAsked } from "./events/EmailAddressChangeAsked.js";
 import { EmailAddressChanged } from "./events/EmailAddressChanged.js";
 import { EmailAddressConfirmed } from "./events/EmailAddressConfirmed.js";
+import { FacebookAccountLinked } from "./events/FacebookAccountLinked.js";
 import { GoogleAccountLinked } from "./events/GoogleAccountLinked.js";
 import { NameChanged } from "./events/NameChanged.js";
 import { PasswordHashedAgain } from "./events/PasswordHashedAgain.js";
@@ -26,7 +27,8 @@ import { type Role, sportOfWorldRankingOfficer } from "./value-objects/Role.js";
 export type AccountErrorCode =
   | "Account.NotConfirmed"
   | "Account.Forgotten"
-  | "Account.GoogleAccountAlreadyLinked";
+  | "Account.GoogleAccountAlreadyLinked"
+  | "Account.FacebookAccountAlreadyLinked";
 
 /**
  * An account's refusal, named by its code. The code is what whoever asked
@@ -54,6 +56,7 @@ export class Account extends AggregateRoot {
   #confirmed = false;
   #forgotten = false;
   #googleSubject: string | undefined;
+  #facebookId: string | undefined;
   // The moves asked for and not yet made, by the reference each link carries.
   readonly #movesAsked = new Map<string, EmailAddress>();
   readonly #roles = new Set<Role>();
@@ -331,6 +334,23 @@ export class Account extends AggregateRoot {
   }
 
   /**
+   * That the Facebook account Facebook knows as `facebookId` signs in to this
+   * one, on the terms a Google account does (`linkGoogleAccount`), and apart
+   * from it: an account may be linked to one of each.
+   */
+  linkFacebookAccount(facebookId: string, at: ReadOnlyDate): void {
+    this.#refuseUnlessInUse();
+    if (this.#facebookId === facebookId) return;
+    if (this.#facebookId !== undefined) {
+      throw new AccountRefused(
+        "Account.FacebookAccountAlreadyLinked",
+        "The account is linked to another Facebook account.",
+      );
+    }
+    this.record(new FacebookAccountLinked(facebookId, this.id, at));
+  }
+
+  /**
    * That `by` gave the account `role`. Only an account somebody has shown is
    * theirs is given one, since a role given to any other would be given to
    * whoever turns out to own the address. Whether `by` may give it is not the
@@ -400,6 +420,8 @@ export class Account extends AggregateRoot {
       this.#passwordHash = event.passwordHash;
     } else if (event instanceof GoogleAccountLinked) {
       this.#googleSubject = event.subject;
+    } else if (event instanceof FacebookAccountLinked) {
+      this.#facebookId = event.facebookId;
     } else if (event instanceof RoleAdded) {
       this.#roles.add(event.role);
     } else if (event instanceof RoleRemoved) {

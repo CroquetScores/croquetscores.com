@@ -7,6 +7,7 @@ import { AccountRegistered } from "./AccountRegistered.js";
 import { EmailAddressChangeAsked } from "./EmailAddressChangeAsked.js";
 import { EmailAddressChanged } from "./EmailAddressChanged.js";
 import { EmailAddressConfirmed } from "./EmailAddressConfirmed.js";
+import { FacebookAccountLinked } from "./FacebookAccountLinked.js";
 import { GoogleAccountLinked } from "./GoogleAccountLinked.js";
 import { NameChanged } from "./NameChanged.js";
 import { PasswordHashedAgain } from "./PasswordHashedAgain.js";
@@ -137,6 +138,16 @@ export const nameAccountEvents = (registry: EventRegistry): EventRegistry =>
       "account-google-account-linked",
       (said, { createdBy, occurredAt }) =>
         new GoogleAccountLinked(text(said, "subject"), createdBy, occurredAt),
+    )
+    .name(
+      FacebookAccountLinked,
+      "account-facebook-account-linked",
+      (said, { createdBy, occurredAt }) =>
+        new FacebookAccountLinked(
+          text(said, "facebookId"),
+          createdBy,
+          occurredAt,
+        ),
     )
     .name(
       AccountForgotten,

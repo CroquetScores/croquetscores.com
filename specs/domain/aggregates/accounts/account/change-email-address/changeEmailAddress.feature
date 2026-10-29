@@ -18,7 +18,7 @@ Feature: Moving an account to another email address
   an inbox can move the account again.
 
   Moving changes the address and nothing else. The account keeps its name, its
-  password, its roles and any Google account linked to it, because the account
+  password, its roles and any Google or Facebook account linked to it, because the account
   is who it was, reached somewhere else.
 
   The address the account has already, however it is written, records
@@ -150,6 +150,14 @@ Feature: Moving an account to another email address
       And it was moved to "sam@example.org"
       When the account is rebuilt from the stream
       Then the account is linked to the Google account "google-subject-1"
+
+    Scenario: A moved account keeps the Facebook account linked to it
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And the Facebook account "facebook-id-1" was linked to it
+      And it was moved to "sam@example.org"
+      When the account is rebuilt from the stream
+      Then the account is linked to the Facebook account "facebook-id-1"
 
     Scenario: A moved account is still confirmed
       Given a stream where an account was registered at "someone@example.com"

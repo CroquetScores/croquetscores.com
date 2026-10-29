@@ -98,4 +98,5 @@ Feature: Forgetting an account
         | the account is signed in to                                                              |
         | a new password is set on the account                                                     |
         | the Google account "google-subject-1" is linked to the account                           |
+        | the Facebook account "facebook-id-1" is linked to the account                            |
         | the role "Administrator" is added to the account                                         |

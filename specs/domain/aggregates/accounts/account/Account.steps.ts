@@ -9,6 +9,7 @@ import { AccountRegistered } from "../../../../../src/domain/aggregates/accounts
 import { EmailAddressConfirmed } from "../../../../../src/domain/aggregates/accounts/events/EmailAddressConfirmed.js";
 import { PasswordHashedAgain } from "../../../../../src/domain/aggregates/accounts/events/PasswordHashedAgain.js";
 import { PasswordSet } from "../../../../../src/domain/aggregates/accounts/events/PasswordSet.js";
+import { FacebookAccountLinked } from "../../../../../src/domain/aggregates/accounts/events/FacebookAccountLinked.js";
 import { GoogleAccountLinked } from "../../../../../src/domain/aggregates/accounts/events/GoogleAccountLinked.js";
 import { RoleAdded } from "../../../../../src/domain/aggregates/accounts/events/RoleAdded.js";
 import { RoleRemoved } from "../../../../../src/domain/aggregates/accounts/events/RoleRemoved.js";
@@ -179,6 +180,15 @@ Given(
   },
 );
 
+Given(
+  "the Facebook account {string} was linked to it",
+  function (this: SpecWorld, facebookId: string) {
+    streamOf(this).push(
+      new FacebookAccountLinked(facebookId, idOf(this), now(this)),
+    );
+  },
+);
+
 Given("it was forgotten", function (this: SpecWorld) {
   streamOf(this).push(new AccountForgotten(idOf(this), now(this)));
 });
@@ -257,6 +267,29 @@ Then(
     const before = account.recorded.length;
     account.linkGoogleAccount(subject, ASKED_AT);
     assert.equal(account.recorded.length, before, "It was linked to none.");
+  },
+);
+
+Then(
+  "the account is linked to the Facebook account {string}",
+  function (this: SpecWorld, facebookId: string) {
+    const account = accountOf(this);
+    const before = account.recorded.length;
+    account.linkFacebookAccount(facebookId, ASKED_AT);
+    assert.equal(account.recorded.length, before, "It was linked to none.");
+  },
+);
+
+Then(
+  "the account is linked to no Facebook account",
+  function (this: SpecWorld) {
+    const account = accountOf(this);
+    const copy = Account.rebuiltFrom(account.id, [
+      ...streamOf(this),
+      ...account.recorded,
+    ]);
+    copy.linkFacebookAccount("a-facebook-account-never-seen", ASKED_AT);
+    assert.equal(copy.recorded.length, 1);
   },
 );
 

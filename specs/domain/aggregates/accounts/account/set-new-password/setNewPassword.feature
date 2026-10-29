@@ -10,7 +10,7 @@ Feature: Setting a new password on an account
   account is signed in with.
 
   An account confirmed with no password, as one confirmed by signing in with
-  Google is, is given one the same way: it has been confirmed, so somebody has
+  Google or Facebook is, is given one the same way: it has been confirmed, so somebody has
   shown they read mail at the address, and until a password is set on it
   nobody has chosen one.
 

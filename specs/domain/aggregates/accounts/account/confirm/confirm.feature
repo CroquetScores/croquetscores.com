@@ -3,9 +3,9 @@ Feature: Confirming an account's email address
   Confirming is an event of its own, stamped with the moment it was asked for
   like every other, and says the name the account is called and the hash of
   the password it is signed in to with. The password is never part of it: only
-  its hash is. An account confirmed by signing in with Google is confirmed
-  with no password at all (`SignInWithGoogle.feature`), and has none until
-  somebody sets one. An account is confirmed once: confirming it again records
+  its hash is. An account confirmed by signing in with Google
+  (`SignInWithGoogle.feature`) or with Facebook (`SignInWithFacebook.feature`)
+  is confirmed with no password at all, and has none until somebody sets one. An account is confirmed once: confirming it again records
   nothing and changes neither, so that a link followed twice leaves one event
   and not two, and a link left in an inbox is not a way to take over an
   account that has since been confirmed.
