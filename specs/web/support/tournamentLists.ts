@@ -17,6 +17,13 @@ import {
 import type { SpecWorld } from "../../support/world.js";
 import { unmarkedWithin } from "./marks.js";
 import { ordinal } from "./ordinals.js";
+import {
+  checkSuggestions,
+  drawnArrowOf,
+  pressSuggestion,
+  suggestedTo,
+  whatOf,
+} from "./suggestions.js";
 import { changeTournament } from "./tournaments.js";
 
 // The pages are drawn by the server, with no scripting, so what is read is
@@ -201,26 +208,31 @@ When(
   },
 );
 
-// The arrow a browser draws at the end of a field that suggests, which is not
-// an element of the page but part of the field: pressed where it is drawn.
 When(
   /^the arrow at the end of the (country|region|sport) box is pressed$/,
   async function (this: SpecWorld, field: string) {
-    const box = filterField(this, field);
-    const size = await box.boundingBox();
-    assert.ok(size !== null, "The box is not on the page.");
-    await box.click({ position: { x: size.width - 10, y: size.height / 2 } });
+    await drawnArrowOf(filterField(this, field)).click();
   },
 );
 
 When(
-  /^the (country|region|sport) box is left$/,
-  async function (this: SpecWorld, field: string) {
-    // By the element itself: the locator's blur waits on a field whose
-    // suggestions are open.
-    await filterField(this, field).evaluate((element: { blur(): void }) => {
-      element.blur();
-    });
+  /^the (enter|escape) key is pressed in the (country|region|sport) box$/,
+  async function (this: SpecWorld, key: string, field: string) {
+    await filterField(this, field).press(key === "enter" ? "Enter" : "Escape");
+  },
+);
+
+When(
+  /^"(.*)" is pressed among the suggestions of the (country|region|sport) box$/,
+  async function (this: SpecWorld, name: string, field: string) {
+    await pressSuggestion(filterField(this, field), name);
+  },
+);
+
+Then(
+  /^the suggestions of the (country|region|sport) box (are shown|are not shown|start where the box starts|are as wide as the box|are in the same text size as the box)$/,
+  async function (this: SpecWorld, field: string, what: string) {
+    await checkSuggestions(filterField(this, field), whatOf(what));
   },
 );
 
@@ -652,20 +664,10 @@ Then(
 // The filter --------------------------------------------------------------------------
 
 // The names the field suggests, in the order it suggests them.
-// A function and not a string of one: Playwright 1.64 does not call a string,
-// and leaves what it was to read undefined. It is typed by what it reads, since
-// the specs are typed without the browser's own types.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
-    : filterField(world, field).evaluate(
-        (input: {
-          readonly list?: {
-            readonly options: ArrayLike<{ readonly value: string }>;
-          } | null;
-        }) =>
-          Array.from(input.list?.options ?? []).map((option) => option.value),
-      );
+    : suggestedTo(filterField(world, field));
 
 Then(
   /^"(.*)" is (not )?offered as a (country|region|sport)$/,

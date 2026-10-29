@@ -326,41 +326,133 @@ const offers = (names: readonly string[], id: string): string =>
 ${names.map((name) => `              <option value="${escape(name)}"></option>`).join("\n")}
             </datalist>`;
 
-// A field with a name in it opens its suggestions narrowed to that name, and the
-// reader who presses the down arrow, or the arrow drawn at the end of the box,
-// means to look at the others. So the arrow empties the box, as though nothing
-// were in it, and puts what was there back when the reader leaves, or presses
-// Escape, without choosing another. The drawn arrow is no element of the page,
-// so it is where the box is pressed near its end. It is
-// written beside the form and not in a file of its own, as the site's search
-// is, and does nothing where scripts do not run, where the field is as it was.
+// The suggestions of a field are a list of its own where scripting is on, as
+// the admin's are (NameChoice.tsx), drawn beneath the field as wide as it is and
+// in its text: the datalist a browser draws is its own to place and size, and
+// narrows itself to what is in the box, which is only the choice made once one
+// has been. Written beside the form and not in a file of its own, as the site's
+// search is. It takes the names from the datalist, which it replaces, so that
+// where scripts do not run the field is as it was, with the browser's own.
 const suggestionsScript = `            <script>
               (function () {
                 var form = document.currentScript.parentElement;
+                var same = function (one, other) {
+                  return one.trim().toLowerCase() === other.trim().toLowerCase();
+                };
                 Array.prototype.forEach.call(form.querySelectorAll("input[list]"), function (field) {
-                  var put = null;
-                  var putBack = function () {
-                    if (put !== null && field.value === "") field.value = put;
-                    put = null;
-                  };
-                  field.addEventListener("mousedown", function (event) {
-                    if (field.value !== "" && event.clientX >= field.getBoundingClientRect().right - 28) {
-                      put = field.value;
-                      field.value = "";
-                    }
+                  var datalist = document.getElementById(field.getAttribute("list"));
+                  if (!datalist) return;
+                  var names = Array.prototype.map.call(datalist.options, function (option) {
+                    return option.value;
                   });
-                  field.addEventListener("keydown", function (event) {
-                    if (event.key === "ArrowDown" && field.value !== "") {
-                      put = field.value;
-                      field.value = "";
-                    } else if (event.key === "Escape") {
-                      putBack();
+                  datalist.parentNode.removeChild(datalist);
+                  field.removeAttribute("list");
+                  var wrap = document.createElement("span");
+                  wrap.className = "name-choice";
+                  field.parentNode.insertBefore(wrap, field);
+                  wrap.appendChild(field);
+                  var arrow = document.createElement("span");
+                  arrow.className = "name-choice-arrow";
+                  arrow.setAttribute("aria-hidden", "true");
+                  wrap.appendChild(arrow);
+                  var list = document.createElement("ul");
+                  list.id = field.id + "-names";
+                  list.className = "name-choice-list";
+                  list.setAttribute("role", "listbox");
+                  wrap.appendChild(list);
+                  field.setAttribute("role", "combobox");
+                  field.setAttribute("aria-controls", list.id);
+                  field.setAttribute("aria-autocomplete", "list");
+                  var open = false;
+                  var browsing = false;
+                  var active = -1;
+                  var shown = [];
+                  var draw = function () {
+                    var typed = field.value;
+                    var whole = names.some(function (name) { return same(name, typed); });
+                    shown = browsing || typed.trim() === "" || whole
+                      ? names
+                      : names.filter(function (name) {
+                          return name.toLowerCase().indexOf(typed.trim().toLowerCase()) !== -1;
+                        });
+                    while (list.firstChild) list.removeChild(list.firstChild);
+                    shown.forEach(function (name, at) {
+                      var option = document.createElement("li");
+                      option.id = list.id + "-" + at;
+                      option.setAttribute("role", "option");
+                      option.setAttribute("aria-selected", at === active ? "true" : "false");
+                      if (at === active) option.className = "name-choice-active";
+                      option.textContent = name;
+                      option.addEventListener("mousedown", function (event) {
+                        event.preventDefault();
+                      });
+                      option.addEventListener("click", function () {
+                        choose(name);
+                      });
+                      list.appendChild(option);
+                    });
+                    list.hidden = !open;
+                    field.setAttribute("aria-expanded", open ? "true" : "false");
+                    if (open && active >= 0 && list.children[active]) {
+                      field.setAttribute("aria-activedescendant", list.id + "-" + active);
+                      list.children[active].scrollIntoView({ block: "nearest" });
+                    } else {
+                      field.removeAttribute("aria-activedescendant");
                     }
+                  };
+                  var close = function () {
+                    open = false;
+                    browsing = false;
+                    active = -1;
+                    draw();
+                  };
+                  var choose = function (name) {
+                    field.value = name;
+                    close();
+                  };
+                  var openAll = function () {
+                    browsing = true;
+                    open = true;
+                    active = -1;
+                    names.forEach(function (name, at) {
+                      if (same(name, field.value)) active = at;
+                    });
+                    draw();
+                  };
+                  arrow.addEventListener("mousedown", function (event) {
+                    event.preventDefault();
+                    field.focus();
+                    if (open && browsing) close();
+                    else openAll();
                   });
                   field.addEventListener("input", function () {
-                    put = null;
+                    browsing = false;
+                    open = true;
+                    active = -1;
+                    draw();
                   });
-                  field.addEventListener("blur", putBack);
+                  field.addEventListener("blur", close);
+                  field.addEventListener("keydown", function (event) {
+                    if (event.key === "ArrowDown") {
+                      event.preventDefault();
+                      if (!open) openAll();
+                      else {
+                        active = Math.min(active + 1, shown.length - 1);
+                        draw();
+                      }
+                    } else if (event.key === "ArrowUp" && open) {
+                      event.preventDefault();
+                      active = Math.max(active - 1, 0);
+                      draw();
+                    } else if (event.key === "Enter" && open && active >= 0) {
+                      event.preventDefault();
+                      choose(shown[active]);
+                    } else if (event.key === "Escape" && open) {
+                      event.preventDefault();
+                      close();
+                    }
+                  });
+                  draw();
                 });
               })();
             </script>

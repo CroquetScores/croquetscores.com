@@ -3,6 +3,14 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
+import {
+  checkSuggestions,
+  controlOf,
+  drawnArrowOf,
+  pressSuggestion,
+  suggestedTo,
+  whatOf,
+} from "../../../support/suggestions.js";
 import { unmarkedWithin } from "../../../support/marks.js";
 import { ordinal } from "../../../support/ordinals.js";
 import { keptCalled } from "../../../support/tournaments.js";
@@ -133,19 +141,12 @@ Then(
 // sport are typed, and suggest the names that have what was typed.
 const offeredAt = async (found: Locator): Promise<string[]> =>
   (
-    await found.evaluate(
-      (element: {
-        readonly options?: ArrayLike<{ readonly text: string }>;
-        readonly list?: {
-          readonly options: ArrayLike<{ readonly value: string }>;
-        } | null;
-      }) =>
-        element.options !== undefined
-          ? Array.from(element.options).map((option) => option.text)
-          : Array.from(element.list?.options ?? []).map(
-              (option) => option.value,
-            ),
-    )
+    (await found.evaluate(
+      (element: { readonly options?: ArrayLike<{ readonly text: string }> }) =>
+        element.options === undefined
+          ? undefined
+          : Array.from(element.options).map((option) => option.text),
+    )) ?? (await suggestedTo(found))
   ).filter((words) => words !== "");
 
 const offeredIn = (world: SpecWorld, label: string): Promise<string[]> =>
@@ -218,25 +219,79 @@ When(
   },
 );
 
+// How wide a field was, to say it is as wide when something is in it.
+const noted = new WeakMap<SpecWorld, number>();
+
+When(
+  "the width of the {string} is noted",
+  async function (this: SpecWorld, label: string) {
+    await drawn(this);
+    const box = await (await controlOf(field(this, label))).boundingBox();
+    assert.ok(box !== null, "The field is not on the page.");
+    noted.set(this, box.width);
+  },
+);
+
+Then(
+  "the {string} is as wide as was noted",
+  async function (this: SpecWorld, label: string) {
+    const before = noted.get(this);
+    assert.ok(before !== undefined, "No width was noted.");
+    await eventually(this, async () => {
+      const box = await (await controlOf(field(this, label))).boundingBox();
+      assert.ok(box !== null, "The field is not on the page.");
+      assert.ok(
+        Math.abs(box.width - before) <= 1,
+        `The field is ${String(box.width)} wide, and was ${String(before)}.`,
+      );
+    });
+  },
+);
+
+// The label lies on the line while the field is empty, and lifts onto the box's
+// border once there is something in it, or it would be over what was typed.
+Then(
+  "the label of the {string} is above what is typed",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      const typed = await field(this, label).boundingBox();
+      const named = await (
+        await controlOf(field(this, label))
+      )
+        .locator(".field-label")
+        .boundingBox();
+      assert.ok(typed !== null && named !== null, "The field is not drawn.");
+      assert.ok(
+        named.y + named.height / 2 < typed.y,
+        `The label is at ${String(named.y)} and what is typed at ${String(typed.y)}.`,
+      );
+    });
+  },
+);
+
 When(
   "the arrow at the end of the {string} is pressed",
   async function (this: SpecWorld, label: string) {
     await drawn(this);
-    const found = field(this, label);
-    const size = await found.boundingBox();
-    assert.ok(size !== null, "The field is not on the page.");
-    await found.click({ position: { x: size.width - 10, y: size.height / 2 } });
+    await drawnArrowOf(field(this, label)).click();
   },
 );
 
-When("the {string} is left", async function (this: SpecWorld, label: string) {
-  await drawn(this);
-  // By the element itself: the locator's blur waits on a field whose
-  // suggestions are open.
-  await field(this, label).evaluate((element: { blur(): void }) => {
-    element.blur();
-  });
-});
+When(
+  "{string} is pressed among the suggestions of the {string}",
+  async function (this: SpecWorld, name: string, label: string) {
+    await drawn(this);
+    await pressSuggestion(field(this, label), name);
+  },
+);
+
+Then(
+  /^the suggestions of the "([^"]*)" (are shown|are not shown|start where the field starts|are as wide as the field|are in the same text size as the field)$/,
+  async function (this: SpecWorld, label: string, what: string) {
+    await drawn(this);
+    await checkSuggestions(field(this, label), whatOf(what));
+  },
+);
 
 Then(
   "the sport chosen is {string}",

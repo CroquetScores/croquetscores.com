@@ -59,3 +59,12 @@
   grid-auto-flow: column;
   gap: var(--space-3);
 }
+
+/* The country and the region it may be narrowed by: the country is as wide
+   with no region beside it as with one, since a box that changed its width
+   as it was filled in would move under the pointer that had just chosen in
+   it. The column the region takes is left empty where it is not asked for. */
+.field-row-pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row;
+}

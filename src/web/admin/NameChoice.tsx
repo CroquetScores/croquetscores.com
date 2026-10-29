@@ -2,10 +2,6 @@ import { useEffect, useId, useRef, useState } from "react";
 
 import { sameWords } from "../common/sameWords.js";
 
-// How far in from the end of a box the arrow a browser draws there reaches,
-// with room to spare, since where it is drawn is the browser's.
-const ARROW_WIDTH = 28;
-
 interface Choice {
   readonly code: string;
   readonly name: string;
@@ -13,7 +9,7 @@ interface Choice {
 
 interface Props extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "value" | "onChange" | "list" | "type"
+  "value" | "onChange" | "list" | "type" | "role"
 > {
   readonly choices: readonly Choice[];
   /** The code of the choice made, or nothing where none is. */
@@ -39,6 +35,12 @@ interface Props extends Omit<
  * countries is a long way to scroll to Zimbabwe, and no line can be drawn
  * between groups in the suggestions of a field, so the groups' order is all
  * of them that is kept.
+ *
+ * The suggestions are a list of its own, drawn beneath the field as wide as it
+ * is and in its text, and not the datalist a browser draws: a browser's is its
+ * own to place and size, and narrows itself to what is in the box, which is
+ * only the choice made once one has been. The arrow at the end of the field,
+ * and the down arrow, open every name as though nothing were in it.
  */
 export function NameChoice({
   choices,
@@ -46,11 +48,11 @@ export function NameChoice({
   onChange,
   refusing = true,
   onKeyDown,
-  onMouseDown,
   onBlur,
   ...rest
 }: Props): React.JSX.Element {
   const listId = useId();
+  const field = useRef<HTMLInputElement>(null);
   const nameOf = (code: string): string =>
     choices.find((each) => each.code === code)?.name ?? code;
   // What is in the box, which is not the choice made while it is being typed.
@@ -66,10 +68,13 @@ export function NameChoice({
   // What the choices are rather than which array holds them, since a form that
   // builds the array again as it is drawn has not changed them.
   const offered = JSON.stringify(choices.map((each) => [each.code, each.name]));
-  // What was in the box when the down arrow emptied it, to put back if the
-  // reader goes without choosing anything.
-  const put = useRef<string | undefined>(undefined);
   const lastOffered = useRef(offered);
+  // Whether the list is drawn, which of its names is the one the keys are on,
+  // and whether it was opened by an arrow, which asks for every name, and not
+  // by typing, which asks for those that have what was typed.
+  const [open, setOpen] = useState(false);
+  const [browsing, setBrowsing] = useState(false);
+  const [active, setActive] = useState(-1);
   useEffect(() => {
     // Other choices are another list, as the regions are of another country,
     // and words typed towards the old ones say nothing of them, even where the
@@ -81,75 +86,135 @@ export function NameChoice({
     // it left, the form coming back to that code (the browser's Forward, say)
     // would be taken for the box's own, and the box would not say so.
     told.current = undefined;
-    put.current = undefined;
     setTyped(nameOf(value));
   }, [value, offered]);
-  const putBack = (): void => {
-    const before = put.current;
-    put.current = undefined;
-    if (before !== undefined) setTyped((now) => (now === "" ? before : now));
-  };
   // Narrowed to the names that have what has been typed, which is what the
   // list is specified to hold (tournaments.feature). A whole name is not
   // something to narrow by: it is a choice made, and the reader who goes on to
   // make another needs all of them (new.feature).
   const suggested =
-    typed.trim() === "" || choices.some((each) => sameWords(each.name, typed))
+    browsing ||
+    typed.trim() === "" ||
+    choices.some((each) => sameWords(each.name, typed))
       ? choices
       : choices.filter((each) =>
           each.name.toLowerCase().includes(typed.trim().toLowerCase()),
         );
+  useEffect(() => {
+    // The name the keys are on stays in view, as a list that scrolls is for.
+    if (open && active >= 0) {
+      document
+        .getElementById(`${listId}-${String(active)}`)
+        ?.scrollIntoView({ block: "nearest" });
+    }
+  }, [open, active, listId]);
+
+  const close = (): void => {
+    setOpen(false);
+    setBrowsing(false);
+    setActive(-1);
+  };
+  // Every name, with the keys on the one chosen, if one is.
+  const openAll = (): void => {
+    setBrowsing(true);
+    setOpen(true);
+    setActive(choices.findIndex((each) => sameWords(each.name, typed)));
+  };
+  const choose = (choice: Choice): void => {
+    setTyped(choice.name);
+    told.current = choice.code;
+    onChange(choice.code);
+    close();
+  };
+
   return (
-    <>
+    <span className="name-choice">
       <input
         {...rest}
+        ref={field}
         type="text"
-        list={listId}
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={
+          open && active >= 0 ? `${listId}-${String(active)}` : undefined
+        }
         autoComplete="off"
         value={typed}
-        // The down arrow, and the arrow a browser draws at the end of the box,
-        // open the suggestions, and a browser narrows them to the names that
-        // have what is in the box, which is all of what is chosen once a name
-        // is. The reader who presses either means to look at the others, so it
-        // is as though nothing were in the box; the choice made is not unmade
-        // by it, and is put back if none other is made. The drawn arrow is not
-        // an element of the page, so it is where the box is pressed near its
-        // end.
-        onMouseDown={(event) => {
-          onMouseDown?.(event);
-          const box = event.currentTarget.getBoundingClientRect();
-          if (typed !== "" && event.clientX >= box.right - ARROW_WIDTH) {
-            put.current = typed;
-            setTyped("");
-          }
-        }}
         onKeyDown={(event) => {
           onKeyDown?.(event);
-          if (event.key === "ArrowDown" && typed !== "") {
-            put.current = typed;
-            setTyped("");
-          } else if (event.key === "Escape") {
-            putBack();
+          if (event.key === "ArrowDown") {
+            event.preventDefault();
+            if (!open) openAll();
+            else setActive((now) => Math.min(now + 1, suggested.length - 1));
+          } else if (event.key === "ArrowUp" && open) {
+            event.preventDefault();
+            setActive((now) => Math.max(now - 1, 0));
+          } else if (event.key === "Enter" && open && active >= 0) {
+            // Choosing is not sending the form.
+            event.preventDefault();
+            const choice = suggested[active];
+            if (choice !== undefined) choose(choice);
+          } else if (event.key === "Escape" && open) {
+            event.preventDefault();
+            close();
           }
         }}
         onBlur={(event) => {
           onBlur?.(event);
-          putBack();
+          close();
         }}
         onChange={(event) => {
-          put.current = undefined;
           const words = event.target.value;
           setTyped(words);
+          setBrowsing(false);
+          setOpen(true);
+          setActive(-1);
           const named = choices.find((each) => sameWords(each.name, words));
           told.current = named?.code ?? (refusing ? words.trim() : "");
           onChange(told.current);
         }}
       />
-      <datalist id={listId}>
-        {suggested.map(({ code, name }) => (
-          <option key={code} value={name} />
+      {/* For the mouse alone, since the keys do what it does: not a button, so
+          that it is not a tab stop or a thing the form is said to have. It
+          does not take the focus from the field, which closing the list on
+          blur would otherwise answer by closing it as it opens. It shows every
+          name, and shuts the list where every name is shown already. */}
+      <span
+        className="name-choice-arrow"
+        aria-hidden="true"
+        onMouseDown={(event) => {
+          event.preventDefault();
+          field.current?.focus();
+          if (open && browsing) close();
+          else openAll();
+        }}
+      />
+      <ul
+        id={listId}
+        role="listbox"
+        className="name-choice-list"
+        hidden={!open}
+      >
+        {suggested.map(({ code, name }, at) => (
+          <li
+            key={code}
+            id={`${listId}-${String(at)}`}
+            role="option"
+            aria-selected={at === active}
+            className={at === active ? "name-choice-active" : undefined}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
+            onClick={() => {
+              choose({ code, name });
+            }}
+          >
+            {name}
+          </li>
         ))}
-      </datalist>
-    </>
+      </ul>
+    </span>
   );
 }

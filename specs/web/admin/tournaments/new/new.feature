@@ -205,40 +205,46 @@ Feature: A new tournament is created in the admin
       When "Zeal" is typed as the "Country"
       Then the form does not offer the country "Fiji"
 
-    Scenario: The down arrow in a field with a sport in it offers every sport
+    Scenario: A field that suggests is as wide empty as it is with a name in it
       Given the new tournament page is open
-      And the sport "Golf Croquet" is chosen
-      When the down arrow is pressed in the "Sport"
-      Then the sport chosen is ""
-      And 4 sports are offered
+      And "" is typed as the "Country"
+      And the width of the "Country" is noted
+      When the country "New Zealand" is chosen
+      Then the "Country" is as wide as was noted
 
-    Scenario: A sport in the field is put back when the field is left after the down arrow
+    Scenario: The label of a field that suggests is above the name in it
       Given the new tournament page is open
-      And the sport "Golf Croquet" is chosen
-      And the down arrow is pressed in the "Sport"
-      When the "Sport" is left
-      Then the sport chosen is "Golf Croquet"
+      When the country "New Zealand" is chosen
+      Then the label of the "Country" is above what is typed
 
     Scenario: The arrow at the end of a field with a sport in it offers every sport
       Given the new tournament page is open
       And the sport "Golf Croquet" is chosen
       When the arrow at the end of the "Sport" is pressed
-      Then the sport chosen is ""
-      And 4 sports are offered
-
-    Scenario: A sport in the field is put back when the field is left after its arrow
-      Given the new tournament page is open
-      And the sport "Golf Croquet" is chosen
-      And the arrow at the end of the "Sport" is pressed
-      When the "Sport" is left
-      Then the sport chosen is "Golf Croquet"
+      Then 4 sports are offered
+      And the sport chosen is "Golf Croquet"
+      And the suggestions of the "Sport" are shown
 
     Scenario: The down arrow in a field with a country in it offers every country
       Given the new tournament page is open
       And the country "New Zealand" is chosen
       When the down arrow is pressed in the "Country"
-      Then the country chosen is ""
-      And the form offers the country "Australia"
+      Then the form offers the country "Australia"
+      And the country chosen is "New Zealand"
+
+    Scenario: The suggestions are as the field they fill is
+      Given the new tournament page is open
+      When the arrow at the end of the "Country" is pressed
+      Then the suggestions of the "Country" start where the field starts
+      And the suggestions of the "Country" are as wide as the field
+      And the suggestions of the "Country" are in the same text size as the field
+
+    Scenario: A suggestion pressed is chosen
+      Given the new tournament page is open
+      And the arrow at the end of the "Sport" is pressed
+      When "Golf Croquet" is pressed among the suggestions of the "Sport"
+      Then the sport chosen is "Golf Croquet"
+      And the suggestions of the "Sport" are not shown
 
     Scenario: A part of a name offers the sports that have it
       Given the new tournament page is open

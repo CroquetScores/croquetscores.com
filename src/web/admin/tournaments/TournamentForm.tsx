@@ -369,7 +369,7 @@ export const TournamentForm = ({
                   ) : null}
                 </div>
               ) : null}
-              <div className="field-row">
+              <div className="field-row field-row-pair">
                 <Field
                   name="country"
                   label={say("admin.tournament.country")}

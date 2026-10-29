@@ -649,37 +649,56 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then "Spring Open" is in the upcoming tournaments
 
-    Scenario: The down arrow in a box with a country in it offers every country
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      When the down arrow is pressed in the country box
-      Then the country box of the filter says ""
-      And the filter offers "Australia" as a country
-
-    Scenario: A country in the box is put back when the box is left after the down arrow
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      And the down arrow is pressed in the country box
-      When the country box is left
-      Then the country box of the filter says "New Zealand"
-
     Scenario: The arrow at the end of a box with a country in it offers every country
       Given the browser has scripting on
       And the home page is open
       And "New Zealand" is chosen as the country
       When the arrow at the end of the country box is pressed
-      Then the country box of the filter says ""
-      And the filter offers "Australia" as a country
+      Then the filter offers "Australia" as a country
+      And the country box of the filter says "New Zealand"
+      And the suggestions of the country box are shown
 
-    Scenario: A country in the box is put back when the box is left after its arrow
+    Scenario: The down arrow in a box with a country in it offers every country
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      When the down arrow is pressed in the country box
+      Then the filter offers "Australia" as a country
+      And the suggestions of the country box are shown
+
+    Scenario: The suggestions are as the box they fill is
+      Given the browser has scripting on
+      And the home page is open
+      When the arrow at the end of the country box is pressed
+      Then the suggestions of the country box start where the box starts
+      And the suggestions of the country box are as wide as the box
+      And the suggestions of the country box are in the same text size as the box
+
+    Scenario: A suggestion pressed is chosen
       Given the browser has scripting on
       And the home page is open
       And "New Zealand" is chosen as the country
       And the arrow at the end of the country box is pressed
-      When the country box is left
-      Then the country box of the filter says "New Zealand"
+      When "Australia" is pressed among the suggestions of the country box
+      Then the country box of the filter says "Australia"
+      And the suggestions of the country box are not shown
+
+    Scenario: A suggestion is chosen with the keys
+      Given the browser has scripting on
+      And the home page is open
+      And "Austra" is typed as the country
+      And the down arrow is pressed in the country box
+      When the enter key is pressed in the country box
+      Then the country box of the filter says "Australia"
+
+    Scenario: Escape closes the suggestions and leaves the box as it was
+      Given the browser has scripting on
+      And the home page is open
+      And "New Zealand" is chosen as the country
+      And the arrow at the end of the country box is pressed
+      When the escape key is pressed in the country box
+      Then the suggestions of the country box are not shown
+      And the country box of the filter says "New Zealand"
 
     Scenario: Without scripting the down arrow leaves the country in the box
       Given the home page is open
