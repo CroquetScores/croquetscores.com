@@ -75,16 +75,39 @@ Then(
   },
 );
 
-// A line of words that wrapped is drawn as more than one box, one to a line.
+// The lines the words of a cell are drawn on. A range is drawn as a box for each
+// piece of what is in it, so the boxes are not the lines, and the boxes of one
+// line are counted as one: a box begins another line when it begins beneath the
+// bottom of the line so far. A function and not a string of one, which
+// Playwright 1.64 does not call.
 Then(
   "the dates of the first row are on one line",
   async function (this: SpecWorld) {
-    const lines = await datesOf(rows(this).first()).evaluate<number>(
-      `(cell) => {
-        const words = document.createRange();
+    const lines = await datesOf(rows(this).first()).evaluate(
+      (cell: {
+        readonly ownerDocument: {
+          createRange(): {
+            selectNodeContents(node: unknown): void;
+            getClientRects(): ArrayLike<{
+              readonly top: number;
+              readonly bottom: number;
+            }>;
+          };
+        };
+      }) => {
+        const words = cell.ownerDocument.createRange();
         words.selectNodeContents(cell);
-        return words.getClientRects().length;
-      }`,
+        const boxes = Array.from(words.getClientRects()).sort(
+          (one, other) => one.top - other.top,
+        );
+        let count = 0;
+        let bottom = -Infinity;
+        for (const box of boxes) {
+          if (box.top >= bottom - 1) count++;
+          bottom = Math.max(bottom, box.bottom);
+        }
+        return count;
+      },
     );
     assert.equal(lines, 1);
   },

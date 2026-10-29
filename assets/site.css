@@ -721,13 +721,6 @@ body > .site-footer {
   overflow-wrap: anywhere;
 }
 
-/* The dates take the width of the widest and no more, as the lists' do, so
-   that on a phone it is the tournament's name that wraps. */
-.player-tournaments .tournament-dates {
-  width: 1%;
-  white-space: nowrap;
-}
-
 .player-tournaments tbody tr:nth-child(even) td {
   background: var(--surface);
 }
@@ -749,9 +742,12 @@ body > .site-footer {
   font-size: inherit;
 }
 
-/* The dates take the width of the widest and no more: a cell as narrow as a
-   percentage can make it is stretched by what is in it, which does not wrap. */
-.search-list .tournament-dates {
+/* The dates take the width of the widest and no more, in the lists found and on
+   a player's page: a cell as narrow as a percentage can make it is stretched by
+   what is in it, which does not wrap, so that on a phone it is the
+   tournament's name that wraps. */
+.search-list .tournament-dates,
+.player-tournaments .tournament-dates {
   width: 1%;
   white-space: nowrap;
 }
