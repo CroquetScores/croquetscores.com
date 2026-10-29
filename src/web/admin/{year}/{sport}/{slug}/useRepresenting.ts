@@ -20,7 +20,13 @@ export const useRepresenting = (
 ): Matching | undefined => {
   const [offered, setOffered] = useState<Matching | undefined>();
   useEffect(() => {
-    if (!asking || typed.trim() === "") return;
+    // What was offered for what was typed before is no answer for what is
+    // typed after the field has been emptied or left, so it is not kept to be
+    // shown for the next.
+    if (!asking || typed.trim() === "") {
+      setOffered(undefined);
+      return;
+    }
     let current = true;
     const paused = setTimeout(() => {
       void fetch(`/api/site/representing?typed=${encodeURIComponent(typed)}`, {
@@ -33,11 +39,16 @@ export const useRepresenting = (
             : undefined,
         )
         // Nothing is offered where nothing could be asked: the field takes
-        // whatever is typed.
+        // whatever is typed, and what was offered for the text before is not
+        // left standing as though it were for this.
         .catch(() => undefined)
         .then((representing) => {
-          if (current && representing !== undefined) {
-            setOffered({ players: representing, known: false });
+          if (current) {
+            setOffered(
+              representing === undefined
+                ? undefined
+                : { players: representing, known: false },
+            );
           }
         });
     }, PAUSE_MILLISECONDS);
