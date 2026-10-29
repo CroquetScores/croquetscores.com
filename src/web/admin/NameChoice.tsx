@@ -62,9 +62,11 @@ export function NameChoice({
     if (value !== told.current) setTyped(nameOf(value));
   }, [value, choices]);
   // Narrowed to the names that have what has been typed, which is what the
-  // list is specified to hold (tournaments.feature).
+  // list is specified to hold (tournaments.feature). A whole name is not
+  // something to narrow by: it is a choice made, and the reader who goes on to
+  // make another needs all of them (new.feature).
   const suggested =
-    typed.trim() === ""
+    typed.trim() === "" || choices.some((each) => sameWords(each.name, typed))
       ? choices
       : choices.filter((each) =>
           each.name.toLowerCase().includes(typed.trim().toLowerCase()),

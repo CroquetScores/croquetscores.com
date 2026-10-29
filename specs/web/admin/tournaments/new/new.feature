@@ -235,7 +235,7 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then "Country" is refused with "CreateTournament.NoSuchCountry"
 
-    Scenario: A sport that is not offered is refused beside the sport
+    Scenario: A sport there is not is refused beside the sport
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
@@ -243,7 +243,7 @@ Feature: A new tournament is created in the admin
       And the country "Fiji" is chosen
       And "Quidditch" is typed as the "Sport"
       When "Create Tournament" is pressed
-      Then "Sport" is refused with "Tournament.SportNotOffered"
+      Then "Sport" is refused with "Sport.Unknown"
 
     Scenario: A region that is not offered is refused beside the region
       Given the new tournament page is open
@@ -549,13 +549,13 @@ Feature: A new tournament is created in the admin
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the new tournament page is opened
-      Then the country "Alemania" is offered before the country "Argentina"
+      Then the country "Alemania" is offered before the country "Austria"
 
     Scenario: The countries are in order of their names in English
       Given a site offering the languages it is served with
       And a browser that asks for "en"
       When the new tournament page is opened
-      Then the country "Argentina" is offered before the country "Germany"
+      Then the country "Austria" is offered before the country "Germany"
 
   Rule: The form is laid out for a phone first
 

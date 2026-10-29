@@ -410,11 +410,11 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Gateball" is not offered as a sport
 
-    Scenario: A name typed that is not offered lists everything
+    Scenario: A name typed that is not offered is refused as a code that is not offered is
       Given the page for 2026 is open
       And "Atlantis" is typed as the country
       When "Filter" is pressed
-      Then "Summer Open" is in the year's tournaments
+      Then the page is refused with "TournamentsInYear.NoSuchCountry"
 
   Rule: A region chosen with few tournaments to show says why
 

@@ -278,6 +278,17 @@ Feature: The home page lists recent results and upcoming tournaments
 
     Scenario Outline: On a phone the country's column is left out
       Given a viewport 375 pixels wide
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-09-30"
+      And the tournament "Autumn Open" finishes on "2026-10-01"
+      And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Autumn Open"
+      And "organiser@example.com" has added the block "Block A" to "Autumn Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Autumn Open"
+      And the server's clock reads "2026-10-01T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Autumn Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
       When the home page is opened
       Then the country's column of the <list> is not shown
 
@@ -287,6 +298,17 @@ Feature: The home page lists recent results and upcoming tournaments
         | upcoming tournaments |
 
     Scenario Outline: On a wide screen the country's column is shown
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-09-30"
+      And the tournament "Autumn Open" finishes on "2026-10-01"
+      And "organiser@example.com" has added the player "Sam Someone" to "Autumn Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Autumn Open"
+      And "organiser@example.com" has added the block "Block A" to "Autumn Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Autumn Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Autumn Open"
+      And the server's clock reads "2026-10-01T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Autumn Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
       When the home page is opened
       Then the country's column of the <list> is shown
 
@@ -327,6 +349,11 @@ Feature: The home page lists recent results and upcoming tournaments
 
   Rule: A tablet or wider shows each tournament's sport
 
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" finishes on "2026-10-12"
+
     Scenario: The sport is shown as its code in capitals
       Given a viewport 768 pixels wide
       And the tournament "Spring Open" is for the sport "gc"
@@ -340,12 +367,16 @@ Feature: The home page lists recent results and upcoming tournaments
 
     Scenario: The sport is shown in the recent results as well
       Given a viewport 768 pixels wide
+      And the tournament "Spring Open" starts on "2026-09-30"
+      And the tournament "Spring Open" finishes on "2026-10-01"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-01T10:00:00Z"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
       When the home page is opened
       Then "Spring Open" shows the sport "AC" in the recent results
 
@@ -361,7 +392,15 @@ Feature: The home page lists recent results and upcoming tournaments
         | gc    | blue   |
         | a6w   | orange |
         | rc    | purple |
-        | gb    | teal   |
+
+    Scenario: Gateball is on teal, on the website that offers it
+      Given a viewport 768 pixels wide
+      And a site served as "gateballscores.com"
+      And "organiser@example.com" has created the tournament "Gateball Open" on the website "gateballscores.com"
+      And the tournament "Gateball Open" starts on "2026-10-10"
+      And the tournament "Gateball Open" finishes on "2026-10-12"
+      When the home page is opened
+      Then "Gateball Open" shows its sport on teal in the upcoming tournaments
 
     Scenario: The sport is left out on a phone
       Given a viewport 375 pixels wide

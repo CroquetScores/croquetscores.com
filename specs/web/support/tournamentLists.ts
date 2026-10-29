@@ -622,11 +622,19 @@ Then(
 // The filter --------------------------------------------------------------------------
 
 // The names the field suggests, in the order it suggests them.
+// A function and not a string of one: Playwright 1.64 does not call a string,
+// and leaves what it was to read undefined. It is typed by what it reads, since
+// the specs are typed without the browser's own types.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
-    : filterField(world, field).evaluate<string[], undefined>(
-        `(input) => Array.from(input.list?.options ?? []).map((option) => option.value)`,
+    : filterField(world, field).evaluate(
+        (input: {
+          readonly list?: {
+            readonly options: ArrayLike<{ readonly value: string }>;
+          } | null;
+        }) =>
+          Array.from(input.list?.options ?? []).map((option) => option.value),
       );
 
 Then(
@@ -802,6 +810,8 @@ Then(
     const stray = await unmarkedWithin(this, "main", [
       ".tournament-name",
       ".tournament-dates",
+      // A sport's code, as AC is, is a code and no word of any language.
+      ".tournament-sport",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

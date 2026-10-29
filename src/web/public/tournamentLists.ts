@@ -144,11 +144,11 @@ export const askedOf = (
 ): Asked => {
   const { say } = speakingOf(request);
   // The fields are typed into, so what arrives is a name as often as a code,
-  // and a flag's link is a code. What is neither is dropped rather than
-  // refused: a reader who typed half a name and pressed Filter has made a
-  // slip, not asked for something that is not there. A code is looked for
-  // first, and a name only where no code is the same, so that the names of
-  // the countries are said only for a country that was typed in words.
+  // and a flag's link is a code. What is neither is kept as it was given, to be
+  // refused as an address that names a country or a sport there is not always
+  // has been (home.feature). A code is looked for first, and a name only where
+  // no code is the same, so that the names of the countries are said only for
+  // a country that was typed in words.
   const chosenFrom = <T extends { readonly code: string }>(
     all: readonly T[],
     field: string,
@@ -176,9 +176,11 @@ export const askedOf = (
     path,
     offersSport,
     chose: {
-      country: country?.code,
+      country: country?.code ?? oneOf(request.query, "country"),
       region: region?.code,
-      sport: sport?.code,
+      sport: offersSport
+        ? (sport?.code ?? oneOf(request.query, "sport"))
+        : undefined,
     },
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),

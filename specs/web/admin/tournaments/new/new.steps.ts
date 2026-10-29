@@ -131,15 +131,25 @@ Then(
 // list with nothing chosen begins with.
 // The format is still a list to choose from; the country, the region and the
 // sport are typed, and suggest the names that have what was typed.
-const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
+const offeredAt = async (found: Locator): Promise<string[]> =>
   (
-    await field(world, label).evaluate<
-      string[],
-      undefined
-    >(`(element) => element instanceof HTMLSelectElement
-        ? Array.from(element.options).map((option) => option.text)
-        : Array.from(element.list?.options ?? []).map((option) => option.value)`)
+    await found.evaluate(
+      (element: {
+        readonly options?: ArrayLike<{ readonly text: string }>;
+        readonly list?: {
+          readonly options: ArrayLike<{ readonly value: string }>;
+        } | null;
+      }) =>
+        element.options !== undefined
+          ? Array.from(element.options).map((option) => option.text)
+          : Array.from(element.list?.options ?? []).map(
+              (option) => option.value,
+            ),
+    )
   ).filter((words) => words !== "");
+
+const offeredIn = (world: SpecWorld, label: string): Promise<string[]> =>
+  offeredAt(field(world, label));
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
@@ -186,13 +196,19 @@ Then(
 );
 
 // What is in the box, which is the name of the choice made once it has been.
+// A function and not a string of one: Playwright 1.64 does not call a string,
+// and leaves what it was to read undefined. It is typed by what it reads, since
+// the specs are typed without the browser's own types.
 const chosenIn = async (world: SpecWorld, label: string): Promise<string> =>
-  field(world, label).evaluate<
-    string,
-    undefined
-  >(`(element) => element instanceof HTMLSelectElement
-      ? (element.selectedOptions[0]?.text ?? "")
-      : element.value`);
+  field(world, label).evaluate(
+    (element: {
+      readonly selectedOptions?: ArrayLike<{ readonly text: string }>;
+      readonly value: string;
+    }) =>
+      element.selectedOptions !== undefined
+        ? (element.selectedOptions[0]?.text ?? "")
+        : element.value,
+  );
 
 Then(
   "the sport chosen is {string}",
@@ -273,7 +289,10 @@ const choose = async (
   await drawn(world);
   const chosen = field(world, label);
   if (
-    await chosen.evaluate("(element) => element instanceof HTMLSelectElement")
+    await chosen.evaluate(
+      (element: { readonly options?: unknown }) =>
+        element.options !== undefined,
+    )
   ) {
     await chosen.selectOption({ label: choice });
   } else {
@@ -562,7 +581,9 @@ Then(
   "the country {string} is offered before the country {string}",
   async function (this: SpecWorld, one: string, other: string) {
     await eventually(this, async () => {
-      const countries = await offeredIn(this, "Country");
+      const countries = await offeredAt(
+        this.browserPage.locator("#field-country"),
+      );
       const [first, second] = [
         countries.indexOf(one),
         countries.indexOf(other),

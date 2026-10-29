@@ -1076,11 +1076,19 @@ const filterField = (world: SpecWorld, field: string): Locator =>
   world.browserPage.locator(`form.tournament-filter input[name="${field}"]`);
 
 // The names a field suggests, in the order it suggests them.
+// A function and not a string of one: Playwright 1.64 does not call a string,
+// and leaves what it was to read undefined. It is typed by what it reads, since
+// the specs are typed without the browser's own types.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
-    : filterField(world, field).evaluate<string[], undefined>(
-        `(input) => Array.from(input.list?.options ?? []).map((option) => option.value)`,
+    : filterField(world, field).evaluate(
+        (input: {
+          readonly list?: {
+            readonly options: ArrayLike<{ readonly value: string }>;
+          } | null;
+        }) =>
+          Array.from(input.list?.options ?? []).map((option) => option.value),
       );
 
 Then(
