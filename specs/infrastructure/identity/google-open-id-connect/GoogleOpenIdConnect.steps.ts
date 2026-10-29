@@ -7,6 +7,7 @@ import {
   type GoogleClaims,
 } from "../../../../src/infrastructure/identity/GoogleOpenIdConnect.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { rememberWhoCameBack } from "../whoCameBack.js";
 import {
   googleCredentialsForScenarios,
   standInGoogleFor,
@@ -167,8 +168,10 @@ const ask = async (world: SpecWorld): Promise<void> => {
   const those = believingOf(world);
   those.cameBack = undefined;
   world.failure = undefined;
+  rememberWhoCameBack(world, undefined);
   try {
     those.cameBack = await whoCameBack(world);
+    rememberWhoCameBack(world, those.cameBack);
   } catch (failure) {
     world.failure = failure;
   }
@@ -211,13 +214,6 @@ Then(
 );
 
 Then(
-  "the reader's email address is {string}",
-  function (this: SpecWorld, address: string) {
-    assert.equal(cameBackOf(this).emailAddress, address);
-  },
-);
-
-Then(
   "the reader's email address is said to be verified",
   function (this: SpecWorld) {
     assert.equal(cameBackOf(this).emailAddressVerified, true);
@@ -230,10 +226,6 @@ Then(
     assert.equal(cameBackOf(this).emailAddressVerified, false);
   },
 );
-
-Then("the reader is called {string}", function (this: SpecWorld, name: string) {
-  assert.equal(cameBackOf(this).name, name);
-});
 
 Then("the reader has no name", function (this: SpecWorld) {
   assert.equal(cameBackOf(this).name, undefined);
