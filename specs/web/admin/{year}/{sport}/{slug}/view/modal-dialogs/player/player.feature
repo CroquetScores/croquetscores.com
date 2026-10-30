@@ -622,7 +622,10 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then the address is "/admin/2026/ac/spring-open"
 
-  Rule: The flags are named in the reader's language, in order of their names
+  Rule: The flags are named in the reader's language, in the order the countries are offered in
+
+    The groups and their order are `countryOrder.feature`'s, as they are for
+    the countries a tournament is played in. A line is drawn between the groups.
 
     Scenario: No flag is the first choice
       Given the page of "Spring Open" is open
@@ -634,10 +637,35 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Add Player" is pressed
       Then the flag "New Zealand" is offered
 
-    Scenario: The flags are in order of their names
+    Scenario: The flags most played in are offered first
       Given the page of "Spring Open" is open
       When "Add Player" is pressed
-      Then the flag "Argentina" is offered before the flag "Germany"
+      Then the flag "New Zealand" is offered before the flag "Austria"
+
+    Scenario: The flags of the other countries played in since 2025 come before the rest
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the flag "Germany" is offered before the flag "Argentina"
+
+    Scenario: The flags of a group are in order of their names
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the flag "Austria" is offered before the flag "Germany"
+
+    Scenario: A line is drawn between the groups of flags
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the list of flags has 2 lines drawn in it
+
+    Scenario: A line is drawn after the United States
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then a line is drawn in the list of flags after "United States"
+
+    Scenario: A line is drawn after Wales
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then a line is drawn in the list of flags after "Wales"
 
     Scenario: The flags are in order of their names in the reader's language
       Given a site offering the languages it is served with

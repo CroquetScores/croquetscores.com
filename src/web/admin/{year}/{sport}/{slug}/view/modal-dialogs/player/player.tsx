@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { GroupedOptions } from "../../../../../../GroupedOptions.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
 import { useRepresenting } from "../../../useRepresenting.js";
@@ -91,7 +92,7 @@ export const PlayerDialog = ({
   close,
 }: Props): React.JSX.Element => {
   const asksWorldRankingName = worldRankingSport !== undefined;
-  const [flags, setFlags] = useState<readonly Flag[]>([]);
+  const [flags, setFlags] = useState<readonly (readonly Flag[])[]>([]);
   const [name, setName] = useState(player?.name ?? "");
   const [handicap, setHandicap] = useState(player?.handicap ?? "");
   const [representing, setRepresenting] = useState(player?.representing ?? "");
@@ -132,7 +133,9 @@ export const PlayerDialog = ({
   useEffect(() => {
     void fetch("/api/site/flags", { headers: { accept: "application/json" } })
       .then(async (response) =>
-        response.ok ? ((await response.json()) as { flags: Flag[] }).flags : [],
+        response.ok
+          ? ((await response.json()) as { groups: Flag[][] }).groups
+          : [],
       )
       .catch(() => [])
       .then(setFlags);
@@ -356,11 +359,7 @@ export const PlayerDialog = ({
             >
               {/* None first, since most players fly none. */}
               <option value="" />
-              {flags.map(({ code, name: called }) => (
-                <option key={code} value={code}>
-                  {called}
-                </option>
-              ))}
+              <GroupedOptions groups={flags} />
             </select>
           )}
         </Field>

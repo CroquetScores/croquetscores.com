@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { GroupedOptions } from "../../../../../../GroupedOptions.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
@@ -60,7 +61,7 @@ export const TeamDialog = ({
   kept,
   close,
 }: Props): React.JSX.Element => {
-  const [flags, setFlags] = useState<readonly Flag[]>([]);
+  const [flags, setFlags] = useState<readonly (readonly Flag[])[]>([]);
   const [name, setName] = useState(team?.name ?? "");
   const [shortName, setShortName] = useState(team?.shortName ?? "");
   const [flag, setFlag] = useState(team?.flag?.code ?? "");
@@ -74,7 +75,9 @@ export const TeamDialog = ({
   useEffect(() => {
     void fetch("/api/site/flags", { headers: { accept: "application/json" } })
       .then(async (response) =>
-        response.ok ? ((await response.json()) as { flags: Flag[] }).flags : [],
+        response.ok
+          ? ((await response.json()) as { groups: Flag[][] }).groups
+          : [],
       )
       .catch(() => [])
       .then(setFlags);
@@ -215,11 +218,7 @@ export const TeamDialog = ({
           >
             {/* None first, since a team need fly none. */}
             <option value="" />
-            {flags.map(({ code, name: called }) => (
-              <option key={code} value={code}>
-                {called}
-              </option>
-            ))}
+            <GroupedOptions groups={flags} />
           </select>
         )}
       </Field>
