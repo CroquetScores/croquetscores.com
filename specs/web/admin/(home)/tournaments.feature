@@ -732,11 +732,8 @@ Feature: The admin lists the reader's tournaments
     been chosen, and then only the regions of that country the list holds. A
     country that is not divided into regions offers none.
 
-    The country, the region and the sport are fields the reader types into,
-    which suggest the names that have what has been typed so far. No line is
-    drawn between the groups of countries, since the suggestions of a field
-    have no place for one. A choice is made as a name offered is chosen, with
-    no button to press, since this page runs scripts as it is. It is kept in the address, as the year is
+    A choice is made as it is chosen, with no button to press, since this
+    page runs scripts as it is. It is kept in the address, as the year is
     (`/admin/2026?country=nz`), so that it can be linked to and the browser's
     back button undoes it. The choices belong to the year they were offered
     from, so choosing another year clears them: a country offered in 2026 may
@@ -774,7 +771,7 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the filter offers "New Zealand" as a country
 
-    Scenario Outline: The countries the list holds are offered the ones most played in first
+    Scenario Outline: The countries the list holds are offered in groups, the ones most played in first
       Given "organiser@example.com" has created the tournament "Winter Open"
       And the tournament "Winter Open" starts on "2026-10-31"
       And the tournament "Winter Open" is played in the country "jp"
@@ -787,163 +784,12 @@ Feature: The admin lists the reader's tournaments
         | second | New Zealand |
         | third  | Japan       |
 
-    Scenario: A part of a country's name offers the countries that have it
-      Given the admin is open
-      When "Zeal" is typed as the country
-      Then the filter offers "New Zealand" as a country
-
-    Scenario: A part of a country's name does not offer a country that lacks it
-      Given the admin is open
-      When "Zeal" is typed as the country
-      Then the filter does not offer "Australia" as a country
-
-    Scenario: A part of a sport's name does not offer a sport that lacks it
-      Given the admin is open
-      When "Golf" is typed as the sport
-      Then the filter does not offer "Association Croquet" as a sport
-
-    Scenario: A name typed that is not offered lists everything, as an address that is not offered does
-      Given the admin is open
-      When "Atlantis" is typed as the country
-      Then the tournament "Summer Open" is listed
-
-    Scenario: The arrow at the end of a box with a country in it offers every country
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      When the arrow at the end of the country box is pressed
-      Then the filter offers "Australia" as a country
-      And the country box of the filter says "New Zealand"
-      And the suggestions of the country box are shown
-
-    Scenario: The down arrow in a box with a country in it offers every country
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      When the down arrow is pressed in the country box
-      Then the filter offers "Australia" as a country
-      And the suggestions of the country box are shown
-
-    Scenario: The suggestions are as the box they fill is
-      Given the admin is open
-      When the arrow at the end of the country box is pressed
-      Then the suggestions of the country box start where the box starts
-      And the suggestions of the country box are as wide as the box
-      And the suggestions of the country box are in the same text size as the box
-
-    Scenario: A suggestion pressed is chosen
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And the arrow at the end of the country box is pressed
-      When "Australia" is pressed among the suggestions of the country box
-      Then the country box of the filter says "Australia"
-      And the suggestions of the country box are not shown
-
-    Scenario: A suggestion is chosen with the keys
-      Given the admin is open
-      And "Austra" is typed as the country
-      And the down arrow is pressed in the country box
-      When the enter key is pressed in the country box
-      Then the country box of the filter says "Australia"
-
-    Scenario: Escape closes the suggestions and leaves the box as it was
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And the arrow at the end of the country box is pressed
-      When the escape key is pressed in the country box
-      Then the suggestions of the country box are not shown
-      And the country box of the filter says "New Zealand"
-
-    Scenario: A country that names nothing is not left
-      Given the admin is open
-      And "Atlantis" is typed as the country
-      When the tab key is pressed in the country box
-      Then the country box has the focus
-      And the country box says it needs "Choose the country."
-
-    Scenario: A country that is named is left
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: A country box with nothing in it is left, since nothing is any country
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And "" is typed as the country
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: A sport that names nothing is not left
-      Given the admin is open
-      And "Quidditch" is typed as the sport
-      When the tab key is pressed in the sport box
-      Then the sport box has the focus
-      And the sport box says it needs "Choose the sport."
-
-    Scenario: Escape puts back the country that was chosen, and the box can then be left
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And "Atlan" is typed as the country
-      And the escape key is pressed in the country box
-      And the escape key is pressed in the country box
-      Then the country box of the filter says "New Zealand"
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: The suggestions are closed once a name is typed in full
-      Given the admin is open
-      When "New Zealand" is typed as the country
-      Then the suggestions of the country box are not shown
-
-    Scenario: The suggestions are open while part of a name is typed
-      Given the admin is open
-      When "Zeal" is typed as the country
-      Then the suggestions of the country box are shown
-
-    Scenario: What is wrong with a country box gets out of the way when a key is pressed
-      Given the admin is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the key "x" is pressed in the country box
-      Then the country box says nothing is wrong
-
-    Scenario: What is wrong with a country box gets out of the way when the down arrow is pressed
-      Given the admin is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the down arrow is pressed in the country box
-      Then the country box says nothing is wrong
-
-    Scenario: What is wrong with a country box is said again when it is left again
-      Given the admin is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the key "x" is pressed in the country box
-      When the tab key is pressed in the country box
-      Then the country box has the focus
-      And the country box says it needs "Choose the country."
-
-    Scenario: What is wrong with a country box gets out of the way when its arrow is pressed
-      Given the admin is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the arrow at the end of the country box is pressed
-      Then the country box says nothing is wrong
-      And the suggestions of the country box are shown
-
-    Scenario: Fewer names are all in view
-      Given the admin is open
-      When "Zeal" is typed as the country
-      Then the suggestions of the country box show 1 name
-
-    Scenario: A name that is half deleted stays in the box to go on editing
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      When "New Zealan" is typed as the country
-      Then the country box of the filter says "New Zealan"
-      And the tournament "Summer Open" is listed
+    Scenario: A line is drawn between the groups the list holds
+      Given "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2026-10-31"
+      And the tournament "Winter Open" is played in the country "jp"
+      When the admin is opened
+      Then the filter's country list has 1 line drawn in it
 
     Scenario: A country the list does not hold is not offered
       When the admin is opened
@@ -1012,13 +858,6 @@ Feature: The admin lists the reader's tournaments
       When "Australia" is chosen as the country
       Then the tournament "Summer Open" is listed
 
-    Scenario: Words typed towards a region are cleared when another country is chosen
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And "Cant" is typed as the region
-      When "Australia" is chosen as the country
-      Then the region box of the filter says ""
-
     Scenario: A sport the list holds is offered
       When the admin is opened
       Then the filter offers "Golf Croquet" as a sport
@@ -1083,14 +922,6 @@ Feature: The admin lists the reader's tournaments
       And "New Zealand" is chosen as the country
       When the browser goes back
       Then the tournament "Summer Open" is listed
-
-    Scenario: The box says the country again when the browser goes back and then forward
-      Given the admin is open
-      And "New Zealand" is chosen as the country
-      And the browser goes back
-      And the country box of the filter says ""
-      When the browser goes forward
-      Then the country box of the filter says "New Zealand"
 
     Scenario: Choosing another year clears the choices
       Given "organiser@example.com" has created the tournament "Winter Open"

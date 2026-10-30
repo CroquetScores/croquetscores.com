@@ -1878,7 +1878,6 @@ main {
   font-weight: 600;
 }
 
-.tournament-filter input,
 .tournament-filter select,
 .tournament-filter button {
   max-width: 100%;
@@ -1889,103 +1888,25 @@ main {
   background: var(--panel);
 }
 
+/* Every country is on offer, so the list is taller than the room above or
+   below the field, and Chrome shuts a list that fits neither as soon as it is
+   opened. A height of its own, with the rest scrolled, lets it stay open. It
+   is still a plain select, and a browser without this draws its own. */
+.tournament-filter select,
+.tournament-filter select::picker(select) {
+  appearance: base-select;
+}
+
+.tournament-filter select::picker(select) {
+  max-height: 20rem;
+}
+
 .tournament-filter button {
   border-color: var(--action);
   background: var(--action);
   color: var(--action-ink);
   font-weight: 600;
   cursor: pointer;
-}
-
-/* A field that suggests names, with a list of its own beneath it rather than
-   the one a browser draws, which a page can neither place nor size. The list
-   starts where the field starts, is as wide as it is, and is in its text. */
-.name-choice {
-  position: relative;
-  display: flex;
-  max-width: 100%;
-  font: inherit;
-}
-
-/* In a form's box the box is the field the reader sees, and the input fills it
-   as it would without the list, so it is as wide empty as it is with a name in
-   it. The list and the arrow are placed by the box and not by what is inside
-   its padding, so that the list is as wide as the box and starts where it does. */
-.field-box .name-choice-list {
-  inset-inline: -1px;
-  top: calc(100% + 1px);
-}
-
-.field-box .name-choice {
-  position: static;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.name-choice > input[role="combobox"] {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding-inline-end: 2.75rem;
-}
-
-.name-choice-arrow {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
-  width: 2.75rem;
-  cursor: pointer;
-}
-
-.name-choice-arrow::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: translate(-50%, -70%) rotate(45deg);
-}
-
-/* Five names are in view at once, and the rest are scrolled to: each is as tall
-   as anything else pressed with a thumb, so that the height of five is known,
-   and the list's own borders are the two pixels over. */
-.name-choice-list {
-  --name-choice-name-height: 44px;
-  --name-choice-names-in-view: 5;
-  position: absolute;
-  inset-inline: 0;
-  top: 100%;
-  z-index: 20;
-  box-sizing: border-box;
-  max-height: calc(
-    var(--name-choice-names-in-view) * var(--name-choice-name-height) + 2px
-  );
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  border: 1px solid var(--ink-muted);
-  background: var(--panel);
-  color: inherit;
-  font: inherit;
-  list-style: none;
-  text-align: start;
-}
-
-.name-choice-list [role="option"] {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  height: var(--name-choice-name-height);
-  padding: 0 var(--space-3);
-  cursor: pointer;
-}
-
-.name-choice-list [role="option"]:hover,
-.name-choice-list .name-choice-active {
-  background: var(--accent-strong);
-  color: var(--accent-ink);
 }
 
 /* A tournament's games, the most recent first, no wider than 38rem, so that

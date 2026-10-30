@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
-import { NameChoice } from "../NameChoice.js";
+import { GroupedOptions } from "../GroupedOptions.js";
 import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
@@ -131,10 +131,6 @@ export const TournamentForm = ({
   const [format, setFormat] = useState(begins?.format ?? "");
   const [country, setCountry] = useState(begins?.country ?? "");
   const [region, setRegion] = useState(begins?.region ?? "");
-  // The country the region was chosen in. It is another country that leaves
-  // none, and not the words in the box while they name none, as they do part
-  // way through a correction, or name the same country again.
-  const regionIsOf = useRef(begins?.country ?? "");
   const [subtitle, setSubtitle] = useState(begins?.subtitle ?? "");
   // Unsaid until the reader ticks or unticks it, when it is whatever the
   // format draws to begin with; a tournament being changed has said already.
@@ -362,20 +358,25 @@ export const TournamentForm = ({
                       lifted
                     >
                       {(tied) => (
-                        <NameChoice
+                        <select
                           {...tied}
-                          choices={offered.sports}
-                          mustChoose={say("Sport.Unknown")}
-                          required
                           value={sport}
-                          onChange={setSport}
-                        />
+                          onChange={(event) => {
+                            setSport(event.target.value);
+                          }}
+                        >
+                          {offered.sports.map(({ code, name: called }) => (
+                            <option key={code} value={code}>
+                              {called}
+                            </option>
+                          ))}
+                        </select>
                       )}
                     </Field>
                   ) : null}
                 </div>
               ) : null}
-              <div className="field-row field-row-pair">
+              <div className="field-row">
                 <Field
                   name="country"
                   label={say("admin.tournament.country")}
@@ -383,25 +384,22 @@ export const TournamentForm = ({
                   lifted
                 >
                   {(tied) => (
-                    <NameChoice
+                    <select
                       {...tied}
-                      mustChoose={say("CreateTournament.NoSuchCountry")}
-                      required
-                      choices={inCountryGroups(
-                        offered.countries,
-                        document.documentElement.lang || "en",
-                      ).flat()}
                       value={country}
-                      onChange={(code) => {
-                        setCountry(code);
-                        if (
-                          offered.countries.some((each) => each.code === code)
-                        ) {
-                          if (code !== regionIsOf.current) setRegion("");
-                          regionIsOf.current = code;
-                        }
+                      onChange={(event) => {
+                        setCountry(event.target.value);
+                        setRegion("");
                       }}
-                    />
+                    >
+                      <option value="" />
+                      <GroupedOptions
+                        groups={inCountryGroups(
+                          offered.countries,
+                          document.documentElement.lang || "en",
+                        )}
+                      />
+                    </select>
                   )}
                 </Field>
                 {asksForRegion ? (
@@ -412,12 +410,20 @@ export const TournamentForm = ({
                     lifted
                   >
                     {(tied) => (
-                      <NameChoice
+                      <select
                         {...tied}
-                        choices={regions}
                         value={region}
-                        onChange={setRegion}
-                      />
+                        onChange={(event) => {
+                          setRegion(event.target.value);
+                        }}
+                      >
+                        <option value="" />
+                        {regions.map(({ code, name: called }) => (
+                          <option key={code} value={code}>
+                            {called}
+                          </option>
+                        ))}
+                      </select>
                     )}
                   </Field>
                 ) : null}

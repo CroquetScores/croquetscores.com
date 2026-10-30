@@ -1143,7 +1143,6 @@ export const japanese: Language = {
     "Tournament.StartsAfterNextYear": "大会の開始は来年までにしてください。",
     "Tournament.FinishesAfterNextYear": "大会の終了は来年までにしてください。",
     "CreateTournament.NoSuchCountry": "国を選択してください。",
-    "Sport.Unknown": "競技を選択してください。",
     "TournamentSubtitle.TooLong": "サブタイトルは2000文字以内にしてください。",
     "Tournament.NotAManager": "この大会を変更できるのは、運営者だけです。",
     "Tournament.NotAManagerOrScorer":

@@ -25,8 +25,7 @@ import type { Assets } from "../common/assets.js";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { escape } from "../common/escape.js";
-import { sameWords } from "../common/sameWords.js";
-import { speakingOf, type Speaking } from "../common/language.js";
+import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 
@@ -139,45 +138,19 @@ export const askedOf = (
   tables: readonly string[],
   { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): Asked => {
-  const { say } = speakingOf(request);
-  // The fields are typed into, so what arrives is a name as often as a code,
-  // and a flag's link is a code. What is neither is kept as it was given, to be
-  // refused as an address that names a country or a sport there is not always
-  // has been (home.feature). A code is looked for first, and a name only where
-  // no code is the same, so that the names of the countries are said only for
-  // a country that was typed in words.
-  const chosenFrom = <T extends { readonly code: string }>(
-    all: readonly T[],
-    field: string,
-    nameOf: (each: T) => string,
-  ): T | undefined => {
-    const typed = oneOf(request.query, field);
-    return typed === undefined
-      ? undefined
-      : (all.find((each) => sameWords(each.code, typed)) ??
-          all.find((each) => sameWords(nameOf(each), typed)));
-  };
-  const country = chosenFrom(Countries.thereAre.all, "country", (each) =>
-    say(`country.${each.code}`),
-  );
-  const region =
-    country === undefined
-      ? undefined
-      : chosenFrom(country.regions, "region", (each) => each.name);
-  const sport = offersSport
-    ? chosenFrom(sportsOffered[websiteOf(request).site], "sport", (each) =>
-        say(`sport.${each.code}`),
-      )
-    : undefined;
+  const country = oneOf(request.query, "country");
+  const region = oneOf(request.query, "region");
+  const kept =
+    region !== undefined &&
+    country !== undefined &&
+    Countries.thereAre.find(country)?.findRegion(region) !== undefined;
   return {
     path,
     offersSport,
     chose: {
-      country: country?.code ?? oneOf(request.query, "country"),
-      region: region?.code,
-      sport: offersSport
-        ? (sport?.code ?? oneOf(request.query, "sport"))
-        : undefined,
+      country,
+      region: kept ? region : undefined,
+      sport: offersSport ? oneOf(request.query, "sport") : undefined,
     },
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
@@ -338,227 +311,43 @@ ${rows}
 
 // The filter --------------------------------------------------------------------------
 
-// A name per line, in the order the groups come in. A field that suggests
-// names has no place for a line between groups, so the order is all of them.
-const offers = (names: readonly string[], id: string): string =>
-  `            <datalist id="${id}">
-${names.map((name) => `              <option value="${escape(name)}"></option>`).join("\n")}
-            </datalist>`;
-
-// The suggestions of a field are a list of its own where scripting is on, as
-// the admin's are (NameChoice.tsx), drawn beneath the field as wide as it is and
-// in its text: the datalist a browser draws is its own to place and size, and
-// narrows itself to what is in the box, which is only the choice made once one
-// has been. Written beside the form and not in a file of its own, as the site's
-// search is. It takes the names from the datalist, which it replaces, so that
-// where scripts do not run the field is as it was, with the browser's own.
-const suggestionsScript = `            <script>
-              (function () {
-                var form = document.currentScript.parentElement;
-                var taking = { now: false };
-                var same = function (one, other) {
-                  return one.trim().toLowerCase() === other.trim().toLowerCase();
-                };
-                Array.prototype.forEach.call(form.querySelectorAll("input[list]"), function (field) {
-                  var datalist = document.getElementById(field.getAttribute("list"));
-                  if (!datalist) return;
-                  var names = Array.prototype.map.call(datalist.options, function (option) {
-                    return option.value;
-                  });
-                  datalist.parentNode.removeChild(datalist);
-                  field.removeAttribute("list");
-                  var wrap = document.createElement("span");
-                  wrap.className = "name-choice";
-                  field.parentNode.insertBefore(wrap, field);
-                  wrap.appendChild(field);
-                  var arrow = document.createElement("span");
-                  arrow.className = "name-choice-arrow";
-                  arrow.setAttribute("aria-hidden", "true");
-                  wrap.appendChild(arrow);
-                  var list = document.createElement("ul");
-                  list.id = field.id + "-names";
-                  list.className = "name-choice-list";
-                  list.setAttribute("role", "listbox");
-                  wrap.appendChild(list);
-                  field.setAttribute("role", "combobox");
-                  field.setAttribute("aria-controls", list.id);
-                  field.setAttribute("aria-autocomplete", "list");
-                  var open = false;
-                  var browsing = false;
-                  var active = -1;
-                  var shown = [];
-                  // Where the box is to be held: words that name none of the
-                  // names are said to the browser as a fault, so that the form
-                  // is not sent, and leaving the box puts the focus back. The
-                  // last name the box held is what Escape puts back.
-                  var mustChoose = field.getAttribute("data-must-choose");
-                  var lastValid = "";
-                  var check = function () {
-                    var typed = field.value;
-                    var named = names.filter(function (name) { return same(name, typed); })[0];
-                    if (named !== undefined) lastValid = named;
-                    else if (typed.trim() === "") lastValid = "";
-                  };
-                  // What is wrong is said to the browser when the box is left or
-                  // the form is sent, and taken back for as long as the reader
-                  // keys on, since the bubble a browser draws stays up for as
-                  // long as it is said.
-                  var wrong = function () {
-                    var typed = field.value;
-                    var named = names.some(function (name) { return same(name, typed); });
-                    return Boolean(mustChoose) && typed.trim() !== "" && !named;
-                  };
-                  var saySo = function () {
-                    field.setCustomValidity(wrong() ? mustChoose : "");
-                  };
-                  var draw = function () {
-                    var typed = field.value;
-                    var whole = names.some(function (name) { return same(name, typed); });
-                    shown = browsing || typed.trim() === "" || whole
-                      ? names
-                      : names.filter(function (name) {
-                          return name.toLowerCase().indexOf(typed.trim().toLowerCase()) !== -1;
-                        });
-                    while (list.firstChild) list.removeChild(list.firstChild);
-                    shown.forEach(function (name, at) {
-                      var option = document.createElement("li");
-                      option.id = list.id + "-" + at;
-                      option.setAttribute("role", "option");
-                      option.setAttribute("aria-selected", at === active ? "true" : "false");
-                      if (at === active) option.className = "name-choice-active";
-                      option.textContent = name;
-                      option.addEventListener("mousedown", function (event) {
-                        event.preventDefault();
-                      });
-                      option.addEventListener("click", function () {
-                        choose(name);
-                      });
-                      list.appendChild(option);
-                    });
-                    list.hidden = !open;
-                    field.setAttribute("aria-expanded", open ? "true" : "false");
-                    if (open && active >= 0 && list.children[active]) {
-                      field.setAttribute("aria-activedescendant", list.id + "-" + active);
-                      list.children[active].scrollIntoView({ block: "nearest" });
-                    } else {
-                      field.removeAttribute("aria-activedescendant");
-                    }
-                  };
-                  var close = function () {
-                    open = false;
-                    browsing = false;
-                    active = -1;
-                    draw();
-                  };
-                  var choose = function (name) {
-                    field.value = name;
-                    check();
-                    saySo();
-                    close();
-                  };
-                  var openAll = function () {
-                    browsing = true;
-                    open = true;
-                    active = -1;
-                    names.forEach(function (name, at) {
-                      if (same(name, field.value)) active = at;
-                    });
-                    draw();
-                  };
-                  arrow.addEventListener("mousedown", function (event) {
-                    event.preventDefault();
-                    field.focus();
-                    // As a key does, the arrow takes back what is said to be
-                    // wrong, so that it is not left over the list it opens.
-                    field.setCustomValidity("");
-                    if (open && browsing) close();
-                    else openAll();
-                  });
-                  field.addEventListener("input", function () {
-                    browsing = false;
-                    active = -1;
-                    // A whole name has nothing left to suggest, nor has a box
-                    // emptied, and a list left open under either covers whatever
-                    // is beneath the field.
-                    open =
-                      field.value.trim() !== "" &&
-                      !names.some(function (name) { return same(name, field.value); });
-                    check();
-                    draw();
-                  });
-                  field.addEventListener("blur", function () {
-                    close();
-                    saySo();
-                    // A window put behind another blurs its field and leaves it
-                    // the one the page has focused: nothing was left. A box that
-                    // takes the focus back takes it from the other, which is not
-                    // left either.
-                    if (field.validity.valid || taking.now || document.activeElement === field) return;
-                    setTimeout(function () {
-                      if (!field.isConnected || field.validity.valid) return;
-                      taking.now = true;
-                      field.focus();
-                      taking.now = false;
-                      field.reportValidity();
-                    }, 0);
-                  });
-                  field.addEventListener("keydown", function (event) {
-                    if (event.key === "Enter") saySo();
-                    else if (event.key !== "Tab") field.setCustomValidity("");
-                    if (event.key === "ArrowDown") {
-                      event.preventDefault();
-                      if (!open) openAll();
-                      else {
-                        active = Math.min(active + 1, shown.length - 1);
-                        draw();
-                      }
-                    } else if (event.key === "ArrowUp" && open) {
-                      event.preventDefault();
-                      active = Math.max(active - 1, 0);
-                      draw();
-                    } else if (event.key === "Enter" && open && active >= 0) {
-                      event.preventDefault();
-                      choose(shown[active]);
-                    } else if (event.key === "Escape" && open) {
-                      event.preventDefault();
-                      close();
-                    } else if (event.key === "Escape" && wrong()) {
-                      event.preventDefault();
-                      field.value = lastValid;
-                      check();
-                      saySo();
-                      draw();
-                    }
-                  });
-                  check();
-                  saySo();
-                  draw();
-                });
-              })();
-            </script>
-`;
-
-// Labelled by a label of its own rather than one wrapped round it, which would
-// name the field by what it has chosen as well as by what it is. What is
-// chosen is shown by its name, which is what the reader types and what the
-// page reads back (askedOf).
-const field = (
-  name: string,
-  label: string,
+// Groups are told apart by a line, which a browser draws in its list.
+const options = (
+  groups: readonly (readonly {
+    readonly value: string;
+    readonly words: string;
+  }[])[],
   any: string,
   chosen: string | undefined,
-  names: readonly string[],
-  mustChoose?: string,
-): string => `            <span class="tournament-filter-field">
-              <label for="filter-${name}">${escape(label)}</label>
-              <input id="filter-${name}" name="${name}" type="text" list="filter-${name}-names" autocomplete="off" placeholder="${escape(any)}" value="${escape(chosen ?? "")}"${mustChoose === undefined ? "" : ` data-must-choose="${escape(mustChoose)}"`} />
-${offers(names, `filter-${name}-names`)}
-            </span>`;
+): string =>
+  [
+    `                <option value="">${escape(any)}</option>`,
+    ...groups.flatMap((choices, at) => [
+      ...(at === 0 ? [] : ["                <hr>"]),
+      ...choices.map(
+        ({ value, words }) =>
+          `                <option value="${escape(value)}"${value === chosen ? " selected" : ""}>${escape(words)}</option>`,
+      ),
+    ]),
+  ].join("\n");
 
 // A country that is not divided into regions is its own one region, coded as
 // the country is, and offers nothing to narrow it further by.
 const isDivided = (country: Country): boolean =>
   country.regions.length > 1 || country.regions[0]?.code !== country.code;
+
+// Labelled by a label of its own rather than one wrapped round it, which would
+// name the list by what it has chosen as well as by what it is.
+const field = (
+  name: string,
+  label: string,
+  choices: string,
+): string => `            <span class="tournament-filter-field">
+              <label for="filter-${name}">${escape(label)}</label>
+              <select id="filter-${name}" name="${name}">
+${choices}
+              </select>
+            </span>`;
 
 // Tournaments were given regions from November 2026, so a region chosen
 // leaves out every earlier one. Below this many shown, the reader is more
@@ -583,20 +372,17 @@ export const filter = (
       name: say(`country.${country.code}`),
     })),
     speaking.language.tag,
-  ).flat();
+  ).map((group) =>
+    group.map(({ code, name }) => ({ value: code, words: name })),
+  );
   const country =
     asked.chose.country === undefined
       ? undefined
       : Countries.thereAre.find(asked.chose.country);
   const sports = sportsOffered[websiteOf(request).site].map((sport) => ({
-    code: sport.code,
-    name: say(`sport.${sport.code}`),
+    value: sport.code,
+    words: say(`sport.${sport.code}`),
   }));
-  const named = (
-    choices: readonly { readonly code: string; readonly name: string }[],
-    code: string | undefined,
-  ): string | undefined =>
-    choices.find((each) => each.code === code)?.name ?? code;
   // Kept as the reader left them, since what sorts a table is not what the form
   // is about.
   const sortings = Object.entries(asked.sorting)
@@ -611,10 +397,11 @@ ${[
   field(
     "country",
     say("tournamentList.filter.country"),
-    say("tournamentList.filter.anyCountry"),
-    named(countries, asked.chose.country),
-    countries.map((each) => each.name),
-    say("CreateTournament.NoSuchCountry"),
+    options(
+      countries,
+      say("tournamentList.filter.anyCountry"),
+      asked.chose.country,
+    ),
   ),
   ...(country === undefined || !isDivided(country)
     ? []
@@ -622,9 +409,16 @@ ${[
         field(
           "region",
           say("tournamentList.filter.region"),
-          say("tournamentList.filter.anyRegion"),
-          named(country.regions, asked.chose.region),
-          country.regions.map((region) => region.name),
+          options(
+            [
+              country.regions.map((region) => ({
+                value: region.code,
+                words: region.name,
+              })),
+            ],
+            say("tournamentList.filter.anyRegion"),
+            asked.chose.region,
+          ),
         ),
       ]),
   ...(asked.offersSport
@@ -632,21 +426,22 @@ ${[
         field(
           "sport",
           say("tournamentList.filter.sport"),
-          say("tournamentList.filter.anySport"),
-          named(sports, asked.chose.sport),
-          sports.map((sport) => sport.name),
-          say("Sport.Unknown"),
+          options(
+            [sports],
+            say("tournamentList.filter.anySport"),
+            asked.chose.sport,
+          ),
         ),
       ]
     : []),
 ].join("\n")}
             <button type="submit">${escape(say("tournamentList.filter.submit"))}</button>
-${suggestionsScript}          </form>${
-    asked.chose.region !== undefined && shown < FEW_TO_SHOW
-      ? `
+          </form>${
+            asked.chose.region !== undefined && shown < FEW_TO_SHOW
+              ? `
           <p class="notice tournament-filter-notice">${escape(say("tournamentList.filter.noRegionsBefore"))}</p>`
-      : ""
-  }`;
+              : ""
+          }`;
 };
 
 // The years ----------------------------------------------------------------------------

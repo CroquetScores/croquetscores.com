@@ -289,8 +289,6 @@ Then(
     const stray = await unmarkedWithin(this, "main", [
       ".tournament-name",
       ".tournament-dates",
-      // A sport's code, as AC is, is a code and no word of any language.
-      ".tournament-sport",
       ".search-of",
       ".search-player a",
     ]);
