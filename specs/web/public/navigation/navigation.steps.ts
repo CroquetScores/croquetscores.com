@@ -34,10 +34,17 @@ Given("scripting is switched on", async function (this: SpecWorld) {
   await withScripting(this);
 });
 
+Given(
+  "a viewport {int} pixels wide and {int} pixels tall",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
 When(
-  "the window is made {int} pixels wide",
-  async function (this: SpecWorld, width: number) {
-    await this.browserPage.setViewportSize({ width, height: 800 });
+  "the window is made {int} pixels wide and {int} pixels tall",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
   },
 );
 

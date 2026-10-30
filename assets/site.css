@@ -854,8 +854,9 @@ body > .site-footer {
   color: var(--current-ink);
 }
 
-/* The primary navigation. Below 40rem it is collapsed behind the disclosure;
-   above it, the disclosure control is not rendered and the links sit inline.
+/* The primary navigation. Below 40rem, or in a window taller than it is wide,
+   it is collapsed behind the disclosure; otherwise the disclosure control is
+   not rendered and the links sit inline.
    <details> opens, closes, takes focus and announces itself without script,
    which is what the public side requires of it. */
 .menu {
@@ -974,10 +975,11 @@ body > .site-footer {
   color: var(--current-ink);
 }
 
-/* Above the one breakpoint this foundation has, the links are the navigation
-   and the disclosure has nothing to disclose. @media cannot read a custom
-   property, which is why 40rem is written out rather than tokenised. */
-@media (min-width: 40rem) {
+/* From the width of a small tablet, and only while the window is wider than it
+   is tall, the links are the navigation and the disclosure has nothing to
+   disclose: a tablet held upright is pressed as a phone is. @media cannot read
+   a custom property, which is why 40rem is written out rather than tokenised. */
+@media (min-width: 40rem) and (orientation: landscape) {
   .menu > summary {
     display: none;
   }
