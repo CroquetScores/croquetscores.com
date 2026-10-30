@@ -183,6 +183,53 @@ Feature: Signing in with Facebook
       When signing in with Facebook is sent
       Then it is answered with the account for "someone@example.com"
 
+  Rule: A Facebook account whose name the site cannot use is refused where a name is needed
+
+    A name needs at least 3 characters, as the site asks of any account's.
+    Facebook's name for the reader may be shorter, such as a name of two
+    characters, and is not the reader's to change here. It is needed only for
+    an account that has none: one already called something keeps what it is
+    called, and a Facebook account already linked is signed in to whatever
+    Facebook calls the reader.
+
+    Scenario: A name that is too short for an account is refused
+      Given Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Li"
+      When signing in with Facebook is sent
+      Then it is refused with "SignInWithFacebook.NameUnusable"
+
+    Scenario: A name that is refused makes no account
+      Given Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Li"
+      When signing in with Facebook is sent
+      Then "someone@example.com" has no account
+
+    Scenario: A name that is too short for an account not yet confirmed is refused
+      Given "someone@example.com" has an account, not confirmed
+      And Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Li"
+      When signing in with Facebook is sent
+      Then it is refused with "SignInWithFacebook.NameUnusable"
+
+    Scenario: A name that is too short leaves an account not yet confirmed as it was
+      Given "someone@example.com" has an account, not confirmed
+      And Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Li"
+      When signing in with Facebook is sent
+      Then the account for "someone@example.com" is not confirmed
+
+    Scenario: A name that is too short for a confirmed account signs in to it
+      Given "someone@example.com" has an account, confirmed
+      And Facebook knows the reader as "facebook-id-1"
+      And Facebook gives the email address "someone@example.com"
+      And Facebook calls the reader "Li"
+      When signing in with Facebook is sent
+      Then it is answered with the account for "someone@example.com"
+
   Rule: An account linked to another Facebook account is not linked again
 
     Scenario: A second Facebook account for the same email address is refused

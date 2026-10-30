@@ -21,7 +21,8 @@ import { SignInWithFacebook } from "./SignInWithFacebook.js";
 /** Every way signing in with Facebook is refused. */
 export type SignInWithFacebookErrorCode =
   | "SignInWithFacebook.EmailAddressMissing"
-  | "SignInWithFacebook.LinkedToAnother";
+  | "SignInWithFacebook.LinkedToAnother"
+  | "SignInWithFacebook.NameUnusable";
 
 export class SignInWithFacebookRefused extends Refused<SignInWithFacebookErrorCode> {}
 
@@ -117,11 +118,7 @@ export class SignInWithFacebookHandler extends CommandHandler<
       : await this.load(holder);
 
     if (!account.confirmed) {
-      account.confirm(
-        PersonName.from(command.name.trim()),
-        undefined,
-        command.requestedAt,
-      );
+      account.confirm(this.nameOf(command), undefined, command.requestedAt);
     }
     // Whoever holds the address for now does not get to add a second Facebook
     // account, and the account is what refuses it. This one linked already is
@@ -141,6 +138,24 @@ export class SignInWithFacebookHandler extends CommandHandler<
     account.signIn(command.requestedAt);
     await this.accounts.save(account);
     return account.id;
+  }
+
+  // Asked only where a name is needed: an account already called something
+  // keeps what it is called. Facebook's name for the reader is theirs and not
+  // ours to change, and one a name cannot be made of, as one of two characters
+  // is, is refused rather than given a name the reader did not choose.
+  private nameOf(command: SignInWithFacebook): PersonName {
+    try {
+      return PersonName.from(command.name);
+    } catch (failure) {
+      if (failure instanceof ValidationError) {
+        throw new SignInWithFacebookRefused(
+          "SignInWithFacebook.NameUnusable",
+          "Facebook gave a name that an account cannot be called.",
+        );
+      }
+      throw failure;
+    }
   }
 
   // What Facebook gives as an email address is whatever the reader has told

@@ -103,6 +103,8 @@ export const korean: Language = {
       "Google에서 이름을 받지 못했는데, 계정에는 이름이 필요해요. 아래에서 이메일 주소를 사용해 주세요.",
     "Google.Unreachable":
       "지금은 Google에 연결할 수 없어요. 몇 분 후에 다시 시도하거나, 아래에서 이메일 주소를 사용해 주세요.",
+    "SignInWithFacebook.NameUnusable":
+      "Facebook에서 받은 이름은 계정 이름으로 쓸 수 없어요. 이름은 3자 이상이어야 해요. 아래에서 이메일 주소를 사용해 주세요.",
     "Facebook.Refused":
       "지금은 Facebook으로 로그인할 수 없었어요. 다시 시도하거나, 아래에서 이메일 주소를 사용해 주세요.",
     "Facebook.Unreachable":

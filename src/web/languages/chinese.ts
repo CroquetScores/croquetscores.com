@@ -91,6 +91,8 @@ export const chinese: Language = {
       "Google 没有告诉我们您的姓名，而账户需要姓名。请改用下方的电子邮件地址。",
     "Google.Unreachable":
       "暂时无法连接 Google。请几分钟后重试，或使用下方的电子邮件地址。",
+    "SignInWithFacebook.NameUnusable":
+      "Facebook 提供的姓名不能用作账户名称，因为姓名至少需要 3 个字符。请改用下方的电子邮件地址。",
     "Facebook.Refused":
       "Facebook 暂时无法让您登录。请重试，或使用下方的电子邮件地址。",
     "Facebook.Unreachable":

@@ -146,6 +146,12 @@ Feature: Believing who Facebook says came back, and only that
       When who came back from Facebook is asked
       Then it is refused with "Facebook.Unreachable"
 
+    Scenario: Something that is not an answer, answered for the token, is unreachable
+      Given the reader has been sent to Facebook
+      And Facebook will answer the exchange with something that is not an answer
+      When who came back from Facebook is asked
+      Then it is refused with "Facebook.Unreachable"
+
     Scenario: Something that is not an answer, answered about the reader, is unreachable
       Given the reader has been sent to Facebook
       And Facebook will answer the question about the reader with something that is not an answer

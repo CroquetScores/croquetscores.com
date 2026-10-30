@@ -55,6 +55,8 @@ export interface Misbehaving {
   /** Making the code for another site than the one exchanging it. */
   codeForAnotherSite?: boolean;
   hangsUpOnTheExchange?: boolean;
+  /** Answering the exchange with something that is not an answer. */
+  answersTheExchangeWithNonsense?: boolean;
   hangsUpOnTheQuestion?: boolean;
   /** Answering the question about the reader with a failure of its own. */
   answersTheQuestionWithAnError?: boolean;
@@ -202,6 +204,9 @@ export class StandInFacebook {
         form.get("redirect_uri") !== issued.redirectUri
       ) {
         return json(400, { error: { message: "invalid code", code: 100 } });
+      }
+      if (this.misbehaving.answersTheExchangeWithNonsense === true) {
+        return { status: 200, headers: {}, body: "this is not an answer" };
       }
       if (this.misbehaving.givesNoAccessToken === true) return json(200, {});
       const accessToken = randomUUID();

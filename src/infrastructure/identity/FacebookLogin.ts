@@ -131,9 +131,20 @@ export class FacebookLogin {
       },
       "for the token",
     );
-    const body = (await response.json().catch(() => ({}))) as {
-      access_token?: unknown;
-    };
+    const answered: unknown = await response.json().catch(() => undefined);
+    // Something that is not an answer at all is Facebook being unwell, as it is
+    // when it is asked about the reader.
+    if (
+      typeof answered !== "object" ||
+      answered === null ||
+      Array.isArray(answered)
+    ) {
+      throw new FacebookLoginFailed(
+        "Facebook.Unreachable",
+        "Facebook answered for the token with something that is not an answer.",
+      );
+    }
+    const body = answered as { access_token?: unknown };
     // Facebook failing is Facebook being away; Facebook refusing the code is a
     // code that was not good, which is the reader's sign-in and not
     // Facebook's health.

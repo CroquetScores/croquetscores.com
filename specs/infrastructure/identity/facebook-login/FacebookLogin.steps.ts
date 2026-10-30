@@ -128,6 +128,13 @@ Given(
 );
 
 Given(
+  "Facebook will answer the exchange with something that is not an answer",
+  async function (this: SpecWorld) {
+    await misbehave(this, { answersTheExchangeWithNonsense: true });
+  },
+);
+
+Given(
   "Facebook will hang up on the question about the reader",
   async function (this: SpecWorld) {
     await misbehave(this, { hangsUpOnTheQuestion: true });

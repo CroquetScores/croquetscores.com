@@ -102,6 +102,8 @@ export const portuguese: Language = {
       "O Google não nos informou o seu nome, e uma conta precisa de um. Use o seu endereço de e-mail abaixo.",
     "Google.Unreachable":
       "Não foi possível acessar o Google agora. Tente de novo em alguns minutos ou use o seu endereço de e-mail abaixo.",
+    "SignInWithFacebook.NameUnusable":
+      "O nome que o Facebook nos informou não pode ser usado para uma conta, pois um nome precisa de pelo menos 3 caracteres. Use o seu endereço de e-mail abaixo.",
     "Facebook.Refused":
       "O Facebook não conseguiu fazer a sua entrada agora. Tente de novo ou use o seu endereço de e-mail abaixo.",
     "Facebook.Unreachable":

@@ -14,6 +14,7 @@ export const facebookPath = "/auth/facebook";
 export const refusalsFromFacebook: readonly string[] = [
   "SignInWithFacebook.EmailAddressMissing",
   "SignInWithFacebook.LinkedToAnother",
+  "SignInWithFacebook.NameUnusable",
   "Facebook.Refused",
   "Facebook.Unreachable",
 ];

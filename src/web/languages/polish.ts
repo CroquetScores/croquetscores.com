@@ -87,6 +87,8 @@ export const polish: Language = {
       "Google nie przekazało nam twojej nazwy, a konto jej wymaga. Użyj poniżej swojego adresu e-mail.",
     "Google.Unreachable":
       "Nie można teraz połączyć się z Google. Spróbuj ponownie za kilka minut albo użyj poniżej swojego adresu e-mail.",
+    "SignInWithFacebook.NameUnusable":
+      "Nazwa, którą przekazał nam Facebook, nie może być nazwą konta, bo nazwa musi mieć co najmniej 3 znaki. Użyj poniżej swojego adresu e-mail.",
     "Facebook.Refused":
       "Facebook nie pozwolił ci się teraz zalogować. Spróbuj ponownie albo użyj poniżej swojego adresu e-mail.",
     "Facebook.Unreachable":

@@ -104,6 +104,8 @@ export const italian: Language = {
       "Google non ci ha detto il tuo nome, e un account ne ha bisogno. Usa invece il tuo indirizzo email qui sotto.",
     "Google.Unreachable":
       "Google non è raggiungibile in questo momento. Riprova tra qualche minuto, oppure usa il tuo indirizzo email qui sotto.",
+    "SignInWithFacebook.NameUnusable":
+      "Il nome che Facebook ci ha dato non può essere usato per un account, perché un nome ha bisogno di almeno 3 caratteri. Usa invece il tuo indirizzo email qui sotto.",
     "Facebook.Refused":
       "Facebook non ha potuto farti accedere in questo momento. Riprova, oppure usa il tuo indirizzo email qui sotto.",
     "Facebook.Unreachable":
