@@ -11,6 +11,7 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 - [beta.md](beta.md) — Running the beta: what counts as a problem, who reads the logs, and what must be true before the second week
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
 - [backup-and-restore.md](backup-and-restore.md) — Copying the events to another machine, and rebuilding the website from the copy
+- [connect-phone.md](connect-phone.md) — For development rather than running the website: opening the site running on your own computer on a phone, through an https tunnel
 
 The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why, and `BETA.md` what the beta's testers are asked to do. What is still to be done before production is the issue https://github.com/CroquetScores/croquetscores.com/issues/286.
 
