@@ -1,5 +1,24 @@
 # What's new
 
+## Released 2026-10-30
+
+### iPad
+
+The pressing a list and pressing whitespace on the home page now works correctly. I tested every page with an iPad 6 without an issues, fingers crossed this holds true for all iPads and iMacs. Please let me know one way either way.
+
+### Finding things
+
+- **Country, state or province, and sport are lists again.** The fields that narrow the tournaments, on the home page and on a year's page, go back to the lists of the browser, which you press to see every name and choose from. Typing in them was not working well enough.
+
+### Managing a tournament
+
+- **Lists again for the country, state or province, and sport.** The form that creates or changes a tournament asks for them in lists too, and a player's or a team's flag is chosen from a list.
+- **The flags are in the order of the countries.** Australia, Egypt, England, New Zealand, Spain and the United States come first, then the other countries tournaments have been played in since 2025, then all the rest. A line is drawn after the United States and after Wales to show where one group ends and the next begins.
+
+### Tournament Country
+
+Chris Williams has been at it again and helped me improve tournament countries during importing from the old database.
+
 ## Released 2026-10-29
 
 ### Finding things

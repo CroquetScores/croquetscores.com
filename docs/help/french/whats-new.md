@@ -1,5 +1,24 @@
 # Nouveautés
 
+## Publié le 2026-10-30
+
+### iPad
+
+Appuyer sur une liste et appuyer sur l'espace vide de la page d'accueil fonctionnent maintenant correctement. J'ai testé chaque page avec un iPad 6 sans le moindre problème ; j'espère que cela vaut pour tous les iPad et tous les iMac. Dites-moi dans les deux cas, s'il vous plaît.
+
+### Trouver ce que vous cherchez
+
+- **Le pays, la région et le sport sont de nouveau des listes.** Les champs qui restreignent les tournois, sur la page d'accueil et sur la page d'une année, reviennent aux listes du navigateur, sur lesquelles vous appuyez pour voir tous les noms et en choisir un. La saisie dans ces champs ne fonctionnait pas assez bien.
+
+### Organiser un tournoi
+
+- **De nouveau des listes pour le pays, la région et le sport.** Le formulaire qui crée ou modifie un tournoi les demande aussi dans des listes, et le drapeau d'un joueur ou d'une équipe se choisit dans une liste.
+- **Les drapeaux suivent l'ordre des pays.** L'Australie, l'Égypte, l'Angleterre, la Nouvelle-Zélande, l'Espagne et les États-Unis viennent en premier, puis les autres pays où des tournois se sont joués depuis 2025, puis tous les autres. Une ligne est tracée après les États-Unis et après le pays de Galles pour montrer où un groupe finit et où le suivant commence.
+
+### Pays d'un tournoi
+
+Chris Williams a de nouveau donné un coup de main : il m'a aidé à améliorer les pays des tournois lors de leur reprise depuis l'ancienne base de données.
+
 ## Publié le 2026-10-29
 
 ### Trouver ce que vous cherchez

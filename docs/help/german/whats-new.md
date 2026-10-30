@@ -1,5 +1,24 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-10-30
+
+### iPad
+
+Das Drücken auf eine Liste und das Drücken auf freie Fläche auf der Startseite funktionieren jetzt richtig. Ich habe jede Seite mit einem iPad 6 ohne Probleme getestet; ich drücke die Daumen, dass das für alle iPads und iMacs gilt. Sagen Sie mir bitte so oder so Bescheid.
+
+### Dinge finden
+
+- **Land, Region und Sportart sind wieder Listen.** Die Felder, die die Turniere eingrenzen, auf der Startseite und auf der Seite eines Jahres, sind zu den Listen des Browsers zurückgekehrt, auf die Sie drücken, um alle Namen zu sehen und einen zu wählen. Das Eintippen darin funktionierte nicht gut genug.
+
+### Ein Turnier führen
+
+- **Wieder Listen für Land, Region und Sportart.** Das Formular, das ein Turnier anlegt oder ändert, fragt sie ebenfalls in Listen ab, und die Flagge eines Spielers oder einer Mannschaft wird aus einer Liste gewählt.
+- **Die Flaggen stehen in der Reihenfolge der Länder.** Australien, Ägypten, England, Neuseeland, Spanien und die Vereinigten Staaten stehen zuerst, dann die anderen Länder, in denen seit 2025 Turniere gespielt wurden, dann alle übrigen. Nach den Vereinigten Staaten und nach Wales ist eine Linie gezogen, die zeigt, wo eine Gruppe endet und die nächste beginnt.
+
+### Land eines Turniers
+
+Chris Williams hat wieder geholfen: Er hat mir geholfen, die Länder der Turniere beim Übernehmen aus der alten Datenbank zu verbessern.
+
 ## Veröffentlicht am 2026-10-29
 
 ### Dinge finden

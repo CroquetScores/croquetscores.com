@@ -1,5 +1,24 @@
 # Nytt
 
+## Släppt 2026-10-30
+
+### iPad
+
+Att trycka på en lista och att trycka på tom yta på startsidan fungerar nu som det ska. Jag har testat varje sida med en iPad 6 utan några problem; jag håller tummarna för att det gäller alla iPads och iMacs. Hör av dig till mig hur det än är.
+
+### Hitta saker
+
+- **Land, region och sport är listor igen.** Fälten som avgränsar turneringarna, på startsidan och på ett års sida, har gått tillbaka till webbläsarens listor, som du trycker på för att se alla namn och välja ett. Att skriva i dem fungerade inte tillräckligt bra.
+
+### Arrangera en turnering
+
+- **Listor igen för land, region och sport.** Formuläret som skapar eller ändrar en turnering frågar efter dem i listor också, och en spelares eller ett lags flagga väljs ur en lista.
+- **Flaggorna står i ländernas ordning.** Australien, Egypten, England, Nya Zeeland, Spanien och USA kommer först, sedan de andra länder där turneringar har spelats sedan 2025, sedan alla övriga. En linje dras efter USA och efter Wales för att visa var en grupp slutar och nästa börjar.
+
+### Turneringens land
+
+Chris Williams har hjälpt till igen: han hjälpte mig att förbättra turneringarnas länder när de fördes över från den gamla databasen.
+
 ## Släppt 2026-10-29
 
 ### Hitta saker

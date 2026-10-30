@@ -1,5 +1,24 @@
 # Wat is nuut
 
+## Vrygestel 2026-10-30
+
+### iPad
+
+Om 'n lys te druk en om wit spasie op die tuisbladsy te druk, werk nou reg. Ek het elke bladsy met 'n iPad 6 getoets sonder enige probleme; ek hou my duim vas dat dit vir alle iPads en iMacs geld. Laat my asseblief so of so weet.
+
+### Dinge vind
+
+- **Land, streek en sport is weer lyste.** Die velde wat die toernooie beperk, op die tuisbladsy en op 'n jaar se bladsy, is terug by die blaaier se lyste, wat jy druk om elke naam te sien en uit te kies. Om daarin te tik het nie goed genoeg gewerk nie.
+
+### 'n Toernooi bestuur
+
+- **Weer lyste vir land, streek en sport.** Die vorm wat 'n toernooi skep of verander, vra ook daarvoor in lyste, en 'n speler of 'n span se vlag word uit 'n lys gekies.
+- **Die vlae is in dieselfde volgorde as die lande.** Australië, Egipte, Engeland, Nieu-Seeland, Spanje en die Verenigde State kom eerste, dan die ander lande waar toernooie sedert 2025 gespeel is, dan al die res. 'n Lyn word ná die Verenigde State en ná Wallis getrek om te wys waar een groep eindig en die volgende begin.
+
+### Toernooiland
+
+Chris Williams het weer gehelp: hy het my gehelp om die lande van toernooie te verbeter toe hulle uit die ou databasis oorgebring is.
+
 ## Vrygestel 2026-10-29
 
 ### Dinge vind

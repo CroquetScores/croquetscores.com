@@ -1,5 +1,24 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-10-30
+
+### iPad
+
+Mae pwyso ar restr a phwyso ar le gwag ar yr hafan bellach yn gweithio'n gywir. Profais bob tudalen gydag iPad 6 heb unrhyw broblem; rwy'n croesi fy mysedd bod hyn yn wir am bob iPad ac iMac. Rhowch wybod i mi, os gwelwch yn dda, ar y naill law neu'r llall.
+
+### Dod o hyd i bethau
+
+- **Mae gwlad, rhanbarth a champ yn rhestri eto.** Mae'r meysydd sy'n culhau'r twrnameintiau, ar yr hafan ac ar dudalen blwyddyn, wedi dychwelyd at restri'r porwr, y byddwch yn pwyso arnynt i weld pob enw a dewis un. Nid oedd teipio ynddynt yn gweithio'n ddigon da.
+
+### Rheoli twrnamaint
+
+- **Rhestri eto ar gyfer y wlad, y rhanbarth a'r gamp.** Mae'r ffurflen sy'n creu neu'n newid twrnamaint yn gofyn amdanynt mewn rhestri hefyd, a dewisir baner chwaraewr neu dîm o restr.
+- **Mae'r baneri yn nhrefn y gwledydd.** Awstralia, yr Aifft, Lloegr, Seland Newydd, Sbaen a'r Unol Daleithiau sy'n dod gyntaf, yna'r gwledydd eraill y chwaraewyd twrnameintiau ynddynt ers 2025, yna'r gweddill i gyd. Tynnir llinell ar ôl yr Unol Daleithiau ac ar ôl Cymru i ddangos lle mae un grŵp yn gorffen a'r nesaf yn dechrau.
+
+### Gwlad twrnamaint
+
+Mae Chris Williams wedi helpu eto: fe'm helpodd i wella gwledydd twrnameintiau wrth eu dwyn o'r hen gronfa ddata.
+
 ## Rhyddhawyd 2026-10-29
 
 ### Dod o hyd i bethau

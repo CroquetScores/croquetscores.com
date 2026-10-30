@@ -1,5 +1,24 @@
 # He aha te mea hou
 
+## I tukuna 2026-10-30
+
+### iPad
+
+Kua tika te pēhi i tētahi rārangi me te pēhi i te waahi kau o te whārangi kāinga. I whakamātauria e au ia whārangi ki tētahi iPad 6 kāore he raruraru; e tūmanako ana au ka pērā ano mō ngā iPad me ngā iMac katoa. Tēnā, whakamōhiotia mai ahakoa te putanga.
+
+### Te kimi i ngā mea
+
+- **He rārangi anō te whenua, te rohe me te hākinakina.** Ko ngā āpure hei whakaiti i ngā whakataetae, i te whārangi kāinga me te whārangi o tētahi tau, kua hoki ki ngā rārangi o te pūtirotiro, ka pēhia e koe kia kitea ia ingoa, kia kōwhiria tētahi. Kāore te patopato i reira i tino pai te mahi.
+
+### Te whakahaere i tētahi whakataetae nui
+
+- **He rārangi anō mō te whenua, te rohe me te hākinakina.** Ka pātai te puka e waihanga ana, e whakarereke ana rānei i tētahi whakataetae nui i aua mea ki ngā rārangi anō, ā, ka kōwhiria te haki o tētahi kaitākaro, o tētahi tīma rānei i tētahi rārangi.
+- **Kei te raupapa o ngā whenua ngā haki.** Ko Ahitereiria, Īhipa, Ingarangi, Aotearoa, Peina me Amerika te tuatahi, kātahi ko ngā whenua kē i takaro ai ngā whakataetae nui mai i te 2025, kātahi ko ērā atu katoa. Ka tāia he rārangi i muri i a Amerika me i muri i a Wēra hei whakaatu i te mutunga o tētahi rōpū me te timatanga o tērā atu.
+
+### Te whenua o te whakataetae
+
+Kua āwhina anō a Chris Williams i ahau ki te whakapai ake i ngā whenua o ngā whakataetae i te kawenga mai i te pātengi raraunga tawhito.
+
 ## I tukuna 2026-10-29
 
 ### Te kimi i ngā mea

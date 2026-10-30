@@ -1,5 +1,24 @@
 # Co nowego
 
+## Wydano 2026-10-30
+
+### iPad
+
+Naciskanie listy i naciskanie pustego miejsca na stronie głównej działa teraz poprawnie. Przetestowałem każdą stronę na iPadzie 6 bez żadnych problemów; trzymam kciuki, żeby tak było na wszystkich iPadach i iMacach. Daj mi proszę znać w obu przypadkach.
+
+### Znajdowanie rzeczy
+
+- **Kraj, region i dyscyplina znów są listami.** Pola zawężające turnieje na stronie głównej i na stronie roku wróciły do list przeglądarki, które naciskasz, żeby zobaczyć wszystkie nazwy i wybrać jedną. Wpisywanie w nich nie działało wystarczająco dobrze.
+
+### Prowadzenie turnieju
+
+- **Znów listy dla kraju, regionu i dyscypliny.** Formularz tworzący lub zmieniający turniej też pyta o nie w listach, a flagę zawodnika lub drużyny wybiera się z listy.
+- **Flagi są w kolejności krajów.** Najpierw Australia, Egipt, Anglia, Nowa Zelandia, Hiszpania i Stany Zjednoczone, potem pozostałe kraje, w których od 2025 roku rozgrywano turnieje, potem wszystkie inne. Po Stanach Zjednoczonych i po Walii narysowana jest linia, która pokazuje, gdzie kończy się jedna grupa, a zaczyna następna.
+
+### Kraj turnieju
+
+Chris Williams znów pomógł: pomógł mi poprawić kraje turniejów przy przenoszeniu ich ze starej bazy danych.
+
 ## Wydano 2026-10-29
 
 ### Znajdowanie rzeczy
