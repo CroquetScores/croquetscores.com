@@ -1716,6 +1716,10 @@ main {
    else that is. */
 .tournament-list tbody tr {
   position: relative;
+  /* Safari on an iPad does not make a table row the box the name's link reaches
+     over, so the link reached over the whole page and a press on whitespace
+     anywhere went to the first tournament. A transform makes it one there. */
+  transform: scale(1);
 }
 
 .tournament-list td {
