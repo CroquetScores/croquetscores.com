@@ -1,5 +1,24 @@
 # Novità
 
+## Rilasciato il 2026-10-30
+
+### iPad
+
+Premere un elenco e premere lo spazio vuoto nella home ora funzionano correttamente. Ho provato ogni pagina con un iPad 6 senza alcun problema; incrocio le dita che valga per tutti gli iPad e gli iMac. Fammi sapere in ogni caso, per favore.
+
+### Trovare le cose
+
+- **Paese, regione e sport sono di nuovo elenchi.** I campi che restringono i tornei, nella home e nella pagina di un anno, tornano agli elenchi del browser, che premi per vedere tutti i nomi e sceglierne uno. Scriverci dentro non funzionava abbastanza bene.
+
+### Organizzare un torneo
+
+- **Di nuovo elenchi per paese, regione e sport.** Il modulo che crea o modifica un torneo li chiede anche in elenchi, e la bandiera di un giocatore o di una squadra si sceglie da un elenco.
+- **Le bandiere seguono l'ordine dei paesi.** Australia, Egitto, Inghilterra, Nuova Zelanda, Spagna e Stati Uniti vengono per primi, poi gli altri paesi in cui si sono giocati tornei dal 2025, poi tutti gli altri. Una linea è tracciata dopo gli Stati Uniti e dopo il Galles per mostrare dove finisce un gruppo e dove comincia il successivo.
+
+### Paese di un torneo
+
+Chris Williams ha dato di nuovo una mano: mi ha aiutato a migliorare i paesi dei tornei durante l'importazione dal vecchio database.
+
 ## Rilasciato il 2026-10-29
 
 ### Trovare le cose

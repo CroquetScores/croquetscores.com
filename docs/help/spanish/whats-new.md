@@ -1,5 +1,24 @@
 # Novedades
 
+## Publicado el 2026-10-30
+
+### iPad
+
+Ahora pulsar una lista y pulsar el espacio en blanco de la página de inicio funcionan correctamente. Probé todas las páginas con un iPad 6 sin ningún problema; cruzo los dedos para que valga para todos los iPad e iMac. Avísame, por favor, en cualquier caso.
+
+### Encontrar cosas
+
+- **El país, la región y el deporte vuelven a ser listas.** Los campos que acotan los torneos, en la página de inicio y en la página de un año, vuelven a las listas del navegador, que pulsas para ver todos los nombres y elegir uno. Escribir en ellos no funcionaba lo bastante bien.
+
+### Gestionar un torneo
+
+- **De nuevo listas para el país, la región y el deporte.** El formulario que crea o cambia un torneo también los pide en listas, y la bandera de un jugador o de un equipo se elige de una lista.
+- **Las banderas siguen el orden de los países.** Primero van Australia, Egipto, Inglaterra, Nueva Zelanda, España y Estados Unidos, luego los demás países en los que se han jugado torneos desde 2025 y luego todos los demás. Se traza una línea después de Estados Unidos y después de Gales para mostrar dónde acaba un grupo y empieza el siguiente.
+
+### País de un torneo
+
+Chris Williams ha vuelto a echar una mano: me ayudó a mejorar los países de los torneos al traerlos de la antigua base de datos.
+
 ## Publicado el 2026-10-29
 
 ### Encontrar cosas

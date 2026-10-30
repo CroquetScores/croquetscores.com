@@ -1,5 +1,24 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-10-30
+
+### iPad
+
+Op een lijst drukken en op witruimte op de homepagina drukken werkt nu goed. Ik heb elke pagina met een iPad 6 getest zonder problemen; ik hoop dat dit voor alle iPads en iMacs geldt. Laat het me weten, hoe dan ook.
+
+### Dingen vinden
+
+- **Land, regio en sport zijn weer lijsten.** De velden die de toernooien beperken, op de homepagina en op de pagina van een jaar, zijn terug bij de lijsten van de browser, waarop je drukt om elke naam te zien en er een te kiezen. Erin typen werkte niet goed genoeg.
+
+### Een toernooi leiden
+
+- **Weer lijsten voor land, regio en sport.** Het formulier waarmee je een toernooi aanmaakt of wijzigt, vraagt er ook in lijsten naar, en de vlag van een speler of een team kies je uit een lijst.
+- **De vlaggen staan in de volgorde van de landen.** Australië, Egypte, Engeland, Nieuw-Zeeland, Spanje en de Verenigde Staten komen eerst, dan de andere landen waarin sinds 2025 toernooien zijn gespeeld, dan alle overige. Na de Verenigde Staten en na Wales is een lijn getrokken om te laten zien waar de ene groep eindigt en de volgende begint.
+
+### Land van een toernooi
+
+Chris Williams heeft weer geholpen: hij heeft me geholpen de landen van toernooien te verbeteren bij het overnemen uit de oude database.
+
 ## Uitgebracht op 2026-10-29
 
 ### Dingen vinden
