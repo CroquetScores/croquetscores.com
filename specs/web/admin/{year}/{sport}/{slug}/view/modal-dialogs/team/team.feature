@@ -29,8 +29,8 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
   name says beneath it what it is for — what the team's tests are called by,
   as "AUS v ENG" — since a reader asked for two names would otherwise wonder
   why. The flags are offered as a player's are: by the name of the place each
-  is the flag of, in the reader's language, in order of those names, with a
-  choice of none first.
+  is the flag of, in the reader's language, in the order the countries are
+  offered in (`countryOrder.feature`), with a choice of none first.
 
   What is refused is said beneath the field it is about, by the refusal's
   code, and what was typed stays typed so that it can be put right: a name or
@@ -363,17 +363,28 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       When "Save" is pressed
       Then "Edit" on the team "Australia A" has the focus
 
-  Rule: The flags are named in the reader's language, in order of their names
+  Rule: The flags are named in the reader's language, in the order the countries are offered in
 
     Scenario: No flag is the first choice
       Given the page of "Spring Tests" is open
       When "Add Team" is pressed
       Then the first flag offered is none
 
-    Scenario: The flags are in order of their names
+    Scenario: The flags most played in are offered first
       Given the page of "Spring Tests" is open
       When "Add Team" is pressed
-      Then the flag "Argentina" is offered before the flag "Germany"
+      Then the flag "New Zealand" is offered before the flag "Austria"
+
+    Scenario: The flags of a group are in order of their names
+      Given the page of "Spring Tests" is open
+      When "Add Team" is pressed
+      Then the flag "Austria" is offered before the flag "Germany"
+
+    Scenario: A line is drawn after the United States and after Wales
+      Given the page of "Spring Tests" is open
+      When "Add Team" is pressed
+      Then a line is drawn in the list of flags after "United States"
+      And a line is drawn in the list of flags after "Wales"
 
   Rule: What is refused is said beside the field it is about
 

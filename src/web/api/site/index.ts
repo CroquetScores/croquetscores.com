@@ -66,6 +66,7 @@ import { UpdateTeamPlayer } from "../../../application/operations/tournaments/Up
 import { UpdateTest } from "../../../application/operations/tournaments/UpdateTest.js";
 import { Flags } from "../../../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { Assets } from "../../common/assets.js";
+import { inCountryGroups } from "../../common/countryOrder.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
@@ -1265,17 +1266,20 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
     };
   };
 
-  // Every flag a player can fly, in order of its name in the reader's
-  // language, which is the order a reader looks for one in.
+  // Every flag a player can fly, in the groups the countries are offered in
+  // (countryOrder.ts): a flag is the flag of a place, and a reader looks for
+  // one where they look for the place. The groups are kept apart so that
+  // whoever draws the list can draw the line between them.
   server.get("/flags", (request, reply) => {
     const reader = signedInOrRefused(request, reply);
     if (reader === undefined) return reply;
-    const byName = new Intl.Collator(speakingOf(request).language.tag);
-    const flags = Flags.thereAre.all
-      .map((flag) => flagAsSeen(request, String(flag)))
-      .filter((flag) => flag !== undefined)
-      .sort((one, other) => byName.compare(one.name, other.name));
-    return reply.header("cache-control", "no-store").send({ flags });
+    const groups = inCountryGroups(
+      Flags.thereAre.all
+        .map((flag) => flagAsSeen(request, String(flag)))
+        .filter((flag) => flag !== undefined),
+      speakingOf(request).language.tag,
+    );
+    return reply.header("cache-control", "no-store").send({ groups });
   });
 
   // A tournament's players, as its manager lists them, each flag as it is seen.

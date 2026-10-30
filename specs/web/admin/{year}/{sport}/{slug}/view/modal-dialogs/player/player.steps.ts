@@ -210,6 +210,33 @@ Then(
   },
 );
 
+Then(
+  "the list of flags has {int} lines drawn in it",
+  async function (this: SpecWorld, count: number) {
+    await flagsOffered(this);
+    assert.equal(await flagList(this).locator("hr").count(), count);
+  },
+);
+
+// A line is drawn after a flag when the next thing in the list is one.
+Then(
+  "a line is drawn in the list of flags after {string}",
+  async function (this: SpecWorld, flag: string) {
+    await flagsOffered(this);
+    const next = await flagList(this)
+      .locator("option", { hasText: new RegExp(`^${flag}$`) })
+      .evaluate(
+        (option) =>
+          (
+            option as unknown as {
+              nextElementSibling: { tagName: string } | null;
+            }
+          ).nextElementSibling?.tagName,
+      );
+    assert.equal(next, "HR", `No line is drawn after ${flag}.`);
+  },
+);
+
 // What it says -----------------------------------------------------------------------
 
 const status = (world: SpecWorld): Locator =>
