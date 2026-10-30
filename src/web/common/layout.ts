@@ -201,6 +201,26 @@ ${accountItems(bar).join("\n")}
               </nav>`;
 };
 
+// Opens the menu from the width its links are in the open, and shuts it below.
+// The stylesheet lets the links out of a closed menu, but only a browser that
+// can say how a closed menu is hidden does what it says: an iPad 6, wide
+// enough for the links to be in the open, showed none. An open menu shows its
+// links in every browser, so where there is scripting it is opened. 40rem is
+// written out as the stylesheet writes it, since a media query cannot be
+// handed a custom property.
+const menuScript = `          <script>
+            (function () {
+              var menu = document.currentScript.parentElement;
+              var wide = window.matchMedia("(min-width: 40rem)");
+              var fit = function () {
+                menu.open = wide.matches;
+              };
+              fit();
+              wide.addEventListener("change", fit);
+            })();
+          </script>
+`;
+
 const menu = (bar: AccountMenu, search = ""): string => {
   const { speaking, currentPath, signedIn } = bar;
   const items = navigation(signedIn)
@@ -225,7 +245,7 @@ ${items}
               </nav>
 ${accountGroup(bar)}
             </div>
-        </details>`;
+${menuScript}        </details>`;
 };
 
 // Beneath the site bar rather than in it, so that it scrolls away once read

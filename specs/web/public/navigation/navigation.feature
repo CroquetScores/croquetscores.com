@@ -33,6 +33,43 @@ Feature: Finding your way around the public site
       Then the menu button is visible
       And the link "Help" is not visible
 
+  Rule: A browser that hides a closed menu's contents is not left without links
+
+    A closed menu is hidden in the browser's own way, and the stylesheet can
+    let the links out of it only in a browser new enough to say how they are
+    hidden. An iPad 6 is not: it is 768 pixels wide, which is wide enough for
+    the links to be in the open, and it showed none of them. So where there is
+    scripting, the menu is opened at the width the links are in the open and
+    shut below it, which is the same in every browser. Without scripting the
+    stylesheet alone does it, as it always did.
+
+    Scenario: On a tablet the menu is opened for the reader
+      Given a viewport 768 pixels wide
+      And scripting is switched on
+      When the home page is opened
+      Then the menu is open
+      And the link "Help" is visible
+
+    Scenario: On a phone the menu is left shut
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      When the home page is opened
+      Then the menu is shut
+
+    Scenario: Turning a tablet upright shuts the menu
+      Given a viewport 768 pixels wide
+      And scripting is switched on
+      And the home page is open
+      When the window is made 375 pixels wide
+      Then the menu is shut
+
+    Scenario: Turning a phone sideways opens the menu
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      And the home page is open
+      When the window is made 768 pixels wide
+      Then the menu is open
+
   Rule: The navigation offers what the reader can use
 
     Scenario: A reader not signed in is offered the way home first

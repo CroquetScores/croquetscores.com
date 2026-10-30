@@ -71,7 +71,7 @@ A grid of cards uses `repeat(auto-fit, minmax(…, 1fr))` and needs no breakpoin
 
 The public header holds the site name, which is a link home, and the primary navigation. Below `40rem` the navigation is collapsed behind a disclosure; above it, it is laid out inline and the disclosure control is not rendered at all.
 
-That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, announced as a disclosure by a screen reader, and opens without a line of JavaScript, which is what the public side requires. The `<nav>` inside it carries an accessible name, so a reader arriving by landmark knows which navigation they have found.
+That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, announced as a disclosure by a screen reader, and opens without a line of JavaScript, which is what the public side requires. The `<nav>` inside it carries an accessible name, so a reader arriving by landmark knows which navigation they have found. Where there is scripting, a few lines open it from `40rem` and shut it below, because a browser too old to say how a closed `<details>` is hidden (an iPad 6) shows none of the links the stylesheet lets out of it; without scripting the stylesheet alone does it (`navigation.feature`).
 
 The navigation is generated from the list of public pages, so a page that exists is a page that can be reached, and no second list has to be kept true beside the first.
 
