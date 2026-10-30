@@ -28,7 +28,7 @@ The site sends email to confirm an email address, to set a password or tell you 
 
 ## Having it forgotten
 
-You can have your account forgotten at any time from your profile once you are signed in. Your name and email address are then made unreadable for good, and cannot be recovered by anybody, you included. What you published stays, under the name "Account Forgotten". Forgetting cannot be undone, which is why it is asked twice, and the email address is then free to be registered again as a new account.
+You can have your account forgotten at any time from your profile once you are signed in. Your name, your email address and any Google or Facebook account linked to it are then replaced, for good, in everything the site keeps, by "Forgotten Account" and a number, an address at example.com that belongs to nobody, and a number. They cannot be recovered by anybody, you included. What you published stays, under the name "Forgotten Account" and that number. Forgetting cannot be undone, which is why it is asked twice, and the email address is then free to be registered again as a new account. A copy of the site made before you were forgotten, such as a backup, still has what it had then, for as long as the copy is kept.
 
 ## Asking
 

@@ -111,10 +111,15 @@ export class PostgresEmailQueue implements EmailQueue {
     let sealed: string;
     if (email.account !== undefined) {
       // An account's key is made as its registering is kept, in the same
-      // transaction this is queued in and before it, so an account with no key
-      // here is one that has been forgotten, and nothing is ever sent to one.
-      if (!(await this.keys.hasKey(email.account))) return;
-      sealed = await this.keys.encrypt(email.account, JSON.stringify(sealing));
+      // transaction this is queued in and before it, and is marked forgotten
+      // as its forgetting is, so an account with no key in use here is one
+      // that has been forgotten, and nothing is ever sent to one.
+      const inUse = await this.keys.encryptIfInUse(
+        email.account,
+        JSON.stringify(sealing),
+      );
+      if (inUse === undefined) return;
+      sealed = inUse;
     } else {
       sealed = this.keys.encryptForSite(JSON.stringify(sealing));
     }
@@ -279,10 +284,15 @@ export class PostgresEmailQueue implements EmailQueue {
 
   // What was sealed of `row`, or nothing when its account is forgotten.
   async #open(row: Row): Promise<Sealed | undefined> {
+    // An account's key is kept when it is forgotten, so what its key opens is
+    // asked for only of an account that is not.
     const opened =
       row.account_id === null
         ? this.keys.decryptForSite(row.sealed)
-        : await this.keys.decrypt(AccountId.from(row.account_id), row.sealed);
+        : await this.keys.decryptIfInUse(
+            AccountId.from(row.account_id),
+            row.sealed,
+          );
     if (opened === undefined) return undefined;
     // An email queued before the site answered for more than one website did
     // not say which it was for, and the one website there was is

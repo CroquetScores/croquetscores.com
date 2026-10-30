@@ -14,11 +14,13 @@ You are signed out everywhere you were signed in, and the account can never be s
 
 ## What is deleted
 
-Your name and your email address are deleted for good: they are made unreadable, and nobody can read them again, the people who run the site included. The same is true of what the site was told by Facebook or Google when you signed in. Your email address can then be registered again, as a new account.
+Your name and your email address are replaced, for good, wherever the site keeps them, by "Forgotten Account" and a number, and an address at example.com that belongs to nobody. Nobody can read them again, the people who run the site included. The same is done to the Google or Facebook account linked to yours, so that nothing ties the account to you. Your email address can then be registered again, as a new account.
 
 ## What is kept
 
-Your account's identifier is kept. It is a random number that was made for the account, and it says nothing about who you are. What you published stays with it, under the name "Account Forgotten": the tournaments you created, the scores you entered, and the commentary and comments you wrote. It is the record of the games, and the people who played in them have a claim to it. It no longer says who you were.
+Your account's identifier is kept. It is a random number that was made for the account, and it says nothing about who you are. What you published stays with it, under the name "Forgotten Account" and that number: the tournaments you created, the scores you entered, and the commentary and comments you wrote. It is the record of the games, and the people who played in them have a claim to it. It no longer says who you were.
+
+A copy of the site made before you were forgotten, such as a backup, still has what it had then, for as long as the copy is kept.
 
 ## Things to know
 

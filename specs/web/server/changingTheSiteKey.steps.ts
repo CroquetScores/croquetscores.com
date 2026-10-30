@@ -79,7 +79,7 @@ const asksWith = async (
   assert.ok(account !== undefined, `No account is found for ${address}.`);
   const keys = new AccountKeys(application.unitOfWork, siteKey);
   return application.unitOfWork.inReadOnlyTransaction(() =>
-    keys.hasKey(account),
+    keys.isInUse(account),
   );
 };
 

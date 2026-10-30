@@ -32,8 +32,9 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
 
   An email about an account is queued in the same transaction as what it is
   about, and after it: the account's key is made as its registering is kept, so
-  by the time anything queues an email about it the key is there. An account
-  with no key is therefore one that has been forgotten, and an email about it
+  by the time anything queues an email about it the key is there, and it is
+  marked forgotten as its forgetting is kept. An account with no key in use is
+  therefore one that has been forgotten, and an email about it
   is not queued at all, rather than queued to be given up when nothing can read
   it.
 
@@ -144,6 +145,12 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
       And the account is forgotten
       When what is queued is sent
       Then "someone@example.com" was sent 0 emails
+
+    Scenario: Forgetting an account takes out the emails waiting for it
+      Given an account for "someone@example.com"
+      And the email "Email.ConfirmAddress" is queued for the account
+      When the account is forgotten
+      Then the queue holds 0 emails
 
     Scenario: An email queued before its account is forgotten is taken out
       Given an account for "someone@example.com"

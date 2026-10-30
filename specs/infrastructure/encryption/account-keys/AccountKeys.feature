@@ -14,18 +14,23 @@ Feature: Keeping an account's name and email address readable only with its own 
   anyone who takes the database without the site's key takes nothing they can
   read, and anyone who takes the events without the table of keys takes less.
 
-  A key of its own for each account is what lets an account be forgotten
-  without rewriting anything. Deleting an account's key leaves every one of its
-  events where it was, and makes its name and email address unreadable for
-  good: the account reads back as forgotten. Deleting the key does not on its
-  own stop the account being found by its email address, which is found by a
-  hash made with a key of the whole site's; forgetting records an event as
-  well, which is what does, and is below. Who may have an account forgotten,
-  and how, is specified with the forget account page: the reader signed in to
-  it, confirming by a link emailed to its address. A key of its own is also
-  what makes the site's key cheap to change: only the table of account keys is
-  encrypted with it, and the few emails waiting in the queue with no account to
-  belong to, so changing it re-encrypts those, and not a single event.
+  An account is forgotten by rewriting its events, which is unusual: an event
+  log is only ever added to, and this is the one place in the site where what
+  was kept is changed. The events that hold an account's name, its email
+  address and the Google account linked to it are rewritten, in the
+  transaction that records the forgetting, to hold what a forgotten account is
+  called instead, encrypted with the account's key as they were before. The
+  key is kept. So what was kept of the person is no longer kept anywhere, and
+  not merely unreadable, and the account reads back, with its key, as the
+  forgotten account its events now say it is. Forgetting does not on its own
+  stop the account being found by its email address, which is found by a hash
+  made with a key of the whole site's; it records an event as well, which is
+  what does, and is below. Who may have an account forgotten, and how, is
+  specified with the forget account page: the reader signed in to it,
+  confirming by a link emailed to its address. A key of its own is also what
+  makes the site's key cheap to change: only the table of account keys is
+  encrypted with it, and the few emails waiting in the queue with no account
+  to belong to, so changing it re-encrypts those, and not a single event.
 
   The encryption is AES-256-GCM, which refuses to decrypt anything that has
   been changed since it was encrypted, rather than decrypting it into
@@ -184,69 +189,92 @@ Feature: Keeping an account's name and email address readable only with its own 
       When the second account is read back
       Then reading it is refused with "AccountKeys.Tampered"
 
-  Rule: An account whose key is deleted is forgotten, and nothing else is rewritten
+  Rule: A forgotten account has what is personal in its events rewritten, and keeps its key
 
-    A forgotten account still has to be called something wherever it appears,
-    and still has to be reached at something that is an email address. It is
-    called "Account Forgotten", followed by the uuid in the account's own id,
-    and is reached at "account-forgotten-", the same uuid, and
-    "@croquetscores.com". The uuid comes from the id rather than being made
-    afresh, so that the account reads back the same every time; the id is kept
-    in any case, and says nothing about the person. Nothing is ever sent to
-    that address: it is the site's own, and anything sent to it would reach the
-    site rather than anybody who was. A Google account it was linked to reads
-    back as "google-account-forgotten-" and the same uuid, which no Google
-    account is known by, since Google knows every one by digits alone.
+    A forgotten account still has to be called something and reached at
+    something that is an email address wherever it appears. It is called
+    "Forgotten Account", followed by the uuid in the account's own id, and is
+    reached at "forgotten-account-", the same uuid without its hyphens, and
+    "@example.com". The uuid comes from the id rather than being made afresh,
+    so that the account reads back the same every time; the id is kept in any
+    case, and says nothing about the person. Nothing is ever sent to that
+    address: example.com is reserved so that nobody owns it. A Google account
+    it was linked to reads back as "google-account-forgotten-" and the same
+    uuid, which no Google account is known by, since Google knows every one by
+    digits alone.
 
-    Deleting the key is not all of forgetting. The table an account is found
-    by holds a keyed hash of its address, made with a key the whole site
-    shares, which deleting one account's key does not touch; left alone, the
-    row would still find the forgotten account by its old address, and keep
-    the address from being registered again. So forgetting deletes the key
-    and records that the account was forgotten, in one transaction, and the
-    read model marks the row forgotten when it is given that event, and never
-    finds it again. The row is kept, and so is the hash in it.
+    Forgetting rewrites those events and adds the one that records it, and
+    takes no event away. The table an account is found by holds a keyed hash
+    of its address, made with a key the whole site shares, which rewriting the
+    events does not touch; left alone, the row would still find the forgotten
+    account by its old address, and keep the address from being registered
+    again. So the read model marks the row forgotten when it is given the
+    event that records the forgetting, and never finds it again. The row is
+    kept, and so is the hash in it.
 
-    Scenario: Deleting an account's key leaves its events where they were
+    Scenario: Forgetting an account keeps its key
       Given an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
-      When the account's key is deleted
+      When the account is forgotten
+      Then the account has a key
+
+    Scenario: Forgetting an account takes none of its events away
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And every event is noted
+      When the account is forgotten
       Then the account's events are all still kept
 
-    Scenario: An account whose key is deleted is called forgotten, by its id
+    Scenario: What was kept of the account's name, address and Google account is kept no longer
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the Google account "google-subject-1" is linked to the account
+      And every event is noted
+      When the account is forgotten
+      Then every event that held something personal is kept differently
+
+    Scenario: A forgotten account is called forgotten, by its id
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
-      When the account's key is deleted
+      When the account is forgotten
       And the account is read back
-      Then the account is called "Account Forgotten 7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      Then the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
-    Scenario: An account whose key is deleted is called forgotten, whatever it was changed to
+    Scenario: A forgotten account is called forgotten, whatever it was changed to
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
       And the account's name is changed to "Samantha Someone"
-      When the account's key is deleted
+      When the account is forgotten
       And the account is read back
-      Then the account is called "Account Forgotten 7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      Then the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
-    Scenario: An account whose key is deleted is reached at a forgotten address, by its id
+    Scenario: A forgotten account is reached at a forgotten address, by its id
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
-      When the account's key is deleted
+      When the account is forgotten
       And the account is read back
-      Then the account is reached at "account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7@croquetscores.com"
+      Then the account is reached at "forgotten-account-7c9e6679742540de944be07fc1f90ae7@example.com"
 
-    Scenario: An account whose key is deleted is linked to a forgotten Google account, by its id
+    Scenario: A forgotten account is reached at a forgotten address, whatever it was moved to
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account is moved to "samantha@example.com" with the email address hash "hash-of-samantha"
+      When the account is forgotten
+      And the account is read back
+      Then the account is reached at "forgotten-account-7c9e6679742540de944be07fc1f90ae7@example.com"
+
+    Scenario: A forgotten account is linked to a forgotten Google account, by its id
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
       And the Google account "google-subject-1" is linked to the account
-      When the account's key is deleted
+      When the account is forgotten
       And the account is read back
-      Then the account is linked to the Google account "google-account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7"
+      Then the Google account kept for the account is "google-account-forgotten-7c9e6679-7425-40de-944b-e07fc1f90ae7"
 
     Scenario: A forgotten account reads back the same every time
       Given an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
-      And the account's key is deleted
+      And the account is forgotten
       When the account is read back twice
       Then it is called the same both times
       And it is reached at the same address both times
@@ -254,15 +282,9 @@ Feature: Keeping an account's name and email address readable only with its own 
     Scenario: Nothing is sent to a forgotten account's address
       Given an account is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"
-      And the account's key is deleted
+      And the account is forgotten
       When an email is queued for the account
       Then nothing is queued to be sent
-
-    Scenario: Recording that an account was forgotten deletes its key
-      Given an account is registered at "someone@example.com"
-      And the account's email address is confirmed as "Sam Someone"
-      When the account is forgotten
-      Then the account has no key
 
     Scenario: A forgotten account cannot be found by its email address
       Given an account is registered at "someone@example.com"
@@ -276,9 +298,58 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the account's email address is confirmed as "Sam Someone"
       And another account is registered at "alex@example.com"
       And the account's email address is confirmed as "Alex Other"
-      When the first account's key is deleted
+      When the first account is forgotten
       And the second account is read back
       Then the account is called "Alex Other"
+
+  Rule: An account forgotten before its events were rewritten is rewritten afterwards
+
+    Accounts were forgotten by deleting their key before they were forgotten
+    by rewriting their events. Their events still hold what was kept, which
+    nobody can read, and they have no key. Rewriting every forgotten account's
+    events gives such an account the key it is rewritten with, and leaves one
+    already rewritten as it was, so that it can be done again. It is a script
+    (`npm run db:rewrite-forgotten-accounts`) that turns database access off
+    first, as rebuilding the read models does, and rebuilds them afterwards,
+    since a read model made from the events as they were holds what they held.
+
+    Scenario: An account forgotten by deleting its key is given a key
+      Given an account was forgotten by deleting its key
+      When the forgotten accounts are rewritten
+      Then the account has a key
+
+    Scenario: An account forgotten by deleting its key is rewritten
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" was forgotten by deleting its key
+      And every event is noted
+      When the forgotten accounts are rewritten
+      And the account is read back
+      Then every event that held something personal is kept differently
+      And the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: An account marked forgotten whose events were not rewritten is rewritten
+      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" was forgotten by deleting its key
+      And the account's key is made and marked forgotten
+      And every event is noted
+      When the forgotten accounts are rewritten
+      And the account is read back
+      Then every event that held something personal is kept differently
+      And the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
+
+    Scenario: An account that is not forgotten is left as it was
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And every event is noted
+      When the forgotten accounts are rewritten
+      And the account is read back
+      Then every event is kept exactly as it was before
+      And the account is called "Sam Someone"
+
+    Scenario: Rewriting twice leaves the events as the first time did
+      Given an account was forgotten by deleting its key
+      And the forgotten accounts are rewritten
+      And every event is noted
+      When the forgotten accounts are rewritten
+      Then every event is kept exactly as it was before
 
   Rule: The site's key is needed, and changing it rewrites none of the events
 

@@ -2,15 +2,14 @@ import type { AggregateRepository } from "../application/common/AggregateReposit
 import type { EmailAddressHasher } from "../application/services/EmailAddressHasher.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import {
+  forgottenEmailAddressOf,
+  forgottenNameOf,
+} from "../domain/aggregates/accounts/forgottenAccount.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
-
-// What a forgotten account is brought over as before it is forgotten, which
-// nobody reads: a forgotten account is read back as "Account Forgotten" and
-// an address at the site's own domain whatever it was kept as (AccountEventSealing).
-const FORGOTTEN_NAME = "Account Forgotten";
 
 /**
  * The accounts the old sites' users became, for whatever was run or written
@@ -46,14 +45,14 @@ export class ImportedAccounts {
     if (forgotten !== undefined) return AccountId.from(forgotten);
 
     const id = AccountId.create();
-    const address = EmailAddress.from(
-      `account-forgotten-${id.uuid}@croquetscores.com`,
-    );
+    // What a forgotten account is rewritten to hold when it is forgotten
+    // (AccountEventSealing), so that there is nothing left to rewrite.
+    const address = EmailAddress.from(forgottenEmailAddressOf(id));
     // Brought over and forgotten in one save, so that it is never an account
-    // anybody could be sent anything at, and its key is gone with it.
+    // anybody could be sent anything at, and its key is marked forgotten.
     const account = Account.bringOver(
       id,
-      PersonName.from(FORGOTTEN_NAME),
+      PersonName.from(forgottenNameOf(id)),
       address,
       this.emailAddresses.hash(address),
       "",

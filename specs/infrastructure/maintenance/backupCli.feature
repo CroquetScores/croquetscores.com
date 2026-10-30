@@ -34,8 +34,8 @@ Feature: Backing up the website's events and accounts' keys to a file
   earlier copies is one that a fault in it can leave with none.
 
   That has a cost, which is why it is said here. An account that is forgotten
-  is forgotten by deleting its key from the website, for good, and a file
-  written before then still has it. The account stays readable in every file
+  is forgotten by rewriting what is kept of it in the website's events, for
+  good, and a file written before then still has it. The account stays readable in every file
   made before it was forgotten, for as long as the file is kept.
 
   The website is not turned off for it (`databaseAccess.feature`). pg_dump

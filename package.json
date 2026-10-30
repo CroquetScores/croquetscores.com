@@ -28,6 +28,7 @@
     "db:dump-import": "tsx scripts/dump-import.mjs",
     "db:create-container": "tsx scripts/create-postgres-container.mjs",
     "db:change-site-key": "tsx scripts/change-site-key.mjs",
+    "db:rewrite-forgotten-accounts": "tsx scripts/rewrite-forgotten-accounts.mjs",
     "db:access": "tsx scripts/database-access.mjs",
     "test:nodb": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile nodb",
     "test:db": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile db",
