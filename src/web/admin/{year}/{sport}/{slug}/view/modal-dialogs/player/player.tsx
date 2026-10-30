@@ -4,7 +4,7 @@ import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
-import { useRepresenting } from "../../../useRepresenting.js";
+import { restOf, useRepresenting } from "../../../useRepresenting.js";
 import { idInAddress } from "../../../../../../api.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 
@@ -82,6 +82,11 @@ const fieldOf = (code: string): FieldName | undefined =>
           ? "worldRankingName"
           : undefined;
 
+// Whether the caret is after all there is in the field, with nothing selected.
+const atEndOf = (field: HTMLInputElement): boolean =>
+  field.selectionStart === field.value.length &&
+  field.selectionEnd === field.value.length;
+
 export const PlayerDialog = ({
   tournament,
   player,
@@ -105,6 +110,10 @@ export const PlayerDialog = ({
   const [sending, setSending] = useState(false);
   // Whether the reader is being told why a player is never a bye.
   const [explaining, setExplaining] = useState(false);
+  // The rest of an offer is shown only to a reader who can take it: with the
+  // typing in the field and the caret after it, where more typing would make it.
+  const [representingFocused, setRepresentingFocused] = useState(false);
+  const [caretAtEnd, setCaretAtEnd] = useState(true);
   const nameField = useRef<HTMLInputElement>(null);
   const worldRankingNameField = useRef<HTMLInputElement>(null);
   const at = `/api/site/tournaments/${idInAddress(tournament)}/players`;
@@ -123,6 +132,10 @@ export const PlayerDialog = ({
     representing,
     !onlyWorldRankingName,
   );
+  const completion =
+    representingFocused && caretAtEnd && !onlyWorldRankingName
+      ? restOf(representing, offeredForRepresenting)
+      : undefined;
   // What will be kept as the world ranking name, which is what is marked.
   const markedFor = useMatching(
     worldRankingSport,
@@ -330,8 +343,36 @@ export const PlayerDialog = ({
                 value={representing}
                 onChange={(event) => {
                   setRepresenting(event.target.value);
+                  setCaretAtEnd(atEndOf(event.target));
+                }}
+                onSelect={(event) => {
+                  setCaretAtEnd(atEndOf(event.currentTarget));
+                }}
+                onFocus={() => {
+                  setRepresentingFocused(true);
+                }}
+                onBlur={() => {
+                  setRepresentingFocused(false);
+                }}
+                onKeyDown={(event) => {
+                  // The tab key takes what is shown. With nothing shown it is
+                  // left alone, to go on to the next field as it always does.
+                  if (
+                    event.key === "Tab" &&
+                    !event.shiftKey &&
+                    completion !== undefined
+                  ) {
+                    event.preventDefault();
+                    setRepresenting(completion.name);
+                  }
                 }}
               />
+              {completion === undefined ? null : (
+                <span className="field-ghost" aria-hidden="true">
+                  <span className="field-ghost-typed">{representing}</span>
+                  <span className="field-ghost-rest">{completion.rest}</span>
+                </span>
+              )}
               <Offers
                 id="representing-offers"
                 matching={offeredForRepresenting}

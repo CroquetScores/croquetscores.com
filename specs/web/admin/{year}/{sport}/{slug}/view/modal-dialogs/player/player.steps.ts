@@ -585,3 +585,37 @@ Then(
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
   },
 );
+
+// What a field shows after the typing as the rest of what is offered
+// (player.feature): the lighter part of the field, which is nothing the field
+// holds, so that it is read from the page and not from the field.
+const rest = (world: SpecWorld, label: string): Locator =>
+  dialogOf(world)
+    .getByLabel(label, { exact: true })
+    .locator("xpath=ancestor::label[1]")
+    .locator(".field-ghost-rest");
+
+Then(
+  "{string} is completed with {string}",
+  async function (this: SpecWorld, label: string, words: string) {
+    await eventually(this, async () => {
+      assert.equal(await rest(this, label).textContent(), words);
+    });
+  },
+);
+
+Then(
+  "{string} is completed with nothing",
+  async function (this: SpecWorld, label: string) {
+    await eventually(this, async () => {
+      assert.equal(await rest(this, label).count(), 0);
+    });
+  },
+);
+
+When(
+  "the tab key is pressed in {string}",
+  async function (this: SpecWorld, label: string) {
+    await dialogOf(this).getByLabel(label, { exact: true }).press("Tab");
+  },
+);

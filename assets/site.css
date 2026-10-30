@@ -1391,6 +1391,29 @@ main {
   color: var(--ink);
 }
 
+/* The rest of what is offered, drawn after what has been typed in a lighter
+   colour. It is laid over the field where the typing is, its copy of the typing
+   hidden so that it takes the room the typing does and the rest begins where the
+   typing ends. Nothing in it is pressed. */
+.field-box .field-ghost {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  overflow: hidden;
+  transform: translateY(-50%);
+  pointer-events: none;
+  white-space: pre;
+}
+
+.field-box .field-ghost-typed {
+  visibility: hidden;
+}
+
+.field-box .field-ghost-rest {
+  color: var(--ink-muted);
+}
+
 /* A browser that fills the field in paints it its own tint, and paints that
    over background-color, so the panel is laid over it as an inset shadow
    instead. A tinted field under a label on the panel reads as a patch. */
