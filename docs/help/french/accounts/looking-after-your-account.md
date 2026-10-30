@@ -16,6 +16,6 @@ Choisissez **Profil** dans le menu **Compte**. La page montre votre **Nom :** e
 
 ## Faire oublier votre compte
 
-**Oublier le compte** est le dernier élément du profil, à part des autres parce qu’on ne peut pas l’annuler. Il envoie un lien à votre adresse e-mail, et suivre ce lien vous redemande une dernière fois avant d’oublier le compte. Votre nom et votre adresse e-mail sont alors rendus illisibles. [La page de confidentialité](../privacy.md) dit ce qui est conservé et ce qui ne l’est pas.
+**Oublier le compte** est le dernier élément du profil, à part des autres parce qu’on ne peut pas l’annuler. Il envoie un lien à votre adresse e-mail, et suivre ce lien vous redemande une dernière fois avant d’oublier le compte. Votre nom et votre adresse e-mail sont alors remplacés, pour toujours, par « Forgotten Account » et un numéro. [La page de confidentialité](../privacy.md) dit ce qui est conservé et ce qui ne l’est pas.
 
 Le dernier administrateur du site ne peut pas oublier son compte, puisqu’il ne resterait personne pour donner le rôle à quelqu’un d’autre. Donnez d’abord le rôle à quelqu’un.

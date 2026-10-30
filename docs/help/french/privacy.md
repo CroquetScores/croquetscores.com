@@ -28,7 +28,7 @@ Le site envoie des e-mails pour confirmer une adresse e-mail, pour définir un m
 
 ## Le faire oublier
 
-Vous pouvez faire oublier votre compte à tout moment depuis votre profil une fois connecté. Votre nom et votre adresse e-mail sont alors rendus illisibles pour toujours et ne peuvent être récupérés par personne, vous compris. Ce que vous avez publié reste, sous le nom « Account Forgotten » (le nom anglais). L’oubli ne peut pas être annulé, c’est pourquoi il est demandé deux fois, et l’adresse e-mail peut ensuite être inscrite de nouveau comme nouveau compte.
+Vous pouvez faire oublier votre compte à tout moment depuis votre profil une fois connecté. Votre nom, votre adresse e-mail et tout compte Google ou Facebook qui y est lié sont alors remplacés, pour toujours, dans tout ce que le site conserve, par « Forgotten Account » et un numéro, et par une adresse en example.com qui n’appartient à personne. Personne ne peut les récupérer, vous compris. Ce que vous avez publié reste, sous le nom « Forgotten Account » et ce numéro. L’oubli ne peut pas être annulé, c’est pourquoi il est demandé deux fois, et l’adresse e-mail peut ensuite être inscrite de nouveau comme nouveau compte. Une copie du site faite avant que vous soyez oublié, comme une sauvegarde, contient encore ce qu’elle contenait alors, tant que la copie est conservée.
 
 ## Poser une question
 

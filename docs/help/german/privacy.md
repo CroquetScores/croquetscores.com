@@ -28,7 +28,7 @@ Die Website schickt E-Mails, um eine E-Mail-Adresse zu bestätigen, um ein Passw
 
 ## Vergessen lassen
 
-Sie können Ihr Konto jederzeit von Ihrem Profil aus vergessen lassen, sobald Sie angemeldet sind. Ihr Name und Ihre E-Mail-Adresse werden dann für immer unlesbar gemacht und können von niemandem wiederhergestellt werden, auch nicht von Ihnen. Was Sie veröffentlicht haben, bleibt unter dem Namen „Account Forgotten“ (dem englischen Namen) erhalten. Das Vergessen lässt sich nicht rückgängig machen, deshalb wird zweimal danach gefragt, und die E-Mail-Adresse kann danach wieder als neues Konto registriert werden.
+Sie können Ihr Konto jederzeit von Ihrem Profil aus vergessen lassen, sobald Sie angemeldet sind. Ihr Name, Ihre E-Mail-Adresse und jedes damit verknüpfte Google- oder Facebook-Konto werden dann in allem, was die Website speichert, für immer durch „Forgotten Account“ und eine Nummer ersetzt und durch eine Adresse bei example.com, die niemandem gehört. Niemand kann sie wiederherstellen, auch nicht Sie. Was Sie veröffentlicht haben, bleibt unter dem Namen „Forgotten Account“ und dieser Nummer erhalten. Das Vergessen lässt sich nicht rückgängig machen, deshalb wird zweimal danach gefragt, und die E-Mail-Adresse kann danach wieder als neues Konto registriert werden. Eine Kopie der Website, die gemacht wurde, bevor Sie vergessen wurden, etwa eine Sicherung, hat noch, was sie damals hatte, solange die Kopie aufbewahrt wird.
 
 ## Fragen
 

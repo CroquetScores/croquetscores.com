@@ -28,7 +28,7 @@ Die webwerf stuur e-pos om 'n e-posadres te bevestig, om 'n wagwoord te stel of 
 
 ## Dit laat vergeet
 
-Jy kan jou rekening enige tyd laat vergeet vanaf jou profiel sodra jy aangemeld is. Jou naam en e-posadres word dan vir altyd onleesbaar gemaak en kan deur niemand herstel word nie, jy ingesluit. Wat jy gepubliseer het, bly, onder die naam "Account Forgotten" (die Engelse naam). Vergeet kan nie ongedaan gemaak word nie, daarom word twee keer daarvoor gevra, en die e-posadres kan daarna weer as 'n nuwe rekening geregistreer word.
+Jy kan jou rekening enige tyd laat vergeet vanaf jou profiel sodra jy aangemeld is. Jou naam, jou e-posadres en enige Google- of Facebook-rekening wat daaraan gekoppel is, word dan vir altyd vervang, in alles wat die webwerf bewaar, deur "Forgotten Account" en 'n nommer, 'n adres by example.com wat aan niemand behoort nie, en 'n nommer. Hulle kan deur niemand herstel word nie, jy ingesluit. Wat jy gepubliseer het, bly, onder die naam "Forgotten Account" en daardie nommer. Vergeet kan nie ongedaan gemaak word nie, daarom word twee keer daarvoor gevra, en die e-posadres is daarna vry om weer as 'n nuwe rekening geregistreer te word. 'n Kopie van die webwerf wat gemaak is voordat jy vergeet is, soos 'n rugsteun, het nog wat dit toe gehad het, solank die kopie bewaar word.
 
 ## Vrae
 

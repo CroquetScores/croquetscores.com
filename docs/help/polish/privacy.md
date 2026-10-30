@@ -28,7 +28,7 @@ Witryna wysyła e-maile, by potwierdzić adres e-mail, ustawić hasło lub powia
 
 ## Zapomnienie
 
-Możesz w dowolnej chwili sprawić, by twoje konto zostało zapomniane, ze swojego profilu, gdy jesteś zalogowany. Twoje imię i nazwisko oraz adres e-mail zostają wtedy na zawsze uczynione nieczytelnymi i nikt nie może ich odzyskać, ty również. To, co zostało przez ciebie opublikowane, zostaje pod nazwą „Account Forgotten” (angielską nazwą). Zapomnienia nie da się cofnąć, dlatego jest ono pytane dwa razy, a adres e-mail można potem zarejestrować ponownie jako nowe konto.
+Możesz w dowolnej chwili sprawić, by twoje konto zostało zapomniane, ze swojego profilu, gdy masz otwartą sesję. Twoje imię i nazwisko, adres e-mail oraz powiązane konto Google lub Facebook zostają wtedy na stałe zastąpione, we wszystkim, co serwis przechowuje, nazwą „Forgotten Account” i numerem oraz adresem w domenie example.com, który do nikogo nie należy. Nikt nie może ich odzyskać, ty również. To, co zostało przez ciebie opublikowane, zostaje pod nazwą „Forgotten Account” i tym numerem. Zapomnienia nie da się cofnąć, dlatego jest ono pytane dwa razy, a adres e-mail można potem zarejestrować ponownie jako nowe konto. Kopia serwisu zrobiona, zanim konto zostało zapomniane, na przykład kopia zapasowa, nadal zawiera to, co zawierała wtedy, tak długo, jak ta kopia jest przechowywana.
 
 ## Pytanie
 

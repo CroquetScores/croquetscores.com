@@ -16,6 +16,6 @@ Wybierz **Profil** w menu **Konto**. Pokazuje pola **Nazwa:** oraz **Adres e-mai
 
 ## Zapomnienie konta
 
-**Zapomnij konto** jest w profilu ostatnie, osobno, bo nie da się tego cofnąć. Wysyła odsyłacz na twój adres e-mail, a po jego kliknięciu strona pyta jeszcze raz, zanim zapomni konto. Twoje imię i nazwisko oraz adres e-mail stają się wtedy nieczytelne. [Strona o prywatności](../privacy.md) mówi, co jest przechowywane, a co nie.
+**Zapomnij konto** jest w profilu ostatnie, osobno, bo nie da się tego cofnąć. Wysyła odsyłacz na twój adres e-mail, a po jego kliknięciu strona pyta jeszcze raz, zanim zapomni konto. Twoje imię i nazwisko oraz adres e-mail zostają wtedy na stałe zastąpione nazwą „Forgotten Account” i numerem. [Strona o prywatności](../privacy.md) mówi, co jest przechowywane, a co nie.
 
 Ostatni administrator strony nie może zapomnieć swojego konta, bo nie byłoby już nikogo, kto mógłby nadać rolę komuś innemu. Najpierw nadaj tę rolę komuś innemu.

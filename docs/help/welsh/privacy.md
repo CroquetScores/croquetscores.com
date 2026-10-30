@@ -28,7 +28,7 @@ Mae'r wefan yn anfon e-bost i gadarnhau cyfeiriad e-bost, i osod cyfrinair neu d
 
 ## Ei gael wedi'i anghofio
 
-Gallwch gael eich cyfrif wedi'i anghofio ar unrhyw adeg o'ch proffil unwaith y byddwch wedi mewngofnodi. Caiff eich enw a'ch cyfeiriad e-bost eu gwneud yn annarllenadwy am byth wedyn ac ni all neb eu hadfer, chi'n cynnwys. Mae'r hyn a gyhoeddwyd gennych yn aros, o dan yr enw "Account Forgotten" (yr enw Saesneg). Ni ellir dadwneud anghofio, a dyna pam y gofynnir ddwywaith, a gellir cofrestru'r cyfeiriad e-bost eto wedyn fel cyfrif newydd.
+Gallwch gael eich cyfrif wedi'i anghofio ar unrhyw adeg o'ch proffil unwaith y byddwch wedi mewngofnodi. Caiff eich enw, eich cyfeiriad e-bost ac unrhyw gyfrif Google neu Facebook sydd wedi'i gysylltu ag ef eu disodli wedyn, am byth, ym mhopeth y mae'r wefan yn ei gadw, gan "Forgotten Account" a rhif, cyfeiriad ar example.com nad yw'n perthyn i neb, a rhif. Ni all neb eu hadfer, chi'n cynnwys. Mae'r hyn a gyhoeddwyd gennych yn aros, o dan yr enw "Forgotten Account" a'r rhif hwnnw. Ni ellir dadwneud anghofio, a dyna pam y gofynnir ddwywaith, ac mae'r cyfeiriad e-bost yn rhydd wedyn i'w gofrestru eto fel cyfrif newydd. Mae copi o'r wefan a wnaed cyn i chi gael eich anghofio, megis copi wrth gefn, yn dal i gael yr hyn oedd ganddo bryd hynny, cyhyd ag y cedwir y copi.
 
 ## Gofyn
 

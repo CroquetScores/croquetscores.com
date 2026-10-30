@@ -16,6 +16,6 @@ Välj **Profil** i menyn **Konto**. Den visar ditt **Namn:** och din **E-postadr
 
 ## Att få ditt konto glömt
 
-**Glöm kontot** står sist i profilen, avskilt från resten eftersom det inte kan ångras. Det skickar en länk till din e-postadress, och när du följer den länken får du frågan en gång till innan kontot glöms. Ditt namn och din e-postadress görs sedan oläsliga. [Integritetssidan](../privacy.md) berättar vad som sparas och vad som inte gör det.
+**Glöm kontot** står sist i profilen, avskilt från resten eftersom det inte kan ångras. Det skickar en länk till din e-postadress, och när du följer den länken får du frågan en gång till innan kontot glöms. Ditt namn och din e-postadress ersätts sedan för alltid av "Forgotten Account" och ett nummer. [Integritetssidan](../privacy.md) berättar vad som sparas och vad som inte gör det.
 
 Webbplatsens sista administratör kan inte glömma sitt konto, eftersom ingen då skulle finnas kvar som kan ge rollen till någon annan. Ge rollen till någon först.

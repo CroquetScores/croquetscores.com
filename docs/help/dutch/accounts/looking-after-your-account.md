@@ -16,6 +16,6 @@ Kies **Profiel** in het menu **Account**. Het toont je **Naam:** en **E-mailadre
 
 ## Je account laten vergeten
 
-**Account vergeten** staat als laatste in het profiel, apart van de rest omdat het niet ongedaan kan worden gemaakt. Het stuurt een link naar je e-mailadres, en als je die link volgt, wordt je nog één keer gevraagd voordat het account wordt vergeten. Je naam en e-mailadres worden dan onleesbaar gemaakt. [De privacypagina](../privacy.md) zegt wat er wordt bewaard en wat niet.
+**Account vergeten** staat als laatste in het profiel, apart van de rest omdat het niet ongedaan kan worden gemaakt. Het stuurt een link naar je e-mailadres, en als je die link volgt, wordt je nog één keer gevraagd voordat het account wordt vergeten. Je naam en e-mailadres worden dan voorgoed vervangen door "Forgotten Account" en een nummer. [De privacypagina](../privacy.md) zegt wat er wordt bewaard en wat niet.
 
 De laatste beheerder van de site kan zijn account niet laten vergeten, omdat er dan niemand meer zou zijn om de rol aan iemand anders te geven. Geef de rol eerst aan iemand anders.

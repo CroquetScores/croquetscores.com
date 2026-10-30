@@ -28,7 +28,7 @@ El sitio envía correo para confirmar una dirección de correo, para establecer 
 
 ## Hacer que se olvide
 
-Puedes hacer que tu cuenta se olvide en cualquier momento desde tu perfil, una vez que hayas iniciado sesión. Tu nombre y tu dirección de correo quedan entonces ilegibles para siempre y nadie puede recuperarlos, tú incluido. Lo que publicaste se queda, con el nombre «Account Forgotten» (el nombre en inglés). Olvidar no se puede deshacer, por eso se pide dos veces, y la dirección de correo puede registrarse de nuevo como una cuenta nueva.
+Puedes hacer que tu cuenta se olvide en cualquier momento desde tu perfil, una vez que hayas iniciado sesión. Tu nombre, tu dirección de correo electrónico y cualquier cuenta de Google o de Facebook vinculada a ella se sustituyen entonces para siempre, en todo lo que guarda el sitio, por «Forgotten Account» y un número, una dirección de example.com que no pertenece a nadie, y un número. Nadie puede recuperarlos, tú incluido. Lo que publicaste se queda, con el nombre «Forgotten Account» y ese número. Olvidar no se puede deshacer, por eso se pide dos veces, y la dirección de correo queda libre para registrarse de nuevo como una cuenta nueva. Una copia del sitio hecha antes de que te olvidaran, como una copia de seguridad, sigue teniendo lo que tenía entonces, mientras se conserve esa copia.
 
 ## Preguntar
 
