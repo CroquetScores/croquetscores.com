@@ -930,6 +930,71 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When "Auck" is typed as the "Representing"
       Then "Representing" does not offer "Canterbury Croquet Club"
 
+  Rule: What the player represents shows the rest of what has been offered, and the tab key accepts it
+
+    The first of what is offered that begins with what has been typed, in any
+    case, is shown after the typing in a lighter colour, as the rest of it. The
+    tab key makes it what is typed, as the offer is spelled. A name that only
+    has a word beginning with the typing is offered but not shown, since
+    typing more would not make it.
+
+    Scenario: The rest of what is offered is shown after what is typed
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Canterbury Cr" is typed as the "Representing"
+      Then "Representing" is completed with "oquet Club"
+
+    Scenario: The rest is shown whatever the case of what is typed
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "canterbury cr" is typed as the "Representing"
+      Then "Representing" is completed with "oquet Club"
+
+    Scenario: The tab key makes the rest what is typed
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Canterbury Cr" is typed as the "Representing"
+      And "Representing" is completed with "oquet Club"
+      When the tab key is pressed in "Representing"
+      Then "Representing" says "Canterbury Croquet Club"
+
+    Scenario: What is accepted is spelled as it was offered
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "canterbury cr" is typed as the "Representing"
+      And "Representing" is completed with "oquet Club"
+      When the tab key is pressed in "Representing"
+      Then "Representing" says "Canterbury Croquet Club"
+
+    Scenario: Nothing is left to show once it is accepted
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Canterbury Cr" is typed as the "Representing"
+      And "Representing" is completed with "oquet Club"
+      When the tab key is pressed in "Representing"
+      Then "Representing" is completed with nothing
+
+    Scenario: A word that only begins with what is typed is not shown
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      When "Croq" is typed as the "Representing"
+      Then "Representing" offers "Canterbury Croquet Club"
+      And "Representing" is completed with nothing
+
+    Scenario: The tab key leaves what is typed as it is where nothing is shown
+      Given a player of "Autumn Open" represents "Canterbury Croquet Club"
+      And the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Croq" is typed as the "Representing"
+      When the tab key is pressed in "Representing"
+      Then "Representing" says "Croq"
+
   Rule: Beside the world ranking name, a tick or a question mark says whether the world rankings know it
 
     Scenario: Nothing is marked before anything is typed

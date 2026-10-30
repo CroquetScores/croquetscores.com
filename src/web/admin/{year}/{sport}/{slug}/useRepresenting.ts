@@ -71,3 +71,28 @@ export const useRepresenting = (
     ? offered
     : undefined;
 };
+
+/**
+ * The rest of the first of `offered` that `typed` is the start of, in any
+ * case, or nothing where none is: what is shown after the typing in a lighter
+ * colour, and made the typing by the tab key (player.feature). Only a name the
+ * typing begins has a rest, as an offer that merely has a word beginning with
+ * the typing does not: typing more would not make it. The typing is compared
+ * as it is, spaces and all, so that a space typed after a word is one the
+ * name has.
+ */
+export const restOf = (
+  typed: string,
+  offered: Matching | undefined,
+): { readonly name: string; readonly rest: string } | undefined => {
+  if (typed.trim() === "") return undefined;
+  const wanted = typed.toLowerCase();
+  const name = offered?.players.find(
+    (each) =>
+      each.length > typed.length &&
+      each.slice(0, typed.length).toLowerCase() === wanted,
+  );
+  return name === undefined
+    ? undefined
+    : { name, rest: name.slice(typed.length) };
+};
