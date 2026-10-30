@@ -1751,13 +1751,26 @@ main {
 
 /* A row is read as one thing, so it is pressed as one: the name's link
    reaches over the whole of it. Pressed with a thumb, so as tall as anything
-   else that is. */
-.tournament-list tbody tr {
+   else that is.
+   Safari on an iPad 6 does not make a table row the box the name's link
+   reaches over: without help the link reached over the page, and a transform
+   on the row, which was tried, moved the trouble to the links beneath the
+   list, all of which led to one tournament. A cell is a box it has always
+   done this for, so the link reaches over its own cell, and over the row only
+   in a browser new enough to have ::details-content, which is the nearest test
+   there is for a Safari that has mended it. */
+.tournament-list td {
   position: relative;
-  /* Safari on an iPad does not make a table row the box the name's link reaches
-     over, so the link reached over the whole page and a press on whitespace
-     anywhere went to the first tournament. A transform makes it one there. */
-  transform: scale(1);
+}
+
+@supports selector(::details-content) {
+  .tournament-list tbody tr {
+    position: relative;
+  }
+
+  .tournament-list td {
+    position: static;
+  }
 }
 
 .tournament-list td {
