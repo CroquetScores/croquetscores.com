@@ -48,21 +48,30 @@ const pictured = (html: string, tag: string): string =>
 export const privacyPath = "/privacy";
 const privacyName = "privacy";
 
+// The address of the data deletion policy, which Facebook asks an app to give
+// before it may sign anybody in. It says how to have an account forgotten and
+// sends the reader to the page that does it.
+export const dataDeletionPolicyPath = "/data-deletion-policy";
+const dataDeletionPolicyName = "data-deletion-policy";
+
 // Each page with an address of its own, by its name in the library. The terms
 // of use have theirs for the reason the privacy statement does: they are
 // linked to from outside the help, from the footer and from the forms that ask
 // for them to be agreed to.
 const ownAddresses: ReadonlyMap<string, string> = new Map([
   [privacyName, privacyPath],
+  [dataDeletionPolicyName, dataDeletionPolicyPath],
   ["terms-of-use", termsOfUsePath],
   ["admin/terms-of-use", writersTermsOfUsePath],
 ]);
 
 // The pages that end by saying who to ask, by the words they say it in: the
-// privacy statement, about what is kept, and the terms for those who write,
-// which is who something written is reported to.
+// privacy statement, about what is kept, the data deletion policy, about having
+// it forgotten, and the terms for those who write, which is who something
+// written is reported to.
 const contacts: ReadonlyMap<string, string> = new Map([
   [privacyName, "privacy.contact"],
+  [dataDeletionPolicyName, "privacy.contact"],
   ["admin/terms-of-use", "termsOfUse.report"],
 ]);
 
