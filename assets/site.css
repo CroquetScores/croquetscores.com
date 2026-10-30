@@ -1006,8 +1006,21 @@ body > .site-footer {
     display: contents;
   }
 
+  /* A row of its own for the search and the links, and not display: contents.
+     Where a closed menu cannot be let out through ::details-content, an open
+     one keeps its contents in a block of the browser's making, and children
+     promoted past the panel stand one above the next in it: the search above
+     the home icon on an iPad. A row of the panel's own is a row either way. */
   .menu-panel {
-    display: contents;
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+    background: none;
+    border: 0;
   }
 
   .menu-account {
