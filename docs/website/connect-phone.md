@@ -22,10 +22,12 @@ The way to a phone is therefore an https address that leads to the site. A tunne
 2. In a second WSL terminal, open a tunnel to it:
 
    ```bash
-   npx cloudflared tunnel --url http://localhost:3000
+   npx cloudflared tunnel --url http://127.0.0.1:3000 --http-host-header localhost:3000
    ```
 
    The first time, this downloads Cloudflare's tunnel program. No account is needed. After a few seconds it prints an address like `https://something-random.trycloudflare.com`.
+
+   The `--http-host-header` is needed. The site works out which website a request is for from the host it was addressed to, and answers "Misdirected request" to a host it does not know, which the tunnel's random address is. The flag has the tunnel say `localhost:3000` to the site instead, which it takes for development. The phone still sees the https address.
 
 3. Open that address on the phone.
 
@@ -33,7 +35,8 @@ The way to a phone is therefore an https address that leads to the site. A tunne
 
 Which website the site is — Croquet Scores or Gateball Scores — comes from `.env`, not from the address, so the tunnel's address serves it as it is.
 
-Two things to know:
+Three things to know:
 
+- The site still thinks it is at `http://localhost:3000`, so a link it makes from its own address, such as one in an email, and the return addresses of signing in with Google or Facebook, point there and do not work from the phone.
 - Anyone with the address reaches your development site while the tunnel is open. It is random and not guessable, but do not share it, and do not leave the tunnel running.
 - What the phone sends goes through Cloudflare rather than staying on your network.
