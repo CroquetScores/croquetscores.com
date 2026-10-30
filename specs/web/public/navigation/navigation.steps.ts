@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { withScripting } from "../../support/browser.js";
 import { menuLink } from "../../support/menuLink.js";
 
 // Named rather than left as "header summary" and "header a": the header also
@@ -28,6 +29,45 @@ const openHomePage = async function (this: SpecWorld): Promise<void> {
 
 Given("the home page is open", openHomePage);
 When("the home page is opened", openHomePage);
+
+Given("scripting is switched on", async function (this: SpecWorld) {
+  await withScripting(this);
+});
+
+Given(
+  "a viewport {int} pixels wide and {int} pixels tall",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
+When(
+  "the window is made {int} pixels wide and {int} pixels tall",
+  async function (this: SpecWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
+// Whether the menu is open is what the script decides, so it is read from the
+// element rather than from what can be seen, which a stylesheet decides too.
+const menuIsOpen = async (world: SpecWorld): Promise<boolean> =>
+  world.browserPage.evaluate<boolean>(
+    `document.querySelector("header details.menu").open`,
+  );
+
+Then("the menu is open", async function (this: SpecWorld) {
+  await this.browserPage.waitForFunction(
+    `document.querySelector("header details.menu").open === true`,
+  );
+  assert.equal(await menuIsOpen(this), true);
+});
+
+Then("the menu is shut", async function (this: SpecWorld) {
+  await this.browserPage.waitForFunction(
+    `document.querySelector("header details.menu").open === false`,
+  );
+  assert.equal(await menuIsOpen(this), false);
+});
 
 When("the menu button is pressed", async function (this: SpecWorld) {
   await this.browserPage.click(menuButton);

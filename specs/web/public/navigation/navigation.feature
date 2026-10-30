@@ -33,6 +33,68 @@ Feature: Finding your way around the public site
       Then the menu button is visible
       And the link "Help" is not visible
 
+  Rule: A tablet held upright has the button
+
+    A tablet held upright is as wide as a small laptop but is held and pressed
+    like a phone, and it has the same room for the site's name and a few links
+    as a phone has for one button once the search and the account are with
+    them. So the links are in the open when the window is wider than it is
+    tall, and at least 40rem wide, and behind the button otherwise.
+
+    Scenario: A tablet held upright has the button
+      Given a viewport 768 pixels wide and 1024 pixels tall
+      When the home page is opened
+      Then the menu button is visible
+      And the link "Help" is not visible
+
+    Scenario: A tablet held sideways has the links in the open
+      Given a viewport 1024 pixels wide and 768 pixels tall
+      When the home page is opened
+      Then the link "Help" is visible
+      And the menu button is not visible
+
+    Scenario: A tablet held upright has the account behind the button
+      Given a viewport 768 pixels wide and 1024 pixels tall
+      When the home page is opened
+      Then the account menu is not visible
+
+  Rule: A browser that hides a closed menu's contents is not left without links
+
+    A closed menu is hidden in the browser's own way, and the stylesheet can
+    let the links out of it only in a browser new enough to say how they are
+    hidden. An iPad 6 is not: held sideways it is wide enough for the links to
+    be in the open, and it showed none of them. So where there is scripting,
+    the menu is opened where the links are in the open and shut elsewhere,
+    which is the same in every browser. Without scripting the stylesheet alone
+    does it, as it always did.
+
+    Scenario: On a tablet held sideways the menu is opened for the reader
+      Given a viewport 1024 pixels wide and 768 pixels tall
+      And scripting is switched on
+      When the home page is opened
+      Then the menu is open
+      And the link "Help" is visible
+
+    Scenario: On a phone the menu is left shut
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      When the home page is opened
+      Then the menu is shut
+
+    Scenario: Turning a tablet upright shuts the menu
+      Given a viewport 1024 pixels wide and 768 pixels tall
+      And scripting is switched on
+      And the home page is open
+      When the window is made 768 pixels wide and 1024 pixels tall
+      Then the menu is shut
+
+    Scenario: Turning a tablet sideways opens the menu
+      Given a viewport 768 pixels wide and 1024 pixels tall
+      And scripting is switched on
+      And the home page is open
+      When the window is made 1024 pixels wide and 768 pixels tall
+      Then the menu is open
+
   Rule: The navigation offers what the reader can use
 
     Scenario: A reader not signed in is offered the way home first

@@ -69,9 +69,9 @@ A grid of cards uses `repeat(auto-fit, minmax(…, 1fr))` and needs no breakpoin
 
 ## 5. The header and its navigation
 
-The public header holds the site name, which is a link home, and the primary navigation. Below `40rem` the navigation is collapsed behind a disclosure; above it, it is laid out inline and the disclosure control is not rendered at all.
+The public header holds the site name, which is a link home, and the primary navigation. Below `40rem`, or in a window taller than it is wide (a tablet held upright), the navigation is collapsed behind a disclosure; otherwise it is laid out inline and the disclosure control is not rendered at all.
 
-That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, announced as a disclosure by a screen reader, and opens without a line of JavaScript, which is what the public side requires. The `<nav>` inside it carries an accessible name, so a reader arriving by landmark knows which navigation they have found.
+That disclosure is `<details>` with a `<summary>`. It is keyboard-reachable, announced as a disclosure by a screen reader, and opens without a line of JavaScript, which is what the public side requires. The `<nav>` inside it carries an accessible name, so a reader arriving by landmark knows which navigation they have found. Where there is scripting, a few lines open it where the links are inline and shut it elsewhere, because a browser too old to say how a closed `<details>` is hidden (an iPad 6) shows none of the links the stylesheet lets out of it; without scripting the stylesheet alone does it (`navigation.feature`).
 
 The navigation is generated from the list of public pages, so a page that exists is a page that can be reached, and no second list has to be kept true beside the first.
 
@@ -147,7 +147,7 @@ These hold everywhere and are not a matter of taste:
 
 - `assets/site.css` holds the tokens, the base, the primitives and the header, in that order, and nothing hard-codes a value the scale already names.
 - The public pages render a header, a main region and a footer, and reach their stylesheet through the asset manifest.
-- The navigation opens and closes with JavaScript switched off, and is inline above `40rem`.
+- The navigation opens and closes with JavaScript switched off, and is inline from `40rem` while the window is wider than it is tall.
 - The admin SPA imports the same stylesheet and renders in the same vocabulary.
 - Light and dark both read correctly, and neither is an inversion of the other done badly.
 - `npm run lint`, `npm run typecheck`, `npm run build` and `npm test` are all clean.

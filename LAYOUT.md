@@ -99,7 +99,7 @@ As the window narrows, the bars stay and their contents wrap. The current site w
 
 **The palette changes, and gains a panel.** `--accent` becomes `#46a546`, a new `--accent-strong` carries the secondary navigation's `#078600`, `--surface` becomes the light green, and `--panel` with `--panel-ink` carry the white and the black that content is actually read in. This is what the tokens were for: a palette swap is one `:root` block, and any rule outside it that needs touching was wrong.
 
-**The disclosure earns its place.** With four items rather than one, the `<details>` menu below `40rem` is doing real work, and the existing browser scenarios covering it still apply unchanged.
+**The disclosure earns its place.** With four items rather than one, the `<details>` menu below `40rem`, and on a tablet held upright, is doing real work, and the existing browser scenarios covering it still apply unchanged.
 
 ---
 
@@ -154,7 +154,7 @@ The admin SPA's page is built by Vite ahead of time, and the server says the cho
 - The top bar is still at the top of the window after the page has been scrolled, and everything below it has gone.
 - The section bar has 8px of green above and below its tabs, and the current section's black does not reach the top or bottom of the bar.
 - The site name, the section tabs and the donate button all start at the same left edge as the text in the panel.
-- The header holds the site name and four links, and they are reachable at `390px`: shown plainly above `40rem`, behind the disclosure below it.
+- The header holds the site name and four links, and they are reachable at `390px`: shown plainly from `40rem` while the window is wider than it is tall, behind the disclosure otherwise.
 - A page with sections renders the dark green secondary navigation beneath the header, the current section on black, wrapping rather than collapsing as the screen narrows.
 - Nothing outside the token block names a colour.
 - A reader whose machine is set to dark gets dark, and every measured pairing in it meets WCAG AA.
