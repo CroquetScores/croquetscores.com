@@ -1110,7 +1110,6 @@ export const polish: Language = {
     "Tournament.FinishesAfterNextYear":
       "Turniej nie może skończyć się później niż w przyszłym roku.",
     "CreateTournament.NoSuchCountry": "Wybierz kraj.",
-    "Sport.Unknown": "Wybierz dyscyplinę.",
     "TournamentSubtitle.TooLong": "Podtytuł może mieć najwyżej 2000 znaków.",
     "Tournament.NotAManager":
       "Tylko organizator tego turnieju może go zmieniać.",

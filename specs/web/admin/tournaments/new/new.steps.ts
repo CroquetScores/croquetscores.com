@@ -3,17 +3,6 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../support/world.js";
-import {
-  checkSuggestions,
-  controlOf,
-  drawnArrowOf,
-  keepsTheFocus,
-  namesInView,
-  pressSuggestion,
-  saidInvalid,
-  suggestedTo,
-  whatOf,
-} from "../../../support/suggestions.js";
 import { unmarkedWithin } from "../../../support/marks.js";
 import { ordinal } from "../../../support/ordinals.js";
 import { keptCalled } from "../../../support/tournaments.js";
@@ -140,20 +129,10 @@ Then(
 
 // What a list offers, in the order it offers it, less the choice of nothing a
 // list with nothing chosen begins with.
-// The format is still a list to choose from; the country, the region and the
-// sport are typed, and suggest the names that have what was typed.
-const offeredAt = async (found: Locator): Promise<string[]> =>
-  (
-    (await found.evaluate(
-      (element: { readonly options?: ArrayLike<{ readonly text: string }> }) =>
-        element.options === undefined
-          ? undefined
-          : Array.from(element.options).map((option) => option.text),
-    )) ?? (await suggestedTo(found))
-  ).filter((words) => words !== "");
-
-const offeredIn = (world: SpecWorld, label: string): Promise<string[]> =>
-  offeredAt(field(world, label));
+const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
+  (await field(world, label).locator("option").allTextContents()).filter(
+    (words) => words !== "",
+  );
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
@@ -185,175 +164,31 @@ Then(
 );
 
 Then(
-  /^the form (offers|does not offer) the (country|region|sport) "([^"]*)"$/,
-  async function (this: SpecWorld, does: string, kind: string, name: string) {
-    const label =
-      kind === "country" ? "Country" : kind === "region" ? "Region" : "Sport";
+  /^the form's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
     await eventually(this, async () => {
       assert.equal(
-        (await offeredIn(this, label)).includes(name),
-        does === "offers",
-        `The form ${does} ${name}.`,
+        await field(this, "Country").locator("hr").count(),
+        Number(count),
       );
     });
   },
 );
 
-// What is in the box, which is the name of the choice made once it has been.
-// A function and not a string of one: Playwright 1.64 does not call a string,
-// and leaves what it was to read undefined. It is typed by what it reads, since
-// the specs are typed without the browser's own types.
+Then(
+  "the region {string} is offered",
+  async function (this: SpecWorld, region: string) {
+    await eventually(this, async () => {
+      assert.ok(
+        (await offeredIn(this, "Region")).includes(region),
+        `${region} is not offered.`,
+      );
+    });
+  },
+);
+
 const chosenIn = async (world: SpecWorld, label: string): Promise<string> =>
-  field(world, label).evaluate(
-    (element: {
-      readonly selectedOptions?: ArrayLike<{ readonly text: string }>;
-      readonly value: string;
-    }) =>
-      element.selectedOptions !== undefined
-        ? (element.selectedOptions[0]?.text ?? "")
-        : element.value,
-  );
-
-When(
-  "the down arrow is pressed in the {string}",
-  async function (this: SpecWorld, label: string) {
-    await drawn(this);
-    await field(this, label).press("ArrowDown");
-  },
-);
-
-// How wide a field was, to say it is as wide when something is in it.
-const noted = new WeakMap<SpecWorld, number>();
-
-When(
-  "the width of the {string} is noted",
-  async function (this: SpecWorld, label: string) {
-    await drawn(this);
-    const box = await (await controlOf(field(this, label))).boundingBox();
-    assert.ok(box !== null, "The field is not on the page.");
-    noted.set(this, box.width);
-  },
-);
-
-Then(
-  "the {string} is as wide as was noted",
-  async function (this: SpecWorld, label: string) {
-    const before = noted.get(this);
-    assert.ok(before !== undefined, "No width was noted.");
-    await eventually(this, async () => {
-      const box = await (await controlOf(field(this, label))).boundingBox();
-      assert.ok(box !== null, "The field is not on the page.");
-      assert.ok(
-        Math.abs(box.width - before) <= 1,
-        `The field is ${String(box.width)} wide, and was ${String(before)}.`,
-      );
-    });
-  },
-);
-
-// The label lies on the line while the field is empty, and lifts onto the box's
-// border once there is something in it, or it would be over what was typed.
-Then(
-  "the label of the {string} is above what is typed",
-  async function (this: SpecWorld, label: string) {
-    await eventually(this, async () => {
-      const typed = await field(this, label).boundingBox();
-      const named = await (
-        await controlOf(field(this, label))
-      )
-        .locator(".field-label")
-        .boundingBox();
-      assert.ok(typed !== null && named !== null, "The field is not drawn.");
-      assert.ok(
-        named.y + named.height / 2 < typed.y,
-        `The label is at ${String(named.y)} and what is typed at ${String(typed.y)}.`,
-      );
-    });
-  },
-);
-
-When(
-  "the tab key is pressed in the {string}",
-  async function (this: SpecWorld, label: string) {
-    await drawn(this);
-    await field(this, label).press("Tab");
-  },
-);
-
-When(
-  "the escape key is pressed in the {string}",
-  async function (this: SpecWorld, label: string) {
-    await drawn(this);
-    await field(this, label).press("Escape");
-  },
-);
-
-Then(
-  "{string} does not have the focus",
-  async function (this: SpecWorld, label: string) {
-    await keepsTheFocus(field(this, label), false);
-  },
-);
-
-When(
-  "the key {string} is pressed in the {string}",
-  async function (this: SpecWorld, key: string, label: string) {
-    await drawn(this);
-    await field(this, label).press(key);
-  },
-);
-
-Then(
-  "the suggestions of the {string} show {int} name(s)",
-  async function (this: SpecWorld, label: string, count: number) {
-    await drawn(this);
-    assert.equal(await namesInView(field(this, label)), count);
-  },
-);
-
-Then(
-  "{string} says nothing is wrong",
-  async function (this: SpecWorld, label: string) {
-    const until = Date.now() + 3000;
-    while ((await field(this, label).evaluate(saidInvalid)) !== "") {
-      assert.ok(Date.now() < until, `${label} still says what is wrong.`);
-      await new Promise((resolve) => setTimeout(resolve, 50));
-    }
-  },
-);
-
-Then(
-  "{string} says it needs {string}",
-  async function (this: SpecWorld, label: string, words: string) {
-    await eventually(this, async () => {
-      assert.equal(await field(this, label).evaluate(saidInvalid), words);
-    });
-  },
-);
-
-When(
-  "the arrow at the end of the {string} is pressed",
-  async function (this: SpecWorld, label: string) {
-    await drawn(this);
-    await drawnArrowOf(field(this, label)).click();
-  },
-);
-
-When(
-  "{string} is pressed among the suggestions of the {string}",
-  async function (this: SpecWorld, name: string, label: string) {
-    await drawn(this);
-    await pressSuggestion(field(this, label), name);
-  },
-);
-
-Then(
-  /^the suggestions of the "([^"]*)" (are shown|are not shown|start where the field starts|are as wide as the field|are in the same text size as the field)$/,
-  async function (this: SpecWorld, label: string, what: string) {
-    await drawn(this);
-    await checkSuggestions(field(this, label), whatOf(what));
-  },
-);
+  (await field(world, label).locator("option:checked").textContent()) ?? "";
 
 Then(
   "the sport chosen is {string}",
@@ -432,17 +267,7 @@ const choose = async (
   choice: string,
 ): Promise<void> => {
   await drawn(world);
-  const chosen = field(world, label);
-  if (
-    await chosen.evaluate(
-      (element: { readonly options?: unknown }) =>
-        element.options !== undefined,
-    )
-  ) {
-    await chosen.selectOption({ label: choice });
-  } else {
-    await chosen.fill(choice);
-  }
+  await field(world, label).selectOption({ label: choice });
 };
 
 Given(
@@ -461,7 +286,7 @@ Given(
 
 Given("none is chosen for the region", async function (this: SpecWorld) {
   await drawn(this);
-  await field(this, "Region").fill("");
+  await field(this, "Region").selectOption({ value: "" });
 });
 
 Given(
@@ -726,9 +551,9 @@ Then(
   "the country {string} is offered before the country {string}",
   async function (this: SpecWorld, one: string, other: string) {
     await eventually(this, async () => {
-      const countries = await offeredAt(
-        this.browserPage.locator("#field-country"),
-      );
+      const countries = await this.browserPage
+        .locator("#field-country option")
+        .allTextContents();
       const [first, second] = [
         countries.indexOf(one),
         countries.indexOf(other),

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
-import { NameChoice } from "./NameChoice.js";
+import { GroupedOptions } from "./GroupedOptions.js";
 import { Years } from "./Years.js";
 import { idInAddress } from "./api.js";
 import "./tournaments.css";
@@ -306,35 +306,23 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
     field: "country" | "region" | "sport",
     label: string,
     any: string,
-    from: readonly { readonly code: string; readonly name: string }[],
+    from: Parameters<typeof GroupedOptions>[0]["groups"],
     chosen: string | undefined,
     changed: (code: string | undefined) => void,
   ): React.JSX.Element => (
     <span className="tournament-filter-field" key={field}>
       <label htmlFor={`filter-${field}`}>{label}</label>
-      <NameChoice
+      <select
         id={`filter-${field}`}
         name={field}
-        placeholder={any}
-        choices={from}
         value={chosen ?? ""}
-        refusing={false}
-        // A region is narrowed by words as often as chosen; a country and a
-        // sport are chosen, and what names neither is not left in the box.
-        {...(field === "country"
-          ? { mustChoose: say("CreateTournament.NoSuchCountry") }
-          : field === "sport"
-            ? { mustChoose: say("Sport.Unknown") }
-            : {})}
-        onChange={(code) => {
-          // Words that name nothing choose nothing, and a choice that is
-          // already none is not made again, which would put a step in the
-          // browser's history for every letter typed.
-          if ((code === "" ? undefined : code) !== chosen) {
-            changed(code === "" ? undefined : code);
-          }
+        onChange={(event) => {
+          changed(event.target.value === "" ? undefined : event.target.value);
         }}
-      />
+      >
+        <option value="">{any}</option>
+        <GroupedOptions groups={from} />
+      </select>
     </span>
   );
 
@@ -518,7 +506,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                       name: countryNamed(code),
                     })),
                     document.documentElement.lang || "en",
-                  ).flat(),
+                  ),
                   country,
                   // The region belongs to the country, so another country
                   // chosen leaves none.

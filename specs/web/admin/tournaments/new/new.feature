@@ -166,13 +166,10 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then the tournament "Spring Open" is kept in the format "Standard"
 
-  Rule: The countries are offered the ones most played in first
+  Rule: The countries are offered in groups, the ones most played in first
 
-    The groups and their order are `countryOrder.feature`'s. The country, the
-    region and the sport are fields the reader types into rather than lists
-    to scroll, and what is offered narrows as they type. No line is drawn
-    between the groups, since the suggestions of a field have no place for
-    one.
+    The groups and their order are `countryOrder.feature`'s. A line is drawn
+    between them.
 
     Scenario Outline: The countries most played in are offered first
       When the new tournament page is opened
@@ -188,227 +185,9 @@ Feature: A new tournament is created in the admin
         | sixth  | United States |
         | seventh| Austria       |
 
-  Rule: A country, a region and a sport are chosen by typing their names
-
-    Typing is a way to find what is offered, and nothing else is accepted: a
-    name that is not offered is refused beside its field by the same code a
-    country that is not there has always been, so that the reader is told
-    rather than left to find that a tournament was kept in nowhere.
-
-    Scenario: A part of a name offers the countries that have it
-      Given the new tournament page is open
-      When "Zeal" is typed as the "Country"
-      Then the form offers the country "New Zealand"
-
-    Scenario: A part of a name does not offer a country that lacks it
-      Given the new tournament page is open
-      When "Zeal" is typed as the "Country"
-      Then the form does not offer the country "Fiji"
-
-    Scenario: A field that suggests is as wide empty as it is with a name in it
-      Given the new tournament page is open
-      And "" is typed as the "Country"
-      And the width of the "Country" is noted
-      When the country "New Zealand" is chosen
-      Then the "Country" is as wide as was noted
-
-    Scenario: The label of a field that suggests is above the name in it
-      Given the new tournament page is open
-      When the country "New Zealand" is chosen
-      Then the label of the "Country" is above what is typed
-
-    Scenario: The arrow at the end of a field with a sport in it offers every sport
-      Given the new tournament page is open
-      And the sport "Golf Croquet" is chosen
-      When the arrow at the end of the "Sport" is pressed
-      Then 4 sports are offered
-      And the sport chosen is "Golf Croquet"
-      And the suggestions of the "Sport" are shown
-
-    Scenario: The down arrow in a field with a country in it offers every country
-      Given the new tournament page is open
-      And the country "New Zealand" is chosen
-      When the down arrow is pressed in the "Country"
-      Then the form offers the country "Australia"
-      And the country chosen is "New Zealand"
-
-    Scenario: The suggestions are as the field they fill is
-      Given the new tournament page is open
-      When the arrow at the end of the "Country" is pressed
-      Then the suggestions of the "Country" start where the field starts
-      And the suggestions of the "Country" are as wide as the field
-      And the suggestions of the "Country" are in the same text size as the field
-
-    Scenario: A suggestion pressed is chosen
-      Given the new tournament page is open
-      And the arrow at the end of the "Sport" is pressed
-      When "Golf Croquet" is pressed among the suggestions of the "Sport"
-      Then the sport chosen is "Golf Croquet"
-      And the suggestions of the "Sport" are not shown
-
-    Scenario: The suggestions are closed once a name is typed in full
-      Given the new tournament page is open
-      When "New Zealand" is typed as the "Country"
-      Then the suggestions of the "Country" are not shown
-
-    Scenario: The suggestions are open while part of a name is typed
-      Given the new tournament page is open
-      When "Zeal" is typed as the "Country"
-      Then the suggestions of the "Country" are shown
-
-    Scenario: What is wrong with a country gets out of the way when a key is pressed
-      Given the new tournament page is open
-      And "Atlantis" is typed as the "Country"
-      And the tab key is pressed in the "Country"
-      And "Country" says it needs "Choose the country."
-      When the key "x" is pressed in the "Country"
-      Then "Country" says nothing is wrong
-
-    Scenario: What is wrong with a country is said again when it is left again
-      Given the new tournament page is open
-      And "Atlantis" is typed as the "Country"
-      And the tab key is pressed in the "Country"
-      And the key "x" is pressed in the "Country"
-      When the tab key is pressed in the "Country"
-      Then "Country" has the focus
-      And "Country" says it needs "Choose the country."
-
-    Scenario: What is wrong with a country is said again when the form is sent
-      Given the new tournament page is open
-      And "Spring Open" is typed as the "Name"
-      And "2026-10-03" is typed as the "Starts"
-      And "2026-10-05" is typed as the "Finishes"
-      And "Atlantis" is typed as the "Country"
-      And the key "x" is pressed in the "Country"
-      When "Create Tournament" is pressed
-      Then "Country" says it needs "Choose the country."
-
-    Scenario: What is wrong with a country gets out of the way when its arrow is pressed
-      Given the new tournament page is open
-      And "Atlantis" is typed as the "Country"
-      And the tab key is pressed in the "Country"
-      And "Country" says it needs "Choose the country."
-      When the arrow at the end of the "Country" is pressed
-      Then "Country" says nothing is wrong
-      And the suggestions of the "Country" are shown
-
-    Scenario: No more than five names are in view at once
-      Given the new tournament page is open
-      When the arrow at the end of the "Country" is pressed
-      Then the suggestions of the "Country" show 5 names
-
-    Scenario: Every sport is in view, there being fewer than five
-      Given the new tournament page is open
-      When the arrow at the end of the "Sport" is pressed
-      Then the suggestions of the "Sport" show 4 names
-
-    Scenario: The suggestions are closed once the box is emptied
-      Given the new tournament page is open
-      And the country "New Zealand" is chosen
-      When "" is typed as the "Country"
-      Then the suggestions of the "Country" are not shown
-
-    Scenario: A part of a name offers the sports that have it
-      Given the new tournament page is open
-      When "Golf" is typed as the "Sport"
-      Then the form offers the sport "Golf Croquet"
-
-    Scenario: A part of a name does not offer a sport that lacks it
-      Given the new tournament page is open
-      When "Golf" is typed as the "Sport"
-      Then the form does not offer the sport "Ricochet"
-
-    Scenario: Correcting the words of the country keeps the region it names again
-      Given the new tournament page is open
-      And the country "Australia" is chosen
-      And the region "Victoria" is chosen
-      And "Austral" is typed as the "Country"
-      When the country "Australia" is chosen
-      Then the region chosen is "Victoria"
-
-    Scenario: Another country chosen leaves no region
-      Given the new tournament page is open
-      And the country "Australia" is chosen
-      And the region "Victoria" is chosen
-      When the country "New Zealand" is chosen
-      And the country "Australia" is chosen
-      Then the region chosen is ""
-
-    Scenario: A part of a name offers the regions that have it
-      Given the new tournament page is open
-      And the country "Australia" is chosen
-      When "Vic" is typed as the "Region"
-      Then the form offers the region "Victoria"
-
-    Scenario: A name typed in full is chosen
-      Given the new tournament page is open
-      When the country "New Zealand" is chosen
-      Then the country chosen is "New Zealand"
-
-    Scenario: A country that is not offered is not left
-      Given the new tournament page is open
-      And "Atlantis" is typed as the "Country"
-      When the tab key is pressed in the "Country"
-      Then "Country" has the focus
-      And "Country" says it needs "Choose the country."
-
-    Scenario: A country that is named is left
-      Given the new tournament page is open
-      And the country "New Zealand" is chosen
-      When the tab key is pressed in the "Country"
-      Then "Country" does not have the focus
-
-    Scenario: A country that has not been chosen is not left
-      Given the new tournament page is open
-      When the tab key is pressed in the "Country"
-      Then "Country" has the focus
-      And "Country" says it needs "Choose the country."
-
-    Scenario: Escape puts back the country that was chosen, and the field can then be left
-      Given the new tournament page is open
-      And the country "New Zealand" is chosen
-      And "Atlan" is typed as the "Country"
-      And the escape key is pressed in the "Country"
-      And the escape key is pressed in the "Country"
-      When the tab key is pressed in the "Country"
-      Then the country chosen is "New Zealand"
-      And "Country" does not have the focus
-
-    Scenario: A country that is not offered is not sent
-      Given the new tournament page is open
-      And "Spring Open" is typed as the "Name"
-      And "2026-10-03" is typed as the "Starts"
-      And "2026-10-05" is typed as the "Finishes"
-      And "Atlantis" is typed as the "Country"
-      When "Create Tournament" is pressed
-      Then "Country" says it needs "Choose the country."
-
-    Scenario: A sport there is not is not left
-      Given the new tournament page is open
-      And "Quidditch" is typed as the "Sport"
-      When the tab key is pressed in the "Sport"
-      Then "Sport" has the focus
-      And "Sport" says it needs "Choose the sport."
-
-    Scenario: A sport there is not is not sent
-      Given the new tournament page is open
-      And "Spring Open" is typed as the "Name"
-      And "2026-10-03" is typed as the "Starts"
-      And "2026-10-05" is typed as the "Finishes"
-      And the country "Fiji" is chosen
-      And "Quidditch" is typed as the "Sport"
-      When "Create Tournament" is pressed
-      Then "Sport" says it needs "Choose the sport."
-
-    Scenario: A region that is not offered is refused beside the region
-      Given the new tournament page is open
-      And "Spring Open" is typed as the "Name"
-      And "2026-10-03" is typed as the "Starts"
-      And "2026-10-05" is typed as the "Finishes"
-      And the country "Australia" is chosen
-      And "Narnia" is typed as the "Region"
-      When "Create Tournament" is pressed
-      Then "Region" is refused with "Tournament.RegionNotInCountry"
+    Scenario: A line is drawn between the three groups
+      When the new tournament page is opened
+      Then the form's country list has 2 lines drawn in it
 
   Rule: A region is asked for only where the country has regions
 
@@ -420,7 +199,7 @@ Feature: A new tournament is created in the admin
     Scenario: The regions offered are the country's
       Given the new tournament page is open
       When the country "Australia" is chosen
-      Then the form offers the region "Victoria"
+      Then the region "Victoria" is offered
 
     Scenario: A country that is its own one region asks for none
       Given the new tournament page is open
@@ -625,14 +404,13 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then "Finishes" is refused with "Tournament.FinishesAfterNextYear"
 
-    Scenario: A tournament with no country is not sent
+    Scenario: A tournament with no country is refused beside the country
       Given the new tournament page is open
       And "Spring Open" is typed as the "Name"
       And "2026-10-03" is typed as the "Starts"
       And "2026-10-05" is typed as the "Finishes"
       When "Create Tournament" is pressed
-      Then "Country" says it needs "Choose the country."
-      And "Country" has the focus
+      Then "Country" is refused with "CreateTournament.NoSuchCountry"
 
     Scenario: A subtitle longer than a subtitle may be is refused beside it
       Given the new tournament page is open
@@ -705,7 +483,7 @@ Feature: A new tournament is created in the admin
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the new tournament page is opened
-      Then the country "Alemania" is offered before the country "Austria"
+      Then the country "Alemania" is offered before the country "Argentina"
 
     Scenario: The countries are in order of their names in English
       Given a site offering the languages it is served with

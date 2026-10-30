@@ -1087,7 +1087,6 @@ export const chinese: Language = {
     "Tournament.StartsAfterNextYear": "赛事不能晚于明年开始。",
     "Tournament.FinishesAfterNextYear": "赛事不能晚于明年结束。",
     "CreateTournament.NoSuchCountry": "请选择国家。",
-    "Sport.Unknown": "请选择运动。",
     "TournamentSubtitle.TooLong": "副标题不能超过 2000 个字符。",
     "Tournament.NotAManager": "只有这个赛事的管理者才能修改它。",
     "Tournament.NotAManagerOrScorer":

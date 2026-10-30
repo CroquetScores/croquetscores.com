@@ -1147,7 +1147,6 @@ export const russian: Language = {
     "Tournament.FinishesAfterNextYear":
       "Турнир не может закончиться позже следующего года.",
     "CreateTournament.NoSuchCountry": "Выберите страну.",
-    "Sport.Unknown": "Выберите вид спорта.",
     "TournamentSubtitle.TooLong":
       "Подзаголовок не может быть длиннее 2000 символов.",
     "Tournament.NotAManager":

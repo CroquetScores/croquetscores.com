@@ -104,12 +104,8 @@ export function NameChoice({
   const [active, setActive] = useState(-1);
   // Whether what is in the box names none of the choices, which a box that is
   // held says to the browser, so that the browser too will not send the form.
-  // Not before there are choices to name: a box begun on a choice made before
-  // the choices arrived shows its code, and was never held to a list it could
-  // not read.
   const invalid =
     mustChoose !== undefined &&
-    choices.length > 0 &&
     (typed.trim() === ""
       ? required
       : !choices.some((each) => sameWords(each.name, typed)));
@@ -271,10 +267,9 @@ export function NameChoice({
           setBrowsing(false);
           setActive(-1);
           const named = choices.find((each) => sameWords(each.name, words));
-          // A whole name has nothing left to suggest, nor has a box emptied,
-          // and a list left open under either covers whatever is beneath the
-          // field; typing on opens it, and the arrow shows every name.
-          setOpen(named === undefined && words.trim() !== "");
+          // A whole name has nothing left to suggest, and a list left open
+          // under it covers whatever is beneath the field; typing on opens it.
+          setOpen(named === undefined);
           told.current = named?.code ?? (refusing ? words.trim() : "");
           onChange(told.current);
         }}
@@ -284,21 +279,19 @@ export function NameChoice({
           does not take the focus from the field, which closing the list on
           blur would otherwise answer by closing it as it opens. It shows every
           name, and shuts the list where every name is shown already. */}
-      {rest.disabled === true ? null : (
-        <span
-          className="name-choice-arrow"
-          aria-hidden="true"
-          onMouseDown={(event) => {
-            event.preventDefault();
-            field.current?.focus();
-            // As a key does, the arrow takes back what is said to be wrong, so
-            // that it is not left over the list it opens.
-            field.current?.setCustomValidity("");
-            if (open && browsing) close();
-            else openAll();
-          }}
-        />
-      )}
+      <span
+        className="name-choice-arrow"
+        aria-hidden="true"
+        onMouseDown={(event) => {
+          event.preventDefault();
+          field.current?.focus();
+          // As a key does, the arrow takes back what is said to be wrong, so
+          // that it is not left over the list it opens.
+          field.current?.setCustomValidity("");
+          if (open && browsing) close();
+          else openAll();
+        }}
+      />
       <ul
         id={listId}
         role="listbox"

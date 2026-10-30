@@ -21,7 +21,6 @@ import {
 import type { SpecWorld } from "../../../support/world.js";
 import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
 import { ordinal } from "../../support/ordinals.js";
-import { suggestedTo } from "../../support/suggestions.js";
 import { changeTournament } from "../../support/tournaments.js";
 
 // The admin draws the list itself, after asking the API for it, so nothing
@@ -343,10 +342,6 @@ When(
 
 When("the browser goes back", async function (this: SpecWorld) {
   await this.browserPage.goBack();
-});
-
-When("the browser goes forward", async function (this: SpecWorld) {
-  await this.browserPage.goForward();
 });
 
 When(
@@ -1078,13 +1073,16 @@ When(
 // By what each narrows by, whatever language its label is in, as the home
 // page's filter is found.
 const filterField = (world: SpecWorld, field: string): Locator =>
-  world.browserPage.locator(`form.tournament-filter input[name="${field}"]`);
+  world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
 
-// The names a field suggests, in the order it suggests them.
+// The words of what a list offers to choose, without the choice that is no
+// choice at all.
 const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
-  (await filterField(world, field).count()) === 0
-    ? []
-    : suggestedTo(filterField(world, field));
+  (
+    await filterField(world, field)
+      .locator("option:not([value=''])")
+      .allTextContents()
+  ).map((words) => words.trim());
 
 Then(
   /^the filter (offers|does not offer) "(.*)" as a (country|region|sport)$/,
@@ -1113,13 +1111,14 @@ Then(
   },
 );
 
-// What the reader sees in the box, which is not always a name offered: it is
-// what they have typed.
 Then(
-  /^the (country|region|sport) box of the filter says "(.*)"$/,
-  async function (this: SpecWorld, field: string, words: string) {
+  /^the filter's country list has (\d+) lines? drawn in it$/,
+  async function (this: SpecWorld, count: string) {
     await eventually(this, async () => {
-      assert.equal(await filterField(this, field).inputValue(), words);
+      assert.equal(
+        await filterField(this, "country").locator("hr").count(),
+        Number(count),
+      );
     });
   },
 );

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
-import { NameChoice } from "../../../../../../NameChoice.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
@@ -207,15 +206,21 @@ export const TeamDialog = ({
         lifted
       >
         {(tied) => (
-          // None is the box left empty, since a team need fly none; what names
-          // none of the flags is not left.
-          <NameChoice
+          <select
             {...tied}
-            mustChoose={say("Team.NoSuchFlag")}
-            choices={flags}
             value={flag}
-            onChange={setFlag}
-          />
+            onChange={(event) => {
+              setFlag(event.target.value);
+            }}
+          >
+            {/* None first, since a team need fly none. */}
+            <option value="" />
+            {flags.map(({ code, name: called }) => (
+              <option key={code} value={code}>
+                {called}
+              </option>
+            ))}
+          </select>
         )}
       </Field>
     </ModalDialog>

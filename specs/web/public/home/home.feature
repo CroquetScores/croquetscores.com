@@ -649,179 +649,6 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then "Spring Open" is in the upcoming tournaments
 
-    Scenario: The arrow at the end of a box with a country in it offers every country
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      When the arrow at the end of the country box is pressed
-      Then the filter offers "Australia" as a country
-      And the country box of the filter says "New Zealand"
-      And the suggestions of the country box are shown
-
-    Scenario: The down arrow in a box with a country in it offers every country
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      When the down arrow is pressed in the country box
-      Then the filter offers "Australia" as a country
-      And the suggestions of the country box are shown
-
-    Scenario: The suggestions are as the box they fill is
-      Given the browser has scripting on
-      And the home page is open
-      When the arrow at the end of the country box is pressed
-      Then the suggestions of the country box start where the box starts
-      And the suggestions of the country box are as wide as the box
-      And the suggestions of the country box are in the same text size as the box
-
-    Scenario: A suggestion pressed is chosen
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      And the arrow at the end of the country box is pressed
-      When "Australia" is pressed among the suggestions of the country box
-      Then the country box of the filter says "Australia"
-      And the suggestions of the country box are not shown
-
-    Scenario: A suggestion is chosen with the keys
-      Given the browser has scripting on
-      And the home page is open
-      And "Austra" is typed as the country
-      And the down arrow is pressed in the country box
-      When the enter key is pressed in the country box
-      Then the country box of the filter says "Australia"
-
-    Scenario: Escape closes the suggestions and leaves the box as it was
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      And the arrow at the end of the country box is pressed
-      When the escape key is pressed in the country box
-      Then the suggestions of the country box are not shown
-      And the country box of the filter says "New Zealand"
-
-    Scenario: A country that names nothing is not left
-      Given the browser has scripting on
-      And the home page is open
-      And "Atlantis" is typed as the country
-      When the tab key is pressed in the country box
-      Then the country box has the focus
-      And the country box says it needs "Choose the country."
-
-    Scenario: A country that is named is left
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: A country box with nothing in it is left, since nothing is any country
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      And "" is typed as the country
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: A sport that names nothing is not left
-      Given the browser has scripting on
-      And the home page is open
-      And "Quidditch" is typed as the sport
-      When the tab key is pressed in the sport box
-      Then the sport box has the focus
-      And the sport box says it needs "Choose the sport."
-
-    Scenario: Escape puts back the country that was chosen, and the box can then be left
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      And "Atlan" is typed as the country
-      And the escape key is pressed in the country box
-      And the escape key is pressed in the country box
-      Then the country box of the filter says "New Zealand"
-      When the tab key is pressed in the country box
-      Then the country box does not have the focus
-
-    Scenario: The suggestions are closed once a name is typed in full
-      Given the browser has scripting on
-      And the home page is open
-      When "New Zealand" is typed as the country
-      Then the suggestions of the country box are not shown
-
-    Scenario: The suggestions are open while part of a name is typed
-      Given the browser has scripting on
-      And the home page is open
-      When "Zeal" is typed as the country
-      Then the suggestions of the country box are shown
-
-    Scenario: What is wrong with a country box gets out of the way when a key is pressed
-      Given the browser has scripting on
-      And the home page is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the key "x" is pressed in the country box
-      Then the country box says nothing is wrong
-
-    Scenario: What is wrong with a country box gets out of the way when the down arrow is pressed
-      Given the browser has scripting on
-      And the home page is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the down arrow is pressed in the country box
-      Then the country box says nothing is wrong
-
-    Scenario: What is wrong with a country box is said again when it is left again
-      Given the browser has scripting on
-      And the home page is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the key "x" is pressed in the country box
-      When the tab key is pressed in the country box
-      Then the country box has the focus
-      And the country box says it needs "Choose the country."
-
-    Scenario: What is wrong with a country box gets out of the way when its arrow is pressed
-      Given the browser has scripting on
-      And the home page is open
-      And "Atlantis" is typed as the country
-      And the tab key is pressed in the country box
-      And the country box says it needs "Choose the country."
-      When the arrow at the end of the country box is pressed
-      Then the country box says nothing is wrong
-      And the suggestions of the country box are shown
-
-    Scenario: No more than five names are in view at once
-      Given the browser has scripting on
-      And the home page is open
-      When the arrow at the end of the country box is pressed
-      Then the suggestions of the country box show 5 names
-
-    Scenario: Fewer names are all in view
-      Given the browser has scripting on
-      And the home page is open
-      When "Zeal" is typed as the country
-      Then the suggestions of the country box show 1 name
-
-    Scenario: The suggestions are closed once the box is emptied
-      Given the browser has scripting on
-      And the home page is open
-      And "New Zealand" is chosen as the country
-      When "" is typed as the country
-      Then the suggestions of the country box are not shown
-
-    Scenario: Without scripting the down arrow leaves the country in the box
-      Given the home page is open
-      And "New Zealand" is chosen as the country
-      When the down arrow is pressed in the country box
-      Then the country box of the filter says "New Zealand"
-
-    Scenario: A country's code in capitals is the country as its code is
-      When the home page is opened for the country "NZ"
-      Then "Spring Open" is in the upcoming tournaments
-      And "Summer Open" is not in the upcoming tournaments
-
     Scenario: A country chosen does not list another country's tournaments
       Given the home page is open
       And "New Zealand" is chosen as the country
@@ -916,10 +743,10 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then "Gateball" is not offered as a sport
 
-  Rule: The countries are offered the ones most played in first
+  Rule: The countries are offered in groups, the ones most played in first
 
-    The groups and their order are `countryOrder.feature`'s. No line is drawn
-    between them, since the suggestions of a field have no place for one.
+    The groups and their order are `countryOrder.feature`'s. A line is drawn
+    between them.
 
     Scenario Outline: The countries most played in are offered first
       When the home page is opened
@@ -934,6 +761,33 @@ Feature: The home page lists recent results and upcoming tournaments
         | fifth  | Spain         |
         | sixth  | United States |
         | seventh| Austria       |
+
+    Scenario: A line is drawn between the three groups
+      When the home page is opened
+      Then the country list has 2 lines drawn in it
+
+  Rule: A long list of countries opens at a height that fits the window
+
+    A drop-down list too tall for the room above and the room below its field
+    is shut by Chrome as soon as it is opened, so a reader sees it flicker
+    and nothing more. With every country on offer, the list is always that
+    tall. It is given a height of its own, and scrolls inside it. It stays a
+    plain drop-down list, so a browser that cannot draw it so keeps its own.
+
+    Background:
+      Given the home page is open
+
+    Scenario: The country list opens no taller than 20 rem
+      When the country list is opened
+      Then the country list is no taller than 20 rem
+
+    Scenario: The country list is still a drop-down list
+      Then the country is chosen from a drop-down list
+
+    Scenario: The country list opens at the same height in dark
+      Given a machine that prefers dark
+      When the country list is opened
+      Then the country list is no taller than 20 rem
 
   Rule: Pressing a flag narrows the lists to its country
 
