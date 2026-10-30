@@ -300,7 +300,7 @@ ${headings}
 ${rows}
               </tbody>`
               }
-            </table>${
+            </table>${rowsScript}${
               listing.listed.length === 0
                 ? `
             <p class="tournament-list-none">${escape(listing.none)}</p>`
@@ -308,6 +308,27 @@ ${rows}
             }${listing.after ?? ""}
           </section>`;
 };
+
+// A press on a row beyond its link follows the name's link, in every browser.
+// The name's link reaching over the whole row did that without scripting, but
+// Safari does not make a row the box a link reaches over, and the link reached
+// over the page: header and all (home.feature). So the link reaches over its own
+// cell, and this does the rest. A press on a link is left to the link, and so
+// is one that ends a selection of words, which is not a press to go anywhere.
+const rowsScript = `
+            <script>
+              (function () {
+                var list = document.currentScript.parentElement;
+                list.classList.add("tournament-list-pressable");
+                list.addEventListener("click", function (event) {
+                  var row = event.target.closest("tbody tr");
+                  if (row === null || event.target.closest("a") !== null) return;
+                  if (String(window.getSelection()) !== "") return;
+                  var link = row.querySelector(".tournament-name");
+                  if (link !== null) link.click();
+                });
+              })();
+            </script>`;
 
 // The filter --------------------------------------------------------------------------
 
