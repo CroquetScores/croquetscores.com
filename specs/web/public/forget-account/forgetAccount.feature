@@ -2,8 +2,8 @@
 Feature: A reader who is signed in can have their account forgotten
 
   A reader can ask for their account to be forgotten: its name and email
-  address made unreadable for good, by deleting the account's own key, with
-  every one of its events left where it was. It cannot be undone, so it is
+  address replaced for good, by rewriting the events that hold them, with
+  none of its events taken away. It cannot be undone, so it is
   asked for twice over.
 
   Only somebody signed in to the account can ask, from /account/forget-account; a
@@ -27,9 +27,9 @@ Feature: A reader who is signed in can have their account forgotten
   link that forgot an account when it was followed would forget it before its
   owner had seen the email.
 
-  Once forgotten, the account is called "Account Forgotten" and the uuid in its
-  id, and is reached at a matching address on the site's own domain, which is
-  never written to; that is specified with the account keys. The reader is
+  Once forgotten, the account is called "Forgotten Account" and the uuid in its
+  id, and is reached at a matching address at example.com, which is never
+  written to; that is specified with the account keys. The reader is
   signed out and told it is done. The account cannot be signed in to, and
   cannot be found by its old email address, which is free to be registered
   again as a new account.

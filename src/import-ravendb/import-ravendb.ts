@@ -207,7 +207,7 @@ try {
           ),
         ),
       ),
-      new AccountEventSealing(accountKeys),
+      new AccountEventSealing(accountKeys, unitOfWork),
     ),
     [
       new AccountsByEmailAddress(unitOfWork, emailAddresses),

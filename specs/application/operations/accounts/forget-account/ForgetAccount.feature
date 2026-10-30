@@ -2,8 +2,9 @@
 Feature: Forgetting an account, asked for and then confirmed
 
   A reader signed in to an account can have it forgotten: its name and email
-  address made unreadable for good, by deleting the account's own key, with
-  every one of its events left where it was (`forget.feature`). It cannot be
+  address replaced for good, by rewriting the events that hold them and the
+  Google account linked to it, with every one of its events kept and its key
+  kept (`forget.feature`). It cannot be
   undone, so it is asked for twice over.
 
   The first asking is signed in, and sends a link to the account's own email

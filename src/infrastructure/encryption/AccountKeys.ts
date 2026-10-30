@@ -2,11 +2,11 @@
 // the site's key, and the encryption of what is kept of an account's name and
 // email address with it.
 //
-// A key of its own for each account is what lets an account be forgotten
-// without rewriting anything: deleting its key makes what is kept of it
-// unreadable for good, and every event stays where it was. And it is what makes
-// the site's key cheap to change: only the keys are encrypted with it, so
-// changing it re-encrypts those, and not a single event.
+// A key of its own for each account is what makes the site's key cheap to
+// change: only the keys are encrypted with it, so changing it re-encrypts
+// those, and not a single event. An account is forgotten by rewriting what is
+// personal in its events (AccountEventSealing.ts), and its key is kept, marked
+// forgotten.
 //
 // The encryption is AES-256-GCM, which refuses what has been changed since it
 // was encrypted rather than decrypting it into something else. What is
@@ -130,14 +130,24 @@ export class AccountKeys {
     return `${VERSION}.${sealed.toString("base64")}`;
   }
 
+  /** Makes `account` a key of its own, unless it has one already. */
+  async ensureFor(account: Id): Promise<void> {
+    if ((await this.#keyOf(account)) === undefined) await this.makeFor(account);
+  }
+
   /**
    * What `kept` was encrypted from, or nothing when `account` has no key,
-   * which is when it has been forgotten. Refused with `AccountKeys.Tampered`
-   * when it was not encrypted for this account, or has been changed since.
+   * which is an account forgotten before forgetting kept the key. Refused with
+   * `AccountKeys.Tampered` when it was not encrypted for this account, or has
+   * been changed since.
    */
   async decrypt(account: Id, kept: string): Promise<string | undefined> {
     const key = await this.#keyOf(account);
     if (key === undefined) return undefined;
+    return this.#decryptWith(key, account, kept);
+  }
+
+  #decryptWith(key: Buffer, account: Id, kept: string): string {
     const [version, body] = kept.split(".");
     try {
       if (version !== VERSION || body === undefined) {
@@ -156,13 +166,37 @@ export class AccountKeys {
   }
 
   /**
-   * Whether `account` has a key: whether it is not forgotten. Read as every
-   * other read of the table is, through the mark of the site's key, so that
-   * another site's key is one refusal everywhere rather than this saying yes
-   * and the next thing refusing.
+   * Whether `account` has a key and is not forgotten: whether anything may
+   * still be kept of it or sent to it. An account with no key is false, as one
+   * forgotten before forgetting kept the key is, and is not an error: nothing
+   * is sent to it. Read as every other read of the table
+   * is, through the mark of the site's key, so that another site's key is one
+   * refusal everywhere rather than this saying yes and the next thing refusing.
    */
-  async hasKey(account: Id): Promise<boolean> {
-    return (await this.#keyOf(account)) !== undefined;
+  async isInUse(account: Id): Promise<boolean> {
+    return (await this.#rowOf(account))?.forgotten === false;
+  }
+
+  /**
+   * `text` encrypted with `account`'s key, or nothing when the account is not in
+   * use (see {@link isInUse}). One look at the key where asking and then
+   * encrypting is two.
+   */
+  async encryptIfInUse(account: Id, text: string): Promise<string | undefined> {
+    const row = await this.#rowOf(account);
+    if (row === undefined || row.forgotten) return undefined;
+    const sealed = seal(row.key, Buffer.from(text, "utf8"), account.value);
+    return `${VERSION}.${sealed.toString("base64")}`;
+  }
+
+  /**
+   * What `kept` was encrypted from, or nothing when the account is not in use.
+   * Refused as {@link decrypt} is.
+   */
+  async decryptIfInUse(account: Id, kept: string): Promise<string | undefined> {
+    const row = await this.#rowOf(account);
+    if (row === undefined || row.forgotten) return undefined;
+    return this.#decryptWith(row.key, account, kept);
   }
 
   /**
@@ -196,11 +230,13 @@ export class AccountKeys {
     }
   }
 
-  /** Deletes `account`'s key, which forgets it for good. */
+  /** Marks `account`'s key forgotten, and keeps it. */
   async forget(account: Id): Promise<void> {
     await this.unitOfWork
       .connection()
-      .query(`delete from account_keys where account_id = $1`, [account.value]);
+      .query(`update account_keys set forgotten = true where account_id = $1`, [
+        account.value,
+      ]);
   }
 
   /**
@@ -235,14 +271,26 @@ export class AccountKeys {
   }
 
   async #keyOf(account: Id): Promise<Buffer | undefined> {
+    return (await this.#rowOf(account))?.key;
+  }
+
+  async #rowOf(
+    account: Id,
+  ): Promise<{ key: Buffer; forgotten: boolean } | undefined> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<KeptKey>(
-        `select key, site_key_mark from account_keys where account_id = $1`,
+      .query<KeptKey & { forgotten: boolean }>(
+        `select key, site_key_mark, forgotten from account_keys
+          where account_id = $1`,
         [account.value],
       );
     const row = rows[0];
-    return row === undefined ? undefined : this.#unwrap(account.value, row);
+    return row === undefined
+      ? undefined
+      : {
+          key: this.#unwrap(account.value, row),
+          forgotten: row.forgotten,
+        };
   }
 
   // The mark is checked before anything is decrypted, because AES-GCM refuses

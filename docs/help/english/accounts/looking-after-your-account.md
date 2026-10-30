@@ -16,6 +16,6 @@ Choose **Profile** in the **Account** menu. It shows your **Name:** and **Email 
 
 ## Having your account forgotten
 
-**Forget Account** is last on the profile, apart from the rest because it cannot be undone. It sends a link to your email address, and following that link asks you once more before it forgets the account. Your name and email address are then made unreadable. [The privacy page](../privacy.md) says what is kept and what is not.
+**Forget Account** is last on the profile, apart from the rest because it cannot be undone. It sends a link to your email address, and following that link asks you once more before it forgets the account. Your name and email address are then replaced, for good, by "Forgotten Account" and a number. [The privacy page](../privacy.md) says what is kept and what is not.
 
 The last administrator of the site cannot forget their account, since nobody would be left to give the role to anyone else. Give the role to somebody first.

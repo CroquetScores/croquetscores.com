@@ -4,7 +4,9 @@ import { createDecipheriv, createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../src/domain/aggregates/accounts/Account.js";
+import { GoogleAccountLinked } from "../../../../src/domain/aggregates/accounts/events/GoogleAccountLinked.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
+import { PersonName } from "../../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
 import { AccountKeys } from "../../../../src/infrastructure/encryption/AccountKeys.js";
@@ -28,7 +30,6 @@ interface Keys {
   siteKey?: string;
   newSiteKey?: string;
   eventsBefore?: string[];
-  eventCount?: number;
   readBack: Account[];
   encryptions: string[];
 }
@@ -205,14 +206,6 @@ Then("no key was made", async function (this: SpecWorld) {
   assert.equal(rows.length, 0, "A key was made.");
 });
 
-Then("the account has no key", async function (this: SpecWorld) {
-  const { rows } = await this.database.query(
-    `select 1 from account_keys where account_id = $1`,
-    [keptAt(this, 1).value],
-  );
-  assert.equal(rows.length, 0, "The account still has a key.");
-});
-
 Then("the two accounts' keys differ", async function (this: SpecWorld) {
   const first = await keyOf(this, keptAt(this, 1));
   const second = await keyOf(this, keptAt(this, 2));
@@ -305,27 +298,123 @@ Given(
   },
 );
 
-// Deleting keys --------------------------------------------------------------
+// Forgetting ------------------------------------------------------------------
 
-When("the account's key is deleted", async function (this: SpecWorld) {
-  const { keys } = accountsOf(this);
-  const id = keptAt(this, 1);
-  keysOf(this).eventCount = (await eventsAsText(this)).length;
-  await this.asARequest(() => keys.forget(id));
-});
-
-When("the first account's key is deleted", async function (this: SpecWorld) {
-  const { keys } = accountsOf(this);
-  const id = keptAt(this, 1);
-  await this.asARequest(() => keys.forget(id));
+When("the first account is forgotten", async function (this: SpecWorld) {
+  assert.ok(this.moment !== undefined, "No moment has been named.");
+  const account = await readBack(this, keptAt(this, 1));
+  account.forget(ReadOnlyDate.from(this.moment));
+  await this.keepAccount?.(account);
 });
 
 Then(
   "the account's events are all still kept",
   async function (this: SpecWorld) {
-    const before = keysOf(this).eventCount;
-    assert.ok(before !== undefined, "No key has been deleted.");
-    assert.equal((await eventsAsText(this)).length, before);
+    const before = keysOf(this).eventsBefore;
+    assert.ok(before !== undefined, "No events were noted.");
+    // The event that records the forgetting is one more than there were.
+    assert.equal((await eventsAsText(this)).length, before.length + 1);
+  },
+);
+
+Given("every event is noted", async function (this: SpecWorld) {
+  keysOf(this).eventsBefore = await eventsAsText(this);
+});
+
+// What holds something personal is told by the fields that hold it, which are
+// the three the sealing keeps: a name, an email address and a subject.
+const personalField = /"(name|emailAddress|subject)":/;
+
+Then(
+  "every event that held something personal is kept differently",
+  async function (this: SpecWorld) {
+    const before = keysOf(this).eventsBefore;
+    assert.ok(before !== undefined, "No events were noted.");
+    const after = await eventsAsText(this);
+    const personal = before.filter((row) => personalField.test(row));
+    assert.ok(personal.length > 0, "Nothing personal was kept to rewrite.");
+    for (const [at, row] of before.entries()) {
+      if (personalField.test(row)) {
+        assert.notEqual(after[at], row, `Still kept as it was: ${row}`);
+      }
+    }
+  },
+);
+
+// An account forgotten as accounts were before their events were rewritten:
+// the event that records it kept, the key deleted, and every event still
+// holding what was kept of the person.
+const forgottenByDeletingItsKey = async (
+  world: SpecWorld,
+  id = AccountId.create(),
+): Promise<void> => {
+  assert.ok(world.moment !== undefined, "No moment has been named.");
+  await registerFor(world, "someone@example.com", id);
+  const account = await readBack(world, id);
+  account.confirm(
+    PersonName.from("Sam Someone"),
+    undefined,
+    ReadOnlyDate.from(world.moment),
+  );
+  await world.keepAccount?.(account);
+  await world.database.query(
+    `insert into events (stream_id, version, name, data)
+     select stream_id, (select max(version) + 1 from events where stream_id = $1),
+            'account-forgotten', data - 'name' - 'passwordHash'
+       from events
+      where stream_id = $1 and name = 'account-email-address-confirmed'`,
+    [id.value],
+  );
+  await world.database.query(`delete from account_keys where account_id = $1`, [
+    id.value,
+  ]);
+};
+
+Given(
+  "an account was forgotten by deleting its key",
+  async function (this: SpecWorld) {
+    await forgottenByDeletingItsKey(this);
+  },
+);
+
+Given(
+  "an account {string} was forgotten by deleting its key",
+  async function (this: SpecWorld, id: string) {
+    await forgottenByDeletingItsKey(this, AccountId.from(id));
+  },
+);
+
+// What a site is left with by an account marked forgotten and nothing more:
+// the key made, the flag set, and the events as they were.
+Given(
+  "the account's key is made and marked forgotten",
+  async function (this: SpecWorld) {
+    const { keys } = accountsOf(this);
+    const id = keptAt(this, 1);
+    await this.asARequest(async () => {
+      await keys.ensureFor(id);
+      await keys.forget(id);
+    });
+  },
+);
+
+When("the forgotten accounts are rewritten", async function (this: SpecWorld) {
+  const { rewriteForgotten } = accountsOf(this);
+  await this.asARequest(() => rewriteForgotten());
+});
+
+// The Google account is asked of the events as they are read back, since an
+// account forgotten is refused being linked, which is how a live account is
+// asked.
+Then(
+  "the Google account kept for the account is {string}",
+  async function (this: SpecWorld, subject: string) {
+    const { store } = accountsOf(this);
+    const id = keptAt(this, 1);
+    const events = await this.asARequest(() => store.getEvents(id));
+    const linked = events.find((event) => event instanceof GoogleAccountLinked);
+    assert.ok(linked !== undefined, "No Google account was linked.");
+    assert.equal(linked.subject, subject);
   },
 );
 

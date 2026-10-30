@@ -1,9 +1,10 @@
 Feature: Forgetting an account
 
   Forgetting is recorded as an event that holds nothing about the person,
-  alongside deleting the account's key: the key makes what is kept of them
-  unreadable, and the event is what tells every read model to stop finding the
-  account by what it holds, such as the row it is found by. A forgotten account
+  alongside rewriting the events that hold the account's name, email address
+  and Google account: the rewriting replaces what is kept of them, and the
+  event is what tells every read model to stop finding the account by what it
+  holds, such as the row it is found by. A forgotten account
   cannot be signed in to, confirmed, registered again, have its password
   hashed again or be given a new one, or have a role added or removed, with
   `Account.Forgotten`; each of those refusals is specified with what it
