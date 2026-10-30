@@ -16,6 +16,6 @@ Mae **Newid cyfeiriad e-bost** yn gofyn am y **Cyfeiriad e-bost newydd** a'ch **
 
 ## Cael eich cyfrif wedi'i anghofio
 
-**Anghofio'r cyfrif** sydd olaf ar y proffil, ar wahân i'r gweddill oherwydd na ellir ei ddadwneud. Mae'n anfon dolen i'ch cyfeiriad e-bost, ac mae dilyn y ddolen honno'n gofyn i chi unwaith eto cyn iddo anghofio'r cyfrif. Caiff eich enw a'ch cyfeiriad e-bost eu gwneud yn annarllenadwy wedyn. Mae [y dudalen Preifatrwydd](../privacy.md) yn dweud beth a gedwir a beth na chedwir.
+**Anghofio'r cyfrif** sydd olaf ar y proffil, ar wahân i'r gweddill oherwydd na ellir ei ddadwneud. Mae'n anfon dolen i'ch cyfeiriad e-bost, ac mae dilyn y ddolen honno'n gofyn i chi unwaith eto cyn iddo anghofio'r cyfrif. Caiff eich enw a'ch cyfeiriad e-bost eu disodli, am byth, gan "Forgotten Account" a rhif wedyn. Mae [y dudalen Preifatrwydd](../privacy.md) yn dweud beth a gedwir a beth na chedwir.
 
 Ni all gweinyddwr olaf y safle anghofio ei gyfrif, gan na fyddai neb ar ôl i roi'r rôl i neb arall. Rhowch y rôl i rywun yn gyntaf.

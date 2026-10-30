@@ -16,6 +16,6 @@ Elige **Perfil** en el menú **Cuenta**. Muestra tu **Nombre:** y tu **Direcció
 
 ## Hacer que se olvide tu cuenta
 
-**Olvidar cuenta** es lo último del perfil, aparte del resto porque no se puede deshacer. Envía un enlace a tu dirección de correo electrónico, y al seguirlo se te pregunta una vez más antes de olvidar la cuenta. Tu nombre y tu dirección de correo electrónico pasan entonces a ser ilegibles. [La página de privacidad](../privacy.md) explica qué se conserva y qué no.
+**Olvidar cuenta** es lo último del perfil, aparte del resto porque no se puede deshacer. Envía un enlace a tu dirección de correo electrónico, y al seguirlo se te pregunta una vez más antes de olvidar la cuenta. Tu nombre y tu dirección de correo electrónico se sustituyen entonces para siempre por «Forgotten Account» y un número. [La página de privacidad](../privacy.md) explica qué se conserva y qué no.
 
 El último administrador del sitio no puede olvidar su cuenta, porque no quedaría nadie para dar el rol a otra persona. Da primero el rol a alguien.

@@ -16,6 +16,6 @@ Kies **Profiel** in die **Rekening**-kieslys. Dit wys jou **Naam:** en **E-posad
 
 ## Om jou rekening te laat vergeet
 
-**Vergeet rekening** is laaste op die profiel, apart van die res omdat dit nie ongedaan gemaak kan word nie. Dit stuur 'n skakel na jou e-posadres, en as jy daardie skakel volg, vra dit jou nog een keer voordat dit die rekening vergeet. Jou naam en e-posadres word dan onleesbaar gemaak. [Die privaatheidsbladsy](../privacy.md) sê wat bewaar word en wat nie.
+**Vergeet rekening** is laaste op die profiel, apart van die res omdat dit nie ongedaan gemaak kan word nie. Dit stuur 'n skakel na jou e-posadres, en as jy daardie skakel volg, vra dit jou nog een keer voordat dit die rekening vergeet. Jou naam en e-posadres word dan vir altyd vervang deur "Forgotten Account" en 'n nommer. [Die privaatheidsbladsy](../privacy.md) sê wat bewaar word en wat nie.
 
 Die laaste administrateur van die werf kan nie hul rekening laat vergeet nie, want niemand sou oorbly om die rol aan iemand anders te gee nie. Gee eers die rol aan iemand.

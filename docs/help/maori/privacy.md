@@ -28,7 +28,7 @@ Ka tukua e te pae he īmēra hei whakatūturu i tētahi wāhitau īmēra, hei wh
 
 ## Te whakawareware
 
-Ka taea e koe te whakawareware i tō pūkete i ngā wā katoa mai i tō kōtaha ina takiuru koe. Ka meinga tō ingoa me tō wāhitau īmēra kia kore e taea te pānui mō ake tonu, ā, e kore e taea e tētahi te whakahoki, tae atu ki a koe. Ka noho tonu ngā mea i whakaputaina e koe, i raro i te ingoa "Account Forgotten" (te ingoa Ingarihi). E kore e taea te whakakore i te warewaretanga, koia i uiuia ai e rua ngā wā, ā, ka taea te rēhita anō i te wāhitau īmēra hei pūkete hou.
+Ka taea e koe te whakawareware i tō pūkete i ngā wā katoa mai i tō kōtaha ina takiuru koe. Ko tō ingoa, tō wāhitau īmēra, me te pūkete Google, Facebook rānei e hono ana, ka whakakapia mō ake tonu, ki ngā mea katoa e puritia ana e te pae, ki "Forgotten Account" me tētahi tau, me tētahi wāhitau i example.com e kore nei e a tētahi. E kore e taea e tētahi te whakahoki, tae atu ki a koe. Ka noho tonu ngā mea i whakaputaina e koe, i raro i te ingoa "Forgotten Account" me taua tau. E kore e taea te whakakore i te warewaretanga, koia i uiuia ai e rua ngā wā, ā, ka taea te rēhita anō i te wāhitau īmēra hei pūkete hou. Ko tētahi kape o te pae i hangaia i mua i tō warewaretanga, pēnei i tētahi kape tautoko, kei a ia tonu ngā mea i reira i taua wā, mō te roa e puritia ana te kape.
 
 ## Te pātai
 

@@ -28,7 +28,7 @@ De website stuurt e-mail om een e-mailadres te bevestigen, om een wachtwoord in 
 
 ## Laten vergeten
 
-Je kunt je account op elk moment laten vergeten vanuit je profiel, zodra je bent ingelogd. Je naam en e-mailadres worden dan voorgoed onleesbaar gemaakt en kunnen door niemand worden hersteld, ook niet door jou. Wat je hebt gepubliceerd blijft staan, onder de naam "Account Forgotten" (de Engelse naam). Vergeten kan niet ongedaan worden gemaakt, daarom wordt er twee keer om gevraagd, en het e-mailadres kan daarna opnieuw als nieuw account worden geregistreerd.
+Je kunt je account op elk moment laten vergeten vanuit je profiel, zodra je bent ingelogd. Je naam, je e-mailadres en elk Google- of Facebook-account dat eraan is gekoppeld, worden dan voorgoed vervangen, in alles wat de website bewaart, door "Forgotten Account" en een nummer, een adres bij example.com dat van niemand is, en een nummer. Ze kunnen door niemand worden hersteld, ook niet door jou. Wat je hebt gepubliceerd blijft staan, onder de naam "Forgotten Account" en dat nummer. Vergeten kan niet ongedaan worden gemaakt, daarom wordt er twee keer om gevraagd, en het e-mailadres kan daarna opnieuw als nieuw account worden geregistreerd. Een kopie van de website die is gemaakt voordat je werd vergeten, zoals een back-up, heeft nog wat ze toen had, zolang de kopie wordt bewaard.
 
 ## Vragen
 

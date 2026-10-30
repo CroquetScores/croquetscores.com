@@ -16,6 +16,6 @@ Wählen Sie **Profil** im Menü **Konto**. Es zeigt Ihnen **Name:** und **E-Mail
 
 ## Ihr Konto vergessen lassen
 
-**Konto vergessen** steht zuletzt im Profil, abgesetzt vom Rest, weil es sich nicht rückgängig machen lässt. Es schickt einen Link an Ihre E-Mail-Adresse, und wenn Sie ihm folgen, werden Sie noch einmal gefragt, bevor das Konto vergessen wird. Ihr Name und Ihre E-Mail-Adresse werden dann unlesbar gemacht. [Die Datenschutzseite](../privacy.md) sagt, was gespeichert bleibt und was nicht.
+**Konto vergessen** steht zuletzt im Profil, abgesetzt vom Rest, weil es sich nicht rückgängig machen lässt. Es schickt einen Link an Ihre E-Mail-Adresse, und wenn Sie ihm folgen, werden Sie noch einmal gefragt, bevor das Konto vergessen wird. Ihr Name und Ihre E-Mail-Adresse werden dann für immer durch „Forgotten Account“ und eine Nummer ersetzt. [Die Datenschutzseite](../privacy.md) sagt, was gespeichert bleibt und was nicht.
 
 Der letzte Administrator der Website kann sein Konto nicht vergessen lassen, denn es bliebe niemand übrig, der die Rolle jemand anderem geben könnte. Geben Sie die Rolle zuerst jemandem.

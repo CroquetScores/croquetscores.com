@@ -28,7 +28,7 @@ Webbplatsen skickar e-post för att bekräfta en e-postadress, för att ange ett
 
 ## Få det glömt
 
-Du kan få ditt konto glömt när som helst från din profil när du är inloggad. Ditt namn och din e-postadress görs då oläsliga för alltid och kan inte återskapas av någon, inte heller av dig. Det du publicerade finns kvar, under namnet "Account Forgotten" (det engelska namnet). Att glömma kan inte ångras, vilket är varför det frågas två gånger, och e-postadressen kan sedan registreras igen som ett nytt konto.
+Du kan få ditt konto glömt när som helst från din profil när du är inloggad. Ditt namn, din e-postadress och eventuellt Google- eller Facebook-konto som är länkat till den ersätts då för alltid, i allt webbplatsen sparar, av "Forgotten Account" och ett nummer, en adress på example.com som inte tillhör någon, och ett nummer. Ingen kan återskapa dem, inte heller du. Det du publicerade finns kvar, under namnet "Forgotten Account" och det numret. Att glömma kan inte ångras, vilket är varför det frågas två gånger, och e-postadressen går sedan att registrera igen som ett nytt konto. En kopia av webbplatsen som gjordes innan du glömdes, till exempel en säkerhetskopia, har kvar det den hade då, så länge kopian sparas.
 
 ## Fråga
 

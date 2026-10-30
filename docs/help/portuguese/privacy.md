@@ -28,7 +28,7 @@ O site envia e-mail para confirmar um endereço de e-mail, para definir uma senh
 
 ## Fazer com que seja esquecido
 
-Você pode fazer com que sua conta seja esquecida a qualquer momento, pelo seu perfil, depois de entrar. Seu nome e seu endereço de e-mail ficam então ilegíveis para sempre e ninguém pode recuperá-los, você inclusive. O que você publicou fica, com o nome "Account Forgotten" (o nome em inglês). Esquecer não pode ser desfeito, e por isso é pedido duas vezes, e o endereço de e-mail pode depois ser registrado de novo como uma conta nova.
+Você pode fazer com que sua conta seja esquecida a qualquer momento, pelo seu perfil, depois de entrar. Seu nome, seu endereço de e-mail e qualquer conta do Google ou do Facebook ligada a ela são então substituídos, para sempre, em tudo o que o site guarda, por "Forgotten Account" e um número, por um endereço em example.com que não pertence a ninguém. Ninguém pode recuperá-los, você inclusive. O que você publicou fica, com o nome "Forgotten Account" e esse número. Esquecer não pode ser desfeito, e por isso é pedido duas vezes, e o endereço de e-mail pode depois ser registrado de novo como uma conta nova. Uma cópia do site feita antes de você ser esquecido, como um backup, ainda tem o que tinha naquele momento, enquanto a cópia for mantida.
 
 ## Perguntar
 

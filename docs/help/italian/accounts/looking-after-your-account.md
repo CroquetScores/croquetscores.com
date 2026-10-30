@@ -16,6 +16,6 @@ Scegli **Profilo** nel menu **Account**. Mostra **Nome:** e **Indirizzo email:**
 
 ## Far dimenticare il tuo account
 
-**Dimentica account** è l'ultima voce del profilo, separata dal resto perché non si può annullare. Invia un link al tuo indirizzo email, e seguirlo ti chiede ancora una volta prima di dimenticare l'account. Il tuo nome e il tuo indirizzo email vengono poi resi illeggibili. [La pagina Privacy](../privacy.md) dice che cosa viene conservato e che cosa no.
+**Dimentica account** è l'ultima voce del profilo, separata dal resto perché non si può annullare. Invia un link al tuo indirizzo email, e seguirlo ti chiede ancora una volta prima di dimenticare l'account. Il tuo nome e il tuo indirizzo email vengono poi sostituiti, per sempre, da "Forgotten Account" e un numero. [La pagina Privacy](../privacy.md) dice che cosa viene conservato e che cosa no.
 
 L'ultimo amministratore del sito non può dimenticare il proprio account, perché non resterebbe nessuno a dare il ruolo a qualcun altro. Dai prima il ruolo a qualcuno.

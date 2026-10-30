@@ -28,7 +28,7 @@ Il sito invia email per confermare un indirizzo email, per impostare una passwor
 
 ## Farlo dimenticare
 
-Puoi far dimenticare il tuo account in qualsiasi momento dal tuo profilo, una volta effettuato l'accesso. Il tuo nome e il tuo indirizzo email vengono allora resi illeggibili per sempre e nessuno può recuperarli, tu compreso. Ciò che hai pubblicato resta, con il nome "Account Forgotten" (il nome inglese). Dimenticare non si può annullare, ed è per questo che viene chiesto due volte, e l'indirizzo email può poi essere registrato di nuovo come nuovo account.
+Puoi far dimenticare il tuo account in qualsiasi momento dal tuo profilo, una volta effettuato l'accesso. Il tuo nome, il tuo indirizzo email e ogni account Google o Facebook collegato vengono allora sostituiti, per sempre, in tutto ciò che il sito conserva, da "Forgotten Account" e un numero, e da un indirizzo su example.com che non appartiene a nessuno. Nessuno può recuperarli, tu compreso. Ciò che hai pubblicato resta, con il nome "Forgotten Account" e quel numero. Dimenticare non si può annullare, ed è per questo che viene chiesto due volte, e l'indirizzo email può poi essere registrato di nuovo come nuovo account. Una copia del sito fatta prima che tu fossi dimenticato, come un backup, ha ancora ciò che aveva allora, finché la copia viene conservata.
 
 ## Chiedere
 
