@@ -82,7 +82,7 @@
     "mailparser": "^3.9.39",
     "playwright": "^1.64.0",
     "prettier": "^3.9.9",
-    "ravendb": "4.2.3",
+    "ravendb": "7.2.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "smtp-server": "^3.19.22",
