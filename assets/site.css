@@ -1749,30 +1749,20 @@ main {
   background: var(--surface);
 }
 
-/* A row is read as one thing, so it is pressed as one: the name's link
-   reaches over the whole of it. Pressed with a thumb, so as tall as anything
-   else that is.
-   Safari on an iPad 6 does not make a table row the box the name's link
-   reaches over: without help the link reached over the page, and a transform
-   on the row, which was tried, moved the trouble to the links beneath the
-   list, all of which led to one tournament. A cell is a box it has always
-   done this for, so the link reaches over its own cell, and over the row only
-   outside Safari on an iPhone or an iPad, which is what -webkit-touch-callout
-   is there to tell. The first version of this told a Safari that had mended
-   the row by ::details-content, and an iPad Air on iPadOS 26 has that and had
-   not mended it: the link reached over the page, header and all. */
+/* A row is read as one thing, so it is pressed as one, and pressed with a
+   thumb, so as tall as anything else that is. The name's link reaches over its
+   own cell and no further: reaching over the row did not work in Safari, which
+   does not make a row the box it reaches over, and the link reached over the
+   page, header and all. Several ways of telling Safari from the rest were
+   tried and each left some Safari wrong. A script follows the name's link from
+   the rest of the row, in every browser (tournamentLists.ts). */
 .tournament-list td {
   position: relative;
 }
 
-@supports not (-webkit-touch-callout: none) {
-  .tournament-list tbody tr {
-    position: relative;
-  }
-
-  .tournament-list td {
-    position: static;
-  }
+/* Only where the script is, so that a pointer does not offer what it cannot do. */
+.tournament-list-pressable tbody tr {
+  cursor: pointer;
 }
 
 .tournament-list td {

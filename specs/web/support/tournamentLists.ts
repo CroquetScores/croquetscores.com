@@ -796,6 +796,8 @@ Then(
       'select[name="region"] option:not([value=""])',
       // A sport's code, as AC is, is a code and no word of any language.
       ".tournament-sport",
+      // The script that follows a row's link is code, which is not read.
+      "script",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

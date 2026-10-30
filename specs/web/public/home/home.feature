@@ -581,13 +581,22 @@ Feature: The home page lists recent results and upcoming tournaments
 
   Rule: Pressing anywhere on a row but its flag leads to the tournament
 
+    The name is a link that reaches over its own cell, which is all that a
+    browser without scripting is given: a link made to reach over the whole
+    row reached over the whole page in Safari, on a Mac, an iPhone and an iPad,
+    which does not make a table row the box it reaches over, and no test of
+    which browser it is has stayed right. So with scripting a press anywhere
+    on the row that is not on a link follows the name's link, the same in every
+    browser, and without it only the name leads there (`assets/site.css`).
+
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is for the sport "gc"
 
     Scenario Outline: Each part of a row leads to the tournament
-      Given the home page is open
+      Given scripting is switched on
+      And the home page is open
       When the <part> of "Spring Open" in the upcoming tournaments is pressed
       Then the address is "/2026/gc/spring-open"
 
@@ -595,6 +604,11 @@ Feature: The home page lists recent results and upcoming tournaments
         | part |
         | date |
         | name |
+
+    Scenario: Without scripting the name leads to the tournament
+      Given the home page is open
+      When the name of "Spring Open" in the upcoming tournaments is pressed
+      Then the address is "/2026/gc/spring-open"
 
     Scenario: The name is a link
       When the home page is opened
@@ -611,6 +625,7 @@ Feature: The home page lists recent results and upcoming tournaments
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And scripting is switched on
       And the home page is open
       When the date of "Spring Open" in the recent results is pressed
       Then the address is "/2026/gc/spring-open"

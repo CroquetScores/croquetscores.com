@@ -219,13 +219,22 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
   Rule: Pressing anywhere on a row but its flag leads to the tournament
 
+    The name is a link that reaches over its own cell, which is all that a
+    browser without scripting is given: a link made to reach over the whole
+    row reached over the whole page in Safari, on a Mac, an iPhone and an iPad,
+    which does not make a table row the box it reaches over, and no test of
+    which browser it is has stayed right. So with scripting a press anywhere
+    on the row that is not on a link follows the name's link, the same in every
+    browser, and without it only the name leads there (`assets/site.css`).
+
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is for the sport "gc"
 
     Scenario Outline: Each part of a row leads to the tournament
-      Given the page for "gc" in 2026 is open
+      Given scripting is switched on
+      And the page for "gc" in 2026 is open
       When the <part> of "Spring Open" in the sport's tournaments is pressed
       Then the address is "/2026/gc/spring-open"
 
@@ -233,6 +242,11 @@ Feature: A sport's page in a year lists every tournament of it starting then
         | part |
         | date |
         | name |
+
+    Scenario: Without scripting the name leads to the tournament
+      Given the page for "gc" in 2026 is open
+      When the name of "Spring Open" in the sport's tournaments is pressed
+      Then the address is "/2026/gc/spring-open"
 
     Scenario: The row offers a link to the tournament and one to its country
       When the page for "gc" in 2026 is opened
