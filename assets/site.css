@@ -213,6 +213,18 @@ select {
   color: inherit;
 }
 
+/* A list's options are drawn white on #3b3b3b, in either theme, so that they
+   read the same wherever a list is opened and whatever ground a browser would
+   have drawn them on: in the dark theme some drew the ink, which is light, on a
+   light ground (issue 456). The picker of a list that is drawn by the page
+   rather than the browser is the same. */
+select option,
+select optgroup,
+select::picker(select) {
+  background: #3b3b3b;
+  color: #fff;
+}
+
 /* --- Base ---------------------------------------------------------------- */
 
 html {
@@ -1257,10 +1269,10 @@ main {
 }
 
 /* The list is drawn on the green bar like the buttons beside it, and opens
-   onto the page's own colours, which is what a browser draws its options on. */
+   onto the colours every list's options are drawn on. */
 .language option {
-  background: var(--panel);
-  color: var(--ink);
+  background: #3b3b3b;
+  color: #fff;
 }
 
 .donate button {

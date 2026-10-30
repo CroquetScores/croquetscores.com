@@ -175,6 +175,30 @@ Then(
   },
 );
 
+// Run in the page, where there is a document; the specs are not compiled to
+// know one, so it is text. The country list is the one that offers Australia.
+const drawnScript = `(() => {
+  const select = [...document.querySelectorAll("select")].find((each) =>
+    each.textContent.includes("Australia"),
+  );
+  const option = getComputedStyle(select.querySelector("option"));
+  return { ink: option.color, ground: option.backgroundColor };
+})()`;
+
+Then(
+  "the options of the form's country list are white on #3b3b3b",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const drawn = await field(this, "Country").evaluate<
+        { ink: string; ground: string },
+        undefined
+      >(drawnScript);
+      assert.equal(drawn.ink, "rgb(255, 255, 255)");
+      assert.equal(drawn.ground, "rgb(59, 59, 59)");
+    });
+  },
+);
+
 Then(
   "the region {string} is offered",
   async function (this: SpecWorld, region: string) {
