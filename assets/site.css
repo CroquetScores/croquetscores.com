@@ -1757,15 +1757,18 @@ main {
    on the row, which was tried, moved the trouble to the links beneath the
    list, all of which led to one tournament. A cell is a box it has always
    done this for, so the link reaches over its own cell, and over the row only
-   outside Safari on an iPhone or an iPad, which is what -webkit-touch-callout
-   is there to tell. The first version of this told a Safari that had mended
-   the row by ::details-content, and an iPad Air on iPadOS 26 has that and had
-   not mended it: the link reached over the page, header and all. */
+   outside Safari, which -apple-pay-button-style is there to tell: it is in
+   Safari on a Mac as well as on an iPhone or an iPad, and in no other browser.
+   Two versions of this told a Safari that had mended the row by what it had
+   (::details-content) and then by being on a touch screen
+   (-webkit-touch-callout). An iPad Air on iPadOS 26 had the first and not the
+   mending, and an iMac had no touch screen and not the mending either: the
+   link reached over the page, header and all. */
 .tournament-list td {
   position: relative;
 }
 
-@supports not (-webkit-touch-callout: none) {
+@supports not (-apple-pay-button-style: black) {
   .tournament-list tbody tr {
     position: relative;
   }
