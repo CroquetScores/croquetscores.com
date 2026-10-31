@@ -189,6 +189,7 @@ export const ScoresTab = ({
       data-withdrawn={game.withdrawn ? "" : undefined}
     >
       <span className="listed-score">
+        <span className="score-number">{(listed ?? []).indexOf(game) + 1}</span>{" "}
         <span className="score-winner">{game.winner}</span>{" "}
         <span className="score-winner-score">{game.winnerScore}</span>{" "}
         <span className="score-beat">{say("admin.score.beat")}</span>

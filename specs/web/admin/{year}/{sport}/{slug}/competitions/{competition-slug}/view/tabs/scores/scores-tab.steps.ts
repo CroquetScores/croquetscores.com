@@ -613,3 +613,42 @@ Then(
     });
   },
 );
+
+const ORDINALS: Readonly<Record<string, number>> = {
+  first: 0,
+  second: 1,
+  third: 2,
+};
+
+Then(
+  /^the (first|second|third) score listed shows the number "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, shown: string) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").nth(ORDINALS[which] ?? 0);
+      assert.equal(await partOf(row, "number"), shown);
+    });
+  },
+);
+
+Then(
+  /^the first archived score shows the number "([^"]*)"$/,
+  async function (this: SpecWorld, shown: string) {
+    await eventually(this, async () => {
+      const row = rows(this, "archived").first();
+      assert.equal(await partOf(row, "number"), shown);
+    });
+  },
+);
+
+Then(
+  "the number of the first score listed is before its winner",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").first();
+      const number = await row.locator(".score-number").boundingBox();
+      const winner = await row.locator(".score-winner").boundingBox();
+      assert.ok(number !== null && winner !== null, "One is not laid out.");
+      assert.ok(number.x + number.width <= winner.x, "It is not before.");
+    });
+  },
+);

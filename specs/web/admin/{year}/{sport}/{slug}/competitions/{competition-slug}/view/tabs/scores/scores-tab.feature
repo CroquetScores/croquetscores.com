@@ -770,11 +770,51 @@ Feature: The scores tab of a competition's page
       When the scores of "Block A" in "Spring Open" are opened
       Then every word in the tab but the players' names is in the test locale
 
+  Rule: A score begins with its game's number
+
+    A game's number is its place in the order the competition's games were
+    entered, the first entered being 1, counting the archived ones among them,
+    so that archiving a game does not change the number of any other and a
+    gap in the numbers says one has been archived. Each score begins with it,
+    before the winner, on a phone as well as on a wider screen.
+
+    Scenario Outline: The scores are numbered in the order they were entered
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the <which> score listed shows the number "<number>"
+
+      Examples:
+        | which  | number |
+        | first  | 1      |
+        | second | 2      |
+
+    Scenario: A score keeps its number when an earlier one is archived
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first score listed shows the number "2"
+
+    Scenario: An archived score keeps the number it had
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first archived score shows the number "1"
+
+    Scenario: The number is the first column
+      Given a viewport 1200 pixels wide
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the number of the first score listed is before its winner
+
   Rule: On a wider screen each part of a score is a column
 
     From the width the other tabs lay their rows out beside what can be done
-    with them, a score is a row of columns: the winner, their score, the loser,
-    their score, and then what can be done with it. The first four are as wide
+    with them, a score is a row of columns: the game's number, the winner,
+    their score, the loser, their score, and then what can be done with it.
+    The first five are as wide
     as what is in them and no wider, and nothing in them wraps, so that a score
     reads along one line and the columns line up from one score to the next.
     The last takes what is left, so that what can be done is at the right edge.
