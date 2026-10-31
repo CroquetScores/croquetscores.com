@@ -125,6 +125,24 @@ export const convertHelpPage = (
     }
   }
 
+  // A heading may be given a bookmark by an id in braces at its end, as
+  // "## Adding multiple players {#adding-multiple-players}", so that an
+  // address can lead straight to it. It is written once and kept as it is in
+  // every language, since a heading's own words are translated and a link
+  // from the site must not depend on them. The braces are not shown.
+  for (const [index, token] of tokens.entries()) {
+    if (token.type !== "heading_open") continue;
+    const inline = tokens[index + 1];
+    const found = /^(.*?)\s*\{#([a-z0-9]+(?:-[a-z0-9]+)*)\}$/.exec(
+      inline?.content ?? "",
+    );
+    const last = inline?.children?.at(-1);
+    if (found === null || inline === undefined || last === undefined) continue;
+    inline.content = found[1] ?? "";
+    last.content = last.content.replace(/\s*\{#[a-z0-9-]+\}$/, "");
+    token.attrSet("id", found[2] ?? "");
+  }
+
   // The first heading of any level, since a page that begins with a second
   // level heading is still called by it, and the build refuses one with none.
   const heading = tokens.findIndex((token) => token.type === "heading_open");

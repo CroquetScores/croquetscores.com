@@ -729,6 +729,8 @@ export const japanese: Language = {
       "この大会をアーカイブします。あとで復元できます",
     "admin.hover.tournaments.restore": "アーカイブした大会を元に戻します",
     "admin.hover.players.add": "この大会に選手を追加します",
+    "admin.hover.players.addMany": "この大会に複数の選手をまとめて追加します",
+    "admin.hover.dialog.players.add": "これらの選手を大会に追加します",
     "admin.hover.players.edit": "この選手の詳細を変更します",
     "admin.hover.players.up": "この選手を一覧の上へ移動します",
     "admin.hover.players.down": "この選手を一覧の下へ移動します",
@@ -908,6 +910,7 @@ export const japanese: Language = {
       "この試合の勝者はすでに次のゲームを行っているため、勝者は変更できません。",
     "CompetitionPlayer.Withdrawn": "棄権した選手はこれ以上出場しません。",
     "admin.players.add": "選手を追加",
+    "admin.players.addMany": "選手をまとめて追加",
     "admin.players.none": "選手がいません",
     "admin.players.edit": "編集",
     "admin.players.archive": "アーカイブ",
@@ -937,6 +940,23 @@ export const japanese: Language = {
     "admin.player.add": "追加",
     "admin.player.save": "保存",
     "admin.player.added": "{name}を追加しました。",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "選手をまとめて追加",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "ヘルプ",
+    "admin.players.many": "選手",
+    "admin.players.line": "{line}行目：{words}",
+    "AddPlayers.FieldsMissing": "1行目に項目名を書いてください。",
+    "AddPlayers.NameMissing": "項目にはNameを含めてください。",
+    "AddPlayers.FieldNotAllowed":
+      "項目に指定できるのは、Name、Representing、Flag、Handicap、WorldRankingPlayerNameです。",
+    "AddPlayers.FieldRepeated": "同じ項目名は1回しか指定できません。",
+    "AddPlayers.PlayersMissing":
+      "2行目以降の各行に選手を1人ずつ書いてください。",
+    "AddPlayers.TooManyPlayers":
+      "1つのリストに入れられる選手は最大500人です。残りは別のリストで追加してください。",
+    "AddPlayers.ValuesMismatched":
+      "1行目に書いた項目すべてについて、選手ごとに値を書いてください。値がない場合は空にしてください。",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "この選手はこの内容では保存できません。",
     "Tournament.PlayerNameTaken":

@@ -603,7 +603,7 @@ Then(
 
 // The dialog open over the page, by its title.
 Then(
-  /^the (?:player|score|competition|team|team player|test|carry forward) dialog is titled "([^"]*)"$/,
+  /^the (?:players|player|score|competition|team|team player|test|carry forward) dialog is titled "([^"]*)"$/,
   async function (this: SpecWorld, title: string) {
     const dialog = this.browserPage.locator("dialog[open]");
     await dialog.waitFor();

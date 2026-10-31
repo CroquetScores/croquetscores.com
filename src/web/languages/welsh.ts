@@ -752,6 +752,10 @@ export const welsh: Language = {
     "admin.hover.tournaments.restore":
       "Dod â'r twrnamaint archifedig hwn yn ôl",
     "admin.hover.players.add": "Ychwanegu chwaraewr at y twrnamaint hwn",
+    "admin.hover.players.addMany":
+      "Ychwanegu sawl chwaraewr at y twrnamaint hwn ar unwaith",
+    "admin.hover.dialog.players.add":
+      "Ychwanegu'r chwaraewyr hyn at y twrnamaint",
     "admin.hover.players.edit": "Newid manylion y chwaraewr hwn",
     "admin.hover.players.up": "Symud y chwaraewr hwn i fyny'r rhestr",
     "admin.hover.players.down": "Symud y chwaraewr hwn i lawr y rhestr",
@@ -939,6 +943,7 @@ export const welsh: Language = {
     "CompetitionPlayer.Withdrawn":
       "Nid yw chwaraewr a dynnwyd yn ôl yn chwarae rhagor.",
     "admin.players.add": "Ychwanegu chwaraewr",
+    "admin.players.addMany": "Ychwanegu chwaraewyr",
     "admin.players.none": "Dim chwaraewyr",
     "admin.players.edit": "Golygu",
     "admin.players.archive": "Archifo",
@@ -970,6 +975,24 @@ export const welsh: Language = {
     "admin.player.add": "Ychwanegu",
     "admin.player.save": "Cadw",
     "admin.player.added": "Ychwanegwyd {name}.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Ychwanegu chwaraewyr",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Cymorth",
+    "admin.players.many": "Chwaraewyr",
+    "admin.players.line": "Llinell {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Ysgrifennwch enwau'r meysydd ar y llinell gyntaf.",
+    "AddPlayers.NameMissing": "Rhaid i'r meysydd gynnwys Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Gall maes fod yn Name, Representing, Flag, Handicap neu WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Dim ond unwaith y gellir enwi maes.",
+    "AddPlayers.PlayersMissing":
+      "Ysgrifennwch un chwaraewr ar bob llinell ar ôl y gyntaf.",
+    "AddPlayers.TooManyPlayers":
+      "Gall rhestr gynnwys 500 o chwaraewyr ar y mwyaf. Ychwanegwch y gweddill mewn rhestr arall.",
+    "AddPlayers.ValuesMismatched":
+      "Mae angen gwerth ar bob chwaraewr, neu ddim byd, ar gyfer pob maes a enwir ar y llinell gyntaf.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Ni ellir cadw'r chwaraewr hwn fel y mae.",
     "Tournament.PlayerNameTaken":

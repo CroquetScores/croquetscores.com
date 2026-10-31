@@ -791,6 +791,9 @@ export const italian: Language = {
     "admin.hover.tournaments.restore":
       "Riporta indietro questo torneo archiviato",
     "admin.hover.players.add": "Aggiungi un giocatore a questo torneo",
+    "admin.hover.players.addMany":
+      "Aggiungi più giocatori a questo torneo in una volta",
+    "admin.hover.dialog.players.add": "Aggiungi questi giocatori al torneo",
     "admin.hover.players.edit": "Cambia i dettagli di questo giocatore",
     "admin.hover.players.up": "Sposta questo giocatore più in alto nell'elenco",
     "admin.hover.players.down":
@@ -991,6 +994,7 @@ export const italian: Language = {
       "Il vincitore di questo incontro ha già giocato la partita successiva, quindi chi l'ha vinto non può cambiare.",
     "CompetitionPlayer.Withdrawn": "Un giocatore ritirato non gioca più.",
     "admin.players.add": "Aggiungi giocatore",
+    "admin.players.addMany": "Aggiungi giocatori",
     "admin.players.none": "Nessun giocatore",
     "admin.players.edit": "Modifica",
     "admin.players.archive": "Archivia",
@@ -1024,6 +1028,23 @@ export const italian: Language = {
     "admin.player.add": "Aggiungi",
     "admin.player.save": "Salva",
     "admin.player.added": "{name} è stato aggiunto.",
+    // La finestra dei giocatori (players.feature): più giocatori scritti in un solo riquadro.
+    "admin.players.addManyTitle": "Aggiungi giocatori",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Aiuto",
+    "admin.players.many": "Giocatori",
+    "admin.players.line": "Riga {line}: {words}",
+    "AddPlayers.FieldsMissing": "Scrivi i nomi dei campi nella prima riga.",
+    "AddPlayers.NameMissing": "I campi devono includere Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Un campo può essere Name, Representing, Flag, Handicap o WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Un campo può essere indicato una sola volta.",
+    "AddPlayers.PlayersMissing":
+      "Scrivi un giocatore su ogni riga dopo la prima.",
+    "AddPlayers.TooManyPlayers":
+      "Un elenco può contenere al massimo 500 giocatori. Aggiungi gli altri in un altro elenco.",
+    "AddPlayers.ValuesMismatched":
+      "Ogni giocatore deve avere un valore, oppure nulla, per ogni campo indicato nella prima riga.",
     // Sopra i campi, per un rifiuto senza parole proprie.
     "admin.player.otherwise":
       "Questo giocatore non può essere conservato così com'è.",

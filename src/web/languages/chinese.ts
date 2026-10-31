@@ -712,6 +712,8 @@ export const chinese: Language = {
     "admin.hover.tournaments.archive": "归档这个赛事；可以恢复",
     "admin.hover.tournaments.restore": "恢复这个已归档的赛事",
     "admin.hover.players.add": "向这个赛事添加选手",
+    "admin.hover.players.addMany": "一次向这个赛事添加多位选手",
+    "admin.hover.dialog.players.add": "把这些选手添加到赛事",
     "admin.hover.players.edit": "修改这位选手的详情",
     "admin.hover.players.up": "把这位选手在列表中上移",
     "admin.hover.players.down": "把这位选手在列表中下移",
@@ -874,6 +876,7 @@ export const chinese: Language = {
       "这场比赛的胜者已经打过下一场，因此不能再更改谁获胜。",
     "CompetitionPlayer.Withdrawn": "已退赛的选手不再比赛。",
     "admin.players.add": "添加选手",
+    "admin.players.addMany": "批量添加选手",
     "admin.players.none": "没有选手",
     "admin.players.edit": "编辑",
     "admin.players.archive": "归档",
@@ -903,6 +906,22 @@ export const chinese: Language = {
     "admin.player.add": "添加",
     "admin.player.save": "保存",
     "admin.player.added": "已添加 {name}。",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "批量添加选手",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "帮助",
+    "admin.players.many": "选手",
+    "admin.players.line": "第 {line} 行：{words}",
+    "AddPlayers.FieldsMissing": "请在第一行写出各字段的名称。",
+    "AddPlayers.NameMissing": "字段必须包含 Name。",
+    "AddPlayers.FieldNotAllowed":
+      "字段可以是 Name、Representing、Flag、Handicap 或 WorldRankingPlayerName。",
+    "AddPlayers.FieldRepeated": "每个字段只能出现一次。",
+    "AddPlayers.PlayersMissing": "请在第一行之后，每行写一位选手。",
+    "AddPlayers.TooManyPlayers":
+      "一个列表最多可包含 500 位选手。其余的请放到另一个列表中添加。",
+    "AddPlayers.ValuesMismatched":
+      "每位选手对第一行所列的每个字段都需要有一个值，或者留空。",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "无法按现状保存这位选手。",
     "Tournament.PlayerNameTaken": "本赛事中已有另一位选手使用这个姓名。",

@@ -11,6 +11,36 @@
   color: var(--ink);
 }
 
+/* One that holds a long list of lines is as wide as the window less the
+   gutter, 1rem each side, where the others are a form's width. */
+.modal-dialog.modal-dialog-wide {
+  max-width: none;
+}
+
+/* A dialog with help has a round "?" in the right of its title bar, in the
+   bar's own colours. The title leaves room for it. A modal dialog is already
+   positioned, so the icon is placed against it. */
+.dialog-title-with-help {
+  padding-inline-end: calc(var(--space-5) + 2.25rem);
+}
+
+.dialog-help {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  color: var(--accent-ink);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
 /* The page behind it dimmed, so that what can be used is what stands out. */
 .modal-dialog::backdrop {
   background: rgb(0 0 0 / 0.5);

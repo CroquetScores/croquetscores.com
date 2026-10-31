@@ -781,6 +781,9 @@ export const afrikaans: Language = {
     "admin.hover.tournaments.restore":
       "Bring hierdie geargiveerde toernooi terug",
     "admin.hover.players.add": "Voeg 'n speler by hierdie toernooi",
+    "admin.hover.players.addMany":
+      "Voeg etlike spelers gelyk by hierdie toernooi",
+    "admin.hover.dialog.players.add": "Voeg hierdie spelers by die toernooi",
     "admin.hover.players.edit": "Verander hierdie speler se besonderhede",
     "admin.hover.players.up": "Skuif hierdie speler hoër in die lys",
     "admin.hover.players.down": "Skuif hierdie speler laer in die lys",
@@ -968,6 +971,7 @@ export const afrikaans: Language = {
       "Die wenner van hierdie wedstryd het reeds sy of haar volgende spel gespeel, so wie dit gewen het, kan nie verander nie.",
     "CompetitionPlayer.Withdrawn": "'n Onttrekte speler speel niks meer nie.",
     "admin.players.add": "Voeg speler by",
+    "admin.players.addMany": "Voeg spelers by",
     "admin.players.none": "Geen spelers nie",
     "admin.players.edit": "Wysig",
     "admin.players.archive": "Argiveer",
@@ -999,6 +1003,23 @@ export const afrikaans: Language = {
     "admin.player.add": "Voeg by",
     "admin.player.save": "Bewaar",
     "admin.player.added": "{name} is bygevoeg.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Voeg spelers by",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Hulp",
+    "admin.players.many": "Spelers",
+    "admin.players.line": "Reël {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Skryf die name van die velde op die eerste reël.",
+    "AddPlayers.NameMissing": "Die velde moet Name insluit.",
+    "AddPlayers.FieldNotAllowed":
+      "'n Veld kan Name, Representing, Flag, Handicap of WorldRankingPlayerName wees.",
+    "AddPlayers.FieldRepeated": "'n Veld kan net een keer genoem word.",
+    "AddPlayers.PlayersMissing": "Skryf 'n speler op elke reël ná die eerste.",
+    "AddPlayers.TooManyPlayers":
+      "'n Lys kan hoogstens 500 spelers hou. Voeg die res in 'n ander lys by.",
+    "AddPlayers.ValuesMismatched":
+      "Elke speler het 'n waarde nodig, of niks, vir elke veld wat op die eerste reël genoem word.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Hierdie speler kan nie so behou word nie.",
     "Tournament.PlayerNameTaken":

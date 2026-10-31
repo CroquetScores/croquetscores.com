@@ -6,6 +6,12 @@
 export interface Refusal {
   readonly code: string;
   readonly words: string;
+  /**
+   * The line of what was typed it is about, where a field holds several lines
+   * that are each refused on their own. Several refusals of one code are then
+   * told apart by it.
+   */
+  readonly line?: number | undefined;
 }
 
 interface FieldProps {
@@ -17,6 +23,11 @@ interface FieldProps {
   /** What the field is for, said beneath it where its label alone would leave
       a reader wondering, and read out with it. */
   readonly explanation?: string | undefined;
+  /**
+   * A field whose label is not drawn, because the dialog it is in says what
+   * it is for. It is still its name, for a screen reader.
+   */
+  readonly unlabelled?: boolean;
   /**
    * Something said of what was typed, at the end of the line it is on, and
    * read out with the field as what is beneath it is. Nothing where there is
@@ -40,6 +51,7 @@ export const Field = ({
   refused,
   lifted,
   explanation,
+  unlabelled = false,
   mark,
   children,
 }: FieldProps): React.JSX.Element => {
@@ -69,7 +81,10 @@ export const Field = ({
           ...(describedBy === "" ? {} : { "aria-describedby": describedBy }),
           ...(wrong ? { "aria-invalid": true as const } : {}),
         })}
-        <span className="field-label" id={labelId}>
+        <span
+          className={unlabelled ? "field-label visually-hidden" : "field-label"}
+          id={labelId}
+        >
           {label}
         </span>
         {mark === undefined ? null : (
@@ -84,8 +99,14 @@ export const Field = ({
           id={messageId}
           data-refused={refused.map(({ code }) => code).join(" ")}
         >
-          {refused.map(({ code, words }) => (
-            <span key={code}>{words}</span>
+          {refused.map(({ code, words, line }, place) => (
+            <span
+              key={`${code}-${String(place)}`}
+              data-code={code}
+              data-line={line}
+            >
+              {words}
+            </span>
           ))}
         </p>
       ) : null}

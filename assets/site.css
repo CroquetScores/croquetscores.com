@@ -395,6 +395,12 @@ a:hover {
   padding-inline: var(--panel-inset);
 }
 
+/* A heading of the help that an address leads to stops beneath the pinned bar,
+   which is taller where it wraps, and not under it. */
+.help [id] {
+  scroll-margin-top: 6rem;
+}
+
 /* The page's own title, on a green strip below the pinned bar. It scrolls away
    with the page, which is what the current site does and what keeps a
    three-line tournament name off a phone screen once reading has started. */

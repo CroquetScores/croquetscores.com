@@ -53,6 +53,23 @@ Then(
 );
 
 Then(
+  "the heading {string} has the bookmark {string}",
+  function (this: SpecWorld, heading: string, bookmark: string) {
+    assert.match(
+      result(this).html,
+      new RegExp(`<h\\d id="${bookmark}">${heading}</h\\d>`),
+    );
+  },
+);
+
+Then(
+  "the heading {string} has no bookmark",
+  function (this: SpecWorld, heading: string) {
+    assert.match(result(this).html, new RegExp(`<h\\d>${heading}</h\\d>`));
+  },
+);
+
+Then(
   "the title of the page is {string}",
   function (this: SpecWorld, title: string) {
     assert.equal(result(this).title, title);

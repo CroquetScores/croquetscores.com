@@ -772,6 +772,9 @@ export const portuguese: Language = {
       "Arquivar este torneio; ele pode ser restaurado",
     "admin.hover.tournaments.restore": "Trazer de volta este torneio arquivado",
     "admin.hover.players.add": "Adicionar um jogador a este torneio",
+    "admin.hover.players.addMany":
+      "Adicionar vários jogadores a este torneio de uma vez",
+    "admin.hover.dialog.players.add": "Adicionar estes jogadores ao torneio",
     "admin.hover.players.edit": "Alterar os dados deste jogador",
     "admin.hover.players.up": "Subir este jogador na lista",
     "admin.hover.players.down": "Descer este jogador na lista",
@@ -962,6 +965,7 @@ export const portuguese: Language = {
       "O vencedor desta partida já jogou o jogo seguinte, então quem a venceu não pode mudar.",
     "CompetitionPlayer.Withdrawn": "Um jogador que desistiu não joga mais.",
     "admin.players.add": "Adicionar jogador",
+    "admin.players.addMany": "Adicionar jogadores",
     "admin.players.none": "Nenhum jogador",
     "admin.players.edit": "Editar",
     "admin.players.archive": "Arquivar",
@@ -992,6 +996,24 @@ export const portuguese: Language = {
     "admin.player.add": "Adicionar",
     "admin.player.save": "Salvar",
     "admin.player.added": "{name} foi adicionado.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Adicionar jogadores",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Ajuda",
+    "admin.players.many": "Jogadores",
+    "admin.players.line": "Linha {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Escreva os nomes dos campos na primeira linha.",
+    "AddPlayers.NameMissing": "Os campos devem incluir Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Um campo pode ser Name, Representing, Flag, Handicap ou WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Um campo só pode ser nomeado uma vez.",
+    "AddPlayers.PlayersMissing":
+      "Escreva um jogador em cada linha depois da primeira.",
+    "AddPlayers.TooManyPlayers":
+      "Uma lista pode ter no máximo 500 jogadores. Adicione o resto em outra lista.",
+    "AddPlayers.ValuesMismatched":
+      "Cada jogador precisa de um valor, ou de nada, para cada campo nomeado na primeira linha.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Este jogador não pode ser guardado como está.",
     "Tournament.PlayerNameTaken":

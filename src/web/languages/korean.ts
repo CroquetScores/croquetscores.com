@@ -747,6 +747,8 @@ export const korean: Language = {
       "이 대회를 보관해요. 나중에 복원할 수 있어요",
     "admin.hover.tournaments.restore": "보관된 이 대회를 되돌리기",
     "admin.hover.players.add": "이 대회에 선수 추가",
+    "admin.hover.players.addMany": "여러 선수를 이 대회에 한꺼번에 추가",
+    "admin.hover.dialog.players.add": "이 선수들을 대회에 추가",
     "admin.hover.players.edit": "이 선수의 세부 정보 변경",
     "admin.hover.players.up": "이 선수를 목록에서 위로 이동",
     "admin.hover.players.down": "이 선수를 목록에서 아래로 이동",
@@ -918,6 +920,7 @@ export const korean: Language = {
       "이 매치의 승자가 이미 다음 경기를 치러서, 누가 이겼는지는 바꿀 수 없어요.",
     "CompetitionPlayer.Withdrawn": "기권한 선수는 더 이상 경기하지 않아요.",
     "admin.players.add": "선수 추가",
+    "admin.players.addMany": "선수 여러 명 추가",
     "admin.players.none": "선수가 없어요",
     "admin.players.edit": "수정",
     "admin.players.archive": "보관",
@@ -948,6 +951,22 @@ export const korean: Language = {
     "admin.player.add": "추가",
     "admin.player.save": "저장",
     "admin.player.added": "{name}님을 추가했어요.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "선수 여러 명 추가",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "도움말",
+    "admin.players.many": "선수",
+    "admin.players.line": "{line}번째 줄: {words}",
+    "AddPlayers.FieldsMissing": "첫 줄에 항목 이름을 써 주세요.",
+    "AddPlayers.NameMissing": "항목에 Name이 있어야 해요.",
+    "AddPlayers.FieldNotAllowed":
+      "항목은 Name, Representing, Flag, Handicap, WorldRankingPlayerName 중에서 쓸 수 있어요.",
+    "AddPlayers.FieldRepeated": "항목 이름은 한 번만 쓸 수 있어요.",
+    "AddPlayers.PlayersMissing": "첫 줄 아래 각 줄에 선수를 한 명씩 써 주세요.",
+    "AddPlayers.TooManyPlayers":
+      "목록 하나에는 선수를 최대 500명까지 넣을 수 있어요. 나머지는 다른 목록으로 추가해 주세요.",
+    "AddPlayers.ValuesMismatched":
+      "첫 줄에 쓴 모든 항목마다 선수별로 값을 쓰거나 비워 두어야 해요.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "이 선수는 이대로 저장할 수 없어요.",
     "Tournament.PlayerNameTaken":

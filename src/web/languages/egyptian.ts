@@ -712,6 +712,8 @@ export const egyptian: Language = {
     "admin.hover.tournaments.archive": "أرشف البطولة دي؛ ممكن ترجّعها",
     "admin.hover.tournaments.restore": "رجّع البطولة المؤرشفة دي",
     "admin.hover.players.add": "ضيف لاعب للبطولة دي",
+    "admin.hover.players.addMany": "ضيف كذا لاعب للبطولة دي مرة واحدة",
+    "admin.hover.dialog.players.add": "ضيف اللاعبين دول للبطولة",
     "admin.hover.players.edit": "غيّر تفاصيل اللاعب ده",
     "admin.hover.players.up": "اطلّع اللاعب ده لفوق في القايمة",
     "admin.hover.players.down": "نزّل اللاعب ده لتحت في القايمة",
@@ -882,6 +884,7 @@ export const egyptian: Language = {
       "فايز المباراة دي لعب لعبته اللي بعدها فعلاً، فمينفعش نغيّر مين كسبها.",
     "CompetitionPlayer.Withdrawn": "اللاعب المنسحب مبيلعبش تاني.",
     "admin.players.add": "ضيف لاعب",
+    "admin.players.addMany": "ضيف لاعبين",
     "admin.players.none": "مفيش لاعبين",
     "admin.players.edit": "عدّل",
     "admin.players.archive": "أرشف",
@@ -910,6 +913,22 @@ export const egyptian: Language = {
     "admin.player.add": "ضيف",
     "admin.player.save": "احفظ",
     "admin.player.added": "{name} اتضاف.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "ضيف لاعبين",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "المساعدة",
+    "admin.players.many": "اللاعبين",
+    "admin.players.line": "السطر {line}: {words}",
+    "AddPlayers.FieldsMissing": "اكتب أسماء الحقول في السطر الأول.",
+    "AddPlayers.NameMissing": "لازم الحقول تحتوي على Name.",
+    "AddPlayers.FieldNotAllowed":
+      "الحقل ممكن يكون Name أو Representing أو Flag أو Handicap أو WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "الحقل ينفع يتسمّى مرة واحدة بس.",
+    "AddPlayers.PlayersMissing": "اكتب لاعب في كل سطر بعد الأول.",
+    "AddPlayers.TooManyPlayers":
+      "القايمة ممكن تشيل 500 لاعب على الأكتر. ضيف الباقي في قايمة تانية.",
+    "AddPlayers.ValuesMismatched":
+      "كل لاعب محتاج قيمة، أو ولا حاجة، لكل حقل مكتوب في السطر الأول.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "مينفعش نحفظ اللاعب ده زي ما هو.",
     "Tournament.PlayerNameTaken": "فيه لاعب تاني في البطولة دي بنفس الاسم.",

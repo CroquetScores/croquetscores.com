@@ -792,6 +792,9 @@ export const french: Language = {
       "Archiver ce tournoi ; il pourra être restauré",
     "admin.hover.tournaments.restore": "Ramener ce tournoi archivé",
     "admin.hover.players.add": "Ajouter un joueur à ce tournoi",
+    "admin.hover.players.addMany":
+      "Ajouter plusieurs joueurs à ce tournoi d'un coup",
+    "admin.hover.dialog.players.add": "Ajouter ces joueurs au tournoi",
     "admin.hover.players.edit": "Modifier les informations de ce joueur",
     "admin.hover.players.up": "Monter ce joueur dans la liste",
     "admin.hover.players.down": "Descendre ce joueur dans la liste",
@@ -986,6 +989,7 @@ export const french: Language = {
       "Le vainqueur de ce match a déjà joué sa partie suivante, le nom du vainqueur ne peut donc plus changer.",
     "CompetitionPlayer.Withdrawn": "Un joueur retiré ne joue plus.",
     "admin.players.add": "Ajouter un joueur",
+    "admin.players.addMany": "Ajouter des joueurs",
     "admin.players.none": "Aucun joueur",
     "admin.players.edit": "Modifier",
     "admin.players.archive": "Archiver",
@@ -1017,6 +1021,25 @@ export const french: Language = {
     "admin.player.add": "Ajouter",
     "admin.player.save": "Enregistrer",
     "admin.player.added": "{name} a été ajouté.",
+    // La boîte de dialogue des joueurs (players.feature) : plusieurs joueurs écrits dans une seule zone.
+    "admin.players.addManyTitle": "Ajouter des joueurs",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Aide",
+    "admin.players.many": "Joueurs",
+    "admin.players.line": "Ligne {line} : {words}",
+    "AddPlayers.FieldsMissing":
+      "Écrivez les noms des champs sur la première ligne.",
+    "AddPlayers.NameMissing": "Les champs doivent inclure Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Un champ peut être Name, Representing, Flag, Handicap ou WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated":
+      "Un champ ne peut être nommé qu'une seule fois.",
+    "AddPlayers.PlayersMissing":
+      "Écrivez un joueur sur chaque ligne après la première.",
+    "AddPlayers.TooManyPlayers":
+      "Une liste peut contenir 500 joueurs au plus. Ajoutez les autres dans une autre liste.",
+    "AddPlayers.ValuesMismatched":
+      "Chaque joueur doit avoir une valeur, ou rien, pour chaque champ nommé sur la première ligne.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Ce joueur ne peut pas être conservé tel quel.",
     "Tournament.PlayerNameTaken":

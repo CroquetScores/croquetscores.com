@@ -762,6 +762,9 @@ export const english: Language = {
       "Archive this tournament; it can be restored",
     "admin.hover.tournaments.restore": "Bring this archived tournament back",
     "admin.hover.players.add": "Add a player to this tournament",
+    "admin.hover.players.addMany":
+      "Add several players to this tournament at once",
+    "admin.hover.dialog.players.add": "Add these players to the tournament",
     "admin.hover.players.edit": "Change this player's details",
     "admin.hover.players.up": "Move this player up the list",
     "admin.hover.players.down": "Move this player down the list",
@@ -940,6 +943,7 @@ export const english: Language = {
       "The winner of this match has already played their next game, so who won it cannot change.",
     "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
     "admin.players.add": "Add Player",
+    "admin.players.addMany": "Add Players",
     "admin.players.none": "No players",
     "admin.players.edit": "Edit",
     "admin.players.archive": "Archive",
@@ -971,6 +975,23 @@ export const english: Language = {
     "admin.player.add": "Add",
     "admin.player.save": "Save",
     "admin.player.added": "{name} was added.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Add Players",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Help",
+    "admin.players.many": "Players",
+    "admin.players.line": "Line {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Write the names of the fields on the first line.",
+    "AddPlayers.NameMissing": "The fields must include Name.",
+    "AddPlayers.FieldNotAllowed":
+      "A field can be Name, Representing, Flag, Handicap or WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "A field can be named only once.",
+    "AddPlayers.PlayersMissing": "Write a player on each line after the first.",
+    "AddPlayers.TooManyPlayers":
+      "A list can hold at most 500 players. Add the rest in another list.",
+    "AddPlayers.ValuesMismatched":
+      "Each player needs a value, or nothing, for every field named on the first line.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "This player cannot be kept as they are.",
     "Tournament.PlayerNameTaken":

@@ -736,6 +736,10 @@ export const maori: Language = {
     "admin.hover.tournaments.restore":
       "Whakahoki mai i tēnei whakataetae kua whakatāpuia",
     "admin.hover.players.add": "Tāpiri i tētahi kaitākaro ki tēnei whakataetae",
+    "admin.hover.players.addMany":
+      "Tāpiri i ētahi kaitākaro maha ki tēnei whakataetae i te wā kotahi",
+    "admin.hover.dialog.players.add":
+      "Tāpiri i ēnei kaitākaro ki te whakataetae",
     "admin.hover.players.edit":
       "Whakarerekē i ngā taipitopito o tēnei kaitākaro",
     "admin.hover.players.up": "Nekehia tēnei kaitākaro ki runga i te rārangi",
@@ -939,6 +943,7 @@ export const maori: Language = {
     "CompetitionPlayer.Withdrawn":
       "Kāore te kaitākaro kua unuhia e tākaro anō.",
     "admin.players.add": "Tāpiri kaitākaro",
+    "admin.players.addMany": "Tāpiri kaitākaro maha",
     "admin.players.none": "Kāore he kaitākaro",
     "admin.players.edit": "Whakatika",
     "admin.players.archive": "Whakatāpui",
@@ -967,6 +972,25 @@ export const maori: Language = {
     "admin.player.add": "Tāpiri",
     "admin.player.save": "Penapena",
     "admin.player.added": "Kua tāpiritia a {name}.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Tāpiri kaitākaro maha",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Āwhina",
+    "admin.players.many": "Ngā kaitākaro",
+    "admin.players.line": "Rārangi {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Tuhia ngā ingoa o ngā āpure i te rārangi tuatahi.",
+    "AddPlayers.NameMissing": "Me whai Name ngā āpure.",
+    "AddPlayers.FieldNotAllowed":
+      "Ko ngā āpure ka taea ko Name, Representing, Flag, Handicap, WorldRankingPlayerName rānei.",
+    "AddPlayers.FieldRepeated":
+      "Kotahi anake te wā e taea ai te whakaingoa i tētahi āpure.",
+    "AddPlayers.PlayersMissing":
+      "Tuhia tētahi kaitākaro ki ia rārangi i muri i te tuatahi.",
+    "AddPlayers.TooManyPlayers":
+      "Neke atu i te 500 kaitākaro e kore e taea te pupuri i tētahi rārangi. Tāpirihia ngā toenga ki tētahi atu rārangi.",
+    "AddPlayers.ValuesMismatched":
+      "Me whai uara tēnā kaitākaro, tēnā kaitākaro, kāore rānei, mō ia āpure kua whakaingoatia i te rārangi tuatahi.",
     "admin.player.otherwise": "Kāore e taea te pupuri i tēnei kaitākaro pēnei.",
     "Tournament.PlayerNameTaken":
       "Kei tētahi atu kaitākaro o tēnei whakataetae kua whai i taua ingoa.",
