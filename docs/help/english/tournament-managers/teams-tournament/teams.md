@@ -4,7 +4,7 @@ The **Teams** tab of a tournament's page is where its teams are added, corrected
 
 ![The Teams tab, with three teams and one archived](images/teams-tab.png)
 
-## Adding a team
+## Adding a team {#adding-a-team}
 
 Press **Add Team**, above the list. A dialog opens over the page.
 
@@ -20,7 +20,7 @@ Press **Add**. The team is added, the dialog says so, and its fields are emptied
 
 ![The dialog after a team is added](images/add-team-dialog-added.png)
 
-## Correcting a team
+## Correcting a team {#correcting-a-team}
 
 Press a team's **Edit** to open the same dialog on that team, titled Edit Team. Change what is wrong and press **Save**. A team whose short name changes is called by the new one everywhere, so its tests are renamed with it.
 

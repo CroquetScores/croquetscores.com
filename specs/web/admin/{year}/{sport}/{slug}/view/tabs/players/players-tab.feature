@@ -759,3 +759,16 @@ Feature: The players tab of a tournament's page
       And the reader has signed in as "ranker@example.com" with the password "another horse battery staple"
       When the players of "Spring Open" are open
       Then the player "Sam Someone" does not offer "Restore"
+
+  Rule: A help icon leads to the help for archiving a player
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The question asked before archiving a player leads to the section on archiving a player
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Spring Open" are open
+      When "Archive" is pressed on the player "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/players#archiving-a-player"

@@ -12,7 +12,7 @@ Sopra l'elenco, un menu a discesa propone ogni giocatore del torneo che non è g
 
 I giocatori archiviati del torneo non vengono proposti.
 
-## I bye in un'eliminazione diretta
+## I bye in un'eliminazione diretta {#byes-in-a-knockout}
 
 Un'eliminazione diretta si gioca solo quando ogni posto del suo tabellone è occupato, e i posti che i suoi giocatori lasciano liberi vengono riempiti con dei bye. Quindi in un'eliminazione diretta il menu propone **Bye** per primo, prima dei giocatori, e continua a proporlo per quanti bye si aggiungano, perché un tabellone può averne bisogno di parecchi.
 
@@ -28,7 +28,7 @@ L'ordine dei giocatori di un'eliminazione diretta è il suo tabellone. I primi d
 
 I giocatori sono elencati nell'ordine della competizione, che è l'ordine in cui si sorteggia un'eliminazione diretta e l'ordine in cui un girone è elencato sulla sua pagina pubblica. **Su** e **Giù** spostano un giocatore di un posto.
 
-## Riporto
+## Riporto {#carry-forward}
 
 **Riporta avanti** dice ciò che un giocatore porta in una competizione da un gioco che questa non ha segnato: i risultati di una fase precedente, o di partite giocate prima che la competizione fosse segnata qui. Viene offerto in un girone e in un sistema svizzero, che hanno una classifica in cui contarlo, e non in un'eliminazione diretta.
 
@@ -36,7 +36,7 @@ I giocatori sono elencati nell'ordine della competizione, che è l'ordine in cui
 
 La finestra chiede sei conteggi: incontri vinti e persi, partite vinte e perse, e archetti fatti e subiti. Ogni conteggio è facoltativo. Un conteggio lasciato vuoto non riporta nulla, il che non è lo stesso che riportare 0, così chi lo cambierà più tardi lo vede com'è stato lasciato. Premi **Salva** per conservare tutti e sei.
 
-## Rimuovere un giocatore
+## Rimuovere un giocatore {#removing-a-player}
 
 **Rimuovi** toglie un giocatore inserito per errore. Resta uno dei giocatori del torneo, e viene proposto di nuovo nel menu, ma del suo posto nella competizione non si conserva nulla, quindi Rimuovi chiede prima.
 
@@ -44,7 +44,7 @@ La finestra chiede sei conteggi: incontri vinti e persi, partite vinte e perse, 
 
 Un giocatore che ha una qualsiasi partita in uso nella competizione non può essere rimosso, perché le partite risulterebbero giocate contro qualcuno che non c'è più, e non gli viene offerto Rimuovi. Un giocatore le cui sole partite sono archiviate può esserlo, e i suoi punteggi archiviati se ne vanno con lui.
 
-## Ritirare un giocatore
+## Ritirare un giocatore {#withdrawing-a-player}
 
 **Ritira** è per un giocatore che non giocherà più nella competizione. Resta dentro, con le partite che ha giocato, ed è elencato sotto **Giocatori ritirati** dopo quelli che giocano ancora. In un'eliminazione diretta, il suo avversario in un incontro non ancora deciso passa il turno.
 

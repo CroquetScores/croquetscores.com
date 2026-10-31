@@ -8,7 +8,7 @@ La página de un test se abre desde su nombre en la pestaña Tests, o desde la b
 
 Los resultados se disponen por equipo y no por quién ganó, en una tabla encabezada por el nombre corto del primer equipo, "v" y el del segundo. Cada resultado es una fila: el jugador del primer equipo, después ambos puntos con los del primer equipo primero, como "26tp - 14", después el jugador del segundo equipo, sea cual sea de los dos el que ganó. Los resultados archivados se disponen igual debajo.
 
-## Introducir un resultado
+## Introducir un resultado {#entering-a-score}
 
 Pulsa **Añadir resultado**, encima de la lista. El diálogo se lee como se dice un resultado en voz alta: el ganador y sus puntos, después "ganó a", después el perdedor y sus puntos.
 
@@ -28,7 +28,7 @@ Dos jugadores que se enfrentan juegan un partido al mejor de lo que diga el test
 
 Un partido empieza cuando sus dos jugadores tienen una partida en uso. Un test no empieza más partidos de los que tiene previstos: una vez que han empezado tantos, una partida entre dos jugadores que no se han enfrentado se rechaza, mientras que otra partida de un partido ya empezado se acepta. Si el test va a tener más partidos, cámbialo en la pestaña Tests para que los prevea.
 
-## Corregir un resultado
+## Corregir un resultado {#correcting-a-score}
 
 **Editar** abre el mismo diálogo sobre ese resultado, titulado Editar resultado, con sus jugadores elegidos y sus puntos tal como se escribieron. Sus jugadores pueden cambiarse igual que sus puntos, elegidos como al añadir. Pulsa **Guardar** para guardar la corrección y cerrar el diálogo. Una corrección mantiene el desenlace: una partida ganada sigue ganada, y una empatada sigue empatada. Una partida cuyo desenlace estaba mal se archiva y se introduce de nuevo.
 

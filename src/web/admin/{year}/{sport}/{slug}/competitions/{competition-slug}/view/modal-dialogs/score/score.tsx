@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
+import {
+  standardHelp,
+  teamsHelp,
+} from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import "./score.css";
@@ -415,6 +419,10 @@ export const ScoreDialog = ({
 
   return (
     <ModalDialog
+      help={(inATest ? teamsHelp : standardHelp)(
+        "scores",
+        correcting === undefined ? "entering-a-score" : "correcting-a-score",
+      )}
       title={say(
         correcting === undefined
           ? "admin.score.title"

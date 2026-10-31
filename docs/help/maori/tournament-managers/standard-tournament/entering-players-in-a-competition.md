@@ -12,7 +12,7 @@ I runga i te rārangi, ka tuku tētahi rārangi taka iho i ngā kaitākaro katoa
 
 Kāore ngā kaitākaro kua whakatāpuia o te whakataetae e tukuna.
 
-## Ngā Bye i tētahi whakawātea
+## Ngā Bye i tētahi whakawātea {#byes-in-a-knockout}
 
 Ka tākarohia anake tētahi whakawātea ina oti te whakakī i ngā tūnga katoa o tōna tūtohi, ā, ko ngā tūnga e toe ana i ōna kaitākaro ka whakakīia ki ngā Bye. Nō reira i tētahi whakawātea ka tuku te rārangi taka iho i a **Bye** i te tuatahi, i mua i ngā kaitākaro, ā, ka tuku tonu ahakoa te maha o ngā Bye ka tāpiria, nā te mea tērā pea he maha ngā mea e hiahiatia ana e tētahi tūtohi.
 
@@ -28,7 +28,7 @@ Ko te raupapa o ngā kaitākaro o tētahi whakawātea tōna tūtohi. Ka tūtaki 
 
 Ka rārangitia ngā kaitākaro i te raupapa o te tauwhāinga, ko te raupapa tērā e tūtohitia ai tētahi whakawātea, e rārangitia ai hoki tētahi poraka i tōna whārangi tūmatanui. Ka nuku **Whakarunga** me **Whakararo** i tētahi kaitākaro kotahi te tūnga.
 
-## Te kawe whakamua
+## Te kawe whakamua {#carry-forward}
 
 Ka kī te **Kawea whakamua** i te mea e kawe mai ana tētahi kaitākaro ki tētahi tauwhāinga mai i te tākaro kāore i kautehia e koe: ngā tākohu o tētahi wāhanga o mua, o ngā kēmu rānei i tākarohia i mua i te kautenga o te tauwhāinga ki konei. Ka tukuna i roto i te poraka me te Swiss, he tūnga tō rāua e kaute ai, ā, kāore i te whakawātea.
 
@@ -36,7 +36,7 @@ Ka kī te **Kawea whakamua** i te mea e kawe mai ana tētahi kaitākaro ki tēta
 
 Ka pātai te pouaka kōrero mō ngā tatau e ono: ngā tukinga i toa me te hinga, ngā kēmu i toa me te hinga, me ngā hupa mō me ki. He mea kōwhiri ia tatau. Ko te tatau ka waiho hei kau kāore he mea e kawea whakamua, ehara tērā i te ōrite ki te kawe whakamua i te 0, kia kite ai te tangata ka whakarerekē i muri mai i te āhua i waihotia ai. Pēhia **Penapena** hei penapena i te ono katoa.
 
-## Te tango i tētahi kaitākaro
+## Te tango i tētahi kaitākaro {#removing-a-player}
 
 Ka tango **Tango** i tētahi kaitākaro i whakaurua hētia. Ka noho tonu ia hei kaitākaro o te whakataetae, ā, ka tukuna anō e te rārangi taka iho, engari kāore he mea e penapenahia mō tōna tūnga i te tauwhāinga, nō reira ka pātai a Tango i te tuatahi.
 
@@ -44,7 +44,7 @@ Ka tango **Tango** i tētahi kaitākaro i whakaurua hētia. Ka noho tonu ia hei 
 
 Kāore e taea te tango i tētahi kaitākaro he kēmu ōna e whakamahia ana i te tauwhāinga, nā te mea ka tū aua kēmu ki tētahi kua kore nei i reira, ā, kāore a Tango e tukuna ki a ia. Ka taea te tango i tētahi kaitākaro he whakatāpuia anake ōna kēmu, ā, ka haere tahi ōna tākohu kua whakatāpuia i a ia.
 
-## Te unu i tētahi kaitākaro
+## Te unu i tētahi kaitākaro {#withdrawing-a-player}
 
 Mō te kaitākaro e kore e tākaro anō i te tauwhāinga te **Unuhia**. Ka noho tonu ia ki roto, me ngā kēmu i tākarohia e ia, ā, ka rārangitia i raro i **Ngā kaitākaro kua unuhia** i muri i ērā e tākaro tonu ana. I tētahi whakawātea, ka haere tonu tana hoa tauwhāinga i tētahi tukinga kāore anō kia whakatauhia.
 

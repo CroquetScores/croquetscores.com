@@ -2,7 +2,7 @@
 
 Un tournoi a des organisateurs, qui peuvent faire tout ce qui peut lui être fait, et peut avoir des marqueurs, qui saisissent ses résultats et rien d’autre. La personne qui a créé le tournoi est son premier organisateur.
 
-## Organisateurs
+## Organisateurs {#managers}
 
 L’onglet **Organisateurs** liste ceux qui organisent le tournoi, dans l’ordre où ils ont été nommés, votre propre nom marqué comme le vôtre. C’est là qu’un tournoi se partage, ou se transmet.
 
@@ -16,7 +16,7 @@ Quelqu’un devient organisateur par son adresse e-mail. Tapez-la dans le champ 
 
 Vous pouvez vous retirer vous-même. La question dit alors ce que cela signifie : vous perdez votre propre accès au tournoi, et personne sur la page ne peut l’annuler pour vous. Un autre organisateur peut vous redonner ce rôle.
 
-## Marqueurs
+## Marqueurs {#scorers}
 
 L’onglet **Marqueurs** est l’onglet Organisateurs des marqueurs, et fonctionne de la même façon : une adresse e-mail et **Ajouter un marqueur** au-dessus de la liste, et **Retirer** sur chacun.
 

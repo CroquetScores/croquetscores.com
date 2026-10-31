@@ -12,7 +12,7 @@ Boven de lijst biedt een keuzelijst elke speler van het toernooi aan die nog nie
 
 Gearchiveerde spelers van het toernooi worden niet aangeboden.
 
-## Vrijlotingen in een knock-out
+## Vrijlotingen in een knock-out {#byes-in-a-knockout}
 
 Een knock-out wordt pas gespeeld wanneer elke plaats in de loting is gevuld, en de plaatsen die de spelers overlaten, worden gevuld met byes. Daarom biedt de keuzelijst in een knock-out eerst **Bye** aan, vóór de spelers, en blijft dat aanbieden hoeveel byes er ook worden toegevoegd, omdat een loting er meerdere nodig kan hebben.
 
@@ -28,7 +28,7 @@ De volgorde van de spelers in een knock-out is de loting. De eerste twee plaatse
 
 De spelers staan in de volgorde van de competitie, wat de volgorde is waarin een knock-out wordt geloot en waarin een poule op haar openbare pagina wordt getoond. **Omhoog** en **Omlaag** verplaatsen een speler één plaats.
 
-## Meenemen
+## Meenemen {#carry-forward}
 
 **Meenemen** zegt wat een speler meeneemt in een competitie uit spel dat daar niet is gescoord: de uitslagen van een eerdere fase, of van partijen die zijn gespeeld voordat de competitie hier werd bijgehouden. Het wordt aangeboden in een poule en een Zwitsers systeem, die een stand hebben waarin het kan meetellen, en niet in een knock-out.
 
@@ -36,7 +36,7 @@ De spelers staan in de volgorde van de competitie, wat de volgorde is waarin een
 
 Het dialoogvenster vraagt zes aantallen: gewonnen en verloren wedstrijden, gewonnen en verloren partijen, en poortjes voor en tegen. Elk aantal is optioneel. Een leeg gelaten aantal neemt niets mee, wat niet hetzelfde is als 0 meenemen, zodat wie het later wijzigt het ziet zoals het is achtergelaten. Druk op **Opslaan** om alle zes te bewaren.
 
-## Een speler verwijderen
+## Een speler verwijderen {#removing-a-player}
 
 **Verwijderen** haalt een per ongeluk geplaatste speler eruit. Die blijft een van de spelers van het toernooi, en wordt weer aangeboden in de keuzelijst, maar er wordt niets bewaard van zijn plaats in de competitie, dus Verwijderen vraagt eerst.
 
@@ -44,7 +44,7 @@ Het dialoogvenster vraagt zes aantallen: gewonnen en verloren wedstrijden, gewon
 
 Een speler die een partij in gebruik heeft in de competitie, kan niet worden verwijderd, omdat de partijen dan tegen iemand zouden zijn die er niet meer is, en krijgt geen Verwijderen. Een speler van wie alle partijen gearchiveerd zijn, kan wel worden verwijderd, en zijn gearchiveerde scores gaan mee.
 
-## Een speler terugtrekken
+## Een speler terugtrekken {#withdrawing-a-player}
 
 **Terugtrekken** is voor een speler die niets meer van de competitie zal spelen. Die blijft erin, met de partijen die die heeft gespeeld, en staat onder **Teruggetrokken spelers** na de spelers die nog spelen. In een knock-out gaat zijn tegenstander in een nog niet besliste wedstrijd door.
 

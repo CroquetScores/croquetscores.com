@@ -24,7 +24,7 @@ Naciśnij **Dodaj**. Notatka zostaje zachowana, lista wraca z nią na górze, a 
 
 Naciśnij tytuł notatki albo jej **Edytuj**, by otworzyć panel na tej notatce. Naciśnij **Zapisz**, by zachować zmianę. Notatka edytowana od czasu, gdy czytelnik ją przeczytał, jest dla niego oznaczana ponownie.
 
-## Usuwanie notatki
+## Usuwanie notatki {#deleting-a-note}
 
 Notatkę, która już nie obowiązuje, usuwa się. Usunięta notatka znika na dobre, więc **Usuń** najpierw pyta.
 

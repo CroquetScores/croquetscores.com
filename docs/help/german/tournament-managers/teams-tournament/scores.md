@@ -8,7 +8,7 @@ Die Seite eines Tests wird über seinen Namen auf dem Reiter Tests oder über di
 
 Die Ergebnisse sind nach Mannschaft angeordnet und nicht danach, wer gewonnen hat, in einer Tabelle, deren Überschrift der Kurzname der ersten Mannschaft, „v“ und der der zweiten ist. Jedes Ergebnis ist eine Zeile: der Spieler der ersten Mannschaft, dann beide Punktzahlen mit der der ersten Mannschaft zuerst, etwa „26tp - 14“, dann der Spieler der zweiten Mannschaft, wer von ihnen auch gewonnen hat. Die archivierten Ergebnisse sind darunter genauso angeordnet.
 
-## Ein Ergebnis eingeben
+## Ein Ergebnis eingeben {#entering-a-score}
 
 Drücken Sie **Ergebnis hinzufügen** über der Liste. Der Dialog liest sich, wie ein Ergebnis gesagt wird: der Sieger und seine Punkte, dann „schlug“, dann der Verlierer und seine Punkte.
 
@@ -28,7 +28,7 @@ Zwei Spieler, die aufeinandertreffen, spielen eine Begegnung über das Best of d
 
 Eine Begegnung hat begonnen, wenn ihre beiden Spieler ein Spiel in Gebrauch haben. Ein Test beginnt nicht mehr Begegnungen, als er erwartet: Sobald so viele begonnen haben, wird ein Spiel zwischen zwei Spielern, die sich noch nicht getroffen haben, abgelehnt, während ein weiteres Spiel einer schon begonnenen Begegnung angenommen wird. Soll der Test mehr Begegnungen haben, ändern Sie ihn auf dem Reiter Tests, sodass er sie erwartet.
 
-## Ein Ergebnis korrigieren
+## Ein Ergebnis korrigieren {#correcting-a-score}
 
 **Bearbeiten** öffnet denselben Dialog für dieses Ergebnis, mit dem Titel Ergebnis bearbeiten, mit seinen Spielern gewählt und seinen Punkten, wie sie eingegeben wurden. Neben seinen Punkten lassen sich auch seine Spieler ändern, gewählt wie beim Hinzufügen. Drücken Sie **Speichern**, um die Korrektur zu speichern und den Dialog zu schließen. Eine Korrektur behält das Ergebnis bei: Ein gewonnenes Spiel bleibt gewonnen, und ein unentschiedenes bleibt unentschieden. Ein Spiel, dessen Ergebnis falsch war, wird archiviert und neu eingegeben.
 

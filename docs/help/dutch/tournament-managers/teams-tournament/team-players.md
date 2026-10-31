@@ -8,7 +8,7 @@ De donkergroene balk op de pagina van een team leidt naar het toernooi en naar e
 
 Een speler in een team hoort alleen bij dat team, vertegenwoordigt het team, en voert de vlag van het team in plaats van een eigen vlag. Dezelfde persoon die voor twee teams speelt, of in twee toernooien, is in elk ervan een speler.
 
-## Een speler toevoegen
+## Een speler toevoegen {#adding-a-player}
 
 Druk op **Speler toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina.
 
@@ -22,7 +22,7 @@ Een speler heet nooit "Bye": een naam waarvan het eerste woord het Engelse "bye"
 
 Druk op **Toevoegen**. De speler wordt toegevoegd, het dialoogvenster zegt dat, en de velden worden leeggemaakt voor de volgende, met de cursor terug in de naam. Voeg zo het hele team toe, en druk dan op **Annuleren** om het dialoogvenster te sluiten.
 
-## Een speler corrigeren
+## Een speler corrigeren {#correcting-a-player}
 
 Druk op de naam van een speler, of op **Bewerken**, om hetzelfde dialoogvenster op die speler te openen, met de titel Speler bewerken. Druk op **Opslaan** om de wijziging te bewaren. Een speler van wie de naam wordt gecorrigeerd, houdt de naam op de wereldranglijst die die had, behalve in Amerikaans croquet met 6 poortjes, waar de naam van een speler op de wereldranglijst altijd zijn naam is.
 

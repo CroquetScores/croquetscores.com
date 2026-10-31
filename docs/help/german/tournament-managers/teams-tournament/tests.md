@@ -12,7 +12,7 @@ Ein Test findet zwischen zwei Mannschaften in Gebrauch statt; solange das Turnie
 
 ![Der Reiter Tests, bevor es zwei Mannschaften gibt](images/tests-tab-two-teams-needed.png)
 
-## Einen Test hinzufügen
+## Einen Test hinzufügen {#adding-a-test}
 
 Drücken Sie **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und liest sich in der Reihenfolge, in der ein Test gesagt wird.
 
@@ -34,7 +34,7 @@ Drücken Sie **Hinzufügen**. Der Test wird hinzugefügt, der Dialog sagt mit se
 
 ![Der Dialog, nachdem ein Test hinzugefügt wurde](images/add-test-dialog-added.png)
 
-## Einen Test ändern
+## Einen Test ändern {#changing-a-test}
 
 **Bearbeiten** öffnet denselben Dialog für den Test, mit dem Titel Test bearbeiten, so vorbelegt, wie der Test ist. Drücken Sie **Speichern**, um die Änderung zu speichern.
 

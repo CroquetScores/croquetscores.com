@@ -24,7 +24,7 @@ Pēhia **Tāpiri**. Ka penapenahia te tuhinga, ka hoki mai te rārangi me ia kei
 
 Pēhia te taitara o tētahi tuhinga, tōna **Whakatika** rānei, hei whakatuwhera i te papa ki taua tuhinga. Pēhia **Penapena** hei penapena i te huringa. Ka tohua anō mō te kaipānui tētahi tuhinga kua whakatikaina i muri i tōna pānuitanga e ia.
 
-## Te muku i tētahi tuhinga
+## Te muku i tētahi tuhinga {#deleting-a-note}
 
 Ka mukua tētahi tuhinga kua kore e whai pānga. Ka ngaro tonu atu te tuhinga kua mukua, nō reira ka pātai a **Muku** i te tuatahi.
 

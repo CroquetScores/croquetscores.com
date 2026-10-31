@@ -12,7 +12,7 @@ Mae prawf rhwng dau dîm sydd yn eu lle, felly tra bo gan y twrnamaint lai na da
 
 ![Y tab Profion cyn bod dau dîm](images/tests-tab-two-teams-needed.png)
 
-## Ychwanegu prawf
+## Ychwanegu prawf {#adding-a-test}
 
 Pwyswch **Ychwanegu prawf**, uwchben y rhestr. Mae deialog yn agor dros y dudalen, yn darllen yn y drefn y dywedir prawf ar lafar.
 
@@ -34,7 +34,7 @@ Pwyswch **Ychwanegu**. Caiff y prawf ei ychwanegu, mae'r ddeialog yn dweud pa un
 
 ![Y ddeialog ar ôl i prawf gael ei ychwanegu](images/add-test-dialog-added.png)
 
-## Newid prawf
+## Newid prawf {#changing-a-test}
 
 Mae **Golygu** yn agor yr un ddeialog ar y prawf, dan y teitl Golygu prawf, wedi'i dechrau fel y mae'r prawf. Pwyswch **Cadw** i gadw'r newid.
 

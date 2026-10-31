@@ -24,7 +24,7 @@ Pwyswch **Ychwanegu**. Cedwir y nodyn, mae'r rhestr yn dod yn ôl ag ef ar y bri
 
 Pwyswch deitl nodyn, neu ei **Golygu**, i agor y panel ar y nodyn hwnnw. Pwyswch **Cadw** i gadw'r newid. Caiff nodyn a olygwyd ers i ddarllenydd ei ddarllen ei farcio iddo eto.
 
-## Dileu nodyn
+## Dileu nodyn {#deleting-a-note}
 
 Caiff nodyn nad yw'n berthnasol mwyach ei ddileu. Mae nodyn a ddilëir wedi mynd am byth, felly mae **Dileu** yn gofyn yn gyntaf.
 

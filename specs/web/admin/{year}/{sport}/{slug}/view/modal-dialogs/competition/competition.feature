@@ -974,3 +974,18 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
     Scenario: The buttons are stacked, the one that adds first
       When "Add Competition" is pressed
       Then "Add" is above "Cancel"
+
+  Rule: A help icon leads to the help for adding or changing a competition
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a competition leads to the section on adding a competition
+      When "Add Competition" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/competitions#adding-a-competition"
+
+    Scenario: The dialog to change a competition leads to the section on changing a competition
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/competitions#changing-a-competition"

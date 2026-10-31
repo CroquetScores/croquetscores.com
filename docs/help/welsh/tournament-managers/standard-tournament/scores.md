@@ -4,7 +4,7 @@ Tab **Sgorau** tudalen cystadleuaeth yw lle caiff ei gemau eu rhoi i mewn, eu cy
 
 ![Tab Sgorau bloc, â chanlyniadau yn eu lle, canlyniad a dynnwyd yn ôl ac un a archifwyd](images/scores-tab.png)
 
-## Rhoi canlyniad i mewn
+## Rhoi canlyniad i mewn {#entering-a-score}
 
 Pwyswch **Ychwanegu sgôr**, uwchben y rhestr. Mae'r ddeialog yn darllen fel y dywedir canlyniad ar lafar: yr enillydd a'i sgôr, yna "a gurodd", yna'r collwr a'i sgôr.
 
@@ -22,7 +22,7 @@ Pwyswch **Ychwanegu gêm**. Caiff y gêm ei hychwanegu, mae'r ddeialog yn dweud 
 
 Dywedir beth a wrthodir o dan y maes y mae'n ymwneud ag ef: enillydd neu gollwr heb ei ddewis, sgôr heb ei theipio neu nad yw'n dechrau â digid, yr un chwaraewr fel y ddau, sgôr collwr wedi'i marcio fel un a enillwyd, neu sgôr enillydd y tu ôl i sgôr y collwr. Mewn cystadleuaeth cnoc-owt, gwrthodir dau chwaraewr nad ydynt wedi'u tynnu i gwrdd uwchben y meysydd.
 
-## Rhaid llenwi siart cystadleuaeth cnoc-owt yn gyntaf
+## Rhaid llenwi siart cystadleuaeth cnoc-owt yn gyntaf {#draw-filled-first}
 
 Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd gan bob lle yn ei siart chwaraewr neu bye. Hyd hynny, mae Ychwanegu canlyniad yn egluro pam na ellir ychwanegu canlyniadau yn hytrach nag agor y ddeialog.
 
@@ -32,7 +32,7 @@ Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd gan bob lle yn ei siart 
 
 Rhestrir y canlyniadau sydd yn eu lle yn y drefn y rhoddwyd hwy i mewn, yr hynaf yn gyntaf, fel bod y rhestr yn darllen fel y chwaraewyd y gystadleuaeth. Mae pob un yn dweud yr enillydd a'i sgôr, yna'r collwr a'i sgôr yntau, ac yn cynnig **Golygu** ac **Archifo**.
 
-## Cywiro canlyniad
+## Cywiro canlyniad {#correcting-a-score}
 
 Mae **Golygu** yn agor yr un ddeialog ar y canlyniad hwnnw, dan y teitl Golygu canlyniad, â'i chwaraewyr wedi'u dewis a'i sgorau fel y'u teipiwyd. Pwyswch **Cadw** i gadw'r cywiriad a chau'r ddeialog.
 

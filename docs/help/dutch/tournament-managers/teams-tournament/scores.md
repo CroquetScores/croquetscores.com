@@ -8,7 +8,7 @@ De pagina van een test open je via haar naam op het tabblad Tests, of via de don
 
 De scores zijn ingedeeld per team in plaats van naar wie heeft gewonnen, in een tabel met als kop de korte naam van het eerste team, "v", en die van het tweede. Elke score is een rij: de speler van het eerste team, dan beide scores met die van het eerste team eerst, als "26tp - 14", dan de speler van het tweede team, wie van hen ook heeft gewonnen. De gearchiveerde scores staan daaronder op dezelfde manier ingedeeld.
 
-## Een score invoeren
+## Een score invoeren {#entering-a-score}
 
 Druk op **Score toevoegen**, boven de lijst. Het dialoogvenster leest zoals een uitslag wordt uitgesproken: de winnaar en zijn score, dan "versloeg", dan de verliezer en zijn score.
 
@@ -28,7 +28,7 @@ Twee spelers die elkaar treffen, spelen een wedstrijd van de beste-van van de te
 
 Een wedstrijd is begonnen wanneer haar twee spelers een partij in gebruik hebben. Een test begint niet meer wedstrijden dan ze naar verwachting heeft: zodra er zoveel zijn begonnen, wordt een partij tussen twee spelers die elkaar nog niet hebben getroffen geweigerd, terwijl een volgende partij van een al begonnen wedstrijd wordt geaccepteerd. Waar de test meer wedstrijden moet hebben, wijzig je dat op het tabblad Tests zodat ze die verwacht.
 
-## Een score corrigeren
+## Een score corrigeren {#correcting-a-score}
 
 **Bewerken** opent hetzelfde dialoogvenster op die score, met de titel Score bewerken, met de spelers gekozen en de scores zoals ze zijn getypt. Ook de spelers kunnen worden gewijzigd, niet alleen de scores, gekozen zoals bij het toevoegen. Druk op **Opslaan** om de correctie te bewaren en het dialoogvenster te sluiten. Een correctie behoudt de uitslag: een gewonnen partij blijft gewonnen, en een gelijkgespeelde partij blijft gelijk. Een partij waarvan de uitslag fout was, archiveer je en voer je opnieuw in.
 

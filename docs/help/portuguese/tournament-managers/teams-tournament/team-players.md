@@ -8,7 +8,7 @@ A barra verde-escura na página de uma equipe leva ao torneio e a cada equipe em
 
 Um jogador de uma equipe pertence só a essa equipe, representa a equipe e leva a bandeira da equipe, e não uma própria. A mesma pessoa jogando por duas equipes, ou em dois torneios, é um jogador em cada uma.
 
-## Adicionar um jogador
+## Adicionar um jogador {#adding-a-player}
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
@@ -22,7 +22,7 @@ Um jogador nunca se chama "Bye": um nome cuja primeira palavra é a palavra ingl
 
 Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus campos são esvaziados para o próximo, com o cursor de volta no nome. Adicione a equipe inteira desse jeito e depois pressione **Cancelar** para fechar o diálogo.
 
-## Corrigir um jogador
+## Corrigir um jogador {#correcting-a-player}
 
 Pressione o nome de um jogador, ou o seu **Editar**, para abrir o mesmo diálogo nesse jogador, com o título Editar jogador. Pressione **Salvar** para guardar a alteração. Um jogador cujo nome é corrigido mantém o nome no ranking mundial que tinha, exceto no Croquet Americano de 6 Arcos, em que o nome de um jogador no ranking mundial é sempre o seu nome.
 

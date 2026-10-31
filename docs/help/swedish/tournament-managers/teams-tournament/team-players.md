@@ -8,7 +8,7 @@ Det mörkgröna fältet på ett lags sida leder till turneringen och till varje 
 
 En spelare i ett lag hör till det laget ensamt, representerar laget och för lagets flagga i stället för en egen. Samma person som spelar för två lag, eller i två turneringar, är en spelare i vart och ett.
 
-## Lägga till en spelare
+## Lägga till en spelare {#adding-a-player}
 
 Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över sidan.
 
@@ -22,7 +22,7 @@ En spelare heter aldrig "Bye": ett namn vars första ord är det engelska "bye" 
 
 Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fälten töms för nästa, med markören tillbaka i namnet. Lägg till hela laget på det sättet, och tryck sedan på **Avbryt** för att stänga dialogrutan.
 
-## Rätta en spelare
+## Rätta en spelare {#correcting-a-player}
 
 Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Tryck på **Spara** för att spara ändringen. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, utom i amerikansk 6-bågars croquet, där en spelares namn i världsrankingen alltid är spelarens namn.
 

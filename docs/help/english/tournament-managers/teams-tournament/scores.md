@@ -8,7 +8,7 @@ A test's page is opened from its name on the Tests tab, or from the dark green b
 
 The scores are set out by team rather than by who won, in a table headed by the first team's short name, "v", and the second team's. Each score is a row: the first team's player, then both scores with the first team's first, as "26tp - 14", then the second team's player, whoever of them won. The archived scores are set out the same way beneath.
 
-## Entering a score
+## Entering a score {#entering-a-score}
 
 Press **Add Score**, above the list. The dialog reads as a result is said aloud: the winner and their score, then "beat", then the loser and their score.
 
@@ -28,7 +28,7 @@ Two players who meet play a match of the test's best-of. The games between them 
 
 A match is started when its two players have a game in use. A test starts no more matches than it is expected to have: once as many have started, a game between two players who have not met is refused, while another game of a match already started is accepted. Where the test is to have more matches, change it on the Tests tab to expect them.
 
-## Correcting a score
+## Correcting a score {#correcting-a-score}
 
 **Edit** opens the same dialog on that score, titled Edit Score, with its players chosen and its scores as they were typed. Its players can be changed as well as its scores, chosen as when adding. Press **Save** to keep the correction and close the dialog. A correction keeps the result: a game won stays won, and a drawn game stays drawn. A game whose result was wrong is archived and entered again.
 

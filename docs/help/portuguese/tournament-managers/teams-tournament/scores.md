@@ -8,7 +8,7 @@ A página de um teste é aberta pelo seu nome na aba Testes, ou pela barra verde
 
 Os resultados são dispostos por equipe, e não por quem ganhou, em uma tabela encabeçada pelo nome abreviado da primeira equipe, "x" e o da segunda. Cada resultado é uma linha: o jogador da primeira equipe, depois os dois resultados com o da primeira equipe primeiro, como "26tp - 14", depois o jogador da segunda equipe, seja qual deles tenha ganhado. Os resultados arquivados são dispostos do mesmo jeito abaixo.
 
-## Inserir um resultado
+## Inserir um resultado {#entering-a-score}
 
 Pressione **Adicionar resultado**, acima da lista. O diálogo se lê como um resultado se diz em voz alta: o vencedor e o seu resultado, depois "venceu", depois o perdedor e o seu resultado.
 
@@ -28,7 +28,7 @@ Dois jogadores que se enfrentam disputam uma partida do melhor de do teste. Os j
 
 Uma partida começa quando os seus dois jogadores têm um jogo em uso. Um teste não começa mais partidas do que deve ter: depois que tantas começaram, um jogo entre dois jogadores que não se enfrentaram é recusado, enquanto outro jogo de uma partida já começada é aceito. Quando o teste deve ter mais partidas, altere-o na aba Testes para prevê-las.
 
-## Corrigir um resultado
+## Corrigir um resultado {#correcting-a-score}
 
 **Editar** abre o mesmo diálogo nesse resultado, com o título Editar resultado, com os seus jogadores escolhidos e os seus resultados como foram digitados. Os seus jogadores podem ser alterados, além dos resultados, escolhidos como ao adicionar. Pressione **Salvar** para guardar a correção e fechar o diálogo. Uma correção mantém o resultado: um jogo ganho continua ganho, e um jogo empatado continua empatado. Um jogo cujo resultado estava errado é arquivado e inserido de novo.
 

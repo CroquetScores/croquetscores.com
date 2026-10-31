@@ -12,7 +12,7 @@ Test rozgrywają dwie drużyny w użyciu, więc gdy turniej ma mniej niż dwie, 
 
 ![Karta Testy, zanim są dwie drużyny](images/tests-tab-two-teams-needed.png)
 
-## Dodawanie testu
+## Dodawanie testu {#adding-a-test}
 
 Naciśnij **Dodaj test**, nad listą. Nad stroną otwiera się okno dialogowe, które czyta się w kolejności, w jakiej mówi się o teście na głos.
 
@@ -34,7 +34,7 @@ Naciśnij **Dodaj**. Test zostaje dodany, okno mówi który, podając jego nazw�
 
 ![Okno po dodaniu testu](images/add-test-dialog-added.png)
 
-## Zmiana testu
+## Zmiana testu {#changing-a-test}
 
 **Edytuj** otwiera to samo okno na teście, zatytułowane Edytuj test, wypełnione tak, jak test wygląda teraz. Naciśnij **Zapisz**, by zachować zmianę.
 

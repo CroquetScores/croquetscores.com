@@ -4,7 +4,7 @@ Tab **Cystadlaethau** tudalen twrnamaint yw lle caiff ei gystadlaethau eu hychwa
 
 ![Y tab Cystadlaethau, â chystadlaethau o bob math ac un wedi'i harchifo](images/competitions-tab.png)
 
-## Ychwanegu cystadleuaeth
+## Ychwanegu cystadleuaeth {#adding-a-competition}
 
 Pwyswch **Ychwanegu cystadleuaeth**, uwchben y rhestr. Mae deialog yn agor dros y dudalen, yn gofyn am enw'r gystadleuaeth, ei math, a'r siâp sydd gan ei math.
 
@@ -50,7 +50,7 @@ Mae pob math yn gofyn yr un tri pheth o dan ei siâp.
 
 Pwyswch **Ychwanegu**. Caiff y gystadleuaeth ei hychwanegu, mae'r ddeialog yn dweud hynny, a chaiff yr enw ei wagio ar gyfer y nesaf, â'r math a'i siâp wedi'u gadael fel yr oeddent: mae cystadlaethau a ychwanegir gyda'i gilydd yn debyg i'w gilydd gan mwyaf, felly nid yw "Block B" ar ôl "Block A" ond ei enw yn unig. Pwyswch **Diddymu** i gau'r ddeialog unwaith y bydd pob un i mewn.
 
-## Newid cystadleuaeth
+## Newid cystadleuaeth {#changing-a-competition}
 
 Mae **Golygu** yn agor yr un ddeialog ar y gystadleuaeth, dan y teitl Golygu cystadleuaeth, â'i henw, ei siâp a sut y caiff ei chwarae a'i chyfrif fel y maent. Ni ofynnir am ei math, gan na wneir bloc yn gystadleuaeth cnoc-owt trwy ei newid: caiff cystadleuaeth o'r math anghywir ei harchifo a'i hychwanegu eto. Pwyswch **Cadw** i gadw'r newid a chau'r ddeialog.
 

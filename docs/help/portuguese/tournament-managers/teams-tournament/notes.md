@@ -24,7 +24,7 @@ Pressione **Adicionar**. A nota é guardada, a lista volta com ela no topo, e el
 
 Pressione o título de uma nota, ou o seu **Editar**, para abrir o painel nessa nota. Pressione **Salvar** para guardar a alteração. Uma nota editada depois que um leitor a leu é marcada para ele de novo.
 
-## Excluir uma nota
+## Excluir uma nota {#deleting-a-note}
 
 Uma nota que não vale mais é excluída. Uma nota excluída desaparece para sempre, então **Excluir** pergunta antes.
 

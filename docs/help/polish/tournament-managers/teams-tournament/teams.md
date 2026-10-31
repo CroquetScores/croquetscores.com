@@ -4,7 +4,7 @@ Karta **Drużyny** na stronie turnieju to miejsce, gdzie dodaje się jego druży
 
 ![Karta Drużyny, z trzema drużynami i jedną zarchiwizowaną](images/teams-tab.png)
 
-## Dodawanie drużyny
+## Dodawanie drużyny {#adding-a-team}
 
 Naciśnij **Dodaj drużynę**, nad listą. Nad stroną otwiera się okno dialogowe.
 
@@ -20,7 +20,7 @@ Naciśnij **Dodaj**. Drużyna zostaje dodana, okno o tym mówi, a jego pola są 
 
 ![Okno po dodaniu drużyny](images/add-team-dialog-added.png)
 
-## Poprawianie drużyny
+## Poprawianie drużyny {#correcting-a-team}
 
 Naciśnij **Edytuj** przy drużynie, by otworzyć to samo okno na tej drużynie, zatytułowane Edytuj drużynę. Zmień to, co jest nie tak, i naciśnij **Zapisz**. Drużyna, której skrót nazwy się zmienia, jest wszędzie nazywana nowym, więc jej testy zmieniają nazwę razem z nią.
 

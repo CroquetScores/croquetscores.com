@@ -2,7 +2,7 @@
 
 He kaiwhakahaere tā tētahi whakataetae, ka taea e rātou ngā mea katoa e taea ana te mahi ki a ia, ā, tērā pea he kaitākohu tāna, ka whakauru i ōna tākohu, ā, kāore atu. Ko te tangata nāna i waihanga te whakataetae tōna kaiwhakahaere tuatahi.
 
-## Ngā kaiwhakahaere
+## Ngā kaiwhakahaere {#managers}
 
 Ka rārangitia e te ripa **Kaiwhakahaere** ko wai kei te whakahaere i te whakataetae, i te raupapa i meinga ai rātou, ā, kua tohua tō ingoa ake hei mea nōu. Ko te wāhi tēnei e tohatohahia ai tētahi whakataetae, e tukuna ai rānei ki tētahi atu.
 
@@ -18,7 +18,7 @@ Ka tango **Tango** i tētahi kaiwhakahaere. Kāore he mea e penapenahia mō te k
 
 Ka taea e koe te tango i a koe ake. Ka kī te pātai i te tikanga o tērā: ka ngaro tō ake huarahi hoki ki te whakataetae, ā, kāore tētahi i te whārangi e taea te whakakore mōu. Ka taea e tētahi atu kaiwhakahaere te mea anō koe hei kaiwhakahaere.
 
-## Ngā kaitākohu
+## Ngā kaitākohu {#scorers}
 
 Ko te ripa **Kaitākohu** te ripa Kaiwhakahaere mō ngā kaitākohu, ā, he ōrite tana mahi: he wāhitau īmēra me **Tāpiri kaitākohu** i runga i te rārangi, me **Tango** i ia mea.
 

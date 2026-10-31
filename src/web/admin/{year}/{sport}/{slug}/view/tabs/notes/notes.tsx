@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { standardHelp, teamsHelp } from "../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../words.js";
 import { type NoteListed, NotePanel } from "./notePanel.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
@@ -19,9 +20,14 @@ import { TrashCan } from "../../../../../../TrashCan.js";
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
+  /** Whether it is played by teams, whose help is a page of its own. */
+  readonly playedByTeams: boolean;
 }
 
-export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
+export const NotesTab = ({
+  tournament,
+  playedByTeams,
+}: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
   // What the panel is shown for: to add, or to edit a note, or nothing, when
   // the list is shown instead.
@@ -157,6 +163,10 @@ export const NotesTab = ({ tournament }: Props): React.JSX.Element => {
       )}
       {deleting === undefined ? null : (
         <ModalDialog
+          help={(playedByTeams ? teamsHelp : standardHelp)(
+            "notes",
+            "deleting-a-note",
+          )}
           title={say("admin.notes.deleteTitle")}
           action={say("admin.notes.delete")}
           hover={say("admin.hover.notes.delete")}

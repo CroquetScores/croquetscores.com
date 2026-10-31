@@ -4,7 +4,7 @@ La pestaña **Resultados** de la página de una competición es donde sus partid
 
 ![La pestaña Resultados de un grupo, con resultados en uso, uno retirado y uno archivado](images/scores-tab.png)
 
-## Introducir un resultado
+## Introducir un resultado {#entering-a-score}
 
 Pulsa **Añadir resultado**, encima de la lista. El diálogo se lee como se dice un resultado en voz alta: el ganador y sus puntos, después "ganó a", después el perdedor y sus puntos.
 
@@ -22,7 +22,7 @@ Pulsa **Añadir partida**. La partida se añade, el diálogo dice cuál y los ca
 
 Lo que se rechaza se dice bajo el campo al que se refiere: un ganador o un perdedor sin elegir, un resultado sin escribir o que no empieza por un dígito, el mismo jugador en ambos lados, los puntos del perdedor marcados como ganados, o los puntos del ganador por detrás de los del perdedor. En una eliminatoria, dos jugadores a los que no les toca enfrentarse se rechazan encima de los campos.
 
-## El cuadro de una eliminatoria tiene que estar completo
+## El cuadro de una eliminatoria tiene que estar completo {#draw-filled-first}
 
 Una eliminatoria se juega solo cuando cada plaza de su cuadro tiene un jugador o un bye. Hasta entonces, Añadir resultado explica por qué no se pueden añadir resultados en vez de abrir el diálogo.
 
@@ -32,7 +32,7 @@ Una eliminatoria se juega solo cuando cada plaza de su cuadro tiene un jugador o
 
 Los resultados en uso se listan en el orden en que se introdujeron, el más antiguo primero, para que la lista se lea como se jugó la competición. Cada uno dice el ganador y sus puntos, después el perdedor y los suyos, y ofrece **Editar** y **Archivar**.
 
-## Corregir un resultado
+## Corregir un resultado {#correcting-a-score}
 
 **Editar** abre el mismo diálogo sobre ese resultado, titulado Editar resultado, con sus jugadores elegidos y sus puntos tal como se escribieron. Pulsa **Guardar** para guardar la corrección y cerrar el diálogo.
 

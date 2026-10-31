@@ -12,7 +12,7 @@ Above the list, a drop-down offers every player of the tournament who is not alr
 
 Archived players of the tournament are not offered.
 
-## Byes in a knockout
+## Byes in a knockout {#byes-in-a-knockout}
 
 A knockout is played only once every place in its draw is filled, and the places its players leave over are filled with byes. So in a knockout the drop-down offers **Bye** first, before the players, and goes on offering it however many byes are added, since a draw can need several.
 
@@ -28,7 +28,7 @@ The order of a knockout's players is its draw. The first two places meet in the 
 
 The players are listed in the competition's order, which is the order a knockout is drawn in and a block is listed in on its public page. **Up** and **Down** move a player one place.
 
-## Carry forward
+## Carry forward {#carry-forward}
 
 **Carry Forward** says what a player brings into a competition from play it did not score: the results of an earlier stage, or of games played before the competition was scored here. It is offered in a block and a Swiss, which have standings for it to count in, and not in a knockout.
 
@@ -36,7 +36,7 @@ The players are listed in the competition's order, which is the order a knockout
 
 The dialog asks for six counts: matches won and lost, games won and lost, and hoops for and against. Every count is optional. A count left empty carries nothing forward, which is not the same as carrying forward 0, so that whoever changes it later sees it as it was left. Press **Save** to keep all six.
 
-## Removing a player
+## Removing a player {#removing-a-player}
 
 **Remove** takes out a player entered by mistake. They stay one of the tournament's players, and are offered again in the drop-down, but nothing is kept of their place in the competition, so Remove asks first.
 
@@ -44,7 +44,7 @@ The dialog asks for six counts: matches won and lost, games won and lost, and ho
 
 A player who has any game in use in the competition cannot be removed, since the games would then be against somebody who is no longer there, and is not offered Remove. A player whose only games are archived can be, and their archived scores go with them.
 
-## Withdrawing a player
+## Withdrawing a player {#withdrawing-a-player}
 
 **Withdraw** is for a player who will play no more of the competition. They stay in it, with the games they have played, and are listed under **Withdrawn players** after those still playing. In a knockout, their opponent in a match not yet decided goes through.
 

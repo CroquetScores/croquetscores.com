@@ -906,3 +906,19 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
         | Expected Matches |
         | Best Of          |
         | Group            |
+
+  Rule: A help icon leads to the help for adding or changing a test
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a test leads to the section on adding a test
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/tests#adding-a-test"
+
+    Scenario: The dialog to change a test leads to the section on changing a test
+      Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/tests#changing-a-test"

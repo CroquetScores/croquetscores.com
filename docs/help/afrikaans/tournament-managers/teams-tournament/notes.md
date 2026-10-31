@@ -24,7 +24,7 @@ Druk op **Voeg by**. Die nota word gehou, die lys kom terug met dit bo-aan, en d
 
 Druk op 'n nota se titel, of op sy **Wysig**, om die paneel op daardie nota oop te maak. Druk op **Bewaar** om die verandering te hou. 'n Nota wat gewysig is sedert 'n leser dit gelees het, word weer vir hulle gemerk.
 
-## Hoe om 'n nota te skrap
+## Hoe om 'n nota te skrap {#deleting-a-note}
 
 'n Nota wat nie meer geld nie, word geskrap. 'n Geskrapte nota is vir altyd weg, so **Skrap** vra eers.
 

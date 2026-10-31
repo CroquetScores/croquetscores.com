@@ -4,7 +4,7 @@ Die **Kompetisies**-oortjie van 'n toernooi se bladsy is waar sy kompetisies byg
 
 ![Die Kompetisies-oortjie, met kompetisies van elke soort en een geargiveer](images/competitions-tab.png)
 
-## Hoe om 'n kompetisie by te voeg
+## Hoe om 'n kompetisie by te voeg {#adding-a-competition}
 
 Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop en vra vir die kompetisie se naam, sy soort, en die vorm wat sy soort het.
 
@@ -50,7 +50,7 @@ Elke soort vra dieselfde drie dinge onder sy vorm.
 
 Druk op **Voeg by**. Die kompetisie word bygevoeg, die dialoog sê so, en die naam word leeggemaak vir die volgende, met die soort en sy vorm gelaat soos hulle was: kompetisies wat saam bygevoeg word, is meestal eenders, so "Block B" ná "Block A" is net sy naam. Druk op **Kanselleer** om die dialoog toe te maak sodra hulle almal in is.
 
-## Hoe om 'n kompetisie te verander
+## Hoe om 'n kompetisie te verander {#changing-a-competition}
 
 **Wysig** maak dieselfde dialoog op die kompetisie oop, met die titel Wysig kompetisie, met sy naam, sy vorm en hoe dit gespeel en getel word soos hulle is. Sy soort word nie gevra nie, want 'n blok word nie 'n uitskakeling gemaak deur dit te verander nie: 'n kompetisie van die verkeerde soort word geargiveer en weer bygevoeg. Druk op **Bewaar** om die verandering te hou en die dialoog toe te maak.
 

@@ -8,7 +8,7 @@ En landskamps sida öppnas från dess namn på fliken Landskamper, eller från d
 
 Resultaten är uppställda lag för lag i stället för efter vem som vann, i en tabell med det första lagets kortnamn, "v" och det andra lagets som rubrik. Varje resultat är en rad: det första lagets spelare, sedan båda resultaten med det första lagets först, som "26tp - 14", sedan det andra lagets spelare, vem av dem som än vann. De arkiverade resultaten är uppställda på samma sätt under.
 
-## Skriva in ett resultat
+## Skriva in ett resultat {#entering-a-score}
 
 Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
 
@@ -28,7 +28,7 @@ Två spelare som möts spelar en match på landskampens bäst av. Partierna mell
 
 En match startas när dess två spelare har ett parti i bruk. En landskamp startar inte fler matcher än den förväntas ha: när så många har startat godtas inte ett parti mellan två spelare som inte har mötts, medan ännu ett parti i en match som redan startat godtas. Där landskampen ska ha fler matcher, ändra den på fliken Landskamper till att förvänta dem.
 
-## Rätta ett resultat
+## Rätta ett resultat {#correcting-a-score}
 
 **Redigera** öppnar samma dialogruta på det resultatet, med rubriken Redigera resultat, med dess spelare valda och dess resultat som de skrevs. Dess spelare kan ändras likaväl som dess siffror, valda som när man lägger till. Tryck på **Spara** för att spara rättelsen och stänga dialogrutan. En rättelse behåller utgången: ett vunnet parti förblir vunnet, och ett oavgjort parti förblir oavgjort. Ett parti vars utgång var fel arkiveras och skrivs in igen.
 

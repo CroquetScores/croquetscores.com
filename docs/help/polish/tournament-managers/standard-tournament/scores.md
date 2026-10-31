@@ -4,7 +4,7 @@ Karta **Wyniki** na stronie konkurencji to miejsce, gdzie wprowadza się jej gry
 
 ![Karta Wyniki konkurencji grupowej, z wynikami w użyciu, wynikiem wycofanym i zarchiwizowanym](images/scores-tab.png)
 
-## Wprowadzanie wyniku
+## Wprowadzanie wyniku {#entering-a-score}
 
 Naciśnij **Dodaj wynik**, nad listą. Okno czyta się tak, jak mówi się rezultat na głos: zwycięzca i jego wynik, potem „wygrywa z", potem przegrany i jego wynik.
 
@@ -22,7 +22,7 @@ Naciśnij **Dodaj grę**. Gra zostaje dodana, okno mówi która, a pola są opr�
 
 To, co odrzucono, jest powiedziane pod polem, którego dotyczy: niewybrany zwycięzca lub przegrany, wynik niewpisany albo niezaczynający się od cyfry, ten sam zawodnik po obu stronach, wynik przegranego oznaczony jako wygrana albo wynik zwycięzcy niższy niż przegranego. W konkurencji pucharowej dwóch zawodników, którzy nie są rozlosowani do gry ze sobą, jest odrzucanych nad polami.
 
-## Drabinka konkurencji pucharowej musi być najpierw zapełniona
+## Drabinka konkurencji pucharowej musi być najpierw zapełniona {#draw-filled-first}
 
 Konkurencję pucharową rozgrywa się dopiero wtedy, gdy każde miejsce w jej drabince zajmuje zawodnik albo Bye. Do tego czasu Dodaj wynik wyjaśnia, dlaczego nie można dodać wyników, zamiast otwierać okno.
 
@@ -32,7 +32,7 @@ Konkurencję pucharową rozgrywa się dopiero wtedy, gdy każde miejsce w jej dr
 
 Wyniki w użyciu są wymienione w kolejności wprowadzania, od najstarszego, by lista czytała się tak, jak rozgrywano konkurencję. Każdy mówi zwycięzcę i jego wynik, potem przegranego i jego, i oferuje **Edytuj** oraz **Archiwizuj**.
 
-## Poprawianie wyniku
+## Poprawianie wyniku {#correcting-a-score}
 
 **Edytuj** otwiera to samo okno na tym wyniku, zatytułowane Edytuj wynik, z wybranymi zawodnikami i wynikami takimi, jak je wpisano. Naciśnij **Zapisz**, by zachować poprawkę i zamknąć okno.
 

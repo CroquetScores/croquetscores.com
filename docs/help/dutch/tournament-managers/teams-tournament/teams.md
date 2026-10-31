@@ -4,7 +4,7 @@ Het tabblad **Teams** van de pagina van een toernooi is waar zijn teams worden t
 
 ![Het tabblad Teams, met drie teams en één gearchiveerd](images/teams-tab.png)
 
-## Een team toevoegen
+## Een team toevoegen {#adding-a-team}
 
 Druk op **Team toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina.
 
@@ -20,7 +20,7 @@ Druk op **Toevoegen**. Het team wordt toegevoegd, het dialoogvenster zegt dat, e
 
 ![Het dialoogvenster nadat een team is toegevoegd](images/add-team-dialog-added.png)
 
-## Een team corrigeren
+## Een team corrigeren {#correcting-a-team}
 
 Druk op **Bewerken** bij een team om hetzelfde dialoogvenster op dat team te openen, met de titel Team bewerken. Verander wat fout is en druk op **Opslaan**. Een team waarvan de korte naam verandert, wordt overal met de nieuwe aangeduid, dus zijn tests worden mee hernoemd.
 

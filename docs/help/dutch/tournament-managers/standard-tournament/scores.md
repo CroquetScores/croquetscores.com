@@ -4,7 +4,7 @@ Het tabblad **Scores** van de pagina van een competitie is waar haar partijen wo
 
 ![Het tabblad Scores van een poule, met scores in gebruik, een teruggetrokken score en een gearchiveerde](images/scores-tab.png)
 
-## Een score invoeren
+## Een score invoeren {#entering-a-score}
 
 Druk op **Score toevoegen**, boven de lijst. Het dialoogvenster leest zoals een uitslag wordt uitgesproken: de winnaar en zijn score, dan "versloeg", dan de verliezer en zijn score.
 
@@ -22,7 +22,7 @@ Druk op **Partij toevoegen**. De partij wordt toegevoegd, het dialoogvenster zeg
 
 Wat wordt geweigerd, staat onder het veld waar het over gaat: een winnaar of verliezer die niet is gekozen, een score die niet is getypt of niet met een cijfer begint, dezelfde speler als beide, een score van een verliezer die als gewonnen is gemarkeerd, of een score van een winnaar die lager is dan die van de verliezer. In een knock-out worden twee spelers die niet tegen elkaar zijn geloot boven de velden geweigerd.
 
-## De loting van een knock-out moet eerst gevuld zijn
+## De loting van een knock-out moet eerst gevuld zijn {#draw-filled-first}
 
 Een knock-out wordt pas gespeeld wanneer elke plaats in de loting een speler of een bye bevat. Tot dan legt Score toevoegen uit waarom er geen scores kunnen worden toegevoegd, in plaats van het dialoogvenster te openen.
 
@@ -32,7 +32,7 @@ Een knock-out wordt pas gespeeld wanneer elke plaats in de loting een speler of 
 
 De scores in gebruik staan in de volgorde waarin ze zijn ingevoerd, oudste eerst, zodat de lijst leest zoals de competitie is gespeeld. Elke score noemt de winnaar en zijn score, dan de verliezer en de zijne, en biedt **Bewerken** en **Archiveren**.
 
-## Een score corrigeren
+## Een score corrigeren {#correcting-a-score}
 
 **Bewerken** opent hetzelfde dialoogvenster op die score, met de titel Score bewerken, met de spelers gekozen en de scores zoals ze zijn getypt. Druk op **Opslaan** om de correctie te bewaren en het dialoogvenster te sluiten.
 

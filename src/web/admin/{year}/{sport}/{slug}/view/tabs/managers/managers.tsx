@@ -1,6 +1,7 @@
 import { go } from "../../../../../../navigation.js";
 import { say } from "../../../../../../words.js";
 import { People } from "../../../../../../people.js";
+import { standardHelp, teamsHelp } from "../../../../../../helpAddress.js";
 import { idInAddress } from "../../../../../../api.js";
 
 // The subject of the message the link opens, which is the site's name for the
@@ -22,14 +23,21 @@ const mailtoOf = (addresses: readonly string[]): string =>
 // taken back to their list of tournaments.
 export const ManagersTab = ({
   tournament,
+  playedByTeams,
 }: {
   readonly tournament: string;
+  /** Whether it is played by teams, whose help is a page of its own. */
+  readonly playedByTeams: boolean;
 }): React.JSX.Element => (
   <People
     at={`/api/site/tournaments/${idInAddress(tournament)}/managers`}
     listedUnder="managers"
     name="managers"
     fieldAbove
+    help={(playedByTeams ? teamsHelp : standardHelp)(
+      "managers-and-scorers",
+      "managers",
+    )}
     words={{
       add: "admin.managers.add",
       none: "admin.managers.none",

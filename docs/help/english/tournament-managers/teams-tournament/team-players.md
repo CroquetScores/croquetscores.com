@@ -8,7 +8,7 @@ The dark green bar on a team's page leads to the tournament and to each team in 
 
 A player in a team belongs to that team alone, represents the team, and flies the team's flag rather than one of their own. The same person playing for two teams, or in two tournaments, is a player in each.
 
-## Adding a player
+## Adding a player {#adding-a-player}
 
 Press **Add Player**, above the list. A dialog opens over the page.
 
@@ -22,7 +22,7 @@ A player is never called "Bye": a name that is "Bye", or "Bye" with a number, as
 
 Press **Add**. The player is added, the dialog says so, and its fields are emptied for the next, with the cursor back in the name. Add the whole team this way, then press **Cancel** to close the dialog.
 
-## Correcting a player
+## Correcting a player {#correcting-a-player}
 
 Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Press **Save** to keep the change. A player whose name is corrected keeps the world ranking name they had, except in American 6 Wicket, where a player's world ranking name is always their name.
 

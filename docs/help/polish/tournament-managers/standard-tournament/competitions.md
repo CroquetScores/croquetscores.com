@@ -4,7 +4,7 @@ Karta **Konkurencje** na stronie turnieju to miejsce, gdzie dodaje się jego kon
 
 ![Karta Konkurencje, z konkurencjami każdego rodzaju i jedną zarchiwizowaną](images/competitions-tab.png)
 
-## Dodawanie konkurencji
+## Dodawanie konkurencji {#adding-a-competition}
 
 Naciśnij **Dodaj konkurencję**, nad listą. Nad stroną otwiera się okno dialogowe, które pyta o nazwę konkurencji, jej rodzaj i kształt, jaki ma ten rodzaj.
 
@@ -50,7 +50,7 @@ Każdy rodzaj pyta pod swoim kształtem o te same trzy rzeczy.
 
 Naciśnij **Dodaj**. Konkurencja zostaje dodana, okno o tym mówi, a nazwa jest opróżniana dla następnej, z rodzajem i jego kształtem pozostawionymi tak, jak były: konkurencje dodawane razem są przeważnie podobne, więc „Block B" po „Block A" to tylko jej nazwa. Naciśnij **Anuluj**, by zamknąć okno, gdy wszystkie są już dodane.
 
-## Zmiana konkurencji
+## Zmiana konkurencji {#changing-a-competition}
 
 **Edytuj** otwiera to samo okno na konkurencji, zatytułowane Edytuj konkurencję, z jej nazwą, kształtem oraz sposobem rozgrywania i liczenia takimi, jakie są. O rodzaj nie pyta, bo konkurencji grupowej nie zmienia się w pucharową przez edycję: konkurencję niewłaściwego rodzaju archiwizuje się i dodaje ponownie. Naciśnij **Zapisz**, by zachować zmianę i zamknąć okno.
 

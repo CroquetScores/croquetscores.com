@@ -8,7 +8,7 @@ La page d’une rencontre s’ouvre depuis son nom sur l’onglet Rencontres, ou
 
 Les résultats sont présentés par équipe plutôt que par vainqueur, dans une table coiffée du nom court de la première équipe, de « v », et de celui de la seconde. Chaque résultat est une ligne : le joueur de la première équipe, puis les deux scores, celui de la première équipe en premier, comme « 26tp - 14 », puis le joueur de la seconde équipe, quel que soit celui des deux qui a gagné. Les résultats archivés sont présentés de la même façon dessous.
 
-## Saisir un résultat
+## Saisir un résultat {#entering-a-score}
 
 Appuyez sur **Ajouter un score**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
@@ -28,7 +28,7 @@ Deux joueurs qui se rencontrent jouent un match au nombre de parties de la renco
 
 Un match commence quand ses deux joueurs ont une partie en service. Une rencontre ne commence pas plus de matchs qu’elle ne doit en avoir : une fois qu’autant ont commencé, une partie entre deux joueurs qui ne se sont pas rencontrés est refusée, tandis qu’une autre partie d’un match déjà commencé est acceptée. Si la rencontre doit avoir plus de matchs, modifiez-la sur l’onglet Rencontres pour les prévoir.
 
-## Corriger un résultat
+## Corriger un résultat {#correcting-a-score}
 
 **Modifier** ouvre la même boîte de dialogue sur ce résultat, intitulée Modifier le résultat, avec ses joueurs choisis et ses points tels qu’ils ont été tapés. Ses joueurs peuvent être changés aussi bien que ses points, choisis comme à l’ajout. Appuyez sur **Enregistrer** pour garder la correction et fermer la boîte de dialogue. Une correction garde l’issue : une partie gagnée reste gagnée, et une partie nulle reste nulle. Une partie dont l’issue était fausse s’archive et se saisit de nouveau.
 

@@ -515,3 +515,19 @@ Feature: A team is added to a tournament, or changed, in a modal dialog
       Given the page of "Spring Tests" is open
       When "Add Team" is pressed
       Then "Add" is above "Cancel"
+
+  Rule: A help icon leads to the help for adding or changing a team
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a team leads to the section on adding a team
+      Given the page of "Spring Tests" is open
+      When "Add Team" is pressed
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/teams#adding-a-team"
+
+    Scenario: The dialog to change a team leads to the section on correcting a team
+      Given "organiser@example.com" has added the team "Australia" to "Spring Tests"
+      And the page of "Spring Tests" is open
+      When "Edit" is pressed on the team "Australia"
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/teams#correcting-a-team"

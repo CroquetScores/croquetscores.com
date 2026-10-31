@@ -12,7 +12,7 @@ Elke toets sê sy naam, die dae waarop dit gespeel word, hoeveel wedstryde dit v
 
 ![Die Toetse-oortjie voordat daar twee spanne is](images/tests-tab-two-teams-needed.png)
 
-## Hoe om 'n toets by te voeg
+## Hoe om 'n toets by te voeg {#adding-a-test}
 
 Druk op **Voeg toets by**, bo die lys. 'n Dialoog maak oor die bladsy oop, en lees in die volgorde waarin 'n toets hardop gesê word.
 
@@ -34,7 +34,7 @@ Druk op **Voeg by**. Die toets word bygevoeg, die dialoog sê watter by sy naam,
 
 ![Die dialoog nadat 'n toets bygevoeg is](images/add-test-dialog-added.png)
 
-## Hoe om 'n toets te verander
+## Hoe om 'n toets te verander {#changing-a-test}
 
 **Wysig** maak dieselfde dialoog op die toets oop, met die titel Wysig toets, begin soos die toets is. Druk op **Bewaar** om die verandering te hou.
 

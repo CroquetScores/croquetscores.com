@@ -12,7 +12,7 @@ A test is between two teams in use, so while the tournament has fewer than two t
 
 ![The Tests tab before there are two teams](images/tests-tab-two-teams-needed.png)
 
-## Adding a test
+## Adding a test {#adding-a-test}
 
 Press **Add Test**, above the list. A dialog opens over the page, reading in the order a test is said aloud.
 
@@ -34,7 +34,7 @@ Press **Add**. The test is added, the dialog says which by its name, and the tea
 
 ![The dialog after a test is added](images/add-test-dialog-added.png)
 
-## Changing a test
+## Changing a test {#changing-a-test}
 
 **Edit** opens the same dialog on the test, titled Edit Test, begun as the test is. Press **Save** to keep the change.
 

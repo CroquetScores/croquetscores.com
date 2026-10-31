@@ -4,7 +4,7 @@ La scheda **Competizioni** della pagina di un torneo è dove le sue competizioni
 
 ![La scheda Competizioni, con competizioni di ogni tipo e una archiviata](images/competitions-tab.png)
 
-## Aggiungere una competizione
+## Aggiungere una competizione {#adding-a-competition}
 
 Premi **Aggiungi competizione**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina, che chiede il nome della competizione, il suo tipo e la forma che quel tipo ha.
 
@@ -50,7 +50,7 @@ Ogni tipo chiede le stesse tre cose sotto la sua forma.
 
 Premi **Aggiungi**. La competizione viene aggiunta, la finestra lo dice, e il nome si svuota per la successiva, mentre il tipo e la sua forma restano com'erano: le competizioni aggiunte insieme sono per lo più simili, quindi per "Block B" dopo "Block A" basta il nome. Premi **Annulla** per chiudere la finestra quando ci sono tutte.
 
-## Modificare una competizione
+## Modificare una competizione {#changing-a-competition}
 
 **Modifica** apre la stessa finestra sulla competizione, intitolata Modifica competizione, con il suo nome, la sua forma e il modo in cui si gioca e si conta com'è. Il tipo non viene chiesto, perché un girone non diventa un'eliminazione diretta modificandolo: una competizione del tipo sbagliato si archivia e si aggiunge di nuovo. Premi **Salva** per conservare la modifica e chiudere la finestra.
 

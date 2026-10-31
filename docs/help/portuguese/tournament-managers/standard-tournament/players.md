@@ -6,7 +6,7 @@ Os jogadores são inscritos aqui uma vez, no torneio. Em que competições cada 
 
 ![A aba Jogadores, com jogadores inscritos e um arquivado](images/players-tab.png)
 
-## Adicionar jogadores
+## Adicionar jogadores {#add-a-player}
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
@@ -28,7 +28,32 @@ Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus
 
 Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
 
-## Corrigir um jogador
+## Adicionar vários jogadores {#adding-multiple-players}
+
+Para adicionar uma lista inteira de uma vez, pressione **Adicionar jogadores**, ao lado de **Adicionar jogador**. Um diálogo abre sobre a página com uma caixa só, que aceita várias linhas de texto. Você pode copiar a lista de uma planilha e colá-la na caixa.
+
+**A primeira linha dá o nome dos campos**, separados por vírgulas ou por tabulações: **Name**, e qualquer um entre **Representing**, **Flag**, **Handicap** e **WorldRankingPlayerName**, em qualquer ordem. Esses nomes são digitados em inglês, seja qual for o idioma do site. **Name** precisa ser um deles. **Cada linha depois dela é um jogador**, com um valor para cada campo na mesma ordem, separados do mesmo jeito. Um jogador sem nada para um campo o deixa vazio, mas mantém a vírgula ou a tabulação. Por exemplo, com vírgulas:
+
+```
+Name,Representing,Flag
+Sam Someone,Canterbury Croquet Club,New Zealand
+Alex Another,,England
+```
+
+- **Nome, Representando e Nome do jogador no ranking mundial** seguem as mesmas regras de quando você adiciona um jogador só (veja [Adicionar jogadores](players.md#add-a-player)). Um nome tem entre 3 e 254 caracteres, não pode já estar no torneio, sejam quais forem as maiúsculas, e não pode ser "Bye".
+- **Bandeira** é o nome do país ou do lugar, no seu idioma, como a lista do diálogo Adicionar jogador o oferece, como Nova Zelândia.
+- **Handicap** é um número com sinal, de até dois dígitos e uma fração de um dígito, como 4, +4 ou -1.5.
+- Um jogador sem **Nome do jogador no ranking mundial** é conhecido pelo próprio nome, como quando é adicionado um a um.
+- **Vírgulas ou tabulações.** As células copiadas de uma planilha são separadas por tabulações, e uma lista digitada à mão costuma ser separada por vírgulas. Qualquer uma funciona. Se a primeira linha tiver uma tabulação, a lista inteira é lida com tabulações, e do contrário com vírgulas.
+- Um valor com o separador dentro é escrito entre aspas duplas, como uma planilha o escreve: "Smith, John" em uma lista separada por vírgulas. Uma aspa dentro de um valor é escrita duas vezes.
+- Os espaços nas pontas de cada valor são removidos, e uma linha sem nada é ignorada.
+- Uma lista tem no máximo 500 jogadores. Adicione o resto em outra lista.
+
+Pressione **Adicionar**. A lista inteira é conferida antes de qualquer parte dela ser guardada, então uma lista com algo errado não adiciona ninguém. O que está errado é dito abaixo da caixa, na linha em que está, contando a primeira linha como linha 1. Todos os erros são listados, não só o primeiro, e o que você digitou fica, para que você possa corrigir. Depois que a lista é guardada, o diálogo fecha e a aba Jogadores lista os novos jogadores, na ordem em que você os escreveu. Ao contrário de **Adicionar jogador**, que fica aberto para o próximo jogador, aqui não há próximo: a lista era o próximo.
+
+O **?** na barra de título do diálogo leva até aqui.
+
+## Corrigir um jogador {#correcting-a-player}
 
 Pressione o nome de um jogador, ou o seu **Editar**, para abrir o mesmo diálogo nesse jogador, com o título Editar jogador. Altere o que está errado e pressione **Salvar**, que guarda a alteração e fecha o diálogo. Um jogador cujo nome é corrigido mantém o nome no ranking mundial que tinha, porque os rankings continuam a conhecê-lo por ele. No Croquet Americano de 6 Arcos o nome de um jogador no ranking mundial é sempre o seu nome, então corrigir o nome o corrige também.
 
@@ -40,7 +65,7 @@ Um jogador corrigido aqui é corrigido em todo lugar: em todas as competições 
 
 Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteada. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
 
-## Arquivar um jogador
+## Arquivar um jogador {#archiving-a-player}
 
 **Arquivar** põe um jogador de lado: inscrito por engano, ou retirado do torneio inteiro. Um jogador arquivado é listado sob **Jogadores arquivados**, riscado, depois dos jogadores em uso, e oferece apenas **Restaurar**. Um jogador arquivado não está em nenhuma competição e não aparece em nenhuma página pública.
 

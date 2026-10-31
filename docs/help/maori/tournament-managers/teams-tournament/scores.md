@@ -8,7 +8,7 @@ Ka whakatuwheratia te whārangi o tētahi whakamātau mai i tōna ingoa i te rip
 
 Ka whakatakotoria ngā tākohu mā te tīma, kaua mā te toa, ki tētahi tēpu e whai pane ana i te ingoa poto o te tīma tuatahi, "v", me te mea o te tīma tuarua. He rārangi ia tākohu: te kaitākaro o te tīma tuatahi, kātahi ko ngā tākohu e rua me tā te tīma tuatahi i te tuatahi, pēnei i te "26tp - 14", kātahi ko te kaitākaro o te tīma tuarua, ko wai ake o rāua i toa. Ka whakatakotoria ngā tākohu kua whakatāpuia i te ara ōrite i raro.
 
-## Te whakauru i tētahi tākohu
+## Te whakauru i tētahi tākohu {#entering-a-score}
 
 Pēhia **Tāpiri tākohu**, i runga i te rārangi. Ka pānuitia te pouaka kōrero pēnei i te kī reo nui i tētahi tākohu: te toa me tana tākohu, kātahi ko "i toa i a", kātahi ko te hinga me tana tākohu.
 
@@ -28,7 +28,7 @@ Ka tākaro ngā kaitākaro e rua ka tūtaki i tētahi tukinga o te pai rawa o te
 
 Ka tīmata tētahi tukinga ina whai kēmu e whakamahia ana ōna kaitākaro e rua. Kāore tētahi whakamātau e tīmata i ngā tukinga maha ake i ērā e tūmanakohia ana: ina tīmata te maha o ngā tukinga e tūmanakohia ana, ka whakahēngia he kēmu i waenga i ngā kaitākaro e rua kāore anō kia tūtaki, ā, ka whakaaetia tētahi atu kēmu o tētahi tukinga kua tīmata kē. Ina maha ake ngā tukinga ka whai te whakamātau, whakarerekētia ki te ripa Whakamātau kia tūmanako i ērā.
 
-## Te whakatika i tētahi tākohu
+## Te whakatika i tētahi tākohu {#correcting-a-score}
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i taua tākohu, ko Whakatika tākohu tōna taitara, kua kōwhiria ōna kaitākaro, ā, kei a ia ōna tākohu pēnei i tā rātou i tuhi ai. Ka taea te whakarerekē i ōna kaitākaro me ōna tākohu, ka kōwhiria pēnei i te wā e tāpiri ana. Pēhia **Penapena** hei penapena i te whakatika, ā, hei kati i te pouaka kōrero. Ka mau tonu te tākohu i te whakatika: ka noho tonu te kēmu i toa hei toa, ā, ka noho tonu te kēmu taurite hei taurite. Ka whakatāpuia te kēmu he hē te tākohu, ka whakauru anō.
 

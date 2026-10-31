@@ -2,7 +2,7 @@
 
 Ein Turnier hat Verantwortliche, die alles tun können, was sich mit ihm tun lässt, und kann Ergebniserfasser haben, die seine Ergebnisse eingeben und sonst nichts. Wer das Turnier angelegt hat, ist sein erster Verantwortlicher.
 
-## Verantwortliche
+## Verantwortliche {#managers}
 
 Der Reiter **Verantwortliche** listet, wer das Turnier leitet, in der Reihenfolge, in der sie dazu gemacht wurden, mit Ihrem eigenen Namen als Ihrem markiert. Hier wird ein Turnier geteilt oder weitergegeben.
 
@@ -16,7 +16,7 @@ Jemand wird über seine E-Mail-Adresse zum Verantwortlichen gemacht. Geben Sie s
 
 Sie können sich selbst herausnehmen. Die Frage sagt dann, was das bedeutet: Sie verlieren Ihren eigenen Weg zurück zum Turnier, und niemand auf der Seite kann das für Sie rückgängig machen. Ein anderer Verantwortlicher kann Sie wieder zum Verantwortlichen machen.
 
-## Ergebniserfasser
+## Ergebniserfasser {#scorers}
 
 Der Reiter **Ergebniserfasser** ist der Reiter Verantwortliche für Ergebniserfasser und funktioniert genauso: eine E-Mail-Adresse und **Ergebniserfasser hinzufügen** über der Liste, und **Entfernen** bei jedem.
 

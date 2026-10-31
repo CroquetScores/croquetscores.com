@@ -2,7 +2,7 @@
 
 Un torneo tiene gestores, que pueden hacer con él todo lo que se puede hacer, y puede tener anotadores, que introducen sus resultados y nada más. Quien creó el torneo es su primer gestor.
 
-## Gestores
+## Gestores {#managers}
 
 La pestaña **Gestores** lista quién lleva el torneo, en el orden en que se hicieron gestores, con tu propio nombre marcado como tuyo. Es donde un torneo se comparte, o se traspasa.
 
@@ -16,7 +16,7 @@ A alguien se le hace gestor por su dirección de correo electrónico. Escríbela
 
 Puedes quitarte a ti mismo. La pregunta dice entonces lo que eso significa: pierdes tu propio camino de vuelta al torneo, y nadie en la página puede deshacerlo por ti. Otro gestor puede volver a hacerte gestor.
 
-## Anotadores
+## Anotadores {#scorers}
 
 La pestaña **Anotadores** es la pestaña Gestores para los anotadores, y funciona igual: una dirección de correo electrónico y **Añadir anotador** encima de la lista, y **Quitar** en cada uno.
 

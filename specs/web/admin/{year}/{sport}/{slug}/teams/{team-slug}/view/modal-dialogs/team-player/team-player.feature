@@ -413,3 +413,19 @@ Feature: A player is added to a team, or changed, in a modal dialog
       And "Samuel Someone" is typed as the "World Ranking Player Name"
       When "Save" is pressed
       Then the player "Sam Someone" of the team "Australia" of "Spring Tests" has the world ranking name "Samuel Someone"
+
+  Rule: A help icon leads to the help for adding or changing a team's player
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a player leads to the section on adding a player
+      Given the page of the team "Australia" in "Spring Tests" is open
+      When "Add Player" is pressed
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/team-players#adding-a-player"
+
+    Scenario: The dialog to change a player leads to the section on correcting a player
+      Given "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And the players of the team "Australia" in "Spring Tests" are open
+      When "Edit" is pressed on the player "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/teams-tournament/team-players#correcting-a-player"

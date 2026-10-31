@@ -4,7 +4,7 @@ La pestaña **Competiciones** de la página de un torneo es donde sus competicio
 
 ![La pestaña Competiciones, con competiciones de cada tipo y una archivada](images/competitions-tab.png)
 
-## Añadir una competición
+## Añadir una competición {#adding-a-competition}
 
 Pulsa **Añadir competición**, encima de la lista. Se abre un diálogo sobre la página, que pide el nombre de la competición, su tipo y la forma que tiene ese tipo.
 
@@ -50,7 +50,7 @@ Todos los tipos preguntan lo mismo bajo su forma.
 
 Pulsa **Añadir**. La competición se añade, el diálogo lo dice y el nombre se vacía para la siguiente, dejando el tipo y su forma como estaban: las competiciones que se añaden juntas suelen parecerse, así que "Block B" después de "Block A" es solo su nombre. Pulsa **Cancelar** para cerrar el diálogo cuando estén todas.
 
-## Cambiar una competición
+## Cambiar una competición {#changing-a-competition}
 
 **Editar** abre el mismo diálogo sobre la competición, titulado Editar competición, con su nombre, su forma y cómo se juega y se cuenta tal como están. No se pregunta su tipo, porque un grupo no se convierte en eliminatoria cambiándolo: una competición del tipo equivocado se archiva y se añade de nuevo. Pulsa **Guardar** para guardar el cambio y cerrar el diálogo.
 

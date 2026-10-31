@@ -243,13 +243,22 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 />
               ) : null}
               {chosen === "notes" ? (
-                <NotesTab tournament={asked.tournament.id} />
+                <NotesTab
+                  tournament={asked.tournament.id}
+                  playedByTeams={asked.tournament.playedByTeams}
+                />
               ) : null}
               {chosen === "managers" ? (
-                <ManagersTab tournament={asked.tournament.id} />
+                <ManagersTab
+                  tournament={asked.tournament.id}
+                  playedByTeams={asked.tournament.playedByTeams}
+                />
               ) : null}
               {chosen === "scorers" ? (
-                <ScorersTab tournament={asked.tournament.id} />
+                <ScorersTab
+                  tournament={asked.tournament.id}
+                  playedByTeams={asked.tournament.playedByTeams}
+                />
               ) : null}
               {chosen === "rankings" ? (
                 <RankingsTab address={asked.tournament.address} />

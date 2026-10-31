@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { idInAddress } from "../../../../../../../../api.js";
 import "./carry-forward.css";
@@ -136,6 +137,7 @@ export const CarryForwardDialog = ({
 
   return (
     <ModalDialog
+      help={standardHelp("entering-players-in-a-competition", "carry-forward")}
       title={say("admin.carryForward.title", { name: player.name })}
       action={say("admin.carryForward.save")}
       hover={say("admin.hover.dialog.carryForward.save")}

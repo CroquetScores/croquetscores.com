@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { teamsHelp } from "../../../../../../helpAddress.js";
 import { GroupedOptions } from "../../../../../../GroupedOptions.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
@@ -142,6 +143,10 @@ export const TeamDialog = ({
 
   return (
     <ModalDialog
+      help={teamsHelp(
+        "teams",
+        team === undefined ? "adding-a-team" : "correcting-a-team",
+      )}
       title={say(
         team === undefined ? "admin.team.addTitle" : "admin.team.editTitle",
       )}

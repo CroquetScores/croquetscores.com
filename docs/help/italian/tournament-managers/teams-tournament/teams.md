@@ -4,7 +4,7 @@ La scheda **Squadre** della pagina di un torneo è dove le sue squadre vengono a
 
 ![La scheda Squadre, con tre squadre e una archiviata](images/teams-tab.png)
 
-## Aggiungere una squadra
+## Aggiungere una squadra {#adding-a-team}
 
 Premi **Aggiungi squadra**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina.
 
@@ -20,7 +20,7 @@ Premi **Aggiungi**. La squadra viene aggiunta, la finestra lo dice, e i suoi cam
 
 ![La finestra dopo che una squadra è stata aggiunta](images/add-team-dialog-added.png)
 
-## Correggere una squadra
+## Correggere una squadra {#correcting-a-team}
 
 Premi **Modifica** su una squadra per aprire la stessa finestra su quella squadra, intitolata Modifica squadra. Cambia ciò che non va e premi **Salva**. Una squadra il cui nome breve cambia viene chiamata con quello nuovo ovunque, quindi i suoi test vengono rinominati con lei.
 

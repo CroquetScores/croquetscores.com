@@ -4,7 +4,7 @@ Die **Spanne**-oortjie van 'n toernooi se bladsy is waar sy spanne bygevoeg, reg
 
 ![Die Spanne-oortjie, met drie spanne en een geargiveer](images/teams-tab.png)
 
-## Hoe om 'n span by te voeg
+## Hoe om 'n span by te voeg {#adding-a-team}
 
 Druk op **Voeg span by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
@@ -20,7 +20,7 @@ Druk op **Voeg by**. Die span word bygevoeg, die dialoog sê so, en sy velde wor
 
 ![Die dialoog nadat 'n span bygevoeg is](images/add-team-dialog-added.png)
 
-## Hoe om 'n span reg te stel
+## Hoe om 'n span reg te stel {#correcting-a-team}
 
 Druk op 'n span se **Wysig** om dieselfde dialoog op daardie span oop te maak, met die titel Wysig span. Verander wat verkeerd is en druk op **Bewaar**. 'n Span waarvan die kortnaam verander, word oral by die nuwe een genoem, so sy toetse word daarmee saam hernoem.
 

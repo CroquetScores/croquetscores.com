@@ -24,7 +24,7 @@ Drücken Sie **Hinzufügen**. Die Notiz wird gespeichert, die Liste kommt mit ih
 
 Drücken Sie den Titel einer Notiz oder ihr **Bearbeiten**, um den Bereich für diese Notiz zu öffnen. Drücken Sie **Speichern**, um die Änderung zu speichern. Eine Notiz, die bearbeitet wurde, seit ein Leser sie gelesen hat, wird für ihn wieder markiert.
 
-## Eine Notiz löschen
+## Eine Notiz löschen {#deleting-a-note}
 
 Eine Notiz, die nicht mehr gilt, wird gelöscht. Eine gelöschte Notiz ist für immer weg, deshalb fragt **Löschen** zuerst.
 

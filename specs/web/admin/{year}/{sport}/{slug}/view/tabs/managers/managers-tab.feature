@@ -552,3 +552,14 @@ Feature: The managers tab of a tournament's page
       Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
       When the managers of "Spring Open" are opened
       Then the page is no wider than the window
+
+  Rule: A help icon leads to the help for managers
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The question asked before removing a manager leads to the section on managers
+      Given "organiser@example.com" has made "someone@example.com" a manager of "Spring Open"
+      And the managers of "Spring Open" are open
+      When "Remove" is pressed on the manager "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/managers-and-scorers#managers"

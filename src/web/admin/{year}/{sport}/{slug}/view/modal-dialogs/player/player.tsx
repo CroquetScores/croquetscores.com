@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../helpAddress.js";
 import { GroupedOptions } from "../../../../../../GroupedOptions.js";
 import { knows, say } from "../../../../../../words.js";
 import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
@@ -248,6 +249,10 @@ export const PlayerDialog = ({
   return (
     <>
       <ModalDialog
+        help={standardHelp(
+          "players",
+          player === undefined ? "add-a-player" : "correcting-a-player",
+        )}
         title={say(
           player === undefined
             ? "admin.player.addTitle"
@@ -444,6 +449,7 @@ export const PlayerDialog = ({
       </ModalDialog>
       {explaining ? (
         <ModalDialog
+          help={standardHelp("players", "byes-in-a-knockout")}
           title={say("admin.player.byesTitle")}
           action={say("admin.modal.ok")}
           hover={say("admin.hover.modal.ok")}

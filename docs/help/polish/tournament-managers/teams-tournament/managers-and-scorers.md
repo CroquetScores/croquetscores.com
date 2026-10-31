@@ -2,7 +2,7 @@
 
 Turniej ma organizatorów, którzy mogą robić z nim wszystko, co można z nim zrobić, i może mieć osoby wprowadzające wyniki, które wprowadzają jego wyniki i nic więcej. Ten, kto utworzył turniej, jest jego pierwszym organizatorem.
 
-## Organizatorzy
+## Organizatorzy {#managers}
 
 Karta **Organizatorzy** wymienia, kto prowadzi turniej, w kolejności, w jakiej ich uczyniono organizatorami, z twoim własnym imieniem i nazwiskiem oznaczonym jako twoje. To tutaj dzieli się turniejem albo przekazuje go dalej.
 
@@ -16,7 +16,7 @@ Kogoś czyni się organizatorem przez jego adres e-mail. Wpisz go w pole nad lis
 
 Możesz usunąć samego siebie. Pytanie mówi wtedy, co to znaczy: tracisz własną drogę powrotu do turnieju i nikt na tej stronie nie może tego za ciebie cofnąć. Inny organizator może ponownie uczynić cię organizatorem.
 
-## Osoby wprowadzające wyniki
+## Osoby wprowadzające wyniki {#scorers}
 
 Karta **Osoby wprowadzające wyniki** to karta Organizatorzy dla osób wprowadzających wyniki i działa tak samo: adres e-mail i **Dodaj osobę wprowadzającą wyniki** nad listą oraz **Usuń** przy każdym.
 

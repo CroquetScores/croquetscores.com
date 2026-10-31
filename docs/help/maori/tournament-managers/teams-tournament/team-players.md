@@ -8,7 +8,7 @@ Ka arahi te pae kākāriki pōuri i te whārangi o tētahi tīma ki te whakataet
 
 Nō te tīma anake tētahi kaitākaro i tētahi tīma, ka tohu i te tīma, ā, ka kapo i te haki o te tīma, kaua tētahi o ōna ake. Ko te tangata kotahi e tākaro ana mō ngā tīma e rua, i ngā whakataetae e rua rānei, he kaitākaro i ia tētahi.
 
-## Te tāpiri i tētahi kaitākaro
+## Te tāpiri i tētahi kaitākaro {#adding-a-player}
 
 Pēhia **Tāpiri kaitākaro**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi.
 
@@ -22,7 +22,7 @@ Kāore tētahi kaitākaro e kīia ko "Bye": ka whakahēngia he ingoa ko "bye" t�
 
 Pēhia **Tāpiri**. Ka tāpiritia te kaitākaro, ka kī te pouaka kōrero i tērā, ā, ka whakakorea ōna āpure mō te kaitākaro e whai ake nei, ka hoki te tohu ki te ingoa. Tāpiria te tīma katoa pēnei, kātahi ka pēhi i **Whakakore** hei kati i te pouaka kōrero.
 
-## Te whakatika i tētahi kaitākaro
+## Te whakatika i tētahi kaitākaro {#correcting-a-player}
 
 Pēhia te ingoa o tētahi kaitākaro, tōna **Whakatika** rānei, hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua kaitākaro, ko Whakatika kaitākaro tōna taitara. Pēhia **Penapena** hei penapena i te huringa. Ka mau tonu i te kaitākaro kua whakatikaina tōna ingoa te ingoa i te whakarārangi o te ao i a ia, haunga i American 6 Wicket, ko te ingoa o te kaitākaro tonu tōna ingoa i te whakarārangi o te ao.
 

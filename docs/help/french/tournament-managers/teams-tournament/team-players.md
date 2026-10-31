@@ -8,7 +8,7 @@ La barre vert foncé sur la page d’une équipe mène au tournoi et à chaque �
 
 Un joueur d’une équipe appartient à cette seule équipe, la représente, et arbore le drapeau de l’équipe plutôt qu’un drapeau à lui. La même personne qui joue pour deux équipes, ou dans deux tournois, est un joueur dans chacun.
 
-## Ajouter un joueur
+## Ajouter un joueur {#adding-a-player}
 
 Appuyez sur **Ajouter un joueur**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page.
 
@@ -22,7 +22,7 @@ Un joueur ne s’appelle jamais « Bye » (le mot anglais pour exempt) : un n
 
 Appuyez sur **Ajouter**. Le joueur est ajouté, la boîte de dialogue le dit, et ses champs se vident pour le suivant, le curseur revenu dans le nom. Ajoutez toute l’équipe ainsi, puis appuyez sur **Annuler** pour fermer la boîte de dialogue.
 
-## Corriger un joueur
+## Corriger un joueur {#correcting-a-player}
 
 Appuyez sur le nom d’un joueur, ou sur son **Modifier**, pour ouvrir la même boîte de dialogue sur ce joueur, intitulée Modifier le joueur. Appuyez sur **Enregistrer** pour garder la modification. Un joueur dont le nom est corrigé garde le nom dans le classement mondial qu’il avait, sauf dans le croquet américain à 6 arceaux, où le nom d’un joueur dans le classement mondial est toujours son nom.
 

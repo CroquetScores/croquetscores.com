@@ -4,7 +4,7 @@ L’onglet **Compétitions** de la page d’un tournoi est l’endroit où ses c
 
 ![L’onglet Compétitions, avec des compétitions de chaque type et une archivée](images/competitions-tab.png)
 
-## Ajouter une compétition
+## Ajouter une compétition {#adding-a-competition}
 
 Appuyez sur **Ajouter une compétition**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page et demande le nom de la compétition, son type, et la forme propre à ce type.
 
@@ -50,7 +50,7 @@ Chaque type demande les trois mêmes choses sous sa forme.
 
 Appuyez sur **Ajouter**. La compétition est ajoutée, la boîte de dialogue le dit, et le nom se vide pour la suivante, le type et sa forme restant tels quels : des compétitions ajoutées ensemble se ressemblent le plus souvent, de sorte que « Block B » après « Block A » n’est que son nom. Appuyez sur **Annuler** pour fermer la boîte de dialogue une fois qu’elles sont toutes saisies.
 
-## Modifier une compétition
+## Modifier une compétition {#changing-a-competition}
 
 **Modifier** ouvre la même boîte de dialogue sur la compétition, intitulée Modifier la compétition, avec son nom, sa forme, et la façon dont elle se joue et se compte, tels qu’ils sont. Son type n’est pas demandé, puisqu’une poule ne devient pas une élimination directe en la modifiant : une compétition du mauvais type s’archive et s’ajoute de nouveau. Appuyez sur **Enregistrer** pour garder la modification et fermer la boîte de dialogue.
 

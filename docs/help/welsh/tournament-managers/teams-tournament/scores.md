@@ -8,7 +8,7 @@ Agorir tudalen prawf o'i enw ar y tab Profion, neu o'r bar gwyrdd tywyll. Enwau 
 
 Gosodir y canlyniadau yn ôl tîm yn hytrach nag yn ôl pwy a enillodd, mewn tabl ag enw byr y tîm cyntaf, "v", ac enw byr yr ail ar ei ben. Mae pob canlyniad yn rhes: chwaraewr y tîm cyntaf, yna'r ddwy sgôr â sgôr y tîm cyntaf yn gyntaf, fel "26tp - 14", yna chwaraewr yr ail dîm, pa un bynnag ohonynt a enillodd. Gosodir y canlyniadau a archifwyd yn yr un ffordd oddi tanynt.
 
-## Rhoi canlyniad i mewn
+## Rhoi canlyniad i mewn {#entering-a-score}
 
 Pwyswch **Ychwanegu sgôr**, uwchben y rhestr. Mae'r ddeialog yn darllen fel y dywedir canlyniad ar lafar: yr enillydd a'i sgôr, yna "a gurodd", yna'r collwr a'i sgôr.
 
@@ -28,7 +28,7 @@ Mae dau chwaraewr sy'n cwrdd yn chwarae gêm yr orau o sydd gan y prawf. Y gemau
 
 Dechreuir gêm pan fydd gan ei dau chwaraewr gêm unigol yn ei lle. Nid yw prawf yn dechrau mwy o gemau nag y disgwylir iddo ei chael: unwaith y bydd cymaint wedi dechrau, gwrthodir gêm unigol rhwng dau chwaraewr nad ydynt wedi cwrdd, tra derbynnir gêm unigol arall o gêm sydd eisoes wedi dechrau. Lle mae'r prawf i gael mwy o gemau, newidiwch ef ar y tab Profion i'w disgwyl.
 
-## Cywiro canlyniad
+## Cywiro canlyniad {#correcting-a-score}
 
 Mae **Golygu** yn agor yr un ddeialog ar y canlyniad hwnnw, dan y teitl Golygu canlyniad, â'i chwaraewyr wedi'u dewis a'i sgorau fel y'u teipiwyd. Gellir newid ei chwaraewyr yn ogystal â'i sgorau, a ddewisir fel wrth ychwanegu. Pwyswch **Cadw** i gadw'r cywiriad a chau'r ddeialog. Mae cywiriad yn cadw'r canlyniad: mae gêm a enillwyd yn parhau i fod wedi'i hennill, a gêm gyfartal yn parhau'n gyfartal. Caiff gêm yr oedd ei chanlyniad yn anghywir ei harchifo a'i rhoi i mewn eto.
 

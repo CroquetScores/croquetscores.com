@@ -4,7 +4,7 @@ Ko te ripa **Tīma** o te whārangi o tētahi whakataetae te wāhi e tāpiria ai
 
 ![Te ripa Tīma, e toru ngā tīma me tētahi kua whakatāpuia](images/teams-tab.png)
 
-## Te tāpiri i tētahi tīma
+## Te tāpiri i tētahi tīma {#adding-a-team}
 
 Pēhia **Tāpiri tīma**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi.
 
@@ -20,7 +20,7 @@ Pēhia **Tāpiri**. Ka tāpiritia te tīma, ka kī te pouaka kōrero i tērā, �
 
 ![Te pouaka kōrero i muri i te tāpiri o tētahi tīma](images/add-team-dialog-added.png)
 
-## Te whakatika i tētahi tīma
+## Te whakatika i tētahi tīma {#correcting-a-team}
 
 Pēhia te **Whakatika** a tētahi tīma hei whakatuwhera i te pouaka kōrero ōrite ki runga i taua tīma, ko Whakatika tīma tōna taitara. Whakarerekētia te mea e hē ana, ka pēhi i **Penapena**. Ka kīia te tīma kua rerekē tōna ingoa poto mā te mea hou ki ngā wāhi katoa, nō reira ka whakaingoatia anōtia ōna whakamātau i a ia.
 

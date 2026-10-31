@@ -12,7 +12,7 @@ Nad listą lista rozwijana oferuje każdego zawodnika turnieju, który nie jest 
 
 Zarchiwizowani zawodnicy turnieju nie są oferowani.
 
-## Bye w konkurencji pucharowej
+## Bye w konkurencji pucharowej {#byes-in-a-knockout}
 
 Konkurencję pucharową rozgrywa się dopiero wtedy, gdy każde miejsce w jej drabince jest zajęte, a miejsca, których nie zajmują zawodnicy, wypełnia się Bye. Dlatego w konkurencji pucharowej lista rozwijana oferuje **Bye** jako pierwszy, przed zawodnikami, i oferuje go dalej niezależnie od tego, ile Bye dodano, bo drabinka może potrzebować kilku.
 
@@ -28,7 +28,7 @@ Kolejność zawodników konkurencji pucharowej jest jej drabinką. Pierwsze dwa 
 
 Zawodnicy są wymienieni w kolejności konkurencji, czyli w kolejności, w jakiej losuje się konkurencję pucharową i w jakiej konkurencja grupowa jest wymieniona na swojej stronie publicznej. **W górę** i **W dół** przesuwają zawodnika o jedno miejsce.
 
-## Przenoszenie wyników
+## Przenoszenie wyników {#carry-forward}
 
 **Przenieś wyniki** mówi, co zawodnik wnosi do konkurencji z gry, której tu nie zapisano: rezultaty wcześniejszego etapu albo gier rozegranych, zanim konkurencję zaczęto tu zapisywać. Jest oferowane w konkurencji grupowej i szwajcarskiej, które mają klasyfikację, do której można to liczyć, a nie w konkurencji pucharowej.
 
@@ -36,7 +36,7 @@ Zawodnicy są wymienieni w kolejności konkurencji, czyli w kolejności, w jakie
 
 Okno pyta o sześć liczb: wygrane i przegrane mecze, wygrane i przegrane gry oraz bramki zdobyte i stracone. Każda liczba jest opcjonalna. Liczba zostawiona pusta nie przenosi nic, co nie jest tym samym co przeniesienie 0, by ten, kto zmieni ją później, widział ją tak, jak została zostawiona. Naciśnij **Zapisz**, by zachować wszystkie sześć.
 
-## Usuwanie zawodnika
+## Usuwanie zawodnika {#removing-a-player}
 
 **Usuń** zabiera zawodnika zgłoszonego przez pomyłkę. Pozostaje on jednym z zawodników turnieju i znów jest oferowany na liście rozwijanej, ale nic z jego miejsca w konkurencji nie jest zachowywane, więc Usuń najpierw pyta.
 
@@ -44,7 +44,7 @@ Okno pyta o sześć liczb: wygrane i przegrane mecze, wygrane i przegrane gry or
 
 Zawodnika, który ma w konkurencji jakąkolwiek grę w użyciu, nie można usunąć, bo gry byłyby wtedy przeciwko komuś, kogo już nie ma, i nie oferuje mu się Usuń. Zawodnika, którego wszystkie gry są zarchiwizowane, można, a jego zarchiwizowane wyniki odchodzą razem z nim.
 
-## Wycofywanie zawodnika
+## Wycofywanie zawodnika {#withdrawing-a-player}
 
 **Wycofaj** jest dla zawodnika, który nie zagra już w konkurencji. Pozostaje w niej, z grami, które rozegrał, i jest wymieniony pod **Wycofani zawodnicy** po tych, którzy nadal grają. W konkurencji pucharowej jego przeciwnik w nierozstrzygniętym jeszcze meczu przechodzi dalej.
 

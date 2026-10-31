@@ -12,7 +12,7 @@ Een test gaat tussen twee teams in gebruik, dus zolang het toernooi er minder da
 
 ![Het tabblad Tests voordat er twee teams zijn](images/tests-tab-two-teams-needed.png)
 
-## Een test toevoegen
+## Een test toevoegen {#adding-a-test}
 
 Druk op **Test toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina, dat leest in de volgorde waarin een test wordt uitgesproken.
 
@@ -34,7 +34,7 @@ Druk op **Toevoegen**. De test wordt toegevoegd, het dialoogvenster zegt welke b
 
 ![Het dialoogvenster nadat een test is toegevoegd](images/add-test-dialog-added.png)
 
-## Een test wijzigen
+## Een test wijzigen {#changing-a-test}
 
 **Bewerken** opent hetzelfde dialoogvenster op de test, met de titel Test bewerken, ingevuld zoals de test is. Druk op **Opslaan** om de wijziging te bewaren.
 

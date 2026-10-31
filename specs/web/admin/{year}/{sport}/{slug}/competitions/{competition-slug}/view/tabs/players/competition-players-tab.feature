@@ -1055,3 +1055,26 @@ Feature: The players tab of a competition's page
       And "organiser@example.com" has entered the player "Maximilian Alexander Fitzwilliam-Worthington" in "Block A" of "Spring Open"
       When the players of "Block A" in "Spring Open" are opened
       Then the page is no wider than the window
+
+  Rule: A help icon leads to the help for carrying forward, removing and withdrawing a player
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The carry forward dialog leads to the section on carrying forward
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Carry Forward" is pressed on the player "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/entering-players-in-a-competition#carry-forward"
+
+    Scenario: The question asked before removing a player leads to the section on removing a player
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Remove" is pressed on the player "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/entering-players-in-a-competition#removing-a-player"
+
+    Scenario: The question asked before withdrawing a player leads to the section on withdrawing a player
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the players of "Block A" in "Spring Open" are open
+      When "Withdraw" is pressed on the player "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/entering-players-in-a-competition#withdrawing-a-player"

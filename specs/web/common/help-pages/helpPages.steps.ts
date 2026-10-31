@@ -1,5 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { readdir, readFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 
 import {
   convertHelpPage,
@@ -94,5 +96,50 @@ Then(
       result(this).html.includes(`src="${picture}"`),
       `The page does not show ${picture}: ${result(this).html}`,
     );
+  },
+);
+
+// Every language ------------------------------------------------------------------
+
+const helpFolder = resolve(import.meta.dirname, "../../../../docs/help");
+
+const everyLanguage = new WeakMap<SpecWorld, readonly string[]>();
+const everyConverted = new WeakMap<
+  SpecWorld,
+  readonly { readonly language: string; readonly html: string }[]
+>();
+
+Given("the help of every language", async function (this: SpecWorld) {
+  const entries = await readdir(helpFolder, { withFileTypes: true });
+  everyLanguage.set(
+    this,
+    entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name),
+  );
+});
+
+When(
+  "the {string} tournament's {string} page of each is converted",
+  async function (this: SpecWorld, kind: string, page: string) {
+    const languages = everyLanguage.get(this) ?? [];
+    assert.ok(languages.length > 0, "No language was read.");
+    const converted = [];
+    for (const language of languages) {
+      const at = `tournament-managers/${kind}-tournament/${page}.md`;
+      const source = await readFile(join(helpFolder, language, at), "utf8");
+      converted.push({
+        language,
+        html: convertHelpPage(source, at).html,
+      });
+    }
+    everyConverted.set(this, converted);
+  },
+);
+
+Then(
+  "each has the bookmark {string}",
+  function (this: SpecWorld, bookmark: string) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.match(html, new RegExp(`<h\\d id="${bookmark}">`), language);
+    }
   },
 );

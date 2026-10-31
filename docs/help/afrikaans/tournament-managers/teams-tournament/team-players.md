@@ -8,7 +8,7 @@ Die donkergroen balk op 'n span se bladsy lei na die toernooi en na elke span in
 
 'n Speler in 'n span behoort net aan daardie span, verteenwoordig die span, en voer die span se vlag eerder as 'n eie een. Dieselfde persoon wat vir twee spanne speel, of in twee toernooie, is 'n speler in elkeen.
 
-## Hoe om 'n speler by te voeg
+## Hoe om 'n speler by te voeg {#adding-a-player}
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
@@ -22,7 +22,7 @@ Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
 Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde word leeggemaak vir die volgende, met die wyser terug in die naam. Voeg die hele span so by, en druk dan op **Kanselleer** om die dialoog toe te maak.
 
-## Hoe om 'n speler reg te stel
+## Hoe om 'n speler reg te stel {#correcting-a-player}
 
 Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Druk op **Bewaar** om die verandering te hou. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, behalwe in Amerikaanse 6-hoepel-croquet, waar 'n speler se naam op die wêreldranglys altyd hul naam is.
 

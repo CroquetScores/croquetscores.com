@@ -6,7 +6,7 @@ Zawodników zgłasza się tutaj raz, do turnieju. To, w których konkurencjach k
 
 ![Karta Zawodnicy, ze zgłoszonymi zawodnikami i jednym zarchiwizowanym](images/players-tab.png)
 
-## Dodawanie zawodników
+## Dodawanie zawodników {#add-a-player}
 
 Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogowe.
 
@@ -28,7 +28,32 @@ Naciśnij **Dodaj**. Zawodnik zostaje dodany, okno o tym mówi, a jego pola są 
 
 Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los). Bye w konkurencji pucharowej dodaje się w samej konkurencji, tam gdzie zgłasza się jej zawodników, więc nazwa, której pierwszym słowem jest „bye", jest odrzucana, a okno wyjaśnia dlaczego.
 
-## Poprawianie zawodnika
+## Dodawanie wielu zawodników {#adding-multiple-players}
+
+Aby dodać całą listę naraz, naciśnij **Dodaj zawodników**, obok **Dodaj zawodnika**. Nad stroną otwiera się okno dialogowe z jednym polem, które przyjmuje kilka wierszy tekstu. Listę można skopiować z arkusza kalkulacyjnego i wkleić do pola.
+
+**Pierwszy wiersz nazywa pola**, oddzielone przecinkami albo tabulatorami: **Name** oraz dowolne z **Representing**, **Flag**, **Handicap** i **WorldRankingPlayerName**, w dowolnej kolejności. Te nazwy wpisuje się po angielsku, niezależnie od języka serwisu. **Name** musi być jedną z nich. **Każdy kolejny wiersz to zawodnik**, z wartością dla każdego pola w tej samej kolejności, oddzieloną w ten sam sposób. Zawodnik, który nie ma wartości dla jakiegoś pola, zostawia je puste, ale zachowuje przecinek lub tabulator. Na przykład z przecinkami:
+
+```
+Name,Representing,Flag
+Sam Someone,Canterbury Croquet Club,New Zealand
+Alex Another,,England
+```
+
+- **Nazwa, Reprezentuje i Nazwa zawodnika w rankingu światowym** podlegają tym samym zasadom, co przy dodawaniu jednego zawodnika (zobacz [Dodawanie zawodników](players.md#add-a-player)). Nazwa ma od 3 do 254 znaków, nie może już występować w turnieju, niezależnie od wielkości liter, i nie może brzmieć „Bye".
+- **Flaga** to nazwa kraju lub miejsca, w twoim języku, tak jak podaje ją lista w oknie Dodaj zawodnika, na przykład Nowa Zelandia.
+- **Handicap** to liczba ze znakiem, z najwyżej dwiema cyframi i ułamkiem o jednej cyfrze, na przykład 4, +4 lub -1.5.
+- Zawodnik bez **Nazwy zawodnika w rankingu światowym** jest znany pod swoją nazwą, tak jak przy dodawaniu pojedynczo.
+- **Przecinki albo tabulatory.** Komórki skopiowane z arkusza są oddzielone tabulatorami, a listę wpisaną ręcznie zwykle oddziela się przecinkami. Działa jedno i drugie. Jeśli w pierwszym wierszu jest tabulator, cała lista jest czytana z tabulatorami, a w przeciwnym razie z przecinkami.
+- Wartość, w której jest separator, zapisuje się w cudzysłowie, tak jak robi to arkusz: „Smith, John" na liście oddzielonej przecinkami. Cudzysłów wewnątrz wartości zapisuje się dwa razy.
+- Z każdej wartości usuwane są spacje na końcach, a wiersz, w którym nic nie ma, jest pomijany.
+- Lista zawiera najwyżej 500 zawodników. Resztę dodaj drugą listą.
+
+Naciśnij **Dodaj**. Cała lista jest sprawdzana, zanim cokolwiek z niej zostanie zachowane, więc lista z jakimkolwiek błędem nie dodaje nikogo. Co jest nie tak, mówi komunikat pod polem, przy wierszu, w którym to jest, licząc pierwszy wiersz jako wiersz 1. Wypisane są wszystkie błędy, nie tylko pierwszy, a to, co wpisano, zostaje, żeby można było to poprawić. Gdy lista zostanie zachowana, okno się zamyka, a karta Zawodnicy pokazuje nowych zawodników w kolejności, w jakiej je wpisano. W odróżnieniu od **Dodaj zawodnika**, które zostaje otwarte dla następnego zawodnika, tu nie ma następnego: następnym była lista.
+
+**?** na pasku tytułu okna prowadzi tutaj.
+
+## Poprawianie zawodnika {#correcting-a-player}
 
 Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Zmień to, co jest nie tak, i naciśnij **Zapisz**, co zachowuje zmianę i zamyka okno. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, bo rankingi nadal znają go pod nią. W amerykańskim krokiecie sześciobramkowym nazwą zawodnika w rankingu światowym jest zawsze jego nazwa, więc poprawienie nazwy poprawia także ją.
 
@@ -40,7 +65,7 @@ Zawodnik poprawiony tutaj jest poprawiony wszędzie: w każdej konkurencji, w kt
 
 Zawodnicy są wymienieni w kolejności turnieju, czyli w kolejności, w jakiej są oferowani przy zgłaszaniu do konkurencji, i w kolejności, w jakiej losuje się konkurencję pucharową. **W górę** i **W dół**, strzałki na końcu każdego wiersza, przesuwają zawodnika o jedno miejsce. Pierwszemu zawodnikowi nie oferuje się W górę, a ostatniemu W dół.
 
-## Archiwizowanie zawodnika
+## Archiwizowanie zawodnika {#archiving-a-player}
 
 **Archiwizuj** odkłada zawodnika na bok: zgłoszonego przez pomyłkę albo wycofanego z całego turnieju. Zarchiwizowany zawodnik jest wymieniony pod **Zarchiwizowani zawodnicy**, przekreślony, po zawodnikach w użyciu, i oferuje tylko **Przywróć**. Zarchiwizowany zawodnik nie jest w żadnej konkurencji i nie pojawia się na żadnej stronie publicznej.
 

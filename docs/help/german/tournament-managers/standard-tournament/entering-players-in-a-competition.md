@@ -12,7 +12,7 @@ Ein Spieler in einem Wettbewerb ist einer der Spieler des Turniers, er wird also
 
 Archivierte Spieler des Turniers werden nicht angeboten.
 
-## Freilose in einer K.-o.-Runde
+## Freilose in einer K.-o.-Runde {#byes-in-a-knockout}
 
 Eine K.-o.-Runde wird erst gespielt, wenn jeder Platz ihrer Auslosung gefüllt ist, und die Plätze, die ihre Spieler übrig lassen, werden mit Freilosen gefüllt. In einer K.-o.-Runde bietet die Auswahlliste deshalb zuerst **Freilos** an, vor den Spielern, und bietet es weiter an, so viele Freilose auch hinzugefügt werden, weil eine Auslosung mehrere brauchen kann.
 
@@ -28,7 +28,7 @@ Die Reihenfolge der Spieler einer K.-o.-Runde ist ihre Auslosung. Die ersten bei
 
 Die Spieler sind in der Reihenfolge des Wettbewerbs aufgeführt; das ist die Reihenfolge, in der eine K.-o.-Runde ausgelost wird und eine Gruppe auf ihrer öffentlichen Seite aufgeführt ist. **Nach oben** und **Nach unten** verschieben einen Spieler um einen Platz.
 
-## Übertrag
+## Übertrag {#carry-forward}
 
 **Übertragen** sagt, was ein Spieler aus Spielen, die der Wettbewerb nicht erfasst hat, in ihn mitbringt: die Ergebnisse einer früheren Stufe oder von Spielen, die gespielt wurden, bevor der Wettbewerb hier erfasst wurde. Er wird in einer Gruppe und einem Schweizer System angeboten, die eine Tabelle haben, in der er zählen kann, und nicht in einer K.-o.-Runde.
 
@@ -36,7 +36,7 @@ Die Spieler sind in der Reihenfolge des Wettbewerbs aufgeführt; das ist die Rei
 
 Der Dialog fragt nach sechs Zahlen: gewonnene und verlorene Begegnungen, gewonnene und verlorene Spiele, erzielte und gegnerische Tore. Jede Zahl ist freiwillig. Eine leer gelassene Zahl überträgt nichts, was nicht dasselbe ist wie 0 zu übertragen, damit, wer sie später ändert, sie so sieht, wie sie gelassen wurde. Drücken Sie **Speichern**, um alle sechs zu speichern.
 
-## Einen Spieler entfernen
+## Einen Spieler entfernen {#removing-a-player}
 
 **Entfernen** nimmt einen versehentlich aufgenommenen Spieler heraus. Er bleibt einer der Spieler des Turniers und wird in der Auswahlliste wieder angeboten, aber von seinem Platz im Wettbewerb wird nichts behalten, deshalb fragt Entfernen zuerst.
 
@@ -44,7 +44,7 @@ Der Dialog fragt nach sechs Zahlen: gewonnene und verlorene Begegnungen, gewonne
 
 Ein Spieler, der im Wettbewerb irgendein Spiel in Gebrauch hat, kann nicht entfernt werden, weil die Spiele dann gegen jemanden wären, den es nicht mehr gibt; ihm wird Entfernen nicht angeboten. Ein Spieler, dessen Spiele alle archiviert sind, kann entfernt werden, und seine archivierten Ergebnisse gehen mit ihm.
 
-## Einen Spieler zurückziehen
+## Einen Spieler zurückziehen {#withdrawing-a-player}
 
 **Zurückziehen** ist für einen Spieler, der im Wettbewerb nicht weiterspielt. Er bleibt darin, mit den Spielen, die er gespielt hat, und steht unter **Zurückgezogene Spieler** hinter denen, die noch spielen. In einer K.-o.-Runde kommt sein Gegner in einer noch nicht entschiedenen Begegnung weiter.
 

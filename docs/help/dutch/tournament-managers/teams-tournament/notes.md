@@ -24,7 +24,7 @@ Druk op **Toevoegen**. De notitie wordt bewaard, de lijst komt terug met haar bo
 
 Druk op de titel van een notitie, of op haar **Bewerken**, om het paneel op die notitie te openen. Druk op **Opslaan** om de wijziging te bewaren. Een notitie die is bewerkt nadat een lezer haar las, wordt voor die lezer opnieuw gemarkeerd.
 
-## Een notitie verwijderen
+## Een notitie verwijderen {#deleting-a-note}
 
 Een notitie die niet meer van toepassing is, wordt verwijderd. Een verwijderde notitie is voorgoed weg, dus **Wissen** vraagt eerst.
 
