@@ -66,9 +66,9 @@ Feature: A list is sorted the way its reader last sorted it
     Scenario: The latest sorting is the one remembered
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      And the column "Date" of the upcoming tournaments is pressed
+      And the column "Name" of the upcoming tournaments is pressed
       When the home page is opened
-      Then the column "Date" of the upcoming tournaments is marked as sorted from the largest
+      Then the column "Name" of the upcoming tournaments is marked as sorted from the largest
 
     Scenario: A list never sorted begins as its page does
       When the home page is opened
@@ -77,7 +77,7 @@ Feature: A list is sorted the way its reader last sorted it
     Scenario: The page is sorted when it is sent
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      When the home page is opened with scripting off
+      When the page at "/" is opened with scripting off
       Then the column "Name" of the upcoming tournaments is marked as sorted from the smallest
 
   Rule: Each list is remembered apart
@@ -91,15 +91,42 @@ Feature: A list is sorted the way its reader last sorted it
     Scenario: Sorting a list on one page does not sort the same list on another
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      When the page for the year 2026 is opened
+      When the page for 2026 is opened
       Then the column "Date" of the year's tournaments is marked as sorted from the smallest
 
     Scenario: A player's tournaments are remembered apart from the tournament lists
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the block is to be the best of 3
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And the page at "/players/sam-someone" is open
       And the heading "Tournament" is pressed
       When the home page is opened
       Then the column "Date" of the upcoming tournaments is marked as sorted from the smallest
+
+  Rule: Every sortable list is remembered
+
+    Scenario: A year's tournaments are sorted by name when next opened
+      Given the page for 2026 is open
+      And the column "Name" of the year's tournaments is pressed
+      When the page for 2026 is opened
+      Then the column "Name" of the year's tournaments is marked as sorted from the smallest
+
+    Scenario: Tournaments found are sorted by name when next opened
+      Given the page at "/search?q=Open" is open
+      And the column "Name" of the found tournaments is pressed
+      When the page at "/search?q=Open" is opened
+      Then the column "Name" of the found tournaments is marked as sorted from the smallest
+
+    Scenario: A player's tournaments are sorted by name when next opened
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the block is to be the best of 3
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the page at "/players/sam-someone" is open
+      And the heading "Tournament" is pressed
+      When the page at "/players/sam-someone" is opened
+      Then the table is sorted by "Tournament", from A to Z
 
   Rule: An address that says how to sort overrules what is remembered
 
@@ -113,20 +140,20 @@ Feature: A list is sorted the way its reader last sorted it
     Scenario: A sorting in the address is the one shown
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      When the home page is opened sorted by date
+      When the page at "/?upcoming=date-up" is opened
       Then the column "Date" of the upcoming tournaments is marked as sorted from the smallest
 
     Scenario: A sorting in the address is not remembered by being followed
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      And the home page is opened sorted by date
+      And the page at "/?upcoming=date-up" is opened
       When the home page is opened
       Then the column "Name" of the upcoming tournaments is marked as sorted from the smallest
 
     Scenario: A sorting the page does not have is taken as no sorting
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      When the home page is opened sorted by a column it does not have
+      When the page at "/?upcoming=size-up" is opened
       Then the column "Name" of the upcoming tournaments is marked as sorted from the smallest
 
   Rule: A list can be put back as its page begins it
@@ -166,17 +193,20 @@ Feature: A list is sorted the way its reader last sorted it
     Scenario: Another device is sorted as its own reader sorted it
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      When another browser opens the home page
+      And the reader opens another browser
+      When the home page is opened
       Then the column "Date" of the upcoming tournaments is marked as sorted from the smallest
 
     Scenario: Signing out does not forget how a list was sorted
-      Given the home page is open
+      Given a reader signed in as "organiser@example.com"
+      And the home page is open
       And the column "Name" of the upcoming tournaments is pressed
-      And the reader signs out
+      And nobody is signed in
       When the home page is opened
       Then the column "Name" of the upcoming tournaments is marked as sorted from the smallest
 
     Scenario: What is remembered does not name the reader
-      Given "organiser@example.com" is signed in
+      Given a reader signed in as "organiser@example.com"
+      And the home page is open
       And the column "Name" of the upcoming tournaments is pressed
       Then the cookie that remembers the sorting does not name "organiser@example.com"
