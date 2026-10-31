@@ -27,6 +27,8 @@ interface Props {
   readonly busy?: boolean;
   /** Whether the one button is all it has, with no Cancel. */
   readonly alone?: boolean;
+  /** Whether it is as wide as the window less the gutter, not a form's width. */
+  readonly wide?: boolean;
 }
 
 export const ModalDialog = ({
@@ -38,6 +40,7 @@ export const ModalDialog = ({
   cancel,
   busy,
   alone = false,
+  wide = false,
 }: Props): React.JSX.Element => {
   const dialog = useRef<HTMLDialogElement>(null);
   // Its own, since one dialog can be open over another.
@@ -60,7 +63,9 @@ export const ModalDialog = ({
 
   return (
     <dialog
-      className="modal-dialog dialog"
+      className={
+        wide ? "modal-dialog modal-dialog-wide dialog" : "modal-dialog dialog"
+      }
       ref={dialog}
       aria-labelledby={titled}
       onKeyDown={(event) => {

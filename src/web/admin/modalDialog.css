@@ -11,6 +11,12 @@
   color: var(--ink);
 }
 
+/* One that holds a long list of lines is as wide as the window less the
+   gutter, 1rem each side, where the others are a form's width. */
+.modal-dialog.modal-dialog-wide {
+  max-width: none;
+}
+
 /* The page behind it dimmed, so that what can be used is what stands out. */
 .modal-dialog::backdrop {
   background: rgb(0 0 0 / 0.5);

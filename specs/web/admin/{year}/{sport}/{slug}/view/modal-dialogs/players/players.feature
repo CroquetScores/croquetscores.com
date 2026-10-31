@@ -4,8 +4,13 @@ Feature: Many players are added to a tournament at once, in a modal dialog
   A manager who has a list of players, from a spreadsheet or an entry form,
   need not add them one at a time. Beside "Add Player" on the Players tab is
   "Add Players" (`players-tab.feature`), which opens a modal dialog
-  (`player.feature` says what a modal dialog is) with one box, captioned
-  "Players", that takes several lines of text.
+  (`player.feature` says what a modal dialog is) with one box that takes
+  several lines of text. The box has no caption and no explanation drawn
+  beside it, since the title says what the dialog is for, and so more of the
+  dialog is the box; it is still named "Players" for a screen reader. Unlike
+  the dialogs for one player, which are the width of a form, this one is as
+  wide as the window less 1rem each side, so that a line of a list is read
+  without scrolling sideways.
 
   The first line names the fields, separated by commas, and every line after it
   is a player, with a value for each field in the same order. "Name" must be
@@ -71,10 +76,27 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add Players" is pressed
       Then the players dialog is titled "Add Players"
 
-    Scenario: The players dialog asks for the players
+    Scenario: The players dialog draws no caption
       Given the page of "Spring Open" is open
       When "Add Players" is pressed
-      Then the players dialog asks for "Players"
+      Then the players dialog draws no caption
+
+    Scenario: The players dialog draws no explanation
+      Given the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the players dialog draws no explanation
+
+    Scenario: The players dialog is as wide as the window less 1rem each side
+      Given a viewport 1200 pixels wide
+      And the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the players dialog is 1168 pixels wide
+
+    Scenario: The players dialog is 1rem from the window's edge
+      Given a viewport 1200 pixels wide
+      And the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the players dialog is 16 pixels from the left of the window
 
     Scenario: The players are written in a box of several lines
       Given the page of "Spring Open" is open

@@ -183,12 +183,13 @@ export const PlayersDialog = ({
       act={() => void send()}
       cancel={close}
       busy={sending}
+      wide
     >
       <Field
         name="players"
         label={say("admin.players.many")}
         refused={refused}
-        explanation={say("admin.players.manyExplanation")}
+        unlabelled
       >
         {(tied) => (
           <textarea

@@ -978,8 +978,6 @@ export const english: Language = {
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Add Players",
     "admin.players.many": "Players",
-    "admin.players.manyExplanation":
-      "The first line names the fields, separated by commas: Name, and any of Representing, Flag, Handicap and WorldRankingPlayerName, in any order. Each line after it is a player, with a value for each field. A value with a comma in it is written in double quotes.",
     "admin.players.line": "Line {line}: {words}",
     "AddPlayers.FieldsMissing":
       "Write the names of the fields on the first line.",

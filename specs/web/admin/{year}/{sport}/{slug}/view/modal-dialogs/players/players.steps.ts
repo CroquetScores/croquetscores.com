@@ -28,6 +28,40 @@ const box = (world: SpecWorld): Locator =>
 // What a scenario last wrote in the box, to hold what is left in it to.
 const written = new WeakMap<SpecWorld, string>();
 
+// What is drawn in the dialog ------------------------------------------------------
+
+// A caption that is hidden is still in the page, for a screen reader, but is
+// no larger than a point.
+Then("the players dialog draws no caption", async function (this: SpecWorld) {
+  const size = await dialogOf(this).locator(".field-label").boundingBox();
+  assert.ok(size === null || (size.width <= 1 && size.height <= 1));
+});
+
+Then(
+  "the players dialog draws no explanation",
+  async function (this: SpecWorld) {
+    assert.equal(await dialogOf(this).locator(".field-explanation").count(), 0);
+  },
+);
+
+Then(
+  "the players dialog is {int} pixels wide",
+  async function (this: SpecWorld, width: number) {
+    const size = await dialogOf(this).boundingBox();
+    assert.ok(size !== null);
+    assert.ok(Math.abs(size.width - width) <= 1, `It is ${size.width} wide.`);
+  },
+);
+
+Then(
+  "the players dialog is {int} pixels from the left of the window",
+  async function (this: SpecWorld, left: number) {
+    const size = await dialogOf(this).boundingBox();
+    assert.ok(size !== null);
+    assert.ok(Math.abs(size.x - left) <= 1, `It is ${size.x} from it.`);
+  },
+);
+
 // Beside Add Player ---------------------------------------------------------------
 
 const buttonsOfTheTab = (world: SpecWorld): Locator =>
