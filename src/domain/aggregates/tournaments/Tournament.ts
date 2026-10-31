@@ -697,6 +697,15 @@ export class Tournament extends AggregateRoot {
         "The tournament holds what only its format can have.",
       );
     }
+    // A group is what a test in a format with none cannot be in, so a format
+    // like that is no longer open to a tournament whose tests are in groups,
+    // archived ones counting, since restoring one brings its group back.
+    if (!settled.format.hasGroups && this.#holdsATestInAGroup) {
+      refuse(
+        "Tournament.FormatHasNoGroups",
+        "The tournament holds tests in groups, which the format has none of.",
+      );
+    }
     const written = writtenFrom(settled);
     if (sameWriting(written, writtenFrom(this.#now))) return;
     this.record(new TournamentUpdated(written, by, at));
@@ -2337,6 +2346,13 @@ export class Tournament extends AggregateRoot {
     }
   }
 
+  // Whether any test it holds, archived or not, is in a group.
+  get #holdsATestInAGroup(): boolean {
+    return [...this.#competitions.values()].some(
+      ({ shape }) => shape.kind === "test" && shape.group !== undefined,
+    );
+  }
+
   // Whether it holds anything whose having depends on its format, archived
   // or not.
   get #holdsAnything(): boolean {
@@ -2457,9 +2473,10 @@ export class Tournament extends AggregateRoot {
   }
 
   // What is asked of a test, added or updated, of the tournament as it is:
-  // no group where the format has none, two different teams of its own in
-  // use, played within its days, starting no later than it finishes. Days are compared as the days the tournament's
-  // starts and finishes fall on in UTC, as the year of its address is. A day
+  // two different teams of its own in use, played within its days, starting
+  // no later than it finishes, and in no group where the format has none.
+  // Days are compared as the days the tournament's starts and finishes fall
+  // on in UTC, as the year of its address is. A day
   // an updated test `had` already is not asked whether it is within the
   // tournament's, since a test is not refused for what the tournament became
   // after it was added.
@@ -2467,12 +2484,6 @@ export class Tournament extends AggregateRoot {
     details: TestDetails,
     had?: { readonly starts: string; readonly finishes: string },
   ): void {
-    if (details.group !== undefined && !this.#now.format.hasGroups) {
-      refuse(
-        "Tournament.FormatHasNoGroups",
-        "The tournament's format has no groups.",
-      );
-    }
     if (details.firstTeam.equals(details.secondTeam)) {
       refuse("Tournament.TestAgainstItself", "A team does not play itself.");
     }
@@ -2498,6 +2509,12 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.TestFinishesAfterTournament",
         "The test finishes after the tournament does.",
+      );
+    }
+    if (details.group !== undefined && !this.#now.format.hasGroups) {
+      refuse(
+        "Tournament.FormatHasNoGroups",
+        "The tournament's format has no groups.",
       );
     }
   }

@@ -176,6 +176,18 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
         | Eire Cup          |
         | Interstate Shield |
 
+    Scenario Outline: The dialog to change a test does not ask for a group in <format>
+      Given the tournament "Spring Tests" is played in the format "<format>"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then the test dialog does not ask for "Group"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
     Scenario: The dialog still asks for a group in Teams
       Given the tests of "Spring Tests" are open
       When "Add Test" is pressed

@@ -28,7 +28,7 @@ Naciśnij **Dodaj test**, nad listą. Nad stroną otwiera się okno dialogowe, k
 
 **Rozgrywany z handicapem**, **Dopuszcza remisy** i **Liczy się do rankingów światowych** są pytane tak jak w każdej konkurencji. Ostatnie pojawia się tylko tam, gdzie może się liczyć: w teście krokieta klasycznego lub krokieta golfowego, który nie jest rozgrywany z handicapami ani nie dopuszcza remisów. Na początku jest zaznaczone.
 
-**Grupa** to grupa, w której jest test, gdy wydarzenie rozgrywa się w grupach, jak „Block A". Jest opcjonalna: zostawiona pusta, test nie jest w żadnej. Testy w grupie mają własną stronę na stronie publicznej, pokazującą, jak stoją drużyny grupy.
+**Grupa** to grupa, w której jest test, gdy wydarzenie rozgrywa się w grupach, jak „Block A". Jest opcjonalna: zostawiona pusta, test nie jest w żadnej. Testy w grupie mają własną stronę na stronie publicznej, pokazującą, jak stoją drużyny grupy. **Eire Cup** i **Interstate Shield** nie mają grup, więc okno dialogowe o nią tam nie pyta.
 
 Naciśnij **Dodaj**. Test zostaje dodany, okno mówi który, podając jego nazwę, a drużyny są opróżniane dla następnego, z dniami, oczekiwaną liczbą meczów, liczbą gier i grupą pozostawionymi tak, jak były: testy dodaje się runda po rundzie, między drużynami, które spotykają się tego samego dnia, więc następny test rundy to tylko jego dwie drużyny. Naciśnij **Anuluj**, gdy wszystkie są już dodane.
 

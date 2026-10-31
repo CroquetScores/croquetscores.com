@@ -28,7 +28,7 @@ Dewisir **Tîm A** a **Tîm B**, bob un, o dimau'r twrnamaint sydd yn eu lle, wr
 
 Gofynnir am **Chwarae gyda handicapiau**, **Caniatáu canlyniadau cyfartal** a **Yn cyfrif tuag at restr detholion y byd** fel ar gyfer unrhyw gystadleuaeth. Gofynnir am yr olaf dim ond lle gellir ei gyfrif: prawf Association Croquet neu Golf Croquet na chaiff ei chwarae gyda handicapiau ac nad yw'n caniatáu canlyniadau cyfartal. Mae wedi'i dicio i ddechrau.
 
-**Grŵp** yw'r grŵp y mae'r prawf ynddo, lle chwaraeir y digwyddiad mewn grwpiau, fel "Block A". Mae'n ddewisol: os caiff ei adael yn wag, nid yw'r prawf mewn un. Mae gan y profion mewn grŵp dudalen eu hunain ar y safle cyhoeddus, yn dangos safle timau'r grŵp.
+**Grŵp** yw'r grŵp y mae'r prawf ynddo, lle chwaraeir y digwyddiad mewn grwpiau, fel "Block A". Mae'n ddewisol: os caiff ei adael yn wag, nid yw'r prawf mewn un. Mae gan y profion mewn grŵp dudalen eu hunain ar y safle cyhoeddus, yn dangos safle timau'r grŵp. Nid oes grwpiau yn **Cwpan Iwerddon** nac yn **Tarian y Taleithiau**, felly nid yw'r deialog yn gofyn am un yno.
 
 Pwyswch **Ychwanegu**. Caiff y prawf ei ychwanegu, mae'r ddeialog yn dweud pa un wrth ei enw, a chaiff y timau eu gwagio ar gyfer y nesaf, â'r dyddiau, y gemau disgwyliedig, yr orau o a'r grŵp wedi'u gadael fel yr oeddent: ychwanegir profion rownd ar y tro, rhwng timau sy'n cwrdd ar yr un diwrnod, felly nid yw prawf nesaf y rownd ond ei ddau dîm yn unig. Pwyswch **Diddymu** unwaith y bydd pob un i mewn.
 

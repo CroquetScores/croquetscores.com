@@ -1130,6 +1130,7 @@ export const welsh: Language = {
     "TestGroup.TooLong": "Mae'r grŵp hwnnw'n rhy hir.",
     "Tournament.TestAgainstItself":
       "Nid yw tîm yn chwarae prawf yn erbyn ei hun.",
+    "Tournament.FormatHasNoGroups": "Nid yw prawf yn y fformat hwn mewn grŵp.",
     "Tournament.TestFinishesBeforeStarts":
       "Ni all prawf orffen cyn iddo ddechrau.",
     "Tournament.TestStartsBeforeTournament":

@@ -26,21 +26,25 @@ const names = new Validator<string, TournamentFormatErrorCode>({
 export class TournamentFormat {
   readonly #name: string;
   readonly #isTeamFormat: boolean;
+  readonly #hasGroups: boolean;
 
-  private constructor(name: string, isTeamFormat: boolean) {
+  private constructor(name: string, isTeamFormat: boolean, hasGroups: boolean) {
     this.#name = name;
     this.#isTeamFormat = isTeamFormat;
+    this.#hasGroups = hasGroups;
   }
 
-  static readonly standard = new TournamentFormat("Standard", false);
-  static readonly teams = new TournamentFormat("Teams", true);
-  static readonly eireCup = new TournamentFormat("Eire Cup", true);
+  static readonly standard = new TournamentFormat("Standard", false, true);
+  static readonly teams = new TournamentFormat("Teams", true, true);
+  static readonly eireCup = new TournamentFormat("Eire Cup", true, false);
   static readonly interstateShield = new TournamentFormat(
     "Interstate Shield",
     true,
+    false,
   );
   static readonly gcWorldTeamChampionship = new TournamentFormat(
     "GC World Team Championship",
+    true,
     true,
   );
 
@@ -95,10 +99,7 @@ export class TournamentFormat {
    * not.
    */
   get hasGroups(): boolean {
-    return (
-      this !== TournamentFormat.eireCup &&
-      this !== TournamentFormat.interstateShield
-    );
+    return this.#hasGroups;
   }
 
   /**

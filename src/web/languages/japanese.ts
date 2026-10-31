@@ -1091,6 +1091,8 @@ export const japanese: Language = {
     "TestGroup.TooLong": "グループ名が長すぎます。",
     "Tournament.TestAgainstItself":
       "同じチーム同士でテストマッチは行えません。",
+    "Tournament.FormatHasNoGroups":
+      "この形式のテストマッチはグループに分けられません。",
     "Tournament.TestFinishesBeforeStarts":
       "テストマッチは開始前に終了できません。",
     "Tournament.TestStartsBeforeTournament":

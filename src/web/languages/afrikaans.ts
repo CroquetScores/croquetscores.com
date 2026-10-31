@@ -1162,6 +1162,8 @@ export const afrikaans: Language = {
     "TestGroup.TooLong": "Daardie groep is te lank.",
     "Tournament.TestAgainstItself":
       "'n Span speel nie 'n toets teen homself nie.",
+    "Tournament.FormatHasNoGroups":
+      "'n Toets in hierdie formaat word nie in 'n groep geplaas nie.",
     "Tournament.TestFinishesBeforeStarts":
       "'n Toets kan nie eindig voordat dit begin nie.",
     "Tournament.TestStartsBeforeTournament":

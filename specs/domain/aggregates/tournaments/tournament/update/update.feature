@@ -324,6 +324,62 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then the tournament is played in the format "Standard"
 
+  Rule: A tournament with a test in a group keeps a format that has groups
+
+    A test in an Eire Cup or an Interstate Shield is in no group
+    (`addTest.feature`), so a tournament whose tests are in groups is not
+    played in either, rather than left holding what its format cannot have.
+    An archived test counts, since restoring it would bring its group back.
+
+    Scenario Outline: A tournament with a test in a group cannot be played in <format>
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the test "AUS v ENG" was updated to be in the group "Group A"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "<format>"
+      When the tournament is updated
+      Then it is refused with "Tournament.FormatHasNoGroups"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario: A tournament with an archived test in a group cannot be played in an Eire Cup
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the test "AUS v ENG" was updated to be in the group "Group A"
+      And the competition "AUS v ENG" was archived
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Eire Cup"
+      When the tournament is updated
+      Then it is refused with "Tournament.FormatHasNoGroups"
+
+    Scenario: A tournament with a test in no group can be played in an Eire Cup
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Eire Cup"
+      When the tournament is updated
+      Then the tournament is played in the format "Eire Cup"
+
+    Scenario: A tournament with a test in a group can be played in another format that has groups
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the test "AUS v ENG" was updated to be in the group "Group A"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "GC World Team Championship"
+      When the tournament is updated
+      Then the tournament is played in the format "GC World Team Championship"
+
   Rule: A tournament's days changed leave its tests as they were
 
     Scenario: A tournament made to start after its test starts keeps the test

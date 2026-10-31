@@ -331,6 +331,32 @@ Feature: Changing a test
         | Eire Cup          |
         | Interstate Shield |
 
+    Scenario Outline: A test updated to no group is accepted in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update has the test in no group
+      When the test "AUS v ENG" is updated
+      Then the test "AUS v ENG" is in no group
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario Outline: A test changed in another way is accepted in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update has the test finish on "2026-10-05"
+      When the test "AUS v ENG" is updated
+      Then the test "AUS v ENG" finishes on "2026-10-05"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
   Rule: A day left as it was is not refused for what the tournament became
 
     Scenario: A test on a day the tournament no longer has can be given a group

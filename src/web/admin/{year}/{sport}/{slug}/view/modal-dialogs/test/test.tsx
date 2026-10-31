@@ -99,6 +99,7 @@ const partOf: Readonly<Record<string, Part>> = {
   "Tournament.TestFinishesAfterTournament": "finishes",
   "Tournament.ExpectedMatchesBelowStarted": "expectedMatches",
   "Tournament.BestOfBelowGamesPlayed": "bestOf",
+  "Tournament.FormatHasNoGroups": "group",
 };
 
 // The earlier and the later of two days written as "2026-10-03", which sort
@@ -127,10 +128,10 @@ export const TestDialog = ({
 }: Props): React.JSX.Element => {
   const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
-  // The days the tournament is played, which a test is played within.
   // Whether the tournament's format has groups. Assumed until it says
   // otherwise, since most do, so that the field is not seen to arrive.
   const [hasGroups, setHasGroups] = useState(true);
+  // The days the tournament is played, which a test is played within.
   const [days, setDays] = useState<
     { readonly starts: string; readonly finishes: string } | undefined
   >();

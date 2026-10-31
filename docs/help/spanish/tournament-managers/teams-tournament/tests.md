@@ -28,7 +28,7 @@ Pulsa **Añadir test**, encima de la lista. Se abre un diálogo sobre la página
 
 **Se juega con hándicap**, **Permite resultados con empate** y **Cuenta para los rankings mundiales** se preguntan como en cualquier competición. Lo último se pregunta solo cuando puede contar: un test de Croquet de asociación o de Croquet golf que ni se juega con hándicap ni permite empates. Empieza marcado.
 
-**Grupo** es el grupo en que está el test, cuando el evento se juega por grupos, como "Block A". Es opcional: si se deja vacío, el test no está en ninguno. Los tests de un grupo tienen una página propia en el sitio público, que muestra cómo van los equipos del grupo.
+**Grupo** es el grupo en que está el test, cuando el evento se juega por grupos, como "Block A". Es opcional: si se deja vacío, el test no está en ninguno. Los tests de un grupo tienen una página propia en el sitio público, que muestra cómo van los equipos del grupo. La **Copa Eire** y el **Escudo Interestatal** no tienen grupos, así que el cuadro de diálogo no pide uno.
 
 Pulsa **Añadir**. El test se añade, el diálogo dice cuál por su nombre, y los equipos se vacían para el siguiente, dejando los días, los partidos previstos, el al mejor de y el grupo como estaban: los tests se añaden ronda a ronda, entre equipos que se enfrentan el mismo día, así que el siguiente test de la ronda es solo sus dos equipos. Pulsa **Cancelar** cuando estén todos.
 
