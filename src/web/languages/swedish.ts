@@ -777,6 +777,9 @@ export const swedish: Language = {
     "admin.hover.tournaments.restore":
       "Hämta tillbaka den arkiverade turneringen",
     "admin.hover.players.add": "Lägg till en spelare i turneringen",
+    "admin.hover.players.addMany":
+      "Lägg till flera spelare i turneringen på en gång",
+    "admin.hover.dialog.players.add": "Lägg till spelarna i turneringen",
     "admin.hover.players.edit": "Ändra spelarens uppgifter",
     "admin.hover.players.up": "Flytta spelaren upp i listan",
     "admin.hover.players.down": "Flytta spelaren ner i listan",
@@ -955,6 +958,7 @@ export const swedish: Language = {
       "Vinnaren av den här matchen har redan spelat sitt nästa parti, så vem som vann kan inte ändras.",
     "CompetitionPlayer.Withdrawn": "En tillbakadragen spelare spelar inte mer.",
     "admin.players.add": "Lägg till spelare",
+    "admin.players.addMany": "Lägg till flera spelare",
     "admin.players.none": "Inga spelare",
     "admin.players.edit": "Redigera",
     "admin.players.archive": "Arkivera",
@@ -988,6 +992,21 @@ export const swedish: Language = {
     "admin.player.add": "Lägg till",
     "admin.player.save": "Spara",
     "admin.player.added": "{name} lades till.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Lägg till flera spelare",
+    "admin.players.many": "Spelare",
+    "admin.players.line": "Rad {line}: {words}",
+    "AddPlayers.FieldsMissing": "Skriv fältens namn på första raden.",
+    "AddPlayers.NameMissing": "Fälten måste innehålla Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Ett fält kan vara Name, Representing, Flag, Handicap eller WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Ett fält kan bara namnges en gång.",
+    "AddPlayers.PlayersMissing":
+      "Skriv en spelare på varje rad efter den första.",
+    "AddPlayers.TooManyPlayers":
+      "En lista kan innehålla högst 500 spelare. Lägg till resten i en annan lista.",
+    "AddPlayers.ValuesMismatched":
+      "Varje spelare behöver ett värde, eller inget, för varje fält som namnges på första raden.",
     // Ovanför fälten, för ett avslag utan egna ord.
     "admin.player.otherwise": "Den här spelaren kan inte sparas som hen är.",
     "Tournament.PlayerNameTaken":

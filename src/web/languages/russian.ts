@@ -733,6 +733,9 @@ export const russian: Language = {
       "Отправить этот турнир в архив; его можно будет восстановить",
     "admin.hover.tournaments.restore": "Вернуть этот турнир из архива",
     "admin.hover.players.add": "Добавить игрока в этот турнир",
+    "admin.hover.players.addMany":
+      "Добавить в этот турнир сразу нескольких игроков",
+    "admin.hover.dialog.players.add": "Добавить этих игроков в турнир",
     "admin.hover.players.edit": "Изменить данные этого игрока",
     "admin.hover.players.up": "Переместить этого игрока выше в списке",
     "admin.hover.players.down": "Переместить этого игрока ниже в списке",
@@ -916,6 +919,7 @@ export const russian: Language = {
       "Победитель этого матча уже сыграл свою следующую игру, поэтому изменить, кто победил, нельзя.",
     "CompetitionPlayer.Withdrawn": "Снявшийся игрок больше не играет.",
     "admin.players.add": "Добавить игрока",
+    "admin.players.addMany": "Добавить игроков",
     "admin.players.none": "Игроков нет",
     "admin.players.edit": "Изменить",
     "admin.players.archive": "В архив",
@@ -943,6 +947,21 @@ export const russian: Language = {
     "admin.player.add": "Добавить",
     "admin.player.save": "Сохранить",
     "admin.player.added": "{name}: добавлено.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Добавление игроков",
+    "admin.players.many": "Игроки",
+    "admin.players.line": "Строка {line}: {words}",
+    "AddPlayers.FieldsMissing": "Напишите названия полей в первой строке.",
+    "AddPlayers.NameMissing": "Среди полей должно быть Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Поле может называться Name, Representing, Flag, Handicap или WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Каждое поле можно назвать только один раз.",
+    "AddPlayers.PlayersMissing":
+      "Напишите по игроку в каждой строке после первой.",
+    "AddPlayers.TooManyPlayers":
+      "В одном списке может быть не больше 500 игроков. Остальных добавьте другим списком.",
+    "AddPlayers.ValuesMismatched":
+      "Для каждого игрока нужно указать значение каждого поля из первой строки либо оставить его пустым.",
     "admin.player.otherwise": "Этого игрока нельзя сохранить в таком виде.",
     "Tournament.PlayerNameTaken":
       "Другой игрок этого турнира уже носит такое имя.",

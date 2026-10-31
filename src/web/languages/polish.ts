@@ -701,6 +701,9 @@ export const polish: Language = {
       "Zarchiwizuj ten turniej; można go przywrócić",
     "admin.hover.tournaments.restore": "Przywróć ten zarchiwizowany turniej",
     "admin.hover.players.add": "Dodaj zawodnika do tego turnieju",
+    "admin.hover.players.addMany":
+      "Dodaj kilku zawodników do tego turnieju naraz",
+    "admin.hover.dialog.players.add": "Dodaj tych zawodników do turnieju",
     "admin.hover.players.edit": "Zmień dane tego zawodnika",
     "admin.hover.players.up": "Przesuń tego zawodnika w górę listy",
     "admin.hover.players.down": "Przesuń tego zawodnika w dół listy",
@@ -879,6 +882,7 @@ export const polish: Language = {
       "Zwycięzca tego meczu rozegrał już następną grę, więc nie można zmienić, kto go wygrał.",
     "CompetitionPlayer.Withdrawn": "Wycofany zawodnik już nie gra.",
     "admin.players.add": "Dodaj zawodnika",
+    "admin.players.addMany": "Dodaj zawodników",
     "admin.players.none": "Brak zawodników",
     "admin.players.edit": "Edytuj",
     "admin.players.archive": "Archiwizuj",
@@ -907,6 +911,21 @@ export const polish: Language = {
     "admin.player.add": "Dodaj",
     "admin.player.save": "Zapisz",
     "admin.player.added": "Dodano: {name}.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Dodaj zawodników",
+    "admin.players.many": "Zawodnicy",
+    "admin.players.line": "Wiersz {line}: {words}",
+    "AddPlayers.FieldsMissing": "Wpisz nazwy pól w pierwszym wierszu.",
+    "AddPlayers.NameMissing": "Pola muszą obejmować Name.",
+    "AddPlayers.FieldNotAllowed":
+      "Polem może być Name, Representing, Flag, Handicap lub WorldRankingPlayerName.",
+    "AddPlayers.FieldRepeated": "Każde pole można nazwać tylko raz.",
+    "AddPlayers.PlayersMissing":
+      "Wpisz zawodnika w każdym wierszu po pierwszym.",
+    "AddPlayers.TooManyPlayers":
+      "Lista może zawierać najwyżej 500 zawodników. Resztę dodaj na innej liście.",
+    "AddPlayers.ValuesMismatched":
+      "Każdy zawodnik musi mieć wartość lub pustą wartość dla każdego pola z pierwszego wiersza.",
     "admin.player.otherwise":
       "Tego zawodnika nie można zachować w tej postaci.",
     "Tournament.PlayerNameTaken":

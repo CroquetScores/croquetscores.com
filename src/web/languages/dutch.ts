@@ -784,6 +784,9 @@ export const dutch: Language = {
       "Archiveer dit toernooi; het kan worden hersteld",
     "admin.hover.tournaments.restore": "Haal dit gearchiveerde toernooi terug",
     "admin.hover.players.add": "Voeg een speler toe aan dit toernooi",
+    "admin.hover.players.addMany":
+      "Voeg meerdere spelers tegelijk toe aan dit toernooi",
+    "admin.hover.dialog.players.add": "Voeg deze spelers toe aan het toernooi",
     "admin.hover.players.edit": "Wijzig de gegevens van deze speler",
     "admin.hover.players.up": "Verplaats deze speler omhoog in de lijst",
     "admin.hover.players.down": "Verplaats deze speler omlaag in de lijst",
@@ -982,6 +985,7 @@ export const dutch: Language = {
     "CompetitionPlayer.Withdrawn":
       "Een teruggetrokken speler speelt niet meer.",
     "admin.players.add": "Speler toevoegen",
+    "admin.players.addMany": "Spelers toevoegen",
     "admin.players.none": "Geen spelers",
     "admin.players.edit": "Bewerken",
     "admin.players.archive": "Archiveren",
@@ -1013,6 +1017,22 @@ export const dutch: Language = {
     "admin.player.add": "Toevoegen",
     "admin.player.save": "Opslaan",
     "admin.player.added": "{name} is toegevoegd.",
+    // The players dialog (players.feature): several players written in one box.
+    "admin.players.addManyTitle": "Spelers toevoegen",
+    "admin.players.many": "Spelers",
+    "admin.players.line": "Regel {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Schrijf de namen van de velden op de eerste regel.",
+    "AddPlayers.NameMissing": "De velden moeten Name bevatten.",
+    "AddPlayers.FieldNotAllowed":
+      "Een veld kan Name, Representing, Flag, Handicap of WorldRankingPlayerName zijn.",
+    "AddPlayers.FieldRepeated": "Een veld mag maar één keer voorkomen.",
+    "AddPlayers.PlayersMissing":
+      "Schrijf op elke regel na de eerste een speler.",
+    "AddPlayers.TooManyPlayers":
+      "Een lijst kan hooguit 500 spelers bevatten. Voeg de rest toe in een andere lijst.",
+    "AddPlayers.ValuesMismatched":
+      "Elke speler heeft voor elk veld dat op de eerste regel staat een waarde nodig, of niets.",
     // Above the fields, for a refusal with no words of its own.
     "admin.player.otherwise": "Deze speler kan zo niet worden bewaard.",
     "Tournament.PlayerNameTaken":

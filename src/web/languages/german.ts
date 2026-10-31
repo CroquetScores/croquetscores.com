@@ -819,6 +819,9 @@ export const german: Language = {
       "Dieses Turnier archivieren; es lässt sich wiederherstellen",
     "admin.hover.tournaments.restore": "Dieses archivierte Turnier zurückholen",
     "admin.hover.players.add": "Einen Spieler zu diesem Turnier hinzufügen",
+    "admin.hover.players.addMany":
+      "Mehrere Spieler auf einmal zu diesem Turnier hinzufügen",
+    "admin.hover.dialog.players.add": "Diese Spieler zum Turnier hinzufügen",
     "admin.hover.players.edit": "Die Angaben zu diesem Spieler ändern",
     "admin.hover.players.up": "Diesen Spieler in der Liste nach oben schieben",
     "admin.hover.players.down":
@@ -1029,6 +1032,7 @@ export const german: Language = {
     "CompetitionPlayer.Withdrawn":
       "Ein zurückgezogener Spieler spielt nicht mehr.",
     "admin.players.add": "Spieler hinzufügen",
+    "admin.players.addMany": "Mehrere Spieler hinzufügen",
     "admin.players.none": "Keine Spieler",
     "admin.players.edit": "Bearbeiten",
     "admin.players.archive": "Archivieren",
@@ -1062,6 +1066,22 @@ export const german: Language = {
     "admin.player.add": "Hinzufügen",
     "admin.player.save": "Speichern",
     "admin.player.added": "{name} wurde hinzugefügt.",
+    // Der Spielerdialog (players.feature): mehrere Spieler, in einem Feld geschrieben.
+    "admin.players.addManyTitle": "Mehrere Spieler hinzufügen",
+    "admin.players.many": "Spieler",
+    "admin.players.line": "Zeile {line}: {words}",
+    "AddPlayers.FieldsMissing":
+      "Schreiben Sie die Namen der Felder in die erste Zeile.",
+    "AddPlayers.NameMissing": "Die Felder müssen Name enthalten.",
+    "AddPlayers.FieldNotAllowed":
+      "Ein Feld kann Name, Representing, Flag, Handicap oder WorldRankingPlayerName sein.",
+    "AddPlayers.FieldRepeated": "Ein Feld darf nur einmal genannt werden.",
+    "AddPlayers.PlayersMissing":
+      "Schreiben Sie in jede Zeile nach der ersten einen Spieler.",
+    "AddPlayers.TooManyPlayers":
+      "Eine Liste kann höchstens 500 Spieler enthalten. Fügen Sie die übrigen in einer weiteren Liste hinzu.",
+    "AddPlayers.ValuesMismatched":
+      "Jeder Spieler braucht für jedes in der ersten Zeile genannte Feld einen Wert oder nichts.",
     // Über den Feldern, für eine Ablehnung ohne eigene Worte.
     "admin.player.otherwise":
       "Dieser Spieler kann so nicht gespeichert werden.",
