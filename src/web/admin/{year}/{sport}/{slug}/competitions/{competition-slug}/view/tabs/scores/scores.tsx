@@ -181,26 +181,40 @@ export const ScoresTab = ({
       </p>
     ) : null;
 
+  // The cell is the part's own class and listed-score, which is what a score
+  // is struck through by (scores.css), so each part of a score is struck.
   const row = (game: Listed): React.JSX.Element => (
-    <li
+    <tr
       key={game.id}
       className="listed-item"
       data-archived={game.archived ? "" : undefined}
       data-withdrawn={game.withdrawn ? "" : undefined}
     >
-      <span className="listed-score">
-        <span className="score-winner">{game.winner}</span>{" "}
-        <span className="score-winner-score">{game.winnerScore}</span>{" "}
-        {say("admin.score.beat")}
-        <br />
-        <span className="score-loser">{game.loser}</span>{" "}
-        <span className="score-loser-score">{game.loserScore}</span>
-      </span>
-      {archivedSaid(game)}
-      {withdrawnSaid(game)}
-      {options(game)}
-      {refusedBeneath(game)}
-    </li>
+      <td className="listed-score score-winner">{game.winner}</td>
+      <td className="listed-score score-winner-score">{game.winnerScore}</td>
+      <td className="listed-score score-loser">{game.loser}</td>
+      <td className="listed-score score-loser-score">{game.loserScore}</td>
+      <td>
+        {archivedSaid(game)}
+        {withdrawnSaid(game)}
+        {options(game)}
+        {refusedBeneath(game)}
+      </td>
+    </tr>
+  );
+
+  // Without column headings: what each column holds is plain from what is in
+  // it, and the page is narrow. Within a box that scrolls across where the
+  // table is wider than the screen, as a test's is.
+  const scoreTable = (
+    games: readonly Listed[],
+    listing: "in-use" | "archived",
+  ): React.JSX.Element => (
+    <div className="test-scores-box">
+      <table className="score-table">
+        <tbody data-listed={listing}>{games.map(row)}</tbody>
+      </table>
+    </div>
   );
 
   // A test's score from the first team's side, whoever won: the first team's
@@ -398,27 +412,19 @@ export const ScoresTab = ({
         <p className="listed-none">{say("admin.scores.none")}</p>
       ) : (
         <>
-          {inUse.length > 0 ? (
-            teams === undefined ? (
-              <ul className="listed" data-listed="in-use">
-                {inUse.map(row)}
-              </ul>
-            ) : (
-              testTable(inUse, "in-use", teams)
-            )
-          ) : null}
+          {inUse.length > 0
+            ? teams === undefined
+              ? scoreTable(inUse, "in-use")
+              : testTable(inUse, "in-use", teams)
+            : null}
           {archived.length > 0 ? (
             <>
               <h2 className="listed-archived-heading">
                 {say("admin.scores.archived")}
               </h2>
-              {teams === undefined ? (
-                <ul className="listed" data-listed="archived">
-                  {archived.map(row)}
-                </ul>
-              ) : (
-                testTable(archived, "archived", teams)
-              )}
+              {teams === undefined
+                ? scoreTable(archived, "archived")
+                : testTable(archived, "archived", teams)}
             </>
           ) : null}
         </>

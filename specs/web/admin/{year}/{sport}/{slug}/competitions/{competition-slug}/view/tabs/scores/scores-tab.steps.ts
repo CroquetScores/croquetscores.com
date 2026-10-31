@@ -189,6 +189,58 @@ Then(
   },
 );
 
+Then("the scores are listed in a table", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(
+      await tabPanel(this).locator("table [data-listed]").count(),
+      1,
+    );
+  });
+});
+
+Then(
+  "the table of scores has no column headings",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const panel = tabPanel(this);
+      assert.equal(await panel.locator("table").count(), 1);
+      assert.equal(await panel.locator("table th, table thead").count(), 0);
+    });
+  },
+);
+
+// Where a column's cell is in its row, by what it holds.
+const COLUMNS: Record<string, string> = {
+  winner: ".score-winner",
+  "winner's score": ".score-winner-score",
+  loser: ".score-loser",
+  "loser's score": ".score-loser-score",
+  buttons: ".listed-options",
+};
+
+Then(
+  /^the first score listed has (\d+) columns$/,
+  async function (this: SpecWorld, columns: string) {
+    await eventually(this, async () => {
+      const cells = rows(this, "in-use").first().locator(":scope > td");
+      assert.equal(await cells.count(), Number(columns));
+    });
+  },
+);
+
+Then(
+  /^the first score listed has its (winner|winner's score|loser|loser's score|buttons) in column (\d+)$/,
+  async function (this: SpecWorld, part: string, column: string) {
+    await eventually(this, async () => {
+      const cell = rows(this, "in-use")
+        .first()
+        .locator(":scope > td")
+        .nth(Number(column) - 1);
+      assert.equal(await cell.locator(COLUMNS[part] ?? part).count(), 1);
+    });
+  },
+);
+
 Then(
   "in the first score listed {string} is shown before {string}",
   async function (this: SpecWorld, one: string, other: string) {
@@ -267,7 +319,7 @@ Then(
       const line = await (
         await rowOf(this, winner, loser)
       )
-        .locator(".listed-score")
+        .locator(".score-winner")
         .evaluate(
           (element: unknown) =>
             (

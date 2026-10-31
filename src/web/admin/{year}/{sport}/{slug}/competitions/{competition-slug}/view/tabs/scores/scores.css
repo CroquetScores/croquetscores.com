@@ -78,3 +78,39 @@
 .listed-item[data-archived] .score-player {
   text-decoration: line-through;
 }
+
+/* The scores of a block, a knockout or a Swiss: a table of the winner, their
+   score, the loser, their score and what each offers, which reaches across
+   the page so that the buttons are at the right edge. A name wraps rather
+   than widening the page; a score does not, so that it reads on one line. */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.score-table td {
+  padding-block: var(--space-2);
+  padding-inline: var(--space-2);
+  vertical-align: middle;
+  text-align: start;
+}
+
+.score-table .score-winner-score,
+.score-table .score-loser-score {
+  white-space: nowrap;
+}
+
+/* A row of a table, rather than the grid every other list's row is
+   (listed.css). */
+.score-table .listed-item {
+  display: table-row;
+  border-top: 1px solid var(--border);
+}
+
+.score-table td:last-child {
+  width: 1%;
+}
+
+.score-table .listed-options {
+  justify-content: flex-end;
+}

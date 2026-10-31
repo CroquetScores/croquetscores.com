@@ -27,9 +27,11 @@ Feature: The scores tab of a competition's page
   draw, and Add Score always opens the score dialog in them.
 
   The scores in use come first, in the order they were entered, oldest first,
-  so that the list reads as the competition was played. Each says the winner
-  and their score, then the loser and their score, and offers Edit and
-  Archive, Edit first, as it is for a player and a competition, so that
+  so that the list reads as the competition was played. They are a table,
+  a row to each score and no column headings, since what each column holds
+  is plain from what is in it. Its columns are the winner's name, the
+  winner's score, the loser's name, the loser's score, and the buttons, which
+  offer Edit and Archive, Edit first, as it is for a player and a competition, so that
   putting a score right is offered ahead of setting it aside. A
   score is shown exactly as it was typed, whatever follows its number, as
   "26tp" or "6w" (`Score.feature`).
@@ -114,6 +116,41 @@ Feature: The scores tab of a competition's page
     Scenario: A competition with no scores says so
       When the scores of "Block A" in "Spring Open" are opened
       Then the tab says there are no scores
+
+  Rule: The scores are a table of five columns, without headings
+
+    The same five columns are used in a block, a knockout and a Swiss, so that
+    a name, a score and what can be done with it are found in the same place
+    from one competition to the next. A column is named for what it holds
+    only here, and not on the page.
+
+    Scenario: The scores are listed in a table
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the scores are listed in a table
+
+    Scenario: The table has no column headings
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the table of scores has no column headings
+
+    Scenario: A score has five columns
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first score listed has 5 columns
+
+    Scenario Outline: Each part of a score has a column of its own
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first score listed has its <part> in column <column>
+
+      Examples:
+        | column | part           |
+        | 1      | winner         |
+        | 2      | winner's score |
+        | 3      | loser          |
+        | 4      | loser's score  |
+        | 5      | buttons        |
 
   Rule: Each score says the winner and their score, then the loser and theirs
 
