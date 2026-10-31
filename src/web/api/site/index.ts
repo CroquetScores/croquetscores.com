@@ -37,6 +37,7 @@ import { ReverseWithdrawal } from "../../../application/operations/competitions/
 import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
+import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
 import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
 import { RestorePlayer } from "../../../application/operations/tournaments/RestorePlayer.js";
@@ -1347,6 +1348,39 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         .code(201)
         .header("cache-control", "no-store")
         .send({ id: added.value });
+    },
+  );
+
+  // Several players added at once, all or none, in the order they are sent,
+  // as the players dialog sends them: the fields named, and each player's
+  // values. Answered with their ids in that order.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/players/many",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const body = request.body as { fields?: unknown; rows?: unknown } | null;
+      // Whatever is not a list of text is as good as nothing written, and is
+      // refused as that is.
+      const texts = (value: unknown): string[] =>
+        Array.isArray(value)
+          ? (value as unknown[]).map((each) =>
+              typeof each === "string" ? each : "",
+            )
+          : [];
+      const added = await request.server.mediator.send(
+        new AddPlayers(
+          reader.value,
+          `tournament/${request.params.id}`,
+          texts(body?.fields),
+          Array.isArray(body?.rows) ? (body.rows as unknown[]).map(texts) : [],
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ ids: added.map(({ value }) => value) });
     },
   );
 
