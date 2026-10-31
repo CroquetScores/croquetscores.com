@@ -186,15 +186,15 @@ const drawnScript = `(() => {
 })()`;
 
 Then(
-  "the options of the form's country list are white on #3b3b3b",
-  async function (this: SpecWorld) {
+  "the options of the form's country list are {string} on {string}",
+  async function (this: SpecWorld, ink: string, ground: string) {
     await eventually(this, async () => {
       const drawn = await field(this, "Country").evaluate<
         { ink: string; ground: string },
         undefined
       >(drawnScript);
-      assert.equal(drawn.ink, "rgb(255, 255, 255)");
-      assert.equal(drawn.ground, "rgb(59, 59, 59)");
+      assert.equal(drawn.ink, ink);
+      assert.equal(drawn.ground, ground);
     });
   },
 );

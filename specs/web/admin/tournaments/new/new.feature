@@ -189,22 +189,22 @@ Feature: A new tournament is created in the admin
       When the new tournament page is opened
       Then the form's country list has 2 lines drawn in it
 
-  Rule: The options of a list are white on #3b3b3b, in either theme
+  Rule: The options of a list are white on #3b3b3b in the dark theme
 
     A browser draws the options of a list as it chooses unless it is told how,
     and in the dark theme some drew them in the ink on a light ground: words
-    nobody could read (issue 456). Every list's options are told, the same in
-    either theme, so that a list reads the same wherever it is opened.
+    nobody could read (issue 456). In dark every list's options are white on
+    #3b3b3b. In light they are the ink on the panel, as they were.
 
-    Scenario Outline: The options of the country list are white on #3b3b3b
-      Given a machine that prefers <theme>
+    Scenario: The options of the country list are white on #3b3b3b in dark
+      Given a machine that prefers dark
       When the new tournament page is opened
-      Then the options of the form's country list are white on #3b3b3b
+      Then the options of the form's country list are "rgb(255, 255, 255)" on "rgb(59, 59, 59)"
 
-      Examples:
-        | theme |
-        | light |
-        | dark  |
+    Scenario: The options of the country list are the ink on the panel in light
+      Given a machine that prefers light
+      When the new tournament page is opened
+      Then the options of the form's country list are "rgb(22, 24, 28)" on "rgb(255, 255, 255)"
 
   Rule: A region is asked for only where the country has regions
 
