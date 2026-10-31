@@ -17,8 +17,8 @@ import { useListed } from "../../../../../../useListed.js";
 // tournament's order, each with what they represent and the flag they fly,
 // offering Edit, Archive, Up and Down, and after them the archived ones, struck
 // through. Add Players opens the dialog to add a list of them at once
-// (players.feature). Add Player, a player's name and Edit open the player dialog. A player who
-// has played is not offered Archive, since the games would then be against
+// (players.feature). Add Player, a player's name and Edit open the player
+// dialog. A player who has played is not offered Archive, since the games would then be against
 // somebody who is no longer there, and archiving one who is in competitions
 // asks first, since it removes them from each. Whatever is pressed, and
 // whenever the dialog keeps a player, the list is asked for again.

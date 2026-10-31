@@ -42,12 +42,12 @@ interface Cut {
   readonly lines: readonly number[];
 }
 
-// One line cut into its values at the commas, except where a value is in double
-// quotes, as a spreadsheet writes one that has a comma in it; a quote inside
-// one is written twice. A quote that does not begin a value is just a quote.
-// A value stays on its line: lines are cut first, so a quoted value cannot run
-// over two of them.
-const valuesOf = (line: string): string[] => {
+// One line cut into its values at the separator, except where a value is in
+// double quotes, as a spreadsheet writes one that has the separator in it; a
+// quote inside one is written twice. A quote that does not begin a value is
+// just a quote. A value stays on its line: lines are cut first, so a quoted
+// value cannot run over two of them.
+const valuesOf = (line: string, separator: string): string[] => {
   const values: string[] = [];
   let value = "";
   let quoted = false;
@@ -62,7 +62,7 @@ const valuesOf = (line: string): string[] => {
     } else if (each === '"' && value.trim() === "") {
       quoted = true;
       value = "";
-    } else if (each === ",") {
+    } else if (each === separator) {
       values.push(value);
       value = "";
     } else value += each;
@@ -81,9 +81,13 @@ const cut = (text: string): Cut => {
     .map((words, place) => ({ words, line: place + 1 }))
     .filter(({ words }) => words.trim() !== "");
   const [first, ...rest] = written;
+  // Cells copied from a spreadsheet arrive with a tab between them and no
+  // commas, so a first line with a tab in it is cut at the tabs, and the lines
+  // after it with it. Otherwise the commas, as the list was written by hand.
+  const separator = first?.words.includes("\t") === true ? "\t" : ",";
   return {
-    fields: first === undefined ? [] : valuesOf(first.words),
-    rows: rest.map(({ words }) => valuesOf(words)),
+    fields: first === undefined ? [] : valuesOf(first.words, separator),
+    rows: rest.map(({ words }) => valuesOf(words, separator)),
     fieldsLine: first?.line,
     lines: rest.map(({ line }) => line),
   };

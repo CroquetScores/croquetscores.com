@@ -119,8 +119,10 @@ Given(
 // The lines as the reader would paste them, from a spreadsheet or an entry form.
 Given(
   "these lines are typed as the {string}:",
-  async function (this: SpecWorld, label: string, lines: string) {
+  async function (this: SpecWorld, label: string, text: string) {
     assert.equal(label, "Players");
+    // A tab is written \t, since an editor turns a real one into spaces.
+    const lines = text.replace(/\\t/g, "\t");
     written.set(this, lines);
     await box(this).fill(lines);
   },
@@ -165,6 +167,21 @@ Then(
         await refusedOn(this, code, line).count(),
         1,
         `${code} is not said of line ${String(line)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} is refused once with {string}",
+  async function (this: SpecWorld, _label: string, code: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await dialogOf(this)
+          .locator(`.field-message [data-code="${code}"]`)
+          .count(),
+        1,
+        `${code} is not said once.`,
       );
     });
   },

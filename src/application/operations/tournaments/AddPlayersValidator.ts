@@ -10,8 +10,9 @@ import { AddPlayers, mostPlayersAtOnce, playerFieldOf } from "./AddPlayers.js";
  *
  * Its shape first: that it names fields, only ones there are, each once and
  * Name among them, that there are players but not too many, and that every
- * player has as many values as there are fields. A list whose shape is wrong is not asked what its players are, since
- * what a value is of depends on its field. Then each player is asked what
+ * player has as many values as there are fields. A list whose shape is wrong
+ * is not asked what its players are, since what a value is of depends on its
+ * field. Then each player is asked what
  * AddPlayer asks of one. The fields named are `fields`, and a player's is
  * `rows.` and their place in the list, counting from 0, so that whoever typed
  * the list is told which of them broke a rule. Every one that does is named,
@@ -40,11 +41,18 @@ export class AddPlayersValidator extends CommandValidator<AddPlayers> {
     }
     const named = command.fields.map((field) => field.trim().toLowerCase());
     const broken: BrokenRule[] = [];
+    // Each fault of the first line is said once, however many of its fields
+    // have it: they are all on the one line, which is all that is said of them.
+    const say = (code: string): void => {
+      if (!broken.some((rule) => rule.code === code)) {
+        broken.push({ code, fields });
+      }
+    };
     named.forEach((field, place) => {
       if (playerFieldOf(field) === undefined) {
-        broken.push({ code: "AddPlayers.FieldNotAllowed", fields });
+        say("AddPlayers.FieldNotAllowed");
       } else if (named.indexOf(field) !== place) {
-        broken.push({ code: "AddPlayers.FieldRepeated", fields });
+        say("AddPlayers.FieldRepeated");
       }
     });
     if (!named.includes("name")) {

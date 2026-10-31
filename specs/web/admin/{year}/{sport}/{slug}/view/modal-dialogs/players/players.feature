@@ -279,6 +279,33 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Spring Open" has the player "Alex Another"
 
+  Rule: Cells pasted from a spreadsheet, separated by tabs, are cut as well as commas
+
+    A spreadsheet puts a tab between the cells it copies, not a comma, so the
+    list is cut at the tabs where its first line has one.
+
+    Scenario: A list pasted with tabs is added
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Name	Representing
+        Sam Someone	Australia
+        """
+      When "Add" is pressed
+      Then "Spring Open" has the player "Sam Someone"
+
+    Scenario: A list pasted with tabs keeps each value with its field
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Name	Representing
+        Sam Someone	Australia
+        """
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" represents "Australia"
+
   Rule: A value with a comma in it is written in double quotes
 
     A spreadsheet writes a value that has a comma in it in double quotes, and
@@ -540,6 +567,17 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Players" is refused with "PersonName.TooShort" on line 2
       And "Players" is refused with "TournamentPlayer.NamedBye" on line 4
+
+    Scenario: A field that is not one and is named twice is refused once
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Name,Colour,Colour
+        Sam Someone,Red,Red
+        """
+      When "Add" is pressed
+      Then "Players" is refused once with "AddPlayers.FieldNotAllowed"
 
     Scenario: A refused dialog stays open
       Given the page of "Spring Open" is open
