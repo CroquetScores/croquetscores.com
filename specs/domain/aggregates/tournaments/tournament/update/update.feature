@@ -27,7 +27,10 @@ Feature: Changing what a tournament is
   would be things it could no longer have. One format played by teams can be
   changed for another, since the tournament holds the same things in each,
   and a tournament that holds nothing yet can be changed to any format its
-  website's site offers. A tournament's days changed leave its tests as they
+  website's site offers. The Interstate Shield is never played in groups
+  (`addTest.feature`), so a tournament with a test in use in a group cannot
+  be changed to it, and is refused as `Tournament.InterstateShieldHasNoGroups`;
+  its managers take the test out of its group first. A tournament's days changed leave its tests as they
   were (`addTest.feature`).
 
   An update that changes nothing records nothing, because nothing happened.
@@ -300,6 +303,27 @@ Feature: Changing what a tournament is
       And the update plays it in the format "Standard"
       When the tournament is updated
       Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A tournament with a test in a group cannot be played in the Interstate Shield
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the test "AUS v ENG" was updated to be in the group "Group A"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Interstate Shield"
+      When the tournament is updated
+      Then it is refused with "Tournament.InterstateShieldHasNoGroups"
+
+    Scenario: A tournament with a test in no group can be played in the Interstate Shield
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Interstate Shield"
+      When the tournament is updated
+      Then the tournament is played in the format "Interstate Shield"
 
     Scenario: A tournament with a team can be played in another format played by teams
       Given a stream where a tournament was created in the format "Teams"

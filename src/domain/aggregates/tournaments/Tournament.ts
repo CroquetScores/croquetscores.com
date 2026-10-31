@@ -126,6 +126,7 @@ export type TournamentErrorCode =
   | "Tournament.PlayedByTeams"
   | "Tournament.NotPlayedByTeams"
   | "Tournament.PlayedByTeamsFixed"
+  | "Tournament.InterstateShieldHasNoGroups"
   | "Tournament.TeamAlreadyAdded"
   | "Tournament.TeamNameTaken"
   | "Tournament.TeamShortNameTaken"
@@ -694,6 +695,22 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.PlayedByTeamsFixed",
         "The tournament holds what only its format can have.",
+      );
+    }
+    // The Interstate Shield is ranked as a whole, by net matches, so a test
+    // already in a group would be one the tournament could not rank.
+    if (
+      settled.format.equals(TournamentFormat.interstateShield) &&
+      [...this.#competitions.values()].some(
+        ({ reference, shape }) =>
+          !reference.archived &&
+          shape.kind === "test" &&
+          shape.group !== undefined,
+      )
+    ) {
+      refuse(
+        "Tournament.InterstateShieldHasNoGroups",
+        "The Interstate Shield is not played in groups.",
       );
     }
     const written = writtenFrom(settled);
@@ -2468,6 +2485,15 @@ export class Tournament extends AggregateRoot {
   ): void {
     if (details.firstTeam.equals(details.secondTeam)) {
       refuse("Tournament.TestAgainstItself", "A team does not play itself.");
+    }
+    if (
+      details.group !== undefined &&
+      this.format.equals(TournamentFormat.interstateShield)
+    ) {
+      refuse(
+        "Tournament.InterstateShieldHasNoGroups",
+        "The Interstate Shield is not played in groups.",
+      );
     }
     const first = this.#teamFound(details.firstTeam);
     const second = this.#teamFound(details.secondTeam);

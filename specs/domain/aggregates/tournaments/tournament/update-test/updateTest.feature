@@ -48,6 +48,10 @@ Feature: Changing a test
 
   An update that changes nothing records nothing, because nothing happened.
 
+  A test of a tournament in the Interstate Shield format is never given a
+  group, since that format is never played in groups (`addTest.feature`): the
+  update is refused as `Tournament.InterstateShieldHasNoGroups`.
+
   Unless a scenario says otherwise, its tournament starts on 3 October 2026
   and finishes on 5 October 2026, a team's short name is the first three
   letters of its name in capitals (`Team.feature`), a test starts and
@@ -397,3 +401,18 @@ Feature: Changing a test
       And the update has the test's second team be "Scotland"
       When the test "AUS v ENG" is updated
       Then the tournament's competition "AUS v SCO" counts towards the world rankings
+
+  Rule: A test of an Interstate Shield is not given a group
+
+    Background:
+      Given it was updated with the format "Interstate Shield"
+      And the tournament is rebuilt from the stream
+
+    Scenario: A test of an Interstate Shield given a group is refused
+      Given the update has the test in the group "Group A"
+      When the test "AUS v ENG" is updated
+      Then it is refused with "Tournament.InterstateShieldHasNoGroups"
+
+    Scenario: A test of an Interstate Shield left in no group is accepted
+      When the test "AUS v ENG" is updated
+      Then the test "AUS v ENG" is in no group

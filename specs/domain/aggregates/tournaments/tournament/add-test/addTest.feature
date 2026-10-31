@@ -58,6 +58,12 @@ Feature: Adding a test to a tournament
   An archived tournament can only be restored (`restore.feature`), so adding a
   test to one is refused.
 
+  A tournament in the Interstate Shield format is never played in groups: its
+  teams are ranked as a whole, by net matches, on its one Summary page
+  (`teamSummary.feature`), and a group's page has no nets to show. A test
+  added to one in a group is refused as
+  `Tournament.InterstateShieldHasNoGroups`, whatever the group is called.
+
   Unless a scenario says otherwise, its tournament starts on 3 October 2026
   and finishes on 5 October 2026, a team's short name is the first three
   letters of its name in capitals (`Team.feature`), and a test starts and
@@ -319,6 +325,21 @@ Feature: Adding a test to a tournament
       And the tournament is rebuilt from the stream
       When a test between two teams is added
       Then it is refused with "Tournament.NotPlayedByTeams"
+
+  Rule: A test of an Interstate Shield is in no group
+
+    Background:
+      Given it was updated with the format "Interstate Shield"
+      And the tournament is rebuilt from the stream
+
+    Scenario: A test added to an Interstate Shield in a group is refused
+      Given the test is to be in the group "Group A"
+      When the test between "Australia" and "England" is added
+      Then it is refused with "Tournament.InterstateShieldHasNoGroups"
+
+    Scenario: A test added to an Interstate Shield in no group is accepted
+      When the test between "Australia" and "England" is added
+      Then the test "AUS v ENG" is in no group
 
   Rule: No two competitions in a tournament have the same id
 

@@ -117,6 +117,13 @@ Given(
 );
 
 Given(
+  "it was updated with the format {string}",
+  function (this: SpecWorld, format: string) {
+    updatedWith(this, { format });
+  },
+);
+
+Given(
   "it was updated with the days {string} to {string}",
   function (this: SpecWorld, starts: string, finishes: string) {
     updatedWith(this, { starts, finishes });
