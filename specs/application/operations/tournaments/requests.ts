@@ -2,6 +2,7 @@ import { AddBlock } from "../../../../src/application/operations/tournaments/Add
 import { AddKnockout } from "../../../../src/application/operations/tournaments/AddKnockout.js";
 import { AddManager } from "../../../../src/application/operations/tournaments/AddManager.js";
 import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
+import { AddPlayers } from "../../../../src/application/operations/tournaments/AddPlayers.js";
 import { AddScorer } from "../../../../src/application/operations/tournaments/AddScorer.js";
 import { AddSwiss } from "../../../../src/application/operations/tournaments/AddSwiss.js";
 import { ArchiveCompetition } from "../../../../src/application/operations/tournaments/ArchiveCompetition.js";
@@ -535,5 +536,22 @@ export const removeScorer = (
   send(
     world,
     new RemoveScorer(account, tournament.value, scorer, momentOf(world)),
+    tournament,
+  );
+
+/**
+ * Adds the players the scenario has listed, as the fields it named and the
+ * rows it wrote, to `tournament`.
+ */
+export const addListedPlayers = (
+  world: SpecWorld,
+  account: string,
+  tournament: About,
+  fields: readonly string[],
+  rows: readonly (readonly string[])[],
+): Promise<void> =>
+  send(
+    world,
+    new AddPlayers(account, tournament.value, fields, rows, momentOf(world)),
     tournament,
   );

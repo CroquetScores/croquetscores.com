@@ -383,6 +383,13 @@ Then(
 );
 
 Then(
+  "the tournament's player {string} flies no flag",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerNamed(tournamentOf(this), name).flag, undefined);
+  },
+);
+
+Then(
   "the tournament's player {string} has the slug {string}",
   function (this: SpecWorld, name: string, slug: string) {
     assert.equal(String(playerNamed(tournamentOf(this), name).slug), slug);

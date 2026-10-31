@@ -28,6 +28,7 @@ import { AddKnockoutValidator } from "../../../src/application/operations/tourna
 import { AddManagerHandler } from "../../../src/application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../../../src/application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../../../src/application/operations/tournaments/AddPlayerHandler.js";
+import { AddPlayersHandler } from "../../../src/application/operations/tournaments/AddPlayersHandler.js";
 import { AddTeamValidator } from "../../../src/application/operations/tournaments/AddTeamValidator.js";
 import { UpdateTeamValidator } from "../../../src/application/operations/tournaments/UpdateTeamValidator.js";
 import { MoveTeamValidator } from "../../../src/application/operations/tournaments/MoveTeamValidator.js";
@@ -52,6 +53,7 @@ import { TeamsOfTournamentHandler } from "../../../src/application/operations/to
 import { PlayersOfTeamHandler } from "../../../src/application/operations/tournaments/PlayersOfTeamHandler.js";
 import { PlayersOfTestHandler } from "../../../src/application/operations/competitions/PlayersOfTestHandler.js";
 import { AddPlayerValidator } from "../../../src/application/operations/tournaments/AddPlayerValidator.js";
+import { AddPlayersValidator } from "../../../src/application/operations/tournaments/AddPlayersValidator.js";
 import { AddScorerHandler } from "../../../src/application/operations/tournaments/AddScorerHandler.js";
 import { AddScorerValidator } from "../../../src/application/operations/tournaments/AddScorerValidator.js";
 import { AddSwissHandler } from "../../../src/application/operations/tournaments/AddSwissHandler.js";
@@ -214,6 +216,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   validation.register(new CreateTournamentValidator());
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
+  validation.register(new AddPlayersValidator());
   validation.register(new UpdatePlayerValidator());
   validation.register(new ChangePlayerWorldRankingNameValidator());
   validation.register(new ChangeTeamPlayerWorldRankingNameValidator());
@@ -252,6 +255,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleCommand(new ArchiveTournamentHandler(...both));
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
+  mediator.handleCommand(new AddPlayersHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
   mediator.handleCommand(new ChangePlayerWorldRankingNameHandler(...both));
   mediator.handleCommand(new ChangeTeamPlayerWorldRankingNameHandler(...both));
