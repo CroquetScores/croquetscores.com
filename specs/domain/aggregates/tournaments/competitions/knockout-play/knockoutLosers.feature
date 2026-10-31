@@ -94,3 +94,14 @@ Feature: Who a knockout's losers are, to be entered in a knockout of their own
       When the knockout is played out
       And the losers of the first round are read
       Then the first loser is a bye
+
+  Rule: A place nobody is drawn in is a bye in the losers' knockout too
+
+    So that the losers' knockout has a place for every match of the round,
+    and each loser stays in the place of the match they lost.
+
+    Scenario: A match with only one player drawn has a bye for its loser
+      Given "Player 8" is not drawn
+      When the knockout is played out
+      And the losers of the first round are read
+      Then the fourth loser is a bye

@@ -7,6 +7,8 @@ import {
   drawnAgainst,
   isPlayer,
   knockoutPlay,
+  losersOfRound,
+  type Loser,
   type Match,
 } from "../../../../../../src/domain/aggregates/tournaments/competitions/KnockoutPlay.js";
 import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
@@ -27,6 +29,7 @@ interface Scenario {
   readonly withdrawals: CompetitionPlayerId[];
   readonly games: Game[];
   play: readonly Match[] | undefined;
+  losers: readonly Loser[] | undefined;
 }
 
 const scenarios = new WeakMap<SpecWorld, Scenario>();
@@ -40,6 +43,7 @@ const scenarioOf = (world: SpecWorld): Scenario => {
       withdrawals: [],
       games: [],
       play: undefined,
+      losers: undefined,
     };
     scenarios.set(world, scenario);
   }
@@ -56,6 +60,33 @@ const playOf = (world: SpecWorld): readonly Match[] => {
   const { play } = scenarioOf(world);
   assert.ok(play !== undefined, "The knockout was not played out.");
   return play;
+};
+
+// Rounds and places are spoken of as ordinals, as people say them, and counted
+// from 0 in the code.
+const ordinals = [
+  "first",
+  "second",
+  "third",
+  "fourth",
+  "fifth",
+  "sixth",
+  "seventh",
+  "eighth",
+];
+
+const ordinal = (word: string): number => {
+  const index = ordinals.indexOf(word);
+  assert.ok(index >= 0, `"${word}" is not an ordinal the steps know.`);
+  return index;
+};
+
+const loserAt = (world: SpecWorld, word: string): Loser => {
+  const { losers } = scenarioOf(world);
+  assert.ok(losers !== undefined, "The losers were not read.");
+  const loser = losers[ordinal(word)];
+  assert.ok(loser !== undefined, `There is no ${word} loser.`);
+  return loser;
 };
 
 // The final is the last match worked out, since the rounds come in order.
@@ -88,6 +119,11 @@ Given(
     );
   },
 );
+
+Given("{string} is not drawn", function (this: SpecWorld, name: string) {
+  drawnPlayer(this, name);
+  scenarioOf(this).players.delete(name);
+});
 
 Given(
   "the drawn player {string} has withdrawn",
@@ -202,5 +238,38 @@ Then(
       drawnAgainst(playOf(this), drawnPlayer(this, name).id),
       undefined,
     );
+  },
+);
+
+When(
+  "the losers of the {word} round are read",
+  function (this: SpecWorld, round: string) {
+    scenarioOf(this).losers = losersOfRound(playOf(this), ordinal(round));
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) loser is "([^"]*)"$/,
+  function (this: SpecWorld, place: string, name: string) {
+    const loser = loserAt(this, place);
+    assert.ok(
+      loser.is === "player" &&
+        loser.player.id.equals(drawnPlayer(this, name).id),
+      `The ${place} loser is ${loser.is}.`,
+    );
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) loser is a bye$/,
+  function (this: SpecWorld, place: string) {
+    assert.equal(loserAt(this, place).is, "bye");
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) loser is not yet known$/,
+  function (this: SpecWorld, place: string) {
+    assert.equal(loserAt(this, place).is, "not yet known");
   },
 );

@@ -167,3 +167,39 @@ export const drawnAgainst = (
   const other = theirs?.sides.find((side) => !isPlayer(side, id));
   return other?.is === "player" ? other.player : undefined;
 };
+
+/**
+ * Who loses a match: a player; a bye, where nobody was there to lose or the
+ * loser has withdrawn; or somebody not yet known, where the match is not yet
+ * decided.
+ */
+export type Loser =
+  | { readonly is: "player"; readonly player: CompetitionPlayer }
+  | { readonly is: "bye" }
+  | { readonly is: "not yet known" };
+
+const bye: Loser = { is: "bye" };
+
+const loserOf = (match: Match): Loser => {
+  if (match.winner.is === "not yet known") return { is: "not yet known" };
+  if (match.winner.is === "nobody") return bye;
+  const winner = match.winner.player;
+  const other = match.sides.find((side) => !isPlayer(side, winner.id));
+  // A withdrawn loser is a bye, not a player, because they would not turn up
+  // to play on in a knockout of the losers; their place is kept so that the
+  // others stay in the order of the matches they lost.
+  return other?.is === "player" && !other.player.withdrawn
+    ? { is: "player", player: other.player }
+    : bye;
+};
+
+/**
+ * The losers of the matches of `round`, the first being 0, in the order of the
+ * matches, so that they can be entered in a knockout of their own in the order
+ * they were drawn.
+ */
+export const losersOfRound = (
+  play: readonly Match[],
+  round: number,
+): readonly Loser[] =>
+  play.filter((match) => match.round === round).map(loserOf);
