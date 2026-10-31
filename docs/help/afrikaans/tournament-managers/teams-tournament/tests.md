@@ -28,7 +28,7 @@ Druk op **Voeg toets by**, bo die lys. 'n Dialoog maak oor die bladsy oop, en le
 
 **Met voorgifte gespeel**, **Laat gelykopuitslae toe** en **Tel vir wêreldranglyste** word gevra soos by enige kompetisie. Die laaste word net gevra waar dit getel kan word: 'n toets in Association Croquet of Golf Croquet wat nie met voorgifte gespeel word nie en nie gelykopuitslae toelaat nie. Dit is om mee te begin gemerk.
 
-**Groep** is die groep waarin die toets is, waar die byeenkoms in groepe gespeel word, soos "Block A". Dit is opsioneel: leeg gelaat, is die toets in geen groep nie. Die toetse in 'n groep het 'n eie bladsy op die openbare werf, wat wys hoe die groep se spanne staan.
+**Groep** is die groep waarin die toets is, waar die byeenkoms in groepe gespeel word, soos "Block A". Dit is opsioneel: leeg gelaat, is die toets in geen groep nie. Die toetse in 'n groep het 'n eie bladsy op die openbare werf, wat wys hoe die groep se spanne staan. Die **Eire-beker** en die **Interstaatskild** het geen groepe nie, so die dialoog vra nie daar vir een nie.
 
 Druk op **Voeg by**. Die toets word bygevoeg, die dialoog sê watter by sy naam, en die spanne word leeggemaak vir die volgende, met die dae, die verwagte wedstryde, die beste van en die groep gelaat soos hulle was: toetse word 'n ronde op 'n slag bygevoeg, tussen spanne wat op dieselfde dag ontmoet, so die volgende toets van die ronde is net sy twee spanne. Druk op **Kanselleer** sodra hulle almal in is.
 

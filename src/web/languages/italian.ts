@@ -1210,6 +1210,8 @@ export const italian: Language = {
     "TestGroup.TooLong": "Questo gruppo è troppo lungo.",
     "Tournament.TestAgainstItself":
       "Una squadra non gioca un test contro se stessa.",
+    "Tournament.FormatHasNoGroups":
+      "Un test in questo formato non viene inserito in un gruppo.",
     "Tournament.TestFinishesBeforeStarts":
       "Un test non può finire prima di iniziare.",
     "Tournament.TestStartsBeforeTournament":

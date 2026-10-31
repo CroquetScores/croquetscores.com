@@ -28,7 +28,7 @@ Drücken Sie **Test hinzufügen** über der Liste. Ein Dialog öffnet sich über
 
 **Mit Vorgaben gespielt**, **Lässt Unentschieden zu** und **Zählt für die Weltranglisten** werden gefragt wie bei jedem Wettbewerb. Das letzte wird nur gefragt, wo es zählen kann: bei einem Test im Association Croquet oder Golf Croquet, der weder mit Vorgaben gespielt wird noch Unentschieden zulässt. Es ist zu Beginn angehakt.
 
-**Gruppe** ist die Gruppe, in der der Test ist, wenn die Veranstaltung in Gruppen gespielt wird, etwa „Block A“. Sie ist freiwillig: Bleibt sie leer, ist der Test in keiner. Die Tests einer Gruppe haben auf der öffentlichen Website eine eigene Seite, die zeigt, wie die Mannschaften der Gruppe stehen.
+**Gruppe** ist die Gruppe, in der der Test ist, wenn die Veranstaltung in Gruppen gespielt wird, etwa „Block A“. Sie ist freiwillig: Bleibt sie leer, ist der Test in keiner. Die Tests einer Gruppe haben auf der öffentlichen Website eine eigene Seite, die zeigt, wie die Mannschaften der Gruppe stehen. Der **Eire Cup** und der **Interstate Shield** kennen keine Gruppen, deshalb fragt das Dialogfenster dort nicht danach.
 
 Drücken Sie **Hinzufügen**. Der Test wird hinzugefügt, der Dialog sagt mit seinem Namen welcher, und die Mannschaften werden für den nächsten geleert, während die Tage, die erwarteten Begegnungen, das Best of und die Gruppe bleiben, wie sie waren: Tests werden Runde für Runde hinzugefügt, zwischen Mannschaften, die sich am selben Tag treffen, der nächste Test der Runde sind also nur seine zwei Mannschaften. Drücken Sie **Abbrechen**, wenn alle drin sind.
 

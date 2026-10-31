@@ -99,6 +99,7 @@ const partOf: Readonly<Record<string, Part>> = {
   "Tournament.TestFinishesAfterTournament": "finishes",
   "Tournament.ExpectedMatchesBelowStarted": "expectedMatches",
   "Tournament.BestOfBelowGamesPlayed": "bestOf",
+  "Tournament.FormatHasNoGroups": "group",
 };
 
 // The earlier and the later of two days written as "2026-10-03", which sort
@@ -127,6 +128,12 @@ export const TestDialog = ({
 }: Props): React.JSX.Element => {
   const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
+  // Whether the tournament's format has groups. Taken to have them until it
+  // says it has none, since nearly every format does, so that the field is
+  // there to be typed in from the start rather than arriving after it. For an
+  // Eire Cup or an Interstate Shield it is taken away once the answer is in,
+  // which is quick, and nothing typed in it is sent.
+  const [hasGroups, setHasGroups] = useState(true);
   // The days the tournament is played, which a test is played within.
   const [days, setDays] = useState<
     { readonly starts: string; readonly finishes: string } | undefined
@@ -161,10 +168,11 @@ export const TestDialog = ({
     void asked<{ teams: Team[] }>(`${ofTournament}/teams`).then((answer) => {
       setTeams(answer?.teams ?? []);
     });
-    void asked<{ starts: string; finishes: string }>(
+    void asked<{ starts: string; finishes: string; hasGroups: boolean }>(
       `/api/site/tournaments/at/${address}`,
     ).then((answer) => {
       if (answer === undefined) return;
+      setHasGroups(answer.hasGroups);
       setDays({ starts: answer.starts, finishes: answer.finishes });
       // A test added begins on the tournament's first day, which is where
       // most are played.
@@ -211,7 +219,9 @@ export const TestDialog = ({
             finishes: said.finishes,
             expectedMatches: typedNumber(said.expectedMatches),
             bestOf: typedNumber(said.bestOf),
-            group: said.group,
+            // Where the format has none, a group is a mistake, so a test is
+            // left in none, and one a test had before is cleared by saving it.
+            group: hasGroups ? said.group : "",
             ...rules.said,
           }),
         },
@@ -381,7 +391,7 @@ export const TestDialog = ({
       {day("finishes", "admin.test.finishes")}
       {typed("expectedMatches", "admin.test.expectedMatches")}
       {typed("bestOf", "admin.test.bestOf")}
-      {typed("group", "admin.test.group")}
+      {hasGroups ? typed("group", "admin.test.group") : null}
       {rules.ticks}
     </ModalDialog>
   );

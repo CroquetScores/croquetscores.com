@@ -96,3 +96,27 @@ Feature: The format a tournament is played in
         | Eire Cup                   |
         | Interstate Shield          |
         | GC World Team Championship |
+
+  Rule: The Eire Cup and the Interstate Shield have no groups
+
+    Their regulations have none, so a test in either is in no group
+    (`addTest.feature`). The other formats are played in groups as often as not.
+
+    Scenario Outline: <name> has no groups
+      Given the format "<name>"
+      Then it has no groups
+
+      Examples:
+        | name              |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario Outline: <name> has groups
+      Given the format "<name>"
+      Then it has groups
+
+      Examples:
+        | name                       |
+        | Standard                   |
+        | Teams                      |
+        | GC World Team Championship |

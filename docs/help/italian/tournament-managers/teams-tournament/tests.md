@@ -28,7 +28,7 @@ Premi **Aggiungi test**, sopra l'elenco. Si apre una finestra di dialogo sopra l
 
 **Si gioca con handicap**, **Ammette i pareggi** e **Vale per le classifiche mondiali** vengono chiesti come per qualsiasi competizione. L'ultimo viene chiesto solo quando può valere: un test di Association Croquet o di Golf Croquet che non si gioca con handicap e non ammette i pareggi. All'inizio è spuntato.
 
-**Gruppo** è il gruppo in cui il test si trova, quando l'evento si gioca a gruppi, come "Block A". È facoltativo: lasciato vuoto, il test non è in nessuno. I test di un gruppo hanno una pagina loro sul sito pubblico, che mostra la classifica delle squadre del gruppo.
+**Gruppo** è il gruppo in cui il test si trova, quando l'evento si gioca a gruppi, come "Block A". È facoltativo: lasciato vuoto, il test non è in nessuno. I test di un gruppo hanno una pagina loro sul sito pubblico, che mostra la classifica delle squadre del gruppo. L'**Eire Cup** e l'**Interstate Shield** non hanno gruppi, perciò la finestra di dialogo non li chiede.
 
 Premi **Aggiungi**. Il test viene aggiunto, la finestra dice quale con il suo nome, e le squadre si svuotano per il successivo, mentre i giorni, gli incontri previsti, l'al meglio di e il gruppo restano com'erano: i test si aggiungono un turno alla volta, tra squadre che si affrontano lo stesso giorno, quindi per il test successivo del turno bastano le sue due squadre. Premi **Annulla** quando ci sono tutti.
 

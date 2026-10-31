@@ -26,21 +26,25 @@ const names = new Validator<string, TournamentFormatErrorCode>({
 export class TournamentFormat {
   readonly #name: string;
   readonly #isTeamFormat: boolean;
+  readonly #hasGroups: boolean;
 
-  private constructor(name: string, isTeamFormat: boolean) {
+  private constructor(name: string, isTeamFormat: boolean, hasGroups: boolean) {
     this.#name = name;
     this.#isTeamFormat = isTeamFormat;
+    this.#hasGroups = hasGroups;
   }
 
-  static readonly standard = new TournamentFormat("Standard", false);
-  static readonly teams = new TournamentFormat("Teams", true);
-  static readonly eireCup = new TournamentFormat("Eire Cup", true);
+  static readonly standard = new TournamentFormat("Standard", false, true);
+  static readonly teams = new TournamentFormat("Teams", true, true);
+  static readonly eireCup = new TournamentFormat("Eire Cup", true, false);
   static readonly interstateShield = new TournamentFormat(
     "Interstate Shield",
     true,
+    false,
   );
   static readonly gcWorldTeamChampionship = new TournamentFormat(
     "GC World Team Championship",
+    true,
     true,
   );
 
@@ -86,6 +90,16 @@ export class TournamentFormat {
   /** Whether it is played by teams, which every format but Standard is. */
   get isTeamFormat(): boolean {
     return this.#isTeamFormat;
+  }
+
+  /**
+   * Whether its tests may be put in groups. The regulations of the Eire Cup
+   * and the Interstate Shield have none, so a group named there is a mistake
+   * rather than a choice; the other formats are played in groups as often as
+   * not.
+   */
+  get hasGroups(): boolean {
+    return this.#hasGroups;
   }
 
   /**

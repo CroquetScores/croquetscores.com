@@ -159,6 +159,54 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Add Test" is pressed
       Then the test dialog does not ask for "Name"
 
+  Rule: A tournament whose format has no groups is not asked for one
+
+    The regulations of the Eire Cup and the Interstate Shield have no groups
+    (`addTest.feature`), so the dialog does not offer a Group there, rather
+    than offer it and refuse what is typed in it.
+
+    Scenario Outline: The dialog does not ask for a group in <format>
+      Given "organiser@example.com" has created the tournament "Spring Cup"
+      And the tournament "Spring Cup" starts on "2026-10-03"
+      And the tournament "Spring Cup" finishes on "2026-10-05"
+      And the tournament "Spring Cup" is for the sport "ac"
+      And the tournament "Spring Cup" is played in the format "<format>"
+      And "organiser@example.com" has added the team "Australia" to "Spring Cup"
+      And "organiser@example.com" has added the team "England" to "Spring Cup"
+      And the tests of "Spring Cup" are open
+      When "Add Test" is pressed
+      And "Starts" says "2026-10-03"
+      Then the test dialog does not ask for "Group"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario Outline: The dialog to change a test does not ask for a group in <format>
+      Given "organiser@example.com" has created the tournament "Spring Cup"
+      And the tournament "Spring Cup" starts on "2026-10-03"
+      And the tournament "Spring Cup" finishes on "2026-10-05"
+      And the tournament "Spring Cup" is for the sport "ac"
+      And the tournament "Spring Cup" is played in the format "<format>"
+      And "organiser@example.com" has added the team "Australia" to "Spring Cup"
+      And "organiser@example.com" has added the team "England" to "Spring Cup"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Cup"
+      And the tests of "Spring Cup" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      And "Starts" says "2026-10-03"
+      Then the test dialog does not ask for "Group"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario: The dialog still asks for a group in Teams
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog asks for "Group"
+
   Rule: The dialog reads in the order a test is said aloud
 
     Scenario: Team A comes first

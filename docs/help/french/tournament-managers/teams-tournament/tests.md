@@ -28,7 +28,7 @@ Appuyez sur **Ajouter une rencontre**, au-dessus de la liste. Une boîte de dial
 
 **Joué avec handicaps**, **Autorise les matchs nuls** et **Compte pour les classements mondiaux** se demandent comme pour toute compétition. La dernière n’est demandée que là où cela peut compter : une rencontre de croquet association ou de croquet golf qui n’est ni jouée avec handicaps ni ouverte aux matchs nuls. La case est cochée au départ.
 
-**Groupe** est le groupe où se trouve la rencontre, quand l’épreuve se joue en groupes, comme « Block A ». Il est facultatif : laissé vide, la rencontre n’est dans aucun groupe. Les rencontres d’un groupe ont leur propre page sur le site public, montrant où en sont les équipes du groupe.
+**Groupe** est le groupe où se trouve la rencontre, quand l’épreuve se joue en groupes, comme « Block A ». Il est facultatif : laissé vide, la rencontre n’est dans aucun groupe. Les rencontres d’un groupe ont leur propre page sur le site public, montrant où en sont les équipes du groupe. La **Coupe d'Irlande** et le **Bouclier interétatique** n’ont pas de groupes : la boîte de dialogue n’en demande donc pas.
 
 Appuyez sur **Ajouter**. La rencontre est ajoutée, la boîte de dialogue dit laquelle par son nom, et les équipes se vident pour la suivante, les jours, les matchs prévus, le nombre de parties et le groupe restant tels quels : les rencontres s’ajoutent par tour, entre des équipes qui se rencontrent le même jour, de sorte que la rencontre suivante du tour n’est que ses deux équipes. Appuyez sur **Annuler** une fois qu’elles sont toutes saisies.
 

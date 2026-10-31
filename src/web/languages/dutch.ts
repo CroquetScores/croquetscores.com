@@ -1197,6 +1197,8 @@ export const dutch: Language = {
       "Van een test worden minstens 1 wedstrijd verwacht.",
     "TestGroup.TooLong": "Die groep is te lang.",
     "Tournament.TestAgainstItself": "Een team speelt geen test tegen zichzelf.",
+    "Tournament.FormatHasNoGroups":
+      "Een test in deze opzet zit niet in een groep.",
     "Tournament.TestFinishesBeforeStarts":
       "Een test kan niet eindigen voordat hij begint.",
     "Tournament.TestStartsBeforeTournament":

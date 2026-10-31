@@ -28,7 +28,7 @@ Ko **Pai rawa o te** te mea e pai rawa ai ia tukinga. Ka taea he tau e wehea ana
 
 Ka pātaihia **Ka tākarohia me ngā whakaiti**, **Ka whakaaetia ngā hua taurite** me **Ka kaute ki ngā whakarārangi o te ao** pēnei i tērā o tētahi tauwhāinga. Ka pātaihia anake te whakamutunga ina taea te kaute: he whakamātau Association Croquet, Golf Croquet rānei kāore i tākarohia ki te hanikapa, kāore hoki e whakaae ki ngā taurite. Kua tīkina i te tīmatanga.
 
-Ko **Rōpū** te rōpū e noho ai te whakamātau, ina tākarohia te kaupapa ki ngā rōpū, pēnei i te "Block A". He mea kōwhiri: ina waiho hei kau, kāore te whakamātau i tētahi. He whārangi motuhake tā ngā whakamātau o tētahi rōpū i te pae tūmatanui, e whakaatu ana i te tūnga o ngā tīma o te rōpū.
+Ko **Rōpū** te rōpū e noho ai te whakamātau, ina tākarohia te kaupapa ki ngā rōpū, pēnei i te "Block A". He mea kōwhiri: ina waiho hei kau, kāore te whakamātau i tētahi. He whārangi motuhake tā ngā whakamātau o tētahi rōpū i te pae tūmatanui, e whakaatu ana i te tūnga o ngā tīma o te rōpū. Kāore he rōpū o te **Eire Cup** me te **Interstate Shield**, no reira kāore te pouaka kōrero e pātai mō tētahi.
 
 Pēhia **Tāpiri**. Ka tāpiritia te whakamātau, ka kī te pouaka kōrero ko tēhea mā tōna ingoa, ā, ka whakakorea ngā tīma mō te mea e whai ake nei, ka waiho ngā rā, ngā tukinga e tūmanakohia ana, te pai rawa o te aha me te rōpū pēnei i mua: ka tāpiria ngā whakamātau i te rauna kotahi i te wā, i waenga i ngā tīma e tūtaki ana i te rā kotahi, nō reira ko ngā tīma e rua anake te whakamātau e whai ake nei o te rauna. Pēhia **Whakakore** ina oti katoa te whakauru.
 

@@ -28,7 +28,7 @@ Tryck på **Lägg till landskamp**, ovanför listan. En dialogruta öppnas över
 
 **Spelas med handikapp**, **Tillåter oavgjorda resultat** och **Räknas med i världsrankingen** frågas efter som för vilken tävling som helst. Det sista frågas bara där det kan räknas: en landskamp i association croquet eller golfcroquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början.
 
-**Grupp** är den grupp landskampen ingår i, där evenemanget spelas i grupper, som "Block A". Den är frivillig: lämnas den tom ingår landskampen i ingen. Landskamperna i en grupp har en egen sida på den offentliga webbplatsen, som visar hur gruppens lag står.
+**Grupp** är den grupp landskampen ingår i, där evenemanget spelas i grupper, som "Block A". Den är frivillig: lämnas den tom ingår landskampen i ingen. Landskamperna i en grupp har en egen sida på den offentliga webbplatsen, som visar hur gruppens lag står. **Eire Cup** och **Interstate Shield** har inga grupper, så dialogrutan frågar inte efter någon där.
 
 Tryck på **Lägg till**. Landskampen läggs till, dialogrutan säger vilken med dess namn, och lagen töms för nästa, med dagarna, de förväntade matcherna, bäst av och gruppen kvar som de var: landskamper läggs till en rond i taget, mellan lag som möts samma dag, så rondens nästa landskamp är bara dess två lag. Tryck på **Avbryt** när alla är inlagda.
 

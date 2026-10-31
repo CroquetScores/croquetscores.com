@@ -28,7 +28,7 @@ Pressione **Adicionar teste**, acima da lista. Um diálogo abre sobre a página,
 
 **Jogado com handicaps**, **Permite empates** e **Conta para o ranking mundial** são perguntados como em qualquer competição. O último só é pedido quando pode valer: um teste de Croquet de Associação ou de Croquet de Golfe que não é jogado com handicaps nem permite empates. Começa marcado.
 
-**Grupo** é o grupo em que o teste está, quando o evento é disputado em grupos, como "Block A". É opcional: deixado vazio, o teste não está em nenhum. Os testes de um grupo têm uma página própria no site público, mostrando a classificação das equipes do grupo.
+**Grupo** é o grupo em que o teste está, quando o evento é disputado em grupos, como "Block A". É opcional: deixado vazio, o teste não está em nenhum. Os testes de um grupo têm uma página própria no site público, mostrando a classificação das equipes do grupo. A **Copa Eire** e o **Interstate Shield** não têm grupos, por isso a caixa de diálogo não pede um.
 
 Pressione **Adicionar**. O teste é adicionado, o diálogo diz qual pelo seu nome, e as equipes são esvaziadas para o próximo, com os dias, as partidas previstas, o melhor de e o grupo deixados como estavam: os testes são adicionados uma rodada de cada vez, entre equipes que se enfrentam no mesmo dia, então o próximo teste da rodada é só as suas duas equipes. Pressione **Cancelar** quando todos estiverem inseridos.
 

@@ -1077,6 +1077,7 @@ export const egyptian: Language = {
     "ExpectedMatches.TooSmall": "اللقاء لازم يتوقّع له مباراة واحدة على الأقل.",
     "TestGroup.TooLong": "المجموعة دي طويلة أوي.",
     "Tournament.TestAgainstItself": "الفريق مبيلعبش لقاء ضد نفسه.",
+    "Tournament.FormatHasNoGroups": "اللقاء في النظام ده مبيتحطش في مجموعة.",
     "Tournament.TestFinishesBeforeStarts": "اللقاء مينفعش يخلص قبل ما يبدأ.",
     "Tournament.TestStartsBeforeTournament": "اللقاء مينفعش يبدأ قبل بطولته.",
     "Tournament.TestFinishesAfterTournament": "اللقاء مينفعش يخلص بعد بطولته.",

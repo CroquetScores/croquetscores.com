@@ -1115,6 +1115,7 @@ export const russian: Language = {
     "ExpectedMatches.TooSmall": "В тесте должен ожидаться как минимум 1 матч.",
     "TestGroup.TooLong": "Эта группа слишком длинная.",
     "Tournament.TestAgainstItself": "Команда не играет тест сама с собой.",
+    "Tournament.FormatHasNoGroups": "Тест в этом формате не входит в группу.",
     "Tournament.TestFinishesBeforeStarts":
       "Тест не может закончиться раньше, чем начнётся.",
     "Tournament.TestStartsBeforeTournament":

@@ -21,6 +21,8 @@ export interface ChangingTournament {
    * codes, the region nothing when the tournament is in none.
    */
   readonly format: string;
+  /** Whether a test in its format may be put in a group. */
+  readonly hasGroups: boolean;
   readonly sport: string;
   readonly country: string;
   readonly region: string | undefined;

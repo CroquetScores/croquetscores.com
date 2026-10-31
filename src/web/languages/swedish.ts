@@ -1172,6 +1172,8 @@ export const swedish: Language = {
     "TestGroup.TooLong": "Den gruppen är för lång.",
     "Tournament.TestAgainstItself":
       "Ett lag spelar inte landskamp mot sig självt.",
+    "Tournament.FormatHasNoGroups":
+      "En landskamp i det här formatet läggs inte i en grupp.",
     "Tournament.TestFinishesBeforeStarts":
       "En landskamp kan inte sluta innan den börjar.",
     "Tournament.TestStartsBeforeTournament":

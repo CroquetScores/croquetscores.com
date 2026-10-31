@@ -58,3 +58,11 @@ Then("it is played by teams", function (this: SpecWorld) {
 Then("it is not played by teams", function (this: SpecWorld) {
   assert.equal(formatOfWorld(this).isTeamFormat, false);
 });
+
+Then("it has groups", function (this: SpecWorld) {
+  assert.equal(formatOfWorld(this).hasGroups, true);
+});
+
+Then("it has no groups", function (this: SpecWorld) {
+  assert.equal(formatOfWorld(this).hasGroups, false);
+});

@@ -28,7 +28,7 @@ Press **Add Test**, above the list. A dialog opens over the page, reading in the
 
 **Played with handicaps**, **Allows drawn results** and **Counts toward world rankings** are asked as they are of any competition. The last is asked only where it can be counted: a test in Association Croquet or Golf Croquet that is neither played with handicaps nor allows drawn results. It is ticked to begin with.
 
-**Group** is the group the test is in, where the event is played in groups, as "Block A". It is optional: left empty, the test is in none. The tests in a group have a page of their own on the public site, showing how the group's teams stand.
+**Group** is the group the test is in, where the event is played in groups, as "Block A". It is optional: left empty, the test is in none. The tests in a group have a page of their own on the public site, showing how the group's teams stand. The **Eire Cup** and the **Interstate Shield** have no groups, so the dialog does not ask for one there.
 
 Press **Add**. The test is added, the dialog says which by its name, and the teams are emptied for the next, with the days, the expected matches, the best-of and the group left as they were: tests are added a round at a time, between teams who meet on the same day, so the next test of the round is its two teams alone. Press **Cancel** once they are all in.
 

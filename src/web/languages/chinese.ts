@@ -1067,6 +1067,7 @@ export const chinese: Language = {
     "ExpectedMatches.TooSmall": "一场对抗赛预计至少要有 1 场比赛。",
     "TestGroup.TooLong": "这个分组名称太长了。",
     "Tournament.TestAgainstItself": "一支队伍不能和自己进行对抗赛。",
+    "Tournament.FormatHasNoGroups": "此赛制的对抗赛不分组。",
     "Tournament.TestFinishesBeforeStarts": "对抗赛不能在开始之前结束。",
     "Tournament.TestStartsBeforeTournament": "对抗赛不能早于所属赛事开始。",
     "Tournament.TestFinishesAfterTournament": "对抗赛不能晚于所属赛事结束。",

@@ -1123,6 +1123,7 @@ export const korean: Language = {
     "TestGroup.TooLong": "그룹 이름이 너무 길어요.",
     "Tournament.TestAgainstItself":
       "한 팀이 자기 팀과 테스트를 치를 수는 없어요.",
+    "Tournament.FormatHasNoGroups": "이 방식의 테스트는 그룹에 넣을 수 없어요.",
     "Tournament.TestFinishesBeforeStarts":
       "테스트는 시작하기 전에 끝날 수 없어요.",
     "Tournament.TestStartsBeforeTournament":

@@ -1152,6 +1152,8 @@ export const maori: Language = {
     "TestGroup.TooLong": "Kua roa rawa taua rōpū.",
     "Tournament.TestAgainstItself":
       "Kāore te tīma e tākaro i tētahi whakamātau i a ia anō.",
+    "Tournament.FormatHasNoGroups":
+      "Kāore he rōpū mō ngā whakamātau i tēnei hōputu.",
     "Tournament.TestFinishesBeforeStarts":
       "Kāore e taea e tētahi whakamātau te mutu i mua i tōna tīmatanga.",
     "Tournament.TestStartsBeforeTournament":

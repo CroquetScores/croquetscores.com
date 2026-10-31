@@ -28,7 +28,7 @@ Druk op **Test toevoegen**, boven de lijst. Er opent een dialoogvenster over de 
 
 **Gespeeld met handicaps**, **Gelijkspel toegestaan** en **Telt mee voor de wereldranglijsten** worden gevraagd zoals bij elke competitie. De laatste wordt alleen gevraagd waar het kan meetellen: een test in Associatiecroquet of Golfcroquet die niet met handicaps wordt gespeeld en geen gelijkspel toestaat. Het staat om te beginnen aangevinkt.
 
-**Groep** is de groep waarin de test zit, waar het evenement in groepen wordt gespeeld, als "Block A". Ze is optioneel: leeg gelaten zit de test in geen groep. De tests in een groep hebben een eigen pagina op de openbare site, die toont hoe de teams van de groep ervoor staan.
+**Groep** is de groep waarin de test zit, waar het evenement in groepen wordt gespeeld, als "Block A". Ze is optioneel: leeg gelaten zit de test in geen groep. De tests in een groep hebben een eigen pagina op de openbare site, die toont hoe de teams van de groep ervoor staan. De **Eire Cup** en de **Interstate Shield** kennen geen groepen, dus het dialoogvenster vraagt daar niet om een groep.
 
 Druk op **Toevoegen**. De test wordt toegevoegd, het dialoogvenster zegt welke bij haar naam, en de teams worden leeggemaakt voor de volgende, met de dagen, de verwachte wedstrijden, de beste-van en de groep zoals ze waren: tests worden per ronde toegevoegd, tussen teams die elkaar op dezelfde dag treffen, dus de volgende test van de ronde is alleen haar twee teams. Druk op **Annuleren** zodra ze er allemaal in staan.
 

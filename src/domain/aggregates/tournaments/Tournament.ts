@@ -125,6 +125,7 @@ export type TournamentErrorCode =
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
   | "Tournament.NotPlayedByTeams"
+  | "Tournament.FormatHasNoGroups"
   | "Tournament.PlayedByTeamsFixed"
   | "Tournament.TeamAlreadyAdded"
   | "Tournament.TeamNameTaken"
@@ -686,9 +687,15 @@ export class Tournament extends AggregateRoot {
     );
     // What a tournament holds depends on whether it is played by teams, so
     // once it holds anything, a change to that would leave it holding what it
-    // could no longer have.
+    // could no longer have. A format played by teams is not changed for
+    // another either: a test held in one may be in a group that the other has
+    // none of, and the tournament would be left holding what it could no
+    // longer be updated with. Which of them a tournament is played in is
+    // settled by the time it holds a team.
     if (
-      settled.format.isTeamFormat !== this.#now.format.isTeamFormat &&
+      (settled.format.isTeamFormat !== this.#now.format.isTeamFormat ||
+        (this.#now.format.isTeamFormat &&
+          settled.format !== this.#now.format)) &&
       this.#holdsAnything
     ) {
       refuse(
@@ -2457,11 +2464,13 @@ export class Tournament extends AggregateRoot {
 
   // What is asked of a test, added or updated, of the tournament as it is:
   // two different teams of its own in use, played within its days, starting
-  // no later than it finishes. Days are compared as the days the tournament's
-  // starts and finishes fall on in UTC, as the year of its address is. A day
-  // an updated test `had` already is not asked whether it is within the
-  // tournament's, since a test is not refused for what the tournament became
-  // after it was added.
+  // no later than it finishes, and in no group where the format has none. The
+  // group is asked last, so that a test with several faults is told of the
+  // ones the dialog lets a reader fix first. Days are compared as the days the
+  // tournament's starts and finishes fall on in UTC, as the year of its
+  // address is. A day an updated test `had` already is not asked whether it is
+  // within the tournament's, since a test is not refused for what the
+  // tournament became after it was added.
   #refuseUnlessATestCanBe(
     details: TestDetails,
     had?: { readonly starts: string; readonly finishes: string },
@@ -2491,6 +2500,12 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.TestFinishesAfterTournament",
         "The test finishes after the tournament does.",
+      );
+    }
+    if (details.group !== undefined && !this.#now.format.hasGroups) {
+      refuse(
+        "Tournament.FormatHasNoGroups",
+        "The tournament's format has no groups.",
       );
     }
   }
