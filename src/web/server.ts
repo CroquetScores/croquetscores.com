@@ -156,6 +156,7 @@ import { GamesOfCompetitionHandler } from "../application/operations/competition
 import { RestoreGameHandler } from "../application/operations/competitions/RestoreGameHandler.js";
 import { ReverseGameWithdrawalHandler } from "../application/operations/competitions/ReverseGameWithdrawalHandler.js";
 import { WithdrawGameHandler } from "../application/operations/competitions/WithdrawGameHandler.js";
+import { EnterLosersHandler } from "../application/operations/competitions/EnterLosersHandler.js";
 import { EnterPlayerHandler } from "../application/operations/competitions/EnterPlayerHandler.js";
 import { MoveCompetitionPlayerHandler } from "../application/operations/competitions/MoveCompetitionPlayerHandler.js";
 import { ChangeCarryForwardHandler } from "../application/operations/competitions/ChangeCarryForwardHandler.js";
@@ -1286,6 +1287,7 @@ export const buildApplication = async (
   mediator.handleCommand(new ArchiveTeamPlayerHandler(...both, games));
   mediator.handleCommand(new UpdateTestHandler(...both, games));
   mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
+  mediator.handleCommand(new EnterLosersHandler(...both, competitions));
   mediator.handleCommand(
     new MoveCompetitionPlayerHandler(...both, competitions),
   );

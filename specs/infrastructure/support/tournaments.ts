@@ -93,6 +93,7 @@ import { GamesOfCompetitionHandler } from "../../../src/application/operations/c
 import { RestoreGameHandler } from "../../../src/application/operations/competitions/RestoreGameHandler.js";
 import { ReverseGameWithdrawalHandler } from "../../../src/application/operations/competitions/ReverseGameWithdrawalHandler.js";
 import { WithdrawGameHandler } from "../../../src/application/operations/competitions/WithdrawGameHandler.js";
+import { EnterLosersHandler } from "../../../src/application/operations/competitions/EnterLosersHandler.js";
 import { EnterPlayerHandler } from "../../../src/application/operations/competitions/EnterPlayerHandler.js";
 import { MoveCompetitionPlayerHandler } from "../../../src/application/operations/competitions/MoveCompetitionPlayerHandler.js";
 import { ChangeCarryForwardHandler } from "../../../src/application/operations/competitions/ChangeCarryForwardHandler.js";
@@ -286,6 +287,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleCommand(new ArchiveTeamPlayerHandler(...both, games));
   mediator.handleCommand(new UpdateTestHandler(...both, games));
   mediator.handleCommand(new EnterPlayerHandler(...both, competitions));
+  mediator.handleCommand(new EnterLosersHandler(...both, competitions));
   mediator.handleCommand(
     new MoveCompetitionPlayerHandler(...both, competitions),
   );
