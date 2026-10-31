@@ -58,6 +58,7 @@ export class TournamentToChangeHandler extends QueryHandler<
       starts: dayOf(tournament.starts),
       finishes: dayOf(tournament.finishes),
       format: tournament.format.name,
+      hasGroups: tournament.format.hasGroups,
       sport: tournament.sport.code,
       country: tournament.country.code,
       region: tournament.region?.code,

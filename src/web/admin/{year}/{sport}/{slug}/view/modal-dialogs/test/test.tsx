@@ -128,6 +128,9 @@ export const TestDialog = ({
   const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
   // The days the tournament is played, which a test is played within.
+  // Whether the tournament's format has groups. Assumed until it says
+  // otherwise, since most do, so that the field is not seen to arrive.
+  const [hasGroups, setHasGroups] = useState(true);
   const [days, setDays] = useState<
     { readonly starts: string; readonly finishes: string } | undefined
   >();
@@ -161,10 +164,11 @@ export const TestDialog = ({
     void asked<{ teams: Team[] }>(`${ofTournament}/teams`).then((answer) => {
       setTeams(answer?.teams ?? []);
     });
-    void asked<{ starts: string; finishes: string }>(
+    void asked<{ starts: string; finishes: string; hasGroups: boolean }>(
       `/api/site/tournaments/at/${address}`,
     ).then((answer) => {
       if (answer === undefined) return;
+      setHasGroups(answer.hasGroups);
       setDays({ starts: answer.starts, finishes: answer.finishes });
       // A test added begins on the tournament's first day, which is where
       // most are played.
@@ -211,7 +215,7 @@ export const TestDialog = ({
             finishes: said.finishes,
             expectedMatches: typedNumber(said.expectedMatches),
             bestOf: typedNumber(said.bestOf),
-            group: said.group,
+            group: hasGroups ? said.group : "",
             ...rules.said,
           }),
         },
@@ -381,7 +385,7 @@ export const TestDialog = ({
       {day("finishes", "admin.test.finishes")}
       {typed("expectedMatches", "admin.test.expectedMatches")}
       {typed("bestOf", "admin.test.bestOf")}
-      {typed("group", "admin.test.group")}
+      {hasGroups ? typed("group", "admin.test.group") : null}
       {rules.ticks}
     </ModalDialog>
   );

@@ -320,8 +320,6 @@ Feature: Changing a test
 
     Scenario Outline: A test updated to a group is refused in <format>
       Given a stream where a tournament was created in the format "<format>"
-      And the team "Australia" was added to it
-      And the team "England" was added to it
       And the test between "Australia" and "England" was added to it
       And the tournament is rebuilt from the stream
       And the update has the test in the group "Group A"

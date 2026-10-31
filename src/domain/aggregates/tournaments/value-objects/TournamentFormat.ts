@@ -89,6 +89,19 @@ export class TournamentFormat {
   }
 
   /**
+   * Whether its tests may be put in groups. The regulations of the Eire Cup
+   * and the Interstate Shield have none, so a group named there is a mistake
+   * rather than a choice; the other formats are played in groups as often as
+   * not.
+   */
+  get hasGroups(): boolean {
+    return (
+      this !== TournamentFormat.eireCup &&
+      this !== TournamentFormat.interstateShield
+    );
+  }
+
+  /**
    * Whether a tournament in it draws a test level on matches unless it is
    * said not to, rather than deciding one on net games and hoops. Only the GC
    * World Team Championship does, as it always has.

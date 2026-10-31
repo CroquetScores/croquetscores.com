@@ -125,6 +125,7 @@ export type TournamentErrorCode =
   | "Tournament.AlreadyAManager"
   | "Tournament.PlayedByTeams"
   | "Tournament.NotPlayedByTeams"
+  | "Tournament.FormatHasNoGroups"
   | "Tournament.PlayedByTeamsFixed"
   | "Tournament.TeamAlreadyAdded"
   | "Tournament.TeamNameTaken"
@@ -2456,8 +2457,8 @@ export class Tournament extends AggregateRoot {
   }
 
   // What is asked of a test, added or updated, of the tournament as it is:
-  // two different teams of its own in use, played within its days, starting
-  // no later than it finishes. Days are compared as the days the tournament's
+  // no group where the format has none, two different teams of its own in
+  // use, played within its days, starting no later than it finishes. Days are compared as the days the tournament's
   // starts and finishes fall on in UTC, as the year of its address is. A day
   // an updated test `had` already is not asked whether it is within the
   // tournament's, since a test is not refused for what the tournament became
@@ -2466,6 +2467,12 @@ export class Tournament extends AggregateRoot {
     details: TestDetails,
     had?: { readonly starts: string; readonly finishes: string },
   ): void {
+    if (details.group !== undefined && !this.#now.format.hasGroups) {
+      refuse(
+        "Tournament.FormatHasNoGroups",
+        "The tournament's format has no groups.",
+      );
+    }
     if (details.firstTeam.equals(details.secondTeam)) {
       refuse("Tournament.TestAgainstItself", "A team does not play itself.");
     }

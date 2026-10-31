@@ -159,6 +159,28 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Add Test" is pressed
       Then the test dialog does not ask for "Name"
 
+  Rule: A tournament whose format has no groups is not asked for one
+
+    The regulations of the Eire Cup and the Interstate Shield have no groups
+    (`addTest.feature`), so the dialog does not offer a Group there, rather
+    than offer it and refuse what is typed in it.
+
+    Scenario Outline: The dialog does not ask for a group in <format>
+      Given the tournament "Spring Tests" is played in the format "<format>"
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog does not ask for "Group"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario: The dialog still asks for a group in Teams
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog asks for "Group"
+
   Rule: The dialog reads in the order a test is said aloud
 
     Scenario: Team A comes first
