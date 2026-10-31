@@ -460,6 +460,8 @@ export const italian: Language = {
     "blockSummary.ranking":
       "In classifica per quota di incontri vinti, poi per differenza archetti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
     "orderOfPlay.none": "Non è ancora stata giocata nessuna partita.",
+    "orderOfPlay.column.game": "Partita",
+    "orderOfPlay.column.date": "Data",
     // I turni di un'eliminazione diretta, chiamati come li chiamava il vecchio
     // sito, contati a ritroso dall'ultimo, e un bye disegnato al posto di un
     // giocatore.

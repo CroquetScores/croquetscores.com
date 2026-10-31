@@ -451,6 +451,8 @@ export const english: Language = {
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
+    "orderOfPlay.column.game": "Game",
+    "orderOfPlay.column.date": "Date",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Final",

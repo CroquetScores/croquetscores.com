@@ -138,6 +138,206 @@ Feature: A competition's order of play lists its games, oldest first
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
       Then every word in the page's content but the tournament's own is in the test locale
 
+  Rule: Above the games are two headings, Game and Date
+
+    The games are laid out as they have been: the winner on one line and the
+    loser on the next, with how long ago beside the winner. Game is above the
+    players and Date above how long ago, and nothing about how a game is laid
+    out changes. Where there are no games there is nothing to head.
+
+    Scenario: The first heading is Game
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first heading of the games is "Game"
+
+    Scenario: The second heading is Date
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the second heading of the games is "Date"
+
+    Scenario: There are no headings where there are no games
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the games have no headings
+
+    Scenario: The headings are in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: The games are the oldest first until a heading is pressed
+
+    Game sorts by the winner's name and then the loser's, from A to Z, and
+    Date by when the game was added, from links of the page's own, as the lists
+    of tournaments are sorted. Pressing the heading the games are sorted by
+    turns them round, and pressing the other sorts by that one the way it is
+    first sorted: Game from A to Z, and Date the oldest first.
+
+    Scenario: The games begin sorted by Date, the oldest first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the heading "Date" of the games is marked as sorted ascending
+
+    Scenario: Game is not marked as sorted to begin with
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the heading "Game" of the games is not marked as sorted
+
+    Scenario: Pressing Game sorts the games by winner, from A to Z
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Game" of the games is pressed
+      Then the first game is of "Alex Another" beating "Sam Someone"
+
+    Scenario: Pressing Game marks it as sorted
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Game" of the games is pressed
+      Then the heading "Game" of the games is marked as sorted ascending
+
+    Scenario: Pressing Game again turns the games round
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      When the heading "Game" of the games is pressed
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+    Scenario: Games with the same winner are sorted by loser
+      Given "organiser@example.com" has added the player "Zed Zero" to "Spring Open"
+      And "organiser@example.com" has entered the player "Zed Zero" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Zed Zero" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Game" of the games is pressed
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+    Scenario: Pressing Date turns the games round, the newest first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Date" of the games is pressed
+      Then the first game is of "Alex Another" beating "Sam Someone"
+
+    Scenario: Pressing Date marks it as sorted from the newest
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Date" of the games is pressed
+      Then the heading "Date" of the games is marked as sorted descending
+
+    Scenario: An address that says how to sort sorts the games that way
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play?sort=game&order=asc" is opened
+      Then the first game is of "Alex Another" beating "Sam Someone"
+
+    Scenario: An address that sorts by nothing the page has is the oldest first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play?sort=score" is opened
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+  Rule: The sorting chosen is the sorting kept
+
+    As every sortable list is (`rememberedSorting.feature`), the games are
+    sorted the way they were last sorted on this device when the page is
+    next opened with nothing in its address saying otherwise. It is kept for
+    every competition rather than one a competition, as the view chosen is,
+    since a reader who wants the newest games first wants them in every
+    competition.
+
+    Scenario: The games are sorted when next opened as they were last sorted
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the first game is of "Alex Another" beating "Sam Someone"
+
+    Scenario: The heading is marked when next opened
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the heading "Game" of the games is marked as sorted ascending
+
+    Scenario: An address that sorts by nothing the page has is not the sorting kept
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play?sort=score" is opened
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+    Scenario: The way back is not offered when the usual order is the sorting kept
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Date" of the games is pressed
+      And the heading "Date" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the games offer no way back to their usual order
+
+    Scenario: The sorting is kept for the competition's own address when it shows the order of play
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Date" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the heading "Date" of the games is marked as sorted descending
+
+    Scenario: The sorting is kept for another competition
+      Given "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Date" of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-b/order-of-play" is opened
+      Then the heading "Date" of the games is marked as sorted descending
+
+    Scenario: The address after pressing a heading says nothing of the sorting
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Game" of the games is pressed
+      Then the address is "/2026/ac/spring-open/competitions/block-a/order-of-play"
+
+    Scenario: The way back to the usual order is offered once the games are sorted
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      When the heading "Game" of the games is pressed
+      Then the games offer the way back to their usual order
+
+    Scenario: The way back is not offered before the games are sorted
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the games offer no way back to their usual order
+
+    Scenario: Pressing the way back puts the games the oldest first
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-03T11:00:00Z"
+      And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      When the way back to the usual order of the games is pressed
+      Then the first game is of "Sam Someone" beating "Alex Another"
+
+    Scenario: The usual order is kept after the way back
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is open
+      And the heading "Game" of the games is pressed
+      And the way back to the usual order of the games is pressed
+      When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
+      Then the heading "Date" of the games is marked as sorted ascending
+
   Rule: A game is the winner on one line and the loser on the next, as on the tournament's page
 
     Background:

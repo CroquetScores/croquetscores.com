@@ -417,6 +417,8 @@ export const polish: Language = {
     "blockSummary.ranking":
       "Kolejność według odsetka wygranych meczów, potem według bilansu bramek. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
     "orderOfPlay.none": "Nie rozegrano jeszcze żadnej gry.",
+    "orderOfPlay.column.game": "Gra",
+    "orderOfPlay.column.date": "Data",
     // Rundy turnieju pucharowego, liczone od ostatniej.
     "knockout.round.final": "Finał",
     "knockout.round.semis": "Półfinały",

@@ -462,6 +462,8 @@ export const french: Language = {
     "blockSummary.ranking":
       "Classement selon la part de matchs gagnés, puis selon la différence de arceaux. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n'a encore été jouée.",
+    "orderOfPlay.column.game": "Partie",
+    "orderOfPlay.column.date": "Date",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Finale",

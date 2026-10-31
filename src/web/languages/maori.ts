@@ -431,6 +431,8 @@ export const maori: Language = {
     "blockSummary.ranking":
       "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
     "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",
+    "orderOfPlay.column.game": "Kēmu",
+    "orderOfPlay.column.date": "Rā",
     // A knockout's rounds.
     "knockout.round.final": "Whakamutunga",
     "knockout.round.semis": "Hawhe-whakamutunga",

@@ -463,6 +463,8 @@ export const spanish: Language = {
     "blockSummary.ranking":
       "Ordenados por la proporción de partidos ganados y, después, por los aros netos. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",
+    "orderOfPlay.column.game": "Partida",
+    "orderOfPlay.column.date": "Fecha",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Final",

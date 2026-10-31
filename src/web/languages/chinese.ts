@@ -428,6 +428,8 @@ export const chinese: Language = {
     "blockSummary.ranking":
       "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",
+    "orderOfPlay.column.game": "比赛",
+    "orderOfPlay.column.date": "日期",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "决赛",

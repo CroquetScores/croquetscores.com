@@ -436,6 +436,8 @@ export const russian: Language = {
     "blockSummary.ranking":
       "Места определяются долей выигранных матчей, затем разницей ворот. Регламент самого турнира может расставлять игроков иначе.",
     "orderOfPlay.none": "Игр ещё не сыграно.",
+    "orderOfPlay.column.game": "Игра",
+    "orderOfPlay.column.date": "Дата",
     // A knockout's rounds.
     "knockout.round.final": "Финал",
     "knockout.round.semis": "Полуфиналы",

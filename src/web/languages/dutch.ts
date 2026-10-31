@@ -462,6 +462,8 @@ export const dutch: Language = {
     "blockSummary.ranking":
       "Gerangschikt naar het aandeel gewonnen wedstrijden, daarna naar het saldo poortjes. Het eigen reglement van een toernooi kan de spelers anders plaatsen.",
     "orderOfPlay.none": "Er zijn nog geen partijen gespeeld.",
+    "orderOfPlay.column.game": "Wedstrijd",
+    "orderOfPlay.column.date": "Datum",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Finale",

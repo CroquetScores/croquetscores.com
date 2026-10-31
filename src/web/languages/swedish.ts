@@ -458,6 +458,8 @@ export const swedish: Language = {
     "blockSummary.ranking":
       "Rankad efter andelen vunna matcher, därefter efter nettobågar. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",
+    "orderOfPlay.column.game": "Match",
+    "orderOfPlay.column.date": "Datum",
     // En utslagnings ronder, benämnda som den gamla webbplatsen gjorde, räknade
     // bakifrån från den sista, och en bye ritad i stället för en spelare.
     "knockout.round.final": "Final",

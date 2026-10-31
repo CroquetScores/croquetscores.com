@@ -444,6 +444,8 @@ export const welsh: Language = {
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
+    "orderOfPlay.column.game": "Gêm",
+    "orderOfPlay.column.date": "Dyddiad",
     // A knockout's rounds, and a bye drawn in place of a player.
     "knockout.round.final": "Rownd derfynol",
     "knockout.round.semis": "Rowndiau cyn-derfynol",

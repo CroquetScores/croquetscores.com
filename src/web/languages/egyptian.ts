@@ -426,6 +426,8 @@ export const egyptian: Language = {
     "blockSummary.ranking":
       "الترتيب على حسب نسبة المباريات اللي اتكسبت، وبعدين صافي الأطواق. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",
+    "orderOfPlay.column.game": "اللعبة",
+    "orderOfPlay.column.date": "التاريخ",
     // A knockout's rounds.
     "knockout.round.final": "النهائي",
     "knockout.round.semis": "نصف النهائي",
