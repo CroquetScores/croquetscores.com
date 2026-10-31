@@ -428,6 +428,8 @@ export const chinese: Language = {
     "blockSummary.ranking":
       "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",
+    "orderOfPlay.column.game": "比赛",
+    "orderOfPlay.column.date": "日期",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "决赛",
@@ -450,6 +452,7 @@ export const chinese: Language = {
     "tournamentList.column.name": "名称",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "仅显示{country}的赛事",
+    "tournamentList.usualOrder": "恢复通常的顺序",
     "tournamentList.filter.country": "国家",
     "tournamentList.filter.anyCountry": "所有国家",
     "tournamentList.filter.region": "地区",

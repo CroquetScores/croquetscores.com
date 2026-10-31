@@ -44,9 +44,11 @@ import { escape } from "../common/escape.js";
 import { type Speaking, speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
+import { settleWhatWasPressed } from "../common/rememberedSorting.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { themeOf } from "../common/theme.js";
 import { sendPage } from "./tournamentLists.js";
+import { gamesSortable, page as sortingPage } from "./gamesSorting.js";
 import { printerPath } from "../common/iconPaths.js";
 import { printPiecesScript } from "./printPieces.js";
 import { readsOf } from "./read.js";
@@ -381,6 +383,14 @@ export const registerCompetitionPages = (
           }
 
           const view = viewOf(request);
+          // A heading of the order of play pressed is remembered, and the
+          // reader sent on to the address without it.
+          if (view === "orderOfPlay") {
+            const pressed = settleWhatWasPressed(request, reply, sortingPage, [
+              gamesSortable,
+            ]);
+            if (pressed !== undefined) return pressed;
+          }
           if (chooses) remember(reply, view);
           // A test in a group is one of its group's, so its page marks the
           // group rather than itself, and offers the group's Summary and

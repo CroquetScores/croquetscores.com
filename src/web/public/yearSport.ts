@@ -30,10 +30,13 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  settledWhenPressed,
   table,
   yearsOf,
 } from "./tournamentLists.js";
 import { yearInPath } from "./year.js";
+
+const tables = ["tournaments"];
 
 export const registerYearSportPage = (
   server: FastifyInstance,
@@ -54,11 +57,13 @@ export const registerYearSportPage = (
       ) {
         return reply.callNotFound();
       }
+      const pressed = settledWhenPressed(request, reply, "sport", tables);
+      if (pressed !== undefined) return pressed;
       const year = Number(request.params.year);
       const path = `/${request.params.year}/${sport.code}`;
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const asked = askedOf(request, path, ["tournaments"], {
+      const asked = askedOf(request, path, "sport", tables, {
         offersSport: false,
       });
       const { mediator } = request.server;

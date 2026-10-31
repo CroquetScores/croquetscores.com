@@ -451,6 +451,8 @@ export const english: Language = {
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
+    "orderOfPlay.column.game": "Game",
+    "orderOfPlay.column.date": "Date",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Final",
@@ -473,6 +475,7 @@ export const english: Language = {
     "tournamentList.column.name": "Name",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Only tournaments in {country}",
+    "tournamentList.usualOrder": "Back to the usual order",
     "tournamentList.filter.country": "Country",
     "tournamentList.filter.anyCountry": "Any country",
     "tournamentList.filter.region": "Region",

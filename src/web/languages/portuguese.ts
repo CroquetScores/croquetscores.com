@@ -456,6 +456,8 @@ export const portuguese: Language = {
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas e, depois, pelo saldo de arcos. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",
+    "orderOfPlay.column.game": "Jogo",
+    "orderOfPlay.column.date": "Data",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Final",
@@ -478,6 +480,7 @@ export const portuguese: Language = {
     "tournamentList.column.name": "Nome",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Só torneios em {country}",
+    "tournamentList.usualOrder": "Voltar à ordem habitual",
     "tournamentList.filter.country": "País",
     "tournamentList.filter.anyCountry": "Qualquer país",
     "tournamentList.filter.region": "Região",

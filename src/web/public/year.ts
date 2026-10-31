@@ -26,6 +26,7 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  settledWhenPressed,
   table,
   yearsOf,
 } from "./tournamentLists.js";
@@ -38,17 +39,21 @@ import {
 export const yearInPath = ":year(^[1-9]\\d{3}$)";
 const yearPath = `/${yearInPath}`;
 
+const tables = ["tournaments"];
+
 export const registerYearPage = (
   server: FastifyInstance,
   assets: Assets,
 ): void => {
   server.get<{ Params: { year: string } }>(yearPath, async (request, reply) => {
+    const pressed = settledWhenPressed(request, reply, "year", tables);
+    if (pressed !== undefined) return pressed;
     const year = Number(request.params.year);
     const path = `/${request.params.year}`;
     const website = websiteOf(request);
     const speaking = speakingOf(request);
     const { say } = speaking;
-    const asked = askedOf(request, path, ["tournaments"]);
+    const asked = askedOf(request, path, "year", tables);
     const { mediator } = request.server;
     const heading = say("year.heading", { year: request.params.year });
 

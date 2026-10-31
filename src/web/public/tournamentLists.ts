@@ -27,6 +27,13 @@ import { dated } from "../common/dates.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
+import {
+  forget,
+  keep,
+  rememberedOf,
+  settleWhatWasPressed,
+  type Sortable,
+} from "../common/rememberedSorting.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 
 // Sorting ------------------------------------------------------------------------
@@ -115,6 +122,11 @@ export interface Asked {
   readonly offersSport: boolean;
   readonly chose: FilterChosen;
   readonly sorting: Readonly<Record<string, string | undefined>>;
+  /**
+   * How each list was last sorted on the reader's device, which sorts it where
+   * the address says nothing it can use.
+   */
+  readonly remembered: Readonly<Record<string, string | undefined>>;
 }
 
 // Each as the address gives it: an empty one is a choice left at "any", which
@@ -135,6 +147,7 @@ const oneOf = (query: unknown, name: string): string | undefined => {
 export const askedOf = (
   request: FastifyRequest,
   path: string,
+  page: string,
   tables: readonly string[],
   { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): Asked => {
@@ -155,8 +168,35 @@ export const askedOf = (
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
     ),
+    remembered: rememberedOf(request, page),
   };
 };
+
+/**
+ * Remembers a sorting the reader pressed, or forgets one they put back, and
+ * sends them on to the page without it. Nothing is sent where they did
+ * neither, and the page goes on to be drawn. See rememberedSorting.ts.
+ */
+export const settledWhenPressed = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+  page: string,
+  tables: readonly string[],
+): FastifyReply | undefined =>
+  settleWhatWasPressed(
+    request,
+    reply,
+    page,
+    tables.map((table): Sortable => ({
+      name: table,
+      parameters: [table],
+      writtenIn: (query) => {
+        const written = oneOf(query, table);
+        const sorting = sortingRead(written);
+        return sorting === undefined ? undefined : sortingWritten(sorting);
+      },
+    })),
+  );
 
 // The address of the page at `path` with `chose` and `sorting` said of it.
 const addressOf = (
@@ -236,12 +276,20 @@ export const table = (
   assets: Assets,
 ): string => {
   const { say } = speaking;
+  // What the address says, then what the device remembers, then the order the
+  // list begins in.
+  const remembered = sortingRead(asked.remembered[listing.table]);
   const sorting =
-    sortingRead(asked.sorting[listing.table]) ?? listing.sortedAtFirst;
+    sortingRead(asked.sorting[listing.table]) ??
+    remembered ??
+    listing.sortedAtFirst;
   const heading = (column: Column): string => {
     const marked = sorting?.column === column ? sorting.order : undefined;
+    // "keep" is what tells the server the reader pressed it, and not that a
+    // link to the page was followed (rememberedSorting.ts).
     const href = addressWith(asked, {
       [listing.table]: sortingWritten(pressed(column, sorting)),
+      [keep]: listing.table,
     });
     return `                <th scope="col"${marked === undefined ? "" : ` aria-sort="${ariaSort[marked]}"`}><a href="${escape(href)}">${
       marked === undefined
@@ -301,6 +349,11 @@ ${rows}
               </tbody>`
               }
             </table>${rowsScript}${
+              remembered === undefined
+                ? ""
+                : `
+            <p class="tournament-list-usual"><a href="${escape(addressWith(asked, { [forget]: listing.table }))}">${escape(say("tournamentList.usualOrder"))}</a></p>`
+            }${
               listing.listed.length === 0
                 ? `
             <p class="tournament-list-none">${escape(listing.none)}</p>`

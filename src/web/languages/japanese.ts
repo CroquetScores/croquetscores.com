@@ -433,6 +433,8 @@ export const japanese: Language = {
     "blockSummary.ranking":
       "試合の勝率、次にフープ差の順に並べています。大会独自の規定では、選手の順位が異なる場合があります。",
     "orderOfPlay.none": "まだゲームは行われていません。",
+    "orderOfPlay.column.game": "試合",
+    "orderOfPlay.column.date": "日付",
     // A knockout's rounds, counted back from the last, and a bye.
     "knockout.round.final": "決勝",
     "knockout.round.semis": "準決勝",
@@ -452,6 +454,7 @@ export const japanese: Language = {
     "tournamentList.column.name": "名称",
     // A flag, which narrows the lists to its country.
     "tournamentList.onlyIn": "{country}の大会のみ",
+    "tournamentList.usualOrder": "いつもの順序に戻す",
     "tournamentList.filter.country": "国",
     "tournamentList.filter.anyCountry": "すべての国",
     "tournamentList.filter.region": "地域",

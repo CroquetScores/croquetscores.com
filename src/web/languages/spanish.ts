@@ -463,6 +463,8 @@ export const spanish: Language = {
     "blockSummary.ranking":
       "Ordenados por la proporción de partidos ganados y, después, por los aros netos. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",
+    "orderOfPlay.column.game": "Partida",
+    "orderOfPlay.column.date": "Fecha",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Final",
@@ -485,6 +487,7 @@ export const spanish: Language = {
     "tournamentList.column.name": "Nombre",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Solo torneos de {country}",
+    "tournamentList.usualOrder": "Volver al orden habitual",
     "tournamentList.filter.country": "País",
     "tournamentList.filter.anyCountry": "Cualquier país",
     "tournamentList.filter.region": "Región",

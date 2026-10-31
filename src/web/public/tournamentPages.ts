@@ -268,6 +268,9 @@ export const gameShown = (
   now: Date,
   speaking: Speaking,
   assets: Assets,
+  // A game is a row of a table where the page lists its games as one
+  // (orderOfPlay.ts), and an item of a list otherwise.
+  asRow = false,
 ): string => {
   const { say } = speaking;
   const result = say(played.drawn ? "tournament.drewWith" : "tournament.beat");
@@ -278,9 +281,19 @@ export const gameShown = (
     ? `              <p class="visually-hidden">${escape(say("block.gameWithdrawn"))}</p>
 `
     : "";
+  const winner = `<p class="game-line game-winner">${playerShown(played.winner, "game", speaking, assets)} <span class="game-score">${escape(played.winnerScore)}</span> <span class="game-result">${escape(result)}</span></p>`;
+  const loser = `<p class="game-line game-loser">${playerShown(played.loser, "game", speaking, assets)} <span class="game-score">${escape(played.loserScore)}</span></p>`;
+  const when = `<p class="game-beside game-ago">${played.addedAt === undefined ? "" : ago(played.addedAt, now, speaking)}</p>`;
+  if (asRow) {
+    return `            <tr class="game"${withdrawn ? " data-withdrawn" : ""}>
+              <td class="game-players">${winner}${beside === undefined ? "" : `<p class="game-beside game-competition">${beside}</p>`}${loser}
+${said}              </td>
+              <td class="game-when">${when}</td>
+            </tr>`;
+  }
   return `            <li class="game"${withdrawn ? " data-withdrawn" : ""}>
-              <p class="game-line game-winner">${playerShown(played.winner, "game", speaking, assets)} <span class="game-score">${escape(played.winnerScore)}</span> <span class="game-result">${escape(result)}</span></p>
-${beside === undefined ? "" : `              <p class="game-beside game-competition">${beside}</p>\n`}              <p class="game-line game-loser">${playerShown(played.loser, "game", speaking, assets)} <span class="game-score">${escape(played.loserScore)}</span></p>
-              <p class="game-beside game-ago">${played.addedAt === undefined ? "" : ago(played.addedAt, now, speaking)}</p>
+              ${winner}
+${beside === undefined ? "" : `              <p class="game-beside game-competition">${beside}</p>\n`}              ${loser}
+              ${when}
 ${said}            </li>`;
 };

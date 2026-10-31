@@ -2047,6 +2047,60 @@ main {
   text-align: end;
 }
 
+/* A competition's games as a table of two columns, Game over the players and
+   Date over how long ago, headed in the section bar's colours as the lists of
+   tournaments are, no wider than the games of a list are. A game's row keeps
+   the game's two lines, with how long ago against the right edge. */
+.games-table {
+  width: 100%;
+  max-width: 38rem;
+  border-collapse: collapse;
+}
+
+.games-table th {
+  padding: var(--space-1) var(--space-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-align: start;
+}
+
+.games-table th:last-child {
+  text-align: end;
+}
+
+.games-column a {
+  display: inline-flex;
+  gap: var(--space-1);
+  color: inherit;
+  text-decoration: none;
+}
+
+.games-table td {
+  padding: var(--space-2);
+  vertical-align: top;
+  border-top: 1px solid var(--border);
+}
+
+.games-table > tbody > .game {
+  display: table-row;
+}
+
+.games-table > tbody > .game + .game {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* The date column is as wide as its widest date and no wider, and a date is
+   never broken across lines: the games' names take the rest of the width. */
+.games-table :is(th, td):last-child,
+.games-table .game-ago {
+  width: 1%;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  text-align: end;
+}
+
 /* Wraps rather than pushing out past the panel. */
 .game-line {
   overflow-wrap: anywhere;

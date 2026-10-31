@@ -431,6 +431,8 @@ export const maori: Language = {
     "blockSummary.ranking":
       "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
     "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",
+    "orderOfPlay.column.game": "Kēmu",
+    "orderOfPlay.column.date": "Rā",
     // A knockout's rounds.
     "knockout.round.final": "Whakamutunga",
     "knockout.round.semis": "Hawhe-whakamutunga",
@@ -449,6 +451,7 @@ export const maori: Language = {
     "tournamentList.column.date": "Rā",
     "tournamentList.column.name": "Ingoa",
     "tournamentList.onlyIn": "Ngā whakataetae i {country} anake",
+    "tournamentList.usualOrder": "Hoki ki te raupapa mātau",
     "tournamentList.filter.country": "Whenua",
     "tournamentList.filter.anyCountry": "Whenua ahakoa",
     "tournamentList.filter.region": "Rohe",

@@ -14,6 +14,13 @@ import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
+import {
+  forget,
+  keep,
+  rememberedOf,
+  settleWhatWasPressed,
+  type Sortable,
+} from "../common/rememberedSorting.js";
 import { themeOf } from "../common/theme.js";
 import {
   arrows,
@@ -53,6 +60,17 @@ interface Row {
 // and shows a reader nothing about where in time each is.
 const firstSorting: Sorting = { column: "date", order: "up" };
 
+const tables: readonly Table[] = ["tournaments", "competitions"];
+
+const sortables: readonly Sortable[] = tables.map((name) => ({
+  name,
+  parameters: [name],
+  writtenIn: (query) => {
+    const sorting = sortingRead(typedIn(query[name]));
+    return sorting === undefined ? undefined : sortingWritten(sorting);
+  },
+}));
+
 export const registerSearchPage = (
   server: FastifyInstance,
   assets: Assets,
@@ -60,6 +78,8 @@ export const registerSearchPage = (
   server.get<{ Querystring: Record<string, unknown> }>(
     "/search",
     async (request, reply) => {
+      const settled = settleWhatWasPressed(request, reply, "search", sortables);
+      if (settled !== undefined) return settled;
       const typed = typedIn(request.query.q);
       const website = websiteOf(request);
       const speaking = speakingOf(request);
@@ -81,13 +101,19 @@ export const registerSearchPage = (
         competitions: typedIn(request.query.competitions) || undefined,
       };
 
-      // The page's address with the sorting of `table` changed and the other
-      // table's kept as it was asked.
-      const addressWith = (table: Table, written: string): string => {
+      // How each was last sorted on the reader's device, which sorts it where
+      // the address says nothing it can use.
+      const remembered = rememberedOf(request, "search");
+
+      // The page's address with `changed` said of it beside what was typed and
+      // the sorting of each table as it was asked.
+      const addressWith = (
+        changed: Readonly<Record<string, string>>,
+      ): string => {
         const said = new URLSearchParams({ q: typed });
         for (const [name, value] of Object.entries({
           ...sortings,
-          [table]: written,
+          ...changed,
         })) {
           if (value !== undefined) said.set(name, value);
         }
@@ -129,13 +155,15 @@ export const registerSearchPage = (
         cut: boolean,
       ): string => {
         if (rows.length === 0) return "";
-        const sorting = sortingRead(sortings[name]) ?? firstSorting;
+        const kept = sortingRead(remembered[name]);
+        const sorting = sortingRead(sortings[name]) ?? kept ?? firstSorting;
         const headed = (column: Column): string => {
           const marked = sorting.column === column ? sorting.order : undefined;
-          const href = addressWith(
-            name,
-            sortingWritten(pressed(column, sorting)),
-          );
+          // "keep" tells the server the reader pressed it (rememberedSorting.ts).
+          const href = addressWith({
+            [name]: sortingWritten(pressed(column, sorting)),
+            [keep]: name,
+          });
           return `                <th scope="col"${marked === undefined ? "" : ` aria-sort="${ariaSort[marked]}"`}><a href="${escape(href)}">${
             marked === undefined
               ? ""
@@ -202,7 +230,12 @@ ${headings}
               <tbody>
 ${lines}
               </tbody>
-            </table>${more(rows.length, cut)}
+            </table>${more(rows.length, cut)}${
+              kept === undefined
+                ? ""
+                : `
+            <p class="tournament-list-usual"><a href="${escape(addressWith({ [forget]: name }))}">${escape(say("tournamentList.usualOrder"))}</a></p>`
+            }
           </section>
 `;
       };

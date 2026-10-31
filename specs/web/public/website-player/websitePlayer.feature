@@ -23,9 +23,12 @@ Feature: A player's page lists the tournaments they have played in
   The rows begin with the tournament that started most recently first, which
   is the table sorted by its dates from the newest to the oldest, and says so.
   The headings are links that sort the table, as
-  "/players/sam-someone?sort=tournament&order=asc" and
-  "/players/sam-someone?sort=date&order=asc": forms of the page's own, so that
-  they need no scripting and can be kept or sent. A heading the table is not
+  "/players/sam-someone?sort=tournament&order=asc&keep=tournaments" and
+  "/players/sam-someone?sort=date&order=asc&keep=tournaments": forms of the
+  page's own, so that they need no scripting. What the address says beside the
+  sorting is how the page knows the heading was pressed and the sorting is
+  to be remembered on the device (`rememberedSorting.feature`); the address a
+  reader is left at has the sorting and not that, and can be kept or sent. A heading the table is not
   sorted by sorts it its way first: Tournament from A to Z, and Date from the
   newest to the oldest. The heading the table is sorted by sorts it the other
   way. Names are put in order by their letters with case and accents set
@@ -81,7 +84,7 @@ Feature: A player's page lists the tournaments they have played in
 
     Scenario: The heading leads to the slug in lower case
       When the page at "/players/Sam-Someone" is opened
-      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=asc"
+      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=asc&keep=tournaments"
 
     Scenario: The page is headed by the world ranking name
       Given "organiser@example.com" has changed the world ranking name of the player "Sam Someone" in "Spring Open" to "Samuel Rankings"
@@ -182,7 +185,7 @@ Feature: A player's page lists the tournaments they have played in
 
     Scenario: The heading of the dates leads to oldest first
       When the page at "/players/sam-someone" is opened
-      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=asc"
+      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=asc&keep=tournaments"
 
   Rule: The headings sort the table
 
@@ -258,15 +261,15 @@ Feature: A player's page lists the tournaments they have played in
 
     Scenario: The heading is a link of the page's own
       When the page at "/players/sam-someone" is opened
-      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=asc"
+      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=asc&keep=tournaments"
 
     Scenario: The heading the table is sorted by leads to the other way
       When the page at "/players/sam-someone?sort=tournament&order=asc" is opened
-      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=desc"
+      Then the heading "Tournament" leads to "/players/sam-someone?sort=tournament&order=desc&keep=tournaments"
 
     Scenario: A heading the table is not sorted by leads to the way it is sorted first
       When the page at "/players/sam-someone?sort=tournament&order=asc" is opened
-      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=desc"
+      Then the heading "Date" leads to "/players/sam-someone?sort=date&order=desc&keep=tournaments"
 
     Scenario: A sort is kept in the address
       When the page at "/players/sam-someone?sort=tournament&order=desc" is opened

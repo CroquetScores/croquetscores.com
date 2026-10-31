@@ -19,7 +19,9 @@ const placeOf = (which: string): number => {
 };
 
 const gameAt = (world: SpecWorld, which: string): Locator =>
-  world.browserPage.locator("main .games > .game").nth(placeOf(which));
+  world.browserPage
+    .locator("main :is(.games, .games-table) .game")
+    .nth(placeOf(which));
 
 // The winner's line is the first of a game, and the loser's the second.
 const lineOf = (world: SpecWorld, line: string, which: string): Locator =>

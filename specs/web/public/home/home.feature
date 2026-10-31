@@ -514,11 +514,11 @@ Feature: The home page lists recent results and upcoming tournaments
       When the page is opened again at its address
       Then the first of the upcoming tournaments is "Autumn Open"
 
-    Scenario: Going back undoes the sorting
+    Scenario: Going back is to the page as the device remembers it
       Given the home page is open
       And the column "Name" of the upcoming tournaments is pressed
       When the browser goes back
-      Then the first of the upcoming tournaments is "Spring Open"
+      Then the first of the upcoming tournaments is "Autumn Open"
 
   Rule: The recent results sort as the upcoming tournaments do, and apart from them
 

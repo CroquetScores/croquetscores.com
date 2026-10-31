@@ -15,6 +15,13 @@ import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
+import {
+  forget,
+  keep,
+  rememberedOf,
+  settleWhatWasPressed,
+  type Sortable,
+} from "../common/rememberedSorting.js";
 import { themeOf } from "../common/theme.js";
 import { typedIn } from "./search.js";
 import { sendPage } from "./tournamentLists.js";
@@ -37,6 +44,38 @@ const arrows: Readonly<Record<Order, string>> = { asc: "↑", desc: "↓" };
 const ariaSort: Readonly<Record<Order, string>> = {
   asc: "ascending",
   desc: "descending",
+};
+
+// The table is remembered as "tournament-asc", the column and then the way.
+const page = "player";
+const list = "tournaments";
+
+const columnIn = (written: unknown): Column | undefined =>
+  written === "tournament" || written === "date" ? written : undefined;
+
+// An order that is not one is ascending, as the page has always taken it.
+const orderIn = (written: unknown): Order =>
+  written === "desc" ? "desc" : "asc";
+
+const sortable: Sortable = {
+  name: list,
+  parameters: ["sort", "order"],
+  writtenIn: (query) => {
+    const column = columnIn(typedIn(query.sort));
+    return column === undefined
+      ? undefined
+      : `${column}-${orderIn(typedIn(query.order))}`;
+  },
+};
+
+const rememberedSortingOf = (
+  written: string | undefined,
+): { readonly column: Column; readonly order: Order } | undefined => {
+  const [column, order] = (written ?? "").split("-");
+  const known = columnIn(column);
+  return known === undefined || (order !== "asc" && order !== "desc")
+    ? undefined
+    : { column: known, order };
 };
 
 const other = (order: Order): Order => (order === "asc" ? "desc" : "asc");
@@ -84,24 +123,22 @@ export const registerWebsitePlayerPage = (
       }
       throw failure;
     }
+    const pressed = settleWhatWasPressed(request, reply, page, [sortable]);
+    if (pressed !== undefined) return pressed;
     const speaking = speakingOf(request);
 
-    // Sorted only by what the page has to sort by. Anything else is the order
+    // Sorted only by what the page has to sort by, as the address says, and
+    // failing that as the reader's device remembers. Anything else is the order
     // the page begins with, the most recently started first, which is the dates
     // from the newest, and is not a page that is not there. An order that is
     // not one is ascending.
-    const chosenSort = typedIn(request.query.sort);
-    const chosen: Column | undefined =
-      chosenSort === "tournament" || chosenSort === "date"
-        ? chosenSort
-        : undefined;
-    const column: Column = chosen ?? "date";
+    const chosen = columnIn(typedIn(request.query.sort));
+    const remembered = rememberedSortingOf(rememberedOf(request, page)[list]);
+    const column: Column = chosen ?? remembered?.column ?? "date";
     const order: Order =
-      chosen === undefined
-        ? firstOrder.date
-        : typedIn(request.query.order) === "desc"
-          ? "desc"
-          : "asc";
+      chosen !== undefined
+        ? orderIn(typedIn(request.query.order))
+        : (remembered?.order ?? firstOrder.date);
     const rows = sortedBy(asked.tournaments, column, order);
 
     const here = `/players/${encodeURIComponent(slug)}`;
@@ -110,7 +147,7 @@ export const registerWebsitePlayerPage = (
     const heading = (of: Column, words: string): string => {
       const now = of === column;
       const next = now ? other(order) : firstOrder[of];
-      return `<th scope="col"${now ? ` aria-sort="${ariaSort[order]}"` : ""}><a href="${escape(`${here}?sort=${of}&order=${next}`)}">${
+      return `<th scope="col"${now ? ` aria-sort="${ariaSort[order]}"` : ""}><a href="${escape(`${here}?sort=${of}&order=${next}&${keep}=${list}`)}">${
         now
           ? `<span class="sort-arrow" aria-hidden="true">${arrows[order]}</span>`
           : ""
@@ -147,7 +184,12 @@ export const registerWebsitePlayerPage = (
             <tbody>
 ${lines}
             </tbody>
-          </table>`,
+          </table>${
+            remembered === undefined
+              ? ""
+              : `
+          <p class="tournament-list-usual"><a href="${escape(`${here}?${forget}=${list}`)}">${escape(speaking.say("tournamentList.usualOrder"))}</a></p>`
+          }`,
       }),
     );
   });

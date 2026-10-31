@@ -25,11 +25,14 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  settledWhenPressed,
   table,
   yearsOf,
 } from "./tournamentLists.js";
 
 export const homePath = "/";
+
+const tables = ["recent", "upcoming"];
 
 export const registerHomePage = (
   server: FastifyInstance,
@@ -37,10 +40,12 @@ export const registerHomePage = (
   help: HelpLibrary,
 ): void => {
   server.get(homePath, async (request, reply) => {
+    const pressed = settledWhenPressed(request, reply, "home", tables);
+    if (pressed !== undefined) return pressed;
     const website = websiteOf(request);
     const speaking = speakingOf(request);
     const { say } = speaking;
-    const asked = askedOf(request, homePath, ["recent", "upcoming"]);
+    const asked = askedOf(request, homePath, "home", tables);
     const { mediator } = request.server;
 
     const shell = {

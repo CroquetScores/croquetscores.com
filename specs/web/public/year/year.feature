@@ -268,11 +268,11 @@ Feature: A year's page lists every tournament starting in it
       When the page is opened again at its address
       Then the first of the year's tournaments is "Autumn Open"
 
-    Scenario: Going back undoes the sorting
+    Scenario: Going back is to the page as the device remembers it
       Given the page for 2026 is open
       And the column "Name" of the year's tournaments is pressed
       When the browser goes back
-      Then the first of the year's tournaments is "Spring Open"
+      Then the first of the year's tournaments is "Autumn Open"
 
     Scenario: Sorting stays on the year's page
       Given the page for 2026 is open

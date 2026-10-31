@@ -461,6 +461,8 @@ export const afrikaans: Language = {
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen, dan volgens netto hoepels. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",
+    "orderOfPlay.column.game": "Wedstryd",
+    "orderOfPlay.column.date": "Datum",
     // A knockout's rounds, named as the old site named them, counted back from
     // the last, and a bye drawn in place of a player.
     "knockout.round.final": "Eindstryd",
@@ -483,6 +485,7 @@ export const afrikaans: Language = {
     "tournamentList.column.name": "Naam",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Net toernooie in {country}",
+    "tournamentList.usualOrder": "Terug na die gewone volgorde",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Enige land",
     "tournamentList.filter.region": "Streek",

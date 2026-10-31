@@ -478,6 +478,8 @@ export const german: Language = {
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
+    "orderOfPlay.column.game": "Spiel",
+    "orderOfPlay.column.date": "Datum",
     // Die Runden eines K.-o.-Turniers, wie die alte Website sie nannte, von
     // der letzten aus zurückgezählt, und ein Freilos anstelle eines Spielers.
     "knockout.round.final": "Finale",
@@ -502,6 +504,7 @@ export const german: Language = {
     // Eine Flagge, die die Listen auf ihr Land eingrenzt, benannt nach dem,
     // was sie tut.
     "tournamentList.onlyIn": "Nur Turniere in {country}",
+    "tournamentList.usualOrder": "Zurück zur üblichen Reihenfolge",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Jedes Land",
     "tournamentList.filter.region": "Region",
