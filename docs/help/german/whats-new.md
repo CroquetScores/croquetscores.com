@@ -1,5 +1,33 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-10-31
+
+### iPad und iMac
+
+- **Die Navigation ist auf dem iPad wieder da.** Auf einem iPad 6 erschienen die Links Suchen, Startseite, Spieler, Hilfe und Verwaltung sowie die Schaltfläche, die sie öffnet, nicht. Jetzt erscheinen sie.
+- **Eine Menüschaltfläche auf einem hochkant gehaltenen Tablet.** Ein Tablet im Hochformat zeigt die Navigation wie ein Handy hinter einer Menüschaltfläche, weil die Links nicht nebeneinander passen. Quer gehalten, stehen sie wie auf einem Computer oben, mit der Suche in derselben Zeile wie das Startseiten-Symbol, vor ihm.
+- **Links unter einer Turnierliste führen nicht mehr zum falschen Turnier.** Auf einem iPad 6 führte jeder Link ab „All tournaments in 2026“ auf der Startseite zum selben Turnier. Jetzt führt jeder zu seinem eigenen.
+- **Ein Druck auf freie Fläche verlässt die Seite nicht mehr.** Auf einem iPad und auf einem iMac führte ein Druck auf die freie Fläche oben auf dem Bildschirm zu einem Turnier. Ein Druck auf eine Zeile öffnet weiterhin ihr Turnier, ein Druck anderswo aber nicht.
+
+### Einem Turnier folgen
+
+- **Die Spielreihenfolge hat Überschriften und lässt sich sortieren.** Die Spielreihenfolge eines Wettbewerbs ist jetzt eine Tabelle mit den Überschriften Spiel und Datum. Drücken Sie auf Spiel, um die Spiele nach dem Namen des Gewinners von A bis Z zu sortieren, danach nach dem des Verlierers. Drücken Sie auf Datum, um danach zu sortieren, wann jedes Spiel hinzugefügt wurde; so beginnt die Seite, das älteste zuerst. Drücken Sie noch einmal auf die Überschrift, um die Spiele umzudrehen. Das Datum bricht nie auf zwei Zeilen um.
+- **Die Sortierung wird gemerkt.** Die Website merkt sich auf Ihrem Handy oder Computer, wie Sie die Spielreihenfolge zuletzt sortiert haben, für jeden Wettbewerb, und sortiert sie beim nächsten Öffnen genauso. Dasselbe gilt für die anderen Listen, die sich sortieren lassen, etwa die Turniere auf der Startseite und die Turniere, bei denen ein Spieler gespielt hat. Unter einer so sortierten Liste steht ein Link, Zurück zur üblichen Reihenfolge, der die Sortierung vergisst.
+
+### Ein Turnier führen
+
+- **Der Reiter Ergebnisse ist in Spalten aufgebaut.** Auf einem Tablet oder breiter ist jedes Ergebnis auf dem Reiter Ergebnisse eines Wettbewerbs eine Zeile aus Spalten: die Nummer des Spiels, der Gewinner, das Ergebnis des Gewinners, der Verlierer, das Ergebnis des Verlierers und die Schaltflächen. Die Namen und Ergebnisse brechen nicht um und nehmen nur den Platz, den sie brauchen. Die Schaltflächen bekommen den Rest. Auf einem Handy sind die Ergebnisse wie bisher aufgebaut.
+- **Jedes Ergebnis beginnt mit der Nummer seines Spiels.** Die Spiele werden in der Reihenfolge nummeriert, in der sie eingegeben wurden, archivierte eingeschlossen; eine Lücke in den Nummern ist also ein Spiel, das archiviert wurde.
+
+### Ihr Konto
+
+- **Ein Konto zu vergessen überschreibt jetzt, was gespeichert war.** Wer ein Konto vergaß, machte früher Name und E-Mail-Adresse unlesbar. Jetzt werden sie endgültig ersetzt, überall dort, wo die Website sie speichert: Der Name wird zu Forgotten Account und einer Nummer, und die E-Mail-Adresse wird zu einer Adresse bei example.com, die niemandem gehört. Dasselbe geschieht mit dem verknüpften Google-Konto, damit nichts das Konto mit der Person verbindet. E-Mails, die noch auf das Konto warten, werden gelöscht. Konten, die vorher vergessen wurden, werden beim nächsten Aktualisieren der Website auf dieselbe Weise überschrieben. Die Kennung des Kontos bleibt erhalten, ebenso das, was es veröffentlicht hat, unter dem neuen Namen.
+- **So lassen Sie Ihre Daten löschen.** Die neue Seite /data-deletion-policy erklärt, wie Sie löschen lassen, was die Website über Sie speichert, gleich wie Sie sich anmelden, was gelöscht wird, was bleibt und was zu tun ist, wenn Sie sich nicht anmelden können. Ihre Schritte führen zur Seite Konto vergessen.
+
+### Die Website
+
+- **Dropdown-Listen sind im dunklen Design lesbar.** Die Optionen jeder Dropdown-Liste, etwa Land, Sportart und Sprache, sind jetzt weiß auf dunkelgrau, wenn die Website dunkel ist. Das helle Design ist unverändert.
+
 ## Veröffentlicht am 2026-10-30
 
 ### iPad

@@ -1,5 +1,33 @@
 # Nytt
 
+## Släppt 2026-10-31
+
+### iPad och iMac
+
+- **Navigeringen är tillbaka på en iPad.** På en iPad 6 syntes inte länkarna Sök, Hem, Spelare, Hjälp och Admin, eller knappen som öppnar dem. Nu syns de.
+- **En menyknapp på en surfplatta som hålls upprätt.** En surfplatta i stående läge visar, precis som en telefon, navigeringen bakom en menyknapp, eftersom länkarna inte ryms på en rad. Hålls den på tvären ligger länkarna högst upp som på en dator, med sökningen på samma rad som hemikonen, före den.
+- **Länkar under en lista med turneringar leder inte längre till fel turnering.** På en iPad 6 ledde varje länk från ”Alla turneringar 2026” och nedåt på startsidan till samma turnering. Nu leder var och en till sin egen.
+- **Att trycka på tom yta lämnar inte längre sidan.** På en iPad, och på en iMac, tog ett tryck på den tomma ytan högst upp på skärmen dig till en turnering. Ett tryck på en rad öppnar fortfarande dess turnering, men ett tryck någon annanstans gör det inte.
+
+### Följa en turnering
+
+- **Spelordningen har rubriker och kan sorteras.** En tävlings spelordning är nu en tabell med rubrikerna Match och Datum. Tryck på Match för att sortera partierna efter vinnarens namn, från A till Ö, och sedan efter förlorarens. Tryck på Datum för att sortera efter när varje parti lades till, vilket är hur sidan börjar, med det äldsta först. Tryck på rubriken igen för att vända på partierna. Datumet bryts aldrig över två rader.
+- **Sorteringen kommer ihåg.** Webbplatsen kommer ihåg på din telefon eller dator hur du senast sorterade spelordningen, för varje tävling, och sorterar den så nästa gång du öppnar den. Detsamma görs för de andra listor du kan sortera, som turneringarna på startsidan och de turneringar en spelare har spelat i. Under en lista som sorterats så finns en länk, Tillbaka till den vanliga ordningen, som glömmer sorteringen.
+
+### Arrangera en turnering
+
+- **Fliken Resultat är ordnad i kolumner.** På en surfplatta eller bredare är varje resultat på en tävlings flik **Resultat** en rad med kolumner: partiets nummer, vinnaren, vinnarens poäng, förloraren, förlorarens poäng och knapparna. Namnen och poängen bryts inte över flera rader och tar bara den plats de behöver. Knapparna får resten. På en telefon är resultaten ordnade som förut.
+- **Varje resultat börjar med partiets nummer.** Partier numreras i den ordning de matades in, arkiverade medräknade, så ett glapp i numren är ett parti som har arkiverats.
+
+### Ditt konto
+
+- **Att glömma ett konto skriver nu om det som sparats.** Att glömma ett konto brukade göra dess namn och e-postadress oåtkomliga. Nu ersätts de, för alltid, överallt där webbplatsen sparar dem: namnet blir Forgotten Account och ett nummer, och e-postadressen blir en adress på example.com som tillhör ingen. Detsamma görs med det Google-konto som är kopplat till det, så att ingenting binder kontot till personen. E-post som ännu väntade på kontot raderas. Konton som glömts före detta skrivs om på samma sätt nästa gång webbplatsen uppdateras. Kontots identifierare behålls, och det som kontot publicerade, under det nya namnet.
+- **Så får du dina uppgifter raderade.** Den nya sidan /data-deletion-policy säger hur du får det webbplatsen sparar om dig raderat, hur du än loggar in, vad som raderas, vad som behålls och vad du gör om du inte kan logga in. Stegen leder till sidan Glöm ditt konto.
+
+### Webbplatsen
+
+- **Rullgardinslistor är läsbara i det mörka temat.** Alternativen i varje rullgardinslista, som land, sport och språk, är nu vita på mörkgrått när webbplatsen är mörk. Det ljusa temat är som det var.
+
 ## Släppt 2026-10-30
 
 ### iPad

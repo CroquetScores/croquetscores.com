@@ -1,5 +1,33 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-10-31
+
+### iPad en iMac
+
+- **De navigatie is terug op een iPad.** Op een iPad 6 verschenen de links Zoeken, Home, Spelers, Help en Beheer, en de knop die ze opent, niet. Nu wel.
+- **Een menuknop op een rechtop gehouden tablet.** Een tablet rechtop, net als een telefoon, toont de navigatie achter een menuknop, omdat de links er niet naast elkaar op passen. Horizontaal gehouden staan ze bovenaan, zoals op een computer, met het zoeken op dezelfde regel als het home-pictogram, ervoor.
+- **Links onder een lijst toernooien brengen je niet meer naar het verkeerde toernooi.** Op een iPad 6 leidde elke link vanaf "Alle toernooien in 2026" op de homepagina naar hetzelfde toernooi. Elke link leidt nu naar zijn eigen toernooi.
+- **Op de witruimte drukken laat je de pagina niet meer verlaten.** Op een iPad, en op een iMac, bracht het drukken op de lege ruimte bovenaan het scherm je naar een toernooi. Op een rij drukken opent nog steeds het toernooi ervan, maar elders drukken doet dat niet.
+
+### Een toernooi volgen
+
+- **De speelvolgorde heeft koppen en kan worden gesorteerd.** De speelvolgorde van een competitie is nu een tabel met de koppen Wedstrijd en Datum. Druk op Wedstrijd om de partijen te sorteren op de naam van de winnaar, van A tot Z, en dan op die van de verliezer. Druk op Datum om te sorteren op het moment waarop elke partij is toegevoegd, zoals de pagina begint, met de oudste eerst. Druk nogmaals op de kop om de partijen om te draaien. De datum breekt nooit af over twee regels.
+- **De sortering wordt onthouden.** De site onthoudt op je telefoon of computer hoe je de speelvolgorde het laatst hebt gesorteerd, voor elke competitie, en sorteert hem de volgende keer dat je hem opent zo. Hetzelfde gebeurt met de andere lijsten die je kunt sorteren, zoals de toernooien op de homepagina en de toernooien waarin een speler heeft gespeeld. Onder een lijst die zo is gesorteerd staat een link, Terug naar de gebruikelijke volgorde, die de sortering vergeet.
+
+### Een toernooi leiden
+
+- **Het tabblad Scores is in kolommen ingedeeld.** Op een tablet of breder is elke score op het tabblad Scores van een competitie een rij kolommen: het nummer van de partij, de winnaar, de score van de winnaar, de verliezer, de score van de verliezer en de knoppen. De namen en scores breken niet af over regels en nemen alleen de ruimte die ze nodig hebben. De knoppen krijgen de rest. Op een telefoon zijn de scores ingedeeld zoals eerder.
+- **Elke score begint met het nummer van de partij.** Partijen worden genummerd in de volgorde waarin ze zijn ingevoerd, de gearchiveerde meegeteld, dus een gat in de nummers is een partij die is gearchiveerd.
+
+### Je account
+
+- **Een account vergeten herschrijft nu wat is bewaard.** Een account vergeten maakte de naam en het e-mailadres ervan vroeger onbereikbaar. Nu worden ze voorgoed vervangen, overal waar de site ze bewaart: de naam wordt Forgotten Account en een nummer, en het e-mailadres wordt een adres bij example.com dat van niemand is. Hetzelfde gebeurt met het Google-account dat eraan is gekoppeld, zodat niets het account nog aan de persoon verbindt. E-mails die er nog op wachten, worden verwijderd. Accounts die hiervoor zijn vergeten, worden op dezelfde manier herschreven wanneer de site de volgende keer wordt bijgewerkt. De identificatie van het account blijft bewaard, en ook wat het heeft gepubliceerd, onder de nieuwe naam.
+- **Hoe je je gegevens laat verwijderen.** De nieuwe pagina /data-deletion-policy zegt hoe je laat verwijderen wat de site over je bewaart, hoe je ook inlogt, wat wordt verwijderd, wat wordt bewaard en wat je doet als je niet kunt inloggen. De stappen leiden naar de pagina Account vergeten.
+
+### De site
+
+- **Keuzelijsten zijn leesbaar in het donkere thema.** De opties van elke keuzelijst, zoals het land, de sport en de taal, zijn nu wit op donkergrijs wanneer de site donker is. Het lichte thema is zoals het was.
+
 ## Uitgebracht op 2026-10-30
 
 ### iPad

@@ -1,5 +1,33 @@
 # Wat is nuut
 
+## Vrygestel 2026-10-31
+
+### iPad en iMac
+
+- **Die navigasie is terug op 'n iPad.** Op 'n iPad 6 het die skakels Soek, Tuis, Spelers, Hulp en Admin, en die knoppie wat hulle oopmaak, nie verskyn nie. Nou doen hulle.
+- **'n Kieslysknoppie op 'n tablet wat regop gehou word.** 'n Tablet regop, soos 'n foon, wys die navigasie agter 'n kieslysknoppie, omdat die skakels nie daaroor pas nie. Sywaarts gehou, is hulle bo-oor, soos op 'n rekenaar, met die soek op dieselfde reël as die tuisikoon, daarvoor.
+- **Skakels onder 'n lys toernooie neem jou nie meer na die verkeerde toernooi nie.** Op 'n iPad 6 het elke skakel van "Alle toernooie in 2026" af teen die tuisbladsy af na dieselfde toernooi gelei. Elkeen lei nou na sy eie.
+- **Om op die wit spasie te druk, laat jou nie meer die bladsy verlaat nie.** Op 'n iPad, en op 'n iMac, het dit jou na 'n toernooi geneem as jy op die leë spasie bo-aan die skerm gedruk het. Om op 'n ry te druk maak nog steeds sy toernooi oop, maar om elders te druk doen dit nie.
+
+### 'n Toernooi volg
+
+- **Die speelorde het opskrifte en kan gesorteer word.** 'n Kompetisie se speelorde is nou 'n tabel met die opskrifte Wedstryd en Datum. Druk Wedstryd om die wedstryde volgens die wenner se naam te sorteer, van A tot Z, en dan volgens die verloorder s'n. Druk Datum om te sorteer volgens wanneer elke wedstryd bygevoeg is, wat is hoe die bladsy begin, met die oudste eerste. Druk die opskrif weer om die wedstryde om te draai. Die datum breek nooit oor twee reëls nie.
+- **Die sortering word onthou.** Die webwerf onthou op jou foon of rekenaar hoe jy die speelorde laas gesorteer het, vir elke kompetisie, en sorteer dit die volgende keer wat jy dit oopmaak so. Dieselfde word gedoen vir die ander lyste wat jy kan sorteer, soos die toernooie op die tuisbladsy en die toernooie waarin 'n speler gespeel het. Onder 'n lys wat so gesorteer is, is 'n skakel, Terug na die gewone volgorde, wat dit vergeet.
+
+### 'n Toernooi bestuur
+
+- **Die Uitslae-oortjie is in kolomme uitgelê.** Op 'n tablet of wyer is elke uitslag op 'n kompetisie se Uitslae-oortjie 'n ry kolomme: die wedstryd se nommer, die wenner, die wenner se telling, die verloorder, die verloorder se telling, en die knoppies. Die name en tellings breek nie oor reëls nie en neem net die ruimte wat hulle nodig het. Die knoppies kry die res. Op 'n foon word die uitslae uitgelê soos voorheen.
+- **Elke uitslag begin met sy wedstryd se nommer.** Wedstryde word genommer in die volgorde waarin hulle ingevoer is, die geargiveerdes ingereken, so 'n gaping in die nommers is 'n wedstryd wat geargiveer is.
+
+### Jou rekening
+
+- **Om 'n rekening te vergeet, herskryf nou wat bewaar is.** Om 'n rekening te vergeet het sy naam en e-posadres voorheen buite bereik geplaas. Dit vervang hulle nou, vir goed, oral waar die webwerf hulle hou: die naam word Forgotten Account en 'n nommer, en die e-posadres word 'n adres by example.com wat aan niemand behoort nie. Dieselfde word gedoen met die Google-rekening wat daaraan gekoppel is, sodat niks die rekening aan die persoon bind nie. E-posse wat nog vir dit wag, word uitgevee. Rekeninge wat voor hierdie vergeet is, word op dieselfde manier herskryf wanneer die webwerf weer opgedateer word. Die rekening se identifiseerder word behou, en so ook wat dit gepubliseer het, onder die nuwe naam.
+- **Hoe om jou data te laat uitvee.** Die nuwe bladsy /data-deletion-policy sê hoe om te laat uitvee wat die webwerf oor jou bewaar, hoe jy ook al aanteken, wat uitgevee word, wat bewaar word, en wat om te doen as jy nie kan aanteken nie. Die stappe lei na die Vergeet rekening-bladsy.
+
+### Die webwerf
+
+- **Afrollyste is leesbaar in die donker tema.** Die opsies van elke afrollys, soos die land, die sport en die taal, is nou wit op donkergrys wanneer die webwerf donker is. Die ligte tema is soos dit was.
+
 ## Vrygestel 2026-10-30
 
 ### iPad

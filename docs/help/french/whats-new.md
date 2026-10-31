@@ -1,5 +1,33 @@
 # Nouveautés
 
+## Publié le 2026-10-31
+
+### iPad et iMac
+
+- **La navigation est de retour sur un iPad.** Sur un iPad 6, les liens Recherche, Accueil, Joueurs, Aide et Administration, ainsi que le bouton qui les ouvre, n'apparaissaient pas. Ils apparaissent maintenant.
+- **Un bouton de menu sur une tablette tenue à la verticale.** Une tablette en mode portrait, comme un téléphone, affiche la navigation derrière un bouton de menu, car les liens ne tiennent pas sur la largeur. Tenue à l'horizontale, elle les place en haut, comme sur un ordinateur, avec la recherche sur la même ligne que l'icône d'accueil, avant elle.
+- **Les liens sous une liste de tournois ne mènent plus au mauvais tournoi.** Sur un iPad 6, tous les liens à partir de « All tournaments in 2026 » sur la page d'accueil menaient au même tournoi. Chacun mène maintenant au sien.
+- **Appuyer sur l'espace vide ne quitte plus la page.** Sur un iPad, et sur un iMac, appuyer sur l'espace vide en haut de l'écran vous menait à un tournoi. Appuyer sur une ligne ouvre toujours son tournoi, mais appuyer ailleurs ne fait plus rien.
+
+### Suivre un tournoi
+
+- **L'ordre de jeu a des titres et peut être trié.** L'ordre de jeu d'une compétition est maintenant un tableau avec les titres Partie et Date. Appuyez sur Partie pour trier les parties selon le nom du gagnant, de A à Z, puis selon celui du perdant. Appuyez sur Date pour trier selon le moment où chaque partie a été ajoutée, ce qui est l'ordre de départ de la page, de la plus ancienne à la plus récente. Appuyez de nouveau sur le titre pour inverser l'ordre. La date ne se coupe jamais sur deux lignes.
+- **Le tri est mémorisé.** Le site retient sur votre téléphone ou votre ordinateur la façon dont vous avez trié l'ordre de jeu la dernière fois, pour chaque compétition, et le trie ainsi à la prochaine ouverture. Il en va de même pour les autres listes que vous pouvez trier, comme les tournois de la page d'accueil et les tournois auxquels un joueur a participé. Sous une liste triée ainsi se trouve un lien, Revenir à l'ordre habituel, qui oublie ce tri.
+
+### Organiser un tournoi
+
+- **L'onglet Scores est disposé en colonnes.** Sur une tablette ou un écran plus large, chaque score de l'onglet Scores d'une compétition forme une ligne de colonnes : le numéro de la partie, le gagnant, le score du gagnant, le perdant, le score du perdant, et les boutons. Les noms et les scores ne se coupent pas sur plusieurs lignes et ne prennent que la place dont ils ont besoin. Les boutons occupent le reste. Sur un téléphone, les scores sont disposés comme avant.
+- **Chaque score commence par le numéro de sa partie.** Les parties sont numérotées dans l'ordre où elles ont été saisies, archivées comprises : un trou dans les numéros est donc une partie qui a été archivée.
+
+### Votre compte
+
+- **Oublier un compte réécrit désormais ce qui a été conservé.** Oublier un compte rendait auparavant son nom et son adresse e-mail inaccessibles. Cela les remplace maintenant, définitivement, partout où le site les conserve : le nom devient Forgotten Account suivi d'un numéro, et l'adresse e-mail devient une adresse en example.com qui n'appartient à personne. Il en va de même pour le compte Google qui lui est lié, de sorte que rien ne rattache le compte à la personne. Les e-mails qui l'attendaient encore sont supprimés. Les comptes oubliés avant cela sont réécrits de la même façon à la prochaine mise à jour du site. L'identifiant du compte est conservé, ainsi que ce qu'il a publié, sous le nouveau nom.
+- **Comment faire supprimer vos données.** La nouvelle page /data-deletion-policy explique comment faire supprimer ce que le site conserve à votre sujet, quelle que soit votre façon de vous connecter, ce qui est supprimé, ce qui est conservé, et que faire si vous ne pouvez pas vous connecter. Ses étapes mènent à la page Oublier le compte.
+
+### Le site
+
+- **Les listes déroulantes sont lisibles dans le thème sombre.** Les options de chaque liste déroulante, comme le pays, le sport et la langue, sont maintenant blanches sur gris foncé quand le site est sombre. Le thème clair reste comme il était.
+
 ## Publié le 2026-10-30
 
 ### iPad

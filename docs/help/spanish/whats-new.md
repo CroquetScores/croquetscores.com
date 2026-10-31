@@ -1,5 +1,33 @@
 # Novedades
 
+## Publicado el 2026-10-31
+
+### iPad e iMac
+
+- **La navegación vuelve a estar en un iPad.** En un iPad 6 no aparecían los enlaces Buscar, Inicio, Jugadores, Ayuda y Administración, ni el botón que los abre. Ahora aparecen.
+- **Un botón de menú en una tableta en vertical.** Una tableta en vertical, como un teléfono, muestra la navegación tras un botón de menú, porque los enlaces no caben en una fila. En horizontal van arriba, como en un ordenador, con la búsqueda en la misma fila que el icono de inicio, antes de él.
+- **Los enlaces bajo una lista de torneos ya no llevan al torneo equivocado.** En un iPad 6, todos los enlaces desde «Todos los torneos de 2026» hacia abajo en la página de inicio llevaban al mismo torneo. Ahora cada uno lleva al suyo.
+- **Pulsar el espacio en blanco ya no te saca de la página.** En un iPad, y en un iMac, pulsar el espacio vacío cerca de la parte superior de la pantalla te llevaba a un torneo. Pulsar una fila sigue abriendo su torneo, pero pulsar en otro sitio no.
+
+### Seguir un torneo
+
+- **El orden de juego tiene encabezados y se puede ordenar.** El orden de juego de una competición es ahora una tabla con los encabezados Partida y Fecha. Pulsa Partida para ordenar las partidas por el nombre del ganador, de la A a la Z, y luego por el del perdedor. Pulsa Fecha para ordenar por el momento en que se añadió cada partida, que es como empieza la página, con la más antigua primero. Vuelve a pulsar el encabezado para invertir las partidas. La fecha nunca se parte en dos líneas.
+- **La ordenación se recuerda.** El sitio recuerda en tu teléfono o en tu ordenador cómo ordenaste por última vez el orden de juego, para cada competición, y lo ordena así la próxima vez que lo abras. Lo mismo se hace con las otras listas que se pueden ordenar, como los torneos de la página de inicio y los torneos en los que ha jugado un jugador. Bajo una lista ordenada así hay un enlace, Volver al orden habitual, que la olvida.
+
+### Gestionar un torneo
+
+- **La pestaña Resultados se presenta en columnas.** En una tableta o en una pantalla más ancha, cada resultado de la pestaña **Resultados** de una competición es una fila de columnas: el número de la partida, el ganador, la puntuación del ganador, el perdedor, la puntuación del perdedor y los botones. Los nombres y las puntuaciones no se parten en líneas y ocupan solo el espacio que necesitan. Los botones tienen el resto. En un teléfono los resultados se presentan como antes.
+- **Cada resultado empieza con el número de su partida.** Las partidas se numeran en el orden en que se introdujeron, contando las archivadas, así que un hueco en los números es una partida que se ha archivado.
+
+### Tu cuenta
+
+- **Olvidar una cuenta ahora reescribe lo que se guardó.** Olvidar una cuenta solía dejar su nombre y su dirección de correo electrónico fuera de alcance. Ahora los sustituye, para siempre, dondequiera que el sitio los guarde: el nombre pasa a ser Forgotten Account y un número, y la dirección de correo electrónico pasa a ser una dirección de example.com que no es de nadie. Lo mismo se hace con la cuenta de Google vinculada a ella, para que nada una la cuenta con la persona. Los correos que aún esperaban a la cuenta se eliminan. Las cuentas olvidadas antes de esto se reescriben del mismo modo la próxima vez que se actualice el sitio. Se conservan el identificador de la cuenta y lo que publicó, bajo el nuevo nombre.
+- **Cómo pedir que se eliminen tus datos.** La nueva página /data-deletion-policy explica cómo pedir que se elimine lo que el sitio guarda sobre ti, sea cual sea la forma en que inicias sesión, qué se elimina, qué se conserva y qué hacer si no puedes iniciar sesión. Sus pasos llevan a la página Olvidar tu cuenta.
+
+### El sitio
+
+- **Las listas desplegables se leen en el tema oscuro.** Las opciones de cada lista desplegable, como el país, el deporte y el idioma, ahora son blancas sobre gris oscuro cuando el sitio está oscuro. El tema claro sigue como estaba.
+
 ## Publicado el 2026-10-30
 
 ### iPad

@@ -1,5 +1,33 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-10-31
+
+### iPad ac iMac
+
+- **Mae'r llywio yn ôl ar iPad.** Ar iPad 6 nid oedd y dolenni Chwilio, Hafan, Chwaraewyr, Cymorth a Gweinyddu, na'r botwm sy'n eu hagor, yn ymddangos. Maent yn ymddangos nawr.
+- **Botwm dewislen ar dabled a ddelir yn unionsyth.** Mae tabled mewn portread, fel ffôn, yn dangos y llywio y tu ôl i fotwm dewislen, gan nad yw'r dolenni'n ffitio ar draws. Pan ddelir hi ar ei hochr, maent ar draws y brig fel ar gyfrifiadur, â'r chwilio ar yr un rhes â'r eicon hafan, o'i flaen.
+- **Nid yw dolenni o dan restr o dwrnameintiau bellach yn mynd â chi i'r twrnamaint anghywir.** Ar iPad 6, roedd pob dolen o "Pob twrnamaint yn 2026" i lawr yr hafan yn arwain at yr un twrnamaint. Nawr mae pob un yn arwain at ei thwrnamaint ei hun.
+- **Nid yw pwyso ar y lle gwag bellach yn gadael y dudalen.** Ar iPad, ac ar iMac, roedd pwyso ar y lle gwag ger brig y sgrin yn mynd â chi i dwrnamaint. Mae pwyso ar res yn agor ei thwrnamaint o hyd, ond nid yw pwyso yn rhywle arall yn gwneud hynny.
+
+### Dilyn twrnamaint
+
+- **Mae gan y drefn chwarae benawdau a gellir ei threfnu.** Bellach tabl â'r penawdau Gêm a Dyddiad yw trefn chwarae cystadleuaeth. Pwyswch Gêm i drefnu'r gemau yn ôl enw'r enillydd, o A i Y, ac yna yn ôl enw'r collwr. Pwyswch Dyddiad i drefnu yn ôl pryd yr ychwanegwyd pob gêm, sef sut mae'r dudalen yn dechrau, â'r hynaf yn gyntaf. Pwyswch y pennawd eto i droi'r gemau o gwmpas. Nid yw'r dyddiad byth yn torri dros ddwy linell.
+- **Cofir y trefnu.** Mae'r wefan yn cofio ar eich ffôn neu'ch cyfrifiadur sut y trefnoch y drefn chwarae ddiwethaf, ar gyfer pob cystadleuaeth, ac yn ei threfnu felly y tro nesaf y byddwch yn ei hagor. Gwneir yr un peth ar gyfer y rhestri eraill y gallwch eu trefnu, fel y twrnameintiau ar yr hafan a'r twrnameintiau y mae chwaraewr wedi chwarae ynddynt. O dan restr a drefnwyd felly mae dolen, Yn ôl i'r drefn arferol, sy'n ei hanghofio.
+
+### Rheoli twrnamaint
+
+- **Mae'r tab Sgorau wedi'i drefnu mewn colofnau.** Ar dabled neu'n ehangach, mae pob sgôr ar dab **Sgorau** cystadleuaeth yn rhes o golofnau: rhif y gêm, yr enillydd, sgôr yr enillydd, y collwr, sgôr y collwr, a'r botymau. Nid yw'r enwau a'r sgorau'n torri dros linellau ac maent yn cymryd dim ond y lle sydd ei angen arnynt. Y botymau sy'n cael y gweddill. Ar ffôn trefnir y sgorau fel o'r blaen.
+- **Mae pob sgôr yn dechrau â rhif ei gêm.** Rhifir y gemau yn y drefn y'u cofnodwyd, gan gyfrif y rhai wedi'u harchifo, felly gêm sydd wedi'i harchifo yw bwlch yn y rhifau.
+
+### Eich cyfrif
+
+- **Mae anghofio cyfrif bellach yn ailysgrifennu'r hyn a gadwyd.** Roedd anghofio cyfrif yn rhoi ei enw a'i gyfeiriad e-bost y tu hwnt i gyrraedd. Bellach mae'n eu disodli, am byth, ym mhob man y mae'r wefan yn eu cadw: daw'r enw yn Forgotten Account a rhif, a daw'r cyfeiriad e-bost yn gyfeiriad yn example.com nad yw'n perthyn i neb. Gwneir yr un peth i'r cyfrif Google sydd wedi'i gysylltu ag ef, fel nad oes dim yn clymu'r cyfrif wrth y person. Dileir e-byst a oedd yn dal i aros amdano. Ailysgrifennir cyfrifon a anghofiwyd cyn hyn yn yr un ffordd pan ddiweddarir y wefan nesaf. Cedwir dynodwr y cyfrif, a'r hyn a gyhoeddodd, o dan yr enw newydd.
+- **Sut i gael dileu eich data.** Mae'r dudalen newydd /data-deletion-policy yn dweud sut i gael dileu'r hyn y mae'r wefan yn ei gadw amdanoch, sut bynnag y mewngofnodwch, beth a ddileir, beth a gedwir, a beth i'w wneud os na allwch fewngofnodi. Mae ei chamau'n arwain at y dudalen Anghofio eich cyfrif.
+
+### Y wefan
+
+- **Mae rhestri gostwng i'w darllen yn y thema dywyll.** Mae opsiynau pob rhestr gostwng, fel y wlad, y gamp a'r iaith, bellach yn wyn ar lwyd tywyll pan fo'r wefan yn dywyll. Mae'r thema olau fel yr oedd.
+
 ## Rhyddhawyd 2026-10-30
 
 ### iPad
