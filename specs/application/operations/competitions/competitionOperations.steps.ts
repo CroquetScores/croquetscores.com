@@ -4,6 +4,8 @@ import { inspect } from "node:util";
 
 import type { Command } from "../../../../src/application/common/Command.js";
 import { AddGame } from "../../../../src/application/operations/competitions/AddGame.js";
+import { EnterLosers } from "../../../../src/application/operations/competitions/EnterLosers.js";
+import { AddKnockout } from "../../../../src/application/operations/tournaments/AddKnockout.js";
 import { ChangeCarryForward } from "../../../../src/application/operations/competitions/ChangeCarryForward.js";
 import { ArchiveGame } from "../../../../src/application/operations/competitions/ArchiveGame.js";
 import {
@@ -2687,5 +2689,129 @@ Then(
   "the competition's player {string} is answered as not a bye",
   function (this: SpecWorld, name: string) {
     assert.equal(listedCalled(this, name).bye, false);
+  },
+);
+
+// Entering the losers of a round of one knockout in another ----------------------
+
+// A round is spoken of as an ordinal and counted from 0 in the command.
+const ROUNDS: Readonly<Record<string, number>> = {
+  first: 0,
+  second: 1,
+  third: 2,
+};
+
+// The draw the knockout is added with says only its places: each round is the
+// best of 1, since what these scenarios are about is who goes where.
+Given(
+  /^"([^"]*)" has added the knockout "([^"]*)" of (\d+) places to "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    knockout: string,
+    places: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    await send(
+      this,
+      new AddKnockout(
+        await asTheReader(this, address),
+        tournament.value,
+        knockout,
+        Number(places),
+        Array.from({ length: Math.log2(Number(places)) }, () => 1),
+        momentOf(this),
+      ),
+      tournament,
+    );
+    doneAs(this);
+  },
+);
+
+// Scores are beside the point here, so every game is 26 to 17.
+Given(
+  /^"([^"]*)" has beaten "([^"]*)" in "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const manager = (await load(this, tournament)).managers[0];
+    assert.ok(manager !== undefined, `${name} has no manager.`);
+    await addingAs(this, manager.value, tournament, competition, {
+      winner,
+      winnerScore: "26",
+      loser,
+      loserScore: "17",
+    });
+    doneAs(this);
+  },
+);
+
+Given(
+  /^"([^"]*)" has withdrawn from "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    player: string,
+    competition: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const manager = (await load(this, tournament)).managers[0];
+    assert.ok(manager !== undefined, `${name} has no manager.`);
+    await sent(
+      this,
+      manager.value,
+      await named(this, tournament, competition, player),
+      withdrawing,
+    );
+    doneAs(this);
+  },
+);
+
+When(
+  /^the reader signed in to the account for "([^"]*)" enters the losers of the (first|second|third) round of "([^"]*)" in "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: SpecWorld,
+    address: string,
+    round: string,
+    from: string,
+    into: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    await send(
+      this,
+      new EnterLosers(
+        await asTheReader(this, address),
+        tournament.value,
+        (await competitionIn(this, tournament, from)).value,
+        ROUNDS[round] ?? -1,
+        (await competitionIn(this, tournament, into)).value,
+        momentOf(this),
+      ),
+      tournament,
+    );
+  },
+);
+
+Then(
+  /^"([^"]*)" of "([^"]*)" has no (first|second|third) player$/,
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    place: string,
+  ) {
+    const names = await namesInOrder(this, competition, name);
+    assert.equal(
+      names[PLACES[place] ?? -1],
+      undefined,
+      `The players are ${JSON.stringify(names)}.`,
+    );
   },
 );

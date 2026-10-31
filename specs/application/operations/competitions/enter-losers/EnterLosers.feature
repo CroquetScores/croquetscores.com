@@ -72,8 +72,8 @@ Feature: Entering the losers of a round of one knockout in another
     Scenario: A competition that is not a knockout is refused
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" enters the losers of the first round of "Block A" in "Plate" of "Spring Open"
-      Then it is refused for breaking "EnterLosers.NotAKnockout"
+      Then it is refused with "EnterLosers.NotAKnockout"
 
     Scenario: A round the knockout does not have is refused
       When the reader signed in to the account for "organiser@example.com" enters the losers of the third round of "Main" in "Plate" of "Spring Open"
-      Then it is refused for breaking "EnterLosers.NoSuchRound"
+      Then it is refused with "EnterLosers.NoSuchRound"
