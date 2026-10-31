@@ -5,6 +5,7 @@
 // group's table and the summary can never come to count a test differently.
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import {
   type Competitions,
   competitionOf,
@@ -25,6 +26,8 @@ export interface Standings {
   readonly bestOfMoreThanOne: boolean;
   /** The ids of the teams ranked, as rankingOf ranks them. */
   readonly ranked: readonly string[];
+  /** Whether the tournament's format has its nets shown and ranks by them. */
+  readonly showsNets: boolean;
 }
 
 // What a team has to its name so far, added to a test at a time.
@@ -170,6 +173,10 @@ export const standingsOf = async (
       shortName: team.shortName.toString(),
       ...tallies.get(team.id.value)!,
     }));
+  // Only the Interstate Shield, whose rules rank by net matches, which the
+  // summary then shows. Another format keeps ranking by matches won: its
+  // organisers chose that, and a change of ranking is theirs to ask for.
+  const showsNets = tournament.format.equals(TournamentFormat.interstateShield);
   return {
     teams,
     bestOfMoreThanOne: tournament.competitions.some(
@@ -179,7 +186,8 @@ export const standingsOf = async (
         counts(shape) &&
         shape.bestOf.games > 1,
     ),
-    ranked: rankingOf(teams).map(({ id }) => id),
+    ranked: rankingOf(teams, showsNets).map(({ id }) => id),
+    showsNets,
   };
 };
 
@@ -217,12 +225,21 @@ const matchesOf = (
 // first, then the more matches won, then the more net games, then the more net
 // hoops, and otherwise as
 // they were, since a sort that keeps the order of equals leaves them in the
-// tournament's.
-const rankingOf = (teams: readonly TeamStanding[]): TeamStanding[] =>
+// tournament's. By net matches in place of matches won where `byNetMatches`,
+// since a lost match is then worse than a drawn one, which matches won cannot
+// tell apart.
+const rankingOf = (
+  teams: readonly TeamStanding[],
+  byNetMatches: boolean,
+): TeamStanding[] =>
   [...teams].sort(
     (one, other) =>
       other.testsWon - one.testsWon ||
-      other.matchesWon - one.matchesWon ||
+      (byNetMatches
+        ? other.matchesWon -
+          other.matchesLost -
+          (one.matchesWon - one.matchesLost)
+        : other.matchesWon - one.matchesWon) ||
       other.gamesWon - other.gamesLost - (one.gamesWon - one.gamesLost) ||
       other.hoopsFor - other.hoopsAgainst - (one.hoopsFor - one.hoopsAgainst),
   );
