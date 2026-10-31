@@ -1,5 +1,33 @@
 # Co nowego
 
+## Wydano 2026-10-31
+
+### iPad i iMac
+
+- **Nawigacja wróciła na iPadzie.** Na iPadzie 6 nie pojawiały się odsyłacze Szukaj, Strona główna, Zawodnicy, Pomoc i Administracja ani przycisk, który je otwiera. Teraz się pojawiają.
+- **Przycisk menu na tablecie trzymanym pionowo.** Tablet w pionie, tak jak telefon, pokazuje nawigację za przyciskiem menu, bo odsyłacze nie mieszczą się w jednym rzędzie. Trzymany poziomo ma je u góry jak komputer, a wyszukiwanie jest w tym samym rzędzie co ikona strony głównej, przed nią.
+- **Odsyłacze pod listą turniejów nie prowadzą już do złego turnieju.** Na iPadzie 6 każdy odsyłacz od „Wszystkie turnieje w roku 2026” w dół strony głównej prowadził do tego samego turnieju. Teraz każdy prowadzi do swojego.
+- **Naciśnięcie pustego miejsca nie opuszcza już strony.** Na iPadzie i na iMacu naciśnięcie pustego miejsca u góry ekranu przenosiło do turnieju. Naciśnięcie wiersza nadal otwiera jego turniej, ale naciśnięcie gdzie indziej już nie.
+
+### Śledzenie turnieju
+
+- **Kolejność gier ma nagłówki i można ją sortować.** Kolejność gier w konkurencji jest teraz tabelą z nagłówkami Gra i Data. Naciśnij Gra, aby posortować gry według nazwy zwycięzcy, od A do Z, a potem według nazwy przegranego. Naciśnij Data, aby posortować według tego, kiedy dodano każdą grę; tak strona zaczyna, od najstarszej. Naciśnij nagłówek ponownie, aby odwrócić kolejność gier. Data nigdy nie łamie się na dwa wiersze.
+- **Sortowanie jest zapamiętywane.** Serwis zapamiętuje na twoim telefonie lub komputerze, jak ostatnio posortowano kolejność gier, dla każdej konkurencji, i następnym razem, gdy ją otworzysz, sortuje ją tak samo. To samo dotyczy innych list, które można sortować, takich jak turnieje na stronie głównej i turnieje, w których grał zawodnik. Pod listą posortowaną w ten sposób jest odsyłacz Wróć do zwykłej kolejności, który to zapomina.
+
+### Prowadzenie turnieju
+
+- **Karta Wyniki ma układ kolumnowy.** Na tablecie lub szerszym ekranie każdy wynik na karcie Wyniki konkurencji jest wierszem kolumn: numer gry, zwycięzca, wynik zwycięzcy, przegrany, wynik przegranego i przyciski. Nazwy i wyniki nie łamią się na kilka wierszy i zajmują tylko tyle miejsca, ile potrzebują. Resztę mają przyciski. Na telefonie wyniki są ułożone jak dawniej.
+- **Każdy wynik zaczyna się od numeru swojej gry.** Gry są numerowane w kolejności wprowadzania, wliczając zarchiwizowane, więc przerwa w numerach oznacza grę, która została zarchiwizowana.
+
+### Twoje konto
+
+- **Zapomnienie konta przepisuje teraz to, co zachowano.** Zapomnienie konta dawniej czyniło jego nazwę i adres e-mail nieczytelnymi. Teraz zastępuje je na stałe wszędzie, gdzie serwis je przechowuje: nazwa staje się Forgotten Account i numerem, a adres e-mail staje się adresem w example.com, który do nikogo nie należy. To samo dzieje się z kontem Google połączonym z kontem, aby nic nie wiązało konta z osobą. Wiadomości e-mail wciąż na nie czekające są usuwane. Konta zapomniane wcześniej zostaną przepisane w ten sam sposób, gdy serwis zostanie następnym razem zaktualizowany. Identyfikator konta zostaje, a także to, co opublikowało, pod nową nazwą.
+- **Jak usunąć swoje dane.** Nowa strona /data-deletion-policy mówi, jak usunąć to, co serwis przechowuje o tobie, niezależnie od tego, jak się logujesz, co jest usuwane, co zostaje i co robić, gdy nie możesz się zalogować. Jej kroki prowadzą do strony Zapomnij konto.
+
+### Strona
+
+- **Listy rozwijane są czytelne w ciemnym motywie.** Opcje każdej listy rozwijanej, takiej jak kraj, dyscyplina i język, są teraz białe na ciemnoszarym, gdy serwis jest ciemny. Jasny motyw jest taki jak był.
+
 ## Wydano 2026-10-30
 
 ### iPad

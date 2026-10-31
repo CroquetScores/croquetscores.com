@@ -1,5 +1,33 @@
 # What's new
 
+## Released 2026-10-31
+
+### iPad and iMac
+
+- **The navigation is back on an iPad.** On an iPad 6 the Search, Home, Players, Help and Admin links, and the button that opens them, did not appear. They do now.
+- **A menu button on a tablet held upright.** A tablet in portrait, like a phone, shows the navigation behind a menu button, since the links do not fit across it. Held sideways, they are across the top as on a computer, with the search on the same row as the home icon, before it.
+- **Links beneath a list of tournaments no longer take you to the wrong tournament.** On an iPad 6, every link from "All tournaments in 2026" down the home page led to the same tournament. Each now leads to its own.
+- **Pressing the whitespace no longer leaves the page.** On an iPad, and on an iMac, pressing the empty space near the top of the screen took you to a tournament. Pressing a row still opens its tournament, but pressing elsewhere does not.
+
+### Following a tournament
+
+- **The order of play has headings and can be sorted.** A competition's order of play is now a table headed Game and Date. Press Game to sort the games by the winner's name, from A to Z, and then by the loser's. Press Date to sort by when each game was added, which is how the page begins, with the oldest first. Press the heading again to turn the games round. The date never breaks across two lines.
+- **The sorting is remembered.** The site remembers on your phone or computer how you last sorted the order of play, for every competition, and sorts it that way the next time you open it. The same is done for the other lists you can sort, such as the tournaments on the home page and the tournaments a player has played in. Beneath a list sorted that way is a link, Back to the usual order, which forgets it.
+
+### Managing a tournament
+
+- **The Scores tab is laid out in columns.** On a tablet or wider, each score on a competition's Scores tab is a row of columns: the game's number, the winner, the winner's score, the loser, the loser's score, and the buttons. The names and scores do not break across lines and take only the room they need. The buttons have the rest. On a phone the scores are laid out as before.
+- **Each score begins with its game's number.** Games are numbered in the order they were entered, counting the archived ones, so a gap in the numbers is a game that has been archived.
+
+### Your account
+
+- **Forgetting an account now rewrites what was kept.** Forgetting an account used to put its name and email address out of reach. It now replaces them, for good, wherever the site keeps them: the name becomes Forgotten Account and a number, and the email address becomes an address at example.com that belongs to nobody. The same is done to the Google account linked to it, so that nothing ties the account to the person. Emails still waiting for it are deleted. Accounts forgotten before this are rewritten in the same way when the site is next brought up to date. The account's identifier is kept, and so is what it published, under the new name.
+- **How to have your data deleted.** The new page /data-deletion-policy says how to have what the site keeps about you deleted, however you sign in, what is deleted, what is kept, and what to do if you cannot sign in. Its steps lead to the Forget Account page.
+
+### The site
+
+- **Drop-down lists are readable in the dark theme.** The options of every drop-down list, such as the country, the sport and the language, are now white on dark grey when the site is dark. The light theme is as it was.
+
 ## Released 2026-10-30
 
 ### iPad

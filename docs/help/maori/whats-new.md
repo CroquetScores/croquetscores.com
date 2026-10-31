@@ -1,5 +1,33 @@
 # He aha te mea hou
 
+## I tukuna 2026-10-31
+
+### iPad me iMac
+
+- **Kua hoki mai te whakatere ki tētahi iPad.** I runga i tētahi iPad 6, kīhai i puta ngā hono Rapua, Kāinga, Kaitākaro, Āwhina me Kaiwhakahaere, me te pātene e whakatuwhera ana i a rātou. Kua puta inaianei.
+- **He pātene tahua i runga i tētahi pae e tū tonu ana.** Ko tētahi pae e tū tonu ana, pēnei i te waea, ka whakaatu i te whakatere i muri i tētahi pātene tahua, nā te mea kāore e uru ngā hono ki te whānui. Ina whakahoki ki te taha, kei runga ngā hono pēnei i te rorohiko, ā, ko te rapu kei te rārangi kotahi me te tohu kāinga, i mua i a ia.
+- **Kāore ngā hono i raro i tētahi rārangi whakataetae nui e kawe i a koe ki te whakataetae nui he.** I runga i tētahi iPad 6, ko ia hono mai i "Ngā whakataetae katoa i 2026" i raro i te whārangi kāinga i kawe ki te whakataetae nui kotahi. Ko ia hono e kawe ana inaianei ki tōna ake.
+- **Kāore te pēhi i te waahi kau e wehe i te whārangi.** I runga i tētahi iPad, me tētahi iMac, ko te pēhi i te waahi kau tata ki runga o te mata i kawe i a koe ki tētahi whakataetae nui. Ka tuwhera tonu te whakataetae nui i te pēhi i tētahi rārangi, engari kāore i te pēhi i tētahi atu wāhi.
+
+### Te whai i tētahi whakataetae nui
+
+- **He ingoa tō te raupapa tākaro, ā, ka taea te whakarōpū.** Ko te raupapa tākaro o tētahi tauwhāinga he ripanga inaianei me ngā ingoa Kēmu me Rā. Pēhia a Kēmu hei whakarōpū i ngā kēmu mā te ingoa o te toa, mai i A ki Z, kātahi mā te ingoa o te hinga. Pēhia a Rā hei whakarōpū mā te wā i tāpiria ai ia kēmu, koia te timatanga o te whārangi, ko te mea tawhito te tuatahi. Pēhia anō te ingoa kia huri ngā kēmu. Kāore te rā e wāhi ki ngā rārangi e rua.
+- **Ka maumahara te whakarōpūtanga.** Ka maumahara te pae ki tāu waea, rorohiko rānei i te āhua o tāu whakarōpū whakamutunga i te raupapa tākaro, mō ia tauwhāinga, ā, ka pērā anō te whakarōpū i te wā e whai ake nei ka tuwhera koe. He pēnei anō mō ērā atu rārangi ka taea te whakarōpū, pēnei i ngā whakataetae nui i te whārangi kāinga me ngā whakataetae nui kua takaro tētahi kaitākaro. I raro i tētahi rārangi kua whakarōpūhia pēnei he hono, Hoki ki te raupapa mātau, ka warewaretia.
+
+### Te whakahaere i tētahi whakataetae nui
+
+- **Kua whakaritea te ripa Ngā tākohu ki ngā wāhanga.** I runga i tētahi pae, i tētahi mea whānui ake rānei, ko ia tākohu i te ripa Ngā tākohu o tētahi tauwhāinga he rārangi o ngā wāhanga: te nama o te kēmu, te toa, te tākohu a te toa, te hinga, te tākohu a te hinga, me ngā pātene. Kāore ngā ingoa me ngā tākohu e wāhi ki ngā rārangi, ā, ka tango i te mokowā e hiahiatia ana anake. Ko ngā pātene te toenga. I runga i te waea, he pēnei tonu te whakaritenga o ngā tākohu.
+- **Ka tīmata ia tākohu ki te nama o tōna kēmu.** Ka whakanamahia ngā kēmu i runga i te raupapa i uru ai, tae atu ki ērā kua whakatāpuia, nō reira ko te āputa i ngā nama he kēmu kua whakatāpuia.
+
+### Tō pūkete
+
+- **Ka tuhia anō ngā mea kua puritia ina warewaretia tētahi pūkete.** I mua, ko te warewaretanga o tētahi pūkete ka kore e taea te pānui i tōna ingoa me tōna wāhitau īmēra. Ka whakakapia e ia inaianei, mō ake tonu atu, ki ngā wāhi katoa e pupuri ai te pae: ka waiho te ingoa hei Forgotten Account me tētahi nama, ā, ka waiho te wāhitau īmēra hei wāhitau i example.com ehara nō tētahi tangata. Ka pērā anō te pūkete Google e hono ana ki a ia, kia kore ai he mea e here i te pūkete ki te tangata. Ka mukua ngā īmēra e tatari tonu ana mō taua pūkete. Ko ngā pūkete i warewaretia i mua i tēnei ka tuhia anō i taua ara anō ina whakahōu ake te pae. Ka puritia te tautuhi o te pūkete, me ngā mea i whakaputaina e ia, i raro i te ingoa hou.
+- **Te āhua e mukua ai ō raraunga.** Ko te whārangi hou /data-deletion-policy e kī ana me pēhea te mukumuku i ngā mea e pupuri ai te pae mōu, ahakoa te āhua o tō takiuru, he aha ngā mea ka mukua, he aha ngā mea ka puritia, me te aha mēnā kāore e taea e koe te takiuru. Ko ōna hātepe e kawe ana ki te whārangi Warewaretia te pūkete.
+
+### Te pae
+
+- **Ka pānuitia ngā rārangi taka iho i te kaupapa pōuri.** Ko ngā kōwhiringa o ia rārangi taka iho, pēnei i te whenua, te hākinakina me te reo, he mā i runga i te hina pōuri ināianei ina pōuri te pae. Kāore i rerekē te kaupapa marama.
+
 ## I tukuna 2026-10-30
 
 ### iPad

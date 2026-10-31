@@ -1,5 +1,33 @@
 # Novidades
 
+## Lançado em 2026-10-31
+
+### iPad e iMac
+
+- **A navegação voltou no iPad.** Em um iPad 6, os links Buscar, Início, Jogadores, Ajuda e Administração, e o botão que os abre, não apareciam. Agora aparecem.
+- **Um botão de menu em um tablet na vertical.** Um tablet na vertical, como um celular, mostra a navegação atrás de um botão de menu, já que os links não cabem em uma só linha. Na horizontal, eles ficam no alto, como em um computador, com a busca na mesma linha do ícone de início, antes dele.
+- **Os links abaixo de uma lista de torneios não levam mais ao torneio errado.** Em um iPad 6, todo link de "Todos os torneios de 2026" para baixo na página inicial levava ao mesmo torneio. Agora cada um leva ao seu.
+- **Tocar no espaço em branco não tira mais você da página.** Em um iPad e em um iMac, tocar no espaço vazio perto do alto da tela levava a um torneio. Tocar em uma linha ainda abre o seu torneio, mas tocar em outro lugar não.
+
+### Acompanhar um torneio
+
+- **A ordem de jogo tem títulos e pode ser ordenada.** A ordem de jogo de uma competição agora é uma tabela com os títulos Jogo e Data. Toque em Jogo para ordenar os jogos pelo nome do vencedor, de A a Z, e depois pelo do perdedor. Toque em Data para ordenar por quando cada jogo foi adicionado, que é como a página começa, com o mais antigo primeiro. Toque no título de novo para inverter os jogos. A data nunca quebra em duas linhas.
+- **A ordenação é lembrada.** O site lembra no seu celular ou computador como você ordenou a ordem de jogo da última vez, para cada competição, e a ordena assim na próxima vez que você a abrir. O mesmo vale para as outras listas que podem ser ordenadas, como os torneios da página inicial e os torneios de que um jogador participou. Abaixo de uma lista ordenada assim há um link, Voltar à ordem habitual, que faz o site esquecer isso.
+
+### Administrar um torneio
+
+- **A aba Resultados é organizada em colunas.** Em um tablet ou em uma tela mais larga, cada resultado na aba Resultados de uma competição é uma linha de colunas: o número do jogo, o vencedor, a pontuação do vencedor, o perdedor, a pontuação do perdedor e os botões. Os nomes e as pontuações não quebram em várias linhas e ocupam só o espaço de que precisam. Os botões ficam com o resto. Em um celular, os resultados são organizados como antes.
+- **Cada resultado começa com o número do seu jogo.** Os jogos são numerados na ordem em que foram inseridos, contando os arquivados, de modo que uma lacuna na numeração é um jogo que foi arquivado.
+
+### Sua conta
+
+- **Esquecer uma conta agora reescreve o que foi guardado.** Esquecer uma conta antes tornava o nome e o endereço de e-mail ilegíveis. Agora ele os substitui, para sempre, em todo lugar em que o site os guarda: o nome passa a ser Forgotten Account e um número, e o endereço de e-mail passa a ser um endereço em example.com que não pertence a ninguém. O mesmo é feito com a conta Google ligada a ela, para que nada ligue a conta à pessoa. Os e-mails que ainda esperam por ela são apagados. As contas esquecidas antes disso são reescritas da mesma forma quando o site for atualizado da próxima vez. O identificador da conta é mantido, assim como o que ela publicou, sob o novo nome.
+- **Como apagar os seus dados.** A nova página /data-deletion-policy diz como apagar o que o site guarda sobre você, não importa como você entre, o que é apagado, o que é mantido e o que fazer se você não consegue entrar. Os passos dela levam à página Esquecer conta.
+
+### O site
+
+- **As listas suspensas são legíveis no tema escuro.** As opções de toda lista suspensa, como o país, o esporte e o idioma, agora são brancas sobre cinza-escuro quando o site está escuro. O tema claro continua como era.
+
 ## Lançado em 2026-10-30
 
 ### iPad

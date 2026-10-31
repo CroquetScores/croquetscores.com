@@ -1,5 +1,33 @@
 # Novità
 
+## Rilasciato il 2026-10-31
+
+### iPad e iMac
+
+- **La navigazione è tornata su un iPad.** Su un iPad 6 i link Cerca, Home, Giocatori, Aiuto e Amministrazione, e il pulsante che li apre, non comparivano. Ora compaiono.
+- **Un pulsante di menu su un tablet tenuto in verticale.** Un tablet in verticale, come un telefono, mostra la navigazione dietro un pulsante di menu, perché i link non ci stanno in larghezza. Tenuto in orizzontale, li mostra in alto come su un computer, con la ricerca sulla stessa riga dell'icona della home, prima di essa.
+- **I link sotto un elenco di tornei non portano più al torneo sbagliato.** Su un iPad 6, ogni link da "All tournaments in 2026" in giù nella home portava allo stesso torneo. Ora ognuno porta al suo.
+- **Premere lo spazio vuoto non fa più uscire dalla pagina.** Su un iPad, e su un iMac, premere lo spazio vuoto in alto sullo schermo portava a un torneo. Premere una riga apre ancora il suo torneo, ma premere altrove no.
+
+### Seguire un torneo
+
+- **L'ordine di gioco ha le intestazioni e si può ordinare.** L'ordine di gioco di una competizione ora è una tabella con le intestazioni Partita e Data. Premi Partita per ordinare le partite in base al nome del vincitore, dalla A alla Z, e poi a quello dello sconfitto. Premi Data per ordinare in base a quando ogni partita è stata aggiunta, che è come comincia la pagina, con la più vecchia per prima. Premi di nuovo l'intestazione per invertire le partite. La data non va mai a capo su due righe.
+- **L'ordinamento viene ricordato.** Il sito ricorda sul tuo telefono o computer come hai ordinato per ultimo l'ordine di gioco, per ogni competizione, e lo ordina così la volta successiva che lo apri. Lo stesso vale per gli altri elenchi che puoi ordinare, come i tornei nella home e i tornei a cui un giocatore ha partecipato. Sotto un elenco ordinato così c'è un link, Torna all'ordine abituale, che dimentica l'ordinamento.
+
+### Organizzare un torneo
+
+- **La scheda Punteggi è disposta in colonne.** Su un tablet o più largo, ogni punteggio nella scheda Punteggi di una competizione è una riga di colonne: il numero della partita, il vincitore, il punteggio del vincitore, lo sconfitto, il punteggio dello sconfitto e i pulsanti. I nomi e i punteggi non vanno a capo e occupano solo lo spazio che serve. I pulsanti hanno il resto. Su un telefono i punteggi sono disposti come prima.
+- **Ogni punteggio comincia con il numero della sua partita.** Le partite sono numerate nell'ordine in cui sono state inserite, comprese quelle archiviate, quindi un buco nei numeri è una partita che è stata archiviata.
+
+### Il tuo account
+
+- **Dimenticare un account ora riscrive ciò che era stato conservato.** Dimenticare un account metteva prima il suo nome e il suo indirizzo email fuori portata. Ora li sostituisce, per sempre, ovunque il sito li conservi: il nome diventa Forgotten Account e un numero, e l'indirizzo email diventa un indirizzo presso example.com che non appartiene a nessuno. Lo stesso si fa con l'account Google collegato, così che nulla leghi l'account alla persona. Le email ancora in attesa per l'account vengono eliminate. Gli account dimenticati prima di ora vengono riscritti allo stesso modo al prossimo aggiornamento del sito. L'identificatore dell'account viene conservato, e anche ciò che ha pubblicato, con il nuovo nome.
+- **Come far eliminare i tuoi dati.** La nuova pagina /data-deletion-policy spiega come far eliminare ciò che il sito conserva su di te, in qualunque modo accedi, che cosa viene eliminato, che cosa viene conservato e che cosa fare se non riesci ad accedere. I suoi passaggi portano alla pagina Dimentica account.
+
+### Il sito
+
+- **Gli elenchi a discesa sono leggibili nel tema scuro.** Le opzioni di ogni elenco a discesa, come il paese, lo sport e la lingua, ora sono bianche su grigio scuro quando il sito è scuro. Il tema chiaro è com'era.
+
 ## Rilasciato il 2026-10-30
 
 ### iPad
