@@ -428,7 +428,8 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Then the team "South Australia" is answered in the summary with 0 net matches
 
     Scenario: A team's net games are the games it has won less the games it has lost
-      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      Given "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" matches each the best of 3
+      And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
       And "Nat North" has beaten "Sam South" 26 to 17 in "SA v NSW" of "Shield 2026"
       And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
       When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
@@ -438,6 +439,7 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Given "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" matches each the best of 1
       And "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" 5 expected matches
       And "organiser@example.com" has given the test "NSW v VIC" of "Shield 2026" matches each the best of 1
+      And "organiser@example.com" has given the test "NSW v VIC" of "Shield 2026" 4 expected matches
       And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
       And "Sue Southern" has beaten "Nell Northern" 26 to 17 in "SA v NSW" of "Shield 2026"
       And "Nat North" has beaten "Sue Southern" 26 to 17 in "SA v NSW" of "Shield 2026"

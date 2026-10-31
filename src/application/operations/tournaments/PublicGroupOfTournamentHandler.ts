@@ -93,6 +93,8 @@ export class PublicGroupOfTournamentHandler extends QueryHandler<
       teams: standings.teams.filter(({ id }) => teamsInGroup.has(id)),
       bestOfMoreThanOne: standings.bestOfMoreThanOne,
       ranked: standings.ranked.filter((id) => teamsInGroup.has(id)),
+      // The Interstate Shield is never played in groups.
+      showsNets: false,
       group: { name: group.name, slug: group.slug },
       tests,
     };

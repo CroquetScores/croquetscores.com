@@ -5,8 +5,9 @@
 // grouped under Tests, Games and Hoops, the tests it has won, lost and drawn,
 // the games it has won and lost, and its hoops for, against and net; and,
 // where any test has matches the best of more than 1, under Matches after the
-// tests, the matches it has won and lost. Its
-// sections are the tournament's, with Summary marked.
+// tests, the matches it has won and lost. A tournament in the Interstate
+// Shield format also shows its net matches and net games, which its rules
+// rank its teams by. Its sections are the tournament's, with Summary marked.
 //
 // A Standard tournament has no summary, any more than a tournament a reader
 // is not sent to has. An address the tournament has moved on from leads to
@@ -54,21 +55,38 @@ const tests: Group = {
   ],
 };
 
-// After the tests, as the teams are ranked by them after their tests.
-const matches: Group = {
+// After the tests, as the teams are ranked by them after their tests. Its net
+// comes last where `showsNets`.
+const matches = (showsNets: boolean): Group => ({
   word: "teamSummary.matches",
   columns: [
     { word: "teamSummary.wins", of: (team) => team.matchesWon },
     { word: "teamSummary.losses", of: (team) => team.matchesLost },
+    ...(showsNets
+      ? [
+          {
+            word: "teamSummary.net",
+            of: (team: TeamStanding) => team.matchesWon - team.matchesLost,
+          },
+        ]
+      : []),
   ],
-};
+});
 
-const rest: readonly Group[] = [
+const rest = (showsNets: boolean): readonly Group[] => [
   {
     word: "teamSummary.games",
     columns: [
       { word: "teamSummary.wins", of: (team) => team.gamesWon },
       { word: "teamSummary.losses", of: (team) => team.gamesLost },
+      ...(showsNets
+        ? [
+            {
+              word: "teamSummary.net",
+              of: (team: TeamStanding) => team.gamesWon - team.gamesLost,
+            },
+          ]
+        : []),
     ],
   },
   {
@@ -96,10 +114,12 @@ export const teamSummaryTable = (
     readonly teams: readonly TeamStanding[];
     readonly ranked: readonly string[];
     readonly bestOfMoreThanOne: boolean;
+    readonly showsNets: boolean;
   },
   speaking: Speaking,
 ): string => {
   const { say } = speaking;
+  const { showsNets } = asked;
   // Written as the reader's language writes a number, grouped as the old
   // site grouped a thousand or more, as "1,970".
   const numbers = new Intl.NumberFormat(speaking.language.tag);
@@ -109,8 +129,8 @@ export const teamSummaryTable = (
   // its matches would only say its games again.
   const groups: readonly Group[] = [
     tests,
-    ...(asked.bestOfMoreThanOne ? [matches] : []),
-    ...rest,
+    ...(asked.bestOfMoreThanOne ? [matches(showsNets)] : []),
+    ...rest(showsNets),
   ];
   const columns = groups.flatMap((group) =>
     group.columns.map((column, at) => ({ ...column, starts: at === 0 })),

@@ -217,6 +217,7 @@ Feature: A tournament played by teams has a summary of how its teams stand
       Then the first team of the summary is "South Australia"
 
     Scenario: A tournament in another format has no column headed "Net" under "Matches"
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
       When the page at "/2026/ac/spring-tests/summary" is opened
       Then the teams' summary has no column headed "Net" under "Matches"
 
