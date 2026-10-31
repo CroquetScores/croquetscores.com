@@ -540,3 +540,76 @@ Then(
     assert.equal(await tabPanel(this).locator(".listed-refused").count(), 0);
   },
 );
+
+// Laid out as columns (scores-tab.feature): what each part of a row is drawn
+// as is asked of the page, which is where the stylesheet is applied.
+Then(
+  "the winner, the winner's score, the loser and the loser's score of the first score listed do not wrap",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.ok((await rows(this, "in-use").count()) > 0);
+      for (const part of ["winner", "winner-score", "loser", "loser-score"]) {
+        const whiteSpace = await this.browserPage.evaluate<string>(
+          `getComputedStyle(document.querySelector('[data-listed="in-use"] > .listed-item .score-${part}')).whiteSpace`,
+        );
+        assert.equal(whiteSpace, "nowrap", `The ${part} can wrap.`);
+      }
+    });
+  },
+);
+
+Then(
+  "the losers of the scores listed start at the same place",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const all = rows(this, "in-use");
+      const count = await all.count();
+      assert.ok(count > 1, "There is only one score to line up.");
+      const starts: number[] = [];
+      for (let each = 0; each < count; each += 1) {
+        const box = await all.nth(each).locator(".score-loser").boundingBox();
+        assert.ok(box !== null, "A loser is not laid out.");
+        starts.push(box.x);
+      }
+      for (const start of starts) {
+        assert.ok(
+          Math.abs(start - (starts[0] ?? 0)) < 1,
+          `The losers start at ${starts.join(", ")}.`,
+        );
+      }
+    });
+  },
+);
+
+Then(
+  "what can be done with the first score listed reaches the right edge of the list",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const options = await rows(this, "in-use")
+        .first()
+        .locator(".listed-options")
+        .boundingBox();
+      const list = await tabPanel(this)
+        .locator('[data-listed="in-use"]')
+        .boundingBox();
+      assert.ok(options !== null && list !== null, "One is not laid out.");
+      assert.ok(
+        Math.abs(options.x + options.width - (list.x + list.width)) < 1,
+        `The buttons end at ${String(options.x + options.width)}, the list at ${String(list.x + list.width)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "what can be done with the first score listed has {int} pixels of padding before it",
+  async function (this: SpecWorld, pixels: number) {
+    await eventually(this, async () => {
+      assert.ok((await rows(this, "in-use").count()) > 0);
+      const padding = await this.browserPage.evaluate<string>(
+        `getComputedStyle(document.querySelector('[data-listed="in-use"] > .listed-item .listed-options')).paddingInlineStart`,
+      );
+      assert.equal(padding, `${String(pixels)}px`);
+    });
+  },
+);

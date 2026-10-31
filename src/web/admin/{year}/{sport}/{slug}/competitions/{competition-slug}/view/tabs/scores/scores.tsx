@@ -191,7 +191,7 @@ export const ScoresTab = ({
       <span className="listed-score">
         <span className="score-winner">{game.winner}</span>{" "}
         <span className="score-winner-score">{game.winnerScore}</span>{" "}
-        {say("admin.score.beat")}
+        <span className="score-beat">{say("admin.score.beat")}</span>
         <br />
         <span className="score-loser">{game.loser}</span>{" "}
         <span className="score-loser-score">{game.loserScore}</span>
