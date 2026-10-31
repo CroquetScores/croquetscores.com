@@ -5,6 +5,13 @@
   overflow-wrap: anywhere;
 }
 
+/* A game's number begins the score, quietly, since it is to find a game by and
+   not to read. */
+.score-number {
+  margin-inline-end: var(--space-2);
+  color: var(--ink-muted);
+}
+
 /* The scores are what is read first, so they are the bold; a name is not. */
 .score-winner-score,
 .score-loser-score {
@@ -77,4 +84,78 @@
 
 .listed-item[data-archived] .score-player {
   text-decoration: line-through;
+}
+
+/* From the width the other tabs lay their rows out beside what can be done
+   with them, a score is a row of columns: its game's number, the winner, their
+   score, the loser, their score, and what can be done with it. The first five are as wide as
+   what is in them and no wider and nothing in them wraps, so that a score
+   reads along one line and the columns line up from one score to the next
+   (a row takes its columns from the list's, as a subgrid). The last takes what
+   is left. A list wider than the screen scrolls across rather than the page
+   widening. Below that width a score is two lines, as it was. */
+@media (min-width: 40rem) {
+  ul.listed:has(.listed-score) {
+    grid-template-columns: repeat(5, max-content) minmax(0, 1fr);
+    overflow-x: auto;
+  }
+
+  ul.listed:has(.listed-score) > .listed-item {
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+  }
+
+  /* Its parts are the row's cells, so the line between them is not wanted, and
+     the word between the winner and the loser, which no column holds, is said
+     to a reader who cannot see and not drawn. */
+  .listed-item > .listed-score {
+    display: contents;
+  }
+
+  .listed-score br {
+    display: none;
+  }
+
+  .listed-score .score-beat {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .score-number,
+  .score-winner,
+  .score-winner-score,
+  .score-loser,
+  .score-loser-score {
+    white-space: nowrap;
+  }
+
+  /* Numbers line up on their last digit, and the column's gap is the space. */
+  .score-number {
+    margin-inline-end: 0;
+    text-align: end;
+  }
+
+  /* Set in from the score, so that the buttons are not read as part of it. */
+  ul.listed:has(.listed-score) .listed-options {
+    padding-inline-start: 2rem;
+  }
+
+  /* A line through a score is drawn on its parts, a row that has no box of its
+     own being no place to hang it. */
+  .listed-item[data-archived] .score-winner,
+  .listed-item[data-archived] .score-winner-score,
+  .listed-item[data-archived] .score-loser,
+  .listed-item[data-archived] .score-loser-score,
+  .listed-item[data-withdrawn] .score-winner,
+  .listed-item[data-withdrawn] .score-winner-score,
+  .listed-item[data-withdrawn] .score-loser,
+  .listed-item[data-withdrawn] .score-loser-score {
+    text-decoration: line-through;
+  }
 }
