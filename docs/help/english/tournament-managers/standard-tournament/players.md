@@ -6,7 +6,7 @@ Players are entered here once, into the tournament. Which competitions each play
 
 ![The Players tab, with players entered and one archived](images/players-tab.png)
 
-## Adding players
+## Add a player {#add-a-player}
 
 Press **Add Player**, above the list. A dialog opens over the page.
 
@@ -27,6 +27,31 @@ Press **Add**. The player is added, the dialog says so, and its fields are empti
 ![The dialog after a player is added](images/add-player-dialog-added.png)
 
 A player is never called "Bye". A knockout's byes are added in the knockout itself, wherever its players are entered, so a name that is "Bye", or "Bye" with a number, as "Bye 2", "Bye-2" or "Bye (2)", is refused, and the dialog explains why.
+
+## Adding multiple players {#adding-multiple-players}
+
+To add a whole list at once, press **Add Players**, beside **Add Player**. A dialog opens over the page with one box, which takes several lines of text. You can copy the list from a spreadsheet and paste it into the box.
+
+**The first line names the fields**, separated by commas or by tabs: **Name**, and any of **Representing**, **Flag**, **Handicap** and **WorldRankingPlayerName**, in any order. These names are typed in English, whatever language the site is in. **Name** must be one of them. **Each line after it is a player**, with a value for each field in the same order, separated in the same way. A player with nothing for a field leaves it empty, but keeps the comma or tab. For example, with commas:
+
+```
+Name,Representing,Flag
+Sam Someone,Canterbury Croquet Club,New Zealand
+Alex Another,,England
+```
+
+- **Name, Representing and World Ranking Player Name** are held to the same rules as when you add one player (see [Add a player](players.md#add-a-player)). A name is between 3 and 254 characters, is not already in the tournament, however it is capitalised, and is not "Bye".
+- **Flag** is the name of the country or place, in your language, as the list in the Add Player dialog offers it, such as New Zealand.
+- **Handicap** is a sign, up to two digits and a fraction of one digit, such as 4, +4 or -1.5.
+- A player given no **WorldRankingPlayerName** is known by their name, as they are when added one at a time.
+- **Commas or tabs.** Cells copied from a spreadsheet are separated by tabs, and a list typed by hand is usually separated by commas. Either works. If the first line has a tab in it, the whole list is read with tabs, and otherwise with commas.
+- A value with the separator in it is written in double quotes, as a spreadsheet writes one: "Smith, John" in a list separated by commas. A quote inside a value is written twice.
+- Every value has spaces at its ends removed, and a line with nothing on it is ignored.
+- A list holds at most 500 players. Add the rest in another list.
+
+Press **Add**. The whole list is checked before any of it is kept, so a list with anything wrong in it adds nobody. What is wrong is said beneath the box, on the line it is on, counting the first line as line 1. Every fault is listed, not only the first, and what you typed stays so that you can put it right. Once the list is kept, the dialog closes and the Players tab lists the new players, in the order you wrote them. Unlike **Add Player**, which stays open for the next player, there is no next: the list was the next.
+
+The **?** in the title bar of the dialog leads here.
 
 ## Correcting a player
 

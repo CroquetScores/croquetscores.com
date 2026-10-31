@@ -977,6 +977,8 @@ export const welsh: Language = {
     "admin.player.added": "Ychwanegwyd {name}.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Ychwanegu chwaraewyr",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Cymorth",
     "admin.players.many": "Chwaraewyr",
     "admin.players.line": "Llinell {line}: {words}",
     "AddPlayers.FieldsMissing":

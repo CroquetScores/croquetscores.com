@@ -188,6 +188,7 @@ export const PlayersDialog = ({
       cancel={close}
       busy={sending}
       wide
+      help="/help/tournament-managers/standard-tournament/players#adding-multiple-players"
     >
       <Field
         name="players"

@@ -9,6 +9,7 @@ import {
 import type { SpecWorld } from "../../../../../../../../support/world.js";
 import {
   eventually,
+  retried,
   tabPanel,
 } from "../../../../../../../support/tournamentPage.js";
 
@@ -59,6 +60,75 @@ Then(
     const size = await dialogOf(this).boundingBox();
     assert.ok(size !== null);
     assert.ok(Math.abs(size.x - left) <= 1, `It is ${size.x} from it.`);
+  },
+);
+
+// The help icon -------------------------------------------------------------------
+
+const helpIcon = (world: SpecWorld): Locator =>
+  dialogOf(world).locator("a.dialog-help");
+
+Then(
+  "the players dialog has a help icon called {string}",
+  async function (this: SpecWorld, name: string) {
+    assert.equal(
+      await dialogOf(this).getByRole("link", { name, exact: true }).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the help icon leads to {string}",
+  async function (this: SpecWorld, address: string) {
+    assert.equal(await helpIcon(this).getAttribute("href"), address);
+  },
+);
+
+Then("the help icon opens another tab", async function (this: SpecWorld) {
+  assert.equal(await helpIcon(this).getAttribute("target"), "_blank");
+});
+
+Then(
+  "the help icon is level with the dialog's title",
+  async function (this: SpecWorld) {
+    const icon = await helpIcon(this).boundingBox();
+    const title = await dialogOf(this).locator(".dialog-title").boundingBox();
+    assert.ok(icon !== null && title !== null, "One of them is not drawn.");
+    assert.ok(
+      icon.y >= title.y && icon.y + icon.height <= title.y + title.height,
+    );
+  },
+);
+
+Then(
+  "the page has the section {string} with the bookmark {string}",
+  async function (this: SpecWorld, heading: string, bookmark: string) {
+    assert.equal(
+      (
+        (await this.browserPage.locator(`h2#${bookmark}`).textContent()) ?? ""
+      ).trim(),
+      heading,
+    );
+  },
+);
+
+// The page is scrolled to the section by its address, and the pinned bar is
+// over the top of the window, so the section must stop beneath it.
+Then(
+  "the section {string} is below the pinned bar",
+  async function (this: SpecWorld, heading: string) {
+    await retried(async () => {
+      const section = await this.browserPage
+        .getByRole("heading", { name: heading, exact: true })
+        .boundingBox();
+      const bar = await this.browserPage.locator(".site-bar").boundingBox();
+      assert.ok(section !== null && bar !== null, "One is not drawn.");
+      assert.ok(
+        section.y >= bar.y + bar.height,
+        `The section is at ${String(section.y)}, the bar ends at ${String(bar.y + bar.height)}.`,
+      );
+    });
   },
 );
 

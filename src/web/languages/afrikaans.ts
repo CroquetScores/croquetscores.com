@@ -1005,6 +1005,8 @@ export const afrikaans: Language = {
     "admin.player.added": "{name} is bygevoeg.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Voeg spelers by",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Hulp",
     "admin.players.many": "Spelers",
     "admin.players.line": "Reël {line}: {words}",
     "AddPlayers.FieldsMissing":

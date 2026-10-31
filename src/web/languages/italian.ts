@@ -1030,6 +1030,8 @@ export const italian: Language = {
     "admin.player.added": "{name} è stato aggiunto.",
     // La finestra dei giocatori (players.feature): più giocatori scritti in un solo riquadro.
     "admin.players.addManyTitle": "Aggiungi giocatori",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Aiuto",
     "admin.players.many": "Giocatori",
     "admin.players.line": "Riga {line}: {words}",
     "AddPlayers.FieldsMissing": "Scrivi i nomi dei campi nella prima riga.",

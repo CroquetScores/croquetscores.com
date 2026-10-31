@@ -1068,6 +1068,8 @@ export const german: Language = {
     "admin.player.added": "{name} wurde hinzugefügt.",
     // Der Spielerdialog (players.feature): mehrere Spieler, in einem Feld geschrieben.
     "admin.players.addManyTitle": "Mehrere Spieler hinzufügen",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Hilfe",
     "admin.players.many": "Spieler",
     "admin.players.line": "Zeile {line}: {words}",
     "AddPlayers.FieldsMissing":

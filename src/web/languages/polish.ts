@@ -913,6 +913,8 @@ export const polish: Language = {
     "admin.player.added": "Dodano: {name}.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Dodaj zawodników",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Pomoc",
     "admin.players.many": "Zawodnicy",
     "admin.players.line": "Wiersz {line}: {words}",
     "AddPlayers.FieldsMissing": "Wpisz nazwy pól w pierwszym wierszu.",

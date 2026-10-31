@@ -953,6 +953,8 @@ export const korean: Language = {
     "admin.player.added": "{name}님을 추가했어요.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "선수 여러 명 추가",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "도움말",
     "admin.players.many": "선수",
     "admin.players.line": "{line}번째 줄: {words}",
     "AddPlayers.FieldsMissing": "첫 줄에 항목 이름을 써 주세요.",

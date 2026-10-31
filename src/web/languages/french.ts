@@ -1023,6 +1023,8 @@ export const french: Language = {
     "admin.player.added": "{name} a été ajouté.",
     // La boîte de dialogue des joueurs (players.feature) : plusieurs joueurs écrits dans une seule zone.
     "admin.players.addManyTitle": "Ajouter des joueurs",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Aide",
     "admin.players.many": "Joueurs",
     "admin.players.line": "Ligne {line} : {words}",
     "AddPlayers.FieldsMissing":

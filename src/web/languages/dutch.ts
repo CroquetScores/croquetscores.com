@@ -1019,6 +1019,8 @@ export const dutch: Language = {
     "admin.player.added": "{name} is toegevoegd.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Spelers toevoegen",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Help",
     "admin.players.many": "Spelers",
     "admin.players.line": "Regel {line}: {words}",
     "AddPlayers.FieldsMissing":

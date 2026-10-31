@@ -974,6 +974,8 @@ export const maori: Language = {
     "admin.player.added": "Kua tāpiritia a {name}.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Tāpiri kaitākaro maha",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Āwhina",
     "admin.players.many": "Ngā kaitākaro",
     "admin.players.line": "Rārangi {line}: {words}",
     "AddPlayers.FieldsMissing":

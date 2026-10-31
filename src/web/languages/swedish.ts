@@ -994,6 +994,8 @@ export const swedish: Language = {
     "admin.player.added": "{name} lades till.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Lägg till flera spelare",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Hjälp",
     "admin.players.many": "Spelare",
     "admin.players.line": "Rad {line}: {words}",
     "AddPlayers.FieldsMissing": "Skriv fältens namn på första raden.",

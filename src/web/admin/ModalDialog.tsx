@@ -29,6 +29,11 @@ interface Props {
   readonly alone?: boolean;
   /** Whether it is as wide as the window less the gutter, not a form's width. */
   readonly wide?: boolean;
+  /**
+   * Where the help for this dialog is, when it has some: a help icon in the
+   * title bar leads there, in another tab so that what was typed stays.
+   */
+  readonly help?: string;
 }
 
 export const ModalDialog = ({
@@ -41,6 +46,7 @@ export const ModalDialog = ({
   busy,
   alone = false,
   wide = false,
+  help,
 }: Props): React.JSX.Element => {
   const dialog = useRef<HTMLDialogElement>(null);
   // Its own, since one dialog can be open over another.
@@ -96,7 +102,14 @@ export const ModalDialog = ({
         else cancel();
       }}
     >
-      <h2 className="dialog-title" id={titled}>
+      <h2
+        className={
+          help === undefined
+            ? "dialog-title"
+            : "dialog-title dialog-title-with-help"
+        }
+        id={titled}
+      >
         {title}
       </h2>
       {/* A form, so that Enter in a field does what the first button does. */}
@@ -142,6 +155,20 @@ export const ModalDialog = ({
           )}
         </div>
       </form>
+      {/* After the form, so that the keyboard begins in the form and not on
+          the help; drawn in the title bar by its style. */}
+      {help === undefined ? null : (
+        <a
+          className="dialog-help"
+          href={help}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={say("admin.dialog.help")}
+          aria-label={say("admin.dialog.help")}
+        >
+          ?
+        </a>
+      )}
     </dialog>
   );
 };

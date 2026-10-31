@@ -1011,6 +1011,8 @@ export const spanish: Language = {
     "admin.player.added": "Se añadió a {name}.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Añadir jugadores",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Ayuda",
     "admin.players.many": "Jugadores",
     "admin.players.line": "Línea {line}: {words}",
     "AddPlayers.FieldsMissing":

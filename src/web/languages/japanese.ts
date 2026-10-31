@@ -942,6 +942,8 @@ export const japanese: Language = {
     "admin.player.added": "{name}を追加しました。",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "選手をまとめて追加",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "ヘルプ",
     "admin.players.many": "選手",
     "admin.players.line": "{line}行目：{words}",
     "AddPlayers.FieldsMissing": "1行目に項目名を書いてください。",

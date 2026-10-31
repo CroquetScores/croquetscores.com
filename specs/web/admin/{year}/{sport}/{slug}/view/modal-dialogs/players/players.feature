@@ -279,6 +279,46 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Spring Open" has the player "Alex Another"
 
+  Rule: A help icon in the dialog's title bar leads to the help for adding many players
+
+    The help is a section of the Players page of the help, with a bookmark of
+    its own so that the address shows that section. It is opened in another
+    tab, so that what was typed stays where it is.
+
+    Scenario: The title bar has a help icon
+      Given the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the players dialog has a help icon called "Help"
+
+    Scenario: The help icon leads to the section on adding many players
+      Given the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/players#adding-multiple-players"
+
+    Scenario: The help icon opens another tab
+      Given the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the help icon opens another tab
+
+    Scenario: The help icon is in the title bar
+      Given a viewport 1200 pixels wide
+      And the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then the help icon is level with the dialog's title
+
+    Scenario: The section the help icon leads to is on the page
+      When the page at "/help/tournament-managers/standard-tournament/players" is opened
+      Then the page has the section "Adding multiple players" with the bookmark "adding-multiple-players"
+
+    Scenario: The section is not hidden behind the pinned bar when it is led to
+      When the page at "/help/tournament-managers/standard-tournament/players#adding-multiple-players" is opened
+      Then the section "Adding multiple players" is below the pinned bar
+
+    Scenario: The reader is still put in the box when the dialog opens
+      Given the page of "Spring Open" is open
+      When "Add Players" is pressed
+      Then "Players" has the focus
+
   Rule: Cells pasted from a spreadsheet, separated by tabs, are cut as well as commas
 
     A spreadsheet puts a tab between the cells it copies, not a comma, so the

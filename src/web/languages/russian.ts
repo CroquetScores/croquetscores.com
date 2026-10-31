@@ -949,6 +949,8 @@ export const russian: Language = {
     "admin.player.added": "{name}: добавлено.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "Добавление игроков",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "Справка",
     "admin.players.many": "Игроки",
     "admin.players.line": "Строка {line}: {words}",
     "AddPlayers.FieldsMissing": "Напишите названия полей в первой строке.",

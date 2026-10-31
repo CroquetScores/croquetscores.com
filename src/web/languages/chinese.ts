@@ -908,6 +908,8 @@ export const chinese: Language = {
     "admin.player.added": "已添加 {name}。",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "批量添加选手",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "帮助",
     "admin.players.many": "选手",
     "admin.players.line": "第 {line} 行：{words}",
     "AddPlayers.FieldsMissing": "请在第一行写出各字段的名称。",

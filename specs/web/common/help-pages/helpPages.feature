@@ -33,6 +33,32 @@ Feature: Help written in markdown becomes pages of the site
       When the help page is converted
       Then the page has no script
 
+  Rule: A heading can be given a bookmark, so that an address leads straight to it
+
+    The bookmark is written at the end of the heading, in braces, and is the
+    same in every language, since the heading's own words are translated and a
+    link to it must not depend on them. The braces are not shown.
+
+    Scenario: A heading written with a bookmark has it
+      Given help page "## Adding many {#adding-many}"
+      When the help page is converted
+      Then the heading "Adding many" has the bookmark "adding-many"
+
+    Scenario: The bookmark is not shown in the heading
+      Given help page "## Adding many {#adding-many}"
+      When the help page is converted
+      Then the page has the heading "Adding many"
+
+    Scenario: A heading written with no bookmark has none
+      Given help page "## Adding many"
+      When the help page is converted
+      Then the heading "Adding many" has no bookmark
+
+    Scenario: Words in braces that are not a bookmark are shown as written
+      Given help page "## Adding many {not a bookmark}"
+      When the help page is converted
+      Then the page has the heading "Adding many {not a bookmark}"
+
   Rule: A link to another page is turned into where that page is found
 
     Scenario: A link to a page beside it

@@ -915,6 +915,8 @@ export const egyptian: Language = {
     "admin.player.added": "{name} اتضاف.",
     // The players dialog (players.feature): several players written in one box.
     "admin.players.addManyTitle": "ضيف لاعبين",
+    // A link in the title bar of a dialog, to the help that explains it.
+    "admin.dialog.help": "المساعدة",
     "admin.players.many": "اللاعبين",
     "admin.players.line": "السطر {line}: {words}",
     "AddPlayers.FieldsMissing": "اكتب أسماء الحقول في السطر الأول.",
