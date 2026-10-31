@@ -257,6 +257,43 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Spring Open" has the player "Alex Another"
 
+  Rule: A value with a comma in it is written in double quotes
+
+    A spreadsheet writes a value that has a comma in it in double quotes, and
+    a double quote inside one twice, so a list pasted from one holds names such
+    as "Smith, John". A quote that does not begin a value is just a quote.
+
+    Scenario: A value in double quotes keeps its comma
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Name, Representing
+        Sam Someone, "Canterbury, New Zealand"
+        """
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" represents "Canterbury, New Zealand"
+
+    Scenario: A double quote inside a value in double quotes is written twice
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Name, Representing
+        Sam Someone, "The ""Mallets"""
+        """
+      When "Add" is pressed
+      Then the player "Sam Someone" of "Spring Open" represents "The \"Mallets\""
+
+  Rule: A list holds at most 500 players
+
+    Scenario: A list of more than 500 players is refused beside the box
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And a list of 501 players is typed as the "Players"
+      When "Add" is pressed
+      Then "Players" is refused with "AddPlayers.TooManyPlayers"
+
   Rule: A player with no world ranking name is known by their name
 
     Scenario Outline: A player given none is known by their name

@@ -10,11 +10,13 @@ Feature: Adding several players to a tournament at once
   The list is added whole or not at all. It is asked about before anything is
   kept, and every fault in it is reported, not only the first, since a list
   that had to be sent once for each fault would be a poor way to be told. A
-  fault is refused with `Request.Invalid` and the rules broken, each reading
-  `fields` for the names of the fields, `rows` for there being no players, or
-  `rows.` and the place of the player in the list, counting from 0, for a
-  player. A list whose fields are wrong is not asked about its players, since
-  what a value is of depends on its field.
+  fault is refused with `Request.Invalid` and the rules broken, each saying
+  whether it is about the fields named, about the list of players as a whole,
+  or about one player, by the row they were written on. A list whose fields
+  are wrong is not asked about its players, since what a value is of depends
+  on its field. A list is also held to a most of 500 players, because each
+  player is asked about against every one already there, so a list with no
+  end would make the work grow with the square of its length.
 
   Names the tournament refuses are refused the same way, one for each player
   who has a name another has, whether the tournament had them already or an
@@ -80,7 +82,7 @@ Feature: Adding several players to a tournament at once
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "<code>"
-      And it reads the field "fields"
+      And that rule is about the fields
 
       Examples:
         | fields       | code                          |
@@ -93,11 +95,46 @@ Feature: Adding several players to a tournament at once
       Then it is refused with "Request.Invalid"
       And the first rule broken is "AddPlayers.FieldsMissing"
 
+    Scenario Outline: A field every object has is no field
+      Given the fields "Name, <field>"
+      And the row "Sam Someone, x"
+      When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "AddPlayers.FieldNotAllowed"
+
+      Examples:
+        | field       |
+        | constructor |
+        | toString    |
+        | __proto__   |
+
     Scenario: A list with no players is refused
       Given the fields "Name"
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "AddPlayers.PlayersMissing"
+
+  Rule: A list holds at most 500 players
+
+    Scenario: A list of 500 players is added
+      Given the fields "Name"
+      And 500 players are written
+      When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
+      Then the answer is 500 ids
+
+    Scenario: A list of more than 500 players is refused
+      Given the fields "Name"
+      And 501 players are written
+      When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "AddPlayers.TooManyPlayers"
+      And no other rule is broken
+
+    Scenario: A list that is refused for its length adds nobody
+      Given the fields "Name"
+      And 501 players are written
+      When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
+      Then the tournament has no players
 
   Rule: Every player has a value for each field, even if it is nothing
 
@@ -107,7 +144,7 @@ Feature: Adding several players to a tournament at once
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "AddPlayers.ValuesMismatched"
-      And it reads the field "rows.0"
+      And that rule is about the player on row 1
 
       Examples:
         | row                         |
@@ -123,7 +160,7 @@ Feature: Adding several players to a tournament at once
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "<code>"
-      And it reads the field "rows.1"
+      And that rule is about the player on row 2
       And no other rule is broken
 
       Examples:
@@ -140,9 +177,9 @@ Feature: Adding several players to a tournament at once
       And the row "Bye"
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then the first rule broken is "PersonName.TooShort"
-      And it reads the field "rows.0"
+      And that rule is about the player on row 1
       And the next rule broken is "TournamentPlayer.NamedBye"
-      And it reads the field "rows.2"
+      And that rule is about the player on row 3
 
     Scenario: A player who breaks a rule leaves nobody added
       Given the fields "Name"
@@ -160,7 +197,7 @@ Feature: Adding several players to a tournament at once
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Tournament.PlayerNameTaken"
-      And it reads the field "rows.0"
+      And that rule is about the player on row 1
 
     Scenario: A name an earlier row has is refused
       Given the fields "Name"
@@ -168,7 +205,7 @@ Feature: Adding several players to a tournament at once
       And the row "sam someone"
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then the first rule broken is "Tournament.PlayerNameTaken"
-      And it reads the field "rows.1"
+      And that rule is about the player on row 2
 
     Scenario: Every name that is taken is told of
       Given the fields "Name"
@@ -177,9 +214,9 @@ Feature: Adding several players to a tournament at once
       And the row "SAM SOMEONE"
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then the first rule broken is "Tournament.PlayerNameTaken"
-      And it reads the field "rows.1"
+      And that rule is about the player on row 2
       And the next rule broken is "Tournament.PlayerNameTaken"
-      And it reads the field "rows.2"
+      And that rule is about the player on row 3
 
     Scenario: A list with a name taken leaves nobody added
       Given the fields "Name"

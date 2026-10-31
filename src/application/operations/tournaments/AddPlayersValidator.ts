@@ -3,14 +3,14 @@ import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { TournamentPlayer } from "../../../domain/aggregates/tournaments/TournamentPlayer.js";
 import { brokenBy } from "../../common/brokenBy.js";
-import { AddPlayers, playerFieldNamed } from "./AddPlayers.js";
+import { AddPlayers, mostPlayersAtOnce, playerFieldOf } from "./AddPlayers.js";
 
 /**
  * What a list of players to be added must be, asked on the way in.
  *
  * Its shape first: that it names fields, only ones there are, each once and
- * Name among them, and that every player has as many values as there are
- * fields. A list whose shape is wrong is not asked what its players are, since
+ * Name among them, that there are players but not too many, and that every
+ * player has as many values as there are fields. A list whose shape is wrong is not asked what its players are, since
  * what a value is of depends on its field. Then each player is asked what
  * AddPlayer asks of one. The fields named are `fields`, and a player's is
  * `rows.` and their place in the list, counting from 0, so that whoever typed
@@ -41,7 +41,7 @@ export class AddPlayersValidator extends CommandValidator<AddPlayers> {
     const named = command.fields.map((field) => field.trim().toLowerCase());
     const broken: BrokenRule[] = [];
     named.forEach((field, place) => {
-      if (playerFieldNamed[field] === undefined) {
+      if (playerFieldOf(field) === undefined) {
         broken.push({ code: "AddPlayers.FieldNotAllowed", fields });
       } else if (named.indexOf(field) !== place) {
         broken.push({ code: "AddPlayers.FieldRepeated", fields });
@@ -53,6 +53,9 @@ export class AddPlayersValidator extends CommandValidator<AddPlayers> {
     if (broken.length > 0) return broken;
     if (command.rows.length === 0) {
       return [{ code: "AddPlayers.PlayersMissing", fields: ["rows"] }];
+    }
+    if (command.rows.length > mostPlayersAtOnce) {
+      return [{ code: "AddPlayers.TooManyPlayers", fields: ["rows"] }];
     }
     return command.rows.flatMap((row, place) =>
       row.length === named.length

@@ -8,6 +8,7 @@ import { Mark, Offers, useMatching } from "../../../WorldRankingPlayers.js";
 import { restOf, useRepresenting } from "../../../useRepresenting.js";
 import { idInAddress } from "../../../../../../api.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
+import { useFlags } from "../../../../../../useFlags.js";
 
 // The player dialog (player.feature), over a tournament's page: opened by Add
 // Player to add players one after another, and by a player's name to change
@@ -30,12 +31,6 @@ import { DialogStatus } from "../../../../../../DialogStatus.js";
 // Opened by a world ranking officer who does not manage the tournament, it
 // shows everything the player is, but only the world ranking name can be
 // changed, and Save changes that alone.
-
-/** A flag as the API offers it: its code, its name as the reader reads it. */
-interface Flag {
-  readonly code: string;
-  readonly name: string;
-}
 
 /** A player as they are, when one is being changed. */
 export interface PlayerAsTheyAre {
@@ -97,7 +92,7 @@ export const PlayerDialog = ({
   close,
 }: Props): React.JSX.Element => {
   const asksWorldRankingName = worldRankingSport !== undefined;
-  const [flags, setFlags] = useState<readonly (readonly Flag[])[]>([]);
+  const { groups: flags } = useFlags();
   const [name, setName] = useState(player?.name ?? "");
   const [handicap, setHandicap] = useState(player?.handicap ?? "");
   const [representing, setRepresenting] = useState(player?.representing ?? "");
@@ -142,17 +137,6 @@ export const PlayerDialog = ({
     worldRankingSport,
     worldRankingName.trim() === "" ? name : worldRankingName,
   );
-
-  useEffect(() => {
-    void fetch("/api/site/flags", { headers: { accept: "application/json" } })
-      .then(async (response) =>
-        response.ok
-          ? ((await response.json()) as { groups: Flag[][] }).groups
-          : [],
-      )
-      .catch(() => [])
-      .then(setFlags);
-  }, []);
 
   const refusal = (code: string): Refusal => ({
     code,

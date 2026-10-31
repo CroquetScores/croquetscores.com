@@ -979,7 +979,7 @@ export const english: Language = {
     "admin.players.addManyTitle": "Add Players",
     "admin.players.many": "Players",
     "admin.players.manyExplanation":
-      "The first line names the fields, separated by commas: Name, and any of Representing, Flag, Handicap and WorldRankingPlayerName, in any order. Each line after it is a player, with a value for each field.",
+      "The first line names the fields, separated by commas: Name, and any of Representing, Flag, Handicap and WorldRankingPlayerName, in any order. Each line after it is a player, with a value for each field. A value with a comma in it is written in double quotes.",
     "admin.players.line": "Line {line}: {words}",
     "AddPlayers.FieldsMissing":
       "Write the names of the fields on the first line.",
@@ -988,6 +988,8 @@ export const english: Language = {
       "A field can be Name, Representing, Flag, Handicap or WorldRankingPlayerName.",
     "AddPlayers.FieldRepeated": "A field can be named only once.",
     "AddPlayers.PlayersMissing": "Write a player on each line after the first.",
+    "AddPlayers.TooManyPlayers":
+      "A list can hold at most 500 players. Add the rest in another list.",
     "AddPlayers.ValuesMismatched":
       "Each player needs a value, or nothing, for every field named on the first line.",
     // Above the fields, for a refusal with no words of its own.

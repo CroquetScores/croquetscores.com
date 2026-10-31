@@ -45,8 +45,11 @@ Then(
   },
 );
 
+// Looked for only once the tab has drawn its list of players, which is after it
+// knows what the reader may do: before then a button that is not there is not
+// there for want of the tab, and would be taken for one rightly kept away.
 Then("{string} is not offered", async function (this: SpecWorld, name: string) {
-  await tabPanel(this).waitFor();
+  await tabPanel(this).locator(".listed, .listed-none").first().waitFor();
   assert.equal(
     await buttonsOfTheTab(this)
       .filter({ hasText: new RegExp(`^${name}$`) })
@@ -58,6 +61,24 @@ Then("{string} is not offered", async function (this: SpecWorld, name: string) {
 When("the way to add players is pressed", async function (this: SpecWorld) {
   await buttonsOfTheTab(this).nth(1).click();
 });
+
+// A list as long as the scenario says, a player to a line, under the one field
+// every list needs.
+Given(
+  "a list of {int} players is typed as the {string}",
+  async function (this: SpecWorld, count: number, label: string) {
+    assert.equal(label, "Players");
+    const lines = [
+      "Name",
+      ...Array.from(
+        { length: count },
+        (_, each) => `Player ${String(each + 1)}`,
+      ),
+    ].join("\n");
+    written.set(this, lines);
+    await box(this).fill(lines);
+  },
+);
 
 // What is written ---------------------------------------------------------------
 

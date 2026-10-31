@@ -18,6 +18,27 @@ export const playerFieldNamed: Readonly<
 };
 
 /**
+ * What a field written in a list is of a player, or nothing where it is no
+ * field there is. Only the table's own names count: a name such as
+ * "constructor" is one every object has, and is no field.
+ */
+export const playerFieldOf = (
+  written: string,
+): keyof TournamentPlayerDetails | undefined => {
+  const name = written.trim().toLowerCase();
+  return Object.hasOwn(playerFieldNamed, name)
+    ? playerFieldNamed[name]
+    : undefined;
+};
+
+/**
+ * The most players one list may hold. A list is added in one save, and each
+ * player is asked about against every player already there, so a list that
+ * had no end would make the work grow with the square of its length.
+ */
+export const mostPlayersAtOnce = 500;
+
+/**
  * Adding several players to a tournament at once, all of them or none. It is
  * answered with the new players' ids, in the order the players were given.
  *
@@ -43,9 +64,7 @@ export class AddPlayers extends Command<readonly TournamentPlayerId[]> {
 
   /** What each row says a player is, every value trimmed. */
   players(): readonly TournamentPlayerDetails[] {
-    const kinds = this.fields.map(
-      (field) => playerFieldNamed[field.trim().toLowerCase()],
-    );
+    const kinds = this.fields.map(playerFieldOf);
     return this.rows.map((row) => {
       const said: Record<string, string> = {};
       kinds.forEach((kind, place) => {
