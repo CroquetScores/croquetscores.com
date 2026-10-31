@@ -454,6 +454,7 @@ export const japanese: Language = {
     "tournamentList.column.name": "名称",
     // A flag, which narrows the lists to its country.
     "tournamentList.onlyIn": "{country}の大会のみ",
+    "tournamentList.usualOrder": "いつもの順序に戻す",
     "tournamentList.filter.country": "国",
     "tournamentList.filter.anyCountry": "すべての国",
     "tournamentList.filter.region": "地域",

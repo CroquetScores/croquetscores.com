@@ -434,6 +434,7 @@ export const polish: Language = {
     "tournamentList.column.date": "Data",
     "tournamentList.column.name": "Nazwa",
     "tournamentList.onlyIn": "Tylko turnieje: {country}",
+    "tournamentList.usualOrder": "Wróć do zwykłej kolejności",
     "tournamentList.filter.country": "Kraj",
     "tournamentList.filter.anyCountry": "Dowolny kraj",
     "tournamentList.filter.region": "Region",

@@ -451,6 +451,7 @@ export const maori: Language = {
     "tournamentList.column.date": "Rā",
     "tournamentList.column.name": "Ingoa",
     "tournamentList.onlyIn": "Ngā whakataetae i {country} anake",
+    "tournamentList.usualOrder": "Hoki ki te raupapa mātau",
     "tournamentList.filter.country": "Whenua",
     "tournamentList.filter.anyCountry": "Whenua ahakoa",
     "tournamentList.filter.region": "Rohe",

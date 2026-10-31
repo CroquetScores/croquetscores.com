@@ -484,6 +484,7 @@ export const swedish: Language = {
     // En flagga, som begränsar listorna till sitt land, benämnd efter vad den
     // gör.
     "tournamentList.onlyIn": "Bara turneringar i {country}",
+    "tournamentList.usualOrder": "Tillbaka till den vanliga ordningen",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Alla länder",
     "tournamentList.filter.region": "Region",

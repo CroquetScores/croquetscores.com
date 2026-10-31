@@ -486,6 +486,7 @@ export const italian: Language = {
     "tournamentList.column.name": "Nome",
     // Una bandiera, che restringe le liste al suo paese, nominata da ciò che fa.
     "tournamentList.onlyIn": "Solo tornei in {country}",
+    "tournamentList.usualOrder": "Torna all'ordine abituale",
     "tournamentList.filter.country": "Paese",
     "tournamentList.filter.anyCountry": "Qualsiasi paese",
     "tournamentList.filter.region": "Regione",

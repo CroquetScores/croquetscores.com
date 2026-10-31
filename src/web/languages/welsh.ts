@@ -465,6 +465,7 @@ export const welsh: Language = {
     "tournamentList.column.name": "Enw",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Twrnameintiau yn {country} yn unig",
+    "tournamentList.usualOrder": "Yn ôl i'r drefn arferol",
     "tournamentList.filter.country": "Gwlad",
     "tournamentList.filter.anyCountry": "Unrhyw wlad",
     "tournamentList.filter.region": "Rhanbarth",

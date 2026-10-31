@@ -486,6 +486,7 @@ export const french: Language = {
     "tournamentList.column.name": "Nom",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Seulement les tournois : {country}",
+    "tournamentList.usualOrder": "Revenir à l'ordre habituel",
     "tournamentList.filter.country": "Pays",
     "tournamentList.filter.anyCountry": "Tous les pays",
     "tournamentList.filter.region": "Région",

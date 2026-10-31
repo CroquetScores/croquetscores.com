@@ -452,6 +452,7 @@ export const chinese: Language = {
     "tournamentList.column.name": "名称",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "仅显示{country}的赛事",
+    "tournamentList.usualOrder": "恢复通常的顺序",
     "tournamentList.filter.country": "国家",
     "tournamentList.filter.anyCountry": "所有国家",
     "tournamentList.filter.region": "地区",

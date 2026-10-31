@@ -457,6 +457,7 @@ export const russian: Language = {
     "tournamentList.column.name": "Название",
     // A flag, which narrows the lists to its country.
     "tournamentList.onlyIn": "Только турниры: {country}",
+    "tournamentList.usualOrder": "Вернуть обычный порядок",
     "tournamentList.filter.country": "Страна",
     "tournamentList.filter.anyCountry": "Любая страна",
     "tournamentList.filter.region": "Регион",

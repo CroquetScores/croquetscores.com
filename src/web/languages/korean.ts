@@ -473,6 +473,7 @@ export const korean: Language = {
     "tournamentList.column.name": "이름",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "{country}의 대회만 보기",
+    "tournamentList.usualOrder": "기본 순서로 되돌리기",
     "tournamentList.filter.country": "국가",
     "tournamentList.filter.anyCountry": "모든 국가",
     "tournamentList.filter.region": "지역",

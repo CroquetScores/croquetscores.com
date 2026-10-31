@@ -504,6 +504,7 @@ export const german: Language = {
     // Eine Flagge, die die Listen auf ihr Land eingrenzt, benannt nach dem,
     // was sie tut.
     "tournamentList.onlyIn": "Nur Turniere in {country}",
+    "tournamentList.usualOrder": "Zurück zur üblichen Reihenfolge",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Jedes Land",
     "tournamentList.filter.region": "Region",

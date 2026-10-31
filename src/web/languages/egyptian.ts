@@ -446,6 +446,7 @@ export const egyptian: Language = {
     "tournamentList.column.date": "التاريخ",
     "tournamentList.column.name": "الاسم",
     "tournamentList.onlyIn": "بطولات {country} بس",
+    "tournamentList.usualOrder": "ارجع للترتيب المعتاد",
     "tournamentList.filter.country": "البلد",
     "tournamentList.filter.anyCountry": "أي بلد",
     "tournamentList.filter.region": "المنطقة",

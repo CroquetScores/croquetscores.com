@@ -486,6 +486,7 @@ export const dutch: Language = {
     "tournamentList.column.name": "Naam",
     // A flag, which narrows the lists to its country, named by what it does.
     "tournamentList.onlyIn": "Alleen toernooien in {country}",
+    "tournamentList.usualOrder": "Terug naar de gebruikelijke volgorde",
     "tournamentList.filter.country": "Land",
     "tournamentList.filter.anyCountry": "Elk land",
     "tournamentList.filter.region": "Regio",
