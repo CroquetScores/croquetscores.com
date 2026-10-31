@@ -316,6 +316,23 @@ Feature: Changing a test
       When the test "AUS v ENG" is updated
       Then it is refused for breaking "ExpectedMatches.TooSmall"
 
+  Rule: A test in an Eire Cup or an Interstate Shield is in no group, updated as added
+
+    Scenario Outline: A test updated to a group is refused in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the update has the test in the group "Group A"
+      When the test "AUS v ENG" is updated
+      Then it is refused with "Tournament.FormatHasNoGroups"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
   Rule: A day left as it was is not refused for what the tournament became
 
     Scenario: A test on a day the tournament no longer has can be given a group

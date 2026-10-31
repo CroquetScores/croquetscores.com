@@ -320,6 +320,55 @@ Feature: Adding a test to a tournament
       When a test between two teams is added
       Then it is refused with "Tournament.NotPlayedByTeams"
 
+  Rule: A test in an Eire Cup or an Interstate Shield is in no group
+
+    Those two are played as one test after another between the same few
+    teams, so there is nothing for a group to divide, and a group named there
+    would only take away the Summary the tournament is read by
+    (`TournamentFormat.feature`). The other team formats are played in groups
+    as often as not.
+
+    Scenario Outline: A test in a group is refused in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the test is to be in the group "Group A"
+      When the test between "Australia" and "England" is added
+      Then it is refused with "Tournament.FormatHasNoGroups"
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario Outline: A test in no group is accepted in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the tournament is rebuilt from the stream
+      When the test between "Australia" and "England" is added
+      Then the test "AUS v ENG" is in no group
+
+      Examples:
+        | format            |
+        | Eire Cup          |
+        | Interstate Shield |
+
+    Scenario Outline: A test in a group is accepted in <format>
+      Given a stream where a tournament was created in the format "<format>"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the tournament is rebuilt from the stream
+      And the test is to be in the group "Group A"
+      When the test between "Australia" and "England" is added
+      Then the test "AUS v ENG" is in the group "Group A"
+
+      Examples:
+        | format                     |
+        | Teams                      |
+        | GC World Team Championship |
+
   Rule: No two competitions in a tournament have the same id
 
     Scenario: A test with an id another competition has is refused
