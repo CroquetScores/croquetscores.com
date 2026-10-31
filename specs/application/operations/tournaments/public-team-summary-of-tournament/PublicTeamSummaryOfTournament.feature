@@ -55,6 +55,24 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   the tournament has moved on from still finds it, and it is answered with
   where it is found now.
 
+  A tournament in the Interstate Shield format is different in two ways, since
+  Croquet Australia ranks its teams by the tests they have won, then by their
+  net matches, then by their net games, then by their net hoops (rule 29.13
+  of its rules). A team's net matches are the matches it has won less the
+  matches it has lost, so that a lost match counts against it where a drawn
+  one, being won by neither team, does not. Net games and net hoops are the
+  same difference of games and of hoops. Its teams are ranked by net matches
+  where every other tournament's are ranked by matches won, and the summary
+  is answered as showing net matches and net games, which the page then
+  shows (`teamSummary.feature`). The people who announce the finishing order
+  of the Shield have read it the wrong way round when the summary did not
+  show them, since a reader who is not shown a net takes it to be of no
+  account and ranks the teams by their wins alone, which treats a loss as a
+  draw. The later tie-breaks of rule 29.13, the net points of the tests and
+  the test already played between the teams, are not applied: the summary is
+  a table of figures, and an organisation is free to rank its teams as it
+  sees fit.
+
   Nobody need be signed in to ask, and every scenario here asks with nobody
   signed in.
 
@@ -364,6 +382,74 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Then the first team of the summary ranked is "Australia"
       And the second team of the summary ranked is "England"
       And the third team of the summary ranked is "New Zealand"
+
+  Rule: A tournament in the Interstate Shield format is ranked by net matches and shows its nets
+
+    Background:
+      Given the tournament is to be played in the format "Interstate Shield"
+      And "organiser@example.com" has created the tournament "Shield 2026"
+      And the team is to be known for short as "SA"
+      And "organiser@example.com" has added the team "South Australia" to "Shield 2026"
+      And the team is to be known for short as "NSW"
+      And "organiser@example.com" has added the team "New South Wales" to "Shield 2026"
+      And the team is to be known for short as "VIC"
+      And "organiser@example.com" has added the team "Victoria" to "Shield 2026"
+      And "organiser@example.com" has added the player "Sam South" to the team "South Australia" of "Shield 2026"
+      And "organiser@example.com" has added the player "Sue Southern" to the team "South Australia" of "Shield 2026"
+      And "organiser@example.com" has added the player "Nat North" to the team "New South Wales" of "Shield 2026"
+      And "organiser@example.com" has added the player "Nell Northern" to the team "New South Wales" of "Shield 2026"
+      And "organiser@example.com" has added the player "Vic Vale" to the team "Victoria" of "Shield 2026"
+      And "organiser@example.com" has added the player "Val Valley" to the team "Victoria" of "Shield 2026"
+      And "organiser@example.com" has added the test between "South Australia" and "New South Wales" to "Shield 2026"
+      And "organiser@example.com" has added the test between "New South Wales" and "Victoria" to "Shield 2026"
+      And "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" matches each the best of 2
+      And "organiser@example.com" has given the test "NSW v VIC" of "Shield 2026" matches each the best of 2
+
+    Scenario: The summary is answered as showing net matches and net games
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the summary is answered as showing net matches and net games
+
+    Scenario: A team that has won a match is a match up
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sam South" has beaten "Nat North" 26 to 3 in "SA v NSW" of "Shield 2026"
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the team "South Australia" is answered in the summary with 1 net match
+
+    Scenario: A team that has lost a match is a match down
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sam South" has beaten "Nat North" 26 to 3 in "SA v NSW" of "Shield 2026"
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the team "New South Wales" is answered in the summary with -1 net matches
+
+    Scenario: A shared match is neither up nor down
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Nat North" has beaten "Sam South" 26 to 17 in "SA v NSW" of "Shield 2026"
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the team "South Australia" is answered in the summary with 0 net matches
+
+    Scenario: A team's net games are the games it has won less the games it has lost
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Nat North" has beaten "Sam South" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the team "South Australia" is answered in the summary with 1 net game
+
+    Scenario: Teams with the same tests won are ranked by net matches, not by matches won
+      Given "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" matches each the best of 1
+      And "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" 5 expected matches
+      And "organiser@example.com" has given the test "NSW v VIC" of "Shield 2026" matches each the best of 1
+      And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sue Southern" has beaten "Nell Northern" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Nat North" has beaten "Sue Southern" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Nell Northern" has beaten "Sam South" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Vic Vale" has beaten "Nell Northern" 26 to 2 in "NSW v VIC" of "Shield 2026"
+      When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
+      Then the first team of the summary ranked is "Victoria"
+      And the second team of the summary ranked is "South Australia"
+
+    Scenario: A tournament in another format is answered as not showing them
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the summary is answered as not showing net matches and net games
 
   Rule: Only a tournament played by teams that a reader is sent to is answered
 
