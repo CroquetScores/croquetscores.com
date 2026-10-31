@@ -6,6 +6,12 @@
 export interface Refusal {
   readonly code: string;
   readonly words: string;
+  /**
+   * The line of what was typed it is about, where a field holds several lines
+   * that are each refused on their own. Several refusals of one code are then
+   * told apart by it.
+   */
+  readonly line?: number | undefined;
 }
 
 interface FieldProps {
@@ -84,8 +90,14 @@ export const Field = ({
           id={messageId}
           data-refused={refused.map(({ code }) => code).join(" ")}
         >
-          {refused.map(({ code, words }) => (
-            <span key={code}>{words}</span>
+          {refused.map(({ code, words, line }, place) => (
+            <span
+              key={`${code}-${String(place)}`}
+              data-code={code}
+              data-line={line}
+            >
+              {words}
+            </span>
           ))}
         </p>
       ) : null}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { say } from "../../../../../../words.js";
 import { aboutPlayer } from "../../../../../../aboutPlayer.js";
+import { PlayersDialog } from "../../modal-dialogs/players/players.js";
 import {
   PlayerDialog,
   type PlayerAsTheyAre,
@@ -15,7 +16,8 @@ import { useListed } from "../../../../../../useListed.js";
 // The Players tab (players-tab.feature): the players in use in the
 // tournament's order, each with what they represent and the flag they fly,
 // offering Edit, Archive, Up and Down, and after them the archived ones, struck
-// through. Add Player, a player's name and Edit open the player dialog. A player who
+// through. Add Players opens the dialog to add a list of them at once
+// (players.feature). Add Player, a player's name and Edit open the player dialog. A player who
 // has played is not offered Archive, since the games would then be against
 // somebody who is no longer there, and archiving one who is in competitions
 // asks first, since it removes them from each. Whatever is pressed, and
@@ -55,7 +57,9 @@ export const PlayersTab = ({
 }: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
-  const [dialog, setDialog] = useState<"adding" | Listed | undefined>();
+  const [dialog, setDialog] = useState<
+    "adding" | "addingMany" | Listed | undefined
+  >();
   // The player a manager is asked about before they are archived.
   const [archiving, setArchiving] = useState<Listed | undefined>();
   const at = `/api/site/tournaments/${idInAddress(tournament)}/players`;
@@ -214,6 +218,17 @@ export const PlayersTab = ({
             }}
           >
             {say("admin.players.add")}
+          </button>{" "}
+          {/* Beside Add Player, for a manager with a list of them. */}
+          <button
+            type="button"
+            className="button"
+            title={say("admin.hover.players.addMany")}
+            onClick={() => {
+              setDialog("addingMany");
+            }}
+          >
+            {say("admin.players.addMany")}
           </button>
         </p>
       ) : null}
@@ -264,7 +279,15 @@ export const PlayersTab = ({
           <p>{say("admin.players.archive.explanation")}</p>
         </ModalDialog>
       )}
-      {dialog === undefined ? null : (
+      {dialog === "addingMany" ? (
+        <PlayersDialog
+          tournament={tournament}
+          kept={askAgain}
+          close={() => {
+            setDialog(undefined);
+          }}
+        />
+      ) : dialog === undefined ? null : (
         <PlayerDialog
           tournament={tournament}
           worldRankingSport={worldRankingSport}
