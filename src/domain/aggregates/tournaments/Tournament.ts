@@ -687,23 +687,20 @@ export class Tournament extends AggregateRoot {
     );
     // What a tournament holds depends on whether it is played by teams, so
     // once it holds anything, a change to that would leave it holding what it
-    // could no longer have.
+    // could no longer have. A format played by teams is not changed for
+    // another either: a test held in one may be in a group that the other has
+    // none of, and the tournament would be left holding what it could no
+    // longer be updated with. Which of them a tournament is played in is
+    // settled by the time it holds a team.
     if (
-      settled.format.isTeamFormat !== this.#now.format.isTeamFormat &&
+      (settled.format.isTeamFormat !== this.#now.format.isTeamFormat ||
+        (this.#now.format.isTeamFormat &&
+          settled.format !== this.#now.format)) &&
       this.#holdsAnything
     ) {
       refuse(
         "Tournament.PlayedByTeamsFixed",
         "The tournament holds what only its format can have.",
-      );
-    }
-    // A group is what a test in a format with none cannot be in, so a format
-    // like that is no longer open to a tournament whose tests are in groups,
-    // archived ones counting, since restoring one brings its group back.
-    if (!settled.format.hasGroups && this.#holdsATestInAGroup) {
-      refuse(
-        "Tournament.FormatHasNoGroups",
-        "The tournament holds tests in groups, which the format has none of.",
       );
     }
     const written = writtenFrom(settled);
@@ -2346,13 +2343,6 @@ export class Tournament extends AggregateRoot {
     }
   }
 
-  // Whether any test it holds, archived or not, is in a group.
-  get #holdsATestInAGroup(): boolean {
-    return [...this.#competitions.values()].some(
-      ({ shape }) => shape.kind === "test" && shape.group !== undefined,
-    );
-  }
-
   // Whether it holds anything whose having depends on its format, archived
   // or not.
   get #holdsAnything(): boolean {
@@ -2474,12 +2464,13 @@ export class Tournament extends AggregateRoot {
 
   // What is asked of a test, added or updated, of the tournament as it is:
   // two different teams of its own in use, played within its days, starting
-  // no later than it finishes, and in no group where the format has none.
-  // Days are compared as the days the tournament's starts and finishes fall
-  // on in UTC, as the year of its address is. A day
-  // an updated test `had` already is not asked whether it is within the
-  // tournament's, since a test is not refused for what the tournament became
-  // after it was added.
+  // no later than it finishes, and in no group where the format has none. The
+  // group is asked last, so that a test with several faults is told of the
+  // ones the dialog lets a reader fix first. Days are compared as the days the
+  // tournament's starts and finishes fall on in UTC, as the year of its
+  // address is. A day an updated test `had` already is not asked whether it is
+  // within the tournament's, since a test is not refused for what the
+  // tournament became after it was added.
   #refuseUnlessATestCanBe(
     details: TestDetails,
     had?: { readonly starts: string; readonly finishes: string },

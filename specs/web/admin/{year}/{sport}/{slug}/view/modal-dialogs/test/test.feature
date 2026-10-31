@@ -166,9 +166,16 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
     than offer it and refuse what is typed in it.
 
     Scenario Outline: The dialog does not ask for a group in <format>
-      Given the tournament "Spring Tests" is played in the format "<format>"
-      And the tests of "Spring Tests" are open
+      Given "organiser@example.com" has created the tournament "Spring Cup"
+      And the tournament "Spring Cup" starts on "2026-10-03"
+      And the tournament "Spring Cup" finishes on "2026-10-05"
+      And the tournament "Spring Cup" is for the sport "ac"
+      And the tournament "Spring Cup" is played in the format "<format>"
+      And "organiser@example.com" has added the team "Australia" to "Spring Cup"
+      And "organiser@example.com" has added the team "England" to "Spring Cup"
+      And the tests of "Spring Cup" are open
       When "Add Test" is pressed
+      And "Starts" says "2026-10-03"
       Then the test dialog does not ask for "Group"
 
       Examples:
@@ -177,10 +184,17 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
         | Interstate Shield |
 
     Scenario Outline: The dialog to change a test does not ask for a group in <format>
-      Given the tournament "Spring Tests" is played in the format "<format>"
-      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
-      And the tests of "Spring Tests" are open
+      Given "organiser@example.com" has created the tournament "Spring Cup"
+      And the tournament "Spring Cup" starts on "2026-10-03"
+      And the tournament "Spring Cup" finishes on "2026-10-05"
+      And the tournament "Spring Cup" is for the sport "ac"
+      And the tournament "Spring Cup" is played in the format "<format>"
+      And "organiser@example.com" has added the team "Australia" to "Spring Cup"
+      And "organiser@example.com" has added the team "England" to "Spring Cup"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Cup"
+      And the tests of "Spring Cup" are open
       When "Edit" is pressed on the test "AUS v ENG"
+      And "Starts" says "2026-10-03"
       Then the test dialog does not ask for "Group"
 
       Examples:

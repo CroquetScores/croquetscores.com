@@ -12,6 +12,7 @@ import type { SpecWorld } from "../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import {
   eventually,
+  retried,
   tabPanel,
 } from "../../../../../../../support/tournamentPage.js";
 
@@ -65,10 +66,14 @@ Then(
   /^the (?:player|score|competition|team player|team|test|carry forward) dialog asks for "([^"]*)"$/,
   async function (this: SpecWorld, label: string) {
     await dialogOf(this).waitFor();
-    assert.equal(
-      await dialogOf(this).getByLabel(label, { exact: true }).count(),
-      1,
-    );
+    // A field may arrive once the dialog has learned what it is for, as a
+    // test's group does once the tournament has said what its format has.
+    await retried(async () => {
+      assert.equal(
+        await dialogOf(this).getByLabel(label, { exact: true }).count(),
+        1,
+      );
+    });
   },
 );
 

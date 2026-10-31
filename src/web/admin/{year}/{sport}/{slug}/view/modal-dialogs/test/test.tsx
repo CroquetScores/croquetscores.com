@@ -128,8 +128,11 @@ export const TestDialog = ({
 }: Props): React.JSX.Element => {
   const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
-  // Whether the tournament's format has groups. Assumed until it says
-  // otherwise, since most do, so that the field is not seen to arrive.
+  // Whether the tournament's format has groups. Taken to have them until it
+  // says it has none, since nearly every format does, so that the field is
+  // there to be typed in from the start rather than arriving after it. For an
+  // Eire Cup or an Interstate Shield it is taken away once the answer is in,
+  // which is quick, and nothing typed in it is sent.
   const [hasGroups, setHasGroups] = useState(true);
   // The days the tournament is played, which a test is played within.
   const [days, setDays] = useState<
@@ -216,6 +219,8 @@ export const TestDialog = ({
             finishes: said.finishes,
             expectedMatches: typedNumber(said.expectedMatches),
             bestOf: typedNumber(said.bestOf),
+            // Where the format has none, a group is a mistake, so a test is
+            // left in none, and one a test had before is cleared by saving it.
             group: hasGroups ? said.group : "",
             ...rules.said,
           }),

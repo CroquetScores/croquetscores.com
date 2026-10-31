@@ -301,21 +301,42 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then it is refused with "Tournament.PlayedByTeamsFixed"
 
-    Scenario: A tournament with a team can be played in another format played by teams
+    Scenario Outline: A tournament with a team cannot be played in <other> instead of Teams
       Given a stream where a tournament was created in the format "Teams"
       And the team "Australia" was added to it
       And the tournament is rebuilt from the stream
-      And the update plays it in the format "Eire Cup"
+      And the update plays it in the format "<other>"
       When the tournament is updated
-      Then the tournament is played in the format "Eire Cup"
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
 
-    Scenario: A tournament with a team keeps it when played in another format played by teams
-      Given a stream where a tournament was created in the format "Teams"
+      Examples:
+        | other                      |
+        | Eire Cup                   |
+        | Interstate Shield          |
+        | GC World Team Championship |
+
+    Scenario: A tournament with a team cannot be moved from an Eire Cup to an Interstate Shield
+      Given a stream where a tournament was created in the format "Eire Cup"
+      And the team "Australia" was added to it
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Interstate Shield"
+      When the tournament is updated
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
+
+    Scenario: A tournament with a team can be updated in the format it has
+      Given a stream where a tournament was created in the format "Eire Cup"
       And the team "Australia" was added to it
       And the tournament is rebuilt from the stream
       And the update plays it in the format "Eire Cup"
       When the tournament is updated
       Then the tournament has the team "Australia"
+
+    Scenario: A tournament with no teams can be moved between formats played by teams
+      Given a stream where a tournament was created in the format "Teams"
+      And the tournament is rebuilt from the stream
+      And the update plays it in the format "Eire Cup"
+      When the tournament is updated
+      Then the tournament is played in the format "Eire Cup"
 
     Scenario: A tournament played by teams with no teams can be made Standard
       Given a stream where a tournament was created in the format "Teams"
@@ -324,12 +345,13 @@ Feature: Changing what a tournament is
       When the tournament is updated
       Then the tournament is played in the format "Standard"
 
-  Rule: A tournament with a test in a group keeps a format that has groups
+  Rule: A tournament with a test in a group keeps the format it has
 
     A test in an Eire Cup or an Interstate Shield is in no group
-    (`addTest.feature`), so a tournament whose tests are in groups is not
-    played in either, rather than left holding what its format cannot have.
-    An archived test counts, since restoring it would bring its group back.
+    (`addTest.feature`), so a tournament whose tests are in groups cannot be
+    played in either. Once a tournament holds a team its format played by
+    teams is fixed, so that it is never left holding what its format cannot
+    have; this is the same refusal as for any other change between them.
 
     Scenario Outline: A tournament with a test in a group cannot be played in <format>
       Given a stream where a tournament was created in the format "Teams"
@@ -340,7 +362,7 @@ Feature: Changing what a tournament is
       And the tournament is rebuilt from the stream
       And the update plays it in the format "<format>"
       When the tournament is updated
-      Then it is refused with "Tournament.FormatHasNoGroups"
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
 
       Examples:
         | format            |
@@ -357,19 +379,9 @@ Feature: Changing what a tournament is
       And the tournament is rebuilt from the stream
       And the update plays it in the format "Eire Cup"
       When the tournament is updated
-      Then it is refused with "Tournament.FormatHasNoGroups"
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
 
-    Scenario: A tournament with a test in no group can be played in an Eire Cup
-      Given a stream where a tournament was created in the format "Teams"
-      And the team "Australia" was added to it
-      And the team "England" was added to it
-      And the test between "Australia" and "England" was added to it
-      And the tournament is rebuilt from the stream
-      And the update plays it in the format "Eire Cup"
-      When the tournament is updated
-      Then the tournament is played in the format "Eire Cup"
-
-    Scenario: A tournament with a test in a group can be played in another format that has groups
+    Scenario: A tournament with a test in a group cannot be played in another format that has groups
       Given a stream where a tournament was created in the format "Teams"
       And the team "Australia" was added to it
       And the team "England" was added to it
@@ -378,7 +390,7 @@ Feature: Changing what a tournament is
       And the tournament is rebuilt from the stream
       And the update plays it in the format "GC World Team Championship"
       When the tournament is updated
-      Then the tournament is played in the format "GC World Team Championship"
+      Then it is refused with "Tournament.PlayedByTeamsFixed"
 
   Rule: A tournament's days changed leave its tests as they were
 
