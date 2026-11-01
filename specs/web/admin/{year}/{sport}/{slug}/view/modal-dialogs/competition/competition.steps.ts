@@ -490,3 +490,118 @@ Then(
     assert.equal((await rulesOf(this, tournament, name)).maximumHoops, null);
   },
 );
+
+// The dialog that adds a losers knockout, open over this one, which is the
+// last of the open dialogs.
+const overOf = (world: SpecWorld): Locator =>
+  world.browserPage.locator(open).last();
+
+Then(
+  "the competition dialog offers {string}",
+  async function (this: SpecWorld, button: string) {
+    await dialogOf(this).waitFor();
+    await dialogOf(this)
+      .getByRole("button", { name: button, exact: true })
+      .waitFor();
+  },
+);
+
+Then(
+  "the competition dialog does not offer {string}",
+  async function (this: SpecWorld, button: string) {
+    await dialogOf(this).waitFor();
+    await eventually(this, async () => {
+      assert.equal(
+        await dialogOf(this)
+          .getByRole("button", { name: button, exact: true })
+          .count(),
+        0,
+      );
+    });
+  },
+);
+
+// Given and When alike: Cucumber does not tell them apart.
+Given(
+  "{string} is pressed in the competition dialog",
+  async function (this: SpecWorld, button: string) {
+    await dialogOf(this)
+      .getByRole("button", { name: button, exact: true })
+      .click();
+  },
+);
+
+Then(
+  "the dialog open over the competition dialog is titled {string}",
+  async function (this: SpecWorld, title: string) {
+    await eventually(this, async () => {
+      assert.equal(await this.browserPage.locator(open).count(), 2);
+      assert.equal(
+        (await overOf(this).locator(".dialog-title").innerText()).trim(),
+        title,
+      );
+    });
+  },
+);
+
+Given(
+  "{string} is typed in the losers dialog",
+  async function (this: SpecWorld, name: string) {
+    await overOf(this).locator("input[type=text]").fill(name);
+  },
+);
+
+When(
+  "{string} is pressed in the losers dialog",
+  async function (this: SpecWorld, button: string) {
+    await overOf(this)
+      .locator(".dialog-buttons button")
+      .filter({ hasText: new RegExp(`^${button}$`) })
+      .click();
+    // Add closes it once the knockout is kept, so what follows is not read
+    // before then.
+    await this.browserPage.locator(open).nth(1).waitFor({ state: "detached" });
+  },
+);
+
+Then(
+  "the competition dialog is the only dialog open",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(await this.browserPage.locator(open).count(), 1);
+      assert.equal(
+        (await dialogOf(this).locator(".dialog-title").innerText()).trim(),
+        "Edit Competition",
+      );
+    });
+  },
+);
+
+Then(
+  "the knockout {string} of {string} takes the losers of the first round of {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    from: string,
+  ) {
+    await eventually(this, async () => {
+      const all = await competitionsOf(this, tournament);
+      const found = all.find(
+        ({ reference }) => reference.name.toString() === name,
+      );
+      const source = all.find(
+        ({ reference }) => reference.name.toString() === from,
+      );
+      assert.ok(
+        found?.shape.kind === "knockout" && source !== undefined,
+        `The competitions are ${JSON.stringify(all.map(({ reference }) => reference.name.toString()))}.`,
+      );
+      assert.equal(
+        found.shape.losersOf?.competitionId.value,
+        source.reference.id.value,
+      );
+      assert.equal(found.shape.losersOf.round, 0);
+    });
+  },
+);

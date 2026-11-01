@@ -123,6 +123,65 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
         | Knockout |
         | Swiss    |
 
+  Rule: A knockout being changed offers to add a losers knockout
+
+    Changing a knockout, beneath its best-ofs, offers Add Losers Knockout. It
+    opens the dialog the Losers tab opens (`losers-tab.feature`) over this one,
+    for the losers of one of this knockout's rounds. It is not offered when
+    adding, since the knockout does not exist yet to take losers from, nor for
+    a block or a Swiss, nor for a knockout with only a final.
+
+    Background:
+      Given the knockout is to have a draw of 8 places
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+
+    Scenario: Changing a knockout offers Add Losers Knockout
+      When "Edit" is pressed on the competition "Main Event"
+      Then the competition dialog offers "Add Losers Knockout"
+
+    Scenario: Adding a competition does not offer it
+      When "Add Competition" is pressed
+      And the kind "Knockout" is chosen
+      Then the competition dialog does not offer "Add Losers Knockout"
+
+    Scenario: Changing a block does not offer it
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not offer "Add Losers Knockout"
+
+    Scenario: Changing a knockout of only a final does not offer it
+      Given the knockout is to have a draw of 2 places
+      And "organiser@example.com" has added the knockout "Final Only" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Final Only"
+      Then the competition dialog does not offer "Add Losers Knockout"
+
+    Scenario: It opens the dialog that adds a losers knockout
+      Given "Edit" is pressed on the competition "Main Event"
+      When "Add Losers Knockout" is pressed in the competition dialog
+      Then the dialog open over the competition dialog is titled "Add Losers Knockout"
+
+    Scenario: Add adds the losers knockout of the knockout being changed
+      Given "Edit" is pressed on the competition "Main Event"
+      And "Add Losers Knockout" is pressed in the competition dialog
+      And "Plate" is typed in the losers dialog
+      When "Add" is pressed in the losers dialog
+      Then the knockout "Plate" of "Spring Open" takes the losers of the first round of "Main Event"
+
+    Scenario: Adding it leaves the competition dialog open
+      Given "Edit" is pressed on the competition "Main Event"
+      And "Add Losers Knockout" is pressed in the competition dialog
+      And "Plate" is typed in the losers dialog
+      When "Add" is pressed in the losers dialog
+      Then the competition dialog is the only dialog open
+
+    Scenario: Cancel adds nothing and leaves the competition dialog open
+      Given "Edit" is pressed on the competition "Main Event"
+      And "Add Losers Knockout" is pressed in the competition dialog
+      When "Cancel" is pressed in the losers dialog
+      Then the competition dialog is the only dialog open
+
   Rule: A block asks how many rounds it is played in
 
     A block is a round robin that may be played more than once, each pair of
