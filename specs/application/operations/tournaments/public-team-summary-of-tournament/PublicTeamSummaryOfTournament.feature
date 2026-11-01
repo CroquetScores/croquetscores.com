@@ -68,10 +68,14 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
   of the Shield have read it the wrong way round when the summary did not
   show them, since a reader who is not shown a net takes it to be of no
   account and ranks the teams by their wins alone, which treats a loss as a
-  draw. The later tie-breaks of rule 29.13, the net points of the tests and
-  the test already played between the teams, are not applied: the summary is
-  a table of figures, and an organisation is free to rank its teams as it
-  sees fit.
+  draw. Where teams are still level after the net hoops, the rule goes on
+  to the test already played between them: of the teams level, the one that
+  has won more of the tests played among those teams alone is ranked higher.
+  A test against a team that is not level counts for nothing here, since the
+  rule names the teams in the tie. Teams still level after that share the
+  trophy, and are left in the tournament's order, since a table of figures
+  has no tied place to show. An organisation is free to rank its teams as it
+  sees fit, so the summary's disclosure stays.
 
   Nobody need be signed in to ask, and every scenario here asks with nobody
   signed in.
@@ -448,6 +452,61 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       When the summary of the teams of the tournament at "2026/ac/shield-2026" is asked for
       Then the first team of the summary ranked is "Victoria"
       And the second team of the summary ranked is "South Australia"
+
+    Scenario: Teams level in everything are ranked by the test played between them
+      Given the tournament is to be played in the format "Interstate Shield"
+      And "organiser@example.com" has created the tournament "Shield Tie"
+      And the team is to be known for short as "NSW"
+      And "organiser@example.com" has added the team "New South Wales" to "Shield Tie"
+      And the team is to be known for short as "SA"
+      And "organiser@example.com" has added the team "South Australia" to "Shield Tie"
+      And the team is to be known for short as "VIC"
+      And "organiser@example.com" has added the team "Victoria" to "Shield Tie"
+      And the team is to be known for short as "WA"
+      And "organiser@example.com" has added the team "Western Australia" to "Shield Tie"
+      And "organiser@example.com" has added the player "Nat North" to the team "New South Wales" of "Shield Tie"
+      And "organiser@example.com" has added the player "Sam South" to the team "South Australia" of "Shield Tie"
+      And "organiser@example.com" has added the player "Vic Vale" to the team "Victoria" of "Shield Tie"
+      And "organiser@example.com" has added the player "Wes West" to the team "Western Australia" of "Shield Tie"
+      And "organiser@example.com" has added the test between "South Australia" and "New South Wales" to "Shield Tie"
+      And "organiser@example.com" has added the test between "Victoria" and "South Australia" to "Shield Tie"
+      And "organiser@example.com" has added the test between "New South Wales" and "Western Australia" to "Shield Tie"
+      And "organiser@example.com" has given the test "SA v NSW" of "Shield Tie" 1 expected matches
+      And "organiser@example.com" has given the test "VIC v SA" of "Shield Tie" 1 expected matches
+      And "organiser@example.com" has given the test "NSW v WA" of "Shield Tie" 1 expected matches
+      And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield Tie"
+      And "Vic Vale" has beaten "Sam South" 26 to 17 in "VIC v SA" of "Shield Tie"
+      And "Nat North" has beaten "Wes West" 26 to 17 in "NSW v WA" of "Shield Tie"
+      When the summary of the teams of the tournament at "2026/ac/shield-tie" is asked for
+      Then the first team of the summary ranked is "Victoria"
+      And the second team of the summary ranked is "South Australia"
+      And the third team of the summary ranked is "New South Wales"
+
+    Scenario: Teams that have each won a test among themselves are left in the tournament's order
+      Given the tournament is to be played in the format "Interstate Shield"
+      And "organiser@example.com" has created the tournament "Shield Share"
+      And the team is to be known for short as "NSW"
+      And "organiser@example.com" has added the team "New South Wales" to "Shield Share"
+      And the team is to be known for short as "SA"
+      And "organiser@example.com" has added the team "South Australia" to "Shield Share"
+      And the team is to be known for short as "VIC"
+      And "organiser@example.com" has added the team "Victoria" to "Shield Share"
+      And "organiser@example.com" has added the player "Nat North" to the team "New South Wales" of "Shield Share"
+      And "organiser@example.com" has added the player "Sam South" to the team "South Australia" of "Shield Share"
+      And "organiser@example.com" has added the player "Vic Vale" to the team "Victoria" of "Shield Share"
+      And "organiser@example.com" has added the test between "South Australia" and "New South Wales" to "Shield Share"
+      And "organiser@example.com" has added the test between "New South Wales" and "Victoria" to "Shield Share"
+      And "organiser@example.com" has added the test between "Victoria" and "South Australia" to "Shield Share"
+      And "organiser@example.com" has given the test "SA v NSW" of "Shield Share" 1 expected matches
+      And "organiser@example.com" has given the test "NSW v VIC" of "Shield Share" 1 expected matches
+      And "organiser@example.com" has given the test "VIC v SA" of "Shield Share" 1 expected matches
+      And "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield Share"
+      And "Nat North" has beaten "Vic Vale" 26 to 17 in "NSW v VIC" of "Shield Share"
+      And "Vic Vale" has beaten "Sam South" 26 to 17 in "VIC v SA" of "Shield Share"
+      When the summary of the teams of the tournament at "2026/ac/shield-share" is asked for
+      Then the first team of the summary ranked is "New South Wales"
+      And the second team of the summary ranked is "South Australia"
+      And the third team of the summary ranked is "Victoria"
 
     Scenario: A tournament in another format is answered as not showing them
       When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
