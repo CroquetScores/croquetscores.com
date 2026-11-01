@@ -182,6 +182,12 @@ export const ScoresTab = ({
       </p>
     ) : null;
 
+  // Each game's number, found once for the list rather than by a search for
+  // every row.
+  const numbers = new Map(
+    (listed ?? []).map((game, at) => [game.id, at + 1] as const),
+  );
+
   // A score is a row of a table, so that it is told to a reader who cannot
   // see as one: the game's number, the winner, their score, the loser, their
   // score, and what can be done with it. There are no column headings, since
@@ -194,7 +200,7 @@ export const ScoresTab = ({
       data-archived={game.archived ? "" : undefined}
       data-withdrawn={game.withdrawn ? "" : undefined}
     >
-      <td className="score-number">{(listed ?? []).indexOf(game) + 1}</td>
+      <td className="score-number">{numbers.get(game.id)}</td>
       <td>
         <span className="score-winner">{game.winner}</span>
       </td>

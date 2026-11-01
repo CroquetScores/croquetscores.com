@@ -17,6 +17,12 @@
 /* The word between the winner and the loser, which no cell holds, is said to a
    reader who cannot see and not drawn: the cells either side of it already
    read as a winner and a loser. */
+.game-scores td {
+  /* The cell the word is in is the box it is placed in, so that it stays in
+     its row and cannot widen the page from some other place. */
+  position: relative;
+}
+
 .score-between {
   position: absolute;
   width: 1px;
@@ -61,10 +67,6 @@
    phone as on any other screen: a row folded into two lines would be a row of
    a table no longer. */
 .scores-box {
-  /* The word that is said and not drawn is placed absolutely, and without a
-     box to be placed in it is placed in the page, beyond the box that scrolls,
-     and widens the page. */
-  position: relative;
   /* Without it a box in a grid is as wide as its table, which is what the
      scrolling is to prevent. */
   min-width: 0;
