@@ -4,7 +4,7 @@ Het tabblad **Competities** van de pagina van een toernooi is waar zijn competit
 
 ![Het tabblad Competities, met competities van elke soort en één gearchiveerde](images/competitions-tab.png)
 
-## Een competitie toevoegen
+## Een competitie toevoegen {#adding-a-competition}
 
 Druk op **Competitie toevoegen**, boven de lijst. Er opent een dialoogvenster over de pagina, dat vraagt naar de naam van de competitie, haar soort, en de vorm die bij haar soort hoort.
 
@@ -50,7 +50,7 @@ Elke soort vraagt hetzelfde drie dingen onder zijn vorm.
 
 Druk op **Toevoegen**. De competitie wordt toegevoegd, het dialoogvenster zegt dat, en de naam wordt leeggemaakt voor de volgende, met de soort en de vorm zoals ze waren: competities die samen worden toegevoegd, lijken meestal op elkaar, dus "Block B" na "Block A" is alleen een naam. Druk op **Annuleren** om het dialoogvenster te sluiten zodra ze er allemaal in staan.
 
-## Een competitie wijzigen
+## Een competitie wijzigen {#changing-a-competition}
 
 **Bewerken** opent hetzelfde dialoogvenster op de competitie, met de titel Competitie bewerken, met haar naam, haar vorm en hoe ze wordt gespeeld en geteld zoals ze zijn. De soort wordt niet gevraagd, omdat je van een poule geen knock-out maakt door haar te wijzigen: een competitie van de verkeerde soort archiveer je en voeg je opnieuw toe. Druk op **Opslaan** om de wijziging te bewaren en het dialoogvenster te sluiten.
 

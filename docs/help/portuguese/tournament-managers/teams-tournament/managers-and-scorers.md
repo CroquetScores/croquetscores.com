@@ -2,7 +2,7 @@
 
 Um torneio tem organizadores, que podem fazer tudo o que pode ser feito nele, e pode ter anotadores, que inserem os seus resultados e nada mais. Quem criou o torneio é o seu primeiro organizador.
 
-## Organizadores
+## Organizadores {#managers}
 
 A aba **Organizadores** lista quem administra o torneio, na ordem em que foram tornados organizadores, com o seu próprio nome marcado como seu. É onde um torneio é compartilhado, ou passado adiante.
 
@@ -16,7 +16,7 @@ Alguém é tornado organizador pelo seu endereço de e-mail. Digite-o no campo a
 
 Você pode tirar a si mesmo. A pergunta então diz o que isso significa: você perde o seu próprio caminho de volta ao torneio, e ninguém na página pode desfazer isso por você. Outro organizador pode torná-lo organizador de novo.
 
-## Anotadores
+## Anotadores {#scorers}
 
 A aba **Anotadores** é a aba Organizadores para anotadores, e funciona do mesmo jeito: um endereço de e-mail e **Adicionar anotador** acima da lista, e **Remover** em cada um.
 

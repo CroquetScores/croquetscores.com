@@ -1,0 +1,32 @@
+/* A dialog with help has a round "?" in the right of its title bar, in the
+   bar's own colours. The title leaves room for it. A modal dialog is already
+   positioned, so the icon is placed against it. */
+.dialog-title-with-help {
+  padding-inline-end: calc(var(--space-5) + 2.25rem);
+}
+
+.dialog-help {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  color: var(--accent-ink);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+}
+
+/* The same icon at the end of a tab row, beside the tabs and not over a title
+   bar. The row has no bar to take its colours from, so it takes the page's. */
+.dialog-help.help-inline {
+  position: static;
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--ink-muted);
+}

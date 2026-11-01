@@ -4,7 +4,7 @@ Fliken **Lag** på en turnerings sida är där dess lag läggs till, rättas, or
 
 ![Fliken Lag, med tre lag och ett arkiverat](images/teams-tab.png)
 
-## Lägga till ett lag
+## Lägga till ett lag {#adding-a-team}
 
 Tryck på **Lägg till lag**, ovanför listan. En dialogruta öppnas över sidan.
 
@@ -20,7 +20,7 @@ Tryck på **Lägg till**. Laget läggs till, dialogrutan säger det, och fälten
 
 ![Dialogrutan efter att ett lag har lagts till](images/add-team-dialog-added.png)
 
-## Rätta ett lag
+## Rätta ett lag {#correcting-a-team}
 
 Tryck på ett lags **Redigera** för att öppna samma dialogruta på det laget, med rubriken Redigera lag. Ändra det som är fel och tryck på **Spara**. Ett lag vars kortnamn ändras kallas med det nya överallt, så dess landskamper byter namn med det.
 

@@ -4,7 +4,7 @@ La scheda **Punteggi** della pagina di una competizione è dove le sue partite v
 
 ![La scheda Punteggi di un girone, con punteggi in uso, un punteggio ritirato e uno archiviato](images/scores-tab.png)
 
-## Inserire un punteggio
+## Inserire un punteggio {#entering-a-score}
 
 Premi **Aggiungi punteggio**, sopra l'elenco. La finestra si legge come un risultato si dice a voce: il vincitore e il suo punteggio, poi "ha battuto", poi lo sconfitto e il suo punteggio.
 
@@ -22,7 +22,7 @@ Premi **Aggiungi partita**. La partita viene aggiunta, la finestra dice quale, e
 
 Ciò che viene rifiutato è detto sotto il campo a cui si riferisce: un vincitore o uno sconfitto non scelto, un punteggio non scritto o che non comincia con una cifra, lo stesso giocatore in entrambi i ruoli, il punteggio di uno sconfitto segnato come vinto, o il punteggio di un vincitore inferiore a quello dello sconfitto. In un'eliminazione diretta, due giocatori che non sono sorteggiati per incontrarsi vengono rifiutati sopra i campi.
 
-## Il tabellone di un'eliminazione diretta va prima completato
+## Il tabellone di un'eliminazione diretta va prima completato {#draw-filled-first}
 
 Un'eliminazione diretta si gioca solo quando ogni posto del suo tabellone è occupato da un giocatore o da un bye. Fino ad allora, Aggiungi punteggio spiega perché non si possono aggiungere punteggi anziché aprire la finestra.
 
@@ -32,7 +32,7 @@ Un'eliminazione diretta si gioca solo quando ogni posto del suo tabellone è occ
 
 I punteggi in uso sono elencati nell'ordine in cui sono stati inseriti, dal più vecchio, così l'elenco si legge come la competizione è stata giocata. Ciascuno dice il vincitore e il suo punteggio, poi lo sconfitto e il suo, e offre **Modifica** e **Archivia**.
 
-## Correggere un punteggio
+## Correggere un punteggio {#correcting-a-score}
 
 **Modifica** apre la stessa finestra su quel punteggio, intitolata Modifica punteggio, con i suoi giocatori scelti e i suoi punteggi come sono stati scritti. Premi **Salva** per conservare la correzione e chiudere la finestra.
 

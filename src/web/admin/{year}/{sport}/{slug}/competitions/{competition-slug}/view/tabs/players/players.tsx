@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
 import { noOption, optionFace } from "../../../../../../../../optionFace.js";
@@ -406,6 +407,12 @@ export const CompetitionPlayersTab = ({
       )}
       {confirming === undefined ? null : (
         <ModalDialog
+          help={standardHelp(
+            "entering-players-in-a-competition",
+            confirming.action === "remove"
+              ? "removing-a-player"
+              : "withdrawing-a-player",
+          )}
           title={say(`admin.competitionPlayers.${confirming.action}Title`)}
           action={say(`admin.competitionPlayers.${confirming.action}`)}
           hover={say(`admin.hover.competitionPlayers.${confirming.action}`)}

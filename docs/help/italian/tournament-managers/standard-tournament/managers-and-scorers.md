@@ -2,7 +2,7 @@
 
 Un torneo ha degli organizzatori, che possono fare tutto ciò che si può fare a un torneo, e può avere dei segnapunti, che inseriscono i suoi punteggi e nient'altro. Chi ha creato il torneo è il suo primo organizzatore.
 
-## Organizzatori
+## Organizzatori {#managers}
 
 La scheda **Organizzatori** elenca chi gestisce il torneo, nell'ordine in cui sono stati nominati, con il tuo nome segnato come tuo. È dove un torneo si condivide, o si passa ad altri.
 
@@ -18,7 +18,7 @@ Qualcuno diventa organizzatore tramite il suo indirizzo email. Scrivilo nel camp
 
 Puoi toglierti da solo. La domanda allora dice che cosa significa: perdi la tua via di ritorno al torneo, e nessuno sulla pagina può annullarlo per te. Un altro organizzatore può renderti di nuovo organizzatore.
 
-## Segnapunti
+## Segnapunti {#scorers}
 
 La scheda **Segnapunti** è la scheda Organizzatori per i segnapunti, e funziona allo stesso modo: un indirizzo email e **Aggiungi segnapunti** sopra l'elenco, e **Rimuovi** su ciascuno.
 

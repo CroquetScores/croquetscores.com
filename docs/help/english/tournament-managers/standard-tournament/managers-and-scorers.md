@@ -2,7 +2,7 @@
 
 A tournament has managers, who can do everything that can be done to it, and may have scorers, who enter its scores and nothing else. Whoever created the tournament is its first manager.
 
-## Managers
+## Managers {#managers}
 
 The **Managers** tab lists who runs the tournament, in the order they were made, with your own name marked as yours. It is where a tournament is shared, or handed on.
 
@@ -18,7 +18,7 @@ Somebody is made a manager by their email address. Type it into the field above 
 
 You can take yourself off. The question then says what that means: you lose your own way back to the tournament, and nobody on the page can undo it for you. Another manager can make you one again.
 
-## Scorers
+## Scorers {#scorers}
 
 The **Scorers** tab is the Managers tab for scorers, and works the same way: an email address and **Add Scorer** above the list, and **Remove** on each.
 

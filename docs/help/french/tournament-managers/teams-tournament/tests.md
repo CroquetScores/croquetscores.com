@@ -12,7 +12,7 @@ Une rencontre oppose deux équipes en service ; tant que le tournoi en a moins 
 
 ![L’onglet Rencontres avant qu’il y ait deux équipes](images/tests-tab-two-teams-needed.png)
 
-## Ajouter une rencontre
+## Ajouter une rencontre {#adding-a-test}
 
 Appuyez sur **Ajouter une rencontre**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page, dans l’ordre où l’on annonce une rencontre à voix haute.
 
@@ -34,7 +34,7 @@ Appuyez sur **Ajouter**. La rencontre est ajoutée, la boîte de dialogue dit la
 
 ![La boîte de dialogue après l’ajout d’une rencontre](images/add-test-dialog-added.png)
 
-## Modifier une rencontre
+## Modifier une rencontre {#changing-a-test}
 
 **Modifier** ouvre la même boîte de dialogue sur la rencontre, intitulée Modifier la rencontre, remplie telle que la rencontre est. Appuyez sur **Enregistrer** pour garder la modification.
 

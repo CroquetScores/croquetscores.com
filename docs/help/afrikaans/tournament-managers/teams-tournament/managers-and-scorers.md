@@ -2,7 +2,7 @@
 
 'n Toernooi het bestuurders, wat alles kan doen wat daaraan gedoen kan word, en kan telers hê, wat sy uitslae invoer en niks anders nie. Wie ook al die toernooi geskep het, is sy eerste bestuurder.
 
-## Bestuurders
+## Bestuurders {#managers}
 
 Die **Bestuurders**-oortjie lys wie die toernooi bestuur, in die volgorde waarin hulle bestuurders gemaak is, met jou eie naam as joune gemerk. Dit is waar 'n toernooi gedeel, of oorgegee, word.
 
@@ -16,7 +16,7 @@ Iemand word 'n bestuurder gemaak by hul e-posadres. Tik dit in die veld bo die l
 
 Jy kan jouself afhaal. Die vraag sê dan wat dit beteken: jy verloor jou eie pad terug na die toernooi, en niemand op die bladsy kan dit vir jou ongedaan maak nie. 'n Ander bestuurder kan jou weer een maak.
 
-## Telers
+## Telers {#scorers}
 
 Die **Telers**-oortjie is die Bestuurders-oortjie vir telers, en werk op dieselfde manier: 'n e-posadres en **Voeg teller by** bo die lys, en **Verwyder** op elkeen.
 

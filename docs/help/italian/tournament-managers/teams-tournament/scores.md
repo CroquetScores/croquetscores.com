@@ -8,7 +8,7 @@ La pagina di un test si apre dal suo nome nella scheda Test, o dalla barra verde
 
 I punteggi sono disposti per squadra anziché per chi ha vinto, in una tabella intestata con il nome breve della prima squadra, "v", e quello della seconda. Ogni punteggio è una riga: il giocatore della prima squadra, poi entrambi i punteggi con quello della prima squadra per primo, come "26tp - 14", poi il giocatore della seconda squadra, chiunque dei due abbia vinto. I punteggi archiviati sono disposti allo stesso modo sotto.
 
-## Inserire un punteggio
+## Inserire un punteggio {#entering-a-score}
 
 Premi **Aggiungi punteggio**, sopra l'elenco. La finestra si legge come un risultato si dice a voce: il vincitore e il suo punteggio, poi "ha battuto", poi lo sconfitto e il suo punteggio.
 
@@ -28,7 +28,7 @@ Due giocatori che si affrontano giocano un incontro al meglio di quanto previsto
 
 Un incontro è cominciato quando i suoi due giocatori hanno una partita in uso. Un test non fa cominciare più incontri di quanti deve avere: una volta che ne sono cominciati tanti, una partita tra due giocatori che non si sono affrontati viene rifiutata, mentre un'altra partita di un incontro già cominciato viene accettata. Quando il test deve avere più incontri, modificalo nella scheda Test perché li preveda.
 
-## Correggere un punteggio
+## Correggere un punteggio {#correcting-a-score}
 
 **Modifica** apre la stessa finestra su quel punteggio, intitolata Modifica punteggio, con i suoi giocatori scelti e i suoi punteggi come sono stati scritti. Se ne possono cambiare i giocatori oltre ai punteggi, scelti come quando si aggiunge. Premi **Salva** per conservare la correzione e chiudere la finestra. Una correzione mantiene il risultato: una partita vinta resta vinta, e una partita pareggiata resta pareggiata. Una partita il cui risultato era sbagliato si archivia e si inserisce di nuovo.
 

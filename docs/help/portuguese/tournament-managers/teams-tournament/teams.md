@@ -4,7 +4,7 @@ A aba **Equipes** da página de um torneio é onde as suas equipes são adiciona
 
 ![A aba Equipes, com três equipes e uma arquivada](images/teams-tab.png)
 
-## Adicionar uma equipe
+## Adicionar uma equipe {#adding-a-team}
 
 Pressione **Adicionar equipe**, acima da lista. Um diálogo abre sobre a página.
 
@@ -20,7 +20,7 @@ Pressione **Adicionar**. A equipe é adicionada, o diálogo diz isso, e os seus 
 
 ![O diálogo depois que uma equipe é adicionada](images/add-team-dialog-added.png)
 
-## Corrigir uma equipe
+## Corrigir uma equipe {#correcting-a-team}
 
 Pressione o **Editar** de uma equipe para abrir o mesmo diálogo nessa equipe, com o título Editar equipe. Altere o que está errado e pressione **Salvar**. Uma equipe cujo nome abreviado muda passa a ser chamada pelo novo em todo lugar, então os seus testes são renomeados com ela.
 

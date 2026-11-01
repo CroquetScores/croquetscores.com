@@ -6,7 +6,7 @@ Spelers word hier een keer ingeskryf, in die toernooi. In watter kompetisies elk
 
 ![Die Spelers-oortjie, met spelers ingeskryf en een geargiveer](images/players-tab.png)
 
-## Hoe om spelers by te voeg
+## Hoe om spelers by te voeg {#add-a-player}
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
@@ -28,7 +28,32 @@ Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde w
 
 'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam waarvan die eerste woord die Engelse "bye" is, word geweier, en die dialoog verduidelik hoekom.
 
-## Hoe om 'n speler reg te stel
+## Voeg verskeie spelers gelyk by {#adding-multiple-players}
+
+Om 'n hele lys ineens by te voeg, druk op **Voeg spelers by**, langs **Voeg speler by**. 'n Dialoog maak oor die bladsy oop met een boks, wat verskeie reëls teks neem. Jy kan die lys uit 'n sigblad kopieer en in die boks plak.
+
+**Die eerste reël noem die velde**, geskei deur kommas of tabs: **Name**, en enige van **Representing**, **Flag**, **Handicap** en **WorldRankingPlayerName**, in enige volgorde. Hierdie name word in Engels getik, watter taal die werf ook al gebruik. **Name** moet een van hulle wees. **Elke reël daarna is 'n speler**, met 'n waarde vir elke veld in dieselfde volgorde, op dieselfde manier geskei. 'n Speler met niks vir 'n veld laat dit leeg, maar hou die komma of tab. Byvoorbeeld, met kommas:
+
+```
+Name,Representing,Flag
+Sam Someone,Canterbury Croquet Club,New Zealand
+Alex Another,,England
+```
+
+- **Naam, Verteenwoordig en Wêreldranglys-spelernaam** is aan dieselfde reëls gebonde as wanneer jy een speler byvoeg (kyk by [Hoe om spelers by te voeg](players.md#add-a-player)). 'n Naam is tussen 3 en 254 karakters, is nie reeds in die toernooi nie, hoe dit ook al met hoofletters geskryf is, en is nie "Bye" nie.
+- **Vlag** is die naam van die land of plek, in jou taal, soos die lys in die dialoog Voeg speler by dit aanbied, soos Nieu-Seeland.
+- **Voorgee** is 'n teken, tot twee syfers en 'n breuk van een syfer, soos 4, +4 of -1.5.
+- 'n Speler wat geen **Wêreldranglys-spelernaam** kry nie, staan bekend onder sy naam, soos wanneer hy een vir een bygevoeg word.
+- **Kommas of tabs.** Selle wat uit 'n sigblad gekopieer is, word deur tabs geskei, en 'n lys wat met die hand getik is, word gewoonlik deur kommas geskei. Albei werk. As die eerste reël 'n tab bevat, word die hele lys met tabs gelees, en anders met kommas.
+- 'n Waarde met die skeidingsteken daarin word in dubbele aanhalingstekens geskryf, soos 'n sigblad dit skryf: "Smith, John" in 'n lys wat deur kommas geskei is. 'n Aanhalingsteken binne 'n waarde word twee keer geskryf.
+- By elke waarde word die spasies aan die punte verwyder, en 'n reël met niks op nie word oorgeslaan.
+- 'n Lys bevat hoogstens 500 spelers. Voeg die res in 'n ander lys by.
+
+Druk op **Voeg by**. Die hele lys word nagegaan voordat enigiets daarvan bewaar word, so 'n lys met iets verkeerds daarin voeg niemand by nie. Wat verkeerd is, word onder die boks gesê, by die reël waarop dit is, waar die eerste reël as reël 1 getel word. Elke fout word gelys, nie net die eerste een nie, en wat jy getik het bly staan sodat jy dit kan regmaak. Sodra die lys bewaar is, maak die dialoog toe en die Spelers-oortjie lys die nuwe spelers, in die volgorde waarin jy hulle geskryf het. Anders as by **Voeg speler by**, wat oop bly vir die volgende speler, is daar geen volgende nie: die lys was die volgende.
+
+Die **?** in die titelbalk van die dialoog lei hierheen.
+
+## Hoe om 'n speler reg te stel {#correcting-a-player}
 
 Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Verander wat verkeerd is en druk op **Bewaar**, wat die verandering hou en die dialoog toemaak. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, want die ranglys ken hulle steeds daaronder. In Amerikaanse 6-hoepel-croquet is 'n speler se naam op die wêreldranglys altyd hul naam, so om die naam reg te stel, stel dit ook reg.
 
@@ -40,7 +65,7 @@ Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie 
 
 Die spelers word in die toernooi se volgorde gelys, wat die volgorde is waarin hulle aangebied word wanneer hulle in kompetisies ingeskryf word, en die volgorde waarin 'n uitskakeling getrek word. **Op** en **Af**, die pyltjies aan die einde van elke ry, skuif 'n speler een plek. Die eerste speler kry nie Op aangebied nie en die laaste nie Af nie.
 
-## Hoe om 'n speler te argiveer
+## Hoe om 'n speler te argiveer {#archiving-a-player}
 
 **Argiveer** sit 'n speler eenkant: per ongeluk ingeskryf, of uit die hele toernooi onttrek. 'n Geargiveerde speler word onder **Geargiveerde spelers** gelys, deurgehaal, ná die spelers in gebruik, en bied net **Herstel** aan. 'n Geargiveerde speler is in geen kompetisie en verskyn op geen openbare bladsy nie.
 

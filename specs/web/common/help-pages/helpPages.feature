@@ -92,3 +92,45 @@ Feature: Help written in markdown becomes pages of the site
       Given help page "![Scores](../../../english/tournament-managers/standard-tournament/images/scores.png)" at "tournament-managers/standard-tournament/scores.md"
       When the help page is converted
       Then the page shows the picture "/help/images/tournament-managers/standard-tournament/scores.png"
+
+  Rule: Every section a dialog's help icon leads to has its bookmark in every language
+
+    A help icon leads to a section by its bookmark, and the bookmark is written
+    once and kept as it is in every language, since a heading's own words are
+    translated and an address must not depend on them. A language that missed
+    it would lead the reader to the top of the page, with no word of why.
+
+    Scenario Outline: The <bookmark> section of the <kind> tournament's <page> page is bookmarked in each language
+      Given the help of every language
+      When the "<kind>" tournament's "<page>" page of each is converted
+      Then each has the bookmark "<bookmark>"
+
+      Examples:
+        | kind     | page                              | bookmark                |
+        | standard | players                           | add-a-player            |
+        | standard | players                           | correcting-a-player     |
+        | standard | players                           | archiving-a-player      |
+        | standard | players                           | adding-multiple-players |
+        | standard | competitions                      | adding-a-competition    |
+        | standard | competitions                      | changing-a-competition  |
+        | standard | scores                            | entering-a-score        |
+        | standard | scores                            | correcting-a-score      |
+        | standard | scores                            | draw-filled-first       |
+        | standard | entering-players-in-a-competition | byes-in-a-knockout      |
+        | standard | entering-players-in-a-competition | carry-forward           |
+        | standard | entering-players-in-a-competition | removing-a-player       |
+        | standard | entering-players-in-a-competition | withdrawing-a-player    |
+        | standard | notes                             | deleting-a-note         |
+        | standard | managers-and-scorers              | managers                |
+        | standard | managers-and-scorers              | scorers                 |
+        | teams    | teams                             | adding-a-team           |
+        | teams    | teams                             | correcting-a-team       |
+        | teams    | tests                             | adding-a-test           |
+        | teams    | tests                             | changing-a-test         |
+        | teams    | team-players                      | adding-a-player         |
+        | teams    | team-players                      | correcting-a-player     |
+        | teams    | scores                            | entering-a-score        |
+        | teams    | scores                            | correcting-a-score      |
+        | teams    | notes                             | deleting-a-note         |
+        | teams    | managers-and-scorers              | managers                |
+        | teams    | managers-and-scorers              | scorers                 |

@@ -2,7 +2,7 @@
 
 Mae gan dwrnamaint reolwyr, a all wneud popeth y gellir ei wneud iddo, a gall fod ganddo sgorwyr, sy'n rhoi ei ganlyniadau i mewn a dim arall. Pwy bynnag a greodd y twrnamaint yw ei reolwr cyntaf.
 
-## Rheolwyr
+## Rheolwyr {#managers}
 
 Mae'r tab **Rheolwyr** yn rhestru pwy sy'n rhedeg y twrnamaint, yn y drefn y cawsant eu gwneud, â'ch enw eich hun wedi'i farcio fel eich un chi. Dyma lle caiff twrnamaint ei rannu, neu ei drosglwyddo.
 
@@ -18,7 +18,7 @@ Mae **Tynnu** yn tynnu rheolwr oddi ar y rhestr. Ni chedwir dim o reolwr a dynnw
 
 Gallwch dynnu eich hun oddi ar y rhestr. Mae'r cwestiwn wedyn yn dweud beth mae hynny'n ei olygu: rydych yn colli eich ffordd eich hun yn ôl i'r twrnamaint, ac ni all neb ar y dudalen ei ddadwneud i chi. Gall rheolwr arall eich gwneud yn rheolwr eto.
 
-## Sgorwyr
+## Sgorwyr {#scorers}
 
 Y tab **Sgorwyr** yw'r tab Rheolwyr ar gyfer sgorwyr, ac mae'n gweithio yn yr un ffordd: cyfeiriad e-bost ac **Ychwanegu sgorwr** uwchben y rhestr, a **Tynnu** ar bob un.
 

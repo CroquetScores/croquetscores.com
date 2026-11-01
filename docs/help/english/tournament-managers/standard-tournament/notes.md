@@ -24,7 +24,7 @@ Press **Add**. The note is kept, the list comes back with it at the top, and it 
 
 Press a note's title, or its **Edit**, to open the panel on that note. Press **Save** to keep the change. A note edited since a reader read it is marked for them again.
 
-## Deleting a note
+## Deleting a note {#deleting-a-note}
 
 A note that no longer applies is deleted. A note deleted is gone for good, so **Delete** asks first.
 

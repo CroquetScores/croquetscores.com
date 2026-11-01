@@ -8,7 +8,7 @@ Ciemnozielony pasek na stronie drużyny prowadzi do turnieju i do każdej druży
 
 Zawodnik w drużynie należy tylko do tej drużyny, reprezentuje ją i gra pod jej flagą, a nie pod własną. Ta sama osoba grająca w dwóch drużynach albo w dwóch turniejach jest zawodnikiem w każdej z nich.
 
-## Dodawanie zawodnika
+## Dodawanie zawodnika {#adding-a-player}
 
 Naciśnij **Dodaj zawodnika**, nad listą. Nad stroną otwiera się okno dialogowe.
 
@@ -22,7 +22,7 @@ Zawodnik nigdy nie nazywa się „Bye" (angielskie słowo na wolny los): nazwa, 
 
 Naciśnij **Dodaj**. Zawodnik zostaje dodany, okno o tym mówi, a jego pola są opróżniane dla następnego, z kursorem z powrotem w nazwie. Dodaj w ten sposób całą drużynę, a potem naciśnij **Anuluj**, by zamknąć okno.
 
-## Poprawianie zawodnika
+## Poprawianie zawodnika {#correcting-a-player}
 
 Naciśnij nazwę zawodnika albo jego **Edytuj**, by otworzyć to samo okno na tym zawodniku, zatytułowane Edytuj zawodnika. Naciśnij **Zapisz**, by zachować zmianę. Zawodnik, którego nazwę poprawiono, zachowuje nazwę w rankingu światowym, którą miał, z wyjątkiem amerykańskiego krokieta sześciobramkowego, gdzie nazwą zawodnika w rankingu światowym jest zawsze jego nazwa.
 

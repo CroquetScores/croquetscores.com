@@ -24,7 +24,7 @@ Appuyez sur **Ajouter**. La note est enregistrée, la liste revient avec elle en
 
 Appuyez sur le titre d’une note, ou sur son **Modifier**, pour ouvrir le panneau sur cette note. Appuyez sur **Enregistrer** pour garder la modification. Une note modifiée depuis qu’un lecteur l’a lue est de nouveau marquée pour lui.
 
-## Supprimer une note
+## Supprimer une note {#deleting-a-note}
 
 Une note qui ne s’applique plus se supprime. Une note supprimée est perdue pour de bon ; **Supprimer** demande donc d’abord.
 

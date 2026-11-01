@@ -4,7 +4,7 @@ Ko te ripa **Ngā tākohu** o te whārangi o tētahi tauwhāinga te wāhi e whak
 
 ![Te ripa Ngā tākohu o tētahi poraka, he tākohu e whakamahia ana, he tākohu kua unuhia me tētahi kua whakatāpuia](images/scores-tab.png)
 
-## Te whakauru i tētahi tākohu
+## Te whakauru i tētahi tākohu {#entering-a-score}
 
 Pēhia **Tāpiri tākohu**, i runga i te rārangi. Ka pānuitia te pouaka kōrero pēnei i te kī reo nui i tētahi tākohu: te toa me tana tākohu, kātahi ko "i toa i a", kātahi ko te hinga me tana tākohu.
 
@@ -22,7 +22,7 @@ Pēhia **Tāpiri kēmu**. Ka tāpiritia te kēmu, ka kī te pouaka kōrero ko t�
 
 Ko te mea e whakahēngia ka kīia i raro i te āpure e pā ana ki a ia: he toa, he hinga rānei kāore i kōwhiria, he tākohu kāore i tuhia, kāore rānei i tīmata ki te tau takitahi, te kaitākaro kotahi hei tētahi me tētahi, te tākohu a te hinga kua tohua hei toa, te tākohu a te toa kei muri i ā te hinga rānei. I tētahi whakawātea, ka whakahēngia ngā kaitākaro e rua kāore i tūtohia kia tūtaki, ā, ka kīia i runga i ngā āpure.
 
-## Me whakakī te tūtohi o tētahi whakawātea i te tuatahi
+## Me whakakī te tūtohi o tētahi whakawātea i te tuatahi {#draw-filled-first}
 
 Ka tākarohia anake tētahi whakawātea ina whai kaitākaro, Bye rānei ia tūnga o tōna tūtohi. Mō tēnei wā, ka whakamārama a Tāpiri tākohu he aha ai kāore e taea te tāpiri tākohu, kaua e whakatuwhera i te pouaka kōrero.
 
@@ -32,7 +32,7 @@ Ka tākarohia anake tētahi whakawātea ina whai kaitākaro, Bye rānei ia tūng
 
 Ka rārangitia ngā tākohu e whakamahia ana i te raupapa i whakaurua ai, ko te tawhito i te tuatahi, kia pānuitia te rārangi pēnei i te tākaro o te tauwhāinga. Ka kī ia tākohu i te toa me tana tākohu, kātahi ko te hinga me tāna, ā, ka tuku i a **Whakatika** me **Whakatāpui**.
 
-## Te whakatika i tētahi tākohu
+## Te whakatika i tētahi tākohu {#correcting-a-score}
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i taua tākohu, ko Whakatika tākohu tōna taitara, kua kōwhiria ōna kaitākaro, ā, kei a ia ōna tākohu pēnei i tā rātou i tuhi ai. Pēhia **Penapena** hei penapena i te whakatika, ā, hei kati i te pouaka kōrero.
 

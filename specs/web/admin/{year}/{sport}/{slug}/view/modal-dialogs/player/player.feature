@@ -1205,3 +1205,26 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       And "Samuel Someone" is typed as the "World Ranking Player Name"
       When "Save" is pressed
       Then no modal dialog is open
+
+  Rule: A help icon leads to the help for adding or changing a player, and for byes
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a player leads to the section on adding a player
+      Given the page of "Spring Open" is open
+      When "Add Player" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/players#add-a-player"
+
+    Scenario: The dialog to change a player leads to the section on correcting a player
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And the page of "Spring Open" is open
+      When the name of the player "Sam Someone" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/players#correcting-a-player"
+
+    Scenario: The dialog about byes leads to the section on byes in a knockout
+      Given the page of "Spring Open" is open
+      And "Add Player" is pressed
+      And "Bye" is typed as the "Name"
+      When "Add" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/entering-players-in-a-competition#byes-in-a-knockout"

@@ -8,7 +8,7 @@ Stronę testu otwiera się z jego nazwy na karcie Testy albo z ciemnozielonego p
 
 Wyniki są ułożone według drużyn, a nie według tego, kto wygrał, w tabeli, której nagłówkiem jest skrót nazwy pierwszej drużyny, „v" i skrót drugiej. Każdy wynik to wiersz: zawodnik pierwszej drużyny, potem oba wyniki, z wynikiem pierwszej drużyny jako pierwszym, jak „26tp - 14", potem zawodnik drugiej drużyny, niezależnie od tego, który z nich wygrał. Zarchiwizowane wyniki są ułożone tak samo poniżej.
 
-## Wprowadzanie wyniku
+## Wprowadzanie wyniku {#entering-a-score}
 
 Naciśnij **Dodaj wynik**, nad listą. Okno czyta się tak, jak mówi się rezultat na głos: zwycięzca i jego wynik, potem „wygrywa z", potem przegrany i jego wynik.
 
@@ -28,7 +28,7 @@ Dwoje zawodników, którzy się spotykają, rozgrywa mecz najlepszy z tylu gier,
 
 Mecz jest rozpoczęty, gdy jego dwoje zawodników ma grę w użyciu. Test nie rozpoczyna więcej meczów, niż ma mieć: gdy rozpoczęło się ich tyle, gra między dwoma zawodnikami, którzy się nie spotkali, jest odrzucana, a kolejna gra już rozpoczętego meczu jest przyjmowana. Gdy test ma mieć więcej meczów, zmień go na karcie Testy, by ich oczekiwał.
 
-## Poprawianie wyniku
+## Poprawianie wyniku {#correcting-a-score}
 
 **Edytuj** otwiera to samo okno na tym wyniku, zatytułowane Edytuj wynik, z wybranymi zawodnikami i wynikami takimi, jak je wpisano. Można zmienić zarówno jego zawodników, jak i wyniki, wybierając ich tak jak przy dodawaniu. Naciśnij **Zapisz**, by zachować poprawkę i zamknąć okno. Poprawka zachowuje rezultat: wygrana gra pozostaje wygrana, a zremisowana – zremisowana. Grę, której rezultat był błędny, archiwizuje się i wprowadza ponownie.
 

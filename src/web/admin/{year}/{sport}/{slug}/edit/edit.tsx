@@ -64,6 +64,7 @@ export const EditTournament = ({ address }: Props): React.JSX.Element => {
   return (
     <TournamentForm
       title={say("admin.editTournament.title")}
+      helpPage="changing-and-archiving"
       button={say("admin.editTournament.submit")}
       hover={say("admin.hover.dialog.tournament.edit")}
       begins={asked.tournament}

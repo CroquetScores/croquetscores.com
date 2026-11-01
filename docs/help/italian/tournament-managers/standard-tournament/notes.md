@@ -24,7 +24,7 @@ Premi **Aggiungi**. La nota viene conservata, l'elenco torna con lei in cima, ed
 
 Premi il titolo di una nota, o il suo **Modifica**, per aprire il pannello su quella nota. Premi **Salva** per conservare la modifica. Una nota modificata dopo che un lettore l'ha letta viene segnata di nuovo per lui.
 
-## Eliminare una nota
+## Eliminare una nota {#deleting-a-note}
 
 Una nota che non vale più si elimina. Una nota eliminata è persa per sempre, quindi **Elimina** chiede prima.
 

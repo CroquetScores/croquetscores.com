@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../helpAddress.js";
 import { say } from "../../../../../../words.js";
 import { aboutPlayer } from "../../../../../../aboutPlayer.js";
 import { PlayersDialog } from "../../modal-dialogs/players/players.js";
@@ -255,6 +256,7 @@ export const PlayersTab = ({
       )}
       {archiving === undefined ? null : (
         <ModalDialog
+          help={standardHelp("players", "archiving-a-player")}
           title={say("admin.players.archiveTitle")}
           action={say("admin.players.archive")}
           hover={say("admin.hover.players.archive")}

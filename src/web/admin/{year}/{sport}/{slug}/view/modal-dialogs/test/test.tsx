@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { teamsHelp } from "../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./test.css";
@@ -368,6 +369,10 @@ export const TestDialog = ({
 
   return (
     <ModalDialog
+      help={teamsHelp(
+        "tests",
+        test === undefined ? "adding-a-test" : "changing-a-test",
+      )}
       title={say(
         test === undefined ? "admin.test.addTitle" : "admin.test.editTitle",
       )}

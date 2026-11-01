@@ -4,7 +4,7 @@ Auf dem Reiter **Mannschaften** der Turnierseite werden die Mannschaften des Tur
 
 ![Der Reiter Mannschaften, mit drei Mannschaften und einer archivierten](images/teams-tab.png)
 
-## Eine Mannschaft hinzufügen
+## Eine Mannschaft hinzufügen {#adding-a-team}
 
 Drücken Sie **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
 
@@ -20,7 +20,7 @@ Drücken Sie **Hinzufügen**. Die Mannschaft wird hinzugefügt, der Dialog sagt 
 
 ![Der Dialog, nachdem eine Mannschaft hinzugefügt wurde](images/add-team-dialog-added.png)
 
-## Eine Mannschaft korrigieren
+## Eine Mannschaft korrigieren {#correcting-a-team}
 
 Drücken Sie das **Bearbeiten** einer Mannschaft, um denselben Dialog für diese Mannschaft zu öffnen, mit dem Titel Mannschaft bearbeiten. Ändern Sie, was falsch ist, und drücken Sie **Speichern**. Eine Mannschaft, deren Kurzname sich ändert, heißt überall nach dem neuen, ihre Tests werden also mit ihm umbenannt.
 

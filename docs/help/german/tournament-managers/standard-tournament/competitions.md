@@ -4,7 +4,7 @@ Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turni
 
 ![Der Reiter Wettbewerbe, mit Wettbewerben jeder Art und einem archivierten](images/competitions-tab.png)
 
-## Einen Wettbewerb hinzufügen
+## Einen Wettbewerb hinzufügen {#adding-a-competition}
 
 Drücken Sie **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und fragt nach dem Namen des Wettbewerbs, seiner Art und der Gestalt, die seine Art hat.
 
@@ -50,7 +50,7 @@ Jede Art fragt unter ihrer Gestalt dasselbe dreifach.
 
 Drücken Sie **Hinzufügen**. Der Wettbewerb wird hinzugefügt, der Dialog sagt es, und der Name wird für den nächsten geleert, während die Art und ihre Gestalt bleiben, wie sie waren: Zusammen hinzugefügte Wettbewerbe gleichen sich meist, „Block B“ nach „Block A“ ist also nur sein Name. Drücken Sie **Abbrechen**, um den Dialog zu schließen, wenn alle drin sind.
 
-## Einen Wettbewerb ändern
+## Einen Wettbewerb ändern {#changing-a-competition}
 
 **Bearbeiten** öffnet denselben Dialog für den Wettbewerb, mit dem Titel Wettbewerb bearbeiten, mit seinem Namen, seiner Gestalt und der Art, wie er gespielt und gezählt wird, wie sie sind. Nach seiner Art wird nicht gefragt, weil aus einer Gruppe durch Ändern keine K.-o.-Runde wird: Ein Wettbewerb der falschen Art wird archiviert und neu hinzugefügt. Drücken Sie **Speichern**, um die Änderung zu speichern und den Dialog zu schließen.
 

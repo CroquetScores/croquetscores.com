@@ -4,7 +4,7 @@ L’onglet **Scores** de la page d’une compétition est l’endroit où ses pa
 
 ![L’onglet Scores d’une poule, avec des résultats en service, un retiré et un archivé](images/scores-tab.png)
 
-## Saisir un résultat
+## Saisir un résultat {#entering-a-score}
 
 Appuyez sur **Ajouter un score**, au-dessus de la liste. La boîte de dialogue se lit comme on annonce un résultat à voix haute : le vainqueur et ses points, puis « a battu », puis le perdant et ses points.
 
@@ -22,7 +22,7 @@ Appuyez sur **Ajouter la partie**. La partie est ajoutée, la boîte de dialogue
 
 Ce qui est refusé est dit sous le champ concerné : un vainqueur ou un perdant non choisi, des points non tapés ou ne commençant pas par un chiffre, le même joueur des deux côtés, les points du perdant marqués comme gagnés, ou les points du vainqueur derrière ceux du perdant. Dans une élimination directe, deux joueurs qui ne sont pas tirés l’un contre l’autre sont refusés au-dessus des champs.
 
-## Le tableau d’une élimination directe doit d’abord être rempli
+## Le tableau d’une élimination directe doit d’abord être rempli {#draw-filled-first}
 
 Une élimination directe ne se joue qu’une fois que chaque place de son tableau tient un joueur ou un exempt. Jusque-là, Ajouter un résultat explique pourquoi les résultats ne peuvent pas être ajoutés, plutôt que d’ouvrir la boîte de dialogue.
 
@@ -32,7 +32,7 @@ Une élimination directe ne se joue qu’une fois que chaque place de son tablea
 
 Les résultats en service sont listés dans l’ordre où ils ont été saisis, le plus ancien en premier, pour que la liste se lise comme la compétition s’est jouée. Chacun dit le vainqueur et ses points, puis le perdant et les siens, et offre **Modifier** et **Archiver**.
 
-## Corriger un résultat
+## Corriger un résultat {#correcting-a-score}
 
 **Modifier** ouvre la même boîte de dialogue sur ce résultat, intitulée Modifier le résultat, avec ses joueurs choisis et ses points tels qu’ils ont été tapés. Appuyez sur **Enregistrer** pour garder la correction et fermer la boîte de dialogue.
 

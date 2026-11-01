@@ -8,7 +8,7 @@
 
 Die uitslae word per span uiteengesit eerder as volgens wie gewen het, in 'n tabel met die eerste span se kortnaam, "v", en die tweede span s'n as opskrif. Elke uitslag is 'n ry: die eerste span se speler, dan albei se punte met die eerste span s'n eerste, soos "26tp - 14", dan die tweede span se speler, wie van hulle ook al gewen het. Die geargiveerde uitslae word daaronder op dieselfde manier uiteengesit.
 
-## Hoe om 'n uitslag in te voer
+## Hoe om 'n uitslag in te voer {#entering-a-score}
 
 Druk op **Voeg uitslag by**, bo die lys. Die dialoog lees soos 'n uitslag hardop gesê word: die wenner en hul punte, dan "het gewen teen", dan die verloorder en hul punte.
 
@@ -28,7 +28,7 @@ Twee spelers wat mekaar ontmoet, speel 'n wedstryd van die toets se beste van. D
 
 'n Wedstryd het begin wanneer sy twee spelers 'n spel in gebruik het. 'n Toets begin nie meer wedstryde as wat dit verwag word om te hê nie: sodra soveel begin het, word 'n spel tussen twee spelers wat nog nie ontmoet het nie geweier, terwyl nog 'n spel van 'n wedstryd wat reeds begin het, aanvaar word. Waar die toets meer wedstryde moet hê, verander dit op die Toetse-oortjie om hulle te verwag.
 
-## Hoe om 'n uitslag reg te stel
+## Hoe om 'n uitslag reg te stel {#correcting-a-score}
 
 **Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Sy spelers kan sowel as sy punte verander word, gekies soos by byvoeging. Druk op **Bewaar** om die regstelling te hou en die dialoog toe te maak. 'n Regstelling behou die uitslag: 'n gewonne spel bly gewonne, en 'n gelykopspel bly gelykop. 'n Spel waarvan die uitslag verkeerd was, word geargiveer en weer ingevoer.
 

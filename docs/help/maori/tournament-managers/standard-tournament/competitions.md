@@ -4,7 +4,7 @@ Ko te ripa **Tauwhāinga** o te whārangi o tētahi whakataetae te wāhi e tāpi
 
 ![Te ripa Tauwhāinga, he tauwhāinga o ia momo me tētahi kua whakatāpuia](images/competitions-tab.png)
 
-## Te tāpiri i tētahi tauwhāinga
+## Te tāpiri i tētahi tauwhāinga {#adding-a-competition}
 
 Pēhia **Tāpiri tauwhāinga**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi, e pātai ana mō te ingoa o te tauwhāinga, tōna momo me te āhua o tōna momo.
 
@@ -50,7 +50,7 @@ Ka pātai ia momo katoa i ēnei mea e toru i raro i tōna āhua.
 
 Pēhia **Tāpiri**. Ka tāpiritia te tauwhāinga, ka kī te pouaka kōrero i tērā, ā, ka whakakorea te ingoa mō tētahi atu, ka waiho te momo me tōna āhua pēnei i mua: he rite te nuinga o ngā tauwhāinga ka tāpiria ngātahi, nō reira ko "Block B" i muri i a "Block A" te ingoa anake. Pēhia **Whakakore** hei kati i te pouaka kōrero ina oti katoa te tāpiri.
 
-## Te whakarerekē i tētahi tauwhāinga
+## Te whakarerekē i tētahi tauwhāinga {#changing-a-competition}
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i te tauwhāinga, ko Whakatika tauwhāinga tōna taitara, me tōna ingoa, tōna āhua, me tōna tākaro me tōna kaute pēnei i tā rātou. Kāore e pātaihia tōna momo, nā te mea kāore e meinga tētahi poraka hei whakawātea mā te whakarerekē: ka whakatāpuia tētahi tauwhāinga o te momo hē, ka tāpiria anō. Pēhia **Penapena** hei penapena i te huringa, ā, hei kati i te pouaka kōrero.
 

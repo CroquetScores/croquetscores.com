@@ -12,7 +12,7 @@ Au-dessus de la liste, une liste déroulante propose chaque joueur du tournoi qu
 
 Les joueurs archivés du tournoi ne sont pas proposés.
 
-## Les exempts dans une élimination directe
+## Les exempts dans une élimination directe {#byes-in-a-knockout}
 
 Une élimination directe ne se joue qu’une fois chaque place de son tableau remplie, et les places que ses joueurs laissent libres sont remplies par des exempts. Dans une élimination directe, la liste déroulante propose donc **Bye** en premier, avant les joueurs, et continue de le proposer quel que soit le nombre d’exempts ajoutés, puisqu’un tableau peut en avoir besoin de plusieurs.
 
@@ -28,7 +28,7 @@ L’ordre des joueurs d’une élimination directe est son tableau. Les deux pre
 
 Les joueurs sont listés dans l’ordre de la compétition, qui est l’ordre dans lequel une élimination directe est tirée et dans lequel une poule est listée sur sa page publique. **Monter** et **Descendre** déplacent un joueur d’une place.
 
-## Report
+## Report {#carry-forward}
 
 **Reporter** dit ce qu’un joueur apporte dans une compétition d’un jeu qu’elle n’a pas comptabilisé : les résultats d’une étape antérieure, ou de parties jouées avant que la compétition ne soit comptabilisée ici. Il est proposé dans une poule et un système suisse, qui ont un classement où le compter, et pas dans une élimination directe.
 
@@ -36,7 +36,7 @@ Les joueurs sont listés dans l’ordre de la compétition, qui est l’ordre da
 
 La boîte de dialogue demande six nombres : matchs gagnés et perdus, parties gagnées et perdues, et arceaux pour et contre. Chaque nombre est facultatif. Un nombre laissé vide ne reporte rien, ce qui n’est pas la même chose que reporter 0, pour que celui qui le modifie plus tard le voie tel qu’il a été laissé. Appuyez sur **Enregistrer** pour garder les six.
 
-## Retirer un joueur
+## Retirer un joueur {#removing-a-player}
 
 **Retirer** sort un joueur inscrit par erreur. Il reste l’un des joueurs du tournoi, et la liste déroulante le propose de nouveau, mais rien de sa place dans la compétition n’est gardé ; Retirer demande donc d’abord.
 
@@ -44,7 +44,7 @@ La boîte de dialogue demande six nombres : matchs gagnés et perdus, parties g
 
 Un joueur qui a une partie en service dans la compétition ne peut pas être retiré, puisque ses parties seraient alors contre quelqu’un qui n’est plus là, et n’a pas de Retirer. Un joueur dont toutes les parties sont archivées peut l’être, et ses résultats archivés partent avec lui.
 
-## Déclarer un joueur forfait
+## Déclarer un joueur forfait {#withdrawing-a-player}
 
 **Retirer de la compétition** est pour un joueur qui ne jouera plus dans la compétition. Il y reste, avec les parties qu’il a jouées, et il est listé sous **Joueurs retirés** après ceux qui jouent encore. Dans une élimination directe, son adversaire d’une rencontre non encore décidée passe au tour suivant.
 

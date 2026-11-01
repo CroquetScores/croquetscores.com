@@ -4,7 +4,7 @@ Auf dem Reiter **Ergebnisse** der Wettbewerbsseite werden die Spiele des Wettbew
 
 ![Der Reiter Ergebnisse einer Gruppe, mit Ergebnissen in Gebrauch, einem zurückgezogenen und einem archivierten](images/scores-tab.png)
 
-## Ein Ergebnis eingeben
+## Ein Ergebnis eingeben {#entering-a-score}
 
 Drücken Sie **Ergebnis hinzufügen** über der Liste. Der Dialog liest sich, wie ein Ergebnis gesagt wird: der Sieger und seine Punkte, dann „schlug“, dann der Verlierer und seine Punkte.
 
@@ -22,7 +22,7 @@ Drücken Sie **Spiel hinzufügen**. Das Spiel wird hinzugefügt, der Dialog sagt
 
 Was abgelehnt wird, steht unter dem Feld, um das es geht: ein nicht gewählter Sieger oder Verlierer, nicht eingegebene oder nicht mit einer Ziffer beginnende Punkte, derselbe Spieler als beides, als gewonnen markierte Punkte des Verlierers oder Punkte des Siegers, die hinter denen des Verlierers liegen. In einer K.-o.-Runde werden zwei Spieler, die nicht gegeneinander gelost sind, über den Feldern abgelehnt.
 
-## Die Auslosung einer K.-o.-Runde muss zuerst gefüllt sein
+## Die Auslosung einer K.-o.-Runde muss zuerst gefüllt sein {#draw-filled-first}
 
 Eine K.-o.-Runde wird erst gespielt, wenn jeder Platz ihrer Auslosung einen Spieler oder ein Freilos hat. Bis dahin erklärt Ergebnis hinzufügen, warum keine Ergebnisse hinzugefügt werden können, statt den Dialog zu öffnen.
 
@@ -32,7 +32,7 @@ Eine K.-o.-Runde wird erst gespielt, wenn jeder Platz ihrer Auslosung einen Spie
 
 Die Ergebnisse in Gebrauch sind in der Reihenfolge ihrer Eingabe aufgeführt, das älteste zuerst, damit sich die Liste so liest, wie der Wettbewerb gespielt wurde. Jedes nennt den Sieger und seine Punkte, dann den Verlierer und seine, und bietet **Bearbeiten** und **Archivieren** an.
 
-## Ein Ergebnis korrigieren
+## Ein Ergebnis korrigieren {#correcting-a-score}
 
 **Bearbeiten** öffnet denselben Dialog für dieses Ergebnis, mit dem Titel Ergebnis bearbeiten, mit seinen Spielern gewählt und seinen Punkten, wie sie eingegeben wurden. Drücken Sie **Speichern**, um die Korrektur zu speichern und den Dialog zu schließen.
 

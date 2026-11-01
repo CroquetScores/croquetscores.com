@@ -12,7 +12,7 @@ Uwchben y rhestr, mae cwymplen yn cynnig pob chwaraewr yn y twrnamaint nad yw yn
 
 Ni chynigir chwaraewyr y twrnamaint sydd wedi'u harchifo.
 
-## Byes mewn cystadleuaeth cnoc-owt
+## Byes mewn cystadleuaeth cnoc-owt {#byes-in-a-knockout}
 
 Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd pob lle yn ei siart wedi'i lenwi, a chaiff y lleoedd y mae ei chwaraewyr yn eu gadael ar ôl eu llenwi â byes. Felly mewn cystadleuaeth cnoc-owt mae'r gwymplen yn cynnig **Bye** yn gyntaf, cyn y chwaraewyr, ac yn dal i'w gynnig faint bynnag o byes a ychwanegir, gan y gall siart fod ag angen sawl un.
 
@@ -28,7 +28,7 @@ Trefn chwaraewyr cystadleuaeth cnoc-owt yw ei siart. Mae'r ddau le cyntaf yn cwr
 
 Rhestrir y chwaraewyr yn nhrefn y gystadleuaeth, sef y drefn y caiff cystadleuaeth cnoc-owt ei thynnu ynddi a'r drefn y rhestrir bloc ynddi ar ei dudalen gyhoeddus. Mae **I fyny** ac **I lawr** yn symud chwaraewr un lle.
 
-## Cario ymlaen
+## Cario ymlaen {#carry-forward}
 
 Mae **Cario ymlaen** yn dweud beth y mae chwaraewr yn ei ddod i gystadleuaeth o chwarae na chafodd ei sgorio ynddi: canlyniadau cam cynharach, neu gemau a chwaraewyd cyn i'r gystadleuaeth gael ei sgorio yma. Cynigir ef mewn bloc a chystadleuaeth Swisaidd, sydd â safleoedd iddo gyfrif ynddynt, ac nid mewn cystadleuaeth cnoc-owt.
 
@@ -36,7 +36,7 @@ Mae **Cario ymlaen** yn dweud beth y mae chwaraewr yn ei ddod i gystadleuaeth o 
 
 Mae'r ddeialog yn gofyn am chwe chyfrif: gemau a enillwyd ac a gollwyd, gemau unigol a enillwyd ac a gollwyd, a chylchau dros ac yn erbyn. Mae pob cyfrif yn ddewisol. Nid yw cyfrif a adewir yn wag yn cario dim ymlaen, nad yw'r un peth â chario 0 ymlaen, fel bod pwy bynnag sy'n ei newid yn ddiweddarach yn ei weld fel y'i gadawyd. Pwyswch **Cadw** i gadw'r chwech.
 
-## Tynnu chwaraewr
+## Tynnu chwaraewr {#removing-a-player}
 
 Mae **Tynnu** yn tynnu allan chwaraewr a roddwyd i mewn trwy gamgymeriad. Mae'n parhau i fod yn un o chwaraewyr y twrnamaint, a chaiff ei gynnig eto yn y gwymplen, ond ni chedwir dim o'i le yn y gystadleuaeth, felly mae Tynnu yn gofyn yn gyntaf.
 
@@ -44,7 +44,7 @@ Mae **Tynnu** yn tynnu allan chwaraewr a roddwyd i mewn trwy gamgymeriad. Mae'n 
 
 Ni ellir tynnu chwaraewr sydd ag unrhyw gêm yn ei lle yn y gystadleuaeth, gan y byddai'r gemau wedyn yn erbyn rhywun nad yw yno mwyach, ac ni chynigir Tynnu iddo. Gellir tynnu chwaraewr nad oes ganddo ond gemau a archifwyd, ac mae ei ganlyniadau a archifwyd yn mynd gydag ef.
 
-## Tynnu chwaraewr yn ôl
+## Tynnu chwaraewr yn ôl {#withdrawing-a-player}
 
 Mae **Tynnu'n ôl** ar gyfer chwaraewr na fydd yn chwarae rhagor o'r gystadleuaeth. Mae'n parhau ynddi, â'r gemau y mae wedi'u chwarae, a chaiff ei restru o dan **Chwaraewyr a dynnwyd yn ôl** ar ôl y rhai sy'n dal i chwarae. Mewn cystadleuaeth cnoc-owt, mae ei wrthwynebydd mewn gêm nad yw wedi'i phenderfynu eto yn mynd drwodd.
 

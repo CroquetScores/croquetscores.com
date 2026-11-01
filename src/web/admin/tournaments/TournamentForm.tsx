@@ -3,6 +3,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
 import { GroupedOptions } from "../GroupedOptions.js";
+import { HelpLink } from "../HelpLink.js";
+import { standardHelp, teamsHelp } from "../helpAddress.js";
 import { go } from "../navigation.js";
 import { knows, say } from "../words.js";
 import "./tournamentForm.css";
@@ -103,6 +105,11 @@ export interface Begins {
 
 interface Props {
   readonly title: string;
+  /**
+   * The page of the help for what the form does, which the title bar's help
+   * icon leads to: the guide for the kind of tournament chosen.
+   */
+  readonly helpPage: "creating-a-tournament" | "changing-and-archiving";
   /** The words on the one button, which says what the form does. */
   readonly button: string;
   /** What that button says, when it is pointed at. */
@@ -118,6 +125,7 @@ interface Props {
 
 export const TournamentForm = ({
   title,
+  helpPage,
   button,
   hover,
   begins,
@@ -192,6 +200,11 @@ export const TournamentForm = ({
   // Only a tournament played by teams has tests, and saying one that is not
   // draws them is refused (create.feature), so the form does not ask.
   const formatChosen = offered.formats.find(({ code }) => code === format);
+  const playedByTeams = (
+    begins === undefined
+      ? formatChosen
+      : offered.formats.find(({ code }) => code === begins.format)
+  )?.teams;
   const asksAboutLevelTests = formatChosen?.teams ?? false;
   const levelTestsDrawn =
     levelTestsSaid ?? formatChosen?.drawsLevelTests ?? false;
@@ -238,9 +251,15 @@ export const TournamentForm = ({
     <main id="content">
       <div className="page">
         <section className="dialog" aria-labelledby="dialog-title">
-          <h1 className="dialog-title" id="dialog-title">
+          <h1 className="dialog-title dialog-title-with-help" id="dialog-title">
             {title}
           </h1>
+          {/* A tournament played by teams has a guide of its own, so which is
+              led to follows the format chosen; until one is chosen, the guide
+              for the ordinary kind. A tournament being changed is of the kind
+              it was saved as and not the one a draft would make it, so the
+              link does not move under the reader. */}
+          <HelpLink to={(playedByTeams ? teamsHelp : standardHelp)(helpPage)} />
           <form
             className="dialog-form"
             ref={form}

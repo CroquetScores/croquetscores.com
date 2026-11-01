@@ -122,3 +122,8 @@
 .tournament-filter-toggle[aria-pressed="false"] .tournament-toggle-tick {
   visibility: hidden;
 }
+
+/* Last in the bar, at its end, whichever way the bar wraps. */
+.tournaments-help {
+  margin-inline-start: auto;
+}

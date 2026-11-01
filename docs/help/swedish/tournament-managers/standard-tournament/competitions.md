@@ -4,7 +4,7 @@ Fliken **Tävlingar** på en turnerings sida är där dess tävlingar läggs til
 
 ![Fliken Tävlingar, med tävlingar av varje slag och en arkiverad](images/competitions-tab.png)
 
-## Lägga till en tävling
+## Lägga till en tävling {#adding-a-competition}
 
 Tryck på **Lägg till tävling**, ovanför listan. En dialogruta öppnas över sidan och frågar efter tävlingens namn, dess slag och den form slaget har.
 
@@ -50,7 +50,7 @@ Varje slag frågar efter samma tre saker under sin form.
 
 Tryck på **Lägg till**. Tävlingen läggs till, dialogrutan säger det, och namnet töms för nästa, med sorten och dess form kvar som de var: tävlingar som läggs till tillsammans är för det mesta lika, så "Block B" efter "Block A" är bara dess namn. Tryck på **Avbryt** för att stänga dialogrutan när alla är inlagda.
 
-## Ändra en tävling
+## Ändra en tävling {#changing-a-competition}
 
 **Redigera** öppnar samma dialogruta på tävlingen, med rubriken Redigera tävling, med dess namn, dess form och hur den spelas och räknas som de är. Dess slag frågas inte efter, eftersom ett block inte görs till en utslagning genom att ändras: en tävling av fel slag arkiveras och läggs till igen. Tryck på **Spara** för att spara ändringen och stänga dialogrutan.
 

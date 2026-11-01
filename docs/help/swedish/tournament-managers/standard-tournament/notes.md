@@ -24,7 +24,7 @@ Tryck på **Lägg till**. Anteckningen sparas, listan kommer tillbaka med den ö
 
 Tryck på en antecknings rubrik, eller på dess **Redigera**, för att öppna panelen på den anteckningen. Tryck på **Spara** för att spara ändringen. En anteckning som redigerats sedan en läsare läste den markeras för den läsaren igen.
 
-## Ta bort en anteckning
+## Ta bort en anteckning {#deleting-a-note}
 
 En anteckning som inte längre gäller tas bort. En borttagen anteckning är borta för gott, så **Radera** frågar först.
 

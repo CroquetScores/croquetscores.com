@@ -12,7 +12,7 @@ Acima da lista, uma lista suspensa oferece todos os jogadores do torneio que ain
 
 Os jogadores arquivados do torneio não são oferecidos.
 
-## Byes em um mata-mata
+## Byes em um mata-mata {#byes-in-a-knockout}
 
 Um mata-mata só é disputada depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
 
@@ -28,7 +28,7 @@ A ordem dos jogadores de um mata-mata é a sua chave. As duas primeiras vagas se
 
 Os jogadores são listados na ordem da competição, que é a ordem em que um mata-mata é sorteada e em que um grupo é listado na sua página pública. **Subir** e **Descer** movem um jogador uma posição.
 
-## Transferir
+## Transferir {#carry-forward}
 
 **Transferir** diz o que um jogador traz para uma competição de jogos cujo resultado não foi registrado nela: os resultados de uma fase anterior, ou de jogos disputados antes de a competição ter os seus resultados registrados aqui. É oferecido em um grupo e em um suíço, que têm uma classificação em que isso conta, e não em um mata-mata.
 
@@ -36,7 +36,7 @@ Os jogadores são listados na ordem da competição, que é a ordem em que um ma
 
 O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transfere nada, o que não é o mesmo que transportar 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
 
-## Remover um jogador
+## Remover um jogador {#removing-a-player}
 
 **Remover** tira um jogador inscrito por engano. Ele continua sendo um dos jogadores do torneio, e volta a ser oferecido na lista suspensa, mas nada da sua posição na competição é guardado, então Remover pergunta antes.
 
@@ -44,7 +44,7 @@ O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdi
 
 Um jogador que tem algum jogo em uso na competição não pode ser removido, porque os jogos passariam a ser contra alguém que não está mais lá, e não recebe Remover. Um jogador cujos únicos jogos estão arquivados pode ser, e os seus resultados arquivados vão com ele.
 
-## Retirar um jogador
+## Retirar um jogador {#withdrawing-a-player}
 
 **Retirar** é para um jogador que não jogará mais nada da competição. Ele continua nela, com os jogos que disputou, e é listado sob **Jogadores que desistiram**, depois dos que continuam jogando. Em um mata-mata, o seu adversário em uma partida ainda não decidida avança.
 

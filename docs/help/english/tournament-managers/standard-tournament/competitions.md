@@ -4,7 +4,7 @@ The **Competitions** tab of a tournament's page is where its competitions are ad
 
 ![The Competitions tab, with competitions of each kind and one archived](images/competitions-tab.png)
 
-## Adding a competition
+## Adding a competition {#adding-a-competition}
 
 Press **Add Competition**, above the list. A dialog opens over the page, asking for the competition's name, its kind, and the shape its kind has.
 
@@ -50,7 +50,7 @@ Every kind asks the same three things beneath its shape.
 
 Press **Add**. The competition is added, the dialog says so, and the name is emptied for the next, with the kind and its shape left as they were: competitions added together are mostly alike, so "Block B" after "Block A" is its name alone. Press **Cancel** to close the dialog once they are all in.
 
-## Changing a competition
+## Changing a competition {#changing-a-competition}
 
 **Edit** opens the same dialog on the competition, titled Edit Competition, with its name, its shape and how it is played and counted as they are. Its kind is not asked, since a block is not made a knockout by changing it: a competition of the wrong kind is archived and added again. Press **Save** to keep the change and close the dialog.
 

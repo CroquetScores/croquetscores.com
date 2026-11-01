@@ -53,7 +53,7 @@ Press **Add**. The whole list is checked before any of it is kept, so a list wit
 
 The **?** in the title bar of the dialog leads here.
 
-## Correcting a player
+## Correcting a player {#correcting-a-player}
 
 Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Change what is wrong and press **Save**, which keeps the change and closes the dialog. A player whose name is corrected keeps the world ranking name they had, since the rankings still know them by it. In American 6 Wicket a player's world ranking name is always their name, so correcting the name corrects it too.
 
@@ -65,7 +65,7 @@ A player corrected here is corrected everywhere: in every competition they are i
 
 The players are listed in the tournament's order, which is the order they are offered in when they are entered into competitions, and the order a knockout is drawn in. **Up** and **Down**, the arrows at the end of each row, move a player one place. The first player is not offered Up and the last is not offered Down.
 
-## Archiving a player
+## Archiving a player {#archiving-a-player}
 
 **Archive** sets a player aside: entered by mistake, or withdrawn from the whole tournament. An archived player is listed under **Archived players**, struck through, after the players in use, and offers only **Restore**. An archived player is in no competition and appears on no public page.
 

@@ -8,7 +8,7 @@ Mae'r bar gwyrdd tywyll ar dudalen tîm yn arwain at y twrnamaint ac at bob tîm
 
 Mae chwaraewr mewn tîm yn perthyn i'r tîm hwnnw yn unig, yn cynrychioli'r tîm, ac yn chwifio baner y tîm yn hytrach nag un ei hun. Mae'r un person sy'n chwarae dros ddau dîm, neu mewn dau dwrnamaint, yn chwaraewr ym mhob un.
 
-## Ychwanegu chwaraewr
+## Ychwanegu chwaraewr {#adding-a-player}
 
 Pwyswch **Ychwanegu chwaraewr**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
@@ -22,7 +22,7 @@ Ni chaiff chwaraewr byth ei alw'n "Bye": gwrthodir enw y mae ei air cyntaf yn y 
 
 Pwyswch **Ychwanegu**. Caiff y chwaraewr ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y nesaf, â'r cyrchwr yn ôl yn yr enw. Ychwanegwch y tîm cyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog.
 
-## Cywiro chwaraewr
+## Cywiro chwaraewr {#correcting-a-player}
 
 Pwyswch enw chwaraewr, neu ei **Golygu**, i agor yr un ddeialog ar y chwaraewr hwnnw, dan y teitl Golygu chwaraewr. Pwyswch **Cadw** i gadw'r newid. Mae chwaraewr y caiff ei enw ei gywiro yn cadw'r enw ar restr detholion y byd a oedd ganddo, ac eithrio mewn American 6 Wicket, lle mae enw chwaraewr ar restr detholion y byd bob amser yr un fath â'i enw.
 

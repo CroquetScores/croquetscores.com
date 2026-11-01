@@ -12,7 +12,7 @@ En landskamp spelas mellan två lag i bruk, så medan turneringen har färre än
 
 ![Fliken Landskamper innan det finns två lag](images/tests-tab-two-teams-needed.png)
 
-## Lägga till en landskamp
+## Lägga till en landskamp {#adding-a-test}
 
 Tryck på **Lägg till landskamp**, ovanför listan. En dialogruta öppnas över sidan, i den ordning en landskamp sägs högt.
 
@@ -34,7 +34,7 @@ Tryck på **Lägg till**. Landskampen läggs till, dialogrutan säger vilken med
 
 ![Dialogrutan efter att en landskamp har lagts till](images/add-test-dialog-added.png)
 
-## Ändra en landskamp
+## Ändra en landskamp {#changing-a-test}
 
 **Redigera** öppnar samma dialogruta på landskampen, med rubriken Redigera landskamp, ifylld som landskampen är. Tryck på **Spara** för att spara ändringen.
 

@@ -4,7 +4,7 @@ A aba **Competições** da página de um torneio é onde as suas competições s
 
 ![A aba Competições, com competições de cada tipo e uma arquivada](images/competitions-tab.png)
 
-## Adicionar uma competição
+## Adicionar uma competição {#adding-a-competition}
 
 Pressione **Adicionar competição**, acima da lista. Um diálogo abre sobre a página, pedindo o nome da competição, o seu tipo e a forma que esse tipo tem.
 
@@ -50,7 +50,7 @@ Todo tipo pergunta as mesmas três coisas abaixo da sua forma.
 
 Pressione **Adicionar**. A competição é adicionada, o diálogo diz isso, e o nome é esvaziado para a próxima, com o tipo e a sua forma deixados como estavam: competições adicionadas juntas são quase sempre parecidas, então "Block B" depois de "Block A" é só o seu nome. Pressione **Cancelar** para fechar o diálogo quando todas estiverem inseridas.
 
-## Alterar uma competição
+## Alterar uma competição {#changing-a-competition}
 
 **Editar** abre o mesmo diálogo na competição, com o título Editar competição, com o seu nome, a sua forma e o modo como é jogada e contada como estão. O tipo não é perguntado, porque um grupo não vira um mata-mata por alteração: uma competição do tipo errado é arquivada e adicionada de novo. Pressione **Salvar** para guardar a alteração e fechar o diálogo.
 

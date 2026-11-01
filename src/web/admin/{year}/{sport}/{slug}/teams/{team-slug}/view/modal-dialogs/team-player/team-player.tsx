@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
+import { teamsHelp } from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
 import {
   Mark,
@@ -182,6 +183,10 @@ export const TeamPlayerDialog = ({
 
   return (
     <ModalDialog
+      help={teamsHelp(
+        "team-players",
+        player === undefined ? "adding-a-player" : "correcting-a-player",
+      )}
       title={say(
         player === undefined
           ? "admin.player.addTitle"

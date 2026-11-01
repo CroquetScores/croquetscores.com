@@ -6,7 +6,7 @@ Spelarna läggs till här en gång, i turneringen. Vilka tävlingar var och en s
 
 ![Fliken Spelare, med tillagda spelare och en arkiverad](images/players-tab.png)
 
-## Lägga till spelare
+## Lägga till spelare {#add-a-player}
 
 Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över sidan.
 
@@ -28,7 +28,32 @@ Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fäl
 
 En spelare heter aldrig "Bye". En utslagnings byes läggs till i själva utslagningen, där dess spelare sätts in, så ett namn vars första ord är det engelska "bye" godtas inte, och dialogrutan förklarar varför.
 
-## Rätta en spelare
+## Lägga till flera spelare {#adding-multiple-players}
+
+För att lägga till en hel lista på en gång trycker du på **Lägg till flera spelare**, bredvid **Lägg till spelare**. En dialogruta öppnas över sidan med en enda ruta, som tar emot flera rader text. Du kan kopiera listan från ett kalkylblad och klistra in den i rutan.
+
+**Första raden anger fälten**, åtskilda med kommatecken eller tabbar: **Name** och något av **Representing**, **Flag**, **Handicap** och **WorldRankingPlayerName**, i valfri ordning. Dessa namn skrivs på engelska, oavsett vilket språk webbplatsen visas på. **Name** måste vara ett av dem. **Varje rad efter den är en spelare**, med ett värde för varje fält i samma ordning, åtskilda på samma sätt. En spelare som saknar värde för ett fält lämnar det tomt, men behåller kommatecknet eller tabben. Till exempel, med kommatecken:
+
+```
+Name,Representing,Flag
+Sam Someone,Canterbury Croquet Club,New Zealand
+Alex Another,,England
+```
+
+- **Namn, Representerar och Spelarens namn i världsrankingen** följer samma regler som när du lägger till en enda spelare (se [Lägga till spelare](players.md#add-a-player)). Ett namn är mellan 3 och 254 tecken, finns inte redan i turneringen, hur det än skrivs med stora och små bokstäver, och är inte "Bye".
+- **Flagga** är namnet på landet eller platsen, på ditt språk, så som listan i dialogrutan Lägg till spelare erbjuder det, till exempel Nya Zeeland.
+- **Handicap** är ett tecken, upp till två siffror och en bråkdel på en siffra, till exempel 4, +4 eller -1.5.
+- En spelare utan **WorldRankingPlayerName** är känd under sitt namn, som när spelaren läggs till en i taget.
+- **Kommatecken eller tabbar.** Celler som kopieras från ett kalkylblad är åtskilda med tabbar, och en lista som skrivs för hand är oftast åtskild med kommatecken. Båda fungerar. Om första raden innehåller en tabb läses hela listan med tabbar, annars med kommatecken.
+- Ett värde som innehåller avgränsaren skrivs inom citattecken, som ett kalkylblad skriver det: "Smith, John" i en lista åtskild med kommatecken. Ett citattecken inuti ett värde skrivs två gånger.
+- Varje värde får blanksteg i ändarna borttagna, och en rad utan innehåll hoppas över.
+- En lista innehåller högst 500 spelare. Lägg till resten i en ny lista.
+
+Tryck på **Lägg till**. Hela listan kontrolleras innan något av den sparas, så en lista med något fel i lägger inte till någon. Vad som är fel sägs under rutan, på den rad det finns, där första raden räknas som rad 1. Varje fel listas, inte bara det första, och det du skrev finns kvar så att du kan rätta det. När listan är sparad stängs dialogrutan och fliken **Spelare** visar de nya spelarna, i den ordning du skrev dem. Till skillnad från **Lägg till spelare**, som förblir öppen för nästa spelare, finns det ingen nästa: listan var nästa.
+
+**?** i dialogrutans namnlist leder hit.
+
+## Rätta en spelare {#correcting-a-player}
 
 Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Ändra det som är fel och tryck på **Spara**, som sparar ändringen och stänger dialogrutan. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, eftersom rankingen fortfarande känner spelaren under det. I amerikansk 6-bågars croquet är en spelares namn i världsrankingen alltid spelarens namn, så att rätta namnet rättar det också.
 
@@ -40,7 +65,7 @@ En spelare som rättas här rättas överallt: i varje tävling spelaren är med
 
 Spelarna listas i turneringens ordning, som är den ordning de erbjuds i när de sätts in i tävlingar, och den ordning en utslagning lottas i. **Upp** och **Ner**, pilarna i slutet av varje rad, flyttar en spelare ett steg. Den första spelaren erbjuds inte Upp och den sista erbjuds inte Ned.
 
-## Arkivera en spelare
+## Arkivera en spelare {#archiving-a-player}
 
 **Arkivera** lägger undan en spelare: en som lades till av misstag, eller som har dragit sig ur hela turneringen. En arkiverad spelare listas under **Arkiverade spelare**, överstruken, efter de spelare som är i bruk, och erbjuder bara **Återställ**. En arkiverad spelare är inte med i någon tävling och visas inte på någon offentlig sida.
 

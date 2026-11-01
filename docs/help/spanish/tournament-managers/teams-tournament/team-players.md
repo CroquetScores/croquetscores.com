@@ -8,7 +8,7 @@ La barra verde oscuro en la página de un equipo lleva al torneo y a cada equipo
 
 Un jugador de un equipo pertenece solo a ese equipo, representa al equipo y lleva la bandera del equipo en vez de una propia. La misma persona jugando por dos equipos, o en dos torneos, es un jugador en cada uno.
 
-## Añadir un jugador
+## Añadir un jugador {#adding-a-player}
 
 Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la página.
 
@@ -22,7 +22,7 @@ Un jugador nunca se llama "Bye": un nombre cuya primera palabra sea "bye" (la pa
 
 Pulsa **Añadir**. El jugador se añade, el diálogo lo dice y sus campos se vacían para el siguiente, con el cursor de vuelta en el nombre. Añade todo el equipo de este modo y después pulsa **Cancelar** para cerrar el diálogo.
 
-## Corregir un jugador
+## Corregir un jugador {#correcting-a-player}
 
 Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Pulsa **Guardar** para guardar el cambio. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía, salvo en American 6 Wicket, donde el nombre de un jugador en el ranking mundial es siempre su nombre.
 

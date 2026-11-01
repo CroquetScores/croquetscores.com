@@ -216,3 +216,14 @@ Feature: The notes tab of a tournament's page
       And "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the notes of "Spring Open" are opened
       Then every word in the tab but the notes' titles is in the test locale
+
+  Rule: A help icon leads to the help for deleting a note
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The question asked before deleting a note leads to the section on deleting a note
+      Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
+      And the notes of "Spring Open" are open
+      When Delete is pressed for the note "Lunch is at noon"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/notes#deleting-a-note"

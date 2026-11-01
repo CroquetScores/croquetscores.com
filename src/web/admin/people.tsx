@@ -57,6 +57,8 @@ interface Props {
    */
   readonly fieldAbove: boolean;
   readonly words: Words;
+  /** Where the help for taking the part from someone is, where there is some. */
+  readonly help?: string;
   /** Whether `person`, of `everybody`, is offered Remove. Everybody is, unless said. */
   readonly removable?: (
     person: Person,
@@ -77,6 +79,7 @@ export const People = ({
   heading,
   fieldAbove,
   words,
+  help,
   removable = () => true,
   explanation,
   removed,
@@ -327,6 +330,7 @@ export const People = ({
       </div>
       {removing === undefined ? null : (
         <ModalDialog
+          {...(help === undefined ? {} : { help })}
           title={say(words.removeTitle)}
           action={say("admin.people.remove")}
           hover={say("admin.hover.people.remove")}

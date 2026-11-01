@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 import { Field, type Refusal } from "../../../../../../Field.js";
 import { ModalDialog } from "../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./competition.css";
@@ -249,6 +250,12 @@ export const CompetitionDialog = ({
 
   return (
     <ModalDialog
+      help={standardHelp(
+        "competitions",
+        competition === undefined
+          ? "adding-a-competition"
+          : "changing-a-competition",
+      )}
       title={say(
         competition === undefined
           ? "admin.competition.addTitle"

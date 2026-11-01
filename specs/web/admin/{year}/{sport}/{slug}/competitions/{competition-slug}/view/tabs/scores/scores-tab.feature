@@ -922,3 +922,17 @@ Feature: The scores tab of a competition's page
       And "Maximilian Alexander Fitzwilliam-Worthington" has beaten "Bartholomew Montgomery Featherstonehaugh" 26 to 25 in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
       Then the page is no wider than the window
+
+  Rule: A help icon leads to the help for a draw that is not filled
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: What Add Score says in a knockout with a place left empty leads to the section on the draw
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And the scores of "Final Stage" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/scores#draw-filled-first"

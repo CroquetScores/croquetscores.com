@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
+import { standardHelp } from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
 import { noOption, optionFace } from "../../../../../../../../optionFace.js";
 import { ScoreDialog } from "../../modal-dialogs/score/score.js";
@@ -452,6 +453,7 @@ export const ScoresTab = ({
         // The knockout's own words for refusing a game, since this is that
         // refusal said before anything is typed that it would throw away.
         <ModalDialog
+          help={standardHelp("scores", "draw-filled-first")}
           title={say("admin.scores.drawNotFilledTitle")}
           action={say("admin.modal.ok")}
           hover={say("admin.hover.modal.ok")}

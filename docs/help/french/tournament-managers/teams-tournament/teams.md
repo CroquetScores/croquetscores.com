@@ -4,7 +4,7 @@ L’onglet **Équipes** de la page d’un tournoi est l’endroit où ses équip
 
 ![L’onglet Équipes, avec trois équipes et une archivée](images/teams-tab.png)
 
-## Ajouter une équipe
+## Ajouter une équipe {#adding-a-team}
 
 Appuyez sur **Ajouter une équipe**, au-dessus de la liste. Une boîte de dialogue s’ouvre sur la page.
 
@@ -20,7 +20,7 @@ Appuyez sur **Ajouter**. L’équipe est ajoutée, la boîte de dialogue le dit,
 
 ![La boîte de dialogue après l’ajout d’une équipe](images/add-team-dialog-added.png)
 
-## Corriger une équipe
+## Corriger une équipe {#correcting-a-team}
 
 Appuyez sur le **Modifier** d’une équipe pour ouvrir la même boîte de dialogue sur cette équipe, intitulée Modifier l’équipe. Changez ce qui est faux et appuyez sur **Enregistrer**. Une équipe dont le nom court change est désignée par le nouveau partout ; ses rencontres sont donc renommées avec elle.
 

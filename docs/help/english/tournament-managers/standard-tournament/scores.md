@@ -4,7 +4,7 @@ The **Scores** tab of a competition's page is where its games are entered, corre
 
 ![A block's Scores tab, with scores in use, a withdrawn score and an archived one](images/scores-tab.png)
 
-## Entering a score
+## Entering a score {#entering-a-score}
 
 Press **Add Score**, above the list. The dialog reads as a result is said aloud: the winner and their score, then "beat", then the loser and their score.
 
@@ -22,7 +22,7 @@ Press **Add Game**. The game is added, the dialog says which, and the fields are
 
 What is refused is said beneath the field it is about: a winner or loser not chosen, a score not typed or not beginning with a digit, the same player as both, a loser's score marked as won, or a winner's score behind the loser's. In a knockout, two players who are not drawn to meet are refused above the fields.
 
-## A knockout's draw has to be filled first
+## A knockout's draw has to be filled first {#draw-filled-first}
 
 A knockout is played only once every place in its draw holds a player or a bye. Until then, Add Score explains why scores cannot be added rather than opening the dialog.
 
@@ -32,7 +32,7 @@ A knockout is played only once every place in its draw holds a player or a bye. 
 
 The scores in use are listed in the order they were entered, oldest first, so that the list reads as the competition was played. Each says the winner and their score, then the loser and theirs, and offers **Edit** and **Archive**.
 
-## Correcting a score
+## Correcting a score {#correcting-a-score}
 
 **Edit** opens the same dialog on that score, titled Edit Score, with its players chosen and its scores as they were typed. Press **Save** to keep the correction and close the dialog.
 

@@ -12,7 +12,7 @@ Bo die lys bied 'n aftreklys elke speler van die toernooi aan wat nie reeds in d
 
 Geargiveerde spelers van die toernooi word nie aangebied nie.
 
-## Byes in 'n uitskakeling
+## Byes in 'n uitskakeling {#byes-in-a-knockout}
 
 'n Uitskakeling word eers gespeel wanneer elke plek in sy rooster gevul is, en die plekke wat sy spelers oorlaat, word met byes gevul. So in 'n uitskakeling bied die aftreklys eers **Bye** aan, voor die spelers, en hou aan om dit aan te bied hoeveel byes ook al bygevoeg word, want 'n rooster kan verskeie nodig hê.
 
@@ -28,7 +28,7 @@ Die volgorde van 'n uitskakeling se spelers is sy rooster. Die eerste twee plekk
 
 Die spelers word in die kompetisie se volgorde gelys, wat die volgorde is waarin 'n uitskakeling getrek word en 'n blok op sy openbare bladsy gelys word. **Op** en **Af** skuif 'n speler een plek.
 
-## Oordrag
+## Oordrag {#carry-forward}
 
 **Dra oor** sê wat 'n speler in 'n kompetisie inbring uit spel wat dit nie aangeteken het nie: die uitslae van 'n vroeëre stadium, of van spelle wat gespeel is voordat die kompetisie hier aangeteken is. Dit word aangebied in 'n blok en 'n Switserse kompetisie, wat 'n ranglys het waarin dit kan tel, en nie in 'n uitskakeling nie.
 
@@ -36,7 +36,7 @@ Die spelers word in die kompetisie se volgorde gelys, wat die volgorde is waarin
 
 Die dialoog vra vir ses tellings: wedstryde gewen en verloor, spelle gewen en verloor, en hoepels vir en teen. Elke telling is opsioneel. 'n Telling wat leeg gelaat word, dra niks oor nie, wat nie dieselfde is as om 0 oor te dra nie, sodat wie dit ook al later verander dit sien soos dit gelaat is. Druk op **Bewaar** om al ses te hou.
 
-## Hoe om 'n speler te verwyder
+## Hoe om 'n speler te verwyder {#removing-a-player}
 
 **Verwyder** haal 'n speler uit wat per ongeluk ingeskryf is. Hulle bly een van die toernooi se spelers, en word weer in die aftreklys aangebied, maar niks van hul plek in die kompetisie word gehou nie, so Verwyder vra eers.
 
@@ -44,7 +44,7 @@ Die dialoog vra vir ses tellings: wedstryde gewen en verloor, spelle gewen en ve
 
 'n Speler wat enige spel in gebruik in die kompetisie het, kan nie verwyder word nie, want die spelle sou dan teen iemand wees wat nie meer daar is nie, en kry nie Verwyder aangebied nie. 'n Speler wie se enigste spelle geargiveer is, kan wel, en hul geargiveerde uitslae gaan saam met hulle.
 
-## Hoe om 'n speler te onttrek
+## Hoe om 'n speler te onttrek {#withdrawing-a-player}
 
 **Trek terug** is vir 'n speler wat niks meer van die kompetisie sal speel nie. Hulle bly daarin, met die spelle wat hulle gespeel het, en word onder **Onttrekte spelers** gelys, ná dié wat nog speel. In 'n uitskakeling gaan hul teenstander in 'n wedstryd wat nog nie beslis is nie, deur.
 

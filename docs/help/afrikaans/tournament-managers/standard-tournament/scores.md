@@ -4,7 +4,7 @@ Die **Uitslae**-oortjie van 'n kompetisie se bladsy is waar sy spelle ingevoer, 
 
 !['n Blok se Uitslae-oortjie, met uitslae in gebruik, 'n onttrekte uitslag en 'n geargiveerde een](images/scores-tab.png)
 
-## Hoe om 'n uitslag in te voer
+## Hoe om 'n uitslag in te voer {#entering-a-score}
 
 Druk op **Voeg uitslag by**, bo die lys. Die dialoog lees soos 'n uitslag hardop gesê word: die wenner en hul punte, dan "het gewen teen", dan die verloorder en hul punte.
 
@@ -22,7 +22,7 @@ Druk op **Voeg spel by**. Die spel word bygevoeg, die dialoog sê watter, en die
 
 Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verloorder wat nie gekies is nie, punte wat nie getik is nie of nie met 'n syfer begin nie, dieselfde speler as albei, 'n verloorder se punte wat as gewen gemerk is, of 'n wenner se punte wat agter die verloorder s'n is. In 'n uitskakeling word twee spelers wat nie getrek is om teen mekaar te speel nie, bo die velde geweier.
 
-## 'n Uitskakeling se rooster moet eers gevul wees
+## 'n Uitskakeling se rooster moet eers gevul wees {#draw-filled-first}
 
 'n Uitskakeling word eers gespeel wanneer elke plek in sy rooster 'n speler of 'n bye het. Tot dan verduidelik Voeg uitslag by hoekom uitslae nie bygevoeg kan word nie, eerder as om die dialoog oop te maak.
 
@@ -32,7 +32,7 @@ Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verlo
 
 Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, oudste eerste, sodat die lys lees soos die kompetisie gespeel is. Elkeen sê die wenner en hul punte, dan die verloorder en hulle s'n, en bied **Wysig** en **Argiveer** aan.
 
-## Hoe om 'n uitslag reg te stel
+## Hoe om 'n uitslag reg te stel {#correcting-a-score}
 
 **Wysig** maak dieselfde dialoog op daardie uitslag oop, met die titel Wysig uitslag, met sy spelers gekies en sy punte soos hulle getik is. Druk op **Bewaar** om die regstelling te hou en die dialoog toe te maak.
 

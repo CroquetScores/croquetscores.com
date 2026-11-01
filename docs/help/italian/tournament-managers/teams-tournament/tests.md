@@ -12,7 +12,7 @@ Un test è tra due squadre in uso, quindi finché il torneo ne ha meno di due la
 
 ![La scheda Test prima che ci siano due squadre](images/tests-tab-two-teams-needed.png)
 
-## Aggiungere un test
+## Aggiungere un test {#adding-a-test}
 
 Premi **Aggiungi test**, sopra l'elenco. Si apre una finestra di dialogo sopra la pagina, che si legge nell'ordine in cui un test si dice a voce.
 
@@ -34,7 +34,7 @@ Premi **Aggiungi**. Il test viene aggiunto, la finestra dice quale con il suo no
 
 ![La finestra dopo che un test è stato aggiunto](images/add-test-dialog-added.png)
 
-## Modificare un test
+## Modificare un test {#changing-a-test}
 
 **Modifica** apre la stessa finestra sul test, intitolata Modifica test, già compilata com'è il test. Premi **Salva** per conservare la modifica.
 

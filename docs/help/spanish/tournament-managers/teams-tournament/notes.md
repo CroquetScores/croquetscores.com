@@ -24,7 +24,7 @@ Pulsa **Añadir**. La nota se guarda, la lista vuelve con ella al principio, y e
 
 Pulsa el título de una nota, o su **Editar**, para abrir el panel sobre esa nota. Pulsa **Guardar** para guardar el cambio. Una nota editada después de que un lector la leyera se le marca de nuevo.
 
-## Eliminar una nota
+## Eliminar una nota {#deleting-a-note}
 
 Una nota que ya no vale se elimina. Una nota eliminada desaparece para siempre, así que **Eliminar** pregunta antes.
 

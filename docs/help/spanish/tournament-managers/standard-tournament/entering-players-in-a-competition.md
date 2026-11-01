@@ -12,7 +12,7 @@ Encima de la lista, una lista desplegable ofrece a todos los jugadores del torne
 
 Los jugadores archivados del torneo no se ofrecen.
 
-## Byes en una eliminatoria
+## Byes en una eliminatoria {#byes-in-a-knockout}
 
 Una eliminatoria se juega solo cuando todas las plazas de su cuadro están ocupadas, y las plazas que dejan libres sus jugadores se rellenan con byes. Por eso en una eliminatoria el desplegable ofrece **Bye** primero, antes que los jugadores, y sigue ofreciéndolo por muchos byes que se añadan, porque un cuadro puede necesitar varios.
 
@@ -28,7 +28,7 @@ El orden de los jugadores de una eliminatoria es su cuadro. Las dos primeras pla
 
 Los jugadores se listan en el orden de la competición, que es el orden en que se sortea una eliminatoria y en que se lista un grupo en su página pública. **Subir** y **Bajar** mueven a un jugador un puesto.
 
-## Traslado
+## Traslado {#carry-forward}
 
 **Trasladar** dice lo que un jugador trae a una competición de partidas que no se anotaron aquí: los resultados de una fase anterior, o de partidas jugadas antes de que la competición se anotara en este sitio. Se ofrece en un grupo y en un suizo, que tienen clasificación en la que contarlo, y no en una eliminatoria.
 
@@ -36,7 +36,7 @@ Los jugadores se listan en el orden de la competición, que es el orden en que s
 
 El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y perdidas, y aros a favor y en contra. Todas son opcionales. Una cuenta dejada vacía no arrastra nada, que no es lo mismo que arrastrar 0, de modo que quien la cambie después la vea tal como se dejó. Pulsa **Guardar** para guardar las seis.
 
-## Quitar a un jugador
+## Quitar a un jugador {#removing-a-player}
 
 **Quitar** saca a un jugador inscrito por error. Sigue siendo uno de los jugadores del torneo, y vuelve a ofrecerse en el desplegable, pero no se guarda nada de su puesto en la competición, así que Quitar pregunta antes.
 
@@ -44,7 +44,7 @@ El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y p
 
 Un jugador que tiene alguna partida en uso en la competición no puede quitarse, porque las partidas quedarían contra alguien que ya no está, y no se le ofrece Quitar. Un jugador cuyas únicas partidas están archivadas sí puede, y sus resultados archivados se van con él.
 
-## Retirar a un jugador
+## Retirar a un jugador {#withdrawing-a-player}
 
 **Retirar** es para un jugador que no va a jugar más en la competición. Sigue en ella, con las partidas que ha jugado, y se lista bajo **Jugadores retirados** después de los que siguen jugando. En una eliminatoria, su rival en un partido aún no decidido pasa a la siguiente ronda.
 

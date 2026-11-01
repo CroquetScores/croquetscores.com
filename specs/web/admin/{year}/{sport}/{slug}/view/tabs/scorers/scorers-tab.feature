@@ -383,3 +383,14 @@ Feature: The scorers tab of a tournament's page
       Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
       When the scorers of "Spring Open" are opened
       Then the page is no wider than the window
+
+  Rule: A help icon leads to the help for scorers
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The question asked before removing a scorer leads to the section on scorers
+      Given "organiser@example.com" has made "someone@example.com" a scorer of "Spring Open"
+      And the scorers of "Spring Open" are open
+      When "Remove" is pressed on the scorer "Sam Someone"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/managers-and-scorers#scorers"

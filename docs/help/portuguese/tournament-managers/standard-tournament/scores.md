@@ -4,7 +4,7 @@ A aba **Resultados** da página de uma competição é onde os seus jogos são i
 
 ![A aba Resultados de um grupo, com resultados em uso, um anulado e um arquivado](images/scores-tab.png)
 
-## Inserir um resultado
+## Inserir um resultado {#entering-a-score}
 
 Pressione **Adicionar resultado**, acima da lista. O diálogo se lê como um resultado se diz em voz alta: o vencedor e o seu resultado, depois "venceu", depois o perdedor e o seu resultado.
 
@@ -22,7 +22,7 @@ Pressione **Adicionar jogo**. O jogo é adicionado, o diálogo diz qual, e os ca
 
 O que é recusado é dito abaixo do campo a que se refere: um vencedor ou perdedor não escolhido, um resultado não digitado ou que não começa com um dígito, o mesmo jogador nos dois lados, um resultado de perdedor marcado como ganho, ou um resultado de vencedor menor que o do perdedor. Em um mata-mata, dois jogadores que não estão sorteados para se enfrentar são recusados acima dos campos.
 
-## A chave de um mata-mata precisa estar preenchida antes
+## A chave de um mata-mata precisa estar preenchida antes {#draw-filled-first}
 
 Um mata-mata só é disputada depois que todas as vagas da sua chave têm um jogador ou um bye. Até então, Adicionar resultado explica por que não é possível adicionar resultados, em vez de abrir o diálogo.
 
@@ -32,7 +32,7 @@ Um mata-mata só é disputada depois que todas as vagas da sua chave têm um jog
 
 Os resultados em uso são listados na ordem em que foram inseridos, o mais antigo primeiro, para que a lista se leia como a competição foi disputada. Cada um diz o vencedor e o seu resultado, depois o perdedor e o dele, e oferece **Editar** e **Arquivar**.
 
-## Corrigir um resultado
+## Corrigir um resultado {#correcting-a-score}
 
 **Editar** abre o mesmo diálogo nesse resultado, com o título Editar resultado, com os seus jogadores escolhidos e os seus resultados como foram digitados. Pressione **Salvar** para guardar a correção e fechar o diálogo.
 

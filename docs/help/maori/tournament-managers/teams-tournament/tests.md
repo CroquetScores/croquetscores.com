@@ -12,7 +12,7 @@ He whakamātau i waenga i ngā tīma e rua e whakamahia ana, nō reira ina iti i
 
 ![Te ripa Whakamātau i mua i te rua o ngā tīma](images/tests-tab-two-teams-needed.png)
 
-## Te tāpiri i tētahi whakamātau
+## Te tāpiri i tētahi whakamātau {#adding-a-test}
 
 Pēhia **Tāpiri whakamātau**, i runga i te rārangi. Ka tuwhera tētahi pouaka kōrero i runga i te whārangi, e pānuitia ana i te raupapa e kī reo nui ai tētahi whakamātau.
 
@@ -34,7 +34,7 @@ Pēhia **Tāpiri**. Ka tāpiritia te whakamātau, ka kī te pouaka kōrero ko t�
 
 ![Te pouaka kōrero i muri i te tāpiri o tētahi whakamātau](images/add-test-dialog-added.png)
 
-## Te whakarerekē i tētahi whakamātau
+## Te whakarerekē i tētahi whakamātau {#changing-a-test}
 
 Ka whakatuwheratia e **Whakatika** te pouaka kōrero ōrite ki runga i te whakamātau, ko Whakatika whakamātau tōna taitara, ka tīmata pēnei i te whakamātau. Pēhia **Penapena** hei penapena i te huringa.
 

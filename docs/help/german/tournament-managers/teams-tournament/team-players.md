@@ -8,7 +8,7 @@ Die dunkelgrüne Leiste auf der Seite einer Mannschaft führt zum Turnier und zu
 
 Ein Spieler einer Mannschaft gehört allein zu dieser Mannschaft, vertritt die Mannschaft und führt ihre Flagge statt einer eigenen. Dieselbe Person, die für zwei Mannschaften oder in zwei Turnieren spielt, ist in jedem ein eigener Spieler.
 
-## Einen Spieler hinzufügen
+## Einen Spieler hinzufügen {#adding-a-player}
 
 Drücken Sie **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite.
 
@@ -22,7 +22,7 @@ Ein Spieler heißt nie „Bye“, das englische Wort für Freilos: Ein Name, des
 
 Drücken Sie **Hinzufügen**. Der Spieler wird hinzugefügt, der Dialog sagt es, und seine Felder werden für den nächsten geleert, mit dem Cursor wieder im Namen. Geben Sie so die ganze Mannschaft ein und drücken Sie dann **Abbrechen**, um den Dialog zu schließen.
 
-## Einen Spieler korrigieren
+## Einen Spieler korrigieren {#correcting-a-player}
 
 Drücken Sie den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Drücken Sie **Speichern**, um die Änderung zu speichern. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte, außer im American 6 Wicket, wo der Name eines Spielers in der Weltrangliste immer sein Name ist.
 

@@ -1181,3 +1181,19 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "Add Score" is pressed
       When "Maximilian Alexander Fitzwilliam-Worthington" is chosen as the "Winner"
       Then the score dialog is no wider than the window
+
+  Rule: A help icon leads to the help for entering or correcting a score
+
+    The help icon is in the dialog's title bar (`players.feature`), and opens
+    the section of the help for what the dialog does in another tab.
+
+    Scenario: The dialog to add a score leads to the section on entering a score
+      Given the scores of "Block A" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/scores#entering-a-score"
+
+    Scenario: The dialog to correct a score leads to the section on correcting a score
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the scores of "Block A" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the help icon leads to "/help/tournament-managers/standard-tournament/scores#correcting-a-score"

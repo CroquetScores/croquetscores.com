@@ -14,6 +14,7 @@ import {
   type CompetitionAsItIs,
 } from "../../../view/modal-dialogs/competition/competition.js";
 import { RefusedPage } from "../../../RefusedPage.js";
+import { standardHelp } from "../../../../../../helpAddress.js";
 
 // A competition's page (view.feature beneath the competition): headed by its
 // name, with what there is to run in two tabs, laid out and chosen as the
@@ -184,6 +185,13 @@ export const ViewCompetition = ({
               choose={setChosen}
               wordsFor={(tab) => say(`admin.competitionView.${tab}`)}
               label={say("admin.competitionView.tabs")}
+              helpFor={(tab) =>
+                standardHelp(
+                  tab === "players"
+                    ? "entering-players-in-a-competition"
+                    : "scores",
+                )
+              }
             >
               {chosen === "players" ? (
                 <CompetitionPlayersTab

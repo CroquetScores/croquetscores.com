@@ -2,7 +2,7 @@
 
 Een toernooi heeft toernooileiders, die alles kunnen doen wat ermee gedaan kan worden, en kan scorebijhouders hebben, die zijn scores invoeren en verder niets. Wie het toernooi heeft aangemaakt, is zijn eerste toernooileider.
 
-## Toernooileiders
+## Toernooileiders {#managers}
 
 Het tabblad **Toernooileiders** toont wie het toernooi leidt, in de volgorde waarin ze toernooileider zijn gemaakt, met je eigen naam als de jouwe gemarkeerd. Het is waar een toernooi wordt gedeeld, of overgedragen.
 
@@ -18,7 +18,7 @@ Iemand wordt toernooileider gemaakt via zijn e-mailadres. Typ het in het veld bo
 
 Je kunt jezelf weghalen. De vraag zegt dan wat dat betekent: je verliest je eigen weg terug naar het toernooi, en niemand op de pagina kan het voor je ongedaan maken. Een andere toernooileider kan je opnieuw toernooileider maken.
 
-## Scorebijhouders
+## Scorebijhouders {#scorers}
 
 Het tabblad **Scorebijhouders** is het tabblad Toernooileiders voor scorebijhouders, en werkt op dezelfde manier: een e-mailadres en **Scorebijhouder toevoegen** boven de lijst, en **Verwijderen** bij elke scorebijhouder.
 

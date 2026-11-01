@@ -4,7 +4,7 @@ La pestaña **Equipos** de la página de un torneo es donde sus equipos se añad
 
 ![La pestaña Equipos, con tres equipos y uno archivado](images/teams-tab.png)
 
-## Añadir un equipo
+## Añadir un equipo {#adding-a-team}
 
 Pulsa **Añadir equipo**, encima de la lista. Se abre un diálogo sobre la página.
 
@@ -20,7 +20,7 @@ Pulsa **Añadir**. El equipo se añade, el diálogo lo dice y sus campos se vac�
 
 ![El diálogo después de añadir un equipo](images/add-team-dialog-added.png)
 
-## Corregir un equipo
+## Corregir un equipo {#correcting-a-team}
 
 Pulsa el **Editar** de un equipo para abrir el mismo diálogo sobre ese equipo, titulado Editar equipo. Cambia lo que esté mal y pulsa **Guardar**. Un equipo cuyo nombre corto cambia se llama por el nuevo en todas partes, así que sus tests cambian de nombre con él.
 

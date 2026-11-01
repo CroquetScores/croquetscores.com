@@ -4,7 +4,7 @@ Tab **Timau** tudalen twrnamaint yw lle caiff ei dimau eu hychwanegu, eu cywiro,
 
 ![Y tab Timau, â thri thîm ac un wedi'i archifo](images/teams-tab.png)
 
-## Ychwanegu tîm
+## Ychwanegu tîm {#adding-a-team}
 
 Pwyswch **Ychwanegu tîm**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
@@ -20,7 +20,7 @@ Pwyswch **Ychwanegu**. Caiff y tîm ei ychwanegu, mae'r ddeialog yn dweud hynny,
 
 ![Y ddeialog ar ôl i dîm gael ei ychwanegu](images/add-team-dialog-added.png)
 
-## Cywiro tîm
+## Cywiro tîm {#correcting-a-team}
 
 Pwyswch **Golygu** tîm i agor yr un ddeialog ar y tîm hwnnw, dan y teitl Golygu tîm. Newidiwch beth sydd o'i le a phwyswch **Cadw**. Caiff tîm y mae ei enw byr yn newid ei alw wrth yr un newydd ym mhob man, felly caiff ei brofion eu hailenwi gydag ef.
 

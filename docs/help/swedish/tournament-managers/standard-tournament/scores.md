@@ -4,7 +4,7 @@ Fliken **Resultat** på en tävlings sida är där dess partier skrivs in, rätt
 
 ![Ett blocks flik Resultat, med resultat i bruk, ett tillbakadraget resultat och ett arkiverat](images/scores-tab.png)
 
-## Skriva in ett resultat
+## Skriva in ett resultat {#entering-a-score}
 
 Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
 
@@ -22,7 +22,7 @@ Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, 
 
 Det som inte godtas sägs under det fält det gäller: en vinnare eller förlorare som inte valts, ett resultat som inte skrivits eller inte börjar med en siffra, samma spelare som båda, en förlorares resultat markerat som vunnet, eller en vinnares resultat lägre än förlorarens. I en utslagning godtas inte två spelare som inte är lottade att mötas, och det sägs ovanför fälten.
 
-## En utslagnings lottning måste fyllas först
+## En utslagnings lottning måste fyllas först {#draw-filled-first}
 
 En utslagning spelas först när varje plats i dess lottning har en spelare eller en bye. Till dess förklarar Lägg till resultat varför resultat inte kan läggas till, i stället för att öppna dialogrutan.
 
@@ -32,7 +32,7 @@ En utslagning spelas först när varje plats i dess lottning har en spelare elle
 
 Resultaten i bruk listas i den ordning de skrevs in, äldst först, så att listan läses som tävlingen spelades. Varje resultat säger vinnaren och dennes resultat, sedan förloraren och dennes, och erbjuder **Redigera** och **Arkivera**.
 
-## Rätta ett resultat
+## Rätta ett resultat {#correcting-a-score}
 
 **Redigera** öppnar samma dialogruta på det resultatet, med rubriken Redigera resultat, med dess spelare valda och dess resultat som de skrevs. Tryck på **Spara** för att spara rättelsen och stänga dialogrutan.
 

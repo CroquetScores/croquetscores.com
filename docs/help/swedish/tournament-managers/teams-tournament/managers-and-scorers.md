@@ -2,7 +2,7 @@
 
 En turnering har arrangörer, som kan göra allt som kan göras med den, och kan ha resultatförare, som skriver in dess resultat och inget annat. Den som skapade turneringen är dess första arrangör.
 
-## Arrangörer
+## Arrangörer {#managers}
 
 Fliken **Arrangörer** listar vem som leder turneringen, i den ordning de gjordes till arrangörer, med ditt eget namn markerat som ditt. Det är där en turnering delas, eller lämnas över.
 
@@ -16,7 +16,7 @@ Någon görs till arrangör via sin e-postadress. Skriv in den i fältet ovanfö
 
 Du kan ta bort dig själv. Frågan säger då vad det innebär: du förlorar din egen väg tillbaka till turneringen, och ingen på sidan kan ångra det åt dig. En annan arrangör kan göra dig till arrangör igen.
 
-## Resultatförare
+## Resultatförare {#scorers}
 
 Fliken **Resultatförare** är fliken Arrangörer för resultatförare, och fungerar på samma sätt: en e-postadress och **Lägg till resultatförare** ovanför listan, och **Ta bort** på var och en.
 
