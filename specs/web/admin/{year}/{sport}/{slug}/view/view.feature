@@ -527,3 +527,52 @@ Feature: A tournament's page in the admin
       And "organiser@example.com" has created the tournament "Spring Tests"
       When the page of "Spring Tests" is opened
       Then the tab "Teams" is the one being read
+
+  Rule: Each tab has a help icon at the end of the row that leads to the help for it
+
+    The icon is the round "?" a dialog's title bar has (`players.feature`), and
+    opens the help in another tab so that the page is kept. It follows the tab
+    being read, and leads to the guide for the kind of tournament it is.
+
+    Scenario Outline: Each tab of a Standard tournament leads to its page of the help
+      Given the page of "Spring Open" is open
+      When the tab "<tab>" is chosen
+      Then the tab row's help icon leads to "/help/tournament-managers/standard-tournament/<page>"
+
+      Examples:
+        | tab          | page                  |
+        | Players      | players               |
+        | Competitions | competitions          |
+        | Notes        | notes                 |
+        | Managers     | managers-and-scorers  |
+        | Scorers      | managers-and-scorers  |
+
+    Scenario Outline: Each tab of a tournament played by teams leads to its page of the help
+      Given the tournament "Spring Open" is played in the format "Teams"
+      And the page of "Spring Open" is open
+      When the tab "<tab>" is chosen
+      Then the tab row's help icon leads to "/help/tournament-managers/teams-tournament/<page>"
+
+      Examples:
+        | tab      | page                 |
+        | Teams    | teams                |
+        | Tests    | tests                |
+        | Notes    | notes                |
+        | Managers | managers-and-scorers |
+        | Scorers  | managers-and-scorers |
+
+    Scenario: The help icon opens another tab
+      When the page of "Spring Open" is opened
+      Then the tab row's help icon opens another tab
+
+    Scenario: The help icon is called Help
+      When the page of "Spring Open" is opened
+      Then the tab row has a help icon called "Help"
+
+    Scenario: The help icon is on the row of the tabs
+      When the page of "Spring Open" is opened
+      Then the tab row's help icon is level with the tabs
+
+    Scenario: The tabs are still on one row beside the help icon
+      When the page of "Spring Open" is opened
+      Then the tabs are on one row

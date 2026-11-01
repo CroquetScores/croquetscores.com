@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { HelpLink } from "./HelpLink.js";
 import { say } from "./words.js";
 
 import "./tabControl.css";
@@ -18,6 +19,11 @@ interface Props<Tab extends string> {
   readonly wordsFor: (tab: Tab) => string;
   /** What the row is named for a reader who cannot see it. */
   readonly label: string;
+  /**
+   * Where the help for a tab is, when it has some: a help icon at the end of
+   * the row leads to the help for the tab being read.
+   */
+  readonly helpFor?: (tab: Tab) => string | undefined;
   /** What the tab being read holds. */
   readonly children: ReactNode;
   /** What its tabs' and its panel's ids begin with, so that a tab control in
@@ -31,30 +37,37 @@ export const TabControl = <Tab extends string>({
   choose,
   wordsFor,
   label,
+  helpFor,
   children,
   ids = "tab",
 }: Props<Tab>): React.JSX.Element => {
   const tabPanelId = `${ids}-panel`;
   const tabId = (tab: string): string => `${ids}-${tab}`;
+  const help = helpFor?.(chosen);
   return (
     <div className="tabbed">
-      <div className="tab-control" role="tablist" aria-label={label}>
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            id={tabId(tab)}
-            aria-controls={tabPanelId}
-            aria-selected={tab === chosen}
-            title={say("admin.hover.tab", { name: wordsFor(tab) })}
-            onClick={() => {
-              choose(tab);
-            }}
-          >
-            {wordsFor(tab)}
-          </button>
-        ))}
+      <div className="tab-row">
+        <div className="tab-control" role="tablist" aria-label={label}>
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              id={tabId(tab)}
+              aria-controls={tabPanelId}
+              aria-selected={tab === chosen}
+              title={say("admin.hover.tab", { name: wordsFor(tab) })}
+              onClick={() => {
+                choose(tab);
+              }}
+            >
+              {wordsFor(tab)}
+            </button>
+          ))}
+        </div>
+        {help === undefined ? null : (
+          <HelpLink to={help} className="help-inline" />
+        )}
       </div>
       <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(chosen)}>
         {children}

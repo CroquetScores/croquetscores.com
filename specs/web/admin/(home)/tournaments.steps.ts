@@ -1328,3 +1328,53 @@ Then(
     });
   },
 );
+
+// The help icon ------------------------------------------------------------------
+
+const listHelp = (world: SpecWorld): Locator =>
+  world.browserPage.locator(".tournaments-bar a.dialog-help");
+
+Then(
+  "the list's help icon leads to {string}",
+  async function (this: SpecWorld, address: string) {
+    await listHelp(this).waitFor();
+    assert.equal(await listHelp(this).getAttribute("href"), address);
+  },
+);
+
+Then(
+  "the list's help icon opens another tab",
+  async function (this: SpecWorld) {
+    await listHelp(this).waitFor();
+    assert.equal(await listHelp(this).getAttribute("target"), "_blank");
+  },
+);
+
+Then(
+  "the list has a help icon called {string}",
+  async function (this: SpecWorld, name: string) {
+    assert.equal(
+      await this.browserPage
+        .locator(".tournaments-bar")
+        .getByRole("link", { name, exact: true })
+        .count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the list's help icon is level with {string}",
+  async function (this: SpecWorld, label: string) {
+    await listHelp(this).waitFor();
+    const icon = await listHelp(this).boundingBox();
+    const button = await this.browserPage
+      .locator(".tournaments-bar")
+      .getByRole("link", { name: label, exact: true })
+      .boundingBox();
+    assert.ok(icon !== null && button !== null, "One of them is not drawn.");
+    // On the same row: the icon's middle falls within the button's height.
+    const middle = icon.y + icon.height / 2;
+    assert.ok(middle >= button.y && middle <= button.y + button.height);
+  },
+);

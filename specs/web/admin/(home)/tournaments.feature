@@ -1397,3 +1397,29 @@ Feature: The admin lists the reader's tournaments
       Given "organiser@example.com" has created the tournament "Spring Open"
       When the admin is opened
       Then the name "Spring Open" is at least 44 pixels tall
+
+  Rule: A help icon beside New Tournament leads to the help for the list
+
+    The icon is the round "?" a dialog's title bar has (`players.feature`), and
+    opens the help in another tab so that the list is kept. It is there in
+    every year, and the list's help is the same for all of them.
+
+    Scenario: The help icon leads to the help for the list of tournaments
+      When the admin is opened
+      Then the list's help icon leads to "/help/tournament-managers/standard-tournament/changing-and-archiving"
+
+    Scenario: The help icon is there in a year of its own
+      When the admin for 2025 is opened
+      Then the list's help icon leads to "/help/tournament-managers/standard-tournament/changing-and-archiving"
+
+    Scenario: The help icon opens another tab
+      When the admin is opened
+      Then the list's help icon opens another tab
+
+    Scenario: The help icon is called Help
+      When the admin is opened
+      Then the list has a help icon called "Help"
+
+    Scenario: The help icon is on the row of New Tournament
+      When the admin is opened
+      Then the list's help icon is level with "New Tournament"

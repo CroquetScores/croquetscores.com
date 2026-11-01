@@ -59,3 +59,9 @@
   grid-auto-flow: column;
   gap: var(--space-3);
 }
+
+/* The page's title bar holds the help icon, which is placed against the form's
+   box. */
+.dialog {
+  position: relative;
+}

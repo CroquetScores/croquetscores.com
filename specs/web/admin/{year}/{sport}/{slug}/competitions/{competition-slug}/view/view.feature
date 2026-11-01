@@ -259,3 +259,18 @@ Feature: A competition's page in the admin
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page of the competition "Block A" in "Spring Open" is opened
       Then the tab "Players" is the one being read
+
+  Rule: Each tab has a help icon at the end of the row that leads to the help for it
+
+    As the tournament's page's tabs have (`view.feature` beside the
+    tournament's).
+
+    Scenario Outline: Each tab leads to its page of the help
+      Given the page of the competition "Block A" in "Spring Open" is open
+      When the tab "<tab>" is chosen
+      Then the tab row's help icon leads to "/help/tournament-managers/standard-tournament/<page>"
+
+      Examples:
+        | tab     | page                               |
+        | Players | entering-players-in-a-competition  |
+        | Scores  | scores                             |

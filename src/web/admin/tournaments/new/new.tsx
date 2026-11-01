@@ -6,6 +6,7 @@ import { TournamentForm } from "../TournamentForm.js";
 export const NewTournament = (): React.JSX.Element => (
   <TournamentForm
     title={say("admin.newTournament.title")}
+    helpPage="creating-a-tournament"
     button={say("admin.newTournament.submit")}
     hover={say("admin.hover.dialog.tournament.new")}
     send={(said) =>

@@ -3,6 +3,18 @@
    beneath the row, and the tab being read has a bar along its foot, just above
    that line. Each tab's words keep to one line, and the row is never wider
    than the box: on a window too narrow for every tab, it scrolls sideways. */
+/* The tabs, and beside them the help for the one being read. */
+.tab-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.tab-row > .tab-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .tab-control {
   display: flex;
   flex-wrap: nowrap;

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { HelpLink } from "./HelpLink.js";
+import { standardHelp } from "./helpAddress.js";
 import { inCountryGroups } from "../common/countryOrder.js";
 import { dated } from "../common/dates.js";
 import { say } from "./words.js";
@@ -488,6 +490,13 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   ))}
                 </span>
               ) : null}
+              {/* At the end of the bar, whatever the list holds, since the
+                  help is for the list as a whole. The ordinary kind of
+                  tournament's guide, since the list holds both kinds. */}
+              <HelpLink
+                to={standardHelp("changing-and-archiving")}
+                className="help-inline tournaments-help"
+              />
             </div>
             {hasList ? (
               <form

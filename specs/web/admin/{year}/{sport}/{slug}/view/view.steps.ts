@@ -252,3 +252,96 @@ Then(
     assert.deepEqual(stray, [], "Words in the tabs came from elsewhere.");
   },
 );
+
+// The help icons ------------------------------------------------------------------
+
+// Of the page's title bar, which a form that is a page's purpose has
+// (new.feature), and of the row of tabs.
+const pageHelp = (world: SpecWorld): Locator =>
+  world.browserPage.locator("section.dialog a.dialog-help");
+const rowHelp = (world: SpecWorld): Locator =>
+  world.browserPage.locator(".tab-row a.dialog-help");
+
+Then(
+  "the page has a help icon called {string}",
+  async function (this: SpecWorld, name: string) {
+    assert.equal(
+      await this.browserPage
+        .locator("section.dialog")
+        .getByRole("link", { name, exact: true })
+        .count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the page's help icon leads to {string}",
+  async function (this: SpecWorld, address: string) {
+    await pageHelp(this).waitFor();
+    assert.equal(await pageHelp(this).getAttribute("href"), address);
+  },
+);
+
+Then(
+  "the page's help icon opens another tab",
+  async function (this: SpecWorld) {
+    await pageHelp(this).waitFor();
+    assert.equal(await pageHelp(this).getAttribute("target"), "_blank");
+  },
+);
+
+Then(
+  "the page's help icon is level with the page's title",
+  async function (this: SpecWorld) {
+    await pageHelp(this).waitFor();
+    const icon = await pageHelp(this).boundingBox();
+    const title = await this.browserPage
+      .locator("section.dialog .dialog-title")
+      .boundingBox();
+    assert.ok(icon !== null && title !== null, "One of them is not drawn.");
+    assert.ok(
+      icon.y >= title.y && icon.y + icon.height <= title.y + title.height,
+    );
+  },
+);
+
+Then(
+  "the tab row's help icon leads to {string}",
+  async function (this: SpecWorld, address: string) {
+    await rowHelp(this).waitFor();
+    assert.equal(await rowHelp(this).getAttribute("href"), address);
+  },
+);
+
+Then(
+  "the tab row's help icon opens another tab",
+  async function (this: SpecWorld) {
+    await rowHelp(this).waitFor();
+    assert.equal(await rowHelp(this).getAttribute("target"), "_blank");
+  },
+);
+
+Then(
+  "the tab row has a help icon called {string}",
+  async function (this: SpecWorld, name: string) {
+    assert.equal(
+      await this.browserPage
+        .locator(".tab-row")
+        .getByRole("link", { name, exact: true })
+        .count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the tab row's help icon is level with the tabs",
+  async function (this: SpecWorld) {
+    await rowHelp(this).waitFor();
+    const icon = await rowHelp(this).boundingBox();
+    const bar = await this.browserPage.locator(tabBar).boundingBox();
+    assert.ok(icon !== null && bar !== null, "One of them is not drawn.");
+    assert.ok(icon.y >= bar.y && icon.y + icon.height <= bar.y + bar.height);
+  },
+);

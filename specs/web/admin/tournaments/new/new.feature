@@ -548,3 +548,31 @@ Feature: A new tournament is created in the admin
     Scenario: The button can be pressed with a thumb
       When the new tournament page is opened
       Then "Create Tournament" is at least 44 pixels tall
+
+  Rule: A help icon in the title bar leads to the help for creating a tournament
+
+    The icon is drawn as a dialog's is (`players.feature`), in the title bar,
+    and opens the help in another tab so that what was typed is kept. A
+    tournament played by teams has a guide of its own, so which guide it leads
+    to follows the format chosen.
+
+    Scenario: The help icon is called Help
+      When the new tournament page is opened
+      Then the page has a help icon called "Help"
+
+    Scenario: The help icon is in the title bar
+      When the new tournament page is opened
+      Then the page's help icon is level with the page's title
+
+    Scenario: The help icon opens another tab
+      When the new tournament page is opened
+      Then the page's help icon opens another tab
+
+    Scenario: The help icon leads to the guide for a Standard tournament
+      When the new tournament page is opened
+      Then the page's help icon leads to "/help/tournament-managers/standard-tournament/creating-a-tournament"
+
+    Scenario: The help icon leads to the guide for a tournament played by teams once that format is chosen
+      Given the new tournament page is open
+      When the format "Teams" is chosen
+      Then the page's help icon leads to "/help/tournament-managers/teams-tournament/creating-a-tournament"

@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useId, useRef } from "react";
 
+import { HelpLink } from "./HelpLink.js";
 import { say } from "./words.js";
 import "./modalDialog.css";
 
@@ -157,18 +158,7 @@ export const ModalDialog = ({
       </form>
       {/* After the form, so that the keyboard begins in the form and not on
           the help; drawn in the title bar by its style. */}
-      {help === undefined ? null : (
-        <a
-          className="dialog-help"
-          href={help}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={say("admin.dialog.help")}
-          aria-label={say("admin.dialog.help")}
-        >
-          ?
-        </a>
-      )}
+      {help === undefined ? null : <HelpLink to={help} />}
     </dialog>
   );
 };

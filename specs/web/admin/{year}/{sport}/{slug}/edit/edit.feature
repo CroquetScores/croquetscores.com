@@ -329,3 +329,22 @@ Feature: A tournament is changed in the admin
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page to edit "Spring Open" is opened
       Then "Name" still says "Spring Open"
+
+  Rule: A help icon in the title bar leads to the help for changing a tournament
+
+    The icon is the one the form has when it creates a tournament
+    (`new.feature`), and leads to the guide for the kind of tournament being
+    changed.
+
+    Scenario: The help icon leads to the guide for a Standard tournament
+      When the page to edit "Spring Open" is opened
+      Then the page's help icon leads to "/help/tournament-managers/standard-tournament/changing-and-archiving"
+
+    Scenario: The help icon leads to the guide for a tournament played by teams
+      Given the tournament "Spring Open" is played in the format "Teams"
+      When the page to edit "Spring Open" is opened
+      Then the page's help icon leads to "/help/tournament-managers/teams-tournament/changing-and-archiving"
+
+    Scenario: The help icon is in the title bar
+      When the page to edit "Spring Open" is opened
+      Then the page's help icon is level with the page's title

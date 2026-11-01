@@ -16,6 +16,7 @@ import { TestsTab } from "./tabs/tests/tests.js";
 import { refusalOf } from "../../../../api.js";
 import { RefusedPage } from "../RefusedPage.js";
 import { Pencil } from "../../../../Pencil.js";
+import { standardHelp, teamsHelp } from "../../../../helpAddress.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
 // to run in six tabs beneath it, and the section bar leading to its
@@ -79,6 +80,20 @@ const teamTabs = [
   "rankings",
 ] as const;
 type Tab = (typeof standardTabs)[number] | (typeof teamTabs)[number];
+
+// The page of the help for each tab. Managers and scorers share a page, and
+// the rankings and notes pages are the same in name for both kinds of
+// tournament, though each kind has a guide of its own.
+const helpPageOf: Readonly<Record<Tab, string>> = {
+  players: "players",
+  competitions: "competitions",
+  teams: "teams",
+  tests: "tests",
+  notes: "notes",
+  managers: "managers-and-scorers",
+  scorers: "managers-and-scorers",
+  rankings: "rankings",
+};
 
 // What a reader is offered: every tab to a manager, and the competitions
 // alone to a scorer, since scores are entered in a tournament's competitions
@@ -208,6 +223,11 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
               choose={setChosen}
               wordsFor={(tab) => say(`admin.view.${tab}`)}
               label={say("admin.view.tabs")}
+              helpFor={(tab) =>
+                (asked.tournament.playedByTeams ? teamsHelp : standardHelp)(
+                  helpPageOf[tab],
+                )
+              }
             >
               {chosen === "players" ? (
                 <PlayersTab
