@@ -440,6 +440,18 @@ export const korean: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "기권",
     "block.losses": "패",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "동률은 게임 득실차, 후프 득실차, 상대 전적 순으로 가려요.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "동률은 후프 득실차, 상대 전적 순으로 가려요.",
+    "block.tieBreak.whoBeatWho": "동률은 상대 전적으로 가려요.",
+    "block.tieBreak.other": "알려진 동률 처리 방법이 없어요.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "보기",
     "competition.view.grid": "대진표",
@@ -448,7 +460,7 @@ export const korean: Language = {
     "competition.print": "인쇄",
     "competition.playedTo": "{hoops} 후프로 진행",
     "blockSummary.ranking":
-      "매치 승률 순으로, 같으면 후프 득실차 순으로 순위를 매겼어요. 대회 자체 규정에 따라 순위가 다를 수 있어요.",
+      "매치 승률 순으로 순위를 매겼어요. 대회 자체 규정에 따라 순위가 다를 수 있어요.",
     "orderOfPlay.none": "아직 진행된 경기가 없어요.",
     "orderOfPlay.column.game": "경기",
     "orderOfPlay.column.date": "날짜",
@@ -716,6 +728,11 @@ export const korean: Language = {
     "admin.competition.kind": "종류",
     "admin.competition.bestOf": "다승제(판 수)",
     "admin.competition.rounds": "라운드 수",
+    "admin.competition.tieBreaks": "동률 처리",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "게임 득실차, 그다음 후프 득실차, 그다음 상대 전적",
+    "admin.competition.tieBreak.who-beat-who": "상대 전적",
+    "admin.competition.tieBreak.other": "기타",
     "admin.competition.places": "자리 수",
     "admin.competition.round": "{number}라운드",
     "admin.competition.bestOfs": "라운드별 판 수",

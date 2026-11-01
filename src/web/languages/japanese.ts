@@ -424,6 +424,18 @@ export const japanese: Language = {
     // A game withdrawn.
     "block.gameWithdrawn": "棄権",
     "block.losses": "負け",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "同率の場合は、ゲーム差、フープ差、直接対決の順で決めます。",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "同率の場合は、フープ差、直接対決の順で決めます。",
+    "block.tieBreak.whoBeatWho": "同率の場合は、直接対決で決めます。",
+    "block.tieBreak.other": "同率を決める方法は定められていません。",
     // The three views of a block, offered beneath its heading.
     "competition.views": "表示",
     "competition.view.grid": "対戦表",
@@ -432,7 +444,7 @@ export const japanese: Language = {
     "competition.print": "印刷",
     "competition.playedTo": "{hoops} ゲートまで",
     "blockSummary.ranking":
-      "試合の勝率、次にフープ差の順に並べています。大会独自の規定では、選手の順位が異なる場合があります。",
+      "試合の勝率の順に並べています。大会独自の規定では、選手の順位が異なる場合があります。",
     "orderOfPlay.none": "まだゲームは行われていません。",
     "orderOfPlay.column.game": "試合",
     "orderOfPlay.column.date": "日付",
@@ -696,6 +708,11 @@ export const japanese: Language = {
     "admin.competition.kind": "種類",
     "admin.competition.bestOf": "先取ゲーム数",
     "admin.competition.rounds": "ラウンド数",
+    "admin.competition.tieBreaks": "同率の決め方",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "ゲーム差、次にフープ差、次に直接対決",
+    "admin.competition.tieBreak.who-beat-who": "直接対決",
+    "admin.competition.tieBreak.other": "その他",
     "admin.competition.places": "枠数",
     "admin.competition.round": "第{number}ラウンド",
     "admin.competition.bestOfs": "各ラウンドの先取ゲーム数",

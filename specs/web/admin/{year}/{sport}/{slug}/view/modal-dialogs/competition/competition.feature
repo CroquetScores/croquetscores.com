@@ -350,6 +350,74 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Save" is pressed
       Then the competition "Block A" of "Spring Open" is played in 3 rounds
 
+  Rule: A block asks how its players level on matches won are told apart
+
+    A block's players level on the share of matches they have won are told
+    apart by its tie break (`TieBreak.feature`), which differs from one
+    tournament's regulations to another's. The dialog asks for it under "Tie
+    Breaks", as a choice of the three there are, beginning on net games then
+    net hoops then who beat who, which is how blocks were told apart before
+    this could be said. A Swiss and a knockout do not ask.
+
+    Scenario: A block asks for the tie break
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the competition dialog asks for "Tie Breaks"
+
+    Scenario: A block begins on net games then net hoops then who beat who
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the tie break chosen is "Net games then net hoops then who beat who"
+
+    Scenario Outline: The tie breaks are offered
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the tie break "<tie break>" is offered
+
+      Examples:
+        | tie break                                  |
+        | Net games then net hoops then who beat who |
+        | Who beat who                               |
+        | Other                                      |
+
+    Scenario Outline: A Swiss and a knockout do not ask for the tie break
+      Given "Add Competition" is pressed
+      When the kind "<kind>" is chosen
+      Then the competition dialog does not ask for "Tie Breaks"
+
+      Examples:
+        | kind     |
+        | Swiss    |
+        | Knockout |
+
+    Scenario: A block added goes by net games then net hoops then who beat who when nothing else is chosen
+      Given "Add Competition" is pressed
+      And "Block A" is typed as the "Name"
+      When "Add" is pressed
+      Then the competition "Block A" of "Spring Open" goes by the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario: A block added goes by the tie break that was chosen
+      Given "Add Competition" is pressed
+      And "Block A" is typed as the "Name"
+      And the tie break "Who beat who" is chosen
+      When "Add" is pressed
+      Then the competition "Block A" of "Spring Open" goes by the tie break "who-beat-who"
+
+    Scenario: A block's tie break begins as the block's
+      Given the block is to go by the tie break "other"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the tie break chosen is "Other"
+
+    Scenario: A block's tie break changed is kept
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the tie break "Who beat who" is chosen
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" goes by the tie break "who-beat-who"
+
   Rule: A block and a Swiss ask what each match is the best of
 
     Scenario Outline: A block and a Swiss ask for their name and what each match is the best of

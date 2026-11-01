@@ -447,6 +447,19 @@ export const portuguese: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "desistência",
     "block.losses": "Derrotas",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Os desempates são decididos pelo saldo de jogos, depois pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Os desempates são decididos pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.whoBeatWho":
+      "Os desempates são decididos por quem venceu quem.",
+    "block.tieBreak.other": "Não há método de desempate conhecido.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Visualizações",
     "competition.view.grid": "Grade",
@@ -455,7 +468,7 @@ export const portuguese: Language = {
     "competition.print": "Imprimir",
     "competition.playedTo": "Jogado a {hoops} arcos",
     "blockSummary.ranking":
-      "Classificados pela proporção de partidas vencidas e, depois, pelo saldo de arcos. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
+      "Classificados pela proporção de partidas vencidas. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",
     "orderOfPlay.column.game": "Jogo",
     "orderOfPlay.column.date": "Data",
@@ -733,6 +746,11 @@ export const portuguese: Language = {
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Melhor de",
     "admin.competition.rounds": "Rodadas",
+    "admin.competition.tieBreaks": "Critérios de desempate",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Saldo de jogos, depois saldo de arcos, depois quem venceu quem",
+    "admin.competition.tieBreak.who-beat-who": "Quem venceu quem",
+    "admin.competition.tieBreak.other": "Outro",
     "admin.competition.places": "Vagas",
     "admin.competition.round": "Rodada {number}",
     "admin.competition.bestOfs": "Melhor de, por fase",

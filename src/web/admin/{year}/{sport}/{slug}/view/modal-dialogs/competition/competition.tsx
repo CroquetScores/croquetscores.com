@@ -31,6 +31,15 @@ const kinds: readonly Kind[] = ["block", "knockout", "swiss"];
 // other could not be drawn, so is not offered to be refused.
 const placesOffered = [2, 4, 8, 16, 32, 64, 128] as const;
 
+// The ways a block's players level on matches won can be told apart, by code,
+// in the order they are offered and the first being what a block goes by
+// unless it is told otherwise (TieBreak.ts).
+const tieBreaksOffered = [
+  "net-games-net-hoops-who-beat-who",
+  "who-beat-who",
+  "other",
+] as const;
+
 /** A competition as it is, when one is being changed. */
 export type CompetitionAsItIs = {
   readonly id: string;
@@ -44,6 +53,8 @@ export type CompetitionAsItIs = {
       readonly kind: "block";
       readonly bestOf: number;
       readonly rounds: number;
+      /** How its players level on matches won are told apart, by code. */
+      readonly tieBreak: string;
     }
   | { readonly kind: "swiss"; readonly bestOf: number }
   | {
@@ -89,6 +100,7 @@ const fieldOf = (
   | "rounds"
   | "playedIn"
   | "maximumHoops"
+  | "tieBreak"
   | undefined =>
   code === "Tournament.MaximumHoopsInvalid"
     ? "maximumHoops"
@@ -101,11 +113,13 @@ const fieldOf = (
           : "bestOf"
         : code.startsWith("Rounds.")
           ? "playedIn"
-          : code === "KnockoutDraw.EvenBestOf"
-            ? "rounds"
-            : code.startsWith("KnockoutDraw.")
-              ? "places"
-              : undefined;
+          : code.startsWith("TieBreak.")
+            ? "tieBreak"
+            : code === "KnockoutDraw.EvenBestOf"
+              ? "rounds"
+              : code.startsWith("KnockoutDraw.")
+                ? "places"
+                : undefined;
 
 // The rules of a round's best-of that what was typed in it breaks, so that a
 // refusal of the rounds is said beside the rounds that earned it.
@@ -154,6 +168,11 @@ export const CompetitionDialog = ({
   // How many rounds a block is played in, a field of a block alone.
   const [playedIn, setPlayedIn] = useState(
     competition?.kind === "block" ? String(competition.rounds) : "1",
+  );
+  // How a block's players level on matches won are told apart, a field of a
+  // block alone.
+  const [tieBreak, setTieBreak] = useState<string>(
+    competition?.kind === "block" ? competition.tieBreak : tieBreaksOffered[0],
   );
   const [places, setPlaces] = useState(
     competition?.kind === "knockout" ? competition.places : 8,
@@ -247,6 +266,7 @@ export const CompetitionDialog = ({
                     name,
                     bestOf: typedNumber(bestOf),
                     rounds: typedNumber(playedIn),
+                    tieBreak,
                     ...rules.said,
                   }
                 : {
@@ -527,6 +547,30 @@ export const CompetitionDialog = ({
                       setPlayedIn(event.target.value);
                     }}
                   />
+                )}
+              </Field>
+            ) : null}
+            {kind === "block" ? (
+              <Field
+                name="tie-break"
+                label={say("admin.competition.tieBreaks")}
+                refused={refusedFor("tieBreak")}
+                lifted
+              >
+                {(tied) => (
+                  <select
+                    {...tied}
+                    value={tieBreak}
+                    onChange={(event) => {
+                      setTieBreak(event.target.value);
+                    }}
+                  >
+                    {tieBreaksOffered.map((offered) => (
+                      <option key={offered} value={offered}>
+                        {say(`admin.competition.tieBreak.${offered}`)}
+                      </option>
+                    ))}
+                  </select>
                 )}
               </Field>
             ) : null}

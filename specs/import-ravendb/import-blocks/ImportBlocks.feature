@@ -34,6 +34,11 @@ Feature: Importing the old sites' blocks
       When the competition is imported
       Then the competition kept for "blocks/30" on "croquetscores.com" is a block
 
+    Scenario: A block goes by net games then net hoops then who beat who
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      When the competition is imported
+      Then the competition kept for "blocks/30" on "croquetscores.com" goes by the tie break "net-games-net-hoops-who-beat-who"
+
     Scenario: A block's matches are the best of what they were
       Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
       And the block's matches are the best of 3

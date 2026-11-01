@@ -14,11 +14,13 @@ Press **Add Competition**, above the list. A dialog opens over the page, asking 
 
 ### A block
 
-A block asks what each match is the **best of**, and how many **rounds** it is played in.
+A block asks what each match is the **best of**, how many **rounds** it is played in, and how its players level on matches won are told apart by its **Tie Breaks**.
 
 **Best of** begins on 1. The best of 3 is won by whoever wins two games. It may be an even number, since in a block a player is ranked by the games they win, and a match of two games shared one each is a result like any other.
 
 **Rounds** is how many times each pair of players in the block meet, with a match in each round. It begins on 1, and 1 is almost always what a block wants: every player plays every other once. Raise it only for a block in which they meet again, such as a double round robin, where 2 has each pair play two matches.
+
+**Tie Breaks** is how players who have won the same share of their matches are told apart. There are three ways, and blocks of one tournament can use different ones, since regulations differ. **Net games then net hoops then who beat who** is how blocks have always been ranked, and is where a new block begins: players level on matches won are told apart by their net games, those still level by their net hoops, and those still level by who beat who among them. Where each match is a single game, net games are left out. **Who beat who** looks only at the matches the players level played against one another. **Other** is for regulations the site does not know, and tells nobody apart. Players who cannot be told apart share a place, shown as =2, and the page says beneath the grid how players level are told apart.
 
 ![The Add Competition dialog for a block](images/add-competition-block.png)
 

@@ -109,6 +109,49 @@ Then(
   },
 );
 
+// Its tie break ------------------------------------------------------------------
+
+const tieBreakOf = (world: SpecWorld): Locator => fieldOf(world, "Tie Breaks");
+
+Given(
+  "the tie break {string} is chosen",
+  async function (this: SpecWorld, tieBreak: string) {
+    await tieBreakOf(this).selectOption({ label: tieBreak });
+  },
+);
+
+Then(
+  "the tie break {string} is offered",
+  async function (this: SpecWorld, tieBreak: string) {
+    await dialogOf(this).waitFor();
+    const offered = (
+      await tieBreakOf(this).locator("option").allInnerTexts()
+    ).map((each) => each.trim());
+    assert.ok(offered.includes(tieBreak), `${tieBreak} is not offered.`);
+  },
+);
+
+Then(
+  "the tie break chosen is {string}",
+  async function (this: SpecWorld, tieBreak: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (
+          await tieBreakOf(this).evaluate(
+            (select) =>
+              (
+                select as unknown as {
+                  selectedOptions: { textContent: string }[];
+                }
+              ).selectedOptions[0]?.textContent ?? "",
+          )
+        ).trim(),
+        tieBreak,
+      );
+    });
+  },
+);
+
 // Its places ----------------------------------------------------------------------
 
 const placesOf = (world: SpecWorld): Locator => fieldOf(world, "Places");
@@ -436,6 +479,20 @@ Then(
     const shape = await shapeOf(this, tournament, name);
     assert.equal(shape.kind, "block", `${name} is a ${shape.kind}.`);
     if (shape.kind === "block") assert.equal(shape.rounds.count, rounds);
+  },
+);
+
+Then(
+  "the competition {string} of {string} goes by the tie break {string}",
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    code: string,
+  ) {
+    const shape = await shapeOf(this, tournament, name);
+    assert.equal(shape.kind, "block", `${name} is a ${shape.kind}.`);
+    if (shape.kind === "block") assert.equal(shape.tieBreak.code, code);
   },
 );
 

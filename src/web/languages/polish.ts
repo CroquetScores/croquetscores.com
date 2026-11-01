@@ -409,6 +409,19 @@ export const polish: Language = {
     "block.withdrawn": "wycofany",
     "block.gameWithdrawn": "wycofana",
     "block.losses": "Przegrane",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Remisy rozstrzygane są według bilansu gier, potem bilansu bramek, potem tego, kto kogo pokonał.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Remisy rozstrzygane są według bilansu bramek, potem tego, kto kogo pokonał.",
+    "block.tieBreak.whoBeatWho":
+      "Remisy rozstrzygane są według tego, kto kogo pokonał.",
+    "block.tieBreak.other": "Nie ma znanej metody rozstrzygania remisów.",
     "competition.views": "Widoki",
     "competition.view.grid": "Siatka",
     "competition.view.summary": "Podsumowanie",
@@ -416,7 +429,7 @@ export const polish: Language = {
     "competition.print": "Drukuj",
     "competition.playedTo": "Gra do {hoops} bramek",
     "blockSummary.ranking":
-      "Kolejność według odsetka wygranych meczów, potem według bilansu bramek. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
+      "Kolejność według odsetka wygranych meczów. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
     "orderOfPlay.none": "Nie rozegrano jeszcze żadnej gry.",
     "orderOfPlay.column.game": "Gra",
     "orderOfPlay.column.date": "Data",
@@ -666,6 +679,11 @@ export const polish: Language = {
     "admin.competition.kind": "Rodzaj",
     "admin.competition.bestOf": "Do wygranych gier",
     "admin.competition.rounds": "Rundy",
+    "admin.competition.tieBreaks": "Rozstrzyganie remisów",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Bilans gier, potem bilans bramek, potem kto kogo pokonał",
+    "admin.competition.tieBreak.who-beat-who": "Kto kogo pokonał",
+    "admin.competition.tieBreak.other": "Inne",
     "admin.competition.places": "Miejsca",
     "admin.competition.round": "Runda {number}",
     "admin.competition.bestOfs": "Do wygranych gier w rundach",

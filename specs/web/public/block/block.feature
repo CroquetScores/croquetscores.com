@@ -42,6 +42,16 @@ Feature: A block's page shows its results as a grid
   heading of more than one word has a word to a line, so that its column is
   no wider than its numbers need.
 
+  The last column is each player's place, headed "#": "1" for the first, and
+  "=2" where others share second, as players do who cannot be told apart
+  (`placingsOfBlock.feature`). A withdrawn player has no place, so theirs is
+  blank. Beneath the grid, where any players are level on the matches they
+  have won, the page says how they are told apart, as the block's tie break
+  has it (`TieBreak.feature`): by net games then net hoops then who beat who,
+  without net games where each match is a single game, or by who beat who
+  alone; or that there is no known way. Where none are level, it says
+  nothing.
+
   The grid is wider than a phone when a block has more than a few players,
   so on a phone the grid scrolls across within the page, and the page itself
   is no wider than the window.
@@ -369,6 +379,70 @@ Feature: A block's page shows its results as a grid
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
       Then the "Net Hoops" of "Alex Another" in the grid are "-9"
+
+  Rule: The last column is each player's place
+
+    Scenario: The last column is headed #
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the place column of the grid is headed "#"
+
+    Scenario: The first player's place is 1
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the place of "Alex Another" in the grid is "1"
+
+    Scenario: The player after is second
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the place of "Sam Someone" in the grid is "2"
+
+    Scenario: A place players share is marked with an equals sign
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the place of "Sam Someone" in the grid is "=1"
+      And the place of "Alex Another" in the grid is "=1"
+
+    Scenario: A withdrawn player's place is blank
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the place of "Alex Another" in the grid is ""
+
+  Rule: Beneath the grid, where players are level on matches won, the page says how they are told apart
+
+    Scenario: Net games then net hoops then who beat who is said in full
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the page says the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
+
+    Scenario: Net games are left out where each match is a single game
+      Given the block is to be the best of 1
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the page says the words for "block.tieBreak.netHoopsWhoBeatWho"
+
+    Scenario: Who beat who alone is said
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the page says the words for "block.tieBreak.whoBeatWho"
+
+    Scenario: That there is no known way is said
+      Given the block is to go by the tie break "other"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the page says the words for "block.tieBreak.other"
+
+    Scenario: Nothing is said where no players are level
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the page does not say the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
 
   Rule: On a phone the grid scrolls across within the page
 

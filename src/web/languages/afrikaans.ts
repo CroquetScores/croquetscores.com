@@ -452,6 +452,19 @@ export const afrikaans: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "onttrek",
     "block.losses": "Verliese",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto spelle, dan netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.whoBeatWho":
+      "Gelykopbrekers word beslis deur wie wie geklop het.",
+    "block.tieBreak.other": "Daar is geen bekende gelykopbreker-metode nie.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Aansigte",
     "competition.view.grid": "Rooster",
@@ -460,7 +473,7 @@ export const afrikaans: Language = {
     "competition.print": "Druk",
     "competition.playedTo": "Gespeel tot {hoops} poorte",
     "blockSummary.ranking":
-      "Gerangskik volgens die aandeel wedstryde gewen, dan volgens netto hoepels. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
+      "Gerangskik volgens die aandeel wedstryde gewen. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",
     "orderOfPlay.column.game": "Wedstryd",
     "orderOfPlay.column.date": "Datum",
@@ -740,6 +753,11 @@ export const afrikaans: Language = {
     "admin.competition.kind": "Soort",
     "admin.competition.bestOf": "Beste van",
     "admin.competition.rounds": "Rondtes",
+    "admin.competition.tieBreaks": "Gelykopbrekers",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Netto spelle dan netto hoepels dan wie wie geklop het",
+    "admin.competition.tieBreak.who-beat-who": "Wie wie geklop het",
+    "admin.competition.tieBreak.other": "Ander",
     "admin.competition.places": "Plekke",
     "admin.competition.round": "Ronde {number}",
     "admin.competition.bestOfs": "Beste-van-getalle",

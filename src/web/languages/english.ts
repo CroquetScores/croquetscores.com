@@ -442,6 +442,18 @@ export const english: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "withdrawn",
     "block.losses": "Losses",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Tie breaks are decided by net games then net hoops then who beat who.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Tie breaks are decided by net hoops then who beat who.",
+    "block.tieBreak.whoBeatWho": "Tie breaks are decided by who beat who.",
+    "block.tieBreak.other": "There is no known tie break method.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Views",
     "competition.view.grid": "Grid",
@@ -450,7 +462,7 @@ export const english: Language = {
     "competition.print": "Print",
     "competition.playedTo": "Played to {hoops} hoops",
     "blockSummary.ranking":
-      "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
+      "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
     "orderOfPlay.column.game": "Game",
     "orderOfPlay.column.date": "Date",
@@ -726,6 +738,11 @@ export const english: Language = {
     "admin.competition.kind": "Kind",
     "admin.competition.bestOf": "Best of",
     "admin.competition.rounds": "Rounds",
+    "admin.competition.tieBreaks": "Tie Breaks",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Net games then net hoops then who beat who",
+    "admin.competition.tieBreak.who-beat-who": "Who beat who",
+    "admin.competition.tieBreak.other": "Other",
     "admin.competition.places": "Places",
     "admin.competition.round": "Round {number}",
     "admin.competition.bestOfs": "Best ofs",

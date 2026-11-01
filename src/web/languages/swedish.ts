@@ -449,6 +449,19 @@ export const swedish: Language = {
     // spelare.
     "block.gameWithdrawn": "utgått",
     "block.losses": "Förluster",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Lika resultat avgörs av nettopartier, sedan nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Lika resultat avgörs av nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.whoBeatWho": "Lika resultat avgörs av vem som slog vem.",
+    "block.tieBreak.other":
+      "Det finns ingen känd metod för att avgöra lika resultat.",
     // Ett blocks tre vyer, som erbjuds under rubriken.
     "competition.views": "Vyer",
     "competition.view.grid": "Rutnät",
@@ -457,7 +470,7 @@ export const swedish: Language = {
     "competition.print": "Skriv ut",
     "competition.playedTo": "Spelas till {hoops} bågar",
     "blockSummary.ranking":
-      "Rankad efter andelen vunna matcher, därefter efter nettobågar. En turnerings egna regler kan placera spelarna annorlunda.",
+      "Rankad efter andelen vunna matcher. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",
     "orderOfPlay.column.game": "Match",
     "orderOfPlay.column.date": "Datum",
@@ -739,6 +752,11 @@ export const swedish: Language = {
     "admin.competition.kind": "Slag",
     "admin.competition.bestOf": "Bäst av",
     "admin.competition.rounds": "Ronder",
+    "admin.competition.tieBreaks": "Särskiljning",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Nettopartier, sedan nettobågar, sedan vem som slog vem",
+    "admin.competition.tieBreak.who-beat-who": "Vem som slog vem",
+    "admin.competition.tieBreak.other": "Annat",
     "admin.competition.places": "Platser",
     "admin.competition.round": "Rond {number}",
     "admin.competition.bestOfs": "Bäst av per rond",

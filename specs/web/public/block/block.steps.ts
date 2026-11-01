@@ -301,6 +301,30 @@ Then(
   },
 );
 
+// Its places ---------------------------------------------------------------------
+
+Then(
+  "the place column of the grid is headed {string}",
+  async function (this: SpecWorld, heading: string) {
+    assert.equal(
+      await headingOf(
+        gridOf(this).locator("thead .block-grid-placing-heading"),
+      ),
+      heading,
+    );
+  },
+);
+
+Then(
+  "the place of {string} in the grid is {string}",
+  async function (this: SpecWorld, name: string, place: string) {
+    assert.equal(
+      await said(rowOf(this, name).locator(".block-grid-placing")),
+      place,
+    );
+  },
+);
+
 // Its totals ---------------------------------------------------------------------
 
 Then(

@@ -453,6 +453,19 @@ export const french: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "retirée",
     "block.losses": "Défaites",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Les égalités sont départagées par la différence de parties, puis la différence d'arceaux, puis qui a battu qui.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Les égalités sont départagées par la différence d'arceaux, puis qui a battu qui.",
+    "block.tieBreak.whoBeatWho":
+      "Les égalités sont départagées par qui a battu qui.",
+    "block.tieBreak.other": "Aucune méthode de départage connue.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Vues",
     "competition.view.grid": "Grille",
@@ -461,7 +474,7 @@ export const french: Language = {
     "competition.print": "Imprimer",
     "competition.playedTo": "Joué en {hoops} arceaux",
     "blockSummary.ranking":
-      "Classement selon la part de matchs gagnés, puis selon la différence de arceaux. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
+      "Classement selon la part de matchs gagnés. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n'a encore été jouée.",
     "orderOfPlay.column.game": "Partie",
     "orderOfPlay.column.date": "Date",
@@ -748,6 +761,11 @@ export const french: Language = {
     "admin.competition.kind": "Type",
     "admin.competition.bestOf": "Au meilleur des",
     "admin.competition.rounds": "Tours",
+    "admin.competition.tieBreaks": "Départage",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Différence de parties puis différence d'arceaux puis qui a battu qui",
+    "admin.competition.tieBreak.who-beat-who": "Qui a battu qui",
+    "admin.competition.tieBreak.other": "Autre",
     "admin.competition.places": "Places",
     "admin.competition.round": "Tour {number}",
     "admin.competition.bestOfs": "Meilleur des",

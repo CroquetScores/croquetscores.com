@@ -11,6 +11,7 @@ import type {
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
+import { placeShown, tieBreakSaid } from "./blockPlacing.js";
 import { aWordToALine, type DrawView } from "./competitionPages.js";
 import { playerShown } from "./tournamentPages.js";
 
@@ -97,6 +98,7 @@ const grid = (
                 <th scope="row" class="block-grid-player">${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
 ${cells.join("\n")}
 ${totals.map(({ of }) => `                <td class="block-grid-total">${escape(String(of(player)))}</td>`).join("\n")}
+                <td class="block-grid-placing">${escape(placeShown(player))}</td>
               </tr>`;
     })
     .join("\n");
@@ -107,13 +109,14 @@ ${totals.map(({ of }) => `                <td class="block-grid-total">${escape(
                 <td class="block-grid-corner"></td>
 ${heading}
 ${totals.map(({ word }) => `                <th scope="col" class="block-grid-total-heading">${aWordToALine(escape(say(word)))}</th>`).join("\n")}
+                <th scope="col" class="block-grid-placing-heading">${escape(say("block.placing"))}</th>
               </tr>
               </thead>
               <tbody>
 ${rows}
               </tbody>
             </table>
-          </div>`;
+          </div>${tieBreakSaid(asked, speaking)}`;
 };
 
 /** What draws a block's grid. */

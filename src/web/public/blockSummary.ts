@@ -1,7 +1,8 @@
 // A block's summary: a short table for a phone, a row for each player ranked
-// and three numbers beside them, where the grid has a column for every
-// player. Beneath it the page says how the players are ranked, and that a
-// tournament's own regulations may place them otherwise. What every view of
+// and three numbers beside them and their place, where the grid has a column
+// for every player. Beneath it the page says how the players are ranked, and
+// that a tournament's own regulations may place them otherwise, and how those
+// level on matches won are told apart. What every view of
 // a competition shares is competitionPages.ts's.
 import type {
   BlockToRead,
@@ -11,6 +12,7 @@ import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { playersById } from "./block.js";
+import { placeShown, tieBreakSaid } from "./blockPlacing.js";
 import { aWordToALine, type DrawView } from "./competitionPages.js";
 import { playerShown } from "./tournamentPages.js";
 
@@ -29,6 +31,8 @@ const columns: readonly {
   { word: "block.wins", of: (player) => String(player.matchesWon) },
   { word: "block.losses", of: (player) => String(player.matchesLost) },
   { word: "block.netHoops", of: (player) => signed(player.netHoops) },
+  // The place is the last, which is where a reader looks for it.
+  { word: "block.placing", of: placeShown },
 ];
 
 const summary = (
@@ -64,7 +68,7 @@ ${columns.map(({ word }) => `                <th scope="col" class="block-summar
 ${rows}
             </tbody>
           </table>
-          <p class="block-summary-ranking">${escape(say("blockSummary.ranking"))}</p>`;
+          <p class="block-summary-ranking">${escape(say("blockSummary.ranking"))}</p>${tieBreakSaid(asked, speaking)}`;
 };
 
 /** What draws a block's summary. */

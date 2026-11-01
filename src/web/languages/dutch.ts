@@ -453,6 +453,20 @@ export const dutch: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "teruggetrokken",
     "block.losses": "Verloren",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Gelijke standen worden beslist door saldo partijen, dan saldo poortjes, dan wie wie versloeg.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Gelijke standen worden beslist door saldo poortjes, dan wie wie versloeg.",
+    "block.tieBreak.whoBeatWho":
+      "Gelijke standen worden beslist door wie wie versloeg.",
+    "block.tieBreak.other":
+      "Er is geen bekende methode om gelijke standen te beslissen.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Weergaven",
     "competition.view.grid": "Schema",
@@ -461,7 +475,7 @@ export const dutch: Language = {
     "competition.print": "Afdrukken",
     "competition.playedTo": "Gespeeld tot {hoops} poortjes",
     "blockSummary.ranking":
-      "Gerangschikt naar het aandeel gewonnen wedstrijden, daarna naar het saldo poortjes. Het eigen reglement van een toernooi kan de spelers anders plaatsen.",
+      "Gerangschikt naar het aandeel gewonnen wedstrijden. Het eigen reglement van een toernooi kan de spelers anders plaatsen.",
     "orderOfPlay.none": "Er zijn nog geen partijen gespeeld.",
     "orderOfPlay.column.game": "Wedstrijd",
     "orderOfPlay.column.date": "Datum",
@@ -743,6 +757,11 @@ export const dutch: Language = {
     "admin.competition.kind": "Soort",
     "admin.competition.bestOf": "Best of",
     "admin.competition.rounds": "Rondes",
+    "admin.competition.tieBreaks": "Tiebreaks",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Saldo partijen dan saldo poortjes dan wie wie versloeg",
+    "admin.competition.tieBreak.who-beat-who": "Wie wie versloeg",
+    "admin.competition.tieBreak.other": "Anders",
     "admin.competition.places": "Plaatsen",
     "admin.competition.round": "Ronde {number}",
     "admin.competition.bestOfs": "Best-ofs",

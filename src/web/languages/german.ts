@@ -469,6 +469,19 @@ export const german: Language = {
     // Spieler.
     "block.gameWithdrawn": "zurückgezogen",
     "block.losses": "Niederlagen",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Gleichstände werden nach der Spieldifferenz, dann der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Gleichstände werden nach der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.whoBeatWho":
+      "Gleichstände werden danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.other": "Für Gleichstände ist kein Verfahren bekannt.",
     // Die drei Ansichten eines Blocks, unter seiner Überschrift angeboten.
     "competition.views": "Ansichten",
     "competition.view.grid": "Raster",
@@ -477,7 +490,7 @@ export const german: Language = {
     "competition.print": "Drucken",
     "competition.playedTo": "Gespielt bis {hoops} Tore",
     "blockSummary.ranking":
-      "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
+      "Gereiht nach dem Anteil gewonnener Matches. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
     "orderOfPlay.column.game": "Spiel",
     "orderOfPlay.column.date": "Datum",
@@ -775,6 +788,11 @@ export const german: Language = {
     "admin.competition.kind": "Art",
     "admin.competition.bestOf": "Best of",
     "admin.competition.rounds": "Runden",
+    "admin.competition.tieBreaks": "Bei Gleichstand",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat",
+    "admin.competition.tieBreak.who-beat-who": "Wer wen geschlagen hat",
+    "admin.competition.tieBreak.other": "Andere",
     "admin.competition.places": "Plätze",
     "admin.competition.round": "Runde {number}",
     "admin.competition.bestOfs": "Best of je Runde",

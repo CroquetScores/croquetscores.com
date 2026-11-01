@@ -435,6 +435,18 @@ export const welsh: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "wedi'i dynnu'n ôl",
     "block.losses": "Colledion",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Penderfynir clymau yn ôl gemau net, yna cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Penderfynir clymau yn ôl cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.whoBeatWho": "Penderfynir clymau yn ôl pwy a gurodd pwy.",
+    "block.tieBreak.other": "Nid oes dull torri clymau hysbys.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Golygfeydd",
     "competition.view.grid": "Grid",
@@ -443,7 +455,7 @@ export const welsh: Language = {
     "competition.print": "Argraffu",
     "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "blockSummary.ranking":
-      "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
+      "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
     "orderOfPlay.column.game": "Gêm",
     "orderOfPlay.column.date": "Dyddiad",
@@ -712,6 +724,11 @@ export const welsh: Language = {
     "admin.competition.kind": "Math",
     "admin.competition.bestOf": "Yr orau o",
     "admin.competition.rounds": "Rowndiau",
+    "admin.competition.tieBreaks": "Torri clymau",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Gemau net, yna cylchau net, yna pwy a gurodd pwy",
+    "admin.competition.tieBreak.who-beat-who": "Pwy a gurodd pwy",
+    "admin.competition.tieBreak.other": "Arall",
     "admin.competition.places": "Lleoedd",
     "admin.competition.round": "Rownd {number}",
     "admin.competition.bestOfs": "Yr orau o, fesul rownd",
