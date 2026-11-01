@@ -125,6 +125,36 @@ Then(
 
 // Its competitions ----------------------------------------------------------------------
 
+const competitionCalled = (
+  world: SpecWorld,
+  name: string,
+): CompetitionOfRanking => {
+  const found = competitionsOf(world).find((each) => each.name === name);
+  assert.ok(found !== undefined, `${name} is not answered.`);
+  return found;
+};
+
+Then(
+  "the winner of the competition {string} is answered as {string}",
+  function (this: SpecWorld, name: string, winner: string) {
+    assert.equal(competitionCalled(this, name).winner, winner);
+  },
+);
+
+Then(
+  "nobody is answered as the winner of the competition {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(competitionCalled(this, name).winner, "");
+  },
+);
+
+Then(
+  "no winner is answered for the competition {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(competitionCalled(this, name).winner, undefined);
+  },
+);
+
 // Where there are no rankings there are no competitions either.
 Then("no competition is answered", function (this: SpecWorld) {
   const { rankings } = answered(this);

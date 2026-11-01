@@ -32,11 +32,13 @@ Feature: Association Croquet's rankings are a text file of who beat whom
   Who won the competition is a guess the site can only half make, as the
   old site's own code said, and the manager's help tells them to correct it:
   in a competition of matches it is the winner of the last
-  match, the final, and in a competition of single games it is the player
-  with the most wins where one has strictly more than any other, and nobody
-  where two or more have the most. A line with nobody says "Winner" and no
-  name, for the manager to fill in, and a space left after the word is not
-  significant.
+  match, the final; in a block it is the player the block places first
+  (`placingsOfBlock.feature`), as its pages do, where only one is, and nobody
+  where players cannot be told apart for first; and in any other competition of
+  single games, a Swiss or a test, it is the player with the most wins where
+  one has strictly more than any other, and nobody where two or more have the
+  most. A line with nobody says "Winner" and no name, for the manager to fill
+  in, and a space left after the word is not significant.
 
   Who won a competition between teams is not a player's to be, so the winner of
   a tournament played by teams is left for the manager: its blocks say
@@ -271,9 +273,32 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the third line is "Winner Sam Someone"
 
-    Scenario: Where two players have the most wins nobody is
+    Scenario: Where players cannot be told apart for first nobody is the winner
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 20 in "Block B" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the third line is "Winner"
+
+    Scenario: Where players level on matches won are told apart by the block's tie break one of them is the winner
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
-      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the third line is "Winner Chris Third"
+
+    Scenario: Where the block's tie break cannot tell them apart nobody is
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the third line is "Winner"
 
