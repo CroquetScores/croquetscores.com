@@ -6,6 +6,8 @@ import { Score } from "../../../domain/aggregates/tournaments/competitions/value
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { carryLosersOn } from "./losersKnockouts.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import {
@@ -56,5 +58,15 @@ export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
       { winner: player(winner), loser: player(loser) },
     );
     await this.competitions.save(competition);
+    // A knockout's game that sets a match's loser aside or changes it changes
+    // who the knockouts that take its losers have.
+    await carryLosersOn(
+      this.competitions,
+      tournament,
+      competition,
+      CompetitionId.from(command.competition),
+      by,
+      command.requestedAt,
+    );
   }
 }

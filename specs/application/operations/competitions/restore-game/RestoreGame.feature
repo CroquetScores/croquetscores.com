@@ -61,6 +61,24 @@ Feature: Restoring an archived score
       When the reader signed in to the account for "organiser@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
       Then nothing more is recorded of the competition "Block A" of "Spring Open"
 
+  Rule: A loser of the score restored is put in the losers knockout again
+
+    Background:
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Final Stage"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
+
+    Scenario: The loser of the score restored is entered in the losers knockout
+      When the reader signed in to the account for "organiser@example.com" restores the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open"
+      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+
   Rule: What the competition refuses is the competition's to refuse
 
     Scenario: A score the competition does not have is refused as the competition refuses it

@@ -126,6 +126,31 @@ Feature: Correcting a game's score entered wrongly
       When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to "Alex Another" beating "Sam Someone" 26 to 17
       Then it is refused with "Competition.WinnerHasPlayedOn"
 
+  Rule: A match corrected to another winner has another loser in the losers knockout
+
+    Background:
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Final Stage"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+
+    Scenario: The loser put there is taken out
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to "Alex Another" beating "Sam Someone" 26 to 17
+      Then the competition "Plate" of "Spring Open" does not have the player "Alex Another"
+
+    Scenario: The new loser is put there
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to "Alex Another" beating "Sam Someone" 26 to 17
+      Then the competition "Plate" of "Spring Open" has the player "Sam Someone"
+
+    Scenario: A score corrected and no more is not a change
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Final Stage" of "Spring Open" to "Sam Someone" beating "Alex Another" 26 to 12
+      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+
   Rule: What corrected scores must be that needs nothing of the tournament is asked on the way in
 
     Scenario Outline: Corrected scores without one of them are refused for it
