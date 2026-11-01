@@ -75,6 +75,15 @@ export class Sport {
     return this.#countsTowardsWorldRankings;
   }
 
+  /**
+   * The most hoops a game of it is played to unless a competition says
+   * otherwise: 13 in golf croquet, where a game is the first to win 7 of 13,
+   * and 26 in the rest, which are not played to a shorter number as a rule.
+   */
+  get usualMaximumHoops(): number {
+    return this.code === "gc" ? 13 : 26;
+  }
+
   /** Every sport there is. */
   static readonly all: readonly Sport[] = [
     Sport.associationCroquet,

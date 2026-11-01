@@ -89,6 +89,15 @@ const yesOrNo = (said: Said, field: string): boolean => {
   return typeof value === "boolean" ? value : unreadable(field);
 };
 
+// The most hoops a game is played to: a number, null for no most, and absent
+// from an event kept before it was said.
+const maximumHoops = (said: Said): number | null | undefined => {
+  const value = said["maximumHoops"];
+  return value === undefined || value === null
+    ? value
+    : number(said, "maximumHoops");
+};
+
 // Everything creating a tournament and updating it both say.
 const tournament = (said: Said): WrittenTournament => ({
   name: text(said, "name"),
@@ -230,6 +239,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -246,6 +256,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -264,6 +275,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -280,6 +292,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -297,6 +310,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -312,6 +326,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -536,6 +551,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),
@@ -556,6 +572,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "handicap"),
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
+          maximumHoops(said),
           createdBy,
           occurredAt,
         ),

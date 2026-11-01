@@ -159,6 +159,28 @@ Feature: A block of a tournament, for anybody to read
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered is found at "2026/gc/spring-open"
 
+  Rule: The block is answered with the most hoops a game in it is played to
+
+    Its page says so where it is not the usual for the sport (`block.feature`),
+    so the block is answered with the most it has and the sport's usual is the
+    tournament's to say. A block with no most is answered with none.
+
+    Scenario: A block added without saying is answered with the usual
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered has a maximum of 26 hoops
+
+    Scenario: A block added with a most is answered with it
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the block "Short Block" to "Spring Open"
+      When the block "short-block" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered has a maximum of 14 hoops
+
+    Scenario: A block added with no most is answered with none
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the block "Open Block" to "Spring Open"
+      When the block "open-block" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered has no maximum number of hoops
+
   Rule: Every player entered in the block is answered, in the block's order
 
     Scenario: The players are answered in the block's order

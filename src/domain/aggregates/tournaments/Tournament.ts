@@ -110,6 +110,7 @@ export type TournamentErrorCode =
   | "Tournament.NoSuchPlayer"
   | "Tournament.CompetitionAlreadyAdded"
   | "Tournament.CompetitionNameTaken"
+  | "Tournament.MaximumHoopsInvalid"
   | "Tournament.NoSuchCompetition"
   | "Tournament.CompetitionArchived"
   | "Tournament.NotABlock"
@@ -886,6 +887,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -915,6 +917,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -943,6 +946,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -983,6 +987,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -1059,6 +1064,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -1096,6 +1102,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -1541,6 +1548,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -1624,6 +1632,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
       ),
@@ -1721,7 +1730,7 @@ export class Tournament extends AggregateRoot {
           bestOf: BestOf.from(event.bestOf),
           rounds: Rounds.from(event.rounds),
         },
-        rulesOf(event),
+        rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
     } else if (event instanceof KnockoutUpdated) {
       this.#competitionUpdated(
@@ -1731,7 +1740,7 @@ export class Tournament extends AggregateRoot {
           kind: "knockout",
           draw: KnockoutDraw.from(event.places, event.rounds),
         },
-        rulesOf(event),
+        rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
     } else if (event instanceof SwissUpdated) {
       this.#competitionUpdated(
@@ -1741,7 +1750,7 @@ export class Tournament extends AggregateRoot {
           kind: "swiss",
           bestOf: BestOf.from(event.bestOf),
         },
-        rulesOf(event),
+        rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
     } else if (event instanceof ManagerAdded) {
       this.#managers.add(event.account);
@@ -1834,7 +1843,7 @@ export class Tournament extends AggregateRoot {
           order: event.order,
         }),
         shape,
-        rules: rulesOf(event),
+        rules: rulesOf(event, this.#now.sport.usualMaximumHoops),
       });
     } else if (event instanceof TestUpdated) {
       const shape = testShapeOf(event);
@@ -1842,7 +1851,7 @@ export class Tournament extends AggregateRoot {
         event.competitionId,
         this.#testNameFor(shape),
         shape,
-        rulesOf(event),
+        rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
     }
   }
@@ -1971,9 +1980,23 @@ export class Tournament extends AggregateRoot {
         "A competition allowing drawn games does not count towards the world rankings.",
       );
     }
+    const maximumHoops =
+      said?.maximumHoops === undefined
+        ? this.#now.sport.usualMaximumHoops
+        : said.maximumHoops;
+    if (
+      maximumHoops !== null &&
+      (!Number.isInteger(maximumHoops) || maximumHoops < 1)
+    ) {
+      refuse(
+        "Tournament.MaximumHoopsInvalid",
+        "The most hoops is a whole number of at least 1.",
+      );
+    }
     return {
       handicap,
       drawsAllowed,
+      maximumHoops,
       worldRankings:
         said?.worldRankings ?? (hasRankings && !handicap && !drawsAllowed),
     };
@@ -2272,7 +2295,7 @@ export class Tournament extends AggregateRoot {
     this.#competitions.set(id.value, {
       reference: CompetitionReference.from(id, event),
       shape,
-      rules: rulesOf(event),
+      rules: rulesOf(event, this.#now.sport.usualMaximumHoops),
     });
   }
 
@@ -2543,22 +2566,27 @@ export class Tournament extends AggregateRoot {
 }
 
 // What an event adding or updating a competition says of its rules.
-type WrittenRules = CompetitionRules;
+type WrittenRules = Omit<CompetitionRules, "maximumHoops"> & {
+  readonly maximumHoops: number | null | undefined;
+};
 
-const rulesOf = ({
+// An event kept before a maximum was said has none written, and is then the
+// usual for its sport, which is what every competition had been played to.
+const rulesOf = (
+  { handicap, drawsAllowed, worldRankings, maximumHoops }: WrittenRules,
+  usualMaximumHoops: number,
+): CompetitionRules => ({
   handicap,
   drawsAllowed,
   worldRankings,
-}: WrittenRules): CompetitionRules => ({
-  handicap,
-  drawsAllowed,
-  worldRankings,
+  maximumHoops: maximumHoops === undefined ? usualMaximumHoops : maximumHoops,
 });
 
 const sameRules = (one: CompetitionRules, other: CompetitionRules): boolean =>
   one.handicap === other.handicap &&
   one.drawsAllowed === other.drawsAllowed &&
-  one.worldRankings === other.worldRankings;
+  one.worldRankings === other.worldRankings &&
+  one.maximumHoops === other.maximumHoops;
 
 const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
   block: "Tournament.NotABlock",

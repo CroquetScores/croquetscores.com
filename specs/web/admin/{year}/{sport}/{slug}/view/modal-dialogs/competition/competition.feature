@@ -71,6 +71,14 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
   competition being changed begins as it is, and a test is asked the same in
   its own dialog (`test.feature`).
 
+  Every kind asks the most hoops a game in it is played to, "Maximum hoops",
+  after how it is played and counted (`maximumHoops.feature`). It begins on
+  the usual for the sport, 26, or 13 in Golf Croquet, and a competition being
+  changed begins on its own. It is a whole number of at least one, and
+  emptied it says there is no most, which is different from the usual, so an
+  empty field is sent as none and not left unsaid. A test is asked the same
+  in its own dialog (`test.feature`).
+
   The admin draws the dialog itself, so every scenario here runs scripts, and
   it is read on a phone's width, as the rest of the admin is.
 
@@ -516,6 +524,65 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And the reader ticks "Allows drawn results"
       When "Save" is pressed
       Then the competition "Block A" of "Spring Open" allows drawn results
+
+  Rule: A competition asks the most hoops a game in it is played to
+
+    Scenario: The dialog asks for the most hoops
+      When "Add Competition" is pressed
+      Then the competition dialog asks for "Maximum hoops"
+
+    Scenario: A new competition begins on 26 hoops
+      When "Add Competition" is pressed
+      Then "Maximum hoops" holds "26"
+
+    Scenario: A new competition in Golf Croquet begins on 13 hoops
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then "Maximum hoops" holds "13"
+
+    Scenario: A competition added with the most hoops typed is kept so
+      Given "Add Competition" is pressed
+      And "Short Block" is typed as the "Name"
+      And "14" is typed as the "Maximum hoops"
+      When "Add" is pressed
+      Then the competition "Short Block" of "Spring Open" has a maximum of 14 hoops
+
+    Scenario: A competition added with the most hoops emptied has none
+      Given "Add Competition" is pressed
+      And "Open Block" is typed as the "Name"
+      And "" is typed as the "Maximum hoops"
+      When "Add" is pressed
+      Then the competition "Open Block" of "Spring Open" has no maximum number of hoops
+
+    Scenario: A most that is not a whole number of at least one is refused beside it
+      Given "Add Competition" is pressed
+      And "Short Block" is typed as the "Name"
+      And "0" is typed as the "Maximum hoops"
+      When "Add" is pressed
+      Then "Tournament.MaximumHoopsInvalid" is said beside "Maximum hoops"
+
+    Scenario: A competition changed begins on its most hoops
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Maximum hoops" holds "14"
+
+    Scenario: A competition with no most begins with the field empty
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Maximum hoops" holds ""
+
+    Scenario: A competition changed to another most is kept so
+      Given "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "18" is typed as the "Maximum hoops"
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" has a maximum of 18 hoops
 
   Rule: Add adds the competition as it was asked for
 

@@ -208,6 +208,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -220,6 +222,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -236,6 +240,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -250,6 +256,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -265,6 +273,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -276,6 +286,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -392,6 +404,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -410,6 +424,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
@@ -428,6 +444,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
     ),
