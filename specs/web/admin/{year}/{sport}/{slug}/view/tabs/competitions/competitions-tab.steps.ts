@@ -371,3 +371,17 @@ Then(
     });
   },
 );
+
+Then(
+  "the competitions tab says it was refused with {string}",
+  async function (this: SpecWorld, code: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await tabPanel(this)
+          .locator(".dialog-problems")
+          .getAttribute("data-refused", { timeout: 500 }),
+        code,
+      );
+    });
+  },
+);

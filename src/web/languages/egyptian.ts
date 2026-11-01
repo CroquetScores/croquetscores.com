@@ -544,6 +544,8 @@ export const egyptian: Language = {
     "Tournament.NoSuchRound": "خروج المغلوب مفيهوش دور زي ده بيبعت خاسرين.",
     "Tournament.KnockoutHasLosersKnockouts":
       "خروج مغلوب تاني واخد خاسرين ده، فمينفعش نغيّر أماكنه.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "خروج مغلوب تاني شغّال واخد خاسرين ده، فأرشف التاني الأول.",
     "Tournament.LosersKnockoutPlacesFixed":
       "خروج المغلوب للخاسرين أماكنه بعدد ماتشات الدور اللي واخد منه الخاسرين.",
     "Competition.PlayersSetAutomatically":

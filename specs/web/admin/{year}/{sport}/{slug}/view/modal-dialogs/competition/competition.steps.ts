@@ -661,3 +661,17 @@ Then(
     });
   },
 );
+
+Then("the places cannot be chosen", async function (this: SpecWorld) {
+  await dialogOf(this).waitFor();
+  await eventually(this, async () => {
+    assert.equal(await placesOf(this).isDisabled(), true);
+  });
+});
+
+Then("the places can be chosen", async function (this: SpecWorld) {
+  await dialogOf(this).waitFor();
+  await eventually(this, async () => {
+    assert.equal(await placesOf(this).isEnabled(), true);
+  });
+});

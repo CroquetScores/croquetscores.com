@@ -548,6 +548,8 @@ export const chinese: Language = {
     "Tournament.NoSuchRound": "这个淘汰赛没有这样一轮可以把败者送出。",
     "Tournament.KnockoutHasLosersKnockouts":
       "另一个淘汰赛接收了这个淘汰赛的败者，所以它的名额不能更改。",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "另一个正在使用的淘汰赛接收了这个淘汰赛的败者，请先归档那个淘汰赛。",
     "Tournament.LosersKnockoutPlacesFixed":
       "败者淘汰赛的名额与所取败者那一轮的比赛场数相同。",
     "Competition.PlayersSetAutomatically":

@@ -201,6 +201,7 @@ export const ViewCompetition = ({
                     : tab === "losers"
                       ? "competitions"
                       : "scores",
+                  tab === "losers" ? "losers-knockout" : undefined,
                 )
               }
             >

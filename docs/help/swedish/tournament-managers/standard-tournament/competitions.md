@@ -36,6 +36,14 @@ En lottning har så många ronder som det tar att halvera dess platser ned till 
 
 ![Dialogrutan Lägg till tävling för en utslagning med 4 platser](images/add-competition-knockout.png)
 
+### En förlorarutslagning {#losers-knockout}
+
+En utslagning kan skicka dem som förlorar en omgång vidare till en egen utslagning, en förlorarutslagning. Tryck på **Lägg till förlorarutslagning** under **Bäst av per rond** i en utslagning. En dialogruta frågar efter **Förlorare från**, omgången vars förlorare spelar vidare, bland alla omgångar utom finalen, och efter **Förlorarutslagningens namn**. Tryck på **Lägg till** för att lägga den i listan under knappen, där **Ta bort** tar bort den igen. Den läggs till tillsammans med utslagningen när den läggs till, och om någon av dem nekas läggs ingen till.
+
+En förlorarutslagning har en plats för varje match i den omgången, och varje omgång i den är bäst av 1, vilket **Redigera** kan ändra. Dess spelare läggs in när matcherna i den omgången avgörs, i den ordning de lottades, så fliken **Spelare** visar dem bara. Om ett spel rättas eller läggs åt sidan flyttas eller tas förloraren bort igen, om inte hen redan har spelat vidare.
+
+På en utslagning som redan lagts till visar **Redigera** samma knapp, och förlorarutslagningen läggs till direkt. En utslagning vars förlorare tas av en annan som används kan inte arkiveras eller få sina platser ändrade: arkivera förlorarutslagningen först.
+
 ### Hur den spelas och räknas
 
 Varje slag frågar efter samma tre saker under sin form.

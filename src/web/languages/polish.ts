@@ -526,6 +526,8 @@ export const polish: Language = {
       "Drabinka nie ma takiej rundy, z której przegrani idą dalej.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Inna drabinka przejmuje przegranych z tej, więc jej miejsc nie można zmienić.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Inna używana drabinka przejmuje przegranych z tej, więc najpierw zarchiwizuj tamtą.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Drabinka przegranych ma tyle miejsc, ile meczów ma runda, z której bierze przegranych.",
     "Competition.PlayersSetAutomatically":

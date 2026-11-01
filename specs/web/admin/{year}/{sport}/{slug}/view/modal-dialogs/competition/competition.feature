@@ -200,6 +200,27 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Cancel" is pressed in the losers dialog
       Then the competition dialog is the only dialog open
 
+  Rule: A losers knockout's places are not changed by hand
+
+    A losers knockout has as many places as the round it takes losers from has
+    matches (`AddLosersKnockout.feature`), so the dialog that changes one shows
+    its places but does not let them be chosen.
+
+    Scenario: The places of a losers knockout are not chosen
+      Given the knockout is to have a draw of 8 places
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Main Event"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Plate"
+      Then the places cannot be chosen
+
+    Scenario: The places of a knockout are chosen
+      Given the knockout is to have a draw of 8 places
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Main Event"
+      Then the places can be chosen
+
   Rule: A losers knockout asked for while adding a knockout is added with it
 
     Background:

@@ -589,6 +589,8 @@ export const dutch: Language = {
       "De knock-out heeft geen ronde die verliezers doorstuurt.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Een andere knock-out neemt de verliezers van deze over, dus de plaatsen kunnen niet worden gewijzigd.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Een andere knock-out die in gebruik is, neemt de verliezers van deze over, dus archiveer die eerst.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Een verliezers-knock-out heeft evenveel plaatsen als de ronde waarvan hij de verliezers neemt wedstrijden heeft.",
     "Competition.PlayersSetAutomatically":

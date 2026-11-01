@@ -50,6 +50,11 @@ export type CompetitionAsItIs = {
       readonly kind: "knockout";
       readonly places: number;
       readonly rounds: readonly number[];
+      /** Set for a losers knockout, whose places are however many lose the round. */
+      readonly losersOf?: {
+        readonly competition: string;
+        readonly round: number;
+      };
     }
 );
 
@@ -377,6 +382,13 @@ export const CompetitionDialog = ({
                 <select
                   {...tied}
                   value={places}
+                  // A losers knockout has as many places as the round it
+                  // takes losers from has matches, which only that round can
+                  // change.
+                  disabled={
+                    competition?.kind === "knockout" &&
+                    competition.losersOf !== undefined
+                  }
                   onChange={(event) => {
                     choosePlaces(Number(event.target.value));
                   }}

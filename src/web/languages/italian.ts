@@ -590,6 +590,8 @@ export const italian: Language = {
       "L'eliminazione diretta non ha un turno del genere che mandi avanti dei perdenti.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Un'altra eliminazione diretta prende i perdenti di questa, quindi i suoi posti non possono essere cambiati.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Un'altra eliminazione diretta in uso prende i perdenti di questa, quindi archivia prima quella.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Un'eliminazione diretta dei perdenti ha tanti posti quante sono le partite del turno di cui prende i perdenti.",
     "Competition.PlayersSetAutomatically":

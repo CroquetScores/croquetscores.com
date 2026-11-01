@@ -587,6 +587,8 @@ export const swedish: Language = {
       "Utslagningen har ingen sådan omgång som skickar vidare förlorare.",
     "Tournament.KnockoutHasLosersKnockouts":
       "En annan utslagning tar förlorarna från den här, så dess platser kan inte ändras.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "En annan utslagning som används tar förlorarna från den här, så arkivera den först.",
     "Tournament.LosersKnockoutPlacesFixed":
       "En förlorarutslagning har lika många platser som omgången den tar förlorare från har matcher.",
     "Competition.PlayersSetAutomatically":

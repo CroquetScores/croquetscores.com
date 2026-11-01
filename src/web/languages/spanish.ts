@@ -591,6 +591,8 @@ export const spanish: Language = {
       "La eliminatoria no tiene una ronda así que envíe perdedores.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Otra eliminatoria toma los perdedores de esta, así que sus plazas no se pueden cambiar.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Otra eliminatoria en uso toma los perdedores de esta, así que archiva primero esa otra.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Una eliminatoria de perdedores tiene tantas plazas como partidos tiene la ronda de la que toma los perdedores.",
     "Competition.PlayersSetAutomatically":

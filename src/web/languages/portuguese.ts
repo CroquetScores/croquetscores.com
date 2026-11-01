@@ -583,6 +583,8 @@ export const portuguese: Language = {
       "O mata-mata não tem uma rodada assim que envie perdedores.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Outro mata-mata recebe os perdedores deste, então as suas vagas não podem ser alteradas.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Outro mata-mata em uso recebe os perdedores deste, então arquive primeiro esse outro.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Um mata-mata dos perdedores tem tantas vagas quantas partidas tem a rodada da qual recebe os perdedores.",
     "Competition.PlayersSetAutomatically":

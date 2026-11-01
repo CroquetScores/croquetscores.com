@@ -554,6 +554,8 @@ export const russian: Language = {
       "В плей-офф нет такого раунда, который отправляет проигравших дальше.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Другой плей-офф берёт проигравших из этого, поэтому его места нельзя менять.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Другой используемый плей-офф берёт проигравших из этого, поэтому сначала архивируйте его.",
     "Tournament.LosersKnockoutPlacesFixed":
       "В плей-офф проигравших столько мест, сколько матчей в раунде, из которого он берёт проигравших.",
     "Competition.PlayersSetAutomatically":

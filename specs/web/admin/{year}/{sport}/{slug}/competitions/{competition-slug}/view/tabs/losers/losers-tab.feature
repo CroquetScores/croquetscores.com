@@ -184,3 +184,10 @@ Feature: The losers tab of a knockout's page
     Scenario: A knockout whose players are set by hand does not say so
       When the players of "Main Event" in "Spring Open" are opened
       Then the players tab does not say the players are the losers of another knockout
+
+  Rule: The tab's help icon leads to the section on a losers knockout
+
+    Scenario: Losers leads to the section of the help on a losers knockout
+      Given the page of the competition "Main Event" in "Spring Open" is open
+      When the tab "Losers" is chosen
+      Then the tab row's help icon leads to "/help/tournament-managers/standard-tournament/competitions#losers-knockout"

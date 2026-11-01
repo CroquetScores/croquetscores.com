@@ -36,6 +36,14 @@ Een loting heeft zoveel rondes als nodig is om de plaatsen te halveren tot één
 
 ![Het dialoogvenster Competitie toevoegen voor een knock-out van 4 plaatsen](images/add-competition-knockout.png)
 
+### Een knock-out van de verliezers {#losers-knockout}
+
+Een knock-out kan degenen die een ronde verliezen doorsturen naar een eigen knock-out, een knock-out van de verliezers. Druk onder **Best-ofs** van een knock-out op **Verliezers-knock-out toevoegen**. Een dialoogvenster vraagt om **Verliezers van**, de ronde waarvan de verliezers doorspelen, uit alle rondes behalve de finale, en om **Naam van de verliezers-knock-out**. Druk op **Toevoegen** om hem in de lijst onder de knop te zetten, waar **Verwijderen** hem weer verwijdert. Hij wordt samen met de knock-out toegevoegd, en wordt een van beide geweigerd, dan wordt geen van beide toegevoegd.
+
+Een knock-out van de verliezers heeft een plaats voor elke wedstrijd van die ronde, en elke ronde ervan is een best-of-1, wat **Bewerken** kan wijzigen. De spelers worden erin gezet naarmate de wedstrijden van die ronde beslist zijn, in de volgorde van de loting, dus het tabblad **Spelers** toont ze alleen. Wordt een partij gecorrigeerd of opzijgezet, dan wordt de verliezer verplaatst of weer weggehaald, tenzij die al verder heeft gespeeld.
+
+Bij een knock-out die al is toegevoegd toont **Bewerken** dezelfde knop, en de knock-out van de verliezers wordt direct toegevoegd. Een knock-out waarvan de verliezers door een andere in gebruik worden overgenomen kan niet worden gearchiveerd of in zijn plaatsen worden gewijzigd: archiveer eerst de knock-out van de verliezers.
+
 ### Hoe het wordt gespeeld en geteld
 
 Elke soort vraagt hetzelfde drie dingen onder zijn vorm.

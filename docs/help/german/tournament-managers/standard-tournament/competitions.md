@@ -36,6 +36,14 @@ Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu
 
 ![Der Dialog Wettbewerb hinzufügen für eine K.-o.-Runde mit 4 Plätzen](images/add-competition-knockout.png)
 
+### Ein K.-o.-Turnier der Verlierer {#losers-knockout}
+
+Ein K.-o.-Turnier kann die Verlierer einer Runde in ein eigenes K.-o.-Turnier weiterschicken, ein K.-o.-Turnier der Verlierer. Klicken Sie unter **Best of je Runde** eines K.-o.-Turniers auf **K.-o.-Turnier der Verlierer hinzufügen**. Ein Dialog fragt nach **Verlierer von**, der Runde, deren Verlierer weiterspielen, aus allen Runden außer dem Finale, und nach **Name des K.-o.-Turniers der Verlierer**. Klicken Sie auf **Hinzufügen**, um es in die Liste unter der Schaltfläche zu übernehmen, wo **Entfernen** es wieder entfernt. Es wird zusammen mit dem K.-o.-Turnier hinzugefügt, und wird eines von beiden abgelehnt, wird keines hinzugefügt.
+
+Ein K.-o.-Turnier der Verlierer hat einen Platz für jedes Spiel dieser Runde, und jede seiner Runden ist ein Best-of-1, was sich mit **Bearbeiten** ändern lässt. Seine Spieler werden eingetragen, sobald die Spiele dieser Runde entschieden sind, in der Reihenfolge der Auslosung, daher zeigt sein Reiter **Spieler** sie nur an. Wird eine Partie korrigiert oder beiseitegelegt, wird der Verlierer verschoben oder wieder herausgenommen, außer er hat schon weitergespielt.
+
+Bei einem bereits hinzugefügten K.-o.-Turnier zeigt **Bearbeiten** dieselbe Schaltfläche, und das K.-o.-Turnier der Verlierer wird sofort hinzugefügt. Ein K.-o.-Turnier, dessen Verlierer ein anderes in Verwendung übernimmt, lässt sich weder archivieren noch in seinen Plätzen ändern: Archivieren Sie zuerst das K.-o.-Turnier der Verlierer.
+
 ### Wie gespielt und gezählt wird
 
 Jede Art fragt unter ihrer Gestalt dasselbe dreifach.

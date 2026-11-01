@@ -36,6 +36,14 @@ Mae gan siart gymaint o rowndiau ag sydd ei angen i haneru ei lleoedd i un, fell
 
 ![Y ddeialog Ychwanegu cystadleuaeth ar gyfer cystadleuaeth cnoc-owt o 4 lle](images/add-competition-knockout.png)
 
+### Cnoc-owt collwyr {#losers-knockout}
+
+Gall cnoc-owt anfon y rhai sy'n colli rownd ymlaen i gnoc-owt eu hunain, cnoc-owt collwyr. O dan **Yr orau o, fesul rownd** cnoc-owt, pwyswch **Ychwanegu Cnoc-owt Collwyr**. Mae deialog yn gofyn am **Collwyr o**, y rownd y mae ei chollwyr yn chwarae ymlaen, o bob rownd ond y rownd derfynol, ac am **Enw'r cnoc-owt collwyr**. Pwyswch **Ychwanegu** i'w roi yn y rhestr o dan y botwm, lle mae **Tynnu** yn ei dynnu eto. Caiff ei ychwanegu gyda'r cnoc-owt pan gaiff hwnnw ei ychwanegu, ac os caiff un o'r ddau ei wrthod, ni chaiff yr un ei ychwanegu.
+
+Mae gan gnoc-owt collwyr le i bob gêm yn y rownd honno, ac mae pob rownd ohono yn orau o 1, y gall **Golygu** ei newid. Rhoddir ei chwaraewyr i mewn wrth i gemau'r rownd honno gael eu penderfynu, yn nhrefn y tynnu, felly dim ond eu dangos y mae ei dab **Chwaraewyr**. Os caiff gêm ei chywiro neu ei rhoi o'r neilltu, caiff y collwr ei symud neu ei dynnu eto, oni bai ei fod eisoes wedi chwarae ymlaen.
+
+Ar gnoc-owt sydd eisoes wedi'i ychwanegu, mae **Golygu** yn dangos yr un botwm, a chaiff y cnoc-owt collwyr ei ychwanegu ar unwaith. Ni ellir archifo cnoc-owt y mae cnoc-owt arall sydd ar waith yn cymryd ei chollwyr, na newid ei lefydd: archifwch y cnoc-owt collwyr yn gyntaf.
+
 ### Sut y caiff ei chwarae a'i chyfrif
 
 Mae pob math yn gofyn yr un tri pheth o dan ei siâp.

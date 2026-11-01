@@ -36,6 +36,14 @@ Un cuadro tiene tantas rondas como hacen falta para reducir sus plazas a una, as
 
 ![El diálogo Añadir competición para una eliminatoria de 4 plazas](images/add-competition-knockout.png)
 
+### Una eliminatoria de perdedores {#losers-knockout}
+
+Una eliminatoria puede enviar a quienes pierden una ronda a una eliminatoria propia, una eliminatoria de perdedores. Debajo de **Al mejor de (por ronda)** de una eliminatoria, pulsa **Añadir eliminatoria de perdedores**. Un cuadro de diálogo pide **Perdedores de**, la ronda cuyos perdedores siguen jugando, entre todas las rondas menos la final, y **Nombre de la eliminatoria de perdedores**. Pulsa **Añadir** para ponerla en la lista bajo el botón, donde **Quitar** la quita. Se añade junto con la eliminatoria cuando esta se añade, y si una de las dos se rechaza, no se añade ninguna.
+
+Una eliminatoria de perdedores tiene una plaza para cada partido de esa ronda, y cada una de sus rondas es al mejor de 1, algo que **Editar** puede cambiar. Sus jugadores se colocan a medida que se deciden los partidos de esa ronda, en el orden del sorteo, así que su pestaña **Jugadores** solo los muestra. Si se corrige o se aparta una partida, el perdedor se mueve o se quita de nuevo, salvo que ya haya jugado.
+
+En una eliminatoria ya añadida, **Editar** muestra el mismo botón y la eliminatoria de perdedores se añade al instante. Una eliminatoria cuyos perdedores toma otra en uso no se puede archivar ni cambiar sus plazas: archiva primero la eliminatoria de perdedores.
+
 ### Cómo se juega y se cuenta
 
 Todos los tipos preguntan lo mismo bajo su forma.

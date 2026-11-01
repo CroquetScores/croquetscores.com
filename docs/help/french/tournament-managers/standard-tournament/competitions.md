@@ -36,6 +36,14 @@ Un tableau a autant de tours qu’il en faut pour ramener ses places à une, de 
 
 ![La boîte de dialogue Ajouter une compétition pour une élimination directe de 4 places](images/add-competition-knockout.png)
 
+### Une élimination directe des perdants {#losers-knockout}
+
+Une élimination directe peut envoyer ceux qui perdent un tour vers une élimination directe à part, une élimination directe des perdants. Sous **Meilleur des** d’une élimination directe, appuyez sur **Ajouter une élimination directe des perdants**. Une boîte de dialogue demande **Perdants de**, le tour dont les perdants continuent à jouer, parmi tous les tours sauf la finale, et **Nom de l'élimination directe des perdants**. Appuyez sur **Ajouter** pour la mettre dans la liste sous le bouton, où **Retirer** la retire. Elle est ajoutée avec l’élimination directe lorsque celle-ci est ajoutée, et si l’une des deux est refusée, aucune n’est ajoutée.
+
+Une élimination directe des perdants a une place pour chaque match de ce tour, et chacun de ses tours se joue au meilleur de 1, ce que **Modifier** peut changer. Ses joueurs y sont placés à mesure que les matchs de ce tour sont décidés, dans l’ordre du tirage, si bien que son onglet **Joueurs** ne fait que les montrer. Si une partie est corrigée ou mise de côté, le perdant est déplacé ou retiré à nouveau, sauf s’il a déjà joué.
+
+Sur une élimination directe déjà ajoutée, **Modifier** montre le même bouton, et l’élimination directe des perdants est ajoutée aussitôt. Une élimination directe dont les perdants sont pris par une autre en cours ne peut ni être archivée ni voir ses places modifiées : archivez d’abord l’élimination directe des perdants.
+
 ### Comment elle se joue et se compte
 
 Chaque type demande les trois mêmes choses sous sa forme.

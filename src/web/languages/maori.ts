@@ -547,6 +547,8 @@ export const maori: Language = {
       "Karekau he rauna pērā i tēnei whakaweto e tuku ana i ngā hunga hinga.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Ka tango tētahi atu whakaweto i ngā hunga hinga o tēnei, no reira e kore e taea te whakarerekē ōna wāhi.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Ka tango tētahi atu whakaweto e whakamahia ana i ngā hunga hinga o tēnei, no reira me puretu tuatahi tērā.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Ko te maha o ngā wāhi o te whakaweto hunga hinga he rite ki te maha o ngā tukinga o te rauna e tangohia ai ōna hunga hinga.",
     "Competition.PlayersSetAutomatically":

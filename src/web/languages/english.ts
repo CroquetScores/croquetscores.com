@@ -577,6 +577,8 @@ export const english: Language = {
       "The knockout has no such round that sends losers on.",
     "Tournament.KnockoutHasLosersKnockouts":
       "Another knockout takes the losers of this one, so its places cannot be changed.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Another knockout in use takes the losers of this one, so archive that one first.",
     "Tournament.LosersKnockoutPlacesFixed":
       "A losers knockout has as many places as the round it takes losers from has matches.",
     "Competition.PlayersSetAutomatically":
