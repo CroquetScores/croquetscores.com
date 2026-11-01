@@ -417,6 +417,7 @@ export const japanese: Language = {
     "block.netGames": "ゲーム差",
     "block.games": "ゲーム",
     "block.netHoops": "フープ差",
+    "block.playedTo": "{hoops} ゲートまで",
     "block.won": "勝ち",
     "block.lost": "負け",
     "block.drawn": "引き分け",
@@ -503,6 +504,7 @@ export const japanese: Language = {
     "admin.rules.drawsAllowed": "引き分けを認める",
     "admin.tournament.levelTestsDrawn": "同点のテストマッチは引き分け",
     "admin.rules.worldRankings": "世界ランキングの対象",
+    "admin.rules.maximumHoops": "最大ゲート数",
     "admin.tournament.national": "全国レベルの大会",
     "admin.tournament.international": "国際レベルの大会",
     // A refusal with no words of its own, above the fields.
@@ -691,6 +693,8 @@ export const japanese: Language = {
       "後のラウンドでゲームが行われたあとは、ラウンドを変更できません。",
     "Tournament.CompetitionNameTaken":
       "この大会のほかの部門がすでにその名称を使っています。",
+    "Tournament.MaximumHoopsInvalid":
+      "1 以上の整数でゲート数を入力してください。上限がない場合は空欄にします。",
     "BestOf.NotWhole": "ゲーム数は整数で入力してください。",
     "BestOf.TooSmall": "1試合は1ゲーム以上の先取制にしてください。",
     "Rounds.NotWhole": "ラウンド数は整数で入力してください。",

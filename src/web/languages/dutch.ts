@@ -446,6 +446,7 @@ export const dutch: Language = {
     "block.netGames": "Saldo partijen",
     "block.games": "Partijen",
     "block.netHoops": "Saldo poortjes",
+    "block.playedTo": "Gespeeld tot {hoops} poortjes",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "gelijk",
@@ -538,6 +539,7 @@ export const dutch: Language = {
     "admin.rules.drawsAllowed": "Gelijkspel toegestaan",
     "admin.tournament.levelTestsDrawn": "Gelijke tests zijn gelijkspel",
     "admin.rules.worldRankings": "Telt mee voor de wereldranglijsten",
+    "admin.rules.maximumHoops": "Maximaal aantal poortjes",
     "admin.tournament.national": "Evenement op nationaal niveau",
     "admin.tournament.international": "Evenement op internationaal niveau",
     // A refusal with no words of its own, above the fields.
@@ -740,6 +742,8 @@ export const dutch: Language = {
       "Een ronde kan niet meer worden gewijzigd als er in een latere ronde een partij is gespeeld.",
     "Tournament.CompetitionNameTaken":
       "Een andere competitie in dit toernooi heeft die naam al.",
+    "Tournament.MaximumHoopsInvalid":
+      "Voer een geheel aantal poortjes in, minstens 1, of laat het leeg voor geen maximum.",
     "BestOf.NotWhole": "Vul een geheel aantal partijen in.",
     "BestOf.TooSmall":
       "Een wedstrijd moet een best-of van minstens 1 partij zijn.",

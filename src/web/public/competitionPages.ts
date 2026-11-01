@@ -452,6 +452,7 @@ export const registerCompetitionPages = (
 ${viewsOffered(here, offered, view, speaking)}
 ${printButton(speaking)}
           </div>
+${playedToNote(found, speaking)}
 ${draw(found, view, speaking, request)}
 ${printPiecesScript}`,
             }),
@@ -464,6 +465,21 @@ ${printPiecesScript}`,
       if (offered.includes(view)) serve(path, () => view, true);
     }
   }
+};
+
+// What a block says under its heading of how many hoops its games are played
+// to, where that is not the usual for the sport. A reader seeing every winning
+// score under 26 cannot otherwise tell a block played to 14 from one whose
+// games were not played out. A block played to the usual says nothing, as does
+// one with no most, and the other kinds say nothing since they are not asked
+// it here (block.feature).
+const playedToNote = (found: Found, speaking: Speaking): string => {
+  if (found.kind !== "block") return "";
+  const { maximumHoops } = found.asked.block;
+  if (maximumHoops === null || maximumHoops === found.asked.usualMaximumHoops) {
+    return "";
+  }
+  return `          <p class="competition-played-to">${escape(speaking.say("block.playedTo", { hoops: String(maximumHoops) }))}</p>`;
 };
 
 /**

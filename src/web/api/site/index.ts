@@ -180,6 +180,18 @@ const yesOrNoOf = (body: unknown, field: string): boolean | undefined => {
   return typeof value === "boolean" ? value : undefined;
 };
 
+// The most hoops a game is played to as a dialog sends it: null for none, which
+// is different from leaving it out, since that is the usual for the sport. A
+// number is a number, and text is read as one where it is only digits, and is
+// otherwise no number, so that it is refused rather than taken as none.
+const maximumHoopsOf = (body: unknown): number | null | undefined => {
+  const value = (body as Record<string, unknown> | null)?.["maximumHoops"];
+  if (value === undefined || value === null) return value;
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return Number.NaN;
+  return /^-?\d+(?:\.\d+)?$/.test(value.trim()) ? Number(value) : Number.NaN;
+};
+
 // How a competition is played and counted, as its dialog sends it: each said
 // or not. Nothing where none is, which an update takes as leaving them as they
 // were.
@@ -187,11 +199,13 @@ const rulesOf = (body: unknown): CompetitionRulesSaid | undefined => {
   const handicap = yesOrNoOf(body, "handicap");
   const drawsAllowed = yesOrNoOf(body, "drawsAllowed");
   const worldRankings = yesOrNoOf(body, "worldRankings");
+  const maximumHoops = maximumHoopsOf(body);
   return handicap === undefined &&
     drawsAllowed === undefined &&
-    worldRankings === undefined
+    worldRankings === undefined &&
+    maximumHoops === undefined
     ? undefined
-    : { handicap, drawsAllowed, worldRankings };
+    : { handicap, drawsAllowed, worldRankings, maximumHoops };
 };
 
 // A game's player as the score dialog sends them: a competition's player by

@@ -416,6 +416,7 @@ export const maori: Language = {
     "block.netGames": "Kupenga kēmu",
     "block.games": "Kēmu",
     "block.netHoops": "Kupenga hupa",
+    "block.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
     "block.won": "wikitoria",
     "block.lost": "hinga",
     "block.drawn": "taurite",
@@ -496,6 +497,7 @@ export const maori: Language = {
     "admin.rules.drawsAllowed": "Ka whakaaetia ngā hua taurite",
     "admin.tournament.levelTestsDrawn": "Ka taurite ngā whakamātau ōrite",
     "admin.rules.worldRankings": "Ka kaute ki ngā whakarārangi o te ao",
+    "admin.rules.maximumHoops": "Te nui rawa o ngā hupa",
     "admin.tournament.national": "Takunetanga ā-motu",
     "admin.tournament.international": "Takunetanga ā-ao",
     "admin.tournament.otherwise": "Kāore e taea te whakaae pēnei.",
@@ -687,6 +689,8 @@ export const maori: Language = {
       "Kāore e taea te whakarerekē i tētahi rauna ina kua tākarohia he kēmu i tētahi rauna o muri.",
     "Tournament.CompetitionNameTaken":
       "Kei tētahi atu tauwhāinga o tēnei whakataetae kua whai i taua ingoa.",
+    "Tournament.MaximumHoopsInvalid":
+      "Tuhia he tau tōpū o ngā hupa, kia kotahi te iti rawa, waiho rānei kia kore te tepe.",
     "BestOf.NotWhole": "Tāuruatia he tau tōpū o ngā kēmu.",
     "BestOf.TooSmall": "Me pai rawa o te 1 kēmu ia tukinga i te iti rawa.",
     "Rounds.NotWhole": "Tāuruatia he tau tōpū o ngā rauna.",

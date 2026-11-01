@@ -461,6 +461,7 @@ export const german: Language = {
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
+    "block.playedTo": "Gespielt bis {hoops} Tore",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "unentschieden",
@@ -559,6 +560,7 @@ export const german: Language = {
     "admin.tournament.levelTestsDrawn":
       "Gleichstand in Tests ist unentschieden",
     "admin.rules.worldRankings": "Zählt für die Weltranglisten",
+    "admin.rules.maximumHoops": "Höchstzahl der Tore",
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
     // Eine Ablehnung ohne eigene Worte, über den Feldern.
@@ -772,6 +774,8 @@ export const german: Language = {
       "Eine Runde kann nicht geändert werden, sobald in einer späteren Runde ein Spiel gespielt wurde.",
     "Tournament.CompetitionNameTaken":
       "Ein anderer Wettbewerb in diesem Turnier hat bereits diesen Namen.",
+    "Tournament.MaximumHoopsInvalid":
+      "Geben Sie eine ganze Zahl von Toren ein, mindestens 1, oder lassen Sie das Feld leer für keine Höchstzahl.",
     "BestOf.NotWhole": "Geben Sie eine ganze Zahl von Spielen ein.",
     "BestOf.TooSmall": "Ein Match muss über mindestens 1 Spiel gehen.",
     "Rounds.NotWhole": "Geben Sie eine ganze Zahl von Runden ein.",

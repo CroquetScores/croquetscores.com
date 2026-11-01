@@ -75,6 +75,7 @@ export class CompetitionPageHandler extends QueryHandler<
       worldRankingSport: tournament.sport.hasWorldRankings
         ? tournament.sport.code
         : undefined,
+      usualMaximumHoops: tournament.sport.usualMaximumHoops,
     };
   }
 }

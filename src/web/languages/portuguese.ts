@@ -440,6 +440,7 @@ export const portuguese: Language = {
     "block.netGames": "Saldo de jogos",
     "block.games": "Jogos",
     "block.netHoops": "Saldo de arcos",
+    "block.playedTo": "Jogado a {hoops} arcos",
     "block.won": "vitória",
     "block.lost": "derrota",
     "block.drawn": "empate",
@@ -532,6 +533,7 @@ export const portuguese: Language = {
     "admin.rules.drawsAllowed": "Permite empates",
     "admin.tournament.levelTestsDrawn": "Testes igualados são empates",
     "admin.rules.worldRankings": "Conta para o ranking mundial",
+    "admin.rules.maximumHoops": "Máximo de arcos",
     "admin.tournament.national": "Evento de nível nacional",
     "admin.tournament.international": "Evento de nível internacional",
     // A refusal with no words of its own, above the fields.
@@ -730,6 +732,8 @@ export const portuguese: Language = {
       "Uma rodada não pode ser alterada depois que um jogo foi disputado em uma rodada posterior.",
     "Tournament.CompetitionNameTaken":
       "Outra competição deste torneio já tem esse nome.",
+    "Tournament.MaximumHoopsInvalid":
+      "Introduza um número inteiro de arcos, pelo menos 1, ou deixe vazio para não haver máximo.",
     "BestOf.NotWhole": "Digite um número inteiro de jogos.",
     "BestOf.TooSmall": "Uma partida deve ser o melhor de pelo menos 1 jogo.",
     "Rounds.NotWhole": "Digite um número inteiro de rodadas.",

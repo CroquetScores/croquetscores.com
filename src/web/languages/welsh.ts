@@ -428,6 +428,7 @@ export const welsh: Language = {
     "block.netGames": "Gemau net",
     "block.games": "Gemau unigol",
     "block.netHoops": "Cylchau net",
+    "block.playedTo": "Chwaraeir i {hoops} cylch",
     "block.won": "wedi ennill",
     "block.lost": "wedi colli",
     "block.drawn": "cyfartal",
@@ -514,6 +515,7 @@ export const welsh: Language = {
     "admin.rules.drawsAllowed": "Caniatáu canlyniadau cyfartal",
     "admin.tournament.levelTestsDrawn": "Cyfrif profion cyfartal yn gyfartal",
     "admin.rules.worldRankings": "Yn cyfrif tuag at restr detholion y byd",
+    "admin.rules.maximumHoops": "Uchafswm cylchau",
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
     // A refusal with no words of its own, above the fields.
@@ -709,6 +711,8 @@ export const welsh: Language = {
       "Ni ellir newid rownd ar ôl chwarae gêm mewn rownd ddiweddarach.",
     "Tournament.CompetitionNameTaken":
       "Mae gan gystadleuaeth arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
+    "Tournament.MaximumHoopsInvalid":
+      "Rhowch nifer cyfan o gylchau, o leiaf 1, neu gadewch yn wag am ddim uchafswm.",
     "BestOf.NotWhole": "Rhowch nifer cyfan o gemau.",
     "BestOf.TooSmall": "Rhaid i gêm fod yr orau o 1 gêm o leiaf.",
     "Rounds.NotWhole": "Rhowch nifer cyfan o rowndiau.",

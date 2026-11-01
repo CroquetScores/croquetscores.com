@@ -52,6 +52,8 @@ interface Found {
   readonly playedByTeams: boolean;
   /** Its sport, by its code, where it has world rankings, for its players' dialog. */
   readonly worldRankingSport?: string | undefined;
+  /** The most hoops a game of its sport is played to unless a competition says otherwise. */
+  readonly usualMaximumHoops: number;
   /** Its sport, by its code, which says which kind of rankings file it has. */
   readonly sport: string;
   /** Whether it counts towards the world rankings, and so has a file. */
@@ -240,6 +242,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 <CompetitionsTab
                   tournament={asked.tournament.id}
                   ranked={asked.tournament.worldRankingSport !== undefined}
+                  usualMaximumHoops={asked.tournament.usualMaximumHoops}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                 />
@@ -255,6 +258,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 <TestsTab
                   tournament={asked.tournament.id}
                   ranked={asked.tournament.worldRankingSport !== undefined}
+                  usualMaximumHoops={asked.tournament.usualMaximumHoops}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                   toTeams={() => {

@@ -436,3 +436,25 @@ Then(
     assert.equal(mark === "Secure" ? cookie.secure : cookie.httpOnly, true);
   },
 );
+
+// Said under the heading, in a paragraph of its own, so it is looked for there
+// and not among the totals' "Net Hoops", which has the same word in it.
+Then(
+  /^the competition says it is played to (\d+) hoops$/,
+  async function (this: SpecWorld, hoops: string) {
+    assert.equal(
+      await said(this.browserPage.locator("main .competition-played-to")),
+      `Played to ${hoops} hoops`,
+    );
+  },
+);
+
+Then(
+  "the competition does not say how many hoops it is played to",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await this.browserPage.locator("main .competition-played-to").count(),
+      0,
+    );
+  },
+);

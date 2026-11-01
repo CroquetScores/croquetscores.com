@@ -441,6 +441,7 @@ export const swedish: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
+    "block.playedTo": "Spelas till {hoops} bågar",
     "block.won": "vann",
     "block.lost": "förlorade",
     "block.drawn": "oavgjort",
@@ -536,6 +537,7 @@ export const swedish: Language = {
     "admin.rules.drawsAllowed": "Tillåter oavgjorda resultat",
     "admin.tournament.levelTestsDrawn": "Jämna landskamper blir oavgjorda",
     "admin.rules.worldRankings": "Räknas med i världsrankingen",
+    "admin.rules.maximumHoops": "Högsta antal bågar",
     "admin.tournament.national": "Nationell tävling",
     "admin.tournament.international": "Internationell tävling",
     // Ett avslag utan egna ord, ovanför fälten.
@@ -736,6 +738,8 @@ export const swedish: Language = {
       "En rond kan inte ändras när ett parti har spelats i en senare rond.",
     "Tournament.CompetitionNameTaken":
       "En annan tävling i den här turneringen har redan det namnet.",
+    "Tournament.MaximumHoopsInvalid":
+      "Ange ett helt antal bågar, minst 1, eller lämna tomt för inget högsta antal.",
     "BestOf.NotWhole": "Ange ett heltal för antalet partier.",
     "BestOf.TooSmall": "En match måste vara bäst av minst 1 parti.",
     "Rounds.NotWhole": "Ange ett heltal för antalet ronder.",

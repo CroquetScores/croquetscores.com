@@ -37,6 +37,7 @@ export interface TestAsItIs {
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
+  readonly maximumHoops: number | null;
 }
 
 /** A team as the API lists the tournament's. */
@@ -54,6 +55,8 @@ interface Props {
   readonly address: string;
   /** Whether the tournament's sport has world rankings, which a test may count towards. */
   readonly ranked: boolean;
+  /** The most hoops a game of the sport is played to unless one says otherwise. */
+  readonly usualMaximumHoops: number;
   /** Nothing when adding, and the test when changing one. */
   readonly test?: TestAsItIs | undefined;
   /** Once a test is kept, so that the list says so. */
@@ -89,7 +92,11 @@ const typedNumber = (typed: string): number =>
 // twice is said beneath Team B, and a test that finishes before it starts
 // beneath Finishes, since the second is the one most likely wrong. One about
 // no one part is said above them all.
-const partOf: Readonly<Record<string, Part>> = {
+// The part a refusal is about: one of those typed in beside the teams, or the
+// most hoops, which every kind of competition asks and which is not one of them.
+type Refused = Part | "maximumHoops";
+
+const partOf: Readonly<Record<string, Refused>> = {
   "AddTest.FirstTeamMissing": "firstTeam",
   "UpdateTest.FirstTeamMissing": "firstTeam",
   "AddTest.SecondTeamMissing": "secondTeam",
@@ -101,6 +108,7 @@ const partOf: Readonly<Record<string, Part>> = {
   "Tournament.ExpectedMatchesBelowStarted": "expectedMatches",
   "Tournament.BestOfBelowGamesPlayed": "bestOf",
   "Tournament.FormatHasNoGroups": "group",
+  "Tournament.MaximumHoopsInvalid": "maximumHoops",
 };
 
 // The earlier and the later of two days written as "2026-10-03", which sort
@@ -123,11 +131,11 @@ export const TestDialog = ({
   tournament,
   address,
   ranked,
+  usualMaximumHoops,
   test,
   kept,
   close,
 }: Props): React.JSX.Element => {
-  const rules = useRules(test, ranked);
   const [teams, setTeams] = useState<readonly Team[]>([]);
   // Whether the tournament's format has groups. Taken to have them until it
   // says it has none, since nearly every format does, so that the field is
@@ -150,7 +158,7 @@ export const TestDialog = ({
     group: test?.group ?? "",
   });
   const [refused, setRefused] = useState<
-    readonly (Refusal & { readonly part: Part | undefined })[]
+    readonly (Refusal & { readonly part: Refused | undefined })[]
   >([]);
   // The test last added, by its name, said until the next team is chosen.
   const [added, setAdded] = useState<string | undefined>();
@@ -193,7 +201,7 @@ export const TestDialog = ({
   // The teams in use, since a test with an archived one would be refused.
   const offered = teams.filter(({ archived }) => !archived);
 
-  const refusal = (code: string, part: Part | undefined) => ({
+  const refusal = (code: string, part: Refused | undefined) => ({
     code,
     part,
     words: say(knows(code) ? code : "admin.test.otherwise"),
@@ -269,8 +277,14 @@ export const TestDialog = ({
 
   useFocusFirstRefused(refused);
 
-  const refusedFor = (part: Part | undefined): Refusal[] =>
+  const refusedFor = (part: Refused | undefined): Refusal[] =>
     refused.filter((each) => each.part === part);
+  const rules = useRules(
+    test,
+    ranked,
+    usualMaximumHoops,
+    refusedFor("maximumHoops"),
+  );
 
   const team = (
     part: "firstTeam" | "secondTeam",

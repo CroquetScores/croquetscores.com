@@ -459,7 +459,7 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
     Scenario: A new test begins on 26 hoops
       Given the tests of "Spring Tests" are open
       When "Add Test" is pressed
-      Then "Maximum hoops" holds "26"
+      Then "Maximum hoops" says "26"
 
     Scenario: A test added with the most hoops typed is kept so
       Given the tests of "Spring Tests" are open

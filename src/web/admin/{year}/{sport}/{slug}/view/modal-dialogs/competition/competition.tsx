@@ -34,6 +34,7 @@ export type CompetitionAsItIs = {
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
+  readonly maximumHoops: number | null;
 } & (
   | {
       readonly kind: "block";
@@ -53,6 +54,8 @@ interface Props {
   readonly tournament: string;
   /** Whether the tournament's sport has world rankings, which a competition may count towards. */
   readonly ranked: boolean;
+  /** The most hoops a game of the sport is played to unless one says otherwise. */
+  readonly usualMaximumHoops: number;
   /** Nothing when adding, and the competition when changing one. */
   readonly competition?: CompetitionAsItIs | undefined;
   /** Once a competition is kept, so that the list says so. */
@@ -70,21 +73,30 @@ const typedNumber = (typed: string): number =>
 const fieldOf = (
   code: string,
   kind: Kind,
-): "name" | "bestOf" | "places" | "rounds" | "playedIn" | undefined =>
-  code.startsWith("CompetitionName.") ||
-  code === "Tournament.CompetitionNameTaken"
-    ? "name"
-    : code.startsWith("BestOf.")
-      ? kind === "knockout"
-        ? "rounds"
-        : "bestOf"
-      : code.startsWith("Rounds.")
-        ? "playedIn"
-        : code === "KnockoutDraw.EvenBestOf"
+):
+  | "name"
+  | "bestOf"
+  | "places"
+  | "rounds"
+  | "playedIn"
+  | "maximumHoops"
+  | undefined =>
+  code === "Tournament.MaximumHoopsInvalid"
+    ? "maximumHoops"
+    : code.startsWith("CompetitionName.") ||
+        code === "Tournament.CompetitionNameTaken"
+      ? "name"
+      : code.startsWith("BestOf.")
+        ? kind === "knockout"
           ? "rounds"
-          : code.startsWith("KnockoutDraw.")
-            ? "places"
-            : undefined;
+          : "bestOf"
+        : code.startsWith("Rounds.")
+          ? "playedIn"
+          : code === "KnockoutDraw.EvenBestOf"
+            ? "rounds"
+            : code.startsWith("KnockoutDraw.")
+              ? "places"
+              : undefined;
 
 // The rules of a round's best-of that what was typed in it breaks, so that a
 // refusal of the rounds is said beside the rounds that earned it.
@@ -116,11 +128,11 @@ const roundLabel = (round: number, count: number): string => {
 export const CompetitionDialog = ({
   tournament,
   ranked,
+  usualMaximumHoops,
   competition,
   kept,
   close,
 }: Props): React.JSX.Element => {
-  const rules = useRules(competition, ranked);
   // A competition being changed begins as it is; one being added begins as a
   // block, the best of 1, or a knockout of 8 places each round the best of 1.
   const [name, setName] = useState(competition?.name ?? "");
@@ -155,6 +167,12 @@ export const CompetitionDialog = ({
   });
   const refusedFor = (field: ReturnType<typeof fieldOf>): Refusal[] =>
     refused.filter(({ code }) => fieldOf(code, kind) === field);
+  const rules = useRules(
+    competition,
+    ranked,
+    usualMaximumHoops,
+    refusedFor("maximumHoops"),
+  );
   const refusedForRound = (round: number): Refusal[] => {
     const broken = brokenByRound(rounds[round] ?? "");
     return refusedFor("rounds").filter(({ code }) => broken.includes(code));

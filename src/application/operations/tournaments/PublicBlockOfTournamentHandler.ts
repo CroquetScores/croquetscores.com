@@ -52,7 +52,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicBlockOfTournament",
     );
-    const { reference, shape } = competitionOfKindForReaders(
+    const { reference, shape, rules } = competitionOfKindForReaders(
       tournament,
       query.slug,
       "block",
@@ -134,7 +134,9 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         name: reference.name.toString(),
         bestOf,
         rounds: shape.rounds.count,
+        maximumHoops: rules.maximumHoops,
       },
+      usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,
       games: games.map((game) => ({
         winner: game.winner.value,

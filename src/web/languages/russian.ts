@@ -420,6 +420,7 @@ export const russian: Language = {
     "block.netGames": "Разница партий",
     "block.games": "Партии",
     "block.netHoops": "Разница ворот",
+    "block.playedTo": "Игра до {hoops} ворот",
     "block.won": "выиграно",
     "block.lost": "проиграно",
     "block.drawn": "вничью",
@@ -505,6 +506,7 @@ export const russian: Language = {
     "admin.rules.drawsAllowed": "Допускаются ничьи",
     "admin.tournament.levelTestsDrawn": "Равные тесты считаются ничьёй",
     "admin.rules.worldRankings": "Учитывается в мировых рейтингах",
+    "admin.rules.maximumHoops": "Максимум ворот",
     "admin.tournament.national": "Событие национального уровня",
     "admin.tournament.international": "Событие международного уровня",
     // A refusal with no words of its own, above the fields.
@@ -693,6 +695,8 @@ export const russian: Language = {
       "Раунд нельзя изменить, если в следующем раунде уже сыграна игра.",
     "Tournament.CompetitionNameTaken":
       "Другое соревнование этого турнира уже называется так.",
+    "Tournament.MaximumHoopsInvalid":
+      "Введите целое число ворот не меньше 1 или оставьте поле пустым, если предела нет.",
     "BestOf.NotWhole": "Введите целое число партий.",
     "BestOf.TooSmall": "Матч должен играться как минимум до 1 партии.",
     "Rounds.NotWhole": "Введите целое число туров.",

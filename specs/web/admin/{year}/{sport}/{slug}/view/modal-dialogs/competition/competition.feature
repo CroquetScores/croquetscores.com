@@ -533,13 +533,13 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: A new competition begins on 26 hoops
       When "Add Competition" is pressed
-      Then "Maximum hoops" holds "26"
+      Then "Maximum hoops" says "26"
 
     Scenario: A new competition in Golf Croquet begins on 13 hoops
       Given the tournament "Spring Open" is for the sport "gc"
       And the competitions of "Spring Open" are open
       When "Add Competition" is pressed
-      Then "Maximum hoops" holds "13"
+      Then "Maximum hoops" says "13"
 
     Scenario: A competition added with the most hoops typed is kept so
       Given "Add Competition" is pressed
@@ -560,21 +560,21 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And "Short Block" is typed as the "Name"
       And "0" is typed as the "Maximum hoops"
       When "Add" is pressed
-      Then "Tournament.MaximumHoopsInvalid" is said beside "Maximum hoops"
+      Then "Maximum hoops" is refused with "Tournament.MaximumHoopsInvalid"
 
     Scenario: A competition changed begins on its most hoops
       Given the competition is said to have a maximum of 14 hoops
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
-      Then "Maximum hoops" holds "14"
+      Then "Maximum hoops" says "14"
 
     Scenario: A competition with no most begins with the field empty
       Given the competition is said to have no maximum number of hoops
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the competitions of "Spring Open" are open
       When "Edit" is pressed on the competition "Block A"
-      Then "Maximum hoops" holds ""
+      Then "Maximum hoops" is empty
 
     Scenario: A competition changed to another most is kept so
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

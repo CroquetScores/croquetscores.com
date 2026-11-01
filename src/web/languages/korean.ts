@@ -433,6 +433,7 @@ export const korean: Language = {
     "block.netGames": "게임 득실차",
     "block.games": "게임",
     "block.netHoops": "후프 득실차",
+    "block.playedTo": "{hoops} 후프로 진행",
     "block.won": "승",
     "block.lost": "패",
     "block.drawn": "무",
@@ -524,6 +525,7 @@ export const korean: Language = {
     "admin.rules.drawsAllowed": "무승부 허용",
     "admin.tournament.levelTestsDrawn": "동점 테스트는 무승부 처리",
     "admin.rules.worldRankings": "세계 랭킹에 반영",
+    "admin.rules.maximumHoops": "최대 후프 수",
     "admin.tournament.national": "국내 대회",
     "admin.tournament.international": "국제 대회",
     // A refusal with no words of its own, above the fields.
@@ -712,6 +714,8 @@ export const korean: Language = {
       "이후 라운드에서 경기가 진행되었다면 그 이전 라운드는 바꿀 수 없어요.",
     "Tournament.CompetitionNameTaken":
       "이 대회의 다른 부문이 이미 그 이름을 쓰고 있어요.",
+    "Tournament.MaximumHoopsInvalid":
+      "1 이상의 정수로 후프 수를 입력하세요. 제한이 없으면 비워 두세요.",
     "BestOf.NotWhole": "게임 수를 정수로 입력해 주세요.",
     "BestOf.TooSmall": "매치는 최소 1게임 다승제여야 해요.",
     "Rounds.NotWhole": "라운드 수를 정수로 입력해 주세요.",

@@ -410,6 +410,7 @@ export const egyptian: Language = {
     "block.netGames": "صافي الألعاب",
     "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
+    "block.playedTo": "بتتلعب لحد {hoops} حلقة",
     "block.won": "فاز",
     "block.lost": "خسر",
     "block.drawn": "تعادل",
@@ -495,6 +496,7 @@ export const egyptian: Language = {
     "admin.rules.drawsAllowed": "التعادل مسموح",
     "admin.tournament.levelTestsDrawn": "اللقاءات المتعادلة بتتحسب تعادل",
     "admin.rules.worldRankings": "بتتحسب في التصنيف العالمي",
+    "admin.rules.maximumHoops": "أقصى عدد حلقات",
     "admin.tournament.national": "حدث على المستوى الوطني",
     "admin.tournament.international": "حدث على المستوى الدولي",
     // A refusal with no words of its own, above the fields.
@@ -676,6 +678,8 @@ export const egyptian: Language = {
       "الدور مينفعش يتغيّر بعد ما تتلعب لعبة في دور بعده.",
     "Tournament.CompetitionNameTaken":
       "فيه منافسة تانية في البطولة دي بنفس الاسم.",
+    "Tournament.MaximumHoopsInvalid":
+      "اكتب رقم صحيح من الحلقات، 1 على الأقل، أو سيبه فاضي لو مفيش حد أقصى.",
     "BestOf.NotWhole": "اكتب عدد صحيح من الألعاب.",
     "BestOf.TooSmall": "المباراة لازم تكون أحسن لعبة واحدة على الأقل.",
     "Rounds.NotWhole": "اكتب عدد صحيح من الأدوار.",

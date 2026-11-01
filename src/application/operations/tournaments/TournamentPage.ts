@@ -40,6 +40,8 @@ export interface TournamentAsPaged {
    * world ranking players. Nothing where they are not asked.
    */
   readonly worldRankingSport: string | undefined;
+  /** The most hoops a game of its sport is played to unless a competition says otherwise, which a competition's dialog begins on. */
+  readonly usualMaximumHoops: number;
   /** Its sport, by its code, as "ac". */
   readonly sport: string;
   /**

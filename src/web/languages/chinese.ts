@@ -412,6 +412,7 @@ export const chinese: Language = {
     "block.netGames": "净胜局",
     "block.games": "局数",
     "block.netHoops": "净胜球门",
+    "block.playedTo": "打到 {hoops} 门",
     "block.won": "胜",
     "block.lost": "负",
     "block.drawn": "平",
@@ -501,6 +502,7 @@ export const chinese: Language = {
     "admin.rules.drawsAllowed": "允许平局",
     "admin.tournament.levelTestsDrawn": "对抗赛打平算平局",
     "admin.rules.worldRankings": "计入世界排名",
+    "admin.rules.maximumHoops": "最大门数",
     "admin.tournament.national": "国家级赛事",
     "admin.tournament.international": "国际级赛事",
     // A refusal with no words of its own, above the fields.
@@ -678,6 +680,8 @@ export const chinese: Language = {
     "Tournament.KnockoutLaterRoundHasGames":
       "后面的轮次一旦已有比赛，这一轮就不能再更改。",
     "Tournament.CompetitionNameTaken": "本赛事中已有另一个项目使用这个名称。",
+    "Tournament.MaximumHoopsInvalid":
+      "请输入至少为 1 的整数门数，留空表示没有上限。",
     "BestOf.NotWhole": "请输入整数局数。",
     "BestOf.TooSmall": "一场比赛至少要采用 1 局制。",
     "Rounds.NotWhole": "请输入整数轮数。",

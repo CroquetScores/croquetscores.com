@@ -444,6 +444,7 @@ export const italian: Language = {
     "block.netGames": "Differenza partite",
     "block.games": "Partite",
     "block.netHoops": "Differenza archetti",
+    "block.playedTo": "Giocata a {hoops} porte",
     "block.won": "vinta",
     "block.lost": "persa",
     "block.drawn": "pareggiata",
@@ -538,6 +539,7 @@ export const italian: Language = {
     "admin.rules.drawsAllowed": "Ammette i pareggi",
     "admin.tournament.levelTestsDrawn": "I test in parità sono pareggiati",
     "admin.rules.worldRankings": "Vale per le classifiche mondiali",
+    "admin.rules.maximumHoops": "Numero massimo di porte",
     "admin.tournament.national": "Evento di livello nazionale",
     "admin.tournament.international": "Evento di livello internazionale",
     // Un rifiuto senza parole proprie, sopra i campi.
@@ -743,6 +745,8 @@ export const italian: Language = {
       "Un turno non può essere cambiato dopo che si è giocata una partita in un turno successivo.",
     "Tournament.CompetitionNameTaken":
       "Un'altra competizione di questo torneo ha già questo nome.",
+    "Tournament.MaximumHoopsInvalid":
+      "Inserisci un numero intero di porte, almeno 1, oppure lascia vuoto per nessun massimo.",
     "BestOf.NotWhole": "Inserisci un numero intero di partite.",
     "BestOf.TooSmall": "Un incontro deve essere al meglio di almeno 1 partita.",
     "Rounds.NotWhole": "Inserisci un numero intero di turni.",

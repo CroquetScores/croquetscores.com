@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Field, type Refusal } from "./Field.js";
 import { say } from "./words.js";
 
 interface TickProps {
@@ -36,6 +37,8 @@ export interface RulesAsItIs {
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
+  /** The most hoops a game is played to, or null for no most. */
+  readonly maximumHoops: number | null;
 }
 
 /**
@@ -48,15 +51,25 @@ export interface RulesAsItIs {
  * competition is neither played under handicap nor allows drawn results, which
  * cannot count, and left unsaid otherwise for the tournament to decide
  * (create.feature). `said` is what is sent; `ticks` is what is drawn.
+ *
+ * After them is the most hoops a game is played to, which a competition being
+ * added begins on the usual for its sport, and one being changed on its own.
+ * Emptied it is none, which is sent as none rather than left out, since
+ * leaving it out would be taken as the usual (maximumHoops.feature). Text that
+ * is no number is sent as it was typed, for the tournament to refuse, since
+ * a number that is not one would be sent as none.
  */
 export const useRules = (
   begins: RulesAsItIs | undefined,
   ranked: boolean,
+  usualMaximumHoops: number,
+  maximumHoopsRefused: readonly Refusal[],
 ): {
   readonly said: {
     readonly handicap: boolean;
     readonly drawsAllowed: boolean;
     readonly worldRankings?: boolean;
+    readonly maximumHoops: number | string | null;
   };
   readonly ticks: React.JSX.Element;
 } => {
@@ -74,11 +87,25 @@ export const useRules = (
       begins.handicap ||
       begins.drawsAllowed,
   );
+  const [maximumHoops, setMaximumHoops] = useState(
+    begins === undefined
+      ? String(usualMaximumHoops)
+      : begins.maximumHoops === null
+        ? ""
+        : String(begins.maximumHoops),
+  );
+  const typedMaximumHoops = maximumHoops.trim();
   const asksAboutWorldRankings = ranked && !handicap && !drawsAllowed;
   return {
     said: {
       handicap,
       drawsAllowed,
+      maximumHoops:
+        typedMaximumHoops === ""
+          ? null
+          : /^-?\d+(?:\.\d+)?$/.test(typedMaximumHoops)
+            ? Number(typedMaximumHoops)
+            : typedMaximumHoops,
       ...(asksAboutWorldRankings ? { worldRankings } : {}),
     },
     ticks: (
@@ -103,6 +130,25 @@ export const useRules = (
             tick={setWorldRankings}
           />
         ) : null}
+        <Field
+          name="maximum-hoops"
+          label={say("admin.rules.maximumHoops")}
+          refused={maximumHoopsRefused}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              type="text"
+              inputMode="numeric"
+              placeholder=" "
+              autoComplete="off"
+              value={maximumHoops}
+              onChange={(event) => {
+                setMaximumHoops(event.target.value);
+              }}
+            />
+          )}
+        </Field>
       </>
     ),
   };

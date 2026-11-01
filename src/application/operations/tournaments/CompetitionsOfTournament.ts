@@ -14,6 +14,8 @@ export type ListedCompetition = {
   readonly handicap: boolean;
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
+  /** The most hoops a game is played to, or null for no most. */
+  readonly maximumHoops: number | null;
 } & (
   | {
       readonly kind: "block";
