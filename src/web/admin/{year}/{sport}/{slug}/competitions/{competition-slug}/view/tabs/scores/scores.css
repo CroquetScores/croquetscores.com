@@ -1,15 +1,11 @@
 /* A score reads as it is said aloud: the winner and their score, then the
-   loser and theirs. A name wraps onto as many lines as it needs rather than
-   widening the page. */
-.listed-score {
-  overflow-wrap: anywhere;
-}
+   loser and theirs. */
 
 /* A game's number begins the score, quietly, since it is to find a game by and
-   not to read. */
+   not to read. Numbers line up on their last digit. */
 .score-number {
-  margin-inline-end: var(--space-2);
   color: var(--ink-muted);
+  text-align: end;
 }
 
 /* The scores are what is read first, so they are the bold; a name is not. */
@@ -18,47 +14,82 @@
   font-weight: 600;
 }
 
+/* The word between the winner and the loser, which no cell holds, is said to a
+   reader who cannot see and not drawn: the cells either side of it already
+   read as a winner and a loser. */
+.game-scores td {
+  /* The cell the word is in is the box it is placed in, so that it stays in
+     its row and cannot widen the page from some other place. */
+  position: relative;
+}
+
+.score-between {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* Struck through so that an archived score is not taken for one in use. Its
-   row says so in words too, for a reader who is not looking. */
+   row says so in words too, for a reader who is not looking. The line is drawn
+   on the parts of a score rather than on its row, since a style on a row does
+   not reach the parts a reader looks at as their own. */
+.listed-item[data-archived] .score-winner,
+.listed-item[data-archived] .score-winner-score,
+.listed-item[data-archived] .score-loser,
+.listed-item[data-archived] .score-loser-score,
 .listed-item[data-archived] .listed-score {
   text-decoration: line-through;
 }
 
 /* Struck through too where it was played but is not to count, though it stays
    among those in use, where it was played. Its row says so in words too. */
-.listed-item[data-withdrawn] .listed-score {
+.listed-item[data-withdrawn] .score-winner,
+.listed-item[data-withdrawn] .score-winner-score,
+.listed-item[data-withdrawn] .score-loser,
+.listed-item[data-withdrawn] .score-loser-score {
   text-decoration: line-through;
 }
 
-/* A test's scores, set out by team: each team's player under its short name,
-   the scores between them, and what each offers last. The players' and the
-   scores' columns are as wide as what is in them and no wider, and nothing
-   wraps, so that a score reads along one line. The table reaches across the
-   page, the last column taking what is left, so that what each score offers
-   is at the right edge. Where it is wider than the screen, the box the table
-   is in scrolls across rather than the page widening. */
-.test-scores-box {
+/* The scores, as a table: a row to each, with its game's number, the winner,
+   their score, the loser, their score, and what each offers last. A test's
+   scores are set out by team, under its short names, and a competition's by
+   who won, but they are laid out alike. The columns but the last are as wide as
+   what is in them and no wider, and nothing wraps, so that a score reads along
+   one line and the columns line up from one score to the next. The table
+   reaches across the page, the last column taking what is left, so that what
+   each score offers is at the right edge. Where it is wider than the screen,
+   the box the table is in scrolls across rather than the page widening, on a
+   phone as on any other screen: a row folded into two lines would be a row of
+   a table no longer. */
+.scores-box {
+  /* Without it a box in a grid is as wide as its table, which is what the
+     scrolling is to prevent. */
+  min-width: 0;
   max-width: 100%;
   overflow-x: auto;
 }
 
-.test-scores {
+.test-scores,
+.game-scores {
   width: 100%;
   border-collapse: collapse;
 }
 
 /* As narrow as what is in them, which a cell asking for less than it needs
    is, so that the last column takes the rest. */
-.test-scores tr > :not(:last-child) {
+.test-scores tr > :not(:last-child),
+.game-scores tr > :not(:last-child) {
   width: 1%;
 }
 
-.test-scores .listed-options {
-  justify-content: flex-end;
-}
-
 .test-scores th,
-.test-scores td {
+.test-scores td,
+.game-scores td {
   padding-block: var(--space-2);
   padding-inline: var(--space-2);
   white-space: nowrap;
@@ -66,11 +97,34 @@
   text-align: start;
 }
 
-/* A row of a table, whose cells line up under the headings, rather than the
+/* A row of a table, whose cells line up under one another, rather than the
    grid every other list's row is (listed.css). */
-.test-scores .listed-item {
+.test-scores .listed-item,
+.game-scores .listed-item {
   display: table-row;
   border-top: 1px solid var(--border);
+}
+
+.test-scores .listed-options,
+.game-scores .listed-options {
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+/* Set in from the score, so that the buttons are not read as part of it, and
+   at the edge of the table rather than a cell's padding short of it. */
+.game-scores .listed-options {
+  padding-inline-start: 2rem;
+}
+
+.game-scores td:last-child {
+  padding-inline-end: 0;
+}
+
+/* Why a Restore was refused is a sentence, which wraps in the room the last
+   column has rather than being kept to a line. */
+.game-scores .listed-score-refused {
+  white-space: normal;
 }
 
 .test-scores th:nth-child(2),
@@ -78,84 +132,6 @@
   text-align: center;
 }
 
-.test-scores .listed-options {
-  flex-wrap: nowrap;
-}
-
 .listed-item[data-archived] .score-player {
   text-decoration: line-through;
-}
-
-/* From the width the other tabs lay their rows out beside what can be done
-   with them, a score is a row of columns: its game's number, the winner, their
-   score, the loser, their score, and what can be done with it. The first five are as wide as
-   what is in them and no wider and nothing in them wraps, so that a score
-   reads along one line and the columns line up from one score to the next
-   (a row takes its columns from the list's, as a subgrid). The last takes what
-   is left. A list wider than the screen scrolls across rather than the page
-   widening. Below that width a score is two lines, as it was. */
-@media (min-width: 40rem) {
-  ul.listed:has(.listed-score) {
-    grid-template-columns: repeat(5, max-content) minmax(0, 1fr);
-    overflow-x: auto;
-  }
-
-  ul.listed:has(.listed-score) > .listed-item {
-    grid-template-columns: subgrid;
-    grid-column: 1 / -1;
-  }
-
-  /* Its parts are the row's cells, so the line between them is not wanted, and
-     the word between the winner and the loser, which no column holds, is said
-     to a reader who cannot see and not drawn. */
-  .listed-item > .listed-score {
-    display: contents;
-  }
-
-  .listed-score br {
-    display: none;
-  }
-
-  .listed-score .score-beat {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-  .score-number,
-  .score-winner,
-  .score-winner-score,
-  .score-loser,
-  .score-loser-score {
-    white-space: nowrap;
-  }
-
-  /* Numbers line up on their last digit, and the column's gap is the space. */
-  .score-number {
-    margin-inline-end: 0;
-    text-align: end;
-  }
-
-  /* Set in from the score, so that the buttons are not read as part of it. */
-  ul.listed:has(.listed-score) .listed-options {
-    padding-inline-start: 2rem;
-  }
-
-  /* A line through a score is drawn on its parts, a row that has no box of its
-     own being no place to hang it. */
-  .listed-item[data-archived] .score-winner,
-  .listed-item[data-archived] .score-winner-score,
-  .listed-item[data-archived] .score-loser,
-  .listed-item[data-archived] .score-loser-score,
-  .listed-item[data-withdrawn] .score-winner,
-  .listed-item[data-withdrawn] .score-winner-score,
-  .listed-item[data-withdrawn] .score-loser,
-  .listed-item[data-withdrawn] .score-loser-score {
-    text-decoration: line-through;
-  }
 }

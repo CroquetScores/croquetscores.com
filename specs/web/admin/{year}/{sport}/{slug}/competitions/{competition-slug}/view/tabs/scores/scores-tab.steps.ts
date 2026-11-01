@@ -25,8 +25,8 @@ When(
 
 type List = "in-use" | "archived";
 
-// A list, or a test's table, whose rows are its body's (view.feature beneath
-// the test).
+// A table whose rows are its body's, as a competition's scores are and as a
+// test's (view.feature beneath the test) are.
 const rows = (world: SpecWorld, list?: List): Locator =>
   tabPanel(world).locator(
     list === undefined
@@ -267,7 +267,7 @@ Then(
       const line = await (
         await rowOf(this, winner, loser)
       )
-        .locator(".listed-score")
+        .locator(".score-winner")
         .evaluate(
           (element: unknown) =>
             (
@@ -394,7 +394,11 @@ Then(
   async function (this: SpecWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
-        ".listed-score",
+        ".score-number",
+        ".score-winner",
+        ".score-winner-score",
+        ".score-loser",
+        ".score-loser-score",
       ]);
       assert.deepEqual(stray, [], "Words in the tab came from elsewhere.");
     });
@@ -649,6 +653,71 @@ Then(
       const winner = await row.locator(".score-winner").boundingBox();
       assert.ok(number !== null && winner !== null, "One is not laid out.");
       assert.ok(number.x + number.width <= winner.x, "It is not before.");
+    });
+  },
+);
+
+// Semantic markup, which is asked of the page by the element, since a table is
+// told to a reader who cannot see by being one and by no style.
+const tableOf = (world: SpecWorld, list: List): Locator =>
+  tabPanel(world).locator(`table:has(> tbody[data-listed="${list}"])`);
+
+for (const [which, list] of [
+  ["in use", "in-use"],
+  ["archived", "archived"],
+] as const) {
+  Then(
+    `the ${which === "in use" ? "scores in use are" : "archived scores are"} a table`,
+    async function (this: SpecWorld) {
+      await eventually(this, async () => {
+        assert.equal(await tableOf(this, list).count(), 1);
+      });
+    },
+  );
+}
+
+Then(
+  "the first score listed is a row of the table",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").first();
+      assert.equal(await row.locator("xpath=self::tr").count(), 1);
+    });
+  },
+);
+
+Then(
+  "the first score listed has {int} cells",
+  async function (this: SpecWorld, cells: number) {
+    await eventually(this, async () => {
+      assert.equal(
+        await rows(this, "in-use").first().locator("> td").count(),
+        cells,
+      );
+    });
+  },
+);
+
+Then(
+  "the table of scores has no column headings",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      assert.equal(await tableOf(this, "in-use").count(), 1);
+      assert.equal(await tableOf(this, "in-use").locator("th").count(), 0);
+    });
+  },
+);
+
+// Said but not drawn: as large as a point, where a word that was drawn would
+// be as wide as its letters.
+Then(
+  "the word between the winner and the loser of the first score listed is not drawn",
+  async function (this: SpecWorld) {
+    await eventually(this, async () => {
+      const word = rows(this, "in-use").first().locator(".score-between");
+      assert.equal(await word.count(), 1, "It is not said.");
+      const box = await word.boundingBox();
+      assert.ok(box === null || box.width <= 1, "It is drawn.");
     });
   },
 );
