@@ -1,5 +1,8 @@
 import { AddBlock } from "../../../../src/application/operations/tournaments/AddBlock.js";
-import { AddKnockout } from "../../../../src/application/operations/tournaments/AddKnockout.js";
+import {
+  AddKnockout,
+  type LosersKnockoutSaid,
+} from "../../../../src/application/operations/tournaments/AddKnockout.js";
 import { AddManager } from "../../../../src/application/operations/tournaments/AddManager.js";
 import { AddPlayer } from "../../../../src/application/operations/tournaments/AddPlayer.js";
 import { AddPlayers } from "../../../../src/application/operations/tournaments/AddPlayers.js";
@@ -306,6 +309,16 @@ const drawSaid = (
   };
 };
 
+// The losers knockouts a scenario says the knockout is to be added with.
+const losersSaid = new WeakMap<SpecWorld, LosersKnockoutSaid[]>();
+
+export const sayLosersKnockout = (
+  world: SpecWorld,
+  losers: LosersKnockoutSaid,
+): void => {
+  losersSaid.set(world, [...(losersSaid.get(world) ?? []), losers]);
+};
+
 export const addKnockout = (
   world: SpecWorld,
   account: string,
@@ -323,6 +336,7 @@ export const addKnockout = (
       draw.rounds,
       momentOf(world),
       domainScenarioOf(world).competition.rules,
+      losersSaid.get(world),
     ),
     tournament,
   );

@@ -44,6 +44,19 @@ export class AddKnockoutHandler extends CommandHandler<
       command.requestedAt,
       command.rules,
     );
+    // Recorded on the one tournament before it is saved once, so that a losers
+    // knockout the tournament refuses leaves the knockout unadded as well.
+    // The knockout is new, so there are no losers to carry into them yet.
+    for (const each of command.losers) {
+      tournament.addLosersKnockout(
+        CompetitionId.create(),
+        CompetitionName.from(each.name),
+        id,
+        each.round,
+        by,
+        command.requestedAt,
+      );
+    }
     await this.tournaments.save(tournament);
     return id;
   }

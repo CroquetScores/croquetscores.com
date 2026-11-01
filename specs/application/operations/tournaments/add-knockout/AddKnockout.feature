@@ -12,6 +12,11 @@ Feature: Adding a knockout to a tournament
   managers can: anybody else, a scorer among them, is refused with
   `Tournament.NotAManager` (`onlyManagers.feature`).
 
+  Losers knockouts, which take the losers of the knockout's rounds
+  (`AddLosersKnockout.feature`), can be added with it. They are added in the
+  same change to the tournament, so that either the knockout and all of them
+  are kept, or none is: one the tournament refuses leaves nothing added.
+
   This says again only enough of what adding a block says to show that it
   holds for a knockout.
 
@@ -41,6 +46,69 @@ Feature: Adding a knockout to a tournament
     Scenario: The answer is the knockout's id
       When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
       Then it is answered with the id of the tournament's competition "Main Event"
+
+  Rule: Losers knockouts added with the knockout are kept with it
+
+    Background:
+      Given the knockout is to have a draw of 8 places
+
+    Scenario: A losers knockout is one of the tournament's competitions
+      Given the knockout is to have its first round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Plate" is a knockout
+
+    Scenario: A losers knockout takes the losers of the round it was added for
+      Given the knockout is to have its second round's losers played on in "Shield"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Shield" was added for the losers of the second round of "Main Event"
+
+    Scenario: A losers knockout has a place for each match of the round
+      Given the knockout is to have its first round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Plate" has a draw of 4 places
+
+    Scenario: Several losers knockouts are all kept
+      Given the knockout is to have its first round's losers played on in "Plate"
+      And the knockout is to have its second round's losers played on in "Shield"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Plate" is a knockout
+      And the tournament's competition "Shield" is a knockout
+
+    Scenario: The answer is still the knockout's id
+      Given the knockout is to have its first round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then it is answered with the id of the tournament's competition "Main Event"
+
+  Rule: A losers knockout the tournament refuses leaves nothing added
+
+    Background:
+      Given the knockout is to have a draw of 8 places
+
+    Scenario: A round with no losers to send on is refused
+      Given the knockout is to have its third round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then it is refused with "Tournament.NoSuchRound"
+
+    Scenario: The knockout is not added for it
+      Given the knockout is to have its third round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament "Spring Open" has no competition "Main Event"
+
+    Scenario: A losers knockout named as the knockout is is refused
+      Given the knockout is to have its first round's losers played on in "Main Event"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then it is refused with "Tournament.CompetitionNameTaken"
+
+    Scenario: A losers knockout added before is not kept either
+      Given the knockout is to have its first round's losers played on in "Plate"
+      And the knockout is to have its third round's losers played on in "Shield"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament "Spring Open" has no competition "Plate"
+
+    Scenario: A losers knockout with no name is refused on the way in
+      Given the knockout is to have its first round's losers played on in ""
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then it is refused with "Request.Invalid"
 
   Rule: The draw must break none of its own rules
 
