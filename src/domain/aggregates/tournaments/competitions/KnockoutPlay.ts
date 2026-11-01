@@ -1,3 +1,4 @@
+import { ORDER_STEP } from "../../../common/orders.js";
 import type { KnockoutDraw } from "../value-objects/KnockoutDraw.js";
 import type { CompetitionPlayer } from "./CompetitionPlayer.js";
 import type { Game } from "./Game.js";
@@ -30,6 +31,13 @@ export interface Match {
   /** Whether a player won it by playing, rather than by a bye or a walkover. */
   readonly wonByPlaying: boolean;
 }
+
+/**
+ * The order of the player in the place `place` of a losers knockout, the
+ * first place being 0: orders start above nought, so the places are given
+ * the steps players are usually given.
+ */
+export const orderOfPlace = (place: number): number => (place + 1) * ORDER_STEP;
 
 const nobody: Side = { is: "nobody" };
 const notYetKnown: Side = { is: "not yet known" };
@@ -107,9 +115,17 @@ export const knockoutPlay = (
   players: readonly CompetitionPlayer[],
   withdrawals: readonly CompetitionPlayerId[],
   games: readonly Game[],
+  // Whether each player is in the place their order says, as in a losers
+  // knockout, where a place is filled when the match it takes its loser from
+  // is decided, and one still empty is somebody not yet known. Otherwise the
+  // players fill the places in order and an empty one is a bye.
+  placedByOrder = false,
 ): readonly Match[] => {
   let entrants: Side[] = Array.from({ length: draw.places }, (_, place) => {
-    const player = players[place];
+    const player = placedByOrder
+      ? players.find((each) => each.order === orderOfPlace(place))
+      : players[place];
+    if (placedByOrder && player === undefined) return notYetKnown;
     // A bye fills a place, but is nobody.
     return player === undefined || player.isBye
       ? nobody
@@ -167,3 +183,25 @@ export const drawnAgainst = (
   const other = theirs?.sides.find((side) => !isPlayer(side, id));
   return other?.is === "player" ? other.player : undefined;
 };
+
+/**
+ * Who lost each match of `round` in `play`, the first being 0, in the order
+ * of the draw: the player who did not go through; nobody where the match was
+ * a bye, which sends a bye on; or not yet known where it is not decided.
+ */
+export const losersOfRound = (
+  play: readonly Match[],
+  round: number,
+): readonly Side[] =>
+  play
+    .filter((match) => match.round === round)
+    .map((match) => {
+      if (match.winner.is === "not yet known") return notYetKnown;
+      const winner = match.winner;
+      const lost = match.sides.find(
+        (side) =>
+          side.is === "player" &&
+          !(winner.is === "player" && winner.player.id.equals(side.player.id)),
+      );
+      return lost ?? nobody;
+    });

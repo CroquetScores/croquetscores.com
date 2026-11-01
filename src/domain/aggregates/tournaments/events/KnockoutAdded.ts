@@ -4,7 +4,8 @@ import type { AccountId } from "../../accounts/AccountId.js";
 
 /**
  * That a knockout was added to the tournament: its id, its name, the slug and
- * the order the tournament gave it, and the shape of its draw.
+ * the order the tournament gave it, and the shape of its draw. A losers
+ * knockout also says which knockout's losers fill it, and from which round.
  */
 export class KnockoutAdded extends DomainEvent {
   // What each round is the best of, the first round first.
@@ -27,6 +28,10 @@ export class KnockoutAdded extends DomainEvent {
     readonly maximumHoops: number | null | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
+    // Left out of every knockout added before losers knockouts, and of one
+    // whose players are set by hand. The round is the first being 0.
+    readonly losersOfCompetitionId?: string,
+    readonly losersOfRound?: number,
   ) {
     super(createdBy, occurredAt);
     // A copy, frozen, so that nothing holding the list it was given can change

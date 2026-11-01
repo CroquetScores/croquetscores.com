@@ -9,6 +9,7 @@ const POSITIONS: Readonly<Record<string, number>> = {
   second: 1,
   third: 2,
   fourth: 3,
+  fifth: 4,
 };
 
 export const positionOf = (ordinal: string): number => {

@@ -140,3 +140,25 @@ Feature: How a knockout has been played so far
       And "Chris Third" beat "Sam Someone" in the knockout
       When the knockout is played out
       Then "Chris Third" is drawn against nobody
+
+  Rule: The losers of a round are told in the order of the draw, for a losers knockout to take
+
+    A losers knockout is filled with whoever lost a round of another
+    knockout, in the order they were drawn there (`enterLoser.feature`), so
+    the knockout says who lost each match of a round: the player who did not
+    go through, nobody where the match was a bye, and not yet known where it
+    is not decided.
+
+    Scenario: The loser of a match decided is the player who did not go through
+      Given "Sam Someone" beat "Alex Another" in the knockout
+      When the knockout is played out
+      Then the loser of the first match of the first round is "Alex Another"
+
+    Scenario: The loser of a match not decided is not yet known
+      When the knockout is played out
+      Then the loser of the first match of the first round is not yet known
+
+    Scenario: The loser of a bye is nobody
+      Given "Sam Someone" beat "Alex Another" in the knockout
+      When the knockout is played out
+      Then the loser of the second match of the first round is nobody

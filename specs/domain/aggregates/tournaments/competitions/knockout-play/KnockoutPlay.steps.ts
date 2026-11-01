@@ -7,7 +7,9 @@ import {
   drawnAgainst,
   isPlayer,
   knockoutPlay,
+  losersOfRound,
   type Match,
+  type Side,
 } from "../../../../../../src/domain/aggregates/tournaments/competitions/KnockoutPlay.js";
 import { CompetitionPlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import { GameId } from "../../../../../../src/domain/aggregates/tournaments/competitions/primitives/GameId.js";
@@ -202,5 +204,29 @@ Then(
       drawnAgainst(playOf(this), drawnPlayer(this, name).id),
       undefined,
     );
+  },
+);
+
+const loserOf = (world: SpecWorld, match: number, round: number): Side => {
+  const loser = losersOfRound(playOf(world), round)[match];
+  assert.ok(loser !== undefined, "The round has no such match.");
+  return loser;
+};
+
+Then(
+  /^the loser of the (first|second) match of the first round is "([^"]*)"$/,
+  function (this: SpecWorld, which: string, name: string) {
+    const loser = loserOf(this, which === "first" ? 0 : 1, 0);
+    assert.ok(
+      isPlayer(loser, drawnPlayer(this, name).id),
+      `The loser is ${loser.is}.`,
+    );
+  },
+);
+
+Then(
+  /^the loser of the (first|second) match of the first round is (nobody|not yet known)$/,
+  function (this: SpecWorld, which: string, kind: string) {
+    assert.equal(loserOf(this, which === "first" ? 0 : 1, 0).is, kind);
   },
 );
