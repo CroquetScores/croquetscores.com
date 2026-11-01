@@ -110,6 +110,22 @@ Feature: Adding a knockout to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
       Then it is refused with "Request.Invalid"
 
+  Rule: A losers knockout is played and counted as the knockout is
+
+    Scenario: A losers knockout added with a knockout played under handicap is too
+      Given the knockout is to have a draw of 8 places
+      And the competition is to be played under handicap
+      And the knockout is to have its first round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Plate" is played under handicap
+
+    Scenario: A losers knockout added with a knockout allowing drawn results is too
+      Given the knockout is to have a draw of 8 places
+      And the competition is to allow drawn results
+      And the knockout is to have its first round's losers played on in "Plate"
+      When the reader signed in to the account for "organiser@example.com" adds the knockout "Main Event" to "Spring Open"
+      Then the tournament's competition "Plate" allows drawn results
+
   Rule: The draw must break none of its own rules
 
     Scenario Outline: A draw that breaks a rule is refused for it

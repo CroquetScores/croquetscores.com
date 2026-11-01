@@ -123,6 +123,7 @@ export type TournamentErrorCode =
   | "Tournament.LosersKnockoutPlacesFixed"
   | "Tournament.KnockoutHasLosersKnockouts"
   | "Tournament.KnockoutHasLosersKnockoutsInUse"
+  | "Tournament.LosersKnockoutSourceArchived"
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
@@ -973,7 +974,9 @@ export class Tournament extends AggregateRoot {
     }
     const places = source.shape.draw.places / 2 ** (round + 1);
     const { slug, order } = this.#placeFor(id, name);
-    const settled = this.#rulesFor(rules);
+    // Played and counted as the knockout it takes losers from is, unless it
+    // is said otherwise: a handicap knockout's losers play with handicaps.
+    const settled = this.#rulesFor(rules ?? source.rules);
     this.record(
       new KnockoutAdded(
         id.value,
@@ -1311,6 +1314,19 @@ export class Tournament extends AggregateRoot {
     if (found.shape.kind === "test") {
       this.#teamFound(found.shape.firstTeam).ensureInUse();
       this.#teamFound(found.shape.secondTeam).ensureInUse();
+    }
+    // A losers knockout waits on the knockout it takes losers from, which an
+    // archived one no longer plays.
+    if (
+      found.shape.kind === "knockout" &&
+      found.shape.losersOf !== undefined &&
+      this.#competitionFound(found.shape.losersOf.competitionId).reference
+        .archived
+    ) {
+      refuse(
+        "Tournament.LosersKnockoutSourceArchived",
+        "The knockout this one takes losers from is archived.",
+      );
     }
     this.record(new CompetitionRestored(id.value, by, at));
   }

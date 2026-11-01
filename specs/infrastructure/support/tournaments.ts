@@ -275,7 +275,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
-  mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new RestoreCompetitionHandler(...both, competitions));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));

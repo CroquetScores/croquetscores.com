@@ -38,6 +38,32 @@ Feature: Restoring a tournament's archived competition
       When the reader signed in to the account for "organiser@example.com" restores the competition "Block A" in "Spring Open"
       Then nothing more is recorded of the tournament
 
+  Rule: A losers knockout restored is brought up to date
+
+    Games decided while it was archived were not carried to it, so restoring it
+    puts in the losers it missed (`AddGame.feature`).
+
+    Background:
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Final Stage"
+      And "organiser@example.com" has archived the competition "Plate" in "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+
+    Scenario: The loser of a game decided while it was archived is not in it
+      Then the competition "Plate" of "Spring Open" does not have the player "Alex Another"
+
+    Scenario: Restoring it puts the loser in
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Plate" in "Spring Open"
+      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+
   Rule: Only a competition there is, in a tournament there is, can be restored
 
     Scenario: Restoring a competition the tournament does not have is refused as the tournament refuses it

@@ -292,6 +292,35 @@ Feature: Adding a game's score to a competition
       When the reader signed in to the account for "organiser@example.com" enters the player "Sam Someone" in "Plate" of "Spring Open"
       Then it is refused with "Competition.PlayersSetAutomatically"
 
+  Rule: A change to a losers knockout is carried on to the one that takes its losers
+
+    A match with a bye is decided without a game, so the player who goes
+    through it sends a bye on to the knockout that takes the losers of its
+    round, without a game of its own to say so.
+
+    Background:
+      Given the knockout is to have a draw of 8 places
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the player "Dana Fifth" to "Spring Open"
+      And "organiser@example.com" has added the player "Eli Sixth" to "Spring Open"
+      And "organiser@example.com" has added the player "Fay Seventh" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Big Draw" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Dana Fifth" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Eli Sixth" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered the player "Fay Seventh" in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Big Draw" of "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Big Draw"
+      And "organiser@example.com" has added the losers knockout "Shield" to "Spring Open" for the losers of the first round of "Plate"
+
+    Scenario: A bye in the first losers knockout is carried on to the second
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Dana Fifth" beating "Eli Sixth" 26 to 17 in "Big Draw" of "Spring Open"
+      Then the competition "Shield" of "Spring Open" has 1 bye
+
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, has a game added
 
     Scenario: A competition the tournament does not have is refused

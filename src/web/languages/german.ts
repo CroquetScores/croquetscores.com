@@ -616,6 +616,8 @@ export const german: Language = {
       "Ein anderes K.-o.-Turnier übernimmt die Verlierer dieses Turniers, deshalb lassen sich seine Plätze nicht ändern.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "Ein anderes K.-o.-Turnier in Verwendung übernimmt die Verlierer dieses Turniers, archivieren Sie daher zuerst jenes.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Dieses K.-o.-Turnier der Verlierer übernimmt die Verlierer eines archivierten K.-o.-Turniers, stellen Sie daher zuerst jenes wieder her.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Ein K.-o.-Turnier der Verlierer hat so viele Plätze, wie die Runde, deren Verlierer es übernimmt, Partien hat.",
     "Competition.PlayersSetAutomatically":

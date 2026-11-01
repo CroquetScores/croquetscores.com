@@ -16,15 +16,14 @@ import {
  * match they lost, and a place whose match is not decided, as when its game is
  * set aside, has nobody. The knockouts are found by searching the
  * tournament's, so there can be one for each round, or several for the same.
+ * What it changes in one is carried on to those that take the losers of that
+ * one's rounds, since a bye put in a place sends a bye on without a game.
  *
  * It looks at every match of the round and not only the one just decided, and
  * a place already right is left alone (`Competition.enterLoser`), so asking
- * again does no harm. That is why it is safe for the save here to be a
- * separate one from the game's: if it fails after the game is kept, the next
- * game of the knockout, whether added, corrected, archived or restored, or the
- * next time the knockout is added, puts it right. A place that has been played
- * on is left as it is (`Competition.clearLoser`), whatever became of the game
- * that put its player there.
+ * again does no harm. A place that has been played on is left as it is
+ * (`Competition.clearLoser`), whatever became of the game that put its player
+ * there. An archived knockout is left until it is restored.
  */
 export const carryLosersOn = async (
   competitions: Competitions,
@@ -61,5 +60,36 @@ export const carryLosersOn = async (
       }
     });
     await competitions.save(taking);
+    await carryLosersOn(competitions, tournament, taking, reference.id, by, at);
+  }
+};
+
+/**
+ * `carryLosersOn` for the knockout `sourceId`, as what follows a change that is
+ * already kept: a game added, corrected, archived or restored, or a losers
+ * knockout added or restored. It never fails the change it follows. The change
+ * is kept whether this works or not, and an error told to the reader of a
+ * score that was kept would have them enter it again. What it could not do is
+ * done by the next of those changes in the knockout, which looks at every match
+ * again.
+ */
+export const keepLosersKnockoutsInStep = async (
+  competitions: Competitions,
+  tournament: Tournament,
+  sourceId: CompetitionId,
+  by: AccountId,
+  at: ReadOnlyDate,
+): Promise<void> => {
+  try {
+    await carryLosersOn(
+      competitions,
+      tournament,
+      await competitionOf(competitions, sourceId),
+      sourceId,
+      by,
+      at,
+    );
+  } catch {
+    // Put right by the next change, as above.
   }
 };

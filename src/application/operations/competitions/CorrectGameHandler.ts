@@ -7,7 +7,7 @@ import type { TournamentId } from "../../../domain/aggregates/tournaments/primit
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
-import { carryLosersOn } from "./losersKnockouts.js";
+import { keepLosersKnockoutsInStep } from "./losersKnockouts.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import {
@@ -58,12 +58,11 @@ export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
       { winner: player(winner), loser: player(loser) },
     );
     await this.competitions.save(competition);
-    // A knockout's game that sets a match's loser aside or changes it changes
-    // who the knockouts that take its losers have.
-    await carryLosersOn(
+    // What it did may have changed who lost a match, and so who the knockouts
+    // that take the losers of its rounds have.
+    await keepLosersKnockoutsInStep(
       this.competitions,
       tournament,
-      competition,
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,

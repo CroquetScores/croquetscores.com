@@ -592,6 +592,8 @@ export const afrikaans: Language = {
       "'n Ander uitskakeling neem die verloorders van hierdie een, so sy plekke kan nie verander word nie.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "'n Ander uitskakeling wat in gebruik is, neem die verloorders van hierdie een, so argiveer eers daardie een.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Hierdie verloorders-uitskakeling neem die verloorders van ’n uitskakeling wat geargiveer is, so herstel eers daardie een.",
     "Tournament.LosersKnockoutPlacesFixed":
       "'n Verloorders-uitskakeling het soveel plekke as die rondte waarvan dit verloorders neem wedstryde het.",
     "Competition.PlayersSetAutomatically":

@@ -1273,7 +1273,7 @@ export const buildApplication = async (
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
-  mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new RestoreCompetitionHandler(...both, competitions));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(
     new AddManagerHandler(...both, accountsByEmailAddress),

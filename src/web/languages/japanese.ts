@@ -556,6 +556,8 @@ export const japanese: Language = {
       "別のノックアウトがこのノックアウトの敗者を受け入れているため、枠の数は変更できません。",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "使用中の別のノックアウトがこのノックアウトの敗者を受け入れているため、先にそちらをアーカイブしてください。",
+    "Tournament.LosersKnockoutSourceArchived":
+      "この敗者ノックアウトはアーカイブされたノックアウトの敗者を受け入れているため、先にそちらを復元してください。",
     "Tournament.LosersKnockoutPlacesFixed":
       "敗者ノックアウトの枠の数は、敗者を受け入れるラウンドの試合数と同じです。",
     "Competition.PlayersSetAutomatically":

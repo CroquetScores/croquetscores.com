@@ -7,11 +7,8 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
-import {
-  type Competitions,
-  competitionOf,
-} from "../competitions/competitionOperations.js";
-import { carryLosersOn } from "../competitions/losersKnockouts.js";
+import { type Competitions } from "../competitions/competitionOperations.js";
+import { keepLosersKnockoutsInStep } from "../competitions/losersKnockouts.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { AddLosersKnockout } from "./AddLosersKnockout.js";
 
@@ -52,10 +49,9 @@ export class AddLosersKnockoutHandler extends CommandHandler<
       command.requestedAt,
     );
     await this.tournaments.save(tournament);
-    await carryLosersOn(
+    await keepLosersKnockoutsInStep(
       this.competitions,
       tournament,
-      await competitionOf(this.competitions, from),
       from,
       by,
       command.requestedAt,

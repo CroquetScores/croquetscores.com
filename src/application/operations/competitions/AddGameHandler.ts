@@ -14,7 +14,7 @@ import {
   type Competitions,
   competitionManagedBy,
 } from "./competitionOperations.js";
-import { carryLosersOn } from "./losersKnockouts.js";
+import { keepLosersKnockoutsInStep } from "./losersKnockouts.js";
 
 /**
  * Adding a game's score to a competition, by a manager or a scorer. The
@@ -57,12 +57,11 @@ export class AddGameHandler extends CommandHandler<AddGame, string> {
       command.requestedAt,
     );
     await this.competitions.save(competition);
-    // A game in a knockout may have decided a match, whose loser goes on to
-    // any knockout that takes the losers of its round.
-    await carryLosersOn(
+    // What it did may have changed who lost a match, and so who the knockouts
+    // that take the losers of its rounds have.
+    await keepLosersKnockoutsInStep(
       this.competitions,
       tournament,
-      competition,
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,

@@ -577,6 +577,8 @@ export const korean: Language = {
       "다른 녹아웃이 이 녹아웃의 패자를 받고 있어서 자리 수를 바꿀 수 없습니다.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "사용 중인 다른 녹아웃이 이 녹아웃의 패자를 받고 있으니 먼저 그 녹아웃을 보관하세요.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "이 패자 녹아웃은 보관된 녹아웃의 패자를 받고 있으니 먼저 그 녹아웃을 복원하세요.",
     "Tournament.LosersKnockoutPlacesFixed":
       "패자 녹아웃의 자리 수는 패자를 받아오는 라운드의 경기 수와 같습니다.",
     "Competition.PlayersSetAutomatically":

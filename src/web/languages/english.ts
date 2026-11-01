@@ -579,6 +579,8 @@ export const english: Language = {
       "Another knockout takes the losers of this one, so its places cannot be changed.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "Another knockout in use takes the losers of this one, so archive that one first.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "This losers knockout takes the losers of a knockout that is archived, so restore that one first.",
     "Tournament.LosersKnockoutPlacesFixed":
       "A losers knockout has as many places as the round it takes losers from has matches.",
     "Competition.PlayersSetAutomatically":

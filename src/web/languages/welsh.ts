@@ -567,6 +567,8 @@ export const welsh: Language = {
       "Mae cnoc-owt arall yn cymryd collwyr yr un hwn, felly ni ellir newid ei lefydd.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "Mae cnoc-owt arall sydd ar waith yn cymryd collwyr yr un hwn, felly archifwch honno yn gyntaf.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Mae'r cnoc-owt collwyr hwn yn cymryd collwyr cnoc-owt sydd wedi'i archifo, felly adferwch honno yn gyntaf.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Mae gan gnoc-owt collwyr gymaint o lefydd ag sydd o gemau yn y rownd y mae'n cymryd ei chollwyr ohoni.",
     "Competition.PlayersSetAutomatically":

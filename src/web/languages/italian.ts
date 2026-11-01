@@ -592,6 +592,8 @@ export const italian: Language = {
       "Un'altra eliminazione diretta prende i perdenti di questa, quindi i suoi posti non possono essere cambiati.",
     "Tournament.KnockoutHasLosersKnockoutsInUse":
       "Un'altra eliminazione diretta in uso prende i perdenti di questa, quindi archivia prima quella.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Questa eliminazione diretta dei perdenti prende i perdenti di una eliminazione diretta archiviata, quindi ripristina prima quella.",
     "Tournament.LosersKnockoutPlacesFixed":
       "Un'eliminazione diretta dei perdenti ha tanti posti quante sono le partite del turno di cui prende i perdenti.",
     "Competition.PlayersSetAutomatically":
