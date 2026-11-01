@@ -207,6 +207,17 @@ Then(
 );
 
 Then(
+  /^the (first|second|third) thing that tells the block's players apart is answered as "(.*)"$/,
+  function (this: SpecWorld, which: string, thing: string) {
+    const said = { "net games": "netGames", "net hoops": "netHoops" }[thing];
+    assert.equal(
+      answered(this).block.tellsApartBy[places.indexOf(which)],
+      said ?? "whoBeatWho",
+    );
+  },
+);
+
+Then(
   "the block is answered with players level on matches won",
   function (this: SpecWorld) {
     assert.equal(answered(this).block.levelOnMatchesWon, true);

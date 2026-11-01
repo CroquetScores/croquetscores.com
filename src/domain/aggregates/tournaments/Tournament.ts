@@ -1846,7 +1846,7 @@ export class Tournament extends AggregateRoot {
         kind: "block",
         bestOf: BestOf.from(event.bestOf),
         rounds: Rounds.from(event.rounds),
-        tieBreak: tieBreakOf(event),
+        tieBreak: TieBreak.from(event.tieBreak),
       });
     } else if (event instanceof KnockoutAdded) {
       this.#competitionAdded(event, {
@@ -1874,7 +1874,7 @@ export class Tournament extends AggregateRoot {
           kind: "block",
           bestOf: BestOf.from(event.bestOf),
           rounds: Rounds.from(event.rounds),
-          tieBreak: tieBreakOf(event),
+          tieBreak: TieBreak.from(event.tieBreak),
         },
         rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
@@ -2779,14 +2779,6 @@ const dayOf = (moment: ReadOnlyDate): string =>
 // The start of the day `written` in UTC.
 const dayWritten = (written: string): ReadOnlyDate =>
   ReadOnlyDate.from(new Date(`${written}T00:00:00Z`));
-
-// What a block as an event that added or updated it says goes by, and what a
-// block goes by unless it is told otherwise where the event, kept before a block
-// could be told, says nothing.
-const tieBreakOf = (said: BlockAdded | BlockUpdated): TieBreak =>
-  said.tieBreak === undefined
-    ? TieBreak.unlessTold
-    : TieBreak.from(said.tieBreak);
 
 // A test as an event that added or updated it says it is.
 const testShapeOf = (

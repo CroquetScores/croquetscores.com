@@ -25,9 +25,8 @@ export class BlockAdded extends DomainEvent {
     // usual for its sport.
     readonly maximumHoops: number | null | undefined,
     // How the players level on matches won are told apart (TieBreak), by its
-    // code. Nothing for a block kept before it could be told, which goes by
-    // what a block goes by unless it is told otherwise.
-    readonly tieBreak: string | undefined,
+    // code.
+    readonly tieBreak: string,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

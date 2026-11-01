@@ -159,6 +159,26 @@ Then("{string} has no place", function (this: SpecWorld, name: string) {
   assert.equal(placedOf(this).placings.get(name), undefined);
 });
 
+const THINGS: Readonly<Record<string, string>> = {
+  "net games": "netGames",
+  "net hoops": "netHoops",
+  "who beat who": "whoBeatWho",
+};
+
+Then(
+  "the {word} thing that told the players apart is {string}",
+  function (this: SpecWorld, ordinal: string, thing: string) {
+    assert.equal(
+      placedOf(this).tellsApartBy[ORDINALS.indexOf(ordinal)],
+      THINGS[thing],
+    );
+  },
+);
+
+Then("nothing told the players apart", function (this: SpecWorld) {
+  assert.deepEqual(placedOf(this).tellsApartBy, []);
+});
+
 Then("some players are level on matches won", function (this: SpecWorld) {
   assert.equal(placedOf(this).levelOnMatchesWon, true);
 });

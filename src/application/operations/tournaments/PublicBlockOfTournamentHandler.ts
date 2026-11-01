@@ -145,6 +145,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         maximumHoops: rules.maximumHoops,
         tieBreak: shape.tieBreak.code,
         levelOnMatchesWon: placed.levelOnMatchesWon,
+        tellsApartBy: placed.tellsApartBy,
       },
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,

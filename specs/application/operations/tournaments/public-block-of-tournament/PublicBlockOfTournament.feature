@@ -787,10 +787,14 @@ Feature: A block of a tournament, for anybody to read
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
-      Then the player of the block "Sam Someone" is answered with the place 1
-      And the player of the block "Alex Another" is answered with the place 1
-      And the player of the block "Alex Another" is answered with a place that is shared
+      Then the player of the block "Alex Another" is answered with the place 1
+      And the player of the block "Sam Someone" is answered with the place 2
+      And the player of the block "Chris Third" is answered with the place 2
+      And the player of the block "Chris Third" is answered with a place that is shared
 
     Scenario: A block going by who beat who does not tell players apart by their net hoops
       Given "organiser@example.com" has added the player "Pat Player" to "Spring Open"
@@ -815,8 +819,21 @@ Feature: A block of a tournament, for anybody to read
       Then the player of the block "Alex Another" is answered with no place
 
     Scenario: Players level on matches won are answered as level
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the block is answered with players level on matches won
+
+    Scenario: Nobody is answered as level, or placed, before anything is played
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with no players level on matches won
+      And the player of the block "Sam Someone" is answered with no place
+
+    Scenario: A block is answered with what tells its players apart
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first thing that tells the block's players apart is answered as "net games"
+      And the second thing that tells the block's players apart is answered as "net hoops"
+      And the third thing that tells the block's players apart is answered as "who beat who"
 
     Scenario: Players with different shares are answered as not level
       Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"

@@ -43,7 +43,16 @@ Feature: Where the players of a block are placed
 
   Whether any players are level on the share they have won is answered as
   well, since it is what the page says a tie break is for. A withdrawn player
-  is level with nobody.
+  is level with nobody. So is everybody until some play has been counted: a
+  block nobody has played in yet has no places to give, and placing every
+  player first would say a tie where there has been no play to tie.
+
+  What told players apart is answered too, in the order it was looked at, so
+  that a page says what was done rather than working it out again.
+
+  Only the matches played in the block can say who beat whom. What a player
+  brings into the block from play elsewhere is counted with the matches they
+  have won, but says nothing of who beat whom.
 
   Background:
     Given the block is the best of 3
@@ -198,6 +207,8 @@ Feature: Where the players of a block are placed
       Given the tie break "who-beat-who"
       And the player "Sam Someone"
       And the player "Alex Another"
+      And "Sam Someone" has won 1 match
+      And "Alex Another" has won 1 match
       When the players are placed
       Then the place of "Sam Someone" is 1
       And the place of "Alex Another" is 1
@@ -344,6 +355,7 @@ Feature: Where the players of a block are placed
       Given the tie break "other"
       And the player "Sam Someone"
       And the player "Alex Another"
+      And "Alex Another" has won 1 match
       And "Sam Someone" has withdrawn
       When the players are placed
       Then the place of "Alex Another" is 1
@@ -354,6 +366,8 @@ Feature: Where the players of a block are placed
       Given the tie break "net-games-net-hoops-who-beat-who"
       And the player "Sam Someone"
       And the player "Alex Another"
+      And "Sam Someone" has won 1 match
+      And "Alex Another" has won 1 match
       When the players are placed
       Then some players are level on matches won
 
@@ -372,3 +386,66 @@ Feature: Where the players of a block are placed
       And "Alex Another" has withdrawn
       When the players are placed
       Then no players are level on matches won
+
+  Rule: Until some play has been counted nobody has a place
+
+    Scenario: Nobody has a place before anything is played
+      Given the tie break "net-games-net-hoops-who-beat-who"
+      And the player "Sam Someone"
+      And the player "Alex Another"
+      When the players are placed
+      Then "Sam Someone" has no place
+      And "Alex Another" has no place
+
+    Scenario: Nobody is level before anything is played
+      Given the tie break "net-games-net-hoops-who-beat-who"
+      And the player "Sam Someone"
+      And the player "Alex Another"
+      When the players are placed
+      Then no players are level on matches won
+
+    Scenario: The players are put in the block's order before anything is played
+      Given the tie break "net-games-net-hoops-who-beat-who"
+      And the player "Sam Someone"
+      And the player "Alex Another"
+      When the players are placed
+      Then the first player placed is "Sam Someone"
+      And the second player placed is "Alex Another"
+
+    Scenario: A match decided is play
+      Given the tie break "who-beat-who"
+      And the player "Sam Someone"
+      And the player "Alex Another"
+      And "Alex Another" has beaten "Sam Someone" in a match
+      When the players are placed
+      Then the place of "Alex Another" is 1
+
+  Rule: What told the players apart is answered
+
+    Scenario: Net games then net hoops then who beat who looks at each in turn
+      Given the tie break "net-games-net-hoops-who-beat-who"
+      And the player "Sam Someone"
+      When the players are placed
+      Then the first thing that told the players apart is "net games"
+      And the second thing that told the players apart is "net hoops"
+      And the third thing that told the players apart is "who beat who"
+
+    Scenario: Where each match is a single game net games are not looked at
+      Given the block is the best of 1
+      And the tie break "net-games-net-hoops-who-beat-who"
+      And the player "Sam Someone"
+      When the players are placed
+      Then the first thing that told the players apart is "net hoops"
+      And the second thing that told the players apart is "who beat who"
+
+    Scenario: Who beat who alone looks at nothing else
+      Given the tie break "who-beat-who"
+      And the player "Sam Someone"
+      When the players are placed
+      Then the first thing that told the players apart is "who beat who"
+
+    Scenario: Other looks at nothing
+      Given the tie break "other"
+      And the player "Sam Someone"
+      When the players are placed
+      Then nothing told the players apart

@@ -1,7 +1,7 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
-import type { Placing } from "./placingsOfBlock.js";
+import type { Placing, TellsApartBy } from "./placingsOfBlock.js";
 import type { PublicPlayer } from "./PublicPlayersOfTournament.js";
 import type {
   CompetitionOfTournament,
@@ -98,6 +98,11 @@ export interface BlockToRead {
      * they are told apart.
      */
     readonly levelOnMatchesWon: boolean;
+    /**
+     * What tells those players apart, in the order it is looked at, and
+     * nothing where the tie break tells nobody apart.
+     */
+    readonly tellsApartBy: readonly TellsApartBy[];
   };
   /**
    * The most hoops a game of the tournament's sport is played to unless a

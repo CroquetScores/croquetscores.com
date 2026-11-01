@@ -214,23 +214,6 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       causedBy,
       happenedAt,
     ),
-  "a block being added with no tie break": () =>
-    new BlockAdded(
-      COMPETITION,
-      "Block A",
-      "block-a",
-      10000,
-      2,
-      3,
-      true,
-      true,
-      false,
-      // Not the usual for any sport, so that one read back as the usual is found.
-      14,
-      undefined,
-      causedBy,
-      happenedAt,
-    ),
   "a block being updated": () =>
     new BlockUpdated(
       COMPETITION,
@@ -243,21 +226,6 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
       "other",
-      causedBy,
-      happenedAt,
-    ),
-  "a block being updated with no tie break": () =>
-    new BlockUpdated(
-      COMPETITION,
-      "Block One",
-      3,
-      2,
-      true,
-      true,
-      false,
-      // Not the usual for any sport, so that one read back as the usual is found.
-      14,
-      undefined,
       causedBy,
       happenedAt,
     ),

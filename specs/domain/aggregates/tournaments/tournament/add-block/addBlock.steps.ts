@@ -70,30 +70,6 @@ Given(
   },
 );
 
-// As a block was kept before it could be told its tie break, which the
-// tournament would not record now.
-Given(
-  "the block {string} was added to it before a block could be told its tie break",
-  function (this: SpecWorld, name: string) {
-    scenarioOf(this).later.push(
-      new BlockAdded(
-        CompetitionId.create().value,
-        name,
-        name.toLowerCase().replaceAll(" ", "-"),
-        10_000,
-        1,
-        1,
-        false,
-        false,
-        true,
-        undefined,
-        byOf(this),
-        now(this),
-      ),
-    );
-  },
-);
-
 // Competitions with every slug from `from` to `to`, each with a name of its
 // own that makes none of them, so that the next competition is refused each
 // of those slugs and nothing else. They are recorded as they would have been
@@ -127,7 +103,7 @@ Given(
           false,
           false,
           true,
-          undefined,
+          TieBreak.unlessTold.code,
           byOf(this),
           now(this),
         ),

@@ -213,17 +213,6 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
-    Scenario Outline: A block kept with no tie break is read back with none
-      Given an event of <happening> with no tie break
-      When the event is written down through the registry
-      And what was kept is read back through the registry
-      Then what was read back says everything the event said
-
-      Examples:
-        | happening             |
-        | a block being added   |
-        | a block being updated |
-
     Scenario: A test added in no group is read back in none
       Given an event of a test being added in no group
       When the event is written down through the registry
@@ -261,6 +250,8 @@ Feature: The names a tournament's events are kept under
         | a block being added                       | handicap        |
         | a block being added                       | drawsAllowed    |
         | a block being added                       | worldRankings   |
+        | a block being added                       | tieBreak        |
+        | a block being updated                     | tieBreak        |
         | a test being added                        | worldRankings   |
         | a block being updated                     | rounds          |
         | a knockout being added                    | rounds          |
@@ -301,6 +292,8 @@ Feature: The names a tournament's events are kept under
         | a block being added        | worldRankings | the text "no"              |
         | a block being added        | order        | the text "10000"            |
         | a block being added        | tieBreak     | the number 1                |
+        | a block being added        | tieBreak     | the text "net-hoops"        |
+        | a block being updated      | tieBreak     | the text "other-ways"       |
         | a knockout being added     | rounds       | the text "1, 3"             |
         | a knockout being added     | rounds       | a list holding the text "3" |
         | a player being added       | flag         | the number 1                |

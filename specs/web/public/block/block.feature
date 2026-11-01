@@ -399,9 +399,21 @@ Feature: A block's page shows its results as a grid
       Then the place of "Sam Someone" in the grid is "2"
 
     Scenario: A place players share is marked with an equals sign
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And the block is to go by the tie break "other"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the place of "Sam Someone" in the grid is "=2"
+      And the place of "Chris Third" in the grid is "=2"
+
+    Scenario: Nobody has a place before anything is played
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the place of "Sam Someone" in the grid is "=1"
-      And the place of "Alex Another" in the grid is "=1"
+      Then the place of "Sam Someone" in the grid is ""
 
     Scenario: A withdrawn player's place is blank
       Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
@@ -411,30 +423,45 @@ Feature: A block's page shows its results as a grid
   Rule: Beneath the grid, where players are level on matches won, the page says how they are told apart
 
     Scenario: Net games then net hoops then who beat who is said in full
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the page says the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
 
     Scenario: Net games are left out where each match is a single game
       Given the block is to be the best of 1
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
       Then the page says the words for "block.tieBreak.netHoopsWhoBeatWho"
 
     Scenario: Who beat who alone is said
       Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
       Then the page says the words for "block.tieBreak.whoBeatWho"
 
     Scenario: That there is no known way is said
       Given the block is to go by the tie break "other"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
       And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
       Then the page says the words for "block.tieBreak.other"
 

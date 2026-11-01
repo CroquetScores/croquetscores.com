@@ -14,6 +14,7 @@ import {
   LosersDialog,
   type LosersAsked,
 } from "../../../competitions/{competition-slug}/view/modal-dialogs/losers/losers.js";
+import { TieBreak } from "../../../../../../../../domain/aggregates/tournaments/value-objects/TieBreak.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -31,14 +32,11 @@ const kinds: readonly Kind[] = ["block", "knockout", "swiss"];
 // other could not be drawn, so is not offered to be refused.
 const placesOffered = [2, 4, 8, 16, 32, 64, 128] as const;
 
-// The ways a block's players level on matches won can be told apart, by code,
-// in the order they are offered and the first being what a block goes by
-// unless it is told otherwise (TieBreak.ts).
-const tieBreaksOffered = [
-  "net-games-net-hoops-who-beat-who",
-  "who-beat-who",
-  "other",
-] as const;
+// The ways a block's players level on matches won can be told apart, in the
+// order they are offered, the first being what a block goes by unless it is
+// told otherwise. Taken from the tie breaks there are rather than written out
+// again, so that one added there is offered here.
+const tieBreaksOffered = TieBreak.all.map(({ code }) => code);
 
 /** A competition as it is, when one is being changed. */
 export type CompetitionAsItIs = {
@@ -172,7 +170,9 @@ export const CompetitionDialog = ({
   // How a block's players level on matches won are told apart, a field of a
   // block alone.
   const [tieBreak, setTieBreak] = useState<string>(
-    competition?.kind === "block" ? competition.tieBreak : tieBreaksOffered[0],
+    competition?.kind === "block"
+      ? competition.tieBreak
+      : TieBreak.unlessTold.code,
   );
   const [places, setPlaces] = useState(
     competition?.kind === "knockout" ? competition.places : 8,

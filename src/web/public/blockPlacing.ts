@@ -5,7 +5,6 @@ import type {
   BlockToRead,
   PlayerOfBlock,
 } from "../../application/operations/tournaments/PublicBlockOfTournament.js";
-import { TieBreak } from "../../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 
@@ -19,16 +18,18 @@ export const placeShown = ({ placing }: PlayerOfBlock): string =>
     ? ""
     : `${placing.shared ? "=" : ""}${String(placing.place)}`;
 
-// The words that say how a block's tie break tells players apart. Where each
-// match is a single game net games are left out of what is said as they are
-// out of the ranking, since a game won is then a match won.
+// The words that say what tells apart the players level on matches won, from
+// what the answer says it was, so that the page can never say one thing and the
+// ranking do another.
 const wordsFor = ({ block }: BlockToRead): string => {
-  if (block.tieBreak === TieBreak.netGamesNetHoopsWhoBeatWho.code) {
-    return block.bestOf === 1
-      ? "block.tieBreak.netHoopsWhoBeatWho"
-      : "block.tieBreak.netGamesNetHoopsWhoBeatWho";
+  const { tellsApartBy } = block;
+  if (tellsApartBy.includes("netGames")) {
+    return "block.tieBreak.netGamesNetHoopsWhoBeatWho";
   }
-  return block.tieBreak === TieBreak.whoBeatWho.code
+  if (tellsApartBy.includes("netHoops")) {
+    return "block.tieBreak.netHoopsWhoBeatWho";
+  }
+  return tellsApartBy.includes("whoBeatWho")
     ? "block.tieBreak.whoBeatWho"
     : "block.tieBreak.other";
 };

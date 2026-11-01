@@ -117,8 +117,7 @@ Feature: Adding a block to a tournament
 
     A block's players who are level on matches won are told apart by its tie
     break (`TieBreak.feature`). A block added with none goes by net games then
-    net hoops then who beat who, as every block did before one could be said,
-    and so does a block kept from then.
+    net hoops then who beat who (`TieBreak.feature`).
 
     Scenario: A block added with no tie break goes by net games then net hoops then who beat who
       Given a stream where a tournament was created as "Spring Open"
@@ -151,12 +150,6 @@ Feature: Adding a block to a tournament
       And the block "Block A" was added to it to go by the tie break "who-beat-who"
       When the tournament is rebuilt from the stream
       Then the tournament's competition "Block A" goes by the tie break "who-beat-who"
-
-    Scenario: A block kept before a block could be told its tie break is rebuilt going by net games then net hoops then who beat who
-      Given a stream where a tournament was created as "Spring Open"
-      And the block "Block A" was added to it before a block could be told its tie break
-      When the tournament is rebuilt from the stream
-      Then the tournament's competition "Block A" goes by the tie break "net-games-net-hoops-who-beat-who"
 
   Rule: No two competitions in a tournament have the same id
 

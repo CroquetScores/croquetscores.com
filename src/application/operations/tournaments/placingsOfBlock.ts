@@ -38,7 +38,16 @@ export interface PlacedPlayers {
    * their decided matches they have won, which is what a tie break is for.
    */
   readonly levelOnMatchesWon: boolean;
+  /**
+   * What told apart players level on the share, in the order it was looked at,
+   * so that a page can say so without knowing the rules for itself: nothing
+   * where the tie break tells nobody apart.
+   */
+  readonly tellsApartBy: readonly TellsApartBy[];
 }
+
+/** What a tie break can tell players level on the share apart by. */
+export type TellsApartBy = "netGames" | "netHoops" | "whoBeatWho";
 
 // The share of the matches a player has decided that they have won, and
 // nothing where they have decided none.
@@ -77,25 +86,33 @@ const runsByMost = (
 // a player's result against someone already placed above or below them says
 // nothing of those who are not, and what cannot be told apart by it stays
 // together: players who beat one another in a ring, who never met, or whose
-// matches were shared.
+// matches were shared. Only the games played in the block can say who beat
+// whom, so what a player carries forward from play elsewhere says nothing here
+// though it counts towards the matches they have won.
 const byWhoBeatWho = (
   players: PlayerToPlace[],
   matches: readonly DecidedMatch[],
 ): PlayerToPlace[][] => {
-  const among = new Set(players.map(({ id }) => id));
-  const runs = runsByMost(players, ({ id }) =>
-    matches.reduce((net, { winner, loser }) => {
-      if (winner === id && among.has(loser)) return net + 1;
-      if (loser === id && among.has(winner)) return net - 1;
-      return net;
-    }, 0),
-  );
+  // Counted once for all of them, rather than by scanning every match for each
+  // player.
+  const net = new Map(players.map(({ id }) => [id, 0]));
+  for (const { winner, loser } of matches) {
+    const won = net.get(winner);
+    const lost = net.get(loser);
+    if (won === undefined || lost === undefined) continue;
+    net.set(winner, won + 1);
+    net.set(loser, lost - 1);
+  }
+  const runs = runsByMost(players, ({ id }) => net.get(id) ?? 0);
   return runs.length === 1
     ? runs
     : runs.flatMap((run) => byWhoBeatWho(run, matches));
 };
 
-type Step = (players: PlayerToPlace[]) => PlayerToPlace[][];
+interface Step {
+  readonly by: TellsApartBy;
+  readonly tell: (players: PlayerToPlace[]) => PlayerToPlace[][];
+}
 
 // What tells apart players level on the share, one step after another, each
 // working on those the one before left level.
@@ -104,15 +121,22 @@ const stepsFor = (
   matches: readonly DecidedMatch[],
   bestOf: number,
 ): Step[] => {
-  const whoBeatWho: Step = (players) => byWhoBeatWho(players, matches);
-  const netHoops: Step = (players) =>
-    runsByMost(players, ({ netHoops: hoops }) => hoops);
+  const whoBeatWho: Step = {
+    by: "whoBeatWho",
+    tell: (players) => byWhoBeatWho(players, matches),
+  };
+  const netHoops: Step = {
+    by: "netHoops",
+    tell: (players) => runsByMost(players, ({ netHoops: hoops }) => hoops),
+  };
   if (tieBreak.equals(TieBreak.whoBeatWho)) return [whoBeatWho];
   if (tieBreak.equals(TieBreak.netGamesNetHoopsWhoBeatWho)) {
     // Where each match is a single game a game won is a match won, so net
     // games would only say again what the share has.
-    const netGames: Step = (players) =>
-      runsByMost(players, ({ netGames: games }) => games);
+    const netGames: Step = {
+      by: "netGames",
+      tell: (players) => runsByMost(players, ({ netGames: games }) => games),
+    };
     return bestOf === 1
       ? [netHoops, whoBeatWho]
       : [netGames, netHoops, whoBeatWho];
@@ -120,13 +144,29 @@ const stepsFor = (
   return [];
 };
 
+// Whether any play has been counted among the players who have not withdrawn:
+// a match decided, or games and hoops, which carrying forward counts as well.
+// Until then every player is level at nothing, and placing them all first
+// would say a tie where there has been no play to tie.
+const anyPlay = (
+  players: readonly PlayerToPlace[],
+  matches: readonly DecidedMatch[],
+): boolean =>
+  matches.length > 0 ||
+  players.some(
+    ({ withdrawn, matchesWon, matchesLost, netGames, netHoops }) =>
+      !withdrawn &&
+      (matchesWon + matchesLost > 0 || netGames !== 0 || netHoops !== 0),
+  );
+
 /**
  * `players`, in the block's order, placed. They are first placed by the share
  * of their decided matches that they have won, and those level on that are
  * told apart by `tieBreak`; those who cannot be told apart share a place, which
  * is the place of the first of them, and the player after them is placed after
  * the places they cover. A player who has withdrawn is placed after everybody
- * and has no place, since their games count for nothing.
+ * and has no place, since their games count for nothing. Where nothing has been
+ * played yet nobody has a place, and nobody is level.
  *
  * `matches` are the matches somebody won, among `players`, and `bestOf` is
  * what each match is the best of.
@@ -137,14 +177,23 @@ export const placePlayers = (
   tieBreak: TieBreak,
   bestOf: number,
 ): PlacedPlayers => {
+  const steps = stepsFor(tieBreak, matches, bestOf);
+  const tellsApartBy = steps.map(({ by }) => by);
+  if (!anyPlay(players, matches)) {
+    return {
+      ranked: players.map(({ id }) => id),
+      placings: new Map(),
+      levelOnMatchesWon: false,
+      tellsApartBy,
+    };
+  }
   const shareRuns = runsByMost(
     players.filter(({ withdrawn }) => !withdrawn),
     shareOf,
   );
-  const steps = stepsFor(tieBreak, matches, bestOf);
   const runs = shareRuns.flatMap((run) =>
     steps.reduce<PlayerToPlace[][]>(
-      (told, step) => told.flatMap((level) => step(level)),
+      (told, { tell }) => told.flatMap((level) => tell(level)),
       [run],
     ),
   );
@@ -163,5 +212,6 @@ export const placePlayers = (
     ],
     placings,
     levelOnMatchesWon: shareRuns.some((run) => run.length > 1),
+    tellsApartBy,
   };
 };
