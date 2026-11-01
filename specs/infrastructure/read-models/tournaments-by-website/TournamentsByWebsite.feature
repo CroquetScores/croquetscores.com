@@ -496,6 +496,56 @@ Feature: Finding a website's tournaments by when they were played and when they 
       And the tournaments played since "2026-09-25T10:00:00Z" are looked for
       Then "Autumn Open" is held as last played at "2026-09-30T10:00:00Z"
 
+  Rule: Whether a tournament is national or international is held
+
+    The lists bold the row of one that is (`year.feature`, `home.feature`),
+    and the lists are drawn from this read model, so it keeps what the
+    tournament's organiser ticked and follows it as it is changed.
+
+    Scenario: A national tournament is held as national
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be national
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is held as national
+
+    Scenario: A national tournament is not held as international
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be national
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is not held as international
+
+    Scenario: An international tournament is held as international
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be international
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is held as international
+
+    Scenario: A tournament that is neither is held as neither
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is not held as national
+      And "Spring Open" is not held as international
+
+    Scenario: A tournament made national after it was created is held as national
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When "Spring Open" is updated to be national
+      And the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is held as national
+
+    Scenario: A national tournament made international is held as international
+      Given a tournament "Spring Open" to start on "2026-10-10"
+      And "Spring Open" to be national
+      And "Spring Open" is created by the account for "organiser@example.com"
+      When "Spring Open" is updated to be international
+      And the tournaments starting from "2026-10-02" to "2026-12-01" are looked for
+      Then "Spring Open" is held as international
+      And "Spring Open" is not held as national
+
   Rule: A website's years are those it has tournaments in, newest first
 
     Scenario: The year a tournament starts in is one of the website's years

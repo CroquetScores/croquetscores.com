@@ -34,6 +34,8 @@ interface Row {
   country: string;
   sport: string;
   address: string;
+  national: boolean;
+  international: boolean;
 }
 
 // The days as text, since pg makes a date into a moment at midnight wherever
@@ -41,7 +43,7 @@ interface Row {
 const COLUMNS = `t.tournament_id, t.name,
        to_char(t.starts, 'YYYY-MM-DD') as starts,
        to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-       t.country, t.sport, t.address`;
+       t.country, t.sport, t.address, t.national, t.international`;
 
 // What the filter narrows by, as conditions on the tournaments' table from
 // the parameter numbered `first` on, and the parameters themselves. Each is
@@ -74,6 +76,8 @@ const listed = (row: Row): TournamentOfWebsite => ({
   country: row.country,
   sport: row.sport,
   address: row.address,
+  national: row.national,
+  international: row.international,
 });
 
 /**
@@ -195,13 +199,14 @@ export class TournamentsByWebsite implements Projection, Asked {
       await connection.query(
         `insert into tournaments_by_website
            (tournament_id, website, name, starts, finishes, country, region,
-            sport, address)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            sport, address, national, international)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          on conflict (tournament_id) do update
            set name = excluded.name, starts = excluded.starts,
                finishes = excluded.finishes, country = excluded.country,
                region = excluded.region, sport = excluded.sport,
-               address = excluded.address`,
+               address = excluded.address, national = excluded.national,
+               international = excluded.international`,
         [
           stream,
           event.website,
@@ -212,13 +217,16 @@ export class TournamentsByWebsite implements Projection, Asked {
           event.region ?? null,
           event.sport,
           event.address,
+          event.national,
+          event.international,
         ],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update tournaments_by_website
             set name = $2, starts = $3, finishes = $4, country = $5,
-                region = $6, sport = $7, address = $8
+                region = $6, sport = $7, address = $8, national = $9,
+                international = $10
           where tournament_id = $1`,
         [
           stream,
@@ -229,6 +237,8 @@ export class TournamentsByWebsite implements Projection, Asked {
           event.region ?? null,
           event.sport,
           event.address,
+          event.national,
+          event.international,
         ],
       );
     } else if (event instanceof TournamentArchived) {

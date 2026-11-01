@@ -347,6 +347,72 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos de Nueva Zelanda"
 
+  Rule: A national or international tournament is bold along its whole row among the upcoming tournaments
+
+    A reader scanning either of the home page's lists is mostly after the
+    tournaments that matter beyond one club, so the row of a national or an
+    international tournament is set in bold, every column of it, and an
+    ordinary tournament's is not. The two are told apart by what the
+    tournament's organiser ticked (`new.feature`), and not by its name.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" finishes on "2026-10-12"
+
+    Scenario: A national tournament's row is bold
+      Given the tournament "Spring Open" is national
+      When the home page is opened
+      Then "Spring Open" is bold in the upcoming tournaments
+
+    Scenario: An international tournament's row is bold
+      Given the tournament "Spring Open" is international
+      When the home page is opened
+      Then "Spring Open" is bold in the upcoming tournaments
+
+    Scenario: A tournament that is neither is not bold
+      When the home page is opened
+      Then "Spring Open" is not bold in the upcoming tournaments
+
+  Rule: A national or international tournament is bold along its whole row among the recent results
+
+    The same as among the upcoming tournaments, above: the two lists are drawn
+    alike.
+
+    Background:
+      Given the server's clock reads "2026-09-19T10:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-09-20"
+      And the tournament "Spring Open" finishes on "2026-10-04"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+
+    Scenario: A national tournament's row is bold
+      Given the tournament "Spring Open" is national
+      And the server's clock reads "2026-10-01T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
+      When the home page is opened
+      Then "Spring Open" is bold in the recent results
+
+    Scenario: An international tournament's row is bold
+      Given the tournament "Spring Open" is international
+      And the server's clock reads "2026-10-01T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
+      When the home page is opened
+      Then "Spring Open" is bold in the recent results
+
+    Scenario: A tournament that is neither is not bold
+      Given the server's clock reads "2026-10-01T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the server's clock reads "2026-10-02T10:00:00Z"
+      When the home page is opened
+      Then "Spring Open" is not bold in the recent results
+
   Rule: A tablet or wider shows each tournament's sport
 
     Background:

@@ -72,6 +72,16 @@ Given(
 );
 
 Given(
+  "the tournament {string} is international",
+  async function (this: SpecWorld, name: string) {
+    await changeTournament(this, name, {
+      national: false,
+      international: true,
+    });
+  },
+);
+
+Given(
   "the tournament {string} has the subtitle {string}",
   async function (this: SpecWorld, name: string, subtitle: string) {
     await changeTournament(this, name, { subtitle });

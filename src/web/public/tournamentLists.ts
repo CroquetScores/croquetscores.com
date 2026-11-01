@@ -324,7 +324,9 @@ export const table = (
   };
   const rows = sorted(listing.listed, sorting, speaking, (row) => row)
     .map(
-      (tournament) => `                <tr>
+      (
+        tournament,
+      ) => `                <tr${tournament.national || tournament.international ? " data-bold" : ""}>
                   <td class="tournament-dates">${escape(dated(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
                   <td class="tournament-sport"><span class="sport-code sport-${escape(tournament.sport)}">${escape(tournament.sport.toUpperCase())}</span></td>
                   <td class="tournament-flag">${flagOf(tournament)}</td>

@@ -29,6 +29,10 @@ export interface TournamentOfAccount {
    * rankings, which a world ranking officer narrows its list by.
    */
   readonly worldRankings: boolean;
+  /** Whether its organiser ticked national. Never both this and `international`. */
+  readonly national: boolean;
+  /** Whether its organiser ticked international. */
+  readonly international: boolean;
   /**
    * The account's part in it: a manager's or a scorer's, or, for a world
    * ranking officer with no part in it, one whose players' world ranking

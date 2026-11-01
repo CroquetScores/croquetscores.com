@@ -1800,6 +1800,12 @@ main {
   white-space: nowrap;
 }
 
+/* A national or international tournament's row is bold, every cell of it, so
+   that the tournaments that matter beyond one club stand out in a long list. */
+.tournament-list tbody tr[data-bold] td {
+  font-weight: 700;
+}
+
 /* A long name wraps rather than being cut short or pushing out past the
    panel. It is underlined only while the pointer is on its row, since the
    whole row is pressed to reach the tournament, and not while it is on the

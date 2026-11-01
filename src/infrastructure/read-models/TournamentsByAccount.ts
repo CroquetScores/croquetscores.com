@@ -41,6 +41,8 @@ interface TournamentRow {
   country: string | null;
   region: string | null;
   world_rankings: boolean;
+  national: boolean;
+  international: boolean;
 }
 
 const listed = (
@@ -56,6 +58,8 @@ const listed = (
   country: row.country ?? undefined,
   region: row.region ?? undefined,
   worldRankings: row.world_rankings,
+  national: row.national,
+  international: row.international,
   part,
 });
 
@@ -117,6 +121,7 @@ export class TournamentsByAccount implements Projection, Asked {
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, d.country, d.region, a.part,
+              d.national, d.international,
               exists (select 1 from tournaments_by_account_competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
@@ -156,7 +161,7 @@ export class TournamentsByAccount implements Projection, Asked {
       `select tournament_id, name,
               to_char(starts, 'YYYY-MM-DD') as starts,
               to_char(finishes, 'YYYY-MM-DD') as finishes,
-              address, archived, country, region,
+              address, archived, country, region, national, international,
               exists (select 1 from tournaments_by_account_competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
@@ -198,6 +203,7 @@ export class TournamentsByAccount implements Projection, Asked {
               to_char(d.starts, 'YYYY-MM-DD') as starts,
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, d.country, d.region, a.part,
+              d.national, d.international,
               exists (select 1 from tournaments_by_account_competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
@@ -241,12 +247,14 @@ export class TournamentsByAccount implements Projection, Asked {
       await connection.query(
         `insert into tournaments_by_account_details
            (tournament_id, website, name, starts, finishes, address, country,
-            region)
-         values ($1, $2, $3, $4, $5, $6, $7, $8)
+            region, national, international)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
          on conflict (tournament_id) do update
            set name = excluded.name, starts = excluded.starts,
                finishes = excluded.finishes, address = excluded.address,
-               country = excluded.country, region = excluded.region`,
+               country = excluded.country, region = excluded.region,
+               national = excluded.national,
+               international = excluded.international`,
         [
           tournament,
           event.website,
@@ -256,6 +264,8 @@ export class TournamentsByAccount implements Projection, Asked {
           event.address,
           event.country,
           event.region ?? null,
+          event.national,
+          event.international,
         ],
       );
       await this.#takesPart(tournament, event.createdBy.value, "manager");
@@ -263,7 +273,8 @@ export class TournamentsByAccount implements Projection, Asked {
       await connection.query(
         `update tournaments_by_account_details
             set name = $2, starts = $3, finishes = $4, address = $5,
-                country = $6, region = $7
+                country = $6, region = $7, national = $8,
+                international = $9
           where tournament_id = $1`,
         [
           tournament,
@@ -273,6 +284,8 @@ export class TournamentsByAccount implements Projection, Asked {
           event.address,
           event.country,
           event.region ?? null,
+          event.national,
+          event.international,
         ],
       );
     } else if (event instanceof TournamentArchived) {
