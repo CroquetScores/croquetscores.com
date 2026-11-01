@@ -265,13 +265,13 @@ const rowHelp = (world: SpecWorld): Locator =>
 Then(
   "the page has a help icon called {string}",
   async function (this: SpecWorld, name: string) {
-    assert.equal(
-      await this.browserPage
-        .locator("section.dialog")
-        .getByRole("link", { name, exact: true })
-        .count(),
-      1,
-    );
+    // Waited for, since the page is drawn in the browser and a count taken at
+    // once can be taken before the icon is there.
+    const icon = this.browserPage
+      .locator("section.dialog")
+      .getByRole("link", { name, exact: true });
+    await icon.first().waitFor();
+    assert.equal(await icon.count(), 1);
   },
 );
 
@@ -325,13 +325,11 @@ Then(
 Then(
   "the tab row has a help icon called {string}",
   async function (this: SpecWorld, name: string) {
-    assert.equal(
-      await this.browserPage
-        .locator(".tab-row")
-        .getByRole("link", { name, exact: true })
-        .count(),
-      1,
-    );
+    const icon = this.browserPage
+      .locator(".tab-row")
+      .getByRole("link", { name, exact: true });
+    await icon.first().waitFor();
+    assert.equal(await icon.count(), 1);
   },
 );
 

@@ -565,9 +565,11 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then the tab row's help icon opens another tab
 
-    Scenario: The help icon is called Help
+    # Named for the tab chosen, because the icon leads somewhere else as the
+    # tab changes and "Help" alone would not say where.
+    Scenario: The help icon is called Help, and says which tab it is for
       When the page of "Spring Open" is opened
-      Then the tab row has a help icon called "Help"
+      Then the tab row has a help icon called "Help: Players"
 
     Scenario: The help icon is on the row of the tabs
       When the page of "Spring Open" is opened
