@@ -1,5 +1,18 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-11-01
+
+### Einem Turnier folgen
+
+- **Der Interstate Shield wird nach der Matchdifferenz gereiht.** Seine Mannschaften werden jetzt nach den gewonnenen Matches abzüglich der verlorenen Matches gereiht; ein verlorenes Match zählt also gegen eine Mannschaft, während es früher gar nicht zählte. Mannschaften, die noch gleichauf liegen, werden nach den Tests geordnet, die sie gegeneinander gewonnen haben. Die Zusammenfassung des Turniers und die Seite einer Gruppe zeigen für jede Mannschaft die Matchdifferenz und die Spieldifferenz.
+
+### Ein Turnier führen
+
+- **Viele Spieler lassen sich auf einmal hinzufügen.** Drücken Sie auf dem Reiter Spieler neben **Spieler hinzufügen** auf **Mehrere Spieler hinzufügen** und fügen Sie eine Liste mit einer Zeile je Spieler ein. Jeder Spieler auf der Liste wird hinzugefügt.
+- **Ein Hilfe-Symbol auf mehr Seiten der Verwaltung.** Das runde Fragezeichen steht jetzt auch am Anfang der Seite, die ein Turnier anlegt, und der Seite, die eins ändert, am Ende der Reiterleiste auf der Seite eines Turniers und eines Wettbewerbs und neben der Turnierliste. Jedes führt zur Hilfe für das, was Sie gerade vor sich haben, und öffnet sie in einem anderen Tab, damit die Seite erhalten bleibt.
+- **Der Reiter Ergebnisse ist eine Tabelle.** Jedes Ergebnis ist eine Zeile einer Tabelle, sodass ein Screenreader Ihnen sagt, in welcher Zelle Sie sind. Das Wort „schlägt“ hat zwischen dem Ergebnis des Gewinners und dem Verlierer eine eigene Spalte. Auf einem Handy wird ein Ergebnis nicht mehr auf zwei Zeilen gefaltet; stattdessen lässt sich die Tabelle zur Seite schieben.
+- **Ein Test in einem Eire Cup oder einem Interstate Shield hat keine Gruppe.** Diese Veranstaltungen werden nicht in Gruppen gespielt. Darum fragt der Dialog für einen Test dort nicht nach einer Gruppe, und ein Test kann keine bekommen.
+
 ## Veröffentlicht am 2026-10-31
 
 ### iPad und iMac

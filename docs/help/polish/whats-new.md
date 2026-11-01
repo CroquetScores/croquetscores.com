@@ -1,5 +1,18 @@
 # Co nowego
 
+## Wydano 2026-11-01
+
+### Śledzenie turnieju
+
+- **Interstate Shield jest układany według bilansu meczów.** Drużyny są teraz układane według meczów wygranych minus mecze przegrane, więc przegrany mecz liczy się teraz przeciwko drużynie, a dawniej nie liczył się wcale. Drużyny wciąż remisujące są ustawiane według testów wygranych między sobą. Podsumowanie turnieju i strona grupy pokazują bilans meczów i bilans gier każdej drużyny.
+
+### Prowadzenie turnieju
+
+- **Można dodać wielu zawodników naraz.** Na karcie Zawodnicy naciśnij **Dodaj zawodników**, obok **Dodaj zawodnika**, i wklej listę z jednym wierszem na każdego zawodnika. Każdy zawodnik z listy zostanie dodany.
+- **Ikona pomocy w większej części panelu.** Okrągły znak zapytania jest teraz także na początku strony, która tworzy turniej, i strony, która go zmienia, na końcu rzędu kart na stronie turnieju i konkurencji oraz obok listy turniejów. Każdy prowadzi do pomocy o tym, na co patrzysz, i otwiera ją w innej karcie przeglądarki, aby strona została na miejscu.
+- **Karta Wyniki jest tabelą.** Każdy wynik jest wierszem tabeli, więc czytnik ekranu mówi, w której komórce jesteś. Słowo „pokonuje” ma własną kolumnę między wynikiem zwycięzcy a przegranym. Na telefonie wynik nie jest już zawinięty na dwa wiersze: tabelę przewija się na boki.
+- **Test w Eire Cup lub Interstate Shield nie ma grupy.** Te rozgrywki nie toczą się w grupach, więc okno testu nie pyta tam o grupę, a testowi nie można jej nadać.
+
 ## Wydano 2026-10-31
 
 ### iPad i iMac

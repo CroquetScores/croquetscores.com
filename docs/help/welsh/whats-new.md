@@ -1,5 +1,18 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-01
+
+### Dilyn twrnamaint
+
+- **Mae Tarian y Taleithiau yn cael ei threfnu yn ôl gemau net.** Bellach trefnir ei thimau yn ôl y gemau a enillwyd llai'r gemau a gollwyd, felly mae gêm a gollir yn cyfrif yn erbyn tîm, lle nad oedd yn cyfrif o gwbl o'r blaen. Rhoddir timau sy'n dal yn gyfartal mewn trefn yn ôl y profion a enillwyd ganddynt yn erbyn ei gilydd. Mae crynodeb y twrnamaint, a thudalen grŵp, yn dangos gemau net pob tîm.
+
+### Rheoli twrnamaint
+
+- **Gellir ychwanegu llawer o chwaraewyr ar unwaith.** Ar y tab Chwaraewyr, pwyswch **Ychwanegu chwaraewyr**, wrth ymyl **Ychwanegu chwaraewr**, a gludwch restr â llinell ar gyfer pob chwaraewr. Ychwanegir pob chwaraewr ar y rhestr.
+- **Eicon cymorth ar fwy o'r gweinyddu.** Bellach mae'r marc cwestiwn crwn hefyd ar ddechrau'r dudalen sy'n creu twrnamaint a'r dudalen sy'n newid un, ar ddiwedd rhes y tabiau ar dudalen twrnamaint ac ar dudalen cystadleuaeth, ac wrth ymyl y rhestr o dwrnameintiau. Mae pob un yn arwain at y cymorth ar gyfer yr hyn rydych yn edrych arno, ac yn ei agor mewn tab arall fel bod y dudalen yn cael ei chadw.
+- **Mae'r tab Sgorau yn dabl.** Mae pob sgôr yn rhes o dabl, fel bod darllenydd sgrin yn dweud wrthych ym mha gell rydych. Mae gan y gair "curo" ei golofn ei hun rhwng sgôr yr enillydd a'r collwr. Ar ffôn nid yw sgôr bellach wedi'i phlygu ar ddwy linell: mae'r tabl yn sgrolio i'r ochr yn lle hynny.
+- **Nid oes grŵp i brawf mewn Cwpan Iwerddon na Tharian y Taleithiau.** Nid yw'r digwyddiadau hynny'n cael eu chwarae mewn grwpiau, felly nid yw'r deialog ar gyfer prawf yn gofyn am un yno, ac ni ellir rhoi grŵp i brawf.
+
 ## Rhyddhawyd 2026-10-31
 
 ### iPad ac iMac

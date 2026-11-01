@@ -1,5 +1,18 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-01
+
+### 'n Toernooi volg
+
+- **Die Interstaatskild word volgens netto wedstryde gerangskik.** Sy spanne word nou gerangskik volgens die wedstryde wat hulle gewen het min die wedstryde wat hulle verloor het, sodat 'n verlore wedstryd teen 'n span tel waar dit voorheen vir niks getel het. Spanne wat nog gelyk is, word in volgorde gesit volgens die toetse wat hulle teen mekaar gewen het. Die opsomming van die toernooi, en die bladsy van 'n groep, wys elke span se netto wedstryde en netto spelle.
+
+### 'n Toernooi bestuur
+
+- **Baie spelers kan op een slag bygevoeg word.** Druk op die Spelers-oortjie **Voeg spelers by**, langs **Voeg speler by**, en plak 'n lys met 'n reël vir elke speler. Elke speler op die lys word bygevoeg.
+- **'n Hulp-ikoon op meer van die admin.** Die ronde vraagteken begin nou ook die bladsy wat 'n toernooi skep en die bladsy wat een verander, staan aan die einde van die ry oortjies op 'n toernooi se bladsy en op 'n kompetisie s'n, en staan langs die lys toernooie. Elkeen lei na die hulp vir wat jy besig is om te sien, en maak dit in 'n ander oortjie oop, sodat die bladsy bewaar bly.
+- **Die Uitslae-oortjie is 'n tabel.** Elke uitslag is 'n ry van 'n tabel, sodat 'n skermleser vir jou sê in watter sel jy is. Die woord "het gewen teen" het sy eie kolom tussen die wenner se telling en die verloorder. Op 'n foon word 'n uitslag nie meer op twee reëls gevou nie: die tabel rol eerder sywaarts.
+- **'n Toets in 'n Eire-beker of 'n Interstaatskild het nie 'n groep nie.** Daardie byeenkomste word nie in groepe gespeel nie, so die dialoog vir 'n toets vra nie daar om een nie, en 'n toets kan nie een kry nie.
+
 ## Vrygestel 2026-10-31
 
 ### iPad en iMac

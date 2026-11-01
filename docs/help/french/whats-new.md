@@ -1,5 +1,18 @@
 # Nouveautés
 
+## Publié le 2026-11-01
+
+### Suivre un tournoi
+
+- **Le Bouclier interétatique est classé selon la différence de matchs.** Ses équipes sont maintenant classées selon les matchs gagnés moins les matchs perdus : un match perdu compte donc contre une équipe, alors qu'avant il ne comptait pour rien. Les équipes encore à égalité sont départagées par les rencontres qu'elles ont gagnées l'une contre l'autre. Le résumé du tournoi et la page d'un groupe montrent la différence de matchs et la différence de parties de chaque équipe.
+
+### Organiser un tournoi
+
+- **On peut ajouter plusieurs joueurs d'un coup.** Sous l'onglet Joueurs, appuyez sur **Ajouter des joueurs**, à côté de **Ajouter un joueur**, et collez une liste avec une ligne par joueur. Tous les joueurs de la liste sont ajoutés.
+- **Une icône d'aide dans plus de pages de l'administration.** Le point d'interrogation rond figure maintenant aussi au début de la page qui crée un tournoi et de celle qui en modifie un, à la fin de la rangée d'onglets de la page d'un tournoi et de celle d'une compétition, et à côté de la liste des tournois. Chacun mène à l'aide sur ce que vous avez sous les yeux, et l'ouvre dans un autre onglet pour que la page reste ouverte.
+- **L'onglet Scores est un tableau.** Chaque score est une ligne d'un tableau, de sorte qu'un lecteur d'écran vous dit dans quelle cellule vous êtes. Le mot « battu » a sa propre colonne entre le score du gagnant et le perdant. Sur un téléphone, un score n'est plus replié sur deux lignes : c'est le tableau qui défile sur le côté.
+- **Une rencontre d'une Coupe d'Irlande ou d'un Bouclier interétatique n'a pas de groupe.** Ces épreuves ne se jouent pas en groupes ; la fenêtre d'une rencontre n'en demande donc pas, et on ne peut pas en donner un à une rencontre.
+
 ## Publié le 2026-10-31
 
 ### iPad et iMac
