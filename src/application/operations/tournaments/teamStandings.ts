@@ -5,7 +5,6 @@
 // group's table and the summary can never come to count a test differently.
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
-import { TournamentFormat } from "../../../domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import {
   type Competitions,
   competitionOf,
@@ -185,10 +184,9 @@ export const standingsOf = async (
       shortName: team.shortName.toString(),
       ...tallies.get(team.id.value)!,
     }));
-  // Only the Interstate Shield, whose rules rank by net matches, which the
-  // summary then shows. Another format keeps ranking by matches won: its
-  // organisers chose that, and a change of ranking is theirs to ask for.
-  const showsNets = tournament.format.equals(TournamentFormat.interstateShield);
+  // Shown where the format ranks by them, since a reader not shown a net takes
+  // it to be of no account.
+  const showsNets = tournament.format.ranksByNetMatches;
   return {
     teams,
     bestOfMoreThanOne: tournament.competitions.some(
@@ -245,22 +243,23 @@ const rankingOf = (
   shield: boolean,
   testsWonBy: readonly { won: string; lost: string }[],
 ): TeamStanding[] => {
-  const level = (one: TeamStanding, other: TeamStanding): boolean =>
-    one.testsWon === other.testsWon &&
-    (shield
-      ? netMatchesOf(one) === netMatchesOf(other)
-      : one.matchesWon === other.matchesWon) &&
-    netGamesOf(one) === netGamesOf(other) &&
-    netHoopsOf(one) === netHoopsOf(other);
-  const ranked = [...teams].sort(
-    (one, other) =>
-      other.testsWon - one.testsWon ||
-      (shield
-        ? netMatchesOf(other) - netMatchesOf(one)
-        : other.matchesWon - one.matchesWon) ||
-      netGamesOf(other) - netGamesOf(one) ||
-      netHoopsOf(other) - netHoopsOf(one),
-  );
+  // What the teams are ranked by, in order, one number each: the more of each
+  // is the better. One list for both the sort and the test for teams level, so
+  // that the two cannot come to rank by different things.
+  const keyOf = (team: TeamStanding): number[] => [
+    team.testsWon,
+    shield ? netMatchesOf(team) : team.matchesWon,
+    netGamesOf(team),
+    netHoopsOf(team),
+  ];
+  const compare = (one: TeamStanding, other: TeamStanding): number => {
+    const ones = keyOf(one);
+    const others = keyOf(other);
+    for (const [at, value] of others.entries())
+      if (value !== ones[at]) return value - ones[at]!;
+    return 0;
+  };
+  const ranked = [...teams].sort(compare);
   if (!shield) return ranked;
 
   // Each run of teams level is put in order by the tests they won against
@@ -270,7 +269,8 @@ const rankingOf = (
   const result: TeamStanding[] = [];
   for (let start = 0; start < ranked.length;) {
     let end = start + 1;
-    while (end < ranked.length && level(ranked[start]!, ranked[end]!)) end += 1;
+    while (end < ranked.length && compare(ranked[start]!, ranked[end]!) === 0)
+      end += 1;
     const run = ranked.slice(start, end);
     const ids = new Set(run.map(({ id }) => id));
     const amongThem = (team: TeamStanding): number =>
