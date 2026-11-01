@@ -776,7 +776,7 @@ Feature: The scores tab of a competition's page
     entered, the first entered being 1, counting the archived ones among them,
     so that archiving a game does not change the number of any other and a
     gap in the numbers says one has been archived. Each score begins with it,
-    before the winner, on a phone as well as on a wider screen.
+    before the winner.
 
     Scenario Outline: The scores are numbered in the order they were entered
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -809,18 +809,56 @@ Feature: The scores tab of a competition's page
       When the scores of "Block A" in "Spring Open" are opened
       Then the number of the first score listed is before its winner
 
-  Rule: On a wider screen each part of a score is a column
+  Rule: The scores are a table
 
-    From the width the other tabs lay their rows out beside what can be done
-    with them, a score is a row of columns: the game's number, the winner,
-    their score, the loser, their score, and then what can be done with it.
-    The first five are as wide
-    as what is in them and no wider, and nothing in them wraps, so that a score
-    reads along one line and the columns line up from one score to the next.
-    The last takes what is left, so that what can be done is at the right edge.
-    Where the names are longer than the screen, the list scrolls across rather
-    than the page widening. On a phone there is no room for columns, and a
-    score is laid out as it was, in two lines.
+    The scores in use are a table, and so are the archived ones, so that a
+    reader who cannot see the page is told they are a table and which cell they
+    are in. Each score is a row of it, and each row has six cells: the game's
+    number, the winner, their score, the loser, their score, and then what can
+    be done with the score. The table has no column headings, since each cell
+    says what it is. The word between the winner and the loser has no cell of
+    its own, so it is said to a reader who cannot see and not drawn.
+
+    Scenario: The scores in use are a table
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the scores in use are a table
+
+    Scenario: The archived scores are a table
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the archived scores are a table
+
+    Scenario: A score is a row of the table
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first score listed is a row of the table
+
+    Scenario: A score has six cells
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the first score listed has 6 cells
+
+    Scenario: The table has no column headings
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the table of scores has no column headings
+
+    Scenario: The word between the winner and the loser is not drawn
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the word between the winner and the loser of the first score listed is not drawn
+
+  Rule: The columns of the table fit what is in them
+
+    The first five columns are as wide as what is in them and no wider, and
+    nothing in them wraps, so that a score reads along one line and the
+    columns line up from one score to the next. The last takes what is left,
+    so that what can be done is at the right edge. Where the names are longer
+    than the screen, the table scrolls across rather than the page widening.
+    That holds on a phone too: a score is not folded into two lines, since the
+    cells of a row stay cells only while the row is a row of the table.
 
     Scenario: A winner, a loser and their scores do not wrap
       Given a viewport 1200 pixels wide
@@ -876,7 +914,7 @@ Feature: The scores tab of a competition's page
         | Sam Someone | Alex Another | Withdraw |
         | Chris Third | Sam Someone  | Restore  |
 
-    Scenario: Long names wrap rather than widening the page
+    Scenario: Long names do not widen the page
       Given "organiser@example.com" has added the player "Maximilian Alexander Fitzwilliam-Worthington" to "Spring Open"
       And "organiser@example.com" has added the player "Bartholomew Montgomery Featherstonehaugh" to "Spring Open"
       And "organiser@example.com" has entered the player "Maximilian Alexander Fitzwilliam-Worthington" in "Block A" of "Spring Open"

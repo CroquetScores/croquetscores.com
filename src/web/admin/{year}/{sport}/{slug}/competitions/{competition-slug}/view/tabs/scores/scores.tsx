@@ -12,8 +12,9 @@ import { Pencil } from "../../../../../../../../Pencil.js";
 import { TrashCan } from "../../../../../../../../TrashCan.js";
 
 // A competition's Scores tab (scores-tab.feature): Add Score above the games
-// in use, in the order they were entered, each saying the winner and their
-// score, then the loser and theirs, and offering Edit, and Archive where it
+// in use, in the order they were entered, a table with a row to each, saying
+// its number, the winner and their score, then the loser and theirs, and
+// offering Edit, and Archive where it
 // can be archived; after them the archived, struck through, offering Restore.
 // Whatever is pressed, and whenever the dialog adds or corrects a game, the
 // list is asked for again. In a knockout whose draw is not filled, Add Score
@@ -181,27 +182,52 @@ export const ScoresTab = ({
       </p>
     ) : null;
 
+  // A score is a row of a table, so that it is told to a reader who cannot
+  // see as one: the game's number, the winner, their score, the loser, their
+  // score, and what can be done with it. There are no column headings, since
+  // each cell says what it is. The word between the winner and the loser has
+  // no cell of its own, so it is said in the winner's score's and not drawn.
   const row = (game: Listed): React.JSX.Element => (
-    <li
+    <tr
       key={game.id}
       className="listed-item"
       data-archived={game.archived ? "" : undefined}
       data-withdrawn={game.withdrawn ? "" : undefined}
     >
-      <span className="listed-score">
-        <span className="score-number">{(listed ?? []).indexOf(game) + 1}</span>{" "}
-        <span className="score-winner">{game.winner}</span>{" "}
+      <td className="score-number">{(listed ?? []).indexOf(game) + 1}</td>
+      <td>
+        <span className="score-winner">{game.winner}</span>
+      </td>
+      <td>
         <span className="score-winner-score">{game.winnerScore}</span>{" "}
-        <span className="score-beat">{say("admin.score.beat")}</span>
-        <br />
-        <span className="score-loser">{game.loser}</span>{" "}
+        <span className="score-between">{say("admin.score.beat")}</span>
+      </td>
+      <td>
+        <span className="score-loser">{game.loser}</span>
+      </td>
+      <td>
         <span className="score-loser-score">{game.loserScore}</span>
-      </span>
-      {archivedSaid(game)}
-      {withdrawnSaid(game)}
-      {options(game)}
-      {refusedBeneath(game)}
-    </li>
+      </td>
+      <td>
+        {archivedSaid(game)}
+        {withdrawnSaid(game)}
+        {options(game)}
+        {refusedBeneath(game)}
+      </td>
+    </tr>
+  );
+
+  const gameTable = (
+    games: readonly Listed[],
+    listing: "in-use" | "archived",
+  ): React.JSX.Element => (
+    // Within a box of its own, which scrolls across where the table is wider
+    // than the screen, since nothing in it wraps.
+    <div className="scores-box">
+      <table className="game-scores">
+        <tbody data-listed={listing}>{games.map(row)}</tbody>
+      </table>
+    </div>
   );
 
   // A test's score from the first team's side, whoever won: the first team's
@@ -243,7 +269,7 @@ export const ScoresTab = ({
   ): React.JSX.Element => (
     // Within a box of its own, which scrolls across where the table is wider
     // than the screen, since nothing in it wraps.
-    <div className="test-scores-box">
+    <div className="scores-box">
       <table className="test-scores">
         <thead>
           <tr>
@@ -399,27 +425,19 @@ export const ScoresTab = ({
         <p className="listed-none">{say("admin.scores.none")}</p>
       ) : (
         <>
-          {inUse.length > 0 ? (
-            teams === undefined ? (
-              <ul className="listed" data-listed="in-use">
-                {inUse.map(row)}
-              </ul>
-            ) : (
-              testTable(inUse, "in-use", teams)
-            )
-          ) : null}
+          {inUse.length > 0
+            ? teams === undefined
+              ? gameTable(inUse, "in-use")
+              : testTable(inUse, "in-use", teams)
+            : null}
           {archived.length > 0 ? (
             <>
               <h2 className="listed-archived-heading">
                 {say("admin.scores.archived")}
               </h2>
-              {teams === undefined ? (
-                <ul className="listed" data-listed="archived">
-                  {archived.map(row)}
-                </ul>
-              ) : (
-                testTable(archived, "archived", teams)
-              )}
+              {teams === undefined
+                ? gameTable(archived, "archived")
+                : testTable(archived, "archived", teams)}
             </>
           ) : null}
         </>
