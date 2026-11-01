@@ -4,6 +4,7 @@ import type { RequestType } from "../../common/Mediator.js";
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { brokenBy } from "../../common/brokenBy.js";
 import { AddBlock } from "./AddBlock.js";
 
@@ -15,10 +16,14 @@ export class AddBlockValidator extends CommandValidator<AddBlock> {
   readonly validates: RequestType<AddBlock> = AddBlock;
 
   validate(command: AddBlock): readonly BrokenRule[] {
+    const { tieBreak } = command;
     return [
       ...brokenBy("name", () => CompetitionName.from(command.name)),
       ...brokenBy("bestOf", () => BestOf.from(command.bestOf)),
       ...brokenBy("rounds", () => Rounds.from(command.rounds)),
+      ...(tieBreak === undefined
+        ? []
+        : brokenBy("tieBreak", () => TieBreak.from(tieBreak))),
     ];
   }
 }

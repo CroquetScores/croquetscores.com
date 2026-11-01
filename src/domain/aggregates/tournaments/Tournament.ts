@@ -65,6 +65,7 @@ import {
 } from "./TournamentPlayer.js";
 import { BestOf } from "./value-objects/BestOf.js";
 import { Rounds } from "./value-objects/Rounds.js";
+import { TieBreak } from "./value-objects/TieBreak.js";
 import { CompetitionName } from "./value-objects/CompetitionName.js";
 import { ExpectedMatches } from "./value-objects/ExpectedMatches.js";
 import { TestGroup } from "./value-objects/TestGroup.js";
@@ -234,6 +235,8 @@ export type CompetitionShape =
       readonly kind: "block";
       readonly bestOf: BestOf;
       readonly rounds: Rounds;
+      // How its players level on matches won are told apart.
+      readonly tieBreak: TieBreak;
     }
   | {
       readonly kind: "knockout";
@@ -879,7 +882,8 @@ export class Tournament extends AggregateRoot {
 
   /**
    * That a block called `name`, the best of `bestOf`, was added, played in
-   * `rounds`.
+   * `rounds`. Its players level on matches won are told apart by `tieBreak`,
+   * and by what a block goes by unless it is told otherwise where none is said.
    */
   addBlock(
     id: CompetitionId,
@@ -889,6 +893,7 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
     rules?: CompetitionRulesSaid,
+    tieBreak?: TieBreak,
   ): void {
     this.#refuseUnlessManager(by);
     const { slug, order } = this.#placeFor(id, name);
@@ -905,6 +910,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        (tieBreak ?? TieBreak.unlessTold).code,
         by,
         at,
       ),
@@ -1028,8 +1034,9 @@ export class Tournament extends AggregateRoot {
 
   /**
    * That the block `id` is now called `name`, is the best of `bestOf` and is
-   * played in `rounds`. Its slug and its order are kept. An update that
-   * changes nothing records nothing.
+   * played in `rounds`. Its slug and its order are kept, and so is its tie
+   * break where `tieBreak` says none. An update that changes nothing records
+   * nothing.
    */
   updateBlock(
     id: CompetitionId,
@@ -1039,15 +1046,18 @@ export class Tournament extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
     rules?: CompetitionRulesSaid,
+    tieBreak?: TieBreak,
   ): void {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "block", name);
     if (found.shape.kind !== "block") return;
     const settled = this.#rulesToUpdate(found, rules);
+    const settledTieBreak = tieBreak ?? found.shape.tieBreak;
     if (
       found.reference.name.equals(name) &&
       found.shape.bestOf.equals(bestOf) &&
       found.shape.rounds.equals(rounds) &&
+      found.shape.tieBreak.equals(settledTieBreak) &&
       sameRules(found.rules, settled)
     )
       return;
@@ -1061,6 +1071,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settledTieBreak.code,
         by,
         at,
       ),
@@ -1835,6 +1846,7 @@ export class Tournament extends AggregateRoot {
         kind: "block",
         bestOf: BestOf.from(event.bestOf),
         rounds: Rounds.from(event.rounds),
+        tieBreak: tieBreakOf(event),
       });
     } else if (event instanceof KnockoutAdded) {
       this.#competitionAdded(event, {
@@ -1862,6 +1874,7 @@ export class Tournament extends AggregateRoot {
           kind: "block",
           bestOf: BestOf.from(event.bestOf),
           rounds: Rounds.from(event.rounds),
+          tieBreak: tieBreakOf(event),
         },
         rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
@@ -2766,6 +2779,14 @@ const dayOf = (moment: ReadOnlyDate): string =>
 // The start of the day `written` in UTC.
 const dayWritten = (written: string): ReadOnlyDate =>
   ReadOnlyDate.from(new Date(`${written}T00:00:00Z`));
+
+// What a block as an event that added or updated it says goes by, and what a
+// block goes by unless it is told otherwise where the event, kept before a block
+// could be told, says nothing.
+const tieBreakOf = (said: BlockAdded | BlockUpdated): TieBreak =>
+  said.tieBreak === undefined
+    ? TieBreak.unlessTold
+    : TieBreak.from(said.tieBreak);
 
 // A test as an event that added or updated it says it is.
 const testShapeOf = (

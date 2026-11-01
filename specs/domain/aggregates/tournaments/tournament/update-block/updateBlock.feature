@@ -83,6 +83,43 @@ Feature: Changing what a tournament's block is
       When the tournament is rebuilt from the stream
       Then the tournament has the competition "Block One"
 
+  Rule: Updating a block can change the tie break it goes by
+
+    An update that says none leaves the block going by what it went by, as an
+    update that says nothing of a block's rules does (`competitionRules.feature`).
+
+    Scenario: An updated block goes by the tie break it was updated to
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update makes the block go by the tie break "other"
+      When the block "Block A" is updated
+      Then the tournament's competition "Block A" goes by the tie break "other"
+
+    Scenario: An update that says no tie break leaves the block going by its own
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it to go by the tie break "who-beat-who"
+      And the tournament is rebuilt from the stream
+      And the update calls the competition "Block One"
+      When the block "Block A" is updated
+      Then the tournament's competition "Block One" goes by the tie break "who-beat-who"
+
+    Scenario: A tie break that is none of them is refused
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update makes the block go by the tie break "net-hoops"
+      When the block "Block A" is updated
+      Then it is refused for breaking "TieBreak.Unknown"
+
+    Scenario: A tournament rebuilt after a block was updated has the block going by the tie break it was updated to
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the update makes the block go by the tie break "other"
+      And the block "Block A" was updated
+      When the tournament is rebuilt from the stream
+      Then the tournament's competition "Block A" goes by the tie break "other"
+
   Rule: No two competitions in a tournament have the same name
 
     Scenario: A name another competition has is refused
@@ -152,6 +189,22 @@ Feature: Changing what a tournament's block is
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
       And the update makes the competition played in 2 rounds
+      When the block "Block A" is updated
+      Then it has recorded 1 event
+
+    Scenario: Updating a block to the tie break it already goes by records nothing
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it to go by the tie break "who-beat-who"
+      And the tournament is rebuilt from the stream
+      And the update makes the block go by the tie break "who-beat-who"
+      When the block "Block A" is updated
+      Then it has recorded 0 events
+
+    Scenario: Updating only the tie break of a block records it
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it
+      And the tournament is rebuilt from the stream
+      And the update makes the block go by the tie break "other"
       When the block "Block A" is updated
       Then it has recorded 1 event
 

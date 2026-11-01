@@ -9,6 +9,7 @@ import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { AddBlock } from "./AddBlock.js";
 
@@ -43,6 +44,9 @@ export class AddBlockHandler extends CommandHandler<AddBlock, CompetitionId> {
       by,
       command.requestedAt,
       command.rules,
+      command.tieBreak === undefined
+        ? undefined
+        : TieBreak.from(command.tieBreak),
     );
     await this.tournaments.save(tournament);
     return id;

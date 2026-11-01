@@ -106,6 +106,12 @@ Feature: The competitions of a tournament, as its managers and scorers list them
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
       Then the competition "Block A" is answered as played in 2 rounds
 
+    Scenario: A block is answered with the tie break it goes by
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
+      Then the competition "Block A" is answered as going by the tie break "who-beat-who"
+
     Scenario: A knockout is answered with its places
       Given "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"

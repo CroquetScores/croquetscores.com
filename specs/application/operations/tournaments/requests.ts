@@ -269,6 +269,7 @@ export const addBlock = (
       domainScenarioOf(world).competition.rounds ?? 1,
       momentOf(world),
       domainScenarioOf(world).competition.rules,
+      domainScenarioOf(world).competition.tieBreak,
     ),
     tournament,
   );
@@ -384,6 +385,7 @@ export const updateBlock = async (
       domainScenarioOf(world).competitionUpdate.rounds ?? 1,
       momentOf(world),
       domainScenarioOf(world).competitionUpdate.rules,
+      domainScenarioOf(world).competitionUpdate.tieBreak,
     ),
     tournament,
   );

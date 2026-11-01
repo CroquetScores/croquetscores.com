@@ -5,7 +5,8 @@ import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournament
 
 /**
  * Adding a block to a tournament: its name, what each of its matches is the
- * best of, and how many rounds it is played in. It is answered with the new competition's id.
+ * best of, how many rounds it is played in, and how its players level on
+ * matches won are told apart. It is answered with the new competition's id.
  */
 export class AddBlock extends Command<CompetitionId> {
   constructor(
@@ -22,6 +23,12 @@ export class AddBlock extends Command<CompetitionId> {
      * that to the tournament: what it was when it is updated.
      */
     readonly rules?: CompetitionRulesSaid | undefined,
+    /**
+     * The code of how its players level on matches won are told apart, as the
+     * dialog sent it, or nothing to leave that to what a block goes by unless
+     * it is told otherwise.
+     */
+    readonly tieBreak?: string | undefined,
   ) {
     super(requestedAt);
   }

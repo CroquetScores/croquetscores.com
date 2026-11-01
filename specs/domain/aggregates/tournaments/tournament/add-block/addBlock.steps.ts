@@ -6,6 +6,7 @@ import { CompetitionId } from "../../../../../../src/domain/aggregates/tournamen
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../../../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
   ask,
@@ -44,6 +45,48 @@ Given(
         CompetitionName.from(name),
         BestOf.from(1),
         Rounds.from(rounds),
+        byOf(this),
+        now(this),
+      ),
+    );
+  },
+);
+
+Given(
+  "the block {string} was added to it to go by the tie break {string}",
+  function (this: SpecWorld, name: string, code: string) {
+    happened(this, (tournament) =>
+      tournament.addBlock(
+        CompetitionId.create(),
+        CompetitionName.from(name),
+        BestOf.from(1),
+        Rounds.from(1),
+        byOf(this),
+        now(this),
+        undefined,
+        TieBreak.from(code),
+      ),
+    );
+  },
+);
+
+// As a block was kept before it could be told its tie break, which the
+// tournament would not record now.
+Given(
+  "the block {string} was added to it before a block could be told its tie break",
+  function (this: SpecWorld, name: string) {
+    scenarioOf(this).later.push(
+      new BlockAdded(
+        CompetitionId.create().value,
+        name,
+        name.toLowerCase().replaceAll(" ", "-"),
+        10_000,
+        1,
+        1,
+        false,
+        false,
+        true,
+        undefined,
         byOf(this),
         now(this),
       ),
@@ -105,6 +148,13 @@ Given(
 );
 
 Given(
+  "the block is to go by the tie break {string}",
+  function (this: SpecWorld, code: string) {
+    scenarioOf(this).competition.tieBreak = code;
+  },
+);
+
+Given(
   "the block is to be played in {int} rounds",
   function (this: SpecWorld, rounds: number) {
     scenarioOf(this).competition.rounds = rounds;
@@ -112,7 +162,7 @@ Given(
 );
 
 When("the block {string} is added", function (this: SpecWorld, name: string) {
-  const { bestOf, rounds } = scenarioOf(this).competition;
+  const { bestOf, rounds, tieBreak } = scenarioOf(this).competition;
   ask(this, (tournament) =>
     tournament.addBlock(
       competitionIdOf(this),
@@ -123,6 +173,7 @@ When("the block {string} is added", function (this: SpecWorld, name: string) {
       byOf(this),
       now(this),
       scenarioOf(this).competition.rules,
+      tieBreak === undefined ? undefined : TieBreak.from(tieBreak),
     ),
   );
 });
@@ -131,6 +182,15 @@ Then(
   "the first thing it recorded is a block being added",
   function (this: SpecWorld) {
     assertFirstRecorded(this, BlockAdded);
+  },
+);
+
+Then(
+  "the tournament's competition {string} goes by the tie break {string}",
+  function (this: SpecWorld, name: string, code: string) {
+    const { shape } = competitionNamed(tournamentOf(this), name);
+    assert.ok(shape.kind === "block", `${name} is not a block.`);
+    assert.equal(shape.tieBreak.code, code);
   },
 );
 

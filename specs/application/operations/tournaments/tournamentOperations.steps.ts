@@ -466,6 +466,7 @@ Given(
           domainScenarioOf(this).competition.rounds ?? 1,
           momentOf(this),
           domainScenarioOf(this).competition.rules,
+          domainScenarioOf(this).competition.tieBreak,
         ),
       ),
     );

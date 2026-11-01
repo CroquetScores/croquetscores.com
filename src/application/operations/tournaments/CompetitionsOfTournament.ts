@@ -23,6 +23,8 @@ export type ListedCompetition = {
       readonly bestOf: number;
       /** How many matches of it each two players play. */
       readonly rounds: number;
+      /** How its players level on matches won are told apart, by code. */
+      readonly tieBreak: string;
     }
   | {
       readonly kind: "swiss";
