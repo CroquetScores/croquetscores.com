@@ -813,11 +813,12 @@ Feature: The scores tab of a competition's page
 
     The scores in use are a table, and so are the archived ones, so that a
     reader who cannot see the page is told they are a table and which cell they
-    are in. Each score is a row of it, and each row has six cells: the game's
-    number, the winner, their score, the loser, their score, and then what can
-    be done with the score. The table has no column headings, since each cell
-    says what it is. The word between the winner and the loser has no cell of
-    its own, so it is said to a reader who cannot see and not drawn.
+    are in. Each score is a row of it, and each row has seven cells: the game's
+    number, the winner, their score, the word "beat", the loser, their score,
+    and then what can be done with the score. The table has no column
+    headings, since each cell says what it is. The word is a cell of its own,
+    so that it is drawn between the winner's score and the loser, and a reader
+    who cannot see is told it as the cell it is and not as part of the score.
 
     Scenario: The scores in use are a table
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -835,24 +836,30 @@ Feature: The scores tab of a competition's page
       When the scores of "Block A" in "Spring Open" are opened
       Then the first score listed is a row of the table
 
-    Scenario: A score has six cells
+    Scenario: A score has seven cells
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
-      Then the first score listed has 6 cells
+      Then the first score listed has 7 cells
 
     Scenario: The table has no column headings
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
       Then the table of scores has no column headings
 
-    Scenario: The word between the winner and the loser is not drawn
+    Scenario: The word between the winner and the loser is a cell of its own
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the scores of "Block A" in "Spring Open" are opened
-      Then the word between the winner and the loser of the first score listed is not drawn
+      Then the first score listed shows the word "beat" in its own cell
+
+    Scenario: The word is drawn between the winner's score and the loser
+      Given a viewport 1200 pixels wide
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the scores of "Block A" in "Spring Open" are opened
+      Then the word between the winner and the loser of the first score listed is drawn between them
 
   Rule: The columns of the table fit what is in them
 
-    The first five columns are as wide as what is in them and no wider, and
+    The first six columns are as wide as what is in them and no wider, and
     nothing in them wraps, so that a score reads along one line and the
     columns line up from one score to the next. The last takes what is left,
     so that what can be done is at the right edge. Where the names are longer

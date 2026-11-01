@@ -14,24 +14,10 @@
   font-weight: 600;
 }
 
-/* The word between the winner and the loser, which no cell holds, is said to a
-   reader who cannot see and not drawn: the cells either side of it already
-   read as a winner and a loser. */
-.game-scores td {
-  /* The cell the word is in is the box it is placed in, so that it stays in
-     its row and cannot widen the page from some other place. */
-  position: relative;
-}
-
+/* The word between the winner's score and the loser, quiet as the number is,
+   since the scores either side of it are what is read. */
 .score-between {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  color: var(--ink-muted);
 }
 
 /* Struck through so that an archived score is not taken for one in use. Its
