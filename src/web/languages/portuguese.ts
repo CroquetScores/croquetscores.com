@@ -574,6 +574,7 @@ export const portuguese: Language = {
     "admin.losers.none": "Nenhum mata-mata dos perdedores.",
     "admin.losers.noRounds":
       "Este mata-mata não tem rodada cujos perdedores possam continuar jogando.",
+    "admin.losers.remove": "Remover",
     "admin.losers.readOnly":
       "Os jogadores deste mata-mata são os perdedores de outro mata-mata, colocados aqui à medida que cada partida é decidida.",
     "admin.hover.losers.add":

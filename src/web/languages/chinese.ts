@@ -541,6 +541,7 @@ export const chinese: Language = {
     "admin.losers.name": "败者淘汰赛名称",
     "admin.losers.none": "没有败者淘汰赛。",
     "admin.losers.noRounds": "这个淘汰赛没有可让败者继续比赛的轮次。",
+    "admin.losers.remove": "移除",
     "admin.losers.readOnly":
       "这个淘汰赛的选手是另一个淘汰赛的败者，每场比赛决出胜负后自动放入这里。",
     "admin.hover.losers.add": "为这个淘汰赛某一轮的败者添加一个淘汰赛",

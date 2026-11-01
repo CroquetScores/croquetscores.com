@@ -536,6 +536,7 @@ export const egyptian: Language = {
     "admin.losers.name": "اسم خروج المغلوب للخاسرين",
     "admin.losers.none": "مفيش خروج مغلوب للخاسرين.",
     "admin.losers.noRounds": "خروج المغلوب ده مفيهوش دور يكمّل خاسريه لعب.",
+    "admin.losers.remove": "شيل",
     "admin.losers.readOnly":
       "لاعبين خروج المغلوب ده هما الخاسرين من خروج مغلوب تاني، وبيتحطوا هنا أول ما كل ماتش يتحسم.",
     "admin.hover.losers.add":

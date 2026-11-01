@@ -578,6 +578,7 @@ export const swedish: Language = {
     "admin.losers.none": "Inga förlorarutslagningar.",
     "admin.losers.noRounds":
       "Den här utslagningen har ingen omgång vars förlorare kan spela vidare.",
+    "admin.losers.remove": "Ta bort",
     "admin.losers.readOnly":
       "Spelarna i den här utslagningen är förlorarna från en annan utslagning och läggs in här när varje match avgörs.",
     "admin.hover.losers.add":

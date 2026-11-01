@@ -605,6 +605,7 @@ export const german: Language = {
     "admin.losers.none": "Keine K.-o.-Turniere der Verlierer.",
     "admin.losers.noRounds":
       "In diesem K.-o.-Turnier gibt es keine Runde, deren Verlierer weiterspielen könnten.",
+    "admin.losers.remove": "Entfernen",
     "admin.losers.readOnly":
       "Die Spieler dieses K.-o.-Turniers sind die Verlierer eines anderen K.-o.-Turniers und werden hier eingetragen, sobald jede Partie entschieden ist.",
     "admin.hover.losers.add":

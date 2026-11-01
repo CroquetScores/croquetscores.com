@@ -12,17 +12,35 @@ import { knows, say } from "../../../../../../../../words.js";
 // the new knockout's name. It has as many places as that round has matches, and
 // the tournament works that out, so it is not asked for.
 
-interface Props {
-  /** The tournament's id. */
-  readonly tournament: string;
-  /** The knockout whose losers it takes, by its id. */
-  readonly competition: string;
+/** A losers knockout asked for and not yet added: its name, and the round whose losers it takes. */
+export interface LosersAsked {
+  readonly name: string;
+  readonly round: number;
+}
+
+type Props = {
   /** How many rounds send their losers on: all but the final. */
   readonly rounds: number;
-  /** Once the knockout is added, so that the list says so. */
-  readonly kept: () => void;
   readonly close: () => void;
-}
+} & (
+  | {
+      /** The tournament's id. */
+      readonly tournament: string;
+      /** The knockout whose losers it takes, by its id. */
+      readonly competition: string;
+      /** Once the knockout is added, so that the list says so. */
+      readonly kept: () => void;
+      readonly keep?: undefined;
+    }
+  | {
+      /**
+       * Where the knockout is not yet added, as when it is asked for in the
+       * dialog that adds the knockout whose losers it takes: what was asked
+       * for is handed over to be added with that knockout, and nothing is sent.
+       */
+      readonly keep: (asked: LosersAsked) => void;
+    }
+);
 
 // A round named as a draw's rounds are spoken of in the competition dialog:
 // the last three by what they are, and any before them by their number. The
@@ -36,13 +54,8 @@ const roundLabel = (round: number, count: number): string => {
       : say("admin.competition.round", { number: String(round + 1) });
 };
 
-export const LosersDialog = ({
-  tournament,
-  competition,
-  rounds,
-  kept,
-  close,
-}: Props): React.JSX.Element => {
+export const LosersDialog = (props: Props): React.JSX.Element => {
+  const { rounds, close } = props;
   const [name, setName] = useState("");
   const [round, setRound] = useState(0);
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
@@ -62,6 +75,12 @@ export const LosersDialog = ({
 
   const send = async (): Promise<void> => {
     if (sending) return;
+    if (props.keep !== undefined) {
+      props.keep({ name, round });
+      close();
+      return;
+    }
+    const { tournament, competition, kept } = props;
     setSending(true);
     try {
       const response = await fetch(

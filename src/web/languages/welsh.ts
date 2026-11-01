@@ -556,6 +556,7 @@ export const welsh: Language = {
     "admin.losers.none": "Dim cnoc-owts collwyr.",
     "admin.losers.noRounds":
       "Nid oes gan y cnoc-owt hwn rownd y gallai ei chollwyr chwarae ymlaen ohoni.",
+    "admin.losers.remove": "Tynnu",
     "admin.losers.readOnly":
       "Collwyr cnoc-owt arall yw chwaraewyr y cnoc-owt hwn, ac fe'u gosodir yma wrth i bob gêm gael ei phenderfynu.",
     "admin.hover.losers.add":

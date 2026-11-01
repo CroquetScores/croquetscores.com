@@ -566,6 +566,7 @@ export const korean: Language = {
     "admin.losers.none": "패자 녹아웃이 없습니다.",
     "admin.losers.noRounds":
       "이 녹아웃에는 패자가 계속 경기할 수 있는 라운드가 없습니다.",
+    "admin.losers.remove": "제거",
     "admin.losers.readOnly":
       "이 녹아웃의 선수는 다른 녹아웃의 패자이며, 각 경기가 결정될 때마다 여기에 들어옵니다.",
     "admin.hover.losers.add":

@@ -10,7 +10,10 @@ import { DialogProblems } from "../../../../../../DialogProblems.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
 import { useRules } from "../../../../../../RulesTicks.js";
-import { LosersDialog } from "../../../competitions/{competition-slug}/view/modal-dialogs/losers/losers.js";
+import {
+  LosersDialog,
+  type LosersAsked,
+} from "../../../competitions/{competition-slug}/view/modal-dialogs/losers/losers.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -157,6 +160,10 @@ export const CompetitionDialog = ({
   );
   // Whether the dialog that adds a losers knockout is open over this one.
   const [addingLosers, setAddingLosers] = useState(false);
+  // The losers knockouts asked for while adding a knockout, kept here until it
+  // is added and added with it, since they take the losers of a knockout that
+  // is not there to be sent to yet.
+  const [asked, setAsked] = useState<readonly LosersAsked[]>([]);
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   // What was last added, said until the next name is typed.
   const [said, setSaid] = useState<string | undefined>();
@@ -188,6 +195,15 @@ export const CompetitionDialog = ({
   const choosePlaces = (chosen: number): void => {
     setPlaces(chosen);
     const needed = Math.log2(chosen);
+    // A round asked for is still the same round of the draw, which is nearer
+    // the final by as many as are taken from the start, and gone with it
+    // where it is taken.
+    const shift = needed - rounds.length;
+    setAsked((all) =>
+      all
+        .map((each) => ({ ...each, round: each.round + shift }))
+        .filter(({ round }) => round >= 0),
+    );
     setRounds((typed) => {
       const added = needed - typed.length;
       return Array.from(
@@ -217,6 +233,8 @@ export const CompetitionDialog = ({
                   places,
                   rounds: rounds.map(typedNumber),
                   ...rules.said,
+                  // Changing a knockout adds its losers knockouts as it goes.
+                  ...(competition === undefined ? { losers: asked } : {}),
                 }
               : kind === "block"
                 ? {
@@ -237,6 +255,7 @@ export const CompetitionDialog = ({
       );
       if (response.ok) {
         setRefused([]);
+        setAsked([]);
         kept();
         if (competition !== undefined) {
           close();
@@ -409,8 +428,7 @@ export const CompetitionDialog = ({
             </fieldset>
             {/* Of a knockout that exists, since it is its losers that play on,
               and of one with a round besides the final to take them from. */}
-            {competition?.kind === "knockout" &&
-            competition.rounds.length > 1 ? (
+            {rounds.length > 1 ? (
               <p>
                 <button
                   type="button"
@@ -424,6 +442,37 @@ export const CompetitionDialog = ({
                 </button>
               </p>
             ) : null}
+            {asked.length === 0 ? null : (
+              <ul className="listed" data-listed="losers-asked">
+                {asked.map((each, place) => (
+                  <li
+                    key={`${each.name}-${String(place)}`}
+                    className="listed-item"
+                  >
+                    <span className="listed-name">{each.name}</span>
+                    <span className="listed-about">
+                      {say("admin.losers.option", {
+                        round: roundLabel(each.round, rounds.length),
+                        count: String(2 ** (rounds.length - 1 - each.round)),
+                      })}
+                    </span>
+                    <span className="listed-options">
+                      <button
+                        type="button"
+                        className="button"
+                        onClick={() => {
+                          setAsked((all) =>
+                            all.filter((_, at) => at !== place),
+                          );
+                        }}
+                      >
+                        {say("admin.losers.remove")}
+                      </button>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </>
         ) : (
           <>
@@ -475,6 +524,17 @@ export const CompetitionDialog = ({
       </ModalDialog>
       {/* Beside the dialog and not in it: its own form must not be inside this
         one's, whose submit would be taken as this one's. */}
+      {addingLosers && competition === undefined ? (
+        <LosersDialog
+          rounds={rounds.length - 1}
+          keep={(each) => {
+            setAsked((all) => [...all, each]);
+          }}
+          close={() => {
+            setAddingLosers(false);
+          }}
+        />
+      ) : null}
       {addingLosers && competition?.kind === "knockout" ? (
         <LosersDialog
           tournament={tournament}

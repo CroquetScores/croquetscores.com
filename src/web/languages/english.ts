@@ -568,6 +568,7 @@ export const english: Language = {
     "admin.losers.none": "No losers knockouts.",
     "admin.losers.noRounds":
       "This knockout has no round whose losers could play on.",
+    "admin.losers.remove": "Remove",
     "admin.losers.readOnly":
       "This knockout's players are the losers of another knockout, put here as each match is decided.",
     "admin.hover.losers.add":

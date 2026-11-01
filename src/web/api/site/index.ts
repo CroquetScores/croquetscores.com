@@ -11,7 +11,10 @@ import type {
 import { PassThrough } from "node:stream";
 
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
-import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
+import {
+  AddKnockout,
+  type LosersKnockoutSaid,
+} from "../../../application/operations/tournaments/AddKnockout.js";
 import { AddLosersKnockout } from "../../../application/operations/tournaments/AddLosersKnockout.js";
 import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.js";
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
@@ -155,6 +158,19 @@ const numbersOf = (body: unknown, field: string): number[] => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return Array.isArray(value)
     ? value.map((each) => (typeof each === "number" ? each : Number.NaN))
+    : [];
+};
+
+// The losers knockouts sent with a knockout: each a name and a round, and
+// none where no list was sent. What is not a name or a number is left to be
+// refused as it is elsewhere.
+const losersOf = (body: unknown): LosersKnockoutSaid[] => {
+  const value = (body as Record<string, unknown> | null)?.["losers"];
+  return Array.isArray(value)
+    ? value.map((each) => ({
+        name: textOf(each, "name"),
+        round: numberOf(each, "round"),
+      }))
     : [];
 };
 
@@ -515,6 +531,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
                 numbersOf(body, "rounds"),
                 at,
                 rulesOf(body),
+                losersOf(body),
               )
             : kind === "swiss"
               ? new AddSwiss(

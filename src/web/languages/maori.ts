@@ -538,6 +538,7 @@ export const maori: Language = {
     "admin.losers.none": "Karekau he whakaweto hunga hinga.",
     "admin.losers.noRounds":
       "Karekau he rauna o tēnei whakaweto e taea ai e ōna hunga hinga te haere tonu.",
+    "admin.losers.remove": "Tango",
     "admin.losers.readOnly":
       "Ko ngā kaitākaro o tēnei whakaweto ko ngā hunga hinga o tētahi atu whakaweto, ka whakanohoia ki konei i te wā e whakataungia ana ia tukinga.",
     "admin.hover.losers.add":

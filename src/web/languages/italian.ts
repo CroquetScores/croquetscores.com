@@ -581,6 +581,7 @@ export const italian: Language = {
     "admin.losers.none": "Nessuna eliminazione diretta dei perdenti.",
     "admin.losers.noRounds":
       "Questa eliminazione diretta non ha turni i cui perdenti possano continuare a giocare.",
+    "admin.losers.remove": "Rimuovi",
     "admin.losers.readOnly":
       "I giocatori di questa eliminazione diretta sono i perdenti di un'altra eliminazione diretta, inseriti qui man mano che ogni partita viene decisa.",
     "admin.hover.losers.add":

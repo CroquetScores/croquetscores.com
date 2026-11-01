@@ -545,6 +545,7 @@ export const russian: Language = {
     "admin.losers.none": "Нет плей-офф проигравших.",
     "admin.losers.noRounds":
       "В этом плей-офф нет раунда, проигравшие которого могли бы играть дальше.",
+    "admin.losers.remove": "Удалить",
     "admin.losers.readOnly":
       "Игроки этого плей-офф — проигравшие другого плей-офф; они попадают сюда, как только решается каждый матч.",
     "admin.hover.losers.add":

@@ -582,6 +582,7 @@ export const spanish: Language = {
     "admin.losers.none": "No hay eliminatorias de perdedores.",
     "admin.losers.noRounds":
       "Esta eliminatoria no tiene ninguna ronda cuyos perdedores puedan seguir jugando.",
+    "admin.losers.remove": "Quitar",
     "admin.losers.readOnly":
       "Los jugadores de esta eliminatoria son los perdedores de otra eliminatoria, y se colocan aquí a medida que se decide cada partido.",
     "admin.hover.losers.add":

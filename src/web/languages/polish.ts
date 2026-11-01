@@ -517,6 +517,7 @@ export const polish: Language = {
     "admin.losers.none": "Brak drabinek przegranych.",
     "admin.losers.noRounds":
       "Ta drabinka nie ma rundy, której przegrani mogliby grać dalej.",
+    "admin.losers.remove": "Usuń",
     "admin.losers.readOnly":
       "Zawodnicy tej drabinki to przegrani z innej drabinki, wpisywani tu, gdy tylko rozstrzygnie się każdy mecz.",
     "admin.hover.losers.add":

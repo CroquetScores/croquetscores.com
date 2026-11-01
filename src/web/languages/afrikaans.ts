@@ -581,6 +581,7 @@ export const afrikaans: Language = {
     "admin.losers.none": "Geen verloorders-uitskakelings nie.",
     "admin.losers.noRounds":
       "Hierdie uitskakeling het geen rondte waarvan die verloorders kan voortspeel nie.",
+    "admin.losers.remove": "Verwyder",
     "admin.losers.readOnly":
       "Die spelers van hierdie uitskakeling is die verloorders van 'n ander uitskakeling, en word hier gesit soos elke wedstryd beslis word.",
     "admin.hover.losers.add":

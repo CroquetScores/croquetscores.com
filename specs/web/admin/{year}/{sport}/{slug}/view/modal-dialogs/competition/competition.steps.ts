@@ -605,3 +605,59 @@ Then(
     });
   },
 );
+
+// The losers knockouts asked for while adding a knockout, listed in the dialog.
+const askedOf = (world: SpecWorld): Locator =>
+  dialogOf(world).locator('[data-listed="losers-asked"] .listed-item');
+
+Then(
+  /^the competition dialog (lists|does not list) the losers knockout "([^"]*)"(?: for "([^"]*)")?$/,
+  async function (
+    this: SpecWorld,
+    lists: string,
+    name: string,
+    round: string | undefined,
+  ) {
+    await dialogOf(this).waitFor();
+    await eventually(this, async () => {
+      const rows = (await askedOf(this).allInnerTexts()).map((each) =>
+        each.replace(/\s+/g, " ").trim(),
+      );
+      const found = rows.some(
+        (row) => row.startsWith(name) && row.includes(round ?? ""),
+      );
+      assert.equal(found, lists === "lists", `Listed: ${JSON.stringify(rows)}`);
+    });
+  },
+);
+
+When(
+  "{string} is chosen as the round of the losers knockout asked for",
+  async function (this: SpecWorld, round: string) {
+    await overOf(this).locator("select").selectOption({ label: round });
+  },
+);
+
+When(
+  "{string} is pressed on the losers knockout {string}",
+  async function (this: SpecWorld, button: string, name: string) {
+    await askedOf(this)
+      .filter({ hasText: name })
+      .getByRole("button", { name: button, exact: true })
+      .click();
+  },
+);
+
+Then(
+  "the tournament {string} has only the competition {string}",
+  async function (this: SpecWorld, tournament: string, name: string) {
+    await eventually(this, async () => {
+      assert.deepEqual(
+        (await competitionsOf(this, tournament)).map(({ reference }) =>
+          reference.name.toString(),
+        ),
+        [name],
+      );
+    });
+  },
+);

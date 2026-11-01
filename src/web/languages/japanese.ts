@@ -545,6 +545,7 @@ export const japanese: Language = {
     "admin.losers.none": "敗者ノックアウトはありません。",
     "admin.losers.noRounds":
       "このノックアウトには、敗者が続けて戦えるラウンドがありません。",
+    "admin.losers.remove": "外す",
     "admin.losers.readOnly":
       "このノックアウトの選手は別のノックアウトの敗者で、各試合が決まるたびにここへ入ります。",
     "admin.hover.losers.add":

@@ -580,6 +580,7 @@ export const dutch: Language = {
     "admin.losers.none": "Geen verliezers-knock-outs.",
     "admin.losers.noRounds":
       "Deze knock-out heeft geen ronde waarvan de verliezers kunnen doorspelen.",
+    "admin.losers.remove": "Verwijderen",
     "admin.losers.readOnly":
       "De spelers van deze knock-out zijn de verliezers van een andere knock-out, en komen hier te staan zodra elke wedstrijd is beslist.",
     "admin.hover.losers.add":
