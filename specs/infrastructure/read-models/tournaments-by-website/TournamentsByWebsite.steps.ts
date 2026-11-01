@@ -24,6 +24,7 @@ import { BestOf } from "../../../../src/domain/aggregates/tournaments/value-obje
 import { CompetitionName } from "../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Countries } from "../../../../src/domain/aggregates/tournaments/value-objects/Countries.js";
 import { ExpectedMatches } from "../../../../src/domain/aggregates/tournaments/value-objects/ExpectedMatches.js";
+import { orderOfPlace } from "../../../../src/domain/aggregates/tournaments/competitions/KnockoutPlay.js";
 import { KnockoutDraw } from "../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import { Sport } from "../../../../src/domain/aggregates/tournaments/value-objects/Sport.js";
 import { TournamentFilter } from "../../../../src/domain/aggregates/tournaments/value-objects/TournamentFilter.js";
@@ -177,6 +178,25 @@ const addCompetition = (
       by,
       at,
     );
+  } else if (kind === "losers knockout") {
+    // It takes the losers of the first round of a knockout of four places,
+    // which is the two places that two players meet in.
+    const source = CompetitionId.create();
+    tournament.addKnockout(
+      source,
+      CompetitionName.from(`${name} source`),
+      KnockoutDraw.from(4, [1, 1]),
+      by,
+      at,
+    );
+    tournament.addLosersKnockout(
+      id,
+      CompetitionName.from(name),
+      source,
+      0,
+      by,
+      at,
+    );
   } else if (kind === "Swiss") {
     tournament.addSwiss(id, CompetitionName.from(name), BestOf.from(1), by, at);
   } else {
@@ -206,7 +226,7 @@ const addCompetition = (
 };
 
 Given(
-  /^the (block|knockout|Swiss|test) "(.*)" is added to "(.*)"$/,
+  /^the (block|knockout|losers knockout|Swiss|test) "(.*)" is added to "(.*)"$/,
   async function (
     this: SpecWorld,
     kind: string,
@@ -270,9 +290,20 @@ const twoPlayers = (
     });
     return [players[0]!, players[1]!];
   }
-  const players = [named(), named()].map((name) => {
+  // A losers knockout's players are put there as the matches of the round it
+  // takes are decided, one to each place.
+  const losers = shape.kind === "knockout" && shape.losersOf !== undefined;
+  const players = [named(), named()].map((name, place) => {
     const player = TournamentPlayerId.create();
     tournament.addPlayer(player, { name }, by, at);
+    if (losers) {
+      competition.enterLoser(player, place, told(), by, at);
+      const entered = competition.players.find(
+        (each) => each.order === orderOfPlace(place),
+      );
+      assert.ok(entered !== undefined);
+      return entered.id;
+    }
     const order = tournament.players.find((each) => each.id.equals(player));
     assert.ok(order !== undefined);
     return competition.enterPlayer(player, order.order, told(), by, at);
