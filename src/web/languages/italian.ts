@@ -1083,7 +1083,7 @@ export const italian: Language = {
     "admin.players.line": "Riga {line}: {words}",
     "AddPlayers.FieldsMissing": "Scrivi i nomi dei campi nella prima riga.",
     "AddPlayers.FirstRowNotFields":
-      "La prima riga deve contenere i nomi dei campi, consulta la guida per maggiori informazioni.",
+      "La prima riga deve contenere i nomi dei campi, vedi {help} per maggiori informazioni.",
     "AddPlayers.NameMissing": "I campi devono includere Name.",
     "AddPlayers.FieldNotAllowed":
       "Un campo può essere Name, Representing, Flag, Handicap o WorldRankingPlayerName.",

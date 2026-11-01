@@ -1077,7 +1077,7 @@ export const french: Language = {
     "AddPlayers.FieldsMissing":
       "Écrivez les noms des champs sur la première ligne.",
     "AddPlayers.FirstRowNotFields":
-      "La première ligne doit contenir les noms des champs, voir l'aide pour plus d'informations.",
+      "La première ligne doit contenir les noms des champs, voir {help} pour plus d'informations.",
     "AddPlayers.NameMissing": "Les champs doivent inclure Name.",
     "AddPlayers.FieldNotAllowed":
       "Un champ peut être Name, Representing, Flag, Handicap ou WorldRankingPlayerName.",

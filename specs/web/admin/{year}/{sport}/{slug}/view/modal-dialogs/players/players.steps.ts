@@ -87,6 +87,25 @@ Then(
   },
 );
 
+// The link inside a refusal's words, which is not the help icon in the title bar.
+const refusalLink = (world: SpecWorld): Locator =>
+  dialogOf(world).locator(".field-message a");
+
+Then(
+  "the refusal's link leads to {string}",
+  async function (this: SpecWorld, address: string) {
+    await eventually(this, async () => {
+      assert.equal(await refusalLink(this).getAttribute("href"), address);
+    });
+  },
+);
+
+Then("the refusal's link opens another tab", async function (this: SpecWorld) {
+  await eventually(this, async () => {
+    assert.equal(await refusalLink(this).getAttribute("target"), "_blank");
+  });
+});
+
 Then("the help icon opens another tab", async function (this: SpecWorld) {
   assert.equal(await helpIcon(this).getAttribute("target"), "_blank");
 });

@@ -1047,7 +1047,7 @@ export const swedish: Language = {
     "admin.players.line": "Rad {line}: {words}",
     "AddPlayers.FieldsMissing": "Skriv fältens namn på första raden.",
     "AddPlayers.FirstRowNotFields":
-      "Första raden måste vara fältnamn, se hjälpen för mer information.",
+      "Första raden måste vara fältnamn, se {help} för mer information.",
     "AddPlayers.NameMissing": "Fälten måste innehålla Name.",
     "AddPlayers.FieldNotAllowed":
       "Ett fält kan vara Name, Representing, Flag, Handicap eller WorldRankingPlayerName.",

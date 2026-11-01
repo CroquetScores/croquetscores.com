@@ -1030,7 +1030,7 @@ export const welsh: Language = {
     "AddPlayers.FieldsMissing":
       "Ysgrifennwch enwau'r meysydd ar y llinell gyntaf.",
     "AddPlayers.FirstRowNotFields":
-      "Rhaid i'r rhes gyntaf fod yn enwau meysydd, gweler y cymorth am ragor o wybodaeth.",
+      "Rhaid i'r rhes gyntaf fod yn enwau meysydd, gweler {help} am ragor o wybodaeth.",
     "AddPlayers.NameMissing": "Rhaid i'r meysydd gynnwys Name.",
     "AddPlayers.FieldNotAllowed":
       "Gall maes fod yn Name, Representing, Flag, Handicap neu WorldRankingPlayerName.",

@@ -2,6 +2,24 @@
 // creates and changes a tournament, a tab's own form, and a modal dialog's.
 // Here rather than in any one of them, so that they cannot come to differ.
 
+import { say } from "./words.js";
+
+// The words with the link to the help in the place the language put it. The
+// link is the dialogs' own word for help, so that it is the same word in the
+// title bar and here.
+const withHelpLink = (words: string, help: string): React.ReactNode => {
+  const [before = "", ...rest] = words.split("{help}");
+  return (
+    <>
+      {before}
+      <a href={help} target="_blank" rel="noopener noreferrer">
+        {say("admin.dialog.help")}
+      </a>
+      {rest.join("{help}")}
+    </>
+  );
+};
+
 /** What was refused about a field: the refusal's code, and its words. */
 export interface Refusal {
   readonly code: string;
@@ -12,6 +30,13 @@ export interface Refusal {
    * told apart by it.
    */
   readonly line?: number | undefined;
+  /**
+   * Where the help for it is. Its words then have `{help}` in them, which is
+   * drawn as a link there, since where in a sentence the word for help falls
+   * is for the language to say, and a link tacked on after it would say it
+   * twice.
+   */
+  readonly help?: string | undefined;
 }
 
 interface FieldProps {
@@ -99,13 +124,13 @@ export const Field = ({
           id={messageId}
           data-refused={refused.map(({ code }) => code).join(" ")}
         >
-          {refused.map(({ code, words, line }, place) => (
+          {refused.map(({ code, words, line, help }, place) => (
             <span
               key={`${code}-${String(place)}`}
               data-code={code}
               data-line={line}
             >
-              {words}
+              {help === undefined ? words : withHelpLink(words, help)}
             </span>
           ))}
         </p>

@@ -1074,7 +1074,7 @@ export const dutch: Language = {
     "AddPlayers.FieldsMissing":
       "Schrijf de namen van de velden op de eerste regel.",
     "AddPlayers.FirstRowNotFields":
-      "De eerste rij moet veldnamen bevatten, zie de help voor meer informatie.",
+      "De eerste rij moet veldnamen bevatten, zie {help} voor meer informatie.",
     "AddPlayers.NameMissing": "De velden moeten Name bevatten.",
     "AddPlayers.FieldNotAllowed":
       "Een veld kan Name, Representing, Flag, Handicap of WorldRankingPlayerName zijn.",

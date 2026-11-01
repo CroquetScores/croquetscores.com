@@ -470,6 +470,28 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Players" is refused with "AddPlayers.FirstRowNotFields" on line 1
 
+    Scenario: The refusal of a first line that names no field leads to the help
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Sam Someone
+        Alex Another
+        """
+      When "Add" is pressed
+      Then the refusal's link leads to "/help/tournament-managers/standard-tournament/players#adding-multiple-players"
+
+    Scenario: The refusal's link opens another tab, so that what was typed stays
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Sam Someone
+        Alex Another
+        """
+      When "Add" is pressed
+      Then the refusal's link opens another tab
+
     Scenario: A list with nothing in it is refused
       Given the page of "Spring Open" is open
       And "Add Players" is pressed

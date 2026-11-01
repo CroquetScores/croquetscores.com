@@ -1059,7 +1059,7 @@ export const afrikaans: Language = {
     "AddPlayers.FieldsMissing":
       "Skryf die name van die velde op die eerste reël.",
     "AddPlayers.FirstRowNotFields":
-      "Die eerste ry moet veldname wees, sien die hulp vir meer inligting.",
+      "Die eerste ry moet veldname wees, sien {help} vir meer inligting.",
     "AddPlayers.NameMissing": "Die velde moet Name insluit.",
     "AddPlayers.FieldNotAllowed":
       "'n Veld kan Name, Representing, Flag, Handicap of WorldRankingPlayerName wees.",

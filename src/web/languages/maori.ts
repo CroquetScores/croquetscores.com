@@ -1028,7 +1028,7 @@ export const maori: Language = {
     "AddPlayers.FieldsMissing":
       "Tuhia ngā ingoa o ngā āpure i te rārangi tuatahi.",
     "AddPlayers.FirstRowNotFields":
-      "Me ingoa āpure te rārangi tuatahi, tirohia te āwhina mō ētahi atu mōhiohio.",
+      "Me ingoa āpure te rārangi tuatahi, tirohia {help} mō ētahi atu mōhiohio.",
     "AddPlayers.NameMissing": "Me whai Name ngā āpure.",
     "AddPlayers.FieldNotAllowed":
       "Ko ngā āpure ka taea ko Name, Representing, Flag, Handicap, WorldRankingPlayerName rānei.",
