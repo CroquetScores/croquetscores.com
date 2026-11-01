@@ -38,6 +38,15 @@ Feature: A tournament played by teams has a summary of how its teams stand
   never had. An address the tournament has moved on from leads to the
   summary where the tournament is now.
 
+  A tournament in the Interstate Shield format also shows its net matches
+  and its net games, headed "Net", the net matches last under "Matches" and
+  the net games last under "Games", and ranks its teams by the net matches
+  (`PublicTeamSummaryOfTournament.feature`). Every other tournament's table
+  is as above. The summary's disclosure of how the teams are ranked stays on
+  both, since an organisation is free to rank its teams as it sees fit.
+  The Shield is never played in groups, so its teams are always ranked here
+  and never by a group's page, which has no nets to show (`group.feature`).
+
   Where a scenario says nothing else, "Spring Tests" is played by teams, its
   teams "Australia", "AUS", with "Pat Player" and "Pam Partner", and
   "England", "ENG", with "Kim Keeper" and "Ken Kicker", and its test between
@@ -161,6 +170,56 @@ Feature: A tournament played by teams has a summary of how its teams stand
       Given a browser that asks for "en-XA"
       When the page at "/2026/ac/spring-tests/summary" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A tournament in the Interstate Shield format also shows net matches and net games
+
+    Background:
+      Given the tournament is to be played in the format "Interstate Shield"
+      And "organiser@example.com" has created the tournament "Shield 2026"
+      And the team is to be known for short as "SA"
+      And "organiser@example.com" has added the team "South Australia" to "Shield 2026"
+      And the team is to be known for short as "NSW"
+      And "organiser@example.com" has added the team "New South Wales" to "Shield 2026"
+      And "organiser@example.com" has added the player "Sam South" to the team "South Australia" of "Shield 2026"
+      And "organiser@example.com" has added the player "Nat North" to the team "New South Wales" of "Shield 2026"
+      And "organiser@example.com" has added the test between "South Australia" and "New South Wales" to "Shield 2026"
+      And "organiser@example.com" has given the test "SA v NSW" of "Shield 2026" matches each the best of 3
+
+    Scenario Outline: The nets are headed under their groups
+      When the page at "/2026/ac/shield-2026/summary" is opened
+      Then the <place> column of the teams' summary is headed "<heading>" under "<group>"
+
+      Examples:
+        | place   | group   | heading |
+        | fourth  | Matches | Wins    |
+        | fifth   | Matches | Losses  |
+        | sixth   | Matches | Net     |
+        | seventh | Games   | Wins    |
+        | eighth  | Games   | Losses  |
+        | ninth   | Games   | Net     |
+
+    Scenario Outline: A team's nets are under their headings
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sam South" has beaten "Nat North" 26 to 3 in "SA v NSW" of "Shield 2026"
+      When the page at "/2026/ac/shield-2026/summary" is opened
+      Then the <place> number of "<team>" in the summary is "<number>"
+
+      Examples:
+        | team            | place | number |
+        | South Australia | sixth | 1      |
+        | New South Wales | sixth | -1     |
+        | South Australia | ninth | 2      |
+
+    Scenario: The teams are ranked by their net matches
+      Given "Sam South" has beaten "Nat North" 26 to 17 in "SA v NSW" of "Shield 2026"
+      And "Sam South" has beaten "Nat North" 26 to 3 in "SA v NSW" of "Shield 2026"
+      When the page at "/2026/ac/shield-2026/summary" is opened
+      Then the first team of the summary is "South Australia"
+
+    Scenario: A tournament in another format has no column headed "Net" under "Matches"
+      Given "organiser@example.com" has given the test "AUS v ENG" of "Spring Tests" matches each the best of 3
+      When the page at "/2026/ac/spring-tests/summary" is opened
+      Then the teams' summary has no column headed "Net" under "Matches"
 
   Rule: Where every test's matches are the best of 1, there are no matches
 

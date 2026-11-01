@@ -87,6 +87,28 @@ Then(
   },
 );
 
+// A net is the difference of two counts the answer already gives, so it is
+// worked out here rather than asked of the answer.
+Then(
+  /^the team "(.*)" is answered in the summary with (-?\d+) net (match|matches|game|games)$/,
+  function (this: SpecWorld, name: string, net: string, what: string) {
+    const team = teamAnswered(this, name);
+    assert.equal(
+      what.startsWith("match")
+        ? team.matchesWon - team.matchesLost
+        : team.gamesWon - team.gamesLost,
+      Number(net),
+    );
+  },
+);
+
+Then(
+  /^the summary is answered as (showing|not showing) net matches and net games$/,
+  function (this: SpecWorld, which: string) {
+    assert.equal(answered(this).showsNets, which === "showing");
+  },
+);
+
 Then(
   /^the (first|second|third) team of the summary ranked is "(.*)"$/,
   function (this: SpecWorld, which: string, name: string) {

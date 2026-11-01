@@ -9,7 +9,12 @@ import {
   type Competitions,
   competitionOf,
 } from "../competitions/competitionOperations.js";
-import type { TeamStanding } from "./PublicTeamSummaryOfTournament.js";
+import {
+  netGamesOf,
+  netHoopsOf,
+  netMatchesOf,
+  type TeamStanding,
+} from "./PublicTeamSummaryOfTournament.js";
 
 /** A test of a tournament, as standingsOf is asked which to count. */
 export type TestShape = Extract<
@@ -25,6 +30,8 @@ export interface Standings {
   readonly bestOfMoreThanOne: boolean;
   /** The ids of the teams ranked, as rankingOf ranks them. */
   readonly ranked: readonly string[];
+  /** Whether the tournament's format has its nets shown and ranks by them. */
+  readonly showsNets: boolean;
 }
 
 // What a team has to its name so far, added to a test at a time.
@@ -72,6 +79,11 @@ export const standingsOf = async (
       },
     ]),
   );
+
+  // Each test that was won, by the team that won it, for breaking a tie by
+  // the test played between the teams in it. A drawn test is left out, since
+  // it favours neither.
+  const testsWonBy: { won: string; lost: string }[] = [];
 
   for (const { reference, shape } of tournament.competitions) {
     if (reference.archived || shape.kind !== "test" || !counts(shape)) continue;
@@ -153,9 +165,11 @@ export const standingsOf = async (
     if (margin > 0) {
       firstTally.testsWon += 1;
       secondTally.testsLost += 1;
+      testsWonBy.push({ won: first, lost: second });
     } else if (margin < 0) {
       secondTally.testsWon += 1;
       firstTally.testsLost += 1;
+      testsWonBy.push({ won: second, lost: first });
     } else {
       firstTally.testsDrawn += 1;
       secondTally.testsDrawn += 1;
@@ -170,6 +184,9 @@ export const standingsOf = async (
       shortName: team.shortName.toString(),
       ...tallies.get(team.id.value)!,
     }));
+  // Shown where the format ranks by them, since a reader not shown a net takes
+  // it to be of no account.
+  const showsNets = tournament.format.ranksByNetMatches;
   return {
     teams,
     bestOfMoreThanOne: tournament.competitions.some(
@@ -179,7 +196,8 @@ export const standingsOf = async (
         counts(shape) &&
         shape.bestOf.games > 1,
     ),
-    ranked: rankingOf(teams).map(({ id }) => id),
+    ranked: rankingOf(teams, showsNets, testsWonBy).map(({ id }) => id),
+    showsNets,
   };
 };
 
@@ -215,14 +233,51 @@ const matchesOf = (
 
 // The teams ranked as the old site's summary ranked them: the more tests won
 // first, then the more matches won, then the more net games, then the more net
-// hoops, and otherwise as
-// they were, since a sort that keeps the order of equals leaves them in the
-// tournament's.
-const rankingOf = (teams: readonly TeamStanding[]): TeamStanding[] =>
-  [...teams].sort(
-    (one, other) =>
-      other.testsWon - one.testsWon ||
-      other.matchesWon - one.matchesWon ||
-      other.gamesWon - other.gamesLost - (one.gamesWon - one.gamesLost) ||
-      other.hoopsFor - other.hoopsAgainst - (one.hoopsFor - one.hoopsAgainst),
-  );
+// hoops, and otherwise as they were, since a sort that keeps the order of
+// equals leaves them in the tournament's. By net matches in place of matches
+// won where `shield`, since a lost match is then worse than a drawn one,
+// which matches won cannot tell apart; and there, as rule 29.13 goes on to, by
+// the tests won among the teams still level.
+const rankingOf = (
+  teams: readonly TeamStanding[],
+  shield: boolean,
+  testsWonBy: readonly { won: string; lost: string }[],
+): TeamStanding[] => {
+  // What the teams are ranked by, in order, one number each: the more of each
+  // is the better. One list for both the sort and the test for teams level, so
+  // that the two cannot come to rank by different things.
+  const keyOf = (team: TeamStanding): number[] => [
+    team.testsWon,
+    shield ? netMatchesOf(team) : team.matchesWon,
+    netGamesOf(team),
+    netHoopsOf(team),
+  ];
+  const compare = (one: TeamStanding, other: TeamStanding): number => {
+    const ones = keyOf(one);
+    const others = keyOf(other);
+    for (const [at, value] of others.entries())
+      if (value !== ones[at]) return value - ones[at]!;
+    return 0;
+  };
+  const ranked = [...teams].sort(compare);
+  if (!shield) return ranked;
+
+  // Each run of teams level is put in order by the tests they won against
+  // one another, and not by those they won against any other team, which
+  // the rule does not count. The sort keeps the order of equals, so teams
+  // still level keep the tournament's.
+  const result: TeamStanding[] = [];
+  for (let start = 0; start < ranked.length;) {
+    let end = start + 1;
+    while (end < ranked.length && compare(ranked[start]!, ranked[end]!) === 0)
+      end += 1;
+    const run = ranked.slice(start, end);
+    const ids = new Set(run.map(({ id }) => id));
+    const amongThem = (team: TeamStanding): number =>
+      testsWonBy.filter(({ won, lost }) => won === team.id && ids.has(lost))
+        .length;
+    result.push(...run.sort((one, other) => amongThem(other) - amongThem(one)));
+    start = end;
+  }
+  return result;
+};

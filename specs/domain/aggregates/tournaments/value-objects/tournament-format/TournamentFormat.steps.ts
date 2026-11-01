@@ -66,3 +66,11 @@ Then("it has groups", function (this: SpecWorld) {
 Then("it has no groups", function (this: SpecWorld) {
   assert.equal(formatOfWorld(this).hasGroups, false);
 });
+
+Then("it is ranked by net matches", function (this: SpecWorld) {
+  assert.equal(formatOfWorld(this).ranksByNetMatches, true);
+});
+
+Then("it is not ranked by net matches", function (this: SpecWorld) {
+  assert.equal(formatOfWorld(this).ranksByNetMatches, false);
+});

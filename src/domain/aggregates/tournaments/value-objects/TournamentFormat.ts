@@ -111,6 +111,16 @@ export class TournamentFormat {
     return this === TournamentFormat.gcWorldTeamChampionship;
   }
 
+  /**
+   * Whether its teams are ranked by net matches, which are then shown, in
+   * place of the matches won. Only the Interstate Shield does: its rules rank
+   * by them, and a lost match is then worse than a drawn one. Another format's
+   * organisers chose to rank by matches won, and a change is theirs to ask for.
+   */
+  get ranksByNetMatches(): boolean {
+    return this === TournamentFormat.interstateShield;
+  }
+
   /** Two formats are the same when their names are. */
   equals(other: TournamentFormat | undefined): boolean {
     return other instanceof TournamentFormat && this.name === other.name;

@@ -56,7 +56,7 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       );
     }
 
-    const { teams, bestOfMoreThanOne, ranked } = await standingsOf(
+    const { teams, bestOfMoreThanOne, ranked, showsNets } = await standingsOf(
       tournament,
       this.competitions,
       () => true,
@@ -72,6 +72,7 @@ export class PublicTeamSummaryOfTournamentHandler extends QueryHandler<
       teams,
       bestOfMoreThanOne,
       ranked,
+      showsNets,
     };
   }
 }

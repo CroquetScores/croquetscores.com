@@ -16,6 +16,7 @@ const places = [
   "sixth",
   "seventh",
   "eighth",
+  "ninth",
 ];
 
 const placeOf = (which: string): number => {
@@ -68,6 +69,26 @@ Then(
 // A column's group is the one whose span takes it in, counted along the row of
 // groups as the columns are along the row beneath it.
 Then(
+  "the teams' summary has no column headed {string} under {string}",
+  async function (this: SpecWorld, heading: string, group: string) {
+    const headings = await tableOf(this).locator(".team-summary-heading").all();
+    const groups = await tableOf(this).locator(".team-summary-group").all();
+    let reached = 0;
+    let at = 0;
+    for (const each of groups) {
+      reached += Number((await each.getAttribute("colspan")) ?? "1");
+      for (; at < reached; at += 1) {
+        assert.ok(
+          (await said(each)) !== group ||
+            (await said(headings[at]!)) !== heading,
+          `There is a column headed ${heading} under ${group}.`,
+        );
+      }
+    }
+  },
+);
+
+Then(
   "the teams' summary has no column under {string}",
   async function (this: SpecWorld, group: string) {
     assert.equal(
@@ -81,7 +102,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) column of the teams' summary is headed "(.*)" under "(.*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth|ninth) column of the teams' summary is headed "(.*)" under "(.*)"$/,
   async function (
     this: SpecWorld,
     which: string,
@@ -108,7 +129,7 @@ Then(
 );
 
 Then(
-  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth) number of "(.*)" in the summary is "(.*)"$/,
+  /^the (first|second|third|fourth|fifth|sixth|seventh|eighth|ninth) number of "(.*)" in the summary is "(.*)"$/,
   async function (
     this: SpecWorld,
     which: string,

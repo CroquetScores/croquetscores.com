@@ -29,6 +29,15 @@ export interface TeamStanding {
   readonly hoopsAgainst: number;
 }
 
+// Written once, since the summary shows each net and the ranking compares it,
+// and the two must not come to differ.
+export const netMatchesOf = (team: TeamStanding): number =>
+  team.matchesWon - team.matchesLost;
+export const netGamesOf = (team: TeamStanding): number =>
+  team.gamesWon - team.gamesLost;
+export const netHoopsOf = (team: TeamStanding): number =>
+  team.hoopsFor - team.hoopsAgainst;
+
 /** How the teams of a tournament played by teams stand, and the tournament. */
 export interface TeamSummaryToRead {
   /** The tournament's name. */
@@ -61,9 +70,16 @@ export interface TeamSummaryToRead {
   /**
    * The ids of the teams ranked: the more tests won first, then the more
    * matches won, then the more net games, then the more net hoops, then in the
-   * tournament's order.
+   * tournament's order. A tournament in the Interstate Shield format ranks by
+   * the more net matches in place of the matches won, and puts teams still
+   * level in order by the tests they won against one another.
    */
   readonly ranked: readonly string[];
+  /**
+   * Whether the summary shows net matches and net games, which a tournament
+   * in the Interstate Shield format does and no other.
+   */
+  readonly showsNets: boolean;
 }
 
 /**
