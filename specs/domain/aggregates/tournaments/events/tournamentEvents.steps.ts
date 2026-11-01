@@ -245,6 +245,22 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       causedBy,
       happenedAt,
     ),
+  "a losers knockout being added": () =>
+    new KnockoutAdded(
+      COMPETITION,
+      "Plate",
+      "plate",
+      30000,
+      2,
+      [1],
+      true,
+      true,
+      false,
+      causedBy,
+      happenedAt,
+      "competition/123e4567-e89b-42d3-a456-426614174099",
+      0,
+    ),
   "a knockout being updated": () =>
     new KnockoutUpdated(
       COMPETITION,

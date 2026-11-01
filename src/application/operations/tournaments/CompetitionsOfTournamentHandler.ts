@@ -81,6 +81,14 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
           kind: shape.kind,
           places: shape.draw.places,
           rounds: shape.draw.rounds.map((round) => round.games),
+          canSetPlayers: shape.losersOf === undefined,
+          losersOf:
+            shape.losersOf === undefined
+              ? undefined
+              : {
+                  competition: shape.losersOf.competitionId.value,
+                  round: shape.losersOf.round,
+                },
         });
       } else if (shape.kind === "test") {
         listed.push({

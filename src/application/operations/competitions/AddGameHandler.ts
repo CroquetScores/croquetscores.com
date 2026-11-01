@@ -1,6 +1,7 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { gamePlayerIdFrom } from "../../../domain/aggregates/tournaments/competitions/Game.js";
+import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
 import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
@@ -13,6 +14,7 @@ import {
   type Competitions,
   competitionManagedBy,
 } from "./competitionOperations.js";
+import { carryLosersOn } from "./losersKnockouts.js";
 
 /**
  * Adding a game's score to a competition, by a manager or a scorer. The
@@ -55,6 +57,16 @@ export class AddGameHandler extends CommandHandler<AddGame, string> {
       command.requestedAt,
     );
     await this.competitions.save(competition);
+    // A game in a knockout may have decided a match, whose loser goes on to
+    // any knockout that takes the losers of its round.
+    await carryLosersOn(
+      this.competitions,
+      tournament,
+      competition,
+      CompetitionId.from(command.competition),
+      by,
+      command.requestedAt,
+    );
     return id.value;
   }
 }

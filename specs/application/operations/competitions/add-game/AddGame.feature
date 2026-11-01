@@ -249,6 +249,49 @@ Feature: Adding a game's score to a competition
       When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
       Then it is refused with "Competition.DrawNotFilled"
 
+  Rule: The loser of a knockout's match goes on to the knockout that takes its losers
+
+    A knockout added to take the losers of a round of another
+    (`AddLosersKnockout.feature`) is filled as the matches of that round are
+    decided: the loser of each is entered in the place of the match they lost,
+    wherever the matches are decided in. The knockout here is four places, so
+    its first round has two matches, and the losers knockout two places.
+
+    Background:
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Final Stage"
+
+    Scenario: The loser of a match decided is entered in the losers knockout
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+
+    Scenario: The winner of a match decided is not
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then the competition "Plate" of "Spring Open" does not have the player "Sam Someone"
+
+    Scenario: A loser is entered in the place of the match they lost
+      Given "Chris Third" has beaten "Pat Fourth" 26 to 17 in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      Then the first player of "Plate" of "Spring Open" is "Alex Another"
+      And the second player of "Plate" of "Spring Open" is "Pat Fourth"
+
+    Scenario: The loser of a match in the final is not entered
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      And "Chris Third" has beaten "Pat Fourth" 26 to 17 in "Final Stage" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Chris Third" 26 to 17 in "Final Stage" of "Spring Open"
+      Then the competition "Plate" of "Spring Open" does not have the player "Sam Someone"
+      And the competition "Plate" of "Spring Open" does not have the player "Chris Third"
+
+    Scenario: The players of a losers knockout cannot be entered by hand
+      When the reader signed in to the account for "organiser@example.com" enters the player "Sam Someone" in "Plate" of "Spring Open"
+      Then it is refused with "Competition.PlayersSetAutomatically"
+
   Rule: Only a competition there is, and one not archived, in a tournament there is and not archived, has a game added
 
     Scenario: A competition the tournament does not have is refused
