@@ -10,7 +10,12 @@ import {
   type Competitions,
   competitionOf,
 } from "../competitions/competitionOperations.js";
-import type { TeamStanding } from "./PublicTeamSummaryOfTournament.js";
+import {
+  netGamesOf,
+  netHoopsOf,
+  netMatchesOf,
+  type TeamStanding,
+} from "./PublicTeamSummaryOfTournament.js";
 
 /** A test of a tournament, as standingsOf is asked which to count. */
 export type TestShape = Extract<
@@ -240,27 +245,21 @@ const rankingOf = (
   shield: boolean,
   testsWonBy: readonly { won: string; lost: string }[],
 ): TeamStanding[] => {
-  const netMatches = (team: TeamStanding): number =>
-    team.matchesWon - team.matchesLost;
-  const netGames = (team: TeamStanding): number =>
-    team.gamesWon - team.gamesLost;
-  const netHoops = (team: TeamStanding): number =>
-    team.hoopsFor - team.hoopsAgainst;
   const level = (one: TeamStanding, other: TeamStanding): boolean =>
     one.testsWon === other.testsWon &&
     (shield
-      ? netMatches(one) === netMatches(other)
+      ? netMatchesOf(one) === netMatchesOf(other)
       : one.matchesWon === other.matchesWon) &&
-    netGames(one) === netGames(other) &&
-    netHoops(one) === netHoops(other);
+    netGamesOf(one) === netGamesOf(other) &&
+    netHoopsOf(one) === netHoopsOf(other);
   const ranked = [...teams].sort(
     (one, other) =>
       other.testsWon - one.testsWon ||
       (shield
-        ? netMatches(other) - netMatches(one)
+        ? netMatchesOf(other) - netMatchesOf(one)
         : other.matchesWon - one.matchesWon) ||
-      netGames(other) - netGames(one) ||
-      netHoops(other) - netHoops(one),
+      netGamesOf(other) - netGamesOf(one) ||
+      netHoopsOf(other) - netHoopsOf(one),
   );
   if (!shield) return ranked;
 

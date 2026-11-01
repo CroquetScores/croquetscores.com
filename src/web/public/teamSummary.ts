@@ -15,6 +15,9 @@
 import type { FastifyInstance } from "fastify";
 
 import {
+  netGamesOf,
+  netHoopsOf,
+  netMatchesOf,
   PublicTeamSummaryOfTournament,
   type TeamStanding,
 } from "../../application/operations/tournaments/PublicTeamSummaryOfTournament.js";
@@ -66,7 +69,7 @@ const matches = (showsNets: boolean): Group => ({
       ? [
           {
             word: "teamSummary.net",
-            of: (team: TeamStanding) => team.matchesWon - team.matchesLost,
+            of: netMatchesOf,
           },
         ]
       : []),
@@ -83,7 +86,7 @@ const rest = (showsNets: boolean): readonly Group[] => [
         ? [
             {
               word: "teamSummary.net",
-              of: (team: TeamStanding) => team.gamesWon - team.gamesLost,
+              of: netGamesOf,
             },
           ]
         : []),
@@ -96,7 +99,7 @@ const rest = (showsNets: boolean): readonly Group[] => [
       { word: "teamSummary.against", of: (team) => team.hoopsAgainst },
       {
         word: "teamSummary.net",
-        of: (team) => team.hoopsFor - team.hoopsAgainst,
+        of: netHoopsOf,
       },
     ],
   },

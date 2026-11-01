@@ -29,6 +29,15 @@ export interface TeamStanding {
   readonly hoopsAgainst: number;
 }
 
+// Written once, since the summary shows each net and the ranking compares it,
+// and the two must not come to differ.
+export const netMatchesOf = (team: TeamStanding): number =>
+  team.matchesWon - team.matchesLost;
+export const netGamesOf = (team: TeamStanding): number =>
+  team.gamesWon - team.gamesLost;
+export const netHoopsOf = (team: TeamStanding): number =>
+  team.hoopsFor - team.hoopsAgainst;
+
 /** How the teams of a tournament played by teams stand, and the tournament. */
 export interface TeamSummaryToRead {
   /** The tournament's name. */
