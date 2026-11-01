@@ -651,3 +651,28 @@ When(
     await dialogOf(this).getByLabel(label, { exact: true }).press("Tab");
   },
 );
+
+// The edge that matters is the top, since a dialog taller than the window
+// scrolls within itself and its bottom is then the window's.
+Then(
+  /^the (?:players|player) dialog's top is in the window$/,
+  async function (this: SpecWorld) {
+    await dialogOf(this).waitFor();
+    const top = (await dialogOf(this).boundingBox())?.y;
+    assert.ok(top !== undefined, "The dialog is not drawn.");
+    assert.ok(
+      top >= 0,
+      `The dialog's top is ${String(top)} from the window's.`,
+    );
+  },
+);
+
+// Only a little, so that the button the dialog is opened from is still in the
+// window: pressing a button that is not scrolls the page back to it, and then
+// the page is not scrolled when the dialog opens.
+When(
+  "the page is scrolled down {int} pixels",
+  async function (this: SpecWorld, distance: number) {
+    await this.browserPage.evaluate(`window.scrollTo(0, ${String(distance)})`);
+  },
+);

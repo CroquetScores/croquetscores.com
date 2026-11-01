@@ -235,6 +235,19 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       When Shift and Tab are pressed until the focus comes round again
       Then the focus never left the player dialog
 
+  Rule: The dialog is placed in the window, wherever the page has been scrolled to
+
+    The dialog sits over the window the reader is looking through, not over
+    the page beneath it: a page scrolled down and a dialog opened from it
+    must not leave the top of the dialog above what can be seen.
+
+    Scenario: The dialog is in the window when the page is scrolled down
+      Given a viewport 375 pixels wide and 500 pixels high
+      And the page of "Spring Open" is open
+      When the page is scrolled down 120 pixels
+      And "Add Player" is pressed
+      Then the player dialog's top is in the window
+
   Rule: Cancel closes the dialog and keeps nothing
 
     Scenario: The dialog has a Cancel button
