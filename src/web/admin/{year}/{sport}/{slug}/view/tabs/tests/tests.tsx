@@ -7,6 +7,7 @@ import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import "../../../../../../listed.css";
 import { Pencil } from "../../../../../../Pencil.js";
+import { sectionsChanged } from "../../../sectionsChanged.js";
 
 // The Tests tab (tests-tab.feature) of a tournament played by teams, which
 // does for its tests what the Competitions tab does for a Standard
@@ -160,6 +161,7 @@ export const TestsTab = ({
       setRefused("Unknown");
     } finally {
       setAsking((count) => count + 1);
+      sectionsChanged();
       setActing(false);
     }
   };
@@ -339,6 +341,7 @@ export const TestsTab = ({
           test={editing}
           kept={() => {
             setAsking((count) => count + 1);
+            sectionsChanged();
           }}
           close={() => {
             setAdding(false);

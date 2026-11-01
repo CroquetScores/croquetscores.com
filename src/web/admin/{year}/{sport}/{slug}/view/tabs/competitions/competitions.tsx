@@ -9,6 +9,7 @@ import {
 import { noOption, optionFace } from "../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../api.js";
 import "../../../../../../listed.css";
+import { sectionsChanged } from "../../../sectionsChanged.js";
 import { useListed } from "../../../../../../useListed.js";
 import { Pencil } from "../../../../../../Pencil.js";
 
@@ -87,6 +88,7 @@ export const CompetitionsTab = ({
       // A request that never arrived is said by the list asked for again.
     } finally {
       askAgain();
+      sectionsChanged();
       setActing(false);
     }
   };
@@ -249,6 +251,7 @@ export const CompetitionsTab = ({
           competition={editing}
           kept={() => {
             askAgain();
+            sectionsChanged();
           }}
           close={() => {
             setAdding(false);

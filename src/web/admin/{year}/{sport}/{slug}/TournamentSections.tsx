@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { say } from "../../../words.js";
 import { idInAddress } from "../../../api.js";
+import { whenSectionsChange } from "./sectionsChanged.js";
 import "./tournamentSections.css";
 
 // The section bar of a tournament's page and its competitions' pages
@@ -77,6 +78,18 @@ export const TournamentSections = ({
     | undefined
   >();
   const onATeam = typeof reading === "object" && "team" in reading;
+  // Counted up to ask again, once a tab on the page has changed the
+  // competitions. The bar is not emptied meanwhile: it keeps the tabs it has
+  // until the new ones arrive, so that it does not flash its held room.
+  const [asking, setAsking] = useState(0);
+
+  useEffect(
+    () =>
+      whenSectionsChange(() => {
+        setAsking((count) => count + 1);
+      }),
+    [],
+  );
 
   useEffect(() => {
     let current = true;
@@ -105,7 +118,7 @@ export const TournamentSections = ({
     return () => {
       current = false;
     };
-  }, [tournament, onATeam]);
+  }, [tournament, onATeam, asking]);
 
   // Its tabs are drawn once the competitions are known, so that the bar does
   // not appear with Tournament alone and then grow as the rest arrive. Its
