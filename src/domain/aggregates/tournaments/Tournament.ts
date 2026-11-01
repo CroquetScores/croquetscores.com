@@ -122,6 +122,7 @@ export type TournamentErrorCode =
   | "Tournament.NoSuchRound"
   | "Tournament.LosersKnockoutPlacesFixed"
   | "Tournament.KnockoutHasLosersKnockouts"
+  | "Tournament.KnockoutHasLosersKnockoutsInUse"
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
@@ -1221,6 +1222,21 @@ export class Tournament extends AggregateRoot {
     this.#refuseOnceArchived();
     const found = this.#competitionFound(id);
     if (found.reference.archived) return;
+    // A knockout in use takes its losers from this one, and would be left
+    // waiting on them for good.
+    if (
+      [...this.#competitions.values()].some(
+        ({ shape, reference }) =>
+          !reference.archived &&
+          shape.kind === "knockout" &&
+          shape.losersOf?.competitionId.equals(id),
+      )
+    ) {
+      refuse(
+        "Tournament.KnockoutHasLosersKnockoutsInUse",
+        "Another knockout in use takes the losers of this one.",
+      );
+    }
     if (found.shape.kind === "test" && (played?.matchesStarted ?? 0) > 0) {
       refuse(
         "Tournament.TestHasGamesInUse",

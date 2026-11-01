@@ -14,7 +14,13 @@ Feature: Entering the loser of a match in a losers knockout
   lost it, and a bye is entered in its place.
 
   Asking again after every game is how this is kept in step, so a place that
-  is filled is left as it is, and records nothing.
+  is filled with the loser asked for is left as it is, and records nothing.
+
+  A game set aside or corrected can change who lost a match, so the place is
+  asked for again and the loser who was put there is taken out for the one who
+  lost it, or for nobody. That is only done while nothing has been built on the
+  place: once a game has been played by either of the two places that meet in
+  the first round of the losers knockout, they are left as they are.
 
   The players of a losers knockout are the losers of the round it takes them
   from and nobody else, so entering, moving or removing one by hand is refused
@@ -67,11 +73,97 @@ Feature: Entering the loser of a match in a losers knockout
       When the competition's matches are worked out
       Then the first side of the first match is nobody
 
-    Scenario: A place already filled is left as it is
+    Scenario: A place already filled with the same loser is left as it is
       Given the loser "Sam Someone" was entered in the first place
       And the competition is rebuilt from its stream
       When the loser "Sam Someone" is entered in the first place
       Then it has recorded 0 events
+
+    Scenario: A bye already in the place is left as it is
+      Given a bye was entered as the loser in the first place
+      And the competition is rebuilt from its stream
+      When a bye is entered as the loser in the first place
+      Then it has recorded 0 events
+
+  Rule: A place is changed when the match was decided otherwise, until it is played on
+
+    Scenario: A different loser replaces the one who was there
+      Given the loser "Sam Someone" was entered in the first place
+      And the competition is rebuilt from its stream
+      When the loser "Alex Another" is entered in the first place
+      Then it has recorded 2 events
+      And the competition has the tournament player "Alex Another"
+
+    Scenario: The loser who was there is taken out
+      Given the loser "Sam Someone" was entered in the first place
+      And the competition is rebuilt from its stream
+      When the loser "Alex Another" is entered in the first place
+      Then the competition does not have the tournament player "Sam Someone"
+
+    Scenario: A loser replaces a bye
+      Given a bye was entered as the loser in the first place
+      And the competition is rebuilt from its stream
+      When the loser "Sam Someone" is entered in the first place
+      Then it has recorded 2 events
+
+    Scenario: A bye replaces a loser
+      Given the loser "Sam Someone" was entered in the first place
+      And the competition is rebuilt from its stream
+      When a bye is entered as the loser in the first place
+      Then it has recorded 2 events
+
+    Scenario: A place whose player has played is left as it is
+      Given the loser "Sam Someone" was entered in the first place
+      And the loser "Alex Another" was entered in the second place
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the loser "Chris Third" is entered in the first place
+      Then it has recorded 0 events
+
+    Scenario: A place drawn against one who has played is left as it is
+      Given the loser "Sam Someone" was entered in the first place
+      And the loser "Alex Another" was entered in the second place
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When a bye is entered as the loser in the second place
+      Then it has recorded 0 events
+
+    Scenario: A place is cleared when nobody has lost its match any more
+      Given the loser "Sam Someone" was entered in the first place
+      And the competition is rebuilt from its stream
+      When the first place is cleared
+      Then it has recorded 1 event
+      And the competition does not have the tournament player "Sam Someone"
+
+    Scenario: A bye is cleared
+      Given a bye was entered as the loser in the first place
+      And the competition is rebuilt from its stream
+      When the first place is cleared
+      Then it has recorded 1 event
+
+    Scenario: A place with nobody in it is cleared of nothing
+      Given the competition is rebuilt from its stream
+      When the first place is cleared
+      Then it has recorded 0 events
+
+    Scenario: A place whose player has played is not cleared
+      Given the loser "Sam Someone" was entered in the first place
+      And the loser "Alex Another" was entered in the second place
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the first place is cleared
+      Then it has recorded 0 events
+
+    Scenario: A place beyond the draw is not cleared
+      Given the competition is rebuilt from its stream
+      When the fifth place is cleared
+      Then it is refused with "Competition.NoSuchPlace"
+
+    Scenario: A knockout that takes no losers has no place to clear
+      Given the competition is a knockout of 4 places, each round the best of 1
+      And the competition is rebuilt from its stream
+      When the first place is cleared
+      Then it is refused with "Competition.NotALosersKnockout"
 
   Rule: A loser is entered only in a place the draw has
 

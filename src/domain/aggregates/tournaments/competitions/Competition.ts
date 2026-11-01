@@ -288,8 +288,12 @@ export class Competition extends AggregateRoot {
   /**
    * That the loser of the match that fills place `place` of a losers knockout
    * is entered there: the tournament player `loser`, or a bye where the match
-   * had nobody to lose it. A place already filled is left as it is, so that
-   * asking again after every game does no harm. The place, and not the order
+   * had nobody to lose it. A place already filled with them is left as it is,
+   * so that asking again after every game does no harm. One filled with
+   * somebody else, because the match has since been decided otherwise by a
+   * game corrected or set aside, has them taken out and the loser put there,
+   * unless a game has been played by either of the two places that meet there
+   * (`clearLoser`). The place, and not the order
    * players arrive in, is where they are drawn, so a loser comes in whenever
    * their match is decided.
    */
@@ -314,8 +318,16 @@ export class Competition extends AggregateRoot {
     ) {
       refuse("Competition.NoSuchPlace", "The draw has no such place.");
     }
-    if (this.players.some((player) => player.order === orderOfPlace(place)))
-      return;
+    const holder = this.#holderOf(place);
+    if (holder !== undefined) {
+      const same =
+        loser === undefined
+          ? holder.isBye
+          : !holder.isBye && holder.tournamentPlayerId.equals(loser);
+      if (same || this.#placeHasBeenPlayedOn(place)) return;
+      // The match was decided otherwise since, and nothing was built on it.
+      this.#takeOut(holder, by, at);
+    }
     const bye = loser === undefined;
     this.record(
       new CompetitionPlayerEntered(
@@ -325,6 +337,56 @@ export class Competition extends AggregateRoot {
         by,
         at,
       ),
+    );
+  }
+
+  /**
+   * That nobody has lost the match of `place` any more, as when the game that
+   * decided it is set aside: whoever was put there is taken out again. A place
+   * with nobody in it records nothing, and neither does one that has been
+   * played on (`enterLoser`).
+   */
+  clearLoser(place: number, told: Told, by: AccountId, at: ReadOnlyDate): void {
+    if (told.shape.kind !== "knockout" || told.shape.losersOf === undefined) {
+      refuse(
+        "Competition.NotALosersKnockout",
+        "Only a losers knockout takes its players from another knockout.",
+      );
+      return;
+    }
+    if (
+      !Number.isInteger(place) ||
+      place < 0 ||
+      place >= told.shape.draw.places
+    ) {
+      refuse("Competition.NoSuchPlace", "The draw has no such place.");
+    }
+    const holder = this.#holderOf(place);
+    if (holder === undefined || this.#placeHasBeenPlayedOn(place)) return;
+    this.#takeOut(holder, by, at);
+  }
+
+  #holderOf(place: number): CompetitionPlayer | undefined {
+    return this.players.find((player) => player.order === orderOfPlace(place));
+  }
+
+  // Whether a game in use was played by whoever is in the place or in the
+  // place it is drawn against, whose player goes through when it is a bye. A
+  // change to either would change a match that has been played on.
+  #placeHasBeenPlayedOn(place: number): boolean {
+    return [place, place ^ 1].some((each) => {
+      const holder = this.#holderOf(each);
+      return (
+        holder !== undefined && !holder.isBye && this.hasGamesInUse(holder.id)
+      );
+    });
+  }
+
+  #takeOut(holder: CompetitionPlayer, by: AccountId, at: ReadOnlyDate): void {
+    this.record(
+      holder.isBye
+        ? new CompetitionByeRemoved(holder.order, by, at)
+        : new CompetitionPlayerRemoved(holder.id.value, by, at),
     );
   }
 

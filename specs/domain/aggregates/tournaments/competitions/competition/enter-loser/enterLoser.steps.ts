@@ -113,3 +113,17 @@ Then(
     );
   },
 );
+
+When(
+  "the {word} place is cleared",
+  function (this: SpecWorld, ordinal: string) {
+    ask(this, (competition) =>
+      competition.clearLoser(
+        positionOf(ordinal),
+        toldOf(this),
+        byOf(this),
+        now(this),
+      ),
+    );
+  },
+);
