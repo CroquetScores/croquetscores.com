@@ -708,16 +708,34 @@ Then(
   },
 );
 
-// Said but not drawn: as large as a point, where a word that was drawn would
-// be as wide as its letters.
+// The word has a cell of its own, which is the one the reader is told it by.
 Then(
-  "the word between the winner and the loser of the first score listed is not drawn",
+  "the first score listed shows the word {string} in its own cell",
+  async function (this: SpecWorld, word: string) {
+    await eventually(this, async () => {
+      const cell = rows(this, "in-use").first().locator("> td.score-between");
+      assert.equal(await cell.count(), 1, "It has no cell of its own.");
+      assert.equal((await cell.innerText()).trim(), word);
+    });
+  },
+);
+
+// Drawn, and between the two it comes between, rather than hidden.
+Then(
+  "the word between the winner and the loser of the first score listed is drawn between them",
   async function (this: SpecWorld) {
     await eventually(this, async () => {
-      const word = rows(this, "in-use").first().locator(".score-between");
-      assert.equal(await word.count(), 1, "It is not said.");
-      const box = await word.boundingBox();
-      assert.ok(box === null || box.width <= 1, "It is drawn.");
+      const row = rows(this, "in-use").first();
+      const score = await row.locator(".score-winner-score").boundingBox();
+      const word = await row.locator(".score-between").boundingBox();
+      const loser = await row.locator(".score-loser").boundingBox();
+      assert.ok(
+        score !== null && word !== null && loser !== null,
+        "One is not drawn.",
+      );
+      assert.ok(word.width > 1, "It is not drawn.");
+      assert.ok(score.x + score.width <= word.x, "It is not after the score.");
+      assert.ok(word.x + word.width <= loser.x, "It is not before the loser.");
     });
   },
 );

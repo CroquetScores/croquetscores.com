@@ -191,9 +191,10 @@ export const ScoresTab = ({
 
   // A score is a row of a table, so that it is told to a reader who cannot
   // see as one: the game's number, the winner, their score, the loser, their
-  // score, and what can be done with it. There are no column headings, since
-  // each cell says what it is. The word between the winner and the loser has
-  // no cell of its own, so it is said in the winner's score's and not drawn.
+  // score, and what can be done with it, and between the winner's score and
+  // the loser the word that joins them, in a cell of its own so that it is not
+  // read as part of the score. There are no column headings, since each cell
+  // says what it is.
   const row = (game: Listed): React.JSX.Element => (
     <tr
       key={game.id}
@@ -206,9 +207,9 @@ export const ScoresTab = ({
         <span className="score-winner">{game.winner}</span>
       </td>
       <td>
-        <span className="score-winner-score">{game.winnerScore}</span>{" "}
-        <span className="score-between">{say("admin.score.beat")}</span>
+        <span className="score-winner-score">{game.winnerScore}</span>
       </td>
+      <td className="score-between">{say("admin.score.beat")}</td>
       <td>
         <span className="score-loser">{game.loser}</span>
       </td>
