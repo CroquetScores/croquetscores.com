@@ -120,3 +120,24 @@ Feature: The format a tournament is played in
         | Standard                   |
         | Teams                      |
         | GC World Team Championship |
+
+  Rule: The Interstate Shield is ranked by net matches
+
+    Croquet Australia's rules for the Shield rank its teams by net matches,
+    where every other format ranks them by matches won
+    (`PublicTeamSummaryOfTournament.feature`).
+
+    Scenario: The Interstate Shield is ranked by net matches
+      Given the format "Interstate Shield"
+      Then it is ranked by net matches
+
+    Scenario Outline: <name> is not ranked by net matches
+      Given the format "<name>"
+      Then it is not ranked by net matches
+
+      Examples:
+        | name                       |
+        | Standard                   |
+        | Teams                      |
+        | Eire Cup                   |
+        | GC World Team Championship |

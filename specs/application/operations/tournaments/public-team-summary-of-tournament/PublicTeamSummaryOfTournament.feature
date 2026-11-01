@@ -453,6 +453,18 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Then the first team of the summary ranked is "Victoria"
       And the second team of the summary ranked is "South Australia"
 
+    Scenario: A tournament in another format is answered as not showing them
+      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
+      Then the summary is answered as not showing net matches and net games
+
+  Rule: Interstate Shield teams still level are ranked by the tests they won against one another
+
+    Rule 29.13 goes on to the test already played between the teams in the
+    tie. Only tests among those teams count, since a win over a team outside
+    the tie says nothing about the two. Teams level after that share the
+    trophy, which the table cannot show, so they stay in the tournament's
+    order. Each scenario builds its own tournament, since none needs another's.
+
     Scenario: Teams level in everything are ranked by the test played between them
       Given the tournament is to be played in the format "Interstate Shield"
       And "organiser@example.com" has created the tournament "Shield Tie"
@@ -507,10 +519,6 @@ Feature: How the teams of a tournament played by teams stand, for anybody to rea
       Then the first team of the summary ranked is "New South Wales"
       And the second team of the summary ranked is "South Australia"
       And the third team of the summary ranked is "Victoria"
-
-    Scenario: A tournament in another format is answered as not showing them
-      When the summary of the teams of the tournament at "2026/ac/spring-tests" is asked for
-      Then the summary is answered as not showing net matches and net games
 
   Rule: Only a tournament played by teams that a reader is sent to is answered
 
