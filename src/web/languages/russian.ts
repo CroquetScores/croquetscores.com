@@ -420,7 +420,7 @@ export const russian: Language = {
     "block.netGames": "Разница партий",
     "block.games": "Партии",
     "block.netHoops": "Разница ворот",
-    "block.playedTo": "Игра до {hoops} ворот",
+    "competition.playedTo": "Игра до {hoops} ворот",
     "block.won": "выиграно",
     "block.lost": "проиграно",
     "block.drawn": "вничью",

@@ -210,3 +210,24 @@ Then(
     );
   },
 );
+
+Then(
+  /^the Swiss answered has a maximum of (\d+) hoops$/,
+  function (this: SpecWorld, hoops: string) {
+    assert.equal(answered(this).swiss.maximumHoops, Number(hoops));
+  },
+);
+
+Then(
+  "the Swiss answered has no maximum number of hoops",
+  function (this: SpecWorld) {
+    assert.equal(answered(this).swiss.maximumHoops, null);
+  },
+);
+
+Then(
+  /^the Swiss answered has the usual of (\d+) hoops$/,
+  function (this: SpecWorld, hoops: string) {
+    assert.equal(answered(this).usualMaximumHoops, Number(hoops));
+  },
+);

@@ -417,7 +417,7 @@ export const japanese: Language = {
     "block.netGames": "ゲーム差",
     "block.games": "ゲーム",
     "block.netHoops": "フープ差",
-    "block.playedTo": "{hoops} ゲートまで",
+    "competition.playedTo": "{hoops} ゲートまで",
     "block.won": "勝ち",
     "block.lost": "負け",
     "block.drawn": "引き分け",

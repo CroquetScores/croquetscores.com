@@ -428,7 +428,7 @@ export const welsh: Language = {
     "block.netGames": "Gemau net",
     "block.games": "Gemau unigol",
     "block.netHoops": "Cylchau net",
-    "block.playedTo": "Chwaraeir i {hoops} cylch",
+    "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "block.won": "wedi ennill",
     "block.lost": "wedi colli",
     "block.drawn": "cyfartal",

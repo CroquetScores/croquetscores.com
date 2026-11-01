@@ -412,7 +412,7 @@ export const chinese: Language = {
     "block.netGames": "净胜局",
     "block.games": "局数",
     "block.netHoops": "净胜球门",
-    "block.playedTo": "打到 {hoops} 门",
+    "competition.playedTo": "打到 {hoops} 门",
     "block.won": "胜",
     "block.lost": "负",
     "block.drawn": "平",

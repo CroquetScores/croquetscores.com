@@ -444,7 +444,7 @@ export const italian: Language = {
     "block.netGames": "Differenza partite",
     "block.games": "Partite",
     "block.netHoops": "Differenza archetti",
-    "block.playedTo": "Giocata a {hoops} porte",
+    "competition.playedTo": "Giocata a {hoops} porte",
     "block.won": "vinta",
     "block.lost": "persa",
     "block.drawn": "pareggiata",

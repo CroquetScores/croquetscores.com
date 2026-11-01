@@ -440,7 +440,7 @@ export const portuguese: Language = {
     "block.netGames": "Saldo de jogos",
     "block.games": "Jogos",
     "block.netHoops": "Saldo de arcos",
-    "block.playedTo": "Jogado a {hoops} arcos",
+    "competition.playedTo": "Jogado a {hoops} arcos",
     "block.won": "vitória",
     "block.lost": "derrota",
     "block.drawn": "empate",

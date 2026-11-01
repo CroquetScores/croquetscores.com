@@ -410,7 +410,7 @@ export const egyptian: Language = {
     "block.netGames": "صافي الألعاب",
     "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
-    "block.playedTo": "بتتلعب لحد {hoops} حلقة",
+    "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
     "block.won": "فاز",
     "block.lost": "خسر",
     "block.drawn": "تعادل",

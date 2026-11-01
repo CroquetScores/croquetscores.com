@@ -62,7 +62,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicSwissOfTournament",
     );
-    const { reference } = competitionOfKindForReaders(
+    const { reference, rules } = competitionOfKindForReaders(
       tournament,
       query.slug,
       "swiss",
@@ -152,7 +152,11 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       competitions: competitionsInUse(tournament),
-      swiss: { name: reference.name.toString() },
+      swiss: {
+        name: reference.name.toString(),
+        maximumHoops: rules.maximumHoops,
+      },
+      usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,
       ranked: rankingOf(players).map(({ id }) => id),
       games: games.map((game) => ({

@@ -433,7 +433,7 @@ export const korean: Language = {
     "block.netGames": "게임 득실차",
     "block.games": "게임",
     "block.netHoops": "후프 득실차",
-    "block.playedTo": "{hoops} 후프로 진행",
+    "competition.playedTo": "{hoops} 후프로 진행",
     "block.won": "승",
     "block.lost": "패",
     "block.drawn": "무",

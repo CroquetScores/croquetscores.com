@@ -253,3 +253,24 @@ Then(
     assert.equal(answered(this).games.length, Number(count));
   },
 );
+
+Then(
+  /^the knockout answered has a maximum of (\d+) hoops$/,
+  function (this: SpecWorld, hoops: string) {
+    assert.equal(answered(this).knockout.maximumHoops, Number(hoops));
+  },
+);
+
+Then(
+  "the knockout answered has no maximum number of hoops",
+  function (this: SpecWorld) {
+    assert.equal(answered(this).knockout.maximumHoops, null);
+  },
+);
+
+Then(
+  /^the knockout answered has the usual of (\d+) hoops$/,
+  function (this: SpecWorld, hoops: string) {
+    assert.equal(answered(this).usualMaximumHoops, Number(hoops));
+  },
+);

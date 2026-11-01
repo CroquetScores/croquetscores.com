@@ -445,7 +445,7 @@ export const afrikaans: Language = {
     "block.netGames": "Netto spelle",
     "block.games": "Spelle",
     "block.netHoops": "Netto hoepels",
-    "block.playedTo": "Gespeel tot {hoops} poorte",
+    "competition.playedTo": "Gespeel tot {hoops} poorte",
     "block.won": "gewen",
     "block.lost": "verloor",
     "block.drawn": "gelykop",

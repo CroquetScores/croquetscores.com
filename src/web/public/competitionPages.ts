@@ -467,19 +467,24 @@ ${printPiecesScript}`,
   }
 };
 
-// What a block says under its heading of how many hoops its games are played
-// to, where that is not the usual for the sport. A reader seeing every winning
-// score under 26 cannot otherwise tell a block played to 14 from one whose
-// games were not played out. A block played to the usual says nothing, as does
-// one with no most, and the other kinds say nothing since they are not asked
-// it here (block.feature).
+// What a block, a knockout or a Swiss says under its heading of how many hoops
+// its games are played to, where that is not the usual for the sport. A reader
+// seeing every winning score under 26 cannot otherwise tell a competition
+// played to 14 from one whose games were not played out. One played to the
+// usual says nothing, as does one with no most. A test is not asked it here,
+// since its games are the teams' players' own.
 const playedToNote = (found: Found, speaking: Speaking): string => {
-  if (found.kind !== "block") return "";
-  const { maximumHoops } = found.asked.block;
+  if (found.kind === "test") return "";
+  const { maximumHoops } =
+    found.kind === "block"
+      ? found.asked.block
+      : found.kind === "knockout"
+        ? found.asked.knockout
+        : found.asked.swiss;
   if (maximumHoops === null || maximumHoops === found.asked.usualMaximumHoops) {
     return "";
   }
-  return `          <p class="competition-played-to">${escape(speaking.say("block.playedTo", { hoops: String(maximumHoops) }))}</p>`;
+  return `          <p class="competition-played-to">${escape(speaking.say("competition.playedTo", { hoops: String(maximumHoops) }))}</p>`;
 };
 
 /**

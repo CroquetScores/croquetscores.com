@@ -403,7 +403,7 @@ export const polish: Language = {
     "block.netGames": "Bilans gier",
     "block.games": "Gry",
     "block.netHoops": "Bilans bramek",
-    "block.playedTo": "Gra do {hoops} bramek",
+    "competition.playedTo": "Gra do {hoops} bramek",
     "block.won": "wygrana",
     "block.lost": "przegrana",
     "block.drawn": "remis",

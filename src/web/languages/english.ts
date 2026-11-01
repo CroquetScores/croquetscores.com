@@ -435,7 +435,7 @@ export const english: Language = {
     "block.netGames": "Net Games",
     "block.games": "Games",
     "block.netHoops": "Net Hoops",
-    "block.playedTo": "Played to {hoops} hoops",
+    "competition.playedTo": "Played to {hoops} hoops",
     "block.won": "won",
     "block.lost": "lost",
     "block.drawn": "drawn",

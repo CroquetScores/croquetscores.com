@@ -447,7 +447,7 @@ export const spanish: Language = {
     "block.netGames": "Partidas netas",
     "block.games": "Partidas",
     "block.netHoops": "Aros netos",
-    "block.playedTo": "Se juega a {hoops} aros",
+    "competition.playedTo": "Se juega a {hoops} aros",
     "block.won": "ganada",
     "block.lost": "perdida",
     "block.drawn": "empatada",

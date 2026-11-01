@@ -446,7 +446,7 @@ export const french: Language = {
     "block.netGames": "Différence de parties",
     "block.games": "Parties",
     "block.netHoops": "Différence de arceaux",
-    "block.playedTo": "Joué en {hoops} arceaux",
+    "competition.playedTo": "Joué en {hoops} arceaux",
     "block.won": "gagné",
     "block.lost": "perdu",
     "block.drawn": "nul",

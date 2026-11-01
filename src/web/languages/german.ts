@@ -461,7 +461,7 @@ export const german: Language = {
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
-    "block.playedTo": "Gespielt bis {hoops} Tore",
+    "competition.playedTo": "Gespielt bis {hoops} Tore",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "unentschieden",

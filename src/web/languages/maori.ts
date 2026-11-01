@@ -416,7 +416,7 @@ export const maori: Language = {
     "block.netGames": "Kupenga kēmu",
     "block.games": "Kēmu",
     "block.netHoops": "Kupenga hupa",
-    "block.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
+    "competition.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
     "block.won": "wikitoria",
     "block.lost": "hinga",
     "block.drawn": "taurite",

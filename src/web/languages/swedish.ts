@@ -441,7 +441,7 @@ export const swedish: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
-    "block.playedTo": "Spelas till {hoops} bågar",
+    "competition.playedTo": "Spelas till {hoops} bågar",
     "block.won": "vann",
     "block.lost": "förlorade",
     "block.drawn": "oavgjort",

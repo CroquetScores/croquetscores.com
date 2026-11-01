@@ -446,7 +446,7 @@ export const dutch: Language = {
     "block.netGames": "Saldo partijen",
     "block.games": "Partijen",
     "block.netHoops": "Saldo poortjes",
-    "block.playedTo": "Gespeeld tot {hoops} poortjes",
+    "competition.playedTo": "Gespeeld tot {hoops} poortjes",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "gelijk",
