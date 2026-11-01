@@ -12,11 +12,11 @@ De donkergroene balk biedt de onderdelen van het toernooi: **Recent**, wat deze 
 
 ## Een poule
 
-De pagina van een poule toont haar uitslagen als een rooster: een rij en een kolom voor elke speler in de volgorde van de poule, met de partijen tussen twee spelers waar de rij de kolom kruist, elk gemarkeerd als gewonnen, verloren of gelijk voor de speler van de rij. Na de kolommen van de spelers komen de totalen van elke speler. Waar elke wedstrijd één partij is, zijn dat gewonnen partijen en poortjessaldo; waar een wedstrijd de beste van meer dan één is, zijn het wedstrijden, partijensaldo, partijen en poortjessaldo.
+De pagina van een poule toont haar uitslagen als een rooster: een rij en een kolom voor elke speler in de volgorde van de poule, met de partijen tussen twee spelers waar de rij de kolom kruist, elk gemarkeerd als gewonnen, verloren of gelijk voor de speler van de rij. Na de kolommen van de spelers komen de totalen van elke speler. Waar elke wedstrijd één partij is, zijn dat gewonnen partijen en poortjessaldo; waar een wedstrijd de beste van meer dan één is, zijn het wedstrijden, partijensaldo, partijen en poortjessaldo. De laatste kolom, **#** genoemd, is de plaats van elke speler: 1 voor de eerste, en =2 waar spelers niet te scheiden zijn en tweede delen. Als spelers hetzelfde aandeel van hun wedstrijden hebben gewonnen, zegt een regel onder het rooster hoe ze worden gescheiden, zoals de tiebreak van de poule het bepaalt (zie Competities).
 
 ![Het rooster van een poule](images/public-block-grid.png)
 
-Een poule wordt op drie manieren getoond, aangeboden op de regel van haar naam: **Schema**, **Overzicht** en **Speelvolgorde**. Het overzicht is de weergave voor een telefoon: de spelers gerangschikt, met hun gewonnen en verloren partijen en poortjessaldo. Het speelschema toont elke partij, oudste eerst. Een lezer die een weergave kiest, houdt die voor elke competitie totdat die een andere kiest.
+Een poule wordt op drie manieren getoond, aangeboden op de regel van haar naam: **Schema**, **Overzicht** en **Speelvolgorde**. Het overzicht is de weergave voor een telefoon: de spelers gerangschikt, met hun gewonnen en verloren partijen, poortjessaldo en plaats. Het speelschema toont elke partij, oudste eerst. Een lezer die een weergave kiest, houdt die voor elke competitie totdat die een andere kiest.
 
 ![Het overzicht van een poule](images/public-block-summary.png)
 

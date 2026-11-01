@@ -14,11 +14,13 @@ Naciśnij **Dodaj konkurencję**, nad listą. Nad stroną otwiera się okno dial
 
 ### Grupowa
 
-Konkurencja grupowa pyta, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**) i w ilu rundach się go rozgrywa (pole **Rundy**).
+Konkurencja grupowa pyta, z ilu gier każdy mecz jest najlepszy (pole **Do wygranych gier**) i w ilu rundach się go rozgrywa (pole **Rundy**), oraz jak rozróżnia się zawodników z jednakowym odsetkiem wygranych meczów (pole **Rozstrzyganie remisów**).
 
 **Do wygranych gier** zaczyna się na 1. Najlepszy z 3 wygrywa ten, kto wygra dwie gry. Może to być liczba parzysta, bo w konkurencji grupowej zawodnika szereguje się według wygranych gier, a mecz z dwóch gier podzielonych po jednej jest rezultatem jak każdy inny.
 
 **Rundy** to liczba spotkań każdej pary zawodników w grupie, z jednym meczem w każdej rundzie. Zaczyna się na 1, a 1 to prawie zawsze to, czego grupa potrzebuje: każdy zawodnik gra z każdym innym raz. Zwiększ to tylko dla grupy, w której spotykają się ponownie, na przykład w podwójnym round robin, gdzie przy 2 każda para gra dwa mecze.
+
+**Rozstrzyganie remisów** określa, jak rozróżnia się zawodników, którzy wygrali taki sam odsetek swoich meczów. Są trzy sposoby, a grupy jednego turnieju mogą stosować różne, ponieważ regulaminy się różnią. **Bilans gier, potem bilans bramek, potem kto kogo pokonał** to sposób, w jaki grupy zawsze były szeregowane, i od niego zaczyna nowa grupa: zawodników z taką samą liczbą wygranych meczów rozróżnia bilans gier, tych nadal równych bilans bramek, a tych nadal równych to, kto z nich kogo pokonał. Gdy każdy mecz jest jedną grą, bilans gier jest pomijany. **Kto kogo pokonał** bierze pod uwagę tylko mecze, które zawodnicy z równym wynikiem rozegrali między sobą. **Inne** jest dla regulaminów, których strona nie zna, i nikogo nie rozróżnia. Zawodnicy, których nie da się rozróżnić, dzielą miejsce, pokazywane jako =2, a strona pod tabelą mówi, jak rozróżnia się zawodników z równym wynikiem.
 
 ![Okno Dodaj konkurencję dla konkurencji grupowej](images/add-competition-block.png)
 

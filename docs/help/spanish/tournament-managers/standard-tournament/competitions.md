@@ -14,11 +14,13 @@ Pulsa **Añadir competición**, encima de la lista. Se abre un diálogo sobre la
 
 ### Un grupo
 
-Un grupo pregunta al mejor de cuántas partidas es cada partido, **Al mejor de**, y en cuántas rondas se juega, **Rondas**.
+Un grupo pregunta al mejor de cuántas partidas es cada partido, **Al mejor de**, en cuántas rondas se juega, **Rondas**, y cómo se desempata a sus jugadores con la misma proporción de partidos ganados, **Desempates**.
 
 **Al mejor de** empieza en 1. Al mejor de 3 lo gana quien gane dos partidas. Puede ser un número par, porque en un grupo un jugador se clasifica por las partidas que gana, y un partido de dos partidas repartidas una a cada uno es un resultado como cualquier otro.
 
 **Rondas** es cuántas veces se enfrenta cada pareja de jugadores del grupo, con un partido en cada ronda. Empieza en 1, y 1 es casi siempre lo que un grupo necesita: cada jugador juega una vez contra cada otro. Súbelo solo para un grupo en el que se vuelven a enfrentar, como una doble liguilla, donde 2 hace que cada pareja juegue dos partidos.
+
+**Desempates** es cómo se desempata a los jugadores que han ganado la misma proporción de sus partidos. Hay tres maneras, y los grupos de un mismo torneo pueden usar maneras distintas, porque los reglamentos difieren. **Partidas netas, luego aros netos, luego quién ganó a quién** es como siempre se han clasificado los grupos y con la que empieza un grupo nuevo: los jugadores igualados en partidos ganados se desempatan por sus partidas netas, los que siguen igualados por sus aros netos, y los que aún siguen igualados por quién ganó a quién entre ellos. Cuando cada partido es una sola partida, las partidas netas se dejan fuera. **Quién ganó a quién** mira solo los partidos que los jugadores igualados jugaron entre sí. **Otro** es para reglamentos que el sitio no conoce, y no desempata a nadie. Los jugadores que no se pueden desempatar comparten un puesto, que se muestra como =2, y la página dice bajo el cuadro cómo se desempata a los jugadores igualados.
 
 ![El diálogo Añadir competición para un grupo](images/add-competition-block.png)
 

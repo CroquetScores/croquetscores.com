@@ -14,11 +14,13 @@ Pressione **Adicionar competição**, acima da lista. Um diálogo abre sobre a p
 
 ### Um grupo
 
-Um grupo pergunta de quantos jogos cada partida é o melhor (**Melhor de**) e em quantas **Rodadas** ela é jogada.
+Um grupo pergunta de quantos jogos cada partida é o melhor (**Melhor de**), em quantas **Rodadas** ela é jogada e como se desempatam os seus jogadores com a mesma proporção de partidas vencidas (**Critérios de desempate**).
 
 **Melhor de** começa em 1. Uma melhor de 3 é ganha por quem vence dois jogos. Pode ser um número par, porque em um grupo um jogador é classificado pelos jogos que ganha, e uma partida de dois jogos dividida um a um é um resultado como qualquer outro.
 
 **Rodadas** é quantas vezes cada par de jogadores do grupo se encontra, com uma partida em cada rodada. Começa em 1, e 1 é quase sempre o que um grupo quer: todo jogador joga contra todos os outros uma vez. Aumente apenas para um grupo em que eles se encontram de novo, como um round robin duplo, em que 2 faz cada par jogar duas partidas.
+
+**Critérios de desempate** é como se desempatam os jogadores que venceram a mesma proporção das suas partidas. Há três maneiras, e os grupos de um mesmo torneio podem usar maneiras diferentes, porque os regulamentos diferem. **Saldo de jogos, depois saldo de arcos, depois quem venceu quem** é como os grupos sempre foram classificados e é com a qual um novo grupo começa: os jogadores empatados em partidas vencidas são desempatados pelo saldo de jogos, os que continuam empatados pelo saldo de arcos, e os que ainda continuam empatados por quem venceu quem entre eles. Quando cada partida é um único jogo, o saldo de jogos fica de fora. **Quem venceu quem** olha apenas as partidas que os jogadores empatados disputaram entre si. **Outro** é para regulamentos que o site não conhece e não desempata ninguém. Jogadores que não podem ser desempatados dividem uma posição, mostrada como =2, e a página diz abaixo da grade como os jogadores empatados são desempatados.
 
 ![O diálogo Adicionar competição para um grupo](images/add-competition-block.png)
 

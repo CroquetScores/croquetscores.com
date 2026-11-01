@@ -14,11 +14,13 @@ Pwyswch **Ychwanegu cystadleuaeth**, uwchben y rhestr. Mae deialog yn agor dros 
 
 ### Bloc
 
-Mae bloc yn gofyn beth yw pob gêm **Yr orau o**, a sawl rownd y caiff ei chwarae ynddynt, sef **Rowndiau**.
+Mae bloc yn gofyn beth yw pob gêm **Yr orau o**, a sawl rownd y caiff ei chwarae ynddynt, sef **Rowndiau**, a sut y gwahenir ei chwaraewyr sydd â'r un gyfran o gemau wedi'u hennill, sef **Torri clymau**.
 
 Mae **Yr orau o** yn dechrau ar 1. Enillir yr orau o 3 gan bwy bynnag sy'n ennill dwy gêm unigol. Gall fod yn eilrif, gan fod chwaraewr mewn bloc yn cael ei safle yn ôl y gemau unigol y mae'n eu hennill, ac mae gêm o ddwy gêm unigol wedi'u rhannu un yr un yn ganlyniad fel unrhyw un arall.
 
 Mae **Rowndiau** yn dweud sawl gwaith y mae pob pâr o chwaraewyr yn y bloc yn cwrdd, â gêm ym mhob rownd. Mae'n dechrau ar 1, ac 1 yw'r hyn y mae bloc ei eisiau bron bob amser: mae pob chwaraewr yn chwarae pob un arall unwaith. Codwch ef dim ond ar gyfer bloc lle maent yn cwrdd eto, fel cystadleuaeth gron ddwbl, lle mae 2 yn gwneud i bob pâr chwarae dwy gêm.
+
+Mae **Torri clymau** yn dweud sut y gwahenir chwaraewyr sydd wedi ennill yr un gyfran o'u gemau. Mae tair ffordd, a gall blociau o'r un twrnamaint ddefnyddio rhai gwahanol, gan fod rheolau'n amrywio. **Gemau net, yna cylchau net, yna pwy a gurodd pwy** yw'r ffordd y mae blociau bob amser wedi'u trefnu, a dyna lle mae bloc newydd yn dechrau: gwahenir chwaraewyr sy'n gyfartal ar gemau a enillwyd gan eu gemau net, y rhai sy'n dal yn gyfartal gan eu cylchau net, a'r rhai sy'n dal yn gyfartal gan pwy a gurodd pwy yn eu plith. Lle mae pob gêm yn un gêm unigol, gadewir y gemau net allan. Mae **Pwy a gurodd pwy** yn edrych ar y gemau yn unig a chwaraeodd y chwaraewyr cyfartal yn erbyn ei gilydd. Mae **Arall** ar gyfer rheolau nad yw'r safle'n eu hadnabod, ac nid yw'n gwahanu neb. Mae chwaraewyr na ellir eu gwahanu yn rhannu safle, a ddangosir fel =2, ac mae'r dudalen yn dweud o dan y grid sut y gwahenir chwaraewyr cyfartal.
 
 ![Y ddeialog Ychwanegu cystadleuaeth ar gyfer bloc](images/add-competition-block.png)
 

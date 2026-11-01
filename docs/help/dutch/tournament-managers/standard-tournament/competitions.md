@@ -14,11 +14,13 @@ Druk op **Competitie toevoegen**, boven de lijst. Er opent een dialoogvenster ov
 
 ### Een poule
 
-Een poule vraagt waarvan elke wedstrijd de **Best of** is, en in hoeveel **Rondes** ze wordt gespeeld.
+Een poule vraagt waarvan elke wedstrijd de **Best of** is, en in hoeveel **Rondes** ze wordt gespeeld, en hoe spelers met een gelijk aandeel gewonnen wedstrijden van elkaar worden gescheiden door haar **Tiebreaks**.
 
 **Best of** begint op 1. De beste van 3 wordt gewonnen door wie twee partijen wint. Het mag een even getal zijn, omdat in een poule een speler wordt gerangschikt op de partijen die die wint, en een wedstrijd van twee partijen die elk één keer gewonnen zijn een uitslag is als elke andere.
 
 **Rondes** is hoe vaak elk paar spelers in de poule elkaar ontmoet, met een wedstrijd in elke ronde. Het begint op 1, en 1 is bijna altijd wat een poule wil: elke speler speelt tegen elke andere één keer. Verhoog het alleen voor een poule waarin ze elkaar opnieuw ontmoeten, zoals een dubbele round robin, waar 2 elk paar twee wedstrijden laat spelen.
+
+**Tiebreaks** is hoe spelers die hetzelfde aandeel van hun wedstrijden hebben gewonnen van elkaar worden gescheiden. Er zijn drie manieren, en poules van één toernooi kunnen er verschillende gebruiken, omdat reglementen verschillen. **Saldo partijen dan saldo poortjes dan wie wie versloeg** is hoe poules altijd zijn gerangschikt en waarmee een nieuwe poule begint: spelers met evenveel gewonnen wedstrijden worden gescheiden door hun partijensaldo, wie dan nog gelijk staat door het poortjessaldo, en wie dan nog gelijk staat door wie wie versloeg onder hen. Als elke wedstrijd één partij is, wordt het partijensaldo weggelaten. **Wie wie versloeg** kijkt alleen naar de wedstrijden die de gelijkstaande spelers tegen elkaar speelden. **Anders** is voor reglementen die de site niet kent, en scheidt niemand. Spelers die niet van elkaar te scheiden zijn, delen een plaats, getoond als =2, en de pagina zegt onder het rooster hoe gelijkstaande spelers worden gescheiden.
 
 ![Het dialoogvenster Competitie toevoegen voor een poule](images/add-competition-block.png)
 

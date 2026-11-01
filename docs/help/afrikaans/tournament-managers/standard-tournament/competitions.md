@@ -14,11 +14,13 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 ### 'n Blok
 
-'n Blok vra waarvan elke wedstryd die **beste van** is, en in hoeveel **rondtes** dit gespeel word.
+'n Blok vra waarvan elke wedstryd die **beste van** is, en in hoeveel **rondtes** dit gespeel word, en hoe sy spelers wat gelyk staan op wedstryde gewen uitmekaar gehou word deur sy **Gelykopbrekers**.
 
 **Beste van** begin op 1. Die beste van 3 word gewen deur wie ook al twee spelle wen. Dit mag 'n ewe getal wees, want in 'n blok word 'n speler gerangskik volgens die spelle wat hulle wen, en 'n wedstryd van twee spelle wat een elk gedeel word, is 'n uitslag soos enige ander.
 
 **Rondtes** is hoeveel keer elke paar spelers in die blok ontmoet, met 'n wedstryd in elke ronde. Dit begin op 1, en 1 is amper altyd wat 'n blok wil hê: elke speler speel elke ander een keer. Verhoog dit net vir 'n blok waarin hulle weer ontmoet, soos 'n dubbele rondte-robyn, waar 2 elke paar twee wedstryde laat speel.
+
+**Gelykopbrekers** is hoe spelers wat dieselfde aandeel van hul wedstryde gewen het, uitmekaar gehou word. Daar is drie maniere, en blokke van een toernooi kan verskillende gebruik, want reglemente verskil. **Netto spelle dan netto hoepels dan wie wie geklop het** is hoe blokke nog altyd gerangskik is, en is waar 'n nuwe blok begin: spelers wat gelyk staan op wedstryde gewen, word uitmekaar gehou deur hul netto spelle, dié wat nog gelyk staan deur hul netto hoepels, en dié wat nog gelyk staan deur wie wie geklop het onder hulle. Waar elke wedstryd 'n enkele spel is, word netto spelle weggelaat. **Wie wie geklop het** kyk net na die wedstryde wat die spelers wat gelyk staan teen mekaar gespeel het. **Ander** is vir reglemente wat die webwerf nie ken nie, en hou niemand uitmekaar nie. Spelers wat nie uitmekaar gehou kan word nie, deel 'n plek, getoon as =2, en die bladsy sê onder die rooster hoe spelers wat gelyk staan uitmekaar gehou word.
 
 ![Die dialoog Voeg kompetisie by vir 'n blok](images/add-competition-block.png)
 

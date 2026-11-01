@@ -14,11 +14,13 @@ Appuyez sur **Ajouter une compétition**, au-dessus de la liste. Une boîte de d
 
 ### Une poule
 
-Une poule demande au meilleur de combien de parties se joue chaque rencontre, **au meilleur des**, et en combien de **tours** elle se joue.
+Une poule demande au meilleur de combien de parties se joue chaque rencontre, **au meilleur des**, en combien de **tours** elle se joue, et comment ses joueurs à égalité de rencontres gagnées sont départagés, par son **Départage**.
 
 **Au meilleur des** commence à 1. Au meilleur des 3 se gagne par celui qui remporte deux parties. Le nombre peut être pair, puisque dans une poule un joueur est classé par les parties qu’il gagne, et qu’une rencontre de deux parties partagées une chacune est un résultat comme un autre.
 
 **Tours** est le nombre de fois que chaque paire de joueurs de la poule se rencontre, avec une rencontre à chaque tour. Il commence à 1, et 1 est presque toujours ce que veut une poule : chaque joueur joue contre chaque autre une fois. Ne l’augmentez que pour une poule où ils se rencontrent de nouveau, comme un double round robin, où 2 fait jouer deux rencontres à chaque paire.
+
+**Départage** est la façon de départager les joueurs qui ont gagné la même part de leurs rencontres. Il y en a trois, et les poules d’un même tournoi peuvent en employer de différentes, puisque les règlements diffèrent. **Différence de parties puis différence d'arceaux puis qui a battu qui** est la façon dont les poules ont toujours été classées, et celle par laquelle commence une nouvelle poule : les joueurs à égalité de rencontres gagnées sont départagés par leurs parties nettes, ceux qui restent à égalité par leurs arceaux nets, et ceux qui restent encore à égalité par qui a battu qui parmi eux. Quand chaque rencontre est une seule partie, les parties nettes sont laissées de côté. **Qui a battu qui** ne regarde que les rencontres que les joueurs à égalité ont jouées les uns contre les autres. **Autre** est pour les règlements que le site ne connaît pas, et ne départage personne. Les joueurs qui ne peuvent être départagés partagent une place, affichée =2, et la page dit sous la grille comment les joueurs à égalité sont départagés.
 
 ![La boîte de dialogue Ajouter une compétition pour une poule](images/add-competition-block.png)
 

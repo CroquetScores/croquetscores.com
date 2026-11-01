@@ -14,11 +14,13 @@ Drücken Sie **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich
 
 ### Eine Gruppe
 
-Eine Gruppe fragt, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, und in wie vielen **Runden** sie gespielt wird.
+Eine Gruppe fragt, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, und in wie vielen **Runden** sie gespielt wird, und wie bei gleich vielen gewonnenen Begegnungen entschieden wird (**Bei Gleichstand**).
 
 **Best of** beginnt auf 1. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einer Gruppe ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
 
 **Runden** ist, wie oft jedes Spielerpaar der Gruppe aufeinandertrifft, mit einer Begegnung in jeder Runde. Es beginnt auf 1, und 1 ist fast immer das, was eine Gruppe will: Jeder Spieler spielt einmal gegen jeden anderen. Erhöhen Sie es nur für eine Gruppe, in der man wieder aufeinandertrifft, etwa eine doppelte Jeder-gegen-jeden-Runde, in der 2 jedes Paar zwei Begegnungen spielen lässt.
+
+**Bei Gleichstand** legt fest, wie Spieler unterschieden werden, die gleich viele ihrer Begegnungen gewonnen haben. Es gibt drei Möglichkeiten, und Gruppen eines Turniers können verschiedene verwenden, da Bestimmungen sich unterscheiden. **Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat** ist, wie Gruppen schon immer gereiht wurden, und womit eine neue Gruppe beginnt: Spieler mit gleich vielen gewonnenen Begegnungen werden nach ihrer Spieldifferenz unterschieden, die dann noch Gleichen nach ihrer Tordifferenz und die dann noch Gleichen danach, wer von ihnen wen geschlagen hat. Besteht jede Begegnung aus einem einzigen Spiel, bleibt die Spieldifferenz außen vor. **Wer wen geschlagen hat** sieht nur auf die Begegnungen, die die gleichauf liegenden Spieler gegeneinander gespielt haben. **Andere** ist für Bestimmungen, die die Seite nicht kennt, und unterscheidet niemanden. Spieler, die sich nicht unterscheiden lassen, teilen sich einen Platz, angezeigt als =2, und die Seite sagt unter dem Raster, wie gleichauf liegende Spieler unterschieden werden.
 
 ![Der Dialog Wettbewerb hinzufügen für eine Gruppe](images/add-competition-block.png)
 

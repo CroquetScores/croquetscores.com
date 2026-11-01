@@ -12,11 +12,11 @@ La barre vert foncé propose les rubriques du tournoi : **Récent**, qui est ce
 
 ## Une poule
 
-La page d’une poule montre ses résultats en grille : une ligne et une colonne pour chaque joueur dans l’ordre de la poule, avec les parties entre deux joueurs là où la ligne croise la colonne, chacune marquée gagnée, perdue ou nulle pour le joueur de la ligne. Après les colonnes des joueurs viennent les totaux de chaque joueur. Quand chaque rencontre est une seule partie, ce sont les victoires et les arceaux nets ; quand une rencontre se joue au meilleur de plusieurs, ce sont les rencontres, les parties nettes, les parties et les arceaux nets.
+La page d’une poule montre ses résultats en grille : une ligne et une colonne pour chaque joueur dans l’ordre de la poule, avec les parties entre deux joueurs là où la ligne croise la colonne, chacune marquée gagnée, perdue ou nulle pour le joueur de la ligne. Après les colonnes des joueurs viennent les totaux de chaque joueur. Quand chaque rencontre est une seule partie, ce sont les victoires et les arceaux nets ; quand une rencontre se joue au meilleur de plusieurs, ce sont les rencontres, les parties nettes, les parties et les arceaux nets. La dernière colonne, intitulée **#**, est la place de chaque joueur : 1 pour le premier, et =2 quand des joueurs ne peuvent être départagés et partagent la deuxième. Quand des joueurs ont gagné la même part de leurs rencontres, une ligne sous la grille dit comment ils sont départagés, selon le départage de la poule (voir Compétitions).
 
 ![La grille d’une poule](images/public-block-grid.png)
 
-Une poule se présente de trois façons, proposées sur la ligne de son nom : **Grille**, **Récapitulatif** et **Ordre de jeu**. Le récapitulatif est celui qui convient à un téléphone : les joueurs classés, avec leurs victoires, leurs défaites et leurs arceaux nets. L’ordre de jeu liste chaque partie, la plus ancienne en premier. Un lecteur qui choisit une vue la garde pour chaque compétition jusqu’à ce qu’il en choisisse une autre.
+Une poule se présente de trois façons, proposées sur la ligne de son nom : **Grille**, **Récapitulatif** et **Ordre de jeu**. Le récapitulatif est celui qui convient à un téléphone : les joueurs classés, avec leurs victoires, leurs défaites, leurs arceaux nets et leur place. L’ordre de jeu liste chaque partie, la plus ancienne en premier. Un lecteur qui choisit une vue la garde pour chaque compétition jusqu’à ce qu’il en choisisse une autre.
 
 ![Le résumé d’une poule](images/public-block-summary.png)
 

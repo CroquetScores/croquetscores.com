@@ -12,11 +12,11 @@ Ciemnozielony pasek oferuje sekcje turnieju: **Ostatnie**, czyli tę stronę, **
 
 ## Konkurencja grupowa
 
-Strona konkurencji grupowej pokazuje jej rezultaty jako tabelę: wiersz i kolumnę dla każdego zawodnika w kolejności konkurencji, z grami między dwoma zawodnikami tam, gdzie wiersz spotyka kolumnę, każdą oznaczoną jako wygrana, przegrana lub remis dla zawodnika z wiersza. Po kolumnach zawodników idą sumy każdego zawodnika. Gdy każdy mecz jest jedną grą, są to wygrane i bilans bramek; gdy mecz jest najlepszy z więcej niż jednej, są to mecze, bilans gier, gry i bilans bramek.
+Strona konkurencji grupowej pokazuje jej rezultaty jako tabelę: wiersz i kolumnę dla każdego zawodnika w kolejności konkurencji, z grami między dwoma zawodnikami tam, gdzie wiersz spotyka kolumnę, każdą oznaczoną jako wygrana, przegrana lub remis dla zawodnika z wiersza. Po kolumnach zawodników idą sumy każdego zawodnika. Gdy każdy mecz jest jedną grą, są to wygrane i bilans bramek; gdy mecz jest najlepszy z więcej niż jednej, są to mecze, bilans gier, gry i bilans bramek. Ostatnia kolumna, z nagłówkiem **#**, to miejsce każdego zawodnika: 1 dla pierwszego i =2, gdy zawodnicy, których nie da się rozróżnić, dzielą drugie. Gdy zawodnicy wygrali taki sam odsetek swoich meczów, wiersz pod tabelą mówi, jak ich rozróżniono, zgodnie z ustawieniem rozstrzygania remisów w grupie (zob. Konkurencje).
 
 ![Siatka konkurencji grupowej](images/public-block-grid.png)
 
-Konkurencja grupowa jest pokazywana na trzy sposoby, oferowane w wierszu z jego nazwą: **Siatka**, **Podsumowanie** i **Kolejność gier**. Podsumowanie jest widokiem na telefon: zawodnicy uszeregowani, z wygranymi, przegranymi i bilansem bramek. Kolejność gier wymienia każdą grę od najstarszej. Czytelnik, który wybierze widok, zachowuje go dla każdej konkurencji, dopóki nie wybierze innego.
+Konkurencja grupowa jest pokazywana na trzy sposoby, oferowane w wierszu z jego nazwą: **Siatka**, **Podsumowanie** i **Kolejność gier**. Podsumowanie jest widokiem na telefon: zawodnicy uszeregowani, z wygranymi, przegranymi, bilansem bramek i miejscem. Kolejność gier wymienia każdą grę od najstarszej. Czytelnik, który wybierze widok, zachowuje go dla każdej konkurencji, dopóki nie wybierze innego.
 
 ![Podsumowanie konkurencji grupowej](images/public-block-summary.png)
 

@@ -12,11 +12,11 @@ La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es est
 
 ## Un grupo
 
-La página de un grupo muestra sus resultados como un cuadro: una fila y una columna por cada jugador en el orden del grupo, con las partidas entre dos jugadores donde la fila se cruza con la columna, cada una marcada como ganada, perdida o empatada para el jugador de la fila. Tras las columnas de los jugadores vienen los totales de cada uno. Cuando cada partido es una sola partida, son victorias y aros netos; cuando un partido es al mejor de más de una, son partidos, partidas netas, partidas y aros netos.
+La página de un grupo muestra sus resultados como un cuadro: una fila y una columna por cada jugador en el orden del grupo, con las partidas entre dos jugadores donde la fila se cruza con la columna, cada una marcada como ganada, perdida o empatada para el jugador de la fila. Tras las columnas de los jugadores vienen los totales de cada uno. Cuando cada partido es una sola partida, son victorias y aros netos; cuando un partido es al mejor de más de una, son partidos, partidas netas, partidas y aros netos. La última columna, con el título **#**, es el puesto de cada jugador: 1 para el primero y =2 cuando varios jugadores no se pueden desempatar y comparten el segundo. Cuando hay jugadores que han ganado la misma proporción de sus partidos, una línea bajo el cuadro dice cómo se desempatan, según el desempate del grupo (véase Competiciones).
 
 ![El cuadro de un grupo](images/public-block-grid.png)
 
-Un grupo se muestra de tres maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, **Resumen** y **Orden de juego**. El resumen es el pensado para un teléfono: los jugadores clasificados, con sus victorias, derrotas y aros netos. El orden de juego lista todas las partidas, la más antigua primero. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
+Un grupo se muestra de tres maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, **Resumen** y **Orden de juego**. El resumen es el pensado para un teléfono: los jugadores clasificados, con sus victorias, derrotas, aros netos y puesto. El orden de juego lista todas las partidas, la más antigua primero. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
 
 ![El resumen de un grupo](images/public-block-summary.png)
 

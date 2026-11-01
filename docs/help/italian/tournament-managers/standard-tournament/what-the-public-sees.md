@@ -12,11 +12,11 @@ La barra verde scuro offre le sezioni del torneo: **Recenti**, che è questa pag
 
 ## Un girone
 
-La pagina di un girone mostra i suoi risultati come una griglia: una riga e una colonna per ogni giocatore nell'ordine del girone, con le partite tra due giocatori dove la riga incontra la colonna, ciascuna segnata come vinta, persa o pareggiata per il giocatore della riga. Dopo le colonne dei giocatori vengono i totali di ciascun giocatore. Dove ogni incontro è una partita sola, sono le vittorie e la differenza archetti; dove un incontro è al meglio di più partite, sono gli incontri, la differenza partite, le partite e la differenza archetti.
+La pagina di un girone mostra i suoi risultati come una griglia: una riga e una colonna per ogni giocatore nell'ordine del girone, con le partite tra due giocatori dove la riga incontra la colonna, ciascuna segnata come vinta, persa o pareggiata per il giocatore della riga. Dopo le colonne dei giocatori vengono i totali di ciascun giocatore. Dove ogni incontro è una partita sola, sono le vittorie e la differenza archetti; dove un incontro è al meglio di più partite, sono gli incontri, la differenza partite, le partite e la differenza archetti. L'ultima colonna, intitolata **#**, è la posizione di ciascun giocatore: 1 per il primo, e =2 dove i giocatori non si possono distinguere e condividono la seconda. Dove dei giocatori hanno vinto la stessa quota dei loro incontri, una riga sotto la griglia dice come si distinguono, come stabilisce lo spareggio del girone (vedi Competizioni).
 
 ![La griglia di un girone](images/public-block-grid.png)
 
-Un girone si mostra in tre modi, offerti sulla riga del suo nome: **Griglia**, **Riepilogo** e **Programma**. Il riepilogo è quello per un telefono: i giocatori classificati, con le loro vittorie, sconfitte e differenza archetti. Il programma elenca ogni partita dalla più vecchia. Un lettore che sceglie una vista la mantiene per ogni competizione finché non ne sceglie un'altra.
+Un girone si mostra in tre modi, offerti sulla riga del suo nome: **Griglia**, **Riepilogo** e **Programma**. Il riepilogo è quello per un telefono: i giocatori classificati, con le loro vittorie, sconfitte, differenza archetti e posizione. Il programma elenca ogni partita dalla più vecchia. Un lettore che sceglie una vista la mantiene per ogni competizione finché non ne sceglie un'altra.
 
 ![Il riepilogo di un girone](images/public-block-summary.png)
 

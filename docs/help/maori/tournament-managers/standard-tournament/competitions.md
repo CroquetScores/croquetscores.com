@@ -14,11 +14,13 @@ Pēhia **Tāpiri tauwhāinga**, i runga i te rārangi. Ka tuwhera tētahi pouaka
 
 ### He poraka
 
-Ka pātai te poraka i te **Pai rawa o te** o ia tukinga, me te maha o **Ngā rauna** e tākarohia ai.
+Ka pātai te poraka i te **Pai rawa o te** o ia tukinga, me te maha o **Ngā rauna** e tākarohia ai, me te tikanga e wehea ai ngā kaitākaro e ōrite ana ngā tukinga i wikitoria, mā **Whakatau i te ōrite**.
 
 **Pai rawa o te** ka tīmata ki te 1. Ka toa i te pai rawa o te 3 te tangata e toa ana i ngā kēmu e rua. Ka taea he tau e wehea ana ki te rua, nā te mea i roto i te poraka ka raupapatia te kaitākaro mā ngā kēmu e toa ai ia, ā, ko te tukinga o ngā kēmu e rua i toa ai tētahi i tētahi he tākohu pērā i ētahi atu.
 
 **Ngā rauna** te maha o ngā wā e tūtaki ai ia takirua kaitākaro o te poraka, me tētahi tukinga i ia rauna. Ka tīmata ki te 1, ā, ko te 1 te mea e hiahiatia ana e te nuinga o ngā poraka: ka tākaro ia kaitākaro i ia kaitākaro atu i te kotahi. Whakarahia anake mō tētahi poraka e tūtaki anō ai rātou, pēnei i te double round robin, ka tākaro ia takirua i ngā tukinga e rua ki te 2.
+
+Ko **Whakatau i te ōrite** te tikanga e wehea ai ngā kaitākaro kotahi te wāhanga o ā rātou tukinga i wikitoria. E toru ngā huarahi, ā, ka taea e ngā poraka o te kotahi whakataetae te whakamahi i ētahi rerekē, nā te mea he rerekē ngā ture. Ko **Kupenga kēmu, ka kupenga hupa, ka ko wai i hinga ko wai** te huarahi i raupapatia ai ngā poraka i ngā wā katoa, ā, koia te tīmatanga o tētahi poraka hou: ka wehea ngā kaitākaro e ōrite ana ngā tukinga i wikitoria mā te kupenga kēmu, ka wehea ērā e ōrite tonu ana mā te kupenga hupa, ā, ka wehea ērā e ōrite tonu ana mā te ko wai i hinga ko wai i waenga i a rātou. Ina kotahi te kēmu o ia tukinga, ka waiho te kupenga kēmu. Ko **Ko wai i hinga ko wai** e titiro ana ki ngā tukinga anake i tākaro ai ngā kaitākaro ōrite ki a rātou anō. Ko **Tētahi atu** mō ngā ture kāore i mōhiotia e te pae, ā, kāore e wehe i tētahi. Ka tiri tahi ngā kaitākaro kāore e taea te wehe i tētahi tūnga, ka whakaaturia hei =2, ā, ka kī te whārangi i raro i te tūtohi me pēhea te wehe i ngā kaitākaro ōrite.
 
 ![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi poraka](images/add-competition-block.png)
 
