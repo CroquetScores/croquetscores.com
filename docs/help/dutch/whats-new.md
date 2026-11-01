@@ -1,5 +1,18 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-11-01
+
+### Een toernooi volgen
+
+- **De Interstate Shield wordt gerangschikt op saldo wedstrijden.** De teams worden nu gerangschikt op de wedstrijden die ze hebben gewonnen min de wedstrijden die ze hebben verloren, zodat een verloren wedstrijd tegen een team telt waar hij eerst voor niets telde. Teams die nog gelijk staan, komen in volgorde op de tests die ze tegen elkaar hebben gewonnen. De samenvatting van het toernooi, en de pagina van een groep, tonen van elk team het saldo wedstrijden en het saldo partijen.
+
+### Een toernooi leiden
+
+- **Je kunt veel spelers tegelijk toevoegen.** Druk op het tabblad Spelers op **Spelers toevoegen**, naast **Speler toevoegen**, en plak een lijst met een regel voor elke speler. Elke speler op de lijst wordt toegevoegd.
+- **Een helppictogram op meer pagina's van het beheer.** Het ronde vraagteken staat nu ook aan het begin van de pagina die een toernooi aanmaakt en van de pagina die er een wijzigt, aan het eind van de rij tabbladen op de pagina van een toernooi en op die van een competitie, en naast de lijst toernooien. Elk pictogram leidt naar de help voor wat je bekijkt en opent die in een ander tabblad, zodat de pagina blijft staan.
+- **Het tabblad Scores is een tabel.** Elke score is een rij van een tabel, zodat een schermlezer je zegt in welke cel je zit. Het woord "versloeg" heeft een eigen kolom tussen de score van de winnaar en de verliezer. Op een telefoon wordt een score niet meer over twee regels gevouwen: de tabel scrolt in plaats daarvan opzij.
+- **Een test in een Eire Cup of een Interstate Shield heeft geen groep.** Die evenementen worden niet in groepen gespeeld, dus het dialoogvenster voor een test vraagt daar niet om een groep, en een test kan er geen krijgen.
+
 ## Uitgebracht op 2026-10-31
 
 ### iPad en iMac

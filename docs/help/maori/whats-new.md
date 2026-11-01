@@ -1,5 +1,18 @@
 # He aha te mea hou
 
+## I tukuna 2026-11-01
+
+### Te whai i tētahi whakataetae nui
+
+- **Ka whakarārangihia te Interstate Shield mā ngā tukinga kupenga.** Ka whakarārangihia ōna tīma inaianei mā ngā tukinga i wikitoria, tangohia ngā tukinga i hinga, nō reira ko te tukinga i hinga he mea kei te whakahē i te tīma, ahakoa i mua kāore ia i tātaihia. Ko ngā tīma ōrite tonu ka whakarārangihia mā ngā whakamātau i wikitoria e tētahi ki tētahi. Ko te whakarāpopototanga o te whakataetae, me te whārangi o tētahi rōpū, e whakaatu ana i ngā tukinga kupenga me ngā kēmu kupenga o ia tīma.
+
+### Te whakahaere i tētahi whakataetae nui
+
+- **Ka taea te tāpiri i ngā kaitākaro maha i te wā kotahi.** I te ripa Kaitākaro, pēhia a **Tāpiri kaitākaro maha**, i te taha o **Tāpiri kaitākaro**, ā, whakapiri mai tētahi rārangi me tētahi rārangi mō ia kaitākaro. Ka tāpiria ngā kaitākaro katoa o te rārangi.
+- **He tohu āwhina i ētahi atu wāhi o te whakahaere.** Ko te pātai porotaka kei te timatanga inaianei o te whārangi e waihanga ana i tētahi whakataetae me te whārangi e whakarerekē ana i tētahi, kei te mutunga o te rārangi ripa i te whārangi o tētahi whakataetae me tērā o tētahi tauwhāinga, ā, kei te taha hoki o te rārangi whakataetae. Ka kawe ia tohu ki te āwhina mō tāu e titiro ana, ā, ka tuwhera i tētahi atu ripa kia mau tonu te whārangi.
+- **He ripanga te ripa Ngā tākohu.** He rārangi o te ripanga ia tākohu, kia mōhio ai te kaipānui mata ki tēhea pūtau kei roto koe. Ko te kupu "i hinga i a" he pou anō kei waenga i te tākohu a te toa me te hinga. I runga i te waea, kāore te tākohu e kopeke ki ngā rārangi e rua: ka retireti ki te taha te ripanga.
+- **Karekau he rōpū i tētahi whakamātau i roto i te Eire Cup, i te Interstate Shield rānei.** Kāore ēnei takahanga e takaro ki ngā rōpū, nō reira kāore te kōpae kōrero mō tētahi whakamātau e pātai mō tētahi, ā, kāore e taea te hoatu rōpū ki tētahi whakamātau.
+
 ## I tukuna 2026-10-31
 
 ### iPad me iMac

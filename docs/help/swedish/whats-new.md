@@ -1,5 +1,18 @@
 # Nytt
 
+## Släppt 2026-11-01
+
+### Följa en turnering
+
+- **Interstate Shield rankas efter nettomatcher.** Dess lag rankas nu efter de matcher de vann minus de matcher de förlorade, så en förlorad match räknas mot ett lag, där den förut inte räknades alls. Lag som ändå står lika sorteras efter de landskamper de vann mot varandra. Turneringens sammanfattning och en grupps sida visar varje lags nettomatcher och nettopartier.
+
+### Arrangera en turnering
+
+- **Många spelare kan läggas till på en gång.** På fliken Spelare trycker du på **Lägg till flera spelare**, bredvid **Lägg till spelare**, och klistrar in en lista med en rad för varje spelare. Alla spelare på listan läggs till.
+- **En hjälpikon på fler av adminsidorna.** Det runda frågetecknet finns nu också först på sidan som skapar en turnering och sidan som ändrar en, sist i raden av flikar på en turnerings sida och på en tävlings, och bredvid listan med turneringar. Var och en leder till hjälpen för det du tittar på, och öppnar den i en annan flik så att sidan finns kvar.
+- **Fliken Resultat är en tabell.** Varje resultat är en rad i en tabell, så att en skärmläsare talar om vilken cell du är i. Ordet ”besegrade” har en egen kolumn mellan vinnarens poäng och förloraren. På en telefon bryts ett resultat inte längre över två rader: tabellen rullar i sidled i stället.
+- **En landskamp i en Eire Cup eller en Interstate Shield har ingen grupp.** De tävlingarna spelas inte i grupper, så dialogrutan för en landskamp frågar inte efter någon där, och en landskamp kan inte få en grupp.
+
 ## Släppt 2026-10-31
 
 ### iPad och iMac

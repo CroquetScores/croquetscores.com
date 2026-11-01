@@ -1,5 +1,18 @@
 # Novedades
 
+## Publicado el 2026-11-01
+
+### Seguir un torneo
+
+- **El Escudo Interestatal se clasifica por partidos netos.** Ahora sus equipos se clasifican por los partidos que ganaron menos los que perdieron, así que un partido perdido cuenta en contra de un equipo, cuando antes no contaba para nada. Los equipos que siguen empatados se ordenan por los tests que ganaron entre sí. El resumen del torneo y la página de un grupo muestran los partidos netos y las partidas netas de cada equipo.
+
+### Gestionar un torneo
+
+- **Se pueden añadir muchos jugadores a la vez.** En la pestaña Jugadores, pulsa **Añadir jugadores**, junto a **Añadir jugador**, y pega una lista con una línea por jugador. Se añade a todos los jugadores de la lista.
+- **Un icono de ayuda en más páginas de administración.** El signo de interrogación redondo ahora también encabeza la página que crea un torneo y la que lo modifica, cierra la fila de pestañas de la página de un torneo y de una competición, y aparece junto a la lista de torneos. Cada uno lleva a la ayuda de lo que estás viendo y la abre en otra pestaña para que la página se conserve.
+- **La pestaña Resultados es una tabla.** Cada resultado es una fila de una tabla, de modo que un lector de pantalla te dice en qué celda estás. La palabra «venció a» tiene una columna propia entre la puntuación del ganador y el perdedor. En un teléfono, el resultado ya no se parte en dos líneas: la tabla se desplaza hacia los lados.
+- **Un test de una Copa Eire o de un Escudo Interestatal no tiene grupo.** Esas competiciones no se juegan en grupos, así que el cuadro de diálogo de un test no pide uno allí, y no se puede asignar un grupo a un test.
+
 ## Publicado el 2026-10-31
 
 ### iPad e iMac

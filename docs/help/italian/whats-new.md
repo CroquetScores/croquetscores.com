@@ -1,5 +1,18 @@
 # Novità
 
+## Rilasciato il 2026-11-01
+
+### Seguire un torneo
+
+- **L'Interstate Shield è classificato per differenza incontri.** Le sue squadre ora sono classificate in base agli incontri vinti meno quelli persi, quindi un incontro perso conta contro una squadra, mentre prima non contava nulla. Le squadre ancora pari sono messe in ordine in base ai test che hanno vinto una contro l'altra. Il riepilogo del torneo e la pagina di un gruppo mostrano la differenza incontri e la differenza partite di ogni squadra.
+
+### Organizzare un torneo
+
+- **Si possono aggiungere molti giocatori in una volta.** Nella scheda Giocatori premi **Aggiungi giocatori**, accanto a **Aggiungi giocatore**, e incolla un elenco con una riga per ogni giocatore. Tutti i giocatori dell'elenco vengono aggiunti.
+- **Un'icona di aiuto in più pagine dell'amministrazione.** Il punto interrogativo tondo ora si trova anche all'inizio della pagina che crea un torneo e di quella che ne modifica uno, alla fine della riga di schede nella pagina di un torneo e in quella di una competizione, e accanto all'elenco dei tornei. Ognuno porta all'aiuto su ciò che stai guardando e lo apre in un'altra scheda, così la pagina resta com'è.
+- **La scheda Punteggi è una tabella.** Ogni punteggio è una riga di una tabella, così uno screen reader ti dice in quale cella sei. La parola "batte" ha una colonna tutta sua tra il punteggio del vincitore e lo sconfitto. Su un telefono un punteggio non va più a capo su due righe: scorre di lato la tabella.
+- **Un test in una Eire Cup o in un Interstate Shield non ha un gruppo.** Questi eventi non si giocano a gruppi, quindi la finestra di un test non ne chiede uno e un test non può averne.
+
 ## Rilasciato il 2026-10-31
 
 ### iPad e iMac

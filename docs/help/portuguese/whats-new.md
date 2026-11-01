@@ -1,5 +1,18 @@
 # Novidades
 
+## Lançado em 2026-11-01
+
+### Acompanhar um torneio
+
+- **O Interstate Shield é classificado pelo saldo de partidas.** Agora suas equipes são classificadas pelas partidas que ganharam menos as que perderam, de modo que uma partida perdida conta contra a equipe, quando antes não contava. As equipes ainda empatadas são ordenadas pelos testes que ganharam umas das outras. O resumo do torneio e a página de um grupo mostram o saldo de partidas e o saldo de jogos de cada equipe.
+
+### Administrar um torneio
+
+- **Vários jogadores podem ser adicionados de uma vez.** Na aba Jogadores, toque em **Adicionar jogadores**, ao lado de **Adicionar jogador**, e cole uma lista com uma linha para cada jogador. Todos os jogadores da lista são adicionados.
+- **Um ícone de ajuda em mais partes da administração.** O ponto de interrogação redondo agora também fica no começo da página que cria um torneio e da que altera um, no fim da fileira de abas na página de um torneio e na de uma competição, e ao lado da lista de torneios. Cada um leva à ajuda sobre o que você está vendo e a abre em outra aba, para que a página fique como está.
+- **A aba Resultados é uma tabela.** Cada resultado é uma linha da tabela, de modo que um leitor de tela diz em que célula você está. A palavra "venceu" tem uma coluna própria entre a pontuação do vencedor e o perdedor. Em um celular, o resultado não é mais dobrado em duas linhas: a tabela rola para o lado.
+- **Um teste em uma Copa Eire ou em um Interstate Shield não tem grupo.** Esses eventos não são disputados em grupos, então a janela de um teste não pede um grupo ali, e um teste não pode receber um.
+
 ## Lançado em 2026-10-31
 
 ### iPad e iMac

@@ -1,5 +1,18 @@
 # What's new
 
+## Released 2026-11-01
+
+### Following a tournament
+
+- **The Interstate Shield is ranked by net matches.** Its teams are now ranked by the matches they won less the matches they lost, so a match lost counts against a team where before it counted for nothing. Teams still level are put in order by the tests they won against one another. The summary of the tournament, and the page of a group, show each team's net matches and net games.
+
+### Managing a tournament
+
+- **Many players can be added at once.** On the Players tab, press **Add Players**, beside **Add Player**, and paste a list with a line for each player. Every player on the list is added.
+- **A help icon on more of the admin.** The round question mark now also begins the page that creates a tournament and the page that changes one, ends the row of tabs on a tournament's page and on a competition's, and sits beside the list of tournaments. Each leads to the help for what you are looking at, and opens it in another tab so that the page is kept.
+- **The Scores tab is a table.** Each score is a row of a table, so that a screen reader tells you which cell you are in. The word "beat" has a column of its own between the winner's score and the loser. On a phone a score is no longer folded onto two lines: the table scrolls sideways instead.
+- **A test in an Eire Cup or an Interstate Shield has no group.** Those events are not played in groups, so the dialog for a test does not ask for one there, and a test cannot be given one.
+
 ## Released 2026-10-31
 
 ### iPad and iMac
