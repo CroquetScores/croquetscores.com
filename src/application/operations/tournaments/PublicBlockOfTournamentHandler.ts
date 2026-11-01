@@ -25,6 +25,7 @@ import {
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
+import { placePlayers } from "./placingsOfBlock.js";
 import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicBlockOfTournamentHandler extends QueryHandler<
@@ -75,54 +76,61 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
     const bestOf = shape.bestOf.games;
     const matches = decidedMatchesOf(counting, bestOf);
     const address = tournament.address.toString();
-    const players = competition.players.flatMap((entered): PlayerOfBlock[] => {
-      const player = tournament.players.find((each) =>
-        each.id.equals(entered.tournamentPlayerId),
-      );
-      if (player === undefined) return [];
-      const theirs = counting.filter(
-        (game) =>
-          game.winner.equals(entered.id) || game.loser.equals(entered.id),
-      );
-      const won = theirs.filter(
-        (game) => !game.drawn && game.winner.equals(entered.id),
-      );
-      const lost = theirs.filter(
-        (game) => !game.drawn && game.loser.equals(entered.id),
-      );
-      // What is not carried forward counts as nothing carried, and so does
-      // all of it where the player has withdrawn, as their games do.
-      const carried = (count: CarryForwardCount): number =>
-        entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
-      const hoops = theirs.reduce((net, game) => {
-        const margin = game.winnerScore.points - game.loserScore.points;
-        return net + (game.winner.equals(entered.id) ? margin : -margin);
-      }, 0);
-      return [
-        {
-          id: entered.id.value,
-          name: player.name.toString(),
-          representing: player.representing,
-          handicap: player.handicap,
-          flag: player.flag === undefined ? undefined : String(player.flag),
-          address: `${address}/players/${player.slug.toString()}`,
-          withdrawn: entered.withdrawn,
-          matchesWon:
-            matches.filter((match) => match.winner === entered.id.value)
-              .length + carried("matchWins"),
-          matchesLost:
-            matches.filter((match) => match.loser === entered.id.value).length +
-            carried("matchLosses"),
-          gamesWon: won.length + carried("gameWins"),
-          netGames:
-            won.length -
-            lost.length +
-            carried("gameWins") -
-            carried("gameLosses"),
-          netHoops: hoops + carried("hoopsFor") - carried("hoopsAgainst"),
-        },
-      ];
-    });
+    const unplaced = competition.players.flatMap(
+      (entered): Omit<PlayerOfBlock, "placing">[] => {
+        const player = tournament.players.find((each) =>
+          each.id.equals(entered.tournamentPlayerId),
+        );
+        if (player === undefined) return [];
+        const theirs = counting.filter(
+          (game) =>
+            game.winner.equals(entered.id) || game.loser.equals(entered.id),
+        );
+        const won = theirs.filter(
+          (game) => !game.drawn && game.winner.equals(entered.id),
+        );
+        const lost = theirs.filter(
+          (game) => !game.drawn && game.loser.equals(entered.id),
+        );
+        // What is not carried forward counts as nothing carried, and so does
+        // all of it where the player has withdrawn, as their games do.
+        const carried = (count: CarryForwardCount): number =>
+          entered.withdrawn ? 0 : (entered.carryForward.of(count) ?? 0);
+        const hoops = theirs.reduce((net, game) => {
+          const margin = game.winnerScore.points - game.loserScore.points;
+          return net + (game.winner.equals(entered.id) ? margin : -margin);
+        }, 0);
+        return [
+          {
+            id: entered.id.value,
+            name: player.name.toString(),
+            representing: player.representing,
+            handicap: player.handicap,
+            flag: player.flag === undefined ? undefined : String(player.flag),
+            address: `${address}/players/${player.slug.toString()}`,
+            withdrawn: entered.withdrawn,
+            matchesWon:
+              matches.filter((match) => match.winner === entered.id.value)
+                .length + carried("matchWins"),
+            matchesLost:
+              matches.filter((match) => match.loser === entered.id.value)
+                .length + carried("matchLosses"),
+            gamesWon: won.length + carried("gameWins"),
+            netGames:
+              won.length -
+              lost.length +
+              carried("gameWins") -
+              carried("gameLosses"),
+            netHoops: hoops + carried("hoopsFor") - carried("hoopsAgainst"),
+          },
+        ];
+      },
+    );
+    const placed = placePlayers(unplaced, matches, shape.tieBreak, bestOf);
+    const players = unplaced.map((player) => ({
+      ...player,
+      placing: placed.placings.get(player.id),
+    }));
     return {
       name: tournament.name.toString(),
       subtitle: tournament.subtitle?.markdown,
@@ -135,6 +143,8 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         bestOf,
         rounds: shape.rounds.count,
         maximumHoops: rules.maximumHoops,
+        tieBreak: shape.tieBreak.code,
+        levelOnMatchesWon: placed.levelOnMatchesWon,
       },
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,
@@ -147,7 +157,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         withdrawn: countsForNothing(game),
         addedAt: game.addedAt,
       })),
-      ranked: rankingOf(players).map(({ id }) => id),
+      ranked: placed.ranked,
     };
   }
 }
@@ -182,22 +192,3 @@ const decidedMatchesOf = (
     }),
   );
 };
-
-// The share of the matches a player has decided that they have won, and
-// nothing where they have decided none.
-const shareOf = ({ matchesWon, matchesLost }: PlayerOfBlock): number =>
-  matchesWon + matchesLost === 0 ? 0 : matchesWon / (matchesWon + matchesLost);
-
-// `players` ranked as the old site's summary ranked them: the greater share of
-// matches won first, then the more net hoops, and otherwise as they were,
-// since a sort that keeps the order of equals leaves them in the block's. A
-// withdrawn player comes after everybody who has not withdrawn, since their
-// games count for nothing, which would otherwise rank them, with no share
-// and no hoops, above a player still in the block who has played and lost.
-const rankingOf = (players: readonly PlayerOfBlock[]): PlayerOfBlock[] =>
-  [...players].sort(
-    (one, other) =>
-      Number(one.withdrawn) - Number(other.withdrawn) ||
-      shareOf(other) - shareOf(one) ||
-      other.netHoops - one.netHoops,
-  );

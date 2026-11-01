@@ -172,6 +172,55 @@ Then(
 );
 
 Then(
+  "the block is answered with the tie break {string}",
+  function (this: SpecWorld, code: string) {
+    assert.equal(answered(this).block.tieBreak, code);
+  },
+);
+
+Then(
+  "the player of the block {string} is answered with the place {int}",
+  function (this: SpecWorld, name: string, place: number) {
+    assert.equal(playerAnswered(this, name).placing?.place, place);
+  },
+);
+
+Then(
+  "the player of the block {string} is answered with a place that is shared",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerAnswered(this, name).placing?.shared, true);
+  },
+);
+
+Then(
+  "the player of the block {string} is answered with a place that is not shared",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerAnswered(this, name).placing?.shared, false);
+  },
+);
+
+Then(
+  "the player of the block {string} is answered with no place",
+  function (this: SpecWorld, name: string) {
+    assert.equal(playerAnswered(this, name).placing, undefined);
+  },
+);
+
+Then(
+  "the block is answered with players level on matches won",
+  function (this: SpecWorld) {
+    assert.equal(answered(this).block.levelOnMatchesWon, true);
+  },
+);
+
+Then(
+  "the block is answered with no players level on matches won",
+  function (this: SpecWorld) {
+    assert.equal(answered(this).block.levelOnMatchesWon, false);
+  },
+);
+
+Then(
   /^(\d+) games? of the block (?:is|are) answered$/,
   function (this: SpecWorld, count: string) {
     assert.equal(answered(this).games.length, Number(count));
