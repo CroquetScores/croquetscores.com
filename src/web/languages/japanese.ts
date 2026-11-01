@@ -537,6 +537,26 @@ export const japanese: Language = {
     "admin.competitionView.tabs": "部門",
     "admin.competitionView.players": "選手",
     "admin.competitionView.scores": "スコア",
+    "admin.competitionView.losers": "敗者",
+    "admin.losers.add": "敗者ノックアウトを追加",
+    "admin.losers.round": "敗者の元",
+    "admin.losers.option": "{round}（敗者 {count} 名）",
+    "admin.losers.name": "敗者ノックアウトの名前",
+    "admin.losers.none": "敗者ノックアウトはありません。",
+    "admin.losers.noRounds":
+      "このノックアウトには、敗者が続けて戦えるラウンドがありません。",
+    "admin.losers.readOnly":
+      "このノックアウトの選手は別のノックアウトの敗者で、各試合が決まるたびにここへ入ります。",
+    "admin.hover.losers.add":
+      "このノックアウトのあるラウンドの敗者のためのノックアウトを追加します",
+    "Tournament.NoSuchRound":
+      "このノックアウトには、敗者を送り出すそのようなラウンドはありません。",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "別のノックアウトがこのノックアウトの敗者を受け入れているため、枠の数は変更できません。",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "敗者ノックアウトの枠の数は、敗者を受け入れるラウンドの試合数と同じです。",
+    "Competition.PlayersSetAutomatically":
+      "敗者ノックアウトの選手は、試合が決まるたびに自動で入ります。手動では入れられません。",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "大会とその部門",
     "admin.sections.tournament": "大会",

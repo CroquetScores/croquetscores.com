@@ -15,6 +15,11 @@ export interface CompetitionAsPaged {
    * it has a game.
    */
   readonly kind: "block" | "knockout" | "swiss" | "test";
+  /**
+   * Whether its players are set by hand. A losers knockout's are not: they are
+   * the losers of a round of another knockout.
+   */
+  readonly canSetPlayers: boolean;
   /** Where its tournament is found now, as "2026/ac/spring-open". */
   readonly tournamentAddress: string;
   /** Where it is found beneath its tournament. */

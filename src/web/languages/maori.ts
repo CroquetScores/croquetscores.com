@@ -530,6 +530,26 @@ export const maori: Language = {
     "admin.competitionView.players": "Kaitākaro",
     "admin.competitionView.scores": "Ngā tākohu",
     "admin.sections.label": "Te whakataetae me ōna tauwhāinga",
+    "admin.competitionView.losers": "Ngā hunga hinga",
+    "admin.losers.add": "Tāpiri Whakaweto Hunga Hinga",
+    "admin.losers.round": "Ngā hunga hinga o",
+    "admin.losers.option": "{round} ({count} ngā hunga hinga)",
+    "admin.losers.name": "Ingoa o te whakaweto hunga hinga",
+    "admin.losers.none": "Karekau he whakaweto hunga hinga.",
+    "admin.losers.noRounds":
+      "Karekau he rauna o tēnei whakaweto e taea ai e ōna hunga hinga te haere tonu.",
+    "admin.losers.readOnly":
+      "Ko ngā kaitākaro o tēnei whakaweto ko ngā hunga hinga o tētahi atu whakaweto, ka whakanohoia ki konei i te wā e whakataungia ana ia tukinga.",
+    "admin.hover.losers.add":
+      "Tāpiri i tētahi whakaweto mō ngā hunga hinga o tētahi rauna o tēnei whakaweto",
+    "Tournament.NoSuchRound":
+      "Karekau he rauna pērā i tēnei whakaweto e tuku ana i ngā hunga hinga.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Ka tango tētahi atu whakaweto i ngā hunga hinga o tēnei, no reira e kore e taea te whakarerekē ōna wāhi.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Ko te maha o ngā wāhi o te whakaweto hunga hinga he rite ki te maha o ngā tukinga o te rauna e tangohia ai ōna hunga hinga.",
+    "Competition.PlayersSetAutomatically":
+      "Ka whakanohoia ngā kaitākaro o te whakaweto hunga hinga i te wā e whakataungia ana ngā tukinga, ehara i te ringa.",
     "admin.sections.tournament": "Whakataetae",
     "admin.administrator.sections.label": "Ngā whārangi a te kaiwhakahaere",
     "admin.administrator.sections.tournaments": "Whakataetae",

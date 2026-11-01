@@ -28,6 +28,11 @@ interface Props {
   /** The competition's id. */
   readonly competition: string;
   readonly kind: "block" | "knockout" | "swiss";
+  /**
+   * Whether the players are set by hand. A losers knockout's are not: they are
+   * put there as the matches they lost are decided, so the tab only shows them.
+   */
+  readonly canSetPlayers: boolean;
 }
 
 /** A flag as the API says it is seen. */
@@ -82,6 +87,7 @@ export const CompetitionPlayersTab = ({
   tournament,
   competition,
   kind,
+  canSetPlayers,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   const [offered, setOffered] = useState<readonly OfTheTournament[]>([]);
@@ -203,7 +209,7 @@ export const CompetitionPlayersTab = ({
     });
 
   // A knockout's players are its draw, fixed once it has a game.
-  const fixed = kind === "knockout" && played;
+  const fixed = (kind === "knockout" && played) || !canSetPlayers;
   const playing = listed?.filter(({ withdrawn }) => !withdrawn) ?? [];
   const withdrawn = listed?.filter((player) => player.withdrawn) ?? [];
 
@@ -246,7 +252,7 @@ export const CompetitionPlayersTab = ({
   const removable = (player: Listed): boolean =>
     !fixed && !player.hasGamesInUse;
   const anyRemove = playing.some(removable);
-  const anyWithdraw = playing.some(({ bye }) => !bye);
+  const anyWithdraw = canSetPlayers && playing.some(({ bye }) => !bye);
   const anyMove = !fixed && playing.length > 1;
   // A knockout is decided by its draw, so has no standings to carry anything
   // forward into, and a bye, which is only ever in one, is nobody.
@@ -281,6 +287,9 @@ export const CompetitionPlayersTab = ({
       className="stack competition-players-tab"
       aria-busy={acting || answered !== asking}
     >
+      {canSetPlayers ? null : (
+        <p className="listed-all">{say("admin.losers.readOnly")}</p>
+      )}
       {listed === undefined || fixed ? null : offered.length > 0 ||
         kind === "knockout" ? (
         // Above the list rather than beneath it, where a long one would push
@@ -385,7 +394,10 @@ export const CompetitionPlayersTab = ({
               </h2>
               <ul className="listed" data-listed="withdrawn">
                 {withdrawn.map((player) =>
-                  row(player, [button(player, "unwithdraw")]),
+                  row(
+                    player,
+                    canSetPlayers ? [button(player, "unwithdraw")] : [],
+                  ),
                 )}
               </ul>
             </>

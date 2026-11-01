@@ -574,6 +574,26 @@ export const french: Language = {
     "admin.competitionView.tabs": "Compétition",
     "admin.competitionView.players": "Joueurs",
     "admin.competitionView.scores": "Scores",
+    "admin.competitionView.losers": "Perdants",
+    "admin.losers.add": "Ajouter une élimination directe des perdants",
+    "admin.losers.round": "Perdants de",
+    "admin.losers.option": "{round} ({count} perdants)",
+    "admin.losers.name": "Nom de l'élimination directe des perdants",
+    "admin.losers.none": "Aucune élimination directe des perdants.",
+    "admin.losers.noRounds":
+      "Cette élimination directe n'a aucun tour dont les perdants pourraient continuer à jouer.",
+    "admin.losers.readOnly":
+      "Les joueurs de cette élimination directe sont les perdants d'une autre élimination directe, placés ici à mesure que chaque match est décidé.",
+    "admin.hover.losers.add":
+      "Ajouter une élimination directe pour les perdants d'un tour de celle-ci",
+    "Tournament.NoSuchRound":
+      "L'élimination directe n'a pas de tel tour qui envoie des perdants.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Une autre élimination directe prend les perdants de celle-ci : ses places ne peuvent donc pas être modifiées.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Une élimination directe des perdants a autant de places que le tour dont elle prend les perdants a de matchs.",
+    "Competition.PlayersSetAutomatically":
+      "Les joueurs d'une élimination directe des perdants y sont placés à mesure que les matchs sont décidés, et non à la main.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Le tournoi et ses compétitions",
     "admin.sections.tournament": "Tournoi",

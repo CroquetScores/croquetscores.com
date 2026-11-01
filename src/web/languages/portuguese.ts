@@ -566,6 +566,26 @@ export const portuguese: Language = {
     "admin.competitionView.tabs": "Competição",
     "admin.competitionView.players": "Jogadores",
     "admin.competitionView.scores": "Resultados",
+    "admin.competitionView.losers": "Perdedores",
+    "admin.losers.add": "Adicionar mata-mata dos perdedores",
+    "admin.losers.round": "Perdedores de",
+    "admin.losers.option": "{round} ({count} perdedores)",
+    "admin.losers.name": "Nome do mata-mata dos perdedores",
+    "admin.losers.none": "Nenhum mata-mata dos perdedores.",
+    "admin.losers.noRounds":
+      "Este mata-mata não tem rodada cujos perdedores possam continuar jogando.",
+    "admin.losers.readOnly":
+      "Os jogadores deste mata-mata são os perdedores de outro mata-mata, colocados aqui à medida que cada partida é decidida.",
+    "admin.hover.losers.add":
+      "Adicionar um mata-mata para os perdedores de uma rodada deste mata-mata",
+    "Tournament.NoSuchRound":
+      "O mata-mata não tem uma rodada assim que envie perdedores.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Outro mata-mata recebe os perdedores deste, então as suas vagas não podem ser alteradas.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Um mata-mata dos perdedores tem tantas vagas quantas partidas tem a rodada da qual recebe os perdedores.",
+    "Competition.PlayersSetAutomatically":
+      "Os jogadores de um mata-mata dos perdedores são colocados nele à medida que as partidas são decididas, não à mão.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "O torneio e suas competições",
     "admin.sections.tournament": "Torneio",

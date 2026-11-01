@@ -534,6 +534,23 @@ export const chinese: Language = {
     "admin.competitionView.tabs": "项目",
     "admin.competitionView.players": "选手",
     "admin.competitionView.scores": "成绩",
+    "admin.competitionView.losers": "败者",
+    "admin.losers.add": "添加败者淘汰赛",
+    "admin.losers.round": "败者来自",
+    "admin.losers.option": "{round}（{count} 名败者）",
+    "admin.losers.name": "败者淘汰赛名称",
+    "admin.losers.none": "没有败者淘汰赛。",
+    "admin.losers.noRounds": "这个淘汰赛没有可让败者继续比赛的轮次。",
+    "admin.losers.readOnly":
+      "这个淘汰赛的选手是另一个淘汰赛的败者，每场比赛决出胜负后自动放入这里。",
+    "admin.hover.losers.add": "为这个淘汰赛某一轮的败者添加一个淘汰赛",
+    "Tournament.NoSuchRound": "这个淘汰赛没有这样一轮可以把败者送出。",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "另一个淘汰赛接收了这个淘汰赛的败者，所以它的名额不能更改。",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "败者淘汰赛的名额与所取败者那一轮的比赛场数相同。",
+    "Competition.PlayersSetAutomatically":
+      "败者淘汰赛的选手在比赛决出后自动放入，不能手动添加。",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "赛事及其项目",
     "admin.sections.tournament": "赛事",

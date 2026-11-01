@@ -573,6 +573,26 @@ export const afrikaans: Language = {
     "admin.competitionView.tabs": "Kompetisie",
     "admin.competitionView.players": "Spelers",
     "admin.competitionView.scores": "Uitslae",
+    "admin.competitionView.losers": "Verloorders",
+    "admin.losers.add": "Voeg verloorders-uitskakeling by",
+    "admin.losers.round": "Verloorders van",
+    "admin.losers.option": "{round} ({count} verloorders)",
+    "admin.losers.name": "Naam van verloorders-uitskakeling",
+    "admin.losers.none": "Geen verloorders-uitskakelings nie.",
+    "admin.losers.noRounds":
+      "Hierdie uitskakeling het geen rondte waarvan die verloorders kan voortspeel nie.",
+    "admin.losers.readOnly":
+      "Die spelers van hierdie uitskakeling is die verloorders van 'n ander uitskakeling, en word hier gesit soos elke wedstryd beslis word.",
+    "admin.hover.losers.add":
+      "Voeg 'n uitskakeling by vir die verloorders van een van hierdie uitskakeling se rondtes",
+    "Tournament.NoSuchRound":
+      "Die uitskakeling het nie so 'n rondte wat verloorders aanstuur nie.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "'n Ander uitskakeling neem die verloorders van hierdie een, so sy plekke kan nie verander word nie.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "'n Verloorders-uitskakeling het soveel plekke as die rondte waarvan dit verloorders neem wedstryde het.",
+    "Competition.PlayersSetAutomatically":
+      "Die spelers van 'n verloorders-uitskakeling word daar gesit soos wedstryde beslis word, nie met die hand nie.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Die toernooi en sy kompetisies",
     "admin.sections.tournament": "Toernooi",

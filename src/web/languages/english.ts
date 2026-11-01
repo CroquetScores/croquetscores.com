@@ -560,6 +560,26 @@ export const english: Language = {
     "admin.competitionView.tabs": "Competition",
     "admin.competitionView.players": "Players",
     "admin.competitionView.scores": "Scores",
+    "admin.competitionView.losers": "Losers",
+    "admin.losers.add": "Add Losers Knockout",
+    "admin.losers.round": "Losers of",
+    "admin.losers.option": "{round} ({count} losers)",
+    "admin.losers.name": "Losers knockout name",
+    "admin.losers.none": "No losers knockouts.",
+    "admin.losers.noRounds":
+      "This knockout has no round whose losers could play on.",
+    "admin.losers.readOnly":
+      "This knockout's players are the losers of another knockout, put here as each match is decided.",
+    "admin.hover.losers.add":
+      "Add a knockout for the losers of one of this knockout's rounds",
+    "Tournament.NoSuchRound":
+      "The knockout has no such round that sends losers on.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Another knockout takes the losers of this one, so its places cannot be changed.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "A losers knockout has as many places as the round it takes losers from has matches.",
+    "Competition.PlayersSetAutomatically":
+      "The players of a losers knockout are put there as matches are decided, not by hand.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "The tournament and its competitions",
     "admin.sections.tournament": "Tournament",

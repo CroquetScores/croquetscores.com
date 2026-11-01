@@ -573,6 +573,26 @@ export const italian: Language = {
     "admin.competitionView.tabs": "Competizione",
     "admin.competitionView.players": "Giocatori",
     "admin.competitionView.scores": "Punteggi",
+    "admin.competitionView.losers": "Perdenti",
+    "admin.losers.add": "Aggiungi eliminazione diretta dei perdenti",
+    "admin.losers.round": "Perdenti di",
+    "admin.losers.option": "{round} ({count} perdenti)",
+    "admin.losers.name": "Nome dell'eliminazione diretta dei perdenti",
+    "admin.losers.none": "Nessuna eliminazione diretta dei perdenti.",
+    "admin.losers.noRounds":
+      "Questa eliminazione diretta non ha turni i cui perdenti possano continuare a giocare.",
+    "admin.losers.readOnly":
+      "I giocatori di questa eliminazione diretta sono i perdenti di un'altra eliminazione diretta, inseriti qui man mano che ogni partita viene decisa.",
+    "admin.hover.losers.add":
+      "Aggiungi un'eliminazione diretta per i perdenti di un turno di questa",
+    "Tournament.NoSuchRound":
+      "L'eliminazione diretta non ha un turno del genere che mandi avanti dei perdenti.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Un'altra eliminazione diretta prende i perdenti di questa, quindi i suoi posti non possono essere cambiati.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Un'eliminazione diretta dei perdenti ha tanti posti quante sono le partite del turno di cui prende i perdenti.",
+    "Competition.PlayersSetAutomatically":
+      "I giocatori di un'eliminazione diretta dei perdenti vengono inseriti man mano che le partite sono decise, non a mano.",
     // La barra delle sezioni della pagina di un torneo e delle sue competizioni.
     "admin.sections.label": "Il torneo e le sue competizioni",
     "admin.sections.tournament": "Torneo",

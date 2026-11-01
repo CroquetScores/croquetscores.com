@@ -509,6 +509,26 @@ export const polish: Language = {
     "admin.competitionView.players": "Zawodnicy",
     "admin.competitionView.scores": "Wyniki",
     "admin.sections.label": "Turniej i jego konkurencje",
+    "admin.competitionView.losers": "Przegrani",
+    "admin.losers.add": "Dodaj drabinkę przegranych",
+    "admin.losers.round": "Przegrani z",
+    "admin.losers.option": "{round} ({count} przegranych)",
+    "admin.losers.name": "Nazwa drabinki przegranych",
+    "admin.losers.none": "Brak drabinek przegranych.",
+    "admin.losers.noRounds":
+      "Ta drabinka nie ma rundy, której przegrani mogliby grać dalej.",
+    "admin.losers.readOnly":
+      "Zawodnicy tej drabinki to przegrani z innej drabinki, wpisywani tu, gdy tylko rozstrzygnie się każdy mecz.",
+    "admin.hover.losers.add":
+      "Dodaj drabinkę dla przegranych z jednej z rund tej drabinki",
+    "Tournament.NoSuchRound":
+      "Drabinka nie ma takiej rundy, z której przegrani idą dalej.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Inna drabinka przejmuje przegranych z tej, więc jej miejsc nie można zmienić.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Drabinka przegranych ma tyle miejsc, ile meczów ma runda, z której bierze przegranych.",
+    "Competition.PlayersSetAutomatically":
+      "Zawodnicy drabinki przegranych są w niej umieszczani, gdy rozstrzygają się mecze, a nie ręcznie.",
     "admin.sections.tournament": "Turniej",
     "admin.administrator.sections.label": "Strony administratora",
     "admin.administrator.sections.tournaments": "Turnieje",

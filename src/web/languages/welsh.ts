@@ -548,6 +548,26 @@ export const welsh: Language = {
     "admin.competitionView.tabs": "Cystadleuaeth",
     "admin.competitionView.players": "Chwaraewyr",
     "admin.competitionView.scores": "Sgorau",
+    "admin.competitionView.losers": "Collwyr",
+    "admin.losers.add": "Ychwanegu Cnoc-owt Collwyr",
+    "admin.losers.round": "Collwyr o",
+    "admin.losers.option": "{round} ({count} collwr)",
+    "admin.losers.name": "Enw'r cnoc-owt collwyr",
+    "admin.losers.none": "Dim cnoc-owts collwyr.",
+    "admin.losers.noRounds":
+      "Nid oes gan y cnoc-owt hwn rownd y gallai ei chollwyr chwarae ymlaen ohoni.",
+    "admin.losers.readOnly":
+      "Collwyr cnoc-owt arall yw chwaraewyr y cnoc-owt hwn, ac fe'u gosodir yma wrth i bob gêm gael ei phenderfynu.",
+    "admin.hover.losers.add":
+      "Ychwanegu cnoc-owt ar gyfer collwyr un o rowndiau'r cnoc-owt hwn",
+    "Tournament.NoSuchRound":
+      "Nid oes gan y cnoc-owt rownd o'r fath sy'n anfon collwyr ymlaen.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Mae cnoc-owt arall yn cymryd collwyr yr un hwn, felly ni ellir newid ei lefydd.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Mae gan gnoc-owt collwyr gymaint o lefydd ag sydd o gemau yn y rownd y mae'n cymryd ei chollwyr ohoni.",
+    "Competition.PlayersSetAutomatically":
+      "Gosodir chwaraewyr cnoc-owt collwyr ynddo wrth i gemau gael eu penderfynu, nid â llaw.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Y twrnamaint a'i gystadlaethau",
     "admin.sections.tournament": "Twrnamaint",
