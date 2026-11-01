@@ -8,7 +8,7 @@ import { AddPlayers, mostPlayersAtOnce, playerFieldOf } from "./AddPlayers.js";
 /**
  * What a list of players to be added must be, asked on the way in.
  *
- * Its shape first: that it names fields, only ones there are, each once and
+ * Its shape first: that it names fields (at least one that there is), only ones there are, each once and
  * Name among them, that there are players but not too many, and that every
  * player has as many values as there are fields. A list whose shape is wrong
  * is not asked what its players are, since what a value is of depends on its
@@ -40,6 +40,13 @@ export class AddPlayersValidator extends CommandValidator<AddPlayers> {
       return [{ code: "AddPlayers.FieldsMissing", fields }];
     }
     const named = command.fields.map((field) => field.trim().toLowerCase());
+    // A first row with no field in it at all is most often a player, from a
+    // list pasted without its row of fields. Saying that its one value is not
+    // a field, and that Name is missing, would be true and no help; saying
+    // what the row is meant to be is.
+    if (named.every((field) => playerFieldOf(field) === undefined)) {
+      return [{ code: "AddPlayers.FirstRowNotFields", fields }];
+    }
     const broken: BrokenRule[] = [];
     // Each fault of the first line is said once, however many of its fields
     // have it: they are all on the one line, which is all that is said of them.

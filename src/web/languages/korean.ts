@@ -1004,6 +1004,8 @@ export const korean: Language = {
     "admin.players.many": "선수",
     "admin.players.line": "{line}번째 줄: {words}",
     "AddPlayers.FieldsMissing": "첫 줄에 항목 이름을 써 주세요.",
+    "AddPlayers.FirstRowNotFields":
+      "첫 줄은 항목 이름이어야 해요. 자세한 내용은 도움말을 참고하세요.",
     "AddPlayers.NameMissing": "항목에 Name이 있어야 해요.",
     "AddPlayers.FieldNotAllowed":
       "항목은 Name, Representing, Flag, Handicap, WorldRankingPlayerName 중에서 쓸 수 있어요.",

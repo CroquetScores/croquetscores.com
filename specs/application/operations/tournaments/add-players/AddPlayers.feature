@@ -90,6 +90,25 @@ Feature: Adding several players to a tournament at once
         | Name, Team   | AddPlayers.FieldNotAllowed    |
         | Name, name   | AddPlayers.FieldRepeated      |
 
+    Scenario Outline: A first row that names no field at all is said to be no row of fields
+      A first row with none of the fields in it is most often a player, from
+      a list that was pasted without its row of fields, so it is told that
+      the first row must name fields, rather than that the one thing it did
+      write is not a field, or that Name is missing.
+
+      Given the fields "<first row>"
+      And the row "Alex Another"
+      When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "AddPlayers.FirstRowNotFields"
+      And that rule is about the fields
+      And no other rule is broken
+
+      Examples:
+        | first row    |
+        | Sam Someone  |
+        | Team, Colour |
+
     Scenario: A list with no fields is refused
       When the reader signed in to the account for "organiser@example.com" adds the listed players to "Spring Open"
       Then it is refused with "Request.Invalid"

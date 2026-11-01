@@ -1029,6 +1029,8 @@ export const english: Language = {
     "admin.players.line": "Line {line}: {words}",
     "AddPlayers.FieldsMissing":
       "Write the names of the fields on the first line.",
+    "AddPlayers.FirstRowNotFields":
+      "First row must be field names, see help for more information.",
     "AddPlayers.NameMissing": "The fields must include Name.",
     "AddPlayers.FieldNotAllowed":
       "A field can be Name, Representing, Flag, Handicap or WorldRankingPlayerName.",

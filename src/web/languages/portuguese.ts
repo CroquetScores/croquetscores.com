@@ -1051,6 +1051,8 @@ export const portuguese: Language = {
     "admin.players.line": "Linha {line}: {words}",
     "AddPlayers.FieldsMissing":
       "Escreva os nomes dos campos na primeira linha.",
+    "AddPlayers.FirstRowNotFields":
+      "A primeira linha deve conter os nomes dos campos, consulte a ajuda para mais informações.",
     "AddPlayers.NameMissing": "Os campos devem incluir Name.",
     "AddPlayers.FieldNotAllowed":
       "Um campo pode ser Name, Representing, Flag, Handicap ou WorldRankingPlayerName.",

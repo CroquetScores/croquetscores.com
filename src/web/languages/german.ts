@@ -1121,6 +1121,8 @@ export const german: Language = {
     "admin.players.line": "Zeile {line}: {words}",
     "AddPlayers.FieldsMissing":
       "Schreiben Sie die Namen der Felder in die erste Zeile.",
+    "AddPlayers.FirstRowNotFields":
+      "Die erste Zeile muss die Feldnamen enthalten, weitere Informationen finden Sie in der Hilfe.",
     "AddPlayers.NameMissing": "Die Felder müssen Name enthalten.",
     "AddPlayers.FieldNotAllowed":
       "Ein Feld kann Name, Representing, Flag, Handicap oder WorldRankingPlayerName sein.",

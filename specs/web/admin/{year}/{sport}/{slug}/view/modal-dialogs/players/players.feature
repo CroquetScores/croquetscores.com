@@ -459,6 +459,17 @@ Feature: Many players are added to a tournament at once, in a modal dialog
         | Name, Team   | AddPlayers.FieldNotAllowed |
         | Name, Name   | AddPlayers.FieldRepeated   |
 
+    Scenario: A first line that names no field at all is refused
+      Given the page of "Spring Open" is open
+      And "Add Players" is pressed
+      And these lines are typed as the "Players":
+        """
+        Sam Someone
+        Alex Another
+        """
+      When "Add" is pressed
+      Then "Players" is refused with "AddPlayers.FirstRowNotFields" on line 1
+
     Scenario: A list with nothing in it is refused
       Given the page of "Spring Open" is open
       And "Add Players" is pressed

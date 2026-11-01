@@ -964,6 +964,8 @@ export const egyptian: Language = {
     "admin.players.many": "اللاعبين",
     "admin.players.line": "السطر {line}: {words}",
     "AddPlayers.FieldsMissing": "اكتب أسماء الحقول في السطر الأول.",
+    "AddPlayers.FirstRowNotFields":
+      "لازم الصف الأول يكون أسماء الحقول، شوف المساعدة لمزيد من المعلومات.",
     "AddPlayers.NameMissing": "لازم الحقول تحتوي على Name.",
     "AddPlayers.FieldNotAllowed":
       "الحقل ممكن يكون Name أو Representing أو Flag أو Handicap أو WorldRankingPlayerName.",

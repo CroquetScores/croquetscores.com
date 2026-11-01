@@ -1001,6 +1001,8 @@ export const russian: Language = {
     "admin.players.many": "Игроки",
     "admin.players.line": "Строка {line}: {words}",
     "AddPlayers.FieldsMissing": "Напишите названия полей в первой строке.",
+    "AddPlayers.FirstRowNotFields":
+      "Первая строка должна содержать названия полей, подробнее см. в справке.",
     "AddPlayers.NameMissing": "Среди полей должно быть Name.",
     "AddPlayers.FieldNotAllowed":
       "Поле может называться Name, Representing, Flag, Handicap или WorldRankingPlayerName.",
