@@ -53,6 +53,11 @@ interface Row {
   readonly tournament: TournamentFound;
   /** The tournament it is in, shown after a competition's name. */
   readonly of?: TournamentFound;
+  /**
+   * Whether the row is set in bold: a tournament that is national or
+   * international. Never a competition, which is not either of itself.
+   */
+  readonly bold?: boolean;
 }
 
 // Oldest first until a column is pressed, which is the order a reader looking
@@ -206,7 +211,9 @@ export const registerSearchPage = (
           }),
         )
           .map(
-            (row) => `                <tr class="search-${kind}">
+            (
+              row,
+            ) => `                <tr class="search-${kind}"${row.bold === true ? " data-bold" : ""}>
                   <td class="tournament-dates">${escape(datedWithYear(row.tournament.starts, row.tournament.finishes, speaking.language.tag))}</td>
                   <td class="tournament-sport">${sportOf(row.tournament)}</td>
                   <td class="tournament-flag">${flagOf(row.tournament)}</td>
@@ -273,6 +280,7 @@ ${[...found.players]
                   name: each.name,
                   address: each.address,
                   tournament: each,
+                  bold: each.national || each.international,
                 })),
                 found.more.tournaments,
               ),

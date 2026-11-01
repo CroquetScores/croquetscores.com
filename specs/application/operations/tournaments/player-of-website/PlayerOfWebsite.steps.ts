@@ -61,6 +61,18 @@ const named = (world: SpecWorld, name: string) =>
   player(world).tournaments.find((each) => each.name === name);
 
 Then(
+  /^the player's tournament "(.*)" is (not )?(national|international)$/,
+  function (this: SpecWorld, name: string, not: string | null, level: string) {
+    const found = named(this, name);
+    assert.ok(found !== undefined, `${name} is not answered.`);
+    assert.equal(
+      level === "national" ? found.national : found.international,
+      not === null,
+    );
+  },
+);
+
+Then(
   "the player's tournament {string} starts on {string}",
   function (this: SpecWorld, tournament: string, day: string) {
     assert.equal(named(this, tournament)?.starts, day);

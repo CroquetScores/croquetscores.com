@@ -96,7 +96,7 @@ const createdBefore = async (
 // said: its days, its sport, and where it is played. A start said with no
 // finish is a tournament of one day, and a country said with no region is a
 // tournament in none of its regions, so that saying one never makes the other
-// wrong.
+// wrong. Whether it is national or international is said in the same way.
 const saidOfNext = (world: SpecWorld): Partial<TournamentRequest> => {
   const said = domainScenarioOf(world).creating;
   return {
@@ -108,6 +108,10 @@ const saidOfNext = (world: SpecWorld): Partial<TournamentRequest> => {
     ...(said.country === undefined
       ? {}
       : { country: said.country, region: said.region ?? undefined }),
+    ...(said.national === undefined ? {} : { national: said.national }),
+    ...(said.international === undefined
+      ? {}
+      : { international: said.international }),
   };
 };
 
@@ -154,6 +158,19 @@ Given(
     this.sport = Sport.from(code);
   },
 );
+
+// Never both, as the form never lets a reader tick both.
+Given("the tournament is to be national", function (this: SpecWorld) {
+  const creating = domainScenarioOf(this).creating;
+  creating.national = true;
+  creating.international = false;
+});
+
+Given("the tournament is to be international", function (this: SpecWorld) {
+  const creating = domainScenarioOf(this).creating;
+  creating.national = false;
+  creating.international = true;
+});
 
 Given(
   "the tournament is to be played in the country {string}",
@@ -271,6 +288,26 @@ Given(
     sport: string,
   ) {
     await updated(this, address, tournamentNamed(this, name), { sport });
+  },
+);
+
+Given(
+  "{string} has made the tournament {string} national",
+  async function (this: SpecWorld, address: string, name: string) {
+    await updated(this, address, tournamentNamed(this, name), {
+      national: true,
+      international: false,
+    });
+  },
+);
+
+Given(
+  "{string} has made the tournament {string} international",
+  async function (this: SpecWorld, address: string, name: string) {
+    await updated(this, address, tournamentNamed(this, name), {
+      national: false,
+      international: true,
+    });
   },
 );
 

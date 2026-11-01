@@ -1802,7 +1802,8 @@ main {
 
 /* A national or international tournament's row is bold, every cell of it, so
    that the tournaments that matter beyond one club stand out in a long list. */
-.tournament-list tbody tr[data-bold] td {
+.tournament-list tbody tr[data-bold] td,
+.player-tournaments tbody tr[data-bold] td {
   font-weight: 700;
 }
 

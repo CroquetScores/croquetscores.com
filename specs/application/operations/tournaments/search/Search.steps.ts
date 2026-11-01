@@ -332,6 +332,17 @@ Then(
 );
 
 Then(
+  /^the tournament "(.*)" is (not )?found as (national|international)$/,
+  function (this: SpecWorld, name: string, not: string | null, level: string) {
+    const found = tournamentFound(this, name);
+    assert.equal(
+      level === "national" ? found.national : found.international,
+      not === null,
+    );
+  },
+);
+
+Then(
   "the competition {string} is found in a tournament for the sport {string}",
   function (this: SpecWorld, name: string, sport: string) {
     assert.equal(competitionsTournament(this, name).sport, sport);

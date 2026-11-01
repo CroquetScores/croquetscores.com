@@ -69,6 +69,17 @@ export interface TournamentFound {
 }
 
 /**
+ * A tournament found by its name, which says as well whether its organiser
+ * ticked national or international, for the page of results to set its row in
+ * bold. A competition's tournament does not, since a competition's row is not.
+ */
+export interface TournamentFoundByName extends TournamentFound {
+  /** Never both this and `international`. */
+  readonly national: boolean;
+  readonly international: boolean;
+}
+
+/**
  * A player found, once however many tournaments they have played in, and where
  * their page is, as "players/sam-someone".
  */
@@ -96,6 +107,9 @@ export interface PlayerTournament {
   readonly address: string;
   /** Where the player's own page in it is, as "2026/ac/spring-open/players/sam-someone". */
   readonly playerAddress: string;
+  /** Whether its organiser ticked national. Never both this and `international`. */
+  readonly national: boolean;
+  readonly international: boolean;
 }
 
 /** A player of a website, as their page shows them. */
@@ -117,7 +131,7 @@ export interface Limited<T> {
 
 /** What a search of a website found, each kind in alphabetical order. */
 export interface SearchFound {
-  readonly tournaments: readonly TournamentFound[];
+  readonly tournaments: readonly TournamentFoundByName[];
   readonly players: readonly PlayerFound[];
   readonly competitions: readonly CompetitionFound[];
   /** Of which kinds there were more than were answered. */
@@ -146,7 +160,7 @@ export interface SearchByWebsite {
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<Limited<TournamentFound>>;
+  ): Promise<Limited<TournamentFoundByName>>;
 
   /** By world ranking name, each person once (SearchPlayersOfWebsite.feature). */
   players(

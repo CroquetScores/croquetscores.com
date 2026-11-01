@@ -825,7 +825,7 @@ const weightsOf = async (
 };
 
 Then(
-  /^"(.*)" is bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments)$/,
+  /^"(.*)" is bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments)$/,
   async function (this: SpecWorld, tournament: string, name: string) {
     const weights = await weightsOf(this, tournament, name);
     assert.equal(weights.length, 2);
@@ -834,7 +834,7 @@ Then(
 );
 
 Then(
-  /^"(.*)" is not bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments)$/,
+  /^"(.*)" is not bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
   async function (this: SpecWorld, tournament: string, name: string) {
     const weights = await weightsOf(this, tournament, name);
     assert.equal(weights.length, 2);
