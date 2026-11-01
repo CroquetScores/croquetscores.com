@@ -76,6 +76,11 @@ export const standingsOf = async (
     ]),
   );
 
+  // Each test that was won, by the team that won it, for breaking a tie by
+  // the test played between the teams in it. A drawn test is left out, since
+  // it favours neither.
+  const testsWonBy: { won: string; lost: string }[] = [];
+
   for (const { reference, shape } of tournament.competitions) {
     if (reference.archived || shape.kind !== "test" || !counts(shape)) continue;
     const competition = await competitionOf(competitions, reference.id);
@@ -156,9 +161,11 @@ export const standingsOf = async (
     if (margin > 0) {
       firstTally.testsWon += 1;
       secondTally.testsLost += 1;
+      testsWonBy.push({ won: first, lost: second });
     } else if (margin < 0) {
       secondTally.testsWon += 1;
       firstTally.testsLost += 1;
+      testsWonBy.push({ won: second, lost: first });
     } else {
       firstTally.testsDrawn += 1;
       secondTally.testsDrawn += 1;
@@ -186,7 +193,7 @@ export const standingsOf = async (
         counts(shape) &&
         shape.bestOf.games > 1,
     ),
-    ranked: rankingOf(teams, showsNets).map(({ id }) => id),
+    ranked: rankingOf(teams, showsNets, testsWonBy).map(({ id }) => id),
     showsNets,
   };
 };
@@ -223,23 +230,55 @@ const matchesOf = (
 
 // The teams ranked as the old site's summary ranked them: the more tests won
 // first, then the more matches won, then the more net games, then the more net
-// hoops, and otherwise as
-// they were, since a sort that keeps the order of equals leaves them in the
-// tournament's. By net matches in place of matches won where `byNetMatches`,
-// since a lost match is then worse than a drawn one, which matches won cannot
-// tell apart.
+// hoops, and otherwise as they were, since a sort that keeps the order of
+// equals leaves them in the tournament's. By net matches in place of matches
+// won where `shield`, since a lost match is then worse than a drawn one,
+// which matches won cannot tell apart; and there, as rule 29.13 goes on to, by
+// the tests won among the teams still level.
 const rankingOf = (
   teams: readonly TeamStanding[],
-  byNetMatches: boolean,
-): TeamStanding[] =>
-  [...teams].sort(
+  shield: boolean,
+  testsWonBy: readonly { won: string; lost: string }[],
+): TeamStanding[] => {
+  const netMatches = (team: TeamStanding): number =>
+    team.matchesWon - team.matchesLost;
+  const netGames = (team: TeamStanding): number =>
+    team.gamesWon - team.gamesLost;
+  const netHoops = (team: TeamStanding): number =>
+    team.hoopsFor - team.hoopsAgainst;
+  const level = (one: TeamStanding, other: TeamStanding): boolean =>
+    one.testsWon === other.testsWon &&
+    (shield
+      ? netMatches(one) === netMatches(other)
+      : one.matchesWon === other.matchesWon) &&
+    netGames(one) === netGames(other) &&
+    netHoops(one) === netHoops(other);
+  const ranked = [...teams].sort(
     (one, other) =>
       other.testsWon - one.testsWon ||
-      (byNetMatches
-        ? other.matchesWon -
-          other.matchesLost -
-          (one.matchesWon - one.matchesLost)
+      (shield
+        ? netMatches(other) - netMatches(one)
         : other.matchesWon - one.matchesWon) ||
-      other.gamesWon - other.gamesLost - (one.gamesWon - one.gamesLost) ||
-      other.hoopsFor - other.hoopsAgainst - (one.hoopsFor - one.hoopsAgainst),
+      netGames(other) - netGames(one) ||
+      netHoops(other) - netHoops(one),
   );
+  if (!shield) return ranked;
+
+  // Each run of teams level is put in order by the tests they won against
+  // one another, and not by those they won against any other team, which
+  // the rule does not count. The sort keeps the order of equals, so teams
+  // still level keep the tournament's.
+  const result: TeamStanding[] = [];
+  for (let start = 0; start < ranked.length;) {
+    let end = start + 1;
+    while (end < ranked.length && level(ranked[start]!, ranked[end]!)) end += 1;
+    const run = ranked.slice(start, end);
+    const ids = new Set(run.map(({ id }) => id));
+    const amongThem = (team: TeamStanding): number =>
+      testsWonBy.filter(({ won, lost }) => won === team.id && ids.has(lost))
+        .length;
+    result.push(...run.sort((one, other) => amongThem(other) - amongThem(one)));
+    start = end;
+  }
+  return result;
+};

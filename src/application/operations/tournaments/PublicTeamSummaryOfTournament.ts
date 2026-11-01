@@ -62,7 +62,8 @@ export interface TeamSummaryToRead {
    * The ids of the teams ranked: the more tests won first, then the more
    * matches won, then the more net games, then the more net hoops, then in the
    * tournament's order. A tournament in the Interstate Shield format ranks by
-   * the more net matches in place of the matches won.
+   * the more net matches in place of the matches won, and puts teams still
+   * level in order by the tests they won against one another.
    */
   readonly ranked: readonly string[];
   /**
