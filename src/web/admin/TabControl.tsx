@@ -66,7 +66,13 @@ export const TabControl = <Tab extends string>({
           ))}
         </div>
         {help === undefined ? null : (
-          <HelpLink to={help} className="help-inline" />
+          // Named for the tab it is for, since it leads somewhere else as the
+          // tab chosen changes and "Help" alone would not say where.
+          <HelpLink
+            to={help}
+            label={`${say("admin.dialog.help")}: ${wordsFor(chosen)}`}
+            className="help-inline"
+          />
         )}
       </div>
       <div id={tabPanelId} role="tabpanel" aria-labelledby={tabId(chosen)}>

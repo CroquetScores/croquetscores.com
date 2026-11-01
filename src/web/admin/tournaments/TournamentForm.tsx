@@ -200,6 +200,11 @@ export const TournamentForm = ({
   // Only a tournament played by teams has tests, and saying one that is not
   // draws them is refused (create.feature), so the form does not ask.
   const formatChosen = offered.formats.find(({ code }) => code === format);
+  const playedByTeams = (
+    begins === undefined
+      ? formatChosen
+      : offered.formats.find(({ code }) => code === begins.format)
+  )?.teams;
   const asksAboutLevelTests = formatChosen?.teams ?? false;
   const levelTestsDrawn =
     levelTestsSaid ?? formatChosen?.drawsLevelTests ?? false;
@@ -251,10 +256,10 @@ export const TournamentForm = ({
           </h1>
           {/* A tournament played by teams has a guide of its own, so which is
               led to follows the format chosen; until one is chosen, the guide
-              for the ordinary kind. */}
-          <HelpLink
-            to={(formatChosen?.teams ? teamsHelp : standardHelp)(helpPage)}
-          />
+              for the ordinary kind. A tournament being changed is of the kind
+              it was saved as and not the one a draft would make it, so the
+              link does not move under the reader. */}
+          <HelpLink to={(playedByTeams ? teamsHelp : standardHelp)(helpPage)} />
           <form
             className="dialog-form"
             ref={form}

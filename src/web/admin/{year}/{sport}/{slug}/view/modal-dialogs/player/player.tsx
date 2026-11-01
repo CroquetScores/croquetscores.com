@@ -449,7 +449,10 @@ export const PlayerDialog = ({
       </ModalDialog>
       {explaining ? (
         <ModalDialog
-          help={standardHelp("players", "byes-in-a-knockout")}
+          help={standardHelp(
+            "entering-players-in-a-competition",
+            "byes-in-a-knockout",
+          )}
           title={say("admin.player.byesTitle")}
           action={say("admin.modal.ok")}
           hover={say("admin.hover.modal.ok")}

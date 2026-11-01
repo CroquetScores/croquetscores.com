@@ -61,7 +61,7 @@
 }
 
 /* The page's title bar holds the help icon, which is placed against the form's
-   box. */
-.dialog {
+   box; only a box that has one is made a place to put it in. */
+.dialog:has(> .dialog-title-with-help) {
   position: relative;
 }

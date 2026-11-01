@@ -65,8 +65,10 @@ Then(
 
 // The help icon -------------------------------------------------------------------
 
+// The last dialog open, since one that tells the reader something is opened
+// over the one that sent it and is the one being read.
 const helpIcon = (world: SpecWorld): Locator =>
-  dialogOf(world).locator("a.dialog-help");
+  dialogOf(world).locator("a.dialog-help").last();
 
 Then(
   "the players dialog has a help icon called {string}",

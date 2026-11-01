@@ -9,11 +9,17 @@ import "./helpLink.css";
 interface Props {
   /** Where the help is, as helpAddress.ts gives it. */
   readonly to: string;
+  /** What it is called, where "Help" alone would not say what it is for. */
+  readonly label?: string;
   /** Extra classes, for where it is drawn: over a title bar by default. */
   readonly className?: string;
 }
 
-export const HelpLink = ({ to, className }: Props): React.JSX.Element => (
+export const HelpLink = ({
+  to,
+  label,
+  className,
+}: Props): React.JSX.Element => (
   <a
     className={
       className === undefined ? "dialog-help" : `dialog-help ${className}`
@@ -21,8 +27,8 @@ export const HelpLink = ({ to, className }: Props): React.JSX.Element => (
     href={to}
     target="_blank"
     rel="noopener noreferrer"
-    title={say("admin.dialog.help")}
-    aria-label={say("admin.dialog.help")}
+    title={label ?? say("admin.dialog.help")}
+    aria-label={label ?? say("admin.dialog.help")}
   >
     ?
   </a>
