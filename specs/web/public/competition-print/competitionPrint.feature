@@ -67,6 +67,24 @@ Feature: A competition's page can be printed
       Then the print button is in the page
       And the print button is not offered
 
+  Rule: The views are kept next to the print button
+
+    The views and the printer are both for doing something with the page, as
+    the competition's name is not, so they are kept together against the
+    right edge, with the name alone at the left, rather than spread across the
+    line with the views stranded between the two.
+
+    Scenario Outline: The views are next to the print button
+      When the page at "<page>" is opened with scripting on
+      Then the views are next to the print button
+
+      Examples:
+        | page                                            |
+        | /2026/ac/spring-open/competitions/block-a       |
+        | /2026/ac/spring-open/competitions/finals        |
+        | /2026/gc/swiss-open/competitions/zed            |
+        | /2026/gc/spring-tests/tests/aus-v-eng           |
+
   Rule: The tournament's name is the page's first-level heading and the competition's the second-level
 
     The tournament's name is said to whatever reads the page aloud as well as

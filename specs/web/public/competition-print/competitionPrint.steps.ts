@@ -215,6 +215,30 @@ Then("the footer is not printed", async function (this: SpecWorld) {
   );
 });
 
+// Next to it is on the same line and no further from it than the gap the
+// heading puts between its parts. The gap is allowed for rather than asked to
+// be nothing, so that the scenario does not fail for the stylesheet's choice of
+// how wide it is.
+Then(
+  "the views are next to the print button",
+  async function (this: SpecWorld) {
+    const views = await this.browserPage
+      .locator("main .competition-views")
+      .boundingBox();
+    const button = await printButton(this).boundingBox();
+    assert.ok(views !== null && button !== null, "One of them is not drawn.");
+    assert.ok(
+      views.y < button.y + button.height && button.y < views.y + views.height,
+      "The views and the print button are not on one line.",
+    );
+    const apart = button.x - (views.x + views.width);
+    assert.ok(
+      apart >= 0 && apart <= 32,
+      `The views end ${String(apart)} pixels from the print button.`,
+    );
+  },
+);
+
 Then("the views are not printed", async function (this: SpecWorld) {
   assert.equal(
     await this.browserPage.locator("main .competition-views").isVisible(),

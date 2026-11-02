@@ -2683,13 +2683,19 @@ a.player-name[data-withdrawn] {
 }
 
 /* A block's name with its three views on the same line, against the right
-   edge, wrapping beneath the name only where there is not room beside it. */
+   edge, wrapping beneath the name only where there is not room beside it.
+   The views and the printer are kept together by pushing the views, and the
+   printer after them, to the end with an automatic margin: spreading the
+   three apart (space-between) left the views stranded in the middle. */
 .competition-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-3);
+}
+
+.competition-heading .competition-views {
+  margin-inline-start: auto;
 }
 
 /* A block's three views, offered beside its heading as a row of links, the
