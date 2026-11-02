@@ -72,40 +72,40 @@ Feature: The tournaments starting from one day to another, a page at a time
       Given the tournament is to start at "2026-03-10T00:00:00Z"
 
     Scenario: A hundred tournaments are answered on the first page
-      Given 100 tournaments have been created
+      Given "organiser@example.com" has created 100 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then 100 tournaments are answered
 
     Scenario: A hundred and one tournaments are answered a hundred on the first page
-      Given 101 tournaments have been created
+      Given "organiser@example.com" has created 101 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then 100 tournaments are answered
 
     Scenario: A hundred and one tournaments are answered one on the second page
-      Given 101 tournaments have been created
+      Given "organiser@example.com" has created 101 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for, page 2
       Then 1 tournament is answered
 
     Scenario: The soonest hundred are on the first page
-      Given 100 tournaments have been created
+      Given "organiser@example.com" has created 100 tournaments
       And the tournament is to start at "2026-03-30T00:00:00Z"
       And "organiser@example.com" has created the tournament "Late Open"
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then "Late Open" is not answered
 
     Scenario: Tournaments starting on the same day are cut by name
-      Given 101 tournaments have been created
+      Given "organiser@example.com" has created 101 tournaments
       And "organiser@example.com" has created the tournament "Aardvark Open"
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then the first tournament answered is "Aardvark Open"
 
     Scenario: The number of tournaments in all is answered with a page
-      Given 101 tournaments have been created
+      Given "organiser@example.com" has created 101 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then the number of tournaments in all is 101
 
     Scenario: The number of the last page is answered with a page
-      Given 101 tournaments have been created
+      Given "organiser@example.com" has created 101 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then the last page is 2
 
@@ -117,7 +117,7 @@ Feature: The tournaments starting from one day to another, a page at a time
 
     Background:
       Given the tournament is to start at "2026-03-10T00:00:00Z"
-      And 101 tournaments have been created
+      And "organiser@example.com" has created 101 tournaments
 
     Scenario: A page beyond the last is answered with no tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for, page 3
