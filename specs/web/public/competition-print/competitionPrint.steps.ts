@@ -217,7 +217,7 @@ Then("the footer is not printed", async function (this: SpecWorld) {
 });
 
 // Next to it is on the same line and no further from it than the gap the
-// heading puts between its parts.
+// group of the two puts between them.
 Then(
   "the views are next to the print button",
   async function (this: SpecWorld) {
@@ -230,13 +230,13 @@ Then(
       views.y < button.y + button.height && button.y < views.y + views.height,
       "The views and the print button are not on one line.",
     );
-    // The gap is the heading's own, read from it, so that the scenario follows
+    // The gap is the group's own, read from it, so that the scenario follows
     // the stylesheet's choice of how wide it is rather than a number of its own.
     const gap = await this.browserPage
-      .locator("main .competition-heading")
-      .evaluate((heading) =>
+      .locator("main .competition-actions")
+      .evaluate((actions) =>
         Number.parseFloat(
-          (globalThis as unknown as InThePage).getComputedStyle(heading)
+          (globalThis as unknown as InThePage).getComputedStyle(actions)
             .columnGap,
         ),
       );
@@ -247,6 +247,18 @@ Then(
     );
   },
 );
+
+Then("the print button is beneath the views", async function (this: SpecWorld) {
+  const views = await this.browserPage
+    .locator("main .competition-views")
+    .boundingBox();
+  const button = await printButton(this).boundingBox();
+  assert.ok(views !== null && button !== null, "One of them is not drawn.");
+  assert.ok(
+    button.y >= views.y + views.height - 0.5,
+    `The print button starts ${String(button.y)} pixels down and the views end ${String(views.y + views.height)}.`,
+  );
+});
 
 Then(
   "the print button is against the right edge",

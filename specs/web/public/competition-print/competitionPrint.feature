@@ -87,10 +87,11 @@ Feature: A competition's page can be printed
         | /2026/gc/swiss-open/competitions/zed            |
         | /2026/gc/spring-tests/tests/aus-v-eng           |
 
-    Scenario: The print button is against the right edge on a phone
+    Scenario: The print button is beneath the views on a phone
       Given a viewport 375 pixels wide
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
-      Then the print button is against the right edge
+      Then the print button is beneath the views
+      And the print button is against the right edge
 
   Rule: The tournament's name is the page's first-level heading and the competition's the second-level
 
