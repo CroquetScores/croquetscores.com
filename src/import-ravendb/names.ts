@@ -20,13 +20,28 @@ const lengthened = (trimmed: string, added = IMPORTED): string =>
     ? trimmed + added
     : trimmed;
 
+// Names the old sites had wrong, each with the name its owner spells it.
+// Matched whole and as written, never by what a name begins with or in another
+// case: a list of corrections is only safe while each is a person known to
+// have been misspelled, since anyone else who really is called the wrong name
+// would be renamed. So it is added to one reported name at a time, not
+// guessed at (ImportTournamentPlayers.feature).
+const MISSPELLED_NAMES: ReadonlyMap<string, string> = new Map([
+  ["Marga Podneiks", "Marga Podnieks"],
+  ["Liz McKenzie", "Liz Mackenzie"],
+]);
+
 /**
- * A person's name the old sites accepted, as the site will take it: one
- * shorter than 3 characters says it was imported. Its case is its owner's,
+ * A person's name the old sites accepted, as the site will take it: one the
+ * old sites misspelled is spelled as its owner spells it, and one shorter
+ * than 3 characters says it was imported. Otherwise its case is its owner's,
  * since the site refuses no person's name for that. A name with none is left
  * with none, and refused.
  */
-export const nameToImport = (name: string): string => lengthened(name.trim());
+export const nameToImport = (name: string): string => {
+  const trimmed = name.trim();
+  return lengthened(MISSPELLED_NAMES.get(trimmed) ?? trimmed);
+};
 
 // A handicap: a whole number or a decimal, written with a point or a comma,
 // with a sign or without.
