@@ -34,7 +34,7 @@ import {
   tournamentBecome,
 } from "./ImportTournamentPlayers.js";
 import {
-  nameToImport,
+  playerNameToImport,
   numberedApart,
   worldRankingNameToImport,
 } from "./names.js";
@@ -474,13 +474,16 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
               theirs === undefined ||
               (theirs.id.equals(team.id) &&
                 theirName !== undefined &&
-                sameBaseName(theirName, nameToImport(player.Name)))
+                sameBaseName(theirName, playerNameToImport(player.Name)))
             ) {
               players.set(player._Id, known);
               continue;
             }
             const named = team.players.find((one) =>
-              sameBaseName(one.name.toString(), nameToImport(player.Name)),
+              sameBaseName(
+                one.name.toString(),
+                playerNameToImport(player.Name),
+              ),
             );
             if (named !== undefined) {
               players.set(player._Id, named.id);
@@ -507,8 +510,10 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
             .find((each) => each.id.equals(team.id))
             ?.players.find(
               (one) =>
-                sameBaseName(one.name.toString(), nameToImport(player.Name)) &&
-                !used.some((taken) => taken.equals(one.id)),
+                sameBaseName(
+                  one.name.toString(),
+                  playerNameToImport(player.Name),
+                ) && !used.some((taken) => taken.equals(one.id)),
             );
           if (theirs !== undefined) {
             players.set(player._Id, theirs.id);
@@ -517,7 +522,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           }
           const playerId = TeamPlayerId.create();
           const name = numberedApart(
-            nameToImport(player.Name),
+            playerNameToImport(player.Name),
             (
               tournament.teams.find((each) => each.id.equals(team.id))
                 ?.players ?? []
@@ -700,7 +705,7 @@ export class ImportTeamMatches implements Importer<TeamMatch> {
           team.players.some((player) => player.id.equals(id)),
         );
       const meetingAgainName = (number: number): string =>
-        `${nameToImport(nameOf(number))} - meet again`;
+        `${playerNameToImport(nameOf(number))} - meet again`;
       // The players made for `number` meeting again, in the order made.
       const meetingAgainOf = (number: number): TeamPlayer[] => {
         const id = players.get(number);

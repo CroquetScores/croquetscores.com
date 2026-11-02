@@ -1500,6 +1500,37 @@ Feature: Importing the old sites' team matches
       When the team match is imported
       Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Sam Someone (2)"
 
+  Rule: A name the old sites misspelled is brought over spelled as its owner spells it
+
+    As a tournament's players are (`ImportTournamentPlayers.feature`): a name
+    on the short list of those the old sites misspelled is the right name on
+    the team, so that the same person under the wrong name and the right one
+    is one player.
+
+    Scenario: A misspelled name is brought over spelled correctly
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Liz McKenzie"
+      And player 7 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has the player "Liz Mackenzie"
+
+    Scenario: A misspelled name and the right name are one player
+      Given the team match "teammatches/50" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 7 is in the team match
+      And player 7 is called "Liz McKenzie"
+      And player 7 represents "New Zealand"
+      And the team match is imported
+      And the team match "teammatches/51" of "tournaments/13" on "croquetscores.com"
+      And the team match is called "New Zealand vs England"
+      And player 12 is in the team match
+      And player 12 is called "Liz Mackenzie"
+      And player 12 represents "New Zealand"
+      When the team match is imported
+      Then the team "New Zealand" of the tournament kept for "tournaments/13" on "croquetscores.com" has 1 player
+
   Rule: A player's world ranking name is their name without the brackets that end it
 
     As a tournament's players are (`ImportTournamentPlayers.feature`): what is

@@ -20,28 +20,13 @@ const lengthened = (trimmed: string, added = IMPORTED): string =>
     ? trimmed + added
     : trimmed;
 
-// Names the old sites had wrong, each with the name its owner spells it.
-// Matched whole and as written, never by what a name begins with or in another
-// case: a list of corrections is only safe while each is a person known to
-// have been misspelled, since anyone else who really is called the wrong name
-// would be renamed. So it is added to one reported name at a time, not
-// guessed at (ImportTournamentPlayers.feature).
-const MISSPELLED_NAMES: ReadonlyMap<string, string> = new Map([
-  ["Marga Podneiks", "Marga Podnieks"],
-  ["Liz McKenzie", "Liz Mackenzie"],
-]);
-
 /**
- * A person's name the old sites accepted, as the site will take it: one the
- * old sites misspelled is spelled as its owner spells it, and one shorter
- * than 3 characters says it was imported. Otherwise its case is its owner's,
+ * A person's name the old sites accepted, as the site will take it: one
+ * shorter than 3 characters says it was imported. Its case is its owner's,
  * since the site refuses no person's name for that. A name with none is left
  * with none, and refused.
  */
-export const nameToImport = (name: string): string => {
-  const trimmed = name.trim();
-  return lengthened(MISSPELLED_NAMES.get(trimmed) ?? trimmed);
-};
+export const nameToImport = (name: string): string => lengthened(name.trim());
 
 // A handicap: a whole number or a decimal, written with a point or a comma,
 // with a sign or without.
@@ -87,6 +72,41 @@ const withoutBracketsAndHandicap = (name: string): string => {
     rest = handicap[1]!;
     handicapTaken = true;
   }
+};
+
+// Names the old sites had wrong for a player, by the name as it is compared
+// (in small letters, with one space between words), each with the name its
+// owner spells it. A table of whole names rather than a pattern: the people
+// who were misspelled are known one at a time, and a pattern such as "Mc" for
+// "Mac" would rename people who really are called what it changes. The
+// comparison ignores case and spacing, since the same person was entered every
+// way, and the brackets and handicap are set aside first, since the old sites
+// added those to a name that was still the same person's.
+const MISSPELLED_PLAYERS: ReadonlyMap<string, string> = new Map([
+  ["marga podneiks", "Marga Podnieks"],
+  ["liz mckenzie", "Liz Mackenzie"],
+]);
+
+const asCompared = (name: string): string =>
+  name.toLowerCase().split(/\s+/).join(" ");
+
+/**
+ * A player's name the old sites accepted, as the site will take it: as a
+ * person's is (nameToImport), and where it is a name the old sites
+ * misspelled, with the right name in its place and whatever brackets and
+ * handicap came after it kept. A user's name is not changed so: they wrote
+ * it themselves (ImportUsers.feature), and the players are the ones who were
+ * entered again and again by somebody else (ImportTournamentPlayers.feature).
+ */
+export const playerNameToImport = (name: string): string => {
+  const trimmed = name.trim();
+  const base = withoutBracketsAndHandicap(
+    trimmed.replace(SEMICOLON_AND_HANDICAP, ""),
+  ).trim();
+  const right = MISSPELLED_PLAYERS.get(asCompared(base));
+  return nameToImport(
+    right === undefined ? trimmed : right + trimmed.slice(base.length),
+  );
 };
 
 /**
