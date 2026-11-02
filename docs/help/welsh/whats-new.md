@@ -1,5 +1,24 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-02
+
+### Rheoli twrnamaint
+
+- **Gall cnoc-owt gymryd collwyr rownd cnoc-owt arall.** Cynhelir llawer o gnoc-owtiau fel prif gystadleuaeth gyda chnoc-owt arall i'r rhai a gollodd ei rownd gyntaf, a thrydydd i'r rhai a gollodd yr ail. Yn neialog cnoc-owt, pwyswch **Ychwanegu Cnoc-owt Collwyr**, enwch ef, a dewiswch y rownd y mae ei chollwyr yn chwarae ymlaen ynddo. Rhoddir ei chwaraewyr yno wrth i bob gêm gael ei phenderfynu, felly nid ydych yn eu rhoi i mewn â llaw.
+- **Gellir dweud wrth floc sut mae gwahanu chwaraewyr sy'n gyfartal ar gemau a enillwyd.** Yn neialog bloc, dewiswch ei **Torri clymau**: gemau net, yna cylchau net, yna pwy a gurodd pwy; pwy a gurodd pwy yn unig; neu arall, sef dim ffordd hysbys, fel bod chwaraewyr yn aros yn gyfartal ac yn rhannu lle. Mae bloc newydd yn dechrau gyda gemau net, yna cylchau net, yna pwy a gurodd pwy.
+- **Gall cystadleuaeth ddweud y nifer mwyaf o gylchau y chwaraeir ei gemau iddynt.** Ymhlith y blychau yn neialog cystadleuaeth, mae **Uchafswm cylchau** yn cymryd rhif cyflawn o 1 o leiaf. Gadewch ef yn wag am ddim uchafswm. Mae gan gystadleuaeth nad yw'n dweud yr un arferol ar gyfer ei champ: 26, neu 13 mewn Golf Croquet.
+- **Mae'r ffeil destun detholion yn enwi enillydd bloc fel y mae'r bloc yn gosod y chwaraewyr.** Yr enillydd yw'r chwaraewr y mae'r bloc yn ei osod gyntaf, os un yn unig sydd, ac ni enwir neb lle na ellir gwahanu chwaraewyr am y lle cyntaf. O'r blaen, roedd y ffeil yn enwi'r chwaraewr a enillodd y nifer mwyaf o gemau, a allai fod yn rhywun arall.
+- **Mae bar yr adrannau yn cadw i fyny â'r cystadlaethau.** Ar ôl i chi ychwanegu, newid, symud, archifo neu adfer cystadleuaeth neu brawf, mae'r bar ar dudalen y twrnamaint yn cynnig yr hyn sydd gan y twrnamaint bellach, heb agor y dudalen eto.
+- **Dywedir wrthych am restr o chwaraewyr heb res o feysydd.** Os nad yw rhes gyntaf y rhestr a ludwch i **Ychwanegu chwaraewyr** yn enwi unrhyw faes, mae'r neges yn dweud bod yn rhaid i'r rhes gyntaf fod yn enwau meysydd, gyda dolen i'r cymorth, mewn tab arall fel bod yr hyn a deipiwyd gennych yn aros lle mae.
+- **Mae deialogau Ychwanegu chwaraewr ac Ychwanegu chwaraewyr yn agor yn y ffenestr.** Gyda'r dudalen wedi'i sgrolio i lawr, roeddent yn arfer agor â'u pennau uwchben yr hyn y gellid ei weld.
+
+### Dilyn twrnamaint
+
+- **Mae bloc yn dangos ym mha le y gosodir pob chwaraewr.** Mae grid a chrynodeb bloc yn gorffen â cholofn o'r enw #, sy'n rhoi lle pob chwaraewr: 1, neu =2 lle na ellir gwahanu chwaraewyr a'u bod yn rhannu'r ail le. O dani, lle mae chwaraewyr yn gyfartal ar y gemau a enillwyd ganddynt, mae llinell yn dweud sut y cawsant eu gwahanu.
+- **Mae cystadleuaeth yn dweud i faint o gylchau y chwaraeir ei gemau.** Lle nad dyna'r arferol ar gyfer y gamp, mae'r canlyniadau'n dweud hynny: "Chwaraeir i 14 cylch".
+- **Mae rhes twrnamaint cenedlaethol neu ryngwladol mewn print trwm.** Mae pob rhestr o dwrnameintiau yn gwneud hynny: ar y dudalen hafan, ar gyfer blwyddyn ac ar gyfer camp mewn blwyddyn, mewn chwiliad, ac ar dudalen chwaraewr.
+- **Mae golygon cystadleuaeth wrth ymyl ei botwm argraffu.** Mae Grid, Crynodeb a Threfn chwarae gyda'i gilydd gyda'r argraffydd yn erbyn yr ymyl dde, ac mae enw'r gystadleuaeth ar ei ben ei hun ar y chwith. Ar ffôn mae'r argraffydd yn mynd o dan y golygon, yn dal yn erbyn yr ymyl dde.
+
 ## Rhyddhawyd 2026-11-01
 
 ### Dilyn twrnamaint

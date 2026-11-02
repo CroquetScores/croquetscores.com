@@ -1,5 +1,24 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-11-02
+
+### Een toernooi leiden
+
+- **Een knock-out kan de verliezers van een ronde van een andere knock-out opnemen.** Veel knock-outs worden gespeeld als een hoofdschema met een tweede knock-out voor wie de eerste ronde verloor, en een derde voor wie de tweede ronde verloor. Druk in het dialoogvenster van een knock-out op **Verliezers-knock-out toevoegen**, geef hem een naam en kies de ronde waarvan de verliezers erin verder spelen. De spelers komen erin te staan zodra elke wedstrijd is beslist, dus je hoeft ze niet met de hand in te voeren.
+- **Je kunt van een groep zeggen hoe spelers met evenveel gewonnen wedstrijden worden onderscheiden.** Kies in het dialoogvenster van een groep de **Tiebreaks**: saldo partijen dan saldo poortjes dan wie wie versloeg, alleen wie wie versloeg, of anders, wat geen bekende manier is, zodat spelers gelijk blijven en een plaats delen. Een nieuwe groep begint met saldo partijen dan saldo poortjes dan wie wie versloeg.
+- **Een competitie kan zeggen tot hoeveel poortjes haar partijen hoogstens worden gespeeld.** Tussen de vinkjes in het dialoogvenster van een competitie neemt **Maximaal aantal poortjes** een geheel getal van minstens 1. Laat het leeg voor geen maximum. Een competitie die niets zegt, krijgt het gebruikelijke voor haar sport: 26, of 13 bij golfcroquet.
+- **Het tekstbestand met de ranglijsten noemt de winnaar van een groep zoals de groep de spelers plaatst.** De speler die de groep als eerste plaatst, is de winnaar, als er maar één is, en niemand wordt genoemd als spelers voor de eerste plaats niet te onderscheiden zijn. Eerder noemde het bestand de speler met de meeste gewonnen partijen, en dat kon iemand anders zijn.
+- **De balk met onderdelen blijft bij met de competities.** Nadat je een competitie of een test hebt toegevoegd, gewijzigd, verplaatst, gearchiveerd of hersteld, toont de balk op de pagina van het toernooi wat het toernooi nu heeft, zonder dat je de pagina opnieuw hoeft te openen.
+- **Een lijst spelers zonder rij met velden krijgt een melding.** Als de eerste rij van de lijst die je in **Spelers toevoegen** plakt geen veld noemt, zegt de melding dat de eerste rij veldnamen moet zijn, met een link naar de help, in een ander tabblad zodat wat je hebt getypt blijft staan.
+- **De dialoogvensters Speler toevoegen en Spelers toevoegen openen in het venster.** Als de pagina naar beneden was gescrold, openden ze eerder met hun bovenkant boven wat te zien was.
+
+### Een toernooi volgen
+
+- **Een groep toont waar elke speler is geplaatst.** Het schema en het overzicht van een groep eindigen met een kolom met kop #, die de plaats van elke speler geeft: 1, of =2 waar spelers niet te onderscheiden zijn en de tweede plaats delen. Eronder zegt een regel, waar spelers gelijk staan op gewonnen wedstrijden, hoe ze zijn onderscheiden.
+- **Een competitie zegt tot hoeveel poortjes haar partijen worden gespeeld.** Waar dat niet het gebruikelijke voor de sport is, zeggen de uitslagen het, als "Gespeeld tot 14 poortjes".
+- **De rij van een nationaal of internationaal toernooi staat vetgedrukt.** Elke lijst met toernooien doet dat: op de startpagina, voor een jaar en voor een sport in een jaar, bij een zoekopdracht en op de pagina van een speler.
+- **De weergaven van een competitie staan naast de afdrukknop.** Schema, Overzicht en Speelvolgorde staan samen met de printer tegen de rechterrand, en de naam van de competitie staat alleen links. Op een telefoon staat de printer onder de weergaven, nog steeds tegen de rechterrand.
+
 ## Uitgebracht op 2026-11-01
 
 ### Een toernooi volgen

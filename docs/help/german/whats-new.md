@@ -1,5 +1,24 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-11-02
+
+### Ein Turnier führen
+
+- **Ein K.-o.-Turnier kann die Verlierer einer Runde eines anderen K.-o.-Turniers aufnehmen.** Viele K.-o.-Turniere werden als Hauptfeld gespielt, mit einem zweiten K.-o.-Turnier für alle, die dessen erste Runde verloren haben, und einem dritten für alle, die die zweite verloren haben. Drücken Sie im Dialog eines K.-o.-Turniers auf **K.-o.-Turnier der Verlierer hinzufügen**, geben Sie ihm einen Namen und wählen Sie die Runde, deren Verlierer darin weiterspielen. Die Spieler kommen dorthin, sobald jedes Match entschieden ist; Sie tragen sie also nicht von Hand ein.
+- **Bei einem Block lässt sich festlegen, wie Spieler mit gleich vielen gewonnenen Matches unterschieden werden.** Wählen Sie im Dialog eines Blocks **Bei Gleichstand**: Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat; nur wer wen geschlagen hat; oder andere, also kein bekanntes Verfahren, sodass die Spieler gleichauf bleiben und sich einen Platz teilen. Ein neuer Block beginnt mit Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat.
+- **Ein Wettbewerb kann die Höchstzahl der Tore angeben, bis zu der seine Spiele gespielt werden.** Unter den Kontrollkästchen im Dialog eines Wettbewerbs nimmt **Höchstzahl der Tore** eine ganze Zahl von mindestens 1 an. Lassen Sie das Feld leer, wenn es keine Höchstzahl gibt. Ein Wettbewerb, der nichts angibt, hat den Wert, der für seine Sportart üblich ist: 26, beim Golf-Croquet 13.
+- **Die Rangliste als Textdatei nennt als Sieger eines Blocks den, den der Block so platziert.** Der Spieler, den der Block auf Platz eins setzt, ist der Sieger, wenn es nur einen gibt; sind Spieler um den ersten Platz nicht zu unterscheiden, wird niemand genannt. Früher nannte die Datei den Spieler mit den meisten gewonnenen Spielen, und das konnte ein anderer sein.
+- **Die Leiste der Bereiche hält mit den Wettbewerben Schritt.** Wenn Sie einen Wettbewerb oder einen Test hinzufügen, ändern, verschieben, archivieren oder wiederherstellen, bietet die Leiste auf der Seite des Turniers an, was das Turnier jetzt hat, ohne dass Sie die Seite neu öffnen müssen.
+- **Eine Liste von Spielern ohne Zeile mit Feldern wird beanstandet.** Nennt die erste Zeile der Liste, die Sie bei **Mehrere Spieler hinzufügen** einfügen, kein Feld, sagt die Meldung, dass die erste Zeile Feldnamen sein muss, mit einem Link zur Hilfe, der in einem anderen Tab öffnet, damit das Eingegebene erhalten bleibt.
+- **Die Dialoge Spieler hinzufügen und Mehrere Spieler hinzufügen öffnen sich im Fenster.** Bei nach unten gescrollter Seite öffneten sie sich früher mit ihrem oberen Rand über dem sichtbaren Bereich.
+
+### Einem Turnier folgen
+
+- **Ein Block zeigt, auf welchem Platz jeder Spieler steht.** Das Raster und die Zusammenfassung eines Blocks enden mit einer Spalte mit der Überschrift #, die den Platz jedes Spielers angibt: 1 oder =2, wenn Spieler nicht zu unterscheiden sind und sich Platz zwei teilen. Darunter sagt eine Zeile, wie Spieler unterschieden wurden, die bei den gewonnenen Matches gleichauf liegen.
+- **Ein Wettbewerb sagt, bis zu wie vielen Toren seine Spiele gespielt werden.** Ist das nicht der für die Sportart übliche Wert, sagen es die Ergebnisse: „Gespielt bis 14 Tore“.
+- **Die Zeile eines nationalen oder internationalen Turniers steht fett.** Jede Turnierliste tut das: auf der Startseite, für ein Jahr und für eine Sportart in einem Jahr, in einer Suche und auf der Seite eines Spielers.
+- **Die Ansichten eines Wettbewerbs stehen neben seiner Drucken-Schaltfläche.** Raster, Zusammenfassung und Spielreihenfolge stehen zusammen mit dem Drucker am rechten Rand, und der Name des Wettbewerbs steht allein links. Auf einem Handy steht der Drucker unter den Ansichten, weiterhin am rechten Rand.
+
 ## Veröffentlicht am 2026-11-01
 
 ### Einem Turnier folgen

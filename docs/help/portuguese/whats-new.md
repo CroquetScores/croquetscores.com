@@ -1,5 +1,24 @@
 # Novidades
 
+## Lançado em 2026-11-02
+
+### Administrar um torneio
+
+- **Um mata-mata pode receber os perdedores de uma rodada de outro mata-mata.** Muitos mata-matas são disputados com uma chave principal e um segundo mata-mata para quem perdeu a primeira rodada, e um terceiro para quem perdeu a segunda. Na janela de um mata-mata, toque em **Adicionar mata-mata dos perdedores**, dê um nome a ele e escolha a rodada cujos perdedores continuam jogando nele. Os jogadores são colocados ali conforme cada partida é decidida, então você não os insere à mão.
+- **Um grupo pode dizer como se desempatam os jogadores com o mesmo número de partidas ganhas.** Na janela de um grupo, escolha os seus **Critérios de desempate**: saldo de jogos, depois saldo de arcos, depois quem venceu quem; só quem venceu quem; ou outro, que é nenhum método conhecido, de modo que os jogadores continuam empatados e dividem uma colocação. Um grupo novo começa com saldo de jogos, depois saldo de arcos, depois quem venceu quem.
+- **Uma competição pode dizer o máximo de arcos até o qual seus jogos são disputados.** Entre as caixas de seleção da janela de uma competição, **Máximo de arcos** aceita um número inteiro a partir de 1. Deixe vazio para não ter máximo. Uma competição que não diz usa o habitual do seu esporte: 26, ou 13 no Croquet de Golfe.
+- **O arquivo de texto dos rankings nomeia o vencedor de um grupo como o grupo o classifica.** O jogador que o grupo coloca em primeiro é o vencedor, quando há só um, e ninguém é nomeado quando os jogadores não podem ser separados no primeiro lugar. Antes, o arquivo nomeava o jogador com mais jogos ganhos, que podia ser outro.
+- **A barra de seções acompanha as competições.** Depois de adicionar, alterar, mover, arquivar ou restaurar uma competição ou um teste, a barra na página do torneio oferece o que o torneio tem agora, sem abrir a página de novo.
+- **Uma lista de jogadores sem linha de campos é avisada.** Se a primeira linha da lista que você cola em **Adicionar jogadores** não nomeia nenhum campo, a mensagem diz que a primeira linha deve conter os nomes dos campos, com um link para a ajuda, em outra aba para que o que você digitou fique onde está.
+- **As janelas Adicionar jogador e Adicionar jogadores abrem na área visível.** Com a página rolada para baixo, elas abriam com o topo acima do que dava para ver.
+
+### Acompanhar um torneio
+
+- **Um grupo mostra a colocação de cada jogador.** A grade e o resumo de um grupo terminam com uma coluna com o título #, que dá a colocação de cada jogador: 1, ou =2 quando os jogadores não podem ser separados e dividem o segundo lugar. Abaixo dela, quando há jogadores empatados nas partidas ganhas, uma linha diz como foram separados.
+- **Uma competição diz a quantos arcos seus jogos são disputados.** Quando não é o habitual do esporte, os resultados dizem isso, como "Jogado a 14 arcos".
+- **A linha de um torneio de nível nacional ou internacional fica em negrito.** Toda lista de torneios faz isso: na página inicial, de um ano e de um esporte em um ano, em uma busca e na página de um jogador.
+- **As visualizações de uma competição ficam ao lado do botão de imprimir.** Grade, Resumo e Ordem de jogo ficam juntos com a impressora na borda direita, e o nome da competição fica sozinho à esquerda. Em um celular, a impressora vai abaixo das visualizações, ainda na borda direita.
+
 ## Lançado em 2026-11-01
 
 ### Acompanhar um torneio

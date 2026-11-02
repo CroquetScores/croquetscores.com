@@ -1,5 +1,24 @@
 # What's new
 
+## Released 2026-11-02
+
+### Managing a tournament
+
+- **A knockout can take the losers of another knockout's round.** Many knockouts are run as a main draw with a second knockout for those who lost its first round, and a third for those who lost its second. In the dialog of a knockout, press **Add Losers Knockout**, name it, and choose the round whose losers play on in it. Its players are put there as each match is decided, so you do not enter them by hand.
+- **A block can be told how players level on matches won are told apart.** In the dialog of a block, choose its **Tie Breaks**: net games then net hoops then who beat who, who beat who alone, or other, which is no known way, so that players stay level and share a place. A new block begins on net games then net hoops then who beat who.
+- **A competition can say the most hoops its games are played to.** Among the ticks in a competition's dialog, **Maximum hoops** takes a whole number of at least 1. Leave it empty for no maximum. A competition that does not say has the usual for its sport: 26, or 13 in golf croquet.
+- **The rankings text file names the winner of a block as the block places them.** The player the block places first is the winner, where only one is, and nobody is named where players cannot be told apart for first. Before, the file named the player with the most games won, which could be someone else.
+- **The bar of sections keeps up with the competitions.** After you add, change, move, archive or restore a competition or a test, the bar on the tournament's page offers what the tournament now has, without opening the page again.
+- **A list of players with no row of fields is told so.** If the first row of the list you paste into **Add Players** names no field, the message says that the first row must be field names, with a link to the help, in another tab so that what you typed stays where it is.
+- **The Add Player and Add Players dialogs open in the window.** With the page scrolled down, they used to open with their tops above what could be seen.
+
+### Following a tournament
+
+- **A block shows where each player is placed.** The grid and the summary of a block end with a column headed #, giving each player's place: 1, or =2 where players cannot be told apart and share second. Beneath it, where players are level on the matches they have won, a line says how they were told apart.
+- **A competition says how many hoops its games are played to.** Where that is not the usual for the sport, the results say so, as "Played to 14 hoops".
+- **The row of a national or international tournament is in bold.** Every list of tournaments does it: on the home page, for a year and for a sport in a year, in a search, and on a player's page.
+- **A competition's views sit next to its print button.** Grid, Summary and Order of Play are together with the printer against the right edge, and the competition's name stands alone at the left. On a phone the printer goes beneath the views, still against the right edge.
+
 ## Released 2026-11-01
 
 ### Following a tournament

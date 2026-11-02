@@ -1,5 +1,24 @@
 # Nouveautés
 
+## Publié le 2026-11-02
+
+### Organiser un tournoi
+
+- **Une élimination directe peut accueillir les perdants d'un tour d'une autre.** Beaucoup d'éliminations directes se jouent avec un tableau principal, une deuxième élimination directe pour ceux qui ont perdu son premier tour, et une troisième pour ceux qui ont perdu son deuxième. Dans la fenêtre d'une élimination directe, appuyez sur **Ajouter une élimination directe des perdants**, donnez-lui un nom et choisissez le tour dont les perdants y continuent. Ses joueurs y sont placés à mesure que chaque match est décidé ; vous ne les saisissez donc pas à la main.
+- **On peut dire comment départager les joueurs à égalité de matchs gagnés dans une poule.** Dans la fenêtre d'une poule, choisissez son **Départage** : différence de parties puis différence d'arceaux puis qui a battu qui, qui a battu qui seul, ou autre, c'est-à-dire aucune méthode connue : les joueurs restent alors à égalité et partagent une place. Une nouvelle poule commence par la différence de parties puis la différence d'arceaux puis qui a battu qui.
+- **Une compétition peut dire le nombre maximal d'arceaux de ses parties.** Parmi les cases à cocher de la fenêtre d'une compétition, **Nombre maximal d'arceaux** prend un nombre entier d'au moins 1. Laissez-le vide s'il n'y a pas de maximum. Une compétition qui n'en dit rien a l'usage de son sport : 26, ou 13 au croquet golf.
+- **Le fichier texte des classements nomme le vainqueur d'une poule tel que la poule le place.** Le joueur que la poule place premier est le vainqueur, s'il n'y en a qu'un, et personne n'est nommé quand des joueurs ne peuvent pas être départagés pour la première place. Avant, le fichier nommait le joueur qui avait gagné le plus de parties, qui pouvait être quelqu'un d'autre.
+- **La barre des rubriques suit les compétitions.** Après que vous avez ajouté, modifié, déplacé, archivé ou restauré une compétition ou une rencontre, la barre de la page du tournoi propose ce que le tournoi a maintenant, sans qu'il faille rouvrir la page.
+- **Une liste de joueurs sans ligne de champs est signalée.** Si la première ligne de la liste que vous collez dans **Ajouter des joueurs** ne nomme aucun champ, le message dit que la première ligne doit être les noms des champs, avec un lien vers l'aide, dans un autre onglet pour que ce que vous avez saisi reste en place.
+- **Les fenêtres Ajouter un joueur et Ajouter des joueurs s'ouvrent dans l'écran.** Quand la page était défilée vers le bas, elles s'ouvraient avec leur haut au-dessus de ce qu'on pouvait voir.
+
+### Suivre un tournoi
+
+- **Une poule montre la place de chaque joueur.** La grille et le récapitulatif d'une poule se terminent par une colonne intitulée #, qui donne la place de chaque joueur : 1, ou =2 quand des joueurs ne peuvent pas être départagés et se partagent la deuxième place. Dessous, quand des joueurs sont à égalité de matchs gagnés, une ligne dit comment ils ont été départagés.
+- **Une compétition dit en combien d'arceaux ses parties se jouent.** Quand ce n'est pas l'usage du sport, les résultats le disent : « Joué en 14 arceaux ».
+- **La ligne d'un tournoi national ou international est en gras.** Toutes les listes de tournois le font : sur la page d'accueil, pour une année et pour un sport dans une année, dans une recherche, et sur la page d'un joueur.
+- **Les vues d'une compétition sont à côté de son bouton d'impression.** Grille, Récapitulatif et Ordre de jeu sont réunis avec l'imprimante contre le bord droit, et le nom de la compétition est seul à gauche. Sur un téléphone, l'imprimante passe sous les vues, toujours contre le bord droit.
+
 ## Publié le 2026-11-01
 
 ### Suivre un tournoi

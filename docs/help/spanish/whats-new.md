@@ -1,5 +1,24 @@
 # Novedades
 
+## Publicado el 2026-11-02
+
+### Gestionar un torneo
+
+- **Una eliminatoria puede recibir a los perdedores de una ronda de otra eliminatoria.** Muchas eliminatorias se juegan como un cuadro principal con una segunda eliminatoria para quienes perdieron su primera ronda, y una tercera para quienes perdieron la segunda. En el cuadro de diálogo de una eliminatoria, pulsa **Añadir eliminatoria de perdedores**, ponle nombre y elige la ronda cuyos perdedores siguen jugando en ella. Sus jugadores se colocan allí a medida que se decide cada partido, así que no tienes que introducirlos a mano.
+- **Se puede indicar a un grupo cómo se distingue a los jugadores con los mismos partidos ganados.** En el cuadro de diálogo de un grupo, elige sus **Desempates**: partidas netas, luego aros netos, luego quién ganó a quién; solo quién ganó a quién; u otro, que es ningún método conocido, de modo que los jugadores siguen empatados y comparten un puesto. Un grupo nuevo empieza con partidas netas, luego aros netos, luego quién ganó a quién.
+- **Una competición puede indicar el máximo de aros al que se juegan sus partidas.** Entre las casillas del cuadro de diálogo de una competición, **Máximo de aros** admite un número entero de al menos 1. Déjalo vacío si no hay máximo. Una competición que no lo indica usa el habitual de su deporte: 26, o 13 en croquet golf.
+- **El archivo de texto de los rankings nombra como ganador de un grupo al que el grupo coloca primero.** El ganador es el jugador que el grupo coloca en primer lugar, si es uno solo, y no se nombra a nadie si no se puede distinguir a los jugadores en el primer puesto. Antes, el archivo nombraba al jugador con más partidas ganadas, que podía ser otro.
+- **La barra de secciones sigue a las competiciones.** Después de añadir, cambiar, mover, archivar o restaurar una competición o un test, la barra de la página del torneo ofrece lo que el torneo tiene ahora, sin volver a abrir la página.
+- **Una lista de jugadores sin fila de campos lo indica.** Si la primera fila de la lista que pegas en **Añadir jugadores** no nombra ningún campo, el mensaje dice que la primera fila debe ser de nombres de campos, con un enlace a la ayuda, que se abre en otra pestaña para que lo que escribiste se conserve.
+- **Los cuadros de diálogo Añadir jugador y Añadir jugadores se abren dentro de la ventana.** Con la página desplazada hacia abajo, se abrían con su parte superior por encima de lo que se veía.
+
+### Seguir un torneo
+
+- **Un grupo muestra el puesto de cada jugador.** La cuadrícula y el resumen de un grupo terminan con una columna titulada #, que da el puesto de cada jugador: 1, o =2 cuando no se puede distinguir a los jugadores y comparten el segundo puesto. Debajo, cuando los jugadores están empatados en los partidos ganados, una línea dice cómo se les distinguió.
+- **Una competición indica a cuántos aros se juegan sus partidas.** Cuando no es lo habitual del deporte, los resultados lo dicen: «Se juega a 14 aros».
+- **La fila de un torneo nacional o internacional está en negrita.** Lo hace toda lista de torneos: en la página de inicio, en un año y en un deporte de un año, en una búsqueda y en la página de un jugador.
+- **Las vistas de una competición están junto a su botón de impresión.** Cuadrícula, Resumen y Orden de juego están juntos con la impresora contra el borde derecho, y el nombre de la competición queda solo a la izquierda. En un teléfono, la impresora pasa debajo de las vistas, siempre contra el borde derecho.
+
 ## Publicado el 2026-11-01
 
 ### Seguir un torneo
