@@ -23,7 +23,8 @@ Feature: The tournaments starting from one day to another, a page at a time
   sorted by keep the order they began in, so that a tournament is on the same
   page from one visit to the next. Asked for no sorting, the list is in the
   order it begins in. A sorting that is neither is refused as
-  `TournamentsInDays.NoSuchSorting`.
+  `TournamentsInDays.NoSuchSorting`, and a language that is not one a language
+  is written as, such as "en_NZ", is refused as `TournamentsInDays.NoSuchLanguage`.
 
   Pages are counted from the first. A page asked for beyond the last is not a
   mistake, since a reader whose list shrank under them is not at fault: it is
@@ -196,6 +197,18 @@ Feature: The tournaments starting from one day to another, a page at a time
     Scenario: A column there is not is refused
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by colour from the smallest
       Then it is refused with "TournamentsInDays.NoSuchSorting"
+
+  Rule: A language there is not is refused
+
+    Scenario: A language written with an underscore is refused
+      Given the reader reads the language "en_NZ"
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the smallest
+      Then it is refused with "TournamentsInDays.NoSuchLanguage"
+
+    Scenario: A language with a region is not refused
+      Given the reader reads the language "en-NZ"
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the smallest
+      Then 0 tournaments are answered
 
   Rule: A page there is not is refused or is empty
 

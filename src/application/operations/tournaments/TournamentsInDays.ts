@@ -10,7 +10,8 @@ import {
 export type TournamentsInDaysRefusedCode =
   | "TournamentsInDays.NotText"
   | "TournamentsInDays.NoSuchPage"
-  | "TournamentsInDays.NoSuchSorting";
+  | "TournamentsInDays.NoSuchSorting"
+  | "TournamentsInDays.NoSuchLanguage";
 
 /** What the list can be sorted by, and which way. */
 export interface TournamentsSorting {
@@ -65,6 +66,15 @@ export class TournamentsInDays extends Query<TournamentsPage> {
     ) {
       throw new ValidationError<TournamentsInDaysRefusedCode>(
         "TournamentsInDays.NoSuchSorting",
+      );
+    }
+    // Asked of the language itself, which throws on a tag that is not one,
+    // rather than a pattern of ours that would have to know every tag.
+    try {
+      Intl.getCanonicalLocales(language);
+    } catch {
+      throw new ValidationError<TournamentsInDaysRefusedCode>(
+        "TournamentsInDays.NoSuchLanguage",
       );
     }
     if (!Number.isSafeInteger(page) || page < 1) {

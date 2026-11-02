@@ -13,7 +13,8 @@ export type TournamentFilterErrorCode =
   | "TournamentFilter.FirstDayWithoutLastDay"
   | "TournamentFilter.LastDayWithoutFirstDay"
   | "TournamentFilter.FirstDayAfterLastDay"
-  | "TournamentFilter.DayNotADay";
+  | "TournamentFilter.DayNotADay"
+  | "TournamentFilter.DayOutOfRange";
 
 /** What a reader chose: each of the three, or nothing where they chose none. */
 export interface Chosen {
@@ -32,6 +33,8 @@ const refuse = (code: TournamentFilterErrorCode): never => {
   throw new ValidationError<TournamentFilterErrorCode>(code);
 };
 
+const EARLIEST_DAY = "1000-01-01";
+
 // Read back from the date it makes, so that a day the calendar has not got,
 // such as the thirtieth of February, is refused rather than carried over into
 // March as `Date` would.
@@ -41,9 +44,13 @@ const dayOf = (written: string): string => {
     : undefined;
   if (parsed === undefined || Number.isNaN(parsed.getTime()))
     return refuse("TournamentFilter.DayNotADay");
-  return parsed.toISOString().slice(0, 10) === written
+  if (parsed.toISOString().slice(0, 10) !== written)
+    return refuse("TournamentFilter.DayNotADay");
+  // The years a tournament's address holds (TournamentAddress.ts), the only
+  // ones it can start in. Before them is a day the database does not have.
+  return written >= EARLIEST_DAY
     ? written
-    : refuse("TournamentFilter.DayNotADay");
+    : refuse("TournamentFilter.DayOutOfRange");
 };
 
 /**

@@ -76,16 +76,8 @@ export const registerTournamentsInDaysPage = (
     const { mediator } = request.server;
     const language = speaking.language.tag;
     const { from, to } = asked.carried;
-    const heading =
-      from !== undefined && to !== undefined
-        ? say("tournamentsInDays.heading", {
-            from: `${dayWritten(from, language)} ${from.slice(0, 4)}`,
-            to: `${dayWritten(to, language)} ${to.slice(0, 4)}`,
-          })
-        : say("tournamentsInDays.headingAll");
-
     const shell = {
-      title: heading,
+      title: say("tournamentsInDays.headingAll"),
       theme: themeOf(request),
       signedIn: signedIn(request),
       hasPassword: hasPassword(request),
@@ -126,6 +118,15 @@ export const registerTournamentsInDaysPage = (
       return reply.redirect(addressAt(request, answered.lastPage), 303);
     }
     const years = await mediator.query(new TournamentYears(website.host));
+    // Said only now that the days are known to be days, which formatting a
+    // string that is not one would throw on.
+    const heading =
+      from !== undefined && to !== undefined
+        ? say("tournamentsInDays.heading", {
+            from: `${dayWritten(from, language)} ${from.slice(0, 4)}`,
+            to: `${dayWritten(to, language)} ${to.slice(0, 4)}`,
+          })
+        : say("tournamentsInDays.headingAll");
 
     // The arrows point the way the page turns, and are left out of what a
     // screen reader says, since "Previous" says it already.
@@ -154,6 +155,7 @@ export const registerTournamentsInDaysPage = (
       request,
       render(assets, {
         ...shell,
+        title: heading,
         ...yearsOf(years, speaking),
         body: `${filter(request, asked, speaking, answered.total)}
 ${table(

@@ -180,3 +180,27 @@ Feature: Which tournaments a reader asks to see
       And the last day "2026-03-31"
       When the filter is made
       Then it is refused with "TournamentFilter.DayNotADay"
+
+  Rule: A day is one a tournament can start on
+
+    A tournament's address holds a year of four digits, the first not a nought
+    (`create.feature`), so no tournament starts before the year 1000 and a day
+    before it asks the database for a day it does not have.
+
+    Scenario: The first day of the year 1000 is filtered by
+      Given the first day "1000-01-01"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it filters by the first day "1000-01-01"
+
+    Scenario: The last day of the year 999 is refused
+      Given the first day "0999-12-31"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it is refused with "TournamentFilter.DayOutOfRange"
+
+    Scenario: A day in the year 0 is refused
+      Given the first day "0000-01-01"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it is refused with "TournamentFilter.DayOutOfRange"

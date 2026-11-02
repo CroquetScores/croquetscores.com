@@ -102,12 +102,12 @@ Then(
 );
 
 Then(
-  /^"(.*)" is the country chosen$/,
-  async function (this: SpecWorld, country: string) {
+  /^"(.*)" is the (country|region|sport) chosen$/,
+  async function (this: SpecWorld, words: string, field: string) {
     const chosen = this.browserPage.locator(
-      'form.tournament-filter select[name="country"] option:checked',
+      `form.tournament-filter select[name="${field}"] option:checked`,
     );
-    assert.equal(await chosen.textContent(), country);
+    assert.equal(await chosen.textContent(), words);
   },
 );
 

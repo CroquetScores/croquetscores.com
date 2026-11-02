@@ -97,6 +97,15 @@ Feature: A page lists the tournaments starting from one day to another
       When "Filter" is pressed
       Then the content has the heading "Recent Results"
 
+  Rule: The days chosen on a sport's page keep its sport
+
+    Scenario: The sport of the page is the sport chosen
+      Given the page for "gc" in 2026 is open
+      And "2026-03-01" is chosen as From
+      And "2026-03-31" is chosen as To
+      When "Filter" is pressed
+      Then "Golf Croquet" is the sport chosen
+
   Rule: Only tournaments starting from the first day to the last are listed
 
     Background:
@@ -255,6 +264,18 @@ Feature: A page lists the tournaments starting from one day to another
     Scenario: A first day after the last is refused
       When the tournaments from "2026-04-01" to "2026-03-31" are opened
       Then the page is refused with "TournamentFilter.FirstDayAfterLastDay"
+
+    Scenario: Words that are not a day are refused
+      When the tournaments from "soon" to "later" are opened
+      Then the page is refused with "TournamentFilter.DayNotADay"
+
+    Scenario: A day with a month there is not is refused
+      When the tournaments from "2026-13-45" to "2026-03-31" are opened
+      Then the page is refused with "TournamentFilter.DayNotADay"
+
+    Scenario: A day before the year 1000 is refused
+      When the tournaments from "0000-01-01" to "2026-01-01" are opened
+      Then the page is refused with "TournamentFilter.DayOutOfRange"
 
     Scenario: A day that is not a day is refused
       When the tournaments from "2026-02-30" to "2026-03-31" are opened
