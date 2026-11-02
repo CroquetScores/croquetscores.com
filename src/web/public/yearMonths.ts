@@ -46,7 +46,7 @@ const monthName = (language: string, year: number, month: number): string =>
     new Date(Date.UTC(year, month - 1, 1)),
   );
 
-// What presses on a month, and what sorts a month's table, do not load the
+// What presses on a month, and what sorts the months' tables, do not load the
 // page. A press on a row beyond its link follows the name's link, as the rows
 // of every other table do (tournamentLists.ts), since a script put in by
 // innerHTML is not run and so the table's own cannot do it.
@@ -55,26 +55,51 @@ const script = `
       (function () {
         var root = document.currentScript.parentElement;
         root.appendChild(root.querySelector("template").content.cloneNode(true));
-        function load(month, search) {
+        // How the tables are sorted, which is the page's and not a month's: a
+        // month sorted sorts every other open month the same way, and one
+        // opened afterwards begins sorted so too.
+        var sorting = null;
+        function searchFor() {
+          var query = new URLSearchParams(window.location.search);
+          if (sorting !== null) query.set("tournaments", sorting);
+          var written = query.toString();
+          return written === "" ? "" : "?" + written;
+        }
+        function show(month, open) {
+          month.querySelector(".year-month-body").hidden = !open;
+          month.dataset.state = open ? "open" : "closed";
+          var toggle = month.querySelector(".year-month-toggle");
+          toggle.setAttribute("aria-expanded", String(open));
+          toggle.querySelector(".year-month-mark").textContent = open ? "-" : "+";
+        }
+        function load(month) {
           var body = month.querySelector(".year-month-body");
+          var search = searchFor();
           month.setAttribute("aria-busy", "true");
           fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
             credentials: "same-origin",
           })
             .then(function (answer) {
-              if (!answer.ok) throw new Error(String(answer.status));
-              return answer.text();
-            })
-            .then(function (html) {
-              body.innerHTML = html;
-              body.hidden = false;
-              Array.prototype.forEach.call(
-                body.querySelectorAll(".tournament-list"),
-                function (list) { list.classList.add("tournament-list-pressable"); }
-              );
-              month.dataset.loaded = "true";
-              month.dataset.state = "open";
-              month.querySelector(".year-month-toggle").setAttribute("aria-expanded", "true");
+              // A filter the server refuses is answered with the reason, which
+              // is shown in the month, and anything else that is not the table
+              // is a failure to load it.
+              if (!answer.ok && answer.status !== 422) {
+                throw new Error(String(answer.status));
+              }
+              return answer.text().then(function (html) {
+                body.innerHTML = html;
+                body.hidden = false;
+                if (!answer.ok) {
+                  month.dataset.state = "failed";
+                  return;
+                }
+                Array.prototype.forEach.call(
+                  body.querySelectorAll(".tournament-list"),
+                  function (list) { list.classList.add("tournament-list-pressable"); }
+                );
+                month.dataset.loaded = search;
+                show(month, true);
+              });
             })
             .catch(function () {
               body.textContent = root.dataset.failed;
@@ -87,24 +112,23 @@ const script = `
           var toggle = event.target.closest(".year-month-toggle");
           if (toggle !== null) {
             var month = toggle.closest(".year-month");
-            var body = month.querySelector(".year-month-body");
             if (month.dataset.state === "open") {
-              body.hidden = true;
-              month.dataset.state = "closed";
-              toggle.setAttribute("aria-expanded", "false");
-            } else if (month.dataset.loaded === "true") {
-              body.hidden = false;
-              month.dataset.state = "open";
-              toggle.setAttribute("aria-expanded", "true");
+              show(month, false);
+            } else if (month.dataset.loaded === searchFor()) {
+              show(month, true);
             } else {
-              load(month, window.location.search);
+              load(month);
             }
             return;
           }
           var sort = event.target.closest(".year-month-body thead a");
           if (sort !== null) {
             event.preventDefault();
-            load(sort.closest(".year-month"), sort.search);
+            sorting = new URLSearchParams(sort.search).get("tournaments");
+            Array.prototype.forEach.call(
+              root.querySelectorAll('.year-month[data-state="open"]'),
+              load
+            );
             return;
           }
           var row = event.target.closest(".year-month-body tbody tr");
@@ -132,7 +156,7 @@ export const monthsOf = (
       (
         month,
       ) => `          <li class="year-month" data-month="${twoDigits(month)}" data-state="closed">
-            <button type="button" class="year-month-toggle" aria-expanded="false">${escape(monthName(speaking.language.tag, year, month))}</button>
+            <button type="button" class="year-month-toggle" id="month-toggle-${twoDigits(month)}" aria-expanded="false"><span class="year-month-mark" aria-hidden="true">+</span> <span class="year-month-name">${escape(monthName(speaking.language.tag, year, month))}</span></button>
             <div class="year-month-body" hidden></div>
           </li>`,
     )
@@ -190,12 +214,10 @@ export const sendMonth = async (
       table(
         {
           table: "tournaments",
-          idStart: `month-${twoDigits(month)}`,
-          heading: new Intl.DateTimeFormat(speaking.language.tag, {
-            month: "long",
-            year: "numeric",
-            timeZone: "UTC",
-          }).format(new Date(Date.UTC(year, month - 1, 1))),
+          // Named by the month's own button, which is its heading, so that a
+          // month is not headed twice.
+          namedBy: `month-toggle-${twoDigits(month)}`,
+          heading: "",
           none: say(
             page.sport === undefined ? "year.monthNone" : "yearSport.monthNone",
             named,

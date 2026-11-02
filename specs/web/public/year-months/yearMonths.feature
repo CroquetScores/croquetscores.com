@@ -22,8 +22,15 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
 
   The country, region and sport the reader chose still narrow the
   tournaments (`year.feature`), and are in the page's address as they are
-  there. Each month's tournaments begin sorted by date, earliest first, and
-  pressing a column heading sorts that month's table alone.
+  there. Each month's tournaments begin sorted by date, earliest first.
+  Pressing a column heading sorts every open month's table the same way, and
+  a month opened afterwards begins sorted so too, since a reader sorting by
+  name wants all of them by name and not one.
+
+  A month is marked "+" while it is closed and "-" while it is open. Open, it
+  has no heading of its own beyond its name, which is not said again over its
+  table, and its name is joined to the table's column headings in the one
+  green, so that the two read as a single heading.
 
   Where a scenario says nothing else, a tournament is for the sport "ac".
 
@@ -194,21 +201,89 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       When every month of the year is pressed
       Then 12 months are open
 
-  Rule: Pressing a column heading sorts that month alone
+  Rule: A month is marked by whether it is open
 
     Background:
       Given scripting is on
 
-    Scenario: A month's table is sorted by the column pressed
-      Given "organiser@example.com" has created the tournament "Beta Open"
+    Scenario: A closed month is marked with a plus
+      When the page for 2026 is opened
+      Then the month "October" is marked "+"
+
+    Scenario: An open month is marked with a minus
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" is marked "-"
+
+    Scenario: A month closed again is marked with a plus
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the month "October" is pressed
+      Then the month "October" is marked "+"
+
+  Rule: An open month is one heading with its column headings
+
+    Background:
+      Given scripting is on
+
+    Scenario: An open month has no heading over its table
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" has no other heading
+
+    Scenario: An open month's name is joined to its column headings
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" touches its column headings
+
+    Scenario: An open month's name is the colour of its column headings
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" is the colour of its column headings
+
+  Rule: Sorting one month sorts every open month the same way
+
+    Background:
+      Given scripting is on
+      And "organiser@example.com" has created the tournament "Beta Open"
       And the tournament "Beta Open" starts on "2026-10-03"
       And "organiser@example.com" has created the tournament "Alpha Open"
       And the tournament "Alpha Open" starts on "2026-10-24"
-      And the page for 2026 is open
+      And "organiser@example.com" has created the tournament "Delta Open"
+      And the tournament "Delta Open" starts on "2026-03-02"
+      And "organiser@example.com" has created the tournament "Charlie Open"
+      And the tournament "Charlie Open" starts on "2026-03-20"
+
+    Scenario: The month pressed is sorted by the column
+      Given the page for 2026 is open
       And the month "October" is pressed
       When the column "Name" of the year's tournaments is pressed
-      Then the first of the year's tournaments is "Alpha Open"
-      And the second of the year's tournaments is "Beta Open"
+      Then the first tournament of the month "October" is "Alpha Open"
+      And the second tournament of the month "October" is "Beta Open"
+
+    Scenario: Another open month is sorted the same way
+      Given the page for 2026 is open
+      And the month "March" is pressed
+      And the month "October" is pressed
+      When the column "Name" of the month "October" is pressed
+      Then the first tournament of the month "March" is "Charlie Open"
+      And the second tournament of the month "March" is "Delta Open"
+
+    Scenario: A month opened afterwards is sorted the same way
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the column "Name" of the year's tournaments is pressed
+      When the month "March" is pressed
+      Then the first tournament of the month "March" is "Charlie Open"
+
+    Scenario: A closed month is sorted the same way when it is opened again
+      Given the page for 2026 is open
+      And the month "March" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the column "Name" of the month "October" is pressed
+      When the month "March" is pressed
+      Then the first tournament of the month "March" is "Charlie Open"
 
     Scenario: The page is not loaded again to sort
       Given the page for 2026 is open

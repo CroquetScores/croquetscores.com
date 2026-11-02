@@ -3554,7 +3554,8 @@ a.player-name[data-withdrawn] {
 
 /* The months of a year's page (yearMonths.ts): twelve to press, each opening
    its tournaments beneath it. The toggle is a button, and as tall as anything
-   else pressed with a thumb. */
+   else pressed with a thumb. Open, it is the same green as the table's column
+   headings and touches them, so that the two read as one heading. */
 .year-month-list {
   display: grid;
   gap: var(--space-2);
@@ -3564,6 +3565,8 @@ a.player-name[data-withdrawn] {
 }
 
 .year-month-toggle {
+  display: flex;
+  gap: var(--space-2);
   min-height: 44px;
   width: 100%;
   padding: var(--space-2) var(--space-3);
@@ -3573,16 +3576,28 @@ a.player-name[data-withdrawn] {
   font: inherit;
   font-weight: 600;
   text-align: start;
+  align-items: center;
   cursor: pointer;
 }
 
+.year-month-mark {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+
 .year-month-toggle[aria-expanded="true"] {
+  border-color: var(--accent-strong);
   background: var(--accent-strong);
   color: var(--accent-ink);
 }
 
 .year-month-body {
-  padding-block: var(--space-3);
+  padding: 0;
+}
+
+.year-month-body .tournament-list {
+  gap: 0;
 }
 
 .year-month[aria-busy="true"] .year-month-toggle {

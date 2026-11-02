@@ -19,7 +19,7 @@ const exactly = (words: string): RegExp =>
 
 const monthNamed = (world: SpecWorld, name: string): Locator =>
   months(world).filter({
-    has: world.browserPage.locator(".year-month-toggle", {
+    has: world.browserPage.locator(".year-month-name", {
       hasText: exactly(name),
     }),
   });
@@ -100,7 +100,7 @@ Then(
       (
         (await months(this)
           .nth(ordinal(which))
-          .locator(".year-month-toggle")
+          .locator(".year-month-name")
           .textContent()) ?? ""
       ).trim(),
       name,
@@ -148,5 +148,97 @@ Then(
   /^(\d+) month's tournaments have been asked for$/,
   function (this: SpecWorld, count: string) {
     assert.equal(askedFor.get(this)?.length, Number(count));
+  },
+);
+
+Then(
+  /^the month "(.*)" is marked "(\+|-)"$/,
+  async function (this: SpecWorld, name: string, mark: string) {
+    assert.equal(
+      (
+        (await monthNamed(this, name)
+          .locator(".year-month-mark")
+          .textContent()) ?? ""
+      ).trim(),
+      mark,
+    );
+  },
+);
+
+When(
+  /^the column "(.*)" of the month "(.*)" is pressed$/,
+  async function (this: SpecWorld, column: string, name: string) {
+    await monthNamed(this, name)
+      .locator("thead a", { hasText: new RegExp(`${column}$`) })
+      .click();
+    await settled(this);
+  },
+);
+
+Then(
+  /^the (first|second|third) tournament of the month "(.*)" is "(.*)"$/,
+  async function (
+    this: SpecWorld,
+    which: string,
+    name: string,
+    expected: string,
+  ) {
+    assert.equal(
+      (
+        (await monthNamed(this, name)
+          .locator("tbody tr .tournament-name")
+          .nth(ordinal(which))
+          .textContent()) ?? ""
+      ).trim(),
+      expected,
+    );
+  },
+);
+
+Then(
+  /^the month "(.*)" has no other heading$/,
+  async function (this: SpecWorld, name: string) {
+    assert.equal(await monthNamed(this, name).getByRole("heading").count(), 0);
+  },
+);
+
+// Where the month's button ends and its table's column headings begin, in the
+// page's own pixels.
+const edges = async (
+  world: SpecWorld,
+  name: string,
+): Promise<{ buttonBottom: number; headingsTop: number }> => {
+  const month = monthNamed(world, name);
+  const button = await month.locator(".year-month-toggle").boundingBox();
+  const headings = await month.locator("thead").boundingBox();
+  assert.ok(button !== null && headings !== null, "The month is not open.");
+  return {
+    buttonBottom: button.y + button.height,
+    headingsTop: headings.y,
+  };
+};
+
+Then(
+  /^the month "(.*)" touches its column headings$/,
+  async function (this: SpecWorld, name: string) {
+    const { buttonBottom, headingsTop } = await edges(this, name);
+    assert.ok(
+      Math.abs(headingsTop - buttonBottom) <= 1,
+      `There are ${String(headingsTop - buttonBottom)} pixels between them.`,
+    );
+  },
+);
+
+Then(
+  /^the month "(.*)" is the colour of its column headings$/,
+  async function (this: SpecWorld, name: string) {
+    const month = monthNamed(this, name);
+    // As text, since the specs are not compiled to know a page's globals.
+    const colour = (found: Locator): Promise<string> =>
+      found.evaluate("(element) => getComputedStyle(element).backgroundColor");
+    assert.equal(
+      await colour(month.locator(".year-month-toggle")),
+      await colour(month.locator("thead th").first()),
+    );
   },
 );

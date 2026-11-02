@@ -800,10 +800,17 @@ Then(
       ".tournament-name",
       ".tournament-dates",
       'select[name="region"] option:not([value=""])',
+      // The months of a year's page and the heading over a month's table are
+      // named by the browser's own calendar, as the dates' months are.
+      ".year-month-toggle",
+      ".year-month-body h2",
       // A sport's code, as AC is, is a code and no word of any language.
       ".tournament-sport",
       // The script that follows a row's link is code, which is not read.
       "script",
+      // What is said where scripting is off is in the page as text and not as
+      // markup, so a page with scripting on holds it unread.
+      "noscript",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

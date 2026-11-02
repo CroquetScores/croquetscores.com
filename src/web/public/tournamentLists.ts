@@ -375,6 +375,11 @@ export interface Listing {
    * under the same name and an id may be on a page only once.
    */
   readonly idStart?: string;
+  /**
+   * The id of what already names it, where the page does and the list is not
+   * to head itself with a second heading, as a month's table is not.
+   */
+  readonly namedBy?: string;
 }
 
 /** `listing`, as a table of its tournaments under its heading. */
@@ -444,8 +449,12 @@ export const table = (
     )
     .join("\n");
   const id = `${listing.idStart ?? listing.table}-heading`;
-  return `          <section class="tournament-list" data-list="${escape(listing.table)}" aria-labelledby="${id}">
-            <h2 id="${id}">${escape(listing.heading)}</h2>
+  return `          <section class="tournament-list" data-list="${escape(listing.table)}" aria-labelledby="${escape(listing.namedBy ?? id)}">${
+    listing.namedBy === undefined
+      ? `
+            <h2 id="${id}">${escape(listing.heading)}</h2>`
+      : ""
+  }
             <table>
               <thead>
                 <tr>

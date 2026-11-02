@@ -1,25 +1,28 @@
 @browser @postgres
-Feature: A sport's page in a year lists every tournament of it starting then
+Feature: A sport's page in a year lists its months, and a month the tournaments of it starting then
 
-  A year's page lists every tournament starting in the year (`year.feature`).
-  A reader who plays one sport wants that sport's tournaments alone, and goes
-  to its page in the year instead: at the year and the sport's code, as
-  "/2026/ac", which is where the tournament's own address begins. It lists
-  every tournament of the sport starting in the year that is not archived,
-  played or not (`TournamentsInYear.feature`).
+  A year's page lists the months of the year, and a month's tournaments are
+  loaded when it is pressed (`year.feature`, `yearMonths.feature`). A reader
+  who plays one sport wants that sport's tournaments alone, and goes to its
+  page in the year instead: at the year and the sport's code, as "/2026/ac",
+  which is where the tournament's own address begins. Its months hold every
+  tournament of the sport starting in the month that is not archived, played
+  or not (`TournamentsInYear.feature`). Every scenario here presses the month
+  its tournaments start in before reading them.
 
-  It looks and behaves as a year's page does: a table of the tournament's
+  Each month looks and behaves as a year's does: a table of the tournament's
   dates, the flag of the country it is played in, and its name, the flags'
   column with no heading; a row that leads to the tournament wherever it is
-  pressed but its flag; a flag that narrows the list to its country; a column
-  heading that sorts the table by that column, and turns it round where it is
-  sorted by it already; and a filter of a country and a region of it. It
-  begins sorted by date, earliest first. All of it needs no scripting, and
-  what was chosen is in the page's address.
+  pressed but its flag; a flag that narrows the page to its country; a column
+  heading that sorts that month's table by that column, in place, and turns it
+  round where it is sorted by it already; and a filter of a country and a
+  region of it, which is in the page's address. It begins sorted by date,
+  earliest first. Narrowing a page closes its months, since it is the page
+  loaded again. How a month is sorted is not kept in the address, or by the
+  device.
 
   The sport is the page's, so the filter offers no sport to choose: a reader
-  after another sport goes to its page. Narrowing and sorting stay on the
-  sport's page.
+  after another sport goes to its page. Narrowing stays on the sport's page.
 
   The secondary navigation is the years there are tournaments of the sport
   in, newest first (`TournamentYears.feature`), each leading to the sport's
@@ -40,6 +43,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
     And a site served as "croquetscores.com"
     And the server's clock reads "2026-10-02T10:00:00Z"
     And "organiser@example.com" has an account, confirmed
+    And scripting is on
 
   Rule: A sport's page in a year is its tournaments, for anybody
 
@@ -52,6 +56,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is in the sport's tournaments
 
   Rule: The tournaments are every one of the sport starting in the year
@@ -61,6 +66,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is for the sport "gc"
       When the page for "gc" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is in the sport's tournaments
 
     Scenario: A tournament of another sport is not listed
@@ -68,18 +74,21 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is for the sport "ac"
       When the page for "gc" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is not in the sport's tournaments
 
     Scenario: A tournament already played is listed
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-03-07"
       When the page for "ac" in 2026 is opened
+      And the month "March" is pressed
       Then "Spring Open" is in the sport's tournaments
 
     Scenario: A tournament starting in another year is not listed
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2025-10-04"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is not in the sport's tournaments
 
     Scenario: An archived tournament is not listed
@@ -87,12 +96,14 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-10-10"
       And "organiser@example.com" has archived the tournament "Spring Open"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is not in the sport's tournaments
 
     Scenario: A tournament on another website is not listed
       Given "organiser@example.com" has created the tournament "Spring Open" on the website "gateballscores.com"
       And the tournament "Spring Open" starts on "2026-10-10"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is not in the sport's tournaments
 
   Rule: A sport with no tournaments in the year says so
@@ -102,12 +113,14 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is for the sport "ac"
       When the page for "gc" in 2026 is opened
+      And the month "October" is pressed
       Then the sport's tournaments say there are none
 
     Scenario: A sport with tournaments in the year does not say there are none
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the sport's tournaments do not say there are none
 
   Rule: An address that is not a year and a sport of the website is not a page
@@ -143,6 +156,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
     Scenario Outline: The columns are the dates, the sport, the country and the name
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the <place> column of the sport's tournaments is "<column>"
 
       Examples:
@@ -152,37 +166,45 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
     Scenario: The country's column has no heading
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the third column of the sport's tournaments has no heading
 
     Scenario: On a phone the country's column is left out
       Given a viewport 375 pixels wide
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the country's column of the sport's tournaments is not shown
 
     Scenario: On a wide screen the country's column is shown
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the country's column of the sport's tournaments is shown
 
     Scenario: A tournament is dated from its start to its finish
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is dated "10-12 Oct" in the sport's tournaments
 
     Scenario: The country is shown as its flag
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" shows the flag of "nz" in the sport's tournaments
 
     Scenario: The flag is named for a screen reader by what pressing it does
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the flag of "Spring Open" in the sport's tournaments is named "Only tournaments in New Zealand"
 
     Scenario: The sport is shown as its code in capitals on a tablet
       Given a viewport 768 pixels wide
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" shows the sport "AC" in the sport's tournaments
 
     Scenario: The sport is left out on a phone
       Given a viewport 375 pixels wide
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" does not show its sport in the sport's tournaments
 
   Rule: A national or international tournament is bold along its whole row
@@ -200,48 +222,50 @@ Feature: A sport's page in a year lists every tournament of it starting then
     Scenario: A national tournament's row is bold
       Given the tournament "Spring Open" is national
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is bold in the sport's tournaments
 
     Scenario: An international tournament's row is bold
       Given the tournament "Spring Open" is international
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is bold in the sport's tournaments
 
     Scenario: A tournament that is neither is not bold
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then "Spring Open" is not bold in the sport's tournaments
 
   Rule: The tournaments begin sorted by date, earliest first, and sort by a column pressed
 
     Background:
       Given "organiser@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" starts on "2026-11-07"
+      And the tournament "Autumn Open" starts on "2026-10-24"
       And "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" starts on "2026-10-03"
 
     Scenario: The earliest is first
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the first of the sport's tournaments is "Spring Open"
       And the second of the sport's tournaments is "Autumn Open"
 
     Scenario: The dates begin marked as sorted from the earliest
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the column "Date" of the sport's tournaments is marked as sorted from the smallest
 
     Scenario: A column not sorted by sorts from the smallest
       Given the page for "ac" in 2026 is open
+      And the month "October" is pressed
       When the column "Name" of the sport's tournaments is pressed
       Then the first of the sport's tournaments is "Autumn Open"
 
     Scenario: The column sorted by is turned round when pressed
       Given the page for "ac" in 2026 is open
+      And the month "October" is pressed
       When the column "Date" of the sport's tournaments is pressed
       Then the first of the sport's tournaments is "Autumn Open"
-
-    Scenario: Sorting stays on the sport's page
-      Given the page for "ac" in 2026 is open
-      When the column "Name" of the sport's tournaments is pressed
-      Then the address is "/2026/ac"
 
   Rule: Pressing anywhere on a row but its flag leads to the tournament
 
@@ -261,6 +285,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
     Scenario Outline: Each part of a row leads to the tournament
       Given scripting is switched on
       And the page for "gc" in 2026 is open
+      And the month "October" is pressed
       When the <part> of "Spring Open" in the sport's tournaments is pressed
       Then the address is "/2026/gc/spring-open"
 
@@ -271,11 +296,13 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
     Scenario: Without scripting the name leads to the tournament
       Given the page for "gc" in 2026 is open
+      And the month "October" is pressed
       When the name of "Spring Open" in the sport's tournaments is pressed
       Then the address is "/2026/gc/spring-open"
 
     Scenario: The row offers a link to the tournament and one to its country
       When the page for "gc" in 2026 is opened
+      And the month "October" is pressed
       Then the row of "Spring Open" in the sport's tournaments holds 2 links
 
   Rule: The tournaments are narrowed by country and region, and not by sport
@@ -296,12 +323,18 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
     Scenario: Nothing is filtered by to begin with
       When the page for "ac" in 2026 is opened
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then 3 of the sport's tournaments are listed
 
     Scenario: A country chosen does not list another country's tournaments
       Given the page for "ac" in 2026 is open
       And "New Zealand" is chosen as the country
       When "Filter" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then "Summer Open" is not in the sport's tournaments
 
     Scenario: A region chosen does not list another region's tournaments
@@ -310,26 +343,47 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "Filter" is pressed
       And "Canterbury" is chosen as the region
       When "Filter" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then "Autumn Open" is not in the sport's tournaments
 
     Scenario: Filtering stays on the sport's page
       Given the page for "ac" in 2026 is open
       And "New Zealand" is chosen as the country
       When "Filter" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then the address is "/2026/ac"
 
     Scenario: No sport is offered to choose
       When the page for "ac" in 2026 is opened
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then no sport is offered
 
     Scenario: A flag pressed lists its country's tournaments
       Given the page for "ac" in 2026 is open
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       When the flag of "Spring Open" in the sport's tournaments is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then "Summer Open" is not in the sport's tournaments
 
     Scenario: A flag pressed stays on the sport's page
       Given the page for "ac" in 2026 is open
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       When the flag of "Spring Open" in the sport's tournaments is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       Then the address is "/2026/ac"
 
   Rule: The filter chosen is the one the home page remembers, apart from the sport
@@ -350,6 +404,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-03-07"
       And the tournament "Spring Open" is played in the country "nz"
       And the page for "ac" in 2026 is open
+      And the month "March" is pressed
       And the flag of "Spring Open" in the sport's tournaments is pressed
       When the home page is opened
       Then the country chosen is "New Zealand"
@@ -362,6 +417,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2026-03-07"
       And the tournament "Spring Open" is played in the country "nz"
       And the page for "ac" in 2026 is open
+      And the month "March" is pressed
       And the flag of "Spring Open" in the sport's tournaments is pressed
       When the home page is opened
       Then the sport chosen is "Golf Croquet"
@@ -376,35 +432,11 @@ Feature: A sport's page in a year lists every tournament of it starting then
       When the home page is opened
       Then the sport chosen is "Golf Croquet"
 
-  Rule: A region chosen with few tournaments to show says why
-
-    Tournaments from before November 2026 have no region, so a region narrows
-    a list to far fewer than the reader may expect, and the page says so rather
-    than leaving them to think tournaments are missing.
-
-    Scenario: A region chosen with fewer than 20 tournaments shows the notice
-      Given "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2026-03-07"
-      And the tournament "Spring Open" is for the sport "ac"
-      And the tournament "Spring Open" is played in the country "nz"
-      And the tournament "Spring Open" is played in the region "can"
-      And the page for "ac" in 2026 is open
-      And "New Zealand" is chosen as the country
-      And "Filter" is pressed
-      And "Canterbury" is chosen as the region
-      When "Filter" is pressed
-      Then the notice about tournaments before November 2026 is shown
-
-    Scenario: A country chosen without a region shows no notice
-      Given the page for "ac" in 2026 is open
-      And "New Zealand" is chosen as the country
-      When "Filter" is pressed
-      Then the notice about tournaments before November 2026 is not shown
-
   Rule: A filter that cannot be is the reader's mistake
 
     Scenario: A country there is not is refused
       When the page for "ac" in 2026 is opened for the country "xx"
+      And the month "October" is pressed
       Then the page is refused with "TournamentsInYear.NoSuchCountry"
 
   Rule: The years are those with tournaments of the sport, the year being read marked
@@ -414,6 +446,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Spring Open" starts on "2024-10-03"
       And the tournament "Spring Open" is for the sport "gc"
       When the page for "gc" in 2024 is opened
+      And the month "October" is pressed
       Then the year 2024 is offered
 
     Scenario: A year with only another sport's tournaments is not offered
@@ -424,6 +457,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the tournament "Autumn Open" starts on "2025-10-03"
       And the tournament "Autumn Open" is for the sport "ac"
       When the page for "gc" in 2024 is opened
+      And the month "October" is pressed
       Then the year 2025 is not offered
 
     Scenario: The year being read is marked as the year chosen
@@ -432,6 +466,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "organiser@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-10-03"
       When the page for "ac" in 2024 is opened
+      And the month "October" is pressed
       Then the tab for 2024 is marked as the year chosen
 
     Scenario: Another year leads to the sport's page in that year
@@ -440,6 +475,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "organiser@example.com" has created the tournament "Autumn Open"
       And the tournament "Autumn Open" starts on "2026-10-03"
       And the page for "ac" in 2024 is open
+      And the month "October" is pressed
       When the year 2026 is pressed
       Then the address is "/2026/ac"
 
@@ -451,6 +487,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the page for "ac" in 2024 is open
       And "New Zealand" is chosen as the country
       And "Filter" is pressed
+      And the month "October" is pressed
       When the year 2026 is pressed
       Then the country chosen is "New Zealand"
 
@@ -464,6 +501,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "Filter" is pressed
       And "Canterbury" is chosen as the region
       And "Filter" is pressed
+      And the month "October" is pressed
       When the year 2026 is pressed
       Then the region chosen is "Canterbury"
 
@@ -475,18 +513,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And the page for "ac" in 2024 is open
       And "New Zealand" is chosen as the country
       And "Filter" is pressed
-      When the year 2026 is pressed
-      Then the address is "/2026/ac?country=nz"
-
-    Scenario: Another year does not keep the sorting
-      Given "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2024-10-03"
-      And "organiser@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" starts on "2026-10-03"
-      And the page for "ac" in 2024 is open
-      And "New Zealand" is chosen as the country
-      And "Filter" is pressed
-      And the column "Name" of the sport's tournaments is pressed
+      And the month "October" is pressed
       When the year 2026 is pressed
       Then the address is "/2026/ac?country=nz"
 
@@ -494,6 +521,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2024-10-03"
       When the page for "ac" in 2025 is opened
+      And the month "October" is pressed
       Then no year is marked as chosen
 
     Scenario: A year in the drop-down list leads to the sport's page in that year
@@ -513,10 +541,12 @@ Feature: A sport's page in a year lists every tournament of it starting then
 
     Scenario: On a phone the page is no wider than the window
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the page is no wider than the window
 
     Scenario: On a phone a long name is not cut short
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then the name "The Northern Counties Invitation Golf Croquet Championship" is shown whole
 
   Rule: Every word the page says is in the reader's language
@@ -530,6 +560,7 @@ Feature: A sport's page in a year lists every tournament of it starting then
       And "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
       Then every word in the page's content but the tournaments' own is in the test locale
 
     Scenario: The heading names the sport in the reader's language
