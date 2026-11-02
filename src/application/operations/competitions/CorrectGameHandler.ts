@@ -66,6 +66,7 @@ export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,
+      competition,
     );
   }
 }

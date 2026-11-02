@@ -53,6 +53,7 @@ export class RestoreGameHandler extends CommandHandler<RestoreGame, void> {
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,
+      competition,
     );
   }
 }

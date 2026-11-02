@@ -318,6 +318,22 @@ export class Competition extends AggregateRoot {
     ) {
       refuse("Competition.NoSuchPlace", "The draw has no such place.");
     }
+    // A player who has played from another place is not put in a second one,
+    // as a result swapped across two matches would do. Where that place has
+    // not been played on it is changed in its turn, and the player is let in
+    // by the next time this is asked.
+    if (
+      loser !== undefined &&
+      this.players.some(
+        (player) =>
+          !player.isBye &&
+          player.order !== orderOfPlace(place) &&
+          player.tournamentPlayerId.equals(loser) &&
+          this.hasGamesInUse(player.id),
+      )
+    ) {
+      return;
+    }
     const holder = this.#holderOf(place);
     if (holder !== undefined) {
       const same =

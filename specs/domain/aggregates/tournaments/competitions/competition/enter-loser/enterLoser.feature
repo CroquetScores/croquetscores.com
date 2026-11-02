@@ -128,6 +128,14 @@ Feature: Entering the loser of a match in a losers knockout
       When a bye is entered as the loser in the second place
       Then it has recorded 0 events
 
+    Scenario: A loser who has played in another place is not entered again
+      Given the loser "Sam Someone" was entered in the first place
+      And the loser "Alex Another" was entered in the second place
+      And the game of "Sam Someone" beating "Alex Another" 26 to 17 was added to it
+      And the competition is rebuilt from its stream
+      When the loser "Sam Someone" is entered in the third place
+      Then it has recorded 0 events
+
     Scenario: A place is cleared when nobody has lost its match any more
       Given the loser "Sam Someone" was entered in the first place
       And the competition is rebuilt from its stream

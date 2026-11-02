@@ -54,6 +54,7 @@ export class ArchiveGameHandler extends CommandHandler<ArchiveGame, void> {
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,
+      competition,
     );
   }
 }

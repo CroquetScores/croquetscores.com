@@ -65,6 +65,7 @@ export class AddGameHandler extends CommandHandler<AddGame, string> {
       CompetitionId.from(command.competition),
       by,
       command.requestedAt,
+      competition,
     );
     return id.value;
   }
