@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
@@ -12,6 +12,15 @@ When(
   async function (this: SpecWorld, chosen: string, code: string) {
     await this.browserPage.goto(
       `${this.baseUrl!}/?${new URLSearchParams({ [chosen]: code }).toString()}`,
+    );
+  },
+);
+
+When(
+  /^the home page is opened asking to remember the (country|sport) "(.*)"$/,
+  async function (this: SpecWorld, chosen: string, code: string) {
+    await this.browserPage.goto(
+      `${this.baseUrl!}/?${new URLSearchParams({ [chosen]: code, keep: "filter" }).toString()}`,
     );
   },
 );
@@ -101,5 +110,20 @@ Then(
     assert.equal(await select.getAttribute("size"), null);
     assert.equal(await select.getAttribute("multiple"), null);
     assert.ok((await select.locator("option").count()) > 1);
+  },
+);
+
+// What a device might hold from before the website changed what it offers, or
+// from a reader's own tampering, which a page is not to be refused for.
+Given(
+  /^the device remembers "(.*)" as the (country|region|sport)$/,
+  async function (this: SpecWorld, code: string, chosen: string) {
+    await this.browserPage.context().addCookies([
+      {
+        name: "filter",
+        value: new URLSearchParams({ [chosen]: code }).toString(),
+        url: this.baseUrl!,
+      },
+    ]);
   },
 );

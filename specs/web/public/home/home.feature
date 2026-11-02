@@ -68,6 +68,16 @@ Feature: The home page lists recent results and upcoming tournaments
   sent. Anything else that cannot be a filter is the reader's mistake, and is
   refused as one (`errors.feature`).
 
+  What a reader narrowed the lists by is remembered on their device, so that
+  a reader who only ever follows the tournaments of their own country is not
+  made to choose it on every visit. The year is not: it is a page of its own,
+  chosen by the secondary navigation, and a reader looking at one year has
+  said nothing about the next. A filter in the page's address is what the
+  reader asked for just now, and is shown in place of the one remembered. The
+  same filter is remembered for a year's page (`year.feature`) and a sport's
+  (`yearSport.feature`), since it says where the reader plays and not which
+  page they were on.
+
   The secondary navigation is the years there are tournaments in, newest
   first (`TournamentYears.feature`), each leading to that year's page, which
   lists its tournaments (`year.feature`). They are fitted to the window as
@@ -823,6 +833,183 @@ Feature: The home page lists recent results and upcoming tournaments
     Scenario: A sport another website plays is not offered
       When the home page is opened
       Then "Gateball" is not offered as a sport
+
+  Rule: What the reader narrowed the lists by is remembered
+
+    The filter is remembered when the reader sends the form or presses a flag
+    on this website, and not when they follow a link that happens to say a
+    country, which a bookmark or an email may. Nor is it remembered when an
+    address asks for it from outside the website, as a link on another site,
+    a bookmark or an address typed in can: what a reader is shown of
+    tournaments is theirs to set, and another site is not to set it for them.
+    The page is still drawn as that address says, for that visit. Choosing "any" in a field records nothing for
+    it, so it forgets what was remembered of that field, and choosing "any" in
+    every field forgets the filter altogether.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "nz"
+      And the tournament "Autumn Open" is played in the region "auc"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-10-24"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is played in the region "vic"
+      And the tournament "Summer Open" is for the sport "ac"
+
+    Scenario: The country chosen is there when the home page is opened again
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: The country remembered narrows the lists
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then "Summer Open" is not in the upcoming tournaments
+
+    Scenario: The region chosen is there when the home page is opened again
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      When the home page is opened
+      Then the region chosen is "Canterbury"
+
+    Scenario: The sport chosen is there when the home page is opened again
+      Given the home page is open
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the sport chosen is "Golf Croquet"
+
+    Scenario: A flag pressed is remembered
+      Given the home page is open
+      And the flag of "Summer Open" in the upcoming tournaments is pressed
+      When the home page is opened
+      Then the country chosen is "Australia"
+
+    Scenario: A link that says a country is not remembered
+      Given the home page is opened for the country "au"
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: A flag pressed forgets the region remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      And the flag of "Spring Open" in the upcoming tournaments is pressed
+      When the home page is opened
+      Then the region chosen is "Any region"
+
+    Scenario: A country remembered that there is not is left out
+      Given the device remembers "xx" as the country
+      When the home page is opened
+      Then 3 upcoming tournaments are listed
+
+    Scenario: A sport remembered that the website does not offer is left out
+      Given the device remembers "gb" as the sport
+      When the home page is opened
+      Then 3 upcoming tournaments are listed
+
+    Scenario: An address that asks to be remembered, from outside the website, is not
+      Given the home page is opened asking to remember the country "au"
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: An address that asks to be remembered, from outside the website, still narrows its page
+      When the home page is opened asking to remember the country "au"
+      Then the country chosen is "Australia"
+
+    Scenario: Sorting does not write the filter remembered into the address
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened
+      When the column "Name" of the upcoming tournaments is pressed
+      Then the address is "/?upcoming=name-up"
+
+    Scenario: A year does not take the filter remembered in its address
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2024-10-03"
+      And the home page is opened
+      When the year 2024 is pressed
+      Then the address is "/2024"
+
+    Scenario: Sending the filter leaves the sorting remembered as it was
+      Given the home page is open
+      And the column "Name" of the upcoming tournaments is pressed
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the first of the upcoming tournaments is "Autumn Open"
+
+    Scenario: A filter in the address is shown in place of the one remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened for the country "au"
+      Then the country chosen is "Australia"
+
+    Scenario: A filter in the address does not replace the one remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened for the country "au"
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: Choosing any sport forgets the sport and keeps the country
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And "Any sport" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: Choosing any sport is not remembered as a sport
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And "Any sport" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the sport chosen is "Any sport"
+
+    Scenario: Choosing any of everything forgets what was remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Any country" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: A year's page is narrowed by what the home page remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the page for 2026 is opened
+      Then "Summer Open" is not in the year's tournaments
 
   Rule: The countries are offered in groups, the ones most played in first
 

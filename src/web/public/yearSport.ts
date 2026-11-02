@@ -60,7 +60,9 @@ export const registerYearSportPage = (
       }
       const toDays = sendToDaysChosen(request, reply, sport.code);
       if (toDays !== undefined) return toDays;
-      const pressed = settledWhenPressed(request, reply, "sport", tables);
+      const pressed = settledWhenPressed(request, reply, "sport", tables, {
+        offersSport: false,
+      });
       if (pressed !== undefined) return pressed;
       const year = Number(request.params.year);
       const path = `/${request.params.year}/${sport.code}`;
@@ -113,7 +115,7 @@ export const registerYearSportPage = (
             // The sport is in the path, so it is left out of what is kept and
             // not said twice, where the two could disagree.
             keepingFilter(
-              { ...asked.chose, sport: undefined },
+              { ...asked.inAddress, sport: undefined },
               `/${String(each)}/${sport.code}`,
             ),
           ),

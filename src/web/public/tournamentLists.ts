@@ -28,6 +28,13 @@ import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import {
+  asksToRememberFilter,
+  filterList,
+  isRegionOf,
+  rememberedFilterOf,
+  rememberFilter,
+} from "../common/rememberedFilter.js";
+import {
   forget,
   keep,
   rememberedOf,
@@ -121,6 +128,13 @@ export interface Asked {
    */
   readonly offersSport: boolean;
   readonly chose: FilterChosen;
+  /**
+   * What of that the address itself says. Links to other lists and pages are
+   * made from this and not from what was chosen, so that a filter the device
+   * remembers is not copied into every address it leads to, where it would
+   * outlast the reader's changing it.
+   */
+  readonly inAddress: FilterChosen;
   readonly sorting: Readonly<Record<string, string | undefined>>;
   /**
    * How each list was last sorted on the reader's device, which sorts it where
@@ -143,12 +157,25 @@ const oneOf = (query: unknown, name: string): string | undefined => {
   return typeof first === "string" && first !== "" ? first : undefined;
 };
 
+// Whether the address says anything of what it is filtered by. An empty
+// choice is "any", which is not recorded anywhere and so says nothing: a
+// reader who chose "any" has had what was remembered of it forgotten, and an
+// address that carries an empty choice is not one that asks for the
+// remembered filter to be set aside.
+const saysOfFilter = (query: unknown, offersSport: boolean): boolean =>
+  ["country", "region", ...(offersSport ? ["sport"] : [])].some(
+    (name) => oneOf(query, name) !== undefined,
+  );
+
 /**
  * What `request` asked of the page at `path`, whose lists keep their sorting
  * under `tables`. A region is kept only where it is one of the country chosen.
  * One left chosen when another country was chosen is still the old country's,
  * since the form offered the old country's regions until it was sent, so it is
  * dropped rather than refused.
+ *
+ * Where the address says nothing of the filter, it is the one the device
+ * remembers (see `settledWhenPressed`).
  */
 export const askedOf = (
   request: FastifyRequest,
@@ -163,20 +190,28 @@ export const askedOf = (
     readonly carries?: readonly string[];
   } = {},
 ): Asked => {
-  const country = oneOf(request.query, "country");
-  const region = oneOf(request.query, "region");
+  const chosenByAddress = saysOfFilter(request.query, offersSport);
+  const { country, region, sport } = chosenByAddress
+    ? {
+        country: oneOf(request.query, "country"),
+        region: oneOf(request.query, "region"),
+        sport: oneOf(request.query, "sport"),
+      }
+    : rememberedFilterOf(request);
   const kept =
     region !== undefined &&
     country !== undefined &&
-    Countries.thereAre.find(country)?.findRegion(region) !== undefined;
+    isRegionOf(country, region);
+  const chose = {
+    country,
+    region: kept ? region : undefined,
+    sport: offersSport ? sport : undefined,
+  };
   return {
     path,
     offersSport,
-    chose: {
-      country,
-      region: kept ? region : undefined,
-      sport: offersSport ? oneOf(request.query, "sport") : undefined,
-    },
+    chose,
+    inAddress: chosenByAddress ? chose : {},
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
     ),
@@ -231,21 +266,36 @@ export const settledWhenPressed = (
   reply: FastifyReply,
   page: string,
   tables: readonly string[],
-): FastifyReply | undefined =>
-  settleWhatWasPressed(
+  { offersSport = true }: { readonly offersSport?: boolean } = {},
+): FastifyReply | undefined => {
+  if (asksToRememberFilter(request))
+    rememberFilter(
+      request,
+      reply,
+      {
+        country: oneOf(request.query, "country"),
+        region: oneOf(request.query, "region"),
+        sport: oneOf(request.query, "sport"),
+      },
+      // A sport's page has none to choose, and its form says nothing of one,
+      // so what was remembered of the sport is not forgotten by it.
+      { keepsSport: !offersSport },
+    );
+  return settleWhatWasPressed(
     request,
     reply,
     page,
     tables.map((table): Sortable => ({
       name: table,
       parameters: [table],
-      writtenIn: (query) => {
-        const written = oneOf(query, table);
+      writtenIn: (asked) => {
+        const written = oneOf(asked, table);
         const sorting = sortingRead(written);
         return sorting === undefined ? undefined : sortingWritten(sorting);
       },
     })),
   );
+};
 
 // The address of the page at `path` with `chose` and `sorting` said of it.
 const addressOf = (
@@ -274,7 +324,7 @@ const addressOf = (
 const addressWith = (
   asked: Asked,
   changed: Readonly<Record<string, string>>,
-  chose: FilterChosen = asked.chose,
+  chose: FilterChosen = asked.inAddress,
 ): string =>
   addressOf(asked.path, chose, { ...asked.sorting, ...changed }, asked.carried);
 
@@ -368,7 +418,7 @@ export const table = (
     if (flag === undefined) return "";
     const narrowed = addressWith(
       asked,
-      {},
+      { [keep]: filterList },
       { ...asked.chose, country: tournament.country, region: undefined },
     );
     const only = say("tournamentList.onlyIn", {
@@ -536,6 +586,7 @@ export const filter = (
   return `          <form class="tournament-filter" method="get" action="${escape(asked.path)}">
 ${[
   ...sortings,
+  `            <input type="hidden" name="${keep}" value="${filterList}" />`,
   field(
     "country",
     say("tournamentList.filter.country"),
