@@ -622,6 +622,8 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
+      # Waited for, so that the place is emptied once the dialog has its players
+      # and not while it is still asking for them, which it would then fail to read.
       And "Chris Third" is offered as the "Winner"
       And "organiser@example.com" has removed the player "Chris Third" from "Final Stage" of "Spring Open"
       And "Sam Someone" is chosen as the "Winner"
@@ -715,6 +717,18 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "17" is typed as the "Loser's score"
       When "Add Game" is pressed
       Then "Loser" has the focus
+
+  Rule: Players the site fails to answer are said above the fields
+
+    A failure answered with no code of its own, as an error of the site's is,
+    is said as `Unknown`, rather than the dialog offering nobody, which would
+    look like a competition with no players still arriving.
+
+    Scenario: Players the site fails to answer are said above the fields
+      Given the scores of "Block A" in "Spring Open" are open
+      And the competition's players are answered with a server error
+      When "Add Score" is pressed
+      Then the score dialog says "Unknown" above the fields
 
   Rule: A score's Edit opens the dialog on that score, to correct it
 

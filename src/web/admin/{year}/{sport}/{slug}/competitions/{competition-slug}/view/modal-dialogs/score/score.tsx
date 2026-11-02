@@ -135,14 +135,21 @@ export const ScoreDialog = ({
       fields.winnerScore.current?.focus();
       return;
     }
+    // A list the site fails to answer is said, as the dialog says any other
+    // failure of the site's, rather than offered as nobody, which would look
+    // like a competition whose players had not yet arrived.
+    const unanswered = (): never[] => {
+      setRefused([refusal("Unknown", undefined)]);
+      return [];
+    };
     if (inATest) {
       void fetch(`${at}/teams`, { headers: { accept: "application/json" } })
         .then(async (response) =>
           response.ok
             ? ((await response.json()) as { teams: TeamInTest[] }).teams
-            : [],
+            : unanswered(),
         )
-        .catch(() => [])
+        .catch(unanswered)
         .then((answered) => {
           setTeams(answered);
           setPlayers(
@@ -161,9 +168,9 @@ export const ScoreDialog = ({
         .then(async (response) =>
           response.ok
             ? ((await response.json()) as { players: Player[] }).players
-            : [],
+            : unanswered(),
         )
-        .catch(() => [])
+        .catch(unanswered)
         .then(setPlayers);
     }
     fields.winner.current?.focus();
