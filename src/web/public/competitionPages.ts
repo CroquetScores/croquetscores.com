@@ -95,9 +95,10 @@ ${views
 // script beside it, since without scripting pressing it does nothing, and a
 // button that does nothing is worse than none. The script is written beside
 // the button, as the search's is (layout.ts), so that the button is never
-// seen and then taken away. The button is found from the heading's own
-// markup and not from where the script sits, so that something put between
-// them does not break it.
+// seen and then taken away. The button is looked for in the script's parent,
+// which is the group of the views and the printer, so the script has to stay
+// in the group with the button; anything else put between them is passed
+// over.
 const printButton = (
   speaking: Speaking,
 ): string => `            <button type="button" class="print-button" hidden>
@@ -449,8 +450,10 @@ export const registerCompetitionPages = (
               body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <h1 class="print-tournament visually-hidden">${escape(asked.name)}</h1>
           <div class="competition-heading" data-print="${paper}">
             <h2 id="competition-heading">${escape(found.name)}</h2>
+            <div class="competition-actions">
 ${viewsOffered(here, offered, view, speaking)}
 ${printButton(speaking)}
+            </div>
           </div>
 ${draw(found, view, speaking, request)}
 ${playedToNote(found, speaking)}
