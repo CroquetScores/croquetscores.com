@@ -21,6 +21,7 @@ interface InThePage {
   getComputedStyle(element: unknown): {
     readonly page: string;
     readonly fontSize: string;
+    readonly columnGap: string;
   };
   readonly document: { readonly body: unknown };
 }
@@ -216,9 +217,7 @@ Then("the footer is not printed", async function (this: SpecWorld) {
 });
 
 // Next to it is on the same line and no further from it than the gap the
-// heading puts between its parts. The gap is allowed for rather than asked to
-// be nothing, so that the scenario does not fail for the stylesheet's choice of
-// how wide it is.
+// heading puts between its parts.
 Then(
   "the views are next to the print button",
   async function (this: SpecWorld) {
@@ -231,10 +230,35 @@ Then(
       views.y < button.y + button.height && button.y < views.y + views.height,
       "The views and the print button are not on one line.",
     );
+    // The gap is the heading's own, read from it, so that the scenario follows
+    // the stylesheet's choice of how wide it is rather than a number of its own.
+    const gap = await this.browserPage
+      .locator("main .competition-heading")
+      .evaluate((heading) =>
+        Number.parseFloat(
+          (globalThis as unknown as InThePage).getComputedStyle(heading)
+            .columnGap,
+        ),
+      );
     const apart = button.x - (views.x + views.width);
     assert.ok(
-      apart >= 0 && apart <= 32,
+      apart >= -0.5 && apart <= gap + 0.5,
       `The views end ${String(apart)} pixels from the print button.`,
+    );
+  },
+);
+
+Then(
+  "the print button is against the right edge",
+  async function (this: SpecWorld) {
+    const heading = await this.browserPage
+      .locator("main .competition-heading")
+      .boundingBox();
+    const button = await printButton(this).boundingBox();
+    assert.ok(heading !== null && button !== null, "One of them is not drawn.");
+    assert.ok(
+      Math.abs(heading.x + heading.width - (button.x + button.width)) <= 1,
+      "The print button is not against the right edge.",
     );
   },
 );

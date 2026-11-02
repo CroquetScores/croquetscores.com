@@ -2684,9 +2684,11 @@ a.player-name[data-withdrawn] {
 
 /* A block's name with its three views on the same line, against the right
    edge, wrapping beneath the name only where there is not room beside it.
-   The views and the printer are kept together by pushing the views, and the
-   printer after them, to the end with an automatic margin: spreading the
-   three apart (space-between) left the views stranded in the middle. */
+   The views and the printer are one group, pushed to the end with an
+   automatic margin: spreading three parts apart (space-between) left the
+   views stranded in the middle, and an automatic margin on the views alone
+   left the printer at the left of a line of its own where there was no room
+   for it beside them. The group wraps inside itself towards the right edge. */
 .competition-heading {
   display: flex;
   flex-wrap: wrap;
@@ -2694,7 +2696,12 @@ a.player-name[data-withdrawn] {
   gap: var(--space-3);
 }
 
-.competition-heading .competition-views {
+.competition-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
   margin-inline-start: auto;
 }
 

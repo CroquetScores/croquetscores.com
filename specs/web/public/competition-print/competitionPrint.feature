@@ -72,7 +72,9 @@ Feature: A competition's page can be printed
     The views and the printer are both for doing something with the page, as
     the competition's name is not, so they are kept together against the
     right edge, with the name alone at the left, rather than spread across the
-    line with the views stranded between the two.
+    line with the views stranded between the two. On a phone the views fill
+    the line, so the printer goes beneath them, still against the right edge
+    rather than left on a line of its own.
 
     Scenario Outline: The views are next to the print button
       When the page at "<page>" is opened with scripting on
@@ -84,6 +86,11 @@ Feature: A competition's page can be printed
         | /2026/ac/spring-open/competitions/finals        |
         | /2026/gc/swiss-open/competitions/zed            |
         | /2026/gc/spring-tests/tests/aus-v-eng           |
+
+    Scenario: The print button is against the right edge on a phone
+      Given a viewport 375 pixels wide
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      Then the print button is against the right edge
 
   Rule: The tournament's name is the page's first-level heading and the competition's the second-level
 

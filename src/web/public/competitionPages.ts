@@ -449,8 +449,10 @@ export const registerCompetitionPages = (
               body: `${group === undefined ? "" : `${groupLinks(asked.address, group, groupTests, here, speaking)}\n`}          <h1 class="print-tournament visually-hidden">${escape(asked.name)}</h1>
           <div class="competition-heading" data-print="${paper}">
             <h2 id="competition-heading">${escape(found.name)}</h2>
+            <div class="competition-actions">
 ${viewsOffered(here, offered, view, speaking)}
 ${printButton(speaking)}
+            </div>
           </div>
 ${draw(found, view, speaking, request)}
 ${playedToNote(found, speaking)}
