@@ -233,3 +233,11 @@ Then(
     );
   },
 );
+
+When(
+  /^the usual order of the month "(.*)" is pressed$/,
+  async function (this: SpecWorld, name: string) {
+    await monthNamed(this, name).locator(".tournament-list-usual a").click();
+    await settled(this);
+  },
+);

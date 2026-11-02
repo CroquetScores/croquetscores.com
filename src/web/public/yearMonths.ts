@@ -61,12 +61,17 @@ const script = `
         // opened afterwards begins sorted so too.
         var sorting = null;
         // "keep" is what tells the server the reader pressed a column, to be
-        // remembered by their device (rememberedSorting.ts), as opposed to a
-        // month opened with the sorting it already had.
-        function searchFor(keeping) {
+        // remembered by their device (rememberedSorting.ts), and "forget" that
+        // they put the usual order back, as opposed to a month opened with the
+        // sorting it already had.
+        function searchFor(pressed) {
           var query = new URLSearchParams(window.location.search);
           if (sorting !== null) query.set("tournaments", sorting);
-          if (keeping) query.set("keep", "tournaments");
+          if (pressed === "keep") query.set("keep", "tournaments");
+          if (pressed === "forget") {
+            query.delete("tournaments");
+            query.set("forget", "tournaments");
+          }
           var written = query.toString();
           return written === "" ? "" : "?" + written;
         }
@@ -77,9 +82,9 @@ const script = `
           toggle.setAttribute("aria-expanded", String(open));
           toggle.querySelector(".year-month-mark").textContent = open ? "-" : "+";
         }
-        function load(month, keeping) {
+        function load(month, pressed) {
           var body = month.querySelector(".year-month-body");
-          var search = searchFor(keeping);
+          var search = searchFor(pressed);
           month.setAttribute("aria-busy", "true");
           fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
             credentials: "same-origin",
@@ -102,7 +107,7 @@ const script = `
                   body.querySelectorAll(".tournament-list"),
                   function (list) { list.classList.add("tournament-list-pressable"); }
                 );
-                month.dataset.loaded = searchFor(false);
+                month.dataset.loaded = searchFor(null);
                 show(month, true);
               });
             })
@@ -119,10 +124,10 @@ const script = `
             var month = toggle.closest(".year-month");
             if (month.dataset.state === "open") {
               show(month, false);
-            } else if (month.dataset.loaded === searchFor(false)) {
+            } else if (month.dataset.loaded === searchFor(null)) {
               show(month, true);
             } else {
-              load(month, false);
+              load(month, null);
             }
             return;
           }
@@ -132,7 +137,17 @@ const script = `
             sorting = new URLSearchParams(sort.search).get("tournaments");
             Array.prototype.forEach.call(
               root.querySelectorAll('.year-month[data-state="open"]'),
-              function (open) { load(open, true); }
+              function (open) { load(open, "keep"); }
+            );
+            return;
+          }
+          var usual = event.target.closest(".year-month-body .tournament-list-usual a");
+          if (usual !== null) {
+            event.preventDefault();
+            sorting = null;
+            Array.prototype.forEach.call(
+              root.querySelectorAll('.year-month[data-state="open"]'),
+              function (open) { load(open, "forget"); }
             );
             return;
           }
