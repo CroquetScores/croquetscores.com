@@ -622,6 +622,7 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
       And the scores of "Final Stage" in "Spring Open" are open
       And "Add Score" is pressed
+      And "Chris Third" is offered as the "Winner"
       And "organiser@example.com" has removed the player "Chris Third" from "Final Stage" of "Spring Open"
       And "Sam Someone" is chosen as the "Winner"
       And "26" is typed as the "Winner's score"
