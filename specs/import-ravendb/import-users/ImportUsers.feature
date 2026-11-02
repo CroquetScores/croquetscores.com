@@ -151,6 +151,21 @@ Feature: Importing the old sites' users as accounts
       When the user is imported
       Then the account at "someone@example.com" is called "SAM SOMEONE"
 
+  Rule: A user's name is left as they wrote it, even where it is a name the old sites misspelled for a player
+
+    A player's name that the old sites misspelled is corrected
+    (`ImportTournamentPlayers.feature`), because the same person was entered
+    again and again under it. A user wrote their own name, so it is theirs: one
+    who is really called what a player was wrongly called is not renamed.
+
+    Scenario: A user is called what they wrote
+      Given a user "users/1" on "croquetscores.com"
+      And the user is called "Liz McKenzie"
+      And the user's email address is "liz@example.com"
+      And the user confirmed their email address at "2014-03-01T09:00:00Z"
+      When the user is imported
+      Then the account at "liz@example.com" is called "Liz McKenzie"
+
   Rule: A user whose email address was imported already is the account already made
 
     A user with an email address already imported is the same person: one on

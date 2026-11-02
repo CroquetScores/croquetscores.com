@@ -7,7 +7,7 @@ import { Flags } from "../domain/aggregates/tournaments/value-objects/Flags.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 import {
-  nameToImport,
+  playerNameToImport,
   numberedApart,
   worldRankingNameToImport,
 } from "./names.js";
@@ -57,7 +57,7 @@ export const playerNamed = (
   tournament: Tournament,
   name: string,
 ): TournamentPlayerId | undefined => {
-  const imported = nameToImport(name);
+  const imported = playerNameToImport(name);
   return tournament.players.find((each) => each.name.toString() === imported)
     ?.id;
 };
@@ -70,7 +70,7 @@ export const addOldPlayer = (
 ): TournamentPlayerId => {
   const already = playerNamed(tournament, player.Name);
   if (already !== undefined) return already;
-  const imported = nameToImport(player.Name);
+  const imported = playerNameToImport(player.Name);
 
   const playerId = TournamentPlayerId.create();
   const name = numberedApart(

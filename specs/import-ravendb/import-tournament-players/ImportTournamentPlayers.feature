@@ -369,6 +369,96 @@ Feature: Bringing a competition's players over to its tournament
       When the competition is imported
       Then "Sam Someone (NZ)" in the tournament kept for "tournaments/14" on "croquetscores.com" has the world ranking name "Sam Someone"
 
+  Rule: A name the old sites misspelled is brought over spelled as its owner spells it
+
+    A person's name was sometimes entered wrongly, and stayed wrong in every
+    event it was entered in, so that one person is found under a name that is
+    not theirs. The import has a short list of such names, each with the name
+    it should have been, and brings a player of one over under the right name.
+
+    The list is of whole names, so that a person who really is called something
+    longer, or something else, is left alone: a name is changed only where it
+    is the listed one, in any case and with any spaces, followed by nothing or
+    by what the old sites added to a name, brackets and a handicap. Anything
+    else after it makes it another name, as "McKenzie-Smith" is. The brackets
+    and handicap are kept, as they are for any name.
+
+    A player of the wrong name and one of the right name are one player
+    (see the next rule).
+
+    Scenario Outline: A misspelled name is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "<Old name>"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "<Name>"
+
+      Examples:
+        | Old name       | Name           |
+        | Marga Podneiks | Marga Podnieks |
+        | Liz McKenzie   | Liz Mackenzie  |
+
+    Scenario: A misspelled name is not kept as it was
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Marga Podneiks"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
+      And the first player of the tournament kept for "tournaments/12" on "croquetscores.com" is "Marga Podnieks"
+
+    Scenario: A misspelled name and the right name are one player
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Marga Podneiks"
+      And player 2 is called "Marga Podnieks"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has 1 player
+
+    Scenario: A misspelled name in another case is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "LIZ MCKENZIE"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz Mackenzie"
+
+    Scenario: A misspelled name with extra spaces is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz  McKenzie"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz Mackenzie"
+
+    Scenario: A misspelled name with a country in brackets is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Marga Podneiks (SA)"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Marga Podnieks (SA)"
+
+    Scenario: A misspelled name with a handicap is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz McKenzie 2.5"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz Mackenzie 2.5"
+
+    Scenario: A misspelled name with a handicap after a semicolon is brought over spelled correctly
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz McKenzie; 2.5"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz Mackenzie; 2.5"
+
+    Scenario: The world ranking name is the right name
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz McKenzie (SA)"
+      When the competition is imported
+      Then "Liz Mackenzie (SA)" in the tournament kept for "tournaments/12" on "croquetscores.com" has the world ranking name "Liz Mackenzie"
+
+    Scenario: A name that only begins as a misspelled one does is left as it was
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz McKenzie-Smith"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz McKenzie-Smith"
+
+    Scenario: A misspelled name with another word after it is left as it was
+      Given the block "blocks/30" of "tournaments/12" on "croquetscores.com"
+      And player 1 is called "Liz McKenzie Junior"
+      When the competition is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" has the player "Liz McKenzie Junior"
+
   Rule: Players of exactly one name are one player
 
     The old sites told players apart by their name and what they
