@@ -28,6 +28,13 @@ import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
 import {
+  asksToRememberFilter,
+  filterList,
+  isRegionOf,
+  rememberedFilterOf,
+  rememberFilter,
+} from "../common/rememberedFilter.js";
+import {
   forget,
   keep,
   rememberedOf,
@@ -35,7 +42,6 @@ import {
   type Sortable,
 } from "../common/rememberedSorting.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
-import { aYear, keptByTheServer } from "../common/theme.js";
 
 // Sorting ------------------------------------------------------------------------
 
@@ -122,6 +128,13 @@ export interface Asked {
    */
   readonly offersSport: boolean;
   readonly chose: FilterChosen;
+  /**
+   * What of that the address itself says. Links to other lists and pages are
+   * made from this and not from what was chosen, so that a filter the device
+   * remembers is not copied into every address it leads to, where it would
+   * outlast the reader's changing it.
+   */
+  readonly inAddress: FilterChosen;
   readonly sorting: Readonly<Record<string, string | undefined>>;
   /**
    * How each list was last sorted on the reader's device, which sorts it where
@@ -144,18 +157,6 @@ const oneOf = (query: unknown, name: string): string | undefined => {
   return typeof first === "string" && first !== "" ? first : undefined;
 };
 
-// What the filter is remembered under.
-const filterCookie = "filter";
-
-// The name the filter is kept under in the page's address, as a list's sorting
-// is: the one that says the reader pressed it, and did not follow a link.
-const filterList = "filter";
-
-// A region is only a region of the country it is in.
-const isRegionOf = (country: string | undefined, region: string): boolean =>
-  country !== undefined &&
-  Countries.thereAre.find(country)?.findRegion(region) !== undefined;
-
 // Whether the address says anything of what it is filtered by. An empty
 // choice is "any", which is not recorded anywhere and so says nothing: a
 // reader who chose "any" has had what was remembered of it forgotten, and an
@@ -165,45 +166,6 @@ const saysOfFilter = (query: unknown, offersSport: boolean): boolean =>
   ["country", "region", ...(offersSport ? ["sport"] : [])].some(
     (name) => oneOf(query, name) !== undefined,
   );
-
-// `chosen` less whatever this website cannot mean by it: a country, region or
-// sport it does not offer would be refused as a mistake. What the device
-// remembers is held to this both ways, so that a filter is never stored that
-// would not be shown, and one stored before the website changed is left out
-// rather than refused, since the reader made no mistake.
-const meaningful = (
-  request: FastifyRequest,
-  chosen: FilterChosen,
-): FilterChosen => {
-  const country =
-    chosen.country !== undefined &&
-    Countries.thereAre.find(chosen.country) !== undefined
-      ? chosen.country
-      : undefined;
-  const sport = sportsOffered[websiteOf(request).site].some(
-    ({ code }) => code === chosen.sport,
-  )
-    ? chosen.sport
-    : undefined;
-  return {
-    country,
-    region:
-      chosen.region !== undefined && isRegionOf(country, chosen.region)
-        ? chosen.region
-        : undefined,
-    sport,
-  };
-};
-
-// What the device remembers of the filter, as it was written.
-const filterRemembered = (request: FastifyRequest): FilterChosen => {
-  const stored = new URLSearchParams(request.cookies[filterCookie] ?? "");
-  return {
-    country: stored.get("country") ?? undefined,
-    region: stored.get("region") ?? undefined,
-    sport: stored.get("sport") ?? undefined,
-  };
-};
 
 /**
  * What `request` asked of the page at `path`, whose lists keep their sorting
@@ -235,19 +197,21 @@ export const askedOf = (
         region: oneOf(request.query, "region"),
         sport: oneOf(request.query, "sport"),
       }
-    : meaningful(request, filterRemembered(request));
+    : rememberedFilterOf(request);
   const kept =
     region !== undefined &&
     country !== undefined &&
     isRegionOf(country, region);
+  const chose = {
+    country,
+    region: kept ? region : undefined,
+    sport: offersSport ? sport : undefined,
+  };
   return {
     path,
     offersSport,
-    chose: {
-      country,
-      region: kept ? region : undefined,
-      sport: offersSport ? sport : undefined,
-    },
+    chose,
+    inAddress: chosenByAddress ? chose : {},
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
     ),
@@ -304,9 +268,19 @@ export const settledWhenPressed = (
   tables: readonly string[],
   { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): FastifyReply | undefined => {
-  const query = request.query as Record<string, unknown> | undefined;
-  const pressed = [query?.[keep]].flat().includes(filterList);
-  if (pressed) rememberFilter(request, reply, offersSport);
+  if (asksToRememberFilter(request))
+    rememberFilter(
+      request,
+      reply,
+      {
+        country: oneOf(request.query, "country"),
+        region: oneOf(request.query, "region"),
+        sport: oneOf(request.query, "sport"),
+      },
+      // A sport's page has none to choose, and its form says nothing of one,
+      // so what was remembered of the sport is not forgotten by it.
+      { keepsSport: !offersSport },
+    );
   return settleWhatWasPressed(
     request,
     reply,
@@ -321,35 +295,6 @@ export const settledWhenPressed = (
       },
     })),
   );
-};
-
-// A sport's page has none to choose, and its form says nothing of one, so what
-// was remembered of the sport is left as it was and not forgotten by it.
-// Choosing "any" of all there is to choose forgets the filter altogether
-// rather than remembering a filter of nothing.
-const rememberFilter = (
-  request: FastifyRequest,
-  reply: FastifyReply,
-  offersSport: boolean,
-): void => {
-  const now = meaningful(request, {
-    country: oneOf(request.query, "country"),
-    region: oneOf(request.query, "region"),
-    sport: offersSport
-      ? oneOf(request.query, "sport")
-      : filterRemembered(request).sport,
-  });
-  const written = new URLSearchParams(
-    Object.entries(now).filter(
-      (entry): entry is [string, string] => entry[1] !== undefined,
-    ),
-  );
-  if (written.size === 0) reply.clearCookie(filterCookie, keptByTheServer);
-  else
-    reply.setCookie(filterCookie, written.toString(), {
-      ...keptByTheServer,
-      maxAge: aYear,
-    });
 };
 
 // The address of the page at `path` with `chose` and `sorting` said of it.
@@ -379,7 +324,7 @@ const addressOf = (
 const addressWith = (
   asked: Asked,
   changed: Readonly<Record<string, string>>,
-  chose: FilterChosen = asked.chose,
+  chose: FilterChosen = asked.inAddress,
 ): string =>
   addressOf(asked.path, chose, { ...asked.sorting, ...changed }, asked.carried);
 

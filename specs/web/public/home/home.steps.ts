@@ -16,6 +16,15 @@ When(
   },
 );
 
+When(
+  /^the home page is opened asking to remember the (country|sport) "(.*)"$/,
+  async function (this: SpecWorld, chosen: string, code: string) {
+    await this.browserPage.goto(
+      `${this.baseUrl!}/?${new URLSearchParams({ [chosen]: code, keep: "filter" }).toString()}`,
+    );
+  },
+);
+
 Then(
   "{string} comes before {string}",
   async function (this: SpecWorld, first: string, second: string) {

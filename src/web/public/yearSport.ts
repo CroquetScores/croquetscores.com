@@ -115,7 +115,7 @@ export const registerYearSportPage = (
             // The sport is in the path, so it is left out of what is kept and
             // not said twice, where the two could disagree.
             keepingFilter(
-              { ...asked.chose, sport: undefined },
+              { ...asked.inAddress, sport: undefined },
               `/${String(each)}/${sport.code}`,
             ),
           ),

@@ -345,6 +345,27 @@ Feature: A sport's page in a year lists every tournament of it starting then
       When the home page is opened
       Then the country chosen is "New Zealand"
 
+    Scenario: A flag pressed is there on the home page
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the page for "ac" in 2026 is open
+      And the flag of "Spring Open" in the sport's tournaments is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: A flag pressed leaves the sport remembered as it was
+      Given the home page is open
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the page for "ac" in 2026 is open
+      And the flag of "Spring Open" in the sport's tournaments is pressed
+      When the home page is opened
+      Then the sport chosen is "Golf Croquet"
+
     Scenario: The sport remembered is left as it was
       Given the home page is open
       And "Golf Croquet" is chosen as the sport

@@ -75,7 +75,8 @@ export const rememberedOf = (
   );
 };
 
-const namesIn = (asked: unknown): readonly string[] => {
+/** The names an address gives for `keep` or `forget`, however it spelled them. */
+export const namesIn = (asked: unknown): readonly string[] => {
   const each = Array.isArray(asked) ? asked : [asked];
   return each
     .filter((one): one is string => typeof one === "string")
@@ -103,6 +104,12 @@ export const settleWhatWasPressed = (
   const toForget = namesIn(query[forget]);
   if (toKeep.length === 0 && toForget.length === 0) return undefined;
 
+  // A request that names no list of this page's, as one asking only for the
+  // filter to be remembered does, leaves the sorting alone rather than
+  // sending it again.
+  const named = lists.some(
+    (list) => toKeep.includes(list.name) || toForget.includes(list.name),
+  );
   const now = kept(request);
   for (const list of lists) {
     const key = keyOf(page, list.name);
@@ -113,12 +120,14 @@ export const settleWhatWasPressed = (
       if (written !== undefined) now.set(key, written);
     }
   }
-  if (now.size === 0) reply.clearCookie(sortingCookie, keptByTheServer);
-  else
-    reply.setCookie(sortingCookie, now.toString(), {
-      ...keptByTheServer,
-      maxAge: aYear,
-    });
+  if (named) {
+    if (now.size === 0) reply.clearCookie(sortingCookie, keptByTheServer);
+    else
+      reply.setCookie(sortingCookie, now.toString(), {
+        ...keptByTheServer,
+        maxAge: aYear,
+      });
+  }
 
   // What is left of the address: the reader's other choices as they were, and
   // for a list put back, nothing that sorted it.

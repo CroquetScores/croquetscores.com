@@ -89,7 +89,7 @@ export const registerYearPage = (
       render(assets, {
         ...shell,
         ...yearsOf(years, speaking, year, (each) =>
-          keepingFilter(asked.chose, `/${String(each)}`),
+          keepingFilter(asked.inAddress, `/${String(each)}`),
         ),
         body: `${filter(request, asked, speaking, listed.length)}
 ${table(

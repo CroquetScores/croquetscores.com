@@ -458,6 +458,15 @@ Feature: A year's page lists every tournament starting in it
       When the home page is opened
       Then the country chosen is "New Zealand"
 
+    Scenario: A flag pressed is there on the home page
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the page for 2026 is open
+      And the flag of "Spring Open" in the year's tournaments is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
   Rule: A region chosen with few tournaments to show says why
 
     Tournaments from before November 2026 have no region, so a region narrows

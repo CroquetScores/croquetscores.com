@@ -836,9 +836,13 @@ Feature: The home page lists recent results and upcoming tournaments
 
   Rule: What the reader narrowed the lists by is remembered
 
-    The filter is remembered when the reader sends the form or presses a flag,
-    and not when they follow a link that happens to say a country, which a
-    bookmark or an email may. Choosing "any" in a field records nothing for
+    The filter is remembered when the reader sends the form or presses a flag
+    on this website, and not when they follow a link that happens to say a
+    country, which a bookmark or an email may. Nor is it remembered when an
+    address asks for it from outside the website, as a link on another site,
+    a bookmark or an address typed in can: what a reader is shown of
+    tournaments is theirs to set, and another site is not to set it for them.
+    The page is still drawn as that address says, for that visit. Choosing "any" in a field records nothing for
     it, so it forgets what was remembered of that field, and choosing "any" in
     every field forgets the filter altogether.
 
@@ -919,6 +923,42 @@ Feature: The home page lists recent results and upcoming tournaments
       Given the device remembers "gb" as the sport
       When the home page is opened
       Then 3 upcoming tournaments are listed
+
+    Scenario: An address that asks to be remembered, from outside the website, is not
+      Given the home page is opened asking to remember the country "au"
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: An address that asks to be remembered, from outside the website, still narrows its page
+      When the home page is opened asking to remember the country "au"
+      Then the country chosen is "Australia"
+
+    Scenario: Sorting does not write the filter remembered into the address
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened
+      When the column "Name" of the upcoming tournaments is pressed
+      Then the address is "/?upcoming=name-up"
+
+    Scenario: A year does not take the filter remembered in its address
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2024-10-03"
+      And the home page is opened
+      When the year 2024 is pressed
+      Then the address is "/2024"
+
+    Scenario: Sending the filter leaves the sorting remembered as it was
+      Given the home page is open
+      And the column "Name" of the upcoming tournaments is pressed
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the first of the upcoming tournaments is "Autumn Open"
 
     Scenario: A filter in the address is shown in place of the one remembered
       Given the home page is open
