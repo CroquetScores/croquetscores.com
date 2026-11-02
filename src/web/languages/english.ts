@@ -334,9 +334,16 @@ export const english: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Tournaments in {year}",
     "year.none": "No tournaments start in {year}.",
+    // The months of a year's page, which are loaded when pressed.
+    "year.needsScripting":
+      "The months of a year are opened with scripting, which is switched off. Please switch it on for this site.",
+    "year.monthNone": "No tournaments start in {month} {year}.",
+    "year.monthFailed":
+      "The tournaments could not be loaded. Please try again.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{sport} Tournaments in {year}",
     "yearSport.none": "No {sport} tournaments start in {year}.",
+    "yearSport.monthNone": "No {sport} tournaments start in {month} {year}.",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",

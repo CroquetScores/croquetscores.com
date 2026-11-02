@@ -1,0 +1,222 @@
+// The months of a year's page, and of a sport's in a year: twelve closed
+// months, and the way to load one month's tournaments alone when it is
+// pressed (yearMonths.feature).
+//
+// A year holds hundreds of tournaments and a reader is after a month's, so the
+// page does not list them. Loading a year whole on every visit would ask the
+// database for a great deal nobody reads, and cutting it into pages would only
+// spread the same question over several visits. So a month is fetched when it
+// is pressed, as the table alone, and put under the month without the page
+// being loaded again. That needs scripting; without it the page says so and
+// lists no month, rather than listing months that lead nowhere.
+//
+// The months are in a template and put on the page by the script that follows
+// it, so that a browser without scripting has none to show.
+import type { FastifyReply, FastifyRequest } from "fastify";
+
+import { TournamentsInYear } from "../../application/operations/tournaments/TournamentsInYear.js";
+import type { Assets } from "../common/assets.js";
+import { escape } from "../common/escape.js";
+import type { Speaking } from "../common/language.js";
+import { websiteOf } from "../common/site.js";
+import {
+  askedOf,
+  refusedWith,
+  sendPage,
+  table,
+  type Asked,
+} from "./tournamentLists.js";
+
+// A year is four digits, the first not a nought, as it is in a tournament's
+// address (TournamentAddress.ts), since no tournament can start in any other.
+// Anything else is left to whatever else the address could be, and is not
+// found where it is nothing. "0000" in particular is no year Postgres has, and
+// asking it for the days of one would fail rather than find none.
+export const yearInPath = ":year(^[1-9]\\d{3}$)";
+
+// A month is two digits, "01" to "12".
+export const monthInPath = ":month(^(0[1-9]|1[0-2])$)";
+
+const twoDigits = (month: number): string => String(month).padStart(2, "0");
+
+// The month's name, in the reader's language and as that language writes it
+// on its own, which is how a list of them is read.
+const monthName = (language: string, year: number, month: number): string =>
+  new Intl.DateTimeFormat(language, { month: "long", timeZone: "UTC" }).format(
+    new Date(Date.UTC(year, month - 1, 1)),
+  );
+
+// What presses on a month, and what sorts a month's table, do not load the
+// page. A press on a row beyond its link follows the name's link, as the rows
+// of every other table do (tournamentLists.ts), since a script put in by
+// innerHTML is not run and so the table's own cannot do it.
+const script = `
+    <script>
+      (function () {
+        var root = document.currentScript.parentElement;
+        root.appendChild(root.querySelector("template").content.cloneNode(true));
+        function load(month, search) {
+          var body = month.querySelector(".year-month-body");
+          month.setAttribute("aria-busy", "true");
+          fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
+            credentials: "same-origin",
+          })
+            .then(function (answer) {
+              if (!answer.ok) throw new Error(String(answer.status));
+              return answer.text();
+            })
+            .then(function (html) {
+              body.innerHTML = html;
+              body.hidden = false;
+              Array.prototype.forEach.call(
+                body.querySelectorAll(".tournament-list"),
+                function (list) { list.classList.add("tournament-list-pressable"); }
+              );
+              month.dataset.loaded = "true";
+              month.dataset.state = "open";
+              month.querySelector(".year-month-toggle").setAttribute("aria-expanded", "true");
+            })
+            .catch(function () {
+              body.textContent = root.dataset.failed;
+              body.hidden = false;
+              month.dataset.state = "failed";
+            })
+            .then(function () { month.removeAttribute("aria-busy"); });
+        }
+        root.addEventListener("click", function (event) {
+          var toggle = event.target.closest(".year-month-toggle");
+          if (toggle !== null) {
+            var month = toggle.closest(".year-month");
+            var body = month.querySelector(".year-month-body");
+            if (month.dataset.state === "open") {
+              body.hidden = true;
+              month.dataset.state = "closed";
+              toggle.setAttribute("aria-expanded", "false");
+            } else if (month.dataset.loaded === "true") {
+              body.hidden = false;
+              month.dataset.state = "open";
+              toggle.setAttribute("aria-expanded", "true");
+            } else {
+              load(month, window.location.search);
+            }
+            return;
+          }
+          var sort = event.target.closest(".year-month-body thead a");
+          if (sort !== null) {
+            event.preventDefault();
+            load(sort.closest(".year-month"), sort.search);
+            return;
+          }
+          var row = event.target.closest(".year-month-body tbody tr");
+          if (row === null || event.target.closest("a") !== null) return;
+          if (String(window.getSelection()) !== "") return;
+          var link = row.querySelector(".tournament-name");
+          if (link !== null) link.click();
+        });
+      })();
+    </script>`;
+
+/**
+ * The twelve months of `year`, closed, under the page's own address `base`
+ * ("/2026" or "/2026/ac"), which is also where a month's tournaments are
+ * fetched from.
+ */
+export const monthsOf = (
+  speaking: Speaking,
+  year: number,
+  base: string,
+): string => {
+  const { say } = speaking;
+  const months = Array.from({ length: 12 }, (_, at) => at + 1)
+    .map(
+      (
+        month,
+      ) => `          <li class="year-month" data-month="${twoDigits(month)}" data-state="closed">
+            <button type="button" class="year-month-toggle" aria-expanded="false">${escape(monthName(speaking.language.tag, year, month))}</button>
+            <div class="year-month-body" hidden></div>
+          </li>`,
+    )
+    .join("\n");
+  return `        <section class="year-months" data-base="${escape(base)}" data-failed="${escape(say("year.monthFailed"))}">
+          <noscript><p class="notice">${escape(say("year.needsScripting"))}</p></noscript>
+          <template>
+            <ol class="year-month-list">
+${months}
+            </ol>
+          </template>${script}
+        </section>`;
+};
+
+/** Where a month's tournaments are fetched from, under a page at `base`. */
+export const monthPath = (base: string): string =>
+  `${base}/months/${monthInPath}`;
+
+// A month's table as a page of its own would draw it, and nothing round it.
+// The links in it are the page's, so that a flag leads to the page narrowed to
+// its country; only sorting stays in the month, by the script above.
+export const sendMonth = async (
+  request: FastifyRequest<{ Params: { year: string; month: string } }>,
+  reply: FastifyReply,
+  assets: Assets,
+  speaking: Speaking,
+  page: { path: string; sport?: { code: string; name: string } },
+): Promise<FastifyReply> => {
+  const { say } = speaking;
+  const year = Number(request.params.year);
+  const month = Number(request.params.month);
+  const asked: Asked = askedOf(
+    request,
+    page.path,
+    page.sport === undefined ? "year" : "sport",
+    ["tournaments"],
+    { offersSport: page.sport === undefined },
+  );
+  const chose =
+    page.sport === undefined
+      ? asked.chose
+      : { ...asked.chose, sport: page.sport.code };
+  const named = {
+    month: monthName(speaking.language.tag, year, month),
+    year: request.params.year,
+    sport: page.sport?.name ?? "",
+  };
+  try {
+    const listed = await request.server.mediator.query(
+      new TournamentsInYear(websiteOf(request).host, year, chose, month),
+    );
+    return sendPage(
+      reply,
+      request,
+      table(
+        {
+          table: "tournaments",
+          idStart: `month-${twoDigits(month)}`,
+          heading: new Intl.DateTimeFormat(speaking.language.tag, {
+            month: "long",
+            year: "numeric",
+            timeZone: "UTC",
+          }).format(new Date(Date.UTC(year, month - 1, 1))),
+          none: say(
+            page.sport === undefined ? "year.monthNone" : "yearSport.monthNone",
+            named,
+          ),
+          listed,
+          sortedAtFirst: { column: "date", order: "up" },
+        },
+        asked,
+        speaking,
+        assets,
+      ),
+    );
+  } catch (failure) {
+    const code = refusedWith(failure);
+    if (code === undefined) throw failure;
+    request.log.info({ code }, "Request refused");
+    return reply
+      .code(422)
+      .type("text/html; charset=utf-8")
+      .send(
+        `<p class="page-refused" data-refused="${escape(code)}">${escape(say("errors.refusedDetail"))}</p>`,
+      );
+  }
+};

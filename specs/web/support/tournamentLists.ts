@@ -82,6 +82,11 @@ const words = async (heading: Locator): Promise<string> =>
 const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
   await link.click();
   await world.browserPage.waitForLoadState();
+  // A month's table on a year's page is sorted in place, without the page being
+  // loaded again, and is busy until its answer is in (yearMonths.ts).
+  await world.browserPage
+    .locator('[aria-busy="true"]')
+    .waitFor({ state: "detached" });
 };
 
 // Pressed where the reader would press it, in the middle of what they can see,

@@ -87,7 +87,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
 
     Scenario: The page is not loaded again
       Given the page for 2026 is open
-      And the page is marked
+      And the page has been marked
       When the month "October" is pressed
       Then the page is the one that was marked
 
@@ -213,7 +213,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
     Scenario: The page is not loaded again to sort
       Given the page for 2026 is open
       And the month "October" is pressed
-      And the page is marked
+      And the page has been marked
       When the column "Name" of the year's tournaments is pressed
       Then the page is the one that was marked
 
@@ -223,7 +223,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       Given scripting is on
 
     Scenario: The sport's page lists the twelve months
-      When the page for 2026 in the sport "ac" is opened
+      When the page for "ac" in 2026 is opened
       Then the year has 12 months
 
     Scenario: An open month shows only the sport's tournaments
@@ -232,7 +232,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       And "organiser@example.com" has created the tournament "Gate Open"
       And the tournament "Gate Open" starts on "2026-10-11"
       And the tournament "Gate Open" is for the sport "gc"
-      And the page for 2026 in the sport "ac" is open
+      And the page for "ac" in 2026 is open
       When the month "October" is pressed
       Then "Spring Open" is in the year's tournaments
       And "Gate Open" is not in the year's tournaments

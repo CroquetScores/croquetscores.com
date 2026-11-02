@@ -10,7 +10,9 @@ import {
 export type TournamentsInYearRefusedCode =
   | "TournamentsInYear.NotText"
   | "TournamentsInYear.YearNotWhole"
-  | "TournamentsInYear.YearOutOfRange";
+  | "TournamentsInYear.YearOutOfRange"
+  | "TournamentsInYear.MonthNotWhole"
+  | "TournamentsInYear.MonthOutOfRange";
 
 // The years a tournament's address holds, four digits with the first not a
 // nought (TournamentAddress.ts), which are the only years a tournament can
@@ -21,14 +23,16 @@ const EARLIEST_YEAR = 1000;
 const LATEST_YEAR = 9999;
 
 /**
- * The tournaments of the website being read that start in `year`, narrowed by
- * what the reader `chose`. For anybody, so it names nobody.
+ * The tournaments of the website being read that start in `year`, or in its
+ * `month` from 1 to 12 where one is given, narrowed by what the reader
+ * `chose`. For anybody, so it names nobody.
  */
 export class TournamentsInYear extends Query<readonly TournamentOfWebsite[]> {
   constructor(
     readonly website: string,
     readonly year: number,
     readonly chose: FilterChosen = {},
+    readonly month?: number,
   ) {
     super();
     if (typeof website !== "string" || !isChosen(chose)) {
@@ -45,6 +49,18 @@ export class TournamentsInYear extends Query<readonly TournamentOfWebsite[]> {
       throw new ValidationError<TournamentsInYearRefusedCode>(
         "TournamentsInYear.YearOutOfRange",
       );
+    }
+    if (month !== undefined) {
+      if (!Number.isSafeInteger(month)) {
+        throw new ValidationError<TournamentsInYearRefusedCode>(
+          "TournamentsInYear.MonthNotWhole",
+        );
+      }
+      if (month < 1 || month > 12) {
+        throw new ValidationError<TournamentsInYearRefusedCode>(
+          "TournamentsInYear.MonthOutOfRange",
+        );
+      }
     }
   }
 }
