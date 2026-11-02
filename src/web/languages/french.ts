@@ -1008,6 +1008,8 @@ export const french: Language = {
     "admin.score.added":
       "La partie gagnée par {winner} contre {loser} a été ajoutée.",
     "admin.score.otherwise": "La partie n'a pas pu être ajoutée.",
+    "admin.score.playersUnread":
+      "Les joueurs n'ont pas pu être lus. Fermez cette fenêtre et rouvrez-la.",
     "admin.score.correctTitle": "Modifier le score",
     "admin.score.save": "Enregistrer",
     "admin.score.notCorrected": "Le score n'a pas pu être corrigé.",

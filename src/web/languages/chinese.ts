@@ -896,6 +896,7 @@ export const chinese: Language = {
     "admin.score.beat": "胜",
     "admin.score.added": "已添加{winner}战胜{loser}的一局。",
     "admin.score.otherwise": "无法添加这一局。",
+    "admin.score.playersUnread": "无法读取球员。请关闭此对话框后重新打开。",
     "admin.score.correctTitle": "编辑成绩",
     "admin.score.save": "保存",
     "admin.score.notCorrected": "无法更正这个成绩。",

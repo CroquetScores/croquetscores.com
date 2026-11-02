@@ -135,43 +135,52 @@ export const ScoreDialog = ({
       fields.winnerScore.current?.focus();
       return;
     }
-    // A list the site fails to answer is said, as the dialog says any other
-    // failure of the site's, rather than offered as nobody, which would look
-    // like a competition whose players had not yet arrived.
-    const unanswered = (): never[] => {
-      setRefused([refusal("Unknown", undefined)]);
-      return [];
+    // A list the site fails to answer is said, rather than offered as nobody,
+    // which would look like a competition whose players had not yet arrived.
+    // It says what could not be read and not that the game could not be added,
+    // which the reader has not tried, and that the dialog is opened again to
+    // ask again, since nothing asks again of itself.
+    const unread = (): void =>
+      setRefused([
+        {
+          code: "Unknown",
+          part: undefined,
+          words: say("admin.score.playersUnread"),
+        },
+      ]);
+    const asked = async <Body extends object>(
+      list: string,
+    ): Promise<Body | undefined> => {
+      try {
+        const response = await fetch(`${at}/${list}`, {
+          headers: { accept: "application/json" },
+        });
+        return response.ok ? ((await response.json()) as Body) : undefined;
+      } catch {
+        return undefined;
+      }
     };
     if (inATest) {
-      void fetch(`${at}/teams`, { headers: { accept: "application/json" } })
-        .then(async (response) =>
-          response.ok
-            ? ((await response.json()) as { teams: TeamInTest[] }).teams
-            : unanswered(),
-        )
-        .catch(unanswered)
-        .then((answered) => {
-          setTeams(answered);
-          setPlayers(
-            answered.flatMap(({ players: ofTeam }) =>
-              ofTeam.map(({ id, name }) => ({
-                id,
-                name,
-                withdrawn: false,
-                bye: false,
-              })),
-            ),
-          );
-        });
+      void asked<{ teams: TeamInTest[] }>("teams").then((answered) => {
+        if (answered === undefined) unread();
+        const answeredTeams = answered?.teams ?? [];
+        setTeams(answeredTeams);
+        setPlayers(
+          answeredTeams.flatMap(({ players: ofTeam }) =>
+            ofTeam.map(({ id, name }) => ({
+              id,
+              name,
+              withdrawn: false,
+              bye: false,
+            })),
+          ),
+        );
+      });
     } else {
-      void fetch(`${at}/players`, { headers: { accept: "application/json" } })
-        .then(async (response) =>
-          response.ok
-            ? ((await response.json()) as { players: Player[] }).players
-            : unanswered(),
-        )
-        .catch(unanswered)
-        .then(setPlayers);
+      void asked<{ players: Player[] }>("players").then((answered) => {
+        if (answered === undefined) unread();
+        setPlayers(answered?.players ?? []);
+      });
     }
     fields.winner.current?.focus();
   }, [at, choosingPlayers, inATest]);

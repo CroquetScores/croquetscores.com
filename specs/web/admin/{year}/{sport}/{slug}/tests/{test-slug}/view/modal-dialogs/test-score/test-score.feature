@@ -291,6 +291,19 @@ Feature: A game's score is added to a test, or corrected, in a modal dialog
       When "Add Game" is pressed
       Then the test "AUS v ENG" of "Spring Tests" has no games
 
+  Rule: Teams the site fails to answer are said above the fields
+
+    As the score dialog says players it fails to read (`score-modal-dialog.feature`):
+    as an error of the site's, with the words that the players could not be
+    read, rather than offering nobody.
+
+    Scenario: Teams the site fails to answer are said above the fields
+      Given the page of the test "AUS v ENG" in "Spring Tests" is open
+      And the test's teams are answered with a server error
+      When "Add Score" is pressed
+      Then the score dialog says "Unknown" above the fields
+      And the modal dialog says the words for "admin.score.playersUnread"
+
   Rule: Every word the dialog says is in the reader's language
 
     The test locale shows it (`language.feature`). The teams' and the

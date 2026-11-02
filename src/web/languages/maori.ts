@@ -961,6 +961,8 @@ export const maori: Language = {
     "admin.score.added":
       "Kua tāpiritia te kēmu i wikitoria ai a {winner} i a {loser}.",
     "admin.score.otherwise": "Kāore i taea te tāpiri i te kēmu.",
+    "admin.score.playersUnread":
+      "Kāore i taea te pānui i ngā kaitākaro. Katia tēnei pouaka kōrero, ka whakatuwhera anō.",
     "admin.score.correctTitle": "Whakatika tākohu",
     "admin.score.save": "Penapena",
     "admin.score.notCorrected": "Kāore i taea te whakatika i te tākohu.",

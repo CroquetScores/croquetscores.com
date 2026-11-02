@@ -902,6 +902,8 @@ export const polish: Language = {
     "admin.score.beat": "pokonuje",
     "admin.score.added": "Dodano grę: {winner} wygrywa z {loser}.",
     "admin.score.otherwise": "Nie udało się dodać gry.",
+    "admin.score.playersUnread":
+      "Nie udało się wczytać graczy. Zamknij to okno i otwórz je ponownie.",
     "admin.score.correctTitle": "Edytuj wynik",
     "admin.score.save": "Zapisz",
     "admin.score.notCorrected": "Nie udało się poprawić wyniku.",

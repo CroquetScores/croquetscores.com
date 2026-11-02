@@ -1,4 +1,4 @@
-import { Then } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
@@ -18,6 +18,28 @@ import { eventually } from "../../../../../../../../../support/tournamentPage.js
 // and the games kept in it.
 
 const open = "dialog[open]";
+
+// The next time the dialog asks for the test's teams, answered as an error of
+// the site's is, with no code of its own. Once only, as the dialog asks when it
+// opens. The test is not named, for the reason the competition's players are
+// not (score-modal-dialog.steps.ts).
+Given(
+  "the test's teams are answered with a server error",
+  async function (this: SpecWorld) {
+    await this.browserPage.route(
+      (url) => /\/competitions\/[^/]+\/teams$/.test(url.pathname),
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        await route.fulfill({
+          status: 500,
+          contentType: "text/html",
+          body: "Something went wrong.",
+        });
+      },
+      { times: 1 },
+    );
+  },
+);
 
 const fieldOf = (world: SpecWorld, label: string): Locator =>
   world.browserPage.locator(open).getByLabel(label, { exact: true });

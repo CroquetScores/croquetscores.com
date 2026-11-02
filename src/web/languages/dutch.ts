@@ -1004,6 +1004,8 @@ export const dutch: Language = {
     "admin.score.added":
       "De partij die {winner} won van {loser} is toegevoegd.",
     "admin.score.otherwise": "De partij kon niet worden toegevoegd.",
+    "admin.score.playersUnread":
+      "De spelers konden niet worden gelezen. Sluit dit venster en open het opnieuw.",
     "admin.score.correctTitle": "Score bewerken",
     "admin.score.save": "Opslaan",
     "admin.score.notCorrected": "De score kon niet worden gecorrigeerd.",
