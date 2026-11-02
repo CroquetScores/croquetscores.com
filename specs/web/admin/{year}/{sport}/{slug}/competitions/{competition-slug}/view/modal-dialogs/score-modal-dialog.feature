@@ -727,11 +727,34 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
     the reader has not yet tried. Asking again is by closing the dialog and
     opening it again, which the words say.
 
+    A reply that is well made but has no players in it is no more a list of
+    players than an error is, and is said the same way, rather than offering
+    nobody as though the competition had none. The players arrive when they
+    arrive, and may fail after the reader has already tried to add a game, so
+    what is said of that is kept and the failure is said as well, rather than
+    put in its place.
+
     Scenario: Players the site fails to answer are said above the fields
       Given the scores of "Block A" in "Spring Open" are open
       And the competition's players are answered with a server error
       When "Add Score" is pressed
       Then the score dialog says "Unknown" above the fields
+      And the modal dialog says the words for "admin.score.playersUnread"
+
+    Scenario: A reply with no players in it is said the same way
+      Given the scores of "Block A" in "Spring Open" are open
+      And the competition's players are answered with a reply that has none
+      When "Add Score" is pressed
+      Then the score dialog says "Unknown" above the fields
+      And the modal dialog says the words for "admin.score.playersUnread"
+
+    Scenario: What was refused before the failure arrived is still said
+      Given the scores of "Block A" in "Spring Open" are open
+      And the competition's players are held back and then answered with a server error
+      And "Add Score" is pressed
+      And "Add Game" is pressed
+      When the players held back are let through
+      Then "Winner" is refused with "Game.WinnerMissing"
       And the modal dialog says the words for "admin.score.playersUnread"
 
   Rule: A score's Edit opens the dialog on that score, to correct it
