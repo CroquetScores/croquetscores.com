@@ -10,6 +10,10 @@ import { DialogProblems } from "../../../../../../DialogProblems.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
 import { useRules } from "../../../../../../RulesTicks.js";
+import {
+  LosersDialog,
+  type LosersAsked,
+} from "../../../competitions/{competition-slug}/view/modal-dialogs/losers/losers.js";
 
 // The competition dialog (competition.feature), over a tournament's page:
 // opened by Add Competition to add competitions one after another, and by Edit
@@ -46,6 +50,11 @@ export type CompetitionAsItIs = {
       readonly kind: "knockout";
       readonly places: number;
       readonly rounds: readonly number[];
+      /** Set for a losers knockout, whose places are however many lose the round. */
+      readonly losersOf?: {
+        readonly competition: string;
+        readonly round: number;
+      };
     }
 );
 
@@ -154,6 +163,12 @@ export const CompetitionDialog = ({
       ? competition.rounds.map(String)
       : ["1", "1", "1"],
   );
+  // Whether the dialog that adds a losers knockout is open over this one.
+  const [addingLosers, setAddingLosers] = useState(false);
+  // The losers knockouts asked for while adding a knockout, kept here until it
+  // is added and added with it, since they take the losers of a knockout that
+  // is not there to be sent to yet.
+  const [asked, setAsked] = useState<readonly LosersAsked[]>([]);
   const [refused, setRefused] = useState<readonly Refusal[]>([]);
   // What was last added, said until the next name is typed.
   const [said, setSaid] = useState<string | undefined>();
@@ -185,6 +200,15 @@ export const CompetitionDialog = ({
   const choosePlaces = (chosen: number): void => {
     setPlaces(chosen);
     const needed = Math.log2(chosen);
+    // A round asked for is still the same round of the draw, which is nearer
+    // the final by as many as are taken from the start, and gone with it
+    // where it is taken.
+    const shift = needed - rounds.length;
+    setAsked((all) =>
+      all
+        .map((each) => ({ ...each, round: each.round + shift }))
+        .filter(({ round }) => round >= 0),
+    );
     setRounds((typed) => {
       const added = needed - typed.length;
       return Array.from(
@@ -214,6 +238,8 @@ export const CompetitionDialog = ({
                   places,
                   rounds: rounds.map(typedNumber),
                   ...rules.said,
+                  // Changing a knockout adds its losers knockouts as it goes.
+                  ...(competition === undefined ? { losers: asked } : {}),
                 }
               : kind === "block"
                 ? {
@@ -234,6 +260,7 @@ export const CompetitionDialog = ({
       );
       if (response.ok) {
         setRefused([]);
+        setAsked([]);
         kept();
         if (competition !== undefined) {
           close();
@@ -267,171 +294,204 @@ export const CompetitionDialog = ({
   const above = refusedFor(undefined);
 
   return (
-    <ModalDialog
-      help={standardHelp(
-        "competitions",
-        competition === undefined
-          ? "adding-a-competition"
-          : "changing-a-competition",
-      )}
-      title={say(
-        competition === undefined
-          ? "admin.competition.addTitle"
-          : "admin.competition.editTitle",
-      )}
-      action={say(
-        competition === undefined
-          ? "admin.competition.add"
-          : "admin.competition.save",
-      )}
-      hover={
-        competition === undefined
-          ? say("admin.hover.dialog.competition.add")
-          : say("admin.hover.dialog.competition.save")
-      }
-      act={() => void send()}
-      cancel={close}
-      busy={sending}
-    >
-      <DialogStatus>
-        {said === undefined
-          ? null
-          : say("admin.competition.added", { name: said })}
-      </DialogStatus>
-      <DialogProblems refused={above} />
-      <Field
-        name="name"
-        label={say("admin.competition.name")}
-        refused={refusedFor("name")}
-      >
-        {(tied) => (
-          <input
-            {...tied}
-            ref={nameField}
-            type="text"
-            placeholder=" "
-            autoComplete="off"
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value);
-              // What was added is no longer the news once the next is typed.
-              setSaid(undefined);
-            }}
-          />
+    <>
+      <ModalDialog
+        help={standardHelp(
+          "competitions",
+          competition === undefined
+            ? "adding-a-competition"
+            : "changing-a-competition",
         )}
-      </Field>
-      {/* Not asked of a competition being changed: no change makes a block a
+        title={say(
+          competition === undefined
+            ? "admin.competition.addTitle"
+            : "admin.competition.editTitle",
+        )}
+        action={say(
+          competition === undefined
+            ? "admin.competition.add"
+            : "admin.competition.save",
+        )}
+        hover={
+          competition === undefined
+            ? say("admin.hover.dialog.competition.add")
+            : say("admin.hover.dialog.competition.save")
+        }
+        act={() => void send()}
+        cancel={close}
+        busy={sending}
+      >
+        <DialogStatus>
+          {said === undefined
+            ? null
+            : say("admin.competition.added", { name: said })}
+        </DialogStatus>
+        <DialogProblems refused={above} />
+        <Field
+          name="name"
+          label={say("admin.competition.name")}
+          refused={refusedFor("name")}
+        >
+          {(tied) => (
+            <input
+              {...tied}
+              ref={nameField}
+              type="text"
+              placeholder=" "
+              autoComplete="off"
+              value={name}
+              onChange={(event) => {
+                setName(event.target.value);
+                // What was added is no longer the news once the next is typed.
+                setSaid(undefined);
+              }}
+            />
+          )}
+        </Field>
+        {/* Not asked of a competition being changed: no change makes a block a
           knockout, so a choice here could only be refused. */}
-      {competition === undefined ? (
-        <fieldset className="field-kinds">
-          <legend>{say("admin.competition.kind")}</legend>
-          {kinds.map((each) => (
-            <label key={each} htmlFor={`field-kind-${each}`}>
-              <input
-                id={`field-kind-${each}`}
-                type="radio"
-                name="kind"
-                value={each}
-                checked={kind === each}
-                onChange={() => {
-                  setKind(each);
-                }}
-              />
-              <span>{say(`admin.competitions.${each}`)}</span>
-            </label>
-          ))}
-        </fieldset>
-      ) : null}
-      {kind === "knockout" ? (
-        <>
-          <Field
-            name="places"
-            label={say("admin.competition.places")}
-            refused={refusedFor("places")}
-            lifted
-          >
-            {(tied) => (
-              <select
-                {...tied}
-                value={places}
-                onChange={(event) => {
-                  choosePlaces(Number(event.target.value));
-                }}
-              >
-                {placesOffered.map((offered) => (
-                  <option key={offered} value={offered}>
-                    {offered}
-                  </option>
-                ))}
-              </select>
-            )}
-          </Field>
-          {/* One group, named for what every field in it asks, so that
-              each field need only say which round it is. */}
-          <fieldset className="field-best-ofs">
-            <legend>{say("admin.competition.bestOfs")}</legend>
-            <div className="field-best-ofs-rounds">
-              {rounds.map((typed, round) => (
-                <Field
-                  // Keyed by its place from the final, so that a round kept
-                  // keeps its field as rounds come and go before it.
-                  key={rounds.length - round}
-                  name={`round-${String(round + 1)}`}
-                  label={roundLabel(round, rounds.length)}
-                  refused={refusedForRound(round)}
-                  lifted
-                >
-                  {(tied) => (
-                    <input
-                      {...tied}
-                      type="text"
-                      inputMode="numeric"
-                      placeholder=" "
-                      autoComplete="off"
-                      value={typed}
-                      onChange={(event) => {
-                        const now = event.target.value;
-                        setRounds((all) =>
-                          all.map((each, place) =>
-                            place === round ? now : each,
-                          ),
-                        );
-                      }}
-                    />
-                  )}
-                </Field>
-              ))}
-            </div>
+        {competition === undefined ? (
+          <fieldset className="field-kinds">
+            <legend>{say("admin.competition.kind")}</legend>
+            {kinds.map((each) => (
+              <label key={each} htmlFor={`field-kind-${each}`}>
+                <input
+                  id={`field-kind-${each}`}
+                  type="radio"
+                  name="kind"
+                  value={each}
+                  checked={kind === each}
+                  onChange={() => {
+                    setKind(each);
+                  }}
+                />
+                <span>{say(`admin.competitions.${each}`)}</span>
+              </label>
+            ))}
           </fieldset>
-        </>
-      ) : (
-        <>
-          <Field
-            name="best-of"
-            label={say("admin.competition.bestOf")}
-            refused={refusedFor("bestOf")}
-          >
-            {(tied) => (
-              <input
-                {...tied}
-                type="text"
-                inputMode="numeric"
-                placeholder=" "
-                autoComplete="off"
-                value={bestOf}
-                onChange={(event) => {
-                  setBestOf(event.target.value);
-                }}
-              />
-            )}
-          </Field>
-          {/* A block alone is played in rounds: a Swiss pairs its players as
-              it goes. */}
-          {kind === "block" ? (
+        ) : null}
+        {kind === "knockout" ? (
+          <>
             <Field
-              name="rounds"
-              label={say("admin.competition.rounds")}
-              refused={refusedFor("playedIn")}
+              name="places"
+              label={say("admin.competition.places")}
+              refused={refusedFor("places")}
+              lifted
+            >
+              {(tied) => (
+                <select
+                  {...tied}
+                  value={places}
+                  // A losers knockout has as many places as the round it
+                  // takes losers from has matches, which only that round can
+                  // change.
+                  disabled={
+                    competition?.kind === "knockout" &&
+                    competition.losersOf !== undefined
+                  }
+                  onChange={(event) => {
+                    choosePlaces(Number(event.target.value));
+                  }}
+                >
+                  {placesOffered.map((offered) => (
+                    <option key={offered} value={offered}>
+                      {offered}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+            {/* One group, named for what every field in it asks, so that
+              each field need only say which round it is. */}
+            <fieldset className="field-best-ofs">
+              <legend>{say("admin.competition.bestOfs")}</legend>
+              <div className="field-best-ofs-rounds">
+                {rounds.map((typed, round) => (
+                  <Field
+                    // Keyed by its place from the final, so that a round kept
+                    // keeps its field as rounds come and go before it.
+                    key={rounds.length - round}
+                    name={`round-${String(round + 1)}`}
+                    label={roundLabel(round, rounds.length)}
+                    refused={refusedForRound(round)}
+                    lifted
+                  >
+                    {(tied) => (
+                      <input
+                        {...tied}
+                        type="text"
+                        inputMode="numeric"
+                        placeholder=" "
+                        autoComplete="off"
+                        value={typed}
+                        onChange={(event) => {
+                          const now = event.target.value;
+                          setRounds((all) =>
+                            all.map((each, place) =>
+                              place === round ? now : each,
+                            ),
+                          );
+                        }}
+                      />
+                    )}
+                  </Field>
+                ))}
+              </div>
+            </fieldset>
+            {/* Of a knockout that exists, since it is its losers that play on,
+              and of one with a round besides the final to take them from. */}
+            {rounds.length > 1 ? (
+              <p>
+                <button
+                  type="button"
+                  className="button"
+                  title={say("admin.hover.losers.add")}
+                  onClick={() => {
+                    setAddingLosers(true);
+                  }}
+                >
+                  {say("admin.losers.add")}
+                </button>
+              </p>
+            ) : null}
+            {asked.length === 0 ? null : (
+              <ul className="listed" data-listed="losers-asked">
+                {asked.map((each, place) => (
+                  <li
+                    key={`${each.name}-${String(place)}`}
+                    className="listed-item"
+                  >
+                    <span className="listed-name">{each.name}</span>
+                    <span className="listed-about">
+                      {say("admin.losers.option", {
+                        round: roundLabel(each.round, rounds.length),
+                        count: String(2 ** (rounds.length - 1 - each.round)),
+                      })}
+                    </span>
+                    <span className="listed-options">
+                      <button
+                        type="button"
+                        className="button"
+                        onClick={() => {
+                          setAsked((all) =>
+                            all.filter((_, at) => at !== place),
+                          );
+                        }}
+                      >
+                        {say("admin.losers.remove")}
+                      </button>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        ) : (
+          <>
+            <Field
+              name="best-of"
+              label={say("admin.competition.bestOf")}
+              refused={refusedFor("bestOf")}
             >
               {(tied) => (
                 <input
@@ -440,17 +500,64 @@ export const CompetitionDialog = ({
                   inputMode="numeric"
                   placeholder=" "
                   autoComplete="off"
-                  value={playedIn}
+                  value={bestOf}
                   onChange={(event) => {
-                    setPlayedIn(event.target.value);
+                    setBestOf(event.target.value);
                   }}
                 />
               )}
             </Field>
-          ) : null}
-        </>
-      )}
-      {rules.ticks}
-    </ModalDialog>
+            {/* A block alone is played in rounds: a Swiss pairs its players as
+              it goes. */}
+            {kind === "block" ? (
+              <Field
+                name="rounds"
+                label={say("admin.competition.rounds")}
+                refused={refusedFor("playedIn")}
+              >
+                {(tied) => (
+                  <input
+                    {...tied}
+                    type="text"
+                    inputMode="numeric"
+                    placeholder=" "
+                    autoComplete="off"
+                    value={playedIn}
+                    onChange={(event) => {
+                      setPlayedIn(event.target.value);
+                    }}
+                  />
+                )}
+              </Field>
+            ) : null}
+          </>
+        )}
+        {rules.ticks}
+      </ModalDialog>
+      {/* Beside the dialog and not in it: its own form must not be inside this
+        one's, whose submit would be taken as this one's. */}
+      {addingLosers && competition === undefined ? (
+        <LosersDialog
+          rounds={rounds.length - 1}
+          keep={(each) => {
+            setAsked((all) => [...all, each]);
+          }}
+          close={() => {
+            setAddingLosers(false);
+          }}
+        />
+      ) : null}
+      {addingLosers && competition?.kind === "knockout" ? (
+        <LosersDialog
+          tournament={tournament}
+          competition={competition.id}
+          rounds={competition.rounds.length - 1}
+          kept={kept}
+          close={() => {
+            setAddingLosers(false);
+          }}
+        />
+      ) : null}
+    </>
   );
 };

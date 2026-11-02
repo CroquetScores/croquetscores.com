@@ -278,6 +278,10 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           maximumHoops(said),
           createdBy,
           occurredAt,
+          optionalText(said, "losersOfCompetitionId"),
+          said["losersOfRound"] === undefined
+            ? undefined
+            : number(said, "losersOfRound"),
         ),
     )
     .name(

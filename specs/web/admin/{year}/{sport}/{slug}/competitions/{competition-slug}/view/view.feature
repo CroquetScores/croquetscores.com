@@ -18,6 +18,10 @@ Feature: A competition's page in the admin
   Each tab says what it holds in a feature of its own
   (`competition-players-tab.feature` and `scores-tab.feature`).
 
+  A knockout's manager is offered a third tab, Losers, after Scores, for the
+  knockouts that take the losers of its rounds (`losers-tab.feature`). No
+  other kind of competition has it.
+
   A manager of the tournament sees both tabs. A scorer sees Scores alone,
   since who plays in a competition is the manager's to say and the scores are
   what a scorer is there for, so the page opens on Scores for a scorer.

@@ -44,6 +44,7 @@ Feature: The names a tournament's events are kept under
         | a block being added                       | tournament-block-added              |
         | a block being updated                     | tournament-block-updated            |
         | a knockout being added                    | tournament-knockout-added           |
+        | a losers knockout being added             | tournament-knockout-added           |
         | a knockout being updated                  | tournament-knockout-updated         |
         | a Swiss being added                       | tournament-swiss-added              |
         | a Swiss being updated                     | tournament-swiss-updated            |
@@ -93,6 +94,7 @@ Feature: The names a tournament's events are kept under
         | a block being added                       |
         | a block being updated                     |
         | a knockout being added                    |
+        | a losers knockout being added             |
         | a knockout being updated                  |
         | a Swiss being added                       |
         | a Swiss being updated                     |
@@ -140,6 +142,7 @@ Feature: The names a tournament's events are kept under
         | a block being added                       |
         | a block being updated                     |
         | a knockout being added                    |
+        | a losers knockout being added             |
         | a knockout being updated                  |
         | a Swiss being added                       |
         | a Swiss being updated                     |
@@ -212,6 +215,14 @@ Feature: The names a tournament's events are kept under
 
     Scenario: A test added in no group is read back in none
       Given an event of a test being added in no group
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+  Rule: A knockout added before losers knockouts is read back as taking nobody's losers
+
+    Scenario: A knockout added takes the losers of nothing
+      Given an event of a knockout being added
       When the event is written down through the registry
       And what was kept is read back through the registry
       Then what was read back says everything the event said

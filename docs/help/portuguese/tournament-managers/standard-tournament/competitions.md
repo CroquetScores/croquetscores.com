@@ -36,6 +36,14 @@ Uma chave tem tantas rodadas quantas forem necessárias para reduzir as suas vag
 
 ![O diálogo Adicionar competição para um mata-mata de 4 vagas](images/add-competition-knockout.png)
 
+### Um mata-mata dos perdedores {#losers-knockout}
+
+Um mata-mata pode enviar quem perde uma rodada para um mata-mata próprio, um mata-mata dos perdedores. Abaixo de **Melhor de, por fase** de um mata-mata, pressione **Adicionar mata-mata dos perdedores**. Uma caixa de diálogo pede **Perdedores de**, a rodada cujos perdedores continuam jogando, entre todas as rodadas menos a final, e **Nome do mata-mata dos perdedores**. Pressione **Adicionar** para colocá-lo na lista abaixo do botão, onde **Remover** o tira de novo. Ele é adicionado junto com o mata-mata quando este é adicionado, e se um dos dois for recusado, nenhum é adicionado.
+
+Um mata-mata dos perdedores tem uma vaga para cada partida dessa rodada, e cada rodada dele é melhor de 1, o que **Editar** pode mudar. Seus jogadores entram à medida que as partidas dessa rodada são decididas, na ordem do sorteio, então a aba **Jogadores** apenas os mostra. Se uma partida é corrigida ou posta de lado, o perdedor é movido ou tirado de novo, a menos que já tenha jogado.
+
+Num mata-mata já adicionado, **Editar** mostra o mesmo botão, e o mata-mata dos perdedores é adicionado na hora. Um mata-mata cujos perdedores outro em uso recebe não pode ser arquivado nem ter suas vagas alteradas: arquive primeiro o mata-mata dos perdedores.
+
 ### Como é jogada e contada
 
 Todo tipo pergunta as mesmas três coisas abaixo da sua forma.

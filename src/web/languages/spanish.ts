@@ -574,6 +574,31 @@ export const spanish: Language = {
     "admin.competitionView.tabs": "Competición",
     "admin.competitionView.players": "Jugadores",
     "admin.competitionView.scores": "Resultados",
+    "admin.competitionView.losers": "Perdedores",
+    "admin.losers.add": "Añadir eliminatoria de perdedores",
+    "admin.losers.round": "Perdedores de",
+    "admin.losers.option": "{round} ({count} perdedores)",
+    "admin.losers.name": "Nombre de la eliminatoria de perdedores",
+    "admin.losers.none": "No hay eliminatorias de perdedores.",
+    "admin.losers.noRounds":
+      "Esta eliminatoria no tiene ninguna ronda cuyos perdedores puedan seguir jugando.",
+    "admin.losers.remove": "Quitar",
+    "admin.losers.readOnly":
+      "Los jugadores de esta eliminatoria son los perdedores de otra eliminatoria, y se colocan aquí a medida que se decide cada partido.",
+    "admin.hover.losers.add":
+      "Añadir una eliminatoria para los perdedores de una ronda de esta eliminatoria",
+    "Tournament.NoSuchRound":
+      "La eliminatoria no tiene una ronda así que envíe perdedores.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Otra eliminatoria toma los perdedores de esta, así que sus plazas no se pueden cambiar.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Otra eliminatoria en uso toma los perdedores de esta, así que archiva primero esa otra.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Esta eliminatoria de perdedores toma los perdedores de una eliminatoria archivada, así que restaura primero esa otra.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Una eliminatoria de perdedores tiene tantas plazas como partidos tiene la ronda de la que toma los perdedores.",
+    "Competition.PlayersSetAutomatically":
+      "Los jugadores de una eliminatoria de perdedores se colocan en ella a medida que se deciden los partidos, no a mano.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "El torneo y sus competiciones",
     "admin.sections.tournament": "Torneo",

@@ -3,9 +3,18 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
+/** A losers knockout to be added with the knockout: its name, and the round whose losers it takes. */
+export interface LosersKnockoutSaid {
+  readonly name: string;
+  /** The round of the knockout it takes losers from, the first being 0. */
+  readonly round: number;
+}
+
 /**
- * Adding a knockout to a tournament: its name, and the shape of its draw. It is
- * answered with the new competition's id.
+ * Adding a knockout to a tournament: its name, and the shape of its draw. It
+ * is answered with the new competition's id. Losers knockouts that take the
+ * losers of its rounds can be added with it, and are kept or refused with it,
+ * as one change to the tournament.
  */
 export class AddKnockout extends Command<CompetitionId> {
   constructor(
@@ -24,6 +33,8 @@ export class AddKnockout extends Command<CompetitionId> {
      * that to the tournament: what it was when it is updated.
      */
     readonly rules?: CompetitionRulesSaid | undefined,
+    /** The losers knockouts to add with it, in the order they are added. */
+    readonly losers: readonly LosersKnockoutSaid[] = [],
   ) {
     super(requestedAt);
   }

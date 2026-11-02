@@ -4,6 +4,8 @@ import { GameId } from "../../../domain/aggregates/tournaments/competitions/prim
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { keepLosersKnockoutsInStep } from "./losersKnockouts.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import {
@@ -28,7 +30,7 @@ export class RestoreGameHandler extends CommandHandler<RestoreGame, void> {
   }
 
   async handle(command: RestoreGame): Promise<void> {
-    const { by, competition, told } = await competitionManagedBy(
+    const { by, tournament, competition, told } = await competitionManagedBy(
       this.tournaments,
       this.accounts,
       this.competitions,
@@ -43,5 +45,15 @@ export class RestoreGameHandler extends CommandHandler<RestoreGame, void> {
       command.requestedAt,
     );
     await this.competitions.save(competition);
+    // What it did may have changed who lost a match, and so who the knockouts
+    // that take the losers of its rounds have.
+    await keepLosersKnockoutsInStep(
+      this.competitions,
+      tournament,
+      CompetitionId.from(command.competition),
+      by,
+      command.requestedAt,
+      competition,
+    );
   }
 }

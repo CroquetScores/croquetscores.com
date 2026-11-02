@@ -570,6 +570,31 @@ export const swedish: Language = {
     "admin.competitionView.tabs": "Tävling",
     "admin.competitionView.players": "Spelare",
     "admin.competitionView.scores": "Resultat",
+    "admin.competitionView.losers": "Förlorare",
+    "admin.losers.add": "Lägg till förlorarutslagning",
+    "admin.losers.round": "Förlorare från",
+    "admin.losers.option": "{round} ({count} förlorare)",
+    "admin.losers.name": "Förlorarutslagningens namn",
+    "admin.losers.none": "Inga förlorarutslagningar.",
+    "admin.losers.noRounds":
+      "Den här utslagningen har ingen omgång vars förlorare kan spela vidare.",
+    "admin.losers.remove": "Ta bort",
+    "admin.losers.readOnly":
+      "Spelarna i den här utslagningen är förlorarna från en annan utslagning och läggs in här när varje match avgörs.",
+    "admin.hover.losers.add":
+      "Lägg till en utslagning för förlorarna från en av den här utslagningens omgångar",
+    "Tournament.NoSuchRound":
+      "Utslagningen har ingen sådan omgång som skickar vidare förlorare.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "En annan utslagning tar förlorarna från den här, så dess platser kan inte ändras.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "En annan utslagning som används tar förlorarna från den här, så arkivera den först.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Den här förlorarutslagningen tar förlorarna från en utslagning som är arkiverad, så återställ den först.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "En förlorarutslagning har lika många platser som omgången den tar förlorare från har matcher.",
+    "Competition.PlayersSetAutomatically":
+      "Spelarna i en förlorarutslagning läggs in när matcher avgörs, inte för hand.",
     // Avsnittsfältet på en turnerings sida och dess tävlingars sidor.
     "admin.sections.label": "Turneringen och dess tävlingar",
     "admin.sections.tournament": "Turnering",

@@ -11,7 +11,11 @@ import type {
 import { PassThrough } from "node:stream";
 
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
-import { AddKnockout } from "../../../application/operations/tournaments/AddKnockout.js";
+import {
+  AddKnockout,
+  type LosersKnockoutSaid,
+} from "../../../application/operations/tournaments/AddKnockout.js";
+import { AddLosersKnockout } from "../../../application/operations/tournaments/AddLosersKnockout.js";
 import { AddSwiss } from "../../../application/operations/tournaments/AddSwiss.js";
 import { UpdateBlock } from "../../../application/operations/tournaments/UpdateBlock.js";
 import { UpdateKnockout } from "../../../application/operations/tournaments/UpdateKnockout.js";
@@ -154,6 +158,19 @@ const numbersOf = (body: unknown, field: string): number[] => {
   const value = (body as Record<string, unknown> | null)?.[field];
   return Array.isArray(value)
     ? value.map((each) => (typeof each === "number" ? each : Number.NaN))
+    : [];
+};
+
+// The losers knockouts sent with a knockout: each a name and a round, and
+// none where no list was sent. What is not a name or a number is left to be
+// refused as it is elsewhere.
+const losersOf = (body: unknown): LosersKnockoutSaid[] => {
+  const value = (body as Record<string, unknown> | null)?.["losers"];
+  return Array.isArray(value)
+    ? value.map((each) => ({
+        name: textOf(each, "name"),
+        round: numberOf(each, "round"),
+      }))
     : [];
 };
 
@@ -494,34 +511,46 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       const at = request.requestedAt;
       const kind = textOf(body, "kind");
       const added = await request.server.mediator.send(
-        kind === "knockout"
-          ? new AddKnockout(
+        // The knockout whose losers it takes is named by its bare id, as the
+        // competitions of a tournament are everywhere in this API.
+        kind === "losers-knockout"
+          ? new AddLosersKnockout(
               reader.value,
               tournament,
               name,
-              numberOf(body, "places"),
-              numbersOf(body, "rounds"),
+              `competition/${textOf(body, "from")}`,
+              numberOf(body, "round"),
               at,
-              rulesOf(body),
             )
-          : kind === "swiss"
-            ? new AddSwiss(
+          : kind === "knockout"
+            ? new AddKnockout(
                 reader.value,
                 tournament,
                 name,
-                numberOf(body, "bestOf"),
+                numberOf(body, "places"),
+                numbersOf(body, "rounds"),
                 at,
                 rulesOf(body),
+                losersOf(body),
               )
-            : new AddBlock(
-                reader.value,
-                tournament,
-                name,
-                numberOf(body, "bestOf"),
-                numberOf(body, "rounds"),
-                at,
-                rulesOf(body),
-              ),
+            : kind === "swiss"
+              ? new AddSwiss(
+                  reader.value,
+                  tournament,
+                  name,
+                  numberOf(body, "bestOf"),
+                  at,
+                  rulesOf(body),
+                )
+              : new AddBlock(
+                  reader.value,
+                  tournament,
+                  name,
+                  numberOf(body, "bestOf"),
+                  numberOf(body, "rounds"),
+                  at,
+                  rulesOf(body),
+                ),
       );
       return reply
         .code(201)

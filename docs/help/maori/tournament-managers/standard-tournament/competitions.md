@@ -36,6 +36,14 @@ He rite te maha o ngā rauna o tētahi tūtohi ki te maha e hiahiatia ana hei ha
 
 ![Te pouaka kōrero Tāpiri tauwhāinga mō tētahi whakawātea e 4 ngā tūnga](images/add-competition-knockout.png)
 
+### He whakaweto hunga hinga {#losers-knockout}
+
+Ka taea e te whakaweto te tuku i te hunga ka hinga i tētahi rauna ki tā rātou ake whakaweto, he whakaweto hunga hinga. I raro i te **Ngā pai rawa o te** o tētahi whakaweto, pēhia te **Tāpiri Whakaweto Hunga Hinga**. Ka pātai te pouaka kōrero mō te **Ngā hunga hinga o**, te rauna e haere tonu ai ōna hunga hinga, i ngā rauna katoa haunga te whakamutunga, me te **Ingoa o te whakaweto hunga hinga**. Pēhia te **Tāpiri** hei whakauru ki te rārangi i raro i te pātene, ā mā te **Tango** e tango anō. Ka tāpiria tahi me te whakaweto ina tāpiria tērā, ā mēnā ka whakakāhoretia tētahi o rāua, e kore tētahi e tāpiria.
+
+He wāhi tō te whakaweto hunga hinga mō ia tukinga o taua rauna, ā he pai rawa o 1 ia rauna, ka taea e te **Whakatika** te whakarerekē. Ka uru ōna kaitākaro i te whakatau i ngā tukinga o taua rauna, i runga i te raupapa o te toro, no reira ko tana ripa **Kaitākaro** anake te whakaatu i a rātou. Mēnā ka whakatikaina, ka waiho rānei tētahi tākaro ki te taha, ka nekehia, ka tangohia anō rānei te kaihinga, haunga mēnā kua haere tonu tana tākaro.
+
+I runga i te whakaweto kua tāpiria kētia, ka whakaatu te **Whakatika** i taua pātene ōna, ā ka tāpiria tonuhia te whakaweto hunga hinga. Ko te whakaweto e tangohia ana ōna hunga hinga e tētahi atu e whakamahia ana, e kore e taea te puretu, te whakarerekē rānei i ōna wāhi: me puretu tuatahi te whakaweto hunga hinga.
+
 ### Te āhua o te tākaro me te kaute
 
 Ka pātai ia momo katoa i ēnei mea e toru i raro i tōna āhua.

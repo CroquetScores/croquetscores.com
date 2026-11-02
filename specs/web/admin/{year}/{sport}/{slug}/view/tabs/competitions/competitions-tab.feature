@@ -329,6 +329,32 @@ Feature: The competitions tab of a tournament's page
       When the competitions of "Spring Open" are opened
       Then the competition "Block A" is not listed among the archived
 
+  Rule: An archive the tournament refuses is said above the list
+
+    A knockout whose losers another in use takes is not archived until that one
+    is (`archiveCompetition.feature`), and the tab says why by the refusal's
+    code, in the reader's language, rather than leaving the list as it was.
+
+    Background:
+      Given the knockout is to have a draw of 8 places
+      And "organiser@example.com" has added the knockout "Main Event" to "Spring Open"
+      And "organiser@example.com" has added the losers knockout "Plate" to "Spring Open" for the losers of the first round of "Main Event"
+      And the competitions of "Spring Open" are open
+
+    Scenario: The refusal is said
+      When "Archive" is pressed on the competition "Main Event"
+      Then the competitions tab says it was refused with "Tournament.KnockoutHasLosersKnockoutsInUse"
+
+    Scenario: The knockout stays in use
+      When "Archive" is pressed on the competition "Main Event"
+      Then the competitions tab says it was refused with "Tournament.KnockoutHasLosersKnockoutsInUse"
+      And the competition "Main Event" is not listed among the archived
+
+    Scenario: Archiving the losers knockout first is not refused
+      Given "Archive" is pressed on the competition "Plate"
+      When "Archive" is pressed on the competition "Main Event"
+      Then the competition "Main Event" is listed among the archived
+
   Rule: A scorer sees the competitions in use, and can only view them
 
     Scenario: A scorer is shown a competition in use

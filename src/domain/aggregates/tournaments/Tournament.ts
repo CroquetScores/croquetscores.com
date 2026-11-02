@@ -119,6 +119,11 @@ export type TournamentErrorCode =
   | "Tournament.KnockoutPlayerHasGames"
   | "Tournament.KnockoutRoundHasDecidedMatch"
   | "Tournament.KnockoutLaterRoundHasGames"
+  | "Tournament.NoSuchRound"
+  | "Tournament.LosersKnockoutPlacesFixed"
+  | "Tournament.KnockoutHasLosersKnockouts"
+  | "Tournament.KnockoutHasLosersKnockoutsInUse"
+  | "Tournament.LosersKnockoutSourceArchived"
   | "Tournament.NotAManager"
   | "Tournament.NotAManagerOrScorer"
   | "Tournament.NotAManagerOrRankingOfficer"
@@ -217,6 +222,12 @@ export interface KnockoutRoundsPlayed {
   readonly roundsWithGames: readonly number[];
 }
 
+/** The round of a knockout, the first being 0, whose losers fill another. */
+export interface LosersOf {
+  readonly competitionId: CompetitionId;
+  readonly round: number;
+}
+
 /** What each kind of competition is besides what every competition is. */
 export type CompetitionShape =
   | {
@@ -224,7 +235,13 @@ export type CompetitionShape =
       readonly bestOf: BestOf;
       readonly rounds: Rounds;
     }
-  | { readonly kind: "knockout"; readonly draw: KnockoutDraw }
+  | {
+      readonly kind: "knockout";
+      readonly draw: KnockoutDraw;
+      // Set where the knockout's players are the losers of a round of another
+      // knockout, put there as the matches are decided, not by hand.
+      readonly losersOf?: LosersOf | undefined;
+    }
   | { readonly kind: "swiss"; readonly bestOf: BestOf }
   | {
       readonly kind: "test";
@@ -924,6 +941,62 @@ export class Tournament extends AggregateRoot {
     );
   }
 
+  /**
+   * That a knockout called `name` was added to take the losers of the round
+   * `round` of the knockout `from`, the first round being 0 and the final not
+   * one that has losers to send on. It has a place for each match of that
+   * round, every round of it the best of 1.
+   */
+  addLosersKnockout(
+    id: CompetitionId,
+    name: CompetitionName,
+    from: CompetitionId,
+    round: number,
+    by: AccountId,
+    at: ReadOnlyDate,
+    rules?: CompetitionRulesSaid,
+  ): void {
+    this.#refuseUnlessManager(by);
+    const source = this.#competitionFound(from);
+    if (source.shape.kind !== "knockout") {
+      refuse("Tournament.NotAKnockout", "The competition is not a knockout.");
+      return;
+    }
+    if (source.reference.archived) {
+      refuse("Tournament.CompetitionArchived", "The competition is archived.");
+    }
+    const rounds = source.shape.draw.rounds.length;
+    if (!Number.isInteger(round) || round < 0 || round >= rounds - 1) {
+      refuse(
+        "Tournament.NoSuchRound",
+        "The knockout has no such round that sends losers on.",
+      );
+    }
+    const places = source.shape.draw.places / 2 ** (round + 1);
+    const { slug, order } = this.#placeFor(id, name);
+    // Played and counted as the knockout it takes losers from is, unless it
+    // is said otherwise: a handicap knockout's losers play with handicaps.
+    const settled = this.#rulesFor(rules ?? source.rules);
+    this.record(
+      new KnockoutAdded(
+        id.value,
+        name.toString(),
+        slug,
+        order,
+        places,
+        Array.from({ length: Math.log2(places) }, () => 1),
+        settled.handicap,
+        settled.drawsAllowed,
+        settled.worldRankings,
+        settled.maximumHoops,
+        by,
+        at,
+        from.value,
+        round,
+      ),
+    );
+  }
+
   /** That a Swiss called `name`, the best of `bestOf`, was added. */
   addSwiss(
     id: CompetitionId,
@@ -1017,6 +1090,30 @@ export class Tournament extends AggregateRoot {
     const found = this.#competitionToUpdate(id, "knockout", name);
     if (found.shape.kind !== "knockout") return;
     const drawChanged = !found.shape.draw.equals(draw);
+    // The knockouts that take its losers have a place for each match of the
+    // round they take them from, which a draw of another size would change.
+    if (
+      draw.places !== found.shape.draw.places &&
+      [...this.#competitions.values()].some(
+        ({ shape }) =>
+          shape.kind === "knockout" && shape.losersOf?.competitionId.equals(id),
+      )
+    ) {
+      refuse(
+        "Tournament.KnockoutHasLosersKnockouts",
+        "Another knockout takes the losers of this one, which a draw of another size would give other places.",
+      );
+    }
+    // Its places are however many lose the round it takes the losers of.
+    if (
+      found.shape.losersOf !== undefined &&
+      draw.places !== found.shape.draw.places
+    ) {
+      refuse(
+        "Tournament.LosersKnockoutPlacesFixed",
+        "A losers knockout has as many places as the round it takes losers from has matches.",
+      );
+    }
     if (drawChanged && movesAPlayerWithGames) {
       refuse(
         "Tournament.KnockoutPlayerHasGames",
@@ -1129,6 +1226,21 @@ export class Tournament extends AggregateRoot {
     this.#refuseOnceArchived();
     const found = this.#competitionFound(id);
     if (found.reference.archived) return;
+    // A knockout in use takes its losers from this one, and would be left
+    // waiting on them for good.
+    if (
+      [...this.#competitions.values()].some(
+        ({ shape, reference }) =>
+          !reference.archived &&
+          shape.kind === "knockout" &&
+          shape.losersOf?.competitionId.equals(id),
+      )
+    ) {
+      refuse(
+        "Tournament.KnockoutHasLosersKnockoutsInUse",
+        "Another knockout in use takes the losers of this one.",
+      );
+    }
     if (found.shape.kind === "test" && (played?.matchesStarted ?? 0) > 0) {
       refuse(
         "Tournament.TestHasGamesInUse",
@@ -1203,6 +1315,19 @@ export class Tournament extends AggregateRoot {
     if (found.shape.kind === "test") {
       this.#teamFound(found.shape.firstTeam).ensureInUse();
       this.#teamFound(found.shape.secondTeam).ensureInUse();
+    }
+    // A losers knockout waits on the knockout it takes losers from, which an
+    // archived one no longer plays.
+    if (
+      found.shape.kind === "knockout" &&
+      found.shape.losersOf !== undefined &&
+      this.#competitionFound(found.shape.losersOf.competitionId).reference
+        .archived
+    ) {
+      refuse(
+        "Tournament.LosersKnockoutSourceArchived",
+        "The knockout this one takes losers from is archived.",
+      );
     }
     this.record(new CompetitionRestored(id.value, by, at));
   }
@@ -1715,6 +1840,14 @@ export class Tournament extends AggregateRoot {
       this.#competitionAdded(event, {
         kind: "knockout",
         draw: KnockoutDraw.from(event.places, event.rounds),
+        losersOf:
+          event.losersOfCompetitionId === undefined ||
+          event.losersOfRound === undefined
+            ? undefined
+            : {
+                competitionId: CompetitionId.from(event.losersOfCompetitionId),
+                round: event.losersOfRound,
+              },
       });
     } else if (event instanceof SwissAdded) {
       this.#competitionAdded(event, {
@@ -1739,6 +1872,8 @@ export class Tournament extends AggregateRoot {
         {
           kind: "knockout",
           draw: KnockoutDraw.from(event.places, event.rounds),
+          // Updating keeps whose losers it takes.
+          losersOf: this.#knockoutLosersOf(event.competitionId),
         },
         rulesOf(event, this.#now.sport.usualMaximumHoops),
       );
@@ -2297,6 +2432,11 @@ export class Tournament extends AggregateRoot {
       shape,
       rules: rulesOf(event, this.#now.sport.usualMaximumHoops),
     });
+  }
+
+  #knockoutLosersOf(written: string): LosersOf | undefined {
+    const shape = this.#competitions.get(written)?.shape;
+    return shape?.kind === "knockout" ? shape.losersOf : undefined;
   }
 
   #competitionUpdated(

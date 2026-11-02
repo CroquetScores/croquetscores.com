@@ -36,6 +36,14 @@ Un tabellone ha tanti turni quanti ne servono per dimezzare i suoi posti fino a 
 
 ![La finestra Aggiungi competizione per un'eliminazione diretta di 4 posti](images/add-competition-knockout.png)
 
+### Un’eliminazione diretta dei perdenti {#losers-knockout}
+
+Un’eliminazione diretta può mandare chi perde un turno in un’eliminazione diretta a parte, un’eliminazione diretta dei perdenti. Sotto **Al meglio di (per turno)** di un’eliminazione diretta, premi **Aggiungi eliminazione diretta dei perdenti**. Una finestra di dialogo chiede **Perdenti di**, il turno i cui perdenti continuano a giocare, tra tutti i turni tranne la finale, e **Nome dell'eliminazione diretta dei perdenti**. Premi **Aggiungi** per metterla nell’elenco sotto il pulsante, dove **Rimuovi** la toglie. Viene aggiunta insieme all’eliminazione diretta quando questa viene aggiunta, e se una delle due è rifiutata, non viene aggiunta nessuna.
+
+Un’eliminazione diretta dei perdenti ha un posto per ogni partita di quel turno, e ogni suo turno è al meglio di 1, cosa che **Modifica** può cambiare. I suoi giocatori vengono inseriti man mano che le partite di quel turno sono decise, nell’ordine del sorteggio, quindi la sua scheda **Giocatori** li mostra soltanto. Se una partita viene corretta o messa da parte, il perdente viene spostato o tolto di nuovo, a meno che non abbia già giocato.
+
+In un’eliminazione diretta già aggiunta, **Modifica** mostra lo stesso pulsante e l’eliminazione diretta dei perdenti viene aggiunta subito. Un’eliminazione diretta i cui perdenti sono presi da un’altra in uso non può essere archiviata né avere i posti modificati: archivia prima l’eliminazione diretta dei perdenti.
+
 ### Come si gioca e come si conta
 
 Ogni tipo chiede le stesse tre cose sotto la sua forma.

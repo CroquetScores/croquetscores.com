@@ -113,6 +113,7 @@ Feature: Finding a website's tournaments by when they were played and when they 
         | kind     | competition |
         | block    | Block A     |
         | knockout | Main Event  |
+        | losers knockout | Plate |
         | Swiss    | Swiss Event |
         | test     | AUS v ENG   |
 

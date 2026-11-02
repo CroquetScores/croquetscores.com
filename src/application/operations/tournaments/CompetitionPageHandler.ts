@@ -69,6 +69,8 @@ export class CompetitionPageHandler extends QueryHandler<
       tournament: tournament.id.value,
       name: found.reference.name.toString(),
       kind: found.shape.kind,
+      canSetPlayers:
+        found.shape.kind !== "knockout" || found.shape.losersOf === undefined,
       tournamentAddress: tournament.address.toString(),
       slug: found.reference.slug.toString(),
       part,

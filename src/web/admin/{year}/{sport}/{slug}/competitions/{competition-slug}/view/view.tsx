@@ -7,6 +7,7 @@ import { TournamentSections } from "../../../TournamentSections.js";
 import { say } from "../../../../../../words.js";
 import { CompetitionPlayersTab } from "./tabs/players/players.js";
 import { ScoresTab } from "./tabs/scores/scores.js";
+import { LosersTab } from "./tabs/losers/losers.js";
 import { idInAddress, refusalOf } from "../../../../../../api.js";
 import { Pencil } from "../../../../../../Pencil.js";
 import {
@@ -37,6 +38,7 @@ interface Found {
   readonly tournament: string;
   readonly name: string;
   readonly kind: "block" | "knockout" | "swiss";
+  readonly canSetPlayers: boolean;
   readonly tournamentAddress: string;
   readonly slug: string;
   readonly part: "manager" | "scorer";
@@ -49,11 +51,17 @@ type Asked =
   | { readonly is: "refused"; readonly code: string }
   | { readonly is: "found"; readonly competition: Found };
 
-const tabs = ["players", "scores"] as const;
+const tabs = ["players", "scores", "losers"] as const;
 type Tab = (typeof tabs)[number];
 
-const offeredTo = (part: Found["part"]): readonly Tab[] =>
-  part === "manager" ? tabs : ["scores"];
+// Losers are the manager's, as the players are, and a knockout's alone: it is
+// the only kind of competition whose losers play on.
+const offeredTo = (competition: Found): readonly Tab[] =>
+  competition.part !== "manager"
+    ? ["scores"]
+    : competition.kind === "knockout"
+      ? tabs
+      : ["players", "scores"];
 
 export const ViewCompetition = ({
   address,
@@ -104,7 +112,7 @@ export const ViewCompetition = ({
           return;
         }
         setAsked({ is: "found", competition: answer });
-        if (!drawn.current) setChosen(offeredTo(answer.part)[0] ?? "scores");
+        if (!drawn.current) setChosen(offeredTo(answer)[0] ?? "scores");
         drawn.current = true;
       })
       .catch(() => {
@@ -181,7 +189,7 @@ export const ViewCompetition = ({
               ) : null}
             </div>
             <TabControl
-              tabs={offeredTo(asked.competition.part)}
+              tabs={offeredTo(asked.competition)}
               chosen={chosen}
               choose={setChosen}
               wordsFor={(tab) => say(`admin.competitionView.${tab}`)}
@@ -190,7 +198,10 @@ export const ViewCompetition = ({
                 standardHelp(
                   tab === "players"
                     ? "entering-players-in-a-competition"
-                    : "scores",
+                    : tab === "losers"
+                      ? "competitions"
+                      : "scores",
+                  tab === "losers" ? "losers-knockout" : undefined,
                 )
               }
             >
@@ -199,6 +210,13 @@ export const ViewCompetition = ({
                   tournament={asked.competition.tournament}
                   competition={asked.competition.id}
                   kind={asked.competition.kind}
+                  canSetPlayers={asked.competition.canSetPlayers}
+                />
+              ) : chosen === "losers" ? (
+                <LosersTab
+                  tournament={asked.competition.tournament}
+                  address={asked.competition.tournamentAddress}
+                  competition={asked.competition.id}
                 />
               ) : (
                 <ScoresTab

@@ -597,6 +597,31 @@ export const german: Language = {
     "admin.competitionView.tabs": "Wettbewerb",
     "admin.competitionView.players": "Spieler",
     "admin.competitionView.scores": "Ergebnisse",
+    "admin.competitionView.losers": "Verlierer",
+    "admin.losers.add": "K.-o.-Turnier der Verlierer hinzufügen",
+    "admin.losers.round": "Verlierer von",
+    "admin.losers.option": "{round} ({count} Verlierer)",
+    "admin.losers.name": "Name des K.-o.-Turniers der Verlierer",
+    "admin.losers.none": "Keine K.-o.-Turniere der Verlierer.",
+    "admin.losers.noRounds":
+      "In diesem K.-o.-Turnier gibt es keine Runde, deren Verlierer weiterspielen könnten.",
+    "admin.losers.remove": "Entfernen",
+    "admin.losers.readOnly":
+      "Die Spieler dieses K.-o.-Turniers sind die Verlierer eines anderen K.-o.-Turniers und werden hier eingetragen, sobald jede Partie entschieden ist.",
+    "admin.hover.losers.add":
+      "Ein K.-o.-Turnier für die Verlierer einer Runde dieses K.-o.-Turniers hinzufügen",
+    "Tournament.NoSuchRound":
+      "Das K.-o.-Turnier hat keine solche Runde, die Verlierer weiterschickt.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Ein anderes K.-o.-Turnier übernimmt die Verlierer dieses Turniers, deshalb lassen sich seine Plätze nicht ändern.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Ein anderes K.-o.-Turnier in Verwendung übernimmt die Verlierer dieses Turniers, archivieren Sie daher zuerst jenes.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Dieses K.-o.-Turnier der Verlierer übernimmt die Verlierer eines archivierten K.-o.-Turniers, stellen Sie daher zuerst jenes wieder her.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Ein K.-o.-Turnier der Verlierer hat so viele Plätze, wie die Runde, deren Verlierer es übernimmt, Partien hat.",
+    "Competition.PlayersSetAutomatically":
+      "Die Spieler eines K.-o.-Turniers der Verlierer werden eingetragen, sobald Partien entschieden sind, nicht von Hand.",
     // Die Bereichsleiste der Seite eines Turniers und der Seiten seiner
     // Wettbewerbe.
     "admin.sections.label": "Das Turnier und seine Wettbewerbe",

@@ -57,6 +57,20 @@ export type ListedCompetition = {
       readonly places: number;
       /** What each round is the best of, the first round first. */
       readonly rounds: readonly number[];
+      /**
+       * Whether its players are set by hand. A losers knockout's are not: they
+       * are the losers of a round of another knockout.
+       */
+      readonly canSetPlayers: boolean;
+      /** The knockout and round it takes losers from, if it does. */
+      readonly losersOf:
+        | {
+            /** The knockout, by its id. */
+            readonly competition: string;
+            /** The round, the first being 0. */
+            readonly round: number;
+          }
+        | undefined;
     }
 );
 

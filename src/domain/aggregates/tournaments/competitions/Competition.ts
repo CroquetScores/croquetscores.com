@@ -35,7 +35,10 @@ import {
   drawnAgainst,
   isPlayer,
   knockoutPlay,
+  losersOfRound,
   type Match,
+  orderOfPlace,
+  type Side,
 } from "./KnockoutPlay.js";
 import { matchesBetween } from "./matchesBetween.js";
 import { GameId } from "./primitives/GameId.js";
@@ -70,7 +73,12 @@ export type CompetitionErrorCode =
   | "Competition.SameTeam"
   | "Competition.NotATest"
   | "Competition.ExpectedMatchesReached"
-  | "Competition.NoStandings";
+  | "Competition.NoStandings"
+  | "Competition.NotALosersKnockout"
+  | "Competition.NoSuchPlace"
+  | "Competition.PlayersSetAutomatically";
+
+type KnockoutShape = Extract<CompetitionShape, { kind: "knockout" }>;
 
 /** A player of one of a test's teams, as the tournament says they are. */
 export interface TeamPlayerInTest {
@@ -197,7 +205,7 @@ export class Competition extends AggregateRoot {
   ): CompetitionPlayerId | undefined {
     const { shape } = told;
     if (shape.kind !== "knockout") return undefined;
-    return drawnAgainst(this.#knockoutPlay(shape.draw), id)?.id;
+    return drawnAgainst(this.#knockoutPlay(shape), id)?.id;
   }
 
   /**
@@ -208,7 +216,15 @@ export class Competition extends AggregateRoot {
   knockoutMatches(told: Told): readonly Match[] {
     const { shape } = told;
     if (shape.kind !== "knockout") return [];
-    return this.#knockoutPlay(shape.draw);
+    return this.#knockoutPlay(shape);
+  }
+
+  /**
+   * Who lost each match of the round `round` of a knockout, the first being
+   * 0 (`losersOfRound`). None in anything that is not a knockout.
+   */
+  losersOfRound(round: number, told: Told): readonly Side[] {
+    return losersOfRound(this.knockoutMatches(told), round);
   }
 
   /**
@@ -229,6 +245,7 @@ export class Competition extends AggregateRoot {
     by: AccountId,
     at: ReadOnlyDate,
   ): CompetitionPlayerId {
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     if (
       this.players.some((player) =>
@@ -269,6 +286,127 @@ export class Competition extends AggregateRoot {
   }
 
   /**
+   * That the loser of the match that fills place `place` of a losers knockout
+   * is entered there: the tournament player `loser`, or a bye where the match
+   * had nobody to lose it. A place already filled with them is left as it is,
+   * so that asking again after every game does no harm. One filled with
+   * somebody else, because the match has since been decided otherwise by a
+   * game corrected or set aside, has them taken out and the loser put there,
+   * unless a game has been played by either of the two places that meet there
+   * (`clearLoser`). The place, and not the order
+   * players arrive in, is where they are drawn, so a loser comes in whenever
+   * their match is decided.
+   */
+  enterLoser(
+    loser: TournamentPlayerId | undefined,
+    place: number,
+    told: Told,
+    by: AccountId,
+    at: ReadOnlyDate,
+  ): void {
+    if (told.shape.kind !== "knockout" || told.shape.losersOf === undefined) {
+      refuse(
+        "Competition.NotALosersKnockout",
+        "Only a losers knockout takes its players from another knockout.",
+      );
+      return;
+    }
+    if (
+      !Number.isInteger(place) ||
+      place < 0 ||
+      place >= told.shape.draw.places
+    ) {
+      refuse("Competition.NoSuchPlace", "The draw has no such place.");
+    }
+    // A player who has played from another place is not put in a second one,
+    // as a result swapped across two matches would do. Where that place has
+    // not been played on it is changed in its turn, and the player is let in
+    // by the next time this is asked.
+    if (
+      loser !== undefined &&
+      this.players.some(
+        (player) =>
+          !player.isBye &&
+          player.order !== orderOfPlace(place) &&
+          player.tournamentPlayerId.equals(loser) &&
+          this.hasGamesInUse(player.id),
+      )
+    ) {
+      return;
+    }
+    const holder = this.#holderOf(place);
+    if (holder !== undefined) {
+      const same =
+        loser === undefined
+          ? holder.isBye
+          : !holder.isBye && holder.tournamentPlayerId.equals(loser);
+      if (same || this.#placeHasBeenPlayedOn(place)) return;
+      // The match was decided otherwise since, and nothing was built on it.
+      this.#takeOut(holder, by, at);
+    }
+    const bye = loser === undefined;
+    this.record(
+      new CompetitionPlayerEntered(
+        (bye ? CompetitionPlayerId.bye() : CompetitionPlayerId.create()).value,
+        (bye ? TournamentPlayerId.bye() : loser).value,
+        orderOfPlace(place),
+        by,
+        at,
+      ),
+    );
+  }
+
+  /**
+   * That nobody has lost the match of `place` any more, as when the game that
+   * decided it is set aside: whoever was put there is taken out again. A place
+   * with nobody in it records nothing, and neither does one that has been
+   * played on (`enterLoser`).
+   */
+  clearLoser(place: number, told: Told, by: AccountId, at: ReadOnlyDate): void {
+    if (told.shape.kind !== "knockout" || told.shape.losersOf === undefined) {
+      refuse(
+        "Competition.NotALosersKnockout",
+        "Only a losers knockout takes its players from another knockout.",
+      );
+      return;
+    }
+    if (
+      !Number.isInteger(place) ||
+      place < 0 ||
+      place >= told.shape.draw.places
+    ) {
+      refuse("Competition.NoSuchPlace", "The draw has no such place.");
+    }
+    const holder = this.#holderOf(place);
+    if (holder === undefined || this.#placeHasBeenPlayedOn(place)) return;
+    this.#takeOut(holder, by, at);
+  }
+
+  #holderOf(place: number): CompetitionPlayer | undefined {
+    return this.players.find((player) => player.order === orderOfPlace(place));
+  }
+
+  // Whether a game in use was played by whoever is in the place or in the
+  // place it is drawn against, whose player goes through when it is a bye. A
+  // change to either would change a match that has been played on.
+  #placeHasBeenPlayedOn(place: number): boolean {
+    return [place, place ^ 1].some((each) => {
+      const holder = this.#holderOf(each);
+      return (
+        holder !== undefined && !holder.isBye && this.hasGamesInUse(holder.id)
+      );
+    });
+  }
+
+  #takeOut(holder: CompetitionPlayer, by: AccountId, at: ReadOnlyDate): void {
+    this.record(
+      holder.isBye
+        ? new CompetitionByeRemoved(holder.order, by, at)
+        : new CompetitionPlayerRemoved(holder.id.value, by, at),
+    );
+  }
+
+  /**
    * That a bye is entered in a knockout, and answered with the id every bye
    * has. It is put last, since it has no order in the tournament, and fills a
    * place as a player does, so it is refused where a player would be: once
@@ -281,6 +419,7 @@ export class Competition extends AggregateRoot {
         "Only a knockout has a draw to put a bye in.",
       );
     }
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     this.#refuseOnceTheDrawIsFull(told);
     const id = CompetitionPlayerId.bye();
@@ -322,6 +461,7 @@ export class Competition extends AggregateRoot {
   ): void {
     const player = this.#playerFound(id);
     player.ensureMovable();
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     const moved = this.#moved(player.order, direction, by, at);
     if (moved === undefined) return;
@@ -341,6 +481,7 @@ export class Competition extends AggregateRoot {
     at: ReadOnlyDate,
   ): void {
     this.#byeFound(order);
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     const moved = this.#moved(order, direction, by, at);
     if (moved === undefined) return;
@@ -394,7 +535,7 @@ export class Competition extends AggregateRoot {
       );
       if (
         this.#leavesGamesBehind(
-          told.shape.draw,
+          told.shape,
           reversed,
           this.#withdrawals.filter((withdrawn) => !withdrawn.equals(id)),
           this.#counting(),
@@ -460,6 +601,7 @@ export class Competition extends AggregateRoot {
     this.#playerFound(id).ensureRemovable({
       hasGames: this.hasGamesInUse(id),
     });
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     this.record(new CompetitionPlayerRemoved(id.value, by, at));
   }
@@ -471,6 +613,7 @@ export class Competition extends AggregateRoot {
    */
   removeBye(order: number, told: Told, by: AccountId, at: ReadOnlyDate): void {
     this.#byeFound(order);
+    this.#refuseWhenPlayersAreSetAutomatically(told);
     this.#refuseOnceTheDrawIsFixed(told);
     this.record(new CompetitionByeRemoved(order, by, at));
   }
@@ -856,6 +999,17 @@ export class Competition extends AggregateRoot {
     }
   }
 
+  // The players of a losers knockout are put there as the round they come from
+  // is decided, so nobody changes them by hand.
+  #refuseWhenPlayersAreSetAutomatically(told: Told): void {
+    if (told.shape.kind === "knockout" && told.shape.losersOf !== undefined) {
+      refuse(
+        "Competition.PlayersSetAutomatically",
+        "The players of a losers knockout are the losers of the round it takes them from.",
+      );
+    }
+  }
+
   // A knockout's draw is its players in the competition's order, so once it
   // has a game in use, nobody is entered, moved or removed. An archived game
   // fixes nothing: it counts for nothing, and restoring it is refused where
@@ -982,7 +1136,11 @@ export class Competition extends AggregateRoot {
     } else if (shape.kind === "knockout") {
       // Who meets whom is not settled while a place is left empty, or while
       // there are more players than places, as a draw made smaller can leave.
-      if (this.players.length !== shape.draw.places) {
+      // A losers knockout is played as its losers arrive, a place at a time.
+      if (
+        shape.losersOf === undefined &&
+        this.players.length !== shape.draw.places
+      ) {
         refuse(
           "Competition.DrawNotFilled",
           "The knockout's draw is not filled.",
@@ -993,6 +1151,7 @@ export class Competition extends AggregateRoot {
         this.players,
         this.#withdrawals,
         counting,
+        shape.losersOf !== undefined,
       ).find(
         (match) =>
           match.sides.some((side) => isPlayer(side, game.winner)) &&
@@ -1037,12 +1196,13 @@ export class Competition extends AggregateRoot {
     return this.games.filter((game) => !game.archived && !game.withdrawn);
   }
 
-  #knockoutPlay(draw: Parameters<typeof knockoutPlay>[0]): readonly Match[] {
+  #knockoutPlay(shape: KnockoutShape): readonly Match[] {
     return knockoutPlay(
-      draw,
+      shape.draw,
       this.players,
       this.#withdrawals,
       this.#counting(),
+      shape.losersOf !== undefined,
     );
   }
 
@@ -1055,7 +1215,7 @@ export class Competition extends AggregateRoot {
   // Whether `game` is of a knockout's match whose winner has played on.
   #heldByPlayingOn(game: Game, told: Told): boolean {
     if (told.shape.kind !== "knockout") return false;
-    const play = this.#knockoutPlay(told.shape.draw);
+    const play = this.#knockoutPlay(told.shape);
     const match = play.find((each) =>
       each.games.some((played) => played.equals(game)),
     );
@@ -1063,7 +1223,7 @@ export class Competition extends AggregateRoot {
     // A winner who withdrew sent their next opponent through without
     // playing, and that opponent may have played on.
     return this.#leavesGamesBehind(
-      told.shape.draw,
+      told.shape,
       this.players,
       this.#withdrawals,
       this.#counting().filter((counting) => !counting.equals(game)),
@@ -1090,18 +1250,19 @@ export class Competition extends AggregateRoot {
   // `games` would leave one of those games, counting now, in none of its
   // matches: played by somebody who had not got there.
   #leavesGamesBehind(
-    draw: Parameters<typeof knockoutPlay>[0],
+    shape: KnockoutShape,
     players: readonly CompetitionPlayer[],
     withdrawals: readonly CompetitionPlayerId[],
     games: readonly Game[],
   ): boolean {
     const countedAfter = knockoutPlay(
-      draw,
+      shape.draw,
       players,
       withdrawals,
       games,
+      shape.losersOf !== undefined,
     ).flatMap((match) => match.games);
-    return this.#knockoutPlay(draw)
+    return this.#knockoutPlay(shape)
       .flatMap((match) => match.games)
       .some(
         (game) =>

@@ -572,6 +572,31 @@ export const dutch: Language = {
     "admin.competitionView.tabs": "Competitie",
     "admin.competitionView.players": "Spelers",
     "admin.competitionView.scores": "Scores",
+    "admin.competitionView.losers": "Verliezers",
+    "admin.losers.add": "Verliezers-knock-out toevoegen",
+    "admin.losers.round": "Verliezers van",
+    "admin.losers.option": "{round} ({count} verliezers)",
+    "admin.losers.name": "Naam van de verliezers-knock-out",
+    "admin.losers.none": "Geen verliezers-knock-outs.",
+    "admin.losers.noRounds":
+      "Deze knock-out heeft geen ronde waarvan de verliezers kunnen doorspelen.",
+    "admin.losers.remove": "Verwijderen",
+    "admin.losers.readOnly":
+      "De spelers van deze knock-out zijn de verliezers van een andere knock-out, en komen hier te staan zodra elke wedstrijd is beslist.",
+    "admin.hover.losers.add":
+      "Een knock-out toevoegen voor de verliezers van een ronde van deze knock-out",
+    "Tournament.NoSuchRound":
+      "De knock-out heeft geen ronde die verliezers doorstuurt.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Een andere knock-out neemt de verliezers van deze over, dus de plaatsen kunnen niet worden gewijzigd.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Een andere knock-out die in gebruik is, neemt de verliezers van deze over, dus archiveer die eerst.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Deze knock-out van de verliezers neemt de verliezers van een gearchiveerde knock-out over, dus herstel die eerst.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "Een verliezers-knock-out heeft evenveel plaatsen als de ronde waarvan hij de verliezers neemt wedstrijden heeft.",
+    "Competition.PlayersSetAutomatically":
+      "De spelers van een verliezers-knock-out worden erin gezet zodra wedstrijden zijn beslist, niet met de hand.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Het toernooi en zijn competities",
     "admin.sections.tournament": "Toernooi",

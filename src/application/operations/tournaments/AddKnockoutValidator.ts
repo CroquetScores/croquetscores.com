@@ -19,6 +19,9 @@ export class AddKnockoutValidator extends CommandValidator<AddKnockout> {
       ...brokenBy("draw", () =>
         KnockoutDraw.from(command.places, command.rounds),
       ),
+      ...command.losers.flatMap((each) =>
+        brokenBy("losers", () => CompetitionName.from(each.name)),
+      ),
     ];
   }
 }

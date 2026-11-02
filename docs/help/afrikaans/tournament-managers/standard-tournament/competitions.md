@@ -36,6 +36,14 @@ Druk op **Voeg kompetisie by**, bo die lys. 'n Dialoog maak oor die bladsy oop e
 
 ![Die dialoog Voeg kompetisie by vir 'n uitskakeling van 4 plekke](images/add-competition-knockout.png)
 
+### ’n Verloorders-uitskakeling {#losers-knockout}
+
+’n Uitskakeling kan diegene wat ’n rondte verloor na hul eie uitskakeling stuur, ’n verloorders-uitskakeling. Druk onder **Beste-van-getalle** van ’n uitskakeling op **Voeg verloorders-uitskakeling by**. ’n Dialoog vra vir **Verloorders van**, die rondte waarvan die verloorders voortspeel, uit al die rondtes behalwe die eindstryd, en vir **Naam van verloorders-uitskakeling**. Druk **Voeg by** om dit in die lys onder die knoppie te sit, waar **Verwyder** dit weer uithaal. Dit word saam met die uitskakeling bygevoeg, en as een van die twee geweier word, word nie een bygevoeg nie.
+
+’n Verloorders-uitskakeling het ’n plek vir elke wedstryd van daardie rondte, en elke rondte daarvan is die beste van 1, wat **Wysig** kan verander. Sy spelers word ingesit soos die wedstryde van daardie rondte besluit word, in die volgorde van die trekking, so sy **Spelers**-oortjie wys hulle net. As ’n spel reggemaak of eenkant gesit word, word die verloorder weer verskuif of uitgehaal, tensy hy of sy reeds verder gespeel het.
+
+By ’n uitskakeling wat reeds bygevoeg is, wys **Wysig** dieselfde knoppie, en die verloorders-uitskakeling word dadelik bygevoeg. ’n Uitskakeling wie se verloorders deur ’n ander een in gebruik geneem word, kan nie geargiveer word of sy plekke verander kry nie: argiveer eers die verloorders-uitskakeling.
+
 ### Hoe dit gespeel en getel word
 
 Elke soort vra dieselfde drie dinge onder sy vorm.

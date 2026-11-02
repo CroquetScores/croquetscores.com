@@ -529,6 +529,29 @@ export const egyptian: Language = {
     "admin.competitionView.tabs": "المنافسة",
     "admin.competitionView.players": "اللاعبين",
     "admin.competitionView.scores": "النتايج",
+    "admin.competitionView.losers": "الخاسرين",
+    "admin.losers.add": "ضيف خروج مغلوب للخاسرين",
+    "admin.losers.round": "الخاسرين من",
+    "admin.losers.option": "{round} ({count} خاسرين)",
+    "admin.losers.name": "اسم خروج المغلوب للخاسرين",
+    "admin.losers.none": "مفيش خروج مغلوب للخاسرين.",
+    "admin.losers.noRounds": "خروج المغلوب ده مفيهوش دور يكمّل خاسريه لعب.",
+    "admin.losers.remove": "شيل",
+    "admin.losers.readOnly":
+      "لاعبين خروج المغلوب ده هما الخاسرين من خروج مغلوب تاني، وبيتحطوا هنا أول ما كل ماتش يتحسم.",
+    "admin.hover.losers.add":
+      "ضيف خروج مغلوب للخاسرين من دور من أدوار الخروج المغلوب ده",
+    "Tournament.NoSuchRound": "خروج المغلوب مفيهوش دور زي ده بيبعت خاسرين.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "خروج مغلوب تاني واخد خاسرين ده، فمينفعش نغيّر أماكنه.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "خروج مغلوب تاني شغّال واخد خاسرين ده، فأرشف التاني الأول.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "خروج المغلوب ده واخد خاسرين من خروج مغلوب متأرشف، فرجّع التاني الأول.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "خروج المغلوب للخاسرين أماكنه بعدد ماتشات الدور اللي واخد منه الخاسرين.",
+    "Competition.PlayersSetAutomatically":
+      "لاعبين خروج المغلوب للخاسرين بيتحطوا فيه أول ما الماتشات تتحسم، مش بالإيد.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "البطولة ومنافساتها",
     "admin.sections.tournament": "البطولة",

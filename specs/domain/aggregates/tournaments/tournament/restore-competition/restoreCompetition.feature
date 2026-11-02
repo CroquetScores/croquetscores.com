@@ -97,6 +97,40 @@ Feature: Restoring a tournament's archived competition
       When the competition "AUS v ENG" is restored
       Then the tournament's competition "AUS v ENG" is not archived
 
+  Rule: A losers knockout cannot be restored while the knockout it takes losers from is archived
+
+    A losers knockout waits on the knockout it takes losers from, which an
+    archived one no longer plays (`archiveCompetition.feature`), so the
+    knockout is restored first.
+
+    Background:
+      Given a stream where a tournament was created as "Spring Open"
+      And the knockout "Main Event" was added to it with a draw of 8 places
+      And the losers knockout "Plate" was added for the losers of the first round of "Main Event"
+      And the competition "Plate" was archived
+      And the competition "Main Event" was archived
+
+    Scenario: Restoring the losers knockout first is refused
+      Given the tournament is rebuilt from the stream
+      When the competition "Plate" is restored
+      Then it is refused with "Tournament.LosersKnockoutSourceArchived"
+
+    Scenario: A losers knockout refused is still archived
+      Given the tournament is rebuilt from the stream
+      When the competition "Plate" is restored
+      Then the tournament's competition "Plate" is archived
+
+    Scenario: Restoring the knockout it takes losers from is not refused
+      Given the tournament is rebuilt from the stream
+      When the competition "Main Event" is restored
+      Then the tournament's competition "Main Event" is not archived
+
+    Scenario: Restoring the losers knockout once its knockout is restored
+      Given the competition "Main Event" was restored
+      And the tournament is rebuilt from the stream
+      When the competition "Plate" is restored
+      Then the tournament's competition "Plate" is not archived
+
   Rule: Only a competition there is can be restored
 
     Scenario: Restoring a competition the tournament does not have is refused

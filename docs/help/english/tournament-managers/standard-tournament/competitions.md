@@ -36,6 +36,14 @@ A draw has as many rounds as it takes to halve its places to one, so a draw of 8
 
 ![The Add Competition dialog for a knockout of 4 places](images/add-competition-knockout.png)
 
+### A losers knockout {#losers-knockout}
+
+A knockout can send those who lose a round on to a knockout of their own, a losers knockout. Beneath the **Best ofs** of a knockout, press **Add Losers Knockout**. A dialog asks for **Losers of**, the round whose losers play on, from every round but the final, and for **Losers knockout name**. Press **Add** to put it in the list beneath the button, where **Remove** takes it out again. It is added with the knockout when that is added, and if either is refused, neither is added.
+
+A losers knockout has a place for each match of that round, and every round of it is the best of 1, which **Edit** can change. Its players are put in as the matches of that round are decided, in the order they were drawn in, so its **Players** tab only shows them. If a game is corrected or set aside, the loser is moved or taken out again, unless they have played on.
+
+On a knockout that is already added, **Edit** shows the same button, and the losers knockout is added at once. A knockout whose losers another in use takes cannot be archived or have its places changed: archive the losers knockout first.
+
 ### How it is played and counted
 
 Every kind asks the same three things beneath its shape.

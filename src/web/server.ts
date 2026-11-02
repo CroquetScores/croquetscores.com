@@ -66,6 +66,8 @@ import { AddBlockHandler } from "../application/operations/tournaments/AddBlockH
 import { AddBlockValidator } from "../application/operations/tournaments/AddBlockValidator.js";
 import { AddKnockoutHandler } from "../application/operations/tournaments/AddKnockoutHandler.js";
 import { AddKnockoutValidator } from "../application/operations/tournaments/AddKnockoutValidator.js";
+import { AddLosersKnockoutHandler } from "../application/operations/tournaments/AddLosersKnockoutHandler.js";
+import { AddLosersKnockoutValidator } from "../application/operations/tournaments/AddLosersKnockoutValidator.js";
 import { AddManagerHandler } from "../application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../application/operations/tournaments/AddPlayerHandler.js";
@@ -1218,6 +1220,7 @@ export const buildApplication = async (
   validation.register(new AddBlockValidator());
   validation.register(new UpdateBlockValidator());
   validation.register(new AddKnockoutValidator());
+  validation.register(new AddLosersKnockoutValidator());
   validation.register(new UpdateKnockoutValidator());
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
@@ -1265,11 +1268,12 @@ export const buildApplication = async (
   mediator.handleCommand(new AddBlockHandler(...both));
   mediator.handleCommand(new UpdateBlockHandler(...both));
   mediator.handleCommand(new AddKnockoutHandler(...both));
+  mediator.handleCommand(new AddLosersKnockoutHandler(...both, competitions));
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
-  mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new RestoreCompetitionHandler(...both, competitions));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(
     new AddManagerHandler(...both, accountsByEmailAddress),

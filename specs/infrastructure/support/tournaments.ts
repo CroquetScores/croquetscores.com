@@ -25,6 +25,8 @@ import { AddBlockHandler } from "../../../src/application/operations/tournaments
 import { AddBlockValidator } from "../../../src/application/operations/tournaments/AddBlockValidator.js";
 import { AddKnockoutHandler } from "../../../src/application/operations/tournaments/AddKnockoutHandler.js";
 import { AddKnockoutValidator } from "../../../src/application/operations/tournaments/AddKnockoutValidator.js";
+import { AddLosersKnockoutHandler } from "../../../src/application/operations/tournaments/AddLosersKnockoutHandler.js";
+import { AddLosersKnockoutValidator } from "../../../src/application/operations/tournaments/AddLosersKnockoutValidator.js";
 import { AddManagerHandler } from "../../../src/application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../../../src/application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../../../src/application/operations/tournaments/AddPlayerHandler.js";
@@ -223,6 +225,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   validation.register(new AddBlockValidator());
   validation.register(new UpdateBlockValidator());
   validation.register(new AddKnockoutValidator());
+  validation.register(new AddLosersKnockoutValidator());
   validation.register(new UpdateKnockoutValidator());
   validation.register(new AddSwissValidator());
   validation.register(new UpdateSwissValidator());
@@ -267,11 +270,12 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleCommand(new AddBlockHandler(...both));
   mediator.handleCommand(new UpdateBlockHandler(...both));
   mediator.handleCommand(new AddKnockoutHandler(...both));
+  mediator.handleCommand(new AddLosersKnockoutHandler(...both, competitions));
   mediator.handleCommand(new UpdateKnockoutHandler(...both, games));
   mediator.handleCommand(new AddSwissHandler(...both));
   mediator.handleCommand(new UpdateSwissHandler(...both));
   mediator.handleCommand(new ArchiveCompetitionHandler(...both, games));
-  mediator.handleCommand(new RestoreCompetitionHandler(...both));
+  mediator.handleCommand(new RestoreCompetitionHandler(...both, competitions));
   mediator.handleCommand(new MoveCompetitionHandler(...both));
   mediator.handleCommand(new AddManagerHandler(...both, accounts.readModel));
   mediator.handleCommand(new AddScorerHandler(...both, accounts.readModel));

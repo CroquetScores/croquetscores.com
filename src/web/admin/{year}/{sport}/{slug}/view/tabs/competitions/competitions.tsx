@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { say } from "../../../../../../words.js";
+import { knows, say } from "../../../../../../words.js";
+import { DialogProblems } from "../../../../../../DialogProblems.js";
 import {
   CompetitionDialog,
   type CompetitionAsItIs,
@@ -50,6 +51,10 @@ export const CompetitionsTab = ({
   usualMaximumHoops,
 }: Props): React.JSX.Element => {
   const [acting, setActing] = useState(false);
+  // What was refused of the last thing pressed, said above the list until the
+  // next is, since the list asked for again would otherwise look as though
+  // nothing was pressed.
+  const [refusedCode, setRefusedCode] = useState<string | undefined>();
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<Listed | undefined>();
   const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions`;
@@ -66,10 +71,18 @@ export const CompetitionsTab = ({
     setActing(true);
     // Asked again whether or not it was done, since the list is to say what
     // the competitions are now.
+    setRefusedCode(undefined);
     try {
-      await fetch(`${at}/${idInAddress(competition.id)}/${action}`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${at}/${idInAddress(competition.id)}/${action}`,
+        { method: "POST" },
+      );
+      if (!response.ok) {
+        const answer = (await response.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        setRefusedCode(answer.error ?? "Unknown");
+      }
     } catch {
       // A request that never arrived is said by the list asked for again.
     } finally {
@@ -140,6 +153,22 @@ export const CompetitionsTab = ({
           </button>
         </p>
       ) : null}
+      <DialogProblems
+        refused={
+          refusedCode === undefined
+            ? []
+            : [
+                {
+                  code: refusedCode,
+                  words: say(
+                    knows(refusedCode)
+                      ? refusedCode
+                      : "admin.competition.otherwise",
+                  ),
+                },
+              ]
+        }
+      />
       {listed === undefined ? null : listed.length === 0 ? (
         <p className="listed-none">{say("admin.competitions.none")}</p>
       ) : (

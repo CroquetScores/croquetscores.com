@@ -558,6 +558,31 @@ export const korean: Language = {
     "admin.competitionView.tabs": "부문",
     "admin.competitionView.players": "선수",
     "admin.competitionView.scores": "점수",
+    "admin.competitionView.losers": "패자",
+    "admin.losers.add": "패자 녹아웃 추가",
+    "admin.losers.round": "패자 출처",
+    "admin.losers.option": "{round}(패자 {count}명)",
+    "admin.losers.name": "패자 녹아웃 이름",
+    "admin.losers.none": "패자 녹아웃이 없습니다.",
+    "admin.losers.noRounds":
+      "이 녹아웃에는 패자가 계속 경기할 수 있는 라운드가 없습니다.",
+    "admin.losers.remove": "제거",
+    "admin.losers.readOnly":
+      "이 녹아웃의 선수는 다른 녹아웃의 패자이며, 각 경기가 결정될 때마다 여기에 들어옵니다.",
+    "admin.hover.losers.add":
+      "이 녹아웃의 한 라운드 패자를 위한 녹아웃을 추가합니다",
+    "Tournament.NoSuchRound":
+      "이 녹아웃에는 패자를 보내는 그런 라운드가 없습니다.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "다른 녹아웃이 이 녹아웃의 패자를 받고 있어서 자리 수를 바꿀 수 없습니다.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "사용 중인 다른 녹아웃이 이 녹아웃의 패자를 받고 있으니 먼저 그 녹아웃을 보관하세요.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "이 패자 녹아웃은 보관된 녹아웃의 패자를 받고 있으니 먼저 그 녹아웃을 복원하세요.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "패자 녹아웃의 자리 수는 패자를 받아오는 라운드의 경기 수와 같습니다.",
+    "Competition.PlayersSetAutomatically":
+      "패자 녹아웃의 선수는 경기가 결정될 때마다 자동으로 들어가며, 직접 넣을 수 없습니다.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "대회와 그 부문",
     "admin.sections.tournament": "대회",

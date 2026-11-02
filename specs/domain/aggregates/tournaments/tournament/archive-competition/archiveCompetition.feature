@@ -165,6 +165,40 @@ Feature: Archiving a tournament's competition
       When the competition "AUS v ENG" is archived
       Then the tournament's competition "AUS v ENG" is archived
 
+  Rule: A knockout whose losers another in use takes cannot be archived
+
+    A losers knockout waits on the knockout it takes its losers from
+    (`addLosersKnockout.feature`), so that knockout is not set aside while it
+    is in use: the losers knockout is archived first. Archiving the losers
+    knockout is not refused, nor is archiving a knockout whose losers no other
+    knockout takes, or whose losers knockouts are all archived.
+
+    Background:
+      Given a stream where a tournament was created as "Spring Open"
+      And the knockout "Main Event" was added to it with a draw of 8 places
+      And the losers knockout "Plate" was added for the losers of the first round of "Main Event"
+
+    Scenario: Archiving the knockout is refused
+      Given the tournament is rebuilt from the stream
+      When the competition "Main Event" is archived
+      Then it is refused with "Tournament.KnockoutHasLosersKnockoutsInUse"
+
+    Scenario: A knockout refused for its losers knockout is not archived
+      Given the tournament is rebuilt from the stream
+      When the competition "Main Event" is archived
+      Then the tournament's competition "Main Event" is not archived
+
+    Scenario: Archiving the losers knockout is not refused
+      Given the tournament is rebuilt from the stream
+      When the competition "Plate" is archived
+      Then the tournament's competition "Plate" is archived
+
+    Scenario: Archiving the knockout once its losers knockout is archived
+      Given the competition "Plate" was archived
+      And the tournament is rebuilt from the stream
+      When the competition "Main Event" is archived
+      Then the tournament's competition "Main Event" is archived
+
   Rule: Only a competition there is can be archived
 
     Scenario: Archiving a competition the tournament does not have is refused

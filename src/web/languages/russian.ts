@@ -537,6 +537,31 @@ export const russian: Language = {
     "admin.competitionView.tabs": "Соревнование",
     "admin.competitionView.players": "Игроки",
     "admin.competitionView.scores": "Результаты",
+    "admin.competitionView.losers": "Проигравшие",
+    "admin.losers.add": "Добавить плей-офф проигравших",
+    "admin.losers.round": "Проигравшие из",
+    "admin.losers.option": "{round} (проигравших: {count})",
+    "admin.losers.name": "Название плей-офф проигравших",
+    "admin.losers.none": "Нет плей-офф проигравших.",
+    "admin.losers.noRounds":
+      "В этом плей-офф нет раунда, проигравшие которого могли бы играть дальше.",
+    "admin.losers.remove": "Удалить",
+    "admin.losers.readOnly":
+      "Игроки этого плей-офф — проигравшие другого плей-офф; они попадают сюда, как только решается каждый матч.",
+    "admin.hover.losers.add":
+      "Добавить плей-офф для проигравших одного из раундов этого плей-офф",
+    "Tournament.NoSuchRound":
+      "В плей-офф нет такого раунда, который отправляет проигравших дальше.",
+    "Tournament.KnockoutHasLosersKnockouts":
+      "Другой плей-офф берёт проигравших из этого, поэтому его места нельзя менять.",
+    "Tournament.KnockoutHasLosersKnockoutsInUse":
+      "Другой используемый плей-офф берёт проигравших из этого, поэтому сначала архивируйте его.",
+    "Tournament.LosersKnockoutSourceArchived":
+      "Этот плей-офф проигравших берёт проигравших из архивированного плей-офф, поэтому сначала восстановите его.",
+    "Tournament.LosersKnockoutPlacesFixed":
+      "В плей-офф проигравших столько мест, сколько матчей в раунде, из которого он берёт проигравших.",
+    "Competition.PlayersSetAutomatically":
+      "Игроки плей-офф проигравших попадают в него, когда решаются матчи, а не вручную.",
     // The section bar of a tournament's page and its competitions' pages.
     "admin.sections.label": "Турнир и его соревнования",
     "admin.sections.tournament": "Турнир",

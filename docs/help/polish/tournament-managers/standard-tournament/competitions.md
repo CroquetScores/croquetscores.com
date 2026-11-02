@@ -36,6 +36,14 @@ Drabinka ma tyle rund, ile trzeba, by zmniejszyć o połowę jej miejsca do jedn
 
 ![Okno Dodaj konkurencję dla konkurencji pucharowej o 4 miejscach](images/add-competition-knockout.png)
 
+### Drabinka przegranych {#losers-knockout}
+
+Drabinka pucharowa może wysłać tych, którzy przegrali rundę, do własnej drabinki, drabinki przegranych. Pod **Do wygranych gier w rundach** drabinki naciśnij **Dodaj drabinkę przegranych**. Okno dialogowe pyta o **Przegrani z**, czyli rundę, której przegrani grają dalej, spośród wszystkich rund oprócz finału, oraz o **Nazwa drabinki przegranych**. Naciśnij **Dodaj**, aby wstawić ją na listę pod przyciskiem, gdzie **Usuń** ją usuwa. Jest dodawana razem z drabinką, gdy ta jest dodawana, a jeśli któraś z nich zostanie odrzucona, nie zostanie dodana żadna.
+
+Drabinka przegranych ma miejsce na każdy mecz tej rundy, a każda jej runda to best of 1, co można zmienić przyciskiem **Edytuj**. Jej zawodnicy są wstawiani w miarę rozstrzygania meczów tej rundy, w kolejności losowania, więc karta **Zawodnicy** tylko ich pokazuje. Jeśli gra zostanie poprawiona lub odłożona, przegrany jest przesuwany albo ponownie usuwany, chyba że już grał dalej.
+
+W drabince już dodanej **Edytuj** pokazuje ten sam przycisk, a drabinka przegranych jest dodawana od razu. Drabinki, której przegranych przejmuje inna używana, nie można zarchiwizować ani zmienić jej miejsc: najpierw zarchiwizuj drabinkę przegranych.
+
 ### Jak jest rozgrywana i liczona
 
 Każdy rodzaj pyta pod swoim kształtem o te same trzy rzeczy.
