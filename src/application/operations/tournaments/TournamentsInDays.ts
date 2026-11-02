@@ -24,22 +24,23 @@ export interface TournamentsPage {
 
 /**
  * Page `page` of the tournaments of the website being read starting from
- * `firstDay` to `lastDay`, narrowed by what the reader `chose`. For anybody,
- * so it names nobody.
+ * `firstDay` to `lastDay`, or every one where neither is given, narrowed by
+ * what the reader `chose`. One day alone is the filter's to refuse
+ * (`TournamentFilter.feature`). For anybody, so it names nobody.
  */
 export class TournamentsInDays extends Query<TournamentsPage> {
   constructor(
     readonly website: string,
-    readonly firstDay: string,
-    readonly lastDay: string,
+    readonly firstDay: string | undefined,
+    readonly lastDay: string | undefined,
     readonly page: number = 1,
     readonly chose: FilterChosen = {},
   ) {
     super();
     if (
       typeof website !== "string" ||
-      typeof firstDay !== "string" ||
-      typeof lastDay !== "string" ||
+      (firstDay !== undefined && typeof firstDay !== "string") ||
+      (lastDay !== undefined && typeof lastDay !== "string") ||
       !isChosen(chose)
     ) {
       throw new ValidationError<TournamentsInDaysRefusedCode>(

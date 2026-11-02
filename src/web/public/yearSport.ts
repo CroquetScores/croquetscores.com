@@ -30,6 +30,7 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  sendToDaysChosen,
   settledWhenPressed,
   table,
   yearsOf,
@@ -57,6 +58,8 @@ export const registerYearSportPage = (
       ) {
         return reply.callNotFound();
       }
+      const toDays = sendToDaysChosen(request, reply, sport.code);
+      if (toDays !== undefined) return toDays;
       const pressed = settledWhenPressed(request, reply, "sport", tables);
       if (pressed !== undefined) return pressed;
       const year = Number(request.params.year);

@@ -29,8 +29,11 @@ Feature: A page lists the tournaments starting from one day to another
   A page beyond the last, which a reader whose list shrank might open from a
   link they kept, sends them to the last page rather than showing nothing.
 
-  The sorting is of the whole range and not of a page, so that the tournament
-  sorted first is on the first page whichever way the reader sorts.
+  A column heading sorts the page the reader is looking at and not the whole
+  range, since the range is cut into pages in the order the tournaments start,
+  by the application (`TournamentsInDays.feature`), which does not know the
+  reader's language and so cannot order names as the reader's page does. The
+  first page is always the soonest hundred.
 
   As everywhere on the public pages, nothing here needs scripting, and what was
   asked is in the address (`navigation.feature`). Both days are asked for or
@@ -52,14 +55,14 @@ Feature: A page lists the tournaments starting from one day to another
       And "2026-03-01" is chosen as From
       And "2026-03-31" is chosen as To
       When "Filter" is pressed
-      Then the content has the heading "Tournaments from 1 March 2026 to 31 March 2026"
+      Then the content has the heading "Tournaments from 01 Mar 2026 to 31 Mar 2026"
 
     Scenario: The days chosen on a year's page open the page of tournaments in them
       Given the page for 2026 is open
       And "2026-03-01" is chosen as From
       And "2026-03-31" is chosen as To
       When "Filter" is pressed
-      Then the content has the heading "Tournaments from 1 March 2026 to 31 March 2026"
+      Then the content has the heading "Tournaments from 01 Mar 2026 to 31 Mar 2026"
 
     Scenario: A filter chosen goes with the days
       Given the home page is open
@@ -73,7 +76,7 @@ Feature: A page lists the tournaments starting from one day to another
       Given the home page is open
       And "New Zealand" is chosen as the country
       When "Filter" is pressed
-      Then the content has the heading "Recent results"
+      Then the content has the heading "Recent Results"
 
   Rule: Only tournaments starting from the first day to the last are listed
 
@@ -83,29 +86,37 @@ Feature: A page lists the tournaments starting from one day to another
 
     Scenario: A tournament starting inside the days is listed
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
-      Then "Spring Open" is in the tournaments listed
+      Then "Spring Open" is in the days' tournaments
 
     Scenario: A tournament starting outside the days is not listed
       When the tournaments from "2026-04-01" to "2026-04-30" are opened
-      Then "Spring Open" is not in the tournaments listed
+      Then "Spring Open" is not in the days' tournaments
 
     Scenario: Neither day chosen lists every tournament
       When the tournaments are opened
-      Then "Spring Open" is in the tournaments listed
+      Then "Spring Open" is in the days' tournaments
+
+  Rule: Each row's dates say their year
+
+    Scenario: A row's dates say the year
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-10"
+      When the tournaments from "2026-03-01" to "2026-03-31" are opened
+      Then "Spring Open" is dated "10 Mar 2026" in the days' tournaments
 
   Rule: A hundred tournaments are listed to a page
 
     Background:
-      Given the tournament is to start on "2026-03-10"
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
       And "organiser@example.com" has created 101 tournaments
 
     Scenario: A hundred are listed on the first page
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
-      Then 100 of the tournaments are listed
+      Then 100 of the days' tournaments are listed
 
     Scenario: The rest are listed on the next page
       When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
-      Then 1 of the tournaments is listed
+      Then 1 of the days' tournaments is listed
 
     Scenario: The page is said to be the first of two
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
@@ -113,29 +124,29 @@ Feature: A page lists the tournaments starting from one day to another
 
     Scenario: The first page offers Next
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
-      Then "Next" is offered
+      Then the way to turn to the next page is offered
 
     Scenario: The first page does not offer Previous
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
-      Then "Previous" is not offered
+      Then the way to turn to the previous page is not offered
 
     Scenario: The last page offers Previous
       When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
-      Then "Previous" is offered
+      Then the way to turn to the previous page is offered
 
     Scenario: The last page does not offer Next
       When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
-      Then "Next" is not offered
+      Then the way to turn to the next page is not offered
 
     Scenario: Pressing Next lists the next page
       Given the tournaments from "2026-03-01" to "2026-03-31" are open
       When "Next" is pressed
-      Then 1 of the tournaments is listed
+      Then 1 of the days' tournaments is listed
 
     Scenario: Pressing Previous lists the page before
       Given the tournaments from "2026-03-01" to "2026-03-31" are open at page 2
       When "Previous" is pressed
-      Then 100 of the tournaments are listed
+      Then 100 of the days' tournaments are listed
 
     Scenario: A page beyond the last is sent to the last page
       When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 9
@@ -144,21 +155,21 @@ Feature: A page lists the tournaments starting from one day to another
   Rule: Where everything fits on one page there is nothing to turn
 
     Scenario: A hundred tournaments say nothing of pages
-      Given the tournament is to start on "2026-03-10"
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
       And "organiser@example.com" has created 100 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
       Then no page is said
 
     Scenario: A hundred tournaments offer neither Previous nor Next
-      Given the tournament is to start on "2026-03-10"
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
       And "organiser@example.com" has created 100 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
-      Then "Next" is not offered
+      Then the way to turn to the next page is not offered
 
   Rule: Turning the page keeps what the reader asked
 
     Background:
-      Given the tournament is to start on "2026-03-10"
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
       And "organiser@example.com" has created 101 tournaments
 
     Scenario: The days are kept
@@ -168,9 +179,9 @@ Feature: A page lists the tournaments starting from one day to another
 
     Scenario: The sorting is kept
       Given the tournaments from "2026-03-01" to "2026-03-31" are open
-      And the heading "Name" is pressed
+      And the column "Name" of the days' tournaments is pressed
       When "Next" is pressed
-      Then the tournaments are sorted by name from the smallest
+      Then the column "Name" of the days' tournaments is marked as sorted from the smallest
 
   Rule: A filter that cannot be is the reader's mistake
 

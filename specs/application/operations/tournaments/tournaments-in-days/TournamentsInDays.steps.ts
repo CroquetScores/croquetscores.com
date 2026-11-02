@@ -13,8 +13,8 @@ import { inHandOf } from "../aRequest.js";
 // every list of a website's tournaments shares (tournamentsOfWebsite.steps.ts).
 const ask = async (
   world: SpecWorld,
-  first: string,
-  last: string,
+  first: string | undefined,
+  last: string | undefined,
   page: number,
 ): Promise<void> => {
   try {
@@ -31,6 +31,17 @@ const ask = async (
     world.failure = failure;
   }
 };
+
+When("the tournaments are asked for", async function (this: SpecWorld) {
+  await ask(this, undefined, undefined, 1);
+});
+
+When(
+  "the tournaments are asked for from {string} only",
+  async function (this: SpecWorld, first: string) {
+    await ask(this, first, undefined, 1);
+  },
+);
 
 When(
   "the tournaments from {string} to {string} are asked for",

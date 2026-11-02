@@ -488,6 +488,14 @@ export const welsh: Language = {
     "tournamentList.filter.sport": "Camp",
     "tournamentList.filter.anySport": "Unrhyw gamp",
     "tournamentList.filter.submit": "Hidlo",
+    "tournamentList.filter.from": "O",
+    "tournamentList.filter.to": "I",
+    "tournamentsInDays.heading": "Twrnameintiau o {from} i {to}",
+    "tournamentsInDays.headingAll": "Twrnameintiau",
+    "tournamentsInDays.none": "Nid oes twrnamaint yn dechrau yn y dyddiau hyn.",
+    "tournamentsInDays.previous": "Blaenorol",
+    "tournamentsInDays.next": "Nesaf",
+    "tournamentsInDays.page": "Tudalen {page} o {last}",
     // The years there are tournaments in.
     "years.label": "Blynyddoedd",
     // The drop-down list holding the years that do not fit as tabs.

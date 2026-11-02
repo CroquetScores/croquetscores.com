@@ -20,6 +20,10 @@ Feature: The tournaments starting from one day to another, a page at a time
   the page can send the reader there. A page that is not a whole number of at
   least one is refused as `TournamentsInDays.NoSuchPage`.
 
+  Asked for neither day, every tournament is answered, a hundred to a page, since a
+  reader who has chosen no days has not narrowed by them. One day alone is
+  refused by the filter (`TournamentFilter.feature`).
+
   An archived tournament is not answered, and the list is of the website asked
   about (`TournamentsByWebsite.feature`).
 
@@ -65,6 +69,24 @@ Feature: The tournaments starting from one day to another, a page at a time
       And "organiser@example.com" has created the tournament "Spring Open"
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then "Spring Open" is not answered
+
+  Rule: Neither day lists every tournament
+
+    Scenario: A tournament is answered where no days are asked for
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments are asked for
+      Then "Spring Open" is answered
+
+    Scenario: A tournament in another year is answered where no days are asked for
+      Given the tournament is to start at "2027-03-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments are asked for
+      Then "Spring Open" is answered
+
+    Scenario: One day alone is refused
+      When the tournaments are asked for from "2026-03-01" only
+      Then it is refused with "TournamentFilter.FirstDayWithoutLastDay"
 
   Rule: A hundred tournaments are answered to a page
 

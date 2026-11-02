@@ -32,10 +32,12 @@ export class TournamentsInDaysHandler extends QueryHandler<
       { ...query.chose, firstDay: query.firstDay, lastDay: query.lastDay },
       "TournamentsInDays",
     );
+    // Every day a tournament can start on, which are those of the years a
+    // tournament's address holds (TournamentAddress.ts), where none was chosen.
     const every = await this.byWebsite.startingBetween(
       website,
-      query.firstDay,
-      query.lastDay,
+      filter.firstDay ?? "1000-01-01",
+      filter.lastDay ?? "9999-12-31",
       filter,
     );
     const from = (query.page - 1) * TOURNAMENTS_TO_A_PAGE;

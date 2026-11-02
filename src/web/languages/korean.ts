@@ -496,6 +496,14 @@ export const korean: Language = {
     "tournamentList.filter.sport": "종목",
     "tournamentList.filter.anySport": "모든 종목",
     "tournamentList.filter.submit": "적용",
+    "tournamentList.filter.from": "시작일",
+    "tournamentList.filter.to": "종료일",
+    "tournamentsInDays.heading": "{from}부터 {to}까지의 대회",
+    "tournamentsInDays.headingAll": "대회",
+    "tournamentsInDays.none": "이 기간에 시작하는 대회가 없습니다.",
+    "tournamentsInDays.previous": "이전",
+    "tournamentsInDays.next": "다음",
+    "tournamentsInDays.page": "{last}쪽 중 {page}쪽",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "연도",
     // The drop-down list holding the years that do not fit as tabs.

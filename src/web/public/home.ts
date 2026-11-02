@@ -25,6 +25,7 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  sendToDaysChosen,
   settledWhenPressed,
   table,
   yearsOf,
@@ -40,6 +41,8 @@ export const registerHomePage = (
   help: HelpLibrary,
 ): void => {
   server.get(homePath, async (request, reply) => {
+    const toDays = sendToDaysChosen(request, reply);
+    if (toDays !== undefined) return toDays;
     const pressed = settledWhenPressed(request, reply, "home", tables);
     if (pressed !== undefined) return pressed;
     const website = websiteOf(request);

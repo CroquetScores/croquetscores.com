@@ -365,6 +365,7 @@ import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspen
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
 import { registerHomePage } from "./public/home.js";
+import { registerTournamentsInDaysPage } from "./public/tournamentsInDays.js";
 import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
@@ -1685,6 +1686,7 @@ export const buildApplication = async (
   registerWhatsNewRoute(server, help);
   registerHomePage(server, assets, help);
   registerYearPage(server, assets);
+  registerTournamentsInDaysPage(server, assets);
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);

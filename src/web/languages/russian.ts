@@ -481,6 +481,14 @@ export const russian: Language = {
     "tournamentList.filter.sport": "Вид спорта",
     "tournamentList.filter.anySport": "Любой вид спорта",
     "tournamentList.filter.submit": "Отфильтровать",
+    "tournamentList.filter.from": "С",
+    "tournamentList.filter.to": "По",
+    "tournamentsInDays.heading": "Турниры с {from} по {to}",
+    "tournamentsInDays.headingAll": "Турниры",
+    "tournamentsInDays.none": "В эти дни не начинается ни одного турнира.",
+    "tournamentsInDays.previous": "Назад",
+    "tournamentsInDays.next": "Вперёд",
+    "tournamentsInDays.page": "Страница {page} из {last}",
     // The years there are tournaments in.
     "years.label": "Годы",
     // The drop-down list holding the years that do not fit as tabs.

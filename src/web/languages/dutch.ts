@@ -511,6 +511,14 @@ export const dutch: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Elke sport",
     "tournamentList.filter.submit": "Filteren",
+    "tournamentList.filter.from": "Van",
+    "tournamentList.filter.to": "Tot",
+    "tournamentsInDays.heading": "Toernooien van {from} tot {to}",
+    "tournamentsInDays.headingAll": "Toernooien",
+    "tournamentsInDays.none": "Er beginnen geen toernooien op deze dagen.",
+    "tournamentsInDays.previous": "Vorige",
+    "tournamentsInDays.next": "Volgende",
+    "tournamentsInDays.page": "Pagina {page} van {last}",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "Jaren",
     // The drop-down list holding the years that do not fit as tabs.

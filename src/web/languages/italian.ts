@@ -510,6 +510,14 @@ export const italian: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Qualsiasi sport",
     "tournamentList.filter.submit": "Filtra",
+    "tournamentList.filter.from": "Dal",
+    "tournamentList.filter.to": "Al",
+    "tournamentsInDays.heading": "Tornei dal {from} al {to}",
+    "tournamentsInDays.headingAll": "Tornei",
+    "tournamentsInDays.none": "Nessun torneo inizia in questi giorni.",
+    "tournamentsInDays.previous": "Precedente",
+    "tournamentsInDays.next": "Successiva",
+    "tournamentsInDays.page": "Pagina {page} di {last}",
     // Gli anni in cui ci sono tornei, la navigazione secondaria di entrambe.
     "years.label": "Anni",
     // L'elenco a discesa con gli anni che non entrano come schede.

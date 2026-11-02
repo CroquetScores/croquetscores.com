@@ -26,6 +26,7 @@ import {
   refusedWith,
   sendPage,
   sendRefused,
+  sendToDaysChosen,
   settledWhenPressed,
   table,
   yearsOf,
@@ -46,6 +47,8 @@ export const registerYearPage = (
   assets: Assets,
 ): void => {
   server.get<{ Params: { year: string } }>(yearPath, async (request, reply) => {
+    const toDays = sendToDaysChosen(request, reply);
+    if (toDays !== undefined) return toDays;
     const pressed = settledWhenPressed(request, reply, "year", tables);
     if (pressed !== undefined) return pressed;
     const year = Number(request.params.year);

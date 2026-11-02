@@ -498,6 +498,14 @@ export const english: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Any sport",
     "tournamentList.filter.submit": "Filter",
+    "tournamentList.filter.from": "From",
+    "tournamentList.filter.to": "To",
+    "tournamentsInDays.heading": "Tournaments from {from} to {to}",
+    "tournamentsInDays.headingAll": "Tournaments",
+    "tournamentsInDays.none": "No tournaments start in these days.",
+    "tournamentsInDays.previous": "Previous",
+    "tournamentsInDays.next": "Next",
+    "tournamentsInDays.page": "Page {page} of {last}",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "Years",
     // The drop-down list holding the years that do not fit as tabs.
