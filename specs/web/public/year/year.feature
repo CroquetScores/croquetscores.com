@@ -583,6 +583,9 @@ Feature: A year's page lists its months, and a month the tournaments starting in
       And the month "December" is pressed
       And "Association Croquet" is chosen as the sport
       And "Filter" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       When the flag of "Spring Open" in the year's tournaments is pressed
       And the month "March" is pressed
       And the month "October" is pressed
@@ -598,6 +601,9 @@ Feature: A year's page lists its months, and a month the tournaments starting in
       And "Filter" is pressed
       And "Canterbury" is chosen as the region
       And "Filter" is pressed
+      And the month "March" is pressed
+      And the month "October" is pressed
+      And the month "December" is pressed
       When the flag of "Spring Open" in the year's tournaments is pressed
       And the month "March" is pressed
       And the month "October" is pressed

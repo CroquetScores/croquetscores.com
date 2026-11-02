@@ -5,6 +5,7 @@ import type { Locator } from "playwright";
 import type { SpecWorld } from "../../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { ordinal } from "../../support/ordinals.js";
+import { settled } from "../../support/tournamentLists.js";
 
 // The months of a year's page, and what pressing one does. What the tournaments
 // beneath a month share with the other lists is said in
@@ -27,16 +28,6 @@ const monthNamed = (world: SpecWorld, name: string): Locator =>
 // What the server was asked for, by the page the scenario is reading: only a
 // request for a month's tournaments counts, and not the page itself.
 const askedFor = new WeakMap<SpecWorld, string[]>();
-
-// A month is open once its tournaments have arrived. The page marks a month
-// busy from the moment it is pressed, so waiting for nothing to be busy waits
-// for the answer. Asked as a locator and not as a function written out in
-// text, which the page's security policy does not allow to be run.
-const settled = async (world: SpecWorld): Promise<void> => {
-  await world.browserPage
-    .locator('[aria-busy="true"]')
-    .waitFor({ state: "detached" });
-};
 
 const press = async (world: SpecWorld, name: string): Promise<void> => {
   await monthNamed(world, name).locator(".year-month-toggle").click();

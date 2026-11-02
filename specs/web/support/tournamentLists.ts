@@ -82,11 +82,20 @@ const words = async (heading: Locator): Promise<string> =>
 const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
   await link.click();
   await world.browserPage.waitForLoadState();
-  // A month's table on a year's page is sorted in place, without the page being
-  // loaded again, and is busy until its answer is in (yearMonths.ts).
-  await world.browserPage
-    .locator('[aria-busy="true"]')
-    .waitFor({ state: "detached" });
+  await settled(world);
+};
+
+/**
+ * Waits until nothing on the page is busy. A month's table on a year's page is
+ * loaded or sorted in place, without the page being loaded again, and is busy
+ * until its answer is in (yearMonths.ts); more than one can be at once, which
+ * is why this counts and does not wait for one element to go.
+ */
+export const settled = async (world: SpecWorld): Promise<void> => {
+  const busy = world.browserPage.locator('[aria-busy="true"]');
+  while ((await busy.count()) > 0) {
+    await world.browserPage.waitForTimeout(25);
+  }
 };
 
 // Pressed where the reader would press it, in the middle of what they can see,
