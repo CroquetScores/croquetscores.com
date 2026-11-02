@@ -419,13 +419,14 @@ Feature: Importing the old sites' tournaments
     Egypt, Morocco and Ukraine as Latvia, and Singapore, Taiwan and Thailand
     as Australia.
 
+    A flag at the start of a name, which is how some are written, is not part of
+    the name for any rule below: "Swiss Open" with the Swiss flag before it is
+    still one that begins with Swiss, and "Irish Championship" with the Irish
+    flag before it one that begins with Irish.
+
     Some names say where a tournament was played better than any of that, and
     are taken over the time zone and the lists. Each is matched in any case
     unless it says otherwise, and the first of these to match is the one taken:
-
-    A flag at the start of a name, which is how some are written, is not part of
-    the word the name begins with: "Swiss Open" with the Swiss flag before it is
-    still one that begins with Swiss.
 
     - a name that begins with Latvia is in Latvia;
     - a name with Spanish anywhere in it is in Spain;
@@ -1113,6 +1114,14 @@ Feature: Importing the old sites' tournaments
         | name                           |
         | 🇨🇭 Swiss Open                  |
         | 🇨🇭 🇨🇭 CERN Open               |
+
+    Scenario: A flag before a name is left out for every rule, not only Swiss ones
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "🇮🇪 Irish Championship"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
 
     Scenario: A tournament whose name says German is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"

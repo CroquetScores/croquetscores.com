@@ -460,7 +460,8 @@ const namesSayingACountry: readonly {
   },
   { says: (name) => name.toLowerCase().includes("norwegian"), country: "no" },
   {
-    says: (name) => /czech/i.test(name) && wholeWord("Open", "i").test(name),
+    says: (name) =>
+      wholeWord("Czech", "i").test(name) && wholeWord("Open", "i").test(name),
     country: "cz",
   },
   { says: (name) => /kohl?hof/i.test(name), country: "de" },
