@@ -976,6 +976,165 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the page is no wider than the window
 
+  Rule: The list is narrowed to the tournaments starting from one day to another
+
+    The public pages have From and To before their Filter button and open a
+    page of the tournaments in the days chosen (`tournamentsInDays.feature`).
+    This list has no button, since a choice is made as it is chosen, and no
+    page to open, since it is already of the reader's own tournaments, so
+    From and To narrow the list where it is. They are beside the country, the
+    region and the sport, and are kept in the address as they are
+    (`/admin/2026?from=2026-10-01&to=2026-10-31`).
+
+    Both days are chosen or neither: with one alone the list is not narrowed
+    by days, since the reader is part way through choosing. Both days are
+    included, and it is the day a tournament starts that is compared. The list
+    is still of one year, so days outside the year chosen list nothing. A first
+    day after the last lists nothing, and says so as a filter that lists
+    nothing does, rather than being refused, since nothing here is a mistake
+    the reader can be told off for as they go.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-24"
+
+    Scenario: Days are not chosen to begin with
+      When the admin is opened
+      Then the tournament "Spring Open" is listed
+      And the tournament "Autumn Open" is listed
+
+    Scenario: A tournament starting inside the days is listed
+      Given the admin is open
+      And "2026-10-01" is chosen as From
+      When "2026-10-15" is chosen as To
+      Then the tournament "Spring Open" is listed
+
+    Scenario: A tournament starting after the days is not listed
+      Given the admin is open
+      And "2026-10-01" is chosen as From
+      When "2026-10-15" is chosen as To
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: A tournament starting on the first day is listed
+      Given the admin is open
+      And "2026-10-10" is chosen as From
+      When "2026-10-12" is chosen as To
+      Then the tournament "Spring Open" is listed
+
+    Scenario: A tournament starting on the last day is listed
+      Given the admin is open
+      And "2026-10-01" is chosen as From
+      When "2026-10-10" is chosen as To
+      Then the tournament "Spring Open" is listed
+
+    Scenario: One day alone does not narrow the list
+      Given the admin is open
+      When "2026-10-15" is chosen as From
+      Then the tournament "Spring Open" is listed
+
+    Scenario: A first day after the last lists nothing
+      Given the admin is open
+      And "2026-10-20" is chosen as From
+      When "2026-10-15" is chosen as To
+      Then the list says no tournament matches
+
+    Scenario: The days are in the address
+      Given the admin for 2026 is open
+      And "2026-10-01" is chosen as From
+      When "2026-10-15" is chosen as To
+      Then the address is "/admin/2026?from=2026-10-01&to=2026-10-15"
+
+    Scenario: Days in the address are chosen when the admin is opened at it
+      When the admin is opened at "/admin/2026?from=2026-10-01&to=2026-10-15"
+      Then "2026-10-01" is From
+
+    Scenario: Days in the address narrow the list
+      When the admin is opened at "/admin/2026?from=2026-10-01&to=2026-10-15"
+      Then the tournament "Autumn Open" is not listed
+
+    Scenario: Days that are not days in the address are ignored
+      When the admin is opened at "/admin/2026?from=soon&to=later"
+      Then the tournament "Autumn Open" is listed
+
+    Scenario: Choosing another year clears the days
+      Given the admin for 2026 is open
+      And "2026-10-01" is chosen as From
+      And "2026-10-15" is chosen as To
+      When the year 2025 is chosen
+      Then "" is From
+
+  Rule: The list is a hundred tournaments to a page
+
+    The list of an administrator, or of a world ranking officer, can be every
+    tournament on the website in a year, which is more than a phone should be
+    asked to draw at once. A hundred are listed to a page, in the order the
+    list is in, with "Previous", "Next" and "Page 2 of 5" beneath, left out where
+    everything fits on one page. The page is in the address as the year is
+    (`/admin/2026?page=2`), so the back button undoes a turn. A page beyond the
+    last is the last, and one that is not a whole number is the first, since
+    nothing here is the reader's mistake to refuse. The page is counted over
+    the list as narrowed, so a filter shortens it, and choosing a filter, or
+    another year, goes back to the first.
+
+    Background:
+      Given the tournament is to start at "2026-10-10T00:00:00Z"
+      And "organiser@example.com" has created 101 tournaments
+
+    Scenario: A hundred are listed on the first page
+      When the admin is opened
+      Then 100 tournaments are listed
+
+    Scenario: The rest are listed on the next page
+      When the admin is opened at "/admin/2026?page=2"
+      Then 1 tournament is listed
+
+    Scenario: The page is said to be the first of two
+      When the admin is opened
+      Then the page is said to be "Page 1 of 2"
+
+    Scenario: The first page offers Next and not Previous
+      When the admin is opened
+      Then the way to turn to the next page is offered
+      And the way to turn to the previous page is not offered
+
+    Scenario: The last page offers Previous and not Next
+      When the admin is opened at "/admin/2026?page=2"
+      Then the way to turn to the previous page is offered
+      And the way to turn to the next page is not offered
+
+    Scenario: Pressing Next lists the next page
+      Given the admin is open
+      When the way to turn to the next page is pressed
+      Then 1 tournament is listed
+
+    Scenario: The page is in the address
+      Given the admin for 2026 is open
+      When the way to turn to the next page is pressed
+      Then the address is "/admin/2026?page=2"
+
+    Scenario: A page beyond the last is the last
+      When the admin is opened at "/admin/2026?page=9"
+      Then the page is said to be "Page 2 of 2"
+
+    Scenario: A page that is not a whole number is the first
+      When the admin is opened at "/admin/2026?page=0"
+      Then the page is said to be "Page 1 of 2"
+
+    Scenario: Choosing a filter goes back to the first page
+      Given the admin is opened at "/admin/2026?page=2"
+      When "Australia" is chosen as the country
+      Then the page is said to be "Page 1 of 2"
+
+  Rule: A list that fits on one page says nothing of pages
+
+    Scenario: A hundred tournaments say nothing of pages
+      Given the tournament is to start at "2026-10-10T00:00:00Z"
+      And "organiser@example.com" has created 100 tournaments
+      When the admin is opened
+      Then no page is said
+
   Rule: A world ranking officer is offered what the tournaments it looks after hold
 
     The same list is narrowed, so the choices are those of the tournaments of
