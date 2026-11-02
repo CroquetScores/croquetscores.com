@@ -20,18 +20,24 @@ export const placeShown = ({ placing }: PlayerOfBlock): string =>
 
 // The words that say what tells apart the players level on matches won, from
 // what the answer says it was, so that the page can never say one thing and the
-// ranking do another.
+// ranking do another. The steps are always looked at in the same order and each
+// begins a different sentence, so the first says which sentence it is. Every
+// step is named, so that one added to `TellsApartBy` is refused here by the
+// type check rather than worded as "no known way".
 const wordsFor = ({ block }: BlockToRead): string => {
-  const { tellsApartBy } = block;
-  if (tellsApartBy.includes("netGames")) {
-    return "block.tieBreak.netGamesNetHoopsWhoBeatWho";
+  const [first] = block.tellsApartBy;
+  switch (first) {
+    case undefined:
+      return "block.tieBreak.other";
+    case "netGames":
+      return "block.tieBreak.netGamesNetHoopsWhoBeatWho";
+    case "netHoops":
+      return "block.tieBreak.netHoopsWhoBeatWho";
+    case "whoBeatWho":
+      return "block.tieBreak.whoBeatWho";
+    default:
+      return first satisfies never;
   }
-  if (tellsApartBy.includes("netHoops")) {
-    return "block.tieBreak.netHoopsWhoBeatWho";
-  }
-  return tellsApartBy.includes("whoBeatWho")
-    ? "block.tieBreak.whoBeatWho"
-    : "block.tieBreak.other";
 };
 
 /**

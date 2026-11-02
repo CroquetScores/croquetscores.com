@@ -52,9 +52,10 @@ export class TieBreak {
   ];
 
   /**
-   * What a block goes by until it is told otherwise. It is how the site placed
-   * every block before a block could be told, so a block that was never told,
-   * and every one kept before it could be, keeps its order.
+   * What a block goes by until it is told otherwise. It is how blocks were
+   * ordered on the old sites, which an imported block goes by too. It is not
+   * how this site ordered them before a block could be told, which stopped at
+   * net hoops, and there are no blocks kept from before it could be told.
    */
   static readonly unlessTold: TieBreak = TieBreak.netGamesNetHoopsWhoBeatWho;
 
