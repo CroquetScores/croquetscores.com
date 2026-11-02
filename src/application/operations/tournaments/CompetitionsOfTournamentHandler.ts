@@ -116,6 +116,7 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
           kind: shape.kind,
           bestOf: shape.bestOf.games,
           rounds: shape.rounds.count,
+          tieBreak: shape.tieBreak.code,
         });
       } else {
         listed.push({ ...about, kind: shape.kind, bestOf: shape.bestOf.games });

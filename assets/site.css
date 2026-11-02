@@ -2637,8 +2637,10 @@ a.player-name[data-withdrawn] {
 
 .block-grid-initials,
 .block-grid-total-heading,
+.block-grid-placing-heading,
 .block-grid-cell,
-.block-grid-total {
+.block-grid-total,
+.block-grid-placing {
   text-align: center;
   white-space: nowrap;
 }
@@ -2775,7 +2777,8 @@ a.player-name[data-withdrawn] {
   white-space: nowrap;
 }
 
-.block-summary-ranking {
+.block-summary-ranking,
+.block-tie-break {
   font-size: var(--text-sm);
   color: var(--ink-muted);
 }

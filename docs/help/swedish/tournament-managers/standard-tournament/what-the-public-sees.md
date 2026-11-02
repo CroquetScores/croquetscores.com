@@ -12,11 +12,11 @@ Det mörkgröna fältet erbjuder turneringens avdelningar: **Senaste**, som är 
 
 ## Ett block
 
-Ett blocks sida visar dess resultat som en tabell: en rad och en kolumn för varje spelare i blockets ordning, med partierna mellan två spelare där raden möter kolumnen, vart och ett markerat som vunnet, förlorat eller oavgjort för radens spelare. Efter spelarnas kolumner kommer varje spelares summor. Där varje match är ett enda parti är de vinster och nettobågar; där en match spelas bäst av fler än ett är de matcher, nettopartier, partier och nettobågar.
+Ett blocks sida visar dess resultat som en tabell: en rad och en kolumn för varje spelare i blockets ordning, med partierna mellan två spelare där raden möter kolumnen, vart och ett markerat som vunnet, förlorat eller oavgjort för radens spelare. Efter spelarnas kolumner kommer varje spelares summor. Där varje match är ett enda parti är de vinster och nettobågar; där en match spelas bäst av fler än ett är de matcher, nettopartier, partier och nettobågar. Den sista kolumnen, med rubriken **#**, är varje spelares placering: 1 för den första och =2 där spelare inte kan skiljas åt och delar andraplatsen. Där spelare har vunnit lika stor andel av sina matcher säger en rad under tabellen hur de skiljs åt, så som blockets särskiljning anger (se Tävlingar).
 
 ![Ett blocks tabell](images/public-block-grid.png)
 
-Ett block visas på tre sätt, som erbjuds på raden med dess namn: **Rutnät**, **Sammanfattning** och **Speltabell**. Sammanfattningen är den för en telefon: spelarna rangordnade, med sina vinster, förluster och nettobågar. Spelordningen listar varje parti äldst först. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
+Ett block visas på tre sätt, som erbjuds på raden med dess namn: **Rutnät**, **Sammanfattning** och **Speltabell**. Sammanfattningen är den för en telefon: spelarna rangordnade, med sina vinster, förluster, nettobågar och placering. Spelordningen listar varje parti äldst först. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
 
 ![Ett blocks sammanfattning](images/public-block-summary.png)
 

@@ -1,6 +1,7 @@
 // The name each of a tournament's events is kept under, and how each is read
 // back. A name is kept for good, and must never be given to anything else.
 import type { EventRegistry } from "../../../common/EventRegistry.js";
+import { TieBreak } from "../value-objects/TieBreak.js";
 import { BlockAdded } from "./BlockAdded.js";
 import { BlockUpdated } from "./BlockUpdated.js";
 import { CompetitionArchived } from "./CompetitionArchived.js";
@@ -62,6 +63,16 @@ const text = (said: Said, field: string): string => {
 // A field an event can do without, and which JSON leaves out when it is.
 const optionalText = (said: Said, field: string): string | undefined =>
   said[field] === undefined ? undefined : text(said, field);
+
+// A tie break is kept by its code, and a code that is none of the three is no
+// more a tie break than a missing one, so it is refused here, where the
+// registry names the event, rather than when the tournament is rebuilt from it.
+const tieBreakCode = (said: Said): string => {
+  const code = text(said, "tieBreak");
+  return TieBreak.all.some((known) => known.code === code)
+    ? code
+    : unreadable("tieBreak");
+};
 
 const number = (said: Said, field: string): number => {
   const value = said[field];
@@ -240,6 +251,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
           maximumHoops(said),
+          tieBreakCode(said),
           createdBy,
           occurredAt,
         ),
@@ -257,6 +269,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
           yesOrNo(said, "drawsAllowed"),
           yesOrNo(said, "worldRankings"),
           maximumHoops(said),
+          tieBreakCode(said),
           createdBy,
           occurredAt,
         ),

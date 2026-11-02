@@ -23,6 +23,11 @@ export class UpdateBlock extends Command<void> {
      * that to the tournament: what it was when it is updated.
      */
     readonly rules?: CompetitionRulesSaid | undefined,
+    /**
+     * The code of how its players level on matches won are told apart, as the
+     * dialog sent it, or nothing to leave the block going by what it went by.
+     */
+    readonly tieBreak?: string | undefined,
   ) {
     super(requestedAt);
   }

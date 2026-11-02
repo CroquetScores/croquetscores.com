@@ -40,6 +40,15 @@ Feature: A tournament's results, as the world rankings are sent them
   decide what a withdrawn game is worth, not this page. A match decided by a
   bye or a walkover was not played, has no game, and so is not a result.
 
+  A block is answered with its winner too, which is the player the block places
+  first (`placingsOfBlock.feature`) where only one is placed first, and nobody
+  where players cannot be told apart for first. It is worked out as the block's
+  own page works out its places, so that the file and the page do not disagree
+  about who won, and a withdrawn game or player counts for nothing in it
+  though the game is still a result. A competition that does not place its
+  players, a knockout, a Swiss or a test, is answered with no winner of its
+  own, and the file guesses.
+
   A competition with no result is not answered, so that a file has no heading
   with nothing beneath it, and neither is one that is archived. The ones that
   are come in the tournament's order. Nobody is asked to sign in: the
@@ -154,6 +163,68 @@ Feature: A tournament's results, as the world rankings are sent them
       And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
       When the rankings of the tournament at "2026/ac/spring-open" are asked for
       Then the first competition of the rankings answered has 2 results
+
+  Rule: A block is answered with the player it places first
+
+    Scenario: The player with the greatest share of their matches won is the winner
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 20 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the competition "Block A" is answered as "Sam Someone"
+
+    Scenario: Players level on the share are told apart by the block's tie break
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the competition "Block A" is answered as "Chris Third"
+
+    Scenario: Players the block's tie break cannot tell apart have no winner
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Alex Another" 26 to 3 in "Block B" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then nobody is answered as the winner of the competition "Block B"
+
+    Scenario: Players who beat one another in a ring have no winner
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block B" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 20 in "Block B" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then nobody is answered as the winner of the competition "Block B"
+
+    Scenario: A game of a player who has withdrawn counts for nothing towards the winner
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the winner of the competition "Block A" is answered as "Alex Another"
+
+    Scenario: A game of a player who has withdrawn is still a result
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has withdrawn the player "Sam Someone" from "Block A" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then the first competition of the rankings answered has 1 result
+
+    Scenario: A knockout is answered with no winner of its own
+      Given "organiser@example.com" has added the player "Pat Fourth" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      When the rankings of the tournament at "2026/ac/spring-open" are asked for
+      Then no winner is answered for the competition "Finals"
 
   Rule: A game of a Swiss or of a test is a result of its own
 

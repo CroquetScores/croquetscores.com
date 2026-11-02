@@ -1,6 +1,7 @@
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import { Query } from "../../common/Query.js";
+import type { Placing, TellsApartBy } from "./placingsOfBlock.js";
 import type { PublicPlayer } from "./PublicPlayersOfTournament.js";
 import type {
   CompetitionOfTournament,
@@ -36,6 +37,11 @@ export interface PlayerOfBlock extends PublicPlayer {
    * hoops for and against they carry forward.
    */
   readonly netHoops: number;
+  /**
+   * Their place among the block's players (`placingsOfBlock.feature`), or
+   * nothing where they have withdrawn, since their games count for nothing.
+   */
+  readonly placing: Placing | undefined;
 }
 
 /** One of a block's games, its scores as they were typed. */
@@ -84,6 +90,19 @@ export interface BlockToRead {
     readonly rounds: number;
     /** The most hoops a game in it is played to, or null where it has no most. */
     readonly maximumHoops: number | null;
+    /** How its players level on matches won are told apart, by code. */
+    readonly tieBreak: string;
+    /**
+     * Whether any two players who have not withdrawn are level on the share
+     * of their decided matches they have won, which is when a page says how
+     * they are told apart.
+     */
+    readonly levelOnMatchesWon: boolean;
+    /**
+     * What tells those players apart, in the order it is looked at, and
+     * nothing where the tie break tells nobody apart.
+     */
+    readonly tellsApartBy: readonly TellsApartBy[];
   };
   /**
    * The most hoops a game of the tournament's sport is played to unless a
@@ -98,8 +117,8 @@ export interface BlockToRead {
    */
   readonly games: readonly GameOfBlock[];
   /**
-   * The ids of its players ranked: the greater share of their decided
-   * matches won first, then the more net hoops, then in the block's order.
+   * The ids of its players ranked, as the block's tie break places them
+   * (`placingsOfBlock.feature`), those who have withdrawn last.
    */
   readonly ranked: readonly string[];
 }

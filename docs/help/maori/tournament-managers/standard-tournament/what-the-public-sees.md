@@ -12,11 +12,11 @@ Ka tuku te pae kākāriki pōuri i ngā wāhanga o te whakataetae: **Tata nei**,
 
 ## Te poraka
 
-Ka whakaatu te whārangi o tētahi poraka i ōna tākohu hei tūtohi: he haupae, he tīwae mō ia kaitākaro i te raupapa o te poraka, me ngā kēmu i waenga i ngā kaitākaro e rua i te wāhi e tūtaki ai te haupae me te tīwae, ia mea kua tohua hei toa, hei hinga, hei taurite rānei mō te kaitākaro o te haupae. I muri i ngā tīwae o ngā kaitākaro ko ngā tapeke o ia kaitākaro. Ina kotahi te kēmu o ia tukinga, he toa me ngā tapeke hupa ērā; ina ko te tukinga te pai rawa o te nui ake i te kotahi, he tukinga, he tapeke kēmu, he kēmu me ngā tapeke hupa.
+Ka whakaatu te whārangi o tētahi poraka i ōna tākohu hei tūtohi: he haupae, he tīwae mō ia kaitākaro i te raupapa o te poraka, me ngā kēmu i waenga i ngā kaitākaro e rua i te wāhi e tūtaki ai te haupae me te tīwae, ia mea kua tohua hei toa, hei hinga, hei taurite rānei mō te kaitākaro o te haupae. I muri i ngā tīwae o ngā kaitākaro ko ngā tapeke o ia kaitākaro. Ina kotahi te kēmu o ia tukinga, he toa me ngā tapeke hupa ērā; ina ko te tukinga te pai rawa o te nui ake i te kotahi, he tukinga, he tapeke kēmu, he kēmu me ngā tapeke hupa. Ko te tīwae whakamutunga, ko **#** tōna ingoa, te tūnga o ia kaitākaro: 1 mō te tuatahi, ā, =2 ina kāore e taea te wehe i ngā kaitākaro, ā, ka tiri tahi i te tuarua. Ina kotahi te wāhanga o ngā tukinga i wikitoria e ētahi kaitākaro, ka kī tētahi rārangi i raro i te tūtohi me pēhea rātou e wehea ai, pēnei i tā te whakatau i te ōrite o te poraka (tirohia Ngā tauwhāinga).
 
 ![Te tūtohi o tētahi poraka](images/public-block-grid.png)
 
-E toru ngā huarahi e whakaaturia ai te poraka, ka tukuna i te rārangi o tōna ingoa: **Whakatakotoranga**, **Whakarāpopototanga** me **Raupapa tākaro**. Ko te whakarāpopototanga te mea mō te waea pūkoro: ngā kaitākaro kua raupapatia, me ō rātou toa, hinga me ngā tapeke hupa. Ka rārangi te raupapa tākaro i ia kēmu, ko te tawhito i te tuatahi. Ka mau tonu i te kaipānui ka kōwhiri i tētahi tirohanga taua tirohanga mō ia tauwhāinga kia kōwhiria ra anō e ia tētahi atu.
+E toru ngā huarahi e whakaaturia ai te poraka, ka tukuna i te rārangi o tōna ingoa: **Whakatakotoranga**, **Whakarāpopototanga** me **Raupapa tākaro**. Ko te whakarāpopototanga te mea mō te waea pūkoro: ngā kaitākaro kua raupapatia, me ō rātou toa, hinga, ngā tapeke hupa me te tūnga. Ka rārangi te raupapa tākaro i ia kēmu, ko te tawhito i te tuatahi. Ka mau tonu i te kaipānui ka kōwhiri i tētahi tirohanga taua tirohanga mō ia tauwhāinga kia kōwhiria ra anō e ia tētahi atu.
 
 ![Te whakarāpopototanga o tētahi poraka](images/public-block-summary.png)
 

@@ -12,11 +12,11 @@ The dark green bar offers the tournament's sections: **Recent**, which is this p
 
 ## A block
 
-A block's page shows its results as a grid: a row and a column for each player in the block's order, with the games between two players where the row meets the column, each marked as won, lost or drawn for the row player. After the players' columns come each player's totals. Where each match is a single game, those are wins and net hoops; where a match is the best of more than one, they are matches, net games, games and net hoops.
+A block's page shows its results as a grid: a row and a column for each player in the block's order, with the games between two players where the row meets the column, each marked as won, lost or drawn for the row player. After the players' columns come each player's totals. Where each match is a single game, those are wins and net hoops; where a match is the best of more than one, they are matches, net games, games and net hoops. The last column, headed **#**, is each player's place: 1 for the first, and =2 where players cannot be told apart and share second. Where any players have won the same share of their matches, a line beneath the grid says how they are told apart, as the block's tie break has it (see Competitions).
 
 ![A block's grid](images/public-block-grid.png)
 
-A block is shown three ways, offered on the line of its name: **Grid**, **Summary** and **Order of Play**. The summary is the one for a phone: the players ranked, with their wins, losses and net hoops. The order of play lists every game oldest first. A reader who chooses a view keeps it for every competition until they choose another.
+A block is shown three ways, offered on the line of its name: **Grid**, **Summary** and **Order of Play**. The summary is the one for a phone: the players ranked, with their wins, losses, net hoops and place. The order of play lists every game oldest first. A reader who chooses a view keeps it for every competition until they choose another.
 
 ![A block's summary](images/public-block-summary.png)
 

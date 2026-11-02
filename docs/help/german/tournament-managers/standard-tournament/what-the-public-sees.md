@@ -12,11 +12,11 @@ Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Neueste**, was di
 
 ## Eine Gruppe
 
-Die Seite einer Gruppe zeigt ihre Ergebnisse als Tabelle: eine Zeile und eine Spalte für jeden Spieler in der Reihenfolge der Gruppe, mit den Spielen zwischen zwei Spielern dort, wo Zeile und Spalte sich treffen, jedes für den Spieler der Zeile als gewonnen, verloren oder unentschieden markiert. Nach den Spalten der Spieler kommen die Summen jedes Spielers. Besteht jede Begegnung aus einem einzigen Spiel, sind das Siege und Tordifferenz; geht eine Begegnung über mehr als ein Spiel, sind es Begegnungen, Spieldifferenz, Spiele und Tordifferenz.
+Die Seite einer Gruppe zeigt ihre Ergebnisse als Tabelle: eine Zeile und eine Spalte für jeden Spieler in der Reihenfolge der Gruppe, mit den Spielen zwischen zwei Spielern dort, wo Zeile und Spalte sich treffen, jedes für den Spieler der Zeile als gewonnen, verloren oder unentschieden markiert. Nach den Spalten der Spieler kommen die Summen jedes Spielers. Besteht jede Begegnung aus einem einzigen Spiel, sind das Siege und Tordifferenz; geht eine Begegnung über mehr als ein Spiel, sind es Begegnungen, Spieldifferenz, Spiele und Tordifferenz. Die letzte Spalte, überschrieben mit **#**, ist der Platz jedes Spielers: 1 für den ersten und =2, wo sich Spieler nicht unterscheiden lassen und sich den zweiten teilen. Haben Spieler gleich viele ihrer Begegnungen gewonnen, sagt eine Zeile unter dem Raster, wie sie unterschieden werden, so wie es die Regelung der Gruppe bei Gleichstand vorsieht (siehe Wettbewerbe).
 
 ![Die Tabelle einer Gruppe](images/public-block-grid.png)
 
-Eine Gruppe wird auf drei Arten gezeigt, angeboten in der Zeile ihres Namens: **Raster**, **Zusammenfassung** und **Spielreihenfolge**. Die Zusammenfassung ist die für das Telefon: die Spieler gereiht, mit ihren Siegen, Niederlagen und ihrer Tordifferenz. Die Spielreihenfolge listet jedes Spiel, das älteste zuerst. Ein Leser, der eine Ansicht wählt, behält sie für jeden Wettbewerb, bis er eine andere wählt.
+Eine Gruppe wird auf drei Arten gezeigt, angeboten in der Zeile ihres Namens: **Raster**, **Zusammenfassung** und **Spielreihenfolge**. Die Zusammenfassung ist die für das Telefon: die Spieler gereiht, mit ihren Siegen, Niederlagen, ihrer Tordifferenz und ihrem Platz. Die Spielreihenfolge listet jedes Spiel, das älteste zuerst. Ein Leser, der eine Ansicht wählt, behält sie für jeden Wettbewerb, bis er eine andere wählt.
 
 ![Die Übersicht einer Gruppe](images/public-block-summary.png)
 

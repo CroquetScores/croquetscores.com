@@ -12,11 +12,11 @@ Mae'r bar gwyrdd tywyll yn cynnig adrannau'r twrnamaint: **Diweddar**, sef y dud
 
 ## Bloc
 
-Mae tudalen bloc yn dangos ei ganlyniadau fel grid: rhes a cholofn i bob chwaraewr yn nhrefn y bloc, â'r gemau rhwng dau chwaraewr lle mae'r rhes yn cwrdd â'r golofn, pob un wedi'i marcio fel un a enillwyd, a gollwyd neu'n gyfartal i chwaraewr y rhes. Ar ôl colofnau'r chwaraewyr daw cyfansymiau pob chwaraewr. Lle mae pob gêm yn un gêm unigol, buddugoliaethau a chylchau net yw'r rheini; lle mae gêm yr orau o fwy nag un, gemau, gemau net, gemau unigol a chylchau net ydynt.
+Mae tudalen bloc yn dangos ei ganlyniadau fel grid: rhes a cholofn i bob chwaraewr yn nhrefn y bloc, â'r gemau rhwng dau chwaraewr lle mae'r rhes yn cwrdd â'r golofn, pob un wedi'i marcio fel un a enillwyd, a gollwyd neu'n gyfartal i chwaraewr y rhes. Ar ôl colofnau'r chwaraewyr daw cyfansymiau pob chwaraewr. Lle mae pob gêm yn un gêm unigol, buddugoliaethau a chylchau net yw'r rheini; lle mae gêm yr orau o fwy nag un, gemau, gemau net, gemau unigol a chylchau net ydynt. Y golofn olaf, â'r pennawd **#**, yw safle pob chwaraewr: 1 i'r cyntaf, ac =2 lle na ellir gwahanu chwaraewyr a'u bod yn rhannu'r ail. Lle mae chwaraewyr wedi ennill yr un gyfran o'u gemau, mae llinell o dan y grid yn dweud sut y gwahenir hwy, fel y mae tei-brêc y bloc yn ei nodi (gweler Cystadlaethau).
 
 ![Grid bloc](images/public-block-grid.png)
 
-Dangosir bloc mewn tair ffordd, a gynigir ar linell ei enw: **Grid**, **Crynodeb** a **Trefn chwarae**. Y crynodeb yw'r un ar gyfer ffôn: y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion a'u cylchau net. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
+Dangosir bloc mewn tair ffordd, a gynigir ar linell ei enw: **Grid**, **Crynodeb** a **Trefn chwarae**. Y crynodeb yw'r un ar gyfer ffôn: y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion, eu cylchau net a'u safle. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
 
 ![Crynodeb bloc](images/public-block-summary.png)
 

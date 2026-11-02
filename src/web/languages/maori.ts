@@ -422,6 +422,19 @@ export const maori: Language = {
     "block.withdrawn": "kua unu",
     "block.gameWithdrawn": "kua unu",
     "block.losses": "Hinganga",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Ka whakatauhia ngā ōrite mā te kupenga kēmu, ka kupenga hupa, ka ko wai i hinga ko wai.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Ka whakatauhia ngā ōrite mā te kupenga hupa, ka ko wai i hinga ko wai.",
+    "block.tieBreak.whoBeatWho":
+      "Ka whakatauhia ngā ōrite mā te ko wai i hinga ko wai.",
+    "block.tieBreak.other": "Kāore he tikanga mōhio hei whakatau i ngā ōrite.",
     // The three views of a block.
     "competition.views": "Ngā tirohanga",
     "competition.view.grid": "Whakatakotoranga",
@@ -430,7 +443,7 @@ export const maori: Language = {
     "competition.print": "Tā",
     "competition.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
     "blockSummary.ranking":
-      "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
+      "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
     "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",
     "orderOfPlay.column.game": "Kēmu",
     "orderOfPlay.column.date": "Rā",
@@ -691,6 +704,11 @@ export const maori: Language = {
     "admin.competition.kind": "Momo",
     "admin.competition.bestOf": "Pai rawa o te",
     "admin.competition.rounds": "Ngā rauna",
+    "admin.competition.tieBreaks": "Whakatau i te ōrite",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Kupenga kēmu, ka kupenga hupa, ka ko wai i hinga ko wai",
+    "admin.competition.tieBreak.who-beat-who": "Ko wai i hinga ko wai",
+    "admin.competition.tieBreak.other": "Tētahi atu",
     "admin.competition.places": "Ngā tūnga",
     "admin.competition.round": "Rauna {number}",
     "admin.competition.bestOfs": "Ngā pai rawa o te",

@@ -37,6 +37,7 @@ import type { Country } from "../../src/domain/aggregates/tournaments/value-obje
 import type { Countries } from "../../src/domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Region } from "../../src/domain/aggregates/tournaments/value-objects/Region.js";
 import type { Sport } from "../../src/domain/aggregates/tournaments/value-objects/Sport.js";
+import type { TieBreak } from "../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { TournamentFormat } from "../../src/domain/aggregates/tournaments/value-objects/TournamentFormat.js";
 import type { TournamentSubtitle } from "../../src/domain/aggregates/tournaments/value-objects/TournamentSubtitle.js";
 import type { TournamentPlayer } from "../../src/domain/aggregates/tournaments/TournamentPlayer.js";
@@ -322,6 +323,8 @@ export class SpecWorld extends World {
   // The format a scenario makes, and whether it was found the same as another;
   // and the formats found for the site it names, and how many of those in
   // order the scenario has named so far.
+  public tieBreak: TieBreak | undefined;
+  public sameTieBreak: boolean | undefined;
   public tournamentFormat: TournamentFormat | undefined;
   public sameTournamentFormat: boolean | undefined;
   public offeredFormats: readonly TournamentFormat[] | undefined;

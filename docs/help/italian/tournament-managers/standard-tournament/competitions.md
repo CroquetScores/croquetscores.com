@@ -14,11 +14,13 @@ Premi **Aggiungi competizione**, sopra l'elenco. Si apre una finestra di dialogo
 
 ### Un girone
 
-Un girone chiede di quante partite è **al meglio di** ciascun incontro, e in quanti **turni** si gioca.
+Un girone chiede di quante partite è **al meglio di** ciascun incontro, e in quanti **turni** si gioca, e come si distinguono i suoi giocatori a pari incontri vinti con il suo **Spareggio**.
 
 **Al meglio di** comincia da 1. Al meglio di 3 vince chi vince due partite. Può essere un numero pari, perché in un girone un giocatore è classificato per le partite che vince, e un incontro di due partite finito una a una è un risultato come un altro.
 
 **Turni** è quante volte ogni coppia di giocatori del girone si incontra, con un incontro in ogni turno. Comincia da 1, e 1 è quasi sempre ciò che vuole un girone: ogni giocatore gioca contro ogni altro una volta. Alzalo solo per un girone in cui si incontrano di nuovo, come un doppio girone all'italiana, dove 2 fa giocare a ogni coppia due incontri.
+
+**Spareggio** è il modo in cui si distinguono i giocatori che hanno vinto la stessa quota dei loro incontri. Sono tre, e i gironi di uno stesso torneo possono usarne di diversi, perché i regolamenti differiscono. **Differenza partite poi differenza archetti poi chi ha battuto chi** è come i gironi sono sempre stati classificati ed è da cui parte un nuovo girone: i giocatori a pari incontri vinti si distinguono per la differenza partite, quelli ancora pari per la differenza archetti, e quelli ancora pari per chi ha battuto chi tra loro. Dove ogni incontro è una partita sola, la differenza partite viene lasciata da parte. **Chi ha battuto chi** guarda solo gli incontri che i giocatori a pari hanno giocato tra loro. **Altro** è per i regolamenti che il sito non conosce, e non distingue nessuno. I giocatori che non si possono distinguere condividono una posizione, mostrata come =2, e la pagina dice sotto la griglia come si distinguono i giocatori a pari.
 
 ![La finestra Aggiungi competizione per un girone](images/add-competition-block.png)
 

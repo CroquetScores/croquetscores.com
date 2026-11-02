@@ -11,7 +11,10 @@ Feature: Changing what a tournament's block is
   (`onlyManagers.feature`).
 
   An update says the block's name and what it is the best of again, each
-  asked its own rules on the way in, and the rounds it is played in again. The block keeps its slug and its order.
+  asked its own rules on the way in, and the rounds it is played in again. It
+  may say the tie break the block goes by, asked its own rule as well, and
+  says none to leave the block going by what it went by. The block keeps its
+  slug and its order.
   An update that changes nothing records nothing. What is said here of
   updating a block is said of updating a knockout (`UpdateKnockout.feature`)
   and a Swiss (`UpdateSwiss.feature`) too.
@@ -60,6 +63,18 @@ Feature: Changing what a tournament's block is
       When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
       Then nothing more is recorded of the tournament
 
+  Rule: How the block tells apart players level on matches won is kept
+
+    Scenario: The block goes by the tie break it was updated to
+      Given the update makes the block go by the tie break "who-beat-who"
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
+      Then the tournament's competition "Block A" goes by the tie break "who-beat-who"
+
+    Scenario: An update that says no tie break leaves the block going by what it went by
+      Given the update calls the competition "Block One"
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
+      Then the tournament's competition "Block One" goes by the tie break "net-games-net-hoops-who-beat-who"
+
   Rule: Each value must break none of its own rules
 
     Scenario: A best-of that could not be one is refused for it
@@ -67,6 +82,12 @@ Feature: Changing what a tournament's block is
       When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "BestOf.TooSmall"
+
+    Scenario: A tie break that is none of them is refused for it
+      Given the update makes the block go by the tie break "net-hoops"
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "TieBreak.Unknown"
 
     Scenario: A number of rounds that could not be one is refused for it
       Given the update makes the competition played in 0 rounds

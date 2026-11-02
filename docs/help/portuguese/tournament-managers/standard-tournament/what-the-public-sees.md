@@ -12,11 +12,11 @@ A barra verde-escura oferece as seções do torneio: **Recentes**, que é esta p
 
 ## Um grupo
 
-A página de um grupo mostra os seus resultados como uma grade: uma linha e uma coluna para cada jogador, na ordem do grupo, com os jogos entre dois jogadores onde a linha encontra a coluna, cada um marcado como vitória, derrota ou empate para o jogador da linha. Depois das colunas dos jogadores vêm os totais de cada jogador. Quando cada partida é um único jogo, são vitórias e saldo de arcos; quando uma partida é melhor de mais de um, são partidas, saldo de jogos, jogos e saldo de arcos.
+A página de um grupo mostra os seus resultados como uma grade: uma linha e uma coluna para cada jogador, na ordem do grupo, com os jogos entre dois jogadores onde a linha encontra a coluna, cada um marcado como vitória, derrota ou empate para o jogador da linha. Depois das colunas dos jogadores vêm os totais de cada jogador. Quando cada partida é um único jogo, são vitórias e saldo de arcos; quando uma partida é melhor de mais de um, são partidas, saldo de jogos, jogos e saldo de arcos. A última coluna, com o título **#**, é a posição de cada jogador: 1 para o primeiro, e =2 quando jogadores não podem ser desempatados e dividem o segundo lugar. Quando jogadores venceram a mesma proporção das suas partidas, uma linha abaixo da grade diz como são desempatados, conforme o critério de desempate do grupo (veja Competições).
 
 ![A grade de um grupo](images/public-block-grid.png)
 
-Um grupo é mostrado de três formas, oferecidas na linha do seu nome: **Grade**, **Resumo** e **Ordem de jogo**. O resumo é a forma para um telefone: os jogadores classificados, com as suas vitórias, derrotas e saldo de arcos. A ordem de jogo lista todos os jogos, o mais antigo primeiro. Um leitor que escolhe uma visão a mantém em todas as competições até escolher outra.
+Um grupo é mostrado de três formas, oferecidas na linha do seu nome: **Grade**, **Resumo** e **Ordem de jogo**. O resumo é a forma para um telefone: os jogadores classificados, com as suas vitórias, derrotas, saldo de arcos e posição. A ordem de jogo lista todos os jogos, o mais antigo primeiro. Um leitor que escolhe uma visão a mantém em todas as competições até escolher outra.
 
 ![O resumo de um grupo](images/public-block-summary.png)
 

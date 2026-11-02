@@ -14,11 +14,13 @@ Tryck på **Lägg till tävling**, ovanför listan. En dialogruta öppnas över 
 
 ### Ett block
 
-Ett block frågar vad varje match spelas **Bäst av**, och i hur många **Ronder** det spelas.
+Ett block frågar vad varje match spelas **Bäst av**, i hur många **Ronder** det spelas och hur spelare med lika andel vunna matcher skiljs åt, genom dess **Särskiljning**.
 
 **Bäst av** börjar på 1. Bäst av 3 vinns av den som vinner två partier. Det får vara ett jämnt tal, eftersom en spelare i ett block rangordnas efter de partier spelaren vinner, och en match på två partier som delas ett vardera är ett resultat som vilket annat.
 
 **Ronder** är hur många gånger varje par av spelare i blocket möts, med en match i varje rond. Det börjar på 1, och 1 är nästan alltid vad ett block vill ha: varje spelare möter varje annan en gång. Höj det bara för ett block där de möts igen, som en dubbel serie, där 2 låter varje par spela två matcher.
+
+**Särskiljning** är hur spelare som har vunnit lika stor andel av sina matcher skiljs åt. Det finns tre sätt, och block i en och samma turnering kan använda olika, eftersom regler skiljer sig åt. **Nettopartier, sedan nettobågar, sedan vem som slog vem** är hur block alltid har rangordnats och det som ett nytt block börjar med: spelare som är lika på vunna matcher skiljs åt av sina nettopartier, de som fortfarande är lika av sina nettobågar, och de som fortfarande är lika av vem som slog vem bland dem. Där varje match är ett enda parti utelämnas nettopartier. **Vem som slog vem** tittar bara på de matcher som de lika spelarna spelade mot varandra. **Annat** är för regler som webbplatsen inte känner till, och skiljer ingen åt. Spelare som inte kan skiljas åt delar en placering, som visas som =2, och sidan säger under tabellen hur spelare som är lika skiljs åt.
 
 ![Dialogrutan Lägg till tävling för ett block](images/add-competition-block.png)
 

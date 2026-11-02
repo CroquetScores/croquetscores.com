@@ -6,6 +6,7 @@ import { CompetitionId } from "../../../../../../src/domain/aggregates/tournamen
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../../../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
   ask,
@@ -51,6 +52,24 @@ Given(
   },
 );
 
+Given(
+  "the block {string} was added to it to go by the tie break {string}",
+  function (this: SpecWorld, name: string, code: string) {
+    happened(this, (tournament) =>
+      tournament.addBlock(
+        CompetitionId.create(),
+        CompetitionName.from(name),
+        BestOf.from(1),
+        Rounds.from(1),
+        byOf(this),
+        now(this),
+        undefined,
+        TieBreak.from(code),
+      ),
+    );
+  },
+);
+
 // Competitions with every slug from `from` to `to`, each with a name of its
 // own that makes none of them, so that the next competition is refused each
 // of those slugs and nothing else. They are recorded as they would have been
@@ -84,7 +103,9 @@ Given(
           false,
           false,
           true,
+          // Not said, so the usual for its sport, as the slugs are all that matters.
           undefined,
+          TieBreak.unlessTold.code,
           byOf(this),
           now(this),
         ),
@@ -105,6 +126,13 @@ Given(
 );
 
 Given(
+  "the block is to go by the tie break {string}",
+  function (this: SpecWorld, code: string) {
+    scenarioOf(this).competition.tieBreak = code;
+  },
+);
+
+Given(
   "the block is to be played in {int} rounds",
   function (this: SpecWorld, rounds: number) {
     scenarioOf(this).competition.rounds = rounds;
@@ -112,7 +140,7 @@ Given(
 );
 
 When("the block {string} is added", function (this: SpecWorld, name: string) {
-  const { bestOf, rounds } = scenarioOf(this).competition;
+  const { bestOf, rounds, tieBreak } = scenarioOf(this).competition;
   ask(this, (tournament) =>
     tournament.addBlock(
       competitionIdOf(this),
@@ -123,6 +151,7 @@ When("the block {string} is added", function (this: SpecWorld, name: string) {
       byOf(this),
       now(this),
       scenarioOf(this).competition.rules,
+      tieBreak === undefined ? undefined : TieBreak.from(tieBreak),
     ),
   );
 });
@@ -131,6 +160,15 @@ Then(
   "the first thing it recorded is a block being added",
   function (this: SpecWorld) {
     assertFirstRecorded(this, BlockAdded);
+  },
+);
+
+Then(
+  "the tournament's competition {string} goes by the tie break {string}",
+  function (this: SpecWorld, name: string, code: string) {
+    const { shape } = competitionNamed(tournamentOf(this), name);
+    assert.ok(shape.kind === "block", `${name} is not a block.`);
+    assert.equal(shape.tieBreak.code, code);
   },
 );
 

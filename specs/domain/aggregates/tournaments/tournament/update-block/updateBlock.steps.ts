@@ -5,6 +5,7 @@ import { CompetitionId } from "../../../../../../src/domain/aggregates/tournamen
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../../../../src/domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../../../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
   ask,
@@ -28,6 +29,13 @@ const roundsOf = (
   return found?.shape.kind === "block" ? found.shape.rounds : Rounds.from(1);
 };
 
+// The tie break the scenario's update says a block goes by, and otherwise
+// none, which leaves the block going by what it went by.
+const tieBreakOf = (world: SpecWorld): TieBreak | undefined => {
+  const said = scenarioOf(world).competitionUpdate.tieBreak;
+  return said === undefined ? undefined : TieBreak.from(said);
+};
+
 Given(
   "the block {string} was added to it as the best of {int}",
   function (this: SpecWorld, name: string, games: number) {
@@ -41,6 +49,32 @@ Given(
         now(this),
       ),
     );
+  },
+);
+
+Given(
+  "the update makes the block go by the tie break {string}",
+  function (this: SpecWorld, code: string) {
+    scenarioOf(this).competitionUpdate.tieBreak = code;
+  },
+);
+
+Given(
+  "the block {string} was updated",
+  function (this: SpecWorld, name: string) {
+    happened(this, (tournament) => {
+      const found = competitionNamed(tournament, name);
+      tournament.updateBlock(
+        found.reference.id,
+        found.reference.name,
+        found.shape.kind === "block" ? found.shape.bestOf : BestOf.from(1),
+        roundsOf(this, found),
+        byOf(this),
+        now(this),
+        undefined,
+        tieBreakOf(this),
+      );
+    });
   },
 );
 
@@ -75,6 +109,7 @@ When("the block {string} is updated", function (this: SpecWorld, name: string) {
       byOf(this),
       now(this),
       scenarioOf(this).competitionUpdate.rules,
+      tieBreakOf(this),
     );
   });
 });
@@ -92,6 +127,7 @@ When(
         byOf(this),
         now(this),
         scenarioOf(this).competitionUpdate.rules,
+        tieBreakOf(this),
       );
     });
   },

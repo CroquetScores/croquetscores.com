@@ -7,6 +7,7 @@ import {
 } from "../../../../../../src/domain/aggregates/tournaments/competitions/Competition.js";
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../../../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import type { CompetitionPlayer } from "../../../../../../src/domain/aggregates/tournaments/competitions/CompetitionPlayer.js";
 import { CompetitionId } from "../../../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { GamePlayerId } from "../../../../../../src/domain/aggregates/tournaments/competitions/Game.js";
@@ -60,6 +61,7 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
           kind: "block",
           bestOf: BestOf.from(1),
           rounds: Rounds.from(1),
+          tieBreak: TieBreak.unlessTold,
         },
         drawsAllowed: false,
       },

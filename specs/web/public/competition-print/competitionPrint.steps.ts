@@ -160,6 +160,39 @@ Then(
   },
 );
 
+Then("the block's place column is printed", async function (this: SpecWorld) {
+  const heading = this.browserPage
+    .locator("main .block-grid-placing-heading")
+    .first();
+  assert.equal(await heading.isVisible(), true);
+  assert.equal((await heading.innerText()).trim(), "#");
+});
+
+const tieBreakWords = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main .block-tie-break");
+
+Then(
+  "the words beneath the block's grid about its tie break are printed",
+  async function (this: SpecWorld) {
+    assert.equal(await tieBreakWords(this).isVisible(), true);
+  },
+);
+
+// The pieces are put after the grid they are cut from, so the words beneath it
+// have to come after the last of them rather than between them.
+Then(
+  "the words beneath the block's grid about its tie break are printed after its last piece",
+  async function (this: SpecWorld) {
+    const last = await this.browserPage
+      .locator("main .print-piece")
+      .last()
+      .boundingBox();
+    const words = await tieBreakWords(this).boundingBox();
+    assert.ok(last !== null && words !== null);
+    assert.ok(words.y >= last.y + last.height, `${words.y} and ${last.y}`);
+  },
+);
+
 Then("the results are printed", async function (this: SpecWorld) {
   assert.equal(await results(this).first().isVisible(), true);
 });

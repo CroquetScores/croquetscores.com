@@ -417,6 +417,18 @@ export const egyptian: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "اتسحبت",
     "block.losses": "الهزايم",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "التعادل بيتحسم بصافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "التعادل بيتحسم بصافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.whoBeatWho": "التعادل بيتحسم بمين غلب مين.",
+    "block.tieBreak.other": "مفيش طريقة معروفة لكسر التعادل.",
     // The three views of a block.
     "competition.views": "العروض",
     "competition.view.grid": "الجدول",
@@ -425,7 +437,7 @@ export const egyptian: Language = {
     "competition.print": "اطبع",
     "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
     "blockSummary.ranking":
-      "الترتيب على حسب نسبة المباريات اللي اتكسبت، وبعدين صافي الأطواق. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
+      "الترتيب على حسب نسبة المباريات اللي اتكسبت. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",
     "orderOfPlay.column.game": "اللعبة",
     "orderOfPlay.column.date": "التاريخ",
@@ -679,6 +691,11 @@ export const egyptian: Language = {
     "admin.competition.kind": "النوع",
     "admin.competition.bestOf": "أحسن",
     "admin.competition.rounds": "الأدوار",
+    "admin.competition.tieBreaks": "كسر التعادل",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "صافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين",
+    "admin.competition.tieBreak.who-beat-who": "مين غلب مين",
+    "admin.competition.tieBreak.other": "غير كده",
     "admin.competition.places": "الأماكن",
     "admin.competition.round": "الدور {number}",
     "admin.competition.bestOfs": "عدد الألعاب في المباراة",

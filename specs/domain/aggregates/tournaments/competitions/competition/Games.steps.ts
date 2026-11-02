@@ -19,6 +19,7 @@ import { Score } from "../../../../../../src/domain/aggregates/tournaments/compe
 import { BestOf } from "../../../../../../src/domain/aggregates/tournaments/value-objects/BestOf.js";
 import { KnockoutDraw } from "../../../../../../src/domain/aggregates/tournaments/value-objects/KnockoutDraw.js";
 import { Rounds } from "../../../../../../src/domain/aggregates/tournaments/value-objects/Rounds.js";
+import { TieBreak } from "../../../../../../src/domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { Website } from "../../../../../../src/domain/common/Website.js";
 import type { SpecWorld } from "../../../../../support/world.js";
 import {
@@ -54,6 +55,7 @@ Given(
         kind: "block",
         bestOf: BestOf.from(games),
         rounds: Rounds.from(1),
+        tieBreak: TieBreak.unlessTold,
       },
     };
   },
@@ -69,6 +71,7 @@ Given(
         kind: "block",
         bestOf: BestOf.from(games),
         rounds: Rounds.from(rounds),
+        tieBreak: TieBreak.unlessTold,
       },
     };
   },

@@ -427,6 +427,19 @@ export const russian: Language = {
     // A game withdrawn, said otherwise than a player is.
     "block.gameWithdrawn": "снята",
     "block.losses": "Поражения",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Равенство определяется разницей партий, затем разницей ворот, затем тем, кто кого обыграл.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Равенство определяется разницей ворот, затем тем, кто кого обыграл.",
+    "block.tieBreak.whoBeatWho":
+      "Равенство определяется тем, кто кого обыграл.",
+    "block.tieBreak.other": "Известного способа определения равенства нет.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Виды",
     "competition.view.grid": "Таблица",
@@ -435,7 +448,7 @@ export const russian: Language = {
     "competition.print": "Печать",
     "competition.playedTo": "Игра до {hoops} ворот",
     "blockSummary.ranking":
-      "Места определяются долей выигранных матчей, затем разницей ворот. Регламент самого турнира может расставлять игроков иначе.",
+      "Места определяются долей выигранных матчей. Регламент самого турнира может расставлять игроков иначе.",
     "orderOfPlay.none": "Игр ещё не сыграно.",
     "orderOfPlay.column.game": "Игра",
     "orderOfPlay.column.date": "Дата",
@@ -696,6 +709,11 @@ export const russian: Language = {
     "admin.competition.kind": "Тип",
     "admin.competition.bestOf": "Партий в матче",
     "admin.competition.rounds": "Туры",
+    "admin.competition.tieBreaks": "Дополнительные показатели",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Разница партий, затем разница ворот, затем кто кого обыграл",
+    "admin.competition.tieBreak.who-beat-who": "Кто кого обыграл",
+    "admin.competition.tieBreak.other": "Другое",
     "admin.competition.places": "Места",
     "admin.competition.round": "Раунд {number}",
     "admin.competition.bestOfs": "Партий в матчах",

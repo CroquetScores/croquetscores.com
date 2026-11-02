@@ -170,6 +170,18 @@ Then(
   },
 );
 
+Then(
+  "the competition {string} is answered as going by the tie break {string}",
+  function (this: SpecWorld, name: string, code: string) {
+    const competition = competitionCalled(this, name);
+    assert.ok(
+      competition.kind === "block",
+      `${name} is answered as a ${competition.kind}.`,
+    );
+    assert.equal(competition.tieBreak, code);
+  },
+);
+
 const knockoutCalled = (
   world: SpecWorld,
   name: string,

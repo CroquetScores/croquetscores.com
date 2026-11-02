@@ -113,6 +113,44 @@ Feature: Adding a block to a tournament
       When the tournament is rebuilt from the stream
       Then the tournament's competition "Block A" is played in 3 rounds
 
+  Rule: A block goes by the tie break it is added with
+
+    A block's players who are level on matches won are told apart by its tie
+    break (`TieBreak.feature`). A block added with none goes by net games then
+    net hoops then who beat who (`TieBreak.feature`).
+
+    Scenario: A block added with no tie break goes by net games then net hoops then who beat who
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      When the block "Block A" is added
+      Then the tournament's competition "Block A" goes by the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario Outline: A block added goes by the tie break it was added with
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      And the block is to go by the tie break "<code>"
+      When the block "Block A" is added
+      Then the tournament's competition "Block A" goes by the tie break "<code>"
+
+      Examples:
+        | code                             |
+        | net-games-net-hoops-who-beat-who |
+        | who-beat-who                     |
+        | other                            |
+
+    Scenario: A tie break that is none of them is refused
+      Given a stream where a tournament was created as "Spring Open"
+      And the tournament is rebuilt from the stream
+      And the block is to go by the tie break "net-hoops"
+      When the block "Block A" is added
+      Then it is refused for breaking "TieBreak.Unknown"
+
+    Scenario: A block added with a tie break is rebuilt going by it
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "Block A" was added to it to go by the tie break "who-beat-who"
+      When the tournament is rebuilt from the stream
+      Then the tournament's competition "Block A" goes by the tie break "who-beat-who"
+
   Rule: No two competitions in a tournament have the same id
 
     Scenario: A competition with an id another competition has is refused

@@ -451,6 +451,19 @@ export const italian: Language = {
     // Una partita ritirata, che lo spagnolo dice diversamente da un giocatore.
     "block.gameWithdrawn": "ritirata",
     "block.losses": "Sconfitte",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Gli spareggi si decidono per differenza partite, poi differenza archetti, poi chi ha battuto chi.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Gli spareggi si decidono per differenza archetti, poi chi ha battuto chi.",
+    "block.tieBreak.whoBeatWho":
+      "Gli spareggi si decidono per chi ha battuto chi.",
+    "block.tieBreak.other": "Non esiste un metodo di spareggio noto.",
     // Le tre viste di un girone, offerte sotto il titolo.
     "competition.views": "Viste",
     "competition.view.grid": "Griglia",
@@ -459,7 +472,7 @@ export const italian: Language = {
     "competition.print": "Stampa",
     "competition.playedTo": "Giocata a {hoops} porte",
     "blockSummary.ranking":
-      "In classifica per quota di incontri vinti, poi per differenza archetti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
+      "In classifica per quota di incontri vinti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
     "orderOfPlay.none": "Non è ancora stata giocata nessuna partita.",
     "orderOfPlay.column.game": "Partita",
     "orderOfPlay.column.date": "Data",
@@ -746,6 +759,11 @@ export const italian: Language = {
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Al meglio di",
     "admin.competition.rounds": "Turni",
+    "admin.competition.tieBreaks": "Spareggio",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Differenza partite poi differenza archetti poi chi ha battuto chi",
+    "admin.competition.tieBreak.who-beat-who": "Chi ha battuto chi",
+    "admin.competition.tieBreak.other": "Altro",
     "admin.competition.places": "Posti",
     "admin.competition.round": "Turno {number}",
     "admin.competition.bestOfs": "Al meglio di (per turno)",

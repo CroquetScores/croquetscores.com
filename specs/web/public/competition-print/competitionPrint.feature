@@ -108,6 +108,20 @@ Feature: A competition's page can be printed
       And the page is laid out for the printer
       Then the results are printed
 
+    Scenario: A block's places are printed
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the page is laid out for the printer
+      Then the block's place column is printed
+
+    Scenario: The words beneath a block's grid about its tie break are printed
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the page is laid out for the printer
+      Then the words beneath the block's grid about its tie break are printed
+
     Scenario: Links are not underlined
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       And the page is laid out for the printer
@@ -173,6 +187,16 @@ Feature: A competition's page can be printed
       And the paper is 300 pixels wide
       And the page is laid out for the printer
       Then the pieces of the block's grid have every column once
+
+    Scenario: The words beneath a grid cut in pieces are printed after its last piece
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on
+      And the paper is 300 pixels wide
+      And the page is laid out for the printer
+      Then the words beneath the block's grid about its tie break are printed after its last piece
 
     Scenario: Once the page is printed the grid is whole again
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened with scripting on

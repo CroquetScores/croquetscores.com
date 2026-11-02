@@ -454,6 +454,19 @@ export const spanish: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "retirada",
     "block.losses": "Derrotas",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "Los desempates se deciden por las partidas netas, luego por los aros netos, luego por quién ganó a quién.",
+    "block.tieBreak.netHoopsWhoBeatWho":
+      "Los desempates se deciden por los aros netos, luego por quién ganó a quién.",
+    "block.tieBreak.whoBeatWho":
+      "Los desempates se deciden por quién ganó a quién.",
+    "block.tieBreak.other": "No hay un método de desempate conocido.",
     // The three views of a block, offered beneath its heading.
     "competition.views": "Vistas",
     "competition.view.grid": "Cuadrícula",
@@ -462,7 +475,7 @@ export const spanish: Language = {
     "competition.print": "Imprimir",
     "competition.playedTo": "Se juega a {hoops} aros",
     "blockSummary.ranking":
-      "Ordenados por la proporción de partidos ganados y, después, por los aros netos. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
+      "Ordenados por la proporción de partidos ganados. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",
     "orderOfPlay.column.game": "Partida",
     "orderOfPlay.column.date": "Fecha",
@@ -746,6 +759,11 @@ export const spanish: Language = {
     "admin.competition.kind": "Tipo",
     "admin.competition.bestOf": "Al mejor de",
     "admin.competition.rounds": "Rondas",
+    "admin.competition.tieBreaks": "Desempates",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "Partidas netas, luego aros netos, luego quién ganó a quién",
+    "admin.competition.tieBreak.who-beat-who": "Quién ganó a quién",
+    "admin.competition.tieBreak.other": "Otro",
     "admin.competition.places": "Plazas",
     "admin.competition.round": "Ronda {number}",
     "admin.competition.bestOfs": "Al mejor de (por ronda)",

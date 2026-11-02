@@ -52,17 +52,16 @@ Feature: A block of a tournament, for anybody to read
   nothing, as the games they played do (`withdrawPlayer.feature`): they have
   left the block, and what they brought into it goes with them.
 
-  The players are ranked as the old site's summary ranked them: by the share
-  of their decided matches they have won, highest first, then by their net
-  hoops, most first, and where both are the same, in the block's order. A
-  share rather than a count, so that a player who has played fewer matches
-  is not ranked below one who has simply played more. A player who has
-  decided no match has a share of nothing. A withdrawn player is ranked
-  after everybody who has not withdrawn, whatever they played, since their
-  games count for nothing and would otherwise rank them, with no share and
-  no hoops, above a player still in the block who has played and lost.
-  Whether this is how a tournament places its players is for its regulations
-  to say, and the summary says so.
+  The players are ranked and placed as the block's tie break says
+  (`placingsOfBlock.feature`): by the share of their decided matches they
+  have won, highest first, and those level on that told apart by the tie break
+  the block is answered with (`TieBreak.feature`). Players who cannot be told
+  apart share a place, and where they are in the ranking is the block's order.
+  Each player is answered with their place and whether others share it, and
+  the block with whether any players are level on matches won, which is when
+  a page says how they are told apart. A withdrawn player is ranked after
+  everybody who has not withdrawn, whatever they played, since their games
+  count for nothing, and has no place.
 
   The page is a section of the tournament's, so the tournament is answered
   with it as its players are (`PublicPlayersOfTournament.feature`): its name,
@@ -706,7 +705,7 @@ Feature: A block of a tournament, for anybody to read
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the player of the block "Sam Someone" is answered with 2 games won
 
-  Rule: The players are ranked by the share of their matches they have won, then by their net hoops
+  Rule: The players are ranked by the share of their matches they have won, then by net hoops where the block goes by net games then net hoops then who beat who
 
     Scenario: A player with a greater share of their matches won is ranked higher
       Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
@@ -763,6 +762,88 @@ Feature: A block of a tournament, for anybody to read
       Given "organiser@example.com" has given the player "Chris Third" in "Block A" of "Spring Open" a carry forward of match wins of 1
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then the first player of the block ranked is "Chris Third"
+
+  Rule: The players are placed as the block's tie break places them
+
+    Scenario: A block is answered with the tie break it goes by
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with the tie break "who-beat-who"
+
+    Scenario: A block that was told no tie break is answered with net games then net hoops then who beat who
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario: A player with the greatest share of their matches won is placed first
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with the place 1
+      And the player of the block "Alex Another" is answered with a place that is not shared
+
+    Scenario: Players who cannot be told apart share a place
+      Given the block is to go by the tie break "other"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with the place 1
+      And the player of the block "Sam Someone" is answered with the place 2
+      And the player of the block "Chris Third" is answered with the place 2
+      And the player of the block "Chris Third" is answered with a place that is shared
+
+    Scenario: A block going by who beat who does not tell players apart by their net hoops
+      Given "organiser@example.com" has added the player "Pat Player" to "Spring Open"
+      And the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Player" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Pat Player" 26 to 25 in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Pat Player" 26 to 25 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block B" of "Spring Open"
+      When the block "block-b" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first player of the block ranked is "Sam Someone"
+      And the second player of the block ranked is "Alex Another"
+      And the player of the block "Alex Another" is answered with the place 1
+
+    Scenario: A player who has withdrawn is answered with no place
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the player of the block "Alex Another" is answered with no place
+
+    Scenario: Players level on matches won are answered as level
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with players level on matches won
+
+    Scenario: Nobody is answered as level, or placed, before anything is played
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with no players level on matches won
+      And the player of the block "Sam Someone" is answered with no place
+
+    Scenario: A block is answered with what tells its players apart
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the first thing that tells the block's players apart is answered as "net games"
+      And the second thing that tells the block's players apart is answered as "net hoops"
+      And the third thing that tells the block's players apart is answered as "who beat who"
+
+    Scenario: Players with different shares are answered as not level
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block is answered with no players level on matches won
 
   Rule: Only a block of a tournament a reader is sent to is answered
 

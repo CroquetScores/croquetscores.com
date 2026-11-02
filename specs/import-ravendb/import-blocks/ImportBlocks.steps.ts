@@ -61,6 +61,16 @@ Then(
 );
 
 Then(
+  "the competition kept for {string} on {string} goes by the tie break {string}",
+  async function (this: SpecWorld, id: string, website: string, code: string) {
+    const { inTournament } = await competitionKeptFor(this, id, website);
+    const { shape } = inTournament;
+    assert.ok(shape.kind === "block", `It is a ${shape.kind}.`);
+    assert.equal(shape.tieBreak.code, code);
+  },
+);
+
+Then(
   /^the (second|third) game of the competition kept for "(.*)" on "(.*)" was won by "(.*)"$/,
   async function (
     this: SpecWorld,

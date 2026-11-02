@@ -419,6 +419,17 @@ export const chinese: Language = {
     // A game withdrawn, which Spanish says otherwise than a player.
     "block.gameWithdrawn": "已撤销",
     "block.losses": "负",
+    // The column of places at the end of a block's grid, summary and print,
+    // and what is said beneath each about how players level on matches won
+    // are told apart. Net hoops come first in the second, for a block whose
+    // matches are a single game, where net games would only say again what
+    // wins have.
+    "block.placing": "#",
+    "block.tieBreak.netGamesNetHoopsWhoBeatWho":
+      "平局按净胜局、净胜球门、相互胜负的顺序决定。",
+    "block.tieBreak.netHoopsWhoBeatWho": "平局按净胜球门、相互胜负的顺序决定。",
+    "block.tieBreak.whoBeatWho": "平局按相互胜负决定。",
+    "block.tieBreak.other": "没有已知的平局决胜方法。",
     // The three views of a block, offered beneath its heading.
     "competition.views": "视图",
     "competition.view.grid": "表格",
@@ -427,7 +438,7 @@ export const chinese: Language = {
     "competition.print": "打印",
     "competition.playedTo": "打到 {hoops} 门",
     "blockSummary.ranking":
-      "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
+      "按获胜场次的比例排名。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",
     "orderOfPlay.column.game": "比赛",
     "orderOfPlay.column.date": "日期",
@@ -681,6 +692,11 @@ export const chinese: Language = {
     "admin.competition.kind": "类型",
     "admin.competition.bestOf": "几局制",
     "admin.competition.rounds": "轮数",
+    "admin.competition.tieBreaks": "平局决胜",
+    "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
+      "净胜局，然后净胜球门，然后相互胜负",
+    "admin.competition.tieBreak.who-beat-who": "相互胜负",
+    "admin.competition.tieBreak.other": "其他",
     "admin.competition.places": "名额",
     "admin.competition.round": "第 {number} 轮",
     "admin.competition.bestOfs": "各轮几局制",

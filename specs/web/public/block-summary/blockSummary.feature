@@ -20,11 +20,19 @@ Feature: A block's summary ranks its players
   read as such down the column; none is "0".
 
   The rows are the players ranked (`PublicBlockOfTournament.feature`): by the
-  share of their decided matches they have won, then by their net hoops.
-  Beneath the table the page says so, and that a tournament's own
-  regulations may place its players otherwise, since a ranking that claimed
+  share of their decided matches they have won, and those level on that as the
+  block's tie break says (`placingsOfBlock.feature`). Beneath the table the
+  page says it is ranked by the share of matches won, and that a tournament's
+  own regulations may place its players otherwise, since a ranking that claimed
   to be the final placings would be wrong for any tournament whose
   regulations decide them some other way.
+
+  At the end of each row is the player's place, headed "#": "1" for the first,
+  and "=2" where others share second, as players do who cannot be told apart
+  (`placingsOfBlock.feature`). A withdrawn player has no place, so theirs is
+  blank. Beneath the table, where any players are level on the matches they
+  have won, the page says how they are told apart, as the grid does
+  (`block.feature`).
 
   Like the grid, it is headed by the block's name, offers the block's three
   views with Summary marked as the one being read, and its sections are the
@@ -152,6 +160,97 @@ Feature: A block's summary ranks its players
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
       Then the "Wins" of "Sam Someone" in the summary are "1"
+
+  Rule: At the end of each row is the player's place
+
+    Scenario: The last column is headed #
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the fourth column of the summary is headed "#"
+
+    Scenario: The first player's place is 1
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "#" of "Alex Another" in the summary are "1"
+
+    Scenario: The player after is second
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "#" of "Sam Someone" in the summary are "2"
+
+    Scenario: A place players share is marked with an equals sign
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And the block is to go by the tie break "other"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the "#" of "Sam Someone" in the summary are "=2"
+      And the "#" of "Chris Third" in the summary are "=2"
+
+    Scenario: Nobody has a place before anything is played
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "#" of "Sam Someone" in the summary are ""
+
+    Scenario: A withdrawn player's place is blank
+      Given "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the "#" of "Alex Another" in the summary are ""
+
+  Rule: Beneath the table, where players are level on matches won, the page says how they are told apart
+
+    Scenario: Net games then net hoops then who beat who is said in full
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the page says the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
+
+    Scenario: Net games are left out where each match is a single game
+      Given the block is to be the best of 1
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the page says the words for "block.tieBreak.netHoopsWhoBeatWho"
+
+    Scenario: Who beat who alone is said
+      Given the block is to go by the tie break "who-beat-who"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the page says the words for "block.tieBreak.whoBeatWho"
+
+    Scenario: That there is no known way is said
+      Given the block is to go by the tie break "other"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b/summary" is opened
+      Then the page says the words for "block.tieBreak.other"
+
+    Scenario: Nothing is said where no players are level
+      Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the page does not say the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
 
   Rule: Beneath the table the page says how the players are ranked
 

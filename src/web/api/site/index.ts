@@ -145,6 +145,13 @@ const textOf = (body: unknown, field: string): string => {
   return typeof value === "string" ? value : "";
 };
 
+// The text sent under `field`, and nothing where none was, which a block's
+// update takes as leaving its tie break as it was.
+const optionalTextOf = (body: unknown, field: string): string | undefined => {
+  const value = (body as Record<string, unknown> | null)?.[field];
+  return typeof value === "string" ? value : undefined;
+};
+
 // A number where one was sent, and otherwise one that is no number, which is
 // refused as a best-of or a draw's places are when they are not whole.
 const numberOf = (body: unknown, field: string): number => {
@@ -550,6 +557,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
                   numberOf(body, "rounds"),
                   at,
                   rulesOf(body),
+                  optionalTextOf(body, "tieBreak"),
                 ),
       );
       return reply
@@ -606,6 +614,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
                 numberOf(body, "rounds"),
                 at,
                 rulesOf(body),
+                optionalTextOf(body, "tieBreak"),
               ),
       );
       return reply.code(204).header("cache-control", "no-store").send();

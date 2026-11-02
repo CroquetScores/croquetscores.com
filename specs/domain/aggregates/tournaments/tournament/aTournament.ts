@@ -73,6 +73,9 @@ interface CompetitionSaid {
   rounds?: number;
   // How it is to be played and counted, where the scenario says.
   rules?: CompetitionRulesSaid;
+  // The code of how a block's players level on matches won are to be told
+  // apart, where the scenario says.
+  tieBreak?: string;
 }
 
 interface Scenario {

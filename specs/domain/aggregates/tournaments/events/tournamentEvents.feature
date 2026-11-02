@@ -250,6 +250,8 @@ Feature: The names a tournament's events are kept under
         | a block being added                       | handicap        |
         | a block being added                       | drawsAllowed    |
         | a block being added                       | worldRankings   |
+        | a block being added                       | tieBreak        |
+        | a block being updated                     | tieBreak        |
         | a test being added                        | worldRankings   |
         | a block being updated                     | rounds          |
         | a knockout being added                    | rounds          |
@@ -289,6 +291,9 @@ Feature: The names a tournament's events are kept under
         | a block being added        | drawsAllowed | the text "no"               |
         | a block being added        | worldRankings | the text "no"              |
         | a block being added        | order        | the text "10000"            |
+        | a block being added        | tieBreak     | the number 1                |
+        | a block being added        | tieBreak     | the text "net-hoops"        |
+        | a block being updated      | tieBreak     | the text "other-ways"       |
         | a knockout being added     | rounds       | the text "1, 3"             |
         | a knockout being added     | rounds       | a list holding the text "3" |
         | a player being added       | flag         | the number 1                |

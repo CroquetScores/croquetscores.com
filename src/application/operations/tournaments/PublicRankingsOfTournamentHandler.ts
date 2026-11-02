@@ -1,3 +1,4 @@
+import { standingsOfBlock } from "./standingsOfBlock.js";
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
@@ -118,6 +119,24 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
           },
         ],
       });
+      // The player a block places first where only one is, and nobody where
+      // players cannot be told apart for first, as the block's page does.
+      const winnerOfBlock = (
+        block: Extract<typeof shape, { readonly kind: "block" }>,
+      ): string => {
+        const { placed } = standingsOfBlock(
+          tournament,
+          competition,
+          reference.id,
+          block,
+        );
+        const [first] = placed.ranked;
+        const placing =
+          first === undefined ? undefined : placed.placings.get(first);
+        return first !== undefined && placing?.place === 1 && !placing.shared
+          ? nameOf(first)
+          : "";
+      };
       const results: ResultOfRanking[] = [];
       if (shape.kind === "knockout") {
         const matches = competition.knockoutMatches(
@@ -171,7 +190,11 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
         }
       }
       if (results.length > 0) {
-        competitions.push({ name: reference.name.toString(), results });
+        competitions.push({
+          name: reference.name.toString(),
+          results,
+          winner: shape.kind === "block" ? winnerOfBlock(shape) : undefined,
+        });
       }
     }
     return {

@@ -31,6 +31,14 @@ export interface ResultOfRanking {
 export interface CompetitionOfRanking {
   readonly name: string;
   readonly results: readonly ResultOfRanking[];
+  /**
+   * Who won it, by their world ranking name, where the competition places its
+   * players itself: a block's player placed first (`placingsOfBlock.feature`),
+   * or nothing, as an empty name, where players cannot be told apart for
+   * first. Not there for a competition that does not, whose winner the file
+   * can only guess.
+   */
+  readonly winner?: string | undefined;
 }
 
 /**

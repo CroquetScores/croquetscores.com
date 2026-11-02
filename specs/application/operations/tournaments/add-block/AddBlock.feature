@@ -8,9 +8,10 @@ Feature: Adding a block to a tournament
   else, a scorer among them, is refused with `Tournament.NotAManager`
   (`onlyManagers.feature`).
 
-  The block's name, what each of its matches is the best of and the rounds it
-  is played in are asked their own rules on the way in, and a request that breaks one is refused with
-  `Request.Invalid` and the first rule it breaks. What the tournament asks of
+  The block's name, what each of its matches is the best of, the rounds it
+  is played in and the tie break it goes by are asked their own rules on the
+  way in, and a request that breaks one is refused with `Request.Invalid` and
+  the first rule it breaks. What the tournament asks of
   a competition — a name no other has, a slug unlike every other's, an order
   above the rest — is the tournament's (`addBlock.feature`), and what is said
   here of adding a block is said of adding a knockout (`AddKnockout.feature`)
@@ -87,6 +88,23 @@ Feature: Adding a block to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
       Then it is refused with "Tournament.HandicapInWorldRankings"
 
+  Rule: How the block tells apart players level on matches won is kept
+
+    Scenario: A block asked nothing goes by net games then net hoops then who beat who
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" goes by the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario Outline: A block asked for a tie break goes by it
+      Given the block is to go by the tie break "<code>"
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then the tournament's competition "Block A" goes by the tie break "<code>"
+
+      Examples:
+        | code                             |
+        | net-games-net-hoops-who-beat-who |
+        | who-beat-who                     |
+        | other                            |
+
   Rule: Each value must break none of its own rules
 
     Scenario Outline: A value that breaks a rule is refused for it
@@ -106,6 +124,12 @@ Feature: Adding a block to a tournament
       When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
       Then it is refused with "Request.Invalid"
       And the first rule broken is "Rounds.TooSmall"
+
+    Scenario: A tie break that is none of them is refused for it
+      Given the block is to go by the tie break "net-hoops"
+      When the reader signed in to the account for "organiser@example.com" adds the block "Block A" to "Spring Open"
+      Then it is refused with "Request.Invalid"
+      And the first rule broken is "TieBreak.Unknown"
 
     Scenario: A block that breaks a rule is not added
       Given the block is to be the best of 0
