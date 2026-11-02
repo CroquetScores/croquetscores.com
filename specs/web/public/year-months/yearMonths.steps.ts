@@ -241,3 +241,108 @@ When(
     await settled(this);
   },
 );
+
+// The look of a month: bar of a colour, without a line round it or rounded
+// corners. Read from the button as the browser draws it.
+const styleOf = (found: Locator, property: string): Promise<string> =>
+  found.evaluate(
+    `(element) => getComputedStyle(element).getPropertyValue("${property}")`,
+  );
+
+Then(
+  /^the month "(.*)" has no border$/,
+  async function (this: SpecWorld, name: string) {
+    const toggle = monthNamed(this, name).locator(".year-month-toggle");
+    for (const side of ["top", "right", "bottom", "left"]) {
+      assert.equal(
+        await styleOf(toggle, `border-${side}-width`),
+        "0px",
+        `There is a border on its ${side}.`,
+      );
+    }
+  },
+);
+
+Then(
+  /^the month "(.*)" has square corners$/,
+  async function (this: SpecWorld, name: string) {
+    const toggle = monthNamed(this, name).locator(".year-month-toggle");
+    for (const corner of [
+      "top-left",
+      "top-right",
+      "bottom-right",
+      "bottom-left",
+    ]) {
+      assert.equal(
+        await styleOf(toggle, `border-${corner}-radius`),
+        "0px",
+        `Its ${corner} corner is rounded.`,
+      );
+    }
+  },
+);
+
+// Showing or hiding every month at once ------------------------------------------
+
+const allOf = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main .year-months-all");
+
+When(
+  "the way to show or hide all the months is pressed",
+  async function (this: SpecWorld) {
+    await allOf(this).click();
+    await settled(this);
+  },
+);
+
+Then(
+  /^the way to show or hide all the months says "(Show all|Hide all)"$/,
+  async function (this: SpecWorld, words: string) {
+    assert.equal(
+      (
+        (await allOf(this).locator(".year-months-all-words").textContent()) ??
+        ""
+      ).trim(),
+      words,
+    );
+  },
+);
+
+Then(
+  /^the way to show or hide all the months is marked "(\+|-)"$/,
+  async function (this: SpecWorld, mark: string) {
+    assert.equal(
+      (
+        (await allOf(this).locator(".year-month-mark").textContent()) ?? ""
+      ).trim(),
+      mark,
+    );
+  },
+);
+
+Then(
+  "the way to show all the months is beneath the heading",
+  async function (this: SpecWorld) {
+    const heading = await this.browserPage.locator("main h1").boundingBox();
+    const control = await allOf(this).boundingBox();
+    assert.ok(heading !== null && control !== null, "It is not laid out.");
+    assert.ok(control.y >= heading.y + heading.height);
+  },
+);
+
+Then(
+  "the way to show all the months is above the first month",
+  async function (this: SpecWorld) {
+    const control = await allOf(this).boundingBox();
+    const first = await months(this).first().boundingBox();
+    assert.ok(control !== null && first !== null, "It is not laid out.");
+    assert.ok(control.y + control.height <= first.y);
+  },
+);
+
+Then(
+  "there is no way to show or hide all the months",
+  async function (this: SpecWorld) {
+    assert.equal(await allOf(this).count(), 0);
+  },
+);

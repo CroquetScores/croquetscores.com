@@ -82,6 +82,16 @@ const script = `
           var toggle = month.querySelector(".year-month-toggle");
           toggle.setAttribute("aria-expanded", String(open));
           toggle.querySelector(".year-month-mark").textContent = open ? "-" : "+";
+          var every = root.querySelectorAll('.year-month[data-state="open"]').length === 12;
+          var all = root.querySelector(".year-months-all");
+          all.querySelector(".year-month-mark").textContent = every ? "-" : "+";
+          all.querySelector(".year-months-all-words").textContent = every ? root.dataset.hideAll : root.dataset.showAll;
+          all.dataset.every = String(every);
+        }
+        function reveal(month) {
+          if (month.dataset.state === "open" || month.hasAttribute("aria-busy")) return;
+          if (month.dataset.loaded === searchFor(null)) show(month, true);
+          else load(month, null);
         }
         function load(month, pressed) {
           var body = month.querySelector(".year-month-body");
@@ -127,15 +137,24 @@ const script = `
             .then(function () { if (current()) month.removeAttribute("aria-busy"); });
         }
         root.addEventListener("click", function (event) {
+          if (event.target.closest(".year-months-all") !== null) {
+            // Asked once before any month changes, since each change rewrites
+            // what the control says. A month that fails to load leaves it
+            // offering to show.
+            var hiding = event.target.closest(".year-months-all").dataset.every === "true";
+            Array.prototype.forEach.call(root.querySelectorAll(".year-month"), function (month) {
+              if (hiding) show(month, false);
+              else reveal(month);
+            });
+            return;
+          }
           var toggle = event.target.closest(".year-month-toggle");
           if (toggle !== null) {
             var month = toggle.closest(".year-month");
             if (month.dataset.state === "open") {
               show(month, false);
-            } else if (month.dataset.loaded === searchFor(null)) {
-              show(month, true);
             } else {
-              load(month, null);
+              reveal(month);
             }
             return;
           }
@@ -189,9 +208,10 @@ export const monthsOf = (
           </li>`,
     )
     .join("\n");
-  return `        <section class="year-months" data-base="${escape(base)}" data-failed="${escape(say("year.monthFailed"))}">
+  return `        <section class="year-months" data-base="${escape(base)}" data-failed="${escape(say("year.monthFailed"))}" data-show-all="${escape(say("year.showAll"))}" data-hide-all="${escape(say("year.hideAll"))}">
           <noscript><p class="notice">${escape(say("year.needsScripting"))}</p></noscript>
           <template>
+            <button type="button" class="year-months-all"><span class="year-month-mark" aria-hidden="true">+</span> <span class="year-months-all-words">${escape(say("year.showAll"))}</span></button>
             <ol class="year-month-list">
 ${months}
             </ol>
