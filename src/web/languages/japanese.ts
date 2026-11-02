@@ -993,6 +993,8 @@ export const japanese: Language = {
     "admin.players.many": "選手",
     "admin.players.line": "{line}行目：{words}",
     "AddPlayers.FieldsMissing": "1行目に項目名を書いてください。",
+    "AddPlayers.FirstRowNotFields":
+      "1行目は項目名にしてください。詳しくは{help}をご覧ください。",
     "AddPlayers.NameMissing": "項目にはNameを含めてください。",
     "AddPlayers.FieldNotAllowed":
       "項目に指定できるのは、Name、Representing、Flag、Handicap、WorldRankingPlayerNameです。",

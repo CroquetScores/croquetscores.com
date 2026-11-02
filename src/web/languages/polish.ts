@@ -965,6 +965,8 @@ export const polish: Language = {
     "admin.players.many": "Zawodnicy",
     "admin.players.line": "Wiersz {line}: {words}",
     "AddPlayers.FieldsMissing": "Wpisz nazwy pól w pierwszym wierszu.",
+    "AddPlayers.FirstRowNotFields":
+      "Pierwszy wiersz musi zawierać nazwy pól, więcej informacji znajdziesz w sekcji {help}.",
     "AddPlayers.NameMissing": "Pola muszą obejmować Name.",
     "AddPlayers.FieldNotAllowed":
       "Polem może być Name, Representing, Flag, Handicap lub WorldRankingPlayerName.",

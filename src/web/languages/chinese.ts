@@ -955,6 +955,8 @@ export const chinese: Language = {
     "admin.players.many": "选手",
     "admin.players.line": "第 {line} 行：{words}",
     "AddPlayers.FieldsMissing": "请在第一行写出各字段的名称。",
+    "AddPlayers.FirstRowNotFields":
+      "第一行必须是字段名称,更多信息请参阅{help}。",
     "AddPlayers.NameMissing": "字段必须包含 Name。",
     "AddPlayers.FieldNotAllowed":
       "字段可以是 Name、Representing、Flag、Handicap 或 WorldRankingPlayerName。",

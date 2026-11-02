@@ -25,6 +25,11 @@ import { useFlags } from "../../../../../../useFlags.js";
 // about codes. A name that is no flag's is sent as it is, to be refused as an
 // unknown flag.
 
+// The section of the help on adding many players, which the title bar's icon
+// leads to as well as a refusal of a first line that names no field.
+const helpAddress =
+  "/help/tournament-managers/standard-tournament/players#adding-multiple-players";
+
 interface Props {
   /** The tournament's id. */
   readonly tournament: string;
@@ -110,6 +115,7 @@ export const PlayersDialog = ({
     return {
       code,
       line,
+      help: code === "AddPlayers.FirstRowNotFields" ? helpAddress : undefined,
       words:
         line === undefined
           ? words
@@ -188,7 +194,7 @@ export const PlayersDialog = ({
       cancel={close}
       busy={sending}
       wide
-      help="/help/tournament-managers/standard-tournament/players#adding-multiple-players"
+      help={helpAddress}
     >
       <Field
         name="players"
