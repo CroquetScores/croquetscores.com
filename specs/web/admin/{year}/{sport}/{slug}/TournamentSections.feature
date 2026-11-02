@@ -150,6 +150,50 @@ Feature: The section bar of a tournament and its competitions
       When the page of "Spring Open" is opened
       Then 1 section is offered
 
+  Rule: The bar says what the competitions are now
+
+    A manager adds, changes, moves and archives competitions in the
+    Competitions tab, on the same page as the bar. The bar is the way to a
+    competition, so it follows the tab at once, rather than waiting for the
+    page to be opened again.
+
+    Scenario: A competition added is offered
+      Given the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And "Block B" is typed as the "Name"
+      When "Add" is pressed
+      Then the section "Block B" is offered
+
+    Scenario: A competition changed is offered by its new name
+      Given the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "Block Z" is typed as the "Name"
+      When "Save" is pressed
+      Then the section "Block Z" is offered
+
+    Scenario: A competition changed is no longer offered by its old name
+      Given the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "Block Z" is typed as the "Name"
+      When "Save" is pressed
+      Then the section "Block A" is not offered
+
+    Scenario: A competition archived is no longer offered
+      Given the competitions of "Spring Open" are open
+      When "Archive" is pressed on the competition "Block A"
+      Then the section "Block A" is not offered
+
+    Scenario: A competition restored is offered
+      Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Restore" is pressed on the competition "Block A"
+      Then the section "Block A" is offered
+
+    Scenario: A competition moved up is offered in its new place
+      Given the competitions of "Spring Open" are open
+      When "Up" is pressed on the competition "Final Stage"
+      Then the second section is "Final Stage"
+
   Rule: A scorer is offered the same
 
     Scenario: A scorer is offered the tournament

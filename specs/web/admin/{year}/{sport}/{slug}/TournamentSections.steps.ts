@@ -37,23 +37,33 @@ Then("the page has a section bar", async function (this: SpecWorld) {
   await drawn(this);
 });
 
+// The bar is drawn again a moment after something on the page changes what it
+// holds, so a claim about what it offers is given a few seconds to come true
+// before it is called false. A claim that is true at once costs nothing.
+const settles = async (
+  world: SpecWorld,
+  holds: (found: readonly string[]) => boolean,
+): Promise<void> => {
+  const until = Date.now() + 5000;
+  let found = await labels(world);
+  while (!holds(found) && Date.now() < until) {
+    await world.browserPage.waitForTimeout(100);
+    found = await labels(world);
+  }
+  assert.ok(holds(found), `The section bar offers ${JSON.stringify(found)}.`);
+};
+
 Then(
   "the section {string} is offered",
   async function (this: SpecWorld, label: string) {
-    assert.ok(
-      (await labels(this)).includes(label),
-      `The section bar offers ${JSON.stringify(await labels(this))}.`,
-    );
+    await settles(this, (found) => found.includes(label));
   },
 );
 
 Then(
   "the section {string} is not offered",
   async function (this: SpecWorld, label: string) {
-    assert.ok(
-      !(await labels(this)).includes(label),
-      `The section bar offers ${JSON.stringify(await labels(this))}.`,
-    );
+    await settles(this, (found) => !found.includes(label));
   },
 );
 
@@ -67,7 +77,7 @@ Then(
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) section is "([^"]*)"$/,
   async function (this: SpecWorld, which: string, label: string) {
-    assert.equal((await labels(this))[places.indexOf(which)], label);
+    await settles(this, (found) => found[places.indexOf(which)] === label);
   },
 );
 
