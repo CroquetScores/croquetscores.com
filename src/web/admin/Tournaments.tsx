@@ -697,6 +697,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                       turnTo(page - 1);
                     }}
                   >
+                    <span aria-hidden="true">&lt;&lt;</span>{" "}
                     {say("tournamentsInDays.previous")}
                   </a>
                 ) : null}{" "}
@@ -719,7 +720,8 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                       turnTo(page + 1);
                     }}
                   >
-                    {say("tournamentsInDays.next")}
+                    {say("tournamentsInDays.next")}{" "}
+                    <span aria-hidden="true">&gt;&gt;</span>
                   </a>
                 ) : null}
               </p>

@@ -842,3 +842,38 @@ Then(
     for (const weight of weights) assert.ok(weight < 700, String(weight));
   },
 );
+
+// The filter's fields by what each is chosen by, as tall as the browser draws
+// them. A field is a list or a day, whichever its name is for.
+const filterFieldBox = async (
+  world: SpecWorld,
+  field: string,
+): Promise<{ readonly height: number }> => {
+  const box = await world.browserPage
+    .locator(
+      `.tournament-filter select[name="${field}"], .tournament-filter input[name="${field}"]`,
+    )
+    .boundingBox();
+  assert.ok(box !== null, `The filter has no ${field}.`);
+  return box;
+};
+
+Then(
+  /^the filter's (country|region|sport|From|To) is at least (\d+) pixels tall$/,
+  async function (this: SpecWorld, field: string, least: string) {
+    const { height } = await filterFieldBox(this, field.toLowerCase());
+    assert.ok(height >= Number(least), `${String(height)} is shorter.`);
+  },
+);
+
+Then(
+  /^the filter's (From|To|sport|region) is as tall as its country$/,
+  async function (this: SpecWorld, field: string) {
+    const one = await filterFieldBox(this, field.toLowerCase());
+    const other = await filterFieldBox(this, "country");
+    assert.ok(
+      Math.abs(one.height - other.height) < 1,
+      `${String(one.height)} is not as tall as ${String(other.height)}.`,
+    );
+  },
+);

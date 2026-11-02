@@ -26,6 +26,11 @@ Feature: A page lists the tournaments starting from one day to another
   the page's number is in the address, so a page can be linked to and the back
   button undoes a turn.
 
+  The way to the previous page is written "<< Previous" and the way to the next
+  "Next >>", the marks pointing the way the page turns. They are drawn for
+  those who see them and left out of what a screen reader says, which says
+  "Previous" and "Next" as it would without them.
+
   A page beyond the last, which a reader whose list shrank might open from a
   link they kept, sends them to the last page rather than showing nothing.
 
@@ -138,14 +143,26 @@ Feature: A page lists the tournaments starting from one day to another
       When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
       Then the way to turn to the next page is not offered
 
+    Scenario: The way to the previous page is marked with two arrows pointing back
+      When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
+      Then the way to turn to the previous page reads "<< Previous"
+
+    Scenario: The way to the next page is marked with two arrows pointing on
+      When the tournaments from "2026-03-01" to "2026-03-31" are opened
+      Then the way to turn to the next page reads "Next >>"
+
+    Scenario: A screen reader is not read the arrows
+      When the tournaments from "2026-03-01" to "2026-03-31" are opened
+      Then the way to turn to the next page is named "Next"
+
     Scenario: Pressing Next lists the next page
       Given the tournaments from "2026-03-01" to "2026-03-31" are open
-      When "Next" is pressed
+      When the way to turn to the next page is pressed
       Then 1 of the days' tournaments is listed
 
     Scenario: Pressing Previous lists the page before
       Given the tournaments from "2026-03-01" to "2026-03-31" are open at page 2
-      When "Previous" is pressed
+      When the way to turn to the previous page is pressed
       Then 100 of the days' tournaments are listed
 
     Scenario: A page beyond the last is sent to the last page
@@ -174,13 +191,13 @@ Feature: A page lists the tournaments starting from one day to another
 
     Scenario: The days are kept
       Given the tournaments from "2026-03-01" to "2026-03-31" are open
-      When "Next" is pressed
+      When the way to turn to the next page is pressed
       Then "2026-03-01" is From
 
     Scenario: The sorting is kept
       Given the tournaments from "2026-03-01" to "2026-03-31" are open
       And the column "Name" of the days' tournaments is pressed
-      When "Next" is pressed
+      When the way to turn to the next page is pressed
       Then the column "Name" of the days' tournaments is marked as sorted from the smallest
 
   Rule: A filter that cannot be is the reader's mistake

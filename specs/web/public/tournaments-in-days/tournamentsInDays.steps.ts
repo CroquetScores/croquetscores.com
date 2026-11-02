@@ -162,3 +162,40 @@ Then(
     );
   },
 );
+
+const wayTo = (world: SpecWorld, which: string) =>
+  world.browserPage.locator(
+    `.tournament-pages a[rel="${which === "previous" ? "prev" : "next"}"]`,
+  );
+
+// What a sighted reader reads, arrows and all, with the space the markup puts
+// between them taken as one.
+Then(
+  /^the way to turn to the (previous|next) page reads "(.*)"$/,
+  async function (this: SpecWorld, which: string, words: string) {
+    await drawn(this);
+    assert.equal(
+      ((await wayTo(this, which).textContent()) ?? "")
+        .replace(/\s+/g, " ")
+        .trim(),
+      words,
+    );
+  },
+);
+
+// What a screen reader is told, which is the link without what is hidden from
+// it.
+Then(
+  /^the way to turn to the (previous|next) page is named "(.*)"$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    await drawn(this);
+    const link = wayTo(this, which);
+    let said = (await link.textContent()) ?? "";
+    for (const hidden of await link
+      .locator('[aria-hidden="true"]')
+      .allTextContents()) {
+      said = said.replace(hidden, "");
+    }
+    assert.equal(said.replace(/\s+/g, " ").trim(), name);
+  },
+);

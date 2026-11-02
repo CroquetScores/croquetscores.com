@@ -972,6 +972,10 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then every word in the filter is in the test locale
 
+    Scenario: The days are as tall as the lists
+      When the admin is opened
+      Then the filter's From is as tall as its country
+
     Scenario: The filter is no wider than a phone
       When the admin is opened
       Then the page is no wider than the window
@@ -1105,6 +1109,10 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened at "/admin/2026?page=2"
       Then the way to turn to the previous page is offered
       And the way to turn to the next page is not offered
+
+    Scenario: The ways to turn are marked with arrows
+      When the admin is opened at "/admin/2026?page=2"
+      Then the way to turn to the previous page reads "<< Previous"
 
     Scenario: Pressing Next lists the next page
       Given the admin is open

@@ -112,8 +112,12 @@ export const registerTournamentsInDaysPage = (
     }
     const years = await mediator.query(new TournamentYears(website.host));
 
-    const link = (words: string, at: number, rel: string): string =>
-      `<a rel="${rel}" href="${escape(addressAt(request, at))}">${escape(words)}</a>`;
+    // The arrows point the way the page turns, and are left out of what a
+    // screen reader says, since "Previous" says it already.
+    const link = (words: string, at: number, rel: "prev" | "next"): string => {
+      const arrows = `<span aria-hidden="true">${rel === "prev" ? "&lt;&lt;" : "&gt;&gt;"}</span>`;
+      return `<a rel="${rel}" href="${escape(addressAt(request, at))}">${rel === "prev" ? `${arrows} ${escape(words)}` : `${escape(words)} ${arrows}`}</a>`;
+    };
     const turning =
       answered.lastPage === 1
         ? ""

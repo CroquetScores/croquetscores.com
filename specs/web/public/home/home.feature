@@ -1004,6 +1004,29 @@ Feature: The home page lists recent results and upcoming tournaments
       When "Filter" is pressed
       Then the notice about tournaments before November 2026 is not shown
 
+  Rule: Every field of the filter is as tall as a thumb, and as tall as the others
+
+    The country, the region, the sport and the two days are chosen from side by
+    side, so a field a few pixels shorter than its neighbour looks like a
+    mistake. Each is at least 44 pixels tall, as anything meant to be pressed
+    is (`STYLE.md`), and they are all the same height.
+
+    Scenario: The country list is as tall as a thumb
+      Given the home page is open
+      Then the filter's country is at least 44 pixels tall
+
+    Scenario: From is as tall as the country list
+      Given the home page is open
+      Then the filter's From is as tall as its country
+
+    Scenario: To is as tall as the country list
+      Given the home page is open
+      Then the filter's To is as tall as its country
+
+    Scenario: The sport list is as tall as the country list
+      Given the home page is open
+      Then the filter's sport is as tall as its country
+
   Rule: A filter that cannot be is the reader's mistake
 
     Scenario: A country there is not is refused
