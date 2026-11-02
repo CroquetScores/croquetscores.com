@@ -122,6 +122,7 @@ Then(
 Then(
   "the page is said to be {string}",
   async function (this: SpecWorld, words: string) {
+    await drawn(this);
     assert.equal(
       (
         await this.browserPage
@@ -134,12 +135,23 @@ Then(
 );
 
 Then("no page is said", async function (this: SpecWorld) {
+  await drawn(this);
   assert.equal(await this.browserPage.locator(".tournament-pages").count(), 0);
 });
+
+// The admin draws its list once it has been asked for, so a page is read only
+// once it has a row; the public pages are drawn whole, and have one already.
+const drawn = async (world: SpecWorld): Promise<void> => {
+  await world.browserPage
+    .locator(".tournaments > .tournament, .tournament-list tbody tr")
+    .first()
+    .waitFor();
+};
 
 Then(
   /^the way to turn to the (previous|next) page is (not )?offered$/,
   async function (this: SpecWorld, which: string, not: string | undefined) {
+    await drawn(this);
     assert.equal(
       await this.browserPage
         .locator(

@@ -1059,7 +1059,9 @@ Feature: The admin lists the reader's tournaments
       Then the tournament "Autumn Open" is listed
 
     Scenario: Choosing another year clears the days
-      Given the admin for 2026 is open
+      Given "organiser@example.com" has created the tournament "Winter Open"
+      And the tournament "Winter Open" starts on "2025-06-07"
+      And the admin for 2026 is open
       And "2026-10-01" is chosen as From
       And "2026-10-15" is chosen as To
       When the year 2025 is chosen
