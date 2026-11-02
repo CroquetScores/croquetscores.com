@@ -446,6 +446,30 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Edit" is pressed on the test "AUS v ENG"
       Then "Played with handicaps" is ticked
 
+  Rule: A test asks the most hoops a game in it is played to
+
+    A test is asked "Maximum hoops" as every competition is
+    (`competition.feature`), beginning on the usual for the sport.
+
+    Scenario: The dialog asks for the most hoops
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog asks for "Maximum hoops"
+
+    Scenario: A new test begins on 26 hoops
+      Given the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then "Maximum hoops" says "26"
+
+    Scenario: A test added with the most hoops typed is kept so
+      Given the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      And the team "Australia" is chosen as "Team A"
+      And the team "England" is chosen as "Team B"
+      And "14" is typed as the "Maximum hoops"
+      When "Add" is pressed
+      Then the test "AUS v ENG" of "Spring Tests" has a maximum of 14 hoops
+
   Rule: Add adds the test as it was asked for
 
     Scenario: The test added is one of the tournament's tests

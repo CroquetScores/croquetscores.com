@@ -106,6 +106,24 @@ Feature: A block's page shows its results as a grid
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then the first score where "Sam Someone" meets "Alex Another" is "26"
 
+  Rule: A block played to other than the usual number of hoops says so
+
+    Scenario: A block played to 14 hoops says so
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the block "Short Block" to "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/short-block" is opened
+      Then the competition says it is played to 14 hoops
+
+    Scenario: A block played to the usual number of hoops says nothing of it
+      When the page at "/2026/ac/spring-open/competitions/block-a" is opened
+      Then the competition does not say how many hoops it is played to
+
+    Scenario: A block with no most says nothing of it
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the block "Open Block" to "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/open-block" is opened
+      Then the competition does not say how many hoops it is played to
+
   Rule: A row for each player, in the block's order
 
     Scenario: The players' rows are in the block's order

@@ -318,3 +318,22 @@ Then(
     assert.equal((await shapeOf(this, tournament, name)).group, undefined);
   },
 );
+
+Then(
+  /^the test "([^"]*)" of "([^"]*)" has a maximum of (\d+) hoops$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    hoops: string,
+  ) {
+    let maximumHoops: number | null | undefined;
+    await eventually(this, async () => {
+      maximumHoops = testNamed(
+        await load(this, tournamentNamed(this, tournament)),
+        name,
+      ).rules.maximumHoops;
+    });
+    assert.equal(maximumHoops, Number(hoops));
+  },
+);

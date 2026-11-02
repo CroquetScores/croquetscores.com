@@ -82,7 +82,14 @@ export interface BlockToRead {
     readonly bestOf: number;
     /** How many matches of it two of its players play: one unless it says. */
     readonly rounds: number;
+    /** The most hoops a game in it is played to, or null where it has no most. */
+    readonly maximumHoops: number | null;
   };
+  /**
+   * The most hoops a game of the tournament's sport is played to unless a
+   * block says otherwise, so that the page can say only what is unusual.
+   */
+  readonly usualMaximumHoops: number;
   /** Every player entered in it, withdrawn or not, in the block's order. */
   readonly players: readonly PlayerOfBlock[];
   /**

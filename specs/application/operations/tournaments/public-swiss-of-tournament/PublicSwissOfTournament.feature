@@ -127,6 +127,33 @@ Feature: A Swiss of a tournament, for anybody to read
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered is found at "2026/gc/spring-open"
 
+  Rule: The Swiss is answered with the most hoops a game in it is played to
+
+    Its page says so where it is not the usual for the sport
+    (`swiss.feature`), so the Swiss is answered with the most it has and the
+    sport's usual is the tournament's to say. A Swiss with no most is
+    answered with none.
+
+    Scenario: A Swiss added without saying is answered with the usual
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the Swiss answered has a maximum of 26 hoops
+
+    Scenario: A Swiss added with a most is answered with it
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the Swiss "Short Swiss" to "Spring Open"
+      When the Swiss "short-swiss" of the tournament at "2026/ac/spring-open" is asked for
+      Then the Swiss answered has a maximum of 14 hoops
+
+    Scenario: A Swiss added with no most is answered with none
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the Swiss "Open Swiss" to "Spring Open"
+      When the Swiss "open-swiss" of the tournament at "2026/ac/spring-open" is asked for
+      Then the Swiss answered has no maximum number of hoops
+
+    Scenario: The sport's usual is answered with the Swiss
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the Swiss answered has the usual of 26 hoops
+
   Rule: Every player entered in the Swiss is answered, in the Swiss's order
 
     Scenario: The players are answered in the Swiss's order

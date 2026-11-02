@@ -457,6 +457,7 @@ export const italian: Language = {
     "competition.view.summary": "Riepilogo",
     "competition.view.orderOfPlay": "Programma",
     "competition.print": "Stampa",
+    "competition.playedTo": "Giocata a {hoops} porte",
     "blockSummary.ranking":
       "In classifica per quota di incontri vinti, poi per differenza archetti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
     "orderOfPlay.none": "Non è ancora stata giocata nessuna partita.",
@@ -538,6 +539,7 @@ export const italian: Language = {
     "admin.rules.drawsAllowed": "Ammette i pareggi",
     "admin.tournament.levelTestsDrawn": "I test in parità sono pareggiati",
     "admin.rules.worldRankings": "Vale per le classifiche mondiali",
+    "admin.rules.maximumHoops": "Numero massimo di porte",
     "admin.tournament.national": "Evento di livello nazionale",
     "admin.tournament.international": "Evento di livello internazionale",
     // Un rifiuto senza parole proprie, sopra i campi.
@@ -743,6 +745,8 @@ export const italian: Language = {
       "Un turno non può essere cambiato dopo che si è giocata una partita in un turno successivo.",
     "Tournament.CompetitionNameTaken":
       "Un'altra competizione di questo torneo ha già questo nome.",
+    "Tournament.MaximumHoopsInvalid":
+      "Inserisci un numero intero di porte, almeno 1, oppure lascia vuoto per nessun massimo.",
     "BestOf.NotWhole": "Inserisci un numero intero di partite.",
     "BestOf.TooSmall": "Un incontro deve essere al meglio di almeno 1 partita.",
     "Rounds.NotWhole": "Inserisci un numero intero di turni.",

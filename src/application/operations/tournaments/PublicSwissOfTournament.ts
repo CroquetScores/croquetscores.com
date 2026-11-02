@@ -86,7 +86,16 @@ export interface SwissToRead {
   readonly commentariesChanged: readonly CommentaryChanged[];
   /** The tournament's competitions in use, in its order, for its sections. */
   readonly competitions: readonly CompetitionOfTournament[];
-  readonly swiss: { readonly name: string };
+  readonly swiss: {
+    readonly name: string;
+    /** The most hoops a game in it is played to, or null where it has no most. */
+    readonly maximumHoops: number | null;
+  };
+  /**
+   * The most hoops a game of the tournament's sport is played to unless a
+   * competition says otherwise, so that the page can say only what is unusual.
+   */
+  readonly usualMaximumHoops: number;
   /** Every player entered in it, withdrawn or not, in the Swiss's order. */
   readonly players: readonly PlayerOfSwiss[];
   /**

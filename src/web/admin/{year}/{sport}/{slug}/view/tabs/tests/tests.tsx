@@ -26,6 +26,8 @@ interface Props {
   readonly address: string;
   /** Whether its sport has world rankings, which a competition may count towards. */
   readonly ranked: boolean;
+  /** The most hoops a game of the sport is played to unless one says otherwise. */
+  readonly usualMaximumHoops: number;
   /**
    * The reader's part in the tournament. A scorer is shown the tests in use
    * alone, as the API answers them, and can only view them.
@@ -101,6 +103,7 @@ export const TestsTab = ({
   part,
   toTeams,
   ranked,
+  usualMaximumHoops,
 }: Props): React.JSX.Element => {
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // How many teams are in use, which is whether a test can be added. A
@@ -331,6 +334,7 @@ export const TestsTab = ({
         <TestDialog
           tournament={tournament}
           ranked={ranked}
+          usualMaximumHoops={usualMaximumHoops}
           address={address}
           test={editing}
           kept={() => {

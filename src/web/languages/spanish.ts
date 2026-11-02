@@ -460,6 +460,7 @@ export const spanish: Language = {
     "competition.view.summary": "Resumen",
     "competition.view.orderOfPlay": "Orden de juego",
     "competition.print": "Imprimir",
+    "competition.playedTo": "Se juega a {hoops} aros",
     "blockSummary.ranking":
       "Ordenados por la proporción de partidos ganados y, después, por los aros netos. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",
@@ -540,6 +541,7 @@ export const spanish: Language = {
     "admin.tournament.levelTestsDrawn":
       "Los tests igualados se dan por empatados",
     "admin.rules.worldRankings": "Cuenta para los rankings mundiales",
+    "admin.rules.maximumHoops": "Máximo de aros",
     "admin.tournament.national": "Evento de nivel nacional",
     "admin.tournament.international": "Evento de nivel internacional",
     // A refusal with no words of its own, above the fields.
@@ -744,6 +746,8 @@ export const spanish: Language = {
       "No se puede cambiar una ronda una vez jugada una partida en una ronda posterior.",
     "Tournament.CompetitionNameTaken":
       "Otra competición de este torneo ya tiene ese nombre.",
+    "Tournament.MaximumHoopsInvalid":
+      "Introduzca un número entero de aros, al menos 1, o deje el campo vacío si no hay máximo.",
     "BestOf.NotWhole": "Introduce un número entero de partidas.",
     "BestOf.TooSmall": "Un partido debe ser al mejor de al menos 1 partida.",
     "Rounds.NotWhole": "Introduce un número entero de rondas.",

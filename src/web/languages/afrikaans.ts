@@ -458,6 +458,7 @@ export const afrikaans: Language = {
     "competition.view.summary": "Opsomming",
     "competition.view.orderOfPlay": "Speelvolgorde",
     "competition.print": "Druk",
+    "competition.playedTo": "Gespeel tot {hoops} poorte",
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen, dan volgens netto hoepels. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",
@@ -537,6 +538,7 @@ export const afrikaans: Language = {
     "admin.rules.drawsAllowed": "Laat gelykopuitslae toe",
     "admin.tournament.levelTestsDrawn": "Gelyke toetse is gelykop",
     "admin.rules.worldRankings": "Tel vir wêreldranglyste",
+    "admin.rules.maximumHoops": "Maksimum poorte",
     "admin.tournament.national": "Byeenkoms op nasionale vlak",
     "admin.tournament.international": "Byeenkoms op internasionale vlak",
     // A refusal with no words of its own, above the fields.
@@ -736,6 +738,8 @@ export const afrikaans: Language = {
       "'n Ronde kan nie verander word nadat 'n spel in 'n latere ronde gespeel is nie.",
     "Tournament.CompetitionNameTaken":
       "Nog 'n kompetisie in hierdie toernooi het reeds daardie naam.",
+    "Tournament.MaximumHoopsInvalid":
+      "Voer 'n heelgetal poorte in, minstens 1, of laat dit leeg vir geen maksimum.",
     "BestOf.NotWhole": "Voer 'n heelgetal spelle in.",
     "BestOf.TooSmall": "'n Wedstryd moet die beste van minstens 1 spel wees.",
     "Rounds.NotWhole": "Voer 'n heelgetal rondtes in.",

@@ -91,6 +91,7 @@ export const competitionOfKindForReaders = <
 ): {
   readonly reference: CompetitionInTournament["reference"];
   readonly shape: Extract<CompetitionInTournament["shape"], { kind: Kind }>;
+  readonly rules: CompetitionInTournament["rules"];
 } => {
   const found = tournament.competitions.find(
     ({ reference }) =>
@@ -102,13 +103,14 @@ export const competitionOfKindForReaders = <
       "The tournament has no such competition.",
     );
   }
-  const { reference, shape } = found;
+  const { reference, shape, rules } = found;
   if (shape.kind !== kind) {
     throw new TournamentOperationRefused(refusals.notOfKind, refusals.sentence);
   }
   return {
     reference,
     shape: shape as Extract<CompetitionInTournament["shape"], { kind: Kind }>,
+    rules,
   };
 };
 

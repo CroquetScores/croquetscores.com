@@ -214,3 +214,17 @@ Then(
     assert.equal(playerAnswered(this, name).netHoops, Number(count));
   },
 );
+
+Then(
+  /^the block answered has a maximum of (\d+) hoops$/,
+  function (this: SpecWorld, hoops: string) {
+    assert.equal(answered(this).block.maximumHoops, Number(hoops));
+  },
+);
+
+Then(
+  "the block answered has no maximum number of hoops",
+  function (this: SpecWorld) {
+    assert.equal(answered(this).block.maximumHoops, null);
+  },
+);

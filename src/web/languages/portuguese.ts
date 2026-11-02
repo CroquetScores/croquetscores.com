@@ -453,6 +453,7 @@ export const portuguese: Language = {
     "competition.view.summary": "Resumo",
     "competition.view.orderOfPlay": "Ordem de jogo",
     "competition.print": "Imprimir",
+    "competition.playedTo": "Jogado a {hoops} arcos",
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas e, depois, pelo saldo de arcos. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",
@@ -532,6 +533,7 @@ export const portuguese: Language = {
     "admin.rules.drawsAllowed": "Permite empates",
     "admin.tournament.levelTestsDrawn": "Testes igualados são empates",
     "admin.rules.worldRankings": "Conta para o ranking mundial",
+    "admin.rules.maximumHoops": "Máximo de arcos",
     "admin.tournament.national": "Evento de nível nacional",
     "admin.tournament.international": "Evento de nível internacional",
     // A refusal with no words of its own, above the fields.
@@ -730,6 +732,8 @@ export const portuguese: Language = {
       "Uma rodada não pode ser alterada depois que um jogo foi disputado em uma rodada posterior.",
     "Tournament.CompetitionNameTaken":
       "Outra competição deste torneio já tem esse nome.",
+    "Tournament.MaximumHoopsInvalid":
+      "Introduza um número inteiro de arcos, pelo menos 1, ou deixe vazio para não haver máximo.",
     "BestOf.NotWhole": "Digite um número inteiro de jogos.",
     "BestOf.TooSmall": "Uma partida deve ser o melhor de pelo menos 1 jogo.",
     "Rounds.NotWhole": "Digite um número inteiro de rodadas.",

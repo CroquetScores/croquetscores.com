@@ -131,6 +131,33 @@ Feature: A knockout of a tournament, for anybody to read
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then the tournament answered is found at "2026/gc/spring-open"
 
+  Rule: The knockout is answered with the most hoops a game in it is played to
+
+    Its page says so where it is not the usual for the sport
+    (`knockout.feature`), so the knockout is answered with the most it has and the
+    sport's usual is the tournament's to say. A knockout with no most is
+    answered with none.
+
+    Scenario: A knockout added without saying is answered with the usual
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered has a maximum of 26 hoops
+
+    Scenario: A knockout added with a most is answered with it
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the knockout "Short Knockout" to "Spring Open"
+      When the knockout "short-knockout" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered has a maximum of 14 hoops
+
+    Scenario: A knockout added with no most is answered with none
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the knockout "Open Knockout" to "Spring Open"
+      When the knockout "open-knockout" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered has no maximum number of hoops
+
+    Scenario: The sport's usual is answered with the knockout
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered has the usual of 26 hoops
+
   Rule: Its rounds are answered, first round first, each with what its matches are the best of
 
     Scenario: Every round is answered

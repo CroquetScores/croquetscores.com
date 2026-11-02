@@ -441,6 +441,7 @@ export const welsh: Language = {
     "competition.view.summary": "Crynodeb",
     "competition.view.orderOfPlay": "Trefn chwarae",
     "competition.print": "Argraffu",
+    "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
@@ -514,6 +515,7 @@ export const welsh: Language = {
     "admin.rules.drawsAllowed": "Caniatáu canlyniadau cyfartal",
     "admin.tournament.levelTestsDrawn": "Cyfrif profion cyfartal yn gyfartal",
     "admin.rules.worldRankings": "Yn cyfrif tuag at restr detholion y byd",
+    "admin.rules.maximumHoops": "Uchafswm cylchau",
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
     // A refusal with no words of its own, above the fields.
@@ -709,6 +711,8 @@ export const welsh: Language = {
       "Ni ellir newid rownd ar ôl chwarae gêm mewn rownd ddiweddarach.",
     "Tournament.CompetitionNameTaken":
       "Mae gan gystadleuaeth arall yn y twrnamaint hwn yr enw hwnnw eisoes.",
+    "Tournament.MaximumHoopsInvalid":
+      "Rhowch nifer cyfan o gylchau, o leiaf 1, neu gadewch yn wag am ddim uchafswm.",
     "BestOf.NotWhole": "Rhowch nifer cyfan o gemau.",
     "BestOf.TooSmall": "Rhaid i gêm fod yr orau o 1 gêm o leiaf.",
     "Rounds.NotWhole": "Rhowch nifer cyfan o rowndiau.",

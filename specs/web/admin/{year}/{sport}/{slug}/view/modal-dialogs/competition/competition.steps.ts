@@ -468,3 +468,25 @@ Then(
     );
   },
 );
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" has a maximum of (\d+) hoops$/,
+  async function (
+    this: SpecWorld,
+    name: string,
+    tournament: string,
+    hoops: string,
+  ) {
+    assert.equal(
+      (await rulesOf(this, tournament, name)).maximumHoops,
+      Number(hoops),
+    );
+  },
+);
+
+Then(
+  /^the competition "([^"]*)" of "([^"]*)" has no maximum number of hoops$/,
+  async function (this: SpecWorld, name: string, tournament: string) {
+    assert.equal((await rulesOf(this, tournament, name)).maximumHoops, null);
+  },
+);

@@ -27,6 +27,10 @@ export class TestAdded extends DomainEvent {
     readonly handicap: boolean,
     readonly drawsAllowed: boolean,
     readonly worldRankings: boolean,
+    // The most hoops a game is played to, or null for no most. Left out by an
+    // event kept before it was said, which the tournament then reads as the
+    // usual for its sport.
+    readonly maximumHoops: number | null | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

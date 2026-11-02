@@ -459,6 +459,7 @@ export const french: Language = {
     "competition.view.summary": "Récapitulatif",
     "competition.view.orderOfPlay": "Ordre de jeu",
     "competition.print": "Imprimer",
+    "competition.playedTo": "Joué en {hoops} arceaux",
     "blockSummary.ranking":
       "Classement selon la part de matchs gagnés, puis selon la différence de arceaux. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n'a encore été jouée.",
@@ -539,6 +540,7 @@ export const french: Language = {
     "admin.tournament.levelTestsDrawn":
       "Les rencontres à égalité sont déclarées nulles",
     "admin.rules.worldRankings": "Compte pour les classements mondiaux",
+    "admin.rules.maximumHoops": "Nombre maximal d'arceaux",
     "admin.tournament.national": "Événement de niveau national",
     "admin.tournament.international": "Événement de niveau international",
     // A refusal with no words of its own, above the fields.
@@ -745,6 +747,8 @@ export const french: Language = {
       "Un tour ne peut pas être modifié dès qu'une partie a été jouée dans un tour suivant.",
     "Tournament.CompetitionNameTaken":
       "Une autre compétition de ce tournoi porte déjà ce nom.",
+    "Tournament.MaximumHoopsInvalid":
+      "Saisissez un nombre entier d'arceaux, au moins 1, ou laissez vide pour aucun maximum.",
     "BestOf.NotWhole": "Saisissez un nombre entier de parties.",
     "BestOf.TooSmall":
       "Un match doit se jouer au meilleur d'au moins 1 partie.",

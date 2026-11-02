@@ -29,6 +29,8 @@ export interface CompetitionAsPaged {
    * competition of it may count towards. Nothing where it has none.
    */
   readonly worldRankingSport: string | undefined;
+  /** The most hoops a game of the sport is played to unless a competition says otherwise. */
+  readonly usualMaximumHoops: number;
 }
 
 /**

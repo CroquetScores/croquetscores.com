@@ -414,6 +414,7 @@ export const polish: Language = {
     "competition.view.summary": "Podsumowanie",
     "competition.view.orderOfPlay": "Kolejność gier",
     "competition.print": "Drukuj",
+    "competition.playedTo": "Gra do {hoops} bramek",
     "blockSummary.ranking":
       "Kolejność według odsetka wygranych meczów, potem według bilansu bramek. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
     "orderOfPlay.none": "Nie rozegrano jeszcze żadnej gry.",
@@ -479,6 +480,7 @@ export const polish: Language = {
     "admin.rules.drawsAllowed": "Dopuszcza remisy",
     "admin.tournament.levelTestsDrawn": "Wyrównane testy kończą się remisem",
     "admin.rules.worldRankings": "Liczy się do rankingów światowych",
+    "admin.rules.maximumHoops": "Maksymalna liczba bramek",
     "admin.tournament.national": "Wydarzenie rangi krajowej",
     "admin.tournament.international": "Wydarzenie rangi międzynarodowej",
     "admin.tournament.otherwise": "Tego nie można przyjąć w tej postaci.",
@@ -661,6 +663,8 @@ export const polish: Language = {
       "Rundy nie można zmienić, gdy w późniejszej rundzie rozegrano już grę.",
     "Tournament.CompetitionNameTaken":
       "Inna konkurencja w tym turnieju ma już taką nazwę.",
+    "Tournament.MaximumHoopsInvalid":
+      "Wpisz liczbę całkowitą bramek, co najmniej 1, albo zostaw puste, aby nie było limitu.",
     "BestOf.NotWhole": "Wpisz całkowitą liczbę gier.",
     "BestOf.TooSmall": "Mecz musi toczyć się co najmniej do 1 gry.",
     "Rounds.NotWhole": "Wpisz całkowitą liczbę rund.",

@@ -54,7 +54,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       query.address,
       "PublicKnockoutOfTournament",
     );
-    const { reference, shape } = competitionOfKindForReaders(
+    const { reference, shape, rules } = competitionOfKindForReaders(
       tournament,
       query.slug,
       "knockout",
@@ -160,7 +160,11 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address,
       competitions: competitionsInUse(tournament),
-      knockout: { name: reference.name.toString() },
+      knockout: {
+        name: reference.name.toString(),
+        maximumHoops: rules.maximumHoops,
+      },
+      usualMaximumHoops: tournament.sport.usualMaximumHoops,
       rounds,
       // None is answered as withdrawn: a knockout's game cannot be, and a
       // withdrawn player's games there count, since each decided a match

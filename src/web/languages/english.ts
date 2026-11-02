@@ -448,6 +448,7 @@ export const english: Language = {
     "competition.view.summary": "Summary",
     "competition.view.orderOfPlay": "Order of Play",
     "competition.print": "Print",
+    "competition.playedTo": "Played to {hoops} hoops",
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
@@ -526,6 +527,7 @@ export const english: Language = {
     "admin.rules.drawsAllowed": "Allows drawn results",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
     "admin.rules.worldRankings": "Counts toward world rankings",
+    "admin.rules.maximumHoops": "Maximum hoops",
     "admin.tournament.national": "National‑level event",
     "admin.tournament.international": "International‑level event",
     // A refusal with no words of its own, above the fields.
@@ -722,6 +724,8 @@ export const english: Language = {
       "A round cannot be changed once a game has been played in a later round.",
     "Tournament.CompetitionNameTaken":
       "Another competition in this tournament already has that name.",
+    "Tournament.MaximumHoopsInvalid":
+      "Enter a whole number of hoops, at least 1, or leave it empty for no maximum.",
     "BestOf.NotWhole": "Enter a whole number of games.",
     "BestOf.TooSmall": "A match has to be the best of at least 1 game.",
     "Rounds.NotWhole": "Enter a whole number of rounds.",

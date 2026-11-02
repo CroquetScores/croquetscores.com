@@ -82,6 +82,26 @@ Feature: A Swiss's grid ranks its players with their results
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the first row of the Swiss is "Sam Someone"
 
+  Rule: A Swiss played to other than the usual number of hoops says so
+
+    The block's page does the same (`block.feature`).
+
+    Scenario: A Swiss played to 14 hoops says so
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the Swiss "Short Swiss" to "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/short-swiss" is opened
+      Then the competition says it is played to 14 hoops
+
+    Scenario: A Swiss played to the usual number of hoops says nothing of it
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the competition does not say how many hoops it is played to
+
+    Scenario: A Swiss with no most says nothing of it
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the Swiss "Open Swiss" to "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/open-swiss" is opened
+      Then the competition does not say how many hoops it is played to
+
   Rule: A row for each player, ranked
 
     Scenario: The players are ranked

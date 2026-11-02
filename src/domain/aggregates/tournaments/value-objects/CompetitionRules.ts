@@ -10,6 +10,8 @@ export interface CompetitionRules {
   readonly drawsAllowed: boolean;
   /** Whether its results count towards the world rankings. */
   readonly worldRankings: boolean;
+  /** The most hoops a game is played to, or null where there is no most. */
+  readonly maximumHoops: number | null;
 }
 
 /**
@@ -21,4 +23,6 @@ export interface CompetitionRulesSaid {
   readonly handicap?: boolean | undefined;
   readonly drawsAllowed?: boolean | undefined;
   readonly worldRankings?: boolean | undefined;
+  /** A number, or null to say there is no most. Left unsaid is the usual for the sport. */
+  readonly maximumHoops?: number | null | undefined;
 }

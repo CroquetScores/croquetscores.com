@@ -91,6 +91,26 @@ Feature: A knockout's grid draws its draw round by round
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
       Then the first side of the first match of the first round in the grid is "Sam Someone"
 
+  Rule: A knockout played to other than the usual number of hoops says so
+
+    The block's page does the same (`block.feature`).
+
+    Scenario: A knockout played to 14 hoops says so
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the knockout "Short Knockout" to "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/short-knockout" is opened
+      Then the competition says it is played to 14 hoops
+
+    Scenario: A knockout played to the usual number of hoops says nothing of it
+      When the page at "/2026/ac/spring-open/competitions/finals" is opened
+      Then the competition does not say how many hoops it is played to
+
+    Scenario: A knockout with no most says nothing of it
+      Given the competition is said to have no maximum number of hoops
+      And "organiser@example.com" has added the knockout "Open Knockout" to "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/open-knockout" is opened
+      Then the competition does not say how many hoops it is played to
+
   Rule: A column for each round, headed by its name
 
     Scenario: The rounds are headed from the first to the final

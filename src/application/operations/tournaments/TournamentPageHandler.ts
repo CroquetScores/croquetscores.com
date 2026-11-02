@@ -64,6 +64,7 @@ export class TournamentPageHandler extends QueryHandler<
         : undefined,
       mayChangeWorldRankingNames,
       mayWriteToManagers: tournament.mayWriteToManagers(reader),
+      usualMaximumHoops: tournament.sport.usualMaximumHoops,
       sport: tournament.sport.code,
       countsTowardsWorldRankings: tournament.sport.countsTowardsWorldRankings,
     };

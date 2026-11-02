@@ -475,6 +475,7 @@ export const german: Language = {
     "competition.view.summary": "Zusammenfassung",
     "competition.view.orderOfPlay": "Spielreihenfolge",
     "competition.print": "Drucken",
+    "competition.playedTo": "Gespielt bis {hoops} Tore",
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
@@ -559,6 +560,7 @@ export const german: Language = {
     "admin.tournament.levelTestsDrawn":
       "Gleichstand in Tests ist unentschieden",
     "admin.rules.worldRankings": "Zählt für die Weltranglisten",
+    "admin.rules.maximumHoops": "Höchstzahl der Tore",
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
     // Eine Ablehnung ohne eigene Worte, über den Feldern.
@@ -772,6 +774,8 @@ export const german: Language = {
       "Eine Runde kann nicht geändert werden, sobald in einer späteren Runde ein Spiel gespielt wurde.",
     "Tournament.CompetitionNameTaken":
       "Ein anderer Wettbewerb in diesem Turnier hat bereits diesen Namen.",
+    "Tournament.MaximumHoopsInvalid":
+      "Geben Sie eine ganze Zahl von Toren ein, mindestens 1, oder lassen Sie das Feld leer für keine Höchstzahl.",
     "BestOf.NotWhole": "Geben Sie eine ganze Zahl von Spielen ein.",
     "BestOf.TooSmall": "Ein Match muss über mindestens 1 Spiel gehen.",
     "Rounds.NotWhole": "Geben Sie eine ganze Zahl von Runden ein.",

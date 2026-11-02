@@ -73,6 +73,7 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
         handicap: rules.handicap,
         drawsAllowed: rules.drawsAllowed,
         worldRankings: rules.worldRankings,
+        maximumHoops: rules.maximumHoops,
       };
       if (shape.kind === "knockout") {
         listed.push({
