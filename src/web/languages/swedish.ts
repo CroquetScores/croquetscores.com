@@ -979,6 +979,8 @@ export const swedish: Language = {
     "admin.score.beat": "slog",
     "admin.score.added": "Partiet som {winner} vann mot {loser} lades till.",
     "admin.score.otherwise": "Partiet kunde inte läggas till.",
+    "admin.score.playersUnread":
+      "Spelarna kunde inte läsas in. Stäng den här dialogrutan och öppna den igen.",
     "admin.score.correctTitle": "Redigera resultat",
     "admin.score.save": "Spara",
     "admin.score.notCorrected": "Resultatet kunde inte rättas.",

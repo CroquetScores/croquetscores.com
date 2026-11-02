@@ -985,6 +985,8 @@ export const portuguese: Language = {
     "admin.score.added":
       "O jogo em que {winner} venceu {loser} foi adicionado.",
     "admin.score.otherwise": "Não foi possível adicionar o jogo.",
+    "admin.score.playersUnread":
+      "Não foi possível ler os jogadores. Feche esta janela e abra-a de novo.",
     "admin.score.correctTitle": "Editar resultado",
     "admin.score.save": "Salvar",
     "admin.score.notCorrected": "Não foi possível corrigir o resultado.",

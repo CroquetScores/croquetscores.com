@@ -902,6 +902,8 @@ export const egyptian: Language = {
     "admin.score.beat": "هزم",
     "admin.score.added": "اتضافت اللعبة اللي كسبها {winner} قدّام {loser}.",
     "admin.score.otherwise": "ما قدرناش نضيف اللعبة.",
+    "admin.score.playersUnread":
+      "ما قدرناش نقرا اللاعبين. اقفل النافذة دي وافتحها تاني.",
     "admin.score.correctTitle": "عدّل النتيجة",
     "admin.score.save": "احفظ",
     "admin.score.notCorrected": "ما قدرناش نصحّح النتيجة.",

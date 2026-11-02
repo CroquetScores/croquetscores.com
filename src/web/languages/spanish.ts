@@ -996,6 +996,8 @@ export const spanish: Language = {
     "admin.score.beat": "ganó a",
     "admin.score.added": "Se añadió la partida que {winner} ganó a {loser}.",
     "admin.score.otherwise": "No se ha podido añadir la partida.",
+    "admin.score.playersUnread":
+      "No se han podido leer los jugadores. Cierra esta ventana y ábrela de nuevo.",
     "admin.score.correctTitle": "Editar resultado",
     "admin.score.save": "Guardar",
     "admin.score.notCorrected": "No se ha podido corregir el resultado.",

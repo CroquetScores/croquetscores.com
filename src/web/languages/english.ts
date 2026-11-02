@@ -963,6 +963,8 @@ export const english: Language = {
     "admin.score.beat": "beat",
     "admin.score.added": "The game {winner} won against {loser} was added.",
     "admin.score.otherwise": "The game could not be added.",
+    "admin.score.playersUnread":
+      "The players could not be read. Close this dialog and open it again.",
     "admin.score.correctTitle": "Edit Score",
     "admin.score.save": "Save",
     "admin.score.notCorrected": "The score could not be corrected.",

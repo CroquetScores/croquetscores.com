@@ -962,6 +962,8 @@ export const welsh: Language = {
     "admin.score.added":
       "Ychwanegwyd y gêm a enillodd {winner} yn erbyn {loser}.",
     "admin.score.otherwise": "Ni ellid ychwanegu'r gêm.",
+    "admin.score.playersUnread":
+      "Ni ellid darllen y chwaraewyr. Caewch y deialog hwn a'i agor eto.",
     "admin.score.correctTitle": "Golygu sgôr",
     "admin.score.save": "Cadw",
     "admin.score.notCorrected": "Ni ellid cywiro'r sgôr.",

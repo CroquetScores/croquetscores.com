@@ -991,6 +991,8 @@ export const afrikaans: Language = {
     "admin.score.added":
       "Die spel wat {winner} teen {loser} gewen het, is bygevoeg.",
     "admin.score.otherwise": "Die spel kon nie bygevoeg word nie.",
+    "admin.score.playersUnread":
+      "Die spelers kon nie gelees word nie. Maak hierdie dialoog toe en maak dit weer oop.",
     "admin.score.correctTitle": "Wysig uitslag",
     "admin.score.save": "Bewaar",
     "admin.score.notCorrected": "Die uitslag kon nie reggestel word nie.",

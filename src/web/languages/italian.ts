@@ -1013,6 +1013,8 @@ export const italian: Language = {
     "admin.score.added":
       "È stata aggiunta la partita che {winner} ha vinto contro {loser}.",
     "admin.score.otherwise": "La partita non ha potuto essere aggiunta.",
+    "admin.score.playersUnread":
+      "Non è stato possibile leggere i giocatori. Chiudi questa finestra e riaprila.",
     "admin.score.correctTitle": "Modifica punteggio",
     "admin.score.save": "Salva",
     "admin.score.notCorrected": "Il punteggio non ha potuto essere corretto.",

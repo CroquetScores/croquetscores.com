@@ -941,6 +941,8 @@ export const korean: Language = {
     "admin.score.beat": "승",
     "admin.score.added": "{winner}님이 {loser}님을 이긴 게임을 추가했어요.",
     "admin.score.otherwise": "게임을 추가할 수 없었어요.",
+    "admin.score.playersUnread":
+      "선수를 불러올 수 없었어요. 이 대화상자를 닫고 다시 열어 주세요.",
     "admin.score.correctTitle": "점수 수정",
     "admin.score.save": "저장",
     "admin.score.notCorrected": "점수를 정정할 수 없었어요.",

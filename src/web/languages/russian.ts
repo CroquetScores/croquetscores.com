@@ -940,6 +940,8 @@ export const russian: Language = {
     "admin.score.added":
       "Партия, в которой {winner} победил {loser}, добавлена.",
     "admin.score.otherwise": "Партию не удалось добавить.",
+    "admin.score.playersUnread":
+      "Не удалось загрузить игроков. Закройте это окно и откройте его снова.",
     "admin.score.correctTitle": "Изменение результата",
     "admin.score.save": "Сохранить",
     "admin.score.notCorrected": "Результат не удалось исправить.",

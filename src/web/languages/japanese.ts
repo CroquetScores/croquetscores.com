@@ -930,6 +930,8 @@ export const japanese: Language = {
     "admin.score.added":
       "{winner}さんが{loser}さんに勝ったゲームを追加しました。",
     "admin.score.otherwise": "ゲームを追加できませんでした。",
+    "admin.score.playersUnread":
+      "選手を読み込めませんでした。このダイアログを閉じて、もう一度開いてください。",
     "admin.score.correctTitle": "スコアを編集",
     "admin.score.save": "保存",
     "admin.score.notCorrected": "スコアを訂正できませんでした。",

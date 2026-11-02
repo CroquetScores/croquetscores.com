@@ -722,13 +722,17 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
 
     A failure answered with no code of its own, as an error of the site's is,
     is said as `Unknown`, rather than the dialog offering nobody, which would
-    look like a competition with no players still arriving.
+    look like a competition with no players still arriving. It says that the
+    players could not be read, and not that the game could not be added, which
+    the reader has not yet tried. Asking again is by closing the dialog and
+    opening it again, which the words say.
 
     Scenario: Players the site fails to answer are said above the fields
       Given the scores of "Block A" in "Spring Open" are open
       And the competition's players are answered with a server error
       When "Add Score" is pressed
       Then the score dialog says "Unknown" above the fields
+      And the modal dialog says the words for "admin.score.playersUnread"
 
   Rule: A score's Edit opens the dialog on that score, to correct it
 
