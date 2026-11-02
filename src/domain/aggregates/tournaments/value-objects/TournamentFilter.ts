@@ -9,7 +9,11 @@ import { sportsOffered } from "./sports.js";
 export type TournamentFilterErrorCode =
   | "TournamentFilter.RegionWithoutCountry"
   | "TournamentFilter.RegionNotInCountry"
-  | "TournamentFilter.SportNotOffered";
+  | "TournamentFilter.SportNotOffered"
+  | "TournamentFilter.FirstDayWithoutLastDay"
+  | "TournamentFilter.LastDayWithoutFirstDay"
+  | "TournamentFilter.FirstDayAfterLastDay"
+  | "TournamentFilter.DayNotADay";
 
 /** What a reader chose: each of the three, or nothing where they chose none. */
 export interface Chosen {
@@ -18,10 +22,28 @@ export interface Chosen {
   readonly region?: string | undefined;
   /** The sport's code, exactly as it is written. */
   readonly sport?: string | undefined;
+  /** The first day, written `2026-03-01`. Chosen only with the last. */
+  readonly firstDay?: string | undefined;
+  /** The last day, written `2026-03-31`. Chosen only with the first. */
+  readonly lastDay?: string | undefined;
 }
 
 const refuse = (code: TournamentFilterErrorCode): never => {
   throw new ValidationError<TournamentFilterErrorCode>(code);
+};
+
+// Read back from the date it makes, so that a day the calendar has not got,
+// such as the thirtieth of February, is refused rather than carried over into
+// March as `Date` would.
+const dayOf = (written: string): string => {
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(written)
+    ? new Date(`${written}T00:00:00Z`)
+    : undefined;
+  if (parsed === undefined || Number.isNaN(parsed.getTime()))
+    return refuse("TournamentFilter.DayNotADay");
+  return parsed.toISOString().slice(0, 10) === written
+    ? written
+    : refuse("TournamentFilter.DayNotADay");
 };
 
 /**
@@ -37,15 +59,21 @@ export class TournamentFilter {
   readonly #country: Country | undefined;
   readonly #region: Region | undefined;
   readonly #sport: Sport | undefined;
+  readonly #firstDay: string | undefined;
+  readonly #lastDay: string | undefined;
 
   private constructor(
     country: Country | undefined,
     region: Region | undefined,
     sport: Sport | undefined,
+    firstDay: string | undefined,
+    lastDay: string | undefined,
   ) {
     this.#country = country;
     this.#region = region;
     this.#sport = sport;
+    this.#firstDay = firstDay;
+    this.#lastDay = lastDay;
   }
 
   /**
@@ -71,7 +99,20 @@ export class TournamentFilter {
         refuse("TournamentFilter.SportNotOffered");
       sport = named;
     }
-    return new TournamentFilter(country, region, sport);
+    // Together or not at all: a half-filled pair is more likely a slip than a
+    // range with one end open, which the pages' fields do not offer.
+    if (chosen.firstDay !== undefined && chosen.lastDay === undefined)
+      refuse("TournamentFilter.FirstDayWithoutLastDay");
+    if (chosen.lastDay !== undefined && chosen.firstDay === undefined)
+      refuse("TournamentFilter.LastDayWithoutFirstDay");
+    const firstDay =
+      chosen.firstDay === undefined ? undefined : dayOf(chosen.firstDay);
+    const lastDay =
+      chosen.lastDay === undefined ? undefined : dayOf(chosen.lastDay);
+    // Written year first, so that comparing the words compares the days.
+    if (firstDay !== undefined && lastDay !== undefined && firstDay > lastDay)
+      refuse("TournamentFilter.FirstDayAfterLastDay");
+    return new TournamentFilter(country, region, sport, firstDay, lastDay);
   }
 
   /** The country filtered by, or nothing where none was chosen. */
@@ -87,5 +128,15 @@ export class TournamentFilter {
   /** The sport filtered by, or nothing where none was chosen. */
   get sport(): Sport | undefined {
     return this.#sport;
+  }
+
+  /** The first day filtered by, or nothing where no days were chosen. */
+  get firstDay(): string | undefined {
+    return this.#firstDay;
+  }
+
+  /** The last day filtered by, or nothing where no days were chosen. */
+  get lastDay(): string | undefined {
+    return this.#lastDay;
   }
 }
