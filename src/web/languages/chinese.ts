@@ -474,6 +474,14 @@ export const chinese: Language = {
     "tournamentList.filter.sport": "运动",
     "tournamentList.filter.anySport": "所有运动",
     "tournamentList.filter.submit": "筛选",
+    "tournamentList.filter.from": "从",
+    "tournamentList.filter.to": "到",
+    "tournamentsInDays.heading": "{from}至{to}的锦标赛",
+    "tournamentsInDays.headingAll": "锦标赛",
+    "tournamentsInDays.none": "这些日期内没有锦标赛开始。",
+    "tournamentsInDays.previous": "上一页",
+    "tournamentsInDays.next": "下一页",
+    "tournamentsInDays.page": "第 {page} 页，共 {last} 页",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "年份",
     // The drop-down list holding the years that do not fit as tabs.

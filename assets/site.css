@@ -1953,8 +1953,12 @@ main {
   font-weight: 600;
 }
 
+/* The days are the same box as the lists beside them, since a field a few
+   pixels shorter than its neighbour looks like a mistake. */
 .tournament-filter select,
+.tournament-filter input[type="date"],
 .tournament-filter button {
+  box-sizing: border-box;
   max-width: 100%;
   min-height: 44px;
   padding: var(--space-1) var(--space-3);
@@ -1974,6 +1978,11 @@ main {
 
 .tournament-filter select::picker(select) {
   max-height: 20rem;
+}
+
+.tournament-filter input[type="date"] {
+  color: var(--ink);
+  font: inherit;
 }
 
 .tournament-filter button {

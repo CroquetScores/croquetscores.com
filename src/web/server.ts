@@ -136,6 +136,7 @@ import { TournamentYearsOfAccountHandler } from "../application/operations/tourn
 import { RecentResultsHandler } from "../application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../application/operations/tournaments/TournamentYearsHandler.js";
+import { TournamentsInDaysHandler } from "../application/operations/tournaments/TournamentsInDaysHandler.js";
 import { TournamentsInYearHandler } from "../application/operations/tournaments/TournamentsInYearHandler.js";
 import { GamesOfTournamentHandler } from "../application/operations/tournaments/GamesOfTournamentHandler.js";
 import { PublicPlayersOfTournamentHandler } from "../application/operations/tournaments/PublicPlayersOfTournamentHandler.js";
@@ -364,6 +365,7 @@ import { registerRegistrationsSuspendedPage } from "./public/registrationsSuspen
 import { registerSetNewPasswordPage } from "./public/setNewPassword.js";
 import { registerSignInPage } from "./public/signIn.js";
 import { registerHomePage } from "./public/home.js";
+import { registerTournamentsInDaysPage } from "./public/tournamentsInDays.js";
 import { registerYearPage } from "./public/year.js";
 import { registerYearSportPage } from "./public/yearSport.js";
 import { registerTournamentPage } from "./public/tournament.js";
@@ -1365,6 +1367,7 @@ export const buildApplication = async (
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(tournamentsByWebsite));
+  mediator.handleQuery(new TournamentsInDaysHandler(tournamentsByWebsite));
   mediator.handleQuery(new SearchHandler(searchByWebsite));
   mediator.handleQuery(new PlayerOfWebsiteHandler(searchByWebsite));
   mediator.handleQuery(new SearchPlayersOfWebsiteHandler(searchByWebsite));
@@ -1683,6 +1686,7 @@ export const buildApplication = async (
   registerWhatsNewRoute(server, help);
   registerHomePage(server, assets, help);
   registerYearPage(server, assets);
+  registerTournamentsInDaysPage(server, assets);
   registerYearSportPage(server, assets);
   registerTournamentPage(server, assets);
   registerPlayersPage(server, assets);

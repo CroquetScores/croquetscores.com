@@ -509,6 +509,14 @@ export const afrikaans: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Enige sport",
     "tournamentList.filter.submit": "Filtreer",
+    "tournamentList.filter.from": "Van",
+    "tournamentList.filter.to": "Tot",
+    "tournamentsInDays.heading": "Toernooie van {from} tot {to}",
+    "tournamentsInDays.headingAll": "Toernooie",
+    "tournamentsInDays.none": "Geen toernooie begin op hierdie dae nie.",
+    "tournamentsInDays.previous": "Vorige",
+    "tournamentsInDays.next": "Volgende",
+    "tournamentsInDays.page": "Bladsy {page} van {last}",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "Jare",
     // The drop-down list holding the years that do not fit as tabs.

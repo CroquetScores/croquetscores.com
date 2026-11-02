@@ -33,6 +33,7 @@ export type TournamentOperationErrorCode =
   | "RecentResults.NoSuchCountry"
   | "UpcomingTournaments.NoSuchCountry"
   | "TournamentsInYear.NoSuchCountry"
+  | "TournamentsInDays.NoSuchCountry"
   | "TournamentYears.SportNotOffered"
   | "PlayerOfWebsite.NoSuchPlayer"
   | "PublicPlayerOfTournament.NoSuchPlayer"

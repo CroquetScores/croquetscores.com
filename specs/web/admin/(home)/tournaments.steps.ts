@@ -403,6 +403,32 @@ Then(
   },
 );
 
+// Counted as the list draws them, a page of them at a time.
+Then(
+  /^(\d+) tournaments? (?:is|are) listed$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await this.browserPage.locator(".tournaments > .tournament").count(),
+        Number(count),
+      );
+    });
+  },
+);
+
+// The way to another page, which is a link in the list's own page and not
+// one to another, so it is waited on until the list has drawn the page.
+When(
+  /^the way to turn to the (previous|next) page is pressed$/,
+  async function (this: SpecWorld, which: string) {
+    await this.browserPage
+      .locator(
+        `.tournament-pages a[rel="${which === "previous" ? "prev" : "next"}"]`,
+      )
+      .click();
+  },
+);
+
 // The weight of what the reader reads of the row, which is its dates and its
 // name, as the browser works it out. Bold is 700 or more, which the weight of
 // an ordinary row never reaches.

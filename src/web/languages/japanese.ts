@@ -477,6 +477,14 @@ export const japanese: Language = {
     "tournamentList.filter.sport": "競技",
     "tournamentList.filter.anySport": "すべての競技",
     "tournamentList.filter.submit": "絞り込む",
+    "tournamentList.filter.from": "開始日（から）",
+    "tournamentList.filter.to": "開始日（まで）",
+    "tournamentsInDays.heading": "{from}から{to}までの大会",
+    "tournamentsInDays.headingAll": "大会",
+    "tournamentsInDays.none": "この期間に始まる大会はありません。",
+    "tournamentsInDays.previous": "前へ",
+    "tournamentsInDays.next": "次へ",
+    "tournamentsInDays.page": "{last}ページ中{page}ページ",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "年",
     // The drop-down list holding the years that do not fit as tabs.

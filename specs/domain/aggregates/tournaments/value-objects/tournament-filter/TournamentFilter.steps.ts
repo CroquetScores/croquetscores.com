@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
@@ -13,6 +13,21 @@ import { scenarioOf } from "../../tournament/aTournament.js";
 // same, and two definitions of them leave Cucumber unable to choose.
 
 const filters = new WeakMap<SpecWorld, TournamentFilter>();
+
+// The days are said in their own steps, and kept beside the filter rather than
+// on the world, since nothing else asks for them.
+const days = new WeakMap<
+  SpecWorld,
+  { firstDay?: string | undefined; lastDay?: string | undefined }
+>();
+
+Given("the first day {string}", function (this: SpecWorld, day: string) {
+  days.set(this, { ...days.get(this), firstDay: day });
+});
+
+Given("the last day {string}", function (this: SpecWorld, day: string) {
+  days.set(this, { ...days.get(this), lastDay: day });
+});
 
 const filterOf = (world: SpecWorld): TournamentFilter => {
   const filter = filters.get(world);
@@ -36,6 +51,7 @@ When("the filter is made", function (this: SpecWorld) {
           country === undefined ? undefined : Countries.thereAre.find(country),
         region: region ?? undefined,
         sport: this.sportSaid,
+        ...days.get(this),
       }),
     );
   } catch (failure) {
@@ -73,5 +89,27 @@ Then(
   "it filters by the sport {string}",
   function (this: SpecWorld, code: string) {
     assert.equal(filterOf(this).sport?.code, code);
+  },
+);
+
+Then("it filters by no first day", function (this: SpecWorld) {
+  assert.equal(filterOf(this).firstDay, undefined);
+});
+
+Then("it filters by no last day", function (this: SpecWorld) {
+  assert.equal(filterOf(this).lastDay, undefined);
+});
+
+Then(
+  "it filters by the first day {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(filterOf(this).firstDay, day);
+  },
+);
+
+Then(
+  "it filters by the last day {string}",
+  function (this: SpecWorld, day: string) {
+    assert.equal(filterOf(this).lastDay, day);
   },
 );

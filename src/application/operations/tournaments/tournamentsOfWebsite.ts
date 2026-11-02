@@ -81,6 +81,9 @@ export interface FilterChosen {
   readonly country?: string | undefined;
   readonly region?: string | undefined;
   readonly sport?: string | undefined;
+  /** Each a day, written `2026-03-01`, and asked for only together. */
+  readonly firstDay?: string | undefined;
+  readonly lastDay?: string | undefined;
 }
 
 /**
@@ -91,7 +94,11 @@ export interface FilterChosen {
 export const filterFor = (
   website: Website,
   chosen: FilterChosen,
-  operation: "RecentResults" | "UpcomingTournaments" | "TournamentsInYear",
+  operation:
+    | "RecentResults"
+    | "UpcomingTournaments"
+    | "TournamentsInYear"
+    | "TournamentsInDays",
 ): TournamentFilter => {
   const country =
     chosen.country === undefined
@@ -107,14 +114,19 @@ export const filterFor = (
     country,
     region: chosen.region,
     sport: chosen.sport,
+    firstDay: chosen.firstDay,
+    lastDay: chosen.lastDay,
   });
 };
 
 /** Whether each of what was chosen is text or nothing, as a request has to say. */
 export const isChosen = (chosen: unknown): chosen is FilterChosen => {
   if (typeof chosen !== "object" || chosen === null) return false;
-  const { country, region, sport } = chosen as Record<string, unknown>;
-  return [country, region, sport].every(
+  const { country, region, sport, firstDay, lastDay } = chosen as Record<
+    string,
+    unknown
+  >;
+  return [country, region, sport, firstDay, lastDay].every(
     (each) => each === undefined || typeof each === "string",
   );
 };

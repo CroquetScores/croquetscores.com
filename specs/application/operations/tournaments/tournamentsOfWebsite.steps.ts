@@ -11,11 +11,16 @@ import type { SpecWorld } from "../../../support/world.js";
 // feature.
 
 const answered = (world: SpecWorld): readonly TournamentOfWebsite[] => {
+  // A page of them, as the tournaments in some days are answered, holds them
+  // under its own name; the others answer the list itself.
+  const list = Array.isArray(world.answer)
+    ? world.answer
+    : (world.answer as { tournaments?: unknown } | undefined)?.tournaments;
   assert.ok(
-    Array.isArray(world.answer),
+    Array.isArray(list),
     `Nothing was answered: ${inspect(world.failure)}`,
   );
-  return world.answer as readonly TournamentOfWebsite[];
+  return list as readonly TournamentOfWebsite[];
 };
 
 const answeredCalled = (

@@ -528,6 +528,14 @@ export const german: Language = {
     "tournamentList.filter.sport": "Sportart",
     "tournamentList.filter.anySport": "Jede Sportart",
     "tournamentList.filter.submit": "Filtern",
+    "tournamentList.filter.from": "Von",
+    "tournamentList.filter.to": "Bis",
+    "tournamentsInDays.heading": "Turniere von {from} bis {to}",
+    "tournamentsInDays.headingAll": "Turniere",
+    "tournamentsInDays.none": "An diesen Tagen beginnen keine Turniere.",
+    "tournamentsInDays.previous": "Zurück",
+    "tournamentsInDays.next": "Weiter",
+    "tournamentsInDays.page": "Seite {page} von {last}",
     // Die Jahre, in denen es Turniere gibt, die Zweitnavigation beider.
     "years.label": "Jahre",
     // Die Auswahlliste mit den Jahren, die nicht als Reiter passen.

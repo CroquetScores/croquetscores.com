@@ -65,7 +65,22 @@ interface Chosen {
   readonly country: string | undefined;
   readonly region: string | undefined;
   readonly sport: string | undefined;
+  /** Each a day, written `2026-10-01`. Both narrow the list, and one alone does not. */
+  readonly from?: string | undefined;
+  readonly to?: string | undefined;
 }
+
+// How many tournaments are listed to a page, as the public pages list them
+// (tournamentsInDays.feature).
+const TOURNAMENTS_TO_A_PAGE = 100;
+
+// A day as the year, the month and the day, and one the calendar has: the
+// thirtieth of February is read back as another day and so is not one.
+const isDay = (written: string): boolean => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(written)) return false;
+  const day = new Date(`${written}T00:00:00Z`);
+  return !Number.isNaN(day.getTime()) && day.toISOString().startsWith(written);
+};
 
 interface Props {
   readonly year: number;
@@ -138,17 +153,33 @@ const chosenIn = (search: string): Chosen => {
     country: one("country"),
     region: one("region"),
     sport: one("sport"),
+    // Ignored where they are not days, as a choice that is not offered is.
+    from: ((day) => (day !== undefined && isDay(day) ? day : undefined))(
+      one("from"),
+    ),
+    to: ((day) => (day !== undefined && isDay(day) ? day : undefined))(
+      one("to"),
+    ),
   };
+};
+
+// The page the address asks for, where it is a whole number from one. Anything
+// else is the first, as nothing here is the reader's mistake to refuse.
+const pageIn = (search: string): number => {
+  const given = new URLSearchParams(search).get("page") ?? "";
+  const page = /^\d+$/.test(given) ? Number(given) : 1;
+  return page >= 1 ? page : 1;
 };
 
 // What is written into the address for `chosen` and `shown`, nothing where
 // nothing is.
-const searchOf = (chosen: Chosen, shown: Shown): string => {
+const searchOf = (chosen: Chosen, shown: Shown, page = 1): string => {
   const query = new URLSearchParams();
-  for (const name of ["country", "region", "sport"] as const) {
+  for (const name of ["country", "region", "sport", "from", "to"] as const) {
     const code = chosen[name];
     if (code !== undefined) query.set(name, code);
   }
+  if (page > 1) query.set("page", String(page));
   for (const name of Object.values(shownNames)) {
     if (shown[name] !== shownToBegin[name]) {
       query.set(name, shown[name] ? "1" : "0");
@@ -258,18 +289,49 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
       ? wanted.sport
       : undefined;
 
+  // Both days narrow the list and one alone does not, since the reader is part
+  // way through choosing. Both are included, and it is the day a tournament
+  // starts that is compared; a first day after the last lists nothing.
+  const { from, to } = wanted;
+  const inDays = (each: Listed): boolean =>
+    from === undefined ||
+    to === undefined ||
+    (each.starts.slice(0, 10) >= from && each.starts.slice(0, 10) <= to);
   const narrowed = shownList.filter(
     (each) =>
       (country === undefined || each.country === country) &&
       (region === undefined || each.region === region) &&
-      (sport === undefined || sportOf(each) === sport),
+      (sport === undefined || sportOf(each) === sport) &&
+      inDays(each),
   );
 
+  // The page is counted over the list as narrowed, and one beyond the last is
+  // the last.
+  const lastPage = Math.max(
+    1,
+    Math.ceil(narrowed.length / TOURNAMENTS_TO_A_PAGE),
+  );
+  const page = Math.min(pageIn(search), lastPage);
+  const onPage = narrowed.slice(
+    (page - 1) * TOURNAMENTS_TO_A_PAGE,
+    page * TOURNAMENTS_TO_A_PAGE,
+  );
+
+  // What is in the address of the page at `at`, the days among what is kept
+  // where a change names none. Choosing anything goes back to the first page.
+  const addressOf = (chosen: Chosen, showing: Shown = shown, at = 1): string =>
+    `${window.location.pathname}${searchOf({ from, to, ...chosen }, showing, at)}`;
+
   const choose = (chosen: Chosen, showing: Shown = shown): void => {
+    window.history.pushState(null, "", addressOf(chosen, showing));
+    setSearch(window.location.search);
+  };
+
+  const turnTo = (at: number): void => {
     window.history.pushState(
       null,
       "",
-      `${window.location.pathname}${searchOf(chosen, showing)}`,
+      addressOf({ country, region, sport }, shown, at),
     );
     setSearch(window.location.search);
   };
@@ -550,6 +612,30 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                     choose({ country, region, sport: code });
                   },
                 )}
+                {(["from", "to"] as const).map((day) => (
+                  <span className="tournament-filter-field" key={day}>
+                    <label htmlFor={`filter-${day}`}>
+                      {say(`tournamentList.filter.${day}`)}
+                    </label>
+                    <input
+                      id={`filter-${day}`}
+                      name={day}
+                      type="date"
+                      value={wanted[day] ?? ""}
+                      onChange={(event) => {
+                        choose({
+                          country,
+                          region,
+                          sport,
+                          [day]:
+                            event.target.value === ""
+                              ? undefined
+                              : event.target.value,
+                        });
+                      }}
+                    />
+                  </span>
+                ))}
               </form>
             ) : null}
             {listed === undefined ? null : listed.length === 0 ? (
@@ -562,7 +648,7 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
               </p>
             ) : (
               <ul className="tournaments">
-                {narrowed.map((tournament) => (
+                {onPage.map((tournament) => (
                   <li
                     key={tournament.id}
                     className="tournament"
@@ -595,6 +681,50 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                   </li>
                 ))}
               </ul>
+            )}
+            {narrowed.length === 0 || lastPage === 1 ? null : (
+              <p className="tournament-pages">
+                {page > 1 ? (
+                  <a
+                    rel="prev"
+                    href={addressOf(
+                      { country, region, sport },
+                      shown,
+                      page - 1,
+                    )}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      turnTo(page - 1);
+                    }}
+                  >
+                    <span aria-hidden="true">&lt;&lt;</span>{" "}
+                    {say("tournamentsInDays.previous")}
+                  </a>
+                ) : null}{" "}
+                <span className="tournament-page">
+                  {say("tournamentsInDays.page", {
+                    page: String(page),
+                    last: String(lastPage),
+                  })}
+                </span>{" "}
+                {page < lastPage ? (
+                  <a
+                    rel="next"
+                    href={addressOf(
+                      { country, region, sport },
+                      shown,
+                      page + 1,
+                    )}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      turnTo(page + 1);
+                    }}
+                  >
+                    {say("tournamentsInDays.next")}{" "}
+                    <span aria-hidden="true">&gt;&gt;</span>
+                  </a>
+                ) : null}
+              </p>
             )}
           </div>
         </div>

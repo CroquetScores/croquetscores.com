@@ -469,6 +469,14 @@ export const egyptian: Language = {
     "tournamentList.filter.sport": "الرياضة",
     "tournamentList.filter.anySport": "أي رياضة",
     "tournamentList.filter.submit": "صفّي",
+    "tournamentList.filter.from": "من",
+    "tournamentList.filter.to": "إلى",
+    "tournamentsInDays.heading": "البطولات من {from} إلى {to}",
+    "tournamentsInDays.headingAll": "البطولات",
+    "tournamentsInDays.none": "مفيش بطولات بتبدأ في الأيام دي.",
+    "tournamentsInDays.previous": "السابق",
+    "tournamentsInDays.next": "التالي",
+    "tournamentsInDays.page": "صفحة {page} من {last}",
     // The years there are tournaments in.
     "years.label": "السنين",
     // The drop-down list holding the years that do not fit as tabs.

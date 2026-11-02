@@ -125,6 +125,7 @@ import { RepresentingMatchingHandler } from "../../../src/application/operations
 import { RecentResultsHandler } from "../../../src/application/operations/tournaments/RecentResultsHandler.js";
 import { UpcomingTournamentsHandler } from "../../../src/application/operations/tournaments/UpcomingTournamentsHandler.js";
 import { TournamentYearsHandler } from "../../../src/application/operations/tournaments/TournamentYearsHandler.js";
+import { TournamentsInDaysHandler } from "../../../src/application/operations/tournaments/TournamentsInDaysHandler.js";
 import { TournamentsInYearHandler } from "../../../src/application/operations/tournaments/TournamentsInYearHandler.js";
 import { TournamentsInUnlistedCountriesHandler } from "../../../src/application/operations/world-rankings/TournamentsInUnlistedCountriesHandler.js";
 import type { WorldRankingCountries } from "../../../src/application/services/WorldRankingCountries.js";
@@ -369,6 +370,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleQuery(new UpcomingTournamentsHandler(byWebsite));
   mediator.handleQuery(new TournamentYearsHandler(byWebsite));
   mediator.handleQuery(new TournamentsInYearHandler(byWebsite));
+  mediator.handleQuery(new TournamentsInDaysHandler(byWebsite));
   // The lists the scenario says name countries, read as they are when asked.
   const listedCountries = { ac: new Set<string>(), gc: new Set<string>() };
   const lists: WorldRankingCountries = {

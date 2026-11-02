@@ -23,7 +23,7 @@ import { sportsOffered } from "../../domain/aggregates/tournaments/value-objects
 import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 import type { Assets } from "../common/assets.js";
 import { inCountryGroups } from "../common/countryOrder.js";
-import { dated } from "../common/dates.js";
+import { dated, datedWithYear } from "../common/dates.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
 import { render, type Shell } from "../common/layout.js";
@@ -127,6 +127,12 @@ export interface Asked {
    * the address says nothing it can use.
    */
   readonly remembered: Readonly<Record<string, string | undefined>>;
+  /**
+   * What else the page's address carries and every link on it keeps, such as
+   * the days a page of tournaments is of. Nothing, for the pages that have
+   * none.
+   */
+  readonly carried: Readonly<Record<string, string>>;
 }
 
 // Each as the address gives it: an empty one is a choice left at "any", which
@@ -149,7 +155,13 @@ export const askedOf = (
   path: string,
   page: string,
   tables: readonly string[],
-  { offersSport = true }: { readonly offersSport?: boolean } = {},
+  {
+    offersSport = true,
+    carries = [],
+  }: {
+    readonly offersSport?: boolean;
+    readonly carries?: readonly string[];
+  } = {},
 ): Asked => {
   const country = oneOf(request.query, "country");
   const region = oneOf(request.query, "region");
@@ -169,7 +181,44 @@ export const askedOf = (
       tables.map((table) => [table, oneOf(request.query, table)]),
     ),
     remembered: rememberedOf(request, page),
+    carried: Object.fromEntries(
+      carries.flatMap((name) => {
+        const value = oneOf(request.query, name);
+        return value === undefined ? [] : [[name, value]];
+      }),
+    ),
   };
+};
+
+/** Where the tournaments from one day to another are listed. */
+export const daysPath = "/tournaments";
+
+/**
+ * Sends a reader who chose days on a page whose lists are of something else
+ * to the page of the tournaments in them, with the filter they chose and
+ * `sport`, which a sport's page has as its own. A form can only be sent to one
+ * place, so the page it is sent to decides where the reader goes, and it works
+ * with no scripting. Nothing is sent where no day was chosen, and the page goes
+ * on to be drawn. One day alone is sent too, for the page it leads to to refuse
+ * as the filter refuses it, rather than this page saying it in its own words.
+ */
+export const sendToDaysChosen = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+  sport?: string,
+): FastifyReply | undefined => {
+  const from = oneOf(request.query, "from");
+  const to = oneOf(request.query, "to");
+  if (from === undefined && to === undefined) return undefined;
+  const chose: FilterChosen = {
+    country: oneOf(request.query, "country"),
+    region: oneOf(request.query, "region"),
+    sport: sport ?? oneOf(request.query, "sport"),
+  };
+  const carried: Record<string, string> = {};
+  if (from !== undefined) carried.from = from;
+  if (to !== undefined) carried.to = to;
+  return reply.redirect(addressOf(daysPath, chose, {}, carried), 303);
 };
 
 /**
@@ -203,12 +252,14 @@ const addressOf = (
   path: string,
   chose: FilterChosen,
   sorting: Readonly<Record<string, string | undefined>>,
+  carried: Readonly<Record<string, string>> = {},
 ): string => {
   const said = new URLSearchParams();
   const each: [string, string | undefined][] = [
     ["country", chose.country],
     ["region", chose.region],
     ["sport", chose.sport],
+    ...Object.entries(carried),
     ...Object.entries(sorting),
   ];
   for (const [name, value] of each) {
@@ -224,7 +275,8 @@ const addressWith = (
   asked: Asked,
   changed: Readonly<Record<string, string>>,
   chose: FilterChosen = asked.chose,
-): string => addressOf(asked.path, chose, { ...asked.sorting, ...changed });
+): string =>
+  addressOf(asked.path, chose, { ...asked.sorting, ...changed }, asked.carried);
 
 /**
  * `path` with what the reader narrowed by, for a link that moves to another
@@ -264,6 +316,8 @@ export interface Listing {
    * is in an order no column shows.
    */
   readonly sortedAtFirst: Sorting | undefined;
+  /** Whether each row's dates say their year, for a list over more than one. */
+  readonly withYear?: boolean;
   /** Anything said beneath the table, already escaped. */
   readonly after?: string;
 }
@@ -327,7 +381,7 @@ export const table = (
       (
         tournament,
       ) => `                <tr${tournament.national || tournament.international ? " data-bold" : ""}>
-                  <td class="tournament-dates">${escape(dated(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
+                  <td class="tournament-dates">${escape((listing.withYear === true ? datedWithYear : dated)(tournament.starts, tournament.finishes, speaking.language.tag))}</td>
                   <td class="tournament-sport"><span class="sport-code sport-${escape(tournament.sport)}">${escape(tournament.sport.toUpperCase())}</span></td>
                   <td class="tournament-flag">${flagOf(tournament)}</td>
                   <td><a class="tournament-name" href="/${escape(tournament.address)}">${escape(tournament.name)}</a></td>
@@ -425,6 +479,18 @@ ${choices}
               </select>
             </span>`;
 
+// A day to choose, in the control a browser draws for one, which sends it as
+// the year, the month and the day that the page's address says it in.
+const dayField = (
+  name: string,
+  label: string,
+  day: string | undefined,
+): string =>
+  `            <span class="tournament-filter-field">
+              <label for="filter-${name}">${escape(label)}</label>
+              <input id="filter-${name}" name="${name}" type="date" value="${escape(day ?? "")}" />
+            </span>`;
+
 // Tournaments were given regions from November 2026, so a region chosen
 // leaves out every earlier one. Below this many shown, the reader is more
 // likely to be missing tournaments than to have found the few there are.
@@ -511,6 +577,8 @@ ${[
       ]
     : []),
 ].join("\n")}
+            ${dayField("from", say("tournamentList.filter.from"), asked.carried.from).trimStart()}
+            ${dayField("to", say("tournamentList.filter.to"), asked.carried.to).trimStart()}
             <button type="submit">${escape(say("tournamentList.filter.submit"))}</button>
           </form>${
             asked.chose.region !== undefined && shown < FEW_TO_SHOW

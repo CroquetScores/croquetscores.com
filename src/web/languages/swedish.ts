@@ -508,6 +508,14 @@ export const swedish: Language = {
     "tournamentList.filter.sport": "Sport",
     "tournamentList.filter.anySport": "Alla sporter",
     "tournamentList.filter.submit": "Filtrera",
+    "tournamentList.filter.from": "Från",
+    "tournamentList.filter.to": "Till",
+    "tournamentsInDays.heading": "Turneringar från {from} till {to}",
+    "tournamentsInDays.headingAll": "Turneringar",
+    "tournamentsInDays.none": "Inga turneringar startar under dessa dagar.",
+    "tournamentsInDays.previous": "Föregående",
+    "tournamentsInDays.next": "Nästa",
+    "tournamentsInDays.page": "Sida {page} av {last}",
     // Åren det finns turneringar i, den sekundära navigeringen för båda.
     "years.label": "År",
     // Rullgardinslistan med de år som inte får plats som flikar.

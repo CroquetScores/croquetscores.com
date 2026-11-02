@@ -504,6 +504,14 @@ export const portuguese: Language = {
     "tournamentList.filter.sport": "Esporte",
     "tournamentList.filter.anySport": "Qualquer esporte",
     "tournamentList.filter.submit": "Filtrar",
+    "tournamentList.filter.from": "De",
+    "tournamentList.filter.to": "Até",
+    "tournamentsInDays.heading": "Torneios de {from} a {to}",
+    "tournamentsInDays.headingAll": "Torneios",
+    "tournamentsInDays.none": "Nenhum torneio começa nestes dias.",
+    "tournamentsInDays.previous": "Anterior",
+    "tournamentsInDays.next": "Seguinte",
+    "tournamentsInDays.page": "Página {page} de {last}",
     // The years there are tournaments in, the secondary navigation of both.
     "years.label": "Anos",
     // The drop-down list holding the years that do not fit as tabs.
