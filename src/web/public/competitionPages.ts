@@ -452,8 +452,8 @@ export const registerCompetitionPages = (
 ${viewsOffered(here, offered, view, speaking)}
 ${printButton(speaking)}
           </div>
-${playedToNote(found, speaking)}
 ${draw(found, view, speaking, request)}
+${playedToNote(found, speaking)}
 ${printPiecesScript}`,
             }),
           );
@@ -467,7 +467,7 @@ ${printPiecesScript}`,
   }
 };
 
-// What a block, a knockout or a Swiss says under its heading of how many hoops
+// What a block, a knockout or a Swiss says under its results of how many hoops
 // its games are played to, where that is not the usual for the sport. A reader
 // seeing every winning score under 26 cannot otherwise tell a competition
 // played to 14 from one whose games were not played out. One played to the

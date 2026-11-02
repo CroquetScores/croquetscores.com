@@ -428,7 +428,6 @@ export const welsh: Language = {
     "block.netGames": "Gemau net",
     "block.games": "Gemau unigol",
     "block.netHoops": "Cylchau net",
-    "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "block.won": "wedi ennill",
     "block.lost": "wedi colli",
     "block.drawn": "cyfartal",
@@ -442,6 +441,7 @@ export const welsh: Language = {
     "competition.view.summary": "Crynodeb",
     "competition.view.orderOfPlay": "Trefn chwarae",
     "competition.print": "Argraffu",
+    "competition.playedTo": "Chwaraeir i {hoops} cylch",
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd, yna yn ôl cylchau net. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",

@@ -417,7 +417,6 @@ export const japanese: Language = {
     "block.netGames": "ゲーム差",
     "block.games": "ゲーム",
     "block.netHoops": "フープ差",
-    "competition.playedTo": "{hoops} ゲートまで",
     "block.won": "勝ち",
     "block.lost": "負け",
     "block.drawn": "引き分け",
@@ -431,6 +430,7 @@ export const japanese: Language = {
     "competition.view.summary": "サマリー",
     "competition.view.orderOfPlay": "試合順",
     "competition.print": "印刷",
+    "competition.playedTo": "{hoops} ゲートまで",
     "blockSummary.ranking":
       "試合の勝率、次にフープ差の順に並べています。大会独自の規定では、選手の順位が異なる場合があります。",
     "orderOfPlay.none": "まだゲームは行われていません。",

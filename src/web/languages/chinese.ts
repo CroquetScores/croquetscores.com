@@ -412,7 +412,6 @@ export const chinese: Language = {
     "block.netGames": "净胜局",
     "block.games": "局数",
     "block.netHoops": "净胜球门",
-    "competition.playedTo": "打到 {hoops} 门",
     "block.won": "胜",
     "block.lost": "负",
     "block.drawn": "平",
@@ -426,6 +425,7 @@ export const chinese: Language = {
     "competition.view.summary": "汇总",
     "competition.view.orderOfPlay": "比赛顺序",
     "competition.print": "打印",
+    "competition.playedTo": "打到 {hoops} 门",
     "blockSummary.ranking":
       "按获胜场次的比例排名，其次按净胜球门。赛事自己的规程可能会对选手作出不同的排名。",
     "orderOfPlay.none": "还没有进行任何比赛。",

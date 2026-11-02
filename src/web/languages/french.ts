@@ -446,7 +446,6 @@ export const french: Language = {
     "block.netGames": "Différence de parties",
     "block.games": "Parties",
     "block.netHoops": "Différence de arceaux",
-    "competition.playedTo": "Joué en {hoops} arceaux",
     "block.won": "gagné",
     "block.lost": "perdu",
     "block.drawn": "nul",
@@ -460,6 +459,7 @@ export const french: Language = {
     "competition.view.summary": "Récapitulatif",
     "competition.view.orderOfPlay": "Ordre de jeu",
     "competition.print": "Imprimer",
+    "competition.playedTo": "Joué en {hoops} arceaux",
     "blockSummary.ranking":
       "Classement selon la part de matchs gagnés, puis selon la différence de arceaux. Le règlement propre à un tournoi peut classer ses joueurs autrement.",
     "orderOfPlay.none": "Aucune partie n'a encore été jouée.",

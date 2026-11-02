@@ -444,7 +444,6 @@ export const italian: Language = {
     "block.netGames": "Differenza partite",
     "block.games": "Partite",
     "block.netHoops": "Differenza archetti",
-    "competition.playedTo": "Giocata a {hoops} porte",
     "block.won": "vinta",
     "block.lost": "persa",
     "block.drawn": "pareggiata",
@@ -458,6 +457,7 @@ export const italian: Language = {
     "competition.view.summary": "Riepilogo",
     "competition.view.orderOfPlay": "Programma",
     "competition.print": "Stampa",
+    "competition.playedTo": "Giocata a {hoops} porte",
     "blockSummary.ranking":
       "In classifica per quota di incontri vinti, poi per differenza archetti. Il regolamento di un torneo può collocare i giocatori in modo diverso.",
     "orderOfPlay.none": "Non è ancora stata giocata nessuna partita.",

@@ -410,7 +410,6 @@ export const egyptian: Language = {
     "block.netGames": "صافي الألعاب",
     "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
-    "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
     "block.won": "فاز",
     "block.lost": "خسر",
     "block.drawn": "تعادل",
@@ -424,6 +423,7 @@ export const egyptian: Language = {
     "competition.view.summary": "الملخّص",
     "competition.view.orderOfPlay": "ترتيب اللعب",
     "competition.print": "اطبع",
+    "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
     "blockSummary.ranking":
       "الترتيب على حسب نسبة المباريات اللي اتكسبت، وبعدين صافي الأطواق. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",

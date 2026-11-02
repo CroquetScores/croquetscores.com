@@ -447,7 +447,6 @@ export const spanish: Language = {
     "block.netGames": "Partidas netas",
     "block.games": "Partidas",
     "block.netHoops": "Aros netos",
-    "competition.playedTo": "Se juega a {hoops} aros",
     "block.won": "ganada",
     "block.lost": "perdida",
     "block.drawn": "empatada",
@@ -461,6 +460,7 @@ export const spanish: Language = {
     "competition.view.summary": "Resumen",
     "competition.view.orderOfPlay": "Orden de juego",
     "competition.print": "Imprimir",
+    "competition.playedTo": "Se juega a {hoops} aros",
     "blockSummary.ranking":
       "Ordenados por la proporción de partidos ganados y, después, por los aros netos. Los reglamentos propios de un torneo pueden clasificar a sus jugadores de otro modo.",
     "orderOfPlay.none": "Todavía no se ha jugado ninguna partida.",

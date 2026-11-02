@@ -435,7 +435,6 @@ export const english: Language = {
     "block.netGames": "Net Games",
     "block.games": "Games",
     "block.netHoops": "Net Hoops",
-    "competition.playedTo": "Played to {hoops} hoops",
     "block.won": "won",
     "block.lost": "lost",
     "block.drawn": "drawn",
@@ -449,6 +448,7 @@ export const english: Language = {
     "competition.view.summary": "Summary",
     "competition.view.orderOfPlay": "Order of Play",
     "competition.print": "Print",
+    "competition.playedTo": "Played to {hoops} hoops",
     "blockSummary.ranking":
       "Ranked by the share of matches won, then by net hoops. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",

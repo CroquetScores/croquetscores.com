@@ -3399,6 +3399,14 @@ a.player-name[data-withdrawn] {
   font-size: var(--text-3xl);
 }
 
+/* Said under the results, in the muted ink, since it explains the scores
+   above it rather than being what the page is for. */
+.competition-played-to {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  margin-block: var(--space-3) 0;
+}
+
 /* A page printed is the competition's name and its results, and nothing that
    is for finding the page: the site's bars, the views, the button. Black on
    white with no panel, since ink is spent on a tint nobody reads against. The

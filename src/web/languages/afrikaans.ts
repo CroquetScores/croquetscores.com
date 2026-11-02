@@ -445,7 +445,6 @@ export const afrikaans: Language = {
     "block.netGames": "Netto spelle",
     "block.games": "Spelle",
     "block.netHoops": "Netto hoepels",
-    "competition.playedTo": "Gespeel tot {hoops} poorte",
     "block.won": "gewen",
     "block.lost": "verloor",
     "block.drawn": "gelykop",
@@ -459,6 +458,7 @@ export const afrikaans: Language = {
     "competition.view.summary": "Opsomming",
     "competition.view.orderOfPlay": "Speelvolgorde",
     "competition.print": "Druk",
+    "competition.playedTo": "Gespeel tot {hoops} poorte",
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen, dan volgens netto hoepels. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",

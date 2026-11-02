@@ -446,7 +446,6 @@ export const dutch: Language = {
     "block.netGames": "Saldo partijen",
     "block.games": "Partijen",
     "block.netHoops": "Saldo poortjes",
-    "competition.playedTo": "Gespeeld tot {hoops} poortjes",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "gelijk",
@@ -460,6 +459,7 @@ export const dutch: Language = {
     "competition.view.summary": "Overzicht",
     "competition.view.orderOfPlay": "Speelvolgorde",
     "competition.print": "Afdrukken",
+    "competition.playedTo": "Gespeeld tot {hoops} poortjes",
     "blockSummary.ranking":
       "Gerangschikt naar het aandeel gewonnen wedstrijden, daarna naar het saldo poortjes. Het eigen reglement van een toernooi kan de spelers anders plaatsen.",
     "orderOfPlay.none": "Er zijn nog geen partijen gespeeld.",

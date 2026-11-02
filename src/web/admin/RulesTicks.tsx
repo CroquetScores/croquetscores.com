@@ -55,9 +55,9 @@ export interface RulesAsItIs {
  * After them is the most hoops a game is played to, which a competition being
  * added begins on the usual for its sport, and one being changed on its own.
  * Emptied it is none, which is sent as none rather than left out, since
- * leaving it out would be taken as the usual (maximumHoops.feature). Text that
- * is no number is sent as it was typed, for the tournament to refuse, since
- * a number that is not one would be sent as none.
+ * leaving it out would be taken as the usual (maximumHoops.feature). What is
+ * typed is sent as it was typed, and the site reads it as a number, so that
+ * there is one reading of it and not two to drift apart.
  */
 export const useRules = (
   begins: RulesAsItIs | undefined,
@@ -69,7 +69,7 @@ export const useRules = (
     readonly handicap: boolean;
     readonly drawsAllowed: boolean;
     readonly worldRankings?: boolean;
-    readonly maximumHoops: number | string | null;
+    readonly maximumHoops: string | null;
   };
   readonly ticks: React.JSX.Element;
 } => {
@@ -100,12 +100,7 @@ export const useRules = (
     said: {
       handicap,
       drawsAllowed,
-      maximumHoops:
-        typedMaximumHoops === ""
-          ? null
-          : /^-?\d+(?:\.\d+)?$/.test(typedMaximumHoops)
-            ? Number(typedMaximumHoops)
-            : typedMaximumHoops,
+      maximumHoops: typedMaximumHoops === "" ? null : typedMaximumHoops,
       ...(asksAboutWorldRankings ? { worldRankings } : {}),
     },
     ticks: (

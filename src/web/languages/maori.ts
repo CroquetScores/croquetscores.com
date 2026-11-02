@@ -416,7 +416,6 @@ export const maori: Language = {
     "block.netGames": "Kupenga kēmu",
     "block.games": "Kēmu",
     "block.netHoops": "Kupenga hupa",
-    "competition.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
     "block.won": "wikitoria",
     "block.lost": "hinga",
     "block.drawn": "taurite",
@@ -429,6 +428,7 @@ export const maori: Language = {
     "competition.view.summary": "Whakarāpopototanga",
     "competition.view.orderOfPlay": "Raupapa tākaro",
     "competition.print": "Tā",
+    "competition.playedTo": "Ka tākarohia ki ngā hupa {hoops}",
     "blockSummary.ranking":
       "Kua raupapatia mā te wāhanga o ngā tukinga i wikitoria, ka mā ngā hupa kupenga. Tērā pea ka rerekē te whakatakoto i ngā kaitākaro e ngā ture o te whakataetae ake.",
     "orderOfPlay.none": "Kāore anō kia tākarohia he kēmu.",

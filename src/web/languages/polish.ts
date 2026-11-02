@@ -403,7 +403,6 @@ export const polish: Language = {
     "block.netGames": "Bilans gier",
     "block.games": "Gry",
     "block.netHoops": "Bilans bramek",
-    "competition.playedTo": "Gra do {hoops} bramek",
     "block.won": "wygrana",
     "block.lost": "przegrana",
     "block.drawn": "remis",
@@ -415,6 +414,7 @@ export const polish: Language = {
     "competition.view.summary": "Podsumowanie",
     "competition.view.orderOfPlay": "Kolejność gier",
     "competition.print": "Drukuj",
+    "competition.playedTo": "Gra do {hoops} bramek",
     "blockSummary.ranking":
       "Kolejność według odsetka wygranych meczów, potem według bilansu bramek. Regulamin turnieju może ustalać kolejność zawodników inaczej.",
     "orderOfPlay.none": "Nie rozegrano jeszcze żadnej gry.",

@@ -461,7 +461,6 @@ export const german: Language = {
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
-    "competition.playedTo": "Gespielt bis {hoops} Tore",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "unentschieden",
@@ -476,6 +475,7 @@ export const german: Language = {
     "competition.view.summary": "Zusammenfassung",
     "competition.view.orderOfPlay": "Spielreihenfolge",
     "competition.print": "Drucken",
+    "competition.playedTo": "Gespielt bis {hoops} Tore",
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches, dann nach der Tordifferenz. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",

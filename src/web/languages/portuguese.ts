@@ -440,7 +440,6 @@ export const portuguese: Language = {
     "block.netGames": "Saldo de jogos",
     "block.games": "Jogos",
     "block.netHoops": "Saldo de arcos",
-    "competition.playedTo": "Jogado a {hoops} arcos",
     "block.won": "vitória",
     "block.lost": "derrota",
     "block.drawn": "empate",
@@ -454,6 +453,7 @@ export const portuguese: Language = {
     "competition.view.summary": "Resumo",
     "competition.view.orderOfPlay": "Ordem de jogo",
     "competition.print": "Imprimir",
+    "competition.playedTo": "Jogado a {hoops} arcos",
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas e, depois, pelo saldo de arcos. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",

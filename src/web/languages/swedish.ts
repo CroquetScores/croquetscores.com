@@ -441,7 +441,6 @@ export const swedish: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
-    "competition.playedTo": "Spelas till {hoops} bågar",
     "block.won": "vann",
     "block.lost": "förlorade",
     "block.drawn": "oavgjort",
@@ -456,6 +455,7 @@ export const swedish: Language = {
     "competition.view.summary": "Sammanfattning",
     "competition.view.orderOfPlay": "Speltabell",
     "competition.print": "Skriv ut",
+    "competition.playedTo": "Spelas till {hoops} bågar",
     "blockSummary.ranking":
       "Rankad efter andelen vunna matcher, därefter efter nettobågar. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",
