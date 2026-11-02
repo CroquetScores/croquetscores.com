@@ -109,6 +109,28 @@ Given(
   },
 );
 
+// The next time the dialog asks for the competition's players, answered as an
+// error of the site's is, with no code of its own. Once only, as the dialog
+// asks when it opens. The competition is not named: the dialog is the only
+// page open, and so the only one to ask.
+Given(
+  "the competition's players are answered with a server error",
+  async function (this: SpecWorld) {
+    await this.browserPage.route(
+      (url) => /\/competitions\/[^/]+\/players$/.test(url.pathname),
+      async (route) => {
+        if (route.request().method() !== "GET") return route.fallback();
+        await route.fulfill({
+          status: 500,
+          contentType: "text/html",
+          body: "Something went wrong.",
+        });
+      },
+      { times: 1 },
+    );
+  },
+);
+
 Then(
   "{string} is offered as the {string}",
   async function (this: SpecWorld, name: string, label: string) {
