@@ -1,29 +1,29 @@
 @browser @postgres
-Feature: A year's page is its months, and a month opens in place to show its tournaments
+Feature: A year's page is its months, and a month's tournaments are loaded when it is pressed
 
   A year's page used to list every tournament starting in the year
-  (`year.feature`). A year holds hundreds, and a reader is after a month's.
-  So the page at "/2026", and a sport's at "/2026/ac", lists the twelve months
-  of the year, each closed. Pressing a month opens it on the same page: the
-  month's tournaments appear beneath it, in the table the year's page was
-  (`year.feature`). Pressing it again closes it. Months open independently, so
-  a reader can open as many as they like, up to all twelve, and read them
-  down the one page.
+  (`year.feature`). A year holds hundreds, and a reader is after a month's, so
+  the page at "/2026", and a sport's at "/2026/ac", lists the twelve months of
+  the year, each closed, and loads nothing else.
 
-  The public side works without scripting (`SETUP.md`), so a month is a link
-  to the same page with that month added to, or taken from, the months open,
-  which are in the address as "/2026?open=3,10". That is also what lets a
-  reader keep or share a page with the months they were reading open. A
-  tournament is not fetched until its month is open, so a closed month costs
-  the page nothing.
+  Pressing a month asks the server for that month's tournaments alone and
+  puts them beneath the month, in the table the year's page was
+  (`year.feature`). The page is not loaded again, and nothing is asked for a
+  month nobody has pressed. That is the point: the page is an address anybody
+  can follow, and loading a year's tournaments whole on every visit would
+  ask the server for a great deal that is never read, which a page of results
+  at a time would only have spread out. Pressing a month again closes it, and
+  pressing it once more shows it without asking again. Months open
+  independently, so a reader can open as many as they like, up to all twelve,
+  and read them down the one page.
 
-  A closed month says how many tournaments start in it, so that the reader
-  sees where the year's tournaments are without opening them.
+  This needs scripting, as registering does (`java-script-required.feature`):
+  without it the page says so in place of the months.
 
-  Each open month's tournaments are narrowed by the country, region and sport
-  the reader chose, as the year's were (`year.feature`), and are sorted by
-  date, earliest first. The table's own column sorting is the page's, and
-  applies to every open month alike.
+  The country, region and sport the reader chose still narrow the
+  tournaments (`year.feature`), and are in the page's address as they are
+  there. Each month's tournaments begin sorted by date, earliest first, and
+  pressing a column heading sorts that month's table alone.
 
   Where a scenario says nothing else, a tournament is for the sport "ac".
 
@@ -34,6 +34,9 @@ Feature: A year's page is its months, and a month opens in place to show its tou
     And "organiser@example.com" has an account, confirmed
 
   Rule: A year's page lists its twelve months, all closed
+
+    Background:
+      Given scripting is on
 
     Scenario: The page lists the twelve months
       When the page for 2026 is opened
@@ -60,41 +63,14 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       Then the month "October" is closed
       And "Spring Open" is not in the year's tournaments
 
-  Rule: A closed month says how many tournaments start in it
-
-    Scenario: A month counts the tournaments starting in it
-      Given "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2026-10-10"
-      And "organiser@example.com" has created the tournament "Autumn Open"
-      And the tournament "Autumn Open" starts on "2026-10-24"
+    Scenario: Nothing is asked of the server for a month nobody pressed
       When the page for 2026 is opened
-      Then the month "October" has 2 tournaments
+      Then no month's tournaments have been asked for
 
-    Scenario: A month with none says none
-      When the page for 2026 is opened
-      Then the month "October" has 0 tournaments
+  Rule: Pressing a month loads its tournaments beneath it
 
-    Scenario: A tournament is counted in the month it starts
-      Given "organiser@example.com" has created the tournament "New Year Open"
-      And the tournament "New Year Open" starts on "2025-12-30"
-      And the tournament "New Year Open" finishes on "2026-01-02"
-      When the page for 2026 is opened
-      Then the month "January" has 0 tournaments
-
-    Scenario: An archived tournament is not counted
-      Given "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2026-10-10"
-      And "organiser@example.com" has archived the tournament "Spring Open"
-      When the page for 2026 is opened
-      Then the month "October" has 0 tournaments
-
-    Scenario: A tournament on another website is not counted
-      Given "organiser@example.com" has created the tournament "Spring Open" on the website "gateballscores.com"
-      And the tournament "Spring Open" starts on "2026-10-10"
-      When the page for 2026 is opened
-      Then the month "October" has 0 tournaments
-
-  Rule: Pressing a month opens it on the same page
+    Background:
+      Given scripting is on
 
     Scenario: Pressing a month opens it
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -104,7 +80,18 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       Then the month "October" is open
       And "Spring Open" is in the year's tournaments
 
-    Scenario: The page stays the year's
+    Scenario: Only the month's tournaments are asked for
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then 1 month's tournaments have been asked for
+
+    Scenario: The page is not loaded again
+      Given the page for 2026 is open
+      And the page is marked
+      When the month "October" is pressed
+      Then the page is the one that was marked
+
+    Scenario: The address is still the year's
       Given the page for 2026 is open
       When the month "October" is pressed
       Then the page is the year 2026's
@@ -123,6 +110,29 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       When the month "October" is pressed
       Then "Spring Open" is not in the year's tournaments
 
+    Scenario: A tournament over the new year is shown only in the month it starts
+      Given "organiser@example.com" has created the tournament "New Year Open"
+      And the tournament "New Year Open" starts on "2025-12-30"
+      And the tournament "New Year Open" finishes on "2026-01-02"
+      And the page for 2026 is open
+      When the month "January" is pressed
+      Then "New Year Open" is not in the year's tournaments
+
+    Scenario: An archived tournament is not shown
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      And the page for 2026 is open
+      When the month "October" is pressed
+      Then "Spring Open" is not in the year's tournaments
+
+    Scenario: A tournament on another website is not shown
+      Given "organiser@example.com" has created the tournament "Spring Open" on the website "gateballscores.com"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the page for 2026 is open
+      When the month "October" is pressed
+      Then "Spring Open" is not in the year's tournaments
+
     Scenario: An open month with none says so
       Given the page for 2026 is open
       When the month "October" is pressed
@@ -135,10 +145,13 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       And the tournament "Early Open" starts on "2026-10-03"
       And the page for 2026 is open
       When the month "October" is pressed
-      Then the first of the month's tournaments is "Early Open"
-      And the second of the month's tournaments is "Late Open"
+      Then the first of the year's tournaments is "Early Open"
+      And the second of the year's tournaments is "Late Open"
 
-  Rule: Pressing an open month closes it
+  Rule: Pressing an open month closes it, and pressing it again shows it without asking
+
+    Background:
+      Given scripting is on
 
     Scenario: Pressing an open month closes it
       Given the page for 2026 is open
@@ -153,7 +166,17 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       When the month "October" is pressed
       Then the month "March" is open
 
+    Scenario: A month pressed again is not asked for again
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the month "October" is pressed
+      When the month "October" is pressed
+      Then 1 month's tournaments have been asked for
+
   Rule: Any number of months can be open at once
+
+    Background:
+      Given scripting is on
 
     Scenario: A second month opens beside the first
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -171,51 +194,37 @@ Feature: A year's page is its months, and a month opens in place to show its tou
       When every month of the year is pressed
       Then 12 months are open
 
-  Rule: The months open are in the address
+  Rule: Pressing a column heading sorts that month alone
 
-    Scenario: The address names the months open
+    Background:
+      Given scripting is on
+
+    Scenario: A month's table is sorted by the column pressed
+      Given "organiser@example.com" has created the tournament "Beta Open"
+      And the tournament "Beta Open" starts on "2026-10-03"
+      And "organiser@example.com" has created the tournament "Alpha Open"
+      And the tournament "Alpha Open" starts on "2026-10-24"
+      And the page for 2026 is open
+      And the month "October" is pressed
+      When the column "Name" of the year's tournaments is pressed
+      Then the first of the year's tournaments is "Alpha Open"
+      And the second of the year's tournaments is "Beta Open"
+
+    Scenario: The page is not loaded again to sort
       Given the page for 2026 is open
       And the month "October" is pressed
-      When the month "March" is pressed
-      Then the page's address asks for the months "3,10" open
+      And the page is marked
+      When the column "Name" of the year's tournaments is pressed
+      Then the page is the one that was marked
 
-    Scenario: A page opened at such an address has those months open
-      When the page at "/2026?open=3,10" is opened
-      Then the month "March" is open
-      And the month "October" is open
-      And the month "June" is closed
+  Rule: A sport's page loads its months in the same way
 
-    Scenario: Closing the last month leaves the address as the year's
-      Given the page for 2026 is open
-      And the month "October" is pressed
-      When the month "October" is pressed
-      Then the page's address asks for no months open
-
-    Scenario Outline: A month that is no month is left closed
-      When the page at "<address>" is opened
-      Then 0 months are open
-
-      Examples:
-        | address                |
-        | /2026?open=0           |
-        | /2026?open=13          |
-        | /2026?open=october     |
-        | /2026?open=            |
-
-  Rule: A sport's page opens its months in the same way
+    Background:
+      Given scripting is on
 
     Scenario: The sport's page lists the twelve months
       When the page for 2026 in the sport "ac" is opened
       Then the year has 12 months
-
-    Scenario: A month counts only the sport's tournaments
-      Given "organiser@example.com" has created the tournament "Spring Open"
-      And the tournament "Spring Open" starts on "2026-10-10"
-      And "organiser@example.com" has created the tournament "Gate Open"
-      And the tournament "Gate Open" starts on "2026-10-11"
-      And the tournament "Gate Open" is for the sport "gc"
-      When the page for 2026 in the sport "ac" is opened
-      Then the month "October" has 1 tournaments
 
     Scenario: An open month shows only the sport's tournaments
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -230,17 +239,23 @@ Feature: A year's page is its months, and a month opens in place to show its tou
 
   Rule: What the reader chose narrows the months
 
-    The country and region a reader narrowed to are in the address
-    (`year.feature`), and are kept as months are opened and closed.
+    Background:
+      Given scripting is on
 
-    Scenario: A month counts only the country chosen
+    Scenario: An open month shows only the country chosen
       Given "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" is played in the country "nz"
-      When the page at "/2026?country=au" is opened
-      Then the month "October" has 0 tournaments
-
-    Scenario: Opening a month keeps the country chosen
-      Given the page at "/2026?country=nz" is open
+      And the page at "/2026?country=au" is open
       When the month "October" is pressed
-      Then the page's address asks for the country "nz"
+      Then "Spring Open" is not in the year's tournaments
+
+  Rule: A reader without scripting is told it is needed
+
+    Scenario: The page says it needs scripting
+      When the page for 2026 is opened
+      Then the page says the words for "year.needsScripting"
+
+    Scenario: No month is listed without scripting
+      When the page for 2026 is opened
+      Then the year has 0 months
