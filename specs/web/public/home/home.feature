@@ -900,6 +900,26 @@ Feature: The home page lists recent results and upcoming tournaments
       When the home page is opened
       Then the country chosen is "Any country"
 
+    Scenario: A flag pressed forgets the region remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      And the flag of "Spring Open" in the upcoming tournaments is pressed
+      When the home page is opened
+      Then the region chosen is "Any region"
+
+    Scenario: A country remembered that there is not is left out
+      Given the device remembers "xx" as the country
+      When the home page is opened
+      Then 3 upcoming tournaments are listed
+
+    Scenario: A sport remembered that the website does not offer is left out
+      Given the device remembers "gb" as the sport
+      When the home page is opened
+      Then 3 upcoming tournaments are listed
+
     Scenario: A filter in the address is shown in place of the one remembered
       Given the home page is open
       And "New Zealand" is chosen as the country

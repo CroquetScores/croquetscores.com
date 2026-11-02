@@ -445,6 +445,19 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Gateball" is not offered as a sport
 
+  Rule: The filter chosen is the one the home page remembers
+
+    The home page says which filter is remembered and why
+    (`home.feature`). A year's page remembers what its reader chose in the same
+    way, since it is where the reader plays and not which page they were on.
+
+    Scenario: A country chosen is there on the home page
+      Given the page for 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
   Rule: A region chosen with few tournaments to show says why
 
     Tournaments from before November 2026 have no region, so a region narrows

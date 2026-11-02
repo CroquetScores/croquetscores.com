@@ -144,10 +144,12 @@ const oneOf = (query: unknown, name: string): string | undefined => {
   return typeof first === "string" && first !== "" ? first : undefined;
 };
 
-// What the filter is remembered under. It is the one name in the page's
-// address, beside the sorting's, that says the reader pressed something.
+// What the filter is remembered under.
 const filterCookie = "filter";
-const filterName = "filter";
+
+// The name the filter is kept under in the page's address, as a list's sorting
+// is: the one that says the reader pressed it, and did not follow a link.
+const filterList = "filter";
 
 // A region is only a region of the country it is in.
 const isRegionOf = (country: string | undefined, region: string): boolean =>
@@ -164,34 +166,42 @@ const saysOfFilter = (query: unknown, offersSport: boolean): boolean =>
     (name) => oneOf(query, name) !== undefined,
   );
 
-// What the device remembers of the filter, less whatever it can no longer
-// mean: a country, region or sport this website has stopped offering would be
-// refused as a mistake, and the reader made none, so it is left out instead.
-const filterRemembered = (
+// `chosen` less whatever this website cannot mean by it: a country, region or
+// sport it does not offer would be refused as a mistake. What the device
+// remembers is held to this both ways, so that a filter is never stored that
+// would not be shown, and one stored before the website changed is left out
+// rather than refused, since the reader made no mistake.
+const meaningful = (
   request: FastifyRequest,
-  offersSport: boolean,
+  chosen: FilterChosen,
 ): FilterChosen => {
-  let stored: URLSearchParams;
-  try {
-    stored = new URLSearchParams(request.cookies[filterCookie] ?? "");
-  } catch {
-    return {};
-  }
-  const country = stored.get("country") ?? undefined;
-  const region = stored.get("region") ?? undefined;
-  const sport = stored.get("sport") ?? undefined;
-  const known =
-    country !== undefined && Countries.thereAre.find(country) !== undefined;
-  const offered =
-    sport !== undefined &&
-    sportsOffered[websiteOf(request).site].some(({ code }) => code === sport);
+  const country =
+    chosen.country !== undefined &&
+    Countries.thereAre.find(chosen.country) !== undefined
+      ? chosen.country
+      : undefined;
+  const sport = sportsOffered[websiteOf(request).site].some(
+    ({ code }) => code === chosen.sport,
+  )
+    ? chosen.sport
+    : undefined;
   return {
-    country: known ? country : undefined,
+    country,
     region:
-      known && region !== undefined && isRegionOf(country, region)
-        ? region
+      chosen.region !== undefined && isRegionOf(country, chosen.region)
+        ? chosen.region
         : undefined,
-    sport: offersSport && offered ? sport : undefined,
+    sport,
+  };
+};
+
+// What the device remembers of the filter, as it was written.
+const filterRemembered = (request: FastifyRequest): FilterChosen => {
+  const stored = new URLSearchParams(request.cookies[filterCookie] ?? "");
+  return {
+    country: stored.get("country") ?? undefined,
+    region: stored.get("region") ?? undefined,
+    sport: stored.get("sport") ?? undefined,
   };
 };
 
@@ -225,7 +235,7 @@ export const askedOf = (
         region: oneOf(request.query, "region"),
         sport: oneOf(request.query, "sport"),
       }
-    : filterRemembered(request, offersSport);
+    : meaningful(request, filterRemembered(request));
   const kept =
     region !== undefined &&
     country !== undefined &&
@@ -295,7 +305,7 @@ export const settledWhenPressed = (
   { offersSport = true }: { readonly offersSport?: boolean } = {},
 ): FastifyReply | undefined => {
   const query = request.query as Record<string, unknown> | undefined;
-  const pressed = [query?.[keep]].flat().includes(filterName);
+  const pressed = [query?.[keep]].flat().includes(filterList);
   if (pressed) rememberFilter(request, reply, offersSport);
   return settleWhatWasPressed(
     request,
@@ -322,25 +332,21 @@ const rememberFilter = (
   reply: FastifyReply,
   offersSport: boolean,
 ): void => {
-  const country = oneOf(request.query, "country");
-  const region = oneOf(request.query, "region");
-  const sport = offersSport
-    ? oneOf(request.query, "sport")
-    : filterRemembered(request, true).sport;
-  const now = new URLSearchParams();
-  if (country !== undefined && Countries.thereAre.find(country) !== undefined) {
-    now.set("country", country);
-    if (region !== undefined && isRegionOf(country, region))
-      now.set("region", region);
-  }
-  if (
-    sport !== undefined &&
-    sportsOffered[websiteOf(request).site].some(({ code }) => code === sport)
-  )
-    now.set("sport", sport);
-  if (now.size === 0) reply.clearCookie(filterCookie, keptByTheServer);
+  const now = meaningful(request, {
+    country: oneOf(request.query, "country"),
+    region: oneOf(request.query, "region"),
+    sport: offersSport
+      ? oneOf(request.query, "sport")
+      : filterRemembered(request).sport,
+  });
+  const written = new URLSearchParams(
+    Object.entries(now).filter(
+      (entry): entry is [string, string] => entry[1] !== undefined,
+    ),
+  );
+  if (written.size === 0) reply.clearCookie(filterCookie, keptByTheServer);
   else
-    reply.setCookie(filterCookie, now.toString(), {
+    reply.setCookie(filterCookie, written.toString(), {
       ...keptByTheServer,
       maxAge: aYear,
     });
@@ -467,7 +473,7 @@ export const table = (
     if (flag === undefined) return "";
     const narrowed = addressWith(
       asked,
-      { [keep]: filterName },
+      { [keep]: filterList },
       { ...asked.chose, country: tournament.country, region: undefined },
     );
     const only = say("tournamentList.onlyIn", {
@@ -635,7 +641,7 @@ export const filter = (
   return `          <form class="tournament-filter" method="get" action="${escape(asked.path)}">
 ${[
   ...sortings,
-  `            <input type="hidden" name="${keep}" value="${filterName}" />`,
+  `            <input type="hidden" name="${keep}" value="${filterList}" />`,
   field(
     "country",
     say("tournamentList.filter.country"),

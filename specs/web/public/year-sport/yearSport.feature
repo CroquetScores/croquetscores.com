@@ -332,6 +332,29 @@ Feature: A sport's page in a year lists every tournament of it starting then
       When the flag of "Spring Open" in the sport's tournaments is pressed
       Then the address is "/2026/ac"
 
+  Rule: The filter chosen is the one the home page remembers, apart from the sport
+
+    The sport is the page's own, so the filter here has none to choose and
+    says nothing of one: what the home page remembered of the sport is left as
+    it was rather than forgotten (`home.feature`).
+
+    Scenario: A country chosen is there on the home page
+      Given the page for "ac" in 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: The sport remembered is left as it was
+      Given the home page is open
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And the page for "ac" in 2026 is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the sport chosen is "Golf Croquet"
+
   Rule: A region chosen with few tournaments to show says why
 
     Tournaments from before November 2026 have no region, so a region narrows
