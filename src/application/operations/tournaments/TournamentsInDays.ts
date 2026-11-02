@@ -8,7 +8,15 @@ import {
 
 /** Every reason asking for a page of tournaments can be refused where it is asked. */
 export type TournamentsInDaysRefusedCode =
-  "TournamentsInDays.NotText" | "TournamentsInDays.NoSuchPage";
+  | "TournamentsInDays.NotText"
+  | "TournamentsInDays.NoSuchPage"
+  | "TournamentsInDays.NoSuchSorting";
+
+/** What the list can be sorted by, and which way. */
+export interface TournamentsSorting {
+  readonly column: "date" | "name";
+  readonly order: "up" | "down";
+}
 
 /** How many tournaments a page holds. */
 export const TOURNAMENTS_TO_A_PAGE = 100;
@@ -35,6 +43,9 @@ export class TournamentsInDays extends Query<TournamentsPage> {
     readonly lastDay: string | undefined,
     readonly page: number = 1,
     readonly chose: FilterChosen = {},
+    readonly sorting?: TournamentsSorting,
+    /** The language names are ordered in, as a language tag such as "sv". */
+    readonly language: string = "en",
   ) {
     super();
     if (
@@ -45,6 +56,15 @@ export class TournamentsInDays extends Query<TournamentsPage> {
     ) {
       throw new ValidationError<TournamentsInDaysRefusedCode>(
         "TournamentsInDays.NotText",
+      );
+    }
+    if (
+      sorting !== undefined &&
+      (!["date", "name"].includes(sorting.column) ||
+        !["up", "down"].includes(sorting.order))
+    ) {
+      throw new ValidationError<TournamentsInDaysRefusedCode>(
+        "TournamentsInDays.NoSuchSorting",
       );
     }
     if (!Number.isSafeInteger(page) || page < 1) {

@@ -3,6 +3,7 @@ import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import {
   filterFor,
+  type TournamentOfWebsite,
   type TournamentsByWebsite,
 } from "./tournamentsOfWebsite.js";
 import {
@@ -10,6 +11,28 @@ import {
   TournamentsInDays,
   type TournamentsPage,
 } from "./TournamentsInDays.js";
+
+// The whole range is sorted before it is cut, so the first page holds the first
+// of what the reader sorted by. A stable sort leaves rows alike in it in the
+// order the read model gave them, which is by start and then name. A day is
+// written year first, so the writing sorts as the day does; names are ordered
+// as the reader's language orders them.
+const sortedBy = (
+  every: readonly TournamentOfWebsite[],
+  { sorting, language }: TournamentsInDays,
+): readonly TournamentOfWebsite[] => {
+  if (sorting === undefined) return every;
+  const byName = new Intl.Collator(language);
+  const compare =
+    sorting.column === "date"
+      ? (one: TournamentOfWebsite, other: TournamentOfWebsite): number =>
+          one.starts < other.starts ? -1 : one.starts > other.starts ? 1 : 0
+      : (one: TournamentOfWebsite, other: TournamentOfWebsite): number =>
+          byName.compare(one.name, other.name);
+  return [...every].sort((one, other) =>
+    sorting.order === "up" ? compare(one, other) : compare(other, one),
+  );
+};
 
 export class TournamentsInDaysHandler extends QueryHandler<
   TournamentsInDays,
@@ -40,9 +63,10 @@ export class TournamentsInDaysHandler extends QueryHandler<
       filter.lastDay ?? "9999-12-31",
       filter,
     );
+    const ordered = sortedBy(every, query);
     const from = (query.page - 1) * TOURNAMENTS_TO_A_PAGE;
     return {
-      tournaments: every.slice(from, from + TOURNAMENTS_TO_A_PAGE),
+      tournaments: ordered.slice(from, from + TOURNAMENTS_TO_A_PAGE),
       total: every.length,
       lastPage: Math.max(1, Math.ceil(every.length / TOURNAMENTS_TO_A_PAGE)),
     };

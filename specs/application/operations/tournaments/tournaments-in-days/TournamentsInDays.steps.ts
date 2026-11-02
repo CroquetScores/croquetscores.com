@@ -1,10 +1,11 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { inspect } from "node:util";
 
 import {
   TournamentsInDays,
   type TournamentsPage,
+  type TournamentsSorting,
 } from "../../../../../src/application/operations/tournaments/TournamentsInDays.js";
 import type { SpecWorld } from "../../../../support/world.js";
 import { inHandOf } from "../aRequest.js";
@@ -16,6 +17,7 @@ const ask = async (
   first: string | undefined,
   last: string | undefined,
   page: number,
+  sorting?: { column: string; order: string },
 ): Promise<void> => {
   try {
     world.answer = await inHandOf(world).ask(
@@ -25,12 +27,42 @@ const ask = async (
         last,
         page,
         world.filterChosen,
+        sorting as TournamentsSorting | undefined,
+        languages.get(world),
       ),
     );
   } catch (failure) {
     world.failure = failure;
   }
 };
+
+// The language names are ordered in, where a scenario says; the question's own
+// where it does not.
+const languages = new WeakMap<SpecWorld, string>();
+
+Given(
+  "the reader reads the language {string}",
+  function (this: SpecWorld, tag: string) {
+    languages.set(this, tag);
+  },
+);
+
+When(
+  /^the tournaments from "(.*)" to "(.*)" are asked for, sorted by (\w+) from the (smallest|largest)(?:, page (\d+))?$/,
+  async function (
+    this: SpecWorld,
+    first: string,
+    last: string,
+    column: string,
+    way: string,
+    page: string | undefined,
+  ) {
+    await ask(this, first, last, page ? Number(page) : 1, {
+      column,
+      order: way === "smallest" ? "up" : "down",
+    });
+  },
+);
 
 When("the tournaments are asked for", async function (this: SpecWorld) {
   await ask(this, undefined, undefined, 1);

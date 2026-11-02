@@ -32,6 +32,7 @@ import {
   sendPage,
   sendRefused,
   settledWhenPressed,
+  sortingRead,
   table,
   yearsOf,
 } from "./tournamentLists.js";
@@ -95,10 +96,24 @@ export const registerTournamentsInDaysPage = (
     };
 
     const page = pageOf(request.query);
+    // What the address says, then what the device remembers: the whole range is
+    // sorted by it before it is cut into pages. Nothing sorts it by the order
+    // it begins in, which is the one the table is marked with.
+    const sorting =
+      sortingRead(asked.sorting.tournaments) ??
+      sortingRead(asked.remembered.tournaments);
     let answered: TournamentsPage;
     try {
       answered = await mediator.query(
-        new TournamentsInDays(website.host, from, to, page, asked.chose),
+        new TournamentsInDays(
+          website.host,
+          from,
+          to,
+          page,
+          asked.chose,
+          sorting,
+          language,
+        ),
       );
     } catch (failure) {
       const code = refusedWith(failure);

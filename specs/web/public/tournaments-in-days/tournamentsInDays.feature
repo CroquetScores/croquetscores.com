@@ -34,6 +34,20 @@ Feature: A page lists the tournaments starting from one day to another
   A page beyond the last, which a reader whose list shrank might open from a
   link they kept, sends them to the last page rather than showing nothing.
 
+  A column heading sorts the whole range and not only the page in view, and
+  sends the reader back to the first page in that order, so that what they
+  sorted by is what they are shown first: the names from A, say, beginning on
+  page 1 whichever page they were on. The sorting stays as the pages are
+  turned (`TournamentsInDays.feature`).
+
+  The way to the previous page is written "<< Previous" and the way to the next
+  "Next >>", the marks pointing the way the page turns. They are drawn for
+  those who see them and left out of what a screen reader says, which says
+  "Previous" and "Next" as it would without them.
+
+  A page beyond the last, which a reader whose list shrank might open from a
+  link they kept, sends them to the last page rather than showing nothing.
+
   A column heading sorts the page the reader is looking at and not the whole
   range, since the range is cut into pages in the order the tournaments start,
   by the application (`TournamentsInDays.feature`), which does not know the
@@ -182,6 +196,34 @@ Feature: A page lists the tournaments starting from one day to another
       And "organiser@example.com" has created 100 tournaments
       When the tournaments from "2026-03-01" to "2026-03-31" are opened
       Then the way to turn to the next page is not offered
+
+  Rule: Sorting the list goes back to the first page in that order
+
+    Background:
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
+      And "organiser@example.com" has created 101 tournaments
+      And the tournament is to start at "2026-03-30T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Aardvark Open"
+
+    Scenario: The latest start is on the second page to begin with
+      When the tournaments from "2026-03-01" to "2026-03-31" are opened at page 2
+      Then "Aardvark Open" is in the days' tournaments
+
+    Scenario: Sorting from the second page goes back to the first
+      Given the tournaments from "2026-03-01" to "2026-03-31" are open at page 2
+      When the column "Name" of the days' tournaments is pressed
+      Then the page is said to be "Page 1 of 2"
+
+    Scenario: Sorting from the second page lists the first name first
+      Given the tournaments from "2026-03-01" to "2026-03-31" are open at page 2
+      When the column "Name" of the days' tournaments is pressed
+      Then the first of the days' tournaments is "Aardvark Open"
+
+    Scenario: The sorting is kept on the second page
+      Given the tournaments from "2026-03-01" to "2026-03-31" are open
+      And the column "Name" of the days' tournaments is pressed
+      When the way to turn to the next page is pressed
+      Then "Aardvark Open" is not in the days' tournaments
 
   Rule: Turning the page keeps what the reader asked
 

@@ -14,6 +14,17 @@ Feature: The tournaments starting from one day to another, a page at a time
   tournament is on the same page from one visit to the next and is never on
   two.
 
+  The reader can sort the list by the tournament's start or by its name, from
+  the smallest or from the largest, and it is the whole range that is sorted
+  before it is cut into pages, so that the first page holds the first of the
+  tournaments in that order and not the first of the start order. Names are
+  ordered as the reader's language orders them, which the question names, since
+  "Östersund" comes after "Zebra" in Swedish and before it in English. Rows alike in what is
+  sorted by keep the order they began in, so that a tournament is on the same
+  page from one visit to the next. Asked for no sorting, the list is in the
+  order it begins in. A sorting that is neither is refused as
+  `TournamentsInDays.NoSuchSorting`.
+
   Pages are counted from the first. A page asked for beyond the last is not a
   mistake, since a reader whose list shrank under them is not at fault: it is
   answered with no tournaments, and with the number of the last page so that
@@ -134,6 +145,57 @@ Feature: The tournaments starting from one day to another, a page at a time
     Scenario: No tournaments is answered as one page with nothing on it
       When the tournaments from "2026-03-01" to "2026-03-31" are asked for
       Then the last page is 1
+
+  Rule: The whole range is sorted before it is cut into pages
+
+    Background:
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
+      And "organiser@example.com" has created 101 tournaments
+      And the tournament is to start at "2026-03-30T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Aardvark Open"
+
+    Scenario: Asked for no sorting the latest start is on the last page
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, page 2
+      Then "Aardvark Open" is answered
+
+    Scenario: Sorted by name from the smallest, the first name is on the first page
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the smallest
+      Then the first tournament answered is "Aardvark Open"
+
+    Scenario: Sorted by name from the largest, the first name is on the last page
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the largest, page 2
+      Then "Aardvark Open" is answered
+
+    Scenario: Sorted by start from the largest, the latest start is on the first page
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by date from the largest
+      Then the first tournament answered is "Aardvark Open"
+
+    Scenario: Sorted by start from the smallest, the latest start is on the last page
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by date from the smallest, page 2
+      Then "Aardvark Open" is answered
+
+  Rule: Names are ordered as the reader's language orders them
+
+    Background:
+      Given the tournament is to start at "2026-03-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Zebra Open"
+      And "organiser@example.com" has created the tournament "Östersund Open"
+
+    Scenario: In English a name beginning with Ö comes before Z
+      Given the reader reads the language "en"
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the smallest
+      Then the first tournament answered is "Östersund Open"
+
+    Scenario: In Swedish a name beginning with Ö comes after Z
+      Given the reader reads the language "sv"
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by name from the smallest
+      Then the first tournament answered is "Zebra Open"
+
+  Rule: A sorting there is not is refused
+
+    Scenario: A column there is not is refused
+      When the tournaments from "2026-03-01" to "2026-03-31" are asked for, sorted by colour from the smallest
+      Then it is refused with "TournamentsInDays.NoSuchSorting"
 
   Rule: A page there is not is refused or is empty
 
