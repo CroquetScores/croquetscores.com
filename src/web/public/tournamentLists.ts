@@ -154,13 +154,14 @@ const isRegionOf = (country: string | undefined, region: string): boolean =>
   country !== undefined &&
   Countries.thereAre.find(country)?.findRegion(region) !== undefined;
 
-// Whether the address says anything of what it is filtered by. An empty choice
-// counts, since that is how the form says "any", and a reader who chose "any"
-// has not asked to be shown what was remembered.
+// Whether the address says anything of what it is filtered by. An empty
+// choice is "any", which is not recorded anywhere and so says nothing: a
+// reader who chose "any" has had what was remembered of it forgotten, and an
+// address that carries an empty choice is not one that asks for the
+// remembered filter to be set aside.
 const saysOfFilter = (query: unknown, offersSport: boolean): boolean =>
   ["country", "region", ...(offersSport ? ["sport"] : [])].some(
-    (name) =>
-      (query as Record<string, unknown> | undefined)?.[name] !== undefined,
+    (name) => oneOf(query, name) !== undefined,
   );
 
 // What the device remembers of the filter, less whatever it can no longer

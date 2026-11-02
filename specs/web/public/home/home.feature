@@ -838,9 +838,9 @@ Feature: The home page lists recent results and upcoming tournaments
 
     The filter is remembered when the reader sends the form or presses a flag,
     and not when they follow a link that happens to say a country, which a
-    bookmark or an email may. Choosing "any" in every field is choosing to be
-    shown everything again, so it forgets what was remembered rather than
-    remembering nothing.
+    bookmark or an email may. Choosing "any" in a field records nothing for
+    it, so it forgets what was remembered of that field, and choosing "any" in
+    every field forgets the filter altogether.
 
     Background:
       Given "organiser@example.com" has created the tournament "Spring Open"
@@ -914,6 +914,26 @@ Feature: The home page lists recent results and upcoming tournaments
       And the home page is opened for the country "au"
       When the home page is opened
       Then the country chosen is "New Zealand"
+
+    Scenario: Choosing any sport forgets the sport and keeps the country
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And "Any sport" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: Choosing any sport is not remembered as a sport
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      And "Any sport" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the sport chosen is "Any sport"
 
     Scenario: Choosing any of everything forgets what was remembered
       Given the home page is open
