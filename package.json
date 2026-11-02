@@ -86,7 +86,7 @@
     "ravendb": "4.2.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "smtp-server": "^3.19.22",
+    "smtp-server": "^3.21.3",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",
