@@ -16,6 +16,14 @@ Feature: Which tournaments a reader asks to see
   for creating a tournament, so a country there is not is the application's
   to refuse. The filter is given the country itself.
 
+  A reader can also ask for the tournaments starting from one day to another.
+  Both days are asked for together or neither is: a range with one end open is
+  not what the From and To fields on the pages offer, and a half-filled pair is
+  more likely a reader's slip than what they meant. Both days are included,
+  since a reader who writes "from 1 March to 31 March" means the whole of
+  March, and it is a tournament's start that is compared, not its finish, so
+  that a tournament is in exactly one month's list rather than two.
+
   Where a scenario names no website, the filter is made on croquetscores.com.
 
   Rule: Whatever is left out is not narrowed by
@@ -119,3 +127,56 @@ Feature: Which tournaments a reader asks to see
       Given the sport "xx"
       When the filter is made
       Then it is refused with "Sport.Unknown"
+
+  Rule: Days are chosen together or not at all
+
+    Scenario: A filter of nothing filters by no first day
+      When the filter is made
+      Then it filters by no first day
+
+    Scenario: A filter of nothing filters by no last day
+      When the filter is made
+      Then it filters by no last day
+
+    Scenario: Both days chosen are filtered by
+      Given the first day "2026-03-01"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it filters by the first day "2026-03-01"
+      And it filters by the last day "2026-03-31"
+
+    Scenario: A first day without a last day is refused
+      Given the first day "2026-03-01"
+      When the filter is made
+      Then it is refused with "TournamentFilter.FirstDayWithoutLastDay"
+
+    Scenario: A last day without a first day is refused
+      Given the last day "2026-03-31"
+      When the filter is made
+      Then it is refused with "TournamentFilter.LastDayWithoutFirstDay"
+
+  Rule: The first day is not after the last
+
+    Scenario: A first day the day before the last is filtered by
+      Given the first day "2026-03-30"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it filters by the first day "2026-03-30"
+
+    Scenario: A single day is filtered by
+      Given the first day "2026-03-31"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it filters by the last day "2026-03-31"
+
+    Scenario: A first day after the last is refused
+      Given the first day "2026-04-01"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it is refused with "TournamentFilter.FirstDayAfterLastDay"
+
+    Scenario: A day that is not a day is refused
+      Given the first day "2026-02-30"
+      And the last day "2026-03-31"
+      When the filter is made
+      Then it is refused with "TournamentFilter.DayNotADay"
