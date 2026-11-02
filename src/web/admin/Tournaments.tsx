@@ -30,6 +30,8 @@ interface Listed {
   readonly region?: string;
   // Whether a competition in use counts towards the world rankings.
   readonly worldRankings: boolean;
+  readonly national: boolean;
+  readonly international: boolean;
   readonly part: "manager" | "scorer" | "rankingOfficer";
 }
 
@@ -565,6 +567,11 @@ export const Tournaments = ({ year, go }: Props): React.JSX.Element => {
                     key={tournament.id}
                     className="tournament"
                     data-archived={tournament.archived ? "" : undefined}
+                    data-bold={
+                      tournament.national || tournament.international
+                        ? ""
+                        : undefined
+                    }
                   >
                     <span className="tournament-dates">
                       {dated(tournament.starts, tournament.finishes, language)}

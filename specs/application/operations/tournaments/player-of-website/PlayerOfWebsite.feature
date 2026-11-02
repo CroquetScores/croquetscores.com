@@ -139,6 +139,36 @@ Feature: A player of the website, with the tournaments they have played in
       When the player "pat-player" of the website is asked for
       Then the player's page in the tournament "Spring Tests" is found at the address "2026/ac/spring-tests/players/pat-player"
 
+  Rule: Each tournament is answered with whether it is national or international
+
+    The player's page sets the row of a national or an international
+    tournament in bold (`websitePlayer.feature`), so each tournament says which
+    it is.
+
+    Scenario: A tournament that is national is answered as national
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" is national
+
+    Scenario: A tournament that is international is answered as international
+      Given "organiser@example.com" has made the tournament "Spring Open" international
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" is international
+
+    Scenario: A tournament that is neither is not answered as national
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" is not national
+
+    Scenario: A tournament that is neither is not answered as international
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" is not international
+
+    Scenario: A national tournament made international is not answered as national
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      And "organiser@example.com" has made the tournament "Spring Open" international
+      When the player "sam-someone" of the website is asked for
+      Then the player's tournament "Spring Open" is not national
+
   Rule: The tournaments are in the order they started, the most recent first
 
     Scenario: The tournament that started most recently is first

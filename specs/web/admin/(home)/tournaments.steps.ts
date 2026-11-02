@@ -403,6 +403,66 @@ Then(
   },
 );
 
+// The weight of what the reader reads of the row, which is its dates and its
+// name, as the browser works it out. Bold is 700 or more, which the weight of
+// an ordinary row never reaches.
+const weightsOf = async (
+  world: SpecWorld,
+  name: string,
+  within: string,
+): Promise<number[]> => {
+  const at = (
+    await world.browserPage
+      .locator(".tournaments > .tournament .tournament-name")
+      .allTextContents()
+  ).indexOf(name);
+  assert.ok(at >= 0, `${name} is not listed.`);
+  return world.browserPage.evaluate<number[]>(
+    `(() => [...document.querySelectorAll(".tournaments > .tournament")[${String(at)}].querySelectorAll(${JSON.stringify(within)})].map((element) => Number(getComputedStyle(element).fontWeight)))()`,
+  );
+};
+
+const readByTheReader = ".tournament-dates, .tournament-name";
+
+Then(
+  "the tournament {string} is listed in bold",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const weights = await weightsOf(this, name, readByTheReader);
+      assert.equal(weights.length, 2);
+      for (const weight of weights) assert.ok(weight >= 700, String(weight));
+    });
+  },
+);
+
+Then(
+  "the tournament {string} is not listed in bold",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const weights = await weightsOf(this, name, readByTheReader);
+      assert.equal(weights.length, 2);
+      for (const weight of weights) assert.ok(weight < 700, String(weight));
+    });
+  },
+);
+
+// Their own weight, which is not the row's: a button is a button whatever the
+// tournament beside it is.
+Then(
+  "the buttons of the tournament {string} are not bold",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      const weights = await weightsOf(
+        this,
+        name,
+        ".tournament-options .button",
+      );
+      assert.ok(weights.length > 0, "There are no buttons.");
+      for (const weight of weights) assert.ok(weight < 700, String(weight));
+    });
+  },
+);
+
 Then(
   "the tournament {string} is not listed",
   async function (this: SpecWorld, name: string) {

@@ -190,6 +190,32 @@ Feature: A year's page lists every tournament starting in it
       When the page for 2026 is opened
       Then "Spring Open" does not show its sport in the year's tournaments
 
+  Rule: A national or international tournament is bold along its whole row
+
+    A reader scanning a year's page is mostly after the tournaments that matter beyond
+    one club, so the row of a national or an international tournament is set
+    in bold, every column of it, and an ordinary tournament's is not. The two
+    are told apart by what the tournament's organiser ticked
+    (`new.feature`), and not by its name.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+
+    Scenario: A national tournament's row is bold
+      Given the tournament "Spring Open" is national
+      When the page for 2026 is opened
+      Then "Spring Open" is bold in the year's tournaments
+
+    Scenario: An international tournament's row is bold
+      Given the tournament "Spring Open" is international
+      When the page for 2026 is opened
+      Then "Spring Open" is bold in the year's tournaments
+
+    Scenario: A tournament that is neither is not bold
+      When the page for 2026 is opened
+      Then "Spring Open" is not bold in the year's tournaments
+
   Rule: The tournaments begin sorted by date, earliest first
 
     Background:

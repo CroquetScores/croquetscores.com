@@ -66,8 +66,15 @@
   display: flex;
   align-items: center;
   min-height: 44px;
-  font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+/* A national or international tournament is the more notable, so its whole row
+   is bold. The name is a normal weight otherwise, since a name already in bold
+   could not be told from one in bold for being notable. The buttons keep the
+   weight they have of their own. */
+.tournament[data-bold] {
+  font-weight: 700;
 }
 
 /* Struck through so that an archived tournament is not taken for one being

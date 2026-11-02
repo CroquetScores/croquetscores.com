@@ -138,6 +138,37 @@ Feature: The admin lists the reader's tournaments
       When the admin is opened
       Then the tournament "Spring Open" is listed
 
+  Rule: A national or international tournament is bold along its whole row
+
+    A reader scanning the admin's list is mostly after the tournaments that matter beyond
+    one club, so the row of a national or an international tournament is set
+    in bold, every column of it, and an ordinary tournament's is not. The two
+    are told apart by what the tournament's organiser ticked
+    (`new.feature`), and not by its name.
+
+    Scenario: A national tournament's row is bold
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" is national
+      When the admin is opened
+      Then the tournament "Spring Open" is listed in bold
+
+    Scenario: An international tournament's row is bold
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" is international
+      When the admin is opened
+      Then the tournament "Spring Open" is listed in bold
+
+    Scenario: A tournament that is neither is not bold
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      When the admin is opened
+      Then the tournament "Spring Open" is not listed in bold
+
+    Scenario: A national tournament's buttons keep their own weight
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" is national
+      When the admin is opened
+      Then the buttons of the tournament "Spring Open" are not bold
+
   Rule: An administrator's list is of every tournament on the website
 
     Scenario: A tournament an administrator has no part in is listed

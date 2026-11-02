@@ -206,3 +206,37 @@ Then(
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
 );
+
+// The weight of what the reader reads of the row, which is its dates and the
+// tournament's name, as the browser works it out. Bold is 700 or more, which
+// the weight of an ordinary row never reaches.
+const weightsOfRow = async (
+  world: SpecWorld,
+  tournament: string,
+): Promise<number[]> => {
+  const at = (
+    await rows(world).locator("td:nth-child(2)").allTextContents()
+  ).indexOf(tournament);
+  assert.ok(at >= 0, `${tournament} is not a row.`);
+  return world.browserPage.evaluate<number[]>(
+    `(() => [...document.querySelectorAll("main .player-tournaments tbody tr")[${String(at)}].querySelectorAll("td, td a")].map((element) => Number(getComputedStyle(element).fontWeight)))()`,
+  );
+};
+
+Then(
+  "the row of {string} is bold",
+  async function (this: SpecWorld, name: string) {
+    const weights = await weightsOfRow(this, name);
+    assert.ok(weights.length > 0);
+    for (const weight of weights) assert.ok(weight >= 700, String(weight));
+  },
+);
+
+Then(
+  "the row of {string} is not bold",
+  async function (this: SpecWorld, name: string) {
+    const weights = await weightsOfRow(this, name);
+    assert.ok(weights.length > 0);
+    for (const weight of weights) assert.ok(weight < 700, String(weight));
+  },
+);

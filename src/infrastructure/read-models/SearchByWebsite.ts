@@ -9,6 +9,7 @@ import {
   type PlayerTournament,
   type SearchByWebsite as Asked,
   type TournamentFound,
+  type TournamentFoundByName,
 } from "../../application/operations/tournaments/searching.js";
 import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
 import { BlockUpdated } from "../../domain/aggregates/tournaments/events/BlockUpdated.js";
@@ -126,7 +127,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     website: Website,
     words: readonly string[],
     most: number,
-  ): Promise<Limited<TournamentFound>> {
+  ): Promise<Limited<TournamentFoundByName>> {
     const { rows } = await this.unitOfWork.connection().query<{
       name: string;
       address: string;
@@ -134,9 +135,12 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       finishes: string;
       sport: string | null;
       country: string | null;
+      national: boolean;
+      international: boolean;
     }>(
       `select name, address, to_char(starts, 'YYYY-MM-DD') as starts,
-              to_char(finishes, 'YYYY-MM-DD') as finishes, sport, country
+              to_char(finishes, 'YYYY-MM-DD') as finishes, sport, country,
+              national, international
            from search_by_website_tournaments
           where website = $1 and not archived and folded_name like all($2)
           order by starts_with(folded_name, $4) desc, folded_name, name,
@@ -149,6 +153,8 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
         name: row.name,
         address: row.address,
         ...whenAndWhere(row),
+        national: row.national,
+        international: row.international,
       })),
       most,
     );
@@ -258,12 +264,14 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       finishes: string;
       address: string;
       player_slug: string;
+      national: boolean;
+      international: boolean;
     }>(
       `select distinct on (t.starts, t.tournament_id)
               p.world_ranking_name as name, t.name as tournament_name,
               to_char(t.starts, 'YYYY-MM-DD') as starts,
               to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-              t.address, p.slug as player_slug
+              t.address, p.slug as player_slug, t.national, t.international
          from search_by_website_players p
          join search_by_website_tournaments t
            on t.tournament_id = p.tournament_id
@@ -281,6 +289,8 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       finishes: row.finishes,
       address: row.address,
       playerAddress: `${row.address}/players/${row.player_slug}`,
+      national: row.national,
+      international: row.international,
     }));
     return { name: first.name, tournaments };
   }
@@ -293,13 +303,14 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       await connection.query(
         `insert into search_by_website_tournaments
            (tournament_id, website, name, folded_name, address, starts,
-            finishes, sport, country)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            finishes, sport, country, national, international)
+         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          on conflict (tournament_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
                address = excluded.address, starts = excluded.starts,
                finishes = excluded.finishes, sport = excluded.sport,
-               country = excluded.country`,
+               country = excluded.country, national = excluded.national,
+               international = excluded.international`,
         [
           stream,
           event.website,
@@ -310,13 +321,16 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
           event.finishes,
           event.sport,
           event.country,
+          event.national,
+          event.international,
         ],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
         `update search_by_website_tournaments
             set name = $2, folded_name = $3, address = $4, starts = $5,
-                finishes = $6, country = $7, sport = $8
+                finishes = $6, country = $7, sport = $8, national = $9,
+                international = $10
           where tournament_id = $1`,
         [
           stream,
@@ -327,6 +341,8 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
           event.finishes,
           event.country,
           event.sport,
+          event.national,
+          event.international,
         ],
       );
     } else if (event instanceof TournamentArchived) {

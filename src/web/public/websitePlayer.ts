@@ -157,7 +157,7 @@ export const registerWebsitePlayerPage = (
     const lines = rows
       .map(
         (row) =>
-          `            <tr><td class="tournament-dates">${escape(datedWithYear(row.starts, row.finishes, speaking.language.tag))}</td><td><a href="/${escape(row.playerAddress)}">${escape(row.name)}</a></td></tr>`,
+          `            <tr${row.national || row.international ? " data-bold" : ""}><td class="tournament-dates">${escape(datedWithYear(row.starts, row.finishes, speaking.language.tag))}</td><td><a href="/${escape(row.playerAddress)}">${escape(row.name)}</a></td></tr>`,
       )
       .join("\n");
 

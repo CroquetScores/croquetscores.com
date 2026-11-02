@@ -128,6 +128,26 @@ Feature: A player's page lists the tournaments they have played in
       When the page at "/players/sam-someone" is opened
       Then the first row says nothing but its dates and "Spring Open"
 
+  Rule: A national or international tournament is bold along its whole row
+
+    The tournaments a player has played in are read as the other lists of
+    tournaments are (`home.feature`), so the row of a national or an
+    international one is set in bold, and an ordinary one's is not.
+
+    Scenario: A national tournament's row is bold
+      Given the tournament "Spring Open" is national
+      When the page at "/players/sam-someone" is opened
+      Then the row of "Spring Open" is bold
+
+    Scenario: An international tournament's row is bold
+      Given the tournament "Spring Open" is international
+      When the page at "/players/sam-someone" is opened
+      Then the row of "Spring Open" is bold
+
+    Scenario: A tournament that is neither is not bold
+      When the page at "/players/sam-someone" is opened
+      Then the row of "Spring Open" is not bold
+
   Rule: Each tournament is dated by the days it runs
 
     Scenario: A tournament is dated by its days and the year

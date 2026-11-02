@@ -47,6 +47,9 @@ export interface Found {
   readonly country?: string | undefined;
   /** The code of the region of it, where it is in one. */
   readonly region?: string | undefined;
+  /** Whether its organiser ticked national or international, where the read model holds them. */
+  readonly national?: boolean | undefined;
+  readonly international?: boolean | undefined;
 }
 
 /** A read model of tournaments, as its scenarios stand it up. */
@@ -246,6 +249,14 @@ Given(
   },
 );
 
+Given("{string} to be national", function (this: SpecWorld, name: string) {
+  toBeChanged(this, name, { national: true, international: false });
+});
+
+Given("{string} to be international", function (this: SpecWorld, name: string) {
+  toBeChanged(this, name, { national: false, international: true });
+});
+
 Given(
   "{string} to be played in no region",
   function (this: SpecWorld, name: string) {
@@ -362,6 +373,20 @@ Given(
 
 // Everything it is to be but its website, which a tournament keeps as it was
 // created, said again as an update says it.
+Given(
+  "{string} is updated to be national",
+  async function (this: SpecWorld, name: string) {
+    await updated(this, name, { national: true, international: false });
+  },
+);
+
+Given(
+  "{string} is updated to be international",
+  async function (this: SpecWorld, name: string) {
+    await updated(this, name, { national: false, international: true });
+  },
+);
+
 Given(
   "{string} is updated to be as it is to be",
   async function (this: SpecWorld, name: string) {
@@ -501,5 +526,33 @@ Then(
   "{string} is held as played in no region",
   function (this: SpecWorld, name: string) {
     assert.equal(foundCalled(scenarioOf(this).found, name).region, undefined);
+  },
+);
+
+Then("{string} is held as national", function (this: SpecWorld, name: string) {
+  assert.equal(foundCalled(scenarioOf(this).found, name).national, true);
+});
+
+Then(
+  "{string} is not held as national",
+  function (this: SpecWorld, name: string) {
+    assert.equal(foundCalled(scenarioOf(this).found, name).national, false);
+  },
+);
+
+Then(
+  "{string} is held as international",
+  function (this: SpecWorld, name: string) {
+    assert.equal(foundCalled(scenarioOf(this).found, name).international, true);
+  },
+);
+
+Then(
+  "{string} is not held as international",
+  function (this: SpecWorld, name: string) {
+    assert.equal(
+      foundCalled(scenarioOf(this).found, name).international,
+      false,
+    );
   },
 );

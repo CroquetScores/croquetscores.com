@@ -21,6 +21,10 @@ export interface TournamentOfWebsite {
   readonly sport: string;
   /** Where it is found, as "2026/ac/spring-open". */
   readonly address: string;
+  /** Whether its organiser ticked national. Never both this and `international`. */
+  readonly national: boolean;
+  /** Whether its organiser ticked international. */
+  readonly international: boolean;
 }
 
 /** A tournament played lately, and when the last game in use was added to it. */

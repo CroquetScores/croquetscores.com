@@ -802,3 +802,42 @@ Then(
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
 );
+
+// How heavy the row is set ----------------------------------------------------
+
+// The weight of what the reader reads of the row, which is its dates and its
+// name, as the browser works it out. Bold is 700 or more, which the weight of
+// an ordinary row never reaches, so that a row is one or the other.
+const weightsOf = async (
+  world: SpecWorld,
+  tournament: string,
+  name: string,
+): Promise<number[]> => {
+  const listed = listNamed(name);
+  const at = (
+    await rows(world, listed).locator(".tournament-name").allTextContents()
+  ).indexOf(tournament);
+  assert.ok(at >= 0, `${tournament} is not in the ${name}.`);
+  const selector = `main section.tournament-list[data-list="${lists[listed]}"] tbody tr`;
+  return world.browserPage.evaluate<number[]>(
+    `(() => [...document.querySelectorAll(${JSON.stringify(selector)})[${String(at)}].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight)))()`,
+  );
+};
+
+Then(
+  /^"(.*)" is bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments)$/,
+  async function (this: SpecWorld, tournament: string, name: string) {
+    const weights = await weightsOf(this, tournament, name);
+    assert.equal(weights.length, 2);
+    for (const weight of weights) assert.ok(weight >= 700, String(weight));
+  },
+);
+
+Then(
+  /^"(.*)" is not bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|found tournaments|found competitions)$/,
+  async function (this: SpecWorld, tournament: string, name: string) {
+    const weights = await weightsOf(this, tournament, name);
+    assert.equal(weights.length, 2);
+    for (const weight of weights) assert.ok(weight < 700, String(weight));
+  },
+);

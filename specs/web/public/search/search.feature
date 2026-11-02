@@ -322,6 +322,34 @@ Feature: A reader searches the website for tournaments, players and competitions
       When the page at "/search?q=spring" is opened
       Then "Spring Open" is dated "10-12 oct 2026" in the found tournaments
 
+  Rule: A national or international tournament is bold along its whole row
+
+    A reader scanning what was found is as much after the tournaments that
+    matter beyond one club as one scanning the home page's lists
+    (`home.feature`), so the row of a national or an international tournament
+    is set in bold, and an ordinary tournament's is not. Only the tournaments
+    are: a competition is not national or international of itself, and its row
+    is left as it is.
+
+    Scenario: A national tournament's row is bold
+      Given the tournament "Spring Open" is national
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" is bold in the found tournaments
+
+    Scenario: An international tournament's row is bold
+      Given the tournament "Spring Open" is international
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" is bold in the found tournaments
+
+    Scenario: A tournament that is neither is not bold
+      When the page at "/search?q=spring" is opened
+      Then "Spring Open" is not bold in the found tournaments
+
+    Scenario: A competition of a national tournament is not bold
+      Given the tournament "Spring Open" is national
+      When the page at "/search?q=block" is opened
+      Then "Block A" is not bold in the found competitions
+
   Rule: The tournaments and the competitions show their sport
 
     Scenario: A tournament shows its sport as its code in capitals

@@ -112,6 +112,58 @@ Feature: Searching the website for tournaments, players and competitions
       When the website is searched for "autumn block"
       Then the competition "Autumn Block" is found in a tournament for the sport "gc"
 
+  Rule: A tournament is answered with whether it is national or international
+
+    The page of results sets the row of a national or an international
+    tournament in bold (`search.feature`), so the answer says which a
+    tournament is. A competition is answered with neither: it is not national
+    or international of itself.
+
+    Scenario: A tournament that is national is answered as national
+      Given the tournament is to be national
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found as national
+
+    Scenario: A tournament that is national is not answered as international
+      Given the tournament is to be national
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is not found as international
+
+    Scenario: A tournament that is international is answered as international
+      Given the tournament is to be international
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found as international
+
+    Scenario: A tournament that is neither is not answered as national
+      When the website is searched for "spring open"
+      Then the tournament "Spring Open" is not found as national
+
+    Scenario: A tournament that is neither is not answered as international
+      When the website is searched for "spring open"
+      Then the tournament "Spring Open" is not found as international
+
+    Scenario: A tournament made national after it was created is answered as national
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the website is searched for "spring open"
+      Then the tournament "Spring Open" is found as national
+
+    Scenario: A national tournament made international is answered as international
+      Given the tournament is to be national
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has made the tournament "Autumn Open" international
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is found as international
+
+    Scenario: A national tournament made international is not answered as national
+      Given the tournament is to be national
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has made the tournament "Autumn Open" international
+      When the website is searched for "autumn open"
+      Then the tournament "Autumn Open" is not found as national
+
   Rule: A tournament is found by the words of its name
 
     Scenario: A tournament is found by a word of its name
