@@ -128,6 +128,26 @@ export const ScoreDialog = ({
   };
   const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}`;
 
+  // What is refused, in its words: those it has of its own, or those for its
+  // code where it has none.
+  const refusal = (
+    code: string,
+    part: Part | undefined,
+    words?: string,
+  ): Refused => ({
+    code,
+    part,
+    words:
+      words ??
+      say(
+        knows(code)
+          ? code
+          : correcting === undefined
+            ? "admin.score.otherwise"
+            : "admin.score.notCorrected",
+      ),
+  });
+
   useEffect(() => {
     // A game that keeps its players has none to choose from, and begins on
     // what can be changed.
@@ -139,31 +159,44 @@ export const ScoreDialog = ({
     // which would look like a competition whose players had not yet arrived.
     // It says what could not be read and not that the game could not be added,
     // which the reader has not tried, and that the dialog is opened again to
-    // ask again, since nothing asks again of itself.
-    const unread = (): void =>
-      setRefused([
-        {
-          code: "Unknown",
-          part: undefined,
-          words: say("admin.score.playersUnread"),
-        },
+    // ask again, since nothing asks again of itself. It is added to what is
+    // already said, since the reader may have tried to add a game before the
+    // list failed, and the answer of a dialog that has gone, or has asked
+    // again, is not said at all.
+    let asking = true;
+    const unread = (): void => {
+      if (!asking) return;
+      const unreadRefusal = refusal(
+        "Unknown",
+        undefined,
+        say("admin.score.playersUnread"),
+      );
+      setRefused((all) => [
+        ...all.filter(({ words }) => words !== unreadRefusal.words),
+        unreadRefusal,
       ]);
-    const asked = async <Body extends object>(
-      list: string,
-    ): Promise<Body | undefined> => {
+    };
+    // A reply without the list asked for is no more a list than an error is.
+    const asked = async <Item,>(
+      list: "players" | "teams",
+    ): Promise<Item[] | undefined> => {
       try {
         const response = await fetch(`${at}/${list}`, {
           headers: { accept: "application/json" },
         });
-        return response.ok ? ((await response.json()) as Body) : undefined;
+        if (!response.ok) return undefined;
+        const body = (await response.json()) as Record<string, unknown>;
+        const items = body[list];
+        return Array.isArray(items) ? (items as Item[]) : undefined;
       } catch {
         return undefined;
       }
     };
     if (inATest) {
-      void asked<{ teams: TeamInTest[] }>("teams").then((answered) => {
+      void asked<TeamInTest>("teams").then((answered) => {
+        if (!asking) return;
         if (answered === undefined) unread();
-        const answeredTeams = answered?.teams ?? [];
+        const answeredTeams = answered ?? [];
         setTeams(answeredTeams);
         setPlayers(
           answeredTeams.flatMap(({ players: ofTeam }) =>
@@ -177,12 +210,16 @@ export const ScoreDialog = ({
         );
       });
     } else {
-      void asked<{ players: Player[] }>("players").then((answered) => {
+      void asked<Player>("players").then((answered) => {
+        if (!asking) return;
         if (answered === undefined) unread();
-        setPlayers(answered?.players ?? []);
+        setPlayers(answered ?? []);
       });
     }
     fields.winner.current?.focus();
+    return () => {
+      asking = false;
+    };
   }, [at, choosingPlayers, inATest]);
 
   // A withdrawn player plays no more of the competition, and a bye is nobody.
@@ -204,18 +241,6 @@ export const ScoreDialog = ({
   // kind, and a test's by their whole ids, since they are its teams' rather
   // than its own (api/site).
   const sentAs = (id: string): string => (inATest ? id : idInAddress(id));
-
-  const refusal = (code: string, part: Part | undefined): Refused => ({
-    code,
-    part,
-    words: say(
-      knows(code)
-        ? code
-        : correcting === undefined
-          ? "admin.score.otherwise"
-          : "admin.score.notCorrected",
-    ),
-  });
 
   // Which of the players chosen in a test has been archived since the dialog
   // opened, asked again of the test, since the refusal says only that one

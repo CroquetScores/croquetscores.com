@@ -4,6 +4,11 @@ import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../support/marks.js";
+import {
+  aServerError,
+  anEmptyReply,
+  answerNextGet,
+} from "../../../../../../../../support/serverError.js";
 import { eventually } from "../../../../../../../../support/tournamentPage.js";
 
 // The score dialog (score-modal-dialog.feature), open over a competition's
@@ -113,23 +118,41 @@ Given(
 // error of the site's is, with no code of its own. Once only, as the dialog
 // asks when it opens. The competition is not named: the dialog is the only
 // page open, and so the only one to ask.
+const playersAsked = /\/competitions\/[^/]+\/players$/;
+
 Given(
   "the competition's players are answered with a server error",
   async function (this: SpecWorld) {
-    await this.browserPage.route(
-      (url) => /\/competitions\/[^/]+\/players$/.test(url.pathname),
-      async (route) => {
-        if (route.request().method() !== "GET") return route.fallback();
-        await route.fulfill({
-          status: 500,
-          contentType: "text/html",
-          body: "Something went wrong.",
-        });
-      },
-      { times: 1 },
-    );
+    await answerNextGet(this, playersAsked, aServerError);
   },
 );
+
+Given(
+  "the competition's players are answered with a reply that has none",
+  async function (this: SpecWorld) {
+    await answerNextGet(this, playersAsked, anEmptyReply);
+  },
+);
+
+// What lets the answer through, kept for the step that does, since the
+// scenario has things to do between the dialog asking and being answered.
+const letThrough = new WeakMap<SpecWorld, () => void>();
+
+Given(
+  "the competition's players are held back and then answered with a server error",
+  async function (this: SpecWorld) {
+    const heldBack = new Promise<void>((resolve) => {
+      letThrough.set(this, resolve);
+    });
+    await answerNextGet(this, playersAsked, aServerError, heldBack);
+  },
+);
+
+When("the players held back are let through", function (this: SpecWorld) {
+  const release = letThrough.get(this);
+  assert.ok(release !== undefined, "No players were held back.");
+  release();
+});
 
 Then(
   "{string} is offered as the {string}",

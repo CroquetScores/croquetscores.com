@@ -10,6 +10,10 @@ import {
 import { testNamed } from "../../../../../../../../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
 import type { SpecWorld } from "../../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import {
+  aServerError,
+  answerNextGet,
+} from "../../../../../../../../../support/serverError.js";
 import { eventually } from "../../../../../../../../../support/tournamentPage.js";
 
 // The score dialog over a test's page (test-score.feature). It is a
@@ -26,18 +30,7 @@ const open = "dialog[open]";
 Given(
   "the test's teams are answered with a server error",
   async function (this: SpecWorld) {
-    await this.browserPage.route(
-      (url) => /\/competitions\/[^/]+\/teams$/.test(url.pathname),
-      async (route) => {
-        if (route.request().method() !== "GET") return route.fallback();
-        await route.fulfill({
-          status: 500,
-          contentType: "text/html",
-          body: "Something went wrong.",
-        });
-      },
-      { times: 1 },
-    );
+    await answerNextGet(this, /\/competitions\/[^/]+\/teams$/, aServerError);
   },
 );
 
