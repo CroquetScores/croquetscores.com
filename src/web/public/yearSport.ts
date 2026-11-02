@@ -60,7 +60,9 @@ export const registerYearSportPage = (
       }
       const toDays = sendToDaysChosen(request, reply, sport.code);
       if (toDays !== undefined) return toDays;
-      const pressed = settledWhenPressed(request, reply, "sport", tables);
+      const pressed = settledWhenPressed(request, reply, "sport", tables, {
+        offersSport: false,
+      });
       if (pressed !== undefined) return pressed;
       const year = Number(request.params.year);
       const path = `/${request.params.year}/${sport.code}`;

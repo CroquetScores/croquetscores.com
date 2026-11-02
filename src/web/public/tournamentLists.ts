@@ -35,6 +35,7 @@ import {
   type Sortable,
 } from "../common/rememberedSorting.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
+import { aYear, keptByTheServer } from "../common/theme.js";
 
 // Sorting ------------------------------------------------------------------------
 
@@ -143,12 +144,65 @@ const oneOf = (query: unknown, name: string): string | undefined => {
   return typeof first === "string" && first !== "" ? first : undefined;
 };
 
+// What the filter is remembered under. It is the one name in the page's
+// address, beside the sorting's, that says the reader pressed something.
+const filterCookie = "filter";
+const filterName = "filter";
+
+// A region is only a region of the country it is in.
+const isRegionOf = (country: string | undefined, region: string): boolean =>
+  country !== undefined &&
+  Countries.thereAre.find(country)?.findRegion(region) !== undefined;
+
+// Whether the address says anything of what it is filtered by. An empty choice
+// counts, since that is how the form says "any", and a reader who chose "any"
+// has not asked to be shown what was remembered.
+const saysOfFilter = (query: unknown, offersSport: boolean): boolean =>
+  ["country", "region", ...(offersSport ? ["sport"] : [])].some(
+    (name) =>
+      (query as Record<string, unknown> | undefined)?.[name] !== undefined,
+  );
+
+// What the device remembers of the filter, less whatever it can no longer
+// mean: a country, region or sport this website has stopped offering would be
+// refused as a mistake, and the reader made none, so it is left out instead.
+const filterRemembered = (
+  request: FastifyRequest,
+  offersSport: boolean,
+): FilterChosen => {
+  let stored: URLSearchParams;
+  try {
+    stored = new URLSearchParams(request.cookies[filterCookie] ?? "");
+  } catch {
+    return {};
+  }
+  const country = stored.get("country") ?? undefined;
+  const region = stored.get("region") ?? undefined;
+  const sport = stored.get("sport") ?? undefined;
+  const known =
+    country !== undefined && Countries.thereAre.find(country) !== undefined;
+  const offered =
+    sport !== undefined &&
+    sportsOffered[websiteOf(request).site].some(({ code }) => code === sport);
+  return {
+    country: known ? country : undefined,
+    region:
+      known && region !== undefined && isRegionOf(country, region)
+        ? region
+        : undefined,
+    sport: offersSport && offered ? sport : undefined,
+  };
+};
+
 /**
  * What `request` asked of the page at `path`, whose lists keep their sorting
  * under `tables`. A region is kept only where it is one of the country chosen.
  * One left chosen when another country was chosen is still the old country's,
  * since the form offered the old country's regions until it was sent, so it is
  * dropped rather than refused.
+ *
+ * Where the address says nothing of the filter, it is the one the device
+ * remembers (see `settledWhenPressed`).
  */
 export const askedOf = (
   request: FastifyRequest,
@@ -163,19 +217,25 @@ export const askedOf = (
     readonly carries?: readonly string[];
   } = {},
 ): Asked => {
-  const country = oneOf(request.query, "country");
-  const region = oneOf(request.query, "region");
+  const chosenByAddress = saysOfFilter(request.query, offersSport);
+  const { country, region, sport } = chosenByAddress
+    ? {
+        country: oneOf(request.query, "country"),
+        region: oneOf(request.query, "region"),
+        sport: oneOf(request.query, "sport"),
+      }
+    : filterRemembered(request, offersSport);
   const kept =
     region !== undefined &&
     country !== undefined &&
-    Countries.thereAre.find(country)?.findRegion(region) !== undefined;
+    isRegionOf(country, region);
   return {
     path,
     offersSport,
     chose: {
       country,
       region: kept ? region : undefined,
-      sport: offersSport ? oneOf(request.query, "sport") : undefined,
+      sport: offersSport ? sport : undefined,
     },
     sorting: Object.fromEntries(
       tables.map((table) => [table, oneOf(request.query, table)]),
@@ -231,21 +291,59 @@ export const settledWhenPressed = (
   reply: FastifyReply,
   page: string,
   tables: readonly string[],
-): FastifyReply | undefined =>
-  settleWhatWasPressed(
+  { offersSport = true }: { readonly offersSport?: boolean } = {},
+): FastifyReply | undefined => {
+  const query = request.query as Record<string, unknown> | undefined;
+  const pressed = [query?.[keep]].flat().includes(filterName);
+  if (pressed) rememberFilter(request, reply, offersSport);
+  return settleWhatWasPressed(
     request,
     reply,
     page,
     tables.map((table): Sortable => ({
       name: table,
       parameters: [table],
-      writtenIn: (query) => {
-        const written = oneOf(query, table);
+      writtenIn: (asked) => {
+        const written = oneOf(asked, table);
         const sorting = sortingRead(written);
         return sorting === undefined ? undefined : sortingWritten(sorting);
       },
     })),
   );
+};
+
+// A sport's page has none to choose, and its form says nothing of one, so what
+// was remembered of the sport is left as it was and not forgotten by it.
+// Choosing "any" of all there is to choose forgets the filter altogether
+// rather than remembering a filter of nothing.
+const rememberFilter = (
+  request: FastifyRequest,
+  reply: FastifyReply,
+  offersSport: boolean,
+): void => {
+  const country = oneOf(request.query, "country");
+  const region = oneOf(request.query, "region");
+  const sport = offersSport
+    ? oneOf(request.query, "sport")
+    : filterRemembered(request, true).sport;
+  const now = new URLSearchParams();
+  if (country !== undefined && Countries.thereAre.find(country) !== undefined) {
+    now.set("country", country);
+    if (region !== undefined && isRegionOf(country, region))
+      now.set("region", region);
+  }
+  if (
+    sport !== undefined &&
+    sportsOffered[websiteOf(request).site].some(({ code }) => code === sport)
+  )
+    now.set("sport", sport);
+  if (now.size === 0) reply.clearCookie(filterCookie, keptByTheServer);
+  else
+    reply.setCookie(filterCookie, now.toString(), {
+      ...keptByTheServer,
+      maxAge: aYear,
+    });
+};
 
 // The address of the page at `path` with `chose` and `sorting` said of it.
 const addressOf = (
@@ -368,7 +466,7 @@ export const table = (
     if (flag === undefined) return "";
     const narrowed = addressWith(
       asked,
-      {},
+      { [keep]: filterName },
       { ...asked.chose, country: tournament.country, region: undefined },
     );
     const only = say("tournamentList.onlyIn", {
@@ -536,6 +634,7 @@ export const filter = (
   return `          <form class="tournament-filter" method="get" action="${escape(asked.path)}">
 ${[
   ...sortings,
+  `            <input type="hidden" name="${keep}" value="${filterName}" />`,
   field(
     "country",
     say("tournamentList.filter.country"),

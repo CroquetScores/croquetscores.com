@@ -68,6 +68,16 @@ Feature: The home page lists recent results and upcoming tournaments
   sent. Anything else that cannot be a filter is the reader's mistake, and is
   refused as one (`errors.feature`).
 
+  What a reader narrowed the lists by is remembered on their device, so that
+  a reader who only ever follows the tournaments of their own country is not
+  made to choose it on every visit. The year is not: it is a page of its own,
+  chosen by the secondary navigation, and a reader looking at one year has
+  said nothing about the next. A filter in the page's address is what the
+  reader asked for just now, and is shown in place of the one remembered. The
+  same filter is remembered for a year's page (`year.feature`) and a sport's
+  (`yearSport.feature`), since it says where the reader plays and not which
+  page they were on.
+
   The secondary navigation is the years there are tournaments in, newest
   first (`TournamentYears.feature`), each leading to that year's page, which
   lists its tournaments (`year.feature`). They are fitted to the window as
@@ -823,6 +833,103 @@ Feature: The home page lists recent results and upcoming tournaments
     Scenario: A sport another website plays is not offered
       When the home page is opened
       Then "Gateball" is not offered as a sport
+
+  Rule: What the reader narrowed the lists by is remembered
+
+    The filter is remembered when the reader sends the form or presses a flag,
+    and not when they follow a link that happens to say a country, which a
+    bookmark or an email may. Choosing "any" in every field is choosing to be
+    shown everything again, so it forgets what was remembered rather than
+    remembering nothing.
+
+    Background:
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-10-10"
+      And the tournament "Spring Open" is played in the country "nz"
+      And the tournament "Spring Open" is played in the region "can"
+      And the tournament "Spring Open" is for the sport "ac"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And the tournament "Autumn Open" starts on "2026-10-17"
+      And the tournament "Autumn Open" is played in the country "nz"
+      And the tournament "Autumn Open" is played in the region "auc"
+      And the tournament "Autumn Open" is for the sport "gc"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And the tournament "Summer Open" starts on "2026-10-24"
+      And the tournament "Summer Open" is played in the country "au"
+      And the tournament "Summer Open" is played in the region "vic"
+      And the tournament "Summer Open" is for the sport "ac"
+
+    Scenario: The country chosen is there when the home page is opened again
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: The country remembered narrows the lists
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then "Summer Open" is not in the upcoming tournaments
+
+    Scenario: The region chosen is there when the home page is opened again
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Canterbury" is chosen as the region
+      And "Filter" is pressed
+      When the home page is opened
+      Then the region chosen is "Canterbury"
+
+    Scenario: The sport chosen is there when the home page is opened again
+      Given the home page is open
+      And "Golf Croquet" is chosen as the sport
+      And "Filter" is pressed
+      When the home page is opened
+      Then the sport chosen is "Golf Croquet"
+
+    Scenario: A flag pressed is remembered
+      Given the home page is open
+      And the flag of "Summer Open" in the upcoming tournaments is pressed
+      When the home page is opened
+      Then the country chosen is "Australia"
+
+    Scenario: A link that says a country is not remembered
+      Given the home page is opened for the country "au"
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: A filter in the address is shown in place of the one remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened for the country "au"
+      Then the country chosen is "Australia"
+
+    Scenario: A filter in the address does not replace the one remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And the home page is opened for the country "au"
+      When the home page is opened
+      Then the country chosen is "New Zealand"
+
+    Scenario: Choosing any of everything forgets what was remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      And "Any country" is chosen as the country
+      And "Filter" is pressed
+      When the home page is opened
+      Then the country chosen is "Any country"
+
+    Scenario: A year's page is narrowed by what the home page remembered
+      Given the home page is open
+      And "New Zealand" is chosen as the country
+      And "Filter" is pressed
+      When the page for 2026 is opened
+      Then "Summer Open" is not in the year's tournaments
 
   Rule: The countries are offered in groups, the ones most played in first
 
