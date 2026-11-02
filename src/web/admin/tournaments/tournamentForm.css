@@ -61,7 +61,11 @@
 }
 
 /* The page's title bar holds the help icon, which is placed against the form's
-   box; only a box that has one is made a place to put it in. */
-.dialog:has(> .dialog-title-with-help) {
+   box; only a box that has one is made a place to put it in. A modal dialog is
+   left out, because it is already a place to put it in (it is fixed to the
+   window), and relative would replace that: the browser draws a modal dialog
+   that is relative as absolute, against the top of the page, so that a page
+   scrolled down opens it above what can be seen (issue 490). */
+.dialog:not(.modal-dialog):has(> .dialog-title-with-help) {
   position: relative;
 }

@@ -279,6 +279,19 @@ Feature: Many players are added to a tournament at once, in a modal dialog
       When "Add" is pressed
       Then "Spring Open" has the player "Alex Another"
 
+  Rule: The dialog is placed in the window, wherever the page has been scrolled to
+
+    The dialog sits over the window the reader is looking through, not over
+    the page beneath it: a page scrolled down and a dialog opened from it
+    must not leave the top of the dialog above what can be seen.
+
+    Scenario: The dialog is in the window when the page is scrolled down
+      Given a viewport 375 pixels wide and 500 pixels high
+      And the page of "Spring Open" is open
+      When the page is scrolled down 120 pixels
+      And "Add Players" is pressed
+      Then the players dialog's top is in the window
+
   Rule: A help icon in the dialog's title bar leads to the help for adding many players
 
     The help is a section of the Players page of the help, with a bookmark of
