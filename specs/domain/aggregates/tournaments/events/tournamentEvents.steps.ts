@@ -256,6 +256,8 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       true,
       true,
       false,
+      // Not the usual for any sport, so that one read back as the usual is found.
+      14,
       causedBy,
       happenedAt,
       "competition/123e4567-e89b-42d3-a456-426614174099",

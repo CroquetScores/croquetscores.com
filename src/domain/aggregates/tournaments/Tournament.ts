@@ -988,6 +988,7 @@ export class Tournament extends AggregateRoot {
         settled.handicap,
         settled.drawsAllowed,
         settled.worldRankings,
+        settled.maximumHoops,
         by,
         at,
         from.value,
