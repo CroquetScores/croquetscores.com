@@ -1,5 +1,24 @@
 # Novità
 
+## Rilasciato il 2026-11-02
+
+### Organizzare un torneo
+
+- **Un'eliminazione diretta può accogliere i perdenti di un turno di un'altra.** Molte eliminazioni dirette si giocano con un tabellone principale, una seconda eliminazione diretta per chi ha perso il primo turno e una terza per chi ha perso il secondo. Nella finestra di un'eliminazione diretta premi **Aggiungi eliminazione diretta dei perdenti**, dalle un nome e scegli il turno i cui perdenti proseguono in essa. I suoi giocatori vengono inseriti man mano che ogni incontro è deciso, quindi non li inserisci a mano.
+- **Si può dire come distinguere i giocatori pari per incontri vinti in un girone.** Nella finestra di un girone scegli il suo **Spareggio**: differenza partite poi differenza archetti poi chi ha battuto chi, solo chi ha battuto chi, oppure altro, cioè nessun metodo noto, così i giocatori restano pari e si dividono un posto. Un nuovo girone comincia con differenza partite poi differenza archetti poi chi ha battuto chi.
+- **Una competizione può dire il numero massimo di porte a cui si giocano le sue partite.** Tra le caselle della finestra di una competizione, **Numero massimo di porte** accetta un numero intero di almeno 1. Lascialo vuoto se non c'è un massimo. Una competizione che non lo dice ha quello abituale del suo sport: 26, oppure 13 nel golf croquet.
+- **Il file di testo delle classifiche nomina il vincitore di un girone come lo colloca il girone.** Il giocatore che il girone mette al primo posto è il vincitore, se ce n'è uno solo, e non viene nominato nessuno se i giocatori non si possono distinguere per il primo posto. Prima il file nominava il giocatore con più partite vinte, che poteva essere un altro.
+- **La barra delle sezioni sta al passo con le competizioni.** Dopo che aggiungi, modifichi, sposti, archivi o ripristini una competizione o un test, la barra nella pagina del torneo offre ciò che il torneo ha ora, senza riaprire la pagina.
+- **Un elenco di giocatori senza riga di campi viene segnalato.** Se la prima riga dell'elenco che incolli in **Aggiungi giocatori** non nomina alcun campo, il messaggio dice che la prima riga deve essere i nomi dei campi, con un link all'aiuto, in un'altra scheda così quello che hai scritto resta com'è.
+- **Le finestre Aggiungi giocatore e Aggiungi giocatori si aprono dentro lo schermo.** Con la pagina scorsa in basso, prima si aprivano con la parte alta sopra ciò che si vedeva.
+
+### Seguire un torneo
+
+- **Un girone mostra il posto di ogni giocatore.** La griglia e il riepilogo di un girone finiscono con una colonna intitolata #, che dà il posto di ogni giocatore: 1, oppure =2 dove i giocatori non si possono distinguere e si dividono il secondo posto. Sotto, dove i giocatori sono pari per incontri vinti, una riga dice come sono stati distinti.
+- **Una competizione dice a quante porte si giocano le sue partite.** Quando non è quello abituale dello sport, i risultati lo dicono: "Giocata a 14 porte".
+- **La riga di un torneo nazionale o internazionale è in grassetto.** Lo fanno tutti gli elenchi di tornei: nella home, per un anno e per uno sport in un anno, in una ricerca e nella pagina di un giocatore.
+- **Le viste di una competizione stanno accanto al suo pulsante di stampa.** Griglia, Riepilogo e Programma stanno insieme alla stampante contro il bordo destro, e il nome della competizione sta da solo a sinistra. Su un telefono la stampante va sotto le viste, sempre contro il bordo destro.
+
 ## Rilasciato il 2026-11-01
 
 ### Seguire un torneo

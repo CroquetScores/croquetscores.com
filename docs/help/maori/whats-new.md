@@ -1,5 +1,24 @@
 # He aha te mea hou
 
+## I tukuna 2026-11-02
+
+### Te whakahaere i tētahi whakataetae nui
+
+- **Ka taea e tētahi whakaweto te tango i ngā hunga hinga o tētahi rauna o tētahi atu whakaweto.** He maha ngā whakaweto e whakahaerea ana hei toa matua me tētahi whakaweto tuarua mō ērā i hinga i tōna rauna tuatahi, me tētahi tuatoru mō ērā i hinga i tōna rauna tuarua. I te kōpae kōrero o tētahi whakaweto, pēhia a **Tāpiri Whakaweto Hunga Hinga**, tapaina, ā, kōwhiria te rauna e takaro tonu ai ōna hunga hinga i roto. Ka whakaurua ōna kaitākaro ki reira ia wā ka whakatauhia tētahi tukinga, nō reira kāore koe e whakauru ā-ringa.
+- **Ka taea te kī ki tētahi poraka me pēhea e wehea ai ngā kaitākaro e ōrite ana i ngā tukinga i wikitoria.** I te kōpae kōrero o tētahi poraka, kōwhiria tāna **Whakatau i te ōrite**: Kupenga kēmu, ka kupenga hupa, ka ko wai i hinga ko wai; Ko wai i hinga ko wai anake; Tētahi atu rānei, arā kāore he ara e mōhiotia ana, kia noho ōrite tonu ngā kaitākaro, kia tūnga tahi hoki. Ka tīmata te poraka hou ki te Kupenga kēmu, ka kupenga hupa, ka ko wai i hinga ko wai.
+- **Ka taea e tētahi tauwhāinga te kī i te nui rawa o ngā hupa e tākarohia ai ana kēmu.** I waenga i ngā pouaka tīkina o te kōpae kōrero o tētahi tauwhāinga, ka whakaae **Te nui rawa o ngā hupa** i tētahi tau tōpū, 1 neke atu rānei. Waiho kau mēnā kāore he nui rawa. Ko te tauwhāinga kāore e kī, ka whai i te tikanga o tōna hākinakina: 26, 13 rānei i te Golf Croquet.
+- **Ka tapaina te toa o tētahi poraka i te kōnae kuputuhi whakarārangi pēnei i tā te poraka e tūnga ai.** Ko te kaitākaro e tūnga tuatahi ai te poraka te toa, ina kotahi anake, ā, kāore he tangata e tapaina ina kāore e wehea ngā kaitākaro mō te tuatahi. I mua, ka tapaina te kaitākaro e nui rawa ana ngā kēmu i wikitoria, ā, tērā pea he tangata kē.
+- **Ka rite tonu te rārangi wāhanga ki ngā tauwhāinga.** Whai muri i tō tāpiri, whakarerekē, nuku, whakatāpui, whakahoki mai rānei i tētahi tauwhāinga, i tētahi whakamātau rānei, ka whakaatu te rārangi i runga i te whārangi o te whakataetae nui i ngā mea kei te whakataetae nui inaianei, kāore e tuwhera anō i te whārangi.
+- **Ka kōrerotia ina kāore he rārangi āpure i tētahi rārangi kaitākaro.** Mēnā kāore te rārangi tuatahi o te rārangi e whakapiria ana e koe ki **Tāpiri kaitākaro maha** e whakaingoa i tētahi āpure, ka kī te karere me ingoa āpure te rārangi tuatahi, me tētahi hono ki te āwhina, i tētahi atu ripa kia noho tonu ngā mea i tuhia e koe.
+- **Ka tuwhera ngā kōpae kōrero Tāpiri kaitākaro me Tāpiri kaitākaro maha i te wāhi e kitea ana.** I te whārangi kua retireti ki raro, i mua ka tuwhera me ō rātou runga kei runga ake i te wāhi e kitea ana.
+
+### Te whai i tētahi whakataetae nui
+
+- **Ka whakaatu te poraka i te tūnga o ia kaitākaro.** Ko te whakatakotoranga me te whakarāpopototanga o tētahi poraka ka mutu ki tētahi pou me te upoko #, e hoatu ana i te tūnga o ia kaitākaro: 1, =2 rānei ina kāore e wehea ngā kaitākaro, ā, e tuarua tahi ana. Kei raro iho, ina ōrite ngā kaitākaro i ngā tukinga kua wikitoria e rātou, ka kī tētahi rārangi i pēhea i wehea ai rātou.
+- **Ka kī te tauwhāinga e hia ngā hupa e tākarohia ai ana kēmu.** Ina kāore tērā te tikanga o te hākinakina, ka kī ngā otinga, pēnei i "Ka tākarohia ki ngā hupa 14".
+- **Ka tuhia te rārangi o tētahi whakataetae nui ā-motu, ā-ao rānei ki te tuhi matotoru.** Pēnei ia rārangi whakataetae nui: i te whārangi kāinga, mō tētahi tau me tētahi hākinakina i tētahi tau, i tētahi rapunga, me te whārangi o tētahi kaitākaro.
+- **Kei te taha o te pātene tā ngā tirohanga a tētahi tauwhāinga.** Ko Whakatakotoranga, Whakarāpopototanga me Raupapa tākaro kei te taha o te tohu tā ki te tapa matau, ā, ko te ingoa o te tauwhāinga e tū takitahi ana ki te tapa mauī. I runga i te waea, ka heke te tohu tā ki raro i ngā tirohanga, ā, kei te tapa matau tonu.
+
 ## I tukuna 2026-11-01
 
 ### Te whai i tētahi whakataetae nui

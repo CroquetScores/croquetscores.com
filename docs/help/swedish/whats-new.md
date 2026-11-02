@@ -1,5 +1,24 @@
 # Nytt
 
+## Släppt 2026-11-02
+
+### Arrangera en turnering
+
+- **En utslagning kan ta emot förlorarna från en annan utslagnings rond.** Många utslagningar spelas som ett huvudschema med en andra utslagning för dem som förlorade första ronden och en tredje för dem som förlorade den andra. Tryck på **Lägg till förlorarutslagning** i en utslagnings dialogruta, ge den ett namn och välj den rond vars förlorare spelar vidare i den. Spelarna placeras där när varje match avgörs, så du behöver inte lägga in dem för hand.
+- **Ett block kan få veta hur spelare som står lika på vunna matcher skiljs åt.** Välj blockets **Särskiljning** i dess dialogruta: nettopartier, sedan nettobågar, sedan vem som slog vem; bara vem som slog vem; eller annat, som är inget känt sätt, så att spelarna fortsätter stå lika och delar en plats. Ett nytt block börjar med nettopartier, sedan nettobågar, sedan vem som slog vem.
+- **En tävling kan ange det högsta antal bågar dess partier spelas till.** Bland rutorna i en tävlings dialogruta tar **Högsta antal bågar** ett helt tal på minst 1. Lämna fältet tomt om det inte finns något högsta antal. En tävling som inte anger något har det vanliga för sin sport: 26, eller 13 i golfcroquet.
+- **Rankingfilen i textformat anger blockets vinnare så som blocket placerar spelarna.** Vinnare är den spelare som blocket placerar först, när det bara är en, och ingen anges när spelare inte kan skiljas åt om förstaplatsen. Förut angav filen spelaren med flest vunna partier, och det kunde vara någon annan.
+- **Raden med avsnitt hänger med tävlingarna.** När du har lagt till, ändrat, flyttat, arkiverat eller återställt en tävling eller en landskamp visar raden på turneringens sida vad turneringen har nu, utan att du öppnar sidan igen.
+- **En lista med spelare utan rad med fält säger det.** Om den första raden i listan du klistrar in i **Lägg till flera spelare** inte anger något fält, står det i meddelandet att första raden måste vara fältnamn, med en länk till hjälpen, som öppnas i en annan flik så att det du skrev finns kvar.
+- **Dialogrutorna Lägg till spelare och Lägg till flera spelare öppnas i fönstret.** När sidan var rullad nedåt öppnades de med överkanten ovanför det som syntes.
+
+### Följa en turnering
+
+- **Ett block visar var varje spelare placeras.** Rutnätet och sammanfattningen för ett block slutar med en kolumn med rubriken #, som anger varje spelares plats: 1, eller =2 när spelare inte kan skiljas åt och delar andra plats. Under den, där spelare står lika på vunna matcher, säger en rad hur de skildes åt.
+- **En tävling säger hur många bågar dess partier spelas till.** Där det inte är det vanliga för sporten anger resultaten det: ”Spelas till 14 bågar”.
+- **Raden för en nationell eller internationell turnering är i fetstil.** Alla turneringslistor gör så: på startsidan, för ett år och för en sport under ett år, i en sökning och på en spelares sida.
+- **En tävlings vyer sitter bredvid utskriftsknappen.** Rutnät, Sammanfattning och Speltabell sitter ihop med skrivaren mot högerkanten, och tävlingens namn står ensamt till vänster. På en telefon hamnar skrivaren under vyerna, fortfarande mot högerkanten.
+
 ## Släppt 2026-11-01
 
 ### Följa en turnering

@@ -1,5 +1,24 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-02
+
+### 'n Toernooi bestuur
+
+- **'n Uitskakeling kan die verloorders van 'n ander uitskakeling se ronde neem.** Baie uitskakelings word gespeel as 'n hoofloting met 'n tweede uitskakeling vir dié wat sy eerste ronde verloor het, en 'n derde vir dié wat sy tweede ronde verloor het. Druk in die dialoog van 'n uitskakeling op **Voeg verloorders-uitskakeling by**, gee dit 'n naam, en kies die ronde waarvan die verloorders daarin verder speel. Sy spelers word daar geplaas sodra elke wedstryd beslis is, so jy hoef hulle nie met die hand in te voer nie.
+- **'n Groep kan gesê word hoe spelers wat gelyk is op gewonne wedstryde uitmekaar gehou word.** Kies in die dialoog van 'n groep sy **Gelykopbrekers**: netto spelle dan netto hoepels dan wie wie geklop het, wie wie geklop het alleen, of ander, wat geen bekende manier is nie, sodat spelers gelyk bly en 'n plek deel. 'n Nuwe groep begin met netto spelle dan netto hoepels dan wie wie geklop het.
+- **'n Kompetisie kan die meeste poorte sê waartoe sy spelle gespeel word.** Tussen die merkblokkies in 'n kompetisie se dialoog neem **Maksimum poorte** 'n heelgetal van minstens 1. Los dit leeg vir geen maksimum nie. 'n Kompetisie wat dit nie sê nie, kry die gebruiklike een vir sy sport: 26, of 13 in gholfkroket.
+- **Die ranglys-tekslêer noem die wenner van 'n groep soos die groep hulle plaas.** Die speler wat die groep eerste plaas, is die wenner, waar daar net een is, en niemand word genoem waar spelers vir die eerste plek nie uitmekaar gehou kan word nie. Voorheen het die lêer die speler met die meeste gewonne spelle genoem, wat iemand anders kon wees.
+- **Die balk van afdelings hou tred met die kompetisies.** Nadat jy 'n kompetisie of 'n toets bygevoeg, verander, geskuif, geargiveer of herstel het, bied die balk op die toernooi se bladsy aan wat die toernooi nou het, sonder dat jy die bladsy weer oopmaak.
+- **'n Lys spelers sonder 'n ry velde word daarvan vertel.** As die eerste ry van die lys wat jy in **Voeg spelers by** plak geen veld noem nie, sê die boodskap dat die eerste ry veldname moet wees, met 'n skakel na die hulp, in 'n ander oortjie sodat wat jy getik het bly staan.
+- **Die dialoë Voeg speler by en Voeg spelers by maak in die venster oop.** Met die bladsy afgerol het hulle voorheen oopgemaak met hul boonste rande bokant wat gesien kon word.
+
+### 'n Toernooi volg
+
+- **'n Groep wys waar elke speler geplaas is.** Die rooster en die opsomming van 'n groep eindig met 'n kolom met die opskrif #, wat elke speler se plek gee: 1, of =2 waar spelers nie uitmekaar gehou kan word nie en tweede plek deel. Daaronder, waar spelers gelyk is op die wedstryde wat hulle gewen het, sê 'n reël hoe hulle uitmekaar gehou is.
+- **'n Kompetisie sê tot hoeveel poorte sy spelle gespeel word.** Waar dit nie die gebruiklike een vir die sport is nie, sê die uitslae so, as "Gespeel tot 14 poorte".
+- **Die ry van 'n nasionale of internasionale toernooi is in vet.** Elke lys toernooie doen dit: op die tuisblad, vir 'n jaar en vir 'n sport in 'n jaar, in 'n soektog, en op 'n speler se bladsy.
+- **'n Kompetisie se aansigte sit langs sy druk-knoppie.** Rooster, Opsomming en Speelvolgorde is saam met die drukker teen die regterrand, en die kompetisie se naam staan alleen links. Op 'n foon gaan die drukker onder die aansigte, steeds teen die regterrand.
+
 ## Vrygestel 2026-11-01
 
 ### 'n Toernooi volg

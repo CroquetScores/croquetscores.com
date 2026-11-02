@@ -1,5 +1,24 @@
 # Co nowego
 
+## Wydano 2026-11-02
+
+### Prowadzenie turnieju
+
+- **Konkurencja pucharowa może przyjąć przegranych z rundy innej konkurencji pucharowej.** Wiele konkurencji pucharowych rozgrywa się jako drabinkę główną z drugą konkurencją pucharową dla tych, którzy przegrali pierwszą rundę, i trzecią dla tych, którzy przegrali drugą. W oknie konkurencji pucharowej naciśnij **Dodaj drabinkę przegranych**, nazwij ją i wybierz rundę, której przegrani grają w niej dalej. Zawodnicy trafiają tam, gdy tylko rozstrzygnie się mecz, więc nie wpisujesz ich ręcznie.
+- **Konkurencji grupowej można powiedzieć, jak rozróżniać zawodników z tą samą liczbą wygranych meczów.** W oknie konkurencji grupowej wybierz jej **Rozstrzyganie remisów**: bilans gier, potem bilans bramek, potem kto kogo pokonał; sam kto kogo pokonał; albo inne, czyli żaden znany sposób, więc zawodnicy pozostają na równi i dzielą miejsce. Nowa konkurencja grupowa zaczyna od bilansu gier, potem bilansu bramek, potem kto kogo pokonał.
+- **Konkurencja może określić największą liczbę bramek, do jakiej gra się jej gry.** Wśród pól wyboru w oknie konkurencji **Maksymalna liczba bramek** przyjmuje liczbę całkowitą nie mniejszą niż 1. Zostaw puste, jeśli maksimum ma nie być. Konkurencja, która go nie określa, ma zwykłą liczbę dla swojej dyscypliny: 26, a w krokiecie golfowym 13.
+- **Plik tekstowy rankingów podaje zwycięzcę konkurencji grupowej tak, jak ją ustawia ta konkurencja.** Zwycięzcą jest zawodnik, którego konkurencja grupowa stawia na pierwszym miejscu, jeśli jest tylko jeden. Gdy zawodników nie da się rozróżnić na pierwszym miejscu, nikt nie jest podany. Dawniej plik podawał zawodnika z największą liczbą wygranych gier, którym mógł być ktoś inny.
+- **Pasek sekcji nadąża za konkurencjami.** Po dodaniu, zmianie, przeniesieniu, zarchiwizowaniu lub przywróceniu konkurencji albo testu pasek na stronie turnieju pokazuje to, co turniej ma teraz, bez ponownego otwierania strony.
+- **Lista zawodników bez wiersza pól jest zgłaszana.** Jeśli pierwszy wiersz listy wklejonej w **Dodaj zawodników** nie nazywa żadnego pola, komunikat mówi, że pierwszy wiersz musi zawierać nazwy pól, z odsyłaczem do pomocy, otwieranym w innej karcie, aby to, co wpisano, zostało na miejscu.
+- **Okna Dodaj zawodnika i Dodaj zawodników otwierają się w widocznej części ekranu.** Przy przewiniętej stronie otwierały się dawniej z górą ponad tym, co widać.
+
+### Śledzenie turnieju
+
+- **Konkurencja grupowa pokazuje miejsce każdego zawodnika.** Siatka i podsumowanie konkurencji grupowej kończą się kolumną z nagłówkiem #, która podaje miejsce każdego zawodnika: 1 albo =2, gdy zawodników nie da się rozróżnić i dzielą drugie miejsce. Pod nią, gdy zawodnicy mają tyle samo wygranych meczów, wiersz mówi, jak ich rozróżniono.
+- **Konkurencja podaje, do ilu bramek rozgrywa się jej gry.** Gdy nie jest to zwykła liczba dla dyscypliny, wyniki mówią o tym: „Gra do 14 bramek”.
+- **Wiersz turnieju rangi krajowej lub międzynarodowej jest pogrubiony.** Robi to każda lista turniejów: na stronie głównej, dla roku i dla dyscypliny w roku, w wyszukiwaniu i na stronie zawodnika.
+- **Widoki konkurencji są obok jej przycisku drukowania.** Siatka, Podsumowanie i Kolejność gier są razem z drukarką przy prawej krawędzi, a nazwa konkurencji stoi sama po lewej. Na telefonie drukarka jest pod widokami, nadal przy prawej krawędzi.
+
 ## Wydano 2026-11-01
 
 ### Śledzenie turnieju
