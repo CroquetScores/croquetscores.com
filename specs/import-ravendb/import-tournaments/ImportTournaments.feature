@@ -419,6 +419,11 @@ Feature: Importing the old sites' tournaments
     Egypt, Morocco and Ukraine as Latvia, and Singapore, Taiwan and Thailand
     as Australia.
 
+    A flag at the start of a name, which is how some are written, is not part of
+    the name for any rule below: "Swiss Open" with the Swiss flag before it is
+    still one that begins with Swiss, and "Irish Championship" with the Irish
+    flag before it one that begins with Irish.
+
     Some names say where a tournament was played better than any of that, and
     are taken over the time zone and the lists. Each is matched in any case
     unless it says otherwise, and the first of these to match is the one taken:
@@ -450,6 +455,14 @@ Feature: Importing the old sites' tournaments
     - a name that begins with Czech, as a word of its own, or has Czech Republic
       in it, is in Czechia, which is what the Czech Republic is now called;
     - a name with Tonic anywhere in it is in Sweden;
+    - a name with Swedish and either Championship or Open in it, as a word of
+      its own for Open, is in Sweden;
+    - a name with Norwegian anywhere in it is in Norway;
+    - a name with Czech and Open as a word of its own in it, wherever Czech is,
+      is in Czechia;
+    - a name with Kohlhof or Kohhof anywhere in it is in Germany;
+    - a name with Southwest Championship anywhere in it, which the plural has,
+      is in Germany;
     - a tournament called exactly "WGCA Women's Intl Friendship Cup", with the
       apostrophe straight or curled, is in the USA. A name with more in it is
       not that tournament;
@@ -1053,6 +1066,62 @@ Feature: Importing the old sites' tournaments
         | Swissair Open  |
         | Concern Cup    |
         | Czechmate Open |
+
+    Scenario Outline: A tournament whose name says Swedish, Norwegian, Czech, Kohlhof or Southwest Championship is in that country
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
+
+      Examples:
+        | name                         | country |
+        | West Swedish Championship    | se      |
+        | Swedish Open                 | se      |
+        | swedish and open             | se      |
+        | Norwegian Tournament         | no      |
+        | norwegian golf championships | no      |
+        | Czech Open                   | cz      |
+        | The Open of Czech Golf       | cz      |
+        | Kohlhof Cup                  | de      |
+        | Kohhof                       | de      |
+        | Southwest Championship       | de      |
+        | Southwest Championships 2019 | de      |
+
+    Scenario Outline: A tournament whose name has only part of what a rule asks for is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
+      Examples:
+        | name                |
+        | Swedish Cup         |
+        | Swedish Openings    |
+
+    Scenario Outline: A flag before a name is not part of what it begins with
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ch"
+
+      Examples:
+        | name                           |
+        | 🇨🇭 Swiss Open                  |
+        | 🇨🇭 🇨🇭 CERN Open               |
+
+    Scenario: A flag before a name is left out for every rule, not only Swiss ones
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "🇮🇪 Irish Championship"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "ie"
 
     Scenario: A tournament whose name says German is in no region
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -2179,6 +2248,96 @@ Feature: Importing the old sites' tournaments
         | 2024 | gc | soaad-abotaleb-cup | eg |
         | 2024 | gc | kohlhof | de |
         | 2025 | gc | zurich-advantage | ch |
+        | 2026 | gc | swiss-presidents-trophy | ch |
+        | 2026 | ac | southwest-championships | de |
+        | 2026 | ac | swiss-open | ch |
+        | 2026 | ac | helfides-salver-one-ball | ch |
+        | 2026 | gc | norgesmesterskap-croquet | no |
+        | 2026 | ac | kohhof | de |
+        | 2026 | gc | kohlhof | de |
+        | 2025 | gc | swe-carpe-croquetum-vs-poseidon | se |
+        | 2025 | gc | reka-1 | no |
+        | 2025 | ac | southwest-championships | de |
+        | 2025 | gc | swe-banvallen-open-doubles | se |
+        | 2025 | gc | interclub-sudwest-zurich | de |
+        | 2025 | gc | battle-of-clubs-algarve-cc-vs-halmstad-cc | pt |
+        | 2025 | gc | norgesmesterskap-croquet | no |
+        | 2025 | gc | interclub-sudwest-waldau | de |
+        | 2025 | gc | kohlhof | de |
+        | 2024 | gc | september | no |
+        | 2023 | gc | fredrikstad-tournament | no |
+        | 2023 | ac | southwest-championship | de |
+        | 2023 | gc | championship-berlin | de |
+        | 2023 | gc | suedwest-zuerich | ch |
+        | 2023 | gc | norges-mesterskap-croquet | no |
+        | 2023 | gc | kohlhof | de |
+        | 2022 | gc | harrison-cup-1 | se |
+        | 2022 | gc | helencup | de |
+        | 2022 | ac | southwest-championships | de |
+        | 2022 | gc | lutefisk-norgesmesterskap | no |
+        | 2022 | gc | southwest-championships | de |
+        | 2022 | gc | norgesmesterskap | no |
+        | 2022 | gc | vastsvenska-cupen | se |
+        | 2022 | gc | fyrslaget | se |
+        | 2022 | gc | kohlhof | de |
+        | 2022 | gc | hamburg-cc-clubchampionship | de |
+        | 2021 | gc | winter-cup-4-boras-ks-vs-poseidon-cc | se |
+        | 2021 | gc | forsinket-paskehare-open-1 | no |
+        | 2021 | gc | west-swedish-championship-carpe-croquetum-vs-poseidon-croquet-club | se |
+        | 2021 | gc | lutefisk-croquet-open | no |
+        | 2021 | ac | southwest-championships | de |
+        | 2021 | gc | southwest-championships | de |
+        | 2021 | gc | norgesmesterskap | no |
+        | 2021 | gc | fyrslaget | se |
+        | 2021 | gc | klubbkamp-boras-1 | se |
+        | 2021 | gc | kohlhof | de |
+        | 2020 | ac | southwest-championships | de |
+        | 2020 | gc | memorial-j-struhaly-a-b-navratila | cz |
+        | 2020 | gc | southwest-championships | de |
+        | 2020 | gc | poseidon-vs-carpe-croquetum | se |
+        | 2020 | gc | norgesmesterskap | no |
+        | 2020 | gc | kohlhof | de |
+        | 2020 | gc | winter-cup-1-boras-ks-vs-poseidon-cc | se |
+        | 2020 | gc | winter-cup-2-boras-ks-vs-poseidon-cc | se |
+        | 2020 | gc | winter-cup-3-boras-ks-vs-poseidon-cc | se |
+        | 2019 | ac | southwest-championships-n2019 | de |
+        | 2019 | gc | southwest-championships | de |
+        | 2019 | gc | swe-carpe-croquetum-vs-karlstad-krocket | se |
+        | 2019 | gc | zurich-open | ch |
+        | 2018 | gc | the-open | za |
+        | 2018 | ac | southwest-championships | de |
+        | 2018 | gc | norwegian-tournament | no |
+        | 2018 | gc | southwest-championships | de |
+        | 2018 | ac | sm-gc | se |
+        | 2018 | gc | sm | se |
+        | 2018 | gc | myhrene-host-croquet | no |
+        | 2018 | gc | cc-zurich-club-championship | ch |
+        | 2018 | gc | hjulmakerveien-croquet-club-vs-hurum-croquet-klubb | no |
+        | 2018 | gc | wolkersdorf-club-championships-gc26 | at |
+        | 2017 | ac | rheingold-cup-ac | at |
+        | 2017 | ac | southwest-championships | de |
+        | 2017 | gc | southwest-championships | de |
+        | 2017 | gc | hjulmakerveien-croquet-club-vs-hurum-croquet-klubb | no |
+        | 2017 | gc | doubles-buerklincup | de |
+        | 2016 | ac | southwest-championships | de |
+        | 2016 | gc | southwest-championships | de |
+        | 2016 | gc | wolkersdorf-club-championships | at |
+        | 2015 | ac | rheingoldpokal | ch |
+        | 2015 | gc | rheingoldpokal | ch |
+        | 2015 | ac | southwest-championships | de |
+        | 2015 | gc | southwest-championships | de |
+        | 2015 | gc | fodande-open | se |
+        | 2015 | gc | salzburg-vs-zurich | at |
+        | 2015 | ac | testmatch-suedwest-versus-surbiton | de |
+        | 2014 | gc | belgian-open | be |
+        | 2014 | ac | southwest-championships | de |
+        | 2014 | gc | norddeutsche-meisterschaft | de |
+        | 2014 | gc | southwest-championships | de |
+        | 2014 | ac | buerklin-cup | de |
+        | 2013 | gc | rheingoldpokal | at |
+        | 2013 | ac | rheingoldpokal | at |
+        | 2013 | gc | norwegian-golf-croquet-championships | no |
+        | 2013 | gc | deutsche-golfkrocket-meisterschaft | de |
 
     Scenario: A tournament found at an address the list names is in the country it names whatever the list of rankings says
       Given an Association Croquet event "Spring Open" played on "1.6.14" in "Latvia"
