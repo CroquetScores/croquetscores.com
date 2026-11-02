@@ -19,8 +19,9 @@ Feature: A year's page lists its months, and a month the tournaments starting in
   country; a column heading that sorts that month's table by that column, in
   place, and turns it round where it is sorted by it already; and a filter of
   a country, a region of it and a sport, which is in the page's address.
-  Narrowing a page closes its months, since it is the page loaded again. How a
-  month is sorted is not kept in the address, or by the device. The
+  Narrowing a page closes its months, since it is the page loaded again. A
+  sorting pressed is not in the address but is remembered by the device
+  (`yearMonths.feature`). The
   tournament's public page does not exist yet, so a row leads to an address
   that answers `404` until the feature that provides it lands.
 

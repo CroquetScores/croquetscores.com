@@ -25,7 +25,9 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
   there. Each month's tournaments begin sorted by date, earliest first.
   Pressing a column heading sorts every open month's table the same way, and
   a month opened afterwards begins sorted so too, since a reader sorting by
-  name wants all of them by name and not one.
+  name wants all of them by name and not one. The sorting is remembered by the
+  reader's device, as every other list's is (`rememberedSorting.feature`), so
+  that a year's page and a sport's are next opened sorted the way it was left.
 
   A month is marked "+" while it is closed and "-" while it is open. Open, it
   has no heading of its own beyond its name, which is not said again over its
@@ -282,6 +284,30 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       And the month "March" is pressed
       And the month "October" is pressed
       And the column "Name" of the month "October" is pressed
+      When the month "March" is pressed
+      Then the first tournament of the month "March" is "Charlie Open"
+
+    Scenario: A sorting is remembered when a year's page is next opened
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the column "Name" of the year's tournaments is pressed
+      When the page for 2026 is opened
+      And the month "October" is pressed
+      Then the column "Name" of the year's tournaments is marked as sorted from the smallest
+
+    Scenario: A sorting is remembered when a sport's page is next opened
+      Given the page for "ac" in 2026 is open
+      And the month "October" is pressed
+      And the column "Name" of the sport's tournaments is pressed
+      When the page for "ac" in 2026 is opened
+      And the month "October" is pressed
+      Then the column "Name" of the sport's tournaments is marked as sorted from the smallest
+
+    Scenario: A month opened with a sorting remembered begins sorted by it
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the column "Name" of the year's tournaments is pressed
+      And the page for 2026 is open
       When the month "March" is pressed
       Then the first tournament of the month "March" is "Charlie Open"
 

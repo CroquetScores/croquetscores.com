@@ -279,11 +279,17 @@ Feature: The tournaments starting in a year
       When the tournaments in month 10 of 2026 are asked for
       Then "Spring Open" is not answered
 
-    Scenario: A tournament starting on the last day of a leap year's February is answered
-      Given the tournament is to start at "2028-02-29T00:00:00Z"
-      And "organiser@example.com" has created the tournament "Leap Open"
-      When the tournaments in month 2 of 2028 are asked for
-      Then "Leap Open" is answered
+    Scenario: A tournament starting on the last day of February is answered
+      Given the tournament is to start at "2027-02-28T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      When the tournaments in month 2 of 2027 are asked for
+      Then "Winter Open" is answered
+
+    Scenario: A tournament starting on the first day of March is not answered in February
+      Given the tournament is to start at "2027-03-01T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      When the tournaments in month 2 of 2027 are asked for
+      Then "Winter Open" is not answered
 
     Scenario: A tournament over the new year is answered in the month it starts
       Given the tournament is to start at "2025-12-30T00:00:00Z"

@@ -12,7 +12,10 @@ Feature: A list is sorted the way its reader last sorted it
   results, nor about a player's tournaments. One size does not fit all.
 
   What is remembered is kept in a cookie, and so comes back with the next
-  request and needs no scripting, as the language and the theme do. The page
+  request and needs no scripting, as the language and the theme do. A year's
+  page, and a sport's in a year, are the exception to needing none: their
+  tables are sorted in place, with scripting, and the cookie is set by that
+  request (`yearMonths.feature`). The page
   is sorted when it is sent, so a reader is never shown the order the page
   began in and then watches it change. Nothing is kept about who the reader is:
   the same device remembers the same way whether or not anyone is signed in.
@@ -89,9 +92,11 @@ Feature: A list is sorted the way its reader last sorted it
       Then no column of the recent results is marked as sorted
 
     Scenario: Sorting a list on one page does not sort the same list on another
-      Given the home page is open
+      Given scripting is on
+      And the home page is open
       And the column "Name" of the upcoming tournaments is pressed
       When the page for 2026 is opened
+      And the month "October" is pressed
       Then the column "Date" of the year's tournaments is marked as sorted from the smallest
 
     Scenario: A player's tournaments are remembered apart from the tournament lists
@@ -107,9 +112,12 @@ Feature: A list is sorted the way its reader last sorted it
   Rule: Every sortable list is remembered
 
     Scenario: A year's tournaments are sorted by name when next opened
-      Given the page for 2026 is open
+      Given scripting is on
+      And the page for 2026 is open
+      And the month "October" is pressed
       And the column "Name" of the year's tournaments is pressed
       When the page for 2026 is opened
+      And the month "October" is pressed
       Then the column "Name" of the year's tournaments is marked as sorted from the smallest
 
     Scenario: Tournaments found are sorted by name when next opened

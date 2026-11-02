@@ -23,6 +23,7 @@ import {
   askedOf,
   refusedWith,
   sendPage,
+  settledWhenPressed,
   table,
   type Asked,
 } from "./tournamentLists.js";
@@ -59,9 +60,13 @@ const script = `
         // month sorted sorts every other open month the same way, and one
         // opened afterwards begins sorted so too.
         var sorting = null;
-        function searchFor() {
+        // "keep" is what tells the server the reader pressed a column, to be
+        // remembered by their device (rememberedSorting.ts), as opposed to a
+        // month opened with the sorting it already had.
+        function searchFor(keeping) {
           var query = new URLSearchParams(window.location.search);
           if (sorting !== null) query.set("tournaments", sorting);
+          if (keeping) query.set("keep", "tournaments");
           var written = query.toString();
           return written === "" ? "" : "?" + written;
         }
@@ -72,9 +77,9 @@ const script = `
           toggle.setAttribute("aria-expanded", String(open));
           toggle.querySelector(".year-month-mark").textContent = open ? "-" : "+";
         }
-        function load(month) {
+        function load(month, keeping) {
           var body = month.querySelector(".year-month-body");
-          var search = searchFor();
+          var search = searchFor(keeping);
           month.setAttribute("aria-busy", "true");
           fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
             credentials: "same-origin",
@@ -97,7 +102,7 @@ const script = `
                   body.querySelectorAll(".tournament-list"),
                   function (list) { list.classList.add("tournament-list-pressable"); }
                 );
-                month.dataset.loaded = search;
+                month.dataset.loaded = searchFor(false);
                 show(month, true);
               });
             })
@@ -114,10 +119,10 @@ const script = `
             var month = toggle.closest(".year-month");
             if (month.dataset.state === "open") {
               show(month, false);
-            } else if (month.dataset.loaded === searchFor()) {
+            } else if (month.dataset.loaded === searchFor(false)) {
               show(month, true);
             } else {
-              load(month);
+              load(month, false);
             }
             return;
           }
@@ -127,7 +132,7 @@ const script = `
             sorting = new URLSearchParams(sort.search).get("tournaments");
             Array.prototype.forEach.call(
               root.querySelectorAll('.year-month[data-state="open"]'),
-              load
+              function (open) { load(open, true); }
             );
             return;
           }
@@ -186,15 +191,14 @@ export const sendMonth = async (
   page: { path: string; sport?: { code: string; name: string } },
 ): Promise<FastifyReply> => {
   const { say } = speaking;
+  const pageKey = page.sport === undefined ? "year" : "sport";
+  const pressed = settledWhenPressed(request, reply, pageKey, ["tournaments"]);
+  if (pressed !== undefined) return pressed;
   const year = Number(request.params.year);
   const month = Number(request.params.month);
-  const asked: Asked = askedOf(
-    request,
-    page.path,
-    page.sport === undefined ? "year" : "sport",
-    ["tournaments"],
-    { offersSport: page.sport === undefined },
-  );
+  const asked: Asked = askedOf(request, page.path, pageKey, ["tournaments"], {
+    offersSport: page.sport === undefined,
+  });
   const chose =
     page.sport === undefined
       ? asked.chose
