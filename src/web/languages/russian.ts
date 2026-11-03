@@ -328,6 +328,8 @@ export const russian: Language = {
     "year.heading": "Турниры {year} года",
     "year.needsScripting":
       "Месяцы года открываются с помощью скриптов, а они отключены. Включите их для этого сайта.",
+    "year.showAll": "Показать все",
+    "year.hideAll": "Скрыть все",
     "year.monthNone": "{month} {year}: турниров нет.",
     "year.monthFailed": "Не удалось загрузить турниры. Попробуйте ещё раз.",
     // A sport's page in a year.

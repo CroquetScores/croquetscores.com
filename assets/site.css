@@ -3570,13 +3570,27 @@ a.player-name[data-withdrawn] {
   min-height: 44px;
   width: 100%;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
+  border: 0;
+  border-radius: 0;
   background: var(--panel);
   color: var(--link);
   font: inherit;
   font-weight: 600;
   text-align: start;
   align-items: center;
+  cursor: pointer;
+}
+
+/* Beneath the heading, above the months. A link-coloured button without a
+   frame, as the months are, and as tall as one. */
+.year-months-all {
+  min-height: 44px;
+  margin-block-end: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: none;
+  color: var(--link);
+  font-weight: 600;
   cursor: pointer;
 }
 

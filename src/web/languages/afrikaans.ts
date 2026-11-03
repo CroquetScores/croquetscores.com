@@ -344,6 +344,8 @@ export const afrikaans: Language = {
     "year.heading": "Toernooie in {year}",
     "year.needsScripting":
       "Die maande van 'n jaar word met skriptering oopgemaak, wat afgeskakel is. Skakel dit asseblief vir hierdie werf aan.",
+    "year.showAll": "Wys alles",
+    "year.hideAll": "Versteek alles",
     "year.monthNone": "Geen toernooie begin in {month} {year} nie.",
     "year.monthFailed":
       "Die toernooie kon nie gelaai word nie. Probeer asseblief weer.",

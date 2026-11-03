@@ -36,6 +36,15 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
   table, and its name is joined to the table's column headings in the one
   green, so that the two read as a single heading.
 
+  A month is drawn as a bar of its own colour, with no border round it and
+  square corners, so that a closed month and an open one differ by colour and
+  not by a line.
+
+  Beneath the page's heading is a way to open every month at once, which says
+  "+ Show all" until every month is open and then "- Hide all", which closes
+  them all, marked as a month is. It opens the months a reader has not, and leaves alone those already
+  open.
+
   Where a scenario says nothing else, a tournament is for the sport "ac".
 
   Background:
@@ -225,6 +234,110 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       When the month "October" is pressed
       Then the month "October" is marked "+"
 
+  Rule: A month has no border and no rounded corners
+
+    Background:
+      Given scripting is on
+
+    Scenario: A closed month has no border
+      When the page for 2026 is opened
+      Then the month "October" has no border
+
+    Scenario: An open month has no border
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" has no border
+
+    Scenario: A closed month has square corners
+      When the page for 2026 is opened
+      Then the month "October" has square corners
+
+    Scenario: An open month has square corners
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the month "October" has square corners
+
+  Rule: One control under the heading shows or hides every month
+
+    Background:
+      Given scripting is on
+
+    Scenario: The control is beneath the heading and above the months
+      When the page for 2026 is opened
+      Then the way to show all the months is beneath the heading
+      And the way to show all the months is above the first month
+
+    Scenario: The control begins by saying "Show all"
+      When the page for 2026 is opened
+      Then the way to show or hide all the months says "Show all"
+
+    Scenario: The control begins marked with a plus
+      When the page for 2026 is opened
+      Then the way to show or hide all the months is marked "+"
+
+    Scenario: Pressing it opens every month
+      Given the page for 2026 is open
+      When the way to show or hide all the months is pressed
+      Then 12 months are open
+
+    Scenario: Once every month is open it says "Hide all"
+      Given the page for 2026 is open
+      When the way to show or hide all the months is pressed
+      Then the way to show or hide all the months says "Hide all"
+
+    Scenario: Once every month is open it is marked with a minus
+      Given the page for 2026 is open
+      When the way to show or hide all the months is pressed
+      Then the way to show or hide all the months is marked "-"
+
+    Scenario: Pressing it again closes every month
+      Given the page for 2026 is open
+      And the way to show or hide all the months is pressed
+      When the way to show or hide all the months is pressed
+      Then 0 months are open
+
+    Scenario: Once every month is closed it says "Show all" again
+      Given the page for 2026 is open
+      And the way to show or hide all the months is pressed
+      When the way to show or hide all the months is pressed
+      Then the way to show or hide all the months says "Show all"
+
+    Scenario: With some months open it says "Show all"
+      Given the page for 2026 is open
+      When the month "October" is pressed
+      Then the way to show or hide all the months says "Show all"
+
+    Scenario: Pressing it with a month open leaves that month open and opens the rest
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the way to show or hide all the months is pressed
+      Then 12 months are open
+
+    Scenario: A month open already is not asked for again
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the way to show or hide all the months is pressed
+      Then 12 month's tournaments have been asked for
+
+    Scenario: Closing a month by hand after showing all says "Show all"
+      Given the page for 2026 is open
+      And the way to show or hide all the months is pressed
+      When the month "October" is pressed
+      Then the way to show or hide all the months says "Show all"
+
+    Scenario: A month that could not be loaded again leaves it saying "Show all"
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the page for 2026 is open
+      And the way to show or hide all the months is pressed
+      And the next asking for December is answered with a server error
+      When the column "Name" of the month "March" is pressed
+      Then the way to show or hide all the months says "Show all"
+
+    Scenario: A sport's page has it too
+      When the page for "ac" in 2026 is opened
+      Then the way to show or hide all the months says "Show all"
+
   Rule: An open month is one heading with its column headings
 
     Background:
@@ -388,3 +501,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
     Scenario: No month is listed without scripting
       When the page for 2026 is opened
       Then the year has 0 months
+
+    Scenario: No way to show every month is there without scripting
+      When the page for 2026 is opened
+      Then there is no way to show or hide all the months

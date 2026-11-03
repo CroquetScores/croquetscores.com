@@ -352,6 +352,8 @@ export const german: Language = {
     "year.heading": "Turniere {year}",
     "year.needsScripting":
       "Die Monate eines Jahres werden mit Skripten geöffnet, die ausgeschaltet sind. Bitte schalte sie für diese Website ein.",
+    "year.showAll": "Alle anzeigen",
+    "year.hideAll": "Alle ausblenden",
     "year.monthNone": "Im {month} {year} beginnen keine Turniere.",
     "year.monthFailed":
       "Die Turniere konnten nicht geladen werden. Bitte versuche es erneut.",

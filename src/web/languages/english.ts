@@ -336,6 +336,8 @@ export const english: Language = {
     // The months of a year's page, which are loaded when pressed.
     "year.needsScripting":
       "The months of a year are opened with scripting, which is switched off. Please switch it on for this site.",
+    "year.showAll": "Show all",
+    "year.hideAll": "Hide all",
     "year.monthNone": "No tournaments start in {month} {year}.",
     "year.monthFailed":
       "The tournaments could not be loaded. Please try again.",
