@@ -1,5 +1,16 @@
 # What's new
 
+## Released 2026-11-03
+
+### Following a tournament
+
+- **A year's page shows its months.** Each of the twelve months is listed closed, saying how many tournaments start in it. Press a month to open its tournaments on the same page, and as many months as you like can be open at once. Beneath the heading, **+ Show all** opens every month, and then reads **- Hide all**, which closes them. The same is done for a sport in a year. Without scripting a month is a link instead, and the months open are kept in the address.
+- **Tournaments can be filtered by a range of days.** Before the Filter button are a first day and a last day, which you give together or not at all. Both days are included. A tournament is in the range by the day it starts, so it is in one month's list and never two.
+- **A list of tournaments is a hundred to a page.** A longer list is divided into pages, so that a wide search no longer loads every row at once.
+- **The filter you chose is remembered.** The country, region and sport you choose in the filter, or by pressing a flag, are kept on your phone or computer, and a list of tournaments begins from them the next time you open it. The year is not kept, since it is a page of its own. Choosing "any" for one of them forgets what was kept for that one.
+- **More tournaments are in their own country.** Swedish and Norwegian championships and opens, Czech opens, and the Kohlhof and Southwest championships were being shown in Spain, or wherever their time zone pointed. They are now in Sweden, Norway, Czechia and Germany.
+- **Two players who were spelled wrongly are one person.** Marga Podnieks had been entered as "Marga Podneiks" in 7 events, and Liz Mackenzie as "Liz McKenzie" in 5, so the site showed two people where there was one. Each is now spelled correctly everywhere.
+
 ## Released 2026-11-02
 
 ### Managing a tournament

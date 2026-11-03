@@ -1,5 +1,16 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-03
+
+### Dilyn twrnamaint
+
+- **Mae tudalen blwyddyn yn dangos ei misoedd.** Rhestrir pob un o'r deuddeg mis wedi'i gau, gan ddweud faint o dwrnameintiau sy'n dechrau ynddo. Pwyswch ar fis i agor ei dwrnameintiau ar yr un dudalen, a gall cynifer o fisoedd ag y mynnwch fod ar agor ar yr un pryd. O dan y pennawd, mae **+ Dangos y cyfan** yn agor pob mis, ac yna'n darllen **- Cuddio'r cyfan**, sy'n eu cau. Gwneir yr un peth ar gyfer camp mewn blwyddyn. Heb sgriptio, dolen yw mis yn lle hynny, a chedwir y misoedd sydd ar agor yn y cyfeiriad.
+- **Gellir hidlo twrnameintiau yn ôl ystod o ddyddiau.** Cyn y botwm Hidlo mae diwrnod cyntaf a diwrnod olaf, y rhoddir y ddau ohonynt gyda'i gilydd neu'r un ohonynt. Mae'r ddau ddiwrnod wedi'u cynnwys. Mae twrnamaint yn yr ystod yn ôl y diwrnod y mae'n dechrau, felly mae yn rhestr un mis ac nid yw byth yn rhestr dau.
+- **Mae rhestr o dwrnameintiau yn gant i bob tudalen.** Rhennir rhestr hirach yn dudalennau, fel nad yw chwiliad eang yn llwytho pob rhes ar unwaith mwyach.
+- **Cofir yr hidl a ddewisoch.** Cedwir y wlad, y rhanbarth a'r gamp a ddewiswch yn yr hidl, neu drwy wasgu baner, ar eich ffôn neu'ch cyfrifiadur, ac mae rhestr o dwrnameintiau yn dechrau ohonynt y tro nesaf y byddwch yn ei hagor. Ni chedwir y flwyddyn, gan ei bod yn dudalen ar ei phen ei hun. Mae dewis "unrhyw" ar gyfer un ohonynt yn anghofio'r hyn a gadwyd ar ei gyfer.
+- **Mae mwy o dwrnameintiau yn eu gwlad eu hunain.** Roedd pencampwriaethau ac agored Sweden a Norwy, agored Tsiecia, a phencampwriaethau Kohlhof a'r De-orllewin yn cael eu dangos yn Sbaen, neu lle bynnag yr oedd eu parth amser yn pwyntio. Maent bellach yn Sweden, Norwy, Tsiecia a'r Almaen.
+- **Mae dau chwaraewr a sillafwyd yn anghywir yn un person.** Roedd Marga Podnieks wedi'i chofnodi fel "Marga Podneiks" mewn 7 cystadleuaeth, a Liz Mackenzie fel "Liz McKenzie" mewn 5, felly roedd y wefan yn dangos dau berson lle roedd un. Mae pob un bellach wedi'i sillafu'n gywir ym mhobman.
+
 ## Rhyddhawyd 2026-11-02
 
 ### Rheoli twrnamaint

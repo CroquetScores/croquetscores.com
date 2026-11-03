@@ -1,5 +1,16 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-11-03
+
+### Einem Turnier folgen
+
+- **Die Seite eines Jahres zeigt ihre Monate.** Jeder der zwölf Monate steht geschlossen in der Liste und nennt, wie viele Turniere in ihm beginnen. Drücken Sie auf einen Monat, um seine Turniere auf derselben Seite zu öffnen; beliebig viele Monate können gleichzeitig offen sein. Unter der Überschrift öffnet **+ Alle anzeigen** jeden Monat und heißt dann **- Alle ausblenden**, was sie wieder schließt. Dasselbe gilt für eine Sportart in einem Jahr. Ohne Skripte ist ein Monat stattdessen ein Link, und die offenen Monate stehen in der Adresse.
+- **Turniere lassen sich nach einem Zeitraum von Tagen filtern.** Vor der Schaltfläche Filtern stehen ein erster und ein letzter Tag, die Sie zusammen oder gar nicht angeben. Beide Tage gehören dazu. Ein Turnier liegt im Zeitraum nach dem Tag, an dem es beginnt, steht also in der Liste eines Monats und nie in zweien.
+- **Eine Turnierliste hat hundert Einträge pro Seite.** Eine längere Liste wird in Seiten geteilt, damit eine breite Suche nicht mehr jede Zeile auf einmal lädt.
+- **Der gewählte Filter wird gemerkt.** Das Land, die Region und die Sportart, die Sie im Filter wählen oder indem Sie auf eine Flagge drücken, werden auf Ihrem Smartphone oder Computer gespeichert, und eine Turnierliste beginnt beim nächsten Öffnen damit. Das Jahr wird nicht gespeichert, da es eine eigene Seite ist. Wenn Sie bei einem von ihnen „beliebig“ wählen, wird das für dieses Gespeicherte vergessen.
+- **Mehr Turniere liegen im eigenen Land.** Schwedische und norwegische Meisterschaften und Opens, tschechische Opens sowie die Meisterschaften von Kohlhof und Southwest wurden in Spanien angezeigt oder dort, wohin ihre Zeitzone zeigte. Jetzt stehen sie in Schweden, Norwegen, Tschechien und Deutschland.
+- **Zwei falsch geschriebene Spieler sind eine Person.** Marga Podnieks war in 7 Veranstaltungen als „Marga Podneiks“ eingetragen und Liz Mackenzie in 5 als „Liz McKenzie“, sodass die Website zwei Personen zeigte, wo es nur eine gab. Beide sind jetzt überall richtig geschrieben.
+
 ## Veröffentlicht am 2026-11-02
 
 ### Ein Turnier führen

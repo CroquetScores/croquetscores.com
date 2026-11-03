@@ -1,5 +1,16 @@
 # Nytt
 
+## Släppt 2026-11-03
+
+### Följa en turnering
+
+- **Ett års sida visar dess månader.** Var och en av de tolv månaderna visas ihopfälld, med hur många turneringar som börjar i den. Tryck på en månad för att öppna dess turneringar på samma sida, och hur många månader som helst kan vara öppna samtidigt. Under rubriken öppnar **+ Visa alla** varje månad, och står sedan som **- Dölj alla**, som stänger dem. Samma sak görs för en sport under ett år. Utan skript är en månad i stället en länk, och de öppna månaderna sparas i adressen.
+- **Turneringar kan filtreras på ett intervall av dagar.** Före knappen Filtrera finns en första och en sista dag, som du anger båda eller ingen av. Båda dagarna ingår. En turnering ligger i intervallet efter den dag den börjar, så den finns i en enda månads lista och aldrig i två.
+- **En lista med turneringar har hundra per sida.** En längre lista delas upp i sidor, så att en bred sökning inte längre läser in alla rader på en gång.
+- **Filtret du valde kommer ihåg.** Landet, regionen och sporten du väljer i filtret, eller genom att trycka på en flagga, sparas på din telefon eller dator, och en lista med turneringar utgår från dem nästa gång du öppnar den. Året sparas inte, eftersom det är en sida för sig. Väljer du ”alla” för ett av dem glöms det som sparats för just det.
+- **Fler turneringar ligger i sitt eget land.** Svenska och norska mästerskap och öppna turneringar, tjeckiska öppna turneringar samt Kohlhof- och Southwest-mästerskapen visades i Spanien, eller dit deras tidszon pekade. Nu ligger de i Sverige, Norge, Tjeckien och Tyskland.
+- **Två spelare som var felstavade är en och samma person.** Marga Podnieks hade registrerats som ”Marga Podneiks” i 7 tävlingar, och Liz Mackenzie som ”Liz McKenzie” i 5, så webbplatsen visade två personer där det fanns en. Nu är varje namn rätt stavat överallt.
+
 ## Släppt 2026-11-02
 
 ### Arrangera en turnering

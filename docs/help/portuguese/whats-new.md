@@ -1,5 +1,16 @@
 # Novidades
 
+## Lançado em 2026-11-03
+
+### Acompanhar um torneio
+
+- **A página de um ano mostra os seus meses.** Cada um dos doze meses aparece fechado, dizendo quantos torneios começam nele. Toque em um mês para abrir os torneios dele na mesma página; quantos meses você quiser podem ficar abertos ao mesmo tempo. Abaixo do título, **+ Mostrar tudo** abre todos os meses e depois passa a dizer **- Ocultar tudo**, que os fecha. O mesmo vale para um esporte em um ano. Sem scripts, um mês é um link, e os meses abertos ficam guardados no endereço.
+- **Os torneios podem ser filtrados por um intervalo de dias.** Antes do botão Filtrar há um primeiro dia e um último dia, que você informa juntos ou nenhum. Os dois dias entram no intervalo. Um torneio está no intervalo pelo dia em que começa, então ele aparece na lista de um mês e nunca de dois.
+- **Uma lista de torneios tem cem por página.** Uma lista mais longa é dividida em páginas, de modo que uma busca ampla não carrega mais todas as linhas de uma vez.
+- **O filtro que você escolheu é lembrado.** O país, a região e o esporte que você escolhe no filtro, ou ao tocar em uma bandeira, ficam guardados no seu celular ou computador, e uma lista de torneios começa com eles na próxima vez que você a abrir. O ano não é guardado, pois é uma página à parte. Escolher "qualquer" para um deles esquece o que estava guardado para ele.
+- **Mais torneios aparecem no seu próprio país.** Os campeonatos e abertos da Suécia e da Noruega, os abertos da Tchéquia e os campeonatos de Kohlhof e Southwest eram mostrados na Espanha, ou onde o fuso horário apontava. Agora estão na Suécia, na Noruega, na Tchéquia e na Alemanha.
+- **Dois jogadores escritos errado agora são uma só pessoa.** Marga Podnieks tinha sido inserida como "Marga Podneiks" em 7 eventos, e Liz Mackenzie como "Liz McKenzie" em 5, então o site mostrava duas pessoas onde havia uma. Cada uma agora está escrita corretamente em todo lugar.
+
 ## Lançado em 2026-11-02
 
 ### Administrar um torneio

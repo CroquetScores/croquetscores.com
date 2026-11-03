@@ -1,5 +1,16 @@
 # Co nowego
 
+## Wydano 2026-11-03
+
+### Śledzenie turnieju
+
+- **Strona roku pokazuje jego miesiące.** Każdy z dwunastu miesięcy jest wypisany zwinięty, z informacją, ile turniejów się w nim zaczyna. Naciśnij miesiąc, aby otworzyć jego turnieje na tej samej stronie; otwartych może być naraz tyle miesięcy, ile chcesz. Pod nagłówkiem **+ Pokaż wszystkie** otwiera każdy miesiąc, a potem zmienia się w **- Ukryj wszystkie**, które je zwija. To samo dotyczy dyscypliny w roku. Bez skryptów miesiąc jest odsyłaczem, a otwarte miesiące zapisują się w adresie.
+- **Turnieje można filtrować według zakresu dni.** Przed przyciskiem Filtruj są pierwszy i ostatni dzień, które podaje się razem albo wcale. Oba dni wchodzą do zakresu. O tym, czy turniej jest w zakresie, decyduje dzień jego początku, więc trafia on na listę jednego miesiąca, nigdy dwóch.
+- **Lista turniejów liczy sto pozycji na stronę.** Dłuższa lista jest dzielona na strony, więc szerokie wyszukiwanie nie ładuje już od razu każdego wiersza.
+- **Wybrany filtr jest zapamiętywany.** Kraj, region i dyscyplina wybrane w filtrze albo przez naciśnięcie flagi są zapisywane na telefonie lub komputerze, a lista turniejów zaczyna od nich przy następnym otwarciu. Rok nie jest zapamiętywany, bo ma własną stronę. Wybranie „dowolny” dla któregoś z nich zapomina to, co zapisano dla niego.
+- **Więcej turniejów jest w swoim kraju.** Mistrzostwa i turnieje open Szwecji i Norwegii, turnieje open Czech oraz mistrzostwa Kohlhof i Southwest były pokazywane w Hiszpanii albo tam, gdzie wskazywała ich strefa czasowa. Są teraz w Szwecji, Norwegii, Czechach i Niemczech.
+- **Dwóch błędnie zapisanych zawodników to jedna osoba.** Marga Podnieks była wpisana jako „Marga Podneiks” w 7 turniejach, a Liz Mackenzie jako „Liz McKenzie” w 5, więc serwis pokazywał dwie osoby tam, gdzie była jedna. Każda jest teraz wszędzie zapisana poprawnie.
+
 ## Wydano 2026-11-02
 
 ### Prowadzenie turnieju

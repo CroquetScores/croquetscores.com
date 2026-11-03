@@ -1,5 +1,16 @@
 # He aha te mea hou
 
+## I tukuna 2026-11-03
+
+### Te whai i tētahi whakataetae nui
+
+- **Ka whakaatu te whārangi o tētahi tau i ōna marama.** Ka rārangitia ngā marama tekau mā rua, kua katia, me te kī e hia ngā whakataetae nui ka tīmata i ia marama. Pēhia tētahi marama kia tuwhera ai ōna whakataetae nui i taua whārangi tonu, ā, e hia noa ngā marama ka taea te tuwhera i te wā kotahi. I raro i te upoko, ka tuwhera a **+ Whakaatu katoa** i ngā marama katoa, ā, ka panui kē i muri mai ko **- Huna katoa**, e kati ana i a rātou. He pēnei anō mō tētahi hākinakina i tētahi tau. Ki te kore he hōtaka, he hono te marama, ā, ka mau ngā marama tuwhera ki te wāhitau.
+- **Ka taea te tātari i ngā whakataetae nui mā tētahi awhe rā.** I mua i te pātene Tātari he rā tuatahi me tētahi rā whakamutunga, ka hoatu tahitia, ka kore rānei e hoatu. Kei roto ngā rā e rua. Kei roto tētahi whakataetae nui i te awhe mā te rā e tīmata ai, nō reira kei te rārangi o tētahi marama anake, kāore i ngā rārangi e rua.
+- **Kotahi rau ngā whakataetae nui i ia whārangi o te rārangi.** Ka wehea te rārangi roa ki ngā whārangi, kia kore ai e utaina ngā rārangi katoa i te wā kotahi i tētahi rapu whānui.
+- **Ka maumahara ki te tātari i kōwhiria e koe.** Ko te whenua, te rohe me te hākinakina e kōwhiria ana e koe i te tātari, mā te pēhi rānei i tētahi haki, ka mau ki tō waea, ki tō rorohiko rānei, ā, ka tīmata tētahi rārangi whakataetae nui i aua mea i te wā e whakatuwheratia ai a muri ake. Kāore te tau e mau, i te mea he whārangi motuhake tōna. Ina kōwhiria te "ahakoa" mō tētahi, ka wareware te mea i mau mō tērā.
+- **He maha ake ngā whakataetae nui kei tō rātou ake whenua.** Ko ngā whakataetae toa me ngā whakataetae tuwhera o Huitene me Nōwei, ngā whakataetae tuwhera o Tiekia, me ngā whakataetae toa o Kohlhof me Southwest, e whakaatuhia ana ki Peina, ki te wāhi rānei i tohu tō rātou rohe wā. Kei Huitene, Nōwei, Tiekia me Tiamana ināianei.
+- **Kotahi te tangata o ngā kaitākaro e rua i hē te tuhi.** I tuhia a Marga Podnieks ko "Marga Podneiks" i ngā takaro 7, ā, ko Liz Mackenzie ko "Liz McKenzie" i ngā takaro 5, nō reira e rua ngā tāngata i whakaatuhia e te pae, kotahi noa. Kua tika te tuhi o ia tangata i ngā wāhi katoa.
+
 ## I tukuna 2026-11-02
 
 ### Te whakahaere i tētahi whakataetae nui
