@@ -1868,6 +1868,27 @@ main {
   image-rendering: pixelated;
 }
 
+/* A month's table is open beneath another's, and a table sized by what is in
+   it makes the dates of one month wider than another's, so that the names do
+   not begin in the same place. The first three columns are given a width of
+   their own, enough for the longest dates (two months, as "28 Dec-03 Jan"),
+   the sport's code and the flag, and the names have the rest. */
+.year-month-body .tournament-list table {
+  table-layout: fixed;
+}
+
+.year-month-body .tournament-list thead th:first-child {
+  width: 10em;
+}
+
+.year-month-body .tournament-list thead .tournament-sport {
+  width: 4rem;
+}
+
+.year-month-body .tournament-list thead .tournament-flag {
+  width: 3.75rem;
+}
+
 /* The sport's code, in capitals, on the sport's own colour (--sport-*), in the
    ink the action buttons use, which sits on each at over 6:1 in both themes.
    Left out on a phone, where the room is wanted

@@ -358,6 +358,40 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       When the month "October" is pressed
       Then the month "October" is the colour of its column headings
 
+  Rule: The columns are as wide in every month as in the others
+
+    Months open one beneath another, and a table sized by what is in it is
+    wider in the dates of one month than another's, so that the names begin at
+    a different place in each. Read down the page, they should line up.
+
+    Background:
+      Given scripting is on
+      And "organiser@example.com" has created the tournament "Long Dates Open"
+      And the tournament "Long Dates Open" starts on "2026-03-28"
+      And the tournament "Long Dates Open" finishes on "2026-04-03"
+      And "organiser@example.com" has created the tournament "Short Dates Open"
+      And the tournament "Short Dates Open" starts on "2026-10-03"
+      And the page for 2026 is open
+      And the month "March" is pressed
+      And the month "October" is pressed
+
+    Scenario: The dates are as wide in each month
+      Then the column "Date" of the month "March" is as wide as that of the month "October"
+
+    Scenario: The names are as wide in each month
+      Then the column "Name" of the month "March" is as wide as that of the month "October"
+
+    Scenario: The longest dates fit their column
+      Then the dates of the month "March" fit their column
+
+    Scenario: The longest dates fit their column on a phone
+      Given a viewport 360 pixels wide and 700 pixels tall
+      Then the dates of the month "March" fit their column
+
+    Scenario: A month with none is not wider than another
+      Given the month "July" is pressed
+      Then the month "July" is as wide as the month "October"
+
   Rule: Sorting one month sorts every open month the same way
 
     Background:
