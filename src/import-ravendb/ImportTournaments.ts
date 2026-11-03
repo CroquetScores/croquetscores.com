@@ -517,6 +517,10 @@ const namesSayingACountry: readonly {
     country: "ca",
   },
   {
+    says: (name) => wholeWord("Happy Valley", "i").test(name),
+    country: "ca",
+  },
+  {
     // Called exactly this, whichever way its apostrophe is written.
     says: (name) =>
       name.replaceAll("’", "'").toLowerCase() ===
