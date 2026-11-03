@@ -22,6 +22,7 @@ import {
   askedOf,
   filter,
   keepingFilter,
+  settledWhenPressed,
   sendPage,
   sendToDaysChosen,
   yearsOf,
@@ -38,6 +39,10 @@ export const registerYearPage = (
   server.get<{ Params: { year: string } }>(yearPath, async (request, reply) => {
     const toDays = sendToDaysChosen(request, reply);
     if (toDays !== undefined) return toDays;
+    // The page lists no table of its own to sort, but a filter pressed on it is
+    // still remembered, as the months' tables are asked for under it.
+    const pressed = settledWhenPressed(request, reply, "year", []);
+    if (pressed !== undefined) return pressed;
     const year = Number(request.params.year);
     const path = `/${request.params.year}`;
     const website = websiteOf(request);

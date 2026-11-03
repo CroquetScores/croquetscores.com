@@ -26,6 +26,7 @@ import {
   askedOf,
   filter,
   keepingFilter,
+  settledWhenPressed,
   sendPage,
   sendToDaysChosen,
   yearsOf,
@@ -54,6 +55,12 @@ export const registerYearSportPage = (
       if (sport === undefined) return reply.callNotFound();
       const toDays = sendToDaysChosen(request, reply, sport.code);
       if (toDays !== undefined) return toDays;
+      // Only the filter: the months' tables are the ones sorted. The sport is the
+      // page's own, so what was remembered of it is left as it was.
+      const pressed = settledWhenPressed(request, reply, "sport", [], {
+        offersSport: false,
+      });
+      if (pressed !== undefined) return pressed;
       const year = Number(request.params.year);
       const path = `/${request.params.year}/${sport.code}`;
       const speaking = speakingOf(request);
