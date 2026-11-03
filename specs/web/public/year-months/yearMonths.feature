@@ -459,6 +459,84 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       When the column "Name" of the year's tournaments is pressed
       Then the page is the one that was marked
 
+  Rule: The months are in the order the tournaments' start dates are
+
+    A month is a stretch of start dates, so the months follow the date column:
+    January first while the tournaments are earliest first, and December first
+    once they are latest first. Sorting by any other column says nothing about
+    dates, and the months stay in the order of the year.
+
+    Background:
+      Given scripting is on
+      And "organiser@example.com" has created the tournament "Beta Open"
+      And the tournament "Beta Open" starts on "2026-10-03"
+
+    Scenario: Earliest first, the months begin with January
+      When the page for 2026 is opened
+      Then the first month of the year is "January"
+
+    Scenario: Latest first, the months begin with December
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the column "Date" of the year's tournaments is pressed
+      Then the first month of the year is "December"
+
+    Scenario: Latest first, the months end with January
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the column "Date" of the year's tournaments is pressed
+      Then the twelfth month of the year is "January"
+
+    Scenario: Sorted by another column, the months begin with January
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the column "Name" of the year's tournaments is pressed
+      Then the first month of the year is "January"
+
+    Scenario: Putting the usual order back puts January first
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the column "Date" of the year's tournaments is pressed
+      When the usual order of the month "October" is pressed
+      Then the first month of the year is "January"
+
+    Scenario: A month open stays open when the months are turned round
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      When the column "Date" of the year's tournaments is pressed
+      Then the month "October" is open
+
+    Scenario: Latest first is remembered when a year's page is next opened
+      Given the page for 2026 is open
+      And the month "October" is pressed
+      And the column "Date" of the year's tournaments is pressed
+      When the page for 2026 is opened
+      Then the first month of the year is "December"
+
+    # Turning the months round moves the one the reader pressed from the
+    # bottom of the page to the top, or the other way, and it would leave them
+    # looking at a different month than the one they sorted.
+    Scenario: The month the date sorting was pressed in is at the top of the page
+      Given a viewport 1200 pixels wide and 300 pixels tall
+      And the page for 2026 is open
+      And every month of the year is pressed
+      When the column "Date" of the month "October" is pressed
+      Then the month "October" is at the top of the page
+
+    Scenario: The month the usual order was pressed in is at the top of the page
+      Given a viewport 1200 pixels wide and 300 pixels tall
+      And the page for 2026 is open
+      And every month of the year is pressed
+      And the column "Date" of the month "October" is pressed
+      When the usual order of the month "March" is pressed
+      Then the month "March" is at the top of the page
+
+    Scenario: A sport's page has its months in the same order
+      Given the page for "ac" in 2026 is open
+      And the month "October" is pressed
+      When the column "Date" of the sport's tournaments is pressed
+      Then the first month of the year is "December"
+
   Rule: A sport's page loads its months in the same way
 
     Background:

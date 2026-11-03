@@ -27,7 +27,13 @@ import {
   sendToDaysChosen,
   yearsOf,
 } from "./tournamentLists.js";
-import { monthPath, monthsOf, sendMonth, yearInPath } from "./yearMonths.js";
+import {
+  latestFirst,
+  monthPath,
+  monthsOf,
+  sendMonth,
+  yearInPath,
+} from "./yearMonths.js";
 
 export { yearInPath };
 const yearPath = `/${yearInPath}`;
@@ -77,7 +83,7 @@ export const registerYearPage = (
         // only mislead, so the filter is told there are enough.
         body: `${filter(request, asked, speaking, Number.POSITIVE_INFINITY)}
           <h1>${escape(heading)}</h1>
-${monthsOf(speaking, year, path)}`,
+${monthsOf(speaking, year, path, latestFirst(request, asked))}`,
       }),
     );
   });

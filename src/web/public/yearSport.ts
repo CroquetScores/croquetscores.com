@@ -31,7 +31,13 @@ import {
   sendToDaysChosen,
   yearsOf,
 } from "./tournamentLists.js";
-import { monthPath, monthsOf, sendMonth, yearInPath } from "./yearMonths.js";
+import {
+  latestFirst,
+  monthPath,
+  monthsOf,
+  sendMonth,
+  yearInPath,
+} from "./yearMonths.js";
 
 // Exactly as a sport's code is written, as it is in a tournament's address,
 // and one the website offers.
@@ -107,7 +113,7 @@ export const registerYearSportPage = (
           // would only mislead, so the filter is told there are enough.
           body: `${filter(request, asked, speaking, Number.POSITIVE_INFINITY)}
           <h1>${escape(heading)}</h1>
-${monthsOf(speaking, year, path)}`,
+${monthsOf(speaking, year, path, latestFirst(request, asked))}`,
         }),
       );
     },
