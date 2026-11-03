@@ -343,9 +343,16 @@ export const afrikaans: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Toernooie in {year}",
     "year.none": "Geen toernooie begin in {year} nie.",
+    "year.needsScripting":
+      "Die maande van 'n jaar word met skriptering oopgemaak, wat afgeskakel is. Skakel dit asseblief vir hierdie werf aan.",
+    "year.monthNone": "Geen toernooie begin in {month} {year} nie.",
+    "year.monthFailed":
+      "Die toernooie kon nie gelaai word nie. Probeer asseblief weer.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{sport}-toernooie in {year}",
     "yearSport.none": "Geen {sport}-toernooie begin in {year} nie.",
+    "yearSport.monthNone":
+      "Geen {sport}-toernooie begin in {month} {year} nie.",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Onlangs",

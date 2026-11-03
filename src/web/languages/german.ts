@@ -351,9 +351,15 @@ export const german: Language = {
     // leer ist.
     "year.heading": "Turniere {year}",
     "year.none": "{year} beginnen keine Turniere.",
+    "year.needsScripting":
+      "Die Monate eines Jahres werden mit Skripten geöffnet, die ausgeschaltet sind. Bitte schalte sie für diese Website ein.",
+    "year.monthNone": "Im {month} {year} beginnen keine Turniere.",
+    "year.monthFailed":
+      "Die Turniere konnten nicht geladen werden. Bitte versuche es erneut.",
     // Die Seite einer Sportart in einem Jahr: dasselbe, nur für diese Sportart.
     "yearSport.heading": "{sport}-Turniere {year}",
     "yearSport.none": "{year} beginnen keine {sport}-Turniere.",
+    "yearSport.monthNone": "Im {month} {year} beginnen keine {sport}-Turniere.",
     // Die Seite eines Turniers: ihre Bereiche, was sie über ein Spiel sagt,
     // wie lange es her ist, dass eines hinzugefügt wurde, und was sie sagt,
     // wenn sie keines hat.

@@ -314,9 +314,14 @@ export const chinese: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "{year} 年的赛事",
     "year.none": "{year} 年没有赛事开始。",
+    "year.needsScripting":
+      "一年中的各个月份需要启用脚本才能展开，而脚本目前已关闭。请为本网站开启脚本。",
+    "year.monthNone": "{year} 年 {month}没有赛事开始。",
+    "year.monthFailed": "无法加载赛事。请重试。",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{year} 年的{sport}赛事",
     "yearSport.none": "{year} 年没有{sport}赛事开始。",
+    "yearSport.monthNone": "{year} 年 {month}没有{sport}赛事开始。",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "最新",

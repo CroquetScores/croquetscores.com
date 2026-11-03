@@ -343,9 +343,16 @@ export const dutch: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Toernooien in {year}",
     "year.none": "Er begint in {year} geen toernooi.",
+    "year.needsScripting":
+      "De maanden van een jaar worden geopend met scripting, dat is uitgeschakeld. Schakel het in voor deze site.",
+    "year.monthNone": "In {month} {year} beginnen geen toernooien.",
+    "year.monthFailed":
+      "De toernooien konden niet worden geladen. Probeer het opnieuw.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{sport}-toernooien in {year}",
     "yearSport.none": "Er begint in {year} geen {sport}-toernooi.",
+    "yearSport.monthNone":
+      "In {month} {year} beginnen geen {sport}-toernooien.",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Recent",

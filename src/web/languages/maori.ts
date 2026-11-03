@@ -323,9 +323,16 @@ export const maori: Language = {
     // A year's page.
     "year.heading": "Ngā whakataetae i {year}",
     "year.none": "Kāore he whakataetae e tīmata ana i {year}.",
+    "year.needsScripting":
+      "Ka whakatuwheratia ngā marama o te tau mā te tuhinga, kua whakawetohia nei. Tēnā, whakaaetia mō tēnei pae.",
+    "year.monthNone": "Kāore he whakataetae e tīmata ana i {month} {year}.",
+    "year.monthFailed":
+      "Kīhai i taea te uta i ngā whakataetae. Tēnā, whakamātauria anō.",
     // A sport's page in a year.
     "yearSport.heading": "Ngā whakataetae {sport} i {year}",
     "yearSport.none": "Kāore he whakataetae {sport} e tīmata ana i {year}.",
+    "yearSport.monthNone":
+      "Kāore he whakataetae {sport} e tīmata ana i {month} {year}.",
     // A tournament's page.
     "tournament.recent": "Tata nei",
     "tournament.summary": "Whakarāpopototanga",

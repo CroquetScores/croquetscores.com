@@ -334,10 +334,16 @@ export const welsh: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Twrnameintiau yn {year}",
     "year.none": "Nid oes unrhyw dwrnameintiau'n dechrau yn {year}.",
+    "year.needsScripting":
+      "Mae misoedd blwyddyn yn cael eu hagor gyda sgriptio, sydd wedi'i ddiffodd. Trowch ef ymlaen ar gyfer y wefan hon.",
+    "year.monthNone": "{month} {year}: nid oes unrhyw dwrnameintiau'n dechrau.",
+    "year.monthFailed": "Nid oedd modd llwytho'r twrnameintiau. Ceisiwch eto.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "Twrnameintiau {sport} yn {year}",
     "yearSport.none":
       "Nid oes unrhyw dwrnameintiau {sport} yn dechrau yn {year}.",
+    "yearSport.monthNone":
+      "{month} {year}: nid oes unrhyw dwrnameintiau {sport} yn dechrau.",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "Diweddar",

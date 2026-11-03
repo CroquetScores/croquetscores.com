@@ -314,8 +314,13 @@ export const polish: Language = {
     "home.allTournaments": "Wszystkie turnieje w roku {year}",
     "year.heading": "Turnieje w roku {year}",
     "year.none": "W roku {year} nie zaczyna się żaden turniej.",
+    "year.needsScripting":
+      "Miesiące roku otwierają się za pomocą skryptów, które są wyłączone. Włącz je dla tej witryny.",
+    "year.monthNone": "{month} {year}: brak turniejów.",
+    "year.monthFailed": "Nie udało się wczytać turniejów. Spróbuj ponownie.",
     "yearSport.heading": "Turnieje: {sport}, rok {year}",
     "yearSport.none": "W roku {year} nie zaczyna się żaden turniej: {sport}.",
+    "yearSport.monthNone": "{month} {year}: brak turniejów — {sport}.",
     // Strona turnieju: jej sekcje, opis gry, jak dawno ją dodano i co mówi,
     // gdy nic nie ma.
     "tournament.recent": "Ostatnie",

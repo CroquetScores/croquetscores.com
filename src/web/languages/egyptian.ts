@@ -318,9 +318,14 @@ export const egyptian: Language = {
     // A year's page.
     "year.heading": "بطولات {year}",
     "year.none": "مفيش بطولات بتبدأ في {year}.",
+    "year.needsScripting":
+      "شهور السنة بتتفتح بالسكريبت، وهو مقفول. لو سمحت شغّله للموقع ده.",
+    "year.monthNone": "مفيش بطولات بتبدأ في {month} {year}.",
+    "year.monthFailed": "مقدرناش نحمّل البطولات. حاول تاني لو سمحت.",
     // A sport's page in a year.
     "yearSport.heading": "بطولات {sport} في {year}",
     "yearSport.none": "مفيش بطولات {sport} بتبدأ في {year}.",
+    "yearSport.monthNone": "مفيش بطولات {sport} بتبدأ في {month} {year}.",
     // A tournament's page.
     "tournament.recent": "الأحدث",
     "tournament.summary": "الملخّص",

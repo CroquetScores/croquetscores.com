@@ -322,9 +322,14 @@ export const japanese: Language = {
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "{year}年の大会",
     "year.none": "{year}年に始まる大会はありません。",
+    "year.needsScripting":
+      "年の各月はスクリプトで開きますが、スクリプトがオフになっています。このサイトではオンにしてください。",
+    "year.monthNone": "{year}年{month}に始まる大会はありません。",
+    "year.monthFailed": "大会を読み込めませんでした。もう一度お試しください。",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{year}年の{sport}の大会",
     "yearSport.none": "{year}年に始まる{sport}の大会はありません。",
+    "yearSport.monthNone": "{year}年{month}に始まる{sport}の大会はありません。",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "最近",
