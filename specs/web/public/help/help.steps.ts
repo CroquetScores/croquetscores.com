@@ -11,8 +11,8 @@ import {
 import { languageCookie } from "../../../../src/web/common/language.js";
 import { egyptian } from "../../../../src/web/languages/egyptian.js";
 import { english } from "../../../../src/web/languages/english.js";
-import { french } from "../../../../src/web/languages/french.js";
 import { german } from "../../../../src/web/languages/german.js";
+import { swedish } from "../../../../src/web/languages/swedish.js";
 import { welsh } from "../../../../src/web/languages/welsh.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
@@ -24,7 +24,7 @@ import { answeredWith } from "../../support/answered.js";
 const languages = {
   English: english,
   Welsh: welsh,
-  French: french,
+  Swedish: swedish,
   German: german,
   "Egyptian Arabic": egyptian,
 };
@@ -33,7 +33,7 @@ const languages = {
 // "the page is in Welsh" is not mistaken for one saying "the page is in "cy"".
 defineParameterType({
   name: "helpLanguage",
-  regexp: /English|Welsh|French|German|Egyptian Arabic/,
+  regexp: /English|Welsh|Swedish|German|Egyptian Arabic/,
   transformer: (name: string) => languages[name as keyof typeof languages],
 });
 
@@ -198,7 +198,7 @@ Then("every picture is found", async function (this: SpecWorld) {
 const folders = new Map<Language, string>([
   [english, "english"],
   [welsh, "welsh"],
-  [french, "french"],
+  [swedish, "swedish"],
   [german, "german"],
   [egyptian, "egyptian"],
 ]);

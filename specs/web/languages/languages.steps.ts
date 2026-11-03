@@ -1,21 +1,22 @@
-import { Given, Then } from "@cucumber/cucumber";
+import { defineParameterType, Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 
+import {
+  mostPlayedIn,
+  playedInSince2025,
+} from "../../../src/web/common/countryOrder.js";
 import type { Language } from "../../../src/web/common/language.js";
 import { afrikaans } from "../../../src/web/languages/afrikaans.js";
-import { chinese } from "../../../src/web/languages/chinese.js";
-import { dutch } from "../../../src/web/languages/dutch.js";
+import { czech } from "../../../src/web/languages/czech.js";
 import { egyptian } from "../../../src/web/languages/egyptian.js";
 import { english } from "../../../src/web/languages/english.js";
-import { french } from "../../../src/web/languages/french.js";
 import { german } from "../../../src/web/languages/german.js";
-import { italian } from "../../../src/web/languages/italian.js";
-import { japanese } from "../../../src/web/languages/japanese.js";
-import { korean } from "../../../src/web/languages/korean.js";
-import { maori } from "../../../src/web/languages/maori.js";
-import { polish } from "../../../src/web/languages/polish.js";
+import { greek } from "../../../src/web/languages/greek.js";
+import { latvian } from "../../../src/web/languages/latvian.js";
+import { norwegian } from "../../../src/web/languages/norwegian.js";
 import { portuguese } from "../../../src/web/languages/portuguese.js";
-import { russian } from "../../../src/web/languages/russian.js";
 import { spanish } from "../../../src/web/languages/spanish.js";
 import { swedish } from "../../../src/web/languages/swedish.js";
 import { welsh } from "../../../src/web/languages/welsh.js";
@@ -27,20 +28,15 @@ import { anApplicationOfferingItsOwnLanguages } from "../support/browser.js";
 // no other, so that adding a language is a file here and a feature beside it.
 const known: Readonly<Record<string, Language>> = {
   English: english,
-  Spanish: spanish,
   Afrikaans: afrikaans,
-  Chinese: chinese,
-  Dutch: dutch,
+  Czech: czech,
   Egyptian: egyptian,
-  French: french,
   German: german,
-  Italian: italian,
-  Japanese: japanese,
-  Korean: korean,
-  Maori: maori,
-  Polish: polish,
+  Greek: greek,
+  Latvian: latvian,
+  Norwegian: norwegian,
   Portuguese: portuguese,
-  Russian: russian,
+  Spanish: spanish,
   Swedish: swedish,
   Welsh: welsh,
 };
@@ -157,5 +153,60 @@ Then(
   "the language {string} is offered reading from left to right",
   async function (this: SpecWorld, tag: string) {
     assert.equal(await offeredReading(this, tag), "ltr");
+  },
+);
+
+// The language files and help folders as they are on disk, since a language
+// that is only registered but not written, or written but not registered,
+// is what this is here to catch.
+const root = join(import.meta.dirname, "..", "..", "..");
+
+const named = (folder: string, keep: (entry: string) => boolean): string[] =>
+  readdirSync(join(root, folder), { withFileTypes: true })
+    .filter((entry) => keep(entry.name))
+    .map((entry) => entry.name.replace(/\.ts$/, ""))
+    .sort();
+
+const languageFiles = (): string[] =>
+  named("src/web/languages", (entry) => entry.endsWith(".ts"));
+
+const helpFolders = (): string[] =>
+  readdirSync(join(root, "docs", "help"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+
+Given("the language file {string}", function (this: SpecWorld, name: string) {
+  assert.ok(languageFiles().includes(name), `${name} is not a language file.`);
+});
+
+Then(
+  "the country {string} is one tournaments are played in",
+  function (this: SpecWorld, code: string) {
+    assert.ok(
+      [...mostPlayedIn, ...playedInSince2025].includes(code),
+      `${code} is not a country tournaments are played in.`,
+    );
+  },
+);
+
+// Named as a sentence would name them, "a, b and c".
+defineParameterType({
+  name: "languageList",
+  regexp: /[a-z]+(?:, [a-z]+)* and [a-z]+/,
+  transformer: (list: string) => list.split(/, | and /),
+});
+
+Then(
+  "the site is written in {languageList}",
+  function (this: SpecWorld, names: string[]) {
+    assert.deepEqual(languageFiles(), [...names].sort());
+  },
+);
+
+Then(
+  "the help is written in the languages the site is",
+  function (this: SpecWorld) {
+    assert.deepEqual(helpFolders(), languageFiles());
   },
 );

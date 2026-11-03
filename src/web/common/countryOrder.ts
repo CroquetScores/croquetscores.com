@@ -4,13 +4,13 @@
 // at Afghanistan made nearly every reader scroll past a hundred to find theirs.
 
 // In this order and not alphabetically, as the countries were asked for.
-const mostPlayedIn = ["au", "eg", "england", "nz", "es", "us"];
+export const mostPlayedIn = ["au", "eg", "england", "nz", "es", "us"];
 
 // The other countries tournaments had been played in as of 2025. Fixed rather
 // than found from the tournaments there are: a list that moved as tournaments
 // were added would put a country in a different place from one visit to the
 // next, and a reader finds a place by remembering where it was.
-const playedInSince2025 = [
+export const playedInSince2025 = [
   "at",
   "ca",
   "ch",

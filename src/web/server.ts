@@ -299,19 +299,14 @@ import {
   type Clock,
 } from "./common/requestedAt.js";
 import { afrikaans } from "./languages/afrikaans.js";
-import { chinese } from "./languages/chinese.js";
-import { dutch } from "./languages/dutch.js";
+import { czech } from "./languages/czech.js";
 import { egyptian } from "./languages/egyptian.js";
 import { english } from "./languages/english.js";
-import { french } from "./languages/french.js";
 import { german } from "./languages/german.js";
-import { italian } from "./languages/italian.js";
-import { japanese } from "./languages/japanese.js";
-import { korean } from "./languages/korean.js";
-import { maori } from "./languages/maori.js";
-import { polish } from "./languages/polish.js";
+import { greek } from "./languages/greek.js";
+import { latvian } from "./languages/latvian.js";
+import { norwegian } from "./languages/norwegian.js";
 import { portuguese } from "./languages/portuguese.js";
-import { russian } from "./languages/russian.js";
 import { spanish } from "./languages/spanish.js";
 import { swedish } from "./languages/swedish.js";
 import { welsh } from "./languages/welsh.js";
@@ -323,18 +318,13 @@ import { welsh } from "./languages/welsh.js";
 const offeredLanguages = [
   english,
   afrikaans,
-  chinese,
-  dutch,
+  czech,
   egyptian,
-  french,
   german,
-  italian,
-  japanese,
-  korean,
-  maori,
-  polish,
+  greek,
+  latvian,
+  norwegian,
   portuguese,
-  russian,
   spanish,
   swedish,
   welsh,

@@ -23,9 +23,9 @@ Feature: The help is read in the language the site is shown in
       Then the page is in Welsh
 
     Scenario: A page in the language the browser asks for
-      Given a browser that asks for French
+      Given a browser that asks for Swedish
       When the help is opened
-      Then the page is in French
+      Then the page is in Swedish
 
     Scenario: A language written from right to left is shown that way
       Given the reader has chosen Egyptian Arabic
