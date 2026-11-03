@@ -388,3 +388,55 @@ Then(
     assert.fail(`It is ${String(top)} pixels from the top.`);
   },
 );
+
+const widthOf = async (found: Locator): Promise<number> => {
+  const box = await found.boundingBox();
+  assert.ok(box !== null, "It is not drawn.");
+  return box.width;
+};
+
+Then(
+  /^the column "(.*)" of the month "(.*)" is as wide as that of the month "(.*)"$/,
+  async function (this: SpecWorld, column: string, one: string, other: string) {
+    const heading = (name: string): Locator =>
+      monthNamed(this, name).locator("thead th", {
+        hasText: new RegExp(`${column}$`),
+      });
+    const first = await widthOf(heading(one));
+    const second = await widthOf(heading(other));
+    assert.ok(
+      Math.abs(first - second) <= 1,
+      `They are ${String(first)} and ${String(second)} pixels wide.`,
+    );
+  },
+);
+
+Then(
+  /^the month "(.*)" is as wide as the month "(.*)"$/,
+  async function (this: SpecWorld, one: string, other: string) {
+    const first = await widthOf(monthNamed(this, one));
+    const second = await widthOf(monthNamed(this, other));
+    assert.ok(
+      Math.abs(first - second) <= 1,
+      `They are ${String(first)} and ${String(second)} pixels wide.`,
+    );
+  },
+);
+
+Then(
+  /^the dates of the month "(.*)" fit their column$/,
+  async function (this: SpecWorld, name: string) {
+    const cell = monthNamed(this, name).locator(".tournament-dates").first();
+    const [needed, given] = await cell.evaluate((element) => {
+      const measured = element as unknown as {
+        scrollWidth: number;
+        clientWidth: number;
+      };
+      return [measured.scrollWidth, measured.clientWidth];
+    });
+    assert.ok(
+      needed <= given,
+      `They need ${String(needed)} of ${String(given)}.`,
+    );
+  },
+);
