@@ -44,11 +44,11 @@ Feature: A tournament's Notes page lists its managers' notes
     And "organiser@example.com" has an account, confirmed
     And "organiser@example.com" has created the tournament "Spring Open"
 
-  Rule: The page is headed Notes, for anybody
+  Rule: The page is headed Manager's Notes, for anybody
 
-    Scenario: The page is headed Notes
+    Scenario: The page is headed Manager's Notes
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then the page is headed "Notes"
+      Then the page is headed "Manager's Notes"
 
     Scenario: A reader not signed in is shown the notes
       Given nobody is signed in

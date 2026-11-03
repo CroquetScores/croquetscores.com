@@ -374,7 +374,8 @@ export const polish: Language = {
     // „Nowe” czyta czytnik ekranu zamiast czerwonej gwiazdki oznaczającej
     // notatkę lub komentarz, które nie zostały przeczytane w obecnej postaci.
     "marks.new": "nowe",
-    "notes.none": "Organizatorzy nie napisali jeszcze żadnych notatek.",
+    "notes.heading": "Notatki organizatorów",
+    "notes.none": "Jeszcze brak notatek.",
     "note.edited": "zmieniono",
     "commentary.none": "Nie napisano jeszcze żadnych komentarzy.",
     "commentary.edited": "zmieniono",

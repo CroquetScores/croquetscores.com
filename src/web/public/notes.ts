@@ -84,7 +84,7 @@ ${asked.managerNotes
             address: asked.address,
             subtitle: asked.subtitle,
           },
-          title: `${say("tournament.notes")} - ${asked.name}`,
+          title: `${say("notes.heading")} - ${asked.name}`,
           sections: sectionsOf(asked, speaking, read),
           currentSection: `/${asked.address}/notes`,
           theme: themeOf(request),
@@ -94,7 +94,7 @@ ${asked.managerNotes
           siteName: siteNameOf(request),
           tryWebsite: website.isTry,
           path: request.url,
-          body: `          <h1>${escape(say("tournament.notes"))}</h1>
+          body: `          <h1>${escape(say("notes.heading"))}</h1>
 ${notes}
 `,
         }),

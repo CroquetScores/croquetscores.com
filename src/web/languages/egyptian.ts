@@ -379,7 +379,8 @@ export const egyptian: Language = {
     // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "جديد",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "المديرين لسه ما كتبوش أي ملاحظات.",
+    "notes.heading": "ملاحظات المديرين",
+    "notes.none": "لسه مفيش ملاحظات.",
     "note.edited": "اتعدّل",
     // A commentary's page.
     "commentary.none": "لسه ما اتكتبش أي تعليقات.",

@@ -405,7 +405,8 @@ export const swedish: Language = {
     // markerar en anteckning eller kommentar som inte är läst som den är nu.
     "marks.new": "ny",
     // En turnerings sida med anteckningar, och en antecknings egen sida.
-    "notes.none": "Arrangörerna har inte skrivit några anteckningar än.",
+    "notes.heading": "Arrangörernas anteckningar",
+    "notes.none": "Inga anteckningar än.",
     "note.edited": "redigerad",
     // En kommentars sida: vad den säger när den saknar inlägg, vad den säger
     // om ett inlägg, och rutan där skribenten skriver nästa.

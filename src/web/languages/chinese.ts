@@ -378,7 +378,8 @@ export const chinese: Language = {
     // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "新",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "管理者还没有写任何通知。",
+    "notes.heading": "管理者通知",
+    "notes.none": "还没有通知。",
     "note.edited": "已编辑",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

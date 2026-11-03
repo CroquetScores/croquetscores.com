@@ -413,7 +413,8 @@ export const spanish: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "nuevo",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Los gestores todavía no han escrito ninguna nota.",
+    "notes.heading": "Notas de los gestores",
+    "notes.none": "Todavía no hay notas.",
     "note.edited": "editada",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

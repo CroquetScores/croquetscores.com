@@ -399,7 +399,8 @@ export const korean: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "새 글",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "운영자가 작성한 공지가 아직 없어요.",
+    "notes.heading": "운영자 공지",
+    "notes.none": "아직 공지가 없어요.",
     "note.edited": "수정됨",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

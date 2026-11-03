@@ -385,7 +385,8 @@ export const japanese: Language = {
     // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "新着",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "運営者はまだお知らせを書いていません。",
+    "notes.heading": "運営者のお知らせ",
+    "notes.none": "お知らせはまだありません。",
     "note.edited": "編集済み",
     // A commentary's page.
     "commentary.none": "まだコメントはありません。",
