@@ -6,6 +6,7 @@
 import type { RankingsToRead } from "../../application/operations/tournaments/PublicRankingsOfTournament.js";
 import { Slug } from "../../domain/common/Slug.js";
 import { xlsxOf, type Row } from "../common/xlsx.js";
+import { plainOf } from "./plainRankings.js";
 
 const months = [
   "January",
@@ -89,7 +90,8 @@ const sheetNameOf = (name: string): string => {
 };
 
 /** The spreadsheet of `rankings`, which must be available. */
-export const rankingsWorkbook = (rankings: RankingsToRead): Buffer => {
+export const rankingsWorkbook = (given: RankingsToRead): Buffer => {
+  const rankings = plainOf(given);
   const { rankings: said } = rankings;
   if (said.is !== "available") {
     throw new Error("There are no rankings to write.");
