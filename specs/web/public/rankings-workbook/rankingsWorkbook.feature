@@ -27,6 +27,12 @@ Feature: Golf Croquet's rankings are a spreadsheet of who beat whom
   always had it. A name with no space is the family name in capitals with
   "Unknown" for a first name.
 
+  Names are written as the rankings' own list writes them, so that the
+  officers' software finds the player: a letter with an accent is the plain
+  letter, a mark typed for an apostrophe is an apostrophe, and a picture, as a
+  flag or a ball a manager has put in a name, is left out
+  (`rankingsTextFile.feature`).
+
   A knockout's match is not a line of its own: each game it was played in is,
   won by whoever won that game, which is not always the match's winner.
 
@@ -308,3 +314,24 @@ Feature: Golf Croquet's rankings are a spreadsheet of who beat whom
       Given "organiser@example.com" has created the tournament with a name of 60 letters
       When the spreadsheet of that tournament's rankings is read
       Then the sheet is called by 31 characters
+
+  Rule: Names are written as the rankings' own list writes them
+
+    Scenario: A flag in the tournament's name is left out
+      Given "organiser@example.com" has renamed the tournament "Spring Open" to "🇳🇿Canterbury Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings" is read
+      Then the first line is "Canterbury Open"
+
+    Scenario: A name with an accent is written without it
+      Given "organiser@example.com" has added the player "José Ñandú" to "Spring Open"
+      And "organiser@example.com" has entered the player "José Ñandú" in "Block A" of "Spring Open"
+      And "José Ñandú" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings" is read
+      Then the winner's first name in the first game is "Jose"
+
+    Scenario: A name with a curly apostrophe is written with a straight one
+      Given "organiser@example.com" has added the player "Pat O’Byrne" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat O’Byrne" in "Block A" of "Spring Open"
+      And "Pat O’Byrne" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings" is read
+      Then the winner's family name in the first game is "O'BYRNE"

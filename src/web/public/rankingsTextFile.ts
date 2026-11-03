@@ -7,6 +7,7 @@ import type {
   RankingsToRead,
   ResultOfRanking,
 } from "../../application/operations/tournaments/PublicRankingsOfTournament.js";
+import { plainOf } from "./plainRankings.js";
 
 // "3.10.26", "3-5.10.26", "30.9-2.10.26" or "30.12.26-2.1.27": the days, said as
 // short as is clear. A tournament of one day is dated by that day, as the
@@ -113,17 +114,9 @@ const blockOf = (
   ];
 };
 
-// What the software cannot read is written as the plain letter where there is
-// one, as "é" is "e", and as "?" where there is not.
-const asciiOf = (text: string): string =>
-  text
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    // eslint-disable-next-line no-control-regex
-    .replace(/[^\x00-\x7f]/g, "?");
-
 /** The text file of `rankings`, which must be available. */
-export const rankingsTextFile = (rankings: RankingsToRead): string => {
+export const rankingsTextFile = (given: RankingsToRead): string => {
+  const rankings = plainOf(given);
   const { rankings: said } = rankings;
   if (said.is !== "available") {
     throw new Error("There are no rankings to write.");
@@ -135,5 +128,5 @@ export const rankingsTextFile = (rankings: RankingsToRead): string => {
   const lines = blocks.flatMap((block, at) =>
     at === 0 ? block : ["", ...block],
   );
-  return asciiOf(lines.map((line) => `${line}\r\n`).join(""));
+  return lines.map((line) => `${line}\r\n`).join("");
 };

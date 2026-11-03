@@ -82,6 +82,18 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the first line is "Event Spring Open Block A"
 
+    Scenario: A flag in the tournament's name is left out
+      Given "organiser@example.com" has renamed the tournament "Spring Open" to "🇳🇿Canterbury Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the first line is "Event Canterbury Open"
+
+    Scenario: A ball in the tournament's name is left out with the space beside it
+      Given "organiser@example.com" has renamed the tournament "Spring Open" to "Canterbury 🏑 Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the first line is "Event Canterbury Open"
+
     Scenario: The date is one day where the tournament was played in one
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
@@ -210,6 +222,34 @@ Feature: Association Croquet's rankings are a text file of who beat whom
       And "José Ñandú" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the text file at "/2026/ac/spring-open/rankings" is read
       Then the eighth line starts " 1 Jose Nandu beat Alex Another"
+
+    Scenario: A name with a letter crossed through is written with the plain letter
+      Given "organiser@example.com" has added the player "Joakim Nørback" to "Spring Open"
+      And "organiser@example.com" has entered the player "Joakim Nørback" in "Block A" of "Spring Open"
+      And "Joakim Nørback" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the eighth line starts " 1 Joakim Norback beat Alex Another"
+
+    Scenario: A name with a curly apostrophe is written with a straight one
+      Given "organiser@example.com" has added the player "Pat O’Byrne" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat O’Byrne" in "Block A" of "Spring Open"
+      And "Pat O’Byrne" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the eighth line starts " 1 Pat O'Byrne beat Alex Another"
+
+    Scenario: A name with a backtick for an apostrophe is written with a straight one
+      Given "organiser@example.com" has added the player "Pat O`Byrne" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat O`Byrne" in "Block A" of "Spring Open"
+      And "Pat O`Byrne" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the eighth line starts " 1 Pat O'Byrne beat Alex Another"
+
+    Scenario: A name with an acute accent for an apostrophe is written with a straight one
+      Given "organiser@example.com" has added the player "Pat O´Byrne" to "Spring Open"
+      And "organiser@example.com" has entered the player "Pat O´Byrne" in "Block A" of "Spring Open"
+      And "Pat O´Byrne" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the text file at "/2026/ac/spring-open/rankings" is read
+      Then the eighth line starts " 1 Pat O'Byrne beat Alex Another"
 
   Rule: A knockout's match is a line of its own with each game's score
 
