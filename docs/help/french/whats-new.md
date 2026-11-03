@@ -1,5 +1,16 @@
 # Nouveautés
 
+## Publié le 2026-11-03
+
+### Suivre un tournoi
+
+- **La page d'une année montre ses mois.** Chacun des douze mois est listé fermé, avec le nombre de tournois qui y commencent. Appuyez sur un mois pour ouvrir ses tournois sur la même page ; autant de mois que vous voulez peuvent être ouverts à la fois. Sous le titre, **+ Tout afficher** ouvre tous les mois, puis devient **- Tout masquer**, qui les ferme. Il en va de même pour un sport dans une année. Sans script, un mois est un lien à la place, et les mois ouverts sont conservés dans l'adresse.
+- **On peut filtrer les tournois sur une plage de jours.** Avant le bouton Filtrer se trouvent un premier jour et un dernier jour, que vous donnez ensemble ou pas du tout. Les deux jours sont inclus. Un tournoi est dans la plage selon le jour où il commence ; il figure donc dans la liste d'un seul mois, jamais de deux.
+- **Une liste de tournois compte cent tournois par page.** Une liste plus longue est divisée en pages, de sorte qu'une recherche large ne charge plus toutes les lignes d'un coup.
+- **Le filtre que vous avez choisi est mémorisé.** Le pays, la région et le sport que vous choisissez dans le filtre, ou en appuyant sur un drapeau, sont conservés sur votre téléphone ou votre ordinateur, et une liste de tournois part de là la prochaine fois que vous l'ouvrez. L'année n'est pas conservée, puisqu'elle a sa propre page. Choisir « n'importe » pour l'un d'eux oublie ce qui était conservé pour celui-là.
+- **Davantage de tournois sont dans leur propre pays.** Les championnats et opens de Suède et de Norvège, les opens tchèques, et les championnats de Kohlhof et du Sud-Ouest étaient affichés en Espagne, ou là où pointait leur fuseau horaire. Ils sont maintenant en Suède, en Norvège, en Tchéquie et en Allemagne.
+- **Deux joueurs dont le nom était mal orthographié ne font qu'une personne.** Marga Podnieks avait été saisie sous le nom « Marga Podneiks » dans 7 épreuves, et Liz Mackenzie sous le nom « Liz McKenzie » dans 5, si bien que le site montrait deux personnes là où il n'y en avait qu'une. Chacune est maintenant correctement orthographiée partout.
+
 ## Publié le 2026-11-02
 
 ### Organiser un tournoi

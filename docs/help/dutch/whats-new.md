@@ -1,5 +1,16 @@
 # Wat is er nieuw
 
+## Uitgebracht op 2026-11-03
+
+### Een toernooi volgen
+
+- **De pagina van een jaar toont zijn maanden.** Elk van de twaalf maanden staat ingeklapt in de lijst, met erbij hoeveel toernooien erin beginnen. Druk op een maand om zijn toernooien op dezelfde pagina te openen; er kunnen er net zoveel maanden tegelijk openstaan als je wilt. Onder de kop opent **+ Alles tonen** elke maand, en daarna staat er **- Alles verbergen**, dat ze sluit. Hetzelfde geldt voor een sport in een jaar. Zonder scripts is een maand in plaats daarvan een link, en de geopende maanden staan in het adres.
+- **Toernooien kunnen worden gefilterd op een reeks dagen.** Vóór de knop Filteren staan een eerste en een laatste dag, die je samen invult of allebei weglaat. Beide dagen horen erbij. Een toernooi valt in de reeks op de dag waarop het begint, dus het staat in de lijst van één maand en nooit in twee.
+- **Een lijst met toernooien telt honderd per pagina.** Een langere lijst wordt in pagina's verdeeld, zodat een brede zoekopdracht niet meer elke rij in één keer laadt.
+- **Het filter dat je koos, wordt onthouden.** Het land, de regio en de sport die je in het filter kiest, of door op een vlag te drukken, blijven bewaard op je telefoon of computer, en een lijst met toernooien begint er de volgende keer mee dat je hem opent. Het jaar wordt niet bewaard, want dat is een pagina op zich. Kies je "elk" voor een van de drie, dan wordt vergeten wat daarvoor bewaard was.
+- **Meer toernooien staan in hun eigen land.** Zweedse en Noorse kampioenschappen en opens, Tsjechische opens en de kampioenschappen van Kohlhof en Southwest werden getoond in Spanje, of waar hun tijdzone ook naar wees. Ze staan nu in Zweden, Noorwegen, Tsjechië en Duitsland.
+- **Twee spelers die verkeerd gespeld waren, zijn één persoon.** Marga Podnieks was in 7 evenementen ingevoerd als "Marga Podneiks", en Liz Mackenzie in 5 als "Liz McKenzie", zodat de site twee mensen toonde waar er één was. Elk is nu overal juist gespeld.
+
 ## Uitgebracht op 2026-11-02
 
 ### Een toernooi leiden

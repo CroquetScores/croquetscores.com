@@ -1,5 +1,16 @@
 # Novità
 
+## Rilasciato il 2026-11-03
+
+### Seguire un torneo
+
+- **La pagina di un anno mostra i suoi mesi.** Ognuno dei dodici mesi è elencato chiuso, con il numero di tornei che iniziano in quel mese. Premi un mese per aprire i suoi tornei nella stessa pagina; puoi tenere aperti quanti mesi vuoi contemporaneamente. Sotto il titolo, **+ Mostra tutto** apre ogni mese e poi diventa **- Nascondi tutto**, che li chiude. Lo stesso vale per uno sport in un anno. Senza script un mese è invece un link, e i mesi aperti sono conservati nell'indirizzo.
+- **I tornei si possono filtrare per un intervallo di giorni.** Prima del pulsante Filtra ci sono un primo giorno e un ultimo giorno, che indichi insieme o per niente. Entrambi i giorni sono inclusi. Un torneo rientra nell'intervallo in base al giorno in cui inizia, quindi compare nell'elenco di un mese e mai di due.
+- **Un elenco di tornei ha cento tornei per pagina.** Un elenco più lungo è diviso in pagine, così una ricerca ampia non carica più ogni riga in una volta.
+- **Il filtro scelto viene ricordato.** Il paese, la regione e lo sport che scegli nel filtro, o premendo una bandiera, vengono conservati sul tuo telefono o computer, e un elenco di tornei parte da lì la volta successiva che lo apri. L'anno non viene conservato, perché è una pagina a sé. Scegliere "qualsiasi" per uno di essi fa dimenticare quanto era conservato per quello.
+- **Più tornei sono nel loro paese.** I campionati e gli open svedesi e norvegesi, gli open cechi e i campionati di Kohlhof e del Sud-Ovest venivano mostrati in Spagna, o dove puntava il loro fuso orario. Ora sono in Svezia, Norvegia, Cechia e Germania.
+- **Due giocatori scritti in modo sbagliato sono una persona sola.** Marga Podnieks era stata inserita come "Marga Podneiks" in 7 eventi, e Liz Mackenzie come "Liz McKenzie" in 5, quindi il sito mostrava due persone dove ce n'era una. Ora ciascuna è scritta correttamente ovunque.
+
 ## Rilasciato il 2026-11-02
 
 ### Organizzare un torneo

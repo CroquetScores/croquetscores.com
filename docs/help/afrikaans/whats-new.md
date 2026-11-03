@@ -1,5 +1,16 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-03
+
+### 'n Toernooi volg
+
+- **'n Jaar se bladsy wys sy maande.** Elk van die twaalf maande word toe gelys, met 'n telling van hoeveel toernooie daarin begin. Druk op 'n maand om sy toernooie op dieselfde bladsy oop te maak, en soveel maande as wat jy wil kan terselfdertyd oop wees. Onder die opskrif maak **+ Wys alles** elke maand oop, en dan staan daar **- Versteek alles**, wat hulle toemaak. Dieselfde geld vir 'n sport in 'n jaar. Sonder skrips is 'n maand eerder 'n skakel, en die oop maande word in die adres onthou.
+- **Toernooie kan gefiltreer word volgens 'n reeks dae.** Voor die Filtreer-knoppie is 'n eerste dag en 'n laaste dag, wat jy altwee gee of altwee weglaat. Albei dae word ingesluit. 'n Toernooi val in die reeks volgens die dag waarop dit begin, so dit is in een maand se lys en nooit in twee nie.
+- **'n Lys toernooie is 'n honderd per bladsy.** 'n Langer lys word in bladsye verdeel, sodat 'n wye soektog nie meer elke ry in een slag laai nie.
+- **Die filter wat jy gekies het, word onthou.** Die land, streek en sport wat jy in die filter kies, of deur op 'n vlag te druk, word op jou foon of rekenaar bewaar, en 'n lys toernooie begin die volgende keer dat jy dit oopmaak daarmee. Die jaar word nie bewaar nie, want dit is 'n bladsy op sy eie. As jy "enige" vir een van hulle kies, vergeet die filter wat daarvoor bewaar was.
+- **Meer toernooie is in hul eie land.** Sweedse en Noorse kampioenskappe en opens, Tsjeggiese opens, en die Kohlhof- en Suidwes-kampioenskappe is in Spanje gewys, of waarheen hul tydsone ook al gewys het. Hulle is nou in Swede, Noorweë, Tsjeggië en Duitsland.
+- **Twee spelers wat verkeerd gespel is, is een persoon.** Marga Podnieks is in 7 byeenkomste as "Marga Podneiks" ingevoer, en Liz Mackenzie in 5 as "Liz McKenzie", sodat die werf twee mense gewys het waar daar een was. Elkeen is nou oral korrek gespel.
+
 ## Vrygestel 2026-11-02
 
 ### 'n Toernooi bestuur
