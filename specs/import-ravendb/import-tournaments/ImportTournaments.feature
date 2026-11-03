@@ -476,6 +476,9 @@ Feature: Importing the old sites' tournaments
       1992, and Ireland in 2001, 2003 and 2009. A year the list has no event
       for says nothing, and the name is then not taken for either country it
       has in it, nor for the Scottish Croquet Association's;
+    - a name with Happy Valley as words of its own is in Canada: the
+      tournaments of that name were played there, and neither their time zones
+      nor any country in their names say so;
     - a name with the name of any other country as a word of its own, as
       "Open of Chile" or "Samoa Cup", is in that country. A country's whole name
       is meant, and where one name has another in it, as Papua New Guinea has
@@ -1819,6 +1822,9 @@ Feature: Importing the old sites' tournaments
         | The CroqCan Open             | ca       |
         | Quebec Open                  | ca       |
         | Open du QUEBEC               | ca       |
+        | Happy Valley                 | ca       |
+        | The Happy Valley Open        | ca       |
+        | HAPPY VALLEY GC              | ca       |
 
     Scenario Outline: A tournament whose name has one of them but not where its rule asks is not moved
       Given a tournament "tournaments/12" on "croquetscores.com"
@@ -1850,6 +1856,8 @@ Feature: Importing the old sites' tournaments
         | Aberdeens Open         |
         | CroqCans Open          |
         | Quebecois Open         |
+        | Happy Valleys Open     |
+        | Happy Valle Open       |
 
     Scenario: A tournament whose name has New South Wales in it is in Australia, not Wales
       Given a tournament "tournaments/12" on "croquetscores.com"
