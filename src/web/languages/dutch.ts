@@ -344,6 +344,8 @@ export const dutch: Language = {
     "year.heading": "Toernooien in {year}",
     "year.needsScripting":
       "De maanden van een jaar worden geopend met scripting, dat is uitgeschakeld. Schakel het in voor deze site.",
+    "year.showAll": "Alles tonen",
+    "year.hideAll": "Alles verbergen",
     "year.monthNone": "In {month} {year} beginnen geen toernooien.",
     "year.monthFailed":
       "De toernooien konden niet worden geladen. Probeer het opnieuw.",

@@ -315,6 +315,8 @@ export const polish: Language = {
     "year.heading": "Turnieje w roku {year}",
     "year.needsScripting":
       "Miesiące roku otwierają się za pomocą skryptów, które są wyłączone. Włącz je dla tej witryny.",
+    "year.showAll": "Pokaż wszystkie",
+    "year.hideAll": "Ukryj wszystkie",
     "year.monthNone": "{month} {year}: brak turniejów.",
     "year.monthFailed": "Nie udało się wczytać turniejów. Spróbuj ponownie.",
     "yearSport.heading": "Turnieje: {sport}, rok {year}",

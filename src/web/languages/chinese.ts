@@ -315,6 +315,8 @@ export const chinese: Language = {
     "year.heading": "{year} 年的赛事",
     "year.needsScripting":
       "一年中的各个月份需要启用脚本才能展开，而脚本目前已关闭。请为本网站开启脚本。",
+    "year.showAll": "全部显示",
+    "year.hideAll": "全部隐藏",
     "year.monthNone": "{year} 年 {month}没有赛事开始。",
     "year.monthFailed": "无法加载赛事。请重试。",
     // A sport's page in a year: the same, of the sport alone.

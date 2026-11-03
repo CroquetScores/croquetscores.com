@@ -339,6 +339,8 @@ export const portuguese: Language = {
     "year.heading": "Torneios de {year}",
     "year.needsScripting":
       "Os meses de um ano abrem-se com scripts, que estão desativados. Ative-os para este site.",
+    "year.showAll": "Mostrar tudo",
+    "year.hideAll": "Ocultar tudo",
     "year.monthNone": "Nenhum torneio começa em {month} de {year}.",
     "year.monthFailed":
       "Não foi possível carregar os torneios. Tente novamente.",

@@ -333,6 +333,8 @@ export const korean: Language = {
     "year.heading": "{year}년 대회",
     "year.needsScripting":
       "연도의 각 월은 스크립트로 열리는데, 스크립트가 꺼져 있습니다. 이 사이트에서는 켜 주세요.",
+    "year.showAll": "모두 표시",
+    "year.hideAll": "모두 숨기기",
     "year.monthNone": "{year}년 {month}에 시작하는 대회가 없습니다.",
     "year.monthFailed": "대회를 불러오지 못했습니다. 다시 시도해 주세요.",
     // A sport's page in a year: the same, of the sport alone.

@@ -335,6 +335,8 @@ export const welsh: Language = {
     "year.heading": "Twrnameintiau yn {year}",
     "year.needsScripting":
       "Mae misoedd blwyddyn yn cael eu hagor gyda sgriptio, sydd wedi'i ddiffodd. Trowch ef ymlaen ar gyfer y wefan hon.",
+    "year.showAll": "Dangos y cyfan",
+    "year.hideAll": "Cuddio'r cyfan",
     "year.monthNone": "{month} {year}: nid oes unrhyw dwrnameintiau'n dechrau.",
     "year.monthFailed": "Nid oedd modd llwytho'r twrnameintiau. Ceisiwch eto.",
     // A sport's page in a year: the same, of the sport alone.

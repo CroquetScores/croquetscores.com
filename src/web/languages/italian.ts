@@ -343,6 +343,8 @@ export const italian: Language = {
     "year.heading": "Tornei del {year}",
     "year.needsScripting":
       "I mesi di un anno si aprono con gli script, che sono disattivati. Attivali per questo sito.",
+    "year.showAll": "Mostra tutto",
+    "year.hideAll": "Nascondi tutto",
     "year.monthNone": "Nessun torneo inizia a {month} {year}.",
     "year.monthFailed": "Non è stato possibile caricare i tornei. Riprova.",
     // La pagina di uno sport in un anno: lo stesso, per quello sport.

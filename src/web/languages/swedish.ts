@@ -339,6 +339,8 @@ export const swedish: Language = {
     "year.heading": "Turneringar {year}",
     "year.needsScripting":
       "Årets månader öppnas med skript, som är avstängda. Slå på dem för den här webbplatsen.",
+    "year.showAll": "Visa alla",
+    "year.hideAll": "Dölj alla",
     "year.monthNone": "Inga turneringar börjar i {month} {year}.",
     "year.monthFailed": "Turneringarna kunde inte läsas in. Försök igen.",
     // En sports sida under ett år: samma sak, för sporten ensam.

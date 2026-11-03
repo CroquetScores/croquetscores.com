@@ -345,6 +345,8 @@ export const french: Language = {
     "year.heading": "Tournois de {year}",
     "year.needsScripting":
       "Les mois d'une année s'ouvrent grâce aux scripts, qui sont désactivés. Veuillez les activer pour ce site.",
+    "year.showAll": "Tout afficher",
+    "year.hideAll": "Tout masquer",
     "year.monthNone": "Aucun tournoi ne commence en {month} {year}.",
     "year.monthFailed":
       "Les tournois n'ont pas pu être chargés. Veuillez réessayer.",

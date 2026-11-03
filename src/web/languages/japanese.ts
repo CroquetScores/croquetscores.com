@@ -323,6 +323,8 @@ export const japanese: Language = {
     "year.heading": "{year}年の大会",
     "year.needsScripting":
       "年の各月はスクリプトで開きますが、スクリプトがオフになっています。このサイトではオンにしてください。",
+    "year.showAll": "すべて表示",
+    "year.hideAll": "すべて非表示",
     "year.monthNone": "{year}年{month}に始まる大会はありません。",
     "year.monthFailed": "大会を読み込めませんでした。もう一度お試しください。",
     // A sport's page in a year: the same, of the sport alone.

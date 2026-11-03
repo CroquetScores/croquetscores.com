@@ -324,6 +324,8 @@ export const maori: Language = {
     "year.heading": "Ngā whakataetae i {year}",
     "year.needsScripting":
       "Ka whakatuwheratia ngā marama o te tau mā te tuhinga, kua whakawetohia nei. Tēnā, whakaaetia mō tēnei pae.",
+    "year.showAll": "Whakaatu katoa",
+    "year.hideAll": "Huna katoa",
     "year.monthNone": "Kāore he whakataetae e tīmata ana i {month} {year}.",
     "year.monthFailed":
       "Kīhai i taea te uta i ngā whakataetae. Tēnā, whakamātauria anō.",
