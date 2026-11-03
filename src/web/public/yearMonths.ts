@@ -82,6 +82,11 @@ const script = `
           var toggle = month.querySelector(".year-month-toggle");
           toggle.setAttribute("aria-expanded", String(open));
           toggle.querySelector(".year-month-mark").textContent = open ? "-" : "+";
+          refreshAll();
+        }
+        // What the control says depends on how many months are open, which a
+        // month failing to load changes without being shown or hidden.
+        function refreshAll() {
           var every = root.querySelectorAll('.year-month[data-state="open"]').length === 12;
           var all = root.querySelector(".year-months-all");
           all.querySelector(".year-month-mark").textContent = every ? "-" : "+";
@@ -118,6 +123,7 @@ const script = `
                 body.hidden = false;
                 if (!answer.ok) {
                   month.dataset.state = "failed";
+                  refreshAll();
                   return;
                 }
                 Array.prototype.forEach.call(
@@ -133,6 +139,7 @@ const script = `
               body.textContent = root.dataset.failed;
               body.hidden = false;
               month.dataset.state = "failed";
+              refreshAll();
             })
             .then(function () { if (current()) month.removeAttribute("aria-busy"); });
         }

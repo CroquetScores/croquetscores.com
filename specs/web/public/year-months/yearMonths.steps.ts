@@ -5,12 +5,20 @@ import type { Locator } from "playwright";
 import type { SpecWorld } from "../../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { ordinal } from "../../support/ordinals.js";
+import { aServerError, answerNextGet } from "../../support/serverError.js";
 import { settled } from "../../support/tournamentLists.js";
 
 // The months of a year's page, and what pressing one does. What the tournaments
 // beneath a month share with the other lists is said in
 // specs/web/support/tournamentLists.ts, and opening the page in year.steps.ts
 // and yearSport.steps.ts.
+
+// What the specs are not compiled to know of the page itself.
+interface InThePage {
+  getComputedStyle(element: unknown): {
+    getPropertyValue(name: string): string;
+  };
+}
 
 const months = (world: SpecWorld): Locator =>
   world.browserPage.locator("main .year-month");
@@ -224,9 +232,12 @@ Then(
   /^the month "(.*)" is the colour of its column headings$/,
   async function (this: SpecWorld, name: string) {
     const month = monthNamed(this, name);
-    // As text, since the specs are not compiled to know a page's globals.
     const colour = (found: Locator): Promise<string> =>
-      found.evaluate("(element) => getComputedStyle(element).backgroundColor");
+      found.evaluate((element) =>
+        (globalThis as unknown as InThePage)
+          .getComputedStyle(element)
+          .getPropertyValue("background-color"),
+      );
     assert.equal(
       await colour(month.locator(".year-month-toggle")),
       await colour(month.locator("thead th").first()),
@@ -246,7 +257,11 @@ When(
 // corners. Read from the button as the browser draws it.
 const styleOf = (found: Locator, property: string): Promise<string> =>
   found.evaluate(
-    `(element) => getComputedStyle(element).getPropertyValue("${property}")`,
+    (element, name) =>
+      (globalThis as unknown as InThePage)
+        .getComputedStyle(element)
+        .getPropertyValue(name),
+    property,
   );
 
 Then(
@@ -344,5 +359,16 @@ Then(
   "there is no way to show or hide all the months",
   async function (this: SpecWorld) {
     assert.equal(await allOf(this).count(), 0);
+  },
+);
+
+// Once only, and a moment late, so that it is the last of the months asked for
+// when a sorting asks for them all, and no month loaded after it sets right
+// what it left.
+Given(
+  "the next asking for December is answered with a server error",
+  async function (this: SpecWorld) {
+    const late = new Promise<void>((resolve) => setTimeout(resolve, 1000));
+    await answerNextGet(this, /\/months\/12(\?|$)/, aServerError, late);
   },
 );

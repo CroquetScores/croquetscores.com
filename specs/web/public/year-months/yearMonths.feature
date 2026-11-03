@@ -325,6 +325,15 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       When the month "October" is pressed
       Then the way to show or hide all the months says "Show all"
 
+    Scenario: A month that could not be loaded again leaves it saying "Show all"
+      Given "organiser@example.com" has created the tournament "Spring Open"
+      And the tournament "Spring Open" starts on "2026-03-07"
+      And the page for 2026 is open
+      And the way to show or hide all the months is pressed
+      And the next asking for December is answered with a server error
+      When the column "Name" of the month "March" is pressed
+      Then the way to show or hide all the months says "Show all"
+
     Scenario: A sport's page has it too
       When the page for "ac" in 2026 is opened
       Then the way to show or hide all the months says "Show all"
