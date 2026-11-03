@@ -412,7 +412,8 @@ export const french: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "nouveau",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Les organisateurs n'ont pas encore écrit de notes.",
+    "notes.heading": "Notes des organisateurs",
+    "notes.none": "Aucune note pour le moment.",
     "note.edited": "modifié",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

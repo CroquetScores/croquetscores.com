@@ -423,7 +423,8 @@ export const german: Language = {
     // nicht gelesen wurden, wie sie jetzt sind.
     "marks.new": "neu",
     // Die Notizenseite eines Turniers und die Seite einer Notiz.
-    "notes.none": "Die Verantwortlichen haben noch keine Notizen geschrieben.",
+    "notes.heading": "Notizen der Verantwortlichen",
+    "notes.none": "Noch keine Notizen.",
     "note.edited": "bearbeitet",
     // Die Seite eines Kommentars: was sie sagt, wenn er keine Beiträge hat,
     // was sie zu einem Beitrag sagt und das Feld, in dem seine Verfasserin

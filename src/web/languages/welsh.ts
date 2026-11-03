@@ -397,7 +397,8 @@ export const welsh: Language = {
     // "New" is said to a screen reader in place of the red asterisk.
     "marks.new": "newydd",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Nid yw'r rheolwyr wedi ysgrifennu unrhyw nodiadau eto.",
+    "notes.heading": "Nodiadau'r Rheolwyr",
+    "notes.none": "Dim nodiadau eto.",
     "note.edited": "wedi'i olygu",
     // A commentary's page.
     "commentary.none": "Ni ysgrifennwyd unrhyw sylwadau eto.",

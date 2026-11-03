@@ -406,7 +406,8 @@ export const portuguese: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "novo",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Os organizadores ainda não escreveram nenhuma nota.",
+    "notes.heading": "Notas dos organizadores",
+    "notes.none": "Ainda não há notas.",
     "note.edited": "editada",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

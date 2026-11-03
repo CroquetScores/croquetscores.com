@@ -408,7 +408,8 @@ export const italian: Language = {
     // rosso che segna una nota o un commento non ancora letti come sono ora.
     "marks.new": "nuovo",
     // La pagina Note di un torneo e la pagina di una nota.
-    "notes.none": "Gli organizzatori non hanno ancora scritto nessuna nota.",
+    "notes.heading": "Note degli organizzatori",
+    "notes.none": "Ancora nessuna nota.",
     "note.edited": "modificata",
     // La pagina di un commento: cosa dice quando non ha interventi, cosa dice di
     // un commento e la casella in cui chi scrive scrive il successivo.

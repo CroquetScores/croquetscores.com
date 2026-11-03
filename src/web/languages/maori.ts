@@ -387,7 +387,8 @@ export const maori: Language = {
     // "New" is said to a screen reader.
     "marks.new": "hou",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Kāore anō kia tuhia he tuhinga e ngā kaiwhakahaere.",
+    "notes.heading": "Ngā tuhinga a ngā kaiwhakahaere",
+    "notes.none": "Kāore anō he tuhinga.",
     "note.edited": "kua whakatikatikaina",
     // A commentary's page.
     "commentary.none": "Kāore anō kia tuhia he kōrero.",

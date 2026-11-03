@@ -411,7 +411,8 @@ export const afrikaans: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "nuut",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Die bestuurders het nog geen notas geskryf nie.",
+    "notes.heading": "Bestuurders se notas",
+    "notes.none": "Nog geen notas nie.",
     "note.edited": "gewysig",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

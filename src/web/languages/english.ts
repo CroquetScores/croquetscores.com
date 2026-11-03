@@ -402,7 +402,10 @@ export const english: Language = {
     // a note or a commentary not read as it is now.
     "marks.new": "new",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "The managers have written no notes yet.",
+    // The page is headed Manager's Notes, while its section in the bar is Notes
+    // (tournament.notes), which is all the room there is for it there.
+    "notes.heading": "Manager's Notes",
+    "notes.none": "No notes yet.",
     "note.edited": "edited",
     // A commentary's page: what it says when it has no comments, what it says
     // of a comment, and the box its writer writes the next one in.

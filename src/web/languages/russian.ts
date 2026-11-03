@@ -388,7 +388,8 @@ export const russian: Language = {
     // Said to a screen reader in place of the red asterisk.
     "marks.new": "новое",
     // A tournament's Notes page, and a note's own page.
-    "notes.none": "Организаторы ещё не написали заметок.",
+    "notes.heading": "Заметки организаторов",
+    "notes.none": "Заметок пока нет.",
     "note.edited": "изменено",
     // A commentary's page.
     "commentary.none": "Комментариев ещё нет.",
