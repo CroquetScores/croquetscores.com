@@ -331,10 +331,14 @@ export const korean: Language = {
     "home.allTournaments": "{year}년 전체 대회",
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "{year}년 대회",
-    "year.none": "{year}년에 시작하는 대회가 없어요.",
+    "year.needsScripting":
+      "연도의 각 월은 스크립트로 열리는데, 스크립트가 꺼져 있습니다. 이 사이트에서는 켜 주세요.",
+    "year.monthNone": "{year}년 {month}에 시작하는 대회가 없습니다.",
+    "year.monthFailed": "대회를 불러오지 못했습니다. 다시 시도해 주세요.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "{year}년 {sport} 대회",
-    "yearSport.none": "{year}년에 시작하는 {sport} 대회가 없어요.",
+    "yearSport.monthNone":
+      "{year}년 {month}에 시작하는 {sport} 대회가 없습니다.",
     // A tournament's page: its sections, what it says of a game, how long ago
     // one was added, and what it says when it has none.
     "tournament.recent": "최근",

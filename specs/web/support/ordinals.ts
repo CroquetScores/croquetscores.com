@@ -6,6 +6,11 @@ const words = [
   "fifth",
   "sixth",
   "seventh",
+  "eighth",
+  "ninth",
+  "tenth",
+  "eleventh",
+  "twelfth",
 ];
 
 /**

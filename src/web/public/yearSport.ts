@@ -1,23 +1,22 @@
-// A sport's page in a year: every tournament of the sport starting in the year,
-// as a table that can be sorted by its dates or its names and narrowed by a
-// country and a region of it, with the years there are tournaments of the
-// sport in as the secondary navigation and this one marked among them. How
-// the list is drawn, narrowed and sorted is shared with the home page and a
-// year's (tournamentLists.ts).
+// A sport's page in a year: the twelve months of the year, each closed, and
+// the way to load one month's tournaments of the sport alone when it is
+// pressed (yearMonths.ts), with the filter that narrows them to a country and
+// a region of it, and the years there are tournaments of the sport in as the
+// secondary navigation and this one marked among them. How a month's
+// tournaments are drawn, narrowed and sorted is shared with the home page and
+// a year's (tournamentLists.ts).
 //
 // The sport is the page's, named by its address, so the filter offers none to
-// choose, and every year leads to the sport's page in that year. It begins
-// sorted by date, earliest first, as a year's page does. An address whose
-// sport is no sport, or one the website does not offer, is not found: no
+// choose, and every year leads to the sport's page in that year. An address
+// whose sport is no sport, or one the website does not offer, is not found: no
 // tournament of the website could be at it.
 import type { FastifyInstance } from "fastify";
 
-import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
-import { TournamentsInYear } from "../../application/operations/tournaments/TournamentsInYear.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
 import { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import { sportsOffered } from "../../domain/aggregates/tournaments/value-objects/sports.js";
 import type { Assets } from "../common/assets.js";
+import { escape } from "../common/escape.js";
 import { speakingOf } from "../common/language.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -27,17 +26,22 @@ import {
   askedOf,
   filter,
   keepingFilter,
-  refusedWith,
-  sendPage,
-  sendRefused,
-  sendToDaysChosen,
   settledWhenPressed,
-  table,
+  sendPage,
+  sendToDaysChosen,
   yearsOf,
 } from "./tournamentLists.js";
-import { yearInPath } from "./year.js";
+import { monthPath, monthsOf, sendMonth, yearInPath } from "./yearMonths.js";
 
-const tables = ["tournaments"];
+// Exactly as a sport's code is written, as it is in a tournament's address,
+// and one the website offers.
+const sportOf = (website: ReturnType<typeof websiteOf>, code: string) => {
+  const sport = Sport.all.find((known) => known.code === code);
+  return sport !== undefined &&
+    sportsOffered[website.site].some((offered) => offered.equals(sport))
+    ? sport
+    : undefined;
+};
 
 export const registerYearSportPage = (
   server: FastifyInstance,
@@ -47,20 +51,13 @@ export const registerYearSportPage = (
     `/${yearInPath}/:sport`,
     async (request, reply) => {
       const website = websiteOf(request);
-      // Exactly as a sport's code is written, as it is in a tournament's
-      // address, and one the website offers.
-      const sport = Sport.all.find(
-        (known) => known.code === request.params.sport,
-      );
-      if (
-        sport === undefined ||
-        !sportsOffered[website.site].some((offered) => offered.equals(sport))
-      ) {
-        return reply.callNotFound();
-      }
+      const sport = sportOf(website, request.params.sport);
+      if (sport === undefined) return reply.callNotFound();
       const toDays = sendToDaysChosen(request, reply, sport.code);
       if (toDays !== undefined) return toDays;
-      const pressed = settledWhenPressed(request, reply, "sport", tables, {
+      // Only the filter: the months' tables are the ones sorted. The sport is the
+      // page's own, so what was remembered of it is left as it was.
+      const pressed = settledWhenPressed(request, reply, "sport", [], {
         offersSport: false,
       });
       if (pressed !== undefined) return pressed;
@@ -68,7 +65,7 @@ export const registerYearSportPage = (
       const path = `/${request.params.year}/${sport.code}`;
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const asked = askedOf(request, path, "sport", tables, {
+      const asked = askedOf(request, path, "sport", [], {
         offersSport: false,
       });
       const { mediator } = request.server;
@@ -89,19 +86,6 @@ export const registerYearSportPage = (
         path: request.url,
       };
 
-      let listed: readonly TournamentOfWebsite[];
-      try {
-        listed = await mediator.query(
-          new TournamentsInYear(website.host, year, {
-            ...asked.chose,
-            sport: sport.code,
-          }),
-        );
-      } catch (failure) {
-        const code = refusedWith(failure);
-        if (code === undefined) throw failure;
-        return sendRefused(reply, request, assets, shell, code);
-      }
       const years = await mediator.query(
         new TournamentYears(website.host, sport.code),
       );
@@ -119,21 +103,26 @@ export const registerYearSportPage = (
               `/${String(each)}/${sport.code}`,
             ),
           ),
-          body: `${filter(request, asked, speaking, listed.length)}
-${table(
-  {
-    table: "tournaments",
-    heading,
-    none: say("yearSport.none", named),
-    listed,
-    sortedAtFirst: { column: "date", order: "up" },
-  },
-  asked,
-  speaking,
-  assets,
-)}`,
+          // Nothing is listed to be few, and the note on why there are few
+          // would only mislead, so the filter is told there are enough.
+          body: `${filter(request, asked, speaking, Number.POSITIVE_INFINITY)}
+          <h1>${escape(heading)}</h1>
+${monthsOf(speaking, year, path)}`,
         }),
       );
+    },
+  );
+
+  server.get<{ Params: { year: string; sport: string; month: string } }>(
+    monthPath(`/${yearInPath}/:sport`),
+    (request, reply) => {
+      const sport = sportOf(websiteOf(request), request.params.sport);
+      if (sport === undefined) return reply.callNotFound();
+      const speaking = speakingOf(request);
+      return sendMonth(request, reply, assets, speaking, {
+        path: `/${request.params.year}/${sport.code}`,
+        sport: { code: sport.code, name: speaking.say(`sport.${sport.code}`) },
+      });
     },
   );
 };

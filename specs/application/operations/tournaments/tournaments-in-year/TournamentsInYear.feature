@@ -231,6 +231,94 @@ Feature: The tournaments starting in a year
         | 1000 |
         | 9999 |
 
+  Rule: One month of the year can be asked for
+
+    A year's page lists its months and loads a month's tournaments only when
+    that month is pressed (`yearMonths.feature`), so that a year is not asked
+    for whole by every reader who wanted one month of it. A month is a number
+    from 1 to 12, and a tournament is in the month it starts in, as it is in
+    the year it starts in. The month is asked of the read model as the days
+    from its first to its last, and is narrowed by the filter in the same way
+    as the year is. A month there is not is refused as
+    `TournamentsInYear.MonthOutOfRange`, or `TournamentsInYear.MonthNotWhole`
+    where it is not a whole number, rather than asked of the read model.
+
+    Scenario: A tournament starting in the month is answered
+      Given the tournament is to start at "2026-10-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is answered
+
+    Scenario: A tournament starting in another month is not answered
+      Given the tournament is to start at "2026-11-07T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is not answered
+
+    Scenario: A tournament starting in the same month of another year is not answered
+      Given the tournament is to start at "2025-10-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is not answered
+
+    Scenario: A tournament starting on the first day of the month is answered
+      Given the tournament is to start at "2026-10-01T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is answered
+
+    Scenario: A tournament starting on the last day of the month is answered
+      Given the tournament is to start at "2026-10-31T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is answered
+
+    Scenario: A tournament starting on the day after the month is not answered
+      Given the tournament is to start at "2026-11-01T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is not answered
+
+    Scenario: A tournament starting on the last day of February is answered
+      Given the tournament is to start at "2027-02-28T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      When the tournaments in month 2 of 2027 are asked for
+      Then "Winter Open" is answered
+
+    Scenario: A tournament starting on the first day of March is not answered in February
+      Given the tournament is to start at "2027-03-01T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      When the tournaments in month 2 of 2027 are asked for
+      Then "Winter Open" is not answered
+
+    Scenario: A tournament over the new year is answered in the month it starts
+      Given the tournament is to start at "2025-12-30T00:00:00Z"
+      And the tournament is to finish at "2026-01-02T00:00:00Z"
+      And "organiser@example.com" has created the tournament "New Year Open"
+      When the tournaments in month 1 of 2026 are asked for
+      Then "New Year Open" is not answered
+
+    Scenario: A tournament in the country filtered by is answered
+      Given the tournament is to start at "2026-10-10T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Spring Open"
+      And a filter of the country "au"
+      When the tournaments in month 10 of 2026 are asked for
+      Then "Spring Open" is not answered
+
+    Scenario Outline: A month there is not is refused
+      When the tournaments in month <month> of 2026 are asked for
+      Then it is refused with "TournamentsInYear.MonthOutOfRange"
+
+      Examples:
+        | month |
+        | 0     |
+        | 13    |
+        | -1    |
+
+    Scenario: A month that is not whole is refused
+      When the tournaments in month 1.5 of 2026 are asked for
+      Then it is refused with "TournamentsInYear.MonthNotWhole"
+
   Rule: A filter there cannot be is refused
 
     Scenario: A country there is not is refused

@@ -11,10 +11,11 @@ const ask = async (
   world: SpecWorld,
   website: string,
   year: number,
+  month?: number,
 ): Promise<void> => {
   try {
     world.answer = await inHandOf(world).ask(
-      new TournamentsInYear(website, year, world.filterChosen),
+      new TournamentsInYear(website, year, world.filterChosen, month),
     );
   } catch (failure) {
     world.failure = failure;
@@ -32,5 +33,14 @@ When(
   "the tournaments on {string} in {int} are asked for",
   async function (this: SpecWorld, website: string, year: number) {
     await ask(this, website, year);
+  },
+);
+
+// Any number is a month for this step, so that one there is not can be asked
+// for and refused.
+When(
+  "the tournaments in month {float} of {int} are asked for",
+  async function (this: SpecWorld, month: number, year: number) {
+    await ask(this, "croquetscores.com", year, month);
   },
 );

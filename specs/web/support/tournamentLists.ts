@@ -82,6 +82,20 @@ const words = async (heading: Locator): Promise<string> =>
 const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
   await link.click();
   await world.browserPage.waitForLoadState();
+  await settled(world);
+};
+
+/**
+ * Waits until nothing on the page is busy. A month's table on a year's page is
+ * loaded or sorted in place, without the page being loaded again, and is busy
+ * until its answer is in (yearMonths.ts); more than one can be at once, which
+ * is why this counts and does not wait for one element to go.
+ */
+export const settled = async (world: SpecWorld): Promise<void> => {
+  const busy = world.browserPage.locator('[aria-busy="true"]');
+  while ((await busy.count()) > 0) {
+    await world.browserPage.waitForTimeout(25);
+  }
 };
 
 // Pressed where the reader would press it, in the middle of what they can see,
@@ -795,10 +809,17 @@ Then(
       ".tournament-name",
       ".tournament-dates",
       'select[name="region"] option:not([value=""])',
+      // The months of a year's page and the heading over a month's table are
+      // named by the browser's own calendar, as the dates' months are.
+      ".year-month-toggle",
+      ".year-month-body h2",
       // A sport's code, as AC is, is a code and no word of any language.
       ".tournament-sport",
       // The script that follows a row's link is code, which is not read.
       "script",
+      // What is said where scripting is off is in the page as text and not as
+      // markup, so a page with scripting on holds it unread.
+      "noscript",
     ]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },

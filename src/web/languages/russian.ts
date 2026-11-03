@@ -326,10 +326,13 @@ export const russian: Language = {
     "home.allTournaments": "Все турниры {year} года",
     // A year's page.
     "year.heading": "Турниры {year} года",
-    "year.none": "В {year} году турниров не начинается.",
+    "year.needsScripting":
+      "Месяцы года открываются с помощью скриптов, а они отключены. Включите их для этого сайта.",
+    "year.monthNone": "{month} {year}: турниров нет.",
+    "year.monthFailed": "Не удалось загрузить турниры. Попробуйте ещё раз.",
     // A sport's page in a year.
     "yearSport.heading": "{sport}: турниры {year} года",
-    "yearSport.none": "{sport}: в {year} году турниров не начинается.",
+    "yearSport.monthNone": "{month} {year}: турниров ({sport}) нет.",
     // A tournament's page.
     "tournament.recent": "Недавние",
     "tournament.summary": "Итоги",

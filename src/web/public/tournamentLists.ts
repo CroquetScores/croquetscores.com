@@ -370,6 +370,16 @@ export interface Listing {
   readonly withYear?: boolean;
   /** Anything said beneath the table, already escaped. */
   readonly after?: string;
+  /**
+   * What its heading's id begins with, where the page holds more than one list
+   * under the same name and an id may be on a page only once.
+   */
+  readonly idStart?: string;
+  /**
+   * The id of what already names it, where the page does and the list is not
+   * to head itself with a second heading, as a month's table is not.
+   */
+  readonly namedBy?: string;
 }
 
 /** `listing`, as a table of its tournaments under its heading. */
@@ -438,9 +448,13 @@ export const table = (
                 </tr>`,
     )
     .join("\n");
-  const id = `${listing.table}-heading`;
-  return `          <section class="tournament-list" data-list="${escape(listing.table)}" aria-labelledby="${id}">
-            <h2 id="${id}">${escape(listing.heading)}</h2>
+  const id = `${listing.idStart ?? listing.table}-heading`;
+  return `          <section class="tournament-list" data-list="${escape(listing.table)}" aria-labelledby="${escape(listing.namedBy ?? id)}">${
+    listing.namedBy === undefined
+      ? `
+            <h2 id="${id}">${escape(listing.heading)}</h2>`
+      : ""
+  }
             <table>
               <thead>
                 <tr>
@@ -745,7 +759,7 @@ export const refusedWith = (failure: unknown): string | undefined =>
 // A page is drawn from the reader's cookies and the languages their browser
 // asks for, so it is sent with what every other page is sent with: a cache
 // that kept one would hand the next reader a page saying they are somebody.
-const asAPage = (reply: FastifyReply): FastifyReply =>
+export const asAPage = (reply: FastifyReply): FastifyReply =>
   reply
     .header("cache-control", "private, no-cache")
     .header("vary", "Cookie, Accept-Language");
