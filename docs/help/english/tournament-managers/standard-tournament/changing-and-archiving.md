@@ -18,6 +18,8 @@ The admin lists one year at a time, starting with this year, newest tournament f
 
 ![The list of tournaments](images/admin-list.png)
 
+Above the list, **Country**, **Region**, **Sport**, **From** and **To** narrow it as they are chosen, with no button to press. Only choices that would list something are offered, and a region is offered once a country is chosen. **From** and **To** are days: the list is of the tournaments that start from one to the other, both included, and both have to be chosen for it to be narrowed by days. What is chosen is in the address, so a narrowed list can be linked to; choosing another year clears it. A year with more than a hundred tournaments is listed a hundred to a page, with **Previous** and **Next** beneath. A national or international tournament is set in bold along its row.
+
 ## Archiving a tournament
 
 **Archive** on a tournament in the list sets it aside. It is still listed, struck through and after the tournaments in use, but it offers only **Restore**: its page in the admin, and its public pages, are closed until it is restored. Archiving does not ask first, since restoring undoes it.

@@ -14,6 +14,8 @@ Press **Add Note**, above the list. A panel takes the place of the list, since a
 
 **Description** is written in Markdown and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
 
+A paragraph is parted from the one before it by a full blank line, so that the note reads as paragraphs.
+
 **Preview** shows the note as a reader will see it on its page.
 
 ![The note panel, on its Preview tab](images/note-preview.png)

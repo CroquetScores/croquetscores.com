@@ -20,6 +20,8 @@ A score is typed as the scorer wrote it down: its number of points, and whatever
 
 A game won on equal points, as when it is stopped by time and settled some other way, says who won it by a mark after the winner's score: "6w" beat "6". The marks are "w", "won" and "winner". A winner's score has to be more than the loser's, or marked, unless the tournament allows drawn results, in which case equal points with no mark is kept as a draw.
 
+If the players cannot be read, the dialog says so above the fields, with "The players could not be read. Close this dialog and open it again.", rather than offering nobody. Do as it says.
+
 Press **Add Game**. The game is added, the dialog says which, and the fields are emptied for the next, since scores come in a batch read off a board at the end of a session. Press **Cancel** once they are all in.
 
 ## Matches

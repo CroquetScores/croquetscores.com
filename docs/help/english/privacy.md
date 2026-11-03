@@ -16,7 +16,7 @@ The site does not use advertising or tracking, and shares nothing about you with
 
 ## Cookies
 
-The site sets a cookie to keep you signed in, one for the theme you chose, one for the language you chose, and one for what you have said about notices of what is new. They are needed for the site to do what you asked and are not used to follow you. Registering uses Google reCAPTCHA to tell people from programs, which Google runs under its own terms.
+The site sets a cookie to keep you signed in, and others to remember what you chose: the theme, the language, how you sorted lists, the country, region and sport you filtered by, the view of a competition, which notes and commentaries you have read, and what you have said about notices of what is new. While you sign in with Google it keeps one more, until you are back. They are needed for the site to do what you asked and are not used to follow you. Registering uses Google reCAPTCHA to tell people from programs, which Google runs under its own terms.
 
 ## Who can see it
 

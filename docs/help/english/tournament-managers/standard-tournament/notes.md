@@ -1,6 +1,6 @@
 # Notes
 
-The **Notes** tab of a tournament's page is where its managers write what the players need to know as the tournament goes on: the format, a change to the order of play, the time of lunch. Readers find them on the tournament's public Notes page, and a note they have not read is marked there with a red asterisk, which also marks the Notes section on every page of the tournament until they open it.
+The **Notes** tab of a tournament's page is where its managers write what the players need to know as the tournament goes on: the format, a change to the order of play, the time of lunch. Readers find them on the tournament's public Notes page, headed Manager's Notes, and a note they have not read is marked there with a red asterisk, which also marks the Notes section on every page of the tournament until they open it.
 
 ![The Notes tab, with two notes](images/notes-tab.png)
 
@@ -14,7 +14,7 @@ Press **Add Note**, above the list. A panel takes the place of the list, since a
 
 **Description** is written in Markdown and can be left empty where the title says all there is to say. The toolbar above the box writes the Markdown for you: Heading, Bold, Italic, Quote, Code, Link, Numbered list, Bulleted list and Task list. Each works on what is selected, or at the start of each line selected, or puts the cursor where the words go.
 
-**Preview** shows the note as a reader will see it on its page.
+A blank line between two paragraphs parts them, and a reader sees a full blank line between them. **Preview** shows the note as a reader will see it on its page.
 
 ![The note panel, on its Preview tab](images/note-preview.png)
 

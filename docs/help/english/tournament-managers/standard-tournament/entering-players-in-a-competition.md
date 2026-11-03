@@ -1,6 +1,6 @@
 # Entering players in a competition
 
-A competition's page is opened from its name on the Competitions tab, or from the dark green bar. It is headed by the competition's name, with two tabs beneath: **Players** and **Scores**. It opens on Players, since the players are entered before anything is played.
+A competition's page is opened from its name on the Competitions tab, or from the dark green bar. It is headed by the competition's name, with two tabs beneath: **Players** and **Scores**. A knockout has a third, **Losers**, which is described under [A losers knockout](competitions.md#losers-knockout). It opens on Players, since the players are entered before anything is played.
 
 A player in a competition is one of the tournament's players, so they are entered by choosing them rather than by typing them. Everything about them but their place in the competition, and what they carry forward into it, is changed on the tournament's Players tab.
 
@@ -23,6 +23,10 @@ A bye is placed in the draw as a player is: it can be moved up and down and remo
 The order of a knockout's players is its draw. The first two places meet in the first match, the next two in the next, and so on. Put the players in the order the draw is to be played in before any score is entered, since once the knockout has a game in use its players are fixed: nobody can be added, removed or moved. A player can still withdraw.
 
 ![A knockout once a game has been entered: nobody can be added, moved or removed](images/knockout-players-fixed.png)
+
+## A losers knockout's players
+
+The players of a losers knockout are not entered by hand. They are put in as the matches whose losers it takes are decided, so its **Players** tab only lists them, and says why.
 
 ## Order
 
