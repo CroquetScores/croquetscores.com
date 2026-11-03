@@ -25,6 +25,7 @@ import {
   refusedWith,
   sendPage,
   settledWhenPressed,
+  sortingRead,
   table,
   type Asked,
 } from "./tournamentLists.js";
@@ -76,6 +77,35 @@ const script = `
           var written = query.toString();
           return written === "" ? "" : "?" + written;
         }
+        // The months follow the date column: December first while the
+        // tournaments are latest first, and the order of the year otherwise.
+        // Moving a month keeps it as it is, open or closed, with what it loaded.
+        // Says whether it moved any.
+        function arrange() {
+          var list = root.querySelector(".year-month-list");
+          var months = Array.prototype.slice.call(list.children);
+          var before = months.slice();
+          months.sort(function (one, other) {
+            var by = Number(one.dataset.month) - Number(other.dataset.month);
+            return sorting === "date-down" ? -by : by;
+          });
+          months.forEach(function (month) { list.appendChild(month); });
+          return months.some(function (month, at) { return month !== before[at]; });
+        }
+        // The month the reader sorted from is put at the top of the page, since
+        // turning the months round would otherwise leave them looking at some
+        // other month. Again once the tables have been reloaded, which changes
+        // how tall each month is and so where this one has come to rest.
+        function sortFrom(month, pressed) {
+          var moved = arrange();
+          var opened = Array.prototype.slice.call(
+            root.querySelectorAll('.year-month[data-state="open"]')
+          );
+          var reloading = opened.map(function (open) { return load(open, pressed); });
+          if (!moved) return;
+          month.scrollIntoView();
+          Promise.all(reloading).then(function () { month.scrollIntoView(); });
+        }
         function show(month, open) {
           month.querySelector(".year-month-body").hidden = !open;
           month.dataset.state = open ? "open" : "closed";
@@ -107,7 +137,7 @@ const script = `
           var ticket = String(Number(month.dataset.ticket || 0) + 1);
           month.dataset.ticket = ticket;
           var current = function () { return month.dataset.ticket === ticket; };
-          fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
+          return fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
             credentials: "same-origin",
           })
             .then(function (answer) {
@@ -169,20 +199,14 @@ const script = `
           if (sort !== null) {
             event.preventDefault();
             sorting = new URLSearchParams(sort.search).get("tournaments");
-            Array.prototype.forEach.call(
-              root.querySelectorAll('.year-month[data-state="open"]'),
-              function (open) { load(open, "keep"); }
-            );
+            sortFrom(sort.closest(".year-month"), "keep");
             return;
           }
           var usual = event.target.closest(".year-month-body .tournament-list-usual a");
           if (usual !== null) {
             event.preventDefault();
             sorting = null;
-            Array.prototype.forEach.call(
-              root.querySelectorAll('.year-month[data-state="open"]'),
-              function (open) { load(open, "forget"); }
-            );
+            sortFrom(usual.closest(".year-month"), "forget");
             return;
           }
           var row = event.target.closest(".year-month-body tbody tr");
@@ -203,9 +227,11 @@ export const monthsOf = (
   speaking: Speaking,
   year: number,
   base: string,
+  latestFirst: boolean,
 ): string => {
   const { say } = speaking;
-  const months = Array.from({ length: 12 }, (_, at) => at + 1)
+  const inOrder = Array.from({ length: 12 }, (_, at) => at + 1);
+  const months = (latestFirst ? inOrder.reverse() : inOrder)
     .map(
       (
         month,
@@ -224,6 +250,18 @@ ${months}
             </ol>
           </template>${script}
         </section>`;
+};
+
+// Whether the tournaments are sorted latest first by their start, as the
+// address or the reader's device says, which is when the months run from
+// December back to January. A month is a stretch of start dates, so it is the
+// date column that turns them round; a sorting by anything else says nothing
+// of dates and leaves the year in its order.
+export const latestFirst = (asked: Asked): boolean => {
+  const sorting =
+    sortingRead(asked.sorting.tournaments) ??
+    sortingRead(asked.remembered.tournaments);
+  return sorting?.column === "date" && sorting.order === "down";
 };
 
 /** Where a month's tournaments are fetched from, under a page at `base`. */

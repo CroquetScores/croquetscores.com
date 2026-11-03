@@ -372,3 +372,15 @@ Given(
     await answerNextGet(this, /\/months\/12(\?|$)/, aServerError, late);
   },
 );
+
+Then(
+  /^the month "(.*)" is at the top of the page$/,
+  async function (this: SpecWorld, name: string) {
+    const box = await monthNamed(this, name).boundingBox();
+    assert.ok(box !== null, "The month is not drawn.");
+    assert.ok(
+      Math.abs(box.y) <= 1,
+      `It is ${String(box.y)} pixels from the top.`,
+    );
+  },
+);
