@@ -341,14 +341,12 @@ export const italian: Language = {
     "home.allTournaments": "Tutti i tornei del {year}",
     // La pagina di un anno: il titolo e cosa dice quando è vuota.
     "year.heading": "Tornei del {year}",
-    "year.none": "Nessun torneo inizia nel {year}.",
     "year.needsScripting":
       "I mesi di un anno si aprono con gli script, che sono disattivati. Attivali per questo sito.",
     "year.monthNone": "Nessun torneo inizia a {month} {year}.",
     "year.monthFailed": "Non è stato possibile caricare i tornei. Riprova.",
     // La pagina di uno sport in un anno: lo stesso, per quello sport.
     "yearSport.heading": "Tornei di {sport} del {year}",
-    "yearSport.none": "Nessun torneo di {sport} inizia nel {year}.",
     "yearSport.monthNone": "Nessun torneo di {sport} inizia a {month} {year}.",
     // La pagina di un torneo: le sezioni, come si dice una partita, quanto fa
     // è stata aggiunta e cosa dice quando non ne ha.

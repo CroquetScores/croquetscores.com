@@ -337,14 +337,12 @@ export const swedish: Language = {
     "home.allTournaments": "Alla turneringar {year}",
     // Ett års sida: dess rubrik, och vad den säger när den är tom.
     "year.heading": "Turneringar {year}",
-    "year.none": "Inga turneringar startar {year}.",
     "year.needsScripting":
       "Årets månader öppnas med skript, som är avstängda. Slå på dem för den här webbplatsen.",
     "year.monthNone": "Inga turneringar börjar i {month} {year}.",
     "year.monthFailed": "Turneringarna kunde inte läsas in. Försök igen.",
     // En sports sida under ett år: samma sak, för sporten ensam.
     "yearSport.heading": "{sport}-turneringar {year}",
-    "yearSport.none": "Inga {sport}-turneringar startar {year}.",
     "yearSport.monthNone": "Inga {sport}-turneringar börjar i {month} {year}.",
     // En turnerings sida: dess avsnitt, vad den säger om ett parti, hur länge
     // sedan ett lades till, och vad den säger när den inte har några.

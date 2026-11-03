@@ -759,7 +759,7 @@ export const refusedWith = (failure: unknown): string | undefined =>
 // A page is drawn from the reader's cookies and the languages their browser
 // asks for, so it is sent with what every other page is sent with: a cache
 // that kept one would hand the next reader a page saying they are somebody.
-const asAPage = (reply: FastifyReply): FastifyReply =>
+export const asAPage = (reply: FastifyReply): FastifyReply =>
   reply
     .header("cache-control", "private, no-cache")
     .header("vary", "Cookie, Accept-Language");

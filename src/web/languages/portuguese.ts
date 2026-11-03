@@ -337,7 +337,6 @@ export const portuguese: Language = {
     "home.allTournaments": "Todos os torneios de {year}",
     // A year's page: its heading, and what it says when it has nothing in it.
     "year.heading": "Torneios de {year}",
-    "year.none": "Nenhum torneio começa em {year}.",
     "year.needsScripting":
       "Os meses de um ano abrem-se com scripts, que estão desativados. Ative-os para este site.",
     "year.monthNone": "Nenhum torneio começa em {month} de {year}.",
@@ -345,7 +344,6 @@ export const portuguese: Language = {
       "Não foi possível carregar os torneios. Tente novamente.",
     // A sport's page in a year: the same, of the sport alone.
     "yearSport.heading": "Torneios de {sport} de {year}",
-    "yearSport.none": "Nenhum torneio de {sport} começa em {year}.",
     "yearSport.monthNone":
       "Nenhum torneio de {sport} começa em {month} de {year}.",
     // A tournament's page: its sections, what it says of a game, how long ago

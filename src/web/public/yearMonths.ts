@@ -21,6 +21,7 @@ import type { Speaking } from "../common/language.js";
 import { websiteOf } from "../common/site.js";
 import {
   askedOf,
+  asAPage,
   refusedWith,
   sendPage,
   settledWhenPressed,
@@ -86,6 +87,11 @@ const script = `
           var body = month.querySelector(".year-month-body");
           var search = searchFor(pressed);
           month.setAttribute("aria-busy", "true");
+          // Only the newest asking for a month is kept: a sorting pressed twice
+          // sends two, and the older answer may arrive after the newer.
+          var ticket = String(Number(month.dataset.ticket || 0) + 1);
+          month.dataset.ticket = ticket;
+          var current = function () { return month.dataset.ticket === ticket; };
           fetch(root.dataset.base + "/months/" + month.dataset.month + search, {
             credentials: "same-origin",
           })
@@ -97,6 +103,7 @@ const script = `
                 throw new Error(String(answer.status));
               }
               return answer.text().then(function (html) {
+                if (!current()) return;
                 body.innerHTML = html;
                 body.hidden = false;
                 if (!answer.ok) {
@@ -112,11 +119,12 @@ const script = `
               });
             })
             .catch(function () {
+              if (!current()) return;
               body.textContent = root.dataset.failed;
               body.hidden = false;
               month.dataset.state = "failed";
             })
-            .then(function () { month.removeAttribute("aria-busy"); });
+            .then(function () { if (current()) month.removeAttribute("aria-busy"); });
         }
         root.addEventListener("click", function (event) {
           var toggle = event.target.closest(".year-month-toggle");
@@ -207,7 +215,9 @@ export const sendMonth = async (
 ): Promise<FastifyReply> => {
   const { say } = speaking;
   const pageKey = page.sport === undefined ? "year" : "sport";
-  const pressed = settledWhenPressed(request, reply, pageKey, ["tournaments"]);
+  const pressed = settledWhenPressed(request, reply, pageKey, ["tournaments"], {
+    offersSport: page.sport === undefined,
+  });
   if (pressed !== undefined) return pressed;
   const year = Number(request.params.year);
   const month = Number(request.params.month);
@@ -253,8 +263,7 @@ export const sendMonth = async (
     const code = refusedWith(failure);
     if (code === undefined) throw failure;
     request.log.info({ code }, "Request refused");
-    return reply
-      .code(422)
+    return asAPage(reply.code(422))
       .type("text/html; charset=utf-8")
       .send(
         `<p class="page-refused" data-refused="${escape(code)}">${escape(say("errors.refusedDetail"))}</p>`,
