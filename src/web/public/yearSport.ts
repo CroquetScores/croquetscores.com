@@ -71,7 +71,7 @@ export const registerYearSportPage = (
       const path = `/${request.params.year}/${sport.code}`;
       const speaking = speakingOf(request);
       const { say } = speaking;
-      const asked = askedOf(request, path, "sport", ["tournaments"], {
+      const asked = askedOf(request, path, "sport", [], {
         offersSport: false,
       });
       const { mediator } = request.server;
@@ -113,7 +113,7 @@ export const registerYearSportPage = (
           // would only mislead, so the filter is told there are enough.
           body: `${filter(request, asked, speaking, Number.POSITIVE_INFINITY)}
           <h1>${escape(heading)}</h1>
-${monthsOf(speaking, year, path, latestFirst(asked))}`,
+${monthsOf(speaking, year, path, latestFirst(request, asked))}`,
         }),
       );
     },

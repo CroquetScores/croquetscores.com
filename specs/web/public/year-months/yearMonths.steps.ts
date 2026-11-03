@@ -376,11 +376,15 @@ Given(
 Then(
   /^the month "(.*)" is at the top of the page$/,
   async function (this: SpecWorld, name: string) {
-    const box = await monthNamed(this, name).boundingBox();
-    assert.ok(box !== null, "The month is not drawn.");
-    assert.ok(
-      Math.abs(box.y) <= 1,
-      `It is ${String(box.y)} pixels from the top.`,
-    );
+    // The scroll is made once the months have been reloaded, so it is waited
+    // for rather than read at once.
+    const month = monthNamed(this, name);
+    let top = Number.NaN;
+    for (let tries = 0; tries < 40; tries += 1) {
+      top = (await month.boundingBox())?.y ?? Number.NaN;
+      if (Math.abs(top) <= 1) return;
+      await this.browserPage.waitForTimeout(50);
+    }
+    assert.fail(`It is ${String(top)} pixels from the top.`);
   },
 );

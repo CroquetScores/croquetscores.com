@@ -79,23 +79,29 @@ const script = `
         }
         // The months follow the date column: December first while the
         // tournaments are latest first, and the order of the year otherwise.
-        // Moving a month keeps it as it is, open or closed, with what it loaded.
-        // Says whether it moved any.
+        // The server draws them so (latestFirst, below), and says which in
+        // data-latest-first, so that what is kept here begins as the page was
+        // drawn and not as though nothing had been sorted. Moving a month keeps
+        // it as it is, open or closed, with what it loaded. Says whether any
+        // moved; none are touched when none need to, which would only cost a
+        // reader the focus they had.
+        var latestFirst = root.dataset.latestFirst === "true";
         function arrange() {
           var list = root.querySelector(".year-month-list");
           var months = Array.prototype.slice.call(list.children);
-          var before = months.slice();
-          months.sort(function (one, other) {
+          var wanted = months.slice().sort(function (one, other) {
             var by = Number(one.dataset.month) - Number(other.dataset.month);
-            return sorting === "date-down" ? -by : by;
+            return latestFirst ? -by : by;
           });
-          months.forEach(function (month) { list.appendChild(month); });
-          return months.some(function (month, at) { return month !== before[at]; });
+          var moved = wanted.some(function (month, at) { return month !== months[at]; });
+          if (moved) wanted.forEach(function (month) { list.appendChild(month); });
+          return moved;
         }
         // The month the reader sorted from is put at the top of the page, since
         // turning the months round would otherwise leave them looking at some
-        // other month. Again once the tables have been reloaded, which changes
-        // how tall each month is and so where this one has come to rest.
+        // other month. Only once the tables have been reloaded, which changes
+        // how tall each month is and so where this one comes to rest; scrolling
+        // before that as well would pull back a reader who had already moved on.
         function sortFrom(month, pressed) {
           var moved = arrange();
           var opened = Array.prototype.slice.call(
@@ -103,7 +109,6 @@ const script = `
           );
           var reloading = opened.map(function (open) { return load(open, pressed); });
           if (!moved) return;
-          month.scrollIntoView();
           Promise.all(reloading).then(function () { month.scrollIntoView(); });
         }
         function show(month, open) {
@@ -199,6 +204,7 @@ const script = `
           if (sort !== null) {
             event.preventDefault();
             sorting = new URLSearchParams(sort.search).get("tournaments");
+            latestFirst = sorting === "date-down";
             sortFrom(sort.closest(".year-month"), "keep");
             return;
           }
@@ -206,6 +212,7 @@ const script = `
           if (usual !== null) {
             event.preventDefault();
             sorting = null;
+            latestFirst = false;
             sortFrom(usual.closest(".year-month"), "forget");
             return;
           }
@@ -227,11 +234,11 @@ export const monthsOf = (
   speaking: Speaking,
   year: number,
   base: string,
-  latestFirst: boolean,
+  latestFirstDrawn: boolean,
 ): string => {
   const { say } = speaking;
   const inOrder = Array.from({ length: 12 }, (_, at) => at + 1);
-  const months = (latestFirst ? inOrder.reverse() : inOrder)
+  const months = (latestFirstDrawn ? inOrder.reverse() : inOrder)
     .map(
       (
         month,
@@ -241,7 +248,7 @@ export const monthsOf = (
           </li>`,
     )
     .join("\n");
-  return `        <section class="year-months" data-base="${escape(base)}" data-failed="${escape(say("year.monthFailed"))}" data-show-all="${escape(say("year.showAll"))}" data-hide-all="${escape(say("year.hideAll"))}">
+  return `        <section class="year-months" data-base="${escape(base)}" data-latest-first="${String(latestFirst)}" data-failed="${escape(say("year.monthFailed"))}" data-show-all="${escape(say("year.showAll"))}" data-hide-all="${escape(say("year.hideAll"))}">
           <noscript><p class="notice">${escape(say("year.needsScripting"))}</p></noscript>
           <template>
             <button type="button" class="year-months-all"><span class="year-month-mark" aria-hidden="true">+</span> <span class="year-months-all-words">${escape(say("year.showAll"))}</span></button>
@@ -256,10 +263,14 @@ ${months}
 // address or the reader's device says, which is when the months run from
 // December back to January. A month is a stretch of start dates, so it is the
 // date column that turns them round; a sorting by anything else says nothing
-// of dates and leaves the year in its order.
-export const latestFirst = (asked: Asked): boolean => {
+// of dates and leaves the year in its order. The script above turns them round
+// by the same rule when a reader sorts, and is told this answer to begin from.
+// The page itself settles nothing of the sorting, as it lists no table: it only
+// reads it, as the months' tables are asked for under it.
+export const latestFirst = (request: FastifyRequest, asked: Asked): boolean => {
+  const inAddress = (request.query as { tournaments?: unknown }).tournaments;
   const sorting =
-    sortingRead(asked.sorting.tournaments) ??
+    sortingRead(typeof inAddress === "string" ? inAddress : undefined) ??
     sortingRead(asked.remembered.tournaments);
   return sorting?.column === "date" && sorting.order === "down";
 };
