@@ -1,5 +1,8 @@
 // A question put to the help, and the pages that answer it
 // (helpSearch.feature).
+import rateLimit from "@fastify/rate-limit";
+import type { FastifyInstance, FastifyRequest } from "fastify";
+
 import type { HelpSearchResult } from "../../application/services/HelpSearchIndex.js";
 import {
   snippetEnd,
@@ -31,17 +34,56 @@ export const longestQuestion = 200;
  */
 export const questionsAMinute = 60;
 
+/** The field a question is typed in, and sent in by the form. */
+export const helpSearchField = "question";
+
 /**
- * What counts the questions an address asks, whether by the API or by the form,
- * written once so that the two cannot come to allow different numbers for the
- * same search. Counted in this process, as the site's files are (assets.ts).
+ * What was typed in the form and sent: nothing where nothing was, or where it
+ * was sent as anything but text. Read here once, for the page that searches
+ * and for the limit that counts the searches, so that they cannot disagree
+ * about which requests ask a question.
  */
-export const questionLimit = {
-  max: questionsAMinute,
-  timeWindow: "1 minute",
-  keyGenerator: ipAddressOf,
-  cache: 100_000,
-} as const;
+export const questionAsked = (request: FastifyRequest): string => {
+  const typed = (request.query as Record<string, unknown>)[helpSearchField];
+  return typeof typed === "string" ? typed.trim() : "";
+};
+
+/** Where the API answers a question, which the limit counts. */
+export const helpSearchApiPath = "/api/site/help/search";
+
+/**
+ * Counts the questions an address asks, by the API and by the form together,
+ * in one count: two counts would allow twice what is meant. Registered once,
+ * for the whole site, and it counts only requests that ask something: opening
+ * the help is not asking it, and a reader is never turned away from the help
+ * for reading it. Kept in this process, as the site's files are (assets.ts).
+ *
+ * Not given to the routes one by one: the plugin keeps a count for each route
+ * that configures it, so two routes configured alike are counted apart.
+ */
+export const registerQuestionLimit = async (
+  server: FastifyInstance,
+): Promise<void> => {
+  await server.register(rateLimit, {
+    max: questionsAMinute,
+    timeWindow: "1 minute",
+    keyGenerator: ipAddressOf,
+    cache: 100_000,
+    allowList: (request) =>
+      !(
+        (request.method === "POST" &&
+          request.routeOptions.url === helpSearchApiPath) ||
+        (request.method === "GET" &&
+          request.routeOptions.url === helpPath &&
+          questionAsked(request) !== "")
+      ),
+  });
+  // The answer that says to wait is for the one who asked, now.
+  server.addHook("onSend", (_request, reply, payload, done) => {
+    if (reply.statusCode === 429) reply.header("cache-control", "no-store");
+    done(null, payload);
+  });
+};
 
 /** A page that answers a question, as it is shown. */
 export interface HelpAnswer {

@@ -171,6 +171,17 @@ When(
   },
 );
 
+When(
+  "the question is asked {int} times",
+  async function (this: SpecWorld, times: number) {
+    const scene = sceneOf(this);
+    assert.ok(scene.question !== undefined, "No question was put.");
+    for (let asked = 0; asked < times; asked++) {
+      await ask(this, { query: scene.question });
+    }
+  },
+);
+
 Then(
   "the question is refused with {string}",
   function (this: SpecWorld, code: string) {
@@ -334,6 +345,19 @@ When(
       this,
       `/help?question=${encodeURIComponent(scene.question)}`,
       61,
+    );
+  },
+);
+
+When(
+  "the question is asked by the form {int} times",
+  async function (this: SpecWorld, times: number) {
+    const scene = sceneOf(this);
+    assert.ok(scene.question !== undefined, "No question was put.");
+    await askAsAForm(
+      this,
+      `/help?question=${encodeURIComponent(scene.question)}`,
+      times,
     );
   },
 );

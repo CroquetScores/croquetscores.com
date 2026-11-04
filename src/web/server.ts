@@ -271,6 +271,7 @@ import {
   type GoogleEndpoints,
 } from "../infrastructure/identity/GoogleOpenIdConnect.js";
 import { apiSite } from "./api/site/index.js";
+import { registerQuestionLimit } from "./common/helpSearch.js";
 import {
   adminBuildHeader,
   adminPage,
@@ -396,7 +397,7 @@ import { knockoutSummaryView } from "./public/knockoutSummary.js";
 import { registerRegisterPage, type ReaderCheck } from "./public/register.js";
 import { readBuiltVersion } from "../infrastructure/version/buildVersion.js";
 import { helpLibraryIn, type HelpLibrary } from "./common/helpLibrary.js";
-import { registerHelpPages } from "./public/help.js";
+import { helpAddressOf, registerHelpPages } from "./public/help.js";
 import { registerJavaScriptRequiredPage } from "./public/javaScriptRequired.js";
 import { registerLanguageRoute } from "./public/language.js";
 import { registerThemeRoute } from "./public/theme.js";
@@ -1573,7 +1574,12 @@ export const buildApplication = async (
       reply.header(adminBuildHeader, build());
     done(null, payload);
   });
-  await server.register(apiSite, { prefix: "/api/site", assets });
+  await registerQuestionLimit(server);
+  await server.register(apiSite, {
+    prefix: "/api/site",
+    assets,
+    helpAddressOf,
+  });
   await server.register(
     auth({
       googleConfigured: config.google !== undefined,

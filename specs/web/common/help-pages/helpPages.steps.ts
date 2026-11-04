@@ -171,6 +171,13 @@ Then(
 );
 
 Then(
+  "the text of the page says {string}",
+  function (this: SpecWorld, words: string) {
+    assert.ok(result(this).text.includes(words), result(this).text);
+  },
+);
+
+Then(
   "the text of the page does not say {string}",
   function (this: SpecWorld, words: string) {
     assert.ok(!result(this).text.includes(words), result(this).text);

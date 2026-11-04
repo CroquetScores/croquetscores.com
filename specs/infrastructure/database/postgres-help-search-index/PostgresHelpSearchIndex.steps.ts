@@ -16,6 +16,8 @@ import { unitOfWorkOf } from "../../support/transactions.js";
 interface Help {
   readonly index: PostgresHelpSearchIndex;
   unreadable: boolean;
+  /** Whether the pages are listed from the last to the first. */
+  backwards: boolean;
   failure?: unknown;
   madeAgain?: boolean;
 }
@@ -35,6 +37,7 @@ Given("an index of the help", function (this: SpecWorld) {
   helps.set(this, {
     index: new PostgresHelpSearchIndex(unitOfWork),
     unreadable: false,
+    backwards: false,
   });
 });
 
@@ -72,6 +75,10 @@ Given("a help that cannot be read", function (this: SpecWorld) {
   helpOf(this).unreadable = true;
 });
 
+Given("the pages are listed the other way round", function (this: SpecWorld) {
+  helpOf(this).backwards = true;
+});
+
 Given("a help with no pages", function (this: SpecWorld) {
   pagesOf(this).length = 0;
 });
@@ -84,7 +91,9 @@ When("the index is made", async function (this: SpecWorld) {
     all: () =>
       help.unreadable
         ? Promise.reject(new Error("The help cannot be read."))
-        : Promise.resolve(pagesOf(this)),
+        : Promise.resolve(
+            help.backwards ? [...pagesOf(this)].reverse() : pagesOf(this),
+          ),
   };
   help.failure = undefined;
   try {

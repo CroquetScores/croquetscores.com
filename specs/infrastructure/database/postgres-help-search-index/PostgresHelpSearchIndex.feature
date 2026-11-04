@@ -139,6 +139,15 @@ Feature: Keeping the help searchable in Postgres
       When the index is made
       Then the index was not made again
 
+    Scenario: The same pages listed in another order are the same help
+      Given an index of the help
+      And the english page "a" titled "Players" saying "Add a player."
+      And the english page "B" titled "Scores" saying "Add a score."
+      And the index is made
+      And the pages are listed the other way round
+      When the index is made
+      Then the index was not made again
+
     Scenario: Making it again when the pages kept have been lost
       Given an index of the help
       And the english page "a" titled "Players" saying "Add a player."

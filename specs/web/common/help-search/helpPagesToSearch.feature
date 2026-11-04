@@ -46,6 +46,24 @@ Feature: Which pages of the built help are searched
       When the pages to search are listed
       Then the page "reindex" is listed titled "The file"
 
+  Rule: A help that is not there is not read as a help with no pages
+
+    An index made from nothing would replace a good one with an empty one, and
+    a site started from a checkout that was never built would lose its search.
+    It cannot be read, and what is kept is left as it was
+    (PostgresHelpSearchIndex.feature).
+
+    Scenario: The built help is not there
+      Given the built help is not there
+      When an attempt is made to list the pages to search
+      Then the pages cannot be listed
+
+    Scenario: A language the build wrote nothing for has no pages
+      Given the built help has the english page "readers/index"
+      And the help is asked for the languages "english" and "welsh"
+      When the pages to search are listed
+      Then the pages listed include "readers"
+
   Rule: A page of what's new is not searched
 
     Scenario: The what's new for everybody

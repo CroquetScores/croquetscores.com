@@ -33,10 +33,14 @@ export const makeHelpSearchIndex = async (
   }
 
   // In a fixed order, so that the same help is the same fingerprint however it
-  // was listed.
-  const ordered = [...pages].sort((a, b) =>
-    `${a.tag}/${a.name}`.localeCompare(`${b.tag}/${b.name}`),
-  );
+  // was listed. By code units and not by locale: a locale orders the same words
+  // differently from one machine or one release of Node to the next, and every
+  // start would then take the same help for another and write it all again.
+  const ordered = [...pages].sort((a, b) => {
+    const first = `${a.tag}/${a.name}`;
+    const second = `${b.tag}/${b.name}`;
+    return first < second ? -1 : first > second ? 1 : 0;
+  });
   const fingerprint = createHash("sha256")
     .update(JSON.stringify(ordered))
     .digest("hex");

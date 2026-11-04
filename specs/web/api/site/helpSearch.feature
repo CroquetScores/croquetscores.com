@@ -148,6 +148,14 @@ Feature: Asking the help a question
       When the question is asked by the form more often than is allowed
       Then the next question is told to wait
 
+    Scenario: The API and the form are counted together
+      Given a site with help pages
+      And an english reader
+      And the reader's question "player"
+      When the question is asked 30 times
+      And the question is asked by the form 31 times
+      Then the next question is told to wait
+
     Scenario: Opening the help without a question is not counted
       Given a site with help pages
       And an english reader

@@ -10,7 +10,6 @@ import type {
 } from "fastify";
 import { PassThrough } from "node:stream";
 
-import { helpAddressOf } from "../../public/help.js";
 import { helpSearchRoute } from "./helpSearch.js";
 
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
@@ -281,11 +280,13 @@ const addressOf = ({ year, sport, slug }: AtAddress): string =>
 export interface ApiSiteOptions {
   /** Where the site's own files are found, for the address of a flag's image. */
   readonly assets: Assets;
+  /** Where the help puts a page, which differs for the few with an address of their own. */
+  readonly helpAddressOf: (name: string) => string;
 }
 
 export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   server,
-  { assets },
+  { assets, helpAddressOf },
   done,
 ) => {
   server.get("/health", () => ({ status: "ok" }));

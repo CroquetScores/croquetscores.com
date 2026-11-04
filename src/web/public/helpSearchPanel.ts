@@ -7,11 +7,8 @@
 // form uses, so the two cannot give different answers.
 import { escape } from "../common/escape.js";
 import type { HelpAnswer } from "../common/helpSearch.js";
-import { longestQuestion } from "../common/helpSearch.js";
+import { helpSearchField, longestQuestion } from "../common/helpSearch.js";
 import type { Speaking } from "../common/language.js";
-
-/** What the form is sent to, with `question` the field it is sent in. */
-export const helpSearchField = "question";
 
 /** What the page shows beneath the field. */
 export type HelpSearched =

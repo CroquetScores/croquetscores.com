@@ -40,16 +40,19 @@ const nameOf = (file: string): string => {
 };
 
 /**
- * The pages of the languages with `tags`, as `directory` holds them. A
- * language the build wrote nothing for has no pages, and a help that was never
- * built has none at all, which is not a failure: nothing else on the site needs
- * the help, and the index is made again when it is built.
+ * The pages of the languages with `tags`, as `directory` holds them. A language
+ * the build wrote nothing for has no pages. A help that was never built is not
+ * a help with none: it cannot be read, and is said to be, so that the index
+ * made from the last help that could be read is not replaced by an empty one
+ * (MakeHelpSearchIndex.ts).
  */
 export const helpPagesToSearchIn = (
   directory: string,
   tags: () => readonly string[],
 ): HelpPagesToSearch => ({
   all: async () => {
+    // Fails, as reading anything that is not there does, when there is no help.
+    await readdir(directory);
     const pages: HelpPageToSearch[] = [];
     for (const tag of tags()) {
       const rules = helpSearchRulesOf(tag);

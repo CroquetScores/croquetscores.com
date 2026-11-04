@@ -117,6 +117,12 @@ const headingsAndText = (
   const headings: string[] = [];
   const paragraphs: string[] = [];
   for (const [index, token] of tokens.entries()) {
+    // Code is words too: a reader may ask for the setting a block shows.
+    if (token.type === "fence" || token.type === "code_block") {
+      const code = token.content.split(/\s+/).filter((word) => word !== "");
+      if (code.length > 0) paragraphs.push(code.join(" "));
+      continue;
+    }
     if (token.type !== "inline") continue;
     const words = wordsOf(token).trim();
     if (words === "") continue;

@@ -81,15 +81,22 @@ export class PostgresHelpSearchIndex implements HelpSearchIndex {
       score: number;
       snippet: string;
     }>(
-      `with asked as (select to_tsquery($2::regconfig, $3) as query)
-       select name, title,
-              ts_rank_cd(document, asked.query, 32) as score,
-              ts_headline($2::regconfig, title || E'\\n' || headings || E'\\n' || body, asked.query,
+      // Ranked and cut to the most first, and only then given a snippet: making
+      // one is the dear part, and a broad question matches many pages of which
+      // only the best are shown.
+      `with asked as (select to_tsquery($2::regconfig, $3) as query),
+            best as (
+              select name, title, headings, body,
+                     ts_rank_cd(document, asked.query, 32) as score
+                from help_search_pages, asked
+               where language_tag = $1 and document @@ asked.query
+               order by score desc, name
+               limit ${mostHelpSearchResults})
+       select best.name, best.title, best.score,
+              ts_headline($2::regconfig, best.title || E'\\n' || best.headings || E'\\n' || best.body, asked.query,
                 'StartSel=${snippetStart}, StopSel=${snippetEnd}, MaxWords=35, MinWords=15, MaxFragments=1') as snippet
-         from help_search_pages, asked
-        where language_tag = $1 and document @@ asked.query
-        order by score desc, name
-        limit ${mostHelpSearchResults}`,
+         from best, asked
+        order by best.score desc, best.name`,
       [tag, rules, query],
     );
     return rows;

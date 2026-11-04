@@ -7,7 +7,6 @@
 // A page its language has not got is shown in the site's first language
 // rather than not at all: a reader asking for help has little use for an
 // answer that says there is none.
-import rateLimit from "@fastify/rate-limit";
 import { createHash } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -19,7 +18,7 @@ import {
   answerHelpQuestion,
   helpAddress,
   HelpSearchRefused,
-  questionLimit,
+  questionAsked,
 } from "../common/helpSearch.js";
 import { render } from "../common/layout.js";
 import { directionAttribute, speakingOf } from "../common/language.js";
@@ -32,11 +31,7 @@ import {
   releaseOf,
 } from "../common/whatsNew.js";
 import { SearchHelp } from "../../application/operations/help/SearchHelp.js";
-import {
-  helpSearchField,
-  helpSearchPanel,
-  type HelpSearched,
-} from "./helpSearchPanel.js";
+import { helpSearchPanel, type HelpSearched } from "./helpSearchPanel.js";
 import { termsOfUsePath, writersTermsOfUsePath } from "./termsOfUse.js";
 
 const imageTypes: Readonly<Record<string, string>> = {
@@ -87,15 +82,6 @@ const contacts: ReadonlyMap<string, string> = new Map([
   [dataDeletionPolicyName, "privacy.contact"],
   ["admin/terms-of-use", "termsOfUse.report"],
 ]);
-
-// What was typed in the panel and sent as a form: nothing where nothing was,
-// or where it was sent as anything but text. Read here once, for the page that
-// searches and for the limit that counts the searches, so that they cannot
-// disagree about which requests ask a question.
-const questionAsked = (request: FastifyRequest): string => {
-  const typed = (request.query as Record<string, unknown>)[helpSearchField];
-  return typeof typed === "string" ? typed.trim() : "";
-};
 
 /** Where the help puts the page called `name`: its own address if it has one. */
 export const helpAddressOf = (name: string): string =>
@@ -255,25 +241,10 @@ ${pictured(page.html, writtenIn.tag)}
   for (const [name, path] of ownAddresses) {
     server.get(path, (request, reply) => show(request, reply, name, true));
   }
-  // The first page of the help is the one that answers a question sent as a
-  // form, which runs the same search the API runs, so it is counted as the API
-  // is. Only a request that asks one is: opening the page is not what is
-  // limited, and a reader is never turned away from the help for reading it.
-  void server.register(async (scope) => {
-    await scope.register(rateLimit, {
-      ...questionLimit,
-      global: false,
-      allowList: (request) => questionAsked(request) === "",
-    });
-    // The answer that says to wait is for the one who asked, now.
-    scope.addHook("onSend", (_request, reply, payload, done) => {
-      if (reply.statusCode === 429) reply.header("cache-control", "no-store");
-      done(null, payload);
-    });
-    scope.get(helpPath, { config: { rateLimit: {} } }, (request, reply) =>
-      show(request, reply, ""),
-    );
-  });
+  // The first page of the help answers a question sent as a form, which runs
+  // the same search the API runs, so it is counted as the API is
+  // (registerQuestionLimit): only when it is asked one.
+  server.get(helpPath, (request, reply) => show(request, reply, ""));
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
     const name = request.params["*"].replace(/\/+$/, "");
     return show(request, reply, name);

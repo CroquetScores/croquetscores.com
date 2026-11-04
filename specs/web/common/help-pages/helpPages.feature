@@ -157,6 +157,16 @@ Feature: Help written in markdown becomes pages of the site
       When the help page is converted
       Then the text of the page is "Add a player to the tournament."
 
+    Scenario: The words of a fenced block of code are words of the page
+      Given help page "```" followed by "set-this"
+      When the help page is converted
+      Then the text of the page says "set-this"
+
+    Scenario: The words of an indented block of code are words of the page
+      Given help page "    set-this"
+      When the help page is converted
+      Then the text of the page says "set-this"
+
     Scenario: The address of a picture is not a word of the page
       Given help page "![The players tab](images/players-tab.png)"
       When the help page is converted

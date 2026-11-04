@@ -13,7 +13,10 @@ import { languageOf } from "./helpFolders.js";
 interface Built {
   readonly directory: string;
   readonly tags: Set<string>;
+  /** Whether the directory is not there at all, as of a help never built. */
+  absent: boolean;
   listed: readonly HelpPageToSearch[];
+  failure?: unknown;
 }
 
 const builds = new WeakMap<SpecWorld, Built>();
@@ -24,6 +27,7 @@ const buildOf = async (world: SpecWorld): Promise<Built> => {
     built = {
       directory: await mkdtemp(join(tmpdir(), "built-help-")),
       tags: new Set(),
+      absent: false,
       listed: [],
     };
     builds.set(world, built);
@@ -109,11 +113,48 @@ Given(
   },
 );
 
+Given("the built help is not there", async function (this: SpecWorld) {
+  (await buildOf(this)).absent = true;
+});
+
+Given(
+  "the help is asked for the languages {string} and {string}",
+  async function (this: SpecWorld, first: string, second: string) {
+    const built = await buildOf(this);
+    for (const folder of [first, second]) {
+      built.tags.add((await languageOf(folder)).tag);
+    }
+  },
+);
+
+// Where the build wrote the help, or where it would have.
+const source = (built: Built) =>
+  helpPagesToSearchIn(
+    built.absent ? join(built.directory, "not-built") : built.directory,
+    () => [...built.tags],
+  );
+
 When("the pages to search are listed", async function (this: SpecWorld) {
   const built = await buildOf(this);
-  built.listed = await helpPagesToSearchIn(built.directory, () => [
-    ...built.tags,
-  ]).all();
+  built.listed = await source(built).all();
+});
+
+// A failure is kept for the step that names it, rather than thrown.
+When(
+  "an attempt is made to list the pages to search",
+  async function (this: SpecWorld) {
+    const built = await buildOf(this);
+    built.failure = undefined;
+    try {
+      built.listed = await source(built).all();
+    } catch (failure) {
+      built.failure = failure;
+    }
+  },
+);
+
+Then("the pages cannot be listed", async function (this: SpecWorld) {
+  assert.ok((await buildOf(this)).failure !== undefined);
 });
 
 Then(
