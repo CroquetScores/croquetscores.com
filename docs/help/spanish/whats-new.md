@@ -1,5 +1,23 @@
 # Novedades
 
+## Publicado el 2026-11-05
+
+### Gestionar un torneo
+
+- **Se pueden añadir varios jugadores a una competición a la vez.** En la pestaña Jugadores de una competición, pulsa **Añadir varios**, junto a **Añadir jugador**, marca los jugadores que quieras, o la casilla de encima de la lista para todos, y pulsa **Añadir seleccionados**. Se colocan en el orden del torneo. Si algunos no se pueden añadir, un segundo cuadro dice cuáles y por qué, y pregunta si se añade al resto. Consulta [Inscribir jugadores en una competición](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Una pareja de dobles se forma con dos jugadores ya inscritos.** En la pestaña Jugadores del torneo, pulsa **Añadir pareja**, elige el primer y el segundo jugador y vuelve a pulsar **Añadir pareja**. La pareja se llama «Sam Someone & Alex Another», o «Peter & Rosie Landrebe» cuando los dos tienen el mismo apellido, y representa lo que representan sus jugadores. El cuadro sigue abierto para poder formar la siguiente pareja. Consulta [Jugadores](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Un torneo nuevo empieza en el mes en que estamos.** Su inicio es el día uno de este mes y su fin es el mismo día, y el fin sigue al inicio hasta que elijas uno propio.
+- **Los archivos del ranking escriben los nombres con sencillez.** Un dibujo en el nombre de un torneo se omite, un apóstrofo curvo se escribe como apóstrofo, y letras como ø, ł y ß se escriben como las letras sencillas, para que los nombres sean los que tiene la lista del ranking.
+
+### Seguir un torneo
+
+- **La ayuda encuentra una respuesta por lo que quieres decir.** Haz una pregunta en el cuadro de búsqueda de la primera página de la ayuda y encontrará el artículo aunque el artículo use otras palabras con el mismo significado.
+- **La primera página de la ayuda ofrece preguntas populares y los temas como tarjetas.** Cinco preguntas que hace la gente llevan a sus respuestas, y cada tema es una tarjeta que dice lo que contiene.
+- **La ayuda se ha puesto al día.** Cada página se leyó frente al sitio y se corrigió, y cada imagen se tomó de nuevo. Una página nueva, Seguir un torneo, dice lo que puedes hacer en las listas y en las páginas de un torneo. Por ahora solo está en inglés.
+- **Los meses de un año siguen el orden de las fechas.** Cuando los torneos se ordenan del más reciente al más antiguo, los meses de la página de un año empiezan por diciembre, y las fechas y los nombres quedan alineados en cada mes abierto.
+- **La página de notas lleva el título Notas de los gestores** y dice que aún no hay notas cuando no las hay.
+- **Más torneos están en su propio país.** Los torneos con Happy Valley en el nombre están en Canadá, y los torneos alemanes, suizos, checos, noruegos, suecos y portugueses que se mostraban en un país equivocado están en el suyo.
+
 ## Publicado el 2026-11-03
 
 ### Seguir un torneo

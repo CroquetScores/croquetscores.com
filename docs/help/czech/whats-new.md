@@ -1,5 +1,23 @@
 # Novinky
 
+## Vydáno 2026-11-05
+
+### Správa turnaje
+
+- **Do soutěže lze přidat více hráčů najednou.** Na kartě Hráči soutěže stiskněte **Přidat více** vedle **Přidat hráče**, zaškrtněte hráče, které chcete, nebo pole nad seznamem pro všechny, a stiskněte **Přidat vybrané**. Zařadí se podle pořadí turnaje. Nelze-li některé přidat, druhý dialog řekne které a proč a zeptá se, zda přidat ostatní. Viz [Přidávání hráčů do soutěže](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Pár čtyřhry se vytvoří ze dvou již zadaných hráčů.** Na kartě Hráči turnaje stiskněte **Přidat pár**, vyberte prvního a druhého hráče a znovu stiskněte **Přidat pár**. Pár se jmenuje „Sam Someone & Alex Another“, nebo „Peter & Rosie Landrebe“, mají-li oba stejné příjmení, a reprezentuje to, co jeho hráči. Dialog zůstane otevřený, aby šlo vytvořit další pár. Viz [Hráči](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Nový turnaj začíná v aktuálním měsíci.** Jeho začátek je prvního dne tohoto měsíce a konec je stejný den; konec sleduje začátek, dokud nevyberete vlastní.
+- **Soubory žebříčku píší jména jednoduše.** Obrázek v názvu turnaje se vynechá, typografický apostrof se zapíše jako apostrof a písmena jako ø, ł a ß se zapíšou jako prostá písmena, takže jména odpovídají žebříčku.
+
+### Sledování turnaje
+
+- **Nápověda najde odpověď podle toho, co myslíte.** Zeptejte se v poli pro hledání na první stránce nápovědy a najde článek, i když článek používá jiná slova se stejným významem.
+- **První stránka nápovědy nabízí oblíbené otázky a témata jako karty.** Pět otázek, které lidé kladou, vede k odpovědím a každé téma je karta, která říká, co obsahuje.
+- **Nápověda je aktualizovaná.** Každá stránka byla přečtena proti webu a opravena a každý obrázek byl pořízen znovu. Nová stránka Sledování turnaje říká, co můžete dělat na seznamech a stránkách turnaje. Zatím je jen v angličtině.
+- **Měsíce roku následují pořadí dat.** Jsou-li turnaje seřazeny od nejnovějších, měsíce na stránce roku začínají prosincem a data a jména jsou v každém otevřeném měsíci zarovnaná.
+- **Stránka Poznámek má nadpis Poznámky organizátorů** a říká, že zatím nejsou žádné poznámky, nejsou-li.
+- **Více turnajů je ve své zemi.** Turnaje s Happy Valley v názvu jsou v Kanadě a německé, švýcarské, české, norské, švédské a portugalské turnaje, které se ukazovaly v nesprávné zemi, jsou ve své.
+
 ## Vydáno 2026-11-03
 
 ### Sledování turnaje

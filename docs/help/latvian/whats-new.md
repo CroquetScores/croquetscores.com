@@ -1,5 +1,23 @@
 # Kas jauns
 
+## Izlaists 2026-11-05
+
+### Turnīra vadīšana
+
+- **Sacensībām var pievienot vairākus spēlētājus uzreiz.** Sacensību cilnē Spēlētāji nospiediet **Pievienot vairākus** blakus **Pievienot spēlētāju**, atzīmējiet vēlamos spēlētājus vai rūtiņu virs saraksta visiem un nospiediet **Pievienot atlasītos**. Tie tiek ielikti turnīra kārtībā. Ja kādus nevar pievienot, otrs dialogs pasaka, kurus un kāpēc, un jautā, vai pievienot pārējos. Skatiet [Spēlētāju ievadīšana sacensībās](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Dubultspēļu pāri izveido no diviem jau ievadītiem spēlētājiem.** Turnīra cilnē Spēlētāji nospiediet **Pievienot pāri**, izvēlieties pirmo un otro spēlētāju un vēlreiz nospiediet **Pievienot pāri**. Pāri sauc “Sam Someone & Alex Another” vai “Peter & Rosie Landrebe”, ja abiem ir viens uzvārds, un tas pārstāv to, ko pārstāv tā spēlētāji. Dialogs paliek atvērts, lai varētu izveidot nākamo pāri. Skatiet [Spēlētāji](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Jauns turnīrs sākas mēnesī, kurā tagad esat.** Tā sākums ir šī mēneša pirmā diena un beigas ir tā pati diena, un beigas seko sākumam, kamēr izvēlaties savas.
+- **Rangu failos vārdi tiek rakstīti vienkārši.** Attēls turnīra nosaukumā tiek izlaists, izliekts apostrofs tiek rakstīts kā apostrofs, un burti kā ø, ł un ß tiek rakstīti kā vienkāršie burti, lai vārdi būtu tādi, kādi ir rangu sarakstā.
+
+### Turnīru sekošana
+
+- **Palīdzība atrod atbildi pēc tā, ko domājat.** Uzdodiet jautājumu palīdzības pirmās lapas meklēšanas lodziņā, un tā atradīs rakstu pat tad, ja rakstā lietoti citi vārdi ar to pašu nozīmi.
+- **Palīdzības pirmā lapa piedāvā populārus jautājumus un tēmas kā kartes.** Pieci jautājumi, ko cilvēki uzdod, ved pie atbildēm, un katra tēma ir karte, kas pasaka, kas tajā ir.
+- **Palīdzība ir atjaunināta.** Katra lapa tika lasīta pret vietni un laboņta, un katrs attēls uzņemts no jauna. Jauna lapa, Turnīru sekošana, pasaka, ko varat darīt sarakstos un turnīra lapās. Pagaidām tā ir tikai angliski.
+- **Gada mēneši seko datumu kārtībai.** Kad turnīri sakārtoti ar jaunāko pirmo, gada lapas mēneši sākas ar decembri, un datumi un nosaukumi ir līdzināti katrā atvērtajā mēnesī.
+- **Piezīmju lapas virsraksts ir Pārvaldnieka piezīmes**, un tā saka, ka piezīmju vēl nav, ja to nav.
+- **Vairāk turnīru ir savā valstī.** Turnīri ar Happy Valley nosaukumā ir Kanādā, un vācu, šveiciešu, čehu, norvēģu, zviedru un portugāļu turnīri, kas tika rādīti nepareizā valstī, ir savā.
+
 ## Izlaists 2026-11-03
 
 ### Turnīru sekošana

@@ -1,5 +1,22 @@
 # What's new
 
+## Released 2026-11-05
+
+### Managing a tournament
+
+- **Several players can be added to a competition at once.** On a competition's Players tab, press **Add Several**, beside **Add Player**, tick the players you want, or the box above the list for all of them, and press **Add Selected**. They are put in the tournament's order. If some cannot be added, a second dialog says which and why, and asks whether to add the rest. See [Entering players in a competition](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **A doubles pair is made from two players already entered.** On the tournament's Players tab, press **Add Pair**, choose the first and the second player, and press **Add Pair** again. The pair is named "Sam Someone & Alex Another", or "Peter & Rosie Landrebe" where both have the same last name, and it represents what its players do. The dialog stays open so that the next pair can be made. See [Players](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **A new tournament begins in the month it is now.** Its start is the first of this month and its finish is the same day, and the finish follows the start until you choose one of your own.
+
+### Following a tournament
+
+- **The help finds an answer by what you mean.** Ask a question in the search box on the help's first page, and it finds the article even where the article uses other words that mean the same.
+- **The first page of the help offers popular questions and the subjects as cards.** Five questions people ask lead to their answers, and each subject is a card saying what is in it.
+- **The help is brought up to date.** Every page was read against the site and corrected, and every picture was taken again. A new page, Following a tournament, says what you can do on the lists and a tournament's pages. It is in English only for now.
+- **A year's months follow the order of the dates.** When tournaments are sorted latest first, the months of a year's page begin with December, and the dates and names line up in every month that is open.
+- **The Notes page is headed Manager's Notes**, and says there are no notes yet where there are none.
+- **More tournaments are in their own country.** Tournaments with Happy Valley in their name are in Canada, and German, Swiss, Czech, Norwegian, Swedish and Portuguese tournaments that were shown in the wrong country are in their own.
+
 ## Released 2026-11-03
 
 ### Following a tournament

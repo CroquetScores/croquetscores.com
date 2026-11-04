@@ -1,5 +1,23 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-05
+
+### Rheoli twrnamaint
+
+- **Gellir ychwanegu sawl chwaraewr at gystadleuaeth ar unwaith.** Ar dab Chwaraewyr cystadleuaeth, pwyswch **Ychwanegu sawl un**, wrth ymyl **Ychwanegu chwaraewr**, ticiwch y chwaraewyr rydych eu heisiau, neu'r blwch uwchben y rhestr ar gyfer pob un, a phwyswch **Ychwanegu'r rhai a ddewiswyd**. Fe'u gosodir yn nhrefn y twrnamaint. Os na ellir ychwanegu rhai, mae ail ddeialog yn dweud pa rai a pham, ac yn gofyn a ddylid ychwanegu'r gweddill. Gweler [Rhoi chwaraewyr mewn cystadleuaeth](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Gwneir pâr dyblau o ddau chwaraewr sydd eisoes i mewn.** Ar dab Chwaraewyr y twrnamaint, pwyswch **Ychwanegu pâr**, dewiswch y chwaraewr cyntaf a'r ail, a phwyswch **Ychwanegu pâr** eto. Enwir y pâr yn "Sam Someone & Alex Another", neu "Peter & Rosie Landrebe" lle mae gan y ddau yr un cyfenw, ac mae'n cynrychioli'r hyn y mae ei chwaraewyr yn ei gynrychioli. Mae'r deialog yn aros ar agor fel y gellir gwneud y pâr nesaf. Gweler [Chwaraewyr](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Mae twrnamaint newydd yn dechrau yn y mis y mae ynddo nawr.** Ei ddechrau yw'r cyntaf o'r mis hwn a'i ddiwedd yw'r un diwrnod, ac mae'r diwedd yn dilyn y dechrau nes i chi ddewis un eich hun.
+- **Mae'r ffeiliau graddio yn ysgrifennu enwau'n blaen.** Gadewir llun yn enw twrnamaint allan, ysgrifennir collnod cyrliog fel collnod, ac ysgrifennir llythrennau fel ø, ł a ß fel y llythrennau plaen, fel bod yr enwau yr un fath â'r rhai sydd gan y rhestr raddio.
+
+### Dilyn twrnamaint
+
+- **Mae'r cymorth yn dod o hyd i ateb yn ôl yr hyn rydych yn ei olygu.** Gofynnwch gwestiwn yn y blwch chwilio ar dudalen gyntaf y cymorth, a bydd yn dod o hyd i'r erthygl hyd yn oed lle mae'r erthygl yn defnyddio geiriau eraill sy'n golygu'r un peth.
+- **Mae tudalen gyntaf y cymorth yn cynnig cwestiynau poblogaidd a'r pynciau fel cardiau.** Mae pum cwestiwn y mae pobl yn eu gofyn yn arwain at eu hatebion, ac mae pob pwnc yn gerdyn sy'n dweud beth sydd ynddo.
+- **Mae'r cymorth wedi'i ddiweddaru.** Darllenwyd pob tudalen yn erbyn y wefan a'i chywiro, a thynnwyd pob llun eto. Mae tudalen newydd, Dilyn twrnamaint, yn dweud beth y gallwch ei wneud ar y rhestrau ac ar dudalennau twrnamaint. Dim ond yn Saesneg y mae am y tro.
+- **Mae misoedd blwyddyn yn dilyn trefn y dyddiadau.** Pan fo twrnameintiau wedi'u trefnu gyda'r diweddaraf yn gyntaf, mae misoedd tudalen blwyddyn yn dechrau gyda Rhagfyr, ac mae'r dyddiadau a'r enwau'n cyd-fynd ym mhob mis agored.
+- **Teitl tudalen y nodiadau yw Nodiadau'r Rheolwyr**, ac mae'n dweud nad oes nodiadau eto lle nad oes dim.
+- **Mae mwy o dwrnameintiau yn eu gwlad eu hunain.** Mae twrnameintiau â Happy Valley yn eu henw yng Nghanada, ac mae twrnameintiau Almaenig, Swisaidd, Tsiecaidd, Norwyaidd, Swedaidd a Phortiwgalaidd a ddangoswyd yn y wlad anghywir yn eu gwlad eu hunain.
+
 ## Rhyddhawyd 2026-11-03
 
 ### Dilyn twrnamaint

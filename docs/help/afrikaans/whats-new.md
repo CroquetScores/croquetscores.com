@@ -1,5 +1,23 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-05
+
+### 'n Toernooi bestuur
+
+- **Verskeie spelers kan gelyk by 'n kompetisie gevoeg word.** Druk op 'n kompetisie se Spelers-oortjie op **Voeg etlike by**, langs **Voeg speler by**, vink die spelers aan wat jy wil hê, of die blokkie bokant die lys vir almal, en druk op **Voeg gekose by**. Hulle word in die toernooi se volgorde geplaas. As sommige nie bygevoeg kan word nie, sê 'n tweede dialoog watter en hoekom, en vra of die res bygevoeg moet word. Sien [Hoe om spelers in 'n kompetisie in te skryf](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **'n Dubbelspan word van twee spelers gemaak wat reeds ingeskryf is.** Druk op die toernooi se Spelers-oortjie op **Voeg paar by**, kies die eerste en die tweede speler, en druk weer op **Voeg paar by**. Die paar kry die naam "Sam Someone & Alex Another", of "Peter & Rosie Landrebe" waar albei dieselfde van het, en verteenwoordig wat sy spelers verteenwoordig. Die dialoog bly oop sodat die volgende paar gemaak kan word. Sien [Spelers](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **'n Nuwe toernooi begin in die maand waarin dit nou is.** Die begin is die eerste van hierdie maand en die einde is dieselfde dag, en die einde volg die begin totdat jy self een kies.
+- **Die ranglyslêers skryf name eenvoudig.** 'n Prentjie in 'n toernooi se naam word weggelaat, 'n krullerige afkappingsteken word as 'n afkappingsteken geskryf, en letters soos ø, ł en ß word as die gewone letters geskryf, sodat die name dié is wat die ranglys het.
+
+### 'n Toernooi volg
+
+- **Die hulp vind 'n antwoord volgens wat jy bedoel.** Vra 'n vraag in die soekkassie op die hulp se eerste bladsy, en dit vind die artikel selfs waar die artikel ander woorde met dieselfde betekenis gebruik.
+- **Die eerste bladsy van die hulp bied gewilde vrae en die onderwerpe as kaarte aan.** Vyf vrae wat mense vra, lei na hul antwoorde, en elke onderwerp is 'n kaart wat sê wat daarin is.
+- **Die hulp is op datum gebring.** Elke bladsy is teen die webwerf gelees en reggestel, en elke prent is oor geneem. 'n Nuwe bladsy, 'n Toernooi volg, sê wat jy op die lyste en 'n toernooi se bladsye kan doen. Dit is vir eers net in Engels.
+- **'n Jaar se maande volg die volgorde van die datums.** Wanneer toernooie nuutste eerste gesorteer word, begin die maande van 'n jaar se bladsy met Desember, en die datums en name lyn op in elke maand wat oop is.
+- **Die Notas-bladsy se opskrif is Bestuurders se notas**, en dit sê daar is nog geen notas nie waar daar geen is nie.
+- **Meer toernooie is in hul eie land.** Toernooie met Happy Valley in hul naam is in Kanada, en Duitse, Switserse, Tsjeggiese, Noorse, Sweedse en Portugese toernooie wat in die verkeerde land gewys is, is in hul eie.
+
 ## Vrygestel 2026-11-03
 
 ### 'n Toernooi volg
