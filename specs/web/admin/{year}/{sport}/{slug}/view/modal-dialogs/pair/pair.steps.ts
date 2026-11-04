@@ -178,6 +178,30 @@ When("Add Pair is pressed", async function (this: SpecWorld) {
   await settled(this);
 });
 
+// Nothing is sent where either player is not chosen, so there is no answer to
+// wait for, and what is asked is whether a request was made at all.
+const asked = new WeakMap<SpecWorld, string[]>();
+
+When(
+  "Add Pair is pressed with a player not chosen",
+  async function (this: SpecWorld) {
+    const requests: string[] = [];
+    asked.set(this, requests);
+    this.browserPage.on("request", (request) => {
+      if (request.url().endsWith("/pairs")) requests.push(request.method());
+    });
+    await dialogOf(this).locator(".dialog-buttons button").first().click();
+    await settled(this);
+    // A request a click makes is made before it returns, but the page's own
+    // answer to it is not, so a moment is given before saying there was none.
+    await this.browserPage.waitForTimeout(300);
+  },
+);
+
+Then("no pair was asked for", function (this: SpecWorld) {
+  assert.deepEqual(asked.get(this), []);
+});
+
 When("the pair dialog is cancelled", async function (this: SpecWorld) {
   await dialogOf(this).locator(".dialog-buttons button").last().click();
   await settled(this);

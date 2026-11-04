@@ -8,8 +8,10 @@ Feature: What a doubles pair is called
   Where both have the same last name, the pair is called by the two first names
   and the one last name, as "Peter & Rosie Landrebe", which is how a doubles
   pair of a family is written and said. A last name is the last word of a
-  name, and is the same name however it is capitalised, as a reader would take
-  it to be (`addPlayer.feature`). A name of one word has no last name, so it is
+  name, with the small words that belong to it before it ("van der Berg",
+  "de la Cruz") and a generation after it ("Smith Jr", "Smith III"), so that
+  what is left is the first names. It is the same name however it is
+  capitalised, as a reader would take it to be (`addPlayer.feature`). A name of one word has no last name, so it is
   never the same as another's, and a pair of two such names is called as any
   other is.
 
@@ -62,6 +64,30 @@ Feature: What a doubles pair is called
       And the second name "Tom Smith"
       When the pair is named
       Then the pair is called "Mary Jane & Tom Smith"
+
+    Scenario: The small words before a last name belong to it
+      Given the first name "Jan van der Berg"
+      And the second name "Piet van der Berg"
+      When the pair is named
+      Then the pair is called "Jan & Piet van der Berg"
+
+    Scenario: A generation after a last name belongs to it
+      Given the first name "Jo Smith Jr"
+      And the second name "Al Smith Jr"
+      When the pair is named
+      Then the pair is called "Jo & Al Smith Jr"
+
+    Scenario: A generation is not the last name of the people who have it
+      Given the first name "Jo Smith Jr"
+      And the second name "Al Jones Jr"
+      When the pair is named
+      Then the pair is called "Jo Smith Jr & Al Jones Jr"
+
+    Scenario: A last name with a generation is not the same as one without
+      Given the first name "Jo Smith"
+      And the second name "Al Smith Jr"
+      When the pair is named
+      Then the pair is called "Jo Smith & Al Smith Jr"
 
     Scenario: A first name alone is not a last name
       Given the first name "Landrebe"

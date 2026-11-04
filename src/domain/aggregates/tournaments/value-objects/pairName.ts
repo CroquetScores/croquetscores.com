@@ -1,9 +1,41 @@
 // What a doubles pair is called (pairName.feature).
 
-// A name is split at its last space: what comes before is the first names, and
-// what comes after is the last name. A name of one word has no last name,
-// which is not the same as an empty one, so that two such names are never
-// taken to share it.
+// The small words that belong to a last name when they come before it, as in
+// "van der Berg" and "de la Cruz", so that what is left is the first names.
+const particles = new Set([
+  "van",
+  "von",
+  "der",
+  "den",
+  "de",
+  "del",
+  "della",
+  "di",
+  "da",
+  "du",
+  "la",
+  "le",
+  "ter",
+  "ten",
+]);
+
+// A generation said after a last name, which is part of it: "Smith Jr" is not
+// "Smith", and two people who are both "Jr" do not share a last name by it.
+const generations = new Set(["jr", "jr.", "sr", "sr.", "ii", "iii", "iv"]);
+
+// Where the last name begins in the words of a name: the last word, with a
+// generation after it and the small words before it, and always after the first
+// word, which is a first name however small a word it is.
+const lastNameStart = (words: readonly string[]): number => {
+  let at = words.length - 1;
+  if (at > 1 && generations.has(words[at]?.toLowerCase() ?? "")) at -= 1;
+  while (at > 1 && particles.has(words[at - 1]?.toLowerCase() ?? "")) at -= 1;
+  return at;
+};
+
+// A name is split into its first names and its last name. A name of one word
+// has no last name, which is not the same as an empty one, so that two such
+// names are never taken to share it.
 const parts = (
   written: string,
 ): {
@@ -12,10 +44,14 @@ const parts = (
   readonly last?: string;
 } => {
   const name = written.trim();
-  const at = name.lastIndexOf(" ");
-  return at === -1
-    ? { name, first: name }
-    : { name, first: name.slice(0, at).trim(), last: name.slice(at + 1) };
+  const words = name.split(/\s+/);
+  if (words.length === 1) return { name, first: name };
+  const at = lastNameStart(words);
+  return {
+    name,
+    first: words.slice(0, at).join(" "),
+    last: words.slice(at).join(" "),
+  };
 };
 
 const sameLastName = (one: string, other: string): boolean =>

@@ -9,16 +9,17 @@ import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 
 // The pair dialog (pair.feature), over a tournament's Players tab: a first
-// player and a second player, each chosen from the tournament's players in
-// use, the second from those but the first, and Add Pair makes a doubles pair of
-// them. The pair's
-// name is made by the site from the two names (pairName.feature), so it is not
-// asked for here.
+// player and a second player, each chosen from the tournament's players in use,
+// the second from those but the first, and Add Pair makes a doubles pair of
+// them. The pair's name is made by the site from the two names
+// (pairName.feature), so it is not asked for here.
 //
 // Adding keeps it open, says which pair was added and empties both choices for
-// the next, as adding a player does. What was chosen stays chosen when it is
-// refused, so that it can be put right. A refusal about one of the two is said beneath it; one about the pair
-// as a whole, such as a name the tournament already has, is said above them.
+// the next, as adding a player does. Nothing is sent until both are chosen, as
+// nothing is where no player is chosen to add on a competition's tab. What was
+// chosen stays chosen when it is refused, so that it can be put right. A
+// refusal about one of the two is said beneath it; one about the pair as a
+// whole, such as a name the tournament already has, is said above them.
 
 interface Props {
   /** The tournament's id. */
@@ -64,7 +65,7 @@ export const PairDialog = ({
   });
 
   const send = async (): Promise<void> => {
-    if (sending) return;
+    if (sending || chosen.first === "" || chosen.second === "") return;
     setSending(true);
     try {
       const response = await fetch(

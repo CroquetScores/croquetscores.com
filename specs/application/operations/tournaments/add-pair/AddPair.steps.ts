@@ -29,11 +29,15 @@ const playerIdIn = async (
   tournament: TournamentId,
   name: string,
 ): Promise<string> => {
+  if (name === NO_ID) return NO_ID;
   const found = (await inHandOf(world).load(tournament))?.players.find(
     (player) => player.name.toString() === name,
   );
   return (found?.id ?? TournamentPlayerId.create()).value;
 };
+
+// What nothing could have been given as the id of a tournament's player.
+const NO_ID = "tournament-player/not-an-id";
 
 const pairing = async (
   world: SpecWorld,
@@ -175,5 +179,43 @@ Then(
     );
     assert.ok(player !== undefined, `The tournament has no player ${name}.`);
     assert.equal(player.representing, undefined);
+  },
+);
+
+// A player written as no id is named by what stands for it, so that the same
+// steps that name a player by name name it.
+When(
+  "the reader signed in to the account for {string} pairs a player written as no id with the player {string} in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    second: string,
+    name: string,
+  ) {
+    await pairing(
+      this,
+      (await accountFor(this, address)).value,
+      tournamentNamed(this, name),
+      NO_ID,
+      second,
+    );
+  },
+);
+
+When(
+  "the reader signed in to the account for {string} pairs the player {string} with a player written as no id in {string}",
+  async function (
+    this: SpecWorld,
+    address: string,
+    first: string,
+    name: string,
+  ) {
+    await pairing(
+      this,
+      (await accountFor(this, address)).value,
+      tournamentNamed(this, name),
+      first,
+      NO_ID,
+    );
   },
 );

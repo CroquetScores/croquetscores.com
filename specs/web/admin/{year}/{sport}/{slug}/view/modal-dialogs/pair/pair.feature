@@ -253,6 +253,32 @@ Feature: A doubles pair is added from two of the tournament's players in a modal
       When "Sam Someone" is chosen as the first player
       Then the pair dialog says nobody was added
 
+  Rule: Both players must be chosen before a pair is made
+
+    Scenario: Add Pair with nobody chosen does nothing
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      When Add Pair is pressed with a player not chosen
+      Then the pair dialog is open
+      And no pair was asked for
+      And "Spring Open" does not have the player "Sam Someone & Alex Another"
+
+    Scenario: Add Pair with only the first player chosen does nothing
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      And "Sam Someone" is chosen as the first player
+      When Add Pair is pressed with a player not chosen
+      Then the pair dialog says nobody was added
+      And no pair was asked for
+
+    Scenario: Add Pair with only the second player chosen does nothing
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      And "Alex Another" is chosen as the second player
+      When Add Pair is pressed with a player not chosen
+      Then the pair dialog is open
+      And no pair was asked for
+
   Rule: Cancel keeps nothing
 
     Scenario: Cancel closes the dialog

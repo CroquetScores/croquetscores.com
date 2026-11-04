@@ -24,6 +24,14 @@ Feature: Adding a doubles pair to a tournament from two of its players
   `Tournament.PlayerNameTaken`. The other way round is another name, and
   another pair.
 
+  A pair is a player, and is kept no differently: nothing links it to the two
+  it was made of, so correcting or archiving one of them later does not change
+  the pair, which is a name and what it represents, as they were when it was
+  made. No format of tournament is played in pairs, so any tournament can have
+  one, and a pair can be paired as any player can. An id that is no player's id
+  names no player the tournament has, and is refused as one is that is not
+  there.
+
   Only a manager of the tournament can ask, and a tournament there is not is
   refused as `AddPair.NoSuchTournament`. A forgotten account makes no pair, and
   is refused with `Account.Forgotten`.
@@ -121,6 +129,14 @@ Feature: Adding a doubles pair to a tournament from two of its players
       Given "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" pairs the players "Sam Someone" and "Alex Another" in "Spring Open"
       Then it is refused with "TournamentPlayer.Archived"
+
+    Scenario: A first player written as no id is refused as a player the tournament does not have
+      When the reader signed in to the account for "organiser@example.com" pairs a player written as no id with the player "Alex Another" in "Spring Open"
+      Then it is refused with "Tournament.NoSuchPlayer"
+
+    Scenario: A second player written as no id is refused as a player the tournament does not have
+      When the reader signed in to the account for "organiser@example.com" pairs the player "Sam Someone" with a player written as no id in "Spring Open"
+      Then it is refused with "Tournament.NoSuchPlayer"
 
     Scenario: A refused pair adds nobody
       When the reader signed in to the account for "organiser@example.com" pairs the players "Sam Someone" and "Nobody Known" in "Spring Open"
