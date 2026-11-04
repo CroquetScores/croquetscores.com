@@ -38,7 +38,7 @@ Los jugadores se listan en el orden de la competición, que es el orden en que s
 
 ![El diálogo Trasladar](images/carry-forward-dialog.png)
 
-El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y perdidas, y aros a favor y en contra. Todas son opcionales. Una cuenta dejada vacía no arrastra nada, que no es lo mismo que arrastrar 0, de modo que quien la cambie después la vea tal como se dejó. Pulsa **Guardar** para guardar las seis.
+El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y perdidas, y aros a favor y en contra. Todas son opcionales. Una cuenta dejada vacía no traslada nada, que no es lo mismo que trasladar 0, de modo que quien la cambie después la vea tal como se dejó. Pulsa **Guardar** para guardar las seis.
 
 ## Quitar a un jugador {#removing-a-player}
 

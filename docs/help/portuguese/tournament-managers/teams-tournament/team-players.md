@@ -18,7 +18,7 @@ Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a págin
 
 **Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Croquet de Golfe, os dois esportes cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador. Conforme você digita, são oferecidos os jogadores que os rankings mundiais conhecem cujos nomes começam daquele jeito, e ao lado do nome no ranking mundial uma marca de certo diz que os rankings conhecem o nome, e um ponto de interrogação diz que não. É só um aviso: um nome que os rankings não conhecem é guardado tão prontamente quanto um que conhecem.
 
-Um jogador nunca se chama "Bye": um nome cuja primeira palavra é a palavra inglesa "bye" é recusado.
+Um jogador nunca se chama "Bye": um nome que é a palavra inglesa "Bye", ou "Bye" com um número, como "Bye 2", "Bye-2" ou "Bye (2)", é recusado. Um nome que apenas começa com a palavra, como "Bye / Bassett", é de uma pessoa.
 
 Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus campos são esvaziados para o próximo, com o cursor de volta no nome. Adicione a equipe inteira desse jeito e depois pressione **Cancelar** para fechar o diálogo.
 

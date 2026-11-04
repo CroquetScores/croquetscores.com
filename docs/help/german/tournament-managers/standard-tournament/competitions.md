@@ -1,6 +1,6 @@
 # Wettbewerbe
 
-Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turniers hinzugefügt, geordnet und beiseitegelegt. Ein Wettbewerb ist eine Gruppe, eine K.-o.-Runde oder ein Schweizer System. Jeder hat eine eigene Seite, auf der seine Spieler aufgenommen und seine Ergebnisse eingegeben werden.
+Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turniers hinzugefügt, geordnet und beiseitegelegt. Ein Wettbewerb ist ein Block, ein K.-o.-Turnier oder ein Schweizer System. Jeder hat eine eigene Seite, auf der seine Spieler aufgenommen und seine Ergebnisse eingegeben werden.
 
 ![Der Reiter Wettbewerbe, mit Wettbewerben jeder Art und einem archivierten](images/competitions-tab.png)
 
@@ -8,41 +8,41 @@ Auf dem Reiter **Wettbewerbe** der Turnierseite werden die Wettbewerbe des Turni
 
 Drücken Sie **Wettbewerb hinzufügen** über der Liste. Ein Dialog öffnet sich über der Seite und fragt nach dem Namen des Wettbewerbs, seiner Art und der Gestalt, die seine Art hat.
 
-**Name** ist das, wonach die Spieler auf der Turnierseite suchen, um ihre Spiele zu finden. Er ist zwischen 1 und 254 Zeichen lang, und ein einzelner Buchstabe genügt, weil eine Gruppe oft nur so heißt. Zwei Wettbewerbe eines Turniers können nicht denselben Namen haben.
+**Name** ist das, wonach die Spieler auf der Turnierseite suchen, um ihre Spiele zu finden. Er ist zwischen 1 und 254 Zeichen lang, und ein einzelner Buchstabe genügt, weil ein Block oft nur so heißt. Zwei Wettbewerbe eines Turniers können nicht denselben Namen haben.
 
-**Art** ist Gruppe, K.-o.-Runde oder Schweizer System. Der Dialog beginnt auf Gruppe, was die meisten Wettbewerbe sind.
+**Art** ist Block, K.-o.-Turnier oder Schweizer System. Der Dialog beginnt auf Block, was die meisten Wettbewerbe sind.
 
-### Eine Gruppe
+### Ein Block
 
-Eine Gruppe fragt, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, und in wie vielen **Runden** sie gespielt wird, und wie bei gleich vielen gewonnenen Begegnungen entschieden wird (**Bei Gleichstand**).
+Ein Block fragt, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, und in wie vielen **Runden** sie gespielt wird, und wie bei gleich vielen gewonnenen Begegnungen entschieden wird (**Bei Gleichstand**).
 
-**Best of** beginnt auf 1. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einer Gruppe ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
+**Best of** beginnt auf 1. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einem Block ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
 
-**Runden** ist, wie oft jedes Spielerpaar der Gruppe aufeinandertrifft, mit einer Begegnung in jeder Runde. Es beginnt auf 1, und 1 ist fast immer das, was eine Gruppe will: Jeder Spieler spielt einmal gegen jeden anderen. Erhöhen Sie es nur für eine Gruppe, in der man wieder aufeinandertrifft, etwa eine doppelte Jeder-gegen-jeden-Runde, in der 2 jedes Paar zwei Begegnungen spielen lässt.
+**Runden** ist, wie oft jedes Spielerpaar des Blocks aufeinandertrifft, mit einer Begegnung in jeder Runde. Es beginnt auf 1, und 1 ist fast immer das, was ein Block will: Jeder Spieler spielt einmal gegen jeden anderen. Erhöhen Sie es nur für einen Block, in dem man wieder aufeinandertrifft, etwa eine doppelte Jeder-gegen-jeden-Runde, in der 2 jedes Paar zwei Begegnungen spielen lässt.
 
-**Bei Gleichstand** legt fest, wie Spieler unterschieden werden, die gleich viele ihrer Begegnungen gewonnen haben. Es gibt drei Möglichkeiten, und Gruppen eines Turniers können verschiedene verwenden, da Bestimmungen sich unterscheiden. **Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat** ist, wie Gruppen schon immer gereiht wurden, und womit eine neue Gruppe beginnt: Spieler mit gleich vielen gewonnenen Begegnungen werden nach ihrer Spieldifferenz unterschieden, die dann noch Gleichen nach ihrer Tordifferenz und die dann noch Gleichen danach, wer von ihnen wen geschlagen hat. Besteht jede Begegnung aus einem einzigen Spiel, bleibt die Spieldifferenz außen vor. **Wer wen geschlagen hat** sieht nur auf die Begegnungen, die die gleichauf liegenden Spieler gegeneinander gespielt haben. **Andere** ist für Bestimmungen, die die Seite nicht kennt, und unterscheidet niemanden. Spieler, die sich nicht unterscheiden lassen, teilen sich einen Platz, angezeigt als =2, und die Seite sagt unter dem Raster, wie gleichauf liegende Spieler unterschieden werden.
+**Bei Gleichstand** legt fest, wie Spieler unterschieden werden, die gleich viele ihrer Begegnungen gewonnen haben. Es gibt drei Möglichkeiten, und Blöcke eines Turniers können verschiedene verwenden, da Bestimmungen sich unterscheiden. **Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat** ist, wie Blöcke schon immer gereiht wurden, und womit ein neuer Block beginnt: Spieler mit gleich vielen gewonnenen Begegnungen werden nach ihrer Spieldifferenz unterschieden, die dann noch Gleichen nach ihrer Tordifferenz und die dann noch Gleichen danach, wer von ihnen wen geschlagen hat. Besteht jede Begegnung aus einem einzigen Spiel, bleibt die Spieldifferenz außen vor. **Wer wen geschlagen hat** sieht nur auf die Begegnungen, die die gleichauf liegenden Spieler gegeneinander gespielt haben. **Andere** ist für Bestimmungen, die die Seite nicht kennt, und unterscheidet niemanden. Spieler, die sich nicht unterscheiden lassen, teilen sich einen Platz, angezeigt als =2, und die Seite sagt unter dem Raster, wie gleichauf liegende Spieler unterschieden werden.
 
-![Der Dialog Wettbewerb hinzufügen für eine Gruppe](images/add-competition-block.png)
+![Der Dialog Wettbewerb hinzufügen für einen Block](images/add-competition-block.png)
 
 ### Ein Schweizer System
 
-Ein Schweizer System fragt nur, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, das wie bei einer Gruppe auf 1 beginnt. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einem Schweizer System ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
+Ein Schweizer System fragt nur, über wie viele Spiele jede Begegnung höchstens geht, das **Best of**, das wie bei einem Block auf 1 beginnt. Ein Best of 3 gewinnt, wer zwei Spiele gewinnt. Die Zahl darf gerade sein, weil in einem Schweizer System ein Spieler nach den Spielen gereiht wird, die er gewinnt, und eine Begegnung über zwei Spiele, die sich beide eines teilen, ein Ergebnis wie jedes andere ist.
 
 ![Der Dialog Wettbewerb hinzufügen für ein Schweizer System](images/add-competition-swiss.png)
 
-### Eine K.-o.-Runde
+### Ein K.-o.-Turnier
 
-Eine K.-o.-Runde fragt, wie viele **Plätze** ihre Auslosung hat und über wie viele Spiele jede Runde höchstens geht. Die Plätze werden als 2, 4, 8, 16, 32, 64 und 128 angeboten, weil sich keine andere Zahl Runde um Runde bis zu einem Finale halbieren ließe, und der Dialog beginnt auf 8. Plätze, die nach dem Aufnehmen der Spieler übrig bleiben, werden mit Freilosen gefüllt, die dort hinzugefügt werden, wo die Spieler sind.
+Ein K.-o.-Turnier fragt, wie viele **Plätze** seine Auslosung hat und über wie viele Spiele jede Runde höchstens geht. Die Plätze werden als 2, 4, 8, 16, 32, 64 und 128 angeboten, weil sich keine andere Zahl Runde um Runde bis zu einem Finale halbieren ließe, und der Dialog beginnt auf 8. Plätze, die nach dem Aufnehmen der Spieler übrig bleiben, werden mit Freilosen gefüllt, die dort hinzugefügt werden, wo die Spieler sind.
 
-Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu halbieren; eine Auslosung mit 8 Plätzen hat also drei Runden. Der Dialog fragt für jede, über wie viele Spiele sie höchstens geht, zusammen unter **Best of je Runde**, in der Reihenfolge, in der sie gespielt werden. Die letzten drei heißen so, wie man von den Runden einer Auslosung spricht, **Viertelfinale**, **Halbfinale** und **Finale**, und alle davor nach ihrer Nummer, Runde 1 zuerst. Mehr Plätze zu wählen fügt Runden am Anfang der Auslosung hinzu, und weniger zu wählen nimmt sie am Anfang weg, sodass das, was für das Finale eingegeben wurde, weiterhin das des Finales ist. Jede Runde geht über eine ungerade Zahl von Spielen, weil eine Begegnung in einer K.-o.-Runde einen Sieger braucht.
+Eine Auslosung hat so viele Runden, wie es braucht, um ihre Plätze auf einen zu halbieren; eine Auslosung mit 8 Plätzen hat also drei Runden. Der Dialog fragt für jede, über wie viele Spiele sie höchstens geht, zusammen unter **Best of je Runde**, in der Reihenfolge, in der sie gespielt werden. Die letzten drei heißen so, wie man von den Runden einer Auslosung spricht, **Viertelfinale**, **Halbfinale** und **Finale**, und alle davor nach ihrer Nummer, Runde 1 zuerst. Mehr Plätze zu wählen fügt Runden am Anfang der Auslosung hinzu, und weniger zu wählen nimmt sie am Anfang weg, sodass das, was für das Finale eingegeben wurde, weiterhin das des Finales ist. Jede Runde geht über eine ungerade Zahl von Spielen, weil eine Begegnung in einem K.-o.-Turnier einen Sieger braucht.
 
-![Der Dialog Wettbewerb hinzufügen für eine K.-o.-Runde mit 4 Plätzen](images/add-competition-knockout.png)
+![Der Dialog Wettbewerb hinzufügen für ein K.-o.-Turnier mit 4 Plätzen](images/add-competition-knockout.png)
 
 ### Ein K.-o.-Turnier der Verlierer {#losers-knockout}
 
-Ein K.-o.-Turnier kann die Verlierer einer Runde in ein eigenes K.-o.-Turnier weiterschicken, ein K.-o.-Turnier der Verlierer. Klicken Sie unter **Best of je Runde** eines K.-o.-Turniers auf **K.-o.-Turnier der Verlierer hinzufügen**. Ein Dialog fragt nach **Verlierer von**, der Runde, deren Verlierer weiterspielen, aus allen Runden außer dem Finale, und nach **Name des K.-o.-Turniers der Verlierer**. Klicken Sie auf **Hinzufügen**, um es in die Liste unter der Schaltfläche zu übernehmen, wo **Entfernen** es wieder entfernt. Es wird zusammen mit dem K.-o.-Turnier hinzugefügt, und wird eines von beiden abgelehnt, wird keines hinzugefügt.
+Ein K.-o.-Turnier kann die Verlierer einer Runde in ein eigenes K.-o.-Turnier weiterschicken, ein K.-o.-Turnier der Verlierer. Drücken Sie unter **Best of je Runde** eines K.-o.-Turniers auf **K.-o.-Turnier der Verlierer hinzufügen**. Ein Dialog fragt nach **Verlierer von**, der Runde, deren Verlierer weiterspielen, aus allen Runden außer dem Finale, und nach **Name des K.-o.-Turniers der Verlierer**. Drücken Sie **Hinzufügen**, um es in die Liste unter der Schaltfläche zu übernehmen, wo **Entfernen** es wieder entfernt. Es wird zusammen mit dem K.-o.-Turnier hinzugefügt, und wird eines von beiden abgelehnt, wird keines hinzugefügt.
 
-Ein K.-o.-Turnier der Verlierer hat einen Platz für jedes Spiel dieser Runde, und jede seiner Runden ist ein Best-of-1, was sich mit **Bearbeiten** ändern lässt. Seine Spieler werden eingetragen, sobald die Spiele dieser Runde entschieden sind, in der Reihenfolge der Auslosung, daher zeigt sein Reiter **Spieler** sie nur an. Wird eine Partie korrigiert oder beiseitegelegt, wird der Verlierer verschoben oder wieder herausgenommen, außer er hat schon weitergespielt.
+Ein K.-o.-Turnier der Verlierer hat einen Platz für jedes Spiel dieser Runde, und jede seiner Runden ist ein Best-of-1, was sich mit **Bearbeiten** ändern lässt. Seine Spieler werden eingetragen, sobald die Spiele dieser Runde entschieden sind, in der Reihenfolge der Auslosung, daher zeigt sein Reiter **Spieler** sie nur an. Wird ein Spiel korrigiert oder beiseitegelegt, wird der Verlierer verschoben oder wieder herausgenommen, außer er hat schon weitergespielt.
 
 Die Seite eines K.-o.-Turniers hat einen dritten Reiter, **Verlierer**, nach Spieler und Ergebnisse, der die K.-o.-Turniere aufführt, die seine Verlierer übernehmen, und jedes führt zu seiner Seite. **K.-o.-Turnier der Verlierer hinzufügen** gibt es dort auch, und es fragt nach denselben zwei Dingen; hier wird ein K.-o.-Turnier der Verlierer sofort hinzugefügt. Nur ein K.-o.-Turnier hat den Reiter, und ein Ergebniserfasser bekommt ihn nicht angeboten.
 
@@ -50,15 +50,15 @@ Bei einem bereits hinzugefügten K.-o.-Turnier zeigt **Bearbeiten** dieselbe Sch
 
 ### Wie gespielt und gezählt wird
 
-Jede Art fragt unter ihrer Gestalt dasselbe vierfach.
+Jede Art fragt unter ihrer Gestalt dieselben vier Dinge.
 
 **Mit Vorgaben gespielt.** Haken Sie das für einen Wettbewerb an, der mit Vorgaben gespielt wird.
 
-**Lässt Unentschieden zu.** Haken Sie das an, wenn ein Spiel enden kann, ohne dass einer der Spieler gewinnt. Die meisten Wettbewerbe erlauben das nicht. Ist es angehakt, wird ein Ergebnis mit gleichen Punkten und ohne Markierung als Unentschieden gespeichert; ist es nicht angehakt, muss ein Spiel mit gleichen Punkten durch eine Markierung hinter den Punkten des Siegers sagen, wer gewonnen hat, etwa „6w“. Das Match einer K.-o.-Runde hat immer einen Sieger, ein unentschiedenes Spiel entscheidet es also nicht.
+**Lässt Unentschieden zu.** Haken Sie das an, wenn ein Spiel enden kann, ohne dass einer der Spieler gewinnt. Die meisten Wettbewerbe erlauben das nicht. Ist es angehakt, wird ein Ergebnis mit gleichen Punkten und ohne Markierung als Unentschieden gespeichert; ist es nicht angehakt, muss ein Spiel mit gleichen Punkten durch eine Markierung hinter den Punkten des Siegers sagen, wer gewonnen hat, etwa „6w“. Das Match eines K.-o.-Turniers hat immer einen Sieger, ein unentschiedenes Spiel entscheidet es also nicht.
 
 **Zählt für die Weltranglisten.** Wird nur gefragt, wo es zählen kann: bei einem Wettbewerb im Association Croquet oder Golf Croquet, der weder mit Vorgaben gespielt wird noch Unentschieden zulässt. Es ist zu Beginn angehakt, nehmen Sie den Haken also weg bei einem Wettbewerb, der nicht zählen soll.
 
-**Höchstzahl der Tore.** Die meisten Tore, bis zu denen ein Spiel im Wettbewerb gespielt wird, eine ganze Zahl von mindestens 1. Sie beginnt bei dem, was für die Sportart üblich ist, 26, oder 13 im Golf Croquet, ändern Sie sie also für einen Wettbewerb, der kürzer gespielt wird, etwa eine Gruppe mit Spielen bis 14 Tore. Leeren Sie sie bei einem Wettbewerb, dessen Spiele nicht bis zu einer Zahl von Toren gespielt werden. Ein Wettbewerb, der bis zu einer anderen als der üblichen Zahl gespielt wird, sagt das auf seiner öffentlichen Seite, als „Gespielt bis 14 Tore“.
+**Höchstzahl der Tore.** Die meisten Tore, bis zu denen ein Spiel im Wettbewerb gespielt wird, eine ganze Zahl von mindestens 1. Sie beginnt bei dem, was für die Sportart üblich ist, 26, oder 13 im Golf Croquet, ändern Sie sie also für einen Wettbewerb, der kürzer gespielt wird, etwa ein Block mit Spielen bis 14 Tore. Leeren Sie sie bei einem Wettbewerb, dessen Spiele nicht bis zu einer Zahl von Toren gespielt werden. Ein Wettbewerb, der bis zu einer anderen als der üblichen Zahl gespielt wird, sagt das auf seiner öffentlichen Seite, als „Gespielt bis 14 Tore“.
 
 ### Mehrere auf einmal hinzufügen
 
@@ -66,9 +66,9 @@ Drücken Sie **Hinzufügen**. Der Wettbewerb wird hinzugefügt, der Dialog sagt 
 
 ## Einen Wettbewerb ändern {#changing-a-competition}
 
-**Bearbeiten** öffnet denselben Dialog für den Wettbewerb, mit dem Titel Wettbewerb bearbeiten, mit seinem Namen, seiner Gestalt und der Art, wie er gespielt und gezählt wird, wie sie sind. Nach seiner Art wird nicht gefragt, weil aus einer Gruppe durch Ändern keine K.-o.-Runde wird: Ein Wettbewerb der falschen Art wird archiviert und neu hinzugefügt. Drücken Sie **Speichern**, um die Änderung zu speichern und den Dialog zu schließen.
+**Bearbeiten** öffnet denselben Dialog für den Wettbewerb, mit dem Titel Wettbewerb bearbeiten, mit seinem Namen, seiner Gestalt und der Art, wie er gespielt und gezählt wird, wie sie sind. Nach seiner Art wird nicht gefragt, weil aus einem Block durch Ändern kein K.-o.-Turnier wird: Ein Wettbewerb der falschen Art wird archiviert und neu hinzugefügt. Drücken Sie **Speichern**, um die Änderung zu speichern und den Dialog zu schließen.
 
-Eine K.-o.-Runde mit einem Spiel hat Spieler, die in ihrer Auslosung platziert sind, und eine Änderung ihrer Plätze würde sie verschieben; sie wird deshalb abgelehnt, sobald ein Spiel eingegeben ist. Die Best of ihrer Runden lassen sich weiterhin ändern.
+Ein K.-o.-Turnier mit einem Spiel hat Spieler, die in seiner Auslosung platziert sind, und eine Änderung seiner Plätze würde sie verschieben; sie wird deshalb abgelehnt, sobald ein Spiel eingegeben ist. Das Best of seiner Runden lässt sich weiterhin ändern.
 
 ## Reihenfolge
 

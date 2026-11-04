@@ -18,21 +18,21 @@ Um jogo ganho com pontos iguais, como quando é interrompido pelo tempo e decidi
 
 Pressione **Adicionar jogo**. O jogo é adicionado, o diálogo diz qual, e os campos são esvaziados para o próximo, porque os resultados chegam em lote, lidos de um quadro no fim de uma rodada. Pressione **Cancelar** quando todos estiverem inseridos.
 
-Se o diálogo não consegue ler os jogadores da competição, ele diz "Não foi possível ler os jogadores. Feche esta janela e abra-a de novo." Faça isso.
-
 ![O diálogo depois que um jogo é adicionado](images/add-score-dialog-added.png)
+
+Se o diálogo não consegue ler os jogadores da competição, ele diz "Não foi possível ler os jogadores. Feche esta janela e abra-a de novo." Faça isso.
 
 O que é recusado é dito abaixo do campo a que se refere: um vencedor ou perdedor não escolhido, um resultado não digitado ou que não começa com um dígito, o mesmo jogador nos dois lados, um resultado de perdedor marcado como ganho, ou um resultado de vencedor menor que o do perdedor. Em um mata-mata, dois jogadores que não estão sorteados para se enfrentar são recusados acima dos campos.
 
 ## A chave de um mata-mata precisa estar preenchida antes {#draw-filled-first}
 
-Um mata-mata só é disputada depois que todas as vagas da sua chave têm um jogador ou um bye. Até então, Adicionar resultado explica por que não é possível adicionar resultados, em vez de abrir o diálogo.
+Um mata-mata só é disputado depois que todas as vagas da sua chave têm um jogador ou um bye. Até então, Adicionar resultado explica por que não é possível adicionar resultados, em vez de abrir o diálogo.
 
 ![O que Adicionar resultado diz em um mata-mata cuja chave não está preenchida](images/draw-not-filled.png)
 
 ## A lista de resultados
 
-Os resultados em uso são listados na ordem em que foram inseridos, o mais antigo primeiro, para que a lista se leia como a competição foi disputada. A lista é uma tabela com uma linha para cada jogo, e sem títulos de coluna. Uma linha diz o número do jogo, o vencedor e o seu resultado, a palavra "beat", depois o perdedor e o dele, e oferece **Editar** e **Arquivar**.
+Os resultados em uso são listados na ordem em que foram inseridos, o mais antigo primeiro, para que a lista se leia como a competição foi disputada. A lista é uma tabela com uma linha para cada jogo, e sem títulos de coluna. Uma linha diz o número do jogo, o vencedor e o seu resultado, a palavra "venceu", depois o perdedor e o dele, e oferece **Editar** e **Arquivar**.
 
 O número de um jogo é o seu lugar entre os jogos inseridos, sendo o primeiro 1, contando os jogos arquivados. Arquivar um jogo não muda o número de nenhum outro, então uma lacuna nos números diz que um jogo foi arquivado.
 

@@ -12,7 +12,7 @@ Alles wat 'n bestuurder doen, word in die administrasie-afdeling van die werf ge
 
 ## Die bladsye in volgorde
 
-1. [Hoe om 'n toernooi te skep](creating-a-tournament.md): sy naam, sy dae, sy sport, waar dit gespeel word, en waarvoor dit tel.
+1. [Hoe om 'n toernooi te skep](creating-a-tournament.md): sy naam, sy dae, sy sport, waar dit gespeel word, en of dit 'n nasionale of 'n internasionale geleentheid is.
 2. [Spelers](players.md): hoe om die toernooi se spelers in te skryf, hulle reg te stel, en dié wat per ongeluk ingeskryf is eenkant te sit.
 3. [Kompetisies](competitions.md): hoe om blokke, uitskakelings en Switserse kompetisies by te voeg en in volgorde te plaas.
 4. [Hoe om spelers in 'n kompetisie in te skryf](entering-players-in-a-competition.md): wie in elke kompetisie speel, byes in 'n uitskakeling, oordragte, verwydering en onttrekking.

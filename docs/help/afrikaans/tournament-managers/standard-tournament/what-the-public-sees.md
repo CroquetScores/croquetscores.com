@@ -12,7 +12,7 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 ## 'n Blok
 
-'n Blok se bladsy wys sy uitslae as 'n rooster: 'n ry en 'n kolom vir elke speler in die blok se volgorde, met die spelle tussen twee spelers waar die ry die kolom ontmoet, elkeen gemerk as gewen, verloor of gelykop vir die speler van die ry. Ná die spelers se kolomme kom elke speler se totale. Waar elke wedstryd 'n enkele spel is, is dit oorwinnings en netto hoepels; waar 'n wedstryd die beste van meer as een is, is dit ontmoetings, netto spelle, spelle en netto hoepels. Die laaste kolom, **#** genoem, is elke speler se plek: 1 vir die eerste, en =2 waar spelers nie uitmekaar gehou kan word nie en tweede deel. Waar enige spelers dieselfde aandeel van hul wedstryde gewen het, sê 'n reël onder die rooster hoe hulle uitmekaar gehou word, soos die blok se gelykopbreker dit het (sien Kompetisies).
+'n Blok se bladsy wys sy uitslae as 'n rooster: 'n ry en 'n kolom vir elke speler in die blok se volgorde, met die spelle tussen twee spelers waar die ry die kolom ontmoet, elkeen gemerk as gewen, verloor of gelykop vir die speler van die ry. Ná die spelers se kolomme kom elke speler se totale. Waar elke wedstryd 'n enkele spel is, is dit oorwinnings en netto hoepels; waar 'n wedstryd die beste van meer as een is, is dit wedstryde, netto spelle, spelle en netto hoepels. Die laaste kolom, **#** genoem, is elke speler se plek: 1 vir die eerste, en =2 waar spelers nie uitmekaar gehou kan word nie en tweede deel. Waar enige spelers dieselfde aandeel van hul wedstryde gewen het, sê 'n reël onder die rooster hoe hulle uitmekaar gehou word, soos die blok se gelykopbreker dit het (sien Kompetisies).
 
 !['n Blok se rooster](images/public-block-grid.png)
 

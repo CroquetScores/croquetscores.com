@@ -15,7 +15,7 @@ Die vorm vra vir alles waarmee 'n toernooi begin. Wat hier die meeste saak maak,
 **Formaat.** Kies een van die formate wat tussen spanne gespeel word:
 
 - **Spanne** is die algemene formaat vir enige byeenkoms tussen spanne.
-- **Eire Cup**, **Interstate Shield** en **GC World Team Championship** is bepaalde byeenkomste, elkeen as 'n eie formaat gehou sodat dit bestuur kan word soos daardie byeenkoms bestuur word.
+- **Eire-beker**, **Interstaatskild** en **GC-wêrelspankampioenskap** is bepaalde byeenkomste, elkeen as 'n eie formaat gehou sodat dit bestuur kan word soos daardie byeenkoms bestuur word.
 
 Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie wat jy hier wil hê nie. Gateball Scores bied geen formaat aan nie, want elke toernooi daar is 'n standaardtoernooi van gateball; 'n toernooi tussen spanne word op Croquet Scores geskep.
 
@@ -27,7 +27,7 @@ Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie w
 
 Hoe sy toetse gespeel en getel word, of met voorgifte, met gelykopuitslae, en vir die wêreldranglyste, sê elke toets self wanneer dit bygevoeg word.
 
-**Gelyke toetse is gelykop.** Word gevra sodra 'n formaat tussen spanne gekies is. 'n Toets waarvan die spanne dieselfde getal wedstryde wen, word beslis deur hul netto spelle, dan hul netto hoepels. Merk dit en dit is eerder gelykop. Dit is om mee te begin net gemerk vir die **GC World Team Championship**, wat dit nog altyd gelykop gehou het, en kan later verander word.
+**Gelyke toetse is gelykop.** Word gevra sodra 'n formaat tussen spanne gekies is. 'n Toets waarvan die spanne dieselfde getal wedstryde wen, word beslis deur hul netto spelle, dan hul netto hoepels. Merk dit en dit is eerder gelykop. Dit is om mee te begin net gemerk vir die **GC-wêrelspankampioenskap**, wat dit nog altyd gelykop gehou het, en kan later verander word.
 
 **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
 

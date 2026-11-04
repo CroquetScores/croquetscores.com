@@ -68,7 +68,7 @@ Pulsa **Añadir**. La competición se añade, el diálogo lo dice y el nombre se
 
 **Editar** abre el mismo diálogo sobre la competición, titulado Editar competición, con su nombre, su forma y cómo se juega y se cuenta tal como están. No se pregunta su tipo, porque un grupo no se convierte en eliminatoria cambiándolo: una competición del tipo equivocado se archiva y se añade de nuevo. Pulsa **Guardar** para guardar el cambio y cerrar el diálogo.
 
-Una eliminatoria que tiene una partida tiene a sus jugadores colocados en su cuadro, y un cambio de sus plazas los movería, así que se rechaza una vez introducida una partida. Aquello de lo que cada ronda es al mejor de sí puede cambiarse.
+Una eliminatoria que tiene una partida tiene a sus jugadores colocados en su cuadro, y un cambio de sus plazas los movería, así que se rechaza una vez introducida una partida. El al mejor de cada ronda sí puede cambiarse.
 
 ## Orden
 

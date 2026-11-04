@@ -30,11 +30,11 @@ Gofynnir am **Chwarae gyda handicapiau**, **Caniatáu canlyniadau cyfartal** a *
 
 **Uchafswm cylchau** yw'r nifer mwyaf o gylchau y chwaraeir gêm yn y prawf iddynt. Mae'n dechrau ar yr arferol ar gyfer y gamp, 26, neu 13 mewn Golf Croquet. Gwagiwch ef ar gyfer gêm nad yw'n cael ei chwarae i nifer o gylchau. Rhaid iddo fod yn gyfanrif o 1 o leiaf.
 
-**Grŵp** yw'r grŵp y mae'r prawf ynddo, lle chwaraeir y digwyddiad mewn grwpiau, fel "Block A". Mae'n ddewisol: os caiff ei adael yn wag, nid yw'r prawf mewn un. Mae gan y profion mewn grŵp dudalen eu hunain ar y safle cyhoeddus, yn dangos safle timau'r grŵp. Nid oes grwpiau yn **Cwpan Iwerddon** nac yn **Tarian y Taleithiau**, felly nid yw'r deialog yn gofyn am un yno.
+**Grŵp** yw'r grŵp y mae'r prawf ynddo, lle chwaraeir y digwyddiad mewn grwpiau, fel "Block A". Mae'n ddewisol: os caiff ei adael yn wag, nid yw'r prawf mewn un. Mae gan y profion mewn grŵp dudalen eu hunain ar y safle cyhoeddus, yn dangos safle timau'r grŵp. Nid oes grwpiau yn **Cwpan Iwerddon** nac yn **Tarian y Taleithiau**, felly nid yw'r ddeialog yn gofyn am un yno.
 
 Pwyswch **Ychwanegu**. Caiff y prawf ei ychwanegu, mae'r ddeialog yn dweud pa un wrth ei enw, a chaiff y timau eu gwagio ar gyfer y nesaf, â'r dyddiau, y gemau disgwyliedig, yr orau o a'r grŵp wedi'u gadael fel yr oeddent: ychwanegir profion rownd ar y tro, rhwng timau sy'n cwrdd ar yr un diwrnod, felly nid yw prawf nesaf y rownd ond ei ddau dîm yn unig. Pwyswch **Diddymu** unwaith y bydd pob un i mewn.
 
-![Y ddeialog ar ôl i prawf gael ei ychwanegu](images/add-test-dialog-added.png)
+![Y ddeialog ar ôl i brawf gael ei ychwanegu](images/add-test-dialog-added.png)
 
 ## Newid prawf {#changing-a-test}
 
@@ -48,9 +48,9 @@ Mae prawf â gemau yn eu lle yn cadw ei dimau: mae'r ddeialog yn eu dangos ond n
 
 Rhestrir y profion yn nhrefn y twrnamaint, sef y drefn y maent yn ymddangos ynddi ar y tudalennau cyhoeddus ac yn y bar gwyrdd tywyll. Mae **I fyny** ac **I lawr** yn symud prawf un lle.
 
-## Mynd i prawf
+## Mynd i brawf
 
-Mae enw prawf, neu **Gweld**, yn agor ei dudalen, lle mae ei ganlyniadau'n mynd. Mae'r bar gwyrdd tywyll yn arwain yno hefyd, o dudalen y twrnamaint neu dudalen unrhyw prawf arall.
+Mae enw prawf, neu **Gweld**, yn agor ei dudalen, lle mae ei ganlyniadau'n mynd. Mae'r bar gwyrdd tywyll yn arwain yno hefyd, o dudalen y twrnamaint neu dudalen unrhyw brawf arall.
 
 ## Archifo prawf
 

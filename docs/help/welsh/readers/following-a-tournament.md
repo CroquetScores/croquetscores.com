@@ -10,7 +10,7 @@ Mae'r chwyddwydr yn yr uwchben yn chwilio am dwrnameintiau, cystadlaethau a chwa
 
 ## Cyfyngu a threfnu rhestr
 
-Mae'r rhestrau **Gwlad**, **Rhanbarth** a **Camp**, a'r dyddiau **O** ac **I**, yn cyfyngu rhestr o dwrnameintiau, ac mae **Hidlo** yn eu cymhwyso. Rhowch y ddau ddiwrnod neu'r un ohonynt: mae twrnamaint yn yr ystod yn ôl y diwrnod y mae'n dechrau. Rhestrir ystod o ddyddiau gan gant i dudalen, gyda **Blaenorol** a **Nesaf**. Gallwch hefyd wasgu baner i gyfyngu'r rhestr i'w gwlad.
+Mae'r rhestrau **Gwlad**, **Rhanbarth** a **Camp**, a'r dyddiau **O** ac **I**, yn cyfyngu rhestr o dwrnameintiau, ac mae **Hidlo** yn eu cymhwyso. Rhowch y ddau ddiwrnod neu ddim un: mae twrnamaint yn yr ystod yn ôl y diwrnod y mae'n dechrau. Rhestrir ystod o ddyddiau gan gant i dudalen, gyda **Blaenorol** a **Nesaf**. Gallwch hefyd wasgu baner i gyfyngu'r rhestr i'w gwlad.
 
 Pwyswch bennawd i drefnu rhestr yn ei ôl, a phwyswch eto i'w throi o chwith. Cofir trefn pob rhestr, a'r wlad, y rhanbarth a'r gamp a ddewisoch, ar eich ffôn neu'ch cyfrifiadur, felly mae rhestr yn dechrau fel y gadawsoch hi. Mae **Yn ôl i'r drefn arferol** yn anghofio trefn.
 

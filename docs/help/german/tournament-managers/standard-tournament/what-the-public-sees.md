@@ -1,6 +1,6 @@
 # Was die Öffentlichkeit sieht
 
-Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch JavaScript und sind für das Telefon gestaltet.
+Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch Skripte und sind für das Telefon gestaltet.
 
 ## Die Seite des Turniers
 
@@ -10,25 +10,25 @@ Die Seite des Turniers liegt unter seinem Jahr, seiner Sportart und seinem Namen
 
 Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Neueste**, was diese Seite ist, **Spieler**, **Notizen** und **Kommentar**, dann jeden Wettbewerb in Gebrauch, in der Reihenfolge des Reiters Wettbewerbe. Notizen ist mit einem roten Sternchen markiert, solange es eine Notiz gibt, die der Leser nicht gelesen hat.
 
-## Eine Gruppe
+## Ein Block
 
-Die Seite einer Gruppe zeigt ihre Ergebnisse als Tabelle: eine Zeile und eine Spalte für jeden Spieler in der Reihenfolge der Gruppe, mit den Spielen zwischen zwei Spielern dort, wo Zeile und Spalte sich treffen, jedes für den Spieler der Zeile als gewonnen, verloren oder unentschieden markiert. Nach den Spalten der Spieler kommen die Summen jedes Spielers. Besteht jede Begegnung aus einem einzigen Spiel, sind das Siege und Tordifferenz; geht eine Begegnung über mehr als ein Spiel, sind es Begegnungen, Spieldifferenz, Spiele und Tordifferenz. Die letzte Spalte, überschrieben mit **#**, ist der Platz jedes Spielers: 1 für den ersten und =2, wo sich Spieler nicht unterscheiden lassen und sich den zweiten teilen. Haben Spieler gleich viele ihrer Begegnungen gewonnen, sagt eine Zeile unter dem Raster, wie sie unterschieden werden, so wie es die Regelung der Gruppe bei Gleichstand vorsieht (siehe Wettbewerbe).
+Die Seite eines Blocks zeigt seine Ergebnisse als Tabelle: eine Zeile und eine Spalte für jeden Spieler in der Reihenfolge des Blocks, mit den Spielen zwischen zwei Spielern dort, wo Zeile und Spalte sich treffen, jedes für den Spieler der Zeile als gewonnen, verloren oder unentschieden markiert. Nach den Spalten der Spieler kommen die Summen jedes Spielers. Besteht jede Begegnung aus einem einzigen Spiel, sind das Siege und Tordifferenz; geht eine Begegnung über mehr als ein Spiel, sind es Begegnungen, Spieldifferenz, Spiele und Tordifferenz. Die letzte Spalte, überschrieben mit **#**, ist der Platz jedes Spielers: 1 für den ersten und =2, wo sich Spieler nicht unterscheiden lassen und sich den zweiten teilen. Haben Spieler gleich viele ihrer Begegnungen gewonnen, sagt eine Zeile unter dem Raster, wie sie unterschieden werden, so wie es die Regelung des Blocks bei Gleichstand vorsieht (siehe Wettbewerbe).
 
-![Die Tabelle einer Gruppe](images/public-block-grid.png)
+![Das Raster eines Blocks](images/public-block-grid.png)
 
-Eine Gruppe, eine K.-o.-Runde und ein Schweizer System werden je auf drei Arten gezeigt, angeboten in der Zeile des Namens des Wettbewerbs: **Raster**, **Zusammenfassung** und **Spielreihenfolge**. Daneben steht eine Druckerschaltfläche, die den Namen des Turniers, den Namen des Wettbewerbs und seine Ergebnisse druckt und sonst nichts. Die Zusammenfassung ist die für das Telefon: bei einer Gruppe die Spieler gereiht, mit ihren Siegen, Niederlagen, ihrer Tordifferenz und ihrem Platz; bei einer K.-o.-Runde die Begegnungen, Runde für Runde aufgelistet; bei einem Schweizer System die Tabelle des Rasters ohne seine Ergebnisse. Die Spielreihenfolge listet jedes Spiel, zunächst das älteste zuerst. Sie ist mit **Spiel** und **Datum** überschrieben: Ein Druck auf **Spiel** sortiert die Spiele nach dem Namen des Siegers und dann dem des Verlierers, ein Druck auf **Datum** sortiert sie ältestes oder neuestes zuerst, und ein Druck auf die Überschrift, nach der eine Liste sortiert ist, dreht sie um. Wie ein Leser sortiert hat, wird auf seinem Gerät gemerkt. Ein Leser, der eine Ansicht wählt, behält sie für jeden Wettbewerb, bis er eine andere wählt.
+Ein Block, ein K.-o.-Turnier und ein Schweizer System werden je auf drei Arten gezeigt, angeboten in der Zeile des Namens des Wettbewerbs: **Raster**, **Zusammenfassung** und **Spielreihenfolge**. Daneben steht eine Druckerschaltfläche, die den Namen des Turniers, den Namen des Wettbewerbs und seine Ergebnisse druckt und sonst nichts. Die Zusammenfassung ist die für das Telefon: bei einem Block die Spieler gereiht, mit ihren Siegen, Niederlagen, ihrer Tordifferenz und ihrem Platz; bei einem K.-o.-Turnier die Begegnungen, Runde für Runde aufgelistet; bei einem Schweizer System die Tabelle des Rasters ohne seine Ergebnisse. Die Spielreihenfolge listet jedes Spiel, zunächst das älteste zuerst. Sie ist mit **Spiel** und **Datum** überschrieben: Ein Druck auf **Spiel** sortiert die Spiele nach dem Namen des Siegers und dann dem des Verlierers, ein Druck auf **Datum** sortiert sie ältestes oder neuestes zuerst, und ein Druck auf die Überschrift, nach der eine Liste sortiert ist, dreht sie um. Wie ein Leser sortiert hat, wird auf seinem Gerät gemerkt. Ein Leser, der eine Ansicht wählt, behält sie für jeden Wettbewerb, bis er eine andere wählt.
 
 Ein Wettbewerb, der bis zu einer anderen als der für seine Sportart üblichen Zahl von Toren gespielt wird, sagt das unter seinem Namen, als „Gespielt bis 14 Tore“ (siehe [Wettbewerbe](competitions.md#adding-a-competition)).
 
-![Die Übersicht einer Gruppe](images/public-block-summary.png)
+![Die Zusammenfassung eines Blocks](images/public-block-summary.png)
 
 Die Zeile eines zurückgezogenen Spielers sagt das. Ein zurückgezogenes Ergebnis wird durchgestrichen gezeigt und zählt für nichts. Ein archiviertes Ergebnis wird nicht gezeigt.
 
-## Eine K.-o.-Runde
+## Ein K.-o.-Turnier
 
-Die Seite einer K.-o.-Runde zeichnet ihre Auslosung Runde für Runde, eine Spalte für jede Runde von der ersten bis zum Finale, mit den beiden Seiten jeder Begegnung übereinander und einer Zelle für jedes Spiel, über das die Begegnung höchstens geht. Die Begegnung einer späteren Runde steht neben den beiden Begegnungen, zwischen deren Siegern sie ausgetragen wird. Auf dem Telefon lässt sich die Auslosung seitwärts verschieben, mit Pfeilen zum Finale und zurück.
+Die Seite eines K.-o.-Turniers zeichnet seine Auslosung Runde für Runde, eine Spalte für jede Runde von der ersten bis zum Finale, mit den beiden Seiten jeder Begegnung übereinander und einer Zelle für jedes Spiel, über das die Begegnung höchstens geht. Die Begegnung einer späteren Runde steht neben den beiden Begegnungen, zwischen deren Siegern sie ausgetragen wird. Auf dem Telefon lässt sich die Auslosung seitwärts verschieben, mit Pfeilen zum Finale und zurück.
 
-![Die Auslosung einer K.-o.-Runde](images/public-knockout.png)
+![Die Auslosung eines K.-o.-Turniers](images/public-knockout.png)
 
 ## Ein Schweizer System
 

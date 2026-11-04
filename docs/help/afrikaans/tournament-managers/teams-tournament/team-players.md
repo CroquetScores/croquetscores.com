@@ -18,7 +18,7 @@ Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
 **Wêreldranglys-spelernaam** is die naam waaronder die wêreldranglys die speler ken. Dit word net gevra in 'n toernooi van Association Croquet of Golf Croquet, die twee sporte van wie se spelers die wêreldranglys 'n lys hou. Amerikaanse 6-hoepel-croquet se spelers is onder hul eie name aan die ranglys bekend, so dit word nie daar gevra nie, en elke speler se naam op die wêreldranglys is altyd hul naam. Terwyl jy 'n speler byvoeg, volg dit die naam soos jy dit tik, en hou op volg sodra jy daarin tik. Leeg gelaat, word dit as die speler se naam gehou. Soos jy tik, word die spelers wat die wêreldranglys ken en wie se name so begin aangebied, en langs die naam op die wêreldranglys sê 'n regmerkie dat die ranglys die naam ken en 'n vraagteken dat dit dit nie ken nie. Dit is net raad: 'n naam wat die ranglys nie ken nie, word net so geredelik gehou as een wat dit wel ken.
 
-'n Speler word nooit "Bye" genoem nie: 'n naam waarvan die eerste woord die Engelse "bye" is, word geweier.
+'n Speler word nooit "Bye" genoem nie: 'n naam wat "Bye" is, of "Bye" met 'n nommer, soos "Bye 2", "Bye-2" of "Bye (2)", word geweier. 'n Naam wat net met die woord begin, soos "Bye / Bassett" doen, is 'n persoon s'n.
 
 Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde word leeggemaak vir die volgende, met die wyser terug in die naam. Voeg die hele span so by, en druk dan op **Kanselleer** om die dialoog toe te maak.
 

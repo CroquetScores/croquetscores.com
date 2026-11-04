@@ -20,7 +20,7 @@ Confirmar não conecta você, já que o link muitas vezes é aberto em outro dis
 
 ## Quando o link deixou de funcionar
 
-Um link funciona por 24 horas. Depois disso ele diz que expirou, e **Enviar um novo link** envia outro para o mesmo endereço. Você pode pedir um novo link no máximo três vezes por hora, e o mesmo limite conta os emails que o registro envia.
+Um link funciona por 24 horas. Depois disso ele diz que expirou, e **Enviar um novo link** envia outro para o mesmo endereço. Você pode pedir um novo link no máximo três vezes por hora, e o mesmo limite conta os e-mails que o registro envia.
 
 Um link que não funciona por qualquer outro motivo, como um que foi alterado, diz apenas que não funciona mais. Se você já confirmou, ele avisa e indica que você entre.
 

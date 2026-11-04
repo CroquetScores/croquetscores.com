@@ -47,7 +47,7 @@ Die dunkelgrüne Leiste unter der Kopfzeile dient dem Wechsel zwischen Seiten. A
 
 **Was abgelehnt wird, steht neben dem Feld, um das es geht.** Nichts Abgelehntes wird gespeichert, und was Sie eingegeben haben, bleibt stehen, damit Sie es berichtigen können, statt es neu einzugeben.
 
-**Hilfe ist einen Druck entfernt.** Ein rundes **?** steht in der Titelleiste der Seite, die ein Turnier anlegt oder ändert, am Ende der Reihe der Reiter, neben **Neues Turnier** und in jedem Dialog. Es öffnet den Teil dieser Anleitung, der von dem handelt, was Sie gerade ansehen, in einem anderen Tab, damit bleibt, was Sie gerade tun.
+**Hilfe ist einen Druck entfernt.** Ein rundes **?** steht in der Titelleiste der Seite, die ein Turnier anlegt oder ändert, am Ende der Reihe der Reiter, neben **Neues Turnier** und in jedem Dialog. Es öffnet den Teil dieser Anleitung, der von dem handelt, was Sie gerade ansehen, in einem anderen Tab, damit erhalten bleibt, was Sie gerade tun.
 
 **Die Verwaltung funktioniert auf dem Telefon.** Jede Schaltfläche ist groß genug für einen Daumen, und nichts ist breiter als der Bildschirm.
 

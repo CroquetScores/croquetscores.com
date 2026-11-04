@@ -6,7 +6,7 @@ Los jugadores se inscriben aquí una sola vez, en el torneo. En qué competicion
 
 ![La pestaña Jugadores, con jugadores inscritos y uno archivado](images/players-tab.png)
 
-## Añadir jugadores {#add-a-player}
+## Añadir un jugador {#add-a-player}
 
 Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la página.
 
@@ -28,7 +28,7 @@ Pulsa **Añadir**. El jugador se añade, el diálogo lo dice y sus campos se vac
 
 ![El diálogo después de añadir un jugador](images/add-player-dialog-added.png)
 
-Un jugador nunca se llama "Bye". Los byes de una eliminatoria se añaden en la propia eliminatoria, allí donde se inscriben sus jugadores, así que un nombre cuya primera palabra sea "bye" (la palabra inglesa) se rechaza, y el diálogo explica por qué.
+Un jugador nunca se llama "Bye". Los byes de una eliminatoria se añaden en la propia eliminatoria, allí donde se inscriben sus jugadores, así que se rechaza un nombre que sea "Bye", o "Bye" con un número, como "Bye 2", "Bye-2" o "Bye (2)", y el diálogo explica por qué.
 
 ## Añadir varios jugadores {#adding-multiple-players}
 
@@ -42,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Nombre, Representa a y Nombre del jugador en el ranking mundial** se rigen por las mismas reglas que al añadir un solo jugador (véase [Añadir jugadores](players.md#add-a-player)). Un nombre tiene entre 3 y 254 caracteres, no está ya en el torneo, sea cual sea su uso de mayúsculas, y no es "Bye".
+- **Nombre, Representa a y Nombre del jugador en el ranking mundial** se rigen por las mismas reglas que al añadir un solo jugador (véase [Añadir un jugador](players.md#add-a-player)). Un nombre tiene entre 3 y 254 caracteres, no está ya en el torneo, sea cual sea su uso de mayúsculas, y no es "Bye".
 - **Bandera** es el nombre del país o lugar, en tu idioma, tal como lo ofrece la lista del diálogo Añadir jugador, como Nueva Zelanda.
 - **Hándicap** es un signo, hasta dos cifras y una fracción de una cifra, como 4, +4 o -1.5.
 - Un jugador sin **WorldRankingPlayerName** es conocido por su nombre, como cuando se añade de uno en uno.
@@ -51,7 +51,7 @@ Alex Another,,England
 - A cada valor se le quitan los espacios de los extremos, y una línea sin nada se ignora.
 - Una lista contiene como máximo 500 jugadores. Añade el resto en otra lista.
 
-Pulsa **Añadir**. Toda la lista se comprueba antes de guardar nada, así que una lista con algo mal no añade a nadie. Lo que está mal se dice debajo del cuadro, en la línea donde está, contando la primera línea como línea 1. Se enumeran todos los fallos, no solo el primero, y lo que escribiste se queda para que puedas corregirlo. Una vez guardada la lista, el diálogo se cierra y la pestaña **Jugadores** muestra a los nuevos jugadores, en el orden en que los escribiste. A diferencia de **Añadir jugador**, que sigue abierto para el siguiente jugador, aquí no hay siguiente: la lista era el siguiente.
+Pulsa **Añadir**. Toda la lista se comprueba antes de guardar nada, así que una lista con algo mal no añade a nadie. Lo que está mal se dice debajo del cuadro, en la línea donde está, contando la primera línea como línea 1. Se enumeran todos los fallos, no solo el primero, y lo que escribiste se queda para que puedas corregirlo. Una vez guardada la lista, el diálogo se cierra y la pestaña Jugadores muestra a los nuevos jugadores, en el orden en que los escribiste. A diferencia de **Añadir jugador**, que sigue abierto para el siguiente jugador, aquí no hay siguiente: la lista era el siguiente.
 
 El **?** de la barra de título del diálogo lleva hasta aquí. Tanto este diálogo como Añadir jugador se quedan en la ventana estés donde estés en la página.
 

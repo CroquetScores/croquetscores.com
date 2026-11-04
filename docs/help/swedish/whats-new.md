@@ -4,7 +4,7 @@
 
 ### Följa en turnering
 
-- **Ett års sida visar dess månader.** Var och en av de tolv månaderna visas ihopfälld, med hur många turneringar som börjar i den. Tryck på en månad för att öppna dess turneringar på samma sida, och hur många månader som helst kan vara öppna samtidigt. Under rubriken öppnar **+ Visa alla** varje månad, och står sedan som **- Dölj alla**, som stänger dem. Samma sak görs för en sport under ett år. Utan skript är en månad i stället en länk, och de öppna månaderna sparas i adressen.
+- **Ett års sida visar dess månader.** Var och en av de tolv månaderna visas ihopfälld, med hur många turneringar som börjar i den. Tryck på en månad för att öppna dess turneringar på samma sida, och hur många månader som helst kan vara öppna samtidigt. Under rubriken öppnar **+ Visa alla** varje månad, och står sedan som **- Dölj alla**, som stänger dem. Samma sak görs för en sport under ett år. Utan JavaScript är en månad i stället en länk, och de öppna månaderna sparas i adressen.
 - **Turneringar kan filtreras på ett intervall av dagar.** Före knappen Filtrera finns en första och en sista dag, som du anger båda eller ingen av. Båda dagarna ingår. En turnering ligger i intervallet efter den dag den börjar, så den finns i en enda månads lista och aldrig i två.
 - **En lista med turneringar har hundra per sida.** En längre lista delas upp i sidor, så att en bred sökning inte längre läser in alla rader på en gång.
 - **Filtret du valde kommer ihåg.** Landet, regionen och sporten du väljer i filtret, eller genom att trycka på en flagga, sparas på din telefon eller dator, och en lista med turneringar utgår från dem nästa gång du öppnar den. Året sparas inte, eftersom det är en sida för sig. Väljer du ”alla” för ett av dem glöms det som sparats för just det.
@@ -40,7 +40,7 @@
 
 - **Många spelare kan läggas till på en gång.** På fliken Spelare trycker du på **Lägg till flera spelare**, bredvid **Lägg till spelare**, och klistrar in en lista med en rad för varje spelare. Alla spelare på listan läggs till.
 - **En hjälpikon på fler av adminsidorna.** Det runda frågetecknet finns nu också först på sidan som skapar en turnering och sidan som ändrar en, sist i raden av flikar på en turnerings sida och på en tävlings, och bredvid listan med turneringar. Var och en leder till hjälpen för det du tittar på, och öppnar den i en annan flik så att sidan finns kvar.
-- **Fliken Resultat är en tabell.** Varje resultat är en rad i en tabell, så att en skärmläsare talar om vilken cell du är i. Ordet ”besegrade” har en egen kolumn mellan vinnarens poäng och förloraren. På en telefon bryts ett resultat inte längre över två rader: tabellen rullar i sidled i stället.
+- **Fliken Resultat är en tabell.** Varje resultat är en rad i en tabell, så att en skärmläsare talar om vilken cell du är i. Ordet ”slog” har en egen kolumn mellan vinnarens poäng och förloraren. På en telefon bryts ett resultat inte längre över två rader: tabellen rullar i sidled i stället.
 - **En landskamp i en Eire Cup eller en Interstate Shield har ingen grupp.** De tävlingarna spelas inte i grupper, så dialogrutan för en landskamp frågar inte efter någon där, och en landskamp kan inte få en grupp.
 
 ## Släppt 2026-10-31
@@ -65,7 +65,7 @@
 ### Ditt konto
 
 - **Att glömma ett konto skriver nu om det som sparats.** Att glömma ett konto brukade göra dess namn och e-postadress oåtkomliga. Nu ersätts de, för alltid, överallt där webbplatsen sparar dem: namnet blir Forgotten Account och ett nummer, och e-postadressen blir en adress på example.com som tillhör ingen. Detsamma görs med det Google-konto som är kopplat till det, så att ingenting binder kontot till personen. E-post som ännu väntade på kontot raderas. Konton som glömts före detta skrivs om på samma sätt nästa gång webbplatsen uppdateras. Kontots identifierare behålls, och det som kontot publicerade, under det nya namnet.
-- **Så får du dina uppgifter raderade.** Den nya sidan /data-deletion-policy säger hur du får det webbplatsen sparar om dig raderat, hur du än loggar in, vad som raderas, vad som behålls och vad du gör om du inte kan logga in. Stegen leder till sidan Glöm ditt konto.
+- **Så får du dina uppgifter raderade.** Den nya sidan /data-deletion-policy säger hur du får det webbplatsen sparar om dig raderat, hur du än loggar in, vad som raderas, vad som behålls och vad du gör om du inte kan logga in. Stegen leder till sidan Glöm kontot.
 
 ### Webbplatsen
 
@@ -121,13 +121,13 @@ Chris Williams har hjälpt till igen: han hjälpte mig att förbättra turnering
 
 ### Följa en turnering
 
-- **Handikapp.** En turnerings ansvariga kan nu ge en spelare ett handikapp, till exempel 4, +4 eller -1.5. Det visas efter spelarens namn, tillsammans med vad spelaren representerar om det finns något, som i Tim Murphy (4, Australien).
-- **Poängskillnad i schweizerrutnätet.** Ett resultat i schweizerrutnätet slutar nu med partiets poängskillnad (peeling), som rankingtextfilen redan gör. Ett parti som vanns med 26tp mot 17 står som +9tp för vinnaren och -9tp för förloraren. Ett parti utan peeling står som förut.
+- **Handikapp.** En turnerings arrangörer kan nu ge en spelare ett handikapp, till exempel 4, +4 eller -1.5. Det visas efter spelarens namn, tillsammans med vad spelaren representerar om det finns något, som i Tim Murphy (4, Australien).
+- **Peelar i schweizerrutnätet.** Ett resultat i schweizerrutnätet slutar nu med partiets peelar, som rankingtextfilen redan gör. Ett parti som vanns med 26tp mot 17 står som +9tp för vinnaren och -9tp för förloraren. Ett parti utan peelar står som förut.
 
 ### Turneringar som förts över från de gamla webbplatserna
 
 - **Fler av dem har rätt land.** Många turneringar fördes över med fel land, eftersom de gamla webbplatserna bara kände till tidszonen. Webbplatsen läser nu landet ur en turnerings namn där det går, till exempel Irish, Welsh, Bayfield eller CroqCan, och placerar varje match mellan England och Skottland i det land som var värd det året. Tack till Chris Williams för hans hjälp med detta.
-- **Turneringar som ännu inte har spelats förs över** även om deras ansvariga ännu inte har lagt till någon tävling, så att du kan se när och var de spelas.
+- **Turneringar som ännu inte har spelats förs över** även om deras arrangörer ännu inte har lagt till någon tävling, så att du kan se när och var de spelas.
 - **Ett handikapp efter en spelares namn** på de gamla webbplatserna, som i Tim Murphy 1, tas inte längre för en del av namnet när spelarens världsranking slås upp.
 
 ## Släppt 2026-10-27
@@ -141,7 +141,7 @@ Croquet Scores har skrivits om helt med AI, i TypeScript. Här är vad du kommer
 
 ### Följa en turnering
 
-- **Anteckningar från arrangörerna.** En turnerings arrangörer kan nu skriva anteckningar för att berätta för spelarna vad de behöver veta medan turneringen spelas: formatet, en ändring i speltablån, tiden för lunchen. De finns i turneringens nya avdelning Anteckningar, med de nyaste överst och hur länge sedan varje anteckning skrevs.
+- **Anteckningar från arrangörerna.** En turnerings arrangörer kan nu skriva anteckningar för att berätta för spelarna vad de behöver veta medan turneringen spelas: formatet, en ändring i spelordningen, tiden för lunchen. De finns i turneringens nya avdelning Anteckningar, med de nyaste överst och hur länge sedan varje anteckning skrevs.
 - **En asterisk (\*) markerar det du inte har läst.** En anteckning har en tills du öppnar den, och igen om den ändras efter att du läst den. Så länge någon anteckning är oläst har avdelningen Anteckningar också en, på varje sida i turneringen, så att du ser att det finns nyheter utan att behöva gå och titta. Kommentarer markeras på samma sätt. Din webbläsare kommer ihåg vad du har läst, så du behöver inte logga in. En annan telefon eller dator börjar med ingenting läst.
 - **Kommentarerna är lättare att följa.** På den gamla webbplatsen kastade varje nytt inlägg sidan längst ned, så den som bläddrade tillbaka bland tidigare inlägg tappade sin plats. Nu flyttas sidan ned till ett nytt inlägg bara om du redan är längst ned och läser den senaste. Om du har bläddrat tillbaka för att läsa tidigare inlägg lämnar den dig där du är.
 

@@ -1,6 +1,6 @@
 # Notizen
 
-Auf dem Reiter **Notizen** der Turnierseite schreiben die Verantwortlichen, was die Spieler im Lauf des Turniers wissen müssen: den Spielplan, eine Änderung der Plätze, die Zeit des Mittagessens. Leser finden sie auf der öffentlichen Seite Notizen des Turniers, und eine Notiz, die sie nicht gelesen haben, ist dort mit einem roten Sternchen markiert, das auch den Bereich Notizen auf jeder Seite des Turniers markiert, bis sie ihn öffnen.
+Auf dem Reiter **Notizen** der Turnierseite schreiben die Verantwortlichen, was die Spieler im Lauf des Turniers wissen müssen: die Spielreihenfolge, eine Änderung der Rasenplätze, die Zeit des Mittagessens. Leser finden sie auf der öffentlichen Seite Notizen des Turniers, und eine Notiz, die sie nicht gelesen haben, ist dort mit einem roten Sternchen markiert, das auch den Bereich Notizen auf jeder Seite des Turniers markiert, bis sie ihn öffnen.
 
 ![Der Reiter Notizen](images/notes-tab.png)
 

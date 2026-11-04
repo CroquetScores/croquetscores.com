@@ -1,6 +1,6 @@
 # Ranglyste
 
-Waar 'n toernooi vir die wêreldranglys tel, word sy uitslae as 'n leer aan die ranglys gestuur, wat die webwerf vir jou skryf uit wat jy ingevoer het. Die **Ranglyste**-oortjie is waar jy dit kry.
+Waar 'n kompetisie vir die wêreldranglys tel, word sy uitslae as 'n leer aan die ranglys gestuur, wat die webwerf vir jou skryf uit wat jy ingevoer het. Die **Ranglyste**-oortjie is waar jy dit kry.
 
 ## Die oortjie
 
@@ -20,6 +20,6 @@ Elke uitslag wat ingevoer en nie geargiveer is nie, is daarin, in die volgorde w
 
 ## Wanneer daar geen leer is nie
 
-'n Toernooi wat nie vir die wêreldranglys tel nie, het geen leer nie. As jy sy ranglysadres oopmaak, wys dit 'n bladsy wat sê dat dit so is en hoekom: sy sportsoort het geen wêreldranglys nie, dit word met voorgee gespeel, dit laat gelykopuitslae toe, of dit is ontmerk om nie te tel nie. Dit word gestel wanneer die toernooi geskep word, en verander met **Wysig**.
+'n Toernooi waarvan geen kompetisie vir die wêreldranglys tel nie, het geen leer nie. As jy sy ranglysadres oopmaak, wys dit 'n bladsy wat sê dat dit so is en hoekom: sy sport het geen wêreldranglyste nie, of geeneen van sy kompetisies tel nie, omdat elkeen met voorgifte gespeel word, gelykopuitslae toelaat, of ontmerk is om nie te tel nie. Dit word gestel wanneer elke kompetisie bygevoeg word, en verander met sy **Wysig**. Net die kompetisies wat tel, is in die leer.
 
 Volgende: [Hoe om 'n toernooi te verander, te argiveer en te herstel](changing-and-archiving.md).

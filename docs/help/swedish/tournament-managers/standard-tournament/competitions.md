@@ -42,9 +42,9 @@ En lottning har så många ronder som det tar att halvera dess platser ned till 
 
 En utslagning kan skicka dem som förlorar en omgång vidare till en egen utslagning, en förlorarutslagning. Tryck på **Lägg till förlorarutslagning** under **Bäst av per rond** i en utslagning. En dialogruta frågar efter **Förlorare från**, omgången vars förlorare spelar vidare, bland alla omgångar utom finalen, och efter **Förlorarutslagningens namn**. Tryck på **Lägg till** för att lägga den i listan under knappen, där **Ta bort** tar bort den igen. Den läggs till tillsammans med utslagningen när den läggs till, och om någon av dem nekas läggs ingen till.
 
-En förlorarutslagning har en plats för varje match i den omgången, och varje omgång i den är bäst av 1, vilket **Redigera** kan ändra. Dess spelare läggs in när matcherna i den omgången avgörs, i den ordning de lottades, så fliken **Spelare** visar dem bara. Om ett spel rättas eller läggs åt sidan flyttas eller tas förloraren bort igen, om inte hen redan har spelat vidare.
+En förlorarutslagning har en plats för varje match i den omgången, och varje omgång i den är bäst av 1, vilket **Redigera** kan ändra. Dess spelare läggs in när matcherna i den omgången avgörs, i den ordning de lottades, så fliken **Spelare** visar dem bara. Om ett parti rättas eller läggs åt sidan flyttas eller tas förloraren bort igen, om inte hen redan har spelat vidare.
 
-En utslagnings sida har en tredje flik, **Förlorare**, efter Spelare och Resultat, som listar de utslagningar som tar dess förlorare, var och en med en länk till sin sida. **Lägg till förlorarutslagning** finns också där och frågar efter samma två saker; här läggs en förlorarutslagning till direkt. Bara en utslagning har fliken, och en poängräknare erbjuds den inte.
+En utslagnings sida har en tredje flik, **Förlorare**, efter Spelare och Resultat, som listar de utslagningar som tar dess förlorare, var och en med en länk till sin sida. **Lägg till förlorarutslagning** finns också där och frågar efter samma två saker; här läggs en förlorarutslagning till direkt. Bara en utslagning har fliken, och en resultatförare erbjuds den inte.
 
 På en utslagning som redan lagts till visar **Redigera** samma knapp, och förlorarutslagningen läggs till direkt, som från fliken Förlorare. En utslagning vars förlorare tas av en annan som används kan inte arkiveras eller få sina platser ändrade: arkivera förlorarutslagningen först.
 
@@ -62,7 +62,7 @@ Varje slag frågar efter samma fyra saker under sin form.
 
 ### Lägga till flera på en gång
 
-Tryck på **Lägg till**. Tävlingen läggs till, dialogrutan säger det, och namnet töms för nästa, med sorten och dess form kvar som de var: tävlingar som läggs till tillsammans är för det mesta lika, så "Block B" efter "Block A" är bara dess namn. Tryck på **Avbryt** för att stänga dialogrutan när alla är inlagda.
+Tryck på **Lägg till**. Tävlingen läggs till, dialogrutan säger det, och namnet töms för nästa, med slaget och dess form kvar som de var: tävlingar som läggs till tillsammans är för det mesta lika, så "Block B" efter "Block A" är bara dess namn. Tryck på **Avbryt** för att stänga dialogrutan när alla är inlagda.
 
 ## Ändra en tävling {#changing-a-competition}
 

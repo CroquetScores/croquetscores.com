@@ -16,7 +16,7 @@ Mae **Enw byr** yn ofynnol hefyd: yr hyn y gelwir profion y tîm wrtho, fel "AUS
 
 Dangosir **Baner** wrth ochr enw'r tîm lle bynnag y mae'n ymddangos. Gellir ei gadael heb un, fel ar gyfer tîm clwb neu ranbarth.
 
-Pwyswch **Ychwanegu**. Caiff y tîm ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y nesaf. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog. Nid yw Canslo yn cadw dim nad oedd eisoes wedi'i ychwanegu.
+Pwyswch **Ychwanegu**. Caiff y tîm ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y nesaf. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog. Nid yw Diddymu yn cadw dim nad oedd eisoes wedi'i ychwanegu.
 
 ![Y ddeialog ar ôl i dîm gael ei ychwanegu](images/add-team-dialog-added.png)
 

@@ -5,7 +5,7 @@
 ### Dilyn twrnamaint
 
 - **Mae tudalen blwyddyn yn dangos ei misoedd.** Rhestrir pob un o'r deuddeg mis wedi'i gau, gan ddweud faint o dwrnameintiau sy'n dechrau ynddo. Pwyswch ar fis i agor ei dwrnameintiau ar yr un dudalen, a gall cynifer o fisoedd ag y mynnwch fod ar agor ar yr un pryd. O dan y pennawd, mae **+ Dangos y cyfan** yn agor pob mis, ac yna'n darllen **- Cuddio'r cyfan**, sy'n eu cau. Gwneir yr un peth ar gyfer camp mewn blwyddyn. Heb sgriptio, dolen yw mis yn lle hynny, a chedwir y misoedd sydd ar agor yn y cyfeiriad.
-- **Gellir hidlo twrnameintiau yn ôl ystod o ddyddiau.** Cyn y botwm Hidlo mae diwrnod cyntaf a diwrnod olaf, y rhoddir y ddau ohonynt gyda'i gilydd neu'r un ohonynt. Mae'r ddau ddiwrnod wedi'u cynnwys. Mae twrnamaint yn yr ystod yn ôl y diwrnod y mae'n dechrau, felly mae yn rhestr un mis ac nid yw byth yn rhestr dau.
+- **Gellir hidlo twrnameintiau yn ôl ystod o ddyddiau.** Cyn y botwm Hidlo mae diwrnod cyntaf a diwrnod olaf, y rhoddir y ddau ohonynt gyda'i gilydd neu ddim un. Mae'r ddau ddiwrnod wedi'u cynnwys. Mae twrnamaint yn yr ystod yn ôl y diwrnod y mae'n dechrau, felly mae yn rhestr un mis ac nid yw byth yn rhestr dau.
 - **Mae rhestr o dwrnameintiau yn gant i bob tudalen.** Rhennir rhestr hirach yn dudalennau, fel nad yw chwiliad eang yn llwytho pob rhes ar unwaith mwyach.
 - **Cofir yr hidl a ddewisoch.** Cedwir y wlad, y rhanbarth a'r gamp a ddewiswch yn yr hidl, neu drwy wasgu baner, ar eich ffôn neu'ch cyfrifiadur, ac mae rhestr o dwrnameintiau yn dechrau ohonynt y tro nesaf y byddwch yn ei hagor. Ni chedwir y flwyddyn, gan ei bod yn dudalen ar ei phen ei hun. Mae dewis "unrhyw" ar gyfer un ohonynt yn anghofio'r hyn a gadwyd ar ei gyfer.
 - **Mae mwy o dwrnameintiau yn eu gwlad eu hunain.** Roedd pencampwriaethau ac agored Sweden a Norwy, agored Tsiecia, a phencampwriaethau Kohlhof a'r De-orllewin yn cael eu dangos yn Sbaen, neu lle bynnag yr oedd eu parth amser yn pwyntio. Maent bellach yn Sweden, Norwy, Tsiecia a'r Almaen.
@@ -34,13 +34,13 @@
 
 ### Dilyn twrnamaint
 
-- **Mae Tarian y Taleithiau yn cael ei threfnu yn ôl gemau net.** Bellach trefnir ei thimau yn ôl y gemau a enillwyd llai'r gemau a gollwyd, felly mae gêm a gollir yn cyfrif yn erbyn tîm, lle nad oedd yn cyfrif o gwbl o'r blaen. Rhoddir timau sy'n dal yn gyfartal mewn trefn yn ôl y profion a enillwyd ganddynt yn erbyn ei gilydd. Mae crynodeb y twrnamaint, a thudalen grŵp, yn dangos gemau net pob tîm.
+- **Mae Tarian y Taleithiau yn cael ei threfnu yn ôl gemau net.** Bellach trefnir ei thimau yn ôl y gemau a enillwyd llai'r gemau a gollwyd, felly mae gêm a gollir yn cyfrif yn erbyn tîm, lle nad oedd yn cyfrif o gwbl o'r blaen. Rhoddir timau sy'n dal yn gyfartal mewn trefn yn ôl y profion a enillwyd ganddynt yn erbyn ei gilydd. Mae crynodeb y twrnamaint, a thudalen grŵp, yn dangos gemau net a gemau unigol net pob tîm.
 
 ### Rheoli twrnamaint
 
 - **Gellir ychwanegu llawer o chwaraewyr ar unwaith.** Ar y tab Chwaraewyr, pwyswch **Ychwanegu chwaraewyr**, wrth ymyl **Ychwanegu chwaraewr**, a gludwch restr â llinell ar gyfer pob chwaraewr. Ychwanegir pob chwaraewr ar y rhestr.
 - **Eicon cymorth ar fwy o'r gweinyddu.** Bellach mae'r marc cwestiwn crwn hefyd ar ddechrau'r dudalen sy'n creu twrnamaint a'r dudalen sy'n newid un, ar ddiwedd rhes y tabiau ar dudalen twrnamaint ac ar dudalen cystadleuaeth, ac wrth ymyl y rhestr o dwrnameintiau. Mae pob un yn arwain at y cymorth ar gyfer yr hyn rydych yn edrych arno, ac yn ei agor mewn tab arall fel bod y dudalen yn cael ei chadw.
-- **Mae'r tab Sgorau yn dabl.** Mae pob sgôr yn rhes o dabl, fel bod darllenydd sgrin yn dweud wrthych ym mha gell rydych. Mae gan y gair "curo" ei golofn ei hun rhwng sgôr yr enillydd a'r collwr. Ar ffôn nid yw sgôr bellach wedi'i phlygu ar ddwy linell: mae'r tabl yn sgrolio i'r ochr yn lle hynny.
+- **Mae'r tab Sgorau yn dabl.** Mae pob sgôr yn rhes o dabl, fel bod darllenydd sgrin yn dweud wrthych ym mha gell rydych. Mae gan y gair "a gurodd" ei golofn ei hun rhwng sgôr yr enillydd a'r collwr. Ar ffôn nid yw sgôr bellach wedi'i phlygu ar ddwy linell: mae'r tabl yn sgrolio i'r ochr yn lle hynny.
 - **Nid oes grŵp i brawf mewn Cwpan Iwerddon na Tharian y Taleithiau.** Nid yw'r digwyddiadau hynny'n cael eu chwarae mewn grwpiau, felly nid yw'r deialog ar gyfer prawf yn gofyn am un yno, ac ni ellir rhoi grŵp i brawf.
 
 ## Rhyddhawyd 2026-10-31
@@ -59,7 +59,7 @@
 
 ### Rheoli twrnamaint
 
-- **Mae'r tab Sgorau wedi'i drefnu mewn colofnau.** Ar dabled neu'n ehangach, mae pob sgôr ar dab **Sgorau** cystadleuaeth yn rhes o golofnau: rhif y gêm, yr enillydd, sgôr yr enillydd, y collwr, sgôr y collwr, a'r botymau. Nid yw'r enwau a'r sgorau'n torri dros linellau ac maent yn cymryd dim ond y lle sydd ei angen arnynt. Y botymau sy'n cael y gweddill. Ar ffôn trefnir y sgorau fel o'r blaen.
+- **Mae'r tab Sgorau wedi'i drefnu mewn colofnau.** Ar dabled neu'n ehangach, mae pob sgôr ar dab Sgorau cystadleuaeth yn rhes o golofnau: rhif y gêm, yr enillydd, sgôr yr enillydd, y collwr, sgôr y collwr, a'r botymau. Nid yw'r enwau a'r sgorau'n torri dros linellau ac maent yn cymryd dim ond y lle sydd ei angen arnynt. Y botymau sy'n cael y gweddill. Ar ffôn trefnir y sgorau fel o'r blaen.
 - **Mae pob sgôr yn dechrau â rhif ei gêm.** Rhifir y gemau yn y drefn y'u cofnodwyd, gan gyfrif y rhai wedi'u harchifo, felly gêm sydd wedi'i harchifo yw bwlch yn y rhifau.
 
 ### Eich cyfrif
@@ -102,7 +102,7 @@ Mae Chris Williams wedi helpu eto: fe'm helpodd i wella gwledydd twrnameintiau w
 - **Dewiswch y wlad, y rhanbarth a'r gamp drwy deipio.** Mae'r ffurflen sy'n creu neu'n newid twrnamaint yn gofyn amdanynt yn yr un blychau. Mae twrnamaint angen gwlad a champ, felly gofynnir i chi ddewis un cyn y gallwch adael y naill flwch na'r llall neu anfon y ffurflen. Nid yw cywiro geiriau'r wlad yn colli'r rhanbarth a ddewisoch mwyach. Mae dewis gwlad arall yn ei glirio.
 - **Teipir baneri hefyd.** Dewisir baner chwaraewr neu dîm yn yr un ffordd. Gadewch y blwch yn wag am ddim baner.
 - **Awgrymir yr hyn y mae chwaraewr yn ei gynrychioli.** Wrth i chi deipio'r hyn y mae chwaraewr yn ei gynrychioli, awgrymir y clybiau a'r gwledydd y mae chwaraewyr wedi'u hychwanegu yn eu cynrychioli, mewn unrhyw dwrnamaint ac mewn unrhyw gamp. Teipiwch ddwy lythyren i ddechrau. Awgrymir deg ar y mwyaf, yn nhrefn yr wyddor, ac awgrymir enw sy'n wahanol yn ei briflythrennau yn unig unwaith, fel y'i hysgrifennwyd gyntaf. Ni edrychir ar chwaraewyr wedi'u harchifo na chwaraewyr tîm.
-- **Mae'r cymorth yn esbonio rowndiau bloc.** **Rowndiau** yw sawl gwaith y mae pob pâr o chwaraewyr mewn bloc yn cwrdd, â gêm ym mhob rownd. Mae'n dechrau ar 1, sef yr hyn y mae bloc ei eisiau bron bob amser. Codwch ef dim ond ar gyfer bloc lle maent yn cwrdd eto, fel cystadleuaeth gron ddwbl. Mae'r dudalen ar gystadlaethau yn dweud hynny, ac mae gan floc a chystadleuaeth Swisaidd adran yr un bellach.
+- **Mae'r cymorth yn esbonio rowndiau bloc.** Rowndiau yw sawl gwaith y mae pob pâr o chwaraewyr mewn bloc yn cwrdd, â gêm ym mhob rownd. Mae'n dechrau ar 1, sef yr hyn y mae bloc ei eisiau bron bob amser. Codwch ef dim ond ar gyfer bloc lle maent yn cwrdd eto, fel cystadleuaeth gron ddwbl. Mae'r dudalen ar gystadlaethau yn dweud hynny, ac mae gan floc a chystadleuaeth Swisaidd adran yr un bellach.
 
 ### Twrnameintiau a ddygwyd o'r hen wefannau
 

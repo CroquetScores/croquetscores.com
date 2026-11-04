@@ -6,7 +6,7 @@ Rhoddir chwaraewyr i mewn yma unwaith, i'r twrnamaint. Dewisir ym mha gystadlaet
 
 ![Y tab Chwaraewyr, â chwaraewyr wedi'u rhoi i mewn ac un wedi'i archifo](images/players-tab.png)
 
-## Ychwanegu chwaraewyr {#add-a-player}
+## Ychwanegu chwaraewr {#add-a-player}
 
 Pwyswch **Ychwanegu chwaraewr**, uwchben y rhestr. Mae deialog yn agor dros y dudalen.
 
@@ -24,11 +24,11 @@ Mae **Enw** yn ofynnol. Dyma enw'r chwaraewr fel y caiff ei ddangos ar bob tudal
 
 Wrth i chi deipio enw, cynigir y chwaraewyr y mae detholion y byd yn eu hadnabod y mae eu henwau'n dechrau felly, fel y gallwch gymryd enw fel y mae'r detholion yn ei sillafu yn hytrach na'i deipio'n llawn. Wrth ochr yr enw ar restr detholion y byd, mae tic yn dweud bod y detholion yn adnabod yr enw, a marc cwestiwn yn dweud nad ydynt: efallai fod yr enw wedi'i gamsillafu, neu fod y chwaraewr yn newydd i'r detholion. Cyngor yn unig yw hyn. Cedwir enw nad yw'r detholion yn ei adnabod yr un mor rhwydd ag un y maent yn ei adnabod.
 
-Pwyswch **Ychwanegu**. Caiff y chwaraewr ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y chwaraewr nesaf, â'r cyrchwr yn ôl yn yr enw. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog. Nid yw Canslo yn cadw dim nad oedd eisoes wedi'i ychwanegu.
+Pwyswch **Ychwanegu**. Caiff y chwaraewr ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y chwaraewr nesaf, â'r cyrchwr yn ôl yn yr enw. Ychwanegwch y rhestr gyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog. Nid yw Diddymu yn cadw dim nad oedd eisoes wedi'i ychwanegu.
 
 ![Y ddeialog ar ôl i chwaraewr gael ei ychwanegu](images/add-player-dialog-added.png)
 
-Ni chaiff chwaraewr byth ei alw'n "Bye". Caiff byes cystadleuaeth cnoc-owt eu hychwanegu yn y gystadleuaeth ei hun, lle bynnag y rhoddir ei chwaraewyr i mewn, felly gwrthodir enw y mae ei air cyntaf yn y gair Saesneg "bye", ac mae'r ddeialog yn egluro pam.
+Ni chaiff chwaraewr byth ei alw'n "Bye". Caiff byes cystadleuaeth cnoc-owt eu hychwanegu yn y gystadleuaeth ei hun, lle bynnag y rhoddir ei chwaraewyr i mewn, felly gwrthodir enw sy'n "Bye", neu'n "Bye" â rhif, fel "Bye 2", "Bye-2" neu "Bye (2)", ac mae'r ddeialog yn egluro pam.
 
 ## Ychwanegu sawl chwaraewr {#adding-multiple-players}
 
@@ -42,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- Mae **Enw, Yn cynrychioli ac Enw'r chwaraewr ar restr detholion y byd** yn dilyn yr un rheolau ag wrth ychwanegu un chwaraewr (gweler [Ychwanegu chwaraewyr](players.md#add-a-player)). Mae enw rhwng 3 a 254 o gymeriadau, nid yw eisoes yn y twrnamaint, sut bynnag y caiff ei briflythrennu, ac nid yw'n "Bye".
+- Mae **Enw, Yn cynrychioli ac Enw'r chwaraewr ar restr detholion y byd** yn dilyn yr un rheolau ag wrth ychwanegu un chwaraewr (gweler [Ychwanegu chwaraewr](players.md#add-a-player)). Mae enw rhwng 3 a 254 o gymeriadau, nid yw eisoes yn y twrnamaint, sut bynnag y caiff ei briflythrennu, ac nid yw'n "Bye".
 - **Baner** yw enw'r wlad neu'r lle, yn eich iaith chi, fel y mae'r rhestr yn y ddeialog Ychwanegu chwaraewr yn ei gynnig, fel Seland Newydd.
 - **Anfantais** yw arwydd, hyd at ddau ddigid a ffracsiwn o un digid, fel 4, +4 neu -1.5.
 - Mae chwaraewr heb **WorldRankingPlayerName** yn cael ei adnabod wrth ei enw, fel pan gaiff ei ychwanegu fesul un.
@@ -51,7 +51,7 @@ Alex Another,,England
 - Tynnir y bylchau o ddau ben pob gwerth, a hepgorir llinell heb ddim arni.
 - Mae rhestr yn dal 500 o chwaraewyr ar y mwyaf. Ychwanegwch y gweddill mewn rhestr arall.
 
-Pwyswch **Ychwanegu**. Gwirir y rhestr gyfan cyn cadw dim ohoni, felly nid yw rhestr â rhywbeth o'i le ynddi yn ychwanegu neb. Dywedir beth sydd o'i le o dan y blwch, ar y llinell y mae arni, gan gyfrif y llinell gyntaf fel llinell 1. Rhestrir pob nam, nid y cyntaf yn unig, ac erys yr hyn a deipiwyd gennych fel y gallwch ei gywiro. Unwaith y caiff y rhestr ei chadw, mae'r ddeialog yn cau ac mae'r tab **Chwaraewyr** yn rhestru'r chwaraewyr newydd, yn y drefn yr ysgrifennoch hwy. Yn wahanol i **Ychwanegu chwaraewr**, sy'n aros ar agor ar gyfer y chwaraewr nesaf, nid oes un nesaf: y rhestr oedd y nesaf.
+Pwyswch **Ychwanegu**. Gwirir y rhestr gyfan cyn cadw dim ohoni, felly nid yw rhestr â rhywbeth o'i le ynddi yn ychwanegu neb. Dywedir beth sydd o'i le o dan y blwch, ar y llinell y mae arni, gan gyfrif y llinell gyntaf fel llinell 1. Rhestrir pob nam, nid y cyntaf yn unig, ac erys yr hyn a deipiwyd gennych fel y gallwch ei gywiro. Unwaith y caiff y rhestr ei chadw, mae'r ddeialog yn cau ac mae tab Chwaraewyr yn rhestru'r chwaraewyr newydd, yn y drefn yr ysgrifennoch hwy. Yn wahanol i **Ychwanegu chwaraewr**, sy'n aros ar agor ar gyfer y chwaraewr nesaf, nid oes un nesaf: y rhestr oedd y nesaf.
 
 Mae'r **?** ym mar teitl y ddeialog yn arwain yma. Mae'r ddeialog hon ac Ychwanegu chwaraewr yn aros yn y ffenestr i ble bynnag y mae'r dudalen wedi'i sgrolio.
 

@@ -18,9 +18,9 @@ La página de un grupo muestra sus resultados como un cuadro: una fila y una col
 
 Un grupo, una eliminatoria y un suizo se muestran cada uno de tres maneras, ofrecidas en la línea del nombre de la competición: **Cuadrícula**, **Resumen** y **Orden de juego**. Junto a ellas hay un botón de impresora, que imprime el nombre del torneo, el nombre de la competición y sus resultados, y nada más. El resumen es el pensado para un teléfono: para un grupo, los jugadores clasificados, con sus victorias, derrotas, aros netos y puesto; para una eliminatoria, los partidos listados ronda a ronda; para un suizo, la tabla del cuadro sin sus resultados. El orden de juego lista todas las partidas, la más antigua primero al principio. Tiene los encabezados **Partida** y **Fecha**: pulsar **Partida** ordena las partidas por el nombre del ganador y después por el del perdedor, pulsar **Fecha** las ordena de la más antigua o de la más reciente primero, y pulsar el encabezado por el que se ha ordenado una lista le da la vuelta. El orden que eligió un lector se recuerda en su dispositivo. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
 
-![El resumen de un grupo](images/public-block-summary.png)
-
 Una competición que se juega a un número de aros distinto del habitual para su deporte lo dice bajo su nombre, como «Se juega a 14 aros» (véase [Competiciones](competitions.md#adding-a-competition)).
+
+![El resumen de un grupo](images/public-block-summary.png)
 
 La fila de un jugador retirado lo dice. Un resultado retirado se muestra tachado y no cuenta para nada. Un resultado archivado no se muestra.
 

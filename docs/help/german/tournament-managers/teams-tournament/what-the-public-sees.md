@@ -1,6 +1,6 @@
 # Was die Öffentlichkeit sieht
 
-Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch JavaScript und sind für das Telefon gestaltet.
+Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch Skripte und sind für das Telefon gestaltet.
 
 ## Die Seite des Turniers
 
@@ -10,7 +10,7 @@ Die Seite des Turniers liegt unter seinem Jahr, seiner Sportart und seinem Namen
 
 Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Neueste**, was diese Seite ist, **Zusammenfassung**, **Spieler**, **Notizen** und **Kommentar**, dann die Tests. Ein Test wird als die Kurznamen seiner Mannschaften mit „gegen“ dazwischen gesagt, etwa „AUS gegen NZ“. Tests in einer Gruppe werden nicht einzeln angeboten: Die Gruppe ist ein Bereich, benannt wie die Gruppe, an der Stelle, an der ihr erster Test stünde. Notizen ist mit einem roten Sternchen markiert, solange es eine Notiz gibt, die der Leser nicht gelesen hat.
 
-## Die Übersicht
+## Die Zusammenfassung
 
 Ein Turnier, dessen Tests in keiner Gruppe sind, hat eine **Zusammenfassung**: eine Tabelle aller Mannschaften, gereiht, mit den gewonnenen, verlorenen und unentschiedenen Tests, den gewonnenen und verlorenen Spielen und den erzielten und gegnerischen Toren sowie der Tordifferenz. Geht in irgendeinem Test eine Begegnung über mehr als ein Spiel, kommen nach den Tests die gewonnenen und verlorenen Begegnungen. Die Mannschaften werden gereiht nach den gewonnenen Tests, dann den gewonnenen Begegnungen, dann ihrer Spieldifferenz, dann ihrer Tordifferenz und dann nach der Reihenfolge des Turniers. Ein Test, in dem die Mannschaften bei den Begegnungen gleichstehen, wird nach Spieldifferenz entschieden, dann nach Tordifferenz, oder ist unentschieden, wo das Turnier **Gleichstand in Tests ist unentschieden** anhakt. In der Zusammenfassung sucht ein Leser jede Mannschaft als Ganzes.
 

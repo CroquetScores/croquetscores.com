@@ -18,7 +18,7 @@ Mae **Enw** yn ofynnol, rhwng 3 a 254 o gymeriadau. Ni all dau chwaraewr yn yr u
 
 **Enw'r chwaraewr ar restr detholion y byd** yw'r enw y mae detholion y byd yn adnabod y chwaraewr wrtho. Gofynnir amdano dim ond mewn twrnamaint Association Croquet neu Golf Croquet, y ddwy gamp y mae detholion y byd yn cadw rhestr o'u chwaraewyr. Mae chwaraewyr American 6 Wicket yn hysbys i'r detholion wrth eu henwau eu hunain, felly ni ofynnir amdano yno, ac enw pob chwaraewr ar restr detholion y byd yw ei enw bob amser. Tra byddwch yn ychwanegu chwaraewr mae'n dilyn yr enw wrth i chi ei deipio, ac mae'n rhoi'r gorau i ddilyn unwaith y byddwch yn teipio ynddo. Os caiff ei adael yn wag, caiff ei gadw fel enw'r chwaraewr. Wrth i chi deipio, cynigir y chwaraewyr y mae detholion y byd yn eu hadnabod y mae eu henwau'n dechrau felly, ac wrth ochr yr enw ar restr detholion y byd mae tic yn dweud bod y detholion yn adnabod yr enw a marc cwestiwn yn dweud nad ydynt. Cyngor yn unig yw hyn: cedwir enw nad yw'r detholion yn ei adnabod yr un mor rhwydd ag un y maent yn ei adnabod.
 
-Ni chaiff chwaraewr byth ei alw'n "Bye": gwrthodir enw y mae ei air cyntaf yn y gair Saesneg "bye".
+Ni chaiff chwaraewr byth ei alw'n "Bye": gwrthodir enw sy'n "Bye", neu'n "Bye" â rhif, fel "Bye 2", "Bye-2" neu "Bye (2)". Enw person yw un sydd ond yn dechrau â'r gair, fel "Bye / Bassett".
 
 Pwyswch **Ychwanegu**. Caiff y chwaraewr ei ychwanegu, mae'r ddeialog yn dweud hynny, a chaiff ei meysydd eu gwagio ar gyfer y nesaf, â'r cyrchwr yn ôl yn yr enw. Ychwanegwch y tîm cyfan fel hyn, yna pwyswch **Diddymu** i gau'r ddeialog.
 

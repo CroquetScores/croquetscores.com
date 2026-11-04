@@ -26,9 +26,9 @@ Tryck på **Lägg till landskamp**, ovanför listan. En dialogruta öppnas över
 
 **Bäst av** är vad varje match spelas bäst av. Det får vara jämnt, eftersom en match kan delas.
 
-**Högsta antal bågar** är det största antal bågar som ett parti i landskampen spelas till. Det börjar på det vanliga för sporten, 26, eller 13 i golfcroquet. Töm det för ett parti som inte spelas till ett antal bågar. Det måste vara ett heltal på minst 1.
-
 **Spelas med handikapp**, **Tillåter oavgjorda resultat** och **Räknas med i världsrankingen** frågas efter som för vilken tävling som helst. Det sista frågas bara där det kan räknas: en landskamp i association croquet eller golfcroquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början.
+
+**Högsta antal bågar** är det största antal bågar som ett parti i landskampen spelas till. Det börjar på det vanliga för sporten, 26, eller 13 i golfcroquet. Töm det för ett parti som inte spelas till ett antal bågar. Det måste vara ett heltal på minst 1.
 
 **Grupp** är den grupp landskampen ingår i, där evenemanget spelas i grupper, som "Block A". Den är frivillig: lämnas den tom ingår landskampen i ingen. Landskamperna i en grupp har en egen sida på den offentliga webbplatsen, som visar hur gruppens lag står. **Eire Cup** och **Interstate Shield** har inga grupper, så dialogrutan frågar inte efter någon där.
 

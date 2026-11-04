@@ -28,13 +28,13 @@ Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fäl
 
 ![Dialogrutan efter att en spelare har lagts till](images/add-player-dialog-added.png)
 
-En spelare heter aldrig "Bye". En utslagnings byes läggs till i själva utslagningen, där dess spelare sätts in, så ett namn vars första ord är det engelska "bye" godtas inte, och dialogrutan förklarar varför.
+En spelare heter aldrig "Bye". En utslagnings byes läggs till i själva utslagningen, där dess spelare sätts in, så ett namn som är "Bye", eller "Bye" med ett nummer, som "Bye 2", "Bye-2" eller "Bye (2)", godtas inte, och dialogrutan förklarar varför. Orden är engelska, eftersom det är de ord webbplatsen själv känner igen.
 
 ## Lägga till flera spelare {#adding-multiple-players}
 
 För att lägga till en hel lista på en gång trycker du på **Lägg till flera spelare**, bredvid **Lägg till spelare**. En dialogruta öppnas över sidan med en enda ruta, som tar emot flera rader text. Du kan kopiera listan från ett kalkylblad och klistra in den i rutan.
 
-**Första raden anger fälten** (en lista vars första rad inte anger några fält nekas, med "Skriv fältens namn på första raden."), åtskilda med kommatecken eller tabbar: **Name** och något av **Representing**, **Flag**, **Handicap** och **WorldRankingPlayerName**, i valfri ordning. Dessa namn skrivs på engelska, oavsett vilket språk webbplatsen visas på. **Name** måste vara ett av dem. **Varje rad efter den är en spelare**, med ett värde för varje fält i samma ordning, åtskilda på samma sätt. En spelare som saknar värde för ett fält lämnar det tomt, men behåller kommatecknet eller tabben. Till exempel, med kommatecken:
+**Första raden anger fälten** (en lista vars första rad inte anger några fält nekas, med "Första raden måste vara fältnamn"), åtskilda med kommatecken eller tabbar: **Name** och något av **Representing**, **Flag**, **Handicap** och **WorldRankingPlayerName**, i valfri ordning. Dessa namn skrivs på engelska, oavsett vilket språk webbplatsen visas på. **Name** måste vara ett av dem. **Varje rad efter den är en spelare**, med ett värde för varje fält i samma ordning, åtskilda på samma sätt. En spelare som saknar värde för ett fält lämnar det tomt, men behåller kommatecknet eller tabben. Till exempel, med kommatecken:
 
 ```
 Name,Representing,Flag
@@ -65,7 +65,7 @@ En spelare som rättas här rättas överallt: i varje tävling spelaren är med
 
 ## Ordna spelarna
 
-Spelarna listas i turneringens ordning, som är den ordning de erbjuds i när de sätts in i tävlingar, och den ordning en utslagning lottas i. **Upp** och **Ner**, pilarna i slutet av varje rad, flyttar en spelare ett steg. Den första spelaren erbjuds inte Upp och den sista erbjuds inte Ned.
+Spelarna listas i turneringens ordning, som är den ordning de erbjuds i när de sätts in i tävlingar, och den ordning en utslagning lottas i. **Upp** och **Ner**, pilarna i slutet av varje rad, flyttar en spelare ett steg. Den första spelaren erbjuds inte Upp och den sista erbjuds inte Ner.
 
 ## Arkivera en spelare {#archiving-a-player}
 

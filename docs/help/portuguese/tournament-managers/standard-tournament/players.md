@@ -6,7 +6,7 @@ Os jogadores são inscritos aqui uma vez, no torneio. Em que competições cada 
 
 ![A aba Jogadores, com jogadores inscritos e um arquivado](images/players-tab.png)
 
-## Adicionar jogadores {#add-a-player}
+## Adicionar um jogador {#add-a-player}
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
@@ -28,7 +28,7 @@ Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus
 
 ![O diálogo depois que um jogador é adicionado](images/add-player-dialog-added.png)
 
-Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
+Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome que é a palavra inglesa "Bye", ou "Bye" com um número, como "Bye 2", "Bye-2" ou "Bye (2)", é recusado, e o diálogo explica por quê.
 
 ## Adicionar vários jogadores {#adding-multiple-players}
 
@@ -42,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Nome, Representando e Nome do jogador no ranking mundial** seguem as mesmas regras de quando você adiciona um jogador só (veja [Adicionar jogadores](players.md#add-a-player)). Um nome tem entre 3 e 254 caracteres, não pode já estar no torneio, sejam quais forem as maiúsculas, e não pode ser "Bye".
+- **Nome, Representando e Nome do jogador no ranking mundial** seguem as mesmas regras de quando você adiciona um jogador só (veja [Adicionar um jogador](players.md#add-a-player)). Um nome tem entre 3 e 254 caracteres, não pode já estar no torneio, sejam quais forem as maiúsculas, e não pode ser "Bye".
 - **Bandeira** é o nome do país ou do lugar, no seu idioma, como a lista do diálogo Adicionar jogador o oferece, como Nova Zelândia.
 - **Handicap** é um número com sinal, de até dois dígitos e uma fração de um dígito, como 4, +4 ou -1.5.
 - Um jogador sem **Nome do jogador no ranking mundial** é conhecido pelo próprio nome, como quando é adicionado um a um.
@@ -65,7 +65,7 @@ Um jogador corrigido aqui é corrigido em todo lugar: em todas as competições 
 
 ## Colocar os jogadores em ordem
 
-Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteada. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
+Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteado. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
 
 ## Arquivar um jogador {#archiving-a-player}
 

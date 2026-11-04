@@ -7,7 +7,7 @@
 - **La página de un año muestra sus meses.** Cada uno de los doce meses aparece cerrado, con el número de torneos que empiezan en él. Pulsa un mes para abrir sus torneos en la misma página; puedes tener abiertos a la vez tantos meses como quieras. Bajo el encabezado, **+ Mostrar todo** abre todos los meses y pasa a decir **- Ocultar todo**, que los cierra. Lo mismo se hace con un deporte en un año. Sin scripts, un mes es en cambio un enlace, y los meses abiertos se guardan en la dirección.
 - **Los torneos se pueden filtrar por un intervalo de días.** Antes del botón Filtrar hay un primer día y un último día, que se indican los dos o ninguno. Ambos días están incluidos. Un torneo entra en el intervalo por el día en que empieza, así que está en la lista de un solo mes y nunca en dos.
 - **Una lista de torneos tiene cien por página.** Una lista más larga se divide en páginas, para que una búsqueda amplia ya no cargue todas las filas a la vez.
-- **Se recuerda el filtro que elegiste.** El país, la región y el deporte que eliges en el filtro, o al pulsar una bandera, se guardan en tu teléfono o computadora, y una lista de torneos empieza con ellos la próxima vez que la abras. El año no se guarda, porque es una página aparte. Si eliges «cualquiera» en uno de ellos, se olvida lo guardado para ese.
+- **Se recuerda el filtro que elegiste.** El país, la región y el deporte que eliges en el filtro, o al pulsar una bandera, se guardan en tu teléfono o en tu ordenador, y una lista de torneos empieza con ellos la próxima vez que la abras. El año no se guarda, porque es una página aparte. Si eliges «cualquiera» en uno de ellos, se olvida lo guardado para ese.
 - **Más torneos aparecen en su propio país.** Los campeonatos y abiertos de Suecia y Noruega, los abiertos de Chequia y los campeonatos de Kohlhof y del Suroeste se mostraban en España, o donde apuntara su zona horaria. Ahora están en Suecia, Noruega, Chequia y Alemania.
 - **Dos jugadores cuyo nombre estaba mal escrito son una sola persona.** Marga Podnieks figuraba como «Marga Podneiks» en 7 competiciones, y Liz Mackenzie como «Liz McKenzie» en 5, así que el sitio mostraba dos personas donde había una. Ahora cada nombre está bien escrito en todas partes.
 
@@ -40,7 +40,7 @@
 
 - **Se pueden añadir muchos jugadores a la vez.** En la pestaña Jugadores, pulsa **Añadir jugadores**, junto a **Añadir jugador**, y pega una lista con una línea por jugador. Se añade a todos los jugadores de la lista.
 - **Un icono de ayuda en más páginas de administración.** El signo de interrogación redondo ahora también encabeza la página que crea un torneo y la que lo modifica, cierra la fila de pestañas de la página de un torneo y de una competición, y aparece junto a la lista de torneos. Cada uno lleva a la ayuda de lo que estás viendo y la abre en otra pestaña para que la página se conserve.
-- **La pestaña Resultados es una tabla.** Cada resultado es una fila de una tabla, de modo que un lector de pantalla te dice en qué celda estás. La palabra «venció a» tiene una columna propia entre la puntuación del ganador y el perdedor. En un teléfono, el resultado ya no se parte en dos líneas: la tabla se desplaza hacia los lados.
+- **La pestaña Resultados es una tabla.** Cada resultado es una fila de una tabla, de modo que un lector de pantalla te dice en qué celda estás. La palabra «ganó a» tiene una columna propia entre la puntuación del ganador y el perdedor. En un teléfono, el resultado ya no se parte en dos líneas: la tabla se desplaza hacia los lados.
 - **Un test de una Copa Eire o de un Escudo Interestatal no tiene grupo.** Esas competiciones no se juegan en grupos, así que el cuadro de diálogo de un test no pide uno allí, y no se puede asignar un grupo a un test.
 
 ## Publicado el 2026-10-31
@@ -59,13 +59,13 @@
 
 ### Gestionar un torneo
 
-- **La pestaña Resultados se presenta en columnas.** En una tableta o en una pantalla más ancha, cada resultado de la pestaña **Resultados** de una competición es una fila de columnas: el número de la partida, el ganador, la puntuación del ganador, el perdedor, la puntuación del perdedor y los botones. Los nombres y las puntuaciones no se parten en líneas y ocupan solo el espacio que necesitan. Los botones tienen el resto. En un teléfono los resultados se presentan como antes.
+- **La pestaña Resultados se presenta en columnas.** En una tableta o en una pantalla más ancha, cada resultado de la pestaña Resultados de una competición es una fila de columnas: el número de la partida, el ganador, la puntuación del ganador, el perdedor, la puntuación del perdedor y los botones. Los nombres y las puntuaciones no se parten en líneas y ocupan solo el espacio que necesitan. Los botones tienen el resto. En un teléfono los resultados se presentan como antes.
 - **Cada resultado empieza con el número de su partida.** Las partidas se numeran en el orden en que se introdujeron, contando las archivadas, así que un hueco en los números es una partida que se ha archivado.
 
 ### Tu cuenta
 
 - **Olvidar una cuenta ahora reescribe lo que se guardó.** Olvidar una cuenta solía dejar su nombre y su dirección de correo electrónico fuera de alcance. Ahora los sustituye, para siempre, dondequiera que el sitio los guarde: el nombre pasa a ser Forgotten Account y un número, y la dirección de correo electrónico pasa a ser una dirección de example.com que no es de nadie. Lo mismo se hace con la cuenta de Google vinculada a ella, para que nada una la cuenta con la persona. Los correos que aún esperaban a la cuenta se eliminan. Las cuentas olvidadas antes de esto se reescriben del mismo modo la próxima vez que se actualice el sitio. Se conservan el identificador de la cuenta y lo que publicó, bajo el nuevo nombre.
-- **Cómo pedir que se eliminen tus datos.** La nueva página /data-deletion-policy explica cómo pedir que se elimine lo que el sitio guarda sobre ti, sea cual sea la forma en que inicias sesión, qué se elimina, qué se conserva y qué hacer si no puedes iniciar sesión. Sus pasos llevan a la página Olvidar tu cuenta.
+- **Cómo pedir que se eliminen tus datos.** La nueva página /data-deletion-policy explica cómo pedir que se elimine lo que el sitio guarda sobre ti, sea cual sea la forma en que inicias sesión, qué se elimina, qué se conserva y qué hacer si no puedes iniciar sesión. Sus pasos llevan a la página Olvidar cuenta.
 
 ### El sitio
 
@@ -102,7 +102,7 @@ Chris Williams ha vuelto a echar una mano: me ayudó a mejorar los países de lo
 - **Elige el país, la región y el deporte escribiendo.** El formulario que crea o cambia un torneo los pide en los mismos cuadros. Un torneo necesita un país y un deporte, así que se te pide que elijas uno antes de poder salir de cualquiera de los cuadros o enviar el formulario. Corregir las palabras del país ya no hace perder la región que habías elegido. Elegir otro país sí la borra.
 - **Las banderas también se escriben.** La bandera de un jugador o de un equipo se elige de la misma manera. Deja el cuadro vacío si no quieres bandera.
 - **Se sugiere lo que representa un jugador.** Mientras escribes lo que representa un jugador, se sugieren los clubes y países por los que se han añadido jugadores, en cualquier torneo y en cualquier deporte. Escribe dos letras para empezar. Se sugieren como máximo diez, por orden alfabético, y un nombre que solo se diferencia en las mayúsculas se sugiere una vez, tal como se escribió la primera vez. No se miran los jugadores archivados ni los de un equipo.
-- **La ayuda explica las rondas de un grupo.** **Rondas** es cuántas veces se enfrenta cada pareja de jugadores de un grupo, con un partido en cada ronda. Empieza en 1, que es lo que casi siempre necesita un grupo. Súbelo solo para un grupo en el que se vuelven a enfrentar, como en una doble liguilla. La página de las competiciones lo explica, y un grupo y un suizo ahora tienen una sección cada uno.
+- **La ayuda explica las rondas de un grupo.** Rondas es cuántas veces se enfrenta cada pareja de jugadores de un grupo, con un partido en cada ronda. Empieza en 1, que es lo que casi siempre necesita un grupo. Súbelo solo para un grupo en el que se vuelven a enfrentar, como en una doble liguilla. La página de las competiciones lo explica, y un grupo y un suizo ahora tienen una sección cada uno.
 
 ### Torneos traídos de los sitios antiguos
 
@@ -142,13 +142,13 @@ Croquet Scores se ha reescrito por completo con IA, en TypeScript. Esto es lo qu
 ### Seguir un torneo
 
 - **Notas de los gestores.** Los gestores de un torneo ahora pueden escribir notas para decir a los jugadores lo que necesitan saber mientras se juega: el formato, un cambio en el orden de juego, la hora de la comida. Están en la nueva sección Notas del torneo, con las más recientes primero y el tiempo que hace que se escribió cada una.
-- **Un asterisco (\*) marca lo que no has leído.** Una nota lo tiene hasta que la abres, y de nuevo si se modifica después de que la leas. Mientras haya una nota sin leer, la sección Notas también lo tiene, en todas las páginas del torneo, así ves que hay novedades sin ir a mirar. Los comentarios se marcan de la misma manera. Tu navegador recuerda lo que has leído, así que no necesitas iniciar sesión. Otro teléfono u ordenador empieza sin nada leído.
-- **Los comentarios son más fáciles de seguir.** En el sitio antiguo, cada comentario nuevo llevaba la página hasta el final, y quien repasaba comentarios anteriores perdía el sitio. Ahora la página solo baja hasta un comentario nuevo si ya estás al final, leyendo el último. Si has subido para leer comentarios anteriores, te deja donde estás.
+- **Un asterisco (\*) marca lo que no has leído.** Una nota lo tiene hasta que la abres, y de nuevo si se modifica después de que la leas. Mientras haya una nota sin leer, la sección Notas también lo tiene, en todas las páginas del torneo, así ves que hay novedades sin ir a mirar. Las crónicas se marcan de la misma manera. Tu navegador recuerda lo que has leído, así que no necesitas iniciar sesión. Otro teléfono u ordenador empieza sin nada leído.
+- **La crónica es más fácil de seguir.** En el sitio antiguo, cada comentario nuevo llevaba la página hasta el final, y quien repasaba comentarios anteriores perdía el sitio. Ahora la página solo baja hasta un comentario nuevo si ya estás al final, leyendo el último. Si has subido para leer comentarios anteriores, te deja donde estás.
 
 ### El sitio
 
 - **Tu idioma.** El sitio ahora está en diecisiete idiomas: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska y Cymraeg. Se te muestra el primer idioma que pide tu navegador y que el sitio tiene, o inglés si no tiene ninguno. Para elegir otro, usa la lista del pie de página, al final de cualquier página, y pulsa el botón que hay junto a ella. Si quieres que se añada un idioma, escribe a <croquetscores@gmail.com>.
-- **Claro u oscuro.** También en el pie de página: elige Claro, Oscuro o Sistema. Sistema sigue a tu teléfono u ordenador. El sitio recuerda tu elección en todas las páginas y en cada visita.
+- **Claro u oscuro.** También en el pie de página: elige Claro, Oscuro o Del sistema. Del sistema sigue a tu teléfono u ordenador. El sitio recuerda tu elección en todas las páginas y en cada visita.
 - **Qué versión estás usando.** El pie de página ahora muestra la versión del sitio que estás viendo, como v234. Si informas de un problema, indica por favor de qué versión era.
 
 ### Código abierto

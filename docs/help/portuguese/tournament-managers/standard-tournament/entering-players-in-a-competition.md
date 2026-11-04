@@ -14,7 +14,7 @@ Os jogadores arquivados do torneio não são oferecidos.
 
 ## Byes em um mata-mata {#byes-in-a-knockout}
 
-Um mata-mata só é disputada depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
+Um mata-mata só é disputado depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
 
 ![Um mata-mata de quatro vagas com três jogadores e um bye](images/knockout-players.png)
 
@@ -30,7 +30,7 @@ Os jogadores de um mata-mata dos perdedores não são inscritos à mão. Eles en
 
 ## Ordem
 
-Os jogadores são listados na ordem da competição, que é a ordem em que um mata-mata é sorteada e em que um grupo é listado na sua página pública. **Subir** e **Descer** movem um jogador uma posição.
+Os jogadores são listados na ordem da competição, que é a ordem em que um mata-mata é sorteado e em que um grupo é listado na sua página pública. **Subir** e **Descer** movem um jogador uma posição.
 
 ## Transferir {#carry-forward}
 
@@ -38,7 +38,7 @@ Os jogadores são listados na ordem da competição, que é a ordem em que um ma
 
 ![O diálogo Transferir](images/carry-forward-dialog.png)
 
-O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transfere nada, o que não é o mesmo que transportar 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
+O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transfere nada, o que não é o mesmo que transferir 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
 
 ## Remover um jogador {#removing-a-player}
 

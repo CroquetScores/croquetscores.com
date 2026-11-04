@@ -6,7 +6,7 @@ Spelers word hier een keer ingeskryf, in die toernooi. In watter kompetisies elk
 
 ![Die Spelers-oortjie, met spelers ingeskryf en een geargiveer](images/players-tab.png)
 
-## Hoe om spelers by te voeg {#add-a-player}
+## Hoe om 'n speler by te voeg {#add-a-player}
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
@@ -28,13 +28,13 @@ Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde w
 
 ![Die dialoog nadat 'n speler bygevoeg is](images/add-player-dialog-added.png)
 
-'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam waarvan die eerste woord die Engelse "bye" is, word geweier, en die dialoog verduidelik hoekom.
+'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam wat "Bye" is, of "Bye" met 'n nommer, soos "Bye 2", "Bye-2" of "Bye (2)", word geweier, en die dialoog verduidelik hoekom.
 
 ## Voeg verskeie spelers gelyk by {#adding-multiple-players}
 
 Om 'n hele lys ineens by te voeg, druk op **Voeg spelers by**, langs **Voeg speler by**. 'n Dialoog maak oor die bladsy oop met een boks, wat verskeie reëls teks neem. Jy kan die lys uit 'n sigblad kopieer en in die boks plak.
 
-**Die eerste reël noem die velde** (’n lys waarvan die eerste reël geen noem nie, word geweier met "First row must be field names", wat in Engels gesê word), geskei deur kommas of tabs: **Name**, en enige van **Representing**, **Flag**, **Handicap** en **WorldRankingPlayerName**, in enige volgorde. Hierdie name word in Engels getik, watter taal die werf ook al gebruik. **Name** moet een van hulle wees. **Elke reël daarna is 'n speler**, met 'n waarde vir elke veld in dieselfde volgorde, op dieselfde manier geskei. 'n Speler met niks vir 'n veld laat dit leeg, maar hou die komma of tab. Byvoorbeeld, met kommas:
+**Die eerste reël noem die velde** ('n lys waarvan die eerste reël geen noem nie, word geweier met "First row must be field names", wat in Engels gesê word), geskei deur kommas of tabs: **Name**, en enige van **Representing**, **Flag**, **Handicap** en **WorldRankingPlayerName**, in enige volgorde. Hierdie name word in Engels getik, watter taal die werf ook al gebruik. **Name** moet een van hulle wees. **Elke reël daarna is 'n speler**, met 'n waarde vir elke veld in dieselfde volgorde, op dieselfde manier geskei. 'n Speler met niks vir 'n veld laat dit leeg, maar hou die komma of tab. Byvoorbeeld, met kommas:
 
 ```
 Name,Representing,Flag
@@ -42,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Naam, Verteenwoordig en Wêreldranglys-spelernaam** is aan dieselfde reëls gebonde as wanneer jy een speler byvoeg (kyk by [Hoe om spelers by te voeg](players.md#add-a-player)). 'n Naam is tussen 3 en 254 karakters, is nie reeds in die toernooi nie, hoe dit ook al met hoofletters geskryf is, en is nie "Bye" nie.
+- **Naam, Verteenwoordig en Wêreldranglys-spelernaam** is aan dieselfde reëls gebonde as wanneer jy een speler byvoeg (kyk by [Hoe om 'n speler by te voeg](players.md#add-a-player)). 'n Naam is tussen 3 en 254 karakters, is nie reeds in die toernooi nie, hoe dit ook al met hoofletters geskryf is, en is nie "Bye" nie.
 - **Vlag** is die naam van die land of plek, in jou taal, soos die lys in die dialoog Voeg speler by dit aanbied, soos Nieu-Seeland.
 - **Voorgee** is 'n teken, tot twee syfers en 'n breuk van een syfer, soos 4, +4 of -1.5.
 - 'n Speler wat geen **Wêreldranglys-spelernaam** kry nie, staan bekend onder sy naam, soos wanneer hy een vir een bygevoeg word.

@@ -8,7 +8,7 @@ Mae tudalen y twrnamaint yn ei flwyddyn, ei gamp a'i enw, fel `/2026/ac/trans-ta
 
 ![Tudalen gyhoeddus y twrnamaint](images/public-tournament.png)
 
-Mae'r bar gwyrdd tywyll yn cynnig adrannau'r twrnamaint: **Diweddar**, sef y dudalen hon, **Crynodeb**, **Chwaraewyr**, **Nodiadau** a **Sylwebaeth**, yna'r testau. Dywedir prawf fel enwau byr ei dimau â "v" rhyngddynt, fel "AUS v NZ". Ni chynigir profion mewn grŵp fesul un: mae'r grŵp yn un adran, wedi'i henwi fel y grŵp, yn sefyll lle byddai ei brawf cyntaf. Mae Nodiadau wedi'i farcio â seren goch tra bo nodyn nad yw'r darllenydd wedi'i ddarllen.
+Mae'r bar gwyrdd tywyll yn cynnig adrannau'r twrnamaint: **Diweddar**, sef y dudalen hon, **Crynodeb**, **Chwaraewyr**, **Nodiadau** a **Sylwebaeth**, yna'r profion. Dywedir prawf fel enwau byr ei dimau ag "yn erbyn" rhyngddynt, fel "AUS yn erbyn NZ". Ni chynigir profion mewn grŵp fesul un: mae'r grŵp yn un adran, wedi'i henwi fel y grŵp, yn sefyll lle byddai ei brawf cyntaf. Mae Nodiadau wedi'i farcio â seren goch tra bo nodyn nad yw'r darllenydd wedi'i ddarllen.
 
 ## Y crynodeb
 
@@ -26,7 +26,7 @@ Mae tudalen grŵp yn dangos safle timau'r grŵp, gan gyfrif profion y grŵp yn u
 
 ## Prawf
 
-Enwau llawn ei dimau sydd ar ben tudalen prawf, fel "Australia v New Zealand", ac mae'n dweud beth yw pob gêm yr orau ohono. Y ddau dîm sydd ar ben ei dabl, y cyntaf ar y chwith. Mae pob gêm a chwaraewyd yn rhes, yn y drefn y dechreuodd, â chwaraewr y tîm cyntaf ar y chwith, chwaraewr yr ail dîm ar y dde, a gemau unigol y gêm rhyngddynt, pob un â sgôr yr ochr gyntaf yna sgôr yr ail, â sgôr yr enillydd wedi'i marcio. O dan y gemau mae gemau unigol a chylchau pob tîm, ac, lle mae pob gêm yr orau o fwy nag un, ei gemau a enillwyd, ar ei ochr ei hun.
+Enwau llawn ei dimau sydd ar ben tudalen prawf, fel "Australia yn erbyn New Zealand", ac mae'n dweud beth yw pob gêm yr orau ohono. Y ddau dîm sydd ar ben ei dabl, y cyntaf ar y chwith. Mae pob gêm a chwaraewyd yn rhes, yn y drefn y dechreuodd, â chwaraewr y tîm cyntaf ar y chwith, chwaraewr yr ail dîm ar y dde, a gemau unigol y gêm rhyngddynt, pob un â sgôr yr ochr gyntaf yna sgôr yr ail, â sgôr yr enillydd wedi'i marcio. O dan y gemau mae gemau unigol a chylchau pob tîm, ac, lle mae pob gêm yr orau o fwy nag un, ei gemau a enillwyd, ar ei ochr ei hun.
 
 ![Tudalen prawf](images/public-test.png)
 

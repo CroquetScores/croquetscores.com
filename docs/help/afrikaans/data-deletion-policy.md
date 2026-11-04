@@ -18,7 +18,7 @@ Jou naam en jou e-posadres word vir altyd vervang, oral waar die webwerf hulle b
 
 ## Wat bewaar word
 
-Jou rekening se identifiseerder word bewaar. Dit is 'n ewekansige nommer wat vir die rekening gemaak is, en dit sê niks oor wie jy is nie. Wat jy gepubliseer het, bly daarby, onder die naam "Forgotten Account" en daardie nommer: die toernooie wat jy geskep het, die tellings wat jy ingevoer het, en die kommentaar en opmerkings wat jy geskryf het. Dit is die rekord van die wedstryde, en die mense wat daarin gespeel het, het 'n aanspraak daarop. Dit sê nie meer wie jy was nie.
+Jou rekening se identifiseerder word bewaar. Dit is 'n ewekansige nommer wat vir die rekening gemaak is, en dit sê niks oor wie jy is nie. Wat jy gepubliseer het, bly daarby, onder die naam "Forgotten Account" en daardie nommer: die toernooie wat jy geskep het, die uitslae wat jy ingevoer het, en die kommentaar en opmerkings wat jy geskryf het. Dit is die rekord van die spelle, en die mense wat daarin gespeel het, het 'n aanspraak daarop. Dit sê nie meer wie jy was nie.
 
 'n Kopie van die webwerf wat gemaak is voordat jy vergeet is, soos 'n rugsteun, het nog wat dit toe gehad het, solank die kopie bewaar word.
 

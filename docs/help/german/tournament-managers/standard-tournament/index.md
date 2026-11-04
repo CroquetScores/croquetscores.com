@@ -1,6 +1,6 @@
 # Ein Standardturnier leiten
 
-Ein Standardturnier wird zwischen einzeln gemeldeten Spielern gespielt: ein Vereinswochenende, ein offenes Turnier, eine Meisterschaft. Seine Spieler werden in Gruppen, K.-o.-Runden und Schweizer Systeme aufgenommen, und seine Ergebnisse erscheinen, sobald gespielt wird. Diese Anleitung begleitet einen Verantwortlichen vom Anmelden bis zu einem Turnier, dessen Ergebnisse öffentlich zu sehen sind.
+Ein Standardturnier wird zwischen einzeln gemeldeten Spielern gespielt: ein Vereinswochenende, ein offenes Turnier, eine Meisterschaft. Seine Spieler werden in Blöcke, K.-o.-Turniere und Schweizer Systeme aufgenommen, und seine Ergebnisse erscheinen, sobald gespielt wird. Diese Anleitung begleitet einen Verantwortlichen vom Anmelden bis zu einem Turnier, dessen Ergebnisse öffentlich zu sehen sind.
 
 Sie steht für sich. Nichts darin hängt von der Anleitung zu einem Mannschaftsturnier ab, die eigens geschrieben ist.
 
@@ -14,8 +14,8 @@ Alles, was ein Verantwortlicher tut, geschieht im Verwaltungsbereich der Website
 
 1. [Ein Turnier anlegen](creating-a-tournament.md): sein Name, seine Tage, seine Sportart, wo es gespielt wird und ob es eine nationale oder internationale Veranstaltung ist.
 2. [Spieler](players.md): die Spieler des Turniers eingeben, korrigieren und die versehentlich eingegebenen beiseitelegen.
-3. [Wettbewerbe](competitions.md): Gruppen, K.-o.-Runden und Schweizer Systeme hinzufügen und ordnen.
-4. [Spieler in einen Wettbewerb aufnehmen](entering-players-in-a-competition.md): wer in welchem Wettbewerb spielt, Freilose in einer K.-o.-Runde, Überträge, Entfernen und Zurückziehen.
+3. [Wettbewerbe](competitions.md): Blöcke, K.-o.-Turniere und Schweizer Systeme hinzufügen und ordnen.
+4. [Spieler in einen Wettbewerb aufnehmen](entering-players-in-a-competition.md): wer in welchem Wettbewerb spielt, Freilose in einem K.-o.-Turnier, Überträge, Entfernen und Zurückziehen.
 5. [Ergebnisse](scores.md): Ergebnisse eingeben, korrigieren und die versehentlich eingegebenen beiseitelegen.
 6. [Notizen](notes.md): den Spielern sagen, was sie im Lauf des Turniers wissen müssen.
 7. [Verantwortliche und Ergebniserfasser](managers-and-scorers.md): die Leitung des Turniers teilen und jemanden Ergebnisse eingeben lassen, ohne dass er sonst etwas ändern kann.

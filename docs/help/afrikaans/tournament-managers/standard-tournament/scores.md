@@ -32,7 +32,7 @@ Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verlo
 
 ## Die lys uitslae
 
-Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, oudste eerste, sodat die lys lees soos die kompetisie gespeel is. Die lys is 'n tabel met 'n ry vir elke spel, en geen kolomopskrifte nie. 'n Ry sê die spel se nommer, die wenner en hul punte, die woord "beat", dan die verloorder en hulle s'n, en bied **Wysig** en **Argiveer** aan.
+Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, oudste eerste, sodat die lys lees soos die kompetisie gespeel is. Die lys is 'n tabel met 'n ry vir elke spel, en geen kolomopskrifte nie. 'n Ry sê die spel se nommer, die wenner en hul punte, die woorde "het gewen teen", dan die verloorder en hulle s'n, en bied **Wysig** en **Argiveer** aan.
 
 'n Spel se nommer is sy plek onder die spelle wat ingevoer is, die eerste is 1, geargiveerde spelle ingereken. Om 'n spel te argiveer verander nie enige ander se nommer nie, so 'n gaping in die nommers sê dat 'n spel geargiveer is.
 

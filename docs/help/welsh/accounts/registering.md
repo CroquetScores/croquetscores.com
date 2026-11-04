@@ -8,7 +8,7 @@ Pwyswch **Cofrestru** yn y ddewislen **Cyfrif**. Mae'r dudalen yn gofyn am eich 
 
 Mae cofrestru'n gofyn bod sgriptio wedi'i alluogi ar gyfer y safle hwn, fel y gall y safle wahaniaethu rhwng person a rhaglen. Os yw wedi'i ddiffodd, dywedir wrthych cyn i chi lenwi dim. Mae [Sgriptio a chwcis](../readers/scripting-and-cookies.md) yn dweud mwy.
 
-Mae'r dudalen nesaf yn dweud **Gwiriwch eich e-bost**. Mae'n dweud yr un peth i bwy bynnag y mae'r cyfeiriad yn perthyn, felly nid yw byth yn dweud wrth ddieithryn pa gyfeiriadau sydd â chyfrifon. Os nad oes dim yn cyrraedd ymhen ychydig funudau, edrychwch yn eich ffolder sbam.
+Mae'r dudalen nesaf yn dweud **Gwiriwch eich e-bost**. Mae'n dweud yr un peth i bwy bynnag y mae'r cyfeiriad yn perthyn, felly nid yw byth yn dweud wrth ddieithryn pa gyfeiriadau sydd â chyfrifon. Os nad oes dim yn cyrraedd ymhen ychydig funudau, edrychwch yn eich ffolder sothach neu sbam.
 
 ## Cadarnhau
 

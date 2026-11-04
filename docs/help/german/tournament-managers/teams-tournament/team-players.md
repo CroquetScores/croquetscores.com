@@ -18,7 +18,7 @@ Drücken Sie **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich ü
 
 **Name des Weltranglistenspielers** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten, deren Spieler die Weltrangliste in einer Liste führt. Die Spieler im American 6 Wicket sind der Rangliste unter ihrem eigenen Namen bekannt; danach wird dort also nicht gefragt, und der Name in der Weltrangliste ist bei jedem Spieler immer sein Name. Während Sie einen Spieler hinzufügen, folgt er dem Namen, während Sie ihn tippen, und hört auf zu folgen, sobald Sie in ihm selbst tippen. Bleibt er leer, wird der Name des Spielers gespeichert. Während Sie tippen, werden die Spieler angeboten, die die Weltrangliste kennt und deren Namen so beginnen, und neben dem Namen in der Weltrangliste sagt ein Haken, dass die Rangliste den Namen kennt, und ein Fragezeichen, dass sie ihn nicht kennt. Das ist nur ein Hinweis: Ein Name, den die Rangliste nicht kennt, wird genauso bereitwillig gespeichert wie einer, den sie kennt.
 
-Ein Spieler heißt nie „Bye“, das englische Wort für Freilos: Ein Name, dessen erstes Wort „bye“ ist, wird abgelehnt.
+Ein Spieler heißt nie „Bye“, das englische Wort für Freilos: Ein Name, der „Bye“ lautet oder „Bye“ mit einer Nummer, wie „Bye 2“, „Bye-2“ oder „Bye (2)“, wird abgelehnt. Ein Name, der nur mit dem Wort beginnt, wie „Bye / Bassett“, gehört einem Menschen.
 
 Drücken Sie **Hinzufügen**. Der Spieler wird hinzugefügt, der Dialog sagt es, und seine Felder werden für den nächsten geleert, mit dem Cursor wieder im Namen. Geben Sie so die ganze Mannschaft ein und drücken Sie dann **Abbrechen**, um den Dialog zu schließen.
 

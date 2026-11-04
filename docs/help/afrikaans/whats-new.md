@@ -4,7 +4,7 @@
 
 ### 'n Toernooi volg
 
-- **'n Jaar se bladsy wys sy maande.** Elk van die twaalf maande word toe gelys, met 'n telling van hoeveel toernooie daarin begin. Druk op 'n maand om sy toernooie op dieselfde bladsy oop te maak, en soveel maande as wat jy wil kan terselfdertyd oop wees. Onder die opskrif maak **+ Wys alles** elke maand oop, en dan staan daar **- Versteek alles**, wat hulle toemaak. Dieselfde geld vir 'n sport in 'n jaar. Sonder skrips is 'n maand eerder 'n skakel, en die oop maande word in die adres onthou.
+- **'n Jaar se bladsy wys sy maande.** Elk van die twaalf maande word toe gelys, met 'n telling van hoeveel toernooie daarin begin. Druk op 'n maand om sy toernooie op dieselfde bladsy oop te maak, en soveel maande as wat jy wil kan terselfdertyd oop wees. Onder die opskrif maak **+ Wys alles** elke maand oop, en dan staan daar **- Versteek alles**, wat hulle toemaak. Dieselfde geld vir 'n sport in 'n jaar. Sonder skrip is 'n maand eerder 'n skakel, en die oop maande word in die adres onthou.
 - **Toernooie kan gefiltreer word volgens 'n reeks dae.** Voor die Filtreer-knoppie is 'n eerste dag en 'n laaste dag, wat jy altwee gee of altwee weglaat. Albei dae word ingesluit. 'n Toernooi val in die reeks volgens die dag waarop dit begin, so dit is in een maand se lys en nooit in twee nie.
 - **'n Lys toernooie is 'n honderd per bladsy.** 'n Langer lys word in bladsye verdeel, sodat 'n wye soektog nie meer elke ry in een slag laai nie.
 - **Die filter wat jy gekies het, word onthou.** Die land, streek en sport wat jy in die filter kies, of deur op 'n vlag te druk, word op jou foon of rekenaar bewaar, en 'n lys toernooie begin die volgende keer dat jy dit oopmaak daarmee. Die jaar word nie bewaar nie, want dit is 'n bladsy op sy eie. As jy "enige" vir een van hulle kies, vergeet die filter wat daarvoor bewaar was.
@@ -15,17 +15,17 @@
 
 ### 'n Toernooi bestuur
 
-- **'n Uitskakeling kan die verloorders van 'n ander uitskakeling se ronde neem.** Baie uitskakelings word gespeel as 'n hoofloting met 'n tweede uitskakeling vir dié wat sy eerste ronde verloor het, en 'n derde vir dié wat sy tweede ronde verloor het. Druk in die dialoog van 'n uitskakeling op **Voeg verloorders-uitskakeling by**, gee dit 'n naam, en kies die ronde waarvan die verloorders daarin verder speel. Sy spelers word daar geplaas sodra elke wedstryd beslis is, so jy hoef hulle nie met die hand in te voer nie.
-- **'n Groep kan gesê word hoe spelers wat gelyk is op gewonne wedstryde uitmekaar gehou word.** Kies in die dialoog van 'n groep sy **Gelykopbrekers**: netto spelle dan netto hoepels dan wie wie geklop het, wie wie geklop het alleen, of ander, wat geen bekende manier is nie, sodat spelers gelyk bly en 'n plek deel. 'n Nuwe groep begin met netto spelle dan netto hoepels dan wie wie geklop het.
-- **'n Kompetisie kan die meeste poorte sê waartoe sy spelle gespeel word.** Tussen die merkblokkies in 'n kompetisie se dialoog neem **Maksimum poorte** 'n heelgetal van minstens 1. Los dit leeg vir geen maksimum nie. 'n Kompetisie wat dit nie sê nie, kry die gebruiklike een vir sy sport: 26, of 13 in gholfkroket.
-- **Die ranglys-tekslêer noem die wenner van 'n groep soos die groep hulle plaas.** Die speler wat die groep eerste plaas, is die wenner, waar daar net een is, en niemand word genoem waar spelers vir die eerste plek nie uitmekaar gehou kan word nie. Voorheen het die lêer die speler met die meeste gewonne spelle genoem, wat iemand anders kon wees.
+- **'n Uitskakeling kan die verloorders van 'n ander uitskakeling se ronde neem.** Baie uitskakelings word gespeel as 'n hoofrooster met 'n tweede uitskakeling vir dié wat sy eerste ronde verloor het, en 'n derde vir dié wat sy tweede ronde verloor het. Druk in die dialoog van 'n uitskakeling op **Voeg verloorders-uitskakeling by**, gee dit 'n naam, en kies die ronde waarvan die verloorders daarin verder speel. Sy spelers word daar geplaas sodra elke wedstryd beslis is, so jy hoef hulle nie met die hand in te voer nie.
+- **'n Blok kan gesê word hoe spelers wat gelyk is op gewonne wedstryde uitmekaar gehou word.** Kies in die dialoog van 'n blok sy **Gelykopbrekers**: netto spelle dan netto hoepels dan wie wie geklop het, wie wie geklop het alleen, of ander, wat geen bekende manier is nie, sodat spelers gelyk bly en 'n plek deel. 'n Nuwe blok begin met netto spelle dan netto hoepels dan wie wie geklop het.
+- **'n Kompetisie kan die meeste poorte sê waartoe sy spelle gespeel word.** Tussen die merkblokkies in 'n kompetisie se dialoog neem **Maksimum poorte** 'n heelgetal van minstens 1. Los dit leeg vir geen maksimum nie. 'n Kompetisie wat dit nie sê nie, kry die gebruiklike een vir sy sport: 26, of 13 in Golf Croquet.
+- **Die ranglys-teksleer noem die wenner van 'n blok soos die blok hulle plaas.** Die speler wat die blok eerste plaas, is die wenner, waar daar net een is, en niemand word genoem waar spelers vir die eerste plek nie uitmekaar gehou kan word nie. Voorheen het die leer die speler met die meeste gewonne spelle genoem, wat iemand anders kon wees.
 - **Die balk van afdelings hou tred met die kompetisies.** Nadat jy 'n kompetisie of 'n toets bygevoeg, verander, geskuif, geargiveer of herstel het, bied die balk op die toernooi se bladsy aan wat die toernooi nou het, sonder dat jy die bladsy weer oopmaak.
 - **'n Lys spelers sonder 'n ry velde word daarvan vertel.** As die eerste ry van die lys wat jy in **Voeg spelers by** plak geen veld noem nie, sê die boodskap dat die eerste ry veldname moet wees, met 'n skakel na die hulp, in 'n ander oortjie sodat wat jy getik het bly staan.
 - **Die dialoë Voeg speler by en Voeg spelers by maak in die venster oop.** Met die bladsy afgerol het hulle voorheen oopgemaak met hul boonste rande bokant wat gesien kon word.
 
 ### 'n Toernooi volg
 
-- **'n Groep wys waar elke speler geplaas is.** Die rooster en die opsomming van 'n groep eindig met 'n kolom met die opskrif #, wat elke speler se plek gee: 1, of =2 waar spelers nie uitmekaar gehou kan word nie en tweede plek deel. Daaronder, waar spelers gelyk is op die wedstryde wat hulle gewen het, sê 'n reël hoe hulle uitmekaar gehou is.
+- **'n Blok wys waar elke speler geplaas is.** Die rooster en die opsomming van 'n blok eindig met 'n kolom met die opskrif #, wat elke speler se plek gee: 1, of =2 waar spelers nie uitmekaar gehou kan word nie en tweede plek deel. Daaronder, waar spelers gelyk is op die wedstryde wat hulle gewen het, sê 'n reël hoe hulle uitmekaar gehou is.
 - **'n Kompetisie sê tot hoeveel poorte sy spelle gespeel word.** Waar dit nie die gebruiklike een vir die sport is nie, sê die uitslae so, as "Gespeel tot 14 poorte".
 - **Die ry van 'n nasionale of internasionale toernooi is in vet.** Elke lys toernooie doen dit: op die tuisblad, vir 'n jaar en vir 'n sport in 'n jaar, in 'n soektog, en op 'n speler se bladsy.
 - **'n Kompetisie se aansigte sit langs sy druk-knoppie.** Rooster, Opsomming en Speelvolgorde is saam met die drukker teen die regterrand, en die kompetisie se naam staan alleen links. Op 'n foon gaan die drukker onder die aansigte, steeds teen die regterrand.
@@ -40,7 +40,7 @@
 
 - **Baie spelers kan op een slag bygevoeg word.** Druk op die Spelers-oortjie **Voeg spelers by**, langs **Voeg speler by**, en plak 'n lys met 'n reël vir elke speler. Elke speler op die lys word bygevoeg.
 - **'n Hulp-ikoon op meer van die admin.** Die ronde vraagteken begin nou ook die bladsy wat 'n toernooi skep en die bladsy wat een verander, staan aan die einde van die ry oortjies op 'n toernooi se bladsy en op 'n kompetisie s'n, en staan langs die lys toernooie. Elkeen lei na die hulp vir wat jy besig is om te sien, en maak dit in 'n ander oortjie oop, sodat die bladsy bewaar bly.
-- **Die Uitslae-oortjie is 'n tabel.** Elke uitslag is 'n ry van 'n tabel, sodat 'n skermleser vir jou sê in watter sel jy is. Die woord "het gewen teen" het sy eie kolom tussen die wenner se telling en die verloorder. Op 'n foon word 'n uitslag nie meer op twee reëls gevou nie: die tabel rol eerder sywaarts.
+- **Die Uitslae-oortjie is 'n tabel.** Elke uitslag is 'n ry van 'n tabel, sodat 'n skermleser vir jou sê in watter sel jy is. Die woord "het gewen teen" het sy eie kolom tussen die wenner se punte en die verloorder. Op 'n foon word 'n uitslag nie meer op twee reëls gevou nie: die tabel rol eerder sywaarts.
 - **'n Toets in 'n Eire-beker of 'n Interstaatskild het nie 'n groep nie.** Daardie byeenkomste word nie in groepe gespeel nie, so die dialoog vir 'n toets vra nie daar om een nie, en 'n toets kan nie een kry nie.
 
 ## Vrygestel 2026-10-31
@@ -54,18 +54,18 @@
 
 ### 'n Toernooi volg
 
-- **Die speelorde het opskrifte en kan gesorteer word.** 'n Kompetisie se speelorde is nou 'n tabel met die opskrifte Wedstryd en Datum. Druk Wedstryd om die wedstryde volgens die wenner se naam te sorteer, van A tot Z, en dan volgens die verloorder s'n. Druk Datum om te sorteer volgens wanneer elke wedstryd bygevoeg is, wat is hoe die bladsy begin, met die oudste eerste. Druk die opskrif weer om die wedstryde om te draai. Die datum breek nooit oor twee reëls nie.
-- **Die sortering word onthou.** Die webwerf onthou op jou foon of rekenaar hoe jy die speelorde laas gesorteer het, vir elke kompetisie, en sorteer dit die volgende keer wat jy dit oopmaak so. Dieselfde word gedoen vir die ander lyste wat jy kan sorteer, soos die toernooie op die tuisbladsy en die toernooie waarin 'n speler gespeel het. Onder 'n lys wat so gesorteer is, is 'n skakel, Terug na die gewone volgorde, wat dit vergeet.
+- **Die speelvolgorde het opskrifte en kan gesorteer word.** 'n Kompetisie se speelvolgorde is nou 'n tabel met die opskrifte Wedstryd en Datum. Druk Wedstryd om die spelle volgens die wenner se naam te sorteer, van A tot Z, en dan volgens die verloorder s'n. Druk Datum om te sorteer volgens wanneer elke spel bygevoeg is, wat is hoe die bladsy begin, met die oudste eerste. Druk die opskrif weer om die spelle om te draai. Die datum breek nooit oor twee reëls nie.
+- **Die sortering word onthou.** Die webwerf onthou op jou foon of rekenaar hoe jy die speelvolgorde laas gesorteer het, vir elke kompetisie, en sorteer dit die volgende keer wat jy dit oopmaak so. Dieselfde word gedoen vir die ander lyste wat jy kan sorteer, soos die toernooie op die tuisbladsy en die toernooie waarin 'n speler gespeel het. Onder 'n lys wat so gesorteer is, is 'n skakel, Terug na die gewone volgorde, wat dit vergeet.
 
 ### 'n Toernooi bestuur
 
-- **Die Uitslae-oortjie is in kolomme uitgelê.** Op 'n tablet of wyer is elke uitslag op 'n kompetisie se Uitslae-oortjie 'n ry kolomme: die wedstryd se nommer, die wenner, die wenner se telling, die verloorder, die verloorder se telling, en die knoppies. Die name en tellings breek nie oor reëls nie en neem net die ruimte wat hulle nodig het. Die knoppies kry die res. Op 'n foon word die uitslae uitgelê soos voorheen.
-- **Elke uitslag begin met sy wedstryd se nommer.** Wedstryde word genommer in die volgorde waarin hulle ingevoer is, die geargiveerdes ingereken, so 'n gaping in die nommers is 'n wedstryd wat geargiveer is.
+- **Die Uitslae-oortjie is in kolomme uitgelê.** Op 'n tablet of wyer is elke uitslag op 'n kompetisie se Uitslae-oortjie 'n ry kolomme: die spel se nommer, die wenner, die wenner se punte, die verloorder, die verloorder se punte, en die knoppies. Die name en punte breek nie oor reëls nie en neem net die ruimte wat hulle nodig het. Die knoppies kry die res. Op 'n foon word die uitslae uitgelê soos voorheen.
+- **Elke uitslag begin met sy spel se nommer.** Spelle word genommer in die volgorde waarin hulle ingevoer is, die geargiveerdes ingereken, so 'n gaping in die nommers is 'n spel wat geargiveer is.
 
 ### Jou rekening
 
 - **Om 'n rekening te vergeet, herskryf nou wat bewaar is.** Om 'n rekening te vergeet het sy naam en e-posadres voorheen buite bereik geplaas. Dit vervang hulle nou, vir goed, oral waar die webwerf hulle hou: die naam word Forgotten Account en 'n nommer, en die e-posadres word 'n adres by example.com wat aan niemand behoort nie. Dieselfde word gedoen met die Google-rekening wat daaraan gekoppel is, sodat niks die rekening aan die persoon bind nie. E-posse wat nog vir dit wag, word uitgevee. Rekeninge wat voor hierdie vergeet is, word op dieselfde manier herskryf wanneer die webwerf weer opgedateer word. Die rekening se identifiseerder word behou, en so ook wat dit gepubliseer het, onder die nuwe naam.
-- **Hoe om jou data te laat uitvee.** Die nuwe bladsy /data-deletion-policy sê hoe om te laat uitvee wat die webwerf oor jou bewaar, hoe jy ook al aanteken, wat uitgevee word, wat bewaar word, en wat om te doen as jy nie kan aanteken nie. Die stappe lei na die Vergeet rekening-bladsy.
+- **Hoe om jou data te laat uitvee.** Die nuwe bladsy /data-deletion-policy sê hoe om te laat uitvee wat die webwerf oor jou bewaar, hoe jy ook al aanmeld, wat uitgevee word, wat bewaar word, en wat om te doen as jy nie kan aanmeld nie. Die stappe lei na die Vergeet rekening-bladsy.
 
 ### Die webwerf
 
@@ -122,7 +122,7 @@ Chris Williams het weer gehelp: hy het my gehelp om die lande van toernooie te v
 ### 'n Toernooi volg
 
 - **Voorgee.** 'n Toernooi se bestuurders kan nou vir 'n speler 'n voorgee gee, soos 4, +4 of -1.5. Dit word ná die speler se naam gewys, saam met wie hy of sy verteenwoordig as daar iets is, soos in Tim Murphy (4, Australia).
-- **Afskil in die Switsers-rooster.** 'n Uitslag in die Switsers-rooster eindig nou met die spel se afskil, soos die ranglys-tekslêer reeds doen. 'n Spel wat 26tp teen 17 gewen is, lees +9tp vir die wenner en -9tp vir die verloorder. 'n Spel sonder afskil lees soos tevore.
+- **Afskil in die Switsers-rooster.** 'n Uitslag in die Switsers-rooster eindig nou met die spel se afskil, soos die ranglys-teksleer reeds doen. 'n Spel wat 26tp teen 17 gewen is, lees +9tp vir die wenner en -9tp vir die verloorder. 'n Spel sonder afskil lees soos tevore.
 
 ### Toernooie van die ou webwerwe oorgebring
 
