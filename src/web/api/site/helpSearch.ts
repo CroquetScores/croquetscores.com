@@ -8,10 +8,10 @@ import { SearchHelp } from "../../../application/operations/help/SearchHelp.js";
 import {
   answerHelpQuestion,
   HelpSearchRefused,
+  questionLimit,
   questionsAMinute,
 } from "../../common/helpSearch.js";
 import { speakingOf } from "../../common/language.js";
-import { ipAddressOf } from "../../common/trustedProxy.js";
 
 export interface HelpSearchRouteOptions {
   /** Where the help puts a page, which differs for the few with an address of their own. */
@@ -19,8 +19,6 @@ export interface HelpSearchRouteOptions {
   /** How many questions one address may ask in a minute. */
   readonly questionsAMinute?: number;
 }
-
-const addressesCounted = 100_000;
 
 export const helpSearchRoute: FastifyPluginCallback<HelpSearchRouteOptions> = (
   server,
@@ -30,12 +28,7 @@ export const helpSearchRoute: FastifyPluginCallback<HelpSearchRouteOptions> = (
   // In a scope of its own, so that the count is of questions and a page is
   // never turned away for the ones a reader has asked.
   void server.register(async (scope) => {
-    await scope.register(rateLimit, {
-      max: limit,
-      timeWindow: "1 minute",
-      keyGenerator: ipAddressOf,
-      cache: addressesCounted,
-    });
+    await scope.register(rateLimit, { ...questionLimit, max: limit });
 
     scope.post<{ Body: { query?: unknown } | null }>(
       "/help/search",

@@ -69,6 +69,30 @@ Given(
   },
 );
 
+Given(
+  "the built help has the {word} page {string} titled {string}",
+  async function (
+    this: SpecWorld,
+    folder: string,
+    name: string,
+    title: string,
+  ) {
+    await written(this, folder, name, {
+      title,
+      html: "",
+      headings: [],
+      text: "Words.",
+    });
+  },
+);
+
+Then(
+  "the page {string} is listed titled {string}",
+  async function (this: SpecWorld, name: string, title: string) {
+    assert.equal((await listedAs(this, name)).title, title);
+  },
+);
+
 // The page as an earlier build wrote it: a title and its HTML, and none of the
 // words kept apart for the search.
 Given(

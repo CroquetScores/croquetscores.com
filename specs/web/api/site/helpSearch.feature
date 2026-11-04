@@ -43,6 +43,14 @@ Feature: Asking the help a question
       When the question is asked
       Then the first result leads to the page "tournament-managers/players"
 
+    Scenario: A page whose name has a space in it leads to an address that can be followed
+      Given a site with help pages
+      And the english page "a b/c#d" titled "Odd" saying "Add a player."
+      And an english reader
+      And the reader's question "player"
+      When the question is asked
+      Then the first result leads to the address "/help/a%20b/c%23d"
+
     Scenario: A question with no answer has no results
       Given a site with help pages
       And the english page "a" titled "Players" saying "Add a player."

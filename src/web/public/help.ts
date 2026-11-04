@@ -19,9 +19,8 @@ import {
   answerHelpQuestion,
   helpAddress,
   HelpSearchRefused,
-  questionsAMinute,
+  questionLimit,
 } from "../common/helpSearch.js";
-import { ipAddressOf } from "../common/trustedProxy.js";
 import { render } from "../common/layout.js";
 import { directionAttribute, speakingOf } from "../common/language.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -39,10 +38,6 @@ import {
   type HelpSearched,
 } from "./helpSearchPanel.js";
 import { termsOfUsePath, writersTermsOfUsePath } from "./termsOfUse.js";
-
-// How many addresses are counted at once, as the site's files are
-// (assets.ts).
-const addressesCounted = 100_000;
 
 const imageTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
@@ -92,6 +87,15 @@ const contacts: ReadonlyMap<string, string> = new Map([
   [dataDeletionPolicyName, "privacy.contact"],
   ["admin/terms-of-use", "termsOfUse.report"],
 ]);
+
+// What was typed in the panel and sent as a form: nothing where nothing was,
+// or where it was sent as anything but text. Read here once, for the page that
+// searches and for the limit that counts the searches, so that they cannot
+// disagree about which requests ask a question.
+const questionAsked = (request: FastifyRequest): string => {
+  const typed = (request.query as Record<string, unknown>)[helpSearchField];
+  return typeof typed === "string" ? typed.trim() : "";
+};
 
 /** Where the help puts the page called `name`: its own address if it has one. */
 export const helpAddressOf = (name: string): string =>
@@ -190,16 +194,9 @@ export const registerHelpPages = (
 
     // The first page carries the panel, and with it the answer to a question
     // sent as a form, which is how it is asked where there is no scripting.
-    const asked =
-      name === "" &&
-      typeof (request.query as Record<string, unknown>)[helpSearchField] ===
-        "string"
-        ? ((request.query as Record<string, unknown>)[
-            helpSearchField
-          ] as string)
-        : "";
+    const asked = name === "" ? questionAsked(request) : "";
     let searched: HelpSearched = { kind: "not asked" };
-    if (name === "" && asked.trim() !== "") {
+    if (name === "" && asked !== "") {
       try {
         searched = {
           kind: "answered",
@@ -219,7 +216,7 @@ export const registerHelpPages = (
     }
     const panel =
       name === ""
-        ? `${helpSearchPanel(speaking, siteNameOf(request), asked, searched)}`
+        ? helpSearchPanel(speaking, siteNameOf(request), asked, searched)
         : "";
 
     const contact = contacts.get(name);
@@ -264,15 +261,9 @@ ${pictured(page.html, writtenIn.tag)}
   // limited, and a reader is never turned away from the help for reading it.
   void server.register(async (scope) => {
     await scope.register(rateLimit, {
+      ...questionLimit,
       global: false,
-      max: questionsAMinute,
-      timeWindow: "1 minute",
-      keyGenerator: ipAddressOf,
-      cache: addressesCounted,
-      allowList: (request) => {
-        const { question } = request.query as Record<string, unknown>;
-        return typeof question !== "string" || question.trim() === "";
-      },
+      allowList: (request) => questionAsked(request) === "",
     });
     // The answer that says to wait is for the one who asked, now.
     scope.addHook("onSend", (_request, reply, payload, done) => {

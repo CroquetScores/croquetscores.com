@@ -40,6 +40,12 @@ Feature: Which pages of the built help are searched
       When the pages to search are listed
       Then the pages listed include "readers" once
 
+    Scenario: A page written twice, whose file name ends as a folder's index does
+      Given the built help has the english page "reindex" titled "The file"
+      And the built help has the english page "reindex/index" titled "The folder"
+      When the pages to search are listed
+      Then the page "reindex" is listed titled "The file"
+
   Rule: A page of what's new is not searched
 
     Scenario: The what's new for everybody

@@ -21,7 +21,10 @@ export class PostgresHelpSearchIndex implements HelpSearchIndex {
     const { rows } = await this.unitOfWork
       .connection()
       .query<{ fingerprint: string }>(
-        "select fingerprint from help_search_state",
+        // Only where the pages are as many as they were made, so that an index
+        // that has lost some is not taken for the help it was made from.
+        `select fingerprint from help_search_state
+          where page_count = (select count(*) from help_search_pages)`,
       );
     return rows[0]?.fingerprint;
   }
@@ -54,9 +57,11 @@ export class PostgresHelpSearchIndex implements HelpSearchIndex {
       ],
     );
     await connection.query(
-      `insert into help_search_state (fingerprint) values ($1)
-         on conflict (only_row) do update set fingerprint = excluded.fingerprint`,
-      [fingerprint],
+      `insert into help_search_state (fingerprint, page_count) values ($1, $2)
+         on conflict (only_row) do update
+           set fingerprint = excluded.fingerprint,
+               page_count = excluded.page_count`,
+      [fingerprint, pages.length],
     );
   }
 

@@ -9,6 +9,7 @@ import { Refused } from "../../domain/common/Refused.js";
 import { escape } from "./escape.js";
 import { helpPath } from "./helpPages.js";
 import { helpSearchRulesOf } from "./helpSearchConfigurations.js";
+import { ipAddressOf } from "./trustedProxy.js";
 import { expandQuestion, helpSynonymsOf } from "./helpSynonyms.js";
 
 export type HelpSearchErrorCode =
@@ -29,6 +30,18 @@ export const longestQuestion = 200;
  * results as they are typed asks once the typing pauses, not at each key.
  */
 export const questionsAMinute = 60;
+
+/**
+ * What counts the questions an address asks, whether by the API or by the form,
+ * written once so that the two cannot come to allow different numbers for the
+ * same search. Counted in this process, as the site's files are (assets.ts).
+ */
+export const questionLimit = {
+  max: questionsAMinute,
+  timeWindow: "1 minute",
+  keyGenerator: ipAddressOf,
+  cache: 100_000,
+} as const;
 
 /** A page that answers a question, as it is shown. */
 export interface HelpAnswer {
@@ -107,4 +120,6 @@ export const answerHelpQuestion = async (
 
 /** Where the help puts the page called `name`, which has no address of its own. */
 export const helpAddress = (name: string): string =>
-  name === "" ? helpPath : `${helpPath}/${name}`;
+  name === ""
+    ? helpPath
+    : `${helpPath}/${name.split("/").map(encodeURIComponent).join("/")}`;

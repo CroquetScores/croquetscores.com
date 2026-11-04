@@ -139,6 +139,24 @@ Feature: Keeping the help searchable in Postgres
       When the index is made
       Then the index was not made again
 
+    Scenario: Making it again when the pages kept have been lost
+      Given an index of the help
+      And the english page "a" titled "Players" saying "Add a player."
+      And the index is made
+      And the pages kept are lost
+      When the index is made
+      Then the index was made again
+
+    Scenario: Making it again when some of the pages kept have been lost
+      Given an index of the help
+      And the english page "a" titled "Players" saying "Add a player."
+      And the english page "b" titled "Scores" saying "Add a score."
+      And the index is made
+      And the page kept as "a" is lost
+      When the index is made
+      And "player" is searched for in english
+      Then the first result is the page "a"
+
     Scenario: Making it again when a page changed is noticed
       Given an index of the help
       And the english page "a" titled "Players" saying "Add a player."

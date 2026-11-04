@@ -109,6 +109,13 @@ Then(
 );
 
 Then(
+  "the first result leads to the address {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(resultAt(this, 0).url, address);
+  },
+);
+
+Then(
   "the first result leads to the page {string}",
   function (this: SpecWorld, name: string) {
     assert.equal(resultAt(this, 0).url, `/help/${name}`);

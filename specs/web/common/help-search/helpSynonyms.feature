@@ -15,6 +15,10 @@ Feature: Words readers use that the help does not
 
   Rule: A word is searched for together with the words that mean the same
 
+    A synonym is matched to the word as it was typed. The search itself
+    matches a word's other forms ("publishing" for "publish"), but a synonym
+    does not, so a list names each form a reader is likely to type.
+
     Scenario: A word with a synonym
       Given the help language "english"
       And the synonym "visible" for "publish"
@@ -49,6 +53,18 @@ Feature: Words readers use that the help does not
       And the question "players & | ! ( ) : * <-> draw"
       When the question is expanded
       Then the question is accepted
+
+    Scenario: A letter with a mark written beside it is one word
+      Given the help language "english"
+      And the question "café"
+      When the question is expanded
+      Then the words searched for include "café"
+
+    Scenario: A word of a script whose vowels are marks is one word
+      Given the help language "egyptian"
+      And the question "كَتَبَ"
+      When the question is expanded
+      Then the words searched for include "كَتَبَ"
 
     Scenario: A question of nothing but punctuation has no words
       Given the help language "english"

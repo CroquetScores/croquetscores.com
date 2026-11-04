@@ -58,11 +58,17 @@ const synonyms: ReadonlyMap<string, HelpSynonyms> = new Map([
 export const helpSynonymsOf = (tag: string): HelpSynonyms | undefined =>
   synonyms.get(tag);
 
-// A word is a run of letters or digits in any script. Everything else, which
+// A word is a run of letters, marks or digits in any script. Everything else, which
 // includes every symbol Postgres reads as part of a query, is a gap between
 // words and so can never reach the query.
 const wordsIn = (question: string): string[] =>
-  question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+  // Composed first, so that a letter typed with its mark beside it is the
+  // letter the page has. Marks are part of a word: in some scripts they are
+  // the vowels.
+  question
+    .normalize("NFC")
+    .toLowerCase()
+    .match(/[\p{L}\p{M}\p{N}]+/gu) ?? [];
 
 /** `question` and what in it means the same, ready to be searched for. */
 export const expandQuestion = (

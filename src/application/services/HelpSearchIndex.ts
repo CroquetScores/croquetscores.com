@@ -41,7 +41,11 @@ export const mostHelpSearchResults = 10;
  * of the built help, made again whole when the build changes.
  */
 export interface HelpSearchIndex {
-  /** What the pages kept were made from, if any have been kept. */
+  /**
+   * What the pages kept were made from, if any have been kept and are all
+   * still kept: an index that has lost some has no fingerprint, so that it is
+   * made again.
+   */
   fingerprint(): Promise<string | undefined>;
 
   /**

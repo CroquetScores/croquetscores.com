@@ -26,6 +26,11 @@ const jsonBelow = async (directory: string, within = ""): Promise<string[]> => {
   return found;
 };
 
+// Whether a file is a folder's own page, by its name and not by how it ends:
+// "reindex.json" is a page of its own.
+const isIndex = (file: string): boolean =>
+  posix.basename(file) === "index.json";
+
 // A page's file is named as the build wrote it: the page of a folder is the
 // folder's index.json, and the first page is the language's own.
 const nameOf = (file: string): string => {
@@ -61,8 +66,7 @@ export const helpPagesToSearchIn = (
       // wins, as it does when the page is read (helpLibrary.ts). Listed in
       // that order, so that the second is skipped and not a collision.
       const ordered = [...files].sort(
-        (a, b) =>
-          Number(a.endsWith("index.json")) - Number(b.endsWith("index.json")),
+        (a, b) => Number(isIndex(a)) - Number(isIndex(b)),
       );
       const seen = new Set<string>();
       for (const file of ordered) {

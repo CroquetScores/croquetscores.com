@@ -50,6 +50,24 @@ Given(
   },
 );
 
+// What a restore, a truncate, or a hand in the database does to the pages kept.
+Given("the pages kept are lost", async function (this: SpecWorld) {
+  await this.asARequest(() =>
+    unitOfWorkOf(this).connection().query("delete from help_search_pages"),
+  );
+});
+
+Given(
+  "the page kept as {string} is lost",
+  async function (this: SpecWorld, name: string) {
+    await this.asARequest(() =>
+      unitOfWorkOf(this)
+        .connection()
+        .query("delete from help_search_pages where name = $1", [name]),
+    );
+  },
+);
+
 Given("a help that cannot be read", function (this: SpecWorld) {
   helpOf(this).unreadable = true;
 });
