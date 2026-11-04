@@ -56,6 +56,34 @@ Feature: Words readers use that the help does not
       When the question is expanded
       Then there are no words to search for
 
+  Rule: A synonym is held to the same words a question is
+
+    A synonym is written by hand into a list, and a list is not read by
+    anybody who types a question. One written with a hyphen, a space or a
+    quotation mark must not be able to break every search in its language.
+
+    Scenario: A synonym of more than one word is searched for as its words
+      Given the help language "english"
+      And the synonym "email" for "electronic mail"
+      And the question "email"
+      When the question is expanded
+      Then the words searched for include "electronic"
+      And the words searched for include "mail"
+
+    Scenario: A synonym with a hyphen in it is searched for as its words
+      Given the help language "english"
+      And the synonym "email" for "e-mail"
+      And the question "email"
+      When the question is expanded
+      Then the words searched for include "mail"
+
+    Scenario: A synonym with a quotation mark in it is accepted
+      Given the help language "english"
+      And the synonym "player" for "player's"
+      And the question "player"
+      When the question is expanded
+      Then the question is accepted
+
   Rule: Every language with help pages has its synonyms kept, even if it has none yet
 
     Scenario: Every folder of the help has a list of synonyms

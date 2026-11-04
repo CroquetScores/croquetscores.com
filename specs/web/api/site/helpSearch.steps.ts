@@ -308,6 +308,47 @@ When(
   },
 );
 
+// One more than the site allows, asked the way a page without scripting asks.
+const askAsAForm = async (
+  world: SpecWorld,
+  address: string,
+  times: number,
+): Promise<void> => {
+  const scene = sceneOf(world);
+  const site = await siteOf(world);
+  for (let asked = 0; asked < times; asked++) {
+    const answer = await fetch(`${site}${address}`, {
+      headers: scene.tag === undefined ? {} : { "accept-language": scene.tag },
+    });
+    await answer.text();
+    scene.status = answer.status;
+  }
+};
+
+When(
+  "the question is asked by the form more often than is allowed",
+  async function (this: SpecWorld) {
+    const scene = sceneOf(this);
+    assert.ok(scene.question !== undefined, "No question was put.");
+    await askAsAForm(
+      this,
+      `/help?question=${encodeURIComponent(scene.question)}`,
+      61,
+    );
+  },
+);
+
+When(
+  "the help is opened more often than the questions are allowed",
+  async function (this: SpecWorld) {
+    await askAsAForm(this, "/help", 61);
+  },
+);
+
+Then("the next opening is not told to wait", function (this: SpecWorld) {
+  assert.equal(sceneOf(this).status, 200);
+});
+
 Then(
   "the page shows the result {string}",
   function (this: SpecWorld, title: string) {

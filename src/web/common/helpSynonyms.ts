@@ -73,8 +73,12 @@ export const expandQuestion = (
   for (const typed of wordsIn(question)) {
     words.add(typed);
     for (const [first, second] of synonyms) {
-      if (first === typed) words.add(second);
-      else if (second === typed) words.add(first);
+      // Held to the same words a question is, since a synonym is written by
+      // hand and one with a hyphen or a quotation mark in it would otherwise
+      // reach the query as it stands and break every search in its language.
+      if (first === typed) for (const word of wordsIn(second)) words.add(word);
+      else if (second === typed)
+        for (const word of wordsIn(first)) words.add(word);
     }
   }
   return {

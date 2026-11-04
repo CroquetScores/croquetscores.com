@@ -56,21 +56,36 @@ export const helpPagesToSearchIn = (
         if ((error as NodeJS.ErrnoException).code === "ENOENT") continue;
         throw error;
       }
-      for (const file of files) {
+      // The page of a folder is written beside the folder's other pages as
+      // index.json, and a page of the same name written as a file of its own
+      // wins, as it does when the page is read (helpLibrary.ts). Listed in
+      // that order, so that the second is skipped and not a collision.
+      const ordered = [...files].sort(
+        (a, b) =>
+          Number(a.endsWith("index.json")) - Number(b.endsWith("index.json")),
+      );
+      const seen = new Set<string>();
+      for (const file of ordered) {
         const name = nameOf(file.slice(tag.length + 1));
         // What changed in a release answers no question about how to do
         // anything, and would be found for the words of every one of them.
-        if (alertKindOfPage(name) !== undefined) continue;
+        if (alertKindOfPage(name) !== undefined || seen.has(name)) continue;
         const page = JSON.parse(
           await readFile(join(directory, file), "utf8"),
-        ) as HelpPage;
+        ) as Partial<HelpPage>;
+        // Not a page of the help: nothing else is written among the pages, but
+        // one file that is not should not stop the others being searched.
+        if (typeof page.title !== "string") continue;
+        seen.add(name);
         pages.push({
           tag,
           rules,
           name,
           title: page.title,
-          headings: page.headings,
-          text: page.text,
+          // A page built before the words were kept has a title and nothing
+          // else to search, which is better than none of the help.
+          headings: Array.isArray(page.headings) ? page.headings : [],
+          text: typeof page.text === "string" ? page.text : "",
         });
       }
     }

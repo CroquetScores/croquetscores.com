@@ -83,6 +83,20 @@ Feature: Keeping the help searchable in Postgres
       And "player" is searched for in english
       Then the snippet of the first result says "player"
 
+    Scenario: A page found by its title has the matching word marked in its snippet
+      Given an index of the help
+      And the english page "a" titled "Players" saying "Nothing here."
+      When the index is made
+      And "player" is searched for in english
+      Then the snippet of the first result marks "Players"
+
+    Scenario: A page found by a heading has the matching word marked in its snippet
+      Given an index of the help
+      And the english page "a" titled "Scores" with the heading "Adding a player" saying "Nothing here."
+      When the index is made
+      And "player" is searched for in english
+      Then the snippet of the first result marks "player"
+
     Scenario: A result has a score
       Given an index of the help
       And the english page "a" titled "Players" saying "Add a player."

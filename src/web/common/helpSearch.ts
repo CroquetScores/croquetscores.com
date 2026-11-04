@@ -23,6 +23,13 @@ export class HelpSearchRefused extends Refused<HelpSearchErrorCode> {}
  */
 export const longestQuestion = 200;
 
+/**
+ * How many questions one address may ask in a minute, by the API or by the
+ * form. Sixty is a question a second, far past anything typed; a page showing
+ * results as they are typed asks once the typing pauses, not at each key.
+ */
+export const questionsAMinute = 60;
+
 /** A page that answers a question, as it is shown. */
 export interface HelpAnswer {
   readonly title: string;

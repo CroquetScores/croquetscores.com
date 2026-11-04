@@ -10,6 +10,36 @@ Feature: Which pages of the built help are searched
   list of what was different last month. Both of them, the one for everybody
   and the one for people who run tournaments, and in every language.
 
+  Rule: A page the build wrote without its words is searched by its title
+
+    A build made before the words were kept wrote pages that have only a title
+    and a body of HTML. One such page must not stop every other from being
+    searched.
+
+    Scenario: A page with no headings or text
+      Given the built help has the english page "readers/index" written without its words
+      And the built help has the english page "accounts/index"
+      When the pages to search are listed
+      Then the pages listed include "readers"
+      And the page "readers" is listed with no headings
+      And the page "readers" is listed with no text
+      And the pages listed include "accounts"
+
+  Rule: Only pages are searched, and each page once
+
+    Scenario: A file that is not a page
+      Given the built help has the english file "readers/notes" that is not a page
+      And the built help has the english page "accounts/index"
+      When the pages to search are listed
+      Then the pages listed do not include "readers/notes"
+      And the pages listed include "accounts"
+
+    Scenario: A page that is written twice
+      Given the built help has the english page "readers"
+      And the built help has the english page "readers/index"
+      When the pages to search are listed
+      Then the pages listed include "readers" once
+
   Rule: A page of what's new is not searched
 
     Scenario: The what's new for everybody

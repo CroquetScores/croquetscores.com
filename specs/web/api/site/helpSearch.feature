@@ -133,6 +133,19 @@ Feature: Asking the help a question
       When the question is asked more often than is allowed
       Then the next question is told to wait
 
+    Scenario: Asking by the form more often than the site allows
+      Given a site with help pages
+      And an english reader
+      And the reader's question "player"
+      When the question is asked by the form more often than is allowed
+      Then the next question is told to wait
+
+    Scenario: Opening the help without a question is not counted
+      Given a site with help pages
+      And an english reader
+      When the help is opened more often than the questions are allowed
+      Then the next opening is not told to wait
+
   Rule: The panel is at the top of the help
 
     @browser

@@ -7,6 +7,7 @@
 // A page its language has not got is shown in the site's first language
 // rather than not at all: a reader asking for help has little use for an
 // answer that says there is none.
+import rateLimit from "@fastify/rate-limit";
 import { createHash } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
@@ -18,7 +19,9 @@ import {
   answerHelpQuestion,
   helpAddress,
   HelpSearchRefused,
+  questionsAMinute,
 } from "../common/helpSearch.js";
+import { ipAddressOf } from "../common/trustedProxy.js";
 import { render } from "../common/layout.js";
 import { directionAttribute, speakingOf } from "../common/language.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -36,6 +39,10 @@ import {
   type HelpSearched,
 } from "./helpSearchPanel.js";
 import { termsOfUsePath, writersTermsOfUsePath } from "./termsOfUse.js";
+
+// How many addresses are counted at once, as the site's files are
+// (assets.ts).
+const addressesCounted = 100_000;
 
 const imageTypes: Readonly<Record<string, string>> = {
   ".png": "image/png",
@@ -86,13 +93,13 @@ const contacts: ReadonlyMap<string, string> = new Map([
   ["admin/terms-of-use", "termsOfUse.report"],
 ]);
 
-// The sentence that says who to ask, with the address in it made a link that
-// opens a new message to it. The words are the catalogue's, so the address is
-// found in them after they are escaped, which is how it was put there.
 /** Where the help puts the page called `name`: its own address if it has one. */
 export const helpAddressOf = (name: string): string =>
   ownAddresses.get(name) ?? helpAddress(name);
 
+// The sentence that says who to ask, with the address in it made a link that
+// opens a new message to it. The words are the catalogue's, so the address is
+// found in them after they are escaped, which is how it was put there.
 const asking = (said: string, emailAddress: string): string => {
   const address = escape(emailAddress);
   // A function, so that what is in the address is not read as a replacement
@@ -251,7 +258,31 @@ ${pictured(page.html, writtenIn.tag)}
   for (const [name, path] of ownAddresses) {
     server.get(path, (request, reply) => show(request, reply, name, true));
   }
-  server.get(helpPath, (request, reply) => show(request, reply, ""));
+  // The first page of the help is the one that answers a question sent as a
+  // form, which runs the same search the API runs, so it is counted as the API
+  // is. Only a request that asks one is: opening the page is not what is
+  // limited, and a reader is never turned away from the help for reading it.
+  void server.register(async (scope) => {
+    await scope.register(rateLimit, {
+      global: false,
+      max: questionsAMinute,
+      timeWindow: "1 minute",
+      keyGenerator: ipAddressOf,
+      cache: addressesCounted,
+      allowList: (request) => {
+        const { question } = request.query as Record<string, unknown>;
+        return typeof question !== "string" || question.trim() === "";
+      },
+    });
+    // The answer that says to wait is for the one who asked, now.
+    scope.addHook("onSend", (_request, reply, payload, done) => {
+      if (reply.statusCode === 429) reply.header("cache-control", "no-store");
+      done(null, payload);
+    });
+    scope.get(helpPath, { config: { rateLimit: {} } }, (request, reply) =>
+      show(request, reply, ""),
+    );
+  });
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
     const name = request.params["*"].replace(/\/+$/, "");
     return show(request, reply, name);

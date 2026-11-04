@@ -3,6 +3,10 @@
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import {
+  snippetEnd,
+  snippetStart,
+} from "../../../../src/application/services/HelpSearchIndex.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 export interface Found {
@@ -82,6 +86,18 @@ Then(
   "the snippet of the first result says {string}",
   function (this: SpecWorld, words: string) {
     assert.ok(resultAt(this, 0).snippet.includes(words));
+  },
+);
+
+Then(
+  "the snippet of the first result marks {string}",
+  function (this: SpecWorld, words: string) {
+    assert.ok(
+      resultAt(this, 0).snippet.includes(
+        `${snippetStart}${words}${snippetEnd}`,
+      ),
+      resultAt(this, 0).snippet,
+    );
   },
 );
 

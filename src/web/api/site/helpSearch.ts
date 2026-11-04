@@ -8,6 +8,7 @@ import { SearchHelp } from "../../../application/operations/help/SearchHelp.js";
 import {
   answerHelpQuestion,
   HelpSearchRefused,
+  questionsAMinute,
 } from "../../common/helpSearch.js";
 import { speakingOf } from "../../common/language.js";
 import { ipAddressOf } from "../../common/trustedProxy.js";
@@ -18,13 +19,6 @@ export interface HelpSearchRouteOptions {
   /** How many questions one address may ask in a minute. */
   readonly questionsAMinute?: number;
 }
-
-/**
- * Sixty a minute is a question a second, far past anything typed. A page
- * showing results as they are typed asks once the typing pauses, not at each
- * key.
- */
-export const questionsAMinute = 60;
 
 const addressesCounted = 100_000;
 

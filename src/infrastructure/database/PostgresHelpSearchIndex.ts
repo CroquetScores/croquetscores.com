@@ -79,7 +79,7 @@ export class PostgresHelpSearchIndex implements HelpSearchIndex {
       `with asked as (select to_tsquery($2::regconfig, $3) as query)
        select name, title,
               ts_rank_cd(document, asked.query, 32) as score,
-              ts_headline($2::regconfig, body, asked.query,
+              ts_headline($2::regconfig, title || E'\\n' || headings || E'\\n' || body, asked.query,
                 'StartSel=${snippetStart}, StopSel=${snippetEnd}, MaxWords=35, MinWords=15, MaxFragments=1') as snippet
          from help_search_pages, asked
         where language_tag = $1 and document @@ asked.query
