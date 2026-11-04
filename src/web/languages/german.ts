@@ -1106,6 +1106,17 @@ export const german: Language = {
     "CompetitionPlayer.Withdrawn":
       "Ein zurückgezogener Spieler spielt nicht mehr.",
     "admin.players.add": "Spieler hinzufügen",
+    "admin.players.addPair": "Paar hinzufügen",
+    "admin.hover.players.addPair":
+      "Aus zwei Spielern des Turniers ein Doppel bilden",
+    "admin.pair.title": "Paar hinzufügen",
+    "admin.pair.first": "Erster Spieler",
+    "admin.pair.second": "Zweiter Spieler",
+    "admin.pair.choose": "Spieler wählen",
+    "admin.hover.dialog.pair.add":
+      "Das Paar aus den beiden gewählten Spielern bilden",
+    "admin.pair.otherwise": "Dieses Paar kann nicht hinzugefügt werden.",
+    "AddPair.SamePlayerTwice": "Wählen Sie zwei verschiedene Spieler.",
     "admin.players.addMany": "Mehrere Spieler hinzufügen",
     "admin.players.none": "Keine Spieler",
     "admin.players.edit": "Bearbeiten",

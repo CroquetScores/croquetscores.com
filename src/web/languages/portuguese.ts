@@ -1040,6 +1040,17 @@ export const portuguese: Language = {
       "O vencedor desta partida já jogou o jogo seguinte, então quem a venceu não pode mudar.",
     "CompetitionPlayer.Withdrawn": "Um jogador que desistiu não joga mais.",
     "admin.players.add": "Adicionar jogador",
+    "admin.players.addPair": "Adicionar dupla",
+    "admin.hover.players.addPair":
+      "Formar uma dupla com dois jogadores do torneio",
+    "admin.pair.title": "Adicionar dupla",
+    "admin.pair.first": "Primeiro jogador",
+    "admin.pair.second": "Segundo jogador",
+    "admin.pair.choose": "Escolha um jogador",
+    "admin.hover.dialog.pair.add":
+      "Formar a dupla com os dois jogadores escolhidos",
+    "admin.pair.otherwise": "Esta dupla não pode ser adicionada.",
+    "AddPair.SamePlayerTwice": "Escolha dois jogadores diferentes.",
     "admin.players.addMany": "Adicionar jogadores",
     "admin.players.none": "Nenhum jogador",
     "admin.players.edit": "Editar",

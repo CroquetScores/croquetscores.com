@@ -1125,6 +1125,17 @@ export const greek: Language = {
       "Ο νικητής αυτού του αγώνα έχει ήδη παίξει το επόμενο παιχνίδι του, γι' αυτό το ποιος τον κέρδισε δεν μπορεί να αλλάξει.",
     "CompetitionPlayer.Withdrawn": "Ένας αποσυρμένος παίκτης δεν παίζει άλλο.",
     "admin.players.add": "Προσθήκη παίκτη",
+    "admin.players.addPair": "Προσθήκη ζευγαριού",
+    "admin.hover.players.addPair":
+      "Δημιουργία διπλού ζευγαριού από δύο παίκτες του τουρνουά",
+    "admin.pair.title": "Προσθήκη ζευγαριού",
+    "admin.pair.first": "Πρώτος παίκτης",
+    "admin.pair.second": "Δεύτερος παίκτης",
+    "admin.pair.choose": "Επιλέξτε παίκτη",
+    "admin.hover.dialog.pair.add":
+      "Δημιουργία του ζευγαριού από τους δύο επιλεγμένους παίκτες",
+    "admin.pair.otherwise": "Αυτό το ζευγάρι δεν μπορεί να προστεθεί.",
+    "AddPair.SamePlayerTwice": "Επιλέξτε δύο διαφορετικούς παίκτες.",
     "admin.players.addMany": "Προσθήκη παικτών",
     "admin.players.none": "Κανένας παίκτης",
     "admin.players.edit": "Επεξεργασία",

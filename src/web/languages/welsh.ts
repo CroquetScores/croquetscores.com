@@ -1015,6 +1015,17 @@ export const welsh: Language = {
     "CompetitionPlayer.Withdrawn":
       "Nid yw chwaraewr a dynnwyd yn ôl yn chwarae rhagor.",
     "admin.players.add": "Ychwanegu chwaraewr",
+    "admin.players.addPair": "Ychwanegu pâr",
+    "admin.hover.players.addPair":
+      "Gwneud pâr dyblau o ddau o chwaraewyr y twrnamaint",
+    "admin.pair.title": "Ychwanegu pâr",
+    "admin.pair.first": "Y chwaraewr cyntaf",
+    "admin.pair.second": "Yr ail chwaraewr",
+    "admin.pair.choose": "Dewiswch chwaraewr",
+    "admin.hover.dialog.pair.add":
+      "Gwneud y pâr o'r ddau chwaraewr a ddewiswyd",
+    "admin.pair.otherwise": "Ni ellir ychwanegu'r pâr hwn.",
+    "AddPair.SamePlayerTwice": "Dewiswch ddau chwaraewr gwahanol.",
     "admin.players.addMany": "Ychwanegu chwaraewyr",
     "admin.players.none": "Dim chwaraewyr",
     "admin.players.edit": "Golygu",
