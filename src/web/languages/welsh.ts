@@ -912,6 +912,26 @@ export const welsh: Language = {
     // A competition's Players tab.
     "admin.competitionPlayers.add": "Ychwanegu chwaraewr",
     "admin.competitionPlayers.otherwise": "Ni ellir ychwanegu'r chwaraewr hwn.",
+    "admin.competitionPlayers.addSeveral": "Ychwanegu sawl un",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Dewiswch sawl chwaraewr o'r twrnamaint i'w rhoi yn y gystadleuaeth hon ar unwaith",
+    "admin.addPlayers.title": "Ychwanegu chwaraewyr",
+    "admin.addPlayers.selectAll": "Dewis pob un",
+    "admin.addPlayers.add": "Ychwanegu'r rhai a ddewiswyd",
+    "admin.hover.dialog.addPlayers.add":
+      "Rhoi'r chwaraewyr a ddewiswyd yn y gystadleuaeth hon",
+    "admin.addPlayers.otherwise": "Ni ellir ychwanegu'r chwaraewyr hyn.",
+    "admin.addPlayers.someRefusedTitle": "Ni ellir ychwanegu rhai chwaraewyr",
+    "admin.addPlayers.someRefusedQuestion":
+      "Ni ellir ychwanegu'r chwaraewyr a restrir. Hoffech chi ychwanegu gweddill y rhai a ddewiswyd?",
+    "admin.addPlayers.addTheRest": "Ychwanegu'r gweddill",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Rhoi'r chwaraewyr y gellir eu hychwanegu yn y gystadleuaeth hon a gadael y lleill allan",
+    "Competition.PlayerAlreadyEntered": "Eisoes yn y gystadleuaeth",
+    "TournamentPlayer.Archived": "Wedi'i roi o'r neilltu yn y twrnamaint",
+    "Tournament.NoSuchPlayer": "Nid yw'n chwaraewr yn y twrnamaint",
+    "Competition.DrawFixed":
+      "Mae'r tynnu wedi'i osod, gan fod gêm wedi'i rhoi i mewn",
     "admin.competitionPlayers.choose": "Chwaraewr i'w ychwanegu",
     "admin.competitionPlayers.nobody": "Dewiswch chwaraewr",
     // Offered in a knockout's drop-down, and what a bye is listed as.

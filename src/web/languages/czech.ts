@@ -924,6 +924,24 @@ export const czech: Language = {
     "admin.competitionPlayers.add": "Přidat hráče",
     // Pod rozbalovacím seznamem, pro odmítnutí bez vlastních slov.
     "admin.competitionPlayers.otherwise": "Tohoto hráče nelze přidat.",
+    "admin.competitionPlayers.addSeveral": "Přidat více",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Vyberte několik hráčů turnaje a přidejte je do této soutěže najednou",
+    "admin.addPlayers.title": "Přidat hráče",
+    "admin.addPlayers.selectAll": "Vybrat všechny",
+    "admin.addPlayers.add": "Přidat vybrané",
+    "admin.hover.dialog.addPlayers.add": "Přidat vybrané hráče do této soutěže",
+    "admin.addPlayers.otherwise": "Tyto hráče nelze přidat.",
+    "admin.addPlayers.someRefusedTitle": "Někteří hráči nelze přidat",
+    "admin.addPlayers.someRefusedQuestion":
+      "Uvedené hráče nelze přidat. Chcete přidat ostatní z vybraných?",
+    "admin.addPlayers.addTheRest": "Přidat ostatní",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Přidat hráče, které lze přidat, do této soutěže a ostatní vynechat",
+    "Competition.PlayerAlreadyEntered": "Už je v soutěži",
+    "TournamentPlayer.Archived": "V turnaji odložen",
+    "Tournament.NoSuchPlayer": "Není hráčem turnaje",
+    "Competition.DrawFixed": "Los je pevný, protože byla zadána hra",
     "admin.competitionPlayers.choose": "Hráč k přidání",
     "admin.competitionPlayers.nobody": "Vyberte hráče",
     // Nabízí se v rozbalovacím seznamu pavouka a tak se uvádí bye.

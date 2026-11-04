@@ -1,0 +1,22 @@
+/* The players to tick one to a row, with room to press each on a phone, and a
+   long tournament's list scrolling inside the dialog rather than pushing its
+   buttons off the screen. */
+.add-players-offered,
+.add-players-not-entered {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.add-players-offered {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.add-players-all,
+.add-players-offered label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+}
