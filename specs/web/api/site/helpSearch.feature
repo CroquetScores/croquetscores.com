@@ -177,6 +177,14 @@ Feature: Asking the help a question
       Then the panel comes before the page's first heading
 
     @browser
+    Scenario: The words of a result are black
+      Given a site with help pages
+      And the english page "a" titled "Players" saying "Add a player."
+      When the first page of the help is read
+      And "player" is typed in the panel
+      Then the words of the result "Players" are black
+
+    @browser
     Scenario: Results are shown as they are asked for
       Given a site with help pages
       And the english page "a" titled "Players" saying "Add a player."

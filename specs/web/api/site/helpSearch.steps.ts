@@ -384,3 +384,20 @@ Then(
     );
   },
 );
+
+// Read from the result in the page, by its title, since a string handed to an
+// element is not given it.
+Then(
+  "the words of the result {string} are black",
+  async function (this: SpecWorld, title: string) {
+    await this.browserPage
+      .locator(`${panel} .help-search-result-title`, { hasText: title })
+      .first()
+      .waitFor({ timeout: 5000 });
+    const read = await this.browserPage.evaluate(
+      `(() => { const result = [...document.querySelectorAll(${JSON.stringify(`${panel} .help-search-results li`)})].find((each) => each.querySelector(".help-search-result-title")?.textContent === ${JSON.stringify(title)}); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; })()`,
+    );
+    assert.equal(typeof read, "string", `There is no result called ${title}.`);
+    assert.equal(read, "rgb(0, 0, 0)");
+  },
+);

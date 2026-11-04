@@ -316,7 +316,6 @@ const sizeOf = (world: SpecWorld, selector: string): Promise<unknown> =>
 
 const sections: Readonly<Record<string, string>> = {
   "Popular questions": "#popular-questions",
-  "Help by subject": "#subjects",
 };
 
 Then(
@@ -327,5 +326,226 @@ Then(
     const size = await sizeOf(this, selector);
     assert.equal(typeof size, "string");
     assert.equal(size, await sizeOf(this, panelTitle));
+  },
+);
+
+// Hidden and shown ------------------------------------------------------------------
+
+Then(
+  "the heading of the subjects is not shown",
+  async function (this: SpecWorld) {
+    const box = await this.browserPage.locator("#subjects").boundingBox();
+    assert.ok(
+      box !== null,
+      "The subjects have no heading for a screen reader.",
+    );
+    assert.ok(box.width <= 1 && box.height <= 1, "The heading is shown.");
+  },
+);
+
+Then(
+  "the page has a heading for the subjects",
+  async function (this: SpecWorld) {
+    assert.equal(await this.browserPage.locator("h2#subjects").count(), 1);
+  },
+);
+
+// The card ---------------------------------------------------------------------------
+
+const styleOf = async (
+  world: SpecWorld,
+  selector: string,
+  property: string,
+): Promise<string> => {
+  const value = await world.browserPage.evaluate(
+    `getComputedStyle(document.querySelector(${JSON.stringify(selector)}))[${JSON.stringify(property)}]`,
+  );
+  assert.equal(typeof value, "string", `${selector} has no ${property}.`);
+  return value as string;
+};
+
+const aSubjectCard = `${cards} li`;
+
+Then(
+  "the popular questions are the colour of a subject card",
+  async function (this: SpecWorld) {
+    const card = await styleOf(this, aSubjectCard, "backgroundColor");
+    assert.equal(
+      await styleOf(this, "#popular-questions", "backgroundColor"),
+      card,
+    );
+    assert.equal(await styleOf(this, `${popular}`, "backgroundColor"), card);
+  },
+);
+
+// What a list's alternate rows are painted with, found by painting something with
+// it, so that the theme it is read in is the one the page is in.
+Then(
+  "a subject card is the colour of the alternating rows of a list",
+  async function (this: SpecWorld) {
+    const rows = await this.browserPage.evaluate(
+      "(() => { const row = document.createElement('div'); row.style.background = 'var(--surface)'; document.body.appendChild(row); const colour = getComputedStyle(row).backgroundColor; row.remove(); return colour; })()",
+    );
+    assert.equal(typeof rows, "string");
+    assert.equal(await styleOf(this, aSubjectCard, "backgroundColor"), rows);
+  },
+);
+
+Then(
+  "the popular questions have the corners of a subject card",
+  async function (this: SpecWorld) {
+    const corner = await styleOf(this, aSubjectCard, "borderTopLeftRadius");
+    assert.notEqual(corner, "0px");
+    // Whole at the top in its heading and at the bottom in its list, which are
+    // one card drawn in two parts.
+    assert.equal(
+      await styleOf(this, "#popular-questions", "borderTopLeftRadius"),
+      corner,
+    );
+    assert.equal(
+      await styleOf(this, "#popular-questions", "borderTopRightRadius"),
+      corner,
+    );
+    assert.equal(
+      await styleOf(this, popular, "borderBottomLeftRadius"),
+      corner,
+    );
+    assert.equal(
+      await styleOf(this, popular, "borderBottomRightRadius"),
+      corner,
+    );
+  },
+);
+
+// The spacing ----------------------------------------------------------------------
+
+// What the page's own letters measure, which is what a rem is.
+const remOf = async (world: SpecWorld): Promise<number> =>
+  Number(
+    await world.browserPage.evaluate(
+      "parseFloat(getComputedStyle(document.documentElement).fontSize)",
+    ),
+  );
+
+const edgesOf = async (world: SpecWorld, selector: string) => {
+  const box = await world.browserPage.locator(selector).first().boundingBox();
+  assert.ok(box !== null, `${selector} is not on the page.`);
+  return { top: box.y, bottom: box.y + box.height };
+};
+
+const assertOneRemApart = async (
+  world: SpecWorld,
+  below: string,
+  above: string,
+): Promise<void> => {
+  const apart =
+    (await edgesOf(world, below)).top - (await edgesOf(world, above)).bottom;
+  const rem = await remOf(world);
+  assert.ok(rem > 0, "The page's letters have no size.");
+  // A pixel either way is how a box is rounded to the screen.
+  assert.ok(
+    Math.abs(apart - rem) <= 1,
+    `It is ${apart}px below, and 1rem is ${rem}px.`,
+  );
+};
+
+Then(
+  "the popular questions are 1rem below the search box",
+  async function (this: SpecWorld) {
+    await assertOneRemApart(this, "#popular-questions", ".help-search");
+  },
+);
+
+Then(
+  "the subject cards are 1rem below the popular questions",
+  async function (this: SpecWorld) {
+    await assertOneRemApart(this, cards, popular);
+  },
+);
+
+// The search box's card ---------------------------------------------------------------
+
+const searchCard = ".help-search";
+
+Then(
+  "the search box is the colour of a subject card",
+  async function (this: SpecWorld) {
+    assert.equal(
+      await styleOf(this, searchCard, "backgroundColor"),
+      await styleOf(this, aSubjectCard, "backgroundColor"),
+    );
+  },
+);
+
+Then(
+  "the search box has the corners of a subject card",
+  async function (this: SpecWorld) {
+    const corner = await styleOf(this, aSubjectCard, "borderTopLeftRadius");
+    assert.notEqual(corner, "0px");
+    for (const property of [
+      "borderTopLeftRadius",
+      "borderTopRightRadius",
+      "borderBottomLeftRadius",
+      "borderBottomRightRadius",
+    ]) {
+      assert.equal(await styleOf(this, searchCard, property), corner, property);
+    }
+  },
+);
+
+// The words ------------------------------------------------------------------------
+
+const black = "rgb(0, 0, 0)";
+
+// The card is found by its link's name inside the page, since a string handed to
+// an element is not given it (the outline's step found that out).
+const wordsOfCard = async (world: SpecWorld, subject: string) => {
+  const read = await world.browserPage.evaluate(
+    `(() => { const card = [...document.querySelectorAll(${JSON.stringify(`${cards} li`)})].find((each) => each.querySelector("a")?.textContent === ${JSON.stringify(subject)}); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; })()`,
+  );
+  assert.equal(typeof read, "string", `There is no card called ${subject}.`);
+  return read;
+};
+
+Then(
+  "the words under the title of the card {string} are black",
+  async function (this: SpecWorld, subject: string) {
+    assert.equal(await wordsOfCard(this, subject), black);
+  },
+);
+
+Then(
+  "the words under the title of the card {string} are not black",
+  async function (this: SpecWorld, subject: string) {
+    assert.notEqual(await wordsOfCard(this, subject), black);
+  },
+);
+
+Then(
+  "the heading {string} is black",
+  async function (this: SpecWorld, heading: string) {
+    const selector = sections[heading];
+    assert.ok(selector !== undefined, `There is no heading ${heading}.`);
+    assert.equal(await styleOf(this, selector, "color"), black);
+  },
+);
+
+Then("the panel's title is black", async function (this: SpecWorld) {
+  assert.equal(await styleOf(this, panelTitle, "color"), black);
+});
+
+Then(
+  "the words typed in the search box are black",
+  async function (this: SpecWorld) {
+    assert.equal(await styleOf(this, "#help-search-field", "color"), black);
+  },
+);
+
+// What a browser says it prefers, which is what the page goes by until the
+// reader has chosen a theme of their own.
+Given(
+  "the reader's browser asks for dark colours",
+  async function (this: SpecWorld) {
+    await this.browserPage.emulateMedia({ colorScheme: "dark" });
   },
 );

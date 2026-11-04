@@ -49,12 +49,14 @@ Feature: The first page of the help helps a reader find an answer without knowin
       When the first page of the help is opened in the browser
       Then the search box is called "Your question"
 
-  Rule: The sections of the first page have headings of one size
+  Rule: The panel and the popular questions are headed alike
 
-    The panel, the popular questions and the subjects are three sections of one
-    page, side by side in what they are, and are headed alike: each by a second
-    level heading, at the size the panel's was. A heading larger than another
-    says its section matters more, and none of these does.
+    The panel and the popular questions are two sections of one page, side by
+    side in what they are, and are headed alike: each by a second level heading,
+    at the size the panel's was. A heading larger than another says its section
+    matters more, and neither does. The subjects have no heading shown, being
+    cards that say what they are themselves; the page keeps one for a screen
+    reader, which has no cards to see.
 
     Scenario: The panel is headed by a second level heading
       When the first page of the help is opened in the browser
@@ -64,9 +66,87 @@ Feature: The first page of the help helps a reader find an answer without knowin
       When the first page of the help is opened in the browser
       Then the heading "Popular questions" is as large as the panel's title
 
-    Scenario: The subjects are as large as the panel's title
+    Scenario: The subjects have no heading shown
       When the first page of the help is opened in the browser
-      Then the heading "Help by subject" is as large as the panel's title
+      Then the heading of the subjects is not shown
+
+    Scenario: The subjects still have a heading for a screen reader
+      When the first page of the help is opened in the browser
+      Then the page has a heading for the subjects
+
+  Rule: The words of the first page are black in the light theme
+
+    The page's text is a near-black, which on the green of a card reads as grey.
+    The words of the first page, its headings, what is typed in the search box,
+    the words under a card's title and the words of a result, are black in the
+    light theme. The links, being links, keep the colour of links.
+
+    In the dark theme they are the pale colour the rest of the text is: black
+    on a dark card would be a hole.
+
+    Scenario: The words under the title of a subject are black
+      When the first page of the help is opened in the browser
+      Then the words under the title of the card "Readers" are black
+
+    Scenario: The heading of the popular questions is black
+      When the first page of the help is opened in the browser
+      Then the heading "Popular questions" is black
+
+    Scenario: The title of the search box is black
+      When the first page of the help is opened in the browser
+      Then the panel's title is black
+
+    Scenario: What is typed in the search box is black
+      When the first page of the help is opened in the browser
+      Then the words typed in the search box are black
+
+    Scenario: In the dark theme the words are not black
+      Given the reader's browser asks for dark colours
+      When the first page of the help is opened in the browser
+      Then the words under the title of the card "Readers" are not black
+
+  Rule: The search box is a card like the others
+
+    The panel, the popular questions and the subjects are all cards, one colour
+    and one shape, so that the page reads as a set of things to choose from and
+    the search is the first of them and not a bare field above the rest.
+
+    Scenario: The search box is the colour of a subject card
+      When the first page of the help is opened in the browser
+      Then the search box is the colour of a subject card
+
+    Scenario: The search box has the corners of a subject card
+      When the first page of the help is opened in the browser
+      Then the search box has the corners of a subject card
+
+  Rule: The popular questions are a card like the subjects
+
+    Scenario: The popular questions are the colour of a subject card
+      When the first page of the help is opened in the browser
+      Then the popular questions are the colour of a subject card
+
+    Scenario: The cards are the colour of the alternating rows of a list of tournaments
+      When the first page of the help is opened in the browser
+      Then a subject card is the colour of the alternating rows of a list
+
+    Scenario: The popular questions have the corners of a subject card
+      When the first page of the help is opened in the browser
+      Then the popular questions have the corners of a subject card
+
+  Rule: The sections are 1rem apart
+
+    A rem is the size of the page's own letters, so the gaps grow with them for
+    a reader who has made the letters larger. Each stands 1rem below what is
+    above it, and nothing else is between them: not a rule, and not room left
+    over from the section above.
+
+    Scenario: The popular questions are 1rem below the search box's card
+      When the first page of the help is opened in the browser
+      Then the popular questions are 1rem below the search box
+
+    Scenario: The subject cards are 1rem below the popular questions
+      When the first page of the help is opened in the browser
+      Then the subject cards are 1rem below the popular questions
 
   Rule: The popular questions are below the search box
 

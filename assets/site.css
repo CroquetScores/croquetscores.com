@@ -49,6 +49,10 @@
   --panel: #ffffff;
   --ink: #16181c;
   --ink-muted: #5b6069;
+  /* The page's text at its strongest, for where --ink reads as grey: on the
+     green of a card. Black in light; in dark, where black would be a hole, the
+     pale ink. */
+  --ink-strong: #000000;
   --accent: #398639;
   --accent-strong: #066b00;
   --accent-ink: #ffffff;
@@ -120,6 +124,7 @@
     --panel: light-dark(#ffffff, #191e18);
     --ink: light-dark(#16181c, #e7ece5);
     --ink-muted: light-dark(#5b6069, #a6b0a3);
+    --ink-strong: light-dark(#000000, #e7ece5);
     --accent: light-dark(#398639, #20201f);
     --accent-strong: light-dark(#066b00, #111111);
     --accent-ink: light-dark(#ffffff, #f3f7f1);
@@ -402,9 +407,11 @@ a:hover {
 }
 
 /* The first page does not show its title: the panel above it says where the
-   reader is. It is kept for a screen reader, which has the title and nothing
+   reader is. Nor the heading over the subjects, which are cards that say what
+   they are. It is kept for a screen reader, which has the title and nothing
    else to say the page is the help, by being made one pixel and clipped. */
-.help[data-page=""] > h1:first-child {
+.help[data-page=""] > h1:first-child,
+.help #subjects {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -419,8 +426,28 @@ a:hover {
    subjects as cards. Both are lists written in Markdown, found here by the
    bookmarks of the headings they follow (docs/help/<language>/index.md), so the
    page needs no markup of its own and a translator writes only the words. */
+/* The popular questions are a card, drawn in two parts because the heading and
+   the list are two elements of the page: the heading is the top of it and the
+   list the rest, with the line between them left out. It is the colour of the
+   alternating rows of the site's lists, as the subjects' cards are. The page's
+   column puts 1rem between the panel and this, and the grid of subjects puts
+   its own 1rem between this and it. */
+.help #popular-questions {
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius-2) var(--radius-2) 0 0;
+  background: var(--surface);
+}
+
 .help #popular-questions + ul {
-  padding-left: var(--space-5);
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + var(--space-5));
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-2) var(--radius-2);
+  background: var(--surface);
 }
 
 .help #popular-questions + ul li + li {
@@ -445,7 +472,7 @@ a:hover {
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-2);
-  background: var(--panel);
+  background: var(--surface);
 }
 
 .help #subjects + ul li p {
@@ -468,7 +495,7 @@ a:hover {
 
 .help #subjects + ul li p + p {
   margin-top: var(--space-2);
-  color: var(--ink-muted);
+  color: var(--ink-strong);
   font-size: var(--text-sm);
 }
 
@@ -491,10 +518,15 @@ a:hover {
    that answer it are listed. It sits above the article, apart from it by a rule,
    and its results are a list of links each holding the page's title and the
    words around the match. */
+/* The search box is a card, as the popular questions and the subjects are: the
+   colour of the alternating rows of the site's lists, with the same line and
+   corners. The page's column puts 1rem between it and the next. */
 .help-search {
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border);
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--surface);
 }
 
 /* The panel's title and the headings of the first page's other sections are one
@@ -502,6 +534,7 @@ a:hover {
    three parts of one page, and none is to read as more than the others. */
 .help-search-title,
 .help[data-page=""] h2 {
+  color: var(--ink-strong);
   font-size: var(--text-lg);
   font-weight: 700;
 }
@@ -524,7 +557,7 @@ a:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius-2);
   background: var(--panel);
-  color: var(--ink);
+  color: var(--ink-strong);
   font: inherit;
 }
 
@@ -540,7 +573,7 @@ a:hover {
 
 .help-search-note {
   margin: var(--space-3) 0 0;
-  color: var(--ink-muted);
+  color: var(--ink-strong);
 }
 
 .help-search-note:empty {
@@ -551,6 +584,11 @@ a:hover {
   margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
+}
+
+/* Nothing asked yet, so nothing to leave room for beneath the box. */
+.help-search-results:empty {
+  margin: 0;
 }
 
 .help-search-results li + li {
@@ -572,13 +610,13 @@ a:hover {
 
 .help-search-snippet {
   display: block;
-  color: var(--ink-muted);
+  color: var(--ink-strong);
   font-size: var(--text-sm);
 }
 
 .help-search-snippet mark {
   background: transparent;
-  color: var(--ink);
+  color: var(--ink-strong);
   font-weight: 700;
 }
 
