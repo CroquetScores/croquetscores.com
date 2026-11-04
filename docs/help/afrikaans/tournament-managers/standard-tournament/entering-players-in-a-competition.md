@@ -12,6 +12,18 @@ Bo die lys bied 'n aftreklys elke speler van die toernooi aan wat nie reeds in d
 
 Geargiveerde spelers van die toernooi word nie aangebied nie.
 
+## Hoe om verskeie spelers by te voeg {#adding-several}
+
+Om 'n kompetisie vinnig op te stel, druk op **Voeg etlike by**, langs **Voeg speler by**. Dit word aangebied waar daar twee of meer spelers is om uit te kies. Dit maak 'n dialoog oop wat elke speler van die toernooi lys wat nie in die kompetisie is nie, in die toernooi se volgorde, elkeen met 'n blokkie om aan te vink. Die blokkie bo die lys vink almal aan.
+
+![Die dialoog Voeg spelers by, met twee spelers aangevink](images/add-players-dialog.png)
+
+Vink die spelers aan wat jy wil hê en druk op **Voeg gekose by**. Hulle word almal gelyk ingeskryf en in die toernooi se volgorde geplaas, in watter volgorde jy hulle ook al aangevink het. Druk op **Kanselleer** om die dialoog toe te maak sonder om iemand by te voeg. As jy op **Voeg gekose by** druk terwyl niemand aangevink is nie, gebeur niks.
+
+Soms kan 'n aangevinkte speler nie ingeskryf word nie: iemand anders kan hulle in die kompetisie geplaas het terwyl die dialoog oop was, of 'n uitskakeling kan minder plekke oor hê as die aantal spelers wat aangevink is. Dan word niemand ingeskryf nie. 'n Tweede dialoog lys die spelers wat nie bygevoeg kan word nie, elkeen met die rede, en vra of die res van die aangevinkte spelers bygevoeg moet word. Druk op **Voeg die res by** om dié in te skryf wat kan, of op **Kanselleer** om terug te gaan na die kruisies, wat is soos jy hulle gelaat het, en dit te verander. Waar nie een van die aangevinkte spelers ingeskryf kan word nie, is daar niks om te besluit nie, en die redes word bo die lys gewys.
+
+Die byes van 'n uitskakeling is nie deel hiervan nie. Hulle word een vir een uit die aftreklys bygevoeg, soos [Byes in 'n uitskakeling](#byes-in-a-knockout) beskryf.
+
 ## Byes in 'n uitskakeling {#byes-in-a-knockout}
 
 'n Uitskakeling word eers gespeel wanneer elke plek in sy rooster gevul is, en die plekke wat sy spelers oorlaat, word met byes gevul. So in 'n uitskakeling bied die aftreklys eers **Bye** aan, voor die spelers, en hou aan om dit aan te bied hoeveel byes ook al bygevoeg word, want 'n rooster kan verskeie nodig hê.

@@ -8,14 +8,19 @@ import {
   Competition,
   type Told,
 } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
+import type { CompetitionPlayerId } from "../../../domain/aggregates/tournaments/competitions/primitives/CompetitionPlayerId.js";
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import type { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
   type CompetitionInTournament,
   type Tournament,
   TournamentRefused,
 } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { TournamentPlayerErrorCode } from "../../../domain/aggregates/tournaments/TournamentPlayer.js";
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import {
   askedBy,
@@ -188,4 +193,34 @@ export const competitionManagedBy = async (
     competition: await competitionOf(competitions, id),
     told: toldOf(tournament, id),
   };
+};
+
+/**
+ * The tournament player `id` entered in `competition`, which `tournament`
+ * must have and must not have set aside. Whoever asks has been asked of the
+ * tournament already. Entering one player and entering a list share this, so
+ * that a player is refused for the same reasons by either.
+ */
+export const enterTournamentPlayer = (
+  tournament: Tournament,
+  competition: Competition,
+  id: TournamentPlayerId,
+  told: Told,
+  by: AccountId,
+  at: ReadOnlyDate,
+): CompetitionPlayerId => {
+  const player = tournament.players.find((each) => each.id.equals(id));
+  if (player === undefined) {
+    throw new TournamentRefused(
+      "Tournament.NoSuchPlayer",
+      "The tournament has no such player.",
+    );
+  }
+  // Set aside, and in no competition, until they are restored.
+  if (player.archived) {
+    throw new ValidationError<TournamentPlayerErrorCode>(
+      "TournamentPlayer.Archived",
+    );
+  }
+  return competition.enterPlayer(id, player.order, told, by, at);
 };

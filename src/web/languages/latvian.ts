@@ -930,6 +930,25 @@ export const latvian: Language = {
     "admin.competitionPlayers.add": "Pievienot spēlētāju",
     // Zem nolaižamā saraksta, atteikumam bez savu vārdu.
     "admin.competitionPlayers.otherwise": "Šo spēlētāju nevar pievienot.",
+    "admin.competitionPlayers.addSeveral": "Pievienot vairākus",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Izvēlieties vairākus turnīra spēlētājus, lai tos vienlaikus pievienotu šīm sacensībām",
+    "admin.addPlayers.title": "Pievienot spēlētājus",
+    "admin.addPlayers.selectAll": "Atlasīt visus",
+    "admin.addPlayers.add": "Pievienot atlasītos",
+    "admin.hover.dialog.addPlayers.add":
+      "Pievienot atlasītos spēlētājus šīm sacensībām",
+    "admin.addPlayers.otherwise": "Šos spēlētājus nevar pievienot.",
+    "admin.addPlayers.someRefusedTitle": "Dažus spēlētājus nevar pievienot",
+    "admin.addPlayers.someRefusedQuestion":
+      "Uzskaitītos spēlētājus nevar pievienot. Vai vēlaties pievienot pārējos atlasītos?",
+    "admin.addPlayers.addTheRest": "Pievienot pārējos",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Pievienot šīm sacensībām spēlētājus, kurus var pievienot, un izlaist pārējos",
+    "Competition.PlayerAlreadyEntered": "Jau ir sacensībās",
+    "TournamentPlayer.Archived": "Turnīrā atlikts malā",
+    "Tournament.NoSuchPlayer": "Nav turnīra spēlētājs",
+    "Competition.DrawFixed": "Izloze ir fiksēta, jo ir ievadīta spēle",
     "admin.competitionPlayers.choose": "Pievienojamais spēlētājs",
     "admin.competitionPlayers.nobody": "Izvēlieties spēlētāju",
     // Piedāvāts izslēgšanas turnīra nolaižamajā sarakstā, un kā bye tiek

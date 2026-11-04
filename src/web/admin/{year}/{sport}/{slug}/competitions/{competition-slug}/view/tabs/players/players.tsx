@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { standardHelp } from "../../../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../../../words.js";
+import { AddPlayersDialog } from "../../modal-dialogs/add-players/add-players.js";
 import { CarryForwardDialog } from "../../modal-dialogs/carry-forward/carry-forward.js";
 import { noOption, optionFace } from "../../../../../../../../optionFace.js";
 import { idInAddress } from "../../../../../../../../api.js";
@@ -14,7 +15,9 @@ import "../../../../../../../../listed.css";
 // the players playing in the competition's order, each offering Carry
 // Forward, Remove, Withdraw, Up and Down, and after them the withdrawn,
 // offering Unwithdraw. Carry Forward opens its own dialog, in a block or a
-// Swiss, which have standings for it to count in.
+// Swiss, which have standings for it to count in. Add Several, offered where
+// there are two or more to choose from, opens a dialog to tick them in and
+// enter them in one go.
 // Remove and Withdraw ask first. A player Add Player cannot enter is said
 // beneath the drop-down, by the refusal's code, until another is chosen. A
 // knockout offers Bye first, however many are added, and a bye is listed as
@@ -109,6 +112,8 @@ export const CompetitionPlayersTab = ({
   >();
   // The player whose carry forward is being changed, in its dialog.
   const [carrying, setCarrying] = useState<Listed | undefined>();
+  // Whether the dialog to tick several players to add is open.
+  const [addingSeveral, setAddingSeveral] = useState(false);
   const choice = useRef<HTMLSelectElement>(null);
   const ofTournament = `/api/site/tournaments/${idInAddress(tournament)}`;
   const at = `${ofTournament}/competitions/${idInAddress(competition)}`;
@@ -335,6 +340,20 @@ export const CompetitionPlayersTab = ({
           >
             {say("admin.competitionPlayers.add")}
           </button>
+          {/* A second player to choose from is what makes it several. */}
+          {offered.length > 1 ? (
+            <button
+              type="button"
+              className="button"
+              data-action="addSeveral"
+              title={say("admin.hover.competitionPlayers.addSeveral")}
+              onClick={() => {
+                setAddingSeveral(true);
+              }}
+            >
+              {say("admin.competitionPlayers.addSeveral")}
+            </button>
+          ) : null}
         </p>
       ) : (
         <p className="listed-all">{say("admin.competitionPlayers.all")}</p>
@@ -404,6 +423,19 @@ export const CompetitionPlayersTab = ({
           ) : null}
         </>
       )}
+      {addingSeveral ? (
+        <AddPlayersDialog
+          tournament={tournament}
+          competition={competition}
+          offered={offered}
+          changed={() => {
+            setAsking((count) => count + 1);
+          }}
+          close={() => {
+            setAddingSeveral(false);
+          }}
+        />
+      ) : null}
       {carrying === undefined ? null : (
         <CarryForwardDialog
           tournament={tournament}

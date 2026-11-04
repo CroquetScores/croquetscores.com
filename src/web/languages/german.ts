@@ -995,6 +995,28 @@ export const german: Language = {
     // Unter der Auswahlliste, für eine Ablehnung ohne eigene Worte.
     "admin.competitionPlayers.otherwise":
       "Dieser Spieler kann nicht hinzugefügt werden.",
+    "admin.competitionPlayers.addSeveral": "Mehrere hinzufügen",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Mehrere Spieler des Turniers auf einmal in diesen Wettbewerb aufnehmen",
+    "admin.addPlayers.title": "Spieler hinzufügen",
+    "admin.addPlayers.selectAll": "Alle auswählen",
+    "admin.addPlayers.add": "Auswahl hinzufügen",
+    "admin.hover.dialog.addPlayers.add":
+      "Die ausgewählten Spieler in diesen Wettbewerb aufnehmen",
+    "admin.addPlayers.otherwise":
+      "Diese Spieler können nicht hinzugefügt werden.",
+    "admin.addPlayers.someRefusedTitle":
+      "Einige Spieler können nicht hinzugefügt werden",
+    "admin.addPlayers.someRefusedQuestion":
+      "Die aufgeführten Spieler können nicht hinzugefügt werden. Sollen die übrigen ausgewählten hinzugefügt werden?",
+    "admin.addPlayers.addTheRest": "Übrige hinzufügen",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Die Spieler, die hinzugefügt werden können, in diesen Wettbewerb aufnehmen und die anderen weglassen",
+    "Competition.PlayerAlreadyEntered": "Schon im Wettbewerb",
+    "TournamentPlayer.Archived": "Im Turnier beiseitegelegt",
+    "Tournament.NoSuchPlayer": "Kein Spieler des Turniers",
+    "Competition.DrawFixed":
+      "Die Auslosung steht fest, da ein Spiel eingetragen wurde",
     "admin.competitionPlayers.choose": "Hinzuzufügender Spieler",
     "admin.competitionPlayers.nobody": "Spieler wählen",
     // In der Auswahlliste eines K.-o.-Turniers angeboten, und als was ein

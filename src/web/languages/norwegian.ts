@@ -936,6 +936,25 @@ export const norwegian: Language = {
     // Under nedtrekkslisten, for et avslag uten egne ord.
     "admin.competitionPlayers.otherwise":
       "Denne spilleren kan ikke legges til.",
+    "admin.competitionPlayers.addSeveral": "Legg til flere",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Velg flere av turneringens spillere for å legge dem til i denne konkurransen samtidig",
+    "admin.addPlayers.title": "Legg til spillere",
+    "admin.addPlayers.selectAll": "Velg alle",
+    "admin.addPlayers.add": "Legg til valgte",
+    "admin.hover.dialog.addPlayers.add":
+      "Legg de valgte spillerne til i denne konkurransen",
+    "admin.addPlayers.otherwise": "Disse spillerne kan ikke legges til.",
+    "admin.addPlayers.someRefusedTitle": "Noen spillere kan ikke legges til",
+    "admin.addPlayers.someRefusedQuestion":
+      "Spillerne som er oppført kan ikke legges til. Vil du legge til resten av de valgte?",
+    "admin.addPlayers.addTheRest": "Legg til resten",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Legg spillerne som kan legges til i denne konkurransen, og la de andre være",
+    "Competition.PlayerAlreadyEntered": "Allerede i konkurransen",
+    "TournamentPlayer.Archived": "Lagt til side i turneringen",
+    "Tournament.NoSuchPlayer": "Ikke en spiller i turneringen",
+    "Competition.DrawFixed": "Trekningen er låst, siden en kamp er registrert",
     "admin.competitionPlayers.choose": "Spiller å legge til",
     "admin.competitionPlayers.nobody": "Velg en spiller",
     // Tilbudt i en utslagnings nedtrekksliste, og hva en bye står som i listen.

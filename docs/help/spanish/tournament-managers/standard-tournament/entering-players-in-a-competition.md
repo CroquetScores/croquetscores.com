@@ -12,6 +12,18 @@ Encima de la lista, una lista desplegable ofrece a todos los jugadores del torne
 
 Los jugadores archivados del torneo no se ofrecen.
 
+## Añadir varios jugadores {#adding-several}
+
+Para preparar una competición con rapidez, pulsa **Añadir varios**, junto a **Añadir jugador**. Se ofrece cuando hay dos o más jugadores entre los que elegir. Abre un cuadro de diálogo que enumera a todos los jugadores del torneo que no están en la competición, en el orden del torneo, cada uno con una casilla para marcar. La casilla de encima de la lista los marca a todos.
+
+![El cuadro de diálogo Añadir jugadores, con dos jugadores marcados](images/add-players-dialog.png)
+
+Marca los jugadores que quieras y pulsa **Añadir seleccionados**. Se inscriben todos a la vez y se colocan en el orden del torneo, sea cual sea el orden en que los marcaste. Pulsa **Cancelar** para cerrar el cuadro sin añadir a nadie. Pulsar **Añadir seleccionados** sin nadie marcado no hace nada.
+
+A veces un jugador marcado no puede inscribirse: otra persona puede haberlo puesto en la competición mientras el cuadro estaba abierto, o una eliminatoria puede tener menos plazas libres que jugadores marcados. En ese caso no se inscribe a nadie. Un segundo cuadro enumera los jugadores que no pueden añadirse, cada uno con su motivo, y pregunta si se añade al resto de los marcados. Pulsa **Añadir al resto** para inscribir a los que pueden, o **Cancelar** para volver a las marcas, que están como las dejaste, y cambiarlas. Si ninguno de los jugadores marcados puede inscribirse, no hay nada que decidir y los motivos se muestran encima de la lista.
+
+Los byes de una eliminatoria no forman parte de esto. Se añaden de uno en uno desde la lista desplegable, como describe [Byes en una eliminatoria](#byes-in-a-knockout).
+
 ## Byes en una eliminatoria {#byes-in-a-knockout}
 
 Una eliminatoria se juega solo cuando todas las plazas de su cuadro están ocupadas, y las plazas que dejan libres sus jugadores se rellenan con byes. Por eso en una eliminatoria el desplegable ofrece **Bye** primero, antes que los jugadores, y sigue ofreciéndolo por muchos byes que se añadan, porque un cuadro puede necesitar varios.

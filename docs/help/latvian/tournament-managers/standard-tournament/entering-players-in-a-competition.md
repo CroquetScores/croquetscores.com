@@ -12,6 +12,18 @@ Virs saraksta nolaižamais saraksts piedāvā katru turnīra spēlētāju, kas v
 
 Turnīra arhivētie spēlētāji netiek piedāvāti.
 
+## Vairāku spēlētāju pievienošana {#adding-several}
+
+Lai ātri sagatavotu sacensības, nospiediet **Pievienot vairākus** blakus **Pievienot spēlētāju**. Tā tiek piedāvāta, ja izvēlei ir divi vai vairāki spēlētāji. Tā atver dialogu, kurā uzskaitīts katrs turnīra spēlētājs, kas vēl nav sacensībās, turnīra kārtībā, pie katra ir rūtiņa, ko atzīmēt. Rūtiņa virs saraksta atzīmē visus.
+
+![Dialogs Pievienot spēlētājus ar diviem atzīmētiem spēlētājiem](images/add-players-dialog.png)
+
+Atzīmējiet vēlamos spēlētājus un nospiediet **Pievienot atlasītos**. Visi tiek ievadīti vienlaikus un ielikti turnīra kārtībā, neatkarīgi no tā, kādā secībā tos atzīmējāt. Nospiediet **Atcelt**, lai aizvērtu dialogu, nevienu nepievienojot. Ja nospiežat **Pievienot atlasītos**, kad neviens nav atzīmēts, nekas nenotiek.
+
+Dažreiz atzīmētu spēlētāju nevar ievadīt: kāds cits var būt viņu ielicis sacensībās, kamēr dialogs bija atvērts, vai izslēgšanas turnīrā var būt mazāk brīvu vietu, nekā atzīmēts spēlētāju. Tad netiek ievadīts neviens. Otrs dialogs uzskaita spēlētājus, kurus nevar pievienot, pie katra norādot iemeslu, un jautā, vai pievienot pārējos atzīmētos. Nospiediet **Pievienot pārējos**, lai ievadītu tos, kurus var, vai **Atcelt**, lai atgrieztos pie atzīmēm, kas ir tādas, kā tās atstājāt, un tās mainītu. Ja nevienu no atzīmētajiem spēlētājiem nevar ievadīt, nav ko izlemt, un iemesli tiek rādīti virs saraksta.
+
+Izslēgšanas turnīra bye šeit neietilpst. Tos pievieno pa vienam no nolaižamā saraksta, kā aprakstīts sadaļā [Bye izslēgšanas turnīrā](#byes-in-a-knockout).
+
 ## Bye izslēgšanas turnīrā {#byes-in-a-knockout}
 
 Izslēgšanas turnīrs tiek spēlēts tikai tad, kad katra tā izlozes vieta ir aizpildīta, un vietas, ko spēlētāji atstāj pāri, tiek aizpildītas ar bye. Tāpēc izslēgšanas turnīrā nolaižamais saraksts piedāvā **Bye** vispirms, pirms spēlētājiem, un turpina to piedāvāt, cik bye arī tiktu pievienoti, jo izlozei var vajadzēt vairākus.

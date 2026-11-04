@@ -12,6 +12,18 @@ Ovanför listan erbjuder en rullgardinslista varje spelare i turneringen som int
 
 Turneringens arkiverade spelare erbjuds inte.
 
+## Lägga till flera spelare {#adding-several}
+
+För att snabbt ställa i ordning en tävling trycker du på **Lägg till flera**, bredvid **Lägg till spelare**. Den erbjuds när det finns två eller fler spelare att välja bland. Den öppnar en dialogruta som listar varje spelare i turneringen som inte är med i tävlingen, i turneringens ordning, var och en med en ruta att kryssa i. Rutan ovanför listan kryssar i alla.
+
+![Dialogrutan Lägg till spelare, med två spelare ikryssade](images/add-players-dialog.png)
+
+Kryssa i de spelare du vill ha och tryck på **Lägg till markerade**. Alla läggs in på en gång och sätts in i turneringens ordning, oavsett i vilken ordning du kryssade i dem. Tryck på **Avbryt** för att stänga dialogrutan utan att lägga till någon. Om du trycker på **Lägg till markerade** utan att någon är ikryssad händer ingenting.
+
+Ibland kan en ikryssad spelare inte läggas in: någon annan kan ha lagt in dem i tävlingen medan dialogrutan var öppen, eller så har en utslagning färre lediga platser än det finns ikryssade spelare. Då läggs ingen in. En andra dialogruta listar de spelare som inte kan läggas till, var och en med orsaken, och frågar om resten av de ikryssade ska läggas till. Tryck på **Lägg till resten** för att lägga in dem som kan läggas in, eller på **Avbryt** för att gå tillbaka till kryssen, som är som du lämnade dem, och ändra dem. Där ingen av de ikryssade spelarna kan läggas in finns inget att avgöra, och orsakerna visas ovanför listan.
+
+En utslagnings byes ingår inte i det här. De läggs till en i taget från rullgardinslistan, så som [Byes i en utslagning](#byes-in-a-knockout) beskriver.
+
 ## Byes i en utslagning {#byes-in-a-knockout}
 
 En utslagning spelas först när varje plats i dess lottning är fylld, och de platser spelarna lämnar över fylls med byes. Så i en utslagning erbjuder rullgardinslistan **Bye** först, före spelarna, och fortsätter erbjuda den hur många byes som än läggs till, eftersom en lottning kan behöva flera.

@@ -947,6 +947,27 @@ export const afrikaans: Language = {
     // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise":
       "Hierdie speler kan nie bygevoeg word nie.",
+    "admin.competitionPlayers.addSeveral": "Voeg etlike by",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Kies etlike van die toernooi se spelers om gelyk in hierdie kompetisie te plaas",
+    "admin.addPlayers.title": "Voeg spelers by",
+    "admin.addPlayers.selectAll": "Kies almal",
+    "admin.addPlayers.add": "Voeg gekose by",
+    "admin.hover.dialog.addPlayers.add":
+      "Plaas die gekose spelers in hierdie kompetisie",
+    "admin.addPlayers.otherwise": "Hierdie spelers kan nie bygevoeg word nie.",
+    "admin.addPlayers.someRefusedTitle":
+      "Sommige spelers kan nie bygevoeg word nie",
+    "admin.addPlayers.someRefusedQuestion":
+      "Die spelers wat gelys word, kan nie bygevoeg word nie. Wil jy die res van die gekose spelers byvoeg?",
+    "admin.addPlayers.addTheRest": "Voeg die res by",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Plaas die spelers wat bygevoeg kan word in hierdie kompetisie en laat die ander uit",
+    "Competition.PlayerAlreadyEntered": "Reeds in die kompetisie",
+    "TournamentPlayer.Archived": "Opsy gesit in die toernooi",
+    "Tournament.NoSuchPlayer": "Nie 'n speler van die toernooi nie",
+    "Competition.DrawFixed":
+      "Die trekking is vas, want 'n wedstryd is reeds ingevoer",
     "admin.competitionPlayers.choose": "Speler om by te voeg",
     "admin.competitionPlayers.nobody": "Kies 'n speler",
     // Offered in a knockout's drop-down, and what a bye is listed as.

@@ -948,6 +948,27 @@ export const spanish: Language = {
     "admin.competitionPlayers.add": "Añadir jugador",
     // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise": "No se puede añadir este jugador.",
+    "admin.competitionPlayers.addSeveral": "Añadir varios",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Elige varios jugadores del torneo para ponerlos en esta competición a la vez",
+    "admin.addPlayers.title": "Añadir jugadores",
+    "admin.addPlayers.selectAll": "Seleccionar todos",
+    "admin.addPlayers.add": "Añadir seleccionados",
+    "admin.hover.dialog.addPlayers.add":
+      "Poner los jugadores seleccionados en esta competición",
+    "admin.addPlayers.otherwise": "Estos jugadores no se pueden añadir.",
+    "admin.addPlayers.someRefusedTitle":
+      "Algunos jugadores no se pueden añadir",
+    "admin.addPlayers.someRefusedQuestion":
+      "Los jugadores indicados no se pueden añadir. ¿Quieres añadir al resto de los seleccionados?",
+    "admin.addPlayers.addTheRest": "Añadir al resto",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Poner en esta competición a los jugadores que se pueden añadir y dejar fuera a los demás",
+    "Competition.PlayerAlreadyEntered": "Ya está en la competición",
+    "TournamentPlayer.Archived": "Apartado en el torneo",
+    "Tournament.NoSuchPlayer": "No es jugador del torneo",
+    "Competition.DrawFixed":
+      "El cuadro está fijado, porque se ha introducido un partido",
     "admin.competitionPlayers.choose": "Jugador que añadir",
     "admin.competitionPlayers.nobody": "Elige un jugador",
     // Offered in a knockout's drop-down, and what a bye is listed as.

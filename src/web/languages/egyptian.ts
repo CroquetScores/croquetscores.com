@@ -856,6 +856,24 @@ export const egyptian: Language = {
     "admin.competitionPlayers.add": "ضيف لاعب",
     // Beneath the drop-down, for a refusal with no words of its own.
     "admin.competitionPlayers.otherwise": "مينفعش نضيف اللاعب ده.",
+    "admin.competitionPlayers.addSeveral": "ضيف كذا لاعب",
+    "admin.hover.competitionPlayers.addSeveral":
+      "اختار كذا لاعب من لاعبين البطولة وضيفهم للمنافسة دي مرة واحدة",
+    "admin.addPlayers.title": "ضيف لاعبين",
+    "admin.addPlayers.selectAll": "اختار الكل",
+    "admin.addPlayers.add": "ضيف المختارين",
+    "admin.hover.dialog.addPlayers.add": "حط اللاعبين المختارين في المنافسة دي",
+    "admin.addPlayers.otherwise": "مينفعش يتضافوا اللاعبين دول.",
+    "admin.addPlayers.someRefusedTitle": "في لاعبين مينفعش يتضافوا",
+    "admin.addPlayers.someRefusedQuestion":
+      "اللاعبين المكتوبين مينفعش يتضافوا. عايز تضيف باقي اللي اخترتهم؟",
+    "admin.addPlayers.addTheRest": "ضيف الباقي",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "حط اللاعبين اللي ينفع يتضافوا في المنافسة دي وسيب الباقي",
+    "Competition.PlayerAlreadyEntered": "موجود في المنافسة بالفعل",
+    "TournamentPlayer.Archived": "متنحي في البطولة",
+    "Tournament.NoSuchPlayer": "مش لاعب في البطولة",
+    "Competition.DrawFixed": "القرعة اتثبتت لأن في لعبة اتسجلت",
     "admin.competitionPlayers.choose": "اللاعب اللي هيتضاف",
     "admin.competitionPlayers.nobody": "اختار لاعب",
     // Offered in a knockout's drop-down, and what a bye is listed as.
