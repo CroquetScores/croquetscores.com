@@ -332,7 +332,11 @@ export const TournamentForm = ({
                       value={starts}
                       onChange={(event) => {
                         setStarts(event.target.value);
-                        if (!finishChosen) setFinishes(event.target.value);
+                        // Not an emptied start: the reader is about to type
+                        // another, and the finish would be lost with it.
+                        if (!finishChosen && event.target.value !== "") {
+                          setFinishes(event.target.value);
+                        }
                       }}
                     />
                   )}

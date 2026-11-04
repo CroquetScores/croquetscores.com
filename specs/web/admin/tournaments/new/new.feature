@@ -280,6 +280,12 @@ Feature: A new tournament is created in the admin
     other way would leave a reader who moves the start to the tenth being
     refused for a finish on the first, which they never typed.
 
+    Emptying the start is not moving it: the reader is about to type another,
+    and a finish that went with it would be one more field to type again. So
+    the finish stays, and follows the start once there is one. This form is
+    the one a tournament is changed with as well, and there the finish is the
+    tournament's own from the start (`edit.feature`).
+
     Scenario: The start is the first of the month it is now
       Given the reader's clock reads "2026-11-04T10:00:00Z"
       When the new tournament page is opened
@@ -315,6 +321,19 @@ Feature: A new tournament is created in the admin
       And "2026-11-12" is typed as the "Finishes"
       When "2026-11-10" is typed as the "Starts"
       Then "Finishes" says "2026-11-12"
+
+    Scenario: Emptying the start leaves the finish where it was
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      When "" is typed as the "Starts"
+      Then "Finishes" says "2026-11-01"
+
+    Scenario: A start typed again after being emptied moves the finish with it
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      And "" is typed as the "Starts"
+      When "2026-11-10" is typed as the "Starts"
+      Then "Finishes" says "2026-11-10"
 
     Scenario: A tournament is a name and a country away
       Given the reader's clock reads "2026-11-04T10:00:00Z"

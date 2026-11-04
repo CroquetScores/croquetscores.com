@@ -143,6 +143,11 @@ Feature: A tournament is changed in the admin
       When the page to edit "Spring Open" is opened
       Then "Subtitle" still says "Lawns open at nine."
 
+    Scenario: Moving the start leaves the finish where the tournament has it
+      Given the page to edit "Spring Open" is open
+      When "2026-10-04" is typed as the "Starts"
+      Then "Finishes" says "2026-10-05"
+
   Rule: Saving keeps the change and takes the reader to the tournament
 
     Scenario: A renamed tournament keeps its address
