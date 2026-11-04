@@ -401,6 +401,100 @@ a:hover {
   scroll-margin-top: 6rem;
 }
 
+/* The panel at the top of the help in which a question is typed and the pages
+   that answer it are listed. It sits above the article, apart from it by a rule,
+   and its results are a list of links each holding the page's title and the
+   words around the match. */
+.help-search {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.help-search-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.help-search form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.help-search label {
+  flex: 1 0 100%;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.help-search input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+}
+
+.help-search button {
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-2);
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.help-search-note {
+  margin: var(--space-3) 0 0;
+  color: var(--ink-muted);
+}
+
+.help-search-note:empty {
+  display: none;
+}
+
+.help-search-results {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-search-results li + li {
+  margin-top: var(--space-3);
+}
+
+.help-search-results a {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.help-search-result-title {
+  display: block;
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.help-search-snippet {
+  display: block;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.help-search-snippet mark {
+  background: transparent;
+  color: var(--ink);
+  font-weight: 700;
+}
+
 /* The page's own title, on a green strip below the pinned bar. It scrolls away
    with the page, which is what the current site does and what keeps a
    three-line tournament name off a phone screen once reading has started. */

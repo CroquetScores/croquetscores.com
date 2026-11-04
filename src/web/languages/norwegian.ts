@@ -61,6 +61,14 @@ export const norwegian: Language = {
     "whatsNew.later": "Minn meg på det neste gang",
     "whatsNew.never": "Aldri vis meg dette varselet",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Spør {siteName}",
+    "helpSearch.label": "Spørsmålet ditt",
+    "helpSearch.submit": "Søk",
+    "helpSearch.none": "Ingen side i hjelpen svarer på det. Prøv andre ord.",
+    "helpSearch.tooLong": "Et spørsmål kan være på høyst {most} tegn.",
+    "helpSearch.failed": "Det gikk ikke an å søke i hjelpen. Prøv igjen.",
+
     "form.otherwise":
       "Noe her stemmer ikke. Sjekk det du skrev inn og prøv igjen.",
 

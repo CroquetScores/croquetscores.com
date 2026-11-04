@@ -53,6 +53,14 @@ export const egyptian: Language = {
     "whatsNew.later": "فكّرني المرة الجاية",
     "whatsNew.never": "ما تورّينيش التنبيه ده تاني",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "اسأل {siteName}",
+    "helpSearch.label": "سؤالك",
+    "helpSearch.submit": "بحث",
+    "helpSearch.none": "مفيش صفحة في المساعدة بتجاوب على ده. جرّب كلمات تانية.",
+    "helpSearch.tooLong": "السؤال مينفعش يزيد عن {most} حرف.",
+    "helpSearch.failed": "ماقدرناش نبحث في المساعدة. جرّب تاني.",
+
     "form.otherwise": "فيه حاجة مش مظبوطة. راجع اللي كتبته وجرّب تاني.",
 
     // The account menu in the header.

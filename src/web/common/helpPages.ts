@@ -30,6 +30,10 @@ export interface ConvertedHelpPage {
    * second level heading "Released 2026-10-13"; nothing where it says none.
    */
   readonly released: string | undefined;
+  /** Every heading, in the order written, as the words it says. */
+  readonly headings: readonly string[];
+  /** What is written under the headings, as the words it says and no markup. */
+  readonly text: string;
 }
 
 // Pictures are kept once, among the English pages, and the other languages
@@ -88,6 +92,44 @@ const releasedOf = (tokens: readonly Token[]): string | undefined => {
     if (found !== null) return found[1];
   }
   return undefined;
+};
+
+// The words an inline run of a page says. A picture contributes what it is
+// described as, since a reader may ask for it by that, but not the address it
+// is found at; a link contributes what it is called and not where it leads.
+const wordsOf = (inline: Token): string =>
+  (inline.children ?? [])
+    .map((token) => {
+      if (token.type === "text" || token.type === "code_inline")
+        return token.content;
+      if (token.type === "image") return token.content;
+      return token.type === "softbreak" || token.type === "hardbreak"
+        ? " "
+        : "";
+    })
+    .join("");
+
+// Headings and the text under them are kept apart because a search weighs a
+// word in a heading above the same word in a paragraph.
+const headingsAndText = (
+  tokens: readonly Token[],
+): Pick<ConvertedHelpPage, "headings" | "text"> => {
+  const headings: string[] = [];
+  const paragraphs: string[] = [];
+  for (const [index, token] of tokens.entries()) {
+    // Code is words too: a reader may ask for the setting a block shows.
+    if (token.type === "fence" || token.type === "code_block") {
+      const code = token.content.split(/\s+/).filter((word) => word !== "");
+      if (code.length > 0) paragraphs.push(code.join(" "));
+      continue;
+    }
+    if (token.type !== "inline") continue;
+    const words = wordsOf(token).trim();
+    if (words === "") continue;
+    if (tokens[index - 1]?.type === "heading_open") headings.push(words);
+    else paragraphs.push(words);
+  }
+  return { headings, text: paragraphs.join(" ") };
 };
 
 /**
@@ -157,5 +199,6 @@ export const convertHelpPage = (
     pagesLinkedTo,
     imagesShown,
     released: releasedOf(tokens),
+    ...headingsAndText(tokens),
   };
 };

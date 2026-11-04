@@ -14,6 +14,12 @@ import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { helpImagesPath, helpPath } from "../common/helpPages.js";
 import type { HelpLibrary } from "../common/helpLibrary.js";
+import {
+  answerHelpQuestion,
+  helpAddress,
+  HelpSearchRefused,
+  questionAsked,
+} from "../common/helpSearch.js";
 import { render } from "../common/layout.js";
 import { directionAttribute, speakingOf } from "../common/language.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -24,6 +30,8 @@ import {
   rememberRead,
   releaseOf,
 } from "../common/whatsNew.js";
+import { SearchHelp } from "../../application/operations/help/SearchHelp.js";
+import { helpSearchPanel, type HelpSearched } from "./helpSearchPanel.js";
 import { termsOfUsePath, writersTermsOfUsePath } from "./termsOfUse.js";
 
 const imageTypes: Readonly<Record<string, string>> = {
@@ -74,6 +82,10 @@ const contacts: ReadonlyMap<string, string> = new Map([
   [dataDeletionPolicyName, "privacy.contact"],
   ["admin/terms-of-use", "termsOfUse.report"],
 ]);
+
+/** Where the help puts the page called `name`: its own address if it has one. */
+export const helpAddressOf = (name: string): string =>
+  ownAddresses.get(name) ?? helpAddress(name);
 
 // The sentence that says who to ask, with the address in it made a link that
 // opens a new message to it. The words are the catalogue's, so the address is
@@ -166,6 +178,33 @@ export const registerHelpPages = (
       if (released !== undefined) rememberRead(request, reply, kind, released);
     }
 
+    // The first page carries the panel, and with it the answer to a question
+    // sent as a form, which is how it is asked where there is no scripting.
+    const asked = name === "" ? questionAsked(request) : "";
+    let searched: HelpSearched = { kind: "not asked" };
+    if (name === "" && asked !== "") {
+      try {
+        searched = {
+          kind: "answered",
+          answers: await answerHelpQuestion(
+            asked,
+            speaking.language.tag,
+            fallback?.tag,
+            (tag, rules, query) =>
+              server.mediator.query(new SearchHelp(tag, rules, query)),
+            helpAddressOf,
+          ),
+        };
+      } catch (error) {
+        if (!(error instanceof HelpSearchRefused)) throw error;
+        searched = { kind: "too long" };
+      }
+    }
+    const panel =
+      name === ""
+        ? helpSearchPanel(speaking, siteNameOf(request), asked, searched)
+        : "";
+
     const contact = contacts.get(name);
     const html = render(assets, {
       title: page.title,
@@ -179,7 +218,7 @@ export const registerHelpPages = (
       // The article says which language it is in and which page it is, so that
       // a reader's browser and screen reader read it in the language it is
       // written in even where the site around it is in another.
-      body: `          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
+      body: `${panel}          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
 ${pictured(page.html, writtenIn.tag)}
           </article>${
             contact === undefined
@@ -202,6 +241,9 @@ ${pictured(page.html, writtenIn.tag)}
   for (const [name, path] of ownAddresses) {
     server.get(path, (request, reply) => show(request, reply, name, true));
   }
+  // The first page of the help answers a question sent as a form, which runs
+  // the same search the API runs, so it is counted as the API is
+  // (registerQuestionLimit): only when it is asked one.
   server.get(helpPath, (request, reply) => show(request, reply, ""));
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
     const name = request.params["*"].replace(/\/+$/, "");

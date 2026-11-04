@@ -56,6 +56,16 @@ export const welsh: Language = {
     "whatsNew.later": "Atgoffwch fi y tro nesaf",
     "whatsNew.never": "Peidiwch byth â dangos y neges hon i mi",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Gofynnwch i {siteName}",
+    "helpSearch.label": "Eich cwestiwn",
+    "helpSearch.submit": "Chwilio",
+    "helpSearch.none":
+      "Does dim tudalen o'r cymorth yn ateb hynny. Rhowch gynnig ar eiriau eraill.",
+    "helpSearch.tooLong": "Ni all cwestiwn fod yn hwy na {most} nod.",
+    "helpSearch.failed":
+      "Ni ellid chwilio'r cymorth. Rhowch gynnig arall arni.",
+
     "form.otherwise":
       "Mae rhywbeth o'i le yma. Gwiriwch yr hyn a roddwyd a rhowch gynnig arall arni.",
 

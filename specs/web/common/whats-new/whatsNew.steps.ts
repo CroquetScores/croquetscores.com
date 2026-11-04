@@ -54,6 +54,8 @@ const helpOf = (world: SpecWorld): HelpLibrary => {
         title: "What's new",
         html: "<h1>What's new</h1>",
         released: releasesOf(world).get(kind),
+        headings: ["What's new"],
+        text: "",
       });
     },
   };

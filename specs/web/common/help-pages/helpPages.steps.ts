@@ -143,3 +143,43 @@ Then(
     }
   },
 );
+
+// Headings and words ---------------------------------------------------------------
+
+const headingListed = (world: SpecWorld, at: number): string | undefined =>
+  result(world).headings[at];
+
+Then(
+  "the first heading listed is {string}",
+  function (this: SpecWorld, heading: string) {
+    assert.equal(headingListed(this, 0), heading);
+  },
+);
+
+Then(
+  "the second heading listed is {string}",
+  function (this: SpecWorld, heading: string) {
+    assert.equal(headingListed(this, 1), heading);
+  },
+);
+
+Then(
+  "the text of the page is {string}",
+  function (this: SpecWorld, text: string) {
+    assert.equal(result(this).text, text);
+  },
+);
+
+Then(
+  "the text of the page says {string}",
+  function (this: SpecWorld, words: string) {
+    assert.ok(result(this).text.includes(words), result(this).text);
+  },
+);
+
+Then(
+  "the text of the page does not say {string}",
+  function (this: SpecWorld, words: string) {
+    assert.ok(!result(this).text.includes(words), result(this).text);
+  },
+);

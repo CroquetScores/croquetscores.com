@@ -134,3 +134,40 @@ Feature: Help written in markdown becomes pages of the site
         | teams    | notes                             | deleting-a-note         |
         | teams    | managers-and-scorers              | managers                |
         | teams    | managers-and-scorers              | scorers                 |
+
+  Rule: A page gives up its headings and its words as plain text, for the help to be searched
+
+    A search reads words, not markup, so what is searched is taken from the
+    page as it was written and not from the HTML made of it, in which a
+    picture's address and a link's would be words too.
+
+    Scenario: The headings of a page are listed in order
+      Given help page "# Players" followed by "## Adding a player"
+      When the help page is converted
+      Then the first heading listed is "Players"
+      And the second heading listed is "Adding a player"
+
+    Scenario: The bookmark of a heading is not one of its words
+      Given help page "## Adding many {#adding-many}"
+      When the help page is converted
+      Then the first heading listed is "Adding many"
+
+    Scenario: A paragraph is given as the words it says
+      Given help page "Add a **player** to the [tournament](players.md)."
+      When the help page is converted
+      Then the text of the page is "Add a player to the tournament."
+
+    Scenario: The words of a fenced block of code are words of the page
+      Given help page "```" followed by "set-this"
+      When the help page is converted
+      Then the text of the page says "set-this"
+
+    Scenario: The words of an indented block of code are words of the page
+      Given help page "    set-this"
+      When the help page is converted
+      Then the text of the page says "set-this"
+
+    Scenario: The address of a picture is not a word of the page
+      Given help page "![The players tab](images/players-tab.png)"
+      When the help page is converted
+      Then the text of the page does not say "players-tab.png"

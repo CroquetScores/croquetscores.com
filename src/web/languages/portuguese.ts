@@ -63,6 +63,16 @@ export const portuguese: Language = {
     "whatsNew.later": "Lembrar na próxima vez",
     "whatsNew.never": "Nunca mais mostrar este aviso",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Pergunte ao {siteName}",
+    "helpSearch.label": "A sua pergunta",
+    "helpSearch.submit": "Pesquisar",
+    "helpSearch.none":
+      "Nenhuma página da ajuda responde a isso. Experimente outras palavras.",
+    "helpSearch.tooLong":
+      "Uma pergunta não pode ter mais de {most} caracteres.",
+    "helpSearch.failed": "Não foi possível pesquisar a ajuda. Tente de novo.",
+
     "form.otherwise":
       "Algo não está certo. Confira o que foi digitado e tente de novo.",
 

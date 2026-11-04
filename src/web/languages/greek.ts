@@ -70,6 +70,17 @@ export const greek: Language = {
     "whatsNew.later": "Υπενθύμιση την επόμενη φορά",
     "whatsNew.never": "Να μην εμφανιστεί ξανά αυτή η ειδοποίηση",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Ρωτήστε το {siteName}",
+    "helpSearch.label": "Η ερώτησή σας",
+    "helpSearch.submit": "Αναζήτηση",
+    "helpSearch.none":
+      "Καμία σελίδα της βοήθειας δεν απαντά σε αυτό. Δοκιμάστε άλλες λέξεις.",
+    "helpSearch.tooLong":
+      "Μια ερώτηση δεν μπορεί να έχει πάνω από {most} χαρακτήρες.",
+    "helpSearch.failed":
+      "Η αναζήτηση στη βοήθεια δεν ήταν δυνατή. Δοκιμάστε ξανά.",
+
     "form.otherwise":
       "Κάτι εδώ δεν είναι σωστό. Ελέγξτε τι εισαγάγατε και δοκιμάστε ξανά.",
 

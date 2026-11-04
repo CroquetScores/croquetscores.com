@@ -129,6 +129,10 @@ for (const folder of languageFolders) {
         title: page.title,
         html: page.html,
         released: page.released,
+        // For the search of the help to index (see helpSearch), which reads
+        // this file and not the Markdown a second time.
+        headings: page.headings,
+        text: page.text,
       }),
     );
   }
