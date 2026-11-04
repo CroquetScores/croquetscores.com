@@ -23,12 +23,15 @@ const particles = new Set([
 // "Smith", and two people who are both "Jr" do not share a last name by it.
 const generations = new Set(["jr", "jr.", "sr", "sr.", "ii", "iii", "iv"]);
 
+const isGeneration = (word: string | undefined): boolean =>
+  generations.has(word?.toLowerCase() ?? "");
+
 // Where the last name begins in the words of a name: the last word, with a
 // generation after it and the small words before it, and always after the first
 // word, which is a first name however small a word it is.
 const lastNameStart = (words: readonly string[]): number => {
   let at = words.length - 1;
-  if (at > 1 && generations.has(words[at]?.toLowerCase() ?? "")) at -= 1;
+  if (at > 1 && isGeneration(words[at])) at -= 1;
   while (at > 1 && particles.has(words[at - 1]?.toLowerCase() ?? "")) at -= 1;
   return at;
 };
@@ -47,6 +50,10 @@ const parts = (
   const words = name.split(/\s+/);
   if (words.length === 1) return { name, first: name };
   const at = lastNameStart(words);
+  // A generation alone is no last name: it says whose son, and not whose family.
+  if (at === words.length - 1 && isGeneration(words[at])) {
+    return { name, first: name };
+  }
   return {
     name,
     first: words.slice(0, at).join(" "),

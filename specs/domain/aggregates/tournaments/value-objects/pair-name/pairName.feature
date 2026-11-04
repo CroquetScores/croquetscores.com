@@ -10,7 +10,8 @@ Feature: What a doubles pair is called
   pair of a family is written and said. A last name is the last word of a
   name, with the small words that belong to it before it ("van der Berg",
   "de la Cruz") and a generation after it ("Smith Jr", "Smith III"), so that
-  what is left is the first names. It is the same name however it is
+  what is left is the first names. A generation alone is no last name, so two
+  people called "John Jr" and "Sam Jr" do not share one. It is the same name however it is
   capitalised, as a reader would take it to be (`addPlayer.feature`). A name of one word has no last name, so it is
   never the same as another's, and a pair of two such names is called as any
   other is.
@@ -82,6 +83,12 @@ Feature: What a doubles pair is called
       And the second name "Al Jones Jr"
       When the pair is named
       Then the pair is called "Jo Smith Jr & Al Jones Jr"
+
+    Scenario: A generation alone is no last name
+      Given the first name "John Jr"
+      And the second name "Sam Jr"
+      When the pair is named
+      Then the pair is called "John Jr & Sam Jr"
 
     Scenario: A last name with a generation is not the same as one without
       Given the first name "Jo Smith"

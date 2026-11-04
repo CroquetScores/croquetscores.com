@@ -83,7 +83,12 @@ export const PairDialog = ({
         },
       );
       if (response.ok) {
-        const { name } = (await response.json()) as { name: string };
+        // The pair is made whether or not the answer can be read, and saying it
+        // was refused would have the manager make it again: only what is said of
+        // it is lost.
+        const { name } = (await response.json().catch(() => ({}))) as {
+          name?: string;
+        };
         setRefused([]);
         kept();
         // Emptied for the next, with the reader back in the first player.

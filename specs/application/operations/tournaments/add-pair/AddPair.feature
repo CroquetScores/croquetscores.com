@@ -152,6 +152,12 @@ Feature: Adding a doubles pair to a tournament from two of its players
 
   Rule: A pair's name is held to what any player's is
 
+    Scenario: A pair whose name would be too long is refused as a name that long is
+      Given "organiser@example.com" has added the player "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" to "Spring Open"
+      And "organiser@example.com" has added the player "Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" to "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" pairs the players "Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" and "Bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" in "Spring Open"
+      Then it is refused with "PersonName.TooLong"
+
     Scenario: The same pair made twice is refused the second time
       Given "organiser@example.com" has paired the players "Sam Someone" and "Alex Another" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" pairs the players "Sam Someone" and "Alex Another" in "Spring Open"

@@ -253,6 +253,39 @@ Feature: A doubles pair is added from two of the tournament's players in a modal
       When "Sam Someone" is chosen as the first player
       Then the pair dialog says nobody was added
 
+  Rule: A pair that was made is reported, whatever the answer looks like
+
+    The site says the pair was made by answering that it was. Whether the answer
+    can be read, for what it says of the pair, is another matter: a pair that was
+    made is not to be said to have been refused, or the manager will make it again.
+
+    Scenario: A pair is listed where the answer to it cannot be read
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      And "Sam Someone" is chosen as the first player
+      And "Alex Another" is chosen as the second player
+      And the answer to making a pair cannot be read
+      When Add Pair is pressed
+      Then the player "Sam Someone & Alex Another" is listed
+
+    Scenario: A pair is not said to be refused where the answer to it cannot be read
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      And "Sam Someone" is chosen as the first player
+      And "Alex Another" is chosen as the second player
+      And the answer to making a pair cannot be read
+      When Add Pair is pressed
+      Then the pair dialog says nothing was refused
+
+    Scenario: The choices are emptied for the next where the answer to it cannot be read
+      Given the players of "Spring Open" are open
+      And the way to add a pair is pressed
+      And "Sam Someone" is chosen as the first player
+      And "Alex Another" is chosen as the second player
+      And the answer to making a pair cannot be read
+      When Add Pair is pressed
+      Then no first player is chosen
+
   Rule: Both players must be chosen before a pair is made
 
     Scenario: Add Pair with nobody chosen does nothing

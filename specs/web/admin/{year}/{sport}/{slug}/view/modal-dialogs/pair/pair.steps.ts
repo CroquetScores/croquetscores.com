@@ -280,3 +280,23 @@ Then("the first player has the focus", async function (this: SpecWorld) {
     );
   });
 });
+
+// The pair is made, and what the site answers is emptied, as a proxy might
+// empty it: the request goes through and the page is given nothing to read.
+Given(
+  "the answer to making a pair cannot be read",
+  async function (this: SpecWorld) {
+    await this.browserPage.route("**/pairs", async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, body: "" });
+    });
+  },
+);
+
+Then(
+  "the pair dialog says nothing was refused",
+  async function (this: SpecWorld) {
+    await settled(this);
+    assert.equal(await dialogOf(this).locator(".dialog-problems").count(), 0);
+  },
+);
