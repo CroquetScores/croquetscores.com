@@ -18,7 +18,7 @@ Una cuenta cuya dirección de correo electrónico no se ha confirmado todavía n
 
 Para iniciar sesión también con contraseña, elige **Establecer contraseña** en el menú **Cuenta** y pulsa **Enviarme un enlace por correo**. El enlace va a la dirección de correo electrónico de tu cuenta y establece una contraseña igual que el enlace de una contraseña olvidada.
 
-## Si has olvidado tu contraseña
+## Si has olvidado tu contraseña {#forgotten-password}
 
 Pulsa **¿Olvidaste tu contraseña?** en la página de inicio de sesión, escribe tu dirección de correo electrónico y pulsa **Enviarme una forma de volver a entrar**. La página dice que revises tu correo tenga o no tenga cuenta la dirección. Lo que se envía depende de la dirección, y solo lo lee su dueño: un enlace para establecer una contraseña nueva, el enlace para confirmar una dirección que nunca se confirmó, o un enlace para registrarse.
 

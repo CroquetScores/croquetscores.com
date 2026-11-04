@@ -49,6 +49,10 @@
   --panel: #ffffff;
   --ink: #16181c;
   --ink-muted: #5b6069;
+  /* The page's text at its strongest, for where --ink reads as grey: on the
+     green of a card. Black in light; in dark, where black would be a hole, the
+     pale ink. */
+  --ink-strong: #000000;
   --accent: #398639;
   --accent-strong: #066b00;
   --accent-ink: #ffffff;
@@ -120,6 +124,7 @@
     --panel: light-dark(#ffffff, #191e18);
     --ink: light-dark(#16181c, #e7ece5);
     --ink-muted: light-dark(#5b6069, #a6b0a3);
+    --ink-strong: light-dark(#000000, #e7ece5);
     --accent: light-dark(#398639, #20201f);
     --accent-strong: light-dark(#066b00, #111111);
     --accent-ink: light-dark(#ffffff, #f3f7f1);
@@ -401,20 +406,141 @@ a:hover {
   scroll-margin-top: 6rem;
 }
 
+/* The first page does not show its title: the panel above it says where the
+   reader is. Nor the heading over the subjects, which are cards that say what
+   they are. It is kept for a screen reader, which has the title and nothing
+   else to say the page is the help, by being made one pixel and clipped. */
+.help-first-title,
+.help[data-page=""] #subjects {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The first page of the help: the popular questions as a list of links, and the
+   subjects as cards. Both are lists written in Markdown, found here by the
+   bookmarks of the headings they follow (docs/help/<language>/index.md), so the
+   page needs no markup of its own and a translator writes only the words. */
+/* The popular questions are a card, drawn in two parts because the heading and
+   the list are two elements of the page: the heading is the top of it and the
+   list the rest, with the line between them left out. It is the colour of the
+   alternating rows of the site's lists, as the subjects' cards are. The page's
+   column puts 1rem between the panel and this, and the grid of subjects puts
+   its own 1rem between this and it. */
+.help[data-page=""] #popular-questions {
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  border: 1px solid var(--border);
+  border-bottom: 0;
+  border-radius: var(--radius-2) var(--radius-2) 0 0;
+  background: var(--surface);
+}
+
+.help[data-page=""] #popular-questions + ul {
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + var(--space-5));
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-2) var(--radius-2);
+  background: var(--surface);
+}
+
+.help[data-page=""] #popular-questions + ul li + li {
+  margin-top: var(--space-2);
+}
+
+/* As many cards in a row as fit at a readable width, and one on a phone. The
+   minimum is under the narrowest screen's content width so that the grid never
+   asks for more than there is. */
+.help[data-page=""] #subjects + ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help[data-page=""] #subjects + ul li {
+  position: relative;
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+}
+
+.help[data-page=""] #subjects + ul li p {
+  margin: 0;
+}
+
+/* The card's title is the link, and the link is spread over the whole card, so
+   that the card is one thing to press and one stop for the keyboard and for a
+   screen reader, with no second link in it. */
+.help[data-page=""] #subjects + ul li p:first-child {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.help[data-page=""] #subjects + ul li p:first-child a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.help[data-page=""] #subjects + ul li p + p {
+  margin-top: var(--space-2);
+  color: var(--ink-strong);
+  font-size: var(--text-sm);
+}
+
+.help[data-page=""] #subjects + ul li:hover {
+  border-color: var(--accent);
+}
+
+/* The card that has the keyboard in it is marked on the card, which is what is
+   pressed, and not on the title alone. */
+.help[data-page=""] #subjects + ul li:focus-within {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.help[data-page=""] #subjects + ul li a:focus {
+  outline: none;
+}
+
 /* The panel at the top of the help in which a question is typed and the pages
    that answer it are listed. It sits above the article, apart from it by a rule,
    and its results are a list of links each holding the page's title and the
    words around the match. */
+/* The search box is a card, as the popular questions and the subjects are: the
+   colour of the alternating rows of the site's lists, with the same line and
+   corners. The page's column puts 1rem between it and the next. */
 .help-search {
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border);
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--surface);
+}
+
+/* The panel's title and the headings of the first page's other sections are one
+   size, which is smaller than a second level heading is elsewhere: they head
+   three parts of one page, and none is to read as more than the others. */
+.help-search-title,
+.help[data-page=""] h2 {
+  color: var(--ink-strong);
+  font-size: var(--text-lg);
+  font-weight: 700;
 }
 
 .help-search-title {
   margin: 0 0 var(--space-2);
-  font-size: var(--text-lg);
-  font-weight: 700;
 }
 
 .help-search form {
@@ -424,12 +550,6 @@ a:hover {
   align-items: center;
 }
 
-.help-search label {
-  flex: 1 0 100%;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-}
-
 .help-search input {
   flex: 1 1 14rem;
   min-width: 0;
@@ -437,7 +557,7 @@ a:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius-2);
   background: var(--panel);
-  color: var(--ink);
+  color: var(--ink-strong);
   font: inherit;
 }
 
@@ -453,7 +573,7 @@ a:hover {
 
 .help-search-note {
   margin: var(--space-3) 0 0;
-  color: var(--ink-muted);
+  color: var(--ink-strong);
 }
 
 .help-search-note:empty {
@@ -464,6 +584,11 @@ a:hover {
   margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
+}
+
+/* Nothing asked yet, so nothing to leave room for beneath the box. */
+.help-search-results:empty {
+  margin: 0;
 }
 
 .help-search-results li + li {
@@ -485,13 +610,13 @@ a:hover {
 
 .help-search-snippet {
   display: block;
-  color: var(--ink-muted);
+  color: var(--ink-strong);
   font-size: var(--text-sm);
 }
 
 .help-search-snippet mark {
   background: transparent;
-  color: var(--ink);
+  color: var(--ink-strong);
   font-weight: 700;
 }
 

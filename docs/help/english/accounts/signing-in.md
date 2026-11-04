@@ -18,7 +18,7 @@ An account whose email address has not been confirmed has no password yet, so it
 
 To sign in with a password as well, choose **Set Password** in the **Account** menu and press **Email me a link**. The link goes to your account's email address and sets a password the way the link for a forgotten password does.
 
-## If you have forgotten your password
+## If you have forgotten your password {#forgotten-password}
 
 Press **Forgot Password?** on the sign in page, give your email address, and press **Send me a way back in**. The page says to check your email whether or not the address has an account. What is sent depends on the address, and only its owner reads it: a link to set a new password, the link to confirm an address that was never confirmed, or a link to register.
 

@@ -18,7 +18,7 @@ Uma conta cujo endereço de e-mail não foi confirmado ainda não tem senha, ent
 
 Para entrar também com uma senha, escolha **Definir senha** no menu **Conta** e clique em **Enviar um link por e-mail**. O link vai para o endereço de e-mail da sua conta e define uma senha do mesmo modo que o link de uma senha esquecida.
 
-## Se você esqueceu a senha
+## Se você esqueceu a senha {#forgotten-password}
 
 Clique em **Esqueci a senha?** na página de entrada, informe o seu endereço de e-mail e clique em **Enviar um jeito de voltar a entrar**. A página diz para verificar o e-mail, quer o endereço tenha uma conta, quer não. O que é enviado depende do endereço e só o seu dono lê: um link para definir uma nova senha, o link para confirmar um endereço que nunca foi confirmado ou um link para se cadastrar.
 

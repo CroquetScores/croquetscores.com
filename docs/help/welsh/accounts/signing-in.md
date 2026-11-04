@@ -18,7 +18,7 @@ Mae **Mewngofnodi gyda Google** a **Cofrestru gyda Google** yn defnyddio'r cyfri
 
 I fewngofnodi gyda chyfrinair hefyd, dewiswch **Gosod cyfrinair** yn y ddewislen **Cyfrif** a phwyswch **Anfonwch ddolen ataf**. Mae'r ddolen yn mynd i gyfeiriad e-bost eich cyfrif ac yn gosod cyfrinair yn yr un ffordd â'r ddolen ar gyfer cyfrinair sydd wedi'i anghofio.
 
-## Os ydych wedi anghofio eich cyfrinair
+## Os ydych wedi anghofio eich cyfrinair {#forgotten-password}
 
 Pwyswch **Wedi anghofio'r cyfrinair?** ar y dudalen mewngofnodi, rhowch eich cyfeiriad e-bost, a phwyswch **Anfonwch ffordd yn ôl i mewn ataf**. Mae'r dudalen yn dweud wrthych am wirio eich e-byst p'un a oes gan y cyfeiriad gyfrif ai peidio. Mae'r hyn a anfonir yn dibynnu ar y cyfeiriad, a pherchennog y cyfeiriad yn unig sy'n ei ddarllen: dolen i osod cyfrinair newydd, y ddolen i gadarnhau cyfeiriad na chafodd ei gadarnhau erioed, neu ddolen i gofrestru.
 

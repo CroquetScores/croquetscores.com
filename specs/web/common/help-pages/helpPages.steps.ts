@@ -183,3 +183,132 @@ Then(
     assert.ok(!result(this).text.includes(words), result(this).text);
   },
 );
+
+// The first page of every language ------------------------------------------------
+
+// The list that follows the heading with the bookmark `id`, as the stylesheet
+// finds it, as the HTML between that list's tags.
+const listAfter = (html: string, id: string): string => {
+  const found = new RegExp(
+    `<h2 id="${id}">[\\s\\S]*?</h2>\\s*<ul>([\\s\\S]*?)</ul>`,
+  ).exec(html);
+  assert.ok(found !== null, `There is no list after the bookmark ${id}.`);
+  return found[1] ?? "";
+};
+
+const hrefsIn = (html: string): string[] =>
+  [...html.matchAll(/<a href="([^"]*)"/g)].map((each) => each[1] ?? "");
+
+When("the first page of each is converted", async function (this: SpecWorld) {
+  const languages = everyLanguage.get(this) ?? [];
+  assert.ok(languages.length > 0, "No language was read.");
+  const converted = [];
+  for (const language of languages) {
+    const source = await readFile(
+      join(helpFolder, language, "index.md"),
+      "utf8",
+    );
+    converted.push({
+      language,
+      html: convertHelpPage(source, "index.md").html,
+    });
+  }
+  everyConverted.set(this, converted);
+});
+
+When(
+  "the page {string} of each is converted",
+  async function (this: SpecWorld, page: string) {
+    const languages = everyLanguage.get(this) ?? [];
+    assert.ok(languages.length > 0, "No language was read.");
+    const converted = [];
+    for (const language of languages) {
+      const at = `${page}.md`;
+      const source = await readFile(join(helpFolder, language, at), "utf8");
+      converted.push({ language, html: convertHelpPage(source, at).html });
+    }
+    everyConverted.set(this, converted);
+  },
+);
+
+Then(
+  "each has {int} popular questions",
+  function (this: SpecWorld, count: number) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.equal(
+        hrefsIn(listAfter(html, "popular-questions")).length,
+        count,
+        language,
+      );
+    }
+  },
+);
+
+const places = ["first", "second", "third", "fourth", "fifth"];
+
+Then(
+  "the {word} popular question of each leads to {string}",
+  function (this: SpecWorld, number: string, address: string) {
+    const at = places.indexOf(number);
+    assert.ok(at !== -1, `There is no ${number} question.`);
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.equal(
+        hrefsIn(listAfter(html, "popular-questions"))[at],
+        address,
+        language,
+      );
+    }
+  },
+);
+
+Then("each has {int} subjects", function (this: SpecWorld, count: number) {
+  for (const { language, html } of everyConverted.get(this) ?? []) {
+    assert.equal(hrefsIn(listAfter(html, "subjects")).length, count, language);
+  }
+});
+
+Then(
+  "each has a subject leading to {string}",
+  function (this: SpecWorld, address: string) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.ok(
+        hrefsIn(listAfter(html, "subjects")).includes(address),
+        `${language} has no subject leading to ${address}.`,
+      );
+    }
+  },
+);
+
+// A card is a title and, in a paragraph of its own beneath, its words: a list
+// item of two paragraphs.
+Then(
+  "each subject of each has words under its title",
+  function (this: SpecWorld) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      const items = [
+        ...listAfter(html, "subjects").matchAll(/<li>([\s\S]*?)<\/li>/g),
+      ];
+      assert.equal(items.length, 4, language);
+      for (const item of items) {
+        const paragraphs = [...(item[1] ?? "").matchAll(/<p>([\s\S]*?)<\/p>/g)];
+        assert.equal(paragraphs.length, 2, `${language}: ${item[1]}`);
+        assert.ok((paragraphs[1]?.[1] ?? "").trim().length > 0, language);
+      }
+    }
+  },
+);
+
+// Nothing between the title and the first section: the sentence that said what
+// the help was for is not on the page.
+Then(
+  "each has the popular questions straight after its title",
+  function (this: SpecWorld) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.match(
+        html,
+        /^<h1>[^<]*<\/h1>\s*<h2 id="popular-questions">/,
+        language,
+      );
+    }
+  },
+);

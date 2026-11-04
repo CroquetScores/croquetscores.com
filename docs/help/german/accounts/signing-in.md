@@ -18,7 +18,7 @@ Ein Konto, dessen E-Mail-Adresse nicht bestätigt wurde, hat noch kein Passwort,
 
 Um sich auch mit einem Passwort anmelden zu können, wählen Sie **Passwort festlegen** im Menü **Konto** und drücken Sie **Link per E-Mail senden**. Der Link geht an die E-Mail-Adresse Ihres Kontos und legt ein Passwort fest, so wie der Link für ein vergessenes Passwort.
 
-## Wenn Sie Ihr Passwort vergessen haben
+## Wenn Sie Ihr Passwort vergessen haben {#forgotten-password}
 
 Drücken Sie auf der Anmeldeseite **Passwort vergessen?**, geben Sie Ihre E-Mail-Adresse an und drücken Sie **Weg zurück ins Konto senden**. Die Seite fordert Sie auf, in Ihrem Postfach nachzusehen, egal ob die Adresse ein Konto hat. Was geschickt wird, hängt von der Adresse ab, und nur ihr Besitzer liest es: ein Link zum Festlegen eines neuen Passworts, der Link zum Bestätigen einer Adresse, die nie bestätigt wurde, oder ein Link zum Registrieren.
 
