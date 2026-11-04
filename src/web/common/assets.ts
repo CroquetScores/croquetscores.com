@@ -2,9 +2,13 @@
 // that "cache this for a year and never ask again" is true rather than a hope.
 // The hashes are taken once, at startup: a file that changes changes its name,
 // and a name that has not changed cannot have changed its file.
+import rateLimit from "@fastify/rate-limit";
+import type { FastifyInstance } from "fastify";
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync } from "node:fs";
+import { createReadStream, readdirSync, readFileSync } from "node:fs";
 import { extname, join, posix } from "node:path";
+
+import { ipAddressOf } from "./trustedProxy.js";
 
 /**
  * Where the site's own files are served from. Named here, where the addresses
@@ -121,4 +125,86 @@ export const readAssets = (
       return { ...asset, current: requestedName === asset.publicName };
     },
   };
+};
+
+const year = 60 * 60 * 24 * 365;
+
+/**
+ * How many files one address may ask for in a minute. A cold page is drawn
+ * with a dozen at most, and a browser keeps them for a year, so this is
+ * several hundred pages' worth: a club's members share one address and a
+ * meeting's worth of them open the site together. It is there to stop a
+ * program asking for files in thousands, and is meant to be out of sight of
+ * everyone else; one that is reached by readers is too low.
+ */
+export const assetRequestsAMinute = 3000;
+
+/**
+ * How many addresses are counted at once. The plugin's own number, five
+ * thousand, is few enough that a run of requests from many addresses, which a
+ * range of IPv6 addresses makes cheap, pushes an address out and so resets its
+ * count. An address costs a few dozen bytes.
+ */
+const addressesCounted = 100_000;
+
+/**
+ * Serves the files under `assetsPath`, and counts each address's requests for
+ * them. The count is on these routes alone, in a scope of their own, so that
+ * a page is never turned away because of the files a reader has been asking
+ * for, and one asked for too often is told to wait rather than read from disk
+ * again.
+ *
+ * A name with no file is counted as a file is, since asking for names at random
+ * is how a program would find which there are. The count is by the address the
+ * site is told to read a request's from, so that behind a load balancer it is
+ * the reader's and not the balancer's.
+ *
+ * The count is kept in this process. A second one would count for itself, and
+ * a reader could have as many as there are, which is the cost of not keeping it
+ * in the database, where every file read would be a write.
+ */
+export const registerAssets = async (
+  server: FastifyInstance,
+  assets: Assets,
+  requestsAMinute = assetRequestsAMinute,
+): Promise<void> => {
+  await server.register(async (scope) => {
+    await scope.register(rateLimit, {
+      max: requestsAMinute,
+      timeWindow: "1 minute",
+      keyGenerator: ipAddressOf,
+      cache: addressesCounted,
+    });
+
+    // The answer that says to wait is for the one who asked, now. The files
+    // are served to be kept for a year, so a cache that took this for the
+    // answer at that address would hand it to everyone after.
+    scope.addHook("onSend", (_request, reply, payload, done) => {
+      if (reply.statusCode === 429) reply.header("cache-control", "no-store");
+      done(null, payload);
+    });
+
+    scope.get<{ Params: { "*": string } }>(
+      `${assetsPath}*`,
+      (request, reply) => {
+        const asset = assets.resolve(request.params["*"]);
+        if (asset === undefined) return reply.callNotFound();
+
+        // A name carrying the current hash cannot come to mean a different file,
+        // so it may be kept for as long as anyone likes. A name without one — an
+        // old hash from a deploy ago, or none at all — still serves the file, so
+        // a page held in a browser's cache is not left unstyled, but it is not
+        // promised to stay put.
+        return reply
+          .header(
+            "cache-control",
+            asset.current
+              ? `public, max-age=${year}, immutable`
+              : "public, max-age=60",
+          )
+          .type(asset.contentType)
+          .send(createReadStream(asset.path));
+      },
+    );
+  });
 };

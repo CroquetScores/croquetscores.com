@@ -13,7 +13,7 @@ import cookie from "@fastify/cookie";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
 import { createHash } from "node:crypto";
-import { createReadStream, existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { Pool } from "pg";
 
@@ -271,7 +271,7 @@ import {
   adminPage,
   builtAdminPage,
 } from "./common/adminPage.js";
-import { assetsPath, readAssets, type Assets } from "./common/assets.js";
+import { readAssets, registerAssets } from "./common/assets.js";
 import { sendTheEmailQueue } from "./common/emailQueueSending.js";
 import { emailWriter } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
@@ -561,33 +561,6 @@ const putTogether = (
   mediator.addQueryBehaviour(new ReadOnlyTransactionBehaviour(unitOfWork));
 
   return { mediator, validation };
-};
-
-const year = 60 * 60 * 24 * 365;
-
-const registerAssets = (server: FastifyInstance, assets: Assets): void => {
-  server.get<{ Params: { "*": string } }>(
-    `${assetsPath}*`,
-    (request, reply) => {
-      const asset = assets.resolve(request.params["*"]);
-      if (asset === undefined) return reply.callNotFound();
-
-      // A name carrying the current hash cannot come to mean a different file, so
-      // it may be kept for as long as anyone likes. A name without one — an old
-      // hash from a deploy ago, or none at all — still serves the file, so a page
-      // held in a browser's cache is not left unstyled, but it is not promised to
-      // stay put.
-      return reply
-        .header(
-          "cache-control",
-          asset.current
-            ? `public, max-age=${year}, immutable`
-            : "public, max-age=60",
-        )
-        .type(asset.contentType)
-        .send(createReadStream(asset.path));
-    },
-  );
 };
 
 // /admin/administrator and everything beneath it, but not an address that
@@ -1599,7 +1572,7 @@ export const buildApplication = async (
     { prefix: "/auth" },
   );
 
-  registerAssets(server, assets);
+  await registerAssets(server, assets);
 
   // The help, read for the pages of it and for what's new, which the alerts go
   // by.
