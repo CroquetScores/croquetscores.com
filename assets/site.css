@@ -410,8 +410,8 @@ a:hover {
    reader is. Nor the heading over the subjects, which are cards that say what
    they are. It is kept for a screen reader, which has the title and nothing
    else to say the page is the help, by being made one pixel and clipped. */
-.help[data-page=""] > h1:first-child,
-.help #subjects {
+.help-first-title,
+.help[data-page=""] #subjects {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -432,7 +432,7 @@ a:hover {
    alternating rows of the site's lists, as the subjects' cards are. The page's
    column puts 1rem between the panel and this, and the grid of subjects puts
    its own 1rem between this and it. */
-.help #popular-questions {
+.help[data-page=""] #popular-questions {
   margin: 0;
   padding: var(--space-4) var(--space-4) var(--space-2);
   border: 1px solid var(--border);
@@ -441,7 +441,7 @@ a:hover {
   background: var(--surface);
 }
 
-.help #popular-questions + ul {
+.help[data-page=""] #popular-questions + ul {
   margin: 0;
   padding: 0 var(--space-4) var(--space-4) calc(var(--space-4) + var(--space-5));
   border: 1px solid var(--border);
@@ -450,14 +450,14 @@ a:hover {
   background: var(--surface);
 }
 
-.help #popular-questions + ul li + li {
+.help[data-page=""] #popular-questions + ul li + li {
   margin-top: var(--space-2);
 }
 
 /* As many cards in a row as fit at a readable width, and one on a phone. The
    minimum is under the narrowest screen's content width so that the grid never
    asks for more than there is. */
-.help #subjects + ul {
+.help[data-page=""] #subjects + ul {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
   gap: var(--space-4);
@@ -466,7 +466,7 @@ a:hover {
   list-style: none;
 }
 
-.help #subjects + ul li {
+.help[data-page=""] #subjects + ul li {
   position: relative;
   margin: 0;
   padding: var(--space-4);
@@ -475,42 +475,42 @@ a:hover {
   background: var(--surface);
 }
 
-.help #subjects + ul li p {
+.help[data-page=""] #subjects + ul li p {
   margin: 0;
 }
 
 /* The card's title is the link, and the link is spread over the whole card, so
    that the card is one thing to press and one stop for the keyboard and for a
    screen reader, with no second link in it. */
-.help #subjects + ul li p:first-child {
+.help[data-page=""] #subjects + ul li p:first-child {
   font-size: var(--text-lg);
   font-weight: 700;
 }
 
-.help #subjects + ul li p:first-child a::after {
+.help[data-page=""] #subjects + ul li p:first-child a::after {
   content: "";
   position: absolute;
   inset: 0;
 }
 
-.help #subjects + ul li p + p {
+.help[data-page=""] #subjects + ul li p + p {
   margin-top: var(--space-2);
   color: var(--ink-strong);
   font-size: var(--text-sm);
 }
 
-.help #subjects + ul li:hover {
+.help[data-page=""] #subjects + ul li:hover {
   border-color: var(--accent);
 }
 
 /* The card that has the keyboard in it is marked on the card, which is what is
    pressed, and not on the title alone. */
-.help #subjects + ul li:focus-within {
+.help[data-page=""] #subjects + ul li:focus-within {
   outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
 }
 
-.help #subjects + ul li a:focus {
+.help[data-page=""] #subjects + ul li a:focus {
   outline: none;
 }
 

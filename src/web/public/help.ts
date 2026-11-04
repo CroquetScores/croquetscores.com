@@ -200,10 +200,23 @@ export const registerHelpPages = (
         searched = { kind: "too long" };
       }
     }
+    // The first page's title is taken out of the article and put before the
+    // panel, so that the page's first level heading is the first heading of the
+    // page and not met after the panel's. It is hidden (site.css), and kept for
+    // those who cannot see the page.
+    const titleHtml = page.html.match(/^<h1[^>]*>[\s\S]*?<\/h1>\s*/);
+    const firstPage = name === "" && titleHtml !== null;
     const panel =
       name === ""
-        ? helpSearchPanel(speaking, siteNameOf(request), asked, searched)
+        ? `${
+            firstPage
+              ? `          <h1 class="help-first-title" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)}>${escape(page.title)}</h1>\n`
+              : ""
+          }${helpSearchPanel(speaking, siteNameOf(request), asked, searched)}`
         : "";
+    const articleHtml = firstPage
+      ? page.html.slice(titleHtml[0].length)
+      : page.html;
 
     const contact = contacts.get(name);
     const html = render(assets, {
@@ -219,7 +232,7 @@ export const registerHelpPages = (
       // a reader's browser and screen reader read it in the language it is
       // written in even where the site around it is in another.
       body: `${panel}          <article class="help" lang="${escape(writtenIn.tag)}"${directionAttribute(writtenIn)} data-page="${escape(name)}">
-${pictured(page.html, writtenIn.tag)}
+${pictured(articleHtml, writtenIn.tag)}
           </article>${
             contact === undefined
               ? ""

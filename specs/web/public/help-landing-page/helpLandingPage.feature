@@ -37,6 +37,14 @@ Feature: The first page of the help helps a reader find an answer without knowin
       When the first page of the help is opened in the browser
       Then the page is titled "Help"
 
+    Scenario: The title comes before the search box in the order of the page
+      When the first page of the help is opened in the browser
+      Then the title of the page comes before the search box in the order of the page
+
+    Scenario: The title is the only first level heading
+      When the first page of the help is opened in the browser
+      Then the page has 1 first level heading
+
     Scenario: The page shows no sentence about what the help is for
       When the first page of the help is opened in the browser
       Then the article does not say "How to use the site, for the people who use it."
@@ -85,18 +93,22 @@ Feature: The first page of the help helps a reader find an answer without knowin
     on a dark card would be a hole.
 
     Scenario: The words under the title of a subject are black
+      Given the reader's browser asks for light colours
       When the first page of the help is opened in the browser
       Then the words under the title of the card "Readers" are black
 
     Scenario: The heading of the popular questions is black
+      Given the reader's browser asks for light colours
       When the first page of the help is opened in the browser
       Then the heading "Popular questions" is black
 
     Scenario: The title of the search box is black
+      Given the reader's browser asks for light colours
       When the first page of the help is opened in the browser
       Then the panel's title is black
 
     Scenario: What is typed in the search box is black
+      Given the reader's browser asks for light colours
       When the first page of the help is opened in the browser
       Then the words typed in the search box are black
 
@@ -104,6 +116,22 @@ Feature: The first page of the help helps a reader find an answer without knowin
       Given the reader's browser asks for dark colours
       When the first page of the help is opened in the browser
       Then the words under the title of the card "Readers" are not black
+
+  Rule: Only the first page is laid out as cards
+
+    The cards are found by the bookmarks the first page's headings are given. A
+    page of the help that happens to give a heading the same bookmark is not the
+    first page, and is left as the help is laid out everywhere else.
+
+    Scenario: A heading with the bookmark of the subjects, on another page, is shown
+      Given a page of the help that uses the bookmarks of the first page
+      When that page is opened in the browser
+      Then its heading "Subjects" is shown
+
+    Scenario: A list after that heading is not laid out as cards
+      Given a page of the help that uses the bookmarks of the first page
+      When that page is opened in the browser
+      Then its list is not laid out as cards
 
   Rule: The search box is a card like the others
 

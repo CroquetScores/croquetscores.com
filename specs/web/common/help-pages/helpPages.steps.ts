@@ -190,7 +190,7 @@ Then(
 // finds it, as the HTML between that list's tags.
 const listAfter = (html: string, id: string): string => {
   const found = new RegExp(
-    `<h2 id="${id}">[^<]*</h2>\\s*<ul>([\\s\\S]*?)</ul>`,
+    `<h2 id="${id}">[\\s\\S]*?</h2>\\s*<ul>([\\s\\S]*?)</ul>`,
   ).exec(html);
   assert.ok(found !== null, `There is no list after the bookmark ${id}.`);
   return found[1] ?? "";

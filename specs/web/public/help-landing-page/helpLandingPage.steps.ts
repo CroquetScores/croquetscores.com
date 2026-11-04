@@ -1,7 +1,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { join } from "node:path";
+
+import {
+  helpLibraryIn,
+  type HelpLibrary,
+} from "../../../../src/web/common/helpLibrary.js";
 import type { SpecWorld } from "../../../support/world.js";
+import { anApplicationWithHelpInTheScenariosLanguages } from "../../support/browser.js";
 import { unmarked } from "../../support/languages.js";
 
 // Found as the stylesheet finds them, by the bookmark of the heading each list
@@ -251,7 +258,7 @@ Then("the page does not scroll sideways", async function (this: SpecWorld) {
 
 // What is not shown but is there ---------------------------------------------------
 
-const title = "article.help h1";
+const title = "h1";
 
 // Hidden by being made one pixel, which a screen reader still reaches, and not
 // by being taken out of the page, which it would not: the next scenario finds
@@ -549,3 +556,82 @@ Given(
     await this.browserPage.emulateMedia({ colorScheme: "dark" });
   },
 );
+
+// The order of the page --------------------------------------------------------
+
+Then(
+  "the title of the page comes before the search box in the order of the page",
+  async function (this: SpecWorld) {
+    const before = await this.browserPage.evaluate(
+      `(() => { const title = document.querySelector("h1"); const box = document.querySelector(".help-search"); return title !== null && box !== null && Boolean(title.compareDocumentPosition(box) & Node.DOCUMENT_POSITION_FOLLOWING); })()`,
+    );
+    assert.equal(before, true);
+  },
+);
+
+Then(
+  "the page has {int} first level heading",
+  async function (this: SpecWorld, count: number) {
+    assert.equal(await this.browserPage.locator("h1").count(), count);
+  },
+);
+
+Given(
+  "the reader's browser asks for light colours",
+  async function (this: SpecWorld) {
+    await this.browserPage.emulateMedia({ colorScheme: "light" });
+  },
+);
+
+// Another page --------------------------------------------------------------------
+
+const dist = join(import.meta.dirname, "..", "..", "..", "..", "dist", "help");
+
+// The site with one page of the help added to the build's own: a page that gives
+// its headings the first page's bookmarks, with a list after one, which is what
+// the cards are made of there.
+const sites = new WeakMap<SpecWorld, string>();
+
+Given(
+  "a page of the help that uses the bookmarks of the first page",
+  async function (this: SpecWorld) {
+    const built = helpLibraryIn(dist);
+    const help: HelpLibrary = {
+      image: built.image,
+      page: (tag, name) =>
+        name === "borrowed"
+          ? Promise.resolve({
+              title: "Borrowed",
+              html: `<h1>Borrowed</h1>\n<h2 id="subjects">Subjects</h2>\n<ul>\n<li>\n<p><a href="/help">One</a></p>\n<p>Words.</p>\n</li>\n</ul>`,
+              headings: ["Borrowed", "Subjects"],
+              text: "Words.",
+            })
+          : built.page(tag, name),
+    };
+    sites.set(
+      this,
+      await anApplicationWithHelpInTheScenariosLanguages(this, help),
+    );
+  },
+);
+
+When("that page is opened in the browser", async function (this: SpecWorld) {
+  const site = sites.get(this);
+  assert.ok(site !== undefined, "No site was made.");
+  await this.browserPage.goto(`${site}/help/borrowed`);
+});
+
+Then(
+  "its heading {string} is shown",
+  async function (this: SpecWorld, words: string) {
+    const box = await this.browserPage
+      .locator("h2#subjects", { hasText: words })
+      .boundingBox();
+    assert.ok(box !== null, "The heading is not on the page.");
+    assert.ok(box.width > 1 && box.height > 1, "The heading is clipped away.");
+  },
+);
+
+Then("its list is not laid out as cards", async function (this: SpecWorld) {
+  assert.notEqual(await styleOf(this, "#subjects + ul", "display"), "grid");
+});
