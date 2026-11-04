@@ -87,6 +87,16 @@ const placed = (
   return { byField, above };
 };
 
+// The first day of the month it is by the reader's own clock, as a date:
+// `2026-11-01`. Theirs rather than the server's, which reads in UTC: a reader
+// early on the first of a month, ahead of UTC, would otherwise be offered the
+// month before.
+const thisMonthBegins = (): string => {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  return `${String(now.getFullYear())}-${month}-01`;
+};
+
 /** What the form begins as: a tournament as it is, when one is being changed. */
 export interface Begins {
   readonly name: string;
@@ -135,6 +145,10 @@ export const TournamentForm = ({
   const [name, setName] = useState(begins?.name ?? "");
   const [starts, setStarts] = useState(begins?.starts ?? "");
   const [finishes, setFinishes] = useState(begins?.finishes ?? "");
+  // Whether the reader has chosen a finish. Until they have, a new tournament's
+  // finish is its start, and moves with it; a tournament being changed has
+  // chosen already.
+  const [finishChosen, setFinishChosen] = useState(begins !== undefined);
   const [sport, setSport] = useState(begins?.sport ?? "");
   const [format, setFormat] = useState(begins?.format ?? "");
   const [country, setCountry] = useState(begins?.country ?? "");
@@ -174,6 +188,11 @@ export const TournamentForm = ({
         // first format, which is Standard on both sites; one being changed
         // begins as it is.
         if (begins !== undefined) return;
+        // Read once, so that a clock that crosses into the next month between
+        // two reads cannot give a start and a finish in different ones.
+        const monthBegins = thisMonthBegins();
+        setStarts(monthBegins);
+        setFinishes(monthBegins);
         setSport(answer.sports[0]?.code ?? "");
         setFormat(answer.formats[0]?.code ?? "");
       })
@@ -316,6 +335,11 @@ export const TournamentForm = ({
                       value={starts}
                       onChange={(event) => {
                         setStarts(event.target.value);
+                        // Not an emptied start: the reader is about to type
+                        // another, and the finish would be lost with it.
+                        if (!finishChosen && event.target.value !== "") {
+                          setFinishes(event.target.value);
+                        }
                       }}
                     />
                   )}
@@ -333,6 +357,12 @@ export const TournamentForm = ({
                       value={finishes}
                       onChange={(event) => {
                         setFinishes(event.target.value);
+                        // An emptied finish is one the reader has not chosen, on
+                        // a new tournament, so it follows the start again. A
+                        // tournament being changed has chosen its own.
+                        setFinishChosen(
+                          begins !== undefined || event.target.value !== "",
+                        );
                       }}
                     />
                   )}

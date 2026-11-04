@@ -62,6 +62,22 @@ const openNewTournament = async function (this: SpecWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${newTournament}`);
 };
 
+// The reader's own clock, which is the browser's and not the server's: the two
+// are set apart so that a scenario can say which one a page reads. Fixed rather
+// than started running, so that what a scenario says is the date for as long as
+// it takes. The moments the scenarios give are mid-month, so that the time zone
+// of the machine running them cannot move one into another month.
+Given(
+  "the reader's clock reads {string}",
+  async function (this: SpecWorld, moment: string) {
+    assert.ok(
+      this.browserContext !== undefined,
+      "This scenario has no browser.",
+    );
+    await this.browserContext.clock.setFixedTime(new Date(moment));
+  },
+);
+
 Given("the new tournament page is open", openNewTournament);
 When("the new tournament page is opened", openNewTournament);
 
