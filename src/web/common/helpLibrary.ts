@@ -11,6 +11,10 @@ export interface HelpPage {
   readonly html: string;
   /** When a page of what's new was released, as "2026-10-13". */
   readonly released?: string | undefined;
+  /** Every heading, in order, as plain words: what the search weighs second. */
+  readonly headings: readonly string[];
+  /** The words under the headings, with no markup. */
+  readonly text: string;
 }
 
 export interface HelpLibrary {
