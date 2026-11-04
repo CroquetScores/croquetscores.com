@@ -28,6 +28,9 @@ Feature: Several of the tournament's players are added to a competition in a mod
   "Add the Rest" enters the ones who can be, and Cancel goes back to the ticks,
   which are as they were, to be changed. Where nobody ticked can be entered
   there is nothing to decide, so the reasons are said above the list.
+  The list behind the dialog is asked for again whenever the site has answered,
+  since a player cannot be entered most often because somebody else changed the
+  competition, and the list is then out of date.
 
   Background:
     Given a viewport 375 pixels wide
@@ -174,6 +177,10 @@ Feature: Several of the tournament's players are added to a competition in a mod
     Scenario: It says why, by the refusal's code
       When Add Selected is pressed
       Then the question says "Sam Someone" was refused with "Competition.PlayerAlreadyEntered"
+
+    Scenario: The list behind the dialog is asked for again, since it was out of date
+      When Add Selected is pressed
+      Then the player "Sam Someone" is listed among those playing
 
     Scenario: Nobody is entered until it is decided
       When Add Selected is pressed

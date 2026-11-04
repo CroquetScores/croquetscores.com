@@ -4,7 +4,8 @@ Feature: Entering several of a tournament's players in one of its competitions a
   A manager of the tournament can enter a list of its players in one of its
   competitions in one go, and the account they are signed in to is who entered
   them. The players are named by their ids in the tournament, and the answer is
-  the ids they are given in the competition, in the order they were listed.
+  the ids they are given in the competition, in the order they were listed,
+  and the players who were not entered, each with why.
   Every player is entered as `EnterPlayer` enters one (`EnterPlayer.feature`),
   so each is given their place in the tournament's order, whatever order they
   were listed in.
@@ -61,7 +62,7 @@ Feature: Entering several of a tournament's players in one of its competitions a
       Given the player "Sam Someone" is to be entered
       And the player "Alex Another" is to be entered
       When the reader signed in to the account for "organiser@example.com" enters the players to be entered in "Block A" of "Spring Open"
-      Then the answer is 2 ids
+      Then the answer names 2 entered players
 
     Scenario: The players are given their places in the tournament's order, whatever order they were listed in
       Given the player "Pat Player" is to be entered
@@ -109,6 +110,15 @@ Feature: Entering several of a tournament's players in one of its competitions a
       When the reader signed in to the account for "organiser@example.com" enters the players to be entered in "Block A" of "Spring Open"
       Then the first rule broken is "Tournament.NoSuchPlayer"
       And that rule is about the player to be entered 2
+
+    Scenario: A player whose id is written wrongly is refused for that player
+      Given the player "Sam Someone" is to be entered
+      And a player written as no id is to be entered
+      And the player "Alex Another" is to be entered
+      When the reader signed in to the account for "organiser@example.com" enters the players to be entered in "Block A" of "Spring Open"
+      Then the first rule broken is "Id.Malformed"
+      And that rule is about the player to be entered 2
+      And no other rule is broken
 
     Scenario: An archived tournament player is refused
       Given "organiser@example.com" has archived the player "Alex Another" in "Spring Open"
@@ -172,12 +182,20 @@ Feature: Entering several of a tournament's players in one of its competitions a
       When the reader signed in to the account for "organiser@example.com" enters what can be entered of the players to be entered in "Block A" of "Spring Open"
       Then the competition "Block A" of "Spring Open" has the player "Alex Another"
 
-    Scenario: The answer has an id for each player entered, and none for the rest
+    Scenario: The answer names each player entered, and not the rest
       Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And the player "Sam Someone" is to be entered
       And the player "Alex Another" is to be entered
       When the reader signed in to the account for "organiser@example.com" enters what can be entered of the players to be entered in "Block A" of "Spring Open"
-      Then the answer is 1 ids
+      Then the answer names 1 entered players
+
+    Scenario: The answer says which player was not entered, and why
+      Given "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And the player "Sam Someone" is to be entered
+      And the player "Alex Another" is to be entered
+      When the reader signed in to the account for "organiser@example.com" enters what can be entered of the players to be entered in "Block A" of "Spring Open"
+      Then the answer names 1 refused players
+      And the answer says the player to be entered 1 was refused with "Competition.PlayerAlreadyEntered"
 
     Scenario: A knockout is filled as far as its draw goes
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
@@ -201,7 +219,7 @@ Feature: Entering several of a tournament's players in one of its competitions a
       Given the player "Sam Someone" is to be entered
       And the player "Alex Another" is to be entered
       When the reader signed in to the account for "organiser@example.com" enters what can be entered of the players to be entered in "Block A" of "Spring Open"
-      Then the answer is 2 ids
+      Then the answer names 2 entered players
 
   Rule: A list has players, and not too many
 

@@ -1,12 +1,9 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
-import { CompetitionRefused } from "../../../domain/aggregates/tournaments/competitions/Competition.js";
 import { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import {
-  type Tournament,
-  TournamentRefused,
-} from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import { Refused } from "../../../domain/common/Refused.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -18,35 +15,26 @@ import {
   competitionManagedBy,
   enterTournamentPlayer,
 } from "./competitionOperations.js";
-import { EnterPlayers } from "./EnterPlayers.js";
+import { EnterPlayers, type EnterPlayersAnswer } from "./EnterPlayers.js";
 
-// What is the fault of one player in the list, rather than of every player
-// alike: any other refusal (that the reader does not manage the tournament,
-// that the competition's players are set automatically) holds for the whole
-// list and ends the asking.
-const aboutOnePlayer = (failure: unknown): string | undefined => {
-  if (failure instanceof CompetitionRefused) {
-    return [
-      "Competition.PlayerAlreadyEntered",
-      "Competition.DrawFixed",
-      "Competition.DrawFull",
-    ].includes(failure.code)
-      ? failure.code
+// What holds for the whole list rather than for one player in it: the
+// players of a losers knockout are put there as its matches are decided, so
+// nobody is entered by hand whoever is asked about. Anything else a player is
+// refused for is that player's, including a refusal this list was not written
+// knowing of, so that one player's refusal is said of them and does not end
+// the asking for all.
+const holdsForEveryPlayer = ["Competition.PlayersSetAutomatically"];
+
+// The code a player was refused with, or nothing where what was thrown is not
+// a refusal at all, and is a mistake that should end the asking.
+const refusedWith = (failure: unknown): string | undefined => {
+  const code =
+    failure instanceof Refused || failure instanceof ValidationError
+      ? (failure as { readonly code: string }).code
       : undefined;
-  }
-  if (
-    failure instanceof TournamentRefused &&
-    failure.code === "Tournament.NoSuchPlayer"
-  ) {
-    return failure.code;
-  }
-  if (
-    failure instanceof ValidationError &&
-    (failure as ValidationError<string>).code === "TournamentPlayer.Archived"
-  ) {
-    return "TournamentPlayer.Archived";
-  }
-  return undefined;
+  return code === undefined || holdsForEveryPlayer.includes(code)
+    ? undefined
+    : code;
 };
 
 /**
@@ -63,12 +51,12 @@ const aboutOnePlayer = (failure: unknown): string | undefined => {
  * is why their refusal is caught here and the rest still asked. They are
  * refused as the rules in the validator are, so that the caller reads them the
  * same way. Where `enterWhatCan` is so, the players who can be are entered and
- * the rest left out; where there are none, there is nothing to enter, and it
- * is refused as it would be whole or nothing.
+ * the rest left out, and said in the answer; where there are none, there is
+ * nothing to enter, and it is refused as it would be whole or nothing.
  */
 export class EnterPlayersHandler extends CommandHandler<
   EnterPlayers,
-  readonly string[]
+  EnterPlayersAnswer
 > {
   readonly handles: RequestType<EnterPlayers> = EnterPlayers;
 
@@ -80,7 +68,7 @@ export class EnterPlayersHandler extends CommandHandler<
     super();
   }
 
-  async handle(command: EnterPlayers): Promise<readonly string[]> {
+  async handle(command: EnterPlayers): Promise<EnterPlayersAnswer> {
     const { by, tournament, competition, told } = await competitionManagedBy(
       this.tournaments,
       this.accounts,
@@ -103,7 +91,7 @@ export class EnterPlayersHandler extends CommandHandler<
           ).value,
         );
       } catch (failure) {
-        const code = aboutOnePlayer(failure);
+        const code = refusedWith(failure);
         if (code === undefined) throw failure;
         refused.push({ code, fields: [`players.${String(place)}`] });
       }
@@ -112,6 +100,6 @@ export class EnterPlayersHandler extends CommandHandler<
       throw new RequestInvalid(command, refused);
     }
     await this.competitions.save(competition);
-    return entered;
+    return { entered, refused };
   }
 }

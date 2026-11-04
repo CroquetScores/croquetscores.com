@@ -2,7 +2,10 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { randomUUID } from "node:crypto";
 
-import { EnterPlayers } from "../../../../../src/application/operations/competitions/EnterPlayers.js";
+import {
+  EnterPlayers,
+  type EnterPlayersAnswer,
+} from "../../../../../src/application/operations/competitions/EnterPlayers.js";
 import type { TournamentId } from "../../../../../src/domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { BrokenRule } from "../../../../../src/domain/common/validation/Validator.js";
 import { playerNamed } from "../../../../domain/aggregates/tournaments/tournament/aTournament.js";
@@ -22,6 +25,7 @@ import { competitionIn } from "../../tournaments/requests.js";
 type Listed =
   | { readonly kind: "named"; readonly name: string }
   | { readonly kind: "unknown" }
+  | { readonly kind: "malformed" }
   | { readonly kind: "made up" };
 
 const listed = new WeakMap<SpecWorld, Listed[]>();
@@ -46,6 +50,10 @@ Given(
   },
 );
 
+Given("a player written as no id is to be entered", function (this: SpecWorld) {
+  listOf(this).push({ kind: "malformed" });
+});
+
 Given(
   "{int} players are to be entered",
   function (this: SpecWorld, count: number) {
@@ -55,11 +63,15 @@ Given(
   },
 );
 
+const answerOf = (world: SpecWorld): EnterPlayersAnswer =>
+  world.answer as EnterPlayersAnswer;
+
 const idOf = async (
   world: SpecWorld,
   tournament: TournamentId,
   player: Listed,
 ): Promise<string> => {
+  if (player.kind === "malformed") return "tournament-player/not-an-id";
   if (player.kind !== "named") {
     return `tournament-player/${randomUUID()}`;
   }
@@ -128,5 +140,29 @@ Then(
       this.brokenRules?.[this.brokenRulesChecked - 1];
     assert.ok(rule !== undefined, "No rule broken has been named yet.");
     assert.deepEqual(rule.fields, [`players.${String(place - 1)}`]);
+  },
+);
+
+Then(
+  "the answer names {int} entered players",
+  function (this: SpecWorld, count: number) {
+    assert.equal(answerOf(this).entered.length, count);
+  },
+);
+
+Then(
+  "the answer names {int} refused players",
+  function (this: SpecWorld, count: number) {
+    assert.equal(answerOf(this).refused.length, count);
+  },
+);
+
+Then(
+  "the answer says the player to be entered {int} was refused with {string}",
+  function (this: SpecWorld, place: number, code: string) {
+    const refused = answerOf(this).refused.find(
+      ({ fields }) => fields[0] === `players.${String(place - 1)}`,
+    );
+    assert.equal(refused?.code, code);
   },
 );

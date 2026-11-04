@@ -428,7 +428,7 @@ export const CompetitionPlayersTab = ({
           tournament={tournament}
           competition={competition}
           offered={offered}
-          added={() => {
+          changed={() => {
             setAsking((count) => count + 1);
           }}
           close={() => {

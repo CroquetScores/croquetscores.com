@@ -743,7 +743,7 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply
         .code(201)
         .header("cache-control", "no-store")
-        .send({ ids: entered });
+        .send({ ids: entered.entered, refused: entered.refused });
     },
   );
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { ModalDialog } from "../../../../../../../../ModalDialog.js";
 import { DialogProblems } from "../../../../../../../../DialogProblems.js";
@@ -21,8 +21,12 @@ interface Props {
   readonly competition: string;
   /** The players to choose from, in the tournament's order. */
   readonly offered: readonly { readonly id: string; readonly name: string }[];
-  /** Once they are entered, so that the list says so. */
-  readonly added: () => void;
+  /**
+   * Once the site has answered, whatever the answer was, so that the list says
+   * who is in the competition now: a refusal is most often because somebody
+   * else changed it, and the list behind the dialog is then out of date.
+   */
+  readonly changed: () => void;
   readonly close: () => void;
 }
 
@@ -44,11 +48,15 @@ export const AddPlayersDialog = ({
   tournament,
   competition,
   offered,
-  added,
+  changed,
   close,
 }: Props): React.JSX.Element => {
   const [ticked, setTicked] = useState<ReadonlySet<string>>(new Set());
   const [sending, setSending] = useState(false);
+  // What says a request is in flight, where `sending` is only what the render
+  // that made a handler last saw: a handler called from another dialog's button
+  // would otherwise be deciding on a value from before the last answer.
+  const inFlight = useRef(false);
   // What was refused about the list as a whole, or about everybody in it.
   const [problems, setProblems] = useState<
     readonly { readonly code: string; readonly words: string }[]
@@ -66,7 +74,8 @@ export const AddPlayersDialog = ({
   const selected = offered.filter(({ id }) => ticked.has(id));
 
   const send = async (enterWhatCan: boolean): Promise<void> => {
-    if (sending || selected.length === 0) return;
+    if (inFlight.current || selected.length === 0) return;
+    inFlight.current = true;
     setSending(true);
     setProblems([]);
     try {
@@ -84,8 +93,8 @@ export const AddPlayersDialog = ({
           }),
         },
       );
+      changed();
       if (response.ok) {
-        added();
         close();
         return;
       }
@@ -119,6 +128,7 @@ export const AddPlayersDialog = ({
     } catch {
       setProblems([refusal("Unknown")]);
     }
+    inFlight.current = false;
     setSending(false);
   };
 
