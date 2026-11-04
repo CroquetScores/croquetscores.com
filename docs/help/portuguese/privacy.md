@@ -16,7 +16,7 @@ O site não usa publicidade nem rastreamento e não compartilha nada sobre você
 
 ## Cookies
 
-O site define um cookie para manter você conectado, um para o tema que você escolheu, um para o idioma que você escolheu e um para o que você disse sobre os avisos de novidades. Eles são necessários para que o site faça o que você pediu e não são usados para seguir você. O cadastro usa o Google reCAPTCHA para distinguir pessoas de programas, que o Google opera sob seus próprios termos.
+O site define um cookie para manter você conectado e outros para lembrar o que você escolheu: o tema, o idioma, como você ordenou as listas, o país, a região e o esporte pelos quais você filtrou, a visão de uma competição, quais notas e comentários você já leu e o que você disse sobre os avisos de novidades. Enquanto você entra com o Google, ele guarda mais um, até você voltar. Eles são necessários para que o site faça o que você pediu e não são usados para seguir você. O cadastro usa o Google reCAPTCHA para distinguir pessoas de programas, que o Google opera sob seus próprios termos.
 
 ## Quem pode ver
 

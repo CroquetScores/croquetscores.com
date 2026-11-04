@@ -1,6 +1,6 @@
 # Rhoi chwaraewyr mewn cystadleuaeth
 
-Agorir tudalen cystadleuaeth o'i henw ar y tab Cystadlaethau, neu o'r bar gwyrdd tywyll. Enw'r gystadleuaeth sydd ar ei phen, â dau dab oddi tano: **Chwaraewyr** a **Sgorau**. Mae'n agor ar Chwaraewyr, gan fod y chwaraewyr yn cael eu rhoi i mewn cyn i ddim gael ei chwarae.
+Agorir tudalen cystadleuaeth o'i henw ar y tab Cystadlaethau, neu o'r bar gwyrdd tywyll. Enw'r gystadleuaeth sydd ar ei phen, â dau dab oddi tano: **Chwaraewyr** a **Sgorau**. Mae gan gystadleuaeth cnoc-owt drydydd, **Collwyr**, a ddisgrifir o dan [Cnoc-owt collwyr](competitions.md#losers-knockout). Mae'n agor ar Chwaraewyr, gan fod y chwaraewyr yn cael eu rhoi i mewn cyn i ddim gael ei chwarae.
 
 Mae chwaraewr mewn cystadleuaeth yn un o chwaraewyr y twrnamaint, felly caiff ei roi i mewn trwy ei ddewis yn hytrach na'i deipio. Caiff popeth amdano, ac eithrio ei le yn y gystadleuaeth a'r hyn y mae'n ei gario ymlaen iddi, ei newid ar dab Chwaraewyr y twrnamaint.
 
@@ -23,6 +23,10 @@ Gosodir bye yn y siart fel y gosodir chwaraewr: gellir ei symud i fyny ac i lawr
 Trefn chwaraewyr cystadleuaeth cnoc-owt yw ei siart. Mae'r ddau le cyntaf yn cwrdd yn y gêm gyntaf, y ddau nesaf yn y nesaf, ac felly ymlaen. Rhowch y chwaraewyr yn y drefn y mae'r siart i'w chwarae ynddi cyn rhoi unrhyw ganlyniad i mewn, gan fod ei chwaraewyr yn sefydlog unwaith y bydd gan y gystadleuaeth gêm yn ei lle: ni ellir ychwanegu, tynnu na symud neb. Gall chwaraewr dynnu'n ôl o hyd.
 
 ![Cystadleuaeth cnoc-owt unwaith y rhoddwyd gêm i mewn: ni ellir ychwanegu, symud na thynnu neb](images/knockout-players-fixed.png)
+
+## Chwaraewyr cnoc-owt collwyr
+
+Ni roddir chwaraewyr cnoc-owt collwyr i mewn â llaw. Cânt eu rhoi i mewn wrth i'r gemau y mae'n cymryd eu collwyr gael eu penderfynu, felly dim ond eu rhestru y mae ei dab **Chwaraewyr**, ac mae'n dweud pam.
 
 ## Trefn
 

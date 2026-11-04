@@ -33,11 +33,11 @@ Administrationens startsida listar de turneringar du har en del i, ett år i tag
 
 ![Listan över turneringar i administrationen](images/admin-list.png)
 
-Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i sex flikar under dess namn: **Lag**, **Landskamper**, **Anteckningar**, **Arrangörer**, **Resultatförare** och **Rankingar**. Sidan öppnas på Lag, eftersom lagen är det första som sätts upp.
+Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i sex flikar under dess namn: **Lag**, **Landskamper**, **Anteckningar**, **Arrangörer**, **Resultatförare** och **Rankingar**. Fliken **Rankingar** finns bara där turneringen räknas med i världsrankingen. Sidan öppnas på Lag, eftersom lagen är det första som sätts upp.
 
 ![En turnerings sida, på fliken Landskamper](images/tournament-page.png)
 
-Det mörkgröna fältet under sidhuvudet är till för att gå mellan sidor. På turneringens sida och på en landskamps sida leder det till turneringen, som **Turnering**, och till varje landskamp med dess namn. På ett lags sida leder det i stället till turneringen och till varje lag med dess kortnamn, eftersom en arrangör på ett lags sida lägger till spelare lag för lag. Sidan du är på är markerad i svart.
+Det mörkgröna fältet under sidhuvudet är till för att gå mellan sidor. På turneringens sida och på en landskamps sida leder det till turneringen, som **Turnering**, och till varje landskamp med dess namn. På ett lags sida leder det i stället till turneringen och till varje lag med dess kortnamn, eftersom en arrangör på ett lags sida lägger till spelare lag för lag. Sidan du är på är markerad i svart. När landskamper läggs till, ändras, flyttas, arkiveras eller återställs på fliken Landskamper följer fältet med på en gång.
 
 ## Sådant som gäller överallt
 
@@ -46,6 +46,8 @@ Det mörkgröna fältet under sidhuvudet är till för att gå mellan sidor. På
 **En dialogruta över sidan sparar ingenting förrän du trycker på dess knapp.** Avbryt, eller Escape-tangenten, stänger den och lämnar allt som det var. Dialogrutor som lägger till saker, som Lägg till lag och Lägg till resultat, står kvar öppna efter varje tillägg, så att en lista kan skrivas in i ett svep.
 
 **Det som inte godtas sägs bredvid det fält det gäller.** Ingenting som inte godtas sparas, och det du skrev står kvar, så att det kan rättas i stället för att skrivas om.
+
+**Hjälpen finns ett tryck bort.** Ett runt **?** finns i namnlisten på sidan som skapar eller ändrar en turnering, i slutet av raden med flikar, bredvid **Ny turnering** och i varje dialogruta. Det öppnar den del av den här guiden som handlar om det du tittar på, i en annan flik, så att det du höll på med behålls.
 
 **Administrationen fungerar på en telefon.** Varje knapp är stor nog att trycka på med tummen, och ingenting är bredare än skärmen.
 

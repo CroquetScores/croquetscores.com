@@ -4,7 +4,7 @@ Niks word gepubliseer nie: die openbare bladsye word saamgestel uit wat die admi
 
 ## Die toernooi se bladsy
 
-Die toernooi se bladsy is by sy jaar, sy sport en sy naam, soos `/2026/ac/spring-open`. Dit het die toernooi se naam as opskrif, met sy onderskrif daaronder. Dit lys elke spel in gebruik, die mees onlangs bygevoegde eerste, sodat 'n leser wat terugkom sien wat sedertdien gebeur het. Elke spel sê die wenner, wat hulle verteenwoordig, hul vlag en hul punte, dan die verloorder en hulle s'n, met die kompetisie waarin dit gespeel is en hoe lank gelede dit bygevoeg is.
+Die toernooi se bladsy is by sy jaar, sy sport en sy naam, soos `/2026/ac/spring-open`. Dit het die toernooi se naam as opskrif, met sy onderskrif daaronder. Dit lys elke spel in gebruik, die mees onlangs bygevoegde eerste, sodat 'n leser wat terugkom sien wat sedertdien gebeur het. Elke spel sê die wenner, hul voorgee en wat hulle verteenwoordig, hul vlag en hul punte, dan die verloorder en hulle s'n, met die kompetisie waarin dit gespeel is en hoe lank gelede dit bygevoeg is.
 
 ![Die toernooi se openbare bladsy](images/public-tournament.png)
 
@@ -16,9 +16,11 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 !['n Blok se rooster](images/public-block-grid.png)
 
-'n Blok word op drie maniere gewys, aangebied op die reël van sy naam: **Rooster**, **Opsomming** en **Speelvolgorde**. Die opsomming is dié vir 'n foon: die spelers gerangskik, met hul oorwinnings, verliese, netto hoepels en plek. Die speelvolgorde lys elke spel, oudste eerste. 'n Leser wat 'n aansig kies, hou dit vir elke kompetisie totdat hulle 'n ander kies.
+'n Blok, 'n uitskakeling en 'n Switserse kompetisie word elk op drie maniere gewys, aangebied op die reël van die kompetisie se naam: **Rooster**, **Opsomming** en **Speelvolgorde**. Daarnaas is 'n drukkerknoppie, wat die toernooi se naam, die kompetisie se naam en sy uitslae druk, en niks anders nie. Die opsomming is dié vir 'n foon: vir 'n blok, die spelers gerangskik, met hul oorwinnings, verliese, netto hoepels en plek; vir 'n uitskakeling, die wedstryde ronde vir ronde gelys; vir 'n Switserse kompetisie, die rooster se tabel sonder sy uitslae. Die speelvolgorde lys elke spel, om mee te begin oudste eerste. Dit het die opskrifte **Wedstryd** en **Datum**: om op **Wedstryd** te druk sorteer die spelle volgens die wenner se naam en dan die verloorder s'n, en om op **Datum** te druk sorteer hulle oudste of nuutste eerste, en om op die opskrif te druk waarvolgens 'n lys gesorteer is, draai dit om. Die manier waarop 'n leser gesorteer het, word op hul toestel onthou. 'n Leser wat 'n aansig kies, hou dit vir elke kompetisie totdat hulle 'n ander kies.
 
 !['n Blok se opsomming](images/public-block-summary.png)
+
+'n Kompetisie wat tot 'n ander getal poorte as die gewone vir sy sport gespeel word, sê dit onder sy naam, as "Gespeel tot 14 poorte" (sien [Kompetisies](competitions.md#adding-a-competition)).
 
 'n Onttrekte speler se ry sê so. 'n Onttrekte uitslag word deurgehaal gewys en tel vir niks. 'n Geargiveerde uitslag word nie gewys nie.
 
@@ -34,13 +36,17 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 ## Spelers
 
-Die Spelers-bladsy lys elke speler van die toernooi wat nie geargiveer is nie, in alfabetiese volgorde, met wat hulle verteenwoordig en hul vlag.
+Die Spelers-bladsy lys elke speler van die toernooi wat nie geargiveer is nie, in alfabetiese volgorde, met hul voorgee en wat hulle verteenwoordig tussen hakies, en hul vlag.
 
 ## Notas
 
-Die Notas-bladsy lys die toernooi se notas, die mees onlangs geskrewe eerste, elkeen lei na sy eie bladsy en sê hoe lank gelede dit geskryf is. 'n Nota wat die leser nie gelees het nie, word met 'n rooi sterretjie gemerk totdat hulle dit oopmaak.
+Die Notas-bladsy, met die opskrif Bestuurders se notas, lys die toernooi se notas, die mees onlangs geskrewe eerste, elkeen lei na sy eie bladsy en sê hoe lank gelede dit geskryf is. 'n Nota wat die leser nie gelees het nie, word met 'n rooi sterretjie gemerk totdat hulle dit oopmaak. 'n Toernooi sonder notas sê "Nog geen notas nie."
 
 ![Die toernooi se openbare Notas-bladsy](images/public-notes.png)
+
+## Waar die toernooi gelys word
+
+'n Toernooi is op die tuisblad terwyl dit gespeel word of op die punt is om te begin. Sy jaar se bladsy, soos `/2026`, lys die jaar se maande, wat elk, sodra dit gedruk is, die toernooie lys wat daarin begin. 'n Beheer onder die opskrif, **Wys alles** en dan **Versteek alles**, maak elke maand oop of toe. 'n Toernooi wat as nasionaal of internasionaal gemerk is, word langs sy hele ry vetgedruk gestel.
 
 ## Adresse wat skuif
 

@@ -27,6 +27,8 @@ Standaard is die een formaat wat nie tussen spanne gespeel word nie, en is nie w
 
 Hoe sy toetse gespeel en getel word, of met voorgifte, met gelykopuitslae, en vir die wêreldranglyste, sê elke toets self wanneer dit bygevoeg word.
 
+**Gelyke toetse is gelykop.** Word gevra sodra 'n formaat tussen spanne gekies is. 'n Toets waarvan die spanne dieselfde getal wedstryde wen, word beslis deur hul netto spelle, dan hul netto hoepels. Merk dit en dit is eerder gelykop. Dit is om mee te begin net gemerk vir die **GC World Team Championship**, wat dit nog altyd gelykop gehou het, en kan later verander word.
+
 **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
 
 ## Hoe om dit te skep

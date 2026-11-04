@@ -29,7 +29,7 @@ Die Eingangsseite der Verwaltung listet die Turniere, an denen Sie beteiligt sin
 
 ![Die Liste der Turniere in der Verwaltung](images/admin-list.png)
 
-Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in sechs Reitern unter seinem Namen: **Spieler**, **Wettbewerbe**, **Notizen**, **Verantwortliche**, **Ergebniserfasser** und **Ranglisten**. Die Seite öffnet sich auf Spieler, weil die Spieler als Erstes eingegeben werden.
+Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in sechs Reitern unter seinem Namen: **Spieler**, **Wettbewerbe**, **Notizen**, **Verantwortliche**, **Ergebniserfasser** und **Ranglisten**. Die Seite öffnet sich auf Spieler, weil die Spieler als Erstes eingegeben werden. Am Ende der Reihe der Reiter und in der Titelleiste eines Dialogs steht ein rundes **?**, das die Hilfe zu dem öffnet, was Sie gerade ansehen, in einem anderen Tab, damit Ihre Stelle erhalten bleibt. Eines steht auch neben **Neues Turnier**.
 
 ![Die Seite eines Turniers, auf dem Reiter Wettbewerbe](images/tournament-page.png)
 

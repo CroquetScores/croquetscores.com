@@ -14,9 +14,11 @@ Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a págin
 
 **Nome** é obrigatório. É o nome do jogador como será mostrado em todas as páginas, entre 3 e 254 caracteres. Dois jogadores de um mesmo torneio não podem ter o mesmo nome, sejam quais forem as maiúsculas; quando dois jogadores realmente têm o mesmo nome, distinga-os no próprio nome, como "Andrew Hobbs (2)".
 
-**Representando** é aquilo por que o jogador joga, escrito como um leitor o diria: um clube, uma região ou um país, como "Canterbury Croquet Club". É mostrado entre parênteses depois do nome. Pode ficar vazio.
+**Representando** é aquilo por que o jogador joga, escrito como um leitor o diria: um clube, uma região ou um país, como "Canterbury Croquet Club". É mostrado entre parênteses depois do nome. Pode ficar vazio. Enquanto você digita, são oferecidos os valores com que jogadores de qualquer torneio do site já foram adicionados em que uma palavra começa com o que você digitou, para que um clube seja escrito como já foi escrito antes; a tecla Tab aceita o que aparece depois do cursor.
 
-**Bandeira** é a bandeira mostrada ao lado do nome do jogador. Pode ficar como nenhuma, como está para a maioria dos jogadores. O que um jogador representa e que bandeira ele leva são coisas separadas, porque um jogador pode jogar por um clube de um país e levar a bandeira de outro.
+**Bandeira** é a bandeira mostrada ao lado do nome do jogador. É uma lista suspensa dos lugares pelo nome, com nenhuma em primeiro lugar e depois os lugares em que a maioria dos torneios é disputada; digite o começo de um nome para ir até ele. Pode ficar como nenhuma, como está para a maioria dos jogadores. O que um jogador representa e que bandeira ele leva são coisas separadas, porque um jogador pode jogar por um clube de um país e levar a bandeira de outro.
+
+**Handicap** é o handicap do jogador, se ele tiver um: um sinal, até dois dígitos e uma fração de um dígito, como 4, +4 ou -1.5. É guardado como você o escreve, e é mostrado entre parênteses com o que o jogador representa, antes dele. Pode ficar vazio.
 
 **Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Croquet de Golfe, os dois esportes cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, porque a maioria dos jogadores é conhecida nos rankings pelo próprio nome, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador.
 
@@ -32,7 +34,7 @@ Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no pr�
 
 Para adicionar uma lista inteira de uma vez, pressione **Adicionar jogadores**, ao lado de **Adicionar jogador**. Um diálogo abre sobre a página com uma caixa só, que aceita várias linhas de texto. Você pode copiar a lista de uma planilha e colá-la na caixa.
 
-**A primeira linha dá o nome dos campos**, separados por vírgulas ou por tabulações: **Name**, e qualquer um entre **Representing**, **Flag**, **Handicap** e **WorldRankingPlayerName**, em qualquer ordem. Esses nomes são digitados em inglês, seja qual for o idioma do site. **Name** precisa ser um deles. **Cada linha depois dela é um jogador**, com um valor para cada campo na mesma ordem, separados do mesmo jeito. Um jogador sem nada para um campo o deixa vazio, mas mantém a vírgula ou a tabulação. Por exemplo, com vírgulas:
+**A primeira linha dá o nome dos campos** (uma lista cuja primeira linha não dá nome a nenhum é recusada, com "A primeira linha deve conter os nomes dos campos"), separados por vírgulas ou por tabulações: **Name**, e qualquer um entre **Representing**, **Flag**, **Handicap** e **WorldRankingPlayerName**, em qualquer ordem. Esses nomes são digitados em inglês, seja qual for o idioma do site. **Name** precisa ser um deles. **Cada linha depois dela é um jogador**, com um valor para cada campo na mesma ordem, separados do mesmo jeito. Um jogador sem nada para um campo o deixa vazio, mas mantém a vírgula ou a tabulação. Por exemplo, com vírgulas:
 
 ```
 Name,Representing,Flag
@@ -51,7 +53,7 @@ Alex Another,,England
 
 Pressione **Adicionar**. A lista inteira é conferida antes de qualquer parte dela ser guardada, então uma lista com algo errado não adiciona ninguém. O que está errado é dito abaixo da caixa, na linha em que está, contando a primeira linha como linha 1. Todos os erros são listados, não só o primeiro, e o que você digitou fica, para que você possa corrigir. Depois que a lista é guardada, o diálogo fecha e a aba Jogadores lista os novos jogadores, na ordem em que você os escreveu. Ao contrário de **Adicionar jogador**, que fica aberto para o próximo jogador, aqui não há próximo: a lista era o próximo.
 
-O **?** na barra de título do diálogo leva até aqui.
+O **?** na barra de título do diálogo leva até aqui. Tanto este diálogo quanto Adicionar jogador ficam na janela, até onde quer que a página tenha sido rolada.
 
 ## Corrigir um jogador {#correcting-a-player}
 

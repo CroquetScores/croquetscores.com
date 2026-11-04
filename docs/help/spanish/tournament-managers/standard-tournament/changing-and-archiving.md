@@ -16,6 +16,8 @@ Solo un gestor puede cambiar un torneo. A un anotador, o a cualquier otro, se le
 
 La administración lista un año a la vez, empezando por este, el torneo más reciente primero. Los años en que tienes algún torneo son pestañas en la barra verde oscuro, el más reciente primero; cuando hay más de los que caben en un teléfono, los más antiguos van en una lista desplegable al final de la fila. El año está en la dirección, así que se puede enlazar a un año.
 
+Encima de la lista, **País**, **Región**, **Deporte**, **Desde** y **Hasta** la acotan según se eligen, sin ningún botón que pulsar. Solo se ofrecen las elecciones que listarían algo, y una región se ofrece cuando se ha elegido un país. **Desde** y **Hasta** son días: la lista es la de los torneos que empiezan de uno a otro, ambos incluidos, y hay que elegir los dos para que se acote por días. Lo elegido está en la dirección, así que se puede enlazar a una lista acotada; elegir otro año la borra. Un año con más de cien torneos se lista a cien por página, con **Anterior** y **Siguiente** debajo. Un torneo nacional o internacional va en negrita a lo largo de su fila.
+
 ![La lista de torneos](images/admin-list.png)
 
 ## Archivar un torneo

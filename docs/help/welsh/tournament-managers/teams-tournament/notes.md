@@ -1,6 +1,6 @@
 # Nodiadau
 
-Tab **Nodiadau** tudalen twrnamaint yw lle mae ei reolwyr yn ysgrifennu'r hyn sydd angen i'r chwaraewyr ei wybod wrth i'r twrnamaint fynd rhagddo: y drefn chwarae, newid i'r lawntiau, amser cinio. Mae darllenwyr yn eu canfod ar dudalen Nodiadau gyhoeddus y twrnamaint, a chaiff nodyn nad ydynt wedi'i ddarllen ei farcio yno â seren goch, sydd hefyd yn marcio'r adran Nodiadau ar bob tudalen o'r twrnamaint nes iddynt ei agor.
+Tab **Nodiadau** tudalen twrnamaint yw lle mae ei reolwyr yn ysgrifennu'r hyn sydd angen i'r chwaraewyr ei wybod wrth i'r twrnamaint fynd rhagddo: y drefn chwarae, newid i'r lawntiau, amser cinio. Mae darllenwyr yn eu canfod ar dudalen Nodiadau gyhoeddus y twrnamaint, sydd â'r pennawd Nodiadau'r Rheolwyr, a chaiff nodyn nad ydynt wedi'i ddarllen ei farcio yno â seren goch, sydd hefyd yn marcio'r adran Nodiadau ar bob tudalen o'r twrnamaint nes iddynt ei agor.
 
 ![Y tab Nodiadau](images/notes-tab.png)
 
@@ -13,6 +13,8 @@ Pwyswch **Ychwanegu nodyn**, uwchben y rhestr. Mae panel yn cymryd lle'r rhestr,
 Mae **Teitl** yn ofynnol, a dyma'r hyn y rhestrir y nodyn wrtho. Testun plaen yw.
 
 Ysgrifennir **Disgrifiad** mewn Markdown a gellir ei adael yn wag lle mae'r teitl yn dweud y cyfan sydd i'w ddweud. Mae'r bar offer uwchben y blwch yn ysgrifennu'r Markdown drosoch: Pennawd, Print trwm, Italig, Dyfyniad, Cod, Dolen, Rhestr wedi'i rhifo, Rhestr bwyntiau bwled a Rhestr tasgau. Mae pob un yn gweithio ar yr hyn a ddewiswyd, neu ar ddechrau pob llinell a ddewiswyd, neu'n rhoi'r cyrchwr lle mae'r geiriau'n mynd.
+
+Gwahanir paragraff oddi wrth yr un o'i flaen gan linell wag lawn, fel bod y nodyn yn darllen fel paragraffau.
 
 Mae **Rhagolwg** yn dangos y nodyn fel y bydd darllenydd yn ei weld ar ei dudalen.
 

@@ -26,6 +26,6 @@ O danynt, mae'r rhestrau **Gwlad**, **Rhanbarth** a **Camp** yn culhau'r hyn a a
 
 ## Beth y gallwch ei wneud gyda thwrnamaint
 
-Wrth ymyl twrnamaint yr ydych yn gofalu am ei detholion yn unig, mae'r rhestr yn cynnig **Chwaraewyr** a dim byd arall. Mae'n agor tudalen y twrnamaint, lle gallwch newid enw Safle'r Byd unrhyw un o'i chwaraewyr, darllen ei reolwyr ac ysgrifennu atynt gydag **E-bostio'r rheolwyr**, a chymryd ei gemau ar gyfer detholion y byd o'r tab **Detholion**. Ni allwch newid y twrnamaint, ei archifo, na rhoi sgorau ynddo, gan fod y rheini ar gyfer ei reolwyr a'i sgorwyr. Nid oes botwm i dwrnamaint o'r fath sydd wedi'i archifo; mae ei enw'n dal i agor ei dudalen.
+Wrth ymyl twrnamaint yr ydych yn gofalu am ei detholion yn unig, mae'r rhestr yn cynnig **Chwaraewyr** a dim byd arall. Mae'n agor tudalen y twrnamaint, lle gallwch newid enw Safle'r Byd unrhyw un o'i chwaraewyr, darllen ei reolwyr ac ysgrifennu atynt gydag **E-bostio'r rheolwyr**, a chymryd ei gemau ar gyfer detholion y byd o'r tab **Detholion**, gyda **Lawrlwytho gemau ar gyfer Safle'r Byd**. Ni allwch newid y twrnamaint, ei archifo, na rhoi sgorau ynddo, gan fod y rheini ar gyfer ei reolwyr a'i sgorwyr. Nid oes botwm i dwrnamaint o'r fath sydd wedi'i archifo; mae ei enw'n dal i agor ei dudalen.
 
 Wrth ymyl twrnamaint yr ydych yn ei reoli neu'n ei sgorio, mae'r rhestr yn cynnig yr hyn y mae'n ei gynnig i unrhyw reolwr neu sgoriwr: **Rheoli** gyda'r pensil (**Golygu**) a'r bin (**Archifo**), neu **Sgorau**. Nid yw bod yn swyddog yn newid dim o hynny.

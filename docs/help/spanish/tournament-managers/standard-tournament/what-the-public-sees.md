@@ -4,7 +4,7 @@ No se publica nada: las páginas públicas se construyen a partir de lo que guar
 
 ## La página del torneo
 
-La página del torneo está en su año, su deporte y su nombre, como `/2026/ac/spring-open`. La encabeza el nombre del torneo, con su subtítulo debajo. Lista todas las partidas en uso, la añadida más recientemente primero, para que un lector que vuelve vea lo que ha pasado desde entonces. Cada partida dice el ganador, a quién representa, su bandera y sus puntos, después el perdedor y los suyos, con la competición en que se jugó y cuánto hace que se añadió.
+La página del torneo está en su año, su deporte y su nombre, como `/2026/ac/spring-open`. La encabeza el nombre del torneo, con su subtítulo debajo. Lista todas las partidas en uso, la añadida más recientemente primero, para que un lector que vuelve vea lo que ha pasado desde entonces. Cada partida dice el ganador, su hándicap y a quién representa, su bandera y sus puntos, después el perdedor y los suyos, con la competición en que se jugó y cuánto hace que se añadió.
 
 ![La página pública del torneo](images/public-tournament.png)
 
@@ -16,9 +16,11 @@ La página de un grupo muestra sus resultados como un cuadro: una fila y una col
 
 ![El cuadro de un grupo](images/public-block-grid.png)
 
-Un grupo se muestra de tres maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, **Resumen** y **Orden de juego**. El resumen es el pensado para un teléfono: los jugadores clasificados, con sus victorias, derrotas, aros netos y puesto. El orden de juego lista todas las partidas, la más antigua primero. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
+Un grupo, una eliminatoria y un suizo se muestran cada uno de tres maneras, ofrecidas en la línea del nombre de la competición: **Cuadrícula**, **Resumen** y **Orden de juego**. Junto a ellas hay un botón de impresora, que imprime el nombre del torneo, el nombre de la competición y sus resultados, y nada más. El resumen es el pensado para un teléfono: para un grupo, los jugadores clasificados, con sus victorias, derrotas, aros netos y puesto; para una eliminatoria, los partidos listados ronda a ronda; para un suizo, la tabla del cuadro sin sus resultados. El orden de juego lista todas las partidas, la más antigua primero al principio. Tiene los encabezados **Partida** y **Fecha**: pulsar **Partida** ordena las partidas por el nombre del ganador y después por el del perdedor, pulsar **Fecha** las ordena de la más antigua o de la más reciente primero, y pulsar el encabezado por el que se ha ordenado una lista le da la vuelta. El orden que eligió un lector se recuerda en su dispositivo. Un lector que elige una vista la conserva para todas las competiciones hasta que elige otra.
 
 ![El resumen de un grupo](images/public-block-summary.png)
+
+Una competición que se juega a un número de aros distinto del habitual para su deporte lo dice bajo su nombre, como «Se juega a 14 aros» (véase [Competiciones](competitions.md#adding-a-competition)).
 
 La fila de un jugador retirado lo dice. Un resultado retirado se muestra tachado y no cuenta para nada. Un resultado archivado no se muestra.
 
@@ -34,13 +36,17 @@ La página de un suizo clasifica a sus jugadores en una tabla: sus partidas, sus
 
 ## Jugadores
 
-La página Jugadores lista a todos los jugadores del torneo que no están archivados, en orden alfabético, con a quién representan y su bandera.
+La página Jugadores lista a todos los jugadores del torneo que no están archivados, en orden alfabético, con su hándicap y a quién representan entre paréntesis, y su bandera.
 
 ## Notas
 
-La página Notas lista las notas del torneo, la escrita más recientemente primero, cada una llevando a su propia página y diciendo cuánto hace que se escribió. Una nota que el lector no ha leído se marca con un asterisco rojo hasta que la abre.
+La página Notas, titulada Notas de los gestores, lista las notas del torneo, la escrita más recientemente primero, cada una llevando a su propia página y diciendo cuánto hace que se escribió. Una nota que el lector no ha leído se marca con un asterisco rojo hasta que la abre. Un torneo sin notas dice «Todavía no hay notas.».
 
 ![La página pública Notas del torneo](images/public-notes.png)
+
+## Dónde se lista el torneo
+
+Un torneo está en la página de inicio mientras se juega o está a punto de empezar. La página de su año, como `/2026`, lista los meses del año, y cada uno, una vez pulsado, lista los torneos que empiezan en él. Un control bajo el encabezado, **Mostrar todo** y después **Ocultar todo**, abre o cierra todos los meses. Un torneo marcado como nacional o internacional va en negrita a lo largo de su fila.
 
 ## Direcciones que se mueven
 

@@ -4,9 +4,9 @@ Waar 'n toernooi vir die wêreldranglys tel, word sy uitslae as 'n leer aan die 
 
 ## Die oortjie
 
-Maak die toernooi se bladsy oop en kies **Ranglyste**, die laaste van sy oortjies. Dit sê wat die leer is: 'n teksleer vir Association Croquet, 'n sigblad vir Golf Croquet en Amerikaanse 6-hoepel-croquet. Dit sê wat vir jou oorbly om met die hand te doen, en dat die leer dan na die beamptes van die wêreldranglys gestuur moet word. Daaronder is **Laai spelle af vir die wêreldranglys**, wat die leer stoor. Dit is daar voordat enige uitslag ingevoer is, en gee 'n leer met niks in nie totdat daar een is.
+Maak die toernooi se bladsy oop en kies **Ranglyste**, die laaste van sy oortjies. Dit sê dat die wêreldranglyste die toernooi se uitslae deur die leer gebruik, sodat bestuurders niks hoef te doen nie. Die leer is 'n teksleer vir Association Croquet en 'n sigblad vir Golf Croquet en Amerikaanse 6-hoepel-croquet. Onder die woorde is **Laai spelle af vir die wêreldranglys**, wat die leer stoor. Dit is daar voordat enige uitslag ingevoer is, en gee 'n leer met niks in nie totdat daar een is.
 
-Die oortjie is net in die bladsy van 'n toernooi wat vir die wêreldranglys tel, en net vir sy bestuurders: 'n teller kry dit nie aangebied nie. Die leer self is by die toernooi se eie adres gevolg deur `/rankings`, soos `/2026/ac/spring-open/rankings`, wat die adres is wat die webwerf dit nog altyd gegee het, en enigiemand wat die adres het, kan dit oopmaak.
+Die oortjie is net in die bladsy van 'n toernooi wat vir die wêreldranglys tel, dit wil sê een met 'n kompetisie wat tel. Dit word aan sy bestuurders aangebied en aan die wêreldranglysbeamptes van sy sport, en nie aan 'n teller wat nie een van die twee is nie. Die leer self is by die toernooi se eie adres gevolg deur `/rankings`, soos `/2026/ac/spring-open/rankings`, wat die adres is wat die webwerf dit nog altyd gegee het, en enigiemand wat die adres het, kan dit oopmaak.
 
 ## Wat in die leer is
 
@@ -14,9 +14,9 @@ Elke uitslag wat ingevoer en nie geargiveer is nie, is daarin, in die volgorde w
 
 'n Speler word gegee deur sy naam op die wêreldranglys, wat sy naam is waar hulle nie 'n ander gekry het nie.
 
-**Association Croquet** het 'n blok vir elke kompetisie wat 'n uitslag het: sy geleentheid, sy datums, sy wenner, of dit wedstryde of enkelspelle was, en 'n genommerde reël vir elke uitslag, soos "1 Sam Someone beat Alex Another +9". 'n Uitslag is die wenner se hoepels min die verloorder s'n, met 'n plusteken waar die wenner meer aangeteken het, en die peels daarna. 'n Uitskakeling se wedstryd is een reël, met elke spel se uitslag om die beurt. Die webwerf kan net raai wie 'n kompetisie gewen het, so kontroleer die **Winner**-reël van elke blok (die reël se woord is Engels) en stel dit reg voordat jy die leer aanstuur.
+**Association Croquet** het 'n blok vir elke kompetisie wat 'n uitslag het: sy geleentheid, sy datums, sy wenner, of dit wedstryde of enkelspelle was, en 'n genommerde reël vir elke uitslag, soos "1 Sam Someone beat Alex Another +9". 'n Uitslag is die wenner se hoepels min die verloorder s'n, met 'n plusteken waar die wenner meer aangeteken het, en die peels daarna. 'n Uitskakeling se wedstryd is een reël, met elke spel se uitslag om die beurt. Die **Winner**-reël van elke blok (die reël se woord is Engels) word leeg gelaat, want 'n toets word deur 'n span gewen en nie deur 'n speler nie.
 
-**Golf Croquet en Amerikaanse 6-hoepel-croquet** het 'n sigblad: die toernooi se naam, sy dae en hoeveel spelle dit bevat, en dan 'n genommerde reël vir elke spel, met die wenner se van en voornaam, "beat", die verloorder s'n, en die twee uitslae. Elke spel van 'n uitskakeling se wedstryd is 'n reël op sy eie. Onder die laaste is die reël **Tournament winner:** (die reël se woorde is Engels) leeg gelaat, vir jou om in te vul.
+**Golf Croquet en Amerikaanse 6-hoepel-croquet** het 'n sigblad: die toernooi se naam, sy dae en hoeveel spelle dit bevat, en dan 'n genommerde reël vir elke spel, met die wenner se van en voornaam, "beat", die verloorder s'n, en die twee uitslae. Elke spel van 'n uitskakeling se wedstryd is 'n reël op sy eie. Onder die laaste is die reël **Tournament winner:** (die reël se woorde is Engels) leeg gelaat, vir wie ook al die leer gebruik om in te vul.
 
 ## Wanneer daar geen leer is nie
 

@@ -20,6 +20,8 @@ Un resultado se escribe tal como lo apuntó el anotador: su número de puntos y 
 
 Una partida ganada con los puntos igualados, como cuando la detiene el tiempo y se decide de otra manera, dice quién la ganó mediante una marca tras los puntos del ganador: "6w" ganó a "6". Las marcas son "w", "won" y "winner". Los puntos del ganador tienen que ser más que los del perdedor, o llevar marca, a menos que el torneo permita empates, en cuyo caso unos puntos igualados sin marca se guardan como empate.
 
+Si no se pueden leer los jugadores, el diálogo lo dice sobre los campos, con «No se han podido leer los jugadores. Cierra esta ventana y ábrela de nuevo.», en vez de ofrecer a nadie. Haz lo que dice.
+
 Pulsa **Añadir partida**. La partida se añade, el diálogo dice cuál y los campos se vacían para la siguiente, porque los resultados llegan en tanda, leídos de un tablón al final de una sesión. Pulsa **Cancelar** cuando estén todos.
 
 ## Partidos

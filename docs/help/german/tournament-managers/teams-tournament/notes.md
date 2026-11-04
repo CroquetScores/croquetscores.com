@@ -14,6 +14,8 @@ Drücken Sie **Notiz hinzufügen** über der Liste. Ein Bereich tritt an die Ste
 
 **Beschreibung** wird in Markdown geschrieben und kann leer bleiben, wenn der Titel schon alles sagt. Die Werkzeugleiste über dem Feld schreibt das Markdown für Sie: Überschrift, Fett, Kursiv, Zitat, Code, Link, Nummerierte Liste, Aufzählung und Aufgabenliste. Jedes wirkt auf das Markierte, oder am Anfang jeder markierten Zeile, oder setzt den Cursor dorthin, wo die Wörter hingehören.
 
+Ein Absatz wird vom vorigen durch eine ganze Leerzeile getrennt, sodass sich die Notiz als Absätze liest.
+
 **Vorschau** zeigt die Notiz so, wie ein Leser sie auf ihrer Seite sehen wird.
 
 ![Der Notizbereich, auf seinem Reiter Vorschau](images/note-preview.png)

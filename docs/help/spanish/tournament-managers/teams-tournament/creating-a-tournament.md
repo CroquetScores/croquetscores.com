@@ -27,6 +27,8 @@ Estándar es el único formato que no es por equipos, y no es el que quieres aqu
 
 Cómo se juegan y se cuentan sus tests, si con hándicap, con empates y para los rankings mundiales, lo dice cada test al añadirlo.
 
+**Los tests igualados se dan por empatados.** Se pide una vez elegido un formato por equipos. Un test cuyos equipos ganan el mismo número de partidos lo decide su diferencia de partidas, y después su diferencia de aros. Márcalo y en su lugar es un empate. Empieza marcado solo para el **Campeonato Mundial por Equipos de Croquet Golf**, que siempre los ha dado por empatados, y puede cambiarse después.
+
 **Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro.
 
 ## Crearlo

@@ -1,6 +1,6 @@
 # Anteckningar
 
-Fliken **Anteckningar** på en turnerings sida är där dess arrangörer skriver det spelarna behöver veta medan turneringen pågår: formatet, en ändring i spelordningen, lunchtiden. Läsarna hittar dem på turneringens offentliga sida Anteckningar, och en anteckning de inte har läst markeras där med en röd asterisk, som också markerar avdelningen Anteckningar på varje sida i turneringen tills de öppnar den.
+Fliken **Anteckningar** på en turnerings sida är där dess arrangörer skriver det spelarna behöver veta medan turneringen pågår: formatet, en ändring i spelordningen, lunchtiden. Läsarna hittar dem på turneringens offentliga sida Anteckningar, med rubriken Arrangörernas anteckningar, och en anteckning de inte har läst markeras där med en röd asterisk, som också markerar avdelningen Anteckningar på varje sida i turneringen tills de öppnar den.
 
 ![Fliken Anteckningar, med två anteckningar](images/notes-tab.png)
 
@@ -14,7 +14,7 @@ Tryck på **Lägg till anteckning**, ovanför listan. En panel tar listans plats
 
 **Beskrivning** skrivs i Markdown och kan lämnas tom där rubriken säger allt som finns att säga. Verktygsfältet ovanför rutan skriver Markdown åt dig: Rubrik, Fet stil, Kursiv stil, Citat, Kod, Länk, Numrerad lista, Punktlista och Uppgiftslista. Vart och ett verkar på det som är markerat, eller i början av varje markerad rad, eller sätter markören där orden ska stå.
 
-**Förhandsgranska** visar anteckningen som en läsare kommer att se den på dess sida.
+En tom rad mellan två stycken skiljer dem åt, och en läsare ser en hel tom rad mellan dem. **Förhandsgranska** visar anteckningen som en läsare kommer att se den på dess sida.
 
 ![Anteckningspanelen, på fliken Förhandsgranska](images/note-preview.png)
 

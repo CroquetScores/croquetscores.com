@@ -16,6 +16,8 @@ Só um organizador pode alterar um torneio. Um anotador, ou qualquer outra pesso
 
 A administração lista um ano de cada vez, começando por este ano, o torneio mais recente primeiro. Os anos em que você tem um torneio são abas na barra verde-escura, o mais recente primeiro; quando há mais do que cabe em um telefone, os mais antigos ficam em uma lista suspensa no fim da linha. O ano está no endereço, então é possível fazer um link para um ano.
 
+Acima da lista, **País**, **Região**, **Esporte**, **De** e **Até** a restringem à medida que são escolhidos, sem botão para apertar. Só são oferecidas as escolhas que listariam alguma coisa, e uma região é oferecida depois de escolhido um país. **De** e **Até** são dias: a lista é a dos torneios que começam de um até o outro, ambos incluídos, e os dois precisam ser escolhidos para que ela seja restringida por dias. O que foi escolhido fica no endereço, então é possível fazer um link para uma lista restringida; escolher outro ano a limpa. Um ano com mais de cem torneios é listado com cem por página, com **Anterior** e **Seguinte** abaixo. Um torneio nacional ou internacional aparece em negrito ao longo da sua linha.
+
 ![A lista de torneios](images/admin-list.png)
 
 ## Arquivar um torneio

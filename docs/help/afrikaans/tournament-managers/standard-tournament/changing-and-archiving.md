@@ -16,6 +16,8 @@ Net 'n bestuurder kan 'n toernooi verander. 'n Teller, of enigiemand anders, wor
 
 Die administrasie lys een jaar op 'n slag, beginnende met vanjaar, nuutste toernooi eerste. Die jare waarin jy 'n toernooi het, is oortjies in die donkergroen balk, nuutste eerste; waar daar meer is as wat op 'n foon pas, is die oudstes in 'n aftreklys aan die einde van die ry. Die jaar is in die adres, so daar kan na 'n jaar geskakel word.
 
+Bo die lys vernou **Land**, **Streek**, **Sport**, **Van** en **Tot** dit soos hulle gekies word, sonder 'n knoppie om te druk. Net keuses wat iets sou lys, word aangebied, en 'n streek word aangebied sodra 'n land gekies is. **Van** en **Tot** is dae: die lys is van die toernooie wat vanaf die een tot die ander begin, albei ingesluit, en albei moet gekies wees vir dit om volgens dae vernou te word. Wat gekies is, is in die adres, so 'n vernoude lys kan geskakel word; as jy 'n ander jaar kies, word dit skoongemaak. 'n Jaar met meer as honderd toernooie word honderd op 'n bladsy gelys, met **Vorige** en **Volgende** daaronder. 'n Nasionale of internasionale toernooi word langs sy ry vetgedruk gestel.
+
 ![Die lys toernooie](images/admin-list.png)
 
 ## Hoe om 'n toernooi te argiveer

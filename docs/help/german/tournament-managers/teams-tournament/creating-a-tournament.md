@@ -27,6 +27,8 @@ Standard ist das einzige Format, das nicht von Mannschaften gespielt wird, und n
 
 Wie die Tests gespielt und gezählt werden, mit Vorgaben, mit Unentschieden und für die Weltranglisten, sagt jeder Test selbst, wenn er hinzugefügt wird.
 
+**Gleichstand in Tests ist unentschieden.** Wird gefragt, sobald ein Format für Mannschaften gewählt ist. Ein Test, dessen Mannschaften gleich viele Matches gewinnen, wird nach ihrer Spieldifferenz entschieden, dann nach ihrer Tordifferenz. Haken Sie das an, und er ist stattdessen unentschieden. Es ist zu Beginn nur bei der **GC-Mannschaftsweltmeisterschaft** angehakt, die Gleichstände schon immer unentschieden wertet, und kann später geändert werden.
+
 **Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene.** Ein Turnier kann das eine, das andere oder keines von beiden sein, aber nie beides: Wer das eine anhakt, nimmt beim anderen den Haken weg.
 
 ## Anlegen

@@ -18,6 +18,8 @@ Die Verwaltung listet jeweils ein Jahr, beginnend mit diesem, das neueste Turnie
 
 ![Die Liste der Turniere](images/admin-list.png)
 
+Über der Liste grenzen **Land**, **Region**, **Sportart**, **Von** und **Bis** sie ein, sobald sie gewählt werden, ohne dass eine Schaltfläche zu drücken ist. Angeboten werden nur Auswahlen, die etwas auflisten würden, und eine Region wird angeboten, sobald ein Land gewählt ist. **Von** und **Bis** sind Tage: Die Liste enthält die Turniere, die von dem einen bis zum anderen beginnen, beide eingeschlossen, und beide müssen gewählt sein, damit nach Tagen eingegrenzt wird. Was gewählt ist, steht in der Adresse, eine eingegrenzte Liste lässt sich also verlinken; wer ein anderes Jahr wählt, hebt die Eingrenzung auf. Ein Jahr mit mehr als hundert Turnieren wird zu hundert auf einer Seite aufgelistet, mit **Zurück** und **Weiter** darunter. Ein nationales oder internationales Turnier steht in seiner Zeile fett.
+
 ## Ein Turnier archivieren
 
 **Archivieren** bei einem Turnier in der Liste legt es beiseite. Es wird weiterhin aufgeführt, durchgestrichen und hinter den Turnieren in Gebrauch, bietet aber nur **Wiederherstellen** an: Seine Seite in der Verwaltung und seine öffentlichen Seiten sind geschlossen, bis es wiederhergestellt wird. Archivieren fragt nicht zuerst, weil das Wiederherstellen es rückgängig macht.

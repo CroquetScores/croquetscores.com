@@ -20,6 +20,8 @@ Pwyswch **Ychwanegu gêm**. Caiff y gêm ei hychwanegu, mae'r ddeialog yn dweud 
 
 ![Y ddeialog ar ôl i gêm gael ei hychwanegu](images/add-score-dialog-added.png)
 
+Os na all y ddeialog ddarllen chwaraewyr y gystadleuaeth, mae'n dweud "Ni ellid darllen y chwaraewyr. Caewch y deialog hwn a'i agor eto." Gwnewch hynny.
+
 Dywedir beth a wrthodir o dan y maes y mae'n ymwneud ag ef: enillydd neu gollwr heb ei ddewis, sgôr heb ei theipio neu nad yw'n dechrau â digid, yr un chwaraewr fel y ddau, sgôr collwr wedi'i marcio fel un a enillwyd, neu sgôr enillydd y tu ôl i sgôr y collwr. Mewn cystadleuaeth cnoc-owt, gwrthodir dau chwaraewr nad ydynt wedi'u tynnu i gwrdd uwchben y meysydd.
 
 ## Rhaid llenwi siart cystadleuaeth cnoc-owt yn gyntaf {#draw-filled-first}
@@ -30,7 +32,9 @@ Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd gan bob lle yn ei siart 
 
 ## Y rhestr o ganlyniadau
 
-Rhestrir y canlyniadau sydd yn eu lle yn y drefn y rhoddwyd hwy i mewn, yr hynaf yn gyntaf, fel bod y rhestr yn darllen fel y chwaraewyd y gystadleuaeth. Mae pob un yn dweud yr enillydd a'i sgôr, yna'r collwr a'i sgôr yntau, ac yn cynnig **Golygu** ac **Archifo**.
+Rhestrir y canlyniadau sydd yn eu lle yn y drefn y rhoddwyd hwy i mewn, yr hynaf yn gyntaf, fel bod y rhestr yn darllen fel y chwaraewyd y gystadleuaeth. Tabl yw'r rhestr, â rhes i bob gêm a dim penawdau colofnau. Mae rhes yn dweud rhif y gêm, yr enillydd a'i sgôr, y gair "a gurodd", yna'r collwr a'i sgôr yntau, ac yn cynnig **Golygu** ac **Archifo**.
+
+Rhif gêm yw ei lle ymhlith y gemau a roddwyd i mewn, a'r gyntaf yn 1, gan gyfrif y rhai a archifwyd. Nid yw archifo gêm yn newid rhif unrhyw un arall, felly mae bwlch yn y rhifau yn dweud bod gêm wedi'i harchifo.
 
 ## Cywiro canlyniad {#correcting-a-score}
 

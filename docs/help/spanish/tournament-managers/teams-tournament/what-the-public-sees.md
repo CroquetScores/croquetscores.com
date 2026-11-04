@@ -12,7 +12,9 @@ La barra verde oscuro ofrece las secciones del torneo: **Recientes**, que es est
 
 ## El resumen
 
-Un torneo cuyos tests no están en ningún grupo tiene un **Resumen**: una sola tabla con todos los equipos, clasificados, con los tests que ha ganado, perdido y empatado, sus partidas ganadas y perdidas, y sus aros a favor, en contra y netos. Cuando los partidos de algún test son al mejor de más de una partida, los partidos ganados y perdidos van después de los tests. El resumen es donde un lector busca a cada equipo en su conjunto.
+Un torneo cuyos tests no están en ningún grupo tiene un **Resumen**: una sola tabla con todos los equipos, clasificados, con los tests que ha ganado, perdido y empatado, sus partidas ganadas y perdidas, y sus aros a favor, en contra y netos. Cuando los partidos de algún test son al mejor de más de una partida, los partidos ganados y perdidos van después de los tests. Los equipos se clasifican por los tests que han ganado, después por los partidos que han ganado, después por su diferencia de partidas y después por su diferencia de aros, y por último por el orden del torneo. Un test cuyos equipos están igualados en partidos lo decide la diferencia de partidas, después la de aros, o se da por empatado cuando el torneo marca **Los tests igualados se dan por empatados**. El resumen es donde un lector busca a cada equipo en su conjunto.
+
+En un **Escudo Interestatal** los equipos se clasifican por los tests ganados, después por los partidos netos en lugar de los partidos ganados, después por las partidas netas y después por los aros netos. Los equipos que siguen igualados se ordenan por los tests que ganaron entre sí. Su resumen muestra una columna **Neto** bajo Partidos y bajo Partidas además de bajo Aros, y el Escudo nunca se juega por grupos.
 
 Un torneo con un test en un grupo no tiene Resumen. En su lugar, la página de cada grupo muestra cómo van los equipos de ese grupo, porque una sola tabla de equipos de distintos grupos que nunca han jugado entre sí no clasificaría nada.
 
@@ -28,7 +30,7 @@ La página de un test la encabezan los nombres completos de sus equipos, como "A
 
 ![La página de un test](images/public-test.png)
 
-Un test se muestra de dos maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, que es esta tabla, y **Orden de juego**, que lista todas las partidas del test, la más antigua primero. Un test de un grupo ofrece el Resumen y los tests de su grupo en una fila sobre su encabezado, con este test marcado.
+Un test se muestra de dos maneras, ofrecidas en la línea de su nombre: **Cuadrícula**, que es esta tabla, y **Orden de juego**, que lista todas las partidas del test en una tabla con los encabezados **Partida** y **Fecha**, la más antigua primero al principio. Pulsar un encabezado ordena por él, y el sitio recuerda cómo ordenó el lector por última vez. Junto a las vistas, un botón de impresora, que se muestra donde hay scripts, imprime la página sin las barras. Un test de un grupo ofrece el Resumen y los tests de su grupo en una fila sobre su encabezado, con este test marcado.
 
 ## Jugadores
 
@@ -38,7 +40,7 @@ La página Jugadores lista a los jugadores equipo por equipo: cada equipo bajo u
 
 ## Notas
 
-La página Notas lista las notas del torneo, la escrita más recientemente primero, cada una llevando a su propia página y diciendo cuánto hace que se escribió. Una nota que el lector no ha leído se marca con un asterisco rojo hasta que la abre.
+La página Notas se titula **Notas de los gestores**, y dice «Todavía no hay notas.» mientras no hay ninguna. Lista las notas del torneo, la escrita más recientemente primero, cada una llevando a su propia página y diciendo cuánto hace que se escribió. Una nota que el lector no ha leído se marca con un asterisco rojo hasta que la abre.
 
 ## Direcciones que se mueven
 

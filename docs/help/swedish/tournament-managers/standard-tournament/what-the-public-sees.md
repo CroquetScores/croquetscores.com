@@ -4,7 +4,7 @@ Ingenting publiceras: de offentliga sidorna hämtas från det administrationen i
 
 ## Turneringens sida
 
-Turneringens sida finns på dess år, dess sport och dess namn, som `/2026/ac/spring-open`. Den har turneringens namn som rubrik, med dess underrubrik under. Den listar varje parti i bruk, det senast tillagda först, så att en läsare som kommer tillbaka ser vad som har hänt sedan dess. Varje parti säger vinnaren, vad den representerar, dess flagga och dess resultat, sedan förloraren och dennes, med den tävling det spelades i och hur länge sedan det lades till.
+Turneringens sida finns på dess år, dess sport och dess namn, som `/2026/ac/spring-open`. Den har turneringens namn som rubrik, med dess underrubrik under. Den listar varje parti i bruk, det senast tillagda först, så att en läsare som kommer tillbaka ser vad som har hänt sedan dess. Varje parti säger vinnaren, dennes handicap och vad den representerar, dess flagga och dess resultat, sedan förloraren och dennes, med den tävling det spelades i och hur länge sedan det lades till.
 
 ![Turneringens offentliga sida](images/public-tournament.png)
 
@@ -16,7 +16,9 @@ Ett blocks sida visar dess resultat som en tabell: en rad och en kolumn för var
 
 ![Ett blocks tabell](images/public-block-grid.png)
 
-Ett block visas på tre sätt, som erbjuds på raden med dess namn: **Rutnät**, **Sammanfattning** och **Speltabell**. Sammanfattningen är den för en telefon: spelarna rangordnade, med sina vinster, förluster, nettobågar och placering. Spelordningen listar varje parti äldst först. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
+Ett block, en utslagning och en schweizer visas var och en på tre sätt, som erbjuds på raden med tävlingens namn: **Rutnät**, **Sammanfattning** och **Speltabell**. Bredvid dem finns en skrivarknapp, som skriver ut turneringens namn, tävlingens namn och dess resultat, och inget annat. Sammanfattningen är den för en telefon: för ett block spelarna rangordnade, med sina vinster, förluster, nettobågar och placering; för en utslagning matcherna listade rond för rond; för en schweizer rutnätets tabell utan dess resultat. Speltabellen listar varje parti, äldst först till att börja med. Den har rubrikerna **Match** och **Datum**: ett tryck på **Match** sorterar partierna efter vinnarens namn och sedan förlorarens, ett tryck på **Datum** sorterar dem äldst eller nyast först, och ett tryck på rubriken en lista är sorterad efter vänder på den. Hur en läsare sorterade kommer ihåg på dennes enhet. En läsare som väljer en vy behåller den för varje tävling tills den väljer en annan.
+
+En tävling som spelas till ett annat antal bågar än det vanliga för sin sport säger det under sitt namn, som "Spelas till 14 bågar" (se [Tävlingar](competitions.md#adding-a-competition)).
 
 ![Ett blocks sammanfattning](images/public-block-summary.png)
 
@@ -34,13 +36,17 @@ En schweizers sida rangordnar dess spelare i en tabell: deras partier, deras vin
 
 ## Spelare
 
-Sidan Spelare listar varje spelare i turneringen som inte är arkiverad, i alfabetisk ordning, med vad de representerar och deras flagga.
+Sidan Spelare listar varje spelare i turneringen som inte är arkiverad, i alfabetisk ordning, med sitt handikapp och vad de representerar inom parentes, och sin flagga.
 
 ## Anteckningar
 
-Sidan Anteckningar listar turneringens anteckningar, den senast skrivna först, var och en ledande till sin egen sida och med uppgift om hur länge sedan den skrevs. En anteckning läsaren inte har läst markeras med en röd asterisk tills den öppnas.
+Sidan Anteckningar, med rubriken Arrangörernas anteckningar, listar turneringens anteckningar, den senast skrivna först, var och en ledande till sin egen sida och med uppgift om hur länge sedan den skrevs. En anteckning läsaren inte har läst markeras med en röd asterisk tills den öppnas. En turnering utan anteckningar säger "Inga anteckningar än."
 
 ![Turneringens offentliga sida Anteckningar](images/public-notes.png)
+
+## Var turneringen listas
+
+En turnering finns på startsidan medan den spelas eller snart ska börja. Dess års sida, som `/2026`, listar årets månader, och var och en listar, när den trycks på, de turneringar som startar i den. En kontroll under rubriken, **Visa alla** och sedan **Dölj alla**, öppnar eller stänger varje månad. En turnering som är förbockad som nationell eller internationell är fetstilt längs hela sin rad.
 
 ## Adresser som flyttar
 

@@ -33,11 +33,11 @@ La puerta de entrada de la administración lista los torneos en los que particip
 
 ![La lista de torneos en la administración](images/admin-list.png)
 
-Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en seis pestañas bajo su nombre: **Equipos**, **Tests**, **Notas**, **Gestores**, **Anotadores** y **Rankings**. La página se abre en Equipos, porque los equipos son lo primero que se prepara.
+Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en seis pestañas bajo su nombre: **Equipos**, **Tests**, **Notas**, **Gestores**, **Anotadores** y **Rankings**. La pestaña **Rankings** solo está cuando el torneo cuenta para los rankings mundiales. La página se abre en Equipos, porque los equipos son lo primero que se prepara.
 
 ![La página de un torneo, en su pestaña Tests](images/tournament-page.png)
 
-La barra verde oscuro bajo la cabecera sirve para moverse entre páginas. En la página del torneo y en la de un test lleva al torneo, como **Torneo**, y a cada test por su nombre. En la página de un equipo lleva en cambio al torneo y a cada equipo por su nombre corto, porque un gestor en la página de un equipo está inscribiendo jugadores equipo por equipo. La página en la que estás se marca en negro.
+La barra verde oscuro bajo la cabecera sirve para moverse entre páginas. En la página del torneo y en la de un test lleva al torneo, como **Torneo**, y a cada test por su nombre. En la página de un equipo lleva en cambio al torneo y a cada equipo por su nombre corto, porque un gestor en la página de un equipo está inscribiendo jugadores equipo por equipo. La página en la que estás se marca en negro. Cuando se añaden, cambian, mueven, archivan o restauran tests en la pestaña Tests, la barra los sigue al instante.
 
 ## Cosas que valen en todas partes
 
@@ -46,6 +46,8 @@ La barra verde oscuro bajo la cabecera sirve para moverse entre páginas. En la 
 **Un diálogo sobre la página no guarda nada hasta que pulsas su botón.** Cancelar, o la tecla Escape, lo cierra y deja todo como estaba. Los diálogos que añaden cosas, como Añadir equipo y Añadir resultado, siguen abiertos después de añadir cada una, de modo que una lista se puede teclear de una tirada.
 
 **Lo que se rechaza se dice junto al campo al que se refiere.** Nada rechazado se guarda, y lo que has escrito sigue escrito, para poder corregirlo en vez de escribirlo otra vez.
+
+**La ayuda está a un toque.** Un **?** redondo está en la barra de título de la página que crea o cambia un torneo, al final de la fila de pestañas, junto a **Nuevo torneo**, y en cada diálogo. Abre la parte de esta guía que trata de lo que estás viendo, en otra pestaña, para que lo que estabas haciendo se conserve.
 
 **La administración funciona en un teléfono.** Cada botón es lo bastante grande para pulsarlo con el pulgar, y nada es más ancho que la pantalla.
 

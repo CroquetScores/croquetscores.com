@@ -44,17 +44,21 @@ Gall cnoc-owt anfon y rhai sy'n colli rownd ymlaen i gnoc-owt eu hunain, cnoc-ow
 
 Mae gan gnoc-owt collwyr le i bob gêm yn y rownd honno, ac mae pob rownd ohono yn orau o 1, y gall **Golygu** ei newid. Rhoddir ei chwaraewyr i mewn wrth i gemau'r rownd honno gael eu penderfynu, yn nhrefn y tynnu, felly dim ond eu dangos y mae ei dab **Chwaraewyr**. Os caiff gêm ei chywiro neu ei rhoi o'r neilltu, caiff y collwr ei symud neu ei dynnu eto, oni bai ei fod eisoes wedi chwarae ymlaen.
 
-Ar gnoc-owt sydd eisoes wedi'i ychwanegu, mae **Golygu** yn dangos yr un botwm, a chaiff y cnoc-owt collwyr ei ychwanegu ar unwaith. Ni ellir archifo cnoc-owt y mae cnoc-owt arall sydd ar waith yn cymryd ei chollwyr, na newid ei lefydd: archifwch y cnoc-owt collwyr yn gyntaf.
+Mae gan dudalen cnoc-owt drydydd tab, **Collwyr**, ar ôl Chwaraewyr a Sgorau, sy'n rhestru'r cnoc-owts sy'n cymryd ei chollwyr, pob un yn arwain at ei dudalen. Mae **Ychwanegu Cnoc-owt Collwyr** yno hefyd, ac yn gofyn am yr un ddau beth; yma ychwanegir cnoc-owt collwyr ar unwaith. Dim ond cnoc-owt sydd â'r tab, ac ni chynigir ef i sgoriwr.
+
+Ar gnoc-owt sydd eisoes wedi'i ychwanegu, mae **Golygu** yn dangos yr un botwm, a chaiff y cnoc-owt collwyr ei ychwanegu ar unwaith, fel y gwneir o'r tab Collwyr. Ni ellir archifo cnoc-owt y mae cnoc-owt arall sydd ar waith yn cymryd ei chollwyr, na newid ei lefydd: archifwch y cnoc-owt collwyr yn gyntaf.
 
 ### Sut y caiff ei chwarae a'i chyfrif
 
-Mae pob math yn gofyn yr un tri pheth o dan ei siâp.
+Mae pob math yn gofyn yr un pedwar peth o dan ei siâp.
 
 **Chwarae gyda handicapiau.** Ticiwch hwn ar gyfer cystadleuaeth a chwaraeir gyda handicapiau.
 
 **Caniatáu canlyniadau cyfartal.** Ticiwch hwn lle gall gêm orffen heb i'r un o'r ddau chwaraewr fod yn enillydd. Nid yw'r mwyafrif o gystadlaethau'n ei ganiatáu. Lle mae wedi'i dicio, caiff sgôr a roddir i mewn â phwyntiau cyfartal a dim marc ei chadw fel gêm gyfartal; lle nad yw, rhaid i gêm ar bwyntiau cyfartal ddweud pwy a'i henillodd â marc ar ôl sgôr yr enillydd, fel "6w". Mae gan gêm cnoc-owt enillydd bob amser, felly nid yw gêm unigol gyfartal yn penderfynu un.
 
 **Yn cyfrif tuag at restr detholion y byd.** Gofynnir amdano dim ond lle gellir ei gyfrif: cystadleuaeth Association Croquet neu Golf Croquet na chaiff ei chwarae gyda handicapiau ac nad yw'n caniatáu canlyniadau cyfartal. Mae wedi'i dicio i ddechrau, felly dad-diciwch ef ar gyfer cystadleuaeth nad yw i gyfrif.
+
+**Uchafswm cylchau.** Y nifer mwyaf o gylchau y chwaraeir gêm yn y gystadleuaeth iddynt, cyfanrif o 1 o leiaf. Mae'n dechrau ar yr arferol ar gyfer y gamp, 26, neu 13 mewn Golf Croquet, felly newidiwch ef ar gyfer cystadleuaeth a chwaraeir yn fyrrach, fel bloc o gemau 14 cylch. Gwagiwch ef ar gyfer cystadleuaeth nad yw ei gemau'n cael eu chwarae i nifer o gylchau. Mae cystadleuaeth a chwaraeir i nifer heblaw'r arferol yn dweud hynny ar ei thudalen gyhoeddus, fel "Chwaraeir i 14 cylch".
 
 ### Ychwanegu sawl un ar y tro
 

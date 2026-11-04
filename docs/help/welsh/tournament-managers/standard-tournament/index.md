@@ -29,7 +29,7 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn. Ar ddiwedd rhes y tabiau, ac ym mar teitl deialog, mae **?** crwn sy'n agor y cymorth ar gyfer yr hyn rydych yn edrych arno, mewn tab arall fel y cedwir eich lle. Mae un wrth ymyl **Twrnamaint newydd** hefyd.
 
 ![Tudalen twrnamaint, ar ei thab Cystadlaethau](images/tournament-page.png)
 

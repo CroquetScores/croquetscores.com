@@ -44,17 +44,21 @@ En utslagning kan skicka dem som förlorar en omgång vidare till en egen utslag
 
 En förlorarutslagning har en plats för varje match i den omgången, och varje omgång i den är bäst av 1, vilket **Redigera** kan ändra. Dess spelare läggs in när matcherna i den omgången avgörs, i den ordning de lottades, så fliken **Spelare** visar dem bara. Om ett spel rättas eller läggs åt sidan flyttas eller tas förloraren bort igen, om inte hen redan har spelat vidare.
 
-På en utslagning som redan lagts till visar **Redigera** samma knapp, och förlorarutslagningen läggs till direkt. En utslagning vars förlorare tas av en annan som används kan inte arkiveras eller få sina platser ändrade: arkivera förlorarutslagningen först.
+En utslagnings sida har en tredje flik, **Förlorare**, efter Spelare och Resultat, som listar de utslagningar som tar dess förlorare, var och en med en länk till sin sida. **Lägg till förlorarutslagning** finns också där och frågar efter samma två saker; här läggs en förlorarutslagning till direkt. Bara en utslagning har fliken, och en poängräknare erbjuds den inte.
+
+På en utslagning som redan lagts till visar **Redigera** samma knapp, och förlorarutslagningen läggs till direkt, som från fliken Förlorare. En utslagning vars förlorare tas av en annan som används kan inte arkiveras eller få sina platser ändrade: arkivera förlorarutslagningen först.
 
 ### Hur den spelas och räknas
 
-Varje slag frågar efter samma tre saker under sin form.
+Varje slag frågar efter samma fyra saker under sin form.
 
 **Spelas med handikapp.** Bocka för det här för en tävling som spelas med handikapp.
 
 **Tillåter oavgjorda resultat.** Bocka för det här där ett parti kan sluta utan att någon av spelarna vinner. De flesta tävlingar tillåter det inte. Där det är förbockat sparas ett resultat med lika poäng och utan markering som oavgjort; där det inte är det måste ett parti med lika poäng säga vem som vann genom en markering efter vinnarens resultat, till exempel "6w". En matchs vinnare i en utslagning står alltid fast, så ett oavgjort parti avgör ingen.
 
 **Räknas med i världsrankingen.** Frågas bara där det kan räknas: en tävling i association croquet eller golfcroquet som varken spelas med handikapp eller tillåter oavgjorda resultat. Det är förbockat från början, så bocka av det för en tävling som inte ska räknas.
+
+**Högsta antal bågar.** Det största antal bågar som ett parti i tävlingen spelas till, ett heltal på minst 1. Det börjar på det vanliga för sporten, 26, eller 13 i golfcroquet, så ändra det för en tävling som spelas kortare, till exempel ett block med partier på 14 bågar. Töm det för en tävling vars partier inte spelas till ett antal bågar. En tävling som spelas till ett annat antal än det vanliga säger det på sin offentliga sida, som "Spelas till 14 bågar".
 
 ### Lägga till flera på en gång
 

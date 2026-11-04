@@ -29,7 +29,7 @@ Die voordeur van die administrasie lys die toernooie waarby jy betrokke is, een 
 
 ![Die lys toernooie in die administrasie](images/admin-list.png)
 
-Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in ses oortjies onder sy naam: **Spelers**, **Kompetisies**, **Notas**, **Bestuurders**, **Telers** en **Ranglyste**. Die bladsy maak op Spelers oop, want die spelers is die eerste ding wat ingeskryf word.
+Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in ses oortjies onder sy naam: **Spelers**, **Kompetisies**, **Notas**, **Bestuurders**, **Telers** en **Ranglyste**. Die bladsy maak op Spelers oop, want die spelers is die eerste ding wat ingeskryf word. Aan die einde van die ry oortjies, en in die titelbalk van 'n dialoog, is 'n ronde **?** wat die hulp oopmaak vir wat jy besig is om te sien, in 'n ander oortjie sodat jou plek behou word. Daar is ook een langs **Nuwe toernooi**.
 
 !['n Toernooi se bladsy, op sy Kompetisies-oortjie](images/tournament-page.png)
 

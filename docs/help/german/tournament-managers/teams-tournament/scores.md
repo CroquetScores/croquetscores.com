@@ -20,6 +20,8 @@ Punkte werden so eingegeben, wie der Erfasser sie aufgeschrieben hat: ihre Zahl 
 
 Ein Spiel, das bei gleichen Punkten gewonnen wurde, etwa weil es durch die Zeit beendet und anders entschieden wurde, sagt durch eine Markierung hinter den Punkten des Siegers, wer gewonnen hat: „6w“ schlug „6“. Die Markierungen sind „w“, „won“ und „winner“. Die Punkte des Siegers müssen höher sein als die des Verlierers oder markiert, es sei denn, das Turnier erlaubt Unentschieden; dann werden gleiche Punkte ohne Markierung als Unentschieden gespeichert.
 
+Können die Spieler nicht gelesen werden, sagt der Dialog das über den Feldern, mit „The players could not be read. Close this dialog and open it again.“, statt niemanden anzubieten. Tun Sie, was er sagt.
+
 Drücken Sie **Spiel hinzufügen**. Das Spiel wird hinzugefügt, der Dialog sagt welches, und die Felder werden für das nächste geleert, weil Ergebnisse am Ende einer Sitzung im Schwung von einer Tafel abgelesen werden. Drücken Sie **Abbrechen**, wenn alle drin sind.
 
 ## Begegnungen

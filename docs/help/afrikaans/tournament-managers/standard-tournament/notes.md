@@ -1,6 +1,6 @@
 # Notas
 
-Die **Notas**-oortjie van 'n toernooi se bladsy is waar sy bestuurders skryf wat die spelers moet weet terwyl die toernooi aan die gang is: die formaat, 'n verandering aan die speelvolgorde, die tyd van middagete. Lesers vind hulle op die toernooi se openbare Notas-bladsy, en 'n nota wat hulle nie gelees het nie, word daar met 'n rooi sterretjie gemerk, wat ook die Notas-afdeling op elke bladsy van die toernooi merk totdat hulle dit oopmaak.
+Die **Notas**-oortjie van 'n toernooi se bladsy is waar sy bestuurders skryf wat die spelers moet weet terwyl die toernooi aan die gang is: die formaat, 'n verandering aan die speelvolgorde, die tyd van middagete. Lesers vind hulle op die toernooi se openbare Notas-bladsy, met die opskrif Bestuurders se notas, en 'n nota wat hulle nie gelees het nie, word daar met 'n rooi sterretjie gemerk, wat ook die Notas-afdeling op elke bladsy van die toernooi merk totdat hulle dit oopmaak.
 
 ![Die Notas-oortjie, met twee notas](images/notes-tab.png)
 
@@ -14,7 +14,7 @@ Druk op **Voeg nota by**, bo die lys. 'n Paneel neem die plek van die lys in, wa
 
 **Beskrywing** word in Markdown geskryf en kan leeg gelaat word waar die titel alles sê wat daar te sê is. Die nutsbalk bo die boks skryf die Markdown vir jou: Opskrif, Vetgedruk, Skuinsgedruk, Aanhaling, Kode, Skakel, Genommerde lys, Lys met kolpunte en Taaklys. Elkeen werk op wat gekies is, of aan die begin van elke gekose reël, of plaas die wyser waar die woorde moet kom.
 
-**Voorskou** wys die nota soos 'n leser dit op sy bladsy sal sien.
+'n Leë reël tussen twee paragrawe skei hulle, en 'n leser sien 'n volle leë reël tussen hulle. **Voorskou** wys die nota soos 'n leser dit op sy bladsy sal sien.
 
 ![Die notapaneel, op sy Voorskou-oortjie](images/note-preview.png)
 

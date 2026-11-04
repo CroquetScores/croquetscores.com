@@ -16,7 +16,7 @@ Die Website verwendet keine Werbung und kein Tracking und gibt nichts über Sie 
 
 ## Cookies
 
-Die Website setzt ein Cookie, das Sie angemeldet hält, eines für das Thema, das Sie gewählt haben, eines für die Sprache, die Sie gewählt haben, und eines dafür, was Sie zu den Hinweisen auf Neues gesagt haben. Sie sind nötig, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Beim Registrieren wird Google reCAPTCHA verwendet, um Menschen von Programmen zu unterscheiden; Google betreibt es nach eigenen Bedingungen.
+Die Website setzt ein Cookie, das Sie angemeldet hält, und weitere, die sich merken, was Sie gewählt haben: die Darstellung, die Sprache, wie Sie Listen sortiert haben, das Land, die Region und die Sportart, nach denen Sie gefiltert haben, die Ansicht eines Wettbewerbs, welche Notizen und Kommentare Sie gelesen haben und was Sie zu den Hinweisen auf Neues gesagt haben. Solange Sie sich mit Google anmelden, behält sie noch eines, bis Sie zurück sind. Sie sind nötig, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Beim Registrieren wird Google reCAPTCHA verwendet, um Menschen von Programmen zu unterscheiden; Google betreibt es nach eigenen Bedingungen.
 
 ## Wer es sehen kann
 

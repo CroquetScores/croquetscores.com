@@ -12,7 +12,9 @@ Mae'r bar gwyrdd tywyll yn cynnig adrannau'r twrnamaint: **Diweddar**, sef y dud
 
 ## Y crynodeb
 
-Mae gan dwrnamaint nad yw ei brofion mewn unrhyw grŵp **Crynodeb**: un tabl o bob tîm, yn ôl eu safle, â'r profion y mae wedi'u hennill, eu colli a'u cael yn gyfartal, ei gemau unigol a enillwyd ac a gollwyd, a'i gylchau dros, yn erbyn a net. Lle mae gemau unrhyw brawf yr orau o fwy nag un gêm unigol, daw'r gemau a enillwyd ac a gollwyd ar ôl y profion. Y crynodeb yw lle mae darllenydd yn chwilio am bob tîm yn ei gyfanrwydd.
+Mae gan dwrnamaint nad yw ei brofion mewn unrhyw grŵp **Crynodeb**: un tabl o bob tîm, yn ôl eu safle, â'r profion y mae wedi'u hennill, eu colli a'u cael yn gyfartal, ei gemau unigol a enillwyd ac a gollwyd, a'i gylchau dros, yn erbyn a net. Lle mae gemau unrhyw brawf yr orau o fwy nag un gêm unigol, daw'r gemau a enillwyd ac a gollwyd ar ôl y profion. Trefnir y timau yn ôl y profion y maent wedi'u hennill, yna'r gemau y maent wedi'u hennill, yna eu gemau unigol net, yna eu cylchau net, ac yna yn ôl trefn y twrnamaint. Penderfynir prawf y mae ei dimau'n gyfartal ar gemau gan y gemau unigol net, yna'r cylchau net, neu mae'n gyfartal lle mae'r twrnamaint yn ticio **Cyfrif profion cyfartal yn gyfartal**. Y crynodeb yw lle mae darllenydd yn chwilio am bob tîm yn ei gyfanrwydd.
+
+Mewn **Tarian y Taleithiau** trefnir y timau yn ôl y profion a enillwyd, yna'r gemau net yn lle'r gemau a enillwyd, yna'r gemau unigol net, yna'r cylchau net. Rhoddir timau sy'n dal yn gyfartal mewn trefn yn ôl y profion a enillwyd ganddynt yn erbyn ei gilydd. Mae ei grynodeb yn dangos colofn **Net** o dan Gemau ac o dan Gemau unigol yn ogystal ag o dan Gylchau, ac ni chwaraeir y Darian byth mewn grwpiau.
 
 Nid oes gan dwrnamaint â phrawf mewn grŵp Grynodeb. Mae tudalen pob grŵp yn dangos safle timau'r grŵp hwnnw yn lle hynny, gan na fyddai un tabl o dimau ar draws grwpiau nad ydynt erioed wedi chwarae yn erbyn ei gilydd yn rhoi safle i ddim.
 
@@ -28,7 +30,7 @@ Enwau llawn ei dimau sydd ar ben tudalen prawf, fel "Australia v New Zealand", a
 
 ![Tudalen prawf](images/public-test.png)
 
-Dangosir prawf mewn dwy ffordd, a gynigir ar linell ei enw: **Grid**, sef y tabl hwn, a **Trefn chwarae**, sy'n rhestru pob gêm unigol o'r prawf, yr hynaf yn gyntaf. Mae prawf mewn grŵp yn cynnig Crynodeb a phrofion ei grŵp mewn rhes uwchben ei bennawd, â'r prawf hwn wedi'i farcio.
+Dangosir prawf mewn dwy ffordd, a gynigir ar linell ei enw: **Grid**, sef y tabl hwn, a **Trefn chwarae**, sy'n rhestru pob gêm unigol o'r prawf mewn tabl â'r penawdau **Gêm** a **Dyddiad**, yr hynaf yn gyntaf i ddechrau. Mae pwyso pennawd yn trefnu yn ei ôl, ac mae'r safle yn cofio sut y trefnodd y darllenydd ddiwethaf. Wrth ochr y golygfeydd mae botwm argraffydd, a ddangosir lle mae sgriptio ymlaen, sy'n argraffu'r dudalen heb y bariau. Mae prawf mewn grŵp yn cynnig Crynodeb a phrofion ei grŵp mewn rhes uwchben ei bennawd, â'r prawf hwn wedi'i farcio.
 
 ## Chwaraewyr
 
@@ -38,7 +40,7 @@ Mae'r dudalen Chwaraewyr yn rhestru'r chwaraewyr dîm wrth dîm: pob tîm o dan 
 
 ## Nodiadau
 
-Mae'r dudalen Nodiadau yn rhestru nodiadau'r twrnamaint, yr un a ysgrifennwyd ddiweddaraf yn gyntaf, pob un yn arwain at ei dudalen ei hun ac yn dweud pa mor bell yn ôl y'i hysgrifennwyd. Caiff nodyn nad yw'r darllenydd wedi'i ddarllen ei farcio â seren goch nes iddo ei agor.
+Mae'r dudalen Nodiadau â'r pennawd **Nodiadau'r Rheolwyr**, ac yn dweud "Dim nodiadau eto." tra nad oes yr un. Mae'n rhestru nodiadau'r twrnamaint, yr un a ysgrifennwyd ddiweddaraf yn gyntaf, pob un yn arwain at ei dudalen ei hun ac yn dweud pa mor bell yn ôl y'i hysgrifennwyd. Caiff nodyn nad yw'r darllenydd wedi'i ddarllen ei farcio â seren goch nes iddo ei agor.
 
 ## Cyfeiriadau sy'n symud
 

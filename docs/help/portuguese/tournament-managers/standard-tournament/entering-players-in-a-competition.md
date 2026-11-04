@@ -1,6 +1,6 @@
 # Inscrever jogadores em uma competição
 
-A página de uma competição é aberta pelo seu nome na aba Competições, ou pela barra verde-escura. Tem como cabeçalho o nome da competição, com duas abas abaixo: **Jogadores** e **Resultados**. Abre em Jogadores, porque os jogadores são inscritos antes que algo seja disputado.
+A página de uma competição é aberta pelo seu nome na aba Competições, ou pela barra verde-escura. Tem como cabeçalho o nome da competição, com duas abas abaixo: **Jogadores** e **Resultados**. Um mata-mata tem uma terceira, **Perdedores**, descrita em [Um mata-mata dos perdedores](competitions.md#losers-knockout). Abre em Jogadores, porque os jogadores são inscritos antes que algo seja disputado.
 
 Um jogador de uma competição é um dos jogadores do torneio, então os jogadores são inscritos escolhendo-os, e não digitando-os. Tudo sobre eles, exceto a sua posição na competição e o que transferem para ela, é alterado na aba Jogadores do torneio.
 
@@ -23,6 +23,10 @@ Um bye é colocado na chave como um jogador: pode ser subido, descido e removido
 A ordem dos jogadores de um mata-mata é a sua chave. As duas primeiras vagas se enfrentam na primeira partida, as duas seguintes na seguinte, e assim por diante. Coloque os jogadores na ordem em que a chave será disputada antes que algum resultado seja inserido, porque depois que o mata-mata tem um jogo em uso os seus jogadores ficam fixos: ninguém pode ser adicionado, removido ou movido. Um jogador ainda pode ser retirado.
 
 ![Um mata-mata depois que um jogo foi inserido: ninguém pode ser adicionado, movido ou removido](images/knockout-players-fixed.png)
+
+## Os jogadores de um mata-mata dos perdedores
+
+Os jogadores de um mata-mata dos perdedores não são inscritos à mão. Eles entram à medida que as partidas cujos perdedores ele recebe são decididas, então a sua aba **Jogadores** apenas os lista, e diz por quê.
 
 ## Ordem
 

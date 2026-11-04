@@ -14,6 +14,8 @@ Pulsa **Añadir nota**, encima de la lista. Un panel ocupa el lugar de la lista,
 
 **Descripción** se escribe en Markdown y puede dejarse vacía cuando el título dice todo lo que hay que decir. La barra de herramientas sobre el cuadro escribe el Markdown por ti: Encabezado, Negrita, Cursiva, Cita, Código, Enlace, Lista numerada, Lista con viñetas y Lista de tareas. Cada una actúa sobre lo seleccionado, o al principio de cada línea seleccionada, o pone el cursor donde van las palabras.
 
+Un párrafo se separa del anterior con una línea en blanco completa, para que la nota se lea como párrafos.
+
 **Vista previa** muestra la nota tal como la verá un lector en su página.
 
 ![El panel de la nota, en su pestaña Vista previa](images/note-preview.png)

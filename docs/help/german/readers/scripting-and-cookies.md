@@ -2,13 +2,13 @@
 
 ## Zum Lesen braucht es beides nicht
 
-Die Seiten, die ein Turnier, seine Ergebnisse, seine Spieler und seine Ranglisten zeigen, funktionieren bei ausgeschalteten Skripten. Ebenso die Wahl der Darstellung und der Sprache.
+Die Seiten, die ein Turnier, seine Ergebnisse, seine Spieler und seine Ranglisten zeigen, funktionieren bei ausgeschalteten Skripten. Ebenso die Wahl der Darstellung und der Sprache, das Sortieren und Filtern von Listen und die Suche. Das Öffnen eines Monats im Jahr und das Drucken eines Wettbewerbs brauchen sie.
 
 ## Cookies
 
-Die Website setzt ein Cookie, das Sie angemeldet hält, eines für die Darstellung, die Sie gewählt haben, eines für die Sprache, die Sie gewählt haben, und eines dafür, was Sie zu den Hinweisen auf Neues gesagt haben. Sie sind da, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Wenn Sie sich nie anmelden und nichts wählen, gibt es kaum etwas, das sie festhalten. [Die Datenschutzseite](../privacy.md) sagt alles, was die Website speichert.
+Die Website setzt ein Cookie, das Sie angemeldet hält, und weitere, die sich merken, was Sie gewählt haben: die Darstellung, die Sprache, wie Sie Listen sortiert haben, das Land, die Region und die Sportart, nach denen Sie gefiltert haben, die Ansicht eines Wettbewerbs, welche Notizen und Kommentare Sie gelesen haben und was Sie zu den Hinweisen auf Neues gesagt haben. Solange Sie sich mit Google anmelden, behält sie noch eines, bis Sie zurück sind. Sie sind da, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Wenn Sie sich nie anmelden und nichts wählen, gibt es kaum etwas, das sie festhalten. [Die Datenschutzseite](../privacy.md) sagt alles, was die Website speichert.
 
-Ein Browser, der Cookies ablehnt, kann trotzdem ein Turnier lesen. Er vergisst bei jedem Besuch Ihre Einstellungen, und er kann nicht angemeldet bleiben.
+Ein Browser, der Cookies ablehnt, kann trotzdem ein Turnier lesen. Er vergisst bei jedem Besuch Ihre Einstellungen und welche Notizen Sie gelesen haben, und er kann nicht angemeldet bleiben.
 
 ## Das Registrieren braucht Skripte
 

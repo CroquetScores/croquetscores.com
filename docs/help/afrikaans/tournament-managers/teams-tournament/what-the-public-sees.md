@@ -12,7 +12,9 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 ## Die opsomming
 
-'n Toernooi waarvan die toetse in geen groep is nie, het 'n **Opsomming**: een tabel van elke span, gerangskik, met die toetse wat dit gewen, verloor en gelykop gespeel het, sy spelle gewen en verloor, en sy hoepels vir, teen en netto. Waar enige toets se wedstryde die beste van meer as een is, kom die wedstryde gewen en verloor ná die toetse. Die opsomming is waar 'n leser elke span as 'n geheel soek.
+'n Toernooi waarvan die toetse in geen groep is nie, het 'n **Opsomming**: een tabel van elke span, gerangskik, met die toetse wat dit gewen, verloor en gelykop gespeel het, sy spelle gewen en verloor, en sy hoepels vir, teen en netto. Waar enige toets se wedstryde die beste van meer as een is, kom die wedstryde gewen en verloor ná die toetse. Die spanne word gerangskik volgens die toetse wat hulle gewen het, dan die wedstryde wat hulle gewen het, dan hul netto spelle, dan hul netto hoepels, en dan volgens die toernooi se volgorde. 'n Toets waarvan die spanne gelyk is in wedstryde, word beslis deur netto spelle, dan netto hoepels, of is gelykop waar die toernooi **Gelyke toetse is gelykop** merk. Die opsomming is waar 'n leser elke span as 'n geheel soek.
+
+In 'n **Interstate Shield** word die spanne gerangskik volgens die toetse gewen, dan netto wedstryde in plaas van wedstryde gewen, dan netto spelle, dan netto hoepels. Spanne wat steeds gelyk is, word in orde gesit volgens die toetse wat hulle teen mekaar gewen het. Sy opsomming wys 'n **Netto**-kolom onder Wedstryde en onder Spelle sowel as onder Hoepels, en die Skild word nooit in groepe gespeel nie.
 
 'n Toernooi met 'n toets in 'n groep het geen Opsomming nie. Elke groep se bladsy wys eerder hoe die spanne van daardie groep staan, want een tabel van spanne oor groepe heen wat nooit teen mekaar gespeel het nie, sou niks rangskik nie.
 
@@ -28,7 +30,7 @@ Die donkergroen balk bied die toernooi se afdelings aan: **Onlangs**, wat hierdi
 
 !['n Toets se bladsy](images/public-test.png)
 
-'n Toets word op twee maniere gewys, aangebied op die reël van sy naam: **Rooster**, wat hierdie tabel is, en **Speelvolgorde**, wat elke spel van die toets lys, oudste eerste. 'n Toets in 'n groep bied sy groep se Opsomming en toetse in 'n ry bo sy opskrif aan, met hierdie toets gemerk.
+'n Toets word op twee maniere gewys, aangebied op die reël van sy naam: **Rooster**, wat hierdie tabel is, en **Speelvolgorde**, wat elke spel van die toets lys in 'n tabel met die opskrifte **Wedstryd** en **Datum**, om mee te begin oudste eerste. Om op 'n opskrif te druk sorteer daarvolgens, en die werf onthou hoe die leser laas gesorteer het. Langs die aansigte druk 'n drukkerknoppie, gewys waar skrip aan is, die bladsy sonder die balke. 'n Toets in 'n groep bied sy groep se Opsomming en toetse in 'n ry bo sy opskrif aan, met hierdie toets gemerk.
 
 ## Spelers
 
@@ -38,7 +40,7 @@ Die Spelers-bladsy lys die spelers span vir span: elke span onder 'n opskrif met
 
 ## Notas
 
-Die Notas-bladsy lys die toernooi se notas, die mees onlangs geskrewe eerste, elkeen lei na sy eie bladsy en sê hoe lank gelede dit geskryf is. 'n Nota wat die leser nie gelees het nie, word met 'n rooi sterretjie gemerk totdat hulle dit oopmaak.
+Die Notas-bladsy het die opskrif **Bestuurders se notas**, en sê "Nog geen notas nie." solank daar geen is nie. Dit lys die toernooi se notas, die mees onlangs geskrewe eerste, elkeen lei na sy eie bladsy en sê hoe lank gelede dit geskryf is. 'n Nota wat die leser nie gelees het nie, word met 'n rooi sterretjie gemerk totdat hulle dit oopmaak.
 
 ## Adresse wat skuif
 

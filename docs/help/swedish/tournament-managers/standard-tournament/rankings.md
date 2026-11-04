@@ -4,7 +4,7 @@ När en tävling räknas med i världsrankingen skickas dess resultat till ranki
 
 ## Fliken
 
-Öppna turneringens sida och välj **Rankingar**, den sista av dess flikar. Den säger vad filen är: en textfil för association croquet, ett kalkylblad för golfcroquet och amerikansk 6-bågars croquet. Den säger vad som återstår för dig att göra för hand, och att filen sedan ska skickas till världsrankingens funktionärer. Under det finns **Ladda ner partier för världsranking**, som sparar filen. Den finns där innan ett enda resultat har skrivits in, och ger då en fil utan något i.
+Öppna turneringens sida och välj **Rankingar**, den sista av dess flikar. Den säger, med samma ord oavsett sport, att världsrankingen använder turneringens resultat via filen, så att arrangörerna inte behöver göra något. Under det finns **Ladda ner partier för världsranking**, en länk till filen, som sparar den. Filen är en textfil för association croquet och ett kalkylblad för golfcroquet och amerikansk 6-bågars croquet. Den finns där innan ett enda resultat har skrivits in, och ger då en fil utan något i. Världsrankingens funktionärer för sporten erbjuds också fliken, för att hämta partierna från filen.
 
 Fliken finns bara på sidan för en turnering i en sport som har en världsranking, och bara för dess arrangörer: en resultatförare erbjuds den inte. Själva filen ligger på turneringens egen adress följd av `/rankings`, som `/2026/ac/spring-open/rankings`, vilket är den adress webbplatsen alltid har gett den, och vem som helst som har adressen kan öppna den.
 
@@ -14,9 +14,9 @@ Varje resultat som har skrivits in och inte arkiverats finns med, i den ordning 
 
 En spelare anges med sitt namn i världsrankingen, som är spelarens namn om inget annat har getts.
 
-För **Association croquet** finns ett avsnitt för varje tävling som har ett resultat: dess evenemang, dess datum, dess vinnare, om det var matcher eller enstaka partier, och en numrerad rad för varje resultat, som "1 Sam Someone beat Alex Another +9". Ett resultat är vinnarens bågar minus förlorarens, med plus när vinnaren gjorde fler, och peelarna efter. En utslagsmatch är en rad, med varje partis resultat i tur och ordning. Webbplatsen kan bara gissa vem som vann en tävling, så kontrollera raden **Winner** i varje avsnitt (den står på engelska i filen) och rätta den innan du skickar filen vidare.
+För **Association croquet** finns ett avsnitt för varje tävling som har ett resultat: dess evenemang, dess datum, dess vinnare, om det var matcher eller enstaka partier, och en numrerad rad för varje resultat, som "1 Sam Someone beat Alex Another +9". Ett resultat är vinnarens bågar minus förlorarens, med plus när vinnaren gjorde fler, och peelarna efter. En utslagsmatch är en rad, med varje partis resultat i tur och ordning. Webbplatsen anger vinnaren så gott den kan: vinnaren av en utslagnings sista match, den spelare ett block placerar först (se dess särskiljning), och i en tävling med enstaka partier den som har vunnit flest. Där spelare inte kan skiljas åt på förstaplatsen lämnar den raden **Winner** (den står på engelska i filen) tom, och världsrankingens funktionärer avgör det.
 
-För **Golfcroquet och Amerikansk 6-bågars croquet** finns ett kalkylblad: turneringens namn, dess dagar och hur många partier den rymmer, sedan en numrerad rad för varje parti, med vinnarens efternamn och förnamn, "beat", förlorarens och de två resultaten. Varje parti i en utslagsmatch är en egen rad. Under den sista är raden **Tournament winner:** (också på engelska i filen) tom, för dig att fylla i.
+För **Golfcroquet och Amerikansk 6-bågars croquet** finns ett kalkylblad: turneringens namn, dess dagar och hur många partier den rymmer, sedan en numrerad rad för varje parti, med vinnarens efternamn och förnamn, "beat", förlorarens och de två resultaten. Varje parti i en utslagsmatch är en egen rad. Under den sista är raden **Tournament winner:** (också på engelska i filen) tom, för den som använder filen att fylla i.
 
 ## När det inte finns någon fil
 

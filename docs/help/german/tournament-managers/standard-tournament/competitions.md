@@ -44,17 +44,21 @@ Ein K.-o.-Turnier kann die Verlierer einer Runde in ein eigenes K.-o.-Turnier we
 
 Ein K.-o.-Turnier der Verlierer hat einen Platz für jedes Spiel dieser Runde, und jede seiner Runden ist ein Best-of-1, was sich mit **Bearbeiten** ändern lässt. Seine Spieler werden eingetragen, sobald die Spiele dieser Runde entschieden sind, in der Reihenfolge der Auslosung, daher zeigt sein Reiter **Spieler** sie nur an. Wird eine Partie korrigiert oder beiseitegelegt, wird der Verlierer verschoben oder wieder herausgenommen, außer er hat schon weitergespielt.
 
-Bei einem bereits hinzugefügten K.-o.-Turnier zeigt **Bearbeiten** dieselbe Schaltfläche, und das K.-o.-Turnier der Verlierer wird sofort hinzugefügt. Ein K.-o.-Turnier, dessen Verlierer ein anderes in Verwendung übernimmt, lässt sich weder archivieren noch in seinen Plätzen ändern: Archivieren Sie zuerst das K.-o.-Turnier der Verlierer.
+Die Seite eines K.-o.-Turniers hat einen dritten Reiter, **Verlierer**, nach Spieler und Ergebnisse, der die K.-o.-Turniere aufführt, die seine Verlierer übernehmen, und jedes führt zu seiner Seite. **K.-o.-Turnier der Verlierer hinzufügen** gibt es dort auch, und es fragt nach denselben zwei Dingen; hier wird ein K.-o.-Turnier der Verlierer sofort hinzugefügt. Nur ein K.-o.-Turnier hat den Reiter, und ein Ergebniserfasser bekommt ihn nicht angeboten.
+
+Bei einem bereits hinzugefügten K.-o.-Turnier zeigt **Bearbeiten** dieselbe Schaltfläche, und das K.-o.-Turnier der Verlierer wird sofort hinzugefügt, wie vom Reiter Verlierer aus. Ein K.-o.-Turnier, dessen Verlierer ein anderes in Verwendung übernimmt, lässt sich weder archivieren noch in seinen Plätzen ändern: Archivieren Sie zuerst das K.-o.-Turnier der Verlierer.
 
 ### Wie gespielt und gezählt wird
 
-Jede Art fragt unter ihrer Gestalt dasselbe dreifach.
+Jede Art fragt unter ihrer Gestalt dasselbe vierfach.
 
 **Mit Vorgaben gespielt.** Haken Sie das für einen Wettbewerb an, der mit Vorgaben gespielt wird.
 
 **Lässt Unentschieden zu.** Haken Sie das an, wenn ein Spiel enden kann, ohne dass einer der Spieler gewinnt. Die meisten Wettbewerbe erlauben das nicht. Ist es angehakt, wird ein Ergebnis mit gleichen Punkten und ohne Markierung als Unentschieden gespeichert; ist es nicht angehakt, muss ein Spiel mit gleichen Punkten durch eine Markierung hinter den Punkten des Siegers sagen, wer gewonnen hat, etwa „6w“. Das Match einer K.-o.-Runde hat immer einen Sieger, ein unentschiedenes Spiel entscheidet es also nicht.
 
 **Zählt für die Weltranglisten.** Wird nur gefragt, wo es zählen kann: bei einem Wettbewerb im Association Croquet oder Golf Croquet, der weder mit Vorgaben gespielt wird noch Unentschieden zulässt. Es ist zu Beginn angehakt, nehmen Sie den Haken also weg bei einem Wettbewerb, der nicht zählen soll.
+
+**Höchstzahl der Tore.** Die meisten Tore, bis zu denen ein Spiel im Wettbewerb gespielt wird, eine ganze Zahl von mindestens 1. Sie beginnt bei dem, was für die Sportart üblich ist, 26, oder 13 im Golf Croquet, ändern Sie sie also für einen Wettbewerb, der kürzer gespielt wird, etwa eine Gruppe mit Spielen bis 14 Tore. Leeren Sie sie bei einem Wettbewerb, dessen Spiele nicht bis zu einer Zahl von Toren gespielt werden. Ein Wettbewerb, der bis zu einer anderen als der üblichen Zahl gespielt wird, sagt das auf seiner öffentlichen Seite, als „Gespielt bis 14 Tore“.
 
 ### Mehrere auf einmal hinzufügen
 

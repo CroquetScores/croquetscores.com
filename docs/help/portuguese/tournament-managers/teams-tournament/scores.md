@@ -20,6 +20,8 @@ Um resultado é digitado como o anotador o anotou: o seu número de pontos e o q
 
 Um jogo ganho com pontos iguais, como quando é interrompido pelo tempo e decidido de outra forma, diz quem o ganhou com uma marca depois do resultado do vencedor: "6w" venceu "6". As marcas são "w", "won" e "winner". O resultado do vencedor precisa ser maior que o do perdedor, ou marcado, a menos que o torneio permita resultados empatados, caso em que pontos iguais sem marca são guardados como empate.
 
+Se não for possível ler os jogadores, o diálogo diz isso acima dos campos, com "Não foi possível ler os jogadores. Feche esta janela e abra-a de novo.", em vez de não oferecer ninguém. Faça o que ele diz.
+
 Pressione **Adicionar jogo**. O jogo é adicionado, o diálogo diz qual, e os campos são esvaziados para o próximo, porque os resultados chegam em lote, lidos de um quadro no fim de uma sessão. Pressione **Cancelar** quando todos estiverem inseridos.
 
 ## Partidas

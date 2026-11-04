@@ -22,6 +22,8 @@ Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs
 
 Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, och fälten töms för nästa, eftersom resultaten kommer i en bunt läst från en tavla i slutet av ett spelpass. Tryck på **Avbryt** när alla är inlagda.
 
+Om spelarna inte kan läsas säger dialogrutan det ovanför fälten, med "Spelarna kunde inte läsas in. Stäng den här dialogrutan och öppna den igen.", i stället för att erbjuda ingen. Gör som den säger.
+
 ## Matcher
 
 Två spelare som möts spelar en match på landskampens bäst av. Partierna mellan dem är den matchens partier, och ett parti mellan två spelare vars match redan är avgjord godtas inte: en av dem har vunnit fler partier än den andra fortfarande kan vinna, eller varje parti i den har spelats.

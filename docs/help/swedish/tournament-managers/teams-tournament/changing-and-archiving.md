@@ -6,7 +6,7 @@ I listan över turneringar i administrationen, tryck på **Redigera** på turner
 
 ![Formuläret Redigera turnering](images/edit-tournament.png)
 
-Turneringens dagar kan vidgas här där en landskamp behöver en dag utanför dem, eftersom en landskamp spelas inom sin turnering. Ett format som spelas av lag kan bytas mot ett annat, eftersom turneringen innehåller samma saker i vart och ett. När turneringen innehåller något lag eller någon landskamp, arkiverade inräknade, kan den inte ändras till formatet Standard, som har spelare och tävlingar i stället.
+Turneringens dagar kan vidgas här där en landskamp behöver en dag utanför dem, eftersom en landskamp spelas inom sin turnering. När turneringen innehåller något lag eller någon landskamp, arkiverade inräknade, kan dess **Format** inte ändras alls: inte till formatet Standard, som har spelare och tävlingar i stället, och inte till ett annat format som spelas av lag, eftersom en landskamp kan ligga i en grupp som det andra formatet saknar. Välj formatet när turneringen skapas.
 
 En turnering behåller sin adress när namnet rättas, så att en länk någon redan har skickat fortfarande hittar den. Den flyttar bara när det år den startar eller dess sport ändras, och då leder dess gamla adress till den nya. När du sparar förs du till turneringen där den nu finns.
 
@@ -14,7 +14,7 @@ Bara en arrangör kan ändra en turnering. En resultatförare, eller vem som hel
 
 ## Listan över turneringar
 
-Administrationen listar ett år i taget, med början på det här året, nyaste turnering först. De år du har en turnering i är flikar i det mörkgröna fältet, nyast först; där det finns fler än vad som ryms på en telefon ligger de äldsta i en rullgardinslista i slutet av raden. Året finns i adressen, så det går att länka till ett år.
+Administrationen listar ett år i taget, med början på det här året, nyaste turnering först. De år du har en turnering i är flikar i det mörkgröna fältet, nyast först; där det finns fler än vad som ryms på en telefon ligger de äldsta i en rullgardinslista i slutet av raden. Året finns i adressen, så det går att länka till ett år. Under knapparna kan listan begränsas efter **Land**, **Region** och **Sport**, och efter de dagar den har turneringar i, **Från** och **Till**. Ett runt **?** bredvid **Ny turnering** leder till hjälpen.
 
 ![Listan över turneringar](images/admin-list.png)
 

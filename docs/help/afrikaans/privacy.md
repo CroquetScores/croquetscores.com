@@ -16,7 +16,7 @@ Die webwerf gebruik nie advertensies of naspeuring nie en deel niks oor jou met 
 
 ## Koekies
 
-Die webwerf stel 'n koekie om jou aangemeld te hou, een vir die tema wat jy gekies het, een vir die taal wat jy gekies het, en een vir wat jy gesê het oor kennisgewings van wat nuut is. Hulle is nodig sodat die webwerf kan doen wat jy gevra het en word nie gebruik om jou te volg nie. Registrasie gebruik Google reCAPTCHA om mense van programme te onderskei, wat Google onder sy eie bepalings bedryf.
+Die webwerf stel 'n koekie om jou aangemeld te hou, en ander om te onthou wat jy gekies het: die tema, die taal, hoe jy lyste gesorteer het, die land, streek en sport waarop jy gefiltreer het, die aansig van 'n kompetisie, watter notas en kommentaar jy gelees het, en wat jy gesê het oor kennisgewings van wat nuut is. Terwyl jy met Google aanmeld, hou dit nog een totdat jy terug is. Hulle is nodig sodat die webwerf kan doen wat jy gevra het en word nie gebruik om jou te volg nie. Registrasie gebruik Google reCAPTCHA om mense van programme te onderskei, wat Google onder sy eie bepalings bedryf.
 
 ## Wie dit kan sien
 

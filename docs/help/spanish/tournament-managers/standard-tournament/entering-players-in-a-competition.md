@@ -1,6 +1,6 @@
 # Inscribir jugadores en una competición
 
-La página de una competición se abre desde su nombre en la pestaña Competiciones, o desde la barra verde oscuro. La encabeza el nombre de la competición, con dos pestañas debajo: **Jugadores** y **Resultados**. Se abre en Jugadores, porque los jugadores se inscriben antes de que se juegue nada.
+La página de una competición se abre desde su nombre en la pestaña Competiciones, o desde la barra verde oscuro. La encabeza el nombre de la competición, con dos pestañas debajo: **Jugadores** y **Resultados**. Una eliminatoria tiene una tercera, **Perdedores**, que se describe en [Una eliminatoria de perdedores](competitions.md#losers-knockout). Se abre en Jugadores, porque los jugadores se inscriben antes de que se juegue nada.
 
 Un jugador de una competición es uno de los jugadores del torneo, así que se inscribe eligiéndolo en vez de escribiéndolo. Todo lo suyo salvo su puesto en la competición, y lo que traslada a ella, se cambia en la pestaña Jugadores del torneo.
 
@@ -23,6 +23,10 @@ Un bye se coloca en el cuadro como un jugador: se puede subir, bajar y quitar, p
 El orden de los jugadores de una eliminatoria es su cuadro. Las dos primeras plazas se enfrentan en el primer partido, las dos siguientes en el siguiente, y así sucesivamente. Pon a los jugadores en el orden en que se va a jugar el cuadro antes de introducir ningún resultado, porque en cuanto la eliminatoria tiene una partida en uso sus jugadores quedan fijos: nadie puede añadirse, quitarse ni moverse. Un jugador sí puede retirarse.
 
 ![Una eliminatoria una vez introducida una partida: nadie puede añadirse, moverse ni quitarse](images/knockout-players-fixed.png)
+
+## Los jugadores de una eliminatoria de perdedores
+
+Los jugadores de una eliminatoria de perdedores no se inscriben a mano. Se colocan a medida que se deciden los partidos cuyos perdedores toma, así que su pestaña **Jugadores** solo los lista, y dice por qué.
 
 ## Orden
 

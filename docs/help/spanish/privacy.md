@@ -16,7 +16,7 @@ El sitio no usa publicidad ni seguimiento, y no comparte nada sobre ti con anunc
 
 ## Cookies
 
-El sitio pone una cookie para mantenerte con la sesión iniciada, una para el tema que elegiste, una para el idioma que elegiste y una para lo que has dicho sobre los avisos de novedades. Son necesarias para que el sitio haga lo que pediste y no se usan para seguirte. El registro usa Google reCAPTCHA para distinguir a las personas de los programas, que Google gestiona bajo sus propias condiciones.
+El sitio pone una cookie para mantenerte con la sesión iniciada y otras para recordar lo que elegiste: el tema, el idioma, cómo ordenaste las listas, el país, la región y el deporte por los que filtraste, la vista de una competición, qué notas y crónicas has leído, y lo que has dicho sobre los avisos de novedades. Mientras inicias sesión con Google guarda una más, hasta que vuelves. Son necesarias para que el sitio haga lo que pediste y no se usan para seguirte. El registro usa Google reCAPTCHA para distinguir a las personas de los programas, que Google gestiona bajo sus propias condiciones.
 
 ## Quién puede verlo
 

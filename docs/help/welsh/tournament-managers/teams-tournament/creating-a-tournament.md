@@ -27,7 +27,9 @@ Safonol yw'r un fformat na chwaraeir gan dimau, ac nid dyna rydych ei eisiau yma
 
 Mater i bob prawf yw dweud, pan gaiff ei ychwanegu, sut y caiff ei chwarae a'i gyfrif: gyda handicapiau, gyda chanlyniadau cyfartal, ac tuag at restr detholion y byd.
 
-**Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall.
+**Cyfrif profion cyfartal yn gyfartal.** Gofynnir amdano unwaith y dewisir fformat a chwaraeir gan dimau. Mae prawf y mae ei dimau'n ennill yr un nifer o gemau yn cael ei benderfynu gan eu gemau unigol net, yna eu cylchau net. Ticiwch hwn ac mae'n gêm gyfartal yn lle hynny. Mae wedi'i dicio i ddechrau dim ond ar gyfer **Pencampwriaeth Tîm y Byd GC**, sydd bob amser wedi'u cyfrif yn gyfartal, a gellir ei newid yn nes ymlaen.
+
+**Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol.** Gall twrnamaint fod yn un, y llall, neu'r un o'r ddau, ond byth y ddau: mae ticio un yn dad-dicio'r llall. Gosodir twrnamaint sydd wedi'i ticio'n un o'r ddau mewn print trwm, ar hyd ei res gyfan, yn y rhestrau o dwrnameintiau.
 
 ## Ei greu
 

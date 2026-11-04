@@ -22,6 +22,8 @@ Mae gêm a enillwyd ar bwyntiau cyfartal, fel pan gaiff ei hatal gan amser a'i s
 
 Pwyswch **Ychwanegu gêm**. Caiff y gêm ei hychwanegu, mae'r ddeialog yn dweud pa un, a chaiff y meysydd eu gwagio ar gyfer y nesaf, gan fod canlyniadau'n dod mewn swp a ddarllenir oddi ar fwrdd ar ddiwedd sesiwn. Pwyswch **Diddymu** unwaith y bydd pob un i mewn.
 
+Os na ellir darllen y chwaraewyr, mae'r ddeialog yn dweud hynny uwchben y meysydd, gyda "Ni ellid darllen y chwaraewyr. Caewch y deialog hwn a'i agor eto.", yn hytrach na chynnig neb. Gwnewch fel y mae'n ei ddweud.
+
 ## Gemau
 
 Mae dau chwaraewr sy'n cwrdd yn chwarae gêm yr orau o sydd gan y prawf. Y gemau unigol rhyngddynt yw gemau unigol y gêm honno, a gwrthodir gêm unigol rhwng dau chwaraewr y mae eu gêm eisoes wedi'i phenderfynu: mae un ohonynt wedi ennill mwy o gemau unigol nag y gallai'r llall ei ennill o hyd, neu mae pob gêm unigol ohoni wedi'i chwarae.

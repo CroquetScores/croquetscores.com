@@ -26,6 +26,6 @@ Abaixo deles, as listas **País**, **Região** e **Esporte** restringem o que os
 
 ## O que você pode fazer com um torneio
 
-Ao lado de um torneio de que você só cuida dos rankings, a lista oferece apenas **Jogadores**. Ele abre a página do torneio, onde você pode mudar o nome no ranking mundial de qualquer um dos seus jogadores, ver os seus organizadores e escrever a eles com **Enviar e-mail aos organizadores**, e pegar os jogos dele para os rankings mundiais na aba **Rankings**. Você não pode alterar o torneio, arquivá-lo nem lançar resultados nele, pois isso cabe aos seus gestores e marcadores. Um torneio arquivado desse tipo não tem botão; o nome dele ainda abre a página.
+Ao lado de um torneio de que você só cuida dos rankings, a lista oferece apenas **Jogadores**. Ele abre a página do torneio, onde você pode mudar o nome no ranking mundial de qualquer um dos seus jogadores, ver os seus organizadores e escrever a eles com **Enviar e-mail aos organizadores**, e pegar os jogos dele para os rankings mundiais na aba **Rankings**, com **Baixar jogos para o ranking mundial**. Você não pode alterar o torneio, arquivá-lo nem lançar resultados nele, pois isso cabe aos seus gestores e marcadores. Um torneio arquivado desse tipo não tem botão; o nome dele ainda abre a página.
 
 Ao lado de um torneio que você administra ou em que lança resultados, a lista oferece o que oferece a qualquer gestor ou marcador: **Gerenciar** com o lápis (**Editar**) e a lixeira (**Arquivar**), ou **Resultados**. Ser responsável pelo ranking não muda nada disso.

@@ -1,6 +1,6 @@
 # Notas
 
-La pestaña **Notas** de la página de un torneo es donde sus gestores escriben lo que los jugadores necesitan saber según avanza el torneo: el formato, un cambio en el orden de juego, la hora de la comida. Los lectores las encuentran en la página pública Notas del torneo, y una nota que no han leído se marca allí con un asterisco rojo, que marca también la sección Notas en todas las páginas del torneo hasta que la abren.
+La pestaña **Notas** de la página de un torneo es donde sus gestores escriben lo que los jugadores necesitan saber según avanza el torneo: el formato, un cambio en el orden de juego, la hora de la comida. Los lectores las encuentran en la página pública Notas del torneo, titulada Notas de los gestores, y una nota que no han leído se marca allí con un asterisco rojo, que marca también la sección Notas en todas las páginas del torneo hasta que la abren.
 
 ![La pestaña Notas, con dos notas](images/notes-tab.png)
 
@@ -14,7 +14,7 @@ Pulsa **Añadir nota**, encima de la lista. Un panel ocupa el lugar de la lista,
 
 **Descripción** se escribe en Markdown y puede dejarse vacía cuando el título dice todo lo que hay que decir. La barra de herramientas sobre el cuadro escribe el Markdown por ti: Encabezado, Negrita, Cursiva, Cita, Código, Enlace, Lista numerada, Lista con viñetas y Lista de tareas. Cada una actúa sobre lo seleccionado, o al principio de cada línea seleccionada, o pone el cursor donde van las palabras.
 
-**Vista previa** muestra la nota tal como la verá un lector en su página.
+Una línea en blanco entre dos párrafos los separa, y un lector ve una línea en blanco completa entre ellos. **Vista previa** muestra la nota tal como la verá un lector en su página.
 
 ![El panel de la nota, en su pestaña Vista previa](images/note-preview.png)
 

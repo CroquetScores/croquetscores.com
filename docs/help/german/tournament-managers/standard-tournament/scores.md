@@ -20,6 +20,8 @@ Drücken Sie **Spiel hinzufügen**. Das Spiel wird hinzugefügt, der Dialog sagt
 
 ![Der Dialog, nachdem ein Spiel hinzugefügt wurde](images/add-score-dialog-added.png)
 
+Kann der Dialog die Spieler des Wettbewerbs nicht lesen, sagt er „The players could not be read. Close this dialog and open it again.“ Tun Sie das.
+
 Was abgelehnt wird, steht unter dem Feld, um das es geht: ein nicht gewählter Sieger oder Verlierer, nicht eingegebene oder nicht mit einer Ziffer beginnende Punkte, derselbe Spieler als beides, als gewonnen markierte Punkte des Verlierers oder Punkte des Siegers, die hinter denen des Verlierers liegen. In einer K.-o.-Runde werden zwei Spieler, die nicht gegeneinander gelost sind, über den Feldern abgelehnt.
 
 ## Die Auslosung einer K.-o.-Runde muss zuerst gefüllt sein {#draw-filled-first}
@@ -30,7 +32,9 @@ Eine K.-o.-Runde wird erst gespielt, wenn jeder Platz ihrer Auslosung einen Spie
 
 ## Die Liste der Ergebnisse
 
-Die Ergebnisse in Gebrauch sind in der Reihenfolge ihrer Eingabe aufgeführt, das älteste zuerst, damit sich die Liste so liest, wie der Wettbewerb gespielt wurde. Jedes nennt den Sieger und seine Punkte, dann den Verlierer und seine, und bietet **Bearbeiten** und **Archivieren** an.
+Die Ergebnisse in Gebrauch sind in der Reihenfolge ihrer Eingabe aufgeführt, das älteste zuerst, damit sich die Liste so liest, wie der Wettbewerb gespielt wurde. Die Liste ist eine Tabelle mit einer Zeile für jedes Spiel und ohne Spaltenüberschriften. Eine Zeile nennt die Nummer des Spiels, den Sieger und seine Punkte, das Wort „beat“, dann den Verlierer und seine, und bietet **Bearbeiten** und **Archivieren** an.
+
+Die Nummer eines Spiels ist sein Platz unter den eingegebenen Spielen, das erste ist 1, archivierte Spiele mitgezählt. Das Archivieren eines Spiels ändert die Nummer keines anderen, eine Lücke in den Nummern sagt also, dass ein Spiel archiviert wurde.
 
 ## Ein Ergebnis korrigieren {#correcting-a-score}
 

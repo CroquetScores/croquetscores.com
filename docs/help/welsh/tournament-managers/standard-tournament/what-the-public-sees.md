@@ -4,7 +4,7 @@ Ni chyhoeddir dim: caiff y tudalennau cyhoeddus eu llunio o'r hyn sydd gan yr ad
 
 ## Tudalen y twrnamaint
 
-Mae tudalen y twrnamaint yn ei flwyddyn, ei gamp a'i enw, fel `/2026/ac/spring-open`. Enw'r twrnamaint sydd ar ei phen, â'i is-deitl oddi tano. Mae'n rhestru pob gêm sydd yn ei lle, yr un a ychwanegwyd ddiweddaraf yn gyntaf, fel bod darllenydd sy'n dod yn ôl yn gweld beth sydd wedi digwydd ers hynny. Mae pob gêm yn dweud yr enillydd, yr hyn y mae'n ei gynrychioli, ei faner a'i sgôr, yna'r collwr a'i rai yntau, â'r gystadleuaeth y chwaraewyd hi ynddi a pha mor bell yn ôl y'i hychwanegwyd.
+Mae tudalen y twrnamaint yn ei flwyddyn, ei gamp a'i enw, fel `/2026/ac/spring-open`. Enw'r twrnamaint sydd ar ei phen, â'i is-deitl oddi tano. Mae'n rhestru pob gêm sydd yn ei lle, yr un a ychwanegwyd ddiweddaraf yn gyntaf, fel bod darllenydd sy'n dod yn ôl yn gweld beth sydd wedi digwydd ers hynny. Mae pob gêm yn dweud yr enillydd, ei anfantais a'r hyn y mae'n ei gynrychioli, ei faner a'i sgôr, yna'r collwr a'i rai yntau, â'r gystadleuaeth y chwaraewyd hi ynddi a pha mor bell yn ôl y'i hychwanegwyd.
 
 ![Tudalen gyhoeddus y twrnamaint](images/public-tournament.png)
 
@@ -16,7 +16,9 @@ Mae tudalen bloc yn dangos ei ganlyniadau fel grid: rhes a cholofn i bob chwarae
 
 ![Grid bloc](images/public-block-grid.png)
 
-Dangosir bloc mewn tair ffordd, a gynigir ar linell ei enw: **Grid**, **Crynodeb** a **Trefn chwarae**. Y crynodeb yw'r un ar gyfer ffôn: y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion, eu cylchau net a'u safle. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
+Dangosir bloc, cystadleuaeth cnoc-owt a chystadleuaeth Swisaidd, bob un, mewn tair ffordd, a gynigir ar linell enw'r gystadleuaeth: **Grid**, **Crynodeb** a **Trefn chwarae**. Wrth eu hymyl mae botwm argraffydd, sy'n argraffu enw'r twrnamaint, enw'r gystadleuaeth a'i chanlyniadau, a dim byd arall. Y crynodeb yw'r un ar gyfer ffôn: ar gyfer bloc, y chwaraewyr yn ôl eu safle, â'u buddugoliaethau, eu colledion, eu cylchau net a'u safle; ar gyfer cystadleuaeth cnoc-owt, y gemau wedi'u rhestru rownd wrth rownd; ar gyfer cystadleuaeth Swisaidd, tabl y grid heb ei ganlyniadau. Mae'r drefn chwarae yn rhestru pob gêm, yr hynaf yn gyntaf i ddechrau. **Gêm** a **Dyddiad** sy'n ei phennawdu: mae pwyso **Gêm** yn trefnu'r gemau yn ôl enw'r enillydd ac yna enw'r collwr, ac mae pwyso **Dyddiad** yn eu trefnu'r hynaf neu'r diweddaraf yn gyntaf, ac mae pwyso'r pennawd y trefnir rhestr yn ei ôl yn ei throi o chwith. Cofir y ffordd y trefnodd darllenydd ar ei ddyfais. Mae darllenydd sy'n dewis golwg yn ei chadw ar gyfer pob cystadleuaeth nes iddo ddewis un arall.
+
+Mae cystadleuaeth a chwaraeir i nifer o gylchau heblaw'r arferol ar gyfer ei champ yn dweud hynny o dan ei henw, fel "Chwaraeir i 14 cylch" (gweler [Cystadlaethau](competitions.md#adding-a-competition)).
 
 ![Crynodeb bloc](images/public-block-summary.png)
 
@@ -34,13 +36,17 @@ Mae tudalen cystadleuaeth Swisaidd yn rhoi ei chwaraewyr yn ôl eu safle mewn ta
 
 ## Chwaraewyr
 
-Mae'r dudalen Chwaraewyr yn rhestru pob chwaraewr yn y twrnamaint nad yw wedi'i archifo, yn nhrefn yr wyddor, â'r hyn y mae'n ei gynrychioli a'i faner.
+Mae'r dudalen Chwaraewyr yn rhestru pob chwaraewr yn y twrnamaint nad yw wedi'i archifo, yn nhrefn yr wyddor, â'i anfantais a'r hyn y mae'n ei gynrychioli mewn cromfachau, a'i faner.
 
 ## Nodiadau
 
-Mae'r dudalen Nodiadau yn rhestru nodiadau'r twrnamaint, yr un a ysgrifennwyd ddiweddaraf yn gyntaf, pob un yn arwain at ei dudalen ei hun ac yn dweud pa mor bell yn ôl y'i hysgrifennwyd. Caiff nodyn nad yw'r darllenydd wedi'i ddarllen ei farcio â seren goch nes iddo ei agor.
+Mae'r dudalen Nodiadau, sydd â'r pennawd Nodiadau'r Rheolwyr, yn rhestru nodiadau'r twrnamaint, yr un a ysgrifennwyd ddiweddaraf yn gyntaf, pob un yn arwain at ei dudalen ei hun ac yn dweud pa mor bell yn ôl y'i hysgrifennwyd. Caiff nodyn nad yw'r darllenydd wedi'i ddarllen ei farcio â seren goch nes iddo ei agor. Mae twrnamaint heb nodiadau yn dweud "Dim nodiadau eto."
 
 ![Tudalen Nodiadau gyhoeddus y twrnamaint](images/public-notes.png)
+
+## Lle caiff y twrnamaint ei restru
+
+Mae twrnamaint ar yr hafan tra'i fod yn cael ei chwarae neu ar fin dechrau. Mae tudalen ei flwyddyn, fel `/2026`, yn rhestru misoedd y flwyddyn, ac unwaith y pwysir pob un, mae'n rhestru'r twrnameintiau sy'n dechrau ynddo. Mae rheolydd o dan y pennawd, **Dangos y cyfan** ac yna **Cuddio'r cyfan**, yn agor neu'n cau pob mis. Gosodir twrnamaint sydd wedi'i ticio'n genedlaethol neu'n rhyngwladol mewn print trwm ar hyd ei res.
 
 ## Cyfeiriadau sy'n symud
 

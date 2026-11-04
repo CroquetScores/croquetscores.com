@@ -14,9 +14,11 @@ Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över s
 
 **Namn** krävs. Det är spelarens namn så som det visas på varje sida, mellan 3 och 254 tecken. Två spelare i en turnering kan inte ha samma namn, hur det än skrivs med stora och små bokstäver; där två spelare verkligen delar namn, skilj dem åt i själva namnet, som "Andrew Hobbs (2)".
 
-**Representerar** är det spelaren spelar för, skrivet som en läsare skulle säga det: en klubb, en region eller ett land, till exempel "Canterbury Croquet Club". Det visas inom parentes efter namnet. Det kan lämnas tomt.
+**Representerar** är det spelaren spelar för, skrivet som en läsare skulle säga det: en klubb, en region eller ett land, till exempel "Canterbury Croquet Club". Det visas inom parentes efter namnet. Det kan lämnas tomt. Medan du skriver erbjuds det som spelare i någon turnering på webbplatsen har lagts till som representerande, där ett ord i det börjar med det du skrev, så att en klubb skrivs som den har skrivits förut; tabbtangenten tar det som visas efter markören.
 
-**Flagga** är den flagga som visas bredvid spelarens namn. Den kan lämnas som ingen, vilket de flesta spelare har. Vad en spelare representerar och vilken flagga spelaren för hålls isär, eftersom en spelare kan spela för en klubb i ett land och föra ett annat lands flagga.
+**Flagga** är den flagga som visas bredvid spelarens namn. Det är en rullgardinslista över platserna med namn, ingen först, sedan de platser där de flesta turneringar spelas; skriv början av ett namn för att hoppa till det. Den kan lämnas som ingen, vilket de flesta spelare har. Vad en spelare representerar och vilken flagga spelaren för hålls isär, eftersom en spelare kan spela för en klubb i ett land och föra ett annat lands flagga.
+
+**Handicap** är spelarens handicap, om spelaren har ett: ett tecken, upp till två siffror och en bråkdel på en siffra, till exempel 4, +4 eller -1.5. Det sparas som du skriver det, och visas inom parentes tillsammans med det spelaren representerar, före det. Det kan lämnas tomt.
 
 **Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i association croquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, eftersom de flesta spelare är kända i rankingen under sitt eget namn, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn.
 
@@ -32,7 +34,7 @@ En spelare heter aldrig "Bye". En utslagnings byes läggs till i själva utslagn
 
 För att lägga till en hel lista på en gång trycker du på **Lägg till flera spelare**, bredvid **Lägg till spelare**. En dialogruta öppnas över sidan med en enda ruta, som tar emot flera rader text. Du kan kopiera listan från ett kalkylblad och klistra in den i rutan.
 
-**Första raden anger fälten**, åtskilda med kommatecken eller tabbar: **Name** och något av **Representing**, **Flag**, **Handicap** och **WorldRankingPlayerName**, i valfri ordning. Dessa namn skrivs på engelska, oavsett vilket språk webbplatsen visas på. **Name** måste vara ett av dem. **Varje rad efter den är en spelare**, med ett värde för varje fält i samma ordning, åtskilda på samma sätt. En spelare som saknar värde för ett fält lämnar det tomt, men behåller kommatecknet eller tabben. Till exempel, med kommatecken:
+**Första raden anger fälten** (en lista vars första rad inte anger några fält nekas, med "Skriv fältens namn på första raden."), åtskilda med kommatecken eller tabbar: **Name** och något av **Representing**, **Flag**, **Handicap** och **WorldRankingPlayerName**, i valfri ordning. Dessa namn skrivs på engelska, oavsett vilket språk webbplatsen visas på. **Name** måste vara ett av dem. **Varje rad efter den är en spelare**, med ett värde för varje fält i samma ordning, åtskilda på samma sätt. En spelare som saknar värde för ett fält lämnar det tomt, men behåller kommatecknet eller tabben. Till exempel, med kommatecken:
 
 ```
 Name,Representing,Flag
@@ -51,7 +53,7 @@ Alex Another,,England
 
 Tryck på **Lägg till**. Hela listan kontrolleras innan något av den sparas, så en lista med något fel i lägger inte till någon. Vad som är fel sägs under rutan, på den rad det finns, där första raden räknas som rad 1. Varje fel listas, inte bara det första, och det du skrev finns kvar så att du kan rätta det. När listan är sparad stängs dialogrutan och fliken **Spelare** visar de nya spelarna, i den ordning du skrev dem. Till skillnad från **Lägg till spelare**, som förblir öppen för nästa spelare, finns det ingen nästa: listan var nästa.
 
-**?** i dialogrutans namnlist leder hit.
+**?** i dialogrutans namnlist leder hit. Både den här dialogrutan och Lägg till spelare stannar i fönstret, vart sidan än har rullats.
 
 ## Rätta en spelare {#correcting-a-player}
 

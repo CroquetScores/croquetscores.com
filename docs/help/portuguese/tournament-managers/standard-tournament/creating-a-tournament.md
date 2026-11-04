@@ -14,15 +14,15 @@ O formulário pede tudo com que um torneio começa. Um torneio do tipo comum est
 
 **Formato.** Escolha **Padrão** para um torneio disputado entre jogadores. Os outros formatos são para torneios disputados entre equipes, que têm um guia próprio.
 
-**Esporte.** Os esportes que o site oferece, na sua ordem: Croquet de Associação, Croquet de Golfe, Croquet Americano de 6 Arcos e Ricochet no Croquet Scores. O Gateball Scores não pede esporte nem formato, porque todo torneio lá é um torneio padrão de gateball.
+**Esporte.** Os esportes que o site oferece, na sua ordem: Croquet de Associação, Croquet de Golfe, Croquet Americano de 6 Arcos e Ricochet no Croquet Scores. **Esporte**, **País** e **Região** são listas suspensas: escolha da lista, ou digite o começo de um nome para ir até ele. O Gateball Scores não pede esporte nem formato, porque todo torneio lá é um torneio padrão de gateball.
 
-**País** e **Região.** Onde o torneio é disputado. A região só é pedida quando o país escolhido é dividido em regiões, como os estados da Austrália; um país que é a sua própria e única região não pede nenhuma. A região não precisa ser escolhida mesmo quando é oferecida.
+**País** e **Região.** Onde o torneio é disputado. Os países em que a maioria dos torneios é disputada vêm primeiro na lista. A região só é pedida quando o país escolhido é dividido em regiões, como os estados da Austrália; um país que é a sua própria e única região não pede nenhuma. A região não precisa ser escolhida mesmo quando é oferecida.
 
 **Subtítulo.** Tudo o que você quer que os leitores saibam e não tem um campo próprio: onde estacionar, a que hora é o almoço, para quem telefonar. É mostrado abaixo do nome do torneio em todas as páginas públicas. É escrito em Markdown, então uma palavra fica em negrito com asteriscos em volta e uma lista se faz com um traço no início de cada linha. Pode ter até 2000 caracteres, e pode ficar vazio.
 
 Como as suas competições são jogadas e contadas, se com handicaps, se com empates e se para os rankings mundiais, é cada competição que diz ao ser adicionada.
 
-**Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro.
+**Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro. Um torneio marcado como um dos dois aparece em negrito, ao longo de toda a sua linha, nas listas de torneios.
 
 ## Criar o torneio
 

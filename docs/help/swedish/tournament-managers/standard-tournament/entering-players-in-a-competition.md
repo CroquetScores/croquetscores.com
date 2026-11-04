@@ -1,6 +1,6 @@
 # Sätta in spelare i en tävling
 
-En tävlings sida öppnas från dess namn på fliken Tävlingar, eller från det mörkgröna fältet. Den har tävlingens namn som rubrik, med två flikar under: **Spelare** och **Resultat**. Den öppnas på Spelare, eftersom spelarna sätts in innan något spelas.
+En tävlings sida öppnas från dess namn på fliken Tävlingar, eller från det mörkgröna fältet. Den har tävlingens namn som rubrik, med två flikar under: **Spelare** och **Resultat**. En utslagning har en tredje, **Förlorare**, som beskrivs under [En förlorarutslagning](competitions.md#losers-knockout). Den öppnas på Spelare, eftersom spelarna sätts in innan något spelas.
 
 En spelare i en tävling är en av turneringens spelare, så de sätts in genom att väljas i stället för att skrivas. Allt om dem utom deras plats i tävlingen, och det de för över in i den, ändras på turneringens flik Spelare.
 
@@ -23,6 +23,10 @@ En bye placeras i lottningen som en spelare: den kan flyttas upp och ned och tas
 Ordningen på en utslagnings spelare är dess lottning. De två första platserna möts i den första matchen, de två nästa i den nästa, och så vidare. Lägg spelarna i den ordning lottningen ska spelas i innan något resultat skrivs in, eftersom spelarna ligger fast när utslagningen har ett parti i bruk: ingen kan läggas till, tas bort eller flyttas. En spelare kan fortfarande dras tillbaka.
 
 ![En utslagning när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](images/knockout-players-fixed.png)
+
+## En förlorarutslagnings spelare
+
+En förlorarutslagnings spelare sätts inte in för hand. De läggs in när de matcher vars förlorare den tar avgörs, så dess flik **Spelare** listar dem bara, och säger varför.
 
 ## Ordning
 

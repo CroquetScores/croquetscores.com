@@ -1,6 +1,6 @@
 # Spieler in einen Wettbewerb aufnehmen
 
-Die Seite eines Wettbewerbs wird über seinen Namen auf dem Reiter Wettbewerbe oder über die dunkelgrüne Leiste geöffnet. Ihre Überschrift ist der Name des Wettbewerbs, mit zwei Reitern darunter: **Spieler** und **Ergebnisse**. Sie öffnet sich auf Spieler, weil die Spieler aufgenommen werden, bevor etwas gespielt wird.
+Die Seite eines Wettbewerbs wird über seinen Namen auf dem Reiter Wettbewerbe oder über die dunkelgrüne Leiste geöffnet. Ihre Überschrift ist der Name des Wettbewerbs, mit zwei Reitern darunter: **Spieler** und **Ergebnisse**. Ein K.-o.-Turnier hat einen dritten, **Verlierer**, der unter [Ein K.-o.-Turnier der Verlierer](competitions.md#losers-knockout) beschrieben ist. Sie öffnet sich auf Spieler, weil die Spieler aufgenommen werden, bevor etwas gespielt wird.
 
 Ein Spieler in einem Wettbewerb ist einer der Spieler des Turniers, er wird also durch Auswählen aufgenommen und nicht durch Eintippen. Alles an ihm außer seinem Platz im Wettbewerb und dem, was er in ihn überträgt, wird auf dem Reiter Spieler des Turniers geändert.
 
@@ -23,6 +23,10 @@ Ein Freilos wird in der Auslosung platziert wie ein Spieler: Es lässt sich nach
 Die Reihenfolge der Spieler einer K.-o.-Runde ist ihre Auslosung. Die ersten beiden Plätze treffen sich in der ersten Begegnung, die nächsten beiden in der nächsten und so weiter. Bringen Sie die Spieler in die Reihenfolge, in der die Auslosung gespielt werden soll, bevor ein Ergebnis eingegeben wird, denn sobald die K.-o.-Runde ein Spiel in Gebrauch hat, stehen ihre Spieler fest: Niemand kann hinzugefügt, entfernt oder verschoben werden. Ein Spieler kann weiterhin zurückgezogen werden.
 
 ![Eine K.-o.-Runde, sobald ein Spiel eingegeben ist: Niemand kann hinzugefügt, verschoben oder entfernt werden](images/knockout-players-fixed.png)
+
+## Die Spieler eines K.-o.-Turniers der Verlierer
+
+Die Spieler eines K.-o.-Turniers der Verlierer werden nicht von Hand aufgenommen. Sie werden eingetragen, sobald die Spiele entschieden sind, deren Verlierer es übernimmt, daher führt sein Reiter **Spieler** sie nur auf und sagt, warum.
 
 ## Reihenfolge
 

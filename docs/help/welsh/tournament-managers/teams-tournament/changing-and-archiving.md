@@ -6,7 +6,7 @@ Yn y rhestr o dwrnameintiau yn yr adran weinyddu, pwyswch **Golygu** ar y twrnam
 
 ![Y ffurflen Golygu twrnamaint](images/edit-tournament.png)
 
-Gellir lledu dyddiau'r twrnamaint yma lle mae ar brawf angen diwrnod y tu allan iddynt, gan y chwaraeir prawf o fewn ei dwrnamaint. Gellir newid un fformat a chwaraeir gan dimau am un arall, gan fod y twrnamaint yn cynnwys yr un pethau ym mhob un. Unwaith y bydd gan y twrnamaint unrhyw dîm neu brawf, a'r rhai a archifwyd yn cyfrif, ni ellir ei newid i'r fformat Safonol, sydd â chwaraewyr a chystadlaethau yn eu lle.
+Gellir lledu dyddiau'r twrnamaint yma lle mae ar brawf angen diwrnod y tu allan iddynt, gan y chwaraeir prawf o fewn ei dwrnamaint. Unwaith y bydd gan y twrnamaint unrhyw dîm neu brawf, a'r rhai a archifwyd yn cyfrif, ni ellir newid ei **Fformat** o gwbl: nid i'r fformat Safonol, sydd â chwaraewyr a chystadlaethau yn eu lle, ac nid i fformat arall a chwaraeir gan dimau, gan y gall prawf fod mewn grŵp nad oes gan y fformat arall mohono. Dewiswch y fformat pan gaiff y twrnamaint ei greu.
 
 Mae twrnamaint yn cadw ei gyfeiriad pan gaiff ei enw ei gywiro, fel bod dolen y mae rhywun eisoes wedi'i hanfon yn dal i ddod o hyd iddo. Mae'n symud dim ond pan fydd y flwyddyn y mae'n dechrau ynddi neu ei gamp yn newid, ac wedyn mae ei hen gyfeiriad yn arwain at yr un newydd. Mae cadw yn eich tywys i'r twrnamaint lle bynnag y'i ceir yn awr.
 
@@ -14,7 +14,7 @@ Dim ond rheolwr all newid twrnamaint. Dywedir hynny wrth sgorwr, neu unrhyw un a
 
 ## Y rhestr o dwrnameintiau
 
-Mae'r adran weinyddu yn rhestru un flwyddyn ar y tro, gan ddechrau â'r flwyddyn hon, y twrnamaint mwyaf newydd yn gyntaf. Mae'r blynyddoedd y mae gennych dwrnamaint ynddynt yn dabiau yn y bar gwyrdd tywyll, y mwyaf newydd yn gyntaf; lle mae mwy nag sy'n ffitio ar ffôn, mae'r hynaf mewn cwymplen ar ddiwedd y rhes. Mae'r flwyddyn yn y cyfeiriad, felly gellir dolennu at flwyddyn.
+Mae'r adran weinyddu yn rhestru un flwyddyn ar y tro, gan ddechrau â'r flwyddyn hon, y twrnamaint mwyaf newydd yn gyntaf. Mae'r blynyddoedd y mae gennych dwrnamaint ynddynt yn dabiau yn y bar gwyrdd tywyll, y mwyaf newydd yn gyntaf; lle mae mwy nag sy'n ffitio ar ffôn, mae'r hynaf mewn cwymplen ar ddiwedd y rhes. Mae'r flwyddyn yn y cyfeiriad, felly gellir dolennu at flwyddyn. O dan y botymau gellir culhau'r rhestr yn ôl **Gwlad**, **Rhanbarth** a **Camp**, ac yn ôl y dyddiau y mae ganddi dwrnameintiau ynddynt, **O** ac **I**. Mae **?** crwn wrth ymyl **Twrnamaint newydd** yn arwain at y cymorth.
 
 ![Y rhestr o dwrnameintiau](images/admin-list.png)
 

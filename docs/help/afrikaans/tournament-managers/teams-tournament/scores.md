@@ -20,6 +20,8 @@ Punte word getik soos die teller hulle neergeskryf het: die getal punte, en wat 
 
 'n Spel wat op gelyke punte gewen is, soos wanneer dit deur tyd gestop en op 'n ander manier beslis word, sê wie dit gewen het met 'n merk ná die wenner se punte: "6w" het gewen teen "6". Die merke is "w", "won" en "winner". 'n Wenner se punte moet meer as die verloorder s'n wees, of gemerk wees, tensy die toernooi gelykopuitslae toelaat, in welke geval gelyke punte sonder 'n merk as gelykop gehou word.
 
+As die spelers nie gelees kan word nie, sê die dialoog dit bo die velde, met "Die spelers kon nie gelees word nie. Maak hierdie dialoog toe en maak dit weer oop.", eerder as om niemand aan te bied nie. Doen soos dit sê.
+
 Druk op **Voeg spel by**. Die spel word bygevoeg, die dialoog sê watter, en die velde word leeggemaak vir die volgende, want uitslae kom in 'n bondel wat aan die einde van 'n sessie van 'n bord af gelees word. Druk op **Kanselleer** sodra hulle almal in is.
 
 ## Wedstryde
