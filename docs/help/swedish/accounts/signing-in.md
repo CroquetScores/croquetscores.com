@@ -18,7 +18,7 @@ Ett konto vars e-postadress inte har bekräftats har inget lösenord än, så de
 
 Om du vill kunna logga in med ett lösenord också, välj **Skapa lösenord** i menyn **Konto** och tryck på **Skicka en länk till mig**. Länken går till kontots e-postadress och anger ett lösenord på samma sätt som länken för ett glömt lösenord.
 
-## Om du har glömt ditt lösenord
+## Om du har glömt ditt lösenord {#forgotten-password}
 
 Tryck på **Glömt lösenord?** på inloggningssidan, ange din e-postadress och tryck på **Skicka mig en väg in**. Sidan säger åt dig att kontrollera din e-post oavsett om adressen har ett konto. Vad som skickas beror på adressen, och bara dess ägare läser det: en länk för att ange ett nytt lösenord, länken för att bekräfta en adress som aldrig bekräftats, eller en länk för att registrera sig.
 

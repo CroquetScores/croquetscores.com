@@ -171,3 +171,65 @@ Feature: Help written in markdown becomes pages of the site
       Given help page "![The players tab](images/players-tab.png)"
       When the help page is converted
       Then the text of the page does not say "players-tab.png"
+
+  Rule: The first page of the help of every language offers popular questions and the subjects as cards
+
+    The first page is the same in every language in what it offers, though not
+    in its words: the same five questions leading to the same articles, and the
+    same four subjects, each with words under its title. The cards are made of
+    these lists by the stylesheet, which finds them by their bookmarks.
+
+    Scenario: Each language has a section of popular questions
+      Given the help of every language
+      When the first page of each is converted
+      Then each has the bookmark "popular-questions"
+
+    Scenario: Each language has a section of subjects
+      Given the help of every language
+      When the first page of each is converted
+      Then each has the bookmark "subjects"
+
+    Scenario: Each language asks the same five questions
+      Given the help of every language
+      When the first page of each is converted
+      Then each has 5 popular questions
+
+    Scenario Outline: Each language's popular question leads to the same article
+      Given the help of every language
+      When the first page of each is converted
+      Then the <number> popular question of each leads to "<address>"
+
+      Examples:
+        | number | address                                                                  |
+        | first  | /help/tournament-managers/standard-tournament/creating-a-tournament      |
+        | second | /help/tournament-managers/standard-tournament/players#add-a-player      |
+        | third  | /help/tournament-managers/standard-tournament/scores#entering-a-score   |
+        | fourth | /help/accounts/signing-in#forgotten-password                             |
+        | fifth  | /help/tournament-managers/standard-tournament/rankings                  |
+
+    Scenario: Each language has the four subjects
+      Given the help of every language
+      When the first page of each is converted
+      Then each has 4 subjects
+
+    Scenario Outline: Each language's subject leads to the same page
+      Given the help of every language
+      When the first page of each is converted
+      Then each has a subject leading to "<address>"
+
+      Examples:
+        | address                      |
+        | /help/readers               |
+        | /help/accounts              |
+        | /help/tournament-managers   |
+        | /help/world-ranking-officers |
+
+    Scenario: Each language says what is in each subject
+      Given the help of every language
+      When the first page of each is converted
+      Then each subject of each has words under its title
+
+    Scenario: The bookmark of the question about a password leads to a heading
+      Given the help of every language
+      When the page "accounts/signing-in" of each is converted
+      Then each has the bookmark "forgotten-password"

@@ -401,6 +401,78 @@ a:hover {
   scroll-margin-top: 6rem;
 }
 
+/* The first page of the help: the popular questions as a list of links, and the
+   subjects as cards. Both are lists written in Markdown, found here by the
+   bookmarks of the headings they follow (docs/help/<language>/index.md), so the
+   page needs no markup of its own and a translator writes only the words. */
+.help #popular-questions + ul {
+  padding-left: var(--space-5);
+}
+
+.help #popular-questions + ul li + li {
+  margin-top: var(--space-2);
+}
+
+/* As many cards in a row as fit at a readable width, and one on a phone. The
+   minimum is under the narrowest screen's content width so that the grid never
+   asks for more than there is. */
+.help #subjects + ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help #subjects + ul li {
+  position: relative;
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2);
+  background: var(--panel);
+}
+
+.help #subjects + ul li p {
+  margin: 0;
+}
+
+/* The card's title is the link, and the link is spread over the whole card, so
+   that the card is one thing to press and one stop for the keyboard and for a
+   screen reader, with no second link in it. */
+.help #subjects + ul li p:first-child {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.help #subjects + ul li p:first-child a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.help #subjects + ul li p + p {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.help #subjects + ul li:hover {
+  border-color: var(--accent);
+}
+
+/* The card that has the keyboard in it is marked on the card, which is what is
+   pressed, and not on the title alone. */
+.help #subjects + ul li:focus-within {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.help #subjects + ul li a:focus {
+  outline: none;
+}
+
 /* The panel at the top of the help in which a question is typed and the pages
    that answer it are listed. It sits above the article, apart from it by a rule,
    and its results are a list of links each holding the page's title and the

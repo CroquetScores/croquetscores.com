@@ -18,7 +18,7 @@ As een van die twee verkeerd is, sê die bladsy net dat die e-posadres of wagwoo
 
 Om ook met 'n wagwoord aan te meld, kies **Stel wagwoord** in die **Rekening**-kieslys en druk **Stuur my 'n skakel**. Die skakel gaan na jou rekening se e-posadres en stel 'n wagwoord op dieselfde manier as die skakel vir 'n vergete wagwoord.
 
-## As jy jou wagwoord vergeet het
+## As jy jou wagwoord vergeet het {#forgotten-password}
 
 Druk **Wagwoord vergeet?** op die aanmeldbladsy, gee jou e-posadres, en druk **Stuur my 'n pad terug in**. Die bladsy sê jy moet jou e-pos nagaan, of die adres 'n rekening het of nie. Wat gestuur word, hang van die adres af, en net die eienaar lees dit: 'n skakel om 'n nuwe wagwoord te stel, die skakel om 'n adres te bevestig wat nooit bevestig is nie, of 'n skakel om te registreer.
 

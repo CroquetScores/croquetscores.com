@@ -18,7 +18,7 @@ Adresa, která se desetkrát za hodinu nepřihlásila, je po zbytek hodiny zablo
 
 Abyste se mohli přihlašovat i heslem, zvolte **Nastavit heslo** v nabídce **Účet** a stiskněte **Poslat mi odkaz e-mailem**. Odkaz jde na e-mailovou adresu vašeho účtu a nastaví heslo stejně jako odkaz pro zapomenuté heslo.
 
-## Pokud jste zapomněli heslo
+## Pokud jste zapomněli heslo {#forgotten-password}
 
 Stiskněte **Zapomenuté heslo?** na stránce přihlášení, zadejte svou e-mailovou adresu a stiskněte **Poslat cestu zpět**. Stránka řekne, abyste zkontrolovali e-mail, ať už adresa účet má, nebo ne. Co se pošle, závisí na adrese a čte to jen její majitel: odkaz pro nastavení nového hesla, odkaz pro potvrzení adresy, která nikdy potvrzena nebyla, nebo odkaz k registraci.
 

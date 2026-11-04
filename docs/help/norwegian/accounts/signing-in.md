@@ -18,7 +18,7 @@ En konto der e-postadressen ikke er bekreftet har ikke passord ennå, så den ka
 
 For å logge inn med passord også, velg **Lag passord** i menyen **Konto** og trykk **Send meg en lenke**. Lenken går til kontoens e-postadresse og lager et passord på samme måte som lenken for et glemt passord.
 
-## Hvis du har glemt passordet ditt
+## Hvis du har glemt passordet ditt {#forgotten-password}
 
 Trykk **Glemt passord?** på innloggingssiden, oppgi e-postadressen din, og trykk **Send meg en vei inn igjen**. Siden sier at du skal sjekke e-posten din uansett om adressen har en konto. Det som sendes avhenger av adressen, og bare eieren leser det: en lenke for å lage et nytt passord, lenken for å bekrefte en adresse som aldri ble bekreftet, eller en lenke for å registrere seg.
 

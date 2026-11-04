@@ -18,7 +18,7 @@ Kontam, kura e-pasta adrese nav apstiprināta, vēl nav paroles, tāpēc tajā n
 
 Lai pierakstītos arī ar paroli, izvēlieties **Iestatīt paroli** izvēlnē **Konts** un nospiediet **Nosūtiet man saiti e-pastā**. Saite iet uz jūsu konta e-pasta adresi un iestata paroli tāpat kā saite aizmirstai parolei.
 
-## Ja esat aizmirsis paroli
+## Ja esat aizmirsis paroli {#forgotten-password}
 
 Nospiediet **Aizmirsu paroli?** pierakstīšanās lapā, norādiet savu e-pasta adresi un nospiediet **Nosūtiet man ceļu atpakaļ**. Lapa saka pārbaudīt savu e-pastu neatkarīgi no tā, vai adresei ir konts. Tas, kas tiek nosūtīts, ir atkarīgs no adreses, un to lasa tikai tās īpašnieks: saite jaunas paroles iestatīšanai, saite adreses apstiprināšanai, kas nekad nav apstiprināta, vai saite reģistrēties.
 
