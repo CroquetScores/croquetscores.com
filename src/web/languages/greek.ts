@@ -1014,6 +1014,27 @@ export const greek: Language = {
     // Κάτω από την αναπτυσσόμενη λίστα, για μια άρνηση χωρίς δικά της λόγια.
     "admin.competitionPlayers.otherwise":
       "Αυτός ο παίκτης δεν μπορεί να προστεθεί.",
+    "admin.competitionPlayers.addSeveral": "Προσθήκη πολλών",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Επιλέξτε πολλούς παίκτες του τουρνουά για να μπουν μαζί σε αυτό το αγώνισμα",
+    "admin.addPlayers.title": "Προσθήκη παικτών",
+    "admin.addPlayers.selectAll": "Επιλογή όλων",
+    "admin.addPlayers.add": "Προσθήκη επιλεγμένων",
+    "admin.hover.dialog.addPlayers.add":
+      "Προσθήκη των επιλεγμένων παικτών σε αυτό το αγώνισμα",
+    "admin.addPlayers.otherwise": "Αυτοί οι παίκτες δεν μπορούν να προστεθούν.",
+    "admin.addPlayers.someRefusedTitle":
+      "Ορισμένοι παίκτες δεν μπορούν να προστεθούν",
+    "admin.addPlayers.someRefusedQuestion":
+      "Οι παίκτες που αναφέρονται δεν μπορούν να προστεθούν. Θέλετε να προσθέσετε τους υπόλοιπους από τους επιλεγμένους;",
+    "admin.addPlayers.addTheRest": "Προσθήκη των υπολοίπων",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Προσθήκη των παικτών που μπορούν να προστεθούν σε αυτό το αγώνισμα και παράλειψη των άλλων",
+    "Competition.PlayerAlreadyEntered": "Ήδη στο αγώνισμα",
+    "TournamentPlayer.Archived": "Παραμερισμένος στο τουρνουά",
+    "Tournament.NoSuchPlayer": "Δεν είναι παίκτης του τουρνουά",
+    "Competition.DrawFixed":
+      "Η κλήρωση είναι οριστική, αφού έχει καταχωριστεί αγώνας",
     "admin.competitionPlayers.choose": "Παίκτης προς προσθήκη",
     "admin.competitionPlayers.nobody": "Επιλέξτε παίκτη",
     // Προσφέρεται στην αναπτυσσόμενη λίστα ενός νοκ-άουτ και πώς λέγεται ένα

@@ -12,6 +12,18 @@ Nad seznamem je rozbalovací seznam, který nabízí každého hráče turnaje, 
 
 Archivovaní hráči turnaje se nenabízejí.
 
+## Přidání více hráčů {#adding-several}
+
+Chcete-li soutěž rychle připravit, stiskněte **Přidat více** vedle **Přidat hráče**. Tlačítko se nabízí, jsou-li k výběru dva nebo více hráčů. Otevře dialog, který vypíše každého hráče turnaje, jenž v soutěži není, v pořadí turnaje, u každého s polem k zaškrtnutí. Pole nad seznamem zaškrtne všechny.
+
+![Dialog Přidat hráče se dvěma zaškrtnutými hráči](images/add-players-dialog.png)
+
+Zaškrtněte hráče, které chcete, a stiskněte **Přidat vybrané**. Všichni se přidají najednou a zařadí se podle pořadí turnaje, v jakémkoli pořadí jste je zaškrtli. Stisknutím **Zrušit** dialog zavřete, aniž byste někoho přidali. Stisknutí **Přidat vybrané**, když není nikdo zaškrtnut, nic neudělá.
+
+Někdy zaškrtnutého hráče přidat nelze: někdo jiný ho mohl do soutěže zařadit, zatímco byl dialog otevřený, nebo může mít pavouk méně volných míst, než kolik je zaškrtnutých hráčů. V takovém případě se nepřidá nikdo. Druhý dialog vypíše hráče, které přidat nelze, každého s důvodem, a zeptá se, zda přidat ostatní z těch, které jste zaškrtli. Stisknutím **Přidat ostatní** přidáte ty, které přidat lze, nebo stisknutím **Zrušit** se vrátíte k zaškrtnutým polím, která zůstala tak, jak jste je nechali, a upravíte je. Nelze-li přidat žádného ze zaškrtnutých hráčů, není o čem rozhodovat a důvody se zobrazí nad seznamem.
+
+Bye v pavouku se do tohoto nezahrnují. Přidávají se po jednom z rozbalovacího seznamu, jak popisuje [Bye v pavouku](#byes-in-a-knockout).
+
 ## Bye v pavouku {#byes-in-a-knockout}
 
 Pavouk se hraje až tehdy, když je obsazeno každé místo v jeho losu, a místa, která hráči nezaplní, se vyplní bye. V pavouku proto rozbalovací seznam nabízí na prvním místě, před hráči, **Bye** a nabízí ho dál, kolikrát se bye přidá, protože los jich může potřebovat několik.

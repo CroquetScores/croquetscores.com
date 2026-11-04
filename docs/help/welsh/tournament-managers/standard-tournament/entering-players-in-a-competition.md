@@ -12,6 +12,18 @@ Uwchben y rhestr, mae cwymplen yn cynnig pob chwaraewr yn y twrnamaint nad yw yn
 
 Ni chynigir chwaraewyr y twrnamaint sydd wedi'u harchifo.
 
+## Ychwanegu sawl chwaraewr {#adding-several}
+
+I osod cystadleuaeth i fyny'n gyflym, pwyswch **Ychwanegu sawl un**, wrth ymyl **Ychwanegu chwaraewr**. Fe'i cynigir lle mae dau chwaraewr neu fwy i ddewis o'u plith. Mae'n agor deialog sy'n rhestru pob chwaraewr yn y twrnamaint nad yw yn y gystadleuaeth, yn nhrefn y twrnamaint, pob un â blwch i'w dicio. Mae'r blwch uwchben y rhestr yn ticio pob un.
+
+![Y deialog Ychwanegu chwaraewyr, â dau chwaraewr wedi'u ticio](images/add-players-dialog.png)
+
+Ticiwch y chwaraewyr rydych eu heisiau a phwyswch **Ychwanegu'r rhai a ddewiswyd**. Maen nhw i gyd yn cael eu rhoi i mewn ar unwaith ac yn cael eu gosod yn nhrefn y twrnamaint, ym mha drefn bynnag y gwnaethoch eu ticio. Pwyswch **Diddymu** i gau'r deialog heb ychwanegu neb. Nid yw pwyso **Ychwanegu'r rhai a ddewiswyd** heb neb wedi'i dicio yn gwneud dim.
+
+Weithiau ni ellir rhoi chwaraewr sydd wedi'i dicio i mewn: efallai bod rhywun arall wedi'i roi yn y gystadleuaeth tra oedd y deialog ar agor, neu efallai fod gan gystadleuaeth cnoc-owt lai o leoedd yn weddill na'r chwaraewyr sydd wedi'u ticio. Ni chaiff neb ei roi i mewn bryd hynny. Mae ail ddeialog yn rhestru'r chwaraewyr na ellir eu hychwanegu, pob un â'r rheswm, ac yn gofyn a ddylid ychwanegu gweddill y rhai a diciwyd. Pwyswch **Ychwanegu'r gweddill** i roi i mewn y rhai y gellir eu rhoi, neu **Diddymu** i fynd yn ôl at y ticiau, sydd fel y gwnaethoch eu gadael, a'u newid. Lle na ellir rhoi'r un o'r chwaraewyr sydd wedi'u ticio i mewn, nid oes dim i'w benderfynu, a dangosir y rhesymau uwchben y rhestr.
+
+Nid yw byes cystadleuaeth cnoc-owt yn rhan o hyn. Cânt eu hychwanegu fesul un o'r gwymplen, fel y mae [Byes mewn cystadleuaeth cnoc-owt](#byes-in-a-knockout) yn ei ddisgrifio.
+
 ## Byes mewn cystadleuaeth cnoc-owt {#byes-in-a-knockout}
 
 Chwaraeir cystadleuaeth cnoc-owt dim ond unwaith y bydd pob lle yn ei siart wedi'i lenwi, a chaiff y lleoedd y mae ei chwaraewyr yn eu gadael ar ôl eu llenwi â byes. Felly mewn cystadleuaeth cnoc-owt mae'r gwymplen yn cynnig **Bye** yn gyntaf, cyn y chwaraewyr, ac yn dal i'w gynnig faint bynnag o byes a ychwanegir, gan y gall siart fod ag angen sawl un.

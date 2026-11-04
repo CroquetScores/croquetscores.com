@@ -934,6 +934,26 @@ export const swedish: Language = {
     "admin.competitionPlayers.add": "Lägg till spelare",
     // Under rullgardinslistan, för ett avslag utan egna ord.
     "admin.competitionPlayers.otherwise": "Spelaren kan inte läggas till.",
+    "admin.competitionPlayers.addSeveral": "Lägg till flera",
+    "admin.hover.competitionPlayers.addSeveral":
+      "Välj flera av turneringens spelare och lägg till dem i den här tävlingen på en gång",
+    "admin.addPlayers.title": "Lägg till spelare",
+    "admin.addPlayers.selectAll": "Markera alla",
+    "admin.addPlayers.add": "Lägg till markerade",
+    "admin.hover.dialog.addPlayers.add":
+      "Lägg de markerade spelarna i den här tävlingen",
+    "admin.addPlayers.otherwise": "De här spelarna kan inte läggas till.",
+    "admin.addPlayers.someRefusedTitle": "Vissa spelare kan inte läggas till",
+    "admin.addPlayers.someRefusedQuestion":
+      "De spelare som listas kan inte läggas till. Vill du lägga till resten av de markerade?",
+    "admin.addPlayers.addTheRest": "Lägg till resten",
+    "admin.hover.dialog.addPlayers.addTheRest":
+      "Lägg de spelare som kan läggas till i den här tävlingen och lämna de andra",
+    "Competition.PlayerAlreadyEntered": "Redan med i tävlingen",
+    "TournamentPlayer.Archived": "Avsatt i turneringen",
+    "Tournament.NoSuchPlayer": "Inte spelare i turneringen",
+    "Competition.DrawFixed":
+      "Lottningen är låst, eftersom en match har lagts in",
     "admin.competitionPlayers.choose": "Spelare att lägga till",
     "admin.competitionPlayers.nobody": "Välj en spelare",
     // Erbjuds i en utslagnings rullgardinslista, och vad en bye listas som.

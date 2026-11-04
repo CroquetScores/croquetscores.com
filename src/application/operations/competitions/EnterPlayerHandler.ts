@@ -2,18 +2,14 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { TournamentPlayerId } from "../../../domain/aggregates/tournaments/primitives/TournamentPlayerId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
-import {
-  type Tournament,
-  TournamentRefused,
-} from "../../../domain/aggregates/tournaments/Tournament.js";
-import type { TournamentPlayerErrorCode } from "../../../domain/aggregates/tournaments/TournamentPlayer.js";
-import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
+import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import {
   type Competitions,
   competitionManagedBy,
+  enterTournamentPlayer,
 } from "./competitionOperations.js";
 import { EnterPlayer } from "./EnterPlayer.js";
 
@@ -48,22 +44,10 @@ export class EnterPlayerHandler extends CommandHandler<EnterPlayer, string> {
       await this.competitions.save(competition);
       return bye.value;
     }
-    const player = tournament.players.find((each) => each.id.equals(id));
-    if (player === undefined) {
-      throw new TournamentRefused(
-        "Tournament.NoSuchPlayer",
-        "The tournament has no such player.",
-      );
-    }
-    // Set aside, and in no competition, until they are restored.
-    if (player.archived) {
-      throw new ValidationError<TournamentPlayerErrorCode>(
-        "TournamentPlayer.Archived",
-      );
-    }
-    const entered = competition.enterPlayer(
+    const entered = enterTournamentPlayer(
+      tournament,
+      competition,
       id,
-      player.order,
       told,
       by,
       command.requestedAt,
