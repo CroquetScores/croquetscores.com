@@ -26,6 +26,6 @@ Beneath them the **Country**, **Region** and **Sport** lists narrow what the but
 
 ## What you can do with a tournament
 
-Beside a tournament you only look after the rankings of, the list offers **Players** and nothing else. It opens the tournament's page, where you can change the world ranking name of any of its players, read its managers and write to them with **Email Managers**, and take its games for the world rankings from the **Rankings** tab. You cannot change the tournament, archive it, or enter scores in it, since those are for its managers and scorers. An archived tournament of this kind has no button; its name still opens its page.
+Beside a tournament you only look after the rankings of, the list offers **Players** and nothing else. It opens the tournament's page, where you can change the world ranking name of any of its players, read its managers and write to them with **Email Managers**, and take its games for the world rankings from the **Rankings** tab, with **Download games for world ranking**. You cannot change the tournament, archive it, or enter scores in it, since those are for its managers and scorers. An archived tournament of this kind has no button; its name still opens its page.
 
 Beside a tournament you manage or score, the list offers what it offers any manager or scorer: **Manage** with the pencil (**Edit**) and the bin (**Archive**), or **Scores**. Being an officer changes none of that.

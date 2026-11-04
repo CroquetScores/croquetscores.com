@@ -26,6 +26,6 @@ Debajo, las listas **País**, **Región** y **Deporte** acotan lo que dejaron lo
 
 ## Qué puedes hacer con un torneo
 
-Junto a un torneo del que solo te ocupas por los rankings, la lista ofrece **Jugadores** y nada más. Abre la página del torneo, donde puedes cambiar el nombre para el ranking mundial de cualquiera de sus jugadores, leer sus gestores y escribirles con **Escribir a los gestores**, y tomar sus partidas para los rankings mundiales en la pestaña **Rankings**. No puedes cambiar el torneo, archivarlo ni introducir resultados en él, porque eso es cosa de sus gestores y anotadores. Un torneo archivado de este tipo no tiene botón; su nombre sigue abriendo su página.
+Junto a un torneo del que solo te ocupas por los rankings, la lista ofrece **Jugadores** y nada más. Abre la página del torneo, donde puedes cambiar el nombre para el ranking mundial de cualquiera de sus jugadores, leer sus gestores y escribirles con **Escribir a los gestores**, y tomar sus partidas para los rankings mundiales en la pestaña **Rankings**, con **Descargar partidas para el ranking mundial**. No puedes cambiar el torneo, archivarlo ni introducir resultados en él, porque eso es cosa de sus gestores y anotadores. Un torneo archivado de este tipo no tiene botón; su nombre sigue abriendo su página.
 
 Junto a un torneo que gestionas o en el que anotas, la lista ofrece lo que ofrece a cualquier gestor o anotador: **Gestionar** con el lápiz (**Editar**) y la papelera (**Archivar**), o **Resultados**. Ser responsable no cambia nada de eso.

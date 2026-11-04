@@ -33,11 +33,11 @@ A porta de entrada da administração lista os torneios de que você participa, 
 
 ![A lista de torneios na administração](images/admin-list.png)
 
-Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores**, **Anotadores** e **Rankings**. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
+Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Equipes**, **Testes**, **Notas**, **Organizadores**, **Anotadores** e **Rankings**. A aba **Rankings** só existe quando o torneio vale para os rankings mundiais. A página abre em Equipes, porque as equipes são a primeira coisa a montar.
 
 ![A página de um torneio, na aba Testes](images/tournament-page.png)
 
-A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. Na página do torneio e na página de um teste, ela leva ao torneio, como **Torneio**, e a cada teste pelo nome. Na página de uma equipe, ela leva ao torneio e a cada equipe pelo nome abreviado, porque um organizador na página de uma equipe está inscrevendo jogadores equipe por equipe. A página em que você está é marcada em preto.
+A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. Na página do torneio e na página de um teste, ela leva ao torneio, como **Torneio**, e a cada teste pelo nome. Na página de uma equipe, ela leva ao torneio e a cada equipe pelo nome abreviado, porque um organizador na página de uma equipe está inscrevendo jogadores equipe por equipe. A página em que você está é marcada em preto. Quando testes são adicionados, alterados, movidos, arquivados ou restaurados na aba Testes, a barra os acompanha na hora.
 
 ## O que vale em todo lugar
 
@@ -46,6 +46,8 @@ A barra verde-escura abaixo do cabeçalho serve para ir de uma página a outra. 
 **Um diálogo sobre a página não guarda nada até que você pressione o seu botão.** Cancelar, ou a tecla Escape, fecha-o e deixa tudo como estava. Os diálogos que adicionam coisas, como Adicionar equipe e Adicionar resultado, continuam abertos depois de cada adição, para que uma lista possa ser digitada de uma vez, um item após o outro.
 
 **O que é recusado é dito ao lado do campo a que se refere.** Nada do que é recusado é guardado, e o que você digitou continua digitado, para que possa ser corrigido em vez de digitado de novo.
+
+**A ajuda está a um toque.** Um **?** redondo fica na barra de título da página que cria ou altera um torneio, no fim da fileira de abas, ao lado de **Novo torneio**, e em cada diálogo. Ele abre a parte deste guia que trata do que você está vendo, em outra aba, para que o que você estava fazendo seja mantido.
 
 **A administração funciona em um telefone.** Todo botão é grande o bastante para ser pressionado com o polegar, e nada é mais largo do que a tela.
 

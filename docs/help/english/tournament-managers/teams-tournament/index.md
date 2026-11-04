@@ -33,11 +33,11 @@ The admin's front door lists the tournaments you have a part in, one year at a t
 
 ![The list of tournaments in the admin](images/admin-list.png)
 
-Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in six tabs beneath its name: **Teams**, **Tests**, **Notes**, **Managers**, **Scorers** and **Rankings**. The page opens on Teams, since the teams are the first thing set up.
+Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in six tabs beneath its name: **Teams**, **Tests**, **Notes**, **Managers**, **Scorers** and **Rankings**. The **Rankings** tab is there only where the tournament counts toward the world rankings. The page opens on Teams, since the teams are the first thing set up.
 
 ![A tournament's page, on its Tests tab](images/tournament-page.png)
 
-The dark green bar beneath the header is for moving between pages. On the tournament's page and on a test's page it leads to the tournament, as **Tournament**, and to each test by its name. On a team's page it leads to the tournament and to each team by its short name instead, since a manager on one team's page is entering players team by team. The page you are on is marked in black.
+The dark green bar beneath the header is for moving between pages. On the tournament's page and on a test's page it leads to the tournament, as **Tournament**, and to each test by its name. On a team's page it leads to the tournament and to each team by its short name instead, since a manager on one team's page is entering players team by team. The page you are on is marked in black. When tests are added, changed, moved, archived or restored on the Tests tab, the bar follows at once.
 
 ## Things that hold everywhere
 
@@ -46,6 +46,8 @@ The dark green bar beneath the header is for moving between pages. On the tourna
 **A dialog over the page keeps nothing until you press its button.** Cancel, or the Escape key, closes it and leaves everything as it was. Dialogs that add things, such as Add Team and Add Score, stay open after each one is added, so that a list can be typed in one after another.
 
 **What is refused is said beside the field it is about.** Nothing refused is kept, and what you typed stays typed, so that it can be put right rather than typed again.
+
+**Help is a press away.** A round **?** is in the title bar of the page that creates or changes a tournament, at the end of the row of tabs, beside **New Tournament**, and in each dialog. It opens the part of this guide that is about what you are looking at, in another tab, so that what you were doing is kept.
 
 **The admin works on a phone.** Every button is big enough to press with a thumb, and nothing is wider than the screen.
 

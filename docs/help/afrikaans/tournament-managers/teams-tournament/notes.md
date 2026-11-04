@@ -14,6 +14,8 @@ Druk op **Voeg nota by**, bo die lys. 'n Paneel neem die plek van die lys in, wa
 
 **Beskrywing** word in Markdown geskryf en kan leeg gelaat word waar die titel alles sê wat daar te sê is. Die nutsbalk bo die boks skryf die Markdown vir jou: Opskrif, Vetgedruk, Skuinsgedruk, Aanhaling, Kode, Skakel, Genommerde lys, Lys met kolpunte en Taaklys. Elkeen werk op wat gekies is, of aan die begin van elke gekose reël, of plaas die wyser waar die woorde moet kom.
 
+'n Paragraaf word van die een voor dit geskei deur 'n volle leë reël, sodat die nota as paragrawe lees.
+
 **Voorskou** wys die nota soos 'n leser dit op sy bladsy sal sien.
 
 ![Die notapaneel, op sy Voorskou-oortjie](images/note-preview.png)

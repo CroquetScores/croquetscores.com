@@ -20,6 +20,8 @@ Druk op **Voeg spel by**. Die spel word bygevoeg, die dialoog sê watter, en die
 
 ![Die dialoog nadat 'n spel bygevoeg is](images/add-score-dialog-added.png)
 
+As die dialoog nie die kompetisie se spelers kan lees nie, sê dit "Die spelers kon nie gelees word nie. Maak hierdie dialoog toe en maak dit weer oop." Doen dit.
+
 Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verloorder wat nie gekies is nie, punte wat nie getik is nie of nie met 'n syfer begin nie, dieselfde speler as albei, 'n verloorder se punte wat as gewen gemerk is, of 'n wenner se punte wat agter die verloorder s'n is. In 'n uitskakeling word twee spelers wat nie getrek is om teen mekaar te speel nie, bo die velde geweier.
 
 ## 'n Uitskakeling se rooster moet eers gevul wees {#draw-filled-first}
@@ -30,7 +32,9 @@ Wat geweier word, word onder die veld gesê waaroor dit gaan: 'n wenner of verlo
 
 ## Die lys uitslae
 
-Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, oudste eerste, sodat die lys lees soos die kompetisie gespeel is. Elkeen sê die wenner en hul punte, dan die verloorder en hulle s'n, en bied **Wysig** en **Argiveer** aan.
+Die uitslae in gebruik word gelys in die volgorde waarin hulle ingevoer is, oudste eerste, sodat die lys lees soos die kompetisie gespeel is. Die lys is 'n tabel met 'n ry vir elke spel, en geen kolomopskrifte nie. 'n Ry sê die spel se nommer, die wenner en hul punte, die woorde "het gewen teen", dan die verloorder en hulle s'n, en bied **Wysig** en **Argiveer** aan.
+
+'n Spel se nommer is sy plek onder die spelle wat ingevoer is, die eerste is 1, geargiveerde spelle ingereken. Om 'n spel te argiveer verander nie enige ander se nommer nie, so 'n gaping in die nommers sê dat 'n spel geargiveer is.
 
 ## Hoe om 'n uitslag reg te stel {#correcting-a-score}
 

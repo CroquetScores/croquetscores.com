@@ -14,9 +14,11 @@ Press **Add Player**, above the list. A dialog opens over the page.
 
 **Name** is required. It is the player's name as it will be shown on every page, between 3 and 254 characters. Two players in one tournament cannot have the same name, however it is capitalised; where two players really share a name, tell them apart in the name itself, as "Andrew Hobbs (2)".
 
-**Representing** is what the player plays for, written as a reader would say it: a club, a region or a country, such as "Canterbury Croquet Club". It is shown in brackets after the name. It can be left empty.
+**Representing** is what the player plays for, written as a reader would say it: a club, a region or a country, such as "Canterbury Croquet Club". It is shown in brackets after the name. It can be left empty. As you type, what players of any tournament on the site have been added representing is offered where a word of it begins with what you typed, so that a club is written as it has been written before; the tab key takes the one shown after the cursor.
 
-**Flag** is the flag shown beside the player's name. It can be left as none, which most players are. What a player represents and which flag they fly are kept apart, since a player can play for a club in one country and fly the flag of another.
+**Flag** is the flag shown beside the player's name. It is a drop-down list of the places by name, none first, then the places most tournaments are played in; type the start of a name to move to it. It can be left as none, which most players are. What a player represents and which flag they fly are kept apart, since a player can play for a club in one country and fly the flag of another.
+
+**Handicap** is the player's handicap, if they have one: a sign, up to two digits and a fraction of one digit, such as 4, +4 or -1.5. It is kept as you write it, and is shown in brackets with what the player represents, before it. It can be left empty.
 
 **World Ranking Player Name** is the name the world rankings know the player by. It is asked for only in a tournament of Association Croquet or Golf Croquet, the two sports whose players the world rankings keep a list of. American 6 Wicket's players are known to the rankings by their own names, so it is not asked for there, and each player's world ranking name is always their name. While you add a player it follows the name as you type it, since most players are known to the rankings by their own name, and stops following once you type in it. Left empty, it is kept as the player's name.
 
@@ -32,7 +34,7 @@ A player is never called "Bye". A knockout's byes are added in the knockout itse
 
 To add a whole list at once, press **Add Players**, beside **Add Player**. A dialog opens over the page with one box, which takes several lines of text. You can copy the list from a spreadsheet and paste it into the box.
 
-**The first line names the fields**, separated by commas or by tabs: **Name**, and any of **Representing**, **Flag**, **Handicap** and **WorldRankingPlayerName**, in any order. These names are typed in English, whatever language the site is in. **Name** must be one of them. **Each line after it is a player**, with a value for each field in the same order, separated in the same way. A player with nothing for a field leaves it empty, but keeps the comma or tab. For example, with commas:
+**The first line names the fields** (a list whose first line names none is refused, with "First row must be field names"), separated by commas or by tabs: **Name**, and any of **Representing**, **Flag**, **Handicap** and **WorldRankingPlayerName**, in any order. These names are typed in English, whatever language the site is in. **Name** must be one of them. **Each line after it is a player**, with a value for each field in the same order, separated in the same way. A player with nothing for a field leaves it empty, but keeps the comma or tab. For example, with commas:
 
 ```
 Name,Representing,Flag
@@ -51,7 +53,7 @@ Alex Another,,England
 
 Press **Add**. The whole list is checked before any of it is kept, so a list with anything wrong in it adds nobody. What is wrong is said beneath the box, on the line it is on, counting the first line as line 1. Every fault is listed, not only the first, and what you typed stays so that you can put it right. Once the list is kept, the dialog closes and the Players tab lists the new players, in the order you wrote them. Unlike **Add Player**, which stays open for the next player, there is no next: the list was the next.
 
-The **?** in the title bar of the dialog leads here.
+The **?** in the title bar of the dialog leads here. Both this dialog and Add Player stay in the window wherever the page has been scrolled to.
 
 ## Correcting a player {#correcting-a-player}
 

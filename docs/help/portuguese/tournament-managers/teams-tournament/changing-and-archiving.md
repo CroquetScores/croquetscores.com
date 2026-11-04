@@ -6,7 +6,7 @@ Na lista de torneios na administração, pressione **Editar** no torneio. O form
 
 ![O formulário Editar torneio](images/edit-tournament.png)
 
-Os dias do torneio podem ser ampliados aqui quando um teste precisa de um dia fora deles, porque um teste é disputado dentro do seu torneio. Um formato disputado por equipes pode ser trocado por outro, porque o torneio guarda as mesmas coisas em cada um. Depois que o torneio tem alguma equipe ou teste, contando os arquivados, ele não pode ser mudado para o formato Padrão, que tem jogadores e competições em vez disso.
+Os dias do torneio podem ser ampliados aqui quando um teste precisa de um dia fora deles, porque um teste é disputado dentro do seu torneio. Depois que o torneio tem alguma equipe ou teste, contando os arquivados, o seu **Formato** não pode mais ser mudado: nem para o formato Padrão, que tem jogadores e competições em vez disso, nem para outro formato disputado por equipes, porque um teste pode estar em um grupo que o outro formato não tem. Escolha o formato quando o torneio for criado.
 
 Um torneio mantém o seu endereço quando o nome é corrigido, para que um link que alguém já enviou continue a encontrá-lo. Ele só muda quando o ano em que começa ou o seu esporte muda, e então o endereço antigo leva ao novo. Salvar leva você ao torneio onde quer que ele esteja agora.
 
@@ -14,7 +14,7 @@ Só um organizador pode alterar um torneio. Um anotador, ou qualquer outra pesso
 
 ## A lista de torneios
 
-A administração lista um ano de cada vez, começando por este ano, o torneio mais recente primeiro. Os anos em que você tem um torneio são abas na barra verde-escura, o mais recente primeiro; quando há mais do que cabe em um telefone, os mais antigos ficam em uma lista suspensa no fim da linha. O ano está no endereço, então é possível fazer um link para um ano.
+A administração lista um ano de cada vez, começando por este ano, o torneio mais recente primeiro. Os anos em que você tem um torneio são abas na barra verde-escura, o mais recente primeiro; quando há mais do que cabe em um telefone, os mais antigos ficam em uma lista suspensa no fim da linha. O ano está no endereço, então é possível fazer um link para um ano. Abaixo dos botões, a lista pode ser restringida por **País**, **Região** e **Esporte**, e pelos dias em que há torneios, **De** e **Até**. Um **?** redondo ao lado de **Novo torneio** leva à ajuda.
 
 ![A lista de torneios](images/admin-list.png)
 

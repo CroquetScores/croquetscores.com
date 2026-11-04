@@ -12,7 +12,9 @@ Det mörkgröna fältet erbjuder turneringens avdelningar: **Senaste**, som är 
 
 ## Sammanfattningen
 
-En turnering vars landskamper inte ingår i någon grupp har en **Sammanfattning**: en tabell över varje lag, rangordnade, med de landskamper det har vunnit, förlorat och spelat oavgjort, dess vunna och förlorade partier, och dess bågar för, emot och netto. Där någon landskamps matcher spelas bäst av fler än ett kommer vunna och förlorade matcher efter landskamperna. Sammanfattningen är där en läsare letar efter varje lag som helhet.
+En turnering vars landskamper inte ingår i någon grupp har en **Sammanfattning**: en tabell över varje lag, rangordnade, med de landskamper det har vunnit, förlorat och spelat oavgjort, dess vunna och förlorade partier, och dess bågar för, emot och netto. Där någon landskamps matcher spelas bäst av fler än ett kommer vunna och förlorade matcher efter landskamperna. Lagen rangordnas efter de landskamper de har vunnit, sedan de matcher de har vunnit, sedan deras nettopartier och sedan deras nettobågar, och därefter efter turneringens ordning. En landskamp vars lag är jämna på matcher avgörs av nettopartier, sedan nettobågar, eller blir oavgjord där turneringen har bockat för **Jämna landskamper blir oavgjorda**. Sammanfattningen är där en läsare letar efter varje lag som helhet.
+
+I en **Interstate Shield** rangordnas lagen efter de landskamper de har vunnit, sedan nettomatcher i stället för vunna matcher, sedan nettopartier och sedan nettobågar. Lag som fortfarande är jämna sätts i ordning efter de landskamper de vann mot varandra. Dess sammanfattning visar en kolumn **Netto** under Matcher och under Partier, liksom under Bågar, och Shield spelas aldrig i grupper.
 
 En turnering med en landskamp i en grupp har ingen Sammanfattning. Varje grupps sida visar i stället hur den gruppens lag står, eftersom en enda tabell över lag från olika grupper som aldrig spelat mot varandra inte skulle rangordna något.
 
@@ -28,7 +30,7 @@ En landskamps sida har lagens fullständiga namn som rubrik, som "Australia mot 
 
 ![En landskamps sida](images/public-test.png)
 
-En landskamp visas på två sätt, som erbjuds på raden med dess namn: **Rutnät**, som är den här tabellen, och **Speltabell**, som listar varje parti i landskampen äldst först. En landskamp i en grupp erbjuder sin grupps Sammanfattning och landskamper på en rad ovanför sin rubrik, med den här landskampen markerad.
+En landskamp visas på två sätt, som erbjuds på raden med dess namn: **Rutnät**, som är den här tabellen, och **Speltabell**, som listar varje parti i landskampen i en tabell med rubrikerna **Match** och **Datum**, äldst först till att börja med. Ett tryck på en rubrik sorterar efter den, och webbplatsen kommer ihåg hur läsaren senast sorterade. Bredvid vyerna finns en skrivarknapp, som visas där JavaScript är på och skriver ut sidan utan fälten. En landskamp i en grupp erbjuder sin grupps Sammanfattning och landskamper på en rad ovanför sin rubrik, med den här landskampen markerad.
 
 ## Spelare
 
@@ -38,7 +40,7 @@ Sidan Spelare listar spelarna lag för lag: varje lag under en rubrik med dess n
 
 ## Anteckningar
 
-Sidan Anteckningar listar turneringens anteckningar, den senast skrivna först, var och en ledande till sin egen sida och med uppgift om hur länge sedan den skrevs. En anteckning läsaren inte har läst markeras med en röd asterisk tills den öppnas.
+Sidan Anteckningar har rubriken **Arrangörernas anteckningar**, och säger "Inga anteckningar än." så länge det inte finns några. Den listar turneringens anteckningar, den senast skrivna först, var och en ledande till sin egen sida och med uppgift om hur länge sedan den skrevs. En anteckning läsaren inte har läst markeras med en röd asterisk tills den öppnas.
 
 ## Adresser som flyttar
 

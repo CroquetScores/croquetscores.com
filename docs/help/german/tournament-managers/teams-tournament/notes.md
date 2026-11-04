@@ -1,6 +1,6 @@
 # Notizen
 
-Auf dem Reiter **Notizen** der Turnierseite schreiben die Verantwortlichen, was die Spieler im Lauf des Turniers wissen müssen: den Spielplan, eine Änderung der Plätze, die Zeit des Mittagessens. Leser finden sie auf der öffentlichen Seite Notizen des Turniers, und eine Notiz, die sie nicht gelesen haben, ist dort mit einem roten Sternchen markiert, das auch den Bereich Notizen auf jeder Seite des Turniers markiert, bis sie ihn öffnen.
+Auf dem Reiter **Notizen** der Turnierseite schreiben die Verantwortlichen, was die Spieler im Lauf des Turniers wissen müssen: die Spielreihenfolge, eine Änderung der Rasenplätze, die Zeit des Mittagessens. Leser finden sie auf der öffentlichen Seite Notizen des Turniers, und eine Notiz, die sie nicht gelesen haben, ist dort mit einem roten Sternchen markiert, das auch den Bereich Notizen auf jeder Seite des Turniers markiert, bis sie ihn öffnen.
 
 ![Der Reiter Notizen](images/notes-tab.png)
 
@@ -13,6 +13,8 @@ Drücken Sie **Notiz hinzufügen** über der Liste. Ein Bereich tritt an die Ste
 **Titel** ist Pflicht und ist das, womit die Notiz aufgeführt wird. Er ist reiner Text.
 
 **Beschreibung** wird in Markdown geschrieben und kann leer bleiben, wenn der Titel schon alles sagt. Die Werkzeugleiste über dem Feld schreibt das Markdown für Sie: Überschrift, Fett, Kursiv, Zitat, Code, Link, Nummerierte Liste, Aufzählung und Aufgabenliste. Jedes wirkt auf das Markierte, oder am Anfang jeder markierten Zeile, oder setzt den Cursor dorthin, wo die Wörter hingehören.
+
+Ein Absatz wird vom vorigen durch eine ganze Leerzeile getrennt, sodass sich die Notiz als Absätze liest.
 
 **Vorschau** zeigt die Notiz so, wie ein Leser sie auf ihrer Seite sehen wird.
 

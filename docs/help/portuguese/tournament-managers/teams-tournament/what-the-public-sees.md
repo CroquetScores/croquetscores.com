@@ -12,7 +12,9 @@ A barra verde-escura oferece as seções do torneio: **Recentes**, que é esta p
 
 ## O resumo
 
-Um torneio cujos testes não estão em nenhum grupo tem um **Resumo**: uma única tabela de todas as equipes, classificadas, com os testes que ganhou, perdeu e empatou, os seus jogos ganhos e perdidos, e os seus arcos a favor, contra e saldo. Quando as partidas de algum teste são melhor de mais de um, as partidas ganhas e perdidas vêm depois dos testes. O resumo é onde um leitor procura cada equipe como um todo.
+Um torneio cujos testes não estão em nenhum grupo tem um **Resumo**: uma única tabela de todas as equipes, classificadas, com os testes que ganhou, perdeu e empatou, os seus jogos ganhos e perdidos, e os seus arcos a favor, contra e saldo. Quando as partidas de algum teste são melhor de mais de um, as partidas ganhas e perdidas vêm depois dos testes. As equipes são classificadas pelos testes que ganharam, depois pelas partidas que ganharam, depois pelo saldo de jogos e depois pelo saldo de arcos, e então pela ordem do torneio. Um teste cujas equipes estão iguais em partidas é decidido pelo saldo de jogos, depois pelo saldo de arcos, ou é um empate quando o torneio marca **Testes igualados são empates**. O resumo é onde um leitor procura cada equipe como um todo.
+
+Num **Interstate Shield** as equipes são classificadas pelos testes ganhos, depois pelo saldo de partidas no lugar das partidas ganhas, depois pelo saldo de jogos e depois pelo saldo de arcos. As equipes que continuam iguais são postas em ordem pelos testes que ganharam umas contra as outras. O seu resumo mostra uma coluna **Saldo** sob Partidas e sob Jogos, além de sob Arcos, e o Shield nunca é disputado em grupos.
 
 Um torneio com um teste em um grupo não tem Resumo. A página de cada grupo mostra a classificação das equipes desse grupo, porque uma única tabela de equipes de grupos diferentes que nunca jogaram entre si não classificaria nada.
 
@@ -28,7 +30,7 @@ A página de um teste tem como cabeçalho os nomes completos das suas equipes, c
 
 ![A página de um teste](images/public-test.png)
 
-Um teste é mostrado de duas formas, oferecidas na linha do seu nome: **Grade**, que é esta tabela, e **Ordem de jogo**, que lista todos os jogos do teste, o mais antigo primeiro. Um teste de um grupo oferece o Resumo e os testes do seu grupo em uma linha acima do cabeçalho, com este teste marcado.
+Um teste é mostrado de duas formas, oferecidas na linha do seu nome: **Grade**, que é esta tabela, e **Ordem de jogo**, que lista todos os jogos do teste em uma tabela com os títulos **Jogo** e **Data**, do mais antigo para o mais novo no começo. Apertar um título ordena por ele, e o site lembra como o leitor ordenou por último. Ao lado das visões, um botão de impressora, mostrado onde os scripts estão ativados, imprime a página sem as barras. Um teste de um grupo oferece o Resumo e os testes do seu grupo em uma linha acima do cabeçalho, com este teste marcado.
 
 ## Jogadores
 
@@ -38,7 +40,7 @@ A página Jogadores lista os jogadores equipe por equipe: cada equipe sob um tí
 
 ## Notas
 
-A página Notas lista as notas do torneio, a escrita mais recentemente primeiro, cada uma levando à sua própria página e dizendo há quanto tempo foi escrita. Uma nota que o leitor não leu é marcada com um asterisco vermelho até que ele a abra.
+A página Notas tem o título **Notas dos organizadores** e diz "Ainda não há notas." enquanto não há nenhuma. Ela lista as notas do torneio, a escrita mais recentemente primeiro, cada uma levando à sua própria página e dizendo há quanto tempo foi escrita. Uma nota que o leitor não leu é marcada com um asterisco vermelho até que ele a abra.
 
 ## Endereços que mudam
 

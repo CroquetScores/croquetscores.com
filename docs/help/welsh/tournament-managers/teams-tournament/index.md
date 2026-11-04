@@ -33,19 +33,21 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Timau**, **Profion**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Timau, gan mai'r timau yw'r peth cyntaf a osodir i fyny.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Timau**, **Profion**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r tab **Detholion** yno dim ond lle mae'r twrnamaint yn cyfrif tuag at restr detholion y byd. Mae'r dudalen yn agor ar Timau, gan mai'r timau yw'r peth cyntaf a osodir i fyny.
 
 ![Tudalen twrnamaint, ar ei thab Profion](images/tournament-page.png)
 
-Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Ar dudalen y twrnamaint ac ar dudalen prawf mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob prawf wrth ei enw. Ar dudalen tîm mae'n arwain at y twrnamaint ac at bob tîm wrth ei enw byr yn lle hynny, gan fod rheolwr ar dudalen un tîm yn rhoi chwaraewyr i mewn dîm wrth dîm. Mae'r dudalen rydych arni wedi'i marcio mewn du.
+Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Ar dudalen y twrnamaint ac ar dudalen prawf mae'n arwain at y twrnamaint, fel **Twrnamaint**, ac at bob prawf wrth ei enw. Ar dudalen tîm mae'n arwain at y twrnamaint ac at bob tîm wrth ei enw byr yn lle hynny, gan fod rheolwr ar dudalen un tîm yn rhoi chwaraewyr i mewn dîm wrth dîm. Mae'r dudalen rydych arni wedi'i marcio mewn du. Pan ychwanegir profion, eu newid, eu symud, eu harchifo neu eu hadfer ar y tab Profion, mae'r bar yn dilyn ar unwaith.
 
 ## Pethau sy'n dal ym mhob man
 
 **Ni chaiff dim ei ddileu'n llwyr ac eithrio nodyn.** Caiff timau, chwaraewyr, profion, canlyniadau a'r twrnamaint ei hun eu harchifo yn hytrach na'u dileu: eu rhoi o'r neilltu, â llinell drwyddynt, a'u rhestru o dan bennawd eu hunain, gydag **Adfer** i'w cael yn ôl. Nid yw archifo, adfer a symud i fyny ac i lawr byth yn gofyn i chi gadarnhau, am fod pob un yn cael ei ddadwneud trwy bwyso'r ffordd arall. Mae'r pethau na ellir eu dadwneud, fel dileu nodyn neu dynnu rheolwr, yn gofyn yn gyntaf.
 
-**Nid yw deialog dros y dudalen yn cadw dim nes i chi bwyso ei botwm.** Mae Canslo, neu'r fysell Escape, yn ei chau ac yn gadael popeth fel yr oedd. Mae deialogau sy'n ychwanegu pethau, fel Ychwanegu tîm ac Ychwanegu canlyniad, yn aros ar agor ar ôl i bob un gael ei ychwanegu, fel y gellir teipio rhestr un ar ôl y llall.
+**Nid yw deialog dros y dudalen yn cadw dim nes i chi bwyso ei botwm.** Mae Diddymu, neu'r fysell Escape, yn ei chau ac yn gadael popeth fel yr oedd. Mae deialogau sy'n ychwanegu pethau, fel Ychwanegu tîm ac Ychwanegu canlyniad, yn aros ar agor ar ôl i bob un gael ei ychwanegu, fel y gellir teipio rhestr un ar ôl y llall.
 
 **Dywedir beth a wrthodir wrth ochr y maes y mae'n ymwneud ag ef.** Ni chedwir dim a wrthodir, ac mae'r hyn a deipiasoch yn aros fel y'i teipiwyd, fel y gellir ei gywiro yn hytrach na'i deipio eto.
+
+**Mae cymorth un wasgiad i ffwrdd.** Mae **?** crwn ym mar teitl y dudalen sy'n creu neu'n newid twrnamaint, ar ddiwedd rhes y tabiau, wrth ymyl **Twrnamaint newydd**, ac ym mhob deialog. Mae'n agor y rhan o'r canllaw hwn sy'n ymwneud â'r hyn rydych yn edrych arno, mewn tab arall, fel y cedwir yr hyn roeddech yn ei wneud.
 
 **Mae'r adran weinyddu'n gweithio ar ffôn.** Mae pob botwm yn ddigon mawr i'w bwyso â bawd, ac nid oes dim yn lletach na'r sgrin.
 

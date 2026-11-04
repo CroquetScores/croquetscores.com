@@ -1,6 +1,6 @@
 # Hoe om spelers in 'n kompetisie in te skryf
 
-'n Kompetisie se bladsy word oopgemaak vanaf sy naam op die Kompetisies-oortjie, of vanaf die donkergroen balk. Dit het die kompetisie se naam as opskrif, met twee oortjies daaronder: **Spelers** en **Uitslae**. Dit maak op Spelers oop, want die spelers word ingeskryf voordat enigiets gespeel word.
+'n Kompetisie se bladsy word oopgemaak vanaf sy naam op die Kompetisies-oortjie, of vanaf die donkergroen balk. Dit het die kompetisie se naam as opskrif, met twee oortjies daaronder: **Spelers** en **Uitslae**. 'n Uitskakeling het 'n derde, **Verloorders**, wat beskryf word onder ['n Verloorders-uitskakeling](competitions.md#losers-knockout). Dit maak op Spelers oop, want die spelers word ingeskryf voordat enigiets gespeel word.
 
 'n Speler in 'n kompetisie is een van die toernooi se spelers, so hulle word ingeskryf deur hulle te kies eerder as om hulle te tik. Alles omtrent hulle behalwe hul plek in die kompetisie, en wat hulle daarin oordra, word op die toernooi se Spelers-oortjie verander.
 
@@ -23,6 +23,10 @@ Geargiveerde spelers van die toernooi word nie aangebied nie.
 Die volgorde van 'n uitskakeling se spelers is sy rooster. Die eerste twee plekke ontmoet mekaar in die eerste wedstryd, die volgende twee in die volgende, en so aan. Plaas die spelers in die volgorde waarin die rooster gespeel moet word voordat enige uitslag ingevoer word, want sodra die uitskakeling 'n spel in gebruik het, is sy spelers vas: niemand kan bygevoeg, verwyder of geskuif word nie. 'n Speler kan steeds onttrek.
 
 !['n Uitskakeling sodra 'n spel ingevoer is: niemand kan bygevoeg, geskuif of verwyder word nie](images/knockout-players-fixed.png)
+
+## 'n Verloorders-uitskakeling se spelers
+
+Die spelers van 'n verloorders-uitskakeling word nie met die hand ingeskryf nie. Hulle word ingesit soos die wedstryde waarvan dit die verloorders neem, besluit word, so sy **Spelers**-oortjie lys hulle net, en sê hoekom.
 
 ## Volgorde
 

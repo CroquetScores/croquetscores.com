@@ -14,9 +14,11 @@ Drücken Sie **Spieler hinzufügen** über der Liste. Ein Dialog öffnet sich ü
 
 **Name** ist Pflicht. Es ist der Name des Spielers, wie er auf jeder Seite gezeigt wird, zwischen 3 und 254 Zeichen lang. Zwei Spieler eines Turniers können nicht denselben Namen haben, wie auch immer er groß- und kleingeschrieben ist; teilen zwei Spieler wirklich einen Namen, unterscheiden Sie sie im Namen selbst, etwa „Andrew Hobbs (2)“.
 
-**Vertritt** ist das, wofür der Spieler spielt, so geschrieben, wie ein Leser es sagen würde: ein Verein, eine Region oder ein Land, etwa „Canterbury Croquet Club“. Es steht in Klammern hinter dem Namen. Es kann leer bleiben.
+**Vertritt** ist das, wofür der Spieler spielt, so geschrieben, wie ein Leser es sagen würde: ein Verein, eine Region oder ein Land, etwa „Canterbury Croquet Club“. Es steht in Klammern hinter dem Namen. Es kann leer bleiben. Während Sie tippen, wird angeboten, was für Spieler irgendeines Turniers der Website als Vertretung hinzugefügt wurde, wo ein Wort davon mit dem beginnt, was Sie getippt haben, damit ein Verein so geschrieben wird, wie er schon einmal geschrieben wurde; die Tabulatortaste übernimmt den Vorschlag, der hinter dem Cursor steht.
 
-**Flagge** ist die Flagge, die neben dem Namen des Spielers gezeigt wird. Sie kann auf „keine“ bleiben, was bei den meisten Spielern so ist. Was ein Spieler vertritt und welche Flagge er führt, wird getrennt gehalten, weil ein Spieler für einen Verein in einem Land spielen und die Flagge eines anderen führen kann.
+**Flagge** ist die Flagge, die neben dem Namen des Spielers gezeigt wird. Sie ist eine Auswahlliste der Orte nach Namen, „keine“ zuerst, dann die Orte, an denen die meisten Turniere gespielt werden; tippen Sie den Anfang eines Namens, um dorthin zu springen. Sie kann auf „keine“ bleiben, was bei den meisten Spielern so ist. Was ein Spieler vertritt und welche Flagge er führt, wird getrennt gehalten, weil ein Spieler für einen Verein in einem Land spielen und die Flagge eines anderen führen kann.
+
+**Vorgabe** ist die Vorgabe des Spielers, wenn er eine hat: ein Vorzeichen, bis zu zwei Ziffern und ein Bruch aus einer Ziffer, etwa 4, +4 oder -1.5. Sie wird so gespeichert, wie Sie sie schreiben, und steht in Klammern zusammen mit dem, was der Spieler vertritt, vor diesem. Sie kann leer bleiben.
 
 **Name des Weltranglistenspielers** ist der Name, unter dem die Weltrangliste den Spieler kennt. Danach wird nur bei einem Turnier im Association Croquet oder Golf Croquet gefragt, den beiden Sportarten, deren Spieler die Weltrangliste in einer Liste führt. Die Spieler im American 6 Wicket sind der Rangliste unter ihrem eigenen Namen bekannt; danach wird dort also nicht gefragt, und der Name in der Weltrangliste ist bei jedem Spieler immer sein Name. Während Sie einen Spieler hinzufügen, folgt er dem Namen, während Sie ihn tippen, weil die meisten Spieler der Rangliste unter ihrem eigenen Namen bekannt sind, und hört auf zu folgen, sobald Sie in ihm selbst tippen. Bleibt er leer, wird der Name des Spielers gespeichert.
 
@@ -26,13 +28,13 @@ Drücken Sie **Hinzufügen**. Der Spieler wird hinzugefügt, der Dialog sagt es,
 
 ![Der Dialog, nachdem ein Spieler hinzugefügt wurde](images/add-player-dialog-added.png)
 
-Ein Spieler heißt nie „Bye“, das englische Wort für Freilos. Die Freilose einer K.-o.-Runde werden in der K.-o.-Runde selbst hinzugefügt, dort, wo ihre Spieler aufgenommen werden; ein Name, dessen erstes Wort „bye“ ist, wird deshalb abgelehnt, und der Dialog erklärt, warum.
+Ein Spieler heißt nie „Bye“, das englische Wort für Freilos. Die Freilose eines K.-o.-Turniers werden im K.-o.-Turnier selbst hinzugefügt, dort, wo ihre Spieler aufgenommen werden; ein Name, der „Bye“ lautet oder „Bye“ mit einer Nummer, wie „Bye 2“, „Bye-2“ oder „Bye (2)“, wird deshalb abgelehnt, und der Dialog erklärt, warum.
 
 ## Mehrere Spieler hinzufügen {#adding-multiple-players}
 
 Um eine ganze Liste auf einmal hinzuzufügen, drücken Sie **Mehrere Spieler hinzufügen** neben **Spieler hinzufügen**. Ein Dialog öffnet sich über der Seite mit einem einzigen Feld, das mehrere Textzeilen aufnimmt. Sie können die Liste aus einer Tabellenkalkulation kopieren und in das Feld einfügen.
 
-**Die erste Zeile nennt die Felder**, getrennt durch Kommas oder Tabulatoren: **Name** und beliebige von **Representing**, **Flag**, **Handicap** und **WorldRankingPlayerName**, in beliebiger Reihenfolge. Diese Namen werden auf Englisch getippt, in welcher Sprache die Website auch ist. **Name** muss dabei sein. **Jede weitere Zeile ist ein Spieler**, mit einem Wert für jedes Feld in derselben Reihenfolge, auf dieselbe Weise getrennt. Hat ein Spieler für ein Feld nichts, bleibt es leer, aber das Komma oder der Tabulator bleibt stehen. Zum Beispiel mit Kommas:
+**Die erste Zeile nennt die Felder** (eine Liste, deren erste Zeile keine nennt, wird mit „First row must be field names“ abgelehnt), getrennt durch Kommas oder Tabulatoren: **Name** und beliebige von **Representing**, **Flag**, **Handicap** und **WorldRankingPlayerName**, in beliebiger Reihenfolge. Diese Namen werden auf Englisch getippt, in welcher Sprache die Website auch ist. **Name** muss dabei sein. **Jede weitere Zeile ist ein Spieler**, mit einem Wert für jedes Feld in derselben Reihenfolge, auf dieselbe Weise getrennt. Hat ein Spieler für ein Feld nichts, bleibt es leer, aber das Komma oder der Tabulator bleibt stehen. Zum Beispiel mit Kommas:
 
 ```
 Name,Representing,Flag
@@ -42,16 +44,16 @@ Alex Another,,England
 
 - **Name, Vertritt und Name des Weltranglistenspielers** unterliegen denselben Regeln wie beim Hinzufügen eines einzelnen Spielers (siehe [Spieler hinzufügen](players.md#add-a-player)). Ein Name ist zwischen 3 und 254 Zeichen lang, ist nicht schon im Turnier, wie auch immer er groß- und kleingeschrieben ist, und ist nicht „Bye“.
 - **Flagge** ist der Name des Landes oder Ortes, in Ihrer Sprache, so wie ihn die Liste im Dialog Spieler hinzufügen anbietet, etwa Neuseeland.
-- **Handicap** ist eine Zahl mit Vorzeichen, mit bis zu zwei Ziffern und einer Nachkommastelle, etwa 4, +4 oder -1.5.
+- **Vorgabe** ist ein Vorzeichen, bis zu zwei Ziffern und ein Bruch aus einer Ziffer, etwa 4, +4 oder -1.5.
 - Ein Spieler ohne **WorldRankingPlayerName** ist unter seinem Namen bekannt, wie beim einzelnen Hinzufügen.
 - **Kommas oder Tabulatoren.** Aus einer Tabellenkalkulation kopierte Zellen sind durch Tabulatoren getrennt, eine von Hand getippte Liste meist durch Kommas. Beides geht. Enthält die erste Zeile einen Tabulator, wird die ganze Liste mit Tabulatoren gelesen, sonst mit Kommas.
 - Ein Wert, der das Trennzeichen enthält, steht in doppelten Anführungszeichen, wie eine Tabellenkalkulation ihn schreibt: "Smith, John" in einer durch Kommas getrennten Liste. Ein Anführungszeichen innerhalb eines Werts wird doppelt geschrieben.
 - Bei jedem Wert werden die Leerzeichen an den Enden entfernt, und eine Zeile ohne Inhalt wird übergangen.
 - Eine Liste enthält höchstens 500 Spieler. Fügen Sie den Rest in einer weiteren Liste hinzu.
 
-Drücken Sie **Hinzufügen**. Die ganze Liste wird geprüft, bevor etwas davon gespeichert wird; eine Liste mit einem Fehler fügt also niemanden hinzu. Was nicht stimmt, steht unter dem Feld, in der Zeile, in der es steht, wobei die erste Zeile als Zeile 1 zählt. Jeder Fehler wird aufgeführt, nicht nur der erste, und was Sie getippt haben, bleibt stehen, damit Sie es berichtigen können. Sobald die Liste gespeichert ist, schließt sich der Dialog, und der Tab Spieler führt die neuen Spieler auf, in der Reihenfolge, in der Sie sie geschrieben haben. Anders als bei **Spieler hinzufügen**, das für den nächsten Spieler offen bleibt, gibt es hier keinen nächsten: Die Liste war der nächste.
+Drücken Sie **Hinzufügen**. Die ganze Liste wird geprüft, bevor etwas davon gespeichert wird; eine Liste mit einem Fehler fügt also niemanden hinzu. Was nicht stimmt, steht unter dem Feld, in der Zeile, in der es steht, wobei die erste Zeile als Zeile 1 zählt. Jeder Fehler wird aufgeführt, nicht nur der erste, und was Sie getippt haben, bleibt stehen, damit Sie es berichtigen können. Sobald die Liste gespeichert ist, schließt sich der Dialog, und der Reiter Spieler führt die neuen Spieler auf, in der Reihenfolge, in der Sie sie geschrieben haben. Anders als bei **Spieler hinzufügen**, das für den nächsten Spieler offen bleibt, gibt es hier keinen nächsten: Die Liste war der nächste.
 
-Das **?** in der Titelleiste des Dialogs führt hierher.
+Das **?** in der Titelleiste des Dialogs führt hierher. Dieser Dialog und Spieler hinzufügen bleiben im Fenster, wohin die Seite auch gescrollt wurde.
 
 ## Einen Spieler korrigieren {#correcting-a-player}
 
@@ -63,7 +65,7 @@ Ein hier korrigierter Spieler ist überall korrigiert: in jedem Wettbewerb, in d
 
 ## Spieler ordnen
 
-Die Spieler sind in der Reihenfolge des Turniers aufgeführt; das ist die Reihenfolge, in der sie angeboten werden, wenn sie in Wettbewerbe aufgenommen werden, und die Reihenfolge, in der eine K.-o.-Runde ausgelost wird. **Nach oben** und **Nach unten**, die Pfeile am Ende jeder Zeile, verschieben einen Spieler um einen Platz. Dem ersten Spieler wird Nach oben nicht angeboten und dem letzten nicht Nach unten.
+Die Spieler sind in der Reihenfolge des Turniers aufgeführt; das ist die Reihenfolge, in der sie angeboten werden, wenn sie in Wettbewerbe aufgenommen werden, und die Reihenfolge, in der ein K.-o.-Turnier ausgelost wird. **Nach oben** und **Nach unten**, die Pfeile am Ende jeder Zeile, verschieben einen Spieler um einen Platz. Dem ersten Spieler wird Nach oben nicht angeboten und dem letzten nicht Nach unten.
 
 ## Einen Spieler archivieren {#archiving-a-player}
 

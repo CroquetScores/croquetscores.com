@@ -1,6 +1,6 @@
 # Inscrever jogadores em uma competição
 
-A página de uma competição é aberta pelo seu nome na aba Competições, ou pela barra verde-escura. Tem como cabeçalho o nome da competição, com duas abas abaixo: **Jogadores** e **Resultados**. Abre em Jogadores, porque os jogadores são inscritos antes que algo seja disputado.
+A página de uma competição é aberta pelo seu nome na aba Competições, ou pela barra verde-escura. Tem como cabeçalho o nome da competição, com duas abas abaixo: **Jogadores** e **Resultados**. Um mata-mata tem uma terceira, **Perdedores**, descrita em [Um mata-mata dos perdedores](competitions.md#losers-knockout). Abre em Jogadores, porque os jogadores são inscritos antes que algo seja disputado.
 
 Um jogador de uma competição é um dos jogadores do torneio, então os jogadores são inscritos escolhendo-os, e não digitando-os. Tudo sobre eles, exceto a sua posição na competição e o que transferem para ela, é alterado na aba Jogadores do torneio.
 
@@ -14,7 +14,7 @@ Os jogadores arquivados do torneio não são oferecidos.
 
 ## Byes em um mata-mata {#byes-in-a-knockout}
 
-Um mata-mata só é disputada depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
+Um mata-mata só é disputado depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.
 
 ![Um mata-mata de quatro vagas com três jogadores e um bye](images/knockout-players.png)
 
@@ -24,9 +24,13 @@ A ordem dos jogadores de um mata-mata é a sua chave. As duas primeiras vagas se
 
 ![Um mata-mata depois que um jogo foi inserido: ninguém pode ser adicionado, movido ou removido](images/knockout-players-fixed.png)
 
+## Os jogadores de um mata-mata dos perdedores
+
+Os jogadores de um mata-mata dos perdedores não são inscritos à mão. Eles entram à medida que as partidas cujos perdedores ele recebe são decididas, então a sua aba **Jogadores** apenas os lista, e diz por quê.
+
 ## Ordem
 
-Os jogadores são listados na ordem da competição, que é a ordem em que um mata-mata é sorteada e em que um grupo é listado na sua página pública. **Subir** e **Descer** movem um jogador uma posição.
+Os jogadores são listados na ordem da competição, que é a ordem em que um mata-mata é sorteado e em que um grupo é listado na sua página pública. **Subir** e **Descer** movem um jogador uma posição.
 
 ## Transferir {#carry-forward}
 
@@ -34,7 +38,7 @@ Os jogadores são listados na ordem da competição, que é a ordem em que um ma
 
 ![O diálogo Transferir](images/carry-forward-dialog.png)
 
-O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transfere nada, o que não é o mesmo que transportar 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
+O diálogo pede seis contagens: partidas ganhas e perdidas, jogos ganhos e perdidos, e arcos a favor e contra. Todas são opcionais. Uma contagem deixada vazia não transfere nada, o que não é o mesmo que transferir 0, para que quem a alterar depois a veja como foi deixada. Pressione **Salvar** para guardar as seis.
 
 ## Remover um jogador {#removing-a-player}
 

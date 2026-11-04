@@ -44,17 +44,21 @@ Una eliminatoria puede enviar a quienes pierden una ronda a una eliminatoria pro
 
 Una eliminatoria de perdedores tiene una plaza para cada partido de esa ronda, y cada una de sus rondas es al mejor de 1, algo que **Editar** puede cambiar. Sus jugadores se colocan a medida que se deciden los partidos de esa ronda, en el orden del sorteo, así que su pestaña **Jugadores** solo los muestra. Si se corrige o se aparta una partida, el perdedor se mueve o se quita de nuevo, salvo que ya haya jugado.
 
-En una eliminatoria ya añadida, **Editar** muestra el mismo botón y la eliminatoria de perdedores se añade al instante. Una eliminatoria cuyos perdedores toma otra en uso no se puede archivar ni cambiar sus plazas: archiva primero la eliminatoria de perdedores.
+La página de una eliminatoria tiene una tercera pestaña, **Perdedores**, después de Jugadores y Resultados, que lista las eliminatorias que toman a sus perdedores, cada una con enlace a su página. **Añadir eliminatoria de perdedores** también está ahí, y pide las mismas dos cosas; aquí la eliminatoria de perdedores se añade al instante. Solo una eliminatoria tiene la pestaña, y a un anotador no se le ofrece.
+
+En una eliminatoria ya añadida, **Editar** muestra el mismo botón y la eliminatoria de perdedores se añade al instante, como desde la pestaña Perdedores. Una eliminatoria cuyos perdedores toma otra en uso no se puede archivar ni cambiar sus plazas: archiva primero la eliminatoria de perdedores.
 
 ### Cómo se juega y se cuenta
 
-Todos los tipos preguntan lo mismo bajo su forma.
+Todos los tipos preguntan las mismas cuatro cosas bajo su forma.
 
 **Se juega con hándicap.** Márcalo para una competición que se juega con hándicap.
 
 **Permite resultados con empate.** Márcalo cuando una partida pueda acabar sin que ninguno de los dos jugadores gane. La mayoría de las competiciones no lo permiten. Si está marcado, un resultado introducido con los puntos igualados y sin marca se guarda como empate; si no, una partida con los puntos igualados tiene que decir quién la ganó con una marca detrás de la puntuación del ganador, como "6w". El partido de una eliminatoria siempre tiene ganador, así que una partida empatada no lo decide.
 
 **Cuenta para los rankings mundiales.** Se pregunta solo cuando puede contar: una competición de Croquet de asociación o de Croquet golf que ni se juega con hándicap ni permite empates. Empieza marcado, así que desmárcalo para una competición que no deba contar.
+
+**Máximo de aros.** Los aros máximos a los que se juega una partida de la competición, un número entero de al menos 1. Empieza en lo habitual para el deporte, 26, o 13 en Croquet golf, así que cámbialo para una competición que se juega más corta, como un grupo de partidas a 14 aros. Vacíalo para una competición cuyas partidas no se juegan a un número de aros. Una competición que se juega a un número distinto del habitual lo dice en su página pública, como «Se juega a 14 aros».
 
 ### Añadir varias de una vez
 
@@ -64,7 +68,7 @@ Pulsa **Añadir**. La competición se añade, el diálogo lo dice y el nombre se
 
 **Editar** abre el mismo diálogo sobre la competición, titulado Editar competición, con su nombre, su forma y cómo se juega y se cuenta tal como están. No se pregunta su tipo, porque un grupo no se convierte en eliminatoria cambiándolo: una competición del tipo equivocado se archiva y se añade de nuevo. Pulsa **Guardar** para guardar el cambio y cerrar el diálogo.
 
-Una eliminatoria que tiene una partida tiene a sus jugadores colocados en su cuadro, y un cambio de sus plazas los movería, así que se rechaza una vez introducida una partida. Aquello de lo que cada ronda es al mejor de sí puede cambiarse.
+Una eliminatoria que tiene una partida tiene a sus jugadores colocados en su cuadro, y un cambio de sus plazas los movería, así que se rechaza una vez introducida una partida. El al mejor de cada ronda sí puede cambiarse.
 
 ## Orden
 

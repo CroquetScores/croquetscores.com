@@ -33,11 +33,11 @@ Die voordeur van die administrasie lys die toernooie waarby jy betrokke is, een 
 
 ![Die lys toernooie in die administrasie](images/admin-list.png)
 
-Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in ses oortjies onder sy naam: **Spanne**, **Toetse**, **Notas**, **Bestuurders**, **Telers** en **Ranglyste**. Die bladsy maak op Spanne oop, want die spanne is die eerste ding wat opgestel word.
+Druk op 'n toernooi se naam, of op **Bestuur**, om sy bladsy oop te maak. Alles wat daar te bestuur is, is in ses oortjies onder sy naam: **Spanne**, **Toetse**, **Notas**, **Bestuurders**, **Telers** en **Ranglyste**. Die **Ranglyste**-oortjie is net daar waar die toernooi vir die wêreldranglyste tel. Die bladsy maak op Spanne oop, want die spanne is die eerste ding wat opgestel word.
 
 !['n Toernooi se bladsy, op sy Toetse-oortjie](images/tournament-page.png)
 
-Die donkergroen balk onder die kopstuk is om tussen bladsye te beweeg. Op die toernooi se bladsy en op 'n toets se bladsy lei dit na die toernooi, as **Toernooi**, en na elke toets by sy naam. Op 'n span se bladsy lei dit eerder na die toernooi en na elke span by sy kortnaam, want 'n bestuurder op een span se bladsy is besig om spelers span vir span in te skryf. Die bladsy waarop jy is, word in swart gemerk.
+Die donkergroen balk onder die kopstuk is om tussen bladsye te beweeg. Op die toernooi se bladsy en op 'n toets se bladsy lei dit na die toernooi, as **Toernooi**, en na elke toets by sy naam. Op 'n span se bladsy lei dit eerder na die toernooi en na elke span by sy kortnaam, want 'n bestuurder op een span se bladsy is besig om spelers span vir span in te skryf. Die bladsy waarop jy is, word in swart gemerk. Wanneer toetse op die Toetse-oortjie bygevoeg, verander, geskuif, geargiveer of herstel word, volg die balk dadelik.
 
 ## Dinge wat oral geld
 
@@ -46,6 +46,8 @@ Die donkergroen balk onder die kopstuk is om tussen bladsye te beweeg. Op die to
 **'n Dialoog oor die bladsy hou niks totdat jy sy knoppie druk nie.** Kanselleer, of die Escape-sleutel, maak dit toe en laat alles soos dit was. Dialoë wat dinge byvoeg, soos Voeg span by en Voeg uitslag by, bly oop nadat elkeen bygevoeg is, sodat 'n lys een na die ander ingetik kan word.
 
 **Wat geweier word, word langs die veld gesê waaroor dit gaan.** Niks wat geweier is, word gehou nie, en wat jy getik het, bly getik, sodat dit reggestel kan word eerder as om weer getik te word.
+
+**Hulp is een druk weg.** 'n Ronde **?** is in die titelbalk van die bladsy wat 'n toernooi skep of verander, aan die einde van die ry oortjies, langs **Nuwe toernooi**, en in elke dialoog. Dit maak die deel van hierdie gids oop wat gaan oor wat jy besig is om te sien, in 'n ander oortjie, sodat wat jy gedoen het, behou word.
 
 **Die administrasie werk op 'n foon.** Elke knoppie is groot genoeg om met 'n duim te druk, en niks is breër as die skerm nie.
 

@@ -1,8 +1,8 @@
 # Sätta in spelare i en tävling
 
-En tävlings sida öppnas från dess namn på fliken Tävlingar, eller från det mörkgröna fältet. Den har tävlingens namn som rubrik, med två flikar under: **Spelare** och **Resultat**. Den öppnas på Spelare, eftersom spelarna sätts in innan något spelas.
+En tävlings sida öppnas från dess namn på fliken Tävlingar, eller från det mörkgröna fältet. Den har tävlingens namn som rubrik, med två flikar under: **Spelare** och **Resultat**. En utslagning har en tredje, **Förlorare**, som beskrivs under [En förlorarutslagning](competitions.md#losers-knockout). Den öppnas på Spelare, eftersom spelarna sätts in innan något spelas.
 
-En spelare i en tävling är en av turneringens spelare, så de sätts in genom att väljas i stället för att skrivas. Allt om dem utom deras plats i tävlingen, och det de för över in i den, ändras på turneringens flik Spelare.
+En spelare i en tävling är en av turneringens spelare, så de sätts in genom att väljas i stället för att skrivas. Allt om dem utom deras plats i tävlingen, och det de för vidare in i den, ändras på turneringens flik Spelare.
 
 ![Ett blocks flik Spelare, med fyra insatta spelare](images/competition-players-tab.png)
 
@@ -24,17 +24,21 @@ Ordningen på en utslagnings spelare är dess lottning. De två första platsern
 
 ![En utslagning när ett parti har skrivits in: ingen kan läggas till, flyttas eller tas bort](images/knockout-players-fixed.png)
 
+## En förlorarutslagnings spelare
+
+En förlorarutslagnings spelare sätts inte in för hand. De läggs in när de matcher vars förlorare den tar avgörs, så dess flik **Spelare** listar dem bara, och säger varför.
+
 ## Ordning
 
 Spelarna listas i tävlingens ordning, som är den ordning en utslagning lottas i och ett block listas i på sin offentliga sida. **Upp** och **Ner** flyttar en spelare ett steg.
 
-## Föra över resultat {#carry-forward}
+## Föra vidare {#carry-forward}
 
 **För vidare** säger vad en spelare tar med sig in i en tävling från spel som inte fördes här: resultaten från ett tidigare skede, eller från partier som spelades innan tävlingen fördes här. Det erbjuds i ett block och en schweizer, som har en ställning för det att räknas i, och inte i en utslagning.
 
-![Dialogrutan För över resultat](images/carry-forward-dialog.png)
+![Dialogrutan För vidare](images/carry-forward-dialog.png)
 
-Dialogrutan frågar efter sex tal: vunna och förlorade matcher, vunna och förlorade partier, och bågar för och emot. Varje tal är frivilligt. Ett tal som lämnas tomt för inte över något, vilket inte är detsamma som att föra över 0, så att den som ändrar det senare ser det som det lämnades. Tryck på **Spara** för att spara alla sex.
+Dialogrutan frågar efter sex tal: vunna och förlorade matcher, vunna och förlorade partier, och bågar för och emot. Varje tal är frivilligt. Ett tal som lämnas tomt för inte vidare något, vilket inte är detsamma som att föra vidare 0, så att den som ändrar det senare ser det som det lämnades. Tryck på **Spara** för att spara alla sex.
 
 ## Ta bort en spelare {#removing-a-player}
 

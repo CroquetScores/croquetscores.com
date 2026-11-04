@@ -4,7 +4,7 @@ Lle mae cystadleuaeth yn cyfrif tuag at restr detholion y byd, caiff ei ganlynia
 
 ## Y tab
 
-Agorwch dudalen y twrnamaint a dewiswch **Detholion**, yr olaf o'i dabiau. Mae'n dweud beth yw'r ffeil: ffeil destun ar gyfer Association Croquet, taenlen ar gyfer Golf Croquet ac American 6 Wicket. Mae'n dweud beth sydd ar ôl i chi ei wneud â llaw, ac yna bod y ffeil i'w hanfon at swyddogion detholion y byd. O dan hynny mae **Lawrlwytho gemau ar gyfer Safle'r Byd**, sy'n cadw'r ffeil. Mae yno cyn i un canlyniad gael ei roi i mewn, ac mae'n rhoi ffeil heb ddim ynddi nes bod un.
+Agorwch dudalen y twrnamaint a dewiswch **Detholion**, yr olaf o'i dabiau. Mae'n dweud, yn yr un geiriau ni waeth y gamp, y bydd rhestr detholion y byd yn defnyddio canlyniadau'r twrnamaint drwy'r ffeil, fel nad oes angen i'r rheolwyr wneud dim. O dan hynny mae **Lawrlwytho gemau ar gyfer Safle'r Byd**, dolen i'r ffeil, sy'n ei chadw. Ffeil destun yw'r ffeil ar gyfer Association Croquet a thaenlen ar gyfer Golf Croquet ac American 6 Wicket. Mae yno cyn i un canlyniad gael ei roi i mewn, ac mae'n rhoi ffeil heb ddim ynddi nes bod un. Cynigir y tab hefyd i swyddogion detholion y byd y gamp, i gymryd y gemau o'r ffeil.
 
 Dim ond ar dudalen twrnamaint mewn camp sydd â rhestr detholion y byd y mae'r tab, a dim ond i'w reolwyr: ni chynigir ef i sgorwr. Mae'r ffeil ei hun ar gyfeiriad y twrnamaint ei hun ac yna `/rankings`, fel `/2026/ac/spring-open/rankings`, sef y cyfeiriad y mae'r wefan bob amser wedi'i roi iddi, a gall unrhyw un sydd â'r cyfeiriad ei hagor.
 
@@ -14,9 +14,9 @@ Mae pob canlyniad a roddwyd i mewn ac na chafodd ei archifo ynddi, yn y drefn y'
 
 Rhoddir chwaraewr wrth ei enw ar restr detholion y byd, sef ei enw lle na roddwyd un arall iddo.
 
-Ar gyfer **Association Croquet** mae adran ar gyfer pob cystadleuaeth sydd â chanlyniad: ei digwyddiad, ei dyddiadau, ei henillydd, ai gemau neu gemau unigol oeddent, a llinell wedi'i rhifo ar gyfer pob canlyniad, fel "1 Sam Someone beat Alex Another +9". Canlyniad yw cylchau yr enillydd namyn cylchau y collwr, ag arwydd plws lle sgoriodd yr enillydd fwy, a'r peels ar ei ôl. Mae gêm cnoc-owt yn un llinell, â sgôr pob gêm unigol yn ei thro. Dim ond dyfalu pwy enillodd cystadleuaeth y gall y wefan ei wneud, felly gwiriwch linell **Winner** pob adran (mae'n Saesneg yn y ffeil) a'i chywiro cyn anfon y ffeil ymlaen.
+Ar gyfer **Association Croquet** mae adran ar gyfer pob cystadleuaeth sydd â chanlyniad: ei digwyddiad, ei dyddiadau, ei henillydd, ai gemau neu gemau unigol oeddent, a llinell wedi'i rhifo ar gyfer pob canlyniad, fel "1 Sam Someone beat Alex Another +9". Canlyniad yw cylchau yr enillydd namyn cylchau y collwr, ag arwydd plws lle sgoriodd yr enillydd fwy, a'r peels ar ei ôl. Mae gêm cnoc-owt yn un llinell, â sgôr pob gêm unigol yn ei thro. Mae'r wefan yn enwi'r enillydd cystal ag y gall: enillydd gêm olaf cystadleuaeth cnoc-owt, y chwaraewr y mae bloc yn ei osod yn gyntaf (gweler ei dorri clymau), ac mewn cystadleuaeth o gemau unigol, pwy bynnag sydd wedi ennill fwyaf. Lle na ellir gwahanu chwaraewyr am y safle cyntaf, mae'n gadael llinell **Winner** (mae'n Saesneg yn y ffeil) yn wag, a swyddogion detholion y byd sy'n penderfynu.
 
-Ar gyfer **Golf Croquet ac American 6 Wicket** mae taenlen: enw'r twrnamaint, ei ddyddiau a faint o gemau sydd ynddo, yna llinell wedi'i rhifo ar gyfer pob gêm, â chyfenw ac enw cyntaf yr enillydd, "beat", rhai'r collwr, a'r ddau sgôr. Mae pob gêm unigol o gêm cnoc-owt yn llinell ei hun. O dan yr olaf, gadewir y llinell **Tournament winner:** (hefyd yn Saesneg yn y ffeil) yn wag, i chi ei llenwi.
+Ar gyfer **Golf Croquet ac American 6 Wicket** mae taenlen: enw'r twrnamaint, ei ddyddiau a faint o gemau sydd ynddo, yna llinell wedi'i rhifo ar gyfer pob gêm, â chyfenw ac enw cyntaf yr enillydd, "beat", rhai'r collwr, a'r ddau sgôr. Mae pob gêm unigol o gêm cnoc-owt yn llinell ei hun. O dan yr olaf, gadewir y llinell **Tournament winner:** (hefyd yn Saesneg yn y ffeil) yn wag, i bwy bynnag sy'n defnyddio'r ffeil ei llenwi.
 
 ## Pan nad oes ffeil
 

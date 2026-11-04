@@ -4,7 +4,7 @@ Nothing is published: the public pages are drawn from what the admin holds, so a
 
 ## The tournament's page
 
-The tournament's page is at its year, its sport and its name, as `/2026/ac/spring-open`. It is headed by the tournament's name, with its subtitle beneath. It lists every game in use, the most recently added first, so that a reader who comes back sees what has happened since. Each game says the winner, what they represent, their flag and their score, then the loser and theirs, with the competition it was played in and how long ago it was added.
+The tournament's page is at its year, its sport and its name, as `/2026/ac/spring-open`. It is headed by the tournament's name, with its subtitle beneath. It lists every game in use, the most recently added first, so that a reader who comes back sees what has happened since. Each game says the winner, their handicap and what they represent, their flag and their score, then the loser and theirs, with the competition it was played in and how long ago it was added.
 
 ![The tournament's public page](images/public-tournament.png)
 
@@ -16,7 +16,9 @@ A block's page shows its results as a grid: a row and a column for each player i
 
 ![A block's grid](images/public-block-grid.png)
 
-A block is shown three ways, offered on the line of its name: **Grid**, **Summary** and **Order of Play**. The summary is the one for a phone: the players ranked, with their wins, losses, net hoops and place. The order of play lists every game oldest first. A reader who chooses a view keeps it for every competition until they choose another.
+A block, a knockout and a Swiss are each shown three ways, offered on the line of the competition's name: **Grid**, **Summary** and **Order of Play**. Beside them is a printer button, which prints the tournament's name, the competition's name and its results, and nothing else. The summary is the one for a phone: for a block, the players ranked, with their wins, losses, net hoops and place; for a knockout, the matches listed round by round; for a Swiss, the grid's table without its results. The order of play lists every game, oldest first to begin with. It is headed **Game** and **Date**: pressing **Game** sorts the games by the winner's name and then the loser's, and pressing **Date** sorts them oldest or newest first, and pressing the heading a list is sorted by turns it round. The way a reader sorted is remembered on their device. A reader who chooses a view keeps it for every competition until they choose another.
+
+A competition played to other than the usual number of hoops for its sport says so beneath its name, as "Played to 14 hoops" (see [Competitions](competitions.md#adding-a-competition)).
 
 ![A block's summary](images/public-block-summary.png)
 
@@ -34,13 +36,17 @@ A Swiss's page ranks its players in a table: their games, their wins, their win 
 
 ## Players
 
-The Players page lists every player of the tournament who is not archived, in alphabetical order, with what they represent and their flag.
+The Players page lists every player of the tournament who is not archived, in alphabetical order, with their handicap and what they represent in brackets, and their flag.
 
 ## Notes
 
-The Notes page lists the tournament's notes, the most recently written first, each leading to its own page and saying how long ago it was written. A note the reader has not read is marked with a red asterisk until they open it.
+The Notes page, headed Manager's Notes, lists the tournament's notes, the most recently written first, each leading to its own page and saying how long ago it was written. A note the reader has not read is marked with a red asterisk until they open it. A tournament with no notes says "No notes yet."
 
 ![The tournament's public Notes page](images/public-notes.png)
+
+## Where the tournament is listed
+
+A tournament is on the home page while it is being played or about to start. Its year's page, as `/2026`, lists the year's months, each of which, once pressed, lists the tournaments that start in it. A control beneath the heading, **Show all** and then **Hide all**, opens or closes every month. A tournament ticked as national or international is set in bold along its row.
 
 ## Addresses that move
 

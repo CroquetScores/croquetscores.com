@@ -1,6 +1,6 @@
 # Hjälp för rankingansvariga
 
-En rankingansvarig sköter världsrankingen i en eller flera sporter. I administrationen har du allt som varje inloggad läsare har: du kan skapa en turnering, och hantera eller föra resultat i de turneringar där du har gjorts till arrangör eller poängräknare, som [arrangörer](../tournament-managers/index.md) gör. Den här sidan säger bara vad du får utöver det, i listan över turneringar på `/admin` och i samma lista för ett annat år på `/admin/2025`, `/admin/2024` och så vidare.
+En rankingansvarig sköter världsrankingen i en eller flera sporter. I administrationen har du allt som varje inloggad läsare har: du kan skapa en turnering, och hantera eller föra resultat i de turneringar där du har gjorts till arrangör eller resultatförare, som [arrangörer](../tournament-managers/index.md) gör. Den här sidan säger bara vad du får utöver det, i listan över turneringar på `/admin` och i samma lista för ett annat år på `/admin/2025`, `/admin/2024` och så vidare.
 
 ## Varje turnering i dina sporter
 
@@ -26,6 +26,6 @@ Under dem begränsar listorna **Land**, **Region** och **Sport** det som knappar
 
 ## Vad du kan göra med en turnering
 
-Bredvid en turnering där du bara sköter rankingen erbjuder listan **Spelare** och inget annat. Den öppnar turneringens sida, där du kan ändra världsrankingnamnet för vilken som helst av dess spelare, läsa dess arrangörer och skriva till dem med **Mejla arrangörerna**, och hämta dess partier till världsrankingen från fliken **Rankingar**. Du kan inte ändra turneringen, arkivera den eller föra in resultat i den, eftersom det är för dess arrangörer och poängräknare. En arkiverad turnering av det slaget har ingen knapp; dess namn öppnar fortfarande dess sida.
+Bredvid en turnering där du bara sköter rankingen erbjuder listan **Spelare** och inget annat. Den öppnar turneringens sida, där du kan ändra världsrankingnamnet för vilken som helst av dess spelare, läsa dess arrangörer och skriva till dem med **Mejla arrangörerna**, och hämta dess partier till världsrankingen från fliken **Rankingar** med **Ladda ner partier för världsranking**. Du kan inte ändra turneringen, arkivera den eller föra in resultat i den, eftersom det är för dess arrangörer och resultatförare. En arkiverad turnering av det slaget har ingen knapp; dess namn öppnar fortfarande dess sida.
 
-Bredvid en turnering du hanterar eller för resultat i erbjuder listan det den erbjuder varje arrangör eller poängräknare: **Hantera** med pennan (**Redigera**) och papperskorgen (**Arkivera**), eller **Resultat**. Att vara ansvarig ändrar inget av det.
+Bredvid en turnering du hanterar eller för resultat i erbjuder listan det den erbjuder varje arrangör eller resultatförare: **Hantera** med pennan (**Redigera**) och papperskorgen (**Arkivera**), eller **Resultat**. Att vara ansvarig ändrar inget av det.

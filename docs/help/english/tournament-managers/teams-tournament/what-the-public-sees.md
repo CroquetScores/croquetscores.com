@@ -12,7 +12,9 @@ The dark green bar offers the tournament's sections: **Recent**, which is this p
 
 ## The summary
 
-A tournament whose tests are in no group has a **Summary**: one table of every team, ranked, with the tests it has won, lost and drawn, its games won and lost, and its hoops for, against and net. Where any test's matches are the best of more than one, the matches won and lost come after the tests. The summary is where a reader looks for each team as a whole.
+A tournament whose tests are in no group has a **Summary**: one table of every team, ranked, with the tests it has won, lost and drawn, its games won and lost, and its hoops for, against and net. Where any test's matches are the best of more than one, the matches won and lost come after the tests. The teams are ranked by the tests they have won, then the matches they have won, then their net games, then their net hoops, and then by the tournament's order. A test whose teams are level on matches is decided by net games, then net hoops, or is drawn where the tournament ticks **Level tests are drawn**. The summary is where a reader looks for each team as a whole.
+
+In an **Interstate Shield** the teams are ranked by the tests won, then net matches in place of matches won, then net games, then net hoops. Teams still level are put in order by the tests they won against one another. Its summary shows a **Net** column under Matches and under Games as well as under Hoops, and the Shield is never played in groups.
 
 A tournament with a test in a group has no Summary. Each group's page shows how the teams of that group stand instead, since one table of teams across groups that never played each other would rank nothing.
 
@@ -28,7 +30,7 @@ A test's page is headed by its teams' full names, as "Australia vs New Zealand",
 
 ![A test's page](images/public-test.png)
 
-A test is shown two ways, offered on the line of its name: **Grid**, which is this table, and **Order of Play**, which lists every game of the test oldest first. A test in a group offers its group's Summary and tests in a row above its heading, with this test marked.
+A test is shown two ways, offered on the line of its name: **Grid**, which is this table, and **Order of Play**, which lists every game of the test in a table headed **Game** and **Date**, oldest first to begin with. Pressing a heading sorts by it, and the site remembers how the reader last sorted. Beside the views a printer button, shown where scripting is on, prints the page without the bars. A test in a group offers its group's Summary and tests in a row above its heading, with this test marked.
 
 ## Players
 
@@ -38,7 +40,7 @@ The Players page lists the players team by team: each team under a heading of it
 
 ## Notes
 
-The Notes page lists the tournament's notes, the most recently written first, each leading to its own page and saying how long ago it was written. A note the reader has not read is marked with a red asterisk until they open it.
+The Notes page is headed **Manager's Notes**, and says "No notes yet." while there are none. It lists the tournament's notes, the most recently written first, each leading to its own page and saying how long ago it was written. A note the reader has not read is marked with a red asterisk until they open it.
 
 ## Addresses that move
 

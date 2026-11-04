@@ -14,15 +14,15 @@ The form asks for everything a tournament begins with. A tournament of the ordin
 
 **Format.** Choose **Standard** for a tournament played between players. The other formats are for tournaments played between teams, which have a guide of their own.
 
-**Sport.** The sports the website offers, in its order: Association Croquet, Golf Croquet, American 6 Wicket and Ricochet on Croquet Scores. Gateball Scores asks for neither a sport nor a format, since every tournament there is a standard tournament of gateball.
+**Sport.** The sports the website offers, in its order: Association Croquet, Golf Croquet, American 6 Wicket and Ricochet on Croquet Scores. **Sport**, **Country** and **Region** are drop-down lists: choose from the list, or type the start of a name to move to it. Gateball Scores asks for neither a sport nor a format, since every tournament there is a standard tournament of gateball.
 
-**Country** and **Region.** Where the tournament is played. A region is asked for only where the country you choose is divided into regions, such as Australia's states; a country that is its own one region asks for none. A region need not be chosen even where one is offered.
+**Country** and **Region.** Where the tournament is played. The countries most tournaments are played in are listed first. A region is asked for only where the country you choose is divided into regions, such as Australia's states; a country that is its own one region asks for none. A region need not be chosen even where one is offered.
 
 **Subtitle.** Whatever you want readers to know that has no field of its own: where to park, when lunch is, who to ring. It is shown beneath the tournament's name on every public page. It is written in Markdown, so a word can be made bold with asterisks around it and a list made with a dash at the start of each line. It can be up to 2000 characters, and can be left empty.
 
 How its competitions are played and counted, whether with handicaps, with drawn results, and towards the world rankings, is each competition's to say when it is added.
 
-**National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
+**National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other. A tournament that is ticked as either is set in bold, along the whole of its row, in the lists of tournaments.
 
 ## Creating it
 

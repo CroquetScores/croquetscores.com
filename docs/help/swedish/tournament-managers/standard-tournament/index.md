@@ -29,7 +29,7 @@ Administrationens startsida listar de turneringar du har en del i, ett år i tag
 
 ![Listan över turneringar i administrationen](images/admin-list.png)
 
-Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i sex flikar under dess namn: **Spelare**, **Tävlingar**, **Anteckningar**, **Arrangörer**, **Resultatförare** och **Rankingar**. Sidan öppnas på Spelare, eftersom spelarna är det första som läggs till.
+Trycker du på en turnerings namn, eller på **Hantera**, öppnas dess sida. Allt som finns att sköta ligger i sex flikar under dess namn: **Spelare**, **Tävlingar**, **Anteckningar**, **Arrangörer**, **Resultatförare** och **Rankingar**. Sidan öppnas på Spelare, eftersom spelarna är det första som läggs till. I slutet av raden med flikar, och i namnlisten på en dialogruta, finns ett runt **?** som öppnar hjälpen för det du tittar på, i en annan flik så att du behåller din plats. Det finns ett vid **Ny turnering** också.
 
 ![En turnerings sida, på fliken Tävlingar](images/tournament-page.png)
 

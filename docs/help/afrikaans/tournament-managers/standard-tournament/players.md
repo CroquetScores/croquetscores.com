@@ -6,7 +6,7 @@ Spelers word hier een keer ingeskryf, in die toernooi. In watter kompetisies elk
 
 ![Die Spelers-oortjie, met spelers ingeskryf en een geargiveer](images/players-tab.png)
 
-## Hoe om spelers by te voeg {#add-a-player}
+## Hoe om 'n speler by te voeg {#add-a-player}
 
 Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
@@ -14,9 +14,11 @@ Druk op **Voeg speler by**, bo die lys. 'n Dialoog maak oor die bladsy oop.
 
 **Naam** is verpligtend. Dit is die speler se naam soos dit op elke bladsy gewys sal word, tussen 3 en 254 karakters. Twee spelers in een toernooi kan nie dieselfde naam hê nie, hoe dit ook al met hoofletters geskryf is; waar twee spelers werklik 'n naam deel, onderskei hulle in die naam self, soos "Andrew Hobbs (2)".
 
-**Verteenwoordig** is waarvoor die speler speel, geskryf soos 'n leser dit sou sê: 'n klub, 'n streek of 'n land, soos "Canterbury Croquet Club". Dit word tussen hakies ná die naam gewys. Dit kan leeg gelaat word.
+**Verteenwoordig** is waarvoor die speler speel, geskryf soos 'n leser dit sou sê: 'n klub, 'n streek of 'n land, soos "Canterbury Croquet Club". Dit word tussen hakies ná die naam gewys. Dit kan leeg gelaat word. Terwyl jy tik, word aangebied wat spelers van enige toernooi op die werf verteenwoordigend bygevoeg is waar 'n woord daarvan begin met wat jy getik het, sodat 'n klub geskryf word soos dit voorheen geskryf is; die tab-sleutel neem die een wat ná die wyser gewys word.
 
-**Vlag** is die vlag wat langs die speler se naam gewys word. Dit kan as geen gelaat word, soos by die meeste spelers. Wat 'n speler verteenwoordig en watter vlag hulle voer, word apart gehou, want 'n speler kan vir 'n klub in een land speel en die vlag van 'n ander voer.
+**Vlag** is die vlag wat langs die speler se naam gewys word. Dit is 'n aftreklys van die plekke volgens naam, geen eerste, dan die plekke waar die meeste toernooie gespeel word; tik die begin van 'n naam om daarheen te beweeg. Dit kan as geen gelaat word, soos by die meeste spelers. Wat 'n speler verteenwoordig en watter vlag hulle voer, word apart gehou, want 'n speler kan vir 'n klub in een land speel en die vlag van 'n ander voer.
+
+**Voorgee** is die speler se voorgee, as hulle een het: 'n teken, tot twee syfers en 'n breuk van een syfer, soos 4, +4 of -1.5. Dit word gehou soos jy dit skryf, en word tussen hakies gewys saam met wat die speler verteenwoordig, daarvoor. Dit kan leeg gelaat word.
 
 **Wêreldranglys-spelernaam** is die naam waaronder die wêreldranglys die speler ken. Dit word net gevra in 'n toernooi van Association Croquet of Golf Croquet, die twee sporte van wie se spelers die wêreldranglys 'n lys hou. Amerikaanse 6-hoepel-croquet se spelers is onder hul eie name aan die ranglys bekend, so dit word nie daar gevra nie, en elke speler se naam op die wêreldranglys is altyd hul naam. Terwyl jy 'n speler byvoeg, volg dit die naam soos jy dit tik, want die meeste spelers is onder hul eie naam aan die ranglys bekend, en dit hou op volg sodra jy daarin tik. Leeg gelaat, word dit as die speler se naam gehou.
 
@@ -26,13 +28,13 @@ Druk op **Voeg by**. Die speler word bygevoeg, die dialoog sê so, en sy velde w
 
 ![Die dialoog nadat 'n speler bygevoeg is](images/add-player-dialog-added.png)
 
-'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam waarvan die eerste woord die Engelse "bye" is, word geweier, en die dialoog verduidelik hoekom.
+'n Speler word nooit "Bye" genoem nie. 'n Uitskakeling se byes word in die uitskakeling self bygevoeg, waar sy spelers ingeskryf word, so 'n naam wat "Bye" is, of "Bye" met 'n nommer, soos "Bye 2", "Bye-2" of "Bye (2)", word geweier, en die dialoog verduidelik hoekom.
 
 ## Voeg verskeie spelers gelyk by {#adding-multiple-players}
 
 Om 'n hele lys ineens by te voeg, druk op **Voeg spelers by**, langs **Voeg speler by**. 'n Dialoog maak oor die bladsy oop met een boks, wat verskeie reëls teks neem. Jy kan die lys uit 'n sigblad kopieer en in die boks plak.
 
-**Die eerste reël noem die velde**, geskei deur kommas of tabs: **Name**, en enige van **Representing**, **Flag**, **Handicap** en **WorldRankingPlayerName**, in enige volgorde. Hierdie name word in Engels getik, watter taal die werf ook al gebruik. **Name** moet een van hulle wees. **Elke reël daarna is 'n speler**, met 'n waarde vir elke veld in dieselfde volgorde, op dieselfde manier geskei. 'n Speler met niks vir 'n veld laat dit leeg, maar hou die komma of tab. Byvoorbeeld, met kommas:
+**Die eerste reël noem die velde** ('n lys waarvan die eerste reël geen noem nie, word geweier met "First row must be field names", wat in Engels gesê word), geskei deur kommas of tabs: **Name**, en enige van **Representing**, **Flag**, **Handicap** en **WorldRankingPlayerName**, in enige volgorde. Hierdie name word in Engels getik, watter taal die werf ook al gebruik. **Name** moet een van hulle wees. **Elke reël daarna is 'n speler**, met 'n waarde vir elke veld in dieselfde volgorde, op dieselfde manier geskei. 'n Speler met niks vir 'n veld laat dit leeg, maar hou die komma of tab. Byvoorbeeld, met kommas:
 
 ```
 Name,Representing,Flag
@@ -40,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Naam, Verteenwoordig en Wêreldranglys-spelernaam** is aan dieselfde reëls gebonde as wanneer jy een speler byvoeg (kyk by [Hoe om spelers by te voeg](players.md#add-a-player)). 'n Naam is tussen 3 en 254 karakters, is nie reeds in die toernooi nie, hoe dit ook al met hoofletters geskryf is, en is nie "Bye" nie.
+- **Naam, Verteenwoordig en Wêreldranglys-spelernaam** is aan dieselfde reëls gebonde as wanneer jy een speler byvoeg (kyk by [Hoe om 'n speler by te voeg](players.md#add-a-player)). 'n Naam is tussen 3 en 254 karakters, is nie reeds in die toernooi nie, hoe dit ook al met hoofletters geskryf is, en is nie "Bye" nie.
 - **Vlag** is die naam van die land of plek, in jou taal, soos die lys in die dialoog Voeg speler by dit aanbied, soos Nieu-Seeland.
 - **Voorgee** is 'n teken, tot twee syfers en 'n breuk van een syfer, soos 4, +4 of -1.5.
 - 'n Speler wat geen **Wêreldranglys-spelernaam** kry nie, staan bekend onder sy naam, soos wanneer hy een vir een bygevoeg word.
@@ -51,7 +53,7 @@ Alex Another,,England
 
 Druk op **Voeg by**. Die hele lys word nagegaan voordat enigiets daarvan bewaar word, so 'n lys met iets verkeerds daarin voeg niemand by nie. Wat verkeerd is, word onder die boks gesê, by die reël waarop dit is, waar die eerste reël as reël 1 getel word. Elke fout word gelys, nie net die eerste een nie, en wat jy getik het bly staan sodat jy dit kan regmaak. Sodra die lys bewaar is, maak die dialoog toe en die Spelers-oortjie lys die nuwe spelers, in die volgorde waarin jy hulle geskryf het. Anders as by **Voeg speler by**, wat oop bly vir die volgende speler, is daar geen volgende nie: die lys was die volgende.
 
-Die **?** in die titelbalk van die dialoog lei hierheen.
+Die **?** in die titelbalk van die dialoog lei hierheen. Hierdie dialoog en Voeg speler by bly albei in die venster, waarheen die bladsy ook al geskuif is.
 
 ## Hoe om 'n speler reg te stel {#correcting-a-player}
 

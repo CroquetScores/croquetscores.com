@@ -6,7 +6,7 @@ Os jogadores são inscritos aqui uma vez, no torneio. Em que competições cada 
 
 ![A aba Jogadores, com jogadores inscritos e um arquivado](images/players-tab.png)
 
-## Adicionar jogadores {#add-a-player}
+## Adicionar um jogador {#add-a-player}
 
 Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a página.
 
@@ -14,9 +14,11 @@ Pressione **Adicionar jogador**, acima da lista. Um diálogo abre sobre a págin
 
 **Nome** é obrigatório. É o nome do jogador como será mostrado em todas as páginas, entre 3 e 254 caracteres. Dois jogadores de um mesmo torneio não podem ter o mesmo nome, sejam quais forem as maiúsculas; quando dois jogadores realmente têm o mesmo nome, distinga-os no próprio nome, como "Andrew Hobbs (2)".
 
-**Representando** é aquilo por que o jogador joga, escrito como um leitor o diria: um clube, uma região ou um país, como "Canterbury Croquet Club". É mostrado entre parênteses depois do nome. Pode ficar vazio.
+**Representando** é aquilo por que o jogador joga, escrito como um leitor o diria: um clube, uma região ou um país, como "Canterbury Croquet Club". É mostrado entre parênteses depois do nome. Pode ficar vazio. Enquanto você digita, são oferecidos os valores com que jogadores de qualquer torneio do site já foram adicionados em que uma palavra começa com o que você digitou, para que um clube seja escrito como já foi escrito antes; a tecla Tab aceita o que aparece depois do cursor.
 
-**Bandeira** é a bandeira mostrada ao lado do nome do jogador. Pode ficar como nenhuma, como está para a maioria dos jogadores. O que um jogador representa e que bandeira ele leva são coisas separadas, porque um jogador pode jogar por um clube de um país e levar a bandeira de outro.
+**Bandeira** é a bandeira mostrada ao lado do nome do jogador. É uma lista suspensa dos lugares pelo nome, com nenhuma em primeiro lugar e depois os lugares em que a maioria dos torneios é disputada; digite o começo de um nome para ir até ele. Pode ficar como nenhuma, como está para a maioria dos jogadores. O que um jogador representa e que bandeira ele leva são coisas separadas, porque um jogador pode jogar por um clube de um país e levar a bandeira de outro.
+
+**Handicap** é o handicap do jogador, se ele tiver um: um sinal, até dois dígitos e uma fração de um dígito, como 4, +4 ou -1.5. É guardado como você o escreve, e é mostrado entre parênteses com o que o jogador representa, antes dele. Pode ficar vazio.
 
 **Nome do jogador no ranking mundial** é o nome pelo qual os rankings mundiais conhecem o jogador. Só é pedido em um torneio de Croquet de Associação ou de Croquet de Golfe, os dois esportes cujos jogadores os rankings mundiais mantêm em uma lista. Os jogadores do Croquet Americano de 6 Arcos são conhecidos nos rankings pelo próprio nome, então ele não é pedido ali, e o nome no ranking mundial de cada jogador é sempre o seu nome. Enquanto você adiciona um jogador, ele acompanha o nome conforme você digita, porque a maioria dos jogadores é conhecida nos rankings pelo próprio nome, e para de acompanhar quando você digita nele. Deixado vazio, é guardado como o nome do jogador.
 
@@ -26,13 +28,13 @@ Pressione **Adicionar**. O jogador é adicionado, o diálogo diz isso, e os seus
 
 ![O diálogo depois que um jogador é adicionado](images/add-player-dialog-added.png)
 
-Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome cuja primeira palavra é a palavra inglesa "bye" é recusado, e o diálogo explica por quê.
+Um jogador nunca se chama "Bye". Os byes de um mata-mata são adicionados no próprio mata-mata, onde os seus jogadores são inscritos, então um nome que é a palavra inglesa "Bye", ou "Bye" com um número, como "Bye 2", "Bye-2" ou "Bye (2)", é recusado, e o diálogo explica por quê.
 
 ## Adicionar vários jogadores {#adding-multiple-players}
 
 Para adicionar uma lista inteira de uma vez, pressione **Adicionar jogadores**, ao lado de **Adicionar jogador**. Um diálogo abre sobre a página com uma caixa só, que aceita várias linhas de texto. Você pode copiar a lista de uma planilha e colá-la na caixa.
 
-**A primeira linha dá o nome dos campos**, separados por vírgulas ou por tabulações: **Name**, e qualquer um entre **Representing**, **Flag**, **Handicap** e **WorldRankingPlayerName**, em qualquer ordem. Esses nomes são digitados em inglês, seja qual for o idioma do site. **Name** precisa ser um deles. **Cada linha depois dela é um jogador**, com um valor para cada campo na mesma ordem, separados do mesmo jeito. Um jogador sem nada para um campo o deixa vazio, mas mantém a vírgula ou a tabulação. Por exemplo, com vírgulas:
+**A primeira linha dá o nome dos campos** (uma lista cuja primeira linha não dá nome a nenhum é recusada, com "A primeira linha deve conter os nomes dos campos"), separados por vírgulas ou por tabulações: **Name**, e qualquer um entre **Representing**, **Flag**, **Handicap** e **WorldRankingPlayerName**, em qualquer ordem. Esses nomes são digitados em inglês, seja qual for o idioma do site. **Name** precisa ser um deles. **Cada linha depois dela é um jogador**, com um valor para cada campo na mesma ordem, separados do mesmo jeito. Um jogador sem nada para um campo o deixa vazio, mas mantém a vírgula ou a tabulação. Por exemplo, com vírgulas:
 
 ```
 Name,Representing,Flag
@@ -40,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Nome, Representando e Nome do jogador no ranking mundial** seguem as mesmas regras de quando você adiciona um jogador só (veja [Adicionar jogadores](players.md#add-a-player)). Um nome tem entre 3 e 254 caracteres, não pode já estar no torneio, sejam quais forem as maiúsculas, e não pode ser "Bye".
+- **Nome, Representando e Nome do jogador no ranking mundial** seguem as mesmas regras de quando você adiciona um jogador só (veja [Adicionar um jogador](players.md#add-a-player)). Um nome tem entre 3 e 254 caracteres, não pode já estar no torneio, sejam quais forem as maiúsculas, e não pode ser "Bye".
 - **Bandeira** é o nome do país ou do lugar, no seu idioma, como a lista do diálogo Adicionar jogador o oferece, como Nova Zelândia.
 - **Handicap** é um número com sinal, de até dois dígitos e uma fração de um dígito, como 4, +4 ou -1.5.
 - Um jogador sem **Nome do jogador no ranking mundial** é conhecido pelo próprio nome, como quando é adicionado um a um.
@@ -51,7 +53,7 @@ Alex Another,,England
 
 Pressione **Adicionar**. A lista inteira é conferida antes de qualquer parte dela ser guardada, então uma lista com algo errado não adiciona ninguém. O que está errado é dito abaixo da caixa, na linha em que está, contando a primeira linha como linha 1. Todos os erros são listados, não só o primeiro, e o que você digitou fica, para que você possa corrigir. Depois que a lista é guardada, o diálogo fecha e a aba Jogadores lista os novos jogadores, na ordem em que você os escreveu. Ao contrário de **Adicionar jogador**, que fica aberto para o próximo jogador, aqui não há próximo: a lista era o próximo.
 
-O **?** na barra de título do diálogo leva até aqui.
+O **?** na barra de título do diálogo leva até aqui. Tanto este diálogo quanto Adicionar jogador ficam na janela, até onde quer que a página tenha sido rolada.
 
 ## Corrigir um jogador {#correcting-a-player}
 
@@ -63,7 +65,7 @@ Um jogador corrigido aqui é corrigido em todo lugar: em todas as competições 
 
 ## Colocar os jogadores em ordem
 
-Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteada. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
+Os jogadores são listados na ordem do torneio, que é a ordem em que são oferecidos quando são inscritos nas competições, e a ordem em que um mata-mata é sorteado. **Subir** e **Descer**, as setas no fim de cada linha, movem um jogador uma posição. O primeiro jogador não recebe Subir, e o último não recebe Descer.
 
 ## Arquivar um jogador {#archiving-a-player}
 

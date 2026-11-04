@@ -29,7 +29,7 @@ The admin's front door lists the tournaments you have a part in, one year at a t
 
 ![The list of tournaments in the admin](images/admin-list.png)
 
-Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in six tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers**, **Scorers** and **Rankings**. The page opens on Players, since the players are the first thing entered.
+Pressing a tournament's name, or **Manage**, opens its page. Everything there is to run is in six tabs beneath its name: **Players**, **Competitions**, **Notes**, **Managers**, **Scorers** and **Rankings**. The page opens on Players, since the players are the first thing entered. At the end of the row of tabs, and in the title bar of a dialog, is a round **?** that opens the help for what you are looking at, in another tab so that your place is kept. There is one beside **New Tournament** too.
 
 ![A tournament's page, on its Competitions tab](images/tournament-page.png)
 

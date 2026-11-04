@@ -20,6 +20,8 @@ Pulsa **Añadir partida**. La partida se añade, el diálogo dice cuál y los ca
 
 ![El diálogo después de añadir una partida](images/add-score-dialog-added.png)
 
+Si el diálogo no puede leer los jugadores de la competición, dice «No se han podido leer los jugadores. Cierra esta ventana y ábrela de nuevo.». Hazlo.
+
 Lo que se rechaza se dice bajo el campo al que se refiere: un ganador o un perdedor sin elegir, un resultado sin escribir o que no empieza por un dígito, el mismo jugador en ambos lados, los puntos del perdedor marcados como ganados, o los puntos del ganador por detrás de los del perdedor. En una eliminatoria, dos jugadores a los que no les toca enfrentarse se rechazan encima de los campos.
 
 ## El cuadro de una eliminatoria tiene que estar completo {#draw-filled-first}
@@ -30,7 +32,9 @@ Una eliminatoria se juega solo cuando cada plaza de su cuadro tiene un jugador o
 
 ## La lista de resultados
 
-Los resultados en uso se listan en el orden en que se introdujeron, el más antiguo primero, para que la lista se lea como se jugó la competición. Cada uno dice el ganador y sus puntos, después el perdedor y los suyos, y ofrece **Editar** y **Archivar**.
+Los resultados en uso se listan en el orden en que se introdujeron, el más antiguo primero, para que la lista se lea como se jugó la competición. La lista es una tabla con una fila por cada partida y sin encabezados de columna. Una fila dice el número de la partida, el ganador y sus puntos, la palabra «ganó a», después el perdedor y sus puntos, y ofrece **Editar** y **Archivar**.
+
+El número de una partida es su puesto entre las partidas introducidas, siendo 1 la primera, contando las archivadas. Archivar una partida no cambia el número de ninguna otra, así que un hueco en los números dice que se ha archivado una partida.
 
 ## Corregir un resultado {#correcting-a-score}
 

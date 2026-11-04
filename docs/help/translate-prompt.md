@@ -4,9 +4,9 @@ Translate every page under `docs/help/english` into every language the site spea
 
 ## Which languages
 
-The languages are the files in `src/web/languages`, one per language, named by the language's English name: `french.ts`, `maori.ts`, `egyptian.ts` and so on. `english.ts` is the one the help is already written in. Every other file is a language to translate into.
+The languages are the files in `src/web/languages`, one per language, named by the language's English name: `swedish.ts`, `welsh.ts`, `egyptian.ts` and so on. `english.ts` is the one the help is already written in. Every other file is a language to translate into.
 
-Each translation goes in a folder beside `docs/help/english`, named as its file is named: `docs/help/french`, `docs/help/maori`, `docs/help/egyptian`. Inside, the folders and files have the same names as the English ones, so that `docs/help/french/tournament-managers/standard-tournament/players.md` is the French `players.md`. File names stay in English because the pages link to each other by them, and a translated name would break every link into it.
+Each translation goes in a folder beside `docs/help/english`, named as its file is named: `docs/help/swedish`, `docs/help/welsh`, `docs/help/egyptian`. Inside, the folders and files have the same names as the English ones, so that `docs/help/swedish/tournament-managers/standard-tournament/players.md` is the Swedish `players.md`. File names stay in English because the pages link to each other by them, and a translated name would break every link into it.
 
 ## Use the catalogue's words
 
@@ -14,7 +14,7 @@ The help names what the reader sees on the screen, in bold: **Add Player**, **Na
 
 The same goes for a value the site offers, such as the formats Standard, Teams, Eire Cup, Interstate Shield and GC World Team Championship, and the sports: say them as the catalogue does.
 
-Read the comment at the top of the language's catalogue first. It says how the language addresses the reader (French as vous, for instance), what case menus and buttons use, and whichever other decisions were made when the site was put into that language. The help is read by the same person as the site, so it keeps to the same decisions.
+Read the comment at the top of the language's catalogue first. It says how the language addresses the reader (Swedish as du, for instance), what case menus and buttons use, and whichever other decisions were made when the site was put into that language. The help is read by the same person as the site, so it keeps to the same decisions.
 
 ## What stays as it is
 

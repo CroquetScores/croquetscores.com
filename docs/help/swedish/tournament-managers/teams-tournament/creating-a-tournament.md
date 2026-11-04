@@ -27,6 +27,8 @@ Standard är det enda format som inte spelas av lag, och är inte det du vill ha
 
 Hur dess landskamper spelas och räknas, med handikapp, med oavgjorda resultat och i världsrankingen, avgör varje landskamp själv när den läggs till.
 
+**Jämna landskamper blir oavgjorda.** Frågas efter när ett format som spelas av lag har valts. En landskamp vars lag vinner lika många matcher avgörs av deras nettopartier, sedan deras nettobågar. Bocka för det här så blir den oavgjord i stället. Det är förbockat från början bara för **Världsmästerskapet för lag i golfcroquet**, som alltid har låtit dem bli oavgjorda, och kan ändras senare.
+
 **Nationell tävling** och **Internationell tävling.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
 
 ## Att skapa den

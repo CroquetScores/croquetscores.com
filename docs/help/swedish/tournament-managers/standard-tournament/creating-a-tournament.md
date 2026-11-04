@@ -14,15 +14,15 @@ Formuläret frågar efter allt en turnering börjar med. En turnering av det van
 
 **Format.** Välj **Standard** för en turnering som spelas mellan spelare. De övriga formaten är för turneringar som spelas mellan lag, och de har en egen guide.
 
-**Sport.** De sporter webbplatsen erbjuder, i dess ordning: Association croquet, Golfcroquet, Amerikansk 6-bågars croquet och Ricochet på Croquet Scores. Gateball Scores frågar varken efter sport eller format, eftersom varje turnering där är en standardturnering i gateball.
+**Sport.** De sporter webbplatsen erbjuder, i dess ordning: Association croquet, Golfcroquet, Amerikansk 6-bågars croquet och Ricochet på Croquet Scores. **Sport**, **Land** och **Region** är rullgardinslistor: välj i listan, eller skriv början av ett namn för att hoppa till det. Gateball Scores frågar varken efter sport eller format, eftersom varje turnering där är en standardturnering i gateball.
 
-**Land** och **Region.** Var turneringen spelas. En region frågas efter bara där det land du väljer är indelat i regioner, som Australiens delstater; ett land som är sin egen enda region frågar inte efter någon. En region behöver inte väljas ens där en erbjuds.
+**Land** och **Region.** Var turneringen spelas. De länder som de flesta turneringar spelas i står först. En region frågas efter bara där det land du väljer är indelat i regioner, som Australiens delstater; ett land som är sin egen enda region frågar inte efter någon. En region behöver inte väljas ens där en erbjuds.
 
 **Underrubrik.** Det du vill att läsarna ska veta och som inte har något eget fält: var man parkerar, när det är lunch, vem man ringer. Den visas under turneringens namn på varje offentlig sida. Den skrivs i Markdown, så ett ord kan göras fett med asterisker runt det och en lista kan göras med ett bindestreck först på varje rad. Den får vara upp till 2000 tecken och kan lämnas tom.
 
 Hur dess tävlingar spelas och räknas, med handikapp, med oavgjorda resultat och i världsrankingen, avgör varje tävling själv när den läggs till.
 
-**Nationell tävling** och **Internationell tävling.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av.
+**Nationell tävling** och **Internationell tävling.** En turnering kan vara det ena, det andra eller inget av dem, men aldrig båda: bockar du för det ena bockas det andra av. En turnering som är förbockad som någon av dem är fetstilt längs hela sin rad i listorna över turneringar.
 
 ## Att skapa den
 

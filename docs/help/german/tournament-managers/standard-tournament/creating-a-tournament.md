@@ -14,15 +14,15 @@ Das Formular fragt nach allem, womit ein Turnier beginnt. Für ein gewöhnliches
 
 **Format.** Wählen Sie **Standard** für ein Turnier zwischen Spielern. Die anderen Formate sind für Turniere zwischen Mannschaften, die eine eigene Anleitung haben.
 
-**Sportart.** Die Sportarten, die die Website anbietet, in ihrer Reihenfolge: Association Croquet, Golf Croquet, American 6 Wicket und Ricochet auf Croquet Scores. Gateball Scores fragt weder nach einer Sportart noch nach einem Format, weil jedes Turnier dort ein Standardturnier im Gateball ist.
+**Sportart.** Die Sportarten, die die Website anbietet, in ihrer Reihenfolge: Association Croquet, Golf Croquet, American 6 Wicket und Ricochet auf Croquet Scores. **Sportart**, **Land** und **Region** sind Auswahllisten: Wählen Sie aus der Liste, oder tippen Sie den Anfang eines Namens, um dorthin zu springen. Gateball Scores fragt weder nach einer Sportart noch nach einem Format, weil jedes Turnier dort ein Standardturnier im Gateball ist.
 
-**Land** und **Region.** Wo das Turnier gespielt wird. Nach einer Region wird nur gefragt, wenn das gewählte Land in Regionen geteilt ist, wie Australien in Bundesstaaten; ein Land, das für sich eine einzige Region ist, fragt nach keiner. Eine Region muss auch dann nicht gewählt werden, wenn eine angeboten wird.
+**Land** und **Region.** Wo das Turnier gespielt wird. Die Länder, in denen die meisten Turniere gespielt werden, stehen zuerst. Nach einer Region wird nur gefragt, wenn das gewählte Land in Regionen geteilt ist, wie Australien in Bundesstaaten; ein Land, das für sich eine einzige Region ist, fragt nach keiner. Eine Region muss auch dann nicht gewählt werden, wenn eine angeboten wird.
 
 **Untertitel.** Alles, was Leser wissen sollen und kein eigenes Feld hat: wo man parkt, wann es Mittagessen gibt, wen man anruft. Er steht auf jeder öffentlichen Seite unter dem Namen des Turniers. Er wird in Markdown geschrieben, ein Wort wird also mit Sternchen darum fett, und eine Liste entsteht mit einem Strich am Anfang jeder Zeile. Er darf bis zu 2000 Zeichen lang sein und kann leer bleiben.
 
 Wie die Wettbewerbe gespielt und gezählt werden, mit Vorgaben, mit Unentschieden und für die Weltranglisten, sagt jeder Wettbewerb selbst, wenn er hinzugefügt wird.
 
-**Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene.** Ein Turnier kann das eine, das andere oder keines von beiden sein, aber nie beides: Wer das eine anhakt, nimmt beim anderen den Haken weg.
+**Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene.** Ein Turnier kann das eine, das andere oder keines von beiden sein, aber nie beides: Wer das eine anhakt, nimmt beim anderen den Haken weg. Ein Turnier, das als eines von beiden angehakt ist, steht in den Listen der Turniere fett, in der ganzen Breite seiner Zeile.
 
 ## Anlegen
 

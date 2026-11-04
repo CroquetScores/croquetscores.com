@@ -16,7 +16,7 @@ Nid yw'r wefan yn defnyddio hysbysebion nac olrhain ac nid yw'n rhannu dim amdan
 
 ## Cwcis
 
-Mae'r wefan yn gosod cwci i'ch cadw wedi mewngofnodi, un ar gyfer y thema a ddewisoch, un ar gyfer yr iaith a ddewisoch, ac un ar gyfer yr hyn a ddywedoch am hysbysiadau o'r hyn sy'n newydd. Maent yn angenrheidiol i'r wefan wneud yr hyn a ofynnoch ac ni chânt eu defnyddio i'ch dilyn. Mae cofrestru yn defnyddio Google reCAPTCHA i wahaniaethu pobl oddi wrth raglenni, y mae Google yn ei redeg o dan ei delerau ei hun.
+Mae'r wefan yn gosod cwci i'ch cadw wedi mewngofnodi, ac eraill i gofio'r hyn a ddewisoch: y thema, yr iaith, sut y trefnoch restrau, y wlad, y rhanbarth a'r gamp y hidloch yn ôl iddynt, golygfa cystadleuaeth, pa nodiadau a sylwebaethau rydych wedi'u darllen, a'r hyn a ddywedoch am hysbysiadau o'r hyn sy'n newydd. Tra byddwch yn mewngofnodi gyda Google mae'n cadw un arall, nes y byddwch yn ôl. Maent yn angenrheidiol i'r wefan wneud yr hyn a ofynnoch ac ni chânt eu defnyddio i'ch dilyn. Mae cofrestru yn defnyddio Google reCAPTCHA i wahaniaethu pobl oddi wrth raglenni, y mae Google yn ei redeg o dan ei delerau ei hun.
 
 ## Pwy all ei weld
 

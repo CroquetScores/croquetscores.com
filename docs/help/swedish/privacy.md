@@ -16,7 +16,7 @@ Webbplatsen använder varken reklam eller spårning och delar ingenting om dig m
 
 ## Kakor
 
-Webbplatsen sätter en kaka för att hålla dig inloggad, en för temat du valde, en för språket du valde och en för vad du har sagt om aviseringar om nyheter. De behövs för att webbplatsen ska göra det du bad om och används inte för att följa dig. Vid registrering används Google reCAPTCHA för att skilja människor från program, vilket Google driver under egna villkor.
+Webbplatsen sätter en kaka för att hålla dig inloggad, och andra för att komma ihåg vad du valde: temat, språket, hur du sorterade listor, landet, regionen och sporten du filtrerade på, vyn av en tävling, vilka anteckningar och kommentarer du har läst och vad du har sagt om aviseringar om nyheter. När du loggar in med Google sparar den ytterligare en, tills du är tillbaka. De behövs för att webbplatsen ska göra det du bad om och används inte för att följa dig. Vid registrering används Google reCAPTCHA för att skilja människor från program, vilket Google driver under egna villkor.
 
 ## Vem som kan se det
 

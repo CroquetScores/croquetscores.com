@@ -147,13 +147,10 @@ async function photographIn(folder, language) {
   // system font, which is different on each machine and wide on this one, so
   // text wraps where the English pictures' did not.
   // The face for the scripts Ubuntu Sans has no letters for. Named, since the
-  // machine's own choice among the CJK faces is the first it finds, which can be
-  // the serif or another country's.
+  // machine's own choice among the faces for a script is the first it finds,
+  // which can be a serif.
   const scriptFont =
     {
-      zh: '"Noto Sans CJK SC"',
-      ja: '"Noto Sans CJK JP"',
-      ko: '"Noto Sans CJK KR"',
       "ar-EG": '"Noto Sans Arabic"',
     }[language.tag] ?? '"Noto Sans"';
   const makeContext = async () => {
@@ -292,7 +289,8 @@ async function photographIn(folder, language) {
     }
   };
   const panel = ".panel";
-  const row = (name) => page.locator("li, tr, .row").filter({ hasText: name });
+  const row = (name) =>
+    page.locator(`${panel} :is(li, tr, .row)`).filter({ hasText: name });
   const inDialog = (key) =>
     page.locator(dialog).getByRole("button", { name: say(key), exact: true });
 
@@ -393,7 +391,10 @@ async function photographIn(folder, language) {
     }
   };
   const rowOf = (name) =>
-    page.locator("li, tr, .row").filter({ hasText: name }).first();
+    page
+      .locator(`${panel} :is(li, tr, .row)`)
+      .filter({ hasText: name })
+      .first();
   const addGame = async (
     winner,
     winnerScore,
@@ -666,7 +667,7 @@ async function photographIn(folder, language) {
     await other.goto("/account/sign-in");
     await other.fill("input[name=emailAddress]", "chris@example.com");
     await other.fill("input[name=password]", password);
-    await other.click("button[type=submit]");
+    await other.click("form:has(input[name=password]) button[type=submit]");
     await other.waitForLoadState("networkidle");
     await other.goto("/admin/2026/ac/spring-open");
     await other.waitForSelector(panel);
@@ -739,7 +740,7 @@ async function photographIn(folder, language) {
   await page.goto("/account/sign-in");
   await page.fill("input[name=emailAddress]", "teams@example.com");
   await page.fill("input[name=password]", password);
-  await page.click("button[type=submit]");
+  await page.click("form:has(input[name=password]) button[type=submit]");
   await page.waitForLoadState("networkidle");
 
   await attempt("teams tournament", async () => {
@@ -980,7 +981,7 @@ async function photographIn(folder, language) {
     await other.goto("/account/sign-in");
     await other.fill("input[name=emailAddress]", "chris@example.com");
     await other.fill("input[name=password]", password);
-    await other.click("button[type=submit]");
+    await other.click("form:has(input[name=password]) button[type=submit]");
     await other.waitForLoadState("networkidle");
     await other.goto("/admin/2026/ac/trans-tasman-tests");
     await other.waitForSelector(panel);

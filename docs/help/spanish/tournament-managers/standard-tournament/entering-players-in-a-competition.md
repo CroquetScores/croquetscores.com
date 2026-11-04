@@ -1,6 +1,6 @@
 # Inscribir jugadores en una competición
 
-La página de una competición se abre desde su nombre en la pestaña Competiciones, o desde la barra verde oscuro. La encabeza el nombre de la competición, con dos pestañas debajo: **Jugadores** y **Resultados**. Se abre en Jugadores, porque los jugadores se inscriben antes de que se juegue nada.
+La página de una competición se abre desde su nombre en la pestaña Competiciones, o desde la barra verde oscuro. La encabeza el nombre de la competición, con dos pestañas debajo: **Jugadores** y **Resultados**. Una eliminatoria tiene una tercera, **Perdedores**, que se describe en [Una eliminatoria de perdedores](competitions.md#losers-knockout). Se abre en Jugadores, porque los jugadores se inscriben antes de que se juegue nada.
 
 Un jugador de una competición es uno de los jugadores del torneo, así que se inscribe eligiéndolo en vez de escribiéndolo. Todo lo suyo salvo su puesto en la competición, y lo que traslada a ella, se cambia en la pestaña Jugadores del torneo.
 
@@ -24,6 +24,10 @@ El orden de los jugadores de una eliminatoria es su cuadro. Las dos primeras pla
 
 ![Una eliminatoria una vez introducida una partida: nadie puede añadirse, moverse ni quitarse](images/knockout-players-fixed.png)
 
+## Los jugadores de una eliminatoria de perdedores
+
+Los jugadores de una eliminatoria de perdedores no se inscriben a mano. Se colocan a medida que se deciden los partidos cuyos perdedores toma, así que su pestaña **Jugadores** solo los lista, y dice por qué.
+
 ## Orden
 
 Los jugadores se listan en el orden de la competición, que es el orden en que se sortea una eliminatoria y en que se lista un grupo en su página pública. **Subir** y **Bajar** mueven a un jugador un puesto.
@@ -34,7 +38,7 @@ Los jugadores se listan en el orden de la competición, que es el orden en que s
 
 ![El diálogo Trasladar](images/carry-forward-dialog.png)
 
-El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y perdidas, y aros a favor y en contra. Todas son opcionales. Una cuenta dejada vacía no arrastra nada, que no es lo mismo que arrastrar 0, de modo que quien la cambie después la vea tal como se dejó. Pulsa **Guardar** para guardar las seis.
+El diálogo pide seis cuentas: partidos ganados y perdidos, partidas ganadas y perdidas, y aros a favor y en contra. Todas son opcionales. Una cuenta dejada vacía no traslada nada, que no es lo mismo que trasladar 0, de modo que quien la cambie después la vea tal como se dejó. Pulsa **Guardar** para guardar las seis.
 
 ## Quitar a un jugador {#removing-a-player}
 

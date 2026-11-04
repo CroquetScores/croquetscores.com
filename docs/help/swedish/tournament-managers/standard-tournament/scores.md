@@ -6,7 +6,7 @@ Fliken **Resultat** på en tävlings sida är där dess partier skrivs in, rätt
 
 ## Skriva in ett resultat {#entering-a-score}
 
-Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
+Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "slog", sedan förloraren och dennes resultat.
 
 ![Dialogrutan Lägg till resultat, ifylld](images/add-score-dialog.png)
 
@@ -14,11 +14,13 @@ Vinnaren och förloraren väljs var för sig bland tävlingens spelare som spela
 
 Ett resultat skrivs som resultatföraren skrev ned det: dess antal poäng, och det som följer, vilket behålls och visas som det skrevs, som "26tp" för 26 bågar och en triple peel. Antalet är de siffror resultatet börjar med; ett resultat som inte börjar med en siffra godtas inte.
 
-Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs på något annat sätt, säger vem som vann genom en markering efter vinnarens resultat: "6w" besegrade "6". På Croquet Scores är markeringarna "w", "won" och "winner"; Gateball Scores tar också "cb" och "so". En vinnares resultat måste vara högre än förlorarens, eller markerat, såvida inte turneringen tillåter oavgjorda resultat, i vilket fall lika poäng utan markering sparas som oavgjort.
+Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs på något annat sätt, säger vem som vann genom en markering efter vinnarens resultat: "6w" slog "6". På Croquet Scores är markeringarna "w", "won" och "winner"; Gateball Scores tar också "cb" och "so". En vinnares resultat måste vara högre än förlorarens, eller markerat, såvida inte turneringen tillåter oavgjorda resultat, i vilket fall lika poäng utan markering sparas som oavgjort.
 
 Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, och fälten töms för nästa, eftersom resultaten kommer i en bunt läst från en tavla i slutet av en rond. Tryck på **Avbryt** när alla är inlagda.
 
 ![Dialogrutan efter att ett parti har lagts till](images/add-score-dialog-added.png)
+
+Om dialogrutan inte kan läsa tävlingens spelare säger den "Spelarna kunde inte läsas in. Stäng den här dialogrutan och öppna den igen." Gör det.
 
 Det som inte godtas sägs under det fält det gäller: en vinnare eller förlorare som inte valts, ett resultat som inte skrivits eller inte börjar med en siffra, samma spelare som båda, en förlorares resultat markerat som vunnet, eller en vinnares resultat lägre än förlorarens. I en utslagning godtas inte två spelare som inte är lottade att mötas, och det sägs ovanför fälten.
 
@@ -30,7 +32,9 @@ En utslagning spelas först när varje plats i dess lottning har en spelare elle
 
 ## Listan över resultat
 
-Resultaten i bruk listas i den ordning de skrevs in, äldst först, så att listan läses som tävlingen spelades. Varje resultat säger vinnaren och dennes resultat, sedan förloraren och dennes, och erbjuder **Redigera** och **Arkivera**.
+Resultaten i bruk listas i den ordning de skrevs in, äldst först, så att listan läses som tävlingen spelades. Listan är en tabell med en rad för varje parti, och utan kolumnrubriker. En rad säger partiets nummer, vinnaren och dennes resultat, ordet "slog", sedan förloraren och dennes resultat, och erbjuder **Redigera** och **Arkivera**.
+
+Ett partis nummer är dess plats bland de partier som skrivits in, där det första är 1, arkiverade partier inräknade. Att arkivera ett parti ändrar inget annat partis nummer, så ett hål i numren säger att ett parti har arkiverats.
 
 ## Rätta ett resultat {#correcting-a-score}
 

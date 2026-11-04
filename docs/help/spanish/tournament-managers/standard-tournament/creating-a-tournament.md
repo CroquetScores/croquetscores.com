@@ -14,15 +14,15 @@ El formulario pide todo aquello con lo que empieza un torneo. Un torneo de los c
 
 **Formato.** Elige **Estándar** para un torneo que se juega entre jugadores. Los demás formatos son para torneos que se juegan entre equipos, que tienen guía propia.
 
-**Deporte.** Los deportes que ofrece el sitio web, en su orden: Croquet de asociación, Croquet golf, American 6 Wicket y Ricochet en Croquet Scores. Gateball Scores no pide ni deporte ni formato, ya que todos sus torneos son torneos estándar de gateball.
+**Deporte.** Los deportes que ofrece el sitio web, en su orden: Croquet de asociación, Croquet golf, American 6 Wicket y Ricochet en Croquet Scores. **Deporte**, **País** y **Región** son listas desplegables: elige de la lista, o escribe el comienzo de un nombre para ir a él. Gateball Scores no pide ni deporte ni formato, ya que todos sus torneos son torneos estándar de gateball.
 
-**País** y **Región.** Dónde se juega el torneo. La región se pide solo cuando el país que eliges está dividido en regiones, como los estados de Australia; un país que es él mismo su única región no pide ninguna. No hace falta elegir región ni siquiera cuando se ofrece.
+**País** y **Región.** Dónde se juega el torneo. Los países en los que se juegan más torneos se listan primero. La región se pide solo cuando el país que eliges está dividido en regiones, como los estados de Australia; un país que es él mismo su única región no pide ninguna. No hace falta elegir región ni siquiera cuando se ofrece.
 
 **Subtítulo.** Lo que quieras que sepan los lectores y no tiene campo propio: dónde aparcar, a qué hora se come, a quién llamar. Se muestra bajo el nombre del torneo en todas las páginas públicas. Se escribe en Markdown, así que una palabra se pone en negrita con asteriscos alrededor y una lista se hace con un guion al principio de cada línea. Puede tener hasta 2000 caracteres, y puede dejarse vacío.
 
 Cómo se juegan y se cuentan sus competiciones, si con hándicap, con empates y para los rankings mundiales, lo dice cada competición al añadirla.
 
-**Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro.
+**Evento de nivel nacional** y **Evento de nivel internacional.** Un torneo puede ser lo uno, lo otro o ninguno, pero nunca ambos: marcar uno desmarca el otro. Un torneo marcado como uno de los dos va en negrita, a lo largo de toda su fila, en las listas de torneos.
 
 ## Crearlo
 

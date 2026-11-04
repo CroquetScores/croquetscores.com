@@ -1,6 +1,6 @@
-# Condiciones de uso para gestores, anotadores y comentaristas
+# Condiciones de uso para gestores, anotadores y cronistas
 
-Estas son las condiciones en las que escribes en este sitio: como gestor de torneo que introduce un torneo, como anotador que introduce resultados o como comentarista que escribe un comentario o un comentario sobre uno. Se te pide que las aceptes cuando te registras y cada vez que empiezas un comentario. Se suman a las [condiciones de uso](/terms-of-use) que acepta todo lector.
+Estas son las condiciones en las que escribes en este sitio: como gestor de torneo que introduce un torneo, como anotador que introduce resultados o como cronista que escribe una crónica o un comentario sobre una. Se te pide que las aceptes cuando te registras y cada vez que empiezas una crónica. Se suman a las [condiciones de uso](/terms-of-use) que acepta todo lector.
 
 ## Eres responsable de lo que escribes
 
@@ -10,9 +10,9 @@ Lo que escribes se publica con tu nombre y es tuyo. Las opiniones que contiene s
 
 Introduce los resultados tal como se jugaron y corrígelos cuando resulten ser erróneos. Los jugadores, sus clubes y los rankings mundiales dependen de ellos.
 
-## Comentario
+## Crónica
 
-Un comentario sirve para contar a los lectores lo que ocurre en el torneo. No es un lugar para buenos deseos ni para conversar.
+Una crónica sirve para contar a los lectores lo que ocurre en el torneo. No es un lugar para buenos deseos ni para conversar.
 
 ## Qué no está permitido
 
@@ -36,4 +36,4 @@ Si ves en el sitio algo que incumple estas condiciones, denúncialo por correo e
 
 ## Cambios
 
-Estas condiciones pueden cambiar. Las que se aplican son las de esta página, y se te pedirá que las aceptes de nuevo la próxima vez que empieces un comentario.
+Estas condiciones pueden cambiar. Las que se aplican son las de esta página, y se te pedirá que las aceptes de nuevo la próxima vez que empieces una crónica.

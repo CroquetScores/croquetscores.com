@@ -20,6 +20,8 @@ Press **Add Game**. The game is added, the dialog says which, and the fields are
 
 ![The dialog after a game is added](images/add-score-dialog-added.png)
 
+If the dialog cannot read the competition's players, it says "The players could not be read. Close this dialog and open it again." Do that.
+
 What is refused is said beneath the field it is about: a winner or loser not chosen, a score not typed or not beginning with a digit, the same player as both, a loser's score marked as won, or a winner's score behind the loser's. In a knockout, two players who are not drawn to meet are refused above the fields.
 
 ## A knockout's draw has to be filled first {#draw-filled-first}
@@ -30,7 +32,9 @@ A knockout is played only once every place in its draw holds a player or a bye. 
 
 ## The list of scores
 
-The scores in use are listed in the order they were entered, oldest first, so that the list reads as the competition was played. Each says the winner and their score, then the loser and theirs, and offers **Edit** and **Archive**.
+The scores in use are listed in the order they were entered, oldest first, so that the list reads as the competition was played. The list is a table with a row for each game, and no column headings. A row says the game's number, the winner and their score, the word "beat", then the loser and their score, and offers **Edit** and **Archive**.
+
+A game's number is its place among the games entered, the first being 1, archived games counted. Archiving a game does not change any other's number, so a gap in the numbers says a game has been archived.
 
 ## Correcting a score {#correcting-a-score}
 

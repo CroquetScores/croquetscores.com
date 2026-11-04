@@ -10,7 +10,7 @@ Resultaten är uppställda lag för lag i stället för efter vem som vann, i en
 
 ## Skriva in ett resultat {#entering-a-score}
 
-Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "besegrade", sedan förloraren och dennes resultat.
+Tryck på **Lägg till resultat**, ovanför listan. Dialogrutan läses som ett resultat sägs högt: vinnaren och dennes resultat, sedan "slog", sedan förloraren och dennes resultat.
 
 ![Dialogrutan Lägg till resultat på en landskamps sida](images/add-test-score-dialog.png)
 
@@ -18,9 +18,11 @@ Vinnaren väljs bland båda lagens spelare i bruk, under varje lags namn, det f�
 
 Ett resultat skrivs som resultatföraren skrev ned det: dess antal poäng, och det som följer, vilket behålls och visas som det skrevs, som "26tp" för 26 bågar och en triple peel. Antalet är de siffror resultatet börjar med; ett resultat som inte börjar med en siffra godtas inte.
 
-Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs på något annat sätt, säger vem som vann genom en markering efter vinnarens resultat: "6w" besegrade "6". Markeringarna är "w", "won" och "winner". En vinnares resultat måste vara högre än förlorarens, eller markerat, såvida inte turneringen tillåter oavgjorda resultat, i vilket fall lika poäng utan markering sparas som oavgjort.
+Ett parti som vunnits på lika poäng, som när det stoppas av tiden och avgörs på något annat sätt, säger vem som vann genom en markering efter vinnarens resultat: "6w" slog "6". Markeringarna är "w", "won" och "winner". En vinnares resultat måste vara högre än förlorarens, eller markerat, såvida inte turneringen tillåter oavgjorda resultat, i vilket fall lika poäng utan markering sparas som oavgjort.
 
 Tryck på **Lägg till parti**. Partiet läggs till, dialogrutan säger vilket, och fälten töms för nästa, eftersom resultaten kommer i en bunt läst från en tavla i slutet av ett spelpass. Tryck på **Avbryt** när alla är inlagda.
+
+Om spelarna inte kan läsas säger dialogrutan det ovanför fälten, med "Spelarna kunde inte läsas in. Stäng den här dialogrutan och öppna den igen.", i stället för att erbjuda ingen. Gör som den säger.
 
 ## Matcher
 

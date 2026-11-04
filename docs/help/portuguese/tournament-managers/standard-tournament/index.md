@@ -29,7 +29,7 @@ A porta de entrada da administração lista os torneios de que você participa, 
 
 ![A lista de torneios na administração](images/admin-list.png)
 
-Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Jogadores**, **Competições**, **Notas**, **Organizadores**, **Anotadores** e **Rankings**. A página abre em Jogadores, porque os jogadores são a primeira coisa a inserir.
+Pressionar o nome de um torneio, ou **Gerenciar**, abre a sua página. Tudo o que há para administrar está em seis abas abaixo do nome: **Jogadores**, **Competições**, **Notas**, **Organizadores**, **Anotadores** e **Rankings**. A página abre em Jogadores, porque os jogadores são a primeira coisa a inserir. No fim da fileira de abas, e na barra de título de uma caixa de diálogo, há um **?** redondo que abre a ajuda do que você está vendo, em outra aba para que o seu lugar seja mantido. Há um também ao lado de **Novo torneio**.
 
 ![A página de um torneio, na aba Competições](images/tournament-page.png)
 

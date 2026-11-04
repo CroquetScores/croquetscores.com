@@ -14,6 +14,8 @@ Pressione **Adicionar nota**, acima da lista. Um painel toma o lugar da lista, p
 
 **Descrição** é escrita em Markdown e pode ficar vazia quando o título diz tudo o que há a dizer. A barra de ferramentas acima da caixa escreve o Markdown por você: Título, Negrito, Itálico, Citação, Código, Link, Lista numerada, Lista com marcadores e Lista de tarefas. Cada uma age sobre o que está selecionado, ou no início de cada linha selecionada, ou põe o cursor onde as palavras vão.
 
+Um parágrafo é separado do anterior por uma linha em branco inteira, para que a nota se leia como parágrafos.
+
 **Pré-visualizar** mostra a nota como um leitor a verá na sua página.
 
 ![O painel de nota, na aba Pré-visualizar](images/note-preview.png)

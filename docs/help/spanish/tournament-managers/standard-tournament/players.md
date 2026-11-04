@@ -6,7 +6,7 @@ Los jugadores se inscriben aquí una sola vez, en el torneo. En qué competicion
 
 ![La pestaña Jugadores, con jugadores inscritos y uno archivado](images/players-tab.png)
 
-## Añadir jugadores {#add-a-player}
+## Añadir un jugador {#add-a-player}
 
 Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la página.
 
@@ -14,9 +14,11 @@ Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la pág
 
 **Nombre** es obligatorio. Es el nombre del jugador tal como se mostrará en todas las páginas, de entre 3 y 254 caracteres. Dos jugadores de un mismo torneo no pueden tener el mismo nombre, sea cual sea su uso de mayúsculas; cuando dos jugadores comparten nombre de verdad, distínguelos en el propio nombre, como "Andrew Hobbs (2)".
 
-**Representa a** es aquello por lo que juega el jugador, escrito como lo diría un lector: un club, una región o un país, como "Canterbury Croquet Club". Se muestra entre paréntesis tras el nombre. Puede dejarse vacío.
+**Representa a** es aquello por lo que juega el jugador, escrito como lo diría un lector: un club, una región o un país, como "Canterbury Croquet Club". Se muestra entre paréntesis tras el nombre. Puede dejarse vacío. Según escribes, se ofrece lo que se ha añadido como representado por jugadores de cualquier torneo del sitio, donde una palabra suya empieza por lo que has escrito, para que un club se escriba como ya se ha escrito antes; la tecla de tabulación toma el que se muestra tras el cursor.
 
-**Bandera** es la bandera que se muestra junto al nombre del jugador. Puede dejarse en ninguna, como la mayoría de los jugadores. A qué representa un jugador y qué bandera lleva se guardan por separado, porque un jugador puede jugar por un club de un país y llevar la bandera de otro.
+**Bandera** es la bandera que se muestra junto al nombre del jugador. Es una lista desplegable de los lugares por su nombre, con ninguna primero y después los lugares donde se juegan más torneos; escribe el comienzo de un nombre para ir a él. Puede dejarse en ninguna, como la mayoría de los jugadores. A qué representa un jugador y qué bandera lleva se guardan por separado, porque un jugador puede jugar por un club de un país y llevar la bandera de otro.
+
+**Hándicap** es el hándicap del jugador, si tiene alguno: un signo, hasta dos cifras y una fracción de una cifra, como 4, +4 o -1.5. Se guarda como lo escribes, y se muestra entre paréntesis con aquello a lo que representa, antes de ello. Puede dejarse vacío.
 
 **Nombre del jugador en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet de asociación o de Croquet golf, los dos deportes de cuyos jugadores el ranking mundial lleva una lista. Los jugadores de American 6 Wicket son conocidos en el ranking por su propio nombre, así que ahí no se pide, y el nombre en el ranking mundial de cada jugador es siempre su nombre. Mientras añades a un jugador, sigue al nombre según lo escribes, porque la mayoría de los jugadores son conocidos en el ranking por su propio nombre, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador.
 
@@ -26,13 +28,13 @@ Pulsa **Añadir**. El jugador se añade, el diálogo lo dice y sus campos se vac
 
 ![El diálogo después de añadir un jugador](images/add-player-dialog-added.png)
 
-Un jugador nunca se llama "Bye". Los byes de una eliminatoria se añaden en la propia eliminatoria, allí donde se inscriben sus jugadores, así que un nombre cuya primera palabra sea "bye" (la palabra inglesa) se rechaza, y el diálogo explica por qué.
+Un jugador nunca se llama "Bye". Los byes de una eliminatoria se añaden en la propia eliminatoria, allí donde se inscriben sus jugadores, así que se rechaza un nombre que sea "Bye", o "Bye" con un número, como "Bye 2", "Bye-2" o "Bye (2)", y el diálogo explica por qué.
 
 ## Añadir varios jugadores {#adding-multiple-players}
 
 Para añadir de una vez una lista entera, pulsa **Añadir jugadores**, junto a **Añadir jugador**. Se abre un diálogo sobre la página con un solo cuadro, que admite varias líneas de texto. Puedes copiar la lista de una hoja de cálculo y pegarla en el cuadro.
 
-**La primera línea nombra los campos**, separados por comas o por tabulaciones: **Name** y cualquiera de **Representing**, **Flag**, **Handicap** y **WorldRankingPlayerName**, en cualquier orden. Estos nombres se escriben en inglés, sea cual sea el idioma del sitio. **Name** debe ser uno de ellos. **Cada línea siguiente es un jugador**, con un valor para cada campo en el mismo orden, separados del mismo modo. Un jugador sin nada en un campo lo deja vacío, pero conserva la coma o la tabulación. Por ejemplo, con comas:
+**La primera línea nombra los campos** (una lista cuya primera línea no nombra ninguno se rechaza, con «La primera línea debe contener los nombres de los campos»), separados por comas o por tabulaciones: **Name** y cualquiera de **Representing**, **Flag**, **Handicap** y **WorldRankingPlayerName**, en cualquier orden. Estos nombres se escriben en inglés, sea cual sea el idioma del sitio. **Name** debe ser uno de ellos. **Cada línea siguiente es un jugador**, con un valor para cada campo en el mismo orden, separados del mismo modo. Un jugador sin nada en un campo lo deja vacío, pero conserva la coma o la tabulación. Por ejemplo, con comas:
 
 ```
 Name,Representing,Flag
@@ -40,7 +42,7 @@ Sam Someone,Canterbury Croquet Club,New Zealand
 Alex Another,,England
 ```
 
-- **Nombre, Representa a y Nombre del jugador en el ranking mundial** se rigen por las mismas reglas que al añadir un solo jugador (véase [Añadir jugadores](players.md#add-a-player)). Un nombre tiene entre 3 y 254 caracteres, no está ya en el torneo, sea cual sea su uso de mayúsculas, y no es "Bye".
+- **Nombre, Representa a y Nombre del jugador en el ranking mundial** se rigen por las mismas reglas que al añadir un solo jugador (véase [Añadir un jugador](players.md#add-a-player)). Un nombre tiene entre 3 y 254 caracteres, no está ya en el torneo, sea cual sea su uso de mayúsculas, y no es "Bye".
 - **Bandera** es el nombre del país o lugar, en tu idioma, tal como lo ofrece la lista del diálogo Añadir jugador, como Nueva Zelanda.
 - **Hándicap** es un signo, hasta dos cifras y una fracción de una cifra, como 4, +4 o -1.5.
 - Un jugador sin **WorldRankingPlayerName** es conocido por su nombre, como cuando se añade de uno en uno.
@@ -49,9 +51,9 @@ Alex Another,,England
 - A cada valor se le quitan los espacios de los extremos, y una línea sin nada se ignora.
 - Una lista contiene como máximo 500 jugadores. Añade el resto en otra lista.
 
-Pulsa **Añadir**. Toda la lista se comprueba antes de guardar nada, así que una lista con algo mal no añade a nadie. Lo que está mal se dice debajo del cuadro, en la línea donde está, contando la primera línea como línea 1. Se enumeran todos los fallos, no solo el primero, y lo que escribiste se queda para que puedas corregirlo. Una vez guardada la lista, el diálogo se cierra y la pestaña **Jugadores** muestra a los nuevos jugadores, en el orden en que los escribiste. A diferencia de **Añadir jugador**, que sigue abierto para el siguiente jugador, aquí no hay siguiente: la lista era el siguiente.
+Pulsa **Añadir**. Toda la lista se comprueba antes de guardar nada, así que una lista con algo mal no añade a nadie. Lo que está mal se dice debajo del cuadro, en la línea donde está, contando la primera línea como línea 1. Se enumeran todos los fallos, no solo el primero, y lo que escribiste se queda para que puedas corregirlo. Una vez guardada la lista, el diálogo se cierra y la pestaña Jugadores muestra a los nuevos jugadores, en el orden en que los escribiste. A diferencia de **Añadir jugador**, que sigue abierto para el siguiente jugador, aquí no hay siguiente: la lista era el siguiente.
 
-El **?** de la barra de título del diálogo lleva hasta aquí.
+El **?** de la barra de título del diálogo lleva hasta aquí. Tanto este diálogo como Añadir jugador se quedan en la ventana estés donde estés en la página.
 
 ## Corregir un jugador {#correcting-a-player}
 

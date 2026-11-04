@@ -2,7 +2,7 @@
 
 Hoe om die werf te gebruik, vir die mense wat dit gebruik.
 
-- [Toernooibestuurders](tournament-managers/index.md): hoe om 'n toernooi vanuit die administrasie te bestuur, van die skep daarvan tot by die bladsye wat sy spelers volg.
 - [Lesers](readers/index.md): om 'n toernooi in 'n blaaier te lees, van die keuse van die tema en die taal tot wat die werf van jou blaaier vereis.
 - [Jou rekening](accounts/index.md): registreer, aanmeld, wagwoorde, en om vir 'n rekening te sorg.
-- [Wêreldranglysbeamptes](world-ranking-officers/index.md): wat die lys toernooie in die administrasie jou gee benewens die toernooie wat jy bestuur.
+- [Toernooibestuurders](tournament-managers/index.md): hoe om 'n toernooi vanuit die administrasie te bestuur, van die skep daarvan tot by die bladsye wat sy spelers volg.
+- [Wêreldranglysbeamptes](world-ranking-officers/index.md): wat die administrasie se lys toernooie en 'n toernooi se Ranglyste-oortjie jou gee benewens die toernooie wat jy bestuur.

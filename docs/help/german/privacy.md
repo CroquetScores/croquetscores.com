@@ -16,7 +16,7 @@ Die Website verwendet keine Werbung und kein Tracking und gibt nichts über Sie 
 
 ## Cookies
 
-Die Website setzt ein Cookie, das Sie angemeldet hält, eines für das Thema, das Sie gewählt haben, eines für die Sprache, die Sie gewählt haben, und eines dafür, was Sie zu den Hinweisen auf Neues gesagt haben. Sie sind nötig, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Beim Registrieren wird Google reCAPTCHA verwendet, um Menschen von Programmen zu unterscheiden; Google betreibt es nach eigenen Bedingungen.
+Die Website setzt ein Cookie, das Sie angemeldet hält, und weitere, die sich merken, was Sie gewählt haben: die Darstellung, die Sprache, wie Sie Listen sortiert haben, das Land, die Region und die Sportart, nach denen Sie gefiltert haben, die Ansicht eines Wettbewerbs, welche Notizen und Kommentare Sie gelesen haben und was Sie zu den Hinweisen auf Neues gesagt haben. Solange Sie sich mit Google anmelden, behält sie noch eines, bis Sie zurück sind. Sie sind nötig, damit die Website tut, was Sie verlangt haben, und werden nicht benutzt, um Ihnen zu folgen. Beim Registrieren wird Google reCAPTCHA verwendet, um Menschen von Programmen zu unterscheiden; Google betreibt es nach eigenen Bedingungen.
 
 ## Wer es sehen kann
 
@@ -28,7 +28,7 @@ Die Website schickt E-Mails, um eine E-Mail-Adresse zu bestätigen, um ein Passw
 
 ## Vergessen lassen
 
-Sie können Ihr Konto jederzeit von Ihrem Profil aus vergessen lassen, sobald Sie angemeldet sind. Ihr Name, Ihre E-Mail-Adresse und jedes damit verknüpfte Google- oder Facebook-Konto werden dann in allem, was die Website speichert, für immer durch „Forgotten Account“ und eine Nummer ersetzt und durch eine Adresse bei example.com, die niemandem gehört. Niemand kann sie wiederherstellen, auch nicht Sie. Was Sie veröffentlicht haben, bleibt unter dem Namen „Forgotten Account“ und dieser Nummer erhalten. Das Vergessen lässt sich nicht rückgängig machen, deshalb wird zweimal danach gefragt, und die E-Mail-Adresse kann danach wieder als neues Konto registriert werden. Eine Kopie der Website, die gemacht wurde, bevor Sie vergessen wurden, etwa eine Sicherung, hat noch, was sie damals hatte, solange die Kopie aufbewahrt wird.
+Sie können Ihr Konto jederzeit von Ihrem Profil aus vergessen lassen, sobald Sie angemeldet sind. Ihr Name, Ihre E-Mail-Adresse und jedes damit verknüpfte Google- oder Facebook-Konto werden dann in allem, was die Website speichert, für immer durch „Forgotten Account“ und eine Nummer sowie durch eine Adresse bei example.com, die niemandem gehört, und eine Nummer ersetzt. Niemand kann sie wiederherstellen, auch nicht Sie. Was Sie veröffentlicht haben, bleibt unter dem Namen „Forgotten Account“ und dieser Nummer erhalten. Das Vergessen lässt sich nicht rückgängig machen, deshalb wird zweimal danach gefragt, und die E-Mail-Adresse kann danach wieder als neues Konto registriert werden. Eine Kopie der Website, die gemacht wurde, bevor Sie vergessen wurden, etwa eine Sicherung, hat noch, was sie damals hatte, solange die Kopie aufbewahrt wird.
 
 ## Fragen
 

@@ -18,6 +18,8 @@ A administração lista um ano de cada vez, começando por este ano, o torneio m
 
 ![A lista de torneios](images/admin-list.png)
 
+Acima da lista, **País**, **Região**, **Esporte**, **De** e **Até** a restringem à medida que são escolhidos, sem botão para apertar. Só são oferecidas as escolhas que listariam alguma coisa, e uma região é oferecida depois de escolhido um país. **De** e **Até** são dias: a lista é a dos torneios que começam de um até o outro, ambos incluídos, e os dois precisam ser escolhidos para que ela seja restringida por dias. O que foi escolhido fica no endereço, então é possível fazer um link para uma lista restringida; escolher outro ano a limpa. Um ano com mais de cem torneios é listado com cem por página, com **Anterior** e **Seguinte** abaixo. Um torneio nacional ou internacional aparece em negrito ao longo da sua linha.
+
 ## Arquivar um torneio
 
 **Arquivar** em um torneio da lista o põe de lado. Ele continua listado, riscado e depois dos torneios em uso, mas oferece apenas **Restaurar**: a sua página na administração, e as suas páginas públicas, ficam fechadas até que ele seja restaurado. Arquivar não pergunta antes, porque restaurar desfaz.

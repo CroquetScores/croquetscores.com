@@ -18,7 +18,7 @@ Pulsa **Añadir jugador**, encima de la lista. Se abre un diálogo sobre la pág
 
 **Nombre del jugador en el ranking mundial** es el nombre por el que el ranking mundial conoce al jugador. Se pide solo en un torneo de Croquet de asociación o de Croquet golf, los dos deportes de cuyos jugadores el ranking mundial lleva una lista. Los jugadores de American 6 Wicket son conocidos en el ranking por su propio nombre, así que ahí no se pide, y el nombre en el ranking mundial de cada jugador es siempre su nombre. Mientras añades a un jugador, sigue al nombre según lo escribes, y deja de seguirlo en cuanto escribes en él. Si se deja vacío, se guarda como el nombre del jugador. Según escribes, se ofrecen los jugadores que el ranking mundial conoce cuyos nombres empiezan así, y junto al nombre en el ranking mundial una marca de verificación dice que el ranking conoce el nombre y un signo de interrogación dice que no. Es solo un aviso: un nombre que el ranking no conoce se guarda igual que uno que sí.
 
-Un jugador nunca se llama "Bye": un nombre cuya primera palabra sea "bye" (la palabra inglesa) se rechaza.
+Un jugador nunca se llama "Bye": se rechaza un nombre que sea "Bye", o "Bye" con un número, como "Bye 2", "Bye-2" o "Bye (2)". Un nombre que solo empieza por esa palabra, como "Bye / Bassett", es el de una persona.
 
 Pulsa **Añadir**. El jugador se añade, el diálogo lo dice y sus campos se vacían para el siguiente, con el cursor de vuelta en el nombre. Añade todo el equipo de este modo y después pulsa **Cancelar** para cerrar el diálogo.
 

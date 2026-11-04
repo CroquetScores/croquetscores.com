@@ -2,13 +2,13 @@
 
 ## Ler não exige nenhum dos dois
 
-As páginas que mostram um torneio, seus resultados, seus jogadores e seus rankings funcionam com os scripts desativados. O mesmo vale para escolher o tema e o idioma.
+As páginas que mostram um torneio, seus resultados, seus jogadores e seus rankings funcionam com os scripts desativados. O mesmo vale para escolher o tema e o idioma, ordenar e filtrar listas e pesquisar. Abrir um mês de um ano e imprimir uma competição precisam deles.
 
 ## Cookies
 
-O site define um cookie para manter você conectado, um para o tema que você escolheu, um para o idioma que você escolheu e um para o que você disse sobre os avisos de novidades. Eles existem para que o site faça o que você pediu e não são usados para seguir você. Se você nunca se conecta nem escolhe nada, eles têm pouco a guardar. [A página de privacidade](../privacy.md) traz tudo o que o site guarda.
+O site define um cookie para manter você conectado e outros para lembrar o que você escolheu: o tema, o idioma, como você ordenou as listas, o país, a região e o esporte pelos quais você filtrou, a visão de uma competição, quais notas e comentários você já leu e o que você disse sobre os avisos de novidades. Enquanto você entra com o Google, ele guarda mais um, até você voltar. Eles existem para que o site faça o que você pediu e não são usados para seguir você. Se você nunca se conecta nem escolhe nada, eles têm pouco a guardar. [A página de privacidade](../privacy.md) traz tudo o que o site guarda.
 
-Um navegador que recusa cookies ainda pode ler um torneio. Ele esquecerá as suas escolhas a cada visita e não consegue continuar conectado.
+Um navegador que recusa cookies ainda pode ler um torneio. Ele esquecerá as suas escolhas, e quais notas você já leu, a cada visita e não consegue continuar conectado.
 
 ## Cadastrar-se exige scripts
 

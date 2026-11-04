@@ -27,6 +27,8 @@ Padrão é o único formato não disputado por equipes, e não é o que você qu
 
 Como os seus testes são jogados e contados, se com handicaps, se com empates e se para os rankings mundiais, é cada teste que diz ao ser adicionado.
 
+**Testes igualados são empates.** Pedido assim que um formato disputado por equipes é escolhido. Um teste cujas equipes ganham o mesmo número de partidas é decidido pelo saldo de jogos delas, depois pelo saldo de arcos. Marque e ele passa a ser um empate. Começa marcado apenas para o **Campeonato Mundial de Equipes de Croquet de Golfe**, que sempre os empatou, e pode ser alterado depois.
+
 **Evento de nível nacional** e **Evento de nível internacional.** Um torneio pode ser um, o outro, ou nenhum, mas nunca os dois: marcar um desmarca o outro.
 
 ## Criar o torneio

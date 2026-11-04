@@ -33,11 +33,11 @@ Die Eingangsseite der Verwaltung listet die Turniere, an denen Sie beteiligt sin
 
 ![Die Liste der Turniere in der Verwaltung](images/admin-list.png)
 
-Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in sechs Reitern unter seinem Namen: **Mannschaften**, **Tests**, **Notizen**, **Verantwortliche**, **Ergebniserfasser** und **Ranglisten**. Die Seite öffnet sich auf Mannschaften, weil die Mannschaften als Erstes angelegt werden.
+Ein Druck auf den Namen eines Turniers oder auf **Verwalten** öffnet seine Seite. Alles, was zu tun ist, liegt in sechs Reitern unter seinem Namen: **Mannschaften**, **Tests**, **Notizen**, **Verantwortliche**, **Ergebniserfasser** und **Ranglisten**. Der Reiter **Ranglisten** ist nur da, wo das Turnier für die Weltranglisten zählt. Die Seite öffnet sich auf Mannschaften, weil die Mannschaften als Erstes angelegt werden.
 
 ![Die Seite eines Turniers, auf dem Reiter Tests](images/tournament-page.png)
 
-Die dunkelgrüne Leiste unter der Kopfzeile dient dem Wechsel zwischen Seiten. Auf der Turnierseite und auf der Seite eines Tests führt sie zum Turnier, als **Turnier**, und zu jedem Test mit seinem Namen. Auf der Seite einer Mannschaft führt sie stattdessen zum Turnier und zu jeder Mannschaft mit ihrem Kurznamen, weil ein Verantwortlicher auf der Seite einer Mannschaft Spieler Mannschaft für Mannschaft eingibt. Die Seite, auf der Sie sind, ist schwarz markiert.
+Die dunkelgrüne Leiste unter der Kopfzeile dient dem Wechsel zwischen Seiten. Auf der Turnierseite und auf der Seite eines Tests führt sie zum Turnier, als **Turnier**, und zu jedem Test mit seinem Namen. Auf der Seite einer Mannschaft führt sie stattdessen zum Turnier und zu jeder Mannschaft mit ihrem Kurznamen, weil ein Verantwortlicher auf der Seite einer Mannschaft Spieler Mannschaft für Mannschaft eingibt. Die Seite, auf der Sie sind, ist schwarz markiert. Wenn auf dem Reiter Tests Tests hinzugefügt, geändert, verschoben, archiviert oder wiederhergestellt werden, folgt die Leiste sofort.
 
 ## Was überall gilt
 
@@ -46,6 +46,8 @@ Die dunkelgrüne Leiste unter der Kopfzeile dient dem Wechsel zwischen Seiten. A
 **Ein Dialog über der Seite speichert nichts, bis Sie seine Schaltfläche drücken.** Abbrechen oder die Escape-Taste schließt ihn und lässt alles, wie es war. Dialoge, die etwas hinzufügen, etwa Mannschaft hinzufügen und Ergebnis hinzufügen, bleiben nach jedem Hinzufügen offen, damit sich eine Liste in einem Zug eingeben lässt.
 
 **Was abgelehnt wird, steht neben dem Feld, um das es geht.** Nichts Abgelehntes wird gespeichert, und was Sie eingegeben haben, bleibt stehen, damit Sie es berichtigen können, statt es neu einzugeben.
+
+**Hilfe ist einen Druck entfernt.** Ein rundes **?** steht in der Titelleiste der Seite, die ein Turnier anlegt oder ändert, am Ende der Reihe der Reiter, neben **Neues Turnier** und in jedem Dialog. Es öffnet den Teil dieser Anleitung, der von dem handelt, was Sie gerade ansehen, in einem anderen Tab, damit erhalten bleibt, was Sie gerade tun.
 
 **Die Verwaltung funktioniert auf dem Telefon.** Jede Schaltfläche ist groß genug für einen Daumen, und nichts ist breiter als der Bildschirm.
 

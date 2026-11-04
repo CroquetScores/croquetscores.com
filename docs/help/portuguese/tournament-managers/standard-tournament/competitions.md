@@ -44,17 +44,21 @@ Um mata-mata pode enviar quem perde uma rodada para um mata-mata próprio, um ma
 
 Um mata-mata dos perdedores tem uma vaga para cada partida dessa rodada, e cada rodada dele é melhor de 1, o que **Editar** pode mudar. Seus jogadores entram à medida que as partidas dessa rodada são decididas, na ordem do sorteio, então a aba **Jogadores** apenas os mostra. Se uma partida é corrigida ou posta de lado, o perdedor é movido ou tirado de novo, a menos que já tenha jogado.
 
-Num mata-mata já adicionado, **Editar** mostra o mesmo botão, e o mata-mata dos perdedores é adicionado na hora. Um mata-mata cujos perdedores outro em uso recebe não pode ser arquivado nem ter suas vagas alteradas: arquive primeiro o mata-mata dos perdedores.
+A página de um mata-mata tem uma terceira aba, **Perdedores**, depois de Jogadores e Resultados, que lista os mata-matas que recebem os seus perdedores, cada um levando à sua página. **Adicionar mata-mata dos perdedores** também está lá e pede as mesmas duas coisas; aqui o mata-mata dos perdedores é adicionado na hora. Só um mata-mata tem a aba, e um anotador não a recebe.
+
+Num mata-mata já adicionado, **Editar** mostra o mesmo botão, e o mata-mata dos perdedores é adicionado na hora, como na aba Perdedores. Um mata-mata cujos perdedores outro em uso recebe não pode ser arquivado nem ter suas vagas alteradas: arquive primeiro o mata-mata dos perdedores.
 
 ### Como é jogada e contada
 
-Todo tipo pergunta as mesmas três coisas abaixo da sua forma.
+Todo tipo pergunta as mesmas quatro coisas abaixo da sua forma.
 
 **Jogado com handicaps.** Marque para uma competição jogada com handicaps.
 
 **Permite empates.** Marque quando um jogo pode terminar sem que nenhum dos jogadores seja o vencedor. A maioria das competições não permite. Quando está marcado, um resultado inserido com pontos iguais e sem marca é guardado como empate; quando não está, um jogo com pontos iguais precisa dizer quem o ganhou com uma marca depois do resultado do vencedor, como "6w". A partida de um mata-mata sempre tem um vencedor, então um jogo empatado não decide uma.
 
 **Conta para o ranking mundial.** Só é pedido quando pode valer: uma competição de Croquet de Associação ou de Croquet de Golfe que não é jogada com handicaps nem permite empates. Começa marcado, então desmarque-o para uma competição que não deve valer.
+
+**Máximo de arcos.** O máximo de arcos até o qual se joga um jogo da competição, um número inteiro de pelo menos 1. Começa no valor habitual do esporte, 26, ou 13 no Croquet de Golfe, então altere-o para uma competição jogada mais curta, como um grupo de jogos de 14 arcos. Esvazie-o para uma competição cujos jogos não são jogados até um número de arcos. Uma competição jogada até um número diferente do habitual diz isso na sua página pública, como "Jogado a 14 arcos".
 
 ### Adicionar várias de uma vez
 

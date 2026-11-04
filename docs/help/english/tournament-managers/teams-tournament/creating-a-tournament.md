@@ -27,6 +27,8 @@ Standard is the one format not played by teams, and is not what you want here. G
 
 How its tests are played and counted, whether with handicaps, with drawn results, and towards the world rankings, is each test's to say when it is added.
 
+**Level tests are drawn.** Asked once a format played by teams is chosen. A test whose teams win the same number of matches is decided by their net games, then their net hoops. Tick this and it is a draw instead. It is ticked to begin with only for the **GC World Team Championship**, which has always drawn them, and can be changed later.
+
 **National‑level event** and **International‑level event.** A tournament can be one, the other, or neither, but never both: ticking one unticks the other.
 
 ## Creating it

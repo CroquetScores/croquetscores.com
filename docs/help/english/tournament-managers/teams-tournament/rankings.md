@@ -4,9 +4,9 @@ Where a competition counts toward the world rankings, its results are sent to th
 
 ## The tab
 
-Open the tournament's page and choose **Rankings**, the last of its tabs. It says what the file is: a text file for Association Croquet, a spreadsheet for Golf Croquet and American 6 Wicket. It says what is left for you to do by hand, and that the file is then to be sent to the rankings officers. Beneath that is **Download games for world ranking**, which saves the file. It is there before a single score is entered, and gives a file with nothing in it until one is.
+Open the tournament's page and choose **Rankings**, the last of its tabs. It says that the world rankings use the tournament's results through the file, so that managers do not need to do anything. The file is a text file for Association Croquet and a spreadsheet for Golf Croquet and American 6 Wicket. Beneath the words is **Download games for world ranking**, which saves the file. It is there before a single score is entered, and gives a file with nothing in it until one is.
 
-The tab is only in the page of a tournament of a sport with world rankings, and only for its managers: a scorer is not offered it. The file itself is at the tournament's own address followed by `/rankings`, as `/2026/ac/spring-open/rankings`, which is the address the site has always given it, and anybody who has the address may open it.
+The tab is only in the page of a tournament that counts toward the world rankings, which is to say one with a competition that counts. It is offered to its managers and to the world ranking officers of its sport, and not to a scorer who is neither. The file itself is at the tournament's own address followed by `/rankings`, as `/2026/ac/spring-open/rankings`, which is the address the site has always given it, and anybody who has the address may open it.
 
 ## What is in the file
 
@@ -14,9 +14,9 @@ Every score that has been entered and not archived is in it, in the order it was
 
 A player is given by their world ranking name, which is their name where they have not been given another.
 
-**Association Croquet** has a block for each competition that has a score: its event, its dates, its winner, whether it was matches or single games, and a numbered line for each result, as "1 Sam Someone beat Alex Another +9". A score is the winner's hoops less the loser's, with a plus where the winner scored more, and the peels after it. A knockout's match is one line, with each game's score in turn. The site can only guess who won a competition, so check the **Winner** line of each block and correct it before you send the file on.
+**Association Croquet** has a block for each competition that has a score: its event, its dates, its winner, whether it was matches or single games, and a numbered line for each result, as "1 Sam Someone beat Alex Another +9". A score is the winner's hoops less the loser's, with a plus where the winner scored more, and the peels after it. A knockout's match is one line, with each game's score in turn. The **Winner** line of each block is left empty, since a test is won by a team and not by a player.
 
-**Golf Croquet and American 6 Wicket** have a spreadsheet: the tournament's name, its days and how many games it holds, then a numbered line for each game, with the winner's family name and first name, "beat", the loser's, and the two scores. Each game of a knockout's match is a line of its own. Beneath the last, the line **Tournament winner:** is left empty, for you to fill in.
+**Golf Croquet and American 6 Wicket** have a spreadsheet: the tournament's name, its days and how many games it holds, then a numbered line for each game, with the winner's family name and first name, "beat", the loser's, and the two scores. Each game of a knockout's match is a line of its own. Beneath the last, the line **Tournament winner:** is left empty, for whoever uses the file to fill in.
 
 ## When there is no file
 

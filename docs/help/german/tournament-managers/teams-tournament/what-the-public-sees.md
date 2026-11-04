@@ -1,6 +1,6 @@
 # Was die Öffentlichkeit sieht
 
-Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch JavaScript und sind für das Telefon gestaltet.
+Nichts wird veröffentlicht: Die öffentlichen Seiten werden aus dem gezeichnet, was die Verwaltung enthält, ein eingegebenes Ergebnis steht also sofort darauf. Sie brauchen weder ein Konto noch Skripte und sind für das Telefon gestaltet.
 
 ## Die Seite des Turniers
 
@@ -10,9 +10,11 @@ Die Seite des Turniers liegt unter seinem Jahr, seiner Sportart und seinem Namen
 
 Die dunkelgrüne Leiste bietet die Bereiche des Turniers an: **Neueste**, was diese Seite ist, **Zusammenfassung**, **Spieler**, **Notizen** und **Kommentar**, dann die Tests. Ein Test wird als die Kurznamen seiner Mannschaften mit „gegen“ dazwischen gesagt, etwa „AUS gegen NZ“. Tests in einer Gruppe werden nicht einzeln angeboten: Die Gruppe ist ein Bereich, benannt wie die Gruppe, an der Stelle, an der ihr erster Test stünde. Notizen ist mit einem roten Sternchen markiert, solange es eine Notiz gibt, die der Leser nicht gelesen hat.
 
-## Die Übersicht
+## Die Zusammenfassung
 
-Ein Turnier, dessen Tests in keiner Gruppe sind, hat eine **Zusammenfassung**: eine Tabelle aller Mannschaften, gereiht, mit den gewonnenen, verlorenen und unentschiedenen Tests, den gewonnenen und verlorenen Spielen und den erzielten und gegnerischen Toren sowie der Tordifferenz. Geht in irgendeinem Test eine Begegnung über mehr als ein Spiel, kommen nach den Tests die gewonnenen und verlorenen Begegnungen. In der Zusammenfassung sucht ein Leser jede Mannschaft als Ganzes.
+Ein Turnier, dessen Tests in keiner Gruppe sind, hat eine **Zusammenfassung**: eine Tabelle aller Mannschaften, gereiht, mit den gewonnenen, verlorenen und unentschiedenen Tests, den gewonnenen und verlorenen Spielen und den erzielten und gegnerischen Toren sowie der Tordifferenz. Geht in irgendeinem Test eine Begegnung über mehr als ein Spiel, kommen nach den Tests die gewonnenen und verlorenen Begegnungen. Die Mannschaften werden gereiht nach den gewonnenen Tests, dann den gewonnenen Begegnungen, dann ihrer Spieldifferenz, dann ihrer Tordifferenz und dann nach der Reihenfolge des Turniers. Ein Test, in dem die Mannschaften bei den Begegnungen gleichstehen, wird nach Spieldifferenz entschieden, dann nach Tordifferenz, oder ist unentschieden, wo das Turnier **Gleichstand in Tests ist unentschieden** anhakt. In der Zusammenfassung sucht ein Leser jede Mannschaft als Ganzes.
+
+In einem **Interstate Shield** werden die Mannschaften gereiht nach den gewonnenen Tests, dann der Differenz der Begegnungen statt der gewonnenen Begegnungen, dann der Spieldifferenz, dann der Tordifferenz. Mannschaften, die dann noch gleichstehen, werden nach den Tests geordnet, die sie gegeneinander gewonnen haben. Seine Zusammenfassung zeigt eine Spalte **Differenz** unter Begegnungen und unter Spielen ebenso wie unter Toren, und das Shield wird nie in Gruppen gespielt.
 
 Ein Turnier mit einem Test in einer Gruppe hat keine Zusammenfassung. Stattdessen zeigt die Seite jeder Gruppe, wie die Mannschaften dieser Gruppe stehen, weil eine einzige Tabelle von Mannschaften über Gruppen hinweg, die nie gegeneinander gespielt haben, nichts reihen würde.
 
@@ -28,7 +30,7 @@ Die Überschrift der Seite eines Tests sind die vollen Namen seiner Mannschaften
 
 ![Die Seite eines Tests](images/public-test.png)
 
-Ein Test wird auf zwei Arten gezeigt, angeboten in der Zeile seines Namens: **Raster**, was diese Tabelle ist, und **Spielreihenfolge**, die jedes Spiel des Tests listet, das älteste zuerst. Ein Test in einer Gruppe bietet die Zusammenfassung und die Tests seiner Gruppe in einer Zeile über seiner Überschrift an, mit diesem Test markiert.
+Ein Test wird auf zwei Arten gezeigt, angeboten in der Zeile seines Namens: **Raster**, was diese Tabelle ist, und **Spielreihenfolge**, die jedes Spiel des Tests in einer mit **Spiel** und **Datum** überschriebenen Tabelle listet, zunächst das älteste zuerst. Ein Druck auf eine Überschrift sortiert danach, und die Website merkt sich, wie der Leser zuletzt sortiert hat. Neben den Ansichten steht eine Druckerschaltfläche, wo Skripte eingeschaltet sind, die die Seite ohne die Leisten druckt. Ein Test in einer Gruppe bietet die Zusammenfassung und die Tests seiner Gruppe in einer Zeile über seiner Überschrift an, mit diesem Test markiert.
 
 ## Spieler
 
@@ -38,7 +40,7 @@ Die Seite Spieler listet die Spieler Mannschaft für Mannschaft: jede Mannschaft
 
 ## Notizen
 
-Die Seite Notizen listet die Notizen des Turniers, die zuletzt geschriebene zuerst; jede führt zu ihrer eigenen Seite und sagt, wie lange es her ist, dass sie geschrieben wurde. Eine Notiz, die der Leser nicht gelesen hat, ist mit einem roten Sternchen markiert, bis er sie öffnet.
+Die Seite Notizen ist mit **Notizen der Verantwortlichen** überschrieben und sagt „Noch keine Notizen.“, solange es keine gibt. Sie listet die Notizen des Turniers, die zuletzt geschriebene zuerst; jede führt zu ihrer eigenen Seite und sagt, wie lange es her ist, dass sie geschrieben wurde. Eine Notiz, die der Leser nicht gelesen hat, ist mit einem roten Sternchen markiert, bis er sie öffnet.
 
 ## Adressen, die sich ändern
 

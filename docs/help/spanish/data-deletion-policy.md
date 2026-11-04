@@ -18,7 +18,7 @@ Tu nombre y tu dirección de correo electrónico se sustituyen para siempre, en 
 
 ## Qué se conserva
 
-Se conserva el identificador de tu cuenta. Es un número aleatorio que se creó para la cuenta y no dice nada sobre quién eres. Lo que publicaste se queda con él, con el nombre «Forgotten Account» y ese número: los torneos que creaste, las puntuaciones que introdujiste y las crónicas y los comentarios que escribiste. Es el registro de las partidas, y las personas que jugaron en ellas tienen derecho a él. Ya no dice quién eras.
+Se conserva el identificador de tu cuenta. Es un número aleatorio que se creó para la cuenta y no dice nada sobre quién eres. Lo que publicaste se queda con él, con el nombre «Forgotten Account» y ese número: los torneos que creaste, los resultados que introdujiste y las crónicas y los comentarios que escribiste. Es el registro de las partidas, y las personas que jugaron en ellas tienen derecho a él. Ya no dice quién eras.
 
 Una copia del sitio hecha antes de que te olvidaran, como una copia de seguridad, sigue teniendo lo que tenía entonces, mientras se conserve esa copia.
 

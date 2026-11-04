@@ -18,7 +18,7 @@ Tryck på **Lägg till spelare**, ovanför listan. En dialogruta öppnas över s
 
 **Spelarens namn i världsrankingen** är det namn världsrankingen känner spelaren under. Det frågas efter bara i en turnering i association croquet eller golfcroquet, de två sporter vars spelare världsrankingen för en förteckning över. Spelarna i amerikansk 6-bågars croquet är kända i rankingen under sina egna namn, så det frågas inte efter där, och varje spelares namn i världsrankingen är alltid spelarens namn. Medan du lägger till en spelare följer det namnet medan du skriver, och slutar följa när du skriver i det. Lämnas det tomt sparas det som spelarens namn. Medan du skriver erbjuds de spelare världsrankingen känner till vars namn börjar så, och bredvid världsrankingnamnet säger en bock att rankingen känner till namnet och ett frågetecken att den inte gör det. Det är bara ett råd: ett namn rankingen inte känner till sparas lika gärna som ett den känner till.
 
-En spelare heter aldrig "Bye": ett namn vars första ord är det engelska "bye" godtas inte.
+En spelare heter aldrig "Bye": ett namn som är "Bye", eller "Bye" med ett nummer, som "Bye 2", "Bye-2" eller "Bye (2)", godtas inte. Orden är engelska, eftersom det är de ord webbplatsen själv känner igen. Ett namn som bara börjar med ordet, som "Bye / Bassett" gör, är en persons.
 
 Tryck på **Lägg till**. Spelaren läggs till, dialogrutan säger det, och fälten töms för nästa, med markören tillbaka i namnet. Lägg till hela laget på det sättet, och tryck sedan på **Avbryt** för att stänga dialogrutan.
 

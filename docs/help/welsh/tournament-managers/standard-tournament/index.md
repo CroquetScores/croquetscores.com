@@ -29,7 +29,7 @@ Mae drws ffrynt yr adran weinyddu yn rhestru'r twrnameintiau y mae gennych ran y
 
 ![Y rhestr o dwrnameintiau yn yr adran weinyddu](images/admin-list.png)
 
-Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn.
+Mae pwyso enw twrnamaint, neu **Rheoli**, yn agor ei dudalen. Mae popeth sydd i'w redeg mewn chwe thab o dan ei enw: **Chwaraewyr**, **Cystadlaethau**, **Nodiadau**, **Rheolwyr**, **Sgorwyr** a **Detholion**. Mae'r dudalen yn agor ar Chwaraewyr, gan mai'r chwaraewyr yw'r peth cyntaf a roddir i mewn. Ar ddiwedd rhes y tabiau, ac ym mar teitl deialog, mae **?** crwn sy'n agor y cymorth ar gyfer yr hyn rydych yn edrych arno, mewn tab arall fel y cedwir eich lle. Mae un wrth ymyl **Twrnamaint newydd** hefyd.
 
 ![Tudalen twrnamaint, ar ei thab Cystadlaethau](images/tournament-page.png)
 
@@ -39,7 +39,7 @@ Mae'r bar gwyrdd tywyll o dan y pennyn ar gyfer symud rhwng tudalennau. Mae'n ar
 
 **Ni chaiff dim ei ddileu'n llwyr ac eithrio nodyn.** Caiff chwaraewyr, cystadlaethau, canlyniadau a'r twrnamaint ei hun eu harchifo yn hytrach na'u dileu: eu rhoi o'r neilltu, â llinell drwyddynt, a'u rhestru o dan bennawd eu hunain, gydag **Adfer** i'w cael yn ôl. Nid yw archifo, adfer a symud i fyny ac i lawr byth yn gofyn i chi gadarnhau, am fod pob un yn cael ei ddadwneud trwy bwyso'r ffordd arall. Mae'r pethau na ellir eu dadwneud, fel tynnu chwaraewr o gystadleuaeth neu ddileu nodyn, yn gofyn yn gyntaf.
 
-**Nid yw deialog dros y dudalen yn cadw dim nes i chi bwyso ei botwm.** Mae Canslo, neu'r fysell Escape, yn ei chau ac yn gadael popeth fel yr oedd. Mae deialogau sy'n ychwanegu pethau, fel Ychwanegu chwaraewr ac Ychwanegu canlyniad, yn aros ar agor ar ôl i bob un gael ei ychwanegu, fel y gellir teipio rhestr un ar ôl y llall.
+**Nid yw deialog dros y dudalen yn cadw dim nes i chi bwyso ei botwm.** Mae Diddymu, neu'r fysell Escape, yn ei chau ac yn gadael popeth fel yr oedd. Mae deialogau sy'n ychwanegu pethau, fel Ychwanegu chwaraewr ac Ychwanegu canlyniad, yn aros ar agor ar ôl i bob un gael ei ychwanegu, fel y gellir teipio rhestr un ar ôl y llall.
 
 **Dywedir beth a wrthodir wrth ochr y maes y mae'n ymwneud ag ef.** Ni chedwir dim a wrthodir, ac mae'r hyn a deipiasoch yn aros fel y'i teipiwyd, fel y gellir ei gywiro yn hytrach na'i deipio eto.
 

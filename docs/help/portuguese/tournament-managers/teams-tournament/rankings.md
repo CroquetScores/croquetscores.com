@@ -4,9 +4,9 @@ Quando uma competição vale para os rankings mundiais, os seus resultados são 
 
 ## A aba
 
-Abra a página do torneio e escolha **Rankings**, a última das suas abas. Ela diz o que é o arquivo: um arquivo de texto no Croquet de Associação, uma planilha no Croquet de Golfe e no Croquet Americano de 6 Arcos. Diz o que fica para você fazer à mão, e que o arquivo deve depois ser enviado aos responsáveis pelos rankings. Abaixo está **Baixar jogos para o ranking mundial**, que salva o arquivo. Ele está ali antes de qualquer resultado ser inserido, e dá um arquivo sem nada dentro até que um seja.
+Abra a página do torneio e escolha **Rankings**, a última das suas abas. Ela diz que o ranking mundial usa os resultados do torneio por meio do arquivo, e que os organizadores não precisam fazer nada. O arquivo é um arquivo de texto no Croquet de Associação e uma planilha no Croquet de Golfe e no Croquet Americano de 6 Arcos. Abaixo das palavras está **Baixar jogos para o ranking mundial**, que salva o arquivo. Ele está ali antes de qualquer resultado ser inserido, e dá um arquivo sem nada dentro até que um seja.
 
-A aba só existe na página de um torneio de um esporte com rankings mundiais, e só para os seus organizadores: um anotador não a recebe. O arquivo em si fica no endereço do próprio torneio seguido de `/rankings`, como `/2026/ac/spring-open/rankings`, que é o endereço que o site sempre lhe deu, e qualquer pessoa que tenha o endereço pode abri-lo.
+A aba só existe na página de um torneio que vale para os rankings mundiais, ou seja, que tem uma competição que vale. Ela é oferecida aos seus organizadores e aos responsáveis pelo ranking mundial do seu esporte, e não a um anotador que não seja nenhum dos dois. O arquivo em si fica no endereço do próprio torneio seguido de `/rankings`, como `/2026/ac/spring-open/rankings`, que é o endereço que o site sempre lhe deu, e qualquer pessoa que tenha o endereço pode abri-lo.
 
 ## O que há no arquivo
 
@@ -14,9 +14,9 @@ Todo resultado que foi inserido e não foi arquivado está nele, na ordem em que
 
 Um jogador aparece pelo nome no ranking mundial, que é o seu nome quando não lhe foi dado outro.
 
-O **Croquet de Associação** tem um bloco para cada competição que tem um resultado: o seu evento, as suas datas, o seu vencedor, se foram partidas ou jogos únicos, e uma linha numerada para cada resultado, como "1 Sam Someone beat Alex Another +9". Um resultado é os arcos do vencedor menos os do perdedor, com um mais quando o vencedor marcou mais, e os peels depois. A partida de um mata-mata é uma linha, com o resultado de cada jogo em seguida. O site só pode adivinhar quem ganhou uma competição, então verifique a linha **Winner** (em inglês, como está no arquivo) de cada bloco e corrija-a antes de enviar o arquivo.
+O **Croquet de Associação** tem um bloco para cada competição que tem um resultado: o seu evento, as suas datas, o seu vencedor, se foram partidas ou jogos únicos, e uma linha numerada para cada resultado, como "1 Sam Someone beat Alex Another +9". Um resultado é os arcos do vencedor menos os do perdedor, com um mais quando o vencedor marcou mais, e os peels depois. A partida de um mata-mata é uma linha, com o resultado de cada jogo em seguida. A linha **Winner** (em inglês, como está no arquivo) de cada bloco fica vazia, porque um teste é ganho por uma equipe e não por um jogador.
 
-O **Croquet de Golfe e o Croquet Americano de 6 Arcos** têm uma planilha: o nome do torneio, os seus dias e quantos jogos ele tem, depois uma linha numerada para cada jogo, com o sobrenome e o nome do vencedor, "beat", os do perdedor, e os dois resultados. Cada jogo da partida de um mata-mata é uma linha própria. Abaixo da última, a linha **Tournament winner:** (em inglês, como está no arquivo) fica vazia, para você preencher.
+O **Croquet de Golfe e o Croquet Americano de 6 Arcos** têm uma planilha: o nome do torneio, os seus dias e quantos jogos ele tem, depois uma linha numerada para cada jogo, com o sobrenome e o nome do vencedor, "beat", os do perdedor, e os dois resultados. Cada jogo da partida de um mata-mata é uma linha própria. Abaixo da última, a linha **Tournament winner:** (em inglês, como está no arquivo) fica vazia, para quem usar o arquivo preencher.
 
 ## Quando não há arquivo
 

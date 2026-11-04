@@ -4,11 +4,11 @@ Dit is die voorwaardes waarop jy hierdie werf lees. Hulle is kort, want lees vra
 
 ## Wat die werf is
 
-Die werf wys krokettoernooie: hul spelers, hul wedstryde en hul uitslae, en die kommentare wat daaroor geskryf word terwyl hulle gespeel word. Dit word deur vrywilligers bedryf en met skenkings betaal.
+Die werf wys krokettoernooie: hul spelers, hul spelle en hul uitslae, en die kommentare wat daaroor geskryf word terwyl hulle gespeel word. Dit word deur vrywilligers bedryf en met skenkings betaal.
 
 ## Waarop jy kan staatmaak
 
-Uitslae word ingevoer deur die mense wat elke toernooi bestuur, en deur die telers wat hulle vertrou, gewoonlik terwyl die wedstryde gespeel word. 'n Uitslag kan verkeerd wees, laat wees, of agterna reggestel word. Die toernooi se eie amptenare, en nie hierdie werf nie, het die laaste sê oor 'n uitslag.
+Uitslae word ingevoer deur die mense wat elke toernooi bestuur, en deur die telers wat hulle vertrou, gewoonlik terwyl die spelle gespeel word. 'n Uitslag kan verkeerd wees, laat wees, of agterna reggestel word. Die toernooi se eie amptenare, en nie hierdie werf nie, het die laaste sê oor 'n uitslag.
 
 Kommentare en opmerkings is die skrywers se eie. Die sienings daarin is nie noodwendig dié van die mense wat die werf bedryf nie.
 
@@ -18,7 +18,7 @@ Jy is welkom om te lees wat die werf wys, daarna te skakel en dit te deel. Moeni
 
 ## Op die werf skryf
 
-As jy 'n toernooi bestuur, tellings invoer of kommentaar skryf, stem jy ook in tot die [gebruiksvoorwaardes vir bestuurders, telers en kommentators](/admin/terms-of-use).
+As jy 'n toernooi bestuur, uitslae invoer of kommentaar skryf, stem jy ook in tot die [gebruiksvoorwaardes vir bestuurders, telers en kommentators](/admin/terms-of-use).
 
 ## Veranderinge
 

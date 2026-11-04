@@ -44,17 +44,21 @@ A knockout can send those who lose a round on to a knockout of their own, a lose
 
 A losers knockout has a place for each match of that round, and every round of it is the best of 1, which **Edit** can change. Its players are put in as the matches of that round are decided, in the order they were drawn in, so its **Players** tab only shows them. If a game is corrected or set aside, the loser is moved or taken out again, unless they have played on.
 
-On a knockout that is already added, **Edit** shows the same button, and the losers knockout is added at once. A knockout whose losers another in use takes cannot be archived or have its places changed: archive the losers knockout first.
+A knockout's page has a third tab, **Losers**, after Players and Scores, which lists the knockouts that take its losers, each leading to its page. **Add Losers Knockout** is there too, and asks for the same two things; here a losers knockout is added at once. Only a knockout has the tab, and a scorer is not offered it.
+
+On a knockout that is already added, **Edit** shows the same button, and the losers knockout is added at once, as it is from the Losers tab. A knockout whose losers another in use takes cannot be archived or have its places changed: archive the losers knockout first.
 
 ### How it is played and counted
 
-Every kind asks the same three things beneath its shape.
+Every kind asks the same four things beneath its shape.
 
 **Played with handicaps.** Tick this for a competition played with handicaps.
 
 **Allows drawn results.** Tick this where a game can end with neither player the winner. Most competitions do not allow it. Where it is ticked, a score entered with equal points and no mark is kept as a draw; where it is not, a game on equal points has to say who won it by a mark after the winner's score, such as "6w". A knockout's match always has a winner, so a drawn game does not decide one.
 
 **Counts toward world rankings.** Asked only where it can be counted: a competition in Association Croquet or Golf Croquet that is neither played with handicaps nor allows drawn results. It is ticked to begin with, so untick it for a competition that is not to count.
+
+**Maximum hoops.** The most hoops a game in the competition is played to, a whole number of at least 1. It begins on the usual for the sport, 26, or 13 in Golf Croquet, so change it for a competition played shorter, such as a block of 14 hoop games. Empty it for a competition whose games are not played to a number of hoops. A competition played to other than the usual number says so on its public page, as "Played to 14 hoops".
 
 ### Adding several at once
 

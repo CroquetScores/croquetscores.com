@@ -18,6 +18,8 @@ Administrationen listar ett år i taget, med början på det här året, nyaste 
 
 ![Listan över turneringar](images/admin-list.png)
 
+Ovanför listan begränsar **Land**, **Region**, **Sport**, **Från** och **Till** den allt eftersom de väljs, utan någon knapp att trycka på. Bara val som skulle ge något i listan erbjuds, och en region erbjuds när ett land har valts. **Från** och **Till** är dagar: listan visar de turneringar som startar från den ena till den andra, båda inräknade, och båda måste väljas för att listan ska begränsas efter dagar. Det som valts står i adressen, så en begränsad lista går att länka till; att välja ett annat år rensar det. Ett år med fler än hundra turneringar listas hundra på varje sida, med **Föregående** och **Nästa** under. En nationell eller internationell turnering är fetstilt längs hela sin rad.
+
 ## Arkivera en turnering
 
 **Arkivera** på en turnering i listan lägger undan den. Den listas fortfarande, överstruken och efter turneringarna i bruk, men den erbjuder bara **Återställ**: dess sida i administrationen, och dess offentliga sidor, är stängda tills den återställs. Att arkivera frågar inte först, eftersom att återställa ångrar det.

@@ -4,11 +4,11 @@ Det här är villkoren för att du läser den här webbplatsen. De är korta, ef
 
 ## Vad webbplatsen är
 
-Webbplatsen visar krockketurneringar: deras spelare, deras matcher och deras resultat, och de kommentarer som skrivs om dem medan de spelas. Den drivs av volontärer och bekostas av donationer.
+Webbplatsen visar krockketurneringar: deras spelare, deras partier och deras resultat, och de kommentarer som skrivs om dem medan de spelas. Den drivs av volontärer och bekostas av donationer.
 
 ## Vad du kan lita på
 
-Resultat anges av dem som arrangerar varje turnering och av de resultatförare de litar på, vanligtvis medan matcherna spelas. Ett resultat kan vara fel, sent eller rättas i efterhand. Turneringens egna funktionärer, och inte den här webbplatsen, har sista ordet om ett resultat.
+Resultat anges av dem som arrangerar varje turnering och av de resultatförare de litar på, vanligtvis medan partierna spelas. Ett resultat kan vara fel, sent eller rättas i efterhand. Turneringens egna funktionärer, och inte den här webbplatsen, har sista ordet om ett resultat.
 
 Kommentarer och inlägg tillhör dem som skriver dem. Åsikterna i dem är inte nödvändigtvis de som de som driver webbplatsen har.
 

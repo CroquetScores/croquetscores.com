@@ -29,7 +29,7 @@ La puerta de entrada de la administración lista los torneos en los que particip
 
 ![La lista de torneos en la administración](images/admin-list.png)
 
-Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en seis pestañas bajo su nombre: **Jugadores**, **Competiciones**, **Notas**, **Gestores**, **Anotadores** y **Rankings**. La página se abre en Jugadores, porque los jugadores son lo primero que se introduce.
+Pulsar el nombre de un torneo, o **Gestionar**, abre su página. Todo lo que hay que gestionar está en seis pestañas bajo su nombre: **Jugadores**, **Competiciones**, **Notas**, **Gestores**, **Anotadores** y **Rankings**. La página se abre en Jugadores, porque los jugadores son lo primero que se introduce. Al final de la fila de pestañas, y en la barra de título de un diálogo, hay un **?** redondo que abre la ayuda de lo que estás viendo, en otra pestaña para que no pierdas tu sitio. También hay uno junto a **Nuevo torneo**.
 
 ![La página de un torneo, en su pestaña Competiciones](images/tournament-page.png)
 

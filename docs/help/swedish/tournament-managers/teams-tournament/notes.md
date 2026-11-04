@@ -14,6 +14,8 @@ Tryck på **Lägg till anteckning**, ovanför listan. En panel tar listans plats
 
 **Beskrivning** skrivs i Markdown och kan lämnas tom där rubriken säger allt som finns att säga. Verktygsfältet ovanför rutan skriver Markdown åt dig: Rubrik, Fet stil, Kursiv stil, Citat, Kod, Länk, Numrerad lista, Punktlista och Uppgiftslista. Vart och ett verkar på det som är markerat, eller i början av varje markerad rad, eller sätter markören där orden ska stå.
 
+Ett stycke skiljs från det före med en hel tom rad, så att anteckningen läses som stycken.
+
 **Förhandsgranska** visar anteckningen som en läsare kommer att se den på dess sida.
 
 ![Anteckningspanelen, på fliken Förhandsgranska](images/note-preview.png)

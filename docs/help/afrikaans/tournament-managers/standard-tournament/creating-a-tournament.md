@@ -14,15 +14,15 @@ Die vorm vra vir alles waarmee 'n toernooi begin. 'n Toernooi van die gewone soo
 
 **Formaat.** Kies **Standaard** vir 'n toernooi wat tussen spelers gespeel word. Die ander formate is vir toernooie wat tussen spanne gespeel word, wat 'n eie gids het.
 
-**Sport.** Die sporte wat die werf aanbied, in sy volgorde: Association Croquet, Golf Croquet, Amerikaanse 6-hoepel-croquet en Ricochet op Croquet Scores. Gateball Scores vra nie vir 'n sport of 'n formaat nie, want elke toernooi daar is 'n standaardtoernooi van gateball.
+**Sport.** Die sporte wat die werf aanbied, in sy volgorde: Association Croquet, Golf Croquet, Amerikaanse 6-hoepel-croquet en Ricochet op Croquet Scores. **Sport**, **Land** en **Streek** is aftreklyste: kies uit die lys, of tik die begin van 'n naam om daarheen te beweeg. Gateball Scores vra nie vir 'n sport of 'n formaat nie, want elke toernooi daar is 'n standaardtoernooi van gateball.
 
-**Land** en **Streek.** Waar die toernooi gespeel word. 'n Streek word net gevra waar die land wat jy kies in streke verdeel is, soos Australië se state; 'n land wat sy eie enigste streek is, vra vir geen. 'n Streek hoef nie gekies te word nie, selfs waar een aangebied word.
+**Land** en **Streek.** Waar die toernooi gespeel word. Die lande waar die meeste toernooie gespeel word, word eerste gelys. 'n Streek word net gevra waar die land wat jy kies in streke verdeel is, soos Australië se state; 'n land wat sy eie enigste streek is, vra vir geen. 'n Streek hoef nie gekies te word nie, selfs waar een aangebied word.
 
 **Onderskrif.** Wat jy ook al wil hê lesers moet weet wat geen eie veld het nie: waar om te parkeer, wanneer middagete is, wie om te bel. Dit word onder die toernooi se naam op elke openbare bladsy gewys. Dit word in Markdown geskryf, so 'n woord kan vetgedruk gemaak word met sterretjies daarom, en 'n lys met 'n strepie aan die begin van elke reël. Dit kan tot 2000 karakters lank wees, en kan leeg gelaat word.
 
 Hoe sy kompetisies gespeel en getel word, of met voorgifte, met gelykopuitslae, en vir die wêreldranglyste, sê elke kompetisie self wanneer dit bygevoeg word.
 
-**Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander.
+**Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak.** 'n Toernooi kan die een, die ander, of geeneen wees, maar nooit albei nie: om die een te merk, ontmerk die ander. 'n Toernooi wat as die een of die ander gemerk is, word in die lyste toernooie langs die hele lengte van sy ry vetgedruk gestel.
 
 ## Hoe om dit te skep
 

@@ -12,7 +12,7 @@ Drücken Sie **Mannschaft hinzufügen** über der Liste. Ein Dialog öffnet sich
 
 **Name** ist Pflicht: der volle Name der Mannschaft, etwa „Australia“, der die Seite der Mannschaft und die Tabellen der öffentlichen Seiten überschreibt. Zwei Mannschaften eines Turniers können nicht denselben Namen haben.
 
-**Kurzname** ist ebenfalls Pflicht: wie die Tests der Mannschaft heißen, etwa „AUS v ENG“, und wie die dunkelgrüne Leiste die Mannschaft nennt. Er ist höchstens 10 Zeichen lang und nicht länger als der Name, weil ein Kurzname, der länger ist als der Name, den er abkürzt, die beiden vertauscht eingegeben sind. Zwei Mannschaften können auch nicht denselben Kurznamen haben.
+**Kurzname** ist ebenfalls Pflicht: wie die Tests der Mannschaft heißen, etwa „AUS v ENG“, und wie die dunkelgrüne Leiste die Mannschaft nennt. Er ist höchstens 10 Zeichen lang und nicht länger als der Name, weil ein Kurzname, der länger ist als der Name, den er abkürzt, bedeutet, dass beide vertauscht eingegeben wurden. Zwei Mannschaften können auch nicht denselben Kurznamen haben.
 
 **Flagge** wird überall neben dem Namen der Mannschaft gezeigt. Sie kann auf „keine“ bleiben, etwa bei der Mannschaft eines Vereins oder einer Region.
 

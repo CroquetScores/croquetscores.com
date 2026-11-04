@@ -7,7 +7,7 @@ Qué guarda este sitio sobre ti, para qué se usa y cómo hacer que se olvide.
 - **Tu dirección de correo electrónico y tu nombre**, si te registras. Ambos se guardan cifrados, con una clave que pertenece solo a tu cuenta. Tu dirección de correo también se guarda en una forma que permite al sitio encontrar tu cuenta cuando inicias sesión y que no se puede convertir de nuevo en la dirección.
 - **Tu contraseña**, si te registras con una, como un hash que no se puede convertir de nuevo en ella. El sitio nunca guarda la contraseña misma y no puede decirte cuál era.
 - **Con qué inicias sesión**, si inicias sesión con Google: el identificador que Google da al sitio para ti, y tu dirección de correo donde la comparte. No se guarda nada más suyo.
-- **Lo que introduces**: los torneos que creas, las puntuaciones que introduces y los comentarios que escribes. Son públicos donde el sitio los muestra al público.
+- **Lo que introduces**: los torneos que creas, los resultados que introduces y las crónicas y los comentarios que escribes. Son públicos donde el sitio los muestra al público.
 - **La dirección desde la que llegó una petición**, por cada intento fallido de iniciar sesión y cada petición de una contraseña nueva, con el momento en que se hizo. Se guarda para poder frenar el adivinar contraseñas o inundar una bandeja de entrada, y para nada más.
 
 ## Qué no se guarda
@@ -16,7 +16,7 @@ El sitio no usa publicidad ni seguimiento, y no comparte nada sobre ti con anunc
 
 ## Cookies
 
-El sitio pone una cookie para mantenerte con la sesión iniciada, una para el tema que elegiste, una para el idioma que elegiste y una para lo que has dicho sobre los avisos de novedades. Son necesarias para que el sitio haga lo que pediste y no se usan para seguirte. El registro usa Google reCAPTCHA para distinguir a las personas de los programas, que Google gestiona bajo sus propias condiciones.
+El sitio pone una cookie para mantenerte con la sesión iniciada y otras para recordar lo que elegiste: el tema, el idioma, cómo ordenaste las listas, el país, la región y el deporte por los que filtraste, la vista de una competición, qué notas y crónicas has leído, y lo que has dicho sobre los avisos de novedades. Mientras inicias sesión con Google guarda una más, hasta que vuelves. Son necesarias para que el sitio haga lo que pediste y no se usan para seguirte. El registro usa Google reCAPTCHA para distinguir a las personas de los programas, que Google gestiona bajo sus propias condiciones.
 
 ## Quién puede verlo
 
