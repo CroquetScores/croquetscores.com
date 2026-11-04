@@ -22,9 +22,9 @@ Feature: A new tournament is created in the admin
   every tournament created there is a Standard tournament of gateball.
 
   What can be decided for the reader is decided, so that a tournament of the
-  ordinary kind is a name, two days and a country away: the first sport the
-  site offers and the Standard format are chosen to begin with, and it is
-  neither national nor international.
+  ordinary kind is a name and a country away: the first sport the site offers
+  and the Standard format are chosen to begin with, it is neither national nor
+  international, and it starts and finishes in the month it is now.
   National and international are asked separately, and cannot both be
   true: a tournament said to be both is refused (`create.feature`). So the
   form never lets them be ticked together, rather than letting the reader
@@ -262,6 +262,68 @@ Feature: A new tournament is created in the admin
     Scenario: Nothing else is filled in to begin with
       When the new tournament page is opened
       Then "Name" is empty
+
+  Rule: The dates begin in the month it is now
+
+    Most tournaments are added in the month they are played in, or close to it,
+    so the form begins there rather than at nothing. A date has to be a whole
+    date, and the first of the month is the one day that is certain to be in
+    it. The month is the reader's own, by their own clock, since it is the
+    month they are in that they are adding a tournament for: by the server's
+    clock a reader early on the first of a month, in a time zone ahead of the
+    server's, would be offered the month before.
+
+    A tournament that finishes where it starts is a one day event, which is the
+    least a tournament can be, so the finish begins as the start and keeps
+    that company until the reader says otherwise: moving the start moves the
+    finish with it, and once the reader has chosen a finish it is theirs. The
+    other way would leave a reader who moves the start to the tenth being
+    refused for a finish on the first, which they never typed.
+
+    Scenario: The start is the first of the month it is now
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      When the new tournament page is opened
+      Then "Starts" says "2026-11-01"
+
+    Scenario: The start follows the reader's clock
+      Given the reader's clock reads "2027-02-20T10:00:00Z"
+      When the new tournament page is opened
+      Then "Starts" says "2027-02-01"
+
+    Scenario: The server's clock is not the one the start is taken from
+      Given the server's clock reads "2026-10-31T10:00:00Z"
+      And the reader's clock reads "2026-11-04T10:00:00Z"
+      When the new tournament page is opened
+      Then "Starts" says "2026-11-01"
+
+    Scenario: The finish is the start to begin with
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      When the new tournament page is opened
+      Then "Finishes" says "2026-11-01"
+
+    Scenario: Moving the start moves the finish with it
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the server's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      When "2026-11-10" is typed as the "Starts"
+      Then "Finishes" says "2026-11-10"
+
+    Scenario: A finish the reader has chosen stays where it is when the start moves
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the server's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      And "2026-11-12" is typed as the "Finishes"
+      When "2026-11-10" is typed as the "Starts"
+      Then "Finishes" says "2026-11-12"
+
+    Scenario: A tournament is a name and a country away
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the server's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      And "Spring Open" is typed as the "Name"
+      And the country "Fiji" is chosen
+      When "Create Tournament" is pressed
+      Then the address is "/admin/2026/ac/spring-open"
 
   Rule: Drawing a level test is asked about only where the format is played by teams
 
