@@ -12,6 +12,18 @@ Ein Spieler in einem Wettbewerb ist einer der Spieler des Turniers, er wird also
 
 Archivierte Spieler des Turniers werden nicht angeboten.
 
+## Mehrere Spieler hinzufügen {#adding-several}
+
+Um einen Wettbewerb schnell einzurichten, drücken Sie **Mehrere hinzufügen** neben **Spieler hinzufügen**. Die Schaltfläche wird angeboten, wenn zwei oder mehr Spieler zur Auswahl stehen. Sie öffnet einen Dialog, der jeden Spieler des Turniers auflistet, der noch nicht im Wettbewerb ist, in der Reihenfolge des Turniers, jeden mit einem Kästchen zum Ankreuzen. Das Kästchen über der Liste kreuzt alle an.
+
+![Der Dialog Spieler hinzufügen mit zwei angekreuzten Spielern](images/add-players-dialog.png)
+
+Kreuzen Sie die gewünschten Spieler an und drücken Sie **Auswahl hinzufügen**. Alle werden auf einmal aufgenommen und in die Reihenfolge des Turniers gesetzt, gleich in welcher Reihenfolge Sie sie angekreuzt haben. Mit **Abbrechen** schließen Sie den Dialog, ohne jemanden hinzuzufügen. Wer **Auswahl hinzufügen** drückt, ohne dass jemand angekreuzt ist, bewirkt nichts.
+
+Manchmal kann ein angekreuzter Spieler nicht aufgenommen werden: Jemand anderes kann ihn in den Wettbewerb gesetzt haben, während der Dialog offen war, oder ein K.-o.-Turnier hat weniger freie Plätze, als Spieler angekreuzt sind. Dann wird niemand aufgenommen. Ein zweiter Dialog listet die Spieler auf, die nicht hinzugefügt werden können, jeden mit dem Grund, und fragt, ob die übrigen angekreuzten hinzugefügt werden sollen. Mit **Übrige hinzufügen** nehmen Sie die auf, die aufgenommen werden können, mit **Abbrechen** gehen Sie zu den Häkchen zurück, die so sind, wie Sie sie gelassen haben, und ändern sie. Kann keiner der angekreuzten Spieler aufgenommen werden, gibt es nichts zu entscheiden, und die Gründe werden über der Liste gezeigt.
+
+Die Freilose eines K.-o.-Turniers gehören nicht dazu. Sie werden einzeln aus der Auswahlliste hinzugefügt, wie unter [Freilose in einem K.-o.-Turnier](#byes-in-a-knockout) beschrieben.
+
 ## Freilose in einem K.-o.-Turnier {#byes-in-a-knockout}
 
 Ein K.-o.-Turnier wird erst gespielt, wenn jeder Platz seiner Auslosung gefüllt ist, und die Plätze, die seine Spieler übrig lassen, werden mit Freilosen gefüllt. In einem K.-o.-Turnier bietet die Auswahlliste deshalb zuerst **Freilos** an, vor den Spielern, und bietet es weiter an, so viele Freilose auch hinzugefügt werden, weil eine Auslosung mehrere brauchen kann.

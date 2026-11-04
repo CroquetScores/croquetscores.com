@@ -12,6 +12,18 @@ Over listen tilbyr en nedtrekksliste hver spiller i turneringen som ikke allered
 
 Arkiverte spillere i turneringen tilbys ikke.
 
+## Å legge til flere spillere {#adding-several}
+
+For å sette opp en konkurranse raskt trykker du på **Legg til flere**, ved siden av **Legg til spiller**. Den tilbys der det er to eller flere spillere å velge mellom. Den åpner en dialog som viser hver spiller i turneringen som ikke er i konkurransen, i turneringens rekkefølge, hver med en boks du kan krysse av. Boksen over listen krysser av alle.
+
+![Dialogen Legg til spillere, med to spillere avkrysset](images/add-players-dialog.png)
+
+Kryss av for spillerne du vil ha, og trykk på **Legg til valgte**. Alle legges inn samtidig og settes inn i turneringens rekkefølge, uansett hvilken rekkefølge du krysset dem av i. Trykk på **Avbryt** for å lukke dialogen uten å legge til noen. Hvis du trykker på **Legg til valgte** uten at noen er avkrysset, skjer ingenting.
+
+Noen ganger kan en avkrysset spiller ikke legges inn: noen andre kan ha lagt dem inn i konkurransen mens dialogen var åpen, eller en utslagning kan ha færre ledige plasser enn det er spillere avkrysset. Da legges ingen inn. En ny dialog viser spillerne som ikke kan legges til, hver med årsaken, og spør om resten av de avkryssede skal legges til. Trykk på **Legg til resten** for å legge inn dem som kan, eller på **Avbryt** for å gå tilbake til avkryssingene, som er slik du lot dem stå, og endre dem. Der ingen av de avkryssede spillerne kan legges inn, er det ingenting å avgjøre, og årsakene vises over listen.
+
+Byes i en utslagning er ikke en del av dette. De legges til én om gangen fra nedtrekkslisten, slik [Byes i en utslagning](#byes-in-a-knockout) beskriver.
+
 ## Byes i en utslagning {#byes-in-a-knockout}
 
 En utslagning spilles først når hver plass i trekningen er fylt, og plassene spillerne lar stå igjen, fylles med byes. Så i en utslagning tilbyr nedtrekkslisten **Bye** først, før spillerne, og fortsetter å tilby den uansett hvor mange byes som legges til, siden en trekning kan trenge flere.

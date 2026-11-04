@@ -12,6 +12,18 @@ Acima da lista, uma lista suspensa oferece todos os jogadores do torneio que ain
 
 Os jogadores arquivados do torneio não são oferecidos.
 
+## Adicionar vários jogadores {#adding-several}
+
+Para montar uma competição depressa, pressione **Adicionar vários**, ao lado de **Adicionar jogador**. Ele é oferecido quando há dois ou mais jogadores para escolher. Abre uma caixa de diálogo que lista todos os jogadores do torneio que ainda não estão na competição, na ordem do torneio, cada um com uma caixa para marcar. A caixa acima da lista marca todos.
+
+![A caixa de diálogo Adicionar jogadores, com dois jogadores marcados](images/add-players-dialog.png)
+
+Marque os jogadores que você quer e pressione **Adicionar selecionados**. Todos são inscritos de uma vez e colocados na ordem do torneio, seja qual for a ordem em que você os marcou. Pressione **Cancelar** para fechar a caixa de diálogo sem adicionar ninguém. Pressionar **Adicionar selecionados** sem ninguém marcado não faz nada.
+
+Às vezes um jogador marcado não pode ser inscrito: outra pessoa pode tê-lo colocado na competição enquanto a caixa de diálogo estava aberta, ou um mata-mata pode ter menos vagas do que jogadores marcados. Nesse caso, ninguém é inscrito. Uma segunda caixa de diálogo lista os jogadores que não podem ser adicionados, cada um com o motivo, e pergunta se os demais jogadores marcados devem ser adicionados. Pressione **Adicionar os restantes** para inscrever os que podem ser, ou **Cancelar** para voltar às marcações, que ficam como você as deixou, e alterá-las. Quando nenhum dos jogadores marcados pode ser inscrito, não há o que decidir, e os motivos aparecem acima da lista.
+
+Os byes de um mata-mata não fazem parte disso. Eles são adicionados um de cada vez pela lista suspensa, como descreve [Byes em um mata-mata](#byes-in-a-knockout).
+
 ## Byes em um mata-mata {#byes-in-a-knockout}
 
 Um mata-mata só é disputado depois que todas as vagas da sua chave estão preenchidas, e as vagas que os jogadores deixam sobrar são preenchidas com byes. Por isso, em um mata-mata a lista suspensa oferece **Bye** primeiro, antes dos jogadores, e continua a oferecê-lo por mais byes que sejam adicionados, porque uma chave pode precisar de vários.

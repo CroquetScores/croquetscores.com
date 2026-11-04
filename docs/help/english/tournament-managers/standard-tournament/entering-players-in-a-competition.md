@@ -16,6 +16,8 @@ Archived players of the tournament are not offered.
 
 To set a competition up quickly, press **Add Several**, beside **Add Player**. It is offered where there are two or more players to choose from. It opens a dialog listing every player of the tournament who is not in the competition, in the tournament's order, each with a box to tick. The box above the list ticks them all.
 
+![The Add Players dialog, with two players ticked](images/add-players-dialog.png)
+
 Tick the players you want and press **Add Selected**. They are all entered at once, and are put in the tournament's order whatever order you ticked them in. Press **Cancel** to close the dialog without adding anybody. Pressing **Add Selected** with nobody ticked does nothing.
 
 Sometimes a player ticked cannot be entered: somebody else may have put them in the competition while the dialog was open, or a knockout may have fewer places left than players ticked. Nobody is entered at that point. A second dialog lists the players who cannot be added, each with the reason, and asks whether to add the rest of those you ticked. Press **Add the Rest** to enter the ones who can be, or **Cancel** to go back to the ticks, which are as you left them, and change them. Where none of the players ticked can be entered, there is nothing to decide, and the reasons are shown above the list.

@@ -477,6 +477,17 @@ async function photographIn(folder, language) {
     await enter("Sam Someone", "Alex Another", "Chris Third", "Pat Fourth");
     await shoot(standard, "competition-players-tab", panel);
   });
+  // Two of the three players still to be chosen are ticked, and the dialog
+  // cancelled, so that Block A goes on with the four it has.
+  await attempt("add several", async () => {
+    await button("admin.competitionPlayers.addSeveral").click();
+    await page.waitForSelector(dialog);
+    for (const name of ["Jo Fifth", "Kim Sixth"]) {
+      await page.locator(dialog).getByLabel(name, { exact: true }).check();
+    }
+    await shoot(standard, "add-players-dialog", dialog);
+    await closeDialog();
+  });
   await attempt("carry forward", async () => {
     await rowOf("Alex Another")
       .getByRole("button", {
