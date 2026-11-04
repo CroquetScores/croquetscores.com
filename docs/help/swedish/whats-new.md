@@ -1,5 +1,23 @@
 # Nytt
 
+## Släppt 2026-11-05
+
+### Arrangera en turnering
+
+- **Flera spelare kan läggas till i en tävling på en gång.** På en tävlings flik Spelare trycker du på **Lägg till flera**, bredvid **Lägg till spelare**, kryssar i de spelare du vill ha, eller rutan ovanför listan för alla, och trycker på **Lägg till markerade**. De sätts in i turneringens ordning. Om några inte kan läggas till säger en andra dialogruta vilka och varför, och frågar om resten ska läggas till. Se [Sätta in spelare i en tävling](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Ett dubbelpar görs av två spelare som redan är inlagda.** På turneringens flik Spelare trycker du på **Lägg till par**, väljer första och andra spelaren och trycker på **Lägg till par** igen. Paret får namnet ”Sam Someone & Alex Another”, eller ”Peter & Rosie Landrebe” där båda har samma efternamn, och det representerar det spelarna representerar. Dialogrutan förblir öppen så att nästa par kan göras. Se [Spelare](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **En ny turnering börjar i den månad det är nu.** Starten är den första i den här månaden och slutet är samma dag, och slutet följer starten tills du väljer ett eget.
+- **Rankingfilerna skriver namn enkelt.** En bild i en turnerings namn utelämnas, en krullig apostrof skrivs som en apostrof, och bokstäver som ø, ł och ß skrivs som de enkla bokstäverna, så att namnen är de som rankinglistan har.
+
+### Följa en turnering
+
+- **Hjälpen hittar ett svar efter det du menar.** Ställ en fråga i sökrutan på hjälpens första sida så hittar den artikeln även där artikeln använder andra ord som betyder samma sak.
+- **Hjälpens första sida erbjuder populära frågor och ämnena som kort.** Fem frågor som folk ställer leder till svaren, och varje ämne är ett kort som säger vad det innehåller.
+- **Hjälpen är uppdaterad.** Varje sida lästes mot webbplatsen och rättades, och varje bild togs om. En ny sida, Följa en turnering, säger vad du kan göra på listorna och en turnerings sidor. Den finns än så länge bara på engelska.
+- **Ett års månader följer datumens ordning.** När turneringar är sorterade med den senaste först börjar månaderna på ett års sida med december, och datum och namn står på linje i varje öppen månad.
+- **Sidan med anteckningar har rubriken Arrangörernas anteckningar** och säger att det inte finns några anteckningar än där det inte finns några.
+- **Fler turneringar ligger i sitt eget land.** Turneringar med Happy Valley i namnet ligger i Kanada, och tyska, schweiziska, tjeckiska, norska, svenska och portugisiska turneringar som visades i fel land ligger i sitt eget.
+
 ## Släppt 2026-11-03
 
 ### Följa en turnering

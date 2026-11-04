@@ -1,5 +1,23 @@
 # Was ist neu
 
+## Veröffentlicht am 2026-11-05
+
+### Ein Turnier führen
+
+- **Mehrere Spieler können auf einmal in einen Wettbewerb aufgenommen werden.** Drücken Sie auf dem Reiter Spieler eines Wettbewerbs **Mehrere hinzufügen** neben **Spieler hinzufügen**, kreuzen Sie die gewünschten Spieler an, oder das Kästchen über der Liste für alle, und drücken Sie **Auswahl hinzufügen**. Sie werden in der Reihenfolge des Turniers eingesetzt. Können einige nicht hinzugefügt werden, sagt ein zweiter Dialog, welche und warum, und fragt, ob die übrigen hinzugefügt werden sollen. Siehe [Spieler in einen Wettbewerb aufnehmen](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Ein Doppelpaar wird aus zwei schon aufgenommenen Spielern gebildet.** Drücken Sie auf dem Reiter Spieler des Turniers **Paar hinzufügen**, wählen Sie den ersten und den zweiten Spieler und drücken Sie noch einmal **Paar hinzufügen**. Das Paar heißt „Sam Someone & Alex Another“ oder, wenn beide denselben Nachnamen haben, „Peter & Rosie Landrebe“, und es vertritt, was seine Spieler vertreten. Der Dialog bleibt offen, damit das nächste Paar gebildet werden kann. Siehe [Spieler](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Ein neues Turnier beginnt in dem Monat, in dem es jetzt ist.** Der Beginn ist der Erste dieses Monats und das Ende derselbe Tag, und das Ende folgt dem Beginn, bis Sie selbst eines wählen.
+- **Die Ranglistendateien schreiben Namen schlicht.** Ein Bild im Namen eines Turniers wird weggelassen, ein geschwungener Apostroph wird als Apostroph geschrieben, und Buchstaben wie ø, ł und ß werden als einfache Buchstaben geschrieben, damit die Namen die der Rangliste sind.
+
+### Einem Turnier folgen
+
+- **Die Hilfe findet eine Antwort nach dem, was Sie meinen.** Stellen Sie im Suchfeld auf der ersten Seite der Hilfe eine Frage, und sie findet den Artikel auch dann, wenn er andere Wörter mit derselben Bedeutung benutzt.
+- **Die erste Seite der Hilfe bietet beliebte Fragen und die Themen als Karten.** Fünf Fragen, die Leute stellen, führen zu ihren Antworten, und jedes Thema ist eine Karte, die sagt, was darin steht.
+- **Die Hilfe ist auf den neuesten Stand gebracht.** Jede Seite wurde gegen die Website gelesen und berichtigt, und jedes Bild wurde neu aufgenommen. Eine neue Seite, Einem Turnier folgen, sagt, was Sie auf den Listen und den Seiten eines Turniers tun können. Sie gibt es vorerst nur auf Englisch.
+- **Die Monate eines Jahres folgen der Reihenfolge der Daten.** Sind die Turniere mit dem neuesten zuerst sortiert, beginnen die Monate auf der Seite eines Jahres mit dem Dezember, und die Daten und Namen stehen in jedem offenen Monat untereinander.
+- **Die Seite der Notizen trägt die Überschrift Notizen der Verantwortlichen** und sagt, dass es noch keine Notizen gibt, wo es keine gibt.
+- **Mehr Turniere liegen in ihrem eigenen Land.** Turniere mit Happy Valley im Namen liegen in Kanada, und deutsche, Schweizer, tschechische, norwegische, schwedische und portugiesische Turniere, die im falschen Land gezeigt wurden, liegen in ihrem eigenen.
+
 ## Veröffentlicht am 2026-11-03
 
 ### Einem Turnier folgen

@@ -1,5 +1,23 @@
 # Hva som er nytt
 
+## Utgitt 2026-11-05
+
+### Å drive en turnering
+
+- **Flere spillere kan legges til i en konkurranse samtidig.** På en konkurranses fane Spillere trykker du på **Legg til flere**, ved siden av **Legg til spiller**, krysser av for spillerne du vil ha, eller boksen over listen for alle, og trykker på **Legg til valgte**. De settes inn i turneringens rekkefølge. Hvis noen ikke kan legges til, sier en ny dialog hvem og hvorfor, og spør om resten skal legges til. Se [Å melde spillere på en konkurranse](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Et dobbeltpar lages av to spillere som allerede er lagt inn.** På turneringens fane Spillere trykker du på **Legg til par**, velger første og andre spiller og trykker på **Legg til par** igjen. Paret får navnet «Sam Someone & Alex Another», eller «Peter & Rosie Landrebe» der begge har samme etternavn, og det representerer det spillerne representerer. Dialogen blir stående åpen slik at neste par kan lages. Se [Spillere](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **En ny turnering begynner i måneden den er nå.** Starten er den første i denne måneden og slutten er samme dag, og slutten følger starten til du velger en egen.
+- **Rankingfilene skriver navn enkelt.** Et bilde i en turnerings navn utelates, en krøllet apostrof skrives som en apostrof, og bokstaver som ø, ł og ß skrives som de enkle bokstavene, slik at navnene er de rankinglisten har.
+
+### Å følge en turnering
+
+- **Hjelpen finner et svar etter det du mener.** Still et spørsmål i søkefeltet på hjelpens første side, så finner den artikkelen selv der artikkelen bruker andre ord som betyr det samme.
+- **Hjelpens første side tilbyr populære spørsmål og emnene som kort.** Fem spørsmål folk stiller fører til svarene, og hvert emne er et kort som sier hva det inneholder.
+- **Hjelpen er oppdatert.** Hver side ble lest mot nettstedet og rettet, og hvert bilde ble tatt på nytt. En ny side, Å følge en turnering, sier hva du kan gjøre på listene og en turnerings sider. Den finnes foreløpig bare på engelsk.
+- **Et års måneder følger rekkefølgen på datoene.** Når turneringer er sortert med den nyeste først, begynner månedene på et års side med desember, og datoene og navnene står på linje i hver åpne måned.
+- **Notatsiden har overskriften Lederens notater**, og sier at det ikke er noen notater ennå der det ikke er noen.
+- **Flere turneringer ligger i sitt eget land.** Turneringer med Happy Valley i navnet ligger i Canada, og tyske, sveitsiske, tsjekkiske, norske, svenske og portugisiske turneringer som ble vist i feil land, ligger i sitt eget.
+
 ## Utgitt 2026-11-03
 
 ### Å følge en turnering

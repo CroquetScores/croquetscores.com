@@ -1,5 +1,23 @@
 # Novidades
 
+## Lançado em 2026-11-05
+
+### Administrar um torneio
+
+- **Vários jogadores podem ser adicionados a uma competição de uma vez.** Na aba Jogadores de uma competição, pressione **Adicionar vários**, ao lado de **Adicionar jogador**, marque os jogadores que quiser, ou a caixa acima da lista para todos, e pressione **Adicionar selecionados**. Eles são colocados na ordem do torneio. Se alguns não puderem ser adicionados, uma segunda caixa de diálogo diz quais e por quê, e pergunta se os demais devem ser adicionados. Veja [Inscrever jogadores em uma competição](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
+- **Uma dupla é formada de dois jogadores já inscritos.** Na aba Jogadores do torneio, pressione **Adicionar dupla**, escolha o primeiro e o segundo jogador e pressione **Adicionar dupla** de novo. A dupla recebe o nome "Sam Someone & Alex Another", ou "Peter & Rosie Landrebe" quando os dois têm o mesmo sobrenome, e representa o que seus jogadores representam. A caixa de diálogo continua aberta para que a próxima dupla possa ser formada. Veja [Jogadores](tournament-managers/standard-tournament/players.md#adding-a-pair).
+- **Um torneio novo começa no mês em que estamos.** O início é o primeiro deste mês e o fim é o mesmo dia, e o fim acompanha o início até você escolher um seu.
+- **Os arquivos de ranking escrevem os nomes de forma simples.** Uma figura no nome de um torneio é deixada de fora, um apóstrofo curvo é escrito como apóstrofo, e letras como ø, ł e ß são escritas como as letras simples, para que os nomes sejam os que a lista de ranking tem.
+
+### Acompanhar um torneio
+
+- **A ajuda encontra uma resposta pelo que você quer dizer.** Faça uma pergunta na caixa de busca da primeira página da ajuda, e ela encontra o artigo mesmo quando o artigo usa outras palavras de mesmo sentido.
+- **A primeira página da ajuda oferece perguntas populares e os assuntos como cartões.** Cinco perguntas que as pessoas fazem levam às respostas, e cada assunto é um cartão que diz o que há nele.
+- **A ajuda foi atualizada.** Cada página foi lida em confronto com o site e corrigida, e cada imagem foi feita de novo. Uma página nova, Acompanhar um torneio, diz o que você pode fazer nas listas e nas páginas de um torneio. Por enquanto só existe em inglês.
+- **Os meses de um ano seguem a ordem das datas.** Quando os torneios são ordenados do mais recente para o mais antigo, os meses da página de um ano começam por dezembro, e as datas e os nomes se alinham em cada mês aberto.
+- **A página de notas tem o título Notas dos organizadores** e diz que ainda não há notas quando não há.
+- **Mais torneios estão em seu próprio país.** Torneios com Happy Valley no nome estão no Canadá, e torneios alemães, suíços, tchecos, noruegueses, suecos e portugueses que eram mostrados no país errado estão no seu.
+
 ## Lançado em 2026-11-03
 
 ### Acompanhar um torneio
