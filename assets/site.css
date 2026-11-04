@@ -497,10 +497,17 @@ a:hover {
   border-bottom: 1px solid var(--border);
 }
 
-.help-search-title {
-  margin: 0 0 var(--space-2);
+/* The panel's title and the headings of the first page's other sections are one
+   size, which is smaller than a second level heading is elsewhere: they head
+   three parts of one page, and none is to read as more than the others. */
+.help-search-title,
+.help[data-page=""] h2 {
   font-size: var(--text-lg);
   font-weight: 700;
+}
+
+.help-search-title {
+  margin: 0 0 var(--space-2);
 }
 
 .help-search form {

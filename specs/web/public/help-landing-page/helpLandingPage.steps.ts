@@ -297,3 +297,35 @@ Then(
     assert.equal(unmarked(called ?? ""), name);
   },
 );
+
+// The headings --------------------------------------------------------------------
+
+const panelTitle = ".help-search-title";
+
+Then(
+  "the panel's title is a second level heading",
+  async function (this: SpecWorld) {
+    assert.equal(await this.browserPage.locator(`h2${panelTitle}`).count(), 1);
+  },
+);
+
+const sizeOf = (world: SpecWorld, selector: string): Promise<unknown> =>
+  world.browserPage.evaluate(
+    `getComputedStyle(document.querySelector(${JSON.stringify(selector)})).fontSize`,
+  );
+
+const sections: Readonly<Record<string, string>> = {
+  "Popular questions": "#popular-questions",
+  "Help by subject": "#subjects",
+};
+
+Then(
+  "the heading {string} is as large as the panel's title",
+  async function (this: SpecWorld, heading: string) {
+    const selector = sections[heading];
+    assert.ok(selector !== undefined, `There is no heading ${heading}.`);
+    const size = await sizeOf(this, selector);
+    assert.equal(typeof size, "string");
+    assert.equal(size, await sizeOf(this, panelTitle));
+  },
+);

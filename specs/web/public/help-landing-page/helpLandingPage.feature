@@ -49,6 +49,25 @@ Feature: The first page of the help helps a reader find an answer without knowin
       When the first page of the help is opened in the browser
       Then the search box is called "Your question"
 
+  Rule: The sections of the first page have headings of one size
+
+    The panel, the popular questions and the subjects are three sections of one
+    page, side by side in what they are, and are headed alike: each by a second
+    level heading, at the size the panel's was. A heading larger than another
+    says its section matters more, and none of these does.
+
+    Scenario: The panel is headed by a second level heading
+      When the first page of the help is opened in the browser
+      Then the panel's title is a second level heading
+
+    Scenario: The popular questions are as large as the panel's title
+      When the first page of the help is opened in the browser
+      Then the heading "Popular questions" is as large as the panel's title
+
+    Scenario: The subjects are as large as the panel's title
+      When the first page of the help is opened in the browser
+      Then the heading "Help by subject" is as large as the panel's title
+
   Rule: The popular questions are below the search box
 
     Scenario: The popular questions come after the search box

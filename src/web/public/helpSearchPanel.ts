@@ -104,7 +104,7 @@ export const helpSearchPanel = (
         : "";
   const answers = searched.kind === "answered" ? searched.answers : [];
   return `          <section class="help-search" aria-labelledby="help-search-title" data-none="${escape(speaking.say("helpSearch.none"))}" data-failed="${escape(speaking.say("helpSearch.failed"))}">
-            <p class="help-search-title" id="help-search-title">${escape(title)}</p>
+            <h2 class="help-search-title" id="help-search-title">${escape(title)}</h2>
             <form method="get" action="/help" role="search">
               <input id="help-search-field" name="${helpSearchField}" type="search" aria-label="${escape(speaking.say("helpSearch.label"))}" maxlength="${longestQuestion}" autocomplete="off" value="${escape(asked)}" />
               <button type="submit">${escape(speaking.say("helpSearch.submit"))}</button>
