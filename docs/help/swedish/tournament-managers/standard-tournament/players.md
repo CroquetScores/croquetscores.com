@@ -55,6 +55,18 @@ Tryck på **Lägg till**. Hela listan kontrolleras innan något av den sparas, s
 
 **?** i dialogrutans namnlist leder hit. Både den här dialogrutan och Lägg till spelare stannar i fönstret, vart sidan än har rullats.
 
+## Lägga till ett par {#adding-a-pair}
+
+I en dubbelturnering är ett par en spelare för sig, så det görs av två spelare som redan är inlagda i stället för att skrivas in på nytt. Tryck på **Lägg till par**, bredvid **Lägg till spelare**. Den erbjuds när det finns två spelare att välja bland. En dialogruta öppnas med **Första spelaren** och **Andra spelaren**, var och en vald bland spelarna i bruk. Den andra listan utelämnar spelaren som valdes först, eftersom en spelare inte kan paras ihop med sig själv. Tryck på **Lägg till par** för att göra paret. Dialogrutan förblir öppen, säger vilket par som lades till och tömmer båda valen så att nästa par kan göras, som **Lägg till spelare** gör. Paret syns genast i listan bakom dialogrutan. Tryck på **Avbryt** när du har gjort alla du behöver.
+
+![Dialogrutan Lägg till par, med två spelare valda](images/add-pair-dialog.png)
+
+Paret får sitt namn av de två spelarna, i den ordning du valde dem: ”Sam Someone & Alex Another”. Där båda har samma efternamn får det de två förnamnen och det enda efternamnet: ”Peter & Rosie Landrebe”. Efternamnet är det sista ordet i ett namn, tillsammans med de små orden framför det (som i ”van der Berg”) och en generation efter det (som i ”Smith Jr”). En generation ensam är inget efternamn.
+
+Paret representerar det spelarna representerar. Där bara en av dem representerar något representerar paret det. Där båda representerar samma sak representerar paret den en gång. Där de representerar olika saker representerar paret båda, den förste och sedan den andre, som ”Canterbury Croquet Club / Melbourne”.
+
+De två spelarna lämnas som de är och kan fortfarande läggas in i egna tävlingar. Inget binder paret till dem efteråt: om du rättar eller arkiverar en av dem behåller paret det namn och den representation det gjordes med och rättas för sig. Paret listas med de andra spelarna, läggs in i tävlingar som vilken som helst av dem och rättas eller arkiveras som vilken som helst av dem. Ett par vars namn turneringen redan har avvisas: samma två spelare i samma ordning kan inte göras till ett par två gånger. Samma två i omvänd ordning är ett annat namn och ett annat par.
+
 ## Rätta en spelare {#correcting-a-player}
 
 Tryck på en spelares namn, eller på spelarens **Redigera**, för att öppna samma dialogruta på den spelaren, med rubriken Redigera spelare. Ändra det som är fel och tryck på **Spara**, som sparar ändringen och stänger dialogrutan. En spelare vars namn rättas behåller det världsrankingnamn spelaren hade, eftersom rankingen fortfarande känner spelaren under det. I amerikansk 6-bågars croquet är en spelares namn i världsrankingen alltid spelarens namn, så att rätta namnet rättar det också.

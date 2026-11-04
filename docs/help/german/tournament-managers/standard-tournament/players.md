@@ -55,6 +55,18 @@ Drücken Sie **Hinzufügen**. Die ganze Liste wird geprüft, bevor etwas davon g
 
 Das **?** in der Titelleiste des Dialogs führt hierher. Dieser Dialog und Spieler hinzufügen bleiben im Fenster, wohin die Seite auch gescrollt wurde.
 
+## Ein Paar hinzufügen {#adding-a-pair}
+
+In einem Doppelturnier ist ein Paar ein eigener Spieler. Es wird deshalb aus zwei schon aufgenommenen Spielern gebildet, statt noch einmal eingetippt zu werden. Drücken Sie **Paar hinzufügen** neben **Spieler hinzufügen**. Die Schaltfläche wird angeboten, wenn zwei Spieler zur Auswahl stehen. Es öffnet sich ein Dialog mit **Erster Spieler** und **Zweiter Spieler**, die jeweils aus den Spielern in Verwendung gewählt werden. Die zweite Liste lässt den zuerst gewählten Spieler aus, da ein Spieler nicht mit sich selbst gepaart werden kann. Drücken Sie **Paar hinzufügen**, um das Paar zu bilden. Der Dialog bleibt offen, sagt, welches Paar hinzugefügt wurde, und leert beide Auswahlen, damit das nächste Paar gebildet werden kann, wie es **Spieler hinzufügen** tut. Das Paar erscheint sofort in der Liste hinter dem Dialog. Drücken Sie **Abbrechen**, wenn Sie alle Paare gebildet haben, die Sie brauchen.
+
+![Der Dialog Paar hinzufügen mit zwei gewählten Spielern](images/add-pair-dialog.png)
+
+Das Paar wird nach den beiden Spielern benannt, in der Reihenfolge, in der Sie sie gewählt haben: „Sam Someone & Alex Another“. Haben beide denselben Nachnamen, heißt es nach den beiden Vornamen und dem einen Nachnamen: „Peter & Rosie Landrebe“. Der Nachname ist das letzte Wort eines Namens, mit den kleinen Wörtern davor (wie in „van der Berg“) und einer Generation danach (wie in „Smith Jr“). Eine Generation allein ist kein Nachname.
+
+Das Paar vertritt, was seine Spieler vertreten. Vertritt nur einer von ihnen etwas, vertritt das Paar das. Vertreten beide dasselbe, vertritt das Paar es einmal. Vertreten sie Verschiedenes, vertritt das Paar beides, erst den ersten, dann den zweiten, wie „Canterbury Croquet Club / Melbourne“.
+
+Die beiden Spieler bleiben, wie sie sind, und können weiter in eigene Wettbewerbe aufgenommen werden. Nichts verbindet das Paar danach mit ihnen: Korrigieren oder archivieren Sie einen von ihnen, behält das Paar den Namen und die Vertretung, mit denen es gebildet wurde, und wird für sich korrigiert. Das Paar wird mit den anderen Spielern aufgelistet, wie jeder von ihnen in Wettbewerbe aufgenommen und wie jeder von ihnen korrigiert oder archiviert. Ein Paar, dessen Namen das Turnier schon hat, wird abgelehnt: Dieselben zwei Spieler in derselben Reihenfolge lassen sich nicht zweimal zu einem Paar machen. Dieselben zwei in umgekehrter Reihenfolge sind ein anderer Name und ein anderes Paar.
+
 ## Einen Spieler korrigieren {#correcting-a-player}
 
 Drücken Sie den Namen eines Spielers oder sein **Bearbeiten**, um denselben Dialog für diesen Spieler zu öffnen, mit dem Titel Spieler bearbeiten. Ändern Sie, was falsch ist, und drücken Sie **Speichern**, was die Änderung speichert und den Dialog schließt. Ein Spieler, dessen Name korrigiert wird, behält den Namen in der Weltrangliste, den er hatte, weil die Rangliste ihn weiterhin unter ihm kennt. Im American 6 Wicket ist der Name eines Spielers in der Weltrangliste immer sein Name, daher wird er mit dem Namen auch korrigiert.

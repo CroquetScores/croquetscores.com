@@ -55,6 +55,18 @@ Druk op **Voeg by**. Die hele lys word nagegaan voordat enigiets daarvan bewaar 
 
 Die **?** in die titelbalk van die dialoog lei hierheen. Hierdie dialoog en Voeg speler by bly albei in die venster, waarheen die bladsy ook al geskuif is.
 
+## Hoe om 'n paar by te voeg {#adding-a-pair}
+
+In 'n dubbelspeltoernooi is 'n paar 'n speler op sy eie, so dit word gemaak van twee spelers wat reeds ingeskryf is, in plaas daarvan om dit weer in te tik. Druk op **Voeg paar by**, langs **Voeg speler by**. Dit word aangebied waar daar twee spelers is om uit te kies. 'n Dialoog maak oop met 'n **Eerste speler** en 'n **Tweede speler**, elk gekies uit die spelers in gebruik. Die tweede lys laat die speler weg wat eerste gekies is, want 'n speler kan nie met homself saamgepaar word nie. Druk op **Voeg paar by** om die paar te maak. Die dialoog bly oop, sê watter paar bygevoeg is, en maak albei keuses leeg sodat die volgende paar gemaak kan word, soos **Voeg speler by** doen. Die paar verskyn dadelik in die lys agter die dialoog. Druk op **Kanselleer** wanneer jy al die pare gemaak het wat jy nodig het.
+
+![Die dialoog Voeg paar by, met twee spelers gekies](images/add-pair-dialog.png)
+
+Die paar kry sy naam van die twee spelers, in die volgorde waarin jy hulle gekies het: "Sam Someone & Alex Another". Waar albei dieselfde van het, kry dit die twee voorname en die een van: "Peter & Rosie Landrebe". Die van is die laaste woord van 'n naam, saam met die klein woorde daarvoor (soos in "van der Berg") en 'n generasie daarna (soos in "Smith Jr"). 'n Generasie alleen is nie 'n van nie.
+
+Die paar verteenwoordig wat sy spelers verteenwoordig. Waar net een van hulle iets verteenwoordig, verteenwoordig die paar dit. Waar albei dieselfde ding verteenwoordig, verteenwoordig die paar dit een keer. Waar hulle verskillende dinge verteenwoordig, verteenwoordig die paar albei, die eerste dan die tweede, soos "Canterbury Croquet Club / Melbourne".
+
+Die twee spelers word gelaat soos hulle is en kan steeds in hul eie kompetisies ingeskryf word. Niks verbind die paar daarna met hulle nie: as jy een van hulle regstel of argiveer, hou die paar die naam en die verteenwoordiging waarmee dit gemaak is, en word op sy eie reggestel. Die paar word saam met die ander spelers gelys, in kompetisies ingeskryf soos enige van hulle, en soos enige van hulle reggestel of geargiveer. 'n Paar waarvan die naam die toernooi reeds het, word geweier: dieselfde twee spelers in dieselfde volgorde kan nie twee keer 'n paar gemaak word nie. Dieselfde twee andersom is 'n ander naam, en 'n ander paar.
+
 ## Hoe om 'n speler reg te stel {#correcting-a-player}
 
 Druk op 'n speler se naam, of op hul **Wysig**, om dieselfde dialoog op daardie speler oop te maak, met die titel Wysig speler. Verander wat verkeerd is en druk op **Bewaar**, wat die verandering hou en die dialoog toemaak. 'n Speler wie se naam reggestel word, hou die naam op die wêreldranglys wat hulle gehad het, want die ranglys ken hulle steeds daaronder. In Amerikaanse 6-hoepel-croquet is 'n speler se naam op die wêreldranglys altyd hul naam, so om die naam reg te stel, stel dit ook reg.

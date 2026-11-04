@@ -4,6 +4,7 @@ import { ModalDialog } from "../../../../../../ModalDialog.js";
 import { standardHelp } from "../../../../../../helpAddress.js";
 import { say } from "../../../../../../words.js";
 import { aboutPlayer } from "../../../../../../aboutPlayer.js";
+import { PairDialog } from "../../modal-dialogs/pair/pair.js";
 import { PlayersDialog } from "../../modal-dialogs/players/players.js";
 import {
   PlayerDialog,
@@ -59,7 +60,7 @@ export const PlayersTab = ({
   const [acting, setActing] = useState(false);
   // Which dialog is open: to add, or to change a player, or none.
   const [dialog, setDialog] = useState<
-    "adding" | "addingMany" | Listed | undefined
+    "adding" | "addingMany" | "addingPair" | Listed | undefined
   >();
   // The player a manager is asked about before they are archived.
   const [archiving, setArchiving] = useState<Listed | undefined>();
@@ -231,6 +232,23 @@ export const PlayersTab = ({
           >
             {say("admin.players.addMany")}
           </button>
+          {/* A pair is made of two players in use, so there must be two. */}
+          {inUse.length > 1 ? (
+            <>
+              {" "}
+              <button
+                type="button"
+                className="button"
+                data-action="addPair"
+                title={say("admin.hover.players.addPair")}
+                onClick={() => {
+                  setDialog("addingPair");
+                }}
+              >
+                {say("admin.players.addPair")}
+              </button>
+            </>
+          ) : null}
         </p>
       ) : null}
       {listed === undefined ? null : listed.length === 0 ? (
@@ -281,7 +299,16 @@ export const PlayersTab = ({
           <p>{say("admin.players.archive.explanation")}</p>
         </ModalDialog>
       )}
-      {dialog === "addingMany" ? (
+      {dialog === "addingPair" ? (
+        <PairDialog
+          tournament={tournament}
+          players={inUse}
+          kept={askAgain}
+          close={() => {
+            setDialog(undefined);
+          }}
+        />
+      ) : dialog === "addingMany" ? (
         <PlayersDialog
           tournament={tournament}
           kept={askAgain}

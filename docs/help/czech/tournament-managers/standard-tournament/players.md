@@ -55,6 +55,18 @@ Stiskněte **Přidat**. Celý seznam se zkontroluje, než se cokoli uloží, tak
 
 **?** v záhlaví dialogu vede sem. Tento dialog i Přidat hráče zůstávají v okně, ať je stránka posunuta kamkoli.
 
+## Přidání páru {#adding-a-pair}
+
+V turnaji čtyřhry je pár samostatným hráčem, takže se vytváří ze dvou již zadaných hráčů, místo aby se zadával znovu. Stiskněte **Přidat pár** vedle **Přidat hráče**. Nabízí se, jsou-li k výběru dva hráči. Otevře se dialog s polem **První hráč** a **Druhý hráč**, z nichž každé se vybírá z používaných hráčů. Druhý seznam vynechává hráče vybraného jako prvního, protože hráč nemůže tvořit pár sám se sebou. Stisknutím **Přidat pár** pár vytvoříte. Dialog zůstane otevřený, řekne, který pár byl přidán, a vyprázdní obě volby, aby bylo možné vytvořit další pár, stejně jako **Přidat hráče**. Pár se v seznamu za dialogem objeví hned. Až vytvoříte všechny potřebné páry, stiskněte **Zrušit**.
+
+![Dialog Přidat pár se dvěma vybranými hráči](images/add-pair-dialog.png)
+
+Pár se jmenuje podle obou hráčů v pořadí, v jakém jste je vybrali: „Sam Someone & Alex Another“. Mají-li oba stejné příjmení, jmenuje se podle obou křestních jmen a jednoho příjmení: „Peter & Rosie Landrebe“. Příjmení je poslední slovo jména spolu s malými slovy před ním (jako v „van der Berg“) a generací za ním (jako v „Smith Jr“). Samotná generace příjmením není.
+
+Pár reprezentuje to, co reprezentují jeho hráči. Reprezentuje-li něco jen jeden z nich, pár reprezentuje to. Reprezentují-li oba totéž, pár to reprezentuje jednou. Reprezentují-li různé věci, pár reprezentuje obojí, nejprve prvního a pak druhého, jako „Canterbury Croquet Club / Melbourne“.
+
+Oba hráči zůstanou, jací jsou, a lze je dál zadávat do vlastních soutěží. Nic pár s nimi potom nespojuje: opravíte-li nebo archivujete jednoho z nich, pár si ponechá jméno a reprezentaci, s nimiž vznikl, a opravuje se samostatně. Pár je uveden mezi ostatními hráči, zadává se do soutěží jako kterýkoli z nich a opravuje se či archivuje jako kterýkoli z nich. Pár, jehož jméno turnaj už má, se odmítne: stejní dva hráči ve stejném pořadí nemohou být spojeni do páru dvakrát. Stejní dva v opačném pořadí jsou jiné jméno a jiný pár.
+
 ## Oprava hráče {#correcting-a-player}
 
 Stiskněte jméno hráče nebo jeho **Upravit** a otevře se stejný dialog na tomto hráči, nazvaný Upravit hráče. Změňte, co je špatně, a stiskněte **Uložit**, čímž se změna uloží a dialog zavře. Hráč, jehož jméno se opraví, si ponechá jméno ve světovém žebříčku, které měl, protože ho žebříčky stále znají pod ním. V Americkém kroketu (6 branek) je jméno hráče ve světovém žebříčku vždy jeho jméno, takže oprava jména opraví i toto.

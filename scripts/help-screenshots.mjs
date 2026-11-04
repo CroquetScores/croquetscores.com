@@ -304,6 +304,21 @@ async function photographIn(folder, language) {
     await shoot(standard, "players-tab", panel);
   });
 
+  // The Add Pair dialog, with two players chosen and then cancelled, so that
+  // the tournament goes on with the players it has.
+  await attempt("add pair", async () => {
+    await button("admin.players.addPair").click();
+    await page.waitForSelector(dialog);
+    await page
+      .locator(`${dialog} #field-first`)
+      .selectOption({ label: "Sam Someone" });
+    await page
+      .locator(`${dialog} #field-second`)
+      .selectOption({ label: "Alex Another" });
+    await shoot(standard, "add-pair-dialog", dialog);
+    await closeDialog();
+  });
+
   // The Edit Player dialog.
   await attempt("edit player", async () => {
     await row("Sam Someone")

@@ -55,6 +55,18 @@ Pressione **Adicionar**. A lista inteira é conferida antes de qualquer parte de
 
 O **?** na barra de título do diálogo leva até aqui. Tanto este diálogo quanto Adicionar jogador ficam na janela, até onde quer que a página tenha sido rolada.
 
+## Adicionar uma dupla {#adding-a-pair}
+
+Em um torneio de duplas, uma dupla é um jogador à parte, por isso ela é formada de dois jogadores já inscritos, em vez de digitada de novo. Pressione **Adicionar dupla**, ao lado de **Adicionar jogador**. Ele é oferecido quando há dois jogadores para escolher. Uma caixa de diálogo se abre com **Primeiro jogador** e **Segundo jogador**, cada um escolhido entre os jogadores em uso. A segunda lista deixa de fora o jogador escolhido primeiro, pois um jogador não pode formar dupla consigo mesmo. Pressione **Adicionar dupla** para formar a dupla. A caixa de diálogo continua aberta, diz qual dupla foi adicionada e esvazia as duas escolhas para que a próxima dupla possa ser formada, como **Adicionar jogador** faz. A dupla aparece logo na lista atrás da caixa de diálogo. Pressione **Cancelar** quando tiver formado todas de que precisa.
+
+![A caixa de diálogo Adicionar dupla, com dois jogadores escolhidos](images/add-pair-dialog.png)
+
+A dupla recebe o nome dos dois jogadores, na ordem em que você os escolheu: "Sam Someone & Alex Another". Quando os dois têm o mesmo sobrenome, ela recebe os dois primeiros nomes e o sobrenome uma vez: "Peter & Rosie Landrebe". O sobrenome é a última palavra de um nome, com as palavrinhas antes dele (como em "van der Berg") e uma geração depois dele (como em "Smith Jr"). Uma geração sozinha não é sobrenome.
+
+A dupla representa o que seus jogadores representam. Quando só um deles representa algo, a dupla representa isso. Quando os dois representam a mesma coisa, a dupla a representa uma vez. Quando representam coisas diferentes, a dupla representa as duas, a primeira e depois a segunda, como "Canterbury Croquet Club / Melbourne".
+
+Os dois jogadores ficam como estão e ainda podem ser inscritos em competições próprias. Nada liga a dupla a eles depois: se você corrigir ou arquivar um deles, a dupla mantém o nome e a representação com que foi formada, e é corrigida por conta própria. A dupla é listada com os outros jogadores, inscrita em competições como qualquer um deles e corrigida ou arquivada como qualquer um deles. Uma dupla cujo nome o torneio já tem é recusada: os mesmos dois jogadores na mesma ordem não podem formar uma dupla duas vezes. Os mesmos dois na ordem inversa são outro nome e outra dupla.
+
 ## Corrigir um jogador {#correcting-a-player}
 
 Pressione o nome de um jogador, ou o seu **Editar**, para abrir o mesmo diálogo nesse jogador, com o título Editar jogador. Altere o que está errado e pressione **Salvar**, que guarda a alteração e fecha o diálogo. Um jogador cujo nome é corrigido mantém o nome no ranking mundial que tinha, porque os rankings continuam a conhecê-lo por ele. No Croquet Americano de 6 Arcos o nome de um jogador no ranking mundial é sempre o seu nome, então corrigir o nome o corrige também.

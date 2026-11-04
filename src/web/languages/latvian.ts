@@ -1050,6 +1050,17 @@ export const latvian: Language = {
       "Šī mača uzvarētājs jau ir nospēlējis savu nākamo partiju, tāpēc to, kurš uzvarēja, vairs nevar mainīt.",
     "CompetitionPlayer.Withdrawn": "Izstājies spēlētājs vairs nespēlē.",
     "admin.players.add": "Pievienot spēlētāju",
+    "admin.players.addPair": "Pievienot pāri",
+    "admin.hover.players.addPair":
+      "Izveidot dubultspēļu pāri no diviem turnīra spēlētājiem",
+    "admin.pair.title": "Pievienot pāri",
+    "admin.pair.first": "Pirmais spēlētājs",
+    "admin.pair.second": "Otrais spēlētājs",
+    "admin.pair.choose": "Izvēlieties spēlētāju",
+    "admin.hover.dialog.pair.add":
+      "Izveidot pāri no abiem izvēlētajiem spēlētājiem",
+    "admin.pair.otherwise": "Šo pāri nevar pievienot.",
+    "AddPair.SamePlayerTwice": "Izvēlieties divus dažādus spēlētājus.",
     "admin.players.addMany": "Pievienot spēlētājus",
     "admin.players.none": "Nav spēlētāju",
     "admin.players.edit": "Labot",

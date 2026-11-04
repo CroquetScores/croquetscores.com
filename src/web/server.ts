@@ -100,6 +100,8 @@ import { TeamsOfTournamentHandler } from "../application/operations/tournaments/
 import { PlayersOfTeamHandler } from "../application/operations/tournaments/PlayersOfTeamHandler.js";
 import { PlayersOfTestHandler } from "../application/operations/competitions/PlayersOfTestHandler.js";
 import { AddPlayerValidator } from "../application/operations/tournaments/AddPlayerValidator.js";
+import { AddPairHandler } from "../application/operations/tournaments/AddPairHandler.js";
+import { AddPairValidator } from "../application/operations/tournaments/AddPairValidator.js";
 import { AddPlayersHandler } from "../application/operations/tournaments/AddPlayersHandler.js";
 import { AddPlayersValidator } from "../application/operations/tournaments/AddPlayersValidator.js";
 import { AddScorerHandler } from "../application/operations/tournaments/AddScorerHandler.js";
@@ -1202,6 +1204,7 @@ export const buildApplication = async (
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
   validation.register(new AddPlayersValidator());
+  validation.register(new AddPairValidator());
   validation.register(new EnterPlayersValidator());
   validation.register(new UpdatePlayerValidator());
   validation.register(new ChangePlayerWorldRankingNameValidator());
@@ -1246,6 +1249,7 @@ export const buildApplication = async (
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new AddPlayersHandler(...both));
+  mediator.handleCommand(new AddPairHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
   mediator.handleCommand(new ChangePlayerWorldRankingNameHandler(...both));
   mediator.handleCommand(new ChangeTeamPlayerWorldRankingNameHandler(...both));

@@ -44,6 +44,7 @@ import { ReverseWithdrawal } from "../../../application/operations/competitions/
 import { WithdrawPlayer } from "../../../application/operations/competitions/WithdrawPlayer.js";
 import { MovePlayer } from "../../../application/operations/tournaments/MovePlayer.js";
 import { AddPlayer } from "../../../application/operations/tournaments/AddPlayer.js";
+import { AddPair } from "../../../application/operations/tournaments/AddPair.js";
 import { AddPlayers } from "../../../application/operations/tournaments/AddPlayers.js";
 import { ArchivePlayer } from "../../../application/operations/tournaments/ArchivePlayer.js";
 import { PlayersOfTournament } from "../../../application/operations/tournaments/PlayersOfTournament.js";
@@ -1479,6 +1480,30 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         .code(201)
         .header("cache-control", "no-store")
         .send({ ids: added.map(({ value }) => value) });
+    },
+  );
+
+  // A doubles pair made of two of the tournament's players, by the parts of
+  // their ids after "tournament-player/", and answered with the pair's id,
+  // which is a player's, and its name.
+  server.post<{ Params: { id: string } }>(
+    "/tournaments/:id/pairs",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const made = await request.server.mediator.send(
+        new AddPair(
+          reader.value,
+          `tournament/${request.params.id}`,
+          `tournament-player/${textOf(request.body, "first")}`,
+          `tournament-player/${textOf(request.body, "second")}`,
+          request.requestedAt,
+        ),
+      );
+      return reply
+        .code(201)
+        .header("cache-control", "no-store")
+        .send({ id: made.id.value, name: made.name });
     },
   );
 

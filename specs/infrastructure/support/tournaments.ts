@@ -30,6 +30,8 @@ import { AddLosersKnockoutValidator } from "../../../src/application/operations/
 import { AddManagerHandler } from "../../../src/application/operations/tournaments/AddManagerHandler.js";
 import { AddManagerValidator } from "../../../src/application/operations/tournaments/AddManagerValidator.js";
 import { AddPlayerHandler } from "../../../src/application/operations/tournaments/AddPlayerHandler.js";
+import { AddPairHandler } from "../../../src/application/operations/tournaments/AddPairHandler.js";
+import { AddPairValidator } from "../../../src/application/operations/tournaments/AddPairValidator.js";
 import { AddPlayersHandler } from "../../../src/application/operations/tournaments/AddPlayersHandler.js";
 import { AddTeamValidator } from "../../../src/application/operations/tournaments/AddTeamValidator.js";
 import { UpdateTeamValidator } from "../../../src/application/operations/tournaments/UpdateTeamValidator.js";
@@ -222,6 +224,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   validation.register(new UpdateTournamentValidator());
   validation.register(new AddPlayerValidator());
   validation.register(new AddPlayersValidator());
+  validation.register(new AddPairValidator());
   validation.register(new EnterPlayersValidator());
   validation.register(new UpdatePlayerValidator());
   validation.register(new ChangePlayerWorldRankingNameValidator());
@@ -263,6 +266,7 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));
   mediator.handleCommand(new AddPlayersHandler(...both));
+  mediator.handleCommand(new AddPairHandler(...both));
   mediator.handleCommand(new UpdatePlayerHandler(...both));
   mediator.handleCommand(new ChangePlayerWorldRankingNameHandler(...both));
   mediator.handleCommand(new ChangeTeamPlayerWorldRankingNameHandler(...both));

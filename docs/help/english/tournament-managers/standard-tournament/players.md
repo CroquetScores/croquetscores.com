@@ -55,6 +55,18 @@ Press **Add**. The whole list is checked before any of it is kept, so a list wit
 
 The **?** in the title bar of the dialog leads here. Both this dialog and Add Player stay in the window wherever the page has been scrolled to.
 
+## Adding a pair {#adding-a-pair}
+
+In a doubles tournament, a pair is a player of its own, so it is made from two players already entered rather than typed in again. Press **Add Pair**, beside **Add Player**. It is offered where there are two players to choose from. A dialog opens with a **First player** and a **Second player**, each chosen from the players in use. The second list leaves out the player chosen first, since a player cannot be paired with themselves. Press **Add Pair** to make the pair. The dialog stays open, says which pair was added, and empties both choices so that the next pair can be made, as **Add Player** does. The pair appears in the list behind the dialog straight away. Press **Cancel** when you have made all you need.
+
+![The Add Pair dialog, with two players chosen](images/add-pair-dialog.png)
+
+The pair is named from the two players, in the order you chose them: "Sam Someone & Alex Another". Where both have the same last name, it is named by the two first names and the one last name, as "Peter & Rosie Landrebe". The last name is the last word of a name, with the small words before it (as in "van der Berg") and a generation after it (as in "Smith Jr"). A generation on its own is not a last name.
+
+The pair represents what its players represent. Where only one of them represents anything, the pair represents that. Where both represent the same thing, the pair represents it once. Where they represent different things, the pair represents both, the first then the second, as "Canterbury Croquet Club / Melbourne".
+
+The two players are left as they are, and can still be entered in competitions of their own. Nothing links the pair to them afterwards: if you correct or archive one of them, the pair keeps the name and the representing it was made with, and is corrected on its own. The pair is listed with the other players, entered in competitions like any of them, and corrected or archived like any of them. A pair whose name the tournament already has is refused: the same two players in the same order cannot be made into a pair twice. The same two the other way round is a different name, and a different pair.
+
 ## Correcting a player {#correcting-a-player}
 
 Press a player's name, or their **Edit**, to open the same dialog on that player, titled Edit Player. Change what is wrong and press **Save**, which keeps the change and closes the dialog. A player whose name is corrected keeps the world ranking name they had, since the rankings still know them by it. In American 6 Wicket a player's world ranking name is always their name, so correcting the name corrects it too.

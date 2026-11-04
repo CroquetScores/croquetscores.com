@@ -55,6 +55,18 @@ Pwyswch **Ychwanegu**. Gwirir y rhestr gyfan cyn cadw dim ohoni, felly nid yw rh
 
 Mae'r **?** ym mar teitl y ddeialog yn arwain yma. Mae'r ddeialog hon ac Ychwanegu chwaraewr yn aros yn y ffenestr i ble bynnag y mae'r dudalen wedi'i sgrolio.
 
+## Ychwanegu pâr {#adding-a-pair}
+
+Mewn twrnamaint dyblau, mae pâr yn chwaraewr ynddo'i hun, felly caiff ei wneud o ddau chwaraewr sydd eisoes i mewn yn hytrach na'i deipio eto. Pwyswch **Ychwanegu pâr**, wrth ymyl **Ychwanegu chwaraewr**. Fe'i cynigir lle mae dau chwaraewr i ddewis o'u plith. Mae deialog yn agor gyda **Y chwaraewr cyntaf** ac **Yr ail chwaraewr**, pob un wedi'i ddewis o'r chwaraewyr sy'n cael eu defnyddio. Mae'r ail restr yn gadael allan y chwaraewr a ddewiswyd yn gyntaf, gan na all chwaraewr fod mewn pâr â nhw eu hunain. Pwyswch **Ychwanegu pâr** i wneud y pâr. Mae'r deialog yn aros ar agor, yn dweud pa bâr a ychwanegwyd, ac yn gwagio'r ddau ddewis fel y gellir gwneud y pâr nesaf, fel y mae **Ychwanegu chwaraewr** yn ei wneud. Mae'r pâr yn ymddangos yn y rhestr y tu ôl i'r deialog ar unwaith. Pwyswch **Diddymu** pan fyddwch wedi gwneud yr holl barau sydd eu hangen arnoch.
+
+![Y deialog Ychwanegu pâr, â dau chwaraewr wedi'u dewis](images/add-pair-dialog.png)
+
+Enwir y pâr ar ôl y ddau chwaraewr, yn y drefn y gwnaethoch eu dewis: "Sam Someone & Alex Another". Lle mae gan y ddau yr un cyfenw, enwir ef ar ôl y ddau enw cyntaf a'r un cyfenw: "Peter & Rosie Landrebe". Y cyfenw yw gair olaf enw, ynghyd â'r geiriau bach o'i flaen (fel yn "van der Berg") a chenhedlaeth ar ei ôl (fel yn "Smith Jr"). Nid yw cenhedlaeth ar ei phen ei hun yn gyfenw.
+
+Mae'r pâr yn cynrychioli'r hyn y mae ei chwaraewyr yn ei gynrychioli. Lle mae dim ond un ohonynt yn cynrychioli rhywbeth, mae'r pâr yn cynrychioli hynny. Lle mae'r ddau yn cynrychioli'r un peth, mae'r pâr yn ei gynrychioli unwaith. Lle maen nhw'n cynrychioli pethau gwahanol, mae'r pâr yn cynrychioli'r ddau, y cyntaf ac yna'r ail, fel "Canterbury Croquet Club / Melbourne".
+
+Gadewir y ddau chwaraewr fel y maent, a gellir eu rhoi mewn cystadlaethau eu hunain o hyd. Nid oes dim yn cysylltu'r pâr â nhw wedyn: os byddwch yn cywiro neu'n archifo un ohonynt, mae'r pâr yn cadw'r enw a'r cynrychiolaeth y'i gwnaed â nhw, ac fe'i cywirir ar ei ben ei hun. Rhestrir y pâr gyda'r chwaraewyr eraill, fe'i rhoddir mewn cystadlaethau fel unrhyw un ohonynt, a'i gywiro neu ei archifo fel unrhyw un ohonynt. Gwrthodir pâr y mae'r twrnamaint eisoes â'i enw: ni ellir gwneud yr un ddau chwaraewr yn yr un drefn yn bâr ddwywaith. Mae'r un ddau i'r gwrthwyneb yn enw gwahanol, ac yn bâr gwahanol.
+
 ## Cywiro chwaraewr {#correcting-a-player}
 
 Pwyswch enw chwaraewr, neu ei **Golygu**, i agor yr un ddeialog ar y chwaraewr hwnnw, dan y teitl Golygu chwaraewr. Newidiwch beth sydd o'i le a phwyswch **Cadw**, sy'n cadw'r newid ac yn cau'r ddeialog. Mae chwaraewr y caiff ei enw ei gywiro yn cadw'r enw ar restr detholion y byd a oedd ganddo, gan fod y safleoedd yn dal i'w adnabod wrtho. Mewn American 6 Wicket enw chwaraewr ar restr detholion y byd yw ei enw bob amser, felly mae cywiro'r enw yn cywiro hwnnw hefyd.
