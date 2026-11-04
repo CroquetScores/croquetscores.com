@@ -64,6 +64,15 @@ export const czech: Language = {
     "whatsNew.later": "Připomenout příště",
     "whatsNew.never": "Už mi toto upozornění nezobrazovat",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Zeptejte se {siteName}",
+    "helpSearch.label": "Vaše otázka",
+    "helpSearch.submit": "Hledat",
+    "helpSearch.none":
+      "Žádná stránka nápovědy na to neodpovídá. Zkuste jiná slova.",
+    "helpSearch.tooLong": "Otázka může mít nejvýše {most} znaků.",
+    "helpSearch.failed": "V nápovědě se nepodařilo hledat. Zkuste to znovu.",
+
     "form.otherwise":
       "Něco tu není v pořádku. Zkontrolujte, co jste zadali, a zkuste to znovu.",
 

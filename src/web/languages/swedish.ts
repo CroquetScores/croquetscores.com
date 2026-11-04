@@ -61,6 +61,14 @@ export const swedish: Language = {
     "whatsNew.later": "Påminn mig nästa gång",
     "whatsNew.never": "Visa aldrig den här aviseringen igen",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Fråga {siteName}",
+    "helpSearch.label": "Din fråga",
+    "helpSearch.submit": "Sök",
+    "helpSearch.none": "Ingen sida i hjälpen svarar på det. Prova andra ord.",
+    "helpSearch.tooLong": "En fråga får vara högst {most} tecken lång.",
+    "helpSearch.failed": "Det gick inte att söka i hjälpen. Försök igen.",
+
     "form.otherwise":
       "Något här stämmer inte. Kontrollera vad du skrev och försök igen.",
 

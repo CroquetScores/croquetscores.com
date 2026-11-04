@@ -103,7 +103,7 @@ Feature: Keeping the help searchable in Postgres
       Given an index of the help
       And the english page "a" titled "Players" saying "Add a player."
       And the index is made
-      And the help has no english page "a"
+      And the english page "a" is no longer in the help
       When the index is made
       And "player" is searched for in english
       Then there are no results

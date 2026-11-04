@@ -31,6 +31,7 @@ import { ListRefused } from "../../../src/application/services/WorldRankingLists
 import { Website } from "../../../src/domain/common/Website.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { siteNameFor as nameOfSite } from "../../../src/web/common/site.js";
+import type { HelpPagesToSearch } from "../../../src/application/services/HelpSearchIndex.js";
 import type { HelpLibrary } from "../../../src/web/common/helpLibrary.js";
 import type { Language } from "../../../src/web/common/language.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
@@ -249,6 +250,24 @@ export const anApplicationWithHelp = (
   help: HelpLibrary,
 ): Promise<string> => anApplicationWith(world, {}, "its own", help);
 
+// The pages a scenario's application makes its search of the help from, in
+// place of the ones the build wrote. Set before the application is made, and
+// read by it when it is, so that a scenario can say what the help holds first.
+const searchableHelp = new WeakMap<SpecWorld, HelpPagesToSearch>();
+
+/**
+ * An application of this scenario's own whose help can be searched, over the
+ * pages given, offering the site's own languages, and otherwise as
+ * {@link anApplicationCalled}. Needs a database, which is where the search is.
+ */
+export const anApplicationWithSearchableHelp = (
+  world: SpecWorld,
+  pages: HelpPagesToSearch,
+): Promise<string> => {
+  searchableHelp.set(world, pages);
+  return anApplicationWith(world, {}, "its own");
+};
+
 /**
  * An application of this scenario's own reading the help it is given, and
  * otherwise as {@link anApplicationCalled}: offering the scenarios' English and
@@ -436,6 +455,12 @@ const itsOwn = async (
       // Nothing is sent. What these scenarios read is what is waiting in the
       // queue, which is where a reader's link comes from.
       sendsTheEmailQueue: false,
+      ...(searchableHelp.has(world)
+        ? {
+            indexesTheHelp: true,
+            helpPagesToSearch: searchableHelp.get(world)!,
+          }
+        : {}),
       // Never Google, for the reason reCAPTCHA is never asked below: a stand-in
       // of the scenario's own, which says what the scenario has Google say.
       googleEndpoints: google.endpoints,

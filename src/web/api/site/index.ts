@@ -10,6 +10,9 @@ import type {
 } from "fastify";
 import { PassThrough } from "node:stream";
 
+import { helpAddressOf } from "../../public/help.js";
+import { helpSearchRoute } from "./helpSearch.js";
+
 import { AddBlock } from "../../../application/operations/tournaments/AddBlock.js";
 import {
   AddKnockout,
@@ -286,6 +289,9 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
   done,
 ) => {
   server.get("/health", () => ({ status: "ok" }));
+
+  // Open to anybody, as the help is.
+  void server.register(helpSearchRoute, { addressOf: helpAddressOf });
 
   // The reader's own, which is who "my" is. Nothing a caller sends can name
   // another account.

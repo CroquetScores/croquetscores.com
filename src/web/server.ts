@@ -41,6 +41,11 @@ import { AccountProfile } from "../application/operations/accounts/AccountProfil
 import { AccountsWithRoleHandler } from "../application/operations/accounts/AccountsWithRoleHandler.js";
 import { AddRoleHandler } from "../application/operations/accounts/AddRoleHandler.js";
 import { ImportWorldRankingPlayersHandler } from "../application/operations/world-rankings/ImportWorldRankingPlayersHandler.js";
+import { makeHelpSearchIndex } from "../application/operations/help/MakeHelpSearchIndex.js";
+import { SearchHelpHandler } from "../application/operations/help/SearchHelpHandler.js";
+import type { HelpPagesToSearch } from "../application/services/HelpSearchIndex.js";
+import { PostgresHelpSearchIndex } from "../infrastructure/database/PostgresHelpSearchIndex.js";
+import { helpPagesToSearchIn } from "./common/helpPagesToSearch.js";
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
@@ -694,6 +699,19 @@ export interface ApplicationOptions {
    */
   readonly help?: HelpLibrary;
   /**
+   * Whether the help is made searchable as the site starts. Not by default:
+   * making it costs a read of every page and, when the help has changed, a
+   * write of every page, and a script that builds the application to do
+   * something else, or a scenario that has no use for the search, should not
+   * pay it. The site that is served asks for it.
+   */
+  readonly indexesTheHelp?: boolean;
+  /**
+   * The pages the search is made from, in place of the languages' pages the
+   * build wrote, for a scenario that says what the help holds.
+   */
+  readonly helpPagesToSearch?: HelpPagesToSearch;
+  /**
    * The kinds of event the store knows how to read back, and the projections
    * that keep the read models. The application's own, unless a scenario gives
    * its examples instead.
@@ -1085,6 +1103,8 @@ export const buildApplication = async (
   mediator.handleQuery(
     new WorldRankingPlayersMatchingHandler(worldRankingPlayers),
   );
+  const helpSearchIndex = new PostgresHelpSearchIndex(unitOfWork);
+  mediator.handleQuery(new SearchHelpHandler(helpSearchIndex));
   const keptImportErrors = new PostgresKeptImportErrors(unitOfWork);
   mediator.handleQuery(new ImportErrorsKeptHandler(accounts, keptImportErrors));
   // The lists are read where the repository keeps them, as the help is read
@@ -1569,6 +1589,25 @@ export const buildApplication = async (
   const help =
     options.help ?? helpLibraryIn(join(repositoryRoot, "dist", "help"));
 
+  // Made again only when the help the build wrote is not the one it was made
+  // from. A failure to make it is told and goes no further: the help is read
+  // from its files, and the site works without being able to search it.
+  if (options.indexesTheHelp ?? false) {
+    try {
+      await unitOfWork.inTransaction(() =>
+        makeHelpSearchIndex(
+          options.helpPagesToSearch ??
+            helpPagesToSearchIn(join(repositoryRoot, "dist", "help"), () =>
+              languages.map((language) => language.tag),
+            ),
+          helpSearchIndex,
+        ),
+      );
+    } catch (error) {
+      server.log.error(error, "The help could not be made searchable.");
+    }
+  }
+
   await registerAdmin(
     server,
     adminRoot,
@@ -1736,7 +1775,9 @@ const startedDirectly =
 if (startedDirectly) {
   loadEnvFile();
   const config = loadConfig();
-  const application = await buildApplication(config);
+  const application = await buildApplication(config, {
+    indexesTheHelp: true,
+  });
   await application.server.listen({ port: config.port, host: "0.0.0.0" });
 
   // A deploy stops the server with a signal, and left alone a signal ends the

@@ -64,6 +64,16 @@ export const latvian: Language = {
     "whatsNew.later": "Atgādināt nākamreiz",
     "whatsNew.never": "Nekad vairs nerādīt šo paziņojumu",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Jautājiet {siteName}",
+    "helpSearch.label": "Jūsu jautājums",
+    "helpSearch.submit": "Meklēt",
+    "helpSearch.none":
+      "Neviena palīdzības lapa uz to neatbild. Mēģiniet citus vārdus.",
+    "helpSearch.tooLong":
+      "Jautājums nedrīkst būt garāks par {most} rakstzīmēm.",
+    "helpSearch.failed": "Palīdzībā neizdevās meklēt. Mēģiniet vēlreiz.",
+
     "form.otherwise":
       "Kaut kas šeit nav kārtībā. Pārbaudiet ievadīto un mēģiniet vēlreiz.",
 

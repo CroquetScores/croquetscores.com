@@ -65,6 +65,16 @@ export const afrikaans: Language = {
     "whatsNew.later": "Herinner my volgende keer",
     "whatsNew.never": "Wys my nooit weer hierdie kennisgewing nie",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Vra {siteName}",
+    "helpSearch.label": "Jou vraag",
+    "helpSearch.submit": "Soek",
+    "helpSearch.none":
+      "Geen bladsy van die hulp beantwoord dit nie. Probeer ander woorde.",
+    "helpSearch.tooLong":
+      "'n Vraag mag nie langer as {most} karakters wees nie.",
+    "helpSearch.failed": "Die hulp kon nie deursoek word nie. Probeer weer.",
+
     "form.otherwise":
       "Iets hier is nie reg nie. Kontroleer wat ingevoer is en probeer weer.",
 

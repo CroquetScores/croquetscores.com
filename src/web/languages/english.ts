@@ -60,6 +60,14 @@ export const english: Language = {
     "whatsNew.later": "Remind me next time",
     "whatsNew.never": "Never show me this alert",
 
+    // The panel at the top of the help that finds a page from a question.
+    "helpSearch.title": "Ask {siteName}",
+    "helpSearch.label": "Your question",
+    "helpSearch.submit": "Search",
+    "helpSearch.none": "No page of the help answers that. Try other words.",
+    "helpSearch.tooLong": "A question can be no longer than {most} characters.",
+    "helpSearch.failed": "The help could not be searched. Try again.",
+
     "form.otherwise":
       "Something here is not right. Check what was entered and try again.",
 
