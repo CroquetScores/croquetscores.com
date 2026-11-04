@@ -55,6 +55,18 @@ Nospiediet **Pievienot**. Viss saraksts tiek pārbaudīts, pirms kaut kas no tā
 
 **?** dialoga virsraksta joslā ved uz šejieni. Gan šis dialogs, gan Pievienot spēlētāju paliek logā, lai kur lapa būtu ritināta.
 
+## Pāra pievienošana {#adding-a-pair}
+
+Dubultspēļu turnīrā pāris ir atsevišķs spēlētājs, tāpēc to izveido no diviem jau ievadītiem spēlētājiem, nevis ievada vēlreiz. Nospiediet **Pievienot pāri** blakus **Pievienot spēlētāju**. Tā tiek piedāvāta, ja izvēlei ir divi spēlētāji. Atveras dialogs ar **Pirmais spēlētājs** un **Otrais spēlētājs**, katru izvēlas no lietotajiem spēlētājiem. Otrajā sarakstā nav pirmā izvēlētā spēlētāja, jo spēlētāju nevar savienot pārī ar viņu pašu. Nospiediet **Pievienot pāri**, lai izveidotu pāri. Dialogs paliek atvērts, pasaka, kurš pāris pievienots, un iztukšo abas izvēles, lai varētu izveidot nākamo, kā to dara **Pievienot spēlētāju**. Pāris uzreiz parādās sarakstā aiz dialoga. Kad esat izveidojis visus vajadzīgos, nospiediet **Atcelt**.
+
+![Dialogs Pievienot pāri ar diviem izvēlētiem spēlētājiem](images/add-pair-dialog.png)
+
+Pāra nosaukumu veido no abiem spēlētājiem tādā secībā, kādā tos izvēlējāties: “Sam Someone & Alex Another”. Ja abiem ir viens uzvārds, nosaukumā ir abi vārdi un viens uzvārds: “Peter & Rosie Landrebe”. Uzvārds ir nosaukuma pēdējais vārds kopā ar mazajiem vārdiem pirms tā (kā “van der Berg”) un paaudzi aiz tā (kā “Smith Jr”). Paaudze viena pati nav uzvārds.
+
+Pāris pārstāv to, ko pārstāv tā spēlētāji. Ja kaut ko pārstāv tikai viens, pāris pārstāv to. Ja abi pārstāv vienu un to pašu, pāris to pārstāv vienreiz. Ja viņi pārstāv dažādas lietas, pāris pārstāv abas, vispirms pirmā, tad otrā, kā “Canterbury Croquet Club / Melbourne”.
+
+Abi spēlētāji paliek, kādi ir, un joprojām var tikt ievadīti savās sacensībās. Nekas pēc tam nesaista pāri ar viņiem: ja labojat vai arhivējat vienu no viņiem, pāris saglabā nosaukumu un pārstāvību, ar kādiem tika izveidots, un tiek labots atsevišķi. Pāris tiek uzskaitīts kopā ar citiem spēlētājiem, ievadīts sacensībās kā jebkurš no viņiem un labots vai arhivēts kā jebkurš no viņiem. Pāris, kura nosaukums turnīrā jau ir, tiek noraidīts: tos pašus divus spēlētājus tajā pašā secībā nevar savienot pārī divreiz. Tie paši divi pretējā secībā ir cits nosaukums un cits pāris.
+
 ## Spēlētāja labošana {#correcting-a-player}
 
 Nospiediet spēlētāja vārdu vai viņa **Labot**, lai atvērtu to pašu dialogu par šo spēlētāju ar nosaukumu Labot spēlētāju. Mainiet to, kas nav pareizi, un nospiediet **Saglabāt**, kas saglabā izmaiņu un aizver dialogu. Spēlētājs, kura vārds tiek labots, patur savu pasaules ranga vārdu, jo rangi viņu joprojām pazīst pēc tā. Amerikāņu 6 vārtiņu kroketā spēlētāja pasaules ranga vārds vienmēr ir viņa vārds, tāpēc vārda labošana labo arī to.

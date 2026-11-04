@@ -55,6 +55,18 @@ Pulsa **Añadir**. Toda la lista se comprueba antes de guardar nada, así que un
 
 El **?** de la barra de título del diálogo lleva hasta aquí. Tanto este diálogo como Añadir jugador se quedan en la ventana estés donde estés en la página.
 
+## Añadir una pareja {#adding-a-pair}
+
+En un torneo de dobles, una pareja es un jugador por sí misma, así que se forma con dos jugadores ya inscritos en lugar de escribirla de nuevo. Pulsa **Añadir pareja**, junto a **Añadir jugador**. Se ofrece cuando hay dos jugadores entre los que elegir. Se abre un cuadro de diálogo con **Primer jugador** y **Segundo jugador**, cada uno elegido entre los jugadores en uso. La segunda lista deja fuera al jugador elegido primero, ya que un jugador no puede formar pareja consigo mismo. Pulsa **Añadir pareja** para formar la pareja. El cuadro sigue abierto, dice qué pareja se añadió y vacía las dos elecciones para poder formar la siguiente, como hace **Añadir jugador**. La pareja aparece enseguida en la lista que hay detrás del cuadro. Pulsa **Cancelar** cuando hayas formado todas las que necesitas.
+
+![El cuadro de diálogo Añadir pareja, con dos jugadores elegidos](images/add-pair-dialog.png)
+
+La pareja se llama según los dos jugadores, en el orden en que los elegiste: «Sam Someone & Alex Another». Cuando los dos tienen el mismo apellido, se llama por los dos nombres de pila y el apellido una sola vez: «Peter & Rosie Landrebe». El apellido es la última palabra de un nombre, con las palabras pequeñas que lo preceden (como en «van der Berg») y una generación que lo sigue (como en «Smith Jr»). Una generación sola no es un apellido.
+
+La pareja representa lo que representan sus jugadores. Si solo uno de ellos representa algo, la pareja representa eso. Si los dos representan lo mismo, la pareja lo representa una vez. Si representan cosas distintas, la pareja representa las dos, primero la del primero y luego la del segundo, como «Canterbury Croquet Club / Melbourne».
+
+Los dos jugadores se quedan como están y pueden seguir inscribiéndose en competiciones propias. Nada une después la pareja con ellos: si corriges o archivas a uno, la pareja conserva el nombre y la representación con que se formó, y se corrige por separado. La pareja se muestra con los demás jugadores, se inscribe en competiciones como cualquiera de ellos y se corrige o archiva como cualquiera de ellos. Se rechaza una pareja cuyo nombre ya tiene el torneo: los mismos dos jugadores en el mismo orden no pueden formar pareja dos veces. Los mismos dos en orden inverso son otro nombre y otra pareja.
+
 ## Corregir un jugador {#correcting-a-player}
 
 Pulsa el nombre de un jugador, o su **Editar**, para abrir el mismo diálogo sobre ese jugador, titulado Editar jugador. Cambia lo que esté mal y pulsa **Guardar**, que guarda el cambio y cierra el diálogo. Un jugador cuyo nombre se corrige conserva el nombre en el ranking mundial que tenía, porque el ranking sigue conociéndolo por él. En American 6 Wicket el nombre de un jugador en el ranking mundial es siempre su nombre, así que corregir el nombre lo corrige también.

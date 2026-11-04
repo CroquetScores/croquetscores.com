@@ -59,7 +59,9 @@ The **?** in the title bar of the dialog leads here. Both this dialog and Add Pl
 
 In a doubles tournament, a pair is a player of its own, so it is made from two players already entered rather than typed in again. Press **Add Pair**, beside **Add Player**. It is offered where there are two players to choose from. A dialog opens with a **First player** and a **Second player**, each chosen from the players in use. The second list leaves out the player chosen first, since a player cannot be paired with themselves. Press **Add Pair** to make the pair. The dialog stays open, says which pair was added, and empties both choices so that the next pair can be made, as **Add Player** does. The pair appears in the list behind the dialog straight away. Press **Cancel** when you have made all you need.
 
-The pair is named from the two players, in the order you chose them: "Sam Someone & Alex Another". Where both have the same last name, it is named by the two first names and the one last name, as "Peter & Rosie Landrebe". The last name is the last word of a name.
+![The Add Pair dialog, with two players chosen](images/add-pair-dialog.png)
+
+The pair is named from the two players, in the order you chose them: "Sam Someone & Alex Another". Where both have the same last name, it is named by the two first names and the one last name, as "Peter & Rosie Landrebe". The last name is the last word of a name, with the small words before it (as in "van der Berg") and a generation after it (as in "Smith Jr"). A generation on its own is not a last name.
 
 The pair represents what its players represent. Where only one of them represents anything, the pair represents that. Where both represent the same thing, the pair represents it once. Where they represent different things, the pair represents both, the first then the second, as "Canterbury Croquet Club / Melbourne".
 
