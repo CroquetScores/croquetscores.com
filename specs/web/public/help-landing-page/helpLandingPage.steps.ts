@@ -2,6 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import type { SpecWorld } from "../../../support/world.js";
+import { unmarked } from "../../support/languages.js";
 
 // Found as the stylesheet finds them, by the bookmark of the heading each list
 // follows (helpPages.feature).
@@ -247,3 +248,52 @@ Then("the page does not scroll sideways", async function (this: SpecWorld) {
   );
   assert.ok(fits, "The page is wider than the screen.");
 });
+
+// What is not shown but is there ---------------------------------------------------
+
+const title = "article.help h1";
+
+// Hidden by being made one pixel, which a screen reader still reaches, and not
+// by being taken out of the page, which it would not: the next scenario finds
+// the title still there.
+Then("the title of the page is not shown", async function (this: SpecWorld) {
+  const box = await this.browserPage.locator(title).boundingBox();
+  assert.ok(box !== null, "The page has no title for a screen reader.");
+  assert.ok(box.width <= 1 && box.height <= 1, "The title is shown.");
+});
+
+Then(
+  "the page is titled {string}",
+  async function (this: SpecWorld, words: string) {
+    assert.equal(
+      (await this.browserPage.locator(title).textContent())?.trim(),
+      words,
+    );
+  },
+);
+
+Then(
+  "the article does not say {string}",
+  async function (this: SpecWorld, words: string) {
+    // What can be seen of it: a screen reader's own words are not a reader's.
+    const said = await this.browserPage.locator("article.help").innerText();
+    assert.ok(!said.includes(words), said);
+  },
+);
+
+Then("the search box shows no label", async function (this: SpecWorld) {
+  assert.equal(
+    await this.browserPage.locator("label[for='help-search-field']").count(),
+    0,
+  );
+});
+
+Then(
+  "the search box is called {string}",
+  async function (this: SpecWorld, name: string) {
+    const called = await this.browserPage
+      .locator("#help-search-field")
+      .getAttribute("aria-label");
+    assert.equal(unmarked(called ?? ""), name);
+  },
+);

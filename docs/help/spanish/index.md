@@ -1,7 +1,5 @@
 # Ayuda
 
-Cómo usar el sitio, para quienes lo usan.
-
 ## Preguntas frecuentes {#popular-questions}
 
 - [¿Cómo creo un torneo?](tournament-managers/standard-tournament/creating-a-tournament.md)

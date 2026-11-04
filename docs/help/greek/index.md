@@ -1,7 +1,5 @@
 # Βοήθεια
 
-Πώς να χρησιμοποιήσετε την ιστοσελίδα, για όσους τη χρησιμοποιούν.
-
 ## Συχνές ερωτήσεις {#popular-questions}
 
 - [Πώς δημιουργώ ένα τουρνουά;](tournament-managers/standard-tournament/creating-a-tournament.md)

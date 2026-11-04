@@ -1,7 +1,5 @@
 # Hjelp
 
-Slik bruker du nettstedet, skrevet for dem som bruker det.
-
 ## Populære spørsmål {#popular-questions}
 
 - [Hvordan oppretter jeg en turnering?](tournament-managers/standard-tournament/creating-a-tournament.md)

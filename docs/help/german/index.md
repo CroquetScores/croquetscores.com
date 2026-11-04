@@ -1,7 +1,5 @@
 # Hilfe
 
-Wie die Website benutzt wird, für die Menschen, die sie benutzen.
-
 ## Häufige Fragen {#popular-questions}
 
 - [Wie lege ich ein Turnier an?](tournament-managers/standard-tournament/creating-a-tournament.md)

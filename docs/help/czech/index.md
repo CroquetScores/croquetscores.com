@@ -1,7 +1,5 @@
 # Nápověda
 
-Jak používat web, pro ty, kdo ho používají.
-
 ## Časté otázky {#popular-questions}
 
 - [Jak vytvořím turnaj?](tournament-managers/standard-tournament/creating-a-tournament.md)

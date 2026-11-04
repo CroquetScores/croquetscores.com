@@ -297,3 +297,18 @@ Then(
     }
   },
 );
+
+// Nothing between the title and the first section: the sentence that said what
+// the help was for is not on the page.
+Then(
+  "each has the popular questions straight after its title",
+  function (this: SpecWorld) {
+    for (const { language, html } of everyConverted.get(this) ?? []) {
+      assert.match(
+        html,
+        /^<h1>[^<]*<\/h1>\s*<h2 id="popular-questions">/,
+        language,
+      );
+    }
+  },
+);

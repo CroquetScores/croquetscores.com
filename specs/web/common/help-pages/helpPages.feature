@@ -179,6 +179,11 @@ Feature: Help written in markdown becomes pages of the site
     same four subjects, each with words under its title. The cards are made of
     these lists by the stylesheet, which finds them by their bookmarks.
 
+    Scenario: Each language goes from its title straight to the popular questions
+      Given the help of every language
+      When the first page of each is converted
+      Then each has the popular questions straight after its title
+
     Scenario: Each language has a section of popular questions
       Given the help of every language
       When the first page of each is converted

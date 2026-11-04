@@ -1,7 +1,5 @@
 # Help
 
-How to use the site, for the people who use it.
-
 ## Popular questions {#popular-questions}
 
 - [How do I create a tournament?](tournament-managers/standard-tournament/creating-a-tournament.md)

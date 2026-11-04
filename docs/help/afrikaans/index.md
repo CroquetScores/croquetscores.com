@@ -1,7 +1,5 @@
 # Hulp
 
-Hoe om die werf te gebruik, vir die mense wat dit gebruik.
-
 ## Gewilde vrae {#popular-questions}
 
 - [Hoe skep ek 'n toernooi?](tournament-managers/standard-tournament/creating-a-tournament.md)

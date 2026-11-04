@@ -1,7 +1,5 @@
 # Palīdzība
 
-Kā lietot vietni, tiem, kas to lieto.
-
 ## Biežāk uzdotie jautājumi {#popular-questions}
 
 - [Kā izveidot turnīru?](tournament-managers/standard-tournament/creating-a-tournament.md)

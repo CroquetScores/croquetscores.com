@@ -106,8 +106,7 @@ export const helpSearchPanel = (
   return `          <section class="help-search" aria-labelledby="help-search-title" data-none="${escape(speaking.say("helpSearch.none"))}" data-failed="${escape(speaking.say("helpSearch.failed"))}">
             <p class="help-search-title" id="help-search-title">${escape(title)}</p>
             <form method="get" action="/help" role="search">
-              <label for="help-search-field">${escape(speaking.say("helpSearch.label"))}</label>
-              <input id="help-search-field" name="${helpSearchField}" type="search" maxlength="${longestQuestion}" autocomplete="off" value="${escape(asked)}" />
+              <input id="help-search-field" name="${helpSearchField}" type="search" aria-label="${escape(speaking.say("helpSearch.label"))}" maxlength="${longestQuestion}" autocomplete="off" value="${escape(asked)}" />
               <button type="submit">${escape(speaking.say("helpSearch.submit"))}</button>
             </form>
             <p class="help-search-note" role="status">${escape(note)}</p>

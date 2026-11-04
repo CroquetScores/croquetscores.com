@@ -1,7 +1,5 @@
 # Cymorth
 
-Sut i ddefnyddio'r safle, i'r bobl sy'n ei ddefnyddio.
-
 ## Cwestiynau poblogaidd {#popular-questions}
 
 - [Sut mae creu twrnamaint?](tournament-managers/standard-tournament/creating-a-tournament.md)

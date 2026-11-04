@@ -401,6 +401,20 @@ a:hover {
   scroll-margin-top: 6rem;
 }
 
+/* The first page does not show its title: the panel above it says where the
+   reader is. It is kept for a screen reader, which has the title and nothing
+   else to say the page is the help, by being made one pixel and clipped. */
+.help[data-page=""] > h1:first-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* The first page of the help: the popular questions as a list of links, and the
    subjects as cards. Both are lists written in Markdown, found here by the
    bookmarks of the headings they follow (docs/help/<language>/index.md), so the
@@ -494,12 +508,6 @@ a:hover {
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
-}
-
-.help-search label {
-  flex: 1 0 100%;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
 }
 
 .help-search input {

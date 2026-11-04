@@ -17,6 +17,38 @@ Feature: The first page of the help helps a reader find an answer without knowin
   moves by keyboard or by screen reader stops once on it and not on its title,
   then its words, then its edge.
 
+  Rule: The first page does not say what it plainly is
+
+    The panel is a search box and the page is the help, and a reader who has
+    arrived at it knows both. A heading that says "Help", a sentence that says
+    what the help is for, and a label over the search box that says it is for a
+    question, are three things to read before the first of the questions. They
+    are not shown.
+
+    They are not taken away from those who cannot see the page, who have nothing
+    else to say where they are: the page keeps its title, which is in the tab and
+    is what a screen reader announces, and the search box keeps its name.
+
+    Scenario: The page shows no heading above the search box
+      When the first page of the help is opened in the browser
+      Then the title of the page is not shown
+
+    Scenario: The page is still called Help
+      When the first page of the help is opened in the browser
+      Then the page is titled "Help"
+
+    Scenario: The page shows no sentence about what the help is for
+      When the first page of the help is opened in the browser
+      Then the article does not say "How to use the site, for the people who use it."
+
+    Scenario: The search box shows no label
+      When the first page of the help is opened in the browser
+      Then the search box shows no label
+
+    Scenario: The search box is still called by its question
+      When the first page of the help is opened in the browser
+      Then the search box is called "Your question"
+
   Rule: The popular questions are below the search box
 
     Scenario: The popular questions come after the search box

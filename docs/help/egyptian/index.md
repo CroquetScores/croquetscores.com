@@ -1,7 +1,5 @@
 # المساعدة
 
-إزاي تستخدم الموقع، للناس اللي بيستخدموه.
-
 ## أسئلة شائعة {#popular-questions}
 
 - [إزاي أعمل بطولة؟](tournament-managers/standard-tournament/creating-a-tournament.md)
