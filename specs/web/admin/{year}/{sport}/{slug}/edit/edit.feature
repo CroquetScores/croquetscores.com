@@ -148,6 +148,12 @@ Feature: A tournament is changed in the admin
       When "2026-10-04" is typed as the "Starts"
       Then "Finishes" says "2026-10-05"
 
+    Scenario: A finish emptied while changing a tournament stays empty when the start moves
+      Given the page to edit "Spring Open" is open
+      And "" is typed as the "Finishes"
+      When "2026-10-04" is typed as the "Starts"
+      Then "Finishes" is empty
+
   Rule: Saving keeps the change and takes the reader to the tournament
 
     Scenario: A renamed tournament keeps its address

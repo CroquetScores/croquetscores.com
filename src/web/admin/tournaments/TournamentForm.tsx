@@ -188,8 +188,11 @@ export const TournamentForm = ({
         // first format, which is Standard on both sites; one being changed
         // begins as it is.
         if (begins !== undefined) return;
-        setStarts(thisMonthBegins());
-        setFinishes(thisMonthBegins());
+        // Read once, so that a clock that crosses into the next month between
+        // two reads cannot give a start and a finish in different ones.
+        const monthBegins = thisMonthBegins();
+        setStarts(monthBegins);
+        setFinishes(monthBegins);
         setSport(answer.sports[0]?.code ?? "");
         setFormat(answer.formats[0]?.code ?? "");
       })
@@ -354,7 +357,12 @@ export const TournamentForm = ({
                       value={finishes}
                       onChange={(event) => {
                         setFinishes(event.target.value);
-                        setFinishChosen(true);
+                        // An emptied finish is one the reader has not chosen, on
+                        // a new tournament, so it follows the start again. A
+                        // tournament being changed has chosen its own.
+                        setFinishChosen(
+                          begins !== undefined || event.target.value !== "",
+                        );
                       }}
                     />
                   )}

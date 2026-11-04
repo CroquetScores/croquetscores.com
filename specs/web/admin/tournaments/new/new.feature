@@ -280,6 +280,11 @@ Feature: A new tournament is created in the admin
     other way would leave a reader who moves the start to the tenth being
     refused for a finish on the first, which they never typed.
 
+    A finish the reader empties is one they have chosen not to have, not one
+    they have chosen, so it follows the start again: a finish left empty would
+    be refused, which is no more than the reader typing the date they emptied.
+    A tournament being changed keeps the finish it has whatever is done to it.
+
     Emptying the start is not moving it: the reader is about to type another,
     and a finish that went with it would be one more field to type again. So
     the finish stays, and follows the start once there is one. This form is
@@ -290,6 +295,16 @@ Feature: A new tournament is created in the admin
       Given the reader's clock reads "2026-11-04T10:00:00Z"
       When the new tournament page is opened
       Then "Starts" says "2026-11-01"
+
+    Scenario: The start is the first of a month with two digits
+      Given the reader's clock reads "2026-12-15T10:00:00Z"
+      When the new tournament page is opened
+      Then "Starts" says "2026-12-01"
+
+    Scenario: The start is the first of the month it is in the year after
+      Given the reader's clock reads "2027-01-15T10:00:00Z"
+      When the new tournament page is opened
+      Then "Starts" says "2027-01-01"
 
     Scenario: The start follows the reader's clock
       Given the reader's clock reads "2027-02-20T10:00:00Z"
@@ -321,6 +336,14 @@ Feature: A new tournament is created in the admin
       And "2026-11-12" is typed as the "Finishes"
       When "2026-11-10" is typed as the "Starts"
       Then "Finishes" says "2026-11-12"
+
+    Scenario: A finish the reader emptied follows the start again
+      Given the reader's clock reads "2026-11-04T10:00:00Z"
+      And the new tournament page is open
+      And "2026-11-12" is typed as the "Finishes"
+      And "" is typed as the "Finishes"
+      When "2026-11-10" is typed as the "Starts"
+      Then "Finishes" says "2026-11-10"
 
     Scenario: Emptying the start leaves the finish where it was
       Given the reader's clock reads "2026-11-04T10:00:00Z"
