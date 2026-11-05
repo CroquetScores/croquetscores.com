@@ -581,12 +581,24 @@ const englandVScotland = (() => {
   );
 })();
 
+// Whether a Welsh club is the home side, named first, as "Glamorgan v Bath" or
+// "Glamorgan B vs Bath". Only the home side says where it was played: away
+// from home the club's name comes second. Glamorgan played at home in Wales in
+// both sports, but Dyffryn only in Golf Croquet, since at least one of its
+// Association Croquet home matches was played at Cheltenham.
+const welshClubAtHome = (name: string, sport: string): boolean =>
+  wholeWord(String.raw`Glamorgan(?:\s+[A-Z])?\s+vs?`, "i").test(name) ||
+  (sport === "gc" && wholeWord(String.raw`Dyffryn\s+vs?`, "i").test(name));
+
 // What a name says of a tournament put in one country only, by the code of the
 // country it was put in, in the order they are tried. Each is given the name as
 // it was written, and says the country the tournament was played in, or
 // nothing where the name says none (ImportTournaments.feature).
 const namesSayingACountryForOne: Readonly<
-  Record<string, (name: string, startYear: number) => string | undefined>
+  Record<
+    string,
+    (name: string, startYear: number, sport: string) => string | undefined
+  >
 > = {
   // South African has South Africa in it, so the one is asked for.
   na: (name) => (/saca|south africa/i.test(name) ? "za" : undefined),
@@ -607,7 +619,7 @@ const namesSayingACountryForOne: Readonly<
   // their tournaments in England, and only there are their names looked for:
   // Dublin and Edinburgh are places elsewhere too. SCA is in capitals, since
   // "sca" begins other words and names.
-  england: (name, startYear) =>
+  england: (name, startYear, sport) =>
     wholeWord("Balgreen|Scottish|Edinburgh|Auchincruive", "i").test(name) ||
     wholeWord("SCA").test(name)
       ? "scotland"
@@ -617,13 +629,16 @@ const namesSayingACountryForOne: Readonly<
           (wholeWord("Mc ?Weeney", "i").test(name) &&
             mcWeeneyYearsInIreland.has(startYear))
         ? "ie"
-        : undefined,
+        : welshClubAtHome(name, sport)
+          ? "wales"
+          : undefined,
 };
 
 const countryPlayedIn = (
   said: Country,
   name: string,
   startYear: number,
+  sport: string,
 ): Country => {
   // A flag before the name is how some are written, and would otherwise stop
   // a name that begins with a word from beginning with it.
@@ -639,7 +654,7 @@ const countryPlayedIn = (
     (match
       ? englandVScotlandYears[startYear]
       : (countryNamedIn(written) ??
-        namesSayingACountryForOne[said.code]?.(written, startYear))) ??
+        namesSayingACountryForOne[said.code]?.(written, startYear, sport))) ??
     countriesPlayedInInstead[said.code];
   return Countries.thereAre.find(country ?? "") ?? said;
 };
@@ -759,7 +774,13 @@ export class ImportTournaments implements Importer<OldTournament> {
           : undefined) ?? "",
       );
       const country =
-        checked ?? countryPlayedIn(saidCountry, document.Name, startYear);
+        checked ??
+        countryPlayedIn(
+          saidCountry,
+          document.Name,
+          startYear,
+          document.SportType.trim().toLowerCase(),
+        );
       const region =
         checked !== undefined ||
         country.code !== saidCountry.code ||

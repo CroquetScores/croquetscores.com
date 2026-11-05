@@ -1781,6 +1781,64 @@ Feature: Importing the old sites' tournaments
         | SCA Open            |
         | Carrickmines Open   |
 
+    Scenario Outline: A tournament put in England whose name has a Welsh club playing at home is in Wales
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament is in the sport "<sport>"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "wales"
+
+      Examples:
+        | sport | name                                          |
+        | GC    | SWF Dyffryn v Nailsea                         |
+        | GC    | SWF Golf League Dyffryn v Nailsea             |
+        | GC    | SWCF Level Dyffryn v Westons Mare             |
+        | GC    | SWCF Level Glamorgan v Westons Mare           |
+        | AC    | SWF Glamorgan v Bristol B                     |
+        | AC    | SWFED Glamorgan v Bath                        |
+        | GC    | SWF Glamorgan v Bristol Level Golf            |
+        | AC    | SWCF Advanced League Div 3 Glamorgan B vs Bath |
+        | GC    | SWF Golf Level League Glamorgan v Budleigh Salterton B |
+        | gc    | swf dyffryn v nailsea                         |
+
+    Scenario: A match Dyffryn plays at home in Association Croquet is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "SWF Dyffryn v Cheltenham"
+      And the tournament is in the sport "AC"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+    Scenario Outline: A tournament whose name has a Welsh club in it but not as the home side is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "<name>"
+      And the tournament is in the sport "GC"
+      And the tournament's time zone is "GMT Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "england"
+
+      Examples:
+        | name                    |
+        | Nailsea v Dyffryn       |
+        | Bath v Glamorgan        |
+        | Dyffryn Open            |
+        | Glamorgan Open          |
+        | Dyffryns v Nailsea      |
+        | Glamorgans v Bath       |
+
+    Scenario: A tournament put in another country than England with a Welsh club playing at home is not moved
+      Given a tournament "tournaments/12" on "croquetscores.com"
+      And the tournament was called "Glamorgan v Bath"
+      And the tournament is in the sport "GC"
+      And the tournament's time zone is "AUS Eastern Standard Time"
+      And the tournament was created by "users/1"
+      When the tournament is imported
+      Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "au"
+
     Scenario Outline: A tournament whose name begins with a word that says its country is in that country
       Given a tournament "tournaments/12" on "croquetscores.com"
       And the tournament was called "<name>"
