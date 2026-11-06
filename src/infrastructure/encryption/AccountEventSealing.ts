@@ -25,9 +25,7 @@
 // it was linked to reads back as "google-account-forgotten-" and the uuid,
 // which no Google account is known by, since Google knows every one by digits
 // alone. The uuid is the id's, so that the account reads back the same every
-// time. An account forgotten before this was done has no key and events still
-// holding what was kept; it reads back the same, and is rewritten by
-// rewriteForgotten when the script that does so is run.
+// time.
 //
 // What other sites an account may be linked to, Facebook among them, holds
 // another subject that would tie a forgotten account to the person, and is
@@ -73,28 +71,10 @@ export class AccountEventSealing implements KeptEventSealing {
     private readonly unitOfWork: UnitOfWork,
   ) {}
 
-  /**
-   * Rewrites the events of every account whose forgetting is recorded and
-   * whose events have not been rewritten, which are those forgotten before
-   * forgetting rewrote them, and answers how many accounts that was. One
-   * already rewritten is left as it was, so this can be run again.
-   */
-  async rewriteForgotten(): Promise<number> {
-    const { rows } = await this.unitOfWork.connection().query<{
-      stream_id: string;
-    }>(`select distinct stream_id from events where name = 'account-forgotten'`);
-    let rewritten = 0;
-    for (const { stream_id } of rows) {
-      if (await this.#rewrite(AccountId.from(stream_id))) rewritten++;
-    }
-    return rewritten;
-  }
-
-  // Whether anything of the account's events was rewritten now: not when all of
-  // it was before. Asked of what the events hold and not of the key's flag,
-  // which says the account is forgotten and not that its events were rewritten:
-  // an account marked forgotten whose events were not is repaired here.
-  async #rewrite(account: AccountId): Promise<boolean> {
+  // Asked of what the events hold and not of the key's flag, which says the
+  // account is forgotten and not that its events were rewritten: an account
+  // marked forgotten whose events were not is repaired here.
+  async #rewrite(account: AccountId): Promise<void> {
     await this.keys.ensureFor(account);
     const connection = this.unitOfWork.connection();
     const { rows } = await connection.query<{
@@ -135,7 +115,6 @@ export class AccountEventSealing implements KeptEventSealing {
       ]);
     }
     await this.keys.forget(account);
-    return rewrote;
   }
 
   // Whether `kept` is already `replacement`, encrypted with the account's key.

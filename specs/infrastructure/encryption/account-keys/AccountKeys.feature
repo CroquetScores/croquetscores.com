@@ -302,55 +302,6 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the second account is read back
       Then the account is called "Alex Other"
 
-  Rule: An account forgotten before its events were rewritten is rewritten afterwards
-
-    Accounts were forgotten by deleting their key before they were forgotten
-    by rewriting their events. Their events still hold what was kept, which
-    nobody can read, and they have no key. Rewriting every forgotten account's
-    events gives such an account the key it is rewritten with, and leaves one
-    already rewritten as it was, so that it can be done again. It is a script
-    (`npm run db:rewrite-forgotten-accounts`) that turns database access off
-    first, as rebuilding the read models does, and rebuilds them afterwards,
-    since a read model made from the events as they were holds what they held.
-
-    Scenario: An account forgotten by deleting its key is given a key
-      Given an account was forgotten by deleting its key
-      When the forgotten accounts are rewritten
-      Then the account has a key
-
-    Scenario: An account forgotten by deleting its key is rewritten
-      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" was forgotten by deleting its key
-      And every event is noted
-      When the forgotten accounts are rewritten
-      And the account is read back
-      Then every event that held something personal is kept differently
-      And the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
-
-    Scenario: An account marked forgotten whose events were not rewritten is rewritten
-      Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" was forgotten by deleting its key
-      And the account's key is made and marked forgotten
-      And every event is noted
-      When the forgotten accounts are rewritten
-      And the account is read back
-      Then every event that held something personal is kept differently
-      And the account is called "Forgotten Account 7c9e6679-7425-40de-944b-e07fc1f90ae7"
-
-    Scenario: An account that is not forgotten is left as it was
-      Given an account is registered at "someone@example.com"
-      And the account's email address is confirmed as "Sam Someone"
-      And every event is noted
-      When the forgotten accounts are rewritten
-      And the account is read back
-      Then every event is kept exactly as it was before
-      And the account is called "Sam Someone"
-
-    Scenario: Rewriting twice leaves the events as the first time did
-      Given an account was forgotten by deleting its key
-      And the forgotten accounts are rewritten
-      And every event is noted
-      When the forgotten accounts are rewritten
-      Then every event is kept exactly as it was before
-
   Rule: The site's key is needed, and changing it rewrites none of the events
 
     Scenario: Without the site's key the account key store cannot be made
