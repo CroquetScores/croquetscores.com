@@ -1,8 +1,14 @@
+# The name Docker Desktop shows the group by. Without it, it is the name of the
+# folder this is in, which is croquetscorescom here and is different in every
+# checkout that is not called the same.
+name: croquet_scores_development
+
 services:
   postgres:
     image: postgres:18-alpine
+    container_name: croquet_scores_development
     environment:
-      POSTGRES_DB: croquetscores-dev
+      POSTGRES_DB: croquet_scores_development
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     # Nothing written here is kept past npm run db:down, so none of it is worth
@@ -26,3 +32,9 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+
+# Named, not left to be worked out from the folder, which is where
+# croquetscorescom_default came from and which changes with the checkout.
+networks:
+  default:
+    name: croquet_scores_development

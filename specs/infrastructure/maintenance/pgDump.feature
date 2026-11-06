@@ -102,9 +102,9 @@ Feature: Asking pg_dump for a copy of some tables of a database
       Then pg_dump is asked for the user "back@up"
 
     Scenario: A database with a hyphen in its name is asked for as it is
-      Given the address "postgres://backup:secret-word@website.example:5433/croquetscores-dev"
+      Given the address "postgres://backup:secret-word@website.example:5433/croquet_scores_development"
       When pg_dump is asked for a dump into "C:\backups\one.dump.partial"
-      Then pg_dump is asked for the database "croquetscores-dev"
+      Then pg_dump is asked for the database "croquet_scores_development"
 
   Rule: The password is not in the arguments
 

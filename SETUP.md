@@ -248,11 +248,17 @@ The admin app is excluded from the root config so browser globals never reach se
 `compose.yaml`:
 
 ```yaml
+# The name Docker Desktop shows the group by. Without it, it is the name of the
+# folder this is in, which is croquetscorescom here and is different in every
+# checkout that is not called the same.
+name: croquet_scores_development
+
 services:
   postgres:
     image: postgres:18-alpine
+    container_name: croquet_scores_development
     environment:
-      POSTGRES_DB: croquetscores-dev
+      POSTGRES_DB: croquet_scores_development
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     # Nothing written here is kept past npm run db:down, so none of it is worth
@@ -276,6 +282,12 @@ services:
       interval: 2s
       timeout: 3s
       retries: 30
+
+# Named, not left to be worked out from the folder, which is where
+# croquetscorescom_default came from and which changes with the checkout.
+networks:
+  default:
+    name: croquet_scores_development
 ```
 
 The credentials here are not a secret: they reach a development container on a developer's own machine, and writing them down is what lets a fresh clone run the specs without anyone being told anything first. Anything real is configured per environment (§6.1). A Postgres already listening on 5432 must be stopped before bringing this one up, or used in place of it (below).
@@ -302,7 +314,7 @@ and then `wsl --shutdown` in PowerShell, and WSL is started again. `wslinfo --ne
 Settings are read once, at startup, by `src/infrastructure/config/`, which validates them and hands out a typed object. Nothing else reads the environment. Values come from environment variables, with a `.env` file — git-ignored — for development:
 
 ```
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/croquetscores-dev
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/croquet_scores_development
 SESSION_COOKIE_SECRET=
 TOKEN_SIGNING_KEY=
 TRUSTED_PROXY=
