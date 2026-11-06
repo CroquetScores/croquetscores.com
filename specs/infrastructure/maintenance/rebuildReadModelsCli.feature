@@ -72,11 +72,19 @@ Feature: Rebuilding the read models turns database access off while it runs
   and the script says what failed and exits with failure. The one thing it does
   not do is carry on: whoever is told it failed decides whether to try again.
 
-  Where access is already off somebody else is doing maintenance, and a
-  rebuild that turned it on again at the end would end theirs. So it is
-  refused, and nothing is changed. It is decided in one step with turning
-  access off (`FileDatabaseAccess.feature`), so that two rebuilds begun at once
-  are not both let.
+  Where access is already off somebody is doing maintenance, often the
+  person running the rebuild, who turned it off to stop the site taking
+  anything in before the data was loaded, and who has said when to come back
+  and what to tell readers. A rebuild that turned it on again at the end would
+  end that, and one that moved the return would replace what they said. So
+  the rebuild goes on, says that access was already off, and leaves the switch
+  exactly as it found it: not turned off again, the expected return and the
+  words not moved, and not turned on at the end, whether the rebuild did or did
+  not succeed. Turning it on is theirs to do (`databaseAccess.feature`). The
+  minutes are still needed and still checked, though they are not used.
+  Looking and turning off is still one step (`FileDatabaseAccess.feature`), so
+  a rebuild begun at once with another does not turn access off twice, but both
+  now go on, and the first to finish does not turn it on either.
 
   What is told to readers is a convenience, and is not worth a rebuild. Where
   the site's expected return cannot be moved, the script says so and goes on
@@ -460,25 +468,73 @@ Feature: Rebuilding the read models turns database access off while it runs
       Then the rebuild script says access could not be turned on
       And the rebuild script says Turn it on with: npm run db:access -- on
 
-  Rule: Maintenance already under way is not ended
+  Rule: Access that is already off is left off
 
-    Scenario: Access already off refuses the rebuild
+    Scenario: The rebuild goes on when access is already off
       Given database access is turned off for 30 minutes
       When the rebuild script is run with "--minutes 20"
-      Then the rebuild script exits with failure
+      Then the read models were made again
 
-    Scenario: Access already off says so
+    Scenario: Access is off while the read models are made again
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 20"
+      Then access was off while the read models were made again
+
+    Scenario: The script says access is already off
       Given database access is turned off for 30 minutes
       When the rebuild script is run with "--minutes 20"
       Then the rebuild script says database access is already off
 
-    Scenario: Access already off rebuilds nothing
+    Scenario: The script does not say it turned access off
       Given database access is turned off for 30 minutes
       When the rebuild script is run with "--minutes 20"
-      Then no read model was rebuilt
+      Then the rebuild script does not say database access is off for 20 minutes
 
-    Scenario: Access already off is left as it was
-      Given the moment "2026-10-13T10:00:00Z"
-      And database access is turned off for 30 minutes
+    Scenario: The expected return is not moved
+      Given database access is turned off for 30 minutes
+      And the rebuild takes 10 minutes
       When the rebuild script is run with "--minutes 20"
       Then access is expected back at "2026-10-13T10:30:00Z"
+
+    Scenario: Access is off afterwards
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 20"
+      Then database access is off
+
+    Scenario: The script says access is left off
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says database access is left off
+
+    Scenario: The script does not say access is on
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script does not say database access is on
+
+    Scenario: The script exits with success
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script exits with success
+
+    Scenario: A rebuild that fails leaves access off
+      Given database access is turned off for 30 minutes
+      And the rebuild fails
+      When the rebuild script is run with "--minutes 20"
+      Then database access is off
+
+    Scenario: A rebuild that fails says what failed
+      Given database access is turned off for 30 minutes
+      And the rebuild fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script says the rebuild failed
+
+    Scenario: A rebuild that fails exits with failure
+      Given database access is turned off for 30 minutes
+      And the rebuild fails
+      When the rebuild script is run with "--minutes 20"
+      Then the rebuild script exits with failure
+
+    Scenario: Minutes that are not allowed are still refused
+      Given database access is turned off for 30 minutes
+      When the rebuild script is run with "--minutes 0"
+      Then no read model was rebuilt

@@ -5,7 +5,9 @@
 // Database access is turned off for the minutes it is expected to take and on
 // again when it is done, so the site is down for maintenance rather than
 // answering from read models that are about to change, and the site need not
-// be stopped. It says how many streams there are, how far it has got every 10
+// be stopped. Where it is already off, as when somebody turned it off before
+// loading the data, it is left as it is found: not turned off again, its
+// expected return not moved, and not turned on at the end. It says how many streams there are, how far it has got every 10
 // seconds, and how long it took. Whatever DATABASE_URL names is rebuilt, and
 // nothing is asked first.
 //
