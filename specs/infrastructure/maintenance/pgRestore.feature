@@ -89,9 +89,9 @@ Feature: Asking pg_restore to put a backup file's data into a database
       Then pg_restore was run as "pg_restore"
 
     Scenario: The program is in the folder pg_dump is in
-      Given pg_dump is named "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Given pg_dump is named "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
       When pg_restore is asked to restore "C:\backups\one.dump"
-      Then pg_restore was run as "C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"
+      Then pg_restore was run as "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe"
 
     Scenario: The program is in the folder pg_dump is in on another computer
       Given pg_dump is named "/usr/lib/postgresql/17/bin/pg_dump"
@@ -99,7 +99,7 @@ Feature: Asking pg_restore to put a backup file's data into a database
       Then pg_restore was run as "/usr/lib/postgresql/17/bin/pg_restore"
 
     Scenario: A name that is not pg_dump's is left to the computer to find
-      Given pg_dump is named "C:\Program Files\PostgreSQL\17\bin"
+      Given pg_dump is named "C:\Program Files\PostgreSQL\18\bin"
       When pg_restore is asked to restore "C:\backups\one.dump"
       Then pg_restore was run as "pg_restore"
 

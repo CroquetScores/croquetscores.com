@@ -178,7 +178,7 @@ export const runPgDump = async (
     const hint =
       request.program === undefined
         ? ""
-        : " PG_DUMP_PATH has to name the file, as C:\\Program Files\\PostgreSQL\\17\\bin\\pg_dump.exe, and not the folder it is in.";
+        : " PG_DUMP_PATH has to name the file, as C:\\Program Files\\PostgreSQL\\18\\bin\\pg_dump.exe, and not the folder it is in.";
     throw new PgDumpRefused(
       "PgDump.NotRun",
       `pg_dump could not be run: ${why}${hint}`,

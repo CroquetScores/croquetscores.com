@@ -9,7 +9,7 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 ## 1. Requirements, and the decisions they force
 
 - **TypeScript**: Node 22 LTS, npm, ESM, `NodeNext` resolution, `strict`
-- **Postgres in Docker**: `compose.yaml`, Postgres 17, port 5432, one definition used by developers and CI
+- **Postgres in Docker**: `compose.yaml`, Postgres 18, port 5432, one definition used by developers and CI
 - **Auth: email address + password**: argon2id hashing, opaque session cookie for browsers
 - **Auth: Google and Facebook**: Google over OIDC, Facebook over OAuth 2.0 + Graph
 - **Auth: the public API, for mobile apps and other people's software**: Bearer JWT access token + rotating refresh token. Not built yet
@@ -250,7 +250,7 @@ The admin app is excluded from the root config so browser globals never reach se
 ```yaml
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_DB: croquetscores-dev
       POSTGRES_USER: postgres

@@ -210,7 +210,7 @@ Then(
   "the container keeps its data in the volume {string}",
   function (this: SpecWorld, volume: string) {
     assert.deepEqual(valuesOf(madeOf(this), "--volume"), [
-      `${volume}:/var/lib/postgresql/data`,
+      `${volume}:/var/lib/postgresql`,
     ]);
   },
 );

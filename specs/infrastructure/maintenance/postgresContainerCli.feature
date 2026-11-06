@@ -156,7 +156,7 @@ Feature: Making a Postgres container
       Then a container called "my-postgres" was made
 
     Scenario: It is the Postgres the site is developed against
-      Then the container was made from "postgres:17-alpine"
+      Then the container was made from "postgres:18-alpine"
 
     Scenario: It runs in the background
       Then the container was made to run in the background

@@ -48,7 +48,7 @@ export interface CreateContainerWorld {
 
 // The image the site is developed against (compose.yaml), so that what is kept
 // in it is kept by the Postgres the site's migrations are written for.
-const IMAGE = "postgres:17-alpine";
+const IMAGE = "postgres:18-alpine";
 // Postgres takes a few seconds to be ready on a computer that has not run it
 // before, and a minute is long enough to say something is wrong.
 const TRIES = 30;
@@ -157,9 +157,13 @@ export const runCreateContainer = async (
         "--publish",
         `127.0.0.1:${String(port)}:5432`,
         // A volume of its own, so that removing the container and making it
-        // again does not lose what was kept.
+        // again does not lose what was kept. At /var/lib/postgresql and not
+        // .../data, which was right up to Postgres 17: from 18 the image keeps
+        // its data in a folder named for the version beneath it, and a volume
+        // at the old place is not where it writes, so it would be an anonymous
+        // volume that is lost with the container that kept the data.
         "--volume",
-        `${name}-data:/var/lib/postgresql/data`,
+        `${name}-data:/var/lib/postgresql`,
         "--env",
         `POSTGRES_USER=${username}`,
         "--env",

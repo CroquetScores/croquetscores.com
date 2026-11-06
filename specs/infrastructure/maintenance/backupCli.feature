@@ -110,9 +110,9 @@ Feature: Backing up the website's events and accounts' keys to a file
       Then the dump was written to a name that is not the file's
 
     Scenario: The program is the one the settings name
-      Given the settings name the program "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Given the settings name the program "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
       When the backup is run
-      Then the dump was made by "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Then the dump was made by "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
 
     Scenario: The program is pg_dump where the settings name none
       When the backup is run
