@@ -256,6 +256,10 @@ name: croquet_scores_development
 services:
   postgres:
     image: postgres:18-alpine
+    # Fixed, so that Docker Desktop, docker ps and a person all call it one
+    # thing. The cost is that a second checkout cannot bring up its own: it
+    # would clash on the name as it already does on port 5432. Stop one before
+    # starting the other.
     container_name: croquet_scores_development
     environment:
       POSTGRES_DB: croquet_scores_development

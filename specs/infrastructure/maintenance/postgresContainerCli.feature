@@ -22,7 +22,13 @@ Feature: Making a Postgres container
   What it makes is the same Postgres the site is developed against, kept for
   the long run and not for a test: its data is in a volume of its own that
   outlives the container, so that removing the container and making it again
-  does not lose what was kept; it starts again when Docker does, and when the
+  does not lose what was kept, and the volume is named for the Postgres
+  version as well as the container, as "my-postgres-18-data". Postgres 18
+  keeps its data in a different place in the volume from 17, so a volume made
+  for 17 and mounted for 18 would have its files loose at the top and the new
+  Postgres would start a database of its own beside them, with nothing to say
+  why what was kept is not there. A volume of the other version is left as it
+  is, with its data in it; it starts again when Docker does, and when the
   computer does; and it is reached from this computer only, not from the
   network, since a database is not to be offered to the room unless somebody
   decides it is.
@@ -162,7 +168,7 @@ Feature: Making a Postgres container
       Then the container was made to run in the background
 
     Scenario: Its data is in a volume of its own
-      Then the container keeps its data in the volume "my-postgres-data"
+      Then the container keeps its data in the volume "my-postgres-18-data"
 
     Scenario: It starts again when Docker does
       Then the container was made to start again unless it was stopped
