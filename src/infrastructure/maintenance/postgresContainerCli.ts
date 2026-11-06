@@ -145,7 +145,6 @@ export const runCreateContainer = async (
   // made a container before will find this one empty and think what they kept
   // is gone.
   const earlierVolume = `${name}-data`;
-  let earlierVolumeIsThere = false;
 
   try {
     if ((await docker.containers()).includes(name)) {
@@ -154,7 +153,9 @@ export const runCreateContainer = async (
       );
     }
 
-    earlierVolumeIsThere = (await docker.volumes()).includes(earlierVolume);
+    const earlierVolumeIsThere = (await docker.volumes()).includes(
+      earlierVolume,
+    );
 
     const made = await docker.run(
       [
@@ -208,6 +209,11 @@ export const runCreateContainer = async (
       await wait(BETWEEN_TRIES);
     }
     say("Postgres is ready.");
+    if (earlierVolumeIsThere) {
+      say(
+        `There is a volume called ${earlierVolume} from an earlier Postgres, with its data in it. This container does not use it.`,
+      );
+    }
   } catch (failure) {
     if (failure instanceof DockerUnavailable) {
       return refuse(
@@ -215,12 +221,6 @@ export const runCreateContainer = async (
       );
     }
     throw failure;
-  }
-
-  if (earlierVolumeIsThere) {
-    say(
-      `There is a volume called ${earlierVolume} from an earlier Postgres, with its data in it. This container does not use it.`,
-    );
   }
 
   const address = `postgres://${username}:${encodeURIComponent(password)}@127.0.0.1:${String(port)}/${username}`;
