@@ -509,17 +509,6 @@ export interface Application {
    */
   readonly changeSiteKey: (newSiteKey: string) => Promise<void>;
   /**
-   * Rewrites what is personal in the events of every account forgotten before
-   * forgetting rewrote them and makes every read model again from the events
-   * as they then are, in one transaction, and answers how many accounts that
-   * was and how many events the read models were made from. For the
-   * maintenance script that does it (scripts/rewrite-forgotten-accounts.mjs);
-   * no route calls it.
-   */
-  readonly rewriteForgottenAccountsAndRebuildReadModels: (
-    progress?: RebuildProgress,
-  ) => Promise<{ readonly accounts: number; readonly events: number }>;
-  /**
    * Resolves once the administrator has been told, or has failed to be, of
    * every request that found the database gone. The answer to the reader does
    * not wait for it, so whatever wants to see the email waits here instead.
@@ -924,17 +913,6 @@ export const buildApplication = async (
   // key it was made with; the setting is changed and the site started again.
   const changeSiteKey = (newSiteKey: string): Promise<void> =>
     unitOfWork.inTransaction(() => accountKeys.changeSiteKey(newSiteKey));
-  // The rewrite and the rebuild after it are one transaction, so that neither
-  // stands without the other: a rebuild that fails puts the events back as they
-  // were, and the read models are never left holding what the events no longer
-  // do.
-  const rewriteForgottenAccountsAndRebuildReadModels = (
-    progress?: RebuildProgress,
-  ): Promise<{ readonly accounts: number; readonly events: number }> =>
-    unitOfWork.inTransaction(async () => {
-      const accounts = await sealing.rewriteForgotten();
-      return { accounts, events: await rebuildInside(progress) };
-    });
   // Reading every event is not something the EventStore the application
   // hands out can do, since no command or query has any business doing it, so
   // the maintenance script that rebuilds the read models asks for it here, and
@@ -1771,7 +1749,6 @@ export const buildApplication = async (
     tournamentsByAccount,
     rebuildReadModels,
     changeSiteKey,
-    rewriteForgottenAccountsAndRebuildReadModels,
     databaseOutageTold: () => databaseOutage.settled(),
     administratorTold: async () => {
       await databaseOutage.settled();

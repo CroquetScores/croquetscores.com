@@ -17,7 +17,6 @@
     "db:migrate": "tsx src/infrastructure/database/migrate-cli.ts",
     "db:rebuild-read-models": "tsx scripts/rebuild-read-models.mjs",
     "db:restore": "tsx scripts/restore.mjs",
-    "db:rewrite-forgotten-accounts": "tsx scripts/rewrite-forgotten-accounts.mjs",
     "db:up": "docker compose up -d --wait && npm run dev:setup",
     "deploy": "tsx scripts/deploy.mjs",
     "dev": "tsx watch src/web/server.ts",

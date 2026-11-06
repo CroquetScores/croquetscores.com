@@ -156,7 +156,7 @@ LastPass is a copy, and a copy goes out of date. **Update the note whenever the 
 - **Each run's email** says it worked, and what the file is called and how big it is. Files that are very much smaller than the one before are something to look at. A subject that begins `WARNING:` means it failed (§6).
 - **No email at all** is a failure: the task did not run, the computer was off, or the email could not be sent. Look at the scheduler's last result, and at the newest file's name in the folder.
 - **Once a month**, read one back: `pg_restore --list <file>` names what is in it, and should list the tables `events` and `account_keys` and their data. A backup that has not been read back is a hope.
-- **Removing old files is yours to do**, and is also a decision: an account that is forgotten on the website is forgotten by deleting its key there, for good, but **a file made before then still has the key, and the account stays readable in it** for as long as the file is kept. So how long files are kept is how long a forgotten account lasts. Keep fewer than you would like to, and none of the ones from before an account was forgotten past what you have told that person.
+- **Removing old files is yours to do**, and is also a decision: an account that is forgotten on the website has its name, email address and Google account rewritten in the events there, for good, but **a file made before then still has them, and the account stays readable in it** for as long as the file is kept. So how long files are kept is how long a forgotten account lasts. Keep fewer than you would like to, and none of the ones from before an account was forgotten past what you have told that person.
 
 ## 6. When a run fails
 

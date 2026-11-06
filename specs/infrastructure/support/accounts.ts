@@ -37,8 +37,6 @@ export interface Accounts {
   siteKey: string;
   keys: AccountKeys;
   store: PostgresEventStore;
-  /** Rewrites the events of the accounts forgotten before they were rewritten. */
-  rewriteForgotten: () => Promise<number>;
   readModel: AccountsByEmailAddress;
   byGoogleAccount: AccountsByGoogleAccount;
   byRole: AccountsByRole;
@@ -69,7 +67,6 @@ export const storesFor = (
 ): {
   keys: AccountKeys;
   store: PostgresEventStore;
-  rewriteForgotten: () => Promise<number>;
 } => {
   const keys = new AccountKeys(unitOfWorkOf(world), siteKey);
   const sealing = new AccountEventSealing(keys, unitOfWorkOf(world));
@@ -87,7 +84,7 @@ export const storesFor = (
     ),
     sealing,
   );
-  return { keys, store, rewriteForgotten: () => sealing.rewriteForgotten() };
+  return { keys, store };
 };
 
 /**
@@ -100,12 +97,11 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
   const readModel = new AccountsByEmailAddress(unitOfWork, hasher);
   const byGoogleAccount = new AccountsByGoogleAccount(unitOfWork, aSiteKey());
   const byRole = new AccountsByRole(unitOfWork);
-  const { keys, store, rewriteForgotten } = storesFor(world, siteKey);
+  const { keys, store } = storesFor(world, siteKey);
   const kept: Accounts = {
     siteKey,
     keys,
     store,
-    rewriteForgotten,
     readModel,
     byGoogleAccount,
     byRole,
