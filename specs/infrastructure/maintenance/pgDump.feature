@@ -65,9 +65,9 @@ Feature: Asking pg_dump for a copy of some tables of a database
       Then the program run is "pg_dump"
 
     Scenario: The program is the one named
-      Given the program to run is "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Given the program to run is "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
       When pg_dump is asked for a dump
-      Then the program run is "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Then the program run is "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
 
   Rule: The address is given as its parts
 
@@ -102,9 +102,9 @@ Feature: Asking pg_dump for a copy of some tables of a database
       Then pg_dump is asked for the user "back@up"
 
     Scenario: A database with a hyphen in its name is asked for as it is
-      Given the address "postgres://backup:secret-word@website.example:5433/croquetscores-dev"
+      Given the address "postgres://backup:secret-word@website.example:5433/croquet_scores_development"
       When pg_dump is asked for a dump into "C:\backups\one.dump.partial"
-      Then pg_dump is asked for the database "croquetscores-dev"
+      Then pg_dump is asked for the database "croquet_scores_development"
 
   Rule: The password is not in the arguments
 
@@ -163,7 +163,7 @@ Feature: Asking pg_dump for a copy of some tables of a database
       Then it is refused with "PgDump.NotRun"
 
     Scenario: A path that has no program at it says the setting names the file
-      Given the program to run is "C:\Program Files\PostgreSQL\17\bin"
+      Given the program to run is "C:\Program Files\PostgreSQL\18\bin"
       And there is no pg_dump on the computer
       When pg_dump is asked for a dump
       Then the refusal says "PG_DUMP_PATH has to name the file"

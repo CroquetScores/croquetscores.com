@@ -110,9 +110,9 @@ Feature: Backing up the website's events and accounts' keys to a file
       Then the dump was written to a name that is not the file's
 
     Scenario: The program is the one the settings name
-      Given the settings name the program "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Given the settings name the program "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
       When the backup is run
-      Then the dump was made by "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Then the dump was made by "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
 
     Scenario: The program is pg_dump where the settings name none
       When the backup is run
@@ -338,7 +338,7 @@ Feature: Backing up the website's events and accounts' keys to a file
     address is refused before anything is dumped.
 
     Scenario: A database on this computer's own Postgres is refused
-      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquet_scores_development"
       When the backup is run
       Then the backup exits with failure
 
@@ -348,17 +348,17 @@ Feature: Backing up the website's events and accounts' keys to a file
       Then the backup exits with failure
 
     Scenario: A database that is refused tells the administrator
-      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquet_scores_development"
       When the backup is run
       Then the email says the failure was that the website's database is not reached through the tunnel
 
     Scenario: A database that is refused is not dumped
-      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquet_scores_development"
       When the backup is run
       Then pg_dump was not run
 
     Scenario: A database that is refused writes nothing
-      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquetscores-dev"
+      Given the website's database is at "postgres://postgres:postgres@localhost:5432/croquet_scores_development"
       When the backup is run
       Then the folder has 0 files
 

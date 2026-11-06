@@ -56,9 +56,9 @@ Feature: Restoring the website's events and accounts' keys from a backup file
       Then the file was restored into the database
 
     Scenario: The program is the one the settings name
-      Given the settings name pg_dump as "C:\Program Files\PostgreSQL\17\bin\pg_dump.exe"
+      Given the settings name pg_dump as "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
       When the restore is run
-      Then the file was restored by "C:\Program Files\PostgreSQL\17\bin\pg_restore.exe"
+      Then the file was restored by "C:\Program Files\PostgreSQL\18\bin\pg_restore.exe"
 
     Scenario: The program is pg_restore where the settings name none
       When the restore is run

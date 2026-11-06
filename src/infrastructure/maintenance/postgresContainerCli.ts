@@ -20,6 +20,8 @@ export class DockerUnavailable extends Error {
 export interface Docker {
   /** The name of every container there is, running or not. */
   containers(): Promise<readonly string[]>;
+  /** The name of every volume there is, in use or not. */
+  volumes(): Promise<readonly string[]>;
   /**
    * Runs `docker` with `args`, with `environment` added to its own. Where the
    * arguments name a variable without a value, as "-e POSTGRES_PASSWORD",
@@ -48,7 +50,8 @@ export interface CreateContainerWorld {
 
 // The image the site is developed against (compose.yaml), so that what is kept
 // in it is kept by the Postgres the site's migrations are written for.
-const IMAGE = "postgres:17-alpine";
+const MAJOR_VERSION = 18;
+const IMAGE = `postgres:${String(MAJOR_VERSION)}-alpine`;
 // Postgres takes a few seconds to be ready on a computer that has not run it
 // before, and a minute is long enough to say something is wrong.
 const TRIES = 30;
@@ -137,12 +140,22 @@ export const runCreateContainer = async (
   const safe = (text: string): string =>
     text.split(password).join("(the password)");
 
+  // What an earlier script named the volume, before it was named for the
+  // version. It is not used and not touched, and said, because somebody who
+  // made a container before will find this one empty and think what they kept
+  // is gone.
+  const earlierVolume = `${name}-data`;
+
   try {
     if ((await docker.containers()).includes(name)) {
       return refuse(
         `There is a container called ${name} already. It is left as it is.`,
       );
     }
+
+    const earlierVolumeIsThere = (await docker.volumes()).includes(
+      earlierVolume,
+    );
 
     const made = await docker.run(
       [
@@ -157,9 +170,16 @@ export const runCreateContainer = async (
         "--publish",
         `127.0.0.1:${String(port)}:5432`,
         // A volume of its own, so that removing the container and making it
-        // again does not lose what was kept.
+        // again does not lose what was kept. At /var/lib/postgresql and not
+        // .../data, which was right up to Postgres 17: from 18 the image keeps
+        // its data in a folder named for the version beneath it, and a volume
+        // at the old place is not where it writes, so it would be an anonymous
+        // volume that is lost with the container that kept the data. Named for
+        // the version too, so that a volume made for 17 is not mounted for 18,
+        // where its files would sit loose and Postgres would start an empty
+        // database beside them without a word. It is left as it is.
         "--volume",
-        `${name}-data:/var/lib/postgresql/data`,
+        `${name}-${String(MAJOR_VERSION)}-data:/var/lib/postgresql`,
         "--env",
         `POSTGRES_USER=${username}`,
         "--env",
@@ -189,6 +209,11 @@ export const runCreateContainer = async (
       await wait(BETWEEN_TRIES);
     }
     say("Postgres is ready.");
+    if (earlierVolumeIsThere) {
+      say(
+        `There is a volume called ${earlierVolume} from an earlier Postgres, with its data in it. This container does not use it.`,
+      );
+    }
   } catch (failure) {
     if (failure instanceof DockerUnavailable) {
       return refuse(
