@@ -89,7 +89,7 @@ It turns the site's database access off itself, for the minutes given, so that t
 
 **Give it more minutes than you expect,** since it is the number readers are told. A rebuild has been timed at 3.8 minutes. How long it takes follows the number of events, since every one is replayed, so time it again when there are many more, and write the new time here.
 
-**Do not turn access off first with `db:access`.** The rebuild refuses when access is already off, saying `Database access is already off.`, because that means somebody else is doing maintenance. If it says so and nobody is, `npm run db:access -- on` (operations.md §3) turns it on.
+**You may turn access off first with `db:access`,** when the site should be down for longer than the rebuild, as when a database is loaded before its read models are made. The rebuild then says `Database access is already off, so it is not turned off again.`, goes on, and leaves access off at the end, with the return and the words as you set them. Turn it on yourself afterwards with `npm run db:access -- on` (operations.md §3). It is the same where somebody else turned it off, so make sure the site is meant to be down before you run it.
 
 **When a migration cannot be lived with by the running site,** or the release is better put up with the site off, stop the site first and put the new version up while nothing is using it. Readers get the proxy's "bad gateway" for the minutes this takes, since the site that would show a maintenance page is the one that is stopped. The same steps as §2, with the stop first, the rebuild before the start where the release needs one, and the start last:
 

@@ -67,23 +67,32 @@ export const runRebuildReadModels = async (
   // What is not a number is not a whole number, which the switch says.
   const minutes = args[1]?.trim() === "" ? Number.NaN : Number(args[1]);
 
-  // Turned off only where it is on, in one step with looking, so that somebody
-  // else's maintenance is not ended by this one finishing, nor two begun at
-  // once both let.
+  // Turned off only where it is on, in one step with looking, so that two
+  // begun at once do not both turn it off. Where it is already off, whoever
+  // turned it off has said when to come back and what to tell readers, and
+  // often it is the person running this, who turned it off before the data was
+  // loaded. A refusal would make them turn it on to run this and off again, and
+  // turning it on at the end would end what they began. So it is left exactly
+  // as found: not moved, and not turned on. Somebody else's maintenance is
+  // protected the same way, and so is the rare case of two rebuilds at once,
+  // which now both go on.
+  let turnedOff = true;
   try {
     await access.turnOffIfOn(minutes, now());
   } catch (failure) {
-    if (failure instanceof DatabaseAccessRefused) {
-      return refuse(
-        failure.code === "DatabaseAccess.AlreadyOff"
-          ? "Database access is already off."
-          : minutesRefusalSaid(failure.code),
-      );
+    if (!(failure instanceof DatabaseAccessRefused)) throw failure;
+    if (failure.code !== "DatabaseAccess.AlreadyOff") {
+      return refuse(minutesRefusalSaid(failure.code));
     }
-    throw failure;
+    turnedOff = false;
   }
-  say(`Database access is off for ${String(minutes)} minutes.`);
-  await wait(FOR_THE_SITE_TO_NOTICE);
+  if (turnedOff) {
+    say(`Database access is off for ${String(minutes)} minutes.`);
+    // Not waited for where it was already off: the site has seen that.
+    await wait(FOR_THE_SITE_TO_NOTICE);
+  } else {
+    say("Database access is already off, so it is not turned off again.");
+  }
 
   // What a reader is told is a convenience: it is said once that it could not
   // be moved and the rebuild goes on.
@@ -93,6 +102,8 @@ export const runRebuildReadModels = async (
       rebuilding,
       { now, say },
       ({ completed, total, left, at }) => {
+        // The return was set by somebody else, and is theirs to move.
+        if (!turnedOff) return;
         // The first streams say little of the rest, so what a reader is told is
         // left as it was said until a tenth of them are done.
         if (completed * ENOUGH_TO_GO_BY < total) return;
@@ -126,8 +137,14 @@ export const runRebuildReadModels = async (
     // Every read model is as it was, being one transaction, so the site is
     // safe to serve and is not left down by a failure nobody is watching.
     say(`The rebuild failed: ${failureSaid(failure)}`);
-    await turnedOn(access, say);
+    if (turnedOff) await turnedOn(access, say);
+    else say("Database access is left off, as it was.");
     return { exitCode: 1 };
+  }
+
+  if (!turnedOff) {
+    say("Database access is left off, as it was.");
+    return { exitCode: 0 };
   }
 
   // The rebuild is done and committed, so a failure to turn access on is the
