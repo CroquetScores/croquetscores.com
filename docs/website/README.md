@@ -8,12 +8,11 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 - [configuration.md](configuration.md) — Every setting, which are required, and which must never change
 - [deploying.md](deploying.md) — Putting a new build up, migrating, rebuilding the read models, taking a build down again, and deploying with a script from your computer or from GitHub
 - [operations.md](operations.md) — Knowing it is up, reading the logs, turning the database off for maintenance, and when it goes wrong
-- [beta.md](beta.md) — Running the beta: what counts as a problem, who reads the logs, and what must be true before the second week
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
 - [backup-and-restore.md](backup-and-restore.md) — Copying the events to another machine, and rebuilding the website from the copy
 - [connect-phone.md](connect-phone.md) — For development rather than running the website: opening the site running on your own computer on a phone, through an https tunnel
 
-The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why, and `BETA.md` what the beta's testers are asked to do. What is still to be done before production is the issue https://github.com/CroquetScores/croquetscores.com/issues/286.
+The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why. What is still to be done before production is the issue https://github.com/CroquetScores/croquetscores.com/issues/286.
 
 ---
 
@@ -52,7 +51,7 @@ One server answers for four websites: `croquetscores.com`, `try.croquetscores.co
 - **Development:** `localhost` and `127.0.0.1` on any port are development, and are Croquet Scores and not a try website.
 - **Any other host is refused** with `421 Misdirected Request`, so a mispointed domain is noticed and not quietly served as the wrong sport. The exception is the health check, which answers whatever it was asked for, so that an uptime check by address works (operations.md §1).
 - **Behind the proxy,** the host the reader typed reaches the site as `X-Forwarded-Host`, believed from `TRUSTED_PROXY` and from nowhere else (configuration.md, "What the site works out for itself").
-- **`beta.croquetscores.com` is the beta site.** Inside the new site it counts as `croquetscores.com` for what is kept and read, so a reader of one sees the other's tournaments, but it is reached at its own address and says on every page that it is a beta. It is not a website a tournament can be on. The links in its emails, and the address Google sends a reader back to, are the beta site's own. **While the beta runs, the new site's database is a copy of the old site's production data, and nothing entered on the beta site reaches the old site** (beta.md §1).
+- **`beta.croquetscores.com` is the beta site.** Inside the new site it counts as `croquetscores.com` for what is kept and read, so a reader of one sees the other's tournaments, but it is reached at its own address and says on every page that it is a beta. It is not a website a tournament can be on. The links in its emails, and the address Google sends a reader back to, are the beta site's own. **While the beta runs, the new site's database is a copy of the old site's production data, and nothing entered on the beta site reaches the old site**.
 - **One database** holds all four. They are not four installations.
 
 ## 3. The shortest path
