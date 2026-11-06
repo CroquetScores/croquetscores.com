@@ -20,6 +20,8 @@ export class DockerUnavailable extends Error {
 export interface Docker {
   /** The name of every container there is, running or not. */
   containers(): Promise<readonly string[]>;
+  /** The name of every volume there is, in use or not. */
+  volumes(): Promise<readonly string[]>;
   /**
    * Runs `docker` with `args`, with `environment` added to its own. Where the
    * arguments name a variable without a value, as "-e POSTGRES_PASSWORD",
@@ -138,12 +140,21 @@ export const runCreateContainer = async (
   const safe = (text: string): string =>
     text.split(password).join("(the password)");
 
+  // What an earlier script named the volume, before it was named for the
+  // version. It is not used and not touched, and said, because somebody who
+  // made a container before will find this one empty and think what they kept
+  // is gone.
+  const earlierVolume = `${name}-data`;
+  let earlierVolumeIsThere = false;
+
   try {
     if ((await docker.containers()).includes(name)) {
       return refuse(
         `There is a container called ${name} already. It is left as it is.`,
       );
     }
+
+    earlierVolumeIsThere = (await docker.volumes()).includes(earlierVolume);
 
     const made = await docker.run(
       [
@@ -204,6 +215,12 @@ export const runCreateContainer = async (
       );
     }
     throw failure;
+  }
+
+  if (earlierVolumeIsThere) {
+    say(
+      `There is a volume called ${earlierVolume} from an earlier Postgres, with its data in it. This container does not use it.`,
+    );
   }
 
   const address = `postgres://${username}:${encodeURIComponent(password)}@127.0.0.1:${String(port)}/${username}`;

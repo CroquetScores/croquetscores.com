@@ -36,6 +36,11 @@ const outcome = await runCreateContainer(
       if (answer.exitCode !== 0) throw new DockerUnavailable(answer.output);
       return answer.output.split("\n").filter((line) => line.trim() !== "");
     },
+    volumes: async () => {
+      const answer = await docker(["volume", "ls", "--format", "{{.Name}}"]);
+      if (answer.exitCode !== 0) throw new DockerUnavailable(answer.output);
+      return answer.output.split("\n").filter((line) => line.trim() !== "");
+    },
     run: docker,
     ready: async (name, username) =>
       (await docker(["exec", name, "pg_isready", "--username", username]))

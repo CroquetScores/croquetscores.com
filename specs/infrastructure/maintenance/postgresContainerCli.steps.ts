@@ -1,5 +1,6 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
 
 import {
   type Docker,
@@ -19,6 +20,7 @@ interface Made {
 
 interface Scenario {
   existing: string[];
+  volumes: string[];
   unavailable: boolean;
   refusal: string | undefined;
   // How many tries Postgres takes to be ready, or never.
@@ -35,6 +37,7 @@ const scenarioOf = (world: SpecWorld): Scenario => {
   if (found === undefined) {
     found = {
       existing: [],
+      volumes: [],
       unavailable: false,
       refusal: undefined,
       readyOnTry: 1,
@@ -49,6 +52,10 @@ const scenarioOf = (world: SpecWorld): Scenario => {
 
 Given("a container called {string}", function (this: SpecWorld, name: string) {
   scenarioOf(this).existing.push(name);
+});
+
+Given("a volume called {string}", function (this: SpecWorld, name: string) {
+  scenarioOf(this).volumes.push(name);
 });
 
 Given("Docker cannot be reached", function (this: SpecWorld) {
@@ -80,6 +87,10 @@ const run = async (world: SpecWorld, argumentsText: string): Promise<void> => {
     containers: () => {
       if (scenario.unavailable) return Promise.reject(new DockerUnavailable());
       return Promise.resolve(scenario.existing);
+    },
+    volumes: () => {
+      if (scenario.unavailable) return Promise.reject(new DockerUnavailable());
+      return Promise.resolve(scenario.volumes);
     },
     run: (args, environment) => {
       if (scenario.refusal !== undefined) {
@@ -196,6 +207,43 @@ Then(
   "the container was made from {string}",
   function (this: SpecWorld, image: string) {
     assert.equal(madeOf(this).args.at(-1), image);
+  },
+);
+
+Then(
+  "the container was made from the image compose.yaml names",
+  function (this: SpecWorld) {
+    // Read from the file itself, so that the two cannot be bumped apart: the
+    // script's image and the one a developer's db:up starts are one Postgres.
+    const image = /^\s*image:\s*(postgres:\S+)\s*$/m.exec(
+      readFileSync("compose.yaml", "utf8"),
+    )?.[1];
+    assert.ok(image !== undefined, "compose.yaml names no Postgres image.");
+    assert.equal(madeOf(this).args.at(-1), image);
+  },
+);
+
+Then(
+  "the container script says there is a volume called {string} from an earlier Postgres",
+  function (this: SpecWorld, name: string) {
+    assert.ok(
+      said(this).includes(`volume called ${name} from an earlier Postgres`),
+      said(this),
+    );
+  },
+);
+
+Then(
+  "the container script says the volume is not used",
+  function (this: SpecWorld) {
+    assert.ok(said(this).includes("does not use it"), said(this));
+  },
+);
+
+Then(
+  "the container script does not mention a volume",
+  function (this: SpecWorld) {
+    assert.ok(!said(this).includes("volume called"), said(this));
   },
 );
 

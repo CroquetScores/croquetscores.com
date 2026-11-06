@@ -153,6 +153,41 @@ Feature: Making a Postgres container
       When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
       Then the container script exits with success
 
+  Rule: A volume made for an earlier Postgres is said to be left
+
+    The volume of a container is named for its Postgres version, so that a
+    volume made for 17 is not mounted for 18, where its files would sit loose
+    and Postgres would start an empty database beside them. The volume made
+    for the earlier version is not touched, and still has what was kept in it.
+    Somebody who made a container before this will find the new one empty and
+    take what was kept for lost, so the script says the old volume is there,
+    and that this container does not use it. Moving the data across is theirs
+    to do, from a dump taken from Postgres 17.
+
+    Scenario: A volume made for the earlier Postgres is said to be there
+      Given a volume called "my-postgres-data"
+      When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
+      Then the container script says there is a volume called "my-postgres-data" from an earlier Postgres
+
+    Scenario: It is said not to be used
+      Given a volume called "my-postgres-data"
+      When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
+      Then the container script says the volume is not used
+
+    Scenario: The container is made all the same
+      Given a volume called "my-postgres-data"
+      When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
+      Then the container script exits with success
+
+    Scenario: A volume of another container is no matter
+      Given a volume called "croquet-web-data"
+      When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
+      Then the container script does not mention a volume
+
+    Scenario: No earlier volume says nothing of one
+      When the container script is run with "--name my-postgres --username sam --password secret --port 5433"
+      Then the container script does not mention a volume
+
   Rule: The container is a Postgres kept for the long run
 
     Background:
@@ -163,6 +198,9 @@ Feature: Making a Postgres container
 
     Scenario: It is the Postgres the site is developed against
       Then the container was made from "postgres:18-alpine"
+
+    Scenario: It is the Postgres that compose.yaml names
+      Then the container was made from the image compose.yaml names
 
     Scenario: It runs in the background
       Then the container was made to run in the background
