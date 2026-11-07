@@ -7,16 +7,6 @@ import type {
 import { CompetitionGameAdded } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameAdded.js";
 import { CompetitionGameArchived } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameArchived.js";
 import { CompetitionGameRestored } from "../../domain/aggregates/tournaments/competitions/events/CompetitionGameRestored.js";
-import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
-import { CompetitionArchived } from "../../domain/aggregates/tournaments/events/CompetitionArchived.js";
-import { CompetitionRestored } from "../../domain/aggregates/tournaments/events/CompetitionRestored.js";
-import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/KnockoutAdded.js";
-import { SwissAdded } from "../../domain/aggregates/tournaments/events/SwissAdded.js";
-import { TestAdded } from "../../domain/aggregates/tournaments/events/TestAdded.js";
-import { TournamentArchived } from "../../domain/aggregates/tournaments/events/TournamentArchived.js";
-import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
-import { TournamentRestored } from "../../domain/aggregates/tournaments/events/TournamentRestored.js";
-import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
 import type { Sport } from "../../domain/aggregates/tournaments/value-objects/Sport.js";
 import type { TournamentFilter } from "../../domain/aggregates/tournaments/value-objects/TournamentFilter.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
@@ -86,11 +76,12 @@ const listed = (row: Row): TournamentOfWebsite => ({
  * the years there are tournaments in, without replaying every tournament
  * there is.
  *
- * Games are added to a competition, whose events do not say which tournament
- * it is in, and the tournament's do. So which tournament each competition is
- * in, and each competition's games, are kept apart and put together when
- * asked, which lets a competition's games be projected before the tournament
- * that has it.
+ * The tournaments and the competitions are held once for every read model
+ * of tournaments (`Tournaments`), and what is kept here is each game by its
+ * competition. Games are added to a competition, whose events do not say which
+ * tournament it is in, and the tournament's do, so the games and the
+ * tournaments are put together when asked, which lets a competition's games
+ * be projected before the tournament that has it.
  */
 export class TournamentsByWebsite implements Projection, Asked {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -105,10 +96,9 @@ export class TournamentsByWebsite implements Projection, Asked {
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `truncate tournaments_by_website, tournaments_by_website_competitions,
-                  tournaments_by_website_games`,
-    );
+    await this.unitOfWork
+      .connection()
+      .query(`truncate tournaments_by_website_games`);
   }
 
   /**
@@ -134,8 +124,8 @@ export class TournamentsByWebsite implements Projection, Asked {
       .connection()
       .query<Row & { last_played: Date }>(
         `select ${COLUMNS}, max(g.added_at) as last_played
-           from tournaments_by_website t
-           join tournaments_by_website_competitions c
+           from tournaments t
+           join competitions c
              on c.tournament_id = t.tournament_id and not c.archived
            join tournaments_by_website_games g
              on g.competition_id = c.competition_id and not g.archived
@@ -160,7 +150,7 @@ export class TournamentsByWebsite implements Projection, Asked {
     const narrowed = narrowedBy(filter, 4);
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}
-           from tournaments_by_website t
+           from tournaments t
           where t.website = $1 and not t.archived
             and t.starts between $2 and $3 ${narrowed.where}
           order by t.starts, t.name`,
@@ -172,7 +162,7 @@ export class TournamentsByWebsite implements Projection, Asked {
   async withSports(): Promise<readonly TournamentOfWebsite[]> {
     const { rows } = await this.unitOfWork.connection().query<Row>(
       `select ${COLUMNS}
-           from tournaments_by_website t
+           from tournaments t
           where not t.archived
           order by t.starts, t.name`,
     );
@@ -182,7 +172,7 @@ export class TournamentsByWebsite implements Projection, Asked {
   async yearsOf(website: Website, sport?: Sport): Promise<readonly number[]> {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from starts)::int as year
-           from tournaments_by_website
+           from tournaments
           where website = $1 and not archived
             and ($2::text is null or sport = $2)
           order by year desc`,
@@ -195,88 +185,7 @@ export class TournamentsByWebsite implements Projection, Asked {
   // which is what makes projecting the same events again change nothing.
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
-    if (event instanceof TournamentCreated) {
-      await connection.query(
-        `insert into tournaments_by_website
-           (tournament_id, website, name, starts, finishes, country, region,
-            sport, address, national, international)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-         on conflict (tournament_id) do update
-           set name = excluded.name, starts = excluded.starts,
-               finishes = excluded.finishes, country = excluded.country,
-               region = excluded.region, sport = excluded.sport,
-               address = excluded.address, national = excluded.national,
-               international = excluded.international`,
-        [
-          stream,
-          event.website,
-          event.name,
-          event.starts,
-          event.finishes,
-          event.country,
-          event.region ?? null,
-          event.sport,
-          event.address,
-          event.national,
-          event.international,
-        ],
-      );
-    } else if (event instanceof TournamentUpdated) {
-      await connection.query(
-        `update tournaments_by_website
-            set name = $2, starts = $3, finishes = $4, country = $5,
-                region = $6, sport = $7, address = $8, national = $9,
-                international = $10
-          where tournament_id = $1`,
-        [
-          stream,
-          event.name,
-          event.starts,
-          event.finishes,
-          event.country,
-          event.region ?? null,
-          event.sport,
-          event.address,
-          event.national,
-          event.international,
-        ],
-      );
-    } else if (event instanceof TournamentArchived) {
-      await this.#archived("tournaments_by_website", "tournament_id", [
-        stream,
-        true,
-      ]);
-    } else if (event instanceof TournamentRestored) {
-      await this.#archived("tournaments_by_website", "tournament_id", [
-        stream,
-        false,
-      ]);
-    } else if (
-      event instanceof BlockAdded ||
-      event instanceof KnockoutAdded ||
-      event instanceof SwissAdded ||
-      event instanceof TestAdded
-    ) {
-      await connection.query(
-        `insert into tournaments_by_website_competitions
-           (competition_id, tournament_id)
-         values ($1, $2)
-         on conflict (competition_id) do nothing`,
-        [event.competitionId, stream],
-      );
-    } else if (event instanceof CompetitionArchived) {
-      await this.#archived(
-        "tournaments_by_website_competitions",
-        "competition_id",
-        [event.competitionId, true],
-      );
-    } else if (event instanceof CompetitionRestored) {
-      await this.#archived(
-        "tournaments_by_website_competitions",
-        "competition_id",
-        [event.competitionId, false],
-      );
-    } else if (event instanceof CompetitionGameAdded) {
+    if (event instanceof CompetitionGameAdded) {
       // When it was added is kept as it was first projected, and so is
       // whether it is archived, since a game is added once and projecting it
       // again is not adding it again.
@@ -292,19 +201,6 @@ export class TournamentsByWebsite implements Projection, Asked {
     } else if (event instanceof CompetitionGameRestored) {
       await this.#gameArchived(stream, event.gameId, false);
     }
-  }
-
-  async #archived(
-    table: string,
-    key: string,
-    [id, archived]: readonly [string, boolean],
-  ): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(`update ${table} set archived = $2 where ${key} = $1`, [
-        id,
-        archived,
-      ]);
   }
 
   async #gameArchived(

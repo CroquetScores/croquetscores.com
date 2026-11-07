@@ -259,6 +259,7 @@ import { SignedLinks } from "../infrastructure/identity/SignedLinks.js";
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
+import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
@@ -874,6 +875,8 @@ export const buildApplication = async (
   const accountsByRole = new AccountsByRole(unitOfWork);
 
   const tournamentsByAddress = new TournamentsByAddress(unitOfWork);
+  // What the three that follow are written against, so before them.
+  const heldTournaments = new Tournaments(unitOfWork);
   const tournamentsByAccount = new TournamentsByAccount(unitOfWork);
   const tournamentsByWebsite = new TournamentsByWebsite(unitOfWork);
   const searchByWebsite = new SearchByWebsite(unitOfWork);
@@ -888,6 +891,7 @@ export const buildApplication = async (
     accountsByGoogleAccount,
     accountsByRole,
     tournamentsByAddress,
+    heldTournaments,
     tournamentsByAccount,
     tournamentsByWebsite,
     searchByWebsite,

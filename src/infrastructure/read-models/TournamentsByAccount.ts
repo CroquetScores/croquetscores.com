@@ -4,24 +4,11 @@ import type {
   TournamentsByAccount as Asked,
 } from "../../application/operations/tournaments/TournamentsOfAccount.js";
 import type { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
-import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
-import { BlockUpdated } from "../../domain/aggregates/tournaments/events/BlockUpdated.js";
-import { CompetitionArchived } from "../../domain/aggregates/tournaments/events/CompetitionArchived.js";
-import { CompetitionRestored } from "../../domain/aggregates/tournaments/events/CompetitionRestored.js";
-import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/KnockoutAdded.js";
-import { KnockoutUpdated } from "../../domain/aggregates/tournaments/events/KnockoutUpdated.js";
 import { ManagerAdded } from "../../domain/aggregates/tournaments/events/ManagerAdded.js";
 import { ManagerRemoved } from "../../domain/aggregates/tournaments/events/ManagerRemoved.js";
 import { ScorerAdded } from "../../domain/aggregates/tournaments/events/ScorerAdded.js";
 import { ScorerRemoved } from "../../domain/aggregates/tournaments/events/ScorerRemoved.js";
-import { SwissAdded } from "../../domain/aggregates/tournaments/events/SwissAdded.js";
-import { SwissUpdated } from "../../domain/aggregates/tournaments/events/SwissUpdated.js";
-import { TestAdded } from "../../domain/aggregates/tournaments/events/TestAdded.js";
-import { TestUpdated } from "../../domain/aggregates/tournaments/events/TestUpdated.js";
-import { TournamentArchived } from "../../domain/aggregates/tournaments/events/TournamentArchived.js";
 import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
-import { TournamentRestored } from "../../domain/aggregates/tournaments/events/TournamentRestored.js";
-import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
 import type { Website } from "../../domain/common/Website.js";
@@ -70,9 +57,10 @@ const yearOf = ({ year }: { year: number }): number => year;
  * append, so that the admin can list a reader's tournaments and the years they
  * are in without replaying every tournament there is.
  *
- * What a tournament is and who has a part in it are kept apart: a tournament
- * changed is one row changed, and an account made a manager has nothing to
- * copy from anybody else's row.
+ * What a tournament is, and its competitions, are held once for every read
+ * model of tournaments (`Tournaments`), and what is kept here is who has a
+ * part in it: a tournament changed is one row changed, and an account made a
+ * manager has nothing to copy from anybody else's row.
  */
 export class TournamentsByAccount implements Projection, Asked {
   constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -87,10 +75,7 @@ export class TournamentsByAccount implements Projection, Asked {
 
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
-    await this.unitOfWork.connection().query(
-      `truncate tournaments_by_account, tournaments_by_account_details,
-                  tournaments_by_account_competitions`,
-    );
+    await this.unitOfWork.connection().query(`truncate tournaments_by_account`);
   }
 
   /**
@@ -122,12 +107,12 @@ export class TournamentsByAccount implements Projection, Asked {
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, d.country, d.region, a.part,
               d.national, d.international,
-              exists (select 1 from tournaments_by_account_competitions c
+              exists (select 1 from competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
                 as world_rankings
          from tournaments_by_account a
-         join tournaments_by_account_details d using (tournament_id)
+         join tournaments d using (tournament_id)
         where a.account_id = $1 and d.website = $2
           and extract(year from d.starts) = $3
         order by d.archived, d.starts desc, d.name`,
@@ -143,7 +128,7 @@ export class TournamentsByAccount implements Projection, Asked {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from d.starts)::int as year
            from tournaments_by_account a
-           join tournaments_by_account_details d using (tournament_id)
+           join tournaments d using (tournament_id)
           where a.account_id = $1 and d.website = $2
           order by year desc`,
       [account.value, website.host],
@@ -162,11 +147,11 @@ export class TournamentsByAccount implements Projection, Asked {
               to_char(starts, 'YYYY-MM-DD') as starts,
               to_char(finishes, 'YYYY-MM-DD') as finishes,
               address, archived, country, region, national, international,
-              exists (select 1 from tournaments_by_account_competitions c
+              exists (select 1 from competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
                 as world_rankings
-         from tournaments_by_account_details d
+         from tournaments d
         where website = $1 and extract(year from starts) = $2
         order by archived, starts desc, name`,
       [website.host, year],
@@ -177,7 +162,7 @@ export class TournamentsByAccount implements Projection, Asked {
   async everyYear(website: Website): Promise<readonly number[]> {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from starts)::int as year
-         from tournaments_by_account_details
+         from tournaments
         where website = $1
         order by year desc`,
       [website.host],
@@ -204,11 +189,11 @@ export class TournamentsByAccount implements Projection, Asked {
               to_char(d.finishes, 'YYYY-MM-DD') as finishes,
               d.address, d.archived, d.country, d.region, a.part,
               d.national, d.international,
-              exists (select 1 from tournaments_by_account_competitions c
+              exists (select 1 from competitions c
                        where c.tournament_id = d.tournament_id
                          and c.world_rankings and not c.archived)
                 as world_rankings
-         from tournaments_by_account_details d
+         from tournaments d
          left join tournaments_by_account a
            on a.tournament_id = d.tournament_id and a.account_id = $1
         where d.website = $2 and extract(year from d.starts) = $3
@@ -227,7 +212,7 @@ export class TournamentsByAccount implements Projection, Asked {
   ): Promise<readonly number[]> {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from d.starts)::int as year
-         from tournaments_by_account_details d
+         from tournaments d
          left join tournaments_by_account a
            on a.tournament_id = d.tournament_id and a.account_id = $1
         where d.website = $2
@@ -241,88 +226,12 @@ export class TournamentsByAccount implements Projection, Asked {
 
   // Each written so that writing it twice leaves what writing it once did,
   // which is what makes projecting the same events again change nothing.
+  // What a tournament and its competitions are is held once for every read
+  // model of tournaments (`Tournaments`), so what is written here is only who
+  // has a part in one.
   async #project(tournament: string, event: DomainEvent): Promise<void> {
-    const connection = this.unitOfWork.connection();
     if (event instanceof TournamentCreated) {
-      await connection.query(
-        `insert into tournaments_by_account_details
-           (tournament_id, website, name, starts, finishes, address, country,
-            region, national, international)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-         on conflict (tournament_id) do update
-           set name = excluded.name, starts = excluded.starts,
-               finishes = excluded.finishes, address = excluded.address,
-               country = excluded.country, region = excluded.region,
-               national = excluded.national,
-               international = excluded.international`,
-        [
-          tournament,
-          event.website,
-          event.name,
-          event.starts,
-          event.finishes,
-          event.address,
-          event.country,
-          event.region ?? null,
-          event.national,
-          event.international,
-        ],
-      );
       await this.#takesPart(tournament, event.createdBy.value, "manager");
-    } else if (event instanceof TournamentUpdated) {
-      await connection.query(
-        `update tournaments_by_account_details
-            set name = $2, starts = $3, finishes = $4, address = $5,
-                country = $6, region = $7, national = $8,
-                international = $9
-          where tournament_id = $1`,
-        [
-          tournament,
-          event.name,
-          event.starts,
-          event.finishes,
-          event.address,
-          event.country,
-          event.region ?? null,
-          event.national,
-          event.international,
-        ],
-      );
-    } else if (event instanceof TournamentArchived) {
-      await this.#archived(tournament, true);
-    } else if (event instanceof TournamentRestored) {
-      await this.#archived(tournament, false);
-    } else if (
-      event instanceof BlockAdded ||
-      event instanceof KnockoutAdded ||
-      event instanceof SwissAdded ||
-      event instanceof TestAdded
-    ) {
-      // Kept as it is first projected, since a competition is added once and
-      // its rules are changed by the events that update it.
-      await connection.query(
-        `insert into tournaments_by_account_competitions
-           (competition_id, tournament_id, world_rankings)
-         values ($1, $2, $3)
-         on conflict (competition_id) do nothing`,
-        [event.competitionId, tournament, event.worldRankings],
-      );
-    } else if (
-      event instanceof BlockUpdated ||
-      event instanceof KnockoutUpdated ||
-      event instanceof SwissUpdated ||
-      event instanceof TestUpdated
-    ) {
-      await connection.query(
-        `update tournaments_by_account_competitions
-            set world_rankings = $2
-          where competition_id = $1`,
-        [event.competitionId, event.worldRankings],
-      );
-    } else if (event instanceof CompetitionArchived) {
-      await this.#competitionArchived(event.competitionId, true);
-    } else if (event instanceof CompetitionRestored) {
-      await this.#competitionArchived(event.competitionId, false);
     } else if (event instanceof ManagerAdded) {
       // A scorer made a manager stops being a scorer, as the tournament has
       // it, and nothing records that separately: so this takes the place of
@@ -362,26 +271,5 @@ export class TournamentsByAccount implements Projection, Asked {
         where tournament_id = $1 and account_id = $2 and part = $3`,
       [tournament, account, part],
     );
-  }
-
-  async #competitionArchived(
-    competition: string,
-    archived: boolean,
-  ): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(
-        `update tournaments_by_account_competitions set archived = $2 where competition_id = $1`,
-        [competition, archived],
-      );
-  }
-
-  async #archived(tournament: string, archived: boolean): Promise<void> {
-    await this.unitOfWork
-      .connection()
-      .query(
-        `update tournaments_by_account_details set archived = $2 where tournament_id = $1`,
-        [tournament, archived],
-      );
   }
 }

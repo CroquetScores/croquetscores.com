@@ -49,6 +49,7 @@ import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswor
 import { AccountsByEmailAddress } from "../infrastructure/read-models/AccountsByEmailAddress.js";
 import { AccountsByGoogleAccount } from "../infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../infrastructure/read-models/AccountsByRole.js";
+import { Tournaments } from "../infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByWebsite } from "../infrastructure/read-models/TournamentsByWebsite.js";
 import { SearchByWebsite } from "../infrastructure/read-models/SearchByWebsite.js";
@@ -217,6 +218,7 @@ try {
       ),
       new AccountsByRole(unitOfWork),
       new TournamentsByAddress(unitOfWork),
+      new Tournaments(unitOfWork),
       new TournamentsByAccount(unitOfWork),
       new TournamentsByWebsite(unitOfWork),
       new SearchByWebsite(unitOfWork),

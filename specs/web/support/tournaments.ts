@@ -110,7 +110,7 @@ export const keptCalled = async (
   name: string,
 ): Promise<Tournament> => {
   const { rows } = await world.database.query<{ tournament_id: string }>(
-    `select tournament_id from tournaments_by_account_details where name = $1`,
+    `select tournament_id from tournaments where name = $1`,
     [name],
   );
   assert.equal(rows.length, 1, `${String(rows.length)} are called ${name}.`);
