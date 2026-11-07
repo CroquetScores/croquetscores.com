@@ -1,6 +1,6 @@
 // "npm run db:dump-import". Has pg_dump write the same two tables the backup
-// does (the events and the accounts' keys) from the database DATABASE_URL
-// names to import.dump in DATABASE_BACKUP_FOLDER, replacing the file of an
+// does (the events and the accounts' keys), and the table of what the import
+// refused (import_errors), from the database DATABASE_URL names to import.dump in DATABASE_BACKUP_FOLDER, replacing the file of an
 // earlier run. Unlike the backup it tells nobody and keeps no earlier copy: it
 // is for carrying a database made on this computer, as by the import from the
 // old sites, to somewhere else. Run under tsx, as the package script does.
@@ -32,6 +32,20 @@ if (!isAFolder) {
   process.exit(1);
 }
 
+// import_errors goes too, and the backup leaves it out: it is what the import
+// found wrong in the old sites, which the new site shows to those who ask about
+// a missing page, and it cannot be made again anywhere but where the import ran.
+// The imported_ tables are what the import read from the old sites (made in
+// ImportDatabase.ts), and go for the same reason.
+const TABLES = [
+  ...TABLES_BACKED_UP,
+  "import_errors",
+  "imported_users",
+  "imported_tournaments",
+  "imported_players",
+  "imported_competitions",
+];
+
 const FILE = join(folder, "import.dump");
 // Written to a name of its own and renamed, as the backup does, so that a
 // dump that fails does not leave half of one under the name of a whole one,
@@ -43,7 +57,7 @@ try {
   await runPgDump({
     address: config.databaseUrl,
     file: PARTIAL,
-    tables: TABLES_BACKED_UP,
+    tables: TABLES,
     program: config.pgDumpPath,
   });
   await rename(PARTIAL, FILE);
