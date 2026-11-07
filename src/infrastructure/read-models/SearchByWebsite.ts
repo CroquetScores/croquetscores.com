@@ -13,8 +13,6 @@ import {
 } from "../../application/operations/tournaments/searching.js";
 import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
 import { BlockUpdated } from "../../domain/aggregates/tournaments/events/BlockUpdated.js";
-import { CompetitionArchived } from "../../domain/aggregates/tournaments/events/CompetitionArchived.js";
-import { CompetitionRestored } from "../../domain/aggregates/tournaments/events/CompetitionRestored.js";
 import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/KnockoutAdded.js";
 import { KnockoutUpdated } from "../../domain/aggregates/tournaments/events/KnockoutUpdated.js";
 import { SwissAdded } from "../../domain/aggregates/tournaments/events/SwissAdded.js";
@@ -26,13 +24,11 @@ import { TeamPlayerAdded } from "../../domain/aggregates/tournaments/events/Team
 import { TeamPlayerArchived } from "../../domain/aggregates/tournaments/events/TeamPlayerArchived.js";
 import { TeamPlayerRestored } from "../../domain/aggregates/tournaments/events/TeamPlayerRestored.js";
 import { TeamPlayerUpdated } from "../../domain/aggregates/tournaments/events/TeamPlayerUpdated.js";
-import { TournamentArchived } from "../../domain/aggregates/tournaments/events/TournamentArchived.js";
 import { TournamentCreated } from "../../domain/aggregates/tournaments/events/TournamentCreated.js";
 import { TournamentPlayerAdded } from "../../domain/aggregates/tournaments/events/TournamentPlayerAdded.js";
 import { TournamentPlayerArchived } from "../../domain/aggregates/tournaments/events/TournamentPlayerArchived.js";
 import { TournamentPlayerRestored } from "../../domain/aggregates/tournaments/events/TournamentPlayerRestored.js";
 import { TournamentPlayerUpdated } from "../../domain/aggregates/tournaments/events/TournamentPlayerUpdated.js";
-import { TournamentRestored } from "../../domain/aggregates/tournaments/events/TournamentRestored.js";
 import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
 import { canMakeASlug } from "../../domain/common/canMakeASlug.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
@@ -106,8 +102,9 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
   /** Empties its tables, so that every stream can be handed to it again. */
   async clear(): Promise<void> {
     await this.unitOfWork.connection().query(
-      `truncate search_by_website_tournaments, search_by_website_competitions,
-                  search_by_website_players, search_by_website_teams`,
+      `truncate search_by_website_tournament_names,
+                  search_by_website_competitions, search_by_website_players,
+                  search_by_website_teams`,
     );
   }
 
@@ -138,13 +135,16 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       national: boolean;
       international: boolean;
     }>(
-      `select name, address, to_char(starts, 'YYYY-MM-DD') as starts,
-              to_char(finishes, 'YYYY-MM-DD') as finishes, sport, country,
-              national, international
-           from search_by_website_tournaments
-          where website = $1 and not archived and folded_name like all($2)
-          order by starts_with(folded_name, $4) desc, folded_name, name,
-                   tournament_id
+      `select t.name, t.address, to_char(t.starts, 'YYYY-MM-DD') as starts,
+              to_char(t.finishes, 'YYYY-MM-DD') as finishes, t.sport,
+              t.country, t.national, t.international
+           from tournaments t
+           join search_by_website_tournament_names n
+             on n.tournament_id = t.tournament_id
+          where t.website = $1 and not t.archived
+            and n.folded_name like all($2)
+          order by starts_with(n.folded_name, $4) desc, n.folded_name, t.name,
+                   t.tournament_id
           limit $3`,
       [website.host, patterns(words), most + 1, beginning(words)],
     );
@@ -176,8 +176,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
          select distinct on (p.person)
                 p.person, p.world_ranking_name as name, p.folded_name
            from search_by_website_players p
-           join search_by_website_tournaments t
-             on t.tournament_id = p.tournament_id
+           join tournaments t on t.tournament_id = p.tournament_id
            left join search_by_website_teams team
              on team.team_id = p.team_id
           where t.website = $1 and not t.archived and not p.archived
@@ -226,9 +225,9 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
               to_char(t.finishes, 'YYYY-MM-DD') as finishes, t.sport,
               t.country
          from search_by_website_competitions c
-         join search_by_website_tournaments t
-           on t.tournament_id = c.tournament_id
-        where t.website = $1 and not t.archived and not c.archived
+         join competitions k on k.competition_id = c.competition_id
+         join tournaments t on t.tournament_id = k.tournament_id
+        where t.website = $1 and not t.archived and not k.archived
           and c.folded_name like all($2)
         order by starts_with(c.folded_name, $4) desc, c.folded_name, c.name,
                  c.competition_id
@@ -273,8 +272,7 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
               to_char(t.finishes, 'YYYY-MM-DD') as finishes,
               t.address, p.slug as player_slug, t.national, t.international
          from search_by_website_players p
-         join search_by_website_tournaments t
-           on t.tournament_id = p.tournament_id
+         join tournaments t on t.tournament_id = p.tournament_id
          left join search_by_website_teams team on team.team_id = p.team_id
         where t.website = $1 and p.person = $2 and not t.archived
           and not p.archived and not coalesce(team.archived, false)
@@ -300,76 +298,38 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
   async #project(stream: string, event: DomainEvent): Promise<void> {
     const connection = this.unitOfWork.connection();
     if (event instanceof TournamentCreated) {
+      // Only the name folded is the search's to keep; the tournament itself is
+      // held once, for every read model (Tournaments.feature).
       await connection.query(
-        `insert into search_by_website_tournaments
-           (tournament_id, website, name, folded_name, address, starts,
-            finishes, sport, country, national, international)
-         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `insert into search_by_website_tournament_names
+           (tournament_id, folded_name)
+         values ($1, $2)
          on conflict (tournament_id) do update
-           set name = excluded.name, folded_name = excluded.folded_name,
-               address = excluded.address, starts = excluded.starts,
-               finishes = excluded.finishes, sport = excluded.sport,
-               country = excluded.country, national = excluded.national,
-               international = excluded.international`,
-        [
-          stream,
-          event.website,
-          event.name,
-          foldedForSearch(event.name),
-          event.address,
-          event.starts,
-          event.finishes,
-          event.sport,
-          event.country,
-          event.national,
-          event.international,
-        ],
+           set folded_name = excluded.folded_name`,
+        [stream, foldedForSearch(event.name)],
       );
     } else if (event instanceof TournamentUpdated) {
       await connection.query(
-        `update search_by_website_tournaments
-            set name = $2, folded_name = $3, address = $4, starts = $5,
-                finishes = $6, country = $7, sport = $8, national = $9,
-                international = $10
+        `update search_by_website_tournament_names set folded_name = $2
           where tournament_id = $1`,
-        [
-          stream,
-          event.name,
-          foldedForSearch(event.name),
-          event.address,
-          event.starts,
-          event.finishes,
-          event.country,
-          event.sport,
-          event.national,
-          event.international,
-        ],
+        [stream, foldedForSearch(event.name)],
       );
-    } else if (event instanceof TournamentArchived) {
-      await this.#archived("search_by_website_tournaments", "tournament_id", [
-        stream,
-        true,
-      ]);
-    } else if (event instanceof TournamentRestored) {
-      await this.#archived("search_by_website_tournaments", "tournament_id", [
-        stream,
-        false,
-      ]);
     } else if (
       event instanceof BlockAdded ||
       event instanceof KnockoutAdded ||
       event instanceof SwissAdded
     ) {
+      // Which tournament it is in, and whether it is archived, are held once
+      // with the competition (Tournaments.feature).
       await connection.query(
         `insert into search_by_website_competitions
-           (competition_id, tournament_id, name, folded_name, slug)
-         values ($1, $2, $3, $4, $5)
+           (competition_id, name, folded_name, slug)
+         values ($1, $2, $3, $4)
          on conflict (competition_id) do update
            set name = excluded.name, folded_name = excluded.folded_name,
                slug = excluded.slug`,
         [
           event.competitionId,
-          stream,
           event.name,
           foldedForSearch(event.name),
           event.slug,
@@ -386,16 +346,6 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
           where competition_id = $1`,
         [event.competitionId, event.name, foldedForSearch(event.name)],
       );
-    } else if (event instanceof CompetitionArchived) {
-      await this.#archived("search_by_website_competitions", "competition_id", [
-        event.competitionId,
-        true,
-      ]);
-    } else if (event instanceof CompetitionRestored) {
-      await this.#archived("search_by_website_competitions", "competition_id", [
-        event.competitionId,
-        false,
-      ]);
     } else if (event instanceof TeamAdded) {
       // Kept as it is, since a team added is not one archived again by
       // projecting its adding a second time.

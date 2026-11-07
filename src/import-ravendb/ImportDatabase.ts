@@ -463,7 +463,7 @@ export class ImportDatabase implements ImportErrors {
     }>(
       `select listed.address, listed.name
          from imported_tournaments imported
-         join tournaments_by_website listed
+         join tournaments listed
            on listed.tournament_id = imported.tournament_id
         where imported.website = $1 and imported.document_id = $2`,
       [website, documentId.toLowerCase()],

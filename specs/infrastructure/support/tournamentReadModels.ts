@@ -27,6 +27,7 @@ import { Tournament } from "../../../src/domain/aggregates/tournaments/Tournamen
 import { EventRegistry } from "../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { Website } from "../../../src/domain/common/Website.js";
+import { Tournaments } from "../../../src/infrastructure/read-models/Tournaments.js";
 import {
   PostgresEventStore,
   type StoredEvent,
@@ -112,7 +113,14 @@ export const standUp = (
     unitOfWork,
     nameCompetitionEvents(nameTournamentEvents(new EventRegistry())),
   );
-  const projecting = new ProjectingEventStore(store, [readModel]);
+  // Every read model of tournaments is written against the tournaments and
+  // competitions held once for all of them, so they are stood up together,
+  // unless it is they that the scenario is about.
+  const readModels: readonly TournamentReadModel[] =
+    readModel instanceof Tournaments
+      ? [readModel]
+      : [new Tournaments(unitOfWork), readModel];
+  const projecting = new ProjectingEventStore(store, readModels);
   const scenario: Scenario = {
     readModel,
     store,
@@ -137,15 +145,13 @@ export const standUp = (
       const events = await store.readAll();
       const isTournaments = ({ stream }: StoredEvent): boolean =>
         stream.startsWith("tournament/");
-      await rebuildFromEvents(
-        readModel,
-        scenario.competitionsFirst
-          ? [
-              ...events.filter((each) => !isTournaments(each)),
-              ...events.filter(isTournaments),
-            ]
-          : events,
-      );
+      const ordered = scenario.competitionsFirst
+        ? [
+            ...events.filter((each) => !isTournaments(each)),
+            ...events.filter(isTournaments),
+          ]
+        : events;
+      for (const each of readModels) await rebuildFromEvents(each, ordered);
     }),
   );
 };

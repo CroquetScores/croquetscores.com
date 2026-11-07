@@ -51,6 +51,7 @@ import type {
   DocumentSource,
   Importer,
 } from "../../src/import-ravendb/runImporter.js";
+import { Tournaments } from "../../src/infrastructure/read-models/Tournaments.js";
 import { TournamentsByAccount } from "../../src/infrastructure/read-models/TournamentsByAccount.js";
 import { TournamentsByAddress } from "../../src/infrastructure/read-models/TournamentsByAddress.js";
 import { TournamentsByWebsite } from "../../src/infrastructure/read-models/TournamentsByWebsite.js";
@@ -335,6 +336,7 @@ export const importingOf = (world: SpecWorld): Importing => {
     accounts.readModel,
     accounts.byGoogleAccount,
     new TournamentsByAddress(unitOfWork),
+    new Tournaments(unitOfWork),
     new TournamentsByAccount(unitOfWork),
     // Where an error of a document refused whole finds its tournament's name
     // and address, as it does in the import.
