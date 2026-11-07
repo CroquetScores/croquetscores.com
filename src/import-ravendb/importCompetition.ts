@@ -351,11 +351,14 @@ export const withWinnersFromScores = <TDocument extends OldCompetition>(
 const withoutBracketedCount = (typed: string): string | undefined =>
   /^(\d+)\s*[wW]\s*\(\d+\)$/.exec(typed.trim())?.[1];
 
-// `game` with either score's mark and bracketed count taken off, or `game`
-// itself where neither has one.
-const withBracketsRemoved = (game: OldGame): OldGame => {
-  const winner = withoutBracketedCount(game.Winner.Score._Score);
-  const loser = withoutBracketedCount(game.Loser.Score._Score);
+// `game` with either score rewritten by `rewrite`, which answers nothing for
+// a score it leaves alone; `game` itself where it leaves both.
+const withScoresRewritten = (
+  game: OldGame,
+  rewrite: (typed: string) => string | undefined,
+): OldGame => {
+  const winner = rewrite(game.Winner.Score._Score);
+  const loser = rewrite(game.Loser.Score._Score);
   if (winner === undefined && loser === undefined) return game;
   return {
     ...game,
@@ -375,6 +378,11 @@ const withBracketsRemoved = (game: OldGame): OldGame => {
     },
   };
 };
+
+// `game` with either score's mark and bracketed count taken off, or `game`
+// itself where neither has one.
+const withBracketsRemoved = (game: OldGame): OldGame =>
+  withScoresRewritten(game, withoutBracketedCount);
 
 // `typed` with a fraction that is more than nothing rounded up to the next
 // whole number, and what follows kept, as "3.5w" to "4w"; nothing where it
@@ -392,28 +400,8 @@ const roundedUp = (typed: string): string | undefined => {
 
 // `game` with either score's half point rounded up, or `game` itself where
 // neither has one.
-const withHalfPointsRounded = (game: OldGame): OldGame => {
-  const winner = roundedUp(game.Winner.Score._Score);
-  const loser = roundedUp(game.Loser.Score._Score);
-  if (winner === undefined && loser === undefined) return game;
-  return {
-    ...game,
-    Winner: {
-      ...game.Winner,
-      Score: {
-        ...game.Winner.Score,
-        _Score: winner ?? game.Winner.Score._Score,
-      },
-    },
-    Loser: {
-      ...game.Loser,
-      Score: {
-        ...game.Loser.Score,
-        _Score: loser ?? game.Loser.Score._Score,
-      },
-    },
-  };
-};
+const withHalfPointsRounded = (game: OldGame): OldGame =>
+  withScoresRewritten(game, roundedUp);
 
 /**
  * Says what was corrected of a document's scores: each rounded, taken the

@@ -74,14 +74,6 @@ export const isArchived = (document: object): boolean =>
   (document as { IsArchived?: unknown }).IsArchived === true;
 
 /**
- * `tournament` held over the days of `named`'s team matches not archived,
- * where it is played by teams and has one (ImportWholeTournaments.feature):
- * starting when the first of them started and finishing when the last
- * finished, which the old sites often did not keep as the tournament's own,
- * and a test is refused outside its tournament's days. As it is otherwise.
- * The old sites wrote every moment alike, so the earliest is the least.
- */
-/**
  * `tournament` as played by teams where it was set up as a Standard tournament
  * whose competitions are all team matches, one or more, which the site keeps
  * only as tests of a tournament played by teams
@@ -209,7 +201,6 @@ const SEE_NOTES_SUFFIX = " - See Notes";
 // Standard tournament its blocks are brought over into.
 const BLOCK_SUFFIX = " - Block";
 
-// What a kind of competition is called in what is said of it.
 // What each kind of document that names a tournament is called, for the note
 // of what was refused.
 const DOCUMENTS: Readonly<Record<string, string>> = {
@@ -217,6 +208,7 @@ const DOCUMENTS: Readonly<Record<string, string>> = {
   Commentaries: "commentary",
 };
 
+// What a kind of competition is called in what is said of it.
 const KINDS: Readonly<Record<string, string>> = {
   Blocks: "block",
   Knockouts: "knockout",
@@ -230,6 +222,14 @@ const KINDS: Readonly<Record<string, string>> = {
 const oldAddressOf = (document: OldTournament): string =>
   `${document.Start.slice(0, 4)}/${document.SportType.trim().toLowerCase()}/${document.Slug}`;
 
+/**
+ * `tournament` held over the days of `named`'s team matches not archived,
+ * where it is played by teams and has one (ImportWholeTournaments.feature):
+ * starting when the first of them started and finishing when the last
+ * finished, which the old sites often did not keep as the tournament's own,
+ * and a test is refused outside its tournament's days. As it is otherwise.
+ * The old sites wrote every moment alike, so the earliest is the least.
+ */
 const heldOverItsTeamMatches = (
   tournament: OldTournament,
   named: readonly Named[],

@@ -10,7 +10,7 @@ import type { Importer, ReadDocument } from "./runImporter.js";
 import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { TieBreak } from "../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { Rounds } from "../domain/aggregates/tournaments/value-objects/Rounds.js";
-import { bestOfWorkedOut } from "./bestOfImported.js";
+import { bestOfWorkedOut, pairOf } from "./bestOfImported.js";
 
 // Blocks of a tournament that finished before this are left behind where
 // nothing was entered in them or played (ImportBlocks.feature).
@@ -67,9 +67,7 @@ export const secondAndThirdReversedIn = (
   const ordered = [...games];
   const byPair = new Map<string, number[]>();
   ordered.forEach((game, at) => {
-    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
-      .sort((one, other) => one - other)
-      .join(" ");
+    const pair = pairOf(game);
     byPair.set(pair, [...(byPair.get(pair) ?? []), at]);
   });
   const reversed: [Game, Game][] = [];
@@ -151,9 +149,7 @@ const playedInRounds = (
   if (bestOf <= 1 || players.length < 2) return false;
   const between = new Map<string, Game[]>();
   for (const game of games) {
-    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
-      .sort((one, other) => one - other)
-      .join(" ");
+    const pair = pairOf(game);
     between.set(pair, [...(between.get(pair) ?? []), game]);
   }
   const pairs = (players.length * (players.length - 1)) / 2;
@@ -185,9 +181,7 @@ export const roundsPlayed = (
   if (bestOf <= 1) return undefined;
   const byPair = new Map<string, Game[]>();
   for (const game of [...games].sort((one, other) => one.Id - other.Id)) {
-    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
-      .sort((one, other) => one - other)
-      .join(" ");
+    const pair = pairOf(game);
     byPair.set(pair, [...(byPair.get(pair) ?? []), game]);
   }
   let most = 0;

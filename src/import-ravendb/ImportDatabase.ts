@@ -56,6 +56,10 @@ export class ImportDatabase implements ImportErrors {
   readonly #pool: Pool;
   readonly #unitOfWork: UnitOfWork;
   readonly #told: ((error: KeptError) => Promise<void>)[] = [];
+  // How many errors are kept, once asked for and then added to as each is
+  // kept, since the import asks after every document and a count of the
+  // table each time grows with the table. Asked afresh after a reset.
+  #kept: number | undefined;
 
   constructor(pool: Pool, unitOfWork: UnitOfWork) {
     this.#pool = pool;
@@ -69,6 +73,7 @@ export class ImportDatabase implements ImportErrors {
    */
   async reset(): Promise<void> {
     await dropTables(this.#pool);
+    this.#kept = undefined;
 
     await migrate(this.#pool);
 
@@ -384,6 +389,7 @@ export class ImportDatabase implements ImportErrors {
         summary ?? null,
       ],
     );
+    if (this.#kept !== undefined) this.#kept += 1;
     for (const listener of this.#told) {
       await listener({ documentId, message, of, summary });
     }
@@ -421,10 +427,12 @@ export class ImportDatabase implements ImportErrors {
 
   /** How many errors were kept, by whatever kept them. */
   async errorCount(): Promise<number> {
+    if (this.#kept !== undefined) return this.#kept;
     const { rows } = await this.#pool.query<{ count: string }>(
       "select count(*) as count from import_errors",
     );
-    return Number(rows[0]?.count ?? 0);
+    this.#kept = Number(rows[0]?.count ?? 0);
+    return this.#kept;
   }
 
   /**

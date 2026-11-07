@@ -31,6 +31,8 @@ const MOST_TITLE_CHARACTERS = 100;
  * whoever has a query.
  */
 export class SeeNotes {
+  #writer: AccountId | undefined;
+
   constructor(
     private readonly unitOfWork: UnitOfWork,
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
@@ -45,10 +47,14 @@ export class SeeNotes {
    * written and no Swiss is made.
    */
   async writer(): Promise<AccountId | undefined> {
+    if (this.#writer !== undefined) return this.#writer;
     const found = await this.database.findImportedAccount(
       EmailAddress.from(NOTES_ADDRESS),
     );
-    return found === undefined ? undefined : AccountId.from(found);
+    // Kept only once found: the user may be brought over after it is first
+    // asked for, and asking again then must find them.
+    this.#writer = found === undefined ? undefined : AccountId.from(found);
+    return this.#writer;
   }
 
   /**

@@ -33,6 +33,20 @@ export const flagOf = (representing: string | null): string | undefined => {
 };
 
 /**
+ * The player of `tournament` the old sites' player called `name` is, where it
+ * has one named exactly as they are: the one that is kept in place of adding
+ * them again.
+ */
+export const playerNamed = (
+  tournament: Tournament,
+  name: string,
+): TournamentPlayerId | undefined => {
+  const imported = playerNameToImport(name);
+  return tournament.players.find((each) => each.name.toString() === imported)
+    ?.id;
+};
+
+/**
  * Adds the old sites' player called `Name`, representing `Representing`, to
  * `tournament`, as the site will take them: their name numbered apart from
  * any the tournament's players have, and flying the flag of whatever they
@@ -48,20 +62,6 @@ export const flagOf = (representing: string | null): string | undefined => {
  * the name as it is kept is compared, so a name another case, or numbered
  * apart before, is not found and is numbered apart as it was.
  */
-/**
- * The player of `tournament` the old sites' player called `name` is, where it
- * has one named exactly as they are: the one that is kept in place of adding
- * them again.
- */
-export const playerNamed = (
-  tournament: Tournament,
-  name: string,
-): TournamentPlayerId | undefined => {
-  const imported = playerNameToImport(name);
-  return tournament.players.find((each) => each.name.toString() === imported)
-    ?.id;
-};
-
 export const addOldPlayer = (
   tournament: Tournament,
   player: { readonly Name: string; readonly Representing: string | null },

@@ -140,7 +140,7 @@ export class ImportFiles implements AcceptedImportErrors {
     // A sort that keeps the order of equals, so that those of one code are
     // in the order they were found.
     const ordered = [...this.#errors].sort((one, other) =>
-      one.code < other.code ? -1 : one.code > other.code ? 1 : 0,
+      inOrder(one.code, other.code),
     );
     const totals = new Map<string, number>();
     for (const { code } of ordered) {

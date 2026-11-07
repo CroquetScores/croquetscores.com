@@ -109,6 +109,11 @@ Feature: Giving the site's roles once the users are imported
       When the roles are given
       Then the account at "someone@example.com" holds the role "Administrator"
 
+    Scenario: An address that is no email address is named
+      Given "not an address" is named to hold the role "Administrator"
+      When the roles are given
+      Then "not an address" is named as having no account
+
     Scenario: An address with an account is not named
       Given a user "users/1" on "croquetscores.com" is imported as "someone@example.com"
       And "someone@example.com" is named to hold the role "Administrator"
