@@ -4,8 +4,18 @@ import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Role } from "../domain/aggregates/accounts/value-objects/Role.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
+import { ValidationError } from "../domain/common/validation/ValidationError.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
+
+const lookedFor = (address: string): EmailAddress | undefined => {
+  try {
+    return EmailAddress.from(address);
+  } catch (failure) {
+    if (failure instanceof ValidationError) return undefined;
+    throw failure;
+  }
+};
 
 /** The addresses each role is to be held by, as the old sites' users had them. */
 export type RoleHolders = Readonly<Partial<Record<Role, readonly string[]>>>;
@@ -40,10 +50,15 @@ export class GiveRoles {
       readonly string[],
     ][]) {
       for (const address of addresses) {
+        // An address that is no email address has no account to be found
+        // at, and is named as such rather than keeping the others from theirs.
+        const looked = lookedFor(address);
+        if (looked === undefined) {
+          withNoAccount.push(address);
+          continue;
+        }
         const given = await this.unitOfWork.inTransaction(async () => {
-          const found = await this.database.findImportedAccount(
-            EmailAddress.from(address),
-          );
+          const found = await this.database.findImportedAccount(looked);
           if (found === undefined) return false;
           const id = AccountId.from(found);
           const account = await this.accounts.load(id);

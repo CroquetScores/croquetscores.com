@@ -390,9 +390,6 @@ const countryOfAddress: Readonly<Record<string, string>> = {
   "2024/gc/klubbkamp-mellan-halmstad-cc-och-algarve-cc": "se",
 };
 
-// The names of Spanish clubs, which a tournament's name has as a word of its
-// own in capitals when the club ran it. Whole is no letter or digit beside it,
-// and the capitals are meant: in lower case these are plain words and names.
 // Whether the name has any of the phrases in it, in any case.
 const hasAny = (name: string, phrases: readonly string[]): boolean => {
   const lower = name.toLowerCase();
@@ -425,6 +422,9 @@ const wholeCountryNames = Countries.thereAre.all
 const countryNamedIn = (name: string): string | undefined =>
   wholeCountryNames.find(({ pattern }) => pattern.test(name))?.code;
 
+// The names of Spanish clubs, which a tournament's name has as a word of its
+// own in capitals when the club ran it. Whole is no letter or digit beside it,
+// and the capitals are meant: in lower case these are plain words and names.
 const spanishClubs =
   /(?<![\p{L}\p{N}])(?:RSHECC|CCVM|VGCC|RCGVH|RCLM|RCP)(?![\p{L}\p{N}])/u;
 

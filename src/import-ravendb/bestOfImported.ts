@@ -5,6 +5,15 @@ import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js
 import type { Game } from "./ravendb-models/Competition.js";
 
 /**
+ * The two players of `game` as one key, whichever won, so that every game
+ * between the same two is found under the same one.
+ */
+export const pairOf = (game: Game): string =>
+  [game.Winner.PlayerId, game.Loser.PlayerId]
+    .sort((one, other) => one - other)
+    .join(" ");
+
+/**
  * The best of `kept`, the old site's number, but the best of 1 where it kept
  * 0: no match can be the best of none, and a competition kept so played its
  * matches as single games.
@@ -26,9 +35,7 @@ export const bestOfWorkedOut = (
   if (kept >= 1) return BestOf.from(kept);
   const between = new Map<string, number>();
   for (const game of games) {
-    const pair = [game.Winner.PlayerId, game.Loser.PlayerId]
-      .sort((one, other) => one - other)
-      .join(" ");
+    const pair = pairOf(game);
     between.set(pair, (between.get(pair) ?? 0) + 1);
   }
   const most = Math.max(1, ...between.values());

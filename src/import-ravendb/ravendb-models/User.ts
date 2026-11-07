@@ -14,8 +14,8 @@ export interface User {
   readonly Password: string;
   /**
    * When the user confirmed their email address, as Newtonsoft wrote a
-   * `DateTime`: `2013-01-27T00:00:00.0000000`, with no zone. Nothing if they
-   * never did.
+   * `DateTime`: `2013-01-27T00:00:00.0000000`, with no zone. Nothing, or left out
+   * altogether as RavenDB leaves out a field never set, if they never did.
    */
-  readonly ConfirmedAt: string | null;
+  readonly ConfirmedAt?: string | null | undefined;
 }

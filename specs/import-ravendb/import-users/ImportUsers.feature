@@ -102,6 +102,14 @@ Feature: Importing the old sites' users as accounts
       When the user is imported
       Then "users/1" on "croquetscores.com" is not kept as any account
 
+    Scenario: A user with no confirmation recorded at all becomes no account
+      Given a user "users/1" on "croquetscores.com"
+      And the user is called "Sam Someone"
+      And the user's email address is "someone@example.com"
+      And the user has no confirmation recorded at all
+      When the user is imported
+      Then no account is reached at "someone@example.com"
+
     Scenario: Leaving an unconfirmed user behind is not refused
       Given a user "users/1" on "croquetscores.com"
       And the user is called "Sam Someone"

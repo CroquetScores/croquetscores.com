@@ -52,6 +52,10 @@ export class ImportCommentaries implements Importer<OldCommentary> {
   }: ReadDocument<OldCommentary>): Promise<void> {
     if (document.IsArchived) return;
 
+    // Kept once the transaction is, since an error is kept outside it and a
+    // commentary rolled back would otherwise leave errors for comments of
+    // one that does not exist.
+    const refused: { message: string; of: ReturnType<typeof errorOf> }[] = [];
     await this.unitOfWork.inTransaction(async () => {
       const tournament = await tournamentBecome(
         this.database,
@@ -123,15 +127,17 @@ export class ImportCommentaries implements Importer<OldCommentary> {
             momentOf(comment.CreatedAt),
           );
         } catch (failure) {
-          await this.database.recordError(
-            `${website}/${id}`,
-            `comment ${String(index + 1)}: ${describedFailure(failure)}`,
-            errorOf(tournament),
-          );
+          refused.push({
+            message: `comment ${String(index + 1)}: ${describedFailure(failure)}`,
+            of: errorOf(tournament),
+          });
         }
       }
 
       await this.commentaries.save(commentary);
     });
+    for (const { message, of } of refused) {
+      await this.database.recordError(`${website}/${id}`, message, of);
+    }
   }
 }

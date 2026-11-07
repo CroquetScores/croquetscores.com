@@ -38,7 +38,7 @@ export class ImportUsers implements Importer<User> {
     document,
   }: ReadDocument<User>): Promise<void> {
     const confirmedAt = document.ConfirmedAt;
-    if (confirmedAt === null) return;
+    if (confirmedAt === null || confirmedAt === undefined) return;
 
     await this.unitOfWork.inTransaction(async () => {
       // Read before it is looked for, so that it is looked for in the form the

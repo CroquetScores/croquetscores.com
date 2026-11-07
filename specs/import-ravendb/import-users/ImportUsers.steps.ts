@@ -209,6 +209,15 @@ Given(
   },
 );
 
+// RavenDB leaves out a field that was never set, so a user who never
+// confirmed may be kept with no ConfirmedAt rather than a null one.
+Given(
+  "the user has no confirmation recorded at all",
+  function (this: SpecWorld) {
+    change(this, { ConfirmedAt: undefined });
+  },
+);
+
 When("the user is imported", async function (this: SpecWorld) {
   const state = importingOf(this);
   assert.ok(state.user !== undefined, "No user has been named.");
