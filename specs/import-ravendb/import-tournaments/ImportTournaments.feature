@@ -210,6 +210,10 @@ Feature: Importing the old sites' tournaments
     and some managers on the Pacific coast chose Mexico's, which keeps the same
     hours.
 
+    "British Columbia Standard Time" is not a time zone Windows keeps, but the
+    old sites' tournaments were kept in it, and it is Canada's: British
+    Columbia is a province of Canada.
+
     A tournament called "Oktober GC" is in Norway whatever time zone it was
     kept in, since it was played there and the time zone it was kept in does
     not say so. A manager can move it.
@@ -229,20 +233,21 @@ Feature: Importing the old sites' tournaments
       Then the tournament kept for "tournaments/12" on "croquetscores.com" is in the country "<country>"
 
       Examples:
-        | time zone                    | country |
-        | GMT Standard Time            | england |
-        | W. Europe Standard Time      | es      |
-        | Romance Standard Time        | es      |
-        | Arabian Standard Time        | ae      |
-        | Argentina Standard Time      | ar      |
-        | Canada Central Standard Time | ca      |
-        | UTC                          | england |
-        | Dateline Standard Time       | england |
-        | UTC+13                       | nz      |
-        | Russian Standard Time        | nz      |
-        | Russia Time Zone 3           | nz      |
-        | Russia Time Zone 10          | nz      |
-        | Russia Time Zone 11          | nz      |
+        | time zone                      | country |
+        | GMT Standard Time              | england |
+        | W. Europe Standard Time        | es      |
+        | Romance Standard Time          | es      |
+        | Arabian Standard Time          | ae      |
+        | Argentina Standard Time        | ar      |
+        | Canada Central Standard Time   | ca      |
+        | British Columbia Standard Time | ca      |
+        | UTC                            | england |
+        | Dateline Standard Time         | england |
+        | UTC+13                         | nz      |
+        | Russian Standard Time          | nz      |
+        | Russia Time Zone 3             | nz      |
+        | Russia Time Zone 10            | nz      |
+        | Russia Time Zone 11            | nz      |
 
     Scenario: A tournament kept in Mexico's Pacific time is in the country of Pacific time
       Given a tournament "tournaments/12" on "croquetscores.com"
