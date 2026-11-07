@@ -9,14 +9,19 @@ Feature: The database an import empties and fills
   never drops anything, and must not, so the dropping is kept apart from it,
   reached only by an import and by "npm run db:drop-tables".
 
-  Tables of the import's own are made with the rest: one keeping what could
-  not be imported, and one each keeping what the old sites' users,
-  tournaments, tournament players and competitions became, so that whatever
-  is imported after them can find them. A user may have become a forgotten
-  account, which is kept too, and every tournament read is kept, whatever
-  became of it, so that a document naming one never read can be found. None
-  is a migration's, because the site has no use for them, and all go when
-  importing is finished.
+  Four tables keep what the old sites' users, tournaments, tournament
+  players and competitions became, so that whatever is imported after them
+  can find them. They are the migrations', because they go to the website
+  with the rest of the data it is carried there with, and stay there: a
+  correction to the import, made after the site has gone live, needs to know
+  what each document became, and the import cannot be run again to learn it.
+
+  Tables of the import's own are made with the rest: one keeping a user who
+  became a forgotten account, and one keeping every tournament read, whatever
+  became of it, so that a document naming one never read can be found, and one
+  keeping what a competition said a tournament player represents. None is a
+  migration's, because the site has no use for them, and all go when
+  importing is finished. The table of errors is the site's own as well.
 
   Background:
     Given an import's database
@@ -86,6 +91,28 @@ Feature: The database an import empties and fills
     Scenario: Every migration is applied again
       When the import's database is emptied
       Then every migration has been applied
+
+  Rule: What the old sites' documents became is kept by the site's own tables
+
+    Scenario: The users imported have a table of the migrations
+      Given a database made by the migrations alone
+      Then there is a table "imported_users"
+
+    Scenario: The tournaments imported have a table of the migrations
+      Given a database made by the migrations alone
+      Then there is a table "imported_tournaments"
+
+    Scenario: The tournament players imported have a table of the migrations
+      Given a database made by the migrations alone
+      Then there is a table "imported_players"
+
+    Scenario: The competitions imported have a table of the migrations
+      Given a database made by the migrations alone
+      Then there is a table "imported_competitions"
+
+    Scenario: A table only the import uses is not one of the migrations
+      Given a database made by the migrations alone
+      Then there is no table "tournaments_read"
 
   Rule: The users imported are found by their email address, whatever its case
 
