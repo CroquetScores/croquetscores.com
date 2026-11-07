@@ -207,7 +207,16 @@ export class PostgresEmailQueue implements EmailQueue {
     let sealed: Sealed | undefined;
     try {
       sealed = await this.#open(row);
-    } catch {
+    } catch (failure) {
+      // Only what says the row cannot be read is a try that failed; a database
+      // that would not answer is not the row's fault and is left to throw, as
+      // `emails` does.
+      if (
+        !(failure instanceof AccountKeysRefused) &&
+        !(failure instanceof SyntaxError)
+      ) {
+        throw failure;
+      }
       // Nothing can read what it says: it was not sealed with the key the
       // store has now, or the row has been changed since. Counted as a try
       // that failed, like any other, so that it is given up in the end.

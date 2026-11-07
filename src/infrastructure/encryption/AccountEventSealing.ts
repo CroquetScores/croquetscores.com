@@ -155,19 +155,30 @@ export class AccountEventSealing implements KeptEventSealing {
   }
 
   async open(stream: string, kept: KeptEvent): Promise<KeptEvent> {
-    const fields = personal[kept.name];
-    if (fields === undefined) return kept;
+    return (await this.openAll(stream, [kept]))[0] as KeptEvent;
+  }
+
+  // The account's key is looked up once for all of its events, and only when
+  // one of them holds something personal.
+  async openAll(
+    stream: string,
+    events: readonly KeptEvent[],
+  ): Promise<readonly KeptEvent[]> {
+    if (!events.some(({ name }) => personal[name] !== undefined)) return events;
 
     const account = AccountId.from(stream);
-    const data = { ...kept.data };
-    for (const field of fields) {
-      const value = data[field];
-      if (typeof value === "string") {
-        data[field] =
-          (await this.keys.decrypt(account, value)) ??
-          forgotten(field, account);
+    const decrypt = await this.keys.decryptor(account);
+    return events.map((kept) => {
+      const fields = personal[kept.name];
+      if (fields === undefined) return kept;
+      const data = { ...kept.data };
+      for (const field of fields) {
+        const value = data[field];
+        if (typeof value === "string") {
+          data[field] = decrypt(value) ?? forgotten(field, account);
+        }
       }
-    }
-    return { name: kept.name, data };
+      return { name: kept.name, data };
+    });
   }
 }

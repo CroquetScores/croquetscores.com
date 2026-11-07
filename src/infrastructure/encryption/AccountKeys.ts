@@ -147,6 +147,18 @@ export class AccountKeys {
     return this.#decryptWith(key, account, kept);
   }
 
+  /**
+   * A function that decrypts what was encrypted for `account`, as {@link
+   * decrypt} does, having looked the key up once. For reading many things of
+   * one account, which would otherwise ask the database for the same key
+   * each time.
+   */
+  async decryptor(account: Id): Promise<(kept: string) => string | undefined> {
+    const key = await this.#keyOf(account);
+    return (kept) =>
+      key === undefined ? undefined : this.#decryptWith(key, account, kept);
+  }
+
   #decryptWith(key: Buffer, account: Id, kept: string): string {
     const [version, body] = kept.split(".");
     try {

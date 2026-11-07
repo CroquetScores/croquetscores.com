@@ -33,12 +33,20 @@ export const migrate = async (pool: Pool): Promise<AppliedMigration[]> => {
   // deployment that starts more than one instance; it never bites the developer
   // who finds it. The lock is held on a session of its own for the whole run.
   const lock = await pool.connect();
+  let broken = false;
   try {
     await lock.query("select pg_advisory_lock($1)", [migrationLock]);
     return await applyPending(pool);
   } finally {
-    await lock.query("select pg_advisory_unlock($1)", [migrationLock]);
-    lock.release();
+    // Not allowed to replace what went wrong with its own failure, or to keep
+    // the connection from being given back. The lock belongs to the session,
+    // so a connection that cannot unlock is thrown away, which releases it.
+    try {
+      await lock.query("select pg_advisory_unlock($1)", [migrationLock]);
+    } catch {
+      broken = true;
+    }
+    lock.release(broken);
   }
 };
 

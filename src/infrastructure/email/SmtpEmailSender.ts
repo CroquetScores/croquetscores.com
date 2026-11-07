@@ -45,6 +45,13 @@ export class SmtpEmailSender implements EmailSender {
     });
   }
 
+  // Not split on a password that is empty, which would put the mask between
+  // every character of what the server said.
+  private withoutPassword(said: string): string {
+    const { password } = this.settings;
+    return password === "" ? said : said.split(password).join("***");
+  }
+
   // The moment is left unused, as the interface allows: the server stamps the email when it takes it, and
   // a second stamp from here would be one the reader could see disagree.
   async send(email: OutgoingEmail): Promise<void> {
@@ -61,7 +68,7 @@ export class SmtpEmailSender implements EmailSender {
       // why; the password is taken out in case a server repeats what it was
       // given.
       throw new Error(
-        `Sending the email failed: ${said.split(this.settings.password).join("***")}`,
+        `Sending the email failed: ${this.withoutPassword(said)}`,
         { cause: error },
       );
     }
