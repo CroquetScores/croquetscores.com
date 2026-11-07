@@ -4,12 +4,12 @@ import { Password } from "../../../domain/aggregates/accounts/value-objects/Pass
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
-import { RequestInvalid } from "../../common/ValidationBehaviour.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { BreachedPasswords } from "../../services/BreachedPasswords.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { Links } from "../../services/Links.js";
 import type { Transactions } from "../../services/Transactions.js";
+import { unlessBreached } from "./unlessBreached.js";
 import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import { SetNewPassword } from "./SetNewPassword.js";
 import { spent, worthOfSetNewPasswordLink } from "./setNewPasswordLinks.js";
@@ -82,11 +82,7 @@ export class SetNewPasswordHandler extends CommandHandler<
     // the way a password too short is refused, because it is the same thing to
     // whoever typed it. A password nobody could check is neither allowed nor
     // refused here; the check's own refusal is let out as it came.
-    if (await this.breached.isBreached(command.password.trim())) {
-      throw new RequestInvalid(command, [
-        { code: "Password.Breached", fields: ["password"] },
-      ]);
-    }
+    await unlessBreached(this.breached, command, command.password);
 
     return this.transactions.inTransaction(() => this.write(command));
   }

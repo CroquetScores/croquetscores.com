@@ -7,6 +7,7 @@ import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { accountOf } from "./accountOf.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { EmailAddressHasher } from "../../services/EmailAddressHasher.js";
@@ -150,11 +151,7 @@ export class SignInWithGoogleHandler extends CommandHandler<
     return PersonName.from(command.name.trim());
   }
 
-  private async load(id: AccountId): Promise<Account> {
-    const account = await this.accounts.load(id);
-    if (account === undefined) {
-      throw new Error(`The account ${id.value} has no events.`);
-    }
-    return account;
+  private load(id: AccountId): Promise<Account> {
+    return accountOf(this.accounts, id);
   }
 }

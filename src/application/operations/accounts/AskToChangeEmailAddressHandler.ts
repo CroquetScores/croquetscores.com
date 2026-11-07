@@ -2,7 +2,6 @@ import { Website } from "../../../domain/common/Website.js";
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -14,6 +13,7 @@ import type { PasswordHasher } from "../../services/PasswordHasher.js";
 import type { FindsAccountByAddress } from "./accountsByAddress.js";
 import { AskToChangeEmailAddress } from "./AskToChangeEmailAddress.js";
 import { ChangeEmailAddressRefused } from "./ChangeEmailAddressRefused.js";
+import { shiftedBy } from "../../common/moments.js";
 import { MOVING_LINK_WORKS_FOR_MILLISECONDS } from "./movingLinks.js";
 import { inboxIsFull } from "./emailsAnHour.js";
 
@@ -114,11 +114,9 @@ export class AskToChangeEmailAddressHandler extends CommandHandler<
     account.askToChangeEmailAddress(address, reference, command.requestedAt);
     await this.accounts.save(account);
 
-    const until = ReadOnlyDate.from(
-      new Date(
-        command.requestedAt.toDate().getTime() +
-          MOVING_LINK_WORKS_FOR_MILLISECONDS,
-      ),
+    const until = shiftedBy(
+      command.requestedAt,
+      MOVING_LINK_WORKS_FOR_MILLISECONDS,
     );
     await this.queue.queue({
       kind: "Email.ConfirmNewEmailAddress",
