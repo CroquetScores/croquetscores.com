@@ -16,12 +16,12 @@ Feature: The database an import empties and fills
   correction to the import, made after the site has gone live, needs to know
   what each document became, and the import cannot be run again to learn it.
 
-  Tables of the import's own are made with the rest: one keeping a user who
+  Three tables are the import's own, and are made with the rest: one keeping a user who
   became a forgotten account, and one keeping every tournament read, whatever
   became of it, so that a document naming one never read can be found, and one
-  keeping what a competition said a tournament player represents. None is a
-  migration's, because the site has no use for them, and all go when
-  importing is finished. The table of errors is the site's own as well.
+  keeping what a competition said a tournament player represents. None of the
+  three is a migration's, because the site has no use for them, and all three
+  go when importing is finished. The table of errors is the site's own as well.
 
   Background:
     Given an import's database

@@ -1,6 +1,7 @@
-// "npm run db:dump-import". Has pg_dump write the same two tables the backup
-// does (the events and the accounts' keys), and the table of what the import
-// refused (import_errors), from the database DATABASE_URL names to import.dump in DATABASE_BACKUP_FOLDER, replacing the file of an
+// "npm run db:dump-import". Has pg_dump write from the database DATABASE_URL
+// names, to import.dump in DATABASE_BACKUP_FOLDER, the two tables the backup is
+// of (the events and the accounts' keys) and the tables the import keeps for
+// the site (import_errors and the imported_ ones), replacing the file of an
 // earlier run. Unlike the backup it tells nobody and keeps no earlier copy: it
 // is for carrying a database made on this computer, as by the import from the
 // old sites, to somewhere else. Run under tsx, as the package script does.

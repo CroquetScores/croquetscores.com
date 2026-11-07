@@ -64,7 +64,8 @@ export class ImportDatabase implements ImportErrors {
 
   /**
    * Drops every table in the database, in every schema but Postgres's own,
-   * applies every migration, and makes the tables only the import uses beside them.
+   * applies every migration, and makes the tables only the import uses
+   * beside them.
    */
   async reset(): Promise<void> {
     await dropTables(this.#pool);
