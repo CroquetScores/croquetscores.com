@@ -3,8 +3,8 @@ import type { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { Role } from "../domain/aggregates/accounts/value-objects/Role.js";
-import { Refused } from "../domain/common/Refused.js";
 import type { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
+import { ValidationError } from "../domain/common/validation/ValidationError.js";
 import type { UnitOfWork } from "../infrastructure/database/UnitOfWork.js";
 import type { ImportDatabase } from "./ImportDatabase.js";
 
@@ -12,7 +12,7 @@ const lookedFor = (address: string): EmailAddress | undefined => {
   try {
     return EmailAddress.from(address);
   } catch (failure) {
-    if (failure instanceof Refused) return undefined;
+    if (failure instanceof ValidationError) return undefined;
     throw failure;
   }
 };
