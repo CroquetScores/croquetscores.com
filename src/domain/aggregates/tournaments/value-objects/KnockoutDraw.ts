@@ -15,10 +15,12 @@ interface Candidate {
 
 const FEWEST_PLACES = 2;
 
-// A number halves exactly down to one when it is a power of two, which is
-// when it has a single bit set.
+// A number halves exactly down to one when it is a power of two. Asked of its
+// logarithm rather than of its bits, which the language reads as 32 only.
 const halvesDownToOne = (places: number): boolean =>
-  Number.isSafeInteger(places) && places > 0 && (places & (places - 1)) === 0;
+  Number.isSafeInteger(places) &&
+  places > 0 &&
+  2 ** Math.round(Math.log2(places)) === places;
 
 const roundsFor = (places: number): number => Math.log2(places);
 
@@ -27,7 +29,8 @@ const draws = new Validator<Candidate, KnockoutDrawErrorCode>({
     {
       field: "places",
       code: "KnockoutDraw.TooFewPlaces",
-      isBrokenBy: ({ places }) => places < FEWEST_PLACES,
+      // Written so that a number that is not one is too few as well.
+      isBrokenBy: ({ places }) => !(places >= FEWEST_PLACES),
     },
     {
       field: "places",

@@ -52,6 +52,15 @@ Feature: A player's score in a game
         | tp26  |
         |       |
 
+    Scenario Outline: A number too large to be counted exactly is not points
+      When the score "<typed>" is read
+      Then it is refused for breaking "Score.NoPoints"
+
+      Examples:
+        | typed             |
+        | 9007199254740993  |
+        | 99999999999999999 |
+
     Scenario: A score with spaces around it has the points it begins with
       When the score " 26tp " is read
       Then the score's points are 26

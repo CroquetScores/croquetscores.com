@@ -68,8 +68,11 @@ export class CarryForward {
 
   private constructor(given: CarryForwardCounts) {
     // Only the six, so that nothing else given is kept, or compared.
-    this.#counts = Object.fromEntries(
-      CARRY_FORWARD_COUNTS.map((count) => [count, given[count]]),
+    // Frozen, since the counts are handed out whole and a value is not changed.
+    this.#counts = Object.freeze(
+      Object.fromEntries(
+        CARRY_FORWARD_COUNTS.map((count) => [count, given[count]]),
+      ),
     );
   }
 

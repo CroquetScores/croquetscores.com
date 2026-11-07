@@ -39,9 +39,11 @@ Feature: The shape of a knockout's draw
       Then it is refused for breaking "KnockoutDraw.PlacesDoNotHalve"
 
       Examples:
-        | places | rounds |
-        | 3      | 2      |
-        | 12     | 4      |
+        | places           | rounds |
+        | 3                | 2      |
+        | 12               | 4      |
+        | 4294967297       | 32     |
+        | 9007199254740991 | 53     |
 
     Scenario: A draw of 1 place is refused
       Given a draw of 1 place

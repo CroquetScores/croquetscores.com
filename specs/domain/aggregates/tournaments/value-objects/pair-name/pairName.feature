@@ -60,6 +60,12 @@ Feature: What a doubles pair is called
       When the pair is named
       Then the pair is called "Peter & Rosie LANDREBE"
 
+    Scenario: A last name is the same however its accents were typed
+      Given the first name "Peter Müller"
+      And the second name "Rosie Müller"
+      When the pair is named
+      Then the pair is called "Peter & Rosie Müller"
+
     Scenario: The last name is the last word, and whatever comes before it is a first name
       Given the first name "Mary Jane Smith"
       And the second name "Tom Smith"

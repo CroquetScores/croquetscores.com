@@ -149,6 +149,9 @@ export class Competition extends AggregateRoot {
   // order, which no other player or bye in the competition has, is what tells
   // one from another.
   #byes: number[] = [];
+  // The players listed, kept until an event changes them: asked for again and
+  // again within one command, and each time it was made and sorted afresh.
+  #sortedPlayers: readonly CompetitionPlayer[] | undefined;
 
   private constructor(id: CompetitionId) {
     super(id);
@@ -166,7 +169,7 @@ export class Competition extends AggregateRoot {
 
   /** Its players, the withdrawn and a knockout's byes among them, lowest order first. */
   get players(): readonly CompetitionPlayer[] {
-    return [
+    this.#sortedPlayers ??= [
       ...this.#players.values(),
       ...this.#byes.map((order) =>
         CompetitionPlayer.from(CompetitionPlayerId.bye(), {
@@ -175,6 +178,7 @@ export class Competition extends AggregateRoot {
         }),
       ),
     ].sort((one, other) => one.order - other.order);
+    return this.#sortedPlayers;
   }
 
   /**
@@ -191,7 +195,10 @@ export class Competition extends AggregateRoot {
    * or the tournament. A withdrawn one was played, so it does.
    */
   hasGamesInUse(id: CompetitionPlayerId): boolean {
-    return this.games.some((game) => !game.archived && isIn(game, id));
+    for (const game of this.#games.values()) {
+      if (!game.archived && isIn(game, id)) return true;
+    }
+    return false;
   }
 
   /**
@@ -893,6 +900,14 @@ export class Competition extends AggregateRoot {
   }
 
   protected apply(event: DomainEvent): void {
+    this.#sortedPlayers = undefined;
+    this.#applyEvent(event);
+    // Cleared again, since spacing out lists the players in the middle of
+    // changing them.
+    this.#sortedPlayers = undefined;
+  }
+
+  #applyEvent(event: DomainEvent): void {
     if (
       event instanceof CompetitionPlayerEntered &&
       CompetitionPlayerId.from(event.playerId).equals(CompetitionPlayerId.bye())

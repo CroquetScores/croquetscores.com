@@ -3,6 +3,10 @@
 const said = (written: string | undefined): string | undefined =>
   written?.trim() || undefined;
 
+// As a name is compared (pairName.ts): without regard to locale or accents.
+const comparable = (written: string): string =>
+  written.toLowerCase().normalize("NFC");
+
 /**
  * What the pair of two players represents: what the one that represents
  * anything does; once, as the first wrote it, where both represent the same;
@@ -17,7 +21,5 @@ export const pairRepresenting = (
   const one = said(first);
   const other = said(second);
   if (one === undefined || other === undefined) return one ?? other;
-  return one.toLocaleLowerCase() === other.toLocaleLowerCase()
-    ? one
-    : `${one} / ${other}`;
+  return comparable(one) === comparable(other) ? one : `${one} / ${other}`;
 };

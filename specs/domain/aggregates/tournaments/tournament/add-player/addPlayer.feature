@@ -260,6 +260,13 @@ Feature: Adding a player to a tournament
       When the player "SAM SOMEONE" is added
       Then it is refused with "Tournament.PlayerNameTaken"
 
+    Scenario: A name is the same name however its accents were typed
+      Given a stream where a tournament was created as "Spring Open"
+      And the player "José Someone" was added to it
+      And the tournament is rebuilt from the stream
+      When the player "José Someone" is added
+      Then it is refused with "Tournament.PlayerNameTaken"
+
     Scenario: A name is the same name with spaces around it
       Given a stream where a tournament was created as "Spring Open"
       And the player "Sam Someone" was added to it
