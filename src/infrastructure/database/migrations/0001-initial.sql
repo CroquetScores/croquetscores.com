@@ -1,12 +1,11 @@
 -- Everything the database holds, made at once.
 --
--- The site has no real data yet, so the thirty-five migrations that grew this
--- into what it is were made into this one rather than carried, with every
--- column that only existed to give a row from before it a value, and every
--- table that was made and dropped, left out. A database made by those cannot
--- be brought up by this: it is made again, with npm run db:down and db:up in
--- development, and there is no other yet. What a migration adds from here is a
--- file of its own, as it was before.
+-- The site has no real data yet, so the schema is kept as one file, written as
+-- it now stands, rather than as the migrations that grew it. A database made
+-- by an earlier shape of this file is made again, with npm run db:down and
+-- db:up in development. Once a site holds real data this file is never
+-- rewritten, and what changes the schema from then on is a file of its own,
+-- since a database that has applied one is told it has by its name.
 
 -- Every event ever recorded, in the stream of the thing it happened to, in the
 -- order it happened. Rows are only ever added.
@@ -42,10 +41,15 @@ create unique index events_by_id on events (id);
 -- nothing of the key and lets a store opened with another be refused as that
 -- rather than finding every key tampered with. Deleting a row forgets its
 -- account: what is kept of its name and email address can never be read again.
+--
+-- An account is forgotten by rewriting what is personal in its events, and its
+-- key is kept, so a key can no longer be told forgotten by being missing.
+-- `forgotten` says so.
 create table account_keys (
-    account_id    text  primary key,
-    key           bytea not null,
-    site_key_mark text  not null
+    account_id    text    primary key,
+    key           bytea   not null,
+    site_key_mark text    not null,
+    forgotten     boolean not null default false
 );
 
 -- Accounts by a keyed hash of their email address, never the address itself.
@@ -212,24 +216,46 @@ create table tournaments_by_address (
     tournament_id text not null
 );
 
--- What the admin lists of each tournament, once for the tournament rather than
--- once for each account with a part in it, so that making somebody a manager
--- has nothing to copy from another account's row, and a change to the
--- tournament is one row to change. The website is kept as it was created,
--- since a tournament keeps the one it was created on.
+-- Each tournament held once, for every read model of tournaments, with what is
+-- true of it whoever asks. The home page's list, the admin's and the search
+-- join to it and keep beside it only what is theirs, so that a tournament
+-- changed is one row changed, and making somebody a manager has nothing to copy
+-- from another account's row. The website is kept as the tournament was
+-- created, since a tournament keeps the one it was created on.
 --
 -- A world ranking officer's list is every tournament of the sports whose
 -- players it looks after. Whether a tournament counts towards the world
 -- rankings is not kept here, since each of its competitions says for itself.
-create table tournaments_by_account_details (
-    tournament_id                 text    primary key,
-    website                       text    not null,
-    name                          text    not null,
-    starts                        date    not null,
-    finishes                      date    not null,
-    address                       text    not null,
-    archived                      boolean not null default false
+create table tournaments (
+    tournament_id text    primary key,
+    website       text    not null,
+    name          text    not null,
+    starts        date    not null,
+    finishes      date    not null,
+    address       text    not null,
+    country       text    not null,
+    region        text,
+    sport         text    not null,
+    archived      boolean not null default false,
+    national      boolean not null default false,
+    international boolean not null default false
 );
+
+create index tournaments_by_website_and_start on tournaments (website, starts);
+
+-- The tournament each competition is in, whether it is archived and whether it
+-- counts towards the world rankings. A competition's own events do not say
+-- which tournament it is in, and its tournament's do, so this is written from
+-- the tournament's stream and a competition's games, kept by the home page, are
+-- put together with it when asked.
+create table competitions (
+    competition_id text    primary key,
+    tournament_id  text    not null,
+    world_rankings boolean not null default false,
+    archived       boolean not null default false
+);
+
+create index competitions_by_tournament on competitions (tournament_id);
 
 -- Each account's part in a tournament: one row an account, since an account
 -- that manages a tournament does not also score it.
@@ -241,37 +267,6 @@ create table tournaments_by_account (
 );
 
 create index tournaments_by_account_account on tournaments_by_account (account_id);
-
--- What the home page shows of each tournament, and what it is found by: its
--- website, its days, where it is played and its sport. The website is kept as
--- it was created, since a tournament keeps the one it was created on, and the
--- region is nothing for a tournament in none.
-create table tournaments_by_website (
-    tournament_id text primary key,
-    website       text not null,
-    name          text not null,
-    starts        date not null,
-    finishes      date not null,
-    country       text not null,
-    region        text,
-    sport         text not null,
-    address       text not null,
-    archived      boolean not null default false
-);
-
-create index tournaments_by_website_starts on tournaments_by_website (website, starts);
-
--- Which tournament each competition is in. A competition's own events do not
--- say, and its tournament's do, so it is kept apart from the competition's
--- games: either can be projected first, and they are put together when asked.
-create table tournaments_by_website_competitions (
-    competition_id text primary key,
-    tournament_id  text not null,
-    archived       boolean not null default false
-);
-
-create index tournaments_by_website_competitions_tournament
-    on tournaments_by_website_competitions (tournament_id);
 
 -- Each game by its competition, and when it was added, which is when the
 -- event adding it happened and is not changed by correcting it or restoring
@@ -412,37 +407,22 @@ create index import_errors_by_document_id on import_errors (document_id);
 -- competitions and of their players, each kept beside the same name folded as
 -- a search folds what is typed (accents off, lower case, one space between
 -- words), so that finding one is a comparison and not a transformation of
--- every name there is. The website is kept as the tournament was created on
--- it. A tournament is dated by the days it runs, so each is kept with the day
--- it finishes as well as the day it starts.
-create table search_by_website_tournaments (
+-- every name there is. The tournament itself is held once, for every read model
+-- of tournaments, and only its folded name is the search's to keep.
+create table search_by_website_tournament_names (
     tournament_id text primary key,
-    website       text not null,
-    name          text not null,
-    folded_name   text not null,
-    address       text not null,
-    starts        date not null,
-    archived      boolean not null default false,
-    finishes      date not null
+    folded_name   text not null
 );
 
-create index search_by_website_tournaments_website
-    on search_by_website_tournaments (website);
-
--- A competition's own events do not say which tournament it is in, and its
--- tournament's do, so each is kept with the tournament it was added to, and
--- its address is put together when asked, as the tournament's may have moved.
+-- A competition is told apart in the search by its name and its slug. Which
+-- tournament it is in, and whether it is archived, are the competition's, held
+-- once. A test is not searched for, so it has no row here.
 create table search_by_website_competitions (
     competition_id text primary key,
-    tournament_id  text not null,
     name           text not null,
     folded_name    text not null,
-    slug           text not null,
-    archived       boolean not null default false
+    slug           text not null
 );
-
-create index search_by_website_competitions_tournament
-    on search_by_website_competitions (tournament_id);
 
 -- Every player of every tournament, a team's included, by the world ranking
 -- name they are known by. `person` is the slug of that name, which is what
@@ -452,6 +432,14 @@ create index search_by_website_competitions_tournament
 -- is. The players of a team that is archived are not found, and a team's
 -- events say it of the team and not of its players, so each player is kept
 -- with the team they are in, where they are in one.
+--
+-- `representing` is what each player represents, so that the player dialog can
+-- offer what players have been added representing
+-- (RepresentingMatching.feature). `kept` orders the players by when they were
+-- first kept, which is how a club written two ways that differ only in
+-- capitals is offered as it was first written. Identity rather than a clock,
+-- since two players kept in one transaction share a moment and a rebuild keeps
+-- them in the order it reads.
 create table search_by_website_players (
     player_id          text primary key,
     tournament_id      text not null,
@@ -461,7 +449,9 @@ create table search_by_website_players (
     person             text not null,
     archived           boolean not null default false,
     team_id            text,
-    slug               text not null
+    slug               text not null,
+    representing       text,
+    kept               bigint generated always as identity
 );
 
 create index search_by_website_players_tournament
@@ -473,4 +463,65 @@ create index search_by_website_players_person
 create table search_by_website_teams (
     team_id  text primary key,
     archived boolean not null default false
+);
+
+-- A second copy of the lines the server writes to its log, for an
+-- administrator to read at /admin/administrator/logs without being on the
+-- machine (PostgresServerLog.feature). The log file is still the log; this is
+-- kept for seven days and then removed.
+--
+-- `severity` is the number the log writes the level in, 10 for Trace to 60 for
+-- Fatal, so that "this severity and more severe" is a comparison. `details` is
+-- the whole line, since which fields a line carries is the log's to decide and
+-- not this table's, and a reference from an error page is found in it.
+create table server_log (
+    kept       bigint generated always as identity primary key,
+    written_at timestamptz not null,
+    severity   smallint    not null,
+    message    text        not null,
+    details    jsonb       not null
+);
+
+-- What the newest-first reading and the removal of the old both go by.
+create index server_log_by_written_at on server_log (written_at, kept);
+
+-- The help, made searchable (PostgresHelpSearchIndex.feature). It is built into
+-- files by "npm run build:help" and read from them; this is a copy of the words
+-- of those files in the form Postgres searches, made again whenever the build
+-- changes, so nothing here is the only place anything is kept and the table can
+-- be emptied without losing a word of the help.
+
+create table help_search_pages (
+    language_tag text     not null,
+    name         text     not null,
+    title        text     not null,
+    headings     text     not null,
+    body         text     not null,
+    -- The rules of the page's language that its words were cut and stemmed by,
+    -- kept with the page so that what is searched for is cut by the same ones.
+    rules        regconfig not null,
+    -- Weighed so that a word in a title counts for more than the same word in a
+    -- heading, and in a heading for more than in a paragraph. Generated, so
+    -- that it can never disagree with the words it is made from.
+    document     tsvector generated always as (
+        setweight(to_tsvector(rules, title), 'A') ||
+        setweight(to_tsvector(rules, headings), 'B') ||
+        setweight(to_tsvector(rules, body), 'C')
+    ) stored,
+    primary key (language_tag, name)
+);
+
+create index help_search_pages_document on help_search_pages using gin (document);
+
+-- What the pages here were made from, so that making them again from the same
+-- help can be seen to be needless. One row, kept by its key.
+--
+-- `page_count` is how many pages the fingerprint was made for, so that an index
+-- that has lost some of them is seen to have, and is made again, instead of
+-- being taken for the help it was made from because the fingerprint still
+-- matches.
+create table help_search_state (
+    only_row    boolean primary key default true check (only_row),
+    fingerprint text    not null,
+    page_count  integer not null default 0
 );
