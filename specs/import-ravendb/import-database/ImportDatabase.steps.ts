@@ -236,6 +236,25 @@ Given(
   },
 );
 
+// The scenario's database is the template the run migrated, and nothing has
+// emptied it, so there is nothing to do: the step says what the database is.
+Given("a database made by the migrations alone", function (this: SpecWorld) {
+  void this.database;
+});
+
+Then(
+  "there is a table {string}",
+  async function (this: SpecWorld, named: string) {
+    const { schema, table } = tableNamed(named);
+    const { rows } = await this.database.query(
+      `select 1 from pg_tables
+       where schemaname = coalesce($1, current_schema()) and tablename = $2`,
+      [schema ?? null, table],
+    );
+    assert.equal(rows.length, 1, `The table ${named} is not there.`);
+  },
+);
+
 Then(
   "there is no table {string}",
   async function (this: SpecWorld, named: string) {

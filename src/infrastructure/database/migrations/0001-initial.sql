@@ -403,6 +403,58 @@ create table import_errors (
 
 create index import_errors_by_document_id on import_errors (document_id);
 
+-- Which account each user of the old sites became, so that a user on both is
+-- one account, and whatever is imported later can find the account a user's
+-- document now means. Kept on the website, not dropped when importing is
+-- finished, so that a correction to the import can find what each document
+-- became. The email address is kept as written, trimmed, and looked for by the
+-- form the site compares it in, worked out by the import rather than by
+-- lower(): lower() leaves an address with space around it, or an accent
+-- written two ways, as a second address, where the site would take it for the
+-- first and refuse the account made for it.
+create table imported_users (
+    website                  text not null,
+    document_id              text not null,
+    account_id               text not null,
+    email_address            text not null,
+    comparable_email_address text not null,
+    primary key (website, document_id)
+);
+
+create index imported_users_by_email_address
+    on imported_users (comparable_email_address);
+
+-- What each tournament document became, by the website and the document. The
+-- old sites wrote a key in more than one case, "TeamMatches/513" in one place
+-- and "teammatches/513" in another, so each is kept, and looked for, in small
+-- letters, as a user's is above.
+create table imported_tournaments (
+    website       text not null,
+    document_id   text not null,
+    tournament_id text not null,
+    primary key (website, document_id)
+);
+
+-- A player by the number the old sites gave them in their tournament, which is
+-- how a competition names them: the tournament player they became, the player
+-- of a team in a tournament played by teams, or a bye.
+create table imported_players (
+    website                text not null,
+    tournament_document_id text not null,
+    player_number          integer not null,
+    player_id              text not null,
+    primary key (website, tournament_document_id, player_number)
+);
+
+-- What each competition document became, as the tournaments above are.
+create table imported_competitions (
+    website        text not null,
+    document_id    text not null,
+    tournament_id  text not null,
+    competition_id text not null,
+    primary key (website, document_id)
+);
+
 -- What the website's search looks in: the names of its tournaments, of their
 -- competitions and of their players, each kept beside the same name folded as
 -- a search folds what is typed (accents off, lower case, one space between

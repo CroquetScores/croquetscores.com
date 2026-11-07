@@ -64,41 +64,20 @@ export class ImportDatabase implements ImportErrors {
 
   /**
    * Drops every table in the database, in every schema but Postgres's own,
-   * applies every migration, and makes the import's own tables beside them.
+   * applies every migration, and makes the tables only the import uses
+   * beside them.
    */
   async reset(): Promise<void> {
     await dropTables(this.#pool);
 
     await migrate(this.#pool);
 
-    // The table of errors is the site's own, made by the migrations
-    // (0001-initial.sql), so that the administrator's page for it finds
-    // it on a site the import has never run on.
-
-    // Which account each user became, so that a user on both old sites is one
-    // account, and whatever is imported later can find the account a user's
-    // document now means. The email address is kept as written, trimmed, which
-    // nothing the site keeps does, because the table goes when importing is
-    // finished.
-    //
-    // It is looked for by the form the site compares it in, worked out here
-    // rather than by lower() in Postgres: lower() leaves an address with space
-    // around it, or an accent written two ways, as a second address, where the
-    // site would take it for the first and refuse the account made for it.
-    await this.#pool.query(`
-      create table imported_users (
-          website                  text not null,
-          document_id              text not null,
-          account_id               text not null,
-          email_address            text not null,
-          comparable_email_address text not null,
-          primary key (website, document_id)
-      )
-    `);
-    await this.#pool.query(`
-      create index imported_users_by_email_address
-          on imported_users (comparable_email_address)
-    `);
+    // The table of errors and the four that keep what the old sites'
+    // documents became are the site's own, made by the migrations
+    // (0001-initial.sql). The errors so that the administrator's page for
+    // them finds the table on a site the import has never run on; the others
+    // so that they go to the website with the data and are there for a
+    // correction to the import, which cannot learn them by running again.
 
     // The forgotten account made for each user who became none and ran a
     // tournament, so that a user is one forgotten account however many
@@ -112,19 +91,6 @@ export class ImportDatabase implements ImportErrors {
       )
     `);
 
-    // What each document became, by the website and the document, so that
-    // whatever is imported after it can find it. The old sites wrote a key in
-    // more than one case, "TeamMatches/513" in one place and "teammatches/513"
-    // in another, so each is kept, and looked for, in small letters, as a
-    // user's is in the tables above.
-    await this.#pool.query(`
-      create table imported_tournaments (
-          website       text not null,
-          document_id   text not null,
-          tournament_id text not null,
-          primary key (website, document_id)
-      )
-    `);
     // Every tournament document read, whatever became of it, so that what is
     // looked for last of all can tell a document whose tournament took it,
     // or left it behind, or was refused, from one whose tournament was never
@@ -134,18 +100,6 @@ export class ImportDatabase implements ImportErrors {
           website     text not null,
           document_id text not null,
           primary key (website, document_id)
-      )
-    `);
-    // A player by the number the old sites gave them in their tournament, which
-    // is how a competition names them: the tournament player they became, the
-    // player of a team in a tournament played by teams, or a bye.
-    await this.#pool.query(`
-      create table imported_players (
-          website                text not null,
-          tournament_document_id text not null,
-          player_number          integer not null,
-          player_id              text not null,
-          primary key (website, tournament_document_id, player_number)
       )
     `);
     // What a competition said a tournament player represents, by the first
@@ -158,15 +112,6 @@ export class ImportDatabase implements ImportErrors {
           player_id              text not null,
           representing           text not null,
           primary key (website, tournament_document_id, player_id)
-      )
-    `);
-    await this.#pool.query(`
-      create table imported_competitions (
-          website        text not null,
-          document_id    text not null,
-          tournament_id  text not null,
-          competition_id text not null,
-          primary key (website, document_id)
       )
     `);
   }
