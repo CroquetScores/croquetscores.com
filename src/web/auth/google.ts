@@ -235,10 +235,6 @@ export const registerGoogleRoutes = (
     Querystring: { state?: string; code?: string; error?: string };
   }>(callbackPath, async (request, reply) => {
     const pending = pendingFrom(request);
-    // Used up whatever comes of it, so that the same way back followed again
-    // finds nothing to be taken with.
-    reply.clearCookie(pendingCookie, { path: googlePath });
-
     const { state, code, error } = request.query;
     if (
       pending === undefined ||
@@ -248,6 +244,11 @@ export const registerGoogleRoutes = (
     ) {
       return notSentFromHere();
     }
+    // Used up once it has been taken, so that the same way back followed again
+    // finds nothing to be taken with. Not before: a way back carrying another
+    // state is somebody else's, and must not wipe the sign in the reader has
+    // under way.
+    reply.clearCookie(pendingCookie, { path: googlePath });
 
     // The reader said no to Google, or Google said no to them. Either way they
     // chose not to come in by Google, and are brought back to the page they

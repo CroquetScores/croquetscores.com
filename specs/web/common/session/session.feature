@@ -121,6 +121,15 @@ Feature: A reader stays signed in while they keep coming back
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
       Then the browser's session id is not the one it held before
 
+    Scenario: Signing in ends the session the browser held
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And the reader has signed in as "someone@example.com" with the password "correct horse battery staple"
+      And a copy of the session's cookie has been taken
+      When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
+      And the home page is opened with the copy of the cookie
+      Then the reader is signed out
+
     Scenario: Signing in on two browsers starts two sessions
       Given a viewport 1200 pixels wide
       And "someone@example.com" has an account, confirmed, with the password "correct horse battery staple"

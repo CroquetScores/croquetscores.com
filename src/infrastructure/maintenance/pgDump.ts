@@ -3,7 +3,9 @@
 import { spawn } from "node:child_process";
 
 export type PgDumpRefusal =
-  "PgDump.AddressNotUnderstood" | "PgDump.NotRun" | "PgDump.Failed";
+  | "PgDump.AddressNotUnderstood"
+  | "PgDump.NotRun"
+  | "PgDump.Failed";
 
 export class PgDumpRefused extends Error {
   constructor(
@@ -59,6 +61,8 @@ export interface Connection {
   readonly password: string;
   readonly database: string;
   readonly sslMode: string | undefined;
+  /** Files the address names for the connection's encryption, by setting. */
+  readonly sslFiles: Readonly<Record<string, string>>;
 }
 
 /**
@@ -77,15 +81,34 @@ export const connectionOf = (address: string): Connection | undefined => {
     return undefined;
   }
   const sslMode = url.searchParams.get("sslmode");
+  const database = decodeURIComponent(url.pathname.replace(/^\//, ""));
+  const host = decodeURIComponent(url.hostname).replace(/^\[|\]$/g, "");
+  // Left empty, pg_dump and pg_restore fall back to the local socket and the
+  // user's own name, which is a different database than the address names.
+  if (host === "" || database === "") return undefined;
   return {
     // The brackets an address puts round an IPv6 host are its own, and not
     // part of the host.
-    host: decodeURIComponent(url.hostname).replace(/^\[|\]$/g, ""),
+    host,
     port: url.port === "" ? "5432" : url.port,
     user: decodeURIComponent(url.username),
     password: decodeURIComponent(url.password),
-    database: decodeURIComponent(url.pathname.replace(/^\//, "")),
+    database,
     sslMode: sslMode === null || sslMode === "" ? undefined : sslMode,
+    // Verifying a certificate needs the file it is verified against, which
+    // the address names beside the mode.
+    sslFiles: Object.fromEntries(
+      (
+        [
+          ["sslrootcert", "PGSSLROOTCERT"],
+          ["sslcert", "PGSSLCERT"],
+          ["sslkey", "PGSSLKEY"],
+        ] as const
+      ).flatMap(([parameter, variable]) => {
+        const file = url.searchParams.get(parameter);
+        return file === null || file === "" ? [] : [[variable, file]];
+      }),
+    ),
   };
 };
 
@@ -97,6 +120,7 @@ export const environmentOf = (
   ...(connection.sslMode === undefined
     ? {}
     : { PGSSLMODE: connection.sslMode }),
+  ...connection.sslFiles,
 });
 
 /**

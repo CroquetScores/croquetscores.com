@@ -39,6 +39,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { carriedIn } from "../common/link.js";
 import { render } from "../common/layout.js";
 import { hasPassword, readerOf } from "../common/reader.js";
 import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
@@ -93,8 +94,6 @@ const confirmingFor = (
   submit: speaking.say("changeEmailAddress.confirm.submit"),
 });
 
-const carriedIn = (request: FastifyRequest): string | undefined =>
-  /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
 export const registerChangeEmailAddressPage = (
   server: FastifyInstance,

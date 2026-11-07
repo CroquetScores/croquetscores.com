@@ -27,6 +27,11 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
 export interface KeptEventSealing {
   seal(stream: string, kept: KeptEvent): Promise<KeptEvent>;
   open(stream: string, kept: KeptEvent): Promise<KeptEvent>;
+  /** {@link open} for every event of one stream, in the order given. */
+  openAll(
+    stream: string,
+    kept: readonly KeptEvent[],
+  ): Promise<readonly KeptEvent[]>;
 }
 
 /** An event read back, with the stream it is in and where in it. */
@@ -40,6 +45,7 @@ export interface StoredEvent {
 const asItIs: KeptEventSealing = {
   seal: (_stream, kept) => Promise.resolve(kept),
   open: (_stream, kept) => Promise.resolve(kept),
+  openAll: (_stream, kept) => Promise.resolve(kept),
 };
 
 export class PostgresEventStore implements EventStore {
@@ -109,7 +115,7 @@ export class PostgresEventStore implements EventStore {
       // not at, because a caller retries on that and would not know to retry on
       // a database error.
       if (isTheVersionTaken(failure)) {
-        throw concurrency(streamId, expectedVersion + 1, expectedVersion);
+        throw concurrency(streamId, undefined, expectedVersion);
       }
       throw failure;
     }
@@ -123,11 +129,8 @@ export class PostgresEventStore implements EventStore {
           order by version`,
       [streamId.value],
     );
-    const events: DomainEvent[] = [];
-    for (const row of rows) {
-      events.push(this.readBack(await this.sealing.open(streamId.value, row)));
-    }
-    return events;
+    const opened = await this.sealing.openAll(streamId.value, rows);
+    return opened.map((kept) => this.readBack(kept));
   }
 
   /**
@@ -138,9 +141,9 @@ export class PostgresEventStore implements EventStore {
   async streamIds(): Promise<readonly string[]> {
     const { rows } = await this.unitOfWork
       .connection()
-      .query<{ stream_id: string }>(
-        `select distinct stream_id from events order by stream_id`,
-      );
+      .query<{
+        stream_id: string;
+      }>(`select distinct stream_id from events order by stream_id`);
     return rows.map((row) => row.stream_id);
   }
 
@@ -155,16 +158,12 @@ export class PostgresEventStore implements EventStore {
           order by version`,
         [streamId],
       );
-    const stored: StoredEvent[] = [];
-    for (const row of rows) {
-      const kept = await this.sealing.open(streamId, row);
-      stored.push({
-        stream: streamId,
-        version: row.version,
-        event: this.readBack(kept),
-      });
-    }
-    return stored;
+    const opened = await this.sealing.openAll(streamId, rows);
+    return opened.map((kept, index) => ({
+      stream: streamId,
+      version: (rows[index] as { version: number }).version,
+      event: this.readBack(kept),
+    }));
   }
 
   /**
@@ -174,6 +173,10 @@ export class PostgresEventStore implements EventStore {
    * Which stream comes first says nothing: the table records no order across
    * streams, and a stream's name is a random uuid. A read model rebuilt from
    * these has to work whichever stream it is handed first.
+   *
+   * Holds the whole store at once, so it is for the scenarios, which read a
+   * small one; rebuilding for real reads `streamIds` and `readStream` a stream
+   * at a time.
    */
   async readAll(): Promise<readonly StoredEvent[]> {
     const { rows } = await this.unitOfWork
@@ -183,14 +186,22 @@ export class PostgresEventStore implements EventStore {
            from events
           order by stream_id, version`,
       );
+    // The rows come stream by stream, so each stream is opened together.
     const stored: StoredEvent[] = [];
-    for (const row of rows) {
-      const kept = await this.sealing.open(row.stream_id, row);
-      stored.push({
-        stream: row.stream_id,
-        version: row.version,
-        event: this.readBack(kept),
+    for (let from = 0; from < rows.length; ) {
+      const stream = (rows[from] as { stream_id: string }).stream_id;
+      let to = from;
+      while (rows[to]?.stream_id === stream) to += 1;
+      const group = rows.slice(from, to);
+      const opened = await this.sealing.openAll(stream, group);
+      opened.forEach((kept, index) => {
+        stored.push({
+          stream,
+          version: (group[index] as { version: number }).version,
+          event: this.readBack(kept),
+        });
       });
+      from = to;
     }
     return stored;
   }
@@ -227,12 +238,16 @@ export class PostgresEventStore implements EventStore {
 
 const concurrency = (
   streamId: Id,
-  version: number,
+  version: number | undefined,
   expected: number,
 ): AppendRefused =>
   new AppendRefused(
     "EventStore.Concurrency",
-    `${streamId.value} is at version ${version}, and the append expected ${expected}.`,
+    // Not known where another command got in first: it may have kept more than
+    // one event, and the transaction cannot be asked once the insert failed.
+    version === undefined
+      ? `${streamId.value} has moved past version ${expected}, and the append expected it there.`
+      : `${streamId.value} is at version ${version}, and the append expected ${expected}.`,
   );
 
 const isRefused = (failure: unknown, code: string): boolean =>

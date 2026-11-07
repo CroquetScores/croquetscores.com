@@ -1,4 +1,4 @@
-import { rename, rm, stat } from "node:fs/promises";
+import { link, rm, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { withoutAddress } from "./withoutAddress.js";
 
@@ -221,6 +221,7 @@ export const runBackup = async (
     );
   }
 
+  let size: number;
   try {
     await rm(partial, { force: true });
     await world.dump({
@@ -229,16 +230,21 @@ export const runBackup = async (
       tables: TABLES_BACKED_UP,
       program: settings.program,
     });
-    await rename(partial, file);
-  } catch (failure) {
+    // Linked and then the partial name taken away, where a rename would
+    // quietly replace a dump of the same name made in the same second.
+    await link(partial, file);
     await rm(partial, { force: true });
+    size = (await stat(file)).size;
+  } catch (failure) {
+    // The cleanup may fail too, and must not hide what failed or stop the
+    // administrator being told.
+    await rm(partial, { force: true }).catch(() => undefined);
     return failed(
       "making the dump",
       failure instanceof Error ? failure.message : String(failure),
     );
   }
 
-  const { size } = await stat(file);
   const took = tookSaid(now().getTime() - began.getTime());
   // What was written is said wherever it is known, in the email and on the
   // screen alike, so that a task whose email did not come is read from its

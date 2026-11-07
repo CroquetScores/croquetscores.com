@@ -65,6 +65,9 @@ import { welcomePath } from "./welcome.js";
 
 export const registerPath = "/account/register";
 
+const formMintedId =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 /** The field reCAPTCHA's script fills in, and the form sends back. */
 export const tokenField = "recaptchaToken";
 
@@ -277,11 +280,15 @@ export const registerRegisterPage = (
     async (request, reply) => {
       const speaking = speakingOf(request);
       const typed = typedFrom(request.body);
-      // An id given blank, or twice, is not one the form minted; a registration
-      // without one is nobody's retry, and gets an id of its own.
+      // An id that is not a UUID, given blank, or given twice, is not one the
+      // form minted; a registration without one is nobody's retry, and gets an
+      // id of its own. Held to the form's shape so that what is kept against it
+      // is bounded and cannot be made to collide with another page's id.
       const given = request.query.request;
       const requestId =
-        typeof given === "string" && given.trim() !== "" ? given : randomUUID();
+        typeof given === "string" && formMintedId.test(given)
+          ? given
+          : randomUUID();
       const dialog = formFor(speaking, requestId, typed, googleOffered);
 
       let judgement: Judgement;

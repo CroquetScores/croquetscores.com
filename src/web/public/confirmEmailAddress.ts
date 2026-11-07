@@ -40,6 +40,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { submitForm, typedFrom, type Typed } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { carriedIn } from "../common/link.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -208,8 +209,6 @@ const linkFollowed = (request: FastifyRequest): string => request.url;
 // The link's own characters out of the address it arrived in, which is what the
 // form carries over to the submission. Found by name wherever it sits, as what
 // reads a link finds it.
-const carriedIn = (request: FastifyRequest): string | undefined =>
-  /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
 const worthOf = (request: FastifyRequest): Promise<ConfirmationLinkWorth> =>
   request.server.mediator.query(

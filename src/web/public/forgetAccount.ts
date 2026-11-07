@@ -31,6 +31,7 @@ import type { InTransaction } from "../common/database.js";
 import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { carriedIn } from "../common/link.js";
 import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, readerOf, signedIn } from "../common/reader.js";
@@ -82,8 +83,6 @@ const lastAdministrator = (speaking: Speaking): Said => ({
   explanation: speaking.say("forgetAccount.lastAdministrator.explanation"),
 });
 
-const carriedIn = (request: FastifyRequest): string | undefined =>
-  /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
 // Back to where the reader was going, link and all, once they have signed in.
 const toSignIn = (request: FastifyRequest, reply: FastifyReply) =>
