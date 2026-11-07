@@ -16,6 +16,10 @@ import { windowsTimeZones } from "./windowsTimeZones.js";
 // old sites' tournaments were kept in them: "UTC" and "Dateline Standard Time"
 // as England's, and "UTC+13" as New Zealand's.
 //
+// "British Columbia Standard Time" is no zone Windows keeps, so
+// windowsTimeZones.ts has no word on it, but the old sites' tournaments were
+// kept in it and it is Canada's.
+//
 // Every time zone of Russia is taken as New Zealand's, since the old sites'
 // tournaments kept in them were played there. They are found by name rather
 // than listed, so that a zone Windows adds later is taken the same way.
@@ -26,6 +30,7 @@ const chosen: Readonly<Record<string, string>> = {
   UTC: "england",
   "Dateline Standard Time": "england",
   "UTC+13": "nz",
+  "British Columbia Standard Time": "ca",
 };
 
 // Time zones read as another, which the old sites' managers chose for
