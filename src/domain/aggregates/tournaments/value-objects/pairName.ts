@@ -61,8 +61,13 @@ const parts = (
   };
 };
 
+// Lowered without regard to the host's locale, which would make one name two in
+// Turkish, and composed so that an accent typed either way is the same letter.
+const comparable = (name: string): string =>
+  name.toLowerCase().normalize("NFC");
+
 const sameLastName = (one: string, other: string): boolean =>
-  one.toLocaleLowerCase() === other.toLocaleLowerCase();
+  comparable(one) === comparable(other);
 
 /**
  * The name of the pair made of the players called `first` and `second`, in

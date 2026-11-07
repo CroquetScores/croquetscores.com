@@ -14,6 +14,22 @@ const MARKS: Readonly<Record<Site, readonly string[]>> = {
 // The digits a score begins with, and whatever follows them.
 const WRITTEN = /^(\d+)(.*)$/s;
 
+// Points a number can hold exactly: beyond that two different scores could
+// read as the same, or as infinity, so it is no more points than no digits.
+const pointsOf = (
+  written: string,
+): { readonly points: number; readonly rest: string } => {
+  const [, digits, rest] = WRITTEN.exec(written) ?? [];
+  if (digits === undefined || rest === undefined) {
+    throw new ValidationError<ScoreErrorCode>("Score.NoPoints");
+  }
+  const points = Number(digits);
+  if (!Number.isSafeInteger(points)) {
+    throw new ValidationError<ScoreErrorCode>("Score.NoPoints");
+  }
+  return { points, rest };
+};
+
 /**
  * A player's score in a game, as the scorer wrote it down: its number of
  * points, which is the digits it begins with, and whatever follows them, as
@@ -41,16 +57,9 @@ export class Score {
    */
   static read(typed: string, website: Website): Score {
     const written = typed.trim();
-    const [, digits, rest] = WRITTEN.exec(written) ?? [];
-    if (digits === undefined || rest === undefined) {
-      throw new ValidationError<ScoreErrorCode>("Score.NoPoints");
-    }
+    const { points, rest } = pointsOf(written);
     const ending = rest.trim().toLowerCase();
-    return new Score(
-      Number(digits),
-      written,
-      MARKS[website.site].includes(ending),
-    );
+    return new Score(points, written, MARKS[website.site].includes(ending));
   }
 
   /**
@@ -58,11 +67,7 @@ export class Score {
    * marked when it was, which the website decided then.
    */
   static kept(written: string, marked: boolean): Score {
-    const [, digits] = WRITTEN.exec(written) ?? [];
-    if (digits === undefined) {
-      throw new ValidationError<ScoreErrorCode>("Score.NoPoints");
-    }
-    return new Score(Number(digits), written, marked);
+    return new Score(pointsOf(written).points, written, marked);
   }
 
   get points(): number {

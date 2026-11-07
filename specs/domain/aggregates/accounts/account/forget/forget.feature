@@ -76,6 +76,27 @@ Feature: Forgetting an account
         | AC World Ranking Officer |
         | GC World Ranking Officer |
 
+  Rule: A forgotten account has no move waiting
+
+    An address asked for is something kept of the person, and a link carrying
+    its reference should find nothing once the account is forgotten.
+
+    Scenario: Forgetting an account spends the moves asked for
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And moving it to "sam@example.org" was asked for, as "asking-1"
+      And the account is rebuilt from the stream
+      When the account is forgotten
+      Then no move is asked for as "asking-1"
+
+    Scenario: An account rebuilt after it was forgotten has no move waiting
+      Given a stream where an account was registered at "someone@example.com"
+      And its email address was confirmed as "Sam Someone"
+      And moving it to "sam@example.org" was asked for, as "asking-1"
+      And it was forgotten
+      When the account is rebuilt from the stream
+      Then no move is asked for as "asking-1"
+
   Rule: A forgotten account says it is forgotten, whether or not it was confirmed
 
     What an account not yet confirmed cannot do, a forgotten one cannot do

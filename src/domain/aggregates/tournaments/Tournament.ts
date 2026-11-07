@@ -296,7 +296,7 @@ const FORMATS_OFFERED = {
 
 // A name is the same name however it is capitalised, as a reader takes it.
 const sameName = (one: string, other: string): boolean =>
-  one.toLowerCase() === other.toLowerCase();
+  one.toLowerCase().normalize("NFC") === other.toLowerCase().normalize("NFC");
 
 const refuse = (code: TournamentErrorCode, message: string): never => {
   throw new TournamentRefused(code, message);

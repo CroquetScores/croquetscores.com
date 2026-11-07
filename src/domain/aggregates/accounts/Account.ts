@@ -409,6 +409,9 @@ export class Account extends AggregateRoot {
       // So that whatever asks what an account may do gets the right answer
       // without also having to ask whether it is forgotten.
       this.#roles.clear();
+      // An address asked for is kept of the person, and a link carrying its
+      // reference must find nothing once they are forgotten.
+      this.#movesAsked.clear();
     }
     // Signing in is kept as a record that it happened, and changes nothing
     // the account decides by, so it has no case here.
