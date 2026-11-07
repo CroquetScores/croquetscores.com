@@ -11,6 +11,7 @@ import type { EmailsWritten, WrittenTo } from "../../services/EmailsWritten.js";
 import type { HandledRequests } from "../../services/HandledRequests.js";
 import type { LinkPurpose, Links } from "../../services/Links.js";
 import type { FindsAccountByAddress } from "./accountsByAddress.js";
+import { CONFIRMATION_LINK_WORKS_FOR_HOURS } from "./confirmationLinks.js";
 import { ResetPassword } from "./ResetPassword.js";
 import { SET_NEW_PASSWORD_LINK_HOURS } from "./setNewPasswordLinks.js";
 import { AN_HOUR, shiftedBy } from "../../common/moments.js";
@@ -25,7 +26,10 @@ const emails: Readonly<
     link: "set-new-password",
     hours: SET_NEW_PASSWORD_LINK_HOURS,
   },
-  "Email.ConfirmAddressAgain": { link: "confirm-email-address", hours: 24 },
+  "Email.ConfirmAddressAgain": {
+    link: "confirm-email-address",
+    hours: CONFIRMATION_LINK_WORKS_FOR_HOURS,
+  },
   "Email.RegisterInstead": { hours: 0 },
 };
 

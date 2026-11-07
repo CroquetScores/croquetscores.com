@@ -2,6 +2,7 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { PersonName } from "../../../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { accountOf } from "./accountOf.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { ChangeName } from "./ChangeName.js";
@@ -24,10 +25,7 @@ export class ChangeNameHandler extends CommandHandler<ChangeName, AccountId> {
 
   async handle(command: ChangeName): Promise<AccountId> {
     const id = AccountId.from(command.account);
-    const account = await this.accounts.load(id);
-    if (account === undefined) {
-      throw new Error(`The account ${id.value} has no events.`);
-    }
+    const account = await accountOf(this.accounts, id);
     account.changeName(PersonName.from(command.name), command.requestedAt);
     await this.accounts.save(account);
     return account.id;

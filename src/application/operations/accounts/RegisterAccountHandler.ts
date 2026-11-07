@@ -3,6 +3,7 @@ import { Account } from "../../../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { accountOf } from "./accountOf.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { LinkPurpose, Links } from "../../services/Links.js";
@@ -118,13 +119,8 @@ export class RegisterAccountHandler extends CommandHandler<
     command: RegisterAccount,
     id: AccountId,
   ): Promise<void> {
-    const account = await this.accounts.load(id);
-    // The read model found it, so its stream is there; a stream that has gone
-    // between the two is a broken database rather than something to tell
-    // whoever registered.
-    if (account === undefined) {
-      throw new Error(`The account ${id.value} has no events.`);
-    }
+    // The read model found it, so its stream is there.
+    const account = await accountOf(this.accounts, id);
 
     // Counting holds the account until this transaction ends, so registrations
     // arriving at once are counted one after another: side by side, each would

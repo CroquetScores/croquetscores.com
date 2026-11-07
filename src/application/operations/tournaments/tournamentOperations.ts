@@ -24,6 +24,7 @@ import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { BrokenRule } from "../../../domain/common/validation/Validator.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
+import { accountOf } from "../accounts/accountOf.js";
 import { brokenBy } from "../../common/brokenBy.js";
 
 /** Why an operation on a tournament is refused, besides the tournament's own. */
@@ -115,10 +116,7 @@ export const askedBy = async (
   written: string,
 ): Promise<AccountId> => {
   const id = AccountId.from(written);
-  const account = await accounts.load(id);
-  if (account === undefined) {
-    throw new Error(`The account ${id.value} has no events.`);
-  }
+  const account = await accountOf(accounts, id);
   if (account.forgotten) {
     throw new AccountRefused("Account.Forgotten", "The account is forgotten.");
   }
@@ -278,7 +276,9 @@ export const managedOrWrittenToBy = async (
 /**
  * The tournament `written`, and the part `account` has in it, once it is known
  * to be asking and to manage or score it: refused as a manager's list is, but
- * letting a scorer in as well, for what a scorer is shown.
+ * letting a scorer in as well, for what a scorer is shown. Anybody else is
+ * refused as `Tournament.NotAManager`, or as `refusal` where the caller's
+ * contract names another code.
  */
 export const managedOrScoredBy = async (
   tournaments: AggregateRepository<Tournament, TournamentId>,
@@ -286,16 +286,20 @@ export const managedOrScoredBy = async (
   account: string,
   written: string,
   operation: string,
+  refusal:
+    | "Tournament.NotAManager"
+    | "Tournament.NotAManagerOrScorer" = "Tournament.NotAManager",
 ): Promise<{
+  readonly by: AccountId;
   readonly tournament: Tournament;
   readonly part: "manager" | "scorer";
 }> => {
   const by = await askedBy(accounts, account);
   const tournament = await tournamentFor(tournaments, written, operation);
-  if (tournament.mayManage(by)) return { tournament, part: "manager" };
-  if (tournament.scores(by)) return { tournament, part: "scorer" };
+  if (tournament.mayManage(by)) return { by, tournament, part: "manager" };
+  if (tournament.scores(by)) return { by, tournament, part: "scorer" };
   throw new TournamentRefused(
-    "Tournament.NotAManager",
+    refusal,
     "Only a manager or a scorer of the tournament can ask for this.",
   );
 };

@@ -15,6 +15,7 @@ import {
   netMatchesOf,
   type TeamStanding,
 } from "./PublicTeamSummaryOfTournament.js";
+import { outcomeOfMatch } from "./outcomeOfMatch.js";
 
 /** A test of a tournament, as standingsOf is asked which to count. */
 export type TestShape = Extract<
@@ -219,14 +220,8 @@ const matchesOf = (
   const decided: (string | undefined)[] = [];
   for (const [pair, played] of byPair) {
     const [one = "", other = ""] = pair.split(" ");
-    const won = (player: string): number =>
-      played.filter((game) => !game.drawn && game.winner.value === player)
-        .length;
-    const left = bestOf - played.length;
-    if (left > 0 && Math.abs(won(one) - won(other)) <= left) continue;
-    decided.push(
-      won(one) > won(other) ? one : won(other) > won(one) ? other : undefined,
-    );
+    const outcome = outcomeOfMatch(played, one, other, bestOf);
+    if (outcome.decided) decided.push(outcome.winner);
   }
   return decided;
 };

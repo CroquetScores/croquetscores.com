@@ -23,31 +23,10 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { ValidationError } from "../../../domain/common/validation/ValidationError.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import {
-  askedBy,
   managedBy,
-  tournamentFor,
+  managedOrScoredBy,
   unlessArchived,
 } from "../tournaments/tournamentOperations.js";
-
-// The tournament `written`, and who asks, once `account` is known to manage it
-// or to score it: anybody else is refused as `Tournament.NotAManagerOrScorer`.
-const managedOrScoredBy = async (
-  tournaments: AggregateRepository<Tournament, TournamentId>,
-  accounts: AggregateRepository<Account, AccountId>,
-  account: string,
-  written: string,
-  operation: string,
-): Promise<{ readonly by: AccountId; readonly tournament: Tournament }> => {
-  const by = await askedBy(accounts, account);
-  const tournament = await tournamentFor(tournaments, written, operation);
-  if (!tournament.mayManage(by) && !tournament.scores(by)) {
-    throw new TournamentRefused(
-      "Tournament.NotAManagerOrScorer",
-      "Only a manager or a scorer of the tournament can ask for this.",
-    );
-  }
-  return { by, tournament };
-};
 
 /** Where a tournament's competitions are kept, each under its own id. */
 export type Competitions = AggregateRepository<Competition, CompetitionId>;
@@ -176,6 +155,7 @@ export const competitionManagedBy = async (
         request.account,
         request.tournament,
         operation,
+        "Tournament.NotAManagerOrScorer",
       )
     : await managedBy(
         tournaments,

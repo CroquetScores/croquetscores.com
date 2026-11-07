@@ -1,4 +1,4 @@
-import { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import { shiftedBy } from "../../common/moments.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
@@ -27,7 +27,7 @@ export class RecentResultsHandler extends QueryHandler<
     const website = Website.from(query.website);
     return this.byWebsite.playedSince(
       website,
-      ReadOnlyDate.from(new Date(query.at.toDate().getTime() - SEVEN_DAYS)),
+      shiftedBy(query.at, -SEVEN_DAYS),
       filterFor(website, query.chose, "RecentResults"),
     );
   }

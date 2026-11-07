@@ -24,6 +24,7 @@ import {
   managerNotesChangedOf,
   type TournamentCommentaries,
 } from "./tournamentForReaders.js";
+import { outcomeOfMatch } from "./outcomeOfMatch.js";
 import { type TournamentAddresses } from "./tournamentOperations.js";
 
 export class PublicTestOfTournamentHandler extends QueryHandler<
@@ -162,11 +163,12 @@ const matchesOf = (
   }
   return [...byPair.values()].map(({ sides, games: played }) => {
     const sideOf = (player: string): WhichSide => (player === sides[0] ? 0 : 1);
-    const won = (side: WhichSide): number =>
-      played.filter((game) => !game.drawn && sideOf(game.winner.value) === side)
-        .length;
-    const left = bestOf - played.length;
-    const decided = left <= 0 || Math.abs(won(0) - won(1)) > left;
+    const { winner: matchWinner } = outcomeOfMatch(
+      played,
+      sides[0],
+      sides[1],
+      bestOf,
+    );
     return {
       sides: [nameOf(sides[0]), nameOf(sides[1])],
       games: played.map((game) => {
@@ -181,8 +183,7 @@ const matchesOf = (
           winner: game.drawn ? undefined : winner,
         };
       }),
-      winner:
-        !decided || won(0) === won(1) ? undefined : won(0) > won(1) ? 0 : 1,
+      winner: matchWinner === undefined ? undefined : sideOf(matchWinner),
     };
   });
 };
