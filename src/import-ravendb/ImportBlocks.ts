@@ -8,6 +8,7 @@ import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js"
 import type { Block, Game } from "./ravendb-models/Competition.js";
 import type { Importer, ReadDocument } from "./runImporter.js";
 import { BestOf } from "../domain/aggregates/tournaments/value-objects/BestOf.js";
+import { TieBreak } from "../domain/aggregates/tournaments/value-objects/TieBreak.js";
 import { Rounds } from "../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { bestOfWorkedOut } from "./bestOfImported.js";
 
@@ -311,6 +312,9 @@ export class ImportBlocks implements Importer<Block> {
               by,
               at,
               { drawsAllowed: hasTieMarked(document) },
+              // The old sites kept no tie break for a block, so which it went
+              // by is not known, and net games is not claimed for it.
+              TieBreak.other,
             );
           },
         };
