@@ -29,6 +29,7 @@ import { renderDialog, type Dialog } from "../common/dialog.js";
 import { escape } from "../common/escape.js";
 import { refusedForm, typedFrom } from "../common/form.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { carriedIn } from "../common/link.js";
 import { siteNameOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -103,8 +104,6 @@ const formFor = (
   submit: speaking.say("setNewPassword.submit"),
 });
 
-const carriedIn = (request: FastifyRequest): string | undefined =>
-  /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
 export const registerSetNewPasswordPage = (
   server: FastifyInstance,

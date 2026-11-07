@@ -99,6 +99,10 @@ export const startSession = async (
   sessions: Sessions,
   account: AccountId,
 ): Promise<void> => {
+  // The one the browser held is ended first, so that a copy of it, or an id
+  // planted before signing in, is worth nothing once the reader has signed in.
+  const held = request.cookies[sessionCookie];
+  if (held !== undefined && held !== "") await sessions.end(held);
   const id = await sessions.start(account, request.requestedAt);
   reply.setCookie(sessionCookie, id, options);
 };

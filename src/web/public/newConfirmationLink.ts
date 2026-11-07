@@ -24,6 +24,7 @@ import type { Links } from "../../application/services/Links.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import { speakingOf, type Speaking } from "../common/language.js";
+import { carriedIn } from "../common/link.js";
 import { siteNameOf, servedAsOf, websiteOf } from "../common/site.js";
 import { render } from "../common/layout.js";
 import { hasPassword, signedIn } from "../common/reader.js";
@@ -85,8 +86,6 @@ const asking = (
             <button class="button button-submit" type="submit">${escape(speaking.say("newConfirmationLink.send"))}</button>
           </form>`;
 
-const carriedIn = (request: FastifyRequest): string | undefined =>
-  /[?&]link=([^&]*)/.exec(request.url)?.[1];
 
 export const registerNewConfirmationLinkPage = (
   server: FastifyInstance,
