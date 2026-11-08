@@ -217,9 +217,10 @@ Then("the rebuild script says {}", function (this: SpecWorld, words: string) {
   // "database access is off for 20 minutes", "the rebuild took 10.0
   // minutes", "there are 2,500 streams in the event store", and the rest
   // are sentences the script says in so many words.
-  const wanted = words
-    .replace(/^the rebuild failed$/, "the rebuild failed")
-    .replace(/^the minutes are needed$/, "minutes are needed");
+  const wanted = words.replace(
+    /^the minutes are needed$/,
+    "minutes are needed",
+  );
   assert.ok(
     sayings(this, wanted),
     `The script said:\n${said(this).join("\n")}`,
