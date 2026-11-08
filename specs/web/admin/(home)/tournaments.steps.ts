@@ -90,8 +90,12 @@ const inNameOf = async <T>(
     name,
   );
   assert.ok(at >= 0, `${name} is not listed.`);
+  // A string that is a function is called with the argument, so the selector
+  // and the position reach the page as data and are never spliced into code.
+  // Only `expression`, which every caller writes out in full, is part of it.
   return world.browserPage.evaluate<T>(
-    `(() => { const element = document.querySelectorAll(${JSON.stringify(names)})[${String(at)}]; return ${expression}; })()`,
+    `({ selector, at }) => { const element = document.querySelectorAll(selector)[at]; return ${expression}; }`,
+    { selector: names, at },
   );
 };
 
