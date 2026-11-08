@@ -394,8 +394,11 @@ Then(
       .locator(`${panel} .help-search-result-title`, { hasText: title })
       .first()
       .waitFor({ timeout: 5000 });
+    // A string that is a function is called with the argument, so the selector
+    // and the title reach the page as data and are never spliced into code.
     const read = await this.browserPage.evaluate(
-      `(() => { const result = [...document.querySelectorAll(${JSON.stringify(`${panel} .help-search-results li`)})].find((each) => each.querySelector(".help-search-result-title")?.textContent === ${JSON.stringify(title)}); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; })()`,
+      `({ selector, title }) => { const result = [...document.querySelectorAll(selector)].find((each) => each.querySelector(".help-search-result-title")?.textContent === title); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; }`,
+      { selector: `${panel} .help-search-results li`, title },
     );
     assert.equal(typeof read, "string", `There is no result called ${title}.`);
     assert.equal(read, "rgb(0, 0, 0)");
