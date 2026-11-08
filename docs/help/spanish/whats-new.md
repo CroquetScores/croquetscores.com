@@ -1,174 +1,49 @@
 # Novedades
 
-## Publicado el 2026-11-05
+## Publicado el 2026-11-10
 
-### Gestionar un torneo
+Croquet Scores se ha reescrito por completo. Espero que te guste la nueva versión.
 
-- **Se pueden añadir varios jugadores a una competición a la vez.** En la pestaña Jugadores de una competición, pulsa **Añadir varios**, junto a **Añadir jugador**, marca los jugadores que quieras, o la casilla de encima de la lista para todos, y pulsa **Añadir seleccionados**. Se colocan en el orden del torneo. Si algunos no se pueden añadir, un segundo cuadro dice cuáles y por qué, y pregunta si se añade al resto. Consulta [Inscribir jugadores en una competición](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
-- **Una pareja de dobles se forma con dos jugadores ya inscritos.** En la pestaña Jugadores del torneo, pulsa **Añadir pareja**, elige el primer y el segundo jugador y vuelve a pulsar **Añadir pareja**. La pareja se llama «Sam Someone & Alex Another», o «Peter & Rosie Landrebe» cuando los dos tienen el mismo apellido, y representa lo que representan sus jugadores. El cuadro sigue abierto para poder formar la siguiente pareja. Consulta [Jugadores](tournament-managers/standard-tournament/players.md#adding-a-pair).
-- **Un torneo nuevo empieza en el mes en que estamos.** Su inicio es el día uno de este mes y su fin es el mismo día, y el fin sigue al inicio hasta que elijas uno propio.
-- **Los archivos del ranking escriben los nombres con sencillez.** Un dibujo en el nombre de un torneo se omite, un apóstrofo curvo se escribe como apóstrofo, y letras como ø, ł y ß se escriben como las letras sencillas, para que los nombres sean los que tiene la lista del ranking.
+### Encontrar cosas
 
-### Seguir un torneo
+- **Buscar.** Todas las páginas tienen un cuadro de búsqueda en la parte superior. Escribe un nombre y pulsa Buscar para encontrar torneos, competiciones y jugadores.
 
-- **La ayuda encuentra una respuesta por lo que quieres decir.** Haz una pregunta en el cuadro de búsqueda de la primera página de la ayuda y encontrará el artículo aunque el artículo use otras palabras con el mismo significado.
-- **La primera página de la ayuda ofrece preguntas populares y los temas como tarjetas.** Cinco preguntas que hace la gente llevan a sus respuestas, y cada tema es una tarjeta que dice lo que contiene.
-- **La ayuda se ha puesto al día.** Cada página se leyó frente al sitio y se corrigió, y cada imagen se tomó de nuevo. Una página nueva, Seguir un torneo, dice lo que puedes hacer en las listas y en las páginas de un torneo. Por ahora solo está en inglés.
-- **Los meses de un año siguen el orden de las fechas.** Cuando los torneos se ordenan del más reciente al más antiguo, los meses de la página de un año empiezan por diciembre, y las fechas y los nombres quedan alineados en cada mes abierto.
-- **La página de notas lleva el título Notas de los gestores** y dice que aún no hay notas cuando no las hay.
-- **Más torneos están en su propio país.** Los torneos con Happy Valley en el nombre están en Canadá, y los torneos alemanes, suizos, checos, noruegos, suecos y portugueses que se mostraban en un país equivocado están en el suyo.
+- **Filtrar los torneos por país, estado o provincia, y deporte.** En la página de inicio, elige un país para ver solo los torneos que se juegan en él. Una vez elegido un país, puedes elegir uno de sus estados o provincias, y también un deporte. Tu teléfono u ordenador recuerda lo que elegiste y empieza desde ahí la próxima vez. **Al elegir un estado o provincia solo se encuentran los torneos nuevos.** Los más antiguos no tenían estado ni provincia, así que al elegir uno se dejan fuera.
 
-## Publicado el 2026-11-03
+- **Filtrar los torneos por días.** Indica un primer día y un último día, juntos, y solo se muestran los torneos que empiezan entre ellos. Ambos días están incluidos.
+
+- **La página de un año muestra sus meses.** Cada mes aparece cerrado, con el número de torneos que empiezan en él. Pulsa un mes para abrir sus torneos, y abre todos los que quieras. **+ Mostrar todo** abre todos los meses.
+
+- **Las listas largas se dividen en páginas.** Una lista de torneos muestra cien a la vez, así que una búsqueda amplia ya no carga todas las filas de golpe.
+
+- **La ayuda encuentra una respuesta por lo que quieres decir.** Haz una pregunta en el cuadro de búsqueda de la primera página de la ayuda y encontrará el artículo aunque use otras palabras con el mismo significado. La primera página también ofrece preguntas populares y los temas en tarjetas.
 
 ### Seguir un torneo
 
-- **La página de un año muestra sus meses.** Cada uno de los doce meses aparece cerrado, con el número de torneos que empiezan en él. Pulsa un mes para abrir sus torneos en la misma página; puedes tener abiertos a la vez tantos meses como quieras. Bajo el encabezado, **+ Mostrar todo** abre todos los meses y pasa a decir **- Ocultar todo**, que los cierra. Lo mismo se hace con un deporte en un año. Sin scripts, un mes es en cambio un enlace, y los meses abiertos se guardan en la dirección.
-- **Los torneos se pueden filtrar por un intervalo de días.** Antes del botón Filtrar hay un primer día y un último día, que se indican los dos o ninguno. Ambos días están incluidos. Un torneo entra en el intervalo por el día en que empieza, así que está en la lista de un solo mes y nunca en dos.
-- **Una lista de torneos tiene cien por página.** Una lista más larga se divide en páginas, para que una búsqueda amplia ya no cargue todas las filas a la vez.
-- **Se recuerda el filtro que elegiste.** El país, la región y el deporte que eliges en el filtro, o al pulsar una bandera, se guardan en tu teléfono o en tu ordenador, y una lista de torneos empieza con ellos la próxima vez que la abras. El año no se guarda, porque es una página aparte. Si eliges «cualquiera» en uno de ellos, se olvida lo guardado para ese.
-- **Más torneos aparecen en su propio país.** Los campeonatos y abiertos de Suecia y Noruega, los abiertos de Chequia y los campeonatos de Kohlhof y del Suroeste se mostraban en España, o donde apuntara su zona horaria. Ahora están en Suecia, Noruega, Chequia y Alemania.
-- **Dos jugadores cuyo nombre estaba mal escrito son una sola persona.** Marga Podnieks figuraba como «Marga Podneiks» en 7 competiciones, y Liz Mackenzie como «Liz McKenzie» en 5, así que el sitio mostraba dos personas donde había una. Ahora cada nombre está bien escrito en todas partes.
+- **Notas de los gestores.** Los gestores de un torneo ahora pueden escribir notas para contar a sus jugadores lo que necesitan saber mientras se juega: el formato, un cambio en el orden de juego, la hora del almuerzo. Están en la nueva sección Notas del torneo, con las más recientes primero y el tiempo que hace que se escribió cada una.
 
-## Publicado el 2026-11-02
+- **Un asterisco (\*) marca lo que no has leído.** Una nota lo lleva hasta que la abres, y de nuevo si se modifica después de que la leas. Mientras haya alguna nota sin leer, la sección Notas también lo lleva, en todas las páginas del torneo, así puedes ver que hay novedades sin ir a mirar. Las crónicas se marcan de la misma manera. Tu navegador recuerda lo que has leído, así que no necesitas iniciar sesión. Otro teléfono u ordenador empieza sin nada leído.
 
-### Gestionar un torneo
+- **La crónica es más fácil de seguir.** En el sitio anterior, cada comentario nuevo llevaba la página hasta el final, y quien estaba repasando comentarios anteriores perdía el lugar. Ahora la página solo baja hasta un comentario nuevo si ya estás al final, leyendo lo último. Si has subido para leer comentarios anteriores, te deja donde estás.
 
-- **Una eliminatoria puede recibir a los perdedores de una ronda de otra eliminatoria.** Muchas eliminatorias se juegan como un cuadro principal con una segunda eliminatoria para quienes perdieron su primera ronda, y una tercera para quienes perdieron la segunda. En el cuadro de diálogo de una eliminatoria, pulsa **Añadir eliminatoria de perdedores**, ponle nombre y elige la ronda cuyos perdedores siguen jugando en ella. Sus jugadores se colocan allí a medida que se decide cada partido, así que no tienes que introducirlos a mano.
-- **Se puede indicar a un grupo cómo se distingue a los jugadores con los mismos partidos ganados.** En el cuadro de diálogo de un grupo, elige sus **Desempates**: partidas netas, luego aros netos, luego quién ganó a quién; solo quién ganó a quién; u otro, que es ningún método conocido, de modo que los jugadores siguen empatados y comparten un puesto. Un grupo nuevo empieza con partidas netas, luego aros netos, luego quién ganó a quién.
-- **Una competición puede indicar el máximo de aros al que se juegan sus partidas.** Entre las casillas del cuadro de diálogo de una competición, **Máximo de aros** admite un número entero de al menos 1. Déjalo vacío si no hay máximo. Una competición que no lo indica usa el habitual de su deporte: 26, o 13 en croquet golf.
-- **El archivo de texto de los rankings nombra como ganador de un grupo al que el grupo coloca primero.** El ganador es el jugador que el grupo coloca en primer lugar, si es uno solo, y no se nombra a nadie si no se puede distinguir a los jugadores en el primer puesto. Antes, el archivo nombraba al jugador con más partidas ganadas, que podía ser otro.
-- **La barra de secciones sigue a las competiciones.** Después de añadir, cambiar, mover, archivar o restaurar una competición o un test, la barra de la página del torneo ofrece lo que el torneo tiene ahora, sin volver a abrir la página.
-- **Una lista de jugadores sin fila de campos lo indica.** Si la primera fila de la lista que pegas en **Añadir jugadores** no nombra ningún campo, el mensaje dice que la primera fila debe ser de nombres de campos, con un enlace a la ayuda, que se abre en otra pestaña para que lo que escribiste se conserve.
-- **Los cuadros de diálogo Añadir jugador y Añadir jugadores se abren dentro de la ventana.** Con la página desplazada hacia abajo, se abrían con su parte superior por encima de lo que se veía.
+- **Un bloque muestra el puesto de cada jugador.** La última columna da el puesto de cada jugador: 1, o =2 cuando no se puede desempatar a los jugadores y comparten el segundo. Cuando los jugadores empatan en los partidos ganados, una línea debajo explica cómo se desempató.
 
-### Seguir un torneo
+- **El orden de juego se puede ordenar.** Pulsa Partida para ordenar las partidas por el nombre del ganador, o Fecha para ordenarlas por cuándo se añadió cada una. Vuelve a pulsar para invertir el orden. El sitio recuerda cómo ordenaste, en todas las competiciones y también en las listas de torneos, y un enlace debajo de la lista, Volver al orden habitual, lo olvida.
 
-- **Un grupo muestra el puesto de cada jugador.** La cuadrícula y el resumen de un grupo terminan con una columna titulada #, que da el puesto de cada jugador: 1, o =2 cuando no se puede distinguir a los jugadores y comparten el segundo puesto. Debajo, cuando los jugadores están empatados en los partidos ganados, una línea dice cómo se les distinguió.
-- **Una competición indica a cuántos aros se juegan sus partidas.** Cuando no es lo habitual del deporte, los resultados lo dicen: «Se juega a 14 aros».
-- **La fila de un torneo nacional o internacional está en negrita.** Lo hace toda lista de torneos: en la página de inicio, en un año y en un deporte de un año, en una búsqueda y en la página de un jugador.
-- **Las vistas de una competición están junto a su botón de impresión.** Cuadrícula, Resumen y Orden de juego están juntos con la impresora contra el borde derecho, y el nombre de la competición queda solo a la izquierda. En un teléfono, la impresora pasa debajo de las vistas, siempre contra el borde derecho.
+- **Se muestran los hándicaps.** Cuando un jugador tiene hándicap, aparece después de su nombre, junto con lo que representa, como en Tim Murphy (4, Australia).
 
-## Publicado el 2026-11-01
-
-### Seguir un torneo
-
-- **El Escudo Interestatal se clasifica por partidos netos.** Ahora sus equipos se clasifican por los partidos que ganaron menos los que perdieron, así que un partido perdido cuenta en contra de un equipo, cuando antes no contaba para nada. Los equipos que siguen empatados se ordenan por los tests que ganaron entre sí. El resumen del torneo y la página de un grupo muestran los partidos netos y las partidas netas de cada equipo.
-
-### Gestionar un torneo
-
-- **Se pueden añadir muchos jugadores a la vez.** En la pestaña Jugadores, pulsa **Añadir jugadores**, junto a **Añadir jugador**, y pega una lista con una línea por jugador. Se añade a todos los jugadores de la lista.
-- **Un icono de ayuda en más páginas de administración.** El signo de interrogación redondo ahora también encabeza la página que crea un torneo y la que lo modifica, cierra la fila de pestañas de la página de un torneo y de una competición, y aparece junto a la lista de torneos. Cada uno lleva a la ayuda de lo que estás viendo y la abre en otra pestaña para que la página se conserve.
-- **La pestaña Resultados es una tabla.** Cada resultado es una fila de una tabla, de modo que un lector de pantalla te dice en qué celda estás. La palabra «ganó a» tiene una columna propia entre la puntuación del ganador y el perdedor. En un teléfono, el resultado ya no se parte en dos líneas: la tabla se desplaza hacia los lados.
-- **Un test de una Copa Eire o de un Escudo Interestatal no tiene grupo.** Esas competiciones no se juegan en grupos, así que el cuadro de diálogo de un test no pide uno allí, y no se puede asignar un grupo a un test.
-
-## Publicado el 2026-10-31
-
-### iPad e iMac
-
-- **La navegación vuelve a estar en un iPad.** En un iPad 6 no aparecían los enlaces Buscar, Inicio, Jugadores, Ayuda y Administración, ni el botón que los abre. Ahora aparecen.
-- **Un botón de menú en una tableta en vertical.** Una tableta en vertical, como un teléfono, muestra la navegación tras un botón de menú, porque los enlaces no caben en una fila. En horizontal van arriba, como en un ordenador, con la búsqueda en la misma fila que el icono de inicio, antes de él.
-- **Los enlaces bajo una lista de torneos ya no llevan al torneo equivocado.** En un iPad 6, todos los enlaces desde «Todos los torneos de 2026» hacia abajo en la página de inicio llevaban al mismo torneo. Ahora cada uno lleva al suyo.
-- **Pulsar el espacio en blanco ya no te saca de la página.** En un iPad, y en un iMac, pulsar el espacio vacío cerca de la parte superior de la pantalla te llevaba a un torneo. Pulsar una fila sigue abriendo su torneo, pero pulsar en otro sitio no.
-
-### Seguir un torneo
-
-- **El orden de juego tiene encabezados y se puede ordenar.** El orden de juego de una competición es ahora una tabla con los encabezados Partida y Fecha. Pulsa Partida para ordenar las partidas por el nombre del ganador, de la A a la Z, y luego por el del perdedor. Pulsa Fecha para ordenar por el momento en que se añadió cada partida, que es como empieza la página, con la más antigua primero. Vuelve a pulsar el encabezado para invertir las partidas. La fecha nunca se parte en dos líneas.
-- **La ordenación se recuerda.** El sitio recuerda en tu teléfono o en tu ordenador cómo ordenaste por última vez el orden de juego, para cada competición, y lo ordena así la próxima vez que lo abras. Lo mismo se hace con las otras listas que se pueden ordenar, como los torneos de la página de inicio y los torneos en los que ha jugado un jugador. Bajo una lista ordenada así hay un enlace, Volver al orden habitual, que la olvida.
-
-### Gestionar un torneo
-
-- **La pestaña Resultados se presenta en columnas.** En una tableta o en una pantalla más ancha, cada resultado de la pestaña Resultados de una competición es una fila de columnas: el número de la partida, el ganador, la puntuación del ganador, el perdedor, la puntuación del perdedor y los botones. Los nombres y las puntuaciones no se parten en líneas y ocupan solo el espacio que necesitan. Los botones tienen el resto. En un teléfono los resultados se presentan como antes.
-- **Cada resultado empieza con el número de su partida.** Las partidas se numeran en el orden en que se introdujeron, contando las archivadas, así que un hueco en los números es una partida que se ha archivado.
-
-### Tu cuenta
-
-- **Olvidar una cuenta ahora reescribe lo que se guardó.** Olvidar una cuenta solía dejar su nombre y su dirección de correo electrónico fuera de alcance. Ahora los sustituye, para siempre, dondequiera que el sitio los guarde: el nombre pasa a ser Forgotten Account y un número, y la dirección de correo electrónico pasa a ser una dirección de example.com que no es de nadie. Lo mismo se hace con la cuenta de Google vinculada a ella, para que nada una la cuenta con la persona. Los correos que aún esperaban a la cuenta se eliminan. Las cuentas olvidadas antes de esto se reescriben del mismo modo la próxima vez que se actualice el sitio. Se conservan el identificador de la cuenta y lo que publicó, bajo el nuevo nombre.
-- **Cómo pedir que se eliminen tus datos.** La nueva página /data-deletion-policy explica cómo pedir que se elimine lo que el sitio guarda sobre ti, sea cual sea la forma en que inicias sesión, qué se elimina, qué se conserva y qué hacer si no puedes iniciar sesión. Sus pasos llevan a la página Olvidar cuenta.
+- **Una competición indica a cuántos aros se juegan sus partidas** cuando no es lo habitual en su deporte, como "Se juega a 14 aros".
 
 ### El sitio
 
-- **Las listas desplegables se leen en el tema oscuro.** Las opciones de cada lista desplegable, como el país, el deporte y el idioma, ahora son blancas sobre gris oscuro cuando el sitio está oscuro. El tema claro sigue como estaba.
+- **Tu idioma.** El sitio está ahora en doce idiomas: afrikáans, árabe (Egipto), checo, inglés, alemán, griego, letón, noruego, portugués, español, sueco y galés. Se te muestra el primer idioma que pide tu navegador y que el sitio tiene, o inglés si no tiene ninguno. Para elegir otro, usa la lista del pie de página, al final de cualquier página, y pulsa el botón que hay junto a ella. Si quieres que se añada un idioma, escribe a <croquetscores@gmail.com>.
 
-## Publicado el 2026-10-30
+- **Claro u oscuro.** También en el pie de página: elige Claro, Oscuro o Del sistema. Del sistema sigue a tu teléfono u ordenador. El sitio recuerda tu elección en todas las páginas y en todas las visitas.
 
-### iPad
+- **Qué versión tienes.** El pie de página ahora muestra la versión del sitio que estás viendo, como v234. Si informas de un problema, indica por favor de qué versión se trataba.
 
-Ahora pulsar una lista y pulsar el espacio en blanco de la página de inicio funcionan correctamente. Probé todas las páginas con un iPad 6 sin ningún problema; cruzo los dedos para que valga para todos los iPad e iMac. Avísame, por favor, en cualquier caso.
-
-### Encontrar cosas
-
-- **El país, la región y el deporte vuelven a ser listas.** Los campos que acotan los torneos, en la página de inicio y en la página de un año, vuelven a las listas del navegador, que pulsas para ver todos los nombres y elegir uno. Escribir en ellos no funcionaba lo bastante bien.
-
-### Gestionar un torneo
-
-- **De nuevo listas para el país, la región y el deporte.** El formulario que crea o cambia un torneo también los pide en listas, y la bandera de un jugador o de un equipo se elige de una lista.
-- **Las banderas siguen el orden de los países.** Primero van Australia, Egipto, Inglaterra, Nueva Zelanda, España y Estados Unidos, luego los demás países en los que se han jugado torneos desde 2025 y luego todos los demás. Se traza una línea después de Estados Unidos y después de Gales para mostrar dónde acaba un grupo y empieza el siguiente.
-
-### País de un torneo
-
-Chris Williams ha vuelto a echar una mano: me ayudó a mejorar los países de los torneos al traerlos de la antigua base de datos.
-
-## Publicado el 2026-10-29
-
-### Encontrar cosas
-
-- **Escribe un país, una región o un deporte.** Los campos que acotan los torneos, en la página de inicio y en la página de un año, ahora son cuadros en los que escribes, no listas por las que desplazarte. Escribe parte de un nombre, como Zela, y se sugieren los nombres que la contienen. Pulsa la flecha del final del cuadro, o la tecla de flecha hacia abajo, para ver todos los nombres, de cinco en cinco y con el resto para desplazarse. Pulsa una sugerencia, o muévete con las teclas de flecha y pulsa Intro, para elegirla. Un cuadro vacío significa cualquiera. Las palabras que no son el nombre de un país o de un deporte no pueden quedarse en el cuadro: se te pide que elijas uno, y la tecla Escape devuelve el que tenías.
-- **La página de un jugador mantiene las fechas de cada torneo en una línea.** En un teléfono, las fechas de los torneos de la página de un jugador se partían en dos líneas. Ahora se quedan en una, y lo que se parte es el nombre del torneo.
-
-### Gestionar un torneo
-
-- **Elige el país, la región y el deporte escribiendo.** El formulario que crea o cambia un torneo los pide en los mismos cuadros. Un torneo necesita un país y un deporte, así que se te pide que elijas uno antes de poder salir de cualquiera de los cuadros o enviar el formulario. Corregir las palabras del país ya no hace perder la región que habías elegido. Elegir otro país sí la borra.
-- **Las banderas también se escriben.** La bandera de un jugador o de un equipo se elige de la misma manera. Deja el cuadro vacío si no quieres bandera.
-- **Se sugiere lo que representa un jugador.** Mientras escribes lo que representa un jugador, se sugieren los clubes y países por los que se han añadido jugadores, en cualquier torneo y en cualquier deporte. Escribe dos letras para empezar. Se sugieren como máximo diez, por orden alfabético, y un nombre que solo se diferencia en las mayúsculas se sugiere una vez, tal como se escribió la primera vez. No se miran los jugadores archivados ni los de un equipo.
-- **La ayuda explica las rondas de un grupo.** Rondas es cuántas veces se enfrenta cada pareja de jugadores de un grupo, con un partido en cada ronda. Empieza en 1, que es lo que casi siempre necesita un grupo. Súbelo solo para un grupo en el que se vuelven a enfrentar, como en una doble liguilla. La página de las competiciones lo explica, y un grupo y un suizo ahora tienen una sección cada uno.
-
-### Torneos traídos de los sitios antiguos
-
-- **Se quitan más hándicaps del nombre para la clasificación mundial.** El número que va después del último espacio del nombre de un jugador en los sitios antiguos, entero o con decimales como 5.5 o 5,5, con signo más o menos o sin él, ya no se toma por parte del nombre al buscar su clasificación mundial. Lo mismo vale para un hándicap después de un punto y coma, como en Tim Murphy; 5.5. Dos números al final, como en Tim Murphy 3 5, se dejan, porque no hay forma de saber cuál se quiso decir, y también se deja un nombre que es solo un número.
-
-## Publicado el 2026-10-28
-
-### Encontrar cosas
-
-- **Los resultados de búsqueda son tablas.** Los torneos y las competiciones que encuentra una búsqueda ahora se presentan como las listas de la página de inicio: los días en que se jugó cada uno, el tipo de deporte, la bandera de su país y el nombre. Una competición muestra los días, el tipo de deporte y la bandera de su torneo, y el torneo en el que está. Las fechas y los nombres se pueden ordenar, cada tabla por separado, y el orden queda en la dirección de la página junto a lo que escribiste. Ordenar solo reordena los cien resultados que se muestran, que son los que mejor coinciden con tus palabras, no todos los que coinciden.
-- **Los países con más actividad van primero.** Allí donde elijas un país, la lista ahora empieza por Australia, Egipto, Inglaterra, Nueva Zelanda, España y Estados Unidos, luego los demás países en los que se han jugado torneos desde 2025, y después todos los demás, con una línea entre los tres grupos.
-- **Cada torneo muestra su deporte.** En una tableta o una pantalla más ancha, las listas de torneos de la página de inicio y de la página de un año muestran el deporte del torneo como un código corto, como GC o AC, con un color propio para cada deporte, después de las fechas. En un teléfono se omite el código para dejar espacio a los nombres.
-- **Página de inicio.** Los próximos torneos de la página de inicio ahora están debajo de los resultados recientes en cualquier ancho de pantalla.
-- **Las banderas ya no abarrotan el teléfono.** En un teléfono, la columna de banderas se omite en todas las listas de torneos, para que los nombres tengan más espacio.
-- **La lista de países se mantiene abierta en Chrome en Linux.** Al pulsar el campo del país en la página de inicio, la lista se abría y se cerraba enseguida. Ahora se mantiene abierta y se desplaza.
-
-### Seguir un torneo
-
-- **Hándicaps.** Los gestores de un torneo ahora pueden dar un hándicap a un jugador, como 4, +4 o -1.5. Se muestra después del nombre del jugador, con lo que representa si hay algo, como en Tim Murphy (4, Australia).
-- **Peeling en la cuadrícula suiza.** Un resultado en la cuadrícula suiza ahora termina con el peeling de la partida, como ya hace el archivo de texto de las clasificaciones. Una partida ganada por 26tp a 17 se lee +9tp para el ganador y -9tp para el perdedor. Una partida sin peeling se lee como antes.
-
-### Torneos traídos de los sitios antiguos
-
-- **Más torneos están en el país correcto.** Muchos torneos llegaron con el país equivocado, porque los sitios antiguos solo conocían la zona horaria. Ahora el sitio lee el país en el nombre de un torneo cuando puede, como Irish, Welsh, Bayfield o CroqCan, y pone cada partido de Inglaterra contra Escocia en el país que fue anfitrión ese año. Gracias a Chris Williams por su ayuda con esto.
-- **Se traen los torneos que aún no se han jugado** aunque sus gestores todavía no hayan añadido una competición, para que puedas encontrar cuándo y dónde se juegan.
-- **Un hándicap después del nombre de un jugador** en los sitios antiguos, como en Tim Murphy 1, ya no se toma por parte del nombre al buscar su clasificación mundial.
-
-## Publicado el 2026-10-27
-
-Croquet Scores se ha reescrito por completo con IA, en TypeScript. Esto es lo que vas a notar.
-
-### Encontrar cosas
-
-- **Buscar.** Todas las páginas tienen un cuadro de búsqueda arriba. Escribe un nombre y pulsa Buscar para encontrar torneos, competiciones y jugadores. Los resultados salen en tres listas, y una lista vacía se omite. Si hay más de cien de un mismo tipo, la página lo dice, y añadir una palabra a tu búsqueda la acota.
-- **Acota los torneos por país, región y deporte.** En la página de inicio, elige un país para ver solo los torneos que se juegan en él. Una vez elegido un país, puedes elegir un estado o provincia de ese país, y también un deporte. Lo que elijas queda en la dirección de la página, así que puedes guardarla en favoritos o enviársela a alguien, y el botón de retroceso lo deshace. **Elegir un estado o provincia solo encuentra torneos nuevos.** Los más antiguos no tienen estado ni provincia, así que al elegir uno se dejan fuera.
-
-### Seguir un torneo
-
-- **Notas de los gestores.** Los gestores de un torneo ahora pueden escribir notas para decir a los jugadores lo que necesitan saber mientras se juega: el formato, un cambio en el orden de juego, la hora de la comida. Están en la nueva sección Notas del torneo, con las más recientes primero y el tiempo que hace que se escribió cada una.
-- **Un asterisco (\*) marca lo que no has leído.** Una nota lo tiene hasta que la abres, y de nuevo si se modifica después de que la leas. Mientras haya una nota sin leer, la sección Notas también lo tiene, en todas las páginas del torneo, así ves que hay novedades sin ir a mirar. Las crónicas se marcan de la misma manera. Tu navegador recuerda lo que has leído, así que no necesitas iniciar sesión. Otro teléfono u ordenador empieza sin nada leído.
-- **La crónica es más fácil de seguir.** En el sitio antiguo, cada comentario nuevo llevaba la página hasta el final, y quien repasaba comentarios anteriores perdía el sitio. Ahora la página solo baja hasta un comentario nuevo si ya estás al final, leyendo el último. Si has subido para leer comentarios anteriores, te deja donde estás.
-
-### El sitio
-
-- **Tu idioma.** El sitio ahora está en diecisiete idiomas: Afrikaans, العربية (مصر), 中文, Nederlands, English, Français, Deutsch, Italiano, 日本語, 한국어, Te Reo Māori, Polski, Português, Русский, Español, Svenska y Cymraeg. Se te muestra el primer idioma que pide tu navegador y que el sitio tiene, o inglés si no tiene ninguno. Para elegir otro, usa la lista del pie de página, al final de cualquier página, y pulsa el botón que hay junto a ella. Si quieres que se añada un idioma, escribe a <croquetscores@gmail.com>.
-- **Claro u oscuro.** También en el pie de página: elige Claro, Oscuro o Del sistema. Del sistema sigue a tu teléfono u ordenador. El sitio recuerda tu elección en todas las páginas y en cada visita.
-- **Qué versión estás usando.** El pie de página ahora muestra la versión del sitio que estás viendo, como v234. Si informas de un problema, indica por favor de qué versión era.
+- **Tus datos.** La página /data-deletion-policy explica cómo hacer que se borre lo que el sitio guarda sobre ti, qué se borra y qué se conserva.
 
 ### Código abierto
 
-El código ahora es de código abierto, con la Licencia Pública General de GNU Affero versión 3 (AGPL-3.0). Cualquiera puede leerlo, usarlo y modificarlo, y quien ponga en marcha una versión modificada como sitio web debe compartir sus cambios con la misma licencia.
+El código ahora es de código abierto, bajo la Licencia Pública General de GNU Affero versión 3 (AGPL-3.0). Cualquiera puede leerlo, usarlo y modificarlo, y quien ejecute una versión modificada como sitio web debe compartir sus cambios con la misma licencia.
