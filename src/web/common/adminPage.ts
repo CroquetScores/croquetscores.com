@@ -92,8 +92,7 @@ const adminBuild = (build: string): string =>
     build,
   ).replace(/</g, "\\u003c")}</script>`;
 
-// Set in the page's width, as the try website's banner is, since nothing
-// around it is a panel.
+// Set in the page's width, since nothing around it is a panel.
 const alertBar = (alert: string): string =>
   alert === ""
     ? ""
@@ -148,7 +147,7 @@ export const adminPage = (
         const banner = websiteOf(request).isTry
           ? tryWebsiteBanner(speaking, siteName)
           : "";
-        return `${whole}${siteBar({
+        return `${whole}${banner}${siteBar({
           speaking,
           siteName,
           // Every page of the admin is the admin to the navigation, which
@@ -156,7 +155,7 @@ export const adminPage = (
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${banner}${alertBar(alert)}${adminWords(speaking)}${adminBuild(build)}`;
+        })}${alertBar(alert)}${adminWords(speaking)}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.

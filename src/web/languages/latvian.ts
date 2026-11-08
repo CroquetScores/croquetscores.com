@@ -52,7 +52,7 @@ export const latvian: Language = {
       "Atzīmējiet rūtiņu, lai piekristu lietošanas noteikumiem.",
     // Tiek rādīts katrā izmēģinājuma vietnes lapā, zem vietnes joslas.
     "tryWebsite.banner":
-      "Šeit varat droši iemācīties lietot {siteName}. Viss, kas šeit tiek ievadīts, jebkurā brīdī var tikt noņemts.",
+      "Šī ir JAUNĀ {siteName} versija, kas tiks izlaista 2026. gada 10. novembrī.",
 
     "language.label": "Valoda",
     "language.choose": "Mainīt",

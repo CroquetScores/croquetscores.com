@@ -41,7 +41,7 @@ export const egyptian: Language = {
     "TermsOfUse.NotAgreed": "علّم على المربع عشان توافق على شروط الاستخدام.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "ده مكان آمن تتعلّم فيه {siteName}. أي حاجة تدخلها هنا ممكن تتمسح في أي وقت.",
+      "دي النسخة الجديدة من {siteName} اللي هتتطلع يوم 10 نوفمبر 2026.",
 
     "language.label": "اللغة",
     "language.choose": "غيّر",

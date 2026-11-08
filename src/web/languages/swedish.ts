@@ -48,7 +48,7 @@ export const swedish: Language = {
       "Kryssa i rutan för att godkänna användarvillkoren.",
     // Sägs på varje sida på en prova-på-webbplats, under webbplatsfältet.
     "tryWebsite.banner":
-      "Här kan du lära dig {siteName} utan risk. Allt som skrivs in här kan tas bort när som helst.",
+      "Det här är den NYA versionen av {siteName}, som släpps den 10 november 2026.",
 
     "language.label": "Språk",
     "language.choose": "Byt",

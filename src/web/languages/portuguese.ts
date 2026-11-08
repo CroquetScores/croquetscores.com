@@ -51,7 +51,7 @@ export const portuguese: Language = {
       "Marque a caixa para concordar com os termos de uso.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Este é um lugar seguro para aprender a usar o {siteName}. Tudo o que for digitado aqui pode ser removido a qualquer momento.",
+      "Esta é a NOVA versão do {siteName}, que será lançada a 10 de novembro de 2026.",
 
     "language.label": "Idioma",
     "language.choose": "Alterar",

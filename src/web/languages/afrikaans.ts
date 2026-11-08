@@ -52,7 +52,7 @@ export const afrikaans: Language = {
       "Merk die blokkie om in te stem tot die gebruiksvoorwaardes.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Dit is 'n veilige plek om {siteName} te leer ken. Enigiets wat hier ingevoer word, kan enige tyd verwyder word.",
+      "Dit is die NUWE weergawe van {siteName} wat op 10 November 2026 vrygestel word.",
 
     "language.label": "Taal",
     "language.choose": "Verander",

@@ -48,7 +48,7 @@ export const norwegian: Language = {
     "TermsOfUse.NotAgreed": "Kryss av i ruta for å godta brukervilkårene.",
     // Sies på hver side på et prøvenettsted, under nettstedsfeltet.
     "tryWebsite.banner":
-      "Her kan du lære {siteName} uten risiko. Alt som skrives inn her kan fjernes når som helst.",
+      "Dette er den NYE versjonen av {siteName}, som lanseres 10. november 2026.",
 
     "language.label": "Språk",
     "language.choose": "Bytt",
