@@ -447,8 +447,11 @@ const weightsOf = async (
       .allTextContents()
   ).indexOf(name);
   assert.ok(at >= 0, `${name} is not listed.`);
+  // A string that is a function is called with the argument, so the position
+  // and the selector reach the page as data and are never spliced into code.
   return world.browserPage.evaluate<number[]>(
-    `(() => [...document.querySelectorAll(".tournaments > .tournament")[${String(at)}].querySelectorAll(${JSON.stringify(within)})].map((element) => Number(getComputedStyle(element).fontWeight)))()`,
+    `({ at, within }) => [...document.querySelectorAll(".tournaments > .tournament")[at].querySelectorAll(within)].map((element) => Number(getComputedStyle(element).fontWeight))`,
+    { at, within },
   );
 };
 
