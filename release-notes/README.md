@@ -11,6 +11,29 @@ This folder and the `release` branch are for deleting after the deploy.
 
 Each step says where it is run: **your computer** (the repository, in WSL, or PowerShell where it says so) or **the server** (`ssh deploy@{ip address}`, then `cd /srv/croquetscores/site`). The server has no `.env`, so its scripts are run through `withsettings`, as `docs/website/deploying.md` section 1 says.
 
+## 0. Put the try banner's words back
+
+Your computer, on a branch of its own off `main`, merged before step 4 deploys `main`. Pull request #576 changed the try banner to say "This is the NEW {siteName} that will be released 10 Nov 2026." That was for the days before the move. From Tuesday the try websites are somewhere to learn again, so the words go back to:
+
+> This is a safe place to learn {siteName}. Anything entered here may be removed at any time.
+
+The words are the phrase `tryWebsite.banner` in each of the twelve files under `src/web/languages/`. The English is above; the other eleven are restored from the commit before #576, rather than written again:
+
+```bash
+for language in afrikaans czech egyptian english german greek latvian norwegian portuguese spanish swedish welsh; do
+  git show 40880478:src/web/languages/$language.ts > temp/$language.before.ts
+done
+```
+
+Copy each `tryWebsite.banner` sentence from `temp/{language}.before.ts` into the file of that name, and leave the rest of the file alone. Then check that only those twelve lines changed, and that the scenarios still pass (they read the English words from the catalogue, so they pass with either wording):
+
+```bash
+git diff --stat
+npm run test:changed -- specs/web/common/layout/layout.feature
+```
+
+The banner's place and colours stay as #576 left them.
+
 ## 1. Stop sites on Azure
 
 Your computer, in `release-notes/`. Puts each offline page on its own old site, which closes it and stops updates to the databases.
