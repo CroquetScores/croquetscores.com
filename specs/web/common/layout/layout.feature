@@ -20,6 +20,11 @@ Feature: What every page is set in
     The banner says one thing, so its words are one phrase of the catalogue
     and are in the reader's language like everything else in the bars.
 
+    It is set as the beta site's notice is: the first thing on the page,
+    above the site bar, in black on bright yellow. Both say that what is
+    entered may be thrown away, and a reader who has met one should know the
+    other at a glance.
+
     Nowhere else shows it. The real websites are where tournaments are kept,
     and development is Croquet Scores as readers have it, so that a page
     worked on there looks as it will where it is served.
@@ -47,6 +52,18 @@ Feature: What every page is set in
       And a site served as "try.croquetscores.com"
       When a page that is not there is opened
       Then the page carries the try website's banner
+
+    Scenario: The banner is above the site bar
+      Given a viewport 1200 pixels wide
+      And a site served as "try.croquetscores.com"
+      When the home page is opened
+      Then the try website's banner is above the site bar
+
+    Scenario: The banner is black on yellow
+      Given a viewport 1200 pixels wide
+      And a site served as "try.croquetscores.com"
+      When the home page is opened
+      Then the try website's banner is black on yellow
 
     @postgres
     Scenario Outline: Any other website does not

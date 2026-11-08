@@ -45,6 +45,36 @@ Then(
 );
 
 Then(
+  "the try website's banner is above the site bar",
+  async function (this: SpecWorld) {
+    const above = await this.browserPage.locator(banner).boundingBox();
+    const bar = await this.browserPage.locator("header.site-bar").boundingBox();
+    assert.ok(
+      above !== null && bar !== null,
+      "The banner or the bar is not shown.",
+    );
+    assert.ok(above.y + above.height <= bar.y);
+  },
+);
+
+// Read as the browser draws them, so that a rule which no longer reaches the
+// banner is seen, and not only one that was never written.
+Then(
+  "the try website's banner is black on yellow",
+  async function (this: SpecWorld) {
+    const drawn = await this.browserPage
+      .locator(banner)
+      .evaluate((element: unknown) => {
+        const style = (globalThis as unknown as InThePage).getComputedStyle(
+          element,
+        );
+        return [style.backgroundColor, style.color];
+      });
+    assert.deepEqual(drawn, ["rgb(255, 235, 59)", "rgb(0, 0, 0)"]);
+  },
+);
+
+Then(
   "the page carries no try website's banner",
   async function (this: SpecWorld) {
     assert.equal(await this.browserPage.locator(banner).count(), 0);
@@ -93,6 +123,8 @@ interface InThePage {
     readonly fontFamily: string;
     readonly fontSize: string;
     readonly fontWeight: string;
+    readonly backgroundColor: string;
+    readonly color: string;
   };
 }
 

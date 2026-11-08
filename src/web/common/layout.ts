@@ -248,17 +248,17 @@ ${accountGroup(bar)}
 ${menuScript}        </details>`;
 };
 
-// Beneath the site bar rather than in it, so that it scrolls away once read
+// Above the site bar, where the beta site's notice is (betaSite.ts), and in
+// its colours, so that the two warnings that what is entered may be thrown
+// away look alike. Outside the pinned bar, so that it scrolls away once read
 // instead of taking a line of every screen for as long as the reader stays.
 // Said by the admin's page too (adminPage.ts).
 export const tryWebsiteBanner = (
   speaking: Speaking,
   siteName: string,
 ): string => `
-    <div class="try-banner">
-      <div class="page">
-        <p>${escape(speaking.say("tryWebsite.banner", { siteName }))}</p>
-      </div>
+    <div class="try-banner" role="status">
+      <p>${escape(speaking.say("tryWebsite.banner", { siteName }))}</p>
     </div>`;
 
 // What a page names its sections is the page's own words; the bar's own word
@@ -562,7 +562,7 @@ ${shell.styles}
     </style>`
     }
   </head>
-  <body>${siteBar({ ...shell, withSearch: true })}${subtitleBar(shell.tournament)}${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
+  <body>${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${siteBar({ ...shell, withSearch: true })}${subtitleBar(shell.tournament)}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">
       <div class="page">
 ${
