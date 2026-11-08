@@ -33,6 +33,7 @@
     "pretest:features": "npm run build:admin:alongside && npm run build:help",
     "pretest:nobrowser": "npm run build:admin:alongside && npm run build:help",
     "pretest:nodb": "npm run build:admin:alongside && npm run build:help",
+    "ssh": "tsx scripts/ssh.mjs",
     "test": "npm run test:features",
     "test:browser": "tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile browser",
     "test:changed": "node scripts/test-changed.mjs",
