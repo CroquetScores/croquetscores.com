@@ -34,7 +34,7 @@ withsettings npm run db:access -- off --minutes 120 --text "Setting up the new h
 
 At Cloudflare: https://dash.cloudflare.com/52d8b863c7ad977a97091d225e6775f5/domains/overview
 
-Point each of the four names at the server, `{ip address}`. This is the change the pages on the old sites promise, and it is why a reader may go on seeing them for a few hours: each provider and device keeps its old copy until it asks again. It is done now, with the sites still closed, so that it is spreading while the data is loaded. Anyone who reaches the new server before step 10 is shown the maintenance page from step 2.
+Point each of the four names at the server, `{ip address}`. This is the change the pages on the old sites promise, and it is why a reader may go on seeing them for a few hours: each provider and device keeps its old copy until it asks again. It is done now, with the sites still closed, so that it is spreading while the data is loaded. Anyone who reaches the new server before step 11 is shown the maintenance page from step 2.
 
 ## 4. Deploy the current website
 
@@ -93,7 +93,11 @@ exit
 
 If it fails it says what to do. Read what it says before running it again.
 
-## 9. Look at the new site
+## 9. Configure reCAPTCHA
+
+At google.com/recaptcha. The server already has the right keys, so nothing changes on it. What is left is Google's side: the domains of the key pair must be all four websites and `beta.croquetscores.com`, since a key is refused on a domain it was not made for and the register form then fails for every reader (`configuration.md` section 6).
+
+## 10. Look at the new site
 
 Before anyone is sent to it: the health check, the home page, a tournament, and sign in with an account from the imported data. A name that shows as unreadable means the account keys are not the file's.
 
@@ -101,16 +105,16 @@ Before anyone is sent to it: the health check, the home page, a tournament, and 
 curl -s https://beta.croquetscores.com/api/site/health
 ```
 
-## 10. Turn on the new production sites
+## 11. Turn on the new production sites
 
-The server. Step 2 turned access off, and the rebuild inside `import-dump.sh` finds it off and leaves it off, so nothing opens the site until this does. Do it once step 9 is satisfied.
+The server. Step 2 turned access off, and the rebuild inside `import-dump.sh` finds it off and leaves it off, so nothing opens the site until this does. Do it once step 10 is satisfied.
 
 ```bash
 cd /srv/croquetscores/site
 withsettings npm run db:access -- on
 ```
 
-## 11. Check the sites by their own names
+## 12. Check the sites by their own names
 
 Check each of the four addresses from a connection that has the new records (mobile data is the quickest), and look at the footer for the version. A reader who still sees the page on an old site is waiting for their own copy of the DNS to update, which is what that page explains.
 
