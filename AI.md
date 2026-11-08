@@ -111,9 +111,11 @@ Report what happened, including what did not work. "Tests pass" when they were n
 
 ## 7. When a review is asked for
 
-A review is run when somebody asks for one, and not otherwise: it is not a step on the way to a pull request.
+A review is run when somebody asks for one, and not otherwise: it is not a step that happens on its own on the way to a pull request.
 
-A pull request is where to say that one is worth asking for. When a pull request has been opened, say so, and give the line that runs the review with the number filled in:
+Before a pull request is created, ask whether a review should be run first, and wait for the answer. A review of the branch is cheaper to act on before the pull request exists than after, when others may already be reading it. If the answer is yes, run it and leave the pull request until its findings have been dealt with; if the answer is no, create the pull request. Being asked for a pull request is still the request to create it, and the question is only whether to review first.
+
+When a pull request has been opened, say so, and give the line that runs a review of it with the number filled in, for whoever skipped the review before or wants another:
 
 ```
 /code-review 123
