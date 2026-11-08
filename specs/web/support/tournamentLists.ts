@@ -841,8 +841,11 @@ const weightsOf = async (
   ).indexOf(tournament);
   assert.ok(at >= 0, `${tournament} is not in the ${name}.`);
   const selector = `main section.tournament-list[data-list="${lists[listed]}"] tbody tr`;
+  // A string that is a function is called with the argument, so the selector
+  // and the position reach the page as data and are never spliced into code.
   return world.browserPage.evaluate<number[]>(
-    `(() => [...document.querySelectorAll(${JSON.stringify(selector)})[${String(at)}].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight)))()`,
+    `({ selector, at }) => [...document.querySelectorAll(selector)[at].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight))`,
+    { selector, at },
   );
 };
 
