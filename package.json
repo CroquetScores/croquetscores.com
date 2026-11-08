@@ -93,6 +93,9 @@
     "typescript-eslint": "^8.72.1",
     "vite": "^8.3.2"
   },
+  "overrides": {
+    "minimatch": "^11.0.5"
+  },
   "allowScripts": {
     "core-js-pure@3.50.0": true,
     "esbuild@0.28.2": true
