@@ -10,24 +10,19 @@
 // there. They reach the page as data and are never part of the script.
 import type { Page } from "playwright";
 
-/** Where the values wait for the script to read them. */
-const where = "specArguments";
-
 /**
  * Hands `given` to the page, then evaluates `script`, which reads it as
  * `globalThis.specArguments`. Every script that uses this writes out the call
- * itself, as `(({ a, b }) => ...)(globalThis.specArguments)`.
+ * itself, as `(({ a, b }) => ...)(globalThis.specArguments)`: building the call
+ * here would splice a script into a script, which is what this is to avoid.
  */
 export const evaluateWith = async <T>(
   page: Page,
   script: string,
   given: unknown,
 ): Promise<T> => {
-  await page.evaluate(
-    ([name, value]) => {
-      Reflect.set(globalThis, name as string, value);
-    },
-    [where, given],
-  );
+  await page.evaluate((value) => {
+    Reflect.set(globalThis, "specArguments", value);
+  }, given);
   return page.evaluate<T>(script);
 };
