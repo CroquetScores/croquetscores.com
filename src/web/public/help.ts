@@ -259,7 +259,10 @@ ${pictured(articleHtml, writtenIn.tag)}
   // (registerQuestionLimit): only when it is asked one.
   server.get(helpPath, (request, reply) => show(request, reply, ""));
   server.get<{ Params: { "*": string } }>(`${helpPath}/*`, (request, reply) => {
-    const name = request.params["*"].replace(/\/+$/, "");
+    // Trailing slashes are cut with a loop rather than /\/+$/, which takes
+    // time quadratic in the length of a path made of nothing but slashes.
+    let name = request.params["*"];
+    while (name.endsWith("/")) name = name.slice(0, -1);
     return show(request, reply, name);
   });
 };
