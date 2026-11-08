@@ -12,6 +12,7 @@ import {
   siteNameFor,
   withScripting,
 } from "../../support/browser.js";
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { signInAs } from "../../support/reader.js";
 
 // What a scenario has said of the reader and the question, and what the last
@@ -394,10 +395,11 @@ Then(
       .locator(`${panel} .help-search-result-title`, { hasText: title })
       .first()
       .waitFor({ timeout: 5000 });
-    // A string that is a function is called with the argument, so the selector
-    // and the title reach the page as data and are never spliced into code.
-    const read = await this.browserPage.evaluate(
-      `({ selector, title }) => { const result = [...document.querySelectorAll(selector)].find((each) => each.querySelector(".help-search-result-title")?.textContent === title); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; }`,
+    // The selector and the title reach the page as data and are never spliced
+    // into code, which evaluateWith says how.
+    const read = await evaluateWith<string | undefined>(
+      this.browserPage,
+      `(({ selector, title }) => { const result = [...document.querySelectorAll(selector)].find((each) => each.querySelector(".help-search-result-title")?.textContent === title); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; })(globalThis.specArguments)`,
       { selector: `${panel} .help-search-results li`, title },
     );
     assert.equal(typeof read, "string", `There is no result called ${title}.`);

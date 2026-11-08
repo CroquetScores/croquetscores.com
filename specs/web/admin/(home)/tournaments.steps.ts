@@ -20,6 +20,7 @@ import {
 } from "../../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { announcedAs, isMarked, unmarkedWithin } from "../../support/marks.js";
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { ordinal } from "../../support/ordinals.js";
 import { changeTournament } from "../../support/tournaments.js";
 
@@ -90,11 +91,12 @@ const inNameOf = async <T>(
     name,
   );
   assert.ok(at >= 0, `${name} is not listed.`);
-  // A string that is a function is called with the argument, so the selector
-  // and the position reach the page as data and are never spliced into code.
-  // Only `expression`, which every caller writes out in full, is part of it.
-  return world.browserPage.evaluate<T>(
-    `({ selector, at }) => { const element = document.querySelectorAll(selector)[at]; return ${expression}; }`,
+  // The selector and the position reach the page as data and are never
+  // spliced into code, which evaluateWith says how. Only `expression`, which
+  // every caller writes out in full, is part of it.
+  return evaluateWith<T>(
+    world.browserPage,
+    `(({ selector, at }) => { const element = document.querySelectorAll(selector)[at]; return ${expression}; })(globalThis.specArguments)`,
     { selector: names, at },
   );
 };
@@ -447,10 +449,11 @@ const weightsOf = async (
       .allTextContents()
   ).indexOf(name);
   assert.ok(at >= 0, `${name} is not listed.`);
-  // A string that is a function is called with the argument, so the position
-  // and the selector reach the page as data and are never spliced into code.
-  return world.browserPage.evaluate<number[]>(
-    `({ at, within }) => [...document.querySelectorAll(".tournaments > .tournament")[at].querySelectorAll(within)].map((element) => Number(getComputedStyle(element).fontWeight))`,
+  // The position and the selector reach the page as data and are never
+  // spliced into code, which evaluateWith says how.
+  return evaluateWith<number[]>(
+    world.browserPage,
+    `(({ at, within }) => [...document.querySelectorAll(".tournaments > .tournament")[at].querySelectorAll(within)].map((element) => Number(getComputedStyle(element).fontWeight)))(globalThis.specArguments)`,
     { at, within },
   );
 };

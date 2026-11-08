@@ -15,6 +15,7 @@ import {
   tournamentNamed,
 } from "../../application/operations/tournaments/aRequest.js";
 import type { SpecWorld } from "../../support/world.js";
+import { evaluateWith } from "./evaluateWith.js";
 import { unmarkedWithin } from "./marks.js";
 import { ordinal } from "./ordinals.js";
 import { changeTournament } from "./tournaments.js";
@@ -841,10 +842,11 @@ const weightsOf = async (
   ).indexOf(tournament);
   assert.ok(at >= 0, `${tournament} is not in the ${name}.`);
   const selector = `main section.tournament-list[data-list="${lists[listed]}"] tbody tr`;
-  // A string that is a function is called with the argument, so the selector
-  // and the position reach the page as data and are never spliced into code.
-  return world.browserPage.evaluate<number[]>(
-    `({ selector, at }) => [...document.querySelectorAll(selector)[at].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight))`,
+  // The selector and the position reach the page as data and are never
+  // spliced into code, which evaluateWith says how.
+  return evaluateWith<number[]>(
+    world.browserPage,
+    `(({ selector, at }) => [...document.querySelectorAll(selector)[at].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight)))(globalThis.specArguments)`,
     { selector, at },
   );
 };

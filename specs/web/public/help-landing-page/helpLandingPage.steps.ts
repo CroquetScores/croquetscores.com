@@ -9,6 +9,7 @@ import {
 } from "../../../../src/web/common/helpLibrary.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { anApplicationWithHelpInTheScenariosLanguages } from "../../support/browser.js";
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { unmarked } from "../../support/languages.js";
 
 // Found as the stylesheet finds them, by the bookmark of the heading each list
@@ -507,10 +508,11 @@ const black = "rgb(0, 0, 0)";
 // The card is found by its link's name inside the page, since a string handed to
 // an element is not given it (the outline's step found that out).
 const wordsOfCard = async (world: SpecWorld, subject: string) => {
-  const read = await world.browserPage.evaluate(
-    // A string that is a function is called with the argument, so the subject
-    // reaches the page as data and is never spliced into code.
-    `({ selector, subject }) => { const card = [...document.querySelectorAll(selector)].find((each) => each.querySelector("a")?.textContent === subject); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; }`,
+  // The subject reaches the page as data and is never spliced into code,
+  // which evaluateWith says how.
+  const read = await evaluateWith<string | undefined>(
+    world.browserPage,
+    `(({ selector, subject }) => { const card = [...document.querySelectorAll(selector)].find((each) => each.querySelector("a")?.textContent === subject); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; })(globalThis.specArguments)`,
     { selector: `${cards} li`, subject },
   );
   assert.equal(typeof read, "string", `There is no card called ${subject}.`);
