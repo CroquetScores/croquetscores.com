@@ -34,7 +34,18 @@ withsettings npm run db:access -- off --minutes 120 --text "Setting up the new h
 
 At Cloudflare: https://dash.cloudflare.com/52d8b863c7ad977a97091d225e6775f5/domains/overview
 
-Point each of the four names at the server, `{ip address}`. This is the change the pages on the old sites promise, and it is why a reader may go on seeing them for a few hours: each provider and device keeps its old copy until it asks again. It is done now, with the sites still closed, so that it is spreading while the data is loaded. Anyone who reaches the new server before step 11 is shown the maintenance page from step 2.
+Point `croquetscores.com` and `gateballscores.com` at the server, `{ip address}`. `try.croquetscores.com`, `try.gateballscores.com` and `beta.croquetscores.com` were pointed at it early and already have their certificates, so leave them alone. This is the change the pages on the old sites promise, and it is why a reader may go on seeing them for a few hours: each provider and device keeps its old copy until it asks again. It is done now, with the sites still closed, so that it is spreading while the data is loaded. Anyone who reaches the new server before step 11 is shown the maintenance page from step 2.
+
+A name that is a `CNAME` to the old host cannot be edited into an `A` record: delete the `CNAME`, then add the `A` record.
+
+Caddy gets each name's certificate only once the name answers from here, and when it fails it waits six hours before trying again. While a name still pointed at the old host, Caddy kept failing and backing off, and `try.croquetscores.com` showed Cloudflare's `525 SSL handshake failed` (as it did on 2026-11-08, until the record was changed and Caddy restarted). So, on the server, once the two `A` records are in:
+
+```bash
+sudo systemctl restart caddy
+sudo journalctl -u caddy -f | grep -i "certificate obtained"
+```
+
+Wait until it has said so for both names, then press `Ctrl+C`. If one fails with a `404` or `Cannot negotiate ALPN protocol`, the record is still pointing at the wrong place, or is orange-clouded while ports 80 and 443 are closed to Cloudflare. Make the record grey (DNS only), restart Caddy again, and turn it orange afterwards if you want it (`server-setup.md` section 4).
 
 ## 4. Deploy the current website
 
@@ -116,7 +127,7 @@ withsettings npm run db:access -- on
 
 ## 12. Check the sites by their own names
 
-Check each of the four addresses from a connection that has the new records (mobile data is the quickest), and look at the footer for the version. A reader who still sees the page on an old site is waiting for their own copy of the DNS to update, which is what that page explains.
+Check each of the four addresses from a connection that has the new records (mobile data is the quickest), and look at the footer for the version. A `525` from Cloudflare means Caddy has no certificate for that name: go back to the end of step 3. A reader who still sees the page on an old site is waiting for their own copy of the DNS to update, which is what that page explains.
 
 ## Afterwards
 
