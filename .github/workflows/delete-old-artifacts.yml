@@ -7,6 +7,10 @@ on:
 jobs:
   delete-artifacts:
     runs-on: ubuntu-latest
+    # Deleting an artifact is the only thing this job does, and it takes write
+    # access to actions and nothing else, so the token is given no more.
+    permissions:
+      actions: write
     steps:
       - uses: kolpav/purge-artifacts-action@v1
         with:
