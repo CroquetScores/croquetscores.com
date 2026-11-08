@@ -1,172 +1,48 @@
 # What's new
 
-## Released 2026-11-05
+## Released 2026-11-10
 
-### Managing a tournament
-
-- **Several players can be added to a competition at once.** On a competition's Players tab, press **Add Several**, beside **Add Player**, tick the players you want, or the box above the list for all of them, and press **Add Selected**. They are put in the tournament's order. If some cannot be added, a second dialog says which and why, and asks whether to add the rest. See [Entering players in a competition](tournament-managers/standard-tournament/entering-players-in-a-competition.md#adding-several).
-- **A doubles pair is made from two players already entered.** On the tournament's Players tab, press **Add Pair**, choose the first and the second player, and press **Add Pair** again. The pair is named "Sam Someone & Alex Another", or "Peter & Rosie Landrebe" where both have the same last name, and it represents what its players do. The dialog stays open so that the next pair can be made. See [Players](tournament-managers/standard-tournament/players.md#adding-a-pair).
-- **A new tournament begins in the month it is now.** Its start is the first of this month and its finish is the same day, and the finish follows the start until you choose one of your own.
-
-### Following a tournament
-
-- **The help finds an answer by what you mean.** Ask a question in the search box on the help's first page, and it finds the article even where the article uses other words that mean the same.
-- **The first page of the help offers popular questions and the subjects as cards.** Five questions people ask lead to their answers, and each subject is a card saying what is in it.
-- **The help is brought up to date.** Every page was read against the site and corrected, and every picture was taken again. A new page, Following a tournament, says what you can do on the lists and a tournament's pages. It is in English only for now.
-- **A year's months follow the order of the dates.** When tournaments are sorted latest first, the months of a year's page begin with December, and the dates and names line up in every month that is open.
-- **The Notes page is headed Manager's Notes**, and says there are no notes yet where there are none.
-- **More tournaments are in their own country.** Tournaments with Happy Valley in their name are in Canada, and German, Swiss, Czech, Norwegian, Swedish and Portuguese tournaments that were shown in the wrong country are in their own.
-
-## Released 2026-11-03
-
-### Following a tournament
-
-- **A year's page shows its months.** Each of the twelve months is listed closed, saying how many tournaments start in it. Press a month to open its tournaments on the same page, and as many months as you like can be open at once. Beneath the heading, **+ Show all** opens every month, and then reads **- Hide all**, which closes them. The same is done for a sport in a year. Without scripting a month is a link instead, and the months open are kept in the address.
-- **Tournaments can be filtered by a range of days.** Before the Filter button are a first day and a last day, which you give together or not at all. Both days are included. A tournament is in the range by the day it starts, so it is in one month's list and never two.
-- **A list of tournaments is a hundred to a page.** A longer list is divided into pages, so that a wide search no longer loads every row at once.
-- **The filter you chose is remembered.** The country, region and sport you choose in the filter, or by pressing a flag, are kept on your phone or computer, and a list of tournaments begins from them the next time you open it. The year is not kept, since it is a page of its own. Choosing "any" for one of them forgets what was kept for that one.
-- **More tournaments are in their own country.** Swedish and Norwegian championships and opens, Czech opens, and the Kohlhof and Southwest championships were being shown in Spain, or wherever their time zone pointed. They are now in Sweden, Norway, Czechia and Germany.
-- **Two players who were spelled wrongly are one person.** Marga Podnieks had been entered as "Marga Podneiks" in 7 events, and Liz Mackenzie as "Liz McKenzie" in 5, so the site showed two people where there was one. Each is now spelled correctly everywhere.
-
-## Released 2026-11-02
-
-### Managing a tournament
-
-- **A knockout can take the losers of another knockout's round.** Many knockouts are run as a main draw with a second knockout for those who lost its first round, and a third for those who lost its second. In the dialog of a knockout, press **Add Losers Knockout**, name it, and choose the round whose losers play on in it. Its players are put there as each match is decided, so you do not enter them by hand.
-- **A block can be told how players level on matches won are told apart.** In the dialog of a block, choose its **Tie Breaks**: net games then net hoops then who beat who, who beat who alone, or other, which is no known way, so that players stay level and share a place. A new block begins on net games then net hoops then who beat who.
-- **A competition can say the most hoops its games are played to.** Among the ticks in a competition's dialog, **Maximum hoops** takes a whole number of at least 1. Leave it empty for no maximum. A competition that does not say has the usual for its sport: 26, or 13 in golf croquet.
-- **The rankings text file names the winner of a block as the block places them.** The player the block places first is the winner, where only one is, and nobody is named where players cannot be told apart for first. Before, the file named the player with the most games won, which could be someone else.
-- **The bar of sections keeps up with the competitions.** After you add, change, move, archive or restore a competition or a test, the bar on the tournament's page offers what the tournament now has, without opening the page again.
-- **A list of players with no row of fields is told so.** If the first row of the list you paste into **Add Players** names no field, the message says that the first row must be field names, with a link to the help, in another tab so that what you typed stays where it is.
-- **The Add Player and Add Players dialogs open in the window.** With the page scrolled down, they used to open with their tops above what could be seen.
-
-### Following a tournament
-
-- **A block shows where each player is placed.** The grid and the summary of a block end with a column headed #, giving each player's place: 1, or =2 where players cannot be told apart and share second. Beneath it, where players are level on the matches they have won, a line says how they were told apart.
-- **A competition says how many hoops its games are played to.** Where that is not the usual for the sport, the results say so, as "Played to 14 hoops".
-- **The row of a national or international tournament is in bold.** Every list of tournaments does it: on the home page, for a year and for a sport in a year, in a search, and on a player's page.
-- **A competition's views sit next to its print button.** Grid, Summary and Order of Play are together with the printer against the right edge, and the competition's name stands alone at the left. On a phone the printer goes beneath the views, still against the right edge.
-
-## Released 2026-11-01
-
-### Following a tournament
-
-- **The Interstate Shield is ranked by net matches.** Its teams are now ranked by the matches they won less the matches they lost, so a match lost counts against a team where before it counted for nothing. Teams still level are put in order by the tests they won against one another. The summary of the tournament, and the page of a group, show each team's net matches and net games.
-
-### Managing a tournament
-
-- **Many players can be added at once.** On the Players tab, press **Add Players**, beside **Add Player**, and paste a list with a line for each player. Every player on the list is added.
-- **A help icon on more of the admin.** The round question mark now also begins the page that creates a tournament and the page that changes one, ends the row of tabs on a tournament's page and on a competition's, and sits beside the list of tournaments. Each leads to the help for what you are looking at, and opens it in another tab so that the page is kept.
-- **The Scores tab is a table.** Each score is a row of a table, so that a screen reader tells you which cell you are in. The word "beat" has a column of its own between the winner's score and the loser. On a phone a score is no longer folded onto two lines: the table scrolls sideways instead.
-- **A test in an Eire Cup or an Interstate Shield has no group.** Those events are not played in groups, so the dialog for a test does not ask for one there, and a test cannot be given one.
-
-## Released 2026-10-31
-
-### iPad and iMac
-
-- **The navigation is back on an iPad.** On an iPad 6 the Search, Home, Players, Help and Admin links, and the button that opens them, did not appear. They do now.
-- **A menu button on a tablet held upright.** A tablet in portrait, like a phone, shows the navigation behind a menu button, since the links do not fit across it. Held sideways, they are across the top as on a computer, with the search on the same row as the home icon, before it.
-- **Links beneath a list of tournaments no longer take you to the wrong tournament.** On an iPad 6, every link from "All tournaments in 2026" down the home page led to the same tournament. Each now leads to its own.
-- **Pressing the whitespace no longer leaves the page.** On an iPad, and on an iMac, pressing the empty space near the top of the screen took you to a tournament. Pressing a row still opens its tournament, but pressing elsewhere does not.
-
-### Following a tournament
-
-- **The order of play has headings and can be sorted.** A competition's order of play is now a table headed Game and Date. Press Game to sort the games by the winner's name, from A to Z, and then by the loser's. Press Date to sort by when each game was added, which is how the page begins, with the oldest first. Press the heading again to turn the games round. The date never breaks across two lines.
-- **The sorting is remembered.** The site remembers on your phone or computer how you last sorted the order of play, for every competition, and sorts it that way the next time you open it. The same is done for the other lists you can sort, such as the tournaments on the home page and the tournaments a player has played in. Beneath a list sorted that way is a link, Back to the usual order, which forgets it.
-
-### Managing a tournament
-
-- **The Scores tab is laid out in columns.** On a tablet or wider, each score on a competition's Scores tab is a row of columns: the game's number, the winner, the winner's score, the loser, the loser's score, and the buttons. The names and scores do not break across lines and take only the room they need. The buttons have the rest. On a phone the scores are laid out as before.
-- **Each score begins with its game's number.** Games are numbered in the order they were entered, counting the archived ones, so a gap in the numbers is a game that has been archived.
-
-### Your account
-
-- **Forgetting an account now rewrites what was kept.** Forgetting an account used to put its name and email address out of reach. It now replaces them, for good, wherever the site keeps them: the name becomes Forgotten Account and a number, and the email address becomes an address at example.com that belongs to nobody. The same is done to the Google account linked to it, so that nothing ties the account to the person. Emails still waiting for it are deleted. Accounts forgotten before this are rewritten in the same way when the site is next brought up to date. The account's identifier is kept, and so is what it published, under the new name.
-- **How to have your data deleted.** The new page /data-deletion-policy says how to have what the site keeps about you deleted, however you sign in, what is deleted, what is kept, and what to do if you cannot sign in. Its steps lead to the Forget Account page.
-
-### The site
-
-- **Drop-down lists are readable in the dark theme.** The options of every drop-down list, such as the country, the sport and the language, are now white on dark grey when the site is dark. The light theme is as it was.
-
-## Released 2026-10-30
-
-### iPad
-
-The pressing a list and pressing whitespace on the home page now works correctly. I tested every page with an iPad 6 without an issues, fingers crossed this holds true for all iPads and iMacs. Please let me know one way either way.
+Croquet Scores has been completely rewritten. I hope you like the new version.
 
 ### Finding things
 
-- **Country, state or province, and sport are lists again.** The fields that narrow the tournaments, on the home page and on a year's page, go back to the lists of the browser, which you press to see every name and choose from. Typing in them was not working well enough.
+- **Search.** Every page has a search box at the top. Type a name and press Search to find tournaments, competitions and players.
 
-### Managing a tournament
+- **Narrow the tournaments by country, state or province, and sport.** On the home page, choose a country to see only the tournaments played in it. Once you have chosen a country you can choose a state or province of it, and you can choose a sport as well. Your phone or computer remembers what you chose, and starts from it the next time. **Choosing a state or province only finds new tournaments.** Older ones were not given a state or province, so choosing one leaves them out.
 
-- **Lists again for the country, state or province, and sport.** The form that creates or changes a tournament asks for them in lists too, and a player's or a team's flag is chosen from a list.
-- **The flags are in the order of the countries.** Australia, Egypt, England, New Zealand, Spain and the United States come first, then the other countries tournaments have been played in since 2025, then all the rest. A line is drawn after the United States and after Wales to show where one group ends and the next begins.
+- **Narrow the tournaments by days.** Give a first day and a last day, together, and only the tournaments that start between them are listed. Both days are included.
 
-### Tournament Country
+- **A year's page shows its months.** Each month is listed closed, saying how many tournaments start in it. Press a month to open its tournaments, and open as many as you like. **+ Show all** opens every month.
 
-Chris Williams has been at it again and helped me improve tournament countries during importing from the old database.
+- **Long lists are in pages.** A list of tournaments shows a hundred at a time, so a wide search no longer loads every row at once.
 
-## Released 2026-10-29
-
-### Finding things
-
-- **Type a country, state or province, or sport.** The fields that narrow the tournaments, on the home page and on a year's page, are now boxes you type into, not lists to scroll. Type part of a name, such as Zeal, and the names that have it are suggested. Press the arrow at the end of the box, or the down arrow key, to see every name, five at a time with the rest to scroll to. Press a suggestion, or move with the arrow keys and press Enter, to choose it. A box left empty means any. Words that are not the name of a country or a sport cannot be left in the box: you are asked to choose one, and Escape puts back the one you had.
-- **A player's page keeps each tournament's dates on one line.** On a phone, the dates of the tournaments on a player's page used to break across two lines. They now stay on one, and it is the tournament's name that wraps.
-
-### Managing a tournament
-
-- **Choose the country, state or province, and sport by typing.** The form that creates or changes a tournament asks for them in the same boxes. A tournament needs a country and a sport, so you are asked to choose one before you can leave either box or send the form. Correcting the words of the country no longer loses the state or province you had chosen. Choosing another country does clear it.
-- **Flags are typed too.** A player's or a team's flag is chosen in the same way. Leave the box empty for no flag.
-- **What a player represents is suggested.** As you type what a player represents, the clubs and countries that players have been added representing, in any tournament and in any sport, are suggested. Type two letters to begin. At most ten are suggested, in alphabetical order, and a name that differs only in its capitals is suggested once, as it was first written. Archived players and the players of a team are not looked at.
-- **The help explains a block's rounds.** Rounds is how many times each pair of players in a block meet, with a match in each round. It begins on 1, which is what a block almost always wants. Raise it only for a block in which they meet again, as in a double round robin. The page for competitions says so, and a block and a Swiss now have a section each.
-
-### Tournaments brought over from the old sites
-
-- **More handicaps are taken off a world ranking name.** The number after a player's last space on the old sites, whole or with a decimal such as 5.5 or 5,5, with a plus or a minus sign or without, is no longer taken for part of their name when looking up their world ranking. So is a handicap after a semicolon, as in Tim Murphy; 5.5. Two numbers at the end, as in Tim Murphy 3 5, are left, since there is no telling which was meant, and so is a name that is only a number.
-
-## Released 2026-10-28
-
-### Finding things
-
-- **Search results are tables.** The tournaments and competitions a search finds are now laid out like the lists on the home page: the days each was played, the sport type, the flag of its country, and the name. A competition shows its tournament's days, sport type and flag, and the tournament it is in. The dates and the names can be sorted, each table on its own, and the sorting is kept in the page's address beside what you typed. Sorting reorders only the hundred results shown, which are the best matches for your words, not every match.
-- **The busiest countries come first.** Wherever you choose a country, the list now begins with Australia, Egypt, England, New Zealand, Spain and the United States, then the other countries tournaments have been played in since 2025, then all the rest, with a line between the three groups.
-- **Each tournament shows its sport.** On a tablet or wider, the tournament lists on the home page and on a year's page show the tournament's sport as a short code, such as GC or AC, in a colour of its own for each sport, after the dates. On a phone the code is left out to leave room for names.
-- **Home page.** The home page's upcoming tournaments are now beneath the recent results at every width.
-- **Flags no longer crowd a phone.** On a phone, the column of flags is left out of every list of tournaments, so the names have more room.
-- **The country list stays open in Chrome on Linux.** Pressing the country field on the home page used to open the list and shut it again straight away. It now stays open, and scrolls.
-
-### Following a tournament
-
-- **Handicaps.** A tournament's managers can now give a player a handicap, such as 4, +4 or -1.5. It is shown after the player's name, with what they represent if there is something, as in Tim Murphy (4, Australia).
-- **Peeling in the Swiss grid.** A result in the Swiss grid now ends with the game's peeling, as the rankings text file already does. A game won 26tp to 17 reads +9tp for the winner and -9tp for the loser. A game with no peeling reads as it did.
-
-### Tournaments brought over from the old sites
-
-- **More of them are in the right country.** Many tournaments came over in the wrong country, because the old sites only knew the time zone. The site now reads the country from a tournament's name where it can, such as Irish, Welsh, Bayfield or CroqCan, and puts each England v Scotland match in the country that played host that year. Thank you Chris Williams for his help with this.
-- **Tournaments still to be played are brought over** even if their managers have yet to add a competition, so you can find when and where they are.
-- **A handicap after a player's name** on the old sites, as in Tim Murphy 1, is no longer taken for part of the name when looking up their world ranking.
-
-## Released 2026-10-27
-
-Croquet Scores has been completely rewritten with AI, in TypeScript. What follows is what you will notice.
-
-### Finding things
-
-- **Search.** Every page has a search box at the top. Type a name and press Search to find tournaments, competitions and players. The results are in three lists, and a list with nothing in it is left out. If there are more than a hundred of one kind, the page says so, and adding a word to your search narrows it.
-- **Narrow the tournaments by country, region and sport.** On the home page, choose a country to see only the tournaments played in it. Once you have chosen a country you can choose a state or province of it, and you can choose a sport as well. What you chose is in the page's address, so you can bookmark it or send it to someone, and the back button undoes it. **Choosing a state or province only finds new tournaments.** Older ones were not given a state or province, so choosing one leaves them out.
+- **The help finds an answer by what you mean.** Ask a question in the search box on the help's first page, and it finds the article even where the article uses other words that mean the same. The first page also offers popular questions and the subjects as cards.
 
 ### Following a tournament
 
 - **Notes from the managers.** A tournament's managers can now write notes to tell its players what they need to know as it is played: the format, a change to the order of play, the time of lunch. They are in the tournament's new Notes section, with the newest first and how long ago each was written.
+
 - **An asterisk (\*) marks what you have not read.** A note has one until you open it, and again if it is changed after you read it. While any note is unread, the Notes section has one too, on every page of the tournament, so you can see there is news without going to look. Commentaries are marked in the same way. Your browser remembers what you have read, so you do not need to sign in. Another phone or computer starts with nothing read.
+
 - **Commentary is easier to follow.** On the old site, every new comment threw the page down to the bottom, so anyone looking back through earlier comments lost their place. Now the page only moves down to a new comment if you are already at the bottom, reading the latest. If you have scrolled back to read earlier comments, it leaves you where you are.
+
+- **A block shows where each player is placed.** The last column gives each player's place: 1, or =2 where players cannot be told apart and share second. Where players are level on the matches they have won, a line beneath says how they were told apart.
+
+- **The order of play can be sorted.** Press Game to sort the games by the winner's name, or Date to sort by when each was added. Press again to turn them round. The site remembers how you sorted, for every competition and for the lists of tournaments too, and a link beneath a list, Back to the usual order, forgets it.
+
+- **Handicaps are shown.** Where a player has a handicap, it is after their name, with what they represent, as in Tim Murphy (4, Australia).
+
+- **A competition says how many hoops its games are played to** where that is not the usual for its sport, as "Played to 14 hoops".
 
 ### The site
 
-- **Your language.** The site is now in seventeen languages: Afrikaans, Arabic (Egypt), Chinese, Dutch, English, French, German, Italian, Japanese, Korean, Māori, Polish, Portuguese, Russian, Spanish, Swedish and Welsh. You are shown the first language your browser asks for that the site has, or English if it has none. To choose another, use the list in the footer at the bottom of any page and press the button beside it. If you would like a language added, email <croquetscores@gmail.com>.
+- **Your language.** The site is now in twelve languages: Afrikaans, Arabic (Egypt), Czech, English, German, Greek, Latvian, Norwegian, Portuguese, Spanish, Swedish and Welsh. You are shown the first language your browser asks for that the site has, or English if it has none. To choose another, use the list in the footer at the bottom of any page and press the button beside it. If you would like a language added, email <croquetscores@gmail.com>.
+
 - **Light or dark.** Also in the footer: choose Light, Dark or System. System follows your phone or computer. The site remembers your choice on every page and every visit.
+
 - **Which version you are on.** The footer now shows the version of the site you are looking at, such as v234. If you report a problem, please say which version it was.
+
+- **Your data.** The page /data-deletion-policy says how to have what the site keeps about you deleted, what is deleted and what is kept.
 
 ### Open Source
 
