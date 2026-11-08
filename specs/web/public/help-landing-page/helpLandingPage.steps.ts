@@ -508,7 +508,10 @@ const black = "rgb(0, 0, 0)";
 // an element is not given it (the outline's step found that out).
 const wordsOfCard = async (world: SpecWorld, subject: string) => {
   const read = await world.browserPage.evaluate(
-    `(() => { const card = [...document.querySelectorAll(${JSON.stringify(`${cards} li`)})].find((each) => each.querySelector("a")?.textContent === ${JSON.stringify(subject)}); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; })()`,
+    // A string that is a function is called with the argument, so the subject
+    // reaches the page as data and is never spliced into code.
+    `({ selector, subject }) => { const card = [...document.querySelectorAll(selector)].find((each) => each.querySelector("a")?.textContent === subject); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; }`,
+    { selector: `${cards} li`, subject },
   );
   assert.equal(typeof read, "string", `There is no card called ${subject}.`);
   return read;
