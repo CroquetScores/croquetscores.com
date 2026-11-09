@@ -37,7 +37,6 @@ and an event store written here rather than installed.
 - `SETUP.md`: How the repository is built, and why it was built that way
 - `STYLE.md`: What things are called, and what the scales are
 - `LAYOUT.md`: What the site looks like
-- `BETA.md`: What the beta's testers are asked to do, to paste into an email
 
 To contribute, read `CONTRIBUTING.md` first, and then `CLA.md`, the agreement
 every contributor signs. Open an issue before you start, however small the
