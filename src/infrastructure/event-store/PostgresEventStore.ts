@@ -139,11 +139,9 @@ export class PostgresEventStore implements EventStore {
    * rebuilding a read model counts its work in.
    */
   async streamIds(): Promise<readonly string[]> {
-    const { rows } = await this.unitOfWork
-      .connection()
-      .query<{
-        stream_id: string;
-      }>(`select distinct stream_id from events order by stream_id`);
+    const { rows } = await this.unitOfWork.connection().query<{
+      stream_id: string;
+    }>(`select distinct stream_id from events order by stream_id`);
     return rows.map((row) => row.stream_id);
   }
 
@@ -188,7 +186,7 @@ export class PostgresEventStore implements EventStore {
       );
     // The rows come stream by stream, so each stream is opened together.
     const stored: StoredEvent[] = [];
-    for (let from = 0; from < rows.length; ) {
+    for (let from = 0; from < rows.length;) {
       const stream = (rows[from] as { stream_id: string }).stream_id;
       let to = from;
       while (rows[to]?.stream_id === stream) to += 1;

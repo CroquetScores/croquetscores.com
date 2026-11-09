@@ -1,7 +1,7 @@
 Feature: A script signs in to the server from the administrator's own computer
 
   An administrator who has to look at the server by hand, such as to run a
-  step in the release notes, signs in to it with a script:
+  step of the server setup, signs in to it with a script:
 
       npm run ssh
 

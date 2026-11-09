@@ -94,7 +94,6 @@ const confirmingFor = (
   submit: speaking.say("changeEmailAddress.confirm.submit"),
 });
 
-
 export const registerChangeEmailAddressPage = (
   server: FastifyInstance,
   assets: Assets,

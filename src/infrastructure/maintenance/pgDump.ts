@@ -3,9 +3,7 @@
 import { spawn } from "node:child_process";
 
 export type PgDumpRefusal =
-  | "PgDump.AddressNotUnderstood"
-  | "PgDump.NotRun"
-  | "PgDump.Failed";
+  "PgDump.AddressNotUnderstood" | "PgDump.NotRun" | "PgDump.Failed";
 
 export class PgDumpRefused extends Error {
   constructor(

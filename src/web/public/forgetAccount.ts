@@ -83,7 +83,6 @@ const lastAdministrator = (speaking: Speaking): Said => ({
   explanation: speaking.say("forgetAccount.lastAdministrator.explanation"),
 });
 
-
 // Back to where the reader was going, link and all, once they have signed in.
 const toSignIn = (request: FastifyRequest, reply: FastifyReply) =>
   reply.redirect(

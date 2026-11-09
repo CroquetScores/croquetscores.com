@@ -86,7 +86,6 @@ const asking = (
             <button class="button button-submit" type="submit">${escape(speaking.say("newConfirmationLink.send"))}</button>
           </form>`;
 
-
 export const registerNewConfirmationLinkPage = (
   server: FastifyInstance,
   assets: Assets,

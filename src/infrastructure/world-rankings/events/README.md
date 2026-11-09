@@ -1,11 +1,8 @@
 # The world rankings' lists of events
 
 The events the world rankings have ranked, each with the country it was played
-in, as they were given for the import on 24 October 2026. The import
-reads them to say which country a tournament was played in
-(`../../../import-ravendb/WorldRankingEvents.ts`,
-`WorldRankingEvents.feature`), and the site reads which countries each names
-for the administrator's page of the tournaments played in countries the
+in, as they were given on 24 October 2026. The site reads which countries each
+names for the administrator's page of the tournaments played in countries the
 lists do not name (`../FileWorldRankingCountries.ts`,
 `FileWorldRankingCountries.feature`, `countries.feature`).
 
@@ -19,4 +16,4 @@ lists do not name (`../FileWorldRankingCountries.ts`,
   from 1 January 1900.
 
 To refresh them, replace the files with newer ones in the same columns. A row
-that cannot be read stops the import and names its file and line.
+that cannot be read stops the site starting and names its file and line.

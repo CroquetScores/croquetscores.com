@@ -12,8 +12,8 @@ export interface SshWorld {
   readonly say: (line: string) => void;
 }
 
-// The account the deploy script signs in as, and the one the release notes
-// have the administrator use on the server (server-setup.md).
+// The account the deploy script signs in as, and the one the administrator
+// uses on the server (server-setup.md).
 const account = "deploy";
 
 /** The script's work (sshCli.feature). */
