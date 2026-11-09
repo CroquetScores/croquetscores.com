@@ -73,7 +73,7 @@
     "@cucumber/cucumber": "^13.2.1",
     "@eslint/js": "^10.0.1",
     "@types/mailparser": "^3.9.0",
-    "@types/node": "^26.6.4",
+    "@types/node": "^26.6.6",
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "@types/react": "^19.3.0",
