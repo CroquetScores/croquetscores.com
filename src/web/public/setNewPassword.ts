@@ -104,7 +104,6 @@ const formFor = (
   submit: speaking.say("setNewPassword.submit"),
 });
 
-
 export const registerSetNewPasswordPage = (
   server: FastifyInstance,
   assets: Assets,
