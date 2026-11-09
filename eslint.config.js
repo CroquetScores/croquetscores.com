@@ -73,7 +73,6 @@ export default tseslint.config(
       "**/application/**",
       "**/infrastructure/**",
       "**/web/**",
-      "**/import-ravendb/**",
     ),
   },
   // What every aggregate shares names no aggregate, or it stops being shared.
@@ -89,16 +88,13 @@ export default tseslint.config(
         "error",
         {
           patterns: [
-            ...[
-              "**/application/**",
-              "**/infrastructure/**",
-              "**/web/**",
-              "**/import-ravendb/**",
-            ].map((group) => ({
-              group: [group],
-              message:
-                "domain does not know that application, infrastructure or web exist.",
-            })),
+            ...["**/application/**", "**/infrastructure/**", "**/web/**"].map(
+              (group) => ({
+                group: [group],
+                message:
+                  "domain does not know that application, infrastructure or web exist.",
+              }),
+            ),
             {
               // A regex rather than a group: a group is read as gitignore
               // would read it, and a file cannot be let back in from under a
@@ -122,7 +118,6 @@ export default tseslint.config(
       "application names the interface; infrastructure implements it.",
       "**/infrastructure/**",
       "**/web/**",
-      "**/import-ravendb/**",
     ),
   },
   // A page asks the mediator for what it reads and sends the mediator what it
@@ -139,13 +134,11 @@ export default tseslint.config(
         "error",
         {
           patterns: [
-            ...["**/infrastructure/**", "**/import-ravendb/**"].map(
-              (group) => ({
-                group: [group],
-                message:
-                  "only the composition root, src/web/server.ts, may name infrastructure.",
-              }),
-            ),
+            {
+              group: ["**/infrastructure/**"],
+              message:
+                "only the composition root, src/web/server.ts, may name infrastructure.",
+            },
             // Each with and without its extension, either of which a
             // bundler would find.
             ...[
@@ -161,15 +154,5 @@ export default tseslint.config(
         },
       ],
     },
-  },
-  // The import from the old sites is put together from the layers, as the
-  // site is, and nothing in them knows it is there: it goes when the old
-  // sites' data is all brought over, and must take nothing with it.
-  {
-    files: ["src/infrastructure/**/*.ts"],
-    rules: forbid(
-      "nothing the site is made of knows about the import from the old sites.",
-      "**/import-ravendb/**",
-    ),
   },
 );

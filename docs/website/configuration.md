@@ -67,9 +67,9 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 
 ### Never on the website
 
-These belong to the administrator's own computer or to an import, and are blank on the server (backup-and-restore.md §3):
+These belong to the administrator's own computer, and are blank on the server (backup-and-restore.md §3):
 
-`WEBSITE_DATABASE_URL`, `DATABASE_BACKUP_FOLDER`, `PG_DUMP_PATH`, and for the import from the old sites `RAVENDB_URL` and `RAVENDB_DATABASES`. **`npm run import:ravendb` empties the database `DATABASE_URL` names, dropping every table, and fills it again.** Never run it with a `DATABASE_URL` that holds anything worth keeping.
+`WEBSITE_DATABASE_URL`, `DATABASE_BACKUP_FOLDER` and `PG_DUMP_PATH`.
 
 ## 4. A copy of the file, away from the server
 

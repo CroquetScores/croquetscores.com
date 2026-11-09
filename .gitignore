@@ -13,4 +13,3 @@ code-review.md
 # Emails written to files in place of being sent, by FileEmailSender.
 temp/
 .database-access*
-docs/import-from-ravendb/*
