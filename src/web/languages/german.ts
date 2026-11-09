@@ -52,7 +52,7 @@ export const german: Language = {
       "Haken Sie das Kästchen an, um den Nutzungsbedingungen zuzustimmen.",
     // Auf jeder Seite einer Übungswebsite, unter der Leiste der Website.
     "tryWebsite.banner":
-      "Dies ist die NEUE Version von {siteName}, die am 10. November 2026 veröffentlicht wird.",
+      "Dies ist ein geschützter Ort, um {siteName} kennenzulernen. Alles, was hier eingegeben wird, kann jederzeit entfernt werden.",
 
     "language.label": "Sprache",
     "language.choose": "Ändern",

@@ -52,7 +52,7 @@ export const czech: Language = {
       "Zaškrtněte políčko a souhlaste s podmínkami použití.",
     // Říká se na každé stránce zkušebního webu, pod lištou webu.
     "tryWebsite.banner":
-      "Toto je NOVÁ verze {siteName}, která bude vydána 10. listopadu 2026.",
+      "Toto je bezpečné místo, kde se můžete naučit používat {siteName}. Cokoli sem zadáte, může být kdykoli odstraněno.",
 
     "language.label": "Jazyk",
     "language.choose": "Změnit",
