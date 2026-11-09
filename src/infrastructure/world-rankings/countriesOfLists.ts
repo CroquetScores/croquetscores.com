@@ -1,12 +1,13 @@
 // The site's country for each way the world rankings' lists write one
-// (FileWorldRankingCountries.feature): the
-// Association Croquet list by name, as it keeps them, and the Golf Croquet list
-// by the three letters used for a country in sport.
+// (FileWorldRankingCountries.feature): the Association Croquet list by name, as
+// it keeps them, and the Golf Croquet list by the three letters used for a
+// country in sport.
 import { Countries } from "../../domain/aggregates/tournaments/value-objects/Countries.js";
 import type { Country } from "../../domain/aggregates/tournaments/value-objects/Country.js";
 
 // Kept as the old sites had it, stray spaces and all, since the lookups match
-// against it as it is.
+// against it as it is, and the Golf Croquet list's codes were found in it.
+//
 // Each country's two-letter code, three-letter code and name in capitals,
 // prepared by the old sites from http://www.worldatlas.com/aatlas/ctycodes.htm.
 // The countries of the United Kingdom at the end have a three-letter code

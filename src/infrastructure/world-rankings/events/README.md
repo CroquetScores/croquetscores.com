@@ -16,4 +16,4 @@ lists do not name (`../FileWorldRankingCountries.ts`,
   from 1 January 1900.
 
 To refresh them, replace the files with newer ones in the same columns. A row
-that cannot be read stops the site and names its file and line.
+that cannot be read stops the site starting and names its file and line.
