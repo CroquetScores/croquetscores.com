@@ -47,7 +47,7 @@ export const english: Language = {
     "TermsOfUse.NotAgreed": "Tick the box to agree to the terms of use.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "This is the NEW {siteName} that will be released 10 Nov 2026.",
+      "This is a safe place to learn {siteName}. Anything entered here may be removed at any time.",
 
     "language.label": "Language",
     "language.choose": "Change",

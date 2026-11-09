@@ -43,7 +43,7 @@ export const welsh: Language = {
     "TermsOfUse.NotAgreed": "Ticiwch y blwch i gytuno i'r telerau defnyddio.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Dyma'r fersiwn NEWYDD o {siteName} a fydd yn cael ei rhyddhau ar 10 Tachwedd 2026.",
+      "Dyma le diogel i ddysgu {siteName}. Gellir dileu unrhyw beth a roddir yma ar unrhyw adeg.",
 
     "language.label": "Iaith",
     "language.choose": "Newid",

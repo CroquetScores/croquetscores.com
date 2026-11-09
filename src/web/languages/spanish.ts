@@ -55,7 +55,7 @@ export const spanish: Language = {
       "Marca la casilla para aceptar las condiciones de uso.",
     // Said on every page of a try website, beneath the site bar.
     "tryWebsite.banner":
-      "Esta es la NUEVA versión de {siteName}, que se publicará el 10 de noviembre de 2026.",
+      "Este es un lugar seguro para aprender a usar {siteName}. Todo lo que se introduzca aquí puede eliminarse en cualquier momento.",
 
     "language.label": "Idioma",
     "language.choose": "Cambiar",
