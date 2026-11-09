@@ -1,4 +1,4 @@
-# next.croquetscores.com
+# Croquet Scores
 
 Croquet Scores provides tournament managers with tools to record match scores and
 enables individuals to publish commentary to the public site. Croquet tragics can
