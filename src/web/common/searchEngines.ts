@@ -39,14 +39,14 @@ const isForReaders = (request: FastifyRequest): boolean => {
   }
 };
 
-const isWelcomed = (
+export const isWelcomed = (
   request: FastifyRequest,
   searchEnginesWelcome: boolean,
 ): boolean => searchEnginesWelcome && isForReaders(request);
 
 // What an answer says depends on the host it was asked at, so a cache that
 // serves more than one host must not give one's answer for another's.
-const varyByHost = (reply: FastifyReply): void => {
+export const varyByHost = (reply: FastifyReply): void => {
   const already = String(reply.getHeader("vary") ?? "");
   if (/(^|,)\s*(host|\*)\s*(,|$)/i.test(already)) return;
   reply.header("vary", already === "" ? "Host" : `${already}, Host`);
@@ -56,15 +56,25 @@ export const registerSearchEngines = (
   server: FastifyInstance,
   searchEnginesWelcome: boolean,
 ): void => {
-  server.get("/robots.txt", (request, reply) =>
-    reply
-      // Asked again each time, since the file is small and a site that has just
-      // been told it is welcome should not be kept out by a copy of this one.
-      .header("cache-control", "public, no-cache")
-      .header("vary", "Host")
-      .type("text/plain; charset=utf-8")
-      .send(isWelcomed(request, searchEnginesWelcome) ? welcome : keepAway),
-  );
+  server.get("/robots.txt", (request, reply) => {
+    const found = isWelcomed(request, searchEnginesWelcome);
+    // A website that is found says where its pages are listed. The address is
+    // the website's own and never the request's host, which is whatever its
+    // sender wrote.
+    varyByHost(reply);
+    const sitemap = found
+      ? `Sitemap: ${Website.addressedTo(request.host).address}/sitemap.xml\n`
+      : "";
+    return (
+      reply
+        // Asked again each time, since the file is small and a site that has
+        // just been told it is welcome should not be kept out by a copy of
+        // this one.
+        .header("cache-control", "public, no-cache")
+        .type("text/plain; charset=utf-8")
+        .send(`${found ? welcome : keepAway}${sitemap}`)
+    );
+  });
 
   server.addHook("onSend", (request, reply, payload, done) => {
     varyByHost(reply);

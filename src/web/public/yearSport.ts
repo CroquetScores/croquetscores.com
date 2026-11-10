@@ -82,7 +82,8 @@ export const registerYearSportPage = (
       const heading = say("yearSport.heading", named);
 
       const shell = {
-        title: heading,
+        title: `${named.sport} ${named.year}`,
+        description: heading,
         theme: themeOf(request),
         signedIn: signedIn(request),
         hasPassword: hasPassword(request),

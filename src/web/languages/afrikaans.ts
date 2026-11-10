@@ -351,6 +351,8 @@ export const afrikaans: Language = {
       "Geen toernooie begin in die volgende sestig dae nie.",
     "home.allTournaments": "Alle toernooie in {year}",
     // A year's page: its heading, and what it says when it has nothing in it.
+    "meta.description":
+      "Tellings, uitslae en ranglyste van toernooie op {siteName}.",
     "year.heading": "Toernooie in {year}",
     "year.needsScripting":
       "Die maande van 'n jaar word met skriptering oopgemaak, wat afgeskakel is. Skakel dit asseblief vir hierdie werf aan.",

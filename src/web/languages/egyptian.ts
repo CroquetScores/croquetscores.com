@@ -324,6 +324,7 @@ export const egyptian: Language = {
     "home.upcomingTournaments.none": "مفيش بطولات بتبدأ في الستين يوم الجايين.",
     "home.allTournaments": "كل البطولات في {year}",
     // A year's page.
+    "meta.description": "نتائج وترتيب البطولات على {siteName}.",
     "year.heading": "بطولات {year}",
     "year.needsScripting":
       "شهور السنة بتتفتح بالسكريبت، وهو مقفول. لو سمحت شغّله للموقع ده.",

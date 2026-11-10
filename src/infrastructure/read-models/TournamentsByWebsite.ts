@@ -169,6 +169,18 @@ export class TournamentsByWebsite implements Projection, Asked {
     return rows.map(listed);
   }
 
+  async addressesOf(website: Website): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ address: string }>(
+        `select address from tournaments
+          where website = $1 and not archived
+          order by address`,
+        [website.host],
+      );
+    return rows.map(({ address }) => address);
+  }
+
   async yearsOf(website: Website, sport?: Sport): Promise<readonly number[]> {
     const { rows } = await this.unitOfWork.connection().query<{ year: number }>(
       `select distinct extract(year from starts)::int as year

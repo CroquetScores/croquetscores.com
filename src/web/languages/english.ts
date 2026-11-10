@@ -340,6 +340,8 @@ export const english: Language = {
       "No tournaments start in the next sixty days.",
     "home.allTournaments": "All tournaments in {year}",
     // A year's page: its heading.
+    "meta.description":
+      "Scores, results and rankings of tournaments, on {siteName}.",
     "year.heading": "Tournaments in {year}",
     // The months of a year's page, which are loaded when pressed.
     "year.needsScripting":

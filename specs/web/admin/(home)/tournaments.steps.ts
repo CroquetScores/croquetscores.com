@@ -1,3 +1,4 @@
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
@@ -90,10 +91,11 @@ const inNameOf = async <T>(
     name,
   );
   assert.ok(at >= 0, `${name} is not listed.`);
-  // A string that is a function is called with the argument, so the selector
-  // and the position reach the page as data and are never spliced into code.
-  // Only `expression`, which every caller writes out in full, is part of it.
-  return world.browserPage.evaluate<T>(
+  // The selector and the position reach the page as data and are never spliced
+  // into code. Only `expression`, which every caller writes out in full, is
+  // part of it.
+  return evaluateWith<T>(
+    world.browserPage,
     `({ selector, at }) => { const element = document.querySelectorAll(selector)[at]; return ${expression}; }`,
     { selector: names, at },
   );
@@ -447,9 +449,10 @@ const weightsOf = async (
       .allTextContents()
   ).indexOf(name);
   assert.ok(at >= 0, `${name} is not listed.`);
-  // A string that is a function is called with the argument, so the position
-  // and the selector reach the page as data and are never spliced into code.
-  return world.browserPage.evaluate<number[]>(
+  // The position and the selector reach the page as data and are never
+  // spliced into code.
+  return evaluateWith<number[]>(
+    world.browserPage,
     `({ at, within }) => [...document.querySelectorAll(".tournaments > .tournament")[at].querySelectorAll(within)].map((element) => Number(getComputedStyle(element).fontWeight))`,
     { at, within },
   );

@@ -342,6 +342,8 @@ export const norwegian: Language = {
       "Ingen turneringer starter de neste seksti dagene.",
     "home.allTournaments": "Alle turneringer i {year}",
     // Et års side: overskriften.
+    "meta.description":
+      "Poeng, resultater og rangeringer fra turneringer på {siteName}.",
     "year.heading": "Turneringer i {year}",
     // Månedene på et års side, som lastes når de trykkes på.
     "year.needsScripting":

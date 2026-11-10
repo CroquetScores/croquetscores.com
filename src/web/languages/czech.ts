@@ -344,6 +344,7 @@ export const czech: Language = {
       "Během příštích šedesáti dní nezačíná žádný turnaj.",
     "home.allTournaments": "Všechny turnaje v roce {year}",
     // Stránka roku: její nadpis.
+    "meta.description": "Skóre, výsledky a žebříčky turnajů na {siteName}.",
     "year.heading": "Turnaje v roce {year}",
     // Měsíce stránky roku, které se načítají po stisknutí.
     "year.needsScripting":

@@ -55,6 +55,12 @@ export const newMark = (speaking: Speaking): string =>
 export interface Shell {
   /** The <title>, which is not always what the header shows. */
   readonly title: string;
+  /**
+   * What the page says of itself for a search result and for a link shared in
+   * a message, where it has something of its own to say. Left out, the page
+   * says what the site is (pagePreview.ts).
+   */
+  readonly description?: string | undefined;
   /** A second line in the green header. Long names wrap; they are not cut. */
   readonly headerTitle?: string | undefined;
   /** The tournament a page is of, if it is of one, named in the pinned bar
@@ -547,12 +553,25 @@ ${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(foote
       </div>
     </footer>`;
 
+// What the page is and which site it is on, with the site's name last so that
+// the part that tells pages apart is what a narrow tab or a search result shows
+// first. The home page is the site, and says only that.
+const titleOf = (shell: Shell): string =>
+  shell.title === shell.siteName
+    ? shell.title
+    : `${shell.title} — ${shell.siteName}`;
+
 export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
 <html lang="${escape(shell.speaking.language.tag)}"${directionAttribute(shell.speaking.language)}${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escape(shell.title)}</title>${sendAwayWithoutScripting(shell.withoutScripting)}
+    <title>${escape(titleOf(shell))}</title>${
+      shell.description === undefined
+        ? ""
+        : `
+    <meta name="description" content="${escape(shell.description)}" />`
+    }${sendAwayWithoutScripting(shell.withoutScripting)}
     <link rel="stylesheet" href="${assets.url("site.css")}" />${
       shell.styles === undefined
         ? ""

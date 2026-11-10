@@ -59,7 +59,8 @@ export const registerYearPage = (
     const heading = say("year.heading", { year: request.params.year });
 
     const shell = {
-      title: heading,
+      title: request.params.year,
+      description: heading,
       theme: themeOf(request),
       signedIn: signedIn(request),
       hasPassword: hasPassword(request),
