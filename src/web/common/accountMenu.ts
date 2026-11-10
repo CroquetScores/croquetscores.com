@@ -147,5 +147,15 @@ export const accountMenu = (menu: AccountMenu): string => {
 ${accountItems(menu).join("\n")}
             </ul>
           </nav>
+          <script>
+            (function () {
+              var menu = document.currentScript.parentElement;
+              // Pressing the page puts an open menu away, as it does on most
+              // sites. Without scripting its own button is still the way.
+              document.addEventListener("click", function (event) {
+                if (menu.open && !menu.contains(event.target)) menu.open = false;
+              });
+            })();
+          </script>
         </details>`;
 };

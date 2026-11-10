@@ -89,6 +89,39 @@ Feature: The way to a reader's account is the last thing in the header
       When the account menu is pressed
       Then the account menu is closed
 
+  Rule: An open menu is shut by pressing the page outside it
+
+    The same as for the navigation's menu (`navigation.feature`): a menu that
+    only its own button puts away leaves a reader wondering whether there is
+    another way. It needs scripting, and without it the button is still the
+    way, as above, so these scenarios are the ones that switch it on.
+
+    @postgres
+    Scenario: Pressing the page outside the menu shuts it
+      Given a viewport 1200 pixels wide
+      And scripting is switched on
+      And the home page is open
+      And the account menu is pressed
+      When the page outside the account menu is pressed
+      Then the account menu is closed
+
+    @postgres
+    Scenario: Pressing inside the menu's panel leaves it open
+      Given a viewport 1200 pixels wide
+      And scripting is switched on
+      And the home page is open
+      And the account menu is pressed
+      When the account menu's panel is pressed
+      Then the account menu is open
+
+    @postgres
+    Scenario: Pressing the page when the menu is closed leaves it closed
+      Given a viewport 1200 pixels wide
+      And scripting is switched on
+      And the home page is open
+      When the page outside the account menu is pressed
+      Then the account menu is closed
+
   Rule: A reader who is not signed in is offered the ways in
 
     @postgres
