@@ -57,7 +57,14 @@ Stiskněte **Přidat**. Celý seznam se zkontroluje, než se cokoli uloží, tak
 
 ## Přidání páru {#adding-a-pair}
 
-V turnaji čtyřhry je pár samostatným hráčem, takže se vytváří ze dvou již zadaných hráčů, místo aby se zadával znovu. Stiskněte **Přidat pár** vedle **Přidat hráče**. Nabízí se, jsou-li k výběru dva hráči. Otevře se dialog s polem **První hráč** a **Druhý hráč**, z nichž každé se vybírá z používaných hráčů. Druhý seznam vynechává hráče vybraného jako prvního, protože hráč nemůže tvořit pár sám se sebou. Stisknutím **Přidat pár** pár vytvoříte. Dialog zůstane otevřený, řekne, který pár byl přidán, a vyprázdní obě volby, aby bylo možné vytvořit další pár, stejně jako **Přidat hráče**. Pár se v seznamu za dialogem objeví hned. Až vytvoříte všechny potřebné páry, stiskněte **Zrušit**.
+V turnaji čtyřhry je pár samostatným hráčem. Přidat ho lze dvěma způsoby.
+
+- **Pomocí Přidat hráče.** Přidejte pár, jako by to byl jeden hráč, a napište jeho jméno se znakem & mezi oběma, například „Joe Blow & Jane Doe“. V turnaji určeném pouze pro čtyřhru je to rychlejší cesta, protože nikdo není zadán dvakrát.
+- **Pomocí Přidat pár.** Vytvořte pár ze dvou již zadaných hráčů, jak je popsáno níže. Hraje-li většina vašich hráčů dvouhry také čtyřhru, je to rychlejší cesta, protože hráči už jsou k výběru.
+
+Je lepší pořádat dvouhru a čtyřhru každou ve vlastním turnaji.
+
+Stiskněte **Přidat pár** vedle **Přidat hráče**. Nabízí se, jsou-li k výběru dva hráči. Otevře se dialog s polem **První hráč** a **Druhý hráč**, z nichž každé se vybírá z používaných hráčů. Druhý seznam vynechává hráče vybraného jako prvního, protože hráč nemůže tvořit pár sám se sebou. Stisknutím **Přidat pár** pár vytvoříte. Dialog zůstane otevřený, řekne, který pár byl přidán, a vyprázdní obě volby, aby bylo možné vytvořit další pár, stejně jako **Přidat hráče**. Pár se v seznamu za dialogem objeví hned. Až vytvoříte všechny potřebné páry, stiskněte **Zrušit**.
 
 ![Dialog Přidat pár se dvěma vybranými hráči](images/add-pair-dialog.png)
 

@@ -57,7 +57,14 @@ Nospiediet **Pievienot**. Viss saraksts tiek pārbaudīts, pirms kaut kas no tā
 
 ## Pāra pievienošana {#adding-a-pair}
 
-Dubultspēļu turnīrā pāris ir atsevišķs spēlētājs, tāpēc to izveido no diviem jau ievadītiem spēlētājiem, nevis ievada vēlreiz. Nospiediet **Pievienot pāri** blakus **Pievienot spēlētāju**. Tā tiek piedāvāta, ja izvēlei ir divi spēlētāji. Atveras dialogs ar **Pirmais spēlētājs** un **Otrais spēlētājs**, katru izvēlas no lietotajiem spēlētājiem. Otrajā sarakstā nav pirmā izvēlētā spēlētāja, jo spēlētāju nevar savienot pārī ar viņu pašu. Nospiediet **Pievienot pāri**, lai izveidotu pāri. Dialogs paliek atvērts, pasaka, kurš pāris pievienots, un iztukšo abas izvēles, lai varētu izveidot nākamo, kā to dara **Pievienot spēlētāju**. Pāris uzreiz parādās sarakstā aiz dialoga. Kad esat izveidojis visus vajadzīgos, nospiediet **Atcelt**.
+Dubultspēļu turnīrā pāris ir atsevišķs spēlētājs. To var pievienot divējādi.
+
+- **Ar Pievienot spēlētāju.** Pievienojiet pāri tā, it kā tas būtu viens spēlētājs, un ierakstiet tā nosaukumu ar zīmi & starp abiem, piemēram, "Joe Blow & Jane Doe". Turnīrā tikai dubultspēlēm tas ir ātrākais veids, jo neviens netiek ievadīts divreiz.
+- **Ar Pievienot pāri.** Izveidojiet pāri no diviem jau ievadītiem spēlētājiem, kā aprakstīts tālāk. Ja lielākā daļa jūsu vienspēļu spēlētāju spēlē arī dubultspēles, tas ir ātrākais veids, jo spēlētāji jau ir izvēlei.
+
+Labāk ir vienspēles un dubultspēles rīkot katru savā turnīrā.
+
+Nospiediet **Pievienot pāri** blakus **Pievienot spēlētāju**. Tā tiek piedāvāta, ja izvēlei ir divi spēlētāji. Atveras dialogs ar **Pirmais spēlētājs** un **Otrais spēlētājs**, katru izvēlas no lietotajiem spēlētājiem. Otrajā sarakstā nav pirmā izvēlētā spēlētāja, jo spēlētāju nevar savienot pārī ar viņu pašu. Nospiediet **Pievienot pāri**, lai izveidotu pāri. Dialogs paliek atvērts, pasaka, kurš pāris pievienots, un iztukšo abas izvēles, lai varētu izveidot nākamo, kā to dara **Pievienot spēlētāju**. Pāris uzreiz parādās sarakstā aiz dialoga. Kad esat izveidojis visus vajadzīgos, nospiediet **Atcelt**.
 
 ![Dialogs Pievienot pāri ar diviem izvēlētiem spēlētājiem](images/add-pair-dialog.png)
 

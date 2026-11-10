@@ -57,7 +57,14 @@ The **?** in the title bar of the dialog leads here. Both this dialog and Add Pl
 
 ## Adding a pair {#adding-a-pair}
 
-In a doubles tournament, a pair is a player of its own, so it is made from two players already entered rather than typed in again. Press **Add Pair**, beside **Add Player**. It is offered where there are two players to choose from. A dialog opens with a **First player** and a **Second player**, each chosen from the players in use. The second list leaves out the player chosen first, since a player cannot be paired with themselves. Press **Add Pair** to make the pair. The dialog stays open, says which pair was added, and empties both choices so that the next pair can be made, as **Add Player** does. The pair appears in the list behind the dialog straight away. Press **Cancel** when you have made all you need.
+In a doubles tournament, a pair is a player of its own. There are two ways to add one.
+
+- **With Add Player.** Add the pair as if it were one player, and type its name with an ampersand between the two, as "Joe Blow & Jane Doe". In a tournament that is for doubles only, this is the quicker way, since nobody is entered twice.
+- **With Add Pair.** Make the pair from two players already entered, as described below. If most of your singles players are playing doubles too, this is the quicker way, since the players are already there to choose from.
+
+It is better to hold singles and doubles in tournaments of their own, one for each.
+
+Press **Add Pair**, beside **Add Player**. It is offered where there are two players to choose from. A dialog opens with a **First player** and a **Second player**, each chosen from the players in use. The second list leaves out the player chosen first, since a player cannot be paired with themselves. Press **Add Pair** to make the pair. The dialog stays open, says which pair was added, and empties both choices so that the next pair can be made, as **Add Player** does. The pair appears in the list behind the dialog straight away. Press **Cancel** when you have made all you need.
 
 ![The Add Pair dialog, with two players chosen](images/add-pair-dialog.png)
 

@@ -57,7 +57,14 @@ Mae'r **?** ym mar teitl y ddeialog yn arwain yma. Mae'r ddeialog hon ac Ychwane
 
 ## Ychwanegu pâr {#adding-a-pair}
 
-Mewn twrnamaint dyblau, mae pâr yn chwaraewr ynddo'i hun, felly caiff ei wneud o ddau chwaraewr sydd eisoes i mewn yn hytrach na'i deipio eto. Pwyswch **Ychwanegu pâr**, wrth ymyl **Ychwanegu chwaraewr**. Fe'i cynigir lle mae dau chwaraewr i ddewis o'u plith. Mae deialog yn agor gyda **Y chwaraewr cyntaf** ac **Yr ail chwaraewr**, pob un wedi'i ddewis o'r chwaraewyr sy'n cael eu defnyddio. Mae'r ail restr yn gadael allan y chwaraewr a ddewiswyd yn gyntaf, gan na all chwaraewr fod mewn pâr â nhw eu hunain. Pwyswch **Ychwanegu pâr** i wneud y pâr. Mae'r deialog yn aros ar agor, yn dweud pa bâr a ychwanegwyd, ac yn gwagio'r ddau ddewis fel y gellir gwneud y pâr nesaf, fel y mae **Ychwanegu chwaraewr** yn ei wneud. Mae'r pâr yn ymddangos yn y rhestr y tu ôl i'r deialog ar unwaith. Pwyswch **Diddymu** pan fyddwch wedi gwneud yr holl barau sydd eu hangen arnoch.
+Mewn twrnamaint dyblau, mae pâr yn chwaraewr ynddo'i hun. Mae dwy ffordd o ychwanegu un.
+
+- **Gydag Ychwanegu chwaraewr.** Ychwanegwch y pâr fel pe bai'n un chwaraewr, a theipiwch ei enw ag & rhwng y ddau, fel "Joe Blow & Jane Doe". Mewn twrnamaint ar gyfer dyblau yn unig, dyma'r ffordd gyflymaf, gan na chaiff neb ei roi i mewn ddwywaith.
+- **Gydag Ychwanegu pâr.** Gwnewch y pâr o ddau chwaraewr sydd eisoes i mewn, fel y disgrifir isod. Os yw'r rhan fwyaf o'ch chwaraewyr senglau yn chwarae dyblau hefyd, dyma'r ffordd gyflymaf, gan fod y chwaraewyr eisoes yno i ddewis o'u plith.
+
+Mae'n well cynnal senglau a dyblau mewn twrnameintiau ar wahân, un i bob un.
+
+Pwyswch **Ychwanegu pâr**, wrth ymyl **Ychwanegu chwaraewr**. Fe'i cynigir lle mae dau chwaraewr i ddewis o'u plith. Mae deialog yn agor gyda **Y chwaraewr cyntaf** ac **Yr ail chwaraewr**, pob un wedi'i ddewis o'r chwaraewyr sy'n cael eu defnyddio. Mae'r ail restr yn gadael allan y chwaraewr a ddewiswyd yn gyntaf, gan na all chwaraewr fod mewn pâr â nhw eu hunain. Pwyswch **Ychwanegu pâr** i wneud y pâr. Mae'r deialog yn aros ar agor, yn dweud pa bâr a ychwanegwyd, ac yn gwagio'r ddau ddewis fel y gellir gwneud y pâr nesaf, fel y mae **Ychwanegu chwaraewr** yn ei wneud. Mae'r pâr yn ymddangos yn y rhestr y tu ôl i'r deialog ar unwaith. Pwyswch **Diddymu** pan fyddwch wedi gwneud yr holl barau sydd eu hangen arnoch.
 
 ![Y deialog Ychwanegu pâr, â dau chwaraewr wedi'u dewis](images/add-pair-dialog.png)
 
