@@ -72,6 +72,21 @@ const disallowed = (world: SpecWorld): string[] =>
     .filter((line) => line.startsWith("Disallow: "))
     .map((line) => line.slice("Disallow: ".length));
 
+const asVary = (header: unknown): string[] => {
+  if (typeof header === "string") {
+    return header.split(",").map((each) => each.trim().toLowerCase());
+  }
+  if (
+    Array.isArray(header) &&
+    header.every((each): each is string => typeof each === "string")
+  ) {
+    return header
+      .flatMap((each) => each.split(","))
+      .map((each) => each.trim().toLowerCase());
+  }
+  return [];
+};
+
 Given(
   "the site is told nothing about search engines",
   function (this: SpecWorld) {
@@ -138,15 +153,14 @@ When(
 
 When(
   "a page that varies by {string} is asked for",
-  async function (this: SpecWorld, _by: string) {
+  async function (this: SpecWorld, by: string) {
+    void by;
     await asked(this, "/a-page-by-cookie", theWebsite);
   },
 );
 
 Then("the answer varies by {string}", function (this: SpecWorld, by: string) {
-  const varies = String(answer(this).headers["vary"] ?? "")
-    .split(",")
-    .map((each) => each.trim().toLowerCase());
+  const varies = asVary(answer(this).headers["vary"]);
   assert.ok(varies.includes(by.toLowerCase()), `It does not vary by ${by}.`);
 });
 
