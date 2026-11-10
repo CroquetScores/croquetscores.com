@@ -22,14 +22,22 @@ const settingsWith = (searchEngines: string): NodeJS.ProcessEnv => ({
 // A server with the one thing under test and a page to ask for, rather than
 // the whole application: what decides the answer is the setting, and an
 // application with a database would give the same answer slower.
-const asked = async (world: SpecWorld, url: string): Promise<void> => {
+const asked = async (
+  world: SpecWorld,
+  url: string,
+  address: string,
+): Promise<void> => {
   const config = loadConfig(settingsWith(world.searchEnginesSetting ?? ""));
   const server = Fastify({ logger: false });
   registerSearchEngines(server, config.searchEnginesWelcome);
   server.get("/a-page", () => "a page");
 
   try {
-    const answer = await server.inject({ method: "GET", url });
+    const answer = await server.inject({
+      method: "GET",
+      url,
+      headers: { host: address },
+    });
     world.answeredWith = { headers: answer.headers, body: answer.body };
   } finally {
     await server.close();
@@ -76,13 +84,30 @@ Given(
   },
 );
 
+// Where nothing says which website, it is the one the setting is about.
+const theWebsite = "croquetscores.com";
+
 When("the robots file is asked for", async function (this: SpecWorld) {
-  await asked(this, "/robots.txt");
+  await asked(this, "/robots.txt", theWebsite);
 });
 
+When(
+  "the robots file is asked for at {string}",
+  async function (this: SpecWorld, address: string) {
+    await asked(this, "/robots.txt", address);
+  },
+);
+
 When("a page is asked for", async function (this: SpecWorld) {
-  await asked(this, "/a-page");
+  await asked(this, "/a-page", theWebsite);
 });
+
+When(
+  "a page of the website at {string} is asked for",
+  async function (this: SpecWorld, address: string) {
+    await asked(this, "/a-page", address);
+  },
+);
 
 Then("it disallows {string}", function (this: SpecWorld, path: string) {
   assert.ok(disallowed(this).includes(path), `${path} is not disallowed.`);

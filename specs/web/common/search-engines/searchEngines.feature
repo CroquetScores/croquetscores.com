@@ -71,6 +71,62 @@ Feature: Search engines are kept away until the site is told they are welcome
         | /api/  |
         | /auth/ |
 
+  Rule: Told they are welcome, only the two websites readers know are found
+
+    One server answers for croquetscores.com, gateballscores.com, the try
+    website under each, and the beta (`betaSite.feature`), and the setting is
+    the server's, not any one website's. So a server told that search engines
+    are welcome would otherwise offer the try websites to them too, where
+    whatever is entered "may be removed at any time" (`layout.feature`) and a
+    result once indexed would put somebody's practice in front of the world.
+    The try websites, the beta and a developer's own computer keep search
+    engines away whatever the setting says; only croquetscores.com and
+    gateballscores.com are found.
+
+    Scenario Outline: A page of a website readers know does not ask not to be indexed
+      Given the site is told search engines are welcome
+      When a page of the website at "<address>" is asked for
+      Then it does not ask not to be indexed
+
+      Examples:
+        | address            |
+        | croquetscores.com  |
+        | gateballscores.com |
+
+    Scenario Outline: A page of a try website, the beta or a developer's computer asks not to be indexed
+      Given the site is told search engines are welcome
+      When a page of the website at "<address>" is asked for
+      Then it asks not to be indexed
+
+      Examples:
+        | address                |
+        | try.croquetscores.com  |
+        | try.gateballscores.com |
+        | beta.croquetscores.com |
+        | localhost:3000         |
+
+    Scenario Outline: The robots file of a website readers know does not disallow everything
+      Given the site is told search engines are welcome
+      When the robots file is asked for at "<address>"
+      Then it does not disallow "/"
+
+      Examples:
+        | address            |
+        | croquetscores.com  |
+        | gateballscores.com |
+
+    Scenario Outline: The robots file of a try website, the beta or a developer's computer disallows everything
+      Given the site is told search engines are welcome
+      When the robots file is asked for at "<address>"
+      Then it disallows "/"
+
+      Examples:
+        | address                |
+        | try.croquetscores.com  |
+        | try.gateballscores.com |
+        | beta.croquetscores.com |
+        | localhost:3000         |
+
   Rule: A setting that is neither yes nor no stops the site starting
 
     The setting is read as true or false and nothing else, because the guess
