@@ -12,6 +12,10 @@ const usualPixels = 16;
 // before a gesture, or before the reader went somewhere else.
 const remembered = new WeakMap<SpecWorld, number>();
 
+// What the text measured when the last gesture was done, which is the size a
+// reader means by "as it was" when they go somewhere else after making it.
+const afterGesture = new WeakMap<SpecWorld, number>();
+
 const textPixels = (world: SpecWorld): Promise<number> =>
   world.browserPage.evaluate<number>(
     "parseFloat(getComputedStyle(document.documentElement).fontSize)",
@@ -68,6 +72,7 @@ const gesture = (fromHalfGap: number, toHalfGap: number) =>
   async function (this: SpecWorld): Promise<void> {
     remembered.set(this, await textPixels(this));
     await pinch(this, fromHalfGap, toHalfGap);
+    afterGesture.set(this, await textPixels(this));
   };
 
 // 40 pixels either side is a comfortable pair of fingers on a 400 pixel screen.
@@ -146,7 +151,9 @@ Then(
 Then(
   "the text is as large as it was on the home page",
   async function (this: SpecWorld) {
-    assert.equal(await textPixels(this), remembering(this));
+    const pixels = afterGesture.get(this);
+    assert.ok(pixels !== undefined, "No text size was made on the home page.");
+    assert.equal(await textPixels(this), pixels);
   },
 );
 

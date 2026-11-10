@@ -92,6 +92,30 @@ Feature: Changing the size of the text by pinching and pulling
       And the home page is opened
       Then the text is as large as it was before the browser was closed
 
+  Rule: The admin is no different
+
+    The admin is a page of its own that the site's layout does not draw, so it
+    is told about the text size separately and is held to the same size as every
+    other page. A reader who is not signed in is sent to the sign in page instead
+    of the admin, which would pass for it, so these readers are signed in.
+
+    Scenario: Pulling on the admin
+      Given a viewport 400 pixels wide
+      And a reader signed in as "someone@example.com"
+      And scripting is switched on
+      And the admin is open
+      When two fingers are pulled apart
+      Then the text is larger than it was
+
+    Scenario: The size is carried into the admin
+      Given a viewport 400 pixels wide
+      And a reader signed in as "someone@example.com"
+      And scripting is switched on
+      And the home page is open
+      And two fingers are pulled apart
+      When the admin is opened
+      Then the text is as large as it was on the home page
+
   Rule: One finger is not a pinch
 
     Scenario: Scrolling is left alone
