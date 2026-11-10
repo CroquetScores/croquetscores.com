@@ -1,5 +1,13 @@
 # Nytt
 
+## Släppt 2026-11-11
+
+- **Menyn i mobilen stängs när du trycker utanför den.** Menyn bakom knappen högst upp på en smal skärm stängs när du trycker någon annanstans på sidan, och likaså när du trycker på knappen igen eller följer en länk.
+
+- **Kontomenyn stängs när du trycker utanför den.** Personen längst ut i sidhuvudet, som öppnar registrering, inloggning och det övriga, stängs när du trycker någon annanstans på sidan, och likaså när du trycker på den igen.
+
+- **Menyn i mobilen går att rulla.** På en låg skärm är menyn aldrig högre än skärmen och rullas inuti den, så att du når varje val. Sidan bakom ligger kvar där den var tills menyn stängs.
+
 ## Släppt 2026-11-10
 
 Croquet Scores har skrivits om helt och hållet. Jag hoppas att du gillar den nya versionen.

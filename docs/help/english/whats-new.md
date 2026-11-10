@@ -1,5 +1,13 @@
 # What's new
 
+## Released 2026-11-11
+
+- **The menu on a phone is put away by pressing outside it.** The menu behind the button at the top of a narrow screen shuts when you press anywhere else on the page, as well as when you press the button again or follow a link.
+
+- **The account menu is put away by pressing outside it.** The person at the end of the header, which opens on registering, signing in and the rest, shuts when you press anywhere else on the page, as well as when you press it again.
+
+- **The menu on a phone scrolls.** On a short screen the menu is no taller than the screen and scrolls within it, so every item can be reached, and the page behind it stays where it was until the menu is shut.
+
 ## Released 2026-11-10
 
 Croquet Scores has been completely rewritten. I hope you like the new version.

@@ -1,5 +1,13 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-11
+
+- **Caiff y ddewislen ar ffôn ei rhoi o'r neilltu trwy wasgu y tu allan iddi.** Mae'r ddewislen y tu ôl i'r botwm ar frig sgrin gul yn cau pan wasgwch unrhyw le arall ar y dudalen, yn ogystal â phan wasgwch y botwm eto neu ddilyn dolen.
+
+- **Caiff dewislen y cyfrif ei rhoi o'r neilltu trwy wasgu y tu allan iddi.** Mae'r person ar ddiwedd y pennyn, sy'n agor Cofrestru, Mewngofnodi a'r gweddill, yn cau pan wasgwch unrhyw le arall ar y dudalen, yn ogystal â phan wasgwch ef eto.
+
+- **Mae'r ddewislen ar ffôn yn sgrolio.** Ar sgrin fer, nid yw'r ddewislen yn dalach na'r sgrin ac mae'n sgrolio ynddi, felly gellir cyrraedd pob eitem, ac mae'r dudalen y tu ôl iddi yn aros lle'r oedd nes i'r ddewislen gau.
+
 ## Rhyddhawyd 2026-11-10
 
 Mae Croquet Scores wedi'i ailysgrifennu'n llwyr. Gobeithio y bydd y fersiwn newydd yn plesio.

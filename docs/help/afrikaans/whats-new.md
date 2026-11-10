@@ -1,5 +1,13 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-11
+
+- **Die kieslys op 'n foon word toegemaak as jy daarbuite druk.** Die kieslys agter die knoppie bo-aan 'n smal skerm gaan toe as jy êrens anders op die bladsy druk, en ook as jy weer op die knoppie druk of 'n skakel volg.
+
+- **Die rekeningkieslys word toegemaak as jy daarbuite druk.** Die persoon aan die einde van die kopstuk maak 'n kieslys oop met onder meer registreer en teken in. Dit gaan toe as jy êrens anders op die bladsy druk, en ook as jy weer daarop druk.
+
+- **Die kieslys op 'n foon rol.** Op 'n kort skerm is die kieslys nie hoër as die skerm nie en rol binne-in, sodat jy by elke item kan uitkom. Die bladsy daaragter bly waar dit was totdat die kieslys toegemaak word.
+
 ## Vrygestel 2026-11-10
 
 Croquet Scores is heeltemal herskryf. Ek hoop jy hou van die nuwe weergawe.
