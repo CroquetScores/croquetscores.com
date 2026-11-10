@@ -1,5 +1,13 @@
 # Co je nového
 
+## Vydáno 2026-11-11
+
+- **Menu na telefonu se zavře stisknutím mimo něj.** Menu za tlačítkem v horní části úzké obrazovky se zavře, když stisknete kdekoli jinde na stránce, stejně jako když znovu stisknete tlačítko nebo otevřete odkaz.
+
+- **Nabídka Účet se zavře stisknutím mimo ni.** Postava na konci záhlaví, která otevírá možnosti Registrovat se, Přihlásit se a další, se zavře, když stisknete kdekoli jinde na stránce, stejně jako když ji znovu stisknete.
+
+- **Menu na telefonu se posouvá.** Na nízké obrazovce není menu vyšší než obrazovka a posouvá se uvnitř ní, takže se dá dosáhnout na každou položku. Stránka za ním zůstane na místě, dokud se menu nezavře.
+
 ## Vydáno 2026-11-10
 
 Croquet Scores bylo celé napsáno znovu. Doufám, že se vám nová verze bude líbit.

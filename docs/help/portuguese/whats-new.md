@@ -1,5 +1,13 @@
 # Novidades
 
+## Lançado em 2026-11-11
+
+- **O menu no celular se fecha ao tocar fora dele.** O menu do botão Menu, no alto de uma tela estreita, se fecha quando você toca em qualquer outro ponto da página, além de quando você toca de novo no botão ou segue um link.
+
+- **O menu Conta se fecha ao tocar fora dele.** A pessoa no fim do cabeçalho, que abre as opções de cadastrar-se, entrar e o resto, se fecha quando você toca em qualquer outro ponto da página, além de quando você toca nela de novo.
+
+- **O menu no celular rola.** Numa tela baixa, o menu não passa da altura da tela e rola dentro dela, para que dê para chegar a todos os itens, e a página atrás dele fica onde estava até o menu se fechar.
+
 ## Lançado em 2026-11-10
 
 O Croquet Scores foi totalmente reescrito. Espero que você goste da nova versão.

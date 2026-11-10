@@ -1,5 +1,13 @@
 # Kas jauns
 
+## Izlaists 2026-11-11
+
+- **Izvēlni tālrunī var aizvērt, nospiežot ārpus tās.** Izvēlne aiz pogas šaura ekrāna augšā aizveras, kad nospiežat jebkur citur lapā, tāpat kā tad, kad vēlreiz nospiežat pogu vai atverat saiti.
+
+- **Konta izvēlni var aizvērt, nospiežot ārpus tās.** Cilvēka ikona galvenes galā, kas atver reģistrēšanos, pierakstīšanos un pārējo, aizveras, kad nospiežat jebkur citur lapā, tāpat kā tad, kad to nospiežat vēlreiz.
+
+- **Izvēlne tālrunī ritinās.** Zemā ekrānā izvēlne nav augstāka par ekrānu un ritinās tā iekšienē, tāpēc var aizsniegt katru vienumu, un lapa aiz tās paliek vietā, līdz izvēlne tiek aizvērta.
+
 ## Izlaists 2026-11-10
 
 Croquet Scores ir pilnībā uzrakstīts no jauna. Ceru, ka jaunā versija jums patiks.

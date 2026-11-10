@@ -1,5 +1,13 @@
 # Was ist neu
 
+## Veröffentlicht am 11.11.2026
+
+- **Das Menü auf dem Telefon schließt sich, wenn Sie außerhalb davon tippen.** Das Menü hinter der Schaltfläche oben auf einem schmalen Bildschirm schließt sich, wenn Sie irgendwo anders auf die Seite tippen, ebenso wie wenn Sie die Schaltfläche noch einmal drücken oder einem Link folgen.
+
+- **Das Kontomenü schließt sich, wenn Sie außerhalb davon tippen.** Die Person am Ende der Kopfzeile, hinter der sich Registrieren, Anmelden und das Übrige öffnen, schließt sich, wenn Sie irgendwo anders auf die Seite tippen, ebenso wie wenn Sie sie noch einmal drücken.
+
+- **Das Menü auf dem Telefon lässt sich scrollen.** Auf einem niedrigen Bildschirm ist das Menü nicht höher als der Bildschirm und scrollt in sich, sodass sich jeder Eintrag erreichen lässt. Die Seite dahinter bleibt, wo sie war, bis das Menü geschlossen wird.
+
 ## Veröffentlicht am 10.11.2026
 
 Croquet Scores wurde komplett neu geschrieben. Ich hoffe, die neue Version gefällt Ihnen.

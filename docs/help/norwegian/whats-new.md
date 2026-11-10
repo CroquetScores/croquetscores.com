@@ -1,5 +1,13 @@
 # Hva som er nytt
 
+## Utgitt 2026-11-11
+
+- **Menyen på en mobil lukkes når du trykker utenfor den.** Menyen bak «Meny»-knappen øverst på en smal skjerm lukkes når du trykker et annet sted på siden, i tillegg til når du trykker på knappen igjen eller følger en lenke.
+
+- **Kontomenyen lukkes når du trykker utenfor den.** Kontomenyen, personen ytterst i toppen av siden, åpner for å registrere deg, logge inn og mer. Den lukkes når du trykker et annet sted på siden, i tillegg til når du trykker på den igjen.
+
+- **Menyen på en mobil kan rulles.** På en lav skjerm er menyen aldri høyere enn skjermen og kan rulles, slik at du kommer til alle valgene. Siden bak blir stående der den var til menyen lukkes.
+
 ## Utgitt 2026-11-10
 
 Croquet Scores er skrevet helt om. Jeg håper du liker den nye versjonen.

@@ -1,5 +1,13 @@
 # Novedades
 
+## Publicado el 2026-11-11
+
+- **El menú del teléfono se cierra al pulsar fuera de él.** El menú que se abre con el botón de la parte superior de una pantalla estrecha se cierra cuando pulsas en cualquier otro lugar de la página, además de cuando vuelves a pulsar el botón o sigues un enlace.
+
+- **El menú de la cuenta se cierra al pulsar fuera de él.** La persona que aparece al final del encabezado, que se abre con Registrarse, Iniciar sesión y el resto, se cierra cuando pulsas en cualquier otro lugar de la página, además de cuando vuelves a pulsarla.
+
+- **El menú del teléfono se desplaza.** En una pantalla baja, el menú no es más alto que la pantalla y se desplaza dentro de ella, de modo que se puede llegar a todos los elementos, y la página de detrás se queda donde estaba hasta que se cierra el menú.
+
 ## Publicado el 2026-11-10
 
 Croquet Scores se ha reescrito por completo. Espero que te guste la nueva versión.
