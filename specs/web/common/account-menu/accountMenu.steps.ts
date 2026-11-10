@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import { signOutPath } from "../../../../src/web/common/accountMenu.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { closes, opens } from "../../support/languages.js";
+import { pressOutside } from "../../support/pressOutside.js";
 import { hasNoPassword, signInAs, signOutOf } from "../../support/reader.js";
 
 const MENU = "details.account-menu";
@@ -24,6 +25,16 @@ const offered = async (world: SpecWorld): Promise<string[]> => {
 
 When("the account menu is pressed", async function (this: SpecWorld) {
   await this.browserPage.locator(SUMMARY).click();
+});
+
+When("the page outside the account menu is pressed", pressOutside);
+
+// The corner of the panel, since its middle is an item and pressing one
+// follows it.
+When("the account menu's panel is pressed", async function (this: SpecWorld) {
+  await this.browserPage
+    .locator(`${MENU} .account-menu-links`)
+    .click({ position: { x: 1, y: 1 } });
 });
 
 // A details element carries open as an attribute, which is "" when it is there
