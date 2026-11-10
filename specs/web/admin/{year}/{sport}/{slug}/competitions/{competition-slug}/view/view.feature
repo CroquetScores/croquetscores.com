@@ -141,10 +141,9 @@ Feature: A competition's page in the admin
 
     It is the games in use that count: a game archived is one the competition
     is as it was without, so a competition whose only game has been archived
-    opens on Players again. It is any competition's, and it is the page being
-    opened that is decided and not what the reader is on: a reader who has
-    chosen a tab stays on it while they enter games, as they would anywhere
-    else.
+    opens on Players again. It is any competition's, and it is only the tab the
+    page opens on that is decided: the tab a reader chooses is theirs, and the
+    page does not move them off it.
 
     Background:
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

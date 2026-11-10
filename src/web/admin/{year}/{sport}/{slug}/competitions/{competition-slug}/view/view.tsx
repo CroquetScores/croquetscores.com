@@ -68,10 +68,13 @@ const offeredTo = (competition: Found): readonly Tab[] =>
 
 // The tab the page opens on: the first the reader is offered, which is Players
 // for a manager, but Scores for one whose competition has a game in it.
-const openedOn = (competition: Found): Tab =>
-  competition.part === "manager" && competition.hasGames
+const openedOn = (competition: Found): Tab => {
+  const offered = offeredTo(competition);
+  // Only a tab the reader is offered: Scores is, to a manager and a scorer.
+  return competition.hasGames && offered.includes("scores")
     ? "scores"
-    : (offeredTo(competition)[0] ?? "scores");
+    : (offered[0] ?? "scores");
+};
 
 export const ViewCompetition = ({
   address,
