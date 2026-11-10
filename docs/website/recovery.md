@@ -19,8 +19,8 @@ What is **not** only here: the code (GitHub), the website's data (the server, Ka
 
 ## 2. Where each thing is to be kept
 
-- **In the password manager (LastPass), as secure notes:**
-  - **`.env.production`**, whole, as one note named for the website. This is the single most important copy: it holds `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY`, which no backup file can replace (backup-and-restore.md §4). **Update the note every time the file changes**, and when a key is changed by `npm run db:change-site-key` (deploying.md §6).
+- **In the password manager (LastPass):**
+  - **`.env.production`**, whole, in the notes of the item for kamatera.com. This is the single most important copy: it holds `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY`, which no backup file can replace (backup-and-restore.md §4). **Update the note every time the file changes**, and when a key is changed by `npm run db:change-site-key` (deploying.md §6).
   - **The server's root password** (the one entered when the server was made), which is the way back in when the SSH key is gone (§3).
   - **The SSH key's passphrase**, and a line saying which computer the key is on.
   - **The database's password**, and the administrator's mailbox if it has its own password.
