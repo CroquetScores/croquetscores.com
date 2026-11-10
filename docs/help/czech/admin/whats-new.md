@@ -1,5 +1,13 @@
 # Novinky pro organizátory turnajů
 
+## Vydáno 2026-11-11
+
+### Soutěže
+
+- **Soutěž se otevře na kartě Skóre, jakmile se zadala nějaká hra.** Když se k soutěži vrátíte zadat další skóre, už nemusíte pokaždé mačkat **Skóre**. Soutěž bez použité hry, včetně té, jejíž jediná hra je archivovaná, se stále otevře na kartě **Hráči**. Zapisovatel vidí jen **Skóre**, jako dřív.
+
+- **Archivovaná soutěž nebo test dostane za název číslo, aby se jejich název mohl použít znovu.** Soutěž vytvořenou jako špatný druh je nutné archivovat a přidat znovu a nová teď může dostat název té staré. Archivací „Block A“ vznikne „Block A (1)“, s prvním číslem, kterým nekončí název žádné jiné soutěže. Adresa zůstane, jaká byla, a obnovená soutěž si nový název ponechá. Archivovaný test se čísluje stejně a při změně krátkého názvu týmu zůstane, jak byl. Viz [Soutěže](../tournament-managers/standard-tournament/competitions.md).
+
 ## Vydáno 2026-11-10
 
 Toto jsou hlavní změny pro lidi, kteří vedou turnaje. [Nápověda pro organizátory turnajů](../tournament-managers/index.md) má všechny podrobnosti.

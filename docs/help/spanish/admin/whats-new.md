@@ -1,5 +1,13 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-11-11
+
+### Competiciones
+
+- **Una competición se abre en su pestaña Resultados cuando ya se ha introducido una partida.** Volver a una competición para introducir más resultados ya no obliga a pulsar **Resultados** cada vez. Una competición sin ninguna partida en uso, incluida una cuya única partida está archivada, se sigue abriendo en **Jugadores**. A un anotador se le muestra solo **Resultados**, como antes.
+
+- **Al archivar una competición o un Test, se le añade un número después del nombre, para que ese nombre se pueda volver a usar.** Una competición creada con el tipo equivocado hay que archivarla y añadirla de nuevo, y ahora la nueva puede llevar el nombre que tenía la antigua. Al archivar "Block A", pasa a llamarse "Block A (1)", con el primer número con el que no termina el nombre de ninguna otra competición. Su dirección no cambia, y una competición que se restaura conserva el nuevo nombre. Un Test archivado se numera del mismo modo, y se deja como estaba cuando se cambia el nombre corto de un equipo. Consulta [Competiciones](../tournament-managers/standard-tournament/competitions.md).
+
 ## Publicado el 2026-11-10
 
 Estos son los cambios principales para quienes organizan torneos. La [ayuda para los gestores de torneo](../tournament-managers/index.md) tiene todos los detalles.

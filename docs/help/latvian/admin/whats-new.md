@@ -1,5 +1,13 @@
 # Kas jauns turnīru pārvaldniekiem
 
+## Izdots 2026-11-11
+
+### Sacensības
+
+- **Sacensības atveras cilnē Rezultāti, līdzko ir ievadīta kāda partija.** Atgriežoties sacensībās, lai ievadītu vēl rezultātus, vairs nav katru reizi jānospiež **Rezultāti**. Sacensības, kurās nav neviena lietojamas partijas, arī tādas, kurās vienīgā partija ir arhivēta, joprojām atveras cilnē **Spēlētāji**. Rezultātu ievadītājam tiek rādīta tikai cilne **Rezultāti**, kā agrāk.
+
+- **Arhivējot sacensības vai testu, aiz to nosaukuma tiek pievienots numurs, lai nosaukumu varētu izmantot vēlreiz.** Sacensības, kas izveidotas ar nepareizu veidu, ir jāarhivē un jāpievieno no jauna, un jaunajām tagad var dot to pašu nosaukumu, kāds bija vecajām. Arhivējot "Block A", tās kļūst par "Block A (1)", izmantojot pirmo numuru, ar kuru neviena cita sacensību nosaukums nebeidzas. To adrese paliek tāda, kāda bija, un atjaunotas sacensības saglabā jauno nosaukumu. Arhivēts tests tiek numurēts tāpat, un, mainot komandas īsais nosaukums, tas paliek nemainīts. Skatiet [Sacensības](../tournament-managers/standard-tournament/competitions.md).
+
 ## Izdots 2026-11-10
 
 Šīs ir galvenās izmaiņas tiem, kas vada turnīrus. [Palīdzībā turnīru pārvaldniekiem](../tournament-managers/index.md) ir visas detaļas.

@@ -1,5 +1,13 @@
 # Novidades para organizadores de torneios
 
+## Lançado em 2026-11-11
+
+### Competições
+
+- **Uma competição abre na aba Resultados depois que um jogo foi inserido.** Voltar a uma competição para inserir mais resultados já não exige apertar **Resultados** toda vez. Uma competição sem nenhum jogo em uso, inclusive uma cujo único jogo foi arquivado, continua abrindo em **Jogadores**. Um anotador vê só **Resultados**, como antes.
+
+- **Arquivar uma competição ou um teste coloca um número depois do nome, para que o nome possa ser usado de novo.** Uma competição criada com o tipo errado precisa ser arquivada e adicionada de novo, e agora a nova pode receber o nome da antiga. Ao arquivar "Block A", ela passa a se chamar "Block A (1)", com o primeiro número que nenhum outro nome de competição usa no fim. O endereço dela não muda, e uma competição restaurada fica com o novo nome. Um teste arquivado é numerado do mesmo modo e fica como estava quando o nome curto de uma equipe é alterado. Veja [Competições](../tournament-managers/standard-tournament/competitions.md).
+
 ## Lançado em 2026-11-10
 
 Estas são as principais mudanças para quem organiza torneios. A [ajuda para organizadores de torneios](../tournament-managers/index.md) tem todos os detalhes.

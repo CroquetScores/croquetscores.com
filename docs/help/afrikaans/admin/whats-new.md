@@ -1,5 +1,13 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-11-11
+
+### Kompetisies
+
+- **'n Kompetisie maak oop op sy Uitslae-oortjie sodra 'n spel ingevoer is.** As jy na 'n kompetisie terugkom om meer uitslae in te voer, hoef jy nie meer elke keer **Uitslae** te druk nie. 'n Kompetisie met geen spel in gebruik nie, ook een wie se enigste spel geargiveer is, maak steeds op **Spelers** oop. 'n Teller sien soos voorheen net **Uitslae**.
+
+- **Wanneer 'n kompetisie of 'n toets geargiveer word, kry dit 'n nommer na sy naam, sodat sy naam weer gebruik kan word.** 'n Kompetisie wat as die verkeerde soort gemaak is, moet geargiveer en weer bygevoeg word, en die nuwe een kan nou die naam kry wat die ou een gehad het. As "Block A" geargiveer word, word dit "Block A (1)", met die eerste nommer waarmee geen ander kompetisie se naam eindig nie. Sy adres bly soos dit was, en 'n kompetisie wat herstel word, hou die nuwe naam. 'n Toets wat geargiveer word, kry op dieselfde manier 'n nommer, en bly soos dit was wanneer 'n span se kortnaam verander word. Sien [Kompetisies](../tournament-managers/standard-tournament/competitions.md).
+
 ## Vrygestel 2026-11-10
 
 Dit is die belangrikste veranderinge vir mense wat toernooie bestuur. Die [hulp vir toernooibestuurders](../tournament-managers/index.md) het al die besonderhede.
