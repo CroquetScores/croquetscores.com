@@ -7,8 +7,9 @@
 // what a crawler reads before it reads anything else. The header is on every
 // answer, so a page linked to from somewhere before the crawler read the file,
 // and a file that is no page, say the same.
+import { ValidationError } from "../../domain/common/validation/ValidationError.js";
 import { Website } from "../../domain/common/Website.js";
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 const keepAway = "User-agent: *\nDisallow: /\n";
 
@@ -18,25 +19,38 @@ const keepAway = "User-agent: *\nDisallow: /\n";
 const welcome =
   "User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /auth/\n";
 
-// The two websites a reader is sent to. The setting is the server's, and one
-// server answers for these, a try website under each, and the beta; a try
-// website says on every page that whatever is entered there may be removed at
-// any time, so a result indexed from one would put somebody's practice in
-// front of the world, and is slow to be forgotten. So the setting is not
-// enough: only these two are ever found, however it is set. Decided by the
-// address a request was reached at, as the beta notice is (betaSite.ts), and
-// an address that is none of the five is kept away rather than guessed at.
-const found: readonly string[] = [
-  Website.croquetScores.host,
-  Website.gateballScores.host,
-];
+// The websites a reader is sent to, which are the two that are neither a try
+// website nor the beta nor development. The setting is the server's, and one
+// server answers for them all; a try website says on every page that whatever
+// is entered there may be removed at any time, so a result indexed from one
+// would put somebody's practice in front of the world, and is slow to be
+// forgotten. So the setting is not enough, and only these are ever found,
+// however it is set. Decided by the address a request was reached at, which is
+// request.host as the rest of the site reads it, so that a proxy's word for it
+// is believed only where the proxy is trusted. An address that is none of the
+// websites is kept away rather than guessed at.
+const isForReaders = (request: FastifyRequest): boolean => {
+  try {
+    const website = Website.addressedTo(request.host);
+    return !website.isTry && website.equals(website.countsAs);
+  } catch (refusal) {
+    if (refusal instanceof ValidationError) return false;
+    throw refusal;
+  }
+};
 
 const isWelcomed = (
   request: FastifyRequest,
   searchEnginesWelcome: boolean,
-): boolean =>
-  searchEnginesWelcome &&
-  found.includes(Website.spelled(request.headers.host ?? ""));
+): boolean => searchEnginesWelcome && isForReaders(request);
+
+// What an answer says depends on the host it was asked at, so a cache that
+// serves more than one host must not give one's answer for another's.
+const varyByHost = (reply: FastifyReply): void => {
+  const already = String(reply.getHeader("vary") ?? "");
+  if (/(^|,)\s*(host|\*)\s*(,|$)/i.test(already)) return;
+  reply.header("vary", already === "" ? "Host" : `${already}, Host`);
+};
 
 export const registerSearchEngines = (
   server: FastifyInstance,
@@ -47,11 +61,13 @@ export const registerSearchEngines = (
       // Asked again each time, since the file is small and a site that has just
       // been told it is welcome should not be kept out by a copy of this one.
       .header("cache-control", "public, no-cache")
+      .header("vary", "Host")
       .type("text/plain; charset=utf-8")
       .send(isWelcomed(request, searchEnginesWelcome) ? welcome : keepAway),
   );
 
   server.addHook("onSend", (request, reply, payload, done) => {
+    varyByHost(reply);
     if (!isWelcomed(request, searchEnginesWelcome)) {
       reply.header("x-robots-tag", "noindex, nofollow");
     }

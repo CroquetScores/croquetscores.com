@@ -22,21 +22,37 @@ const settingsWith = (searchEngines: string): NodeJS.ProcessEnv => ({
 // A server with the one thing under test and a page to ask for, rather than
 // the whole application: what decides the answer is the setting, and an
 // application with a database would give the same answer slower.
+// Whether a scenario's server believes the proxy in front of it, and which
+// address that proxy says the reader asked for.
+const proxied = new WeakMap<SpecWorld, { trusted: boolean }>();
+
 const asked = async (
   world: SpecWorld,
   url: string,
   address: string,
+  forwardedFor?: string,
 ): Promise<void> => {
   const config = loadConfig(settingsWith(world.searchEnginesSetting ?? ""));
-  const server = Fastify({ logger: false });
+  const server = Fastify({
+    logger: false,
+    trustProxy: proxied.get(world)?.trusted ?? false,
+  });
   registerSearchEngines(server, config.searchEnginesWelcome);
   server.get("/a-page", () => "a page");
+  server.get("/a-page-by-cookie", (_request, reply) =>
+    reply.header("vary", "Cookie").send("a page"),
+  );
 
   try {
     const answer = await server.inject({
       method: "GET",
       url,
-      headers: { host: address },
+      headers: {
+        host: address,
+        ...(forwardedFor === undefined
+          ? {}
+          : { "x-forwarded-host": forwardedFor }),
+      },
     });
     world.answeredWith = { headers: answer.headers, body: answer.body };
   } finally {
@@ -98,6 +114,17 @@ When(
   },
 );
 
+Given("the site is behind a proxy it trusts", function (this: SpecWorld) {
+  proxied.set(this, { trusted: true });
+});
+
+When(
+  "a page is asked for at {string} by way of the proxy for {string}",
+  async function (this: SpecWorld, address: string, forwarded: string) {
+    await asked(this, "/a-page", address, forwarded);
+  },
+);
+
 When("a page is asked for", async function (this: SpecWorld) {
   await asked(this, "/a-page", theWebsite);
 });
@@ -108,6 +135,20 @@ When(
     await asked(this, "/a-page", address);
   },
 );
+
+When(
+  "a page that varies by {string} is asked for",
+  async function (this: SpecWorld, _by: string) {
+    await asked(this, "/a-page-by-cookie", theWebsite);
+  },
+);
+
+Then("the answer varies by {string}", function (this: SpecWorld, by: string) {
+  const varies = String(answer(this).headers["vary"] ?? "")
+    .split(",")
+    .map((each) => each.trim().toLowerCase());
+  assert.ok(varies.includes(by.toLowerCase()), `It does not vary by ${by}.`);
+});
 
 Then("it disallows {string}", function (this: SpecWorld, path: string) {
   assert.ok(disallowed(this).includes(path), `${path} is not disallowed.`);
