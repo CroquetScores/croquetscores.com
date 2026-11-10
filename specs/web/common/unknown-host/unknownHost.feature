@@ -57,10 +57,15 @@ Feature: Refusing a request addressed to a website nobody set up
       When the sign in page is asked for as "example.com"
       Then the answer is a page
 
-    Scenario: The refusal carries no beta banner
+    Scenario Outline: The refusal carries no beta banner
       Given a site
-      When the sign in page is asked for as "example.com"
+      When the sign in page is asked for as "<host>"
       Then the answer carries no beta banner
+
+      Examples:
+        | host                   |
+        | example.com            |
+        | beta.croquetscores.com |
 
     Scenario: The refusal is JSON where the API was asked
       Given a site

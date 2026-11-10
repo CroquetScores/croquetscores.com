@@ -128,12 +128,12 @@ Feature: The website a site is served as
       Then it is refused for breaking "Website.Unknown"
 
       Examples:
-        | host                  |
-        | example.com           |
-        | www.croquetscores.com |
+        | host                   |
+        | example.com            |
+        | www.croquetscores.com  |
         | beta.croquetscores.com |
-        | 203.0.113.5           |
-        | localhost.example.com |
+        | 203.0.113.5            |
+        | localhost.example.com  |
 
     Scenario: A request addressed to nowhere is refused
       When a request addressed to "" is placed
