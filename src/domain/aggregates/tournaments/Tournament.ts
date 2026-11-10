@@ -2736,10 +2736,13 @@ export class Tournament extends AggregateRoot {
 
   // A team called by another short name gives every test it is in another
   // name with it. The tests keep their slugs, as a competition renamed does.
+  // An archived test is left as it is: the number archiving gave it is what
+  // keeps its old name free, and renaming it would take that back.
   #renameTestsOf(written: string): void {
     for (const { reference, shape, rules } of this.#competitions.values()) {
       if (
         shape.kind === "test" &&
+        !reference.archived &&
         (shape.firstTeam.value === written ||
           shape.secondTeam.value === written)
       ) {
