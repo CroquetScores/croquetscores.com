@@ -47,7 +47,9 @@ Given(
       writtenAt !== null
         ? new Date(writtenAt)
         : new Date(now - (ago === null ? 0 : (AGO[ago] ?? 0)) * 1000);
-    await keep(this, when, message, severity, reference);
+    // The page starts at Warn, so an entry whose severity a scenario does not
+    // name is Warn, or it would be kept and then not shown.
+    await keep(this, when, message, severity ?? "Warn", reference);
   },
 );
 
