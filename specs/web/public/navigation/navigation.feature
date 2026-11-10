@@ -135,6 +135,52 @@ Feature: Finding your way around the public site
       When the page outside the menu is pressed
       Then the menu is open
 
+  Rule: While the menu is open it is scrolled and the page behind it is not
+
+    The menu hangs under a bar that stays where it is as the page is scrolled,
+    and on a short phone the search, the links and the account group together
+    are taller than the window, so that the lower ones fell off the bottom of
+    it with no way to reach them. The menu is held to the height of the window
+    and scrolls within it, and while it is open the page behind it is held
+    still, so that a reader who scrolls is moving what they are looking at.
+    Neither needs scripting. Where the links are in the open there is no menu
+    to scroll and the page scrolls as it always did.
+
+    Scenario: A menu taller than the window is no taller than the window
+      Given a viewport 375 pixels wide and 300 pixels tall
+      And the home page is open
+      When the menu button is pressed
+      Then the menu's panel ends within the window
+
+    Scenario: Scrolling over the open menu moves the menu
+      Given a viewport 375 pixels wide and 300 pixels tall
+      And the home page is open
+      And the menu button is pressed
+      When the wheel is turned 400 pixels down over the menu
+      Then the menu has been scrolled
+
+    Scenario: Scrolling over the open menu does not move the page
+      Given a viewport 375 pixels wide and 300 pixels tall
+      And the home page is open
+      And the menu button is pressed
+      When the wheel is turned 400 pixels down over the menu
+      Then the page has not been scrolled
+
+    Scenario: Scrolling beside the open menu does not move the page
+      Given a viewport 375 pixels wide and 300 pixels tall
+      And the home page is open
+      And the menu button is pressed
+      When the wheel is turned 400 pixels down beside the menu
+      Then the page has not been scrolled
+
+    Scenario: The page scrolls once the menu is shut
+      Given a viewport 375 pixels wide and 300 pixels tall
+      And the home page is open
+      And the menu button is pressed
+      And the menu button is pressed
+      When the wheel is turned 400 pixels down beside the menu
+      Then the page has been scrolled
+
   Rule: The navigation offers what the reader can use
 
     Scenario: A reader not signed in is offered the way home first

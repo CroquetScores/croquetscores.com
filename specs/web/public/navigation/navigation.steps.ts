@@ -76,6 +76,77 @@ When("the menu button is pressed", async function (this: SpecWorld) {
 
 When("the page outside the menu is pressed", pressOutside);
 
+// Scrolling ----------------------------------------------------------------
+
+const panel = "header details.menu .menu-panel";
+
+Then(
+  "the menu's panel ends within the window",
+  async function (this: SpecWorld) {
+    const box = await this.browserPage.locator(panel).boundingBox();
+    const size = this.browserPage.viewportSize();
+    assert.ok(box !== null && size !== null, "There is no panel to measure.");
+    assert.ok(
+      box.y + box.height <= size.height,
+      `The panel ends at ${box.y + box.height}, below the window's ${size.height}.`,
+    );
+  },
+);
+
+// The wheel is turned where the pointer is, so the pointer is put first on the
+// panel's middle or at the window's left edge, which the panel, being at the
+// right, does not reach.
+const turnWheel = async (
+  world: SpecWorld,
+  pixels: number,
+  where: "over" | "beside",
+): Promise<void> => {
+  const size = world.browserPage.viewportSize();
+  assert.ok(size !== null, "The page has no viewport.");
+  if (where === "over") {
+    const box = await world.browserPage.locator(panel).boundingBox();
+    assert.ok(box !== null, "There is no panel to turn the wheel over.");
+    await world.browserPage.mouse.move(
+      box.x + box.width / 2,
+      box.y + box.height / 2,
+    );
+  } else {
+    await world.browserPage.mouse.move(2, size.height / 2);
+  }
+  await world.browserPage.mouse.wheel(0, pixels);
+};
+
+When(
+  "the wheel is turned {int} pixels down over the menu",
+  async function (this: SpecWorld, pixels: number) {
+    await turnWheel(this, pixels, "over");
+  },
+);
+
+When(
+  "the wheel is turned {int} pixels down beside the menu",
+  async function (this: SpecWorld, pixels: number) {
+    await turnWheel(this, pixels, "beside");
+  },
+);
+
+const panelScroll = `document.querySelector("${panel}").scrollTop`;
+
+Then("the menu has been scrolled", async function (this: SpecWorld) {
+  await this.browserPage.waitForFunction(`${panelScroll} > 0`);
+});
+
+Then("the page has been scrolled", async function (this: SpecWorld) {
+  await this.browserPage.waitForFunction("window.scrollY > 0");
+});
+
+// Scrolling is not instant, so a page that is to stay where it was is given a
+// moment in which to show that it did not.
+Then("the page has not been scrolled", async function (this: SpecWorld) {
+  await this.browserPage.waitForTimeout(300);
+  assert.equal(await this.browserPage.evaluate<number>("window.scrollY"), 0);
+});
+
 // The heading is not a link, so pressing it is pressing the panel and nothing
 // the panel would do.
 When(

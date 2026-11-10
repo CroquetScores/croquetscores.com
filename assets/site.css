@@ -1148,6 +1148,27 @@ body > .site-footer {
   background: var(--accent);
   border: 1px solid var(--accent-ink);
   border-radius: var(--radius-2);
+  /* The window less the bar it hangs under, with room to spare for a bar made
+     taller by a tournament's name beneath the site's, which is not measured
+     because there is no script to measure it. On a short phone the search, the
+     links and the account together are taller than what is left, and without
+     a limit the lower ones fell off the bottom with no way to reach them.
+     contain keeps a scroll that reaches the end of the panel from going on
+     into the page. */
+  max-height: calc(100dvh - 9rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* While the menu is open the page behind it is held still, so that scrolling
+   moves what the reader is looking at. It is the html element that is held, so
+   that the page is where it was when the menu is shut. Not where the links
+   are in the open: there the menu is open for the browsers that need it to
+   show them, and holding the page would hold it for good. */
+@media not ((min-width: 40rem) and (orientation: landscape)) {
+  html:has(.menu[open]) {
+    overflow: hidden;
+  }
 }
 
 .menu-links ul,
@@ -1258,6 +1279,8 @@ body > .site-footer {
     margin: 0;
     padding: 0;
     min-width: 0;
+    max-height: none;
+    overflow: visible;
     background: none;
     border: 0;
   }
