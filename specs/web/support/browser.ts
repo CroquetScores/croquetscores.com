@@ -34,6 +34,7 @@ import { siteNameFor as nameOfSite } from "../../../src/web/common/site.js";
 import type { HelpPagesToSearch } from "../../../src/application/services/HelpSearchIndex.js";
 import type { HelpLibrary } from "../../../src/web/common/helpLibrary.js";
 import type { Language } from "../../../src/web/common/language.js";
+import { FileEmailSender } from "../../../src/infrastructure/email/FileEmailSender.js";
 import { buildApplication, type Application } from "../../../src/web/server.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsThrough, oldSiteSaltForScenarios } from "./accounts.js";
@@ -82,6 +83,17 @@ const theBrowser = async (): Promise<Browser> => {
   return browser;
 };
 
+// Where the scenarios' applications write the emails they send, made when the
+// first is asked for and removed with the run. The site would otherwise send by
+// SMTP wherever .env sets a mail server, and nothing a scenario does is to
+// leave the machine, so every application is given a file sender whatever the
+// configuration says.
+let emailFolder: string | undefined;
+const fileSender = (): FileEmailSender => {
+  emailFolder ??= mkdtempSync(join(tmpdir(), "scenario-emails-"));
+  return new FileEmailSender(emailFolder);
+};
+
 // The application every scenario without a database of its own talks to.
 const theSharedOne = async (): Promise<string> => {
   if (application === undefined) {
@@ -96,6 +108,7 @@ const theSharedOne = async (): Promise<string> => {
       },
       {
         logger: false,
+        emailSender: fileSender(),
         languages: scenarioLanguages,
         // Who a scenario's reader is, which it says with a cookie of its own:
         // there are no sessions to read without a database to keep them in.
@@ -369,6 +382,7 @@ const anApplicationWith = async (
     },
     {
       logger: false,
+      emailSender: fileSender(),
       ...offered(languages ?? scenarioLanguages),
       ...helpGiven,
       ...versionGiven,
@@ -470,6 +484,7 @@ const itsOwn = async (
     },
     {
       logger: false,
+      emailSender: fileSender(),
       ...offered(languages),
       ...(addressesToList.has(world)
         ? { addressesOfWebsite: addressesToList.get(world)! }
@@ -782,4 +797,8 @@ AfterAll(async () => {
   await application?.server.close();
   await application?.pool.end();
   application = undefined;
+
+  if (emailFolder !== undefined)
+    rmSync(emailFolder, { recursive: true, force: true });
+  emailFolder = undefined;
 });
