@@ -406,6 +406,24 @@ a:hover {
   scroll-margin-top: 6rem;
 }
 
+/* The spacing of a page of the help, which is read as a document: a rule under
+   each heading across the whole of the panel, and room round the paragraphs and
+   the pictures. The first page is left out because its headings and paragraphs
+   are cards and a hidden title, which have spacing of their own. */
+.help:not([data-page=""]) :is(h1, h2, h3, h4, h5, h6) {
+  border-bottom: 1px solid #808080;
+  padding-bottom: var(--space-2);
+  margin-bottom: 1.5rem;
+}
+
+.help:not([data-page=""]) :is(p, ul, ol) {
+  margin-bottom: 1rem;
+}
+
+.help:not([data-page=""]) img {
+  margin-block: 1rem;
+}
+
 /* The first page does not show its title: the panel above it says where the
    reader is. Nor the heading over the subjects, which are cards that say what
    they are. It is kept for a screen reader, which has the title and nothing
