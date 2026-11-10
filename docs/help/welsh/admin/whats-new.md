@@ -1,5 +1,13 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-11-11
+
+### Cystadlaethau
+
+- **Mae cystadleuaeth yn agor ar ei thab Sgorau unwaith y bydd gêm wedi'i rhoi i mewn.** Wrth ddychwelyd at gystadleuaeth i roi mwy o sgorau i mewn, nid oes angen pwyso **Sgorau** bob tro mwyach. Mae cystadleuaeth heb gêm ar waith, gan gynnwys un y mae ei hunig gêm wedi'i harchifo, yn dal i agor ar **Chwaraewyr**. Dangosir **Sgorau** yn unig i sgoriwr, fel o'r blaen.
+
+- **Mae archifo cystadleuaeth neu brawf yn rhoi rhif ar ôl ei enw, fel y gellir defnyddio'r enw eto.** Rhaid archifo cystadleuaeth a wnaed yn y math anghywir a'i hychwanegu eto, a gellir nawr roi iddi'r enw a oedd gan yr hen un. Mae archifo "Block A" yn ei ailenwi'n "Block A (1)", gan ddefnyddio'r rhif cyntaf nad yw enw unrhyw gystadleuaeth arall yn gorffen ag ef. Erys ei chyfeiriad fel yr oedd, ac mae cystadleuaeth a adferir yn cadw'r enw newydd. Rhifir prawf a archifir yn yr un modd, a gadewir ef fel yr oedd pan newidir enw byr tîm. Gweler [Cystadlaethau](../tournament-managers/standard-tournament/competitions.md).
+
 ## Rhyddhawyd 2026-11-10
 
 Dyma'r prif newidiadau i bobl sy'n cynnal twrnameintiau. Mae'r [cymorth i reolwyr twrnameintiau](../tournament-managers/index.md) yn rhoi'r holl fanylion.

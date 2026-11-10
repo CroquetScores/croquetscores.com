@@ -1,5 +1,13 @@
 # Hva er nytt for turneringsarrangører
 
+## Lansert 2026-11-11
+
+### Konkurranser
+
+- **En konkurranse åpnes på fanen Resultater når et parti er lagt inn.** Når du kommer tilbake til en konkurranse for å legge inn flere resultater, trenger du ikke lenger trykke på **Resultater** hver gang. En konkurranse uten parti i bruk, også en der det eneste partiet er arkivert, åpnes fortsatt på **Spillere**. En poengfører ser bare **Resultater**, som før.
+
+- **Når en konkurranse eller en test arkiveres, får navnet et tall etter seg, så navnet kan brukes igjen.** En konkurranse som er laget med feil slag, må arkiveres og legges til på nytt, og den nye kan nå få navnet den gamle hadde. Når «Block A» arkiveres, heter den «Block A (1)», med det første tallet som ingen annen konkurranses navn slutter på. Adressen blir som den var, og en konkurranse som gjenopprettes, beholder det nye navnet. En test som arkiveres, får tall på samme måte, og blir som den var når lagets korte navn endres. Se [Konkurranser](../tournament-managers/standard-tournament/competitions.md).
+
 ## Lansert 2026-11-10
 
 Dette er de største endringene for dem som arrangerer turneringer. [Hjelpen for turneringsarrangører](../tournament-managers/index.md) har alle detaljene.

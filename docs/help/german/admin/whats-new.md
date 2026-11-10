@@ -1,5 +1,13 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-11-11
+
+### Wettbewerbe
+
+- **Ein Wettbewerb öffnet sich auf dem Reiter Ergebnisse, sobald ein Spiel eingetragen wurde.** Wer zu einem Wettbewerb zurückkehrt, um weitere Ergebnisse einzutragen, muss nicht mehr jedes Mal auf **Ergebnisse** drücken. Ein Wettbewerb ohne Spiel in Verwendung, auch einer, dessen einziges Spiel archiviert wurde, öffnet sich weiterhin auf **Spieler**. Ein Ergebniserfasser sieht wie bisher nur **Ergebnisse**.
+
+- **Wird ein Wettbewerb oder ein Test archiviert, erhält er hinter seinem Namen eine Nummer, damit sein Name wieder verwendet werden kann.** Ein Wettbewerb, der als falsche Art angelegt wurde, muss archiviert und neu hinzugefügt werden, und der neue darf jetzt den Namen des alten tragen. Wird "Block A" archiviert, heißt er danach "Block A (1)", mit der ersten Nummer, auf die kein anderer Wettbewerbsname endet. Seine Adresse bleibt, wie sie war, und ein wiederhergestellter Wettbewerb behält den neuen Namen. Ein archivierter Test wird auf dieselbe Weise nummeriert und bleibt unverändert, wenn der Kurzname einer Mannschaft geändert wird. Siehe [Wettbewerbe](../tournament-managers/standard-tournament/competitions.md).
+
 ## Veröffentlicht am 2026-11-10
 
 Das sind die wichtigsten Änderungen für alle, die Turniere leiten. Die [Hilfe für Verantwortliche](../tournament-managers/index.md) hat alle Einzelheiten.

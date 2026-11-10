@@ -1,5 +1,13 @@
 # Nytt för arrangörer
 
+## Släppt 2026-11-11
+
+### Tävlingar
+
+- **En tävling öppnas på fliken Resultat när ett parti har lagts in.** När du kommer tillbaka till en tävling för att lägga in fler resultat behöver du inte längre trycka på **Resultat** varje gång. En tävling utan något parti i bruk, också en vars enda parti har arkiverats, öppnas fortfarande på **Spelare**. En resultatförare ser bara **Resultat**, som förut.
+
+- **När du arkiverar en tävling eller en landskamp får den ett nummer efter namnet, så att namnet kan användas igen.** En tävling som skapats med fel slag måste arkiveras och läggas till på nytt, och den nya kan nu få samma namn som den gamla. Arkiverar du "Block A" byter den namn till "Block A (1)", med det första numret som ingen annan tävlings namn slutar på. Adressen är oförändrad, och en tävling som återställs behåller det nya namnet. En arkiverad landskamp numreras på samma sätt och lämnas som den var när ett lags korta namn ändras. Se [Tävlingar](../tournament-managers/standard-tournament/competitions.md).
+
 ## Släppt 2026-11-10
 
 Det här är de viktigaste ändringarna för den som arrangerar turneringar. [Hjälpen för arrangörer](../tournament-managers/index.md) har alla detaljer.

@@ -1,5 +1,13 @@
 # What's new for Tournament Managers
 
+## Released 2026-11-11
+
+### Competitions
+
+- **A competition opens on its Scores tab once a game has been entered.** Coming back to a competition to enter more scores no longer means pressing **Scores** each time. A competition with no game in use, including one whose only game has been archived, still opens on **Players**. A scorer is shown **Scores** alone, as before.
+
+- **Archiving a competition or a test gives it a number after its name, so that its name can be used again.** A competition made as the wrong kind has to be archived and added again, and the new one can now be given the name the old one had. Archiving "Block A" renames it "Block A (1)", using the first number that no other competition's name ends in. Its address stays as it was, and a competition that is restored keeps the new name. A test archived is numbered in the same way, and is left as it was when a team's short name is changed. See [Competitions](../tournament-managers/standard-tournament/competitions.md).
+
 ## Released 2026-11-10
 
 These are the major changes for people who run tournaments. The [help for tournament managers](../tournament-managers/index.md) has all the details.
