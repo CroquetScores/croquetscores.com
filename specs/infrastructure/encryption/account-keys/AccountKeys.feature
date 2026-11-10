@@ -302,6 +302,42 @@ Feature: Keeping an account's name and email address readable only with its own 
       And the second account is read back
       Then the account is called "Alex Other"
 
+  Rule: Every kind of account event is either forgotten with the account or holds nothing personal
+
+    An account event that cannot be changed by adding to it is not edited: a
+    second version is made beside it, and the events already kept stay as
+    they were. A version of an event that holds a name, an email address or a
+    Google account is one forgetting has to rewrite, and one that was not
+    named to forgetting would keep the person for good, with nothing to say
+    so. So each kind of account event the site knows is either one forgetting
+    rewrites, or one this feature says holds nothing personal, and a kind
+    that is neither fails here, where whoever added it is looking, rather than
+    being found when somebody asks to be forgotten.
+
+    Scenario: A kind of account event is neither forgotten nor said to hold nothing personal
+      Given a kind of account event the site knows
+      And forgetting does not rewrite it
+      And it is not said to hold nothing personal
+      When the kinds of account event are checked
+      Then the kind is named as not accounted for
+
+    Scenario: A kind of account event that forgetting rewrites is accounted for
+      Given a kind of account event the site knows
+      And forgetting rewrites it
+      When the kinds of account event are checked
+      Then nothing is named as not accounted for
+
+    Scenario: A kind of account event said to hold nothing personal is accounted for
+      Given a kind of account event the site knows
+      And it is said to hold nothing personal
+      When the kinds of account event are checked
+      Then nothing is named as not accounted for
+
+    Scenario: Every kind of account event the site knows is accounted for
+      Given every kind of account event the site knows
+      When the kinds of account event are checked
+      Then nothing is named as not accounted for
+
   Rule: The site's key is needed, and changing it rewrites none of the events
 
     Scenario: Without the site's key the account key store cannot be made

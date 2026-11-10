@@ -4,10 +4,13 @@ import { createDecipheriv, createHash } from "node:crypto";
 import { inspect } from "node:util";
 
 import { Account } from "../../../../src/domain/aggregates/accounts/Account.js";
+import { nameAccountEvents } from "../../../../src/domain/aggregates/accounts/events/accountEvents.js";
 import { GoogleAccountLinked } from "../../../../src/domain/aggregates/accounts/events/GoogleAccountLinked.js";
 import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { AccountId } from "../../../../src/domain/aggregates/accounts/AccountId.js";
+import { EventRegistry } from "../../../../src/domain/common/EventRegistry.js";
 import { ReadOnlyDate } from "../../../../src/domain/common/ReadOnlyDate.js";
+import { eventsForgettingRewrites } from "../../../../src/infrastructure/encryption/AccountEventSealing.js";
 import { AccountKeys } from "../../../../src/infrastructure/encryption/AccountKeys.js";
 import type { SpecWorld } from "../../../support/world.js";
 import {
@@ -417,3 +420,96 @@ Then(
     assert.equal(first.emailAddress.toString(), second.emailAddress.toString());
   },
 );
+
+// The kinds of account event that hold nothing personal: no name, no email
+// address and no Google account. A kind is added here only after reading what
+// it holds, and one that holds something personal is added to what forgetting
+// rewrites instead.
+const holdingNothingPersonal: readonly string[] = [
+  "account-signed-in",
+  "account-password-hashed-again",
+  "account-password-set",
+  "account-forgotten",
+  "account-role-added",
+  "account-role-removed",
+];
+
+// What the check of the kinds of account event is given, and found.
+interface Kinds {
+  known: string[];
+  rewritten: string[];
+  holdingNothing: string[];
+  notAccountedFor?: string[];
+}
+
+const kindsOfScenario = new WeakMap<SpecWorld, Kinds>();
+
+// Each scenario starts the check by saying which kinds it is of, with the lists
+// it is held against: the made-up kind has neither until a step puts it in one,
+// and every kind the site knows has the real lists. So a step that comes before
+// either has nothing to run on, and says so.
+const kindsOf = (world: SpecWorld): Kinds => {
+  const found = kindsOfScenario.get(world);
+  assert.ok(found !== undefined, "No kinds of account event were given.");
+  return found;
+};
+
+const aKind = "account-example";
+
+Given("a kind of account event the site knows", function (this: SpecWorld) {
+  kindsOfScenario.set(this, {
+    known: [aKind],
+    rewritten: [],
+    holdingNothing: [],
+  });
+});
+
+Given("every kind of account event the site knows", function (this: SpecWorld) {
+  kindsOfScenario.set(this, {
+    known: [...nameAccountEvents(new EventRegistry()).names()],
+    rewritten: [...eventsForgettingRewrites],
+    holdingNothing: [...holdingNothingPersonal],
+  });
+});
+
+Given("forgetting rewrites it", function (this: SpecWorld) {
+  kindsOf(this).rewritten.push(aKind);
+});
+
+Given("forgetting does not rewrite it", function (this: SpecWorld) {
+  assert.ok(
+    !kindsOf(this).rewritten.includes(aKind),
+    `${aKind} is rewritten by forgetting.`,
+  );
+});
+
+Given("it is said to hold nothing personal", function (this: SpecWorld) {
+  kindsOf(this).holdingNothing.push(aKind);
+});
+
+Given("it is not said to hold nothing personal", function (this: SpecWorld) {
+  assert.ok(
+    !kindsOf(this).holdingNothing.includes(aKind),
+    `${aKind} is said to hold nothing personal.`,
+  );
+});
+
+When("the kinds of account event are checked", function (this: SpecWorld) {
+  const kinds = kindsOf(this);
+  kinds.notAccountedFor = kinds.known.filter(
+    (kind) =>
+      !kinds.rewritten.includes(kind) && !kinds.holdingNothing.includes(kind),
+  );
+});
+
+Then("the kind is named as not accounted for", function (this: SpecWorld) {
+  assert.deepEqual(kindsOf(this).notAccountedFor, [aKind]);
+});
+
+Then("nothing is named as not accounted for", function (this: SpecWorld) {
+  assert.deepEqual(
+    kindsOf(this).notAccountedFor,
+    [],
+    "A kind of account event is neither rewritten by forgetting nor said to hold nothing personal. Add it to `personal` in AccountEventSealing.ts if it holds a name, an email address or a Google account, and to `holdingNothingPersonal` here if not.",
+  );
+});
