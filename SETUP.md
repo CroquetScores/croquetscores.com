@@ -123,7 +123,7 @@ Rules across the tree:
 
 ```bash
 npm init -y
-npm pkg set name="next-croquetscores" type="module" private=true license="AGPL-3.0-only"
+npm pkg set name="croquetscores" type="module" private=true license="AGPL-3.0-only"
 npm pkg set engines.node=">=22.13.0"
 ```
 

@@ -1,5 +1,5 @@
 {
-  "name": "next-croquetscores",
+  "name": "croquetscores",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && npm run build:admin && npm run build:help && npm run build:version",
@@ -43,13 +43,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CroquetScores/next.croquetscores.com.git"
+    "url": "git+https://github.com/CroquetScores/croquetscores.com.git"
   },
   "license": "AGPL-3.0-only",
   "bugs": {
-    "url": "https://github.com/CroquetScores/next.croquetscores.com/issues"
+    "url": "https://github.com/CroquetScores/croquetscores.com/issues"
   },
-  "homepage": "https://github.com/CroquetScores/next.croquetscores.com#readme",
+  "homepage": "https://github.com/CroquetScores/croquetscores.com#readme",
   "type": "module",
   "private": true,
   "engines": {
