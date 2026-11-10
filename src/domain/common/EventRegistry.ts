@@ -95,6 +95,11 @@ export class EventRegistry {
     return this;
   }
 
+  /** Every name a kind of event is kept under, in the order they were given. */
+  names(): readonly string[] {
+    return [...this.#namesByKind.values()];
+  }
+
   /**
    * `event` as it is kept. Refused with `EventRegistry.UnknownKind` when its
    * kind has no name, because it could be written down and never read back.

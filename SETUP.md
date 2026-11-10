@@ -341,7 +341,7 @@ Numbered SQL files in `src/infrastructure/database/migrations/`, applied in file
 
 A migration arrives with whatever needs it — the first came with the Postgres event store — and what is in it is decided there rather than here: this document says how migrations are run, not what any of them contains.
 
-The site has no real data yet, so the schema is one file, `0001-initial.sql`, written as it now stands rather than as the migrations that grew it, and edited in place as the schema changes. A database made by an earlier shape of it is made again, not migrated. Once a site holds real data the file is never rewritten, and a change is a migration of its own, since a database that has applied one is told it has by its name.
+The site is in production and holds real data, so `0001-initial.sql` is never rewritten: it is the schema as it was when the site first went live, and every change since is a migration of its own, numbered after it, since a database that has applied one is told it has by its name. A change that removes or renames something is put up with the site stopped (`docs/website/deploying.md` §4). The events are never rewritten, and what a change to one may and may not do is in `AI.md` §9.
 
 ---
 

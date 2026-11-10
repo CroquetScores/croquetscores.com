@@ -52,6 +52,14 @@ const personal: Readonly<Record<string, readonly string[]>> = {
   "account-google-account-linked": ["subject"],
 };
 
+/**
+ * The kinds of account event forgetting rewrites. A kind of event that holds
+ * something personal and is not here would keep the person for good
+ * (AccountKeys.feature).
+ */
+export const eventsForgettingRewrites: readonly string[] =
+  Object.keys(personal);
+
 // The events an account begins with, either of which is when its key is made.
 const beginnings: readonly string[] = [
   "account-registered",

@@ -92,8 +92,11 @@ export class PostgresEventStore implements EventStore {
 
     // Sealed only once the append is certain. Sealing may leave something of
     // its own behind — an account's key is made as its registering is sealed,
-    // and deleted as its forgetting is — and an append refused for the version
-    // it expected is to leave nothing at all.
+    // and as its forgetting is sealed the personal fields of its earlier
+    // events are rewritten and the key is marked forgotten — and an append
+    // refused for the version it expected is to leave nothing at all. That
+    // forgetting is the one place a kept event is ever changed; the store
+    // otherwise only appends and reads.
     const kept: KeptEvent[] = [];
     for (const each of written) {
       kept.push(await this.sealing.seal(streamId.value, each));
