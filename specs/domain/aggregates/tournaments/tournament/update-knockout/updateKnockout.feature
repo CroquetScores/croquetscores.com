@@ -230,7 +230,7 @@ Feature: Changing what a tournament's knockout is
       And the competition "Main Event" was archived
       And the tournament is rebuilt from the stream
       And the update calls the competition "Main Draw"
-      When the knockout "Main Event" is updated
+      When the knockout "Main Event (1)" is updated
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: Updating a knockout in an archived tournament is refused

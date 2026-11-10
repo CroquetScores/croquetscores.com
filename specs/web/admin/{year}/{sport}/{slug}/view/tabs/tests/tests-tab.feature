@@ -326,13 +326,13 @@ Feature: The tests tab of a tournament's page
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       When the tests of "Spring Tests" are opened
-      Then the test "AUS v ENG" is struck through
+      Then the test "AUS v ENG (1)" is struck through
 
     Scenario Outline: An archived test offers nothing but Restore
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       When the tests of "Spring Tests" are opened
-      Then the test "AUS v ENG" does not offer "<option>"
+      Then the test "AUS v ENG (1)" does not offer "<option>"
 
       Examples:
         | option  |
@@ -346,15 +346,15 @@ Feature: The tests tab of a tournament's page
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       And the tests of "Spring Tests" are open
-      When "Restore" is pressed on the test "AUS v ENG"
-      Then the test "AUS v ENG" is not listed among the archived
+      When "Restore" is pressed on the test "AUS v ENG (1)"
+      Then the test "AUS v ENG (1)" is not listed among the archived
 
     Scenario: Restoring a test whose team is archived says why it is not restored
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       And "organiser@example.com" has archived the team "England" in "Spring Tests"
       And the tests of "Spring Tests" are open
-      When "Restore" is pressed on the test "AUS v ENG"
+      When "Restore" is pressed on the test "AUS v ENG (1)"
       Then the tab is refused with "Team.Archived"
 
     Scenario: A test whose team is archived stays archived
@@ -362,8 +362,8 @@ Feature: The tests tab of a tournament's page
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       And "organiser@example.com" has archived the team "England" in "Spring Tests"
       And the tests of "Spring Tests" are open
-      When "Restore" is pressed on the test "AUS v ENG"
-      Then the test "AUS v ENG" is listed among the archived
+      When "Restore" is pressed on the test "AUS v ENG (1)"
+      Then the test "AUS v ENG (1)" is listed among the archived
 
   Rule: A scorer sees the tests in use, and can only view them
 
@@ -382,7 +382,7 @@ Feature: The tests tab of a tournament's page
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the page of "Spring Tests" is opened
-      Then the test "AUS v ENG" is not listed
+      Then the test "AUS v ENG (1)" is not listed
 
     Scenario: A scorer is offered View
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"

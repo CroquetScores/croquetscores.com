@@ -394,9 +394,9 @@ Feature: Changing a test
     Scenario: Updating an archived test is refused
       Given the competition "AUS v ENG" was archived
       And the tournament is rebuilt from the stream
-      And the test "AUS v ENG" has no games
+      And the test "AUS v ENG (1)" has no games
       And the update has the test's second team be "Scotland"
-      When the test "AUS v ENG" is updated
+      When the test "AUS v ENG (1)" is updated
       Then it is refused with "Tournament.CompetitionArchived"
 
   Rule: An update that changes nothing records nothing

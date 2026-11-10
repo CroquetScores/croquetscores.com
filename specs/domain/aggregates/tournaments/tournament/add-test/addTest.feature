@@ -222,7 +222,8 @@ Feature: Adding a test to a tournament
       And the competition "AUS v ENG" was archived
       And the tournament is rebuilt from the stream
       When the test between "Australia" and "England" is added
-      Then the second test "AUS v ENG" has the slug "aus-v-eng-01"
+      Then the tournament's competition "AUS v ENG" has the slug "aus-v-eng-01"
+      And the tournament's competition "AUS v ENG (1)" has the slug "aus-v-eng"
 
   Rule: Each test added is given 10,000 more than the highest order there is
 

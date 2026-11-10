@@ -379,6 +379,7 @@ export const nameTournamentEvents = (registry: EventRegistry): EventRegistry =>
         new CompetitionArchived(
           text(said, "competitionId"),
           number(said, "order"),
+          optionalText(said, "name"),
           createdBy,
           occurredAt,
         ),

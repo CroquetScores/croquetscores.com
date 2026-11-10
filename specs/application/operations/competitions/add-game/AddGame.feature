@@ -329,7 +329,7 @@ Feature: Adding a game's score to a competition
 
     Scenario: An archived competition is refused
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Sam Someone" beating "Alex Another" 26 to 17 in "Block A (1)" of "Spring Open"
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: An archived tournament is refused
@@ -426,5 +426,5 @@ Feature: Adding a game's score to a competition
       And "organiser@example.com" has added the player "Kim Keeper" to the team "England" of "Spring Tests"
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" adds the game of "Pat Player" beating "Kim Keeper" 26 to 17 in "AUS v ENG (1)" of "Spring Tests"
       Then it is refused with "Tournament.CompetitionArchived"

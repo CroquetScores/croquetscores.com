@@ -11,6 +11,7 @@ export class CompetitionArchived extends DomainEvent {
   constructor(
     readonly competitionId: string,
     readonly order: number,
+    readonly name: string | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
   ) {

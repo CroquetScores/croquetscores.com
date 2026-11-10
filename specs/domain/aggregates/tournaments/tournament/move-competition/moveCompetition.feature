@@ -240,7 +240,7 @@ Feature: Moving a tournament's competition up or down
       And the block "Block D" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block D" is moved up
-      Then the tournament's competition "Block B" has the order 20000
+      Then the tournament's competition "Block B (1)" has the order 20000
 
     Scenario: A tournament rebuilt after its competitions were spaced out has them spaced out
       Given a stream where a tournament was created as "Spring Open"
@@ -271,7 +271,7 @@ Feature: Moving a tournament's competition up or down
       And the block "Block C" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block C" is moved up
-      Then the tournament's competition "Block B" has the order 30000
+      Then the tournament's competition "Block B (1)" has the order 30000
 
     Scenario: A competition moved down passes over an archived one below it
       Given a stream where a tournament was created as "Spring Open"
@@ -351,7 +351,7 @@ Feature: Moving a tournament's competition up or down
       And the block "Block B" was added to it
       And the competition "Block B" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block B" is moved up
+      When the competition "Block B (1)" is moved up
       Then it is refused with "Tournament.CompetitionArchived"
 
   Rule: A competition in an archived tournament cannot be moved

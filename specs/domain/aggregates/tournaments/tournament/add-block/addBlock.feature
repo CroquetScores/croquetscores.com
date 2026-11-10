@@ -18,7 +18,9 @@ Feature: Adding a block to a tournament
   No two competitions in a tournament have the same id. No two have the same
   name either, since a player looking for their games could not tell them
   apart; a name is the same however it is capitalised, and an archived
-  competition keeps its name, as an archived player does.
+  competition keeps the name it was renamed to when it was archived
+  (`archiveCompetition.feature`), as an archived player keeps theirs, so the
+  name it had is free to use again.
 
   A competition is found within its tournament by a slug made from its name,
   as "2026/ac/spring-open/competitions/block-a". Two names that are not the
@@ -177,12 +179,12 @@ Feature: Adding a block to a tournament
       When the block "block a" is added
       Then it is refused with "Tournament.CompetitionNameTaken"
 
-    Scenario: A name an archived competition has is refused
+    Scenario: A name an archived competition was renamed to is refused
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the block "Block A" is added
+      When the block "Block A (1)" is added
       Then it is refused with "Tournament.CompetitionNameTaken"
 
     Scenario: A name another kind of competition has is refused

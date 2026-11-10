@@ -142,7 +142,7 @@ Feature: The section bar of a tournament and its competitions
     Scenario: An archived competition is not offered
       Given "organiser@example.com" has archived the competition "Final Stage" in "Spring Open"
       When the page of "Spring Open" is opened
-      Then the section "Final Stage" is not offered
+      Then the section "Final Stage (1)" is not offered
 
     Scenario: A tournament with no competitions offers Tournament alone
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
@@ -186,8 +186,8 @@ Feature: The section bar of a tournament and its competitions
     Scenario: A competition restored is offered
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the competitions of "Spring Open" are open
-      When "Restore" is pressed on the competition "Block A"
-      Then the section "Block A" is offered
+      When "Restore" is pressed on the competition "Block A (1)"
+      Then the section "Block A (1)" is offered
 
     Scenario: A competition moved up is offered in its new place
       Given the competitions of "Spring Open" are open
@@ -309,7 +309,7 @@ Feature: The section bar of a tournament and its competitions
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       When the page of "Spring Tests" is opened
-      Then the section "AUS v ENG" is not offered
+      Then the section "AUS v ENG (1)" is not offered
 
     Scenario: A team is not offered
       Given "organiser@example.com" has created the tournament "Spring Tests"

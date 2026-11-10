@@ -82,7 +82,7 @@ Feature: Archiving a tournament's player
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the player "Sam Someone" in "Spring Open"
-      Then the competition "Block A" of "Spring Open" does not have the player "Sam Someone"
+      Then the competition "Block A (1)" of "Spring Open" does not have the player "Sam Someone"
 
     Scenario: A player archived is removed from a competition they withdrew from
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

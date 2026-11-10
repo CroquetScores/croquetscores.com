@@ -188,7 +188,7 @@ Feature: Changing a test
     Scenario: Updating an archived test is refused as the tournament refuses it
       Given "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
       And the update has the test's second team be "Scotland"
-      When the reader signed in to the account for "organiser@example.com" updates the test "AUS v ENG" in "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" updates the test "AUS v ENG (1)" in "Spring Tests"
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: Updating a test the tournament does not have is refused as the tournament refuses it

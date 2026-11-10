@@ -83,3 +83,21 @@ Feature: The name a competition is known by
     Scenario: A competition name of 254 characters with spaces around it is accepted
       When a competition name of 254 characters with spaces around it is made
       Then it is not refused
+
+  Rule: A name can be given a number
+
+    Scenario: A competition name is given a number after it
+      Given the competition name "KO"
+      When the competition name is given the number 2
+      Then the competition name is written "KO (2)"
+
+    Scenario: A competition name too long to take the number is cut short
+      Given a competition name of 254 characters
+      When the competition name is given the number 1
+      Then the competition name is 254 characters long
+      And the competition name is written ending " (1)"
+
+    Scenario: A competition name is cut short by characters as a reader counts them
+      Given a competition name of 254 accented letters with each accent typed after its letter
+      When the competition name is given the number 1
+      Then the competition name is 254 characters long

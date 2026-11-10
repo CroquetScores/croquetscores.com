@@ -163,7 +163,7 @@ Feature: The games of a tournament, for anybody to read
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block B" in "Spring Open"
       When the games of the tournament at "2026/ac/spring-open" are asked for
-      Then the competition "Block B" is not answered
+      Then the competition "Block B (1)" is not answered
 
   Rule: Every game in use is answered, the most recently added first
 

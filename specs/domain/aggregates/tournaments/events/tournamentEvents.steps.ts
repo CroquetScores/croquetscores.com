@@ -312,7 +312,21 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       happenedAt,
     ),
   "a competition being archived": () =>
-    new CompetitionArchived(COMPETITION, 40000, causedBy, happenedAt),
+    new CompetitionArchived(
+      COMPETITION,
+      40000,
+      undefined,
+      causedBy,
+      happenedAt,
+    ),
+  "a competition being archived under a new name": () =>
+    new CompetitionArchived(
+      COMPETITION,
+      40000,
+      "Final Stage (1)",
+      causedBy,
+      happenedAt,
+    ),
   "an account being made a manager": () =>
     new ManagerAdded(ANOTHER_ACCOUNT, causedBy, happenedAt),
   "an account being taken off the managers": () =>

@@ -26,12 +26,12 @@ Feature: Restoring a tournament's archived competition
 
     Scenario: The competition is kept not archived
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A" in "Spring Open"
-      Then the tournament's competition "Block A" is not archived
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A (1)" in "Spring Open"
+      Then the tournament's competition "Block A (1)" is not archived
 
     Scenario: Restoring the competition is recorded as done by whoever asked
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
 
     Scenario: Restoring a competition that is not archived records nothing
@@ -79,14 +79,14 @@ Feature: Restoring a tournament's archived competition
     Scenario: A reader who does not manage the tournament is refused
       Given "someone@example.com" has an account, confirmed, called "Sam Someone"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "someone@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "someone@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Tournament.NotAManager"
 
     Scenario: A scorer of the tournament is refused
       Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
       And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "scorer@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Tournament.NotAManager"
 
   Rule: A forgotten account restores nothing
@@ -95,5 +95,5 @@ Feature: Restoring a tournament's archived competition
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the account for "organiser@example.com" is taken hold of
       And the account for "organiser@example.com" has been forgotten
-      When the reader signed in to that account restores the competition "Block A" in "Spring Open"
+      When the reader signed in to that account restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Account.Forgotten"

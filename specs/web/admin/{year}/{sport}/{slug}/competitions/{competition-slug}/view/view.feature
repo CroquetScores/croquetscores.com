@@ -216,7 +216,7 @@ Feature: A competition's page in the admin
 
     Scenario: An archived competition says it can only be restored
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the page of the competition "Block A" in "Spring Open" is opened
+      When the page of the competition "Block A (1)" in "Spring Open" is opened
       Then the page is refused with "Tournament.CompetitionArchived"
 
     Scenario: An address no competition has been found at says so
@@ -252,7 +252,7 @@ Feature: A competition's page in the admin
     Scenario: A refused page is in the reader's language
       Given a browser that asks for "en-XA"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the page of the competition "Block A" in "Spring Open" is opened
+      When the page of the competition "Block A (1)" in "Spring Open" is opened
       Then every word in the admin's content is in the test locale
 
   Rule: An administrator sees a competition as a manager does

@@ -1,4 +1,4 @@
-import { Then, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 
 import { CompetitionArchived } from "../../../../../../src/domain/aggregates/tournaments/events/CompetitionArchived.js";
 import { CompetitionId } from "../../../../../../src/domain/aggregates/tournaments/primitives/CompetitionId.js";
@@ -8,6 +8,7 @@ import {
   assertFirstRecorded,
   byOf,
   competitionNamed,
+  happenedAs,
   now,
 } from "../aTournament.js";
 import { playedIn } from "../aTeamTournament.js";
@@ -44,5 +45,25 @@ Then(
   "the first thing it recorded is a competition being archived",
   function (this: SpecWorld) {
     assertFirstRecorded(this, CompetitionArchived);
+  },
+);
+
+// Not through the tournament, which now says the name a competition is given
+// when it is archived: the event as it was kept before it did.
+Given(
+  "the competition {string} was archived before archiving renamed it",
+  function (this: SpecWorld, name: string) {
+    happenedAs(
+      this,
+      (tournament) =>
+        new CompetitionArchived(
+          competitionNamed(tournament, name).reference.id.value,
+          // Past every order the tournament has, as archiving puts it.
+          1_000_000,
+          undefined,
+          byOf(this),
+          now(this),
+        ),
+    );
   },
 );

@@ -154,7 +154,7 @@ Feature: The players of a tournament, as a manager lists them
       And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the players of "Spring Open"
-      Then the player "Sam Someone" is answered in the competition "Block A"
+      Then the player "Sam Someone" is answered in the competition "Block A (1)"
 
     Scenario: A player is answered with a competition they withdrew from
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

@@ -69,7 +69,7 @@ Feature: The competitions of a tournament, as its managers and scorers list them
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the competitions of "Spring Open"
-      Then the competition "Block A" is answered as archived
+      Then the competition "Block A (1)" is answered as archived
 
     Scenario: A competition not archived is listed as not archived
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"

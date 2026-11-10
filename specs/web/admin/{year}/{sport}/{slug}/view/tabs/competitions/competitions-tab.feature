@@ -142,20 +142,20 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is listed among the archived
+      Then the competition "Block A (1)" is listed among the archived
 
     Scenario: An archived competition is not listed among those in use
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is not listed among those in use
+      Then the competition "Block A (1)" is not listed among those in use
 
     Scenario: The archived competitions come after those in use
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is listed after "Block B"
+      Then the competition "Block A (1)" is listed after "Block B"
 
     Scenario: The archived competitions are under a heading of their own
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -172,7 +172,7 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
       And "organiser@example.com" has archived the competition "Final Stage" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Final Stage" is said to be a "Knockout"
+      Then the competition "Final Stage (1)" is said to be a "Knockout"
 
   Rule: What a competition offers is what it can have done to it
 
@@ -224,7 +224,7 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" offers "Restore"
+      Then the competition "Block A (1)" offers "Restore"
 
     Scenario Outline: An archived competition offers nothing else
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -232,7 +232,7 @@ Feature: The competitions tab of a tournament's page
       And "organiser@example.com" has added the block "Block C" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block B" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block B" does not offer "<option>"
+      Then the competition "Block B (1)" does not offer "<option>"
 
       Examples:
         | option  |
@@ -258,7 +258,7 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the competitions of "Spring Open" are opened
-      Then the name of the competition "Block A" leads to "/admin/2026/ac/spring-open/competitions/block-a"
+      Then the name of the competition "Block A (1)" leads to "/admin/2026/ac/spring-open/competitions/block-a"
 
   Rule: Up and Down move a competition a place
 
@@ -310,24 +310,24 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the competitions of "Spring Open" are open
-      When "Restore" is pressed on the competition "Block A"
-      Then the competition "Block A" is not listed among the archived
+      When "Restore" is pressed on the competition "Block A (1)"
+      Then the competition "Block A (1)" is not listed among the archived
 
     Scenario: A restored competition comes after those that stayed in use
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the competitions of "Spring Open" are open
-      When "Restore" is pressed on the competition "Block A"
-      Then the competition "Block A" is listed after "Block B"
+      When "Restore" is pressed on the competition "Block A (1)"
+      Then the competition "Block A (1)" is listed after "Block B"
 
     Scenario: A competition restored from the tab is kept restored
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the competitions of "Spring Open" are open
-      And "Restore" is pressed on the competition "Block A"
+      And "Restore" is pressed on the competition "Block A (1)"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is not listed among the archived
+      Then the competition "Block A (1)" is not listed among the archived
 
   Rule: An archive the tournament refuses is said above the list
 
@@ -383,7 +383,7 @@ Feature: The competitions tab of a tournament's page
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the reader has signed in as "other@example.com" with the password "another horse battery staple"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is not listed
+      Then the competition "Block A (1)" is not listed
 
     Scenario: A scorer is shown no heading for the archived
       Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
