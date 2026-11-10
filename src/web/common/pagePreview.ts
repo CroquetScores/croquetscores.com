@@ -89,6 +89,11 @@ export const registerPagePreview = (server: FastifyInstance): void => {
 
     // The length it was sent with is for the page without them.
     reply.removeHeader("content-length");
-    done(null, payload.replace(headEnd, `${tags}  ${headEnd}`));
+    // A function, so that a "$" in what is put in is not read as a pattern
+    // of the replacement: "$&" in a tournament's name would put </head> there.
+    done(
+      null,
+      payload.replace(headEnd, () => `${tags}  ${headEnd}`),
+    );
   });
 };

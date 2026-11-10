@@ -178,6 +178,13 @@ Feature: Search engines are kept away until the site is told they are welcome
       When the robots file is asked for
       Then the answer varies by "Host"
 
+    Scenario: The robots file of a site whose answers already vary says so as well
+      Given the site is told search engines are welcome
+      And every answer of the site already varies by "Cookie"
+      When the robots file is asked for
+      Then the answer varies by "Cookie"
+      And the answer varies by "Host"
+
     Scenario: A page varies by the address it was asked at
       Given the site is told search engines are welcome
       When a page is asked for

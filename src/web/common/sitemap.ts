@@ -11,7 +11,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { AddressesOfWebsite } from "../../application/operations/tournaments/AddressesOfWebsite.js";
 import { escape } from "./escape.js";
-import { isWelcomed } from "./searchEngines.js";
+import { isWelcomed, varyByHost } from "./searchEngines.js";
 import { websiteOf } from "./site.js";
 
 /** The most addresses a search engine reads from one sitemap. */
@@ -55,13 +55,16 @@ export const registerSitemap = (
   server: FastifyInstance,
   searchEnginesWelcome: boolean,
 ): void => {
-  const send = (reply: FastifyReply, body: string): FastifyReply =>
-    reply
-      // Asked again each time, as the robots file is, and for the same reason.
-      .header("cache-control", "public, no-cache")
-      .header("vary", "Host")
-      .type("application/xml; charset=utf-8")
-      .send(body);
+  const send = (reply: FastifyReply, body: string): FastifyReply => {
+    varyByHost(reply);
+    return (
+      reply
+        // Asked again each time, as the robots file is, and for the same reason.
+        .header("cache-control", "public, no-cache")
+        .type("application/xml; charset=utf-8")
+        .send(body)
+    );
+  };
 
   const pagesAsked = async (request: FastifyRequest): Promise<string[]> =>
     pagesOf(

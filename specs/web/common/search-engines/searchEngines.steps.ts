@@ -24,6 +24,10 @@ const settingsWith = (searchEngines: string): NodeJS.ProcessEnv => ({
 // application with a database would give the same answer slower.
 // Whether a scenario's server believes the proxy in front of it, and which
 // address that proxy says the reader asked for.
+// What every answer of a scenario's server already varies by, before this says
+// anything of its own.
+const alwaysVaries = new WeakMap<SpecWorld, string>();
+
 const proxied = new WeakMap<SpecWorld, { trusted: boolean }>();
 
 const asked = async (
@@ -37,6 +41,13 @@ const asked = async (
     logger: false,
     trustProxy: proxied.get(world)?.trusted ?? false,
   });
+  const alreadyVaries = alwaysVaries.get(world);
+  if (alreadyVaries !== undefined) {
+    server.addHook("onRequest", (_request, reply, done) => {
+      reply.header("vary", alreadyVaries);
+      done();
+    });
+  }
   registerSearchEngines(server, config.searchEnginesWelcome);
   server.get("/a-page", () => "a page");
   server.get("/a-page-by-cookie", (_request, reply) =>
@@ -126,6 +137,13 @@ When(
   "the robots file is asked for at {string}",
   async function (this: SpecWorld, address: string) {
     await asked(this, "/robots.txt", address);
+  },
+);
+
+Given(
+  "every answer of the site already varies by {string}",
+  function (this: SpecWorld, by: string) {
+    alwaysVaries.set(this, by);
   },
 );
 

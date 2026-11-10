@@ -146,6 +146,11 @@ Feature: A page says what it is, in its title and in what a link to it shows
       When the page of the tournament is asked for at "croquetscores.com"
       Then its description names "Spring <b>Open</b> & Co"
 
+    Scenario: A name with dollar signs in it is said as it is written
+      Given a tournament "Cash $$ & $& Prize" of Association Croquet in 2026 on croquetscores.com
+      When the page of the tournament is asked for at "croquetscores.com"
+      Then its preview title is "Cash $$ & $& Prize — Croquet Scores"
+
     Scenario: A name with markup in it does not break out of the description
       Given a tournament "Spring <b>Open</b> & Co" of Association Croquet in 2026 on croquetscores.com
       When the page of the tournament is asked for at "croquetscores.com"
