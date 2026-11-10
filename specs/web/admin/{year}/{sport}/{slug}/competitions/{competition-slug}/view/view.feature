@@ -11,9 +11,12 @@ Feature: A competition's page in the admin
   beneath the tournament): they are a tab control in the panel, beneath the
   competition's name, not in the section bar, which leads to the tournament
   and its competitions (`TournamentSections.feature`), the one being read is
-  marked, and they have no addresses, so the page opens on Players and
-  choosing Scores leaves the address as it was. Players is first because the
-  players are entered before anything is played.
+  marked, and they have no addresses, so choosing Scores leaves the address as
+  it was. The page opens on Players, which is first because the players are
+  entered before anything is played, until a game has been entered, and then on
+  Scores: a manager who comes back to a competition that has games in it is
+  there to enter more, as they were on the old site, where it was the first
+  thing they saw.
 
   Each tab says what it holds in a feature of its own
   (`competition-players-tab.feature` and `scores-tab.feature`).
@@ -134,7 +137,84 @@ Feature: A competition's page in the admin
       When the page of the competition "Block A" in "Spring Open" is opened
       Then the tab "Players" is at least 44 pixels tall
 
-  Rule: The page opens on Players, and the tab chosen is marked
+  Rule: Once a game has been entered, the page opens on Scores
+
+    It is the games in use that count: a game archived is one the competition
+    is as it was without, so a competition whose only game has been archived
+    opens on Players again. It is any competition's, and it is only the tab the
+    page opens on that is decided: the tab a reader chooses is theirs, and the
+    page does not move them off it.
+
+    Background:
+      Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+
+    Scenario: A competition with a game opens on the Scores tab
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Scores" is the one being read
+
+    Scenario: A competition with a game does not open on the Players tab
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Players" is not the one being read
+
+    Scenario: A competition with players and no game opens on the Players tab
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A competition whose only game has been archived opens on the Players tab
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A game in another competition does not move this one
+      Given "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block B" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block B" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block B" of "Spring Open"
+      When the page of the competition "Block A" in "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A knockout with a game opens on the Scores tab
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Final Stage" of "Spring Open"
+      And "organiser@example.com" has entered a bye in "Final Stage" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
+      When the page of the competition "Final Stage" in "Spring Open" is opened
+      Then the tab "Scores" is the one being read
+
+    Scenario: A knockout with no game opens on the Players tab
+      Given "organiser@example.com" has added the knockout "Final Stage" to "Spring Open"
+      When the page of the competition "Final Stage" in "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A Swiss with a game opens on the Scores tab
+      Given "organiser@example.com" has added the Swiss "Swiss" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Swiss" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Swiss" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Swiss" of "Spring Open"
+      When the page of the competition "Swiss" in "Spring Open" is opened
+      Then the tab "Scores" is the one being read
+
+    Scenario: A Swiss with no game opens on the Players tab
+      Given "organiser@example.com" has added the Swiss "Swiss" to "Spring Open"
+      When the page of the competition "Swiss" in "Spring Open" is opened
+      Then the tab "Players" is the one being read
+
+    Scenario: A reader who chose Players on a competition with a game stays on it
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And the page of the competition "Block A" in "Spring Open" is open
+      When the tab "Players" is chosen
+      Then the tab "Players" is the one being read
+
+  Rule: The page opens on Players where no game has been entered, and the tab chosen is marked
 
     Scenario: The page opens on the Players tab
       When the page of the competition "Block A" in "Spring Open" is opened

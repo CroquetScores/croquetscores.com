@@ -115,6 +115,35 @@ Feature: A test's page in the admin
       When the page of the test "AUS v ENG" in "Spring Tests" is opened
       Then the section "AUS v ENG" is marked as current
 
+  Rule: A test opens on its scores whether or not a game has been entered
+
+    A block, a knockout or a Swiss opens on its Players until a game has been
+    entered and on its Scores after (`view.feature` beneath the competition),
+    since a manager comes back to a competition that has games in it to enter
+    more. A test is the only kind of competition a tournament played by teams
+    has, and it has no Players to open on: its scores are the whole of the
+    page, with no tabs to choose between. So there is nothing for the first
+    score to change, and a test with games in it is opened on its scores as one
+    with none is.
+
+    Scenario: A test with no score opens on its scores
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the page says there are no scores
+
+    Scenario: A test with no score offers no tab
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then no tab is offered
+
+    Scenario: A test with a score opens on its scores
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then the score of "Sam Someone" beating "Chris Third" 26 to 17 is listed
+
+    Scenario: A test with a score offers no tab
+      Given "Sam Someone" has beaten "Chris Third" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      Then no tab is offered
+
   Rule: The scores in use are listed in the order they were entered
 
     Scenario: A score entered is listed

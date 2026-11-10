@@ -8,6 +8,7 @@ import {
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
+import type { Games } from "../../services/Games.js";
 import { type CompetitionAsPaged, CompetitionPage } from "./CompetitionPage.js";
 import {
   type TournamentAddresses,
@@ -26,6 +27,7 @@ export class CompetitionPageHandler extends QueryHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly addresses: TournamentAddresses,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly games: Games,
   ) {
     super();
   }
@@ -74,6 +76,11 @@ export class CompetitionPageHandler extends QueryHandler<
       tournamentAddress: tournament.address.toString(),
       slug: found.reference.slug.toString(),
       part,
+      // A match is started once two players have a game in use between them,
+      // so any started is a game in use, in a competition of any kind.
+      hasGames:
+        (await this.games.playedIn(tournament.id, found.reference.id))
+          .matchesStarted > 0,
       worldRankingSport: tournament.sport.hasWorldRankings
         ? tournament.sport.code
         : undefined,
