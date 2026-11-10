@@ -224,6 +224,62 @@ Then(
   },
 );
 
+// Layout -------------------------------------------------------------------
+
+const prune = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main button.log-prune");
+
+const show = (world: SpecWorld): Locator =>
+  world.browserPage.locator("main form.log-narrowing button[type=submit]");
+
+// Two things are in one row where their vertical extents overlap, which holds
+// however the row is aligned, whereas comparing their tops would not.
+const sameRowAsSeverity = async (
+  world: SpecWorld,
+  other: Locator,
+): Promise<void> => {
+  await eventually(async () => {
+    const chosen = await severity(world).boundingBox({ timeout: 100 });
+    const found = await other.boundingBox({ timeout: 100 });
+    assert.ok(chosen !== null && found !== null, "Not drawn.");
+    assert.ok(
+      found.y < chosen.y + chosen.height && chosen.y < found.y + found.height,
+      "Not in the severity's row.",
+    );
+    assert.notEqual(found.x, chosen.x);
+  });
+};
+
+Then("the text box is in the severity's row", async function (this: SpecWorld) {
+  await sameRowAsSeverity(this, text(this));
+});
+
+Then(
+  "the Show button is in the severity's row",
+  async function (this: SpecWorld) {
+    await sameRowAsSeverity(this, show(this));
+  },
+);
+
+Then(
+  "the Prune button is in the severity's row",
+  async function (this: SpecWorld) {
+    await sameRowAsSeverity(this, prune(this));
+  },
+);
+
+Then(
+  "the Prune button is below the severity",
+  async function (this: SpecWorld) {
+    await eventually(async () => {
+      const chosen = await severity(this).boundingBox({ timeout: 100 });
+      const found = await prune(this).boundingBox({ timeout: 100 });
+      assert.ok(chosen !== null && found !== null, "Not drawn.");
+      assert.ok(found.y >= chosen.y + chosen.height, "Not below.");
+    });
+  },
+);
+
 // Pruning --------------------------------------------------------------------
 
 const dialog = (world: SpecWorld): Locator =>

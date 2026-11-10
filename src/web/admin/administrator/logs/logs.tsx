@@ -25,12 +25,14 @@ interface Entry {
 }
 
 // What the address narrows to. A severity the log does not write in is taken
-// as none, as a hand-written address may carry one.
+// as Warn, the same as no severity at all, as a hand-written address may carry
+// one. Warn and not Trace because an administrator comes to the log for what
+// went wrong; Trace is one choice away.
 const narrowedBy = (): { severity: string; text: string } => {
   const asked = new URLSearchParams(window.location.search);
   const severity = asked.get("severity") ?? "";
   return {
-    severity: severities.includes(severity) ? severity : "Trace",
+    severity: severities.includes(severity) ? severity : "Warn",
     text: asked.get("text") ?? "",
   };
 };
@@ -93,44 +95,46 @@ export const Logs = (): React.JSX.Element => {
   return (
     <div className="stack" aria-busy={entries === undefined && !refused}>
       <h1>{say("admin.logs.title")}</h1>
-      <form className="log-narrowing" method="get">
-        <label>
-          {say("admin.logs.severity")}
-          <select name="severity" defaultValue={narrowed.severity}>
-            {severities.map((severity) => (
-              <option key={severity} value={severity}>
-                {severity}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          {say("admin.logs.text")}
-          <input
-            type="search"
-            name="text"
-            defaultValue={narrowed.text}
-            autoComplete="off"
-          />
-        </label>
+      <div className="log-controls">
+        <form className="log-narrowing" method="get">
+          <label>
+            {say("admin.logs.severity")}
+            <select name="severity" defaultValue={narrowed.severity}>
+              {severities.map((severity) => (
+                <option key={severity} value={severity}>
+                  {severity}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            {say("admin.logs.text")}
+            <input
+              type="search"
+              name="text"
+              defaultValue={narrowed.text}
+              autoComplete="off"
+            />
+          </label>
+          <button
+            className="button button-submit"
+            type="submit"
+            title={say("admin.hover.logs.show")}
+          >
+            {say("admin.logs.show")}
+          </button>
+        </form>
         <button
-          className="button button-submit"
-          type="submit"
-          title={say("admin.hover.logs.show")}
+          className="button log-prune"
+          type="button"
+          title={say("admin.hover.logs.prune")}
+          onClick={() => {
+            setPruning(true);
+          }}
         >
-          {say("admin.logs.show")}
+          {say("admin.logs.prune")}
         </button>
-      </form>
-      <button
-        className="button log-prune"
-        type="button"
-        title={say("admin.hover.logs.prune")}
-        onClick={() => {
-          setPruning(true);
-        }}
-      >
-        {say("admin.logs.prune")}
-      </button>
+      </div>
       {removed === undefined ? null : (
         <p role="status" data-removed={removed}>
           {say("admin.logs.removed", { count: String(removed) })}

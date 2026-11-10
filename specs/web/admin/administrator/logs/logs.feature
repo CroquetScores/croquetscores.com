@@ -20,7 +20,12 @@ Feature: The page where an administrator reads the server's log
   whether it has been read once or is being returned to, and the address
   carries them (`/admin/administrator/logs?severity=Warn&text=9f1c`), which
   is how an administrator is sent a link to what to look at. The severity
-  starts at Trace, which is all of it.
+  starts at Warn, since what an administrator comes to the log for is what
+  went wrong, and Trace, which is all of it, is one choice away.
+
+  On a screen as wide as a desktop's, the severity, the box, the Show button
+  and the Prune button are in one row, since stacked they leave most of the
+  width empty and push the log down the page. On a phone they stay stacked.
 
   A Prune button removes every entry written more than an hour ago
   (`PruneLog.feature`), and the page then says how many were removed. It asks
@@ -94,9 +99,26 @@ Feature: The page where an administrator reads the server's log
 
   Rule: The entries can be narrowed
 
-    Scenario: The severity starts at Trace
+    Scenario: The severity starts at Warn
       When the page at "/admin/administrator/logs" is opened
-      Then the severity is "Trace"
+      Then the severity is "Warn"
+
+    Scenario: An entry less severe than Warn is not shown to start with
+      Given the log has an entry "Chatter" at the severity Info
+      When the page at "/admin/administrator/logs" is opened
+      Then the page says there are no log entries
+
+    Scenario: An entry at Warn is shown to start with
+      Given the log has an entry "Careful" at the severity Warn
+      When the page at "/admin/administrator/logs" is opened
+      Then the first entry says "Careful"
+
+    Scenario: Every entry is shown when Trace is chosen
+      Given the log has an entry "Chatter" at the severity Debug
+      And the page at "/admin/administrator/logs" is open
+      When the severity "Trace" is chosen
+      And the Show button is pressed
+      Then the first entry says "Chatter"
 
     Scenario: A more severe entry is shown for a lower severity
       Given the log has an entry "Broken" at the severity Error
@@ -144,9 +166,30 @@ Feature: The page where an administrator reads the server's log
       When the page at "/admin/administrator/logs?severity=Error" is opened
       Then the page says there are no log entries
 
-    Scenario: A severity the log does not write in is opened as Trace
+    Scenario: A severity the log does not write in is opened as Warn
       When the page at "/admin/administrator/logs?severity=Loud" is opened
-      Then the severity is "Trace"
+      Then the severity is "Warn"
+
+  Rule: The controls share a row where there is width for it
+
+    Scenario: On a desktop the text box is in the severity's row
+      Given a viewport 1200 pixels wide
+      When the page at "/admin/administrator/logs" is opened
+      Then the text box is in the severity's row
+
+    Scenario: On a desktop the Show button is in the severity's row
+      Given a viewport 1200 pixels wide
+      When the page at "/admin/administrator/logs" is opened
+      Then the Show button is in the severity's row
+
+    Scenario: On a desktop the Prune button is in the severity's row
+      Given a viewport 1200 pixels wide
+      When the page at "/admin/administrator/logs" is opened
+      Then the Prune button is in the severity's row
+
+    Scenario: On a phone the Prune button is below the severity
+      When the page at "/admin/administrator/logs" is opened
+      Then the Prune button is below the severity
 
   Rule: The recent log can be pruned
 

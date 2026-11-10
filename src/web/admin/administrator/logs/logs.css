@@ -2,6 +2,11 @@
    for each entry, which is pressed to open the rest of what it carried. Lines
    wrap rather than being cut short or scrolled sideways on a phone. */
 
+.log-controls {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .log-narrowing {
   display: grid;
   gap: var(--space-3);
@@ -10,6 +15,21 @@
 .log-narrowing label {
   display: grid;
   gap: var(--space-1);
+}
+
+/* One row where there is width: the form's own controls, then the Prune
+   button, which is outside the form because it does not send it. The buttons
+   sit on the controls' baseline edge so the row reads as one line. */
+@media (min-width: 40rem) {
+  .log-controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .log-narrowing {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: end;
+  }
 }
 
 .log-entries {
