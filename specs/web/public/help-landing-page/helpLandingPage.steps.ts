@@ -1,3 +1,4 @@
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
@@ -507,9 +508,9 @@ const black = "rgb(0, 0, 0)";
 // The card is found by its link's name inside the page, since a string handed to
 // an element is not given it (the outline's step found that out).
 const wordsOfCard = async (world: SpecWorld, subject: string) => {
-  const read = await world.browserPage.evaluate(
-    // A string that is a function is called with the argument, so the subject
-    // reaches the page as data and is never spliced into code.
+  const read = await evaluateWith<string | undefined>(
+    world.browserPage,
+    // The subject reaches the page as data and is never spliced into code.
     `({ selector, subject }) => { const card = [...document.querySelectorAll(selector)].find((each) => each.querySelector("a")?.textContent === subject); return card === undefined ? undefined : getComputedStyle(card.querySelector("p + p")).color; }`,
     { selector: `${cards} li`, subject },
   );

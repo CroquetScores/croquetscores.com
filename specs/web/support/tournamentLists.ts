@@ -5,6 +5,7 @@
 // (src/web/public/tournamentLists.ts). Here rather than beside either
 // feature's steps because both say the same words, and two definitions of the
 // same words leave Cucumber unable to choose between them.
+import { evaluateWith } from "./evaluateWith.js";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
@@ -841,9 +842,10 @@ const weightsOf = async (
   ).indexOf(tournament);
   assert.ok(at >= 0, `${tournament} is not in the ${name}.`);
   const selector = `main section.tournament-list[data-list="${lists[listed]}"] tbody tr`;
-  // A string that is a function is called with the argument, so the selector
-  // and the position reach the page as data and are never spliced into code.
-  return world.browserPage.evaluate<number[]>(
+  // The selector and the position reach the page as data and are never
+  // spliced into code.
+  return evaluateWith<number[]>(
+    world.browserPage,
     `({ selector, at }) => [...document.querySelectorAll(selector)[at].querySelectorAll(".tournament-dates, .tournament-name")].map((element) => Number(getComputedStyle(element).fontWeight))`,
     { selector, at },
   );

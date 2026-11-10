@@ -256,7 +256,9 @@ Given(
 );
 
 Given(
-  /^the tournament is played in (.+)$/,
+  // Not the steps that say what a tournament was made in, which begin the same:
+  // its format, sport, country and region, or no region.
+  /^the tournament is played in (?!no region$|the (?:format|sport|country|region) )(.+)$/,
   async function (this: SpecWorld, country: string) {
     const found = Countries.thereAre.all.find(({ name }) => name === country);
     assert.ok(found !== undefined, `There is no country ${country}.`);

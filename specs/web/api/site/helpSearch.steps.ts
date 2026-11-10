@@ -1,3 +1,4 @@
+import { evaluateWith } from "../../support/evaluateWith.js";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
@@ -394,9 +395,10 @@ Then(
       .locator(`${panel} .help-search-result-title`, { hasText: title })
       .first()
       .waitFor({ timeout: 5000 });
-    // A string that is a function is called with the argument, so the selector
-    // and the title reach the page as data and are never spliced into code.
-    const read = await this.browserPage.evaluate(
+    // The selector and the title reach the page as data and are never spliced
+    // into code.
+    const read = await evaluateWith<string | undefined>(
+      this.browserPage,
       `({ selector, title }) => { const result = [...document.querySelectorAll(selector)].find((each) => each.querySelector(".help-search-result-title")?.textContent === title); return result === undefined ? undefined : getComputedStyle(result.querySelector(".help-search-snippet")).color; }`,
       { selector: `${panel} .help-search-results li`, title },
     );
