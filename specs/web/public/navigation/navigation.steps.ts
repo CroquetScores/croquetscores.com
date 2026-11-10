@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import type { SpecWorld } from "../../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { menuLink } from "../../support/menuLink.js";
+import { pressOutside } from "../../support/pressOutside.js";
 
 // Named rather than left as "header summary" and "header a": the header also
 // holds the account menu, which has a summary and links of its own, and a step
@@ -72,6 +73,17 @@ Then("the menu is shut", async function (this: SpecWorld) {
 When("the menu button is pressed", async function (this: SpecWorld) {
   await this.browserPage.click(menuButton);
 });
+
+When("the page outside the menu is pressed", pressOutside);
+
+// The heading is not a link, so pressing it is pressing the panel and nothing
+// the panel would do.
+When(
+  "the account group's heading is pressed",
+  async function (this: SpecWorld) {
+    await this.browserPage.click(`${group} .menu-account-heading`);
+  },
+);
 
 Then(
   "the link {string} is visible",

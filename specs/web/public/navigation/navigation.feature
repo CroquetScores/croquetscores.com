@@ -95,6 +95,46 @@ Feature: Finding your way around the public site
       When the window is made 1024 pixels wide and 768 pixels tall
       Then the menu is open
 
+  Rule: An open menu is shut by pressing the page outside it
+
+    On most sites a menu that has been opened is put away by pressing anywhere
+    else, and a reader who finds the button and the links but no way to put the
+    menu away but the button is left wondering whether there is one (issue
+    603). Where there is scripting, pressing outside the menu's panel shuts it.
+    Without scripting the button is still the way, as it always was. Where the
+    links are in the open the menu is held open for the browsers that need it
+    to show them, so pressing the page there leaves it as it is.
+
+    Scenario: On a phone, pressing the page outside the menu shuts it
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      And the home page is open
+      And the menu button is pressed
+      When the page outside the menu is pressed
+      Then the menu is shut
+
+    Scenario: Pressing inside the menu's panel leaves it open
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      And the home page is open
+      And the menu button is pressed
+      When the account group's heading is pressed
+      Then the menu is open
+
+    Scenario: Pressing the page when the menu is shut leaves it shut
+      Given a viewport 375 pixels wide
+      And scripting is switched on
+      And the home page is open
+      When the page outside the menu is pressed
+      Then the menu is shut
+
+    Scenario: Where the links are in the open, pressing the page leaves the menu open
+      Given a viewport 1024 pixels wide and 768 pixels tall
+      And scripting is switched on
+      And the home page is open
+      When the page outside the menu is pressed
+      Then the menu is open
+
   Rule: The navigation offers what the reader can use
 
     Scenario: A reader not signed in is offered the way home first
