@@ -115,7 +115,7 @@ const theSharedOne = async (): Promise<string> => {
     // way.
     await application.server.listen({ port: 0, host: "127.0.0.1" });
     const address = application.server.addresses()[0];
-    if (address === undefined)
+    if (address === undefined || typeof address === "string")
       throw new Error("The application is not listening.");
     baseUrl = `http://127.0.0.1:${address.port}`;
   }
@@ -356,7 +356,7 @@ const anApplicationWith = async (
 
   await named.server.listen({ port: 0, host: "127.0.0.1" });
   const address = named.server.addresses()[0];
-  if (address === undefined) {
+  if (address === undefined || typeof address === "string") {
     throw new Error("The scenario's own application is not listening.");
   }
   return `http://127.0.0.1:${address.port}`;
@@ -539,7 +539,7 @@ const itsOwn = async (
 
   await scenario.server.listen({ port: 0, host: "127.0.0.1" });
   const address = scenario.server.addresses()[0];
-  if (address === undefined) {
+  if (address === undefined || typeof address === "string") {
     throw new Error("The scenario's application is not listening.");
   }
   return `http://127.0.0.1:${address.port}`;
