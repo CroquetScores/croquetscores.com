@@ -5,8 +5,7 @@
 // browser's own zoom, because the stylesheet is written in rem. Zoom makes the
 // page wider than the screen and leaves a reader scrolling sideways; a larger
 // root size makes the lines wrap instead. The browser's zoom is therefore
-// switched off for a touch (the stylesheet's touch-action on html), and the
-// gesture is read here.
+// switched off for a touch, and the gesture is read here.
 //
 // Half to double is what a reader can still use. Narrower than that, the text
 // cannot be read; wider, a long word no longer fits on a line.
@@ -44,13 +43,17 @@ export const textSizeScript = `    <script>
           }
         };
         var gap = function (touches) {
-          return Math.hypot(
-            touches[0].clientX - touches[1].clientX,
-            touches[0].clientY - touches[1].clientY,
-          );
+          var across = touches[0].clientX - touches[1].clientX;
+          var down = touches[0].clientY - touches[1].clientY;
+          return Math.sqrt(across * across + down * down);
         };
         var size = kept();
         if (size !== 100) apply(size);
+        // The browser's own pinch zoom is switched off here rather than in the
+        // stylesheet, so that a reader whose script never runs keeps it. Text
+        // that cannot be made larger at all would be worse than text made
+        // larger the browser's way.
+        root.style.touchAction = "pan-x pan-y";
 
         var from = 0;
         var starting = size;
@@ -70,12 +73,17 @@ export const textSizeScript = `    <script>
           );
           apply(size);
         }, { passive: false });
-        document.addEventListener("touchend", function (event) {
+        // A pinch the system cancels, such as for an incoming call, ends the
+        // same way as one the reader lifts their fingers from, so that what
+        // they saw is what is kept.
+        var finish = function (event) {
           if (event.touches.length < 2 && from !== 0) {
             from = 0;
             keep(size);
           }
-        }, { passive: true });
+        };
+        document.addEventListener("touchend", finish, { passive: true });
+        document.addEventListener("touchcancel", finish, { passive: true });
       })();
     </script>
 `;
