@@ -32,7 +32,7 @@ Feature: Archiving a tournament's competition
 
     Scenario: The competition is kept archived
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
-      Then the tournament's competition "Block A" is archived
+      Then the tournament's competition "Block A (1)" is archived
 
     Scenario: Archiving the competition is recorded as done by whoever asked
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
@@ -40,7 +40,7 @@ Feature: Archiving a tournament's competition
 
     Scenario: Archiving an archived competition records nothing
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" archives the competition "Block A (1)" in "Spring Open"
       Then nothing more is recorded of the tournament
 
   Rule: A test with games in use is not archived
@@ -68,7 +68,7 @@ Feature: Archiving a tournament's competition
       And "Pat Player" has beaten "Kim Keeper" 26 to 17 in "AUS v ENG" of "Spring Tests"
       And "organiser@example.com" has archived the score of "Pat Player" beating "Kim Keeper" in "AUS v ENG" of "Spring Tests"
       When the reader signed in to the account for "organiser@example.com" archives the competition "AUS v ENG" in "Spring Tests"
-      Then the tournament's competition "AUS v ENG" is archived
+      Then the tournament's competition "AUS v ENG (1)" is archived
 
   Rule: A block with games is archived
 
@@ -79,7 +79,7 @@ Feature: Archiving a tournament's competition
       And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" archives the competition "Block A" in "Spring Open"
-      Then the tournament's competition "Block A" is archived
+      Then the tournament's competition "Block A (1)" is archived
 
   Rule: Only a competition there is, in a tournament there is, can be archived
 

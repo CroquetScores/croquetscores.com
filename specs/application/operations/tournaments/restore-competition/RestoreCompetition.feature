@@ -58,11 +58,11 @@ Feature: Restoring a tournament's archived competition
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
 
     Scenario: The loser of a game decided while it was archived is not in it
-      Then the competition "Plate" of "Spring Open" does not have the player "Alex Another"
+      Then the competition "Plate (1)" of "Spring Open" does not have the player "Alex Another"
 
     Scenario: Restoring it puts the loser in
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Plate" in "Spring Open"
-      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Plate (1)" in "Spring Open"
+      Then the competition "Plate (1)" of "Spring Open" has the player "Alex Another"
 
   Rule: Only a competition there is, in a tournament there is, can be restored
 
