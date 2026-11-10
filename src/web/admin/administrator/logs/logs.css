@@ -19,7 +19,8 @@
 
 /* One row where there is width: the form's own controls, then the Prune
    button, which is outside the form because it does not send it. The buttons
-   sit on the controls' baseline edge so the row reads as one line. */
+   are aligned to the controls' bottom edge, not their baseline, so that the
+   labels above the boxes do not push the boxes off the buttons' line. */
 @media (min-width: 40rem) {
   .log-controls {
     grid-template-columns: minmax(0, 1fr) auto;

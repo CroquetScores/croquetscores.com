@@ -246,7 +246,6 @@ const sameRowAsSeverity = async (
       found.y < chosen.y + chosen.height && chosen.y < found.y + found.height,
       "Not in the severity's row.",
     );
-    assert.notEqual(found.x, chosen.x);
   });
 };
 

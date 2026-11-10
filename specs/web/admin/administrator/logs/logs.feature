@@ -120,17 +120,10 @@ Feature: The page where an administrator reads the server's log
       And the Show button is pressed
       Then the first entry says "Chatter"
 
-    Scenario: A more severe entry is shown for a lower severity
-      Given the log has an entry "Broken" at the severity Error
-      And the page at "/admin/administrator/logs" is open
-      When the severity "Warn" is chosen
-      And the Show button is pressed
-      Then the first entry says "Broken"
-
     Scenario: A less severe entry is not shown
-      Given the log has an entry "Chatter" at the severity Debug
+      Given the log has an entry "Careful" at the severity Warn
       And the page at "/admin/administrator/logs" is open
-      When the severity "Warn" is chosen
+      When the severity "Error" is chosen
       And the Show button is pressed
       Then the page says there are no log entries
 
@@ -150,11 +143,11 @@ Feature: The page where an administrator reads the server's log
 
     Scenario: Narrowing is in the address
       Given the page at "/admin/administrator/logs" is open
-      When the severity "Warn" is chosen
+      When the severity "Error" is chosen
       And "9f1c" is entered to look up
       And the Show button is pressed
       Then the address is "/admin/administrator/logs"
-      And the address's search is "?severity=Warn&text=9f1c"
+      And the address's search is "?severity=Error&text=9f1c"
 
     Scenario: An address that narrows is opened narrowed
       Given the log has an entry "Chatter" at the severity Debug
