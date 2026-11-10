@@ -2,7 +2,7 @@
 
 How the website's data is copied to another machine, how to know it is working, and how to rebuild the website from the copy. The backup is run, and its emails are read, by Tim Murphy (croquetscores@gmail.com). If it stops, or a restore is needed, he is the person to tell.
 
-The behaviour is specified in `specs/infrastructure/maintenance/backupCli.feature` and `pgDump.feature`; this says how to use it.
+The behaviour is specified in `specs/infrastructure/maintenance/`, in `backupCli.feature` and `pgDump.feature` for the backup and `restoreCli.feature` and `pgRestore.feature` for the restore; this says how to use it.
 
 ---
 
@@ -164,7 +164,7 @@ The email, and the screen, say which step failed and why.
 
 - **making the dump** — Read the reason: it is pg_dump's own words. Nothing was kept. See below for the ones that are usual
 - **that the website's database is not named** — `WEBSITE_DATABASE_URL` is blank
-- **that the website's database is not reached through the tunnel** — `WEBSITE_DATABASE_URL` is not `127.0.0.1` or `localhost` on port 55432. The usual cause is that it still names the development database on this computer (`localhost:5432`), which the backup would otherwise have dumped every night and called a success. Nothing was made
+- **that the website's database is not reached through the tunnel** — `WEBSITE_DATABASE_URL` is not `127.0.0.1`, `localhost` or `[::1]` on port 55432, or has anything after its path (a `?` or a `#`). The usual cause is that it still names the development database on this computer (`localhost:5432`), which the backup would otherwise have dumped every night and called a success. Nothing was made
 - **that the folder is not named** — `DATABASE_BACKUP_FOLDER` is blank
 - **that the folder is not there** — The folder named does not exist, or its disk is not plugged in. Nothing was made
 
@@ -175,6 +175,8 @@ The reasons that are usual for making the dump:
 - **could not connect** — the website's database could not be reached from this computer. Is the website up? Is the tunnel up? Run the tunnel's `ssh -N -L …` line by hand to see why not: a changed server address, a key that is no longer in `authorized_keys`, or a port 55432 that something else is using.
 - **password authentication failed** — the user or password in `WEBSITE_DATABASE_URL` is not the database's.
 - **a file of that name was already there** — two runs began in the same second. Run it again.
+
+One failure is not a step of the backup: **the administrator could not be told** (the screen says so). The file was made, but the run still exits with failure, so the scheduler shows it, because a backup nobody hears about cannot be told from one that did not run. Check the four `SMTP_` settings (Email, §3), and that the file is in the folder.
 
 ## 7. Restoring
 
@@ -236,7 +238,7 @@ The steps above are for any new website. This is the same restore done on the se
    sudo -u postgres psql -c "alter user croquetscores createdb;"
    ```
 
-   Postgres has no separate permission to drop or rename a database. To **drop** one a user must own it, which is what lets `db:restore` drop the database it made when it fails. To **rename** one a user must own it and have `createdb`, which this gives. The two databases in steps 5 and 8 are renamed and dropped as `postgres` instead, so nothing more is given to `croquetscores` for them.
+   Postgres has no separate permission to drop a database: a user must own it, which is what lets `db:restore` drop the database it made when it fails. The permission to make one is what `db:restore` needs. The two databases in steps 5 and 8 are renamed and dropped as `postgres` instead, so nothing more is given to `croquetscores` for them.
 
 4. **Restore into a new database,** with the site's settings, through `withsettings` (deploying.md §1):
 
@@ -279,7 +281,7 @@ The steps above are for any new website. This is the same restore done on the se
 
 Everyone is signed out afterwards, and emails that were waiting in the queue when the file was made are not in it.
 
-**Practise it.** A backup that has not been restored from is a hope. Do steps 2–6 once into a throwaway database (a name you will then drop) before the beta opens, and write down how long step 5 took, which is what you will tell people the site is down for. I, Tim Murphy, have practised restore without issue.
+**Practise it.** A backup that has not been restored from is a hope. Do steps 2–6 once into a throwaway database (a name you will then drop) before the beta opens, and write down how long step 5 took, which is what you will tell people the site is down for. Tim Murphy has practised restore without issue.
 
 ## 8. What this does not do
 
