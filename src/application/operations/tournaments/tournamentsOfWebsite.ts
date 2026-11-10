@@ -70,6 +70,12 @@ export interface TournamentsByWebsite {
   withSports(): Promise<readonly TournamentOfWebsite[]>;
 
   /**
+   * Where each tournament on `website` is found, as "2026/ac/spring-open", in
+   * order, none archived.
+   */
+  addressesOf(website: Website): Promise<readonly string[]>;
+
+  /**
    * The years it has a tournament starting in, of `sport` where one is given,
    * the newest first, each once.
    */

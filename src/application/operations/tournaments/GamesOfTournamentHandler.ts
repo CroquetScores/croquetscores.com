@@ -94,6 +94,10 @@ export class GamesOfTournamentHandler extends QueryHandler<
     return {
       name: tournament.name.toString(),
       subtitle: tournament.subtitle?.markdown,
+      sport: tournament.sport.code,
+      country: tournament.country.code,
+      starts: tournament.starts.toISOString().slice(0, 10),
+      finishes: tournament.finishes.toISOString().slice(0, 10),
       commentariesChanged: await this.changes.of(tournament.id),
       managerNotes: await managerNotesChangedOf(this.notes, tournament),
       address: tournament.address.toString(),

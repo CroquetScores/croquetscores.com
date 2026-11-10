@@ -49,6 +49,8 @@ import { helpPagesToSearchIn } from "./common/helpPagesToSearch.js";
 import { WorldRankingPlayersMatchingHandler } from "../application/operations/world-rankings/WorldRankingPlayersMatchingHandler.js";
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
+import type { Website } from "../domain/common/Website.js";
+import { AddressesOfWebsiteHandler } from "../application/operations/tournaments/AddressesOfWebsiteHandler.js";
 import { TournamentsInUnlistedCountriesHandler } from "../application/operations/world-rankings/TournamentsInUnlistedCountriesHandler.js";
 import type { WorldRankingCountries } from "../application/services/WorldRankingCountries.js";
 import { FileWorldRankingCountries } from "../infrastructure/world-rankings/FileWorldRankingCountries.js";
@@ -288,7 +290,9 @@ import { emailWriter } from "./common/emailWriter.js";
 import { refuseCrossSite } from "./common/crossSite.js";
 import { registerSecurityHeaders } from "./common/securityHeaders.js";
 import { registerBetaBanner } from "./common/betaSite.js";
+import { registerPagePreview } from "./common/pagePreview.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
+import { registerSitemap } from "./common/sitemap.js";
 import {
   isAdministrator,
   knowTheReader,
@@ -718,6 +722,13 @@ export interface ApplicationOptions {
    * repository, unless a scenario says which countries they name.
    */
   readonly worldRankingCountries?: WorldRankingCountries;
+  /**
+   * Where each tournament of a website is found, for the sitemap. The
+   * tournaments the read model keeps, unless a scenario says which there are.
+   */
+  readonly addressesOfWebsite?: {
+    addressesOf(website: Website): Promise<readonly string[]>;
+  };
   /**
    * What says which account the reader of a request is signed in to. The
    * session cookie, unless a scenario says otherwise: one with no database to
@@ -1337,6 +1348,11 @@ export const buildApplication = async (
   mediator.handleQuery(
     new TournamentYearsOfAccountHandler(tournamentsByAccount, accounts),
   );
+  mediator.handleQuery(
+    new AddressesOfWebsiteHandler(
+      options.addressesOfWebsite ?? tournamentsByWebsite,
+    ),
+  );
   mediator.handleQuery(new RecentResultsHandler(tournamentsByWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));
   mediator.handleQuery(new TournamentYearsHandler(tournamentsByWebsite));
@@ -1552,6 +1568,8 @@ export const buildApplication = async (
   registerSecurityHeaders(server);
   registerSearchEngines(server, config.searchEnginesWelcome);
   registerBetaBanner(server);
+  registerPagePreview(server);
+  registerSitemap(server, config.searchEnginesWelcome);
 
   // Every answer of the API names the build the site is serving, so that an
   // admin left open across a deploy learns of it (newerBuild.feature).

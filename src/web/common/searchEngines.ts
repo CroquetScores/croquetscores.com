@@ -39,7 +39,7 @@ const isForReaders = (request: FastifyRequest): boolean => {
   }
 };
 
-const isWelcomed = (
+export const isWelcomed = (
   request: FastifyRequest,
   searchEnginesWelcome: boolean,
 ): boolean => searchEnginesWelcome && isForReaders(request);
@@ -56,15 +56,25 @@ export const registerSearchEngines = (
   server: FastifyInstance,
   searchEnginesWelcome: boolean,
 ): void => {
-  server.get("/robots.txt", (request, reply) =>
-    reply
-      // Asked again each time, since the file is small and a site that has just
-      // been told it is welcome should not be kept out by a copy of this one.
-      .header("cache-control", "public, no-cache")
-      .header("vary", "Host")
-      .type("text/plain; charset=utf-8")
-      .send(isWelcomed(request, searchEnginesWelcome) ? welcome : keepAway),
-  );
+  server.get("/robots.txt", (request, reply) => {
+    const found = isWelcomed(request, searchEnginesWelcome);
+    // A website that is found says where its pages are listed. The address is
+    // the website's own and never the request's host, which is whatever its
+    // sender wrote.
+    const sitemap = found
+      ? `Sitemap: ${Website.addressedTo(request.host).address}/sitemap.xml\n`
+      : "";
+    return (
+      reply
+        // Asked again each time, since the file is small and a site that has
+        // just been told it is welcome should not be kept out by a copy of
+        // this one.
+        .header("cache-control", "public, no-cache")
+        .header("vary", "Host")
+        .type("text/plain; charset=utf-8")
+        .send(`${found ? welcome : keepAway}${sitemap}`)
+    );
+  });
 
   server.addHook("onSend", (request, reply, payload, done) => {
     varyByHost(reply);

@@ -348,6 +348,7 @@ export const latvian: Language = {
       "Tuvāko sešdesmit dienu laikā nesākas neviens turnīrs.",
     "home.allTournaments": "Visi turnīri {year}. gadā",
     // Gada lapa: tās virsraksts.
+    "meta.description": "Turnīru rezultāti un reitingi vietnē {siteName}.",
     "year.heading": "Turnīri {year}. gadā",
     // Gada lapas mēneši, kas tiek ielādēti, tos nospiežot.
     "year.needsScripting":

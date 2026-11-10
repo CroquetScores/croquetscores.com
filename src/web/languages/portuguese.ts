@@ -346,6 +346,8 @@ export const portuguese: Language = {
       "Nenhum torneio começa nos próximos sessenta dias.",
     "home.allTournaments": "Todos os torneios de {year}",
     // A year's page: its heading, and what it says when it has nothing in it.
+    "meta.description":
+      "Pontuações, resultados e classificações de torneios no {siteName}.",
     "year.heading": "Torneios de {year}",
     "year.needsScripting":
       "Os meses de um ano abrem-se com scripts, que estão desativados. Ative-os para este site.",

@@ -48,6 +48,13 @@ export interface TournamentGames {
   readonly address: string;
   /** The tournament's subtitle, in Markdown, or nothing where it has none. */
   readonly subtitle: string | undefined;
+  /** The code of its sport. */
+  readonly sport: string;
+  /** The code of the country it is played in. */
+  readonly country: string;
+  /** The first and last day it is played, each written `2026-03-12`. */
+  readonly starts: string;
+  readonly finishes: string;
   /**
    * Each of the tournament's notes with when it last changed, the most
    * recently written first, for its section bar to mark Notes by.

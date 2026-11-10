@@ -8,6 +8,8 @@
 //
 // It needs no scripting. How long ago is worked out as the page is drawn, by
 // the server's clock, so it is as true as the page is fresh.
+import { datedWithYear } from "../common/dates.js";
+import { shortened } from "../common/described.js";
 import type { FastifyInstance } from "fastify";
 
 import {
@@ -99,6 +101,18 @@ ${asked.games.map((each) => game(each, now, speaking, assets)).join("\n")}
             subtitle: asked.subtitle,
           },
           title: asked.name,
+          description: shortened(
+            [
+              asked.name,
+              say(`sport.${asked.sport}`),
+              say(`country.${asked.country}`),
+              datedWithYear(
+                asked.starts,
+                asked.finishes,
+                speaking.language.tag,
+              ),
+            ].join(", "),
+          ),
           sections,
           currentSection: `/${asked.address}`,
           theme: themeOf(request),

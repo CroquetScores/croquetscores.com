@@ -344,6 +344,8 @@ export const swedish: Language = {
       "Inga turneringar startar de närmaste sextio dagarna.",
     "home.allTournaments": "Alla turneringar {year}",
     // Ett års sida: dess rubrik, och vad den säger när den är tom.
+    "meta.description":
+      "Poäng, resultat och rankningar från turneringar på {siteName}.",
     "year.heading": "Turneringar {year}",
     "year.needsScripting":
       "Årets månader öppnas med skript, som är avstängda. Slå på dem för den här webbplatsen.",

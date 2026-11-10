@@ -359,6 +359,8 @@ export const german: Language = {
     "home.allTournaments": "Alle Turniere {year}",
     // Die Seite eines Jahres: ihre Überschrift und was sie sagt, wenn sie
     // leer ist.
+    "meta.description":
+      "Spielstände, Ergebnisse und Ranglisten von Turnieren auf {siteName}.",
     "year.heading": "Turniere {year}",
     "year.needsScripting":
       "Die Monate eines Jahres werden mit Skripten geöffnet, die ausgeschaltet sind. Bitte schalte sie für diese Website ein.",

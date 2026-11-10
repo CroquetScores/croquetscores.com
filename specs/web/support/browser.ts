@@ -305,6 +305,31 @@ const askedOf = new WeakMap<
   }
 >();
 
+// The tournaments' addresses a scenario says the sitemap is made from, where it
+// says: in place of the ones the read model keeps.
+const addressesToList = new WeakMap<
+  SpecWorld,
+  { addressesOf(): Promise<readonly string[]> }
+>();
+
+/**
+ * An application of this scenario's own, told whether search engines are
+ * welcome, and where a scenario says which tournaments there are to list, the
+ * addresses of those, and otherwise as {@link anApplicationRunning}.
+ */
+export const anApplicationToldAboutSearchEngines = (
+  world: SpecWorld,
+  welcome: boolean,
+  addresses?: readonly string[],
+): Promise<string> => {
+  if (addresses !== undefined) {
+    addressesToList.set(world, {
+      addressesOf: () => Promise.resolve(addresses),
+    });
+  }
+  return anApplicationWith(world, { searchEnginesWelcome: welcome }, "its own");
+};
+
 const anApplicationWith = async (
   world: SpecWorld,
   asked: Partial<Config>,
@@ -446,6 +471,9 @@ const itsOwn = async (
     {
       logger: false,
       ...offered(languages),
+      ...(addressesToList.has(world)
+        ? { addressesOfWebsite: addressesToList.get(world)! }
+        : {}),
       ...(help === undefined ? {} : { help }),
       ...(version === undefined ? {} : { version }),
       clock: () => new Date(clock.now.getTime()),

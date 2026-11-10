@@ -342,6 +342,8 @@ export const welsh: Language = {
       "Nid oes unrhyw dwrnameintiau'n dechrau yn ystod y chwe deg diwrnod nesaf.",
     "home.allTournaments": "Pob twrnamaint yn {year}",
     // A year's page: its heading, and what it says when it has nothing in it.
+    "meta.description":
+      "Sgoriau, canlyniadau a graddfeydd twrnameintiau ar {siteName}.",
     "year.heading": "Twrnameintiau yn {year}",
     "year.needsScripting":
       "Mae misoedd blwyddyn yn cael eu hagor gyda sgriptio, sydd wedi'i ddiffodd. Trowch ef ymlaen ar gyfer y wefan hon.",
