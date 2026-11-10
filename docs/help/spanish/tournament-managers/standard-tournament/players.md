@@ -57,7 +57,14 @@ El **?** de la barra de título del diálogo lleva hasta aquí. Tanto este diál
 
 ## Añadir una pareja {#adding-a-pair}
 
-En un torneo de dobles, una pareja es un jugador por sí misma, así que se forma con dos jugadores ya inscritos en lugar de escribirla de nuevo. Pulsa **Añadir pareja**, junto a **Añadir jugador**. Se ofrece cuando hay dos jugadores entre los que elegir. Se abre un cuadro de diálogo con **Primer jugador** y **Segundo jugador**, cada uno elegido entre los jugadores en uso. La segunda lista deja fuera al jugador elegido primero, ya que un jugador no puede formar pareja consigo mismo. Pulsa **Añadir pareja** para formar la pareja. El cuadro sigue abierto, dice qué pareja se añadió y vacía las dos elecciones para poder formar la siguiente, como hace **Añadir jugador**. La pareja aparece enseguida en la lista que hay detrás del cuadro. Pulsa **Cancelar** cuando hayas formado todas las que necesitas.
+En un torneo de dobles, una pareja es un jugador por sí misma. Hay dos maneras de añadir una.
+
+- **Con Añadir jugador.** Añade la pareja como si fuera un solo jugador y escribe su nombre con un & entre los dos, como "Joe Blow & Jane Doe". En un torneo solo de dobles, esta es la manera más rápida, pues nadie se inscribe dos veces.
+- **Con Añadir pareja.** Forma la pareja con dos jugadores ya inscritos, como se describe más abajo. Si la mayoría de tus jugadores de individuales también juegan dobles, esta es la manera más rápida, pues los jugadores ya están ahí para elegir.
+
+Es mejor tener un torneo para individuales y otro para dobles.
+
+Pulsa **Añadir pareja**, junto a **Añadir jugador**. Se ofrece cuando hay dos jugadores entre los que elegir. Se abre un cuadro de diálogo con **Primer jugador** y **Segundo jugador**, cada uno elegido entre los jugadores en uso. La segunda lista deja fuera al jugador elegido primero, ya que un jugador no puede formar pareja consigo mismo. Pulsa **Añadir pareja** para formar la pareja. El cuadro sigue abierto, dice qué pareja se añadió y vacía las dos elecciones para poder formar la siguiente, como hace **Añadir jugador**. La pareja aparece enseguida en la lista que hay detrás del cuadro. Pulsa **Cancelar** cuando hayas formado todas las que necesitas.
 
 ![El cuadro de diálogo Añadir pareja, con dos jugadores elegidos](images/add-pair-dialog.png)
 

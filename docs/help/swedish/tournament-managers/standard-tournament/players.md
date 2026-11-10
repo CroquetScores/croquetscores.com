@@ -57,7 +57,14 @@ Tryck på **Lägg till**. Hela listan kontrolleras innan något av den sparas, s
 
 ## Lägga till ett par {#adding-a-pair}
 
-I en dubbelturnering är ett par en spelare för sig, så det görs av två spelare som redan är inlagda i stället för att skrivas in på nytt. Tryck på **Lägg till par**, bredvid **Lägg till spelare**. Den erbjuds när det finns två spelare att välja bland. En dialogruta öppnas med **Första spelaren** och **Andra spelaren**, var och en vald bland spelarna i bruk. Den andra listan utelämnar spelaren som valdes först, eftersom en spelare inte kan paras ihop med sig själv. Tryck på **Lägg till par** för att göra paret. Dialogrutan förblir öppen, säger vilket par som lades till och tömmer båda valen så att nästa par kan göras, som **Lägg till spelare** gör. Paret syns genast i listan bakom dialogrutan. Tryck på **Avbryt** när du har gjort alla du behöver.
+I en dubbelturnering är ett par en spelare för sig. Det finns två sätt att lägga till ett.
+
+- **Med Lägg till spelare.** Lägg till paret som om det vore en enda spelare och skriv dess namn med ett &-tecken mellan de två, som "Joe Blow & Jane Doe". I en turnering bara för dubbel är detta det snabbaste sättet, eftersom ingen läggs in två gånger.
+- **Med Lägg till par.** Gör paret av två spelare som redan är inlagda, som beskrivs nedan. Om de flesta av dina singelspelare också spelar dubbel är detta det snabbaste sättet, eftersom spelarna redan finns att välja bland.
+
+Det är bättre att ha singel och dubbel i var sin turnering.
+
+Tryck på **Lägg till par**, bredvid **Lägg till spelare**. Den erbjuds när det finns två spelare att välja bland. En dialogruta öppnas med **Första spelaren** och **Andra spelaren**, var och en vald bland spelarna i bruk. Den andra listan utelämnar spelaren som valdes först, eftersom en spelare inte kan paras ihop med sig själv. Tryck på **Lägg till par** för att göra paret. Dialogrutan förblir öppen, säger vilket par som lades till och tömmer båda valen så att nästa par kan göras, som **Lägg till spelare** gör. Paret syns genast i listan bakom dialogrutan. Tryck på **Avbryt** när du har gjort alla du behöver.
 
 ![Dialogrutan Lägg till par, med två spelare valda](images/add-pair-dialog.png)
 

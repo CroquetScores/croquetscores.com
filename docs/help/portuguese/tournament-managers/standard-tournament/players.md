@@ -57,7 +57,14 @@ O **?** na barra de título do diálogo leva até aqui. Tanto este diálogo quan
 
 ## Adicionar uma dupla {#adding-a-pair}
 
-Em um torneio de duplas, uma dupla é um jogador à parte, por isso ela é formada de dois jogadores já inscritos, em vez de digitada de novo. Pressione **Adicionar dupla**, ao lado de **Adicionar jogador**. Ele é oferecido quando há dois jogadores para escolher. Uma caixa de diálogo se abre com **Primeiro jogador** e **Segundo jogador**, cada um escolhido entre os jogadores em uso. A segunda lista deixa de fora o jogador escolhido primeiro, pois um jogador não pode formar dupla consigo mesmo. Pressione **Adicionar dupla** para formar a dupla. A caixa de diálogo continua aberta, diz qual dupla foi adicionada e esvazia as duas escolhas para que a próxima dupla possa ser formada, como **Adicionar jogador** faz. A dupla aparece logo na lista atrás da caixa de diálogo. Pressione **Cancelar** quando tiver formado todas de que precisa.
+Em um torneio de duplas, uma dupla é um jogador à parte. Há duas maneiras de adicionar uma.
+
+- **Com Adicionar jogador.** Adicione a dupla como se fosse um só jogador e digite o nome dela com um & entre os dois, como "Joe Blow & Jane Doe". Em um torneio só de duplas, essa é a maneira mais rápida, pois ninguém é inscrito duas vezes.
+- **Com Adicionar dupla.** Forme a dupla de dois jogadores já inscritos, como descrito abaixo. Se a maioria dos seus jogadores de simples também joga duplas, essa é a maneira mais rápida, pois os jogadores já estão lá para escolher.
+
+É melhor ter um torneio para simples e outro para duplas.
+
+Pressione **Adicionar dupla**, ao lado de **Adicionar jogador**. Ele é oferecido quando há dois jogadores para escolher. Uma caixa de diálogo se abre com **Primeiro jogador** e **Segundo jogador**, cada um escolhido entre os jogadores em uso. A segunda lista deixa de fora o jogador escolhido primeiro, pois um jogador não pode formar dupla consigo mesmo. Pressione **Adicionar dupla** para formar a dupla. A caixa de diálogo continua aberta, diz qual dupla foi adicionada e esvazia as duas escolhas para que a próxima dupla possa ser formada, como **Adicionar jogador** faz. A dupla aparece logo na lista atrás da caixa de diálogo. Pressione **Cancelar** quando tiver formado todas de que precisa.
 
 ![A caixa de diálogo Adicionar dupla, com dois jogadores escolhidos](images/add-pair-dialog.png)
 

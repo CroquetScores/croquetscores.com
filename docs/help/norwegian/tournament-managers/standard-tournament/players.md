@@ -57,7 +57,14 @@ Trykk på **Legg til**. Hele listen sjekkes før noe av den beholdes, så en lis
 
 ## Å legge til et par {#adding-a-pair}
 
-I en dobbeltturnering er et par en spiller for seg, så det lages av to spillere som allerede er lagt inn, i stedet for å skrives inn på nytt. Trykk på **Legg til par**, ved siden av **Legg til spiller**. Den tilbys der det er to spillere å velge mellom. En dialog åpnes med **Første spiller** og **Andre spiller**, hver valgt blant spillerne i bruk. Den andre listen utelater spilleren som ble valgt først, siden en spiller ikke kan pares med seg selv. Trykk på **Legg til par** for å lage paret. Dialogen blir stående åpen, sier hvilket par som ble lagt til, og tømmer begge valgene slik at neste par kan lages, slik **Legg til spiller** gjør. Paret vises med én gang i listen bak dialogen. Trykk på **Avbryt** når du har laget alle du trenger.
+I en dobbeltturnering er et par en spiller for seg. Det finnes to måter å legge til et på.
+
+- **Med Legg til spiller.** Legg til paret som om det var én spiller, og skriv navnet med et og-tegn mellom de to, som «Joe Blow & Jane Doe». I en turnering bare for dobbel er dette den raskeste måten, siden ingen legges inn to ganger.
+- **Med Legg til par.** Lag paret av to spillere som allerede er lagt inn, slik det er beskrevet under. Hvis de fleste av singelspillerne dine også spiller dobbel, er dette den raskeste måten, siden spillerne allerede er der å velge mellom.
+
+Det er bedre å holde singel og dobbel i hver sin turnering.
+
+Trykk på **Legg til par**, ved siden av **Legg til spiller**. Den tilbys der det er to spillere å velge mellom. En dialog åpnes med **Første spiller** og **Andre spiller**, hver valgt blant spillerne i bruk. Den andre listen utelater spilleren som ble valgt først, siden en spiller ikke kan pares med seg selv. Trykk på **Legg til par** for å lage paret. Dialogen blir stående åpen, sier hvilket par som ble lagt til, og tømmer begge valgene slik at neste par kan lages, slik **Legg til spiller** gjør. Paret vises med én gang i listen bak dialogen. Trykk på **Avbryt** når du har laget alle du trenger.
 
 ![Dialogen Legg til par, med to spillere valgt](images/add-pair-dialog.png)
 

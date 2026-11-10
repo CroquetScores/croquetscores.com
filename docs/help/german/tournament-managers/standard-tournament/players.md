@@ -57,7 +57,14 @@ Das **?** in der Titelleiste des Dialogs führt hierher. Dieser Dialog und Spiel
 
 ## Ein Paar hinzufügen {#adding-a-pair}
 
-In einem Doppelturnier ist ein Paar ein eigener Spieler. Es wird deshalb aus zwei schon aufgenommenen Spielern gebildet, statt noch einmal eingetippt zu werden. Drücken Sie **Paar hinzufügen** neben **Spieler hinzufügen**. Die Schaltfläche wird angeboten, wenn zwei Spieler zur Auswahl stehen. Es öffnet sich ein Dialog mit **Erster Spieler** und **Zweiter Spieler**, die jeweils aus den Spielern in Verwendung gewählt werden. Die zweite Liste lässt den zuerst gewählten Spieler aus, da ein Spieler nicht mit sich selbst gepaart werden kann. Drücken Sie **Paar hinzufügen**, um das Paar zu bilden. Der Dialog bleibt offen, sagt, welches Paar hinzugefügt wurde, und leert beide Auswahlen, damit das nächste Paar gebildet werden kann, wie es **Spieler hinzufügen** tut. Das Paar erscheint sofort in der Liste hinter dem Dialog. Drücken Sie **Abbrechen**, wenn Sie alle Paare gebildet haben, die Sie brauchen.
+In einem Doppelturnier ist ein Paar ein eigener Spieler. Es gibt zwei Wege, eines hinzuzufügen.
+
+- **Mit Spieler hinzufügen.** Fügen Sie das Paar hinzu, als wäre es ein einzelner Spieler, und tippen Sie seinen Namen mit einem Und-Zeichen zwischen den beiden, etwa „Joe Blow & Jane Doe“. In einem Turnier nur für Doppel ist das der schnellere Weg, da niemand doppelt aufgenommen wird.
+- **Mit Paar hinzufügen.** Bilden Sie das Paar aus zwei schon aufgenommenen Spielern, wie unten beschrieben. Wenn die meisten Ihrer Einzelspieler auch Doppel spielen, ist das der schnellere Weg, da die Spieler schon zur Auswahl stehen.
+
+Besser ist es, Einzel und Doppel in je einem eigenen Turnier auszutragen.
+
+Drücken Sie **Paar hinzufügen** neben **Spieler hinzufügen**. Die Schaltfläche wird angeboten, wenn zwei Spieler zur Auswahl stehen. Es öffnet sich ein Dialog mit **Erster Spieler** und **Zweiter Spieler**, die jeweils aus den Spielern in Verwendung gewählt werden. Die zweite Liste lässt den zuerst gewählten Spieler aus, da ein Spieler nicht mit sich selbst gepaart werden kann. Drücken Sie **Paar hinzufügen**, um das Paar zu bilden. Der Dialog bleibt offen, sagt, welches Paar hinzugefügt wurde, und leert beide Auswahlen, damit das nächste Paar gebildet werden kann, wie es **Spieler hinzufügen** tut. Das Paar erscheint sofort in der Liste hinter dem Dialog. Drücken Sie **Abbrechen**, wenn Sie alle Paare gebildet haben, die Sie brauchen.
 
 ![Der Dialog Paar hinzufügen mit zwei gewählten Spielern](images/add-pair-dialog.png)
 

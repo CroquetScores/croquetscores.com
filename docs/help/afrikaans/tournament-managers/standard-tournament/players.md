@@ -57,7 +57,14 @@ Die **?** in die titelbalk van die dialoog lei hierheen. Hierdie dialoog en Voeg
 
 ## Hoe om 'n paar by te voeg {#adding-a-pair}
 
-In 'n dubbelspeltoernooi is 'n paar 'n speler op sy eie, so dit word gemaak van twee spelers wat reeds ingeskryf is, in plaas daarvan om dit weer in te tik. Druk op **Voeg paar by**, langs **Voeg speler by**. Dit word aangebied waar daar twee spelers is om uit te kies. 'n Dialoog maak oop met 'n **Eerste speler** en 'n **Tweede speler**, elk gekies uit die spelers in gebruik. Die tweede lys laat die speler weg wat eerste gekies is, want 'n speler kan nie met homself saamgepaar word nie. Druk op **Voeg paar by** om die paar te maak. Die dialoog bly oop, sê watter paar bygevoeg is, en maak albei keuses leeg sodat die volgende paar gemaak kan word, soos **Voeg speler by** doen. Die paar verskyn dadelik in die lys agter die dialoog. Druk op **Kanselleer** wanneer jy al die pare gemaak het wat jy nodig het.
+In 'n dubbelspeltoernooi is 'n paar 'n speler op sy eie. Daar is twee maniere om een by te voeg.
+
+- **Met Voeg speler by.** Voeg die paar by asof dit een speler is, en tik sy naam met 'n ampersand tussen die twee, soos "Joe Blow & Jane Doe". In 'n toernooi wat net vir dubbelspel is, is dit die vinniger manier, want niemand word twee keer ingeskryf nie.
+- **Met Voeg paar by.** Maak die paar van twee spelers wat reeds ingeskryf is, soos hieronder beskryf. As die meeste van jou enkelspelers ook dubbelspel speel, is dit die vinniger manier, want die spelers is reeds daar om uit te kies.
+
+Dit is beter om enkelspel en dubbelspel elk in 'n toernooi van hul eie te hou.
+
+Druk op **Voeg paar by**, langs **Voeg speler by**. Dit word aangebied waar daar twee spelers is om uit te kies. 'n Dialoog maak oop met 'n **Eerste speler** en 'n **Tweede speler**, elk gekies uit die spelers in gebruik. Die tweede lys laat die speler weg wat eerste gekies is, want 'n speler kan nie met homself saamgepaar word nie. Druk op **Voeg paar by** om die paar te maak. Die dialoog bly oop, sê watter paar bygevoeg is, en maak albei keuses leeg sodat die volgende paar gemaak kan word, soos **Voeg speler by** doen. Die paar verskyn dadelik in die lys agter die dialoog. Druk op **Kanselleer** wanneer jy al die pare gemaak het wat jy nodig het.
 
 ![Die dialoog Voeg paar by, met twee spelers gekies](images/add-pair-dialog.png)
 
