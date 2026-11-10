@@ -1329,7 +1329,12 @@ export const buildApplication = async (
     new TournamentPageHandler(tournaments, tournamentsByAddress, accounts),
   );
   mediator.handleQuery(
-    new CompetitionPageHandler(tournaments, tournamentsByAddress, accounts),
+    new CompetitionPageHandler(
+      tournaments,
+      tournamentsByAddress,
+      accounts,
+      games,
+    ),
   );
   mediator.handleQuery(
     new TeamPageHandler(tournaments, tournamentsByAddress, accounts),

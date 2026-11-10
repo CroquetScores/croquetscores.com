@@ -30,6 +30,12 @@ export interface CompetitionAsPaged {
    */
   readonly part: "manager" | "scorer";
   /**
+   * Whether it has a game in use, which is what a manager comes back to enter
+   * more of: its page opens on its scores then, and on its players until it
+   * has one (view.feature). An archived game counts for nothing.
+   */
+  readonly hasGames: boolean;
+  /**
    * The tournament's sport, by its code, where it has world rankings, which a
    * competition of it may count towards. Nothing where it has none.
    */

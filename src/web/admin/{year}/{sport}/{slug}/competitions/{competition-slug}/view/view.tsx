@@ -21,8 +21,10 @@ import { standardHelp } from "../../../../../../helpAddress.js";
 // name, with what there is to run in two tabs, laid out and chosen as the
 // tournament's page's are, so they share its stylesheet. A manager is offered
 // Players and Scores, and a scorer Scores alone, since who plays is the
-// manager's to say; the page opens on the first the reader is offered. Each tab
-// says what it holds in a feature of its own. Above it is its tournament's
+// manager's to say; the page opens on the first the reader is offered, except
+// that a manager is taken to Scores where a game has been entered, since it is
+// to enter more that they come back (view.feature). Each tab says what it holds
+// in a feature of its own. Above it is its tournament's
 // section bar, with the competition marked (TournamentSections.feature).
 
 interface Props {
@@ -44,6 +46,7 @@ interface Found {
   readonly part: "manager" | "scorer";
   readonly worldRankingSport: string | undefined;
   readonly usualMaximumHoops: number;
+  readonly hasGames: boolean;
 }
 
 type Asked =
@@ -62,6 +65,13 @@ const offeredTo = (competition: Found): readonly Tab[] =>
     : competition.kind === "knockout"
       ? tabs
       : ["players", "scores"];
+
+// The tab the page opens on: the first the reader is offered, which is Players
+// for a manager, but Scores for one whose competition has a game in it.
+const openedOn = (competition: Found): Tab =>
+  competition.part === "manager" && competition.hasGames
+    ? "scores"
+    : (offeredTo(competition)[0] ?? "scores");
 
 export const ViewCompetition = ({
   address,
@@ -112,7 +122,7 @@ export const ViewCompetition = ({
           return;
         }
         setAsked({ is: "found", competition: answer });
-        if (!drawn.current) setChosen(offeredTo(answer)[0] ?? "scores");
+        if (!drawn.current) setChosen(openedOn(answer));
         drawn.current = true;
       })
       .catch(() => {
