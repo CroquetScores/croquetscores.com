@@ -444,31 +444,32 @@ interface Kinds {
 
 const kindsOfScenario = new WeakMap<SpecWorld, Kinds>();
 
+// Each scenario starts the check by saying which kinds it is of, with the lists
+// it is held against: the made-up kind has neither until a step puts it in one,
+// and every kind the site knows has the real lists. So a step that comes before
+// either has nothing to run on, and says so.
 const kindsOf = (world: SpecWorld): Kinds => {
-  let found = kindsOfScenario.get(world);
-  if (found === undefined) {
-    found = {
-      known: [],
-      rewritten: [...eventsForgettingRewrites],
-      holdingNothing: [...holdingNothingPersonal],
-    };
-    kindsOfScenario.set(world, found);
-  }
+  const found = kindsOfScenario.get(world);
+  assert.ok(found !== undefined, "No kinds of account event were given.");
   return found;
 };
 
 const aKind = "account-example";
 
 Given("a kind of account event the site knows", function (this: SpecWorld) {
-  const kinds = kindsOf(this);
-  kinds.known = [aKind];
-  // Neither of the two lists says anything of it until a step does.
-  kinds.rewritten = [];
-  kinds.holdingNothing = [];
+  kindsOfScenario.set(this, {
+    known: [aKind],
+    rewritten: [],
+    holdingNothing: [],
+  });
 });
 
 Given("every kind of account event the site knows", function (this: SpecWorld) {
-  kindsOf(this).known = nameAccountEvents(new EventRegistry()).names().slice();
+  kindsOfScenario.set(this, {
+    known: [...nameAccountEvents(new EventRegistry()).names()],
+    rewritten: [...eventsForgettingRewrites],
+    holdingNothing: [...holdingNothingPersonal],
+  });
 });
 
 Given("forgetting rewrites it", function (this: SpecWorld) {

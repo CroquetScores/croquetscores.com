@@ -95,7 +95,7 @@ export class EventRegistry {
     return this;
   }
 
-  /** Every name a kind of event is kept under, in the order they were given. */
+  /** Every name a kind of event is kept under. */
   names(): readonly string[] {
     return [...this.#namesByKind.values()];
   }
