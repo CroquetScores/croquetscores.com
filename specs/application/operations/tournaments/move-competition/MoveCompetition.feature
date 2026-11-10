@@ -58,7 +58,7 @@ Feature: Moving a tournament's competition up or down
 
     Scenario: Moving an archived competition is refused as the tournament refuses it
       Given "organiser@example.com" has archived the competition "Block B" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" moves the competition "Block B" in "Spring Open" up
+      When the reader signed in to the account for "organiser@example.com" moves the competition "Block B (1)" in "Spring Open" up
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: Moving a competition the tournament does not have is refused as the tournament refuses it

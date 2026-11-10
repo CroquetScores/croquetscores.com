@@ -365,7 +365,7 @@ Feature: Searching the website for tournaments, players and competitions
     Scenario: An archived competition is not found
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the website is searched for "block"
-      Then the competition "Block A" is not found
+      Then the competition "Block A (1)" is not found
 
     Scenario: A tournament restored is found again
       Given "organiser@example.com" has archived the tournament "Spring Open"
@@ -381,9 +381,9 @@ Feature: Searching the website for tournaments, players and competitions
 
     Scenario: A competition restored is found again
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      And "organiser@example.com" has restored the competition "Block A" in "Spring Open"
+      And "organiser@example.com" has restored the competition "Block A (1)" in "Spring Open"
       When the website is searched for "block"
-      Then the competition "Block A" is found
+      Then the competition "Block A (1)" is found
 
   Rule: The answer is of the website asked about
 

@@ -13,6 +13,7 @@ import {
 } from "../../application/operations/tournaments/searching.js";
 import { BlockAdded } from "../../domain/aggregates/tournaments/events/BlockAdded.js";
 import { BlockUpdated } from "../../domain/aggregates/tournaments/events/BlockUpdated.js";
+import { CompetitionArchived } from "../../domain/aggregates/tournaments/events/CompetitionArchived.js";
 import { KnockoutAdded } from "../../domain/aggregates/tournaments/events/KnockoutAdded.js";
 import { KnockoutUpdated } from "../../domain/aggregates/tournaments/events/KnockoutUpdated.js";
 import { SwissAdded } from "../../domain/aggregates/tournaments/events/SwissAdded.js";
@@ -340,6 +341,19 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
       event instanceof KnockoutUpdated ||
       event instanceof SwissUpdated
     ) {
+      await connection.query(
+        `update search_by_website_competitions
+            set name = $2, folded_name = $3
+          where competition_id = $1`,
+        [event.competitionId, event.name, foldedForSearch(event.name)],
+      );
+    } else if (
+      event instanceof CompetitionArchived &&
+      event.name !== undefined
+    ) {
+      // Archiving renames the competition so that its name can be used again,
+      // and it keeps the new name when it is restored. Not found while it is
+      // archived, but found by this name after.
       await connection.query(
         `update search_by_website_competitions
             set name = $2, folded_name = $3

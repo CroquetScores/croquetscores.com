@@ -1,8 +1,10 @@
 Feature: Restoring a tournament's archived competition
 
   An archived competition (`archiveCompetition.feature`) can be restored, of
-  whatever kind it is, and is then in use again, with its name and its slug,
-  which were kept for it while it was archived, so nothing else can have them.
+  whatever kind it is, and is then in use again, with the name it was renamed to when it was archived
+  and its slug, which were kept for it while it was archived, so nothing else
+  can have them. The name it had before is not kept for it: it was freed so
+  that the competition meant could be made (`archiveCompetition.feature`).
   It keeps the order it was given when it was archived, so it comes back after
   the competitions that stayed in use rather than in the place it had, which
   something else may have been moved into since.
@@ -30,7 +32,7 @@ Feature: Restoring a tournament's archived competition
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is restored
+      When the competition "Block A (1)" is restored
       Then it has recorded 1 event
       And the first thing it recorded is a competition being restored
 
@@ -39,8 +41,8 @@ Feature: Restoring a tournament's archived competition
       And the <kind> "Final Stage" was added to it
       And the competition "Final Stage" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Final Stage" is restored
-      Then the tournament's competition "Final Stage" is not archived
+      When the competition "Final Stage (1)" is restored
+      Then the tournament's competition "Final Stage (1)" is not archived
 
       Examples:
         | kind     |
@@ -54,8 +56,8 @@ Feature: Restoring a tournament's archived competition
       And the block "Block B" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is restored
-      Then the tournament's competition "Block A" has the order 30000
+      When the competition "Block A (1)" is restored
+      Then the tournament's competition "Block A (1)" has the order 30000
 
     Scenario: A restored competition comes after those that stayed in use
       Given a stream where a tournament was created as "Spring Open"
@@ -63,16 +65,16 @@ Feature: Restoring a tournament's archived competition
       And the block "Block B" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is restored
+      When the competition "Block A (1)" is restored
       Then the tournament's first competition is "Block B"
 
     Scenario: A tournament rebuilt after a competition was restored has it not archived
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the competition "Block A" was archived
-      And the competition "Block A" was restored
+      And the competition "Block A (1)" was restored
       When the tournament is rebuilt from the stream
-      Then the tournament's competition "Block A" is not archived
+      Then the tournament's competition "Block A (1)" is not archived
 
   Rule: A test cannot be restored while one of its teams is archived
 
@@ -84,7 +86,7 @@ Feature: Restoring a tournament's archived competition
       And the competition "AUS v ENG" was archived
       And the team "Australia" was archived
       And the tournament is rebuilt from the stream
-      When the competition "AUS v ENG" is restored
+      When the competition "AUS v ENG (1)" is restored
       Then it is refused for breaking "Team.Archived"
 
     Scenario: Restoring a test whose teams are in use restores it
@@ -94,8 +96,8 @@ Feature: Restoring a tournament's archived competition
       And the test between "Australia" and "England" was added to it
       And the competition "AUS v ENG" was archived
       And the tournament is rebuilt from the stream
-      When the competition "AUS v ENG" is restored
-      Then the tournament's competition "AUS v ENG" is not archived
+      When the competition "AUS v ENG (1)" is restored
+      Then the tournament's competition "AUS v ENG (1)" is not archived
 
   Rule: A losers knockout cannot be restored while the knockout it takes losers from is archived
 
@@ -112,24 +114,24 @@ Feature: Restoring a tournament's archived competition
 
     Scenario: Restoring the losers knockout first is refused
       Given the tournament is rebuilt from the stream
-      When the competition "Plate" is restored
+      When the competition "Plate (1)" is restored
       Then it is refused with "Tournament.LosersKnockoutSourceArchived"
 
     Scenario: A losers knockout refused is still archived
       Given the tournament is rebuilt from the stream
-      When the competition "Plate" is restored
-      Then the tournament's competition "Plate" is archived
+      When the competition "Plate (1)" is restored
+      Then the tournament's competition "Plate (1)" is archived
 
     Scenario: Restoring the knockout it takes losers from is not refused
       Given the tournament is rebuilt from the stream
-      When the competition "Main Event" is restored
-      Then the tournament's competition "Main Event" is not archived
+      When the competition "Main Event (1)" is restored
+      Then the tournament's competition "Main Event (1)" is not archived
 
     Scenario: Restoring the losers knockout once its knockout is restored
-      Given the competition "Main Event" was restored
+      Given the competition "Main Event (1)" was restored
       And the tournament is rebuilt from the stream
-      When the competition "Plate" is restored
-      Then the tournament's competition "Plate" is not archived
+      When the competition "Plate (1)" is restored
+      Then the tournament's competition "Plate (1)" is not archived
 
   Rule: Only a competition there is can be restored
 
@@ -163,5 +165,5 @@ Feature: Restoring a tournament's archived competition
       And the competition "Block A" was archived
       And it was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is restored
+      When the competition "Block A (1)" is restored
       Then it is refused with "Tournament.Archived"

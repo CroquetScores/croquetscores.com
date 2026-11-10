@@ -420,6 +420,18 @@ Then(
 );
 
 Then(
+  "the tournament does not have the competition {string}",
+  function (this: SpecWorld, name: string) {
+    assert.equal(
+      tournamentOf(this).competitions.some(
+        ({ reference }) => reference.name.toString() === name,
+      ),
+      false,
+    );
+  },
+);
+
+Then(
   "the tournament's {word} competition is {string}",
   function (this: SpecWorld, ordinal: string, name: string) {
     const competition = tournamentOf(this).competitions[positionOf(ordinal)];

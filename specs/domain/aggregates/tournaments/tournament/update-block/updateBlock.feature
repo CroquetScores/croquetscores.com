@@ -137,7 +137,7 @@ Feature: Changing what a tournament's block is
       And the block "Block B" was added to it
       And the competition "Block B" was archived
       And the tournament is rebuilt from the stream
-      And the update calls the competition "Block B"
+      And the update calls the competition "Block B (1)"
       When the block "Block A" is updated
       Then it is refused with "Tournament.CompetitionNameTaken"
 
@@ -232,7 +232,7 @@ Feature: Changing what a tournament's block is
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
       And the update calls the competition "Block One"
-      When the block "Block A" is updated
+      When the block "Block A (1)" is updated
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: Updating a block in an archived tournament is refused

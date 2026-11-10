@@ -78,7 +78,7 @@ Feature: Changing what a tournament's Swiss is
       And the competition "Swiss" was archived
       And the tournament is rebuilt from the stream
       And the update calls the competition "Swiss Stage"
-      When the Swiss "Swiss" is updated
+      When the Swiss "Swiss (1)" is updated
       Then it is refused with "Tournament.CompetitionArchived"
 
     Scenario: Updating a Swiss in an archived tournament is refused

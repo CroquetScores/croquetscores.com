@@ -10,6 +10,8 @@ export type CompetitionNameErrorCode =
 
 const MOST_CHARACTERS = 254;
 
+const graphemes = new Intl.Segmenter();
+
 // There is no fewest beyond one, as there is for a person's name: a block is
 // often called by a letter alone, and "A" is a whole name for one.
 const names = new Validator<string, CompetitionNameErrorCode>({
@@ -53,6 +55,24 @@ export class CompetitionName {
     const trimmed = given.trim();
     names.ensureValid(trimmed);
     return new CompetitionName(trimmed);
+  }
+
+  /**
+   * The name with a number after it, such as "KO (1)". A name too long to
+   * take the number is cut short to make room for it, by characters as a
+   * reader counts them, since a name made too long by the number would be
+   * refused, and the number is what tells it from the others.
+   */
+  numbered(number: number): CompetitionName {
+    const suffix = ` (${number})`;
+    const room = Math.max(0, MOST_CHARACTERS - charactersIn(suffix));
+    const kept = [...graphemes.segment(this.#given)]
+      .slice(0, room)
+      .map(({ segment }) => segment)
+      .join("")
+      // Cutting can leave a space before the number that would be doubled.
+      .trimEnd();
+    return CompetitionName.from(`${kept}${suffix}`);
   }
 
   equals(other: CompetitionName | undefined): boolean {

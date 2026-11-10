@@ -49,6 +49,7 @@ Feature: The names a tournament's events are kept under
         | a Swiss being added                       | tournament-swiss-added              |
         | a Swiss being updated                     | tournament-swiss-updated            |
         | a competition being archived              | tournament-competition-archived     |
+        | a competition being archived under a new name | tournament-competition-archived |
         | a competition being restored              | tournament-competition-restored     |
         | a competition being moved                 | tournament-competition-moved        |
         | the competitions being spaced out         | tournament-competitions-spaced-out  |
@@ -99,6 +100,7 @@ Feature: The names a tournament's events are kept under
         | a Swiss being added                       |
         | a Swiss being updated                     |
         | a competition being archived              |
+        | a competition being archived under a new name |
         | a competition being restored              |
         | a competition being moved                 |
         | the competitions being spaced out         |
@@ -215,6 +217,14 @@ Feature: The names a tournament's events are kept under
 
     Scenario: A test added in no group is read back in none
       Given an event of a test being added in no group
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
+  Rule: A competition archived before archiving renamed it is read back with no new name
+
+    Scenario: A competition archived without a new name is read back without one
+      Given an event of a competition being archived
       When the event is written down through the registry
       And what was kept is read back through the registry
       Then what was read back says everything the event said

@@ -397,7 +397,7 @@ Feature: A test's page in the admin
 
     Scenario: An archived test says it can only be restored
       Given "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      When the page of the test "AUS v ENG (1)" in "Spring Tests" is opened
       Then the page is refused with "Tournament.CompetitionArchived"
 
     Scenario: An address no test has been found at says so
@@ -406,7 +406,7 @@ Feature: A test's page in the admin
 
     Scenario: A refused page offers no Add Score
       Given "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      When the page of the test "AUS v ENG (1)" in "Spring Tests" is opened
       Then the page does not offer "Add Score"
 
   Rule: An address the tournament has moved on from sends the reader to where it is
@@ -432,7 +432,7 @@ Feature: A test's page in the admin
     Scenario: A refused page is in the reader's language
       Given a browser that asks for "en-XA"
       And "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the page of the test "AUS v ENG" in "Spring Tests" is opened
+      When the page of the test "AUS v ENG (1)" in "Spring Tests" is opened
       Then every word in the admin's content is in the test locale
 
   Rule: The page is laid out for a phone first

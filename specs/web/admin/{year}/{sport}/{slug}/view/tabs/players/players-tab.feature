@@ -525,7 +525,7 @@ Feature: The players tab of a tournament's page
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the players of "Spring Open" are open
       When "Archive" is pressed on the player "Sam Someone"
-      Then the modal dialog names "Block A"
+      Then the modal dialog names "Block A (1)"
 
     Scenario: Asking first names a competition they withdrew from
       Given "organiser@example.com" has added the player "Sam Someone" to "Spring Open"

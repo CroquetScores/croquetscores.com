@@ -627,6 +627,23 @@ Feature: A reader searches the website for tournaments, players and competitions
       When the page at "/search?q=block" is opened
       Then "Block A" is not among the competitions in the results
 
+  Rule: A competition archived is found by its new name once it is restored
+
+    Archiving a competition renames it, so that its name can be used again
+    (`archiveCompetition.feature`), and it keeps that name when it is restored.
+
+    Scenario: A restored competition is found by the name archiving gave it
+      Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      And "organiser@example.com" has restored the competition "Block A (1)" in "Spring Open"
+      When the page at "/search?q=block" is opened
+      Then "Block A (1)" is among the competitions in the results
+
+    Scenario: A restored competition is not found by the name it had
+      Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
+      And "organiser@example.com" has restored the competition "Block A (1)" in "Spring Open"
+      When the page at "/search?q=block" is opened
+      Then "Block A" is not among the competitions in the results
+
   Rule: Nothing typed is not a search
 
     Scenario: A page with no search shows only its box

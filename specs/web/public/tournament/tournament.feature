@@ -378,7 +378,7 @@ Feature: A tournament's page lists its games, the most recent first
       Given "organiser@example.com" has added the block "Block B" to "Spring Open"
       And "organiser@example.com" has archived the competition "Block B" in "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
-      Then the section "Block B" is not offered
+      Then the section "Block B (1)" is not offered
 
   Rule: A tournament played by teams has Summary after Recent, and its tests said as its teams' short names
 

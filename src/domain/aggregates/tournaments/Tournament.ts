@@ -1224,8 +1224,10 @@ export class Tournament extends AggregateRoot {
    * has then been played; what has been played in it is not the tournament's
    * to know, so whatever asks says, as `played`, and says nothing of any other
    * kind. It is out of the way, so it is put last, given a step more than the
-   * highest order there is, and keeps that order if it is restored. Archiving
-   * one that is archived records nothing.
+   * highest order there is, and keeps that order if it is restored. It is
+   * renamed with a number after its name, so that the name is free for the
+   * competition that was meant (`#nameFreedFor`). Archiving one that is
+   * archived records nothing.
    */
   archiveCompetition(
     id: CompetitionId,
@@ -1258,7 +1260,15 @@ export class Tournament extends AggregateRoot {
         "The test has games in use between its teams' players.",
       );
     }
-    this.record(new CompetitionArchived(id.value, this.#nextOrder, by, at));
+    this.record(
+      new CompetitionArchived(
+        id.value,
+        this.#nextOrder,
+        this.#nameFreedFor(found.reference.name),
+        by,
+        at,
+      ),
+    );
   }
 
   /**
@@ -1911,6 +1921,9 @@ export class Tournament extends AggregateRoot {
       this.#scorers.delete(event.account);
     } else if (event instanceof CompetitionArchived) {
       this.#competitionIs(event.competitionId, true);
+      if (event.name !== undefined) {
+        this.#competitionCalled(event.competitionId, event.name);
+      }
       this.#competitionAt(event.competitionId, event.order);
     } else if (event instanceof CompetitionRestored) {
       this.#competitionIs(event.competitionId, false);
@@ -2489,6 +2502,30 @@ export class Tournament extends AggregateRoot {
     });
   }
 
+  #competitionCalled(written: string, name: string): void {
+    const found = this.#competitions.get(written);
+    if (found === undefined) return;
+    this.#competitions.set(written, {
+      ...found,
+      reference: referenceWith(found.reference, { name }),
+    });
+  }
+
+  // What an archived competition called `name` is renamed to: the name with
+  // the first number from 1 after it that no competition has, archived or not,
+  // so that a number is never given twice. The first unused number and not one
+  // more than the highest, so that a number left free by a competition that
+  // was renamed is used again.
+  #nameFreedFor(name: CompetitionName): string {
+    const taken = [...this.#competitions.values()].map(({ reference }) =>
+      reference.name.toString(),
+    );
+    for (let number = 1; ; number += 1) {
+      const candidate = name.numbered(number).toString();
+      if (!taken.some((other) => sameName(other, candidate))) return candidate;
+    }
+  }
+
   #competitionIs(written: string, archived: boolean): void {
     const found = this.#competitions.get(written);
     if (found === undefined) return;
@@ -2699,10 +2736,13 @@ export class Tournament extends AggregateRoot {
 
   // A team called by another short name gives every test it is in another
   // name with it. The tests keep their slugs, as a competition renamed does.
+  // An archived test is left as it is: the number archiving gave it is what
+  // keeps its old name free, and renaming it would take that back.
   #renameTestsOf(written: string): void {
     for (const { reference, shape, rules } of this.#competitions.values()) {
       if (
         shape.kind === "test" &&
+        !reference.archived &&
         (shape.firstTeam.value === written ||
           shape.secondTeam.value === written)
       ) {

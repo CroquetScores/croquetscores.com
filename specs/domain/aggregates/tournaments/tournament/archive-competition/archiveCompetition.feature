@@ -18,6 +18,16 @@ Feature: Archiving a tournament's competition
   (`restoreCompetition.feature`). Its new order still counts, so no order is
   given twice.
 
+  An archived competition is also renamed, to its name with a number after it,
+  such as "KO (1)", so that the name it had is free again. A competition made
+  as the wrong kind is archived and made again as the right one, and could not
+  be made again under the same name while the wrong one still had it. The
+  number is the first from 1 that no other competition's name, archived or
+  not, already ends in after the same name. Its slug is kept, so that the
+  address it was found at is still its own. It keeps the new name when it is
+  restored (`restoreCompetition.feature`). A competition archived before this
+  was so is read back with the name it had.
+
   A block, a knockout or a Swiss can be archived whether or not it has games.
   Archiving sets it aside rather than taking anything away, so its games are
   kept with it, and come back with it when it is restored. So whether it has
@@ -57,7 +67,7 @@ Feature: Archiving a tournament's competition
       And the <kind> "Final Stage" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Final Stage" is archived
-      Then the tournament's competition "Final Stage" is archived
+      Then the tournament's competition "Final Stage (1)" is archived
 
       Examples:
         | kind     |
@@ -70,21 +80,106 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block A" is archived
-      Then the tournament has the competition "Block A"
+      Then the tournament has the competition "Block A (1)"
 
     Scenario: An archived competition keeps its slug
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block A" is archived
-      Then the tournament's competition "Block A" has the slug "block-a"
+      Then the tournament's competition "Block A (1)" has the slug "block-a"
 
     Scenario: A tournament rebuilt after a competition was archived has it archived
       Given a stream where a tournament was created as "Spring Open"
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       When the tournament is rebuilt from the stream
-      Then the tournament's competition "Block A" is archived
+      Then the tournament's competition "Block A (1)" is archived
+
+  Rule: An archived competition is renamed so that its name can be used again
+
+    Scenario: An archived competition is given the number 1
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament has the competition "KO (1)"
+
+    Scenario: An archived competition no longer has the name it had
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament does not have the competition "KO"
+
+    Scenario: The name an archived competition had can be used again
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the competition "KO" was archived
+      And the tournament is rebuilt from the stream
+      When the block "KO" is added
+      Then it is not refused
+
+    Scenario: An archived competition is given the first number no other has
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the competition "KO" was archived
+      And the block "KO" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament has the competition "KO (2)"
+
+    Scenario: A number a competition in use already has is skipped
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the block "KO (1)" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament has the competition "KO (2)"
+
+    Scenario: A number is the first unused, not one more than the highest
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the block "KO (3)" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament has the competition "KO (1)"
+
+    Scenario: A number is taken however the name is capitalised
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the block "ko (1)" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament has the competition "KO (2)"
+
+    Scenario: An archived competition keeps its slug when it is renamed
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the tournament is rebuilt from the stream
+      When the competition "KO" is archived
+      Then the tournament's competition "KO (1)" has the slug "ko"
+
+    Scenario: A tournament rebuilt after a competition was archived has it renamed
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the competition "KO" was archived
+      When the tournament is rebuilt from the stream
+      Then the tournament has the competition "KO (1)"
+
+    Scenario: A competition archived before archiving renamed it keeps its name
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the competition "KO" was archived before archiving renamed it
+      When the tournament is rebuilt from the stream
+      Then the tournament has the competition "KO"
+
+    Scenario: A competition archived before archiving renamed it is renamed no more
+      Given a stream where a tournament was created as "Spring Open"
+      And the block "KO" was added to it
+      And the competition "KO" was archived before archiving renamed it
+      When the tournament is rebuilt from the stream
+      Then the tournament does not have the competition "KO (1)"
 
   Rule: An archived competition is put last
 
@@ -94,7 +189,7 @@ Feature: Archiving a tournament's competition
       And the block "Block B" was added to it
       And the tournament is rebuilt from the stream
       When the competition "Block A" is archived
-      Then the tournament's competition "Block A" has the order 30000
+      Then the tournament's competition "Block A (1)" has the order 30000
 
     Scenario: An archived competition comes after those in use
       Given a stream where a tournament was created as "Spring Open"
@@ -110,7 +205,7 @@ Feature: Archiving a tournament's competition
       And the block "Block B" was added to it
       And the competition "Block A" was archived
       When the tournament is rebuilt from the stream
-      Then the tournament's competition "Block A" has the order 30000
+      Then the tournament's competition "Block A (1)" has the order 30000
 
     Scenario: A competition added after an archived one comes before it
       Given a stream where a tournament was created as "Spring Open"
@@ -119,7 +214,7 @@ Feature: Archiving a tournament's competition
       And the block "Block B" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament's first competition is "Block B"
-      And the tournament's second competition is "Block A"
+      And the tournament's second competition is "Block A (1)"
 
     Scenario: Archived competitions are listed in the order they were archived
       Given a stream where a tournament was created as "Spring Open"
@@ -130,8 +225,8 @@ Feature: Archiving a tournament's competition
       And the block "Block C" was added to it
       When the tournament is rebuilt from the stream
       Then the tournament's first competition is "Block C"
-      And the tournament's second competition is "Block B"
-      And the tournament's third competition is "Block A"
+      And the tournament's second competition is "Block B (1)"
+      And the tournament's third competition is "Block A (1)"
 
   Rule: A test with games in use cannot be archived
 
@@ -163,7 +258,7 @@ Feature: Archiving a tournament's competition
       And the tournament is rebuilt from the stream
       And the test "AUS v ENG" has no games
       When the competition "AUS v ENG" is archived
-      Then the tournament's competition "AUS v ENG" is archived
+      Then the tournament's competition "AUS v ENG (1)" is archived
 
   Rule: A knockout whose losers another in use takes cannot be archived
 
@@ -191,13 +286,13 @@ Feature: Archiving a tournament's competition
     Scenario: Archiving the losers knockout is not refused
       Given the tournament is rebuilt from the stream
       When the competition "Plate" is archived
-      Then the tournament's competition "Plate" is archived
+      Then the tournament's competition "Plate (1)" is archived
 
     Scenario: Archiving the knockout once its losers knockout is archived
       Given the competition "Plate" was archived
       And the tournament is rebuilt from the stream
       When the competition "Main Event" is archived
-      Then the tournament's competition "Main Event" is archived
+      Then the tournament's competition "Main Event (1)" is archived
 
   Rule: Only a competition there is can be archived
 
@@ -214,7 +309,7 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is archived
+      When the competition "Block A (1)" is archived
       Then it has recorded 0 events
 
     Scenario: Archiving an archived competition is not refused
@@ -222,7 +317,7 @@ Feature: Archiving a tournament's competition
       And the block "Block A" was added to it
       And the competition "Block A" was archived
       And the tournament is rebuilt from the stream
-      When the competition "Block A" is archived
+      When the competition "Block A (1)" is archived
       Then it is not refused
 
   Rule: A competition in an archived tournament cannot be archived

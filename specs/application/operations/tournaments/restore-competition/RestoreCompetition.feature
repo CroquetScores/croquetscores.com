@@ -26,12 +26,12 @@ Feature: Restoring a tournament's archived competition
 
     Scenario: The competition is kept not archived
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A" in "Spring Open"
-      Then the tournament's competition "Block A" is not archived
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A (1)" in "Spring Open"
+      Then the tournament's competition "Block A (1)" is not archived
 
     Scenario: Restoring the competition is recorded as done by whoever asked
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then the last thing the tournament recorded was caused by the account for "organiser@example.com"
 
     Scenario: Restoring a competition that is not archived records nothing
@@ -58,11 +58,11 @@ Feature: Restoring a tournament's archived competition
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Final Stage" of "Spring Open"
 
     Scenario: The loser of a game decided while it was archived is not in it
-      Then the competition "Plate" of "Spring Open" does not have the player "Alex Another"
+      Then the competition "Plate (1)" of "Spring Open" does not have the player "Alex Another"
 
     Scenario: Restoring it puts the loser in
-      When the reader signed in to the account for "organiser@example.com" restores the competition "Plate" in "Spring Open"
-      Then the competition "Plate" of "Spring Open" has the player "Alex Another"
+      When the reader signed in to the account for "organiser@example.com" restores the competition "Plate (1)" in "Spring Open"
+      Then the competition "Plate (1)" of "Spring Open" has the player "Alex Another"
 
   Rule: Only a competition there is, in a tournament there is, can be restored
 
@@ -79,14 +79,14 @@ Feature: Restoring a tournament's archived competition
     Scenario: A reader who does not manage the tournament is refused
       Given "someone@example.com" has an account, confirmed, called "Sam Someone"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "someone@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "someone@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Tournament.NotAManager"
 
     Scenario: A scorer of the tournament is refused
       Given "scorer@example.com" has an account, confirmed, called "Sasha Scorer"
       And "organiser@example.com" has made "scorer@example.com" a scorer of "Spring Open"
       And "organiser@example.com" has archived the competition "Block A" in "Spring Open"
-      When the reader signed in to the account for "scorer@example.com" restores the competition "Block A" in "Spring Open"
+      When the reader signed in to the account for "scorer@example.com" restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Tournament.NotAManager"
 
   Rule: A forgotten account restores nothing
@@ -95,5 +95,5 @@ Feature: Restoring a tournament's archived competition
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       And the account for "organiser@example.com" is taken hold of
       And the account for "organiser@example.com" has been forgotten
-      When the reader signed in to that account restores the competition "Block A" in "Spring Open"
+      When the reader signed in to that account restores the competition "Block A (1)" in "Spring Open"
       Then it is refused with "Account.Forgotten"

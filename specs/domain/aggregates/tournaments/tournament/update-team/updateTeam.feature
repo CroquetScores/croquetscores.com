@@ -10,7 +10,9 @@ Feature: Changing what a tournament's team is
 
   A test is called by the short names of its teams (`addTest.feature`), so a
   team given a new short name gives every test it is in a new name with it.
-  The tests keep their slugs, as a competition renamed keeps its own.
+  The tests keep their slugs, as a competition renamed keeps its own. An
+  archived test keeps the name archiving gave it (`archiveCompetition.feature`),
+  so that the name it had stays free for a test made after it.
 
   The team is found by its id. An id that is no team's in the tournament is
   refused rather than taken as a new team, since adding a team is a thing of
@@ -113,6 +115,17 @@ Feature: Changing what a tournament's team is
       And the update has the team known for short as "Oz"
       When the team "Australia" is updated
       Then the tournament has the competition "Oz v ENG"
+
+    Scenario: An archived test keeps the name archiving gave it
+      Given a stream where a tournament was created in the format "Teams"
+      And the team "Australia" was added to it
+      And the team "England" was added to it
+      And the test between "Australia" and "England" was added to it
+      And the competition "AUS v ENG" was archived
+      And the tournament is rebuilt from the stream
+      And the update has the team known for short as "Oz"
+      When the team "Australia" is updated
+      Then the tournament has the competition "AUS v ENG (1)"
 
     Scenario: A test keeps its slug when a team's short name changes
       Given a stream where a tournament was created in the format "Teams"

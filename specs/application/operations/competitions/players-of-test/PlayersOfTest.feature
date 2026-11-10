@@ -125,7 +125,7 @@ Feature: The players of a test, as its tournament's managers and scorers list th
 
     Scenario: An archived test is refused
       Given "organiser@example.com" has archived the competition "AUS v ENG" in "Spring Tests"
-      When the reader signed in to the account for "organiser@example.com" lists the players of "AUS v ENG" of "Spring Tests"
+      When the reader signed in to the account for "organiser@example.com" lists the players of "AUS v ENG (1)" of "Spring Tests"
       Then it is refused with "Tournament.CompetitionArchived"
 
   Rule: A forgotten account lists nothing
