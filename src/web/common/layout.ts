@@ -223,6 +223,14 @@ const menuScript = `          <script>
               };
               fit();
               wide.addEventListener("change", fit);
+              // Pressing the page puts an open menu away, as it does on most
+              // sites, but only where the links are not in the open: there the
+              // menu is held open for the browsers that need it to show them.
+              document.addEventListener("click", function (event) {
+                if (!wide.matches && menu.open && !menu.contains(event.target)) {
+                  menu.open = false;
+                }
+              });
             })();
           </script>
 `;
