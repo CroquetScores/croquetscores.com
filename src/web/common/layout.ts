@@ -254,7 +254,7 @@ ${accountGroup(bar)}
 ${menuScript}        </details>`;
 };
 
-// Above the site bar, where the beta site's notice is (betaSite.ts), and in
+// Above the site bar, where the beta notice is (betaSite.ts), and in
 // its colours, so that the two warnings that what is entered may be thrown
 // away look alike. Outside the pinned bar, so that it scrolls away once read
 // instead of taking a line of every screen for as long as the reader stays.

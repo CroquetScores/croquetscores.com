@@ -349,10 +349,10 @@ Feature: Registering with Google
 
     Google sends a reader back only to an address it was given beforehand, so
     it is the address of the website the reader is on that it is told, and
-    never one worked out from anything the request says of itself. The beta
-    site is its own address for this, though it keeps croquetscores.com's data:
-    a reader who signed in from beta.croquetscores.com comes back to it, not to
-    croquetscores.com (`Website.feature`).
+    never one worked out from anything the request says of itself. Development
+    is its own address for this, though it keeps croquetscores.com's data: a
+    reader who signed in from there comes back to it, not to croquetscores.com
+    (`Website.feature`).
 
     Scenario Outline: The way back is the website's own address
       Given a site served as "<host>"
@@ -362,6 +362,5 @@ Feature: Registering with Google
       Examples:
         | host                   | address                                         |
         | croquetscores.com      | https://croquetscores.com/auth/google/callback  |
-        | beta.croquetscores.com | https://beta.croquetscores.com/auth/google/callback |
         | try.croquetscores.com  | https://try.croquetscores.com/auth/google/callback |
         | gateballscores.com     | https://gateballscores.com/auth/google/callback |

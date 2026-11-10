@@ -26,8 +26,6 @@ const websites = ["croquetscores.com", "gateballscores.com"];
 /** Whether `host`, as a request names it, is not one of the two websites. */
 export const isABeta = (host: string): boolean => {
   const name = Website.spelled(host).replace(/:\d+$/, "");
-  // The one website under the two that is a beta: it is where the site is tried.
-  if (name === Website.beta.host) return true;
   return !websites.some(
     (website) => name === website || name.endsWith(`.${website}`),
   );

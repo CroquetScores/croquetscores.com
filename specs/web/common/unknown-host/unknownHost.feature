@@ -32,7 +32,6 @@ Feature: Refusing a request addressed to a website nobody set up
       Examples:
         | host                   |
         | croquetscores.com      |
-        | beta.croquetscores.com |
         | try.croquetscores.com  |
         | gateballscores.com     |
         | try.gateballscores.com |
@@ -47,20 +46,26 @@ Feature: Refusing a request addressed to a website nobody set up
       Then the site answers "421"
 
       Examples:
-        | host                  |
-        | example.com           |
-        | www.croquetscores.com |
-        | 203.0.113.5           |
+        | host                   |
+        | example.com            |
+        | www.croquetscores.com  |
+        | beta.croquetscores.com |
+        | 203.0.113.5            |
 
     Scenario: The refusal is a page, not a blank
       Given a site
       When the sign in page is asked for as "example.com"
       Then the answer is a page
 
-    Scenario: The refusal carries no beta banner
+    Scenario Outline: The refusal carries no beta banner
       Given a site
-      When the sign in page is asked for as "example.com"
+      When the sign in page is asked for as "<host>"
       Then the answer carries no beta banner
+
+      Examples:
+        | host                   |
+        | example.com            |
+        | beta.croquetscores.com |
 
     Scenario: The refusal is JSON where the API was asked
       Given a site
@@ -107,11 +112,11 @@ Feature: Refusing a request addressed to a website nobody set up
       When the home page is asked for as "gateballscores.com"
       Then the header names the site "Gateball Scores"
 
-  Rule: The beta site is served as a beta
+  Rule: Only development carries the beta notice
 
-    Scenario: The beta site carries the beta notice
+    Scenario: Development carries the beta notice
       Given a site
-      When the home page is asked for as "beta.croquetscores.com"
+      When the home page is asked for as "localhost:3000"
       Then the answer carries a beta notice
 
     Scenario: Croquet Scores does not

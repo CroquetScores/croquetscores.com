@@ -74,19 +74,12 @@ Feature: The website a site is served as
     address that is no website's and no local one is refused, never taken for
     the nearest, for the reason above.
 
-    The beta site, beta.croquetscores.com, is where a few readers try the
-    site before anybody else is let in. It has the database of
-    croquetscores.com and not one of its own: what is entered there is on
-    croquetscores.com, and a reader of one sees the other's tournaments. But
-    it is not croquetscores.com in anything else. It is reached at its own
-    address, so a link in an email takes its reader back to it, and it says
-    that it is a beta (`betaSite.feature`). So a request addressed to it is for
-    the beta site, which counts as croquetscores.com for what is kept and read.
-    Development counts as croquetscores.com in the same way, since the data a
-    developer has to work with is a copy of that site's and none is kept under
-    development's own name.
-    It is the only other name, so www.croquetscores.com and the like are still
-    refused.
+    Development counts as croquetscores.com for what is kept and read, since
+    the data a developer has to work with is a copy of that site's and none is
+    kept under development's own name. It is reached at its own address, so a
+    link in an email takes its reader back to it, and it says that it is a beta
+    (`betaSite.feature`). It is the only other name, so www.croquetscores.com
+    and the like are still refused.
 
     Scenario Outline: A request is for the website it names
       When a request addressed to "<host>" is placed
@@ -102,20 +95,6 @@ Feature: The website a site is served as
         | gateballscores.com     | gateballscores.com     |
         | try.gateballscores.com | try.gateballscores.com |
         | localhost:3000         | localhost:3000         |
-
-    Scenario Outline: A request addressed to the beta site is for the beta site
-      When a request addressed to "<host>" is placed
-      Then it is for the website "beta.croquetscores.com"
-
-      Examples:
-        | host                    |
-        | beta.croquetscores.com  |
-        | BETA.CroquetScores.com  |
-        | beta.croquetscores.com. |
-
-    Scenario: The beta site counts as croquetscores.com
-      When a request addressed to "beta.croquetscores.com" is placed
-      Then it counts as the website "croquetscores.com"
 
     Scenario Outline: Any other website counts as itself
       When a request addressed to "<host>" is placed
@@ -149,11 +128,12 @@ Feature: The website a site is served as
       Then it is refused for breaking "Website.Unknown"
 
       Examples:
-        | host                  |
-        | example.com           |
-        | www.croquetscores.com |
-        | 203.0.113.5           |
-        | localhost.example.com |
+        | host                   |
+        | example.com            |
+        | www.croquetscores.com  |
+        | beta.croquetscores.com |
+        | 203.0.113.5            |
+        | localhost.example.com  |
 
     Scenario: A request addressed to nowhere is refused
       When a request addressed to "" is placed
