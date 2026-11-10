@@ -41,7 +41,7 @@ export const siteNameOf = (request: FastifyRequest): string =>
   siteNameFor(websiteOf(request));
 
 /**
- * Which website `request` was addressed to: the beta site where it was, and
+ * Which website `request` was addressed to: development where it was, and
  * otherwise {@link websiteOf}. Asked for what a reader is shown or sent of the
  * address they came by, such as the link in an email; what is kept and read is
  * websiteOf's.
@@ -54,8 +54,8 @@ export const servedAsOf = (request: FastifyRequest): Website => {
 };
 
 /**
- * Which website `request` is for, as far as what is kept and read: the beta
- * site is for croquetscores.com. Every request that reaches a route has one,
+ * Which website `request` is for, as far as what is kept and read:
+ * development is for croquetscores.com. Every request that reaches a route has one,
  * because {@link placeRequests} answers the rest before they get there.
  */
 export const websiteOf = (request: FastifyRequest): Website => {

@@ -54,12 +54,12 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 - **`TRUSTED_PROXY`** — The addresses the proxy connects from, separated by commas: `127.0.0.1` when Caddy is on the same server. The reader's own address is believed from these and nowhere else. Blank, every reader is counted as the proxy, and the limits on failed sign-ins and password-reset requests hold everybody to one reader's share. `0.0.0.0/0` is refused
 - **`RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`** — Both or neither. Without them the register form is open and emails whoever it is told to. Made at google.com/recaptcha for the site's domain
 - **`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER_NAME`, `SMTP_PASSWORD`** — All four or none. Brevo's: `smtp-relay.brevo.com`, `587`, and the user name and key Brevo gives for SMTP (not the account's sign-in). None, and every email is written to `temp/emails/` and nobody is sent anything. The connection is always encrypted, and a server that will not encrypt is not sent to
-- **`SEARCH_ENGINES_WELCOME`** — `true` or `false`, blank is `false`. **Leave it `false` for the beta**, and wherever the site is not meant to be found. `true` only when the site is meant to be found. Even then, only croquetscores.com and gateballscores.com are: a try website, the beta and a development computer ask search engines to keep away whatever it says (`searchEngines.feature`)
+- **`SEARCH_ENGINES_WELCOME`** — `true` or `false`, blank is `false`. **Leave it `false`** wherever the site is not meant to be found. `true` only when the site is meant to be found. Even then, only croquetscores.com and gateballscores.com are: a try website and a development computer ask search engines to keep away whatever it says (`searchEngines.feature`)
 
 ### Optional
 
 - **`PORT`** — The port the site listens on. Blank is 3000. The proxy is told the same
-- **`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`** — Sign in with Google. Both or neither: with one missing the route is not offered. The site sends Google the address of the website the reader is on, so **all five** must be registered in Google's console as authorised redirect URIs: `https://croquetscores.com/auth/google/callback`, `https://beta.croquetscores.com/auth/google/callback`, `https://try.croquetscores.com/auth/google/callback`, `https://gateballscores.com/auth/google/callback` and `https://try.gateballscores.com/auth/google/callback`. One missing fails sign-in on that website with `redirect_uri_mismatch`. Behind the proxy it is right only when `TRUSTED_PROXY` names the proxy: otherwise it sends `http://`, and Google refuses it
+- **`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`** — Sign in with Google. Both or neither: with one missing the route is not offered. The site sends Google the address of the website the reader is on, so **all four** must be registered in Google's console as authorised redirect URIs: `https://croquetscores.com/auth/google/callback`, `https://try.croquetscores.com/auth/google/callback`, `https://gateballscores.com/auth/google/callback` and `https://try.gateballscores.com/auth/google/callback`. One missing fails sign-in on that website with `redirect_uri_mismatch`. Behind the proxy it is right only when `TRUSTED_PROXY` names the proxy: otherwise it sends `http://`, and Google refuses it
 - **`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`** — Sign in with Facebook. Leave blank until the app has been reviewed (https://github.com/CroquetScores/croquetscores.com/issues/286, Facebook sign-in)
 - **`OLD_SITE_PASSWORD_SALT`** — The salt the old site added before hashing passwords. Needed only so that passwords imported from the old site match. Blank, they match nothing
 - **`DATABASE_UNREACHABLE_EMAIL_INTERVAL_MINUTES`** — How long between emails to the administrator that the database cannot be reached. Whole minutes, blank is 30
@@ -94,8 +94,8 @@ Changing `ACCOUNT_ENCRYPTION_KEY` is not this. It is `npm run db:change-site-key
 
 - [ ] Every one of the required settings has a value.
 - [ ] `TRUSTED_PROXY` is the proxy's address, and the proxy forwards the host the reader typed as `X-Forwarded-Host`.
-- [ ] The reCAPTCHA keys are made for all four domains and for `beta.croquetscores.com`.
+- [ ] The reCAPTCHA keys are made for all four domains.
 - [ ] The four `SMTP_` settings are all there, and a registration's email arrived (operations.md §1).
 - [ ] The whole file is in the LastPass note for kamatera.com, and the two account keys in it match the server's.
-- [ ] `SEARCH_ENGINES_WELCOME` is `false` for a beta, `true` for production.
+- [ ] `SEARCH_ENGINES_WELCOME` is `false` wherever the site is not meant to be found, `true` for production.
 - [ ] No `.env` is in the site's folder on the server.

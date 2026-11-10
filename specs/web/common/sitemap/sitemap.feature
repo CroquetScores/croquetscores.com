@@ -22,7 +22,7 @@ Feature: A sitemap lists every page a search engine should find
   for good (`tournament.feature`), and is not a page of its own to find.
 
   A sitemap is for the websites that are found. Where search engines are not
-  welcome, and on a try website or the beta whatever the setting says
+  welcome, and on a try website or a developer's computer whatever the setting says
   (`searchEngines.feature`), there is none: asking for it is a page that is not
   there, since a list of what to find on a website that is not to be found
   would say the opposite of the robots file.
@@ -196,7 +196,7 @@ Feature: A sitemap lists every page a search engine should find
       When the sitemap is asked for at "croquetscores.com"
       Then there is no such page
 
-    Scenario Outline: A try website, the beta or a developer's computer has none whatever the setting says
+    Scenario Outline: A try website or a developer's computer has none whatever the setting says
       Given the site is told search engines are welcome
       When the sitemap is asked for at "<address>"
       Then there is no such page
@@ -205,7 +205,6 @@ Feature: A sitemap lists every page a search engine should find
         | address                |
         | try.croquetscores.com  |
         | try.gateballscores.com |
-        | beta.croquetscores.com |
         | localhost:3000         |
 
     Scenario: The robots file of a site not to be found points to no sitemap

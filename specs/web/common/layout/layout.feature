@@ -20,7 +20,7 @@ Feature: What every page is set in
     The banner says one thing, so its words are one phrase of the catalogue
     and are in the reader's language like everything else in the bars.
 
-    It is set as the beta site's notice is: the first thing on the page,
+    It is set as the beta notice is (`betaSite.feature`): the first thing on the page,
     above the site bar, in black on bright yellow. Both say that what is
     entered may be thrown away, and a reader who has met one should know the
     other at a glance.

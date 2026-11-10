@@ -68,23 +68,10 @@ export class Website {
   );
   // Development is where the site is worked on rather than somewhere readers
   // are sent, so it is Croquet Scores as readers have it and not a try website.
-  // It keeps and reads croquetscores.com's, as the beta site does, because the
-  // data a developer restores is a copy of that site's.
+  // It keeps and reads croquetscores.com's, because the data a developer
+  // restores is a copy of that site's.
   static readonly development = new Website(
     "localhost:3000",
-    "croquetScores",
-    false,
-    Website.croquetScores,
-  );
-
-  /**
-   * The beta site, where a few readers try the site before anybody else is let
-   * in. It has croquetscores.com's database and is otherwise its own: its own
-   * address, and a beta. It is not one of {@link Website.all}, which are the
-   * websites a tournament can be on, and it can be on none.
-   */
-  static readonly beta = new Website(
-    "beta.croquetscores.com",
     "croquetScores",
     false,
     Website.croquetScores,
@@ -134,7 +121,6 @@ export class Website {
     const name = lowered.replace(/:\d+$/, "");
     if (name === "localhost" || name === "127.0.0.1" || name === "[::1]")
       return Website.development;
-    if (lowered === Website.beta.host) return Website.beta;
     return Website.from(lowered);
   }
 
@@ -172,7 +158,7 @@ export class Website {
 
   /**
    * The website whose tournaments, accounts and the rest it keeps and reads:
-   * itself, except for the beta site, which keeps and reads croquetscores.com's.
+   * itself, except for development, which keeps and reads croquetscores.com's.
    */
   get countsAs(): Website {
     return this.#countsAs ?? this;

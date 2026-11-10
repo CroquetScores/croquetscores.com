@@ -20,7 +20,7 @@ const welcome =
   "User-agent: *\nDisallow: /admin\nDisallow: /api/\nDisallow: /auth/\n";
 
 // The websites a reader is sent to, which are the two that are neither a try
-// website nor the beta nor development. The setting is the server's, and one
+// website nor development. The setting is the server's, and one
 // server answers for them all; a try website says on every page that whatever
 // is entered there may be removed at any time, so a result indexed from one
 // would put somebody's practice in front of the world, and is slow to be

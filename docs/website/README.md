@@ -51,7 +51,6 @@ One server answers for four websites: `croquetscores.com`, `try.croquetscores.co
 - **Development:** `localhost` and `127.0.0.1` on any port are development, and are Croquet Scores and not a try website.
 - **Any other host is refused** with `421 Misdirected Request`, so a mispointed domain is noticed and not quietly served as the wrong sport. The exception is the health check, which answers whatever it was asked for, so that an uptime check by address works (operations.md §1).
 - **Behind the proxy,** the host the reader typed reaches the site as `X-Forwarded-Host`, believed from `TRUSTED_PROXY` and from nowhere else (configuration.md, "What the site works out for itself").
-- **`beta.croquetscores.com` is the beta site.** Inside the new site it counts as `croquetscores.com` for what is kept and read, so a reader of one sees the other's tournaments, but it is reached at its own address and says on every page that it is a beta. It is not a website a tournament can be on. The links in its emails, and the address Google sends a reader back to, are the beta site's own. **While the beta runs, the new site's database is a copy of the old site's production data, and nothing entered on the beta site reaches the old site**.
 - **One database** holds all four. They are not four installations.
 
 ## 3. The shortest path

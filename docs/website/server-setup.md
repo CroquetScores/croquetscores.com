@@ -217,11 +217,11 @@ SQL
 
 DNS is at Cloudflare. In the domain's DNS records there:
 
-- **`A` records** — one for each of the four names: `@` and `try` in the `croquetscores.com` zone, and `@` and `try` in the `gateballscores.com` zone, all to the server's address. Add `beta` in the `croquetscores.com` zone too, for the beta site (README.md §2). **Set the proxy status to "DNS only" (the grey cloud),** for the reason below.
+- **`A` records** — one for each of the four names: `@` and `try` in the `croquetscores.com` zone, and `@` and `try` in the `gateballscores.com` zone, all to the server's address. **Set the proxy status to "DNS only" (the grey cloud),** for the reason below.
 - **`AAAA` record** — only if the server was given an IPv6 address, and the same proxy status.
 - **Brevo's records** — SPF (a `TXT`), DKIM (a `TXT` or `CNAME`) and DMARC (a `TXT` at `_dmarc`), exactly as Brevo's dashboard gives them. Without these the emails go to spam (https://github.com/CroquetScores/croquetscores.com/issues/279, Email and DNS). Cloudflare only proxies `A`, `AAAA` and `CNAME` records, and a `CNAME` that Brevo gives for DKIM must also be "DNS only", or Brevo cannot see it and says the domain is not verified.
 
-Wait for every `A` record to answer before starting the proxy. Run this once for each of the names, the beta's included, and it should print the server's address:
+Wait for every `A` record to answer before starting the proxy. Run this once for each of the names, and it should print the server's address:
 
 ```bash
 dig +short <the name>
@@ -240,7 +240,7 @@ With the orange cloud Cloudflare sits in front of Caddy, hides the server's addr
 3. **Caddy must be told to believe Cloudflare** about the reader's address, by naming those same ranges as trusted proxies in its global options, or it throws away what Cloudflare says and passes on Cloudflare's own address.
 4. **The firewall can then allow ports 80 and 443 from Cloudflare's ranges only,** which is the point of hiding the server's address.
 
-Try it on the beta's own name first, and read the log to see that a reader's address, and not Cloudflare's, is what the site is counting by.
+Try it on the `try` name first, and read the log to see that a reader's address, and not Cloudflare's, is what the site is counting by.
 
 ## 5. The proxy
 
@@ -262,13 +262,13 @@ sudo nano /etc/caddy/Caddyfile
 Replace the whole of it with the following. `Ctrl+O` then Enter saves, and `Ctrl+X` leaves:
 
 ```
-croquetscores.com, beta.croquetscores.com, try.croquetscores.com, gateballscores.com, try.gateballscores.com {
+croquetscores.com, try.croquetscores.com, gateballscores.com, try.gateballscores.com {
     encode zstd gzip
     reverse_proxy 127.0.0.1:3000
 }
 ```
 
-Four of the names are the four websites, and `beta.croquetscores.com` is the beta site, which counts as `croquetscores.com` for what it keeps (README.md §2); Caddy gets a certificate for each. `reverse_proxy` sends `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host`, the last being the host the reader typed, and speaks to the site from `127.0.0.1`. So the site's settings are:
+The four names are the four websites; Caddy gets a certificate for each. `reverse_proxy` sends `X-Forwarded-For`, `X-Forwarded-Proto` and `X-Forwarded-Host`, the last being the host the reader typed, and speaks to the site from `127.0.0.1`. So the site's settings are:
 
 - `TRUSTED_PROXY=127.0.0.1`. Without it every reader is counted as the proxy, and Google sign-in sends the wrong address (configuration.md §3).
 - Nothing for the names above: the site reads which website a request is for from `X-Forwarded-Host`, believed because of `TRUSTED_PROXY` (configuration.md, "What the site works out for itself"). Step 7 and step 8 of §6 check that this works, once the site is running.
@@ -489,7 +489,7 @@ From another computer, in a browser or with `curl`, which should say `{"status":
 curl -s https://<the site's name>/api/site/health
 ```
 
-Then open `https://try.croquetscores.com/` in a browser. It should load with a padlock, and show the try banner on every page, saying that anything entered may be removed at any time. Open `https://beta.croquetscores.com/` too, which should say on every page that it is a beta, and `https://croquetscores.com/`, which should have no banner at all. That shows that Caddy is sending the host the reader typed and that the site is reading it.
+Then open `https://try.croquetscores.com/` in a browser. It should load with a padlock, and show the try banner on every page, saying that anything entered may be removed at any time. Open `https://croquetscores.com/` too, which should have no banner at all. That shows that Caddy is sending the host the reader typed and that the site is reading it.
 
 This is the real test, since it goes through Cloudflare's DNS (§4) and Caddy (§5). If it does not, the site is running and the fault is in one of those two; operations.md §4 lists what to look for.
 
