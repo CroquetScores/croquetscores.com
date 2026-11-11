@@ -20,7 +20,10 @@ Feature: A block's page shows its results as a grid
   across a phone for every name, and is named in full for whatever reads the
   page aloud. A player's initials are the first letter or digit of each word
   of their name, a word being what spaces part, so "Kerri-Ann Organ" is "KO".
-  Where a player's row meets their own column there is nothing to hold, and
+  A doubles pair's are each player's joined by an ampersand, so "Tim Murphy &
+  Alison Sharpe" is "TM&AS", and where the last name is said once, as in
+  "Rosie & Pete Landrebe", it is the last name of both, so that is "RL&PL"
+  (`pairName.feature`). Where a player's row meets their own column there is nothing to hold, and
   the cell is blacked out.
 
   A cell holds the row player's score in each game against the column
@@ -191,6 +194,21 @@ Feature: A block's page shows its results as a grid
         | Jan van Dijk    | JvD      |
         | Agent 007       | A0       |
         | 李 小龍         | 李小     |
+
+    Scenario Outline: A doubles pair's initials are each player's, joined by an ampersand
+      Given "organiser@example.com" has added the block "Block B" to "Spring Open"
+      And "organiser@example.com" has added the player "<pair>" to "Spring Open"
+      And "organiser@example.com" has entered the player "<pair>" in "Block B" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-b" is opened
+      Then the first column of the grid is headed "<initials>"
+
+      Examples:
+        | pair                         | initials |
+        | Tim Murphy & Alison Sharpe   | TM&AS    |
+        | Tim Murphy / Alison Sharpe   | TM&AS    |
+        | Tim Murphy and Alison Sharpe | TM&AS    |
+        | Rosie & Pete Landrebe        | RL&PL    |
+        | Rosie and Pete Landrebe      | RL&PL    |
 
     Scenario: Where a player meets themselves the cell is blacked out
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
