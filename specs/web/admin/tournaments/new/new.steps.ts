@@ -465,6 +465,18 @@ Then(
   },
 );
 
+Then(
+  /^the (first|second|third|fourth|fifth|sixth) name suggested is "([^"]*)"$/,
+  async function (this: SpecWorld, which: string, name: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        (await suggested(this).allTextContents())[ordinal(which)],
+        name,
+      );
+    });
+  },
+);
+
 Then("no name is suggested", async function (this: SpecWorld) {
   await settledNames(this);
   assert.deepEqual(await suggested(this).allTextContents(), []);

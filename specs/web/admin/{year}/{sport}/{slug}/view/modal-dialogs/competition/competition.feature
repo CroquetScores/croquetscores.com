@@ -1065,6 +1065,108 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Bronze" is typed as the "Name"
       Then no name is suggested
 
+  Rule: The names most used are suggested first
+
+    Not more than a few names are suggested, so which come first decides which
+    are seen: "Bronze Medal" is run in a great many tournaments and "Bronze
+    Cup" in one, and the reader typing "Bronze" is most likely after the first.
+    A name is as used as the number of competitions in use that have it, across
+    the website's tournaments that are not archived. "Block A" and "block A"
+    are one name, as the tournament takes them to be
+    (`Tournament.CompetitionNameTaken`), so they are counted together and
+    offered once, in the capitals more competitions have it in. Names used as
+    often as one another come in alphabetical order, so that what is suggested
+    does not move about for no reason.
+
+    Scenario: The name more competitions have is suggested before one fewer have
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Winter Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the first name suggested is "Bronze Medal"
+
+    Scenario: The name fewer competitions have is suggested after
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Winter Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the second name suggested is "Bronze Cup"
+
+    Scenario: Names used as often as one another are suggested in alphabetical order
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Plate" to "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the first name suggested is "Bronze Cup"
+
+    Scenario: Names that differ only in capitals are counted together
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Awards" to "Winter Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze CUP" to "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the second name suggested is "Bronze Awards"
+
+    Scenario: Names that differ only in capitals are suggested once
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze CUP" to "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then 1 name is suggested
+
+    Scenario: A name is suggested in the capitals more competitions have it in
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Winter Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze CUP" to "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the first name suggested is "Bronze Cup"
+
+    Scenario: A name the tournament has in other capitals is not suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze CUP" to "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
+    Scenario: A competition of an archived tournament is not counted
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Cup" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Winter Open"
+      And "organiser@example.com" has created the tournament "Summer Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Summer Open"
+      And "organiser@example.com" has archived the tournament "Summer Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the first name suggested is "Bronze Cup"
+
   Rule: What is refused is said beside the field it is about
 
     Scenario: A missing name is refused beside the name

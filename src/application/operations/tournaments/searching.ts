@@ -176,8 +176,10 @@ export interface SearchByWebsite {
   ): Promise<Limited<CompetitionFound>>;
 
   /**
-   * What the competitions in use on `website` are called, each name once, in
+   * What the competitions in use on `website` are called, each name once, the
+   * one most competitions have first and those had as often in alphabetical
    * order, leaving out any name the tournament `tournament` already has.
+   * Names that differ only in capitals are one name.
    */
   competitionNamesOf(
     website: Website,

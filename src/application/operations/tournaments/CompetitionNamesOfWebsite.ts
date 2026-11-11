@@ -1,8 +1,8 @@
 import { Query } from "../../common/Query.js";
 
 /**
- * What the competitions of a website are called, each name once and in order
- * of the name, for the dialog that names a competition to suggest from: those
+ * What the competitions of a website are called, each name once and the most
+ * used first, for the dialog that names a competition to suggest from: those
  * in use in tournaments that are not archived, except any name the tournament
  * `tournament` already has, since another of its competitions with it would be
  * refused (`Tournament.CompetitionNameTaken`). The names are those of the
