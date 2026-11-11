@@ -2,6 +2,10 @@
 
 ## Släppt 2026-11-11
 
+### Turneringen
+
+- **Namnet på en turnering föreslår de namn webbplatsen redan har.** En turnering ingår ofta i en serie som spelas varje år under nästan samma namn. När du skriver i **Namn** på sidan som skapar eller ändrar en turnering föreslås därför namnen på webbplatsens turneringar. Ett namn föreslås när det har varje ord du har skrivit, i valfri ordning och med valfria stora och små bokstäver, så "CNSW Bronze" hittar "CNSW AC Bronze Medal". Välj ett med ett klick, eller med piltangenterna och Enter, och ändra det som du vill. Escape stänger förslagen. Ett namn föreslås en gång, hur många turneringar som än har det, och en turnering du ändrar får inte sitt eget namn föreslaget.
+
 ### Tävlingar
 
 - **En tävling öppnas på fliken Resultat när ett parti har lagts in.** När du kommer tillbaka till en tävling för att lägga in fler resultat behöver du inte längre trycka på **Resultat** varje gång. En tävling utan något parti i bruk, också en vars enda parti har arkiverats, öppnas fortfarande på **Spelare**. En resultatförare ser bara **Resultat**, som förut.

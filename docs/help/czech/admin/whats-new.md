@@ -2,6 +2,10 @@
 
 ## Vydáno 2026-11-11
 
+### Turnaj
+
+- **Název turnaje napovídá názvy, které web už má.** Turnaj bývá součástí série, která se hraje každý rok pod téměř stejným názvem. Když tedy na stránce, která turnaj vytváří nebo mění, píšete do pole **Název**, nabízejí se názvy turnajů na webu. Název se nabídne, když obsahuje každé zadané slovo, v libovolném pořadí a s libovolnou velikostí písmen, takže „CNSW Bronze“ najde „CNSW AC Bronze Medal“. Vyberete ho kliknutím nebo šipkami a klávesou Enter a pak ho můžete libovolně upravit. Klávesa Escape nabídku zavře. Název se nabídne jen jednou, kolik turnajů ho má, a turnaji, který měníte, se jeho vlastní název nenabízí.
+
 ### Soutěže
 
 - **Soutěž se otevře na kartě Skóre, jakmile se zadala nějaká hra.** Když se k soutěži vrátíte zadat další skóre, už nemusíte pokaždé mačkat **Skóre**. Soutěž bez použité hry, včetně té, jejíž jediná hra je archivovaná, se stále otevře na kartě **Hráči**. Zapisovatel vidí jen **Skóre**, jako dřív.

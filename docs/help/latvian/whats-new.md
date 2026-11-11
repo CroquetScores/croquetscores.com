@@ -6,7 +6,11 @@
 
 - **Konta izvēlni var aizvērt, nospiežot ārpus tās.** Cilvēka ikona galvenes galā, kas atver reģistrēšanos, pierakstīšanos un pārējo, aizveras, kad nospiežat jebkur citur lapā, tāpat kā tad, kad to nospiežat vēlreiz.
 
+- **Savelciet un izpletiet pirkstus, lai mainītu teksta izmēru.** Skārienekrānā savelciet divus pirkstus, lai teksts kļūtu mazāks, un izpletiet tos, lai tas kļūtu lielāks, līdz izmēram no puses līdz divkāršam parastajam. Atšķirībā no pārlūka paša tālummaiņas lapa paliek tikpat plata kā ekrāns, tāpēc rindas lasīšanai nekad nav jāritina uz sāniem. Izmērs tiek atcerēts, tāpēc tas ir vienāds katrā lapā un katrā apmeklējumā. Viens pirksts joprojām ritina kā agrāk.
+
 - **Izvēlne tālrunī ritinās.** Zemā ekrānā izvēlne nav augstāka par ekrānu un ritinās tā iekšienē, tāpēc var aizsniegt katru vienumu, un lapa aiz tās paliek vietā, līdz izvēlne tiek aizvērta.
+
+- **Pedro Echeguren ir uzlabojis spāņu valodu.** Pedro pārskatīja vietnes spāņu vārdus un tos izlaboja. Paldies, Pedro.
 
 ## Izlaists 2026-11-10
 

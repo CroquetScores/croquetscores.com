@@ -2,6 +2,10 @@
 
 ## Rhyddhawyd 2026-11-11
 
+### Y twrnamaint
+
+- **Mae enw twrnamaint yn awgrymu'r enwau sydd gan y wefan eisoes.** Mae twrnamaint yn aml yn rhan o gyfres a chwaraeir bob blwyddyn dan enw bron yr un fath. Felly wrth i chi deipio yn **Enw** ar y dudalen sy'n creu neu'n newid twrnamaint, awgrymir enwau twrnameintiau'r wefan. Awgrymir enw lle mae ganddo bob gair a deipiwyd gennych, mewn unrhyw drefn ac mewn unrhyw lythrennau mawr neu fach, felly mae "CNSW Bronze" yn dod o hyd i "CNSW AC Bronze Medal". Dewiswch un gyda chlic, neu gyda'r bysellau saeth a Enter, a'i newid fel y mynnwch. Mae Escape yn cau'r awgrymiadau. Awgrymir enw unwaith faint bynnag o dwrnameintiau sydd ganddo, ac ni chynigir ei enw ei hun i dwrnamaint rydych chi'n ei newid.
+
 ### Cystadlaethau
 
 - **Mae cystadleuaeth yn agor ar ei thab Sgorau unwaith y bydd gêm wedi'i rhoi i mewn.** Wrth ddychwelyd at gystadleuaeth i roi mwy o sgorau i mewn, nid oes angen pwyso **Sgorau** bob tro mwyach. Mae cystadleuaeth heb gêm ar waith, gan gynnwys un y mae ei hunig gêm wedi'i harchifo, yn dal i agor ar **Chwaraewyr**. Dangosir **Sgorau** yn unig i sgoriwr, fel o'r blaen.

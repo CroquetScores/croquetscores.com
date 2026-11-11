@@ -2,6 +2,10 @@
 
 ## Lançado em 2026-11-11
 
+### O torneio
+
+- **O nome de um torneio sugere os nomes que o site já tem.** Um torneio costuma fazer parte de uma série, jogada todo ano com quase o mesmo nome. Por isso, enquanto você digita em **Nome** na página que cria ou altera um torneio, os nomes dos torneios do site são sugeridos. Um nome é sugerido quando tem todas as palavras que você digitou, em qualquer ordem e com maiúsculas ou minúsculas, então "CNSW Bronze" encontra "CNSW AC Bronze Medal". Escolha um com um clique, ou com as setas e a tecla Enter, e altere-o como quiser. Escape fecha as sugestões. Um nome é sugerido uma só vez, por mais torneios que o tenham, e um torneio que você está alterando não recebe o próprio nome como sugestão.
+
 ### Competições
 
 - **Uma competição abre na aba Resultados depois que um jogo foi inserido.** Voltar a uma competição para inserir mais resultados já não exige apertar **Resultados** toda vez. Uma competição sem nenhum jogo em uso, inclusive uma cujo único jogo foi arquivado, continua abrindo em **Jogadores**. Um anotador vê só **Resultados**, como antes.

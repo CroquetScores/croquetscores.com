@@ -6,7 +6,11 @@
 
 - **El menú de la cuenta se cierra al pulsar fuera de él.** La persona que aparece al final del encabezado, que se abre con Registrarse, Iniciar sesión y el resto, se cierra cuando pulsas en cualquier otro lugar de la página, además de cuando vuelves a pulsarla.
 
+- **Pellizca y separa los dedos para cambiar el tamaño del texto.** En una pantalla táctil, pellizca con dos dedos para hacer el texto más pequeño y sepáralos para hacerlo más grande, hasta un tamaño entre la mitad y el doble del habitual. A diferencia del zoom del propio navegador, la página sigue teniendo el ancho de la pantalla, así que nunca tienes que desplazarte hacia los lados para leer una línea. El tamaño se conserva, de modo que es el mismo en todas las páginas y en todas las visitas. Un dedo sigue desplazando la página como antes.
+
 - **El menú del teléfono se desplaza.** En una pantalla baja, el menú no es más alto que la pantalla y se desplaza dentro de ella, de modo que se puede llegar a todos los elementos, y la página de detrás se queda donde estaba hasta que se cierra el menú.
+
+- **Pedro Echeguren ha mejorado el español.** Pedro revisó las palabras del sitio en español y las corrigió. Gracias, Pedro.
 
 ## Publicado el 2026-11-10
 

@@ -6,7 +6,11 @@
 
 - **The account menu is put away by pressing outside it.** The person at the end of the header, which opens on registering, signing in and the rest, shuts when you press anywhere else on the page, as well as when you press it again.
 
+- **Pinch and pull to change the size of the text.** On a touch screen, pinch with two fingers to make the text smaller and pull them apart to make it larger, to between half and twice its usual size. Unlike the browser's own zoom, the page stays as wide as the screen, so you are never left scrolling sideways to read a line. The size is kept, so it is the same on every page and on every visit. One finger still scrolls as before.
+
 - **The menu on a phone scrolls.** On a short screen the menu is no taller than the screen and scrolls within it, so every item can be reached, and the page behind it stays where it was until the menu is shut.
+
+- **The Spanish has been improved by Pedro Echeguren.** Pedro reviewed the Spanish words of the site and corrected them. Thank you, Pedro.
 
 ## Released 2026-11-10
 

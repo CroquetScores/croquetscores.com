@@ -6,7 +6,11 @@
 
 - **O menu Conta se fecha ao tocar fora dele.** A pessoa no fim do cabeçalho, que abre as opções de cadastrar-se, entrar e o resto, se fecha quando você toca em qualquer outro ponto da página, além de quando você toca nela de novo.
 
+- **Faça o gesto de pinça para mudar o tamanho do texto.** Em uma tela sensível ao toque, junte dois dedos para diminuir o texto e afaste-os para aumentá-lo, até um tamanho entre a metade e o dobro do habitual. Ao contrário do zoom do próprio navegador, a página continua tão larga quanto a tela, então você nunca precisa rolar para o lado para ler uma linha. O tamanho é guardado, então é o mesmo em todas as páginas e em todas as visitas. Um dedo continua rolando como antes.
+
 - **O menu no celular rola.** Numa tela baixa, o menu não passa da altura da tela e rola dentro dela, para que dê para chegar a todos os itens, e a página atrás dele fica onde estava até o menu se fechar.
+
+- **Pedro Echeguren melhorou o espanhol.** Pedro revisou as palavras do site em espanhol e as corrigiu. Obrigado, Pedro.
 
 ## Lançado em 2026-11-10
 

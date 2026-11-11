@@ -2,6 +2,10 @@
 
 ## Lansert 2026-11-11
 
+### Turneringen
+
+- **Navnet på en turnering foreslår navnene nettstedet allerede har.** En turnering er ofte en del av en serie som spilles hvert år under nesten samme navn. Mens du skriver i **Navn** på siden som oppretter eller endrer en turnering, foreslås derfor navnene på nettstedets turneringer. Et navn foreslås når det har hvert ord du har skrevet, i hvilken som helst rekkefølge og med hvilke som helst store og små bokstaver, så «CNSW Bronze» finner «CNSW AC Bronze Medal». Velg et forslag med et klikk, eller med piltastene og Enter, og endre det som du vil. Escape skjuler forslagene. Et navn foreslås én gang uansett hvor mange turneringer som har det, og en turnering du endrer, får ikke sitt eget navn foreslått.
+
 ### Konkurranser
 
 - **En konkurranse åpnes på fanen Resultater når et parti er lagt inn.** Når du kommer tilbake til en konkurranse for å legge inn flere resultater, trenger du ikke lenger trykke på **Resultater** hver gang. En konkurranse uten parti i bruk, også en der det eneste partiet er arkivert, åpnes fortsatt på **Spillere**. En poengfører ser bare **Resultater**, som før.

@@ -2,6 +2,10 @@
 
 ## Izdots 2026-11-11
 
+### Turnīrs
+
+- **Turnīra nosaukums piedāvā nosaukumus, kas vietnei jau ir.** Turnīrs bieži ir daļa no sērijas, ko katru gadu spēlē ar gandrīz tādu pašu nosaukumu. Tāpēc, kamēr lapā, kas izveido vai maina turnīru, rakstāt laukā **Nosaukums**, tiek piedāvāti vietnes turnīru nosaukumi. Nosaukums tiek piedāvāts, ja tajā ir katrs jūsu uzrakstītais vārds, jebkurā secībā un ar jebkādiem burtiem, tāpēc "CNSW Bronze" atrod "CNSW AC Bronze Medal". Izvēlieties kādu ar klikšķi vai ar bulttaustiņiem un taustiņu Enter un mainiet to, kā vēlaties. Taustiņš Escape aizver piedāvājumus. Nosaukums tiek piedāvāts vienu reizi neatkarīgi no tā, cik turnīriem tas ir, un turnīram, ko maināt, tā paša nosaukums netiek piedāvāts.
+
 ### Sacensības
 
 - **Sacensības atveras cilnē Rezultāti, līdzko ir ievadīta kāda partija.** Atgriežoties sacensībās, lai ievadītu vēl rezultātus, vairs nav katru reizi jānospiež **Rezultāti**. Sacensības, kurās nav neviena lietojamas partijas, arī tādas, kurās vienīgā partija ir arhivēta, joprojām atveras cilnē **Spēlētāji**. Rezultātu ievadītājam tiek rādīta tikai cilne **Rezultāti**, kā agrāk.

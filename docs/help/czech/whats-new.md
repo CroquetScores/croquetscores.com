@@ -6,7 +6,11 @@
 
 - **Nabídka Účet se zavře stisknutím mimo ni.** Postava na konci záhlaví, která otevírá možnosti Registrovat se, Přihlásit se a další, se zavře, když stisknete kdekoli jinde na stránce, stejně jako když ji znovu stisknete.
 
+- **Sevřením a roztažením prstů změníte velikost textu.** Na dotykové obrazovce text zmenšíte sevřením dvou prstů a zvětšíte ho jejich roztažením, na velikost mezi polovinou a dvojnásobkem běžné velikosti. Na rozdíl od přiblížení v samotném prohlížeči zůstává stránka stejně široká jako obrazovka, takže nemusíte posouvat obsah do stran, abyste přečetli řádek. Velikost se pamatuje, a je tedy stejná na každé stránce i při každé návštěvě. Jedním prstem se stránka posouvá jako dřív.
+
 - **Menu na telefonu se posouvá.** Na nízké obrazovce není menu vyšší než obrazovka a posouvá se uvnitř ní, takže se dá dosáhnout na každou položku. Stránka za ním zůstane na místě, dokud se menu nezavře.
+
+- **Pedro Echeguren vylepšil španělštinu.** Pedro prošel španělská slova webu a opravil je. Děkuji, Pedro.
 
 ## Vydáno 2026-11-10
 

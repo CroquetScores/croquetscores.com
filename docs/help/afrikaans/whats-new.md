@@ -6,7 +6,11 @@
 
 - **Die rekeningkieslys word toegemaak as jy daarbuite druk.** Die persoon aan die einde van die kopstuk maak 'n kieslys oop met onder meer registreer en teken in. Dit gaan toe as jy êrens anders op die bladsy druk, en ook as jy weer daarop druk.
 
+- **Knyp en trek om die grootte van die teks te verander.** Op 'n raakskerm knyp jy met twee vingers om die teks kleiner te maak en trek jy hulle uitmekaar om dit groter te maak, tot 'n grootte tussen die helfte en dubbel van die gewone. Anders as die blaaier se eie zoem bly die bladsy so breed soos die skerm, so jy hoef nooit sywaarts te rol om 'n reël te lees nie. Die grootte word onthou, so dit is dieselfde op elke bladsy en by elke besoek. Een vinger rol steeds soos voorheen.
+
 - **Die kieslys op 'n foon rol.** Op 'n kort skerm is die kieslys nie hoër as die skerm nie en rol binne-in, sodat jy by elke item kan uitkom. Die bladsy daaragter bly waar dit was totdat die kieslys toegemaak word.
+
+- **Pedro Echeguren het die Spaans verbeter.** Pedro het die Spaanse woorde van die webwerf nagegaan en reggestel. Dankie, Pedro.
 
 ## Vrygestel 2026-11-10
 

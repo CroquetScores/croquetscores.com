@@ -2,6 +2,10 @@
 
 ## Veröffentlicht am 2026-11-11
 
+### Das Turnier
+
+- **Der Name eines Turniers schlägt die Namen vor, die die Website schon hat.** Ein Turnier gehört oft zu einer Reihe, die jedes Jahr unter fast demselben Namen gespielt wird. Wenn Sie auf der Seite, die ein Turnier anlegt oder ändert, in **Name** tippen, werden deshalb die Namen der Turniere der Website vorgeschlagen. Ein Name wird vorgeschlagen, wenn er jedes eingegebene Wort enthält, in beliebiger Reihenfolge und Schreibweise; „CNSW Bronze“ findet also „CNSW AC Bronze Medal“. Wählen Sie einen per Klick oder mit den Pfeiltasten und der Eingabetaste (Enter) und ändern Sie ihn beliebig. Mit Escape verschwinden die Vorschläge. Ein Name wird nur einmal vorgeschlagen, egal wie viele Turniere ihn haben, und einem Turnier, das Sie ändern, wird sein eigener Name nicht angeboten.
+
 ### Wettbewerbe
 
 - **Ein Wettbewerb öffnet sich auf dem Reiter Ergebnisse, sobald ein Spiel eingetragen wurde.** Wer zu einem Wettbewerb zurückkehrt, um weitere Ergebnisse einzutragen, muss nicht mehr jedes Mal auf **Ergebnisse** drücken. Ein Wettbewerb ohne Spiel in Verwendung, auch einer, dessen einziges Spiel archiviert wurde, öffnet sich weiterhin auf **Spieler**. Ein Ergebniserfasser sieht wie bisher nur **Ergebnisse**.

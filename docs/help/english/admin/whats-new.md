@@ -2,6 +2,10 @@
 
 ## Released 2026-11-11
 
+### The tournament
+
+- **The name of a tournament suggests the names the website already has.** A tournament is often one of a series, played again each year under nearly the same name, so as you type in **Name** on the page that creates or changes a tournament, the names of the website's tournaments are suggested. A name is suggested where it has every word you have typed, in any order and any case, so "CNSW Bronze" finds "CNSW AC Bronze Medal". Choose one with a click, or with the arrow keys and Enter, and change it as you like. Escape puts the suggestions away. A name is suggested once however many tournaments have it, and a tournament you are changing is not offered its own name.
+
 ### Competitions
 
 - **A competition opens on its Scores tab once a game has been entered.** Coming back to a competition to enter more scores no longer means pressing **Scores** each time. A competition with no game in use, including one whose only game has been archived, still opens on **Players**. A scorer is shown **Scores** alone, as before.

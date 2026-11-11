@@ -2,6 +2,10 @@
 
 ## Vrygestel 2026-11-11
 
+### Die toernooi
+
+- **Die naam van 'n toernooi stel die name voor wat die webwerf reeds het.** 'n Toernooi is dikwels deel van 'n reeks wat elke jaar onder byna dieselfde naam gespeel word. Terwyl jy dus in **Naam** tik op die bladsy wat 'n toernooi skep of verander, word die name van die webwerf se toernooie voorgestel. 'n Naam word voorgestel waar dit elke woord het wat jy getik het, in enige volgorde en met enige hoofletters of kleinletters, so "CNSW Bronze" vind "CNSW AC Bronze Medal". Kies een met 'n klik, of met die pyltjiesleutels en Enter, en verander dit soos jy wil. Escape maak die voorstelle toe. 'n Naam word een keer voorgestel, hoeveel toernooie dit ook al het, en 'n toernooi wat jy verander, word nie sy eie naam aangebied nie.
+
 ### Kompetisies
 
 - **'n Kompetisie maak oop op sy Uitslae-oortjie sodra 'n spel ingevoer is.** As jy na 'n kompetisie terugkom om meer uitslae in te voer, hoef jy nie meer elke keer **Uitslae** te druk nie. 'n Kompetisie met geen spel in gebruik nie, ook een wie se enigste spel geargiveer is, maak steeds op **Spelers** oop. 'n Teller sien soos voorheen net **Uitslae**.
