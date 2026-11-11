@@ -6,6 +6,7 @@ import { standardHelp } from "../../../../../../helpAddress.js";
 import { knows, say } from "../../../../../../words.js";
 import { idInAddress } from "../../../../../../api.js";
 import "./competition.css";
+import { useNameSuggestions } from "../../../../../../useNameSuggestions.js";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
 import { DialogStatus } from "../../../../../../DialogStatus.js";
 import { useFocusFirstRefused } from "../../../../../../useFocusFirstRefused.js";
@@ -194,6 +195,18 @@ export const CompetitionDialog = ({
   const [sending, setSending] = useState(false);
   const nameField = useRef<HTMLInputElement>(null);
   const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions`;
+  // The tournament's own competitions are left out of what is suggested on the
+  // server, and so is the one being changed, which is the name it has.
+  const suggestion = useNameSuggestions({
+    at: `/api/site/tournaments/${idInAddress(tournament)}/competition-names`,
+    name,
+    setName,
+    own: competition?.name,
+    // What was added is no longer the news once the next is typed.
+    typed: () => {
+      setSaid(undefined);
+    },
+  });
 
   const refusal = (code: string): Refusal => ({
     code,
@@ -289,6 +302,9 @@ export const CompetitionDialog = ({
         // The name emptied for the next, and the rest left as the next alike
         // will want it, with the reader back in the name.
         setSaid(name.trim());
+        // What was added is a name the tournament has now, which the website
+        // leaves out of what it suggests, so the names are asked for again.
+        suggestion.renew();
         setName("");
         nameField.current?.focus();
       } else {
@@ -353,19 +369,17 @@ export const CompetitionDialog = ({
           refused={refusedFor("name")}
         >
           {(tied) => (
-            <input
-              {...tied}
-              ref={nameField}
-              type="text"
-              placeholder=" "
-              autoComplete="off"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                // What was added is no longer the news once the next is typed.
-                setSaid(undefined);
-              }}
-            />
+            <>
+              <input
+                {...tied}
+                {...suggestion.input}
+                ref={nameField}
+                type="text"
+                placeholder=" "
+                autoComplete="off"
+              />
+              {suggestion.list}
+            </>
           )}
         </Field>
         {/* Not asked of a competition being changed: no change makes a block a

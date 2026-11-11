@@ -176,6 +176,15 @@ export interface SearchByWebsite {
   ): Promise<Limited<CompetitionFound>>;
 
   /**
+   * What the competitions in use on `website` are called, each name once, in
+   * order, leaving out any name the tournament `tournament` already has.
+   */
+  competitionNamesOf(
+    website: Website,
+    tournament: string,
+  ): Promise<readonly string[]>;
+
+  /**
    * The player whose world ranking name makes `slug`, or nothing where no
    * player of the website does, none being left once what is archived is.
    */

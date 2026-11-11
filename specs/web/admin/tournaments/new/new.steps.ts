@@ -61,7 +61,8 @@ const settledNames = async (world: SpecWorld): Promise<void> => {
   await drawn(world);
   if ((await field(world, "Name").inputValue()) === "") return;
   await world.browserPage
-    .locator('form.dialog-form[data-names="known"]')
+    .locator(forms)
+    .locator('#field-name[data-names="known"]')
     .waitFor();
 };
 
@@ -435,9 +436,9 @@ Then(
 // not there while there is nothing to suggest. Asked again for a while, since
 // the names are asked of the website once the form is drawn.
 const suggested = (world: SpecWorld): Locator =>
-  world.browserPage.locator(
-    'form.dialog-form [role="listbox"]:not([hidden]) [role="option"]',
-  );
+  world.browserPage
+    .locator(forms)
+    .locator('[role="listbox"]:not([hidden]) [role="option"]');
 
 Then(
   "the name {string} is suggested",

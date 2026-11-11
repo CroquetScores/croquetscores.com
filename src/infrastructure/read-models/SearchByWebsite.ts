@@ -205,6 +205,27 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     );
   }
 
+  async competitionNamesOf(
+    website: Website,
+    tournament: string,
+  ): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork.connection().query<{ name: string }>(
+      `select distinct c.name
+           from search_by_website_competitions c
+           join competitions k on k.competition_id = c.competition_id
+           join tournaments t on t.tournament_id = k.tournament_id
+          where t.website = $1 and not t.archived and not k.archived
+            and c.name not in (
+              select c2.name
+                from search_by_website_competitions c2
+                join competitions k2 on k2.competition_id = c2.competition_id
+               where k2.tournament_id = $2 and not k2.archived)
+          order by c.name`,
+      [website.host, tournament],
+    );
+    return rows.map(({ name }) => name);
+  }
+
   async competitions(
     website: Website,
     words: readonly string[],

@@ -963,6 +963,108 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Block B" is typed as the "Name"
       Then the competition dialog says nothing was added
 
+  Rule: The name suggests the names of competitions the website already has
+
+    Competitions run again under the same names, "Bronze Medal" and "Open
+    Singles" from one tournament to the next, so the name is offered back as it
+    was last typed, as the tournament's name is (`new.feature`). The names
+    offered are those of the competitions in use in every tournament on the
+    website being read, whoever runs it, which are on its public pages already,
+    and none from the other website. A name is offered once however many
+    competitions have it.
+
+    A name is offered where every word typed is somewhere in it, in any order
+    and any case. A name the tournament already has is not offered, since
+    another competition of the tournament with it would be refused
+    (`Tournament.CompetitionNameTaken`), and a competition being changed is
+    not offered its own name. Choosing a suggestion puts its name in the field,
+    to be changed like anything else typed there.
+
+    Scenario: A name that has every word typed is suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "CNSW Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: A name that lacks a word typed is not suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "CNSW Silver" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is not suggested
+
+    Scenario: Nothing is suggested before anything is typed
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then no name is suggested
+
+    Scenario: A competition of a tournament the reader has no part in is suggested
+      Given "other@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "other@example.com" has created the tournament "Autumn Open"
+      And "other@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: A competition of the other website is not suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open" on the website "gateballscores.com"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
+    Scenario: A competition that has been archived is not suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And "organiser@example.com" has archived the competition "CNSW AC Bronze Medal" in "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
+    Scenario: A name held by several competitions is suggested once
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Autumn Open"
+      And "organiser@example.com" has created the tournament "Winter Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Winter Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then 1 name is suggested
+
+    Scenario: A name the tournament already has is not suggested
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Autumn Open"
+      And "organiser@example.com" has added the block "Bronze Medal" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
+    Scenario: Choosing a suggestion puts its name in the field
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the block "CNSW AC Bronze Medal" to "Autumn Open"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And "CNSW Bronze" is typed as the "Name"
+      When the name "CNSW AC Bronze Medal" is chosen
+      Then "Name" says "CNSW AC Bronze Medal"
+
+    Scenario: A competition being changed is not offered its own name
+      Given "organiser@example.com" has added the block "Bronze Medal" to "Spring Open"
+      And "organiser@example.com" has added the block "Bronze Plate" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Bronze Medal"
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
   Rule: What is refused is said beside the field it is about
 
     Scenario: A missing name is refused beside the name

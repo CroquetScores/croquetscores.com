@@ -114,6 +114,7 @@ import {
 } from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
 import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
+import { CompetitionNamesOfWebsite } from "../../../application/operations/tournaments/CompetitionNamesOfWebsite.js";
 import { TournamentNamesOfWebsite } from "../../../application/operations/tournaments/TournamentNamesOfWebsite.js";
 import { websiteOf } from "../../common/site.js";
 import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
@@ -524,6 +525,24 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
         ),
       );
       return reply.header("cache-control", "no-store").send({ competitions });
+    },
+  );
+
+  // What the website's competitions are called, for the dialog to suggest a
+  // name from, less those the tournament has already. Matching what was typed
+  // to them is the dialog's, which has it as it is typed.
+  server.get<{ Params: { id: string } }>(
+    "/tournaments/:id/competition-names",
+    async (request, reply) => {
+      const reader = signedInOrRefused(request, reply);
+      if (reader === undefined) return reply;
+      const names = await request.server.mediator.query(
+        new CompetitionNamesOfWebsite(
+          websiteOf(request).host,
+          `tournament/${request.params.id}`,
+        ),
+      );
+      return reply.header("cache-control", "no-store").send({ names });
     },
   );
 
