@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { Field, type Refusal } from "../Field.js";
@@ -97,6 +97,35 @@ const thisMonthBegins = (): string => {
   return `${String(now.getFullYear())}-${month}-01`;
 };
 
+// How many names are suggested at most: more than a phone's screen holds is a
+// list to scroll rather than one to glance at, and the reader who has not found
+// theirs types another word.
+const mostSuggested = 6;
+
+// The names that have every word typed somewhere in them, in any order and
+// any case, so that "CNSW Bronze" finds "CNSW AC Bronze Medal". A name that
+// begins with what was typed would not, which is what a reader who remembers
+// some of the words and not the rest is after. A name that is what was typed
+// has nothing left to suggest.
+const suggestionsFor = (
+  typed: string,
+  names: readonly string[],
+  own: string | undefined,
+): string[] => {
+  const words = typed.toLowerCase().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return [];
+  return names
+    .filter((each) => {
+      const lower = each.toLowerCase();
+      return (
+        each !== typed.trim() &&
+        each !== own &&
+        words.every((word) => lower.includes(word))
+      );
+    })
+    .slice(0, mostSuggested);
+};
+
 /** What the form begins as: a tournament as it is, when one is being changed. */
 export interface Begins {
   readonly name: string;
@@ -167,6 +196,16 @@ export const TournamentForm = ({
     byField: Record<string, Refusal[]>;
     above: Refusal[];
   }>({ byField: {}, above: [] });
+  // What the website's tournaments are called, to suggest from, and whether the
+  // suggestions are shown and which the keys are on. They are shown as the
+  // reader types and put away by choosing one, leaving the field or Escape.
+  const [names, setNames] = useState<readonly string[]>([]);
+  const [suggesting, setSuggesting] = useState(false);
+  const [active, setActive] = useState(-1);
+  const [namesKnown, setNamesKnown] = useState<"unasked" | "asking" | "known">(
+    "unasked",
+  );
+  const suggestionsId = useId();
   const [sending, setSending] = useState(false);
   // What stops a second send, where `sending` only says one is under way. A
   // double click or a second Enter can arrive before the form has drawn itself
@@ -201,6 +240,33 @@ export const TournamentForm = ({
       });
   }, [begins]);
 
+  // Asked when the reader first types in the name and not when the form opens:
+  // a website has thousands of names, and a reader who never types there has
+  // no use for them.
+  useEffect(() => {
+    if (!suggesting || namesKnown !== "unasked") return;
+    setNamesKnown("asking");
+    void fetch("/api/site/tournaments/names", {
+      headers: { accept: "application/json" },
+    })
+      .then(async (response) =>
+        response.ok
+          ? ((await response.json()) as { names: string[] })
+          : undefined,
+      )
+      .then((answer) => {
+        if (answer !== undefined) setNames(answer.names);
+      })
+      .catch(() => {
+        // Nothing to suggest, which leaves the field as any other is.
+      })
+      // Said once it has finished whichever way it went, which is what a
+      // scenario that a name is not suggested waits for (new.feature).
+      .finally(() => {
+        setNamesKnown("known");
+      });
+  }, [suggesting, namesKnown]);
+
   // The reader is taken to the first field that needs attention, as every
   // refused form takes them (STYLE.md §5b).
   useLayoutEffect(() => {
@@ -209,6 +275,14 @@ export const TournamentForm = ({
       ?.focus();
   }, [refused]);
 
+  // The name the keys are on stays in view, as a list that scrolls is for.
+  useEffect(() => {
+    if (active >= 0) {
+      document
+        .getElementById(`${suggestionsId}-${String(active)}`)
+        ?.scrollIntoView({ block: "nearest" });
+    }
+  }, [active, suggestionsId]);
   if (offered === undefined) return <main id="content" />;
 
   const regions =
@@ -227,6 +301,17 @@ export const TournamentForm = ({
   const asksAboutLevelTests = formatChosen?.teams ?? false;
   const levelTestsDrawn =
     levelTestsSaid ?? formatChosen?.drawsLevelTests ?? false;
+
+  // A tournament being changed is not offered its own name, which is the one
+  // it has.
+  const suggestions = suggesting
+    ? suggestionsFor(name, names, begins?.name)
+    : [];
+  const choose = (chosen: string): void => {
+    setName(chosen);
+    setSuggesting(false);
+    setActive(-1);
+  };
 
   const save = async (): Promise<void> => {
     // Each send of a new tournament is given an address of its own, so a
@@ -281,6 +366,7 @@ export const TournamentForm = ({
           <HelpLink to={(playedByTeams ? teamsHelp : standardHelp)(helpPage)} />
           <form
             className="dialog-form"
+            data-names={namesKnown}
             ref={form}
             noValidate
             aria-busy={sending}
@@ -303,20 +389,102 @@ export const TournamentForm = ({
                 refused={said("name")}
               >
                 {(tied) => (
-                  <input
-                    {...tied}
-                    type="text"
-                    placeholder=" "
-                    autoComplete="off"
-                    // The first field, where the reader is taken when the
-                    // form arrives, as every form that is a page's purpose
-                    // takes them (form.feature).
-                    autoFocus
-                    value={name}
-                    onChange={(event) => {
-                      setName(event.target.value);
-                    }}
-                  />
+                  <>
+                    <input
+                      {...tied}
+                      type="text"
+                      placeholder=" "
+                      autoComplete="off"
+                      // The first field, where the reader is taken when the
+                      // form arrives, as every form that is a page's purpose
+                      // takes them (form.feature).
+                      autoFocus
+                      role="combobox"
+                      aria-expanded={suggestions.length > 0}
+                      aria-controls={
+                        suggestions.length > 0 ? suggestionsId : undefined
+                      }
+                      aria-autocomplete="list"
+                      aria-activedescendant={
+                        active >= 0 && suggestions.length > 0
+                          ? `${suggestionsId}-${String(active)}`
+                          : undefined
+                      }
+                      value={name}
+                      onChange={(event) => {
+                        setName(event.target.value);
+                        setSuggesting(true);
+                        setActive(-1);
+                      }}
+                      onBlur={() => {
+                        setSuggesting(false);
+                        setActive(-1);
+                      }}
+                      onKeyDown={(event) => {
+                        // Not the Enter that ends a composition in an input method, which
+                        // confirms what was composed and is not a choice.
+                        if (
+                          suggestions.length === 0 ||
+                          event.nativeEvent.isComposing
+                        )
+                          return;
+                        const chosen = suggestions[active];
+                        if (event.key === "ArrowDown") {
+                          event.preventDefault();
+                          setActive((now) =>
+                            Math.min(now + 1, suggestions.length - 1),
+                          );
+                        } else if (event.key === "ArrowUp") {
+                          event.preventDefault();
+                          setActive((now) => Math.max(now - 1, -1));
+                        } else if (
+                          event.key === "Enter" &&
+                          chosen !== undefined
+                        ) {
+                          // Choosing is not sending the form: only where the
+                          // keys are on a name to choose.
+                          event.preventDefault();
+                          choose(chosen);
+                        } else if (event.key === "Escape") {
+                          // Put the list away and no more: Escape is also what closes a
+                          // dialog the form may be in.
+                          event.preventDefault();
+                          event.stopPropagation();
+                          setSuggesting(false);
+                          setActive(-1);
+                        }
+                      }}
+                    />
+                    {/* Drawn beneath the field, in the page's own words and not
+                      the list a browser draws, which narrows itself to names
+                      that begin with what is typed. The mouse press does not
+                      take the focus from the field, which would put the list
+                      away before the click that chooses reached it. */}
+                    {suggestions.length > 0 ? (
+                      <ul
+                        id={suggestionsId}
+                        role="listbox"
+                        className="name-suggestions"
+                      >
+                        {suggestions.map((each, at) => (
+                          <li
+                            key={each}
+                            id={`${suggestionsId}-${String(at)}`}
+                            role="option"
+                            aria-selected={at === active}
+                            onMouseDown={(event) => {
+                              event.preventDefault();
+                            }}
+                            onClick={() => {
+                              choose(each);
+                            }}
+                          >
+                            {each}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </>
                 )}
               </Field>
               {/* Side by side, on a phone as much as anywhere: when a

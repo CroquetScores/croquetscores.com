@@ -53,6 +53,18 @@ const eventually = async (
   }
 };
 
+// Once the website's names have been asked for, which the form does when the
+// reader first types in the name and says when it has the answer, so that a step
+// saying a name is not there is not true only because it is early. Nothing is
+// asked for until something is typed, so nothing is waited for before.
+const settledNames = async (world: SpecWorld): Promise<void> => {
+  await drawn(world);
+  if ((await field(world, "Name").inputValue()) === "") return;
+  await world.browserPage
+    .locator('form.dialog-form[data-names="known"]')
+    .waitFor();
+};
+
 // A field by the words it is labelled with, which is how the reader and a
 // screen reader find it.
 const field = (world: SpecWorld, label: string): Locator =>
@@ -414,6 +426,62 @@ Then(
     await eventually(this, async () => {
       assert.equal(await field(this, label).inputValue(), words);
     });
+  },
+);
+
+// What the name suggests ----------------------------------------------------------
+
+// The suggestions of the name field alone: the list it is drawn with, which is
+// not there while there is nothing to suggest. Asked again for a while, since
+// the names are asked of the website once the form is drawn.
+const suggested = (world: SpecWorld): Locator =>
+  world.browserPage.locator(
+    'form.dialog-form [role="listbox"]:not([hidden]) [role="option"]',
+  );
+
+Then(
+  "the name {string} is suggested",
+  async function (this: SpecWorld, name: string) {
+    await eventually(this, async () => {
+      assert.ok(
+        (await suggested(this).allTextContents()).includes(name),
+        `${name} is not suggested.`,
+      );
+    });
+  },
+);
+
+Then(
+  "the name {string} is not suggested",
+  async function (this: SpecWorld, name: string) {
+    // Waited for the form to be drawn, and the names to have been asked for:
+    // a list that has not arrived yet would otherwise pass for one without it.
+    await settledNames(this);
+    assert.ok(
+      !(await suggested(this).allTextContents()).includes(name),
+      `${name} is suggested.`,
+    );
+  },
+);
+
+Then("no name is suggested", async function (this: SpecWorld) {
+  await settledNames(this);
+  assert.deepEqual(await suggested(this).allTextContents(), []);
+});
+
+Then(
+  /^(\d+) names? (?:is|are) suggested$/,
+  async function (this: SpecWorld, count: string) {
+    await eventually(this, async () => {
+      assert.equal(await suggested(this).count(), Number(count));
+    });
+  },
+);
+
+When(
+  "the name {string} is chosen",
+  async function (this: SpecWorld, name: string) {
+    await suggested(this).getByText(name, { exact: true }).click();
   },
 );
 
