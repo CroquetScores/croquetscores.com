@@ -20,8 +20,10 @@ Feature: What a doubles pair is called
   (`AddPair.feature`), so where the site needs to know that "Peter & Rosie
   Landrebe" and "Rosie & Peter Landrebe" are the same pair, as the search of
   players does (`SearchPlayersOfWebsite.feature`), it reads the two players back
-  out of the name. A name is a pair's when it has "&" in it once, between two
-  names. Where the first of them is a single word and the second has a last
+  out of the name. A name is a pair's when it has a delimiter in it once,
+  between two names, the delimiter being "&", "/", "+" or "and", the last of
+  them as a word of its own, so that "Sam Anderson" is no pair. People write a
+  pair all four ways, and a pair is the same pair whichever they used. Where the first of them is a single word and the second has a last
   name, the first has that last name too, since that is what the pair was
   called by. A first of more than one word is a name of its own, as "Mary Jane"
   might be a first name or a whole one, and is taken as written.
@@ -150,17 +152,77 @@ Feature: What a doubles pair is called
       Then the first player of the pair is "Sam Someone"
       And the second player of the pair is "Alex Another"
 
-    Scenario: A name with no ampersand is no pair
+    Scenario: A slash parts the two names
+      Given the pair called "Sam Someone / Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: A slash needs no spaces around it
+      Given the pair called "Sam Someone/Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: A plus parts the two names
+      Given the pair called "Sam Someone + Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: A plus needs no spaces around it
+      Given the pair called "Sam Someone+Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: "and" parts the two names
+      Given the pair called "Sam Someone and Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: "and" is the same however it is capitalised
+      Given the pair called "Sam Someone AND Alex Another"
+      When the pair is read back
+      Then the first player of the pair is "Sam Someone"
+      And the second player of the pair is "Alex Another"
+
+    Scenario: A last name said once is the last name of both, whatever parts them
+      Given the pair called "Peter and Rosie Landrebe"
+      When the pair is read back
+      Then the first player of the pair is "Peter Landrebe"
+      And the second player of the pair is "Rosie Landrebe"
+
+    Scenario: "and" inside a name is not a delimiter
+      Given the pair called "Sam Anderson"
+      When the pair is read back
+      Then the name is not a pair's
+
+    Scenario: A name with no delimiter is no pair
       Given the pair called "Sam Someone"
       When the pair is read back
       Then the name is not a pair's
 
-    Scenario: A name with two ampersands is no pair
+    Scenario: A name with two delimiters is no pair
       Given the pair called "Sam & Alex & Pat"
       When the pair is read back
       Then the name is not a pair's
 
-    Scenario: An ampersand with nothing on one side is no pair
-      Given the pair called "Sam Someone &"
+    Scenario: A name with two different delimiters is no pair
+      Given the pair called "Sam and Alex / Pat"
       When the pair is read back
       Then the name is not a pair's
+
+    Scenario Outline: A delimiter with nothing on one side is no pair
+      Given the pair called "<called>"
+      When the pair is read back
+      Then the name is not a pair's
+
+      Examples:
+        | called          |
+        | Sam Someone &   |
+        | Sam Someone /   |
+        | Sam Someone +   |
+        | / Sam Someone   |
+        | Sam Someone and |

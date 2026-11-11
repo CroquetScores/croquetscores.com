@@ -27,7 +27,10 @@ Feature: A Swiss's grid ranks its players with their results
   of their first name and their last name, as "C. Denny", their last name
   being their last word with a letter in it, so that a number added to tell
   two players of one name apart, as "Andrew Hobbs (2)", is left out; and the
-  margin, as
+  margin. A doubles pair is each player so said, joined by an ampersand, as
+  "T. Murphy & A. Sharpe"; where the last name is said once in the pair's name,
+  as in "Rosie & Pete Landrebe", it is said once in the result too, as
+  "R. & P. Landrebe" (`pairName.feature`). The margin is
   "+4" for a game won by 4, "-1" for one lost by 1 and "0" for one drawn,
   with the opponent's whole name for whatever reads the page aloud. Where
   the scorer wrote peeling after either score, as "tp" in "26tp", it follows
@@ -223,6 +226,34 @@ Feature: A Swiss's grid ranks its players with their results
       And "Sam Someone" has beaten "Madonna" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then the first result of "Sam Someone" in the Swiss is "Madonna +4"
+
+    Scenario Outline: A result for a doubles pair is the initial and last name of each
+      Given "organiser@example.com" has added the player "<pair>" to "Spring Open"
+      And "organiser@example.com" has entered the player "<pair>" in "Zed" of "Spring Open"
+      And "Sam Someone" has beaten "<pair>" 7 to 3 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "<result>"
+
+      Examples:
+        | pair                         | result                   |
+        | Tim Murphy & Alison Sharpe   | T. Murphy & A. Sharpe +4 |
+        | Tim Murphy / Alison Sharpe   | T. Murphy & A. Sharpe +4 |
+        | Tim Murphy + Alison Sharpe   | T. Murphy & A. Sharpe +4 |
+        | Tim Murphy and Alison Sharpe | T. Murphy & A. Sharpe +4 |
+
+    Scenario: A result for a pair who share a last name says it once
+      Given "organiser@example.com" has added the player "Rosie & Pete Landrebe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Rosie & Pete Landrebe" in "Zed" of "Spring Open"
+      And "Sam Someone" has beaten "Rosie & Pete Landrebe" 7 to 3 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "R. & P. Landrebe +4"
+
+    Scenario: A pair's whole name is said for whatever reads the page aloud
+      Given "organiser@example.com" has added the player "Rosie & Pete Landrebe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Rosie & Pete Landrebe" in "Zed" of "Spring Open"
+      And "Sam Someone" has beaten "Rosie & Pete Landrebe" 7 to 3 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss names "Rosie & Pete Landrebe" in full
 
     Scenario: A number after a name is left out of a result
       Given "organiser@example.com" has added the player "Andrew Hobbs (2)" to "Spring Open"

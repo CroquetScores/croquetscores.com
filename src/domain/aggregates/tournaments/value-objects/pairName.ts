@@ -69,9 +69,39 @@ const comparable = (name: string): string =>
 const sameLastName = (one: string, other: string): boolean =>
   comparable(one) === comparable(other);
 
+// People write a pair with "&", with "/", with "+" and with the word "and",
+// and mean the same pair by each. "and" must stand alone between spaces, so that
+// it is not found inside a name such as "Anderson".
+const delimiter = /\s*&\s*|\s*\/\s*|\s*\+\s*|\s+and\s+/i;
+
+/**
+ * The two sides of a pair's name as they were written, with the spaces around
+ * and within them tidied, or nothing where the name is not a pair's: no
+ * delimiter, or more than one, or nothing on a side of it. A first side of one
+ * word with a second side that has a last name is a pair that said its last
+ * name once, which is how a reader of the sides tells it.
+ */
+export const pairSides = (
+  name: string,
+): readonly [string, string] | undefined => {
+  const sides = name
+    .split(delimiter)
+    .map((side) => side.trim().replace(/\s+/g, " "));
+  const [first, second] = sides;
+  return sides.length === 2 && first && second ? [first, second] : undefined;
+};
+
+/**
+ * Whether a pair's name, as {@link pairSides} gave it, says its last name once,
+ * after both first names, as "Rosie & Pete Landrebe" does: the first side is one
+ * word and the second has a last name, which is then the first's too.
+ */
+export const sharesLastName = (sides: readonly [string, string]): boolean =>
+  !sides[0].includes(" ") && parts(sides[1]).last !== undefined;
+
 /**
  * The two players a pair's name was made from, as {@link pairName} made it, or
- * nothing where the name is not a pair's: no "&", or more than one, or nothing
+ * nothing where the name is not a pair's: no delimiter, or more than one, or nothing
  * on a side of it.
  *
  * A first of one word is given the last name of the second, since that is what
@@ -83,12 +113,11 @@ const sameLastName = (one: string, other: string): boolean =>
 export const pairMembers = (
   name: string,
 ): readonly [string, string] | undefined => {
-  const sides = name.split("&").map((side) => side.trim().replace(/\s+/g, " "));
+  const sides = pairSides(name);
+  if (sides === undefined) return undefined;
   const [first, second] = sides;
-  if (sides.length !== 2 || !first || !second) return undefined;
-  const last = parts(second).last;
-  return !first.includes(" ") && last !== undefined
-    ? [`${first} ${last}`, second]
+  return sharesLastName(sides)
+    ? [`${first} ${parts(second).last}`, second]
     : [first, second];
 };
 
