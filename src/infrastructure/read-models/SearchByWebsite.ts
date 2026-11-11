@@ -205,6 +205,38 @@ export class SearchByWebsite implements Projection, Asked, PlayersRepresenting {
     );
   }
 
+  async competitionNamesOf(
+    website: Website,
+    tournament: string,
+  ): Promise<readonly string[]> {
+    const { rows } = await this.unitOfWork.connection().query<{ name: string }>(
+      // Names the tournament takes to be one name are one here, by the rule it
+      // takes them by (`sameName`: lower case, then composed): each is counted
+      // under that key, and shown in the capitals more competitions have it in
+      // (the one that sorts first where they have it as often). The names used
+      // most come first, and those used as often in the alphabetical order of
+      // their keys, which does not depend on the capitals that happen to win.
+      `with counted as (
+         select normalize(lower(c.name), NFC) as key, c.name, count(*) as used
+           from search_by_website_competitions c
+           join competitions k on k.competition_id = c.competition_id
+           join tournaments t on t.tournament_id = k.tournament_id
+          where t.website = $1 and not t.archived and not k.archived
+            and normalize(lower(c.name), NFC) not in (
+              select normalize(lower(c2.name), NFC)
+                from search_by_website_competitions c2
+                join competitions k2 on k2.competition_id = c2.competition_id
+               where k2.tournament_id = $2 and not k2.archived)
+          group by 1, c.name)
+       select (array_agg(name order by used desc, name))[1] as name
+         from counted
+        group by key
+        order by sum(used) desc, key`,
+      [website.host, tournament],
+    );
+    return rows.map(({ name }) => name);
+  }
+
   async competitions(
     website: Website,
     words: readonly string[],
