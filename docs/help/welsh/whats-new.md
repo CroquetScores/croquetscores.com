@@ -6,7 +6,11 @@
 
 - **Caiff dewislen y cyfrif ei rhoi o'r neilltu trwy wasgu y tu allan iddi.** Mae'r person ar ddiwedd y pennyn, sy'n agor Cofrestru, Mewngofnodi a'r gweddill, yn cau pan wasgwch unrhyw le arall ar y dudalen, yn ogystal â phan wasgwch ef eto.
 
+- **Pinsiwch a thynnwch i newid maint y testun.** Ar sgrin gyffwrdd, pinsiwch â dau fys i wneud y testun yn llai a thynnwch nhw ar wahân i'w wneud yn fwy, i faint rhwng hanner a dwbl y maint arferol. Yn wahanol i chwyddo'r porwr ei hun, mae'r dudalen yn aros mor llydan â'r sgrin, felly ni fyddwch byth yn gorfod sgrolio i'r ochr i ddarllen llinell. Cedwir y maint, felly mae'r un fath ar bob tudalen ac ar bob ymweliad. Mae un bys yn dal i sgrolio fel o'r blaen.
+
 - **Mae'r ddewislen ar ffôn yn sgrolio.** Ar sgrin fer, nid yw'r ddewislen yn dalach na'r sgrin ac mae'n sgrolio ynddi, felly gellir cyrraedd pob eitem, ac mae'r dudalen y tu ôl iddi yn aros lle'r oedd nes i'r ddewislen gau.
+
+- **Mae Pedro Echeguren wedi gwella'r Sbaeneg.** Adolygodd Pedro eiriau Sbaeneg y wefan a'u cywiro. Diolch, Pedro.
 
 ## Rhyddhawyd 2026-11-10
 

@@ -6,7 +6,11 @@
 
 - **Kontomenyen lukkes når du trykker utenfor den.** Kontomenyen, personen ytterst i toppen av siden, åpner for å registrere deg, logge inn og mer. Den lukkes når du trykker et annet sted på siden, i tillegg til når du trykker på den igjen.
 
+- **Klyp og dra fra hverandre for å endre størrelsen på teksten.** På en berøringsskjerm klyper du sammen to fingre for å gjøre teksten mindre, og drar dem fra hverandre for å gjøre den større, til en størrelse mellom halvparten og det dobbelte av vanlig størrelse. I motsetning til nettleserens egen zoom er siden fortsatt like bred som skjermen, så du må aldri rulle sidelengs for å lese en linje. Størrelsen huskes, så den er den samme på hver side og ved hvert besøk. Én finger ruller som før.
+
 - **Menyen på en mobil kan rulles.** På en lav skjerm er menyen aldri høyere enn skjermen og kan rulles, slik at du kommer til alle valgene. Siden bak blir stående der den var til menyen lukkes.
+
+- **Pedro Echeguren har forbedret spansken.** Pedro gikk gjennom nettstedets spanske ord og rettet dem. Takk, Pedro.
 
 ## Utgitt 2026-11-10
 

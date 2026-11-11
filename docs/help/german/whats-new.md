@@ -6,7 +6,11 @@
 
 - **Das Kontomenü schließt sich, wenn Sie außerhalb davon tippen.** Die Person am Ende der Kopfzeile, hinter der sich Registrieren, Anmelden und das Übrige öffnen, schließt sich, wenn Sie irgendwo anders auf die Seite tippen, ebenso wie wenn Sie sie noch einmal drücken.
 
+- **Mit zwei Fingern die Textgröße ändern.** Auf einem Touchscreen machen Sie den Text kleiner, indem Sie zwei Finger zusammenführen, und größer, indem Sie sie auseinanderziehen, auf eine Größe zwischen der Hälfte und dem Doppelten der üblichen. Anders als der Zoom des Browsers bleibt die Seite so breit wie der Bildschirm, sodass Sie nie seitwärts scrollen müssen, um eine Zeile zu lesen. Die Größe wird gemerkt und ist daher auf jeder Seite und bei jedem Besuch dieselbe. Ein Finger scrollt weiterhin wie bisher.
+
 - **Das Menü auf dem Telefon lässt sich scrollen.** Auf einem niedrigen Bildschirm ist das Menü nicht höher als der Bildschirm und scrollt in sich, sodass sich jeder Eintrag erreichen lässt. Die Seite dahinter bleibt, wo sie war, bis das Menü geschlossen wird.
+
+- **Pedro Echeguren hat das Spanische verbessert.** Pedro hat die spanischen Wörter der Website durchgesehen und korrigiert. Danke, Pedro.
 
 ## Veröffentlicht am 10.11.2026
 

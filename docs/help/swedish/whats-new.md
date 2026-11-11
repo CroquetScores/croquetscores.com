@@ -6,7 +6,11 @@
 
 - **Kontomenyn stängs när du trycker utanför den.** Personen längst ut i sidhuvudet, som öppnar registrering, inloggning och det övriga, stängs när du trycker någon annanstans på sidan, och likaså när du trycker på den igen.
 
+- **Nyp och dra isär för att ändra textstorleken.** På en pekskärm nyper du ihop två fingrar för att göra texten mindre och drar isär dem för att göra den större, till en storlek mellan hälften och det dubbla av den vanliga. Till skillnad från webbläsarens egen zoom är sidan fortfarande lika bred som skärmen, så du behöver aldrig rulla i sidled för att läsa en rad. Storleken sparas, så den är densamma på varje sida och vid varje besök. Ett finger rullar fortfarande som förut.
+
 - **Menyn i mobilen går att rulla.** På en låg skärm är menyn aldrig högre än skärmen och rullas inuti den, så att du når varje val. Sidan bakom ligger kvar där den var tills menyn stängs.
+
+- **Pedro Echeguren har förbättrat spanskan.** Pedro gick igenom webbplatsens spanska ord och rättade dem. Tack, Pedro.
 
 ## Släppt 2026-11-10
 

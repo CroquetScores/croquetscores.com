@@ -2,6 +2,10 @@
 
 ## Publicado el 2026-11-11
 
+### El torneo
+
+- **El nombre de un torneo sugiere los nombres que el sitio ya tiene.** Un torneo suele formar parte de una serie que se juega cada año con casi el mismo nombre. Por eso, mientras escribes en **Nombre** en la página que crea o cambia un torneo, se sugieren los nombres de los torneos del sitio. Se sugiere un nombre cuando tiene todas las palabras que has escrito, en cualquier orden y con mayúsculas o minúsculas, así que «CNSW Bronze» encuentra «CNSW AC Bronze Medal». Elige uno con un clic, o con las flechas y Enter, y cámbialo como quieras. Escape cierra las sugerencias. Un nombre se sugiere una sola vez, por muchos torneos que lo tengan, y a un torneo que estás cambiando no se le ofrece su propio nombre.
+
 ### Competiciones
 
 - **Una competición se abre en su pestaña Resultados cuando ya se ha introducido una partida.** Volver a una competición para introducir más resultados ya no obliga a pulsar **Resultados** cada vez. Una competición sin ninguna partida en uso, incluida una cuya única partida está archivada, se sigue abriendo en **Jugadores**. A un anotador se le muestra solo **Resultados**, como antes.
