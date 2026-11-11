@@ -296,6 +296,77 @@ Feature: Searching the players of the website, for anybody
       Then the search finds the player "SAM SOMEONE"
       And the search does not find the player "Sam Someone"
 
+  Rule: A doubles pair is listed once, whichever of its two players is named first
+
+    A pair is a player whose name is the names of two players with "&" between
+    them (`pairName.feature`), and so "Sam Someone & Alex Another" and "Alex
+    Another & Sam Someone" are two names, which tournaments write as they like.
+    They are one pair when they are the same two players, and the pair's page is
+    at the same address whichever was written: the addresses of the two players
+    in alphabetical order, with two hyphens between them. A hyphen alone is
+    what separates the words of a player's address, so a pair is never at the
+    address of a player whose name has the same words in it. The pair is listed
+    by the name the tournament that started most recently wrote, as any player
+    is.
+
+    Scenario: A pair written the other way round in another tournament is one player
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Sam Someone & Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another & Sam Someone" to "Autumn Open"
+      When the players of the website matching "another" are asked for
+      Then the search finds 1 player
+
+    Scenario: A pair is listed by the name written most recently
+      Given the tournament is to start at "2027-03-20T00:00:00Z"
+      And the tournament is to finish at "2027-04-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Sam Someone & Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another & Sam Someone" to "Autumn Open"
+      When the players of the website matching "another" are asked for
+      Then the search finds the player "Alex Another & Sam Someone"
+      And the search does not find the player "Sam Someone & Alex Another"
+
+    Scenario: A pair is at one address whichever way round it was written
+      Given the tournament is to start at "2027-03-20T00:00:00Z"
+      And the tournament is to finish at "2027-04-04T00:00:00Z"
+      And "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Sam Someone & Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another & Sam Someone" to "Autumn Open"
+      When the players of the website matching "another" are asked for
+      Then the search finds the player "Alex Another & Sam Someone" at the address "players/alex-another--sam-someone"
+
+    Scenario: A pair of one family is one player whichever first name comes first
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Peter & Rosie Landrebe" to "Spring Open"
+      And "organiser@example.com" has added the player "Rosie & Peter Landrebe" to "Autumn Open"
+      When the players of the website matching "landrebe" are asked for
+      Then the search finds 1 player
+
+    Scenario: A pair of one family is the same as the pair written with both last names
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And "organiser@example.com" has added the player "Peter & Rosie Landrebe" to "Spring Open"
+      And "organiser@example.com" has added the player "Rosie Landrebe & Peter Landrebe" to "Autumn Open"
+      When the players of the website matching "landrebe" are asked for
+      Then the search finds 1 player
+
+    Scenario: Two pairs with a player in common are two pairs
+      Given "organiser@example.com" has added the player "Sam Someone & Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone & Pat Player" to "Spring Open"
+      When the players of the website matching "sam" are asked for
+      Then the search finds 2 players
+
+    Scenario: A pair is not the same as a player whose name has the same words
+      Given "organiser@example.com" has added the player "Sam & Alex" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Sam" to "Spring Open"
+      When the players of the website matching "alex" are asked for
+      Then the search finds 2 players
+
+    Scenario: A pair is not the same as one of its players
+      Given "organiser@example.com" has added the player "Sam Someone & Alex Another" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      When the players of the website matching "sam" are asked for
+      Then the search finds 2 players
+
   Rule: A player is listed by their world ranking name
 
     Scenario: A player is listed by the world ranking name they have and not the name they were added with

@@ -31,6 +31,7 @@ import { TournamentPlayerArchived } from "../../domain/aggregates/tournaments/ev
 import { TournamentPlayerRestored } from "../../domain/aggregates/tournaments/events/TournamentPlayerRestored.js";
 import { TournamentPlayerUpdated } from "../../domain/aggregates/tournaments/events/TournamentPlayerUpdated.js";
 import { TournamentUpdated } from "../../domain/aggregates/tournaments/events/TournamentUpdated.js";
+import { pairMembers } from "../../domain/aggregates/tournaments/value-objects/pairName.js";
 import { canMakeASlug } from "../../domain/common/canMakeASlug.js";
 import type { DomainEvent } from "../../domain/common/DomainEvent.js";
 import type { Id } from "../../domain/common/Id.js";
@@ -61,10 +62,25 @@ const limited = <T>(rows: readonly T[], most: number): Limited<T> => ({
 // makes, as a tournament's players are told apart by theirs. A name that
 // makes none, as one of nothing but punctuation, is the player's own name's
 // address instead, which every player's name can make.
-const personOf = (worldRankingName: string, name: string): string =>
-  Slug.fromName(
-    canMakeASlug(worldRankingName) ? worldRankingName : name,
-  ).toString();
+//
+// A doubles pair is a player like any other, written with whichever of its two
+// first, so "Sam & Alex" and "Alex & Sam" would be two people by their names.
+// The pair's address is made of the two players' addresses in alphabetical
+// order, so that it is the same whichever way round it was written, with two
+// hyphens between them. A slug never has two hyphens together, so no player's
+// address can be a pair's, as "Alex Sam" would be that of "Sam & Alex" with one
+// (SearchPlayersOfWebsite.feature).
+const personOf = (worldRankingName: string, name: string): string => {
+  const known = canMakeASlug(worldRankingName) ? worldRankingName : name;
+  const members = pairMembers(known);
+  if (members !== undefined && members.every(canMakeASlug)) {
+    return members
+      .map((member) => Slug.fromName(member).toString())
+      .sort()
+      .join("--");
+  }
+  return Slug.fromName(known).toString();
+};
 
 // A tournament's days, sport and country as a search answers them, from a row
 // that has them as the database holds them: the sport and the country of a

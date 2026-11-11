@@ -70,6 +70,29 @@ const sameLastName = (one: string, other: string): boolean =>
   comparable(one) === comparable(other);
 
 /**
+ * The two players a pair's name was made from, as {@link pairName} made it, or
+ * nothing where the name is not a pair's: no "&", or more than one, or nothing
+ * on a side of it.
+ *
+ * A first of one word is given the last name of the second, since that is what
+ * `pairName` leaves off when both have the same one. A first of several words is
+ * left as it is: "Mary Jane & Tom Smith" might be Mary Jane Smith and Tom
+ * Smith, or Mary Jane and Tom Smith, and nothing in the name says which, where
+ * guessing wrong would join two pairs that are not one.
+ */
+export const pairMembers = (
+  name: string,
+): readonly [string, string] | undefined => {
+  const sides = name.split("&").map((side) => side.trim().replace(/\s+/g, " "));
+  const [first, second] = sides;
+  if (sides.length !== 2 || !first || !second) return undefined;
+  const last = parts(second).last;
+  return !first.includes(" ") && last !== undefined
+    ? [`${first} ${last}`, second]
+    : [first, second];
+};
+
+/**
  * The name of the pair made of the players called `first` and `second`, in
  * that order: "Sam Someone & Alex Another", or where both have the same last
  * name, "Peter & Rosie Landrebe", with the last name of the second, as it was
