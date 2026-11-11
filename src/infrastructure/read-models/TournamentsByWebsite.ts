@@ -22,6 +22,7 @@ interface Row {
   starts: string;
   finishes: string;
   country: string;
+  region: string | null;
   sport: string;
   address: string;
   national: boolean;
@@ -33,7 +34,7 @@ interface Row {
 const COLUMNS = `t.tournament_id, t.name,
        to_char(t.starts, 'YYYY-MM-DD') as starts,
        to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-       t.country, t.sport, t.address, t.national, t.international`;
+       t.country, t.region, t.sport, t.address, t.national, t.international`;
 
 // What the filter narrows by, as conditions on the tournaments' table from
 // the parameter numbered `first` on, and the parameters themselves. Each is
@@ -64,6 +65,7 @@ const listed = (row: Row): TournamentOfWebsite => ({
   starts: row.starts,
   finishes: row.finishes,
   country: row.country,
+  region: row.region ?? undefined,
   sport: row.sport,
   address: row.address,
   national: row.national,

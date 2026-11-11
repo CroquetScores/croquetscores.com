@@ -17,6 +17,7 @@
     "db:rebuild-read-models": "tsx scripts/rebuild-read-models.mjs",
     "db:restore": "tsx scripts/restore.mjs",
     "db:up": "docker compose up -d --wait && npm run dev:setup",
+    "export:tournaments": "tsx scripts/export-tournaments.mjs",
     "deploy": "tsx scripts/deploy.mjs",
     "dev": "tsx watch src/web/server.ts",
     "dev:admin": "vite",

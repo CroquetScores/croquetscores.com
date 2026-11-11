@@ -17,6 +17,8 @@ export interface TournamentOfWebsite {
   readonly finishes: string;
   /** The code of the country it is played in. */
   readonly country: string;
+  /** The code of the region of it that it is played in, or nothing where it is in none. */
+  readonly region?: string | undefined;
   /** The code of its sport. */
   readonly sport: string;
   /** Where it is found, as "2026/ac/spring-open". */

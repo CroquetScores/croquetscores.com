@@ -1,13 +1,6 @@
 import { After, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import {
-  mkdtemp,
-  readdir,
-  readFile,
-  rm,
-  stat,
-  writeFile,
-} from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -16,6 +9,7 @@ import {
   runBackup,
 } from "../../../src/infrastructure/maintenance/backupCli.js";
 import type { SpecWorld } from "../../support/world.js";
+import { emailText, scriptOf, sendTo } from "./maintenanceScript.js";
 
 // The backup script, run as its own function (`backupCli.feature`) over a
 // folder of the scenario's own. pg_dump is the scenario's, so that what was
@@ -30,7 +24,6 @@ const WEBSITES_ADDRESS =
 interface Backup {
   folder: string | undefined;
   folderIsNamed: boolean;
-  administrator: string;
   websiteNamed: boolean;
   websiteAddress: string;
   program: string | undefined;
@@ -39,7 +32,6 @@ interface Backup {
   dumpFailsPartWay: boolean;
   failureWords: string;
   takesSeconds: number;
-  emailFails: boolean;
   dumps: {
     database: string;
     file: string;
@@ -47,7 +39,6 @@ interface Backup {
     program: string | undefined;
   }[];
   readonly said: string[];
-  readonly emails: { to: string; subject: string; body: string }[];
   exitCode: 0 | 1 | undefined;
 }
 
@@ -59,7 +50,6 @@ const backupOf = (world: SpecWorld): Backup => {
     found = {
       folder: undefined,
       folderIsNamed: true,
-      administrator: "",
       websiteNamed: true,
       websiteAddress: WEBSITES_ADDRESS,
       program: undefined,
@@ -68,10 +58,8 @@ const backupOf = (world: SpecWorld): Backup => {
       dumpFailsPartWay: false,
       failureWords: "pg_dump ended with 1",
       takesSeconds: 0,
-      emailFails: false,
       dumps: [],
       said: [],
-      emails: [],
       exitCode: undefined,
     };
     backups.set(world, found);
@@ -102,7 +90,9 @@ const filesIn = async (world: SpecWorld): Promise<string[]> =>
 // The folder, the database and the people ----------------------------------
 
 Given("a folder for the backups", async function (this: SpecWorld) {
-  backupOf(this).folder = await mkdtemp(join(tmpdir(), "backups-"));
+  const folder = await mkdtemp(join(tmpdir(), "backups-"));
+  backupOf(this).folder = folder;
+  scriptOf(this).folder = folder;
 });
 
 Given("the website's database is named", function (this: SpecWorld) {
@@ -127,13 +117,6 @@ Given("no folder is named", function (this: SpecWorld) {
 Given("the folder is not there", async function (this: SpecWorld) {
   await rm(folderOf(this), { recursive: true, force: true });
 });
-
-Given(
-  "the administrator is {string}",
-  function (this: SpecWorld, address: string) {
-    backupOf(this).administrator = address;
-  },
-);
 
 Given(
   "the settings name the program {string}",
@@ -174,10 +157,6 @@ Given(
   },
 );
 
-Given("email cannot be sent", function (this: SpecWorld) {
-  backupOf(this).emailFails = true;
-});
-
 Given(
   "the folder has the file {string} holding {string}",
   async function (this: SpecWorld, name: string, content: string) {
@@ -200,7 +179,7 @@ const run = async (
   );
   const outcome = await runBackup(args, {
     settings: {
-      administrator: backup.administrator,
+      administrator: scriptOf(world).administrator,
       websiteDatabase: backup.websiteNamed ? backup.websiteAddress : undefined,
       folder: backup.folderIsNamed ? backup.folder : undefined,
       program: backup.program,
@@ -218,13 +197,7 @@ const run = async (
         momentOf(world).getTime() + backup.takesSeconds * 1000,
       );
     },
-    send: (email) => {
-      if (backup.emailFails) {
-        return Promise.reject(new Error("The mail sender is down."));
-      }
-      backup.emails.push(email);
-      return Promise.resolve();
-    },
+    send: sendTo(world),
     now: () => momentOf(world),
     say: (line) => {
       backup.said.push(line);
@@ -256,23 +229,11 @@ Then("the folder has {int} files", async function (this: SpecWorld, n: number) {
 });
 
 Then(
-  "the folder has the file {string}",
-  async function (this: SpecWorld, name: string) {
-    const files = await filesIn(this);
-    assert.ok(files.includes(name), `The folder has ${files.join(", ")}.`);
-  },
-);
-
-Then(
   "the file {string} holds {string}",
   async function (this: SpecWorld, name: string, content: string) {
     assert.equal(await readFile(join(folderOf(this), name), "utf8"), content);
   },
 );
-
-Then("the folder is still not there", async function (this: SpecWorld) {
-  await assert.rejects(stat(folderOf(this)));
-});
 
 Then("the dump was of the website's database", function (this: SpecWorld) {
   const { dumps } = backupOf(this);
@@ -332,25 +293,8 @@ Then("the backup exits with success", function (this: SpecWorld) {
   assert.equal(backupOf(this).exitCode, 0);
 });
 
-const lastEmail = (
-  world: SpecWorld,
-): { to: string; subject: string; body: string } => {
-  const email = backupOf(world).emails.at(-1);
-  assert.ok(email !== undefined, "No email was sent.");
-  return email;
-};
-
-const emailText = (world: SpecWorld): string => {
-  const email = lastEmail(world);
-  return `${email.subject}\n${email.body}`;
-};
-
 const saidOnTheScreen = (world: SpecWorld): string =>
   backupOf(world).said.join("\n");
-
-Then("an email was sent to {string}", function (this: SpecWorld, to: string) {
-  assert.equal(lastEmail(this).to, to);
-});
 
 Then("the email says the backup worked", function (this: SpecWorld) {
   assert.match(emailText(this), /The backup worked\./);
@@ -359,13 +303,6 @@ Then("the email says the backup worked", function (this: SpecWorld) {
 Then("the email says the backup failed", function (this: SpecWorld) {
   assert.match(emailText(this), /The backup failed\./);
 });
-
-Then(
-  "the email subject is {string}",
-  function (this: SpecWorld, subject: string) {
-    assert.equal(lastEmail(this).subject, subject);
-  },
-);
 
 Then(
   "the email says the file is called {string}",
@@ -452,10 +389,6 @@ Then(
     );
   },
 );
-
-Then("the email says why: {string}", function (this: SpecWorld, why: string) {
-  assert.ok(emailText(this).includes(`Why: ${why}`));
-});
 
 Then(
   "the email does not say the website's address",

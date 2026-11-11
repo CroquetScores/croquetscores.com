@@ -122,8 +122,8 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   has; and, in place of competitions, each test: the two teams that met, the
   first team's first, the group the test is in where it is in one, and each
   match played, the first team's player and the second team's, with the games
-  between them as a block's have them, withdrawn ones kept and said to be
-  withdrawn. How the teams stand is not in the file. It is worked out from the
+  between them, each said not to be withdrawn, since a test's game cannot be
+  (`withdrawGame.feature`). How the teams stand is not in the file. It is worked out from the
   tests by whoever reads them, and a standing written beside the tests that
   make it is a second thing that could disagree with them, as well as one more
   decision about how teams are ranked, which an organisation is free to make
@@ -282,12 +282,12 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Then the folder has the file "2027/ac/autumn-open.json"
 
     Scenario: A tournament that has moved is at the address it has now
-      Given "organiser@example.com" has renamed the tournament "Spring Open" to "Spring Classic"
+      Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
       When the export script is run with "--folder export"
-      Then the folder has the file "2026/ac/spring-classic.json"
+      Then the folder has the file "2026/gc/spring-open.json"
 
     Scenario: A tournament that has moved is not also at the address it left
-      Given "organiser@example.com" has renamed the tournament "Spring Open" to "Spring Classic"
+      Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
       When the export script is run with "--folder export"
       Then the folder does not have the file "2026/ac/spring-open.json"
 
@@ -426,7 +426,11 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Then the first game of "Block A" is withdrawn
 
     Scenario: A knockout's match is its games under the two who met
-      Given "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      Given the knockout is to have a draw of 2 places
+      And its first round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Finals" of "Spring Open"
       When the export script is run with "--folder export"
@@ -434,7 +438,11 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Then the first match of "Finals" is between "Sam Someone" and "Alex Another"
 
     Scenario: A knockout's match has each game it was played in
-      Given "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      Given the knockout is to have a draw of 2 places
+      And its first round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
       And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 20 in "Finals" of "Spring Open"
       When the export script is run with "--folder export"
@@ -499,11 +507,11 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       And the export script is run again with "--folder export"
       Then the file "2026/ac/spring-open.json" was written twice
 
-    Scenario: The players come in the same order each run
+    Scenario: The players come in alphabetical order each run
       Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
-      Then the first player named is "Sam Someone"
+      Then the first player named is "Alex Another"
 
     Scenario: A file that is not a tournament's is left alone
       Given the folder has the file "README.md" containing "About this data"
@@ -534,6 +542,7 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
     Scenario: A run that fails removes nothing
       Given the export script has been run with "--folder export"
       And "organiser@example.com" has archived the tournament "Spring Open"
+      And "organiser@example.com" has created the tournament "Autumn Open"
       And writing a file fails
       When the export script is run with "--folder export"
       Then the folder has the file "2026/ac/spring-open.json"
@@ -925,7 +934,8 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Then the file does not name a player outside a team
 
     Scenario: A team that is archived is left out
-      Given "organiser@example.com" has archived the team "England" in "Spring Tests"
+      Given "organiser@example.com" has archived the test "AUS v ENG" of "Spring Tests"
+      And "organiser@example.com" has archived the team "England" in "Spring Tests"
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-tests.json" is read
       Then the file does not name the team "England"
@@ -984,12 +994,11 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Then the first match of the first test is between "Pam Partner" and "Ken Kicker"
       And the second match of the first test is between "Pat Player" and "Kim Keeper"
 
-    Scenario: A withdrawn game is kept and said to be withdrawn
+    Scenario: A game of a test is not said to be withdrawn
       Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
-      And "organiser@example.com" has withdrawn that game
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-tests.json" is read
-      Then the first game of the first match of the first test is withdrawn
+      Then the first game of the first match of the first test is not withdrawn
 
     Scenario: A test in a group says which
       Given "organiser@example.com" has added the test between "England" and "Australia" to the group "Block A" of "Spring Tests"
