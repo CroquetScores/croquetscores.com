@@ -74,7 +74,9 @@ When("the menu button is pressed", async function (this: SpecWorld) {
   await this.browserPage.click(menuButton);
 });
 
-When("the page outside the menu is pressed", pressOutside);
+When("the page outside the menu is pressed", async function (this: SpecWorld) {
+  await pressOutside(this);
+});
 
 // Scrolling ----------------------------------------------------------------
 
@@ -132,8 +134,15 @@ When(
 
 const panelScroll = `document.querySelector("${panel}").scrollTop`;
 
+// Read again on a timer rather than waited for with waitForFunction, which
+// never returned here when it was the first thing asked after the wheel was
+// turned, though the panel had moved by then.
 Then("the menu has been scrolled", async function (this: SpecWorld) {
-  await this.browserPage.waitForFunction(`${panelScroll} > 0`);
+  for (let attempt = 0; attempt < 50; attempt++) {
+    if (await this.browserPage.evaluate<boolean>(`${panelScroll} > 0`)) return;
+    await this.browserPage.waitForTimeout(100);
+  }
+  assert.fail("The menu's panel was not scrolled.");
 });
 
 Then("the page has been scrolled", async function (this: SpecWorld) {

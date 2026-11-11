@@ -314,7 +314,7 @@ Feature: The tests tab of a tournament's page
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       And the tests of "Spring Tests" are open
       When "Archive" is pressed on the test "AUS v ENG"
-      Then the test "AUS v ENG" is listed among the archived
+      Then the test "AUS v ENG (1)" is listed among the archived
 
     Scenario: The archived tests are under a heading of their own
       Given "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"

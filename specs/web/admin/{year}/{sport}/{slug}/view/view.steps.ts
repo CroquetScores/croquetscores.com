@@ -337,9 +337,14 @@ Then(
   "the tab row's help icon is level with the tabs",
   async function (this: SpecWorld) {
     await rowHelp(this).waitFor();
-    const icon = await rowHelp(this).boundingBox();
-    const bar = await this.browserPage.locator(tabBar).boundingBox();
-    assert.ok(icon !== null && bar !== null, "One of them is not drawn.");
-    assert.ok(icon.y >= bar.y && icon.y + icon.height <= bar.y + bar.height);
+    // Measured again until it holds: on a busy machine the row is measured
+    // before the page has finished laying it out, and fails for a moment that
+    // passes.
+    await retried(async () => {
+      const icon = await rowHelp(this).boundingBox();
+      const bar = await this.browserPage.locator(tabBar).boundingBox();
+      assert.ok(icon !== null && bar !== null, "One of them is not drawn.");
+      assert.ok(icon.y >= bar.y && icon.y + icon.height <= bar.y + bar.height);
+    });
   },
 );

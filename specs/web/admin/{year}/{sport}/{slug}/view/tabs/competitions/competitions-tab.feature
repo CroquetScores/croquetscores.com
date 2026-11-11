@@ -297,14 +297,14 @@ Feature: The competitions tab of a tournament's page
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the competitions of "Spring Open" are open
       When "Archive" is pressed on the competition "Block A"
-      Then the competition "Block A" is listed among the archived
+      Then the competition "Block A (1)" is listed among the archived
 
     Scenario: A competition archived from the tab is kept archived
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
       And the competitions of "Spring Open" are open
       And "Archive" is pressed on the competition "Block A"
       When the competitions of "Spring Open" are opened
-      Then the competition "Block A" is listed among the archived
+      Then the competition "Block A (1)" is listed among the archived
 
     Scenario: Restoring a competition lists it among those in use
       Given "organiser@example.com" has added the block "Block A" to "Spring Open"
@@ -353,7 +353,7 @@ Feature: The competitions tab of a tournament's page
     Scenario: Archiving the losers knockout first is not refused
       Given "Archive" is pressed on the competition "Plate"
       When "Archive" is pressed on the competition "Main Event"
-      Then the competition "Main Event" is listed among the archived
+      Then the competition "Main Event (1)" is listed among the archived
 
   Rule: A scorer sees the competitions in use, and can only view them
 
