@@ -58,7 +58,7 @@ export const spanish: Language = {
       "Este es un lugar seguro para aprender a usar {siteName}. Todo lo que se introduzca aquí puede eliminarse en cualquier momento.",
 
     "language.label": "Idioma",
-    "language.choose": "Cambiar",
+    "language.choose": "Cambiar idioma",
 
     // The alert that tells a reader there is something new to read.
     "whatsNew.public.message": "Hay una novedad para leer.",
@@ -124,9 +124,9 @@ export const spanish: Language = {
 
     "welcome.title": "Revisa tu correo",
     "welcome.checkEmail":
-      "Va de camino un correo a la dirección que indicaste. Sigue el enlace que contiene para continuar.",
+      "Hemos enviado un correo a la dirección que indicaste. Sigue el enlace que contiene para continuar.",
     "welcome.nothingArrived":
-      "Si no llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
+      "Si no te llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
     "welcome.home": "Volver a {siteName}",
     "newConfirmationLink.title": "Obtener un enlace nuevo",
     "newConfirmationLink.explanation":
@@ -136,27 +136,27 @@ export const spanish: Language = {
     "newConfirmationLink.signIn": "Iniciar sesión",
     "newConfirmationLink.sent.title": "Revisa tu correo",
     "newConfirmationLink.sent.explanation":
-      "Va de camino un enlace nuevo. Síguelo para confirmar tu dirección de correo electrónico. Si no llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
+      "Hemos enviado un enlace nuevo. Síguelo para confirmar tu dirección de correo electrónico. Si no llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
     "newConfirmationLink.alreadyConfirmed.title":
       "Esa dirección de correo electrónico ya está confirmada",
     "newConfirmationLink.alreadyConfirmed.explanation":
       "No hay nada más que confirmar. Inicia sesión con la contraseña que indicaste al confirmarla.",
     "newConfirmationLink.noLongerWorks.title": "Ese enlace ya no funciona",
     "newConfirmationLink.noLongerWorks.explanation":
-      "Comprueba que has seguido el enlace completo del correo, sin que falte nada al final. Si sigue sin funcionar, regístrate de nuevo y se enviará un enlace nuevo.",
+      "Comprueba que has seguido el enlace completo del correo, sin que falte nada al final. Si sigue sin funcionar, regístrate de nuevo y te enviaremos un enlace nuevo.",
     "newConfirmationLink.tooMany.title": "Inténtalo más tarde",
     "newConfirmationLink.tooMany.explanation":
       "Se han enviado varios enlaces a esta dirección últimamente. Espera una hora y vuelve a pedirlo, y mientras tanto mira en la carpeta de correo no deseado o spam.",
 
     "forgotPassword.title": "¿Olvidaste tu contraseña?",
     "forgotPassword.emailAddress": "Dirección de correo electrónico",
-    "forgotPassword.submit": "Enviarme una forma de volver a entrar",
+    "forgotPassword.submit": "Enviarme una clave de acceso",
     "forgotPassword.home": "Volver a {siteName}",
     "forgotPassword.sent.title": "Revisa tu correo",
     "forgotPassword.sent.explanation":
-      "Si esa dirección tiene una cuenta, va de camino un enlace para establecer una contraseña nueva. Síguelo dentro de la próxima hora. Si no llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
+      "Si esa dirección tiene una cuenta, te hemos enviado de camino un enlace para establecer una contraseña nueva. Síguelo dentro de la próxima hora. Si no llega nada en unos minutos, mira en la carpeta de correo no deseado o spam.",
     "forgotPassword.tryAgainLater":
-      "Desde aquí se han pedido demasiadas formas de volver a entrar últimamente. Espera una hora e inténtalo de nuevo.",
+      "Desde aquí se han pedido demasiadas formas de volver a acceder últimamente. Espera una hora e inténtalo de nuevo.",
 
     "setNewPassword.title": "Establecer una contraseña nueva",
     "setNewPassword.password": "Contraseña",
@@ -188,7 +188,7 @@ export const spanish: Language = {
       "Hemos enviado un enlace a la dirección de tu cuenta. Funciona durante 15 minutos, y solo mientras tengas la sesión iniciada en esta cuenta.",
     "forgetAccount.confirm.title": "¿Olvidar tu cuenta para siempre?",
     "forgetAccount.confirm.explanation":
-      "Una vez olvidada, tu nombre y tu dirección de correo electrónico no podrán volver a leerse, por nadie, y no se podrá iniciar sesión en tu cuenta. No se puede deshacer.",
+      "Una vez olvidada, tu nombre y tu dirección de correo electrónico no podrán volver a leerse, y no se podrá iniciar sesión en tu cuenta. Esta acción no se puede deshacer.",
     "forgetAccount.confirm.submit": "Olvidar mi cuenta",
     "forgetAccount.forgotten.title": "Tu cuenta ha sido olvidada",
     "forgetAccount.forgotten.explanation":
@@ -265,7 +265,7 @@ export const spanish: Language = {
     "changeEmailAddress.confirm.submit": "Trasladar mi cuenta",
     "changeEmailAddress.noLongerWorks.title": "Este enlace ya no funciona",
     "changeEmailAddress.noLongerWorks.explanation":
-      "Ha caducado, ya se ha usado o no se envió para la cuenta en la que tienes la sesión iniciada. Vuelve a pedirlo desde tu perfil.",
+      "La sesión ha caducado, ya se ha usado o no se envió para la cuenta en la que tienes la sesión iniciada. Vuelve a pedirlo desde tu perfil.",
     "changeEmailAddress.taken.title": "Tu cuenta no se ha trasladado",
     "changeEmailAddress.profile": "Volver a tu perfil",
     // Beneath the field each is about.
@@ -304,9 +304,9 @@ export const spanish: Language = {
     "PersonName.TooShort": "Un nombre debe tener al menos 3 caracteres.",
     "PersonName.TooLong": "Un nombre puede tener como máximo 254 caracteres.",
     "WorldRankingName.TooShort":
-      "Un nombre de ranking mundial debe tener al menos 3 caracteres.",
+      "Un nombre para el ranking internacional debe tener al menos 3 caracteres.",
     "WorldRankingName.TooLong":
-      "Un nombre de ranking mundial puede tener como máximo 254 caracteres.",
+      "Un nombre para el ranking internacional puede tener como máximo 254 caracteres.",
     "Password.Missing": "Introduce una contraseña.",
     "Password.TooShort": "Una contraseña debe tener al menos 12 caracteres.",
     "Password.ConfirmationDiffers":
@@ -455,7 +455,7 @@ export const spanish: Language = {
     "player.games": "Partidas",
     "player.competitions": "Competiciones",
     "player.beat": "ganó a",
-    "player.lostTo": "perdió con",
+    "player.lostTo": "perdió contra",
     "player.drewWith": "empató con",
     "player.score": "{score} a {opponent}",
     "player.noGames": "Todavía no ha jugado ninguna partida.",
@@ -581,7 +581,7 @@ export const spanish: Language = {
     "admin.rules.drawsAllowed": "Permite resultados con empate",
     "admin.tournament.levelTestsDrawn":
       "Los tests igualados se dan por empatados",
-    "admin.rules.worldRankings": "Cuenta para los rankings mundiales",
+    "admin.rules.worldRankings": "Cuenta para el ranking internacional",
     "admin.rules.maximumHoops": "Máximo de aros",
     "admin.tournament.national": "Evento de nivel nacional",
     "admin.tournament.international": "Evento de nivel internacional",
@@ -602,13 +602,13 @@ export const spanish: Language = {
     "admin.view.scorers": "Anotadores",
     "admin.view.rankings": "Rankings",
     "admin.rankings.file":
-      "Los rankings mundiales usarán los resultados del torneo mediante esta función, y los gestores no tienen que hacer nada.",
-    "admin.rankings.download": "Descargar partidas para el ranking mundial",
+      "El ranking internacional usará los resultados del torneo mediante esta función, y los gestores no tienen que hacer nada.",
+    "admin.rankings.download": "Descargar partidas para el ranking internacional",
     "rankings.notAvailable": "Los rankings no están disponibles",
     "rankings.notAvailable.sport":
-      "El deporte de este torneo no tiene rankings mundiales, así que no hay rankings que enviar.",
+      "El deporte de este torneo no tiene ranking internacional, así que no hay rankings que enviar.",
     "rankings.notAvailable.notCounted":
-      "Ninguna de las competiciones de este torneo cuenta para los rankings mundiales.",
+      "Ninguna de las competiciones de este torneo cuenta para el ranking internacional.",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "Este torneo no se puede gestionar desde aquí.",
     // A competition's page, and the tabs what there is to run is in.
@@ -647,7 +647,7 @@ export const spanish: Language = {
     "admin.administrator.sections.label": "Las páginas del administrador",
     "admin.administrator.sections.tournaments": "Torneos",
     "admin.administrator.sections.accounts": "Cuentas",
-    "admin.administrator.sections.worldRankings": "Rankings mundiales",
+    "admin.administrator.sections.worldRankings": "Ranking internacional",
     "admin.administrator.sections.importErrors": "Errores de importación",
     "admin.administrator.sections.logs": "Registros",
     "admin.administrator.sections.databaseStatus": "Acceso a la base de datos",
@@ -686,21 +686,21 @@ export const spanish: Language = {
     "admin.roles.administrator.removeExplanation":
       "{name} dejará de ser administrador de este sitio.",
     "admin.roles.ac-world-ranking-officer.heading":
-      "Responsables del ranking mundial de croquet de asociación",
+      "Responsables del ranking mundial de association croquet",
     "admin.roles.ac-world-ranking-officer.none":
-      "Ningún responsable del ranking mundial de croquet de asociación",
+      "Ningún responsable del ranking mundial de association croquet",
     "admin.roles.ac-world-ranking-officer.removeTitle":
-      "Quitar responsable del ranking mundial de croquet de asociación",
+      "Quitar responsable del ranking mundial de association croquet",
     "admin.roles.ac-world-ranking-officer.removeExplanation":
-      "{name} dejará de ser responsable del ranking mundial de croquet de asociación.",
+      "{name} dejará de ser responsable del ranking mundial de association croquet.",
     "admin.roles.gc-world-ranking-officer.heading":
-      "Responsables del ranking mundial de croquet golf",
+      "Responsables del ranking mundial de golf croquet",
     "admin.roles.gc-world-ranking-officer.none":
-      "Ningún responsable del ranking mundial de croquet golf",
+      "Ningún responsable del ranking mundial de golf croquet",
     "admin.roles.gc-world-ranking-officer.removeTitle":
-      "Quitar responsable del ranking mundial de croquet golf",
+      "Quitar responsable del ranking mundial de golf croquet",
     "admin.roles.gc-world-ranking-officer.removeExplanation":
-      "{name} dejará de ser responsable del ranking mundial de croquet golf.",
+      "{name} dejará de ser responsable del ranking mundial de golf croquet.",
     // For a refusal with no words of its own, beneath the field or in place
     // of the list. Not about the address, since it may be the session that
     // ended or the site that failed.
@@ -711,37 +711,37 @@ export const spanish: Language = {
     "admin.worldRankings.import": "Importar",
     "admin.worldRankings.log": "Cómo fue la importación",
     "admin.worldRankings.ac.reading":
-      "Leyendo la lista de croquet de asociación",
+      "Leyendo la lista de association croquet",
     "admin.worldRankings.ac.read":
-      "Jugadores de croquet de asociación leídos: {players}",
+      "Jugadores de association croquet leídos: {players}",
     "admin.worldRankings.ac.kept":
-      "Jugadores de croquet de asociación conservados: {players}",
+      "Jugadores de association croquet conservados: {players}",
     "admin.worldRankings.ac.refused":
-      "No se ha podido leer la lista de croquet de asociación, así que sus jugadores se han dejado como estaban.",
-    "admin.worldRankings.gc.reading": "Leyendo la lista de croquet golf",
+      "No se ha podido leer la lista de association croquet, así que sus jugadores se han dejado como estaban.",
+    "admin.worldRankings.gc.reading": "Leyendo la lista de golf croquet",
     "admin.worldRankings.gc.read":
-      "Jugadores de croquet golf leídos: {players}",
+      "Jugadores de golf croquet leídos: {players}",
     "admin.worldRankings.gc.kept":
-      "Jugadores de croquet golf conservados: {players}",
+      "Jugadores de golf croquet conservados: {players}",
     "admin.worldRankings.gc.refused":
-      "No se ha podido leer la lista de croquet golf, así que sus jugadores se han dejado como estaban.",
+      "No se ha podido leer la lista de golf croquet, así que sus jugadores se han dejado como estaban.",
     "admin.worldRankings.finished": "Terminado",
     "admin.worldRankings.failed": "La importación no terminó.",
     // For a refusal with no words of its own, as a failure of the site's.
-    "admin.worldRankings.otherwise": "Algo ha salido mal en el sitio.",
+    "admin.worldRankings.otherwise": "Algo ha salido mal en este sitio.",
     "WorldRankingLists.Unreachable":
-      "No se ha podido contactar con el sitio de los rankings mundiales.",
+      "No se ha podido contactar con el sitio del ranking internacional.",
     "WorldRankingLists.Unreadable":
-      "La lista no tiene el formato que usan los rankings mundiales: no se ha podido leer una línea, no tiene a nadie, o no está escrita en UTF-8.",
+      "La lista no tiene el formato que usa el ranking internacional: no se ha podido leer una línea, no tiene a nadie, o no está escrita en UTF-8.",
     // The documents the import from the old sites refused, and the page of one.
     "admin.importErrors.title": "Errores de importación",
     "admin.importErrors.none": "Ningún error de importación",
-    "admin.importErrors.otherwise": "Algo ha salido mal en el sitio.",
+    "admin.importErrors.otherwise": "Algo ha salido mal en este sitio.",
     "admin.countries.title": "Países",
     "admin.countries.none":
       "Ningún torneo se juega en un país que las listas no nombran",
     "admin.countries.oldSite": "Sitio antiguo",
-    "admin.countries.otherwise": "Algo ha salido mal en el sitio.",
+    "admin.countries.otherwise": "Algo ha salido mal en este sitio.",
     "admin.logs.title": "Registros",
     "admin.logs.severity": "Gravedad",
     "admin.logs.text": "Buscar",
@@ -751,7 +751,7 @@ export const spanish: Language = {
       "¿Eliminar el registro anterior a la última hora? Nada lo devuelve.",
     "admin.logs.removed": "Se eliminaron {count} entradas",
     "admin.logs.none": "Ninguna entrada de registro",
-    "admin.logs.otherwise": "Algo ha salido mal en el sitio.",
+    "admin.logs.otherwise": "Algo ha salido mal en este sitio.",
     "admin.hover.logs.show": "Mostrar las entradas que coinciden",
     "admin.hover.logs.prune": "Eliminar el registro anterior a la última hora",
     "admin.hover.logs.pruneAgree":
@@ -908,7 +908,7 @@ export const spanish: Language = {
     "admin.hover.competitionPlayers.up": "Subir este jugador en la lista",
     "admin.hover.competitionPlayers.down": "Bajar este jugador en la lista",
     "admin.hover.competitionPlayers.remove":
-      "Sacar a este jugador de la competición",
+      "Eliminar a este jugador de la competición",
     "admin.hover.competitionPlayers.withdraw":
       "Retirar a este jugador de la competición",
     "admin.hover.competitionPlayers.unwithdraw":
@@ -930,7 +930,7 @@ export const spanish: Language = {
     // The Managers and Scorers tabs, each of which makes somebody one by their
     // email address and takes one off.
     "admin.people.emailAddress": "Dirección de correo electrónico",
-    "admin.people.remove": "Quitar",
+    "admin.people.remove": "Eliminar",
     "admin.people.otherwise": "No se ha podido hacer.",
     // Beside the reader's own name among the managers.
     "admin.managers.you": "Tú",
@@ -980,11 +980,11 @@ export const spanish: Language = {
     "admin.competitionPlayers.none": "Ningún jugador",
     "admin.competitionPlayers.up": "Subir",
     "admin.competitionPlayers.down": "Bajar",
-    "admin.competitionPlayers.remove": "Quitar",
+    "admin.competitionPlayers.remove": "Eliminar",
     "admin.competitionPlayers.withdraw": "Retirar",
     "admin.competitionPlayers.unwithdraw": "Anular retirada",
     "admin.competitionPlayers.withdrawn": "Jugadores retirados",
-    "admin.competitionPlayers.removeTitle": "Quitar jugador",
+    "admin.competitionPlayers.removeTitle": "Eliminar jugador",
     "admin.competitionPlayers.removeQuestion":
       "{name} saldrá de la competición. No se puede deshacer.",
     "admin.competitionPlayers.withdrawTitle": "Retirar jugador",
@@ -1072,7 +1072,7 @@ export const spanish: Language = {
     "Competition.NotDrawnToMeet":
       "Estos jugadores no están emparejados actualmente para jugar entre sí en la eliminatoria.",
     "Competition.WinnerHasPlayedOn":
-      "El ganador de este partido ya ha jugado su siguiente partida, así que quién lo ganó no puede cambiar.",
+      "El ganador de este partido ya ha jugado su siguiente partida, así que quién lo ganó no puede cambiarse.",
     "CompetitionPlayer.Withdrawn": "Un jugador retirado no juega más.",
     "admin.players.add": "Añadir jugador",
     "admin.players.addPair": "Añadir pareja",
@@ -1113,7 +1113,7 @@ export const spanish: Language = {
     "admin.player.worldRankingKnown":
       "Los rankings mundiales conocen este nombre.",
     "admin.player.worldRankingQuestioned":
-      "Los rankings mundiales no tienen ningún jugador con este nombre. Puede estar mal escrito, o el jugador puede ser nuevo en los rankings.",
+      "El ranking internacional no tiene a ningún jugador con este nombre. Puede estar mal escrito, o el jugador puede ser nuevo en el ranking.",
     "admin.player.flag": "Bandera",
     "admin.player.add": "Añadir",
     "admin.player.save": "Guardar",
@@ -1377,8 +1377,8 @@ export const spanish: Language = {
     // What a tournament is played in and where, by code, as the API offers
     // them to the admin's form. Written out here in full, since a catalogue
     // other than English's cannot take them from the domain.
-    "sport.ac": "Croquet de asociación",
-    "sport.gc": "Croquet golf",
+    "sport.ac": "Association Croquet",
+    "sport.gc": "Golf Croquet",
     "sport.a6w": "American 6 Wicket",
     "sport.rc": "Ricochet",
     "sport.gb": "Gateball",
@@ -1405,7 +1405,7 @@ export const spanish: Language = {
     "country.az": "Azerbaiyán",
     "country.ba": "Bosnia y Herzegovina",
     "country.bb": "Barbados",
-    "country.bd": "Bangladés",
+    "country.bd": "Bangladesh",
     "country.be": "Bélgica",
     "country.bf": "Burkina Faso",
     "country.bg": "Bulgaria",
@@ -1779,7 +1779,7 @@ export const spanish: Language = {
 </p>
 
 <p>
-    Si no fuiste tú, no tienes que hacer nada. Nadie ha recibido una forma de entrar
+    Si no fuiste tú, no tienes que hacer nada. Nadie ha recibido una forma de acceder
     en tu cuenta.
 </p>
 
