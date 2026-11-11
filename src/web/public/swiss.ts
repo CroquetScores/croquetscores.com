@@ -10,6 +10,10 @@ import type {
   ResultOfSwiss,
   SwissToRead,
 } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
+import {
+  pairSides,
+  sharesLastName,
+} from "../../domain/aggregates/tournaments/value-objects/pairName.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
@@ -22,8 +26,25 @@ import { playerShown } from "./tournamentPages.js";
  * their last word with a letter in it, so that a number added to tell two
  * players of one name apart, as "Andrew Hobbs (2)", is left out. A player of
  * one such word is that word.
+ *
+ * A doubles pair is each of its players so said, joined by an ampersand, as
+ * "T. Murphy & A. Sharpe". Where the pair's name says its last name once, so
+ * does the result, as "R. & P. Landrebe", since that is how the pair was named.
  */
 export const shortNameOf = (name: string): string => {
+  const sides = pairSides(name);
+  if (sides === undefined) return shortNameOfPlayer(name);
+  if (sharesLastName(sides)) {
+    const [first, second] = sides;
+    // The first letter in it, as a player's own is found, and not whatever
+    // character the side happens to begin with.
+    const initial = /\p{L}/u.exec(first)?.[0] ?? first;
+    return `${initial}. & ${shortNameOfPlayer(second)}`;
+  }
+  return sides.map(shortNameOfPlayer).join(" & ");
+};
+
+const shortNameOfPlayer = (name: string): string => {
   const words = name.split(/\s+/u).filter((word) => /\p{L}/u.test(word));
   const [first] = words;
   const last = words.at(-1);

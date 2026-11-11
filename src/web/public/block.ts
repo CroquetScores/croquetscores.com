@@ -8,6 +8,7 @@ import type {
   GameOfBlock,
   PlayerOfBlock,
 } from "../../application/operations/tournaments/PublicBlockOfTournament.js";
+import { pairMembers } from "../../domain/aggregates/tournaments/value-objects/pairName.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
@@ -15,16 +16,27 @@ import { placeShown, tieBreakSaid } from "./blockPlacing.js";
 import { aWordToALine, type DrawView } from "./competitionPages.js";
 import { playerShown } from "./tournamentPages.js";
 
-/**
- * The first letter or digit of each word of `name`, a word being what spaces
- * part, each as it was written: so "Kerri-Ann Organ" is "KO" and "Jan van
- * Dijk" is "JvD".
- */
-export const initialsOf = (name: string): string =>
+const initialsOfPlayer = (name: string): string =>
   name
     .split(/\s+/u)
     .map((word) => /[\p{L}\p{N}]/u.exec(word)?.[0] ?? "")
     .join("");
+
+/**
+ * The first letter or digit of each word of `name`, a word being what spaces
+ * part, each as it was written: so "Kerri-Ann Organ" is "KO" and "Jan van
+ * Dijk" is "JvD".
+ *
+ * A doubles pair's are each player's joined by an ampersand: "Tim Murphy &
+ * Alison Sharpe" is "TM&AS". Where the last name is said once, as in "Rosie &
+ * Pete Landrebe", it is the last name of both, so that is "RL&PL".
+ */
+export const initialsOf = (name: string): string => {
+  const members = pairMembers(name);
+  return members === undefined
+    ? initialsOfPlayer(name)
+    : members.map(initialsOfPlayer).join("&");
+};
 
 // A player's totals, with the words they are headed by. Where each match is a
 // single game a game won is a match won, so the old site's wins and net hoops

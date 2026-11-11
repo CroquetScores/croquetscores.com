@@ -238,6 +238,7 @@ Feature: A Swiss's grid ranks its players with their results
         | pair                         | result                   |
         | Tim Murphy & Alison Sharpe   | T. Murphy & A. Sharpe +4 |
         | Tim Murphy / Alison Sharpe   | T. Murphy & A. Sharpe +4 |
+        | Tim Murphy + Alison Sharpe   | T. Murphy & A. Sharpe +4 |
         | Tim Murphy and Alison Sharpe | T. Murphy & A. Sharpe +4 |
 
     Scenario: A result for a pair who share a last name says it once
@@ -252,7 +253,7 @@ Feature: A Swiss's grid ranks its players with their results
       And "organiser@example.com" has entered the player "Rosie & Pete Landrebe" in "Zed" of "Spring Open"
       And "Sam Someone" has beaten "Rosie & Pete Landrebe" 7 to 3 in "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the first result of "Sam Someone" in the Swiss is named "Rosie & Pete Landrebe"
+      Then the first result of "Sam Someone" in the Swiss names "Rosie & Pete Landrebe" in full
 
     Scenario: A number after a name is left out of a result
       Given "organiser@example.com" has added the player "Andrew Hobbs (2)" to "Spring Open"

@@ -206,6 +206,7 @@ Feature: A block's page shows its results as a grid
         | pair                         | initials |
         | Tim Murphy & Alison Sharpe   | TM&AS    |
         | Tim Murphy / Alison Sharpe   | TM&AS    |
+        | Tim Murphy + Alison Sharpe   | TM&AS    |
         | Tim Murphy and Alison Sharpe | TM&AS    |
         | Rosie & Pete Landrebe        | RL&PL    |
         | Rosie and Pete Landrebe      | RL&PL    |
