@@ -27,7 +27,12 @@ When("the account menu is pressed", async function (this: SpecWorld) {
   await this.browserPage.locator(SUMMARY).click();
 });
 
-When("the page outside the account menu is pressed", pressOutside);
+When(
+  "the page outside the account menu is pressed",
+  async function (this: SpecWorld) {
+    await pressOutside(this);
+  },
+);
 
 // The corner of the panel, since its middle is an item and pressing one
 // follows it.
