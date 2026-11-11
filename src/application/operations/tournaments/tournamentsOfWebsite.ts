@@ -75,6 +75,9 @@ export interface TournamentsByWebsite {
    */
   addressesOf(website: Website): Promise<readonly string[]>;
 
+  /** What the tournaments on `website` are called, each name once, in order, none archived. */
+  namesOf(website: Website): Promise<readonly string[]>;
+
   /**
    * The years it has a tournament starting in, of `sport` where one is given,
    * the newest first, each once.

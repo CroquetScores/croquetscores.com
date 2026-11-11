@@ -114,6 +114,7 @@ import {
 } from "../../../domain/aggregates/tournaments/value-objects/tournamentFormats.js";
 import { speakingOf } from "../../common/language.js";
 import { isAdministrator, readerOf } from "../../common/reader.js";
+import { TournamentNamesOfWebsite } from "../../../application/operations/tournaments/TournamentNamesOfWebsite.js";
 import { websiteOf } from "../../common/site.js";
 import type { CompetitionRulesSaid } from "../../../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
 
@@ -328,6 +329,18 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       new TournamentYearsOfAccount(reader.value, websiteOf(request).host),
     );
     return reply.header("cache-control", "no-store").send({ years });
+  });
+
+  // What the website's tournaments are called, for the form to suggest a name
+  // from. Matching what was typed to them is the form's, which has it as it is
+  // typed.
+  server.get("/tournaments/names", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const names = await request.server.mediator.query(
+      new TournamentNamesOfWebsite(websiteOf(request).host),
+    );
+    return reply.header("cache-control", "no-store").send({ names });
   });
 
   // What a new tournament can be on the website asked: the sports and formats

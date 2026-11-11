@@ -50,6 +50,7 @@ import { WorldRankingPlayersMatchingHandler } from "../application/operations/wo
 import { ImportErrorKeptHandler } from "../application/operations/import-errors/ImportErrorKeptHandler.js";
 import { ImportErrorsKeptHandler } from "../application/operations/import-errors/ImportErrorsKeptHandler.js";
 import type { Website } from "../domain/common/Website.js";
+import { TournamentNamesOfWebsiteHandler } from "../application/operations/tournaments/TournamentNamesOfWebsiteHandler.js";
 import { AddressesOfWebsiteHandler } from "../application/operations/tournaments/AddressesOfWebsiteHandler.js";
 import { TournamentsInUnlistedCountriesHandler } from "../application/operations/world-rankings/TournamentsInUnlistedCountriesHandler.js";
 import type { WorldRankingCountries } from "../application/services/WorldRankingCountries.js";
@@ -1357,6 +1358,9 @@ export const buildApplication = async (
     new AddressesOfWebsiteHandler(
       options.addressesOfWebsite ?? tournamentsByWebsite,
     ),
+  );
+  mediator.handleQuery(
+    new TournamentNamesOfWebsiteHandler(tournamentsByWebsite),
   );
   mediator.handleQuery(new RecentResultsHandler(tournamentsByWebsite));
   mediator.handleQuery(new UpcomingTournamentsHandler(tournamentsByWebsite));

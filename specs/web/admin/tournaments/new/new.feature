@@ -103,6 +103,90 @@ Feature: A new tournament is created in the admin
       When the new tournament page is opened
       Then "Name" has the focus
 
+  Rule: The name suggests the names of tournaments the website already has
+
+    A tournament is often one of a series, run again each year under nearly the
+    same name, and by a different organiser as often as the same one, so the
+    name is offered back as it was last typed rather than typed again. The names
+    offered are those of every tournament on the website being read, in every
+    year, whoever runs it: they are on its public pages already. A tournament
+    on the other website is not offered, since the two sites keep their own. A
+    name is offered once however many tournaments have it.
+
+    A suggestion is not only a name that begins with what was typed. A name is
+    offered where every word typed is somewhere in it, whatever order and
+    whatever case, so "CNSW Bronze" finds "CNSW AC Bronze Medal", which is
+    what a reader who remembers some of the words and not the rest is after.
+    Choosing a suggestion puts its name in the field, to be changed like
+    anything else typed there: the form is also the one a tournament is changed
+    with (`edit.feature`), where the tournament's own name is not offered back
+    to it.
+
+    Scenario: A name that has every word typed is suggested
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the new tournament page is open
+      When "CNSW Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: The words may be typed in any case
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the new tournament page is open
+      When "bronze cnsw" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: A name that lacks a word typed is not suggested
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the new tournament page is open
+      When "CNSW Silver" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is not suggested
+
+    Scenario: Nothing is suggested before anything is typed
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      When the new tournament page is opened
+      Then no name is suggested
+
+    Scenario: A tournament the reader has no part in is suggested
+      Given "other@example.com" has an account, confirmed, with the password "correct horse battery staple"
+      And "other@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the new tournament page is open
+      When "Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: A tournament of an earlier year is suggested
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the tournament "CNSW AC Bronze Medal" starts on "2019-06-06"
+      And the new tournament page is open
+      When "Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is suggested
+
+    Scenario: A tournament of the other website is not suggested
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal" on the website "gateballscores.com"
+      And the new tournament page is open
+      When "Bronze" is typed as the "Name"
+      Then no name is suggested
+
+    Scenario: A name held by several tournaments is suggested once
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal" starting at "2024-06-06T00:00:00Z" in the sport "ac"
+      And "organiser@example.com" has created the tournament "CNSW AC Bronze Medal" starting at "2025-06-06T00:00:00Z" in the sport "ac"
+      And the new tournament page is open
+      When "Bronze" is typed as the "Name"
+      Then 1 name is suggested
+
+    Scenario: Choosing a suggestion puts its name in the field
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And the new tournament page is open
+      And "CNSW Bronze" is typed as the "Name"
+      When the name "CNSW AC Bronze Medal" is chosen
+      Then "Name" says "CNSW AC Bronze Medal"
+
+    Scenario: A tournament being changed is not offered its own name
+      Given "organiser@example.com" has created the tournament "CNSW AC Bronze Medal"
+      And "organiser@example.com" has created the tournament "CNSW AC Bronze Medal Plate"
+      And the page to edit "CNSW AC Bronze Medal" is open
+      When "Bronze" is typed as the "Name"
+      Then the name "CNSW AC Bronze Medal" is not suggested
+      And the name "CNSW AC Bronze Medal Plate" is suggested
+
   Rule: The sports and formats are the ones the website offers
 
     Scenario Outline: Croquet Scores offers its sports in its order
