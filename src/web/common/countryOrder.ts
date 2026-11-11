@@ -17,7 +17,6 @@ export const playedInSince2025 = [
   "cz",
   "de",
   "gr",
-  "gt",
   "ie",
   "lv",
   "mu",
