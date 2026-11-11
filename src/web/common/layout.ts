@@ -1,6 +1,7 @@
 // The shape of every page the public side serves: green header, optional
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
+import { textSizeScript } from "./textSizeScript.js";
 import { accountItems, accountMenu, type AccountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
@@ -574,12 +575,12 @@ export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${escape(titleOf(shell))}</title>${
-      shell.description === undefined
-        ? ""
-        : `
+${textSizeScript}    <title>${escape(titleOf(shell))}</title>${
+  shell.description === undefined
+    ? ""
+    : `
     <meta name="description" content="${escape(shell.description)}" />`
-    }${sendAwayWithoutScripting(shell.withoutScripting)}
+}${sendAwayWithoutScripting(shell.withoutScripting)}
     <link rel="stylesheet" href="${assets.url("site.css")}" />${
       shell.styles === undefined
         ? ""

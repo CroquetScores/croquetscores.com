@@ -13,6 +13,7 @@ import { directionAttribute, type Speaking, speakingOf } from "./language.js";
 import { siteBar, siteFooter, tryWebsiteBanner } from "./layout.js";
 import { hasPassword, signedIn } from "./reader.js";
 import { siteNameOf, websiteOf } from "./site.js";
+import { textSizeScript } from "./textSizeScript.js";
 import { themeOf } from "./theme.js";
 
 // Where each thing is said into the built file. Found by these rather than by
@@ -135,7 +136,7 @@ export const adminPage = (
       .replace(
         title,
         () =>
-          `<title>${escape(siteName)} — ${escape(speaking.say("admin.title"))}</title>`,
+          `<title>${escape(siteName)} — ${escape(speaking.say("admin.title"))}</title>\n${textSizeScript}`,
       )
       // The public pages' own header and footer, drawn by the code that draws
       // theirs, rather than a copy of each in the admin that would drift from

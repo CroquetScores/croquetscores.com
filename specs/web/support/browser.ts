@@ -784,6 +784,40 @@ export const withScripting = async (world: SpecWorld): Promise<void> => {
   await context.close();
 };
 
+/**
+ * Closes the scenario's browser and opens another that has kept what a browser
+ * keeps between visits: its cookies and what pages stored in it. It is asked
+ * for everything the scenario asked of the first, scripting included, since a
+ * reader who comes back has not changed their browser.
+ */
+export const reopenedBrowser = async (world: SpecWorld): Promise<void> => {
+  const context = world.browserContext;
+  const page = world.page;
+  if (context === undefined || page === undefined || browser === undefined) {
+    throw new Error(
+      "This scenario has no browser. Tag it @browser if it needs one.",
+    );
+  }
+
+  const reopened = await browser.newContext({
+    javaScriptEnabled: true,
+    storageState: await context.storageState(),
+    viewport: page.viewportSize(),
+    ...(world.colourScheme === undefined
+      ? {}
+      : { colorScheme: world.colourScheme }),
+    ...(world.acceptLanguage === undefined
+      ? {}
+      : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
+  });
+  const host = addressed.get(world);
+  if (host !== undefined) await addressedAs(reopened, host);
+
+  world.browserContext = reopened;
+  world.page = await reopened.newPage();
+  await context.close();
+};
+
 After({ tags: "@browser" }, async function (this: SpecWorld) {
   await this.browserContext?.close();
   this.browserContext = undefined;
