@@ -290,6 +290,66 @@ Feature: Registering with Google
       When the reader follows the same way back from Google again
       Then the reader is signed out
 
+  Rule: A way back that is refused says in the log which check it failed
+
+    A reader sent back from Google to an address this site did not start the
+    sign in from is refused, and the log says only that. Five of them in a day
+    and a half could not be told apart: a cookie that never came back, one that
+    came back and was not the site's, a reader who took too long, and one
+    whose way back was somebody else's each ask something different of
+    whoever reads the log. So the line names which, by code.
+
+    The refusal the reader is given is the same for all of them and says none,
+    since a forger is owed nothing (the rule above). What the log says is for
+    the administrator alone, and is no more than the code: the state the reader
+    came back with and the code Google gave are not written down, since a log
+    is read by more people and kept longer than the cookie was.
+
+    Scenario: A way back with no cookie says the cookie did not come back
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the log says the way back was refused for "Google.CookieMissing"
+
+    Scenario: A way back with a cookie the site did not make says it was not the site's
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google with a cookie the site did not make
+      Then the log says the way back was refused for "Google.CookieNotOurs"
+
+    Scenario: A way back after the reader took too long says it was too late
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      And the reader takes longer than the site allows
+      When the reader arrives back from Google
+      Then the log says the way back was refused for "Google.TookTooLong"
+
+    Scenario: A way back carrying another state says it was somebody else's
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      When the reader arrives back from Google carrying another state
+      Then the log says the way back was refused for "Google.StateDiffers"
+
+    Scenario: The log does not hold the state the reader came back with
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the log does not hold the state the reader came back with
+      And the log does not hold the code Google gave
+
+    Scenario: The reader is told the same whichever check it failed
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      When the reader arrives back from Google carrying another state
+      Then the way back is answered as a request that could not be dealt with
+      And the answer to the way back does not name "Google.StateDiffers"
+
   Rule: A reader Google does not vouch for is brought back to register, and told why
 
     Scenario: A reader who turns Google down is brought back to the register page

@@ -1,10 +1,13 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import type { Response } from "playwright";
 
 import {
   addressingOf,
   anApplicationWithoutGoogle,
+  logOf,
 } from "../../support/browser.js";
+import { movePast } from "../../support/clock.js";
 import {
   boxOf,
   callback,
@@ -275,16 +278,70 @@ When(
   },
 );
 
-// A code Google would take, for the reader the scenario has Google say, sent
-// back here by a browser this site never sent to Google: what a page
+// What the reader last came back with, so that a scenario can say the log does
+// not hold it, and what the site answered.
+const cameBackWith = new WeakMap<
+  SpecWorld,
+  { state: string; code: string; answer: Response | null }
+>();
+
+// A code Google would take, for the reader the scenario has Google say. The
+// state is the one the site gave on the way to Google where it was sent there,
+// and one made up elsewhere where it was not.
+const arriveBack = async (world: SpecWorld, state: string): Promise<void> => {
+  const code = (await standInGoogleFor(world)).aCodeNobodyWasSentFor();
+  const answer = await world.browserPage.goto(
+    `${world.baseUrl!}${callback}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+  );
+  cameBackWith.set(world, { state, code, answer });
+};
+
+// Sent back here by a browser this site never sent to Google: what a page
 // elsewhere would send a reader's browser along.
 When(
   "the reader arrives back from Google without having been sent there",
   async function (this: SpecWorld) {
-    const code = (await standInGoogleFor(this)).aCodeNobodyWasSentFor();
-    await this.browserPage.goto(
-      `${this.baseUrl!}${callback}?code=${encodeURIComponent(code)}&state=made-up-elsewhere`,
-    );
+    await arriveBack(this, "made-up-elsewhere");
+  },
+);
+
+When(
+  "the reader arrives back from Google with a cookie the site did not make",
+  async function (this: SpecWorld) {
+    // Where the site's own is kept, and named as it names it, but not signed
+    // by it: what comes of a cookie made by somebody else, or by the site
+    // before its secret changed.
+    const address = new URL(this.baseUrl!);
+    await this.browserPage.context().addCookies([
+      {
+        name: "google-sign-in",
+        value: "not-signed-by-the-site",
+        domain: address.hostname,
+        path: "/auth/google",
+        secure: true,
+      },
+    ]);
+    await arriveBack(this, "made-up-elsewhere");
+  },
+);
+
+When("the reader arrives back from Google", async function (this: SpecWorld) {
+  await arriveBack(this, stateGiven(this));
+});
+
+When(
+  "the reader arrives back from Google carrying another state",
+  async function (this: SpecWorld) {
+    await arriveBack(this, "somebody-elses");
+  },
+);
+
+// Longer than the cookie is kept for, which the site judges by its own clock
+// and not the browser's, so that a scenario need not wait for it.
+Given(
+  "the reader takes longer than the site allows",
+  function (this: SpecWorld) {
+    movePast(this, 11 * 60 * 1000);
   },
 );
 
@@ -296,7 +353,7 @@ When(
 // sent back rather than to Google.
 const sentTo = new WeakMap<SpecWorld, URL>();
 
-When("the way to Google is followed", async function (this: SpecWorld) {
+const followTheWayToGoogle = async function (this: SpecWorld): Promise<void> {
   const answer = await this.browserPage.request.get(
     `${this.baseUrl!}/auth/google?termsOfUse=on`,
     { headers: addressingOf(this), maxRedirects: 0, failOnStatusCode: false },
@@ -304,7 +361,17 @@ When("the way to Google is followed", async function (this: SpecWorld) {
   const location = answer.headers()["location"];
   assert.ok(location !== undefined, `The site answered ${answer.status()}.`);
   sentTo.set(this, new URL(location));
-});
+};
+
+When("the way to Google is followed", followTheWayToGoogle);
+Given("the site has sent the reader to Google", followTheWayToGoogle);
+
+// The state the site gave to be brought back.
+const stateGiven = (world: SpecWorld): string => {
+  const state = sentTo.get(world)?.searchParams.get("state");
+  assert.ok(state, "The reader was not sent to Google.");
+  return state;
+};
 
 Then(
   "Google is told to send the reader back to {string}",
@@ -312,5 +379,58 @@ Then(
     const url = sentTo.get(this);
     assert.ok(url !== undefined, "The reader was not sent to Google.");
     assert.equal(url.searchParams.get("redirect_uri"), address);
+  },
+);
+
+// What the log says about a way back that was refused ---------------------------
+
+// The warnings that are a way back refused, as the site wrote them.
+const refusalsLogged = (
+  world: SpecWorld,
+): { err?: { code?: string; reason?: string } }[] =>
+  logOf(world)
+    .map(
+      (line) =>
+        JSON.parse(line) as { err?: { code?: string; reason?: string } },
+    )
+    .filter((line) => line.err?.code === "Google.NotSentFromHere");
+
+Then(
+  "the log says the way back was refused for {string}",
+  function (this: SpecWorld, reason: string) {
+    const refusals = refusalsLogged(this);
+    assert.equal(refusals.length, 1, `${refusals.length} refusals are logged.`);
+    assert.equal(refusals[0]!.err?.reason, reason);
+  },
+);
+
+Then(
+  "the log does not hold the state the reader came back with",
+  function (this: SpecWorld) {
+    const back = cameBackWith.get(this);
+    assert.ok(back !== undefined, "The reader did not come back.");
+    assert.ok(!logOf(this).join("").includes(back.state));
+  },
+);
+
+Then("the log does not hold the code Google gave", function (this: SpecWorld) {
+  const back = cameBackWith.get(this);
+  assert.ok(back !== undefined, "The reader did not come back.");
+  assert.ok(!logOf(this).join("").includes(back.code));
+});
+
+Then(
+  "the way back is answered as a request that could not be dealt with",
+  function (this: SpecWorld) {
+    assert.equal(cameBackWith.get(this)?.answer?.status(), 400);
+  },
+);
+
+Then(
+  "the answer to the way back does not name {string}",
+  async function (this: SpecWorld, code: string) {
+    const body = await cameBackWith.get(this)?.answer?.text();
+    assert.ok(body !== undefined, "The reader did not come back.");
+    assert.ok(!body.includes(code), `The answer names ${code}.`);
   },
 );

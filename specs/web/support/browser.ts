@@ -15,6 +15,7 @@ import { AfterAll, Before, After } from "@cucumber/cucumber";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { Writable } from "node:stream";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 
 // Loaded here so that whatever loads this has already registered the hooks that
@@ -65,6 +66,23 @@ let baseUrl: string | undefined;
 // What each scenario has deployed the site as, where it has deployed it again.
 // Nothing is the build the admin was built to.
 const deployedAs = new WeakMap<SpecWorld, string>();
+
+// Warnings and worse, as lines of JSON, for a scenario that asks what the site
+// logged. Only the application a scenario has a database for keeps them: the
+// shared one outlasts the scenario, so what it logged is nobody's.
+const logs = new WeakMap<SpecWorld, string[]>();
+
+const linesOf = (world: SpecWorld): string[] => {
+  let found = logs.get(world);
+  if (found === undefined) {
+    found = [];
+    logs.set(world, found);
+  }
+  return found;
+};
+
+/** Everything the scenario's site logged at warning or worse. */
+export const logOf = (world: SpecWorld): readonly string[] => linesOf(world);
 
 /** Deploys the site again: from now on it names another build. */
 export const deployAgain = (world: SpecWorld): void => {
@@ -483,7 +501,16 @@ const itsOwn = async (
       ...changed,
     },
     {
-      logger: false,
+      // A request log is not wanted, and is what "off" was for.
+      logger: {
+        level: "warn",
+        stream: new Writable({
+          write(chunk, _encoding, done) {
+            linesOf(world).push(String(chunk));
+            done();
+          },
+        }),
+      },
       emailSender: fileSender(),
       ...offered(languages),
       ...(addressesToList.has(world)
