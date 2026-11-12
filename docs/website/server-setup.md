@@ -560,3 +560,7 @@ Once a month, check the journal is not nearly full (`sudo journalctl --disk-usag
 ```bash
 sudo journalctl --since "100 days ago" | head -n 1
 ```
+
+## 8. What to set up next
+
+The tournaments are published as files in a Git repository by a script that runs from cron every hour, on this server. It is set up after the site is running: exporting-tournaments.md.
