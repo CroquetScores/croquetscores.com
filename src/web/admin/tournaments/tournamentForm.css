@@ -74,6 +74,8 @@
    ones that must be answered (issue 627). The legend sits on the box's edge
    as a fieldset's does, muted as a competition's kind is. */
 .field-optional {
+  /* A fieldset will not narrow past its contents unless told to. */
+  min-width: 0;
   margin: 0;
   padding: 0 var(--space-3);
   border: 1px solid var(--ink-muted);

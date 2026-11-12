@@ -322,6 +322,13 @@ Then(
   "{string} is not in the group {string}",
   async function (this: SpecWorld, label: string, legend: string) {
     await eventually(this, async () => {
+      // The group is asserted first: with none there, nothing is in it, and
+      // the scenario would pass for a reason other than the one it names.
+      assert.equal(
+        await group(this, legend).count(),
+        1,
+        `There is no group ${legend}.`,
+      );
       assert.equal(
         await group(this, legend).getByLabel(label, { exact: true }).count(),
         0,

@@ -604,8 +604,7 @@ export const spanish: Language = {
     "admin.view.rankings": "Rankings",
     "admin.rankings.file":
       "El ranking internacional usará los resultados del torneo mediante esta función, y los gestores no tienen que hacer nada.",
-    "admin.rankings.download":
-      "Descargar partidas para el ranking internacional",
+    "admin.rankings.download": "Descargar partidas para el ranking internacional",
     "rankings.notAvailable": "Los rankings no están disponibles",
     "rankings.notAvailable.sport":
       "El deporte de este torneo no tiene ranking internacional, así que no hay rankings que enviar.",
@@ -712,7 +711,8 @@ export const spanish: Language = {
     "admin.worldRankings.title": "Importar jugadores del ranking mundial",
     "admin.worldRankings.import": "Importar",
     "admin.worldRankings.log": "Cómo fue la importación",
-    "admin.worldRankings.ac.reading": "Leyendo la lista de association croquet",
+    "admin.worldRankings.ac.reading":
+      "Leyendo la lista de association croquet",
     "admin.worldRankings.ac.read":
       "Jugadores de association croquet leídos: {players}",
     "admin.worldRankings.ac.kept":
