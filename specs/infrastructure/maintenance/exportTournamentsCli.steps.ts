@@ -135,7 +135,10 @@ const runGit = (
   input?: string,
 ): Promise<GitEnded> =>
   new Promise((resolve, reject) => {
-    const child = spawn("git", [...args], { cwd: folder });
+    const child = spawn("git", [...args], {
+      cwd: folder,
+      env: { ...process.env, GIT_LITERAL_PATHSPECS: "1" },
+    });
     let said = "";
     let complaint = "";
     child.stdout.on("data", (chunk: Buffer) => (said += chunk.toString()));
@@ -818,6 +821,13 @@ Then(
 Then("the export script says it was a test run", function (this: SpecWorld) {
   saysOnTheScreen(this, "This was a test run");
 });
+
+Then(
+  "the export script says {string}",
+  function (this: SpecWorld, line: string) {
+    saysOnTheScreen(this, line);
+  },
+);
 
 Then(
   "the export script says {int} tournament was read",

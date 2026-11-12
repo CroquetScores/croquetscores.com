@@ -965,6 +965,10 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       Then the export script says 1 tournament was read
 
+    Scenario: The export script says how many tournaments are public and how many it will read
+      When the export script is run with "--folder export"
+      Then the export script says "1 tournament is public, and 1 to read."
+
     Scenario: A tournament that has not changed is not read again
       Given the export script has been run with "--folder export"
       When the export script is run with "--folder export"

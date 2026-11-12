@@ -714,7 +714,7 @@ export const runExportTournaments = async (
     }
     read.count = toRead.length;
     say(
-      `${withCommas(listings.length)} tournaments are public, and ${withCommas(toRead.length)} to read.`,
+      `${listings.length === 1 ? "1 tournament is" : `${withCommas(listings.length)} tournaments are`} public, and ${withCommas(toRead.length)} to read.`,
     );
     // A few at a time, since each is several questions and the database may be
     // a long way off; said as it goes, so that a long read is seen to be going.
@@ -722,12 +722,20 @@ export const runExportTournaments = async (
     // same order whatever order the answers came in.
     const texts = new Map<number, string>();
     let next = 0;
+    // Set by the first reader to fail, so that the others stop and nothing is
+    // still asking the database when the run has reported and the pool closes.
+    let stopped = false;
     const worker = async (): Promise<void> => {
-      while (next < toRead.length) {
+      while (!stopped && next < toRead.length) {
         const at = toRead[next]!;
         next += 1;
         const { website, listed } = listings[at]!;
-        texts.set(at, await fileOf(world, website, listed));
+        try {
+          texts.set(at, await fileOf(world, website, listed));
+        } catch (failure) {
+          stopped = true;
+          throw failure;
+        }
         if (texts.size % 25 === 0 || texts.size === toRead.length) {
           say(
             `Read ${withCommas(texts.size)} of ${withCommas(toRead.length)}.`,
@@ -735,9 +743,14 @@ export const runExportTournaments = async (
         }
       }
     };
-    await Promise.all(
+    // Settled and not raced, so that every reader has ended before the first
+    // failure is reported.
+    const ended = await Promise.allSettled(
       Array.from({ length: Math.min(READ_AT_ONCE, toRead.length) }, worker),
     );
+    for (const each of ended) {
+      if (each.status === "rejected") throw each.reason;
+    }
     for (const [at, { listed }] of listings.entries()) {
       const name = `${listed.address}.json`;
       if (wanted.has(name)) continue;
