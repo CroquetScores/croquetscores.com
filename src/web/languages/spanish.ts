@@ -1378,7 +1378,7 @@ export const spanish: Language = {
     // What a tournament is played in and where, by code, as the API offers
     // them to the admin's form. Written out here in full, since a catalogue
     // other than English's cannot take them from the domain.
-    "sport.ac": "Association Croquet",
+    "sport.ac": "Croquet de asociación",
     "sport.gc": "Golf Croquet",
     "sport.a6w": "American 6 Wicket",
     "sport.rc": "Ricochet",
