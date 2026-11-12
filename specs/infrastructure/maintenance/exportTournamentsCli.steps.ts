@@ -552,6 +552,11 @@ const commitsIn = async (folder: string): Promise<number> => {
   return counted.code === 0 ? Number(counted.said.trim()) : 0;
 };
 
+Then("no Git command was run", function (this: SpecWorld) {
+  const ran = exportOf(this).happened.filter((each) => each.kind === "git");
+  assert.equal(ran.length, 0, `${String(ran.length)} Git commands were run.`);
+});
+
 Then("the folder has no commits", async function (this: SpecWorld) {
   assert.equal(await commitsIn(folderOf(this)), 0);
 });
@@ -765,6 +770,10 @@ Then(
     saysOnTheScreen(this, `${String(count)} file was removed.`);
   },
 );
+
+Then("the export script says it was a test run", function (this: SpecWorld) {
+  saysOnTheScreen(this, "This was a test run");
+});
 
 Then(
   "the export script says there was nothing to commit",

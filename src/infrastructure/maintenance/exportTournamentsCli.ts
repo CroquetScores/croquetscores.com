@@ -8,6 +8,7 @@ import { PublicPlayersOfTournament } from "../../application/operations/tourname
 import { PublicSwissOfTournament } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
 import { PublicTeamSummaryOfTournament } from "../../application/operations/tournaments/PublicTeamSummaryOfTournament.js";
 import { PublicTestOfTournament } from "../../application/operations/tournaments/PublicTestOfTournament.js";
+import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
 import { TournamentsInYear } from "../../application/operations/tournaments/TournamentsInYear.js";
 
@@ -24,6 +25,9 @@ export const WEBSITES_EXPORTED: readonly string[] = [
   "croquetscores.com",
   "gateballscores.com",
 ];
+
+/** How many tournaments are read at once. */
+const READ_AT_ONCE = 6;
 
 /**
  * Which layout of a file this is. A reader of the files is told by it that the
@@ -386,24 +390,31 @@ const fileOf = async (
 
 interface Parsed {
   readonly folder: string | undefined;
+  /** Whether Git is left alone, so that the files are written and no more. */
+  readonly test: boolean;
   readonly mistake: string | undefined;
 }
 
 const parse = (args: readonly string[]): Parsed => {
   let folder: string | undefined;
+  let test = false;
   for (let at = 0; at < args.length; at += 1) {
     const arg = args[at]!;
+    if (arg === "--test") {
+      test = true;
+      continue;
+    }
     if (arg !== "--folder") {
-      return { folder: undefined, mistake: `${arg} is not known.` };
+      return { folder: undefined, test, mistake: `${arg} is not known.` };
     }
     const value = args[at + 1];
     if (value === undefined || value.startsWith("--")) {
-      return { folder: undefined, mistake: undefined };
+      return { folder: undefined, test, mistake: undefined };
     }
     folder = value;
     at += 1;
   }
-  return { folder, mistake: undefined };
+  return { folder, test, mistake: undefined };
 };
 
 const ofFilesIn = async (folder: string): Promise<string[]> => {
@@ -455,12 +466,12 @@ export const runExportTournaments = async (
   const parsed = parse(args);
   if (parsed.mistake !== undefined) {
     say(parsed.mistake);
-    say("Usage: export:tournaments --folder <folder>");
+    say("Usage: export:tournaments --folder <folder> [--test]");
     return { exitCode: 1 };
   }
   if (parsed.folder === undefined) {
     say("The folder is needed: --folder says where the files are written.");
-    say("Usage: export:tournaments --folder <folder>");
+    say("Usage: export:tournaments --folder <folder> [--test]");
     return { exitCode: 1 };
   }
   const folder = resolve(world.workingFolder, parsed.folder);
@@ -511,86 +522,124 @@ export const runExportTournaments = async (
   if (!(await isAFolder(folder))) {
     return failed("that the folder is not there", undefined);
   }
-  if (!(await exists(join(folder, ".git")))) {
-    return failed("that the folder is not a Git repository", undefined);
-  }
-  let remotes: GitEnded;
-  try {
-    remotes = await git(["remote"]);
-  } catch (failure) {
-    return failed("asking the folder for its remote", messageOf(failure));
-  }
-  const names = remotes.said
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line !== "");
-  if (remotes.code !== 0 || names.length === 0) {
-    return failed("that the folder has no remote", undefined);
-  }
-  const remote = names.includes("origin") ? "origin" : names[0]!;
-  try {
-    const address = await git(["remote", "get-url", remote]);
-    if (address.code === 0) remoteAddress = address.said.trim();
-  } catch {
-    // Hidden by what it looks like instead, below.
-  }
+  // Said once and in one place what a test leaves alone: every call of Git,
+  // which is the repository, its remote, the pull, and the staging, the commit
+  // and the push, so that the files can be looked at without publishing them.
+  const test = parsed.test;
+  let remote = "";
+  let remoteHead = "";
+  let branchName = "";
+  if (!test) {
+    if (!(await exists(join(folder, ".git")))) {
+      return failed("that the folder is not a Git repository", undefined);
+    }
+    let remotes: GitEnded;
+    try {
+      remotes = await git(["remote"]);
+    } catch (failure) {
+      return failed("asking the folder for its remote", messageOf(failure));
+    }
+    const names = remotes.said
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter((line) => line !== "");
+    if (remotes.code !== 0 || names.length === 0) {
+      return failed("that the folder has no remote", undefined);
+    }
+    remote = names.includes("origin") ? "origin" : names[0]!;
+    try {
+      const address = await git(["remote", "get-url", remote]);
+      if (address.code === 0) remoteAddress = address.said.trim();
+    } catch {
+      // Hidden by what it looks like instead, below.
+    }
 
-  // Pulled before anything is written, so that what is written is laid over
-  // what is published; and only forward, since a merge made with nobody
-  // looking is somebody's files quietly changed.
-  let remoteHead: string;
-  let branchName: string;
-  try {
-    const branch = await git(["symbolic-ref", "--short", "HEAD"]);
-    if (branch.code !== 0) {
-      return failed("pulling the folder", "The folder is not on a branch.");
-    }
-    const on = branch.said.trim();
-    branchName = on;
-    const there = await git([
-      "ls-remote",
-      "--heads",
-      remote,
-      `refs/heads/${on}`,
-    ]);
-    if (there.code !== 0) return failed("pulling the folder", whyOf(there));
-    remoteHead = there.said.split(/\s/)[0] ?? "";
-    if (remoteHead !== "") {
-      const pulled = await git(["pull", "--ff-only", remote, on]);
-      if (pulled.code !== 0) {
-        return failed(
-          "pulling the folder",
-          whyOf(pulled) === ""
-            ? "The folder and its remote have each gone their own way."
-            : whyOf(pulled),
-        );
+    // Pulled before anything is written, so that what is written is laid over
+    // what is published; and only forward, since a merge made with nobody
+    // looking is somebody's files quietly changed.
+    try {
+      const branch = await git(["symbolic-ref", "--short", "HEAD"]);
+      if (branch.code !== 0) {
+        return failed("pulling the folder", "The folder is not on a branch.");
       }
+      const on = branch.said.trim();
+      branchName = on;
+      const there = await git([
+        "ls-remote",
+        "--heads",
+        remote,
+        `refs/heads/${on}`,
+      ]);
+      if (there.code !== 0) return failed("pulling the folder", whyOf(there));
+      remoteHead = there.said.split(/\s/)[0] ?? "";
+      if (remoteHead !== "") {
+        const pulled = await git(["pull", "--ff-only", remote, on]);
+        if (pulled.code !== 0) {
+          return failed(
+            "pulling the folder",
+            whyOf(pulled) === ""
+              ? "The folder and its remote have each gone their own way."
+              : whyOf(pulled),
+          );
+        }
+      }
+    } catch (failure) {
+      return failed("pulling the folder", messageOf(failure));
     }
-  } catch (failure) {
-    return failed("pulling the folder", messageOf(failure));
   }
 
   // Read before anything is written, so that a tournament that cannot be read
   // fails the run with nothing changed.
   const wanted = new Map<string, string>();
   try {
+    const listings: {
+      readonly website: string;
+      readonly listed: TournamentOfWebsite;
+    }[] = [];
+    const addresses = new Set<string>();
     for (const website of WEBSITES_EXPORTED) {
       for (const year of await world.ask(new TournamentYears(website))) {
         for (const listed of await world.ask(
           new TournamentsInYear(website, year),
         )) {
-          const name = `${listed.address}.json`;
           // Two tournaments at one address would be one file, with one of
           // them quietly missing.
-          if (wanted.has(name)) {
+          if (addresses.has(listed.address)) {
             throw new Error(
               `Two tournaments are at the address ${listed.address}.`,
             );
           }
-          wanted.set(name, await fileOf(world, website, listed));
+          addresses.add(listed.address);
+          listings.push({ website, listed });
         }
       }
     }
+    say(`${String(listings.length)} tournaments to read.`);
+    // A few at a time, since each is several questions and the database may be
+    // a long way off; said as it goes, so that a long read is seen to be going.
+    // Kept in the order they were listed, so that the files are written in the
+    // same order whatever order the answers came in.
+    const texts: string[] = new Array<string>(listings.length);
+    let next = 0;
+    let done = 0;
+    const worker = async (): Promise<void> => {
+      while (next < listings.length) {
+        const at = next;
+        next += 1;
+        const { website, listed } = listings[at]!;
+        texts[at] = await fileOf(world, website, listed);
+        done += 1;
+        if (done % 25 === 0 || done === listings.length) {
+          say(`Read ${String(done)} of ${String(listings.length)}.`);
+        }
+      }
+    };
+    await Promise.all(
+      Array.from({ length: Math.min(READ_AT_ONCE, listings.length) }, worker),
+    );
+    listings.forEach(({ listed }, at) => {
+      wanted.set(`${listed.address}.json`, texts[at]!);
+    });
   } catch (failure) {
     return failed("reading the tournaments", messageOf(failure));
   }
@@ -637,10 +686,12 @@ export const runExportTournaments = async (
   try {
     for (const name of await ofFilesIn(folder)) {
       if (wanted.has(name) || !(await isOurs(folder, name))) continue;
-      const tracked = await git(["ls-files", "--error-unmatch", "--", name]);
+      const tracked = test
+        ? undefined
+        : await git(["ls-files", "--error-unmatch", "--", name]);
       await rm(join(folder, name));
       removed.push(name);
-      if (tracked.code === 0) removedTracked.push(name);
+      if (tracked?.code === 0) removedTracked.push(name);
       for (const empty of [
         dirname(join(folder, name)),
         dirname(dirname(join(folder, name))),
@@ -658,6 +709,10 @@ export const runExportTournaments = async (
     `${counted(alreadyAsTheyShouldBe, "tournament", "tournaments")} already as ${alreadyAsTheyShouldBe === 1 ? "it" : "they"} should be.`,
   );
   say(`${counted(removed.length, "file", "files")} removed.`);
+  if (test) {
+    say("This was a test run: no Git command was run.");
+    return { exitCode: 0 };
+  }
 
   // What a run changed, and what an earlier run wrote and was stopped before
   // committing: both are the run's to commit, and nothing else in the folder.

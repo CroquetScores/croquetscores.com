@@ -131,6 +131,13 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   team who is archived is left out, with the games they were in, and so is an
   archived test, as the pages leave them out.
 
+  `--test` does everything but call Git: the folder is checked to be there,
+  the tournaments are read and the files are written and removed, and nothing
+  more. The folder need not be a repository, or have a remote, since Git is
+  not asked, and nothing is pulled, staged, committed or pushed, so that the
+  files can be looked at before anything is published. It says that it was a
+  test.
+
   Flags are not exported. A flag is a picture the pages draw, and nothing in
   a file would say what the picture was.
 
@@ -882,6 +889,58 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
       Then the file does not name the competition "Block A"
+
+  Rule: A test run calls no Git command
+
+    Scenario: A test run writes the files
+      When the export script is run with "--folder export --test"
+      Then the folder has the file "2026/ac/spring-open.json"
+
+    Scenario: A test run calls no Git command
+      When the export script is run with "--folder export --test"
+      Then no Git command was run
+
+    Scenario: A test run makes no commit
+      When the export script is run with "--folder export --test"
+      Then the folder has no commits
+
+    Scenario: A test run pushes nothing
+      When the export script is run with "--folder export --test"
+      Then the remote has no commits
+
+    Scenario: A test run needs no repository
+      Given the folder for the export is not a Git repository
+      When the export script is run with "--folder export --test"
+      Then the folder has the file "2026/ac/spring-open.json"
+
+    Scenario: A test run needs no remote
+      Given the folder has no remote
+      When the export script is run with "--folder export --test"
+      Then the export script exits with success
+
+    Scenario: A test run removes the file of a tournament that is no longer public
+      Given the export script has been run with "--folder export --test"
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the export script is run with "--folder export --test"
+      Then the folder does not have the file "2026/ac/spring-open.json"
+
+    Scenario: A test run says it was a test
+      When the export script is run with "--folder export --test"
+      Then the export script says it was a test run
+
+    Scenario: A test run says how many it wrote
+      When the export script is run with "--folder export --test"
+      Then the export script says 1 tournament was written
+
+    Scenario: A test run of a folder that is not there is refused
+      Given the folder for the export is not there
+      When the export script is run with "--folder export --test"
+      Then the export script exits with failure
+
+    Scenario: A test run that fails is emailed
+      Given writing a file fails
+      When the export script is run with "--folder export --test"
+      Then an email was sent to "administrator@example.com"
 
   Rule: A tournament played by teams has its teams and its tests
 
