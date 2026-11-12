@@ -1236,10 +1236,20 @@ export const buildApplication = async (
   validation.register(new AddTestValidator());
   validation.register(new UpdateTestValidator());
   mediator.handleCommand(
-    new CreateTournamentHandler(...both, tournamentsByAddress),
+    new CreateTournamentHandler(
+      ...both,
+      tournamentsByAddress,
+      emailQueue,
+      config.administratorEmailAddress,
+    ),
   );
   mediator.handleCommand(
-    new UpdateTournamentHandler(...both, tournamentsByAddress),
+    new UpdateTournamentHandler(
+      ...both,
+      tournamentsByAddress,
+      emailQueue,
+      config.administratorEmailAddress,
+    ),
   );
   mediator.handleCommand(new ArchiveTournamentHandler(...both));
   mediator.handleCommand(new RestoreTournamentHandler(...both));

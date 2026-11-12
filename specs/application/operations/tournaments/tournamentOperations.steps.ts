@@ -735,6 +735,80 @@ Given(
   },
 );
 
+// Never both, as the form never lets a reader tick both. The international one
+// is the domain's own step (`update.steps.ts`).
+Given("the update makes it a national event", function (this: SpecWorld) {
+  const updating = domainScenarioOf(this).updating;
+  updating.national = true;
+  updating.international = false;
+});
+
+Given(
+  "the update makes it neither national nor international",
+  function (this: SpecWorld) {
+    const updating = domainScenarioOf(this).updating;
+    updating.national = false;
+    updating.international = false;
+  },
+);
+
+// What the administrator was told ----------------------------------------------
+//
+// Read from the email as it is written, since what it says is the writer's and
+// the words are English's: the subject and the body together.
+
+const writtenToAdministrator = (
+  world: SpecWorld,
+  address: string,
+): Promise<string> => {
+  assert.ok(world.registering !== undefined, "Registering is not stood up.");
+  return world.registering.writtenFor(address);
+};
+
+Then(
+  "the email queued for {string} names the tournament {string}",
+  async function (this: SpecWorld, address: string, name: string) {
+    const written = await writtenToAdministrator(this, address);
+    assert.ok(written.includes(name), `The email does not name ${name}.`);
+  },
+);
+
+Then(
+  "the email queued for {string} links to the tournament at {string}",
+  async function (this: SpecWorld, address: string, found: string) {
+    const written = await writtenToAdministrator(this, address);
+    assert.ok(
+      written.includes(
+        `https://croquetscores.com/admin/administrator/notable-tournament?url=${found}`,
+      ),
+      `The email does not link to ${found}.`,
+    );
+  },
+);
+
+Then(
+  /^the email queued for "(.*)" says the tournament was (added|edited)$/,
+  async function (this: SpecWorld, address: string, change: string) {
+    const written = await writtenToAdministrator(this, address);
+    assert.ok(
+      written.includes(`tournament was ${change}`),
+      `The email does not say it was ${change}.`,
+    );
+  },
+);
+
+Then(
+  /^the email queued for "(.*)" says the tournament is (national|international)$/,
+  async function (this: SpecWorld, address: string, level: string) {
+    const written = await writtenToAdministrator(this, address);
+    // Whole words, since "international" holds "national".
+    assert.ok(
+      written.includes(`A ${level} tournament`),
+      `The email does not say it is ${level}.`,
+    );
+  },
+);
+
 // What came of it ----------------------------------------------------------------
 
 Then(

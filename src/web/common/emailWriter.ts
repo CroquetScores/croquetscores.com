@@ -55,6 +55,7 @@ const kinds: readonly string[] = [
   "Email.RegistrationsSuspended",
   "Email.DatabaseUnreachable",
   "Email.UnhandledError",
+  "Email.NotableTournament",
   "Email.PasswordChanged",
   "Email.ConfirmNewEmailAddress",
   "Email.AlreadyHasAnAccount",

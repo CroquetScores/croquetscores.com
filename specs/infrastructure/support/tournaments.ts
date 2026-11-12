@@ -171,9 +171,14 @@ import { ManagerNoteToEditHandler } from "../../../src/application/operations/to
 import type { TournamentsInHand } from "../../support/tournaments.js";
 import type { SpecWorld } from "../../support/world.js";
 import { accountsOf } from "./accounts.js";
+import { queueingOf } from "./emailQueue.js";
 import { standUpFor } from "./registering.js";
 import { unitOfWorkOf } from "./transactions.js";
 import { heldAfter } from "../../support/heldAtOnce.js";
+
+// Where the scenarios have the site's administrator, who is told of a national
+// or an international tournament. The features say the same address.
+const theAdministratorsEmailAddress = "administrator@example.com";
 
 const standUpTheTournaments = function (this: SpecWorld): void {
   standUpFor(this);
@@ -263,8 +268,23 @@ const standUpTheTournaments = function (this: SpecWorld): void {
   validation.register(new AddCommentValidator());
   validation.register(new EditCommentValidator());
   const both = [tournaments, accountRepository] as const;
-  mediator.handleCommand(new CreateTournamentHandler(...both, byAddress));
-  mediator.handleCommand(new UpdateTournamentHandler(...both, byAddress));
+  const { queue } = queueingOf(this);
+  mediator.handleCommand(
+    new CreateTournamentHandler(
+      ...both,
+      byAddress,
+      queue,
+      theAdministratorsEmailAddress,
+    ),
+  );
+  mediator.handleCommand(
+    new UpdateTournamentHandler(
+      ...both,
+      byAddress,
+      queue,
+      theAdministratorsEmailAddress,
+    ),
+  );
   mediator.handleCommand(new ArchiveTournamentHandler(...both));
   mediator.handleCommand(new RestoreTournamentHandler(...both));
   mediator.handleCommand(new AddPlayerHandler(...both));

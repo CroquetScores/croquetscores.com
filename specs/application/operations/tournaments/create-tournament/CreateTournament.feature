@@ -193,6 +193,67 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then it is answered with the address "2026/ac/spring-open"
 
+  Rule: The administrator is told of a national or an international tournament
+
+    A national or an international tournament is the more notable, and the
+    administrator is the one who would want to know of it. They are told by
+    email, in English only: it is the one language the administrator is held to
+    read, whichever language the reader who created the tournament was using.
+    The email is queued in the transaction that keeps the tournament, so that
+    it is queued if and only if the tournament is kept.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario: A national tournament is told to the administrator
+      Given the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
+    Scenario: An international tournament is told to the administrator
+      Given the tournament is to be international
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
+    Scenario: A tournament that is neither is not told to the administrator
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+    Scenario: The email names the tournament
+      Given the tournament name "Spring Open"
+      And the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" names the tournament "Spring Open"
+
+    Scenario: The email links to the administrator's page for the tournament
+      Given the tournament is to start at "2026-10-03T00:00:00Z"
+      And the sport "ac"
+      And the tournament name "Spring Open"
+      And the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" links to the tournament at "2026/ac/spring-open"
+
+    Scenario: The email says the tournament was added
+      Given the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" says the tournament was added
+
+    Scenario: The email says the tournament is national
+      Given the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" says the tournament is national
+
+    Scenario: The email says the tournament is international
+      Given the tournament is to be international
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" says the tournament is international
+
+    Scenario: A tournament that is refused is not told to the administrator
+      Given the tournament is to be national
+      And the tournament is to start at "2026-10-03T00:00:00Z"
+      And the tournament is to finish at "2026-10-02T00:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
   Rule: A forgotten account creates nothing
 
     Scenario: A forgotten account is refused

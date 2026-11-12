@@ -1800,6 +1800,24 @@ export const english: Language = {
 </p>
 `,
 
+    // Written in English only, in no other catalogue: it goes to the
+    // administrator, and every other language falls back to these words.
+    "Email.NotableTournament.subject":
+      "A {level} tournament was {change}: {tournament}",
+    "Email.NotableTournament.body": `
+<p>Hi,</p>
+
+<p>
+    A {level} tournament was {change} on {siteName}:
+    <a href="{site}/admin/administrator/notable-tournament?url={address}">{tournament}</a>.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
     "Email.DatabaseUnreachable.subject": "{siteName} cannot reach its database",
     "Email.DatabaseUnreachable.body": `
 <p>Hi,</p>
