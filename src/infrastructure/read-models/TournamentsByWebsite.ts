@@ -1,5 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
+  TournamentFingerprint,
   TournamentOfWebsite,
   TournamentPlayed,
   TournamentsByWebsite as Asked,
@@ -22,6 +23,7 @@ interface Row {
   starts: string;
   finishes: string;
   country: string;
+  region: string | null;
   sport: string;
   address: string;
   national: boolean;
@@ -33,7 +35,7 @@ interface Row {
 const COLUMNS = `t.tournament_id, t.name,
        to_char(t.starts, 'YYYY-MM-DD') as starts,
        to_char(t.finishes, 'YYYY-MM-DD') as finishes,
-       t.country, t.sport, t.address, t.national, t.international`;
+       t.country, t.region, t.sport, t.address, t.national, t.international`;
 
 // What the filter narrows by, as conditions on the tournaments' table from
 // the parameter numbered `first` on, and the parameters themselves. Each is
@@ -64,6 +66,7 @@ const listed = (row: Row): TournamentOfWebsite => ({
   starts: row.starts,
   finishes: row.finishes,
   country: row.country,
+  region: row.region ?? undefined,
   sport: row.sport,
   address: row.address,
   national: row.national,
@@ -179,6 +182,45 @@ export class TournamentsByWebsite implements Projection, Asked {
         [website.host],
       );
     return rows.map(({ address }) => address);
+  }
+
+  // The newest version of each stream the tournament is made of, its own and
+  // each competition's, put together and hashed. A version only ever grows, so
+  // any append changes the mark; and it is read from the events themselves and
+  // not from a moment, so that an append that was kept late, or at the same
+  // moment as another, still changes it.
+  async fingerprintsOf(
+    website: Website,
+  ): Promise<readonly TournamentFingerprint[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ tournament_id: string; fingerprint: string }>(
+        `with streams as (
+           select t.tournament_id, t.tournament_id as stream_id
+             from tournaments t
+            where t.website = $1 and not t.archived
+           union all
+           select c.tournament_id, c.competition_id
+             from competitions c
+             join tournaments t on t.tournament_id = c.tournament_id
+            where t.website = $1 and not t.archived
+         )
+         select s.tournament_id,
+                md5(string_agg(s.stream_id || ':' || coalesce(v.version, 0),
+                               ',' order by s.stream_id)) as fingerprint
+           from streams s
+           left join lateral (
+             select max(e.version) as version from events e
+              where e.stream_id = s.stream_id
+           ) v on true
+          group by s.tournament_id
+          order by s.tournament_id`,
+        [website.host],
+      );
+    return rows.map((row) => ({
+      id: row.tournament_id,
+      fingerprint: row.fingerprint,
+    }));
   }
 
   async namesOf(website: Website): Promise<readonly string[]> {
