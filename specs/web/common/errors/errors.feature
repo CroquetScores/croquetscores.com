@@ -238,3 +238,38 @@ Feature: What a failed request is answered with is decided in one place
       And it ends at 5
       When the example range is sent to the example route
       Then the answer is kept by nobody
+
+  Rule: A body the server cannot read is the caller's mistake, and is not logged as a warning
+
+    The site is asked for addresses it has never had, by programs that send a
+    body saying it is JSON and then send none. The server refuses these itself,
+    before any route runs, and answers them as unreadable. That is the
+    caller's mistake, in the same way a request that breaks a rule is, and a
+    warning is for what somebody should look at. A scanner sending a few dozen
+    in a few minutes buried the two warnings in a day's log that were worth
+    reading, which is the cost of logging them as one.
+
+    It is still logged, as information, so that it is there to be found when it
+    is wanted. A failure that is not the caller's reading is not touched by
+    this: a reader sent back from Google to an address that did not send them
+    is still a warning, because somebody should know.
+
+    Scenario: An empty body that says it is JSON is answered as unreadable
+      Given an example API route that sends the example command for the range it is given
+      When an empty body that says it is JSON is sent to the example route
+      Then the route answers that it could not be read
+
+    Scenario: An empty body that says it is JSON is not logged as a warning
+      Given an example API route that sends the example command for the range it is given
+      When an empty body that says it is JSON is sent to the example route
+      Then nothing is logged as a warning
+
+    Scenario: A body that is not JSON is not logged as a warning
+      Given an example API route that sends the example command for the range it is given
+      When something that cannot be read is sent to the example route
+      Then nothing is logged as a warning
+
+    Scenario: A failure that is not the caller's reading is still logged as a warning
+      Given an example API route that fails with a status of its own
+      When the example route is asked for
+      Then a warning is logged

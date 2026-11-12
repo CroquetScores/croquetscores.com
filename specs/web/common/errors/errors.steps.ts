@@ -5,7 +5,7 @@ import type { LightMyRequestResponse } from "fastify";
 import type { Range } from "../../../support/exampleRange.js";
 import { ExampleCommand, ExampleQuery } from "../../../support/examples.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { builtFor } from "../../support/application.js";
+import { builtFor, logOf } from "../../support/application.js";
 import { englishForScenarios } from "../../support/languages.js";
 
 // The API answers anything under /api/ as JSON, and anything else as a page,
@@ -360,4 +360,62 @@ When(
 
 Then("the answer is kept by nobody", function (this: SpecWorld) {
   assert.equal(answered(this).headers["cache-control"], "no-store");
+});
+
+// What the server logs about a body it cannot read ------------------------------
+
+// What a program that scans the site sends: it says the body is JSON and then
+// sends nothing.
+When(
+  "an empty body that says it is JSON is sent to the example route",
+  async function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    assert.ok(scenario.route !== undefined, "There is no example route.");
+    scenario.response = await scenario.application.server.inject({
+      ...scenario.route,
+      headers: { "content-type": "application/json" },
+    });
+  },
+);
+
+// 400, which says it could not be understood: not 422, which says it was
+// understood and refused.
+Then("the route answers that it could not be read", function (this: SpecWorld) {
+  const response = answered(this);
+  assert.equal(
+    response.statusCode,
+    400,
+    `The route answered ${response.statusCode}: ${response.body}`,
+  );
+});
+
+// A failure that carries a status chosen by whatever failed, and is not
+// Fastify refusing to read the request.
+Given(
+  "an example API route that fails with a status of its own",
+  function (this: SpecWorld) {
+    const scenario = builtFor(this);
+    scenario.application.server.get(apiRoute, () => {
+      throw Object.assign(new Error("Something chose this."), {
+        statusCode: 409,
+      });
+    });
+    scenario.route = { method: "GET", url: apiRoute };
+  },
+);
+
+When("the example route is asked for", async function (this: SpecWorld) {
+  const scenario = builtFor(this);
+  assert.ok(scenario.route !== undefined, "There is no example route.");
+  scenario.response = await scenario.application.server.inject(scenario.route);
+});
+
+// The application logs warnings and worse and nothing quieter (application.ts),
+// so a line here is a warning or a fault.
+Then("nothing is logged as a warning", function (this: SpecWorld) {
+  assert.deepEqual(logOf(this), []);
+});
+
+Then("a warning is logged", function (this: SpecWorld) {
+  assert.notEqual(logOf(this).length, 0, "Nothing was logged as a warning.");
 });
