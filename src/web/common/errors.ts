@@ -210,7 +210,18 @@ export const registerErrorMapping = (
     // English whatever the reader's language, so a page says the catalogue's
     // words for a request that could not be dealt with instead.
     if (typeof error.statusCode === "number") {
-      request.log.warn({ err: error }, "Request failed");
+      // Fastify refusing to read a body is the caller's mistake, as a broken
+      // rule is, and a warning is for what somebody should look at. Programs
+      // that scan the site send a few dozen of these in minutes, which buried
+      // the warnings worth reading. Named by the code's prefix rather than by
+      // each kind, so that a refusal Fastify adds later is quiet as well. That
+      // takes in a body too large and a type it does not read, which are as
+      // much the caller's to put right.
+      if (error.code?.startsWith("FST_ERR_CTP_")) {
+        request.log.info({ code: error.code }, "Request could not be read");
+      } else {
+        request.log.warn({ err: error }, "Request failed");
+      }
       if (wantsJson(request)) {
         return sendJson(reply.code(error.statusCode), {
           error: error.code ?? "Error",
