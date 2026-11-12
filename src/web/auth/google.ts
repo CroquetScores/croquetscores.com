@@ -86,7 +86,7 @@ export interface GoogleRoutesOptions {
 const pendingCookie = "google-sign-in";
 
 /** How long a reader has at Google before the way back stops being taken. */
-const PENDING_SECONDS = 10 * 60;
+export const PENDING_SECONDS = 10 * 60;
 
 interface Pending {
   readonly state: string;
@@ -114,11 +114,24 @@ const cookieOptions = {
   signed: true,
 } as const;
 
-const pendingFrom = (request: FastifyRequest): Pending | undefined => {
+// Why a way back is not taken, by code, for the log alone: the reader is told
+// the same whichever it was, since a forger is owed nothing.
+type Why =
+  | "Google.CookieMissing"
+  | "Google.CookieNotOurs"
+  | "Google.TookTooLong"
+  | "Google.StateDiffers";
+
+// Told apart because each asks something different of whoever reads the log: a
+// cookie that never came back is the reader's browser or the address they came
+// back to; one that is not the site's is somebody else's, or the site's secret
+// having changed, or one the site did sign in a shape it no longer reads; and a
+// reader who took too long needs nothing done at all.
+const pendingFrom = (request: FastifyRequest): Pending | Why => {
   const kept = request.cookies[pendingCookie];
-  if (kept === undefined) return undefined;
+  if (kept === undefined) return "Google.CookieMissing";
   const unsigned = request.unsignCookie(kept);
-  if (!unsigned.valid || unsigned.value === null) return undefined;
+  if (!unsigned.valid || unsigned.value === null) return "Google.CookieNotOurs";
   try {
     const pending = JSON.parse(unsigned.value) as Partial<Pending>;
     if (
@@ -129,21 +142,25 @@ const pendingFrom = (request: FastifyRequest): Pending | undefined => {
       typeof pending.goBack !== "string" ||
       typeof pending.sentAt !== "number"
     ) {
-      return undefined;
+      return "Google.CookieNotOurs";
     }
     return pending as Pending;
   } catch {
-    return undefined;
+    return "Google.CookieNotOurs";
   }
 };
 
 // A way back that is not taken is answered as a request that could not be dealt
 // with, and signs nobody in: there is nothing a reader can be told that would
 // help, and nothing a forger should be told at all.
-const notSentFromHere = (): never => {
+const notSentFromHere = (why: Why): never => {
   throw Object.assign(
     new Error("A way back from Google this site did not send the reader on."),
-    { statusCode: 400, code: "Google.NotSentFromHere" },
+    // The reason is in the log with the error and in nothing the reader is
+    // sent, which says the code alone. It is no more than a code: not the state
+    // or the code Google gave, which a log is kept too long and read by too
+    // many to hold.
+    { statusCode: 400, code: "Google.NotSentFromHere", reason: why },
   );
 };
 
@@ -214,7 +231,9 @@ export const registerGoogleRoutes = (
       // Judged by the sign in page's own rule, so that which page is gone back
       // to does not depend on which way the reader came in.
       goBack: sentFrom === "sign-in" ? goBackTo(request.query.return) : landing,
-      sentAt: Date.now(),
+      // The server's clock as the request was stamped, which is also what the
+      // way back is judged by, so that the two agree on what time it is.
+      sentAt: request.requestedAt.toDate().getTime(),
     };
     reply.setCookie(pendingCookie, JSON.stringify(pending), {
       ...cookieOptions,
@@ -236,13 +255,18 @@ export const registerGoogleRoutes = (
   }>(callbackPath, async (request, reply) => {
     const pending = pendingFrom(request);
     const { state, code, error } = request.query;
+    if (typeof pending === "string") return notSentFromHere(pending);
+    // The state before the time: a way back carrying another state is somebody
+    // else's whether or not the cookie has gone stale, and saying only that the
+    // reader was slow would hide it.
+    if (typeof state !== "string" || state !== pending.state) {
+      return notSentFromHere("Google.StateDiffers");
+    }
     if (
-      pending === undefined ||
-      Date.now() - pending.sentAt > PENDING_SECONDS * 1000 ||
-      typeof state !== "string" ||
-      state !== pending.state
+      request.requestedAt.toDate().getTime() - pending.sentAt >
+      PENDING_SECONDS * 1000
     ) {
-      return notSentFromHere();
+      return notSentFromHere("Google.TookTooLong");
     }
     // Used up once it has been taken, so that the same way back followed again
     // finds nothing to be taken with. Not before: a way back carrying another
