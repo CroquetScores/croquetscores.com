@@ -100,6 +100,13 @@ Feature: The site's emails are written in their reader's language
         | Email.ConfirmNewEmailAddress |
         | Email.AlreadyHasAnAccount    |
         | Email.EmailAddressChanged    |
+        | Email.NotableTournament      |
+        | Email.NationalStatusRemoved  |
+        | Email.InternationalStatusRemoved |
+
+    Scenario: An email only written in English is written in English whatever language is asked for
+      When the email "Email.NotableTournament" is written in "de"
+      Then its subject is the words for "Email.NotableTournament.subject" in English
 
     Scenario: An email in a language the site does not offer is written in English
       When the email "Email.ConfirmAddress" is written in "xx"

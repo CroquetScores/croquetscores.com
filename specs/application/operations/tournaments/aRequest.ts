@@ -258,7 +258,7 @@ export const updateOf = (
     region: changed.region ?? tournament.region?.code,
     ...(typeof subtitle === "string" ? { subtitle } : {}),
     levelTestsDrawn: tournament.levelTestsDrawn,
-    national: tournament.national,
+    national: changed.national ?? tournament.national,
     international: changed.international ?? tournament.international,
   };
 };

@@ -112,6 +112,77 @@ Feature: Changing what a tournament is
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
       Then the tournament is found at "2026/ac/spring-open"
 
+  Rule: The administrator is told of a national or an international tournament that is changed
+
+    A national or an international tournament is the more notable, and the
+    administrator is the one who would want to know when one is changed. They
+    are told by email, in English only, as creating one tells them
+    (`CreateTournament.feature`). An update that changes nothing records
+    nothing, and so tells nobody: the email is of a change made, not of a form
+    sent again.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario: A tournament made national is told to the administrator
+      Given the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
+    Scenario: A tournament made international is told to the administrator
+      Given the update makes it an international event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
+    Scenario: A national tournament that is renamed is told to the administrator
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      And the update calls it "Spring Open Championship"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then 2 emails are queued for "administrator@example.com"
+
+    Scenario: A tournament that is neither is not told to the administrator
+      Given the update calls it "Spring Open Championship"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+    Scenario: A tournament made neither again is not told to the administrator
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      And the update makes it neither national nor international
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then one email is queued for "administrator@example.com"
+
+    Scenario: An update that changes nothing tells nobody
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      And the update calls it "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then one email is queued for "administrator@example.com"
+
+    Scenario: The email names the tournament as it is now called
+      Given the update calls it "Spring Open Championship"
+      And the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email queued for "administrator@example.com" names the tournament "Spring Open Championship"
+
+    Scenario: The email says the tournament was edited
+      Given the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email queued for "administrator@example.com" says the tournament was edited
+
+    Scenario: The email says the tournament is national
+      Given the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email queued for "administrator@example.com" says the tournament is national
+
+    Scenario: The email says the tournament is international
+      Given the update makes it an international event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email queued for "administrator@example.com" says the tournament is international
+
+    Scenario: An update that is refused is not told to the administrator
+      Given the update makes it a national event
+      And the update finishes it at "2026-10-02T00:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
   Rule: Only a tournament there is can be updated
 
     Scenario: Updating a tournament there is not is refused

@@ -7,7 +7,9 @@ import type { TournamentAddresses } from "./tournamentOperations.js";
 import { Website } from "../../../domain/common/Website.js";
 import { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import type { EmailQueue } from "../../services/EmailQueue.js";
 import { askedBy, detailsFrom, takenFor } from "./tournamentOperations.js";
+import { tellOfNotableTournament } from "./notableTournament.js";
 import {
   CreateTournament,
   type CreatedTournament,
@@ -29,6 +31,9 @@ export class CreateTournamentHandler extends CommandHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly addresses: TournamentAddresses,
+    private readonly queue: EmailQueue,
+    /** Who is told of a national or an international tournament. */
+    private readonly administratorEmailAddress: string,
   ) {
     super();
   }
@@ -46,6 +51,18 @@ export class CreateTournamentHandler extends CommandHandler<
       command.requestedAt,
     );
     await this.tournaments.save(tournament);
+    await tellOfNotableTournament(
+      this.queue,
+      this.administratorEmailAddress,
+      {
+        name: tournament.name.toString(),
+        address: tournament.address.toString(),
+        website: tournament.website.host,
+      },
+      details,
+      "added",
+      command.requestedAt,
+    );
     return { id, address: tournament.address };
   }
 }

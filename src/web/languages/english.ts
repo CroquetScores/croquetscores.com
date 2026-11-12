@@ -723,6 +723,26 @@ export const english: Language = {
       "No tournament is played in a country the lists do not name",
     "admin.countries.oldSite": "Old site",
     "admin.countries.otherwise": "Something went wrong on the site.",
+    // The page an administrator judges a national or an international
+    // tournament on, in English only (writtenInEnglishOnly.ts).
+    "admin.notableTournament.title": "Notable tournament",
+    "admin.notableTournament.tournament": "Tournament",
+    "admin.notableTournament.adminTournament": "Admin tournament",
+    "admin.notableTournament.removeNational": "Remove national event status",
+    "admin.notableTournament.removeInternational":
+      "Remove international event status",
+    "admin.notableTournament.confirmNational":
+      "Remove the national event status from {name}? Its managers will be emailed to say so, and that cannot be taken back.",
+    "admin.notableTournament.confirmInternational":
+      "Remove the international event status from {name}? Its managers will be emailed to say so, and that cannot be taken back.",
+    "admin.notableTournament.yes": "Yes, remove it",
+    "admin.notableTournament.neither":
+      "This tournament is neither national nor international",
+    "admin.notableTournament.otherwise": "Something went wrong on the site.",
+    "admin.hover.notableTournament.remove":
+      "Ask to take this tournament's status away",
+    "admin.hover.notableTournament.yes":
+      "Take the status away and email the tournament's managers",
     "admin.logs.title": "Logs",
     "admin.logs.severity": "Severity",
     "admin.logs.text": "Look up",
@@ -1798,6 +1818,79 @@ export const english: Language = {
 <p>
     {emailFromName}<br />
     {siteName}
+</p>
+`,
+
+    // Written in English only, in no other catalogue: it goes to the
+    // administrator, and every other language falls back to these words.
+    "Email.NotableTournament.subject":
+      "A {level} tournament was {change}: {tournament}",
+    "Email.NotableTournament.body": `
+<p>Hi,</p>
+
+<p>
+    A {level} tournament was {change} on {siteName}:
+    <a href="{site}/admin/administrator/notable-tournament?url={address}">{tournament}</a>.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
+    // Written in English only too, in the administrator's own voice: one for
+    // each level, since what is said of why it is not that level differs.
+    "Email.NationalStatusRemoved.subject": "{siteName} - {tournament}",
+    "Email.NationalStatusRemoved.body": `
+<p>Hi,</p>
+
+<p>You recently created the tournament:</p>
+
+<p><a href="{site}/{address}">{site}/{address}</a></p>
+
+<p>and classified it as a national-level event.</p>
+
+<p>
+    National-level events are intended for tournaments such as the Australian
+    Open and other competitions of similar national significance. Based on my
+    understanding, {tournament} does not appear to fall into that category.
+</p>
+
+<p>
+    If you believe it should be classified as a national-level event, I'd be
+    interested to hear the reasoning behind that classification.
+</p>
+
+<p>
+    Regards,<br />
+    {emailFromName}
+</p>
+`,
+
+    "Email.InternationalStatusRemoved.subject": "{siteName} - {tournament}",
+    "Email.InternationalStatusRemoved.body": `
+<p>Hi,</p>
+
+<p>You recently created the tournament:</p>
+
+<p><a href="{site}/{address}">{site}/{address}</a></p>
+
+<p>and classified it as an international-level event.</p>
+
+<p>
+    International-level events are intended for WCF tournaments. Based on my
+    understanding, {tournament} does not appear to fall into that category.
+</p>
+
+<p>
+    If you believe it should be classified as an international-level event,
+    I'd be interested to hear the reasoning behind that classification.
+</p>
+
+<p>
+    Regards,<br />
+    {emailFromName}
 </p>
 `,
 

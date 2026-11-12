@@ -12,6 +12,8 @@ import {
   takenFor,
   tournamentFor,
 } from "./tournamentOperations.js";
+import type { EmailQueue } from "../../services/EmailQueue.js";
+import { tellOfNotableTournament } from "./notableTournament.js";
 import { UpdateTournament } from "./UpdateTournament.js";
 
 /**
@@ -28,6 +30,9 @@ export class UpdateTournamentHandler extends CommandHandler<
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly addresses: TournamentAddresses,
+    private readonly queue: EmailQueue,
+    /** Who is told of a national or an international tournament. */
+    private readonly administratorEmailAddress: string,
   ) {
     super();
   }
@@ -46,6 +51,21 @@ export class UpdateTournamentHandler extends CommandHandler<
       by,
       command.requestedAt,
     );
+    // An update that changed nothing recorded nothing, and has nothing to tell.
+    const changed = tournament.recorded.length > 0;
     await this.tournaments.save(tournament);
+    if (!changed) return;
+    await tellOfNotableTournament(
+      this.queue,
+      this.administratorEmailAddress,
+      {
+        name: tournament.name.toString(),
+        address: tournament.address.toString(),
+        website: tournament.website.host,
+      },
+      details,
+      "edited",
+      command.requestedAt,
+    );
   }
 }
