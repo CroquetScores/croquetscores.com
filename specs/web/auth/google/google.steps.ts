@@ -7,6 +7,7 @@ import {
   anApplicationWithoutGoogle,
   logOf,
 } from "../../support/browser.js";
+import { PENDING_SECONDS } from "../../../../src/web/auth/google.js";
 import { movePast } from "../../support/clock.js";
 import {
   boxOf,
@@ -341,7 +342,8 @@ When(
 Given(
   "the reader takes longer than the site allows",
   function (this: SpecWorld) {
-    movePast(this, 11 * 60 * 1000);
+    // A minute past what the site allows, whatever that is.
+    movePast(this, (PENDING_SECONDS + 60) * 1000);
   },
 );
 

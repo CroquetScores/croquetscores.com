@@ -86,7 +86,7 @@ export interface GoogleRoutesOptions {
 const pendingCookie = "google-sign-in";
 
 /** How long a reader has at Google before the way back stops being taken. */
-const PENDING_SECONDS = 10 * 60;
+export const PENDING_SECONDS = 10 * 60;
 
 interface Pending {
   readonly state: string;
@@ -124,8 +124,9 @@ type Why =
 
 // Told apart because each asks something different of whoever reads the log: a
 // cookie that never came back is the reader's browser or the address they came
-// back to, one that is not the site's is somebody else's or the site's secret
-// having changed, and a reader who took too long needs nothing done at all.
+// back to; one that is not the site's is somebody else's, or the site's secret
+// having changed, or one the site did sign in a shape it no longer reads; and a
+// reader who took too long needs nothing done at all.
 const pendingFrom = (request: FastifyRequest): Pending | Why => {
   const kept = request.cookies[pendingCookie];
   if (kept === undefined) return "Google.CookieMissing";
@@ -255,14 +256,17 @@ export const registerGoogleRoutes = (
     const pending = pendingFrom(request);
     const { state, code, error } = request.query;
     if (typeof pending === "string") return notSentFromHere(pending);
+    // The state before the time: a way back carrying another state is somebody
+    // else's whether or not the cookie has gone stale, and saying only that the
+    // reader was slow would hide it.
+    if (typeof state !== "string" || state !== pending.state) {
+      return notSentFromHere("Google.StateDiffers");
+    }
     if (
       request.requestedAt.toDate().getTime() - pending.sentAt >
       PENDING_SECONDS * 1000
     ) {
       return notSentFromHere("Google.TookTooLong");
-    }
-    if (typeof state !== "string" || state !== pending.state) {
-      return notSentFromHere("Google.StateDiffers");
     }
     // Used up once it has been taken, so that the same way back followed again
     // finds nothing to be taken with. Not before: a way back carrying another
