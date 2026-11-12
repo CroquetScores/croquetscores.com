@@ -50,8 +50,10 @@ export default tseslint.config(
       // Named rather than pulled from a globals package: this is the whole list
       // these files use, and a short list that is true beats a long one.
       globals: {
+        AbortSignal: "readonly",
         Buffer: "readonly",
         console: "readonly",
+        fetch: "readonly",
         process: "readonly",
       },
     },

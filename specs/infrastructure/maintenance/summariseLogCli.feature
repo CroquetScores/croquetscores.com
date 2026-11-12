@@ -47,7 +47,7 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
     Given a migrated database
     And a server log kept in the database
     And the moment "2026-10-09T05:00:00Z"
-    And the administrator's email address is "croquetscores@gmail.com"
+    And the administrator is "croquetscores@gmail.com"
     And a Claude that writes the summary "Two payments were refused."
 
   Rule: The last 24 hours of the log are read, from Warn
@@ -71,6 +71,33 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
       Given an entry written at "2026-10-09T04:00:00Z" saying "Chatter" at the severity Info
       When the summary is run
       Then Claude was not given the entry "Chatter"
+
+  Rule: A very long day is cut at the newest 300 entries
+
+    An outage can write thousands of lines, which would be more than Claude
+    can be given and would cost more than the summary is worth. The newest are
+    what the administrator most needs, and Claude is told that there were
+    more, so that it does not say the day was quieter than it was.
+
+    Scenario: 300 entries are given
+      Given 300 entries written at "2026-10-09T04:00:00Z" at the severity Error
+      When the summary is run
+      Then Claude was given 300 entries
+
+    Scenario: No more than 300 entries are given
+      Given 301 entries written at "2026-10-09T04:00:00Z" at the severity Error
+      When the summary is run
+      Then Claude was given 300 entries
+
+    Scenario: Claude is told where there were more
+      Given 301 entries written at "2026-10-09T04:00:00Z" at the severity Error
+      When the summary is run
+      Then Claude was told there were more entries than it was given
+
+    Scenario: Claude is not told so where there were not
+      Given 300 entries written at "2026-10-09T04:00:00Z" at the severity Error
+      When the summary is run
+      Then Claude was not told there were more entries than it was given
 
   Rule: An email address is not sent to Claude
 
@@ -112,7 +139,7 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
       Given a Claude that writes the summary "<script>alert(1)</script>"
       And an entry written at "2026-10-09T04:00:00Z" saying "Payment refused" at the severity Error
       When the summary is run
-      Then the email does not contain markup from Claude
+      Then the email does not contain "<script>"
 
     Scenario: The email's subject says how many entries there were
       Given an entry written at "2026-10-09T04:00:00Z" saying "Payment refused" at the severity Error
@@ -127,7 +154,7 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
     Scenario: The script ends well
       Given an entry written at "2026-10-09T04:00:00Z" saying "Payment refused" at the severity Error
       When the summary is run
-      Then the script ended well
+      Then the summary script exits with success
 
   Rule: A quiet day is emailed too
 
@@ -174,7 +201,7 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
       Given a Claude that cannot be reached
       And an entry written at "2026-10-09T04:00:00Z" saying "Refused for ada@example.com" at the severity Error
       When the summary is run
-      Then the email does not say "ada@example.com"
+      Then the email does not contain "ada@example.com"
 
     Scenario: A summary that is empty is the same as one that could not be written
       Given a Claude that writes the summary ""
@@ -185,13 +212,30 @@ Feature: A summary of the last day's log, emailed to the administrator each morn
   Rule: A failure to send is a failure of the script
 
     Scenario: The script ends in failure where the email cannot be sent
-      Given an email that cannot be sent
+      Given email cannot be sent
       And an entry written at "2026-10-09T04:00:00Z" saying "Payment refused" at the severity Error
       When the summary is run
-      Then the script ended in failure
+      Then the summary script exits with failure
 
     Scenario: The script says why where the email cannot be sent
-      Given an email that cannot be sent
+      Given email cannot be sent
       And an entry written at "2026-10-09T04:00:00Z" saying "Payment refused" at the severity Error
       When the summary is run
-      Then the script said that the administrator could not be told
+      Then the summary script says the administrator could not be told
+
+  Rule: A log that cannot be read is told to the administrator
+
+    Scenario: The administrator is emailed where the log cannot be read
+      Given the log cannot be read
+      When the summary is run
+      Then an email was sent to "croquetscores@gmail.com"
+
+    Scenario: The email says the log could not be read
+      Given the log cannot be read
+      When the summary is run
+      Then the email says that the log could not be read
+
+    Scenario: The script ends in failure where the log cannot be read
+      Given the log cannot be read
+      When the summary is run
+      Then the summary script exits with failure

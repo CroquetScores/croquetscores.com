@@ -11,6 +11,7 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
 - [backup-and-restore.md](backup-and-restore.md) — Copying the events to another machine, and rebuilding the website from the copy
 - [exporting-tournaments.md](exporting-tournaments.md) — Publishing the tournaments as JSON files in a Git repository anybody can read, from cron on the hour
+- [summarising-the-log.md](summarising-the-log.md) — The last day's log, summarised by Claude and emailed each morning from cron
 - [connect-phone.md](connect-phone.md) — For development rather than running the website: opening the site running on your own computer on a phone, through an https tunnel
 
 The repository's other documents say what the code is rather than how it is run: `SETUP.md` how it is built and why. What is still to be done before production is the issue https://github.com/CroquetScores/croquetscores.com/issues/286.
