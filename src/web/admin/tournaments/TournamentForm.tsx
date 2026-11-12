@@ -511,27 +511,33 @@ export const TournamentForm = ({
                   tick={setLevelTestsSaid}
                 />
               ) : null}
-              {/* Never both: a tournament said to be both is refused, so
-                  ticking one unticks the other rather than letting the reader
-                  tick both and then be told it cannot be done. */}
-              <Tick
-                name="national"
-                label={say("admin.tournament.national")}
-                ticked={national}
-                tick={(ticked) => {
-                  setNational(ticked);
-                  if (ticked) setInternational(false);
-                }}
-              />
-              <Tick
-                name="international"
-                label={say("admin.tournament.international")}
-                ticked={international}
-                tick={(ticked) => {
-                  setInternational(ticked);
-                  if (ticked) setNational(false);
-                }}
-              />
+              <fieldset className="field-optional">
+                <legend>{say("admin.tournament.optional")}</legend>
+                {/* Boxed under "Optional" because a reader took these for a
+                    choice they had to make, as they were all that was asked
+                    below the subtitle (issue 627). Never both: a tournament
+                    said to be both is refused, so ticking one unticks the
+                    other rather than letting the reader tick both and then be
+                    told it cannot be done. */}
+                <Tick
+                  name="national"
+                  label={say("admin.tournament.national")}
+                  ticked={national}
+                  tick={(ticked) => {
+                    setNational(ticked);
+                    if (ticked) setInternational(false);
+                  }}
+                />
+                <Tick
+                  name="international"
+                  label={say("admin.tournament.international")}
+                  ticked={international}
+                  tick={(ticked) => {
+                    setInternational(ticked);
+                    if (ticked) setNational(false);
+                  }}
+                />
+              </fieldset>
             </div>
             <div className="dialog-buttons">
               <button

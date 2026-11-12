@@ -603,6 +603,7 @@ export const german: Language = {
     "admin.rules.maximumHoops": "Höchstzahl der Tore",
     "admin.tournament.national": "Veranstaltung auf nationaler Ebene",
     "admin.tournament.international": "Veranstaltung auf internationaler Ebene",
+    "admin.tournament.optional": "Optional",
     // Eine Ablehnung ohne eigene Worte, über den Feldern.
     "admin.tournament.otherwise": "Das kann so nicht angenommen werden.",
     "admin.newTournament.title": "Neues Turnier",

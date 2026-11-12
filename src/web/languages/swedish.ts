@@ -577,6 +577,7 @@ export const swedish: Language = {
     "admin.rules.maximumHoops": "Högsta antal bågar",
     "admin.tournament.national": "Nationell tävling",
     "admin.tournament.international": "Internationell tävling",
+    "admin.tournament.optional": "Valfritt",
     // Ett avslag utan egna ord, ovanför fälten.
     "admin.tournament.otherwise": "Det här kan inte godtas som det är.",
     "admin.newTournament.title": "Ny turnering",

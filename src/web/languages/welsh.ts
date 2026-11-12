@@ -556,6 +556,7 @@ export const welsh: Language = {
     "admin.rules.maximumHoops": "Uchafswm cylchau",
     "admin.tournament.national": "Digwyddiad lefel genedlaethol",
     "admin.tournament.international": "Digwyddiad lefel ryngwladol",
+    "admin.tournament.optional": "Dewisol",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Ni ellir derbyn hyn fel y mae.",
     "admin.newTournament.title": "Twrnamaint newydd",
