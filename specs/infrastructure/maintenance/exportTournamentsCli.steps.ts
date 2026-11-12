@@ -26,6 +26,8 @@ import { ArchiveCompetition } from "../../../src/application/operations/tourname
 import { StartCommentary } from "../../../src/application/operations/tournaments/StartCommentary.js";
 import { UpdatePlayer } from "../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { UpdateTeam } from "../../../src/application/operations/tournaments/UpdateTeam.js";
+import { PublicPlayersOfTournament } from "../../../src/application/operations/tournaments/PublicPlayersOfTournament.js";
+import { changeTournament } from "../../web/support/tournaments.js";
 import { WithdrawGame } from "../../../src/application/operations/competitions/WithdrawGame.js";
 import type { CommentaryId } from "../../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import {
@@ -69,6 +71,8 @@ type Happened =
 interface Export {
   root: string | undefined;
   remote: string | undefined;
+  /** A change to make once, as the tournaments begin to be read. */
+  changeWhileReading: { from: string; to: string } | undefined;
   writeFails: boolean;
   writeFailsPartway: boolean;
   pushFails: boolean;
@@ -90,6 +94,7 @@ const exportOf = (world: SpecWorld): Export => {
     found = {
       root: undefined,
       remote: undefined,
+      changeWhileReading: undefined,
       writeFails: false,
       writeFailsPartway: false,
       pushFails: false,
@@ -266,6 +271,33 @@ Given("writing a file fails", function (this: SpecWorld) {
   exportOf(this).writeFails = true;
 });
 
+Given("writing a file works", function (this: SpecWorld) {
+  const state = exportOf(this);
+  state.writeFails = false;
+  state.writeFailsPartway = false;
+});
+
+Given(
+  "the tournament {string} is renamed to {string} while it is being read",
+  function (this: SpecWorld, from: string, to: string) {
+    exportOf(this).changeWhileReading = { from, to };
+  },
+);
+
+Given(
+  "the file {string} is deleted",
+  async function (this: SpecWorld, name: string) {
+    await rm(join(folderOf(this), name));
+  },
+);
+
+Given(
+  "the folder's record of what was exported is deleted",
+  async function (this: SpecWorld) {
+    await rm(join(folderOf(this), ".git", "export-record.json"));
+  },
+);
+
 Given("writing a file fails partway", function (this: SpecWorld) {
   const state = exportOf(this);
   state.writeFails = true;
@@ -371,7 +403,19 @@ const run = async (world: SpecWorld, argument: string): Promise<void> => {
     {
       administrator: script.administrator,
       workingFolder: root,
-      ask: (query) => inHandOf(world).ask(query),
+      ask: async (query) => {
+        const change = state.changeWhileReading;
+        if (
+          change !== undefined &&
+          query instanceof PublicPlayersOfTournament
+        ) {
+          // Once, and as the first tournament begins to be read: after what
+          // marks the tournaments was asked, and before anything of one was.
+          state.changeWhileReading = undefined;
+          await changeTournament(world, change.from, { name: change.to });
+        }
+        return inHandOf(world).ask(query);
+      },
       git: async (folder, args, input) => {
         state.happened.push({ kind: "git", args });
         // Said as a remote with a password in its address would say it, which
@@ -774,6 +818,20 @@ Then(
 Then("the export script says it was a test run", function (this: SpecWorld) {
   saysOnTheScreen(this, "This was a test run");
 });
+
+Then(
+  "the export script says {int} tournament was read",
+  function (this: SpecWorld, count: number) {
+    saysOnTheScreen(this, `${String(count)} tournament was read.`);
+  },
+);
+
+Then(
+  "the export script says {int} tournaments were read",
+  function (this: SpecWorld, count: number) {
+    saysOnTheScreen(this, `${String(count)} tournaments were read.`);
+  },
+);
 
 Then(
   "the export script says there was nothing to commit",

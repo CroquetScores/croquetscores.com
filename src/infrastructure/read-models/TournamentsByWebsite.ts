@@ -1,5 +1,6 @@
 import type { Projection } from "../../application/common/Projection.js";
 import type {
+  TournamentFingerprint,
   TournamentOfWebsite,
   TournamentPlayed,
   TournamentsByWebsite as Asked,
@@ -181,6 +182,45 @@ export class TournamentsByWebsite implements Projection, Asked {
         [website.host],
       );
     return rows.map(({ address }) => address);
+  }
+
+  // The newest version of each stream the tournament is made of, its own and
+  // each competition's, put together and hashed. A version only ever grows, so
+  // any append changes the mark; and it is read from the events themselves and
+  // not from a moment, so that an append that was kept late, or at the same
+  // moment as another, still changes it.
+  async fingerprintsOf(
+    website: Website,
+  ): Promise<readonly TournamentFingerprint[]> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ tournament_id: string; fingerprint: string }>(
+        `with streams as (
+           select t.tournament_id, t.tournament_id as stream_id
+             from tournaments t
+            where t.website = $1 and not t.archived
+           union all
+           select c.tournament_id, c.competition_id
+             from competitions c
+             join tournaments t on t.tournament_id = c.tournament_id
+            where t.website = $1 and not t.archived
+         )
+         select s.tournament_id,
+                md5(string_agg(s.stream_id || ':' || coalesce(v.version, 0),
+                               ',' order by s.stream_id)) as fingerprint
+           from streams s
+           left join lateral (
+             select max(e.version) as version from events e
+              where e.stream_id = s.stream_id
+           ) v on true
+          group by s.tournament_id
+          order by s.tournament_id`,
+        [website.host],
+      );
+    return rows.map((row) => ({
+      id: row.tournament_id,
+      fingerprint: row.fingerprint,
+    }));
   }
 
   async namesOf(website: Website): Promise<readonly string[]> {

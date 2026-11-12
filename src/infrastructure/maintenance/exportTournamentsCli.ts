@@ -1,4 +1,12 @@
-import { mkdir, readdir, readFile, rename, rm, stat } from "node:fs/promises";
+import {
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 
 import type { Query } from "../../application/common/Query.js";
@@ -9,6 +17,7 @@ import { PublicSwissOfTournament } from "../../application/operations/tournament
 import { PublicTeamSummaryOfTournament } from "../../application/operations/tournaments/PublicTeamSummaryOfTournament.js";
 import { PublicTestOfTournament } from "../../application/operations/tournaments/PublicTestOfTournament.js";
 import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
+import { TournamentFingerprints } from "../../application/operations/tournaments/TournamentFingerprints.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
 import { TournamentsInYear } from "../../application/operations/tournaments/TournamentsInYear.js";
 
@@ -134,9 +143,12 @@ const withoutRemote = (text: string, address: string | undefined): string => {
 const whyOf = (ended: GitEnded): string =>
   (ended.complaint ?? "").trim() || ended.said.trim();
 
+// A number as a reader of English is used to, so that 12345 is not squinted at.
+const withCommas = (count: number): string => count.toLocaleString("en-US");
+
 // What a count is said as: "1 tournament was", "2 tournaments were".
 const counted = (count: number, one: string, many: string): string =>
-  count === 1 ? `1 ${one} was` : `${String(count)} ${many} were`;
+  count === 1 ? `1 ${one} was` : `${withCommas(count)} ${many} were`;
 
 const tournamentsWritten = (count: number): string =>
   counted(count, "tournament", "tournaments");
@@ -392,29 +404,78 @@ interface Parsed {
   readonly folder: string | undefined;
   /** Whether Git is left alone, so that the files are written and no more. */
   readonly test: boolean;
+  /** Whether every tournament is read, and not only those that have changed. */
+  readonly all: boolean;
   readonly mistake: string | undefined;
 }
 
 const parse = (args: readonly string[]): Parsed => {
   let folder: string | undefined;
   let test = false;
+  let all = false;
   for (let at = 0; at < args.length; at += 1) {
     const arg = args[at]!;
     if (arg === "--test") {
       test = true;
       continue;
     }
+    if (arg === "--all") {
+      all = true;
+      continue;
+    }
     if (arg !== "--folder") {
-      return { folder: undefined, test, mistake: `${arg} is not known.` };
+      return { folder: undefined, test, all, mistake: `${arg} is not known.` };
     }
     const value = args[at + 1];
     if (value === undefined || value.startsWith("--")) {
-      return { folder: undefined, test, mistake: undefined };
+      return { folder: undefined, test, all, mistake: undefined };
     }
     folder = value;
     at += 1;
   }
-  return { folder, test, mistake: undefined };
+  return { folder, test, all, mistake: undefined };
+};
+
+/** What was exported of a tournament, as the last run left it. */
+interface Recorded {
+  readonly address: string;
+  readonly fingerprint: string;
+}
+
+// Kept inside the folder's own Git directory, which is never committed, so
+// that it goes with the clone it is true of: a folder that is cloned again, or
+// has its files put back by hand, has no record, and so is exported whole
+// rather than believed.
+const recordFile = (folder: string): string =>
+  join(folder, ".git", "export-record.json");
+
+const recordedIn = async (folder: string): Promise<Map<string, Recorded>> => {
+  try {
+    const parsed = JSON.parse(await readFile(recordFile(folder), "utf8")) as {
+      layout?: unknown;
+      tournaments?: Record<string, Recorded>;
+    };
+    // A record of another layout says nothing of what a file would say now.
+    if (parsed.layout !== LAYOUT || parsed.tournaments === undefined) {
+      return new Map();
+    }
+    return new Map(Object.entries(parsed.tournaments));
+  } catch {
+    return new Map();
+  }
+};
+
+const recordIn = async (
+  folder: string,
+  tournaments: ReadonlyMap<string, Recorded>,
+): Promise<void> => {
+  const text = JSON.stringify({
+    layout: LAYOUT,
+    tournaments: Object.fromEntries(tournaments),
+  });
+  // A name of its own until it is whole, as the files are.
+  await writeFile(`${recordFile(folder)}.partial`, text);
+  await rename(`${recordFile(folder)}.partial`, recordFile(folder));
 };
 
 const ofFilesIn = async (folder: string): Promise<string[]> => {
@@ -466,12 +527,12 @@ export const runExportTournaments = async (
   const parsed = parse(args);
   if (parsed.mistake !== undefined) {
     say(parsed.mistake);
-    say("Usage: export:tournaments --folder <folder> [--test]");
+    say("Usage: export:tournaments --folder <folder> [--test] [--all]");
     return { exitCode: 1 };
   }
   if (parsed.folder === undefined) {
     say("The folder is needed: --folder says where the files are written.");
-    say("Usage: export:tournaments --folder <folder> [--test]");
+    say("Usage: export:tournaments --folder <folder> [--test] [--all]");
     return { exitCode: 1 };
   }
   const folder = resolve(world.workingFolder, parsed.folder);
@@ -590,8 +651,26 @@ export const runExportTournaments = async (
 
   // Read before anything is written, so that a tournament that cannot be read
   // fails the run with nothing changed.
-  const wanted = new Map<string, string>();
+  // What of each tournament is to be said, or nothing where its file is as
+  // the record says it should be and is not read again.
+  const wanted = new Map<string, string | undefined>();
+  const toRecord = new Map<string, Recorded>();
+  // A test leaves the folder's Git directory alone with the rest of Git, and
+  // so keeps no record and reads every tournament.
+  const recorded: Map<string, Recorded> =
+    test || parsed.all ? new Map<string, Recorded>() : await recordedIn(folder);
+  const read = { count: 0 };
   try {
+    // What marks each tournament is read before anything of the tournaments is,
+    // so that whatever is kept while they are read is newer than the mark and
+    // shows as a change the next time. Read after, the mark could be of a
+    // change the file was made without, and that change would be missed.
+    const marks = new Map<string, string>();
+    for (const website of WEBSITES_EXPORTED) {
+      for (const each of await world.ask(new TournamentFingerprints(website))) {
+        marks.set(each.id, each.fingerprint);
+      }
+    }
     const listings: {
       readonly website: string;
       readonly listed: TournamentOfWebsite;
@@ -614,32 +693,59 @@ export const runExportTournaments = async (
         }
       }
     }
-    say(`${String(listings.length)} tournaments to read.`);
+    // Read unless the record says it is as it was: the same mark and the same
+    // address, and a file there. Anything that cannot be shown to be
+    // unchanged is read, so that a doubt is never settled by leaving it.
+    const toRead: number[] = [];
+    for (const [at, { listed }] of listings.entries()) {
+      const mark = marks.get(listed.id);
+      const before = recorded.get(listed.id);
+      const unchanged =
+        mark !== undefined &&
+        before !== undefined &&
+        before.fingerprint === mark &&
+        before.address === listed.address &&
+        (await exists(join(folder, `${listed.address}.json`)));
+      if (mark !== undefined) {
+        toRecord.set(listed.id, { address: listed.address, fingerprint: mark });
+      }
+      if (unchanged) wanted.set(`${listed.address}.json`, undefined);
+      else toRead.push(at);
+    }
+    read.count = toRead.length;
+    say(
+      `${withCommas(listings.length)} tournaments are public, and ${withCommas(toRead.length)} to read.`,
+    );
     // A few at a time, since each is several questions and the database may be
     // a long way off; said as it goes, so that a long read is seen to be going.
     // Kept in the order they were listed, so that the files are written in the
     // same order whatever order the answers came in.
-    const texts: string[] = new Array<string>(listings.length);
+    const texts = new Map<number, string>();
     let next = 0;
-    let done = 0;
     const worker = async (): Promise<void> => {
-      while (next < listings.length) {
-        const at = next;
+      while (next < toRead.length) {
+        const at = toRead[next]!;
         next += 1;
         const { website, listed } = listings[at]!;
-        texts[at] = await fileOf(world, website, listed);
-        done += 1;
-        if (done % 25 === 0 || done === listings.length) {
-          say(`Read ${String(done)} of ${String(listings.length)}.`);
+        texts.set(at, await fileOf(world, website, listed));
+        if (texts.size % 25 === 0 || texts.size === toRead.length) {
+          say(
+            `Read ${withCommas(texts.size)} of ${withCommas(toRead.length)}.`,
+          );
         }
       }
     };
     await Promise.all(
-      Array.from({ length: Math.min(READ_AT_ONCE, listings.length) }, worker),
+      Array.from({ length: Math.min(READ_AT_ONCE, toRead.length) }, worker),
     );
-    listings.forEach(({ listed }, at) => {
-      wanted.set(`${listed.address}.json`, texts[at]!);
-    });
+    for (const [at, { listed }] of listings.entries()) {
+      const name = `${listed.address}.json`;
+      if (wanted.has(name)) continue;
+      const text = texts.get(at);
+      // Never left as nothing, which would say it is unchanged.
+      if (text === undefined) throw new Error(`${name} was not read.`);
+      wanted.set(name, text);
+    }
   } catch (failure) {
     return failed("reading the tournaments", messageOf(failure));
   }
@@ -648,6 +754,10 @@ export const runExportTournaments = async (
   let alreadyAsTheyShouldBe = 0;
   try {
     for (const [name, text] of wanted) {
+      if (text === undefined) {
+        alreadyAsTheyShouldBe += 1;
+        continue;
+      }
       const path = join(folder, name);
       let before: string | undefined;
       try {
@@ -704,6 +814,19 @@ export const runExportTournaments = async (
     return failed("removing a file", messageOf(failure));
   }
 
+  // Recorded once every file is as it should be, and not before: a run that
+  // stopped part way has recorded nothing, and so the next reads what this
+  // one did not reach. Only the files are what is believed, so a record that
+  // cannot be kept costs a longer next run and never a missed change.
+  if (!test) {
+    try {
+      await recordIn(folder, toRecord);
+    } catch (failure) {
+      say(`The record could not be kept: ${messageOf(failure)}`);
+    }
+  }
+
+  say(`${counted(read.count, "tournament", "tournaments")} read.`);
   say(`${tournamentsWritten(written.length)} written.`);
   say(
     `${counted(alreadyAsTheyShouldBe, "tournament", "tournaments")} already as ${alreadyAsTheyShouldBe === 1 ? "it" : "they"} should be.`,
@@ -797,7 +920,7 @@ export const runExportTournaments = async (
       );
       if (committed.code !== 0)
         return failed("committing the folder", whyOf(committed));
-      say(`Committed ${String(paths.length)} files.`);
+      say(`Committed ${withCommas(paths.length)} files.`);
     }
   } catch (failure) {
     return failed("committing the folder", messageOf(failure));

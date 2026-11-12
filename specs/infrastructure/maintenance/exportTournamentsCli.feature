@@ -131,9 +131,26 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   team who is archived is left out, with the games they were in, and so is an
   archived test, as the pages leave them out.
 
+  A run reads only the tournaments that have changed since the last run
+  exported them, since reading them all takes long and nearly none of them has
+  changed. What changed is told by a mark of each tournament, made of the
+  newest version kept of the tournament and of each of its competitions, and
+  not by when anything was kept: a moment is no proof of what came before it,
+  as two things kept at once, or one kept late by a slow transaction after one
+  kept earlier, would leave a change that a moment missed. The marks are read
+  before any tournament is, so that what is kept while the tournaments are
+  read is newer than the mark and is read again next time. What is exported is
+  recorded in the folder's own Git directory, which is never committed, once
+  every file is as it should be and not before, so that a run that stopped
+  part way has recorded nothing. Where there is doubt the tournament is read:
+  with no record, with a record of another layout, with a file that is not
+  there, or at another address. `--all` reads every tournament whatever the
+  record says, for where the script itself has changed what it would write.
+
   `--test` does everything but call Git: the folder is checked to be there,
   the tournaments are read and the files are written and removed, and nothing
-  more. The folder need not be a repository, or have a remote, since Git is
+  more, and keeps no record, so that it reads every tournament. The folder
+  need not be a repository, or have a remote, since Git is
   not asked, and nothing is pulled, staged, committed or pushed, so that the
   files can be looked at before anything is published. It says that it was a
   test.
@@ -941,6 +958,103 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       Given writing a file fails
       When the export script is run with "--folder export --test"
       Then an email was sent to "administrator@example.com"
+
+  Rule: Only a tournament that has changed since the last export is read
+
+    Scenario: The first run reads every tournament
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A tournament that has not changed is not read again
+      Given the export script has been run with "--folder export"
+      When the export script is run with "--folder export"
+      Then the export script says 0 tournaments were read
+
+    Scenario: A game that was added is read again
+      Given the export script has been run with "--folder export"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A game that was added is in the file
+      Given the export script has been run with "--folder export"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then "Block A" has 1 game
+
+    Scenario: A change to the tournament itself is read again
+      Given the export script has been run with "--folder export"
+      And "organiser@example.com" has renamed the tournament "Spring Open" to "Spring Classic"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament's name is "Spring Classic"
+
+    Scenario: Only the tournament that changed is read
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And the export script has been run with "--folder export"
+      And "organiser@example.com" has renamed the tournament "Autumn Open" to "Autumn Classic"
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A tournament that was not read is still counted as it should be
+      Given "organiser@example.com" has created the tournament "Autumn Open"
+      And the export script has been run with "--folder export"
+      And "organiser@example.com" has renamed the tournament "Autumn Open" to "Autumn Classic"
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was already as it should be
+
+    Scenario: A file that is not there is read again
+      Given the export script has been run with "--folder export"
+      And the file "2026/ac/spring-open.json" is deleted
+      When the export script is run with "--folder export"
+      Then the folder has the file "2026/ac/spring-open.json"
+
+    Scenario: A tournament that moved is read again
+      Given the export script has been run with "--folder export"
+      And "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"
+      When the export script is run with "--folder export"
+      Then the folder has the file "2026/gc/spring-open.json"
+
+    Scenario: Every tournament is read when it is asked
+      Given the export script has been run with "--folder export"
+      When the export script is run with "--folder export --all"
+      Then the export script says 1 tournament was read
+
+    Scenario: A run that stopped part way has recorded nothing
+      Given writing a file fails
+      And the export script has been run with "--folder export"
+      And writing a file works
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A test run records nothing
+      Given the export script has been run with "--folder export --test"
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A folder that has its record taken away is read whole
+      Given the export script has been run with "--folder export"
+      And the folder's record of what was exported is deleted
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A change made while the tournaments are being read is read next time
+      Given the tournament "Spring Open" is renamed to "Spring Classic" while it is being read
+      And the export script has been run with "--folder export"
+      When the export script is run with "--folder export"
+      Then the export script says 1 tournament was read
+
+    Scenario: A change made while the tournaments are being read is in the file next time
+      Given the tournament "Spring Open" is renamed to "Spring Classic" while it is being read
+      And the export script has been run with "--folder export"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament's name is "Spring Classic"
+
+    Scenario: The record is not committed
+      When the export script is run with "--folder export"
+      Then the folder's last commit does not have the file ".git/export-record.json"
 
   Rule: A tournament played by teams has its teams and its tests
 

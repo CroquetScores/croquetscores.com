@@ -29,6 +29,12 @@ export interface TournamentOfWebsite {
   readonly international: boolean;
 }
 
+/** A tournament, and the mark that says whether anything was kept of it since. */
+export interface TournamentFingerprint {
+  readonly id: string;
+  readonly fingerprint: string;
+}
+
 /** A tournament played lately, and when the last game in use was added to it. */
 export interface TournamentPlayed extends TournamentOfWebsite {
   readonly lastPlayed: ReadOnlyDate;
@@ -76,6 +82,13 @@ export interface TournamentsByWebsite {
    * order, none archived.
    */
   addressesOf(website: Website): Promise<readonly string[]>;
+
+  /**
+   * For each tournament on `website`, none archived, a mark that is different
+   * whenever anything was kept of the tournament or of any of its competitions
+   * since the mark was last read, and the same otherwise.
+   */
+  fingerprintsOf(website: Website): Promise<readonly TournamentFingerprint[]>;
 
   /** What the tournaments on `website` are called, each name once, in order, none archived. */
   namesOf(website: Website): Promise<readonly string[]>;
