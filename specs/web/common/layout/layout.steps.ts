@@ -81,6 +81,28 @@ Then(
   },
 );
 
+// Cloudflare's web analytics ------------------------------------------------------
+
+// Looked for in the page's markup and not in what the browser fetched, so that
+// the scenarios do not depend on Cloudflare being reachable from wherever they
+// are run.
+const analyticsScript =
+  'script[src="https://static.cloudflareinsights.com/beacon.min.js"]';
+
+Then(
+  "the page carries Cloudflare's web analytics",
+  async function (this: SpecWorld) {
+    assert.equal(await this.browserPage.locator(analyticsScript).count(), 1);
+  },
+);
+
+Then(
+  "the page carries no Cloudflare web analytics",
+  async function (this: SpecWorld) {
+    assert.equal(await this.browserPage.locator(analyticsScript).count(), 0);
+  },
+);
+
 // The tournament named in the header -------------------------------------------------
 
 const tournamentInHeader = (world: SpecWorld): Locator =>

@@ -189,11 +189,16 @@ Then("its policy allows scripts from nowhere else", function (this: SpecWorld) {
     "'unsafe-inline'",
     "https://www.google.com",
     "https://www.gstatic.com",
+    "https://static.cloudflareinsights.com",
   ]);
 });
 
 Then("its policy allows requests to nowhere else", function (this: SpecWorld) {
-  onlyThese(this, "connect-src", ["'self'", "https://www.google.com"]);
+  onlyThese(this, "connect-src", [
+    "'self'",
+    "https://www.google.com",
+    "https://cloudflareinsights.com",
+  ]);
 });
 
 Then("its policy allows images from nowhere else", function (this: SpecWorld) {

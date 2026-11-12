@@ -436,3 +436,33 @@ Feature: What every page is set in
       And a reader signed in as "someone@example.com"
       When the admin is opened
       Then the footer's links end where the theme choice ends
+
+  Rule: Every page a reader can see is counted by Cloudflare's web analytics, and the admin is not
+
+    The site's owner wants to know how many readers come and which pages they
+    read, which Cloudflare's web analytics tells them from a small script on
+    the page. It is put in the shell, so that a page added later is counted
+    without anyone remembering to ask, and an error page is as much a visit as
+    any other.
+
+    The admin is the one place it is not. Those who use it are the site's own
+    managers at their work, so counting them would only add their visits to
+    the readers', and what they open there is theirs and not the public's.
+    The admin draws its own page and not the shell's (`adminPage.ts`), which
+    is what keeps it out.
+
+    Scenario: A page carries the web analytics
+      Given a viewport 1200 pixels wide
+      When the sign in page is opened
+      Then the page carries Cloudflare's web analytics
+
+    Scenario: A page saying something went wrong carries it too
+      Given a viewport 1200 pixels wide
+      When a page that is not there is opened
+      Then the page carries Cloudflare's web analytics
+
+    Scenario: The admin carries none
+      Given a viewport 1200 pixels wide
+      And a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the page carries no Cloudflare web analytics
