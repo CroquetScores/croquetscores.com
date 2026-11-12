@@ -173,7 +173,7 @@ const named = (folder: string, keep: (entry: string) => boolean): string[] =>
     .sort();
 
 const languageFiles = (): string[] =>
-  named("src/web/languages", (entry) => entry.endsWith(".ts"));
+  named("src/web/languages", (entry) => /^[a-z]+\.ts$/.test(entry));
 
 const helpFolders = (): string[] =>
   readdirSync(join(root, "docs", "help"), { withFileTypes: true })
