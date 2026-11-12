@@ -571,6 +571,7 @@ export const czech: Language = {
     "admin.rules.maximumHoops": "Nejvyšší počet branek",
     "admin.tournament.national": "Akce na národní úrovni",
     "admin.tournament.international": "Akce na mezinárodní úrovni",
+    "admin.tournament.optional": "Nepovinné",
     // Odmítnutí bez vlastních slov, nad poli.
     "admin.tournament.otherwise": "Toto nelze přijmout tak, jak to je.",
     "admin.newTournament.title": "Nový turnaj",

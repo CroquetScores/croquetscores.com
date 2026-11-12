@@ -570,6 +570,7 @@ export const english: Language = {
     "admin.rules.maximumHoops": "Maximum hoops",
     "admin.tournament.national": "National‑level event",
     "admin.tournament.international": "International‑level event",
+    "admin.tournament.optional": "Optional",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "This cannot be accepted as it is.",
     "admin.newTournament.title": "New Tournament",

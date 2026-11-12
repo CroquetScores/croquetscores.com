@@ -582,6 +582,7 @@ export const afrikaans: Language = {
     "admin.rules.maximumHoops": "Maksimum poorte",
     "admin.tournament.national": "Byeenkoms op nasionale vlak",
     "admin.tournament.international": "Byeenkoms op internasionale vlak",
+    "admin.tournament.optional": "Opsioneel",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Dit kan nie so aanvaar word nie.",
     "admin.newTournament.title": "Nuwe toernooi",

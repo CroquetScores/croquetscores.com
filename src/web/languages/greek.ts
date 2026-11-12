@@ -615,6 +615,7 @@ export const greek: Language = {
     "admin.rules.maximumHoops": "Μέγιστα τόξα",
     "admin.tournament.national": "Εθνικού επιπέδου διοργάνωση",
     "admin.tournament.international": "Διεθνούς επιπέδου διοργάνωση",
+    "admin.tournament.optional": "Προαιρετικό",
     // Μια άρνηση χωρίς δικά της λόγια, πάνω από τα πεδία.
     "admin.tournament.otherwise": "Αυτό δεν μπορεί να γίνει δεκτό ως έχει.",
     "admin.newTournament.title": "Νέο τουρνουά",

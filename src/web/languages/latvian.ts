@@ -576,6 +576,7 @@ export const latvian: Language = {
     "admin.rules.maximumHoops": "Maksimālais vārtiņu skaits",
     "admin.tournament.national": "Nacionāla līmeņa pasākums",
     "admin.tournament.international": "Starptautiska līmeņa pasākums",
+    "admin.tournament.optional": "Neobligāti",
     // Atteikums bez savu vārdu, virs laukiem.
     "admin.tournament.otherwise": "To nevar pieņemt tādu, kāds tas ir.",
     "admin.newTournament.title": "Jauns turnīrs",

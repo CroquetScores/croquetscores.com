@@ -534,6 +534,7 @@ export const egyptian: Language = {
     "admin.rules.maximumHoops": "أقصى عدد حلقات",
     "admin.tournament.national": "حدث على المستوى الوطني",
     "admin.tournament.international": "حدث على المستوى الدولي",
+    "admin.tournament.optional": "اختياري",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "مينفعش نقبل ده زي ما هو.",
     "admin.newTournament.title": "بطولة جديدة",

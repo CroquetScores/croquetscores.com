@@ -297,6 +297,47 @@ Then("{string} is not ticked", async function (this: SpecWorld, label: string) {
   });
 });
 
+// A group of fields by the words on its legend, which is how a screen reader
+// names it.
+const group = (world: SpecWorld, legend: string): Locator =>
+  world.browserPage.locator(forms).getByRole("group", {
+    name: legend,
+    exact: true,
+  });
+
+Then(
+  "{string} is in the group {string}",
+  async function (this: SpecWorld, label: string, legend: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await group(this, legend).getByLabel(label, { exact: true }).count(),
+        1,
+        `${label} is not in the group ${legend}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} is not in the group {string}",
+  async function (this: SpecWorld, label: string, legend: string) {
+    await eventually(this, async () => {
+      // The group is asserted first: with none there, nothing is in it, and
+      // the scenario would pass for a reason other than the one it names.
+      assert.equal(
+        await group(this, legend).count(),
+        1,
+        `There is no group ${legend}.`,
+      );
+      assert.equal(
+        await group(this, legend).getByLabel(label, { exact: true }).count(),
+        0,
+        `${label} is in the group ${legend}.`,
+      );
+    });
+  },
+);
+
 Then("{string} is empty", async function (this: SpecWorld, label: string) {
   await eventually(this, async () => {
     assert.equal(await field(this, label).inputValue(), "");

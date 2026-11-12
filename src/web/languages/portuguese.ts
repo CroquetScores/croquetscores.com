@@ -577,6 +577,7 @@ export const portuguese: Language = {
     "admin.rules.maximumHoops": "Máximo de arcos",
     "admin.tournament.national": "Evento de nível nacional",
     "admin.tournament.international": "Evento de nível internacional",
+    "admin.tournament.optional": "Opcional",
     // A refusal with no words of its own, above the fields.
     "admin.tournament.otherwise": "Isto não pode ser aceito como está.",
     "admin.newTournament.title": "Novo torneio",

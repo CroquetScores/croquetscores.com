@@ -488,6 +488,25 @@ Feature: A new tournament is created in the admin
       When "Create Tournament" is pressed
       Then the tournament "Spring Shield" is kept drawing a level test
 
+  Rule: The two levels are set apart as optional
+
+    A reader took "National‑level event" for a choice they had to make, because
+    it and "International‑level event" were the only things asked of them below
+    the subtitle (issue 627). They are enclosed together under a label that
+    says an event need be neither.
+
+    Scenario: The national level is enclosed under "Optional"
+      When the new tournament page is opened
+      Then "National‑level event" is in the group "Optional"
+
+    Scenario: The international level is enclosed under "Optional"
+      When the new tournament page is opened
+      Then "International‑level event" is in the group "Optional"
+
+    Scenario: The subtitle is not enclosed under "Optional"
+      When the new tournament page is opened
+      Then "Subtitle" is not in the group "Optional"
+
   Rule: A tournament may be national, international or neither, but never both
 
     Scenario: A tournament can be national

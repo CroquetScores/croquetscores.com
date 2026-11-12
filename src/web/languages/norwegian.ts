@@ -576,6 +576,7 @@ export const norwegian: Language = {
     "admin.rules.maximumHoops": "Maksimalt antall buer",
     "admin.tournament.national": "Arrangement på nasjonalt nivå",
     "admin.tournament.international": "Arrangement på internasjonalt nivå",
+    "admin.tournament.optional": "Valgfritt",
     // Et avslag uten egne ord, over feltene.
     "admin.tournament.otherwise": "Dette kan ikke godtas som det er.",
     "admin.newTournament.title": "Ny turnering",
