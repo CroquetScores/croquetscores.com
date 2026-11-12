@@ -61,7 +61,7 @@ npm run test:changed
 
 Check that a new scenario can fail: break the code it describes, watch it go red, and put the code back. Say in the pull request what you ran, and what you did not. If you could not run the scenarios that need a database, say so, and CI will.
 
-CI runs every scenario but the `@browser` ones on your pull request. Run `npm run test:browser` yourself where a change touches what they check.
+CI runs every scenario on your pull request, the `@browser` ones too.
 
 ## The pull request
 

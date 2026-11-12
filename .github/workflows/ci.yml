@@ -64,10 +64,16 @@ jobs:
       # scenario makes a database of its own on it.
       - run: npm run db:up
 
-      # Everything but the @browser scenarios, so no browser is installed.
-      # Two workers rather than the six scripts/cucumber.mjs asks for: the runner has
-      # two cores, and workers beyond them only wait their turn for one.
-      - run: npm run test:nobrowser -- --parallel 2 --shard ${{ matrix.shard }}/4
+      # Chromium and only Chromium: the @browser scenarios drive it, and a
+      # second engine would be a second download on every run for a check
+      # nobody has asked for. --with-deps adds the system libraries it needs,
+      # which the runner's image does not carry.
+      - run: npx playwright install --with-deps chromium
+
+      # Every scenario. Two workers rather than the six scripts/cucumber.mjs asks
+      # for: the runner has two cores, and workers beyond them only wait their
+      # turn for one.
+      - run: npm run test:features -- --parallel 2 --shard ${{ matrix.shard }}/4
 
       - if: always()
         run: npm run db:down
