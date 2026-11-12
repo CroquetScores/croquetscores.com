@@ -87,6 +87,7 @@ import { UpdatePlayerValidator } from "../../../src/application/operations/tourn
 import { UpdateSwissHandler } from "../../../src/application/operations/tournaments/UpdateSwissHandler.js";
 import { UpdateSwissValidator } from "../../../src/application/operations/tournaments/UpdateSwissValidator.js";
 import { UpdateTournamentHandler } from "../../../src/application/operations/tournaments/UpdateTournamentHandler.js";
+import { RemoveNotableStatusHandler } from "../../../src/application/operations/tournaments/RemoveNotableStatusHandler.js";
 import { UpdateTournamentValidator } from "../../../src/application/operations/tournaments/UpdateTournamentValidator.js";
 import { AddGameHandler } from "../../../src/application/operations/competitions/AddGameHandler.js";
 import { AddGameValidator } from "../../../src/application/operations/competitions/AddGameValidator.js";
@@ -284,6 +285,9 @@ const standUpTheTournaments = function (this: SpecWorld): void {
       queue,
       theAdministratorsEmailAddress,
     ),
+  );
+  mediator.handleCommand(
+    new RemoveNotableStatusHandler(...both, byAddress, queue),
   );
   mediator.handleCommand(new ArchiveTournamentHandler(...both));
   mediator.handleCommand(new RestoreTournamentHandler(...both));

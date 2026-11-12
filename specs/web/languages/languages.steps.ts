@@ -20,6 +20,7 @@ import { portuguese } from "../../../src/web/languages/portuguese.js";
 import { spanish } from "../../../src/web/languages/spanish.js";
 import { swedish } from "../../../src/web/languages/swedish.js";
 import { welsh } from "../../../src/web/languages/welsh.js";
+import { isWrittenInEnglishOnly } from "../../../src/web/languages/writtenInEnglishOnly.js";
 import type { SpecWorld } from "../../support/world.js";
 import { anApplicationOfferingItsOwnLanguages } from "../support/browser.js";
 
@@ -73,8 +74,12 @@ const missingFrom = (from: Language, to: Language): string[] =>
 Then(
   "every entry in English has one in {word}",
   function (this: SpecWorld, name: string) {
+    // Except the emails written in English only, which no other catalogue
+    // holds (writtenInEnglishOnly.ts).
     assert.deepEqual(
-      missingFrom(catalogue(this, "English"), catalogue(this, name)),
+      missingFrom(catalogue(this, "English"), catalogue(this, name)).filter(
+        (key) => !isWrittenInEnglishOnly(key),
+      ),
       [],
     );
   },

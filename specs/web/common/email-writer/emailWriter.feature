@@ -101,6 +101,8 @@ Feature: The site's emails are written in their reader's language
         | Email.AlreadyHasAnAccount    |
         | Email.EmailAddressChanged    |
         | Email.NotableTournament      |
+        | Email.NationalStatusRemoved  |
+        | Email.InternationalStatusRemoved |
 
     Scenario: An email only written in English is written in English whatever language is asked for
       When the email "Email.NotableTournament" is written in "de"

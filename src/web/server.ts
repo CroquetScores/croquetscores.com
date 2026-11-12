@@ -137,6 +137,7 @@ import { UpdatePlayerValidator } from "../application/operations/tournaments/Upd
 import { UpdateSwissHandler } from "../application/operations/tournaments/UpdateSwissHandler.js";
 import { UpdateSwissValidator } from "../application/operations/tournaments/UpdateSwissValidator.js";
 import { UpdateTournamentHandler } from "../application/operations/tournaments/UpdateTournamentHandler.js";
+import { RemoveNotableStatusHandler } from "../application/operations/tournaments/RemoveNotableStatusHandler.js";
 import { UpdateTournamentValidator } from "../application/operations/tournaments/UpdateTournamentValidator.js";
 import { TournamentsOfAccountHandler } from "../application/operations/tournaments/TournamentsOfAccountHandler.js";
 import { CompetitionPageHandler } from "../application/operations/tournaments/CompetitionPageHandler.js";
@@ -1250,6 +1251,9 @@ export const buildApplication = async (
       emailQueue,
       config.administratorEmailAddress,
     ),
+  );
+  mediator.handleCommand(
+    new RemoveNotableStatusHandler(...both, tournamentsByAddress, emailQueue),
   );
   mediator.handleCommand(new ArchiveTournamentHandler(...both));
   mediator.handleCommand(new RestoreTournamentHandler(...both));
