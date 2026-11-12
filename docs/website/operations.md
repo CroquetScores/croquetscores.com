@@ -25,7 +25,7 @@ sudo journalctl -u caddy -n 50                # the proxy's
 
 The site writes a line for each request and for each thing that went wrong, as JSON. The first lines after a start say whether its settings were accepted: a setting that is wrong stops the site, and lists every problem (configuration.md).
 
-The journal is on the server, kept for 90 days or 500 MB (server-setup.md §7), and is lost with the server except for Kamatera's daily backup of it. Only `deploy` can read it. **Tim Murphy reads it once a day,** with the three commands under "Reading them every day" in server-setup.md §7: warnings and errors from the site and the proxy, and whether the site restarted. That is the whole of the watching, so a night's outage is found the next day (§1).
+The journal is on the server, kept for 90 days or 500 MB (server-setup.md §7), and is lost with the server except for Kamatera's daily backup of it. Only `deploy` can read it. **Tim Murphy reads it once a day,** with the three commands under "Reading them every day" in server-setup.md §7: warnings and errors from the site and the proxy, and whether the site restarted. That is the whole of the watching, so a night's outage is found the next day (§1). The site's own warnings and errors are also summarised and emailed at five each morning once that is set up (summarising-the-log.md), which leaves the proxy's log and the restarts to read by hand.
 
 ## 3. Turning the database off on purpose
 

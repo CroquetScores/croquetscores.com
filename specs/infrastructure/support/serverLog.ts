@@ -58,10 +58,15 @@ Given(
 );
 
 Given(
-  /^(\d+) entries written at "([^"]*)"$/,
-  async function (this: SpecWorld, count: string, writtenAt: string) {
+  /^(\d+) entries written at "([^"]*)"(?: at the severity (\w+))?$/,
+  async function (
+    this: SpecWorld,
+    count: string,
+    writtenAt: string,
+    severity: string | null,
+  ) {
     for (let each = 0; each < Number(count); each++) {
-      await keep(this, new Date(writtenAt), `Entry ${each}`, null, null);
+      await keep(this, new Date(writtenAt), `Entry ${each}`, severity, null);
     }
   },
 );
