@@ -46,7 +46,7 @@ Feature: The page where an administrator judges a national or an international t
 
     Scenario: The page names the tournament
       When the page at "/admin/administrator/notable-tournament?url=2026/ac/spring-open" is opened
-      Then the page names the tournament "Spring Open"
+      Then the notable tournament page names the tournament "Spring Open"
 
     Scenario: The page links to the tournament
       When the page at "/admin/administrator/notable-tournament?url=2026/ac/spring-open" is opened

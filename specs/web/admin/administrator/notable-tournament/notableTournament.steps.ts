@@ -3,7 +3,7 @@
 // filled in once the API has answered, so every step waits for what it looks
 // at. The dialog it asks in is the modal dialog's, whose steps are shared
 // (modalDialog.ts).
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
@@ -30,17 +30,8 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
 const buttonCalled = (world: SpecWorld, words: string): Locator =>
   world.browserPage.locator("main button").filter({ hasText: exactly(words) });
 
-// Opened as a reader opens it, without keeping what the server answered: the
-// scenarios that open it first are not about the answer.
-Given(
-  "the page at {string} is open",
-  async function (this: SpecWorld, path: string) {
-    await this.browserPage.goto(`${this.baseUrl!}${path}`);
-  },
-);
-
 Then(
-  "the page names the tournament {string}",
+  "the notable tournament page names the tournament {string}",
   async function (this: SpecWorld, name: string) {
     await eventually(async () => {
       assert.equal(

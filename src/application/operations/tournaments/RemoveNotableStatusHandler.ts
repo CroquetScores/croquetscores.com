@@ -7,6 +7,7 @@ import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import { administratorAsking } from "../accounts/roleOperations.js";
+import { notableLevelOf } from "./notableTournament.js";
 import { RemoveNotableStatus } from "./RemoveNotableStatus.js";
 import {
   askedBy,
@@ -52,11 +53,7 @@ export class RemoveNotableStatusHandler extends CommandHandler<
       command.tournament,
       "RemoveNotableStatus",
     );
-    const level = tournament.international
-      ? "International"
-      : tournament.national
-        ? "National"
-        : undefined;
+    const level = notableLevelOf(tournament);
     // Neither: nothing to take away, and nobody to tell it of.
     if (level === undefined) return;
 
@@ -86,7 +83,10 @@ export class RemoveNotableStatusHandler extends CommandHandler<
       // A forgotten account has no address to write to, and nobody to read it.
       if (account === undefined || account.forgotten) continue;
       await this.queue.queue({
-        kind: `Email.${level}StatusRemoved`,
+        kind:
+          level === "international"
+            ? "Email.InternationalStatusRemoved"
+            : "Email.NationalStatusRemoved",
         to: account.emailAddress.toString(),
         account: manager,
         language: "en",

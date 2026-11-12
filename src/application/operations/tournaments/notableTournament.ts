@@ -3,6 +3,20 @@ import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 
 /**
+ * Which level a tournament is notable at, or nothing where it is neither. The
+ * one place that says it, since the tournament refuses to be both
+ * (`create.feature`) and a reader of either must agree on which wins.
+ */
+export const notableLevelOf = (
+  tournament: Pick<TournamentDetails, "national" | "international">,
+): "national" | "international" | undefined =>
+  tournament.international
+    ? "international"
+    : tournament.national
+      ? "national"
+      : undefined;
+
+/**
  * Telling the administrator of a tournament that is national or international,
  * which is the more notable, in the transaction that keeps it so that they are
  * told if and only if it is kept. Nothing where it is neither.
@@ -23,11 +37,7 @@ export const tellOfNotableTournament = async (
   change: "added" | "edited",
   at: ReadOnlyDate,
 ): Promise<void> => {
-  const level = details.international
-    ? "international"
-    : details.national
-      ? "national"
-      : undefined;
+  const level = notableLevelOf(details);
   if (level === undefined) return;
   await queue.queue({
     kind: "Email.NotableTournament",

@@ -41,9 +41,16 @@ export const NotableTournament = (): React.JSX.Element => {
   useEffect(() => {
     if (address === undefined) return;
     let current = true;
-    void fetch(`/api/site/tournaments/at/${address}`, {
-      headers: { accept: "application/json" },
-    })
+    // Whatever was refused before is not what this asks.
+    setRefused(undefined);
+    // Each part written as one segment, so that a slug with a ? or a # in it
+    // is a slug and not the rest of the address.
+    void fetch(
+      `/api/site/tournaments/at/${address.split("/").map(encodeURIComponent).join("/")}`,
+      {
+        headers: { accept: "application/json" },
+      },
+    )
       .then(async (response) => {
         if (response.ok) {
           const body = (await response.json()) as Judged;
@@ -73,6 +80,7 @@ export const NotableTournament = (): React.JSX.Element => {
 
   const remove = async (judged: Judged): Promise<void> => {
     setActing(true);
+    setRefused(undefined);
     try {
       const response = await fetch(
         `/api/site/tournaments/${idInAddress(judged.id)}/remove-notable-status`,

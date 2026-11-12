@@ -140,6 +140,14 @@ Feature: Removing a tournament's national or international status
       When the reader signed in to the account for "organiser@example.com" removes the notable status of the tournament "Spring Open"
       Then the kept tournament "Spring Open" is national
 
+  Rule: An archived tournament is refused as the tournament refuses it
+
+    Scenario: An archived tournament is refused
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      And "organiser@example.com" has archived the tournament "Spring Open"
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
+      Then it is refused with "Tournament.Archived"
+
   Rule: Only a tournament there is can have its status removed
 
     Scenario: A tournament there is not is refused
