@@ -20,7 +20,8 @@ export const notableLevelOf = (
 /**
  * Telling the administrator of a tournament that is national or international,
  * which is the more notable, in the transaction that keeps it so that they are
- * told if and only if it is kept. Nothing where it is neither.
+ * told if and only if it is kept. Nothing where it is neither, and nothing on a
+ * try website, where what is entered is practice and may be removed.
  *
  * In English whatever language the reader who made the change was using: the
  * administrator reads the site's own language, as when a service cannot be

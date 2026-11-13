@@ -78,6 +78,11 @@ export class RemoveNotableStatusHandler extends CommandHandler<
     );
     await this.tournaments.save(tournament);
 
+    // The status is taken away on a try website all the same, so that the
+    // tournament is the same on every website, but its managers are not written
+    // to: nobody there was told it was judged notable, as on any other website.
+    if (tournament.website.isTry) return;
+
     for (const manager of tournament.managers) {
       const account = await this.accounts.load(manager);
       // A forgotten account has no address to write to, and nobody to read it.

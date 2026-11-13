@@ -289,6 +289,12 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then the email "Email.NotableTournament" is queued for "administrator@example.com"
 
+    Scenario: A national tournament on the development website is still told to the administrator
+      Given the request came to "localhost:3000"
+      And the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
   Rule: A forgotten account creates nothing
 
     Scenario: A forgotten account is refused
