@@ -195,6 +195,21 @@ export const anApplicationWhoseAdministratorIs = (
   anApplicationWith(world, { administratorEmailAddress: emailAddress });
 
 /**
+ * An application of this scenario's own told what its administrator is called
+ * and where they are emailed, and otherwise as {@link anApplicationCalled}. What is asked here stays when
+ * the scenario asks for another change after it.
+ */
+export const anApplicationWhoseAdministratorIsCalled = (
+  world: SpecWorld,
+  name: string,
+  emailAddress: string,
+): Promise<string> =>
+  anApplicationWith(world, {
+    administratorEmailFromName: name,
+    administratorEmailAddress: emailAddress,
+  });
+
+/**
  * An application of this scenario's own told whom the page for taking the site
  * over writes to, and otherwise as {@link anApplicationCalled}. Told them and
  * not left to read the developer's own, who has nobody named.

@@ -79,6 +79,8 @@ import { ChangeNameValidator } from "../../../src/application/operations/account
 import type { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
 import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
+import { WhenEmergencyAccessMayBeAskedAgainHandler } from "../../../src/application/operations/emergency/WhenEmergencyAccessMayBeAskedAgainHandler.js";
+import type { WhenEmergencyAccessMayBeAskedAgain } from "../../../src/application/operations/emergency/WhenEmergencyAccessMayBeAskedAgain.js";
 import { AskForEmergencyAccessHandler } from "../../../src/application/operations/emergency/AskForEmergencyAccessHandler.js";
 import type { AskForEmergencyAccess } from "../../../src/application/operations/emergency/AskForEmergencyAccess.js";
 import { SetNewPasswordHandler } from "../../../src/application/operations/accounts/SetNewPasswordHandler.js";
@@ -642,6 +644,16 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       mediator.handleCommand(
         new AskForEmergencyAccessHandler(repository, queue, written, addresses),
       );
+      mediator.handleQuery(
+        new WhenEmergencyAccessMayBeAskedAgainHandler(written),
+      );
+    },
+
+    async whenEmergencyAccessMayBeAskedAgain(
+      query: WhenEmergencyAccessMayBeAskedAgain,
+    ): Promise<ReadOnlyDate | undefined> {
+      await settle();
+      return mediator.query(query);
     },
 
     async askForEmergencyAccess(command: AskForEmergencyAccess): Promise<void> {

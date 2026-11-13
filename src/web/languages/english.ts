@@ -725,6 +725,14 @@ export const english: Language = {
     "admin.countries.otherwise": "Something went wrong on the site.",
     // The page for taking the site over, and what it refuses with.
     "admin.emergency.title": "In case of emergency",
+    "admin.emergency.warning":
+      "PLEASE ONLY USE THIS PAGE IF YOU GENUINELY CANNOT CONTACT {administratorName}. DO NOT TEST THE PAGE.",
+    "admin.emergency.emailed":
+      "I have emailed {administrator} and have not heard back from them in the last 48 hours.",
+    "admin.emergency.notEmailed":
+      "Tick the box to say you have emailed the administrator and waited 48 hours.",
+    "admin.emergency.wait":
+      "YOU HAVE ALREADY ASKED. YOU MUST WAIT UNTIL {when} BEFORE YOU CAN ASK AGAIN.",
     "admin.emergency.explanation":
       "Use this page if the person who runs this site cannot, and you have come to take it over. What you say is emailed to the people who hold the site's passwords. They decide whether to give them to you, and they answer you themselves, at the email address of your account.",
     "admin.emergency.question":

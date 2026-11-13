@@ -55,12 +55,32 @@ const saidByTheAdmin =
 // language has, so that a word missing from the reader's is said in that one
 // as it is on every other page. As JSON in a script that is never run, with
 // every < written so that no word can close the script it is in.
-const adminWords = (speaking: Speaking): string => {
+const adminWords = (
+  speaking: Speaking,
+  administratorName: string,
+  administratorEmailAddress: string,
+): string => {
   const first = speaking.offered[0];
   const keys = Object.keys(first?.words ?? {}).filter((key) =>
     saidByTheAdmin.test(key),
   );
-  const words = Object.fromEntries(keys.map((key) => [key, speaking.say(key)]));
+  // Whoever administers the site is named in the words that say who to
+  // contact, from how the site is set up and not from the catalogue.
+  const said = Object.fromEntries(
+    keys.map((key) => [
+      key,
+      speaking
+        .say(key)
+        .replace(/\{administratorName\}/g, () => administratorName),
+    ]),
+  );
+  // Who the page's links to email the administrator are to, which are made of
+  // them and not of words, so they are given on their own.
+  const words = {
+    ...said,
+    "admin.administrator.name": administratorName,
+    "admin.administrator.emailAddress": administratorEmailAddress,
+  };
   return `<script type="application/json" id="${adminWordsId}">${JSON.stringify(
     words,
   ).replace(/</g, "\\u003c")}</script>`;
@@ -112,6 +132,8 @@ export const adminPage = (
   alert = "",
   // Who administers the site, which the footer offers a bug to be reported to.
   administratorEmailAddress: string,
+  // What the administrator is called, for the words that say who to contact.
+  administratorName: string,
   // Which version of the website this is, where it is known.
   version?: number,
 ): string => {
@@ -157,7 +179,7 @@ export const adminPage = (
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${alertBar(alert)}${adminWords(speaking)}${adminBuild(build)}`;
+        })}${alertBar(alert)}${adminWords(speaking, administratorName, administratorEmailAddress)}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.

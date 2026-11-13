@@ -34,6 +34,7 @@ import { ResetPasswordValidator } from "../application/operations/accounts/Reset
 import type { EmailSender } from "../application/services/EmailSender.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
 import { AskForEmergencyAccessHandler } from "../application/operations/emergency/AskForEmergencyAccessHandler.js";
+import { WhenEmergencyAccessMayBeAskedAgainHandler } from "../application/operations/emergency/WhenEmergencyAccessMayBeAskedAgainHandler.js";
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
@@ -590,6 +591,7 @@ const registerAdmin = async (
   build: () => string,
   help: HelpLibrary,
   administratorEmailAddress: string,
+  administratorName: string,
   version: number | undefined,
 ): Promise<void> => {
   if (page === undefined) {
@@ -655,6 +657,7 @@ const registerAdmin = async (
           build(),
           await alertFor(request),
           administratorEmailAddress,
+          administratorName,
           version,
         ),
       );
@@ -1096,6 +1099,9 @@ export const buildApplication = async (
   validation.register(new ChangeNameValidator());
   mediator.handleCommand(new ChangeNameHandler(accounts));
   mediator.handleQuery(new AccountProfileHandler(accounts));
+  mediator.handleQuery(
+    new WhenEmergencyAccessMayBeAskedAgainHandler(emailsWritten),
+  );
   validation.register(new AddRoleValidator());
   mediator.handleCommand(new AddRoleHandler(accounts, accountsByEmailAddress));
   mediator.handleCommand(new RemoveRoleHandler(accounts, accountsByRole));
@@ -1665,6 +1671,7 @@ export const buildApplication = async (
     build,
     help,
     config.administratorEmailAddress,
+    config.administratorEmailFromName,
     version,
   );
 

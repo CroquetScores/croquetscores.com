@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { WhenEmergencyAccessMayBeAskedAgain } from "../../../../../src/application/operations/emergency/WhenEmergencyAccessMayBeAskedAgain.js";
 import { AskForEmergencyAccess } from "../../../../../src/application/operations/emergency/AskForEmergencyAccess.js";
 import type { AccountId } from "../../../../../src/domain/aggregates/accounts/AccountId.js";
 import { ReadOnlyDate } from "../../../../../src/domain/common/ReadOnlyDate.js";
@@ -145,6 +146,22 @@ Given("{string} is forgotten", async function (this: SpecWorld, name: string) {
   namedOf(this).forgotten.set(name, await accountCalled(this, name));
   await registeringOf(this).forget(address);
 });
+
+// When the account called `name` may ask again, as an ISO moment, or nothing
+// where it may ask now. Here with the rest of what is said about asking, and
+// used by WhenEmergencyAccessMayBeAskedAgain.steps.ts.
+export const whenMayAskAgainFor = async (
+  world: SpecWorld,
+  name: string,
+): Promise<string | undefined> => {
+  const until = await registeringOf(world).whenEmergencyAccessMayBeAskedAgain(
+    new WhenEmergencyAccessMayBeAskedAgain(
+      await accountCalled(world, name),
+      momentOf(world),
+    ),
+  );
+  return until?.toISOString();
+};
 
 When(
   "somebody signed in as no one asks for emergency access",

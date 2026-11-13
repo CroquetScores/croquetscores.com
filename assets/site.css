@@ -770,6 +770,25 @@ a:hover {
    mount point does not box (#root above), which is what makes the years, the
    main and the alert siblings. The alert is outside any panel, so it is set in
    the page's width. */
+/* The page for taking the site over asks, before anything else on it, not to be
+   used by anybody who can reach the administrator. It is made loud: bold, large
+   and boxed, in --danger, which is held to enough contrast in both themes. */
+.emergency-warning {
+  margin: 0;
+  padding: var(--space-4);
+  border: 4px solid var(--danger);
+  color: var(--danger);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.emergency-emailed {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
 .whats-new-bar {
   order: 1;
   padding-block-start: var(--space-3);

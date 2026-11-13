@@ -79,6 +79,7 @@ import type { Assets } from "../../common/assets.js";
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
+import { WhenEmergencyAccessMayBeAskedAgain } from "../../../application/operations/emergency/WhenEmergencyAccessMayBeAskedAgain.js";
 import { AskForEmergencyAccess } from "../../../application/operations/emergency/AskForEmergencyAccess.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
@@ -1098,6 +1099,20 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // When the account may ask again, so that the page can say so before it is
+  // written in: nothing where it may ask now
+  // (WhenEmergencyAccessMayBeAskedAgain.feature).
+  server.get("/emergency-access", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    const until = await request.server.mediator.query(
+      new WhenEmergencyAccessMayBeAskedAgain(reader, request.requestedAt),
+    );
+    return reply
+      .header("cache-control", "no-store")
+      .send({ waitUntil: until === undefined ? null : until.toISOString() });
+  });
 
   // What somebody who has come to take the site over says of who they are and
   // why, emailed to the people who hold its passwords
