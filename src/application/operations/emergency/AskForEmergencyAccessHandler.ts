@@ -1,5 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
 import { Refused } from "../../../domain/common/Refused.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
@@ -31,6 +32,30 @@ export const MOST_CHARACTERS = 2000;
 export const HOURS_BETWEEN_ASKINGS = 48;
 
 const KIND = "Email.EmergencyAccessAsked";
+
+const A_DAY = 24 * AN_HOUR;
+
+/**
+ * How long ago an account was begun, in the one unit a reader takes in at a
+ * glance: days for the first month, then months, then years. The people asked
+ * read it to judge whether an account is new, so more precision is not wanted.
+ */
+const ageOf = (began: ReadOnlyDate | undefined, now: ReadOnlyDate): string => {
+  if (began === undefined)
+    return "on the old site, and how long ago is not known";
+  const days = Math.floor(
+    (now.toDate().getTime() - began.toDate().getTime()) / A_DAY,
+  );
+  const counted = (count: number, unit: string): string =>
+    `${count} ${unit}${count === 1 ? "" : "s"}`;
+  if (days < 1) return "less than a day ago";
+  if (days < 31) return `${counted(days, "day")} ago`;
+  // At most 11, so that the last days of a year are not "12 months".
+  if (days < 365) {
+    return `${counted(Math.min(11, Math.floor(days / 30)), "month")} ago`;
+  }
+  return `${counted(Math.floor(days / 365), "year")} ago`;
+};
 
 /**
  * Emailing each of the people who hold the site's passwords what somebody
@@ -131,6 +156,7 @@ export class AskForEmergencyAccessHandler extends CommandHandler<
           senderName: name.toString(),
           senderEmailAddress: account.emailAddress.toString(),
           when: command.requestedAt.toDate().toISOString(),
+          accountAge: ageOf(account.registeredAt, command.requestedAt),
         },
         queuedAt: command.requestedAt,
       });

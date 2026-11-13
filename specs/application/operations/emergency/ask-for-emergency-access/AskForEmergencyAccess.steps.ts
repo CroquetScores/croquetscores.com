@@ -46,6 +46,35 @@ Given(
   },
 );
 
+Given(
+  "an account {string} at {string} begun {int} day(s) ago",
+  async function (
+    this: SpecWorld,
+    name: string,
+    address: string,
+    days: number,
+  ) {
+    namedOf(this).addresses.set(name, address);
+    await registeringOf(this).giveAnAccount(address, {
+      confirmed: true,
+      name,
+      registeredDaysAgo: days,
+    });
+  },
+);
+
+Given(
+  "an account {string} at {string} brought over from the old site",
+  async function (this: SpecWorld, name: string, address: string) {
+    namedOf(this).addresses.set(name, address);
+    await registeringOf(this).giveAnAccount(address, {
+      confirmed: true,
+      name,
+      fromTheOldSite: true,
+    });
+  },
+);
+
 Given("no emergency contacts are set", function (this: SpecWorld) {
   registeringOf(this).emergencyContactsAre([]);
 });

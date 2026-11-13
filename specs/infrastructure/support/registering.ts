@@ -23,6 +23,7 @@ import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import { AN_HOUR, shiftedBy } from "../../../src/application/common/moments.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { PostgresHandledRequests } from "../../../src/infrastructure/database/PostgresHandledRequests.js";
 import { PostgresEmailsWritten } from "../../../src/infrastructure/email/PostgresEmailsWritten.js";
@@ -481,7 +482,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       AccountId.create(),
       at,
       accounts.hasher.hash(at),
-      now(),
+      shiftedBy(now(), -(as.registeredDaysAgo ?? 0) * 24 * AN_HOUR),
     );
     if (as.confirmed) {
       // Hashed the way this scenario's hasher hashes, so that a password the

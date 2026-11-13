@@ -29,6 +29,8 @@ export interface AccountAsGiven {
   readonly noPassword?: boolean;
   /** Whether it came over from the old site, with the hash the old site made. */
   readonly fromTheOldSite?: boolean;
+  /** How many days before the scenario's moment it was begun, where it says. */
+  readonly registeredDaysAgo?: number;
 }
 
 /** What makes the accounts a scenario says are already there. */

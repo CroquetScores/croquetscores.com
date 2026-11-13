@@ -65,6 +65,94 @@ Feature: Asking the people who hold the site's passwords to hand them over
       When "Sam Jones" asks for emergency access
       Then the email queued for "first@example.com" gives the moment "2026-11-14T10:00:00Z"
 
+  Rule: The email says how old the sender's account is
+
+    The people asked judge from it whether the account is new, so it is given
+    as days for the first month, then months, then years.
+
+    Scenario: An account begun today
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account less than a day ago"
+
+    Scenario: An account begun a day ago
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 1 day ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 1 day ago"
+
+    Scenario: An account begun three days ago
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 3 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 3 days ago"
+
+    Scenario: An account begun over a month ago is given in months
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 65 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 2 months ago"
+
+    Scenario: An account begun over a year ago is given in years
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 800 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 2 years ago"
+
+    Scenario: An account begun thirty days ago is still given in days
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 30 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 30 days ago"
+
+    Scenario: An account begun thirty-one days ago is given in months
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 31 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 1 month ago"
+
+    Scenario: An account begun the day before a year is not given as twelve months
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 364 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 11 months ago"
+
+    Scenario: An account begun a year ago is given in years
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" begun 365 days ago
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account 1 year ago"
+
+    Scenario: An account from the old site does not say how long ago it began
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      And an account "Alex Lee" at "alex@example.com" brought over from the old site
+      When "Alex Lee" asks for emergency access
+      Then the email queued for "first@example.com" says "created their account on the old site, and how long ago is not known"
+
+  Rule: The email tells the people asked what to do
+
+    Scenario: The email says which note to copy
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "find the Secure Note named Croquet Scores"
+
+    Scenario: The email says what the sender said under a heading of its own
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "What the requestor said:"
+
   Rule: A message has to be there, and short enough to read
 
     Scenario: A message with nothing in it is refused
