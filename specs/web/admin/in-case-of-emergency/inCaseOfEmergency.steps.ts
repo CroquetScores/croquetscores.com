@@ -174,6 +174,33 @@ Then(
   },
 );
 
+// The words a refusal is said in, read and not only its code: the admin is sent
+// words only for the codes it is told of (adminPage.ts), and one it is not told
+// of is said as "Something went wrong on the site.", which has the right code.
+const refusalReads = async (
+  world: SpecWorld,
+  where: string,
+  words: string,
+): Promise<void> => {
+  const refusal = world.browserPage.locator(where);
+  await refusal.waitFor();
+  assert.equal(unmarked((await refusal.innerText()).trim()), words);
+};
+
+Then(
+  "the refusal of the answer reads {string}",
+  async function (this: SpecWorld, words: string) {
+    await refusalReads(this, ".field-message", words);
+  },
+);
+
+Then(
+  "the refusal of the page reads {string}",
+  async function (this: SpecWorld, words: string) {
+    await refusalReads(this, "[data-refused].page-refused", words);
+  },
+);
+
 // What is waiting to be sent, as the application the scenario stood up has it
 // or as the site the browser was served has it: one step for both, since
 // "nothing was sent" is said the same of each.
