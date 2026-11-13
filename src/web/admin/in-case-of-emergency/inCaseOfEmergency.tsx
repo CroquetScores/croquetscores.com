@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { refusalOf } from "../api.js";
 import { Field, type Refusal } from "../Field.js";
@@ -30,6 +30,13 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
   const [sent, setSent] = useState(false);
   const [refused, setRefused] = useState<string | undefined>();
 
+  // The button that was pressed is gone once the message is sent, so focus is
+  // given to the notice, and a screen reader is told it by its role.
+  const notice = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (sent) notice.current?.focus();
+  }, [sent]);
+
   const send = async (): Promise<void> => {
     setSending(true);
     setRefused(undefined);
@@ -60,7 +67,9 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
       ? [refusalWords(refused)]
       : undefined;
   const aboutPage =
-    refused !== undefined && !aboutTheMessage.includes(refused)
+    // Not once it is sent: a second asking that got in before the dialog closed
+    // is refused, and the page must not say both.
+    !sent && refused !== undefined && !aboutTheMessage.includes(refused)
       ? refused
       : undefined;
 
@@ -69,7 +78,13 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
       <h1>{say("admin.emergency.title")}</h1>
       <p>{say("admin.emergency.explanation")}</p>
       {sent ? (
-        <p className="emergency-sent" data-sent="">
+        <p
+          className="emergency-sent"
+          data-sent=""
+          role="status"
+          tabIndex={-1}
+          ref={notice}
+        >
           {say("admin.emergency.sent")}
         </p>
       ) : null}
@@ -78,44 +93,45 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
           {refusalWords(aboutPage).words}
         </p>
       )}
-      <form
-        className="stack"
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSent(false);
-          setRefused(undefined);
-          setAsking(true);
-        }}
-      >
-        <Field
-          name="message"
-          label={say("admin.emergency.question")}
-          refused={aboutField}
-          lifted
+      {sent ? null : (
+        <form
+          className="stack"
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            setRefused(undefined);
+            setAsking(true);
+          }}
         >
-          {(tied) => (
-            <textarea
-              {...tied}
-              rows={6}
-              value={message}
-              onChange={(event) => {
-                setMessage(event.target.value);
-                setRefused(undefined);
-              }}
-            />
-          )}
-        </Field>
-        <div className="dialog-buttons">
-          <button
-            className="button button-submit"
-            type="submit"
-            title={say("admin.hover.emergency.send")}
+          <Field
+            name="message"
+            label={say("admin.emergency.question")}
+            refused={aboutField}
+            lifted
           >
-            {say("admin.emergency.send")}
-          </button>
-        </div>
-      </form>
+            {(tied) => (
+              <textarea
+                {...tied}
+                rows={6}
+                value={message}
+                onChange={(event) => {
+                  setMessage(event.target.value);
+                  setRefused(undefined);
+                }}
+              />
+            )}
+          </Field>
+          <div className="dialog-buttons">
+            <button
+              className="button button-submit"
+              type="submit"
+              title={say("admin.hover.emergency.send")}
+            >
+              {say("admin.emergency.send")}
+            </button>
+          </div>
+        </form>
+      )}
       {asking ? (
         <ModalDialog
           title={say("admin.emergency.confirmTitle")}

@@ -91,6 +91,19 @@ Then(
   },
 );
 
+Then("the question is no longer on the page", async function (this: SpecWorld) {
+  await this.browserPage.locator("[data-sent]").waitFor();
+  assert.equal(await this.browserPage.locator(".field label").count(), 0);
+});
+
+Then(
+  "the button to send is no longer on the page",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("[data-sent]").waitFor();
+    assert.equal(await sendButtonOf(this).count(), 0);
+  },
+);
+
 Given(
   "the answer {string} is typed",
   async function (this: SpecWorld, answer: string) {
