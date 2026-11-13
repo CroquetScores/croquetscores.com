@@ -42,6 +42,11 @@ To contribute, read `CONTRIBUTING.md` first, and then `CLA.md`, the agreement
 every contributor signs. Open an issue before you start, however small the
 change.
 
+## In Case of Emergency
+
+If Tim Murphy, who runs the website, cannot, and somebody has to take it over,
+read [docs/website/in-case-of-emergency.md](docs/website/in-case-of-emergency.md).
+
 ## Licence
 
 Copyright © 2026 Tim Murphy. Free software under the GNU Affero General Public
