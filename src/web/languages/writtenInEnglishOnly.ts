@@ -15,6 +15,8 @@ export const writtenInEnglishOnly: readonly string[] = [
   "Email.NotableTournament",
   "Email.NationalStatusRemoved",
   "Email.InternationalStatusRemoved",
+  // Written in Tim's voice to the two people he named, who read English.
+  "Email.EmergencyAccessAsked",
 ];
 
 /**
@@ -26,6 +28,12 @@ export const writtenInEnglishOnly: readonly string[] = [
 const administratorsPages: readonly string[] = [
   "admin.notableTournament.",
   "admin.hover.notableTournament.",
+  // The page for taking the site over, and what it refuses with. Whoever
+  // comes to it comes once, in a hurry, and the people they write to read
+  // English, so a language without them says them in English.
+  "admin.emergency.",
+  "admin.hover.emergency.",
+  "EmergencyAccess.",
 ];
 
 /** Whether the catalogue entry `key` is one written in English only. */
