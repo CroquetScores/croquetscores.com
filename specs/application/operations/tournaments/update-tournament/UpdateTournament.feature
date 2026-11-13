@@ -183,6 +183,34 @@ Feature: Changing what a tournament is
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Spring Open"
       Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
 
+  Rule: The administrator is not told of a tournament on a try website that is changed
+
+    A try website is where a reader learns the system, and what is entered
+    there may be removed at any time, so a change there tells the
+    administrator nothing (`CreateTournament.feature`). It is the website the
+    tournament was created on that counts, since an update cannot change it.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario: A tournament on a try website made national is not told to the administrator
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.croquetscores.com"
+      And the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Try Open"
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+    Scenario: A tournament on a try website made international is not told to the administrator
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.croquetscores.com"
+      And the update makes it an international event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Try Open"
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+    Scenario: A national tournament on a try website that is renamed is not told to the administrator
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.croquetscores.com"
+      And "organiser@example.com" has made the tournament "Try Open" national
+      And the update calls it "Try Open Championship"
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Try Open"
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
   Rule: Only a tournament there is can be updated
 
     Scenario: Updating a tournament there is not is refused

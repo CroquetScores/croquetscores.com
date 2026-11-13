@@ -254,6 +254,41 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
 
+  Rule: The administrator is not told of a tournament on a try website
+
+    A try website is where a reader learns the system, and what is entered
+    there may be removed at any time. A national or an international
+    tournament made there is practice rather than something the
+    administrator would want to know of, and the emails would only bury the
+    ones that are real.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario Outline: A national tournament on a try website is not told to the administrator
+      Given the request came to "<website>"
+      And the sport "<sport>"
+      And the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+      Examples:
+        | website                | sport |
+        | try.croquetscores.com  | ac    |
+        | try.gateballscores.com | gb    |
+
+    Scenario: An international tournament on a try website is not told to the administrator
+      Given the request came to "try.croquetscores.com"
+      And the tournament is to be international
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
+
+    Scenario: A national tournament on a website that is not a try website is still told to the administrator
+      Given the request came to "gateballscores.com"
+      And the sport "gb"
+      And the tournament is to be national
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
   Rule: A forgotten account creates nothing
 
     Scenario: A forgotten account is refused

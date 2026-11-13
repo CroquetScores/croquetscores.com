@@ -1,5 +1,6 @@
 import type { TournamentDetails } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { ReadOnlyDate } from "../../../domain/common/ReadOnlyDate.js";
+import type { Website } from "../../../domain/common/Website.js";
 import type { EmailQueue } from "../../services/EmailQueue.js";
 
 /**
@@ -31,19 +32,24 @@ export const tellOfNotableTournament = async (
   tournament: {
     readonly name: string;
     readonly address: string;
-    readonly website: string;
+    readonly website: Website;
   },
   details: Pick<TournamentDetails, "national" | "international">,
   change: "added" | "edited",
   at: ReadOnlyDate,
 ): Promise<void> => {
+  // A try website is for learning the system and what is entered there may be
+  // removed, so a notable tournament there is practice and not news. Decided
+  // here, by the website the tournament was created on, rather than by each
+  // handler, so that creating and updating cannot disagree.
+  if (tournament.website.isTry) return;
   const level = notableLevelOf(details);
   if (level === undefined) return;
   await queue.queue({
     kind: "Email.NotableTournament",
     to: administratorEmailAddress,
     language: "en",
-    website: tournament.website,
+    website: tournament.website.host,
     fill: {
       level,
       change,
