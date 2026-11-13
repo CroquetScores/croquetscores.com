@@ -570,6 +570,14 @@ const titleOf = (shell: Shell): string =>
     ? shell.title
     : `${shell.title} — ${shell.siteName}`;
 
+// Cloudflare's web analytics, which counts the pages read. In the shell so
+// that every page of the public site is counted, and not in the admin, which
+// draws its own page (adminPage.ts) and so is left out without being asked.
+// The token names the site to Cloudflare and is not a secret: it is sent to
+// every reader's browser by the script itself.
+const webAnalytics = `
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e5c9fe0f3518475ab45bdce40da2bcaf"}'></script>`;
+
 export const render = (assets: Assets, shell: Shell): string => `<!doctype html>
 <html lang="${escape(shell.speaking.language.tag)}"${directionAttribute(shell.speaking.language)}${shell.theme === "system" ? "" : ` data-theme="${shell.theme}"`}>
   <head>
@@ -588,7 +596,7 @@ ${textSizeScript}    <title>${escape(titleOf(shell))}</title>${
     <style>
 ${shell.styles}
     </style>`
-    }
+    }${webAnalytics}
   </head>
   <body>${shell.tryWebsite ? tryWebsiteBanner(shell.speaking, shell.siteName) : ""}${siteBar({ ...shell, withSearch: true })}${subtitleBar(shell.tournament)}${titleBar(shell.headerTitle)}${shell.secondary ?? sectionBar(shell.speaking, shell.sections, shell.currentSection)}
     <main id="content">

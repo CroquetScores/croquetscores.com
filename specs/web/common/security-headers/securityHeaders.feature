@@ -14,7 +14,8 @@ Feature: Telling the reader's browser how to treat what it is sent
   written with them; moving those out so that the policy can refuse them is a
   change of its own. What it refuses already is everything from another place
   except the few the site uses: Google's reCAPTCHA, to tell people from
-  programs, and PayPal and Google's sign-in, which a form is sent on to.
+  programs, Cloudflare's web analytics, to count the pages read, and PayPal
+  and Google's sign-in, which a form is sent on to.
 
   The policy is not a defence against a script slipped into a page: inline
   scripts are allowed, and Google's address as a whole is, so it is not to be
@@ -74,9 +75,10 @@ Feature: Telling the reader's browser how to treat what it is sent
       Then its policy allows scripts from "<place>"
 
       Examples:
-        | place                   |
-        | https://www.google.com  |
-        | https://www.gstatic.com |
+        | place                                 |
+        | https://www.google.com                |
+        | https://www.gstatic.com               |
+        | https://static.cloudflareinsights.com |
 
     Scenario Outline: A page may be sent to <place> by a form
       When a reader asks for a page
@@ -122,6 +124,10 @@ Feature: Telling the reader's browser how to treat what it is sent
     Scenario: A page may ask reCAPTCHA for its answer
       When a reader asks for a page
       Then its policy allows requests to "https://www.google.com"
+
+    Scenario: A page may tell Cloudflare's web analytics what was read
+      When a reader asks for a page
+      Then its policy allows requests to "https://cloudflareinsights.com"
 
   Rule: Every answer says so
 
