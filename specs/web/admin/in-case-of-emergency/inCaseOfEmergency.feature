@@ -89,6 +89,27 @@ Feature: The page for asking to take over the site
       When the dialog is confirmed
       Then the page says the message was sent
 
+  Rule: Once it is sent the page says so and asks nothing more
+
+    The person has done what the page is for. Leaving the question and the
+    button where they were invites a second, which is refused for two days.
+
+    @browser @postgres
+    Scenario: The question is gone once the message is sent
+      Given the page "in case of emergency" is open
+      And the answer "Tim asked me to look after the site" is typed
+      And the button "Send" is pressed
+      When the dialog is confirmed
+      Then the question is no longer on the page
+
+    @browser @postgres
+    Scenario: The button to send is gone once the message is sent
+      Given the page "in case of emergency" is open
+      And the answer "Tim asked me to look after the site" is typed
+      And the button "Send" is pressed
+      When the dialog is confirmed
+      Then the button to send is no longer on the page
+
   Rule: A refusal is shown on the page
 
     @browser @postgres
