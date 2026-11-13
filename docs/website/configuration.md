@@ -62,6 +62,7 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 - **`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`** — Sign in with Google. Both or neither: with one missing the route is not offered. The site sends Google the address of the website the reader is on, so **all four** must be registered in Google's console as authorised redirect URIs: `https://croquetscores.com/auth/google/callback`, `https://try.croquetscores.com/auth/google/callback`, `https://gateballscores.com/auth/google/callback` and `https://try.gateballscores.com/auth/google/callback`. One missing fails sign-in on that website with `redirect_uri_mismatch`. Behind the proxy it is right only when `TRUSTED_PROXY` names the proxy: otherwise it sends `http://`, and Google refuses it
 - **`FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET`** — Sign in with Facebook. Leave blank until the app has been reviewed (https://github.com/CroquetScores/croquetscores.com/issues/286, Facebook sign-in)
 - **`OLD_SITE_PASSWORD_SALT`** — The salt the old site added before hashing passwords. Needed only so that passwords imported from the old site match. Blank, they match nothing
+- **`EMERGENCY_CONTACT_EMAIL_ADDRESSES`** — The people who hold the site's passwords, whom the page at `/admin/in-case-of-emergency` writes to when somebody asks to take the site over (in-case-of-emergency.md). Email addresses separated by commas. Blank, the page says the site has nobody to ask. One that is not an address stops the site starting. It is a setting and not written in the repository, because the repository is public and these are not meant to be
 - **`DATABASE_UNREACHABLE_EMAIL_INTERVAL_MINUTES`** — How long between emails to the administrator that the database cannot be reached. Whole minutes, blank is 30
 - **`DATABASE_ACCESS_FILE`** — Where the maintenance switch is kept (operations.md §3). Only the scripts run as `deploy` write it, and the running site only reads it. Blank is `.database-access` in the site's folder. It is a file, because the database cannot say whether it may be asked
 
@@ -73,7 +74,7 @@ These belong to the administrator's own computer, and are blank on the server (b
 
 ## 4. A copy of the file, away from the server
 
-The server's environment file is the place that is lost with the server. **The whole of the website's `.env` is kept in LastPass, in the notes of the item for kamatera.com.** That one note holds every setting and key in this document, so there is nothing to collect from anywhere else after a loss.
+The server's environment file is the place that is lost with the server. **The whole of the website's `.env` is kept in LastPass, in the secure note titled `Croquet Scores`.** That one note holds every setting and key in this document, so there is nothing to collect from anywhere else after a loss.
 
 What matters most in it:
 
@@ -96,6 +97,6 @@ Changing `ACCOUNT_ENCRYPTION_KEY` is not this. It is `npm run db:change-site-key
 - [ ] `TRUSTED_PROXY` is the proxy's address, and the proxy forwards the host the reader typed as `X-Forwarded-Host`.
 - [ ] The reCAPTCHA keys are made for all four domains.
 - [ ] The four `SMTP_` settings are all there, and a registration's email arrived (operations.md §1).
-- [ ] The whole file is in the LastPass note for kamatera.com, and the two account keys in it match the server's.
+- [ ] The whole file is in the LastPass note titled `Croquet Scores`, and the two account keys in it match the server's.
 - [ ] `SEARCH_ENGINES_WELCOME` is `false` wherever the site is not meant to be found, `true` for production.
 - [ ] No `.env` is in the site's folder on the server.

@@ -3,6 +3,7 @@
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
+import { EmailAddress } from "../../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import type { SmtpSettings } from "../email/SmtpEmailSender.js";
 
 /** What reCAPTCHA needs: the key the page shows, and the one only the site has. */
@@ -39,6 +40,12 @@ export interface Config {
   // which it is for by the host it was addressed to (Website.ts).
   readonly administratorEmailAddress: string;
   readonly administratorEmailFromName: string;
+  // The people who hold the site's passwords, whom the page for taking the
+  // site over writes to (AskForEmergencyAccess.feature). A setting and not
+  // written in the code, because the code is public and these are not meant to
+  // be. Empty on a machine that names nobody, where the page says it has
+  // nobody to ask.
+  readonly emergencyContactEmailAddresses: readonly string[];
   // How many minutes the site waits between emailing the administrator that
   // it cannot reach its database. It is counted in the running site's own
   // memory, there being nowhere else to count it when the database is the
@@ -268,6 +275,34 @@ const readDatabaseUnreachableEmailIntervalMinutes = (
   return minutes;
 };
 
+// The addresses in EMERGENCY_CONTACT_EMAIL_ADDRESSES, separated by commas.
+// One that is not an address stops the site starting: a mistyped one would be
+// an emergency asked of nobody, and nobody would know until it was needed.
+const readEmergencyContacts = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): string[] => {
+  const key = "EMERGENCY_CONTACT_EMAIL_ADDRESSES";
+  const addresses: string[] = [];
+  for (const said of (env[key] ?? "").split(",")) {
+    const typed = said.trim();
+    if (typed === "") continue;
+    try {
+      const address = EmailAddress.from(typed).toString();
+      // Named twice is asked once: the same person would be emailed twice.
+      if (
+        !addresses.some((had) => had.toLowerCase() === address.toLowerCase())
+      ) {
+        addresses.push(address);
+      }
+    } catch {
+      problems.push(`${key} has something that is not an email address.`);
+      return [];
+    }
+  }
+  return addresses;
+};
+
 export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const problems: string[] = [];
 
@@ -289,6 +324,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const trustedProxies = readTrustedProxies(env, problems);
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
   const smtp = readSmtp(env, problems);
+  const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   if (problems.length > 0) throw new ConfigError(problems);
@@ -302,6 +338,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     accountEmailAddressHashKey: env["ACCOUNT_EMAIL_ADDRESS_HASH_KEY"]!,
     administratorEmailFromName: env["ADMINISTRATOR_EMAIL_FROM_NAME"]!.trim(),
     administratorEmailAddress: env["ADMINISTRATOR_EMAIL_ADDRESS"]!.trim(),
+    emergencyContactEmailAddresses,
     databaseUnreachableEmailIntervalMinutes,
     databaseAccessFile:
       env["DATABASE_ACCESS_FILE"]?.trim() || ".database-access",

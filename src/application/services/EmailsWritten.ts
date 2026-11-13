@@ -14,7 +14,8 @@ import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 export type WrittenTo =
   | { readonly account: AccountId }
   | { readonly emailAddressHash: string }
-  | { readonly administratorAbout: string };
+  | { readonly administratorAbout: string }
+  | { readonly emergencyAccessBy: AccountId };
 
 /**
  * A record of what the site has written to an account, kept so that the

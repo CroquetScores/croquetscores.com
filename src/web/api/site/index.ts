@@ -79,6 +79,7 @@ import type { Assets } from "../../common/assets.js";
 import { inCountryGroups } from "../../common/countryOrder.js";
 import { AccountsWithRole } from "../../../application/operations/accounts/AccountsWithRole.js";
 import { AddRole } from "../../../application/operations/accounts/AddRole.js";
+import { AskForEmergencyAccess } from "../../../application/operations/emergency/AskForEmergencyAccess.js";
 import { RemoveRole } from "../../../application/operations/accounts/RemoveRole.js";
 import { ImportWorldRankingPlayers } from "../../../application/operations/world-rankings/ImportWorldRankingPlayers.js";
 import { LogEntries } from "../../../application/operations/logs/LogEntries.js";
@@ -1097,6 +1098,25 @@ export const apiSite: FastifyPluginCallback<ApiSiteOptions> = (
       return reply.code(204).header("cache-control", "no-store").send();
     },
   );
+
+  // What somebody who has come to take the site over says of who they are and
+  // why, emailed to the people who hold its passwords
+  // (AskForEmergencyAccess.feature). Any signed-in account may send it, since
+  // the people it is for have no part in any tournament; nobody who is not
+  // signed in is refused, as every route here refuses them.
+  server.post("/emergency-access", async (request, reply) => {
+    const reader = signedInOrRefused(request, reply);
+    if (reader === undefined) return reply;
+    await request.server.mediator.send(
+      new AskForEmergencyAccess(
+        textOf(request.body, "message"),
+        websiteOf(request).host,
+        request.requestedAt,
+        reader,
+      ),
+    );
+    return reply.code(204).header("cache-control", "no-store").send();
+  });
 
   // The accounts holding a role, as an administrator lists them. The role is
   // named as one is kept, "administrator", "ac-world-ranking-officer" or "gc-world-ranking-officer".

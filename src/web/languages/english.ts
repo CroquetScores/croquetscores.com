@@ -723,6 +723,32 @@ export const english: Language = {
       "No tournament is played in a country the lists do not name",
     "admin.countries.oldSite": "Old site",
     "admin.countries.otherwise": "Something went wrong on the site.",
+    // The page for taking the site over, and what it refuses with.
+    "admin.emergency.title": "In case of emergency",
+    "admin.emergency.explanation":
+      "Use this page if the person who runs this site cannot, and you have come to take it over. What you say is emailed to the people who hold the site's passwords. They decide whether to give them to you, and they answer you themselves, at the email address of your account.",
+    "admin.emergency.question":
+      "Say who you are, who asked you or why you are taking this on",
+    "admin.emergency.send": "Send",
+    "admin.hover.emergency.send": "Check what you have said, and then send it",
+    "admin.emergency.confirmTitle": "Send this?",
+    "admin.emergency.confirm":
+      "What you have said is emailed to the people who hold the site's passwords, and cannot be taken back. Send it?",
+    "admin.emergency.yes": "Yes, send it",
+    "admin.hover.emergency.yes": "Email what you have said to them",
+    "admin.emergency.sent":
+      "Your message was sent. The people who hold the site's passwords will answer you themselves.",
+    "EmergencyAccess.MessageMissing":
+      "Say who you are, who asked you or why you are taking this on.",
+    "EmergencyAccess.MessageTooLong":
+      "That is too long. Keep it to 2000 characters.",
+    "EmergencyAccess.NoContacts":
+      "This site has nobody to ask. It has not been told who holds its passwords.",
+    "EmergencyAccess.NoSuchAccount":
+      "Your account could not be found. Sign in again.",
+    "EmergencyAccess.TooSoon":
+      "You have asked already. The people asked may be slow to answer, so you can ask again in two days.",
+    "admin.emergency.otherwise": "Something went wrong on the site.",
     // The page an administrator judges a national or an international
     // tournament on, in English only (writtenInEnglishOnly.ts).
     "admin.notableTournament.title": "Notable tournament",
@@ -1791,6 +1817,29 @@ export const english: Language = {
 <p>
     {emailFromName}<br />
     {siteName}
+</p>
+`,
+
+    "Email.EmergencyAccessAsked.subject":
+      "{senderName} is asking to take over {siteName}",
+    "Email.EmergencyAccessAsked.body": `
+<p>Hi,</p>
+
+<p>
+    {senderName} ({senderEmailAddress}) asked at {when} to take over
+    {siteName}, and said:
+</p>
+
+<p style="white-space: pre-wrap; border-left: 3px solid #999999; padding-left: 12px;">{message}</p>
+
+<p>
+    You are asked because you can open the secure note that holds what the
+    site needs. Nothing has been given to them, and nothing will be unless one
+    of you decides to. Replying to this email answers {senderName}.
+</p>
+
+<p>
+    {siteName} sent this, and does not know whether what was said is true.
 </p>
 `,
 

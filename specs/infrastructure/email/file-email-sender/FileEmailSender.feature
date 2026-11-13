@@ -83,6 +83,20 @@ Feature: Sending an email by writing it to a file
       When an email to "someone@example.com" with the body "<p>Follow the link.</p>" is sent
       Then the file holds "<p>Follow the link.</p>"
 
+  Rule: Where a reply goes is written when it is somewhere else
+
+    Scenario: The file says where a reply goes
+      When an email to "someone@example.com" with replies to "sender@example.com" is sent
+      Then the file says a reply goes to "sender@example.com"
+
+    Scenario: An email with no reply address says none
+      When an email to "someone@example.com" is sent
+      Then the file does not say where a reply goes
+
+    Scenario: A reply address with markup in it cannot become markup
+      When an email to "someone@example.com" with replies to "<script>alert(1)</script>@example.com" is sent
+      Then the file contains no element named "script"
+
   Rule: Who the email is to, and its subject, are written as text
 
     Scenario: An address with markup in it cannot become markup

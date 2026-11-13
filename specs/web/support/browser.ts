@@ -194,6 +194,17 @@ export const anApplicationWhoseAdministratorIs = (
 ): Promise<string> =>
   anApplicationWith(world, { administratorEmailAddress: emailAddress });
 
+/**
+ * An application of this scenario's own told whom the page for taking the site
+ * over writes to, and otherwise as {@link anApplicationCalled}. Told them and
+ * not left to read the developer's own, who has nobody named.
+ */
+export const anApplicationWithEmergencyContacts = (
+  world: SpecWorld,
+  emailAddresses: readonly string[],
+): Promise<string> =>
+  anApplicationWith(world, { emergencyContactEmailAddresses: emailAddresses });
+
 // Which website each scenario's browser says it is addressing, where it says
 // one. Nothing is development, which is what the application is reached as.
 const addressed = new WeakMap<SpecWorld, string>();

@@ -137,6 +137,27 @@ Feature: Keeping emails to be sent in the same transaction as what they are abou
       When the email "Email.RegisterInstead" has been queued for "nobody@example.com"
       Then no row of the queue contains "nobody@example.com"
 
+  Rule: An email that is answered somewhere else keeps where
+
+    An email that tells somebody what somebody else said is answered to the
+    one who said it, not to the site it was sent from. Where a reply goes is
+    somebody's address, so it is kept as every address is kept: sealed with the
+    rest of what the email holds, and never as it was given.
+
+    Scenario: An email queued with a reply address is sent with it
+      Given the email "Email.ConfirmAddress" is queued for "someone@example.com" with replies to "sender@example.com"
+      When what is queued is sent
+      Then the email sent to "someone@example.com" has replies going to "sender@example.com"
+
+    Scenario: An email queued with none is sent with none
+      Given the email "Email.ConfirmAddress" has been queued for "someone@example.com"
+      When what is queued is sent
+      Then the email sent to "someone@example.com" has no reply address
+
+    Scenario: A queued email does not hold the address replies go to
+      Given the email "Email.ConfirmAddress" is queued for "someone@example.com" with replies to "sender@example.com"
+      Then no row of the queue contains "sender@example.com"
+
   Rule: An email whose account is forgotten before it is sent is not sent
 
     Scenario: An email queued before its account is forgotten is not sent

@@ -22,7 +22,7 @@ In Kamatera's [console](https://console.kamatera.com/servers), create a server w
   - **Private Local Network** - Unselect
 - **Advanced Configuration** - Hide
 - **Finalize Settings**
-  - **Password** - Enter a strong password. See LastPass notes in my kam item.
+  - **Password** - Enter a strong password, and keep it in the LastPass note titled `Croquet Scores`.
   - **Servers** - 1
   - **Name #1** - CroquetScores
   - **Power On Servers** - Select

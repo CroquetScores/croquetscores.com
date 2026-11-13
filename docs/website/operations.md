@@ -81,7 +81,7 @@ If only one name does it, that name is not one of the four, or its DNS points at
 
 ### A name shows as unreadable
 
-`ACCOUNT_ENCRYPTION_KEY` is not the one the accounts were sealed with. Put the right one back, from the LastPass note for kamatera.com (configuration.md §4). If the note has an `ACCOUNT_ENCRYPTION_KEY_OLD` line as well, the data may have been sealed by either, depending on when it was made (deploying.md §6). **Do not run `db:change-site-key` to "fix" it:** it needs the right old key to work.
+`ACCOUNT_ENCRYPTION_KEY` is not the one the accounts were sealed with. Put the right one back, from the LastPass note titled `Croquet Scores` (configuration.md §4). If the note has an `ACCOUNT_ENCRYPTION_KEY_OLD` line as well, the data may have been sealed by either, depending on when it was made (deploying.md §6). **Do not run `db:change-site-key` to "fix" it:** it needs the right old key to work.
 
 ### The server itself is lost
 

@@ -68,6 +68,17 @@ Given("there is no administrator's email address", function (this: SpecWorld) {
   delete startingOf(this).settings["ADMINISTRATOR_EMAIL_ADDRESS"];
 });
 
+Given("nobody is named as an emergency contact", function (this: SpecWorld) {
+  delete startingOf(this).settings["EMERGENCY_CONTACT_EMAIL_ADDRESSES"];
+});
+
+Given(
+  "the emergency contacts' email addresses are {string}",
+  function (this: SpecWorld, addresses: string) {
+    startingOf(this).settings["EMERGENCY_CONTACT_EMAIL_ADDRESSES"] = addresses;
+  },
+);
+
 When("the settings are loaded", function (this: SpecWorld) {
   const starting = startingOf(this);
   try {
@@ -81,6 +92,34 @@ When("the settings are loaded", function (this: SpecWorld) {
 Then("they are accepted", function (this: SpecWorld) {
   assert.equal(startingOf(this).refusal, undefined);
 });
+
+const emergencyContactsOf = (world: SpecWorld): readonly string[] => {
+  const { config } = startingOf(world);
+  assert.ok(config !== undefined, "The settings were not accepted.");
+  return config.emergencyContactEmailAddresses;
+};
+
+Then("there are no emergency contacts", function (this: SpecWorld) {
+  assert.deepEqual(emergencyContactsOf(this), []);
+});
+
+Then("there is only one emergency contact", function (this: SpecWorld) {
+  assert.equal(emergencyContactsOf(this).length, 1);
+});
+
+Then(
+  "the first emergency contact is {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(emergencyContactsOf(this)[0], address);
+  },
+);
+
+Then(
+  "the second emergency contact is {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(emergencyContactsOf(this)[1], address);
+  },
+);
 
 Then("they are refused", function (this: SpecWorld) {
   assert.ok(startingOf(this).refusal !== undefined, "The site started.");

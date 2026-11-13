@@ -19,12 +19,13 @@ What is **not** only here: the code (GitHub), the website's data (the server, Ka
 
 ## 2. Where each thing is to be kept
 
-- **In the password manager (LastPass):**
-  - **`.env.production`**, whole, in the notes of the item for kamatera.com. This is the single most important copy: it holds `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY`, which no backup file can replace (backup-and-restore.md §4). **Update the note every time the file changes**, and when a key is changed by `npm run db:change-site-key` (deploying.md §6).
+- **In the password manager (LastPass), in one secure note titled `Croquet Scores`.** Everything below that is secret goes in that one note and nowhere else in the vault, so that whoever is given a copy of it (in-case-of-emergency.md) has all of it and nothing that is not the website's:
+  - **`.env.production`**, whole. This is the single most important copy: it holds `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY`, which no backup file can replace (backup-and-restore.md §4). **Update the note every time the file changes**, and when a key is changed by `npm run db:change-site-key` (deploying.md §6).
   - **The server's root password** (the one entered when the server was made), which is the way back in when the SSH key is gone (§3).
   - **The SSH key's passphrase**, and a line saying which computer the key is on.
-  - **The database's password**, and the administrator's mailbox if it has its own password.
-  - **A note of the accounts the website depends on,** each with its sign-in: Kamatera, Cloudflare, Brevo, Google (the sign-in credentials and reCAPTCHA), GitHub, and the domain registrar. Losing the one for the domain registrar is the worst of these, since the domain is not recoverable without it.
+  - **The database's password**, and the sign-in for the administrator's mailbox (`croquetscores@gmail.com`).
+  - **The accounts the website depends on,** each with its sign-in: Kamatera, Cloudflare, Brevo, Google (the sign-in credentials and reCAPTCHA), GitHub, and the domain registrar. Losing the one for the domain registrar is the worst of these, since the domain is not recoverable without it.
+  - **What Tim wants done with the website,** in his own words, at the top, for whoever takes it over if he cannot run it (in-case-of-emergency.md §7).
 - **Not in the password manager: the SSH private key.** Losing it is recoverable (§3), and putting it beside the passwords gives anyone who gets into the vault the server as well. Give it a passphrase (`ssh-keygen -p -f ~/.ssh/id_ed25519`), and keep one key for each computer.
 - **Somewhere other than this computer, and other than the server: the backup files.** An external disk kept elsewhere, or a cloud storage folder, or both. The files hold names and email addresses only in the sealed form the website has, and the key that opens them is not in them (backup-and-restore.md §1), so a file on its own is not readable. Even so, keep the key and the files in different places: the key in the password manager, the files in storage.
   - Point `DATABASE_BACKUP_FOLDER` at a folder that syncs, or copy the folder to the external disk on a day of the month that is kept to.
