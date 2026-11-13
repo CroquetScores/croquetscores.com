@@ -121,6 +121,14 @@ Feature: The page for asking to take over the site
       Then the answer is refused with "EmergencyAccess.MessageMissing"
 
     @browser @postgres
+    Scenario: An empty answer is refused in words
+      Given the page "in case of emergency" is open
+      And the answer "" is typed
+      And the button "Send" is pressed
+      When the dialog is confirmed
+      Then the refusal of the answer reads "Say who you are, who asked you or why you are taking this on."
+
+    @browser @postgres
     Scenario: Asking again within 48 hours is refused on the page
       Given the page "in case of emergency" is open
       And the answer "Tim asked me to look after the site" is typed
@@ -131,3 +139,15 @@ Feature: The page for asking to take over the site
       And the button "Send" is pressed
       When the dialog is confirmed
       Then the page is refused with "EmergencyAccess.TooSoon"
+
+    @browser @postgres
+    Scenario: Asking again within 48 hours is refused in words
+      Given the page "in case of emergency" is open
+      And the answer "Tim asked me to look after the site" is typed
+      And the button "Send" is pressed
+      And the dialog is confirmed
+      And the page "in case of emergency" is open
+      And the answer "Tim asked me to look after the site" is typed
+      And the button "Send" is pressed
+      When the dialog is confirmed
+      Then the refusal of the page reads "You have asked already. The people asked may be slow to answer, so you can ask again in two days."
