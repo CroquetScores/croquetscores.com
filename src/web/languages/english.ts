@@ -1838,9 +1838,12 @@ export const english: Language = {
 </p>
 
 <p>
-    Log into LastPass, find the Secure Note named Croquet Scores, copy the note
-    and forward it to the requestor.
+    If you are satisfied they are who they say, reply to this email, which
+    goes to the requestor at {senderEmailAddress}, with the following.
+    Put the password in place of ??? and do not send it with the ??? still in:
 </p>
+
+<p style="white-space: pre-wrap; border-left: 3px solid #999999; padding-left: 12px;">Everything you need is at https://lastpass.com/vault/. The user name is croquetscores@gmail.com and password is ???.</p>
 
 <p>What the requestor said:</p>
 

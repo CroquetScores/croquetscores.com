@@ -19,7 +19,7 @@ What is **not** only here: the code (GitHub), the website's data (the server, Ka
 
 ## 2. Where each thing is to be kept
 
-- **In the password manager (LastPass), in one secure note titled `Croquet Scores`.** Everything below that is secret goes in that one note and nowhere else in the vault, so that whoever is given a copy of it (in-case-of-emergency.md) has all of it and nothing that is not the website's:
+- **In the password manager (LastPass), in one secure note titled `Croquet Scores`, in the website's own LastPass account (`croquetscores@gmail.com`).** Everything below that is secret goes in that one note, so that whoever is given the sign-in to the account (in-case-of-emergency.md) has all of it and nothing that is not the website's. The account's own password is held by Nicole Murphy and Peter Murphy, and by nobody's memory alone:
   - **`.env.production`**, whole. This is the single most important copy: it holds `ACCOUNT_ENCRYPTION_KEY` and `ACCOUNT_EMAIL_ADDRESS_HASH_KEY`, which no backup file can replace (backup-and-restore.md §4). **Update the note every time the file changes**, and when a key is changed by `npm run db:change-site-key` (deploying.md §6).
   - **The server's root password** (the one entered when the server was made), which is the way back in when the SSH key is gone (§3).
   - **The SSH key's passphrase**, and a line saying which computer the key is on.

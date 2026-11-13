@@ -2,11 +2,11 @@
 
 What to do if Tim Murphy, who runs the website, cannot: because he is ill, away for long time, or has died. Written for the technical person who has been asked to take it over, or who has found this and means to. Nothing in it is secret, because this repository is public. Everything that is secret is in one LastPass note, and §1 says how to get a copy of it.
 
-Nobody is expected to run the website but you. Nicole and Peter, named below, are only the people who can open the note.
+Nobody is expected to run the website but you. Nicole and Peter, named below, are only the people who know the password of the LastPass account.
 
 ## 1. Getting in
 
-Every password, key and sign-in the website needs is in one LastPass secure note titled `Croquet Scores`. It is not in the repository and never will be. Two people, Nicole Murphy and Peter Murphy, can open Tim's LastPass and give you a copy of that note.
+Every password, key and sign-in the website needs is in one LastPass secure note titled `Croquet Scores`. It is not in the repository and never will be. It is kept in the LastPass account for `croquetscores@gmail.com`, and two people, Nicole Murphy and Peter Murphy, know its password and will send you the sign-in.
 
 Their email addresses are not written here, because this repository is public. Ask for them on the website instead:
 
@@ -16,7 +16,7 @@ Their email addresses are not written here, because this repository is public. A
 
 What you say is emailed to Nicole and Peter, with the name and email address of your account, and their replies come to that address. You may ask once in 48 hours, so say enough the first time.
 
-They are not responsible for the website, may know little about it, and may be grieving or worried. Expect them to want to be sure of you before they hand over what is the whole of the website, and give them what they need to be: a way to reach you, and somebody who can speak for you. Ask them for a copy of the `Croquet Scores` note, and for nothing else from Tim's LastPass.
+They are not responsible for the website, may know little about it, and may be grieving or worried. Expect them to want to be sure of you before they hand over what is the whole of the website, and give them what they need to be: a way to reach you, and somebody who can speak for you. What you are asking for is the sign-in to that one LastPass account, and nothing else of Tim's.
 
 **If the website is down,** the page is too. Then Nicole and Peter have to be found some other way, through whoever knew Tim: his family, or the executor of his estate.
 
@@ -95,8 +95,8 @@ The people who rely on the website are the organisers of tournaments and the pla
 
 This is only as good as the note and the people it names. Tim goes through this once a year, and whenever something below changes:
 
-- Nicole and Peter know they are named here, are willing to be, and know that what is asked of them is only to give a copy of the note to somebody who comes for it.
-- Nicole and Peter can sign in to LastPass, including its second code: the recovery codes are somewhere they know about, and not only on Tim's phone.
+- Nicole and Peter know they are named here, are willing to be, and know that what is asked of them is only to send the LastPass sign-in to somebody who comes for it.
+- Nicole and Peter have the password of the `croquetscores@gmail.com` LastPass account, and can sign in to it from a new device.
 - `EMERGENCY_CONTACT_EMAIL_ADDRESSES` is set to their two addresses in `/etc/croquetscores/environment` on the server, and in the note with the rest of the settings. Without it the page says the site has nobody to ask (configuration.md §3).
 - Their addresses still work, and each can be reached other than through this page, since this page is no help while the site is down.
 - The note `Croquet Scores` has the whole of the production settings file, with both account keys matching what the server is using (configuration.md §4), the server's root password, the sign-in for each company in §1 (the domain names' company especially), and the password for the `croquetscores@gmail.com` mailbox.

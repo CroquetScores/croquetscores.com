@@ -2,11 +2,11 @@
 Feature: Asking the people who hold the site's passwords to hand them over
 
   If the person who runs the site cannot, somebody technical may take it over.
-  What they need is kept in a secure note that two people Tim chose can open,
-  and the site is how they are asked: someone says who they are and why they
-  are taking this on, and the two people are emailed what was said. Nothing is
-  decided here. The two people read it, make up their own minds and answer the
-  sender themselves.
+  What they need is kept in a LastPass account that two people Tim chose know
+  the password of, and the site is how they are asked: someone says who they
+  are and why they are taking this on, and the two people are emailed what was
+  said. Nothing is decided here. The two people read it, make up their own
+  minds and answer the sender themselves.
 
   Whoever asks has an account, so that the two people are told who is asking
   and the page cannot be used by anybody who merely knows its address. The two
@@ -141,11 +141,35 @@ Feature: Asking the people who hold the site's passwords to hand them over
 
   Rule: The email tells the people asked what to do
 
-    Scenario: The email says which note to copy
+    Scenario: The email says where to find what is needed
       Given the emergency contacts are at "first@example.com" and "second@example.com"
       And the message "I run a croquet club and Tim asked me to look after the site"
       When "Sam Jones" asks for emergency access
-      Then the email queued for "first@example.com" says "find the Secure Note named Croquet Scores"
+      Then the email queued for "first@example.com" says "Everything you need is at https://lastpass.com/vault/"
+
+    Scenario: The email tells them to send it only if they are satisfied
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "If you are satisfied they are who they say"
+
+    Scenario: The email says where the reply goes
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "goes to the requestor at sam@example.com"
+
+    Scenario: The email says to put the password where the question marks are
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "Put the password in place of ???"
+
+    Scenario: The email says who to sign in as
+      Given the emergency contacts are at "first@example.com" and "second@example.com"
+      And the message "I run a croquet club and Tim asked me to look after the site"
+      When "Sam Jones" asks for emergency access
+      Then the email queued for "first@example.com" says "The user name is croquetscores@gmail.com"
 
     Scenario: The email says what the sender said under a heading of its own
       Given the emergency contacts are at "first@example.com" and "second@example.com"
