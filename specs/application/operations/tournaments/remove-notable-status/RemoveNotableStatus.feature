@@ -17,7 +17,8 @@ Feature: Removing a tournament's national or international status
   international, why the administrator thinks it is not, and asks to hear the
   reasoning if the manager disagrees. A manager whose account is forgotten is
   not emailed, since there is nobody to read it. A tournament that is neither
-  has nothing taken away and nobody is emailed.
+  has nothing taken away and nobody is emailed, and nor is anybody on a try
+  website, where the administrator was not told of it either.
 
   The emails are queued in the transaction that keeps the change, so that they
   are queued if and only if it is kept.
@@ -85,6 +86,32 @@ Feature: Removing a tournament's national or international status
       When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
       Then one email is queued for "organiser@example.com"
       And the queue holds 2 emails
+
+  Rule: Managers of a tournament on a try website are not emailed
+
+    A try website is where a reader learns the system, and the administrator is
+    not told of a notable tournament made there (`CreateTournament.feature`).
+    What is entered there may be removed at any time, so a manager is not
+    written to as though a real event had been judged. The status is still
+    taken away, so that the tournament is the same on every website.
+
+    Scenario: The status is still taken away on a try website
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.croquetscores.com"
+      And "organiser@example.com" has made the tournament "Try Open" national
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Try Open"
+      Then the kept tournament "Try Open" is not national
+
+    Scenario: The manager of a national tournament on a try website is not emailed
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.croquetscores.com"
+      And "organiser@example.com" has made the tournament "Try Open" national
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Try Open"
+      Then the email "Email.NationalStatusRemoved" is not queued for "organiser@example.com"
+
+    Scenario: The manager of an international tournament on a try website is not emailed
+      Given "organiser@example.com" has created the tournament "Try Open" on "try.gateballscores.com"
+      And "organiser@example.com" has made the tournament "Try Open" international
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Try Open"
+      Then the email "Email.InternationalStatusRemoved" is not queued for "organiser@example.com"
 
   Rule: The email says what the administrator thinks and why
 

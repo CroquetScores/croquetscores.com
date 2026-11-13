@@ -211,6 +211,12 @@ Feature: Changing what a tournament is
       When the reader signed in to the account for "organiser@example.com" updates the tournament "Try Open"
       Then the email "Email.NotableTournament" is not queued for "administrator@example.com"
 
+    Scenario: A tournament on a website that is not a try website is still told to the administrator
+      Given "organiser@example.com" has created the tournament "Gate Open" on "gateballscores.com"
+      And the update makes it a national event
+      When the reader signed in to the account for "organiser@example.com" updates the tournament "Gate Open"
+      Then the email "Email.NotableTournament" is queued for "administrator@example.com"
+
   Rule: Only a tournament there is can be updated
 
     Scenario: Updating a tournament there is not is refused
