@@ -60,6 +60,8 @@ export interface QueuedEmail {
   readonly fill: Readonly<Record<string, string>> | undefined;
   /** When that link stops working, when the queue was told. */
   readonly linkWorksUntil: Date | undefined;
+  /** Where a reply to it goes, when that is not where it came from. */
+  readonly replyTo: string | undefined;
   readonly tries: number;
   readonly dueAt: Date;
   readonly lastTriedAt: Date | undefined;
@@ -72,6 +74,8 @@ interface Sealed {
   readonly to: string;
   readonly website: string;
   readonly fill: Readonly<Record<string, string>>;
+  // Absent from every email queued before replies were thought of.
+  readonly replyTo?: string;
 }
 
 interface Row {
@@ -107,6 +111,9 @@ export class PostgresEmailQueue implements EmailQueue {
       to: email.to,
       website: email.website,
       fill: email.fill,
+      // Sealed with the rest: it is somebody's address, and is kept no longer
+      // than the email is.
+      ...(email.replyTo === undefined ? {} : { replyTo: email.replyTo }),
     };
     let sealed: string;
     if (email.account !== undefined) {
@@ -181,6 +188,7 @@ export class PostgresEmailQueue implements EmailQueue {
         link: sealed?.fill["link"],
         fill: sealed?.fill,
         linkWorksUntil: row.link_works_until ?? undefined,
+        replyTo: sealed?.replyTo,
         tries: row.tries,
         dueAt: row.due_at,
         lastTriedAt: row.last_tried_at ?? undefined,
@@ -257,6 +265,7 @@ export class PostgresEmailQueue implements EmailQueue {
         {
           to: sealed.to,
           from: this.from,
+          ...(sealed.replyTo === undefined ? {} : { replyTo: sealed.replyTo }),
           subject: written.subject,
           body: written.body,
         },

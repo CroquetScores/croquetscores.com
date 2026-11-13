@@ -6,6 +6,8 @@ export interface OutgoingEmail {
   readonly to: string;
   /** The address it comes from: the site's own. */
   readonly from: string;
+  /** Where a reply goes, when that is not the address it comes from. */
+  readonly replyTo?: string;
   readonly subject: string;
   /** The body as HTML. */
   readonly body: string;

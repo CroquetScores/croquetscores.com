@@ -37,3 +37,57 @@ Feature: The settings the site is started with
       When the settings are loaded
       Then they are refused
       And the refusal names the setting "ADMINISTRATOR_EMAIL_ADDRESS"
+
+  Rule: The people who hold the site's passwords are named, and may be nobody
+
+    They are the people the page for taking the site over writes to
+    (`AskForEmergencyAccess.feature`). They are a setting and not written in
+    the code, because the code is public and their addresses are not meant to
+    be. A development machine names nobody, and the page then says it has
+    nobody to ask rather than the site refusing to start.
+
+    A setting that is not an address stops the site starting, as any other
+    does, since a mistyped one would be an emergency asked of nobody.
+
+    Scenario: A site with nobody named starts
+      Given the administrator's email address is "administrator@example.com"
+      And nobody is named as an emergency contact
+      When the settings are loaded
+      Then they are accepted
+
+    Scenario: A site with nobody named has no emergency contacts
+      Given the administrator's email address is "administrator@example.com"
+      And nobody is named as an emergency contact
+      When the settings are loaded
+      Then there are no emergency contacts
+
+    Scenario: A site with two named starts
+      Given the administrator's email address is "administrator@example.com"
+      And the emergency contacts' email addresses are "first@example.com, second@example.com"
+      When the settings are loaded
+      Then they are accepted
+
+    Scenario: The first one named is the first emergency contact
+      Given the administrator's email address is "administrator@example.com"
+      And the emergency contacts' email addresses are "first@example.com, second@example.com"
+      When the settings are loaded
+      Then the first emergency contact is "first@example.com"
+
+    Scenario: The second one named is the second emergency contact
+      Given the administrator's email address is "administrator@example.com"
+      And the emergency contacts' email addresses are "first@example.com, second@example.com"
+      When the settings are loaded
+      Then the second emergency contact is "second@example.com"
+
+    Scenario: Somebody named twice is one emergency contact
+      Given the administrator's email address is "administrator@example.com"
+      And the emergency contacts' email addresses are "first@example.com, FIRST@example.com"
+      When the settings are loaded
+      Then there is only one emergency contact
+
+    Scenario: A setting that is not an address does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the emergency contacts' email addresses are "first@example.com, not an address"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "EMERGENCY_CONTACT_EMAIL_ADDRESSES"

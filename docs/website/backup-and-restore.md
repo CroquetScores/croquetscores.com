@@ -147,9 +147,9 @@ A copy of the events does not get anybody back without these, and neither is in 
 - **`ACCOUNT_ENCRYPTION_KEY`.** Opens every account's key. Lost, every name and email address in the events is unreadable for good.
 - **`ACCOUNT_EMAIL_ADDRESS_HASH_KEY`.** Finds an account by its email address. It can never be changed. Lost, nobody can sign in by their email address, and there is no way to make it again.
 
-Both are in the website's `.env` (on the server, `/etc/croquetscores/environment`), which is the place that is lost with the website. **The whole of that file is kept in LastPass, in the notes of the item for kamatera.com.** So the two keys are there, with `SESSION_COOKIE_SECRET`, `TOKEN_SIGNING_KEY`, the database's password and the Google, reCAPTCHA and Brevo keys. Only the two named above matter to the data: losing the others does no harm to it, and costs a morning.
+Both are in the website's `.env` (on the server, `/etc/croquetscores/environment`), which is the place that is lost with the website. **The whole of that file is kept in LastPass, in the secure note titled `Croquet Scores`.** So the two keys are there, with `SESSION_COOKIE_SECRET`, `TOKEN_SIGNING_KEY`, the database's password and the Google, reCAPTCHA and Brevo keys. Only the two named above matter to the data: losing the others does no harm to it, and costs a morning.
 
-LastPass is a copy, and a copy goes out of date. **Update the note whenever the file changes,** and check it once: that the keys in the note are the ones the website is running with (`sudo grep ACCOUNT_ /etc/croquetscores/environment` on the server), not an older set written down before a change. Whoever Tim chooses to reach LastPass if he cannot should know that the note is there (recovery.md §2).
+LastPass is a copy, and a copy goes out of date. **Update the note whenever the file changes,** and check it once: that the keys in the note are the ones the website is running with (`sudo grep ACCOUNT_ /etc/croquetscores/environment` on the server), not an older set written down before a change. If Tim cannot, Nicole Murphy and Peter Murphy know the password of the LastPass account it is in, and send the sign-in to whoever is to take the website over (in-case-of-emergency.md §1); recovery.md §2 says what else is in it.
 
 ## 5. Knowing it is working, and keeping the folder
 

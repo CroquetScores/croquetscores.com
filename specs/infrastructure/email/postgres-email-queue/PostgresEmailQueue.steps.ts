@@ -98,6 +98,13 @@ Given(
 );
 
 Given(
+  "the email {string} is queued for {string} with replies to {string}",
+  async function (this: SpecWorld, kind: string, to: string, replyTo: string) {
+    await queueAsARequest(this, { kind, to, replyTo });
+  },
+);
+
+Given(
   "the email {string} is queued for {string} at {string}",
   async function (this: SpecWorld, kind: string, to: string, at: string) {
     await queueAsARequest(this, {
@@ -379,6 +386,24 @@ Then(
   function (this: SpecWorld, link: string) {
     const given = queueingOf(this).writer.asked.map((email) => email.fill.link);
     assert.ok(given.includes(link), `It was given ${given.join()}.`);
+  },
+);
+
+Then(
+  "the email sent to {string} has replies going to {string}",
+  function (this: SpecWorld, to: string, replyTo: string) {
+    const sent = queueingOf(this).sender.sent.find((email) => email.to === to);
+    assert.ok(sent !== undefined, `Nothing was sent to ${to}.`);
+    assert.equal(sent.replyTo, replyTo);
+  },
+);
+
+Then(
+  "the email sent to {string} has no reply address",
+  function (this: SpecWorld, to: string) {
+    const sent = queueingOf(this).sender.sent.find((email) => email.to === to);
+    assert.ok(sent !== undefined, `Nothing was sent to ${to}.`);
+    assert.equal(sent.replyTo, undefined);
   },
 );
 

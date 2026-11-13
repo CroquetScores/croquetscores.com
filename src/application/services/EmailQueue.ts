@@ -12,6 +12,11 @@ export interface EmailToQueue {
    * account's key, and is not sent once the account is forgotten.
    */
   readonly account?: AccountId;
+  /**
+   * Where a reply to it goes, when that is not where it came from: an email
+   * that tells somebody what somebody else said is answered to them.
+   */
+  readonly replyTo?: string;
   /** The language to write it in, as a tag such as `en`. */
   readonly language: string;
   /**

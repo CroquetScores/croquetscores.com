@@ -12,6 +12,9 @@ import type { UnitOfWork } from "../database/UnitOfWork.js";
 const named = (whom: WrittenTo): string => {
   if ("account" in whom) return `account:${whom.account.value}`;
   if ("emailAddressHash" in whom) return `address:${whom.emailAddressHash}`;
+  if ("emergencyAccessBy" in whom) {
+    return `emergency-access:${whom.emergencyAccessBy.value}`;
+  }
   return `administrator:${whom.administratorAbout}`;
 };
 

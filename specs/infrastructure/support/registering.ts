@@ -23,6 +23,7 @@ import { Account } from "../../../src/domain/aggregates/accounts/Account.js";
 import { AccountId } from "../../../src/domain/aggregates/accounts/AccountId.js";
 import { EmailAddress } from "../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { PersonName } from "../../../src/domain/aggregates/accounts/value-objects/PersonName.js";
+import { AN_HOUR, shiftedBy } from "../../../src/application/common/moments.js";
 import { ReadOnlyDate } from "../../../src/domain/common/ReadOnlyDate.js";
 import { PostgresHandledRequests } from "../../../src/infrastructure/database/PostgresHandledRequests.js";
 import { PostgresEmailsWritten } from "../../../src/infrastructure/email/PostgresEmailsWritten.js";
@@ -78,6 +79,8 @@ import { ChangeNameValidator } from "../../../src/application/operations/account
 import type { ForgetAccount } from "../../../src/application/operations/accounts/ForgetAccount.js";
 import { ReportUnreachableServiceHandler } from "../../../src/application/operations/accounts/ReportUnreachableServiceHandler.js";
 import type { ReportUnreachableService } from "../../../src/application/operations/accounts/ReportUnreachableService.js";
+import { AskForEmergencyAccessHandler } from "../../../src/application/operations/emergency/AskForEmergencyAccessHandler.js";
+import type { AskForEmergencyAccess } from "../../../src/application/operations/emergency/AskForEmergencyAccess.js";
 import { SetNewPasswordHandler } from "../../../src/application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../../../src/application/operations/accounts/SetNewPasswordValidator.js";
 import type { SetNewPassword } from "../../../src/application/operations/accounts/SetNewPassword.js";
@@ -479,7 +482,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
       AccountId.create(),
       at,
       accounts.hasher.hash(at),
-      now(),
+      shiftedBy(now(), -(as.registeredDaysAgo ?? 0) * 24 * AN_HOUR),
     );
     if (as.confirmed) {
       // Hashed the way this scenario's hasher hashes, so that a password the
@@ -630,6 +633,21 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
     },
 
     async report(command: ReportUnreachableService): Promise<void> {
+      await mediator.send(command);
+    },
+
+    // Registered when the scenario says who is to be asked, since that is what
+    // the handler is made with, as the site's is made with its config.
+    emergencyContactsAre(addresses) {
+      mediator.handleCommand(
+        new AskForEmergencyAccessHandler(repository, queue, written, addresses),
+      );
+    },
+
+    async askForEmergencyAccess(command: AskForEmergencyAccess): Promise<void> {
+      // Whatever the scenario said exists is made first: an account it only
+      // said it had is not there to ask until it is.
+      await settle();
       await mediator.send(command);
     },
 
@@ -794,6 +812,7 @@ export const standUpRegistering = (world: SpecWorld): Registering => {
           to: email.to ?? "",
           link: email.link,
           worksUntil: email.linkWorksUntil,
+          replyTo: email.replyTo,
         }));
     },
     async writtenFor(address) {
@@ -906,6 +925,16 @@ Given("the application's finding of profiles", function (this: SpecWorld) {
 // scenario about telling the administrator is not about registering.
 Given(
   "the application's reporting of unreachable services",
+  function (this: SpecWorld) {
+    standUpFor(this);
+  },
+);
+
+// The same mediator over the same accounts and the same queue, said in its own
+// words because a scenario about asking the people who hold the site's
+// passwords to hand them over is not about registering.
+Given(
+  "the application's asking for emergency access",
   function (this: SpecWorld) {
     standUpFor(this);
   },

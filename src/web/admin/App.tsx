@@ -15,6 +15,7 @@ import { ViewCompetition } from "./{year}/{sport}/{slug}/competitions/{competiti
 import { ViewTournament } from "./{year}/{sport}/{slug}/view/view.js";
 import { ViewTeam } from "./{year}/{sport}/{slug}/teams/{team-slug}/view/view.js";
 import { ViewTest } from "./{year}/{sport}/{slug}/tests/{test-slug}/view/view.js";
+import { InCaseOfEmergency } from "./in-case-of-emergency/inCaseOfEmergency.js";
 import { go, here, inPlace } from "./navigation.js";
 import { Tournaments } from "./Tournaments.js";
 import { say } from "./words.js";
@@ -222,6 +223,20 @@ export const App = (): React.JSX.Element => {
   const viewing = /^\/admin\/([1-9]\d{3}\/[^/]+\/[^/]+)\/?$/.exec(path)?.[1];
   if (viewing !== undefined) {
     return <ViewTournament key={path} address={viewing} />;
+  }
+
+  // For anybody signed in, and not one of the administrator's pages: it is
+  // where somebody who has come to take the site over asks for what they need.
+  if (/^\/admin\/in-case-of-emergency\/?$/.test(path)) {
+    return (
+      <main id="content">
+        <div className="page">
+          <div className="panel stack">
+            <InCaseOfEmergency />
+          </div>
+        </div>
+      </main>
+    );
   }
 
   const year = yearIn(path);

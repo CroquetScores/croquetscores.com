@@ -35,7 +35,7 @@ const addressOf = (bytes: number): string =>
 const send = async (
   world: SpecWorld,
   to: string,
-  what: { subject?: string; body?: string } = {},
+  what: { subject?: string; body?: string; replyTo?: string } = {},
 ): Promise<void> => {
   assert.ok(world.moment !== undefined, "No moment has been named.");
   const sending = sendingOf(world);
@@ -46,6 +46,7 @@ const send = async (
       from: "croquetscores@example.com",
       subject: what.subject ?? "An email",
       body: what.body ?? "<p>An email.</p>",
+      ...(what.replyTo === undefined ? {} : { replyTo: what.replyTo }),
     },
     ReadOnlyDate.from(world.moment),
   );
@@ -129,6 +130,13 @@ When(
 );
 
 When(
+  "an email to {string} with replies to {string} is sent",
+  async function (this: SpecWorld, to: string, replyTo: string) {
+    await send(this, to, { replyTo });
+  },
+);
+
+When(
   "an email to {string} with the body {string} is sent",
   async function (this: SpecWorld, to: string, body: string) {
     await send(this, to, { body });
@@ -184,6 +192,23 @@ Then(
     const to = sendingOf(this).lastTo;
     assert.ok(to !== undefined, "Nothing has been sent.");
     assert.equal(await headingOf(this, "to"), to);
+  },
+);
+
+Then(
+  "the file says a reply goes to {string}",
+  async function (this: SpecWorld, replyTo: string) {
+    assert.equal(await headingOf(this, "reply-to"), replyTo);
+  },
+);
+
+Then(
+  "the file does not say where a reply goes",
+  async function (this: SpecWorld) {
+    assert.ok(
+      !(await contentOf(this)).includes('id="reply-to"'),
+      "The file says where a reply goes.",
+    );
   },
 );
 

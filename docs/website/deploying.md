@@ -151,7 +151,7 @@ Which migrations cannot be lived with by the older code is for the pull request 
 
 `ACCOUNT_ENCRYPTION_KEY` is changed by the script and no other way, because the script re-encrypts what the old key sealed:
 
-1. Take a copy first (`npm run db:backup`), and keep the old key. It is in the LastPass note for kamatera.com (configuration.md §4); leave it there.
+1. Take a copy first (`npm run db:backup`), and keep the old key. It is in the LastPass note titled `Croquet Scores` (configuration.md §4); leave it there.
 2. Make the new key (`openssl rand -base64 32`) and **put it in the LastPass note now,** before it is used anywhere, as a new line `ACCOUNT_ENCRYPTION_KEY_NEW`. A copy of the events made before the change is sealed with the old key, and one made after with the new, so keep both keys in the note, each with the dates of the backup files it opens.
 3. Stop the site: `sudo systemctl stop croquetscores`.
 4. Give the script the new key without typing it on the command line, where it would be kept in the shell's history. `read -rs` asks for it and does not show what you paste, so it is asked for **twice**, and the script is not run unless the two are the same: a key that was mistyped once would be used to re-encrypt every account, and be unreadable the moment the real one was put in the settings file. The settings file still has the old key, which is what the script is to find:

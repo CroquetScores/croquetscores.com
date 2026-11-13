@@ -24,6 +24,7 @@ import type {
   Profile,
 } from "../../src/application/operations/accounts/AccountProfile.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
+import type { AskForEmergencyAccess } from "../../src/application/operations/emergency/AskForEmergencyAccess.js";
 import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
 import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
@@ -49,6 +50,8 @@ export interface SeenEmail {
   readonly link: string | undefined;
   /** When that link stops working, when the queue was told. */
   readonly worksUntil: Date | undefined;
+  /** Where a reply goes, when that is not where it came from. */
+  readonly replyTo: string | undefined;
 }
 
 export interface Registering {
@@ -132,6 +135,12 @@ export interface Registering {
 
   /** Has reporting tell `address`, or nobody where there is none. */
   tellsAdministrator(address: string): void;
+
+  /** Has asking for emergency access tell these addresses, or nobody where there are none. */
+  emergencyContactsAre(addresses: readonly string[]): void;
+
+  /** Asks for emergency access. Throws what the mediator throws. */
+  askForEmergencyAccess(command: AskForEmergencyAccess): Promise<void>;
 
   /** Reports a service unreachable. Throws what the mediator throws. */
   report(command: ReportUnreachableService): Promise<void>;

@@ -49,6 +49,7 @@ export class Account extends AggregateRoot {
   #emailAddress: EmailAddress | undefined;
   #name: PersonName | undefined;
   #passwordHash: string | undefined;
+  #registeredAt: ReadOnlyDate | undefined;
   #passwordSetAt: ReadOnlyDate | undefined;
   #movedAt: ReadOnlyDate | undefined;
   #confirmed = false;
@@ -142,6 +143,15 @@ export class Account extends AggregateRoot {
    */
   get passwordHash(): string | undefined {
     return this.#passwordHash;
+  }
+
+  /**
+   * When the account was registered here, or nothing for one brought over
+   * from the old site, whose own beginning that site's export does not give:
+   * the moment it was brought over would make a long-standing member look new.
+   */
+  get registeredAt(): ReadOnlyDate | undefined {
+    return this.#registeredAt;
   }
 
   /**
@@ -366,6 +376,7 @@ export class Account extends AggregateRoot {
   protected apply(event: DomainEvent): void {
     if (event instanceof AccountRegistered) {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
+      this.#registeredAt = event.occurredAt;
     } else if (event instanceof AccountBroughtOver) {
       this.#emailAddress = EmailAddress.from(event.emailAddress);
       this.#name = PersonName.from(event.name);

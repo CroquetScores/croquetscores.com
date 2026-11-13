@@ -33,6 +33,7 @@ import { ResetPasswordHandler } from "../application/operations/accounts/ResetPa
 import { ResetPasswordValidator } from "../application/operations/accounts/ResetPasswordValidator.js";
 import type { EmailSender } from "../application/services/EmailSender.js";
 import { ReportUnreachableServiceHandler } from "../application/operations/accounts/ReportUnreachableServiceHandler.js";
+import { AskForEmergencyAccessHandler } from "../application/operations/emergency/AskForEmergencyAccessHandler.js";
 import { SetNewPasswordHandler } from "../application/operations/accounts/SetNewPasswordHandler.js";
 import { SetNewPasswordValidator } from "../application/operations/accounts/SetNewPasswordValidator.js";
 import { AskToForgetAccountHandler } from "../application/operations/accounts/AskToForgetAccountHandler.js";
@@ -1053,6 +1054,14 @@ export const buildApplication = async (
       emailQueue,
       emailsWritten,
       config.administratorEmailAddress,
+    ),
+  );
+  mediator.handleCommand(
+    new AskForEmergencyAccessHandler(
+      accounts,
+      emailQueue,
+      emailsWritten,
+      config.emergencyContactEmailAddresses,
     ),
   );
   validation.register(new SetNewPasswordValidator());

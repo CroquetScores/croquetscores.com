@@ -78,7 +78,12 @@ export class FileEmailSender implements EmailSender {
 <dl>
   <dt>To</dt><dd id="to">${escape(email.to)}</dd>
   <dt>From</dt><dd id="from">${escape(email.from)}</dd>
-  <dt>Subject</dt><dd id="subject">${escape(email.subject)}</dd>
+${
+  email.replyTo === undefined
+    ? ""
+    : `  <dt>Reply to</dt><dd id="reply-to">${escape(email.replyTo)}</dd>
+`
+}  <dt>Subject</dt><dd id="subject">${escape(email.subject)}</dd>
 </dl>
 <hr>
 ${email.body}`;
