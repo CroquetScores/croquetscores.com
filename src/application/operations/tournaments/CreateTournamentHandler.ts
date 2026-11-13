@@ -57,7 +57,7 @@ export class CreateTournamentHandler extends CommandHandler<
       {
         name: tournament.name.toString(),
         address: tournament.address.toString(),
-        website: tournament.website.host,
+        website: tournament.website,
       },
       details,
       "added",
