@@ -49,6 +49,11 @@ export interface TournamentAsPaged {
    * file its Rankings tab leads to (rankings-tab.feature).
    */
   readonly countsTowardsWorldRankings: boolean;
+  /**
+   * Whether the reader may delete it, telling its managers, as only an
+   * administrator may (DeleteTournament.feature).
+   */
+  readonly mayDelete: boolean;
 }
 
 /**

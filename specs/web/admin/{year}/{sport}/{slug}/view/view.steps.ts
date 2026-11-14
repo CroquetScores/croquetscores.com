@@ -163,6 +163,65 @@ When(
   },
 );
 
+// The trash can after the pencil: a button, since it opens a dialog.
+const deleteBesideHeading = (world: SpecWorld): Locator =>
+  world.browserPage
+    .locator("main .page-heading")
+    .getByRole("button", { name: "Delete", exact: true });
+
+Then("Delete is beside the page's heading", async function (this: SpecWorld) {
+  const button = deleteBesideHeading(this);
+  await button.waitFor();
+  const heading = await this.browserPage
+    .locator("main h1")
+    .first()
+    .boundingBox();
+  const box = await button.boundingBox();
+  assert.ok(heading !== null && box !== null, "One is not laid out.");
+  assert.ok(
+    box.y < heading.y + heading.height && heading.y < box.y + box.height,
+    `Delete is not on the heading's line: ${JSON.stringify({ heading, box })}`,
+  );
+  assert.ok(box.x >= heading.x + heading.width, "Delete is not after it.");
+});
+
+Then(
+  "Delete beside the page's heading is a trash can",
+  async function (this: SpecWorld) {
+    const button = deleteBesideHeading(this);
+    await button.waitFor();
+    assert.equal(await button.locator(".icon-trash-can").count(), 1);
+    assert.equal(((await button.textContent()) ?? "").trim(), "");
+  },
+);
+
+Then(
+  "Delete comes after Edit beside the page's heading",
+  async function (this: SpecWorld) {
+    const button = deleteBesideHeading(this);
+    await button.waitFor();
+    const edit = await editBesideHeading(this).boundingBox();
+    const box = await button.boundingBox();
+    assert.ok(edit !== null && box !== null, "One is not laid out.");
+    assert.ok(box.x >= edit.x + edit.width, "Delete is not after Edit.");
+  },
+);
+
+When(
+  "Delete beside the page's heading is pressed",
+  async function (this: SpecWorld) {
+    await deleteBesideHeading(this).click();
+  },
+);
+
+Then(
+  "Delete is not offered beside the page's heading",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("main h1").first().waitFor();
+    assert.equal(await deleteBesideHeading(this).count(), 0);
+  },
+);
+
 Then(
   "Edit is not offered beside the page's heading",
   async function (this: SpecWorld) {
