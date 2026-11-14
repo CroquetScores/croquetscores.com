@@ -1929,6 +1929,24 @@ export const english: Language = {
 </p>
 `,
 
+    // Written in English only too, to the administrator: a tournament whose
+    // name suggests it was only a test, with a link to remove it from.
+    "Email.PossibleTestTournament.subject":
+      "A possible test tournament was added: {tournament}",
+    "Email.PossibleTestTournament.body": `
+<p>Hi,</p>
+
+<p>
+    A tournament was added to {siteName} whose name suggests it may be a test:
+    <a href="{site}/admin/{address}">{tournament}</a>.
+</p>
+
+<p>
+    {emailFromName}<br />
+    {siteName}
+</p>
+`,
+
     // Written in English only too: the administrator's own words, as typed in
     // the box the page of the tournament offers, so they are the whole of what
     // the email says.

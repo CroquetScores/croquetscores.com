@@ -295,6 +295,92 @@ Feature: Creating a tournament
       When the reader signed in to the account for "organiser@example.com" creates the tournament
       Then the email "Email.NotableTournament" is queued for "administrator@example.com"
 
+  Rule: The administrator is told of a tournament that looks like a test
+
+    Somebody learning the site often makes a tournament on the real website
+    that was only ever a test, and the administrator would want to look at it
+    and, where it is one, remove it. A name with the word "test", "fake" or
+    "dummy" in it is the sign, as a whole word in any capitals, so "Contest
+    Open" is not one. The email names the tournament and links to its page in
+    the admin. It is in English only and is queued in the transaction that
+    keeps the tournament, as the email about a notable tournament is.
+
+    Only these three words are looked for. The issue spelled the third
+    "dumy", which is taken as a slip; a name spelled that way is not told of.
+    Only creating is looked at: a tournament renamed to one of them is not.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario Outline: A tournament named with <name> is told to the administrator
+      Given the tournament name "<name>"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.PossibleTestTournament" is queued for "administrator@example.com"
+
+      Examples:
+        | name              |
+        | Test Open         |
+        | Fake Open         |
+        | Dummy Open        |
+        | Spring TEST Open  |
+        | My fake event     |
+        | Open (dummy)      |
+        | Test              |
+
+    Scenario Outline: A tournament named <name> is not told to the administrator
+      Given the tournament name "<name>"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.PossibleTestTournament" is not queued for "administrator@example.com"
+
+      Examples:
+        | name         |
+        | Spring Open  |
+        | Contest Open |
+        | Fakeland Cup |
+        | Attest Cup   |
+
+    Scenario: The email names the tournament
+      Given the tournament name "Test Open"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" names the tournament "Test Open"
+
+    Scenario: The email links to the tournament's page in the admin
+      Given the tournament name "Test Open"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email queued for "administrator@example.com" links to the admin page of the tournament at "2026/ac/test-open"
+
+    Scenario: A tournament that is refused is not told to the administrator
+      Given the tournament name "Test Open"
+      And the tournament is to start at "2026-10-03T00:00:00Z"
+      And the tournament is to finish at "2026-10-02T00:00:00Z"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.PossibleTestTournament" is not queued for "administrator@example.com"
+
+  Rule: The administrator is not told of a test tournament on a try website
+
+    A try website is where a reader is sent to make test tournaments, so
+    telling the administrator of each would bury the ones that matter.
+
+    These scenarios have the administrator at "administrator@example.com".
+
+    Scenario Outline: A tournament that looks like a test on a try website is not told to the administrator
+      Given the request came to "<website>"
+      And the sport "<sport>"
+      And the tournament name "Test Open"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.PossibleTestTournament" is not queued for "administrator@example.com"
+
+      Examples:
+        | website                | sport |
+        | try.croquetscores.com  | ac    |
+        | try.gateballscores.com | gb    |
+
+    Scenario: A tournament that looks like a test on a website that is not a try website is told to the administrator
+      Given the request came to "gateballscores.com"
+      And the sport "gb"
+      And the tournament name "Test Open"
+      When the reader signed in to the account for "organiser@example.com" creates the tournament
+      Then the email "Email.PossibleTestTournament" is queued for "administrator@example.com"
+
   Rule: A forgotten account creates nothing
 
     Scenario: A forgotten account is refused

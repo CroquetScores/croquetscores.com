@@ -101,6 +101,7 @@ Feature: The site's emails are written in their reader's language
         | Email.AlreadyHasAnAccount    |
         | Email.EmailAddressChanged    |
         | Email.NotableTournament      |
+        | Email.PossibleTestTournament |
         | Email.NationalStatusRemoved  |
         | Email.InternationalStatusRemoved |
 

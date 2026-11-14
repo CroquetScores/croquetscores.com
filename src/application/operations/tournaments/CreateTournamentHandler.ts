@@ -10,6 +10,7 @@ import { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js
 import type { EmailQueue } from "../../services/EmailQueue.js";
 import { askedBy, detailsFrom, takenFor } from "./tournamentOperations.js";
 import { tellOfNotableTournament } from "./notableTournament.js";
+import { tellOfPossibleTestTournament } from "./possibleTestTournament.js";
 import {
   CreateTournament,
   type CreatedTournament,
@@ -32,7 +33,10 @@ export class CreateTournamentHandler extends CommandHandler<
     private readonly accounts: AggregateRepository<Account, AccountId>,
     private readonly addresses: TournamentAddresses,
     private readonly queue: EmailQueue,
-    /** Who is told of a national or an international tournament. */
+    /**
+     * Who is told of a national or an international tournament, and of one
+     * whose name suggests it was only a test.
+     */
     private readonly administratorEmailAddress: string,
   ) {
     super();
@@ -51,16 +55,23 @@ export class CreateTournamentHandler extends CommandHandler<
       command.requestedAt,
     );
     await this.tournaments.save(tournament);
+    const told = {
+      name: tournament.name.toString(),
+      address: tournament.address.toString(),
+      website: tournament.website,
+    };
     await tellOfNotableTournament(
       this.queue,
       this.administratorEmailAddress,
-      {
-        name: tournament.name.toString(),
-        address: tournament.address.toString(),
-        website: tournament.website,
-      },
+      told,
       details,
       "added",
+      command.requestedAt,
+    );
+    await tellOfPossibleTestTournament(
+      this.queue,
+      this.administratorEmailAddress,
+      told,
       command.requestedAt,
     );
     return { id, address: tournament.address };
