@@ -795,6 +795,13 @@ After({ tags: "@browser" }, async function (this: SpecWorld) {
   }
 });
 
+// What anotherBrowser made, so that the scenario's end can close it. A browser
+// left open keeps connections to the scenario's application, and closing the
+// application waits for every one of them to end: one scenario waited five
+// minutes, which is how long the server lets a connection be, and failed on
+// the hook's thirty seconds with its database still there to be dropped.
+const anotherBrowsers = new WeakMap<SpecWorld, BrowserContext[]>();
+
 /**
  * Another browser, with cookies of its own: what a scenario means by another
  * device. It is asked for everything the scenario asked of the first but what
@@ -812,6 +819,9 @@ export const anotherBrowser = async (
       ? {}
       : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
   });
+  // Kept before anything else is asked of it, so that one that fails to be set
+  // up is still closed.
+  anotherBrowsers.set(world, [...(anotherBrowsers.get(world) ?? []), another]);
   const host = addressed.get(world);
   if (host !== undefined) await addressedAs(another, host);
   return another;
@@ -901,7 +911,13 @@ export const reopenedBrowser = async (world: SpecWorld): Promise<void> => {
 };
 
 After({ tags: "@browser" }, async function (this: SpecWorld) {
-  await this.browserContext?.close();
+  // Every one is closed whatever the others do, and what closing has to say is
+  // nothing the scenario's own verdict should be overturned by, as in the hook
+  // above.
+  const contexts = [...(anotherBrowsers.get(this) ?? [])];
+  if (this.browserContext !== undefined) contexts.push(this.browserContext);
+  await Promise.allSettled(contexts.map((context) => context.close()));
+  anotherBrowsers.delete(this);
   this.browserContext = undefined;
   this.page = undefined;
 });
