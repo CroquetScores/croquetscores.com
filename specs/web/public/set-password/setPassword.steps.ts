@@ -9,7 +9,7 @@ import {
   openAndKeepTheAnswer,
   postAndKeepTheAnswer,
 } from "../../support/answered.js";
-import { applicationFor } from "../../support/browser.js";
+import { applicationFor, everythingLoggedOf } from "../../support/browser.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 const setPassword = "/account/set-password";
@@ -146,6 +146,63 @@ Given(
     const followed = new URL(last.link);
     await this.browserPage.goto(
       `${this.baseUrl!}${followed.pathname}${followed.search}`,
+    );
+  },
+);
+
+// What the log holds of a link ------------------------------------------------
+
+// The link that was followed, which a step about it reads.
+const linkFollowed = (world: SpecWorld): URL => {
+  assert.ok(world.linkInHand !== undefined, "No link was followed.");
+  return new URL(world.linkInHand);
+};
+
+// What the log says of each request: the address it was made to.
+const addressesLogged = (world: SpecWorld): string[] =>
+  everythingLoggedOf(world).flatMap((line) => {
+    const url = (JSON.parse(line) as { req?: { url?: string } }).req?.url;
+    return url === undefined ? [] : [url];
+  });
+
+// The signature on its own, the part after the last full stop, since that is
+// what lets whoever holds the link act, and a log that kept only it would hold
+// what matters as much as one that kept the whole link.
+Then(
+  "the log does not hold the link that was followed",
+  function (this: SpecWorld) {
+    const carried = linkFollowed(this).searchParams.get("link") ?? "";
+    const signature = carried.slice(carried.lastIndexOf(".") + 1);
+    assert.ok(signature !== "", "The link followed carries no signature.");
+    assert.ok(
+      !everythingLoggedOf(this).join("").includes(signature),
+      "The log holds the link's signature.",
+    );
+  },
+);
+
+// So that the link is not left out by leaving out the whole address, which
+// would pass the step above.
+Then(
+  "the log says the page the link opens was asked for",
+  function (this: SpecWorld) {
+    const page = linkFollowed(this).pathname;
+    assert.ok(
+      addressesLogged(this).some((url) => url.startsWith(`${page}?`)),
+      `No request for ${page} is logged.`,
+    );
+  },
+);
+
+Then(
+  "the page the link opens is logged with the link taken out",
+  function (this: SpecWorld) {
+    const page = linkFollowed(this).pathname;
+    assert.ok(
+      addressesLogged(this).some(
+        (url) => url.startsWith(`${page}?`) && url.includes("link=[removed]"),
+      ),
+      `${page} is not logged with its link taken out.`,
     );
   },
 );

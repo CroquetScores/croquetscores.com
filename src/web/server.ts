@@ -353,7 +353,6 @@ const offeredLanguages = [
 ];
 import { auth } from "./auth/index.js";
 import {
-  addressToLog,
   GoogleUnreachable,
   registerGoogleRoutes,
   type GoogleSignIn,
@@ -361,6 +360,7 @@ import {
 import { tellingTheAdministrator } from "./common/databaseOutage.js";
 import { tellingOfFailures } from "./common/errorReport.js";
 import { registerErrorMapping } from "./common/errors.js";
+import { addressToLog } from "./common/addressToLog.js";
 import { refuseWhileDatabaseAccessIsOff } from "./common/maintenance.js";
 import type { RebuildProgress } from "../application/common/RebuildProgress.js";
 import type { DatabaseAccess } from "../application/common/DatabaseAccess.js";
@@ -826,7 +826,8 @@ const withEscapesThatWillDecode = (url: string): string => {
 };
 
 // The line each request is logged with, as Fastify writes it but for the
-// address, which is written without what it must not keep (google.ts).
+// address, which is written without what lets somebody act as a reader
+// (addressToLog.ts).
 // Fastify's types say a serializer is given the request as Node has it, but it
 // is given Fastify's, whose `ip` is the reader's address where the proxy is
 // believed, and which Fastify's own serializer reads too.

@@ -36,27 +36,6 @@ import { goBackTo, signInPath } from "../public/signIn.js";
 const callbackPath = `${googlePath}/callback`;
 
 /**
- * `url` as the line each request is logged with writes it: the way back from
- * Google with its state and code taken out, and any other address as it is.
- * The site keeps both out of what it writes about a way back it refused, and
- * the request's own line would otherwise hold them anyway (google.feature).
- */
-export const addressToLog = (url: string): string => {
-  const at = url.indexOf("?");
-  if (at === -1 || url.slice(0, at) !== callbackPath) return url;
-  // Said as taken out, as a link is in the log (ServerLogStream.ts), rather
-  // than left out, so that whoever reads it knows there was one.
-  const said = url
-    .slice(at + 1)
-    .split("&")
-    .map((pair) => {
-      const name = pair.split("=")[0];
-      return name === "state" || name === "code" ? `${name}=[removed]` : pair;
-    });
-  return `${callbackPath}?${said.join("&")}`;
-};
-
-/**
  * Where a reader who registered with Google is taken. A reader who signed in
  * with Google goes back where the sign in page would have sent them instead.
  */
@@ -110,13 +89,14 @@ const pendingCookie = "google-sign-in";
 /** How long a reader has at Google before the way back stops being taken. */
 export const PENDING_SECONDS = 10 * 60;
 
-// How long the browser is told to keep the cookie: a day, well past the time a
-// reader is allowed, so that a reader who took too long comes back with it and
-// is told apart from a way back with no cookie, which is logged as information
-// and not as a warning (google.feature). The time the reader is allowed is
-// judged by `sentAt`, which the cookie holds and the site signed, and not by
-// how long the browser kept it.
-const KEPT_SECONDS = 24 * 60 * 60;
+// How long the browser is told to keep the cookie: an hour, well past the time
+// a reader is allowed, so that a reader who took too long comes back with it
+// and is told apart from a way back with no cookie, which is logged as
+// information and not as a warning (google.feature). No longer, since it holds
+// part of a sign in under way. The time the reader is allowed is judged by
+// `sentAt`, which the cookie holds and the site signed, and not by how long the
+// browser kept it.
+const KEPT_SECONDS = 60 * 60;
 
 interface Pending {
   readonly state: string;
@@ -307,6 +287,10 @@ export const registerGoogleRoutes = (
       request.requestedAt.toDate().getTime() - pending.sentAt >
       PENDING_SECONDS * 1000
     ) {
+      // Taken away, as one that is taken is, since nothing can be done with it
+      // now. A way back carrying another state, checked above, does not take
+      // it away, since it must not wipe the sign in the reader has under way.
+      reply.clearCookie(pendingCookie, { path: googlePath });
       return notSentFromHere("Google.TookTooLong");
     }
     // Used up once it has been taken, so that the same way back followed again

@@ -359,8 +359,12 @@ Feature: Registering with Google
 
     A reader who took too long is told apart from one with no cookie only if
     the browser still has the cookie when they come back. So the browser is
-    told to keep it for well past the time the site allows, and the way back is
-    judged by when the reader was sent, which the cookie holds.
+    told to keep it for an hour, well past the ten minutes the site allows, and
+    the way back is judged by when the reader was sent, which the cookie holds.
+    No longer than that, since what the cookie holds is part of a sign in under
+    way, and a reader who comes back after an hour is not waiting for one. And
+    a way back refused for taking too long takes the cookie away, as one that
+    is taken does, since nothing can be done with it after that.
 
     Scenario: A way back with no cookie is information
       Given a viewport 1200 pixels wide
@@ -397,6 +401,22 @@ Feature: Registering with Google
       And the register page is open with scripting on
       When the site has sent the reader to Google
       Then the browser keeps the cookie for the way back for longer than the site allows
+
+    Scenario: The browser keeps the cookie for no longer than an hour
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      When the site has sent the reader to Google
+      Then the browser keeps the cookie for the way back for no longer than an hour
+
+    Scenario: A way back after the reader took too long takes the cookie away
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      And the reader takes longer than the site allows
+      When the reader arrives back from Google
+      Then the browser no longer has the cookie for the way back
 
   Rule: The log does not hold the state or the code a way back carried
 

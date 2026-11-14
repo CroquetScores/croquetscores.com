@@ -370,22 +370,50 @@ const followTheWayToGoogle = async function (this: SpecWorld): Promise<void> {
 When("the way to Google is followed", followTheWayToGoogle);
 Given("the site has sent the reader to Google", followTheWayToGoogle);
 
+// The cookie for the way back, as the browser has it, or nothing.
+const cookieKept = async (world: SpecWorld) =>
+  (await world.browserPage.context().cookies()).find(
+    (each) => each.name === "google-sign-in",
+  );
+
+// How many seconds from now the browser keeps the cookie for.
+const secondsKept = async (world: SpecWorld): Promise<number> => {
+  const cookie = await cookieKept(world);
+  assert.ok(
+    cookie !== undefined,
+    "The browser has no cookie for the way back.",
+  );
+  return cookie.expires - Date.now() / 1000;
+};
+
+Then(
+  "the browser keeps the cookie for the way back for no longer than an hour",
+  async function (this: SpecWorld) {
+    const kept = await secondsKept(this);
+    assert.ok(
+      kept <= 60 * 60,
+      `The browser keeps it for ${String(Math.round(kept))} seconds.`,
+    );
+  },
+);
+
+Then(
+  "the browser no longer has the cookie for the way back",
+  async function (this: SpecWorld) {
+    assert.equal(await cookieKept(this), undefined);
+  },
+);
+
 // Read from the browser, whose clock is the real one, because it is the browser
 // that lets the cookie go: moving the site's clock on, as a scenario of a
 // reader taking too long does, leaves the cookie where it was.
 Then(
   "the browser keeps the cookie for the way back for longer than the site allows",
   async function (this: SpecWorld) {
-    const cookie = (await this.browserPage.context().cookies()).find(
-      (each) => each.name === "google-sign-in",
-    );
+    const kept = await secondsKept(this);
     assert.ok(
-      cookie !== undefined,
-      "The browser has no cookie for the way back.",
-    );
-    assert.ok(
-      cookie.expires - Date.now() / 1000 > PENDING_SECONDS,
-      `The browser keeps it for ${String(Math.round(cookie.expires - Date.now() / 1000))} seconds.`,
+      kept > PENDING_SECONDS,
+      `The browser keeps it for ${String(Math.round(kept))} seconds.`,
     );
   },
 );
