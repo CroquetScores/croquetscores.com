@@ -25,10 +25,11 @@ jobs:
     runs-on: ubuntu-24.04
 
     # A run that hangs would hold a runner for GitHub's default six hours. The
-    # whole suite takes about an hour and a half on a runner of two cores, in
-    # one job and not in shards: nobody is waiting on it at this hour, and
-    # every shard would repeat the install of Chromium and the database.
-    timeout-minutes: 150
+    # whole suite took two hours and three minutes the first time, on a runner
+    # of two cores, in one job and not in shards because nobody is waiting on it
+    # at this hour. Four hours leaves room for the suite to double, and for a
+    # slow runner, without a run that has hung holding one all night.
+    timeout-minutes: 240
 
     permissions:
       contents: read
