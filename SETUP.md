@@ -17,7 +17,7 @@ This document specifies the **setup**. It does not specify behaviour: behaviour 
 - **Web: static pages for the public side**: Server-rendered HTML, no client framework, works without JavaScript
 - **Web: a SPA at `/admin`**: React built by Vite, served as static files with a history fallback
 - **Gherkin**: Cucumber.js, the only test runner
-- **CI via GitHub**: Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database
+- **CI via GitHub**: Actions: lint, typecheck, build, then every scenario but the `@browser` ones, against the compose database, and the `@browser` ones in the feature files a pull request changes
 - **Roll its own mediator, CQRS, event store**: Written in `src/application` and `src/infrastructure`; no framework decides their shape
 - **Layers: web, infrastructure, application, domain**: Enforced by ESLint, not by good intentions
 - **`/src` for source, `/specs` for `.feature` files**: Steps live beside their feature
@@ -490,7 +490,7 @@ The log is written where it always was, to standard output, and a copy of each l
 - `db`, from `npm run test:db`: every feature, only `@postgres`. Reports under `reports/cucumber-db`.
 - `browser`, from `npm run test:browser`: every feature, only `@browser`. Reports under `reports/cucumber-browser`.
 - `nobrowser`, from `npm run test:nobrowser`: every feature, less `@browser`. Reports under `reports/cucumber-nobrowser`.
-- `changed`, from `npm run test:changed`: the features `scripts/test-changed.mjs` names. Reports under `reports/cucumber-changed`.
+- `changed`, from `npm run test:changed`, and from `npm run test:browser:changed`, which adds `--tags @browser` and takes the features on the command line, as CI does for those a pull request changed: the features `scripts/test-changed.mjs` names. Reports under `reports/cucumber-changed`.
 
 - JavaScript rather than JSON, so the import list, the loader and the number of workers are said once. Six copies of them in JSON would be six things to keep in step, and a support folder added to five and missed in the sixth would fail one script's scenarios for a reason nowhere in the code. It also lets the reasons sit beside the settings as comments, which JSON has no room for.
 - Every profile writes two reports, each named after the profile, so running one script does not overwrite what another last reported: `.html`, the whole run to be read in a browser; and `-summary.txt`, the count of scenarios and steps and the time the run took as a whole, which the progress bar prints and then scrolls away, so one run's time can be set against the next.
@@ -539,7 +539,9 @@ The `@postgres` hooks have to run before the `@browser` ones, because a scenario
 
 That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
 
-CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run by hand, with `npm run test:browser`, wherever a change touches what they check. If CI is to run them again, it installs Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
+The `tests` job in CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run in two other places. A job of its own on a pull request runs those in the feature files the pull request changed, and finds out first whether there are any, so that a pull request changing none installs nothing. `browser.yml` runs every one of them each Australian night and on request, in one job. Both install Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
+
+The split is there because the `@browser` scenarios are about two fifths of the scenarios and about five sixths of the runner time: all of them took about an hour and a half of it, against a quarter of an hour for the rest. The cost of it is that a change under `src/web/` with no feature file beside it is not seen by its pull request's run, and is seen by the next Australian night's. Where that is not soon enough, `browser.yml` can be run on the branch from the Actions page, or `npm run test:browser` by hand.
 
 ### 8.3 Gherkin conventions
 
@@ -712,6 +714,7 @@ npm pkg set scripts.pretest:db="npm run build:admin:alongside && npm run build:h
 npm pkg set scripts.pretest:browser="npm run build:admin:alongside && npm run build:help"
 npm pkg set scripts.pretest:nobrowser="npm run build:admin:alongside && npm run build:help"
 npm pkg set scripts.pretest:changed="npm run build:admin:alongside && npm run build:help"
+npm pkg set scripts.pretest:browser:changed="npm run build:admin:alongside && npm run build:help"
 ```
 
 Working on one feature:
