@@ -101,6 +101,16 @@ const sendJson = (reply: FastifyReply, body: unknown): FastifyReply =>
 // Retry-After wants it; nothing waits on it being right.
 const retryAfterSeconds = "30";
 
+/**
+ * Put on an error with a status by a route that knows the failure is usually a
+ * program scanning the site and nothing to look at, as Google's way back with no
+ * cookie is (google.ts), so that it is logged as information and not as a
+ * warning. A symbol rather than a property with a name, so that it cannot be
+ * misspelt without the compiler saying so, and so that the log, which writes an
+ * error's named properties, does not write it.
+ */
+export const loggedAsInformation = Symbol("logged as information");
+
 export const registerErrorMapping = (
   server: FastifyInstance,
   assets: Assets,
@@ -221,6 +231,10 @@ export const registerErrorMapping = (
       // much the caller's to put right.
       if (error.code?.startsWith("FST_ERR_CTP_")) {
         request.log.info({ code: error.code }, "Request could not be read");
+      } else if (loggedAsInformation in error) {
+        // The whole error is still written, so that its code is there for
+        // whoever goes looking.
+        request.log.info({ err: error }, "Request failed");
       } else {
         request.log.warn({ err: error }, "Request failed");
       }

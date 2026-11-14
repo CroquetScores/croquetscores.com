@@ -353,6 +353,7 @@ const offeredLanguages = [
 ];
 import { auth } from "./auth/index.js";
 import {
+  addressToLog,
   GoogleUnreachable,
   registerGoogleRoutes,
   type GoogleSignIn,
@@ -824,6 +825,39 @@ const withEscapesThatWillDecode = (url: string): string => {
   );
 };
 
+// The line each request is logged with, as Fastify writes it but for the
+// address, which is written without what it must not keep (google.ts).
+// Fastify's types say a serializer is given the request as Node has it, but it
+// is given Fastify's, whose `ip` is the reader's address where the proxy is
+// believed, and which Fastify's own serializer reads too.
+const requestLogged = (raw: unknown): Record<string, unknown> => {
+  const request = raw as FastifyRequest;
+  return {
+    method: request.method,
+    url: addressToLog(request.url),
+    version: request.headers["accept-version"],
+    host: request.host,
+    remoteAddress: request.ip,
+    // Asked of a socket that may not be there, as Fastify's own serializer
+    // does, since a log line must never be what makes a request fail.
+    remotePort: (request.socket as FastifyRequest["socket"] | undefined)
+      ?.remotePort,
+  };
+};
+
+// Whatever the log is given, a scenario's or the site's own, writes requests
+// the same way, so that what a scenario finds in it is what the site's holds.
+const withRequestsLogged = (
+  logger: NonNullable<FastifyServerOptions["logger"]>,
+): NonNullable<FastifyServerOptions["logger"]> => {
+  if (logger === false) return logger;
+  const given = logger === true ? {} : logger;
+  return {
+    ...given,
+    serializers: { ...given.serializers, req: requestLogged },
+  };
+};
+
 export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
@@ -838,7 +872,7 @@ export const buildApplication = async (
     now: options.clock ?? machineClock,
   });
   const server = Fastify({
-    logger: options.logger ?? { stream: serverLogStream },
+    logger: withRequestsLogged(options.logger ?? { stream: serverLogStream }),
     // An admin address with a malformed escape, as "%E0%A4%A", is refused by
     // the router before any handler is asked, with a 400 that is no page of
     // the admin's. It is the admin's to say there is no such document, as it

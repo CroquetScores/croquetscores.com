@@ -67,22 +67,49 @@ let baseUrl: string | undefined;
 // Nothing is the build the admin was built to.
 const deployedAs = new WeakMap<SpecWorld, string>();
 
-// Warnings and worse, as lines of JSON, for a scenario that asks what the site
-// logged. Only the application a scenario has a database for keeps them: the
-// shared one outlasts the scenario, so what it logged is nobody's.
-const logs = new WeakMap<SpecWorld, string[]>();
+/** The numbers the log writes information and a warning as. */
+export const INFORMATION = 30;
+export const WARNING = 40;
 
-const linesOf = (world: SpecWorld): string[] => {
+// What the site logged, as lines of JSON, for a scenario that asks: every line
+// from information up, and the warnings and worse among them apart, as they
+// are what most scenarios ask about. Each line is read for its level once, as
+// it is written. Only the application a scenario has a database for keeps
+// them: the shared one outlasts the scenario, so what it logged is nobody's.
+const logs = new WeakMap<
+  SpecWorld,
+  { readonly everything: string[]; readonly warnings: string[] }
+>();
+
+const loggedBy = (
+  world: SpecWorld,
+): { readonly everything: string[]; readonly warnings: string[] } => {
   let found = logs.get(world);
   if (found === undefined) {
-    found = [];
+    found = { everything: [], warnings: [] };
     logs.set(world, found);
   }
   return found;
 };
 
+const keep = (world: SpecWorld, line: string): void => {
+  const logged = loggedBy(world);
+  logged.everything.push(line);
+  if (((JSON.parse(line) as { level?: number }).level ?? 0) >= WARNING) {
+    logged.warnings.push(line);
+  }
+};
+
 /** Everything the scenario's site logged at warning or worse. */
-export const logOf = (world: SpecWorld): readonly string[] => linesOf(world);
+export const logOf = (world: SpecWorld): readonly string[] =>
+  loggedBy(world).warnings;
+
+/**
+ * Everything the scenario's site logged from information up, the line each
+ * request is logged with among it.
+ */
+export const everythingLoggedOf = (world: SpecWorld): readonly string[] =>
+  loggedBy(world).everything;
 
 /** Deploys the site again: from now on it names another build. */
 export const deployAgain = (world: SpecWorld): void => {
@@ -527,12 +554,14 @@ const itsOwn = async (
       ...changed,
     },
     {
-      // A request log is not wanted, and is what "off" was for.
+      // From information up, so that a scenario can ask what is logged at a
+      // level below a warning, and what the line each request is logged with
+      // holds. The scenarios that ask about warnings read only those.
       logger: {
-        level: "warn",
+        level: "info",
         stream: new Writable({
           write(chunk, _encoding, done) {
-            linesOf(world).push(String(chunk));
+            keep(world, String(chunk));
             done();
           },
         }),
