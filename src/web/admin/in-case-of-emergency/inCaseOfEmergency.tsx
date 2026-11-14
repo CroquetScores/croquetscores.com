@@ -21,6 +21,14 @@ const refusalWords = (code: string): Refusal => ({
   words: say(knows(code) ? code : "admin.emergency.otherwise"),
 });
 
+// What is read from the page is not taken as a link until it looks like one
+// address: the words are text in the page, and a link made of text that was
+// not checked could be made to go somewhere other than a mail to the
+// administrator. What does not is left as a link to nothing.
+const plainAddress = /^[^\s@<>"'`,;:?&#%]+@[^\s@<>"'`,;:?&#%/\\]+$/;
+const mailtoOf = (address: string): string | undefined =>
+  plainAddress.test(address) ? `mailto:${encodeURI(address)}` : undefined;
+
 // The sentence with the administrator's name where the language put it, drawn
 // as a link to email them: where in a sentence a name falls is for the
 // language to say.
@@ -31,7 +39,7 @@ const emailedWords = (): React.ReactNode => {
   return (
     <>
       {before}
-      <a href={`mailto:${say("admin.administrator.emailAddress")}`}>
+      <a href={mailtoOf(say("admin.administrator.emailAddress"))}>
         {say("admin.administrator.name")}
       </a>
       {rest.join("{administrator}")}
