@@ -787,6 +787,17 @@ Then(
 );
 
 Then(
+  "the email queued for {string} links to the admin page of the tournament at {string}",
+  async function (this: SpecWorld, address: string, found: string) {
+    const written = await writtenToAdministrator(this, address);
+    assert.ok(
+      written.includes(`https://croquetscores.com/admin/${found}`),
+      `The email does not link to the admin page of ${found}.`,
+    );
+  },
+);
+
+Then(
   /^the email queued for "(.*)" says the tournament was (added|edited)$/,
   async function (this: SpecWorld, address: string, change: string) {
     const written = await writtenToAdministrator(this, address);

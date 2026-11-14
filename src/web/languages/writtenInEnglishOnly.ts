@@ -13,6 +13,7 @@
  */
 export const writtenInEnglishOnly: readonly string[] = [
   "Email.NotableTournament",
+  "Email.PossibleTestTournament",
   "Email.NationalStatusRemoved",
   "Email.InternationalStatusRemoved",
   // Written in Tim's voice to the two people he named, who read English.
