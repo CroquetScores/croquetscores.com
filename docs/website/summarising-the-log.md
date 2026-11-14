@@ -1,6 +1,6 @@
-# summarising-the-log.md — The last day's log, summarised and emailed each morning
+# summarising-the-log.md — The last day's log, summarised and emailed each Australian morning
 
-At five in the morning a script reads the last 24 hours of the site's log, has Claude write a summary of what went wrong, and emails it to `ADMINISTRATOR_EMAIL_ADDRESS`. It replaces reading the journal by hand each day (operations.md §2). The reasons, and every rule it keeps, are in `specs/infrastructure/maintenance/summariseLogCli.feature`; this is how to set it up and look after it.
+At four in the morning in Sydney a script reads the last 24 hours of the site's log, has Claude write a summary of what went wrong, and emails it to `ADMINISTRATOR_EMAIL_ADDRESS`. It replaces reading the journal by hand each day (operations.md §2). The reasons, and every rule it keeps, are in `specs/infrastructure/maintenance/summariseLogCli.feature`; this is how to set it up and look after it.
 
 It runs **on the Kamatera server**, as `deploy`, from cron, and needs the same settings the site has (the database and the mail server), which `withsettings` gives it, and one more: an API key for Claude.
 
@@ -36,22 +36,22 @@ withsettings npm run summarise:log
 
 It prints a line only where something went wrong. Look in the inbox of `ADMINISTRATOR_EMAIL_ADDRESS`: an email headed `Croquet Scores log for` and today's date should be there. If the key is missing, the email says the summary could not be written, and the line above it says `ANTHROPIC_API_KEY is not set.`
 
-## 3. Running it every morning
+## 3. Running it every Australian morning
 
 ```bash
 crontab -e
 ```
 
-Add the line at the bottom, under the `PATH` line the export already needs. The server's time is UTC, so `0 5` is five o'clock in the morning in London in winter and six in summer; change the hour if it matters. The log is the last run's only, as the export's is:
+Add the line at the bottom, under the `PATH` line the export already needs. The server's time is UTC, and cron knows nothing of daylight saving, so `0 17` is four o'clock in the morning in Sydney from the first Sunday in October to the first Sunday in April (AEDT, UTC+11) and three o'clock for the rest of the year (AEST, UTC+10). It is left as it is, so the summary comes an hour earlier in the Australian winter. The log is the last run's only, as the export's is:
 
 ```
-0 5 * * * cd /srv/croquetscores/site && withsettings npm run summarise:log > /home/deploy/summarise-log.log 2>&1
+0 17 * * * cd /srv/croquetscores/site && withsettings npm run summarise:log > /home/deploy/summarise-log.log 2>&1
 ```
 
 ## 4. Knowing it is working
 
 - **An email every day.** None by nine means look at `cat ~/summarise-log.log`, which says the step and why.
-- **The log's last line** says how the last run ended. It is overwritten each morning.
+- **The log's last line** says how the last run ended. It is overwritten each Australian morning.
 - **A summary that says it could not be written** is a key that is wrong, a limit that was reached, or Claude being away. The line above it in `~/summarise-log.log` says which.
 
 ## 5. What this does not do

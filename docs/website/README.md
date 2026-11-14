@@ -11,7 +11,7 @@ How the website is put on a Kamatera server with a Postgres database, kept up to
 - [recovery.md](recovery.md) — What lives only on the operator's computer, where a copy of each belongs, and what to do on a new one
 - [backup-and-restore.md](backup-and-restore.md) — Copying the events to another machine, and rebuilding the website from the copy
 - [exporting-tournaments.md](exporting-tournaments.md) — Publishing the tournaments as JSON files in a Git repository anybody can read, from cron on the hour
-- [summarising-the-log.md](summarising-the-log.md) — The last day's log, summarised by Claude and emailed each morning from cron
+- [summarising-the-log.md](summarising-the-log.md) — The last day's log, summarised by Claude and emailed each Australian morning from cron
 - [in-case-of-emergency.md](in-case-of-emergency.md) — For whoever takes the website over if Tim is ill, away or has died: how to get the LastPass note, what keeps running by itself, and what must not lapse
 - [connect-phone.md](connect-phone.md) — For development rather than running the website: opening the site running on your own computer on a phone, through an https tunnel
 
