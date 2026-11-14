@@ -26,6 +26,7 @@ import { SignInWithGoogle } from "../../application/operations/accounts/SignInWi
 import { SignInWithGoogleRefused } from "../../application/operations/accounts/SignInWithGoogleHandler.js";
 import type { Sessions } from "../../application/services/Sessions.js";
 import type { InTransaction } from "../common/database.js";
+import { loggedAsInformation } from "../common/errors.js";
 import { startSession } from "../common/session.js";
 import { googlePath, type SentFrom } from "../public/googleOffer.js";
 import { registerPath } from "../public/register.js";
@@ -88,6 +89,15 @@ const pendingCookie = "google-sign-in";
 /** How long a reader has at Google before the way back stops being taken. */
 export const PENDING_SECONDS = 10 * 60;
 
+// How long the browser is told to keep the cookie: an hour, well past the time
+// a reader is allowed, so that a reader who took too long comes back with it
+// and is told apart from a way back with no cookie, which is logged as
+// information and not as a warning (google.feature). No longer, since it holds
+// part of a sign in under way. The time the reader is allowed is judged by
+// `sentAt`, which the cookie holds and the site signed, and not by how long the
+// browser kept it.
+const KEPT_SECONDS = 60 * 60;
+
 interface Pending {
   readonly state: string;
   readonly nonce: string;
@@ -95,7 +105,7 @@ interface Pending {
   readonly sentFrom: SentFrom;
   /** Where the reader goes once signed in, already judged safe to go to. */
   readonly goBack: string;
-  /** When the reader was sent, in milliseconds, for the cookie not to outlive. */
+  /** When the reader was sent, in milliseconds, which the way back is judged by. */
   readonly sentAt: number;
 }
 
@@ -160,7 +170,18 @@ const notSentFromHere = (why: Why): never => {
     // sent, which says the code alone. It is no more than a code: not the state
     // or the code Google gave, which a log is kept too long and read by too
     // many to hold.
-    { statusCode: 400, code: "Google.NotSentFromHere", reason: why },
+    {
+      statusCode: 400,
+      code: "Google.NotSentFromHere",
+      reason: why,
+      // A way back with no cookie is what a program calling the address with a
+      // state and a code it made up looks like, and the log had ten a day of
+      // them as its only warnings. The others need a reader to have been sent
+      // to Google first, so they stay warnings (google.feature).
+      ...(why === "Google.CookieMissing"
+        ? { [loggedAsInformation]: true }
+        : {}),
+    },
   );
 };
 
@@ -237,7 +258,7 @@ export const registerGoogleRoutes = (
     };
     reply.setCookie(pendingCookie, JSON.stringify(pending), {
       ...cookieOptions,
-      maxAge: PENDING_SECONDS,
+      maxAge: KEPT_SECONDS,
     });
     return reply.redirect(
       options.google.whereToSend({
@@ -266,6 +287,10 @@ export const registerGoogleRoutes = (
       request.requestedAt.toDate().getTime() - pending.sentAt >
       PENDING_SECONDS * 1000
     ) {
+      // Taken away, as one that is taken is, since nothing can be done with it
+      // now. A way back carrying another state, checked above, does not take
+      // it away, since it must not wipe the sign in the reader has under way.
+      reply.clearCookie(pendingCookie, { path: googlePath });
       return notSentFromHere("Google.TookTooLong");
     }
     // Used up once it has been taken, so that the same way back followed again

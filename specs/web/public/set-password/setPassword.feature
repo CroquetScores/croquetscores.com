@@ -116,6 +116,43 @@ Feature: A reader whose account has no password can have a link sent to set one
       When the reader signs in as "someone@example.com" with the password "correct horse battery staple"
       Then the reader is signed in to the account for "someone@example.com"
 
+  Rule: The log does not hold the link
+
+    The link carries a signature that lets whoever holds it set the account's
+    password, and every request is logged with the address it was made to. The
+    log is kept on the server for longer than the link is good for and read by
+    whoever looks after the site, none of whom need the link to do that. So the
+    address is logged with the link taken out, and with the rest of it as it
+    was. Here for the link to set a password, as one the site sends;
+    `addressToLog.feature` says the same of every address.
+
+    Scenario: The log does not hold the link that was followed
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the set password page is open
+      And the reader has asked for a link to set a password
+      When the link sent to "someone@example.com" is followed
+      Then the log does not hold the link that was followed
+
+    Scenario: The log still says the page the link opens was asked for
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the set password page is open
+      And the reader has asked for a link to set a password
+      When the link sent to "someone@example.com" is followed
+      Then the log says the page the link opens was asked for
+
+    Scenario: The page the link opens is logged with the link taken out
+      Given a viewport 1200 pixels wide
+      And "someone@example.com" has an account, confirmed, with no password
+      And a reader signed in as "someone@example.com"
+      And the set password page is open
+      And the reader has asked for a link to set a password
+      When the link sent to "someone@example.com" is followed
+      Then the page the link opens is logged with the link taken out
+
   Rule: Pressing the button twice asks once
 
     Scenario: Pressing the button twice sends one link

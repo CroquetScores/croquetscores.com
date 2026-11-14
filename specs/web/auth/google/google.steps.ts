@@ -5,7 +5,9 @@ import type { Response } from "playwright";
 import {
   addressingOf,
   anApplicationWithoutGoogle,
-  logOf,
+  everythingLoggedOf,
+  INFORMATION,
+  WARNING,
 } from "../../support/browser.js";
 import { PENDING_SECONDS } from "../../../../src/web/auth/google.js";
 import { movePast } from "../../support/clock.js";
@@ -368,6 +370,54 @@ const followTheWayToGoogle = async function (this: SpecWorld): Promise<void> {
 When("the way to Google is followed", followTheWayToGoogle);
 Given("the site has sent the reader to Google", followTheWayToGoogle);
 
+// The cookie for the way back, as the browser has it, or nothing.
+const cookieKept = async (world: SpecWorld) =>
+  (await world.browserPage.context().cookies()).find(
+    (each) => each.name === "google-sign-in",
+  );
+
+// How many seconds from now the browser keeps the cookie for.
+const secondsKept = async (world: SpecWorld): Promise<number> => {
+  const cookie = await cookieKept(world);
+  assert.ok(
+    cookie !== undefined,
+    "The browser has no cookie for the way back.",
+  );
+  return cookie.expires - Date.now() / 1000;
+};
+
+Then(
+  "the browser keeps the cookie for the way back for no longer than an hour",
+  async function (this: SpecWorld) {
+    const kept = await secondsKept(this);
+    assert.ok(
+      kept <= 60 * 60,
+      `The browser keeps it for ${String(Math.round(kept))} seconds.`,
+    );
+  },
+);
+
+Then(
+  "the browser no longer has the cookie for the way back",
+  async function (this: SpecWorld) {
+    assert.equal(await cookieKept(this), undefined);
+  },
+);
+
+// Read from the browser, whose clock is the real one, because it is the browser
+// that lets the cookie go: moving the site's clock on, as a scenario of a
+// reader taking too long does, leaves the cookie where it was.
+Then(
+  "the browser keeps the cookie for the way back for longer than the site allows",
+  async function (this: SpecWorld) {
+    const kept = await secondsKept(this);
+    assert.ok(
+      kept > PENDING_SECONDS,
+      `The browser keeps it for ${String(Math.round(kept))} seconds.`,
+    );
+  },
+);
+
 // The state the site gave to be brought back.
 const stateGiven = (world: SpecWorld): string => {
   const state = sentTo.get(world)?.searchParams.get("state");
@@ -386,40 +436,81 @@ Then(
 
 // What the log says about a way back that was refused ---------------------------
 
-// The warnings that are a way back refused, as the site wrote them.
-const refusalsLogged = (
-  world: SpecWorld,
-): { err?: { code?: string; reason?: string } }[] =>
-  logOf(world)
-    .map(
-      (line) =>
-        JSON.parse(line) as { err?: { code?: string; reason?: string } },
-    )
-    .filter((line) => line.err?.code === "Google.NotSentFromHere");
+interface LoggedLine {
+  readonly level?: number;
+  readonly err?: { code?: string; reason?: string };
+  readonly req?: { url?: string };
+}
+
+const linesLogged = (world: SpecWorld): LoggedLine[] =>
+  everythingLoggedOf(world).map((line) => JSON.parse(line) as LoggedLine);
+
+// The lines that are a way back refused, as the site wrote them, at whatever
+// level it wrote them.
+const refusalsLogged = (world: SpecWorld): LoggedLine[] =>
+  linesLogged(world).filter(
+    (line) => line.err?.code === "Google.NotSentFromHere",
+  );
+
+// The one refusal a scenario expects, which a step about it reads.
+const theRefusal = (world: SpecWorld): LoggedLine => {
+  const refusals = refusalsLogged(world);
+  assert.equal(refusals.length, 1, `${refusals.length} refusals are logged.`);
+  return refusals[0]!;
+};
 
 Then(
   "the log says the way back was refused for {string}",
   function (this: SpecWorld, reason: string) {
-    const refusals = refusalsLogged(this);
-    assert.equal(refusals.length, 1, `${refusals.length} refusals are logged.`);
-    assert.equal(refusals[0]!.err?.reason, reason);
+    assert.equal(theRefusal(this).err?.reason, reason);
   },
 );
 
+Then(
+  "the refusal is written in the log as information",
+  function (this: SpecWorld) {
+    assert.equal(theRefusal(this).level, INFORMATION);
+  },
+);
+
+Then(
+  "the refusal is written in the log as a warning",
+  function (this: SpecWorld) {
+    assert.equal(theRefusal(this).level, WARNING);
+  },
+);
+
+// Searched for in every line from information up, the line each request is
+// logged with among them, which is where the address the reader came back to
+// is written.
 Then(
   "the log does not hold the state the reader came back with",
   function (this: SpecWorld) {
     const back = cameBackWith.get(this);
     assert.ok(back !== undefined, "The reader did not come back.");
-    assert.ok(!logOf(this).join("").includes(back.state));
+    assert.ok(!everythingLoggedOf(this).join("").includes(back.state));
   },
 );
 
 Then("the log does not hold the code Google gave", function (this: SpecWorld) {
   const back = cameBackWith.get(this);
   assert.ok(back !== undefined, "The reader did not come back.");
-  assert.ok(!logOf(this).join("").includes(back.code));
+  assert.ok(!everythingLoggedOf(this).join("").includes(back.code));
 });
+
+// So that taking the state and the code out is not done by taking out the
+// whole address, which would pass the two steps above.
+Then(
+  "the log says the way back from Google was asked for",
+  function (this: SpecWorld) {
+    assert.ok(
+      linesLogged(this).some((line) =>
+        line.req?.url?.startsWith("/auth/google/callback"),
+      ),
+      "No request for the way back is logged.",
+    );
+  },
+);
 
 Then(
   "the way back is answered as a request that could not be dealt with",

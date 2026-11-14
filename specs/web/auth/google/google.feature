@@ -334,13 +334,6 @@ Feature: Registering with Google
       When the reader arrives back from Google carrying another state
       Then the log says the way back was refused for "Google.StateDiffers"
 
-    Scenario: The log does not hold the state the reader came back with
-      Given a viewport 1200 pixels wide
-      And Google knows the reader as "google-subject-1"
-      When the reader arrives back from Google without having been sent there
-      Then the log does not hold the state the reader came back with
-      And the log does not hold the code Google gave
-
     Scenario: The reader is told the same whichever check it failed
       Given a viewport 1200 pixels wide
       And Google knows the reader as "google-subject-1"
@@ -349,6 +342,108 @@ Feature: Registering with Google
       When the reader arrives back from Google carrying another state
       Then the way back is answered as a request that could not be dealt with
       And the answer to the way back does not name "Google.StateDiffers"
+
+  Rule: A way back with no cookie is information, and the others are warnings
+
+    Programs that scan websites call the address Google sends readers back to,
+    with a state and a code they made up and no cookie. Over a day in November
+    2026 ten of them were the only warnings in the log, and nobody had started
+    signing in with Google before any of them. A warning is for what somebody
+    should look at, so a way back with no cookie is written as information: it
+    is still in the log, under its code, for whoever goes looking.
+
+    The other refusals stay warnings. A cookie that was not the site's, a
+    state that was somebody else's, and a reader who took too long each need a
+    reader to have been sent to Google first, which a program calling the
+    address does not do.
+
+    A reader who took too long is told apart from one with no cookie only if
+    the browser still has the cookie when they come back. So the browser is
+    told to keep it for an hour, well past the ten minutes the site allows, and
+    the way back is judged by when the reader was sent, which the cookie holds.
+    No longer than that, since what the cookie holds is part of a sign in under
+    way, and a reader who comes back after an hour is not waiting for one. And
+    a way back refused for taking too long takes the cookie away, as one that
+    is taken does, since nothing can be done with it after that.
+
+    Scenario: A way back with no cookie is information
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the refusal is written in the log as information
+
+    Scenario: A way back with a cookie the site did not make is a warning
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google with a cookie the site did not make
+      Then the refusal is written in the log as a warning
+
+    Scenario: A way back after the reader took too long is a warning
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      And the reader takes longer than the site allows
+      When the reader arrives back from Google
+      Then the refusal is written in the log as a warning
+
+    Scenario: A way back carrying another state is a warning
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      When the reader arrives back from Google carrying another state
+      Then the refusal is written in the log as a warning
+
+    Scenario: The browser keeps the cookie for longer than the site allows
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      When the site has sent the reader to Google
+      Then the browser keeps the cookie for the way back for longer than the site allows
+
+    Scenario: The browser keeps the cookie for no longer than an hour
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      When the site has sent the reader to Google
+      Then the browser keeps the cookie for the way back for no longer than an hour
+
+    Scenario: A way back after the reader took too long takes the cookie away
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      And the register page is open with scripting on
+      And the site has sent the reader to Google
+      And the reader takes longer than the site allows
+      When the reader arrives back from Google
+      Then the browser no longer has the cookie for the way back
+
+  Rule: The log does not hold the state or the code a way back carried
+
+    The address a reader comes back to carries the state the site gave and the
+    code Google gave. The site wrote neither in the line saying why a way back
+    was refused, but the line every request is logged with held the whole
+    address, so both were in the log after all. The address is still logged,
+    with the two taken out.
+
+    Scenario: The log does not hold the state the reader came back with
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the log does not hold the state the reader came back with
+
+    Scenario: The log does not hold the code Google gave
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the log does not hold the code Google gave
+
+    Scenario: The log still says which address was asked for
+      Given a viewport 1200 pixels wide
+      And Google knows the reader as "google-subject-1"
+      When the reader arrives back from Google without having been sent there
+      Then the log says the way back from Google was asked for
+
 
   Rule: A reader Google does not vouch for is brought back to register, and told why
 

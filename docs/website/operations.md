@@ -71,7 +71,7 @@ The limit on failed sign-ins and password-reset requests counts by the reader's 
 
 ### Sign-in with Google fails
 
-`redirect_uri_mismatch` on one website only means that website's address is not registered in Google's console. All four must be: `https://<each of the four names>/auth/google/callback` (configuration.md §3). A reader who signs in with Google on one website and comes back on another means that website's address is not registered with Google. The log then shows `Google.NotSentFromHere` as a warning, because the reader came back to an address that did not start the sign-in (server-setup.md §7). If the site sends `http://`, `TRUSTED_PROXY` does not name the proxy.
+`redirect_uri_mismatch` on one website only means that website's address is not registered in Google's console. All four must be: `https://<each of the four names>/auth/google/callback` (configuration.md §3). A reader who signs in with Google on one website and comes back on another means that website's address is not registered with Google. The log then shows `Google.NotSentFromHere` with the reason `Google.CookieMissing`, because the reader came back to an address that did not start the sign-in (server-setup.md §7). It is written as information and not as a warning, since programs scanning the site send the same a few times a day, so look for it at Info. If the site sends `http://`, `TRUSTED_PROXY` does not name the proxy.
 
 ### Every page answers 421 Misdirected Request
 

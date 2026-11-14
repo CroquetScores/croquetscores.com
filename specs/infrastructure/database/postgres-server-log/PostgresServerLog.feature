@@ -76,11 +76,11 @@ Feature: The server's log, kept in the database for an administrator to read
   Rule: A link a reader was sent is not kept
 
     A link in an email carries a signature that lets whoever holds it set a
-    password or confirm an address. The log file already holds the addresses
-    requests were made to, but the file is read on the machine, and this copy
-    is read on a page, so what in an address would let somebody act as a reader
-    is left out of it. The rest of the address is kept, so that a request is
-    still found by what else it carried.
+    password or confirm an address. The line each request is logged with leaves
+    it out already (`setPassword.feature`), in the file as here. This copy is
+    read on a page, so it is left out here as well wherever else in a line an
+    address is written, such as in what an error says. The rest of the address
+    is kept, so that a request is still found by what else it carried.
 
     Scenario: The link in an address is left out
       When the server logs "incoming request" at the severity Info for the address "/set-new-password?link=abc.def&request=r1"
