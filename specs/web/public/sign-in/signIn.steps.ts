@@ -20,9 +20,6 @@ import { drawnBesideAButton } from "../../support/buttons.js";
 import { englishForScenarios, unmarked } from "../../support/languages.js";
 
 const signIn = "/account/sign-in";
-// Where the form sends a reader who came to it from nowhere in particular
-// (goBackTo in src/web/public/signIn.ts).
-const whereSigningInGoesBack = "/admin/";
 const dialog = "section.dialog";
 
 const nowIn = (world: SpecWorld): ReadOnlyDate =>
@@ -135,8 +132,15 @@ When(
 // is done as the form's own handler does it: the same command, so the password
 // is checked, the signing in recorded on the account, and an old site's hash
 // made again today's way; then a session, kept in the same place, with its id
-// in the same cookie. The reader then lands where the form would have sent
-// them, so a step that acts on the page in front of it finds the same page.
+// in the same cookie.
+//
+// The reader is not taken to where the form would have sent them. That was
+// done at first, so that a step acting on the page in front of it found the
+// same page, and it was about 410 milliseconds in each scenario, for a page the
+// next step nearly always left at once by opening one of its own. A scenario
+// that wants a page opens it: the browser is left on a blank page, so a step
+// that acts on the page in front of it, or posts from it, has to open one first,
+// as the step that signs out does.
 Given(
   "the reader has signed in as {string} with the password {string}",
   async function (this: SpecWorld, address: string, password: string) {
@@ -171,7 +175,6 @@ Given(
         expires: Math.floor(Date.now() / 1000) + 90 * 24 * 60 * 60,
       },
     ]);
-    await this.browserPage.goto(`${this.baseUrl!}${whereSigningInGoesBack}`);
   },
 );
 

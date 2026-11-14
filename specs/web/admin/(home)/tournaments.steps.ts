@@ -196,6 +196,15 @@ Given("the reader has signed out", async function (this: SpecWorld) {
   // keeps the session comes back, and signing out before it would be undone
   // by it.
   await this.browserPage.waitForURL((url) => url.pathname !== signInPath);
+  // A reader signed in without the form is on no page of the site, and a page
+  // of no site has nothing to post from: the address below is read against
+  // wherever the page is. Judged by origin, as postAndKeepTheAnswer judges it
+  // (specs/web/support/answered.ts), so that any page of another site is
+  // handled and not only a blank one.
+  const site = new URL(this.baseUrl!);
+  if (new URL(this.browserPage.url()).origin !== site.origin) {
+    await this.browserPage.goto(site.href);
+  }
   // Posted from the page, so that it goes with the browser's own cookie. It
   // was posted with Playwright's request instead, which does not send a secure
   // cookie to a site served over plain http, as the scenarios' is: the server
