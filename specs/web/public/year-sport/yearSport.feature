@@ -567,4 +567,4 @@ Feature: A sport's page in a year lists its months, and a month the tournaments 
       Given a site offering the languages it is served with
       And a browser that asks for "es"
       When the page for "ac" in 2026 is opened
-      Then the content has the heading "Torneos de Croquet de asociación de 2026"
+      Then the content has the heading "Torneos de Association Croquet de 2026"
