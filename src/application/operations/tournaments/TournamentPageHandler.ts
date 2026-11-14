@@ -1,4 +1,5 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
+import { Administrator } from "../../../domain/aggregates/accounts/Administrator.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
@@ -67,6 +68,7 @@ export class TournamentPageHandler extends QueryHandler<
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       sport: tournament.sport.code,
       countsTowardsWorldRankings: tournament.sport.countsTowardsWorldRankings,
+      mayDelete: reader instanceof Administrator,
     };
   }
 }

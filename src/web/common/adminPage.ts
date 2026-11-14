@@ -8,6 +8,7 @@
 // cookie readable by a script, which it is kept from being (theme.ts).
 import type { FastifyRequest } from "fastify";
 
+import { Website } from "../../domain/common/Website.js";
 import { escape } from "./escape.js";
 import { directionAttribute, type Speaking, speakingOf } from "./language.js";
 import { siteBar, siteFooter, tryWebsiteBanner } from "./layout.js";
@@ -49,7 +50,7 @@ export const adminBuildHeader = "x-admin-build";
 // is why each screen's scenarios read a refusal's own words and not only its
 // code: the words for any would pass for it otherwise.
 const saidByTheAdmin =
-  /^(admin\.|tournamentList\.filter\.|tournamentsInDays\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddPair\.|AddPlayers\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator|WorldRankingLists\.|ImportErrorKept.|DatabaseAccess.|EmergencyAccess\.)/;
+  /^(admin\.|tournamentList\.filter\.|tournamentsInDays\.|Tournament|CreateTournament\.|UpdateTournament\.|ReadOnlyDate\.|EmailAddress\.|AddManager\.|AddPair\.|AddPlayers\.|AddScorer\.|PersonName\.|Competition|BestOf\.|KnockoutDraw\.|Game\.|Score\.|Team|ExpectedMatches\.|TestGroup\.|AddTest\.|UpdateTest\.|ManagerNote|EditManagerNote\.|DeleteManagerNote\.|AddRole\.|RemoveRole\.|AccountsWithRole\.|Account\.NotAnAdministrator|WorldRankingLists\.|ImportErrorKept.|DatabaseAccess.|EmergencyAccess\.|DeleteTournament\.)/;
 
 // The admin's words in the reader's language, each one the site's first
 // language has, so that a word missing from the reader's is said in that one
@@ -59,6 +60,8 @@ const adminWords = (
   speaking: Speaking,
   administratorName: string,
   administratorEmailAddress: string,
+  siteName: string,
+  tryAddress: string,
 ): string => {
   const first = speaking.offered[0];
   const keys = Object.keys(first?.words ?? {}).filter((key) =>
@@ -80,11 +83,21 @@ const adminWords = (
     ...said,
     "admin.administrator.name": administratorName,
     "admin.administrator.emailAddress": administratorEmailAddress,
+    // What the administrator's message about a deleted tournament is begun
+    // from says of the site, which only the server knows.
+    "admin.site.name": siteName,
+    "admin.site.tryAddress": tryAddress,
   };
   return `<script type="application/json" id="${adminWordsId}">${JSON.stringify(
     words,
   ).replace(/</g, "\\u003c")}</script>`;
 };
+
+// Where a reader is sent to learn the site: the try website of the site this
+// is, which is this one where it is already a try website.
+const tryAddressOf = (website: Website): string =>
+  Website.all.find((known) => known.isTry && known.site === website.site)
+    ?.address ?? website.address;
 
 /**
  * The built page, checked once, as the application starts, for everything it
@@ -179,7 +192,7 @@ export const adminPage = (
           currentPath: "/admin/",
           signedIn: signedIn(request),
           hasPassword: hasPassword(request),
-        })}${alertBar(alert)}${adminWords(speaking, administratorName, administratorEmailAddress)}${adminBuild(build)}`;
+        })}${alertBar(alert)}${adminWords(speaking, administratorName, administratorEmailAddress, siteName, tryAddressOf(websiteOf(request)))}${adminBuild(build)}`;
       })
       // Back to the address the admin was opened at, as a choice made on a
       // public page returns to that page.

@@ -16,6 +16,7 @@ export const writtenInEnglishOnly: readonly string[] = [
   "Email.PossibleTestTournament",
   "Email.NationalStatusRemoved",
   "Email.InternationalStatusRemoved",
+  "Email.TournamentDeleted",
   // Written in Tim's voice to the two people he named, who read English.
   "Email.EmergencyAccessAsked",
 ];
@@ -28,6 +29,9 @@ export const writtenInEnglishOnly: readonly string[] = [
  */
 const administratorsPages: readonly string[] = [
   "admin.notableTournament.",
+  "admin.deleteTournament.",
+  "admin.hover.deleteTournament.",
+  "DeleteTournament.",
   "admin.hover.notableTournament.",
   // The page for taking the site over, and what it refuses with. Whoever
   // comes to it comes once, in a hurry, and the people they write to read

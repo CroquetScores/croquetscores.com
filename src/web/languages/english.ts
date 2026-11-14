@@ -597,6 +597,21 @@ export const english: Language = {
       "None of this tournament's competitions counts towards the world rankings.",
     // Said in place of the tabs, for a refusal with no words of its own.
     "admin.view.otherwise": "This tournament cannot be run from here.",
+    // The administrator's, to delete a tournament that was only a test and tell
+    // its managers (DeleteTournament.feature). In English alone, as the email
+    // it sends is (writtenInEnglishOnly.ts).
+    "admin.deleteTournament.open": "Delete",
+    "admin.deleteTournament.title": "Delete this tournament?",
+    "admin.deleteTournament.explanation":
+      "This email is sent to every manager of the tournament, as it is written here.",
+    "admin.deleteTournament.message": "Email to the managers",
+    "admin.deleteTournament.begun":
+      "Hi,\n\nPlease use {tryAddress}/ for testing and learning how to use {siteName}.\n\nI have archived the {tournament} tournament.\n\nRegards,\n{administratorName}\n{siteName}",
+    "admin.deleteTournament.told": "Its managers have been emailed.",
+    "admin.deleteTournament.emailOnly": "Send Email Only",
+    "admin.deleteTournament.emailAndArchive": "Send Email and Archive",
+    "admin.deleteTournament.otherwise": "Something went wrong on the site.",
+    "DeleteTournament.MessageMissing": "Write something to tell the managers.",
     // A competition's page, and the tabs what there is to run is in.
     "admin.competitionView.tabs": "Competition",
     "admin.competitionView.players": "Players",
@@ -887,6 +902,12 @@ export const english: Language = {
     "admin.hover.modal.cancel": "Close this without keeping anything",
     "admin.hover.modal.ok": "Close this message",
     "admin.hover.tab": "Show the {name} tab",
+    "admin.hover.deleteTournament.open":
+      "Delete this tournament, and tell its managers",
+    "admin.hover.deleteTournament.emailOnly":
+      "Tell its managers, and leave the tournament as it is",
+    "admin.hover.deleteTournament.emailAndArchive":
+      "Tell its managers, and archive the tournament; it can be restored",
     "admin.hover.tournaments.archive":
       "Archive this tournament; it can be restored",
     "admin.hover.tournaments.restore": "Bring this archived tournament back",
@@ -1924,6 +1945,14 @@ export const english: Language = {
     {emailFromName}<br />
     {siteName}
 </p>
+`,
+
+    // Written in English only too: the administrator's own words, as typed in
+    // the box the page of the tournament offers, so they are the whole of what
+    // the email says.
+    "Email.TournamentDeleted.subject": "{siteName} - {tournament}",
+    "Email.TournamentDeleted.body": `
+<p style="white-space: pre-wrap;">{message}</p>
 `,
 
     // Written in English only too, in the administrator's own voice: one for

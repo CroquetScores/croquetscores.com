@@ -24,6 +24,17 @@ interface Props {
   readonly act: () => void;
   /** Closing it by Cancel or Escape, which keeps nothing. */
   readonly cancel: () => void;
+  /**
+   * A second thing the dialog can do, as a button after the first and before
+   * Cancel, where there are two ways to do what it is for and neither is the
+   * other with something added on. Enter does the first, as it does without
+   * this.
+   */
+  readonly alternative?: {
+    readonly action: string;
+    readonly hover: string;
+    readonly act: () => void;
+  };
   /** Whether what the first button does is still being done. */
   readonly busy?: boolean;
   /** Whether the one button is all it has, with no Cancel. */
@@ -44,6 +55,7 @@ export const ModalDialog = ({
   hover,
   act,
   cancel,
+  alternative,
   busy,
   alone = false,
   wide = false,
@@ -142,6 +154,16 @@ export const ModalDialog = ({
               title={hover}
             >
               {action}
+            </button>
+          )}
+          {alone || alternative === undefined ? null : (
+            <button
+              className="button button-submit"
+              type="button"
+              title={alternative.hover}
+              onClick={alternative.act}
+            >
+              {alternative.action}
             </button>
           )}
           {alone ? null : (
