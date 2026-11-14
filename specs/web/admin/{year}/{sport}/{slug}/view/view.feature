@@ -113,6 +113,39 @@ Feature: A tournament's page in the admin
       When the page of "Spring Open" is opened
       Then Edit is not offered beside the page's heading
 
+  Rule: An administrator can delete the tournament from beside its name
+
+    After Edit is a trash can, named Delete, that opens the dialog which tells
+    the tournament's managers it is gone, and archives it if asked
+    (`delete.feature`). It is the administrator's alone, since deleting a
+    test tournament is a judgement of the site's (`DeleteTournament.feature`):
+    a manager of the tournament is not offered it.
+
+    Scenario: An administrator is offered Delete beside the tournament's name
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then Delete is beside the page's heading
+
+    Scenario: Delete beside the tournament's name is a trash can
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then Delete beside the page's heading is a trash can
+
+    Scenario: Delete comes after Edit
+      Given "other@example.com" has an account, confirmed, with the password "another horse battery staple"
+      And "other@example.com" has been given the role "Administrator"
+      And the reader has signed in as "other@example.com" with the password "another horse battery staple"
+      When the page of "Spring Open" is opened
+      Then Delete comes after Edit beside the page's heading
+
+    Scenario: A manager is not offered Delete beside the tournament's name
+      When the page of "Spring Open" is opened
+      Then Delete is not offered beside the page's heading
+
   Rule: What there is to run is in six tabs, in the panel beneath the tournament's name
 
     Scenario Outline: The page has each tab

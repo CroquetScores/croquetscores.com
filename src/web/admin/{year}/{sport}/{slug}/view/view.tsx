@@ -16,6 +16,8 @@ import { TestsTab } from "./tabs/tests/tests.js";
 import { refusalOf } from "../../../../api.js";
 import { RefusedPage } from "../RefusedPage.js";
 import { Pencil } from "../../../../Pencil.js";
+import { TrashCan } from "../../../../TrashCan.js";
+import { DeleteTournamentDialog } from "./modal-dialogs/delete/delete.js";
 import { standardHelp, teamsHelp } from "../../../../helpAddress.js";
 
 // A tournament's page (view.feature): headed by its name, with what there is
@@ -58,6 +60,8 @@ interface Found {
   readonly sport: string;
   /** Whether it counts towards the world rankings, and so has a file. */
   readonly countsTowardsWorldRankings: boolean;
+  /** Whether the reader may delete it, telling its managers: an administrator. */
+  readonly mayDelete: boolean;
 }
 
 type Asked =
@@ -155,6 +159,9 @@ const partInCompetitions = (part: Found["part"]): "manager" | "scorer" =>
 export const ViewTournament = ({ address }: Props): React.JSX.Element => {
   const [asked, setAsked] = useState<Asked>({ is: "asking" });
   const [chosen, setChosen] = useState<Tab>("players");
+  const [deleting, setDeleting] = useState(false);
+  // Said once the managers are told and the tournament is left where it is.
+  const [told, setTold] = useState(false);
 
   useEffect(() => {
     // Asked as the page that edits it asks, and refused the same way: only a
@@ -218,7 +225,28 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                   <Pencil />
                 </a>
               ) : null}
+              {/* An administrator's, after Edit: it tells the managers the
+                  tournament is gone, and archives it if asked. */}
+              {asked.tournament.mayDelete ? (
+                <button
+                  type="button"
+                  className="button"
+                  title={say("admin.hover.deleteTournament.open")}
+                  aria-label={say("admin.deleteTournament.open")}
+                  onClick={() => {
+                    setTold(false);
+                    setDeleting(true);
+                  }}
+                >
+                  <TrashCan />
+                </button>
+              ) : null}
             </div>
+            {told ? (
+              <p className="dialog-status" role="status">
+                {say("admin.deleteTournament.told")}
+              </p>
+            ) : null}
             <TabControl
               tabs={offeredTo(asked.tournament)}
               chosen={chosen}
@@ -291,6 +319,24 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
           </div>
         </div>
       </main>
+      {deleting ? (
+        <DeleteTournamentDialog
+          tournament={asked.tournament.id}
+          name={asked.tournament.name}
+          told={() => {
+            setDeleting(false);
+            setTold(true);
+          }}
+          archived={() => {
+            // Archived, the page is refused to everybody, so the reader is
+            // taken to the list, where the tournament is no longer.
+            go("/admin/");
+          }}
+          close={() => {
+            setDeleting(false);
+          }}
+        />
+      ) : null}
     </>
   );
 };

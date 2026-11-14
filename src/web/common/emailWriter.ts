@@ -58,6 +58,7 @@ const kinds: readonly string[] = [
   "Email.NotableTournament",
   "Email.NationalStatusRemoved",
   "Email.InternationalStatusRemoved",
+  "Email.TournamentDeleted",
   "Email.PasswordChanged",
   "Email.ConfirmNewEmailAddress",
   "Email.AlreadyHasAnAccount",

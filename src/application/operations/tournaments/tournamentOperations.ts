@@ -53,6 +53,7 @@ export type TournamentOperationErrorCode =
   | `${string}.NoSuchManagerNote`
   | "AddManager.NoSuchAccount"
   | "AddScorer.NoSuchAccount"
+  | "DeleteTournament.MessageMissing"
   | `${string}.NoSuchTournament`;
 
 /**
