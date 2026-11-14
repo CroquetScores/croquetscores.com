@@ -219,6 +219,7 @@ DNS is at Cloudflare. In the domain's DNS records there:
 
 - **`A` records** — one for each of the four names: `@` and `try` in the `croquetscores.com` zone, and `@` and `try` in the `gateballscores.com` zone, all to the server's address. **Set the proxy status to "DNS only" (the grey cloud),** for the reason below.
 - **`AAAA` record** — only if the server was given an IPv6 address, and the same proxy status.
+- **`www`** — a `CNAME` to the zone's own name, in each zone, **"Proxied" (the orange cloud)**, with a redirect rule beside it (below). It is the one record that is orange, and the server never sees it.
 - **Brevo's records** — SPF (a `TXT`), DKIM (a `TXT` or `CNAME`) and DMARC (a `TXT` at `_dmarc`), exactly as Brevo's dashboard gives them. Without these the emails go to spam (https://github.com/CroquetScores/croquetscores.com/issues/279, Email and DNS). Cloudflare only proxies `A`, `AAAA` and `CNAME` records, and a `CNAME` that Brevo gives for DKIM must also be "DNS only", or Brevo cannot see it and says the domain is not verified.
 
 Wait for every `A` record to answer before starting the proxy. Run this once for each of the names, and it should print the server's address:
@@ -241,6 +242,18 @@ With the orange cloud Cloudflare sits in front of Caddy, hides the server's addr
 4. **The firewall can then allow ports 80 and 443 from Cloudflare's ranges only,** which is the point of hiding the server's address.
 
 Try it on the `try` name first, and read the log to see that a reader's address, and not Cloudflare's, is what the site is counting by.
+
+### www, sent on by Cloudflare
+
+`www.croquetscores.com` and `www.gateballscores.com` are answered by Cloudflare and never reach the server: the Caddyfile does not name them, and the site has no certificate for them. Cloudflare sends the reader to the same address without the `www`, as a permanent redirect (301), keeping the path and the query and going to `https://` whether the reader asked by `http://` or not. That is why the `www` record is orange: with the grey cloud the reader would connect to the server, which would refuse them.
+
+The redirect is a rule in each zone, and is lost with the zone. To make it again, in Cloudflare for each domain: **Rules**, then **Redirect Rules**, then **Create rule** from the template **Redirect from WWW to root**, and **Deploy**. Then check it, once for each domain:
+
+```bash
+curl -sI http://www.<the domain>/some/page?x=1
+```
+
+It should answer `301` with `location: https://<the domain>/some/page?x=1`.
 
 ## 5. The proxy
 
