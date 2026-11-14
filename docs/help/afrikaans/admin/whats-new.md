@@ -1,5 +1,17 @@
 # Wat is nuut vir toernooibestuurders
 
+## Vrygestel 2026-11-15
+
+### Die toernooi
+
+- **Die twee merkblokkies vir 'n nasionale of 'n internasionale byeenkoms is onder "Opsioneel" in 'n blokkie geplaas.** Op die bladsy wat 'n toernooi skep of verander, was **Byeenkoms op nasionale vlak** en **Byeenkoms op internasionale vlak** die enigste dinge wat onder die subtitel gevra is, en sommige mense het hulle vir 'n keuse aangesien wat gemaak moes word. 'n Toernooi hoef geen van die twee te wees nie, en die blokkie sê dit nou. Die woord is by elke taal van die webwerf gevoeg, en die vertalings anders as Engels het 'n moedertaalleser se oog nodig.
+
+- **'n Toernooi wat net as 'n toets gemaak is, kan deur die administrateur geargiveer word, wat jou sê.** Iemand wat die webwerf leer ken, maak soms 'n toernooi op die regte webwerf wat nooit meer as 'n toets was nie. Die administrateur kan dit nou argiveer en sy bestuurders per e-pos laat weet, met 'n probeerwebwerf genoem om op te oefen. Niks word uitgevee nie, so 'n geargiveerde toernooi kan herstel word. Bestuurders wat hul rekeninge vergeet het, en puntehouers, kry nie 'n e-pos nie.
+
+### Spelers
+
+- **'n Dubbelspelpaar kan ook met 'n skuinsstreep, 'n plusteken of die Engelse woord "and" geskryf word, nie net met 'n ampersand nie.** "Sam Someone / Alex Another" is dieselfde paar as "Sam Someone & Alex Another". Die woord "and" tel net as dit alleen staan, so 'n naam soos "Sam Anderson" word nie vir 'n paar aangesien nie. Waar 'n paar in 'n Switsers of 'n blok gespeel word, word dit in 'n Switsers-uitslag as "T. Murphy & A. Sharpe" gesê, en as "TM&AS" bo-aan 'n blokrooster.
+
 ## Vrygestel 2026-11-11
 
 ### Die toernooi

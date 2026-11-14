@@ -1,5 +1,23 @@
 # Kas jauns
 
+## Izlaists 2026-11-15
+
+- **Dubultspēļu pāris meklēšanā ir viens spēlētājs, neatkarīgi no tā, kurš no abiem spēlētājiem nosaukts pirmais.** "Sam Someone & Alex Another" un "Alex Another & Sam Someone" spēlētāju lapā bija divi ieraksti, tāpat kā "Peter & Rosie Landrebe" un "Rosie & Peter Landrebe". Tagad tie ir viens, vienā adresē, norādīts ar nosaukumu, ko rakstīja pēdējais turnīrs.
+
+- **Dubultspēļu pāri var rakstīt arī ar slīpsvītru, plusa zīmi vai angļu vārdu "and", ne tikai ar &.** "Sam Someone / Alex Another", "Sam Someone + Alex Another" un "Sam Someone and Alex Another" visi tiek lasīti kā pāris. Vārds "and" tiek ņemts vērā tikai tad, ja stāv viens pats, tāpēc tādu vārdu kā "Sam Anderson" nepieņem par pāri.
+
+- **Pāris Šveices sistēmas rezultātos un grupu tabulās tiek nosaukts īsi.** Šveices sistēmas rezultātā bija pirmā spēlētāja vārda pirmais burts un otrā spēlētāja uzvārds. Tagad tajā nosaukts katrs spēlētājs, kā "T. Murphy & A. Sharpe", un uzvārds, kas abiem ir kopīgs, tiek nosaukts vienreiz, kā "R. & P. Landrebe". Grupas tabulas kolonnu virsraksti ir katra spēlētāja iniciāļi, savienoti ar &, piemēram, "TM&AS", vai "RL&PL" kopīga uzvārda gadījumā.
+
+- **Gvatemala ir iekļauta valstīs, kurās nesen neviens nav spēlējis.** Agrāk tā bija norādīta kopā ar valstīm, kurās turnīri notikuši kopš 2025. gada.
+
+- **Vietne skaita, cik lasītāju nāk un kuras lapas viņi lasa.** Tā izmanto Cloudflare tīmekļa analītiku katrā lapā, ko redz lasītāji. Lapas, kurās strādā pārvaldnieki, netiek skaitītas. Tā neizmanto sīkdatnes un lietotāju neidentificē citādi kā pēc viņa IP adreses.
+
+- **Turnīri tiek publicēti kā faili, ko var izmantot ikviens.** Katrs publiskais turnīrs, gan kroketa, gan gateball, tiek ierakstīts savā failā ar saviem spēlētājiem un sacensībām vai ar komandām un testiem tur, kur spēlē komandas, iekļaujot atsauktās partijas, kas atzīmētas kā atsauktas. Tie glabājas Git repozitorijā `CroquetScores/data.croquetscores.com`, ko atjaunina katru stundu, tāpēc varat sakārtot rezultātus vai kaut ko no tiem izveidot, un labojums parādās kā izmaiņa ar datumu. Failā nav neviena konta, e-pasta adreses, piezīmes vai komentāra, nav arī nekā arhivēta vai no izmēģinājuma vietnes.
+
+### Ārkārtas gadījumā
+
+- **Ir lapa tam, kam jāpārņem vietne.** Ja tas, kas vada vietni, to nevar, jo ir slims vai ilgi prombūtnē, ikviens pieteicies var admin sadaļā atvērt **In case of emergency**, pateikt, kas viņš ir un kāpēc pārņem vietni, un nospiest **Send**. Pēc apstiprinājuma tas, ko viņš pateicis, tiek nosūtīts pa e-pastu cilvēkiem, kuri zina paroli piezīmei ar visu, kas vietnei vajadzīgs, un atbildes nonāk pie sūtītāja. Konts var lūgt vienreiz 48 stundās, un tam pasaka, kad var lūgt atkal. Lapa sākas ar brīdinājumu to neizmantot, ja administratoram nav nosūtīts e-pasts un viņš 48 stundu laikā nav atbildējis, un to netestēt. Tiklīdz ziņa nosūtīta, lapa to pasaka un vairs neko neprasa.
+
 ## Izlaists 2026-11-11
 
 - **Izvēlni tālrunī var aizvērt, nospiežot ārpus tās.** Izvēlne aiz pogas šaura ekrāna augšā aizveras, kad nospiežat jebkur citur lapā, tāpat kā tad, kad vēlreiz nospiežat pogu vai atverat saiti.

@@ -1,5 +1,17 @@
 # Novedades para los gestores de torneo
 
+## Publicado el 2026-11-15
+
+### El torneo
+
+- **Las dos casillas de evento nacional e internacional van en un recuadro bajo "Opcional".** En la página que crea o cambia un torneo, **Evento de nivel nacional** y **Evento de nivel internacional** eran lo único que se preguntaba bajo el subtítulo, y algunas personas las tomaron por una elección que había que hacer. Un torneo no tiene por qué ser ninguna de las dos, y el recuadro ahora lo dice. La palabra se ha añadido en todos los idiomas del sitio, y las traducciones que no son al inglés necesitan la mirada de un hablante nativo.
+
+- **Un torneo hecho solo como prueba puede archivarlo el administrador, que te avisa.** Quien está aprendiendo el sitio a veces crea en el sitio de verdad un torneo que siempre fue solo una prueba. El administrador ahora puede archivarlo y enviar un correo electrónico a sus gestores, nombrando un sitio de prueba donde practicar. No se borra nada, así que un torneo archivado puede restaurarse. Los gestores que han olvidado su cuenta y los anotadores no reciben correo electrónico.
+
+### Jugadores
+
+- **Una pareja de dobles puede escribirse con una barra, con un signo más o con la palabra inglesa "and", y no solo con "&".** "Sam Someone / Alex Another" es la misma pareja que "Sam Someone & Alex Another". La palabra "and" solo cuenta cuando está sola, así que un nombre como "Sam Anderson" no se toma por una pareja. Donde una pareja juega en un suizo o en un grupo, se dice "T. Murphy & A. Sharpe" en un resultado del suizo y "TM&AS" en lo alto de la tabla de un grupo.
+
 ## Publicado el 2026-11-11
 
 ### El torneo

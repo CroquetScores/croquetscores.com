@@ -1,5 +1,17 @@
 # Was ist neu für Verantwortliche
 
+## Veröffentlicht am 2026-11-15
+
+### Das Turnier
+
+- **Die beiden Häkchen für eine nationale und eine internationale Veranstaltung stehen in einem Kasten unter "Optional".** Auf der Seite, die ein Turnier anlegt oder ändert, waren **Veranstaltung auf nationaler Ebene** und **Veranstaltung auf internationaler Ebene** das Einzige, wonach unter dem Untertitel gefragt wurde, und manche hielten sie für eine Wahl, die getroffen werden muss. Ein Turnier muss keines von beiden sein, und der Kasten sagt das jetzt. Das Wort ist in jeder Sprache der Website ergänzt, und die Übersetzungen außer dem Englischen brauchen den Blick eines Muttersprachlers.
+
+- **Ein Turnier, das nur zum Testen angelegt wurde, darf der Administrator archivieren, und er benachrichtigt Sie.** Wer die Website kennenlernt, legt manchmal auf der echten Website ein Turnier an, das immer nur ein Test war. Der Administrator kann es jetzt archivieren und seinen Verantwortlichen eine E-Mail schicken, in der eine Website zum Ausprobieren genannt wird, auf der sie üben können. Nichts wird gelöscht, ein archiviertes Turnier lässt sich also wiederherstellen. Verantwortliche, die ihr Konto vergessen haben, und Schreiber erhalten keine E-Mail.
+
+### Spieler
+
+- **Ein Doppelpaar kann auch mit einem Schrägstrich, einem Pluszeichen oder dem englischen Wort "and" geschrieben werden, nicht nur mit einem Et-Zeichen.** "Sam Someone / Alex Another" ist dasselbe Paar wie "Sam Someone & Alex Another". Das Wort "and" zählt nur, wenn es allein steht, ein Name wie "Sam Anderson" wird also nicht für ein Paar gehalten. Wo ein Paar im Schweizer System oder in einem Block gespielt wird, wird es im Ergebnis des Schweizer Systems als "T. Murphy & A. Sharpe" genannt und über einer Blocktabellenspalte als "TM&AS".
+
 ## Veröffentlicht am 2026-11-11
 
 ### Das Turnier

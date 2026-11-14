@@ -1,5 +1,23 @@
 # Was ist neu
 
+## Veröffentlicht am 15.11.2026
+
+- **Ein Doppelpaar ist in der Suche ein einziger Spieler, gleich welcher seiner beiden Spieler zuerst genannt wird.** "Sam Someone & Alex Another" und "Alex Another & Sam Someone" waren zwei Einträge auf der Spielerseite, ebenso "Peter & Rosie Landrebe" und "Rosie & Peter Landrebe". Jetzt sind sie einer, unter einer Adresse, aufgeführt mit dem Namen, den das jüngste Turnier geschrieben hat.
+
+- **Ein Doppelpaar kann auch mit einem Schrägstrich, einem Pluszeichen oder dem englischen Wort "and" geschrieben werden, nicht nur mit einem Et-Zeichen.** "Sam Someone / Alex Another", "Sam Someone + Alex Another" und "Sam Someone and Alex Another" werden alle als Paar gelesen. Das Wort "and" zählt nur, wenn es allein steht, ein Name wie "Sam Anderson" wird also nicht für ein Paar gehalten.
+
+- **Ein Paar wird in Schweizer-System-Ergebnissen und Blocktabellen kurz genannt.** Ein Ergebnis im Schweizer System nannte den Anfangsbuchstaben des Vornamens des ersten Spielers und den Nachnamen des zweiten. Jetzt nennt es jeden Spieler, als "T. Murphy & A. Sharpe", und ein Nachname, den beide teilen, wird nur einmal genannt, als "R. & P. Landrebe". Die Spalten einer Blocktabelle tragen als Überschrift die Initialen jedes Spielers, mit einem Et-Zeichen verbunden, etwa "TM&AS", oder "RL&PL" bei gemeinsamem Nachnamen.
+
+- **Guatemala steht bei den Ländern, in denen zuletzt niemand gespielt hat.** Es wurde zuvor bei den Ländern geführt, in denen seit 2025 Turniere gespielt wurden.
+
+- **Die Website zählt, wie viele Leserinnen und Leser kommen und welche Seiten sie lesen.** Dazu verwendet sie die Web-Analyse von Cloudflare, auf jeder Seite, die Leser sehen. Die Seiten, auf denen Verantwortliche arbeiten, werden nicht gezählt. Es werden keine Cookies verwendet, und die Nutzer werden nur an ihrer IP-Adresse erkannt.
+
+- **Die Turniere werden als Dateien veröffentlicht, die jeder verwenden kann.** Jedes öffentliche Turnier, im Croquet und im Gateball, wird als eigene Datei geschrieben, mit seinen Spielern und Wettbewerben, oder mit seinen Mannschaften und Tests, wo es in Mannschaften gespielt wird, einschließlich zurückgezogener Spiele, die als zurückgezogen gekennzeichnet sind. Sie liegen in einem Git-Repository, `CroquetScores/data.croquetscores.com`, das jede Stunde aktualisiert wird, sodass Sie die Ergebnisse in eine Rangfolge bringen oder etwas daraus bauen können und eine Korrektur als Änderung mit Datum erscheint. In einer Datei steht kein Konto, keine E-Mail-Adresse, keine Notiz und kein Kommentar, und auch nichts Archiviertes oder von einer Website zum Ausprobieren.
+
+### Im Notfall
+
+- **Es gibt eine Seite für jemanden, der die Website übernehmen muss.** Wenn die Person, die die Website betreibt, es nicht kann, weil sie krank oder lange abwesend ist, kann jeder Angemeldete im Admin-Bereich **In case of emergency** öffnen, sagen, wer er ist und warum er die Website übernimmt, und **Send** drücken. Nach einer Bestätigung wird, was er gesagt hat, per E-Mail an die Menschen geschickt, die das Passwort zu der Notiz haben, die alles enthält, was die Website braucht, und Antworten gehen an den Absender. Ein Konto kann einmal in 48 Stunden anfragen und erfährt, wann es wieder anfragen darf. Die Seite beginnt mit einer Warnung, sie nicht zu benutzen, wenn der Administrator nicht per E-Mail benachrichtigt wurde und innerhalb von 48 Stunden nicht geantwortet hat, und sie nicht zu testen. Ist die Nachricht gesendet, sagt die Seite das und fragt nichts weiter.
+
 ## Veröffentlicht am 11.11.2026
 
 - **Das Menü auf dem Telefon schließt sich, wenn Sie außerhalb davon tippen.** Das Menü hinter der Schaltfläche oben auf einem schmalen Bildschirm schließt sich, wenn Sie irgendwo anders auf die Seite tippen, ebenso wie wenn Sie die Schaltfläche noch einmal drücken oder einem Link folgen.

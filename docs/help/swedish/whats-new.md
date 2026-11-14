@@ -1,5 +1,23 @@
 # Nytt
 
+## Släppt 2026-11-15
+
+- **Ett dubbelpar är en spelare i sökningen, oavsett vilken av de två spelarna som nämns först.** "Sam Someone & Alex Another" och "Alex Another & Sam Someone" var två poster på spelarsidan, och det var "Peter & Rosie Landrebe" och "Rosie & Peter Landrebe" också. Nu är de en, på en adress, uppförda med det namn som den senaste turneringen skrev.
+
+- **Ett dubbelpar kan skrivas med snedstreck, plus eller det engelska ordet "and", inte bara med &.** "Sam Someone / Alex Another", "Sam Someone + Alex Another" och "Sam Someone and Alex Another" läses alla som ett par. Ordet "and" räknas bara när det står ensamt, så ett namn som "Sam Anderson" tas inte för ett par.
+
+- **Ett par sägs kort i schweizerresultat och blocktabeller.** Ett schweizerresultat gav den första spelarens förnamnsinitial och den andra spelarens efternamn. Nu säger det varje spelare, som "T. Murphy & A. Sharpe", och ett efternamn som båda delar sägs en gång, som "R. & P. Landrebe". Kolumnerna i en blocktabell har som rubrik varje spelares initialer sammanbundna med &, till exempel "TM&AS", eller "RL&PL" för ett gemensamt efternamn.
+
+- **Guatemala står bland de länder där ingen har spelat på sistone.** Det stod förut bland de länder där turneringar har spelats sedan 2025.
+
+- **Webbplatsen räknar hur många läsare som kommer och vilka sidor de läser.** Den använder Cloudflares webbanalys, på varje sida som läsare ser. Sidorna där arrangörer arbetar räknas inte. Den använder inga kakor och identifierar inte användaren på något annat sätt än med IP-adressen.
+
+- **Turneringarna publiceras som filer som vem som helst kan använda.** Varje offentlig turnering, i både krocket och gateball, skrivs som en egen fil, med sina spelare och tävlingar, eller sina lag och tester där den spelas av lag, med tillbakadragna partier med och sagda som tillbakadragna. De ligger i ett Git-arkiv, `CroquetScores/data.croquetscores.com`, som uppdateras varje timme, så att du kan rangordna resultaten eller bygga något av dem, och en rättelse syns som en ändring med datum. Inget konto, ingen e-postadress, anteckning eller kommentar finns i en fil, och inte heller något som är arkiverat eller kommer från en provwebbplats.
+
+### Vid nödfall
+
+- **Det finns en sida för den som måste ta över webbplatsen.** Om den som driver webbplatsen inte kan, för att hen är sjuk eller borta länge, kan vem som helst som är inloggad öppna **In case of emergency** i admin, säga vem hen är och varför hen tar över, och trycka på **Send**. Efter en bekräftelse skickas det hen sa som e-post till de personer som har lösenordet till anteckningen med allt webbplatsen behöver, och svar går till avsändaren. Ett konto kan fråga en gång per 48 timmar och får veta när det kan fråga igen. Sidan inleds med en varning om att inte använda den om inte administratören har fått e-post och inte har svarat inom 48 timmar, och om att inte testa den. När meddelandet är skickat säger sidan det och frågar inget mer.
+
 ## Släppt 2026-11-11
 
 - **Menyn i mobilen stängs när du trycker utanför den.** Menyn bakom knappen högst upp på en smal skärm stängs när du trycker någon annanstans på sidan, och likaså när du trycker på knappen igen eller följer en länk.

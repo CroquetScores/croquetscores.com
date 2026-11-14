@@ -1,5 +1,17 @@
 # Kas jauns turnīru pārvaldniekiem
 
+## Izdots 2026-11-15
+
+### Turnīrs
+
+- **Divas atzīmes nacionāla un starptautiska līmeņa pasākumam ir ievietotas rāmī ar nosaukumu "Neobligāti".** Lapā, kas izveido vai maina turnīru, **Nacionāla līmeņa pasākums** un **Starptautiska līmeņa pasākums** bija vienīgie, par ko jautāja zem apakšvirsraksta, un daži tos uzskatīja par izvēli, kas jāizdara. Turnīram nav jābūt nevienam no tiem, un rāmis to tagad saka. Vārds ir pievienots katrā vietnes valodā, un tulkojumiem, kas nav angļu valodā, vajadzīga dzimtās valodas lasītāja acs.
+
+- **Turnīru, kas izveidots tikai kā tests, administrators var arhivēt, un viņš jūs informē.** Kas apgūst vietni, dažkārt izveido īstajā vietnē turnīru, kas vienmēr bija tikai tests. Administrators to tagad var arhivēt un nosūtīt e-pastu tā pārvaldniekiem, norādot izmēģinājuma vietni, kurā vingrināties. Nekas netiek dzēsts, tāpēc arhivētu turnīru var atjaunot. Pārvaldnieki, kas aizmirsuši savus kontus, un rezultātu ievadītāji e-pastu nesaņem.
+
+### Spēlētāji
+
+- **Dubultspēļu pāri var rakstīt arī ar slīpsvītru, plusa zīmi vai angļu vārdu "and", ne tikai ar &.** "Sam Someone / Alex Another" ir tas pats pāris, kas "Sam Someone & Alex Another". Vārds "and" tiek ņemts vērā tikai tad, ja stāv viens pats, tāpēc tādu vārdu kā "Sam Anderson" nepieņem par pāri. Kur pāris spēlē Šveices sistēmā vai grupā, to nosauc "T. Murphy & A. Sharpe" Šveices sistēmas rezultātā un "TM&AS" grupas tabulas augšā.
+
 ## Izdots 2026-11-11
 
 ### Turnīrs

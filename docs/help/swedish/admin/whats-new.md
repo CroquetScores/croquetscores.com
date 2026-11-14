@@ -1,5 +1,17 @@
 # Nytt för arrangörer
 
+## Släppt 2026-11-15
+
+### Turneringen
+
+- **De två rutorna för en nationell och en internationell tävling står i en ruta under "Valfritt".** På sidan som skapar eller ändrar en turnering var **Nationell tävling** och **Internationell tävling** det enda som frågades efter under underrubriken, och några tog dem för ett val som måste göras. En turnering behöver inte vara någon av dem, och rutan säger det nu. Ordet har lagts till på varje språk webbplatsen finns på, och översättningarna som inte är engelska behöver en modersmålstalares blick.
+
+- **En turnering som bara gjordes som ett test kan administratören arkivera, och du får veta det.** Den som lär sig webbplatsen gör ibland en turnering på den riktiga webbplatsen som alltid bara var ett test. Administratören kan nu arkivera den och skicka e-post till dess arrangörer, med en provwebbplats nämnd att öva på. Inget raderas, så en arkiverad turnering kan återställas. Arrangörer som har glömt sina konton och resultatförare får ingen e-post.
+
+### Spelare
+
+- **Ett dubbelpar kan skrivas med snedstreck, plus eller det engelska ordet "and", inte bara med &.** "Sam Someone / Alex Another" är samma par som "Sam Someone & Alex Another". Ordet "and" räknas bara när det står ensamt, så ett namn som "Sam Anderson" tas inte för ett par. Där ett par spelar i en schweizer eller ett block sägs det "T. Murphy & A. Sharpe" i ett schweizerresultat och "TM&AS" överst i en blocktabell.
+
 ## Släppt 2026-11-11
 
 ### Turneringen

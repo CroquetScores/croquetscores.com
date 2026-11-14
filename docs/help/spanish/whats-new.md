@@ -1,5 +1,23 @@
 # Novedades
 
+## Publicado el 2026-11-15
+
+- **Una pareja de dobles es un solo jugador en la búsqueda, sea cual sea de los dos jugadores el que se nombre primero.** "Sam Someone & Alex Another" y "Alex Another & Sam Someone" eran dos entradas en la página de jugadores, y también lo eran "Peter & Rosie Landrebe" y "Rosie & Peter Landrebe". Ahora son una sola, en una sola dirección, listada con el nombre que escribió el torneo más reciente.
+
+- **Una pareja de dobles puede escribirse con una barra, con un signo más o con la palabra inglesa "and", y no solo con "&".** "Sam Someone / Alex Another", "Sam Someone + Alex Another" y "Sam Someone and Alex Another" se leen todos como una pareja. La palabra "and" solo cuenta cuando está sola, así que un nombre como "Sam Anderson" no se toma por una pareja.
+
+- **Una pareja se dice de forma abreviada en los resultados del suizo y en las tablas de los grupos.** Un resultado del suizo daba la inicial del nombre del primer jugador y el apellido del segundo. Ahora dice a cada jugador, como "T. Murphy & A. Sharpe", y un apellido que comparten ambos se dice una sola vez, como "R. & P. Landrebe". Las columnas de la tabla de un grupo se titulan con las iniciales de cada jugador unidas por "&", como "TM&AS", o "RL&PL" si comparten apellido.
+
+- **Guatemala figura con los países donde nadie ha jugado últimamente.** Antes aparecía con los países donde se han jugado torneos desde 2025.
+
+- **El sitio cuenta cuántos lectores llegan y qué páginas leen.** Lo hace con el análisis web de Cloudflare, en cada página que ven los lectores. Las páginas en las que trabajan los gestores no se cuentan. No usa cookies y no identifica al usuario de ninguna otra manera que no sea su dirección IP.
+
+- **Los torneos se publican como archivos que cualquiera puede usar.** Cada torneo público, de croquet y de gateball, se escribe en un archivo propio, con sus jugadores y competiciones, o sus equipos y tests donde se juega por equipos, con las partidas retiradas incluidas y dichas como retiradas. Se guardan en un repositorio de Git, `CroquetScores/data.croquetscores.com`, que se actualiza cada hora, de modo que puedes clasificar los resultados o construir algo con ellos, y una corrección aparece como un cambio con fecha. Ninguna cuenta, dirección de correo electrónico, nota ni comentario está en un archivo, ni nada archivado o de un sitio de prueba.
+
+### En caso de emergencia
+
+- **Hay una página para quien tenga que hacerse cargo del sitio.** Si quien lleva el sitio no puede, porque está enfermo o ausente mucho tiempo, cualquiera que haya iniciado sesión puede abrir **In case of emergency** en la administración, decir quién es y por qué se hace cargo, y pulsar **Send**. Tras una confirmación, lo que dijo se envía por correo electrónico a las personas que conocen la contraseña de la nota con todo lo que el sitio necesita, y las respuestas van a quien lo envió. Una cuenta puede pedirlo una vez cada 48 horas y se le dice cuándo podrá pedirlo de nuevo. La página se abre con una advertencia de que no se use salvo que se haya enviado un correo electrónico al administrador y no haya respondido en 48 horas, y de que no se pruebe. En cuanto se envía el mensaje, la página lo dice y no pide nada más.
+
 ## Publicado el 2026-11-11
 
 - **El menú del teléfono se cierra al pulsar fuera de él.** El menú que se abre con el botón de la parte superior de una pantalla estrecha se cierra cuando pulsas en cualquier otro lugar de la página, además de cuando vuelves a pulsar el botón o sigues un enlace.

@@ -1,5 +1,17 @@
 # Hva er nytt for turneringsarrangører
 
+## Lansert 2026-11-15
+
+### Turneringen
+
+- **De to avmerkingene for et nasjonalt og et internasjonalt arrangement står i en boks under «Valgfritt».** På siden som oppretter eller endrer en turnering var **Arrangement på nasjonalt nivå** og **Arrangement på internasjonalt nivå** det eneste det ble spurt om under undertittelen, og noen tok dem for et valg som måtte gjøres. En turnering trenger ikke være noen av delene, og boksen sier det nå. Ordet er lagt til i hvert språk nettstedet finnes på, og oversettelsene som ikke er engelske, trenger et blikk fra en som har språket som morsmål.
+
+- **En turnering som bare ble laget som en test, kan administratoren arkivere, og du får beskjed.** Noen som lærer nettstedet, lager av og til en turnering på det virkelige nettstedet som alltid bare var en test. Administratoren kan nå arkivere den og sende e-post til arrangørene, med et prøvenettsted nevnt der de kan øve. Ingenting slettes, så en arkivert turnering kan gjenopprettes. Arrangører som har glemt kontoen sin, og poengførere, får ikke e-post.
+
+### Spillere
+
+- **Et dobbeltpar kan skrives med skråstrek, pluss eller det engelske ordet «and», ikke bare med &.** «Sam Someone / Alex Another» er samme par som «Sam Someone & Alex Another». Ordet «and» teller bare når det står alene, så et navn som «Sam Anderson» regnes ikke som et par. Der et par spiller i en sveitsisk eller en blokk, sies det «T. Murphy & A. Sharpe» i et sveitsisk resultat og «TM&AS» øverst i en blokktabell.
+
 ## Lansert 2026-11-11
 
 ### Turneringen

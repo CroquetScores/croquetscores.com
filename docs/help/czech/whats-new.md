@@ -1,5 +1,23 @@
 # Co je nového
 
+## Vydáno 2026-11-15
+
+- **Pár ve čtyřhře je ve vyhledávání jeden hráč, ať je jmenován jako první kterýkoli z obou hráčů.** „Sam Someone & Alex Another“ a „Alex Another & Sam Someone“ byly na stránce hráčů dva záznamy, stejně jako „Peter & Rosie Landrebe“ a „Rosie & Peter Landrebe“. Nyní jsou jeden, na jedné adrese, uvedený pod jménem, které napsal nejnovější turnaj.
+
+- **Pár ve čtyřhře lze zapsat také lomítkem, plusem nebo anglickým slovem „and“, nejen ampersandem.** „Sam Someone / Alex Another“, „Sam Someone + Alex Another“ i „Sam Someone and Alex Another“ se čtou jako pár. Slovo „and“ se počítá, jen když stojí samo, takže jméno jako „Sam Anderson“ se za pár nepovažuje.
+
+- **Pár se ve výsledcích švýcarského systému a v tabulkách bloků uvádí krátce.** Výsledek švýcarského systému uváděl první písmeno křestního jména prvního hráče a příjmení druhého. Nyní uvádí každého hráče, jako „T. Murphy & A. Sharpe“, a příjmení, které mají oba společné, se uvede jednou, jako „R. & P. Landrebe“. Sloupce tabulky bloku jsou nadepsány iniciálami každého hráče spojenými ampersandem, například „TM&AS“, nebo „RL&PL“ při společném příjmení.
+
+- **Guatemala je zařazena mezi země, kde se v poslední době nehrálo.** Dříve byla uváděna mezi zeměmi, ve kterých se turnaje hrály od roku 2025.
+
+- **Web počítá, kolik čtenářů přichází a které stránky čtou.** Používá k tomu webovou analytiku Cloudflare na každé stránce, kterou čtenáři vidí. Stránky, ve kterých pracují organizátoři, se nepočítají. Nepoužívá cookies a uživatele neidentifikuje jinak než podle jeho IP adresy.
+
+- **Turnaje jsou zveřejňovány jako soubory, které může používat kdokoli.** Každý veřejný turnaj, v kroketu i v gateballu, se zapisuje do vlastního souboru, s jeho hráči a soutěžemi, nebo s týmy a testy tam, kde se hraje v týmech, včetně odstoupených her, které jsou označeny jako odstoupené. Jsou uloženy v repozitáři Git `CroquetScores/data.croquetscores.com`, který se aktualizuje každou hodinu, takže můžete výsledky řadit nebo z nich něco stavět a oprava se ukáže jako změna s datem. V souboru není žádný účet, e-mailová adresa, poznámka ani komentář, a také nic archivovaného ani z webu určeného k vyzkoušení.
+
+### Pro případ nouze
+
+- **Existuje stránka pro někoho, kdo musí web převzít.** Pokud ten, kdo web provozuje, nemůže, protože je nemocný nebo dlouho pryč, může kdokoli přihlášený otevřít v administraci **In case of emergency**, napsat, kdo je a proč web přebírá, a stisknout **Send**. Po potvrzení se to, co napsal, pošle e-mailem lidem, kteří znají heslo k poznámce se vším, co web potřebuje, a odpovědi chodí odesílateli. Účet může požádat jednou za 48 hodin a je mu řečeno, kdy může požádat znovu. Stránka začíná varováním, aby se nepoužívala, pokud administrátor nebyl e-mailem zpraven a neodpověděl do 48 hodin, a aby se netestovala. Jakmile je zpráva odeslána, stránka to oznámí a nežádá nic dalšího.
+
 ## Vydáno 2026-11-11
 
 - **Menu na telefonu se zavře stisknutím mimo něj.** Menu za tlačítkem v horní části úzké obrazovky se zavře, když stisknete kdekoli jinde na stránce, stejně jako když znovu stisknete tlačítko nebo otevřete odkaz.

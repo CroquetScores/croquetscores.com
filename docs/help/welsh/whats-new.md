@@ -1,5 +1,23 @@
 # Beth sy'n newydd
 
+## Rhyddhawyd 2026-11-15
+
+- **Mae pâr dyblau yn un chwaraewr yn y chwilio, pa un bynnag o'i ddau chwaraewr a enwir gyntaf.** Roedd "Sam Someone & Alex Another" ac "Alex Another & Sam Someone" yn ddau gofnod ar dudalen y chwaraewyr, felly hefyd "Peter & Rosie Landrebe" a "Rosie & Peter Landrebe". Nawr maen nhw'n un, ar un cyfeiriad, wedi'i restru dan yr enw a ysgrifennodd y twrnamaint diweddaraf.
+
+- **Gellir ysgrifennu pâr dyblau â blaenslaes, â phlws neu â'r gair Saesneg "and", yn ogystal ag ampersand.** Mae "Sam Someone / Alex Another", "Sam Someone + Alex Another" a "Sam Someone and Alex Another" i gyd yn cael eu darllen fel pâr. Dim ond pan fydd ar ei ben ei hun y mae'r gair "and" yn cyfrif, felly ni chymerir enw fel "Sam Anderson" am bâr.
+
+- **Dywedir pâr yn fyr mewn canlyniadau Swisaidd a gridiau blociau.** Roedd canlyniad Swisaidd yn rhoi llythyren gyntaf enw cyntaf y chwaraewr cyntaf ac enw olaf yr ail. Nawr mae'n dweud pob chwaraewr, fel "T. Murphy & A. Sharpe", a dywedir enw olaf y mae'r ddau yn ei rannu unwaith, fel "R. & P. Landrebe". Mae colofnau grid bloc wedi'u pennawdu gan lythrennau cyntaf pob chwaraewr wedi'u huno ag ampersand, fel "TM&AS", neu "RL&PL" ar gyfer enw olaf a rennir.
+
+- **Rhestrir Guatemala gyda'r gwledydd lle nad oes neb wedi chwarae yn ddiweddar.** Fe'i rhestrwyd o'r blaen gyda'r gwledydd lle chwaraewyd twrnameintiau ers 2025.
+
+- **Mae'r wefan yn cyfrif faint o ddarllenwyr sy'n dod a pha dudalennau maen nhw'n eu darllen.** Mae'n gwneud hynny gyda dadansoddeg gwe Cloudflare, ar bob tudalen y mae darllenwyr yn ei gweld. Ni chyfrifir y tudalennau y mae rheolwyr yn gweithio ynddynt. Nid yw'n defnyddio cwcis ac nid yw'n adnabod y defnyddiwr mewn unrhyw ffordd heblaw trwy ei gyfeiriad IP.
+
+- **Cyhoeddir y twrnameintiau fel ffeiliau y gall unrhyw un eu defnyddio.** Ysgrifennir pob twrnamaint cyhoeddus, o groce ac o gateball, fel ffeil ei hun, gyda'i chwaraewyr a'i gystadlaethau, neu ei dimau a'i brofion lle caiff ei chwarae gan dimau, gyda gemau a dynnwyd yn ôl wedi'u cynnwys ac wedi'u dweud eu bod wedi'u tynnu'n ôl. Cânt eu cadw mewn storfa Git, `CroquetScores/data.croquetscores.com`, a ddiweddarir bob awr, fel y gallwch restru'r canlyniadau neu adeiladu rhywbeth ohonynt, ac mae cywiriad yn ymddangos fel newid â dyddiad arno. Nid oes cyfrif, cyfeiriad e-bost, nodyn na sylw mewn ffeil, na dim sydd wedi'i archifo neu o wefan arbrofi.
+
+### Mewn argyfwng
+
+- **Mae tudalen i rywun y mae'n rhaid iddo gymryd y wefan drosodd.** Os na all yr un sy'n rhedeg y wefan, am ei fod yn sâl neu i ffwrdd am amser hir, gall unrhyw un sydd wedi mewngofnodi agor **In case of emergency** yn y gweinyddu, dweud pwy ydyw a pham ei fod yn ei chymryd drosodd, a phwyso **Send**. Ar ôl cadarnhad, anfonir yr hyn a ddywedodd trwy e-bost at y bobl sy'n gwybod cyfrinair y nodyn â phopeth y mae ei angen ar y wefan, ac mae atebion yn mynd at yr anfonwr. Gall cyfrif ofyn unwaith mewn 48 awr, a dywedir wrtho pryd y gall ofyn eto. Mae'r dudalen yn agor â rhybudd i beidio â'i defnyddio oni bai bod y gweinyddwr wedi cael e-bost ac heb ateb o fewn 48 awr, ac i beidio â'i phrofi. Unwaith y caiff y neges ei hanfon, mae'r dudalen yn dweud hynny ac nid yw'n gofyn dim mwy.
+
 ## Rhyddhawyd 2026-11-11
 
 - **Caiff y ddewislen ar ffôn ei rhoi o'r neilltu trwy wasgu y tu allan iddi.** Mae'r ddewislen y tu ôl i'r botwm ar frig sgrin gul yn cau pan wasgwch unrhyw le arall ar y dudalen, yn ogystal â phan wasgwch y botwm eto neu ddilyn dolen.
