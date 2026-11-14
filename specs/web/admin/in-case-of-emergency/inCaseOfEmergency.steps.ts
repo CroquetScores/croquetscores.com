@@ -7,9 +7,11 @@ import type { Locator } from "playwright";
 
 import type { SpecWorld } from "../../../support/world.js";
 import {
+  anApplicationWhoseAdministratorIsCalled,
   anApplicationWithEmergencyContacts,
   applicationFor,
 } from "../../support/browser.js";
+import { clockFor } from "../../support/clock.js";
 import { unmarked } from "../../support/languages.js";
 
 // The pages this feature names, by what a reader would call them.
@@ -74,6 +76,66 @@ When(
   },
 );
 
+Given(
+  "the administrator is called {string} at {string}",
+  async function (this: SpecWorld, name: string, emailAddress: string) {
+    this.baseUrl = await anApplicationWhoseAdministratorIsCalled(
+      this,
+      name,
+      emailAddress,
+    );
+  },
+);
+
+const boxOf = (world: SpecWorld): Locator =>
+  world.browserPage.locator("label:has(input[type=checkbox])");
+
+Then(
+  "the box {string} is on the page",
+  async function (this: SpecWorld, words: string) {
+    await boxOf(this).waitFor();
+    assert.equal(unmarked((await boxOf(this).innerText()).trim()), words);
+  },
+);
+
+Then(
+  "the name in the box links to {string}",
+  async function (this: SpecWorld, address: string) {
+    const link = boxOf(this).locator("a");
+    await link.waitFor();
+    assert.equal(await link.getAttribute("href"), address);
+  },
+);
+
+Then("the box is not ticked", async function (this: SpecWorld) {
+  await boxOf(this).waitFor();
+  assert.equal(await boxOf(this).locator("input").isChecked(), false);
+});
+
+Given("the box is ticked", async function (this: SpecWorld) {
+  await boxOf(this).locator("input").check();
+});
+
+Then(
+  "the warning {string} is on the page",
+  async function (this: SpecWorld, warning: string) {
+    const shown = this.browserPage.locator(".emergency-warning");
+    await shown.waitFor();
+    assert.equal(unmarked((await shown.innerText()).trim()), warning);
+  },
+);
+
+Then(
+  "the warning is above everything else on the page",
+  async function (this: SpecWorld) {
+    const shown = this.browserPage.locator(".emergency-warning");
+    await shown.waitFor();
+    // The page is a stack of what it holds, top to bottom, and the warning is
+    // the first of them.
+    assert.equal(await shown.locator("xpath=preceding-sibling::*").count(), 0);
+  },
+);
+
 Then(
   "the question {string} is on the page",
   async function (this: SpecWorld, question: string) {
@@ -90,6 +152,52 @@ Then(
     assert.equal(unmarked((await sendButtonOf(this).innerText()).trim()), name);
   },
 );
+
+// What a second tab is: a page opened before the first asking was sent, which
+// was told they could ask. The site would say otherwise now, so it is made to
+// say what it said then.
+Given("the page is told they may ask now", async function (this: SpecWorld) {
+  await this.browserPage.route("**/api/site/emergency-access", (route) =>
+    route.request().method() === "GET"
+      ? route.fulfill({ json: { waitUntil: null } })
+      : route.continue(),
+  );
+});
+
+Then("the page tells them loudly to wait", async function (this: SpecWorld) {
+  const wait = this.browserPage.locator("[data-wait]");
+  await wait.waitFor();
+  assert.match(
+    unmarked((await wait.innerText()).trim()),
+    /^YOU HAVE ALREADY ASKED\. YOU MUST WAIT UNTIL .+ BEFORE YOU CAN ASK AGAIN\.$/,
+  );
+});
+
+Then(
+  "the moment they must wait until is 48 hours from now",
+  async function (this: SpecWorld) {
+    const wait = this.browserPage.locator("[data-wait] time");
+    await wait.waitFor();
+    const until = Date.parse((await wait.getAttribute("datetime")) ?? "");
+    const hours = (until - clockFor(this).now.getTime()) / (60 * 60 * 1000);
+    assert.ok(hours > 47 && hours <= 48, `${hours} hours from now.`);
+  },
+);
+
+Then(
+  "the page has no question and no button to send",
+  async function (this: SpecWorld) {
+    await this.browserPage.locator("[data-wait]").waitFor();
+    assert.equal(await this.browserPage.locator(".field label").count(), 0);
+    assert.equal(await sendButtonOf(this).count(), 0);
+  },
+);
+
+Then("the page does not tell them to wait", async function (this: SpecWorld) {
+  // Waited for the form, which is drawn once the site has said they may ask.
+  await sendButtonOf(this).waitFor();
+  assert.equal(await this.browserPage.locator("[data-wait]").count(), 0);
+});
 
 Then("the question is no longer on the page", async function (this: SpecWorld) {
   await this.browserPage.locator("[data-sent]").waitFor();
@@ -123,6 +231,16 @@ const pressSend = async function (
 };
 
 When("the button {string} is pressed", pressSend);
+
+// Nothing opens, so what is waited for is the page saying why.
+When(
+  "the button {string} is pressed with the box not ticked",
+  async function (this: SpecWorld, name: string) {
+    assert.equal(unmarked((await sendButtonOf(this).innerText()).trim()), name);
+    await sendButtonOf(this).click();
+    await this.browserPage.locator(".page-refused").waitFor();
+  },
+);
 
 Then("a dialog asks whether to send", async function (this: SpecWorld) {
   await dialogOf(this).waitFor();

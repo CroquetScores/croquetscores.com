@@ -21,6 +21,51 @@ const refusalWords = (code: string): Refusal => ({
   words: say(knows(code) ? code : "admin.emergency.otherwise"),
 });
 
+// What is read from the page is not taken as a link until it looks like one
+// address: the words are text in the page, and a link made of text that was
+// not checked could be made to go somewhere other than a mail to the
+// administrator. What does not is left as a link to nothing.
+const plainAddress = /^[^\s@<>"'`,;:?&#%]+@[^\s@<>"'`,;:?&#%/\\]+$/;
+const mailtoOf = (address: string): string | undefined =>
+  plainAddress.test(address) ? `mailto:${encodeURI(address)}` : undefined;
+
+// The sentence with the administrator's name where the language put it, drawn
+// as a link to email them: where in a sentence a name falls is for the
+// language to say.
+const emailedWords = (): React.ReactNode => {
+  const [before = "", ...rest] = say("admin.emergency.emailed").split(
+    "{administrator}",
+  );
+  return (
+    <>
+      {before}
+      <a href={mailtoOf(say("admin.administrator.emailAddress"))}>
+        {say("admin.administrator.name")}
+      </a>
+      {rest.join("{administrator}")}
+    </>
+  );
+};
+
+// The words for having to wait, with the moment where the language put it.
+const waitWords = (until: string): React.ReactNode => {
+  const [before = "", ...rest] = say("admin.emergency.wait").split("{when}");
+  return (
+    <>
+      {before}
+      <time dateTime={until}>
+        {new Date(until).toLocaleString(undefined, {
+          dateStyle: "full",
+          // The long time style names the zone, since a time with no zone
+          // means something else to a reader in another one.
+          timeStyle: "long",
+        })}
+      </time>
+      {rest.join("{when}")}
+    </>
+  );
+};
+
 export const InCaseOfEmergency = (): React.JSX.Element => {
   const [message, setMessage] = useState("");
   // Pressing Send only asks again: nothing is sent until the dialog is
@@ -29,6 +74,34 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [refused, setRefused] = useState<string | undefined>();
+  // Said by whoever asks, and not by the site: the box is ticked to say they
+  // have emailed the administrator and waited.
+  // When the account may ask again: undefined until the site has said, then
+  // null where it may ask now.
+  const [waitUntil, setWaitUntil] = useState<string | null | undefined>();
+  useEffect(() => {
+    // Not set once the page has gone, which it can before the site answers.
+    let leaving = false;
+    void fetch("/api/site/emergency-access", {
+      headers: { accept: "application/json" },
+    })
+      .then(async (response) =>
+        response.ok
+          ? ((await response.json()) as { waitUntil: string | null }).waitUntil
+          : null,
+      )
+      // Where it cannot be said, the form is shown and the site refuses what
+      // it must when it is sent.
+      .catch(() => null)
+      .then((until) => {
+        if (!leaving) setWaitUntil(until);
+      });
+    return () => {
+      leaving = true;
+    };
+  }, []);
+  const [emailed, setEmailed] = useState(false);
+  const [unticked, setUnticked] = useState(false);
 
   // The button that was pressed is gone once the message is sent, so focus is
   // given to the notice, and a screen reader is told it by its role.
@@ -75,6 +148,9 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
 
   return (
     <div className="stack">
+      <p className="emergency-warning" role="alert">
+        {say("admin.emergency.warning")}
+      </p>
       <h1>{say("admin.emergency.title")}</h1>
       <p>{say("admin.emergency.explanation")}</p>
       {sent ? (
@@ -88,18 +164,32 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
           {say("admin.emergency.sent")}
         </p>
       ) : null}
+      {unticked && !sent ? (
+        <p className="page-refused" data-refused="NotEmailed">
+          {say("admin.emergency.notEmailed")}
+        </p>
+      ) : null}
       {aboutPage === undefined ? null : (
         <p className="page-refused" data-refused={aboutPage}>
           {refusalWords(aboutPage).words}
         </p>
       )}
-      {sent ? null : (
+      {!sent && typeof waitUntil === "string" ? (
+        <p className="emergency-warning" role="alert" data-wait={waitUntil}>
+          {waitWords(waitUntil)}
+        </p>
+      ) : null}
+      {sent || waitUntil !== null ? null : (
         <form
           className="stack"
           noValidate
           onSubmit={(event) => {
             event.preventDefault();
             setRefused(undefined);
+            if (!emailed) {
+              setUnticked(true);
+              return;
+            }
             setAsking(true);
           }}
         >
@@ -121,6 +211,17 @@ export const InCaseOfEmergency = (): React.JSX.Element => {
               />
             )}
           </Field>
+          <label className="emergency-emailed">
+            <input
+              type="checkbox"
+              checked={emailed}
+              onChange={(event) => {
+                setEmailed(event.target.checked);
+                setUnticked(false);
+              }}
+            />
+            <span>{emailedWords()}</span>
+          </label>
           <div className="dialog-buttons">
             <button
               className="button button-submit"

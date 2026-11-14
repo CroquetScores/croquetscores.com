@@ -24,7 +24,9 @@ import type {
   Profile,
 } from "../../src/application/operations/accounts/AccountProfile.js";
 import type { ReportUnreachableService } from "../../src/application/operations/accounts/ReportUnreachableService.js";
+import type { ReadOnlyDate } from "../../src/domain/common/ReadOnlyDate.js";
 import type { AskForEmergencyAccess } from "../../src/application/operations/emergency/AskForEmergencyAccess.js";
+import type { WhenEmergencyAccessMayBeAskedAgain } from "../../src/application/operations/emergency/WhenEmergencyAccessMayBeAskedAgain.js";
 import type { SetNewPassword } from "../../src/application/operations/accounts/SetNewPassword.js";
 import type { ResetPassword } from "../../src/application/operations/accounts/ResetPassword.js";
 import type { SendConfirmationLinkAgain } from "../../src/application/operations/accounts/SendConfirmationLinkAgain.js";
@@ -141,6 +143,11 @@ export interface Registering {
 
   /** Asks for emergency access. Throws what the mediator throws. */
   askForEmergencyAccess(command: AskForEmergencyAccess): Promise<void>;
+
+  /** When the account may ask again, or nothing where it may ask now. */
+  whenEmergencyAccessMayBeAskedAgain(
+    query: WhenEmergencyAccessMayBeAskedAgain,
+  ): Promise<ReadOnlyDate | undefined>;
 
   /** Reports a service unreachable. Throws what the mediator throws. */
   report(command: ReportUnreachableService): Promise<void>;

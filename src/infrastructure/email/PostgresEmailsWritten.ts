@@ -4,7 +4,7 @@
 // waiting.
 import type { EmailsWritten } from "../../application/services/EmailsWritten.js";
 import type { WrittenTo } from "../../application/services/EmailsWritten.js";
-import type { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
+import { ReadOnlyDate } from "../../domain/common/ReadOnlyDate.js";
 import type { UnitOfWork } from "../database/UnitOfWork.js";
 
 // One column holds both kinds, so what is in it says which it is: an account
@@ -51,5 +51,20 @@ export class PostgresEmailsWritten implements EmailsWritten {
     // Postgres counts in bigint, which comes back as text so that a count
     // larger than a number can hold is not quietly rounded on the way.
     return Number(rows[0]?.written ?? 0);
+  }
+
+  async latestAt(whom: WrittenTo): Promise<ReadOnlyDate | undefined> {
+    const { rows } = await this.unitOfWork
+      .connection()
+      .query<{ latest: Date | null }>(
+        `select max(written_at) as latest
+           from emails_written
+          where written_to = $1`,
+        [named(whom)],
+      );
+    const latest = rows[0]?.latest;
+    return latest === null || latest === undefined
+      ? undefined
+      : ReadOnlyDate.from(latest);
   }
 }

@@ -48,4 +48,11 @@ export interface EmailsWritten {
    * account never waits on another.
    */
   countSince(whom: WrittenTo, since: ReadOnlyDate): Promise<number>;
+
+  /**
+   * When `whom` was last written to, or nothing if they never were. Not held:
+   * it only tells, and nothing is decided on it that a count has not also
+   * decided.
+   */
+  latestAt(whom: WrittenTo): Promise<ReadOnlyDate | undefined>;
 }
