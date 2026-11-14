@@ -1,0 +1,53 @@
+name: Browser scenarios
+
+# Every @browser scenario, each Australian night and when asked. A pull request runs only
+# those in the feature files it changed (ci.yml), because all of them take
+# about an hour and a half of runner time. This is what catches a change that
+# breaks a page without touching the feature that describes it, a day later
+# rather than never.
+#
+# GitHub runs a schedule only from the default branch, so this is main as it
+# stands, and a failure is mailed to whoever last changed this file.
+on:
+  schedule:
+    # Quarter past nine in the evening in Sydney, which is 10:15 UTC while
+    # daylight saving is in force there (AEDT, UTC+11): after a day's merges,
+    # and at an hour when nobody is waiting on a runner. GitHub reads a
+    # schedule as UTC and knows nothing of daylight saving, so from the first
+    # Sunday in April, when Sydney is on UTC+10, this is quarter past eight.
+    - cron: "15 10 * * *"
+  # From the Actions page or `gh workflow run browser.yml`, on whichever branch
+  # is chosen, for a change that wants all of them before it is merged.
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+
+    # A run that hangs would hold a runner for GitHub's default six hours. The
+    # whole suite takes about an hour and a half on a runner of two cores, in
+    # one job and not in shards: nobody is waiting on it at this hour, and
+    # every shard would repeat the install of Chromium and the database.
+    timeout-minutes: 150
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22.13.0
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run db:up
+
+      - run: npm run test:browser -- --parallel 2
+
+      - if: always()
+        run: npm run db:down
