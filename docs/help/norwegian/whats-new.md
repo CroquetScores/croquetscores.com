@@ -1,5 +1,23 @@
 # Hva som er nytt
 
+## Utgitt 2026-11-15
+
+- **Et dobbeltpar er én spiller i søket, uansett hvem av de to spillerne som er nevnt først.** «Sam Someone & Alex Another» og «Alex Another & Sam Someone» var to oppføringer på spillersiden, og det samme var «Peter & Rosie Landrebe» og «Rosie & Peter Landrebe». Nå er de én, på én adresse, oppført med navnet den siste turneringen skrev.
+
+- **Et dobbeltpar kan skrives med skråstrek, pluss eller det engelske ordet «and», ikke bare med &.** «Sam Someone / Alex Another», «Sam Someone + Alex Another» og «Sam Someone and Alex Another» leses alle som et par. Ordet «and» teller bare når det står alene, så et navn som «Sam Anderson» regnes ikke som et par.
+
+- **Et par sies kort i resultater fra sveitsisk og i blokktabeller.** Et sveitsisk resultat ga forbokstaven i fornavnet til den første spilleren og etternavnet til den andre. Nå sier det hver spiller, som «T. Murphy & A. Sharpe», og et etternavn som begge deler, sies én gang, som «R. & P. Landrebe». Kolonnene i en blokktabell har som overskrift initialene til hver spiller bundet sammen med &, for eksempel «TM&AS», eller «RL&PL» for et felles etternavn.
+
+- **Guatemala står sammen med landene der ingen har spilt i det siste.** Det sto før sammen med landene der det er spilt turneringer siden 2025.
+
+- **Nettstedet teller hvor mange lesere som kommer og hvilke sider de leser.** Det bruker Cloudflares nettanalyse, på hver side leserne ser. Sidene arrangørene jobber på, telles ikke. Det bruker ingen informasjonskapsler og identifiserer ikke brukeren på annen måte enn med IP-adressen.
+
+- **Turneringene publiseres som filer som hvem som helst kan bruke.** Hver offentlig turnering, i både krokket og gateball, skrives som en egen fil, med spillerne og konkurransene sine, eller lagene og testene sine der den spilles av lag, med trukne partier tatt med og sagt å være trukket. De ligger i et Git-arkiv, `CroquetScores/data.croquetscores.com`, som oppdateres hver time, slik at du kan rangere resultatene eller bygge noe av dem, og en rettelse vises som en endring med dato. Ingen konto, e-postadresse, notat eller kommentar står i en fil, og heller ikke noe som er arkivert eller kommer fra et prøvenettsted.
+
+### I en nødssituasjon
+
+- **Det finnes en side for den som må ta over nettstedet.** Hvis den som driver nettstedet ikke kan, fordi vedkommende er syk eller borte lenge, kan hvem som helst som er logget inn åpne **In case of emergency** i admin, si hvem de er og hvorfor de tar over, og trykke **Send**. Etter en bekreftelse sendes det de sa som e-post til menneskene som har passordet til notatet med alt nettstedet trenger, og svar går til avsenderen. En konto kan spørre én gang per 48 timer, og får vite når den kan spørre igjen. Siden åpner med en advarsel om ikke å bruke den med mindre administratoren har fått e-post og ikke har svart innen 48 timer, og om ikke å teste den. Når meldingen er sendt, sier siden det og spør ikke om mer.
+
 ## Utgitt 2026-11-11
 
 - **Menyen på en mobil lukkes når du trykker utenfor den.** Menyen bak «Meny»-knappen øverst på en smal skjerm lukkes når du trykker et annet sted på siden, i tillegg til når du trykker på knappen igjen eller følger en lenke.

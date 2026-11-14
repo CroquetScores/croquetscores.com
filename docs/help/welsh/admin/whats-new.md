@@ -1,5 +1,17 @@
 # Beth sy'n newydd i Reolwyr Twrnameintiau
 
+## Rhyddhawyd 2026-11-15
+
+### Y twrnamaint
+
+- **Mae'r ddau dic ar gyfer digwyddiad cenedlaethol a rhyngwladol mewn blwch dan "Dewisol".** Ar y dudalen sy'n creu neu'n newid twrnamaint, **Digwyddiad lefel genedlaethol** a **Digwyddiad lefel ryngwladol** oedd yr unig bethau y gofynnwyd amdanynt dan yr is-deitl, a chymerodd rhai nhw am ddewis yr oedd yn rhaid ei wneud. Nid oes angen i dwrnamaint fod yn un o'r ddau, ac mae'r blwch yn dweud hynny nawr. Ychwanegwyd y gair at bob iaith ar y wefan, ac mae'r cyfieithiadau heblaw'r Saesneg angen llygad siaradwr brodorol.
+
+- **Gall y gweinyddwr archifo twrnamaint a wnaed yn unig fel prawf, ac mae'n dweud wrthych.** Weithiau bydd rhywun sy'n dysgu'r wefan yn gwneud twrnamaint ar y wefan go iawn a oedd bob amser yn brawf yn unig. Gall y gweinyddwr nawr ei archifo ac anfon e-bost at ei reolwyr, gan enwi gwefan arbrofi i ymarfer arni. Ni chaiff dim ei ddileu, felly gellir adfer twrnamaint wedi'i archifo. Ni anfonir e-bost at reolwyr sydd wedi anghofio eu cyfrifon, na sgorwyr.
+
+### Chwaraewyr
+
+- **Gellir ysgrifennu pâr dyblau â blaenslaes, â phlws neu â'r gair Saesneg "and", yn ogystal ag ampersand.** Mae "Sam Someone / Alex Another" yr un pâr â "Sam Someone & Alex Another". Dim ond pan fydd ar ei ben ei hun y mae'r gair "and" yn cyfrif, felly ni chymerir enw fel "Sam Anderson" am bâr. Lle mae pâr yn chwarae mewn Swisaidd neu mewn bloc, dywedir "T. Murphy & A. Sharpe" mewn canlyniad Swisaidd a "TM&AS" ar frig grid bloc.
+
 ## Rhyddhawyd 2026-11-11
 
 ### Y twrnamaint

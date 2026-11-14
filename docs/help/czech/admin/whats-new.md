@@ -1,5 +1,17 @@
 # Novinky pro organizátory turnajů
 
+## Vydáno 2026-11-15
+
+### Turnaj
+
+- **Dvě zaškrtávací políčka pro národní a mezinárodní akci jsou uzavřena do rámečku „Nepovinné“.** Na stránce, která turnaj vytváří nebo mění, byly **Akce na národní úrovni** a **Akce na mezinárodní úrovni** jediné, na co se pod podtitulkem ptalo, a někteří je považovali za volbu, kterou je nutné udělat. Turnaj nemusí být ani jedním, a rámeček to nyní říká. Slovo bylo přidáno do všech jazyků webu a překlady jiné než anglický by potřebovaly oko rodilého mluvčího.
+
+- **Turnaj vytvořený jen jako test může administrátor archivovat a dá vám vědět.** Kdo se web učí, někdy vytvoří na skutečném webu turnaj, který byl vždy jen zkouškou. Administrátor jej nyní může archivovat a poslat e-mail jeho organizátorům, s uvedením webu určeného k vyzkoušení, kde si mohou zkoušet. Nic se nemaže, takže archivovaný turnaj lze obnovit. Organizátoři, kteří zapomněli své účty, a zapisovatelé e-mail nedostanou.
+
+### Hráči
+
+- **Pár ve čtyřhře lze zapsat také lomítkem, plusem nebo anglickým slovem „and“, nejen ampersandem.** „Sam Someone / Alex Another“ je stejný pár jako „Sam Someone & Alex Another“. Slovo „and“ se počítá, jen když stojí samo, takže jméno jako „Sam Anderson“ se za pár nepovažuje. Kde se pár hraje ve švýcarském systému nebo v bloku, uvádí se ve výsledku švýcarského systému jako „T. Murphy & A. Sharpe“ a v záhlaví tabulky bloku jako „TM&AS“.
+
 ## Vydáno 2026-11-11
 
 ### Turnaj

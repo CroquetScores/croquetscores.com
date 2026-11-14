@@ -1,5 +1,23 @@
 # Novidades
 
+## Lançado em 2026-11-15
+
+- **Uma dupla é um único jogador na busca, seja qual for dos dois jogadores o primeiro citado.** "Sam Someone & Alex Another" e "Alex Another & Sam Someone" eram dois registros na página de jogadores, assim como "Peter & Rosie Landrebe" e "Rosie & Peter Landrebe". Agora são um só, em um só endereço, listado com o nome que o torneio mais recente escreveu.
+
+- **Uma dupla pode ser escrita com barra, com sinal de mais ou com a palavra inglesa "and", e não só com o "&".** "Sam Someone / Alex Another", "Sam Someone + Alex Another" e "Sam Someone and Alex Another" são todos lidos como uma dupla. A palavra "and" só conta quando está sozinha, então um nome como "Sam Anderson" não é tomado por uma dupla.
+
+- **Uma dupla é dita de forma curta nos resultados do suíço e nas tabelas dos grupos.** Um resultado do suíço dava a inicial do nome do primeiro jogador e o sobrenome do segundo. Agora diz cada jogador, como "T. Murphy & A. Sharpe", e um sobrenome que os dois compartilham é dito uma vez, como "R. & P. Landrebe". As colunas da tabela de um grupo têm como título as iniciais de cada jogador unidas por "&", como "TM&AS", ou "RL&PL" quando o sobrenome é comum.
+
+- **A Guatemala está listada com os países onde ninguém jogou recentemente.** Antes aparecia com os países onde houve torneios desde 2025.
+
+- **O site conta quantos leitores chegam e quais páginas leem.** Faz isso com a análise da web da Cloudflare, em todas as páginas que os leitores veem. As páginas em que os organizadores trabalham não são contadas. Não usa cookies e não identifica o usuário de nenhuma outra forma além do endereço IP.
+
+- **Os torneios são publicados como arquivos que qualquer pessoa pode usar.** Todo torneio público, de croquet e de gateball, é escrito em um arquivo próprio, com seus jogadores e competições, ou suas equipes e testes onde é jogado por equipes, com as partidas desistidas incluídas e ditas como desistidas. Ficam em um repositório Git, `CroquetScores/data.croquetscores.com`, atualizado a cada hora, para que você possa classificar os resultados ou construir algo com eles, e uma correção apareça como uma mudança com data. Nenhuma conta, endereço de e-mail, nota ou comentário está em um arquivo, nem nada arquivado ou de um site de teste.
+
+### Em caso de emergência
+
+- **Há uma página para quem precisa assumir o site.** Se quem cuida do site não puder, por estar doente ou longe por muito tempo, qualquer pessoa conectada pode abrir **In case of emergency** na administração, dizer quem é e por que está assumindo, e apertar **Send**. Depois de uma confirmação, o que ela disse é enviado por e-mail às pessoas que sabem a senha da nota com tudo de que o site precisa, e as respostas vão para quem enviou. Uma conta pode pedir uma vez a cada 48 horas e é informada de quando poderá pedir de novo. A página abre com um aviso para não usá-la a menos que o administrador tenha recebido um e-mail e não tenha respondido em 48 horas, e para não testá-la. Assim que a mensagem é enviada, a página diz isso e não pede mais nada.
+
 ## Lançado em 2026-11-11
 
 - **O menu no celular se fecha ao tocar fora dele.** O menu do botão Menu, no alto de uma tela estreita, se fecha quando você toca em qualquer outro ponto da página, além de quando você toca de novo no botão ou segue um link.

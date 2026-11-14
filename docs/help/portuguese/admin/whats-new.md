@@ -1,5 +1,17 @@
 # Novidades para organizadores de torneios
 
+## Lançado em 2026-11-15
+
+### O torneio
+
+- **As duas marcas de evento nacional e internacional ficam em uma caixa sob "Opcional".** Na página que cria ou altera um torneio, **Evento de nível nacional** e **Evento de nível internacional** eram as únicas coisas perguntadas abaixo do subtítulo, e algumas pessoas as tomaram por uma escolha que precisava ser feita. Um torneio não precisa ser nenhum dos dois, e a caixa agora diz isso. A palavra foi acrescentada em todos os idiomas do site, e as traduções que não são em inglês pedem o olhar de um falante nativo.
+
+- **Um torneio feito apenas como teste pode ser arquivado pelo administrador, que avisa você.** Quem está aprendendo o site às vezes cria no site de verdade um torneio que sempre foi só um teste. O administrador agora pode arquivá-lo e enviar um e-mail aos organizadores, citando um site de teste para praticarem. Nada é apagado, então um torneio arquivado pode ser restaurado. Organizadores que esqueceram suas contas e anotadores não recebem e-mail.
+
+### Jogadores
+
+- **Uma dupla pode ser escrita com barra, com sinal de mais ou com a palavra inglesa "and", e não só com o "&".** "Sam Someone / Alex Another" é a mesma dupla que "Sam Someone & Alex Another". A palavra "and" só conta quando está sozinha, então um nome como "Sam Anderson" não é tomado por uma dupla. Onde uma dupla joga em um suíço ou em um grupo, ela é dita "T. Murphy & A. Sharpe" em um resultado do suíço e "TM&AS" no alto da tabela de um grupo.
+
 ## Lançado em 2026-11-11
 
 ### O torneio

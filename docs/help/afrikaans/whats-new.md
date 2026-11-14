@@ -1,5 +1,23 @@
 # Wat is nuut
 
+## Vrygestel 2026-11-15
+
+- **'n Dubbelspelpaar is een speler in die soektog, ongeag watter van sy twee spelers eerste genoem word.** "Sam Someone & Alex Another" en "Alex Another & Sam Someone" was twee inskrywings op die spelersbladsy, net soos "Peter & Rosie Landrebe" en "Rosie & Peter Landrebe". Hulle is nou een, by een adres, gelys onder die naam wat die jongste toernooi geskryf het.
+
+- **'n Dubbelspelpaar kan ook met 'n skuinsstreep, 'n plusteken of die Engelse woord "and" geskryf word, nie net met 'n ampersand nie.** "Sam Someone / Alex Another", "Sam Someone + Alex Another" en "Sam Someone and Alex Another" word almal as 'n paar gelees. Die woord "and" tel net as dit alleen staan, so 'n naam soos "Sam Anderson" word nie vir 'n paar aangesien nie.
+
+- **'n Paar word kort gesê in Switsers-uitslae en blokroosters.** 'n Switsers-uitslag het die eerste voorletter van die eerste speler en die van van die tweede gegee. Dit sê nou elke speler, as "T. Murphy & A. Sharpe", en 'n van wat albei deel, word een keer gesê, as "R. & P. Landrebe". Die kolomme van 'n blokrooster het as opskrif elke speler se voorletters met 'n ampersand verbind, soos "TM&AS", of "RL&PL" vir 'n gedeelde van.
+
+- **Guatemala word gelys by die lande waarin niemand onlangs gespeel het nie.** Dit is vroeër geplaas by die lande waarin toernooie sedert 2025 gespeel is.
+
+- **Die webwerf tel hoeveel lesers kom en watter bladsye hulle lees.** Dit gebruik Cloudflare se webanalise, op elke bladsy wat lesers sien. Die bladsye waarin bestuurders werk, word nie getel nie. Dit gebruik geen koekies nie en identifiseer die gebruiker op geen ander manier as deur hul IP-adres nie.
+
+- **Die toernooie word as lêers gepubliseer wat enigiemand kan gebruik.** Elke openbare toernooi, van croquet en van gateball, word as 'n eie lêer geskryf, met sy spelers en kompetisies, of sy spanne en toetse waar dit deur spanne gespeel word, met onttrekte spelle ingesluit en as onttrek aangedui. Hulle word in 'n Git-bewaarplek, `CroquetScores/data.croquetscores.com`, gehou wat elke uur bygewerk word, sodat jy die uitslae kan rangskik of iets daarmee kan bou, en 'n regstelling as 'n verandering met 'n datum daarop wys. Geen rekening, e-posadres, nota of opmerking is in 'n lêer nie, en ook niks wat geargiveer is of van 'n probeerwebwerf kom nie.
+
+### In geval van 'n noodgeval
+
+- **Daar is 'n bladsy vir iemand wat die webwerf moet oorneem.** As die persoon wat die webwerf bestuur nie kan nie, omdat hy of sy siek of vir 'n lang tyd weg is, kan enigeen wat ingeteken het **In case of emergency** in die admin oopmaak, sê wie hulle is en hoekom hulle dit oorneem, en **Send** druk. Ná 'n bevestiging word wat hulle gesê het per e-pos gestuur aan die mense wat die wagwoord het van die nota met alles wat die webwerf nodig het, en antwoorde gaan na die sender. 'n Rekening kan een keer in 48 uur vra, en word gesê wanneer dit weer kan vra. Die bladsy begin met 'n waarskuwing om dit nie te gebruik nie tensy die administrateur 'n e-pos gestuur is en nie in 48 uur geantwoord het nie, en om dit nie te toets nie. Sodra die boodskap gestuur is, sê die bladsy so en vra niks meer nie.
+
 ## Vrygestel 2026-11-11
 
 - **Die kieslys op 'n foon word toegemaak as jy daarbuite druk.** Die kieslys agter die knoppie bo-aan 'n smal skerm gaan toe as jy êrens anders op die bladsy druk, en ook as jy weer op die knoppie druk of 'n skakel volg.

@@ -1,5 +1,17 @@
 # What's new for Tournament Managers
 
+## Released 2026-11-15
+
+### The tournament
+
+- **The two ticks for a national or an international event are boxed under "Optional".** On the page that creates or changes a tournament, **National-level event** and **International-level event** were the only things asked below the subtitle, and some people took them for a choice that had to be made. A tournament need be neither, and the box now says so. The word is added in every language of the site, and the translations other than English want a native reader's eye.
+
+- **A tournament made only as a test may be archived by the administrator, who tells you.** Somebody learning the site sometimes makes a tournament on the real website that was only ever a test. The administrator can now archive it and email its managers, naming a try website to practise on. Nothing is deleted, so an archived tournament can be restored. Managers who have forgotten their accounts, and scorers, are not emailed.
+
+### Players
+
+- **A doubles pair can be written with a slash, a plus or the word "and", as well as an ampersand.** "Sam Someone / Alex Another" is the same pair as "Sam Someone & Alex Another". The word "and" counts only on its own, so a name such as "Sam Anderson" is not taken for a pair. Where a pair is played in a Swiss or a block, it is said as "T. Murphy & A. Sharpe" in a Swiss result, and as "TM&AS" at the head of a block grid.
+
 ## Released 2026-11-11
 
 ### The tournament
