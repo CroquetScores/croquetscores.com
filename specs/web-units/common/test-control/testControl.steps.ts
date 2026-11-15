@@ -395,3 +395,173 @@ Then(
     assert.equal(page.statusCode, 200);
   },
 );
+
+// What the control made of a block and its players, kept to be played in.
+interface Played {
+  block?: string;
+  game?: string;
+  players: Map<string, { tournament: string; entered: string }>;
+}
+const playing = new WeakMap<SpecWorld, Played>();
+const playedIn = (world: SpecWorld): Played => {
+  let found = playing.get(world);
+  if (found === undefined) {
+    found = { players: new Map() };
+    playing.set(world, found);
+  }
+  return found;
+};
+
+const idOfAnswer = (world: SpecWorld): string =>
+  (JSON.parse(responseOf(world).body) as { id: string }).id;
+
+When(
+  "the block {string} is added to the tournament through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/blocks", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id ?? "no-tournament",
+      name,
+    });
+    if (responseOf(this).statusCode === 201) {
+      playedIn(this).block = idOfAnswer(this);
+    }
+  },
+);
+
+When(
+  "the players {string} and {string} are added and entered in the block through the control",
+  async function (this: SpecWorld, first: string, second: string) {
+    const played = playedIn(this);
+    for (const name of [first, second]) {
+      await controlled(this, "/__test/tournaments/players", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        player: { name },
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      const tournamentPlayer = idOfAnswer(this);
+      await controlled(this, "/__test/competitions/players", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        competition: played.block,
+        player: tournamentPlayer,
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      played.players.set(name, {
+        tournament: tournamentPlayer,
+        entered: idOfAnswer(this),
+      });
+    }
+  },
+);
+
+When(
+  "Ann is made to have beaten Bea {int} to {int} in the block through the control",
+  async function (this: SpecWorld, winnerScore: number, loserScore: number) {
+    const played = playedIn(this);
+    await controlled(this, "/__test/competitions/games", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: played.block,
+      winner: played.players.get("Ann")?.entered,
+      winnerScore: String(winnerScore),
+      loser: played.players.get("Bea")?.entered,
+      loserScore: String(loserScore),
+    });
+    if (responseOf(this).statusCode === 201) played.game = idOfAnswer(this);
+  },
+);
+
+When(
+  "a game between two players who are not in the block is added through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/games", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      winner: "11111111-1111-4111-8111-111111111111",
+      winnerScore: "26",
+      loser: "22222222-2222-4222-8222-222222222222",
+      loserScore: "20",
+    });
+  },
+);
+
+When(
+  "the score is withdrawn through the control",
+  async function (this: SpecWorld) {
+    const game = idOfAnswer(this);
+    await controlled(this, "/__test/competitions/games/withdraw", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      game,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "Bea is withdrawn from the block through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/players/withdraw", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      player: playedIn(this).players.get("Bea")?.entered,
+    });
+  },
+);
+
+Given(
+  "the block {string} with draws allowed is added to the tournament through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/blocks", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      name,
+      rules: { drawsAllowed: true },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    playedIn(this).block = idOfAnswer(this);
+  },
+);
+
+When(
+  "Bea is moved up in the block through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/players/move", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      player: playedIn(this).players.get("Bea")?.entered,
+      direction: "up",
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the score is archived through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/games/archive", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      game: playedIn(this).game,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the block is archived through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/tournaments/competitions/archive", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+    });
+  },
+);

@@ -207,3 +207,15 @@ Given(
     }
   },
 );
+
+Given(
+  "{string} has moved the tournament {string} to the sport {string}",
+  async function (
+    this: WebWorld,
+    _manager: string,
+    name: string,
+    sport: string,
+  ) {
+    await change(this, name, { sport });
+  },
+);

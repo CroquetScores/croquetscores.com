@@ -156,6 +156,58 @@ Feature: A site over a database the specs made can be controlled by a token
       When "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
       Then the site answers that there is no such page
 
+  Rule: A site with the control can be given competitions, players and games
+
+    A scenario about a block's page, or about what a tournament lists of its
+    games, should not have to fill in a dialog for each of them. The site adds
+    them as its own dialogs do, as an account that manages the tournament, and
+    hands back the id each is given, which the scenario holds to name it by.
+
+    Scenario: A block is added to a tournament, and players are entered and play
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      Then the site answers that it was made
+
+    Scenario: A score and a player can be withdrawn
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When the score is withdrawn through the control
+      And Bea is withdrawn from the block through the control
+      Then the site answers that it is fine
+
+    Scenario: A block can be given rules, and players moved, and a score and the block archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" with draws allowed is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When Bea is moved up in the block through the control
+      And the score is archived through the control
+      And the block is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A game between players who are not in the block is refused
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the block "Block A" is added to the tournament through the control
+      And a game between two players who are not in the block is added through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A site given no token has no competitions control
+      Given a site given no token
+      When the block "Block A" is added to the tournament through the control
+      Then the site answers that there is no such page
+
   Rule: The clock can be set, and goes on from there
 
     Scenario: A time set is the time the site tells

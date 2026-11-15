@@ -115,3 +115,14 @@ Then(
     assert.equal(await refused.getAttribute("data-refused"), code);
   },
 );
+
+Then(
+  "the page does not say {string}",
+  async function (this: WebWorld, words: string) {
+    const shown = unmarked(await this.browserPage.locator("main").innerText());
+    assert.ok(
+      !shown.includes(words),
+      `The page says ${JSON.stringify(shown)}.`,
+    );
+  },
+);

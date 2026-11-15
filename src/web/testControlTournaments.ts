@@ -8,6 +8,15 @@
 // an id and an address, and no domain type leaves the site.
 import type { FastifyInstance } from "fastify";
 
+import { AddGame } from "../application/operations/competitions/AddGame.js";
+import { ArchiveGame } from "../application/operations/competitions/ArchiveGame.js";
+import { MoveCompetitionPlayer } from "../application/operations/competitions/MoveCompetitionPlayer.js";
+import { ArchiveCompetition } from "../application/operations/tournaments/ArchiveCompetition.js";
+import { WithdrawGame } from "../application/operations/competitions/WithdrawGame.js";
+import { WithdrawPlayer } from "../application/operations/competitions/WithdrawPlayer.js";
+import { EnterPlayer } from "../application/operations/competitions/EnterPlayer.js";
+import { AddBlock } from "../application/operations/tournaments/AddBlock.js";
+import { AddPlayer } from "../application/operations/tournaments/AddPlayer.js";
 import { ArchiveTournament } from "../application/operations/tournaments/ArchiveTournament.js";
 import { CreateTournament } from "../application/operations/tournaments/CreateTournament.js";
 import { RestoreTournament } from "../application/operations/tournaments/RestoreTournament.js";
@@ -15,10 +24,25 @@ import type { TournamentRequest } from "../application/operations/tournaments/to
 import { UpdateTournament } from "../application/operations/tournaments/UpdateTournament.js";
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
+import type { CompetitionRulesSaid } from "../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
+import type { TournamentPlayerDetails } from "../domain/aggregates/tournaments/TournamentPlayer.js";
 import type { ReaderMaking } from "./testControlReaders.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
 interface Asked {
+  rules?: unknown;
+  direction?: unknown;
+  game?: unknown;
+  competition?: unknown;
+  player?: unknown;
+  name?: unknown;
+  bestOf?: unknown;
+  rounds?: unknown;
+  tieBreak?: unknown;
+  winner?: unknown;
+  winnerScore?: unknown;
+  loser?: unknown;
+  loserScore?: unknown;
   manager?: unknown;
   website?: unknown;
   id?: unknown;
@@ -133,6 +157,163 @@ export const registerTestControlTournaments = (
             new RestoreTournament(
               await accountOf(asked.manager),
               text(asked.id, "A tournament"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      // A player of the tournament, who is not yet in any competition.
+      scope.post(
+        "/tournaments/players",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddPlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              asked.player as TournamentPlayerDetails,
+              at(),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      // A block, which has no players until some are entered.
+      scope.post(
+        "/tournaments/blocks",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddBlock(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.name, "A name"),
+              typeof asked.bestOf === "number" ? asked.bestOf : 1,
+              typeof asked.rounds === "number" ? asked.rounds : 1,
+              at(),
+              asked.rules as CompetitionRulesSaid | undefined,
+              typeof asked.tieBreak === "string" ? asked.tieBreak : undefined,
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      // One of the tournament's players, entered in a competition. The id it
+      // answers with is the player's in that competition, which is what a game
+      // names.
+      scope.post(
+        "/competitions/players",
+        refusing(async (asked) => {
+          const entered = await making.mediator.send(
+            new EnterPlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              text(asked.player, "A player"),
+              at(),
+            ),
+          );
+          return { id: entered };
+        }, 201),
+      );
+
+      // A game, by the winner's and the loser's ids in the competition.
+      scope.post(
+        "/competitions/games",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddGame(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              {
+                winner: asked.winner as string | undefined,
+                winnerScore: asked.winnerScore as string | undefined,
+                loser: asked.loser as string | undefined,
+                loserScore: asked.loserScore as string | undefined,
+              },
+              at(),
+            ),
+          );
+          return { id };
+        }, 201),
+      );
+
+      scope.post(
+        "/competitions/games/withdraw",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new WithdrawGame(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              text(asked.game, "A game"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/competitions/players/withdraw",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new WithdrawPlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              text(asked.player, "A player"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/competitions/players/move",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new MoveCompetitionPlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              text(asked.player, "A player"),
+              text(asked.direction, "A direction"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/competitions/games/archive",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new ArchiveGame(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
+              text(asked.game, "A game"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/competitions/archive",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new ArchiveCompetition(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
               at(),
             ),
           );
