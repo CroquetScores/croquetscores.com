@@ -32,6 +32,7 @@ export const norwegian: Language = {
     "footer.privacy": "Personvern",
     "footer.termsOfUse": "Brukervilkår",
     "footer.reportBug": "Rapporter en feil",
+    "footer.installSite": "Installer nettstedet",
     "beta.banner":
       "Dette er et betanettsted. Data kan bli nullstilt når som helst.",
     "privacy.contact":

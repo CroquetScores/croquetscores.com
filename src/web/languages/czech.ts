@@ -35,6 +35,7 @@ export const czech: Language = {
     "footer.privacy": "Soukromí",
     "footer.termsOfUse": "Podmínky použití",
     "footer.reportBug": "Nahlásit chybu",
+    "footer.installSite": "Nainstalovat web",
     "beta.banner":
       "Toto je zkušební (beta) web. Data mohou být kdykoli vynulována.",
     "privacy.contact":

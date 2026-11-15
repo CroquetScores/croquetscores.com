@@ -31,6 +31,7 @@ export const english: Language = {
     "footer.privacy": "Privacy",
     "footer.termsOfUse": "Terms of use",
     "footer.reportBug": "Report a bug",
+    "footer.installSite": "Install the site",
     "beta.banner": "This is a beta site. Data may be reset at any time.",
     "privacy.contact":
       "Questions about this page, or about what is kept about you: {emailAddress}",
