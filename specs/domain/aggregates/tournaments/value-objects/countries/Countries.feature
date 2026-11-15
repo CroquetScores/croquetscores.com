@@ -211,3 +211,31 @@ Feature: The countries there are
     Scenario: Every country there is has at least one region
       Given the countries there are
       Then every one of them has at least one region
+
+  Rule: New Zealand has the regions its national tournaments are split into
+
+    New Zealand's national tournaments are played by teams of the croquet
+    regions, which are not the provinces the old site listed: the Marlborough,
+    Nelson and West Coast region is one team where the provinces are three.
+    They are added to the provinces, since a tournament the old site recorded
+    in a province still has to find it. Northland is both a province and a
+    croquet region, so it is listed once.
+
+    Scenario Outline: New Zealand has the croquet region
+      Given the countries there are
+      When the country "nz" is found
+      And the region "<region>" is found
+      Then the region's name is "<name>"
+
+      Examples:
+        | region | name                          |
+        | cd     | Central Districts             |
+        | cm     | Counties Manukau              |
+        | mnw    | Marlborough Nelson West Coast |
+        | sc     | South Canterbury              |
+        | tv     | Thames Valley                 |
+
+    Scenario: Northland is listed once
+      Given the countries there are
+      When the country "nz" is found
+      Then the country has one region named "Northland"

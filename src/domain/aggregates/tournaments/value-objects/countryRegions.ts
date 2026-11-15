@@ -511,6 +511,15 @@ export const countryRegions: readonly (readonly [
       ["wai", "Waikato"],
       ["wel", "Wellington"],
       ["wc", "West Coast"],
+      // The regions its national tournaments are split into, which are the
+      // croquet regions and not provinces, so they are not the old site's. They
+      // stand beside the provinces, which what the old site recorded still
+      // needs. Northland is both, and so is above only.
+      ["cd", "Central Districts"],
+      ["cm", "Counties Manukau"],
+      ["mnw", "Marlborough Nelson West Coast"],
+      ["sc", "South Canterbury"],
+      ["tv", "Thames Valley"],
     ],
   ],
   [
