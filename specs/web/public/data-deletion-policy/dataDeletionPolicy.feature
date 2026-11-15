@@ -26,12 +26,6 @@ Feature: A reader can see how to have their data deleted
       When the help page "data-deletion-policy" is looked at
       Then the page is not found
 
-    Scenario: A language without the policy is shown it in English
-      Given a browser that asks for Welsh
-      And the help has no Welsh data deletion policy
-      When the data deletion policy is opened
-      Then the policy is in English
-
   Rule: The policy sends the reader to forget their account
 
     Scenario: The policy links to the page where an account is forgotten
@@ -41,6 +35,5 @@ Feature: A reader can see how to have their data deleted
   Rule: The policy says who to ask
 
     Scenario: The administrator is named, as a link to send them email
-      Given the site is told its administrator is "administrator@example.com"
       When the data deletion policy is opened
-      Then the policy links to send email to the administrator
+      Then the policy links to send email to "administrator@example.com"

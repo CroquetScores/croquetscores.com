@@ -21,6 +21,9 @@ export class WebWorld extends World {
   /** A page on some other site, served into the browser by the scenario. */
   public elsewhere: string | undefined;
 
+  /** What a page read without a browser said, and how it was answered. */
+  public looked: { body: string; status: number } | undefined;
+
   /** The page of the scenario's browser, which a scenario that has none lacks. */
   get browserPage(): Page {
     if (this.page === undefined) {

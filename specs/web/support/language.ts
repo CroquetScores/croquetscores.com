@@ -14,7 +14,8 @@ Given(
   "a browser that asks for {string}",
   async function (this: WebWorld, asked: string) {
     this.acceptLanguage = asked;
-    await this.browserPage.setExtraHTTPHeaders({ "accept-language": asked });
+    // A scenario that only reads pages has no browser to tell.
+    await this.page?.setExtraHTTPHeaders({ "accept-language": asked });
   },
 );
 
