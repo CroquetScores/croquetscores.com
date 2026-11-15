@@ -26,7 +26,8 @@ export const call = async (
   given?: object,
 ): Promise<Response> => {
   const body =
-    given !== undefined && /^\/(tournaments|competitions)/.test(path)
+    given !== undefined &&
+    /^\/(tournaments|competitions|commentaries)/.test(path)
       ? { at: setUpAt, ...given }
       : given;
   const { baseUrl, token } = await site();

@@ -843,3 +843,80 @@ When(
     });
   },
 );
+
+const commentaryMade = new WeakMap<
+  SpecWorld,
+  { id: string; comment?: string }
+>();
+
+Given(
+  "a commentary called {string} is started through the control",
+  async function (this: SpecWorld, title: string) {
+    await controlled(this, "/__test/tournaments/commentaries", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      title,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    commentaryMade.set(this, { id: idOfAnswer(this) });
+  },
+);
+
+Given(
+  "the comment {string} is added to it through the control",
+  async function (this: SpecWorld, text: string) {
+    const commentary = commentaryMade.get(this);
+    assert.ok(commentary !== undefined, "No commentary was started.");
+    await controlled(this, "/__test/commentaries/comments", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      commentary: commentary.id,
+      text,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    commentary.comment = idOfAnswer(this);
+  },
+);
+
+When(
+  "the comment is edited to say {string} through the control",
+  async function (this: SpecWorld, text: string) {
+    const commentary = commentaryMade.get(this);
+    await controlled(this, "/__test/commentaries/comments/edit", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      commentary: commentary?.id,
+      comment: commentary?.comment,
+      text,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the comment is deleted through the control",
+  async function (this: SpecWorld) {
+    const commentary = commentaryMade.get(this);
+    await controlled(this, "/__test/commentaries/comments/delete", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      commentary: commentary?.id,
+      comment: commentary?.comment,
+    });
+  },
+);
+
+Given(
+  "the account for {string} is forgotten through the control",
+  async function (this: SpecWorld, emailAddress: string) {
+    await controlled(this, "/__test/accounts/forget", { emailAddress });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "an account for {string} is made through the control",
+  async function (this: SpecWorld, emailAddress: string) {
+    await controlled(this, "/__test/accounts", { emailAddress });
+  },
+);

@@ -179,12 +179,20 @@ export const site = (): Promise<RunningSite> => {
 /** Tells the site to forget what the last scenario left, and its clock too. */
 export const forget = async (): Promise<void> => {
   const { baseUrl, token } = await site();
-  const answer = await fetch(`${baseUrl}/__test/reset`, {
-    method: "POST",
-    headers: { "x-test-control": token },
-  });
-  if (answer.status !== 204) {
-    throw new Error(`The site would not forget: ${String(answer.status)}.`);
+  // Asked again a few times: a request the last scenario's browser left in flight
+  // can hold a table the reset needs, and is over in a moment.
+  for (let attempt = 1; ; attempt++) {
+    const answer = await fetch(`${baseUrl}/__test/reset`, {
+      method: "POST",
+      headers: { "x-test-control": token },
+    });
+    if (answer.status === 204) return;
+    if (attempt === 5) {
+      throw new Error(
+        `The site would not forget: ${String(answer.status)} ${await answer.text()}`,
+      );
+    }
+    await new Promise((later) => setTimeout(later, 300));
   }
 };
 

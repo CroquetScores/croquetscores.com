@@ -119,6 +119,12 @@ Feature: A site over a database the specs made can be controlled by a token
       And the profile page is asked for with that session
       Then the site sends the reader elsewhere
 
+    Scenario: An account can be made whatever the clock has been set to
+      Given a site given the token "open sesame"
+      And the clock is set to "2020-01-01T00:00:00Z"
+      When an account for "someone@example.com" is made through the control
+      Then the site answers that it was made
+
     Scenario: A site given no token has no accounts control
       Given a site given no token
       When a session for "someone@example.com" is asked for
@@ -263,6 +269,27 @@ Feature: A site over a database the specs made can be controlled by a token
     Scenario: A site given no token has no competitions control
       Given a site given no token
       When the block "Block A" is added to the tournament through the control
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be given commentaries and comments
+
+    Scenario: A commentary is started, and commented on, and a comment is edited and deleted
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a commentary called "Day one" is started through the control
+      And the comment "Good start" is added to it through the control
+      When the comment is edited to say "Great start" through the control
+      And the comment is deleted through the control
+      Then the site answers that it is fine
+
+  Rule: A site with the control can be told an account has been forgotten
+
+    Scenario: A forgotten account has no session to give
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And the account for "someone@example.com" is forgotten through the control
+      When a session for "someone@example.com" is asked for
       Then the site answers that there is no such page
 
   Rule: The clock can be set, and goes on from there

@@ -38,6 +38,13 @@ export class WebWorld extends World {
   /** The ids of the manager notes the scenario added, by their titles. */
   public notes = new Map<string, string>();
 
+  /** What the accounts the scenario made are called, by address. */
+  public accountNames = new Map<string, string>();
+
+  /** The ids of the commentaries and comments the scenario added. */
+  public commentaries = new Map<string, string>();
+  public comments = new Map<string, string>();
+
   /** What the scenario has said of the next player it adds. */
   public ofTheNextPlayer: Record<string, unknown> = {};
 

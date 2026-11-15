@@ -364,7 +364,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the page at "/2026/ac/spring-open/commentaries/day-one" is open
       And the comment "   " is typed
       When the comment is submitted
-      Then the comment box says the message for "CommentText.Missing"
+      Then the comment box says "Write something in the comment."
 
     Scenario: The page shown again for a refused comment returns its choices to the commentary
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -452,14 +452,14 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the page as it is now is remembered
       And the comment "   " is typed
       When the comment is submitted
-      Then the comment box says the message for "CommentText.Missing"
+      Then the comment box says "Write something in the comment."
       And the page is the one remembered
 
     Scenario: What was typed is left in the box when it is refused in place
       Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
       And a comment of 100001 characters is typed
       When the comment is submitted
-      Then the comment box says the message for "CommentText.TooLong"
+      Then the comment box says "That comment is too long."
       And the comment box holds what was typed
 
     Scenario: A comment kept but not answered is not sent again
@@ -474,7 +474,7 @@ Feature: A commentary's page shows its comments, and its writer adds to them
       And the next comment sent is kept and answered with a server error
       And the comment "Sam is two hoops up" is typed
       When the comment is submitted
-      Then the comment box says the words for "commentary.notSent"
+      Then the comment box says "The comment could not be sent. Load the page again to see whether it was kept."
 
     Scenario: A writer signed out since the page was opened is sent to sign in
       Given the page at "/2026/ac/spring-open/commentaries/day-one" is open with scripting on
@@ -791,17 +791,17 @@ Feature: A commentary's page shows its comments, and its writer adds to them
 
     Scenario: A slug no commentary has is not a page
       When the page at "/2026/ac/spring-open/commentaries/day-two" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's commentary is not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A commentary whose writer has been forgotten is not found
       Given the account for "writer@example.com" has been forgotten
       When the page at "/2026/ac/spring-open/commentaries/day-one" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to a commentary titled in another script where the tournament is now
       Given "writer@example.com" has started the commentary "День два" on "Spring Open"

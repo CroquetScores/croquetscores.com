@@ -775,3 +775,110 @@ Given(
     });
   },
 );
+
+// The commentaries and comments a scenario says are there, known by their
+// titles and their words.
+Given(
+  "{string} has started the commentary {string} on {string}",
+  async function (
+    this: WebWorld,
+    account: string,
+    title: string,
+    tournament: string,
+  ) {
+    const id = await made("start the commentary", "/tournaments/commentaries", {
+      manager: account,
+      tournament: tournamentOf(this, tournament).id,
+      title,
+    });
+    this.commentaries.set(within(tournament, title), id!);
+  },
+);
+
+const commentaryIn = (
+  world: WebWorld,
+  tournament: string,
+  title: string,
+): string =>
+  held(
+    world.commentaries,
+    within(tournament, title),
+    `commentary called ${title} in ${tournament}`,
+  );
+
+// A scenario cannot write a line break inside a step's quotes, so it writes
+// "\\n", which is sent as the line break it stands for.
+const lines = (text: string): string => text.replaceAll("\\n", "\n");
+
+Given(
+  "{string} has added the comment {string} to {string} of {string}",
+  async function (
+    this: WebWorld,
+    account: string,
+    text: string,
+    title: string,
+    tournament: string,
+  ) {
+    const id = await made("add the comment", "/commentaries/comments", {
+      manager: account,
+      tournament: tournamentOf(this, tournament).id,
+      commentary: commentaryIn(this, tournament, title),
+      text: lines(text),
+    });
+    this.comments.set(within(within(tournament, title), text), id!);
+  },
+);
+
+const commentIn = (
+  world: WebWorld,
+  tournament: string,
+  title: string,
+  text: string,
+): string =>
+  held(
+    world.comments,
+    within(within(tournament, title), text),
+    `comment ${text} in ${title} of ${tournament}`,
+  );
+
+Given(
+  "{string} has edited the comment {string} in {string} of {string} to {string}",
+  async function (
+    this: WebWorld,
+    account: string,
+    text: string,
+    title: string,
+    tournament: string,
+    to: string,
+  ) {
+    await made("edit the comment", "/commentaries/comments/edit", {
+      manager: account,
+      tournament: tournamentOf(this, tournament).id,
+      commentary: commentaryIn(this, tournament, title),
+      comment: commentIn(this, tournament, title, text),
+      text: lines(to),
+    });
+    this.comments.set(
+      within(within(tournament, title), to),
+      commentIn(this, tournament, title, text),
+    );
+  },
+);
+
+Given(
+  "{string} has deleted the comment {string} in {string} of {string}",
+  async function (
+    this: WebWorld,
+    account: string,
+    text: string,
+    title: string,
+    tournament: string,
+  ) {
+    await made("delete the comment", "/commentaries/comments/delete", {
+      manager: account,
+      tournament: tournamentOf(this, tournament).id,
+      commentary: commentaryIn(this, tournament, title),
+      comment: commentIn(this, tournament, title, text),
+    });
+  },
+);

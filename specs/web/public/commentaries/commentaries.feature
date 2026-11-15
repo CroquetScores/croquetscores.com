@@ -155,7 +155,7 @@ Feature: A tournament's commentaries page is the old site's
 
     Scenario: The mark is said to a screen reader as the word new
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the mark on the commentary "Day one" is said as the words for "marks.new"
+      Then the mark on the commentary "Day one" is said as "new"
 
     Scenario: A commentary the reader has read is not marked
       Given the reader has read the commentary "Day one"
@@ -256,8 +256,8 @@ Feature: A tournament's commentaries page is the old site's
     Scenario: An archived tournament has no commentaries page
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/commentaries" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An address no tournament has been found at is not a page
       When the page at "/2026/ac/autumn-open/commentaries" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"

@@ -54,7 +54,7 @@ Feature: A commentary's writer can edit or delete any of its comments
     Scenario: A reader signed in to another account is told the page is not found
       Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
       When the page to edit the comment "Sam is two hoops up" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: The writer is shown the comment to edit
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -121,7 +121,7 @@ Feature: A commentary's writer can edit or delete any of its comments
       And the page to edit the comment "Sam is two hoops up" is open
       And the comment "   " is typed in place of what it held
       When the comment is submitted
-      Then the comment box says the message for "CommentText.Missing"
+      Then the comment box says "Write something in the comment."
 
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -203,7 +203,7 @@ Feature: A commentary's writer can edit or delete any of its comments
     Scenario: A reader signed in to another account is told the page is not found
       Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
       When the page to delete the comment "Sam is two hoops up" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
   Rule: A deleted comment has no page
 
@@ -211,4 +211,4 @@ Feature: A commentary's writer can edit or delete any of its comments
       Given "writer@example.com" has deleted the comment "Sam is two hoops up" in "Day one" of "Spring Open"
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       When the page to edit the comment "Sam is two hoops up" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"

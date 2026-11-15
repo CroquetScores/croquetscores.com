@@ -17,6 +17,10 @@ import { ChangePlayerWorldRankingName } from "../application/operations/tourname
 import { AddManagerNote } from "../application/operations/tournaments/AddManagerNote.js";
 import { DeleteManagerNote } from "../application/operations/tournaments/DeleteManagerNote.js";
 import { EditManagerNote } from "../application/operations/tournaments/EditManagerNote.js";
+import { AddComment } from "../application/operations/commentaries/AddComment.js";
+import { DeleteComment } from "../application/operations/commentaries/DeleteComment.js";
+import { EditComment } from "../application/operations/commentaries/EditComment.js";
+import { StartCommentary } from "../application/operations/tournaments/StartCommentary.js";
 import { AddTeam } from "../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../application/operations/tournaments/AddTest.js";
@@ -46,6 +50,9 @@ import type { ReaderMaking } from "./testControlReaders.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
 interface Asked {
+  commentary?: unknown;
+  comment?: unknown;
+  text?: unknown;
   title?: unknown;
   description?: unknown;
   note?: unknown;
@@ -559,6 +566,71 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               text(asked.note, "A note"),
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/commentaries",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new StartCommentary(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.title, "A title"),
+              at(asked),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      // A comment, whoever writes it: any account that is there may comment.
+      scope.post(
+        "/commentaries/comments",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddComment(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.commentary, "A commentary"),
+              text(asked.text, "A text"),
+              at(asked),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/commentaries/comments/edit",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new EditComment(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.commentary, "A commentary"),
+              text(asked.comment, "A comment"),
+              text(asked.text, "A text"),
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/commentaries/comments/delete",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new DeleteComment(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.commentary, "A commentary"),
+              text(asked.comment, "A comment"),
               at(asked),
             ),
           );

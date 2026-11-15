@@ -74,7 +74,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the page at "/2026/ac/spring-open/commentaries/create" is open
       And the title "Day one" is typed
       When the dialog is submitted
-      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+      Then the terms of use box says "Tick the box to agree to the terms of use."
 
     Scenario: A commentary sent without agreeing starts nothing
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -132,7 +132,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the title "   " is typed
       And the terms of use are agreed to
       When the dialog is submitted
-      Then the title field says the message for "CommentaryTitle.Missing"
+      Then the title field says "Give the commentary a title."
 
     Scenario: A title longer than 100 characters is said beneath the field
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -140,7 +140,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And a title of 101 characters is typed
       And the terms of use are agreed to
       When the dialog is submitted
-      Then the title field says the message for "CommentaryTitle.TooLong"
+      Then the title field says "That title is too long."
 
     Scenario: A title of 100 characters with spaces around it is not cut short
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -156,7 +156,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the title "???" is typed
       And the terms of use are agreed to
       When the dialog is submitted
-      Then the title field says the message for "CommentaryTitle.NoLetterOrDigit"
+      Then the title field says "A title needs a letter or a digit in it."
 
     Scenario: A title another commentary has is said beneath the field
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
@@ -165,7 +165,7 @@ Feature: A reader signed in can start a commentary on a tournament
       And the title "Day One" is typed
       And the terms of use are agreed to
       When the dialog is submitted
-      Then the title field says the message for "Commentary.TitleTaken"
+      Then the title field says "Another commentary already has that title."
 
     Scenario: What was typed is put back
       Given "writer@example.com" has started the commentary "Day one" on "Spring Open"
@@ -200,9 +200,9 @@ Feature: A reader signed in can start a commentary on a tournament
       Given "organiser@example.com" has archived the tournament "Spring Open"
       And the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       When the page at "/2026/ac/spring-open/commentaries/create" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An address no tournament has been found at has no page to start a commentary
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
       When the page at "/2026/ac/autumn-open/commentaries/create" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"

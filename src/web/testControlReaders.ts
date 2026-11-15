@@ -13,6 +13,8 @@ import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 
 import type { Mediator } from "../application/common/Mediator.js";
+import { AskToForgetAccount } from "../application/operations/accounts/AskToForgetAccount.js";
+import { ForgetAccount } from "../application/operations/accounts/ForgetAccount.js";
 import { ConfirmEmailAddress } from "../application/operations/accounts/ConfirmEmailAddress.js";
 import { RegisterAccount } from "../application/operations/accounts/RegisterAccount.js";
 import { SignInWithGoogle } from "../application/operations/accounts/SignInWithGoogle.js";
@@ -71,9 +73,13 @@ const PASSWORD = "correct horse battery staple";
 const linkTo = async (
   making: ReaderMaking,
   address: string,
+  kind?: string,
 ): Promise<string> => {
   const waiting = (await making.inTransaction(making.emailedTo)).filter(
-    (email) => !email.givenUp && email.to === address,
+    (email) =>
+      !email.givenUp &&
+      email.to === address &&
+      (kind === undefined || email.kind === kind),
   );
   const link = waiting[waiting.length - 1]?.link;
   if (link === undefined) {
@@ -91,7 +97,10 @@ const make = async (
 ): Promise<void> => {
   const address = textOf(asked.emailAddress, "");
   if (address === "") throw new Error("An email address is needed.");
-  const at = (): ReadOnlyDate => ReadOnlyDate.from(making.clock());
+  // By the machine's clock and not the site's: the links an account is made with
+  // are good for a time from when they are made, and a scenario that has set the
+  // site's clock into the past must not find them already stale.
+  const at = (): ReadOnlyDate => ReadOnlyDate.from(new Date());
   const name = textOf(asked.name, CALLED);
 
   if (asked.noPassword === true) {
@@ -178,6 +187,38 @@ export const registerTestControlReaders = (
             .send({ message: failure instanceof Error ? failure.message : "" });
         }
         return reply.code(201).send();
+      });
+
+      // An account forgotten, as forgetting one is done: asked for, and
+      // confirmed with the link the asking emailed.
+      scope.post("/accounts/forget", async (request, reply) => {
+        const address = textOf(
+          (request.body as { emailAddress?: unknown } | null)?.emailAddress,
+          "",
+        );
+        try {
+          const id = await making.inTransaction(() =>
+            making.accountIdFor(EmailAddress.from(address)),
+          );
+          if (id === undefined) throw new Error(`No account for ${address}.`);
+          // By the machine's clock, as making an account is (see make).
+          const at = (): ReadOnlyDate => ReadOnlyDate.from(new Date());
+          await making.mediator.send(
+            new AskToForgetAccount(id.value, "en", "croquetscores.com", at()),
+          );
+          await making.mediator.send(
+            new ForgetAccount(
+              await linkTo(making, address, "Email.ConfirmForgetting"),
+              id.value,
+              at(),
+            ),
+          );
+        } catch (failure) {
+          return reply
+            .code(400)
+            .send({ message: failure instanceof Error ? failure.message : "" });
+        }
+        return reply.code(200).send();
       });
 
       // A session for the account, which the browser holds as a cookie.
