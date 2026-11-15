@@ -83,8 +83,10 @@ const manifestOf = (
 
 const headEnd = "</head>";
 
-// Not the API, which is no page, and not a page that is not one.
-const isAPage = (path: string): boolean => !/^\/api(\/|$)/.test(path);
+// The API answers in JSON and is no page to put a link in, whatever it may
+// quote. Everything else that answers as HTML is a page, an error's included:
+// a reader sent to one is as likely to want the right tab picture.
+const isTheApi = (path: string): boolean => /^\/api(\/|$)/.test(path);
 
 export const registerWebAppManifest = (
   server: FastifyInstance,
@@ -112,9 +114,11 @@ export const registerWebAppManifest = (
     const type = String(reply.getHeader("content-type") ?? "");
     if (
       typeof payload !== "string" ||
-      reply.statusCode !== 200 ||
+      // The refusal of a host no website has, which is no website's page
+      // (unknownHost.feature), and so has no website to name pictures of.
+      reply.statusCode === 421 ||
       !type.startsWith("text/html") ||
-      !isAPage(path) ||
+      isTheApi(path) ||
       request.servedAs === undefined ||
       !payload.includes(headEnd)
     ) {
@@ -191,7 +195,10 @@ export const installOffer = (speaking: Speaking): string => `
                 var given = offer;
                 if (given === null) return;
                 put(null);
-                given.prompt();
+                // A browser may refuse even for a press, and a refusal is not
+                // an error to leave for the console.
+                var shown = given.prompt();
+                if (shown && shown.catch) shown.catch(function () {});
               });
             })();
           </script>`;

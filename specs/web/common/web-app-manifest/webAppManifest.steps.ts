@@ -280,11 +280,17 @@ Then("it does not name the manifest", function (this: SpecWorld) {
 // The button -------------------------------------------------------------------------
 
 // Scripting is off in these scenarios unless one switches it on, so this does
-// nothing but say so: it is there so that a scenario can say it.
-Given("scripting is switched off", function (this: SpecWorld) {
-  assert.ok(
-    this.page !== undefined,
-    "This scenario has no browser. Tag it @browser if it needs one.",
+// no switching: it checks, since a scenario that said so with scripting on
+// would pass whatever the page does without a script. A page that sets its own
+// content from a script is left empty by a browser that runs none.
+Given("scripting is switched off", async function (this: SpecWorld) {
+  await this.browserPage.setContent(
+    '<p id="ran"></p><script>document.getElementById("ran").textContent = "yes";</script>',
+  );
+  assert.equal(
+    await this.browserPage.locator("#ran").textContent(),
+    "",
+    "Scripting is on in this scenario's browser.",
   );
 });
 

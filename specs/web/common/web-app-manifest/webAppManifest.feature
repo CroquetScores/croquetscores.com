@@ -160,6 +160,10 @@ Feature: A reader can put the site on their phone's home screen
       When the admin is opened
       Then the page open links to the manifest
 
+    Scenario: A page that is not there links to the manifest too
+      When the page "/no-such-page" is asked for at "croquetscores.com"
+      Then it links to the manifest
+
     Scenario: A page has one link to the manifest
       When the page "/" is asked for at "croquetscores.com"
       Then it has one link to the manifest
