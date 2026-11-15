@@ -100,6 +100,68 @@ Feature: Words readers use that the help does not
       When the question is expanded
       Then the question is accepted
 
+  Rule: The English list ties what readers say of installing to what the help says
+
+    A reader who wants the site on their phone says install, or app, or icon,
+    and the help says home screen (`helpHomeScreen.feature`). Each of the three
+    is paired with it, and none of them is paired with the others, since a
+    pair is not carried further: an icon is not an app, and a reader asking
+    about one should not be sent to pages about the other.
+
+    A synonym does not match a word's other forms, so each form a reader is
+    likely to type is listed: installed, installing, apps and icons as well.
+
+    The pairs run from what readers say to what the help says and not back. A
+    synonym of two words is not matched to the single words a question is made
+    of, so a question in the help's own words is searched for as it was typed,
+    which finds the page by those words.
+
+    These scenarios are held to the English list as it is kept, which is the
+    thing being specified, and so ask for the list by name. The scenarios above
+    give a synonym of their own and are not changed by it.
+
+    Scenario Outline: "<word>" is searched for together with "home screen"
+      Given the help language "english"
+      And the question "<question>"
+      When the question is expanded by the list kept for the language
+      Then the words searched for include "<word>"
+      And the words searched for include "home"
+      And the words searched for include "screen"
+
+      Examples:
+        | word       | question                   |
+        | install    | How do I install the site? |
+        | installed  | Is it installed?           |
+        | installing | Am I installing it?        |
+        | app        | Is there an app?           |
+        | apps       | Are there apps?            |
+        | icon       | Can I have an icon?        |
+        | icons      | Where are the icons?       |
+
+    Scenario: A question in the help's own words is searched for as it was typed
+      Given the help language "english"
+      And the question "home screen"
+      When the question is expanded by the list kept for the language
+      Then the words searched for do not include "install"
+
+    Scenario: A question about adding a player is not widened to the home screen
+      Given the help language "english"
+      And the question "How do I add a player?"
+      When the question is expanded by the list kept for the language
+      Then the words searched for do not include "screen"
+
+    Scenario: A question about an app is not widened to icons
+      Given the help language "english"
+      And the question "Is there an app?"
+      When the question is expanded by the list kept for the language
+      Then the words searched for do not include "icon"
+
+    Scenario: A question about an icon is not widened to installing
+      Given the help language "english"
+      And the question "Can I have an icon?"
+      When the question is expanded by the list kept for the language
+      Then the words searched for do not include "install"
+
   Rule: Every language with help pages has its synonyms kept, even if it has none yet
 
     Scenario: Every folder of the help has a list of synonyms

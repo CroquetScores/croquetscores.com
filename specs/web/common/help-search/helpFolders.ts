@@ -20,3 +20,7 @@ export const languageOf = async (folder: string): Promise<Language> => {
 };
 
 export const folders = new WeakMap<SpecWorld, readonly string[]>();
+
+// The language a scenario asked for by name, which more than one feature of
+// the search reads: the way it is searched, and the words that mean the same.
+export const asked = new WeakMap<SpecWorld, string>();

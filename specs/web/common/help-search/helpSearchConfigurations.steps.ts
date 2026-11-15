@@ -7,9 +7,8 @@ import {
   type HelpSearchRules,
 } from "../../../../src/web/common/helpSearchConfigurations.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { folders, helpFolder, languageOf } from "./helpFolders.js";
+import { asked, folders, helpFolder, languageOf } from "./helpFolders.js";
 
-const asked = new WeakMap<SpecWorld, string>();
 const chosen = new WeakMap<SpecWorld, HelpSearchRules | undefined>();
 const chosenForEach = new WeakMap<
   SpecWorld,
