@@ -221,6 +221,58 @@ export const registerTestControlReaders = (
         return reply.code(200).send();
       });
 
+      // Whether the site has an account for an address: an address that breaks the
+      // rules for one never had an account, and is counted as none.
+      scope.get("/accounts/count", async (request) => {
+        const address = (request.query as { emailAddress?: string })
+          .emailAddress;
+        try {
+          const id = await making.inTransaction(() =>
+            making.accountIdFor(EmailAddress.from(address ?? "")),
+          );
+          return { count: id === undefined ? 0 : 1 };
+        } catch {
+          return { count: 0 };
+        }
+      });
+
+      // What an account is called, as the site keeps it.
+      scope.get("/accounts/name", async (request, reply) => {
+        const address = (request.query as { emailAddress?: string })
+          .emailAddress;
+        const name = await making.inTransaction(async () => {
+          const id = await making.accountIdFor(
+            EmailAddress.from(address ?? ""),
+          );
+          return id === undefined
+            ? undefined
+            : ((await making.loadAccount(id))?.name?.toString() ?? null);
+        });
+        if (name === undefined) {
+          return reply
+            .code(404)
+            .send({ message: `No account for ${String(address)}.` });
+        }
+        return { name };
+      });
+
+      // What has been queued for an address, oldest first, as a scenario that
+      // follows the link in an email reads it.
+      scope.get("/emails", async (request) => {
+        const to = (request.query as { to?: string }).to;
+        const queued = await making.inTransaction(making.emailedTo);
+        return {
+          emails: queued
+            .filter((email) => to === undefined || email.to === to)
+            .map(({ to: address, kind, link, givenUp }) => ({
+              to: address,
+              kind,
+              link,
+              givenUp,
+            })),
+        };
+      });
+
       // A session for the account, which the browser holds as a cookie.
       scope.post("/sessions", async (request, reply) => {
         const address = textOf(

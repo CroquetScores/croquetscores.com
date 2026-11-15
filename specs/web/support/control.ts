@@ -83,3 +83,63 @@ export const setTheClock = async (moment: string): Promise<void> => {
     );
   }
 };
+
+/** An email the site has queued, as a scenario that follows its link reads it. */
+export interface QueuedEmail {
+  readonly to: string;
+  readonly kind: string;
+  readonly link?: string;
+  readonly givenUp: boolean;
+}
+
+/** What the site has queued for `address`, oldest first. */
+export const emailsFor = async (address: string): Promise<QueuedEmail[]> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/emails?to=${encodeURIComponent(address)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { emails: QueuedEmail[] }).emails;
+};
+
+/** How many accounts the site has for `address`: none or one. */
+export const accountsFor = async (address: string): Promise<number> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/accounts/count?emailAddress=${encodeURIComponent(address)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { count: number }).count;
+};
+
+/** Tells the site's reCAPTCHA how to judge, or that it is down. */
+export const tellRecaptcha = async (said: {
+  judgement?: string;
+  down?: boolean;
+}): Promise<void> => {
+  const answer = await call("POST", "/recaptcha", said);
+  if (answer.status !== 200) {
+    throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
+};
+
+/** The tokens the site's reCAPTCHA has been asked to judge. */
+export const tokensJudged = async (): Promise<string[]> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(`${baseUrl}/__test/recaptcha/tokens`, {
+    headers: { "x-test-control": token },
+  });
+  return ((await answer.json()) as { tokens: string[] }).tokens;
+};
+
+/** What the site calls the account for `address`, or nothing where it has none. */
+export const nameOfAccount = async (
+  address: string,
+): Promise<string | null> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/accounts/name?emailAddress=${encodeURIComponent(address)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { name: string | null }).name;
+};

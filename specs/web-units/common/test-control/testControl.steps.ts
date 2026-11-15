@@ -920,3 +920,120 @@ When(
     await controlled(this, "/__test/accounts", { emailAddress });
   },
 );
+
+const asking = async (
+  world: SpecWorld,
+  method: "GET" | "POST",
+  url: string,
+  payload?: object,
+): Promise<void> => {
+  const control = controlOf(world);
+  assert.ok(control.application !== undefined, "The site was not started.");
+  control.response = await control.application.server.inject({
+    method,
+    url,
+    headers: { "x-test-control": control.token ?? "" },
+    ...(payload === undefined ? {} : { payload }),
+  });
+};
+
+When(
+  "the emails queued for {string} are asked for",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/emails?to=${encodeURIComponent(address)}`,
+    );
+  },
+);
+
+const told = (world: SpecWorld): { kind: string; link?: string }[] =>
+  (
+    JSON.parse(responseOf(world).body) as {
+      emails: { kind: string; link?: string }[];
+    }
+  ).emails;
+
+Then(
+  "one email of the kind {string} with a link is told",
+  function (this: SpecWorld, kind: string) {
+    const emails = told(this);
+    assert.equal(emails.length, 1);
+    assert.equal(emails[0]?.kind, kind);
+    assert.ok(emails[0]?.link !== undefined && emails[0].link !== "");
+  },
+);
+
+Then("no email is told", function (this: SpecWorld) {
+  assert.deepEqual(told(this), []);
+});
+
+When(
+  "the tokens reCAPTCHA has judged are asked for",
+  async function (this: SpecWorld) {
+    await asking(this, "GET", "/__test/recaptcha/tokens");
+  },
+);
+
+Then("no token is told", function (this: SpecWorld) {
+  assert.deepEqual(
+    (JSON.parse(responseOf(this).body) as { tokens: string[] }).tokens,
+    [],
+  );
+});
+
+When(
+  "reCAPTCHA is told to judge {string}",
+  async function (this: SpecWorld, judgement: string) {
+    await asking(this, "POST", "/__test/recaptcha", { judgement });
+  },
+);
+
+When(
+  "the accounts for {string} are counted",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/count?emailAddress=${encodeURIComponent(address)}`,
+    );
+  },
+);
+
+const counted = (world: SpecWorld): number =>
+  (JSON.parse(responseOf(world).body) as { count: number }).count;
+
+Then("one account is counted", function (this: SpecWorld) {
+  assert.equal(counted(this), 1);
+});
+
+Then("no account is counted", function (this: SpecWorld) {
+  assert.equal(counted(this), 0);
+});
+
+Given(
+  "an account for {string} called {string} made through the control",
+  async function (this: SpecWorld, emailAddress: string, name: string) {
+    await controlled(this, "/__test/accounts", { emailAddress, name });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
+When(
+  "the name of the account for {string} is asked for",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/name?emailAddress=${encodeURIComponent(address)}`,
+    );
+  },
+);
+
+Then("the name told is {string}", function (this: SpecWorld, name: string) {
+  assert.equal(
+    (JSON.parse(responseOf(this).body) as { name: string | null }).name,
+    name,
+  );
+});

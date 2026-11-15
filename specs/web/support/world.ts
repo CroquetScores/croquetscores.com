@@ -60,6 +60,9 @@ export class WebWorld extends World {
     { id: string; request: Record<string, unknown> }
   >();
 
+  /** Whether the scenario's browser is one that never loads Google's script. */
+  public recaptchaBlocked = false;
+
   /** What the scenario has said of the next knockout it adds. */
   public ofTheNextKnockout: Record<string, unknown> = {};
 

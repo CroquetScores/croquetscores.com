@@ -2,10 +2,10 @@
 // made by the site's own control and signed in to for real, with a session the
 // browser holds as it would after signing in, so that a scenario about what a
 // signed-in reader sees is about a reader the site could have.
-import { Given, Then } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { call, makeAccount, sessionFor } from "./control.js";
+import { call, makeAccount, nameOfAccount, sessionFor } from "./control.js";
 import { unmarked } from "./languages.js";
 import type { WebWorld } from "./world.js";
 
@@ -35,7 +35,9 @@ export const signInAs = async (
 Given(
   "a reader signed in as {string}",
   async function (this: WebWorld, address: string) {
-    await signInAs(this, address);
+    // An account the scenario made is signed in to, and one it did not is made
+    // first, as signing in to one assumes.
+    await signInAs(this, address, [], !this.accountNames.has(address));
   },
 );
 
@@ -135,3 +137,35 @@ Given("the reader has signed out", async function (this: WebWorld) {
   // redirect is what signing out answers with.
   assert.equal(status, 0, `Signing out answered ${String(status)}.`);
 });
+
+// An account made by signing in with Google, which has no password.
+Given(
+  "{string} has an account, confirmed, with no password",
+  async function (this: WebWorld, address: string) {
+    this.accountNames.set(address, "Sam Someone");
+    await makeAccount({ emailAddress: address, noPassword: true });
+  },
+);
+
+// Signed in through the form, as a reader signs in: from the sign in page, which
+// a scenario that has not opened it opens.
+When(
+  "the reader signs in as {string} with the password {string}",
+  async function (this: WebWorld, address: string, password: string) {
+    const page = this.browserPage;
+    if (new URL(page.url()).pathname !== "/account/sign-in") {
+      await page.goto(`${this.baseUrl!}/account/sign-in`);
+    }
+    await page.fill('section.dialog input[name="emailAddress"]', address);
+    await page.fill('section.dialog input[name="password"]', password);
+    await page.click('section.dialog button[type="submit"]');
+    await page.waitForLoadState();
+  },
+);
+
+Then(
+  "the account for the email address {string} is called {string}",
+  async function (this: WebWorld, address: string, name: string) {
+    assert.equal(await nameOfAccount(address), name);
+  },
+);

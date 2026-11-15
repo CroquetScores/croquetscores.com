@@ -292,6 +292,78 @@ Feature: A site over a database the specs made can be controlled by a token
       When a session for "someone@example.com" is asked for
       Then the site answers that there is no such page
 
+  Rule: A site with the control can be asked whether an account is there
+
+    Scenario: An account that was made is there
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the accounts for "someone@example.com" are counted
+      Then one account is counted
+
+    Scenario: An address with no account has none
+      Given a site given the token "open sesame"
+      When the accounts for "nobody@example.com" are counted
+      Then no account is counted
+
+    Scenario: An address that breaks the rules for one has none
+      Given a site given the token "open sesame"
+      When the accounts for "not an address" are counted
+      Then no account is counted
+
+  Rule: A site with the control can be asked what an account is called
+
+    Scenario: An account is called what it was made called
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" called "Sam Someone" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the name told is "Sam Someone"
+
+  Rule: A site with the control can be asked what email it has queued
+
+    A site under test sends nothing, so a scenario that follows the link in an
+    email reads it from what the site has queued for the address.
+
+    Scenario: The email queued for an address is told with its kind and its link
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When the emails queued for "someone@example.com" are asked for
+      Then one email of the kind "Email.ConfirmAddress" with a link is told
+
+    Scenario: No email is told for an address nobody wrote to
+      Given a site given the token "open sesame"
+      When the emails queued for "nobody@example.com" are asked for
+      Then no email is told
+
+    Scenario: A site given no token tells no emails
+      Given a site given no token
+      When the emails queued for "someone@example.com" are asked for
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be told how reCAPTCHA judges
+
+    The site never asks Google. Where it has the control it judges a reader as a
+    scenario says, and says which tokens it was asked to judge.
+
+    Scenario: reCAPTCHA judges a person until it is told otherwise
+      Given a site given the token "open sesame"
+      When the tokens reCAPTCHA has judged are asked for
+      Then no token is told
+
+    Scenario: reCAPTCHA can be told how to judge
+      Given a site given the token "open sesame"
+      When reCAPTCHA is told to judge "not a person"
+      Then the site answers that it is fine
+
+    Scenario: reCAPTCHA is not told to judge anything but a person or not a person
+      Given a site given the token "open sesame"
+      When reCAPTCHA is told to judge "a robot"
+      Then the site answers that the request was wrong
+
+    Scenario: A site given no token has no reCAPTCHA control
+      Given a site given no token
+      When reCAPTCHA is told to judge "not a person"
+      Then the site answers that there is no such page
+
   Rule: The clock can be set, and goes on from there
 
     Scenario: A time set is the time the site tells

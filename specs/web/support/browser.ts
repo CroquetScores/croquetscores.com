@@ -6,6 +6,7 @@ import { After, AfterAll, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { chromium, type Browser } from "playwright";
 
 import { settingUpAtTheUsualMoment } from "./control.js";
+import { standInForRecaptcha } from "./recaptcha.js";
 import { forget, site, stop } from "./site.js";
 import type { WebWorld } from "./world.js";
 
@@ -35,6 +36,7 @@ Before({ tags: "@browser" }, async function (this: WebWorld) {
   ).newContext({
     javaScriptEnabled: false,
   });
+  await standInForRecaptcha(this.browserContext, this);
   this.page = await this.browserContext.newPage();
 });
 
@@ -83,6 +85,7 @@ export const withScripting = async (world: WebWorld): Promise<void> => {
   // signed in as.
   await scripted.addCookies(await context.cookies());
 
+  await standInForRecaptcha(scripted, world);
   world.browserContext = scripted;
   world.page = await scripted.newPage();
   await context.close();
@@ -115,6 +118,7 @@ export const reopenedBrowser = async (world: WebWorld): Promise<void> => {
     extraHTTPHeaders: world.extraHeaders,
   });
 
+  await standInForRecaptcha(reopened, world);
   world.browserContext = reopened;
   world.page = await reopened.newPage();
   await context.close();

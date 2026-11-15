@@ -304,6 +304,10 @@ import {
   registerTestControlReaders,
   type ReaderMaking,
 } from "./testControlReaders.js";
+import {
+  registerTestControlReaderCheck,
+  StandInReaderCheck,
+} from "./testControlReaderCheck.js";
 import { registerTestControlTournaments } from "./testControlTournaments.js";
 import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
@@ -1621,9 +1625,20 @@ export const buildApplication = async (
     config.administratorEmailAddress,
   );
 
+  // What judges a reader for a site under test, which is never Google.
+  const standInReaderCheck =
+    config.testControlToken === undefined
+      ? undefined
+      : new StandInReaderCheck();
   stampRequests(server, clock);
   if (config.testControlToken !== undefined && settableClock !== undefined) {
-    registerTestControl(server, config.testControlToken, settableClock, pool);
+    registerTestControl(
+      server,
+      config.testControlToken,
+      settableClock,
+      pool,
+      () => standInReaderCheck?.reset(),
+    );
   }
   speakToRequests(server, languages);
   // Before anything that reads the website, which includes the hooks that
@@ -1661,6 +1676,13 @@ export const buildApplication = async (
     };
     registerTestControlReaders(server, config.testControlToken, making);
     registerTestControlTournaments(server, config.testControlToken, making);
+    if (standInReaderCheck !== undefined) {
+      registerTestControlReaderCheck(
+        server,
+        config.testControlToken,
+        standInReaderCheck,
+      );
+    }
   }
   const reader: Reader =
     options.reader ??
@@ -1765,6 +1787,7 @@ export const buildApplication = async (
   // the keys belong on the deployment checklist.
   const readers: ReaderCheck =
     options.readerCheck ??
+    standInReaderCheck ??
     (config.recaptcha === undefined
       ? { judge: () => Promise.resolve("a person"), siteKey: undefined }
       : recaptchaAsAReaderCheck(config.recaptcha));

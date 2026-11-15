@@ -78,6 +78,8 @@ export const registerTestControl = (
   token: string,
   clock: SettableClock,
   pool: Pool,
+  // What else a scenario may have changed, put back with the rest.
+  onReset: () => void = () => undefined,
 ): void => {
   // Inside its own prefix, so that the guard is one hook and not a check
   // remembered in each route.
@@ -108,6 +110,7 @@ export const registerTestControl = (
       scope.post("/reset", async (_request, reply) => {
         await forgetEverything(pool);
         clock.reset();
+        onReset();
         return reply.code(204).send();
       });
 

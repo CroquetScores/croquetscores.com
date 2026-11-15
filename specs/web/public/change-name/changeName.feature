@@ -103,12 +103,12 @@ Feature: A reader who is signed in can change what their account is called
       And the change name page is open
       And the name "<name>" is typed
       When the dialog is submitted
-      Then the name field says the message for "<code>"
+      Then the name field says "<message>"
 
       Examples:
-        | name | code                |
-        |      | PersonName.Missing  |
-        | Sa   | PersonName.TooShort |
+        | name | message |
+        |      | Enter a name. |
+        | Sa   | A name has to be at least 3 characters. |
 
     Scenario: What was typed is put back
       Given a viewport 1200 pixels wide
