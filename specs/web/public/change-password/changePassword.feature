@@ -196,7 +196,7 @@ Feature: A reader who is signed in can change their password
       And the new password "staple battery horse correct" is typed
       And the new password is typed again as "staple battery horse correct"
       When the dialog is submitted
-      Then the current password field says the message for "ChangePassword.WrongPassword"
+      Then the current password field says "That is not your password."
 
     Scenario: A wrong current password changes nothing
       Given a viewport 1200 pixels wide
@@ -280,12 +280,12 @@ Feature: A reader who is signed in can change their password
       And the new password "<password>" is typed
       And the new password is typed again as "<again>"
       When the dialog is submitted
-      Then the <field> field says the message for "<code>"
+      Then the <field> field says "<message>"
 
       Examples:
-        | password                     | again                        | field            | code                         |
-        | too short                    | too short                    | new password     | Password.TooShort            |
-        | staple battery horse correct | staple battery horse corerct | confirm password | Password.ConfirmationDiffers |
+        | password | again | field | message |
+        | too short | too short | new password | A password has to be at least 12 characters. |
+        | staple battery horse correct | staple battery horse corerct | confirm password | This is not the same as the password above. Type it again. |
 
     Scenario: A new password that breaks a rule changes nothing
       Given a viewport 1200 pixels wide

@@ -1075,3 +1075,245 @@ Then("an id is told", function (this: SpecWorld) {
     (JSON.parse(responseOf(this).body) as { id?: string }).id !== undefined,
   );
 });
+
+When(
+  "{int} askings for a way back in from the address {string} are said to have been made {int} minutes ago",
+  async function (
+    this: SpecWorld,
+    times: number,
+    ipAddress: string,
+    minutes: number,
+  ) {
+    await asking(this, "POST", "/__test/askings", {
+      ipAddress,
+      times,
+      minutesAgo: minutes,
+    });
+  },
+);
+
+When(
+  "a way back in is asked for {string} through the control",
+  async function (this: SpecWorld, address: string) {
+    await asking(this, "POST", "/__test/accounts/way-back", {
+      emailAddress: address,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Then(
+  "an email of the kind {string} is among those told",
+  function (this: SpecWorld, kind: string) {
+    assert.ok(told(this).some((email) => email.kind === kind));
+  },
+);
+
+When(
+  "the password {string} is checked for {string}",
+  async function (this: SpecWorld, password: string, address: string) {
+    await asking(this, "POST", "/__test/accounts/password", {
+      emailAddress: address,
+      password,
+    });
+  },
+);
+
+const checked = (world: SpecWorld): { matches: boolean; remake: boolean } =>
+  JSON.parse(responseOf(world).body) as { matches: boolean; remake: boolean };
+
+Then(
+  "the password is told to match and not to need making again",
+  function (this: SpecWorld) {
+    assert.deepEqual(checked(this), { matches: true, remake: false });
+  },
+);
+
+Then("the password is told not to match", function (this: SpecWorld) {
+  assert.equal(checked(this).matches, false);
+});
+
+Given(
+  "an account for {string} brought over from the old site with the password {string}",
+  async function (this: SpecWorld, emailAddress: string, password: string) {
+    await controlled(this, "/__test/accounts", {
+      emailAddress,
+      password,
+      fromTheOldSite: true,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
+Then(
+  "the password is told to match and to need making again",
+  function (this: SpecWorld) {
+    assert.deepEqual(checked(this), { matches: true, remake: true });
+  },
+);
+
+When(
+  "the sessions of the account for {string} are counted",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/sessions?emailAddress=${encodeURIComponent(address)}`,
+    );
+  },
+);
+
+Then(
+  /^(\d+) sessions? (?:is|are) counted$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(
+      (JSON.parse(responseOf(this).body) as { count: number }).count,
+      Number(count),
+    );
+  },
+);
+
+When(
+  "forgetting is asked for {string} through the control",
+  async function (this: SpecWorld, address: string) {
+    await asking(this, "POST", "/__test/accounts/ask-to-forget", {
+      emailAddress: address,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the sessions of the account for {string} are counted by its id",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/name?emailAddress=${encodeURIComponent(address)}`,
+    );
+    const { id } = JSON.parse(responseOf(this).body) as { id: string };
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/sessions?accountId=${encodeURIComponent(id)}`,
+    );
+  },
+);
+
+When(
+  "{int} failures to sign in as {string} are said to have happened {int} minutes ago",
+  async function (
+    this: SpecWorld,
+    times: number,
+    address: string,
+    minutes: number,
+  ) {
+    await asking(this, "POST", "/__test/signins/failed", {
+      emailAddress: address,
+      times,
+      minutesAgo: minutes,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the failures to sign in as {string} are counted",
+  async function (this: SpecWorld, address: string) {
+    await asking(
+      this,
+      "GET",
+      `/__test/signins/failed?emailAddress=${encodeURIComponent(address)}`,
+    );
+  },
+);
+
+Then(
+  /^(\d+) failures? (?:is|are) counted$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(
+      (JSON.parse(responseOf(this).body) as { count: number }).count,
+      Number(count),
+    );
+  },
+);
+
+When(
+  "the account the session belongs to is asked for",
+  async function (this: SpecWorld) {
+    await asking(
+      this,
+      "GET",
+      `/__test/sessions/account?cookie=${encodeURIComponent(sessions.get(this) ?? "")}`,
+    );
+  },
+);
+
+When(
+  "the account a made up session belongs to is asked for",
+  async function (this: SpecWorld) {
+    await asking(this, "GET", "/__test/sessions/account?cookie=made-up");
+  },
+);
+
+Then(
+  "the account told is the account for {string}",
+  async function (this: SpecWorld, address: string) {
+    const told = (
+      JSON.parse(responseOf(this).body) as { accountId: string | null }
+    ).accountId;
+    await asking(
+      this,
+      "GET",
+      `/__test/accounts/name?emailAddress=${encodeURIComponent(address)}`,
+    );
+    assert.equal(
+      told,
+      (JSON.parse(responseOf(this).body) as { id: string }).id,
+    );
+  },
+);
+
+Then("no account is told", function (this: SpecWorld) {
+  assert.equal(
+    (JSON.parse(responseOf(this).body) as { accountId: string | null })
+      .accountId,
+    null,
+  );
+});
+
+When(
+  "the role {string} is given to {string} through the control",
+  async function (this: SpecWorld, role: string, address: string) {
+    await asking(this, "POST", "/__test/accounts/role", {
+      emailAddress: address,
+      role,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the role {string} is taken away from {string} through the control",
+  async function (this: SpecWorld, role: string, address: string) {
+    await asking(this, "POST", "/__test/accounts/role", {
+      emailAddress: address,
+      role,
+      taken: true,
+    });
+  },
+);
+
+When(
+  "{string} is taken down",
+  async function (this: SpecWorld, service: string) {
+    await asking(this, "POST", "/__test/services", { service, down: true });
+  },
+);
+
+When(
+  "{string} is brought back",
+  async function (this: SpecWorld, service: string) {
+    await asking(this, "POST", "/__test/services", { service, down: false });
+  },
+);

@@ -220,7 +220,8 @@ import { PublicCommentaryOfTournamentHandler } from "../application/operations/t
 import { gamesKeptByCompetitions } from "../application/operations/competitions/competitionGames.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
@@ -930,11 +931,15 @@ export const buildApplication = async (
   // send a password from a spec run across the internet and answer by
   // whatever the service knows that day: nothing is breached unless a spec
   // says so.
+  // What judges a reader for a site under test, which is never Google.
+  const standInReaderCheck =
+    config.testControlToken === undefined
+      ? undefined
+      : new StandInReaderCheck();
   const breached =
     options.breachedPasswords ??
-    (config.testControlToken === undefined
-      ? new HaveIBeenPwnedPasswords()
-      : { isBreached: () => Promise.resolve(false) });
+    standInReaderCheck ??
+    new HaveIBeenPwnedPasswords();
   const { mediator, validation } = putTogether(unitOfWork);
 
   // What is personal in an account's events is encrypted with the account's
@@ -1625,11 +1630,6 @@ export const buildApplication = async (
     config.administratorEmailAddress,
   );
 
-  // What judges a reader for a site under test, which is never Google.
-  const standInReaderCheck =
-    config.testControlToken === undefined
-      ? undefined
-      : new StandInReaderCheck();
   stampRequests(server, clock);
   if (config.testControlToken !== undefined && settableClock !== undefined) {
     registerTestControl(
@@ -1673,6 +1673,67 @@ export const buildApplication = async (
       loadAccount: (id) => accounts.load(id),
       saveAccount: (account) => accounts.save(account),
       emailedTo: () => emailQueue.emails(),
+      writeFailedSignIns: async (comparable, ipAddress, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into failed_sign_ins (email_address, ip_address, failed_at)
+             values ($1, $2, $3)`,
+            [comparable, ipAddress, at],
+          );
+        }
+      },
+      countFailedSignIns: async (comparable) => {
+        const { rows } = await pool.query<{ counted: string }>(
+          `select count(*) as counted from failed_sign_ins where email_address = $1`,
+          [comparable],
+        );
+        return Number(rows[0]?.counted ?? 0);
+      },
+      accountOfSession: async (cookie) => {
+        const { rows } = await pool.query<{ account_id: string }>(
+          `select account_id from sessions where id_hash = $1`,
+          [createHash("sha256").update(cookie).digest("base64url")],
+        );
+        return rows[0]?.account_id;
+      },
+      bringOver: async (address, name, password, at) => {
+        // The old site's salt for one password, sixteen bytes as it made them and
+        // fixed, so that the same account made twice has the same hash.
+        const salt = Buffer.alloc(16, 7).toString("base64");
+        const oldSite = new OldSitePasswordHasher(config.oldSitePasswordSalt);
+        const kept = `${salt.slice(0, 4)}${oldSite.hashOf(password, salt)}${salt.slice(4)}`;
+        const account = Account.bringOver(
+          AccountId.create(),
+          PersonName.from(name),
+          address,
+          emailAddresses.hash(address),
+          await passwords.import(kept),
+          at,
+        );
+        await unitOfWork.inTransaction(() => accounts.save(account));
+      },
+      sessionsOf: async (id) => {
+        const { rows } = await pool.query<{ sessions: string }>(
+          `select count(*) as sessions from sessions where account_id = $1`,
+          [id.value],
+        );
+        return Number(rows[0]?.sessions ?? 0);
+      },
+      writeAskings: async (ipAddress, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into password_reset_askings (ip_address, asked_at) values ($1, $2)`,
+            [ipAddress, at],
+          );
+        }
+      },
+      checkPassword: async (id, password) => {
+        const account = await unitOfWork.inTransaction(() => accounts.load(id));
+        const checked = await passwords.check(password, account?.passwordHash);
+        return { matches: checked.matches, remake: checked.remake };
+      },
       writeEmails: async (to, kind, times, minutesAgo) => {
         const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
         for (let each = 0; each < times; each++) {

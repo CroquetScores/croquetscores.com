@@ -15,6 +15,7 @@ import type { FastifyInstance } from "fastify";
 import type { Mediator } from "../application/common/Mediator.js";
 import { AskToForgetAccount } from "../application/operations/accounts/AskToForgetAccount.js";
 import { ForgetAccount } from "../application/operations/accounts/ForgetAccount.js";
+import { ResetPassword } from "../application/operations/accounts/ResetPassword.js";
 import { ConfirmEmailAddress } from "../application/operations/accounts/ConfirmEmailAddress.js";
 import { RegisterAccount } from "../application/operations/accounts/RegisterAccount.js";
 import { SignInWithGoogle } from "../application/operations/accounts/SignInWithGoogle.js";
@@ -48,11 +49,42 @@ export interface ReaderMaking {
     times: number,
     minutesAgo: number,
   ) => Promise<void>;
+  /** Says `times` askings for a way back in were made from `ipAddress`, `minutesAgo`. */
+  readonly writeAskings: (
+    ipAddress: string,
+    times: number,
+    minutesAgo: number,
+  ) => Promise<void>;
+  /** Whether `password` is the one the account keeps, and whether its hash is of an old kind. */
+  readonly checkPassword: (
+    id: AccountId,
+    password: string,
+  ) => Promise<{ matches: boolean; remake: boolean }>;
+  /** An account the old site had, with `password` kept the way the old site kept it. */
+  readonly bringOver: (
+    address: EmailAddress,
+    name: string,
+    password: string,
+    at: ReadOnlyDate,
+  ) => Promise<void>;
+  /** How many sessions the account has. */
+  readonly sessionsOf: (id: AccountId) => Promise<number>;
+  /** Says `times` sign ins as `comparable` (an address as it is compared) failed, `minutesAgo`. */
+  readonly writeFailedSignIns: (
+    comparable: string,
+    ipAddress: string,
+    times: number,
+    minutesAgo: number,
+  ) => Promise<void>;
+  readonly countFailedSignIns: (comparable: string) => Promise<number>;
+  /** The account a session cookie belongs to, if it belongs to any. */
+  readonly accountOfSession: (cookie: string) => Promise<string | undefined>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
       readonly kind: string;
       readonly link?: string | undefined;
+      readonly fill?: Readonly<Record<string, string>> | undefined;
       readonly givenUp: boolean;
     }[]
   >;
@@ -65,6 +97,7 @@ interface AccountToMake {
   password?: unknown;
   confirmed?: unknown;
   noPassword?: unknown;
+  fromTheOldSite?: unknown;
   roles?: unknown;
 }
 
@@ -110,7 +143,14 @@ const make = async (
   const at = (): ReadOnlyDate => ReadOnlyDate.from(new Date());
   const name = textOf(asked.name, CALLED);
 
-  if (asked.noPassword === true) {
+  if (asked.fromTheOldSite === true) {
+    await making.bringOver(
+      EmailAddress.from(address),
+      name,
+      textOf(asked.password, PASSWORD),
+      at(),
+    );
+  } else if (asked.noPassword === true) {
     // The one way the site makes an account with no password: by signing in
     // with Google.
     await making.mediator.send(
@@ -267,6 +307,192 @@ export const registerTestControlReaders = (
         return reply.code(200).send();
       });
 
+      // Askings for a way back in, which the site counts against a limit for
+      // the address they came from.
+      scope.post("/askings", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          ipAddress?: unknown;
+          times?: unknown;
+          minutesAgo?: unknown;
+        };
+        if (
+          typeof body.ipAddress !== "string" ||
+          typeof body.times !== "number" ||
+          typeof body.minutesAgo !== "number"
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        await making.writeAskings(body.ipAddress, body.times, body.minutesAgo);
+        return reply.code(200).send();
+      });
+
+      // Forgetting asked for, as the forget account page asks for it: the link to
+      // confirm it is emailed.
+      scope.post("/accounts/ask-to-forget", async (request, reply) => {
+        const address = textOf(
+          (request.body as { emailAddress?: unknown } | null)?.emailAddress,
+          "",
+        );
+        try {
+          const id = await making.inTransaction(() =>
+            making.accountIdFor(EmailAddress.from(address)),
+          );
+          if (id === undefined) throw new Error(`No account for ${address}.`);
+          await making.mediator.send(
+            new AskToForgetAccount(
+              id.value,
+              "en",
+              "croquetscores.com",
+              ReadOnlyDate.from(new Date()),
+            ),
+          );
+        } catch (failure) {
+          return reply
+            .code(400)
+            .send({ message: failure instanceof Error ? failure.message : "" });
+        }
+        return reply.code(200).send();
+      });
+
+      // A way back in asked for, as the forgot password page asks for one.
+      scope.post("/accounts/way-back", async (request, reply) => {
+        const address = textOf(
+          (request.body as { emailAddress?: unknown } | null)?.emailAddress,
+          "",
+        );
+        try {
+          await making.mediator.send(
+            new ResetPassword(
+              randomUUID(),
+              address,
+              "en",
+              "croquetscores.com",
+              ReadOnlyDate.from(new Date()),
+            ),
+          );
+        } catch (failure) {
+          return reply
+            .code(400)
+            .send({ message: failure instanceof Error ? failure.message : "" });
+        }
+        return reply.code(200).send();
+      });
+
+      // Whether a password is the account's, and of today's kind.
+      scope.post("/accounts/password", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          emailAddress?: unknown;
+          password?: unknown;
+        };
+        const id = await making.inTransaction(() =>
+          making.accountIdFor(EmailAddress.from(textOf(body.emailAddress, ""))),
+        );
+        if (id === undefined || typeof body.password !== "string") {
+          return reply.code(404).send({ code: "TestControl.NoAccount" });
+        }
+        return making.checkPassword(id, body.password);
+      });
+
+      // Sign ins that failed, which the site counts against a limit.
+      scope.post("/signins/failed", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          emailAddress?: unknown;
+          ipAddress?: unknown;
+          times?: unknown;
+          minutesAgo?: unknown;
+        };
+        if (
+          typeof body.times !== "number" ||
+          typeof body.minutesAgo !== "number" ||
+          (typeof body.emailAddress !== "string" &&
+            typeof body.ipAddress !== "string")
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        // Counted against an account's address or against where it came from,
+        // which a failure is for one or the other.
+        await making.writeFailedSignIns(
+          typeof body.emailAddress === "string"
+            ? EmailAddress.from(body.emailAddress).comparable
+            : "",
+          typeof body.ipAddress === "string" ? body.ipAddress : "",
+          body.times,
+          body.minutesAgo,
+        );
+        return reply.code(200).send();
+      });
+
+      scope.get("/signins/failed", async (request) => {
+        const address = (request.query as { emailAddress?: string })
+          .emailAddress;
+        return {
+          count: await making.countFailedSignIns(
+            EmailAddress.from(address ?? "").comparable,
+          ),
+        };
+      });
+
+      // Whose session a cookie is, as the browser holds it.
+      scope.get("/sessions/account", async (request) => {
+        const cookie = (request.query as { cookie?: string }).cookie ?? "";
+        return { accountId: (await making.accountOfSession(cookie)) ?? null };
+      });
+
+      // A role given or taken away, by nobody in particular, since who may is for
+      // the role's own features to say.
+      scope.post("/accounts/role", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          emailAddress?: unknown;
+          role?: unknown;
+          taken?: unknown;
+        };
+        try {
+          if (typeof body.role !== "string" || !isRole(body.role)) {
+            throw new Error(`${String(body.role)} is no role.`);
+          }
+          const address = textOf(body.emailAddress, "");
+          await making.inTransaction(async () => {
+            const id = await making.accountIdFor(EmailAddress.from(address));
+            if (id === undefined) throw new Error(`No account for ${address}.`);
+            const account = await making.loadAccount(id);
+            if (account === undefined)
+              throw new Error(`No events for ${address}.`);
+            const now = ReadOnlyDate.from(new Date());
+            if (body.taken === true) {
+              account.removeRole(body.role as Role, AccountId.create(), now);
+            } else {
+              account.addRole(body.role as Role, AccountId.create(), now);
+            }
+            await making.saveAccount(account);
+          });
+        } catch (failure) {
+          return reply
+            .code(400)
+            .send({ message: failure instanceof Error ? failure.message : "" });
+        }
+        return reply.code(200).send();
+      });
+
+      // How many sessions an account has, as a scenario about signing out asks.
+      scope.get("/accounts/sessions", async (request, reply) => {
+        const { emailAddress: address, accountId } = request.query as {
+          emailAddress?: string;
+          accountId?: string;
+        };
+        // By the account's id where it is given, which a forgotten account has
+        // still when its address no longer finds it.
+        const id =
+          accountId !== undefined
+            ? AccountId.from(accountId)
+            : await making.inTransaction(() =>
+                making.accountIdFor(EmailAddress.from(address ?? "")),
+              );
+        if (id === undefined) {
+          return reply.code(404).send({ code: "TestControl.NoAccount" });
+        }
+        return { count: await making.sessionsOf(id) };
+      });
+
       // What an account is called, as the site keeps it.
       scope.get("/accounts/name", async (request, reply) => {
         const address = (request.query as { emailAddress?: string })
@@ -301,11 +527,12 @@ export const registerTestControlReaders = (
         return {
           emails: queued
             .filter((email) => to === undefined || email.to === to)
-            .map(({ to: address, kind, link, givenUp }) => ({
+            .map(({ to: address, kind, link, givenUp, fill }) => ({
               to: address,
               kind,
               link,
               givenUp,
+              fill,
             })),
         };
       });

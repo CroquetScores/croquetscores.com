@@ -5,6 +5,8 @@
 // to it.
 import type { FastifyInstance } from "fastify";
 
+import type { BreachedPasswords } from "../application/services/BreachedPasswords.js";
+import { CheckRefused } from "../application/services/BreachedPasswords.js";
 import type { Judgement, ReaderCheck } from "./public/register.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
@@ -15,10 +17,15 @@ export const standInSiteKey = "the scenarios' reCAPTCHA site key";
 const judgements = ["a person", "not a person"] as const;
 type Said = (typeof judgements)[number];
 
-export class StandInReaderCheck implements ReaderCheck {
+/** The services a scenario can take down, which a site under test would otherwise ask. */
+export const services = ["reCAPTCHA", "Have I Been Pwned"] as const;
+type Service = (typeof services)[number];
+
+export class StandInReaderCheck implements ReaderCheck, BreachedPasswords {
   readonly siteKey = standInSiteKey;
   #judgement: Said = "a person";
   #down = false;
+  #breachedDown = false;
   #tokens: string[] = [];
 
   judge(token: string | undefined): Promise<Judgement> {
@@ -39,8 +46,21 @@ export class StandInReaderCheck implements ReaderCheck {
     this.#judgement = judgement;
   }
 
-  takeDown(down: boolean): void {
-    this.#down = down;
+  takeDown(service: Service, down: boolean): void {
+    if (service === "reCAPTCHA") this.#down = down;
+    else this.#breachedDown = down;
+  }
+
+  /** Never Have I Been Pwned, which a spec run has no business asking. */
+  isBreached(): Promise<boolean> {
+    return this.#breachedDown
+      ? Promise.reject(
+          new CheckRefused(
+            "BreachedPasswords.Unreachable",
+            "The scenario has taken Have I Been Pwned down.",
+          ),
+        )
+      : Promise.resolve(false);
   }
 
   tokens(): readonly string[] {
@@ -50,6 +70,7 @@ export class StandInReaderCheck implements ReaderCheck {
   reset(): void {
     this.#judgement = "a person";
     this.#down = false;
+    this.#breachedDown = false;
     this.#tokens = [];
   }
 }
@@ -70,10 +91,7 @@ export const registerTestControlReaderCheck = (
       });
 
       scope.post("/recaptcha", async (request, reply) => {
-        const body = (request.body ?? {}) as {
-          judgement?: unknown;
-          down?: unknown;
-        };
+        const body = (request.body ?? {}) as { judgement?: unknown };
         if (body.judgement !== undefined) {
           const said = judgements.find((each) => each === body.judgement);
           if (said === undefined) {
@@ -81,7 +99,21 @@ export const registerTestControlReaderCheck = (
           }
           standIn.tell(said);
         }
-        if (typeof body.down === "boolean") standIn.takeDown(body.down);
+        return reply.code(200).send();
+      });
+
+      // A service taken down, or brought back, as a scenario about the site
+      // being unable to reach it says.
+      scope.post("/services", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          service?: unknown;
+          down?: unknown;
+        };
+        const service = services.find((each) => each === body.service);
+        if (service === undefined || typeof body.down !== "boolean") {
+          return reply.code(400).send({ code: "TestControl.NotAService" });
+        }
+        standIn.takeDown(service, body.down);
         return reply.code(200).send();
       });
 

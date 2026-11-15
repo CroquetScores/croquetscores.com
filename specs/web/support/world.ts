@@ -38,9 +38,18 @@ export class WebWorld extends World {
   /** The ids of the manager notes the scenario added, by their titles. */
   public notes = new Map<string, string>();
 
+  /** The account a scenario holds by its id, which its address may no longer find. */
+  public accountHeld: string | undefined;
+
+  /** Where in the site's log this scenario begins. */
+  public logFrom = 0;
+
   /** The link a scenario is about to follow, and whose mail it came from. */
   public linkInHand: string | undefined;
   public addressInHand: string | undefined;
+
+  /** Other browsers the scenario opened, standing in for other devices. */
+  public otherBrowsers: BrowserContext[] = [];
 
   /** What the accounts the scenario made are called, by address. */
   public accountNames = new Map<string, string>();

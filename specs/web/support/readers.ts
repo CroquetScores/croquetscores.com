@@ -5,7 +5,16 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { call, makeAccount, sessionFor } from "./control.js";
+import {
+  accountOfSession,
+  call,
+  changeRole,
+  detailsOfAccount,
+  failedSignInsAs,
+  makeAccount,
+  sayFailedSignInsHappened,
+  sessionFor,
+} from "./control.js";
 import { unmarked } from "./languages.js";
 import { wordsFor } from "./words.js";
 import type { WebWorld } from "./world.js";
@@ -190,3 +199,93 @@ Then("the reader is told to try again later", async function (this: WebWorld) {
     "No page says to try again later.",
   );
 });
+
+// An account the old site had, brought over with its password kept the old way.
+Given(
+  "{string} has an account brought over from the old site, with the password {string}",
+  async function (this: WebWorld, address: string, password: string) {
+    this.accountNames.set(address, "Sam Someone");
+    await makeAccount({
+      emailAddress: address,
+      password,
+      fromTheOldSite: true,
+    });
+  },
+);
+
+// What has failed before, written where the page counts it, at a few minutes ago
+// so that it is inside the hour whatever moment the scenario is at.
+Given(
+  "signing in as {string} has failed {int} times in the last hour",
+  async function (this: WebWorld, address: string, times: number) {
+    await sayFailedSignInsHappened({ emailAddress: address }, times, 5);
+  },
+);
+
+Given(
+  "this IP address has failed to sign in {int} times in the last hour",
+  async function (this: WebWorld, times: number) {
+    await sayFailedSignInsHappened({ ipAddress: "127.0.0.1" }, times, 5);
+  },
+);
+
+Then(
+  /^signing in as "([^"]*)" has been counted (\d+) times?$/,
+  async function (this: WebWorld, address: string, times: string) {
+    assert.equal(await failedSignInsAs(address), Number(times));
+  },
+);
+
+// The account the browser's session cookie signs in to, which the site says.
+Then(
+  "the reader is signed in to the account for {string}",
+  async function (this: WebWorld, address: string) {
+    const cookie = (await this.browserContext?.cookies())?.find(
+      (each) => each.name === "session",
+    );
+    assert.ok(cookie !== undefined, "The browser holds no session.");
+    assert.equal(
+      await accountOfSession(cookie.value),
+      (await detailsOfAccount(address)).id,
+    );
+  },
+);
+
+Given(
+  "{string} has been given the role {string}",
+  async function (this: WebWorld, address: string, role: string) {
+    await changeRole(address, roleCalled(role), false);
+  },
+);
+
+Given(
+  "{string} has had the role {string} taken away",
+  async function (this: WebWorld, address: string, role: string) {
+    await changeRole(address, roleCalled(role), true);
+  },
+);
+
+// A role as a feature names it, "Administrator" or "World Ranking Officer", and as
+// the account keeps it.
+const roleCalled = (name: string): string =>
+  name.toLowerCase().replaceAll(" ", "-");
+
+// The sign in page, as a reader opens it from a link or by typing its address.
+const openSignIn = async function (this: WebWorld): Promise<void> {
+  await this.browserPage.goto(`${this.baseUrl!}/account/sign-in`);
+};
+
+Given("the sign in page is open", openSignIn);
+When("the sign in page is opened", openSignIn);
+
+Then(
+  "the page links to the forgot password page once",
+  async function (this: WebWorld) {
+    assert.equal(
+      await this.browserPage
+        .locator('main a[href="/account/forgot-password"]')
+        .count(),
+      1,
+    );
+  },
+);

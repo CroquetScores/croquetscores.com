@@ -6,7 +6,7 @@
 import { Given } from "@cucumber/cucumber";
 import type { BrowserContext } from "playwright";
 
-import { tellRecaptcha } from "./control.js";
+import { call, tellRecaptcha } from "./control.js";
 import type { WebWorld } from "./world.js";
 
 const script = `
@@ -21,6 +21,17 @@ window.grecaptcha = {
     );
   }
 };`;
+
+/** Takes a service the site asks down, or brings it back. */
+export const takeDown = async (
+  service: "reCAPTCHA" | "Have I Been Pwned",
+  down: boolean,
+): Promise<void> => {
+  const answer = await call("POST", "/services", { service, down });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
+};
 
 /** Has `context` hand the page the stand-in for Google's script, or none. */
 export const standInForRecaptcha = async (

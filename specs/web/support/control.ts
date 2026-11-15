@@ -50,6 +50,8 @@ export interface AccountToMake {
   readonly confirmed?: boolean;
   /** Whether it has none, as an account made by signing in with Google has. */
   readonly noPassword?: boolean;
+  /** Whether it is one the old site had, its password kept the way the old site kept it. */
+  readonly fromTheOldSite?: boolean;
   readonly roles?: readonly string[];
 }
 
@@ -90,6 +92,8 @@ export interface QueuedEmail {
   readonly kind: string;
   readonly link?: string;
   readonly givenUp: boolean;
+  /** What fills the email in, by the name its words give it. */
+  readonly fill?: Readonly<Record<string, string>>;
 }
 
 /** What the site has queued for `address`, oldest first. */
@@ -197,5 +201,132 @@ export const sayEmailsWereWritten = async (
   });
   if (answer.status !== 200) {
     throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
+};
+
+/** Says `times` askings for a way back in came from `ipAddress`, `minutesAgo`. */
+export const sayWaysBackWereAsked = async (
+  ipAddress: string,
+  times: number,
+  minutesAgo: number,
+): Promise<void> => {
+  const answer = await call("POST", "/askings", {
+    ipAddress,
+    times,
+    minutesAgo,
+  });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
+};
+
+/** Asks for a way back in as the forgot password page does. */
+export const askForAWayBack = async (address: string): Promise<void> => {
+  const answer = await call("POST", "/accounts/way-back", {
+    emailAddress: address,
+  });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not send one: ${String(answer.status)}.`);
+  }
+};
+
+/** Whether `password` is the account's, and whether it was kept an old way. */
+export const checkPasswordOf = async (
+  address: string,
+  password: string,
+): Promise<{ matches: boolean; remake: boolean }> => {
+  const answer = await call("POST", "/accounts/password", {
+    emailAddress: address,
+    password,
+  });
+  return (await answer.json()) as { matches: boolean; remake: boolean };
+};
+
+/** How many sessions the site holds for the account for `address`. */
+export const sessionsOf = async (address: string): Promise<number> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/accounts/sessions?emailAddress=${encodeURIComponent(address)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { count: number }).count;
+};
+
+/** Asks the account for `address` to forget itself, as its page does: the link is emailed. */
+export const askToForget = async (address: string): Promise<void> => {
+  const answer = await call("POST", "/accounts/ask-to-forget", {
+    emailAddress: address,
+  });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not ask: ${String(answer.status)}.`);
+  }
+};
+
+/** How many sessions the site holds for the account with this id. */
+export const sessionsOfId = async (accountId: string): Promise<number> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/accounts/sessions?accountId=${encodeURIComponent(accountId)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { count: number }).count;
+};
+
+/** Says `times` sign ins as `address` failed, `minutesAgo` by the site's clock. */
+export const sayFailedSignInsHappened = async (
+  who: { readonly emailAddress: string } | { readonly ipAddress: string },
+  times: number,
+  minutesAgo: number,
+): Promise<void> => {
+  const answer = await call("POST", "/signins/failed", {
+    ...who,
+    times,
+    minutesAgo,
+  });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
+};
+
+/** How many sign ins as `address` the site has counted as failed. */
+export const failedSignInsAs = async (address: string): Promise<number> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/signins/failed?emailAddress=${encodeURIComponent(address)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { count: number }).count;
+};
+
+/** The id of the account the session cookie `cookie` belongs to, if any. */
+export const accountOfSession = async (
+  cookie: string,
+): Promise<string | undefined> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/sessions/account?cookie=${encodeURIComponent(cookie)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return (
+    ((await answer.json()) as { accountId: string | null }).accountId ??
+    undefined
+  );
+};
+
+/** Gives the account a role, or takes it away. */
+export const changeRole = async (
+  address: string,
+  role: string,
+  taken: boolean,
+): Promise<void> => {
+  const answer = await call("POST", "/accounts/role", {
+    emailAddress: address,
+    role,
+    taken,
+  });
+  if (answer.status !== 200) {
+    throw new Error(
+      `The site would not change the role: ${String(answer.status)}.`,
+    );
   }
 };

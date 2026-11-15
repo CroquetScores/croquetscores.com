@@ -7,7 +7,7 @@ import { chromium, type Browser } from "playwright";
 
 import { settingUpAtTheUsualMoment } from "./control.js";
 import { standInForRecaptcha } from "./recaptcha.js";
-import { forget, site, stop } from "./site.js";
+import { forget, markTheLog, site, stop } from "./site.js";
 import type { WebWorld } from "./world.js";
 
 // Starting the site, and making its database, take more than Cucumber's five
@@ -25,6 +25,7 @@ Before(async function (this: WebWorld) {
   this.baseUrl = (await site()).baseUrl;
   await forget();
   settingUpAtTheUsualMoment();
+  this.logFrom = markTheLog();
 });
 
 Before({ tags: "@browser" }, async function (this: WebWorld) {
@@ -43,7 +44,11 @@ Before({ tags: "@browser" }, async function (this: WebWorld) {
 // Whatever closing has to say is nothing the scenario's own verdict should be
 // overturned by.
 After({ tags: "@browser" }, async function (this: WebWorld) {
-  await Promise.allSettled([this.browserContext?.close()]);
+  await Promise.allSettled([
+    this.browserContext?.close(),
+    ...this.otherBrowsers.map((other) => other.close()),
+  ]);
+  this.otherBrowsers = [];
   this.browserContext = undefined;
   this.page = undefined;
 });

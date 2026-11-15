@@ -34,6 +34,24 @@ export interface RunningSite {
 }
 
 let starting: Promise<RunningSite> | undefined;
+
+// What the site has written to its log, a line at a time, which a scenario about
+// what is logged reads from where its own scenario began (`markTheLog`).
+const logged: string[] = [];
+let unfinished = "";
+
+const keepLogged = (text: Buffer): void => {
+  const lines = (unfinished + text.toString("utf8")).split("\n");
+  unfinished = lines.pop() ?? "";
+  logged.push(...lines.filter((line) => line.trim() !== ""));
+};
+
+/** Where in the log the next scenario begins. */
+export const markTheLog = (): number => logged.length;
+
+/** What the site has logged since `mark`. */
+export const loggedSince = (mark: number): readonly string[] =>
+  logged.slice(mark);
 let child: ChildProcess | undefined;
 let databaseName: string | undefined;
 let templateName: string | undefined;
@@ -118,13 +136,16 @@ const start = async (): Promise<RunningSite> => {
     [require.resolve("tsx/cli"), "src/web/server.ts"],
     {
       cwd: root,
-      stdio: "ignore",
+      stdio: ["ignore", "pipe", "pipe"],
       env: {
         ...process.env,
         PORT: String(port),
         DATABASE_URL: urlOf(databaseName),
         DATABASE_ACCESS_FILE: join(folder, ".database-access"),
         TEST_CONTROL_TOKEN: token,
+        // Written out here and not read from the site: what an account brought
+        // over from the old site was hashed with, in the site's hands.
+        OLD_SITE_PASSWORD_SALT: "the old site's site-wide salt",
         // The browser reaches the site on 127.0.0.1, which is trusted to say
         // which website it addressed, as something in front of the site would.
         TRUSTED_PROXY: "127.0.0.1",
@@ -147,6 +168,8 @@ const start = async (): Promise<RunningSite> => {
       },
     },
   );
+  child.stdout?.on("data", keepLogged);
+  child.stderr?.on("data", keepLogged);
   const baseUrl = `http://127.0.0.1:${String(port)}`;
   await ready(baseUrl);
   return { baseUrl, token };

@@ -362,7 +362,7 @@ Feature: A reader who is signed in can change their account's email address
       And the new email address "sam@example.org" is typed
       And the current password "not the right password" is typed
       When the dialog is submitted
-      Then the current password field says the message for "ChangeEmailAddress.WrongPassword"
+      Then the current password field says "That is not your password."
 
     Scenario: A wrong current password sends nothing
       Given a viewport 1200 pixels wide
@@ -382,13 +382,13 @@ Feature: A reader who is signed in can change their account's email address
       And the new email address "<address>" is typed
       And the current password "correct horse battery staple" is typed
       When the dialog is submitted
-      Then the new email address field says the message for "<code>"
+      Then the new email address field says "<message>"
 
       Examples:
-        | address             | code                         |
-        | sam@example         | EmailAddress.NoDomain        |
-        | someone@example.com | ChangeEmailAddress.Unchanged |
-        | Someone@Example.com | ChangeEmailAddress.Unchanged |
+        | address | message |
+        | sam@example | An email address has a domain after the @, such as example.com. |
+        | someone@example.com | Your account is at this address already. |
+        | Someone@Example.com | Your account is at this address already. |
 
     Scenario: A new address that breaks a rule sends nothing
       Given a viewport 1200 pixels wide

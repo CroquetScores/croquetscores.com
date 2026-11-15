@@ -5,7 +5,7 @@
 import { When, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { closes, opens } from "./languages.js";
+import { closes, opens, unmarked } from "./languages.js";
 import { unmarkedWithin } from "./marks.js";
 import type { WebWorld } from "./world.js";
 
@@ -169,5 +169,96 @@ Then(
   async function (this: WebWorld) {
     const stray = await unmarkedWithin(this, "main", [".profile-own"]);
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
+  },
+);
+
+const buttons = ".dialog-buttons :is(a, button)";
+
+Then(
+  "the submit button is the first of the dialog's buttons",
+  async function (this: WebWorld) {
+    const all = this.browserPage.locator(buttons);
+    const count = await all.count();
+    assert.ok(count > 0, "The dialog has no buttons.");
+    const first = all.nth(0);
+    assert.equal(
+      await first.getAttribute("type"),
+      "submit",
+      "The first button is not the submit button.",
+    );
+    const pressed = await first.boundingBox();
+    assert.ok(pressed !== null);
+    for (let index = 1; index < count; index += 1) {
+      const other = await all.nth(index).boundingBox();
+      assert.ok(other !== null);
+      assert.ok(
+        pressed.y <= other.y + 0.5,
+        "The submit button is shown beneath another button.",
+      );
+    }
+  },
+);
+
+Then(
+  "each of the dialog's buttons is as wide as the email address field",
+  async function (this: WebWorld) {
+    const field = await this.browserPage
+      .locator('section.dialog label.field-box[for="field-emailAddress"]')
+      .first()
+      .boundingBox();
+    assert.ok(field !== null, "The email address field is not drawn.");
+    const all = await this.browserPage
+      .locator(`section.dialog ${buttons}`)
+      .all();
+    assert.ok(all.length > 0, "The dialog has no buttons.");
+    for (const button of all) {
+      const drawn = await button.boundingBox();
+      assert.ok(drawn !== null, "A button in the dialog is not drawn.");
+      assert.ok(
+        Math.abs(drawn.width - field.width) <= 0.5,
+        `A button is ${drawn.width} pixels wide and the field ${field.width}.`,
+      );
+    }
+  },
+);
+
+// A cancel button is a way out of the form to the home page, whatever it says, or
+// anything among the dialog's buttons that says Cancel, wherever it goes: either
+// would be the button the rule says is not there.
+Then("the dialog has no cancel button", async function (this: WebWorld) {
+  const all = await this.browserPage.locator(`section.dialog ${buttons}`).all();
+  assert.ok(all.length > 0, "The dialog has no buttons at all.");
+  for (const button of all) {
+    const href = await button.getAttribute("href");
+    const said = unmarked(await button.innerText()).trim();
+    assert.notEqual(href, "/", `"${said}" goes to the home page.`);
+    assert.notEqual(said.toLowerCase(), "cancel", "A button says Cancel.");
+  }
+});
+
+Then(
+  /^the (.+) field is empty$/,
+  async function (this: WebWorld, field: string) {
+    const value = await this.browserPage.evaluate<string | null>(`(() => {
+    const input = ${inputByLabel(field)};
+    return input ? input.value : null;
+  })()`);
+    assert.ok(value !== null, `The dialog has no ${field} field.`);
+    assert.equal(value, "");
+  },
+);
+
+Then("the admin is shown", function (this: WebWorld) {
+  assert.equal(new URL(this.browserPage.url()).pathname, "/admin/");
+});
+
+// The account's address is filled into the words that say where a link will go, so
+// it is read inside their marks with them, as any word filled in is; the step says
+// it is left out, since that is what the scenario is about.
+Then(
+  "every word in the dialog but the account's own is in the test locale",
+  async function (this: WebWorld) {
+    const stray = await unmarkedWithin(this, "section.dialog");
+    assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
   },
 );

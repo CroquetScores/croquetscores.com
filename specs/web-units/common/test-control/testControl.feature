@@ -330,6 +330,106 @@ Feature: A site over a database the specs made can be controlled by a token
       When the name of the account for "someone@example.com" is asked for
       Then the account is told not to be confirmed
 
+  Rule: A site with the control can be given an account brought over from the old site
+
+    Scenario: An account brought over keeps its password the old way
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" brought over from the old site with the password "correct horse battery staple"
+      When the password "correct horse battery staple" is checked for "someone@example.com"
+      Then the password is told to match and to need making again
+
+  Rule: A site with the control can be told who has failed to sign in, and asked how many have
+
+    Scenario: Failures a few minutes ago are said to have happened, and counted
+      Given a site given the token "open sesame"
+      When 2 failures to sign in as "someone@example.com" are said to have happened 5 minutes ago
+      And the failures to sign in as "someone@example.com" are counted
+      Then 2 failures are counted
+
+    Scenario: A site given no token keeps no count of failures
+      Given a site given no token
+      When the failures to sign in as "someone@example.com" are counted
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be asked whose session a cookie is
+
+    Scenario: A session's cookie is told to be the account's
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the account the session belongs to is asked for
+      Then the account told is the account for "someone@example.com"
+
+    Scenario: A cookie that is no session belongs to nobody
+      Given a site given the token "open sesame"
+      When the account a made up session belongs to is asked for
+      Then no account is told
+
+  Rule: A site with the control can be given and have taken away a role
+
+    Scenario: A role can be given and taken away
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the role "administrator" is given to "someone@example.com" through the control
+      And the role "administrator" is taken away from "someone@example.com" through the control
+      Then the site answers that it is fine
+
+  Rule: A site with the control can be asked to ask the account to forget itself
+
+    Scenario: Forgetting is asked for, and its link is emailed
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When forgetting is asked for "someone@example.com" through the control
+      And the emails queued for "someone@example.com" are asked for
+      Then an email of the kind "Email.ConfirmForgetting" is among those told
+
+  Rule: A site with the control can be asked how many sessions an account has
+
+    Scenario: An account can be asked about by its id as well as its address
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the sessions of the account for "someone@example.com" are counted by its id
+      Then 0 sessions are counted
+
+    Scenario: An account with no session has none
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the sessions of the account for "someone@example.com" are counted
+      Then 0 sessions are counted
+
+    Scenario: A session that was given is counted
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the sessions of the account for "someone@example.com" are counted
+      Then 1 session is counted
+
+  Rule: A site with the control can be told what has been asked of it, and be asked to send a way back in
+
+    Scenario: Askings from an address a few minutes ago are said to have been made
+      Given a site given the token "open sesame"
+      When 3 askings for a way back in from the address "127.0.0.1" are said to have been made 5 minutes ago
+      Then the site answers that it is fine
+
+    Scenario: A way back in can be asked for, and is emailed
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When a way back in is asked for "someone@example.com" through the control
+      And the emails queued for "someone@example.com" are asked for
+      Then an email of the kind "Email.SetNewPassword" is among those told
+
+    Scenario: A password the account was made with is told to be of today's kind
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the password "correct horse battery staple" is checked for "someone@example.com"
+      Then the password is told to match and not to need making again
+
+    Scenario: Another password is told not to match
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the password "some other words entirely" is checked for "someone@example.com"
+      Then the password is told not to match
+
   Rule: A site with the control can be told emails were written to an account already
 
     The site limits how many emails it writes to an account in an hour, so a
@@ -374,6 +474,24 @@ Feature: A site over a database the specs made can be controlled by a token
       Given a site given no token
       When the emails queued for "someone@example.com" are asked for
       Then the site answers that there is no such page
+
+  Rule: A site with the control can have the services it asks taken down
+
+    Scenario Outline: A service can be taken down and brought back
+      Given a site given the token "open sesame"
+      When "<service>" is taken down
+      And "<service>" is brought back
+      Then the site answers that it is fine
+
+      Examples:
+        | service           |
+        | reCAPTCHA         |
+        | Have I Been Pwned |
+
+    Scenario: A service the site does not ask cannot be taken down
+      Given a site given the token "open sesame"
+      When "Google" is taken down
+      Then the site answers that the request was wrong
 
   Rule: A site with the control can be told how reCAPTCHA judges
 
