@@ -128,3 +128,9 @@ Then(
     );
   },
 );
+
+// The admin draws the section bar once it knows the competitions, so a step waits
+// for it before looking: a bar looked at too soon is not yet there.
+Then("the page has a section bar", async function (this: WebWorld) {
+  await this.browserPage.locator("nav.site-sections").waitFor();
+});

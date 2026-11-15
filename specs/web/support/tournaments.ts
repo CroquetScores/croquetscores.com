@@ -297,3 +297,11 @@ Given(
     );
   },
 );
+
+Given(
+  "the tournament is to be played in the country {string}",
+  function (this: WebWorld, country: string) {
+    // In no region of it, since the regions are the country's own.
+    this.ofTheNext = { ...this.ofTheNext, country, region: undefined };
+  },
+);

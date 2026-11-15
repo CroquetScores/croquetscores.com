@@ -330,3 +330,12 @@ Then(
     assert.deepEqual(stray, [], "Words in the navigation came from elsewhere.");
   },
 );
+
+// An account with a name, which a scenario about people names it by.
+Given(
+  "{string} has an account, confirmed, called {string}",
+  async function (this: WebWorld, address: string, name: string) {
+    this.accountNames.set(address, name);
+    await makeAccount({ emailAddress: address, name });
+  },
+);

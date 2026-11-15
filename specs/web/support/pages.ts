@@ -5,6 +5,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { withScripting } from "./browser.js";
+import { openAndKeepTheAnswer } from "./answers.js";
 import { setTheClock, settingUpAt } from "./control.js";
 import { unmarked } from "./languages.js";
 import type { WebWorld } from "./world.js";
@@ -80,7 +81,7 @@ Given(
 );
 
 const openAt = async function (this: WebWorld, path: string): Promise<void> {
-  await this.browserPage.goto(`${this.baseUrl!}${path}`);
+  await openAndKeepTheAnswer(this, path);
 };
 
 When("the page at {string} is opened", openAt);
@@ -183,3 +184,19 @@ Given("the page at {string} is open with scripting off", openWithScriptingOff);
 When("the menu button is pressed", async function (this: WebWorld) {
   await this.browserPage.click("header details.menu > summary");
 });
+
+// The heading the page is headed by, which the admin draws once it has its answer.
+Then(
+  "the page's heading is {string}",
+  async function (this: WebWorld, heading: string) {
+    const until = Date.now() + 3000;
+    for (;;) {
+      const shown = (
+        await this.browserPage.locator("main h1").innerText()
+      ).trim();
+      if (shown === heading) return;
+      if (Date.now() > until) assert.equal(shown, heading);
+      await new Promise((later) => setTimeout(later, 50));
+    }
+  },
+);
