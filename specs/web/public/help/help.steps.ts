@@ -159,6 +159,10 @@ Then(
   },
 );
 
+Then("the page is the one about the home screen", function (this: SpecWorld) {
+  assert.match(article(this), /data-page="readers\/home-screen"/);
+});
+
 Then(
   "the page is the one for world ranking officers",
   function (this: SpecWorld) {

@@ -1,6 +1,7 @@
 import { evaluateWith } from "../../support/evaluateWith.js";
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
+import { join } from "node:path";
 
 import type { HelpPagesToSearch } from "../../../../src/application/services/HelpSearchIndex.js";
 import { languageCookie } from "../../../../src/web/common/language.js";
@@ -14,11 +15,16 @@ import {
   withScripting,
 } from "../../support/browser.js";
 import { signInAs } from "../../support/reader.js";
+import { helpPagesToSearchIn } from "../../../../src/web/common/helpPagesToSearch.js";
+
+const builtHelp = join(import.meta.dirname, "../../../../dist/help");
 
 // What a scenario has said of the reader and the question, and what the last
 // asking was answered with. Held here and not on the world, which every spec
 // in the repository shares, for something only these scenarios have.
 interface Scene {
+  /** The pages to search where they are the help as it is written. */
+  written: HelpPagesToSearch | undefined;
   tag: string | undefined;
   signedIn: boolean;
   question: string | undefined;
@@ -39,6 +45,7 @@ const sceneOf = (world: SpecWorld): Scene => {
 
 Given("a site with help pages", function (this: SpecWorld) {
   scenes.set(this, {
+    written: undefined,
     tag: undefined,
     signedIn: false,
     question: undefined,
@@ -54,13 +61,34 @@ Given("a site with help pages", function (this: SpecWorld) {
 const siteOf = async (world: SpecWorld): Promise<string> => {
   const scene = sceneOf(world);
   if (scene.site !== undefined) return scene.site;
-  const pages: HelpPagesToSearch = {
+  const pages: HelpPagesToSearch = scene.written ?? {
     all: () => Promise.resolve([...pagesOf(world)]),
   };
   scene.site = await anApplicationWithSearchableHelp(world, pages);
   world.baseUrl = scene.site;
   return scene.site;
 };
+
+// The help as the build writes it, for a scenario that is about what the help
+// says and not about how it is searched: the pages of docs/help, read from
+// where the build put them, so that a page written for the help is the page
+// searched.
+Given(
+  "a site with the English help as written",
+  async function (this: SpecWorld) {
+    const { tag } = await languageOf("english");
+    scenes.set(this, {
+      written: helpPagesToSearchIn(builtHelp, () => [tag]),
+      tag: undefined,
+      signedIn: false,
+      question: undefined,
+      body: undefined,
+      site: undefined,
+      status: undefined,
+      error: undefined,
+    });
+  },
+);
 
 // The readers ---------------------------------------------------------------------
 

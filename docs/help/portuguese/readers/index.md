@@ -5,3 +5,4 @@ Você não precisa de uma conta para ler os resultados de um torneio, e estes gu
 - [Encontrando e acompanhando um torneio](following-a-tournament.md): encontrar, restringir e ordenar listas, ler uma competição, notas e novidades.
 - [Escolhendo o tema e o idioma](theme-and-language.md): claro ou escuro, e o idioma em que o site fala com você.
 - [Scripts e cookies](scripting-and-cookies.md): o que o site guarda no seu navegador e a única coisa que exige scripts ativados.
+- [Colocando o site no ecrã principal](home-screen.md): ter o site no telemóvel com um ícone próprio, no iPhone, no iPad e noutros telemóveis.

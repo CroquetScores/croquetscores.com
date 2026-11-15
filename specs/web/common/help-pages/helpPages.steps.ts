@@ -135,6 +135,30 @@ When(
   },
 );
 
+Then("each has a title", function (this: SpecWorld) {
+  const each = everyConverted.get(this) ?? [];
+  assert.ok(each.length > 0, "No page was converted.");
+  for (const { language, html } of each) {
+    assert.match(html, /<h1[ >]/, language);
+  }
+});
+
+// Once, and as an item of the list the page is made of, which is where a page
+// of the help names the others it leads to: a link from a stray place, or one
+// said twice, is not what the page was written to say.
+Then("each links to {string}", function (this: SpecWorld, address: string) {
+  const link = `<a href="${address}">`;
+  for (const { language, html } of everyConverted.get(this) ?? []) {
+    const at = html.indexOf(link);
+    assert.ok(at !== -1, `${language} does not link to ${address}.`);
+    assert.equal(html.indexOf(link, at + 1), -1, `${language} links twice.`);
+    assert.ok(
+      html.lastIndexOf("<li>", at) > html.lastIndexOf("</li>", at),
+      `${language} does not link to ${address} from a list.`,
+    );
+  }
+});
+
 Then(
   "each has the bookmark {string}",
   function (this: SpecWorld, bookmark: string) {

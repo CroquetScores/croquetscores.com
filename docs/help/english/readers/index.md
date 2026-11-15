@@ -5,3 +5,4 @@ You do not need an account to read a tournament's results, and these guides are 
 - [Finding and following a tournament](following-a-tournament.md): finding, narrowing and sorting lists, reading a competition, notes, and what's new.
 - [Choosing the theme and the language](theme-and-language.md): light or dark, and the language the site speaks to you in.
 - [Scripting and cookies](scripting-and-cookies.md): what the site keeps in your browser, and the one thing that needs scripting switched on.
+- [Add the site to your home screen](home-screen.md): keeping the site on your phone with an icon of its own, on an iPhone, an iPad and other phones.
