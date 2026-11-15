@@ -108,6 +108,17 @@ Then("every flag there is is one of them", function (this: SpecWorld) {
   );
 });
 
+Then(
+  "the country has one region named {string}",
+  function (this: SpecWorld, name: string) {
+    assert.ok(this.country !== undefined, "No country was found.");
+    assert.equal(
+      this.country.regions.filter((region) => region.name === name).length,
+      1,
+    );
+  },
+);
+
 // Named in full when it fails, so that whoever reads it knows which countries
 // have no region to put a tournament in.
 Then("every one of them has at least one region", function (this: SpecWorld) {
