@@ -59,9 +59,11 @@ Feature: The help tells a reader with an iPhone how to put the site on their hom
 
     Safari is named, since it is the browser the site's pages are most often
     read in on an iPhone and the one that has always had this. The other
-    browsers on an iPhone have it too now, from a later version of the phone,
-    so the page says to look in their Share menu in the same way, and which
-    version, rather than telling a reader on one of them that they cannot.
+    browsers on an iPhone can have it too, from a later version of the phone,
+    where they offer it, so the page says to look in their Share menu in the
+    same way, and from which version, rather than telling a reader on one of
+    them that they cannot. Chrome is named as one, since Chrome is known to
+    offer it, and Firefox is not, since that is not known.
 
     Scenario: The page says to open the site in Safari
       When the English page "readers/home-screen" is converted
@@ -87,6 +89,10 @@ Feature: The help tells a reader with an iPhone how to put the site on their hom
       When the English page "readers/home-screen" is converted
       Then the section "on-an-iphone" says "iOS 16.4"
 
+    Scenario: The page does not promise it of a browser not known to offer it
+      When the English page "readers/home-screen" is converted
+      Then the section "on-an-iphone" does not say "Firefox"
+
     Scenario: The page says where the Share button is on an iPad
       When the English page "readers/home-screen" is converted
       Then the section "on-an-ipad" says "top"
@@ -95,19 +101,19 @@ Feature: The help tells a reader with an iPhone how to put the site on their hom
 
     Scenario: The page says the site opens without the browser's controls
       When the English page "readers/home-screen" is converted
-      Then the page says "without the browser's address bar"
+      Then the help page says "without the browser's address bar"
 
     Scenario: The page says the site still needs a connection
       When the English page "readers/home-screen" is converted
-      Then the page says "needs a connection"
+      Then the help page says "needs a connection"
 
     Scenario: The page says the site gets an icon
       When the English page "readers/home-screen" is converted
-      Then the page says "icon"
+      Then the help page says "icon"
 
     Scenario: The page says a try website cannot be put there
       When the English page "readers/home-screen" is converted
-      Then the page says "try website"
+      Then the help page says "try website"
 
   Rule: The page says what to do on other phones, and when there is no option
 
@@ -123,19 +129,31 @@ Feature: The help tells a reader with an iPhone how to put the site on their hom
       When the English page "readers/home-screen" is converted
       Then the section "if-there-is-no-option" says "reading in a private window"
 
+  @postgres
   Rule: A reader who asks in their own words finds the page
 
     Readers do not ask for the home screen. They ask how to install the app, or
-    how to get the site as an icon, and the help has to answer both.
+    how to get the site as an icon, and the help has to answer both. The
+    questions are put to the English help as it is written, which is the pages
+    of `docs/help` as the build makes them, and not to pages a scenario made up.
+
+    A question is held to the page being first, which is a ranking that another
+    page written later could change, and it is meant to: a page that outranks
+    this one for a question about the home screen is one to look at. The search
+    ranks by how often a word is said, so a question whose words are common to
+    other pages, such as "add to home screen" with the "add" of every page that
+    says how to add something, is not held here.
 
     Scenario Outline: The question "<question>" finds the page
-      Given the help is searched in English
-      When the question "<question>" is asked
-      Then the first result is "readers/home-screen"
+      Given a site with the English help as written
+      And an english reader
+      And the reader's question "<question>"
+      When the question is asked
+      Then the first result leads to the page "readers/home-screen"
 
       Examples:
-        | question                  |
-        | add to home screen        |
-        | how do I install the app  |
-        | put the site on my iPhone |
-        | make an icon on my phone  |
+        | question                   |
+        | the site on my home screen |
+        | how do I install the app   |
+        | put the site on my iPhone  |
+        | make an icon on my phone   |

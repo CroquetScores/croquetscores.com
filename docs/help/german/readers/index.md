@@ -5,3 +5,4 @@ Sie brauchen kein Konto, um die Ergebnisse eines Turniers zu lesen. Diese Anleit
 - [Turniere finden und verfolgen](following-a-tournament.md): Listen finden, eingrenzen und sortieren, einen Wettbewerb lesen, Notizen und Neuigkeiten.
 - [Darstellung und Sprache wählen](theme-and-language.md): hell oder dunkel, und die Sprache, in der die Website zu Ihnen spricht.
 - [Skripte und Cookies](scripting-and-cookies.md): was die Website in Ihrem Browser speichert, und das Eine, wofür Skripte eingeschaltet sein müssen.
+- [Die Website zum Home-Bildschirm hinzufügen](home-screen.md): die Website mit eigenem Symbol auf dem Handy behalten, auf dem iPhone, dem iPad und anderen Handys.

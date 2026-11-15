@@ -5,3 +5,4 @@ Ke čtení výsledků turnaje účet nepotřebujete a tyto návody jsou pro toho
 - [Hledání a sledování turnaje](following-a-tournament.md): hledání, zužování a řazení seznamů, čtení soutěže, poznámky a novinky.
 - [Volba motivu a jazyka](theme-and-language.md): světlý nebo tmavý a jazyk, kterým k vám web mluví.
 - [Skriptování a cookies](scripting-and-cookies.md): co web uchovává ve vašem prohlížeči a jediná věc, která potřebuje zapnuté skriptování.
+- [Přidání webu na plochu telefonu](home-screen.md): mít web v telefonu s vlastní ikonou, na iPhonu, iPadu a jiných telefonech.

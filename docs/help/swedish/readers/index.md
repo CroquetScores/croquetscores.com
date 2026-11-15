@@ -5,3 +5,4 @@ Du behöver inget konto för att läsa en turnerings resultat, och de här guide
 - [Hitta och följa en turnering](following-a-tournament.md): att hitta, begränsa och sortera listor, att läsa en tävling, anteckningar och vad som är nytt.
 - [Välja tema och språk](theme-and-language.md): ljust eller mörkt, och språket som webbplatsen talar till dig på.
 - [JavaScript och kakor](scripting-and-cookies.md): vad webbplatsen sparar i din webbläsare, och det enda som kräver att JavaScript är aktiverat.
+- [Lägga till webbplatsen på din hemskärm](home-screen.md): att ha webbplatsen på mobilen med en egen ikon, på en iPhone, en iPad och andra mobiler.
