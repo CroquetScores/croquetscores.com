@@ -12,6 +12,7 @@ import { AddGame } from "../application/operations/competitions/AddGame.js";
 import { ArchiveGame } from "../application/operations/competitions/ArchiveGame.js";
 import { MoveCompetitionPlayer } from "../application/operations/competitions/MoveCompetitionPlayer.js";
 import { ArchivePlayer } from "../application/operations/tournaments/ArchivePlayer.js";
+import { UpdateTeam } from "../application/operations/tournaments/UpdateTeam.js";
 import { AddTeam } from "../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../application/operations/tournaments/AddTest.js";
@@ -22,6 +23,8 @@ import { ArchiveCompetition } from "../application/operations/tournaments/Archiv
 import { WithdrawGame } from "../application/operations/competitions/WithdrawGame.js";
 import { WithdrawPlayer } from "../application/operations/competitions/WithdrawPlayer.js";
 import { EnterPlayer } from "../application/operations/competitions/EnterPlayer.js";
+import { AddKnockout } from "../application/operations/tournaments/AddKnockout.js";
+import { AddSwiss } from "../application/operations/tournaments/AddSwiss.js";
 import { AddBlock } from "../application/operations/tournaments/AddBlock.js";
 import { AddPlayer } from "../application/operations/tournaments/AddPlayer.js";
 import { ArchiveTournament } from "../application/operations/tournaments/ArchiveTournament.js";
@@ -39,6 +42,9 @@ import type { ReaderMaking } from "./testControlReaders.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
 interface Asked {
+  at?: unknown;
+  details?: unknown;
+  places?: unknown;
   team?: unknown;
   test?: unknown;
   rules?: unknown;
@@ -90,7 +96,17 @@ export const registerTestControlTournaments = (
         if (id === undefined) throw new Error(`No account for ${address}.`);
         return id.value;
       };
-      const at = (): ReadOnlyDate => ReadOnlyDate.from(making.clock());
+      // The moment the site stamps the command with: the moment the scenario
+      // names where it names one, so that what is said of how long ago it was is
+      // the same whenever it is run, and the site's own clock where it does not.
+      const at = (asked?: Asked): ReadOnlyDate => {
+        const named =
+          typeof asked?.at === "string" ? new Date(asked.at) : undefined;
+        if (named !== undefined && Number.isNaN(named.getTime())) {
+          throw new Error("The moment is not one.");
+        }
+        return ReadOnlyDate.from(named ?? making.clock());
+      };
 
       const refusing =
         (
@@ -124,7 +140,7 @@ export const registerTestControlTournaments = (
                 ? asked.website
                 : "croquetscores.com",
               asked.tournament as TournamentRequest,
-              at(),
+              at(asked),
             ),
           );
           return { id: created.id.value, address: created.address.toString() };
@@ -140,7 +156,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.id, "A tournament"),
               asked.tournament as TournamentRequest,
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -154,7 +170,7 @@ export const registerTestControlTournaments = (
             new ArchiveTournament(
               await accountOf(asked.manager),
               text(asked.id, "A tournament"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -168,7 +184,7 @@ export const registerTestControlTournaments = (
             new RestoreTournament(
               await accountOf(asked.manager),
               text(asked.id, "A tournament"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -184,7 +200,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               asked.player as TournamentPlayerDetails,
-              at(),
+              at(asked),
             ),
           );
           return { id: id.value };
@@ -202,7 +218,7 @@ export const registerTestControlTournaments = (
               text(asked.name, "A name"),
               typeof asked.bestOf === "number" ? asked.bestOf : 1,
               typeof asked.rounds === "number" ? asked.rounds : 1,
-              at(),
+              at(asked),
               asked.rules as CompetitionRulesSaid | undefined,
               typeof asked.tieBreak === "string" ? asked.tieBreak : undefined,
             ),
@@ -223,7 +239,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
               text(asked.player, "A player"),
-              at(),
+              at(asked),
             ),
           );
           return { id: entered };
@@ -245,7 +261,7 @@ export const registerTestControlTournaments = (
                 loser: asked.loser as string | undefined,
                 loserScore: asked.loserScore as string | undefined,
               },
-              at(),
+              at(asked),
             ),
           );
           return { id };
@@ -261,7 +277,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
               text(asked.game, "A game"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -277,7 +293,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
               text(asked.player, "A player"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -294,7 +310,7 @@ export const registerTestControlTournaments = (
               text(asked.competition, "A competition"),
               text(asked.player, "A player"),
               text(asked.direction, "A direction"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -310,7 +326,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
               text(asked.game, "A game"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -325,7 +341,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -340,7 +356,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               asked.team as TeamDetails,
-              at(),
+              at(asked),
             ),
           );
           return { id: id.value };
@@ -356,7 +372,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.team, "A team"),
               asked.player as TeamPlayerDetails,
-              at(),
+              at(asked),
             ),
           );
           return { id: id.value };
@@ -371,7 +387,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               text(asked.team, "A team"),
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -387,7 +403,7 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               asked.test as TestRequest,
-              at(),
+              at(asked),
             ),
           );
           return { id: id.value };
@@ -403,7 +419,7 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.id, "A test"),
               asked.test as TestRequest,
-              at(),
+              at(asked),
             ),
           );
           return undefined;
@@ -418,7 +434,59 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               text(asked.player, "A player"),
-              at(),
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      // A knockout of a number of places, each round the best of some games.
+      scope.post(
+        "/tournaments/knockouts",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddKnockout(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.name, "A name"),
+              typeof asked.places === "number" ? asked.places : 4,
+              Array.isArray(asked.rounds) ? (asked.rounds as number[]) : [1, 1],
+              at(asked),
+              asked.rules as CompetitionRulesSaid | undefined,
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/swisses",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddSwiss(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.name, "A name"),
+              typeof asked.bestOf === "number" ? asked.bestOf : 1,
+              at(asked),
+              asked.rules as CompetitionRulesSaid | undefined,
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/teams/update",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new UpdateTeam(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.team, "A team"),
+              asked.details as TeamDetails,
+              at(asked),
             ),
           );
           return undefined;

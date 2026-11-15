@@ -699,3 +699,94 @@ When(
     });
   },
 );
+
+When(
+  "a knockout of {int} places is added through the control",
+  async function (this: SpecWorld, places: number) {
+    await controlled(this, "/__test/tournaments/knockouts", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      name: "Knockout A",
+      places,
+      rounds: Array.from({ length: Math.log2(places) }, () => 1),
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    playedIn(this).block = idOfAnswer(this);
+  },
+);
+
+When(
+  "a bye is entered in the knockout through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/players", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      player: "tournament-player/00000000-0000-0000-0000-000000000000",
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
+When("a Swiss is added through the control", async function (this: SpecWorld) {
+  await controlled(this, "/__test/tournaments/swisses", {
+    manager: "manager@example.com",
+    tournament: made.get(this)?.id,
+    name: "Swiss A",
+  });
+});
+
+When(
+  "the team {string} is given the short name {string} through the control",
+  async function (this: SpecWorld, team: string, shortName: string) {
+    await controlled(this, "/__test/tournaments/teams/update", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      team: teamsOf(this).names.get(team),
+      details: { name: team, shortName },
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Given(
+  "Ann is made to have beaten Bea {int} to {int} in the block at {string} through the control",
+  async function (
+    this: SpecWorld,
+    winnerScore: number,
+    loserScore: number,
+    at: string,
+  ) {
+    const played = playedIn(this);
+    await controlled(this, "/__test/competitions/games", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: played.block,
+      winner: played.players.get("Ann")?.entered,
+      winnerScore: String(winnerScore),
+      loser: played.players.get("Bea")?.entered,
+      loserScore: String(loserScore),
+      at,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
+When("the tournament's page is asked for", async function (this: SpecWorld) {
+  const control = controlOf(this);
+  assert.ok(control.application !== undefined, "The site was not started.");
+  control.response = await control.application.server.inject({
+    method: "GET",
+    url: `/${made.get(this)?.address}`,
+  });
+});
+
+Then(
+  "the tournament's page says {string}",
+  function (this: SpecWorld, words: string) {
+    assert.ok(
+      responseOf(this).body.includes(words),
+      `The page does not say ${words}.`,
+    );
+  },
+);

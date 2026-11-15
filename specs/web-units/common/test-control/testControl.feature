@@ -202,6 +202,7 @@ Feature: A site over a database the specs made can be controlled by a token
       When the teams "England" and "Australia" are added through the control
       And a player is added to the team "England" through the control
       And a test between the two teams is added and given 2 expected matches through the control
+      And the team "England" is given the short name "ENG" through the control
       And the teams "New Zealand" and "Fiji" are added through the control
       And the team "Fiji" is archived through the control
       Then the site answers that it is fine
@@ -213,6 +214,26 @@ Feature: A site over a database the specs made can be controlled by a token
       And the players "Ann" and "Bea" are added through the control
       When "Ann" is archived through the control
       Then the site answers that it is fine
+
+    Scenario: A knockout and a Swiss can be added, and a bye entered
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When a knockout of 4 places is added through the control
+      And a bye is entered in the knockout through the control
+      And a Swiss is added through the control
+      Then the site answers that it was made
+
+    Scenario: A game added at a moment is said to have been added then
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block at "2026-10-03T10:00:00Z" through the control
+      And the clock is set to "2026-10-03T10:12:00Z"
+      When the tournament's page is asked for
+      Then the tournament's page says "12 min"
 
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"

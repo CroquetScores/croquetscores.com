@@ -4,11 +4,31 @@
 // (src/web/testControl.ts), so that nothing of the site's code is loaded here.
 import { site } from "./site.js";
 
+// The moment what a scenario sets up is said to have been done, so that what a
+// page says of how long ago it was is the same whenever the scenario is run: the
+// moment the scenario has the clock read, and until it says, a usual one.
+const usualMoment = "2026-10-03T10:00:00Z";
+let setUpAt = usualMoment;
+
+/** What is set up from here on is said to have been done at `moment`. */
+export const settingUpAt = (moment: string): void => {
+  setUpAt = moment;
+};
+
+/** The next scenario sets up as if it were the usual moment again. */
+export const settingUpAtTheUsualMoment = (): void => {
+  setUpAt = usualMoment;
+};
+
 export const call = async (
   method: "POST" | "DELETE",
   path: string,
-  body?: object,
+  given?: object,
 ): Promise<Response> => {
+  const body =
+    given !== undefined && /^\/(tournaments|competitions)/.test(path)
+      ? { at: setUpAt, ...given }
+      : given;
   const { baseUrl, token } = await site();
   return fetch(`${baseUrl}/__test${path}`, {
     method,

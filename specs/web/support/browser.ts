@@ -5,6 +5,7 @@
 import { After, AfterAll, Before, setDefaultTimeout } from "@cucumber/cucumber";
 import { chromium, type Browser } from "playwright";
 
+import { settingUpAtTheUsualMoment } from "./control.js";
 import { forget, site, stop } from "./site.js";
 import type { WebWorld } from "./world.js";
 
@@ -22,6 +23,7 @@ export const theBrowser = async (): Promise<Browser> => {
 Before(async function (this: WebWorld) {
   this.baseUrl = (await site()).baseUrl;
   await forget();
+  settingUpAtTheUsualMoment();
 });
 
 Before({ tags: "@browser" }, async function (this: WebWorld) {

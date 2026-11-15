@@ -42,6 +42,9 @@ export class WebWorld extends World {
     { id: string; request: Record<string, unknown> }
   >();
 
+  /** What the scenario has said of the next knockout it adds. */
+  public ofTheNextKnockout: Record<string, unknown> = {};
+
   /** What the scenario has said of the next block it adds. */
   public ofTheNextBlock: Record<string, unknown> = {};
 

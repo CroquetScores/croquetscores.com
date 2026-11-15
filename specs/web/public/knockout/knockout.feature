@@ -454,12 +454,12 @@ Feature: A knockout's grid draws its draw round by round
     Scenario: An archived knockout is not found
       Given "organiser@example.com" has archived the competition "Finals" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's knockouts are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the knockout where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

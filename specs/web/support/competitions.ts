@@ -483,7 +483,6 @@ Given(
       tournament: found.id,
       test: request,
     });
-    this.ofTheNextTest = {};
     this.tests.set(
       within(tournament, `${one.shortName} v ${other.shortName}`),
       {
@@ -540,5 +539,148 @@ Given(
         `player called ${player} in ${tournament}`,
       ),
     });
+  },
+);
+
+// A knockout of a number of places, each round the best of 1 unless the scenario
+// says otherwise, for four places where it says nothing.
+const roundsAt = ["first", "second", "third", "fourth"];
+
+const sayRound = (world: WebWorld, which: string, games: number): void => {
+  const said = [...((world.ofTheNextKnockout["rounds"] as number[]) ?? [])];
+  said[roundsAt.indexOf(which)] = games;
+  world.ofTheNextKnockout = { ...world.ofTheNextKnockout, rounds: said };
+};
+
+Given(
+  "the knockout is to have a draw of {int} places",
+  function (this: WebWorld, places: number) {
+    this.ofTheNextKnockout = { ...this.ofTheNextKnockout, places };
+  },
+);
+
+Given(
+  /^(?:the knockout's|its) (first|second|third|fourth) round is to be the best of (\d+)$/,
+  function (this: WebWorld, which: string, games: string) {
+    sayRound(this, which, Number(games));
+  },
+);
+
+Given(
+  "{string} has added the knockout {string} to {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    knockout: string,
+    tournament: string,
+  ) {
+    const places =
+      (this.ofTheNextKnockout["places"] as number | undefined) ?? 4;
+    const said =
+      (this.ofTheNextKnockout["rounds"] as number[] | undefined) ?? [];
+    const id = await made("add the knockout", "/tournaments/knockouts", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      name: knockout,
+      places,
+      rounds: Array.from(
+        { length: Math.log2(places) },
+        (_, at) => said[at] ?? 1,
+      ),
+      ...(this.ofTheNextBlock["rules"] === undefined
+        ? {}
+        : { rules: this.ofTheNextBlock["rules"] }),
+    });
+    this.ofTheNextKnockout = {};
+    this.competitions.set(within(tournament, knockout), id!);
+  },
+);
+
+// The id every bye is known by, which is no player's.
+const bye = "tournament-player/00000000-0000-0000-0000-000000000000";
+
+Given(
+  "{string} has entered a bye in {string} of {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    competition: string,
+    tournament: string,
+  ) {
+    await made("enter the bye", "/competitions/players", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      competition: competitionId(this, tournament, competition),
+      player: bye,
+    });
+  },
+);
+
+Given(
+  "{string} has added the Swiss {string} to {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    swiss: string,
+    tournament: string,
+  ) {
+    const id = await made("add the Swiss", "/tournaments/swisses", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      name: swiss,
+      ...(this.ofTheNextBlock["rules"] === undefined
+        ? {}
+        : { rules: this.ofTheNextBlock["rules"] }),
+    });
+    this.competitions.set(within(tournament, swiss), id!);
+  },
+);
+
+Given(
+  "the tournament is to be for the sport {string}",
+  function (this: WebWorld, sport: string) {
+    this.ofTheNext = { ...this.ofTheNext, sport };
+  },
+);
+
+Given(
+  "{string} has given the team {string} of {string} the short name {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    team: string,
+    tournament: string,
+    shortName: string,
+  ) {
+    const found = teamOf(this, tournament, team);
+    await made("change the team", "/tournaments/teams/update", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      team: found.id,
+      details: { name: team, shortName },
+    });
+    found.shortName = shortName;
+  },
+);
+
+Given(
+  "{string} has given the test {string} of {string} matches each the best of {int}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    test: string,
+    tournament: string,
+    bestOf: number,
+  ) {
+    const found = this.tests.get(within(tournament, test));
+    if (found === undefined) throw new Error(`There is no test ${test}.`);
+    const request = { ...found.request, bestOf };
+    await made("change the test", "/tournaments/tests/update", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      id: found.id,
+      test: request,
+    });
+    found.request = request;
   },
 );

@@ -250,18 +250,18 @@ Feature: A tournament played by teams has a summary of how its teams stand
       Given the tournament is to be played in the format "Standard"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A tournament with a test in a group has no summary
       Given the test is to be in the group "Block A"
       And "organiser@example.com" has added the test between "England" and "Australia" to "Spring Tests"
       When the page at "/2026/ac/spring-tests/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's summary is not found
       Given "organiser@example.com" has archived the tournament "Spring Tests"
       When the page at "/2026/ac/spring-tests/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the summary where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"

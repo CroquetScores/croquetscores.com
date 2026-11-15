@@ -5,7 +5,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
 import { withScripting } from "./browser.js";
-import { setTheClock } from "./control.js";
+import { setTheClock, settingUpAt } from "./control.js";
 import { unmarked } from "./languages.js";
 import type { WebWorld } from "./world.js";
 
@@ -75,6 +75,7 @@ Given(
   "the server's clock reads {string}",
   async function (this: WebWorld, moment: string) {
     await setTheClock(moment);
+    settingUpAt(moment);
   },
 );
 
@@ -82,7 +83,6 @@ const openAt = async function (this: WebWorld, path: string): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${path}`);
 };
 
-Given("the page at {string} is open", openAt);
 When("the page at {string} is opened", openAt);
 
 // Whether the page is the address it should be, which a page that goes on to

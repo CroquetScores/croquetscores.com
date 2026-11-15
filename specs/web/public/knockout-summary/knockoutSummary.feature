@@ -182,7 +182,7 @@ Feature: A knockout's summary lists its matches round by round
     Scenario: An archived knockout has no summary
       Given "organiser@example.com" has archived the competition "Finals" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/finals/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the summary where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

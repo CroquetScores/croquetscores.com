@@ -4,7 +4,7 @@
 import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { unmarkedWithin } from "./marks.js";
+import { isMarked } from "./marks.js";
 import type { WebWorld } from "./world.js";
 
 // The sections the site's bar offers, found by their words.
@@ -36,56 +36,6 @@ Then(
       await this.browserPage.getAttribute(section(label), "aria-current"),
       null,
     );
-  },
-);
-
-// A competition's page is headed by the tournament's name, a first-level heading
-// said aloud and not seen, and the competition's name beneath it, the second.
-Then(
-  "the competition is headed {string}",
-  async function (this: WebWorld, name: string) {
-    const heading = this.browserPage.locator("main h2").first();
-    await heading.waitFor();
-    assert.equal((await heading.innerText()).trim(), name);
-  },
-);
-
-// The tournament's own words are left out, on its page, its players' page, a
-// player's and a block's alike: its name, its players' names, their initials and
-// what they represent, its competitions' names and the scores, which are what
-// whoever entered them typed, and the day a game was added, which is numbers and
-// a month the browser names.
-Then(
-  "every word in the page's content but the tournament's own is in the test locale",
-  async function (this: WebWorld) {
-    const stray = await unmarkedWithin(this, "main", [
-      "main h1",
-      // The competition's name, as the tournament's is, and the script that
-      // shows the print button, which is not words.
-      ".competition-heading h2",
-      "main script",
-      ".game-name",
-      ".game-representing",
-      ".game-score",
-      ".game-competition",
-      ".game-day",
-      ".player-name",
-      ".player-representing",
-      ".player-game-opponent",
-      ".player-competition",
-      ".block-grid-initials",
-      ".block-grid-points",
-      ".swiss-result-opponent",
-      ".team-summary-team",
-      ".team-summary-corner",
-      ".test-team",
-      ".test-side",
-      ".test-score",
-      ".players-team-name",
-      ".player-game-team",
-      ".rankings-tournament",
-    ]);
-    assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
 );
 
@@ -127,7 +77,86 @@ Then(
   },
 );
 
-Then("the page's content has no main heading", async function (this: WebWorld) {
-  await this.browserPage.locator("main").waitFor();
-  assert.equal(await this.browserPage.locator("main h1").count(), 0);
-});
+// The section bar, which is drawn again a moment after something on the page
+// changes what it holds, so a claim about what it offers is given a few seconds
+// to come true before it is called false. A claim that is true at once costs
+// nothing.
+const sections = ".site-sections a";
+const places = [
+  "first",
+  "second",
+  "third",
+  "fourth",
+  "fifth",
+  "sixth",
+  "seventh",
+];
+
+const labels = async (world: WebWorld): Promise<string[]> => {
+  await world.browserPage.locator(".site-sections").waitFor();
+  return world.browserPage.locator(sections).allTextContents();
+};
+
+const settles = async (
+  world: WebWorld,
+  holds: (found: readonly string[]) => boolean,
+): Promise<void> => {
+  const until = Date.now() + 5000;
+  let found = await labels(world);
+  while (!holds(found) && Date.now() < until) {
+    await world.browserPage.waitForTimeout(100);
+    found = await labels(world);
+  }
+  assert.ok(holds(found), `The section bar offers ${JSON.stringify(found)}.`);
+};
+
+Then(
+  "the section {string} is offered",
+  async function (this: WebWorld, label: string) {
+    await settles(this, (found) => found.includes(label));
+  },
+);
+
+Then(
+  "the section {string} is not offered",
+  async function (this: WebWorld, label: string) {
+    await settles(this, (found) => !found.includes(label));
+  },
+);
+
+Then(
+  /^(\d+) sections? (?:is|are) offered$/,
+  async function (this: WebWorld, count: string) {
+    assert.equal((await labels(this)).length, Number(count));
+  },
+);
+
+Then(
+  /^the (first|second|third|fourth|fifth|sixth|seventh) section is "([^"]*)"$/,
+  async function (this: WebWorld, which: string, label: string) {
+    await settles(this, (found) => found[places.indexOf(which)] === label);
+  },
+);
+
+Then(
+  "the first section is in the test locale",
+  async function (this: WebWorld) {
+    const [first] = await labels(this);
+    assert.ok(
+      first !== undefined && isMarked(first),
+      `The first section is ${JSON.stringify(first)}.`,
+    );
+  },
+);
+
+Then(
+  /^(\d+) sections? (?:is|are) marked as current$/,
+  async function (this: WebWorld, count: string) {
+    assert.equal(
+      await this.browserPage
+        .locator('.site-sections a[aria-current="page"]')
+        .count(),
+      Number(count),
+    );
+  },
+);
