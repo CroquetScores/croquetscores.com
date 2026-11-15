@@ -179,3 +179,7 @@ Then(
 );
 
 Given("the page at {string} is open with scripting off", openWithScriptingOff);
+
+When("the menu button is pressed", async function (this: WebWorld) {
+  await this.browserPage.click("header details.menu > summary");
+});

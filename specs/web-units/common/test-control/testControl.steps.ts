@@ -1317,3 +1317,14 @@ When(
     await asking(this, "POST", "/__test/services", { service, down: false });
   },
 );
+
+When(
+  "the block is restored through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/tournaments/competitions/restore", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+    });
+  },
+);

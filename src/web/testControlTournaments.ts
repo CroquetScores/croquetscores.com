@@ -27,6 +27,7 @@ import { AddTest } from "../application/operations/tournaments/AddTest.js";
 import { ArchiveTeam } from "../application/operations/tournaments/ArchiveTeam.js";
 import { UpdateTest } from "../application/operations/tournaments/UpdateTest.js";
 import type { TestRequest } from "../application/operations/tournaments/testOperations.js";
+import { RestoreCompetition } from "../application/operations/tournaments/RestoreCompetition.js";
 import { ArchiveCompetition } from "../application/operations/tournaments/ArchiveCompetition.js";
 import { WithdrawGame } from "../application/operations/competitions/WithdrawGame.js";
 import { WithdrawPlayer } from "../application/operations/competitions/WithdrawPlayer.js";
@@ -340,6 +341,21 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
               text(asked.game, "A game"),
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/competitions/restore",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new RestoreCompetition(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.competition, "A competition"),
               at(asked),
             ),
           );

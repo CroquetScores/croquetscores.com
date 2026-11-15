@@ -53,6 +53,11 @@ const competitionId = (
 ): string =>
   world.competitions.get(within(tournament, competition)) ??
   world.tests.get(within(tournament, competition))?.id ??
+  // Archiving gives a competition a number after its name, so that the name can
+  // be used again; the one that was archived is the one it was called before.
+  world.competitions.get(
+    within(tournament, competition.replace(/ \(\d+\)$/, "")),
+  ) ??
   held(
     world.competitions,
     within(tournament, competition),
@@ -880,5 +885,37 @@ Given(
       commentary: commentaryIn(this, tournament, title),
       comment: commentIn(this, tournament, title, text),
     });
+  },
+);
+
+Given(
+  "{string} has restored the competition {string} in {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    competition: string,
+    tournament: string,
+  ) {
+    await made("restore the competition", "/tournaments/competitions/restore", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      competition: competitionId(this, tournament, competition),
+    });
+  },
+);
+
+Given(
+  /^(\d+) players are called "([^"]*)" followed by a number in "([^"]*)"$/,
+  async function (this: WebWorld, count: string, name: string, of: string) {
+    const found = tournamentOf(this, of);
+    for (let number = 1; number <= Number(count); number += 1) {
+      const called = `${name} ${String(number)}`;
+      const id = await made("add the player", "/tournaments/players", {
+        manager: "organiser@example.com",
+        tournament: found.id,
+        player: { name: called },
+      });
+      this.players.set(within(of, called), id!);
+    }
   },
 );

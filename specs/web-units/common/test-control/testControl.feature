@@ -258,6 +258,15 @@ Feature: A site over a database the specs made can be controlled by a token
       And the note is deleted through the control
       Then the site answers that it is fine
 
+    Scenario: A block that was archived can be restored
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the block is archived through the control
+      When the block is restored through the control
+      Then the site answers that it is fine
+
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

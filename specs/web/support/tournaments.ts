@@ -230,3 +230,14 @@ Given(
     this.ofTheNext = { ...this.ofTheNext, finishes: moment };
   },
 );
+
+// As many tournaments as a scenario needs to have a page of results, called by
+// a name and a number, each made as the organiser the scenarios keep.
+Given(
+  /^(\d+) tournaments are called "([^"]*)" followed by a number$/,
+  async function (this: WebWorld, count: string, name: string) {
+    for (let number = 1; number <= Number(count); number += 1) {
+      await create(this, "organiser@example.com", `${name} ${String(number)}`);
+    }
+  },
+);

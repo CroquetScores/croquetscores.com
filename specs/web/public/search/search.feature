@@ -315,8 +315,7 @@ Feature: A reader searches the website for tournaments, players and competitions
       Then "Block A" shows the flag of "nz" in the found competitions
 
     Scenario: The month is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And the tournament "Spring Open" starts on "2026-10-10"
       And the tournament "Spring Open" finishes on "2026-10-12"
       When the page at "/search?q=spring" is opened
