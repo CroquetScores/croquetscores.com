@@ -129,59 +129,112 @@ const start = async (): Promise<RunningSite> => {
   );
 
   folder = mkdtempSync(join(tmpdir(), "web-spec-site-"));
-  const port = await freePort();
   const token = randomBytes(16).toString("hex");
-  child = spawn(
+  siteEnvironment = {
+    ...process.env,
+    DATABASE_URL: urlOf(databaseName),
+    DATABASE_ACCESS_FILE: join(folder, ".database-access"),
+    TEST_CONTROL_TOKEN: token,
+    // Written out here and not read from the site: what an account brought
+    // over from the old site was hashed with, in the site's hands.
+    OLD_SITE_PASSWORD_SALT: "the old site's site-wide salt",
+    // The browser reaches the site on 127.0.0.1, which is trusted to say
+    // which website it addressed, as something in front of the site would.
+    TRUSTED_PROXY: "127.0.0.1",
+    ADMINISTRATOR_EMAIL_ADDRESS: "administrator@example.com",
+    ADMINISTRATOR_EMAIL_FROM_NAME: "The administrator",
+    SESSION_COOKIE_SECRET: secret(),
+    TOKEN_SIGNING_KEY: secret(),
+    ACCOUNT_ENCRYPTION_KEY: secret(),
+    ACCOUNT_EMAIL_ADDRESS_HASH_KEY: secret(),
+    // Nothing here is sent anywhere: a site with no mail server writes
+    // what it would send to a file.
+    SMTP_HOST: "",
+    SMTP_PORT: "",
+    SMTP_USER_NAME: "",
+    SMTP_PASSWORD: "",
+    GOOGLE_CLIENT_ID: "",
+    GOOGLE_CLIENT_SECRET: "",
+    FACEBOOK_APP_ID: "",
+    FACEBOOK_APP_SECRET: "",
+  };
+  const running = await spawnSite({});
+  child = running.child;
+  return { baseUrl: running.baseUrl, token };
+};
+
+// What every site of a run is given, kept so that a site started with settings of
+// its own over the same database is given the same keys: what is kept in the
+// database is sealed with them.
+let siteEnvironment: NodeJS.ProcessEnv = {};
+
+/** Starts a site over the run's database, told `settings` besides what it is always told. */
+const spawnSite = async (
+  settings: Readonly<Record<string, string>>,
+): Promise<{ child: ChildProcess; baseUrl: string }> => {
+  const port = await freePort();
+  const spawned = spawn(
     process.execPath,
     [require.resolve("tsx/cli"), "src/web/server.ts"],
     {
       cwd: root,
       stdio: ["ignore", "pipe", "pipe"],
-      env: {
-        ...process.env,
-        PORT: String(port),
-        DATABASE_URL: urlOf(databaseName),
-        DATABASE_ACCESS_FILE: join(folder, ".database-access"),
-        TEST_CONTROL_TOKEN: token,
-        // Written out here and not read from the site: what an account brought
-        // over from the old site was hashed with, in the site's hands.
-        OLD_SITE_PASSWORD_SALT: "the old site's site-wide salt",
-        // The browser reaches the site on 127.0.0.1, which is trusted to say
-        // which website it addressed, as something in front of the site would.
-        TRUSTED_PROXY: "127.0.0.1",
-        ADMINISTRATOR_EMAIL_ADDRESS: "administrator@example.com",
-        ADMINISTRATOR_EMAIL_FROM_NAME: "The administrator",
-        SESSION_COOKIE_SECRET: secret(),
-        TOKEN_SIGNING_KEY: secret(),
-        ACCOUNT_ENCRYPTION_KEY: secret(),
-        ACCOUNT_EMAIL_ADDRESS_HASH_KEY: secret(),
-        // Nothing here is sent anywhere: a site with no mail server writes
-        // what it would send to a file.
-        SMTP_HOST: "",
-        SMTP_PORT: "",
-        SMTP_USER_NAME: "",
-        SMTP_PASSWORD: "",
-        GOOGLE_CLIENT_ID: "",
-        GOOGLE_CLIENT_SECRET: "",
-        FACEBOOK_APP_ID: "",
-        FACEBOOK_APP_SECRET: "",
-      },
+      env: { ...siteEnvironment, ...settings, PORT: String(port) },
     },
   );
-  child.stdout?.on("data", keepLogged);
-  child.stderr?.on("data", keepLogged);
+  spawned.stdout.on("data", keepLogged);
+  spawned.stderr.on("data", keepLogged);
   const baseUrl = `http://127.0.0.1:${String(port)}`;
-  await ready(baseUrl);
-  return { baseUrl, token };
+  await ready(baseUrl, spawned);
+  return { child: spawned, baseUrl };
+};
+
+// A site a scenario started with settings of its own, which is the one the
+// scenario talks to until it ends.
+let another: { child: ChildProcess; running: RunningSite } | undefined;
+
+/**
+ * A site told `settings`, as a deployment is told its settings by the
+ * environment, over the same database as the run's other site. It is the site the
+ * scenario's control calls go to until the scenario ends (`endAnotherSite`).
+ */
+export const siteTold = async (
+  settings: Readonly<Record<string, string>>,
+): Promise<RunningSite> => {
+  const { token } = await site();
+  await endAnotherSite();
+  const started = await spawnSite(settings);
+  another = {
+    child: started.child,
+    running: { baseUrl: started.baseUrl, token },
+  };
+  return another.running;
+};
+
+/** Stops the site a scenario started for itself, if it did. */
+export const endAnotherSite = async (): Promise<void> => {
+  const ending = another;
+  another = undefined;
+  if (ending === undefined || ending.child.exitCode !== null) return;
+  await new Promise<void>((done) => {
+    ending.child.once("exit", () => done());
+    ending.child.kill();
+    setTimeout(done, 10_000);
+  });
 };
 
 // Asked until it answers, since a site that is still starting refuses the
 // connection. A site that stops instead is said so, rather than waited for.
-const ready = async (baseUrl: string): Promise<void> => {
+const ready = async (
+  baseUrl: string,
+  launched: ChildProcess,
+): Promise<void> => {
   const until = Date.now() + 120_000;
   for (;;) {
-    if (child?.exitCode !== null && child?.exitCode !== undefined) {
-      throw new Error(`The site stopped with code ${String(child.exitCode)}.`);
+    if (launched.exitCode !== null) {
+      throw new Error(
+        `The site stopped with code ${String(launched.exitCode)}.`,
+      );
     }
     try {
       await fetch(`${baseUrl}/`);
@@ -195,6 +248,7 @@ const ready = async (baseUrl: string): Promise<void> => {
 
 /** The site, started by the first scenario that asks and the same for the rest. */
 export const site = (): Promise<RunningSite> => {
+  if (another !== undefined) return Promise.resolve(another.running);
   starting ??= start();
   return starting;
 };
@@ -221,6 +275,7 @@ export const forget = async (): Promise<void> => {
 
 /** Stops the site and drops its database, whatever state the run ended in. */
 export const stop = async (): Promise<void> => {
+  await endAnotherSite();
   const running = child;
   child = undefined;
   if (running !== undefined && running.exitCode === null) {

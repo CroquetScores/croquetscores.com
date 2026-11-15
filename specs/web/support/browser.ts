@@ -7,7 +7,7 @@ import { chromium, type Browser } from "playwright";
 
 import { settingUpAtTheUsualMoment } from "./control.js";
 import { standInForRecaptcha } from "./recaptcha.js";
-import { forget, markTheLog, site, stop } from "./site.js";
+import { endAnotherSite, forget, markTheLog, site, stop } from "./site.js";
 import type { WebWorld } from "./world.js";
 
 // Starting the site, and making its database, take more than Cucumber's five
@@ -49,6 +49,8 @@ After({ tags: "@browser" }, async function (this: WebWorld) {
     ...this.otherBrowsers.map((other) => other.close()),
   ]);
   this.otherBrowsers = [];
+  // The site the scenario started with settings of its own is stopped with it.
+  await endAnotherSite();
   this.browserContext = undefined;
   this.page = undefined;
 });
