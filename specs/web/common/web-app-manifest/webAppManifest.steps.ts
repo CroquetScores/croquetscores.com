@@ -298,14 +298,17 @@ Given("the terms of use page is open", async function (this: SpecWorld) {
   await this.browserPage.goto(`${this.baseUrl!}/terms-of-use`);
 });
 
-Given("the try website's home page is open", async function (this: SpecWorld) {
+const openTryHomePage = async function (this: SpecWorld): Promise<void> {
   const base = await anApplicationServedAs(this, "try.croquetscores.com");
   await this.browserPage.goto(`${base}/`);
-});
+};
+
+Given("the try website's home page is open", openTryHomePage);
+When("the try website's home page is opened", openTryHomePage);
 
 // A browser has no way to be told it is an installed app, so the page is told
 // what an installed one is: its display mode is standalone.
-Given("the site is open as an installed app", async function (this: SpecWorld) {
+const openAsInstalledApp = async function (this: SpecWorld): Promise<void> {
   await this.browserContext!.addInitScript(`
     var matched = window.matchMedia.bind(window);
     window.matchMedia = function (query) {
@@ -323,7 +326,10 @@ Given("the site is open as an installed app", async function (this: SpecWorld) {
     };
   `);
   await this.browserPage.goto(`${this.baseUrl!}/`);
-});
+};
+
+Given("the site is open as an installed app", openAsInstalledApp);
+When("the site is opened as an installed app", openAsInstalledApp);
 
 // What a browser sends a page that it can install: an event the page may stop
 // the browser acting on, with the means to show the prompt when it chooses.
@@ -336,11 +342,20 @@ When(
         window.installWasAskedFor = true;
         return Promise.resolve();
       };
-      offer.userChoice = Promise.resolve({ outcome: "accepted" });
+      // The reader's answer, which is not known until they give it.
+      offer.userChoice = new Promise(function (answer) {
+        window.answerInstallOffer = answer;
+      });
       window.dispatchEvent(offer);
     `);
   },
 );
+
+When("the reader turns the offer down", async function (this: SpecWorld) {
+  await this.browserPage.evaluate(
+    `window.answerInstallOffer({ outcome: "dismissed" })`,
+  );
+});
 
 When(
   "the browser says the site has been installed",

@@ -157,48 +157,82 @@ export const registerWebAppManifest = (
   });
 };
 
-// The button that offers to install the site, and the script that shows it. It
-// is hidden until the browser says the site can be installed, so that it is
-// never a button that does nothing, and it is an addition to the page as the
-// text size is: without scripting there is no button, and the browser's own
-// menu still offers the same. It is used once, since a browser lets an offer
-// be used once, and goes with the offer. A site already open as an installed
-// app has nothing to offer.
+// The link to the help that says how the site is put on the home screen, which
+// every reader is offered and not only one whose browser can install the site:
+// a browser that never says it can, such as Safari on an iPhone, is the one that
+// has most need of being told how (homeScreenLink.feature). It is not worked
+// out from which phone the reader has, which goes wrong each time a phone or a
+// browser changes, and misses the reader it matters most to.
+const homeScreenHelp = (speaking: Speaking): string =>
+  `<a class="home-screen-help" href="/help/readers/home-screen">${escape(speaking.say("footer.addToHomeScreen"))}</a>`;
+
+// The link, the button that offers to install the site, and the script that
+// shows the one in place of the other.
+//
+// The button is hidden until the browser says the site can be installed, so
+// that it is never a button that does nothing, and it takes the link's place
+// while it is there, since a link beside a button that already does it would be
+// a second way to the same place and a longer one. It is an addition to the
+// page as the text size is: without scripting there is no button, and the link
+// is what there is. It is used once, since a browser lets an offer be used
+// once. A reader who turns the offer down has still not put the site there and
+// the browser will not offer again at once, so the link comes back; one who
+// accepts has, and has neither. A site already open as an installed app has
+// nothing to offer.
 //
 // Written without arrow functions, const or template strings, like the other
 // scripts on the page, for the older tablets the site is still read on.
 export const installOffer = (speaking: Speaking): string => `
+          ${homeScreenHelp(speaking)}
           <button type="button" class="install-site" hidden>${escape(speaking.say("footer.installSite"))}</button>
           <script>
             (function () {
               var button = document.currentScript.previousElementSibling;
+              var link = button.parentElement.querySelector(".home-screen-help");
               var offer = null;
+              var settled = false;
+              var showLink = function (shown) {
+                if (link) link.hidden = !shown;
+              };
               var installed =
                 (window.matchMedia &&
                   window.matchMedia("(display-mode: standalone)").matches) ||
                 window.navigator.standalone === true;
-              var put = function (given) {
-                offer = given;
-                button.hidden = given === null;
-              };
-              if (installed) return;
+              if (installed) {
+                showLink(false);
+                return;
+              }
               window.addEventListener("beforeinstallprompt", function (event) {
                 // Without this the browser shows its own prompt at once,
                 // and the button is the reader's to press instead.
                 event.preventDefault();
-                put(event);
+                offer = event;
+                button.hidden = false;
+                showLink(false);
               });
               window.addEventListener("appinstalled", function () {
-                put(null);
+                settled = true;
+                offer = null;
+                button.hidden = true;
+                showLink(false);
               });
+              var turnedDown = function () {
+                if (!settled) showLink(true);
+              };
               button.addEventListener("click", function () {
                 var given = offer;
                 if (given === null) return;
-                put(null);
-                // A browser may refuse even for a press, and a refusal is not
-                // an error to leave for the console.
+                offer = null;
+                button.hidden = true;
+                // A browser may refuse even for a press, and a refusal is the
+                // offer turned down and not an error to leave for the console.
                 var shown = given.prompt();
-                if (shown && shown.catch) shown.catch(function () {});
+                if (shown && shown.catch) shown.catch(turnedDown);
+                if (given.userChoice && given.userChoice.then) {
+                  given.userChoice.then(function (choice) {
+                    if (choice.outcome !== "accepted") turnedDown();
+                  }, turnedDown);
+                }
               });
             })();
           </script>`;

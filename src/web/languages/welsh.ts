@@ -31,6 +31,7 @@ export const welsh: Language = {
     "footer.termsOfUse": "Telerau defnyddio",
     "footer.reportBug": "Adrodd am nam",
     "footer.installSite": "Gosod y wefan",
+    "footer.addToHomeScreen": "Ychwanegu at y sgrin gartref",
     "beta.banner": "Gwefan beta yw hon. Gellir ailosod y data ar unrhyw adeg.",
     "privacy.contact":
       "Cwestiynau am y dudalen hon, neu am yr hyn a gedwir amdanoch: {emailAddress}",

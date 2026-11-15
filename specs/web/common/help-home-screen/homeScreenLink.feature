@@ -38,6 +38,7 @@ Feature: The footer leads a reader to how the site is put on their home screen
 
     Scenario: The admin's footer offers it too
       Given a viewport 1200 pixels wide
+      And a reader signed in as "someone@example.com"
       When the admin is opened
       Then the footer offers the link "Add to home screen"
 
@@ -53,16 +54,13 @@ Feature: The footer leads a reader to how the site is put on their home screen
 
   Rule: The link is in the reader's language
 
-    Scenario: The link is in the language the reader has chosen
-      Given the reader has chosen German
-      When the sign in page is opened
-      Then the footer offers the link "Zum Home-Bildschirm hinzufügen"
+    The help it leads to is shown in the language the reader reads, as every
+    page is (`help.feature`), and so is not held here.
 
-    Scenario: The link leads to the page in the language the reader has chosen
-      Given the reader has chosen German
+    Scenario: The link is in the language the reader has chosen
+      Given a browser that asks for "en-XA"
       When the sign in page is opened
-      And the footer link "Zum Home-Bildschirm hinzufügen" is followed
-      Then the page is in German
+      Then the footer link "Add to home screen" is in the test locale
 
   Rule: The link is among the footer's links
 

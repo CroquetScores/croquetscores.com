@@ -36,6 +36,8 @@ export const unmarkedWithin = async (
     let lastAt = -1;
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
       if (named.some((one) => one.contains(node))) continue;
+      // A script is code and not words, whatever it says to the browser.
+      if (node.parentNode && node.parentNode.nodeName === "SCRIPT") continue;
       const text = node.textContent.trim();
       // A phrase laid out over more than one line, its words parted by line
       // breaks rather than spaces, is still one phrase, read as it is said.

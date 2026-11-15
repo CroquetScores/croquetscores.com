@@ -378,14 +378,16 @@ Feature: What every page is set in
   Rule: The footer's links are on a row of their own, at the right
 
     The footer's first row is for the donation, the plea and the copyright,
-    which are read. Privacy, Terms of use and Report a bug are for finding, not
-    for reading, so they are on a row of their own beneath it, side by side in
-    that order and at the right, where the theme and language choices beneath
-    them end. The row of links comes before the choices, which are settings
-    rather than links and stay last.
+    which are read. Privacy, Terms of use, Report a bug and Add to home screen
+    (`homeScreenLink.feature`) are for finding, not for reading, so they are on
+    a row of their own beneath it, side by side in that order and at the right,
+    where the theme and language choices beneath them end. The row of links
+    comes before the choices, which are settings rather than links and stay
+    last.
 
-    Where there is not room for all three side by side, as on a phone, they
-    wrap, but are still beneath the first row and at the right.
+    Where there is not room for all four side by side, as on a phone, they
+    wrap, but are still beneath the first row and at the right. A try website
+    has no Add to home screen, so its row is three.
 
     Scenario: The links are beneath the donation and the copyright
       Given a viewport 1200 pixels wide

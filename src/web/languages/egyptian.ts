@@ -31,6 +31,7 @@ export const egyptian: Language = {
     "footer.termsOfUse": "شروط الاستخدام",
     "footer.reportBug": "بلّغ عن مشكلة",
     "footer.installSite": "ثبّت الموقع",
+    "footer.addToHomeScreen": "إضافة إلى الشاشة الرئيسية",
     "beta.banner": "ده موقع تجريبي. ممكن البيانات تتمسح في أي وقت.",
     "privacy.contact":
       "أي أسئلة عن الصفحة دي، أو عن اللي محفوظ عنك: {emailAddress}",

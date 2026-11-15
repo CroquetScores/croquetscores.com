@@ -32,6 +32,7 @@ export const swedish: Language = {
     "footer.termsOfUse": "Användarvillkor",
     "footer.reportBug": "Rapportera ett fel",
     "footer.installSite": "Installera webbplatsen",
+    "footer.addToHomeScreen": "Lägg till på hemskärmen",
     "beta.banner":
       "Det här är en betawebbplats. Data kan nollställas när som helst.",
     "privacy.contact":

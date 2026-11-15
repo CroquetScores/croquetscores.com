@@ -35,6 +35,7 @@ export const german: Language = {
     "footer.termsOfUse": "Nutzungsbedingungen",
     "footer.reportBug": "Fehler melden",
     "footer.installSite": "Website installieren",
+    "footer.addToHomeScreen": "Zum Home-Bildschirm hinzufügen",
     "beta.banner":
       "Dies ist eine Beta-Website. Die Daten können jederzeit zurückgesetzt werden.",
     "privacy.contact":
