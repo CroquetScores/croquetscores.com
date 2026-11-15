@@ -101,6 +101,13 @@ Feature: The footer leads a reader to how the site is put on their home screen
       When the reader turns the offer down
       Then the footer offers the link "Add to home screen"
 
+    Scenario: The link is back when the browser refuses to show the offer
+      Given scripting is switched on
+      And the home page is open
+      And the browser says the site can be installed but will not show the offer
+      When the install button is pressed
+      Then the footer offers the link "Add to home screen"
+
     Scenario: The link stays away once the site is installed
       Given scripting is switched on
       And the home page is open

@@ -224,9 +224,17 @@ export const installOffer = (speaking: Speaking): string => `
                 if (given === null) return;
                 offer = null;
                 button.hidden = true;
-                // A browser may refuse even for a press, and a refusal is the
-                // offer turned down and not an error to leave for the console.
-                var shown = given.prompt();
+                // A browser may refuse even for a press, by throwing or by
+                // refusing what it gives back, and a refusal is the offer turned
+                // down and not an error to leave for the console. The link is
+                // what is left, so a refusal that is not seen leaves nothing.
+                var shown;
+                try {
+                  shown = given.prompt();
+                } catch (refused) {
+                  turnedDown();
+                  return;
+                }
                 if (shown && shown.catch) shown.catch(turnedDown);
                 if (given.userChoice && given.userChoice.then) {
                   given.userChoice.then(function (choice) {

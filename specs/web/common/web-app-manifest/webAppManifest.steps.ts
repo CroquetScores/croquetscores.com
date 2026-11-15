@@ -357,6 +357,21 @@ When("the reader turns the offer down", async function (this: SpecWorld) {
   );
 });
 
+// A browser that has said the site can be installed and then will not show the
+// offer, as one does where the offer was already used.
+When(
+  "the browser says the site can be installed but will not show the offer",
+  async function (this: SpecWorld) {
+    await this.browserPage.evaluate(`
+      var offer = new Event("beforeinstallprompt", { cancelable: true });
+      offer.prompt = function () {
+        throw new Error("The offer was already used.");
+      };
+      window.dispatchEvent(offer);
+    `);
+  },
+);
+
 When(
   "the browser says the site has been installed",
   async function (this: SpecWorld) {
