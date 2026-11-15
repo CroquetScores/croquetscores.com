@@ -1,0 +1,416 @@
+import { Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+
+import type { WebWorld } from "../../support/world.js";
+import { menuLink } from "../../support/menuLink.js";
+import { pressOutside } from "../../support/pressOutside.js";
+
+// Named rather than left as "header summary" and "header a": the header also
+// holds the account menu, which has a summary and links of its own, and a step
+// about the primary navigation that lands on the first match in the page is one
+// the order of the markup decides.
+const menuButton = "header details.menu > summary";
+const link = menuLink;
+const section = (label: string): string =>
+  `.site-sections a:text-is("${label}")`;
+
+When(
+  "the window is made {int} pixels wide and {int} pixels tall",
+  async function (this: WebWorld, width: number, height: number) {
+    await this.browserPage.setViewportSize({ width, height });
+  },
+);
+
+// Whether the menu is open is what the script decides, so it is read from the
+// element rather than from what can be seen, which a stylesheet decides too.
+const menuIsOpen = async (world: WebWorld): Promise<boolean> =>
+  world.browserPage.evaluate<boolean>(
+    `document.querySelector("header details.menu").open`,
+  );
+
+Then("the menu is open", async function (this: WebWorld) {
+  await this.browserPage.waitForFunction(
+    `document.querySelector("header details.menu").open === true`,
+  );
+  assert.equal(await menuIsOpen(this), true);
+});
+
+Then("the menu is shut", async function (this: WebWorld) {
+  await this.browserPage.waitForFunction(
+    `document.querySelector("header details.menu").open === false`,
+  );
+  assert.equal(await menuIsOpen(this), false);
+});
+
+When("the page outside the menu is pressed", async function (this: WebWorld) {
+  await pressOutside(this);
+});
+
+// Scrolling ----------------------------------------------------------------
+
+const panel = "header details.menu .menu-panel";
+
+Then(
+  "the menu's panel ends within the window",
+  async function (this: WebWorld) {
+    const box = await this.browserPage.locator(panel).boundingBox();
+    const size = this.browserPage.viewportSize();
+    assert.ok(box !== null && size !== null, "There is no panel to measure.");
+    assert.ok(
+      box.y + box.height <= size.height,
+      `The panel ends at ${box.y + box.height}, below the window's ${size.height}.`,
+    );
+  },
+);
+
+// The wheel is turned where the pointer is, so the pointer is put first on the
+// panel's middle or at the window's left edge, which the panel, being at the
+// right, does not reach.
+const turnWheel = async (
+  world: WebWorld,
+  pixels: number,
+  where: "over" | "beside",
+): Promise<void> => {
+  const size = world.browserPage.viewportSize();
+  assert.ok(size !== null, "The page has no viewport.");
+  if (where === "over") {
+    const box = await world.browserPage.locator(panel).boundingBox();
+    assert.ok(box !== null, "There is no panel to turn the wheel over.");
+    await world.browserPage.mouse.move(
+      box.x + box.width / 2,
+      box.y + box.height / 2,
+    );
+  } else {
+    await world.browserPage.mouse.move(2, size.height / 2);
+  }
+  await world.browserPage.mouse.wheel(0, pixels);
+};
+
+When(
+  "the wheel is turned {int} pixels down over the menu",
+  async function (this: WebWorld, pixels: number) {
+    await turnWheel(this, pixels, "over");
+  },
+);
+
+When(
+  "the wheel is turned {int} pixels down beside the menu",
+  async function (this: WebWorld, pixels: number) {
+    await turnWheel(this, pixels, "beside");
+  },
+);
+
+const panelScroll = `document.querySelector("${panel}").scrollTop`;
+
+// Read again on a timer rather than waited for with waitForFunction, which
+// never returned here when it was the first thing asked after the wheel was
+// turned, though the panel had moved by then.
+Then("the menu has been scrolled", async function (this: WebWorld) {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    if (await this.browserPage.evaluate<boolean>(`${panelScroll} > 0`)) return;
+    await this.browserPage.waitForTimeout(100);
+  }
+  assert.fail("The menu's panel was not scrolled.");
+});
+
+Then("the page has been scrolled", async function (this: WebWorld) {
+  await this.browserPage.waitForFunction("window.scrollY > 0");
+});
+
+// Scrolling is not instant, so a page that is to stay where it was is given a
+// moment in which to show that it did not.
+Then("the page has not been scrolled", async function (this: WebWorld) {
+  await this.browserPage.waitForTimeout(300);
+  assert.equal(await this.browserPage.evaluate<number>("window.scrollY"), 0);
+});
+
+// The heading is not a link, so pressing it is pressing the panel and nothing
+// the panel would do.
+When("the account group's heading is pressed", async function (this: WebWorld) {
+  await this.browserPage.click(`${group} .menu-account-heading`);
+});
+
+Then(
+  "the link {string} is visible",
+  async function (this: WebWorld, label: string) {
+    assert.equal(await this.browserPage.isVisible(link(label)), true);
+  },
+);
+
+Then(
+  "the link {string} is not visible",
+  async function (this: WebWorld, label: string) {
+    assert.equal(await this.browserPage.isVisible(link(label)), false);
+  },
+);
+
+Then("the menu button is visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible(menuButton), true);
+});
+
+Then("the menu button is not visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible(menuButton), false);
+});
+
+Then(
+  "the link {string} is at least {int} pixels tall",
+  async function (this: WebWorld, label: string, height: number) {
+    const box = await this.browserPage.locator(link(label)).boundingBox();
+    assert.ok(box !== null, `The link ${label} has no box to measure.`);
+    assert.ok(
+      box.height >= height,
+      `The link ${label} is ${Math.round(box.height)} pixels tall, and wanted ${height}.`,
+    );
+  },
+);
+
+Then(
+  "the section {string} is visible",
+  async function (this: WebWorld, label: string) {
+    assert.equal(await this.browserPage.isVisible(section(label)), true);
+  },
+);
+
+Then(
+  "the section {string} is marked as current",
+  async function (this: WebWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(section(label), "aria-current"),
+      "page",
+    );
+  },
+);
+
+Then(
+  "the section {string} is not marked as current",
+  async function (this: WebWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(section(label), "aria-current"),
+      null,
+    );
+  },
+);
+
+Then(
+  /^(\d+) sections? (?:is|are) marked as current$/,
+  async function (this: WebWorld, count: string) {
+    assert.equal(
+      await this.browserPage
+        .locator('.site-sections a[aria-current="page"]')
+        .count(),
+      Number(count),
+    );
+  },
+);
+
+// What the navigation offers ------------------------------------------------------
+
+// Every link in it, in the order it offers them, whether or not the menu is
+// open: what is offered is the same either way.
+const offered = (world: WebWorld): Promise<string[]> =>
+  world.browserPage.locator(".menu-links a").allTextContents();
+
+Then(
+  /^the (first|second|third|fourth) link in the navigation is "([^"]*)"$/,
+  async function (this: WebWorld, which: string, label: string) {
+    const at = ["first", "second", "third", "fourth"].indexOf(which);
+    assert.equal((await offered(this))[at], label);
+  },
+);
+
+Then(
+  "the navigation holds {int} links",
+  async function (this: WebWorld, count: number) {
+    assert.equal((await offered(this)).length, count);
+  },
+);
+
+// A picture in the link, with the word kept for those who cannot see it, so
+// the link is found by its word all the same.
+Then(
+  "the link {string} is drawn as a picture",
+  async function (this: WebWorld, label: string) {
+    assert.equal(
+      await this.browserPage.locator(`${link(label)} svg`).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the link {string} leads to {string}",
+  async function (this: WebWorld, label: string, address: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "href"),
+      address,
+    );
+  },
+);
+
+// How the page being read is marked -----------------------------------------------
+
+Then(
+  "the link {string} is marked as the page being read",
+  async function (this: WebWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "aria-current"),
+      "page",
+    );
+  },
+);
+
+Then(
+  "the link {string} is not marked as the page being read",
+  async function (this: WebWorld, label: string) {
+    assert.equal(
+      await this.browserPage.getAttribute(link(label), "aria-current"),
+      null,
+    );
+  },
+);
+
+// What the stylesheet draws the link `label` with, found by its place among
+// the navigation's links and read as an expression, as the other steps read
+// what they run in the page, since the specs are typed without the browser's
+// own types.
+const drawn = async (
+  world: WebWorld,
+  label: string,
+  property: string,
+): Promise<string> => {
+  const at = (
+    await world.browserPage.locator(".menu-links a").allTextContents()
+  ).indexOf(label);
+  assert.ok(at >= 0, `The navigation has no link ${label}.`);
+  return world.browserPage.evaluate<string>(
+    `getComputedStyle(document.querySelectorAll(".menu-links a")[${String(at)}]).${property}`,
+  );
+};
+
+Then(
+  "the link {string} is on black",
+  async function (this: WebWorld, label: string) {
+    assert.equal(await drawn(this, label, "backgroundColor"), "rgb(0, 0, 0)");
+  },
+);
+
+// The colour a current section is drawn on, read off one drawn for the purpose
+// as the section bar draws it, since the page being read need have no sections
+// of its own: the home page's are years, and none of them is current.
+Then(
+  "the link {string} is on the colour the current section is on",
+  async function (this: WebWorld, label: string) {
+    const section = await this.browserPage.evaluate<string>(
+      `(() => {
+        const bar = document.createElement("nav");
+        bar.className = "site-sections";
+        const current = bar.appendChild(document.createElement("a"));
+        current.setAttribute("aria-current", "page");
+        document.body.appendChild(bar);
+        const colour = getComputedStyle(current).backgroundColor;
+        bar.remove();
+        return colour;
+      })()`,
+    );
+    assert.equal(await drawn(this, label, "backgroundColor"), section);
+  },
+);
+
+Then(
+  "the link {string} is not underlined",
+  async function (this: WebWorld, label: string) {
+    assert.ok(
+      !(await drawn(this, label, "textDecorationLine")).includes("underline"),
+      `${label} is underlined.`,
+    );
+  },
+);
+
+// The account, behind the button ---------------------------------------------------
+
+// The group is found by its own class and not by "nav" or "ul", which the
+// navigation beside it is also made of.
+const group = ".menu-account";
+
+Then("the account menu is visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible("details.account-menu"), true);
+});
+
+Then("the account menu is not visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible("details.account-menu"), false);
+});
+
+Then("the account group is visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible(group), true);
+});
+
+Then("the account group is not visible", async function (this: WebWorld) {
+  assert.equal(await this.browserPage.isVisible(group), false);
+});
+
+Then(
+  "the account group is headed {string}",
+  async function (this: WebWorld, heading: string) {
+    assert.equal(
+      (
+        await this.browserPage
+          .locator(`${group} .menu-account-heading`)
+          .textContent()
+      )?.trim(),
+      heading,
+    );
+  },
+);
+
+const accountItem = (world: WebWorld, item: string) =>
+  world.browserPage.locator(`${group} a`, {
+    hasText: new RegExp(`^${item.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
+  });
+
+Then(
+  "the account group offers {string} at {string}",
+  async function (this: WebWorld, item: string, path: string) {
+    const found = accountItem(this, item);
+    assert.equal(await found.count(), 1, `The group does not offer ${item}.`);
+    assert.equal(await found.getAttribute("href"), path);
+  },
+);
+
+Then(
+  "the account group does not offer {string}",
+  async function (this: WebWorld, item: string) {
+    assert.equal(await accountItem(this, item).count(), 0);
+  },
+);
+
+Then(
+  "the account group offers a button to sign out",
+  async function (this: WebWorld) {
+    assert.equal(
+      await this.browserPage.locator(`${group} form button`).count(),
+      1,
+    );
+  },
+);
+
+Then(
+  "the account group's form posts to {string}",
+  async function (this: WebWorld, path: string) {
+    assert.equal(
+      await this.browserPage.locator(`${group} form`).getAttribute("action"),
+      path,
+    );
+  },
+);
+
+Then(
+  "the account group's {string} is at least {int} pixels tall",
+  async function (this: WebWorld, item: string, height: number) {
+    const box = await accountItem(this, item).boundingBox();
+    assert.ok(box !== null, `${item} has no box to measure.`);
+    assert.ok(
+      box.height >= height,
+      `${item} is ${Math.round(box.height)} pixels tall, and wanted ${height}.`,
+    );
+  },
+);

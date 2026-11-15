@@ -919,3 +919,39 @@ Given(
     }
   },
 );
+
+Given(
+  "nothing is said of how the competition is played and counted",
+  function (this: WebWorld) {
+    delete this.ofTheNextBlock["rules"];
+  },
+);
+
+Given(
+  "the competition is to be played under handicap",
+  function (this: WebWorld) {
+    rulesOf(this, { handicap: true });
+  },
+);
+
+Given(
+  "{string} has changed the world ranking name of {string} in {string} to {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    player: string,
+    tournament: string,
+    name: string,
+  ) {
+    await made("change the name", "/tournaments/players/world-ranking-name", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      player: held(
+        this.players,
+        within(tournament, player),
+        `player called ${player} in ${tournament}`,
+      ),
+      name,
+    });
+  },
+);

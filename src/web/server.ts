@@ -1963,7 +1963,12 @@ export const buildApplication = async (
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the
   // pool is ended, by whoever closes them.
-  if (options.sendsTheEmailQueue ?? true)
+  // Never for a site under test: what it has queued is what a scenario reads, and
+  // an email sent is an email taken out of the queue before it was read.
+  if (
+    (options.sendsTheEmailQueue ?? true) &&
+    config.testControlToken === undefined
+  )
     sendTheEmailQueue(server, emailQueue, clock);
 
   return {

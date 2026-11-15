@@ -76,6 +76,9 @@ export class WebWorld extends World {
   /** Whether the scenario's browser is one that never loads Google's script. */
   public recaptchaBlocked = false;
 
+  /** The name of the tournament the scenario made last. */
+  public lastTournament: string | undefined;
+
   /** What the scenario has said of the next knockout it adds. */
   public ofTheNextKnockout: Record<string, unknown> = {};
 

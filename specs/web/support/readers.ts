@@ -16,6 +16,7 @@ import {
   sessionFor,
 } from "./control.js";
 import { unmarked } from "./languages.js";
+import { unmarkedWithin } from "./marks.js";
 import { wordsFor } from "./words.js";
 import type { WebWorld } from "./world.js";
 
@@ -287,5 +288,45 @@ Then(
         .count(),
       1,
     );
+  },
+);
+
+// Accounts said in the words the navigation's features say them in.
+Given(
+  "an account for {string}, confirmed",
+  async function (this: WebWorld, address: string) {
+    this.accountNames.set(address, "Sam Someone");
+    await makeAccount({ emailAddress: address });
+  },
+);
+
+Given(
+  "an account for {string}, confirmed, with no password",
+  async function (this: WebWorld, address: string) {
+    this.accountNames.set(address, "Sam Someone");
+    await makeAccount({ emailAddress: address, noPassword: true });
+  },
+);
+
+Then(
+  "the last item in the header navigation is the account menu",
+  async function (this: WebWorld) {
+    const last =
+      (await this.browserPage
+        .locator("header .site-bar-inner > *")
+        .last()
+        .getAttribute("class")) ?? "";
+    assert.ok(
+      last.includes("account-menu"),
+      `The header's last item is ${last}.`,
+    );
+  },
+);
+
+Then(
+  "every word in the navigation is in the test locale",
+  async function (this: WebWorld) {
+    const stray = await unmarkedWithin(this, "header .menu-links", []);
+    assert.deepEqual(stray, [], "Words in the navigation came from elsewhere.");
   },
 );

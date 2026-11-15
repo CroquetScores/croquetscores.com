@@ -19,26 +19,6 @@ When(
   },
 );
 
-Then(
-  "the section {string} is marked as current",
-  async function (this: WebWorld, label: string) {
-    assert.equal(
-      await this.browserPage.getAttribute(section(label), "aria-current"),
-      "page",
-    );
-  },
-);
-
-Then(
-  "the section {string} is not marked as current",
-  async function (this: WebWorld, label: string) {
-    assert.equal(
-      await this.browserPage.getAttribute(section(label), "aria-current"),
-      null,
-    );
-  },
-);
-
 When("the browser goes back", async function (this: WebWorld) {
   await this.browserPage.goBack();
 });
@@ -145,18 +125,6 @@ Then(
     assert.ok(
       first !== undefined && isMarked(first),
       `The first section is ${JSON.stringify(first)}.`,
-    );
-  },
-);
-
-Then(
-  /^(\d+) sections? (?:is|are) marked as current$/,
-  async function (this: WebWorld, count: string) {
-    assert.equal(
-      await this.browserPage
-        .locator('.site-sections a[aria-current="page"]')
-        .count(),
-      Number(count),
     );
   },
 );

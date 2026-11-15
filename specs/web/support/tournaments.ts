@@ -57,9 +57,10 @@ const create = async (
     address: string;
   };
   world.tournaments.set(name, { id, manager, request, address });
+  world.lastTournament = name;
 };
 
-const found = (world: WebWorld, name: string) => {
+const foundNamed = (world: WebWorld, name: string) => {
   const tournament = world.tournaments.get(name);
   if (tournament === undefined) {
     throw new Error(`No tournament called ${name} was created.`);
@@ -72,7 +73,7 @@ const change = async (
   name: string,
   changed: Record<string, unknown>,
 ): Promise<void> => {
-  const tournament = found(world, name);
+  const tournament = foundNamed(world, name);
   const request = { ...tournament.request, ...changed };
   const answer = await call("POST", "/tournaments/update", {
     manager: tournament.manager,
@@ -163,7 +164,7 @@ Given(
   async function (this: WebWorld, manager: string, name: string) {
     const answer = await call("POST", "/tournaments/archive", {
       manager,
-      id: found(this, name).id,
+      id: foundNamed(this, name).id,
     });
     if (answer.status !== 200) await refused("archive the tournament", answer);
   },
@@ -239,5 +240,60 @@ Given(
     for (let number = 1; number <= Number(count); number += 1) {
       await create(this, "organiser@example.com", `${name} ${String(number)}`);
     }
+  },
+);
+
+Given(
+  "{string} has renamed the tournament {string} to {string}",
+  async function (
+    this: WebWorld,
+    _manager: string,
+    name: string,
+    renamed: string,
+  ) {
+    await change(this, name, { name: renamed });
+    const found = foundNamed(this, name);
+    this.tournaments.set(renamed, found);
+  },
+);
+
+Given(
+  "{string} has moved the tournament {string} to the country {string}",
+  async function (
+    this: WebWorld,
+    _manager: string,
+    name: string,
+    country: string,
+  ) {
+    // In no region of it until the scenario says which.
+    await change(this, name, { country, region: undefined });
+  },
+);
+
+Given(
+  "{string} has set the days of the tournament {string} to start on {string} and finish on {string}",
+  async function (
+    this: WebWorld,
+    _manager: string,
+    name: string,
+    starts: string,
+    finishes: string,
+  ) {
+    await change(this, name, {
+      starts: moment(starts),
+      finishes: moment(finishes),
+    });
+  },
+);
+
+// A name of the length the scenario wants, for a name too long to say twice.
+Given(
+  "{string} has created the tournament with a name of {int} letters",
+  async function (this: WebWorld, manager: string, letters: number) {
+    await create(
+      this,
+      manager,
+      "Rankings".padEnd(letters, "x").slice(0, letters),
+    );
   },
 );
