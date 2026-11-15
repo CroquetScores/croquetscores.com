@@ -8,7 +8,7 @@ import {
   type HelpSynonyms,
 } from "../../../../src/web/common/helpSynonyms.js";
 import type { SpecWorld } from "../../../support/world.js";
-import { folders, languageOf } from "./helpFolders.js";
+import { asked, folders, languageOf } from "./helpFolders.js";
 
 const pairs = new WeakMap<SpecWorld, [string, string][]>();
 const questions = new WeakMap<SpecWorld, string>();
@@ -34,6 +34,25 @@ When("the question is expanded", function (this: SpecWorld) {
   expanded.set(this, expandQuestion(question, pairs.get(this) ?? []));
 });
 
+// The list kept for the language a scenario named with "the help language",
+// whose step is in helpSearchConfigurations.steps.ts and keeps what it was told
+// in helpFolders.ts. Asked for by its own step and not merged into the one
+// above, so that a scenario giving a synonym of its own is not changed by what
+// the list comes to hold. A scenario that names no language, or one with no
+// list, is an error and not an empty list, which is a different thing.
+When(
+  "the question is expanded by the list kept for the language",
+  async function (this: SpecWorld) {
+    const question = questions.get(this);
+    assert.ok(question !== undefined, "No question was asked.");
+    const name = asked.get(this);
+    assert.ok(name !== undefined, "No language was asked for.");
+    const kept = helpSynonymsOf((await languageOf(name)).tag);
+    assert.ok(kept !== undefined, `${name} has no list of synonyms.`);
+    expanded.set(this, expandQuestion(question, kept));
+  },
+);
+
 const result = (world: SpecWorld): ExpandedQuestion => {
   const found = expanded.get(world);
   assert.ok(found !== undefined, "No question was expanded.");
@@ -46,6 +65,16 @@ Then(
     assert.ok(
       result(this).words.includes(word),
       `${word} is not among ${result(this).words.join(", ")}.`,
+    );
+  },
+);
+
+Then(
+  "the words searched for do not include {string}",
+  function (this: SpecWorld, word: string) {
+    assert.ok(
+      !result(this).words.includes(word),
+      `${word} is among ${result(this).words.join(", ")}.`,
     );
   },
 );

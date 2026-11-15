@@ -12,4 +12,18 @@ export const english: HelpSynonyms = [
   ["competition", "tournament"],
   ["competitor", "player"],
   ["bracket", "draw"],
+  // What readers say of putting the site on their phone, and what the help says
+  // (readers/home-screen). Each is paired with the help's words and none with
+  // the others: an icon is not an app, and a reader asking about one should not
+  // be sent to pages about the other. Each form a reader is likely to type is
+  // named, since a synonym is not stemmed. Read from the reader's word to the
+  // help's, since a synonym of two words is not matched to a question's single
+  // ones.
+  ["install", "home screen"],
+  ["installed", "home screen"],
+  ["installing", "home screen"],
+  ["app", "home screen"],
+  ["apps", "home screen"],
+  ["icon", "home screen"],
+  ["icons", "home screen"],
 ];
