@@ -219,3 +219,11 @@ Given(
     await change(this, name, { sport });
   },
 );
+
+// A tournament that finishes when the scenario says, and not on the third day.
+Given(
+  "the tournament is to finish at {string}",
+  function (this: WebWorld, moment: string) {
+    this.ofTheNext = { ...this.ofTheNext, finishes: moment };
+  },
+);

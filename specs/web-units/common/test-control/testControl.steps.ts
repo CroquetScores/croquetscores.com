@@ -790,3 +790,15 @@ Then(
     );
   },
 );
+
+When(
+  "the world ranking name of {string} is changed to {string} through the control",
+  async function (this: SpecWorld, name: string, rankingName: string) {
+    await controlled(this, "/__test/tournaments/players/world-ranking-name", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      player: playedIn(this).players.get(name)?.tournament,
+      name: rankingName,
+    });
+  },
+);

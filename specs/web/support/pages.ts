@@ -126,3 +126,42 @@ Then(
     );
   },
 );
+
+// Said as a Given and as a When in the scenarios, which Cucumber does not tell
+// apart, so it is defined once. A page opened with scripting off, which is how
+// every browser scenario begins,
+// and with it on, which a page that is read by scripts needs.
+const openWithScriptingOff = async function (
+  this: WebWorld,
+  path: string,
+): Promise<void> {
+  await this.browserPage.goto(`${this.baseUrl!}${path}`);
+};
+
+Given(
+  "the page at {string} is opened with scripting off",
+  openWithScriptingOff,
+);
+
+When(
+  "the page at {string} is opened with scripting on",
+  async function (this: WebWorld, path: string) {
+    await withScripting(this);
+    await this.browserPage.goto(`${this.baseUrl!}${path}`);
+  },
+);
+
+Then(
+  "the second-level heading is {string}",
+  async function (this: WebWorld, heading: string) {
+    const said = await this.browserPage.locator("main h2").first().innerText();
+    assert.equal(said.trim(), heading);
+  },
+);
+
+Then("the header names no tournament", async function (this: WebWorld) {
+  assert.equal(
+    await this.browserPage.locator("header.site-bar .site-tournament").count(),
+    0,
+  );
+});

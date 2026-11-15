@@ -235,6 +235,14 @@ Feature: A site over a database the specs made can be controlled by a token
       When the tournament's page is asked for
       Then the tournament's page says "12 min"
 
+    Scenario: A player's world ranking name can be changed
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When the world ranking name of "Ann" is changed to "Ann Smith" through the control
+      Then the site answers that it is fine
+
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

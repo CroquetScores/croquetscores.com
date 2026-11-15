@@ -13,6 +13,7 @@ import { ArchiveGame } from "../application/operations/competitions/ArchiveGame.
 import { MoveCompetitionPlayer } from "../application/operations/competitions/MoveCompetitionPlayer.js";
 import { ArchivePlayer } from "../application/operations/tournaments/ArchivePlayer.js";
 import { UpdateTeam } from "../application/operations/tournaments/UpdateTeam.js";
+import { ChangePlayerWorldRankingName } from "../application/operations/tournaments/ChangePlayerWorldRankingName.js";
 import { AddTeam } from "../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../application/operations/tournaments/AddTest.js";
@@ -486,6 +487,22 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.team, "A team"),
               asked.details as TeamDetails,
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/players/world-ranking-name",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new ChangePlayerWorldRankingName(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.player, "A player"),
+              text(asked.name, "A name"),
               at(asked),
             ),
           );
