@@ -569,6 +569,12 @@ Cucumber is run in two families, because the two kinds of spec define steps in t
 
 A feature moves into `specs/web/` when its steps can be written against the website alone. What cannot is a statement about how the site is built (a function of `src/web`, a pipeline put together by hand, an example route mounted for the purpose), and stays in `specs/web-units/`. Features that were written before the split are moved a slice at a time: `git mv` the feature, rewrite its steps against `specs/web/support/` (adding to the test control what they need), and run it with `npm run test:changed -- specs/web/…`.
 
+What is left in `specs/web-units/` is left for one of these reasons, which is also where the next slice of work is:
+
+- **It is a statement about how the site is built**, not what it does: the languages' catalogues, security headers, trusted proxies, request stamping, the email writer and the queue's sending, the form and dialog examples, canonical links read by function, the help library's search, rebuilding read models.
+- **It needs the site started with settings of its own** (search engines welcome, an administrator, emergency contacts, a host the site refuses), a help library handed to it, or its database made to fail: `common/layout`, `search-engines`, `sitemap`, `canonical-link`, `page-description`, `web-app-manifest`, `whats-new`, `maintenance`, `database-unavailable`, the help pages. The way in is a second site started over the same database with the settings in its environment, as a deployment is told them.
+- **Its steps read the site's state as the application holds it** and not as a page shows it: most of the admin's tournament pages (`admin/{year}/...`), the admin's tournaments list and new tournament page, the import errors, and the world rankings imports, which need a stand-in for the rankings site as well. The way in is a read of what a tournament holds, told by the test control as plain data.
+
 ### 8.4 Gherkin conventions
 
 - A `.feature` file describes behaviour. Method names, signatures and encodings belong in the step definitions and in the `/src` types, where a reviewer sees them.
