@@ -346,14 +346,12 @@ Feature: The home page lists recent results and upcoming tournaments
       Then the flag of "Spring Open" in the upcoming tournaments is named "Only tournaments in New Zealand"
 
     Scenario: The month is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the home page is opened
       Then "Spring Open" is dated "10-12 oct" in the upcoming tournaments
 
     Scenario: The flag is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the home page is opened
       Then the flag of "Spring Open" in the upcoming tournaments is named "Solo torneos de Nueva Zelanda"
 
@@ -821,8 +819,7 @@ Feature: The home page lists recent results and upcoming tournaments
       Then the first of the upcoming tournaments is "Autumn Open"
 
     Scenario: The countries offered are in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the home page is opened
       Then "Nueva Zelanda" is offered as a country
 

@@ -565,3 +565,137 @@ When(
     });
   },
 );
+
+// The teams the control made, and the test they play.
+const teams = new WeakMap<
+  SpecWorld,
+  { names: Map<string, string>; test?: string }
+>();
+const teamsOf = (world: SpecWorld) => {
+  let found = teams.get(world);
+  if (found === undefined) {
+    found = { names: new Map() };
+    teams.set(world, found);
+  }
+  return found;
+};
+
+When(
+  "the teams {string} and {string} are added through the control",
+  async function (this: SpecWorld, first: string, second: string) {
+    for (const name of [first, second]) {
+      await controlled(this, "/__test/tournaments/teams", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        team: { name, shortName: name.slice(0, 3).toUpperCase() },
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      teamsOf(this).names.set(name, idOfAnswer(this));
+    }
+  },
+);
+
+When(
+  "a player is added to the team {string} through the control",
+  async function (this: SpecWorld, team: string) {
+    await controlled(this, "/__test/tournaments/teams/players", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      team: teamsOf(this).names.get(team),
+      player: { name: "Kim Keeper" },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+  },
+);
+
+When(
+  "a test between the two teams is added and given {int} expected matches through the control",
+  async function (this: SpecWorld, expectedMatches: number) {
+    const [first, second] = [...teamsOf(this).names.values()];
+    const request = {
+      firstTeam: first,
+      secondTeam: second,
+      starts: "2026-10-03",
+      finishes: "2026-10-03",
+      expectedMatches: 1,
+      bestOf: 1,
+    };
+    await controlled(this, "/__test/tournaments/tests", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      test: request,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    const test = idOfAnswer(this);
+    await controlled(this, "/__test/tournaments/tests/update", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      id: test,
+      test: { ...request, expectedMatches },
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the team {string} is archived through the control",
+  async function (this: SpecWorld, team: string) {
+    await controlled(this, "/__test/tournaments/teams/archive", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      team: teamsOf(this).names.get(team),
+    });
+  },
+);
+
+Given(
+  "{string} is made the manager of a tournament called {string} played by teams through the control",
+  async function (this: SpecWorld, manager: string, name: string) {
+    await controlled(this, "/__test/tournaments", {
+      manager,
+      tournament: {
+        name,
+        starts: "2026-10-03T00:00:00Z",
+        finishes: "2026-10-05T00:00:00Z",
+        format: "Teams",
+        sport: "ac",
+        country: "au",
+        region: "vic",
+      },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    made.set(
+      this,
+      JSON.parse(responseOf(this).body) as { id: string; address: string },
+    );
+  },
+);
+
+Given(
+  "the players {string} and {string} are added through the control",
+  async function (this: SpecWorld, first: string, second: string) {
+    for (const name of [first, second]) {
+      await controlled(this, "/__test/tournaments/players", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        player: { name },
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      playedIn(this).players.set(name, {
+        tournament: idOfAnswer(this),
+        entered: "",
+      });
+    }
+  },
+);
+
+When(
+  "{string} is archived through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/players/archive", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      player: playedIn(this).players.get(name)?.tournament,
+    });
+  },
+);

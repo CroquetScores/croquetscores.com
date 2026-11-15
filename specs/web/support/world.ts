@@ -30,6 +30,18 @@ export class WebWorld extends World {
   /** What the scenario has said of the next player it adds. */
   public ofTheNextPlayer: Record<string, unknown> = {};
 
+  /** What the scenario has said of the next team and the next test it adds. */
+  public ofTheNextTeam: Record<string, unknown> = {};
+  public ofTheNextTest: Record<string, unknown> = {};
+
+  /** The teams and tests the scenario added, by the names it gave them. */
+  public teamPlayers = new Map<string, string>();
+  public teams = new Map<string, { id: string; shortName: string }>();
+  public tests = new Map<
+    string,
+    { id: string; request: Record<string, unknown> }
+  >();
+
   /** What the scenario has said of the next block it adds. */
   public ofTheNextBlock: Record<string, unknown> = {};
 

@@ -195,6 +195,25 @@ Feature: A site over a database the specs made can be controlled by a token
       And the block is archived through the control
       Then the site answers that it is fine
 
+    Scenario: Teams are added with players, and play a test, and one can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Tests" played by teams through the control
+      When the teams "England" and "Australia" are added through the control
+      And a player is added to the team "England" through the control
+      And a test between the two teams is added and given 2 expected matches through the control
+      And the teams "New Zealand" and "Fiji" are added through the control
+      And the team "Fiji" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A player of the tournament can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When "Ann" is archived through the control
+      Then the site answers that it is fine
+
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

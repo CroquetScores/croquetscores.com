@@ -88,3 +88,46 @@ Then(
     assert.deepEqual(stray, [], "Words on the page came from elsewhere.");
   },
 );
+
+When("the browser goes back", async function (this: WebWorld) {
+  await this.browserPage.goBack();
+});
+
+Then(
+  "the header names the tournament {string}",
+  async function (this: WebWorld, name: string) {
+    assert.equal(
+      (
+        await this.browserPage
+          .locator("header.site-bar .site-tournament")
+          .innerText()
+      ).trim(),
+      name,
+    );
+  },
+);
+
+Then(
+  "the section {string} leads to {string}",
+  async function (this: WebWorld, label: string, path: string) {
+    await this.browserPage.locator(".site-sections").waitFor();
+    assert.equal(
+      await this.browserPage.getAttribute(section(label), "href"),
+      path,
+    );
+  },
+);
+
+Then(
+  "the page is headed {string}",
+  async function (this: WebWorld, name: string) {
+    const heading = this.browserPage.locator("main h1").first();
+    await heading.waitFor();
+    assert.equal((await heading.innerText()).trim(), name);
+  },
+);
+
+Then("the page's content has no main heading", async function (this: WebWorld) {
+  await this.browserPage.locator("main").waitFor();
+  assert.equal(await this.browserPage.locator("main h1").count(), 0);
+});

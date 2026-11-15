@@ -11,6 +11,13 @@ import type { FastifyInstance } from "fastify";
 import { AddGame } from "../application/operations/competitions/AddGame.js";
 import { ArchiveGame } from "../application/operations/competitions/ArchiveGame.js";
 import { MoveCompetitionPlayer } from "../application/operations/competitions/MoveCompetitionPlayer.js";
+import { ArchivePlayer } from "../application/operations/tournaments/ArchivePlayer.js";
+import { AddTeam } from "../application/operations/tournaments/AddTeam.js";
+import { AddTeamPlayer } from "../application/operations/tournaments/AddTeamPlayer.js";
+import { AddTest } from "../application/operations/tournaments/AddTest.js";
+import { ArchiveTeam } from "../application/operations/tournaments/ArchiveTeam.js";
+import { UpdateTest } from "../application/operations/tournaments/UpdateTest.js";
+import type { TestRequest } from "../application/operations/tournaments/testOperations.js";
 import { ArchiveCompetition } from "../application/operations/tournaments/ArchiveCompetition.js";
 import { WithdrawGame } from "../application/operations/competitions/WithdrawGame.js";
 import { WithdrawPlayer } from "../application/operations/competitions/WithdrawPlayer.js";
@@ -25,11 +32,15 @@ import { UpdateTournament } from "../application/operations/tournaments/UpdateTo
 import { EmailAddress } from "../domain/aggregates/accounts/value-objects/EmailAddress.js";
 import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
 import type { CompetitionRulesSaid } from "../domain/aggregates/tournaments/value-objects/CompetitionRules.js";
+import type { TeamDetails } from "../domain/aggregates/tournaments/Team.js";
+import type { TeamPlayerDetails } from "../domain/aggregates/tournaments/TeamPlayer.js";
 import type { TournamentPlayerDetails } from "../domain/aggregates/tournaments/TournamentPlayer.js";
 import type { ReaderMaking } from "./testControlReaders.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
 interface Asked {
+  team?: unknown;
+  test?: unknown;
   rules?: unknown;
   direction?: unknown;
   game?: unknown;
@@ -314,6 +325,99 @@ export const registerTestControlTournaments = (
               await accountOf(asked.manager),
               text(asked.tournament, "A tournament"),
               text(asked.competition, "A competition"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/teams",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddTeam(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              asked.team as TeamDetails,
+              at(),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/teams/players",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddTeamPlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.team, "A team"),
+              asked.player as TeamPlayerDetails,
+              at(),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/teams/archive",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new ArchiveTeam(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.team, "A team"),
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      // A test between two teams, which is a competition of its own.
+      scope.post(
+        "/tournaments/tests",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddTest(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              asked.test as TestRequest,
+              at(),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/tests/update",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new UpdateTest(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.id, "A test"),
+              asked.test as TestRequest,
+              at(),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/players/archive",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new ArchivePlayer(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.player, "A player"),
               at(),
             ),
           );

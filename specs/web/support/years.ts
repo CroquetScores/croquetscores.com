@@ -7,6 +7,7 @@ import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
 import { evaluateWith } from "./evaluateWith.js";
+import { announcedAs, isMarked } from "./marks.js";
 import { settled } from "./tournamentLists.js";
 import type { WebWorld } from "./world.js";
 
@@ -296,5 +297,109 @@ When(
         `.tournament-pages a[rel="${which === "previous" ? "prev" : "next"}"]`,
       )
       .click();
+  },
+);
+
+// What the drop-down list is called for a reader who is listening rather than
+// looking: a list to choose from by its label, and a disclosure by its summary.
+const dropDownNamed = (world: WebWorld): Promise<string | null> =>
+  dropDown(world).evaluate((element) => {
+    const list = element as unknown as Shown;
+    return list.localName === "select"
+      ? list.getAttribute("aria-label")
+      : (list.querySelector("summary")?.textContent?.trim() ?? null);
+  });
+
+Then(
+  /^the (first|second|third) year offered is (\d+)$/,
+  async function (this: WebWorld, which: string, year: string) {
+    const at = ["first", "second", "third"].indexOf(which);
+    await eventually(this, async () => {
+      assert.equal((await yearsOffered(this))[at], Number(year));
+    });
+  },
+);
+
+Then("every year offered is a tab", async function (this: WebWorld) {
+  await eventually(this, async () => {
+    assert.equal(await dropDown(this).count(), 0);
+    assert.ok((await tabYears(this)).length > 0, "No year is a tab.");
+  });
+});
+
+Then("no drop-down list of years is offered", async function (this: WebWorld) {
+  await eventually(this, async () => {
+    assert.equal(await dropDown(this).count(), 0);
+  });
+});
+
+Then("the year {int} is a tab", async function (this: WebWorld, year: number) {
+  await eventually(this, async () => {
+    assert.ok(
+      (await tabYears(this)).includes(year),
+      `${String(year)} is not a tab.`,
+    );
+  });
+});
+
+Then(
+  "the year {int} is in the drop-down list",
+  async function (this: WebWorld, year: number) {
+    await eventually(this, async () => {
+      assert.ok(
+        (await dropDownYears(this)).includes(year),
+        `${String(year)} is not in the drop-down list.`,
+      );
+    });
+  },
+);
+
+Then(
+  "the drop-down list is named {string}",
+  async function (this: WebWorld, name: string) {
+    await eventually(this, async () => {
+      assert.equal(await dropDownNamed(this), name);
+    });
+  },
+);
+
+Then(
+  "the drop-down list is at least {int} pixels tall",
+  async function (this: WebWorld, least: number) {
+    await eventually(this, async () => {
+      const box = await dropDown(this).boundingBox();
+      assert.ok(box !== null, "It is not on the page.");
+      assert.ok(
+        box.height >= least,
+        `It is ${String(box.height)} pixels tall.`,
+      );
+    });
+  },
+);
+
+Then("the years are named in the test locale", async function (this: WebWorld) {
+  await eventually(this, async () => {
+    const named = await announcedAs(this, "nav.years");
+    assert.ok(named !== null, "The years are not named.");
+    assert.ok(isMarked(named), `The years are named ${JSON.stringify(named)}.`);
+  });
+});
+
+Then(
+  "the drop-down list of years is named in the test locale",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      assert.equal(
+        await dropDown(this).count(),
+        1,
+        "No drop-down list of years is offered.",
+      );
+      const named = await dropDownNamed(this);
+      assert.ok(named !== null, "No drop-down list of years is named.");
+      assert.ok(
+        isMarked(named),
+        `The drop-down list is named ${JSON.stringify(named)}.`,
+      );
+    });
   },
 );
