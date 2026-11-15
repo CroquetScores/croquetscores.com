@@ -5,7 +5,7 @@ import type { SpecWorld } from "../../../support/world.js";
 import { rows } from "../../support/tournamentLists.js";
 
 // What is a sport's page in a year's own. What its list shares with the home
-// page's and a year's is said in specs/web/support/tournamentLists.ts.
+// page's and a year's is said in specs/web-units/support/tournamentLists.ts.
 
 const openSportInYear = async function (
   this: SpecWorld,

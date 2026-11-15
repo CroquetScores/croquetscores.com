@@ -121,7 +121,7 @@ import { aFakeOfHaveIBeenPwned } from "./breachedPasswords.js";
 import { listsStoodUpBy } from "./worldRankings.js";
 import { Website } from "../../../src/domain/common/Website.js";
 import { emailWriter } from "../../../src/web/common/emailWriter.js";
-import { scenarioLanguages } from "../../web/support/languages.js";
+import { scenarioLanguages } from "../../web-units/support/languages.js";
 
 /** A projection that fails the append it is given, when a scenario says to. */
 class RefusingProjection implements Projection {

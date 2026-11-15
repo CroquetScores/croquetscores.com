@@ -93,7 +93,29 @@ export interface Config {
   // pg_dump, as the backup runs it, where the computer does not find it by the
   // name pg_dump: the copy that comes with pgAdmin is not on the path.
   readonly pgDumpPath: string | undefined;
+  /**
+   * What a call to the test control must carry, where the site has one
+   * (src/web/testControl.ts). Only a site over a database the specs made is
+   * let have it, so that it cannot be set over a real one.
+   */
+  readonly testControlToken: string | undefined;
 }
+
+/**
+ * What the specs name every database they make, so that a site can tell one
+ * from a real one by its name alone.
+ */
+export const scratchDatabasePrefix = "zzz_delete_me_spec_";
+
+/** Whether `databaseUrl` names a database the specs made. */
+export const isScratchDatabase = (databaseUrl: string): boolean => {
+  try {
+    const name = decodeURIComponent(new URL(databaseUrl).pathname.slice(1));
+    return name.startsWith(scratchDatabasePrefix);
+  } catch {
+    return false;
+  }
+};
 
 export class ConfigError extends Error {
   constructor(problems: readonly string[]) {
@@ -327,6 +349,17 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
+  // Refused rather than ignored: a token left in the settings of a real site
+  // would otherwise be a way into it that nobody was watching for.
+  const testControlToken = env["TEST_CONTROL_TOKEN"]?.trim() || undefined;
+  if (
+    testControlToken !== undefined &&
+    !isScratchDatabase(env["DATABASE_URL"] ?? "")
+  ) {
+    problems.push(
+      `TEST_CONTROL_TOKEN is only for a database the specs made, whose name begins ${scratchDatabasePrefix}.`,
+    );
+  }
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
@@ -352,6 +385,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     websiteDatabaseUrl: env["WEBSITE_DATABASE_URL"]?.trim() || undefined,
     databaseBackupFolder: env["DATABASE_BACKUP_FOLDER"]?.trim() || undefined,
     pgDumpPath: env["PG_DUMP_PATH"]?.trim() || undefined,
+    testControlToken,
   };
 };
 

@@ -30,7 +30,7 @@ import {
 import { migrate } from "../src/infrastructure/database/migrate.js";
 import { createPool } from "../src/infrastructure/database/pool.js";
 import { buildApplication } from "../src/web/server.js";
-import { accountsThrough } from "../specs/web/support/accounts.js";
+import { accountsThrough } from "../specs/web-units/support/accounts.js";
 import { ReadOnlyDate } from "../src/domain/common/ReadOnlyDate.js";
 import { english } from "../src/web/languages/english.js";
 

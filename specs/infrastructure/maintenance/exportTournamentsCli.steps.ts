@@ -27,7 +27,7 @@ import { StartCommentary } from "../../../src/application/operations/tournaments
 import { UpdatePlayer } from "../../../src/application/operations/tournaments/UpdatePlayer.js";
 import { UpdateTeam } from "../../../src/application/operations/tournaments/UpdateTeam.js";
 import { PublicPlayersOfTournament } from "../../../src/application/operations/tournaments/PublicPlayersOfTournament.js";
-import { changeTournament } from "../../web/support/tournaments.js";
+import { changeTournament } from "../../web-units/support/tournaments.js";
 import { WithdrawGame } from "../../../src/application/operations/competitions/WithdrawGame.js";
 import type { CommentaryId } from "../../../src/domain/aggregates/tournaments/primitives/CommentaryId.js";
 import {

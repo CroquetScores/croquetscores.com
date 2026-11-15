@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { reopenedBrowser } from "../../support/browser.js";
 
 // A browser's usual text is 16 pixels, which is what "its usual size" and every
@@ -10,18 +10,18 @@ const usualPixels = 16;
 
 // What the text measured at the moment a step wanted to compare against it:
 // before a gesture, or before the reader went somewhere else.
-const remembered = new WeakMap<SpecWorld, number>();
+const remembered = new WeakMap<WebWorld, number>();
 
 // What the text measured when the last gesture was done, which is the size a
 // reader means by "as it was" when they go somewhere else after making it.
-const afterGesture = new WeakMap<SpecWorld, number>();
+const afterGesture = new WeakMap<WebWorld, number>();
 
-const textPixels = (world: SpecWorld): Promise<number> =>
+const textPixels = (world: WebWorld): Promise<number> =>
   world.browserPage.evaluate<number>(
     "parseFloat(getComputedStyle(document.documentElement).fontSize)",
   );
 
-const remembering = (world: SpecWorld): number => {
+const remembering = (world: WebWorld): number => {
   const pixels = remembered.get(world);
   assert.ok(pixels !== undefined, "No text size was noted to compare with.");
   return pixels;
@@ -35,7 +35,7 @@ const remembering = (world: SpecWorld): number => {
 const middle = { x: 200, y: 300 };
 
 const pinch = async (
-  world: SpecWorld,
+  world: WebWorld,
   fromHalfGap: number,
   toHalfGap: number,
 ): Promise<void> => {
@@ -69,7 +69,7 @@ const pinch = async (
 };
 
 const gesture = (fromHalfGap: number, toHalfGap: number) =>
-  async function (this: SpecWorld): Promise<void> {
+  async function (this: WebWorld): Promise<void> {
     remembered.set(this, await textPixels(this));
     await pinch(this, fromHalfGap, toHalfGap);
     afterGesture.set(this, await textPixels(this));
@@ -82,7 +82,7 @@ Given("two fingers are pinched together", gesture(60, 40));
 When("two fingers are pulled apart a long way", gesture(10, 190));
 When("two fingers are pinched together a long way", gesture(190, 10));
 
-When("one finger is dragged down the page", async function (this: SpecWorld) {
+When("one finger is dragged down the page", async function (this: WebWorld) {
   remembered.set(this, await textPixels(this));
   const session = await this.browserContext!.newCDPSession(this.browserPage);
   await session.send("Emulation.setTouchEmulationEnabled", {
@@ -106,51 +106,51 @@ When("one finger is dragged down the page", async function (this: SpecWorld) {
   await session.detach();
 });
 
-Given("the help page is open", async function (this: SpecWorld) {
+Given("the help page is open", async function (this: WebWorld) {
   await this.browserPage.goto(`${this.baseUrl!}/help`);
 });
 
-When("the help page is opened", async function (this: SpecWorld) {
+When("the help page is opened", async function (this: WebWorld) {
   remembered.set(this, await textPixels(this));
   await this.browserPage.goto(`${this.baseUrl!}/help`);
 });
 
 When(
   "the browser is closed and opened again with what pages stored in it",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     remembered.set(this, await textPixels(this));
     await reopenedBrowser(this);
   },
 );
 
-Then("the text is larger than it was", async function (this: SpecWorld) {
+Then("the text is larger than it was", async function (this: WebWorld) {
   assert.ok(
     (await textPixels(this)) > (remembered.get(this) ?? usualPixels),
     "The text did not grow.",
   );
 });
 
-Then("the text is smaller than it was", async function (this: SpecWorld) {
+Then("the text is smaller than it was", async function (this: WebWorld) {
   assert.ok(
     (await textPixels(this)) < (remembered.get(this) ?? usualPixels),
     "The text did not shrink.",
   );
 });
 
-Then("the text is its usual size", async function (this: SpecWorld) {
+Then("the text is its usual size", async function (this: WebWorld) {
   assert.equal(await textPixels(this), usualPixels);
 });
 
 Then(
   "the text is {int} percent of its usual size",
-  async function (this: SpecWorld, percent: number) {
+  async function (this: WebWorld, percent: number) {
     assert.equal(await textPixels(this), (usualPixels * percent) / 100);
   },
 );
 
 Then(
   "the text is as large as it was on the home page",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const pixels = afterGesture.get(this);
     assert.ok(pixels !== undefined, "No text size was made on the home page.");
     assert.equal(await textPixels(this), pixels);
@@ -159,21 +159,21 @@ Then(
 
 Then(
   "the text is as large as it was before the browser was closed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await textPixels(this), remembering(this));
   },
 );
 
 // What the browser itself has done to the page, which is not the same as the
 // text being larger: its own zoom would have shown here as a scale.
-Then("the page is not zoomed", async function (this: SpecWorld) {
+Then("the page is not zoomed", async function (this: WebWorld) {
   assert.equal(
     await this.browserPage.evaluate<number>("window.visualViewport.scale"),
     1,
   );
 });
 
-Then("the page is no wider than the screen", async function (this: SpecWorld) {
+Then("the page is no wider than the screen", async function (this: WebWorld) {
   const [content, screen] = await this.browserPage.evaluate<[number, number]>(
     "[document.documentElement.scrollWidth, document.documentElement.clientWidth]",
   );

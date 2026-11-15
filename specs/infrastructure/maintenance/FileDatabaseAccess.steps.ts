@@ -3,8 +3,11 @@ import { strict as assert } from "node:assert";
 
 import type { DatabaseAccessState } from "../../../src/application/common/DatabaseAccess.js";
 import type { SpecWorld } from "../../support/world.js";
-import { addressingOf, applicationFor } from "../../web/support/browser.js";
-import { englishForScenarios } from "../../web/support/languages.js";
+import {
+  addressingOf,
+  applicationFor,
+} from "../../web-units/support/browser.js";
+import { englishForScenarios } from "../../web-units/support/languages.js";
 import {
   accessInHand,
   aFileThatIsNotThere,

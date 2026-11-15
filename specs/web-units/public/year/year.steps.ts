@@ -5,7 +5,7 @@ import type { SpecWorld } from "../../../support/world.js";
 import { rows } from "../../support/tournamentLists.js";
 
 // What is a year's page's own. What its list shares with the home page's is
-// said in specs/web/support/tournamentLists.ts.
+// said in specs/web-units/support/tournamentLists.ts.
 
 const openYear = async function (this: SpecWorld, year: number): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}/${String(year)}`);

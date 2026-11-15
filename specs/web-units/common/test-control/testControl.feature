@@ -1,0 +1,145 @@
+@postgres
+Feature: A site over a database the specs made can be controlled by a token
+
+  The black-box specs in `specs/web` start the site as a process of its own and
+  know it only by its address, so a page is the only way they have of changing
+  it, and there is no page for moving the site's own clock. Some scenarios have
+  to say what time it is, so a site started for them can be told.
+
+  A way of changing a running site that is not a reader's is a way into it, so
+  it is guarded twice, and each guard is enough on its own. A site has it only
+  if it was given a token, and it refuses to start with a token unless its
+  database is one the specs made, which no real database is named like. And
+  every call carries the token, or is answered as a page that is not there
+  would be, so that nobody without it learns the routes exist.
+
+  Rule: Only a site given a token has the control
+
+    Scenario: A site given no token has no control
+      Given a site given no token
+      When the clock is asked for with the token "open sesame"
+      Then the site answers that there is no such page
+
+    Scenario: A site given a token has the control
+      Given a site given the token "open sesame"
+      When the clock is asked for with the token "open sesame"
+      Then the site answers that it is fine
+
+  Rule: A call must carry the token
+
+    Scenario: A call with no token is answered as a page that is not there
+      Given a site given the token "open sesame"
+      When the clock is asked for with no token
+      Then the site answers that there is no such page
+
+    Scenario: A call with the wrong token is answered as a page that is not there
+      Given a site given the token "open sesame"
+      When the clock is asked for with the token "close sesame"
+      Then the site answers that there is no such page
+
+  Rule: A site refuses a token unless its database is one the specs made
+
+    Scenario: A token over a database the specs did not make stops the site starting
+      Given a token "open sesame"
+      And a database called "croquet_scores"
+      When the site is started over that database
+      Then the site refuses to start
+      And the refusal names the token
+
+  Rule: The site can be made to forget what it kept
+
+    A site is started once for many scenarios, since starting one takes longer
+    than most scenarios do, so each scenario begins by having the site forget
+    what the last one left. What the site keeps of the help is not what a
+    scenario leaves, and is a copy of files, so it stays.
+
+    Scenario: What the site kept is forgotten
+      Given a site given the token "open sesame"
+      And the site has kept a failed sign in
+      When the site is told to forget what it kept
+      Then the site has kept no failed sign in
+
+    Scenario: The help the site made searchable is kept
+      Given a site given the token "open sesame"
+      And the site has made the help searchable
+      When the site is told to forget what it kept
+      Then the help is still searchable
+
+    Scenario: The clock is put back by forgetting
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the site is told to forget what it kept
+      And the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of now
+
+  Rule: A site with the control offers the test locale
+
+    The test locale is English with every phrase marked, so that a word on a
+    page that came from somewhere other than a catalogue can be found. It is
+    made for the specs and is offered to nobody else.
+
+    Scenario: A site given a token offers the test locale
+      Given a site given the token "open sesame"
+      When the home page is asked for in "en-XA"
+      Then the page is in the test locale
+
+    Scenario: A site given no token does not offer it
+      Given a site given no token
+      When the home page is asked for in "en-XA"
+      Then the page is not in the test locale
+
+  Rule: A site with the control can be given accounts and readers
+
+    A scenario that wants a signed-in reader should not have to register,
+    open an email and follow its link on every run, so the site makes the
+    account the way it makes one, and hands back a session to hold.
+
+    Scenario: A reader with a session is signed in
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When a session for "someone@example.com" is asked for
+      And the profile page is asked for with that session
+      Then the site answers that it is fine
+
+    Scenario: A reader with no session is not signed in
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the profile page is asked for with no session
+      Then the site sends the reader elsewhere
+
+    Scenario: A session for an address with no account is refused
+      Given a site given the token "open sesame"
+      When a session for "nobody@example.com" is asked for
+      Then the site answers that there is no such page
+
+    Scenario: An account that is not confirmed cannot be signed in to
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When a session for "someone@example.com" is asked for
+      And the profile page is asked for with that session
+      Then the site sends the reader elsewhere
+
+    Scenario: A site given no token has no accounts control
+      Given a site given no token
+      When a session for "someone@example.com" is asked for
+      Then the site answers that there is no such page
+
+  Rule: The clock can be set, and goes on from there
+
+    Scenario: A time set is the time the site tells
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of "2031-03-04T05:06:07Z"
+
+    Scenario: A time that is not one is refused
+      Given a site given the token "open sesame"
+      When the clock is set to "yesterday"
+      Then the site answers that the request was wrong
+
+    Scenario: The clock is put back to the machine's
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the clock is put back
+      And the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of now

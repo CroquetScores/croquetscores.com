@@ -299,6 +299,9 @@ import { registerSecurityHeaders } from "./common/securityHeaders.js";
 import { registerBetaBanner } from "./common/betaSite.js";
 import { registerPagePreview } from "./common/pagePreview.js";
 import { registerWebAppManifest } from "./common/webAppManifest.js";
+import { registerTestControl, SettableClock } from "./testControl.js";
+import { registerTestControlReaders } from "./testControlReaders.js";
+import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import { registerSitemap } from "./common/sitemap.js";
 import {
@@ -865,13 +868,19 @@ export const buildApplication = async (
   options: ApplicationOptions = {},
 ): Promise<Application> => {
   const pool = createPool(config.databaseUrl);
+  // Where the time comes from. The one a call to the test control can set is
+  // made only for a site that has the control, so that no other site has a
+  // clock anything can move.
+  const settableClock =
+    config.testControlToken === undefined ? undefined : new SettableClock();
+  const clock: Clock = options.clock ?? settableClock?.now ?? machineClock;
   // The log goes where it always has, to standard output, and a copy of each
   // line is kept in the database for an administrator to read. A scenario that
   // says where its log goes keeps no copy, since it is not asking about this.
   const serverLogStream = new ServerLogStream({
     file: process.stdout,
     database: pool,
-    now: options.clock ?? machineClock,
+    now: clock,
   });
   const server = Fastify({
     logger: withRequestsLogged(options.logger ?? { stream: serverLogStream }),
@@ -909,7 +918,15 @@ export const buildApplication = async (
   // Handed to the two handlers that set a password, each of which asks it
   // between the transaction it reads in and the one it writes in, where the
   // asking holds no connection.
-  const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
+  // A site with the test control never asks Have I Been Pwned, which would
+  // send a password from a spec run across the internet and answer by
+  // whatever the service knows that day: nothing is breached unless a spec
+  // says so.
+  const breached =
+    options.breachedPasswords ??
+    (config.testControlToken === undefined
+      ? new HaveIBeenPwnedPasswords()
+      : { isBreached: () => Promise.resolve(false) });
   const { mediator, validation } = putTogether(unitOfWork);
 
   // What is personal in an account's events is encrypted with the account's
@@ -1005,7 +1022,12 @@ export const buildApplication = async (
   // Emails are written from the site's catalogues, with links made from the
   // address of the website each is for and never a request's host, and written
   // to files in temp/emails/ unless a mail server is set (SMTP_HOST).
-  const languages = options.languages ?? offeredLanguages;
+  // The test locale is offered only to a site that has the test control.
+  const languages =
+    options.languages ??
+    (config.testControlToken === undefined
+      ? offeredLanguages
+      : [...offeredLanguages, testLocaleFrom(english)]);
   const writer = emailWriter(languages, {
     fromName: config.administratorEmailFromName,
   });
@@ -1595,8 +1617,10 @@ export const buildApplication = async (
     config.administratorEmailAddress,
   );
 
-  const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
+  if (config.testControlToken !== undefined && settableClock !== undefined) {
+    registerTestControl(server, config.testControlToken, settableClock, pool);
+  }
   speakToRequests(server, languages);
   // Before anything that reads the website, which includes the hooks that
   // refuse a request.
@@ -1620,6 +1644,18 @@ export const buildApplication = async (
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
 
   const sessions = new PostgresSessions(unitOfWork);
+  if (config.testControlToken !== undefined) {
+    registerTestControlReaders(server, config.testControlToken, {
+      mediator,
+      sessions,
+      clock,
+      inTransaction: (work) => unitOfWork.inTransaction(work),
+      accountIdFor: (address) => accountsByEmailAddress.find(address),
+      loadAccount: (id) => accounts.load(id),
+      saveAccount: (account) => accounts.save(account),
+      emailedTo: () => emailQueue.emails(),
+    });
+  }
   const reader: Reader =
     options.reader ??
     readerFromSessions(sessions, inTransaction, async (account) => {

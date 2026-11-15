@@ -5,12 +5,10 @@
 // this narrows what is run while work is in hand, not what has to pass.
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const require = createRequire(import.meta.url);
 
 const git = (...args) =>
   execFileSync("git", args, { cwd: root, encoding: "utf8" })
@@ -169,7 +167,7 @@ const code = changedIn("src/*", "specs/*.ts");
 // AI.md asks for the whole suite by hand where a change reaches further than
 // its own feature, and names a spec's support as exactly that: scripts/cucumber.mjs
 // imports every support folder on every run, so there is no one feature to
-// name. All three are counted, not specs/support alone — specs/web/support and
+// name. All three are counted, not specs/support alone — specs/web-units/support and
 // specs/infrastructure/support are loaded just as widely, and a change to one
 // of them is under no single feature either.
 const reaching = [...code].filter((file) =>
@@ -228,32 +226,11 @@ console.log(
 for (const feature of features) console.log(`  ${feature}`);
 console.log("");
 
-// Node is spawned against tsx's own entry point rather than the shim in
-// node_modules/.bin, because the shim is a shell script with no extension that
-// Windows cannot execute, and its .cmd twin cannot be spawned without a shell.
-// Both entry points are resolved rather than built from a path under
-// node_modules, so that a layout which is not npm's flat one — pnpm, or a
-// workspace hoisting its dependencies elsewhere — finds them where they are.
-// Cucumber's own bin is reached through its package.json, which is the only
-// thing it exports, and names the bin so a move survives.
-const tsx = require.resolve("tsx/cli");
-const cucumberPackage = require.resolve("@cucumber/cucumber/package.json");
-const cucumber = join(
-  dirname(cucumberPackage),
-  require(cucumberPackage).bin["cucumber-js"],
-);
-
+// The runner sends each feature to the family of specs it belongs to, since
+// the in-process specs and the black-box ones cannot be loaded together.
 const { status, error } = spawnSync(
   process.execPath,
-  [
-    tsx,
-    cucumber,
-    "--config",
-    "scripts/cucumber.mjs",
-    "--profile",
-    "changed",
-    ...features,
-  ],
+  [join(root, "scripts", "run-cucumber.mjs"), "changed", ...features],
   { cwd: root, stdio: "inherit" },
 );
 

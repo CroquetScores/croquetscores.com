@@ -10,7 +10,7 @@ import { settled } from "../../support/tournamentLists.js";
 
 // The months of a year's page, and what pressing one does. What the tournaments
 // beneath a month share with the other lists is said in
-// specs/web/support/tournamentLists.ts, and opening the page in year.steps.ts
+// specs/web-units/support/tournamentLists.ts, and opening the page in year.steps.ts
 // and yearSport.steps.ts.
 
 // What the specs are not compiled to know of the page itself.

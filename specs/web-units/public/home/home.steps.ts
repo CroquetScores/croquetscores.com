@@ -5,7 +5,7 @@ import type { SpecWorld } from "../../../support/world.js";
 import { boxOf, list, rows } from "../../support/tournamentLists.js";
 
 // What is the home page's own. What its lists share with a year's is said in
-// specs/web/support/tournamentLists.ts.
+// specs/web-units/support/tournamentLists.ts.
 
 When(
   /^the home page is opened for the (country|sport) "(.*)"$/,

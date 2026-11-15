@@ -199,7 +199,7 @@ Given("the reader has signed out", async function (this: SpecWorld) {
   // A reader signed in without the form is on no page of the site, and a page
   // of no site has nothing to post from: the address below is read against
   // wherever the page is. Judged by origin, as postAndKeepTheAnswer judges it
-  // (specs/web/support/answered.ts), so that any page of another site is
+  // (specs/web-units/support/answered.ts), so that any page of another site is
   // handled and not only a blank one.
   const site = new URL(this.baseUrl!);
   if (new URL(this.browserPage.url()).origin !== site.origin) {

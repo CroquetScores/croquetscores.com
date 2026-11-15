@@ -5,7 +5,7 @@ import type { SpecWorld } from "../../../support/world.js";
 import { rows } from "../../support/tournamentLists.js";
 
 // What is this page's own. What its list shares with the home page's and a
-// year's is said in specs/web/support/tournamentLists.ts.
+// year's is said in specs/web-units/support/tournamentLists.ts.
 
 // The address the page is at, with whatever of the days and the page a scenario
 // said, written as an address writes them.
