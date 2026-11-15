@@ -37,6 +37,7 @@ export const greek: Language = {
     "footer.privacy": "Απόρρητο",
     "footer.termsOfUse": "Όροι χρήσης",
     "footer.reportBug": "Αναφορά σφάλματος",
+    "footer.installSite": "Εγκατάσταση του ιστότοπου",
     "beta.banner":
       "Αυτή είναι δοκιμαστική (beta) ιστοσελίδα. Τα δεδομένα μπορεί να μηδενιστούν οποιαδήποτε στιγμή.",
     "privacy.contact":

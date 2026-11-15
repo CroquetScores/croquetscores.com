@@ -1,3 +1,4 @@
+@postgres
 Feature: A reader can put the site on their phone's home screen
 
   People follow a tournament from the side of a lawn, on a phone, and want the
@@ -31,9 +32,9 @@ Feature: A reader can put the site on their phone's home screen
   site's own, and a page says the dark one for itself, in the page.
 
   A reader who does not know their browser can do this is told so by a button
-  in the footer of the pages anyone may read. It is there only for a reader the
-  browser has said can install the site, so that it is never a button that does
-  nothing, and it is an addition to the page like the text size
+  in the footer of every page, the admin's among them. It is there only for a
+  reader the browser has said can install the site, so that it is never a
+  button that does nothing, and it is an addition to the page like the text size
   (`textSize.feature`): without scripting there is no button, and the browser's
   own menu still offers the same. A browser that never says it can, such as
   Safari on an iPhone, gets no button, and is told how to do it in the help
@@ -44,9 +45,8 @@ Feature: A reader can put the site on their phone's home screen
   its own kept by the browser, is a feature of its own, and what a reader sees
   without a connection is the browser's.
 
-  These scenarios run against a server built for the manifest and the pages'
-  heads alone, and say nothing of what else a page holds, which is each page's
-  own.
+  These scenarios run against a server with tournaments kept, and say nothing
+  of what else a page holds, which is each page's own.
 
   Rule: Each website's manifest is its own
 
@@ -151,7 +151,14 @@ Feature: A reader can put the site on their phone's home screen
         | /              |
         | /terms-of-use  |
         | /help          |
-        | /admin         |
+
+    # The admin is shown to nobody who is not signed in, so it is looked at in
+    # a browser by a reader who is.
+    @browser
+    Scenario: The admin links to the manifest
+      Given a reader signed in as "someone@example.com"
+      When the admin is opened
+      Then the page open links to the manifest
 
     Scenario: A page has one link to the manifest
       When the page "/" is asked for at "croquetscores.com"
@@ -296,5 +303,6 @@ Feature: A reader can put the site on their phone's home screen
   Rule: The manifest is not one of the pages to be found
 
     Scenario: The manifest is not in the sitemap
+      Given the site is told search engines are welcome
       When the sitemap is asked for at "croquetscores.com"
       Then it does not name the manifest

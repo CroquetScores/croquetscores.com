@@ -2,6 +2,7 @@
 // section bar, content in a white panel, green footer. Error pages use it too,
 // because a page that cannot be found is still a page of this site.
 import { textSizeScript } from "./textSizeScript.js";
+import { installOffer } from "./webAppManifest.js";
 import { accountItems, accountMenu, type AccountMenu } from "./accountMenu.js";
 import type { Assets } from "./assets.js";
 import { escape } from "./escape.js";
@@ -504,7 +505,7 @@ ${accountMenu(bar)}
 /** What the footer needs of the page it is drawn on. */
 export type SiteFooter = Pick<
   Shell,
-  "speaking" | "siteName" | "theme" | "path"
+  "speaking" | "siteName" | "theme" | "path" | "tryWebsite"
 > & {
   /** Who administers the site, which a bug is reported to. */
   readonly administratorEmailAddress: string;
@@ -554,7 +555,10 @@ export const siteFooter = (footer: SiteFooter): string => `
         <div class="site-footer-links">
           <a href="/privacy">${escape(footer.speaking.say("footer.privacy"))}</a>
           <a href="/terms-of-use">${escape(footer.speaking.say("footer.termsOfUse"))}</a>
-          <a class="report-bug" href="${escape(bugReport(footer))}">${escape(footer.speaking.say("footer.reportBug"))}</a>
+          <a class="report-bug" href="${escape(bugReport(footer))}">${escape(footer.speaking.say("footer.reportBug"))}</a>${
+            // A try website offers none of putting itself on a home screen.
+            footer.tryWebsite ? "" : installOffer(footer.speaking)
+          }
         </div>
         <div class="site-footer-theme">
 ${themeChoice(footer.speaking, footer.theme, footer.path)}${languageChoice(footer.speaking, footer.path)}

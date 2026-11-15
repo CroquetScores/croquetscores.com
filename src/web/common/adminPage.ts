@@ -202,6 +202,7 @@ export const adminPage = (
           `${siteFooter({
             speaking,
             siteName,
+            tryWebsite: websiteOf(request).isTry,
             theme,
             path: request.url,
             administratorEmailAddress,

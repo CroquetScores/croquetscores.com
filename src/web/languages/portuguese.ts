@@ -33,6 +33,7 @@ export const portuguese: Language = {
     "footer.privacy": "Privacidade",
     "footer.termsOfUse": "Termos de uso",
     "footer.reportBug": "Relatar um erro",
+    "footer.installSite": "Instalar o site",
     "beta.banner":
       "Este é um site beta. Os dados podem ser apagados a qualquer momento.",
     "privacy.contact":

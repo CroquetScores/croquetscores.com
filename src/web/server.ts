@@ -298,6 +298,7 @@ import { refuseCrossSite } from "./common/crossSite.js";
 import { registerSecurityHeaders } from "./common/securityHeaders.js";
 import { registerBetaBanner } from "./common/betaSite.js";
 import { registerPagePreview } from "./common/pagePreview.js";
+import { registerWebAppManifest } from "./common/webAppManifest.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import { registerSitemap } from "./common/sitemap.js";
 import {
@@ -1648,6 +1649,7 @@ export const buildApplication = async (
   registerSearchEngines(server, config.searchEnginesWelcome);
   registerBetaBanner(server);
   registerPagePreview(server);
+  registerWebAppManifest(server, assets);
   registerSitemap(server, config.searchEnginesWelcome);
 
   // Every answer of the API names the build the site is serving, so that an

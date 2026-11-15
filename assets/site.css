@@ -1480,6 +1480,25 @@ main {
   padding-bottom: var(--space-3);
 }
 
+/* The button that offers to install the site, among the footer's links. It is
+   pressed with a thumb on the phones it is for, so it is as tall as the footer's
+   other buttons. A stylesheet's display would otherwise override the hidden
+   attribute it is kept from view with until the browser says it can install. */
+.install-site {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-1);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.install-site[hidden] {
+  display: none;
+}
+
 /* A row of its own beneath the footer proper. The theme is a setting rather
    than something to read, so it sits apart from the donation and the copyright
    instead of competing with them for the same line. */
