@@ -106,13 +106,41 @@ export const settled = async (world: SpecWorld): Promise<void> => {
 // the page, since a press made with the mouse is not waited on as a link
 // clicked is.
 const pressAt = async (world: SpecWorld, found: Locator): Promise<void> => {
+  // Brought to the middle of the window first, where the pinned bar is not over
+  // it: where the page was left depends on how long it is, and a press made at
+  // coordinates goes to whatever is there, the bar included. Jumped to rather
+  // than scrolled to, so that it has stopped moving when it is measured. The
+  // callback is typed by what it calls, since the specs have no browser types.
+  await found.evaluate(
+    (element: {
+      scrollIntoView(options: { block: string; behavior: string }): void;
+    }) => {
+      element.scrollIntoView({ block: "center", behavior: "instant" });
+    },
+  );
   const box = await found.boundingBox();
   assert.ok(box !== null, "It is not on the page.");
-  const from = world.browserPage.url();
-  await world.browserPage.mouse.click(
-    box.x + box.width / 2,
-    box.y + box.height / 2,
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  // Something laid over it would take the press, so that is said, rather than
+  // left to show as a page that never changed.
+  const reached = await found.evaluate(
+    (
+      element: { contains(other: unknown): boolean },
+      at: { x: number; y: number },
+    ) => {
+      const top = (
+        globalThis as unknown as {
+          document: { elementFromPoint(x: number, y: number): unknown };
+        }
+      ).document.elementFromPoint(at.x, at.y);
+      return top !== null && element.contains(top);
+    },
+    { x, y },
   );
+  assert.ok(reached, "Something is over it, where it would be pressed.");
+  const from = world.browserPage.url();
+  await world.browserPage.mouse.click(x, y);
   await world.browserPage.waitForURL((url) => url.toString() !== from);
   await world.browserPage.waitForLoadState();
 };
