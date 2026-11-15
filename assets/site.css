@@ -1474,6 +1474,7 @@ main {
 .site-footer-links {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: var(--space-2) var(--space-5);
   padding-inline: var(--panel-inset);
@@ -1495,8 +1496,18 @@ main {
   cursor: pointer;
 }
 
-.install-site[hidden] {
+.install-site[hidden],
+.home-screen-help[hidden] {
   display: none;
+}
+
+/* The link to the help for the home screen is pressed with a thumb on the phones
+   it is for, as the button is, and is as tall as one. The row centres what is in
+   it, so that the links beside it are not left at its top. */
+.home-screen-help {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* A row of its own beneath the footer proper. The theme is a setting rather

@@ -32,6 +32,7 @@ export const english: Language = {
     "footer.termsOfUse": "Terms of use",
     "footer.reportBug": "Report a bug",
     "footer.installSite": "Install the site",
+    "footer.addToHomeScreen": "Add to home screen",
     "beta.banner": "This is a beta site. Data may be reset at any time.",
     "privacy.contact":
       "Questions about this page, or about what is kept about you: {emailAddress}",

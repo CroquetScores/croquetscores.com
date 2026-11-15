@@ -35,6 +35,7 @@ export const afrikaans: Language = {
     "footer.termsOfUse": "Gebruiksvoorwaardes",
     "footer.reportBug": "Rapporteer 'n fout",
     "footer.installSite": "Installeer die webwerf",
+    "footer.addToHomeScreen": "Voeg by tuisskerm",
     "beta.banner":
       "Dit is 'n beta-webwerf. Data kan enige tyd teruggestel word.",
     "privacy.contact":

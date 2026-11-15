@@ -36,6 +36,7 @@ export const latvian: Language = {
     "footer.termsOfUse": "Lietošanas noteikumi",
     "footer.reportBug": "Ziņot par kļūdu",
     "footer.installSite": "Instalēt vietni",
+    "footer.addToHomeScreen": "Pievienot sākuma ekrānam",
     "beta.banner":
       "Šī ir beta vietne. Dati jebkurā brīdī var tikt atiestatīti.",
     "privacy.contact":

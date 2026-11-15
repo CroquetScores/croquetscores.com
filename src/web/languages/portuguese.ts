@@ -34,6 +34,7 @@ export const portuguese: Language = {
     "footer.termsOfUse": "Termos de uso",
     "footer.reportBug": "Relatar um erro",
     "footer.installSite": "Instalar o site",
+    "footer.addToHomeScreen": "Adicionar ao ecrã principal",
     "beta.banner":
       "Este é um site beta. Os dados podem ser apagados a qualquer momento.",
     "privacy.contact":

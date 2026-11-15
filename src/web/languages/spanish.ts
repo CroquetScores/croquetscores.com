@@ -38,6 +38,7 @@ export const spanish: Language = {
     "footer.termsOfUse": "Condiciones de uso",
     "footer.reportBug": "Informar de un error",
     "footer.installSite": "Instalar el sitio",
+    "footer.addToHomeScreen": "Añadir a pantalla de inicio",
     "beta.banner":
       "Este es un sitio beta. Los datos pueden restablecerse en cualquier momento.",
     "privacy.contact":
