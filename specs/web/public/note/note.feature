@@ -177,14 +177,14 @@ Feature: Each of a tournament's managers' notes has a page of its own
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       And "organiser@example.com" has deleted the manager note "Lunch is at noon" of "Spring Open"
       When the page at "/2026/ac/spring-open/notes/lunch-is-at-noon" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An address no note is found at is not a page
       When the page at "/2026/ac/spring-open/notes/tea" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament has no note pages
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       And "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/notes/lunch-is-at-noon" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"

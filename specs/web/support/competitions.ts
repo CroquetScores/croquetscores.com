@@ -706,3 +706,72 @@ Given(
     });
   },
 );
+
+// What the next manager note says, until the scenario says something else.
+Given(
+  "the manager note is to say {string}",
+  function (this: WebWorld, description: string) {
+    this.noteSays = description;
+  },
+);
+
+Given(
+  "{string} has added the manager note {string} to {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    title: string,
+    tournament: string,
+  ) {
+    const id = await made("add the note", "/tournaments/notes", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      title,
+      description: this.noteSays,
+    });
+    this.notes.set(within(tournament, title), id!);
+  },
+);
+
+const noteIn = (world: WebWorld, tournament: string, title: string): string =>
+  held(
+    world.notes,
+    within(tournament, title),
+    `note called ${title} in ${tournament}`,
+  );
+
+Given(
+  "{string} has edited the manager note {string} of {string} to {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    title: string,
+    tournament: string,
+    to: string,
+  ) {
+    await made("edit the note", "/tournaments/notes/edit", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      note: noteIn(this, tournament, title),
+      title: to,
+      description: this.noteSays,
+    });
+    this.notes.set(within(tournament, to), noteIn(this, tournament, title));
+  },
+);
+
+Given(
+  "{string} has deleted the manager note {string} of {string}",
+  async function (
+    this: WebWorld,
+    manager: string,
+    title: string,
+    tournament: string,
+  ) {
+    await made("delete the note", "/tournaments/notes/delete", {
+      manager,
+      tournament: tournamentOf(this, tournament).id,
+      note: noteIn(this, tournament, title),
+    });
+  },
+);

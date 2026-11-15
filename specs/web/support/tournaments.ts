@@ -52,8 +52,11 @@ const create = async (
     tournament: request,
   });
   if (answer.status !== 201) await refused("make the tournament", answer);
-  const { id } = (await answer.json()) as { id: string };
-  world.tournaments.set(name, { id, manager, request });
+  const { id, address } = (await answer.json()) as {
+    id: string;
+    address: string;
+  };
+  world.tournaments.set(name, { id, manager, request, address });
 };
 
 const found = (world: WebWorld, name: string) => {

@@ -165,3 +165,17 @@ Then("the header names no tournament", async function (this: WebWorld) {
     0,
   );
 });
+
+// A link in the page's content by its words, wherever it is.
+Then(
+  "{string} leads to {string}",
+  async function (this: WebWorld, words: string, path: string) {
+    const link = this.browserPage
+      .locator("main")
+      .getByRole("link", { name: words, exact: true });
+    assert.equal(await link.count(), 1, `There is no link ${words}.`);
+    assert.equal(await link.getAttribute("href"), path);
+  },
+);
+
+Given("the page at {string} is open with scripting off", openWithScriptingOff);

@@ -58,7 +58,7 @@ Feature: A tournament's Notes page lists its managers' notes
 
     Scenario: A tournament with no notes says it has none
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then the page says the words for "notes.none"
+      Then the page says "No notes yet."
 
   Rule: Every note is listed by its title, the most recently written first
 
@@ -101,7 +101,7 @@ Feature: A tournament's Notes page lists its managers' notes
     Scenario: The mark is said to a screen reader as the word new
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then the mark on the note "Lunch is at noon" is said as the words for "marks.new"
+      Then the mark on the note "Lunch is at noon" is said as "new"
 
     Scenario: A note the reader has read is not marked
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
@@ -157,7 +157,7 @@ Feature: A tournament's Notes page lists its managers' notes
     Scenario: The section's mark is said to a screen reader as the word new
       Given "organiser@example.com" has added the manager note "Lunch is at noon" to "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
-      Then the mark on the section "Notes" is said as the words for "marks.new"
+      Then the mark on the section "Notes" is said as "new"
 
     Scenario: A tournament with no notes does not mark the section
       When the page at "/2026/ac/spring-open" is opened
@@ -210,8 +210,8 @@ Feature: A tournament's Notes page lists its managers' notes
     Scenario: An archived tournament has no Notes page
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/notes" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An address no tournament has been found at is not a page
       When the page at "/2026/ac/autumn-open/notes" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"

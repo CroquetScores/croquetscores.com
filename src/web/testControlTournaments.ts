@@ -14,6 +14,9 @@ import { MoveCompetitionPlayer } from "../application/operations/competitions/Mo
 import { ArchivePlayer } from "../application/operations/tournaments/ArchivePlayer.js";
 import { UpdateTeam } from "../application/operations/tournaments/UpdateTeam.js";
 import { ChangePlayerWorldRankingName } from "../application/operations/tournaments/ChangePlayerWorldRankingName.js";
+import { AddManagerNote } from "../application/operations/tournaments/AddManagerNote.js";
+import { DeleteManagerNote } from "../application/operations/tournaments/DeleteManagerNote.js";
+import { EditManagerNote } from "../application/operations/tournaments/EditManagerNote.js";
 import { AddTeam } from "../application/operations/tournaments/AddTeam.js";
 import { AddTeamPlayer } from "../application/operations/tournaments/AddTeamPlayer.js";
 import { AddTest } from "../application/operations/tournaments/AddTest.js";
@@ -43,6 +46,9 @@ import type { ReaderMaking } from "./testControlReaders.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
 interface Asked {
+  title?: unknown;
+  description?: unknown;
+  note?: unknown;
   at?: unknown;
   details?: unknown;
   places?: unknown;
@@ -503,6 +509,56 @@ export const registerTestControlTournaments = (
               text(asked.tournament, "A tournament"),
               text(asked.player, "A player"),
               text(asked.name, "A name"),
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      // A manager's note, which readers of the tournament see when it is
+      // public.
+      scope.post(
+        "/tournaments/notes",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddManagerNote(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.title, "A title"),
+              typeof asked.description === "string" ? asked.description : "",
+              at(asked),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
+      );
+
+      scope.post(
+        "/tournaments/notes/edit",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new EditManagerNote(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.note, "A note"),
+              text(asked.title, "A title"),
+              typeof asked.description === "string" ? asked.description : "",
+              at(asked),
+            ),
+          );
+          return undefined;
+        }, 200),
+      );
+
+      scope.post(
+        "/tournaments/notes/delete",
+        refusing(async (asked) => {
+          await making.mediator.send(
+            new DeleteManagerNote(
+              await accountOf(asked.manager),
+              text(asked.tournament, "A tournament"),
+              text(asked.note, "A note"),
               at(asked),
             ),
           );

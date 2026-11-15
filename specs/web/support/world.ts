@@ -24,8 +24,19 @@ export class WebWorld extends World {
   /** The tournaments the scenario made, by the name it gave them. */
   public tournaments = new Map<
     string,
-    { id: string; manager: string; request: Record<string, unknown> }
+    {
+      id: string;
+      manager: string;
+      request: Record<string, unknown>;
+      address: string;
+    }
   >();
+
+  /** What the scenario has said the next manager note says, until it says another. */
+  public noteSays = "";
+
+  /** The ids of the manager notes the scenario added, by their titles. */
+  public notes = new Map<string, string>();
 
   /** What the scenario has said of the next player it adds. */
   public ofTheNextPlayer: Record<string, unknown> = {};

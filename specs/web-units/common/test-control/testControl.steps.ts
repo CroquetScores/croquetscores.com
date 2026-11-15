@@ -802,3 +802,44 @@ When(
     });
   },
 );
+
+const noteOf = new WeakMap<SpecWorld, string>();
+
+Given(
+  "a note called {string} saying {string} is added through the control",
+  async function (this: SpecWorld, title: string, description: string) {
+    await controlled(this, "/__test/tournaments/notes", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      title,
+      description,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    noteOf.set(this, idOfAnswer(this));
+  },
+);
+
+When(
+  "the note is edited to be called {string} saying {string} through the control",
+  async function (this: SpecWorld, title: string, description: string) {
+    await controlled(this, "/__test/tournaments/notes/edit", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      note: noteOf.get(this),
+      title,
+      description,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "the note is deleted through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/tournaments/notes/delete", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      note: noteOf.get(this),
+    });
+  },
+);
