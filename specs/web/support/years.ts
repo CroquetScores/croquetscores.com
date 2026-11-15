@@ -285,3 +285,16 @@ for (const field of ["Sport", "Country", "Region"]) {
     },
   );
 }
+
+// The way to another page, which is a link in the list's own page and not one to
+// another, so it is waited on until the list has drawn the page.
+When(
+  /^the way to turn to the (previous|next) page is pressed$/,
+  async function (this: WebWorld, which: string) {
+    await this.browserPage
+      .locator(
+        `.tournament-pages a[rel="${which === "previous" ? "prev" : "next"}"]`,
+      )
+      .click();
+  },
+);

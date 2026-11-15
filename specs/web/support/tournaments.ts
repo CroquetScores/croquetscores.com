@@ -43,6 +43,7 @@ const create = async (
   // another game.
   const request = {
     ...usual(name),
+    ...world.ofTheNext,
     ...(website?.startsWith("gateballscores") === true ? { sport: "gb" } : {}),
   };
   const answer = await call("POST", "/tournaments", {
@@ -184,6 +185,25 @@ Given(
       await create(this, manager, name);
       const at = `${String(year)}-06-06T00:00:00Z`;
       await change(this, name, { starts: at, finishes: at });
+    }
+  },
+);
+
+// Said of the next tournaments the scenario creates, until it says otherwise.
+Given(
+  "the tournament is to start at {string}",
+  function (this: WebWorld, moment: string) {
+    this.ofTheNext = { ...this.ofTheNext, starts: moment, finishes: moment };
+  },
+);
+
+// Each called "Tournament 1", "Tournament 2" and so on, for a scenario that
+// wants many and cares about none of them.
+Given(
+  "{string} has created {int} tournaments",
+  async function (this: WebWorld, manager: string, count: number) {
+    for (let each = 1; each <= count; each++) {
+      await create(this, manager, `Tournament ${String(each)}`);
     }
   },
 );

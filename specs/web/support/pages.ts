@@ -78,11 +78,6 @@ Given(
   },
 );
 
-// Scripting on, which a page of months needs to load them.
-Given("scripting is on", async function (this: WebWorld) {
-  await withScripting(this);
-});
-
 const openAt = async function (this: WebWorld, path: string): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${path}`);
 };

@@ -27,6 +27,9 @@ export class WebWorld extends World {
     { id: string; manager: string; request: Record<string, unknown> }
   >();
 
+  /** What the scenario has said of the next tournament it creates. */
+  public ofTheNext: Record<string, unknown> = {};
+
   /** A page on some other site, served into the browser by the scenario. */
   public elsewhere: string | undefined;
 
