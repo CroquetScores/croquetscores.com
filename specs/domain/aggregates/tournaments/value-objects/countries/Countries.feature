@@ -235,6 +235,18 @@ Feature: The countries there are
         | sc     | South Canterbury              |
         | tv     | Thames Valley                 |
 
+    Scenario Outline: New Zealand keeps the province the old site gave it
+      Given the countries there are
+      When the country "nz" is found
+      And the region "<region>" is found
+      Then the region's name is "<name>"
+
+      Examples:
+        | region | name        |
+        | mar    | Marlborough |
+        | nel    | Nelson      |
+        | wc     | West Coast  |
+
     Scenario: Northland is listed once
       Given the countries there are
       When the country "nz" is found
