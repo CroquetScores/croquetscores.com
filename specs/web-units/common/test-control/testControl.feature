@@ -124,6 +124,38 @@ Feature: A site over a database the specs made can be controlled by a token
       When a session for "someone@example.com" is asked for
       Then the site answers that there is no such page
 
+  Rule: A site with the control can be given tournaments
+
+    A scenario about a page of tournaments should not have to sign in and fill
+    in the form that makes one every time, so the site makes the tournament the
+    way it makes one from its own form, for an account that is there, and says
+    where the tournament is found. What the tournament is said in the words the
+    form uses, and the site makes the rest of what a tournament needs.
+
+    Scenario: A tournament is made for an account and found at its address
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      When "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that it was made
+      And the tournament is found at the address it gave
+
+    Scenario: A tournament for an address with no account is refused
+      Given a site given the token "open sesame"
+      When "nobody@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A tournament that was made can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the tournament is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A site given no token has no tournaments control
+      Given a site given no token
+      When "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that there is no such page
+
   Rule: The clock can be set, and goes on from there
 
     Scenario: A time set is the time the site tells

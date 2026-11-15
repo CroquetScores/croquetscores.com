@@ -15,8 +15,17 @@ export class WebWorld extends World {
   /** The colour scheme the scenario's machine says it prefers, where it does. */
   public colourScheme: "light" | "dark" | undefined;
 
-  /** What the scenario's browser says its reader reads, where it says. */
-  public acceptLanguage: string | undefined;
+  /**
+   * What the scenario's browser says on every request: the languages its
+   * reader reads, and the website a proxy says it was asked for.
+   */
+  public extraHeaders: Record<string, string> = {};
+
+  /** The tournaments the scenario made, by the name it gave them. */
+  public tournaments = new Map<
+    string,
+    { id: string; manager: string; request: Record<string, unknown> }
+  >();
 
   /** A page on some other site, served into the browser by the scenario. */
   public elsewhere: string | undefined;

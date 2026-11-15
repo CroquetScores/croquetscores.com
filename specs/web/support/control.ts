@@ -4,7 +4,7 @@
 // (src/web/testControl.ts), so that nothing of the site's code is loaded here.
 import { site } from "./site.js";
 
-const call = async (
+export const call = async (
   method: "POST" | "DELETE",
   path: string,
   body?: object,

@@ -4,6 +4,7 @@
 import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
+import { telling } from "./headers.js";
 import { unmarkedWithin } from "./marks.js";
 import type { WebWorld } from "./world.js";
 
@@ -13,9 +14,9 @@ import type { WebWorld } from "./world.js";
 Given(
   "a browser that asks for {string}",
   async function (this: WebWorld, asked: string) {
-    this.acceptLanguage = asked;
-    // A scenario that only reads pages has no browser to tell.
-    await this.page?.setExtraHTTPHeaders({ "accept-language": asked });
+    // The browser's own is replaced. A scenario that only reads pages has no
+    // browser to tell, and tells its requests instead.
+    await telling(this, "accept-language", asked);
   },
 );
 

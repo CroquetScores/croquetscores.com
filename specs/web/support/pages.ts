@@ -1,9 +1,12 @@
 // What nearly every browser scenario says first: how big the window is and
 // which page is open. Here rather than beside one feature because most of them
 // say it.
-import { Given, When } from "@cucumber/cucumber";
+import { Given, Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
 
 import { withScripting } from "./browser.js";
+import { setTheClock } from "./control.js";
+import { unmarked } from "./languages.js";
 import type { WebWorld } from "./world.js";
 
 Given(
@@ -65,3 +68,55 @@ When("the admin is opened", openAdmin);
 Given("a browser that runs scripts", async function (this: WebWorld) {
   await withScripting(this);
 });
+
+// What time the site believes it is, which the scenario moves and nothing else
+// does.
+Given(
+  "the server's clock reads {string}",
+  async function (this: WebWorld, moment: string) {
+    await setTheClock(moment);
+  },
+);
+
+// Scripting on, which a page of months needs to load them.
+Given("scripting is on", async function (this: WebWorld) {
+  await withScripting(this);
+});
+
+const openAt = async function (this: WebWorld, path: string): Promise<void> {
+  await this.browserPage.goto(`${this.baseUrl!}${path}`);
+};
+
+Given("the page at {string} is open", openAt);
+When("the page at {string} is opened", openAt);
+
+// Whether the page is the address it should be, which a page that goes on to
+// change its own address, by what the reader chooses in it, has to be asked
+// until it has. The choices after the question mark too where the address
+// names any, since the page keeps what was chosen there.
+Then("the address is {string}", async function (this: WebWorld, path: string) {
+  await this.browserPage.waitForURL(
+    (url) =>
+      (path.includes("?") ? `${url.pathname}${url.search}` : url.pathname) ===
+      path,
+  );
+});
+
+// What the page says, with the test locale's marks taken off so that it reads
+// as its language does.
+Then("the page says {string}", async function (this: WebWorld, words: string) {
+  const shown = unmarked(await this.browserPage.locator("main").innerText());
+  assert.ok(shown.includes(words), `The page says ${JSON.stringify(shown)}.`);
+});
+
+// In place of what was asked for, by the refusal's code: the words beside it
+// are only its words. Asked again for a while, since the page says it once the
+// site has answered.
+Then(
+  "the page is refused with {string}",
+  async function (this: WebWorld, code: string) {
+    const refused = this.browserPage.locator("main .page-refused");
+    await refused.waitFor();
+    assert.equal(await refused.getAttribute("data-refused"), code);
+  },
+);

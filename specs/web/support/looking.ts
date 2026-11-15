@@ -9,10 +9,7 @@ import type { WebWorld } from "./world.js";
 
 export const look = async (world: WebWorld, address: string): Promise<void> => {
   const response = await fetch(`${world.baseUrl!}${address}`, {
-    headers:
-      world.acceptLanguage === undefined
-        ? {}
-        : { "accept-language": world.acceptLanguage },
+    headers: world.extraHeaders,
     redirect: "manual",
   });
   world.looked = { body: await response.text(), status: response.status };

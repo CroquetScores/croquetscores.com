@@ -74,9 +74,7 @@ export const withScripting = async (world: WebWorld): Promise<void> => {
     ...(world.colourScheme === undefined
       ? {}
       : { colorScheme: world.colourScheme }),
-    ...(world.acceptLanguage === undefined
-      ? {}
-      : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
+    extraHTTPHeaders: world.extraHeaders,
   });
   // The cookies the scenario has the first browser keep are as much a part of
   // what it asked for as its width is: the theme it chose, and the reader it is
@@ -112,9 +110,7 @@ export const reopenedBrowser = async (world: WebWorld): Promise<void> => {
     ...(world.colourScheme === undefined
       ? {}
       : { colorScheme: world.colourScheme }),
-    ...(world.acceptLanguage === undefined
-      ? {}
-      : { extraHTTPHeaders: { "accept-language": world.acceptLanguage } }),
+    extraHTTPHeaders: world.extraHeaders,
   });
 
   world.browserContext = reopened;

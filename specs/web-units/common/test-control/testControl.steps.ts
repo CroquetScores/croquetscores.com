@@ -337,3 +337,61 @@ Then(
     within(this, new Date(), seconds);
   },
 );
+
+// The tournament the control made, kept to be asked for and archived.
+const made = new WeakMap<SpecWorld, { id: string; address: string }>();
+
+When(
+  "{string} is made the manager of a tournament called {string} through the control",
+  async function (this: SpecWorld, manager: string, name: string) {
+    await controlled(this, "/__test/tournaments", {
+      manager,
+      tournament: {
+        name,
+        starts: "2026-10-03T00:00:00Z",
+        finishes: "2026-10-05T00:00:00Z",
+        format: "Standard",
+        sport: "ac",
+        country: "au",
+        region: "vic",
+      },
+    });
+    if (responseOf(this).statusCode === 201) {
+      made.set(
+        this,
+        JSON.parse(responseOf(this).body) as { id: string; address: string },
+      );
+    }
+  },
+);
+
+When(
+  "the tournament is archived through the control",
+  async function (this: SpecWorld) {
+    const tournament = made.get(this);
+    assert.ok(tournament !== undefined, "No tournament was made.");
+    await controlled(this, "/__test/tournaments/archive", {
+      manager: "manager@example.com",
+      id: tournament.id,
+    });
+  },
+);
+
+Then("the site answers that it was made", function (this: SpecWorld) {
+  assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+});
+
+Then(
+  "the tournament is found at the address it gave",
+  async function (this: SpecWorld) {
+    const tournament = made.get(this);
+    assert.ok(tournament !== undefined, "No tournament was made.");
+    const control = controlOf(this);
+    assert.ok(control.application !== undefined, "The site was not started.");
+    const page = await control.application.server.inject({
+      method: "GET",
+      url: `/${tournament.address}`,
+    });
+    assert.equal(page.statusCode, 200);
+  },
+);

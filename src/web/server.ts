@@ -300,7 +300,11 @@ import { registerBetaBanner } from "./common/betaSite.js";
 import { registerPagePreview } from "./common/pagePreview.js";
 import { registerWebAppManifest } from "./common/webAppManifest.js";
 import { registerTestControl, SettableClock } from "./testControl.js";
-import { registerTestControlReaders } from "./testControlReaders.js";
+import {
+  registerTestControlReaders,
+  type ReaderMaking,
+} from "./testControlReaders.js";
+import { registerTestControlTournaments } from "./testControlTournaments.js";
 import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import { registerSitemap } from "./common/sitemap.js";
@@ -1645,7 +1649,7 @@ export const buildApplication = async (
 
   const sessions = new PostgresSessions(unitOfWork);
   if (config.testControlToken !== undefined) {
-    registerTestControlReaders(server, config.testControlToken, {
+    const making: ReaderMaking = {
       mediator,
       sessions,
       clock,
@@ -1654,7 +1658,9 @@ export const buildApplication = async (
       loadAccount: (id) => accounts.load(id),
       saveAccount: (account) => accounts.save(account),
       emailedTo: () => emailQueue.emails(),
-    });
+    };
+    registerTestControlReaders(server, config.testControlToken, making);
+    registerTestControlTournaments(server, config.testControlToken, making);
   }
   const reader: Reader =
     options.reader ??

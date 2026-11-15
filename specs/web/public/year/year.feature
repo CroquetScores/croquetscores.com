@@ -136,7 +136,7 @@ Feature: A year's page lists its months, and a month the tournaments starting in
 
     Scenario Outline: An address that is not a year is not found
       When the page at "<address>" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
       Examples:
         | address |
@@ -197,8 +197,7 @@ Feature: A year's page lists its months, and a month the tournaments starting in
       Then the flag of "Spring Open" in the year's tournaments is named "Only tournaments in New Zealand"
 
     Scenario: The month is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the page for 2026 is opened
       And the month "octubre" is pressed
       Then "Spring Open" is dated "10-12 oct" in the year's tournaments
