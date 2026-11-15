@@ -100,6 +100,55 @@ Feature: Words readers use that the help does not
       When the question is expanded
       Then the question is accepted
 
+  Rule: The English list ties what readers say of installing to what the help says
+
+    A reader who wants the site on their phone says install, or app, or icon,
+    and the help says home screen (`helpHomeScreen.feature`). Each of the three
+    is paired with it, and none of them is paired with the others, since a
+    pair is not carried further: an icon is not an app, and a reader asking
+    about one should not be sent to pages about the other.
+
+    These are the English list as it is kept, not a synonym given for the
+    scenario, since the list is what is being specified.
+
+    Scenario Outline: "<word>" is searched for together with "home screen"
+      Given the help language "english"
+      And the question "<question>"
+      When the question is expanded
+      Then the words searched for include "<word>"
+      And the words searched for include "home"
+      And the words searched for include "screen"
+
+      Examples:
+        | word    | question                   |
+        | install | How do I install the site? |
+        | app     | Is there an app?           |
+        | icon    | Can I have an icon?        |
+
+    Scenario: "home screen" is searched for together with "install"
+      Given the help language "english"
+      And the question "home screen"
+      When the question is expanded
+      Then the words searched for include "install"
+
+    Scenario: A question about adding a player is not widened to the home screen
+      Given the help language "english"
+      And the question "How do I add a player?"
+      When the question is expanded
+      Then the words searched for do not include "screen"
+
+    Scenario: A question about an app is not widened to icons
+      Given the help language "english"
+      And the question "Is there an app?"
+      When the question is expanded
+      Then the words searched for do not include "icon"
+
+    Scenario: A question about an icon is not widened to installing
+      Given the help language "english"
+      And the question "Can I have an icon?"
+      When the question is expanded
+      Then the words searched for do not include "install"
+
   Rule: Every language with help pages has its synonyms kept, even if it has none yet
 
     Scenario: Every folder of the help has a list of synonyms
