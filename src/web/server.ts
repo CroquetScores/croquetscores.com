@@ -1673,6 +1673,16 @@ export const buildApplication = async (
       loadAccount: (id) => accounts.load(id),
       saveAccount: (account) => accounts.save(account),
       emailedTo: () => emailQueue.emails(),
+      writeEmails: async (to, kind, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into emails_written (written_to, kind, written_at)
+             values ($1, $2, $3)`,
+            [`account:${to.value}`, kind, at],
+          );
+        }
+      },
     };
     registerTestControlReaders(server, config.testControlToken, making);
     registerTestControlTournaments(server, config.testControlToken, making);

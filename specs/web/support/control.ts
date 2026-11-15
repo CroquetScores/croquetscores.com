@@ -132,14 +132,70 @@ export const tokensJudged = async (): Promise<string[]> => {
   return ((await answer.json()) as { tokens: string[] }).tokens;
 };
 
-/** What the site calls the account for `address`, or nothing where it has none. */
-export const nameOfAccount = async (
+/** What the site keeps of the account for `address`: its name, and whether its address is confirmed. */
+export const detailsOfAccount = async (
   address: string,
-): Promise<string | null> => {
+): Promise<{ id: string; name: string | null; confirmed: boolean }> => {
   const { baseUrl, token } = await site();
   const answer = await fetch(
     `${baseUrl}/__test/accounts/name?emailAddress=${encodeURIComponent(address)}`,
     { headers: { "x-test-control": token } },
   );
-  return ((await answer.json()) as { name: string | null }).name;
+  if (answer.status !== 200) {
+    throw new Error(`There is no account for ${address}.`);
+  }
+  return (await answer.json()) as {
+    id: string;
+    name: string | null;
+    confirmed: boolean;
+  };
+};
+
+/** What the site calls the account for `address`. */
+export const nameOfAccount = async (address: string): Promise<string | null> =>
+  (await detailsOfAccount(address)).name;
+
+/**
+ * The link in the newest email still to be sent to `address` (of `kind`, where
+ * given), which is the one a reader would follow.
+ */
+export const latestLinkTo = async (
+  address: string,
+  kind?: string,
+): Promise<string> => {
+  const waiting = (await emailsFor(address)).filter(
+    (email) => !email.givenUp && (kind === undefined || email.kind === kind),
+  );
+  const link = waiting[waiting.length - 1]?.link;
+  if (link === undefined) {
+    throw new Error(`No email carrying a link is queued for ${address}.`);
+  }
+  return link;
+};
+
+/** What time the site believes it is. */
+export const siteNow = async (): Promise<Date> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(`${baseUrl}/__test/clock`, {
+    headers: { "x-test-control": token },
+  });
+  return new Date(((await answer.json()) as { now: string }).now);
+};
+
+/** Says the site wrote `times` emails of `kind` to the account for `address`, `minutesAgo`. */
+export const sayEmailsWereWritten = async (
+  address: string,
+  kind: string,
+  times: number,
+  minutesAgo: number,
+): Promise<void> => {
+  const answer = await call("POST", "/emails/written", {
+    emailAddress: address,
+    kind,
+    times,
+    minutesAgo,
+  });
+  if (answer.status !== 200) {
+    throw new Error(`The site would not be told: ${String(answer.status)}.`);
+  }
 };

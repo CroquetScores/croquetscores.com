@@ -5,8 +5,9 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { call, makeAccount, nameOfAccount, sessionFor } from "./control.js";
+import { call, makeAccount, sessionFor } from "./control.js";
 import { unmarked } from "./languages.js";
+import { wordsFor } from "./words.js";
 import type { WebWorld } from "./world.js";
 
 /** Has this scenario's browser ask as a reader signed in as `address`. */
@@ -163,9 +164,29 @@ When(
   },
 );
 
-Then(
-  "the account for the email address {string} is called {string}",
-  async function (this: WebWorld, address: string, name: string) {
-    assert.equal(await nameOfAccount(address), name);
+// An account that has registered and not yet followed the link it was sent.
+Given(
+  "{string} has an account, not confirmed",
+  async function (this: WebWorld, address: string) {
+    this.accountNames.set(address, "Sam Someone");
+    await makeAccount({ emailAddress: address, confirmed: false });
   },
 );
+
+// Said by more than one page: the sign in page says it above its fields, and the
+// new confirmation link page says it as the whole of what it has to say.
+Then("the reader is told to try again later", async function (this: WebWorld) {
+  const content = unmarked(
+    (await this.browserPage.locator("main").textContent()) ?? "",
+  );
+  const said = [
+    wordsFor("signIn.tryAgainLater"),
+    wordsFor("newConfirmationLink.tooMany.explanation"),
+    wordsFor("forgotPassword.tryAgainLater"),
+    wordsFor("registrationsSuspended.tryAgainLater"),
+  ];
+  assert.ok(
+    said.some((each) => content.includes(each)),
+    "No page says to try again later.",
+  );
+});

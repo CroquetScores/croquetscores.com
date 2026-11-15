@@ -1037,3 +1037,41 @@ Then("the name told is {string}", function (this: SpecWorld, name: string) {
     name,
   );
 });
+
+Then("the account is told to be confirmed", function (this: SpecWorld) {
+  assert.equal(
+    (JSON.parse(responseOf(this).body) as { confirmed: boolean }).confirmed,
+    true,
+  );
+});
+
+Then("the account is told not to be confirmed", function (this: SpecWorld) {
+  assert.equal(
+    (JSON.parse(responseOf(this).body) as { confirmed: boolean }).confirmed,
+    false,
+  );
+});
+
+When(
+  "{int} emails of the kind {string} are said to have been written to {string} {int} minutes ago",
+  async function (
+    this: SpecWorld,
+    times: number,
+    kind: string,
+    address: string,
+    minutes: number,
+  ) {
+    await asking(this, "POST", "/__test/emails/written", {
+      emailAddress: address,
+      kind,
+      times,
+      minutesAgo: minutes,
+    });
+  },
+);
+
+Then("an id is told", function (this: SpecWorld) {
+  assert.ok(
+    (JSON.parse(responseOf(this).body) as { id?: string }).id !== undefined,
+  );
+});

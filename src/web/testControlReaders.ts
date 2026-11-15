@@ -41,6 +41,13 @@ export interface ReaderMaking {
   ) => Promise<AccountId | undefined>;
   readonly loadAccount: (id: AccountId) => Promise<Account | undefined>;
   readonly saveAccount: (account: Account) => Promise<void>;
+  /** Says `times` emails of `kind` were written to the account `to`, `minutesAgo`. */
+  readonly writeEmails: (
+    to: AccountId,
+    kind: string,
+    times: number,
+    minutesAgo: number,
+  ) => Promise<void>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -236,24 +243,54 @@ export const registerTestControlReaders = (
         }
       });
 
+      // Emails written to an account before, which the site counts against the
+      // limit on how many it writes in an hour.
+      scope.post("/emails/written", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          emailAddress?: unknown;
+          kind?: unknown;
+          times?: unknown;
+          minutesAgo?: unknown;
+        };
+        const id = await making.inTransaction(() =>
+          making.accountIdFor(EmailAddress.from(textOf(body.emailAddress, ""))),
+        );
+        if (
+          id === undefined ||
+          typeof body.kind !== "string" ||
+          typeof body.times !== "number" ||
+          typeof body.minutesAgo !== "number"
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        await making.writeEmails(id, body.kind, body.times, body.minutesAgo);
+        return reply.code(200).send();
+      });
+
       // What an account is called, as the site keeps it.
       scope.get("/accounts/name", async (request, reply) => {
         const address = (request.query as { emailAddress?: string })
           .emailAddress;
-        const name = await making.inTransaction(async () => {
+        const found = await making.inTransaction(async () => {
           const id = await making.accountIdFor(
             EmailAddress.from(address ?? ""),
           );
-          return id === undefined
+          const account =
+            id === undefined ? undefined : await making.loadAccount(id);
+          return account === undefined
             ? undefined
-            : ((await making.loadAccount(id))?.name?.toString() ?? null);
+            : {
+                id: account.id.value,
+                name: account.name?.toString() ?? null,
+                confirmed: account.confirmed,
+              };
         });
-        if (name === undefined) {
+        if (found === undefined) {
           return reply
             .code(404)
             .send({ message: `No account for ${String(address)}.` });
         }
-        return { name };
+        return found;
       });
 
       // What has been queued for an address, oldest first, as a scenario that

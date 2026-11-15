@@ -318,6 +318,42 @@ Feature: A site over a database the specs made can be controlled by a token
       When the name of the account for "someone@example.com" is asked for
       Then the name told is "Sam Someone"
 
+    Scenario: An account is confirmed once its address is
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" called "Sam Someone" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the account is told to be confirmed
+
+    Scenario: An account whose address is not confirmed is told so
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the account is told not to be confirmed
+
+  Rule: A site with the control can be told emails were written to an account already
+
+    The site limits how many emails it writes to an account in an hour, so a
+    scenario about the limit says how many were written without writing them.
+
+    Scenario: Emails written a few minutes ago are said to have been written
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When 3 emails of the kind "Email.ConfirmAddressAgain" are said to have been written to "someone@example.com" 5 minutes ago
+      Then the site answers that it is fine
+
+    Scenario: Emails cannot be said to have been written to nobody
+      Given a site given the token "open sesame"
+      When 3 emails of the kind "Email.ConfirmAddressAgain" are said to have been written to "nobody@example.com" 5 minutes ago
+      Then the site answers that the request was wrong
+
+  Rule: A site with the control can be asked what an account is called and whether it is confirmed
+
+    Scenario: An account is told by its id
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then an id is told
+
   Rule: A site with the control can be asked what email it has queued
 
     A site under test sends nothing, so a scenario that follows the link in an

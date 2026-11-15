@@ -25,10 +25,14 @@ Then("the welcome page is shown", async function (this: WebWorld) {
 
 // Said by more than one page: where registering ends, and wherever a link
 // has just been asked for. Each says it in its own words, and what the
-// scenario is asking is that the reader was told to go and look. The other
-// pages' words are added here as the features about them are moved.
+// scenario is asking is that the reader was told to go and look.
 const toldToCheck = [
   "An email is on its way to the address you gave. Follow the link in it to carry on.",
+  "A new link is on its way. Follow it to confirm your email address. If nothing arrives in a few minutes, look in your junk or spam folder.",
+  "If that address has an account, a link to set a new password is on its way. Follow it within the hour. If nothing arrives in a few minutes, look in your junk or spam folder.",
+  "We have emailed a link to your account's address. It works for 15 minutes, and only while you are signed in to this account.",
+  "We have emailed you a link to set a password. It works for an hour.",
+  "A link to confirm the move has been sent to the new email address. Follow it, signed in, to move your account there.",
 ];
 
 Then(
