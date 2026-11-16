@@ -6,7 +6,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
+import type { WebWorld } from "../../../support/world.js";
 import { unmarkedWithin } from "../../../support/marks.js";
 
 const exactly = (words: string): RegExp =>
@@ -27,16 +27,16 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
   }
 };
 
-const lines = (world: SpecWorld): Locator =>
+const lines = (world: WebWorld): Locator =>
   world.browserPage.locator("ol.import-log > .import-log-line");
 
-const buttonCalled = (world: SpecWorld, words: string): Locator =>
+const buttonCalled = (world: WebWorld, words: string): Locator =>
   world.browserPage.locator("main button").filter({ hasText: exactly(words) });
 
 // What a line says it is, as the page marks it, for a step to compare with
 // what the scenario expects of it.
 const lineAt = async (
-  world: SpecWorld,
+  world: WebWorld,
   place: string,
 ): Promise<Record<string, string | null>> => {
   const all = lines(world);
@@ -59,7 +59,7 @@ const sportOf = (name: string): string =>
   name === "association croquet" ? "ac" : "gc";
 
 const expecting = (
-  world: SpecWorld,
+  world: WebWorld,
   place: string,
   expected: Record<string, string | null>,
 ): Promise<void> =>
@@ -77,7 +77,7 @@ const expecting = (
 // error, and a page rather than a code.
 Given(
   "the import is answered with a server error",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.route(
       (url) => url.pathname === "/api/site/world-ranking-players/import",
       async (route) => {
@@ -92,19 +92,7 @@ Given(
   },
 );
 
-Then(
-  "the page's heading is {string}",
-  async function (this: SpecWorld, heading: string) {
-    await eventually(async () => {
-      assert.equal(
-        (await this.browserPage.locator("main h1").innerText()).trim(),
-        heading,
-      );
-    });
-  },
-);
-
-Then("{string} is offered", async function (this: SpecWorld, words: string) {
+Then("{string} is offered", async function (this: WebWorld, words: string) {
   await eventually(async () => {
     assert.equal(await buttonCalled(this, words).count(), 1);
   });
@@ -112,23 +100,20 @@ Then("{string} is offered", async function (this: SpecWorld, words: string) {
 
 Then(
   "{string} cannot be pressed",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await eventually(async () => {
       assert.equal(await buttonCalled(this, words).isDisabled(), true);
     });
   },
 );
 
-Then(
-  "{string} can be pressed",
-  async function (this: SpecWorld, words: string) {
-    await eventually(async () => {
-      assert.equal(await buttonCalled(this, words).isEnabled(), true);
-    });
-  },
-);
+Then("{string} can be pressed", async function (this: WebWorld, words: string) {
+  await eventually(async () => {
+    assert.equal(await buttonCalled(this, words).isEnabled(), true);
+  });
+});
 
-Then("the import's log is empty", async function (this: SpecWorld) {
+Then("the import's log is empty", async function (this: WebWorld) {
   // Attached rather than visible, since a list with nothing in it takes up no
   // room on the page.
   await this.browserPage
@@ -139,7 +124,7 @@ Then("the import's log is empty", async function (this: SpecWorld) {
 
 // Once Import can be pressed again with the last line saying so, which is
 // when the import is over and nothing more will be said of it.
-const finished = async function (this: SpecWorld): Promise<void> {
+const finished = async function (this: WebWorld): Promise<void> {
   await this.browserPage
     .locator('main [aria-busy="false"] .import-log-line:last-child')
     .and(this.browserPage.locator('[data-kind="finished"]'))
@@ -152,7 +137,7 @@ When("the import's log says it has finished", finished);
 
 Then(
   "the import's log has {int} lines",
-  async function (this: SpecWorld, count: number) {
+  async function (this: WebWorld, count: number) {
     await eventually(async () => {
       assert.equal(await lines(this).count(), count);
     });
@@ -163,7 +148,7 @@ Then(
   new RegExp(
     `^the import's log's ${PLACE} line says the ${SPORT} list is being read$`,
   ),
-  async function (this: SpecWorld, place: string, sport: string) {
+  async function (this: WebWorld, place: string, sport: string) {
     await expecting(this, place, { kind: "reading", sport: sportOf(sport) });
   },
 );
@@ -173,7 +158,7 @@ Then(
     `^the import's log's ${PLACE} line says (\\d+) ${SPORT} players? (?:was|were) (read|kept)$`,
   ),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     place: string,
     players: number,
     sport: string,
@@ -192,7 +177,7 @@ Then(
   new RegExp(
     `^the import's log's ${PLACE} line says the ${SPORT} list was refused with "([^"]*)"$`,
   ),
-  async function (this: SpecWorld, place: string, sport: string, code: string) {
+  async function (this: WebWorld, place: string, sport: string, code: string) {
     await expecting(this, place, {
       kind: "refused",
       sport: sportOf(sport),
@@ -208,7 +193,7 @@ Then(
   new RegExp(
     `^the import's log's ${PLACE} line says the ${SPORT} players were left as they were$`,
   ),
-  async function (this: SpecWorld, place: string, sport: string) {
+  async function (this: WebWorld, place: string, sport: string) {
     await eventually(async () => {
       const said = await lineAt(this, place);
       assert.equal(said.kind, "refused");
@@ -219,7 +204,7 @@ Then(
 
 Then(
   new RegExp(`^the import's log's ${PLACE} line says it has finished$`),
-  async function (this: SpecWorld, place: string) {
+  async function (this: WebWorld, place: string) {
     await expecting(this, place, { kind: "finished" });
   },
 );
@@ -228,14 +213,14 @@ Then(
   new RegExp(
     `^the import's log's ${PLACE} line says the import was refused with "([^"]*)"$`,
   ),
-  async function (this: SpecWorld, place: string, code: string) {
+  async function (this: WebWorld, place: string, code: string) {
     await expecting(this, place, { kind: "failed", refused: code });
   },
 );
 
 // By its place rather than its words, which are in whatever language the page
 // is in.
-When("the way to import is pressed", async function (this: SpecWorld) {
+When("the way to import is pressed", async function (this: WebWorld) {
   await this.browserPage.locator("main h1 ~ p > button").click();
 });
 
@@ -243,7 +228,7 @@ When("the way to import is pressed", async function (this: SpecWorld) {
 // and a code is not shown at all, only what the reader's language says of it.
 Then(
   "every word in the import's log but its numbers and codes is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const stray = await unmarkedWithin(this, "ol.import-log");
     assert.deepEqual(stray, [], "Words in the log came from elsewhere.");
   },

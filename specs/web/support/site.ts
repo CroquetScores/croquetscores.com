@@ -18,6 +18,8 @@ import { join, resolve } from "node:path";
 import { createRequire } from "node:module";
 import pg from "pg";
 
+import { startStandInGoogle, stopStandInGoogle } from "./googleStandIn.js";
+
 // The root of the repository, where the site's command is run from.
 const root = resolve(import.meta.dirname, "..", "..", "..");
 const require = createRequire(import.meta.url);
@@ -155,6 +157,9 @@ const start = async (): Promise<RunningSite> => {
     SMTP_PASSWORD: "",
     GOOGLE_CLIENT_ID: "",
     GOOGLE_CLIENT_SECRET: "",
+    // Where Google answers, which a scenario about Google makes use of by
+    // giving the site credentials (googleStandIn.ts).
+    TEST_GOOGLE_ADDRESS: await startStandInGoogle(),
     FACEBOOK_APP_ID: "",
     FACEBOOK_APP_SECRET: "",
   };
@@ -286,6 +291,7 @@ export const forget = async (): Promise<void> => {
 /** Stops the site and drops its database, whatever state the run ended in. */
 export const stop = async (): Promise<void> => {
   await endAnotherSite();
+  await stopStandInGoogle();
   const running = child;
   child = undefined;
   if (running !== undefined && running.exitCode === null) {

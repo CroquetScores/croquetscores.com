@@ -17,22 +17,19 @@ import {
   offerLooksLikeAButton,
   pressTheOffer,
 } from "../../support/googleOffer.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 // Known by where it goes and which page it says sent the reader, whatever it
 // carries after that about where they go back to.
 const offer = 'a[href^="/auth/google?from=sign-in"]';
 
-Then(
-  "the page offers signing in with Google",
-  async function (this: SpecWorld) {
-    assert.equal(await offerCount(this, offer), 1);
-  },
-);
+Then("the page offers signing in with Google", async function (this: WebWorld) {
+  assert.equal(await offerCount(this, offer), 1);
+});
 
 Then(
   "the page does not offer signing in with Google",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     // Any way to Google at all, so that an offer that lost its page would
     // still be found.
     assert.equal(await offerCount(this, 'a[href^="/auth/google"]'), 0);
@@ -41,68 +38,68 @@ Then(
 
 Then(
   "the offer to sign in with Google is a button",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerIsAButton(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google looks like a button other than the submit button",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerLooksLikeAButton(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google carries Google's icon",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerCarriesGooglesIcon(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google is in the dialog",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerIsInTheDialog(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google is beneath the dialog's title bar",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerIsBeneathTheTitleBar(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google is above the email address field",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerIsAboveTheEmailAddressField(this, offer);
   },
 );
 
 Then(
   "the offer to sign in with Google is as wide as the email address field",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await offerIsAsWideAsTheEmailAddressField(this, offer);
   },
 );
 
 Then(
   "the message for {string} is above the offer to sign in with Google",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await messageIsAboveTheOffer(this, code, offer);
   },
 );
 
 Then(
   "the line saying {string} is beneath the offer to sign in with Google",
-  async function (this: SpecWorld, said: string) {
+  async function (this: WebWorld, said: string) {
     await lineIsBeneathTheOffer(this, said, offer);
   },
 );
 
-const signInWithGoogle = async function (this: SpecWorld): Promise<void> {
+const signInWithGoogle = async function (this: WebWorld): Promise<void> {
   await pressTheOffer(this, offer);
 };
 
@@ -114,7 +111,7 @@ Given("the reader has signed in with Google", signInWithGoogle);
 // asks to go back to and the way to Google that is asked to take it.
 When(
   "the reader follows a link from elsewhere to sign in with Google, to go back to {string}",
-  async function (this: SpecWorld, goBack: string) {
+  async function (this: WebWorld, goBack: string) {
     await this.browserPage.goto(
       `${this.baseUrl!}/auth/google?from=sign-in&return=${encodeURIComponent(goBack)}`,
     );

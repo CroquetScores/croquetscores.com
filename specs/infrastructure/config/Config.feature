@@ -91,3 +91,52 @@ Feature: The settings the site is started with
       When the settings are loaded
       Then they are refused
       And the refusal names the setting "EMERGENCY_CONTACT_EMAIL_ADDRESSES"
+
+  Rule: The world rankings' lists are read where the site is told, and from the rankings' own site where it is told nothing
+
+    Scenario: A site told nothing reads the Association Croquet list from the rankings' site
+      Given the administrator's email address is "administrator@example.com"
+      When the settings are loaded
+      Then the Association Croquet list is read from "http://rank.worldcroquet.org/cgs/data_dir/names.dat"
+
+    Scenario: A site told where the lists are reads them there
+      Given the administrator's email address is "administrator@example.com"
+      And the world rankings' lists are at "http://127.0.0.1:9001/ac" and "http://127.0.0.1:9001/gc"
+      When the settings are loaded
+      Then the Association Croquet list is read from "http://127.0.0.1:9001/ac"
+      And the Golf Croquet list is read from "http://127.0.0.1:9001/gc"
+
+    Scenario: A site told where only one list is does not start
+      Given the administrator's email address is "administrator@example.com"
+      And only the Association Croquet list is said to be at "http://127.0.0.1:9001/ac"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "WORLD_RANKING_GC_ADDRESS"
+
+    Scenario: A site told how long to wait for a list that is not a whole number of milliseconds does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the world rankings are waited for "soon"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "WORLD_RANKING_WAIT_MILLISECONDS"
+
+    Scenario: A site told how long to wait waits so long
+      Given the administrator's email address is "administrator@example.com"
+      And the world rankings are waited for "1500"
+      When the settings are loaded
+      Then the world rankings are waited for 1500 milliseconds
+
+  Rule: Where Google answers can be set only for a site that has the test control
+
+    Scenario: A site told where Google is, with the test control, answers there
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And Google is said to answer at "http://127.0.0.1:9002"
+      When the settings are loaded
+      Then Google's keys are read from "http://127.0.0.1:9002/keys"
+
+    Scenario: A site told where Google is, without the test control, answers where Google does
+      Given the administrator's email address is "administrator@example.com"
+      And Google is said to answer at "http://127.0.0.1:9002"
+      When the settings are loaded
+      Then Google's keys are read from "https://www.googleapis.com/oauth2/v3/certs"

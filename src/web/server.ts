@@ -1201,7 +1201,11 @@ export const buildApplication = async (
   mediator.handleCommand(
     new ImportWorldRankingPlayersHandler(
       accounts,
-      options.worldRankingLists ?? new WorldRankingWebsite(),
+      options.worldRankingLists ??
+        new WorldRankingWebsite(
+          config.worldRankingAddresses,
+          config.worldRankingWaitMilliseconds,
+        ),
       worldRankingPlayers,
       unitOfWork,
     ),
@@ -1770,6 +1774,12 @@ export const buildApplication = async (
       deployAgain: () => {
         deployedAs = "built-again-by-the-control";
       },
+      worldRankingPlayers: async (sport) =>
+        (
+          await pool.query<{ name: string }>(
+            `select name from ${sport}_world_ranking_players order by name`,
+          )
+        ).rows.map((row) => row.name),
       addWorldRankingPlayer: async (sport, name) => {
         await pool.query(
           `insert into ${sport === "ac" ? "ac" : "gc"}_world_ranking_players (name)
@@ -1980,7 +1990,10 @@ export const buildApplication = async (
     config.google === undefined
       ? undefined
       : googleAsASignIn(
-          new GoogleOpenIdConnect(config.google, options.googleEndpoints),
+          new GoogleOpenIdConnect(
+            config.google,
+            options.googleEndpoints ?? config.googleEndpoints,
+          ),
         );
   if (google !== undefined) {
     registerGoogleRoutes(server, {

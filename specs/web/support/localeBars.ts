@@ -90,3 +90,19 @@ Then(
     );
   },
 );
+
+Then(
+  "the offer to register with Google is in the test locale",
+  async function (this: WebWorld) {
+    const stray = await unmarkedWithin(this, ".dialog-alternative");
+    assert.deepEqual(stray, [], "Words in the offer came from elsewhere.");
+  },
+);
+
+Then(
+  "the offer to sign in with Google is in the test locale",
+  async function (this: WebWorld) {
+    const stray = await unmarkedWithin(this, ".dialog-alternative");
+    assert.deepEqual(stray, [], "Words in the offer came from elsewhere.");
+  },
+);

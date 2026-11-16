@@ -1793,3 +1793,31 @@ When(
     });
   },
 );
+
+When(
+  "the golf croquet world ranking players are asked for",
+  async function (this: SpecWorld) {
+    await asking(this, "GET", "/__test/world-ranking-players?sport=gc");
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Then(
+  "the players told are {string}",
+  function (this: SpecWorld, names: string) {
+    assert.deepEqual(
+      (JSON.parse(responseOf(this).body) as { names: string[] }).names,
+      names.split(", "),
+    );
+  },
+);
+
+When(
+  "the account for {string} is linked to the Google account {string} through the control",
+  async function (this: SpecWorld, address: string, subject: string) {
+    await asking(this, "POST", "/__test/accounts/google", {
+      emailAddress: address,
+      subject,
+    });
+  },
+);

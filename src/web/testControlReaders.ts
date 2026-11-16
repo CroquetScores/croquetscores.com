@@ -109,6 +109,8 @@ export interface ReaderMaking {
   }) => Promise<boolean>;
   /** Says the world rankings' list of `sport` names the country with this code. */
   readonly listCountry: (sport: "ac" | "gc", code: string) => void;
+  /** Every name the world rankings' list of `sport` holds, in order. */
+  readonly worldRankingPlayers: (sport: "ac" | "gc") => Promise<string[]>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -513,6 +515,15 @@ export const registerTestControlReaders = (
         return reply.code(201).send({});
       });
 
+      // What the import has kept of a sport's list.
+      scope.get("/world-ranking-players", async (request, reply) => {
+        const { sport } = request.query as { sport?: string };
+        if (sport !== "ac" && sport !== "gc") {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        return { names: await making.worldRankingPlayers(sport) };
+      });
+
       // What the admin is told the site's build is called, and a deploy that
       // changes it, so that a page loaded before is behind it.
       scope.get("/build", () => ({ build: making.build() }));
@@ -613,6 +624,33 @@ export const registerTestControlReaders = (
       scope.get("/sessions/account", async (request) => {
         const cookie = (request.query as { cookie?: string }).cookie ?? "";
         return { accountId: (await making.accountOfSession(cookie)) ?? null };
+      });
+
+      // The Google account an account is linked to, as signing in with Google
+      // would have left it.
+      scope.post("/accounts/google", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          emailAddress?: unknown;
+          subject?: unknown;
+        };
+        try {
+          const address = textOf(body.emailAddress, "");
+          const subject = textOf(body.subject, "");
+          await making.inTransaction(async () => {
+            const id = await making.accountIdFor(EmailAddress.from(address));
+            if (id === undefined) throw new Error(`No account for ${address}.`);
+            const account = await making.loadAccount(id);
+            if (account === undefined)
+              throw new Error(`No events for ${address}.`);
+            account.linkGoogleAccount(subject, ReadOnlyDate.from(new Date()));
+            await making.saveAccount(account);
+          });
+          return await reply.code(200).send({});
+        } catch (failure) {
+          return reply
+            .code(400)
+            .send({ message: failure instanceof Error ? failure.message : "" });
+        }
       });
 
       // A role given or taken away, by nobody in particular, since who may is for

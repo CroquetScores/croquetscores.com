@@ -365,6 +365,12 @@ Feature: A site over a database the specs made can be controlled by a token
       When the Golf Croquet world rankings list is said to name the country "Atlantis" through the control
       Then the site answers that the request was wrong
 
+    Scenario: The world ranking players a site holds are told
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Keith Aiton" is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the players told are "Keith Aiton"
+
     Scenario: A block that was archived can be restored
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control
@@ -521,6 +527,21 @@ Feature: A site over a database the specs made can be controlled by a token
       When the role "administrator" is given to "someone@example.com" through the control
       And the role "administrator" is taken away from "someone@example.com" through the control
       Then the site answers that it is fine
+
+  Rule: A site with the control can link an account to a Google account
+
+    Scenario: An account can be linked to a Google account
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the account for "someone@example.com" is linked to the Google account "google-1" through the control
+      Then the site answers that it is fine
+
+    Scenario: An account with a Google account already is refused a second
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And the account for "someone@example.com" is linked to the Google account "google-1" through the control
+      When the account for "someone@example.com" is linked to the Google account "google-2" through the control
+      Then the site answers that the request was wrong
 
   Rule: A site with the control can be asked to ask the account to forget itself
 

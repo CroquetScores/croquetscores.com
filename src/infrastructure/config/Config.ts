@@ -1,5 +1,13 @@
 // Settings are read once, here, and handed out as a typed object. Nothing else
 // in the repository touches process.env: a second reader is a second answer.
+import {
+  googlesOwnEndpoints,
+  type GoogleEndpoints,
+} from "../identity/GoogleOpenIdConnect.js";
+import {
+  defaultWaitMilliseconds,
+  worldRankingAddresses,
+} from "../services/WorldRankingWebsite.js";
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
@@ -104,6 +112,16 @@ export interface Config {
    * number, or null for none. Left out, it is what the build wrote down.
    */
   readonly testSiteVersion: number | null | undefined;
+  /** Where the world rankings keep each sport's list: their own site unless told. */
+  readonly worldRankingAddresses: Readonly<Record<"ac" | "gc", string>>;
+  /** How long a list is waited for, in milliseconds. */
+  readonly worldRankingWaitMilliseconds: number;
+  /**
+   * Where Google answers: its own, and another's only for a site that has the
+   * test control, which the specs stand in Google's place for. A deployment
+   * cannot point sign-in somewhere else.
+   */
+  readonly googleEndpoints: GoogleEndpoints;
 }
 
 // What the specs say the version is: a number, "none", or nothing said.
@@ -293,6 +311,61 @@ const defaultDatabaseUnreachableEmailIntervalMinutes = 30;
 // Anything that is not a whole number of minutes stops the site starting
 // rather than quietly meaning the default, since whoever wrote "5m" wanted
 // five.
+// Where Google answers when the specs stand another in its place: one address,
+// at which the stand-in answers everywhere Google does.
+const testGoogleEndpoints = (address: string | undefined): GoogleEndpoints => {
+  const at = address?.trim() ?? "";
+  if (at === "") return googlesOwnEndpoints;
+  return {
+    issuers: [at],
+    authorization: `${at}/authorize`,
+    token: `${at}/token`,
+    keys: `${at}/keys`,
+  };
+};
+
+// Where the lists are, which a deployment is told only where it must not ask
+// the rankings' own site (the specs stand another in its place): both or
+// neither.
+const readWorldRankingAddresses = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): Readonly<Record<"ac" | "gc", string>> => {
+  const ac = env["WORLD_RANKING_AC_ADDRESS"]?.trim() ?? "";
+  const gc = env["WORLD_RANKING_GC_ADDRESS"]?.trim() ?? "";
+  if (ac === "" && gc === "") return worldRankingAddresses;
+  if (ac === "")
+    problems.push(
+      "WORLD_RANKING_AC_ADDRESS is needed with WORLD_RANKING_GC_ADDRESS.",
+    );
+  if (gc === "")
+    problems.push(
+      "WORLD_RANKING_GC_ADDRESS is needed with WORLD_RANKING_AC_ADDRESS.",
+    );
+  return { ac, gc };
+};
+
+const readWorldRankingWait = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): number => {
+  const key = "WORLD_RANKING_WAIT_MILLISECONDS";
+  const raw = env[key]?.trim() ?? "";
+  if (raw === "") return defaultWaitMilliseconds;
+  const milliseconds = Number(raw);
+  if (
+    !/^\d+$/.test(raw) ||
+    !Number.isSafeInteger(milliseconds) ||
+    milliseconds < 1
+  ) {
+    problems.push(
+      `${key} must be a whole number of milliseconds, one or more, not ${JSON.stringify(raw)}.`,
+    );
+    return defaultWaitMilliseconds;
+  }
+  return milliseconds;
+};
+
 const readDatabaseUnreachableEmailIntervalMinutes = (
   env: NodeJS.ProcessEnv,
   problems: string[],
@@ -361,6 +434,8 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
   const smtp = readSmtp(env, problems);
   const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
+  const worldRankingAddresses = readWorldRankingAddresses(env, problems);
+  const worldRankingWaitMilliseconds = readWorldRankingWait(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
   // Refused rather than ignored: a token left in the settings of a real site
@@ -400,6 +475,12 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     databaseBackupFolder: env["DATABASE_BACKUP_FOLDER"]?.trim() || undefined,
     pgDumpPath: env["PG_DUMP_PATH"]?.trim() || undefined,
     testControlToken,
+    worldRankingAddresses,
+    worldRankingWaitMilliseconds,
+    googleEndpoints:
+      testControlToken === undefined
+        ? googlesOwnEndpoints
+        : testGoogleEndpoints(env["TEST_GOOGLE_ADDRESS"]),
     testSiteVersion:
       testControlToken === undefined
         ? undefined

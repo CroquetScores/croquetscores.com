@@ -73,6 +73,8 @@ const words: Readonly<Record<string, string>> = {
   "Game.WinnerNotAhead":
     "The winner's score has to be more than the loser's, or marked as won.",
   "Game.WinnerScoreMissing": "Type the winner's score.",
+  "Google.Unreachable":
+    "Google could not be reached just now. Try again in a few minutes, or use your email address below.",
   "KnockoutDraw.EvenBestOf":
     "A knockout's match has to have a winner, so it is the best of an odd number of games.",
   "ManagerNote.Deleted":
@@ -158,6 +160,8 @@ const words: Readonly<Record<string, string>> = {
     "A subtitle can be no longer than 2000 characters.",
   "UpdateTournament.NoSuchTournament":
     "There is no tournament at this address.",
+  "WorldRankingLists.Unreachable":
+    "The world rankings' site could not be reached.",
   "WorldRankingName.TooShort":
     "A world ranking name has to be at least 3 characters.",
   "admin.managers.removeYourself.explanation":
@@ -232,8 +236,7 @@ const words: Readonly<Record<string, string>> = {
   "setPassword.title": "Set a password",
   "signIn.tryAgainLater":
     "Too many attempts have been made lately. Wait an hour and try again.",
-  "tryWebsite.banner":
-    "This is a safe place to learn {siteName}. Anything entered here may be removed at any time.",
+  "termsOfUse.agree": "I agree to the terms of use",
 };
 
 /** What English says for `key`. */
