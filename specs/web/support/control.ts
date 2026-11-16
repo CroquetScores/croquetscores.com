@@ -330,3 +330,13 @@ export const changeRole = async (
     );
   }
 };
+
+/** Whether any row of what the site keeps of its sessions holds `cookie`. */
+export const sessionsHold = async (cookie: string): Promise<boolean> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/sessions/holds?cookie=${encodeURIComponent(cookie)}`,
+    { headers: { "x-test-control": token } },
+  );
+  return ((await answer.json()) as { holds: boolean }).holds;
+};

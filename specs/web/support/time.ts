@@ -10,7 +10,7 @@ const aMinute = 60 * 1000;
 const anHour = 60 * aMinute;
 const aDay = 24 * anHour;
 
-const passes = async (milliseconds: number): Promise<void> => {
+export const passes = async (milliseconds: number): Promise<void> => {
   const now = await siteNow();
   await setTheClock(new Date(now.getTime() + milliseconds).toISOString());
 };

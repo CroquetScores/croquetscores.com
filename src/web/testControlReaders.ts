@@ -79,6 +79,8 @@ export interface ReaderMaking {
   readonly countFailedSignIns: (comparable: string) => Promise<number>;
   /** The account a session cookie belongs to, if it belongs to any. */
   readonly accountOfSession: (cookie: string) => Promise<string | undefined>;
+  /** Whether any row the site keeps of its sessions holds `cookie`. */
+  readonly sessionsHold: (cookie: string) => Promise<boolean>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -430,6 +432,13 @@ export const registerTestControlReaders = (
             EmailAddress.from(address ?? "").comparable,
           ),
         };
+      });
+
+      // Whether what the site keeps of its sessions holds the cookie as it is: the
+      // site keeps a hash of it, so that what is kept is not what is sent.
+      scope.get("/sessions/holds", async (request) => {
+        const cookie = (request.query as { cookie?: string }).cookie ?? "";
+        return { holds: await making.sessionsHold(cookie) };
       });
 
       // Whose session a cookie is, as the browser holds it.

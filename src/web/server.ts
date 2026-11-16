@@ -1690,6 +1690,12 @@ export const buildApplication = async (
         );
         return Number(rows[0]?.counted ?? 0);
       },
+      sessionsHold: async (cookie) => {
+        const { rows } = await pool.query<{ row: string }>(
+          `select t::text as row from sessions t`,
+        );
+        return rows.some(({ row }) => row.includes(cookie));
+      },
       accountOfSession: async (cookie) => {
         const { rows } = await pool.query<{ account_id: string }>(
           `select account_id from sessions where id_hash = $1`,

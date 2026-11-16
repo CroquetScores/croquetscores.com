@@ -1328,3 +1328,21 @@ When(
     });
   },
 );
+
+When(
+  "the sessions are asked whether any holds the session's cookie",
+  async function (this: SpecWorld) {
+    await asking(
+      this,
+      "GET",
+      `/__test/sessions/holds?cookie=${encodeURIComponent(sessions.get(this) ?? "")}`,
+    );
+  },
+);
+
+Then("none is told to hold it", function (this: SpecWorld) {
+  assert.equal(
+    (JSON.parse(responseOf(this).body) as { holds: boolean }).holds,
+    false,
+  );
+});

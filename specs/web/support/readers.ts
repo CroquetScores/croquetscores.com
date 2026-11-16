@@ -39,6 +39,10 @@ export const signInAs = async (
       httpOnly: true,
       secure: true,
       sameSite: "Lax",
+      // As the site sets it, 90 days and all: a cookie with no end is one a browser
+      // drops when it is closed. Counted from the machine's clock, because that is
+      // the clock the browser counts it by.
+      expires: Math.floor(Date.now() / 1000) + 90 * 24 * 60 * 60,
     },
   ]);
 };

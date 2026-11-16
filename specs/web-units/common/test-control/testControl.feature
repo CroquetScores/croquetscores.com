@@ -374,6 +374,15 @@ Feature: A site over a database the specs made can be controlled by a token
       When the account a made up session belongs to is asked for
       Then no account is told
 
+  Rule: A site with the control can be asked whether the sessions it keeps hold a cookie
+
+    Scenario: A session's cookie is not what the site keeps
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the sessions are asked whether any holds the session's cookie
+      Then none is told to hold it
+
   Rule: A site with the control can be given and have taken away a role
 
     Scenario: A role can be given and taken away
