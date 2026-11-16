@@ -70,6 +70,11 @@ export interface ReaderMaking {
   /** How many sessions the account has. */
   readonly sessionsOf: (id: AccountId) => Promise<number>;
   /** Says `times` sign ins as `comparable` (an address as it is compared) failed, `minutesAgo`. */
+  /** Says the world rankings of `sport` ("ac" or "gc") hold a player called `name`. */
+  readonly addWorldRankingPlayer: (
+    sport: string,
+    name: string,
+  ) => Promise<void>;
   readonly writeFailedSignIns: (
     comparable: string,
     ipAddress: string,
@@ -83,6 +88,10 @@ export interface ReaderMaking {
   readonly sessionsHold: (cookie: string) => Promise<boolean>;
   /** What the tournament with this id holds, as plain data. */
   readonly keptOf: (id: string, name?: string) => Promise<object | undefined>;
+  /** What the competition with this id holds, as plain data. */
+  readonly gamesOf: (id: string) => Promise<object | undefined>;
+  /** The notes of the tournament with this id, as plain data. */
+  readonly notesOf: (id: string) => Promise<object[]>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -397,6 +406,23 @@ export const registerTestControlReaders = (
         return making.checkPassword(id, body.password);
       });
 
+      // A player the world rankings are said to hold, as an import would have
+      // left them, so that what is found among them is the scenario's subject.
+      scope.post("/world-ranking-players", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          sport?: unknown;
+          name?: unknown;
+        };
+        if (
+          (body.sport !== "ac" && body.sport !== "gc") ||
+          typeof body.name !== "string"
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        await making.addWorldRankingPlayer(body.sport, body.name);
+        return reply.code(201).send({});
+      });
+
       // Sign ins that failed, which the site counts against a limit.
       scope.post("/signins/failed", async (request, reply) => {
         const body = (request.body ?? {}) as {
@@ -445,6 +471,20 @@ export const registerTestControlReaders = (
           return reply.code(404).send({ code: "TestControl.NoTournament" });
         }
         return kept;
+      });
+
+      // The notes a tournament holds, as plain data.
+      scope.get("/tournaments/notes/kept", async (request) => {
+        const id = (request.query as { id?: string }).id ?? "";
+        return await making.notesOf(id);
+      });
+
+      // What a competition holds: its players and its games, as plain data.
+      scope.get("/competitions/kept", async (request) => {
+        const id = (request.query as { id?: string }).id ?? "";
+        const games = await making.gamesOf(id);
+        // One nobody has entered or played in has kept nothing yet.
+        return games ?? { players: [], games: [] };
       });
 
       // Whether what the site keeps of its sessions holds the cookie as it is: the

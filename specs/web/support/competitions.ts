@@ -429,7 +429,12 @@ Given(
         manager,
         tournament: tournamentOf(this, tournament).id,
         team: teamOf(this, tournament, team).id,
-        player: { name: player },
+        player: {
+          name: player,
+          ...(this.ofTheNextPlayer["worldRankingName"] === undefined
+            ? {}
+            : { worldRankingName: this.ofTheNextPlayer["worldRankingName"] }),
+        },
       },
     );
     this.teamPlayers.set(within(tournament, player), id!);
@@ -482,6 +487,9 @@ Given(
       expectedMatches: 1,
       bestOf: 1,
       ...this.ofTheNextTest,
+      ...(this.ofTheNextBlock["rules"] === undefined
+        ? {}
+        : { rules: this.ofTheNextBlock["rules"] }),
     };
     const id = await made("add the test", "/tournaments/tests", {
       manager,
@@ -953,5 +961,47 @@ Given(
       ),
       name,
     });
+  },
+);
+
+Given(
+  "the block is to be played in {int} rounds",
+  function (this: WebWorld, rounds: number) {
+    this.ofTheNextBlock = { ...this.ofTheNextBlock, rounds };
+  },
+);
+
+Given(
+  /^the competition is said (not )?to count towards the world rankings$/,
+  function (this: WebWorld, not: string | undefined) {
+    rulesOf(this, { worldRankings: not === undefined });
+  },
+);
+
+Given(
+  "the test is to start on {string}",
+  function (this: WebWorld, starts: string) {
+    this.ofTheNextTest = { ...this.ofTheNextTest, starts };
+  },
+);
+
+Given(
+  "the test is to finish on {string}",
+  function (this: WebWorld, finishes: string) {
+    this.ofTheNextTest = { ...this.ofTheNextTest, finishes };
+  },
+);
+
+Given(
+  "the test is to be expected to have {int} matches",
+  function (this: WebWorld, expectedMatches: number) {
+    this.ofTheNextTest = { ...this.ofTheNextTest, expectedMatches };
+  },
+);
+
+Given(
+  "each match of the test is to be the best of {int}",
+  function (this: WebWorld, bestOf: number) {
+    this.ofTheNextTest = { ...this.ofTheNextTest, bestOf };
   },
 );

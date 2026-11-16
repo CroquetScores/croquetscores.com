@@ -82,7 +82,7 @@ const dropDownYears = async (world: WebWorld): Promise<number[]> => {
     .map(Number);
 };
 
-const yearsOffered = async (world: WebWorld): Promise<number[]> => [
+export const yearsOffered = async (world: WebWorld): Promise<number[]> => [
   ...(await tabYears(world)),
   ...(await dropDownYears(world)),
 ];
@@ -255,37 +255,6 @@ Then(
 );
 
 // The filter ---------------------------------------------------------------------
-
-// Pressed by its words, and waited on until what it does is done: a link
-// followed or a form's answer come back, so that the next step reads what
-// pressing it did and not the page as it was before.
-When("{string} is pressed", async function (this: WebWorld, option: string) {
-  await settled(this);
-  const page = this.browserPage;
-  await page
-    .locator("main :is(a, button)")
-    .filter({ hasText: exactly(option) })
-    .click();
-  await page.waitForLoadState();
-});
-
-const chosenIn = async (world: WebWorld, label: string): Promise<string> =>
-  (await world.browserPage
-    .locator("main form.tournament-filter")
-    .getByLabel(label, { exact: true })
-    .locator("option:checked")
-    .textContent()) ?? "";
-
-for (const field of ["Sport", "Country", "Region"]) {
-  Then(
-    `the ${field.toLowerCase()} chosen is {string}`,
-    async function (this: WebWorld, chosen: string) {
-      await eventually(this, async () => {
-        assert.equal(await chosenIn(this, field), chosen);
-      });
-    },
-  );
-}
 
 // The way to another page, which is a link in the list's own page and not one to
 // another, so it is waited on until the list has drawn the page.

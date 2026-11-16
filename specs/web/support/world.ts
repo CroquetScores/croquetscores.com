@@ -20,6 +20,7 @@ export class WebWorld extends World {
    * reader reads, and the website a proxy says it was asked for.
    */
   public extraHeaders: Record<string, string> = {};
+  public focusNeverLeft: boolean | undefined;
 
   /** The tournaments the scenario made, by the name it gave them. */
   public tournaments = new Map<

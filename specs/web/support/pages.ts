@@ -20,9 +20,12 @@ Given(
 );
 
 Given(
-  "a viewport {int} pixels wide and {int} pixels tall",
-  async function (this: WebWorld, width: number, height: number) {
-    await this.browserPage.setViewportSize({ width, height });
+  /^a viewport (\d+) pixels wide and (\d+) pixels (?:tall|high)$/,
+  async function (this: WebWorld, width: string, height: string) {
+    await this.browserPage.setViewportSize({
+      width: Number(width),
+      height: Number(height),
+    });
   },
 );
 

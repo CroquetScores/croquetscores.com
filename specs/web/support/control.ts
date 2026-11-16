@@ -340,3 +340,12 @@ export const sessionsHold = async (cookie: string): Promise<boolean> => {
   );
   return ((await answer.json()) as { holds: boolean }).holds;
 };
+
+/** Everything the site has queued, whoever it is for, oldest first. */
+export const allEmails = async (): Promise<QueuedEmail[]> => {
+  const { baseUrl, token } = await site();
+  const answer = await fetch(`${baseUrl}/__test/emails`, {
+    headers: { "x-test-control": token },
+  });
+  return ((await answer.json()) as { emails: QueuedEmail[] }).emails;
+};

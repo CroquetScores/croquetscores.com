@@ -8,6 +8,19 @@
 // an id and an address, and no domain type leaves the site.
 import type { FastifyInstance } from "fastify";
 
+import { MovePlayer } from "../application/operations/tournaments/MovePlayer.js";
+import { UpdatePlayer } from "../application/operations/tournaments/UpdatePlayer.js";
+import { MoveTeam } from "../application/operations/tournaments/MoveTeam.js";
+import { MoveTeamPlayer } from "../application/operations/tournaments/MoveTeamPlayer.js";
+import { ArchiveTeamPlayer } from "../application/operations/tournaments/ArchiveTeamPlayer.js";
+import { UpdateTeamPlayer } from "../application/operations/tournaments/UpdateTeamPlayer.js";
+import { MoveCompetition } from "../application/operations/tournaments/MoveCompetition.js";
+import { AddManager } from "../application/operations/tournaments/AddManager.js";
+import { AddScorer } from "../application/operations/tournaments/AddScorer.js";
+import { AddPair } from "../application/operations/tournaments/AddPair.js";
+import { AddLosersKnockout } from "../application/operations/tournaments/AddLosersKnockout.js";
+import { ChangeCarryForward } from "../application/operations/competitions/ChangeCarryForward.js";
+import { RemovePlayer } from "../application/operations/competitions/RemovePlayer.js";
 import { AddGame } from "../application/operations/competitions/AddGame.js";
 import { ArchiveGame } from "../application/operations/competitions/ArchiveGame.js";
 import { MoveCompetitionPlayer } from "../application/operations/competitions/MoveCompetitionPlayer.js";
@@ -79,6 +92,13 @@ interface Asked {
   website?: unknown;
   id?: unknown;
   tournament?: unknown;
+  first?: unknown;
+  second?: unknown;
+  from?: unknown;
+  round?: unknown;
+  counts?: unknown;
+  byeOrder?: unknown;
+  emailAddress?: unknown;
 }
 
 const text = (value: unknown, name: string): string => {
@@ -469,6 +489,176 @@ export const registerTestControlTournaments = (
           );
           return undefined;
         }, 200),
+      );
+
+      // What the manager does to what is already there: moving, renaming,
+      // pairing, and the people who help.
+      const moving = (
+        path: string,
+        make: (asked: Asked, account: string) => object,
+      ): void => {
+        scope.post(
+          path,
+          refusing(async (asked) => {
+            await making.mediator.send(
+              make(asked, await accountOf(asked.manager)) as never,
+            );
+            return undefined;
+          }, 200),
+        );
+      };
+      const said = (asked: Asked, key: keyof Asked, what: string): string =>
+        text(asked[key], what);
+      moving(
+        "/tournaments/players/move",
+        (asked, account) =>
+          new MovePlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "player", "A player"),
+            said(asked, "direction", "A direction"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/players/update",
+        (asked, account) =>
+          new UpdatePlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "player", "A player"),
+            asked.details as TournamentPlayerDetails,
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/pairs",
+        (asked, account) =>
+          new AddPair(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "first", "A first player"),
+            said(asked, "second", "A second player"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/teams/move",
+        (asked, account) =>
+          new MoveTeam(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "team", "A team"),
+            said(asked, "direction", "A direction"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/teams/players/move",
+        (asked, account) =>
+          new MoveTeamPlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "team", "A team"),
+            said(asked, "player", "A player"),
+            said(asked, "direction", "A direction"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/teams/players/update",
+        (asked, account) =>
+          new UpdateTeamPlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "team", "A team"),
+            said(asked, "player", "A player"),
+            asked.details as TeamPlayerDetails,
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/teams/players/archive",
+        (asked, account) =>
+          new ArchiveTeamPlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "team", "A team"),
+            said(asked, "player", "A player"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/competitions/move",
+        (asked, account) =>
+          new MoveCompetition(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "competition", "A competition"),
+            said(asked, "direction", "A direction"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/managers",
+        (asked, account) =>
+          new AddManager(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "emailAddress", "An email address"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/tournaments/scorers",
+        (asked, account) =>
+          new AddScorer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "emailAddress", "An email address"),
+            at(asked),
+          ),
+      );
+      moving(
+        "/competitions/players/carry-forward",
+        (asked, account) =>
+          new ChangeCarryForward(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "competition", "A competition"),
+            said(asked, "player", "A player"),
+            asked.counts ?? {},
+            at(asked),
+          ),
+      );
+      moving(
+        "/competitions/players/remove",
+        (asked, account) =>
+          new RemovePlayer(
+            account,
+            said(asked, "tournament", "A tournament"),
+            said(asked, "competition", "A competition"),
+            said(asked, "player", "A player"),
+            at(asked),
+            typeof asked.byeOrder === "number" ? asked.byeOrder : undefined,
+          ),
+      );
+
+      scope.post(
+        "/tournaments/losers-knockouts",
+        refusing(async (asked) => {
+          const id = await making.mediator.send(
+            new AddLosersKnockout(
+              await accountOf(asked.manager),
+              said(asked, "tournament", "A tournament"),
+              said(asked, "name", "A name"),
+              said(asked, "from", "A knockout"),
+              typeof asked.round === "number" ? asked.round : 0,
+              at(asked),
+            ),
+          );
+          return { id: id.value };
+        }, 201),
       );
 
       // A knockout of a number of places, each round the best of some games.

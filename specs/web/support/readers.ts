@@ -7,6 +7,7 @@ import { strict as assert } from "node:assert";
 
 import {
   accountOfSession,
+  accountsFor,
   call,
   changeRole,
   detailsOfAccount,
@@ -65,6 +66,8 @@ Given(
   "{string} has an account, confirmed",
   async function (this: WebWorld, address: string) {
     this.accountNames.set(address, "Sam Someone");
+    // Said of an account a signed in reader already has, it is that one.
+    if ((await accountsFor(address)) > 0) return;
     await makeAccount({ emailAddress: address });
   },
 );
@@ -300,6 +303,7 @@ Given(
   "an account for {string}, confirmed",
   async function (this: WebWorld, address: string) {
     this.accountNames.set(address, "Sam Someone");
+    if ((await accountsFor(address)) > 0) return;
     await makeAccount({ emailAddress: address });
   },
 );

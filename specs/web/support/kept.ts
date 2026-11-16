@@ -26,7 +26,11 @@ export interface KeptTeam {
   readonly slug: string;
   readonly order: number;
   readonly archived: boolean;
-  readonly players: readonly { readonly id: string; readonly name: string }[];
+  readonly players: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly worldRankingName?: string;
+  }[];
 }
 
 export interface KeptRules {
@@ -50,9 +54,19 @@ export interface KeptCompetition {
   readonly expectedMatches?: number;
   readonly bestOf?: number;
   readonly group?: string;
+  readonly rounds?: number;
+  readonly tieBreak?: string;
+  readonly drawRounds?: readonly number[];
+  readonly losersOf?: {
+    readonly competitionId: string;
+    readonly round: number;
+  };
+  readonly starts?: string;
+  readonly finishes?: string;
 }
 
 export interface Kept {
+  readonly id: string;
   readonly format: string;
   readonly sport: string;
   readonly country: string;
@@ -99,17 +113,104 @@ export const testOf = (kept: Kept, test: string): KeptCompetition => {
   return found;
 };
 
-/** What the tournament called `name` holds, which the scenario made through a page and so never knew the id of. */
+/**
+ * What the tournament called `name` holds, which the scenario made through a
+ * page and so never knew the id of. Asked again for a while, since the site
+ * tells of it by name a moment after it is kept.
+ */
 export const keptCalled = async (
   world: WebWorld,
   name: string,
 ): Promise<Kept> => {
   const { baseUrl, token } = await site();
+  const until = Date.now() + 5000;
+  for (;;) {
+    const answer = await fetch(
+      `${baseUrl}/__test/tournaments/kept?name=${encodeURIComponent(name)}`,
+      { headers: { "x-test-control": token } },
+    );
+    if (answer.status === 200) return (await answer.json()) as Kept;
+    if (Date.now() > until) {
+      assert.equal(answer.status, 200, `No tournament is called ${name}.`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  void world;
+};
+
+export interface KeptGame {
+  readonly winner: string;
+  readonly loser: string;
+  readonly winnerScore: number;
+  readonly loserScore: number;
+  readonly winnerWritten: string;
+  readonly loserWritten: string;
+  readonly marked: boolean;
+  readonly archived: boolean;
+  readonly withdrawn: boolean;
+}
+
+export interface KeptCompetitionPlayer {
+  readonly id: string;
+  readonly tournamentPlayer: string;
+  readonly order: number;
+  readonly withdrawn: boolean;
+  readonly bye: boolean;
+  readonly carryForward: Readonly<Record<string, number>>;
+}
+
+/** What the competition with this id holds: its players, and its games by their ids. */
+export const competitionHeld = async (
+  id: string,
+): Promise<{
+  readonly players: readonly KeptCompetitionPlayer[];
+  readonly games: readonly KeptGame[];
+}> => {
+  const { baseUrl, token } = await site();
   const answer = await fetch(
-    `${baseUrl}/__test/tournaments/kept?name=${encodeURIComponent(name)}`,
+    `${baseUrl}/__test/competitions/kept?id=${encodeURIComponent(id)}`,
     { headers: { "x-test-control": token } },
   );
-  assert.equal(answer.status, 200, `No tournament is called ${name}.`);
-  void world;
-  return (await answer.json()) as Kept;
+  assert.equal(
+    answer.status,
+    200,
+    "The site would not say what the competition holds.",
+  );
+  return (await answer.json()) as {
+    players: KeptCompetitionPlayer[];
+    games: KeptGame[];
+  };
+};
+
+/** The games the competition with this id holds. */
+export const gamesOf = async (id: string): Promise<readonly KeptGame[]> =>
+  (await competitionHeld(id)).games;
+
+/** The day, as the date is written to the day, of a moment told as plain data. */
+export const dayOf = (moment: string | undefined): string =>
+  (moment ?? "").slice(0, 10);
+
+export interface KeptNote {
+  readonly title: string;
+  readonly description?: string;
+  readonly deleted: boolean;
+}
+
+/** The notes the tournament called `name` holds. */
+export const notesOf = async (
+  world: WebWorld,
+  name: string,
+): Promise<readonly KeptNote[]> => {
+  const { id } = await keptOf(world, name);
+  const { baseUrl, token } = await site();
+  const answer = await fetch(
+    `${baseUrl}/__test/tournaments/notes/kept?id=${encodeURIComponent(id)}`,
+    { headers: { "x-test-control": token } },
+  );
+  assert.equal(
+    answer.status,
+    200,
+    "The site would not say what the notes hold.",
+  );
+  return (await answer.json()) as KeptNote[];
 };

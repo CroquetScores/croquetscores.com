@@ -6,6 +6,7 @@ import { strict as assert } from "node:assert";
 
 import { isMarked } from "./marks.js";
 import type { WebWorld } from "./world.js";
+import { retried } from "./tournamentPage.js";
 
 // The sections the site's bar offers, found by their words.
 const section = (label: string): string =>
@@ -53,7 +54,10 @@ Then(
   async function (this: WebWorld, name: string) {
     const heading = this.browserPage.locator("main h1").first();
     await heading.waitFor();
-    assert.equal((await heading.innerText()).trim(), name);
+    // A name kept from beside the heading is redrawn a moment after it is.
+    await retried(async () => {
+      assert.equal((await heading.innerText()).trim(), name);
+    });
   },
 );
 

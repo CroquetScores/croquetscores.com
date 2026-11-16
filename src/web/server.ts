@@ -195,7 +195,7 @@ import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commen
 import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
 import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-notes/events/managerNoteEvents.js";
 import { ManagerNote } from "../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
-import type { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
+import { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { StartCommentaryHandler } from "../application/operations/tournaments/StartCommentaryHandler.js";
 import { StartCommentaryValidator } from "../application/operations/tournaments/StartCommentaryValidator.js";
@@ -222,7 +222,7 @@ import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
-import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
@@ -309,7 +309,7 @@ import {
   registerTestControlReaderCheck,
   StandInReaderCheck,
 } from "./testControlReaderCheck.js";
-import { plainTournament } from "./testControlKept.js";
+import { plainCompetition, plainTournament } from "./testControlKept.js";
 import { registerTestControlTournaments } from "./testControlTournaments.js";
 import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
@@ -1674,6 +1674,33 @@ export const buildApplication = async (
       loadAccount: (id) => accounts.load(id),
       saveAccount: (account) => accounts.save(account),
       emailedTo: () => emailQueue.emails(),
+      notesOf: async (id) =>
+        unitOfWork.inTransaction(async () => {
+          const headings = await managerNotesByTournament.of(
+            TournamentId.from(id),
+          );
+          const notes = [];
+          for (const heading of headings) {
+            const note = await managerNotes.load(
+              ManagerNoteId.from(heading.id),
+            );
+            if (note === undefined) continue;
+            notes.push({
+              title: note.title.toString(),
+              description: note.description?.toString(),
+              deleted: note.deleted,
+            });
+          }
+          return notes;
+        }),
+      gamesOf: async (id) => {
+        const competition = await unitOfWork.inTransaction(() =>
+          competitions.load(CompetitionId.from(id)),
+        );
+        return competition === undefined
+          ? undefined
+          : plainCompetition(competition);
+      },
       keptOf: async (id, name) => {
         // By the name it is called where the scenario made it through a page and
         // never knew its id.
@@ -1693,6 +1720,13 @@ export const buildApplication = async (
         return tournament === undefined
           ? undefined
           : plainTournament(tournament);
+      },
+      addWorldRankingPlayer: async (sport, name) => {
+        await pool.query(
+          `insert into ${sport === "ac" ? "ac" : "gc"}_world_ranking_players (name)
+           values ($1) on conflict do nothing`,
+          [name],
+        );
       },
       writeFailedSignIns: async (comparable, ipAddress, times, minutesAgo) => {
         const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);

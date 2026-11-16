@@ -258,6 +258,80 @@ Feature: A site over a database the specs made can be controlled by a token
       And the note is deleted through the control
       Then the site answers that it is fine
 
+    Scenario: What a tournament's notes hold is told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a note called "Lunch" saying "At noon" is added through the control
+      When the notes the tournament holds are asked for
+      Then it is told to hold the note "Lunch" saying "At noon"
+
+    Scenario: A player can be moved, renamed and paired
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When "Bea" is moved up in the tournament through the control
+      And "Ann" is renamed to "Anne" through the control
+      And "Anne" and "Bea" are paired through the control
+      Then the site answers that it is fine
+
+    Scenario: A team and its players can be moved, renamed and archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Tests" played by teams through the control
+      And the teams "England" and "Australia" are added through the control
+      And the players "Kim" and "Lee" are added to the team "England" through the control
+      When the team "Australia" is moved up through the control
+      And the player "Lee" of the team "England" is moved up through the control
+      And the player "Kim" of the team "England" is renamed to "Kimberley" through the control
+      And the player "Lee" of the team "England" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A competition can be moved
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the blocks "Block A" and "Block B" are added through the control
+      When the block "Block B" is moved up through the control
+      Then the site answers that it is fine
+
+    Scenario: A manager and a scorer can be added
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And an account for "helper@example.com" made through the control
+      And an account for "scorer@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When "helper@example.com" is made a manager of the tournament through the control
+      And "scorer@example.com" is made a scorer of the tournament through the control
+      Then the site answers that it is fine
+
+    Scenario: A knockout can be given a losers knockout
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a knockout of 4 places is added through the control
+      When a losers knockout of the first round of the knockout is added through the control
+      Then the site answers that it was made
+
+    Scenario: A player's carry forward can be changed and the player removed from a competition
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      When Ann is given a carry forward of 3 match wins through the control
+      And Bea is removed from the block through the control
+      And what the tournament holds is asked for
+      And the games of the block are asked for
+      Then it is told to hold 1 player
+      And it is told that a player carries forward 3 match wins
+
+    Scenario: A world ranking player can be given to the lists the site holds
+      Given a site given the token "open sesame"
+      When the golf croquet world ranking player "Keith Aiton" is given through the control
+      Then the site answers that it was made
+
     Scenario: A block that was archived can be restored
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control
@@ -277,6 +351,18 @@ Feature: A site over a database the specs made can be controlled by a token
       Then it is told to hold the block "Block A"
       And it is told to hold the player "Ann"
       And it is told not to be archived
+
+    Scenario: The games of a competition are told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When what the tournament holds is asked for
+      And the games of the block are asked for
+      Then it is told to hold a game won 26 to 20
+      And it is told to hold 2 players
 
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"

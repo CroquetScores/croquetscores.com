@@ -1349,8 +1349,8 @@ Then("none is told to hold it", function (this: SpecWorld) {
 
 interface Held {
   archived: boolean;
-  players: { name: string }[];
-  competitions: { name: string; kind: string }[];
+  players: { id: string; name: string }[];
+  competitions: { id: string; name: string; kind: string }[];
 }
 
 const held = (world: SpecWorld): Held =>
@@ -1389,3 +1389,329 @@ Then(
 Then("it is told not to be archived", function (this: SpecWorld) {
   assert.equal(held(this).archived, false);
 });
+
+When("the games of the block are asked for", async function (this: SpecWorld) {
+  const block = held(this).competitions.find((each) => each.kind === "block");
+  assert.ok(block !== undefined, "The tournament holds no block.");
+  await asking(
+    this,
+    "GET",
+    `/__test/competitions/kept?id=${encodeURIComponent(block.id)}`,
+  );
+  assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+});
+
+Then(
+  "it is told to hold a game won {int} to {int}",
+  function (this: SpecWorld, winnerScore: number, loserScore: number) {
+    const { games } = JSON.parse(responseOf(this).body) as {
+      games: { winnerScore: number; loserScore: number }[];
+    };
+    assert.ok(
+      games.some(
+        (game) =>
+          game.winnerScore === winnerScore && game.loserScore === loserScore,
+      ),
+      responseOf(this).body,
+    );
+  },
+);
+
+When(
+  "the notes the tournament holds are asked for",
+  async function (this: SpecWorld) {
+    await asking(
+      this,
+      "GET",
+      `/__test/tournaments/notes/kept?id=${encodeURIComponent(made.get(this)?.id ?? "")}`,
+    );
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Then(
+  "it is told to hold the note {string} saying {string}",
+  function (this: SpecWorld, title: string, description: string) {
+    const notes = JSON.parse(responseOf(this).body) as {
+      title: string;
+      description?: string;
+    }[];
+    assert.ok(
+      notes.some(
+        (note) => note.title === title && note.description === description,
+      ),
+      responseOf(this).body,
+    );
+  },
+);
+
+const named = (world: SpecWorld, name: string): string | undefined =>
+  playedIn(world).players.get(name)?.tournament;
+
+When(
+  "{string} is moved up in the tournament through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/players/move", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      player: named(this, name),
+      direction: "up",
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "{string} is renamed to {string} through the control",
+  async function (this: SpecWorld, name: string, renamed: string) {
+    await controlled(this, "/__test/tournaments/players/update", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      player: named(this, name),
+      details: { name: renamed },
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+    const found = playedIn(this).players.get(name);
+    if (found !== undefined) playedIn(this).players.set(renamed, found);
+  },
+);
+
+When(
+  "{string} and {string} are paired through the control",
+  async function (this: SpecWorld, first: string, second: string) {
+    await controlled(this, "/__test/tournaments/pairs", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      first: named(this, first),
+      second: named(this, second),
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+const teamPlayers = new WeakMap<SpecWorld, Map<string, string>>();
+const teamPlayerIds = (world: SpecWorld): Map<string, string> => {
+  let found = teamPlayers.get(world);
+  if (found === undefined) {
+    found = new Map();
+    teamPlayers.set(world, found);
+  }
+  return found;
+};
+
+When(
+  "the players {string} and {string} are added to the team {string} through the control",
+  async function (
+    this: SpecWorld,
+    first: string,
+    second: string,
+    team: string,
+  ) {
+    for (const name of [first, second]) {
+      await controlled(this, "/__test/tournaments/teams/players", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        team: teamsOf(this).names.get(team),
+        player: { name },
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      teamPlayerIds(this).set(name, idOfAnswer(this));
+    }
+  },
+);
+
+When(
+  "the team {string} is moved up through the control",
+  async function (this: SpecWorld, team: string) {
+    await controlled(this, "/__test/tournaments/teams/move", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      team: teamsOf(this).names.get(team),
+      direction: "up",
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+const toATeamPlayer = async (
+  world: SpecWorld,
+  path: string,
+  team: string,
+  player: string,
+  more: object,
+): Promise<void> => {
+  await controlled(world, path, {
+    manager: "manager@example.com",
+    tournament: made.get(world)?.id,
+    team: teamsOf(world).names.get(team),
+    player: teamPlayerIds(world).get(player),
+    ...more,
+  });
+  assert.equal(responseOf(world).statusCode, 200, responseOf(world).body);
+};
+
+When(
+  "the player {string} of the team {string} is moved up through the control",
+  async function (this: SpecWorld, player: string, team: string) {
+    await toATeamPlayer(
+      this,
+      "/__test/tournaments/teams/players/move",
+      team,
+      player,
+      { direction: "up" },
+    );
+  },
+);
+
+When(
+  "the player {string} of the team {string} is renamed to {string} through the control",
+  async function (
+    this: SpecWorld,
+    player: string,
+    team: string,
+    renamed: string,
+  ) {
+    await toATeamPlayer(
+      this,
+      "/__test/tournaments/teams/players/update",
+      team,
+      player,
+      { details: { name: renamed } },
+    );
+  },
+);
+
+When(
+  "the player {string} of the team {string} is archived through the control",
+  async function (this: SpecWorld, player: string, team: string) {
+    await toATeamPlayer(
+      this,
+      "/__test/tournaments/teams/players/archive",
+      team,
+      player,
+      {},
+    );
+  },
+);
+
+const blocks = new WeakMap<SpecWorld, Map<string, string>>();
+
+When(
+  "the blocks {string} and {string} are added through the control",
+  async function (this: SpecWorld, first: string, second: string) {
+    const ids = new Map<string, string>();
+    for (const name of [first, second]) {
+      await controlled(this, "/__test/tournaments/blocks", {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        name,
+      });
+      assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+      ids.set(name, idOfAnswer(this));
+    }
+    blocks.set(this, ids);
+  },
+);
+
+When(
+  "the block {string} is moved up through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/competitions/move", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: blocks.get(this)?.get(name),
+      direction: "up",
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+for (const role of ["manager", "scorer"] as const) {
+  When(
+    `{string} is made a ${role} of the tournament through the control`,
+    async function (this: SpecWorld, address: string) {
+      await controlled(this, `/__test/tournaments/${role}s`, {
+        manager: "manager@example.com",
+        tournament: made.get(this)?.id,
+        emailAddress: address,
+      });
+      assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+    },
+  );
+}
+
+When(
+  "a losers knockout of the first round of the knockout is added through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/tournaments/losers-knockouts", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      name: "Losers A",
+      from: playedIn(this).block,
+      round: 0,
+    });
+  },
+);
+
+When(
+  "Ann is given a carry forward of {int} match wins through the control",
+  async function (this: SpecWorld, wins: number) {
+    await controlled(this, "/__test/competitions/players/carry-forward", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      player: playedIn(this).players.get("Ann")?.entered,
+      counts: { matchWins: wins },
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+When(
+  "Bea is removed from the block through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/competitions/players/remove", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: playedIn(this).block,
+      player: playedIn(this).players.get("Bea")?.entered,
+    });
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+const competitionHeld = (
+  world: SpecWorld,
+): { players: { carryForward: Record<string, number> }[] } =>
+  JSON.parse(responseOf(world).body) as {
+    players: { carryForward: Record<string, number> }[];
+  };
+
+Then(
+  /^it is told to hold (\d+) players?$/,
+  function (this: SpecWorld, count: string) {
+    assert.equal(competitionHeld(this).players.length, Number(count));
+  },
+);
+
+Then(
+  "it is told that a player carries forward {int} match wins",
+  function (this: SpecWorld, wins: number) {
+    assert.ok(
+      competitionHeld(this).players.some(
+        (player) => player.carryForward["matchWins"] === wins,
+      ),
+      responseOf(this).body,
+    );
+  },
+);
+
+When(
+  "the golf croquet world ranking player {string} is given through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/world-ranking-players", {
+      sport: "gc",
+      name,
+    });
+  },
+);

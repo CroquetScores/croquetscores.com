@@ -1,12 +1,15 @@
 // What a tournament holds, said in plain data, for the test control: names and
 // ids and the few facts about each that a scenario says were kept. No domain
 // type leaves the site, so the specs that ask need to know none.
+import { CARRY_FORWARD_COUNTS } from "../domain/aggregates/tournaments/competitions/value-objects/CarryForward.js";
+import type { Competition } from "../domain/aggregates/tournaments/competitions/Competition.js";
 import type { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 
 const text = (value: { toString(): string } | undefined): string | undefined =>
   value === undefined ? undefined : value.toString();
 
 export const plainTournament = (tournament: Tournament): object => ({
+  id: tournament.id.value,
   address: tournament.address.toString(),
   name: tournament.name.toString(),
   archived: tournament.archived,
@@ -44,6 +47,7 @@ export const plainTournament = (tournament: Tournament): object => ({
     players: team.players.map((player) => ({
       id: player.id.value,
       name: player.name.toString(),
+      worldRankingName: text(player.worldRankingName),
     })),
   })),
   competitions: tournament.competitions.map(({ reference, shape, rules }) => ({
@@ -69,5 +73,48 @@ export const plainTournament = (tournament: Tournament): object => ({
         ? shape.bestOf.games
         : undefined,
     group: shape.kind === "test" ? text(shape.group) : undefined,
+    rounds: shape.kind === "block" ? shape.rounds.count : undefined,
+    tieBreak: shape.kind === "block" ? shape.tieBreak.code : undefined,
+    drawRounds:
+      shape.kind === "knockout"
+        ? shape.draw.rounds.map((round) => round.games)
+        : undefined,
+    losersOf:
+      shape.kind === "knockout" && shape.losersOf !== undefined
+        ? {
+            competitionId: shape.losersOf.competitionId.value,
+            round: shape.losersOf.round,
+          }
+        : undefined,
+    starts: shape.kind === "test" ? shape.starts.toISOString() : undefined,
+    finishes: shape.kind === "test" ? shape.finishes.toISOString() : undefined,
+  })),
+});
+
+/** What a competition holds: its players, and its games by the ids of those who played them. */
+export const plainCompetition = (competition: Competition): object => ({
+  players: competition.players.map((player) => ({
+    id: player.id.value,
+    tournamentPlayer: player.tournamentPlayerId.value,
+    order: player.order,
+    withdrawn: player.withdrawn,
+    bye: player.isBye,
+    carryForward: Object.fromEntries(
+      CARRY_FORWARD_COUNTS.flatMap((count) => {
+        const value = player.carryForward.of(count);
+        return value === undefined ? [] : [[count, value]];
+      }),
+    ),
+  })),
+  games: competition.games.map((game) => ({
+    winner: game.winner.value,
+    loser: game.loser.value,
+    winnerScore: game.winnerScore.points,
+    loserScore: game.loserScore.points,
+    winnerWritten: game.winnerScore.toString(),
+    loserWritten: game.loserScore.toString(),
+    marked: game.winnerScore.marked,
+    archived: game.archived,
+    withdrawn: game.withdrawn,
   })),
 });

@@ -1,0 +1,725 @@
+import { Then, When } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+import type { Locator } from "playwright";
+
+import type { WebWorld } from "../../../../../../../../../support/world.js";
+import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import {
+  eventually,
+  settled,
+  tabPanel,
+} from "../../../../../../../../../support/tournamentPage.js";
+import { openCompetitionTab } from "../players/competition-players-tab.steps.js";
+
+// A competition's Scores tab (scores-tab.feature). A score is found by its
+// winner and its loser, and by its scores as well where the two played more
+// than once, as the tab shows them.
+
+When(
+  /^the scores of "([^"]*)" in "([^"]*)" are open(?:ed)?$/,
+  async function (this: WebWorld, competition: string, name: string) {
+    await openCompetitionTab(this, competition, name, "scores");
+  },
+);
+
+type List = "in-use" | "archived";
+
+// A table whose rows are its body's, as a competition's scores are and as a
+// test's (view.feature beneath the test) are.
+const rows = (world: WebWorld, list?: List): Locator =>
+  tabPanel(world).locator(
+    list === undefined
+      ? "[data-listed] > .listed-item"
+      : `[data-listed="${list}"] > .listed-item`,
+  );
+
+const partOf = async (row: Locator, part: string): Promise<string> =>
+  (await row.locator(`.score-${part}`).innerText()).trim();
+
+// What a row says, as "Sam Someone 26 Alex Another 17".
+const said = async (row: Locator): Promise<string> =>
+  [
+    await partOf(row, "winner"),
+    await partOf(row, "winner-score"),
+    await partOf(row, "loser"),
+    await partOf(row, "loser-score"),
+  ].join(" ");
+
+const saidIn = async (world: WebWorld, list?: List): Promise<string[]> => {
+  const all = rows(world, list);
+  const count = await all.count();
+  const found: string[] = [];
+  for (let each = 0; each < count; each += 1) {
+    found.push(await said(all.nth(each)));
+  }
+  return found;
+};
+
+// Whether what a row says is the score of `winner` beating `loser`, and 26 to
+// 17 where the scenario says the scores.
+const isScore = (
+  row: string,
+  winner: string,
+  loser: string,
+  scores?: string,
+): boolean => {
+  const [winnerScore, loserScore] = scores?.split(" to ") ?? [];
+  return scores === undefined
+    ? row.startsWith(`${winner} `) && row.includes(` ${loser} `)
+    : row === `${winner} ${winnerScore ?? ""} ${loser} ${loserScore ?? ""}`;
+};
+
+const rowOf = async (
+  world: WebWorld,
+  winner: string,
+  loser: string,
+  scores?: string,
+): Promise<Locator> => {
+  const all = await saidIn(world);
+  const place = all.findIndex((row) => isScore(row, winner, loser, scores));
+  assert.ok(place !== -1, `The scores are ${JSON.stringify(all)}.`);
+  return rows(world).nth(place);
+};
+
+const placeIn = async (
+  world: WebWorld,
+  winner: string,
+  loser: string,
+  list?: List,
+): Promise<number> =>
+  (await saidIn(world, list)).findIndex((row) => isScore(row, winner, loser));
+
+const SCORE = String.raw`the score of "([^"]*)" beating "([^"]*)"(?: (\S+ to \S+))?`;
+
+Then(
+  new RegExp(`^${SCORE} is listed$`),
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    scores: string | null,
+  ) {
+    await eventually(this, async () => {
+      await rowOf(this, winner, loser, scores ?? undefined);
+    });
+  },
+);
+
+for (const [said, list, expected] of [
+  ["listed among the archived", "archived", true],
+  ["not listed among the archived", "archived", false],
+  ["not listed among those in use", "in-use", false],
+] as const) {
+  Then(
+    new RegExp(`^the score of "([^"]*)" beating "([^"]*)" is ${said}$`),
+    async function (this: WebWorld, winner: string, loser: string) {
+      await eventually(this, async () => {
+        assert.equal(
+          (await placeIn(this, winner, loser, list)) !== -1,
+          expected,
+          `The ${list} scores are ${JSON.stringify(await saidIn(this, list))}.`,
+        );
+      });
+    },
+  );
+}
+
+for (const [words, earlier] of [
+  ["after", false],
+  ["before", true],
+] as const) {
+  Then(
+    new RegExp(
+      `^the score of "([^"]*)" beating "([^"]*)" is listed ${words} the score of "([^"]*)" beating "([^"]*)"$`,
+    ),
+    async function (
+      this: WebWorld,
+      winner: string,
+      loser: string,
+      otherWinner: string,
+      otherLoser: string,
+    ) {
+      await eventually(this, async () => {
+        const one = await placeIn(this, winner, loser);
+        const other = await placeIn(this, otherWinner, otherLoser);
+        assert.ok(one !== -1 && other !== -1, "One is not listed.");
+        assert.equal(one < other, earlier);
+      });
+    },
+  );
+}
+
+Then(
+  /^the (first|last) score listed is of "([^"]*)" beating "([^"]*)"$/,
+  async function (
+    this: WebWorld,
+    which: string,
+    winner: string,
+    loser: string,
+  ) {
+    await eventually(this, async () => {
+      const all = await saidIn(this, "in-use");
+      const row = which === "first" ? all[0] : all.at(-1);
+      assert.ok(
+        row !== undefined && isScore(row, winner, loser),
+        `The scores are ${JSON.stringify(all)}.`,
+      );
+    });
+  },
+);
+
+const PARTS: Readonly<Record<string, string>> = {
+  winner: "winner",
+  "winner's score": "winner-score",
+  loser: "loser",
+  "loser's score": "loser-score",
+};
+
+Then(
+  /^the first (score listed|archived score) shows "([^"]*)" as its (winner|winner's score|loser|loser's score)$/,
+  async function (this: WebWorld, which: string, shown: string, part: string) {
+    await eventually(this, async () => {
+      const row = rows(
+        this,
+        which === "score listed" ? "in-use" : "archived",
+      ).first();
+      assert.equal(await partOf(row, PARTS[part] ?? part), shown);
+    });
+  },
+);
+
+Then(
+  "in the first score listed {string} is shown before {string}",
+  async function (this: WebWorld, one: string, other: string) {
+    await eventually(this, async () => {
+      const row = (await saidIn(this, "in-use"))[0] ?? "";
+      assert.ok(
+        row.includes(one) &&
+          row.includes(other) &&
+          row.indexOf(one) < row.indexOf(other),
+        `It says ${row}.`,
+      );
+    });
+  },
+);
+
+const optionOf = async (
+  world: WebWorld,
+  option: string,
+  winner: string,
+  loser: string,
+  scores?: string,
+): Promise<Locator> =>
+  // By the name it is read out by, which for Up and Down is not what is
+  // shown: they are drawn as arrows.
+  (await rowOf(world, winner, loser, scores))
+    .locator(".listed-options")
+    .getByRole("button", { name: option, exact: true });
+
+Then(
+  new RegExp(`^${SCORE} (offers|does not offer) "([^"]*)"$`),
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    scores: string | null,
+    offers: string,
+    option: string,
+  ) {
+    await eventually(this, async () => {
+      assert.equal(
+        await (
+          await optionOf(this, option, winner, loser, scores ?? undefined)
+        ).count(),
+        offers === "offers" ? 1 : 0,
+      );
+    });
+  },
+);
+
+When(
+  new RegExp(`^"([^"]*)" is pressed on ${SCORE}$`),
+  async function (
+    this: WebWorld,
+    option: string,
+    winner: string,
+    loser: string,
+    scores: string | null,
+  ) {
+    await settled(this);
+    await (
+      await optionOf(this, option, winner, loser, scores ?? undefined)
+    ).click();
+    await settled(this);
+  },
+);
+
+Then(
+  /^the score of "([^"]*)" beating "([^"]*)" is (not )?struck through$/,
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    not: string | null,
+  ) {
+    await eventually(this, async () => {
+      const line = await (
+        await rowOf(this, winner, loser)
+      )
+        .locator(".score-winner")
+        .evaluate(
+          (element: unknown) =>
+            (
+              globalThis as unknown as {
+                getComputedStyle(element: unknown): {
+                  textDecorationLine: string;
+                };
+              }
+            ).getComputedStyle(element).textDecorationLine,
+        );
+      assert.equal(line.includes("line-through"), not === null);
+    });
+  },
+);
+
+// By what it is marked with, since the words are in the reader's language.
+Then(
+  "the score of {string} beating {string} is announced as withdrawn",
+  async function (this: WebWorld, winner: string, loser: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await (
+          await rowOf(this, winner, loser)
+        )
+          .locator('.visually-hidden[data-said="withdrawn"]')
+          .count(),
+        1,
+      );
+    });
+  },
+);
+
+Then(
+  "the score of {string} beating {string} is announced as archived",
+  async function (this: WebWorld, winner: string, loser: string) {
+    await eventually(this, async () => {
+      assert.equal(
+        await (
+          await rowOf(this, winner, loser)
+        )
+          .locator(".visually-hidden")
+          .count(),
+        1,
+      );
+    });
+  },
+);
+
+const heading = (world: WebWorld): Locator =>
+  tabPanel(world).locator(".listed-archived-heading");
+
+Then(
+  "the archived scores are headed {string}",
+  async function (this: WebWorld, words: string) {
+    await eventually(this, async () => {
+      assert.equal((await heading(this).innerText()).trim(), words);
+    });
+  },
+);
+
+Then(
+  "no heading for the archived scores is shown",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      assert.ok((await rows(this).count()) > 0);
+      assert.equal(await heading(this).count(), 0);
+    });
+  },
+);
+
+// The tab's own list, or a test's page's, which is its scores.
+Then(
+  /^the (?:tab|page) says there are no scores$/,
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      assert.equal(await rows(this).count(), 0);
+      assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
+    });
+  },
+);
+
+Then(
+  "{string} is above the scores",
+  async function (this: WebWorld, option: string) {
+    await eventually(this, async () => {
+      const offer = await tabPanel(this)
+        .locator("section > p button")
+        .filter({ hasText: option })
+        .boundingBox();
+      const list = await tabPanel(this)
+        .locator("[data-listed]")
+        .first()
+        .boundingBox();
+      assert.ok(offer !== null && list !== null, "One is not laid out.");
+      assert.ok(offer.y + offer.height <= list.y, `${option} is not above.`);
+    });
+  },
+);
+
+Then(
+  new RegExp(`^"([^"]*)" on ${SCORE} is at least (\\d+) pixels tall$`),
+  async function (
+    this: WebWorld,
+    option: string,
+    winner: string,
+    loser: string,
+    scores: string | null,
+    pixels: string,
+  ) {
+    await eventually(this, async () => {
+      const box = await (
+        await optionOf(this, option, winner, loser, scores ?? undefined)
+      ).boundingBox();
+      assert.ok(box !== null, "It is not laid out.");
+      assert.ok(box.height >= Number(pixels), `It is ${String(box.height)}.`);
+    });
+  },
+);
+
+// A player's name is what the manager typed, and nobody's language, and a
+// score is a number and whatever the scorer wrote after it.
+Then(
+  "every word in the tab but the players' names is in the test locale",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "#tab-panel section", [
+        ".score-number",
+        ".score-winner",
+        ".score-winner-score",
+        ".score-loser",
+        ".score-loser-score",
+      ]);
+      assert.deepEqual(stray, [], "Words in the tab came from elsewhere.");
+    });
+  },
+);
+
+// Every word in whatever modal dialog is open, which says nothing typed.
+Then(
+  "every word in the modal dialog is in the test locale",
+  async function (this: WebWorld) {
+    await this.browserPage.locator("dialog[open]").waitFor();
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, "dialog[open]", []);
+      assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+    });
+  },
+);
+
+When("the way to add a score is pressed", async function (this: WebWorld) {
+  await settled(this);
+  await tabPanel(this).locator("section > p button").first().click();
+});
+
+// By what it does rather than its words, which are the reader's language's.
+When(
+  "the way to correct the score of {string} beating {string} is pressed",
+  async function (this: WebWorld, winner: string, loser: string) {
+    await settled(this);
+    await (
+      await rowOf(this, winner, loser)
+    )
+      .locator('.listed-options button[data-action="edit"]')
+      .click();
+  },
+);
+
+Then(
+  "{string} on the score of {string} beating {string} comes before {string}",
+  async function (
+    this: WebWorld,
+    option: string,
+    winner: string,
+    loser: string,
+    after: string,
+  ) {
+    await eventually(this, async () => {
+      // By the names they are read out by, since Up and Down are drawn as
+      // arrows and say nothing as text.
+      const buttons = await (
+        await rowOf(this, winner, loser)
+      )
+        .locator(".listed-options")
+        .getByRole("button")
+        .all();
+      const offered = await Promise.all(
+        buttons.map(
+          async (button) =>
+            (await button.getAttribute("aria-label")) ??
+            (await button.innerText()).trim(),
+        ),
+      );
+      const first = offered.indexOf(option);
+      const second = offered.indexOf(after);
+      assert.ok(
+        first !== -1 && second !== -1 && first < second,
+        `The score offers ${JSON.stringify(offered)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} on the score of {string} beating {string} has the focus",
+  async function (
+    this: WebWorld,
+    option: string,
+    winner: string,
+    loser: string,
+  ) {
+    await eventually(this, async () => {
+      assert.ok(
+        await (
+          await optionOf(this, option, winner, loser)
+        ).evaluate(
+          (element) =>
+            element ===
+            (globalThis as unknown as { document: { activeElement: unknown } })
+              .document.activeElement,
+        ),
+        "Something else has the focus.",
+      );
+    });
+  },
+);
+
+// Beneath the score it was pressed on, by the refusal's code: the words beside
+// it are only its words.
+Then(
+  /^the score of "([^"]*)" beating "([^"]*)" says it was refused with "([^"]*)"$/,
+  async function (this: WebWorld, winner: string, loser: string, code: string) {
+    await eventually(this, async () => {
+      const row = await rowOf(this, winner, loser);
+      assert.equal(
+        await row
+          .locator(".listed-score-refused")
+          .getAttribute("data-refused", { timeout: 500 }),
+        code,
+      );
+    });
+  },
+);
+
+Then(
+  /^the score of "([^"]*)" beating "([^"]*)" says nothing was refused$/,
+  async function (this: WebWorld, winner: string, loser: string) {
+    const row = await rowOf(this, winner, loser);
+    assert.equal(await row.locator(".listed-score-refused").count(), 0);
+  },
+);
+
+Then(
+  "nothing is said above the list of scores",
+  async function (this: WebWorld) {
+    // Once the list has been asked for again after the press.
+    await eventually(this, async () => {
+      assert.ok((await rows(this).count()) > 0);
+    });
+    assert.equal(await tabPanel(this).locator(".listed-refused").count(), 0);
+  },
+);
+
+// Laid out as columns (scores-tab.feature): what each part of a row is drawn
+// as is asked of the page, which is where the stylesheet is applied.
+Then(
+  "the winner, the winner's score, the loser and the loser's score of the first score listed do not wrap",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      assert.ok((await rows(this, "in-use").count()) > 0);
+      for (const part of ["winner", "winner-score", "loser", "loser-score"]) {
+        const whiteSpace = await this.browserPage.evaluate<string>(
+          `getComputedStyle(document.querySelector('[data-listed="in-use"] > .listed-item .score-${part}')).whiteSpace`,
+        );
+        assert.equal(whiteSpace, "nowrap", `The ${part} can wrap.`);
+      }
+    });
+  },
+);
+
+Then(
+  "the losers of the scores listed start at the same place",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const all = rows(this, "in-use");
+      const count = await all.count();
+      assert.ok(count > 1, "There is only one score to line up.");
+      const starts: number[] = [];
+      for (let each = 0; each < count; each += 1) {
+        const box = await all.nth(each).locator(".score-loser").boundingBox();
+        assert.ok(box !== null, "A loser is not laid out.");
+        starts.push(box.x);
+      }
+      for (const start of starts) {
+        assert.ok(
+          Math.abs(start - (starts[0] ?? 0)) < 1,
+          `The losers start at ${starts.join(", ")}.`,
+        );
+      }
+    });
+  },
+);
+
+Then(
+  "what can be done with the first score listed reaches the right edge of the list",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const options = await rows(this, "in-use")
+        .first()
+        .locator(".listed-options")
+        .boundingBox();
+      const list = await tabPanel(this)
+        .locator('[data-listed="in-use"]')
+        .boundingBox();
+      assert.ok(options !== null && list !== null, "One is not laid out.");
+      assert.ok(
+        Math.abs(options.x + options.width - (list.x + list.width)) < 1,
+        `The buttons end at ${String(options.x + options.width)}, the list at ${String(list.x + list.width)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "what can be done with the first score listed has {int} pixels of padding before it",
+  async function (this: WebWorld, pixels: number) {
+    await eventually(this, async () => {
+      assert.ok((await rows(this, "in-use").count()) > 0);
+      const padding = await this.browserPage.evaluate<string>(
+        `getComputedStyle(document.querySelector('[data-listed="in-use"] > .listed-item .listed-options')).paddingInlineStart`,
+      );
+      assert.equal(padding, `${String(pixels)}px`);
+    });
+  },
+);
+
+const ORDINALS: Readonly<Record<string, number>> = {
+  first: 0,
+  second: 1,
+  third: 2,
+};
+
+Then(
+  /^the (first|second|third) score listed shows the number "([^"]*)"$/,
+  async function (this: WebWorld, which: string, shown: string) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").nth(ORDINALS[which] ?? 0);
+      assert.equal(await partOf(row, "number"), shown);
+    });
+  },
+);
+
+Then(
+  /^the first archived score shows the number "([^"]*)"$/,
+  async function (this: WebWorld, shown: string) {
+    await eventually(this, async () => {
+      const row = rows(this, "archived").first();
+      assert.equal(await partOf(row, "number"), shown);
+    });
+  },
+);
+
+Then(
+  "the number of the first score listed is before its winner",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").first();
+      const number = await row.locator(".score-number").boundingBox();
+      const winner = await row.locator(".score-winner").boundingBox();
+      assert.ok(number !== null && winner !== null, "One is not laid out.");
+      assert.ok(number.x + number.width <= winner.x, "It is not before.");
+    });
+  },
+);
+
+// Semantic markup, which is asked of the page by the element, since a table is
+// told to a reader who cannot see by being one and by no style.
+const tableOf = (world: WebWorld, list: List): Locator =>
+  tabPanel(world).locator(`table:has(> tbody[data-listed="${list}"])`);
+
+for (const [which, list] of [
+  ["in use", "in-use"],
+  ["archived", "archived"],
+] as const) {
+  Then(
+    `the ${which === "in use" ? "scores in use are" : "archived scores are"} a table`,
+    async function (this: WebWorld) {
+      await eventually(this, async () => {
+        assert.equal(await tableOf(this, list).count(), 1);
+      });
+    },
+  );
+}
+
+Then(
+  "the first score listed is a row of the table",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").first();
+      assert.equal(await row.locator("xpath=self::tr").count(), 1);
+    });
+  },
+);
+
+Then(
+  "the first score listed has {int} cells",
+  async function (this: WebWorld, cells: number) {
+    await eventually(this, async () => {
+      assert.equal(
+        await rows(this, "in-use").first().locator("> td").count(),
+        cells,
+      );
+    });
+  },
+);
+
+Then(
+  "the table of scores has no column headings",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      assert.equal(await tableOf(this, "in-use").count(), 1);
+      assert.equal(await tableOf(this, "in-use").locator("th").count(), 0);
+    });
+  },
+);
+
+// The word has a cell of its own, which is the one the reader is told it by.
+Then(
+  "the first score listed shows the word {string} in its own cell",
+  async function (this: WebWorld, word: string) {
+    await eventually(this, async () => {
+      const cell = rows(this, "in-use").first().locator("> td.score-between");
+      assert.equal(await cell.count(), 1, "It has no cell of its own.");
+      assert.equal((await cell.innerText()).trim(), word);
+    });
+  },
+);
+
+// Drawn, and between the two it comes between, rather than hidden.
+Then(
+  "the word between the winner and the loser of the first score listed is drawn between them",
+  async function (this: WebWorld) {
+    await eventually(this, async () => {
+      const row = rows(this, "in-use").first();
+      const score = await row.locator(".score-winner-score").boundingBox();
+      const word = await row.locator(".score-between").boundingBox();
+      const loser = await row.locator(".score-loser").boundingBox();
+      assert.ok(
+        score !== null && word !== null && loser !== null,
+        "One is not drawn.",
+      );
+      assert.ok(word.width > 1, "It is not drawn.");
+      assert.ok(score.x + score.width <= word.x, "It is not after the score.");
+      assert.ok(word.x + word.width <= loser.x, "It is not before the loser.");
+    });
+  },
+);

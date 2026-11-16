@@ -25,7 +25,11 @@ const usual = (name: string): Record<string, unknown> => ({
 // Where a country's tournaments are when one is moved to it, so that it is
 // somewhere in it: the first of its regions, which a scenario that says which
 // goes on to say so.
-const firstRegionOf: Record<string, string> = { au: "act", nz: "auc" };
+const firstRegionOf: Record<string, string> = {
+  au: "act",
+  nz: "auc",
+  jp: "aic",
+};
 
 const refused = async (what: string, answer: Response): Promise<never> => {
   throw new Error(
@@ -33,17 +37,19 @@ const refused = async (what: string, answer: Response): Promise<never> => {
   );
 };
 
-const create = async (
+export const createTournament = async (
   world: WebWorld,
   manager: string,
   name: string,
   website?: string,
+  changes: Record<string, unknown> = {},
 ): Promise<void> => {
   // The sport its website offers first, which is not croquet on a website for
   // another game.
   const request = {
     ...usual(name),
     ...world.ofTheNext,
+    ...changes,
     ...(website?.startsWith("gateballscores") === true ? { sport: "gb" } : {}),
   };
   const answer = await call("POST", "/tournaments", {
@@ -89,7 +95,7 @@ const moment = (date: string): string => `${date}T00:00:00Z`;
 Given(
   "{string} has created the tournament {string}",
   async function (this: WebWorld, manager: string, name: string) {
-    await create(this, manager, name);
+    await createTournament(this, manager, name);
   },
 );
 
@@ -101,7 +107,7 @@ Given(
     name: string,
     website: string,
   ) {
-    await create(this, manager, name, website);
+    await createTournament(this, manager, name, website);
   },
 );
 
@@ -189,7 +195,7 @@ Given(
   async function (this: WebWorld, manager: string, from: number, to: number) {
     for (let year = from; year <= to; year++) {
       const name = `Open ${String(year)}`;
-      await create(this, manager, name);
+      await createTournament(this, manager, name);
       const at = `${String(year)}-06-06T00:00:00Z`;
       await changeTournament(this, name, { starts: at, finishes: at });
     }
@@ -210,7 +216,7 @@ Given(
   "{string} has created {int} tournaments",
   async function (this: WebWorld, manager: string, count: number) {
     for (let each = 1; each <= count; each++) {
-      await create(this, manager, `Tournament ${String(each)}`);
+      await createTournament(this, manager, `Tournament ${String(each)}`);
     }
   },
 );
@@ -241,7 +247,11 @@ Given(
   /^(\d+) tournaments are called "([^"]*)" followed by a number$/,
   async function (this: WebWorld, count: string, name: string) {
     for (let number = 1; number <= Number(count); number += 1) {
-      await create(this, "organiser@example.com", `${name} ${String(number)}`);
+      await createTournament(
+        this,
+        "organiser@example.com",
+        `${name} ${String(number)}`,
+      );
     }
   },
 );
@@ -293,7 +303,7 @@ Given(
 Given(
   "{string} has created the tournament with a name of {int} letters",
   async function (this: WebWorld, manager: string, letters: number) {
-    await create(
+    await createTournament(
       this,
       manager,
       "Rankings".padEnd(letters, "x").slice(0, letters),

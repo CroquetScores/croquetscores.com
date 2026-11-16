@@ -1,0 +1,151 @@
+import { Given, Then } from "@cucumber/cucumber";
+import { strict as assert } from "node:assert";
+import type { Locator } from "playwright";
+
+import type { WebWorld } from "../../../../../../../../../support/world.js";
+import {
+  gamesOf,
+  keptOf,
+  testOf,
+} from "../../../../../../../../../support/kept.js";
+import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
+import {
+  aServerError,
+  answerNextGet,
+} from "../../../../../../../../../support/serverError.js";
+import { eventually } from "../../../../../../../../../support/tournamentPage.js";
+
+// The score dialog over a test's page (test-score.feature). It is a
+// competition's score dialog, read by its steps (score-modal-dialog.steps.ts);
+// these are what a test adds: its players offered under their teams' names,
+// and the games kept in it.
+
+const open = "dialog[open]";
+
+// The next time the dialog asks for the test's teams, answered as an error of
+// the site's is, with no code of its own. Once only, as the dialog asks when it
+// opens. The test is not named, for the reason the competition's players are
+// not (score-modal-dialog.steps.ts).
+Given(
+  "the test's teams are answered with a server error",
+  async function (this: WebWorld) {
+    await answerNextGet(this, /\/competitions\/[^/]+\/teams$/, aServerError);
+  },
+);
+
+const fieldOf = (world: WebWorld, label: string): Locator =>
+  world.browserPage.locator(open).getByLabel(label, { exact: true });
+
+// The players offered, each with the team they are offered under, once they
+// have arrived, which takes a moment after the dialog opens.
+const offered = async (
+  world: WebWorld,
+  label: string,
+): Promise<{ name: string; team: string }[]> => {
+  await fieldOf(world, label)
+    .locator('option:not([value=""])')
+    .first()
+    .waitFor({ state: "attached", timeout: 10_000 });
+  return Promise.all(
+    (await fieldOf(world, label).locator('option:not([value=""])').all()).map(
+      async (option) => ({
+        name: (await option.innerText()).trim(),
+        // The group it is offered under.
+        team: (await option.locator("xpath=..").getAttribute("label")) ?? "",
+      }),
+    ),
+  );
+};
+
+Then(
+  "{string} is offered under {string} as the {string}",
+  async function (this: WebWorld, name: string, team: string, label: string) {
+    await eventually(this, async () => {
+      const all = await offered(this, label);
+      assert.ok(
+        all.some((each) => each.name === name && each.team === team),
+        `They are offered as ${JSON.stringify(all)}.`,
+      );
+    });
+  },
+);
+
+Then(
+  "{string} is offered after {string} as the {string}",
+  async function (this: WebWorld, one: string, other: string, label: string) {
+    await eventually(this, async () => {
+      const names = (await offered(this, label)).map(({ name }) => name);
+      assert.ok(
+        names.includes(one) &&
+          names.includes(other) &&
+          names.indexOf(other) < names.indexOf(one),
+        `They are offered as ${JSON.stringify(names)}.`,
+      );
+    });
+  },
+);
+
+// The teams' names are what the manager typed, and so are the players'; the
+// teams' name the groups the players are offered under, which is no text of
+// the dialog's own.
+Then(
+  "every word in the score dialog but the teams' and the players' names is in the test locale",
+  async function (this: WebWorld) {
+    await this.browserPage.locator(open).waitFor();
+    await eventually(this, async () => {
+      const stray = await unmarkedWithin(this, open, ["select option"]);
+      assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
+    });
+  },
+);
+
+// What was kept: the test's own stream, read back -------------------------------
+
+const gamesOfTest = async (world: WebWorld, test: string, name: string) => {
+  const tournament = await keptOf(world, name);
+  const found = testOf(tournament, test);
+  const players = tournament.teams.flatMap((team) => team.players);
+  const nameOf = (id: string): string =>
+    players.find((player) => player.id === id)?.name ?? "";
+  return (await gamesOf(found.id)).map((game) => ({
+    winner: nameOf(game.winner),
+    loser: nameOf(game.loser),
+    scores: `${String(game.winnerScore)} to ${String(game.loserScore)}`,
+  }));
+};
+
+Then(
+  "the test {string} of {string} has the game of {string} beating {string} {int} to {int}",
+  async function (
+    this: WebWorld,
+    test: string,
+    name: string,
+    winner: string,
+    loser: string,
+    winnerScore: number,
+    loserScore: number,
+  ) {
+    await eventually(this, async () => {
+      const games = await gamesOfTest(this, test, name);
+      assert.ok(
+        games.some(
+          (game) =>
+            game.winner === winner &&
+            game.loser === loser &&
+            game.scores === `${String(winnerScore)} to ${String(loserScore)}`,
+        ),
+        `${test} has ${JSON.stringify(games)}.`,
+      );
+    });
+  },
+);
+
+// Once nothing more can be sent: the dialog closed, or the page settled.
+Then(
+  "the test {string} of {string} has no games",
+  async function (this: WebWorld, test: string, name: string) {
+    await eventually(this, async () => {
+      assert.deepEqual(await gamesOfTest(this, test, name), []);
+    });
+  },
+);
