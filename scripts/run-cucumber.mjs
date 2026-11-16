@@ -81,6 +81,18 @@ const runs = changed
       },
     ];
 
+// Cucumber registers the loader in scripts/cucumber.mjs with module.register(),
+// which Node deprecates (DEP0205), and it does so in the main thread and again in
+// every worker, so each run printed the warning seven times over. Cucumber is at
+// its latest release and has no other way to hand a worker tsx, so that warning,
+// and only that one, is turned off, in NODE_OPTIONS so that the workers have it
+// too. Remove this when Cucumber moves to module.registerHooks().
+const quietedEnvironment = {
+  ...process.env,
+  NODE_OPTIONS:
+    `${process.env.NODE_OPTIONS ?? ""} --disable-warning=DEP0205`.trim(),
+};
+
 let worst = 0;
 for (const { profile, arguments: given, wanted } of runs) {
   if (!wanted) continue;
@@ -95,7 +107,7 @@ for (const { profile, arguments: given, wanted } of runs) {
       profile,
       ...given,
     ],
-    { cwd: root, stdio: "inherit" },
+    { cwd: root, stdio: "inherit", env: quietedEnvironment },
   );
   if (error !== undefined) {
     console.error(`The scenarios could not be run: ${error.message}`);
