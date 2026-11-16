@@ -68,7 +68,7 @@ const foundNamed = (world: WebWorld, name: string) => {
   return tournament;
 };
 
-const change = async (
+export const changeTournament = async (
   world: WebWorld,
   name: string,
   changed: Record<string, unknown>,
@@ -109,21 +109,24 @@ Given(
   "the tournament {string} starts on {string}",
   async function (this: WebWorld, name: string, date: string) {
     // A one-day tournament, until the scenario says it finishes later.
-    await change(this, name, { starts: moment(date), finishes: moment(date) });
+    await changeTournament(this, name, {
+      starts: moment(date),
+      finishes: moment(date),
+    });
   },
 );
 
 Given(
   "the tournament {string} finishes on {string}",
   async function (this: WebWorld, name: string, date: string) {
-    await change(this, name, { finishes: moment(date) });
+    await changeTournament(this, name, { finishes: moment(date) });
   },
 );
 
 Given(
   "the tournament {string} is for the sport {string}",
   async function (this: WebWorld, name: string, sport: string) {
-    await change(this, name, { sport });
+    await changeTournament(this, name, { sport });
   },
 );
 
@@ -134,28 +137,28 @@ Given(
     if (region === undefined) {
       throw new Error(`The scenarios do not know the regions of ${country}.`);
     }
-    await change(this, name, { country, region });
+    await changeTournament(this, name, { country, region });
   },
 );
 
 Given(
   "the tournament {string} is played in the region {string}",
   async function (this: WebWorld, name: string, region: string) {
-    await change(this, name, { region });
+    await changeTournament(this, name, { region });
   },
 );
 
 Given(
   "the tournament {string} is national",
   async function (this: WebWorld, name: string) {
-    await change(this, name, { national: true });
+    await changeTournament(this, name, { national: true });
   },
 );
 
 Given(
   "the tournament {string} is international",
   async function (this: WebWorld, name: string) {
-    await change(this, name, { international: true });
+    await changeTournament(this, name, { international: true });
   },
 );
 
@@ -188,7 +191,7 @@ Given(
       const name = `Open ${String(year)}`;
       await create(this, manager, name);
       const at = `${String(year)}-06-06T00:00:00Z`;
-      await change(this, name, { starts: at, finishes: at });
+      await changeTournament(this, name, { starts: at, finishes: at });
     }
   },
 );
@@ -220,7 +223,7 @@ Given(
     name: string,
     sport: string,
   ) {
-    await change(this, name, { sport });
+    await changeTournament(this, name, { sport });
   },
 );
 
@@ -251,7 +254,7 @@ Given(
     name: string,
     renamed: string,
   ) {
-    await change(this, name, { name: renamed });
+    await changeTournament(this, name, { name: renamed });
     const found = foundNamed(this, name);
     this.tournaments.set(renamed, found);
   },
@@ -266,7 +269,7 @@ Given(
     country: string,
   ) {
     // In no region of it until the scenario says which.
-    await change(this, name, { country, region: undefined });
+    await changeTournament(this, name, { country, region: undefined });
   },
 );
 
@@ -279,7 +282,7 @@ Given(
     starts: string,
     finishes: string,
   ) {
-    await change(this, name, {
+    await changeTournament(this, name, {
       starts: moment(starts),
       finishes: moment(finishes),
     });

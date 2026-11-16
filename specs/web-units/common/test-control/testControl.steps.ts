@@ -1346,3 +1346,46 @@ Then("none is told to hold it", function (this: SpecWorld) {
     false,
   );
 });
+
+interface Held {
+  archived: boolean;
+  players: { name: string }[];
+  competitions: { name: string; kind: string }[];
+}
+
+const held = (world: SpecWorld): Held =>
+  JSON.parse(responseOf(world).body) as Held;
+
+When(
+  "what the tournament holds is asked for",
+  async function (this: SpecWorld) {
+    await asking(
+      this,
+      "GET",
+      `/__test/tournaments/kept?id=${encodeURIComponent(made.get(this)?.id ?? "")}`,
+    );
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Then(
+  "it is told to hold the block {string}",
+  function (this: SpecWorld, name: string) {
+    assert.ok(
+      held(this).competitions.some(
+        (each) => each.name === name && each.kind === "block",
+      ),
+    );
+  },
+);
+
+Then(
+  "it is told to hold the player {string}",
+  function (this: SpecWorld, name: string) {
+    assert.ok(held(this).players.some((each) => each.name === name));
+  },
+);
+
+Then("it is told not to be archived", function (this: SpecWorld) {
+  assert.equal(held(this).archived, false);
+});

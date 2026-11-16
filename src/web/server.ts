@@ -223,7 +223,7 @@ import { Account } from "../domain/aggregates/accounts/Account.js";
 import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
 import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
 import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
-import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
@@ -309,6 +309,7 @@ import {
   registerTestControlReaderCheck,
   StandInReaderCheck,
 } from "./testControlReaderCheck.js";
+import { plainTournament } from "./testControlKept.js";
 import { registerTestControlTournaments } from "./testControlTournaments.js";
 import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
@@ -1673,6 +1674,26 @@ export const buildApplication = async (
       loadAccount: (id) => accounts.load(id),
       saveAccount: (account) => accounts.save(account),
       emailedTo: () => emailQueue.emails(),
+      keptOf: async (id, name) => {
+        // By the name it is called where the scenario made it through a page and
+        // never knew its id.
+        const found =
+          id === "" && name !== undefined
+            ? (
+                await pool.query<{ tournament_id: string }>(
+                  `select tournament_id from tournaments where name = $1`,
+                  [name],
+                )
+              ).rows[0]?.tournament_id
+            : id;
+        if (found === undefined) return undefined;
+        const tournament = await unitOfWork.inTransaction(() =>
+          tournaments.load(TournamentId.from(found)),
+        );
+        return tournament === undefined
+          ? undefined
+          : plainTournament(tournament);
+      },
       writeFailedSignIns: async (comparable, ipAddress, times, minutesAgo) => {
         const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
         for (let each = 0; each < times; each++) {

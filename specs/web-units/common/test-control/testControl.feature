@@ -267,6 +267,17 @@ Feature: A site over a database the specs made can be controlled by a token
       When the block is restored through the control
       Then the site answers that it is fine
 
+    Scenario: What a tournament holds is told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      When what the tournament holds is asked for
+      Then it is told to hold the block "Block A"
+      And it is told to hold the player "Ann"
+      And it is told not to be archived
+
     Scenario: A game between players who are not in the block is refused
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

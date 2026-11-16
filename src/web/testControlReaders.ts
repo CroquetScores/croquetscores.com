@@ -81,6 +81,8 @@ export interface ReaderMaking {
   readonly accountOfSession: (cookie: string) => Promise<string | undefined>;
   /** Whether any row the site keeps of its sessions holds `cookie`. */
   readonly sessionsHold: (cookie: string) => Promise<boolean>;
+  /** What the tournament with this id holds, as plain data. */
+  readonly keptOf: (id: string, name?: string) => Promise<object | undefined>;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -432,6 +434,17 @@ export const registerTestControlReaders = (
             EmailAddress.from(address ?? "").comparable,
           ),
         };
+      });
+
+      // What a tournament holds, as plain data, for a scenario that says what was
+      // kept of it and cannot say so from a page.
+      scope.get("/tournaments/kept", async (request, reply) => {
+        const { id, name } = request.query as { id?: string; name?: string };
+        const kept = await making.keptOf(id ?? "", name);
+        if (kept === undefined) {
+          return reply.code(404).send({ code: "TestControl.NoTournament" });
+        }
+        return kept;
       });
 
       // Whether what the site keeps of its sessions holds the cookie as it is: the
