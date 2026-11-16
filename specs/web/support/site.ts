@@ -191,7 +191,13 @@ const spawnSite = async (
 
 // A site a scenario started with settings of its own, which is the one the
 // scenario talks to until it ends.
-let another: { child: ChildProcess; running: RunningSite } | undefined;
+let another:
+  | {
+      child: ChildProcess;
+      running: RunningSite;
+      settings: Readonly<Record<string, string>>;
+    }
+  | undefined;
 
 /**
  * A site told `settings`, as a deployment is told its settings by the
@@ -202,11 +208,15 @@ export const siteTold = async (
   settings: Readonly<Record<string, string>>,
 ): Promise<RunningSite> => {
   const { token } = await site();
+  // What an earlier step of the scenario told its site is told still: the
+  // scenario says one setting at a time, and has one site.
+  const told = { ...another?.settings, ...settings };
   await endAnotherSite();
-  const started = await spawnSite(settings);
+  const started = await spawnSite(told);
   another = {
     child: started.child,
     running: { baseUrl: started.baseUrl, token },
+    settings: told,
   };
   return another.running;
 };

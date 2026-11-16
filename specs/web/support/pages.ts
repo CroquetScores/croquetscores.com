@@ -8,6 +8,8 @@ import { withScripting } from "./browser.js";
 import { openAndKeepTheAnswer } from "./answers.js";
 import { setTheClock, settingUpAt } from "./control.js";
 import { unmarked } from "./languages.js";
+import { isMarked } from "./marks.js";
+import { retried } from "./tournamentPage.js";
 import type { WebWorld } from "./world.js";
 
 Given(
@@ -201,5 +203,22 @@ Then(
       if (Date.now() > until) assert.equal(shown, heading);
       await new Promise((later) => setTimeout(later, 50));
     }
+  },
+);
+
+// The heading is in the words of the reader's language, which the test locale
+// marks, so that it is not a word of the site's that no catalogue gave.
+Then(
+  "the page's heading is in the test locale",
+  async function (this: WebWorld) {
+    await retried(async () => {
+      const heading = await this.browserPage
+        .locator("main h1")
+        .innerText({ timeout: 100 });
+      assert.ok(
+        isMarked(heading),
+        `The heading is ${JSON.stringify(heading)}.`,
+      );
+    });
   },
 );

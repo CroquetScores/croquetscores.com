@@ -1715,3 +1715,81 @@ When(
     });
   },
 );
+
+const builds = new WeakMap<SpecWorld, string[]>();
+
+const askedForTheBuild = async (world: SpecWorld): Promise<void> => {
+  await asking(world, "GET", "/__test/build");
+  assert.equal(responseOf(world).statusCode, 200, responseOf(world).body);
+  const named = (JSON.parse(responseOf(world).body) as { build: string }).build;
+  builds.set(world, [...(builds.get(world) ?? []), named]);
+};
+
+When("the build the site names is asked for", async function (this: SpecWorld) {
+  await askedForTheBuild(this);
+});
+
+When(
+  "the build the site names is asked for again",
+  async function (this: SpecWorld) {
+    await askedForTheBuild(this);
+  },
+);
+
+When(
+  "the site is told it was deployed again through the control",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/build", {});
+    assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
+  },
+);
+
+Then("the build named is not the one named before", function (this: SpecWorld) {
+  const [before, now] = builds.get(this) ?? [];
+  assert.ok(before !== undefined && now !== undefined);
+  assert.notEqual(now, before);
+});
+
+When(
+  "database access is switched through the control saying nothing",
+  async function (this: SpecWorld) {
+    await controlled(this, "/__test/database-access", {});
+  },
+);
+
+Then(
+  /^the control says database access is (on|off)$/,
+  async function (this: SpecWorld, which: string) {
+    await asking(this, "GET", "/__test/database-access");
+    assert.equal(
+      (JSON.parse(responseOf(this).body) as { off: boolean }).off,
+      which === "off",
+    );
+  },
+);
+
+When(
+  "an entry {string} at the severity {word} written at {string} is put in the log through the control",
+  async function (
+    this: SpecWorld,
+    message: string,
+    severity: string,
+    writtenAt: string,
+  ) {
+    await controlled(this, "/__test/log-entries", {
+      message,
+      severity,
+      writtenAt,
+    });
+  },
+);
+
+When(
+  "the Golf Croquet world rankings list is said to name the country {string} through the control",
+  async function (this: SpecWorld, country: string) {
+    await controlled(this, "/__test/world-ranking-countries", {
+      sport: "gc",
+      country,
+    });
+  },
+);

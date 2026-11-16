@@ -79,9 +79,14 @@ export const refuseWhileDatabaseAccessIsOff = (
   assets: Assets,
   access: DatabaseAccess,
   isAdministrator: AdministratorReader,
+  // What else is served whatever the state of access: the test control, where
+  // a site has one, since a scenario that turned access off must be able to say
+  // it is on again and to reset what it did.
+  alsoServed: readonly string[] = [],
 ): void => {
   server.addHook("onRequest", async (request, reply) => {
     if (filesServed.some((prefix) => request.url.startsWith(prefix))) return;
+    if (alsoServed.some((prefix) => request.url.startsWith(prefix))) return;
     if (request.url === healthCheck) return;
     const state = await access.current();
     if (!state.off) return;

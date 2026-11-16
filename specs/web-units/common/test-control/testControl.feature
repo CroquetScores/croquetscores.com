@@ -332,6 +332,39 @@ Feature: A site over a database the specs made can be controlled by a token
       When the golf croquet world ranking player "Keith Aiton" is given through the control
       Then the site answers that it was made
 
+    Scenario: The site can be told it was deployed again
+      Given a site given the token "open sesame"
+      When the build the site names is asked for
+      And the site is told it was deployed again through the control
+      And the build the site names is asked for again
+      Then the build named is not the one named before
+
+    Scenario: Database access is told as it is, and a switch that says nothing is refused
+      Given a site given the token "open sesame"
+      Then the control says database access is on
+      When database access is switched through the control saying nothing
+      Then the site answers that the request was wrong
+
+    Scenario: An entry can be put in the server's log as if it had been written then
+      Given a site given the token "open sesame"
+      When an entry "Something happened" at the severity Warn written at "2026-10-03T10:00:00Z" is put in the log through the control
+      Then the site answers that it was made
+
+    Scenario: An entry at a severity there is none of is refused
+      Given a site given the token "open sesame"
+      When an entry "Something happened" at the severity Loud written at "2026-10-03T10:00:00Z" is put in the log through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A country can be said to be listed by the world rankings
+      Given a site given the token "open sesame"
+      When the Golf Croquet world rankings list is said to name the country "New Zealand" through the control
+      Then the site answers that it was made
+
+    Scenario: A country there is none of is refused
+      Given a site given the token "open sesame"
+      When the Golf Croquet world rankings list is said to name the country "Atlantis" through the control
+      Then the site answers that the request was wrong
+
     Scenario: A block that was archived can be restored
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

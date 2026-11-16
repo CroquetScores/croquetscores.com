@@ -9,6 +9,8 @@
 // the site could actually have. A scenario says what it wants in plain words
 // and gets back only a session to hold: no account, event or command type
 // leaves the site.
+import { Countries } from "../domain/aggregates/tournaments/value-objects/Countries.js";
+import type { DatabaseAccess } from "../application/common/DatabaseAccess.js";
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
 
@@ -92,6 +94,21 @@ export interface ReaderMaking {
   readonly gamesOf: (id: string) => Promise<object | undefined>;
   /** The notes of the tournament with this id, as plain data. */
   readonly notesOf: (id: string) => Promise<object[]>;
+  /** The build the site names, and from now on another one. */
+  readonly build: () => string;
+  readonly deployAgain: () => void;
+  /** The switch for database access, which the site keeps outside its database. */
+  readonly databaseAccess: DatabaseAccess;
+  /** Puts an entry in the server's log as if it had been written at `writtenAt`. */
+  /** False where there is no severity of that name, and nothing was put. */
+  readonly addLogEntry: (entry: {
+    readonly writtenAt: Date;
+    readonly severity: string;
+    readonly message: string;
+    readonly reference?: string;
+  }) => Promise<boolean>;
+  /** Says the world rankings' list of `sport` names the country with this code. */
+  readonly listCountry: (sport: "ac" | "gc", code: string) => void;
   readonly emailedTo: () => Promise<
     readonly {
       readonly to?: string | undefined;
@@ -404,6 +421,104 @@ export const registerTestControlReaders = (
           return reply.code(404).send({ code: "TestControl.NoAccount" });
         }
         return making.checkPassword(id, body.password);
+      });
+
+      // Whether the site may use its database, as an administrator sets it.
+      scope.get("/database-access", async () => {
+        const state = await making.databaseAccess.current();
+        return {
+          off: state.off,
+          ...(state.off
+            ? {
+                expectedBackAt: state.expectedBackAt.toISOString(),
+                words: state.words,
+              }
+            : {}),
+        };
+      });
+      scope.post("/database-access", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          off?: unknown;
+          minutes?: unknown;
+          words?: unknown;
+          move?: unknown;
+        };
+        const words = typeof body.words === "string" ? body.words : undefined;
+        const now = making.clock();
+        if (body.off === false) {
+          await making.databaseAccess.turnOn();
+        } else if (typeof body.minutes === "number") {
+          if (body.move === true) {
+            await making.databaseAccess.moveReturn(body.minutes, now, words);
+          } else {
+            await making.databaseAccess.turnOff(body.minutes, now, words);
+          }
+        } else {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        return reply.code(200).send({});
+      });
+
+      // An entry of the server's log, as the stream writes one: a row for each.
+      scope.post("/log-entries", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          message?: unknown;
+          severity?: unknown;
+          writtenAt?: unknown;
+          reference?: unknown;
+        };
+        const writtenAt =
+          typeof body.writtenAt === "string"
+            ? new Date(body.writtenAt)
+            : undefined;
+        if (
+          typeof body.severity !== "string" ||
+          typeof body.message !== "string" ||
+          writtenAt === undefined ||
+          Number.isNaN(writtenAt.getTime())
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        const put = await making.addLogEntry({
+          writtenAt,
+          severity: body.severity,
+          message: body.message,
+          ...(typeof body.reference === "string"
+            ? { reference: body.reference }
+            : {}),
+        });
+        if (!put) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        return reply.code(201).send({});
+      });
+
+      // The countries the world rankings' lists name, which a site under the
+      // control starts knowing none of, so that a scenario says which.
+      scope.post("/world-ranking-countries", async (request, reply) => {
+        const body = (request.body ?? {}) as {
+          sport?: unknown;
+          country?: unknown;
+        };
+        const country = Countries.thereAre.all.find(
+          (each) => each.name === body.country,
+        );
+        if (
+          (body.sport !== "ac" && body.sport !== "gc") ||
+          country === undefined
+        ) {
+          return reply.code(400).send({ code: "TestControl.NotWritable" });
+        }
+        making.listCountry(body.sport, country.code);
+        return reply.code(201).send({});
+      });
+
+      // What the admin is told the site's build is called, and a deploy that
+      // changes it, so that a page loaded before is behind it.
+      scope.get("/build", () => ({ build: making.build() }));
+      scope.post("/build", async (_request, reply) => {
+        making.deployAgain();
+        return reply.code(200).send({ build: making.build() });
       });
 
       // A player the world rankings are said to hold, as an import would have

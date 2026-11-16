@@ -111,7 +111,7 @@ Then(
 Then(
   /^(\d+) sections? (?:is|are) offered$/,
   async function (this: WebWorld, count: string) {
-    assert.equal((await labels(this)).length, Number(count));
+    await settles(this, (found) => found.length === Number(count));
   },
 );
 

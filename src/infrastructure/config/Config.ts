@@ -99,7 +99,21 @@ export interface Config {
    * let have it, so that it cannot be set over a real one.
    */
   readonly testControlToken: string | undefined;
+  /**
+   * The version the specs say the site is, where it has the test control: a
+   * number, or null for none. Left out, it is what the build wrote down.
+   */
+  readonly testSiteVersion: number | null | undefined;
 }
+
+// What the specs say the version is: a number, "none", or nothing said.
+const testVersionOf = (
+  written: string | undefined,
+): number | null | undefined => {
+  const said = written?.trim();
+  if (said === undefined || said === "") return undefined;
+  return said === "none" ? null : Number(said);
+};
 
 /**
  * What the specs name every database they make, so that a site can tell one
@@ -386,6 +400,10 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     databaseBackupFolder: env["DATABASE_BACKUP_FOLDER"]?.trim() || undefined,
     pgDumpPath: env["PG_DUMP_PATH"]?.trim() || undefined,
     testControlToken,
+    testSiteVersion:
+      testControlToken === undefined
+        ? undefined
+        : testVersionOf(env["TEST_SITE_VERSION"]),
   };
 };
 

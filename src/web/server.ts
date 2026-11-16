@@ -228,6 +228,7 @@ import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
+import type { Severity } from "../application/services/ServerLog.js";
 import {
   loadConfig,
   loadEnvFile,
@@ -258,7 +259,10 @@ import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswor
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
 import { LogEntriesHandler } from "../application/operations/logs/LogEntriesHandler.js";
 import { PruneLogHandler } from "../application/operations/logs/PruneLogHandler.js";
-import { PostgresServerLog } from "../infrastructure/database/PostgresServerLog.js";
+import {
+  levelOf,
+  PostgresServerLog,
+} from "../infrastructure/database/PostgresServerLog.js";
 import { ServerLogStream } from "../infrastructure/logging/ServerLogStream.js";
 import { PostgresKeptImportErrors } from "../infrastructure/database/PostgresKeptImportErrors.js";
 import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
@@ -884,6 +888,16 @@ export const buildApplication = async (
   const settableClock =
     config.testControlToken === undefined ? undefined : new SettableClock();
   const clock: Clock = options.clock ?? settableClock?.now ?? machineClock;
+  // What a deploy says since the site started the build is called, where the
+  // control has said there was one (it names the build the admin was built to
+  // otherwise).
+  let deployedAs: string | undefined;
+  // The countries the world rankings are said to list, where the control says
+  // so: it starts knowing none, and is emptied with the rest.
+  const listedCountries =
+    config.testControlToken === undefined
+      ? undefined
+      : { ac: new Set<string>(), gc: new Set<string>() };
   // The log goes where it always has, to standard output, and a copy of each
   // line is kept in the database for an administrator to read. A scenario that
   // says where its log goes keeps no copy, since it is not asking about this.
@@ -916,9 +930,11 @@ export const buildApplication = async (
   // scenario says which. Null is a scenario saying none, as undefined is the
   // option left out.
   const version =
-    options.version === undefined
-      ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
-      : (options.version ?? undefined);
+    options.version === undefined && config.testSiteVersion !== undefined
+      ? (config.testSiteVersion ?? undefined)
+      : options.version === undefined
+        ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
+        : (options.version ?? undefined);
   const assets = readAssets(
     join(repositoryRoot, "assets"),
     config.administratorEmailAddress,
@@ -1204,15 +1220,17 @@ export const buildApplication = async (
       accounts,
       tournamentsByWebsite,
       options.worldRankingCountries ??
-        (await FileWorldRankingCountries.readFrom(
-          join(
-            repositoryRoot,
-            "src",
-            "infrastructure",
-            "world-rankings",
-            "events",
-          ),
-        )),
+        (listedCountries !== undefined
+          ? { countriesOf: (sport) => listedCountries[sport] }
+          : await FileWorldRankingCountries.readFrom(
+              join(
+                repositoryRoot,
+                "src",
+                "infrastructure",
+                "world-rankings",
+                "events",
+              ),
+            )),
     ),
   );
   mediator.handleQuery(new ImportErrorKeptHandler(accounts, keptImportErrors));
@@ -1638,7 +1656,11 @@ export const buildApplication = async (
       config.testControlToken,
       settableClock,
       pool,
-      () => standInReaderCheck?.reset(),
+      () => {
+        standInReaderCheck?.reset();
+        listedCountries?.ac.clear();
+        listedCountries?.gc.clear();
+      },
     );
   }
   speakToRequests(server, languages);
@@ -1720,6 +1742,33 @@ export const buildApplication = async (
         return tournament === undefined
           ? undefined
           : plainTournament(tournament);
+      },
+      databaseAccess,
+      listCountry: (sport, code) => {
+        listedCountries?.[sport].add(code);
+      },
+      addLogEntry: async ({ writtenAt, severity, message, reference }) => {
+        const level = levelOf[severity as Severity];
+        if (level === undefined) return false;
+        await pool.query(
+          `insert into server_log (written_at, severity, message, details)
+           values ($1, $2, $3, $4)`,
+          [
+            writtenAt,
+            level,
+            message,
+            JSON.stringify({
+              level,
+              msg: message,
+              ...(reference === undefined ? {} : { correlationId: reference }),
+            }),
+          ],
+        );
+        return true;
+      },
+      build: () => build(),
+      deployAgain: () => {
+        deployedAs = "built-again-by-the-control";
       },
       addWorldRankingPlayer: async (sport, name) => {
         await pool.query(
@@ -1834,6 +1883,7 @@ export const buildApplication = async (
     databaseAccess,
     async (request, reply) =>
       (await reader(request, reply))?.isAdministrator === true,
+    config.testControlToken === undefined ? [] : ["/__test/"],
   );
   server.decorate("databaseAccess", databaseAccess);
   knowTheReader(server, reader);
@@ -1853,7 +1903,7 @@ export const buildApplication = async (
   const adminRoot = join(repositoryRoot, "dist", "admin");
   const adminPageBuilt = builtPageIn(adminRoot);
   const builtAs = buildOf(adminPageBuilt);
-  const build = (): string => options.build?.() ?? builtAs;
+  const build = (): string => options.build?.() ?? deployedAs ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
     if (request.url.startsWith("/api/site/"))
       reply.header(adminBuildHeader, build());

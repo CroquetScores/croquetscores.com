@@ -1,8 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../support/world.js";
 import { menuLink } from "../support/menuLink.js";
+import type { WebWorld } from "../support/world.js";
 
 // Whether the admin moved in place or had the browser load the page again,
 // told by a value left on the window: it survives anything the admin does,
@@ -12,12 +12,12 @@ interface Marked {
   leftByTheScenario?: boolean;
 }
 
-const left = async (world: SpecWorld): Promise<boolean> =>
+const left = async (world: WebWorld): Promise<boolean> =>
   world.browserPage.evaluate(
     () => (globalThis as Marked).leftByTheScenario === true,
   );
 
-Given("something is left on the page", async function (this: SpecWorld) {
+Given("something is left on the page", async function (this: WebWorld) {
   await this.browserPage.evaluate(() => {
     (globalThis as Marked).leftByTheScenario = true;
   });
@@ -25,14 +25,14 @@ Given("something is left on the page", async function (this: SpecWorld) {
 
 Then(
   "what was left on the page is still there",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await left(this), true, "The page was loaded again.");
   },
 );
 
 // Once the page that was headed for has loaded, so that the question is asked
 // of it rather than of one on its way out.
-Then("what was left on the page is gone", async function (this: SpecWorld) {
+Then("what was left on the page is gone", async function (this: WebWorld) {
   await this.browserPage.waitForLoadState();
   assert.equal(await left(this), false, "The page was not loaded again.");
 });
@@ -42,7 +42,7 @@ Then("what was left on the page is gone", async function (this: SpecWorld) {
 // to become the one wanted rather than read once.
 Then(
   "the page comes to be headed {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const heading = this.browserPage.locator("main h1").first();
     const until = Date.now() + 5000;
     for (;;) {
@@ -58,13 +58,13 @@ Then(
 // behind the menu button.
 When(
   "the link {string} in the header is pressed",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await this.browserPage.click(menuLink(label));
   },
 );
 
 // Whether the last press for a new tab was stopped, by the scenario it was in.
-const pressesStopped = new WeakMap<SpecWorld, boolean>();
+const pressesStopped = new WeakMap<WebWorld, boolean>();
 
 // Pressed as a reader asks for a new tab: with Control, or Command on a Mac.
 // What the admin does with the press is told by whether anything it listens
@@ -73,7 +73,7 @@ const pressesStopped = new WeakMap<SpecWorld, boolean>();
 // a tab is not waited on: a headless browser does not do it every time.
 When(
   "the section {string} is pressed to open it in a new tab",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     const page = this.browserPage;
     await page.evaluate(`(() => {
       window.addEventListener("click", (event) => {
@@ -91,7 +91,7 @@ When(
   },
 );
 
-Then("the press is left to the browser", function (this: SpecWorld) {
+Then("the press is left to the browser", function (this: WebWorld) {
   const stopped = pressesStopped.get(this);
   assert.ok(stopped !== undefined, "Nothing was pressed for a new tab.");
   assert.equal(stopped, false, "The admin stopped the browser following it.");

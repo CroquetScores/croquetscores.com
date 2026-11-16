@@ -52,9 +52,15 @@ const words: Readonly<Record<string, string>> = {
   "CompetitionName.TooLong": "A name can be at most 254 characters.",
   "CompetitionPlayer.Withdrawn": "A withdrawn player plays no more.",
   "CreateTournament.NoSuchCountry": "Choose the country.",
+  "DatabaseAccess.MinutesNotWhole": "The minutes must be a whole number.",
+  "DatabaseAccess.MinutesOutOfRange": "The minutes must be from 1 to 1440.",
   "DeleteTournament.MessageMissing": "Write something to tell the managers.",
   "EmailAddress.Missing": "Enter an email address.",
   "EmailAddress.NoAt": "An email address has an @ in it.",
+  "EmergencyAccess.MessageMissing":
+    "Say who you are, who asked you or why you are taking this on.",
+  "EmergencyAccess.TooSoon":
+    "You have asked already. The people asked may be slow to answer, so you can ask again in two days.",
   "ExpectedMatches.TooSmall":
     "A test has to be expected to have at least 1 match.",
   "Game.LoserMarked": "The loser's score cannot be marked as won.",
@@ -156,6 +162,7 @@ const words: Readonly<Record<string, string>> = {
     "A world ranking name has to be at least 3 characters.",
   "admin.managers.removeYourself.explanation":
     "You will no longer be able to run this tournament, and nobody here can undo that for you. Another manager can make you one again.",
+  "admin.newerBuild.message": "A newer version of this site is available.",
   "admin.notes.delete.explanation":
     "A note deleted is gone for good, and cannot be brought back.",
   "admin.player.byes":
@@ -190,6 +197,7 @@ const words: Readonly<Record<string, string>> = {
   "confirmEmailAddress.noLongerWorks.explanation":
     "Check that you followed the whole link from the email, without anything missing from the end of it. If it still does not work, register again and a new link will be sent.",
   "confirmEmailAddress.title": "Confirm your email address",
+  "errors.maintenance": "The site is down for maintenance.",
   "forgetAccount.confirm.explanation":
     "Once forgotten, your name and email address can never be read again, by anybody, and your account cannot be signed in to. It cannot be undone.",
   "forgetAccount.forgotten.explanation":
@@ -224,6 +232,8 @@ const words: Readonly<Record<string, string>> = {
   "setPassword.title": "Set a password",
   "signIn.tryAgainLater":
     "Too many attempts have been made lately. Wait an hour and try again.",
+  "tryWebsite.banner":
+    "This is a safe place to learn {siteName}. Anything entered here may be removed at any time.",
 };
 
 /** What English says for `key`. */
