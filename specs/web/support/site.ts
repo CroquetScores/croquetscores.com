@@ -290,15 +290,23 @@ const ready = async (
         `The site stopped with code ${String(launched.exitCode)}. ${lately()}`,
       );
     }
-    try {
-      await fetch(`${baseUrl}/`);
-      return;
-    } catch {
-      if (Date.now() > until) {
-        throw new Error(`The site did not start. ${lately()}`);
-      }
-      await new Promise((later) => setTimeout(later, 250));
+    // Answering is not enough: another worker's site may have taken the port
+    // between its being found free and this site listening on it, and that
+    // site answers too. Only ours knows the token, so only ours says yes to
+    // the clock. The other is waited out until this site stops with
+    // EADDRINUSE, and is started again on another port.
+    const answered = await fetch(`${baseUrl}/__test/clock`, {
+      headers: { "x-test-control": siteEnvironment["TEST_CONTROL_TOKEN"]! },
+    }).then(
+      (answer) => answer.status === 200,
+      // Refused, since a site that is still starting is not listening yet.
+      () => false,
+    );
+    if (answered) return;
+    if (Date.now() > until) {
+      throw new Error(`The site did not start. ${lately()}`);
     }
+    await new Promise((later) => setTimeout(later, 250));
   }
 };
 
