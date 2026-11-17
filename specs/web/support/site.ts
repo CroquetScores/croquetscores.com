@@ -187,10 +187,22 @@ const spawnSite = async (
       env: { ...siteEnvironment, ...settings, PORT: String(port) },
     },
   );
-  spawned.stdout.on("data", keepLogged);
-  spawned.stderr.on("data", keepLogged);
+  // What this site has said, kept apart from the run's log so that a site that
+  // does not start can be asked what it was doing.
+  const said: string[] = [];
+  const keep = (text: Buffer): void => {
+    keepLogged(text);
+    said.push(
+      ...text
+        .toString()
+        .split("\n")
+        .filter((line) => line.trim() !== ""),
+    );
+  };
+  spawned.stdout.on("data", keep);
+  spawned.stderr.on("data", keep);
   const baseUrl = `http://127.0.0.1:${String(port)}`;
-  await ready(baseUrl, spawned);
+  await ready(baseUrl, spawned, said);
   return { child: spawned, baseUrl };
 };
 
@@ -243,19 +255,28 @@ export const endAnotherSite = async (): Promise<void> => {
 const ready = async (
   baseUrl: string,
   launched: ChildProcess,
+  said: readonly string[],
 ): Promise<void> => {
+  // What the site last said, which is what there is to go on where it neither
+  // answers nor stops.
+  const lately = (): string =>
+    said.length === 0
+      ? "It has said nothing."
+      : `It last said:\n${said.slice(-15).join("\n")}`;
   const until = Date.now() + 120_000;
   for (;;) {
     if (launched.exitCode !== null) {
       throw new Error(
-        `The site stopped with code ${String(launched.exitCode)}.`,
+        `The site stopped with code ${String(launched.exitCode)}. ${lately()}`,
       );
     }
     try {
       await fetch(`${baseUrl}/`);
       return;
     } catch {
-      if (Date.now() > until) throw new Error("The site did not start.");
+      if (Date.now() > until) {
+        throw new Error(`The site did not start. ${lately()}`);
+      }
       await new Promise((later) => setTimeout(later, 250));
     }
   }
