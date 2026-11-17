@@ -114,7 +114,11 @@ Then("the menu has been scrolled", async function (this: WebWorld) {
 });
 
 Then("the page has been scrolled", async function (this: WebWorld) {
-  await this.browserPage.waitForFunction("window.scrollY > 0");
+  for (let attempt = 0; attempt < 50; attempt++) {
+    if (await this.browserPage.evaluate<boolean>("window.scrollY > 0")) return;
+    await this.browserPage.waitForTimeout(100);
+  }
+  assert.fail("The page was not scrolled.");
 });
 
 // Scrolling is not instant, so a page that is to stay where it was is given a
