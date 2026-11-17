@@ -77,6 +77,22 @@ Then(
   },
 );
 
+// For where the entry is one of several: at Trace the page also shows what the
+// site itself logs of the requests it is asked for, which are newer than the
+// entry a scenario wrote and so come before it, once they have been kept (a
+// second after the first of them is written, so only when the scenario is slow).
+Then("an entry says {string}", async function (this: WebWorld, said: string) {
+  await eventually(async () => {
+    const messages = await entries(this)
+      .locator(".log-entry-message")
+      .allInnerTexts();
+    assert.ok(
+      messages.includes(said),
+      `The entries say ${JSON.stringify(messages)}, and not ${said}.`,
+    );
+  });
+});
+
 Then(
   "the first entry's severity is {string}",
   async function (this: WebWorld, severity: string) {

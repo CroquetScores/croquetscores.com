@@ -118,7 +118,7 @@ Feature: The page where an administrator reads the server's log
       And the page at "/admin/administrator/logs" is open
       When the severity "Trace" is chosen
       And the Show button is pressed
-      Then the first entry says "Chatter"
+      Then an entry says "Chatter"
 
     Scenario: A less severe entry is not shown
       Given the log has an entry "Careful" at the severity Warn
