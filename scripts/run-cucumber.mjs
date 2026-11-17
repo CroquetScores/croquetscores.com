@@ -11,6 +11,7 @@
 // each to the family it belongs to, running a family only if it was given one.
 // Whatever else follows is handed to Cucumber for each run.
 import { spawnSync } from "node:child_process";
+import { appendFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -93,9 +94,28 @@ const quietedEnvironment = {
     `${process.env.NODE_OPTIONS ?? ""} --disable-warning=DEP0205`.trim(),
 };
 
+// How long a run took, as a person reads it.
+const taken = (milliseconds) => {
+  const seconds = Math.round(milliseconds / 1000);
+  return seconds < 60
+    ? `${seconds}s`
+    : `${Math.floor(seconds / 60)}m ${String(seconds % 60).padStart(2, "0")}s`;
+};
+
+// Where a profile writes its HTML report, read from the profile itself so that
+// the name is said once, in scripts/cucumber.mjs.
+const profiles = await import("./cucumber.mjs");
+const reportOf = (profile) =>
+  (profiles[profile] ?? profiles.default).format
+    .find((format) => format.startsWith("html:"))
+    ?.slice("html:".length);
+
+const results = [];
+const started = Date.now();
 let worst = 0;
 for (const { profile, arguments: given, wanted } of runs) {
   if (!wanted) continue;
+  const began = Date.now();
   const { status, error } = spawnSync(
     process.execPath,
     [
@@ -114,5 +134,38 @@ for (const { profile, arguments: given, wanted } of runs) {
     process.exit(1);
   }
   worst = Math.max(worst, status ?? 1);
+  results.push({
+    // The in-process specs and the black-box ones, which the profile's name
+    // tells apart.
+    family: profile.startsWith("web") ? "web" : "in-process",
+    passed: status === 0,
+    time: Date.now() - began,
+    report: reportOf(profile),
+  });
+}
+
+// What was run, whether it passed, and how long it took, said at the end where
+// the progress bar leaves off, and kept in reports/test-times.txt so that runs
+// can be compared. A failure says where its report is.
+const lines = results.map(
+  ({ family, passed, time, report }) =>
+    `  ${family.padEnd(10)}  ${passed ? "passed" : "FAILED"}  ${taken(time).padStart(8)}` +
+    (passed || report === undefined ? "" : `  report: ${report}`),
+);
+const total = `Total ${taken(Date.now() - started)}: ${worst === 0 ? "passed" : "FAILED"}`;
+console.log(`\n${[...lines, total].join("\n")}`);
+try {
+  mkdirSync(join(root, "reports"), { recursive: true });
+  appendFileSync(
+    join(root, "reports", "test-times.txt"),
+    `${new Date().toISOString()}  ${kind}  ${results
+      .map(
+        ({ family, passed, time }) =>
+          `${family} ${passed ? "passed" : "FAILED"} ${taken(time)}`,
+      )
+      .join(", ")}  ${total}\n`,
+  );
+} catch {
+  // Keeping the times is a convenience, and never what fails a run.
 }
 process.exit(worst);

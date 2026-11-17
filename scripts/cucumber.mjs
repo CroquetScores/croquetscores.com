@@ -49,8 +49,10 @@ const reports = (name) => [
   "progress-bar",
   `html:reports/${name}.html`,
   `summary:reports/${name}-summary.txt`,
-  // Fails a run that has stopped, naming what it stopped on.
-  "./scripts/stallWatch.mjs",
+  // Fails a run that has stopped, naming what it stopped on. Sent to a file
+  // because it writes nothing, and a formatter given standard output has it to
+  // itself, which left the progress bar with none.
+  "./scripts/stallWatch.mjs:reports/stall-watch.txt",
 ];
 
 const unitFeatures = [
