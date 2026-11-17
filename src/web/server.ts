@@ -937,12 +937,13 @@ export const buildApplication = async (
   // Which version of the website this is: what the build wrote down, unless a
   // scenario says which. Null is a scenario saying none, as undefined is the
   // option left out.
-  const version =
-    options.version === undefined && config.testSiteVersion !== undefined
-      ? (config.testSiteVersion ?? undefined)
-      : options.version === undefined
-        ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
-        : (options.version ?? undefined);
+  const version = ((): number | undefined => {
+    if (options.version !== undefined) return options.version ?? undefined;
+    if (config.testSiteVersion !== undefined) {
+      return config.testSiteVersion ?? undefined;
+    }
+    return readBuiltVersion(join(repositoryRoot, "dist", "version.json"));
+  })();
   const assets = readAssets(
     join(repositoryRoot, "assets"),
     config.administratorEmailAddress,
@@ -1764,8 +1765,11 @@ export const buildApplication = async (
         listedCountries?.[sport].add(code);
       },
       addLogEntry: async ({ writtenAt, severity, message, reference }) => {
+        // Only the names it has: a plain object also answers to "toString" and
+        // the like, which are not severities and would reach the database as
+        // functions.
+        if (!Object.hasOwn(levelOf, severity)) return false;
         const level = levelOf[severity as Severity];
-        if (level === undefined) return false;
         await pool.query(
           `insert into server_log (written_at, severity, message, details)
            values ($1, $2, $3, $4)`,

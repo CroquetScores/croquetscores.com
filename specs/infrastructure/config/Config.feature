@@ -106,6 +106,13 @@ Feature: The settings the site is started with
       Then the Association Croquet list is read from "http://127.0.0.1:9001/ac"
       And the Golf Croquet list is read from "http://127.0.0.1:9001/gc"
 
+    Scenario: A site told a list is somewhere that is not an address does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the world rankings' lists are at "rank.worldcroquet.org" and "http://127.0.0.1:9001/gc"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "WORLD_RANKING_AC_ADDRESS"
+
     Scenario: A site told where only one list is does not start
       Given the administrator's email address is "administrator@example.com"
       And only the Association Croquet list is said to be at "http://127.0.0.1:9001/ac"

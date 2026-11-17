@@ -1218,6 +1218,17 @@ When(
 );
 
 When(
+  "a log entry of the severity {string} is written",
+  async function (this: SpecWorld, severity: string) {
+    await asking(this, "POST", "/__test/log-entries", {
+      severity,
+      message: "Something was said.",
+      writtenAt: "2031-03-04T05:06:07Z",
+    });
+  },
+);
+
+When(
   "the failures to sign in as {string} are counted",
   async function (this: SpecWorld, address: string) {
     await asking(

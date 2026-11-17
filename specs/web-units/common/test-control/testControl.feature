@@ -130,6 +130,11 @@ Feature: A site over a database the specs made can be controlled by a token
       When the failures to sign in as "not an address" are counted
       Then the site answers that the request was wrong
 
+    Scenario: A log entry of a severity there is none of is answered as a wrong request
+      Given a site given the token "open sesame"
+      When a log entry of the severity "toString" is written
+      Then the site answers that the request was wrong
+
     Scenario: A site given no token has no accounts control
       Given a site given no token
       When a session for "someone@example.com" is asked for

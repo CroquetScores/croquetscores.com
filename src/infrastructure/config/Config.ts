@@ -351,6 +351,14 @@ const testGoogleEndpoints = (
   };
 };
 
+const isWebAddress = (written: string): boolean => {
+  try {
+    return ["http:", "https:"].includes(new URL(written).protocol);
+  } catch {
+    return false;
+  }
+};
+
 // Where the lists are, which a deployment is told only where it must not ask
 // the rankings' own site (the specs stand another in its place): both or
 // neither.
@@ -361,6 +369,19 @@ const readWorldRankingAddresses = (
   const ac = env["WORLD_RANKING_AC_ADDRESS"]?.trim() ?? "";
   const gc = env["WORLD_RANKING_GC_ADDRESS"]?.trim() ?? "";
   if (ac === "" && gc === "") return worldRankingAddresses;
+  // A list is fetched from it, so what is not an address stops the site
+  // starting and not the import, long after, with nothing said about which
+  // setting it was.
+  for (const [key, written] of [
+    ["WORLD_RANKING_AC_ADDRESS", ac],
+    ["WORLD_RANKING_GC_ADDRESS", gc],
+  ] as const) {
+    if (written !== "" && !isWebAddress(written)) {
+      problems.push(
+        `${key} must be a web address, not ${JSON.stringify(written)}.`,
+      );
+    }
+  }
   if (ac === "")
     problems.push(
       "WORLD_RANKING_AC_ADDRESS is needed with WORLD_RANKING_GC_ADDRESS.",
