@@ -80,6 +80,28 @@ Then(
 );
 
 Then(
+  /^the email queued for "(.*)" says the (national|international)-level classification has been removed$/,
+  async function (this: SpecWorld, address: string, level: string) {
+    const written = await writtenTo(this, address);
+    assert.ok(
+      written.includes(`removed the ${level}-level classification`),
+      `The email does not say the ${level}-level classification was removed.`,
+    );
+  },
+);
+
+Then(
+  /^the email queued for "(.*)" gives "(.*)" as an example$/,
+  async function (this: SpecWorld, address: string, example: string) {
+    const written = await writtenTo(this, address);
+    assert.ok(
+      written.includes(example),
+      `The email does not give "${example}" as an example.`,
+    );
+  },
+);
+
+Then(
   /^the email queued for "(.*)" explains what (national|international)-level events are for$/,
   async function (this: SpecWorld, address: string, level: string) {
     const written = await writtenTo(this, address);

@@ -14,7 +14,8 @@ Feature: Removing a tournament's national or international status
 
   Every manager is emailed, in English only, as the administrator's own voice:
   the email says the tournament was classified as national or as
-  international, why the administrator thinks it is not, and asks to hear the
+  international, why the administrator thinks it is not, that the
+  administrator has therefore removed the classification, and asks to hear the
   reasoning if the manager disagrees. A manager whose account is forgotten is
   not emailed, since there is nobody to read it. A tournament that is neither
   has nothing taken away and nobody is emailed, and nor is anybody on a try
@@ -144,6 +145,26 @@ Feature: Removing a tournament's national or international status
       Given "organiser@example.com" has made the tournament "Spring Open" international
       When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
       Then the email queued for "organiser@example.com" explains what international-level events are for
+
+    Scenario: The email gives the Australian Open as what a national-level event is like
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
+      Then the email queued for "organiser@example.com" gives "Australian Open" as an example
+
+    Scenario: The email gives the WCF Association Croquet Singles as what an international-level event is like
+      Given "organiser@example.com" has made the tournament "Spring Open" international
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
+      Then the email queued for "organiser@example.com" gives "WCF Association Croquet Singles" as an example
+
+    Scenario: The email says the national-level classification has been removed
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
+      Then the email queued for "organiser@example.com" says the national-level classification has been removed
+
+    Scenario: The email says the international-level classification has been removed
+      Given "organiser@example.com" has made the tournament "Spring Open" international
+      When the reader signed in to the account for "admin@example.com" removes the notable status of the tournament "Spring Open"
+      Then the email queued for "organiser@example.com" says the international-level classification has been removed
 
   Rule: A tournament that is neither has nothing taken away
 

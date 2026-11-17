@@ -1970,14 +1970,15 @@ export const english: Language = {
 <p>and classified it as a national-level event.</p>
 
 <p>
-    National-level events are intended for tournaments such as the Australian
-    Open and other competitions of similar national significance. Based on my
-    understanding, {tournament} does not appear to fall into that category.
+    National-level events are intended for tournaments such as the
+    Australian Open and other competitions of comparable national significance.
+    Based on my understanding, {tournament} does not appear to meet that
+    criterion, so I have removed the national-level classification.
 </p>
 
 <p>
-    If you believe it should be classified as a national-level event, I'd be
-    interested to hear the reasoning behind that classification.
+    If you believe the tournament should be classified as a national-level
+    event, I would be interested to hear the reasoning behind that assessment.
 </p>
 
 <p>
@@ -1997,13 +1998,16 @@ export const english: Language = {
 <p>and classified it as an international-level event.</p>
 
 <p>
-    International-level events are intended for WCF tournaments. Based on my
-    understanding, {tournament} does not appear to fall into that category.
+    International-level events are intended for tournaments such as the
+    WCF Association Croquet Singles and other competitions of comparable
+    international significance. Based on my understanding, {tournament} does
+    not appear to meet that criterion, so I have
+    removed the international-level classification.
 </p>
 
 <p>
-    If you believe it should be classified as an international-level event,
-    I'd be interested to hear the reasoning behind that classification.
+    If you believe the tournament should be classified as an international-level
+    event, I would be interested to hear the reasoning behind that assessment.
 </p>
 
 <p>
