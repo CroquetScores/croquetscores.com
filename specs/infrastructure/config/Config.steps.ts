@@ -210,3 +210,17 @@ Then(
     assert.equal(configOf(this).googleEndpoints.keys, address);
   },
 );
+
+Given(
+  "the site is said to be at version {string}",
+  function (this: SpecWorld, version: string) {
+    startingOf(this).settings["TEST_SITE_VERSION"] = version;
+  },
+);
+
+Then(
+  "the site reports version {int}",
+  function (this: SpecWorld, version: number) {
+    assert.equal(configOf(this).testSiteVersion, version);
+  },
+);

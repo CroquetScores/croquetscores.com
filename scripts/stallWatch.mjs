@@ -11,7 +11,17 @@
 import { Formatter } from "@cucumber/cucumber";
 import { clearInterval, setInterval } from "node:timers";
 
-const limit = Number(process.env.CUCUMBER_STALL_MINUTES ?? 10) * 60_000;
+// A limit that is not a positive number of minutes would be passed over as one:
+// "10m" is NaN and "" is 0, and either makes the first check after the first
+// scenario call the run stalled, with nothing to say why. So it is refused here,
+// where whoever set it is told which setting it was.
+const minutes = Number(process.env.CUCUMBER_STALL_MINUTES ?? 10);
+if (!(minutes > 0)) {
+  throw new Error(
+    `CUCUMBER_STALL_MINUTES must be a number of minutes above zero, not ${JSON.stringify(process.env.CUCUMBER_STALL_MINUTES)}.`,
+  );
+}
+const limit = minutes * 60_000;
 
 export default class StallWatch extends Formatter {
   constructor(options) {

@@ -124,13 +124,24 @@ export interface Config {
   readonly googleEndpoints: GoogleEndpoints;
 }
 
-// What the specs say the version is: a number, "none", or nothing said.
+// What the specs say the version is: a whole number, "none", or nothing said.
+// Anything else stops the site starting, as every other setting not understood
+// does, since a number that is not one would be passed on as the version.
 const testVersionOf = (
   written: string | undefined,
+  problems: string[],
 ): number | null | undefined => {
   const said = written?.trim();
   if (said === undefined || said === "") return undefined;
-  return said === "none" ? null : Number(said);
+  if (said === "none") return null;
+  const version = Number(said);
+  if (!Number.isInteger(version)) {
+    problems.push(
+      `TEST_SITE_VERSION must be a whole number or "none", not ${JSON.stringify(said)}.`,
+    );
+    return undefined;
+  }
+  return version;
 };
 
 /**
@@ -314,7 +325,8 @@ const defaultDatabaseUnreachableEmailIntervalMinutes = 30;
 // Where Google answers when the specs stand another in its place: one address,
 // at which the stand-in answers everywhere Google does.
 const testGoogleEndpoints = (address: string | undefined): GoogleEndpoints => {
-  const at = address?.trim() ?? "";
+  // Without a slash at the end, which the paths added below would double.
+  const at = (address?.trim() ?? "").replace(/\/+$/u, "");
   if (at === "") return googlesOwnEndpoints;
   return {
     issuers: [at],
@@ -449,6 +461,11 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
       `TEST_CONTROL_TOKEN is only for a database the specs made, whose name begins ${scratchDatabasePrefix}.`,
     );
   }
+  // Read before the problems are counted, so that one it finds is among them.
+  const testSiteVersion =
+    testControlToken === undefined
+      ? undefined
+      : testVersionOf(env["TEST_SITE_VERSION"], problems);
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
@@ -482,9 +499,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
         ? googlesOwnEndpoints
         : testGoogleEndpoints(env["TEST_GOOGLE_ADDRESS"]),
     testSiteVersion:
-      testControlToken === undefined
-        ? undefined
-        : testVersionOf(env["TEST_SITE_VERSION"]),
+      testControlToken === undefined ? undefined : testSiteVersion,
   };
 };
 

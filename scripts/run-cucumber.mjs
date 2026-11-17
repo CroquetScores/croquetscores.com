@@ -13,7 +13,7 @@
 import { spawnSync } from "node:child_process";
 import { appendFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -46,8 +46,14 @@ const cucumber = join(
 const changed = kind.startsWith("changed");
 const features = rest.filter((argument) => argument.endsWith(".feature"));
 const options = rest.filter((argument) => !argument.endsWith(".feature"));
+// Said from the root of the repository whatever way it was given, since a path
+// written "./specs/web/..." or in full is the same feature and must be run by
+// the same family: the other would not load its steps, and would report that
+// nothing was wrong.
 const isWeb = (feature) =>
-  feature.replaceAll("\\", "/").startsWith("specs/web/");
+  relative(root, resolve(root, feature))
+    .replaceAll("\\", "/")
+    .startsWith("specs/web/");
 
 // The profile and the arguments of each run. A kind of run over every feature
 // has Cucumber find them; a changed one names them, and the browser kind of it

@@ -1786,7 +1786,7 @@ export const buildApplication = async (
         ).rows.map((row) => row.name),
       addWorldRankingPlayer: async (sport, name) => {
         await pool.query(
-          `insert into ${sport === "ac" ? "ac" : "gc"}_world_ranking_players (name)
+          `insert into ${sport}_world_ranking_players (name)
            values ($1) on conflict do nothing`,
           [name],
         );

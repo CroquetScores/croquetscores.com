@@ -140,3 +140,39 @@ Feature: The settings the site is started with
       And Google is said to answer at "http://127.0.0.1:9002"
       When the settings are loaded
       Then Google's keys are read from "https://www.googleapis.com/oauth2/v3/certs"
+
+    Scenario: A slash at the end of where Google is said to answer is not doubled
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And Google is said to answer at "http://127.0.0.1:9002/"
+      When the settings are loaded
+      Then Google's keys are read from "http://127.0.0.1:9002/keys"
+
+  Rule: The version a site reports can be set only for a site that has the test control
+
+    A version that is not a number would be passed on as one that is not, and a
+    scenario about versions would then behave oddly with nothing to say why. So
+    it stops the site starting, as every other setting that is not understood does.
+
+    Scenario: A site told its version, with the test control, reports it
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And the site is said to be at version "3"
+      When the settings are loaded
+      Then the site reports version 3
+
+    Scenario: A site told its version is not a whole number does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And the site is said to be at version "v2"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "TEST_SITE_VERSION"
+
+    Scenario: A site told its version is a fraction does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And the site is said to be at version "1.5"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "TEST_SITE_VERSION"

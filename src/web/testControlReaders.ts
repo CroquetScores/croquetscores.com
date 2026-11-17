@@ -30,6 +30,7 @@ import {
   type Role,
 } from "../domain/aggregates/accounts/value-objects/Role.js";
 import { ReadOnlyDate } from "../domain/common/ReadOnlyDate.js";
+import { ValidationError } from "../domain/common/validation/ValidationError.js";
 import type { Clock } from "./common/requestedAt.js";
 import { sameToken, testControlHeader } from "./testControl.js";
 
@@ -74,7 +75,7 @@ export interface ReaderMaking {
   /** Says `times` sign ins as `comparable` (an address as it is compared) failed, `minutesAgo`. */
   /** Says the world rankings of `sport` ("ac" or "gc") hold a player called `name`. */
   readonly addWorldRankingPlayer: (
-    sport: string,
+    sport: "ac" | "gc",
     name: string,
   ) => Promise<void>;
   readonly writeFailedSignIns: (
@@ -253,6 +254,19 @@ export const registerTestControlReaders = (
           return reply.callNotFound();
         }
         return undefined;
+      });
+
+      // An address or an id a scenario wrote wrongly is the scenario's
+      // mistake, so it is answered as the request being wrong, as the routes
+      // that catch it themselves answer it, and not as a fault of the site,
+      // which is what a 500 says. Anything else is still a fault.
+      scope.setErrorHandler((error, _request, reply) => {
+        if (error instanceof ValidationError) {
+          return reply
+            .code(400)
+            .send({ code: "TestControl.NotWritable", message: error.message });
+        }
+        throw error;
       });
 
       // An account, as the scenario says it is: confirmed or not, with a

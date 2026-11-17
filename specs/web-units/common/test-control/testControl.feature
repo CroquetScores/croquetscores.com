@@ -125,6 +125,11 @@ Feature: A site over a database the specs made can be controlled by a token
       When an account for "someone@example.com" is made through the control
       Then the site answers that it was made
 
+    Scenario: An address that is not one is answered as a wrong request
+      Given a site given the token "open sesame"
+      When the failures to sign in as "not an address" are counted
+      Then the site answers that the request was wrong
+
     Scenario: A site given no token has no accounts control
       Given a site given no token
       When a session for "someone@example.com" is asked for
