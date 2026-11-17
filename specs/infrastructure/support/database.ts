@@ -181,6 +181,13 @@ const isLeftBehind = async (
   client: pg.PoolClient,
   databaseName: string,
 ): Promise<boolean> => {
+  // The web specs make their databases beside these, named with a "w" after the
+  // prefix (specs/web/support/site.ts), and a run of theirs may be going while
+  // this one starts. Taking a name that is not shaped like ours for one from
+  // before names carried a run dropped them from under it, and every scenario
+  // after that failed for want of a database.
+  if (databaseName.startsWith(`${prefix}w`)) return false;
+
   const owner = named.exec(databaseName)?.[1];
   if (owner === undefined) return true;
 
