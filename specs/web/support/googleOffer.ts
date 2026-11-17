@@ -4,9 +4,10 @@
 // differs between them is only which offer is asked about.
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 import { drawnBesideAButton } from "./buttons.js";
-import { englishForScenarios, unmarked } from "./languages.js";
+import { unmarked } from "./languages.js";
+import { wordsFor } from "./words.js";
 
 export const callback = "/auth/google/callback";
 
@@ -23,7 +24,7 @@ export interface Box {
 }
 
 export const boxOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   selector: string,
 ): Promise<Box> => {
   const found = await world.browserPage.locator(selector).boundingBox();
@@ -35,7 +36,7 @@ export const boxOf = async (
 // the width of the dialog wherever its words sit in it, so only the words' own
 // box can say whether they are centred. Found by what the reader sees, capitals
 // and all, so a line whose words are drawn in capitals is found by them.
-export const linesSaying = (world: SpecWorld, said: string): Promise<Box[]> =>
+export const linesSaying = (world: WebWorld, said: string): Promise<Box[]> =>
   world.browserPage.evaluate<Box[]>(`(() => {
     const said = ${JSON.stringify(said)};
     return [...document.querySelectorAll(${JSON.stringify(`${dialog} *`)})]
@@ -49,7 +50,7 @@ export const linesSaying = (world: SpecWorld, said: string): Promise<Box[]> =>
   })()`);
 
 export const lineSaying = async (
-  world: SpecWorld,
+  world: WebWorld,
   said: string,
 ): Promise<Box> => {
   const found = await linesSaying(world, said);
@@ -61,11 +62,11 @@ export const lineSaying = async (
   return found[0]!;
 };
 
-export const offerCount = (world: SpecWorld, offer: string): Promise<number> =>
+export const offerCount = (world: WebWorld, offer: string): Promise<number> =>
   world.browserPage.locator(offer).count();
 
 export const offerIsAButton = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const classes = await world.browserPage.locator(offer).getAttribute("class");
@@ -73,7 +74,7 @@ export const offerIsAButton = async (
 };
 
 export const offerLooksLikeAButton = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const drawn = await drawnBesideAButton(world, offer);
@@ -83,7 +84,7 @@ export const offerLooksLikeAButton = async (
 
 // Google's mark is the G in its four colours, so it is known by them.
 export const offerCarriesGooglesIcon = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const fills: string[] = [];
@@ -96,7 +97,7 @@ export const offerCarriesGooglesIcon = async (
 };
 
 export const offerIsInTheDialog = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   assert.equal(
@@ -106,7 +107,7 @@ export const offerIsInTheDialog = async (
 };
 
 export const offerIsBeneathTheTitleBar = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const bar = await boxOf(world, titleBar);
@@ -118,7 +119,7 @@ export const offerIsBeneathTheTitleBar = async (
 };
 
 export const offerIsAboveTheEmailAddressField = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const button = await boxOf(world, offer);
@@ -130,7 +131,7 @@ export const offerIsAboveTheEmailAddressField = async (
 };
 
 export const offerIsAsWideAsTheEmailAddressField = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const button = await boxOf(world, offer);
@@ -142,12 +143,11 @@ export const offerIsAsWideAsTheEmailAddressField = async (
 };
 
 export const messageIsAboveTheOffer = async (
-  world: SpecWorld,
+  world: WebWorld,
   code: string,
   offer: string,
 ): Promise<void> => {
-  const words = englishForScenarios.words[code];
-  assert.ok(words !== undefined, `English has no words for ${code}.`);
+  const words = wordsFor(code);
   const said = await world.browserPage.locator(problems).textContent();
   assert.ok(
     unmarked(said ?? "").includes(words),
@@ -162,7 +162,7 @@ export const messageIsAboveTheOffer = async (
 };
 
 export const lineIsBeneathTheOffer = async (
-  world: SpecWorld,
+  world: WebWorld,
   said: string,
   offer: string,
 ): Promise<void> => {
@@ -176,15 +176,15 @@ export const lineIsBeneathTheOffer = async (
 
 // Every way back from Google the reader's browser was sent along, so that a
 // scenario can follow one again.
-const waysBack = new WeakMap<SpecWorld, string[]>();
+const waysBack = new WeakMap<WebWorld, string[]>();
 
-export const waysBackFollowed = (world: SpecWorld): readonly string[] =>
+export const waysBackFollowed = (world: WebWorld): readonly string[] =>
   waysBack.get(world) ?? [];
 
 // Pressed as a reader presses it, and followed wherever it leads: to the
 // stand-in, back here, and on to wherever the site sends the reader then.
 export const pressTheOffer = async (
-  world: SpecWorld,
+  world: WebWorld,
   offer: string,
 ): Promise<void> => {
   const followed: string[] = [];

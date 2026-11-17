@@ -2,10 +2,11 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
+import type { WebWorld } from "../../../support/world.js";
 import { unmarkedWithin } from "../../../support/marks.js";
 import { ordinal } from "../../../support/ordinals.js";
-import { keptCalled } from "../../../support/tournaments.js";
+import { keptCalled } from "../../../support/kept.js";
+import { retried } from "../../../support/tournamentPage.js";
 
 // The admin draws the form itself, after asking the API what the website
 // offers, so a step reads it once it is drawn, and asks again for a while
@@ -25,7 +26,7 @@ const forms =
 // it (edit.feature), or a tournament's tab once it has what it lists, which is
 // when its form is drawn where it has one, and which may have no form of its
 // own once its dialog is closed: any is the page drawn.
-const drawn = async (world: SpecWorld): Promise<void> => {
+const drawn = async (world: WebWorld): Promise<void> => {
   await world.browserPage
     .locator(
       `${forms}, main .page-refused, :is(#tab-panel, #page-list) section[aria-busy="false"]`,
@@ -37,7 +38,7 @@ const drawn = async (world: SpecWorld): Promise<void> => {
 // Three seconds, which leaves the step time to fail with what it found rather
 // than with Cucumber's word that it took too long.
 const eventually = async (
-  world: SpecWorld,
+  world: WebWorld,
   check: () => Promise<void>,
 ): Promise<void> => {
   await drawn(world);
@@ -57,7 +58,7 @@ const eventually = async (
 // reader first types in the name and says when it has the answer, so that a step
 // saying a name is not there is not true only because it is early. Nothing is
 // asked for until something is typed, so nothing is waited for before.
-const settledNames = async (world: SpecWorld): Promise<void> => {
+const settledNames = async (world: WebWorld): Promise<void> => {
   await drawn(world);
   if ((await field(world, "Name").inputValue()) === "") return;
   await world.browserPage
@@ -68,10 +69,10 @@ const settledNames = async (world: SpecWorld): Promise<void> => {
 
 // A field by the words it is labelled with, which is how the reader and a
 // screen reader find it.
-const field = (world: SpecWorld, label: string): Locator =>
+const field = (world: WebWorld, label: string): Locator =>
   world.browserPage.locator(forms).getByLabel(label, { exact: true });
 
-const openNewTournament = async function (this: SpecWorld): Promise<void> {
+const openNewTournament = async function (this: WebWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}${newTournament}`);
 };
 
@@ -82,7 +83,7 @@ const openNewTournament = async function (this: SpecWorld): Promise<void> {
 // of the machine running them cannot move one into another month.
 Given(
   "the reader's clock reads {string}",
-  async function (this: SpecWorld, moment: string) {
+  async function (this: WebWorld, moment: string) {
     assert.ok(
       this.browserContext !== undefined,
       "This scenario has no browser.",
@@ -98,7 +99,7 @@ When("the new tournament page is opened", openNewTournament);
 
 Then(
   "the form asks for {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(
         await field(this, label).count(),
@@ -112,7 +113,7 @@ Then(
 
 Then(
   "the form does not ask for {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(
         await field(this, label).count(),
@@ -125,7 +126,7 @@ Then(
 
 Then(
   "the dialog is titled {string}",
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     await eventually(this, async () => {
       assert.equal(
         await this.browserPage.locator(".dialog-title").textContent(),
@@ -135,12 +136,12 @@ Then(
   },
 );
 
-const buttons = (world: SpecWorld): Locator =>
+const buttons = (world: WebWorld): Locator =>
   world.browserPage.locator("form.dialog-form button");
 
 Then(
   "the form's button is {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(await buttons(this).first().textContent(), label);
     });
@@ -149,7 +150,7 @@ Then(
 
 Then(
   /^the form has (\d+) buttons?$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     await eventually(this, async () => {
       assert.equal(await buttons(this).count(), Number(count));
     });
@@ -158,14 +159,14 @@ Then(
 
 // What a list offers, in the order it offers it, less the choice of nothing a
 // list with nothing chosen begins with.
-const offeredIn = async (world: SpecWorld, label: string): Promise<string[]> =>
+const offeredIn = async (world: WebWorld, label: string): Promise<string[]> =>
   (await field(world, label).locator("option").allTextContents()).filter(
     (words) => words !== "",
   );
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) (sport|format) offered is "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, list: string, words: string) {
+  async function (this: WebWorld, which: string, list: string, words: string) {
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, label))[ordinal(which)], words);
@@ -175,7 +176,7 @@ Then(
 
 Then(
   /^(\d+) (sport|format)s? (?:is|are) offered$/,
-  async function (this: SpecWorld, count: string, list: string) {
+  async function (this: WebWorld, count: string, list: string) {
     const label = list === "sport" ? "Sport" : "Format";
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, label)).length, Number(count));
@@ -185,7 +186,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) country in the form is "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, country: string) {
+  async function (this: WebWorld, which: string, country: string) {
     await eventually(this, async () => {
       assert.equal((await offeredIn(this, "Country"))[ordinal(which)], country);
     });
@@ -194,7 +195,7 @@ Then(
 
 Then(
   /^the form's country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     await eventually(this, async () => {
       assert.equal(
         await field(this, "Country").locator("hr").count(),
@@ -216,7 +217,7 @@ const drawnScript = `(() => {
 
 Then(
   "the options of the form's country list are {string} on {string}",
-  async function (this: SpecWorld, ink: string, ground: string) {
+  async function (this: WebWorld, ink: string, ground: string) {
     await eventually(this, async () => {
       const drawn = await field(this, "Country").evaluate<
         { ink: string; ground: string },
@@ -230,7 +231,7 @@ Then(
 
 Then(
   "the region {string} is offered",
-  async function (this: SpecWorld, region: string) {
+  async function (this: WebWorld, region: string) {
     await eventually(this, async () => {
       assert.ok(
         (await offeredIn(this, "Region")).includes(region),
@@ -240,37 +241,26 @@ Then(
   },
 );
 
-const chosenIn = async (world: SpecWorld, label: string): Promise<string> =>
+const chosenIn = async (world: WebWorld, label: string): Promise<string> =>
   (await field(world, label).locator("option:checked").textContent()) ?? "";
 
-Then(
-  "the sport chosen is {string}",
-  async function (this: SpecWorld, sport: string) {
-    await eventually(this, async () => {
-      assert.equal(await chosenIn(this, "Sport"), sport);
-    });
-  },
-);
+// The same words say it of the lists' filter, which is a form of the same kind.
+for (const [which, label] of [
+  ["sport", "Sport"],
+  ["country", "Country"],
+  ["region", "Region"],
+] as const) {
+  Then(
+    `the ${which} chosen is {string}`,
+    async function (this: WebWorld, chosen: string) {
+      await eventually(this, async () => {
+        assert.equal(await chosenIn(this, label), chosen);
+      });
+    },
+  );
+}
 
-Then(
-  "the country chosen is {string}",
-  async function (this: SpecWorld, country: string) {
-    await eventually(this, async () => {
-      assert.equal(await chosenIn(this, "Country"), country);
-    });
-  },
-);
-
-Then(
-  "the region chosen is {string}",
-  async function (this: SpecWorld, region: string) {
-    await eventually(this, async () => {
-      assert.equal(await chosenIn(this, "Region"), region);
-    });
-  },
-);
-
-Then("no region is chosen", async function (this: SpecWorld) {
+Then("no region is chosen", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await field(this, "Region").inputValue(), "");
   });
@@ -278,20 +268,20 @@ Then("no region is chosen", async function (this: SpecWorld) {
 
 Then(
   "the format chosen is {string}",
-  async function (this: SpecWorld, format: string) {
+  async function (this: WebWorld, format: string) {
     await eventually(this, async () => {
       assert.equal(await chosenIn(this, "Format"), format);
     });
   },
 );
 
-Then("{string} is ticked", async function (this: SpecWorld, label: string) {
+Then("{string} is ticked", async function (this: WebWorld, label: string) {
   await eventually(this, async () => {
     assert.equal(await field(this, label).isChecked(), true);
   });
 });
 
-Then("{string} is not ticked", async function (this: SpecWorld, label: string) {
+Then("{string} is not ticked", async function (this: WebWorld, label: string) {
   await eventually(this, async () => {
     assert.equal(await field(this, label).isChecked(), false);
   });
@@ -299,7 +289,7 @@ Then("{string} is not ticked", async function (this: SpecWorld, label: string) {
 
 // A group of fields by the words on its legend, which is how a screen reader
 // names it.
-const group = (world: SpecWorld, legend: string): Locator =>
+const group = (world: WebWorld, legend: string): Locator =>
   world.browserPage.locator(forms).getByRole("group", {
     name: legend,
     exact: true,
@@ -307,7 +297,7 @@ const group = (world: SpecWorld, legend: string): Locator =>
 
 Then(
   "{string} is in the group {string}",
-  async function (this: SpecWorld, label: string, legend: string) {
+  async function (this: WebWorld, label: string, legend: string) {
     await eventually(this, async () => {
       assert.equal(
         await group(this, legend).getByLabel(label, { exact: true }).count(),
@@ -320,7 +310,7 @@ Then(
 
 Then(
   "{string} is not in the group {string}",
-  async function (this: SpecWorld, label: string, legend: string) {
+  async function (this: WebWorld, label: string, legend: string) {
     await eventually(this, async () => {
       // The group is asserted first: with none there, nothing is in it, and
       // the scenario would pass for a reason other than the one it names.
@@ -338,7 +328,7 @@ Then(
   },
 );
 
-Then("{string} is empty", async function (this: SpecWorld, label: string) {
+Then("{string} is empty", async function (this: WebWorld, label: string) {
   await eventually(this, async () => {
     assert.equal(await field(this, label).inputValue(), "");
   });
@@ -346,7 +336,7 @@ Then("{string} is empty", async function (this: SpecWorld, label: string) {
 
 Then(
   "{string} still says {string}",
-  async function (this: SpecWorld, label: string, words: string) {
+  async function (this: WebWorld, label: string, words: string) {
     await eventually(this, async () => {
       assert.equal(await field(this, label).inputValue(), words);
     });
@@ -356,7 +346,7 @@ Then(
 // What the reader does -------------------------------------------------------
 
 const choose = async (
-  world: SpecWorld,
+  world: WebWorld,
   label: string,
   choice: string,
 ): Promise<void> => {
@@ -366,40 +356,40 @@ const choose = async (
 
 Given(
   "the country {string} is chosen",
-  async function (this: SpecWorld, country: string) {
+  async function (this: WebWorld, country: string) {
     await choose(this, "Country", country);
   },
 );
 
 Given(
   "the region {string} is chosen",
-  async function (this: SpecWorld, region: string) {
+  async function (this: WebWorld, region: string) {
     await choose(this, "Region", region);
   },
 );
 
-Given("none is chosen for the region", async function (this: SpecWorld) {
+Given("none is chosen for the region", async function (this: WebWorld) {
   await drawn(this);
   await field(this, "Region").selectOption({ value: "" });
 });
 
 Given(
   "the sport {string} is chosen",
-  async function (this: SpecWorld, sport: string) {
+  async function (this: WebWorld, sport: string) {
     await choose(this, "Sport", sport);
   },
 );
 
 Given(
   "the format {string} is chosen",
-  async function (this: SpecWorld, format: string) {
+  async function (this: WebWorld, format: string) {
     await choose(this, "Format", format);
   },
 );
 
 Given(
   "the reader ticks {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await drawn(this);
     await field(this, label).check();
   },
@@ -407,7 +397,7 @@ Given(
 
 Given(
   "the reader unticks {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await drawn(this);
     await field(this, label).uncheck();
   },
@@ -415,7 +405,7 @@ Given(
 
 Given(
   "{string} is typed as the {string}",
-  async function (this: SpecWorld, words: string, label: string) {
+  async function (this: WebWorld, words: string, label: string) {
     await drawn(this);
     await field(this, label).fill(words);
   },
@@ -423,7 +413,7 @@ Given(
 
 Given(
   "{int} characters are typed as the {string}",
-  async function (this: SpecWorld, count: number, label: string) {
+  async function (this: WebWorld, count: number, label: string) {
     await drawn(this);
     await field(this, label).fill("a".repeat(count));
   },
@@ -431,14 +421,14 @@ Given(
 
 Then(
   "the tab asks for {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(await field(this, label).count(), 1);
     });
   },
 );
 
-Then("{string} has the focus", async function (this: SpecWorld, label: string) {
+Then("{string} has the focus", async function (this: WebWorld, label: string) {
   await eventually(this, async () => {
     // A field by its label, and otherwise a button by its words, looked for
     // again each time this is retried, and asked with a short wait of its own,
@@ -464,7 +454,7 @@ Then("{string} has the focus", async function (this: SpecWorld, label: string) {
 
 Then(
   "{string} says {string}",
-  async function (this: SpecWorld, label: string, words: string) {
+  async function (this: WebWorld, label: string, words: string) {
     await eventually(this, async () => {
       assert.equal(await field(this, label).inputValue(), words);
     });
@@ -476,14 +466,14 @@ Then(
 // The suggestions of the name field alone: the list it is drawn with, which is
 // not there while there is nothing to suggest. Asked again for a while, since
 // the names are asked of the website once the form is drawn.
-const suggested = (world: SpecWorld): Locator =>
+const suggested = (world: WebWorld): Locator =>
   world.browserPage
     .locator(forms)
     .locator('[role="listbox"]:not([hidden]) [role="option"]');
 
 Then(
   "the name {string} is suggested",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
         (await suggested(this).allTextContents()).includes(name),
@@ -495,7 +485,7 @@ Then(
 
 Then(
   "the name {string} is not suggested",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // Waited for the form to be drawn, and the names to have been asked for:
     // a list that has not arrived yet would otherwise pass for one without it.
     await settledNames(this);
@@ -508,7 +498,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth) name suggested is "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
         (await suggested(this).allTextContents())[ordinal(which)],
@@ -518,14 +508,14 @@ Then(
   },
 );
 
-Then("no name is suggested", async function (this: SpecWorld) {
+Then("no name is suggested", async function (this: WebWorld) {
   await settledNames(this);
   assert.deepEqual(await suggested(this).allTextContents(), []);
 });
 
 Then(
   /^(\d+) names? (?:is|are) suggested$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     await eventually(this, async () => {
       assert.equal(await suggested(this).count(), Number(count));
     });
@@ -534,7 +524,7 @@ Then(
 
 When(
   "the name {string} is chosen",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await suggested(this).getByText(name, { exact: true }).click();
   },
 );
@@ -543,7 +533,7 @@ When(
 
 Then(
   "nothing is said beneath {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(
         await field(this, label).getAttribute("aria-describedby"),
@@ -559,7 +549,7 @@ Then(
 // not count as said beside the field.
 Then(
   "{string} is refused with {string}",
-  async function (this: SpecWorld, label: string, code: string) {
+  async function (this: WebWorld, label: string, code: string) {
     await eventually(this, async () => {
       const described = await field(this, label).getAttribute(
         "aria-describedby",
@@ -592,36 +582,46 @@ Then(
 
 Then(
   "the tournament {string} is kept in the format {string}",
-  async function (this: SpecWorld, name: string, format: string) {
-    assert.equal((await keptCalled(this, name)).format.name, format);
+  async function (this: WebWorld, name: string, format: string) {
+    await retried(async () => {
+      assert.equal((await keptCalled(this, name)).format, format);
+    });
   },
 );
 
 Then(
   "the tournament {string} is kept in no region",
-  async function (this: SpecWorld, name: string) {
-    assert.equal((await keptCalled(this, name)).region, undefined);
+  async function (this: WebWorld, name: string) {
+    await retried(async () => {
+      assert.equal((await keptCalled(this, name)).region, undefined);
+    });
   },
 );
 
 Then(
   "the tournament {string} is kept drawing a level test",
-  async function (this: SpecWorld, name: string) {
-    assert.equal((await keptCalled(this, name)).levelTestsDrawn, true);
+  async function (this: WebWorld, name: string) {
+    await retried(async () => {
+      assert.equal((await keptCalled(this, name)).levelTestsDrawn, true);
+    });
   },
 );
 
 Then(
   "the tournament {string} is kept as not national",
-  async function (this: SpecWorld, name: string) {
-    assert.equal((await keptCalled(this, name)).national, false);
+  async function (this: WebWorld, name: string) {
+    await retried(async () => {
+      assert.equal((await keptCalled(this, name)).national, false);
+    });
   },
 );
 
 Then(
   "the tournament {string} is kept as not international",
-  async function (this: SpecWorld, name: string) {
-    assert.equal((await keptCalled(this, name)).international, false);
+  async function (this: WebWorld, name: string) {
+    await retried(async () => {
+      assert.equal((await keptCalled(this, name)).international, false);
+    });
   },
 );
 
@@ -630,7 +630,7 @@ Then(
 // Measured by the boxes the reader sees, which are the labels the fields are
 // drawn in, rather than the controls inside them.
 const boxOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   label: string,
 ): Promise<{ x: number; y: number }> => {
   const box = await world.browserPage
@@ -644,7 +644,7 @@ const boxOf = async (
 
 Then(
   "{string} and {string} are on the same row",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await eventually(this, async () => {
       const [first, second] = [
         await boxOf(this, one),
@@ -661,7 +661,7 @@ Then(
 
 Then(
   "{string} is to the left of {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await eventually(this, async () => {
       const [first, second] = [
         await boxOf(this, one),
@@ -682,7 +682,7 @@ Then(
 // since the lists fill a moment after the form is drawn.
 Then(
   "every word in the form is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "section.dialog");
       assert.deepEqual(stray, [], "Words in the form came from elsewhere.");
@@ -692,7 +692,7 @@ Then(
 
 // Sent by its one button, found by what it is rather than by its words, which
 // are in whatever language the page is in.
-When("the form is sent as it is", async function (this: SpecWorld) {
+When("the form is sent as it is", async function (this: WebWorld) {
   await drawn(this);
   await this.browserPage
     .locator('form.dialog-form button[type="submit"]')
@@ -700,7 +700,7 @@ When("the form is sent as it is", async function (this: SpecWorld) {
 });
 
 // Something said beside a field, which is where the form says what it refused.
-Then("the form says what it refused", async function (this: SpecWorld) {
+Then("the form says what it refused", async function (this: WebWorld) {
   await this.browserPage
     .locator("form.dialog-form .field-message")
     .first()
@@ -711,7 +711,7 @@ Then("the form says what it refused", async function (this: SpecWorld) {
 // page is in, and a scenario about order may be read in any of them.
 Then(
   "the country {string} is offered before the country {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await eventually(this, async () => {
       const countries = await this.browserPage
         .locator("#field-country option")

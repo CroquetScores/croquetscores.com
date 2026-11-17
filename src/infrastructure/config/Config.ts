@@ -1,5 +1,13 @@
 // Settings are read once, here, and handed out as a typed object. Nothing else
 // in the repository touches process.env: a second reader is a second answer.
+import {
+  googlesOwnEndpoints,
+  type GoogleEndpoints,
+} from "../identity/GoogleOpenIdConnect.js";
+import {
+  defaultWaitMilliseconds,
+  worldRankingAddresses,
+} from "../services/WorldRankingWebsite.js";
 import { existsSync } from "node:fs";
 import { isIP } from "node:net";
 
@@ -93,7 +101,65 @@ export interface Config {
   // pg_dump, as the backup runs it, where the computer does not find it by the
   // name pg_dump: the copy that comes with pgAdmin is not on the path.
   readonly pgDumpPath: string | undefined;
+  /**
+   * What a call to the test control must carry, where the site has one
+   * (src/web/testControl.ts). Only a site over a database the specs made is
+   * let have it, so that it cannot be set over a real one.
+   */
+  readonly testControlToken: string | undefined;
+  /**
+   * The version the specs say the site is, where it has the test control: a
+   * number, or null for none. Left out, it is what the build wrote down.
+   */
+  readonly testSiteVersion: number | null | undefined;
+  /** Where the world rankings keep each sport's list: their own site unless told. */
+  readonly worldRankingAddresses: Readonly<Record<"ac" | "gc", string>>;
+  /** How long a list is waited for, in milliseconds. */
+  readonly worldRankingWaitMilliseconds: number;
+  /**
+   * Where Google answers: its own, and another's only for a site that has the
+   * test control, which the specs stand in Google's place for. A deployment
+   * cannot point sign-in somewhere else.
+   */
+  readonly googleEndpoints: GoogleEndpoints;
 }
+
+// What the specs say the version is: a whole number, "none", or nothing said.
+// Anything else stops the site starting, as every other setting not understood
+// does, since a number that is not one would be passed on as the version.
+const testVersionOf = (
+  written: string | undefined,
+  problems: string[],
+): number | null | undefined => {
+  const said = written?.trim();
+  if (said === undefined || said === "") return undefined;
+  if (said === "none") return null;
+  // Digits and nothing else: Number() would take "0x10" for 16, "1e2" for 100
+  // and "1.0" for 1, none of which is a whole number as it is written.
+  if (!/^\d+$/u.test(said)) {
+    problems.push(
+      `TEST_SITE_VERSION must be a whole number or "none", not ${JSON.stringify(said)}.`,
+    );
+    return undefined;
+  }
+  return Number(said);
+};
+
+/**
+ * What the specs name every database they make, so that a site can tell one
+ * from a real one by its name alone.
+ */
+export const scratchDatabasePrefix = "zzz_delete_me_spec_";
+
+/** Whether `databaseUrl` names a database the specs made. */
+export const isScratchDatabase = (databaseUrl: string): boolean => {
+  try {
+    const name = decodeURIComponent(new URL(databaseUrl).pathname.slice(1));
+    return name.startsWith(scratchDatabasePrefix);
+  } catch {
+    return false;
+  }
+};
 
 export class ConfigError extends Error {
   constructor(problems: readonly string[]) {
@@ -257,6 +323,97 @@ const defaultDatabaseUnreachableEmailIntervalMinutes = 30;
 // Anything that is not a whole number of minutes stops the site starting
 // rather than quietly meaning the default, since whoever wrote "5m" wanted
 // five.
+// Where Google answers when the specs stand another in its place: one address,
+// at which the stand-in answers everywhere Google does.
+const testGoogleEndpoints = (
+  address: string | undefined,
+  problems: string[],
+): GoogleEndpoints => {
+  const written = address?.trim() ?? "";
+  // Without a slash at the end, which the paths added below would double.
+  const at = written.replace(/\/+$/u, "");
+  if (at === "") {
+    // Nothing said is Google's own, but slashes alone are something said that
+    // names nowhere: taken for nothing they would send the specs to the real
+    // Google when they meant the stand-in.
+    if (written !== "") {
+      problems.push(
+        `TEST_GOOGLE_ADDRESS must be an address, not ${JSON.stringify(written)}.`,
+      );
+    }
+    return googlesOwnEndpoints;
+  }
+  return {
+    issuers: [at],
+    authorization: `${at}/authorize`,
+    token: `${at}/token`,
+    keys: `${at}/keys`,
+  };
+};
+
+const isWebAddress = (written: string): boolean => {
+  try {
+    return ["http:", "https:"].includes(new URL(written).protocol);
+  } catch {
+    return false;
+  }
+};
+
+// Where the lists are, which a deployment is told only where it must not ask
+// the rankings' own site (the specs stand another in its place): both or
+// neither.
+const readWorldRankingAddresses = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): Readonly<Record<"ac" | "gc", string>> => {
+  const ac = env["WORLD_RANKING_AC_ADDRESS"]?.trim() ?? "";
+  const gc = env["WORLD_RANKING_GC_ADDRESS"]?.trim() ?? "";
+  if (ac === "" && gc === "") return worldRankingAddresses;
+  // A list is fetched from it, so what is not an address stops the site
+  // starting and not the import, long after, with nothing said about which
+  // setting it was.
+  for (const [key, written] of [
+    ["WORLD_RANKING_AC_ADDRESS", ac],
+    ["WORLD_RANKING_GC_ADDRESS", gc],
+  ] as const) {
+    if (written !== "" && !isWebAddress(written)) {
+      problems.push(
+        `${key} must be a web address, not ${JSON.stringify(written)}.`,
+      );
+    }
+  }
+  if (ac === "")
+    problems.push(
+      "WORLD_RANKING_AC_ADDRESS is needed with WORLD_RANKING_GC_ADDRESS.",
+    );
+  if (gc === "")
+    problems.push(
+      "WORLD_RANKING_GC_ADDRESS is needed with WORLD_RANKING_AC_ADDRESS.",
+    );
+  return { ac, gc };
+};
+
+const readWorldRankingWait = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): number => {
+  const key = "WORLD_RANKING_WAIT_MILLISECONDS";
+  const raw = env[key]?.trim() ?? "";
+  if (raw === "") return defaultWaitMilliseconds;
+  const milliseconds = Number(raw);
+  if (
+    !/^\d+$/.test(raw) ||
+    !Number.isSafeInteger(milliseconds) ||
+    milliseconds < 1
+  ) {
+    problems.push(
+      `${key} must be a whole number of milliseconds, one or more, not ${JSON.stringify(raw)}.`,
+    );
+    return defaultWaitMilliseconds;
+  }
+  return milliseconds;
+};
+
 const readDatabaseUnreachableEmailIntervalMinutes = (
   env: NodeJS.ProcessEnv,
   problems: string[],
@@ -325,8 +482,30 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
   const smtp = readSmtp(env, problems);
   const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
+  const worldRankingAddresses = readWorldRankingAddresses(env, problems);
+  const worldRankingWaitMilliseconds = readWorldRankingWait(env, problems);
   const databaseUnreachableEmailIntervalMinutes =
     readDatabaseUnreachableEmailIntervalMinutes(env, problems);
+  // Refused rather than ignored: a token left in the settings of a real site
+  // would otherwise be a way into it that nobody was watching for.
+  const testControlToken = env["TEST_CONTROL_TOKEN"]?.trim() || undefined;
+  if (
+    testControlToken !== undefined &&
+    !isScratchDatabase(env["DATABASE_URL"] ?? "")
+  ) {
+    problems.push(
+      `TEST_CONTROL_TOKEN is only for a database the specs made, whose name begins ${scratchDatabasePrefix}.`,
+    );
+  }
+  // Read before the problems are counted, so that one it finds is among them.
+  const testSiteVersion =
+    testControlToken === undefined
+      ? undefined
+      : testVersionOf(env["TEST_SITE_VERSION"], problems);
+  const googleEndpoints =
+    testControlToken === undefined
+      ? googlesOwnEndpoints
+      : testGoogleEndpoints(env["TEST_GOOGLE_ADDRESS"], problems);
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
@@ -352,6 +531,12 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     websiteDatabaseUrl: env["WEBSITE_DATABASE_URL"]?.trim() || undefined,
     databaseBackupFolder: env["DATABASE_BACKUP_FOLDER"]?.trim() || undefined,
     pgDumpPath: env["PG_DUMP_PATH"]?.trim() || undefined,
+    testControlToken,
+    worldRankingAddresses,
+    worldRankingWaitMilliseconds,
+    googleEndpoints,
+    testSiteVersion:
+      testControlToken === undefined ? undefined : testSiteVersion,
   };
 };
 

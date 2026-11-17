@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
@@ -18,27 +18,27 @@ const placeOf = (which: string): number => {
   return at;
 };
 
-const summaryOf = (world: SpecWorld): Locator =>
+const summaryOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main .block-summary");
 
-const rows = (world: SpecWorld): Locator =>
+const rows = (world: WebWorld): Locator =>
   summaryOf(world).locator("tbody > tr");
 
-const headings = (world: SpecWorld): Locator =>
+const headings = (world: WebWorld): Locator =>
   summaryOf(world).locator("thead .block-summary-heading");
 
 // What is said, as a reader reads it, one space between each word.
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
 
-const rowOf = (world: SpecWorld, name: string): Locator =>
+const rowOf = (world: WebWorld, name: string): Locator =>
   rows(world).filter({
     has: world.browserPage.locator(".player-name", { hasText: name }),
   });
 
 When(
   "the name of {string} in the summary is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // A block's summary or a knockout's, whichever the page draws.
     await this.browserPage
       .locator("main :is(.block-summary, .knockout-summary) .player-name", {
@@ -54,7 +54,7 @@ When(
 
 Then(
   /^the (first|second|third) row of the summary is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       await said(rows(this).nth(placeOf(which)).locator(".player-name")),
       name,
@@ -64,7 +64,7 @@ Then(
 
 Then(
   "the row of {string} in the summary says they represent {string}",
-  async function (this: SpecWorld, name: string, representing: string) {
+  async function (this: WebWorld, name: string, representing: string) {
     assert.equal(
       await said(rowOf(this, name).locator(".player-representing")),
       `(${representing})`,
@@ -74,7 +74,7 @@ Then(
 
 Then(
   /^the row of "(.*)" in the summary (does not say|says) they have withdrawn$/,
-  async function (this: SpecWorld, name: string, says: string) {
+  async function (this: WebWorld, name: string, says: string) {
     assert.equal(
       await rowOf(this, name).locator(".block-summary-withdrawn").count(),
       says === "says" ? 1 : 0,
@@ -84,13 +84,15 @@ Then(
 
 Then(
   /^the name of "(.*)" in the summary is (not )?struck through$/,
-  async function (this: SpecWorld, name: string, not: string | null) {
+  async function (this: WebWorld, name: string, not: string | null) {
     assert.equal(
       await isStruckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
     );
   },
 );
+
+// How a name breaks across lines -------------------------------------------------
 
 // A space a line may break at is an ordinary one; a no-break space, which is
 // what holds a name together, is not matched by a plain " ".
@@ -99,7 +101,7 @@ const breakable = async (found: Locator): Promise<string> =>
 
 Then(
   /^the name of "(.*)" in the summary has (\d+) places? to break a line$/,
-  async function (this: SpecWorld, name: string, count: string) {
+  async function (this: WebWorld, name: string, count: string) {
     const text = await breakable(rowOf(this, name).locator(".player-name"));
     assert.equal(text.split(" ").length - 1, Number(count));
   },
@@ -107,7 +109,7 @@ Then(
 
 Then(
   /^the name of "(.*)" in the summary breaks after its ampersand$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const text = await breakable(rowOf(this, name).locator(".player-name"));
     assert.ok(text.includes("& "), `"${text}" does not break after "&".`);
   },
@@ -118,7 +120,7 @@ Then(
 // expression, since a function given as text is not called.
 Then(
   "no word of any name in the summary is broken",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const broken = await this.browserPage.evaluate(`(() => {
       const split = [];
       for (const name of document.querySelectorAll("main .block-summary .player-name")) {
@@ -141,7 +143,7 @@ Then(
   },
 );
 
-Then("the summary scrolls sideways", async function (this: SpecWorld) {
+Then("the summary scrolls sideways", async function (this: WebWorld) {
   const scrolls = await this.browserPage.evaluate(
     `(() => {
       const found = document.querySelector("main .block-summary-scroll");
@@ -151,18 +153,25 @@ Then("the summary scrolls sideways", async function (this: SpecWorld) {
   assert.ok(scrolls, "The summary fits the window, so has no need to scroll.");
 });
 
+Then("the page does not scroll sideways", async function (this: WebWorld) {
+  const fits = await this.browserPage.evaluate(
+    "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+  );
+  assert.ok(fits, "The page is wider than the screen.");
+});
+
 // Its columns --------------------------------------------------------------------
 
 Then(
   /^the (first|second|third|fourth) column of the summary is headed "(.*)"$/,
-  async function (this: SpecWorld, which: string, heading: string) {
+  async function (this: WebWorld, which: string, heading: string) {
     assert.equal(await headingOf(headings(this).nth(placeOf(which))), heading);
   },
 );
 
 Then(
   /^the (first|second|third) column of the summary is headed in (\d+) lines?$/,
-  async function (this: SpecWorld, which: string, count: string) {
+  async function (this: WebWorld, which: string, count: string) {
     assert.equal(
       (await linesOf(headings(this).nth(placeOf(which)))).length,
       Number(count),
@@ -173,7 +182,7 @@ Then(
 Then(
   "the {string} of {string} in the summary are {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     heading: string,
     name: string,
     value: string,

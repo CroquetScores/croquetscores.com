@@ -1,14 +1,13 @@
 import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { Team } from "../../../../../../../../../src/domain/aggregates/tournaments/Team.js";
-import { english } from "../../../../../../../../../src/web/languages/english.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
+import { keptOf, type KeptTeam } from "../../../../../../../support/kept.js";
+import { wordsFor } from "../../../../../../../support/words.js";
 import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
-import { eventually } from "../../../../../../../support/tournamentPage.js";
+  eventually,
+  retried,
+} from "../../../../../../../support/tournamentPage.js";
 
 // The team dialog (team.feature), and the team player dialog on a team's page
 // (team-player.feature). What they share with the player dialog, being modal
@@ -20,9 +19,8 @@ import { eventually } from "../../../../../../../support/tournamentPage.js";
 // count as said of the field.
 Then(
   "{string} is described by the words for {string}",
-  async function (this: SpecWorld, label: string, key: string) {
-    const words = english.words[key];
-    assert.ok(words !== undefined, `English has no words for ${key}.`);
+  async function (this: WebWorld, label: string, key: string) {
+    const words = wordsFor(key);
     const field = this.browserPage
       .locator("dialog[open]")
       .getByLabel(label, { exact: true });
@@ -46,20 +44,19 @@ Then(
 // What was kept ------------------------------------------------------------------
 
 const teamsOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
-): Promise<readonly Team[]> =>
-  (await load(world, tournamentNamed(world, tournament))).teams;
+): Promise<readonly KeptTeam[]> => (await keptOf(world, tournament)).teams;
 
 const teamCalled = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
   name: string,
-): Promise<Team> => {
-  let found: Team | undefined;
+): Promise<KeptTeam> => {
+  let found: KeptTeam | undefined;
   await eventually(world, async () => {
     found = (await teamsOf(world, tournament)).find(
-      (team) => team.name.toString() === name,
+      (team) => team.name === name,
     );
     assert.ok(found !== undefined, `${tournament} has no team ${name}.`);
   });
@@ -69,15 +66,17 @@ const teamCalled = async (
 
 Then(
   "{string} has the team {string}",
-  async function (this: SpecWorld, tournament: string, name: string) {
-    await teamCalled(this, tournament, name);
+  async function (this: WebWorld, tournament: string, name: string) {
+    await retried(async () => {
+      await teamCalled(this, tournament, name);
+    });
   },
 );
 
 // Once nothing more can be sent: the dialog closed, or the page settled.
 Then(
   "{string} has no teams",
-  async function (this: SpecWorld, tournament: string) {
+  async function (this: WebWorld, tournament: string) {
     await eventually(this, async () => {
       assert.equal((await teamsOf(this, tournament)).length, 0);
     });
@@ -87,14 +86,14 @@ Then(
 Then(
   "the team {string} of {string} is known for short as {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     shortName: string,
   ) {
     await eventually(this, async () => {
       assert.equal(
-        (await teamCalled(this, tournament, name)).shortName.toString(),
+        (await teamCalled(this, tournament, name)).shortName,
         shortName,
       );
     });
@@ -104,7 +103,7 @@ Then(
 Then(
   "the team {string} of {string} flies the flag {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     flag: string,
@@ -120,7 +119,7 @@ Then(
 
 Then(
   "the team {string} of {string} flies no flag",
-  async function (this: SpecWorld, name: string, tournament: string) {
+  async function (this: WebWorld, name: string, tournament: string) {
     await eventually(this, async () => {
       assert.equal((await teamCalled(this, tournament, name)).flag, undefined);
     });
@@ -128,18 +127,18 @@ Then(
 );
 
 const playersOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
   team: string,
 ): Promise<string[]> =>
-  (await teamCalled(world, tournament, team)).players.map((player) =>
-    player.name.toString(),
+  (await teamCalled(world, tournament, team)).players.map(
+    (player) => player.name,
   );
 
 Then(
   "the team {string} of {string} has the player {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     team: string,
     tournament: string,
     name: string,
@@ -154,7 +153,7 @@ Then(
 Then(
   "the player {string} of the team {string} of {string} has the world ranking name {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     team: string,
     tournament: string,
@@ -162,7 +161,7 @@ Then(
   ) {
     await eventually(this, async () => {
       const player = (await teamCalled(this, tournament, team)).players.find(
-        (each) => each.name.toString() === name,
+        (each) => each.name === name,
       );
       assert.ok(player !== undefined, `${team} has no player ${name}.`);
       assert.equal(String(player.worldRankingName), worldRankingName);
@@ -173,7 +172,7 @@ Then(
 Then(
   "the team {string} of {string} does not have the player {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     team: string,
     tournament: string,
     name: string,
@@ -186,7 +185,7 @@ Then(
 
 Then(
   "the team {string} of {string} has no players",
-  async function (this: SpecWorld, team: string, tournament: string) {
+  async function (this: WebWorld, team: string, tournament: string) {
     await eventually(this, async () => {
       assert.deepEqual(await playersOf(this, tournament, team), []);
     });

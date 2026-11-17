@@ -269,7 +269,7 @@ Feature: A player's page shows their games and their competitions
       And "organiser@example.com" has added the player "Nat Newman" to the team "New Zealand" of "Spring Tests"
       And "organiser@example.com" has archived the team "New Zealand" in "Spring Tests"
       When the page at "/2026/ac/spring-tests/players/nat-newman" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A team's player's page is in the reader's language
       Given a browser that asks for "en-XA"
@@ -281,18 +281,18 @@ Feature: A player's page shows their games and their competitions
 
     Scenario: A slug no player has is not found
       When the page at "/2026/ac/spring-open/players/pat-player" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived player is not found
       Given "organiser@example.com" has added the player "Pat Player" to "Spring Open"
       And "organiser@example.com" has archived the player "Pat Player" in "Spring Open"
       When the page at "/2026/ac/spring-open/players/pat-player" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's players are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/players/sam-someone" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the player where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

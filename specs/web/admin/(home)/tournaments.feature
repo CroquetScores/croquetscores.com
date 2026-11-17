@@ -1266,8 +1266,7 @@ Feature: The admin lists the reader's tournaments
       Then the tournament "Spring Open" is dated "03-05 Oct"
 
     Scenario: The month is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And "organiser@example.com" has created the tournament "Spring Open"
       And the tournament "Spring Open" starts on "2026-10-03"
       And the tournament "Spring Open" finishes on "2026-10-05"
@@ -1328,8 +1327,7 @@ Feature: The admin lists the reader's tournaments
       Then every word in the years but the years themselves is in the test locale
 
     Scenario: The list is in Spanish for a reader of Spanish
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the admin is opened
       Then the list offers "Nuevo torneo"
 

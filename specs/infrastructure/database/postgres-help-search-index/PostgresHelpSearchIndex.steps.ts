@@ -5,9 +5,9 @@ import { makeHelpSearchIndex } from "../../../../src/application/operations/help
 import type { HelpPagesToSearch } from "../../../../src/application/services/HelpSearchIndex.js";
 import { PostgresHelpSearchIndex } from "../../../../src/infrastructure/database/PostgresHelpSearchIndex.js";
 import { helpSearchRulesOf } from "../../../../src/web/common/helpSearchConfigurations.js";
-import { languageOf } from "../../../web/common/help-search/helpFolders.js";
-import { pagesOf } from "../../../web/common/help-search/pagesWritten.js";
-import { keepResults } from "../../../web/common/help-search/results.js";
+import { languageOf } from "../../../web-units/common/help-search/helpFolders.js";
+import { pagesOf } from "../../../web-units/common/help-search/pagesWritten.js";
+import { keepResults } from "../../../web-units/common/help-search/results.js";
 import type { SpecWorld } from "../../../support/world.js";
 import { unitOfWorkOf } from "../../support/transactions.js";
 

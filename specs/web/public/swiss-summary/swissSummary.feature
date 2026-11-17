@@ -89,7 +89,7 @@ Feature: A Swiss's summary ranks its players without their results
     Scenario: An archived Swiss has no summary
       Given "organiser@example.com" has archived the competition "Zed" in "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the summary where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "ac"

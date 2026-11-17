@@ -2,11 +2,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../support/world.js";
+import { keptOf } from "../../../../../support/kept.js";
 import { retried } from "../../../../../support/tournamentPage.js";
 import {
   announcedAs,
@@ -21,13 +18,11 @@ import {
 const tabBar = ".tab-control";
 
 const openPageOf = async function (
-  this: SpecWorld,
+  this: WebWorld,
   name: string,
 ): Promise<void> {
-  const tournament = await load(this, tournamentNamed(this, name));
-  await this.browserPage.goto(
-    `${this.baseUrl!}/admin/${tournament.address.toString()}`,
-  );
+  const tournament = await keptOf(this, name);
+  await this.browserPage.goto(`${this.baseUrl!}/admin/${tournament.address}`);
   // Where the reader is sent to sign in first there is no heading of the
   // admin's to wait for, and the sign in page is what the scenario looks at.
   if (!new URL(this.browserPage.url()).pathname.startsWith("/admin/")) return;
@@ -37,12 +32,12 @@ const openPageOf = async function (
 Given("the page of {string} is open", openPageOf);
 When("the page of {string} is opened", openPageOf);
 
-const tabCalled = (world: SpecWorld, tab: string): Locator =>
+const tabCalled = (world: WebWorld, tab: string): Locator =>
   world.browserPage
     .locator(tabBar)
     .getByRole("tab", { name: tab, exact: true });
 
-const choose = async function (this: SpecWorld, tab: string): Promise<void> {
+const choose = async function (this: WebWorld, tab: string): Promise<void> {
   await tabCalled(this, tab).click();
 };
 
@@ -50,20 +45,8 @@ const choose = async function (this: SpecWorld, tab: string): Promise<void> {
 When("the tab {string} is chosen", choose);
 
 Then(
-  "the page is headed {string}",
-  async function (this: SpecWorld, name: string) {
-    const heading = this.browserPage.locator("main h1").first();
-    await heading.waitFor();
-    // A name kept from beside the heading is redrawn a moment after it is.
-    await retried(async () => {
-      assert.equal((await heading.innerText()).trim(), name);
-    });
-  },
-);
-
-Then(
   "the tab {string} is offered",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
   },
 );
@@ -73,7 +56,7 @@ Then(
 // still to come.
 Then(
   "the tab {string} is not offered",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await this.browserPage.locator(tabBar).getByRole("tab").first().waitFor();
     assert.equal(await tabCalled(this, tab).count(), 0, `${tab} is offered.`);
   },
@@ -81,7 +64,7 @@ Then(
 
 // Once the page has said why it was refused, which is when it has decided
 // what to draw.
-Then("no tab is offered", async function (this: SpecWorld) {
+Then("no tab is offered", async function (this: WebWorld) {
   await this.browserPage.locator("main h1").first().waitFor();
   assert.equal(await this.browserPage.getByRole("tab").count(), 0);
 });
@@ -90,7 +73,7 @@ const places = ["first", "second", "third", "fourth", "fifth", "sixth"];
 
 Then(
   /^the tab "([^"]*)" is the (first|second|third|fourth|fifth|sixth) tab$/,
-  async function (this: SpecWorld, tab: string, place: string) {
+  async function (this: WebWorld, tab: string, place: string) {
     await tabCalled(this, tab).waitFor();
     const all = (
       await this.browserPage.locator(tabBar).getByRole("tab").allInnerTexts()
@@ -107,7 +90,7 @@ Then(
 // heading, rather than in the section bar, which is for moving between pages.
 Then(
   "the tab {string} is in the panel",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
     assert.equal(
       await this.browserPage
@@ -122,14 +105,14 @@ Then(
 // The pencil beside the heading, by the name it is given: a link where it
 // leads to a page, as a tournament's does, and a button where it opens a
 // dialog, as a competition's does.
-const editBesideHeading = (world: SpecWorld): Locator => {
+const editBesideHeading = (world: WebWorld): Locator => {
   const heading = world.browserPage.locator("main .page-heading");
   return heading
     .getByRole("link", { name: "Edit", exact: true })
     .or(heading.getByRole("button", { name: "Edit", exact: true }));
 };
 
-Then("Edit is beside the page's heading", async function (this: SpecWorld) {
+Then("Edit is beside the page's heading", async function (this: WebWorld) {
   const edit = editBesideHeading(this);
   await edit.waitFor();
   const heading = await this.browserPage
@@ -148,7 +131,7 @@ Then("Edit is beside the page's heading", async function (this: SpecWorld) {
 
 Then(
   "Edit beside the page's heading is a pencil",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const edit = editBesideHeading(this);
     await edit.waitFor();
     assert.equal(await edit.locator(".icon-pencil").count(), 1);
@@ -158,18 +141,18 @@ Then(
 
 When(
   "Edit beside the page's heading is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await editBesideHeading(this).click();
   },
 );
 
 // The trash can after the pencil: a button, since it opens a dialog.
-const deleteBesideHeading = (world: SpecWorld): Locator =>
+const deleteBesideHeading = (world: WebWorld): Locator =>
   world.browserPage
     .locator("main .page-heading")
     .getByRole("button", { name: "Delete", exact: true });
 
-Then("Delete is beside the page's heading", async function (this: SpecWorld) {
+Then("Delete is beside the page's heading", async function (this: WebWorld) {
   const button = deleteBesideHeading(this);
   await button.waitFor();
   const heading = await this.browserPage
@@ -187,7 +170,7 @@ Then("Delete is beside the page's heading", async function (this: SpecWorld) {
 
 Then(
   "Delete beside the page's heading is a trash can",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const button = deleteBesideHeading(this);
     await button.waitFor();
     assert.equal(await button.locator(".icon-trash-can").count(), 1);
@@ -197,7 +180,7 @@ Then(
 
 Then(
   "Delete comes after Edit beside the page's heading",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const button = deleteBesideHeading(this);
     await button.waitFor();
     const edit = await editBesideHeading(this).boundingBox();
@@ -209,14 +192,14 @@ Then(
 
 When(
   "Delete beside the page's heading is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await deleteBesideHeading(this).click();
   },
 );
 
 Then(
   "Delete is not offered beside the page's heading",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator("main h1").first().waitFor();
     assert.equal(await deleteBesideHeading(this).count(), 0);
   },
@@ -224,7 +207,7 @@ Then(
 
 Then(
   "Edit is not offered beside the page's heading",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator("main h1").first().waitFor();
     assert.equal(await editBesideHeading(this).count(), 0);
   },
@@ -232,7 +215,7 @@ Then(
 
 Then(
   "the tab {string} is beneath the page's heading",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
     const heading = await this.browserPage
       .locator("main h1")
@@ -244,7 +227,7 @@ Then(
   },
 );
 
-Then("the tabs are named in the test locale", async function (this: SpecWorld) {
+Then("the tabs are named in the test locale", async function (this: WebWorld) {
   await this.browserPage.locator(tabBar).waitFor();
   const named = await announcedAs(this, tabBar);
   assert.ok(named !== null, "The tabs are not named.");
@@ -255,7 +238,7 @@ Then("the tabs are named in the test locale", async function (this: SpecWorld) {
 // still be settling, which moved the last two a line down from the first four
 // in one run of a few thousand: a row that really wraps is still wrapped when
 // the retries are over.
-Then("the tabs are on one row", async function (this: SpecWorld) {
+Then("the tabs are on one row", async function (this: WebWorld) {
   const tabs = this.browserPage.locator(tabBar).getByRole("tab");
   await tabs.first().waitFor();
   await retried(async () => {
@@ -272,7 +255,7 @@ Then("the tabs are on one row", async function (this: SpecWorld) {
 
 Then(
   "the tab {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, tab: string, pixels: number) {
+  async function (this: WebWorld, tab: string, pixels: number) {
     const box = await tabCalled(this, tab).boundingBox();
     assert.ok(box !== null, `The tab ${tab} is not laid out.`);
     assert.ok(
@@ -284,12 +267,12 @@ Then(
 
 // Which tab is being read is what a screen reader is told, and what the
 // stylesheet marks: one is the other.
-const isBeingRead = async (world: SpecWorld, tab: string): Promise<boolean> =>
+const isBeingRead = async (world: WebWorld, tab: string): Promise<boolean> =>
   (await tabCalled(world, tab).getAttribute("aria-selected")) === "true";
 
 Then(
   "the tab {string} is the one being read",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
     assert.equal(await isBeingRead(this, tab), true);
   },
@@ -297,7 +280,7 @@ Then(
 
 Then(
   "the tab {string} is not the one being read",
-  async function (this: SpecWorld, tab: string) {
+  async function (this: WebWorld, tab: string) {
     await tabCalled(this, tab).waitFor();
     assert.equal(await isBeingRead(this, tab), false);
   },
@@ -305,7 +288,7 @@ Then(
 
 Then(
   "every word in the tabs is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator(tabBar).waitFor();
     const stray = await unmarkedWithin(this, tabBar);
     assert.deepEqual(stray, [], "Words in the tabs came from elsewhere.");
@@ -316,14 +299,14 @@ Then(
 
 // Of the page's title bar, which a form that is a page's purpose has
 // (new.feature), and of the row of tabs.
-const pageHelp = (world: SpecWorld): Locator =>
+const pageHelp = (world: WebWorld): Locator =>
   world.browserPage.locator("section.dialog a.dialog-help");
-const rowHelp = (world: SpecWorld): Locator =>
+const rowHelp = (world: WebWorld): Locator =>
   world.browserPage.locator(".tab-row a.dialog-help");
 
 Then(
   "the page has a help icon called {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // Waited for, since the page is drawn in the browser and a count taken at
     // once can be taken before the icon is there.
     const icon = this.browserPage
@@ -336,23 +319,20 @@ Then(
 
 Then(
   "the page's help icon leads to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     await pageHelp(this).waitFor();
     assert.equal(await pageHelp(this).getAttribute("href"), address);
   },
 );
 
-Then(
-  "the page's help icon opens another tab",
-  async function (this: SpecWorld) {
-    await pageHelp(this).waitFor();
-    assert.equal(await pageHelp(this).getAttribute("target"), "_blank");
-  },
-);
+Then("the page's help icon opens another tab", async function (this: WebWorld) {
+  await pageHelp(this).waitFor();
+  assert.equal(await pageHelp(this).getAttribute("target"), "_blank");
+});
 
 Then(
   "the page's help icon is level with the page's title",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await pageHelp(this).waitFor();
     const icon = await pageHelp(this).boundingBox();
     const title = await this.browserPage
@@ -367,7 +347,7 @@ Then(
 
 Then(
   "the tab row's help icon leads to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     await rowHelp(this).waitFor();
     assert.equal(await rowHelp(this).getAttribute("href"), address);
   },
@@ -375,7 +355,7 @@ Then(
 
 Then(
   "the tab row's help icon opens another tab",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await rowHelp(this).waitFor();
     assert.equal(await rowHelp(this).getAttribute("target"), "_blank");
   },
@@ -383,7 +363,7 @@ Then(
 
 Then(
   "the tab row has a help icon called {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const icon = this.browserPage
       .locator(".tab-row")
       .getByRole("link", { name, exact: true });
@@ -394,7 +374,7 @@ Then(
 
 Then(
   "the tab row's help icon is level with the tabs",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await rowHelp(this).waitFor();
     // Measured again until it holds: on a busy machine the row is measured
     // before the page has finished laying it out, and fails for a moment that

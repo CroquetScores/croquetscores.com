@@ -2,8 +2,8 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { english } from "../../../../../../../../../src/web/languages/english.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import { wordsFor } from "../../../../../../../support/words.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import {
   eventually,
@@ -23,12 +23,12 @@ const exactly = (words: string): RegExp =>
 
 When(
   /^the tests of "([^"]*)" are open(?:ed)?$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await openTab(this, name, "tests");
   },
 );
 
-const rowOf = (world: SpecWorld, name: string): Locator =>
+const rowOf = (world: WebWorld, name: string): Locator =>
   tabPanel(world)
     .locator("ul[data-listed] > .listed-item")
     .filter({
@@ -47,7 +47,7 @@ const daysOf = async (within: Locator): Promise<string[]> =>
 
 Then(
   "the test {string} is shown played on {string}",
-  async function (this: SpecWorld, name: string, day: string) {
+  async function (this: WebWorld, name: string, day: string) {
     await eventually(this, async () => {
       assert.deepEqual(await daysOf(rowOf(this, name)), [day]);
     });
@@ -60,7 +60,7 @@ for (const [said, place] of [
 ] as const) {
   Then(
     `the test {string} is shown ${said} on {string}`,
-    async function (this: SpecWorld, name: string, day: string) {
+    async function (this: WebWorld, name: string, day: string) {
       await eventually(this, async () => {
         const days = await daysOf(rowOf(this, name));
         assert.equal(days.length, 2, `It shows ${JSON.stringify(days)}.`);
@@ -74,7 +74,7 @@ for (const [said, place] of [
 // the day of the month, and the month's short name.
 Then(
   "the days of the test {string} are written as Spanish writes a day",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       const times = rowOf(this, name).locator(".test-days time");
       const day = (await times.first().getAttribute("datetime")) ?? "";
@@ -92,7 +92,7 @@ Then(
 
 Then(
   "the test {string} is shown expected to have {int} matches",
-  async function (this: SpecWorld, name: string, matches: number) {
+  async function (this: WebWorld, name: string, matches: number) {
     await eventually(this, async () => {
       assert.equal(
         await rowOf(this, name)
@@ -106,7 +106,7 @@ Then(
 
 Then(
   "the test {string} is shown with each match the best of {int}",
-  async function (this: SpecWorld, name: string, games: number) {
+  async function (this: WebWorld, name: string, games: number) {
     await eventually(this, async () => {
       assert.equal(
         await rowOf(this, name)
@@ -120,7 +120,7 @@ Then(
 
 Then(
   "the test {string} is shown in the group {string}",
-  async function (this: SpecWorld, name: string, group: string) {
+  async function (this: WebWorld, name: string, group: string) {
     await eventually(this, async () => {
       assert.equal(
         (
@@ -136,7 +136,7 @@ Then(
 
 Then(
   "the test {string} is shown in no group",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
       assert.equal(await rowOf(this, name).locator(".test-group").count(), 0);
@@ -147,9 +147,8 @@ Then(
 // What the tab says where Add Test would be, by the English words it says.
 Then(
   "the tab says the words for {string}",
-  async function (this: SpecWorld, key: string) {
-    const words = english.words[key];
-    assert.ok(words !== undefined, `English has no words for ${key}.`);
+  async function (this: WebWorld, key: string) {
+    const words = wordsFor(key);
     await eventually(this, async () => {
       const said = await tabPanel(this).locator("section").innerText();
       assert.ok(said.includes(words), `The tab says ${said}.`);
@@ -158,7 +157,7 @@ Then(
 );
 
 // By what it does rather than its words, which are the reader's language's.
-When("the way to the teams is pressed", async function (this: SpecWorld) {
+When("the way to the teams is pressed", async function (this: WebWorld) {
   const toTeams = tabPanel(this).locator('button[data-action="teams"]');
   await toTeams.waitFor();
   await toTeams.click();
@@ -168,7 +167,7 @@ When("the way to the teams is pressed", async function (this: SpecWorld) {
 // words.
 Then(
   /^the (?:tab is refused|page is refused above the list) with "([^"]*)"$/,
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(this, async () => {
       assert.equal(
         await tabPanel(this)
@@ -185,7 +184,7 @@ Then(
 // language.
 Then(
   /^every word in the tab but the tests' names(?: and groups)? is in the test locale$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
         ".listed-name",

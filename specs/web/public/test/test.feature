@@ -195,7 +195,7 @@ Feature: A test's page shows its matches, the first team down one side
 
     Scenario: A test has no summary page
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng/summary" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
   Rule: On a phone the page fits the window
 
@@ -254,19 +254,19 @@ Feature: A test's page shows its matches, the first team down one side
 
     Scenario: A slug no test has is not found
       When the page at "/2026/ac/spring-tests/tests/aus-v-nz" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A competition that is not a test is not found under the tests
       Given the tournament is to be played in the format "Standard"
       And "organiser@example.com" has created the tournament "Spring Open"
       And "organiser@example.com" has added the block "Block A" to "Spring Open"
       When the page at "/2026/ac/spring-open/tests/block-a" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's tests are not found
       Given "organiser@example.com" has archived the tournament "Spring Tests"
       When the page at "/2026/ac/spring-tests/tests/aus-v-eng" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the test where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"

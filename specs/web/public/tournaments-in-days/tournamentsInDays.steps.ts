@@ -1,16 +1,16 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { rows } from "../../support/tournamentLists.js";
 
 // What is this page's own. What its list shares with the home page's and a
-// year's is said in specs/web/support/tournamentLists.ts.
+// year's is said in specs/web-units/support/tournamentLists.ts.
 
 // The address the page is at, with whatever of the days and the page a scenario
 // said, written as an address writes them.
 const addressOf = (
-  world: SpecWorld,
+  world: WebWorld,
   said: { from?: string; to?: string; page?: number },
 ): string => {
   const query = new URLSearchParams();
@@ -22,58 +22,58 @@ const addressOf = (
 };
 
 const open = async (
-  world: SpecWorld,
+  world: WebWorld,
   said: { from?: string; to?: string; page?: number },
 ): Promise<void> => {
   await world.browserPage.goto(addressOf(world, said));
 };
 
-Given("the tournaments are open", async function (this: SpecWorld) {
+Given("the tournaments are open", async function (this: WebWorld) {
   await open(this, {});
 });
 
-When("the tournaments are opened", async function (this: SpecWorld) {
+When("the tournaments are opened", async function (this: WebWorld) {
   await open(this, {});
 });
 
 Given(
   "the tournaments from {string} to {string} are open",
-  async function (this: SpecWorld, from: string, to: string) {
+  async function (this: WebWorld, from: string, to: string) {
     await open(this, { from, to });
   },
 );
 
 When(
   "the tournaments from {string} to {string} are opened",
-  async function (this: SpecWorld, from: string, to: string) {
+  async function (this: WebWorld, from: string, to: string) {
     await open(this, { from, to });
   },
 );
 
 Given(
   "the tournaments from {string} to {string} are open at page {int}",
-  async function (this: SpecWorld, from: string, to: string, page: number) {
+  async function (this: WebWorld, from: string, to: string, page: number) {
     await open(this, { from, to, page });
   },
 );
 
 When(
   "the tournaments from {string} to {string} are opened at page {int}",
-  async function (this: SpecWorld, from: string, to: string, page: number) {
+  async function (this: WebWorld, from: string, to: string, page: number) {
     await open(this, { from, to, page });
   },
 );
 
 When(
   "the tournaments are opened from {string} only",
-  async function (this: SpecWorld, from: string) {
+  async function (this: WebWorld, from: string) {
     await open(this, { from });
   },
 );
 
 When(
   "the tournaments are opened to {string} only",
-  async function (this: SpecWorld, to: string) {
+  async function (this: WebWorld, to: string) {
     await open(this, { to });
   },
 );
@@ -82,7 +82,7 @@ When(
 // labels are in.
 Given(
   /^"(.*)" is chosen as (From|To)$/,
-  async function (this: SpecWorld, day: string, field: string) {
+  async function (this: WebWorld, day: string, field: string) {
     await this.browserPage
       .locator(`form.tournament-filter input[name="${field.toLowerCase()}"]`)
       .fill(day);
@@ -91,7 +91,7 @@ Given(
 
 Then(
   /^"(.*)" is (From|To)$/,
-  async function (this: SpecWorld, day: string, field: string) {
+  async function (this: WebWorld, day: string, field: string) {
     assert.equal(
       await this.browserPage
         .locator(`form.tournament-filter input[name="${field.toLowerCase()}"]`)
@@ -103,7 +103,7 @@ Then(
 
 Then(
   /^"(.*)" is the (country|region|sport) chosen$/,
-  async function (this: SpecWorld, words: string, field: string) {
+  async function (this: WebWorld, words: string, field: string) {
     const chosen = this.browserPage.locator(
       `form.tournament-filter select[name="${field}"] option:checked`,
     );
@@ -113,7 +113,7 @@ Then(
 
 Then(
   /^(\d+) of the days' tournaments (?:is|are) listed$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(await rows(this, "days' tournaments").count(), Number(count));
   },
 );
@@ -121,7 +121,7 @@ Then(
 // Said by the page in the reader's language, so the words are the scenario's.
 Then(
   "the page is said to be {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await drawn(this);
     assert.equal(
       (
@@ -134,14 +134,14 @@ Then(
   },
 );
 
-Then("no page is said", async function (this: SpecWorld) {
+Then("no page is said", async function (this: WebWorld) {
   await drawn(this);
   assert.equal(await this.browserPage.locator(".tournament-pages").count(), 0);
 });
 
 // The admin draws its list once it has been asked for, so a page is read only
 // once it has a row; the public pages are drawn whole, and have one already.
-const drawn = async (world: SpecWorld): Promise<void> => {
+const drawn = async (world: WebWorld): Promise<void> => {
   await world.browserPage
     .locator(".tournaments > .tournament, .tournament-list tbody tr")
     .first()
@@ -150,7 +150,7 @@ const drawn = async (world: SpecWorld): Promise<void> => {
 
 Then(
   /^the way to turn to the (previous|next) page is (not )?offered$/,
-  async function (this: SpecWorld, which: string, not: string | undefined) {
+  async function (this: WebWorld, which: string, not: string | undefined) {
     await drawn(this);
     assert.equal(
       await this.browserPage
@@ -163,7 +163,7 @@ Then(
   },
 );
 
-const wayTo = (world: SpecWorld, which: string) =>
+const wayTo = (world: WebWorld, which: string) =>
   world.browserPage.locator(
     `.tournament-pages a[rel="${which === "previous" ? "prev" : "next"}"]`,
   );
@@ -172,7 +172,7 @@ const wayTo = (world: SpecWorld, which: string) =>
 // between them taken as one.
 Then(
   /^the way to turn to the (previous|next) page reads "(.*)"$/,
-  async function (this: SpecWorld, which: string, words: string) {
+  async function (this: WebWorld, which: string, words: string) {
     await drawn(this);
     assert.equal(
       ((await wayTo(this, which).textContent()) ?? "")
@@ -187,7 +187,7 @@ Then(
 // it.
 Then(
   /^the way to turn to the (previous|next) page is named "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     await drawn(this);
     const link = wayTo(this, which);
     let said = (await link.textContent()) ?? "";

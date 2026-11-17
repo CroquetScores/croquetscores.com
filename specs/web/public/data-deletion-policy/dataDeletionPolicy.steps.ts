@@ -1,47 +1,23 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { join } from "node:path";
 
-import {
-  helpLibraryIn,
-  helpLibraryWithout,
-} from "../../../../src/web/common/helpLibrary.js";
-import type { SpecWorld } from "../../../support/world.js";
-import { anApplicationWithHelp } from "../../support/browser.js";
-import { look, lookOn, lookedAt } from "../../support/lookedAt.js";
+import { look, lookedAt } from "../../support/looking.js";
+import type { WebWorld } from "../../support/world.js";
 
-const dist = join(import.meta.dirname, "..", "..", "..", "..", "dist", "help");
-
-Given(
-  "the help has no Welsh data deletion policy",
-  async function (this: SpecWorld) {
-    const without = helpLibraryWithout(
-      helpLibraryIn(dist),
-      "cy",
-      "data-deletion-policy",
-    );
-    lookOn(this, await anApplicationWithHelp(this, without));
-  },
-);
-
-When("the data deletion policy is opened", async function (this: SpecWorld) {
+When("the data deletion policy is opened", async function (this: WebWorld) {
   await look(this, "/data-deletion-policy");
 });
 
-Then("the page is the data deletion policy", function (this: SpecWorld) {
+Then("the page is the data deletion policy", function (this: WebWorld) {
   assert.match(
     lookedAt(this),
     /<article class="help"[^>]* data-page="data-deletion-policy"/,
   );
 });
 
-Then("the policy is in English", function (this: SpecWorld) {
-  assert.match(lookedAt(this), /<article class="help" lang="en"/);
-});
-
 Then(
   "the policy links to {string}",
-  function (this: SpecWorld, address: string) {
+  function (this: WebWorld, address: string) {
     assert.ok(
       lookedAt(this).includes(`href="${address}"`),
       `The policy does not link to ${address}.`,
@@ -50,11 +26,13 @@ Then(
 );
 
 Then(
-  "the policy links to send email to the administrator",
-  function (this: SpecWorld) {
-    assert.match(
-      lookedAt(this),
-      /<\/article>\s*<p>[^<]*: <a href="mailto:(\S+@\S+)">\1<\/a><\/p>/,
+  "the policy links to send email to {string}",
+  function (this: WebWorld, emailAddress: string) {
+    assert.ok(
+      lookedAt(this).includes(
+        `<a href="mailto:${emailAddress}">${emailAddress}</a>`,
+      ),
+      "The administrator is not linked.",
     );
   },
 );

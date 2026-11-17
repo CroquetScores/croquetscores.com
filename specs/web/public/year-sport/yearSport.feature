@@ -127,7 +127,7 @@ Feature: A sport's page in a year lists its months, and a month the tournaments 
 
     Scenario Outline: An address that is not a sport's page is not found
       When the page at "<address>" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
       Examples:
         | address  |
@@ -564,7 +564,6 @@ Feature: A sport's page in a year lists its months, and a month the tournaments 
       Then every word in the page's content but the tournaments' own is in the test locale
 
     Scenario: The heading names the sport in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the page for "ac" in 2026 is opened
       Then the content has the heading "Torneos de Association Croquet de 2026"

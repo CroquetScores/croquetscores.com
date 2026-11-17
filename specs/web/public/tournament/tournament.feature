@@ -111,17 +111,17 @@ Feature: A tournament's page lists its games, the most recent first
 
     Scenario: An address no tournament has been found at is not found
       When the page at "/2026/ac/autumn-open" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's page is not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A tournament on another website is not found
       Given a site served as "gateballscores.com"
       When the page at "/2026/ac/spring-open" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
   Rule: An address the tournament has moved on from leads to where it is now
 
@@ -310,8 +310,7 @@ Feature: A tournament's page lists its games, the most recent first
       Then the first game was added "03 Oct 2026" ago
 
     Scenario: The day's month is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And the server's clock reads "2026-10-05T10:00:00Z"
       When the page at "/2026/ac/spring-open" is opened
       Then the first game was added "03 oct 2026" ago

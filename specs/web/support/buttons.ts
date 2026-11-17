@@ -8,7 +8,7 @@
 // rather than about any one button drawn in it. Everything is read from what
 // the browser drew rather than from the classes, so that a rule written for
 // one and not the other shows.
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 
 const drawn = [
   "background-color",
@@ -35,7 +35,7 @@ export interface AsDrawn {
  * drawn in the same dialog; nothing where either is not on the page.
  */
 export const drawnBesideAButton = (
-  world: SpecWorld,
+  world: WebWorld,
   selector: string,
 ): Promise<AsDrawn | null> =>
   world.browserPage.evaluate<AsDrawn | null>(`(() => {

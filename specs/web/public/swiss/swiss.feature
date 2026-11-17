@@ -364,12 +364,12 @@ Feature: A Swiss's grid ranks its players with their results
     Scenario: An archived Swiss is not found
       Given "organiser@example.com" has archived the competition "Zed" in "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's Swisses are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the Swiss where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "ac"

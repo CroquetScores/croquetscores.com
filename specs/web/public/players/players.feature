@@ -194,12 +194,12 @@ Feature: A tournament's players' page lists its players by name
 
     Scenario: An address no tournament has been found at is not found
       When the page at "/2026/ac/autumn-open/players" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's players are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/players" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the players' page where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

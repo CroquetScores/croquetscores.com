@@ -2,13 +2,9 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { english } from "../../../../../../../../../src/web/languages/english.js";
-import type { TournamentPlayer } from "../../../../../../../../../src/domain/aggregates/tournaments/TournamentPlayer.js";
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
+import { keptOf, type KeptPlayer } from "../../../../../../../support/kept.js";
+import { wordsFor } from "../../../../../../../support/words.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import {
   eventually,
@@ -22,13 +18,13 @@ import {
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
 // Opened ------------------------------------------------------------------------
 
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog is open$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
   },
 );
@@ -37,7 +33,7 @@ Then(
 // reader, and makes everything outside it unreachable.
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog is announced as a modal dialog$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     assert.equal(
       await dialogOf(this).evaluate(
@@ -51,7 +47,7 @@ Then(
 
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog is named "([^"]*)"$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     const labelledBy = await dialogOf(this).getAttribute("aria-labelledby");
     assert.ok(labelledBy !== null, "The dialog is named by nothing.");
@@ -64,7 +60,7 @@ Then(
 
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog asks for "([^"]*)"$/,
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     // A field may arrive once the dialog has learned what it is for, as a
     // test's group does once the tournament has said what its format has.
@@ -82,7 +78,7 @@ Then(
 // to become pressable, which it never will.
 When(
   "the site's name in the header is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage
       .locator("header .site-name")
       .click({ force: true, timeout: 2000 })
@@ -90,14 +86,10 @@ When(
   },
 );
 
-When("Escape is pressed", async function (this: SpecWorld) {
-  await this.browserPage.keyboard.press("Escape");
-});
-
 // Pressed until the focus is back where it started, and never more than the
 // dialog has things to press twice over: a focus that leaves the dialog would
 // otherwise go round the whole page first.
-const goRound = async (world: SpecWorld, key: string): Promise<void> => {
+const goRound = async (world: WebWorld, key: string): Promise<void> => {
   await dialogOf(world).waitFor();
   const inDialog = (): Promise<boolean> =>
     world.browserPage.evaluate<boolean>(
@@ -119,33 +111,33 @@ const goRound = async (world: SpecWorld, key: string): Promise<void> => {
 
 When(
   "Tab is pressed until the focus comes round again",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await goRound(this, "Tab");
   },
 );
 
 When(
   "Shift and Tab are pressed until the focus comes round again",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await goRound(this, "Shift+Tab");
   },
 );
 
 Then(
   /^the focus never left the (?:players|player|score|competition|team player|team|test|carry forward) dialog$/,
-  function (this: SpecWorld) {
+  function (this: WebWorld) {
     assert.equal(this.focusNeverLeft, true, "The focus left the dialog.");
   },
 );
 
 // Its flag -------------------------------------------------------------------------
 
-const flagList = (world: SpecWorld): Locator =>
+const flagList = (world: WebWorld): Locator =>
   dialogOf(world).locator("#field-flag");
 
 // The flags are asked for once the dialog is open, so they are waited on:
 // every flag there is, which takes a moment to arrive.
-const flagsOffered = async (world: SpecWorld): Promise<string[]> => {
+const flagsOffered = async (world: WebWorld): Promise<string[]> => {
   await flagList(world)
     .locator("option")
     .nth(1)
@@ -157,18 +149,18 @@ const flagsOffered = async (world: SpecWorld): Promise<string[]> => {
 
 When(
   "the flag {string} is chosen",
-  async function (this: SpecWorld, flag: string) {
+  async function (this: WebWorld, flag: string) {
     await flagsOffered(this);
     await flagList(this).selectOption({ label: flag });
   },
 );
 
-When("none is chosen for the flag", async function (this: SpecWorld) {
+When("none is chosen for the flag", async function (this: WebWorld) {
   await flagsOffered(this);
   await flagList(this).selectOption({ value: "" });
 });
 
-Then("no flag is chosen", async function (this: SpecWorld) {
+Then("no flag is chosen", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await flagList(this).inputValue(), "");
   });
@@ -176,7 +168,7 @@ Then("no flag is chosen", async function (this: SpecWorld) {
 
 Then(
   "the flag chosen is {string}",
-  async function (this: SpecWorld, flag: string) {
+  async function (this: WebWorld, flag: string) {
     await flagsOffered(this);
     await eventually(this, async () => {
       assert.equal(
@@ -187,7 +179,7 @@ Then(
   },
 );
 
-Then("the first flag offered is none", async function (this: SpecWorld) {
+Then("the first flag offered is none", async function (this: WebWorld) {
   await flagsOffered(this);
   assert.equal(
     await flagList(this).locator("option").first().getAttribute("value"),
@@ -197,7 +189,7 @@ Then("the first flag offered is none", async function (this: SpecWorld) {
 
 Then(
   "the flag {string} is offered",
-  async function (this: SpecWorld, flag: string) {
+  async function (this: WebWorld, flag: string) {
     assert.ok(
       (await flagsOffered(this)).includes(flag),
       `${flag} is not offered.`,
@@ -207,7 +199,7 @@ Then(
 
 Then(
   "the flag {string} is offered before the flag {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     const flags = await flagsOffered(this);
     assert.ok(flags.includes(one), `${one} is not offered.`);
     assert.ok(flags.includes(other), `${other} is not offered.`);
@@ -217,7 +209,7 @@ Then(
 
 Then(
   "the list of flags has {int} lines drawn in it",
-  async function (this: SpecWorld, count: number) {
+  async function (this: WebWorld, count: number) {
     await flagsOffered(this);
     assert.equal(await flagList(this).locator("hr").count(), count);
   },
@@ -226,7 +218,7 @@ Then(
 // A line is drawn after a flag when the next thing in the list is one.
 Then(
   "a line is drawn in the list of flags after {string}",
-  async function (this: SpecWorld, flag: string) {
+  async function (this: WebWorld, flag: string) {
     await flagsOffered(this);
     const next = await flagList(this)
       .locator("option", { hasText: new RegExp(`^${flag}$`) })
@@ -244,12 +236,12 @@ Then(
 
 // What it says -----------------------------------------------------------------------
 
-const status = (world: SpecWorld): Locator =>
+const status = (world: WebWorld): Locator =>
   dialogOf(world).locator('[role="status"]');
 
 Then(
   /^the (?:player|team player|team|test|carry forward) dialog says "([^"]*)" was added$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
         (await status(this).innerText()).includes(name),
@@ -261,7 +253,7 @@ Then(
 
 Then(
   /^the (?:player dialog says nobody|team dialog says no team|test dialog says no test) was added$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.equal((await status(this).innerText()).trim(), "");
     });
@@ -272,7 +264,7 @@ Then(
 // taken to it.
 Then(
   /^what the (?:player dialog says about who|team dialog says about which team|test dialog says about which test) was added is announced$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await status(this).innerText()).trim() !== "");
     });
@@ -281,7 +273,7 @@ Then(
 
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog says what it refused$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this)
       .locator(".field-message, .dialog-problems")
       .first()
@@ -295,7 +287,7 @@ Then(
 // rather than racing a server slowed by every other scenario running.
 When(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog is sent as it is$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const answered = this.browserPage.waitForResponse(
       (response) =>
         ["POST", "PUT"].includes(response.request().method()) &&
@@ -308,21 +300,21 @@ When(
 
 When(
   /^the way to add a (?:player|team|test|note) is pressed$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await tabPanel(this).locator("section > p button").first().click();
   },
 );
 
 When(
   "{string} is typed into the player's name",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await dialogOf(this).locator("#field-name").fill(words);
   },
 );
 
 Then(
   /^every word in the (?:players|player|team player|team) dialog is in the test locale$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
@@ -333,7 +325,7 @@ Then(
 // and nobody's language.
 Then(
   "every word in the test dialog but the teams' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open, ["select option"]);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
@@ -344,7 +336,7 @@ Then(
 // marks with it.
 Then(
   "every word in the player dialog but the player's name is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await status(this).innerText()).trim() !== "");
     });
@@ -357,7 +349,7 @@ Then(
 
 Then(
   /^the (?:players|player|score|competition|team player|team|test|carry forward) dialog is no wider than the window$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const box = await dialogOf(this).boundingBox();
     const width = this.browserPage.viewportSize()?.width ?? 0;
@@ -371,7 +363,7 @@ Then(
 
 Then(
   "{string} is above {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await dialogOf(this).waitFor();
     // A field by its label, or otherwise a button by its words.
     const boxOf = async (words: string) => {
@@ -391,7 +383,7 @@ Then(
 
 Then(
   "the name of the player {string} has the focus",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       const focused = await this.browserPage.evaluate<string>(
         "document.activeElement?.textContent ?? ''",
@@ -404,20 +396,19 @@ Then(
 // What was kept ------------------------------------------------------------------
 
 const playersOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
-): Promise<readonly TournamentPlayer[]> =>
-  (await load(world, tournamentNamed(world, tournament))).players;
+): Promise<readonly KeptPlayer[]> => (await keptOf(world, tournament)).players;
 
 const playerCalled = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
   name: string,
-): Promise<TournamentPlayer> => {
-  let found: TournamentPlayer | undefined;
+): Promise<KeptPlayer> => {
+  let found: KeptPlayer | undefined;
   await eventually(world, async () => {
     found = (await playersOf(world, tournament)).find(
-      (player) => player.name.toString() === name,
+      (player) => player.name === name,
     );
     assert.ok(found !== undefined, `${tournament} has no player ${name}.`);
   });
@@ -427,17 +418,19 @@ const playerCalled = async (
 
 Then(
   "{string} has the player {string}",
-  async function (this: SpecWorld, tournament: string, name: string) {
-    await playerCalled(this, tournament, name);
+  async function (this: WebWorld, tournament: string, name: string) {
+    await retried(async () => {
+      await playerCalled(this, tournament, name);
+    });
   },
 );
 
 Then(
   "{string} does not have the player {string}",
-  async function (this: SpecWorld, tournament: string, name: string) {
+  async function (this: WebWorld, tournament: string, name: string) {
     await eventually(this, async () => {
-      const names = (await playersOf(this, tournament)).map((player) =>
-        player.name.toString(),
+      const names = (await playersOf(this, tournament)).map(
+        (player) => player.name,
       );
       assert.ok(!names.includes(name), `${tournament} has ${name}.`);
     });
@@ -447,7 +440,7 @@ Then(
 // Once nothing more can be sent: the dialog closed, or the page settled.
 Then(
   "{string} has no players",
-  async function (this: SpecWorld, tournament: string) {
+  async function (this: WebWorld, tournament: string) {
     await eventually(this, async () => {
       assert.equal((await playersOf(this, tournament)).length, 0);
     });
@@ -457,7 +450,7 @@ Then(
 Then(
   "the player {string} of {string} represents {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     representing: string,
@@ -474,7 +467,7 @@ Then(
 Then(
   "the player {string} of {string} has the handicap {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     handicap: string,
@@ -491,7 +484,7 @@ Then(
 Then(
   "the player {string} of {string} has the world ranking name {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     worldRankingName: string,
@@ -507,7 +500,7 @@ Then(
 
 Then(
   "the player {string} of {string} has no world ranking name",
-  async function (this: SpecWorld, name: string, tournament: string) {
+  async function (this: WebWorld, name: string, tournament: string) {
     await eventually(this, async () => {
       assert.equal(
         (await playerCalled(this, tournament, name)).worldRankingName,
@@ -519,18 +512,20 @@ Then(
 
 Then(
   "the player {string} of {string} represents nothing",
-  async function (this: SpecWorld, name: string, tournament: string) {
-    assert.equal(
-      (await playerCalled(this, tournament, name)).representing,
-      undefined,
-    );
+  async function (this: WebWorld, name: string, tournament: string) {
+    await retried(async () => {
+      assert.equal(
+        (await playerCalled(this, tournament, name)).representing,
+        undefined,
+      );
+    });
   },
 );
 
 Then(
   "the player {string} of {string} flies the flag {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     flag: string,
@@ -546,7 +541,7 @@ Then(
 
 Then(
   "the player {string} of {string} flies no flag",
-  async function (this: SpecWorld, name: string, tournament: string) {
+  async function (this: WebWorld, name: string, tournament: string) {
     await eventually(this, async () => {
       assert.equal(
         (await playerCalled(this, tournament, name)).flag,
@@ -562,20 +557,20 @@ Then(
 // says rather than by being the dialog open.
 const byesDialog = "dialog[open]:has(.dialog-byes)";
 
-const byesDialogOf = (world: SpecWorld): Locator =>
+const byesDialogOf = (world: WebWorld): Locator =>
   world.browserPage.locator(byesDialog);
 
-Then("the dialog about byes is open", async function (this: SpecWorld) {
+Then("the dialog about byes is open", async function (this: WebWorld) {
   await byesDialogOf(this).waitFor();
 });
 
-Then("the dialog about byes is not open", async function (this: SpecWorld) {
+Then("the dialog about byes is not open", async function (this: WebWorld) {
   await byesDialogOf(this).waitFor({ state: "detached" });
 });
 
 Then(
   "the dialog about byes is announced as a modal dialog",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await byesDialogOf(this).waitFor();
     assert.equal(
       await byesDialogOf(this).evaluate(
@@ -589,9 +584,8 @@ Then(
 
 Then(
   "the dialog about byes says the words for {string}",
-  async function (this: SpecWorld, key: string) {
-    const words = english.words[key];
-    assert.ok(words !== undefined, `English has no words for ${key}.`);
+  async function (this: WebWorld, key: string) {
+    const words = wordsFor(key);
     await byesDialogOf(this).waitFor();
     const said = await byesDialogOf(this).innerText();
     assert.ok(said.includes(words), `The dialog says ${said}.`);
@@ -600,7 +594,7 @@ Then(
 
 Then(
   "the dialog about byes offers {string} alone",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await byesDialogOf(this).waitFor();
     const buttons = (
       await byesDialogOf(this).locator("button").allInnerTexts()
@@ -611,7 +605,7 @@ Then(
 
 Then(
   "every word in the dialog about byes is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await byesDialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, byesDialog);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
@@ -621,7 +615,7 @@ Then(
 // What a field shows after the typing as the rest of what is offered
 // (player.feature): the lighter part of the field, which is nothing the field
 // holds, so that it is read from the page and not from the field.
-const rest = (world: SpecWorld, label: string): Locator =>
+const rest = (world: WebWorld, label: string): Locator =>
   dialogOf(world)
     .getByLabel(label, { exact: true })
     .locator("xpath=ancestor::label[1]")
@@ -629,7 +623,7 @@ const rest = (world: SpecWorld, label: string): Locator =>
 
 Then(
   "{string} is completed with {string}",
-  async function (this: SpecWorld, label: string, words: string) {
+  async function (this: WebWorld, label: string, words: string) {
     await eventually(this, async () => {
       assert.equal(await rest(this, label).textContent(), words);
     });
@@ -638,7 +632,7 @@ Then(
 
 Then(
   "{string} is completed with nothing",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(await rest(this, label).count(), 0);
     });
@@ -647,7 +641,7 @@ Then(
 
 When(
   "the tab key is pressed in {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).getByLabel(label, { exact: true }).press("Tab");
   },
 );
@@ -656,7 +650,7 @@ When(
 // scrolls within itself and its bottom is then the window's.
 Then(
   /^the (?:players|player) dialog's top is in the window$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const top = (await dialogOf(this).boundingBox())?.y;
     assert.ok(top !== undefined, "The dialog is not drawn.");
@@ -672,7 +666,7 @@ Then(
 // the page is not scrolled when the dialog opens.
 When(
   "the page is scrolled down {int} pixels",
-  async function (this: SpecWorld, distance: number) {
+  async function (this: WebWorld, distance: number) {
     await this.browserPage.evaluate(`window.scrollTo(0, ${String(distance)})`);
   },
 );

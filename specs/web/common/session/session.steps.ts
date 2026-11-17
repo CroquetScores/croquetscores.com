@@ -9,63 +9,73 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { BrowserContext, Cookie } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { anotherBrowser, applicationFor } from "../../support/browser.js";
-import { movePast } from "../../support/clock.js";
+import type { WebWorld } from "../../support/world.js";
 import {
-  accountIdFor,
-  signedInAccount,
-} from "../../public/sign-in/signIn.steps.js";
+  accountOfSession,
+  detailsOfAccount,
+  sessionsHold,
+  sessionsOf,
+} from "../../support/control.js";
+import { anotherBrowser } from "../../support/sessions.js";
+import { passes } from "../../support/time.js";
 
 const home = "/";
 const sessionCookie = "session";
 
 const A_DAY = 24 * 60 * 60 * 1000;
 
-/** The other browser this scenario is using, and what it has been given. */
-interface Elsewhere {
-  readonly context: BrowserContext;
-}
-
-const others = new WeakMap<SpecWorld, Elsewhere>();
-
-const otherOf = (world: SpecWorld): Elsewhere => {
-  const found = others.get(world);
+const otherOf = (world: WebWorld): { readonly context: BrowserContext } => {
+  const found = world.otherBrowsers[world.otherBrowsers.length - 1];
   assert.ok(found !== undefined, "This scenario has only one browser.");
-  return found;
+  return { context: found };
 };
+
+/** The account the browser's session cookie belongs to, as the site says. */
+const signedInAccount = async (
+  _world: WebWorld,
+  context: BrowserContext,
+): Promise<string | undefined> => {
+  const cookie = (await context.cookies()).find(
+    (each) => each.name === "session",
+  );
+  return cookie === undefined ? undefined : accountOfSession(cookie.value);
+};
+
+const accountIdFor = async (
+  _world: WebWorld,
+  address: string,
+): Promise<string> => (await detailsOfAccount(address)).id;
 
 /** The session cookie this browser holds, if any. */
 const cookieOf = async (context: BrowserContext): Promise<Cookie | undefined> =>
   (await context.cookies()).find((each) => each.name === sessionCookie);
 
-const openHome = async (world: SpecWorld): Promise<void> => {
+const openHome = async (world: WebWorld): Promise<void> => {
   await world.browserPage.goto(`${world.baseUrl!}${home}`);
 };
 
-const setCookies = new WeakMap<SpecWorld, string>();
+const setCookies = new WeakMap<WebWorld, string>();
 
 // Asked of the application directly, carrying the session the browser holds.
 // Not through the page, because what a page was shown says nothing about what
 // the answer to it said: a browser keeps what it is given and shows neither
 // the header nor, over plain HTTP, a Secure cookie it declines to send back.
-When("the home page is asked for again", async function (this: SpecWorld) {
+When("the home page is asked for again", async function (this: WebWorld) {
   const context = this.browserContext;
   assert.ok(context !== undefined, "This scenario has no browser.");
   const cookie = await cookieOf(context);
   assert.ok(cookie !== undefined, "The browser holds no session.");
 
-  const answer = await applicationFor(this).server.inject({
-    method: "GET",
-    url: home,
-    headers: { cookie: `${cookie.name}=${cookie.value}` },
+  const answer = await fetch(`${this.baseUrl!}${home}`, {
+    headers: { cookie: `${cookie.name}=${cookie.value}`, ...this.extraHeaders },
+    redirect: "manual",
   });
-  const said = answer.headers["set-cookie"];
-  setCookies.set(this, (Array.isArray(said) ? said : [said ?? ""]).join("\n"));
+  const said = answer.headers.getSetCookie();
+  setCookies.set(this, said.join("\n"));
 });
 
 const signInOn = async (
-  world: SpecWorld,
+  world: WebWorld,
   context: BrowserContext,
   address: string,
   password: string,
@@ -83,23 +93,21 @@ const signInOn = async (
 
 Given(
   "the reader has signed in on another browser as {string} with the password {string}",
-  async function (this: SpecWorld, address: string, password: string) {
+  async function (this: WebWorld, address: string, password: string) {
     const context = await anotherBrowser(this);
-    others.set(this, { context });
     await signInOn(this, context, address, password);
   },
 );
 
 When(
   "the reader signs in on another browser as {string} with the password {string}",
-  async function (this: SpecWorld, address: string, password: string) {
+  async function (this: WebWorld, address: string, password: string) {
     const context = await anotherBrowser(this);
-    others.set(this, { context });
     await signInOn(this, context, address, password);
   },
 );
 
-Then("the other browser is signed out", async function (this: SpecWorld) {
+Then("the other browser is signed out", async function (this: WebWorld) {
   assert.equal(
     await signedInAccount(this, otherOf(this).context),
     undefined,
@@ -109,7 +117,7 @@ Then("the other browser is signed out", async function (this: SpecWorld) {
 
 Then(
   "the reader is signed in on the other browser to the account for {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     assert.equal(
       await signedInAccount(this, otherOf(this).context),
       await accountIdFor(this, address),
@@ -123,11 +131,11 @@ Then(
 // session's life again: what a reader who keeps coming back does.
 Given(
   "the home page has been opened every {int} days for {int} days",
-  async function (this: SpecWorld, every: number, stretch: number) {
+  async function (this: WebWorld, every: number, stretch: number) {
     // Until the stretch is behind it rather than until the next visit would
     // pass it: a loop that stopped short would say 400 days and try 360.
     for (let passed = 0; passed < stretch; passed += every) {
-      movePast(this, every * A_DAY);
+      await passes(every * A_DAY);
       await openHome(this);
     }
   },
@@ -136,48 +144,38 @@ Given(
 // A browser closed and opened again keeps what it was given to keep, and
 // forgets what it was not: a cookie with no life of its own goes with the
 // window it was given in.
-When(
-  "the browser is closed and opened again",
-  async function (this: SpecWorld) {
-    const context = this.browserContext;
-    assert.ok(context !== undefined, "This scenario has no browser.");
-    const kept = (await context.cookies()).filter(
-      (cookie) => cookie.expires > 0,
-    );
-    const opened = await anotherBrowser(this);
-    await opened.addCookies(kept);
-    await context.close();
-    this.browserContext = opened;
-    this.page = await opened.newPage();
-  },
-);
+When("the browser is closed and opened again", async function (this: WebWorld) {
+  const context = this.browserContext;
+  assert.ok(context !== undefined, "This scenario has no browser.");
+  const kept = (await context.cookies()).filter((cookie) => cookie.expires > 0);
+  const opened = await anotherBrowser(this);
+  await opened.addCookies(kept);
+  await context.close();
+  this.browserContext = opened;
+  this.page = await opened.newPage();
+});
 
 // What is kept -------------------------------------------------------------------------
 
 Then(
   "no row of the sessions table contains the session's id",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const context = this.browserContext;
     assert.ok(context !== undefined, "This scenario has no browser.");
     const cookie = await cookieOf(context);
     assert.ok(cookie !== undefined, "The browser holds no session.");
-    const { rows } = await this.database.query<{ row: string }>(
-      `select t::text as row from sessions t`,
+    assert.equal(
+      await sessionsHold(cookie.value),
+      false,
+      "A row of the sessions holds the session's id.",
     );
-    for (const { row } of rows) {
-      assert.ok(!row.includes(cookie.value), `A row holds it: ${row}`);
-    }
   },
 );
 
 Then(
   "the account for {string} has {int} session(s)",
-  async function (this: SpecWorld, address: string, count: number) {
-    const { rows } = await this.database.query<{ sessions: string }>(
-      `select count(*) as sessions from sessions where account_id = $1`,
-      [await accountIdFor(this, address)],
-    );
-    assert.equal(Number(rows[0]?.sessions ?? 0), count);
+  async function (this: WebWorld, address: string, count: number) {
+    assert.equal(await sessionsOf(address), count);
   },
 );
 
@@ -185,7 +183,7 @@ Then(
 // in: signing in must not carry it on.
 Given(
   "the browser holds a session id it was given before signing in",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const context = this.browserContext;
     assert.ok(context !== undefined, "This scenario has no browser.");
     const url = new URL(this.baseUrl ?? "http://127.0.0.1");
@@ -201,11 +199,11 @@ Given(
   },
 );
 
-const planted = new WeakMap<SpecWorld, string>();
+const planted = new WeakMap<WebWorld, string>();
 
 Then(
   "the browser's session id is not the one it held before",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const context = this.browserContext;
     assert.ok(context !== undefined, "This scenario has no browser.");
     const now = await cookieOf(context);
@@ -219,7 +217,7 @@ Then(
 // From the menu, as a reader does: the menu is opened, and the button in it
 // pressed. It is a form that posts, never a link, so that another site cannot
 // sign a reader out by putting the link in an image.
-When("the reader signs out", async function (this: SpecWorld) {
+When("the reader signs out", async function (this: WebWorld) {
   await openHome(this);
   await this.browserPage.locator("details.account-menu > summary").click();
   const button = this.browserPage.locator(
@@ -232,7 +230,7 @@ When("the reader signs out", async function (this: SpecWorld) {
 
 Given(
   "a copy of the session's cookie has been taken",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const context = this.browserContext;
     assert.ok(context !== undefined, "This scenario has no browser.");
     const cookie = await cookieOf(context);
@@ -241,11 +239,11 @@ Given(
   },
 );
 
-const copies = new WeakMap<SpecWorld, Cookie>();
+const copies = new WeakMap<WebWorld, Cookie>();
 
 When(
   "the home page is opened with the copy of the cookie",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const context = this.browserContext;
     const copy = copies.get(this);
     assert.ok(context !== undefined, "This scenario has no browser.");
@@ -260,7 +258,7 @@ When(
 // only thing that keeps a reader who comes back signed in.
 Then(
   "the answer gives the session's cookie its 90 days again",
-  function (this: SpecWorld) {
+  function (this: WebWorld) {
     const said = setCookies.get(this) ?? "";
     assert.ok(
       said.includes(`${sessionCookie}=`),

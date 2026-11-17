@@ -704,14 +704,12 @@ Feature: A new tournament is created in the admin
       And every word in the form is in the test locale
 
     Scenario: The countries are in order of their names in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the new tournament page is opened
       Then the country "Alemania" is offered before the country "Argentina"
 
     Scenario: The countries are in order of their names in English
-      Given a site offering the languages it is served with
-      And a browser that asks for "en"
+      Given a browser that asks for "en"
       When the new tournament page is opened
       Then the country "Austria" is offered before the country "Germany"
 

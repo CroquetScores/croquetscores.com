@@ -5,9 +5,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
-import { keep } from "../../../../infrastructure/support/serverLog.js";
-import { clockFor } from "../../../support/clock.js";
+import type { WebWorld } from "../../../support/world.js";
+import { call, siteNow } from "../../../support/control.js";
 
 // Retried for three seconds, which leaves a step time to fail with what it
 // found rather than with Cucumber's word that it took too long.
@@ -35,32 +34,38 @@ const AGO: Readonly<Record<string, number>> = {
 Given(
   /^the log has an entry "([^"]*)"(?: at the severity (\w+))?(?: written at "([^"]*)")?(?: with the reference "([^"]*)")?(?: written (a minute ago|an hour and a minute ago|two hours ago))?$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     message: string,
     severity: string | null,
     writtenAt: string | null,
     reference: string | null,
     ago: string | null,
   ) {
-    const now = clockFor(this).now.getTime();
+    const now = (await siteNow()).getTime();
     const when =
       writtenAt !== null
         ? new Date(writtenAt)
         : new Date(now - (ago === null ? 0 : (AGO[ago] ?? 0)) * 1000);
     // The page starts at Warn, so an entry whose severity a scenario does not
     // name is Warn, or it would be kept and then not shown.
-    await keep(this, when, message, severity ?? "Warn", reference);
+    const answer = await call("POST", "/log-entries", {
+      message,
+      severity: severity ?? "Warn",
+      writtenAt: when.toISOString(),
+      ...(reference === null ? {} : { reference }),
+    });
+    assert.equal(answer.status, 201, await answer.text());
   },
 );
 
-const entries = (world: SpecWorld): Locator =>
+const entries = (world: WebWorld): Locator =>
   world.browserPage.locator("main ul.log-entries > li > details.log-entry");
 
-const first = (world: SpecWorld): Locator => entries(world).first();
+const first = (world: WebWorld): Locator => entries(world).first();
 
 Then(
   "the first entry says {string}",
-  async function (this: SpecWorld, said: string) {
+  async function (this: WebWorld, said: string) {
     await eventually(async () => {
       assert.equal(
         await first(this).locator(".log-entry-message").innerText({
@@ -72,9 +77,25 @@ Then(
   },
 );
 
+// For where the entry is one of several: at Trace the page also shows what the
+// site itself logs of the requests it is asked for, which are newer than the
+// entry a scenario wrote and so come before it, once they have been kept (a
+// second after the first of them is written, so only when the scenario is slow).
+Then("an entry says {string}", async function (this: WebWorld, said: string) {
+  await eventually(async () => {
+    const messages = await entries(this)
+      .locator(".log-entry-message")
+      .allInnerTexts();
+    assert.ok(
+      messages.includes(said),
+      `The entries say ${JSON.stringify(messages)}, and not ${said}.`,
+    );
+  });
+});
+
 Then(
   "the first entry's severity is {string}",
-  async function (this: SpecWorld, severity: string) {
+  async function (this: WebWorld, severity: string) {
     await eventually(async () => {
       assert.equal(
         await first(this).locator(".log-entry-severity").innerText({
@@ -88,7 +109,7 @@ Then(
 
 Then(
   "the first entry was written at {string}",
-  async function (this: SpecWorld, moment: string) {
+  async function (this: WebWorld, moment: string) {
     await eventually(async () => {
       assert.equal(
         await first(this)
@@ -105,7 +126,7 @@ Then(
 // it.
 Then(
   "the first entry's severity comes before when it was written",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(async () => {
       const severity = await first(this)
         .locator(".log-entry-severity")
@@ -119,13 +140,13 @@ Then(
   },
 );
 
-When("the first entry is pressed", async function (this: SpecWorld) {
+When("the first entry is pressed", async function (this: WebWorld) {
   await first(this).locator("summary").click();
 });
 
 Then(
   "the first entry's details include {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await eventually(async () => {
       const details = first(this).locator(".log-entry-details");
       assert.ok(await details.isVisible(), "The details are hidden.");
@@ -136,7 +157,7 @@ Then(
 
 // Looked for once the entry is drawn, so that a page not yet drawn is not
 // taken for one whose entries are hidden.
-Then("the first entry's details are hidden", async function (this: SpecWorld) {
+Then("the first entry's details are hidden", async function (this: WebWorld) {
   await eventually(async () => {
     assert.equal(await entries(this).count(), 1);
   });
@@ -146,23 +167,17 @@ Then("the first entry's details are hidden", async function (this: SpecWorld) {
   );
 });
 
-Then(
-  "the page says there are no log entries",
-  async function (this: SpecWorld) {
-    await eventually(async () => {
-      assert.equal(
-        await this.browserPage.locator("main [data-none]").count(),
-        1,
-      );
-    });
-  },
-);
+Then("the page says there are no log entries", async function (this: WebWorld) {
+  await eventually(async () => {
+    assert.equal(await this.browserPage.locator("main [data-none]").count(), 1);
+  });
+});
 
 // Looked for once an entry is drawn, which is when the page has answered, so
 // that a page not yet drawn is not taken for one that does not say it.
 Then(
   "the page does not say there are no log entries",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(async () => {
       assert.equal(await entries(this).count(), 1);
     });
@@ -172,15 +187,15 @@ Then(
 
 // Narrowing ----------------------------------------------------------------
 
-const severity = (world: SpecWorld): Locator =>
+const severity = (world: WebWorld): Locator =>
   world.browserPage.locator("main form.log-narrowing select[name=severity]");
 
-const text = (world: SpecWorld): Locator =>
+const text = (world: WebWorld): Locator =>
   world.browserPage.locator("main form.log-narrowing input[name=text]");
 
 Then(
   "the severity is {string}",
-  async function (this: SpecWorld, chosen: string) {
+  async function (this: WebWorld, chosen: string) {
     await eventually(async () => {
       assert.equal(await severity(this).inputValue({ timeout: 100 }), chosen);
     });
@@ -189,21 +204,21 @@ Then(
 
 When(
   "the severity {string} is chosen",
-  async function (this: SpecWorld, chosen: string) {
+  async function (this: WebWorld, chosen: string) {
     await severity(this).selectOption(chosen);
   },
 );
 
 When(
   "{string} is entered to look up",
-  async function (this: SpecWorld, entered: string) {
+  async function (this: WebWorld, entered: string) {
     await text(this).fill(entered);
   },
 );
 
 // The form is sent to the server, so the page that answers is a new one; the
 // steps after it wait for what they look at, which the old page cannot give.
-When("the Show button is pressed", async function (this: SpecWorld) {
+When("the Show button is pressed", async function (this: WebWorld) {
   await this.browserPage
     .locator("main form.log-narrowing button[type=submit]")
     .click();
@@ -212,14 +227,14 @@ When("the Show button is pressed", async function (this: SpecWorld) {
 
 Then(
   "the address's search is {string}",
-  async function (this: SpecWorld, search: string) {
+  async function (this: WebWorld, search: string) {
     await this.browserPage.waitForURL((url) => url.search === search);
   },
 );
 
 Then(
   "the text to look up is {string}",
-  async function (this: SpecWorld, entered: string) {
+  async function (this: WebWorld, entered: string) {
     await eventually(async () => {
       assert.equal(await text(this).inputValue({ timeout: 100 }), entered);
     });
@@ -228,16 +243,16 @@ Then(
 
 // Layout -------------------------------------------------------------------
 
-const prune = (world: SpecWorld): Locator =>
+const prune = (world: WebWorld): Locator =>
   world.browserPage.locator("main button.log-prune");
 
-const show = (world: SpecWorld): Locator =>
+const show = (world: WebWorld): Locator =>
   world.browserPage.locator("main form.log-narrowing button[type=submit]");
 
 // Two things are in one row where their vertical extents overlap, which holds
 // however the row is aligned, whereas comparing their tops would not.
 const sameRowAsSeverity = async (
-  world: SpecWorld,
+  world: WebWorld,
   other: Locator,
 ): Promise<void> => {
   await eventually(async () => {
@@ -251,65 +266,62 @@ const sameRowAsSeverity = async (
   });
 };
 
-Then("the text box is in the severity's row", async function (this: SpecWorld) {
+Then("the text box is in the severity's row", async function (this: WebWorld) {
   await sameRowAsSeverity(this, text(this));
 });
 
 Then(
   "the Show button is in the severity's row",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await sameRowAsSeverity(this, show(this));
   },
 );
 
 Then(
   "the Prune button is in the severity's row",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await sameRowAsSeverity(this, prune(this));
   },
 );
 
-Then(
-  "the Prune button is below the severity",
-  async function (this: SpecWorld) {
-    await eventually(async () => {
-      const chosen = await severity(this).boundingBox({ timeout: 100 });
-      const found = await prune(this).boundingBox({ timeout: 100 });
-      assert.ok(chosen !== null && found !== null, "Not drawn.");
-      assert.ok(found.y >= chosen.y + chosen.height, "Not below.");
-    });
-  },
-);
+Then("the Prune button is below the severity", async function (this: WebWorld) {
+  await eventually(async () => {
+    const chosen = await severity(this).boundingBox({ timeout: 100 });
+    const found = await prune(this).boundingBox({ timeout: 100 });
+    assert.ok(chosen !== null && found !== null, "Not drawn.");
+    assert.ok(found.y >= chosen.y + chosen.height, "Not below.");
+  });
+});
 
 // Pruning --------------------------------------------------------------------
 
-const dialog = (world: SpecWorld): Locator =>
+const dialog = (world: WebWorld): Locator =>
   world.browserPage.locator("dialog.modal-dialog[open]");
 
-When("the Prune button is pressed", async function (this: SpecWorld) {
+When("the Prune button is pressed", async function (this: WebWorld) {
   await this.browserPage.locator("main button.log-prune").click();
 });
 
 Then(
   "the page asks whether to remove the log from before the last hour",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(async () => {
       assert.ok(await dialog(this).isVisible(), "Nothing is asked.");
     });
   },
 );
 
-When("the pruning is declined", async function (this: SpecWorld) {
+When("the pruning is declined", async function (this: WebWorld) {
   await dialog(this).locator("button:not(.button-submit)").click();
 });
 
-When("the pruning is agreed to", async function (this: SpecWorld) {
+When("the pruning is agreed to", async function (this: WebWorld) {
   await dialog(this).locator("button.button-submit").click();
 });
 
 Then(
   /^the page says (\d+) entries were removed$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     await eventually(async () => {
       assert.equal(
         Number(

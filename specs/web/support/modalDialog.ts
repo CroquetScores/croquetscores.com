@@ -6,19 +6,19 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 import { unmarkedWithin } from "./marks.js";
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
-const buttonsOf = (world: SpecWorld): Locator =>
+const buttonsOf = (world: WebWorld): Locator =>
   dialogOf(world).locator(".dialog-buttons button");
 
 Then(
   "the modal dialog titled {string} is open",
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     await dialogOf(this).waitFor();
     assert.equal(
       (await dialogOf(this).locator(".dialog-title").innerText()).trim(),
@@ -29,14 +29,28 @@ Then(
 
 Then(
   /^(?:no modal dialog is|the (?:players|player|score|competition|team player|team|test|carry forward) dialog is not) open$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor({ state: "detached" });
+  },
+);
+
+// For where another dialog is meant to open in the one that is not, so that
+// "no dialog is open" would be true only until it had: it waits for the dialog
+// that is open, and then says what it is not.
+Then(
+  "the modal dialog is not titled {string}",
+  async function (this: WebWorld, title: string) {
+    await dialogOf(this).waitFor();
+    assert.notEqual(
+      (await dialogOf(this).locator(".dialog-title").innerText()).trim(),
+      title,
+    );
   },
 );
 
 Then(
   "the modal dialog names {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     const said = await dialogOf(this).locator(".dialog-content").innerText();
     assert.ok(said.includes(name), `The dialog says ${JSON.stringify(said)}.`);
@@ -45,7 +59,7 @@ Then(
 
 Then(
   "the modal dialog does not name {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     const said = await dialogOf(this).locator(".dialog-content").innerText();
     assert.ok(!said.includes(name), `The dialog says ${JSON.stringify(said)}.`);
@@ -54,7 +68,7 @@ Then(
 
 Then(
   "the modal dialog names {string} before {string}",
-  async function (this: SpecWorld, first: string, second: string) {
+  async function (this: WebWorld, first: string, second: string) {
     await dialogOf(this).waitFor();
     const said = await dialogOf(this).locator(".dialog-content").innerText();
     assert.ok(
@@ -70,7 +84,7 @@ const places = ["first", "second"];
 
 Then(
   /^the (?:modal|players|player|score|competition|team player|team|test|carry forward) dialog's (first|second) button is "([^"]*)"$/,
-  async function (this: SpecWorld, place: string, words: string) {
+  async function (this: WebWorld, place: string, words: string) {
     await dialogOf(this).waitFor();
     const all = (await buttonsOf(this).allInnerTexts()).map((each) =>
       each.trim(),
@@ -85,7 +99,7 @@ Then(
 
 When(
   "{string} is pressed in the modal dialog",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await dialogOf(this).waitFor();
     await buttonsOf(this)
       .filter({ hasText: new RegExp(`^${words}$`) })
@@ -98,7 +112,7 @@ When(
 // is its manager's, and is listed in the dialog on its own.
 Then(
   /^every word in the modal dialog but the (?:scorer|manager|account)'s name is in the test locale$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");
@@ -107,7 +121,7 @@ Then(
 
 Then(
   "every word in the modal dialog but the player's and the competitions' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open, ["[data-names] li"]);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");

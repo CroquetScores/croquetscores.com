@@ -4,11 +4,7 @@
 // rather than its words, which are in whatever language the page is in.
 import type { Locator } from "playwright";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 
 export type Tab =
   | "players"
@@ -25,19 +21,20 @@ export type Tab =
  * with one list and no tabs does — a team's players, a test's scores — since
  * the list is drawn the same either way.
  */
-export const tabPanel = (world: SpecWorld): Locator =>
+export const tabPanel = (world: WebWorld): Locator =>
   world.browserPage.locator("#tab-panel, #page-list");
 
 /** The page of the tournament the scenario calls `name`, on `tab`. */
 export const openTab = async (
-  world: SpecWorld,
+  world: WebWorld,
   name: string,
   tab: Tab,
 ): Promise<void> => {
-  const tournament = await load(world, tournamentNamed(world, name));
-  await world.browserPage.goto(
-    `${world.baseUrl!}/admin/${tournament.address.toString()}`,
-  );
+  const tournament = world.tournaments.get(name);
+  if (tournament === undefined) {
+    throw new Error(`No tournament called ${name} was created.`);
+  }
+  await world.browserPage.goto(`${world.baseUrl!}/admin/${tournament.address}`);
   await world.browserPage.locator(`#tab-${tab}`).click();
   await settled(world);
 };
@@ -46,7 +43,7 @@ export const openTab = async (
  * Once the tab says its list is the answer to what was last asked: until then
  * it is busy, and what it shows is what it showed before.
  */
-export const settled = async (world: SpecWorld): Promise<void> => {
+export const settled = async (world: WebWorld): Promise<void> => {
   await tabPanel(world).locator('section[aria-busy="false"]').waitFor();
 };
 
@@ -58,7 +55,7 @@ export const settled = async (world: SpecWorld): Promise<void> => {
 // has none, can be waited on: `eventually` waits for the panel first, and on
 // such a page it waits until Cucumber gives up.
 export const eventually = async (
-  world: SpecWorld,
+  world: WebWorld,
   check: () => Promise<void>,
 ): Promise<void> => {
   await settled(world);

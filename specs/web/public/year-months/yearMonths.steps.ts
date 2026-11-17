@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { withScripting } from "../../support/browser.js";
 import { ordinal } from "../../support/ordinals.js";
 import { aServerError, answerNextGet } from "../../support/serverError.js";
@@ -10,7 +10,7 @@ import { settled } from "../../support/tournamentLists.js";
 
 // The months of a year's page, and what pressing one does. What the tournaments
 // beneath a month share with the other lists is said in
-// specs/web/support/tournamentLists.ts, and opening the page in year.steps.ts
+// specs/web-units/support/tournamentLists.ts, and opening the page in year.steps.ts
 // and yearSport.steps.ts.
 
 // What the specs are not compiled to know of the page itself.
@@ -20,13 +20,13 @@ interface InThePage {
   };
 }
 
-const months = (world: SpecWorld): Locator =>
+const months = (world: WebWorld): Locator =>
   world.browserPage.locator("main .year-month");
 
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
-const monthNamed = (world: SpecWorld, name: string): Locator =>
+const monthNamed = (world: WebWorld, name: string): Locator =>
   months(world).filter({
     has: world.browserPage.locator(".year-month-name", {
       hasText: exactly(name),
@@ -35,14 +35,14 @@ const monthNamed = (world: SpecWorld, name: string): Locator =>
 
 // What the server was asked for, by the page the scenario is reading: only a
 // request for a month's tournaments counts, and not the page itself.
-const askedFor = new WeakMap<SpecWorld, string[]>();
+const askedFor = new WeakMap<WebWorld, string[]>();
 
-const press = async (world: SpecWorld, name: string): Promise<void> => {
+const press = async (world: WebWorld, name: string): Promise<void> => {
   await monthNamed(world, name).locator(".year-month-toggle").click();
   await settled(world);
 };
 
-Given("scripting is on", async function (this: SpecWorld) {
+Given("scripting is on", async function (this: WebWorld) {
   await withScripting(this);
   const requests: string[] = [];
   askedFor.set(this, requests);
@@ -54,11 +54,11 @@ Given("scripting is on", async function (this: SpecWorld) {
 
 // Said as a Given and as a When in the scenarios, which Cucumber does not tell
 // apart, so it is defined once.
-When(/^the month "(.*)" is pressed$/, async function (this: SpecWorld, name) {
+When(/^the month "(.*)" is pressed$/, async function (this: WebWorld, name) {
   await press(this, name as string);
 });
 
-When("every month of the year is pressed", async function (this: SpecWorld) {
+When("every month of the year is pressed", async function (this: WebWorld) {
   const count = await months(this).count();
   for (let at = 0; at < count; at++) {
     await months(this).nth(at).locator(".year-month-toggle").click();
@@ -66,11 +66,11 @@ When("every month of the year is pressed", async function (this: SpecWorld) {
   }
 });
 
-Given("the page has been marked", async function (this: SpecWorld) {
+Given("the page has been marked", async function (this: WebWorld) {
   await this.browserPage.evaluate("window.marked = true");
 });
 
-Then("the page is the one that was marked", async function (this: SpecWorld) {
+Then("the page is the one that was marked", async function (this: WebWorld) {
   assert.equal(
     await this.browserPage.evaluate("window.marked === true"),
     true,
@@ -78,23 +78,20 @@ Then("the page is the one that was marked", async function (this: SpecWorld) {
   );
 });
 
-Then(
-  /^the page is the year (\d+)'s$/,
-  function (this: SpecWorld, year: string) {
-    assert.equal(new URL(this.browserPage.url()).pathname, `/${year}`);
-  },
-);
+Then(/^the page is the year (\d+)'s$/, function (this: WebWorld, year: string) {
+  assert.equal(new URL(this.browserPage.url()).pathname, `/${year}`);
+});
 
 Then(
   /^the year has (\d+) months$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(await months(this).count(), Number(count));
   },
 );
 
 Then(
   /^the (first|twelfth) month of the year is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       (
         (await months(this)
@@ -109,7 +106,7 @@ Then(
 
 Then(
   /^the month "(.*)" is (open|closed)$/,
-  async function (this: SpecWorld, name: string, state: string) {
+  async function (this: WebWorld, name: string, state: string) {
     assert.equal(
       await monthNamed(this, name).getAttribute("data-state"),
       state,
@@ -117,21 +114,18 @@ Then(
   },
 );
 
-Then(
-  /^(\d+) months are open$/,
-  async function (this: SpecWorld, count: string) {
-    assert.equal(
-      await months(this)
-        .and(this.browserPage.locator("[data-state=open]"))
-        .count(),
-      Number(count),
-    );
-  },
-);
+Then(/^(\d+) months are open$/, async function (this: WebWorld, count: string) {
+  assert.equal(
+    await months(this)
+      .and(this.browserPage.locator("[data-state=open]"))
+      .count(),
+    Number(count),
+  );
+});
 
 Then(
   /^the month "(.*)" says there are none$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(
       await monthNamed(this, name).locator(".tournament-list-none").count(),
       1,
@@ -139,20 +133,20 @@ Then(
   },
 );
 
-Then("no month's tournaments have been asked for", function (this: SpecWorld) {
+Then("no month's tournaments have been asked for", function (this: WebWorld) {
   assert.deepEqual(askedFor.get(this), []);
 });
 
 Then(
   /^(\d+) month's tournaments have been asked for$/,
-  function (this: SpecWorld, count: string) {
+  function (this: WebWorld, count: string) {
     assert.equal(askedFor.get(this)?.length, Number(count));
   },
 );
 
 Then(
   /^the month "(.*)" is marked "(\+|-)"$/,
-  async function (this: SpecWorld, name: string, mark: string) {
+  async function (this: WebWorld, name: string, mark: string) {
     assert.equal(
       (
         (await monthNamed(this, name)
@@ -166,7 +160,7 @@ Then(
 
 When(
   /^the column "(.*)" of the month "(.*)" is pressed$/,
-  async function (this: SpecWorld, column: string, name: string) {
+  async function (this: WebWorld, column: string, name: string) {
     await monthNamed(this, name)
       .locator("thead a", { hasText: new RegExp(`${column}$`) })
       .click();
@@ -177,7 +171,7 @@ When(
 Then(
   /^the (first|second|third) tournament of the month "(.*)" is "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     name: string,
     expected: string,
@@ -196,7 +190,7 @@ Then(
 
 Then(
   /^the month "(.*)" has no other heading$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(await monthNamed(this, name).getByRole("heading").count(), 0);
   },
 );
@@ -204,7 +198,7 @@ Then(
 // Where the month's button ends and its table's column headings begin, in the
 // page's own pixels.
 const edges = async (
-  world: SpecWorld,
+  world: WebWorld,
   name: string,
 ): Promise<{ buttonBottom: number; headingsTop: number }> => {
   const month = monthNamed(world, name);
@@ -219,7 +213,7 @@ const edges = async (
 
 Then(
   /^the month "(.*)" touches its column headings$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const { buttonBottom, headingsTop } = await edges(this, name);
     assert.ok(
       Math.abs(headingsTop - buttonBottom) <= 1,
@@ -230,7 +224,7 @@ Then(
 
 Then(
   /^the month "(.*)" is the colour of its column headings$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const month = monthNamed(this, name);
     const colour = (found: Locator): Promise<string> =>
       found.evaluate((element) =>
@@ -247,7 +241,7 @@ Then(
 
 When(
   /^the usual order of the month "(.*)" is pressed$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await monthNamed(this, name).locator(".tournament-list-usual a").click();
     await settled(this);
   },
@@ -266,7 +260,7 @@ const styleOf = (found: Locator, property: string): Promise<string> =>
 
 Then(
   /^the month "(.*)" has no border$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const toggle = monthNamed(this, name).locator(".year-month-toggle");
     for (const side of ["top", "right", "bottom", "left"]) {
       assert.equal(
@@ -280,7 +274,7 @@ Then(
 
 Then(
   /^the month "(.*)" has square corners$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const toggle = monthNamed(this, name).locator(".year-month-toggle");
     for (const corner of [
       "top-left",
@@ -299,12 +293,12 @@ Then(
 
 // Showing or hiding every month at once ------------------------------------------
 
-const allOf = (world: SpecWorld): Locator =>
+const allOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main .year-months-all");
 
 When(
   "the way to show or hide all the months is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await allOf(this).click();
     await settled(this);
   },
@@ -312,7 +306,7 @@ When(
 
 Then(
   /^the way to show or hide all the months says "(Show all|Hide all)"$/,
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.equal(
       (
         (await allOf(this).locator(".year-months-all-words").textContent()) ??
@@ -325,7 +319,7 @@ Then(
 
 Then(
   /^the way to show or hide all the months is marked "(\+|-)"$/,
-  async function (this: SpecWorld, mark: string) {
+  async function (this: WebWorld, mark: string) {
     assert.equal(
       (
         (await allOf(this).locator(".year-month-mark").textContent()) ?? ""
@@ -337,7 +331,7 @@ Then(
 
 Then(
   "the way to show all the months is beneath the heading",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const heading = await this.browserPage.locator("main h1").boundingBox();
     const control = await allOf(this).boundingBox();
     assert.ok(heading !== null && control !== null, "It is not laid out.");
@@ -347,7 +341,7 @@ Then(
 
 Then(
   "the way to show all the months is above the first month",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const control = await allOf(this).boundingBox();
     const first = await months(this).first().boundingBox();
     assert.ok(control !== null && first !== null, "It is not laid out.");
@@ -357,7 +351,7 @@ Then(
 
 Then(
   "there is no way to show or hide all the months",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await allOf(this).count(), 0);
   },
 );
@@ -367,7 +361,7 @@ Then(
 // what it left.
 Given(
   "the next asking for December is answered with a server error",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const late = new Promise<void>((resolve) => setTimeout(resolve, 1000));
     await answerNextGet(this, /\/months\/12(\?|$)/, aServerError, late);
   },
@@ -375,7 +369,7 @@ Given(
 
 Then(
   /^the month "(.*)" is at the top of the page$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // The scroll is made once the months have been reloaded, so it is waited
     // for rather than read at once.
     const month = monthNamed(this, name);
@@ -397,7 +391,7 @@ const widthOf = async (found: Locator): Promise<number> => {
 
 Then(
   /^the column "(.*)" of the month "(.*)" is as wide as that of the month "(.*)"$/,
-  async function (this: SpecWorld, column: string, one: string, other: string) {
+  async function (this: WebWorld, column: string, one: string, other: string) {
     const heading = (name: string): Locator =>
       monthNamed(this, name).locator("thead th", {
         hasText: new RegExp(`${column}$`),
@@ -413,7 +407,7 @@ Then(
 
 Then(
   /^the month "(.*)" is as wide as the month "(.*)"$/,
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     const first = await widthOf(monthNamed(this, one));
     const second = await widthOf(monthNamed(this, other));
     assert.ok(
@@ -425,7 +419,7 @@ Then(
 
 Then(
   /^the dates of the month "(.*)" fit their column$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const cell = monthNamed(this, name).locator(".tournament-dates").first();
     const [needed, given] = await cell.evaluate((element) => {
       const measured = element as unknown as {

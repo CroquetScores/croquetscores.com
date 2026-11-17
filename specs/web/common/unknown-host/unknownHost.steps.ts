@@ -2,11 +2,9 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { APIResponse, Response } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
-import {
-  anApplicationBelievingNoProxy,
-  anApplicationServedAs,
-} from "../../support/browser.js";
+import type { WebWorld } from "../../support/world.js";
+import { telling } from "../../support/headers.js";
+import { siteTold } from "../../support/site.js";
 
 // What the site last answered the scenario, as the page was opened or as a
 // request was made without one.
@@ -16,9 +14,9 @@ interface Answered {
   readonly body: string;
 }
 
-const answers = new WeakMap<SpecWorld, Answered>();
+const answers = new WeakMap<WebWorld, Answered>();
 
-const answeredOf = (world: SpecWorld): Answered => {
+const answeredOf = (world: WebWorld): Answered => {
   const answered = answers.get(world);
   assert.ok(answered !== undefined, "Nothing has been asked of the site.");
   return answered;
@@ -44,44 +42,45 @@ const forwardedFor = (host: string): Record<string, string> => ({
 });
 
 const opened = async (
-  world: SpecWorld,
+  world: WebWorld,
   host: string,
   path: string,
 ): Promise<void> => {
-  await anApplicationServedAs(world, host);
+  await telling(world, "x-forwarded-host", host);
   const response = await world.browserPage.goto(`${world.baseUrl!}${path}`);
   assert.ok(response !== null, "The page gave no answer.");
   answers.set(world, await readFrom(response));
 };
 
-Given("a site", function (this: SpecWorld) {
+Given("a site", function (this: WebWorld) {
   assert.ok(this.baseUrl !== undefined, "The scenario has no application.");
 });
 
 Given(
   "a site told that no proxy forwards requests to it",
-  async function (this: SpecWorld) {
-    this.baseUrl = await anApplicationBelievingNoProxy(this);
+  async function (this: WebWorld) {
+    // Told no proxy is to be believed, as a deployment with none is.
+    this.baseUrl = (await siteTold({ TRUSTED_PROXY: "" })).baseUrl;
   },
 );
 
 When(
   "the sign in page is asked for as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     await opened(this, host, "/account/sign-in");
   },
 );
 
 When(
   "the home page is asked for as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     await opened(this, host, "/");
   },
 );
 
 When(
   "the API is asked for as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     const response = await this.browserPage.request.get(
       `${this.baseUrl!}/api/site/tournaments`,
       { headers: forwardedFor(host), failOnStatusCode: false },
@@ -92,7 +91,7 @@ When(
 
 When(
   "the health check is asked for as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     const response = await this.browserPage.request.get(
       `${this.baseUrl!}/api/site/health`,
       { headers: forwardedFor(host), failOnStatusCode: false },
@@ -103,7 +102,7 @@ When(
 
 When(
   "the health check is asked for with a query as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     const response = await this.browserPage.request.get(
       `${this.baseUrl!}/api/site/health?probe=1`,
       { headers: forwardedFor(host), failOnStatusCode: false },
@@ -114,7 +113,7 @@ When(
 
 When(
   "a form is posted as {string}",
-  async function (this: SpecWorld, host: string) {
+  async function (this: WebWorld, host: string) {
     const response = await this.browserPage.request.post(
       `${this.baseUrl!}/account/sign-in`,
       {
@@ -127,27 +126,27 @@ When(
   },
 );
 
-Then("the site answers {string}", function (this: SpecWorld, status: string) {
+Then("the site answers {string}", function (this: WebWorld, status: string) {
   assert.equal(answeredOf(this).status, Number(status));
 });
 
-Then("the answer is a page", function (this: SpecWorld) {
+Then("the answer is a page", function (this: WebWorld) {
   const { contentType, body } = answeredOf(this);
   assert.match(contentType, /^text\/html/);
   assert.match(body, /<h1>/);
 });
 
-Then("the answer carries a beta notice", function (this: SpecWorld) {
+Then("the answer carries a beta notice", function (this: WebWorld) {
   assert.ok(answeredOf(this).body.includes("beta-banner"));
 });
 
-Then("the answer carries no beta banner", function (this: SpecWorld) {
+Then("the answer carries no beta banner", function (this: WebWorld) {
   assert.ok(!answeredOf(this).body.includes("beta-banner"));
 });
 
 Then(
   "the answer carries the code {string}",
-  function (this: SpecWorld, code: string) {
+  function (this: WebWorld, code: string) {
     const said = JSON.parse(answeredOf(this).body) as { error?: unknown };
     assert.equal(said.error, code);
   },

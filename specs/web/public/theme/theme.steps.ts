@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 // What each theme actually looks like, so that "the page is dark" is a claim
 // about what was painted rather than about an attribute that is supposed to
@@ -16,7 +16,7 @@ const themeButton = (label: string): string =>
 
 Given(
   "a machine that prefers {word}",
-  async function (this: SpecWorld, scheme: string) {
+  async function (this: WebWorld, scheme: string) {
     assert.ok(
       scheme === "light" || scheme === "dark",
       `Unknown preference ${scheme}.`,
@@ -28,17 +28,17 @@ Given(
 
 When(
   "the theme {string} is chosen",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await this.browserPage.click(themeButton(label));
     await this.browserPage.waitForLoadState();
   },
 );
 
-When("a page that is not there is opened", async function (this: SpecWorld) {
+When("a page that is not there is opened", async function (this: WebWorld) {
   await this.browserPage.goto(`${this.baseUrl!}/no-such-page`);
 });
 
-Then("the page is {word}", async function (this: SpecWorld, theme: string) {
+Then("the page is {word}", async function (this: WebWorld, theme: string) {
   const wanted = surfaces[theme as keyof typeof surfaces];
   assert.ok(
     wanted !== undefined,
@@ -53,7 +53,7 @@ Then("the page is {word}", async function (this: SpecWorld, theme: string) {
 
 Then(
   "the theme {string} is the one in force",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.getAttribute(themeButton(label), "aria-current"),
       "true",
@@ -62,7 +62,7 @@ Then(
   },
 );
 
-const themeCookie = async function (this: SpecWorld) {
+const themeCookie = async function (this: WebWorld) {
   const cookies = await this.browserContext!.cookies();
   const cookie = cookies.find((candidate) => candidate.name === "theme");
   assert.ok(cookie !== undefined, "No theme cookie was set.");
@@ -71,7 +71,7 @@ const themeCookie = async function (this: SpecWorld) {
 
 Then(
   "the choice is kept in a cookie marked Secure",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const cookie = await themeCookie.call(this);
     assert.equal(cookie.secure, true);
   },
@@ -79,13 +79,13 @@ Then(
 
 Then(
   "the choice is kept in a cookie marked HttpOnly",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const cookie = await themeCookie.call(this);
     assert.equal(cookie.httpOnly, true);
   },
 );
 
-const measure = async function (this: SpecWorld, label: string) {
+const measure = async function (this: WebWorld, label: string) {
   const box = await this.browserPage.locator(themeButton(label)).boundingBox();
   assert.ok(box !== null, `The theme button ${label} has no box to measure.`);
   return box;
@@ -93,7 +93,7 @@ const measure = async function (this: SpecWorld, label: string) {
 
 Then(
   "the theme button {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, label: string, pixels: number) {
+  async function (this: WebWorld, label: string, pixels: number) {
     const box = await measure.call(this, label);
     assert.ok(
       box.height >= pixels,
@@ -104,7 +104,7 @@ Then(
 
 Then(
   "the theme button {string} is at least {int} pixels wide",
-  async function (this: SpecWorld, label: string, pixels: number) {
+  async function (this: WebWorld, label: string, pixels: number) {
     const box = await measure.call(this, label);
     assert.ok(
       box.width >= pixels,
@@ -119,7 +119,7 @@ const elsewhere = "http://elsewhere.example/";
 
 Given(
   "a page on another site with a button that posts {string} here",
-  async function (this: SpecWorld, theme: string) {
+  async function (this: WebWorld, theme: string) {
     const target = `${this.baseUrl!}/theme`;
     await this.browserPage.route(elsewhere, (route) =>
       route.fulfill({
@@ -139,7 +139,7 @@ Given(
 
 When(
   "the reader presses the button on that page",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.goto(this.elsewhere!);
     await this.browserPage.click("button");
     await this.browserPage.waitForLoadState();

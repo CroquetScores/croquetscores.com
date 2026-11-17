@@ -2,12 +2,8 @@ import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import { testNamed } from "../../../../../../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
+import { keptOf, testOf } from "../../../../../../../support/kept.js";
 import { unmarkedWithin } from "../../../../../../../support/marks.js";
 import { eventually } from "../../../../../../../support/tournamentPage.js";
 
@@ -21,11 +17,11 @@ import { eventually } from "../../../../../../../support/tournamentPage.js";
 
 Given(
   /^the page of the test "([^"]*)" in "([^"]*)" is open(?:ed)?$/,
-  async function (this: SpecWorld, test: string, name: string) {
-    const tournament = await load(this, tournamentNamed(this, name));
-    const { reference } = testNamed(tournament, test);
+  async function (this: WebWorld, test: string, name: string) {
+    const tournament = await keptOf(this, name);
+    const found = testOf(tournament, test);
     await this.browserPage.goto(
-      `${this.baseUrl!}/admin/${tournament.address.toString()}/tests/${reference.slug.toString()}`,
+      `${this.baseUrl!}/admin/${tournament.address}/tests/${found.slug}`,
     );
     // Where the reader is sent to sign in first there is no heading of the
     // admin's to wait for, and the sign in page is what the scenario looks at.
@@ -38,12 +34,12 @@ Given(
 
 // What is said beneath the heading -----------------------------------------------
 
-const about = (world: SpecWorld): Locator =>
+const about = (world: WebWorld): Locator =>
   world.browserPage.locator("main .page-about");
 
 Then(
   /^the page says the test is expected to have (\d+) match(?:es)?$/,
-  async function (this: SpecWorld, matches: number) {
+  async function (this: WebWorld, matches: number) {
     await eventually(this, async () => {
       assert.equal(
         await about(this)
@@ -57,7 +53,7 @@ Then(
 
 Then(
   "the page says each match is the best of {int}",
-  async function (this: SpecWorld, games: number) {
+  async function (this: WebWorld, games: number) {
     await eventually(this, async () => {
       assert.equal(
         await about(this)
@@ -71,13 +67,13 @@ Then(
 
 // The scores, set out by team ---------------------------------------------------
 
-const scoreTable = (world: SpecWorld): Locator =>
+const scoreTable = (world: WebWorld): Locator =>
   world.browserPage.locator("#page-list table");
 
 Then(
   "the scores are headed {string}, {string} and {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     first: string,
     between: string,
     second: string,
@@ -95,7 +91,7 @@ Then(
 Then(
   /^the (first score listed|first archived score) reads "([^"]*)", "([^"]*)" and "([^"]*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     first: string,
     scores: string,
@@ -118,7 +114,7 @@ Then(
 // On one line: the text of each cell laid out in one line box.
 Then(
   "no part of the first score listed wraps",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const lines = await this.browserPage.evaluate<number[]>(`(() => {
         const row = document.querySelector('#page-list [data-listed="in-use"] > .listed-item');
@@ -143,7 +139,7 @@ Then(
 // table's width would be.
 Then(
   "the players and the scores of the first score listed are no wider than what is in them",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const spare = await this.browserPage.evaluate<number[]>(`(() => {
         const row = document.querySelector('#page-list [data-listed="in-use"] > .listed-item');
@@ -169,7 +165,7 @@ Then(
 // the page gives its scores.
 Then(
   "what the first score listed offers ends at the right edge of the page",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const offered = await scoreTable(this)
         .first()
@@ -193,7 +189,7 @@ Then(
 // heading above it does, to the pixel, as the columns of one table do.
 Then(
   "each part of the first score listed lines up under its heading",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const table = scoreTable(this).first();
       const headings = await table.locator("thead tr > *").all();
@@ -221,7 +217,7 @@ Then(
 // typed: none is anybody's language.
 Then(
   "every word in the admin's content but the test's, the teams' and the players' own is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "main", [
         "main h1",

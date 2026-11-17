@@ -2,16 +2,16 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { unmarkedWithin } from "../../support/marks.js";
 
 // A player's page, drawn by the server with no scripting
 // (`websitePlayer.feature`): a table of the tournaments they are in.
 
-const rows = (world: SpecWorld): Locator =>
+const rows = (world: WebWorld): Locator =>
   world.browserPage.locator("main .player-tournaments tbody tr");
 
-const headings = (world: SpecWorld): Locator =>
+const headings = (world: WebWorld): Locator =>
   world.browserPage.locator("main .player-tournaments th");
 
 const escaped = (words: string): string =>
@@ -24,14 +24,14 @@ const exactly = (words: string): RegExp => new RegExp(`^${escaped(words)}$`);
 const withArrow = (words: string): RegExp =>
   new RegExp(`^[↑↓]?\\s*${escaped(words)}$`);
 
-const heading = (world: SpecWorld, name: string): Locator =>
+const heading = (world: WebWorld, name: string): Locator =>
   headings(world).filter({ hasText: withArrow(name) });
 
 // A row's two cells, the days it runs and then the tournament.
 const datesOf = (one: Locator): Locator => one.locator("td").nth(0);
 const tournamentOf = (one: Locator): Locator => one.locator("td").nth(1);
 
-const row = (world: SpecWorld, name: string): Locator =>
+const row = (world: WebWorld, name: string): Locator =>
   rows(world).filter({
     has: world.browserPage.locator("td:nth-child(2)", {
       hasText: exactly(name),
@@ -49,7 +49,7 @@ const ways: Readonly<Record<string, string>> = {
 
 Then(
   /^the table's headings are "(.*)" and "(.*)"$/,
-  async function (this: SpecWorld, first: string, second: string) {
+  async function (this: WebWorld, first: string, second: string) {
     const all = headings(this);
     assert.equal(await all.count(), 2);
     assert.match((await all.nth(0).innerText()).trim(), withArrow(first));
@@ -59,7 +59,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) row is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     const at = place.indexOf(which);
     assert.equal(
       (await tournamentOf(rows(this).nth(at)).innerText()).trim(),
@@ -70,7 +70,7 @@ Then(
 
 Then(
   /^the first row is dated "(.*)"$/,
-  async function (this: SpecWorld, dates: string) {
+  async function (this: WebWorld, dates: string) {
     assert.equal((await datesOf(rows(this).first()).innerText()).trim(), dates);
   },
 );
@@ -82,7 +82,7 @@ Then(
 // Playwright 1.64 does not call.
 Then(
   "the dates of the first row are on one line",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const lines = await datesOf(rows(this).first()).evaluate(
       (cell: {
         readonly ownerDocument: {
@@ -115,21 +115,21 @@ Then(
 
 Then(
   /^there (is|is not) a row of "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(await row(this, name).count(), which === "is" ? 1 : 0);
   },
 );
 
 Then(
   /^the table has (\d+) rows?$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(await rows(this).count(), Number(count));
   },
 );
 
 Then(
   "the first row says nothing but its dates and {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const first = rows(this).first();
     assert.equal(await first.locator("td").count(), 2);
     assert.equal((await tournamentOf(first).innerText()).trim(), name);
@@ -139,7 +139,7 @@ Then(
 
 Then(
   "the first row's tournament leads to {string}",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     assert.equal(
       await rows(this).first().locator("a").getAttribute("href"),
       path,
@@ -149,7 +149,7 @@ Then(
 
 When(
   "the tournament of the first row is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await Promise.all([
       this.browserPage.waitForNavigation(),
       rows(this).first().locator("a").click(),
@@ -160,7 +160,7 @@ When(
 
 When(
   "the heading {string} is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await Promise.all([
       this.browserPage.waitForNavigation(),
       heading(this, name).locator("a").click(),
@@ -171,7 +171,7 @@ When(
 
 Then(
   "the heading {string} leads to {string}",
-  async function (this: SpecWorld, name: string, path: string) {
+  async function (this: WebWorld, name: string, path: string) {
     assert.equal(
       await heading(this, name).locator("a").getAttribute("href"),
       path,
@@ -181,7 +181,7 @@ Then(
 
 Then(
   /^the table is sorted by "(.*)", from (A to Z|Z to A|oldest to newest|newest to oldest)$/,
-  async function (this: SpecWorld, name: string, way: string) {
+  async function (this: WebWorld, name: string, way: string) {
     const sorted = heading(this, name);
     assert.equal(await sorted.count(), 1, `${name} is not a heading.`);
     assert.equal(await sorted.getAttribute("aria-sort"), ways[way]);
@@ -197,7 +197,7 @@ Then(
 
 Then(
   "every word in the page's content but the names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const stray = await unmarkedWithin(this, "main", [
       "h1",
       ".player-tournaments td a",
@@ -211,7 +211,7 @@ Then(
 // tournament's name, as the browser works it out. Bold is 700 or more, which
 // the weight of an ordinary row never reaches.
 const weightsOfRow = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
 ): Promise<number[]> => {
   const at = (
@@ -225,7 +225,7 @@ const weightsOfRow = async (
 
 Then(
   "the row of {string} is bold",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const weights = await weightsOfRow(this, name);
     assert.ok(weights.length > 0);
     for (const weight of weights) assert.ok(weight >= 700, String(weight));
@@ -234,7 +234,7 @@ Then(
 
 Then(
   "the row of {string} is not bold",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const weights = await weightsOfRow(this, name);
     assert.ok(weights.length > 0);
     for (const weight of weights) assert.ok(weight < 700, String(weight));

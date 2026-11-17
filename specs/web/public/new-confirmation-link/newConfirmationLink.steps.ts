@@ -2,29 +2,32 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { alterLinkToName } from "../../../infrastructure/support/links.js";
-import { applicationFor } from "../../support/browser.js";
-import { clockFor } from "../../support/clock.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
-import { accountIdFor } from "../sign-in/signIn.steps.js";
+import type { WebWorld } from "../../support/world.js";
+import {
+  detailsOfAccount,
+  emailsFor,
+  latestLinkTo,
+  sayEmailsWereWritten,
+} from "../../support/control.js";
+import { unmarked } from "../../support/languages.js";
+import { alterLinkToName } from "../../support/links.js";
+import { wordsFor } from "../../support/words.js";
 
 const newConfirmationLink = "/account/new-confirmation-link";
 
-const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
-  assert.ok(said !== undefined, `English has no words for ${key}.`);
-  return said;
-};
+// Where each scenario's button sent the form, by the scenario.
+const drawnWith = new WeakMap<WebWorld, string>();
 
-const linkInHand = (world: SpecWorld): string => {
+const words = wordsFor;
+
+const linkInHand = (world: WebWorld): string => {
   assert.ok(world.linkInHand !== undefined, "The scenario has no link.");
   return world.linkInHand;
 };
 
 // The page as the reader reaches it: the link they hold, on this scenario's
 // application rather than on the address the emails are written with.
-const openFor = async (world: SpecWorld, link: string): Promise<void> => {
+const openFor = async (world: WebWorld, link: string): Promise<void> => {
   const followed = new URL(link);
   await world.browserPage.goto(
     `${world.baseUrl!}${newConfirmationLink}${followed.search}`,
@@ -35,7 +38,7 @@ const openFor = async (world: SpecWorld, link: string): Promise<void> => {
 
 When(
   "the new confirmation link page is opened for the link",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await openFor(this, linkInHand(this));
   },
 );
@@ -45,14 +48,14 @@ When(
 // without it.
 When(
   "the new confirmation link page is opened for the link with scripting off",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await openFor(this, linkInHand(this));
   },
 );
 
 When(
   "the new confirmation link page is opened",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.goto(`${this.baseUrl!}${newConfirmationLink}`);
   },
 );
@@ -60,7 +63,7 @@ When(
 // From the page the expired link opened, as a reader gets here.
 When(
   "the link to the new confirmation link page is followed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage
       .locator(`main a[href^="${newConfirmationLink}"]`)
       .click();
@@ -70,7 +73,7 @@ When(
 
 Then(
   "the new confirmation link page is shown",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(new URL(this.browserPage.url()).pathname, newConfirmationLink);
     const heading = unmarked(
       (await this.browserPage.locator("main h1").textContent()) ?? "",
@@ -81,9 +84,14 @@ Then(
 
 // Asking --------------------------------------------------------------------------
 
-When("a new link is asked for", async function (this: SpecWorld) {
+When("a new link is asked for", async function (this: WebWorld) {
   const button = this.browserPage.locator('form.asking button[type="submit"]');
   if ((await button.count()) > 0) {
+    // What the button was drawn with, which a second press sends again.
+    drawnWith.set(
+      this,
+      (await this.browserPage.getAttribute("form.asking", "action")) ?? "",
+    );
     await button.click();
     await this.browserPage.waitForLoadState();
     return;
@@ -99,8 +107,8 @@ When("a new link is asked for", async function (this: SpecWorld) {
 });
 
 // The one that has just been sent, which is the newest queued for the address.
-When("the new link is followed", async function (this: SpecWorld) {
-  const link = await newestLinkTo(this, this.addressInHand ?? "");
+When("the new link is followed", async function (this: WebWorld) {
+  const link = await latestLinkTo(this.addressInHand ?? "");
   const followed = new URL(link);
   this.linkInHand = link;
   await this.browserPage.goto(
@@ -112,52 +120,40 @@ When("the new link is followed", async function (this: SpecWorld) {
 // alone: what the page must not act on.
 Given(
   "the link has been altered to name the account for {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     this.linkInHand = alterLinkToName(
       linkInHand(this),
-      await accountIdFor(this, address),
+      (await detailsOfAccount(address)).id,
     );
   },
 );
 
 // What has been sent ------------------------------------------------------------------
 
-const emailsFor = async (
-  world: SpecWorld,
-  address: string,
-): Promise<readonly { kind: string; link: string | undefined }[]> => {
-  const application = applicationFor(world);
-  const queued = await application.unitOfWork.inTransaction(() =>
-    application.emailQueue.emails(),
-  );
-  return queued.filter((email) => !email.givenUp && email.to === address);
-};
-
-const newestLinkTo = async (
-  world: SpecWorld,
-  address: string,
-): Promise<string> => {
-  const emails = await emailsFor(world, address);
-  const last = emails[emails.length - 1];
-  assert.ok(
-    last?.link !== undefined,
-    `Nothing carrying a link is for ${address}.`,
-  );
-  return last.link;
-};
+const sentTo = async (address: string) =>
+  (await emailsFor(address)).filter((email) => !email.givenUp);
 
 // The same form posted again, to the same address it was drawn with, which is
-// what a second press of the button does.
-When("the button is pressed again", async function (this: SpecWorld) {
-  await this.browserPage.goBack();
-  await this.browserPage.click('form.asking button[type="submit"]');
-  await this.browserPage.waitForLoadState();
+// what a second press of the button does. Sent from the scenario and not pressed,
+// because a browser sent back to the page draws it again with an id of its own,
+// and what is asked is what the site does with the one it was first given.
+When("the button is pressed again", async function (this: WebWorld) {
+  const action = drawnWith.get(this);
+  assert.ok(action !== undefined, "The button was never pressed.");
+  const answer = await this.browserPage.request.post(
+    `${this.baseUrl!}${action}`,
+    {
+      headers: { "sec-fetch-site": "same-origin" },
+      maxRedirects: 0,
+    },
+  );
+  assert.ok(answer.status() < 500, `It was answered ${answer.status()}.`);
 });
 
 Then(
   "one new link has been emailed to {string}",
-  async function (this: SpecWorld, address: string) {
-    const sent = (await emailsFor(this, address)).filter(
+  async function (this: WebWorld, address: string) {
+    const sent = (await sentTo(address)).filter(
       (email) => email.kind === "Email.ConfirmAddressAgain",
     );
     assert.equal(sent.length, 1, `${sent.length} new links were sent.`);
@@ -166,8 +162,8 @@ Then(
 
 Then(
   "a new link is emailed to {string}",
-  async function (this: SpecWorld, address: string) {
-    const emails = await emailsFor(this, address);
+  async function (this: WebWorld, address: string) {
+    const emails = await sentTo(address);
     const last = emails[emails.length - 1];
     assert.ok(last !== undefined, `Nothing is queued for ${address}.`);
     assert.equal(last.kind, "Email.ConfirmAddressAgain");
@@ -178,8 +174,8 @@ Then(
 // queued, and is not what any of these scenarios is asking about.
 Then(
   "nothing more is sent to {string}",
-  async function (this: SpecWorld, address: string) {
-    const sent = (await emailsFor(this, address)).filter(
+  async function (this: WebWorld, address: string) {
+    const sent = (await sentTo(address)).filter(
       (email) => email.kind !== "Email.ConfirmAddress",
     );
     assert.deepEqual(sent, [], `More was sent to ${address}.`);
@@ -190,42 +186,16 @@ Then(
 // with whatever is asked for now.
 Given(
   "{string} has been emailed {int} times in the last hour",
-  async function (this: SpecWorld, address: string, times: number) {
-    const account = await accountIdFor(this, address);
+  async function (this: WebWorld, address: string, times: number) {
     // A few minutes ago, so that they are inside the hour whatever moment the
     // scenario is at.
-    const at = new Date(clockFor(this).now.getTime() - 5 * 60 * 1000);
-    for (let each = 0; each < times; each++) {
-      await this.database.query(
-        `insert into emails_written (written_to, kind, written_at)
-         values ($1, $2, $3)`,
-        [`account:${account}`, "Email.ConfirmAddressAgain", at],
-      );
-    }
+    await sayEmailsWereWritten(address, "Email.ConfirmAddressAgain", times, 5);
   },
 );
 
 // What the page shows -------------------------------------------------------------------
 
-Then(
-  "the page does not contain {string}",
-  async function (this: SpecWorld, words_: string) {
-    const content = (await this.browserPage.content()) ?? "";
-    assert.ok(!content.includes(words_), `The page holds ${words_}.`);
-  },
-);
-
-Then(
-  "the page's address does not contain {string}",
-  function (this: SpecWorld, words_: string) {
-    assert.ok(
-      !decodeURIComponent(this.browserPage.url()).includes(words_),
-      `The address holds ${words_}.`,
-    );
-  },
-);
-
-Given("the email address is confirmed", async function (this: SpecWorld) {
+Given("the email address is confirmed", async function (this: WebWorld) {
   await this.browserPage.fill(
     'section.dialog input[name="name"]',
     "Sam Someone",

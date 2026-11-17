@@ -67,7 +67,7 @@ Feature: A commentary's writer can change its title
     Scenario: A reader signed in to another account is told the page is not found
       Given the reader has signed in as "organiser@example.com" with the password "correct horse battery staple"
       When the page at "/2026/ac/spring-open/commentaries/day-one/edit" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: The writer is asked for a title
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"
@@ -126,7 +126,7 @@ Feature: A commentary's writer can change its title
       And the page at "/2026/ac/spring-open/commentaries/day-one/edit" is open
       And the title "   " is typed
       When the dialog is submitted
-      Then the title field says the message for "CommentaryTitle.Missing"
+      Then the title field says "Give the commentary a title."
 
     Scenario: A title another commentary has is said beneath the field
       Given "writer@example.com" has started the commentary "Day two" on "Spring Open"
@@ -134,7 +134,7 @@ Feature: A commentary's writer can change its title
       And the page at "/2026/ac/spring-open/commentaries/day-one/edit" is open
       And the title "Day Two" is typed
       When the dialog is submitted
-      Then the title field says the message for "Commentary.TitleTaken"
+      Then the title field says "Another commentary already has that title."
 
     Scenario: What was typed is put back
       Given the reader has signed in as "writer@example.com" with the password "correct horse battery staple"

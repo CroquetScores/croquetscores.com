@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough, isUnderlined } from "../../support/struckThrough.js";
 import { headingOf, linesOf } from "../../support/headings.js";
 
@@ -22,22 +22,22 @@ const placeOf = (which: string): number => {
   return at;
 };
 
-const gridOf = (world: SpecWorld): Locator =>
+const gridOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main .block-grid");
 
-const rows = (world: SpecWorld): Locator => gridOf(world).locator("tbody > tr");
+const rows = (world: WebWorld): Locator => gridOf(world).locator("tbody > tr");
 
-const columnHeadings = (world: SpecWorld): Locator =>
+const columnHeadings = (world: WebWorld): Locator =>
   gridOf(world).locator("thead .block-grid-initials");
 
-const totalHeadings = (world: SpecWorld): Locator =>
+const totalHeadings = (world: WebWorld): Locator =>
   gridOf(world).locator("thead .block-grid-total-heading");
 
 // What is said, as a reader reads it, one space between each word.
 const said = async (found: Locator): Promise<string> =>
   ((await found.textContent()) ?? "").replace(/\s+/g, " ").trim();
 
-const rowOf = (world: SpecWorld, name: string): Locator =>
+const rowOf = (world: WebWorld, name: string): Locator =>
   rows(world).filter({
     has: world.browserPage.locator(".player-name", {
       hasText: new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
@@ -46,7 +46,7 @@ const rowOf = (world: SpecWorld, name: string): Locator =>
 
 // Where `name` is along every line of the grid: their column's place among
 // the players', and one more along a line, past the row's heading.
-const columnOf = async (world: SpecWorld, name: string): Promise<number> => {
+const columnOf = async (world: WebWorld, name: string): Promise<number> => {
   const names = await columnHeadings(world)
     .locator(".visually-hidden")
     .allTextContents();
@@ -56,7 +56,7 @@ const columnOf = async (world: SpecWorld, name: string): Promise<number> => {
 };
 
 const cellWhere = async (
-  world: SpecWorld,
+  world: WebWorld,
   player: string,
   opponent: string,
 ): Promise<Locator> =>
@@ -65,7 +65,7 @@ const cellWhere = async (
     .nth(await columnOf(world, opponent));
 
 const scoreWhere = async (
-  world: SpecWorld,
+  world: WebWorld,
   which: string,
   player: string,
   opponent: string,
@@ -97,7 +97,7 @@ const backgroundOf = (found: Locator): Promise<string> =>
 
 When(
   "the name of {string} in the grid is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // A block's grid or a knockout's, whichever the page draws.
     await this.browserPage
       .locator("main :is(.block-grid, .knockout) .player-name", {
@@ -113,7 +113,7 @@ When(
 
 Then(
   /^the (first|second|third) row of the grid is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       await said(rows(this).nth(placeOf(which)).locator(".player-name")),
       name,
@@ -123,7 +123,7 @@ Then(
 
 Then(
   "the row of {string} in the grid says they represent {string}",
-  async function (this: SpecWorld, name: string, representing: string) {
+  async function (this: WebWorld, name: string, representing: string) {
     assert.equal(
       await said(rowOf(this, name).locator(".player-representing")),
       `(${representing})`,
@@ -133,7 +133,7 @@ Then(
 
 Then(
   /^the row of "(.*)" in the grid (does not say|says) they have withdrawn$/,
-  async function (this: SpecWorld, name: string, says: string) {
+  async function (this: WebWorld, name: string, says: string) {
     assert.equal(
       await rowOf(this, name).locator(".block-grid-withdrawn").count(),
       says === "says" ? 1 : 0,
@@ -145,7 +145,7 @@ Then(
 
 Then(
   /^the (first|second|third) column of the grid is headed "(.*)"$/,
-  async function (this: SpecWorld, which: string, initials: string) {
+  async function (this: WebWorld, which: string, initials: string) {
     assert.equal(
       await said(
         columnHeadings(this)
@@ -160,7 +160,7 @@ Then(
 // Named as whatever reads the page aloud names it.
 Then(
   /^the (first|second|third) column of the grid is named "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       await columnHeadings(this)
         .nth(placeOf(which))
@@ -175,7 +175,7 @@ Then(
 
 Then(
   "the cell where {string} meets {string} is blacked out",
-  async function (this: SpecWorld, player: string, opponent: string) {
+  async function (this: WebWorld, player: string, opponent: string) {
     const cell = await cellWhere(this, player, opponent);
     assert.match(
       (await cell.getAttribute("class")) ?? "",
@@ -193,7 +193,7 @@ Then(
 
 Then(
   "the cell where {string} meets {string} is empty",
-  async function (this: SpecWorld, player: string, opponent: string) {
+  async function (this: WebWorld, player: string, opponent: string) {
     assert.equal(
       await (
         await cellWhere(this, player, opponent)
@@ -208,7 +208,7 @@ Then(
 Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     player: string,
     opponent: string,
@@ -230,7 +230,7 @@ Then(
 Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is (not )?marked as withdrawn$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     player: string,
     opponent: string,
@@ -246,7 +246,7 @@ Then(
 
 Then(
   /^the name of "(.*)" in the grid is underlined$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.ok(
       await isUnderlined(rowOf(this, name).locator(".player-name")),
       "The name is not underlined.",
@@ -256,7 +256,7 @@ Then(
 
 Then(
   /^the name of "(.*)" in the grid is (not )?struck through$/,
-  async function (this: SpecWorld, name: string, not: string | null) {
+  async function (this: WebWorld, name: string, not: string | null) {
     assert.equal(
       await isStruckThrough(rowOf(this, name).locator(".player-name")),
       not === null,
@@ -267,7 +267,7 @@ Then(
 Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is struck through$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     player: string,
     opponent: string,
@@ -280,7 +280,7 @@ Then(
 Then(
   /^the (first|second|third) score where "(.*)" meets "(.*)" is marked as (won|lost|drawn)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     player: string,
     opponent: string,
@@ -305,7 +305,7 @@ Then(
 
 Then(
   "the place column of the grid is headed {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     assert.equal(
       await headingOf(
         gridOf(this).locator("thead .block-grid-placing-heading"),
@@ -317,7 +317,7 @@ Then(
 
 Then(
   "the place of {string} in the grid is {string}",
-  async function (this: SpecWorld, name: string, place: string) {
+  async function (this: WebWorld, name: string, place: string) {
     assert.equal(
       await said(rowOf(this, name).locator(".block-grid-placing")),
       place,
@@ -329,7 +329,7 @@ Then(
 
 Then(
   "the grid has the column {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     const headings = await Promise.all(
       (await totalHeadings(this).all()).map(headingOf),
     );
@@ -339,7 +339,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) total of the grid is headed "(.*)"$/,
-  async function (this: SpecWorld, which: string, heading: string) {
+  async function (this: WebWorld, which: string, heading: string) {
     assert.equal(
       await headingOf(totalHeadings(this).nth(placeOf(which))),
       heading,
@@ -349,7 +349,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) total of the grid is headed in (\d+) lines?$/,
-  async function (this: SpecWorld, which: string, count: string) {
+  async function (this: WebWorld, which: string, count: string) {
     assert.equal(
       (await linesOf(totalHeadings(this).nth(placeOf(which)))).length,
       Number(count),
@@ -359,7 +359,7 @@ Then(
 
 Then(
   "the grid has {int} totals",
-  async function (this: SpecWorld, count: number) {
+  async function (this: WebWorld, count: number) {
     assert.equal(await totalHeadings(this).count(), count);
   },
 );
@@ -367,7 +367,7 @@ Then(
 Then(
   "the {string} of {string} in the grid are {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     heading: string,
     name: string,
     value: string,
@@ -386,7 +386,7 @@ Then(
 
 // Across a phone -----------------------------------------------------------------
 
-Then("the grid can be scrolled across", async function (this: SpecWorld) {
+Then("the grid can be scrolled across", async function (this: WebWorld) {
   // A block's grid or a knockout's, whichever the page draws.
   const scroller = this.browserPage.locator(
     "main :is(.block-grid-scroll, .knockout-scroll)",
@@ -413,22 +413,22 @@ Then("the grid can be scrolled across", async function (this: SpecWorld) {
 //
 // Said here for all three of a block's views, which offer the same three.
 
-const viewsOffered = (world: SpecWorld): Locator =>
+const viewsOffered = (world: WebWorld): Locator =>
   world.browserPage.locator("main .competition-views .competition-view");
 
-const viewCalled = (world: SpecWorld, name: string): Locator =>
+const viewCalled = (world: WebWorld, name: string): Locator =>
   viewsOffered(world).filter({ hasText: new RegExp(`^${name}$`) });
 
 Then(
   /^the (first|second|third) view offered is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(await said(viewsOffered(this).nth(placeOf(which))), name);
   },
 );
 
 Then(
   /^the view "(.*)" is (not )?marked as the one being read$/,
-  async function (this: SpecWorld, name: string, not: string | null) {
+  async function (this: WebWorld, name: string, not: string | null) {
     assert.equal(
       await viewCalled(this, name).getAttribute("aria-current"),
       not === null ? "page" : null,
@@ -438,7 +438,7 @@ Then(
 
 When(
   "the view {string} is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await viewCalled(this, name).click();
     await this.browserPage.waitForLoadState();
   },
@@ -446,7 +446,7 @@ When(
 
 // The view chosen ------------------------------------------------------------------
 
-const viewCookie = async (world: SpecWorld) => {
+const viewCookie = async (world: WebWorld) => {
   const cookies = await world.browserContext!.cookies();
   const cookie = cookies.find((candidate) => candidate.name === "blockView");
   assert.ok(cookie !== undefined, "No view was kept.");
@@ -455,7 +455,7 @@ const viewCookie = async (world: SpecWorld) => {
 
 Then(
   /^the view chosen is kept in a cookie marked (Secure|HttpOnly)$/,
-  async function (this: SpecWorld, mark: string) {
+  async function (this: WebWorld, mark: string) {
     const cookie = await viewCookie(this);
     assert.equal(mark === "Secure" ? cookie.secure : cookie.httpOnly, true);
   },
@@ -465,7 +465,7 @@ Then(
 // and not among the totals' "Net Hoops", which has the same word in it.
 Then(
   /^the competition says it is played to (\d+) hoops$/,
-  async function (this: SpecWorld, hoops: string) {
+  async function (this: WebWorld, hoops: string) {
     assert.equal(
       await said(this.browserPage.locator("main .competition-played-to")),
       `Played to ${hoops} hoops`,
@@ -475,7 +475,7 @@ Then(
 
 Then(
   "the competition does not say how many hoops it is played to",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(
       await this.browserPage.locator("main .competition-played-to").count(),
       0,

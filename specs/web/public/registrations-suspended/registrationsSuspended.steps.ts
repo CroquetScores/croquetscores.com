@@ -3,52 +3,52 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
-import {
-  administratorForScenarios,
-  applicationFor,
-  serviceIsDown,
-} from "../../support/browser.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
+import type { WebWorld } from "../../support/world.js";
+import { emailsFor } from "../../support/control.js";
+import { unmarked } from "../../support/languages.js";
+import { takeDown } from "../../support/recaptcha.js";
+import { wordsFor } from "../../support/words.js";
+
+// Who the site is told administers it (specs/web/support/site.ts).
+const administrator = "administrator@example.com";
 
 const registrationsSuspended = "/account/registrations-suspended";
 
-const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
-  assert.ok(said !== undefined, `English has no words for ${key}.`);
-  return said;
-};
+const words = wordsFor;
 
 // Taking services down and bringing them back ------------------------------------
 
-Given("reCAPTCHA cannot be reached", function (this: SpecWorld) {
-  serviceIsDown(this, "reCAPTCHA", true);
+Given("reCAPTCHA cannot be reached", async function (this: WebWorld) {
+  await takeDown("reCAPTCHA", true);
 });
 
-Given("reCAPTCHA can be reached again", function (this: SpecWorld) {
-  serviceIsDown(this, "reCAPTCHA", false);
+Given("reCAPTCHA can be reached again", async function (this: WebWorld) {
+  await takeDown("reCAPTCHA", false);
 });
 
-Given("Have I Been Pwned cannot be reached", function (this: SpecWorld) {
-  serviceIsDown(this, "Have I Been Pwned", true);
+Given("Have I Been Pwned cannot be reached", async function (this: WebWorld) {
+  await takeDown("Have I Been Pwned", true);
 });
 
-Given("Have I Been Pwned can be reached again", function (this: SpecWorld) {
-  serviceIsDown(this, "Have I Been Pwned", false);
-});
+Given(
+  "Have I Been Pwned can be reached again",
+  async function (this: WebWorld) {
+    await takeDown("Have I Been Pwned", false);
+  },
+);
 
 // The page -------------------------------------------------------------------------
 
 When(
   "the registrations suspended page is opened",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.goto(`${this.baseUrl!}${registrationsSuspended}`);
   },
 );
 
 Then(
   "the registrations suspended page is shown",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(
       new URL(this.browserPage.url()).pathname,
       registrationsSuspended,
@@ -62,7 +62,7 @@ Then(
 
 Then(
   "the reader is told registering is suspended",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const content = unmarked(
       (await this.browserPage.locator("main").textContent()) ?? "",
     );
@@ -82,7 +82,7 @@ Then(
 Then(
   "the reader can sign in as {string} with the password {string}",
   { timeout: 10_000 },
-  async function (this: SpecWorld, address: string, password: string) {
+  async function (this: WebWorld, address: string, password: string) {
     const page = this.browserPage;
     await page.goto(`${this.baseUrl!}/account/sign-in`);
     await page.fill('section.dialog input[name="emailAddress"]', address);
@@ -103,14 +103,9 @@ Then(
 
 Then(
   "the administrator is emailed that {string} cannot be reached",
-  async function (this: SpecWorld, service: string) {
-    const application = applicationFor(this);
-    const queued = await application.unitOfWork.inTransaction(() =>
-      application.emailQueue.emails(),
-    );
-    const told = queued.filter(
+  async function (this: WebWorld, service: string) {
+    const told = (await emailsFor(administrator)).filter(
       (email) =>
-        email.to === administratorForScenarios &&
         email.kind === "Email.RegistrationsSuspended" &&
         email.fill?.["service"] === service,
     );

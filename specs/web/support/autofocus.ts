@@ -12,7 +12,7 @@
 //
 // Asked again and again from here rather than by a timer in the page, because
 // a scenario's browser has scripting switched off unless a step asks for it.
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 
 /** How long a browser is given to draw the page and move focus. */
 const PATIENCE_MS = 2000;
@@ -28,7 +28,7 @@ const focusHasMoved = `(() => {
  * been given long enough to, whichever comes first. Either way the step then
  * asks where focus is, and fails if it is not where it should be.
  */
-export const autofocusSettled = async (world: SpecWorld): Promise<void> => {
+export const autofocusSettled = async (world: WebWorld): Promise<void> => {
   const giveUpAt = Date.now() + PATIENCE_MS;
   while (Date.now() < giveUpAt) {
     if (await world.browserPage.evaluate<boolean>(focusHasMoved)) return;

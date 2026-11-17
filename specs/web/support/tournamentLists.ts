@@ -10,15 +10,9 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { Countries } from "../../../src/domain/aggregates/tournaments/value-objects/Countries.js";
-import {
-  load,
-  tournamentNamed,
-} from "../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 import { unmarkedWithin } from "./marks.js";
 import { ordinal } from "./ordinals.js";
-import { changeTournament } from "./tournaments.js";
 
 // The pages are drawn by the server, with no scripting, so what is read is
 // there once the page has loaded: nothing here waits for it to be drawn again.
@@ -44,13 +38,13 @@ const listNamed = (name: string): List => {
 };
 
 /** The list a scenario names, as the page draws it. */
-export const list = (world: SpecWorld, name: List): Locator =>
+export const list = (world: WebWorld, name: List): Locator =>
   world.browserPage.locator(
     `main section.tournament-list[data-list="${lists[name]}"]`,
   );
 
 /** The rows of the list a scenario names. */
-export const rows = (world: SpecWorld, name: List): Locator =>
+export const rows = (world: WebWorld, name: List): Locator =>
   list(world, name).locator("tbody tr");
 
 // The words exactly, rather than any row whose name holds them: "Open" is in
@@ -58,7 +52,7 @@ export const rows = (world: SpecWorld, name: List): Locator =>
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
-const rowOf = (world: SpecWorld, name: List, tournament: string): Locator =>
+const rowOf = (world: WebWorld, name: List, tournament: string): Locator =>
   rows(world, name).filter({
     has: world.browserPage.locator(".tournament-name", {
       hasText: exactly(tournament),
@@ -66,11 +60,11 @@ const rowOf = (world: SpecWorld, name: List, tournament: string): Locator =>
   });
 
 // Every cell of the heading row, the flags' among them, which has no heading.
-const headings = (world: SpecWorld, name: List): Locator =>
+const headings = (world: WebWorld, name: List): Locator =>
   list(world, name).locator("thead tr > *");
 
 // A column's heading by its words, which follow the arrow where it has one.
-const headingOf = (world: SpecWorld, name: List, column: string): Locator =>
+const headingOf = (world: WebWorld, name: List, column: string): Locator =>
   headings(world, name).filter({
     has: world.browserPage.locator("a", { hasText: new RegExp(`${column}$`) }),
   });
@@ -80,7 +74,7 @@ const words = async (heading: Locator): Promise<string> =>
 
 // Followed, and waited on until the page it leads to has loaded, so that the
 // next step reads that page.
-const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
+const follow = async (world: WebWorld, link: Locator): Promise<void> => {
   await link.click();
   await world.browserPage.waitForLoadState();
   await settled(world);
@@ -92,7 +86,7 @@ const follow = async (world: SpecWorld, link: Locator): Promise<void> => {
  * until its answer is in (yearMonths.ts); more than one can be at once, which
  * is why this counts and does not wait for one element to go.
  */
-export const settled = async (world: SpecWorld): Promise<void> => {
+export const settled = async (world: WebWorld): Promise<void> => {
   const busy = world.browserPage.locator('[aria-busy="true"]');
   while ((await busy.count()) > 0) {
     await world.browserPage.waitForTimeout(25);
@@ -105,7 +99,7 @@ export const settled = async (world: SpecWorld): Promise<void> => {
 // but for its flag's, which is above it. Waited on until the browser has left
 // the page, since a press made with the mouse is not waited on as a link
 // clicked is.
-const pressAt = async (world: SpecWorld, found: Locator): Promise<void> => {
+const pressAt = async (world: WebWorld, found: Locator): Promise<void> => {
   // Brought to the middle of the window first, where the pinned bar is not over
   // it: where the page was left depends on how long it is, and a press made at
   // coordinates goes to whatever is there, the bar included. Jumped to rather
@@ -147,38 +141,11 @@ const pressAt = async (world: SpecWorld, found: Locator): Promise<void> => {
 
 // The tournaments there are ------------------------------------------------------
 
-// In the region it is in where the country has it, and otherwise the country's
-// first, so that a tournament moved to another country is somewhere in it: a
-// scenario saying which region goes on to say so.
-Given(
-  "the tournament {string} is played in the country {string}",
-  async function (this: SpecWorld, name: string, code: string) {
-    const country = Countries.thereAre.find(code);
-    assert.ok(country !== undefined, `There is no country ${code}.`);
-    const now = await load(this, tournamentNamed(this, name));
-    const region =
-      now.region === undefined
-        ? undefined
-        : country.findRegion(now.region.code)?.code;
-    await changeTournament(this, name, {
-      country: code,
-      region: region ?? country.regions[0]?.code,
-    });
-  },
-);
-
-Given(
-  "the tournament {string} is played in the region {string}",
-  async function (this: SpecWorld, name: string, region: string) {
-    await changeTournament(this, name, { region });
-  },
-);
-
 // Opening it ----------------------------------------------------------------------
 
 When(
   "the page is opened again at its address",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.goto(this.browserPage.url());
   },
 );
@@ -187,14 +154,14 @@ When(
 
 When(
   /^the column "(.*)" of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is pressed$/,
-  async function (this: SpecWorld, column: string, name: string) {
+  async function (this: WebWorld, column: string, name: string) {
     await follow(this, headingOf(this, listNamed(name), column).locator("a"));
   },
 );
 
 When(
   /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is pressed$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     await follow(
       this,
       headings(this, listNamed(name)).nth(ordinal(which)).locator("a"),
@@ -211,7 +178,7 @@ const parts = {
 When(
   /^the (date|name|flag) of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is pressed$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     part: keyof typeof parts,
     tournament: string,
     name: string,
@@ -225,38 +192,35 @@ When(
 
 // The filter's lists by what each narrows by, whatever language its label is
 // in.
-const filterField = (world: SpecWorld, field: string): Locator =>
+const filterField = (world: WebWorld, field: string): Locator =>
   world.browserPage.locator(`form.tournament-filter select[name="${field}"]`);
 
 Given(
   /^"(.*)" is chosen as the (country|region|sport)$/,
-  async function (this: SpecWorld, choice: string, field: string) {
+  async function (this: WebWorld, choice: string, field: string) {
     await filterField(this, field).selectOption({ label: choice });
   },
 );
 
 const yearsShown = "nav.years .years-row > ul";
 
-When(
-  "the drop-down list of years is pressed",
-  async function (this: SpecWorld) {
-    await this.browserPage
-      .locator(`${yearsShown} details > summary`)
-      .filter({ visible: true })
-      .click();
-  },
-);
+When("the drop-down list of years is pressed", async function (this: WebWorld) {
+  await this.browserPage
+    .locator(`${yearsShown} details > summary`)
+    .filter({ visible: true })
+    .click();
+});
 
 // Wherever the reader can see it: a tab, or in the drop-down list once it is
 // open.
-const yearLink = (world: SpecWorld, year: number): Locator =>
+const yearLink = (world: WebWorld, year: number): Locator =>
   world.browserPage
     .locator(`${yearsShown} a`, { hasText: exactly(String(year)) })
     .filter({ visible: true });
 
 When(
   "the year {int} is pressed",
-  async function (this: SpecWorld, year: number) {
+  async function (this: WebWorld, year: number) {
     await follow(this, yearLink(this, year));
   },
 );
@@ -265,7 +229,7 @@ When(
 
 Then(
   /^the content has (the|no) heading "(.*)"$/,
-  async function (this: SpecWorld, which: string, heading: string) {
+  async function (this: WebWorld, which: string, heading: string) {
     assert.equal(
       await this.browserPage
         .locator("main")
@@ -279,7 +243,7 @@ Then(
 Then(
   /^"(.*)" is (not )?in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     not: string | null,
     name: string,
@@ -294,7 +258,7 @@ Then(
 Then(
   /^the (first|second|third) of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     name: string,
     tournament: string,
@@ -309,19 +273,19 @@ Then(
   },
 );
 
-const sayNone = (world: SpecWorld, name: List): Locator =>
+const sayNone = (world: WebWorld, name: List): Locator =>
   list(world, name).locator(".tournament-list-none");
 
 Then(
   /^the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) say there are none$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(await sayNone(this, listNamed(name)).count(), 1);
   },
 );
 
 Then(
   /^the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) do not say there are none$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(await sayNone(this, listNamed(name)).count(), 0);
   },
 );
@@ -330,12 +294,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is "(.*)"$/,
-  async function (
-    this: SpecWorld,
-    which: string,
-    name: string,
-    column: string,
-  ) {
+  async function (this: WebWorld, which: string, name: string, column: string) {
     assert.equal(
       await words(headings(this, listNamed(name)).nth(ordinal(which))),
       column,
@@ -345,7 +304,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) has no heading$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       await words(headings(this, listNamed(name)).nth(ordinal(which))),
       "",
@@ -358,7 +317,7 @@ Then(
 // would leave the others under the wrong words.
 Then(
   /^the country's column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is (not )?shown$/,
-  async function (this: SpecWorld, name: string, not: string | null) {
+  async function (this: WebWorld, name: string, not: string | null) {
     const flags = list(this, listNamed(name)).locator(".tournament-flag");
     assert.ok(
       (await flags.count()) >= 2,
@@ -371,7 +330,7 @@ Then(
 
 Then(
   /^the (first|second|third|fourth) column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) cannot be pressed$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(
       await headings(this, listNamed(name))
         .nth(ordinal(which))
@@ -385,7 +344,7 @@ Then(
 Then(
   /^"(.*)" is dated "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     dated: string,
     name: string,
@@ -399,7 +358,7 @@ Then(
   },
 );
 
-const flagOf = (world: SpecWorld, name: string, tournament: string): Locator =>
+const flagOf = (world: WebWorld, name: string, tournament: string): Locator =>
   rowOf(world, listNamed(name), tournament).locator(".tournament-flag img");
 
 // The picture the flag is, as the site serves it, under whatever name it is
@@ -407,24 +366,21 @@ const flagOf = (world: SpecWorld, name: string, tournament: string): Locator =>
 Then(
   /^"(.*)" shows the flag of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     code: string,
     name: string,
   ) {
-    const flag = Countries.thereAre.find(code)?.flag;
-    assert.ok(flag !== undefined, `There is no country ${code}.`);
     const shown =
       (await flagOf(this, name, tournament).getAttribute("src")) ?? "";
-    const [kept] = flag.relativePath.split(".");
     assert.ok(
-      shown.includes(`/images/${kept!}.`),
+      shown.includes(`/images/famfamfam/flags/${code}.`),
       `The flag shown is ${shown}.`,
     );
   },
 );
 
-const sportOf = (world: SpecWorld, name: string, tournament: string): Locator =>
+const sportOf = (world: WebWorld, name: string, tournament: string): Locator =>
   rowOf(world, listNamed(name), tournament).locator(".tournament-sport");
 
 // Read as the reader sees it, so that a column the stylesheet hides counts as
@@ -432,7 +388,7 @@ const sportOf = (world: SpecWorld, name: string, tournament: string): Locator =>
 Then(
   /^"(.*)" shows the sport "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     code: string,
     name: string,
@@ -480,7 +436,7 @@ interface BadgeInThePage {
 Then(
   /^"(.*)" shows its sport on (orange|green|teal|blue|purple) in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     colour: string,
     name: string,
@@ -503,7 +459,7 @@ Then(
 
 Then(
   /^"(.*)" does not show its sport in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
-  async function (this: SpecWorld, tournament: string, name: string) {
+  async function (this: WebWorld, tournament: string, name: string) {
     assert.ok(
       !(await sportOf(this, name, tournament).isVisible()),
       "The sport is shown.",
@@ -514,7 +470,7 @@ Then(
 Then(
   /^the flag of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is named "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     name: string,
     country: string,
@@ -530,7 +486,7 @@ Then(
 
 Then(
   /^the name of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is a link$/,
-  async function (this: SpecWorld, tournament: string, listed: string) {
+  async function (this: WebWorld, tournament: string, listed: string) {
     const name = rowOf(this, listNamed(listed), tournament).locator(
       ".tournament-name",
     );
@@ -547,7 +503,7 @@ Then(
 Then(
   /^the row of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) holds (\d+) links?$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     name: string,
     count: string,
@@ -562,7 +518,7 @@ Then(
 Then(
   /^the row of "(.*)" in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is at least (\d+) pixels tall$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     tournament: string,
     name: string,
     least: string,
@@ -588,7 +544,7 @@ const announced = {
 Then(
   /^the column "(.*)" of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is (?:marked|announced) as sorted (?:from the )?(smallest|largest|ascending|descending)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     column: string,
     name: string,
     how: keyof typeof announced,
@@ -602,7 +558,7 @@ Then(
 
 Then(
   /^the column "(.*)" of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is not marked as sorted$/,
-  async function (this: SpecWorld, column: string, name: string) {
+  async function (this: WebWorld, column: string, name: string) {
     assert.equal(
       await headingOf(this, listNamed(name), column).getAttribute("aria-sort"),
       null,
@@ -612,7 +568,7 @@ Then(
 
 Then(
   /^no column of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is marked as sorted$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(
       await headings(this, listNamed(name))
         .and(this.browserPage.locator("[aria-sort]"))
@@ -623,7 +579,7 @@ Then(
 );
 
 const arrowOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   name: string,
   column: string,
 ): Promise<string | undefined> => {
@@ -634,21 +590,21 @@ const arrowOf = async (
 
 Then(
   /^the heading "(.*)" of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) begins with an arrow pointing (up|down)$/,
-  async function (this: SpecWorld, column: string, name: string, way: string) {
+  async function (this: WebWorld, column: string, name: string, way: string) {
     assert.equal(await arrowOf(this, name, column), way === "up" ? "↑" : "↓");
   },
 );
 
 Then(
   /^the heading "(.*)" of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) has no arrow$/,
-  async function (this: SpecWorld, column: string, name: string) {
+  async function (this: WebWorld, column: string, name: string) {
     assert.equal(await arrowOf(this, name, column), undefined);
   },
 );
 
 // The filter --------------------------------------------------------------------------
 
-const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
+const offeredIn = async (world: WebWorld, field: string): Promise<string[]> =>
   (await filterField(world, field).count()) === 0
     ? []
     : filterField(world, field)
@@ -658,7 +614,7 @@ const offeredIn = async (world: SpecWorld, field: string): Promise<string[]> =>
 Then(
   /^"(.*)" is (not )?offered as a (country|region|sport)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     choice: string,
     not: string | null,
     field: string,
@@ -669,14 +625,14 @@ Then(
 
 Then(
   /^the (first|second|third|fourth|fifth|sixth|seventh) country offered is "(.*)"$/,
-  async function (this: SpecWorld, which: string, country: string) {
+  async function (this: WebWorld, which: string, country: string) {
     assert.equal((await offeredIn(this, "country"))[ordinal(which)], country);
   },
 );
 
 Then(
   /^the country list has (\d+) lines? drawn in it$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(
       await filterField(this, "country").locator("hr").count(),
       Number(count),
@@ -684,13 +640,13 @@ Then(
   },
 );
 
-Then("no region is offered", async function (this: SpecWorld) {
+Then("no region is offered", async function (this: WebWorld) {
   assert.deepEqual(await offeredIn(this, "region"), []);
 });
 
 Then(
   /^the notice about tournaments before November 2026 is (not )?shown$/,
-  async function (this: SpecWorld, not: string | null) {
+  async function (this: WebWorld, not: string | null) {
     assert.equal(
       await this.browserPage.locator(".tournament-filter-notice").count(),
       not === null ? 1 : 0,
@@ -699,7 +655,7 @@ Then(
 );
 
 // Not even the list to choose one from, as on a sport's own page.
-Then("no sport is offered", async function (this: SpecWorld) {
+Then("no sport is offered", async function (this: WebWorld) {
   assert.equal(await filterField(this, "sport").count(), 0);
 });
 
@@ -707,12 +663,12 @@ Then("no sport is offered", async function (this: SpecWorld) {
 
 Then(
   "the year {int} is visible",
-  async function (this: SpecWorld, year: number) {
+  async function (this: WebWorld, year: number) {
     assert.equal(await yearLink(this, year).count(), 1);
   },
 );
 
-Then("no year is marked as chosen", async function (this: SpecWorld) {
+Then("no year is marked as chosen", async function (this: WebWorld) {
   assert.ok(
     (await this.browserPage.locator(`${yearsShown} a`).count()) > 0,
     "No year is offered.",
@@ -723,7 +679,7 @@ Then("no year is marked as chosen", async function (this: SpecWorld) {
   );
 });
 
-Then("no section bar is shown", async function (this: SpecWorld) {
+Then("no section bar is shown", async function (this: WebWorld) {
   assert.equal(await this.browserPage.locator(".site-sections").count(), 0);
 });
 
@@ -755,12 +711,12 @@ const drawnAs = (found: Locator, property: string): Promise<string> =>
     property,
   );
 
-const secondary = (world: SpecWorld): Locator =>
+const secondary = (world: WebWorld): Locator =>
   world.browserPage.locator("nav.site-sections");
 
 Then(
   /^the column headings of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) are on the colour the secondary navigation is on$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const bar = await drawnAs(secondary(this), "background-color");
     for (const heading of await headings(this, listNamed(name)).all()) {
       assert.equal(await drawnAs(heading, "background-color"), bar);
@@ -770,7 +726,7 @@ Then(
 
 Then(
   /^the column headings of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) are in the colour the secondary navigation's words are in$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const words = await drawnAs(secondary(this).locator("a").first(), "color");
     for (const heading of await headings(this, listNamed(name))
       .locator("a")
@@ -781,7 +737,7 @@ Then(
 );
 
 const rowColour = (
-  world: SpecWorld,
+  world: WebWorld,
   name: string,
   which: string,
 ): Promise<string> =>
@@ -790,7 +746,7 @@ const rowColour = (
 Then(
   /^the (second|third) of the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) is (not )?on the colour the first is on$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     name: string,
     not: string | null,
@@ -803,7 +759,7 @@ Then(
 
 Then(
   /^the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions) have no lines between their cells$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // Every side of every cell read at once, since one question of the page
     // for each would take longer than a step is given on a busy machine.
     const cells = list(this, listNamed(name)).locator("th, td");
@@ -833,7 +789,7 @@ Then(
 // Nor is a region's name, which is kept as it was recorded.
 Then(
   "every word in the page's content but the tournaments' own is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const stray = await unmarkedWithin(this, "main", [
       ".tournament-name",
       ".tournament-dates",
@@ -860,7 +816,7 @@ Then(
 // name, as the browser works it out. Bold is 700 or more, which the weight of
 // an ordinary row never reaches, so that a row is one or the other.
 const weightsOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
   name: string,
 ): Promise<number[]> => {
@@ -881,7 +837,7 @@ const weightsOf = async (
 
 Then(
   /^"(.*)" is bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments)$/,
-  async function (this: SpecWorld, tournament: string, name: string) {
+  async function (this: WebWorld, tournament: string, name: string) {
     const weights = await weightsOf(this, tournament, name);
     assert.equal(weights.length, 2);
     for (const weight of weights) assert.ok(weight >= 700, String(weight));
@@ -890,7 +846,7 @@ Then(
 
 Then(
   /^"(.*)" is not bold in the (recent results|upcoming tournaments|year's tournaments|sport's tournaments|days' tournaments|found tournaments|found competitions)$/,
-  async function (this: SpecWorld, tournament: string, name: string) {
+  async function (this: WebWorld, tournament: string, name: string) {
     const weights = await weightsOf(this, tournament, name);
     assert.equal(weights.length, 2);
     for (const weight of weights) assert.ok(weight < 700, String(weight));
@@ -900,7 +856,7 @@ Then(
 // The filter's fields by what each is chosen by, as tall as the browser draws
 // them. A field is a list or a day, whichever its name is for.
 const filterFieldBox = async (
-  world: SpecWorld,
+  world: WebWorld,
   field: string,
 ): Promise<{ readonly height: number }> => {
   const box = await world.browserPage
@@ -914,7 +870,7 @@ const filterFieldBox = async (
 
 Then(
   /^the filter's (country|region|sport|From|To) is at least (\d+) pixels tall$/,
-  async function (this: SpecWorld, field: string, least: string) {
+  async function (this: WebWorld, field: string, least: string) {
     const { height } = await filterFieldBox(this, field.toLowerCase());
     assert.ok(height >= Number(least), `${String(height)} is shorter.`);
   },
@@ -922,7 +878,7 @@ Then(
 
 Then(
   /^the filter's (From|To|sport|region) is as tall as its country$/,
-  async function (this: SpecWorld, field: string) {
+  async function (this: WebWorld, field: string) {
     const one = await filterFieldBox(this, field.toLowerCase());
     const other = await filterFieldBox(this, "country");
     assert.ok(

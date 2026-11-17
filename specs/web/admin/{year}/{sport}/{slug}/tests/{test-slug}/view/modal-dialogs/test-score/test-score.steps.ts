@@ -2,13 +2,12 @@ import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
+import type { WebWorld } from "../../../../../../../../../support/world.js";
 import {
-  inHandOf,
-  load,
-  tournamentNamed,
-} from "../../../../../../../../../../application/operations/tournaments/aRequest.js";
-import { testNamed } from "../../../../../../../../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
-import type { SpecWorld } from "../../../../../../../../../../support/world.js";
+  gamesOf,
+  keptOf,
+  testOf,
+} from "../../../../../../../../../support/kept.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
 import {
   aServerError,
@@ -29,18 +28,18 @@ const open = "dialog[open]";
 // not (score-modal-dialog.steps.ts).
 Given(
   "the test's teams are answered with a server error",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await answerNextGet(this, /\/competitions\/[^/]+\/teams$/, aServerError);
   },
 );
 
-const fieldOf = (world: SpecWorld, label: string): Locator =>
+const fieldOf = (world: WebWorld, label: string): Locator =>
   world.browserPage.locator(open).getByLabel(label, { exact: true });
 
 // The players offered, each with the team they are offered under, once they
 // have arrived, which takes a moment after the dialog opens.
 const offered = async (
-  world: SpecWorld,
+  world: WebWorld,
   label: string,
 ): Promise<{ name: string; team: string }[]> => {
   await fieldOf(world, label)
@@ -60,7 +59,7 @@ const offered = async (
 
 Then(
   "{string} is offered under {string} as the {string}",
-  async function (this: SpecWorld, name: string, team: string, label: string) {
+  async function (this: WebWorld, name: string, team: string, label: string) {
     await eventually(this, async () => {
       const all = await offered(this, label);
       assert.ok(
@@ -73,7 +72,7 @@ Then(
 
 Then(
   "{string} is offered after {string} as the {string}",
-  async function (this: SpecWorld, one: string, other: string, label: string) {
+  async function (this: WebWorld, one: string, other: string, label: string) {
     await eventually(this, async () => {
       const names = (await offered(this, label)).map(({ name }) => name);
       assert.ok(
@@ -91,7 +90,7 @@ Then(
 // the dialog's own.
 Then(
   "every word in the score dialog but the teams' and the players' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator(open).waitFor();
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, open, ["select option"]);
@@ -102,16 +101,13 @@ Then(
 
 // What was kept: the test's own stream, read back -------------------------------
 
-const gamesOf = async (world: SpecWorld, test: string, name: string) => {
-  const tournament = await load(world, tournamentNamed(world, name));
-  const { reference } = testNamed(tournament, test);
-  const kept = await inHandOf(world).loadCompetition(reference.id);
+const gamesOfTest = async (world: WebWorld, test: string, name: string) => {
+  const tournament = await keptOf(world, name);
+  const found = testOf(tournament, test);
   const players = tournament.teams.flatMap((team) => team.players);
-  const nameOf = (id: unknown): string =>
-    players
-      .find((player) => player.id.equals(id as typeof player.id))
-      ?.name.toString() ?? "";
-  return (kept?.games ?? []).map((game) => ({
+  const nameOf = (id: string): string =>
+    players.find((player) => player.id === id)?.name ?? "";
+  return (await gamesOf(found.id)).map((game) => ({
     winner: nameOf(game.winner),
     loser: nameOf(game.loser),
     scores: `${String(game.winnerScore)} to ${String(game.loserScore)}`,
@@ -121,7 +117,7 @@ const gamesOf = async (world: SpecWorld, test: string, name: string) => {
 Then(
   "the test {string} of {string} has the game of {string} beating {string} {int} to {int}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     test: string,
     name: string,
     winner: string,
@@ -130,7 +126,7 @@ Then(
     loserScore: number,
   ) {
     await eventually(this, async () => {
-      const games = await gamesOf(this, test, name);
+      const games = await gamesOfTest(this, test, name);
       assert.ok(
         games.some(
           (game) =>
@@ -147,9 +143,9 @@ Then(
 // Once nothing more can be sent: the dialog closed, or the page settled.
 Then(
   "the test {string} of {string} has no games",
-  async function (this: SpecWorld, test: string, name: string) {
+  async function (this: WebWorld, test: string, name: string) {
     await eventually(this, async () => {
-      assert.deepEqual(await gamesOf(this, test, name), []);
+      assert.deepEqual(await gamesOfTest(this, test, name), []);
     });
   },
 );

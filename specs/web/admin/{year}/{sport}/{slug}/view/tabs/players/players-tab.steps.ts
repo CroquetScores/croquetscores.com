@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
 import { assertDrawnAsTrashCan } from "../../../../../../../support/icons.js";
 import {
   isMarked,
@@ -24,7 +24,7 @@ const exactly = (words: string): RegExp =>
 // so these steps read either.
 type List = "in-use" | "archived";
 
-const rows = (world: SpecWorld, list?: List): Locator =>
+const rows = (world: WebWorld, list?: List): Locator =>
   tabPanel(world).locator(
     list === undefined
       ? "ul[data-listed] > .listed-item"
@@ -33,12 +33,12 @@ const rows = (world: SpecWorld, list?: List): Locator =>
         : `ul[data-listed="${list}"] > .listed-item`,
   );
 
-const rowOf = (world: SpecWorld, name: string): Locator =>
+const rowOf = (world: WebWorld, name: string): Locator =>
   rows(world).filter({
     has: world.browserPage.locator(".listed-name", { hasText: exactly(name) }),
   });
 
-const namesIn = async (world: SpecWorld, list?: List): Promise<string[]> =>
+const namesIn = async (world: WebWorld, list?: List): Promise<string[]> =>
   (await rows(world, list).locator(".listed-name").allInnerTexts()).map(
     (name) => name.trim(),
   );
@@ -46,7 +46,7 @@ const namesIn = async (world: SpecWorld, list?: List): Promise<string[]> =>
 // By the name it is read out by, which for Up and Down is not what is shown:
 // they are drawn as arrows. A button or a link, whichever it is: a team's View
 // is a link.
-const optionOf = (world: SpecWorld, name: string, option: string): Locator => {
+const optionOf = (world: WebWorld, name: string, option: string): Locator => {
   const options = rowOf(world, name).locator(".listed-options");
   return options
     .getByRole("button", { name: option, exact: true })
@@ -62,19 +62,19 @@ const said = (pattern: string): RegExp =>
 
 When(
   /^the players of "([^"]*)" are open(?:ed)?$/,
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await openTab(this, name, "players");
   },
 );
 
 // A name that can be pressed is a button where it opens a dialog, as a
 // player's does, and a link where it leads to a page, as a team's does.
-const pressableName = (world: SpecWorld, name: string): Locator =>
+const pressableName = (world: WebWorld, name: string): Locator =>
   rowOf(world, name).locator(":is(button, a).listed-name");
 
 When(
   said("the name of the WHO Q is pressed"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const button = pressableName(this, name);
     await eventually(this, async () => {
       assert.equal(await button.count(), 1);
@@ -85,7 +85,7 @@ When(
 
 When(
   said("Q is pressed on the WHO Q"),
-  async function (this: SpecWorld, option: string, name: string) {
+  async function (this: WebWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
     });
@@ -96,7 +96,7 @@ When(
 // Whatever the button is called in the reader's language, by what it does.
 When(
   "the way to archive the player {string} is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const archive = rowOf(this, name).locator(
       '.listed-options button[data-action="archive"]',
     );
@@ -107,7 +107,7 @@ When(
 
 Then(
   "Remove for the player {string} is a trash can",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       const remove = rowOf(this, name).locator(
         '.listed-options button[data-action="remove"]',
@@ -119,7 +119,7 @@ Then(
 
 Then(
   said("the WHO Q is listed"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
         (await namesIn(this)).includes(name),
@@ -131,7 +131,7 @@ Then(
 
 Then(
   said("the first WHO listed is Q"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
         (await namesIn(this, "in-use"))[0],
@@ -143,7 +143,7 @@ Then(
 );
 
 const assertOrder = async (
-  world: SpecWorld,
+  world: WebWorld,
   earlier: string,
   later: string,
 ): Promise<void> => {
@@ -157,7 +157,7 @@ const assertOrder = async (
 
 Then(
   said("the WHO Q is listed after Q"),
-  async function (this: SpecWorld, later: string, earlier: string) {
+  async function (this: WebWorld, later: string, earlier: string) {
     await eventually(this, async () => {
       await assertOrder(this, earlier, later);
     });
@@ -166,7 +166,7 @@ Then(
 
 Then(
   "the player {string} is listed before {string}",
-  async function (this: SpecWorld, earlier: string, later: string) {
+  async function (this: WebWorld, earlier: string, later: string) {
     await eventually(this, async () => {
       await assertOrder(this, earlier, later);
     });
@@ -175,7 +175,7 @@ Then(
 
 Then(
   said("the WHO Q is listed among the archived"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok((await namesIn(this, "archived")).includes(name));
     });
@@ -184,7 +184,7 @@ Then(
 
 Then(
   said("the WHO Q is not listed among the archived"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(!(await namesIn(this, "archived")).includes(name));
     });
@@ -193,7 +193,7 @@ Then(
 
 Then(
   "the player {string} is not listed among those in use",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(!(await namesIn(this, "in-use")).includes(name));
     });
@@ -202,7 +202,7 @@ Then(
 
 Then(
   said("the WHO Q offers Q"),
-  async function (this: SpecWorld, name: string, option: string) {
+  async function (this: WebWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await optionOf(this, name, option).count(), 1);
     });
@@ -213,12 +213,7 @@ Then(
 // Down are drawn as arrows and say nothing as text.
 Then(
   said("Q on the WHO Q comes before Q"),
-  async function (
-    this: SpecWorld,
-    option: string,
-    name: string,
-    after: string,
-  ) {
+  async function (this: WebWorld, option: string, name: string, after: string) {
     await eventually(this, async () => {
       // Buttons and links alike, a team's View being a link, and none of the
       // room kept where an option is not offered.
@@ -246,7 +241,7 @@ Then(
 // room kept where one is not offered.
 Then(
   said("the first thing the WHO Q offers is Q"),
-  async function (this: SpecWorld, name: string, option: string) {
+  async function (this: WebWorld, name: string, option: string) {
     await eventually(this, async () => {
       const first = rowOf(this, name)
         .locator(".listed-options > :is(button, a)")
@@ -261,7 +256,7 @@ Then(
 
 Then(
   said("the WHO Q does not offer Q"),
-  async function (this: SpecWorld, name: string, option: string) {
+  async function (this: WebWorld, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
       assert.equal(await optionOf(this, name, option).count(), 0);
@@ -269,15 +264,12 @@ Then(
   },
 );
 
-const representingOf = async (
-  world: SpecWorld,
-  name: string,
-): Promise<string> =>
+const representingOf = async (world: WebWorld, name: string): Promise<string> =>
   (await rowOf(world, name).locator(".listed-about").innerText()).trim();
 
 Then(
   "the player {string} is shown representing {string}",
-  async function (this: SpecWorld, name: string, representing: string) {
+  async function (this: WebWorld, name: string, representing: string) {
     await eventually(this, async () => {
       assert.equal(await representingOf(this, name), representing);
     });
@@ -286,7 +278,7 @@ Then(
 
 Then(
   "the player {string} is shown representing nothing",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
       assert.equal(await representingOf(this, name), "");
@@ -298,19 +290,19 @@ Then(
 // represent.
 Then(
   "the team {string} is shown known for short as {string}",
-  async function (this: SpecWorld, name: string, shortName: string) {
+  async function (this: WebWorld, name: string, shortName: string) {
     await eventually(this, async () => {
       assert.equal(await representingOf(this, name), shortName);
     });
   },
 );
 
-const flagOf = (world: SpecWorld, name: string): Locator =>
+const flagOf = (world: WebWorld, name: string): Locator =>
   rowOf(world, name).locator("img.listed-flag");
 
 Then(
   said("the WHO Q is shown flying the flag Q"),
-  async function (this: SpecWorld, name: string, flag: string) {
+  async function (this: WebWorld, name: string, flag: string) {
     await eventually(this, async () => {
       assert.equal(await flagOf(this, name).getAttribute("data-flag"), flag);
     });
@@ -319,7 +311,7 @@ Then(
 
 Then(
   said("the WHO Q is shown flying no flag"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
       assert.equal(await flagOf(this, name).count(), 0);
@@ -329,7 +321,7 @@ Then(
 
 Then(
   said("the flag of the WHO Q is named Q"),
-  async function (this: SpecWorld, name: string, called: string) {
+  async function (this: WebWorld, name: string, called: string) {
     await eventually(this, async () => {
       assert.equal(await flagOf(this, name).getAttribute("alt"), called);
     });
@@ -338,7 +330,7 @@ Then(
 
 Then(
   "the flag of the player {string} is named in the test locale",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       const called = (await flagOf(this, name).getAttribute("alt")) ?? "";
       assert.ok(isMarked(called), `The flag is named ${called}.`);
@@ -346,10 +338,7 @@ Then(
   },
 );
 
-const struckThrough = async (
-  world: SpecWorld,
-  name: string,
-): Promise<boolean> =>
+const struckThrough = async (world: WebWorld, name: string): Promise<boolean> =>
   (
     await rowOf(world, name)
       .locator(".listed-name")
@@ -365,7 +354,7 @@ const struckThrough = async (
 
 Then(
   said("the WHO Q is struck through"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await struckThrough(this, name), true);
     });
@@ -374,7 +363,7 @@ Then(
 
 Then(
   "the player {string} is not struck through",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await struckThrough(this, name), false);
     });
@@ -384,7 +373,7 @@ Then(
 // Where a link a row offers goes: a team's View, to its page.
 Then(
   "{string} on the team {string} leads to {string}",
-  async function (this: SpecWorld, option: string, name: string, path: string) {
+  async function (this: WebWorld, option: string, name: string, path: string) {
     await eventually(this, async () => {
       assert.equal(
         await optionOf(this, name, option).getAttribute("href"),
@@ -396,7 +385,7 @@ Then(
 
 Then(
   "the name of the team {string} leads to {string}",
-  async function (this: SpecWorld, name: string, path: string) {
+  async function (this: WebWorld, name: string, path: string) {
     await eventually(this, async () => {
       assert.equal(
         await rowOf(this, name).locator("a.listed-name").getAttribute("href"),
@@ -410,7 +399,7 @@ Then(
 // team's Edit, or a competition's player's Carry Forward.
 Then(
   said("Q on the WHO Q has the focus"),
-  async function (this: SpecWorld, option: string, name: string) {
+  async function (this: WebWorld, option: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
         await optionOf(this, name, option).evaluate(
@@ -432,7 +421,7 @@ Then(
 // through a name is not read out.
 Then(
   said("the WHO Q is announced as archived"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
         await rowOf(this, name).locator(".visually-hidden").count(),
@@ -444,7 +433,7 @@ Then(
 
 Then(
   said("the name of the WHO Q cannot be pressed"),
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(await rowOf(this, name).count(), 1);
       assert.equal(await pressableName(this, name).count(), 0);
@@ -454,7 +443,7 @@ Then(
 
 Then(
   /^the archived (?:players|teams) are headed "([^"]*)"$/,
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     await eventually(this, async () => {
       assert.equal(
         (
@@ -468,7 +457,7 @@ Then(
 
 Then(
   /^no heading for the archived (?:players|teams) is shown$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await rows(this).count()) > 0);
       assert.equal(
@@ -482,7 +471,7 @@ Then(
 // The tab's own list, or a team's page's, which is its players.
 Then(
   /^the (?:tab|page) says there are no (?:players|teams)$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.equal(await rows(this).count(), 0);
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
@@ -492,7 +481,7 @@ Then(
 
 Then(
   "the tab does not say there are no players",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await rows(this).count()) > 0);
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 0);
@@ -501,14 +490,14 @@ Then(
 );
 
 // What the tab offers above its list, rather than what any one player offers.
-const tabOffers = (world: SpecWorld, option: string): Locator =>
+const tabOffers = (world: WebWorld, option: string): Locator =>
   tabPanel(world)
     .locator("section > p button")
     .filter({ hasText: exactly(option) });
 
 Then(
   "the tab offers {string}",
-  async function (this: SpecWorld, option: string) {
+  async function (this: WebWorld, option: string) {
     await eventually(this, async () => {
       assert.equal(await tabOffers(this, option).count(), 1);
     });
@@ -518,7 +507,7 @@ Then(
 // Beside it in the same row of what the tab offers, and after it.
 Then(
   "{string} is after {string}",
-  async function (this: SpecWorld, option: string, before: string) {
+  async function (this: WebWorld, option: string, before: string) {
     await eventually(this, async () => {
       const first = await tabOffers(this, before).elementHandle();
       const second = await tabOffers(this, option).elementHandle();
@@ -541,7 +530,7 @@ Then(
 // its tests.
 Then(
   /^"([^"]*)" is above the (?:players|teams|competitions|tests)$/,
-  async function (this: SpecWorld, option: string) {
+  async function (this: WebWorld, option: string) {
     await eventually(this, async () => {
       const offer = await tabOffers(this, option).boundingBox();
       const list = await tabPanel(this)
@@ -562,7 +551,7 @@ const tallEnough = async (thing: Locator, pixels: number): Promise<void> => {
 
 Then(
   "the name of the player {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, name: string, pixels: number) {
+  async function (this: WebWorld, name: string, pixels: number) {
     await eventually(this, async () => {
       await tallEnough(rowOf(this, name).locator(".listed-name"), pixels);
     });
@@ -572,7 +561,7 @@ Then(
 Then(
   said("Q on the WHO Q is at least (\\d+) pixels tall"),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     name: string,
     pixels: string,
@@ -588,7 +577,7 @@ Then(
 // by its own step.
 Then(
   /^every word in the tab but the (?:players|teams)' own is in the test locale$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
         ".listed-name",
@@ -604,7 +593,7 @@ Then(
 // The dialog open over the page, by its title.
 Then(
   /^the (?:players|player|score|competition|team|team player|test|carry forward) dialog is titled "([^"]*)"$/,
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     const dialog = this.browserPage.locator("dialog[open]");
     await dialog.waitFor();
     assert.equal(
@@ -618,10 +607,10 @@ Then(
 const PLACES = ["first", "second", "third", "fourth"];
 const PLACE = "(first|second|third|fourth)";
 
-const rowAt = (world: SpecWorld, place: string): Locator =>
+const rowAt = (world: WebWorld, place: string): Locator =>
   rows(world).nth(PLACES.indexOf(place));
 
-const optionAt = (world: SpecWorld, place: string, option: string): Locator =>
+const optionAt = (world: WebWorld, place: string, option: string): Locator =>
   rowAt(world, place)
     .locator(".listed-options")
     .getByRole("button", { name: option, exact: true });
@@ -629,7 +618,7 @@ const optionAt = (world: SpecWorld, place: string, option: string): Locator =>
 // The first has a step of its own, which reads only those in use.
 Then(
   /^the (second|third|fourth) player listed is "([^"]*)"$/,
-  async function (this: SpecWorld, place: string, name: string) {
+  async function (this: WebWorld, place: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
         (await namesIn(this))[PLACES.indexOf(place)],
@@ -642,7 +631,7 @@ Then(
 
 Then(
   new RegExp(`^the ${PLACE} player listed offers "([^"]*)"$`),
-  async function (this: SpecWorld, place: string, option: string) {
+  async function (this: WebWorld, place: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await optionAt(this, place, option).count(), 1);
     });
@@ -651,7 +640,7 @@ Then(
 
 Then(
   new RegExp(`^the ${PLACE} player listed does not offer "([^"]*)"$`),
-  async function (this: SpecWorld, place: string, option: string) {
+  async function (this: WebWorld, place: string, option: string) {
     await eventually(this, async () => {
       assert.equal(await rowAt(this, place).count(), 1);
       assert.equal(await optionAt(this, place, option).count(), 0);
@@ -661,7 +650,7 @@ Then(
 
 When(
   new RegExp(`^"([^"]*)" is pressed on the ${PLACE} player listed$`),
-  async function (this: SpecWorld, option: string, place: string) {
+  async function (this: WebWorld, option: string, place: string) {
     await eventually(this, async () => {
       assert.equal(await optionAt(this, place, option).count(), 1);
     });
@@ -671,7 +660,7 @@ When(
 
 Then(
   "the first player listed is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const [first] = await namesIn(this);
       assert.ok(

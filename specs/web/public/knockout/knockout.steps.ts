@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -22,18 +22,18 @@ const placeOf = (which: string): number => {
 };
 
 // The grid's rounds or the summary's, whichever `view` names.
-const roundsIn = (world: SpecWorld, view: string): Locator =>
+const roundsIn = (world: WebWorld, view: string): Locator =>
   world.browserPage.locator(
     view === "grid"
       ? "main .knockout .knockout-round"
       : "main .knockout-summary .knockout-summary-round",
   );
 
-const roundAt = (world: SpecWorld, round: string, view: string): Locator =>
+const roundAt = (world: WebWorld, round: string, view: string): Locator =>
   roundsIn(world, view).nth(placeOf(round));
 
 const matchAt = (
-  world: SpecWorld,
+  world: WebWorld,
   match: string,
   round: string,
   view: string,
@@ -41,7 +41,7 @@ const matchAt = (
   roundAt(world, round, view).locator(".knockout-match").nth(placeOf(match));
 
 const sideAt = (
-  world: SpecWorld,
+  world: WebWorld,
   side: string,
   match: string,
   round: string,
@@ -52,7 +52,7 @@ const sideAt = (
     .nth(placeOf(side));
 
 const scoreAt = (
-  world: SpecWorld,
+  world: WebWorld,
   score: string,
   side: string,
   match: string,
@@ -80,7 +80,7 @@ const SIDE =
 
 Then(
   /^the (first|second|third|fourth) round in the (grid|summary) is headed "(.*)"$/,
-  async function (this: SpecWorld, round: string, view: string, name: string) {
+  async function (this: WebWorld, round: string, view: string, name: string) {
     assert.equal(
       await said(roundAt(this, round, view).locator(".knockout-round-name")),
       name,
@@ -90,14 +90,14 @@ Then(
 
 Then(
   /^(\d+) rounds? (?:is|are) listed in the summary$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(await roundsIn(this, "summary").count(), Number(count));
   },
 );
 
 Then(
   "the second round in the summary is beneath the first",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const first = await boxOf(roundAt(this, "first", "summary"));
     const second = await boxOf(roundAt(this, "second", "summary"));
     assert.ok(
@@ -112,7 +112,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} is "(.*)"$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -131,7 +131,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} is a bye$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -149,7 +149,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} is not yet known$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -167,7 +167,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} says they represent "(.*)"$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -186,7 +186,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} says they have withdrawn$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -204,7 +204,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} (does not have|has) its name struck through$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -223,7 +223,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} is beneath its first$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -241,7 +241,7 @@ Then(
 Then(
   new RegExp(`^${SIDE} has room for (\\d+) scores?$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     match: string,
     round: string,
@@ -264,7 +264,7 @@ const SCORE = `the (first|second|third) score of ${SIDE}`;
 Then(
   new RegExp(`^${SCORE} is "(.*)"$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     score: string,
     side: string,
     match: string,
@@ -286,7 +286,7 @@ Then(
 Then(
   new RegExp(`^${SCORE} is (not )?struck through$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     score: string,
     side: string,
     match: string,
@@ -304,7 +304,7 @@ Then(
 Then(
   new RegExp(`^${SCORE} is (not )?said to be withdrawn$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     score: string,
     side: string,
     match: string,
@@ -324,7 +324,7 @@ Then(
 Then(
   new RegExp(`^${SCORE} is empty$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     score: string,
     side: string,
     match: string,
@@ -343,7 +343,7 @@ Then(
 Then(
   new RegExp(`^${SCORE} is marked as (won|lost)$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     score: string,
     side: string,
     match: string,
@@ -365,7 +365,7 @@ Then(
 
 Then(
   "the first match of the second round in the grid is to the right of the first match of the first round",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const before = await boxOf(matchAt(this, "first", "first", "grid"));
     const after = await boxOf(matchAt(this, "first", "second", "grid"));
     assert.ok(
@@ -377,7 +377,7 @@ Then(
 
 Then(
   "the first match of the second round in the grid is between the first and second matches of the first round",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const above = await boxOf(matchAt(this, "first", "first", "grid"));
     const below = await boxOf(matchAt(this, "second", "first", "grid"));
     const between = await boxOf(matchAt(this, "first", "second", "grid"));
@@ -394,7 +394,7 @@ Then(
 
 // The arrow on to the right, or the one back to the left, halfway down the
 // grid ("across"), or above it or below it.
-const arrow = (world: SpecWorld, back: string | null, where: string): Locator =>
+const arrow = (world: WebWorld, back: string | null, where: string): Locator =>
   world.browserPage.locator(
     where === "across"
       ? `main .knockout-frame > .knockout-${back === null ? "onward" : "back"}`
@@ -419,7 +419,7 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
 
 Then(
   /^an arrow (back )?(across|above|below) the grid is shown$/,
-  async function (this: SpecWorld, back: string | null, where: string) {
+  async function (this: WebWorld, back: string | null, where: string) {
     await eventually(async () => {
       assert.equal(
         await arrow(this, back, where).isVisible(),
@@ -432,7 +432,7 @@ Then(
 
 Then(
   /^no arrow (back )?(across|above|below) the grid is shown$/,
-  async function (this: SpecWorld, back: string | null, where: string) {
+  async function (this: WebWorld, back: string | null, where: string) {
     await eventually(async () => {
       assert.equal(
         await arrow(this, back, where).isVisible(),
@@ -445,7 +445,7 @@ Then(
 
 When(
   /^the arrow (back )?(across|above|below) the grid is pressed$/,
-  async function (this: SpecWorld, back: string | null, where: string) {
+  async function (this: WebWorld, back: string | null, where: string) {
     // Once it shows, since the arrow back shows only once the grid has
     // scrolled from its start, which the press before it begins.
     await eventually(async () => {
@@ -456,7 +456,7 @@ When(
 );
 
 // Wholly within the grid's scrolled view, give or take a pixel.
-const inView = async (world: SpecWorld, selector: string): Promise<void> => {
+const inView = async (world: WebWorld, selector: string): Promise<void> => {
   await eventually(async () => {
     const grid = await boxOf(
       world.browserPage.locator("main .knockout-scroll"),
@@ -469,20 +469,20 @@ const inView = async (world: SpecWorld, selector: string): Promise<void> => {
   });
 };
 
-Then("the final is in view within the grid", async function (this: SpecWorld) {
+Then("the final is in view within the grid", async function (this: WebWorld) {
   await inView(this, "main #knockout-final");
 });
 
 Then(
   "the first round is in view within the grid",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await inView(this, "main #knockout-first");
   },
 );
 
 Then(
   "the arrow above the grid is above the first round",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const above = await boxOf(arrow(this, null, "above"));
     const round = await boxOf(this.browserPage.locator("main #knockout-first"));
     assert.ok(
@@ -494,7 +494,7 @@ Then(
 
 Then(
   /^no room is kept (above|below) the grid$/,
-  async function (this: SpecWorld, edge: string) {
+  async function (this: WebWorld, edge: string) {
     assert.equal(
       await this.browserPage.locator(`main .knockout-${edge}`).isVisible(),
       false,
@@ -505,7 +505,7 @@ Then(
 
 Then(
   "the arrow below the grid is below the first round",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const below = await boxOf(arrow(this, null, "below"));
     const round = await boxOf(this.browserPage.locator("main #knockout-first"));
     assert.ok(
@@ -520,7 +520,7 @@ Then(
 Then(
   /^the arrow (back )?(across|above|below) the grid leads to the (first round|final)$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     back: string | null,
     where: string,
     round: string,

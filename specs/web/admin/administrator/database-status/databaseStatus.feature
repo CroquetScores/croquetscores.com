@@ -82,14 +82,14 @@ Feature: The page where an administrator sees and sets the site's database acces
       And the page at "/admin/administrator/database-status" is opened
       And "2.5" is typed in the minutes field
       When Turn off is pressed
-      Then the minutes field says "DatabaseAccess.MinutesNotWhole"
+      Then the minutes field is refused as "DatabaseAccess.MinutesNotWhole"
 
     Scenario: Minutes beyond the most are refused beside the field
       Given database access is turned on
       And the page at "/admin/administrator/database-status" is opened
       And "1441" is typed in the minutes field
       When Turn off is pressed
-      Then the minutes field says "DatabaseAccess.MinutesOutOfRange"
+      Then the minutes field is refused as "DatabaseAccess.MinutesOutOfRange"
 
     Scenario: A refusal changes nothing
       Given database access is turned on

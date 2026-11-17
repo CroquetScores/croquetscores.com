@@ -447,7 +447,7 @@ Feature: A block's page shows its results as a grid
       And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page says the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
+      Then the page says "Tie breaks are decided by net games then net hoops then who beat who."
 
     Scenario: Net games are left out where each match is a single game
       Given the block is to be the best of 1
@@ -458,7 +458,7 @@ Feature: A block's page shows its results as a grid
       And "organiser@example.com" has entered the player "Chris Third" in "Block B" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
-      Then the page says the words for "block.tieBreak.netHoopsWhoBeatWho"
+      Then the page says "Tie breaks are decided by net hoops then who beat who."
 
     Scenario: Who beat who alone is said
       Given the block is to go by the tie break "who-beat-who"
@@ -470,7 +470,7 @@ Feature: A block's page shows its results as a grid
       And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
-      Then the page says the words for "block.tieBreak.whoBeatWho"
+      Then the page says "Tie breaks are decided by who beat who."
 
     Scenario: That there is no known way is said
       Given the block is to go by the tie break "other"
@@ -482,13 +482,13 @@ Feature: A block's page shows its results as a grid
       And "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block B" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block B" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-b" is opened
-      Then the page says the words for "block.tieBreak.other"
+      Then the page says "There is no known tie break method."
 
     Scenario: Nothing is said where no players are level
       Given "Alex Another" has beaten "Sam Someone" 26 to 17 in "Block A" of "Spring Open"
       And "Alex Another" has beaten "Sam Someone" 26 to 3 in "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page does not say the words for "block.tieBreak.netGamesNetHoopsWhoBeatWho"
+      Then the page does not say "Tie breaks are decided by net games then net hoops then who beat who."
 
   Rule: On a phone the grid scrolls across within the page
 
@@ -601,17 +601,17 @@ Feature: A block's page shows its results as a grid
 
     Scenario: A slug no competition has is not found
       When the page at "/2026/ac/spring-open/competitions/block-z" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived block is not found
       Given "organiser@example.com" has archived the competition "Block A" in "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's blocks are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the block where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

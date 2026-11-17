@@ -322,28 +322,28 @@ Feature: A player's page lists the tournaments they have played in
     Scenario: The page of an archived player is not there
       Given "organiser@example.com" has archived the player "Sam Someone" in "Spring Open"
       When the page at "/players/sam-someone" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: The page of a player of an archived tournament is not there
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/players/sam-someone" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
   Rule: A player nobody has is not a page
 
     Scenario: A slug nobody has is not found
       When the page at "/players/nobody-here" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A player of another website is not found
       Given a site served as "gateballscores.com"
       When the page at "/players/sam-someone" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A slug the player was added under is not a page where their world ranking name is another
       Given "organiser@example.com" has changed the world ranking name of the player "Sam Someone" in "Spring Open" to "Samuel Rankings"
       When the page at "/players/sam-someone" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
   Rule: The page fits a phone
 

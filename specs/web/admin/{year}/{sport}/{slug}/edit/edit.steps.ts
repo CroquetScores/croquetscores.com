@@ -1,17 +1,10 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../support/world.js";
-import { openAndKeepTheAnswer } from "../../../../../support/answered.js";
+import type { WebWorld } from "../../../../../support/world.js";
+import { keptCalled, keptOf } from "../../../../../support/kept.js";
 import { unmarkedWithin } from "../../../../../support/marks.js";
-import {
-  changeTournament,
-  keptCalled,
-} from "../../../../../support/tournaments.js";
+import { changeTournament } from "../../../../../support/tournaments.js";
 
 // The edit page is the new tournament form begun as the tournament is, so the
 // steps that read and fill the form are the form's own (new.steps.ts). These
@@ -21,33 +14,24 @@ import {
 // Opened at the tournament's address as it is now, which is where the reader
 // is sent from the list.
 const openToEdit = async function (
-  this: SpecWorld,
+  this: WebWorld,
   name: string,
 ): Promise<void> {
-  const tournament = await load(this, tournamentNamed(this, name));
+  const tournament = await keptOf(this, name);
   await this.browserPage.goto(
-    `${this.baseUrl!}/admin/${tournament.address.toString()}/edit`,
+    `${this.baseUrl!}/admin/${tournament.address}/edit`,
   );
 };
 
 Given("the page to edit {string} is open", openToEdit);
 When("the page to edit {string} is opened", openToEdit);
 
-// Keeping what it was answered with, for a scenario that says whether it was
-// found.
-When(
-  "the page at {string} is opened",
-  async function (this: SpecWorld, path: string) {
-    await openAndKeepTheAnswer(this, path);
-  },
-);
-
 // What the tournament is before the page is opened. One that is national is
 // not international, since the tournament refuses both (create.feature).
 
 Given(
   "the tournament {string} is in no region",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await changeTournament(this, name, { region: undefined });
   },
 );
@@ -56,54 +40,22 @@ Given(
 // first that it is played by teams.
 Given(
   "the tournament {string} draws a level test",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await changeTournament(this, name, { levelTestsDrawn: true });
   },
 );
 
 Given(
-  "the tournament {string} is national",
-  async function (this: SpecWorld, name: string) {
-    await changeTournament(this, name, {
-      national: true,
-      international: false,
-    });
-  },
-);
-
-Given(
-  "the tournament {string} is international",
-  async function (this: SpecWorld, name: string) {
-    await changeTournament(this, name, {
-      national: false,
-      international: true,
-    });
-  },
-);
-
-Given(
   "the tournament {string} has the subtitle {string}",
-  async function (this: SpecWorld, name: string, subtitle: string) {
+  async function (this: WebWorld, name: string, subtitle: string) {
     await changeTournament(this, name, { subtitle });
-  },
-);
-
-// In place of the form, by the refusal's code: the words beside it are only
-// its words. Asked again for a while, since the page says it once the API has
-// answered.
-Then(
-  "the page is refused with {string}",
-  async function (this: SpecWorld, code: string) {
-    const refused = this.browserPage.locator("main .page-refused");
-    await refused.waitFor();
-    assert.equal(await refused.getAttribute("data-refused"), code);
   },
 );
 
 Then(
   "the tournament {string} is kept with the subtitle {string}",
-  async function (this: SpecWorld, name: string, subtitle: string) {
-    assert.equal((await keptCalled(this, name)).subtitle?.markdown, subtitle);
+  async function (this: WebWorld, name: string, subtitle: string) {
+    assert.equal((await keptCalled(this, name)).subtitle, subtitle);
   },
 );
 
@@ -113,7 +65,7 @@ Then(
 // tournament is in is chosen in its list.
 Then(
   "every word in the form but the subtitle and the regions is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage
       .locator("#field-region option:checked:not([value=''])")
       .waitFor({ state: "attached" });

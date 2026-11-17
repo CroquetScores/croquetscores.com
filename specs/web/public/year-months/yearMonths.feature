@@ -71,8 +71,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
       Then the twelfth month of the year is "December"
 
     Scenario: The months are named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       When the page for 2026 is opened
       Then the first month of the year is "enero"
 
@@ -608,7 +607,7 @@ Feature: A year's page is its months, and a month's tournaments are loaded when 
 
     Scenario: The page says it needs scripting
       When the page for 2026 is opened
-      Then the page says the words for "year.needsScripting"
+      Then the page says "The months of a year are opened with scripting, which is switched off. Please switch it on for this site."
 
     Scenario: No month is listed without scripting
       When the page for 2026 is opened

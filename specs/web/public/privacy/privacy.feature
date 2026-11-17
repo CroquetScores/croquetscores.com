@@ -31,27 +31,15 @@ Feature: A reader can see what the site keeps about them
       Then the page is not found
 
     Scenario: The statement is shown in the reader's language
-      Given a browser that asks for Welsh
+      Given a browser that asks for "cy"
       When the privacy statement is opened
       Then the statement is in Welsh
-
-    Scenario: A language without the statement is shown it in English
-      Given a browser that asks for Welsh
-      And the help has no Welsh privacy statement
-      When the privacy statement is opened
-      Then the statement is in English
 
   Rule: The statement says who to ask
 
     Scenario: The administrator is named, as a link to send them email
-      Given the site is told its administrator is "administrator@example.com"
       When the privacy statement is opened
-      Then the statement links to send email to the administrator
-
-    Scenario: An address with characters that mean something is linked as written
-      Given the site is told its administrator is "a$&b@example.com"
-      When the privacy statement is opened
-      Then the statement links to send email to "a$&b@example.com"
+      Then the statement links to send email to "administrator@example.com"
 
   Rule: Every page links to it
 

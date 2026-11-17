@@ -146,8 +146,31 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-if (existsSync(finished)) renameSync(finished, replaced);
-renameSync(built, finished);
+// On Windows a folder cannot be renamed while anything holds a file in it open,
+// and a virus scanner, the search indexer or an editor's file watcher will for
+// a moment, on a tree that has just been written. The rename is tried again
+// for a few seconds, which is longer than any of them keeps it.
+const renamed = (from, to) => {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      renameSync(from, to);
+      return;
+    } catch (error) {
+      const held = ["EPERM", "EBUSY", "EACCES"].includes(error.code);
+      if (!held || attempt === 40) throw error;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 250);
+    }
+  }
+};
+
+if (existsSync(finished)) renamed(finished, replaced);
+try {
+  renamed(built, finished);
+} catch (error) {
+  // The help that was there is put back rather than left with none.
+  if (existsSync(replaced)) renameSync(replaced, finished);
+  throw error;
+}
 rmSync(replaced, { recursive: true, force: true });
 
 console.log(

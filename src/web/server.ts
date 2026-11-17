@@ -195,7 +195,7 @@ import { Commentary } from "../domain/aggregates/tournaments/commentaries/Commen
 import { nameCommentaryEvents } from "../domain/aggregates/tournaments/commentaries/events/commentaryEvents.js";
 import { nameManagerNoteEvents } from "../domain/aggregates/tournaments/manager-notes/events/managerNoteEvents.js";
 import { ManagerNote } from "../domain/aggregates/tournaments/manager-notes/ManagerNote.js";
-import type { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
+import { ManagerNoteId } from "../domain/aggregates/tournaments/primitives/ManagerNoteId.js";
 import type { CommentaryId } from "../domain/aggregates/tournaments/primitives/CommentaryId.js";
 import { StartCommentaryHandler } from "../application/operations/tournaments/StartCommentaryHandler.js";
 import { StartCommentaryValidator } from "../application/operations/tournaments/StartCommentaryValidator.js";
@@ -220,13 +220,15 @@ import { PublicCommentaryOfTournamentHandler } from "../application/operations/t
 import { gamesKeptByCompetitions } from "../application/operations/competitions/competitionGames.js";
 import type { EventStore } from "../application/services/EventStore.js";
 import { Account } from "../domain/aggregates/accounts/Account.js";
-import type { AccountId } from "../domain/aggregates/accounts/AccountId.js";
-import type { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
-import type { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
+import { AccountId } from "../domain/aggregates/accounts/AccountId.js";
+import { PersonName } from "../domain/aggregates/accounts/value-objects/PersonName.js";
+import { CompetitionId } from "../domain/aggregates/tournaments/primitives/CompetitionId.js";
+import { TournamentId } from "../domain/aggregates/tournaments/primitives/TournamentId.js";
 import { Tournament } from "../domain/aggregates/tournaments/Tournament.js";
 import { nameAccountEvents } from "../domain/aggregates/accounts/events/accountEvents.js";
 import { nameTournamentEvents } from "../domain/aggregates/tournaments/events/tournamentEvents.js";
 import { EventRegistry } from "../domain/common/EventRegistry.js";
+import type { Severity } from "../application/services/ServerLog.js";
 import {
   loadConfig,
   loadEnvFile,
@@ -257,7 +259,10 @@ import { OldSitePasswordHasher } from "../infrastructure/identity/OldSitePasswor
 import { HaveIBeenPwnedPasswords } from "../infrastructure/identity/HaveIBeenPwnedPasswords.js";
 import { LogEntriesHandler } from "../application/operations/logs/LogEntriesHandler.js";
 import { PruneLogHandler } from "../application/operations/logs/PruneLogHandler.js";
-import { PostgresServerLog } from "../infrastructure/database/PostgresServerLog.js";
+import {
+  levelOf,
+  PostgresServerLog,
+} from "../infrastructure/database/PostgresServerLog.js";
 import { ServerLogStream } from "../infrastructure/logging/ServerLogStream.js";
 import { PostgresKeptImportErrors } from "../infrastructure/database/PostgresKeptImportErrors.js";
 import { PostgresWorldRankingPlayers } from "../infrastructure/database/PostgresWorldRankingPlayers.js";
@@ -299,6 +304,18 @@ import { registerSecurityHeaders } from "./common/securityHeaders.js";
 import { registerBetaBanner } from "./common/betaSite.js";
 import { registerPagePreview } from "./common/pagePreview.js";
 import { registerWebAppManifest } from "./common/webAppManifest.js";
+import { registerTestControl, SettableClock } from "./testControl.js";
+import {
+  registerTestControlReaders,
+  type ReaderMaking,
+} from "./testControlReaders.js";
+import {
+  registerTestControlReaderCheck,
+  StandInReaderCheck,
+} from "./testControlReaderCheck.js";
+import { plainCompetition, plainTournament } from "./testControlKept.js";
+import { registerTestControlTournaments } from "./testControlTournaments.js";
+import { testLocaleFrom } from "./testLocale.js";
 import { registerSearchEngines } from "./common/searchEngines.js";
 import { registerSitemap } from "./common/sitemap.js";
 import {
@@ -860,18 +877,42 @@ const withRequestsLogged = (
   };
 };
 
+// The table each sport's list is kept in. Looked up and not built from the
+// sport, so that a table name is one of these two whatever is passed at run
+// time: the type "ac" | "gc" is gone by then.
+const worldRankingTables = {
+  ac: "ac_world_ranking_players",
+  gc: "gc_world_ranking_players",
+} as const;
+
 export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
 ): Promise<Application> => {
   const pool = createPool(config.databaseUrl);
+  // Where the time comes from. The one a call to the test control can set is
+  // made only for a site that has the control, so that no other site has a
+  // clock anything can move.
+  const settableClock =
+    config.testControlToken === undefined ? undefined : new SettableClock();
+  const clock: Clock = options.clock ?? settableClock?.now ?? machineClock;
+  // What a deploy says since the site started the build is called, where the
+  // control has said there was one (it names the build the admin was built to
+  // otherwise).
+  let deployedAs: string | undefined;
+  // The countries the world rankings are said to list, where the control says
+  // so: it starts knowing none, and is emptied with the rest.
+  const listedCountries =
+    config.testControlToken === undefined
+      ? undefined
+      : { ac: new Set<string>(), gc: new Set<string>() };
   // The log goes where it always has, to standard output, and a copy of each
   // line is kept in the database for an administrator to read. A scenario that
   // says where its log goes keeps no copy, since it is not asking about this.
   const serverLogStream = new ServerLogStream({
     file: process.stdout,
     database: pool,
-    now: options.clock ?? machineClock,
+    now: clock,
   });
   const server = Fastify({
     logger: withRequestsLogged(options.logger ?? { stream: serverLogStream }),
@@ -896,10 +937,13 @@ export const buildApplication = async (
   // Which version of the website this is: what the build wrote down, unless a
   // scenario says which. Null is a scenario saying none, as undefined is the
   // option left out.
-  const version =
-    options.version === undefined
-      ? readBuiltVersion(join(repositoryRoot, "dist", "version.json"))
-      : (options.version ?? undefined);
+  const version = ((): number | undefined => {
+    if (options.version !== undefined) return options.version ?? undefined;
+    if (config.testSiteVersion !== undefined) {
+      return config.testSiteVersion ?? undefined;
+    }
+    return readBuiltVersion(join(repositoryRoot, "dist", "version.json"));
+  })();
   const assets = readAssets(
     join(repositoryRoot, "assets"),
     config.administratorEmailAddress,
@@ -909,7 +953,19 @@ export const buildApplication = async (
   // Handed to the two handlers that set a password, each of which asks it
   // between the transaction it reads in and the one it writes in, where the
   // asking holds no connection.
-  const breached = options.breachedPasswords ?? new HaveIBeenPwnedPasswords();
+  // A site with the test control never asks Have I Been Pwned, which would
+  // send a password from a spec run across the internet and answer by
+  // whatever the service knows that day: nothing is breached unless a spec
+  // says so.
+  // What judges a reader for a site under test, which is never Google.
+  const standInReaderCheck =
+    config.testControlToken === undefined
+      ? undefined
+      : new StandInReaderCheck();
+  const breached =
+    options.breachedPasswords ??
+    standInReaderCheck ??
+    new HaveIBeenPwnedPasswords();
   const { mediator, validation } = putTogether(unitOfWork);
 
   // What is personal in an account's events is encrypted with the account's
@@ -1005,7 +1061,12 @@ export const buildApplication = async (
   // Emails are written from the site's catalogues, with links made from the
   // address of the website each is for and never a request's host, and written
   // to files in temp/emails/ unless a mail server is set (SMTP_HOST).
-  const languages = options.languages ?? offeredLanguages;
+  // The test locale is offered only to a site that has the test control.
+  const languages =
+    options.languages ??
+    (config.testControlToken === undefined
+      ? offeredLanguages
+      : [...offeredLanguages, testLocaleFrom(english)]);
   const writer = emailWriter(languages, {
     fromName: config.administratorEmailFromName,
   });
@@ -1149,7 +1210,11 @@ export const buildApplication = async (
   mediator.handleCommand(
     new ImportWorldRankingPlayersHandler(
       accounts,
-      options.worldRankingLists ?? new WorldRankingWebsite(),
+      options.worldRankingLists ??
+        new WorldRankingWebsite(
+          config.worldRankingAddresses,
+          config.worldRankingWaitMilliseconds,
+        ),
       worldRankingPlayers,
       unitOfWork,
     ),
@@ -1168,15 +1233,17 @@ export const buildApplication = async (
       accounts,
       tournamentsByWebsite,
       options.worldRankingCountries ??
-        (await FileWorldRankingCountries.readFrom(
-          join(
-            repositoryRoot,
-            "src",
-            "infrastructure",
-            "world-rankings",
-            "events",
-          ),
-        )),
+        (listedCountries !== undefined
+          ? { countriesOf: (sport) => listedCountries[sport] }
+          : await FileWorldRankingCountries.readFrom(
+              join(
+                repositoryRoot,
+                "src",
+                "infrastructure",
+                "world-rankings",
+                "events",
+              ),
+            )),
     ),
   );
   mediator.handleQuery(new ImportErrorKeptHandler(accounts, keptImportErrors));
@@ -1595,8 +1662,24 @@ export const buildApplication = async (
     config.administratorEmailAddress,
   );
 
-  const clock = options.clock ?? machineClock;
   stampRequests(server, clock);
+  if (config.testControlToken !== undefined && settableClock !== undefined) {
+    registerTestControl(
+      server,
+      config.testControlToken,
+      settableClock,
+      pool,
+      () => {
+        standInReaderCheck?.reset();
+        listedCountries?.ac.clear();
+        listedCountries?.gc.clear();
+        // A deploy is something one scenario says happened; left standing, the
+        // next scenario's page would be sent as the build the site now names, and
+        // a deploy of its own would change nothing for it to be offered.
+        deployedAs = undefined;
+      },
+    );
+  }
   speakToRequests(server, languages);
   // Before anything that reads the website, which includes the hooks that
   // refuse a request.
@@ -1620,6 +1703,194 @@ export const buildApplication = async (
   const inTransaction: InTransaction = (work) => unitOfWork.inTransaction(work);
 
   const sessions = new PostgresSessions(unitOfWork);
+  if (config.testControlToken !== undefined) {
+    const making: ReaderMaking = {
+      mediator,
+      sessions,
+      clock,
+      inTransaction: (work) => unitOfWork.inTransaction(work),
+      accountIdFor: (address) => accountsByEmailAddress.find(address),
+      loadAccount: (id) => accounts.load(id),
+      saveAccount: (account) => accounts.save(account),
+      emailedTo: () => emailQueue.emails(),
+      notesOf: async (id) =>
+        unitOfWork.inTransaction(async () => {
+          const headings = await managerNotesByTournament.of(
+            TournamentId.from(id),
+          );
+          const notes = [];
+          for (const heading of headings) {
+            const note = await managerNotes.load(
+              ManagerNoteId.from(heading.id),
+            );
+            if (note === undefined) continue;
+            notes.push({
+              title: note.title.toString(),
+              description: note.description?.toString(),
+              deleted: note.deleted,
+            });
+          }
+          return notes;
+        }),
+      gamesOf: async (id) => {
+        const competition = await unitOfWork.inTransaction(() =>
+          competitions.load(CompetitionId.from(id)),
+        );
+        return competition === undefined
+          ? undefined
+          : plainCompetition(competition);
+      },
+      keptOf: async (id, name) => {
+        // By the name it is called where the scenario made it through a page and
+        // never knew its id.
+        const found =
+          id === "" && name !== undefined
+            ? (
+                await pool.query<{ tournament_id: string }>(
+                  `select tournament_id from tournaments where name = $1`,
+                  [name],
+                )
+              ).rows[0]?.tournament_id
+            : id;
+        if (found === undefined) return undefined;
+        const tournament = await unitOfWork.inTransaction(() =>
+          tournaments.load(TournamentId.from(found)),
+        );
+        return tournament === undefined
+          ? undefined
+          : plainTournament(tournament);
+      },
+      databaseAccess,
+      listCountry: (sport, code) => {
+        listedCountries?.[sport].add(code);
+      },
+      addLogEntry: async ({ writtenAt, severity, message, reference }) => {
+        // Only the names it has: a plain object also answers to "toString" and
+        // the like, which are not severities and would reach the database as
+        // functions.
+        if (!Object.hasOwn(levelOf, severity)) return false;
+        const level = levelOf[severity as Severity];
+        await pool.query(
+          `insert into server_log (written_at, severity, message, details)
+           values ($1, $2, $3, $4)`,
+          [
+            writtenAt,
+            level,
+            message,
+            JSON.stringify({
+              level,
+              msg: message,
+              ...(reference === undefined ? {} : { correlationId: reference }),
+            }),
+          ],
+        );
+        return true;
+      },
+      build: () => build(),
+      deployAgain: () => {
+        deployedAs = "built-again-by-the-control";
+      },
+      worldRankingPlayers: async (sport) =>
+        (
+          await pool.query<{ name: string }>(
+            `select name from ${worldRankingTables[sport]} order by name`,
+          )
+        ).rows.map((row) => row.name),
+      addWorldRankingPlayer: async (sport, name) => {
+        await pool.query(
+          `insert into ${worldRankingTables[sport]} (name)
+           values ($1) on conflict do nothing`,
+          [name],
+        );
+      },
+      writeFailedSignIns: async (comparable, ipAddress, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into failed_sign_ins (email_address, ip_address, failed_at)
+             values ($1, $2, $3)`,
+            [comparable, ipAddress, at],
+          );
+        }
+      },
+      countFailedSignIns: async (comparable) => {
+        const { rows } = await pool.query<{ counted: string }>(
+          `select count(*) as counted from failed_sign_ins where email_address = $1`,
+          [comparable],
+        );
+        return Number(rows[0]?.counted ?? 0);
+      },
+      sessionsHold: async (cookie) => {
+        const { rows } = await pool.query<{ row: string }>(
+          `select t::text as row from sessions t`,
+        );
+        return rows.some(({ row }) => row.includes(cookie));
+      },
+      accountOfSession: async (cookie) => {
+        const { rows } = await pool.query<{ account_id: string }>(
+          `select account_id from sessions where id_hash = $1`,
+          [createHash("sha256").update(cookie).digest("base64url")],
+        );
+        return rows[0]?.account_id;
+      },
+      bringOver: async (address, name, password, at) => {
+        // The old site's salt for one password, sixteen bytes as it made them and
+        // fixed, so that the same account made twice has the same hash.
+        const salt = Buffer.alloc(16, 7).toString("base64");
+        const oldSite = new OldSitePasswordHasher(config.oldSitePasswordSalt);
+        const kept = `${salt.slice(0, 4)}${oldSite.hashOf(password, salt)}${salt.slice(4)}`;
+        const account = Account.bringOver(
+          AccountId.create(),
+          PersonName.from(name),
+          address,
+          emailAddresses.hash(address),
+          await passwords.import(kept),
+          at,
+        );
+        await unitOfWork.inTransaction(() => accounts.save(account));
+      },
+      sessionsOf: async (id) => {
+        const { rows } = await pool.query<{ sessions: string }>(
+          `select count(*) as sessions from sessions where account_id = $1`,
+          [id.value],
+        );
+        return Number(rows[0]?.sessions ?? 0);
+      },
+      writeAskings: async (ipAddress, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into password_reset_askings (ip_address, asked_at) values ($1, $2)`,
+            [ipAddress, at],
+          );
+        }
+      },
+      checkPassword: async (id, password) => {
+        const account = await unitOfWork.inTransaction(() => accounts.load(id));
+        const checked = await passwords.check(password, account?.passwordHash);
+        return { matches: checked.matches, remake: checked.remake };
+      },
+      writeEmails: async (to, kind, times, minutesAgo) => {
+        const at = new Date(clock().getTime() - minutesAgo * 60 * 1000);
+        for (let each = 0; each < times; each++) {
+          await pool.query(
+            `insert into emails_written (written_to, kind, written_at)
+             values ($1, $2, $3)`,
+            [`account:${to.value}`, kind, at],
+          );
+        }
+      },
+    };
+    registerTestControlReaders(server, config.testControlToken, making);
+    registerTestControlTournaments(server, config.testControlToken, making);
+    if (standInReaderCheck !== undefined) {
+      registerTestControlReaderCheck(
+        server,
+        config.testControlToken,
+        standInReaderCheck,
+      );
+    }
+  }
   const reader: Reader =
     options.reader ??
     readerFromSessions(sessions, inTransaction, async (account) => {
@@ -1638,6 +1909,7 @@ export const buildApplication = async (
     databaseAccess,
     async (request, reply) =>
       (await reader(request, reply))?.isAdministrator === true,
+    config.testControlToken === undefined ? [] : ["/__test/"],
   );
   server.decorate("databaseAccess", databaseAccess);
   knowTheReader(server, reader);
@@ -1657,7 +1929,7 @@ export const buildApplication = async (
   const adminRoot = join(repositoryRoot, "dist", "admin");
   const adminPageBuilt = builtPageIn(adminRoot);
   const builtAs = buildOf(adminPageBuilt);
-  const build = (): string => options.build?.() ?? builtAs;
+  const build = (): string => options.build?.() ?? deployedAs ?? builtAs;
   server.addHook("onSend", (request, reply, payload, done) => {
     if (request.url.startsWith("/api/site/"))
       reply.header(adminBuildHeader, build());
@@ -1723,6 +1995,7 @@ export const buildApplication = async (
   // the keys belong on the deployment checklist.
   const readers: ReaderCheck =
     options.readerCheck ??
+    standInReaderCheck ??
     (config.recaptcha === undefined
       ? { judge: () => Promise.resolve("a person"), siteKey: undefined }
       : recaptchaAsAReaderCheck(config.recaptcha));
@@ -1733,7 +2006,10 @@ export const buildApplication = async (
     config.google === undefined
       ? undefined
       : googleAsASignIn(
-          new GoogleOpenIdConnect(config.google, options.googleEndpoints),
+          new GoogleOpenIdConnect(
+            config.google,
+            options.googleEndpoints ?? config.googleEndpoints,
+          ),
         );
   if (google !== undefined) {
     registerGoogleRoutes(server, {
@@ -1827,7 +2103,12 @@ export const buildApplication = async (
   // What is queued is sent while the server is listening, and the pool is
   // still open while the last round finishes: the server is closed before the
   // pool is ended, by whoever closes them.
-  if (options.sendsTheEmailQueue ?? true)
+  // Never for a site under test: what it has queued is what a scenario reads, and
+  // an email sent is an email taken out of the queue before it was read.
+  if (
+    (options.sendsTheEmailQueue ?? true) &&
+    config.testControlToken === undefined
+  )
     sendTheEmailQueue(server, emailQueue, clock);
 
   return {

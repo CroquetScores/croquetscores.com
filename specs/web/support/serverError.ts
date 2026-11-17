@@ -2,7 +2,7 @@
 // rather than as the site would. Here rather than beside one feature, because
 // more than one dialog asks for its list when it opens, and a scenario for each
 // says the same thing of the answer.
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 
 /** What a request is answered with in place of the site's own answer. */
 export interface Answer {
@@ -32,7 +32,7 @@ export const anEmptyReply: Answer = {
  * between the dialog asking and being answered.
  */
 export const answerNextGet = async (
-  world: SpecWorld,
+  world: WebWorld,
   asks: RegExp,
   answer: Answer,
   heldBack?: Promise<void>,

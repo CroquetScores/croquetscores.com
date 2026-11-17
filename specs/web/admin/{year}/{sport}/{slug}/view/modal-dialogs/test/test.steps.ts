@@ -2,17 +2,17 @@ import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
 import {
   dayOf,
-  testNamed,
-  type TestShape,
-} from "../../../../../../../../domain/aggregates/tournaments/tournament/aTeamTournament.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
-import { eventually } from "../../../../../../../support/tournamentPage.js";
+  keptOf,
+  testOf,
+  type KeptCompetition,
+} from "../../../../../../../support/kept.js";
+import {
+  eventually,
+  retried,
+} from "../../../../../../../support/tournamentPage.js";
 
 // The test dialog (test.feature), open over a tournament's Tests tab. What it
 // shares with the player dialog, being a modal dialog of the same kind, is
@@ -22,16 +22,16 @@ import { eventually } from "../../../../../../../support/tournamentPage.js";
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
 // A field by the words it is labelled with, as the reader finds it.
-const fieldOf = (world: SpecWorld, label: string): Locator =>
+const fieldOf = (world: WebWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 // The teams offered, without the choice of nobody each begins on, once they
 // have arrived, which takes a moment after the dialog opens.
 const teamsOffered = async (
-  world: SpecWorld,
+  world: WebWorld,
   label: string,
 ): Promise<string[]> => {
   await fieldOf(world, label)
@@ -47,7 +47,7 @@ const teamsOffered = async (
 
 Given(
   "the team {string} is chosen as {string}",
-  async function (this: SpecWorld, team: string, label: string) {
+  async function (this: WebWorld, team: string, label: string) {
     await eventually(this, async () => {
       assert.ok((await teamsOffered(this, label)).includes(team));
     });
@@ -57,7 +57,7 @@ Given(
 
 Then(
   "no team is chosen as {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {
       assert.equal(await fieldOf(this, label).inputValue(), "");
@@ -67,7 +67,7 @@ Then(
 
 Then(
   "the team {string} is offered as {string}",
-  async function (this: SpecWorld, team: string, label: string) {
+  async function (this: WebWorld, team: string, label: string) {
     await eventually(this, async () => {
       assert.ok((await teamsOffered(this, label)).includes(team));
     });
@@ -76,7 +76,7 @@ Then(
 
 Then(
   "the team {string} is not offered as {string}",
-  async function (this: SpecWorld, team: string, label: string) {
+  async function (this: WebWorld, team: string, label: string) {
     await eventually(this, async () => {
       const offered = await teamsOffered(this, label);
       assert.ok(!offered.includes(team), `${team} is offered.`);
@@ -86,7 +86,7 @@ Then(
 
 Then(
   "the team {string} is offered before the team {string} as {string}",
-  async function (this: SpecWorld, one: string, other: string, label: string) {
+  async function (this: WebWorld, one: string, other: string, label: string) {
     await eventually(this, async () => {
       const offered = await teamsOffered(this, label);
       assert.ok(
@@ -103,7 +103,7 @@ Then(
 // that cannot be used.
 Then(
   "the test dialog shows {string} as {string}",
-  async function (this: SpecWorld, team: string, label: string) {
+  async function (this: WebWorld, team: string, label: string) {
     await eventually(this, async () => {
       assert.equal(
         (
@@ -123,7 +123,7 @@ Then(
 // no such day: either way it is what the field holds.
 Given(
   /^"([^"]*)" is (?:chosen|typed) as "([^"]*)"$/,
-  async function (this: SpecWorld, day: string, label: string) {
+  async function (this: WebWorld, day: string, label: string) {
     await fieldOf(this, label).fill(day);
   },
 );
@@ -134,7 +134,7 @@ for (const [said, attribute] of [
 ] as const) {
   Then(
     `{string} offers no day ${said} {string}`,
-    async function (this: SpecWorld, label: string, day: string) {
+    async function (this: WebWorld, label: string, day: string) {
       await eventually(this, async () => {
         assert.equal(
           await fieldOf(this, label).getAttribute(attribute, { timeout: 500 }),
@@ -149,7 +149,7 @@ for (const [said, attribute] of [
 
 Then(
   "{string} is typed on a keypad of numbers",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     assert.equal(
       await fieldOf(this, label).getAttribute("inputmode"),
@@ -162,7 +162,7 @@ Then(
 // meets them.
 Then(
   "{string} is the first thing the test dialog asks for",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     const first = dialogOf(this)
       .locator(".dialog-content :is(input, select, textarea)")
@@ -180,7 +180,7 @@ Then(
 
 Then(
   "{string} comes after {string}",
-  async function (this: SpecWorld, later: string, earlier: string) {
+  async function (this: WebWorld, later: string, earlier: string) {
     await dialogOf(this).waitFor();
     const boxOf = async (label: string) => {
       const box = await fieldOf(this, label).boundingBox();
@@ -195,7 +195,7 @@ Then(
 // What is said above the fields, about no one of them, by its code.
 Then(
   "the test dialog is refused above its fields with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(this, async () => {
       const refused =
         (await dialogOf(this)
@@ -211,22 +211,19 @@ Then(
 
 // What was kept ------------------------------------------------------------------
 
-const testsOf = async (world: SpecWorld, tournament: string) =>
-  (await load(world, tournamentNamed(world, tournament))).competitions.filter(
-    ({ shape }) => shape.kind === "test",
+const testsOf = async (world: WebWorld, tournament: string) =>
+  (await keptOf(world, tournament)).competitions.filter(
+    (each) => each.kind === "test",
   );
 
 const shapeOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
   name: string,
-): Promise<TestShape> => {
-  let found: TestShape | undefined;
+): Promise<KeptCompetition> => {
+  let found: KeptCompetition | undefined;
   await eventually(world, async () => {
-    found = testNamed(
-      await load(world, tournamentNamed(world, tournament)),
-      name,
-    ).shape;
+    found = testOf(await keptOf(world, tournament), name);
   });
   assert.ok(found !== undefined);
   return found;
@@ -234,15 +231,17 @@ const shapeOf = async (
 
 Then(
   "{string} has the test {string}",
-  async function (this: SpecWorld, tournament: string, name: string) {
-    await shapeOf(this, tournament, name);
+  async function (this: WebWorld, tournament: string, name: string) {
+    await retried(async () => {
+      await shapeOf(this, tournament, name);
+    });
   },
 );
 
 // Once nothing more can be sent: the dialog closed, or the page settled.
 Then(
   "{string} has no tests",
-  async function (this: SpecWorld, tournament: string) {
+  async function (this: WebWorld, tournament: string) {
     await eventually(this, async () => {
       assert.equal((await testsOf(this, tournament)).length, 0);
     });
@@ -250,13 +249,13 @@ Then(
 );
 
 for (const [said, day] of [
-  ["starts", (shape: TestShape) => dayOf(shape.starts)],
-  ["finishes", (shape: TestShape) => dayOf(shape.finishes)],
+  ["starts", (shape: KeptCompetition) => dayOf(shape.starts)],
+  ["finishes", (shape: KeptCompetition) => dayOf(shape.finishes)],
 ] as const) {
   Then(
     `the test {string} of {string} ${said} on {string}`,
     async function (
-      this: SpecWorld,
+      this: WebWorld,
       name: string,
       tournament: string,
       on: string,
@@ -269,28 +268,30 @@ for (const [said, day] of [
 Then(
   "the test {string} of {string} is expected to have {int} matches",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     matches: number,
   ) {
-    assert.equal(
-      (await shapeOf(this, tournament, name)).expectedMatches.count,
-      matches,
-    );
+    await retried(async () => {
+      assert.equal(
+        (await shapeOf(this, tournament, name)).expectedMatches,
+        matches,
+      );
+    });
   },
 );
 
 Then(
   "each match of the test {string} of {string} is the best of {int}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     games: number,
   ) {
     await eventually(this, async () => {
-      assert.equal((await shapeOf(this, tournament, name)).bestOf.games, games);
+      assert.equal((await shapeOf(this, tournament, name)).bestOf, games);
     });
   },
 );
@@ -298,7 +299,7 @@ Then(
 Then(
   "the test {string} of {string} is in the group {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     group: string,
@@ -314,25 +315,25 @@ Then(
 
 Then(
   "the test {string} of {string} is in no group",
-  async function (this: SpecWorld, name: string, tournament: string) {
-    assert.equal((await shapeOf(this, tournament, name)).group, undefined);
+  async function (this: WebWorld, name: string, tournament: string) {
+    await retried(async () => {
+      assert.equal((await shapeOf(this, tournament, name)).group, undefined);
+    });
   },
 );
 
 Then(
   /^the test "([^"]*)" of "([^"]*)" has a maximum of (\d+) hoops$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     tournament: string,
     hoops: string,
   ) {
     let maximumHoops: number | null | undefined;
     await eventually(this, async () => {
-      maximumHoops = testNamed(
-        await load(this, tournamentNamed(this, tournament)),
-        name,
-      ).rules.maximumHoops;
+      maximumHoops = testOf(await keptOf(this, tournament), name).rules
+        .maximumHoops;
     });
     assert.equal(maximumHoops, Number(hoops));
   },

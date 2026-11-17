@@ -2,8 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { Flags } from "../../../../src/domain/aggregates/tournaments/value-objects/Flags.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 import { unmarkedWithin } from "../../support/marks.js";
 
@@ -18,13 +17,13 @@ const placeOf = (which: string): number => {
   return at;
 };
 
-const gameAt = (world: SpecWorld, which: string): Locator =>
+const gameAt = (world: WebWorld, which: string): Locator =>
   world.browserPage
     .locator("main :is(.games, .games-table) .game")
     .nth(placeOf(which));
 
 // The winner's line is the first of a game, and the loser's the second.
-const lineOf = (world: SpecWorld, line: string, which: string): Locator =>
+const lineOf = (world: WebWorld, line: string, which: string): Locator =>
   gameAt(world, which).locator(
     line === "first" ? ".game-winner" : ".game-loser",
   );
@@ -34,14 +33,14 @@ const textOf = async (found: Locator): Promise<string> =>
 
 Given(
   "the page at {string} is open",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     await this.browserPage.goto(`${this.baseUrl!}${path}`);
   },
 );
 
 When(
   /^the competition of the (first|second|third) game is pressed$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     await gameAt(this, which).locator(".game-competition a").click();
     await this.browserPage.waitForLoadState();
   },
@@ -49,21 +48,18 @@ When(
 
 // What the page says -----------------------------------------------------------
 
-Then("the page says there are no games", async function (this: SpecWorld) {
+Then("the page says there are no games", async function (this: WebWorld) {
   assert.equal(await this.browserPage.locator("main .games-none").count(), 1);
 });
 
-Then(
-  "the page's content has no main heading",
-  async function (this: SpecWorld) {
-    await this.browserPage.locator("main").waitFor();
-    assert.equal(await this.browserPage.locator("main h1").count(), 0);
-  },
-);
+Then("the page's content has no main heading", async function (this: WebWorld) {
+  await this.browserPage.locator("main").waitFor();
+  assert.equal(await this.browserPage.locator("main h1").count(), 0);
+});
 
 Then(
   "the page does not say there are no games",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await this.browserPage.locator("main .games-none").count(), 0);
   },
 );
@@ -71,7 +67,7 @@ Then(
 Then(
   /^the (first|second|third) game is of "(.*)" beating "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     winner: string,
     loser: string,
@@ -88,7 +84,7 @@ Then(
 
 Then(
   /^the (first|second|third) game is (not )?marked as withdrawn$/,
-  async function (this: SpecWorld, which: string, not: string | null) {
+  async function (this: WebWorld, which: string, not: string | null) {
     assert.equal(
       (await gameAt(this, which).getAttribute("data-withdrawn")) !== null,
       not === null,
@@ -98,7 +94,7 @@ Then(
 
 Then(
   /^the (first|second|third) game is struck through$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     for (const line of ["first", "second"]) {
       assert.ok(
         await isStruckThrough(lineOf(this, line, which)),
@@ -112,7 +108,7 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game names "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, name: string) {
+  async function (this: WebWorld, line: string, which: string, name: string) {
     assert.equal(
       await textOf(lineOf(this, line, which).locator(".game-name")),
       name,
@@ -122,7 +118,7 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game scores "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, score: string) {
+  async function (this: WebWorld, line: string, which: string, score: string) {
     assert.equal(
       await textOf(lineOf(this, line, which).locator(".game-score")),
       score,
@@ -132,7 +128,7 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game ends with "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, words: string) {
+  async function (this: WebWorld, line: string, which: string, words: string) {
     assert.ok(
       (await textOf(lineOf(this, line, which))).endsWith(words),
       `It says ${await textOf(lineOf(this, line, which))}.`,
@@ -143,7 +139,7 @@ Then(
 Then(
   /^the (first|second) line of the (first|second|third) game represents "(.*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     line: string,
     which: string,
     representing: string,
@@ -157,7 +153,7 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game represents nothing$/,
-  async function (this: SpecWorld, line: string, which: string) {
+  async function (this: WebWorld, line: string, which: string) {
     assert.equal(
       await lineOf(this, line, which).locator(".game-representing").count(),
       0,
@@ -165,20 +161,17 @@ Then(
   },
 );
 
-const flagOn = (world: SpecWorld, line: string, which: string): Locator =>
+const flagOn = (world: WebWorld, line: string, which: string): Locator =>
   lineOf(world, line, which).locator(".game-flag");
 
 // The picture the flag is, as the site serves it, under whatever name it is
 // given to be kept by.
 Then(
   /^the (first|second) line of the (first|second|third) game shows the flag of "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, code: string) {
-    const flag = Flags.thereAre.find(code);
-    assert.ok(flag !== undefined, `There is no flag ${code}.`);
+  async function (this: WebWorld, line: string, which: string, code: string) {
     const shown = (await flagOn(this, line, which).getAttribute("src")) ?? "";
-    const [kept] = flag.relativePath.split(".");
     assert.ok(
-      shown.includes(`/images/${kept!}.`),
+      shown.includes(`/images/famfamfam/flags/${code}.`),
       `The flag shown is ${shown}.`,
     );
   },
@@ -186,14 +179,14 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game shows no flag$/,
-  async function (this: SpecWorld, line: string, which: string) {
+  async function (this: WebWorld, line: string, which: string) {
     assert.equal(await flagOn(this, line, which).count(), 0);
   },
 );
 
 Then(
   /^the flag on the (first|second) line of the (first|second|third) game is named "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, name: string) {
+  async function (this: WebWorld, line: string, which: string, name: string) {
     assert.equal(await flagOn(this, line, which).getAttribute("alt"), name);
   },
 );
@@ -214,7 +207,7 @@ const colourOf = (found: Locator): Promise<string> =>
 // name is in the panel's ink, which is as dark as the page has.
 Then(
   /^what the (first|second) line of the (first|second|third) game represents is lighter than its name$/,
-  async function (this: SpecWorld, line: string, which: string) {
+  async function (this: WebWorld, line: string, which: string) {
     const found = lineOf(this, line, which);
     assert.notEqual(
       await colourOf(found.locator(".game-representing")),
@@ -227,7 +220,7 @@ Then(
 
 Then(
   /^the (first|second) line of the (first|second|third) game is beside "(.*)"$/,
-  async function (this: SpecWorld, line: string, which: string, words: string) {
+  async function (this: WebWorld, line: string, which: string, words: string) {
     // Found by where it is laid out rather than by what it is, since what is
     // beside a line differs from one list of games to another: the
     // competition beside the winner on a tournament's page, how long ago on
@@ -248,7 +241,7 @@ Then(
 
 Then(
   /^the (first|second|third) game was added "(.*)" ago$/,
-  async function (this: SpecWorld, which: string, ago: string) {
+  async function (this: WebWorld, which: string, ago: string) {
     assert.equal(await textOf(gameAt(this, which).locator(".game-ago")), ago);
   },
 );
@@ -263,7 +256,7 @@ const boxOf = async (
 
 Then(
   /^the competition of the (first|second|third) game is to the right of its winner$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     const winner = await boxOf(
       lineOf(this, "first", which).locator(".game-score"),
     );
@@ -280,7 +273,7 @@ Then(
 
 Then(
   /^the competition of the (first|second|third) game is beneath its loser$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     const loser = await boxOf(lineOf(this, "second", which));
     const competition = await boxOf(
       gameAt(this, which).locator(".game-competition"),
@@ -297,7 +290,7 @@ Then(
 // second.
 Then(
   "the competition is headed {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const heading = this.browserPage.locator("main h2").first();
     await heading.waitFor();
     assert.equal((await heading.innerText()).trim(), name);
@@ -313,7 +306,7 @@ Then(
 // numbers and a month the browser names.
 Then(
   "every word in the page's content but the tournament's own is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const stray = await unmarkedWithin(this, "main", [
       "main h1",
       // The competition's name, as the tournament's is, and the script that

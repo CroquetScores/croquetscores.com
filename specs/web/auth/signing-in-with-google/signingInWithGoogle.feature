@@ -42,6 +42,9 @@ Feature: Signing in with Google
   Google is not asked by these scenarios. A stand-in plays its part, as it
   does in `google.feature`.
 
+  Background:
+    Given a site that has been given Google's credentials
+
   Rule: The sign in page offers signing in with Google where the site can
 
     Scenario: The sign in page offers signing in with Google
@@ -293,7 +296,7 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       And the sign in page is open
       When the reader signs in with Google
-      Then the dialog says the message for "SignInWithGoogle.EmailAddressNotVerified"
+      Then the dialog says "Google has not confirmed that email address is yours, so it cannot be used with Google here. Use your email address below instead."
 
     Scenario: A Google account that gives no name is said on the sign in page
       Given a viewport 1200 pixels wide
@@ -303,7 +306,7 @@ Feature: Signing in with Google
       And Google gives no name
       And the sign in page is open
       When the reader signs in with Google
-      Then the dialog says the message for "SignInWithGoogle.NameMissing"
+      Then the dialog says "Google did not tell us your name, and an account needs one. Use your email address below instead."
 
     Scenario: An account linked to another Google account is said on the sign in page
       Given a viewport 1200 pixels wide
@@ -315,14 +318,14 @@ Feature: Signing in with Google
       And Google calls the reader "Sam Someone"
       And the sign in page is open
       When the reader signs in with Google
-      Then the dialog says the message for "SignInWithGoogle.LinkedToAnother"
+      Then the dialog says "That email address already has an account, linked to a different Google account. Sign in with that Google account, or with your email address and password."
 
     Scenario: Google that cannot be reached is said on the sign in page
       Given a viewport 1200 pixels wide
       And Google cannot be reached
       And the sign in page is open
       When the reader signs in with Google
-      Then the dialog says the message for "Google.Unreachable"
+      Then the dialog says "Google could not be reached just now. Try again in a few minutes, or use your email address below."
 
     Scenario: A reader Google turned away still goes back where they were sent from, signing in with their password
       Given a viewport 1200 pixels wide

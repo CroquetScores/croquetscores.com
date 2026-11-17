@@ -1,11 +1,8 @@
 import { Given } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
+import { keptOf } from "../../../../../../../support/kept.js";
 
 // A competition's page, opened at its address beneath its tournament's. Its
 // tabs are laid out and chosen as the tournament's page's are, so the steps
@@ -14,17 +11,17 @@ import type { SpecWorld } from "../../../../../../../../support/world.js";
 // The page is taken as open once it has drawn its heading: the competition's
 // name, or what it says in its place where the reader cannot see it.
 const openCompetition = async function (
-  this: SpecWorld,
+  this: WebWorld,
   competition: string,
   name: string,
 ): Promise<void> {
-  const tournament = await load(this, tournamentNamed(this, name));
+  const tournament = await keptOf(this, name);
   const found = tournament.competitions.find(
-    ({ reference }) => reference.name.toString() === competition,
+    (each) => each.name === competition,
   );
   assert.ok(found !== undefined, `${name} has no competition ${competition}.`);
   await this.browserPage.goto(
-    `${this.baseUrl!}/admin/${tournament.address.toString()}/competitions/${found.reference.slug.toString()}`,
+    `${this.baseUrl!}/admin/${tournament.address}/competitions/${found.slug}`,
   );
   // Where the reader is sent to sign in first there is no heading of the
   // admin's to wait for, and the sign in page is what the scenario looks at.

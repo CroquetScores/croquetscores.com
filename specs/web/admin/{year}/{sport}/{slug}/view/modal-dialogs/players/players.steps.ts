@@ -2,11 +2,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import {
-  load,
-  tournamentNamed,
-} from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
+import { keptOf } from "../../../../../../../support/kept.js";
 import {
   eventually,
   retried,
@@ -20,34 +17,34 @@ import {
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
 // The one box, found by the label the dialog gives it.
-const box = (world: SpecWorld): Locator =>
+const box = (world: WebWorld): Locator =>
   dialogOf(world).getByLabel("Players", { exact: true });
 
 // What a scenario last wrote in the box, to hold what is left in it to.
-const written = new WeakMap<SpecWorld, string>();
+const written = new WeakMap<WebWorld, string>();
 
 // What is drawn in the dialog ------------------------------------------------------
 
 // A caption that is hidden is still in the page, for a screen reader, but is
 // no larger than a point.
-Then("the players dialog draws no caption", async function (this: SpecWorld) {
+Then("the players dialog draws no caption", async function (this: WebWorld) {
   const size = await dialogOf(this).locator(".field-label").boundingBox();
   assert.ok(size === null || (size.width <= 1 && size.height <= 1));
 });
 
 Then(
   "the players dialog draws no explanation",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await dialogOf(this).locator(".field-explanation").count(), 0);
   },
 );
 
 Then(
   "the players dialog is {int} pixels wide",
-  async function (this: SpecWorld, width: number) {
+  async function (this: WebWorld, width: number) {
     const size = await dialogOf(this).boundingBox();
     assert.ok(size !== null);
     assert.ok(Math.abs(size.width - width) <= 1, `It is ${size.width} wide.`);
@@ -56,7 +53,7 @@ Then(
 
 Then(
   "the players dialog is {int} pixels from the left of the window",
-  async function (this: SpecWorld, left: number) {
+  async function (this: WebWorld, left: number) {
     const size = await dialogOf(this).boundingBox();
     assert.ok(size !== null);
     assert.ok(Math.abs(size.x - left) <= 1, `It is ${size.x} from it.`);
@@ -67,12 +64,12 @@ Then(
 
 // The last dialog open, since one that tells the reader something is opened
 // over the one that sent it and is the one being read.
-const helpIcon = (world: SpecWorld): Locator =>
+const helpIcon = (world: WebWorld): Locator =>
   dialogOf(world).locator("a.dialog-help").last();
 
 Then(
   "the players dialog has a help icon called {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(
       await dialogOf(this).getByRole("link", { name, exact: true }).count(),
       1,
@@ -82,37 +79,37 @@ Then(
 
 Then(
   "the help icon leads to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     assert.equal(await helpIcon(this).getAttribute("href"), address);
   },
 );
 
 // The link inside a refusal's words, which is not the help icon in the title bar.
-const refusalLink = (world: SpecWorld): Locator =>
+const refusalLink = (world: WebWorld): Locator =>
   dialogOf(world).locator(".field-message a");
 
 Then(
   "the refusal's link leads to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     await eventually(this, async () => {
       assert.equal(await refusalLink(this).getAttribute("href"), address);
     });
   },
 );
 
-Then("the refusal's link opens another tab", async function (this: SpecWorld) {
+Then("the refusal's link opens another tab", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await refusalLink(this).getAttribute("target"), "_blank");
   });
 });
 
-Then("the help icon opens another tab", async function (this: SpecWorld) {
+Then("the help icon opens another tab", async function (this: WebWorld) {
   assert.equal(await helpIcon(this).getAttribute("target"), "_blank");
 });
 
 Then(
   "the help icon is level with the dialog's title",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const icon = await helpIcon(this).boundingBox();
     const title = await dialogOf(this).locator(".dialog-title").boundingBox();
     assert.ok(icon !== null && title !== null, "One of them is not drawn.");
@@ -124,7 +121,7 @@ Then(
 
 Then(
   "the page has the section {string} with the bookmark {string}",
-  async function (this: SpecWorld, heading: string, bookmark: string) {
+  async function (this: WebWorld, heading: string, bookmark: string) {
     assert.equal(
       (
         (await this.browserPage.locator(`h2#${bookmark}`).textContent()) ?? ""
@@ -138,7 +135,7 @@ Then(
 // over the top of the window, so the section must stop beneath it.
 Then(
   "the section {string} is below the pinned bar",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     await retried(async () => {
       const section = await this.browserPage
         .getByRole("heading", { name: heading, exact: true })
@@ -155,12 +152,12 @@ Then(
 
 // Beside Add Player ---------------------------------------------------------------
 
-const buttonsOfTheTab = (world: SpecWorld): Locator =>
+const buttonsOfTheTab = (world: WebWorld): Locator =>
   tabPanel(world).locator("section > p button");
 
 Then(
   "the button after {string} is {string}",
-  async function (this: SpecWorld, before: string, after: string) {
+  async function (this: WebWorld, before: string, after: string) {
     await eventually(this, async () => {
       const names = (await buttonsOfTheTab(this).allInnerTexts()).map((words) =>
         words.trim(),
@@ -173,7 +170,7 @@ Then(
 // Looked for only once the tab has drawn its list of players, which is after it
 // knows what the reader may do: before then a button that is not there is not
 // there for want of the tab, and would be taken for one rightly kept away.
-Then("{string} is not offered", async function (this: SpecWorld, name: string) {
+Then("{string} is not offered", async function (this: WebWorld, name: string) {
   await tabPanel(this).locator(".listed, .listed-none").first().waitFor();
   assert.equal(
     await buttonsOfTheTab(this)
@@ -183,7 +180,7 @@ Then("{string} is not offered", async function (this: SpecWorld, name: string) {
   );
 });
 
-When("the way to add players is pressed", async function (this: SpecWorld) {
+When("the way to add players is pressed", async function (this: WebWorld) {
   await buttonsOfTheTab(this).nth(1).click();
 });
 
@@ -191,7 +188,7 @@ When("the way to add players is pressed", async function (this: SpecWorld) {
 // every list needs.
 Given(
   "a list of {int} players is typed as the {string}",
-  async function (this: SpecWorld, count: number, label: string) {
+  async function (this: WebWorld, count: number, label: string) {
     assert.equal(label, "Players");
     const lines = [
       "Name",
@@ -210,7 +207,7 @@ Given(
 // The lines as the reader would paste them, from a spreadsheet or an entry form.
 Given(
   "these lines are typed as the {string}:",
-  async function (this: SpecWorld, label: string, text: string) {
+  async function (this: WebWorld, label: string, text: string) {
     assert.equal(label, "Players");
     // A tab is written \t, since an editor turns a real one into spaces.
     const lines = text.replace(/\\t/g, "\t");
@@ -221,7 +218,7 @@ Given(
 
 Then(
   "{string} takes several lines",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await dialogOf(this)
         .getByLabel(label, { exact: true })
@@ -233,7 +230,7 @@ Then(
 
 Then(
   "{string} says the lines it was given",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.equal(
         await dialogOf(this).getByLabel(label, { exact: true }).inputValue(),
@@ -245,14 +242,14 @@ Then(
 
 // What was refused, line by line -----------------------------------------------
 
-const refusedOn = (world: SpecWorld, code: string, line: number): Locator =>
+const refusedOn = (world: WebWorld, code: string, line: number): Locator =>
   dialogOf(world).locator(
     `.field-message [data-code="${code}"][data-line="${String(line)}"]`,
   );
 
 Then(
   "{string} is refused with {string} on line {int}",
-  async function (this: SpecWorld, _label: string, code: string, line: number) {
+  async function (this: WebWorld, _label: string, code: string, line: number) {
     await eventually(this, async () => {
       assert.equal(
         await refusedOn(this, code, line).count(),
@@ -265,7 +262,7 @@ Then(
 
 Then(
   "{string} is refused once with {string}",
-  async function (this: SpecWorld, _label: string, code: string) {
+  async function (this: WebWorld, _label: string, code: string) {
     await eventually(this, async () => {
       assert.equal(
         await dialogOf(this)
@@ -280,7 +277,7 @@ Then(
 
 Then(
   "{string} is not refused on line {int}",
-  async function (this: SpecWorld, _label: string, line: number) {
+  async function (this: WebWorld, _label: string, line: number) {
     // Waited for what is refused elsewhere first, so that nothing refused yet
     // is not taken for nothing refused at all.
     await dialogOf(this).locator(".field-message span").first().waitFor();
@@ -296,17 +293,15 @@ Then(
 // What was kept ------------------------------------------------------------------
 
 const namesOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   tournament: string,
 ): Promise<readonly string[]> =>
-  (await load(world, tournamentNamed(world, tournament))).players.map(
-    (player) => player.name.toString(),
-  );
+  (await keptOf(world, tournament)).players.map((player) => player.name);
 
 Then(
   "the player {string} of {string} comes before the player {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     first: string,
     tournament: string,
     second: string,
@@ -321,7 +316,7 @@ Then(
 
 Then(
   "the Players tab lists the player {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
         await tabPanel(this)
@@ -336,11 +331,10 @@ Then(
 
 Then(
   "the player {string} of {string} has no handicap",
-  async function (this: SpecWorld, name: string, tournament: string) {
+  async function (this: WebWorld, name: string, tournament: string) {
     await eventually(this, async () => {
-      const players = (await load(this, tournamentNamed(this, tournament)))
-        .players;
-      const player = players.find((each) => each.name.toString() === name);
+      const players = (await keptOf(this, tournament)).players;
+      const player = players.find((each) => each.name === name);
       assert.ok(player !== undefined, `${tournament} has no player ${name}.`);
       assert.equal(player.handicap, undefined);
     });

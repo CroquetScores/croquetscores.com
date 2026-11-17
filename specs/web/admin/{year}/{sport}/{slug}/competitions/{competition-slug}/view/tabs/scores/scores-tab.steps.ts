@@ -1,9 +1,8 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../../../../../../../support/world.js";
-import { scenarioOf as domainScenarioOf } from "../../../../../../../../../../domain/aggregates/tournaments/tournament/aTournament.js";
+import type { WebWorld } from "../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
 import {
   eventually,
@@ -18,7 +17,7 @@ import { openCompetitionTab } from "../players/competition-players-tab.steps.js"
 
 When(
   /^the scores of "([^"]*)" in "([^"]*)" are open(?:ed)?$/,
-  async function (this: SpecWorld, competition: string, name: string) {
+  async function (this: WebWorld, competition: string, name: string) {
     await openCompetitionTab(this, competition, name, "scores");
   },
 );
@@ -27,7 +26,7 @@ type List = "in-use" | "archived";
 
 // A table whose rows are its body's, as a competition's scores are and as a
 // test's (view.feature beneath the test) are.
-const rows = (world: SpecWorld, list?: List): Locator =>
+const rows = (world: WebWorld, list?: List): Locator =>
   tabPanel(world).locator(
     list === undefined
       ? "[data-listed] > .listed-item"
@@ -46,7 +45,7 @@ const said = async (row: Locator): Promise<string> =>
     await partOf(row, "loser-score"),
   ].join(" ");
 
-const saidIn = async (world: SpecWorld, list?: List): Promise<string[]> => {
+const saidIn = async (world: WebWorld, list?: List): Promise<string[]> => {
   const all = rows(world, list);
   const count = await all.count();
   const found: string[] = [];
@@ -71,7 +70,7 @@ const isScore = (
 };
 
 const rowOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   winner: string,
   loser: string,
   scores?: string,
@@ -83,7 +82,7 @@ const rowOf = async (
 };
 
 const placeIn = async (
-  world: SpecWorld,
+  world: WebWorld,
   winner: string,
   loser: string,
   list?: List,
@@ -95,7 +94,7 @@ const SCORE = String.raw`the score of "([^"]*)" beating "([^"]*)"(?: (\S+ to \S+
 Then(
   new RegExp(`^${SCORE} is listed$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     winner: string,
     loser: string,
     scores: string | null,
@@ -113,7 +112,7 @@ for (const [said, list, expected] of [
 ] as const) {
   Then(
     new RegExp(`^the score of "([^"]*)" beating "([^"]*)" is ${said}$`),
-    async function (this: SpecWorld, winner: string, loser: string) {
+    async function (this: WebWorld, winner: string, loser: string) {
       await eventually(this, async () => {
         assert.equal(
           (await placeIn(this, winner, loser, list)) !== -1,
@@ -134,7 +133,7 @@ for (const [words, earlier] of [
       `^the score of "([^"]*)" beating "([^"]*)" is listed ${words} the score of "([^"]*)" beating "([^"]*)"$`,
     ),
     async function (
-      this: SpecWorld,
+      this: WebWorld,
       winner: string,
       loser: string,
       otherWinner: string,
@@ -153,7 +152,7 @@ for (const [words, earlier] of [
 Then(
   /^the (first|last) score listed is of "([^"]*)" beating "([^"]*)"$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     which: string,
     winner: string,
     loser: string,
@@ -178,7 +177,7 @@ const PARTS: Readonly<Record<string, string>> = {
 
 Then(
   /^the first (score listed|archived score) shows "([^"]*)" as its (winner|winner's score|loser|loser's score)$/,
-  async function (this: SpecWorld, which: string, shown: string, part: string) {
+  async function (this: WebWorld, which: string, shown: string, part: string) {
     await eventually(this, async () => {
       const row = rows(
         this,
@@ -191,7 +190,7 @@ Then(
 
 Then(
   "in the first score listed {string} is shown before {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await eventually(this, async () => {
       const row = (await saidIn(this, "in-use"))[0] ?? "";
       assert.ok(
@@ -205,7 +204,7 @@ Then(
 );
 
 const optionOf = async (
-  world: SpecWorld,
+  world: WebWorld,
   option: string,
   winner: string,
   loser: string,
@@ -220,7 +219,7 @@ const optionOf = async (
 Then(
   new RegExp(`^${SCORE} (offers|does not offer) "([^"]*)"$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     winner: string,
     loser: string,
     scores: string | null,
@@ -241,7 +240,7 @@ Then(
 When(
   new RegExp(`^"([^"]*)" is pressed on ${SCORE}$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     winner: string,
     loser: string,
@@ -258,7 +257,7 @@ When(
 Then(
   /^the score of "([^"]*)" beating "([^"]*)" is (not )?struck through$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     winner: string,
     loser: string,
     not: string | null,
@@ -286,7 +285,7 @@ Then(
 // By what it is marked with, since the words are in the reader's language.
 Then(
   "the score of {string} beating {string} is announced as withdrawn",
-  async function (this: SpecWorld, winner: string, loser: string) {
+  async function (this: WebWorld, winner: string, loser: string) {
     await eventually(this, async () => {
       assert.equal(
         await (
@@ -302,7 +301,7 @@ Then(
 
 Then(
   "the score of {string} beating {string} is announced as archived",
-  async function (this: SpecWorld, winner: string, loser: string) {
+  async function (this: WebWorld, winner: string, loser: string) {
     await eventually(this, async () => {
       assert.equal(
         await (
@@ -316,12 +315,12 @@ Then(
   },
 );
 
-const heading = (world: SpecWorld): Locator =>
+const heading = (world: WebWorld): Locator =>
   tabPanel(world).locator(".listed-archived-heading");
 
 Then(
   "the archived scores are headed {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await eventually(this, async () => {
       assert.equal((await heading(this).innerText()).trim(), words);
     });
@@ -330,7 +329,7 @@ Then(
 
 Then(
   "no heading for the archived scores is shown",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await rows(this).count()) > 0);
       assert.equal(await heading(this).count(), 0);
@@ -341,7 +340,7 @@ Then(
 // The tab's own list, or a test's page's, which is its scores.
 Then(
   /^the (?:tab|page) says there are no scores$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.equal(await rows(this).count(), 0);
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
@@ -351,7 +350,7 @@ Then(
 
 Then(
   "{string} is above the scores",
-  async function (this: SpecWorld, option: string) {
+  async function (this: WebWorld, option: string) {
     await eventually(this, async () => {
       const offer = await tabPanel(this)
         .locator("section > p button")
@@ -370,7 +369,7 @@ Then(
 Then(
   new RegExp(`^"([^"]*)" on ${SCORE} is at least (\\d+) pixels tall$`),
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     winner: string,
     loser: string,
@@ -391,7 +390,7 @@ Then(
 // score is a number and whatever the scorer wrote after it.
 Then(
   "every word in the tab but the players' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
         ".score-number",
@@ -408,7 +407,7 @@ Then(
 // Every word in whatever modal dialog is open, which says nothing typed.
 Then(
   "every word in the modal dialog is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator("dialog[open]").waitFor();
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "dialog[open]", []);
@@ -417,7 +416,7 @@ Then(
   },
 );
 
-When("the way to add a score is pressed", async function (this: SpecWorld) {
+When("the way to add a score is pressed", async function (this: WebWorld) {
   await settled(this);
   await tabPanel(this).locator("section > p button").first().click();
 });
@@ -425,7 +424,7 @@ When("the way to add a score is pressed", async function (this: SpecWorld) {
 // By what it does rather than its words, which are the reader's language's.
 When(
   "the way to correct the score of {string} beating {string} is pressed",
-  async function (this: SpecWorld, winner: string, loser: string) {
+  async function (this: WebWorld, winner: string, loser: string) {
     await settled(this);
     await (
       await rowOf(this, winner, loser)
@@ -438,7 +437,7 @@ When(
 Then(
   "{string} on the score of {string} beating {string} comes before {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     winner: string,
     loser: string,
@@ -473,7 +472,7 @@ Then(
 Then(
   "{string} on the score of {string} beating {string} has the focus",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     winner: string,
     loser: string,
@@ -494,26 +493,11 @@ Then(
   },
 );
 
-// What a knockout added before the scenario is to be ---------------------------
-
-Given(
-  /^the knockout's (first|second) round is to be the best of (\d+)$/,
-  function (this: SpecWorld, round: string, games: string) {
-    domainScenarioOf(this).drawRounds[round === "first" ? 0 : 1] =
-      Number(games);
-  },
-);
-
 // Beneath the score it was pressed on, by the refusal's code: the words beside
 // it are only its words.
 Then(
   /^the score of "([^"]*)" beating "([^"]*)" says it was refused with "([^"]*)"$/,
-  async function (
-    this: SpecWorld,
-    winner: string,
-    loser: string,
-    code: string,
-  ) {
+  async function (this: WebWorld, winner: string, loser: string, code: string) {
     await eventually(this, async () => {
       const row = await rowOf(this, winner, loser);
       assert.equal(
@@ -528,7 +512,7 @@ Then(
 
 Then(
   /^the score of "([^"]*)" beating "([^"]*)" says nothing was refused$/,
-  async function (this: SpecWorld, winner: string, loser: string) {
+  async function (this: WebWorld, winner: string, loser: string) {
     const row = await rowOf(this, winner, loser);
     assert.equal(await row.locator(".listed-score-refused").count(), 0);
   },
@@ -536,7 +520,7 @@ Then(
 
 Then(
   "nothing is said above the list of scores",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     // Once the list has been asked for again after the press.
     await eventually(this, async () => {
       assert.ok((await rows(this).count()) > 0);
@@ -549,7 +533,7 @@ Then(
 // as is asked of the page, which is where the stylesheet is applied.
 Then(
   "the winner, the winner's score, the loser and the loser's score of the first score listed do not wrap",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await rows(this, "in-use").count()) > 0);
       for (const part of ["winner", "winner-score", "loser", "loser-score"]) {
@@ -564,7 +548,7 @@ Then(
 
 Then(
   "the losers of the scores listed start at the same place",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const all = rows(this, "in-use");
       const count = await all.count();
@@ -587,7 +571,7 @@ Then(
 
 Then(
   "what can be done with the first score listed reaches the right edge of the list",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const options = await rows(this, "in-use")
         .first()
@@ -607,7 +591,7 @@ Then(
 
 Then(
   "what can be done with the first score listed has {int} pixels of padding before it",
-  async function (this: SpecWorld, pixels: number) {
+  async function (this: WebWorld, pixels: number) {
     await eventually(this, async () => {
       assert.ok((await rows(this, "in-use").count()) > 0);
       const padding = await this.browserPage.evaluate<string>(
@@ -626,7 +610,7 @@ const ORDINALS: Readonly<Record<string, number>> = {
 
 Then(
   /^the (first|second|third) score listed shows the number "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, shown: string) {
+  async function (this: WebWorld, which: string, shown: string) {
     await eventually(this, async () => {
       const row = rows(this, "in-use").nth(ORDINALS[which] ?? 0);
       assert.equal(await partOf(row, "number"), shown);
@@ -636,7 +620,7 @@ Then(
 
 Then(
   /^the first archived score shows the number "([^"]*)"$/,
-  async function (this: SpecWorld, shown: string) {
+  async function (this: WebWorld, shown: string) {
     await eventually(this, async () => {
       const row = rows(this, "archived").first();
       assert.equal(await partOf(row, "number"), shown);
@@ -646,7 +630,7 @@ Then(
 
 Then(
   "the number of the first score listed is before its winner",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const row = rows(this, "in-use").first();
       const number = await row.locator(".score-number").boundingBox();
@@ -659,7 +643,7 @@ Then(
 
 // Semantic markup, which is asked of the page by the element, since a table is
 // told to a reader who cannot see by being one and by no style.
-const tableOf = (world: SpecWorld, list: List): Locator =>
+const tableOf = (world: WebWorld, list: List): Locator =>
   tabPanel(world).locator(`table:has(> tbody[data-listed="${list}"])`);
 
 for (const [which, list] of [
@@ -668,7 +652,7 @@ for (const [which, list] of [
 ] as const) {
   Then(
     `the ${which === "in use" ? "scores in use are" : "archived scores are"} a table`,
-    async function (this: SpecWorld) {
+    async function (this: WebWorld) {
       await eventually(this, async () => {
         assert.equal(await tableOf(this, list).count(), 1);
       });
@@ -678,7 +662,7 @@ for (const [which, list] of [
 
 Then(
   "the first score listed is a row of the table",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const row = rows(this, "in-use").first();
       assert.equal(await row.locator("xpath=self::tr").count(), 1);
@@ -688,7 +672,7 @@ Then(
 
 Then(
   "the first score listed has {int} cells",
-  async function (this: SpecWorld, cells: number) {
+  async function (this: WebWorld, cells: number) {
     await eventually(this, async () => {
       assert.equal(
         await rows(this, "in-use").first().locator("> td").count(),
@@ -700,7 +684,7 @@ Then(
 
 Then(
   "the table of scores has no column headings",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.equal(await tableOf(this, "in-use").count(), 1);
       assert.equal(await tableOf(this, "in-use").locator("th").count(), 0);
@@ -711,7 +695,7 @@ Then(
 // The word has a cell of its own, which is the one the reader is told it by.
 Then(
   "the first score listed shows the word {string} in its own cell",
-  async function (this: SpecWorld, word: string) {
+  async function (this: WebWorld, word: string) {
     await eventually(this, async () => {
       const cell = rows(this, "in-use").first().locator("> td.score-between");
       assert.equal(await cell.count(), 1, "It has no cell of its own.");
@@ -723,7 +707,7 @@ Then(
 // Drawn, and between the two it comes between, rather than hidden.
 Then(
   "the word between the winner and the loser of the first score listed is drawn between them",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const row = rows(this, "in-use").first();
       const score = await row.locator(".score-winner-score").boundingBox();

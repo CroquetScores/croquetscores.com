@@ -1,39 +1,21 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { toSay } from "../../../application/operations/tournaments/managerNoteRequests.js";
-import { withScripting } from "../../support/browser.js";
+import type { WebWorld } from "../../support/world.js";
 
 // A note's page is drawn by the server, so what is read is there once the
 // page has loaded.
 
-const noteText = (world: SpecWorld): Locator =>
+const noteText = (world: WebWorld): Locator =>
   world.browserPage.locator("main .note-text");
 
-const linkInNote = (world: SpecWorld, words: string): Locator =>
+const linkInNote = (world: WebWorld, words: string): Locator =>
   noteText(world).getByRole("link", { name: words, exact: true });
-
-When(
-  "the page at {string} is opened with scripting on",
-  async function (this: SpecWorld, path: string) {
-    await withScripting(this);
-    await this.browserPage.goto(`${this.baseUrl!}${path}`);
-  },
-);
-
-Then(
-  "the second-level heading is {string}",
-  async function (this: SpecWorld, heading: string) {
-    const said = await this.browserPage.locator("main h2").first().innerText();
-    assert.equal(said.trim(), heading);
-  },
-);
 
 Then(
   "the note draws {string} bold",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.deepEqual(await noteText(this).locator("strong").allInnerTexts(), [
       words,
     ]);
@@ -42,14 +24,14 @@ Then(
 
 Then(
   "the note's link {string} leads to {string}",
-  async function (this: SpecWorld, words: string, href: string) {
+  async function (this: WebWorld, words: string, href: string) {
     assert.equal(await linkInNote(this, words).getAttribute("href"), href);
   },
 );
 
 Then(
   "the note's link {string} is marked as not vouched for",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const rel = (
       (await linkInNote(this, words).getAttribute("rel")) ?? ""
     ).split(/\s+/);
@@ -58,19 +40,19 @@ Then(
   },
 );
 
-Then("the note says {string}", async function (this: SpecWorld, said: string) {
+Then("the note says {string}", async function (this: WebWorld, said: string) {
   assert.equal((await noteText(this).innerText()).trim(), said);
 });
 
 // What the note's script would have done, had it run: the page's title set to
 // "ran".
-Then("nothing the note says has run", async function (this: SpecWorld) {
+Then("nothing the note says has run", async function (this: WebWorld) {
   assert.notEqual(await this.browserPage.title(), "ran");
 });
 
 Then(
   "the note was written {string} ago",
-  async function (this: SpecWorld, ago: string) {
+  async function (this: WebWorld, ago: string) {
     const said = await this.browserPage.locator("main .note-ago").innerText();
     assert.equal(said.trim(), ago);
   },
@@ -78,7 +60,7 @@ Then(
 
 Then(
   "the note was edited {string} ago",
-  async function (this: SpecWorld, ago: string) {
+  async function (this: WebWorld, ago: string) {
     const said = await this.browserPage
       .locator("main .note-edited-ago")
       .innerText();
@@ -86,19 +68,19 @@ Then(
   },
 );
 
-Then("the note does not say it was edited", async function (this: SpecWorld) {
+Then("the note does not say it was edited", async function (this: WebWorld) {
   assert.equal(await this.browserPage.locator("main .note-edited").count(), 0);
 });
 
 // Paragraphs are kept as typed, parted by a blank line, as Markdown has them.
-const paragraphsOf = new WeakMap<SpecWorld, string[]>();
+const paragraphsOf = new WeakMap<WebWorld, string[]>();
 
 Given(
   "the manager note has a paragraph {string}",
-  function (this: SpecWorld, paragraph: string) {
+  function (this: WebWorld, paragraph: string) {
     const paragraphs = [...(paragraphsOf.get(this) ?? []), paragraph];
     paragraphsOf.set(this, paragraphs);
-    toSay(this, paragraphs.join("\n\n"));
+    this.noteSays = paragraphs.join("\n\n");
   },
 );
 
@@ -111,7 +93,7 @@ interface LineHeightInThePage {
 // multiplied by the font size, as the browser works it out.
 Then(
   "the second paragraph of the note starts a full line below the first",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const paragraphs = noteText(this).locator("p");
     assert.equal(await paragraphs.count(), 2);
     const first = await paragraphs.nth(0).boundingBox();

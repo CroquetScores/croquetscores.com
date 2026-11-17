@@ -5,13 +5,9 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
-import {
-  anApplicationWhoseAdministratorIsCalled,
-  anApplicationWithEmergencyContacts,
-  applicationFor,
-} from "../../support/browser.js";
-import { clockFor } from "../../support/clock.js";
+import type { WebWorld } from "../../support/world.js";
+import { allEmails, siteNow } from "../../support/control.js";
+import { siteTold } from "../../support/site.js";
 import { unmarked } from "../../support/languages.js";
 
 // The pages this feature names, by what a reader would call them.
@@ -25,45 +21,42 @@ const addressOf = (page: string): string => {
   return found;
 };
 
-const dialogOf = (world: SpecWorld): Locator =>
+const dialogOf = (world: WebWorld): Locator =>
   world.browserPage.locator("dialog[open]");
 
-const answerOf = (world: SpecWorld): Locator =>
+const answerOf = (world: WebWorld): Locator =>
   world.browserPage.locator("#field-message");
 
-const sendButtonOf = (world: SpecWorld): Locator =>
+const sendButtonOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main form .button-submit");
 
 // Who the scenario says holds the site's passwords, kept so that what was
 // queued can be asked of each. A setting of the site, read when it is built, so
 // it is said before the site is served.
-const contacts = new WeakMap<SpecWorld, readonly string[]>();
+const contacts = new WeakMap<WebWorld, readonly string[]>();
 
 // One step for the application's scenarios and for this one: said to an
 // application the scenario stood up it tells that, and otherwise the site the
 // browser is served is made with them.
 Given(
   "the emergency contacts are at {string} and {string}",
-  async function (this: SpecWorld, first: string, second: string) {
+  async function (this: WebWorld, first: string, second: string) {
     contacts.set(this, [first, second]);
-    if (this.registering !== undefined) {
-      this.registering.emergencyContactsAre([first, second]);
-      return;
-    }
-    this.baseUrl = await anApplicationWithEmergencyContacts(this, [
-      first,
-      second,
-    ]);
+    this.baseUrl = (
+      await siteTold({
+        EMERGENCY_CONTACT_EMAIL_ADDRESSES: `${first},${second}`,
+      })
+    ).baseUrl;
   },
 );
 
-const openPage = async (world: SpecWorld, page: string): Promise<void> => {
+const openPage = async (world: WebWorld, page: string): Promise<void> => {
   await world.browserPage.goto(`${world.baseUrl!}${addressOf(page)}`);
 };
 
 Given(
   "the page {string} is open",
-  async function (this: SpecWorld, page: string) {
+  async function (this: WebWorld, page: string) {
     await openPage(this, page);
     await answerOf(this).waitFor();
   },
@@ -71,28 +64,29 @@ Given(
 
 When(
   "the page {string} is opened",
-  async function (this: SpecWorld, page: string) {
+  async function (this: WebWorld, page: string) {
     await openPage(this, page);
   },
 );
 
 Given(
   "the administrator is called {string} at {string}",
-  async function (this: SpecWorld, name: string, emailAddress: string) {
-    this.baseUrl = await anApplicationWhoseAdministratorIsCalled(
-      this,
-      name,
-      emailAddress,
-    );
+  async function (this: WebWorld, name: string, emailAddress: string) {
+    this.baseUrl = (
+      await siteTold({
+        ADMINISTRATOR_EMAIL_FROM_NAME: name,
+        ADMINISTRATOR_EMAIL_ADDRESS: emailAddress,
+      })
+    ).baseUrl;
   },
 );
 
-const boxOf = (world: SpecWorld): Locator =>
+const boxOf = (world: WebWorld): Locator =>
   world.browserPage.locator("label:has(input[type=checkbox])");
 
 Then(
   "the box {string} is on the page",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await boxOf(this).waitFor();
     assert.equal(unmarked((await boxOf(this).innerText()).trim()), words);
   },
@@ -100,25 +94,25 @@ Then(
 
 Then(
   "the name in the box links to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     const link = boxOf(this).locator("a");
     await link.waitFor();
     assert.equal(await link.getAttribute("href"), address);
   },
 );
 
-Then("the box is not ticked", async function (this: SpecWorld) {
+Then("the box is not ticked", async function (this: WebWorld) {
   await boxOf(this).waitFor();
   assert.equal(await boxOf(this).locator("input").isChecked(), false);
 });
 
-Given("the box is ticked", async function (this: SpecWorld) {
+Given("the box is ticked", async function (this: WebWorld) {
   await boxOf(this).locator("input").check();
 });
 
 Then(
   "the warning {string} is on the page",
-  async function (this: SpecWorld, warning: string) {
+  async function (this: WebWorld, warning: string) {
     const shown = this.browserPage.locator(".emergency-warning");
     await shown.waitFor();
     assert.equal(unmarked((await shown.innerText()).trim()), warning);
@@ -127,7 +121,7 @@ Then(
 
 Then(
   "the warning is above everything else on the page",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const shown = this.browserPage.locator(".emergency-warning");
     await shown.waitFor();
     // The page is a stack of what it holds, top to bottom, and the warning is
@@ -138,7 +132,7 @@ Then(
 
 Then(
   "the question {string} is on the page",
-  async function (this: SpecWorld, question: string) {
+  async function (this: WebWorld, question: string) {
     const label = this.browserPage.locator(".field label").first();
     await label.waitFor();
     assert.equal(unmarked((await label.innerText()).trim()), question);
@@ -147,7 +141,7 @@ Then(
 
 Then(
   "the button {string} is on the page",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await sendButtonOf(this).waitFor();
     assert.equal(unmarked((await sendButtonOf(this).innerText()).trim()), name);
   },
@@ -156,7 +150,7 @@ Then(
 // What a second tab is: a page opened before the first asking was sent, which
 // was told they could ask. The site would say otherwise now, so it is made to
 // say what it said then.
-Given("the page is told they may ask now", async function (this: SpecWorld) {
+Given("the page is told they may ask now", async function (this: WebWorld) {
   await this.browserPage.route("**/api/site/emergency-access", (route) =>
     route.request().method() === "GET"
       ? route.fulfill({ json: { waitUntil: null } })
@@ -164,7 +158,7 @@ Given("the page is told they may ask now", async function (this: SpecWorld) {
   );
 });
 
-Then("the page tells them loudly to wait", async function (this: SpecWorld) {
+Then("the page tells them loudly to wait", async function (this: WebWorld) {
   const wait = this.browserPage.locator("[data-wait]");
   await wait.waitFor();
   assert.match(
@@ -175,38 +169,38 @@ Then("the page tells them loudly to wait", async function (this: SpecWorld) {
 
 Then(
   "the moment they must wait until is 48 hours from now",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const wait = this.browserPage.locator("[data-wait] time");
     await wait.waitFor();
     const until = Date.parse((await wait.getAttribute("datetime")) ?? "");
-    const hours = (until - clockFor(this).now.getTime()) / (60 * 60 * 1000);
+    const hours = (until - (await siteNow()).getTime()) / (60 * 60 * 1000);
     assert.ok(hours > 47 && hours <= 48, `${hours} hours from now.`);
   },
 );
 
 Then(
   "the page has no question and no button to send",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator("[data-wait]").waitFor();
     assert.equal(await this.browserPage.locator(".field label").count(), 0);
     assert.equal(await sendButtonOf(this).count(), 0);
   },
 );
 
-Then("the page does not tell them to wait", async function (this: SpecWorld) {
+Then("the page does not tell them to wait", async function (this: WebWorld) {
   // Waited for the form, which is drawn once the site has said they may ask.
   await sendButtonOf(this).waitFor();
   assert.equal(await this.browserPage.locator("[data-wait]").count(), 0);
 });
 
-Then("the question is no longer on the page", async function (this: SpecWorld) {
+Then("the question is no longer on the page", async function (this: WebWorld) {
   await this.browserPage.locator("[data-sent]").waitFor();
   assert.equal(await this.browserPage.locator(".field label").count(), 0);
 });
 
 Then(
   "the button to send is no longer on the page",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.locator("[data-sent]").waitFor();
     assert.equal(await sendButtonOf(this).count(), 0);
   },
@@ -214,17 +208,14 @@ Then(
 
 Given(
   "the answer {string} is typed",
-  async function (this: SpecWorld, answer: string) {
+  async function (this: WebWorld, answer: string) {
     await answerOf(this).fill(answer);
   },
 );
 
 // Pressing Send opens the dialog before anything is sent, so the step waits
 // for it: what follows asks about the dialog or about what was not sent.
-const pressSend = async function (
-  this: SpecWorld,
-  name: string,
-): Promise<void> {
+const pressSend = async function (this: WebWorld, name: string): Promise<void> {
   assert.equal(unmarked((await sendButtonOf(this).innerText()).trim()), name);
   await sendButtonOf(this).click();
   await dialogOf(this).waitFor();
@@ -235,14 +226,14 @@ When("the button {string} is pressed", pressSend);
 // Nothing opens, so what is waited for is the page saying why.
 When(
   "the button {string} is pressed with the box not ticked",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(unmarked((await sendButtonOf(this).innerText()).trim()), name);
     await sendButtonOf(this).click();
     await this.browserPage.locator(".page-refused").waitFor();
   },
 );
 
-Then("a dialog asks whether to send", async function (this: SpecWorld) {
+Then("a dialog asks whether to send", async function (this: WebWorld) {
   await dialogOf(this).waitFor();
   assert.equal(
     await dialogOf(this).locator(".dialog-buttons .button-submit").count(),
@@ -252,7 +243,7 @@ Then("a dialog asks whether to send", async function (this: SpecWorld) {
 });
 
 // Cancel is the dialog's one button that is not its submit button.
-When("the dialog is cancelled", async function (this: SpecWorld) {
+When("the dialog is cancelled", async function (this: WebWorld) {
   await dialogOf(this)
     .locator(".dialog-buttons button:not(.button-submit)")
     .click();
@@ -261,7 +252,7 @@ When("the dialog is cancelled", async function (this: SpecWorld) {
 
 // Closed once what it asked has been answered, whichever way: the page shows a
 // refusal where what was typed is, so the dialog is not left over it.
-const confirm = async function (this: SpecWorld): Promise<void> {
+const confirm = async function (this: WebWorld): Promise<void> {
   await dialogOf(this).locator(".dialog-buttons .button-submit").click();
   await dialogOf(this).waitFor({ state: "detached" });
 };
@@ -270,18 +261,18 @@ When("the dialog is confirmed", confirm);
 
 Then(
   "the answer typed is {string}",
-  async function (this: SpecWorld, answer: string) {
+  async function (this: WebWorld, answer: string) {
     assert.equal(await answerOf(this).inputValue(), answer);
   },
 );
 
-Then("the page says the message was sent", async function (this: SpecWorld) {
+Then("the page says the message was sent", async function (this: WebWorld) {
   await this.browserPage.locator("[data-sent]").waitFor();
 });
 
 Then(
   "the answer is refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     const refusal = this.browserPage.locator(".field-message");
     await refusal.waitFor();
     const refusedWith = (await refusal.getAttribute("data-refused")) ?? "";
@@ -296,7 +287,7 @@ Then(
 // words only for the codes it is told of (adminPage.ts), and one it is not told
 // of is said as "Something went wrong on the site.", which has the right code.
 const refusalReads = async (
-  world: SpecWorld,
+  world: WebWorld,
   where: string,
   words: string,
 ): Promise<void> => {
@@ -307,14 +298,14 @@ const refusalReads = async (
 
 Then(
   "the refusal of the answer reads {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await refusalReads(this, ".field-message", words);
   },
 );
 
 Then(
   "the refusal of the page reads {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await refusalReads(this, "[data-refused].page-refused", words);
   },
 );
@@ -322,33 +313,25 @@ Then(
 // What is waiting to be sent, as the application the scenario stood up has it
 // or as the site the browser was served has it: one step for both, since
 // "nothing was sent" is said the same of each.
-const waiting = async (
-  world: SpecWorld,
-): Promise<readonly { kind: string; to: string }[]> => {
-  if (world.registering !== undefined) return world.registering.queued();
-  const application = applicationFor(world);
-  const emails = await application.unitOfWork.inTransaction(() =>
-    application.emailQueue.emails(),
-  );
+const waiting = async (): Promise<readonly { kind: string; to: string }[]> =>
   // Only what the page sends: the confirmation the account the scenario made
   // was queued with, as it was made, is not what is being asked about.
-  return emails
+  (await allEmails())
     .filter(
       (email) => !email.givenUp && email.kind.startsWith("Email.Emergency"),
     )
-    .map((email) => ({ kind: email.kind, to: email.to ?? "" }));
-};
+    .map((email) => ({ kind: email.kind, to: email.to }));
 
-Then("no email is queued", async function (this: SpecWorld) {
-  assert.deepEqual(await waiting(this), [], "Something is queued.");
+Then("no email is queued", async function (this: WebWorld) {
+  assert.deepEqual(await waiting(), [], "Something is queued.");
 });
 
 Then(
   "the email {string} is queued for each emergency contact",
-  async function (this: SpecWorld, kind: string) {
+  async function (this: WebWorld, kind: string) {
     const named = contacts.get(this);
     assert.ok(named !== undefined, "No emergency contacts were named.");
-    const queued = await waiting(this);
+    const queued = await waiting();
     for (const contact of named) {
       assert.equal(
         queued.filter((email) => email.kind === kind && email.to === contact)

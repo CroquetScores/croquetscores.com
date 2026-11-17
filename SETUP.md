@@ -100,7 +100,11 @@ ESLint enforces all of this (§9); breaking it fails CI.
 /specs                     mirrors /src; each .feature sits with its .steps.ts
   /support                 World, hooks, the example requests and events, shared
                            step helpers
-  /domain /application /infrastructure /web
+  /domain /application /infrastructure
+                           the specs of the layer of the same name
+  /web                     the website by its address alone: black-box specs
+  /web-units               the specs of the web tier that run in-process, and
+                           have not (or cannot be) been made black-box
 /scripts                   the repository's own tooling: building, testing,
                            deploying, and looking after the database and the site
 /assets                    css and images served as static files
@@ -113,6 +117,7 @@ Rules across the tree:
 - Where a class has more to say than one feature can be read as, each of its methods gets a feature of its own, in a folder beneath the class's named for the method, the feature cased as the method is: `specs/domain/aggregates/accounts/account/set-new-password/setNewPassword.feature` for `Account.setNewPassword`.
 - `specs/support/` is the exception: it holds what every feature shares, so it is loaded everywhere and may not reach into `src/infrastructure/`.
 - A spec obeys the import rule of the layer it describes. `specs/domain/` may reach `src/domain/` and no further out. `specs/infrastructure/` is the one place a spec touches a concrete implementation, because that is precisely what it is describing.
+- `specs/web/` imports **nothing** of the repository: not `src/`, not `specs/support/`, not another layer's specs, and not `specs/web-units/`. It starts the site as a process of its own and knows it by its address, so a scenario there is a statement about the website and not about how it is built (§8.3). ESLint enforces it (`black-box/only-the-site` in `eslint.config.js`), and so does the way Cucumber is run (§8.3), so breaking it fails the build rather than being noticed in review.
 - Where a feature describes an interface, the fake that satisfies it sits beside that feature, so the fake and the scenarios defining it stay together.
 - **There is no `/tests` folder.** Anything worth testing is worth stating as behaviour in a `.feature` file.
 - `NodeNext` ESM means relative imports carry `.js` even in TypeScript sources: `import { Account } from "../Account.js";`
@@ -539,13 +544,39 @@ Those builds of the admin are `build:admin:alongside`, which writes the new buil
 
 The `@postgres` hooks have to run before the `@browser` ones, because a scenario's application is built over a database that must already exist. Cucumber runs hooks in the order they were defined, so the browser harness imports the database harness before it defines its own.
 
-That harness lives in `specs/web/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not.
+That harness lives in `specs/web-units/support/`, for the same reason the database one lives in `specs/infrastructure/support/`: it reaches into the layer it describes, and `specs/support/` may not. It is the harness of the in-process specs. The specs of the website by its address alone have a harness of their own, which names nothing of the site's code (§8.3).
 
 The `tests` job in CI does not run the `@browser` scenarios, and so installs no browser: `test:nobrowser` is what it runs. They are run in two other places. A job of its own on a pull request runs those in the feature files the pull request changed, and finds out first whether there are any, so that a pull request changing none installs nothing. `browser.yml` runs every one of them each Australian night and on request, in one job. Both install Chromium and only Chromium: a second engine is a second download on every run, and wants a reason.
 
 The split is there because the `@browser` scenarios are about two fifths of the scenarios and about five sixths of the runner time: all of them took about an hour and a half of it, against a quarter of an hour for the rest. The cost of it is that a change under `src/web/` with no feature file beside it is not seen by its pull request's run, and is seen by the next Australian night's. Where that is not soon enough, `browser.yml` can be run on the branch from the Actions page, or `npm run test:browser` by hand.
 
-### 8.3 Gherkin conventions
+### 8.3 Specs of the website alone
+
+`specs/web/` holds the scenarios that are about the website as a reader meets it, and nothing else. They import nothing of the repository. The site is **started as a process of its own** (`tsx src/web/server.ts`, on a port that is free and never 3000) over **a database of its own**, and a scenario knows it only by its address: a browser, or a plain request. What is started is a command, and what it is told is settings, as whoever deploys it would tell it.
+
+Starting a site takes longer than most scenarios do, so each Cucumber worker starts one site and one database, on its first scenario, and each scenario begins by telling the site to forget what the last one left. The database is named `zzz_delete_me_spec_w…`, made from a template that was migrated once, and dropped with the site when the worker ends (`specs/web/support/site.ts`).
+
+What a scenario needs that no page lets it do is done through the site's **test control** (`src/web/testControl.ts`, `testControlReaders.ts`, `testControlTournaments.ts`; specified in `specs/web-units/common/test-control/testControl.feature`): setting the clock, forgetting what was kept, making and forgetting an account, handing back a session to be held as the cookie, and adding what a tournament is made of through the commands the site's own pages send (tournaments, blocks, knockouts, Swiss draws, players, teams, tests, entries, scores, manager notes, commentaries and comments, with moving, withdrawing and archiving them). A scenario names a thing by what it called it and the control answers with its id, which `specs/web/support` keeps. What a scenario sets up is stamped at the moment it last had the clock read, or a usual one, so that what a page says of how long ago it was does not depend on how long the scenario took; an account and its links are stamped by the machine's clock, so that a clock set into the past does not make them stale. For the account pages it also tells what email is queued for an address (and what filled it in), what an account is called and whether it is confirmed, how many accounts, sessions and failed sign ins there are, whose session a cookie is, sends a way back in or the asking to forget, brings an account over from the old site, gives and takes away a role, and says how many emails, askings and failed sign ins were written before. Never Google: reCAPTCHA judges as the scenario says and keeps the tokens it was asked about, and reCAPTCHA and Have I Been Pwned can each be taken down and brought back. The harness reads the site's log as it is written. The site is given the control by one setting, `TEST_CONTROL_TOKEN`, and guarded twice, each guard enough alone:
+
+- The site **refuses to start** with a token unless its database is named as the specs name theirs, which no real database is. A token left in a real site's settings stops it starting instead of opening it.
+- Every call carries the token in `x-test-control`, or is answered exactly as a page that is not there would be, so that nobody without the token learns the routes exist.
+
+A site that has the control also has what a spec run must not do without it: it never asks Have I Been Pwned, and it offers the test locale (`en-XA`, English with every phrase marked, made from the English catalogue by `src/web/testLocale.ts`), which nobody else is offered. The control grows as the scenarios need it: a thing a scenario cannot do through a page is added to it, with a scenario in `specs/web-units/common/test-control/`, and never done by reaching into the site's code.
+
+The words a reader sees are written in the features and steps **literally**, in English. They are not read from the site's catalogues, so that a changed wording fails the scenarios that say it, which is what they are for.
+
+Cucumber is run in two families, because the two kinds of spec define steps in the same words and cannot be loaded together. `scripts/cucumber.mjs` defines each profile twice, `x` for the in-process specs and `webX` for `specs/web`, and `scripts/run-cucumber.mjs` runs them in turn and exits with the worse status. Every `test:*` script goes through it, and so does `test:changed`, which sends each feature to the family it is in.
+
+A feature moves into `specs/web/` when its steps can be written against the website alone. What cannot is a statement about how the site is built (a function of `src/web`, a pipeline put together by hand, an example route mounted for the purpose), and stays in `specs/web-units/`. Features that were written before the split are moved a slice at a time: `git mv` the feature, rewrite its steps against `specs/web/support/` (adding to the test control what they need), and run it with `npm run test:changed -- specs/web/…`.
+
+What is left in `specs/web-units/` is left for one of these reasons, which is also where the next slice of work is:
+
+- **It is a statement about how the site is built**, not what it does: the languages' catalogues, security headers, trusted proxies, request stamping, the email writer and the queue's sending, the form and dialog examples, canonical links read by function, the help library's search, rebuilding read models.
+- **It needs what a scenario cannot give a running site**: a help library handed to it (the help pages, the help landing page, what's new, the home screen link), its database made to fail (`database-unavailable`), or tens of thousands of tournaments (the sitemap's paging). A scenario that needs a site told settings of its own, such as no proxy believed, search engines welcome, the emergency contacts, the administrator or the version, starts a second site over the same database with them in its environment (`siteTold`, `specs/web/support/site.ts`), as a deployment is told them; settings told one after another are told together. The version and the countries the world rankings list are settable only on a site that has the test control.
+- **It stands in for something outside the site**: the world rankings' lists and Google are stood in for by servers of the run's own (`specs/web/support/fakeWorldRankings.ts`, `googleStandIn.ts`), which the site is told where to find as a deployment is told where the real ones are (`WORLD_RANKING_AC_ADDRESS`, `WORLD_RANKING_GC_ADDRESS`, `WORLD_RANKING_WAIT_MILLISECONDS`; and, for a site that has the test control only, `TEST_GOOGLE_ADDRESS`). A feature that needs Google says the site has been given its credentials.
+- **Its steps read the site's state as the application holds it** and not as a page shows it: the import errors, which were left by choice. What the admin's tournament pages (`admin/{year}/...`), list and new tournament page read of what was kept, they read from the test control as plain data: what a tournament holds (`GET /__test/tournaments/kept`), what a competition holds, its players with their carry forward and its games (`GET /__test/competitions/kept`), and the notes (`GET /__test/tournaments/notes/kept`), through `specs/web/support/kept.ts`. What the admin's other pages set up is done through the control too: database access (a switch the site keeps outside its database, left on again after every scenario, and served by the site whatever its state so that a scenario can do so), log entries, the build the site names, the countries the world rankings list. Some steps those features shared with the in-process specs are kept in `specs/web-units/admin/` for the features there that still use them.
+
+### 8.4 Gherkin conventions
 
 - A `.feature` file describes behaviour. Method names, signatures and encodings belong in the step definitions and in the `/src` types, where a reviewer sees them.
 - Steps are written to be reused: one value to a step, and a set asserted by naming each member.
@@ -700,11 +731,11 @@ npm pkg set scripts.typecheck="tsc --noEmit && tsc --noEmit -p src/web/admin"
 npm pkg set scripts.lint="eslint ."
 npm pkg set scripts.format="prettier --write ."
 npm pkg set scripts.test="npm run test:features"
-npm pkg set scripts.test:features="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs"
-npm pkg set scripts.test:nodb="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile nodb"
-npm pkg set scripts.test:db="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile db"
-npm pkg set scripts.test:browser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile browser"
-npm pkg set scripts.test:nobrowser="tsx ./node_modules/@cucumber/cucumber/bin/cucumber.js --config scripts/cucumber.mjs --profile nobrowser"
+npm pkg set scripts.test:features="node scripts/run-cucumber.mjs default"
+npm pkg set scripts.test:nodb="node scripts/run-cucumber.mjs nodb"
+npm pkg set scripts.test:db="node scripts/run-cucumber.mjs db"
+npm pkg set scripts.test:browser="node scripts/run-cucumber.mjs browser"
+npm pkg set scripts.test:nobrowser="node scripts/run-cucumber.mjs nobrowser"
 npm pkg set scripts.db:up="docker compose up -d --wait && npm run dev:setup"
 npm pkg set scripts.db:down="docker compose down -v"
 npm pkg set scripts.db:migrate="tsx src/infrastructure/database/migrate-cli.ts"

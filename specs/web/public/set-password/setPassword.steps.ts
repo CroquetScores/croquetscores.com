@@ -4,34 +4,32 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import {
   openAndKeepTheAnswer,
   postAndKeepTheAnswer,
-} from "../../support/answered.js";
-import { applicationFor, everythingLoggedOf } from "../../support/browser.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
+} from "../../support/answers.js";
+import { emailsFor } from "../../support/control.js";
+import { loggedSince } from "../../support/site.js";
+import { unmarked } from "../../support/languages.js";
+import { wordsFor } from "../../support/words.js";
 
 const setPassword = "/account/set-password";
 const dialog = "section.dialog";
 
-const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
-  assert.ok(said !== undefined, `English has no words for ${key}.`);
-  return said;
-};
+const words = wordsFor;
 
 // Opening it ------------------------------------------------------------------------
 
-const open = async (world: SpecWorld): Promise<void> => {
+const open = async (world: WebWorld): Promise<void> => {
   await openAndKeepTheAnswer(world, setPassword);
 };
 
-Given("the set password page is open", async function (this: SpecWorld) {
+Given("the set password page is open", async function (this: WebWorld) {
   await open(this);
 });
 
-When("the set password page is opened", async function (this: SpecWorld) {
+When("the set password page is opened", async function (this: WebWorld) {
   await open(this);
 });
 
@@ -39,18 +37,18 @@ When("the set password page is opened", async function (this: SpecWorld) {
 // opening, said all the same because it is what the scenario is about.
 When(
   "the set password page is opened with scripting off",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await open(this);
   },
 );
 
 // Whatever it is posted, since what is posted is not what is being asked
 // about: only whether there is a page there to take it.
-When("the set password page is posted to", async function (this: SpecWorld) {
+When("the set password page is posted to", async function (this: WebWorld) {
   await postAndKeepTheAnswer(this, setPassword, {});
 });
 
-Then("the set password page is shown", async function (this: SpecWorld) {
+Then("the set password page is shown", async function (this: WebWorld) {
   assert.equal(new URL(this.browserPage.url()).pathname, setPassword);
   const title = unmarked(
     (await this.browserPage.locator(`${dialog} .dialog-title`).textContent()) ??
@@ -61,7 +59,7 @@ Then("the set password page is shown", async function (this: SpecWorld) {
 
 Then(
   "the page says a link will be sent to {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     const said = await this.browserPage
       .locator(`${dialog} .notice`)
       .textContent();
@@ -74,62 +72,75 @@ Then(
 
 // Asking ----------------------------------------------------------------------------
 
-const ask = async (world: SpecWorld): Promise<void> => {
+// Where each scenario's form sends what it holds, so that a second asking is the
+// same one again.
+const drawnWith = new WeakMap<WebWorld, string>();
+
+const ask = async (world: WebWorld): Promise<void> => {
+  drawnWith.set(
+    world,
+    (await world.browserPage
+      .locator(`${dialog} form`)
+      .getAttribute("action")) ?? "",
+  );
   await world.browserPage.click(`${dialog} button[type="submit"]`);
   await world.browserPage.waitForLoadState();
 };
 
 When(
   "the reader asks for a link to set a password",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await ask(this);
   },
 );
 
 Given(
   "the reader has asked for a link to set a password",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await ask(this);
   },
 );
 
-// Back to the form as the browser kept it, and pressed again: the form it
-// sends is the one that was shown, and carries the request id it did.
+// The form as it was shown, sent again: what pressing it a second time does, and
+// it carries the request id it did. Sent from the scenario and not pressed after
+// going back, because a browser sent back to the page may draw it again with an id
+// of its own, and what is asked is what the site does with the one it was given.
 When(
   "the reader goes back and asks for a link to set a password again",
-  async function (this: SpecWorld) {
-    await this.browserPage.goBack();
-    await ask(this);
+  async function (this: WebWorld) {
+    const action = drawnWith.get(this);
+    assert.ok(action !== undefined, "Nothing has been asked for.");
+    const answer = await this.browserPage.request.post(
+      `${this.baseUrl!}${action}`,
+      {
+        headers: { "sec-fetch-site": "same-origin" },
+        maxRedirects: 0,
+        failOnStatusCode: false,
+      },
+    );
+    assert.ok(answer.status() < 500, `It was answered ${answer.status()}.`);
   },
 );
 
 // What was sent ---------------------------------------------------------------------
 
-const setPasswordEmailsTo = async (world: SpecWorld, address: string) => {
-  const application = applicationFor(world);
-  const queued = await application.unitOfWork.inTransaction(() =>
-    application.emailQueue.emails(),
+const setPasswordEmailsTo = async (address: string) =>
+  (await emailsFor(address)).filter(
+    (email) => !email.givenUp && email.kind === "Email.SetPassword",
   );
-  return queued.filter(
-    (email) =>
-      !email.givenUp &&
-      email.to === address &&
-      email.kind === "Email.SetPassword",
-  );
-};
 
 Then(
   "{string} is sent a link to set a password",
-  async function (this: SpecWorld, address: string) {
-    const sent = await setPasswordEmailsTo(this, address);
+  async function (this: WebWorld, address: string) {
+    const sent = await setPasswordEmailsTo(address);
     assert.ok(sent.length > 0, `No link to set a password went to ${address}.`);
   },
 );
 
 Then(
   "one link to set a password has been sent to {string}",
-  async function (this: SpecWorld, address: string) {
-    const sent = await setPasswordEmailsTo(this, address);
+  async function (this: WebWorld, address: string) {
+    const sent = await setPasswordEmailsTo(address);
     assert.equal(sent.length, 1, `${sent.length} links were sent.`);
   },
 );
@@ -138,8 +149,8 @@ Then(
 // site's address.
 Given(
   "the link sent to {string} is followed",
-  async function (this: SpecWorld, address: string) {
-    const sent = await setPasswordEmailsTo(this, address);
+  async function (this: WebWorld, address: string) {
+    const sent = await setPasswordEmailsTo(address);
     const last = sent[sent.length - 1];
     assert.ok(last?.link !== undefined, "No link to set a password was sent.");
     this.linkInHand = last.link;
@@ -153,14 +164,14 @@ Given(
 // What the log holds of a link ------------------------------------------------
 
 // The link that was followed, which a step about it reads.
-const linkFollowed = (world: SpecWorld): URL => {
+const linkFollowed = (world: WebWorld): URL => {
   assert.ok(world.linkInHand !== undefined, "No link was followed.");
   return new URL(world.linkInHand);
 };
 
 // What the log says of each request: the address it was made to.
-const addressesLogged = (world: SpecWorld): string[] =>
-  everythingLoggedOf(world).flatMap((line) => {
+const addressesLogged = (world: WebWorld): string[] =>
+  loggedSince(world.logFrom).flatMap((line) => {
     const url = (JSON.parse(line) as { req?: { url?: string } }).req?.url;
     return url === undefined ? [] : [url];
   });
@@ -170,12 +181,12 @@ const addressesLogged = (world: SpecWorld): string[] =>
 // what matters as much as one that kept the whole link.
 Then(
   "the log does not hold the link that was followed",
-  function (this: SpecWorld) {
+  function (this: WebWorld) {
     const carried = linkFollowed(this).searchParams.get("link") ?? "";
     const signature = carried.slice(carried.lastIndexOf(".") + 1);
     assert.ok(signature !== "", "The link followed carries no signature.");
     assert.ok(
-      !everythingLoggedOf(this).join("").includes(signature),
+      !loggedSince(this.logFrom).join("").includes(signature),
       "The log holds the link's signature.",
     );
   },
@@ -185,7 +196,7 @@ Then(
 // would pass the step above.
 Then(
   "the log says the page the link opens was asked for",
-  function (this: SpecWorld) {
+  function (this: WebWorld) {
     const page = linkFollowed(this).pathname;
     assert.ok(
       addressesLogged(this).some((url) => url.startsWith(`${page}?`)),
@@ -196,7 +207,7 @@ Then(
 
 Then(
   "the page the link opens is logged with the link taken out",
-  function (this: SpecWorld) {
+  function (this: WebWorld) {
     const page = linkFollowed(this).pathname;
     assert.ok(
       addressesLogged(this).some(

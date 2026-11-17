@@ -5,15 +5,15 @@ import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
-const pencilOf = (world: SpecWorld): Locator =>
+const pencilOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main .commentary-title-edit");
 
 // Drawn as a pencil, and named for a reader who cannot see it.
 Then(
   "the way to change the commentary's title is a pencil named {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const pencil = pencilOf(this);
     assert.equal(await pencil.locator(".icon-pencil").count(), 1);
     assert.equal(
@@ -30,7 +30,7 @@ Then(
 // reading the title.
 Then(
   "the way to change the commentary's title is to the right of the title",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const title = await this.browserPage
       .locator("main .commentary-title")
       .boundingBox();
@@ -49,14 +49,14 @@ Then(
 
 Then(
   "the way to change the commentary's title leads to {string}",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     assert.equal(await pencilOf(this).getAttribute("href"), path);
   },
 );
 
 Then(
   "the page offers no way to change the commentary's title",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await pencilOf(this).count(), 0);
   },
 );

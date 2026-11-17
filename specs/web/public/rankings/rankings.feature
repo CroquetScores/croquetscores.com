@@ -120,7 +120,7 @@ Feature: A tournament's rankings are a file to send to the world rankings
 
     Scenario: The page says the rankings are not available
       When the page at "/2026/ac/handicap-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable"
+      Then the page says "Rankings are not available"
 
     Scenario: The page is not a file
       When the address "/2026/ac/handicap-open/rankings" is requested
@@ -133,24 +133,24 @@ Feature: A tournament's rankings are a file to send to the world rankings
     Scenario: A reader not signed in is shown the page
       Given nobody is signed in
       When the page at "/2026/ac/handicap-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable"
+      Then the page says "Rankings are not available"
 
     Scenario: A tournament none of whose competitions counts says so
       When the page at "/2026/ac/handicap-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.notCounted"
+      Then the page says "None of this tournament's competitions counts towards the world rankings."
 
     Scenario: A tournament of a sport with no world rankings says so
       Given the tournament is to be for the sport "rc"
       And "organiser@example.com" has created the tournament "Ricochet Open"
       When the page at "/2026/rc/ricochet-open/rankings" is opened
-      Then the page says the words for "rankings.notAvailable.sport"
+      Then the page says "This tournament's sport has no world rankings, so there are no rankings to send."
 
     Scenario: Only the reason that applies is said
       Given the tournament is to be for the sport "rc"
       And "organiser@example.com" has created the tournament "Ricochet Open"
       And "organiser@example.com" has added the block "Block A" to "Ricochet Open"
       When the page at "/2026/rc/ricochet-open/rankings" is opened
-      Then the page does not say the words for "rankings.notAvailable.notCounted"
+      Then the page does not say "None of this tournament's competitions counts towards the world rankings."
 
     Scenario: The page leads back to the tournament
       Given the page at "/2026/ac/handicap-open/rankings" is open
@@ -172,12 +172,12 @@ Feature: A tournament's rankings are a file to send to the world rankings
 
     Scenario: A slug no tournament has is not found
       When the page at "/2026/ac/no-such-open/rankings" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament is not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/rankings" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament that did not count is not found either
       Given the competition is to be played under handicap
@@ -185,7 +185,7 @@ Feature: A tournament's rankings are a file to send to the world rankings
       And "organiser@example.com" has added the block "Block A" to "Handicap Open"
       And "organiser@example.com" has archived the tournament "Handicap Open"
       When the page at "/2026/ac/handicap-open/rankings" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the file where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

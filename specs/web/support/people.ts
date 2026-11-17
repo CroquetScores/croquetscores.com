@@ -6,8 +6,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { tournamentNamed } from "../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 import { assertDrawnAsTrashCan } from "./icons.js";
 import { unmarkedWithin } from "./marks.js";
 import { eventually, openTab, tabPanel } from "./tournamentPage.js";
@@ -21,15 +20,15 @@ const partOf = (said: string): Part =>
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
-const rows = (world: SpecWorld, part: Part): Locator =>
+const rows = (world: WebWorld, part: Part): Locator =>
   tabPanel(world).locator(`ul[data-listed="${part}"] > .listed-item`);
 
-const rowOf = (world: SpecWorld, part: Part, name: string): Locator =>
+const rowOf = (world: WebWorld, part: Part, name: string): Locator =>
   rows(world, part).filter({
     has: world.browserPage.locator(".listed-name", { hasText: exactly(name) }),
   });
 
-const namesOf = async (world: SpecWorld, part: Part): Promise<string[]> =>
+const namesOf = async (world: WebWorld, part: Part): Promise<string[]> =>
   (await rows(world, part).locator(".listed-name").allInnerTexts()).map(
     (name) => name.trim(),
   );
@@ -43,14 +42,14 @@ export const optionOf = (row: Locator, option: string): Locator =>
 
 When(
   /^the (scorers|managers) of "([^"]*)" are open(?:ed)?$/,
-  async function (this: SpecWorld, part: Part, name: string) {
+  async function (this: WebWorld, part: Part, name: string) {
     await openTab(this, name, part);
   },
 );
 
 Then(
   /^the (scorer|manager) "([^"]*)" is listed$/,
-  async function (this: SpecWorld, part: string, name: string) {
+  async function (this: WebWorld, part: string, name: string) {
     await eventually(this, async () => {
       assert.ok(
         (await namesOf(this, partOf(part))).includes(name),
@@ -62,7 +61,7 @@ Then(
 
 Then(
   /^the (scorer|manager) "([^"]*)" is listed once$/,
-  async function (this: SpecWorld, part: string, name: string) {
+  async function (this: WebWorld, part: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
         (await namesOf(this, partOf(part))).filter((each) => each === name)
@@ -75,7 +74,7 @@ Then(
 
 Then(
   /^the (scorer|manager) "([^"]*)" is not listed$/,
-  async function (this: SpecWorld, part: string, name: string) {
+  async function (this: WebWorld, part: string, name: string) {
     await eventually(this, async () => {
       assert.ok(
         !(await namesOf(this, partOf(part))).includes(name),
@@ -87,7 +86,7 @@ Then(
 
 Then(
   /^the first (scorer|manager) listed is "([^"]*)"$/,
-  async function (this: SpecWorld, part: string, name: string) {
+  async function (this: WebWorld, part: string, name: string) {
     await eventually(this, async () => {
       assert.equal((await namesOf(this, partOf(part)))[0], name);
     });
@@ -96,7 +95,7 @@ Then(
 
 Then(
   /^(\d+) (?:scorers?|managers?) (?:is|are) listed$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     await eventually(this, async () => {
       assert.equal(
         await tabPanel(this).locator("ul[data-listed] > .listed-item").count(),
@@ -108,7 +107,7 @@ Then(
 
 Then(
   /^Remove for the (scorer|manager) "([^"]*)" is a trash can$/,
-  async function (this: SpecWorld, part: string, name: string) {
+  async function (this: WebWorld, part: string, name: string) {
     await eventually(this, async () => {
       const remove = rowOf(this, partOf(part), name).locator(
         '.listed-options button[data-action="remove"]',
@@ -120,7 +119,7 @@ Then(
 
 Then(
   /^the (scorer|manager) "([^"]*)" offers "([^"]*)"$/,
-  async function (this: SpecWorld, part: string, name: string, option: string) {
+  async function (this: WebWorld, part: string, name: string, option: string) {
     await eventually(this, async () => {
       assert.equal(
         await optionOf(rowOf(this, partOf(part), name), option).count(),
@@ -132,7 +131,7 @@ Then(
 
 Then(
   /^the (scorer|manager) "([^"]*)" does not offer "([^"]*)"$/,
-  async function (this: SpecWorld, part: string, name: string, option: string) {
+  async function (this: WebWorld, part: string, name: string, option: string) {
     await eventually(this, async () => {
       const row = rowOf(this, partOf(part), name);
       assert.equal(await row.count(), 1);
@@ -143,7 +142,7 @@ Then(
 
 When(
   /^"([^"]*)" is pressed on the (scorer|manager) "([^"]*)"$/,
-  async function (this: SpecWorld, option: string, part: string, name: string) {
+  async function (this: WebWorld, option: string, part: string, name: string) {
     const button = optionOf(rowOf(this, partOf(part), name), option);
     await eventually(this, async () => {
       assert.equal(await button.count(), 1);
@@ -158,7 +157,7 @@ const places = ["first", "second"];
 
 When(
   /^(?:"Remove" is pressed on|the way to remove) the (first|second) (scorer|manager)(?: is pressed)?$/,
-  async function (this: SpecWorld, place: string, part: string) {
+  async function (this: WebWorld, place: string, part: string) {
     const row = rows(this, partOf(part)).nth(places.indexOf(place));
     await eventually(this, async () => {
       assert.equal(await row.locator(".listed-options button").count(), 1);
@@ -169,7 +168,7 @@ When(
 
 Then(
   /^the tab says there are no (scorers|managers)$/,
-  async function (this: SpecWorld, part: Part) {
+  async function (this: WebWorld, part: Part) {
     await eventually(this, async () => {
       assert.equal(await rows(this, part).count(), 0);
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 1);
@@ -179,7 +178,7 @@ Then(
 
 Then(
   /^the tab does not say there are no (scorers|managers)$/,
-  async function (this: SpecWorld, part: Part) {
+  async function (this: WebWorld, part: Part) {
     await eventually(this, async () => {
       assert.ok((await rows(this, part).count()) > 0);
       assert.equal(await tabPanel(this).locator(".listed-none").count(), 0);
@@ -189,7 +188,7 @@ Then(
 
 Then(
   /^"([^"]*)" is above the (scorers|managers)$/,
-  async function (this: SpecWorld, label: string, part: Part) {
+  async function (this: WebWorld, label: string, part: Part) {
     await eventually(this, async () => {
       const field = await tabPanel(this)
         .locator("form.tab-form")
@@ -212,7 +211,7 @@ const tallEnough = async (thing: Locator, pixels: number): Promise<void> => {
 
 Then(
   "the button {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, words: string, pixels: number) {
+  async function (this: WebWorld, words: string, pixels: number) {
     await eventually(this, async () => {
       await tallEnough(
         tabPanel(this)
@@ -227,7 +226,7 @@ Then(
 Then(
   /^"([^"]*)" on the (scorer|manager) "([^"]*)" is at least (\d+) pixels tall$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     part: string,
     name: string,
@@ -244,23 +243,23 @@ Then(
 
 // The tab's own field, found by its name rather than its label, which is in
 // whatever language the page is in.
-const addressField = (world: SpecWorld): Locator =>
+const addressField = (world: WebWorld): Locator =>
   tabPanel(world).locator('form.tab-form input[name="emailAddress"]');
 
 When(
   "{string} is typed into the tab's email address",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await addressField(this).fill(words);
   },
 );
 
-When("the tab's email address is sent", async function (this: SpecWorld) {
+When("the tab's email address is sent", async function (this: WebWorld) {
   await tabPanel(this).locator('form.tab-form button[type="submit"]').click();
 });
 
 Then(
   "something is said beneath the tab's email address",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await tabPanel(this).locator("form.tab-form .field-message").waitFor();
   },
 );
@@ -269,8 +268,11 @@ Then(
 // its own. Once only, as the list is asked for once when the tab is opened.
 Given(
   /^the (scorers|managers) of "([^"]*)" are answered with a server error$/,
-  async function (this: SpecWorld, part: Part, name: string) {
-    const tournament = tournamentNamed(this, name).value;
+  async function (this: WebWorld, part: Part, name: string) {
+    const tournament = this.tournaments.get(name)?.id;
+    if (tournament === undefined) {
+      throw new Error(`No tournament called ${name} was created.`);
+    }
     const at = `/api/site/tournaments/${tournament.slice(tournament.indexOf("/") + 1)}/${part}`;
     await this.browserPage.route(
       (url) => url.pathname === at,
@@ -289,7 +291,7 @@ Given(
 
 Then(
   "the tab says it was refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(this, async () => {
       assert.equal(
         await tabPanel(this)
@@ -301,7 +303,7 @@ Then(
   },
 );
 
-Then("the tab says nothing was refused", async function (this: SpecWorld) {
+Then("the tab says nothing was refused", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await tabPanel(this).locator(".people-refused").count(), 0);
   });
@@ -311,7 +313,7 @@ Then("the tab says nothing was refused", async function (this: SpecWorld) {
 // in the field, and not among the tab's words.
 Then(
   /^every word in the tab but the (?:scorers|managers)' names is in the test locale$/,
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, "#tab-panel section", [
         ".listed-name",

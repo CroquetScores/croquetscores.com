@@ -414,12 +414,12 @@ Feature: A competition's order of play lists its games, oldest first
 
     Scenario: A slug no competition has is not found
       When the page at "/2026/ac/spring-open/competitions/block-z/order-of-play" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's blocks are not found
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/order-of-play" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the order of play where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "gc"

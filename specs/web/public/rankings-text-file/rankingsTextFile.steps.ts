@@ -1,11 +1,7 @@
 import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  load,
-  scenarioOf,
-} from "../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import {
   keepTextFile,
   linesRead,
@@ -19,7 +15,7 @@ import {
 
 When(
   "the text file at {string} is read",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     await request(this, path);
     keepTextFile(this, textGiven(this));
   },
@@ -27,20 +23,20 @@ When(
 
 When(
   "the text file of that tournament's rankings is read",
-  async function (this: SpecWorld) {
-    const { looking } = scenarioOf(this);
-    assert.ok(looking !== undefined, "No tournament was made.");
-    const tournament = await load(this, looking);
-    await request(this, `/${tournament.address.toString()}/rankings`);
+  async function (this: WebWorld) {
+    const last = this.lastTournament;
+    assert.ok(last !== undefined, "No tournament was made.");
+    const address = this.tournaments.get(last)?.address;
+    await request(this, `/${address}/rankings`);
     keepTextFile(this, textGiven(this));
   },
 );
 
-Then("the file is empty", function (this: SpecWorld) {
+Then("the file is empty", function (this: WebWorld) {
   assert.equal(textGiven(this), "");
 });
 
-Then("the file has no line {string}", function (this: SpecWorld, text: string) {
+Then("the file has no line {string}", function (this: WebWorld, text: string) {
   assert.ok(
     !linesRead(this).some((line) => line.text.trimEnd() === text),
     `The file has the line ${JSON.stringify(text)}.`,

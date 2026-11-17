@@ -74,6 +74,8 @@ A commit message says what changed and why it changed, in paragraphs. What went 
 
 Dependencies point inwards — web and infrastructure onto application, application onto domain, domain onto nothing. `src/web/server.ts` is the only file outside `src/infrastructure/` that names a concrete implementation. `specs/support/` is loaded by every spec in the repository, so it may name nothing from infrastructure or web.
 
+`specs/web/` is held to a harder rule than any layer: it imports **nothing** of the repository, `src/` and every other spec folder alike, and knows the site only by its address. The site is started as a process of its own, and what a scenario needs that no page gives it is done through the site's guarded test control (`SETUP.md` §8.3), never by reaching into the code. A scenario that can only be written by naming something of `src/web` belongs in `specs/web-units/` instead, and a scenario that can be written against the site alone belongs in `specs/web/`.
+
 ESLint enforces this, so breaking it fails the build rather than being noticed in review. If a rule is in the way, the thing to question is the design, not the rule.
 
 ---
@@ -87,7 +89,7 @@ npx prettier --check .
 npm run test:changed
 ```
 
-`npm run test:changed` runs the scenarios in the feature files this branch has touched, and none of the others. It looks in all four places a change can be — committed on the branch, staged, in the working tree, and not yet added at all — so a feature still being written counts the same as one that landed three commits ago.
+`npm run test:changed` runs the scenarios in the feature files this branch has touched, and none of the others. Cucumber is run in two families, the in-process specs and `specs/web`, which cannot be loaded together (`SETUP.md` §8.3); every `test:*` script goes through `scripts/run-cucumber.mjs`, which runs both, and `test:changed` sends each feature to its own. It looks in all four places a change can be — committed on the branch, staged, in the working tree, and not yet added at all — so a feature still being written counts the same as one that landed three commits ago.
 
 It is narrowed because the whole suite takes long enough that running it after every change holds the work up, and nearly all of what it runs has nothing to do with the change in front of it. A gate that slow stops being run, which is worse than a gate that is narrow.
 

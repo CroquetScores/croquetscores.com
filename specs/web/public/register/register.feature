@@ -91,7 +91,7 @@ Feature: Registering an account
       And the register page is open with scripting on
       And the register form is filled in for "someone@example"
       When the dialog is submitted
-      Then the email address field says the message for "EmailAddress.NoDomain"
+      Then the email address field says "An email address has a domain after the @, such as example.com."
 
     Scenario: What was typed is put back
       Given a viewport 1200 pixels wide
@@ -119,7 +119,7 @@ Feature: Registering an account
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com" without agreeing to the terms of use
       When the dialog is submitted
-      Then the terms of use box says the message for "TermsOfUse.NotAgreed"
+      Then the terms of use box says "Tick the box to agree to the terms of use."
 
     Scenario: A registration sent without agreeing records nothing
       Given a viewport 1200 pixels wide
@@ -205,7 +205,7 @@ Feature: Registering an account
       And the register page is open with scripting on
       And the register form is filled in for "someone@example.com"
       When the dialog is submitted
-      Then the message for "Registration.NotAPerson" is above the fields
+      Then the message "This did not look like it came from a person. Try again, and if it keeps happening, wait a few minutes and come back." is above the fields
 
     Scenario: Nothing is recorded of a registration judged not to be from a person
       Given a viewport 1200 pixels wide

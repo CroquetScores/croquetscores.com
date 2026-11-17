@@ -5,7 +5,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
+import type { WebWorld } from "../../../support/world.js";
 import { unmarkedWithin } from "../../../support/marks.js";
 import { optionOf } from "../../../support/people.js";
 
@@ -22,10 +22,10 @@ interface InThePage {
   };
 }
 
-const sections = (world: SpecWorld): Locator =>
+const sections = (world: WebWorld): Locator =>
   world.browserPage.locator("section.people");
 
-const sectionCalled = (world: SpecWorld, heading: string): Locator =>
+const sectionCalled = (world: WebWorld, heading: string): Locator =>
   sections(world).filter({
     has: world.browserPage.locator(".people-heading", {
       hasText: exactly(heading),
@@ -37,7 +37,7 @@ const sectionCalled = (world: SpecWorld, heading: string): Locator =>
 // retried for three seconds, which leaves a step time to fail with what it
 // found rather than with Cucumber's word that it took too long.
 const eventually = async (
-  world: SpecWorld,
+  world: WebWorld,
   check: () => Promise<void>,
 ): Promise<void> => {
   await world.browserPage
@@ -56,7 +56,7 @@ const eventually = async (
   }
 };
 
-const openTheAccounts = async function (this: SpecWorld): Promise<void> {
+const openTheAccounts = async function (this: WebWorld): Promise<void> {
   await this.browserPage.goto(`${this.baseUrl!}/admin/administrator/accounts`);
 };
 
@@ -67,7 +67,7 @@ When("the accounts page is opened", openTheAccounts);
 // site's is: a server error, and a page rather than a code.
 Given(
   "the accounts holding the role {string} are answered with a server error",
-  async function (this: SpecWorld, role: string) {
+  async function (this: WebWorld, role: string) {
     const at = `/api/site/roles/${role.toLowerCase().replaceAll(" ", "-")}/accounts`;
     await this.browserPage.route(
       (url) => url.pathname === at,
@@ -84,14 +84,14 @@ Given(
   },
 );
 
-const headings = async (world: SpecWorld): Promise<string[]> =>
+const headings = async (world: WebWorld): Promise<string[]> =>
   (await sections(world).locator(".people-heading").allInnerTexts()).map(
     (heading) => heading.trim(),
   );
 
 Then(
   "the section {string} is on the page",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     await eventually(this, async () => {
       assert.ok(
         (await headings(this)).includes(heading),
@@ -103,7 +103,7 @@ Then(
 
 Then(
   "the first section on the page is {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     await eventually(this, async () => {
       assert.equal((await headings(this))[0], heading);
     });
@@ -115,7 +115,7 @@ Then(
 // theme the page is in.
 Then(
   "the heading of {string} is on the section bar's colour",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     await eventually(this, async () => {
       const colours = (locator: Locator): Promise<string[]> =>
         locator.evaluate((element) => {
@@ -132,22 +132,22 @@ Then(
   },
 );
 
-const rows = (world: SpecWorld, heading: string): Locator =>
+const rows = (world: WebWorld, heading: string): Locator =>
   sectionCalled(world, heading).locator("ul.listed > .listed-item");
 
-const namesIn = async (world: SpecWorld, heading: string): Promise<string[]> =>
+const namesIn = async (world: WebWorld, heading: string): Promise<string[]> =>
   (await rows(world, heading).locator(".listed-name").allInnerTexts()).map(
     (name) => name.trim(),
   );
 
-const rowOf = (world: SpecWorld, heading: string, name: string): Locator =>
+const rowOf = (world: WebWorld, heading: string, name: string): Locator =>
   rows(world, heading).filter({
     has: world.browserPage.locator(".listed-name", { hasText: exactly(name) }),
   });
 
 Then(
   "{string} is listed in {string}",
-  async function (this: SpecWorld, name: string, heading: string) {
+  async function (this: WebWorld, name: string, heading: string) {
     await eventually(this, async () => {
       const names = await namesIn(this, heading);
       assert.ok(names.includes(name), `Listed ${JSON.stringify(names)}.`);
@@ -157,7 +157,7 @@ Then(
 
 Then(
   "{string} is not listed in {string}",
-  async function (this: SpecWorld, name: string, heading: string) {
+  async function (this: WebWorld, name: string, heading: string) {
     await eventually(this, async () => {
       const names = await namesIn(this, heading);
       assert.ok(!names.includes(name), `Listed ${JSON.stringify(names)}.`);
@@ -167,7 +167,7 @@ Then(
 
 Then(
   "{string} is listed once in {string}",
-  async function (this: SpecWorld, name: string, heading: string) {
+  async function (this: WebWorld, name: string, heading: string) {
     await eventually(this, async () => {
       const names = await namesIn(this, heading);
       assert.equal(names.filter((each) => each === name).length, 1);
@@ -177,7 +177,7 @@ Then(
 
 Then(
   "the first listed in {string} is {string}",
-  async function (this: SpecWorld, heading: string, name: string) {
+  async function (this: WebWorld, heading: string, name: string) {
     await eventually(this, async () => {
       assert.equal((await namesIn(this, heading))[0], name);
     });
@@ -187,7 +187,7 @@ Then(
 Then(
   "{string} in {string} offers {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     name: string,
     heading: string,
     option: string,
@@ -204,7 +204,7 @@ Then(
 When(
   "{string} is pressed on {string} in {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     name: string,
     heading: string,
@@ -221,7 +221,7 @@ When(
 // is in.
 When(
   "the way to remove the first {string} world ranking officer is pressed",
-  async function (this: SpecWorld, sport: string) {
+  async function (this: WebWorld, sport: string) {
     const row = this.browserPage
       .locator(
         `ul.listed[data-listed="${sport}-world-ranking-officer"] > .listed-item`,
@@ -234,12 +234,12 @@ When(
   },
 );
 
-const fieldIn = (world: SpecWorld, label: string, heading: string): Locator =>
+const fieldIn = (world: WebWorld, label: string, heading: string): Locator =>
   sectionCalled(world, heading).getByLabel(label, { exact: true });
 
 Then(
   "{string} asks for {string}",
-  async function (this: SpecWorld, heading: string, label: string) {
+  async function (this: WebWorld, heading: string, label: string) {
     await eventually(this, async () => {
       assert.equal(await fieldIn(this, label, heading).count(), 1);
     });
@@ -249,7 +249,7 @@ Then(
 When(
   "{string} is typed as the {string} in {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     words: string,
     label: string,
     heading: string,
@@ -263,17 +263,20 @@ When(
 
 When(
   "{string} is pressed in {string}",
-  async function (this: SpecWorld, words: string, heading: string) {
+  async function (this: WebWorld, words: string, heading: string) {
     await sectionCalled(this, heading)
       .locator("form button")
       .filter({ hasText: exactly(words) })
       .click();
+    // Until what pressing it sent has been answered, which a page opened again
+    // straight after would otherwise not have waited for.
+    await this.browserPage.waitForLoadState("networkidle");
   },
 );
 
 Then(
   "{string} in {string} is empty",
-  async function (this: SpecWorld, label: string, heading: string) {
+  async function (this: WebWorld, label: string, heading: string) {
     await eventually(this, async () => {
       assert.equal(await fieldIn(this, label, heading).inputValue(), "");
     });
@@ -283,7 +286,7 @@ Then(
 Then(
   "{string} in {string} says {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     label: string,
     heading: string,
     words: string,
@@ -296,7 +299,7 @@ Then(
 
 Then(
   "{string} in {string} has the focus",
-  async function (this: SpecWorld, label: string, heading: string) {
+  async function (this: WebWorld, label: string, heading: string) {
     await eventually(this, async () => {
       assert.equal(
         await fieldIn(this, label, heading).evaluate(
@@ -315,7 +318,7 @@ Then(
 Then(
   "{string} in {string} is refused with {string}",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     label: string,
     heading: string,
     code: string,
@@ -344,7 +347,7 @@ Then(
 // section as a whole: read by its code, which is the contract.
 Then(
   "the section {string} says it was refused with {string}",
-  async function (this: SpecWorld, heading: string, code: string) {
+  async function (this: WebWorld, heading: string, code: string) {
     await eventually(this, async () => {
       assert.equal(
         await sectionCalled(this, heading)
@@ -358,7 +361,7 @@ Then(
 
 Then(
   "nothing is said beneath {string} in {string}",
-  async function (this: SpecWorld, label: string, heading: string) {
+  async function (this: WebWorld, label: string, heading: string) {
     await eventually(this, async () => {
       assert.equal(
         await fieldIn(this, label, heading).getAttribute("aria-describedby"),
@@ -373,7 +376,7 @@ Then(
 // have come, so that the words of an empty list are not all that is read.
 Then(
   "every word in the admin's content but the accounts' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok(
         (await this.browserPage.locator("ul.listed > .listed-item").count()) >
@@ -395,7 +398,7 @@ const tallEnough = async (thing: Locator, pixels: number): Promise<void> => {
 Then(
   "{string} in {string} is at least {int} pixels tall",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     words: string,
     heading: string,
     pixels: number,
@@ -414,7 +417,7 @@ Then(
 Then(
   "{string} on {string} in {string} is at least {int} pixels tall",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     option: string,
     name: string,
     heading: string,

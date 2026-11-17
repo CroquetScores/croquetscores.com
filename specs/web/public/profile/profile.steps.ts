@@ -2,13 +2,14 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
+import type { WebWorld } from "../../support/world.js";
+import { unmarked } from "../../support/languages.js";
+import { wordsFor } from "../../support/words.js";
 
 const profile = "/account/profile";
 
 const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
+  const said = wordsFor(key);
   assert.ok(said !== undefined, `English has no words for ${key}.`);
   return said;
 };
@@ -16,26 +17,26 @@ const words = (key: string): string => {
 // Scripting is off unless a step asks for it back, so opening the page with it
 // off is the same opening, said all the same because it is what the scenario is
 // about.
-const open = async (world: SpecWorld): Promise<void> => {
+const open = async (world: WebWorld): Promise<void> => {
   await world.browserPage.goto(`${world.baseUrl!}${profile}`);
 };
 
-Given("the profile page is open", async function (this: SpecWorld) {
+Given("the profile page is open", async function (this: WebWorld) {
   await open(this);
 });
 
-When("the profile page is opened", async function (this: SpecWorld) {
+When("the profile page is opened", async function (this: WebWorld) {
   await open(this);
 });
 
 When(
   "the profile page is opened with scripting off",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await open(this);
   },
 );
 
-Then("the profile page is shown", async function (this: SpecWorld) {
+Then("the profile page is shown", async function (this: WebWorld) {
   assert.equal(new URL(this.browserPage.url()).pathname, profile);
   const heading = unmarked(
     (await this.browserPage.locator("main h1").textContent()) ?? "",
@@ -45,7 +46,7 @@ Then("the profile page is shown", async function (this: SpecWorld) {
 
 Then(
   "the profile shows the name {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const shown = await this.browserPage.locator("#profile-name").textContent();
     assert.equal(shown?.trim(), name);
   },
@@ -53,7 +54,7 @@ Then(
 
 Then(
   "the profile shows the email address {string}",
-  async function (this: SpecWorld, address: string) {
+  async function (this: WebWorld, address: string) {
     const shown = await this.browserPage
       .locator("#profile-email-address")
       .textContent();
@@ -65,7 +66,7 @@ Then(
 // went to the right page under the wrong words would show.
 Then(
   "the profile links to {string} at {string}",
-  async function (this: SpecWorld, page: string, path: string) {
+  async function (this: WebWorld, page: string, path: string) {
     const link = this.browserPage.locator(`main a[href="${path}"]`);
     assert.equal(await link.count(), 1, `Nothing links to ${path}.`);
     assert.equal(unmarked((await link.textContent()) ?? "").trim(), page);
@@ -74,7 +75,7 @@ Then(
 
 Then(
   "the profile does not link to {string}",
-  async function (this: SpecWorld, page: string) {
+  async function (this: WebWorld, page: string) {
     const links = await this.browserPage.locator("main a").allTextContents();
     assert.ok(
       !links.some((each) => unmarked(each).trim() === page),
@@ -85,7 +86,7 @@ Then(
 
 Then(
   "the last page the profile links to is {string}",
-  async function (this: SpecWorld, page: string) {
+  async function (this: WebWorld, page: string) {
     const links = await this.browserPage.locator("main a").allTextContents();
     assert.equal(unmarked(links.at(-1) ?? "").trim(), page);
   },
@@ -108,7 +109,7 @@ const partsOf = (value: string): { label: string; value: string } => {
 
 Then(
   /^the label for the (name|email address) says "([^"]*)"$/,
-  async function (this: SpecWorld, value: string, said: string) {
+  async function (this: WebWorld, value: string, said: string) {
     const shown = await this.browserPage
       .locator(partsOf(value).label)
       .textContent();
@@ -119,7 +120,7 @@ Then(
 // Read from what the browser drew, since bold is what the reader sees.
 Then(
   /^the label for the (name|email address) is bold$/,
-  async function (this: SpecWorld, value: string) {
+  async function (this: WebWorld, value: string) {
     const weight = await this.browserPage.evaluate<string>(
       `getComputedStyle(document.querySelector(${JSON.stringify(partsOf(value).label)})).fontWeight`,
     );
@@ -130,7 +131,7 @@ Then(
 // Beside it: starting on the same line, and to its right rather than beneath.
 Then(
   /^the (name|email address) is on the same row as its label$/,
-  async function (this: SpecWorld, value: string) {
+  async function (this: WebWorld, value: string) {
     const parts = partsOf(value);
     const label = await this.browserPage.locator(parts.label).boundingBox();
     const shown = await this.browserPage.locator(parts.value).boundingBox();

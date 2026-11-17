@@ -162,18 +162,18 @@ Feature: A group of a tournament's tests has a page of how its teams stand
 
     Scenario: A slug no group makes is not found
       When the page at "/2026/ac/spring-tests/groups/block-c" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: A Standard tournament has no groups
       Given the tournament is to be played in the format "Standard"
       And "organiser@example.com" has created the tournament "Spring Open"
       When the page at "/2026/ac/spring-open/groups/block-a" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An archived tournament's group is not found
       Given "organiser@example.com" has archived the tournament "Spring Tests"
       When the page at "/2026/ac/spring-tests/groups/block-a" is opened
-      Then the page says the words for "errors.notFound"
+      Then the page says "Not found"
 
     Scenario: An old address leads to the group where the tournament is now
       Given "organiser@example.com" has moved the tournament "Spring Tests" to the sport "gc"

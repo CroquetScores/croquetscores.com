@@ -69,7 +69,7 @@ Feature: Registering, confirming and setting a password wait while a service the
       And the password typed as "correct horse battery staple"
       And the confirm password typed as "correct horse battery staple"
       When the dialog is submitted
-      Then the message for "BreachedPasswords.Unreachable" is above the fields
+      Then the message "Your password cannot be checked just now, so it has not been changed. Try again in a few minutes; your link still works until it expires." is above the fields
 
     Scenario: The address is not confirmed while the check is down
       Given a viewport 1200 pixels wide
@@ -110,7 +110,7 @@ Feature: Registering, confirming and setting a password wait while a service the
       And Have I Been Pwned cannot be reached
       And the link is followed
       When the new password "a different long password" is set
-      Then the message for "BreachedPasswords.Unreachable" is above the fields
+      Then the message "Your password cannot be checked just now, so it has not been changed. Try again in a few minutes; your link still works until it expires." is above the fields
 
     Scenario: The password is not changed while the check is down
       Given a viewport 1200 pixels wide

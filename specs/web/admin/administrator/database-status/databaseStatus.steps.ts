@@ -7,9 +7,8 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
-import { addressingOf } from "../../../support/browser.js";
-import { englishForScenarios } from "../../../support/languages.js";
+import type { WebWorld } from "../../../support/world.js";
+import { wordsFor } from "../../../support/words.js";
 
 // Retried for three seconds, which leaves a step time to fail with what it
 // found rather than with Cucumber's word that it took too long.
@@ -26,17 +25,17 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
   }
 };
 
-const buttonCalled = (world: SpecWorld, words: string): Locator =>
+const buttonCalled = (world: WebWorld, words: string): Locator =>
   world.browserPage
     .locator("main button")
     .filter({ hasText: new RegExp(`^${words}$`) });
 
-const status = (world: SpecWorld): Locator =>
+const status = (world: WebWorld): Locator =>
   world.browserPage.locator("main [data-access]");
 
 Then(
   /^the page says database access is (on|off)$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     await eventually(async () => {
       assert.equal(await status(this).getAttribute("data-access"), which);
     });
@@ -45,7 +44,7 @@ Then(
 
 Then(
   "the page says {int} minutes are expected",
-  async function (this: SpecWorld, minutes: number) {
+  async function (this: WebWorld, minutes: number) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage
@@ -59,7 +58,7 @@ Then(
 
 Then(
   "the page says readers are told {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await eventually(async () => {
       const told = this.browserPage.locator('main [data-told="words"]');
       assert.ok((await told.innerText()).includes(words));
@@ -69,7 +68,7 @@ Then(
 
 Then(
   "the page says readers are told the usual sentence",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage
@@ -82,9 +81,8 @@ Then(
 );
 
 // What a reader who is let through to nothing else is shown.
-Then("the maintenance page is shown", async function (this: SpecWorld) {
-  const usual = englishForScenarios.words["errors.maintenance"];
-  assert.ok(usual !== undefined, "English has no usual sentence.");
+Then("the maintenance page is shown", async function (this: WebWorld) {
+  const usual = wordsFor("errors.maintenance");
   await eventually(async () => {
     assert.ok(
       (await this.browserPage.locator("body").innerText()).includes(usual),
@@ -96,28 +94,28 @@ Then("the maintenance page is shown", async function (this: SpecWorld) {
 
 Given(
   "{string} is typed in the minutes field",
-  async function (this: SpecWorld, minutes: string) {
+  async function (this: WebWorld, minutes: string) {
     await this.browserPage.locator("#field-minutes").fill(minutes);
   },
 );
 
 Given(
   "{string} is typed in the words field",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await this.browserPage.locator("#field-words").fill(words);
   },
 );
 
 When(
   /^(Turn off|Change|Turn on) is pressed$/,
-  async function (this: SpecWorld, button: string) {
+  async function (this: WebWorld, button: string) {
     await buttonCalled(this, button).click();
   },
 );
 
 Then(
   /^(Turn on|Change) is not offered$/,
-  async function (this: SpecWorld, button: string) {
+  async function (this: WebWorld, button: string) {
     // Once the page has drawn the form, which Turn off is always in.
     await buttonCalled(this, "Turn off").waitFor();
     assert.equal(await buttonCalled(this, button).count(), 0);
@@ -126,7 +124,7 @@ Then(
 
 Then(
   "the minutes field says the minutes are needed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage
@@ -139,8 +137,8 @@ Then(
 );
 
 Then(
-  "the minutes field says {string}",
-  async function (this: SpecWorld, code: string) {
+  "the minutes field is refused as {string}",
+  async function (this: WebWorld, code: string) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage
@@ -155,14 +153,14 @@ Then(
 // The answers the page asks of the site ----------------------------------------
 
 // As the signed-in reader's browser would ask, with its cookies.
-const answers = new WeakMap<SpecWorld, number>();
+const answers = new WeakMap<WebWorld, number>();
 
 When(
   "the database access status is asked for",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const response = await this.browserPage.request.get(
       `${this.baseUrl!}/api/site/database-access`,
-      { headers: addressingOf(this) },
+      { headers: this.extraHeaders },
     );
     answers.set(this, response.status());
   },
@@ -170,16 +168,16 @@ When(
 
 When(
   "database access is asked to be turned off for {int} minutes",
-  async function (this: SpecWorld, minutes: number) {
+  async function (this: WebWorld, minutes: number) {
     const response = await this.browserPage.request.post(
       `${this.baseUrl!}/api/site/database-access/off`,
-      { headers: addressingOf(this), data: { minutes, words: "" } },
+      { headers: this.extraHeaders, data: { minutes, words: "" } },
     );
     answers.set(this, response.status());
   },
 );
 
-Then("the answer is refused", function (this: SpecWorld) {
+Then("the answer is refused", function (this: WebWorld) {
   const status = answers.get(this);
   assert.ok(
     status === 401 || status === 422,

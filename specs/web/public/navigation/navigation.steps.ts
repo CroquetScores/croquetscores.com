@@ -1,8 +1,7 @@
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { withScripting } from "../../support/browser.js";
+import type { WebWorld } from "../../support/world.js";
 import { menuLink } from "../../support/menuLink.js";
 import { pressOutside } from "../../support/pressOutside.js";
 
@@ -15,66 +14,35 @@ const link = menuLink;
 const section = (label: string): string =>
   `.site-sections a:text-is("${label}")`;
 
-Given(
-  "a viewport {int} pixels wide",
-  async function (this: SpecWorld, width: number) {
-    // The height is not what any of these scenarios are about, so it is the same
-    // for all of them and says nothing.
-    await this.browserPage.setViewportSize({ width, height: 800 });
-  },
-);
-
-const openHomePage = async function (this: SpecWorld): Promise<void> {
-  await this.browserPage.goto(`${this.baseUrl!}/`);
-};
-
-Given("the home page is open", openHomePage);
-When("the home page is opened", openHomePage);
-
-Given("scripting is switched on", async function (this: SpecWorld) {
-  await withScripting(this);
-});
-
-Given(
-  "a viewport {int} pixels wide and {int} pixels tall",
-  async function (this: SpecWorld, width: number, height: number) {
-    await this.browserPage.setViewportSize({ width, height });
-  },
-);
-
 When(
   "the window is made {int} pixels wide and {int} pixels tall",
-  async function (this: SpecWorld, width: number, height: number) {
+  async function (this: WebWorld, width: number, height: number) {
     await this.browserPage.setViewportSize({ width, height });
   },
 );
 
 // Whether the menu is open is what the script decides, so it is read from the
 // element rather than from what can be seen, which a stylesheet decides too.
-const menuIsOpen = async (world: SpecWorld): Promise<boolean> =>
+const menuIsOpen = async (world: WebWorld): Promise<boolean> =>
   world.browserPage.evaluate<boolean>(
     `document.querySelector("header details.menu").open`,
   );
 
-Then("the menu is open", async function (this: SpecWorld) {
+Then("the menu is open", async function (this: WebWorld) {
   await this.browserPage.waitForFunction(
     `document.querySelector("header details.menu").open === true`,
   );
   assert.equal(await menuIsOpen(this), true);
 });
 
-Then("the menu is shut", async function (this: SpecWorld) {
+Then("the menu is shut", async function (this: WebWorld) {
   await this.browserPage.waitForFunction(
     `document.querySelector("header details.menu").open === false`,
   );
   assert.equal(await menuIsOpen(this), false);
 });
 
-When("the menu button is pressed", async function (this: SpecWorld) {
-  await this.browserPage.click(menuButton);
-});
-
-When("the page outside the menu is pressed", async function (this: SpecWorld) {
+When("the page outside the menu is pressed", async function (this: WebWorld) {
   await pressOutside(this);
 });
 
@@ -84,7 +52,7 @@ const panel = "header details.menu .menu-panel";
 
 Then(
   "the menu's panel ends within the window",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const box = await this.browserPage.locator(panel).boundingBox();
     const size = this.browserPage.viewportSize();
     assert.ok(box !== null && size !== null, "There is no panel to measure.");
@@ -99,7 +67,7 @@ Then(
 // panel's middle or at the window's left edge, which the panel, being at the
 // right, does not reach.
 const turnWheel = async (
-  world: SpecWorld,
+  world: WebWorld,
   pixels: number,
   where: "over" | "beside",
 ): Promise<void> => {
@@ -120,14 +88,14 @@ const turnWheel = async (
 
 When(
   "the wheel is turned {int} pixels down over the menu",
-  async function (this: SpecWorld, pixels: number) {
+  async function (this: WebWorld, pixels: number) {
     await turnWheel(this, pixels, "over");
   },
 );
 
 When(
   "the wheel is turned {int} pixels down beside the menu",
-  async function (this: SpecWorld, pixels: number) {
+  async function (this: WebWorld, pixels: number) {
     await turnWheel(this, pixels, "beside");
   },
 );
@@ -137,7 +105,7 @@ const panelScroll = `document.querySelector("${panel}").scrollTop`;
 // Read again on a timer rather than waited for with waitForFunction, which
 // never returned here when it was the first thing asked after the wheel was
 // turned, though the panel had moved by then.
-Then("the menu has been scrolled", async function (this: SpecWorld) {
+Then("the menu has been scrolled", async function (this: WebWorld) {
   for (let attempt = 0; attempt < 50; attempt++) {
     if (await this.browserPage.evaluate<boolean>(`${panelScroll} > 0`)) return;
     await this.browserPage.waitForTimeout(100);
@@ -145,51 +113,48 @@ Then("the menu has been scrolled", async function (this: SpecWorld) {
   assert.fail("The menu's panel was not scrolled.");
 });
 
-Then("the page has been scrolled", async function (this: SpecWorld) {
+Then("the page has been scrolled", async function (this: WebWorld) {
   await this.browserPage.waitForFunction("window.scrollY > 0");
 });
 
 // Scrolling is not instant, so a page that is to stay where it was is given a
 // moment in which to show that it did not.
-Then("the page has not been scrolled", async function (this: SpecWorld) {
+Then("the page has not been scrolled", async function (this: WebWorld) {
   await this.browserPage.waitForTimeout(300);
   assert.equal(await this.browserPage.evaluate<number>("window.scrollY"), 0);
 });
 
 // The heading is not a link, so pressing it is pressing the panel and nothing
 // the panel would do.
-When(
-  "the account group's heading is pressed",
-  async function (this: SpecWorld) {
-    await this.browserPage.click(`${group} .menu-account-heading`);
-  },
-);
+When("the account group's heading is pressed", async function (this: WebWorld) {
+  await this.browserPage.click(`${group} .menu-account-heading`);
+});
 
 Then(
   "the link {string} is visible",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(await this.browserPage.isVisible(link(label)), true);
   },
 );
 
 Then(
   "the link {string} is not visible",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(await this.browserPage.isVisible(link(label)), false);
   },
 );
 
-Then("the menu button is visible", async function (this: SpecWorld) {
+Then("the menu button is visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible(menuButton), true);
 });
 
-Then("the menu button is not visible", async function (this: SpecWorld) {
+Then("the menu button is not visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible(menuButton), false);
 });
 
 Then(
   "the link {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, label: string, height: number) {
+  async function (this: WebWorld, label: string, height: number) {
     const box = await this.browserPage.locator(link(label)).boundingBox();
     assert.ok(box !== null, `The link ${label} has no box to measure.`);
     assert.ok(
@@ -201,14 +166,14 @@ Then(
 
 Then(
   "the section {string} is visible",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(await this.browserPage.isVisible(section(label)), true);
   },
 );
 
 Then(
   "the section {string} is marked as current",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.getAttribute(section(label), "aria-current"),
       "page",
@@ -218,7 +183,7 @@ Then(
 
 Then(
   "the section {string} is not marked as current",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.getAttribute(section(label), "aria-current"),
       null,
@@ -228,7 +193,7 @@ Then(
 
 Then(
   /^(\d+) sections? (?:is|are) marked as current$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(
       await this.browserPage
         .locator('.site-sections a[aria-current="page"]')
@@ -242,12 +207,12 @@ Then(
 
 // Every link in it, in the order it offers them, whether or not the menu is
 // open: what is offered is the same either way.
-const offered = (world: SpecWorld): Promise<string[]> =>
+const offered = (world: WebWorld): Promise<string[]> =>
   world.browserPage.locator(".menu-links a").allTextContents();
 
 Then(
   /^the (first|second|third|fourth) link in the navigation is "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, label: string) {
+  async function (this: WebWorld, which: string, label: string) {
     const at = ["first", "second", "third", "fourth"].indexOf(which);
     assert.equal((await offered(this))[at], label);
   },
@@ -255,7 +220,7 @@ Then(
 
 Then(
   "the navigation holds {int} links",
-  async function (this: SpecWorld, count: number) {
+  async function (this: WebWorld, count: number) {
     assert.equal((await offered(this)).length, count);
   },
 );
@@ -264,7 +229,7 @@ Then(
 // the link is found by its word all the same.
 Then(
   "the link {string} is drawn as a picture",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.locator(`${link(label)} svg`).count(),
       1,
@@ -274,7 +239,7 @@ Then(
 
 Then(
   "the link {string} leads to {string}",
-  async function (this: SpecWorld, label: string, address: string) {
+  async function (this: WebWorld, label: string, address: string) {
     assert.equal(
       await this.browserPage.getAttribute(link(label), "href"),
       address,
@@ -286,7 +251,7 @@ Then(
 
 Then(
   "the link {string} is marked as the page being read",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.getAttribute(link(label), "aria-current"),
       "page",
@@ -296,7 +261,7 @@ Then(
 
 Then(
   "the link {string} is not marked as the page being read",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(
       await this.browserPage.getAttribute(link(label), "aria-current"),
       null,
@@ -309,7 +274,7 @@ Then(
 // what they run in the page, since the specs are typed without the browser's
 // own types.
 const drawn = async (
-  world: SpecWorld,
+  world: WebWorld,
   label: string,
   property: string,
 ): Promise<string> => {
@@ -324,7 +289,7 @@ const drawn = async (
 
 Then(
   "the link {string} is on black",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.equal(await drawn(this, label, "backgroundColor"), "rgb(0, 0, 0)");
   },
 );
@@ -334,7 +299,7 @@ Then(
 // of its own: the home page's are years, and none of them is current.
 Then(
   "the link {string} is on the colour the current section is on",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     const section = await this.browserPage.evaluate<string>(
       `(() => {
         const bar = document.createElement("nav");
@@ -353,7 +318,7 @@ Then(
 
 Then(
   "the link {string} is not underlined",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     assert.ok(
       !(await drawn(this, label, "textDecorationLine")).includes("underline"),
       `${label} is underlined.`,
@@ -367,25 +332,25 @@ Then(
 // navigation beside it is also made of.
 const group = ".menu-account";
 
-Then("the account menu is visible", async function (this: SpecWorld) {
+Then("the account menu is visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible("details.account-menu"), true);
 });
 
-Then("the account menu is not visible", async function (this: SpecWorld) {
+Then("the account menu is not visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible("details.account-menu"), false);
 });
 
-Then("the account group is visible", async function (this: SpecWorld) {
+Then("the account group is visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible(group), true);
 });
 
-Then("the account group is not visible", async function (this: SpecWorld) {
+Then("the account group is not visible", async function (this: WebWorld) {
   assert.equal(await this.browserPage.isVisible(group), false);
 });
 
 Then(
   "the account group is headed {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     assert.equal(
       (
         await this.browserPage
@@ -397,14 +362,14 @@ Then(
   },
 );
 
-const accountItem = (world: SpecWorld, item: string) =>
+const accountItem = (world: WebWorld, item: string) =>
   world.browserPage.locator(`${group} a`, {
     hasText: new RegExp(`^${item.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
   });
 
 Then(
   "the account group offers {string} at {string}",
-  async function (this: SpecWorld, item: string, path: string) {
+  async function (this: WebWorld, item: string, path: string) {
     const found = accountItem(this, item);
     assert.equal(await found.count(), 1, `The group does not offer ${item}.`);
     assert.equal(await found.getAttribute("href"), path);
@@ -413,14 +378,14 @@ Then(
 
 Then(
   "the account group does not offer {string}",
-  async function (this: SpecWorld, item: string) {
+  async function (this: WebWorld, item: string) {
     assert.equal(await accountItem(this, item).count(), 0);
   },
 );
 
 Then(
   "the account group offers a button to sign out",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(
       await this.browserPage.locator(`${group} form button`).count(),
       1,
@@ -430,7 +395,7 @@ Then(
 
 Then(
   "the account group's form posts to {string}",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     assert.equal(
       await this.browserPage.locator(`${group} form`).getAttribute("action"),
       path,
@@ -440,7 +405,7 @@ Then(
 
 Then(
   "the account group's {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, item: string, height: number) {
+  async function (this: WebWorld, item: string, height: number) {
     const box = await accountItem(this, item).boundingBox();
     assert.ok(box !== null, `${item} has no box to measure.`);
     assert.ok(

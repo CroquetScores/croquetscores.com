@@ -3,39 +3,35 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import { EmailAddress } from "../../../../src/domain/aggregates/accounts/value-objects/EmailAddress.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import {
   openAndKeepTheAnswer,
   postAndKeepTheAnswer,
-} from "../../support/answered.js";
-import { applicationFor } from "../../support/browser.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
+} from "../../support/answers.js";
+import { checkPasswordOf, emailsFor } from "../../support/control.js";
+import { unmarked } from "../../support/languages.js";
+import { wordsFor } from "../../support/words.js";
 
 const changePassword = "/account/change-password";
 const dialog = "section.dialog";
 
-const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
-  assert.ok(said !== undefined, `English has no words for ${key}.`);
-  return said;
-};
+const words = wordsFor;
 
-const open = async (world: SpecWorld): Promise<void> => {
+const open = async (world: WebWorld): Promise<void> => {
   await openAndKeepTheAnswer(world, changePassword);
 };
 
-Given("the change password page is open", async function (this: SpecWorld) {
+Given("the change password page is open", async function (this: WebWorld) {
   await open(this);
 });
 
-When("the change password page is opened", async function (this: SpecWorld) {
+When("the change password page is opened", async function (this: WebWorld) {
   await open(this);
 });
 
 // Whatever it is posted, since what is posted is not what is being asked
 // about: only whether there is a page there to take it.
-When("the change password page is posted to", async function (this: SpecWorld) {
+When("the change password page is posted to", async function (this: WebWorld) {
   await postAndKeepTheAnswer(this, changePassword, {
     currentPassword: "correct horse battery staple",
     password: "staple battery horse correct",
@@ -47,12 +43,12 @@ When("the change password page is posted to", async function (this: SpecWorld) {
 // opening, said all the same because it is what the scenario is about.
 When(
   "the change password page is opened with scripting off",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await open(this);
   },
 );
 
-Then("the change password page is shown", async function (this: SpecWorld) {
+Then("the change password page is shown", async function (this: WebWorld) {
   assert.equal(new URL(this.browserPage.url()).pathname, changePassword);
   const title = unmarked(
     (await this.browserPage.locator(".dialog-title").textContent()) ?? "",
@@ -62,7 +58,7 @@ Then("the change password page is shown", async function (this: SpecWorld) {
 
 // Asked for by a field of the kind that hides what is typed, found by its
 // label, which is what a reader and a screen reader know it by.
-const asksFor = async (world: SpecWorld, label: string): Promise<void> => {
+const asksFor = async (world: WebWorld, label: string): Promise<void> => {
   const input = world.browserPage
     .locator(dialog)
     .getByLabel(words(label), { exact: true });
@@ -72,24 +68,24 @@ const asksFor = async (world: SpecWorld, label: string): Promise<void> => {
 
 Then(
   "the dialog asks for the current password",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await asksFor(this, "changePassword.currentPassword");
   },
 );
 
-Then("the dialog asks for a new password", async function (this: SpecWorld) {
+Then("the dialog asks for a new password", async function (this: WebWorld) {
   await asksFor(this, "changePassword.password");
 });
 
 Then(
   "the dialog asks for the new password again",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await asksFor(this, "changePassword.passwordConfirmation");
   },
 );
 
 const type = async (
-  world: SpecWorld,
+  world: WebWorld,
   field: string,
   typed: string,
 ): Promise<void> => {
@@ -98,26 +94,26 @@ const type = async (
 
 Given(
   "the current password {string} is typed",
-  async function (this: SpecWorld, typed: string) {
+  async function (this: WebWorld, typed: string) {
     await type(this, "currentPassword", typed);
   },
 );
 
 Given(
   "the new password {string} is typed",
-  async function (this: SpecWorld, typed: string) {
+  async function (this: WebWorld, typed: string) {
     await type(this, "password", typed);
   },
 );
 
 Given(
   "the new password is typed again as {string}",
-  async function (this: SpecWorld, typed: string) {
+  async function (this: WebWorld, typed: string) {
     await type(this, "passwordConfirmation", typed);
   },
 );
 
-Then("every password field is empty", async function (this: SpecWorld) {
+Then("every password field is empty", async function (this: WebWorld) {
   const fields = await this.browserPage
     .locator(`${dialog} input[type="password"]`)
     .all();
@@ -130,29 +126,14 @@ Then("every password field is empty", async function (this: SpecWorld) {
 // Checked against the hash the account keeps, as signing in would check it,
 // without signing in: a scenario held by the sign in limit could not.
 const matches = async (
-  world: SpecWorld,
+  _world: WebWorld,
   address: string,
   password: string,
-): Promise<boolean> => {
-  const application = applicationFor(world);
-  const account = await application.unitOfWork.inTransaction(async () => {
-    const id = await application.accountsByEmailAddress.find(
-      EmailAddress.from(address),
-    );
-    assert.ok(id !== undefined, `There is no account for ${address}.`);
-    return application.accounts.load(id);
-  });
-  assert.ok(account !== undefined, `Nothing is kept for ${address}.`);
-  const checked = await application.passwords.check(
-    password,
-    account.passwordHash,
-  );
-  return checked.matches;
-};
+): Promise<boolean> => (await checkPasswordOf(address, password)).matches;
 
 Then(
   "the account for the email address {string} has the password {string}",
-  async function (this: SpecWorld, address: string, password: string) {
+  async function (this: WebWorld, address: string, password: string) {
     assert.ok(
       await matches(this, address, password),
       "That is not its password.",
@@ -162,7 +143,7 @@ Then(
 
 Then(
   "the account for the email address {string} does not have the password {string}",
-  async function (this: SpecWorld, address: string, password: string) {
+  async function (this: WebWorld, address: string, password: string) {
     assert.ok(
       !(await matches(this, address, password)),
       "That is still its password.",
@@ -172,16 +153,9 @@ Then(
 
 Then(
   "{string} is sent an email saying their password was changed",
-  async function (this: SpecWorld, address: string) {
-    const application = applicationFor(this);
-    const queued = await application.unitOfWork.inTransaction(() =>
-      application.emailQueue.emails(),
-    );
-    const sent = queued.filter(
-      (email) =>
-        !email.givenUp &&
-        email.to === address &&
-        email.kind === "Email.PasswordChanged",
+  async function (this: WebWorld, address: string) {
+    const sent = (await emailsFor(address)).filter(
+      (email) => !email.givenUp && email.kind === "Email.PasswordChanged",
     );
     assert.equal(sent.length, 1, "No email says the password was changed.");
   },

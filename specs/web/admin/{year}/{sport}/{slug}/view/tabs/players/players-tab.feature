@@ -126,8 +126,7 @@ Feature: The players tab of a tournament's page
       Then the flag of the player "Sam Someone" is named "New Zealand"
 
     Scenario: A flag is named in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And the player is to fly the flag "de"
       And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
       When the players of "Spring Open" are opened

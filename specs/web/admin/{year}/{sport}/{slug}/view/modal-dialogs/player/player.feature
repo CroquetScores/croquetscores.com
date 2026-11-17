@@ -681,8 +681,7 @@ Feature: A player is added to a tournament, or changed, in a modal dialog
       Then a line is drawn in the list of flags after "Wales"
 
     Scenario: The flags are in order of their names in the reader's language
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And the page of "Spring Open" is open
       When "Añadir jugador" is pressed
       Then the flag "Alemania" is offered before the flag "Argentina"

@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../support/marks.js";
 import {
   aServerError,
@@ -20,14 +20,14 @@ import { eventually } from "../../../../../../../../support/tournamentPage.js";
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
-const fieldOf = (world: SpecWorld, label: string): Locator =>
+const fieldOf = (world: WebWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 // The players offered, without the choice of nobody each begins on, once
 // they have arrived, which takes a moment after the dialog opens.
-const offered = async (world: SpecWorld, label: string): Promise<string[]> => {
+const offered = async (world: WebWorld, label: string): Promise<string[]> => {
   await fieldOf(world, label)
     .locator('option:not([value=""])')
     .first()
@@ -40,7 +40,7 @@ const offered = async (world: SpecWorld, label: string): Promise<string[]> => {
 // Given and When alike: Cucumber does not tell them apart.
 Given(
   "{string} is chosen as the {string}",
-  async function (this: SpecWorld, name: string, label: string) {
+  async function (this: WebWorld, name: string, label: string) {
     await eventually(this, async () => {
       assert.ok((await offered(this, label)).includes(name));
     });
@@ -56,7 +56,7 @@ for (const [said, can] of [
 ] as const) {
   Then(
     `{string} ${said} be changed`,
-    async function (this: SpecWorld, label: string) {
+    async function (this: WebWorld, label: string) {
       await eventually(this, async () => {
         assert.equal(await fieldOf(this, label).isEnabled(), can);
       });
@@ -66,7 +66,7 @@ for (const [said, can] of [
 
 Then(
   "the {string} chosen is {string}",
-  async function (this: SpecWorld, label: string, name: string) {
+  async function (this: WebWorld, label: string, name: string) {
     await eventually(this, async () => {
       assert.equal(
         (
@@ -78,7 +78,7 @@ Then(
   },
 );
 
-Given("{string} is emptied", async function (this: SpecWorld, label: string) {
+Given("{string} is emptied", async function (this: WebWorld, label: string) {
   const field = fieldOf(this, label);
   if (
     (await field.evaluate(
@@ -94,7 +94,7 @@ Given("{string} is emptied", async function (this: SpecWorld, label: string) {
 // By the fields' own ids, where the reader's language names them otherwise.
 Given(
   /^"([^"]*)" is chosen as the (winner|loser) in the score dialog$/,
-  async function (this: SpecWorld, name: string, part: string) {
+  async function (this: WebWorld, name: string, part: string) {
     const field = dialogOf(this).locator(`#field-${part}`);
     await eventually(this, async () => {
       assert.ok(
@@ -109,7 +109,7 @@ Given(
 
 Given(
   /^"([^"]*)" is typed as the (winner|loser)'s score in the score dialog$/,
-  async function (this: SpecWorld, words: string, part: string) {
+  async function (this: WebWorld, words: string, part: string) {
     await dialogOf(this).locator(`#field-${part}Score`).fill(words);
   },
 );
@@ -122,25 +122,25 @@ const playersAsked = /\/competitions\/[^/]+\/players$/;
 
 Given(
   "the competition's players are answered with a server error",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await answerNextGet(this, playersAsked, aServerError);
   },
 );
 
 Given(
   "the competition's players are answered with a reply that has none",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await answerNextGet(this, playersAsked, anEmptyReply);
   },
 );
 
 // What lets the answer through, kept for the step that does, since the
 // scenario has things to do between the dialog asking and being answered.
-const letThrough = new WeakMap<SpecWorld, () => void>();
+const letThrough = new WeakMap<WebWorld, () => void>();
 
 Given(
   "the competition's players are held back and then answered with a server error",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const heldBack = new Promise<void>((resolve) => {
       letThrough.set(this, resolve);
     });
@@ -148,7 +148,7 @@ Given(
   },
 );
 
-When("the players held back are let through", function (this: SpecWorld) {
+When("the players held back are let through", function (this: WebWorld) {
   const release = letThrough.get(this);
   assert.ok(release !== undefined, "No players were held back.");
   release();
@@ -156,7 +156,7 @@ When("the players held back are let through", function (this: SpecWorld) {
 
 Then(
   "{string} is offered as the {string}",
-  async function (this: SpecWorld, name: string, label: string) {
+  async function (this: WebWorld, name: string, label: string) {
     await eventually(this, async () => {
       assert.ok((await offered(this, label)).includes(name));
     });
@@ -165,7 +165,7 @@ Then(
 
 Then(
   "{string} is not offered as the {string}",
-  async function (this: SpecWorld, name: string, label: string) {
+  async function (this: WebWorld, name: string, label: string) {
     await eventually(this, async () => {
       const all = await offered(this, label);
       assert.ok(all.length > 0, "Nobody is offered yet.");
@@ -176,7 +176,7 @@ Then(
 
 Then(
   "{string} is offered before {string} as the {string}",
-  async function (this: SpecWorld, one: string, other: string, label: string) {
+  async function (this: WebWorld, one: string, other: string, label: string) {
     await eventually(this, async () => {
       const all = await offered(this, label);
       assert.ok(
@@ -191,7 +191,7 @@ Then(
 
 Then(
   "the first choice offered as the {string} is nobody",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     assert.equal(
       await fieldOf(this, label)
@@ -207,7 +207,7 @@ Then(
 // choice of nobody for want of having anything at all.
 Then(
   "nobody is not offered as the {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await eventually(this, async () => {
       assert.ok(
         (await offered(this, label)).length > 0,
@@ -229,12 +229,7 @@ const boxOf = async (thing: Locator) => {
 
 Then(
   "the score dialog says {string} between {string} and {string}",
-  async function (
-    this: SpecWorld,
-    words: string,
-    above: string,
-    below: string,
-  ) {
+  async function (this: WebWorld, words: string, above: string, below: string) {
     await dialogOf(this).waitFor();
     const between = dialogOf(this).locator(".score-beat");
     assert.equal((await between.innerText()).trim(), words);
@@ -258,7 +253,7 @@ Then(
 // nowhere.
 Then(
   "{string} is beside {string}",
-  async function (this: SpecWorld, one: string, other: string) {
+  async function (this: WebWorld, one: string, other: string) {
     await dialogOf(this).waitFor();
     const [first, second] = [
       await boxOf(fieldOf(this, one)),
@@ -273,7 +268,7 @@ Then(
 
 Then(
   "{string} does not bring up a keypad of numbers",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     const field = fieldOf(this, label);
     assert.ok(
@@ -285,12 +280,12 @@ Then(
   },
 );
 
-const status = (world: SpecWorld): Locator =>
+const status = (world: WebWorld): Locator =>
   dialogOf(world).locator('[role="status"]');
 
 Then(
   "the score dialog says the game {string} won against {string} was added",
-  async function (this: SpecWorld, winner: string, loser: string) {
+  async function (this: WebWorld, winner: string, loser: string) {
     await eventually(this, async () => {
       const said = await status(this).innerText();
       assert.ok(
@@ -305,7 +300,7 @@ Then(
 
 Then(
   "the score dialog says no game was added",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.equal((await status(this).innerText()).trim(), "");
     });
@@ -316,7 +311,7 @@ Then(
 // taken to it.
 Then(
   "what the score dialog says about the game added is announced",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await status(this).innerText()).trim() !== "");
     });
@@ -328,7 +323,7 @@ Then(
 // game is added, inside its marks.
 When(
   "every word in the score dialog but the players' names is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {
       const stray = await unmarkedWithin(this, open, ["select option"]);

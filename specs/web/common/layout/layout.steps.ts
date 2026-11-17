@@ -2,51 +2,16 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { english } from "../../../../src/web/languages/english.js";
-import {
-  anApplicationWhoseAdministratorIs,
-  anApplicationRunning,
-  anApplicationServedAs,
-  siteNameFor,
-} from "../../support/browser.js";
-import { closes, opens, unmarked } from "../../support/languages.js";
+import { siteTold } from "../../support/site.js";
+import { closes, opens } from "../../support/languages.js";
 import { changeTournament } from "../../support/tournaments.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 const banner = ".try-banner";
 
-// A site of this scenario's own, served as the website it names, so that what
-// the shell puts round a page can be seen to follow the website rather than
-// anything else about the application every other scenario shares.
-Given(
-  "a site served as {string}",
-  async function (this: SpecWorld, host: string) {
-    this.baseUrl = await anApplicationServedAs(this, host);
-  },
-);
-
-// Read against the English words, with the site's name filled in as the site
-// is called, so that a banner saying something else — or holding a place the
-// name was never put in — is not taken for this one. The name is asked of the
-// application rather than read off the header, because the admin draws its
-// header itself and a page looked at with no scripting has none.
-Then(
-  "the page carries the try website's banner",
-  async function (this: SpecWorld) {
-    const siteName = siteNameFor(this);
-    const words = english.words["tryWebsite.banner"];
-    assert.ok(words !== undefined, "English has no words for the banner.");
-
-    const shown = unmarked(
-      await this.browserPage.locator(banner).innerText(),
-    ).trim();
-    assert.equal(shown, words.replace("{siteName}", siteName));
-  },
-);
-
 Then(
   "the try website's banner is above the site bar",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const above = await this.browserPage.locator(banner).boundingBox();
     const bar = await this.browserPage.locator("header.site-bar").boundingBox();
     assert.ok(
@@ -61,7 +26,7 @@ Then(
 // banner is seen, and not only one that was never written.
 Then(
   "the try website's banner is black on yellow",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const drawn = await this.browserPage
       .locator(banner)
       .evaluate((element: unknown) => {
@@ -71,13 +36,6 @@ Then(
         return [style.backgroundColor, style.color];
       });
     assert.deepEqual(drawn, ["rgb(255, 235, 59)", "rgb(0, 0, 0)"]);
-  },
-);
-
-Then(
-  "the page carries no try website's banner",
-  async function (this: SpecWorld) {
-    assert.equal(await this.browserPage.locator(banner).count(), 0);
   },
 );
 
@@ -91,40 +49,29 @@ const analyticsScript =
 
 Then(
   "the page carries Cloudflare's web analytics",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await this.browserPage.locator(analyticsScript).count(), 1);
   },
 );
 
 Then(
   "the page carries no Cloudflare web analytics",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await this.browserPage.locator(analyticsScript).count(), 0);
   },
 );
 
 // The tournament named in the header -------------------------------------------------
 
-const tournamentInHeader = (world: SpecWorld): Locator =>
+const tournamentInHeader = (world: WebWorld): Locator =>
   world.browserPage.locator("header.site-bar .site-tournament");
 
-const siteNameInHeader = (world: SpecWorld): Locator =>
+const siteNameInHeader = (world: WebWorld): Locator =>
   world.browserPage.locator("header.site-bar .site-name");
 
 Then(
-  "the header names the tournament {string}",
-  async function (this: SpecWorld, name: string) {
-    assert.equal((await tournamentInHeader(this).innerText()).trim(), name);
-  },
-);
-
-Then("the header names no tournament", async function (this: SpecWorld) {
-  assert.equal(await tournamentInHeader(this).count(), 0);
-});
-
-Then(
   "the tournament named in the header is beneath the site's name",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const site = await siteNameInHeader(this).boundingBox();
     const tournament = await tournamentInHeader(this).boundingBox();
     assert.ok(
@@ -160,7 +107,7 @@ const setIn = (found: Locator): Promise<string> =>
 
 Then(
   "the tournament named in the header is set as the site's name is",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(
       await setIn(tournamentInHeader(this)),
       await setIn(siteNameInHeader(this)),
@@ -170,7 +117,7 @@ Then(
 
 When(
   "the tournament named in the header is pressed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await tournamentInHeader(this).click();
     await this.browserPage.waitForLoadState();
   },
@@ -180,42 +127,34 @@ When(
 
 Given(
   "the tournament {string} has the subtitle:",
-  async function (this: SpecWorld, name: string, subtitle: string) {
+  async function (this: WebWorld, name: string, subtitle: string) {
     await changeTournament(this, name, { subtitle });
   },
 );
 
-// A window short enough that any tournament's page scrolls.
-Given(
-  "a viewport {int} pixels wide and {int} pixels high",
-  async function (this: SpecWorld, width: number, height: number) {
-    await this.browserPage.setViewportSize({ width, height });
-  },
-);
-
-When("the page is scrolled to its bottom", async function (this: SpecWorld) {
+When("the page is scrolled to its bottom", async function (this: WebWorld) {
   await this.browserPage.evaluate(
     "globalThis.scrollTo(0, globalThis.document.body.scrollHeight)",
   );
 });
 
-const subtitleInHeader = (world: SpecWorld): Locator =>
+const subtitleInHeader = (world: WebWorld): Locator =>
   world.browserPage.locator(".tournament-subtitle");
 
 Then(
   "the header shows the subtitle {string}",
-  async function (this: SpecWorld, subtitle: string) {
+  async function (this: WebWorld, subtitle: string) {
     assert.equal((await subtitleInHeader(this).innerText()).trim(), subtitle);
   },
 );
 
-Then("the header shows no subtitle", async function (this: SpecWorld) {
+Then("the header shows no subtitle", async function (this: WebWorld) {
   assert.equal(await subtitleInHeader(this).count(), 0);
 });
 
 Then(
   "the subtitle in the header is beneath the tournament named there",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const tournament = await tournamentInHeader(this).boundingBox();
     const subtitle = await subtitleInHeader(this).boundingBox();
     assert.ok(
@@ -233,7 +172,7 @@ Then(
 // while what is beneath it scrolls under it.
 Then(
   "the subtitle in the header is out of sight",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const bar = await this.browserPage.locator("header.site-bar").boundingBox();
     const subtitle = await subtitleInHeader(this).boundingBox();
     assert.ok(bar !== null && subtitle !== null, "One of them is not drawn.");
@@ -246,25 +185,25 @@ Then(
 
 Then(
   "the subtitle in the header draws {string} bold",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const bold = await subtitleInHeader(this).locator("strong").allInnerTexts();
     assert.deepEqual(bold, [words]);
   },
 );
 
-const linkInSubtitle = (world: SpecWorld, words: string): Locator =>
+const linkInSubtitle = (world: WebWorld, words: string): Locator =>
   subtitleInHeader(world).locator("a", { hasText: words });
 
 Then(
   "the subtitle's link {string} leads to {string}",
-  async function (this: SpecWorld, words: string, href: string) {
+  async function (this: WebWorld, words: string, href: string) {
     assert.equal(await linkInSubtitle(this, words).getAttribute("href"), href);
   },
 );
 
 Then(
   "the subtitle's link {string} is marked as not vouched for",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const rel = (
       (await linkInSubtitle(this, words).getAttribute("rel")) ?? ""
     ).split(/\s+/);
@@ -275,7 +214,7 @@ Then(
 
 Then(
   "the subtitle in the header is a numbered list of {int} items",
-  async function (this: SpecWorld, items: number) {
+  async function (this: WebWorld, items: number) {
     assert.equal(
       await subtitleInHeader(this).locator("ol > li").count(),
       items,
@@ -285,39 +224,41 @@ Then(
 
 // The version in the footer ----------------------------------------------------
 
-const versionInFooter = (world: SpecWorld): Locator =>
+const versionInFooter = (world: WebWorld): Locator =>
   world.browserPage.locator("footer.site-footer .site-version");
 
 Given(
   "a site running version {int}",
-  async function (this: SpecWorld, version: number) {
-    this.baseUrl = await anApplicationRunning(this, version);
+  async function (this: WebWorld, version: number) {
+    this.baseUrl = (
+      await siteTold({ TEST_SITE_VERSION: String(version) })
+    ).baseUrl;
   },
 );
 
-Given("a site running no version", async function (this: SpecWorld) {
-  this.baseUrl = await anApplicationRunning(this, null);
+Given("a site running no version", async function (this: WebWorld) {
+  this.baseUrl = (await siteTold({ TEST_SITE_VERSION: "none" })).baseUrl;
 });
 
 Then(
   "the footer carries the version {string}",
-  async function (this: SpecWorld, version: string) {
+  async function (this: WebWorld, version: string) {
     assert.equal((await versionInFooter(this).innerText()).trim(), version);
   },
 );
 
-Then("the footer carries no version", async function (this: SpecWorld) {
+Then("the footer carries no version", async function (this: WebWorld) {
   assert.equal(await versionInFooter(this).count(), 0);
 });
 
 // The link to report a bug in the footer ---------------------------------------
 
-const bugReport = (world: SpecWorld): Locator =>
+const bugReport = (world: WebWorld): Locator =>
   world.browserPage.locator("footer.site-footer a.report-bug");
 
 // The link as an address, which is a mailto: whose path is who it writes to and
 // whose subject is a parameter of it.
-const bugReportAddress = async (world: SpecWorld): Promise<URL> => {
+const bugReportAddress = async (world: WebWorld): Promise<URL> => {
   const href = await bugReport(world).getAttribute("href");
   assert.ok(href !== null, "The link has no address.");
   return new URL(href);
@@ -325,14 +266,16 @@ const bugReportAddress = async (world: SpecWorld): Promise<URL> => {
 
 Given(
   "a site whose administrator is {string}",
-  async function (this: SpecWorld, emailAddress: string) {
-    this.baseUrl = await anApplicationWhoseAdministratorIs(this, emailAddress);
+  async function (this: WebWorld, emailAddress: string) {
+    this.baseUrl = (
+      await siteTold({ ADMINISTRATOR_EMAIL_ADDRESS: emailAddress })
+    ).baseUrl;
   },
 );
 
 // Among the footer's links, which are for finding: the one that writes about a
 // bug is asked for by its own steps below, and any other by its words.
-const linksOffered = async (world: SpecWorld): Promise<string[]> => {
+const linksOffered = async (world: WebWorld): Promise<string[]> => {
   const offered: string[] = [];
   for (const link of await world.browserPage
     .locator("footer.site-footer .site-footer-links a")
@@ -345,7 +288,7 @@ const linksOffered = async (world: SpecWorld): Promise<string[]> => {
 
 Then(
   "the footer offers the link {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.ok(
       (await linksOffered(this)).includes(words),
       `The footer does not offer ${words}.`,
@@ -355,7 +298,7 @@ Then(
 
 Then(
   "the footer does not offer the link {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.ok(
       !(await linksOffered(this)).includes(words),
       `The footer offers ${words}.`,
@@ -365,7 +308,7 @@ Then(
 
 Then(
   "the bug report is addressed to {string}",
-  async function (this: SpecWorld, emailAddress: string) {
+  async function (this: WebWorld, emailAddress: string) {
     const address = await bugReportAddress(this);
     assert.equal(address.protocol, "mailto:");
     assert.equal(decodeURIComponent(address.pathname), emailAddress);
@@ -374,7 +317,7 @@ Then(
 
 Then(
   "the bug report has the subject {string}",
-  async function (this: SpecWorld, subject: string) {
+  async function (this: WebWorld, subject: string) {
     assert.equal(
       (await bugReportAddress(this)).searchParams.get("subject"),
       subject,
@@ -384,7 +327,7 @@ Then(
 
 Then(
   "the bug report link is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const shown = (await bugReport(this).innerText()).trim();
     assert.ok(shown.startsWith(opens) && shown.endsWith(closes), shown);
   },
@@ -392,7 +335,7 @@ Then(
 
 // Where the footer's links are ---------------------------------------------------
 
-const footerLinks = (world: SpecWorld): Locator =>
+const footerLinks = (world: WebWorld): Locator =>
   world.browserPage.locator("footer.site-footer .site-footer-links a");
 
 const boxOf = async (locator: Locator, what: string) => {
@@ -407,7 +350,7 @@ const near = (one: number, other: number): boolean =>
 
 Then(
   "the footer's links are beneath the donation and the copyright",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const bar = await boxOf(
       this.browserPage.locator("footer.site-footer .site-footer-bar"),
       "The footer's first row",
@@ -423,7 +366,7 @@ Then(
   },
 );
 
-Then("the footer's links are side by side", async function (this: SpecWorld) {
+Then("the footer's links are side by side", async function (this: WebWorld) {
   // By the middle of each and not the top, since a link that is as tall as a
   // thumb needs (homeScreenLink.feature) is centred in the row with the shorter
   // ones, and starts above them without being on a row of its own.
@@ -441,7 +384,7 @@ Then("the footer's links are side by side", async function (this: SpecWorld) {
 
 Then(
   /^the (first|second|third|fourth) footer link is "([^"]*)"$/,
-  async function (this: SpecWorld, place: string, words: string) {
+  async function (this: WebWorld, place: string, words: string) {
     const at = ["first", "second", "third", "fourth"].indexOf(place);
     assert.equal((await footerLinks(this).nth(at).innerText()).trim(), words);
   },
@@ -449,7 +392,7 @@ Then(
 
 Then(
   "the footer's links end where the theme choice ends",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const last = await boxOf(footerLinks(this).last(), "The last link");
     const choice = await boxOf(
       this.browserPage
@@ -466,7 +409,7 @@ Then(
 
 Then(
   "the theme choice is beneath the footer's links",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const last = await boxOf(footerLinks(this).last(), "The last link");
     const choice = await boxOf(
       this.browserPage.locator("footer.site-footer .site-footer-theme"),

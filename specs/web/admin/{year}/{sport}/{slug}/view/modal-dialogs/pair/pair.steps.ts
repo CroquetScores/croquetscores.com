@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
 import {
   eventually,
   settled,
@@ -13,37 +13,37 @@ import {
 // opens the tab and reads its list is the tab's (players-tab.steps.ts); these
 // are what this dialog adds.
 
-const dialogOf = (world: SpecWorld): Locator =>
+const dialogOf = (world: WebWorld): Locator =>
   world.browserPage.locator("dialog[open]");
 
 // Whatever the button is called in the reader's language, by what it does.
-const addPair = (world: SpecWorld): Locator =>
+const addPair = (world: WebWorld): Locator =>
   tabPanel(world).locator('button[data-action="addPair"]');
 
-When("the way to add a pair is pressed", async function (this: SpecWorld) {
+When("the way to add a pair is pressed", async function (this: WebWorld) {
   await settled(this);
   await addPair(this).click();
 });
 
-Then("the way to add a pair is offered", async function (this: SpecWorld) {
+Then("the way to add a pair is offered", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await addPair(this).count(), 1);
   });
 });
 
-Then("the way to add a pair is not offered", async function (this: SpecWorld) {
+Then("the way to add a pair is not offered", async function (this: WebWorld) {
   await settled(this);
   await eventually(this, async () => {
     assert.equal(await addPair(this).count(), 0);
   });
 });
 
-Then("the pair dialog is open", async function (this: SpecWorld) {
+Then("the pair dialog is open", async function (this: WebWorld) {
   await dialogOf(this).waitFor();
   assert.equal(await dialogOf(this).locator("#field-first").count(), 1);
 });
 
-Then("the pair dialog is closed", async function (this: SpecWorld) {
+Then("the pair dialog is closed", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await dialogOf(this).count(), 0);
   });
@@ -51,7 +51,7 @@ Then("the pair dialog is closed", async function (this: SpecWorld) {
 
 Then(
   "the pair dialog is titled {string}",
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     await dialogOf(this).waitFor();
     assert.equal(
       (await dialogOf(this).locator(".dialog-title").innerText()).trim(),
@@ -62,7 +62,7 @@ Then(
 
 Then(
   "the pair dialog's first button is {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await dialogOf(this).waitFor();
     assert.equal(
       (
@@ -78,7 +78,7 @@ Then(
 
 Then(
   "the pair dialog asks for {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     const labels = (
       await dialogOf(this).locator(".field-label").allInnerTexts()
@@ -87,7 +87,7 @@ Then(
   },
 );
 
-const offered = async (world: SpecWorld): Promise<string[]> =>
+const offered = async (world: WebWorld): Promise<string[]> =>
   (
     await dialogOf(world)
       .locator('#field-first option:not([value=""])')
@@ -96,7 +96,7 @@ const offered = async (world: SpecWorld): Promise<string[]> =>
 
 Then(
   "the pair dialog offers the player {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     assert.ok((await offered(this)).includes(name));
   },
@@ -104,13 +104,13 @@ Then(
 
 Then(
   "the pair dialog does not offer the player {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     assert.ok(!(await offered(this)).includes(name));
   },
 );
 
-const offeredAsSecond = async (world: SpecWorld): Promise<string[]> =>
+const offeredAsSecond = async (world: WebWorld): Promise<string[]> =>
   (
     await dialogOf(world)
       .locator('#field-second option:not([value=""])')
@@ -119,7 +119,7 @@ const offeredAsSecond = async (world: SpecWorld): Promise<string[]> =>
 
 Then(
   "the pair dialog offers {string} as the second player",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     assert.ok((await offeredAsSecond(this)).includes(name));
   },
@@ -127,13 +127,13 @@ Then(
 
 Then(
   "the pair dialog does not offer {string} as the second player",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     assert.ok(!(await offeredAsSecond(this)).includes(name));
   },
 );
 
-Then("no second player is chosen", async function (this: SpecWorld) {
+Then("no second player is chosen", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(
       await dialogOf(this).locator("#field-second").inputValue(),
@@ -148,7 +148,7 @@ for (const [place, field] of [
 ] as const) {
   Given(
     `{string} is chosen as the ${place} player`,
-    async function (this: SpecWorld, name: string) {
+    async function (this: WebWorld, name: string) {
       await dialogOf(this).locator(field).selectOption({ label: name });
     },
   );
@@ -156,7 +156,7 @@ for (const [place, field] of [
 
 Then(
   "{string} is still the first player",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const chosen = await dialogOf(this)
       .locator("#field-first option:checked")
       .innerText();
@@ -167,7 +167,7 @@ Then(
 // The first button, which does what the dialog is for, whatever it is called.
 // Waited for until the site has answered, since the tournament is read
 // straight after and the answer is what says the pair was made.
-When("Add Pair is pressed", async function (this: SpecWorld) {
+When("Add Pair is pressed", async function (this: WebWorld) {
   const answered = this.browserPage.waitForResponse(
     (response) =>
       response.url().endsWith("/pairs") &&
@@ -180,11 +180,11 @@ When("Add Pair is pressed", async function (this: SpecWorld) {
 
 // Nothing is sent where either player is not chosen, so there is no answer to
 // wait for, and what is asked is whether a request was made at all.
-const asked = new WeakMap<SpecWorld, string[]>();
+const asked = new WeakMap<WebWorld, string[]>();
 
 When(
   "Add Pair is pressed with a player not chosen",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const requests: string[] = [];
     asked.set(this, requests);
     this.browserPage.on("request", (request) => {
@@ -198,11 +198,11 @@ When(
   },
 );
 
-Then("no pair was asked for", function (this: SpecWorld) {
+Then("no pair was asked for", function (this: WebWorld) {
   assert.deepEqual(asked.get(this), []);
 });
 
-When("the pair dialog is cancelled", async function (this: SpecWorld) {
+When("the pair dialog is cancelled", async function (this: WebWorld) {
   await dialogOf(this).locator(".dialog-buttons button").last().click();
   await settled(this);
 });
@@ -211,7 +211,7 @@ When("the pair dialog is cancelled", async function (this: SpecWorld) {
 // language's to choose.
 Then(
   "the pair dialog says above its fields that it was refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(this, async () => {
       const refused =
         (await dialogOf(this)
@@ -227,12 +227,12 @@ Then(
 
 // What it says -----------------------------------------------------------------
 
-const status = (world: SpecWorld): Locator =>
+const status = (world: WebWorld): Locator =>
   dialogOf(world).locator('[role="status"]');
 
 Then(
   "the pair dialog says {string} was added",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.ok(
         (await status(this).innerText()).includes(name),
@@ -242,7 +242,7 @@ Then(
   },
 );
 
-Then("the pair dialog says nobody was added", async function (this: SpecWorld) {
+Then("the pair dialog says nobody was added", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal((await status(this).innerText()).trim(), "");
   });
@@ -252,20 +252,20 @@ Then("the pair dialog says nobody was added", async function (this: SpecWorld) {
 // taken to it.
 Then(
   "what the pair dialog says about which pair was added is announced",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await eventually(this, async () => {
       assert.ok((await status(this).innerText()).trim() !== "");
     });
   },
 );
 
-Then("no first player is chosen", async function (this: SpecWorld) {
+Then("no first player is chosen", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.equal(await dialogOf(this).locator("#field-first").inputValue(), "");
   });
 });
 
-Then("the first player has the focus", async function (this: SpecWorld) {
+Then("the first player has the focus", async function (this: WebWorld) {
   await eventually(this, async () => {
     assert.ok(
       await dialogOf(this)
@@ -285,17 +285,27 @@ Then("the first player has the focus", async function (this: SpecWorld) {
 // empty it: the request goes through and the page is given nothing to read.
 Given(
   "the answer to making a pair cannot be read",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage.route("**/pairs", async (route) => {
-      const response = await route.fetch();
-      await route.fulfill({ response, body: "" });
+      // Asked as the page asked it, which the browser says is from this site
+      // and the request made here would not say.
+      const response = await route.fetch({
+        headers: {
+          ...route.request().headers(),
+          "sec-fetch-site": "same-origin",
+        },
+      });
+      // Without the length of what was emptied, which is no longer true of it.
+      const headers = { ...response.headers() };
+      delete headers["content-length"];
+      await route.fulfill({ status: response.status(), headers, body: "" });
     });
   },
 );
 
 Then(
   "the pair dialog says nothing was refused",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await settled(this);
     assert.equal(await dialogOf(this).locator(".dialog-problems").count(), 0);
   },

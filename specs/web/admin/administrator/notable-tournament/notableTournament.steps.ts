@@ -7,7 +7,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../support/world.js";
+import type { WebWorld } from "../../../support/world.js";
 
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
@@ -27,12 +27,12 @@ const eventually = async (check: () => Promise<void>): Promise<void> => {
   }
 };
 
-const buttonCalled = (world: SpecWorld, words: string): Locator =>
+const buttonCalled = (world: WebWorld, words: string): Locator =>
   world.browserPage.locator("main button").filter({ hasText: exactly(words) });
 
 Then(
   "the notable tournament page names the tournament {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(async () => {
       assert.equal(
         (
@@ -48,7 +48,7 @@ Then(
 
 Then(
   /^the page's link to the (tournament|admin tournament) leads to "([^"]*)"$/,
-  async function (this: SpecWorld, which: string, address: string) {
+  async function (this: WebWorld, which: string, address: string) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage
@@ -64,7 +64,7 @@ Then(
 
 Then(
   "the page has the button {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await eventually(async () => {
       assert.equal(await buttonCalled(this, words).count(), 1);
     });
@@ -75,7 +75,7 @@ Then(
 // not taken for one that is not offered.
 Then(
   "the page has no button {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await this.browserPage
       .locator("main [data-none]")
       .waitFor({ timeout: 3000 });
@@ -85,14 +85,14 @@ Then(
 
 When(
   "the page's button {string} is pressed",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await buttonCalled(this, words).click();
   },
 );
 
 Then(
   "the page says the tournament is neither national nor international",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await this.browserPage
       .locator("main [data-none]")
       .waitFor({ timeout: 3000 });
@@ -101,7 +101,7 @@ Then(
 
 Then(
   "the page says it is refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(async () => {
       assert.equal(
         await this.browserPage

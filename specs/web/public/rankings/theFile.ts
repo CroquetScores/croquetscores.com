@@ -8,8 +8,7 @@
 import { strict as assert } from "node:assert";
 import { inflateRawSync } from "node:zlib";
 
-import { addressingOf } from "../../support/browser.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 /** What the site answered a request for the file with. */
 export interface Given {
@@ -40,9 +39,9 @@ interface Kept {
   sheetName: string | undefined;
 }
 
-const kept = new WeakMap<SpecWorld, Kept>();
+const kept = new WeakMap<WebWorld, Kept>();
 
-const keptOf = (world: SpecWorld): Kept => {
+const keptOf = (world: WebWorld): Kept => {
   let found = kept.get(world);
   if (found === undefined) {
     found = { given: undefined, lines: [], rows: [], sheetName: undefined };
@@ -53,11 +52,11 @@ const keptOf = (world: SpecWorld): Kept => {
 
 /** Asks for `path` on the scenario's site, following any redirect. */
 export const request = async (
-  world: SpecWorld,
+  world: WebWorld,
   path: string,
 ): Promise<Given> => {
   const response = await fetch(`${world.baseUrl!}${path}`, {
-    headers: addressingOf(world),
+    headers: world.extraHeaders,
     redirect: "follow",
   });
   const given: Given = {
@@ -71,7 +70,7 @@ export const request = async (
 };
 
 /** What was last asked for. */
-export const givenTo = (world: SpecWorld): Given => {
+export const givenTo = (world: WebWorld): Given => {
   const { given } = keptOf(world);
   assert.ok(given !== undefined, "No file was asked for.");
   return given;
@@ -93,13 +92,13 @@ export const fileNameOf = (given: Given): string => {
 // Text file -------------------------------------------------------------------------
 
 /** Keeps the lines of the text file given, which is `text` as it was written. */
-export const keepTextFile = (world: SpecWorld, text: string): void => {
+export const keepTextFile = (world: WebWorld, text: string): void => {
   const lines = text === "" ? [] : text.replace(/\r?\n$/, "").split(/\r?\n/);
   keptOf(world).lines = lines.map((line) => ({ text: line, bold: false }));
 };
 
 /** The text of the file given, which is what was asked for last. */
-export const textGiven = (world: SpecWorld): string =>
+export const textGiven = (world: WebWorld): string =>
   givenTo(world).bytes.toString("latin1");
 
 // Spreadsheet -----------------------------------------------------------------------
@@ -148,7 +147,7 @@ const unescaped = (text: string): string =>
  * file. Rows and cells are as written, so a row left empty is a line of
  * nothing.
  */
-export const keepSpreadsheet = (world: SpecWorld): void => {
+export const keepSpreadsheet = (world: WebWorld): void => {
   const entries = zipEntries(givenTo(world).bytes);
   const sheet = entries.get("xl/worksheets/sheet1.xml");
   assert.ok(sheet !== undefined, "The file has no worksheet.");
@@ -185,14 +184,14 @@ export const keepSpreadsheet = (world: SpecWorld): void => {
 };
 
 /** The lines of the file read last. */
-export const linesRead = (world: SpecWorld): readonly Line[] =>
+export const linesRead = (world: WebWorld): readonly Line[] =>
   keptOf(world).lines;
 
 /** The spreadsheet's rows read last, each its cells by column letter. */
 export const rowsRead = (
-  world: SpecWorld,
+  world: WebWorld,
 ): readonly ReadonlyMap<string, Cell>[] => keptOf(world).rows;
 
 /** The name of the spreadsheet's worksheet read last. */
-export const sheetNameRead = (world: SpecWorld): string | undefined =>
+export const sheetNameRead = (world: WebWorld): string | undefined =>
   keptOf(world).sheetName;

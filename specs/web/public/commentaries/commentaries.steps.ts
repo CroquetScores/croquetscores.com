@@ -2,13 +2,9 @@ import { Given, Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import {
-  inHandOf,
-  load,
-  scenarioOf,
-} from "../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../support/world.js";
-import { colourOf, dangerOn, wordsFor } from "../../support/newMarks.js";
+import type { WebWorld } from "../../support/world.js";
+import { commentaryLink } from "../../support/commentaryPages.js";
+import { colourOf, dangerOn } from "../../support/newMarks.js";
 import { unmarked } from "../../support/languages.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -18,10 +14,10 @@ import { unmarked } from "../../support/languages.js";
 const exactly = (words: string): RegExp =>
   new RegExp(`^${words.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 
-const commentaries = (world: SpecWorld): Locator =>
+const commentaries = (world: WebWorld): Locator =>
   world.browserPage.locator("main .commentaries > .commentary-listed");
 
-const commentaryTitled = (world: SpecWorld, title: string): Locator =>
+const commentaryTitled = (world: WebWorld, title: string): Locator =>
   commentaries(world).filter({
     has: world.browserPage.locator(".commentary-listed-title", {
       hasText: exactly(title),
@@ -33,14 +29,14 @@ const textOf = async (found: Locator): Promise<string> =>
 
 Then(
   "{string} is among the commentaries",
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     assert.equal(await commentaryTitled(this, title).count(), 1);
   },
 );
 
 Then(
   /^the (first|second|third) commentary is "(.*)"$/,
-  async function (this: SpecWorld, which: string, title: string) {
+  async function (this: WebWorld, which: string, title: string) {
     assert.equal(
       await textOf(
         commentaries(this)
@@ -54,7 +50,7 @@ Then(
 
 Then(
   "the commentary {string} is listed as written by {string}",
-  async function (this: SpecWorld, title: string, writer: string) {
+  async function (this: WebWorld, title: string, writer: string) {
     assert.equal(
       await textOf(
         commentaryTitled(this, title).locator(".commentary-listed-writer"),
@@ -64,19 +60,7 @@ Then(
   },
 );
 
-// A link in the page's content by its words, wherever it is.
-Then(
-  "{string} leads to {string}",
-  async function (this: SpecWorld, words: string, path: string) {
-    const link = this.browserPage
-      .locator("main")
-      .getByRole("link", { name: words, exact: true });
-    assert.equal(await link.count(), 1, `There is no link ${words}.`);
-    assert.equal(await link.getAttribute("href"), path);
-  },
-);
-
-Then("no commentaries are listed", async function (this: SpecWorld) {
+Then("no commentaries are listed", async function (this: WebWorld) {
   assert.equal(await commentaries(this).count(), 0);
 });
 
@@ -84,7 +68,7 @@ Then("no commentaries are listed", async function (this: SpecWorld) {
 Then(
   "the content's headings are {string}, {string} and {string}, in that order",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     first: string,
     second: string,
     third: string,
@@ -96,21 +80,9 @@ Then(
   },
 );
 
-// A paragraph of the content that says exactly this.
-const paragraphSaying = (world: SpecWorld, words: string): Locator =>
-  world.browserPage.locator("main p", { hasText: exactly(words) });
-
-Then("the page says {string}", async function (this: SpecWorld, words: string) {
-  assert.equal(
-    await paragraphSaying(this, words).count(),
-    1,
-    `Nothing in the content says ${words}.`,
-  );
-});
-
 Then(
   "the page says {string} in bold",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.equal(
       await this.browserPage
         .locator("main strong", { hasText: exactly(words) })
@@ -121,14 +93,14 @@ Then(
   },
 );
 
-const linkCalled = (world: SpecWorld, words: string): Locator =>
+const linkCalled = (world: WebWorld, words: string): Locator =>
   world.browserPage
     .locator("main")
     .getByRole("link", { name: words, exact: true });
 
 Then(
   "{string} is drawn as a button",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const classes = (
       (await linkCalled(this, words).getAttribute("class")) ?? ""
     ).split(/\s+/);
@@ -149,7 +121,7 @@ const below = async (upper: Locator, lower: Locator): Promise<boolean> => {
 
 Then(
   "{string} comes after the list of commentaries",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.ok(
       await below(
         this.browserPage.locator("main .commentaries"),
@@ -162,7 +134,7 @@ Then(
 
 Then(
   "{string} comes before the heading {string}",
-  async function (this: SpecWorld, words: string, heading: string) {
+  async function (this: WebWorld, words: string, heading: string) {
     assert.ok(
       await below(
         linkCalled(this, words),
@@ -177,21 +149,16 @@ Then(
 
 // What is new to the reader ------------------------------------------------------
 
-// Read by opening its page, which is what reading it is, in this browser.
-// Found by its title among the scenario's tournaments, which the scenario
-// names it by.
+// Read by opening its page, which is what reading it is, in this browser. Found by
+// its title on the commentaries page of the tournament that has it.
 Given(
   "the reader has read the commentary {string}",
-  async function (this: SpecWorld, title: string) {
-    for (const id of scenarioOf(this).byName.values()) {
-      const commentary = (await inHandOf(this).commentariesOf(id)).find(
-        (each) => each.title === title,
-      );
-      if (commentary === undefined) continue;
-      const tournament = await load(this, id);
-      await this.browserPage.goto(
-        `${this.baseUrl!}/${tournament.address.toString()}/commentaries/${commentary.slug}`,
-      );
+  async function (this: WebWorld, title: string) {
+    for (const { address } of this.tournaments.values()) {
+      await this.browserPage.goto(`${this.baseUrl!}/${address}/commentaries`);
+      const link = commentaryLink(this, title);
+      if ((await link.count()) === 0) continue;
+      await Promise.all([this.browserPage.waitForNavigation(), link.click()]);
       return;
     }
     assert.fail(`No tournament has the commentary ${title}.`);
@@ -200,7 +167,7 @@ Given(
 
 Then(
   /^the commentary "(.*)" is (not )?marked as new$/,
-  async function (this: SpecWorld, title: string, not: string | null) {
+  async function (this: WebWorld, title: string, not: string | null) {
     const marks = await commentaryTitled(this, title)
       .locator(".new-mark")
       .count();
@@ -210,18 +177,18 @@ Then(
 
 Then(
   "the commentary {string} is marked in red",
-  async function (this: SpecWorld, title: string) {
+  async function (this: WebWorld, title: string) {
     const mark = commentaryTitled(this, title).locator(".new-mark");
     assert.equal(await colourOf(mark), await dangerOn(this));
   },
 );
 
 Then(
-  "the mark on the commentary {string} is said as the words for {string}",
-  async function (this: SpecWorld, title: string, key: string) {
+  "the mark on the commentary {string} is said as {string}",
+  async function (this: WebWorld, title: string, words: string) {
     const said = await commentaryTitled(this, title)
       .locator(".new-mark .visually-hidden")
       .textContent();
-    assert.equal(said, wordsFor(key));
+    assert.equal(said, words);
   },
 );

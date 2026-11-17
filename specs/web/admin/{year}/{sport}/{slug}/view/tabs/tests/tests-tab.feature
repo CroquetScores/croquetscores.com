@@ -118,8 +118,7 @@ Feature: The tests tab of a tournament's page
       Then the test "AUS v ENG" is shown finishing on "2026-10-05"
 
     Scenario: A test's days are written as the reader's language writes them
-      Given a site offering the languages it is served with
-      And a browser that asks for "es"
+      Given a browser that asks for "es"
       And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
       When the tests of "Spring Tests" are opened
       Then the days of the test "AUS v ENG" are written as Spanish writes a day

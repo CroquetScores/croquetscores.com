@@ -4,7 +4,7 @@
 // admin's among them, and one reader of them is one answer.
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../support/world.js";
+import type { WebWorld } from "./world.js";
 import { closes, opens } from "./languages.js";
 
 /** Whether `text` is marked at both ends, as a phrase from a catalogue is. */
@@ -21,7 +21,7 @@ export const isMarked = (text: string): boolean =>
 // name, and each language in the list, which is named in its own language.
 /** The text within `selector` that did not come from a catalogue. */
 export const unmarkedWithin = async (
-  world: SpecWorld,
+  world: WebWorld,
   selector: string,
   names: readonly string[] = [],
 ): Promise<string[]> => {
@@ -73,7 +73,7 @@ export const unmarkedWithin = async (
 // attribute rather than anything on the page.
 /** The name `selector` is announced by, or nothing where it has none. */
 export const announcedAs = async (
-  world: SpecWorld,
+  world: WebWorld,
   selector: string,
 ): Promise<string | null> =>
   world.browserPage.evaluate<string | null>(

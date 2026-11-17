@@ -1,0 +1,718 @@
+@postgres
+Feature: A site over a database the specs made can be controlled by a token
+
+  The black-box specs in `specs/web` start the site as a process of its own and
+  know it only by its address, so a page is the only way they have of changing
+  it, and there is no page for moving the site's own clock. Some scenarios have
+  to say what time it is, so a site started for them can be told.
+
+  A way of changing a running site that is not a reader's is a way into it, so
+  it is guarded twice, and each guard is enough on its own. A site has it only
+  if it was given a token, and it refuses to start with a token unless its
+  database is one the specs made, which no real database is named like. And
+  every call carries the token, or is answered as a page that is not there
+  would be, so that nobody without it learns the routes exist.
+
+  Rule: Only a site given a token has the control
+
+    Scenario: A site given no token has no control
+      Given a site given no token
+      When the clock is asked for with the token "open sesame"
+      Then the site answers that there is no such page
+
+    Scenario: A site given a token has the control
+      Given a site given the token "open sesame"
+      When the clock is asked for with the token "open sesame"
+      Then the site answers that it is fine
+
+  Rule: A call must carry the token
+
+    Scenario: A call with no token is answered as a page that is not there
+      Given a site given the token "open sesame"
+      When the clock is asked for with no token
+      Then the site answers that there is no such page
+
+    Scenario: A call with the wrong token is answered as a page that is not there
+      Given a site given the token "open sesame"
+      When the clock is asked for with the token "close sesame"
+      Then the site answers that there is no such page
+
+  Rule: A site refuses a token unless its database is one the specs made
+
+    Scenario: A token over a database the specs did not make stops the site starting
+      Given a token "open sesame"
+      And a database called "croquet_scores"
+      When the site is started over that database
+      Then the site refuses to start
+      And the refusal names the token
+
+  Rule: The site can be made to forget what it kept
+
+    A site is started once for many scenarios, since starting one takes longer
+    than most scenarios do, so each scenario begins by having the site forget
+    what the last one left. What the site keeps of the help is not what a
+    scenario leaves, and is a copy of files, so it stays.
+
+    Scenario: What the site kept is forgotten
+      Given a site given the token "open sesame"
+      And the site has kept a failed sign in
+      When the site is told to forget what it kept
+      Then the site has kept no failed sign in
+
+    Scenario: The help the site made searchable is kept
+      Given a site given the token "open sesame"
+      And the site has made the help searchable
+      When the site is told to forget what it kept
+      Then the help is still searchable
+
+    Scenario: The clock is put back by forgetting
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the site is told to forget what it kept
+      And the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of now
+
+  Rule: A site with the control offers the test locale
+
+    The test locale is English with every phrase marked, so that a word on a
+    page that came from somewhere other than a catalogue can be found. It is
+    made for the specs and is offered to nobody else.
+
+    Scenario: A site given a token offers the test locale
+      Given a site given the token "open sesame"
+      When the home page is asked for in "en-XA"
+      Then the page is in the test locale
+
+    Scenario: A site given no token does not offer it
+      Given a site given no token
+      When the home page is asked for in "en-XA"
+      Then the page is not in the test locale
+
+  Rule: A site with the control can be given accounts and readers
+
+    A scenario that wants a signed-in reader should not have to register,
+    open an email and follow its link on every run, so the site makes the
+    account the way it makes one, and hands back a session to hold.
+
+    Scenario: A reader with a session is signed in
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When a session for "someone@example.com" is asked for
+      And the profile page is asked for with that session
+      Then the site answers that it is fine
+
+    Scenario: A reader with no session is not signed in
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the profile page is asked for with no session
+      Then the site sends the reader elsewhere
+
+    Scenario: A session for an address with no account is refused
+      Given a site given the token "open sesame"
+      When a session for "nobody@example.com" is asked for
+      Then the site answers that there is no such page
+
+    Scenario: An account that is not confirmed cannot be signed in to
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When a session for "someone@example.com" is asked for
+      And the profile page is asked for with that session
+      Then the site sends the reader elsewhere
+
+    Scenario: An account can be made whatever the clock has been set to
+      Given a site given the token "open sesame"
+      And the clock is set to "2020-01-01T00:00:00Z"
+      When an account for "someone@example.com" is made through the control
+      Then the site answers that it was made
+
+    Scenario: An address that is not one is answered as a wrong request
+      Given a site given the token "open sesame"
+      When the failures to sign in as "not an address" are counted
+      Then the site answers that the request was wrong
+
+    Scenario: A log entry of a severity there is none of is answered as a wrong request
+      Given a site given the token "open sesame"
+      When a log entry of the severity "toString" is written
+      Then the site answers that the request was wrong
+
+    Scenario: A site given no token has no accounts control
+      Given a site given no token
+      When a session for "someone@example.com" is asked for
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be given tournaments
+
+    A scenario about a page of tournaments should not have to sign in and fill
+    in the form that makes one every time, so the site makes the tournament the
+    way it makes one from its own form, for an account that is there, and says
+    where the tournament is found. What the tournament is said in the words the
+    form uses, and the site makes the rest of what a tournament needs.
+
+    Scenario: A tournament is made for an account and found at its address
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      When "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that it was made
+      And the tournament is found at the address it gave
+
+    Scenario: A tournament for an address with no account is refused
+      Given a site given the token "open sesame"
+      When "nobody@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A tournament that was made can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the tournament is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A site given no token has no tournaments control
+      Given a site given no token
+      When "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be given competitions, players and games
+
+    A scenario about a block's page, or about what a tournament lists of its
+    games, should not have to fill in a dialog for each of them. The site adds
+    them as its own dialogs do, as an account that manages the tournament, and
+    hands back the id each is given, which the scenario holds to name it by.
+
+    Scenario: A block is added to a tournament, and players are entered and play
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      Then the site answers that it was made
+
+    Scenario: A score and a player can be withdrawn
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When the score is withdrawn through the control
+      And Bea is withdrawn from the block through the control
+      Then the site answers that it is fine
+
+    Scenario: A block can be given rules, and players moved, and a score and the block archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" with draws allowed is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When Bea is moved up in the block through the control
+      And the score is archived through the control
+      And the block is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: Teams are added with players, and play a test, and one can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Tests" played by teams through the control
+      When the teams "England" and "Australia" are added through the control
+      And a player is added to the team "England" through the control
+      And a test between the two teams is added and given 2 expected matches through the control
+      And the team "England" is given the short name "ENG" through the control
+      And the teams "New Zealand" and "Fiji" are added through the control
+      And the team "Fiji" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A player of the tournament can be archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When "Ann" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A knockout and a Swiss can be added, and a bye entered
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When a knockout of 4 places is added through the control
+      And a bye is entered in the knockout through the control
+      And a Swiss is added through the control
+      Then the site answers that it was made
+
+    Scenario: A game added at a moment is said to have been added then
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block at "2026-10-03T10:00:00Z" through the control
+      And the clock is set to "2026-10-03T10:12:00Z"
+      When the tournament's page is asked for
+      Then the tournament's page says "12 min"
+
+    Scenario: A player's world ranking name can be changed
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When the world ranking name of "Ann" is changed to "Ann Smith" through the control
+      Then the site answers that it is fine
+
+    Scenario: A manager's note can be added, edited and deleted
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a note called "Lunch" saying "At noon" is added through the control
+      When the note is edited to be called "Lunch" saying "At one" through the control
+      And the note is deleted through the control
+      Then the site answers that it is fine
+
+    Scenario: What a tournament's notes hold is told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a note called "Lunch" saying "At noon" is added through the control
+      When the notes the tournament holds are asked for
+      Then it is told to hold the note "Lunch" saying "At noon"
+
+    Scenario: A player can be moved, renamed and paired
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the players "Ann" and "Bea" are added through the control
+      When "Bea" is moved up in the tournament through the control
+      And "Ann" is renamed to "Anne" through the control
+      And "Anne" and "Bea" are paired through the control
+      Then the site answers that it is fine
+
+    Scenario: A team and its players can be moved, renamed and archived
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Tests" played by teams through the control
+      And the teams "England" and "Australia" are added through the control
+      And the players "Kim" and "Lee" are added to the team "England" through the control
+      When the team "Australia" is moved up through the control
+      And the player "Lee" of the team "England" is moved up through the control
+      And the player "Kim" of the team "England" is renamed to "Kimberley" through the control
+      And the player "Lee" of the team "England" is archived through the control
+      Then the site answers that it is fine
+
+    Scenario: A competition can be moved
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the blocks "Block A" and "Block B" are added through the control
+      When the block "Block B" is moved up through the control
+      Then the site answers that it is fine
+
+    Scenario: A manager and a scorer can be added
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And an account for "helper@example.com" made through the control
+      And an account for "scorer@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When "helper@example.com" is made a manager of the tournament through the control
+      And "scorer@example.com" is made a scorer of the tournament through the control
+      Then the site answers that it is fine
+
+    Scenario: A knockout can be given a losers knockout
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a knockout of 4 places is added through the control
+      When a losers knockout of the first round of the knockout is added through the control
+      Then the site answers that it was made
+
+    Scenario: A player's carry forward can be changed and the player removed from a competition
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      When Ann is given a carry forward of 3 match wins through the control
+      And Bea is removed from the block through the control
+      And what the tournament holds is asked for
+      And the games of the block are asked for
+      Then it is told to hold 1 player
+      And it is told that a player carries forward 3 match wins
+
+    Scenario: A world ranking player can be given to the lists the site holds
+      Given a site given the token "open sesame"
+      When the golf croquet world ranking player "Keith Aiton" is given through the control
+      Then the site answers that it was made
+
+    Scenario: The site can be told it was deployed again
+      Given a site given the token "open sesame"
+      When the build the site names is asked for
+      And the site is told it was deployed again through the control
+      And the build the site names is asked for again
+      Then the build named is not the one named before
+
+    Scenario: Database access is told as it is, and a switch that says nothing is refused
+      Given a site given the token "open sesame"
+      Then the control says database access is on
+      When database access is switched through the control saying nothing
+      Then the site answers that the request was wrong
+
+    Scenario: An entry can be put in the server's log as if it had been written then
+      Given a site given the token "open sesame"
+      When an entry "Something happened" at the severity Warn written at "2026-10-03T10:00:00Z" is put in the log through the control
+      Then the site answers that it was made
+
+    Scenario: An entry at a severity there is none of is refused
+      Given a site given the token "open sesame"
+      When an entry "Something happened" at the severity Loud written at "2026-10-03T10:00:00Z" is put in the log through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A country can be said to be listed by the world rankings
+      Given a site given the token "open sesame"
+      When the Golf Croquet world rankings list is said to name the country "New Zealand" through the control
+      Then the site answers that it was made
+
+    Scenario: A country there is none of is refused
+      Given a site given the token "open sesame"
+      When the Golf Croquet world rankings list is said to name the country "Atlantis" through the control
+      Then the site answers that the request was wrong
+
+    Scenario: The world ranking players a site holds are told
+      Given a site given the token "open sesame"
+      And the golf croquet world ranking player "Keith Aiton" is given through the control
+      When the golf croquet world ranking players are asked for
+      Then the players told are "Keith Aiton"
+
+    Scenario: A block that was archived can be restored
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the block is archived through the control
+      When the block is restored through the control
+      Then the site answers that it is fine
+
+    Scenario: What a tournament holds is told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      When what the tournament holds is asked for
+      Then it is told to hold the block "Block A"
+      And it is told to hold the player "Ann"
+      And it is told not to be archived
+
+    Scenario: The games of a competition are told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And the block "Block A" is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 26 to 20 in the block through the control
+      When what the tournament holds is asked for
+      And the games of the block are asked for
+      Then it is told to hold a game won 26 to 20
+      And it is told to hold 2 players
+
+    Scenario: A game between players who are not in the block is refused
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      When the block "Block A" is added to the tournament through the control
+      And a game between two players who are not in the block is added through the control
+      Then the site answers that the request was wrong
+
+    Scenario: A site given no token has no competitions control
+      Given a site given no token
+      When the block "Block A" is added to the tournament through the control
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be given commentaries and comments
+
+    Scenario: A commentary is started, and commented on, and a comment is edited and deleted
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a tournament called "Spring Open" through the control
+      And a commentary called "Day one" is started through the control
+      And the comment "Good start" is added to it through the control
+      When the comment is edited to say "Great start" through the control
+      And the comment is deleted through the control
+      Then the site answers that it is fine
+
+  Rule: A site with the control can be told an account has been forgotten
+
+    Scenario: A forgotten account has no session to give
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And the account for "someone@example.com" is forgotten through the control
+      When a session for "someone@example.com" is asked for
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be asked whether an account is there
+
+    Scenario: An account that was made is there
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the accounts for "someone@example.com" are counted
+      Then one account is counted
+
+    Scenario: An address with no account has none
+      Given a site given the token "open sesame"
+      When the accounts for "nobody@example.com" are counted
+      Then no account is counted
+
+    Scenario: An address that breaks the rules for one has none
+      Given a site given the token "open sesame"
+      When the accounts for "not an address" are counted
+      Then no account is counted
+
+  Rule: A site with the control can be asked what an account is called
+
+    Scenario: An account is called what it was made called
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" called "Sam Someone" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the name told is "Sam Someone"
+
+    Scenario: An account is confirmed once its address is
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" called "Sam Someone" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the account is told to be confirmed
+
+    Scenario: An account whose address is not confirmed is told so
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then the account is told not to be confirmed
+
+  Rule: A site with the control can be given an account brought over from the old site
+
+    Scenario: An account brought over keeps its password the old way
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" brought over from the old site with the password "correct horse battery staple"
+      When the password "correct horse battery staple" is checked for "someone@example.com"
+      Then the password is told to match and to need making again
+
+  Rule: A site with the control can be told who has failed to sign in, and asked how many have
+
+    Scenario: Failures a few minutes ago are said to have happened, and counted
+      Given a site given the token "open sesame"
+      When 2 failures to sign in as "someone@example.com" are said to have happened 5 minutes ago
+      And the failures to sign in as "someone@example.com" are counted
+      Then 2 failures are counted
+
+    Scenario: A site given no token keeps no count of failures
+      Given a site given no token
+      When the failures to sign in as "someone@example.com" are counted
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can be asked whose session a cookie is
+
+    Scenario: A session's cookie is told to be the account's
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the account the session belongs to is asked for
+      Then the account told is the account for "someone@example.com"
+
+    Scenario: A cookie that is no session belongs to nobody
+      Given a site given the token "open sesame"
+      When the account a made up session belongs to is asked for
+      Then no account is told
+
+  Rule: A site with the control can be asked whether the sessions it keeps hold a cookie
+
+    Scenario: A session's cookie is not what the site keeps
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the sessions are asked whether any holds the session's cookie
+      Then none is told to hold it
+
+  Rule: A site with the control can be given and have taken away a role
+
+    Scenario: A role can be given and taken away
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the role "administrator" is given to "someone@example.com" through the control
+      And the role "administrator" is taken away from "someone@example.com" through the control
+      Then the site answers that it is fine
+
+  Rule: A site with the control can link an account to a Google account
+
+    Scenario: An account can be linked to a Google account
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the account for "someone@example.com" is linked to the Google account "google-1" through the control
+      Then the site answers that it is fine
+
+    Scenario: An account with a Google account already is refused a second
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And the account for "someone@example.com" is linked to the Google account "google-1" through the control
+      When the account for "someone@example.com" is linked to the Google account "google-2" through the control
+      Then the site answers that the request was wrong
+
+  Rule: A site with the control can be asked to ask the account to forget itself
+
+    Scenario: Forgetting is asked for, and its link is emailed
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When forgetting is asked for "someone@example.com" through the control
+      And the emails queued for "someone@example.com" are asked for
+      Then an email of the kind "Email.ConfirmForgetting" is among those told
+
+  Rule: A site with the control can be asked how many sessions an account has
+
+    Scenario: An account can be asked about by its id as well as its address
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the sessions of the account for "someone@example.com" are counted by its id
+      Then 0 sessions are counted
+
+    Scenario: An account with no session has none
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the sessions of the account for "someone@example.com" are counted
+      Then 0 sessions are counted
+
+    Scenario: A session that was given is counted
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      And a session for "someone@example.com" is asked for
+      When the sessions of the account for "someone@example.com" are counted
+      Then 1 session is counted
+
+  Rule: A site with the control can be told what has been asked of it, and be asked to send a way back in
+
+    Scenario: Askings from an address a few minutes ago are said to have been made
+      Given a site given the token "open sesame"
+      When 3 askings for a way back in from the address "127.0.0.1" are said to have been made 5 minutes ago
+      Then the site answers that it is fine
+
+    Scenario: A way back in can be asked for, and is emailed
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When a way back in is asked for "someone@example.com" through the control
+      And the emails queued for "someone@example.com" are asked for
+      Then an email of the kind "Email.SetNewPassword" is among those told
+
+    Scenario: A password the account was made with is told to be of today's kind
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the password "correct horse battery staple" is checked for "someone@example.com"
+      Then the password is told to match and not to need making again
+
+    Scenario: Another password is told not to match
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the password "some other words entirely" is checked for "someone@example.com"
+      Then the password is told not to match
+
+  Rule: A site with the control can be told emails were written to an account already
+
+    The site limits how many emails it writes to an account in an hour, so a
+    scenario about the limit says how many were written without writing them.
+
+    Scenario: Emails written a few minutes ago are said to have been written
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When 3 emails of the kind "Email.ConfirmAddressAgain" are said to have been written to "someone@example.com" 5 minutes ago
+      Then the site answers that it is fine
+
+    Scenario: Emails cannot be said to have been written to nobody
+      Given a site given the token "open sesame"
+      When 3 emails of the kind "Email.ConfirmAddressAgain" are said to have been written to "nobody@example.com" 5 minutes ago
+      Then the site answers that the request was wrong
+
+  Rule: A site with the control can be asked what an account is called and whether it is confirmed
+
+    Scenario: An account is told by its id
+      Given a site given the token "open sesame"
+      And an account for "someone@example.com" made through the control
+      When the name of the account for "someone@example.com" is asked for
+      Then an id is told
+
+  Rule: A site with the control can be asked what email it has queued
+
+    A site under test sends nothing, so a scenario that follows the link in an
+    email reads it from what the site has queued for the address.
+
+    Scenario: The email queued for an address is told with its kind and its link
+      Given a site given the token "open sesame"
+      And an unconfirmed account for "someone@example.com" made through the control
+      When the emails queued for "someone@example.com" are asked for
+      Then one email of the kind "Email.ConfirmAddress" with a link is told
+
+    Scenario: No email is told for an address nobody wrote to
+      Given a site given the token "open sesame"
+      When the emails queued for "nobody@example.com" are asked for
+      Then no email is told
+
+    Scenario: A site given no token tells no emails
+      Given a site given no token
+      When the emails queued for "someone@example.com" are asked for
+      Then the site answers that there is no such page
+
+  Rule: A site with the control can have the services it asks taken down
+
+    Scenario Outline: A service can be taken down and brought back
+      Given a site given the token "open sesame"
+      When "<service>" is taken down
+      And "<service>" is brought back
+      Then the site answers that it is fine
+
+      Examples:
+        | service           |
+        | reCAPTCHA         |
+        | Have I Been Pwned |
+
+    Scenario: A service the site does not ask cannot be taken down
+      Given a site given the token "open sesame"
+      When "Google" is taken down
+      Then the site answers that the request was wrong
+
+  Rule: A site with the control can be told how reCAPTCHA judges
+
+    The site never asks Google. Where it has the control it judges a reader as a
+    scenario says, and says which tokens it was asked to judge.
+
+    Scenario: reCAPTCHA judges a person until it is told otherwise
+      Given a site given the token "open sesame"
+      When the tokens reCAPTCHA has judged are asked for
+      Then no token is told
+
+    Scenario: reCAPTCHA can be told how to judge
+      Given a site given the token "open sesame"
+      When reCAPTCHA is told to judge "not a person"
+      Then the site answers that it is fine
+
+    Scenario: reCAPTCHA is not told to judge anything but a person or not a person
+      Given a site given the token "open sesame"
+      When reCAPTCHA is told to judge "a robot"
+      Then the site answers that the request was wrong
+
+    Scenario: A site given no token has no reCAPTCHA control
+      Given a site given no token
+      When reCAPTCHA is told to judge "not a person"
+      Then the site answers that there is no such page
+
+  Rule: The clock can be set, and goes on from there
+
+    Scenario: A time set is the time the site tells
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of "2031-03-04T05:06:07Z"
+
+    Scenario: A time that is not one is refused
+      Given a site given the token "open sesame"
+      When the clock is set to "yesterday"
+      Then the site answers that the request was wrong
+
+    Scenario: The clock is put back to the machine's
+      Given a site given the token "open sesame"
+      And the clock is set to "2031-03-04T05:06:07Z"
+      When the clock is put back
+      And the clock is asked for with the token "open sesame"
+      Then the clock reads a time within 5 seconds of now

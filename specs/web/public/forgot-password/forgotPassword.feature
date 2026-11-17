@@ -229,7 +229,7 @@ Feature: A reader who has forgotten their password is sent a way back in
       And a link to set a new password has been sent to "someone@example.com"
       And the link is followed
       When the new password "too short" is set
-      Then the password field says the message for "Password.TooShort"
+      Then the password field says "A password has to be at least 12 characters."
 
     Scenario: A new password typed differently the second time is refused
       Given a viewport 1200 pixels wide
@@ -239,7 +239,7 @@ Feature: A reader who has forgotten their password is sent a way back in
       And "correct horse battery staple" is typed as the new password
       And "correct horse battery stapler" is typed as the confirm password
       When the new password is sent
-      Then the confirm password field says the message for "Password.ConfirmationDiffers"
+      Then the confirm password field says "This is not the same as the password above. Type it again."
 
     Scenario: An account brought over from the old site gets a new password of today's kind
       Given a viewport 1200 pixels wide

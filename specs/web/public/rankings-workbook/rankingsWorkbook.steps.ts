@@ -1,11 +1,7 @@
 import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import {
-  load,
-  scenarioOf,
-} from "../../../application/operations/tournaments/aRequest.js";
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import {
   keepSpreadsheet,
   request,
@@ -19,7 +15,7 @@ import {
 
 When(
   "the spreadsheet at {string} is read",
-  async function (this: SpecWorld, path: string) {
+  async function (this: WebWorld, path: string) {
     await request(this, path);
     keepSpreadsheet(this);
   },
@@ -27,11 +23,11 @@ When(
 
 When(
   "the spreadsheet of that tournament's rankings is read",
-  async function (this: SpecWorld) {
-    const { looking } = scenarioOf(this);
-    assert.ok(looking !== undefined, "No tournament was made.");
-    const tournament = await load(this, looking);
-    await request(this, `/${tournament.address.toString()}/rankings`);
+  async function (this: WebWorld) {
+    const last = this.lastTournament;
+    assert.ok(last !== undefined, "No tournament was made.");
+    const address = this.tournaments.get(last)?.address;
+    await request(this, `/${address}/rankings`);
     keepSpreadsheet(this);
   },
 );
@@ -39,7 +35,7 @@ When(
 const places = ["first", "second", "third"];
 
 // A game is a row whose fourth column says "beat".
-const gameRow = (world: SpecWorld, which: string) => {
+const gameRow = (world: WebWorld, which: string) => {
   const games = rowsRead(world).filter(
     (cells) => cells.get("D")?.text === "beat",
   );
@@ -63,7 +59,7 @@ for (const [words, column] of columns) {
     new RegExp(
       `^the ${words}(?: in)? (?:the )?(first|second|third) game is "(.*)"$`,
     ),
-    function (this: SpecWorld, which: string, expected: string) {
+    function (this: WebWorld, which: string, expected: string) {
       assert.equal(gameRow(this, which).get(column)?.text, expected);
     },
   );
@@ -71,14 +67,14 @@ for (const [words, column] of columns) {
 
 Then(
   /^the number of the (first|second|third) game is "(.*)"$/,
-  function (this: SpecWorld, which: string, expected: string) {
+  function (this: WebWorld, which: string, expected: string) {
     assert.equal(gameRow(this, which).get("A")?.text, expected);
   },
 );
 
 Then(
   /^the (first|second|third) game says "(.*)"$/,
-  function (this: SpecWorld, which: string, expected: string) {
+  function (this: WebWorld, which: string, expected: string) {
     assert.equal(gameRow(this, which).get("D")?.text, expected);
   },
 );
@@ -86,7 +82,7 @@ Then(
 // The line a heading or the third line is followed by, said by what it is.
 Then(
   /^the (\w+) line is the first game$/,
-  function (this: SpecWorld, which: string) {
+  function (this: WebWorld, which: string) {
     const ordinals = [
       "first",
       "second",
@@ -103,13 +99,13 @@ Then(
   },
 );
 
-Then("the sheet is called {string}", function (this: SpecWorld, name: string) {
+Then("the sheet is called {string}", function (this: WebWorld, name: string) {
   assert.equal(sheetNameRead(this), name);
 });
 
 Then(
   "the sheet is called by {int} characters",
-  function (this: SpecWorld, length: number) {
+  function (this: WebWorld, length: number) {
     assert.equal(sheetNameRead(this)?.length, length);
   },
 );

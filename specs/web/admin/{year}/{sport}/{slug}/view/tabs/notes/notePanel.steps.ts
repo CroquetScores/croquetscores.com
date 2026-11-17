@@ -2,33 +2,32 @@ import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import { tournamentNamed } from "../../../../../../../../application/operations/tournaments/aRequest.js";
-import { managerNoteCalled } from "../../../../../../../../application/operations/tournaments/managerNoteRequests.js";
-import type { SpecWorld } from "../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../support/world.js";
 import {
   isMarked,
   unmarkedWithin,
 } from "../../../../../../../support/marks.js";
 import { eventually } from "../../../../../../../support/tournamentPage.js";
-import { english } from "../../../../../../../../../src/web/languages/english.js";
+import { notesOf } from "../../../../../../../support/kept.js";
+import { wordsFor } from "../../../../../../../support/words.js";
 
 // The note panel, in the Notes tab in place of its list.
-const panelOf = (world: SpecWorld): Locator =>
+const panelOf = (world: WebWorld): Locator =>
   world.browserPage.locator("form.note-panel");
 
-const box = (world: SpecWorld): Locator =>
+const box = (world: WebWorld): Locator =>
   panelOf(world).locator("#note-description");
 
-const toolbar = (world: SpecWorld): Locator =>
+const toolbar = (world: WebWorld): Locator =>
   panelOf(world).getByRole("toolbar");
 
-const tool = (world: SpecWorld, name: string): Locator =>
+const tool = (world: WebWorld, name: string): Locator =>
   toolbar(world).getByRole("button", { name, exact: true });
 
-const descriptionTab = (world: SpecWorld, name: string): Locator =>
+const descriptionTab = (world: WebWorld, name: string): Locator =>
   panelOf(world).getByRole("tab", { name, exact: true });
 
-const preview = (world: SpecWorld): Locator =>
+const preview = (world: WebWorld): Locator =>
   panelOf(world).locator(".note-preview");
 
 // A feature cannot write a line break inside a step's quotes, so it writes
@@ -57,7 +56,7 @@ const places = [
 
 Given(
   "{string} is typed in the description",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await box(this).fill(withLineBreaks(words));
   },
 );
@@ -66,7 +65,7 @@ Given(
 // of what the box holds.
 When(
   "{string} is typed in the description as it stands",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await this.browserPage.keyboard.type(withLineBreaks(words));
   },
 );
@@ -74,7 +73,7 @@ When(
 // Hundreds of thousands of characters, which Playwright's typing takes longer
 // over than a step may: put in the box at once, as pasting them would, and
 // the input event that pasting raises raised, so that the panel hears of it.
-const pasted = async (world: SpecWorld, words: string): Promise<void> => {
+const pasted = async (world: WebWorld, words: string): Promise<void> => {
   await box(world).evaluate((element, value) => {
     const textarea = element as unknown as {
       value: string;
@@ -94,21 +93,21 @@ const pasted = async (world: SpecWorld, words: string): Promise<void> => {
 
 Given(
   "a description of {int} characters is typed",
-  async function (this: SpecWorld, length: number) {
+  async function (this: WebWorld, length: number) {
     await pasted(this, "n".repeat(length));
   },
 );
 
 Given(
   "a description of {int} letters of two bytes each is typed",
-  async function (this: SpecWorld, length: number) {
+  async function (this: WebWorld, length: number) {
     await pasted(this, TWO_BYTES.repeat(length));
   },
 );
 
 Given(
   "the description's words are all selected",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await box(this).selectText();
   },
 );
@@ -117,7 +116,7 @@ Given(
 // line in some browsers.
 Given(
   "the description's first line is selected with its line break",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     // Said as what of a text box it uses, since the specs are not built with
     // the browser's types.
     await box(this).evaluate(
@@ -135,12 +134,12 @@ Given(
 
 Then(
   "the description says {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.equal(await box(this).inputValue(), withLineBreaks(words));
   },
 );
 
-Then("the description has the focus", async function (this: SpecWorld) {
+Then("the description has the focus", async function (this: WebWorld) {
   const focused = await this.browserPage.evaluate(
     "document.activeElement?.id ?? null",
   );
@@ -152,9 +151,8 @@ Then("the description has the focus", async function (this: SpecWorld) {
 // would leave as the panel's words for anything at all.
 Then(
   "the title is refused in the words for {string}",
-  async function (this: SpecWorld, key: string) {
-    const words = english.words[key];
-    assert.ok(words !== undefined, `English has no words for ${key}.`);
+  async function (this: WebWorld, key: string) {
+    const words = wordsFor(key);
     const message = panelOf(this).locator("#field-title-message");
     await message.waitFor();
     assert.equal((await message.innerText()).trim(), words);
@@ -163,7 +161,7 @@ Then(
 
 Then(
   "the description is refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     const message = panelOf(this).locator("#note-description-message");
     await message.waitFor();
     const codes = ((await message.getAttribute("data-refused")) ?? "").split(
@@ -177,14 +175,14 @@ Then(
 
 Then(
   "the description's tab {string} is offered",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(await descriptionTab(this, name).count(), 1);
   },
 );
 
 Then(
   "the description's first tab is {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const first = panelOf(this).getByRole("tab").first();
     assert.equal((await first.innerText()).trim(), name);
   },
@@ -192,7 +190,7 @@ Then(
 
 Then(
   "the description's tab {string} is the one being read",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await eventually(this, async () => {
       assert.equal(
         await descriptionTab(this, name).getAttribute("aria-selected"),
@@ -204,7 +202,7 @@ Then(
 
 When(
   "the description's tab {string} is chosen",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await descriptionTab(this, name).click();
   },
 );
@@ -213,7 +211,7 @@ When(
 
 Then(
   /^the toolbar's (first|second|third|fourth|fifth|sixth|seventh|eighth|ninth) tool is named "(.*)"$/,
-  async function (this: SpecWorld, place: string, name: string) {
+  async function (this: WebWorld, place: string, name: string) {
     const found = toolbar(this).getByRole("button").nth(places.indexOf(place));
     assert.equal(await found.getAttribute("aria-label"), name);
   },
@@ -221,19 +219,19 @@ Then(
 
 Then(
   "the tool {string} shows no words",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal((await tool(this, name).innerText()).trim(), "");
   },
 );
 
 Then(
   "the tool {string} is titled {string}",
-  async function (this: SpecWorld, name: string, title: string) {
+  async function (this: WebWorld, name: string, title: string) {
     assert.equal(await tool(this, name).getAttribute("title"), title);
   },
 );
 
-Then("the toolbar is above the description", async function (this: SpecWorld) {
+Then("the toolbar is above the description", async function (this: WebWorld) {
   const tools = await toolbar(this).boundingBox();
   const typed = await box(this).boundingBox();
   assert.ok(tools !== null && typed !== null, "One of them is not drawn.");
@@ -242,14 +240,14 @@ Then("the toolbar is above the description", async function (this: SpecWorld) {
 
 When(
   "the tool {string} is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await tool(this, name).click();
   },
 );
 
 Then(
   "every tool's name is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const names: string[] = [];
     for (const each of await toolbar(this).getByRole("button").all()) {
       names.push((await each.getAttribute("aria-label")) ?? "");
@@ -263,7 +261,7 @@ Then(
 
 Then(
   "the toolbar is no wider than the note panel",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const tools = await toolbar(this).boundingBox();
     const panel = await panelOf(this).boundingBox();
     assert.ok(tools !== null && panel !== null, "One of them is not drawn.");
@@ -276,7 +274,7 @@ Then(
 
 Then(
   "the tool {string} is at least {int} pixels tall",
-  async function (this: SpecWorld, name: string, height: number) {
+  async function (this: WebWorld, name: string, height: number) {
     const drawn = await tool(this, name).boundingBox();
     assert.ok(drawn !== null, "It is not drawn.");
     assert.ok(drawn.height >= height, `It is ${String(drawn.height)} tall.`);
@@ -287,7 +285,7 @@ Then(
 
 Then(
   "the preview's heading is {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     assert.equal(
       (await preview(this).locator("h2").innerText()).trim(),
       heading,
@@ -297,7 +295,7 @@ Then(
 
 Then(
   "the preview draws {string} bold",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     assert.deepEqual(
       await preview(this).locator(".note-text strong").allInnerTexts(),
       [words],
@@ -307,7 +305,7 @@ Then(
 
 Then(
   "the preview says {string}",
-  async function (this: SpecWorld, said: string) {
+  async function (this: WebWorld, said: string) {
     assert.equal(
       (await preview(this).locator(".note-text").innerText()).trim(),
       said,
@@ -317,7 +315,7 @@ Then(
 
 Then(
   "the preview's link {string} is marked as not vouched for",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const rel = (
       (await preview(this)
         .locator(".note-text")
@@ -329,17 +327,17 @@ Then(
   },
 );
 
-Then("the preview has no heading", async function (this: SpecWorld) {
+Then("the preview has no heading", async function (this: WebWorld) {
   await preview(this).waitFor({ state: "attached" });
   assert.equal(await preview(this).locator("h2").count(), 0);
 });
 
-Then("the preview shows no description", async function (this: SpecWorld) {
+Then("the preview shows no description", async function (this: WebWorld) {
   await preview(this).waitFor({ state: "attached" });
   assert.equal(await preview(this).locator(".note-text").count(), 0);
 });
 
-Then("the preview says nothing", async function (this: SpecWorld) {
+Then("the preview says nothing", async function (this: WebWorld) {
   await preview(this).waitFor({ state: "attached" });
   assert.equal((await preview(this).innerText()).trim(), "");
 });
@@ -348,7 +346,7 @@ Then("the preview says nothing", async function (this: SpecWorld) {
 
 Then(
   "the note panel is headed {string}",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     const said = panelOf(this).locator(".note-panel-heading");
     await said.waitFor();
     assert.equal((await said.innerText()).trim(), heading);
@@ -357,7 +355,7 @@ Then(
 
 Then(
   "the note panel's first button is {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     // Once the note it edits is in hand: until then it offers Cancel alone.
     await this.browserPage
       .locator('form.note-panel[aria-busy="false"]')
@@ -369,7 +367,7 @@ Then(
 
 Then(
   /^the note panel is (not )?shown$/,
-  async function (this: SpecWorld, not: string | null) {
+  async function (this: WebWorld, not: string | null) {
     await panelOf(this).waitFor({
       state: not === null ? "visible" : "detached",
     });
@@ -378,7 +376,7 @@ Then(
 
 Then(
   "every word in the note panel is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await panelOf(this).waitFor();
     const stray = await unmarkedWithin(this, "form.note-panel");
     assert.deepEqual(stray, [], "Words in the panel came from elsewhere.");
@@ -387,7 +385,7 @@ Then(
 
 Then(
   "the note panel is no wider than the window",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const panel = await panelOf(this).boundingBox();
     const window = this.browserPage.viewportSize();
     assert.ok(panel !== null && window !== null, "It is not drawn.");
@@ -400,7 +398,7 @@ Then(
 
 Then(
   "the note panel is refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     const said = panelOf(this).locator(".dialog-problems [data-refused]");
     await said.waitFor();
     assert.equal(await said.getAttribute("data-refused"), code);
@@ -412,9 +410,8 @@ Then(
 // anything at all.
 Then(
   "the note panel is refused in the words for {string}",
-  async function (this: SpecWorld, key: string) {
-    const words = english.words[key];
-    assert.ok(words !== undefined, `English has no words for ${key}.`);
+  async function (this: WebWorld, key: string) {
+    const words = wordsFor(key);
     const said = panelOf(this).locator(".dialog-problems [data-refused]");
     await said.waitFor();
     assert.equal((await said.innerText()).trim(), words);
@@ -425,7 +422,7 @@ Then(
 // taken to be missing only because the panel has not yet been told.
 Then(
   "the note panel does not offer {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await panelOf(this).locator(".dialog-problems").waitFor();
     assert.equal(
       await panelOf(this)
@@ -438,7 +435,7 @@ Then(
 
 Then(
   "the note panel does not offer the field {string}",
-  async function (this: SpecWorld, label: string) {
+  async function (this: WebWorld, label: string) {
     await panelOf(this).locator(".dialog-problems").waitFor();
     assert.equal(
       await panelOf(this).getByLabel(label, { exact: true }).count(),
@@ -451,19 +448,13 @@ Then(
 
 Then(
   "the manager note {string} of {string} says {int} letters of two bytes each",
-  async function (
-    this: SpecWorld,
-    title: string,
-    name: string,
-    length: number,
-  ) {
+  async function (this: WebWorld, title: string, name: string, length: number) {
     await eventually(this, async () => {
-      const note = await managerNoteCalled(
-        this,
-        tournamentNamed(this, name),
-        title,
+      const note = (await notesOf(this, name)).find(
+        (each) => each.title === title && !each.deleted,
       );
-      assert.equal(note.description?.toString(), TWO_BYTES.repeat(length));
+      assert.ok(note !== undefined, `${name} has no note ${title}.`);
+      assert.equal(note.description, TWO_BYTES.repeat(length));
     });
   },
 );

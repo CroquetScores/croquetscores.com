@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import { dirname, relative, resolve, sep } from "node:path";
 import tseslint from "typescript-eslint";
 
 /**
@@ -12,6 +13,61 @@ const forbid = (message, ...groups) => ({
     { patterns: groups.map((group) => ({ group: [group], message })) },
   ],
 });
+
+// The black-box specs know the site by its address and nothing else, so what
+// one of them may import is decided by where the import leads, which a pattern
+// cannot say: ../support/world.js is its own support from one folder and the
+// repository's from another. Packages are an allow list, and anything outside
+// specs/web fails, whatever it is called.
+const blackBoxPackages = new Set(["@cucumber/cucumber", "playwright", "pg"]);
+const blackBox = {
+  meta: {
+    type: "problem",
+    messages: {
+      outside:
+        "specs/web knows the site by its address alone (AI.md §5). {{ what }} is not in specs/web.",
+      package:
+        "specs/web may use only {{ allowed }} and Node's own modules, not {{ what }}.",
+    },
+    schema: [],
+  },
+  create(context) {
+    const web = resolve(import.meta.dirname, "specs", "web");
+    const check = (node) => {
+      const what = node.source?.value;
+      if (typeof what !== "string") return;
+      if (what.startsWith(".")) {
+        const target = resolve(dirname(context.filename), what);
+        const inside = relative(web, target);
+        if (inside === ".." || inside.startsWith(`..${sep}`)) {
+          context.report({ node, messageId: "outside", data: { what } });
+        }
+        return;
+      }
+      if (what.startsWith("node:") || blackBoxPackages.has(what)) return;
+      context.report({
+        node,
+        messageId: "package",
+        data: { what, allowed: [...blackBoxPackages].join(", ") },
+      });
+    };
+    return {
+      ImportDeclaration: check,
+      ExportAllDeclaration: check,
+      ExportNamedDeclaration: check,
+      ImportExpression: (node) => {
+        const what = node.source;
+        if (what.type !== "Literal") {
+          context.report({
+            node,
+            messageId: "package",
+            data: { what: "a computed import", allowed: "its own files" },
+          });
+        } else check({ ...node, source: what });
+      },
+    };
+  },
+};
 
 export default tseslint.config(
   {
@@ -67,6 +123,14 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+  },
+  // specs/web runs the site as a process and knows it by its address. Loading
+  // anything of the repository's would make a scenario here a statement about
+  // how the site is built, which is what specs/web-units is for.
+  {
+    files: ["specs/web/**/*.ts"],
+    plugins: { "black-box": { rules: { "only-the-site": blackBox } } },
+    rules: { "black-box/only-the-site": "error" },
   },
   {
     files: ["src/domain/**/*.ts", "specs/domain/**/*.ts"],

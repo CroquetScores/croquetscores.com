@@ -18,14 +18,22 @@ const gitSays = (
   folder: string,
   args: readonly string[],
 ): string | undefined => {
-  try {
-    return execFileSync("git", args, {
-      cwd: folder,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
-  } catch {
-    return undefined;
+  // A git that hangs is a git that could not be asked, like the rest here, and
+  // not a build that waits for it for ever. What is asked only reads, so one
+  // that hung is asked again, a few times: it takes a tenth of a second, and has
+  // been seen to stall for no reason found while the machine was busy.
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return execFileSync("git", args, {
+        cwd: folder,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+        timeout: 15_000,
+      }).trim();
+    } catch (failure) {
+      const hung = (failure as { code?: unknown }).code === "ETIMEDOUT";
+      if (!hung || attempt === 3) return undefined;
+    }
   }
 };
 

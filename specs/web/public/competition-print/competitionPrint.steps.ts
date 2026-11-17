@@ -2,17 +2,17 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 // What the printer is shown is the page under the browser's print rules, which
 // a browser can be asked to apply to the page on the screen, so that what is
 // checked is what the stylesheet says rather than a print preview nobody can
 // read back. The paper's shape is the page's named page, which the browser
 // reports as the `page` of the body it is set on.
-const printButton = (world: SpecWorld): Locator =>
+const printButton = (world: WebWorld): Locator =>
   world.browserPage.locator("main .print-button");
 
-const results = (world: SpecWorld): Locator =>
+const results = (world: WebWorld): Locator =>
   world.browserPage.locator(
     "main :is(.block-grid, .knockout, .swiss, .test-matches)",
   );
@@ -43,7 +43,7 @@ interface InTheDocument {
 // too many.
 When(
   "the paper is {int} pixels wide",
-  async function (this: SpecWorld, width: number) {
+  async function (this: WebWorld, width: number) {
     await this.browserPage.evaluate((pixels) => {
       const inThePage = globalThis as unknown as InTheDocument;
       inThePage.document.documentElement.style.setProperty(
@@ -57,39 +57,39 @@ When(
 // The events a browser sends the page just before it lays it out for the
 // printer and just after it is printed, which the page cuts a wide grid up
 // between.
-When("the page is laid out for the printer", async function (this: SpecWorld) {
+When("the page is laid out for the printer", async function (this: WebWorld) {
   await this.browserPage.emulateMedia({ media: "print" });
   await this.browserPage.evaluate(() => {
     (globalThis as unknown as Eventing).dispatchEvent(new Event("beforeprint"));
   });
 });
 
-When("the printing is done", async function (this: SpecWorld) {
+When("the printing is done", async function (this: WebWorld) {
   await this.browserPage.evaluate(() => {
     (globalThis as unknown as Eventing).dispatchEvent(new Event("afterprint"));
   });
   await this.browserPage.emulateMedia({ media: "screen" });
 });
 
-Then("the print button is offered", async function (this: SpecWorld) {
+Then("the print button is offered", async function (this: WebWorld) {
   assert.equal(await printButton(this).isVisible(), true);
 });
 
-Then("the print button is in the page", async function (this: SpecWorld) {
+Then("the print button is in the page", async function (this: WebWorld) {
   assert.equal(await printButton(this).count(), 1);
 });
 
-Then("the print button is not offered", async function (this: SpecWorld) {
+Then("the print button is not offered", async function (this: WebWorld) {
   assert.equal(await printButton(this).isVisible(), false);
 });
 
-Then("the print button is not printed", async function (this: SpecWorld) {
+Then("the print button is not printed", async function (this: WebWorld) {
   assert.equal(await printButton(this).isVisible(), false);
 });
 
 Then(
   "the printed tournament name is {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const printed = this.browserPage.locator("main .print-tournament");
     assert.equal(await printed.isVisible(), true);
     assert.equal((await printed.innerText()).trim(), name);
@@ -98,7 +98,7 @@ Then(
 
 // Said to what reads the page aloud and drawn as nothing, a box of one pixel,
 // which the browser still calls visible.
-Then("the tournament name is not seen", async function (this: SpecWorld) {
+Then("the tournament name is not seen", async function (this: WebWorld) {
   const box = await this.browserPage
     .locator("main .print-tournament")
     .boundingBox();
@@ -107,7 +107,7 @@ Then("the tournament name is not seen", async function (this: SpecWorld) {
 
 Then(
   "the first-level heading is {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     // The whole page, not only its main part, since the layout has a first-level
     // heading of its own on some pages, and a page has but one.
     const headings = this.browserPage.locator("h1");
@@ -118,7 +118,7 @@ Then(
 
 // A heading is as large as it is drawn, which is the size the browser reports
 // for it once the page is laid out for the printer.
-const sizeOf = (world: SpecWorld, selector: string): Promise<number> =>
+const sizeOf = (world: WebWorld, selector: string): Promise<number> =>
   world.browserPage
     .locator(selector)
     .first()
@@ -130,7 +130,7 @@ const sizeOf = (world: SpecWorld, selector: string): Promise<number> =>
 
 Then(
   "the printed tournament name is larger than the printed competition name",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const tournament = await sizeOf(this, "main .print-tournament");
     const competition = await sizeOf(this, "main h2");
     assert.ok(tournament > competition, `${tournament} and ${competition}`);
@@ -139,7 +139,7 @@ Then(
 
 Then(
   "the printed competition name is {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const heading = this.browserPage.locator("main h2").first();
     assert.equal(await heading.isVisible(), true);
     assert.equal((await heading.innerText()).trim(), name);
@@ -148,7 +148,7 @@ Then(
 
 Then(
   "the printed tournament name is above the printed competition name",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const tournament = await this.browserPage
       .locator("main .print-tournament")
       .boundingBox();
@@ -161,7 +161,7 @@ Then(
   },
 );
 
-Then("the block's place column is printed", async function (this: SpecWorld) {
+Then("the block's place column is printed", async function (this: WebWorld) {
   const heading = this.browserPage
     .locator("main .block-grid-placing-heading")
     .first();
@@ -169,12 +169,12 @@ Then("the block's place column is printed", async function (this: SpecWorld) {
   assert.equal((await heading.innerText()).trim(), "#");
 });
 
-const tieBreakWords = (world: SpecWorld): Locator =>
+const tieBreakWords = (world: WebWorld): Locator =>
   world.browserPage.locator("main .block-tie-break");
 
 Then(
   "the words beneath the block's grid about its tie break are printed",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await tieBreakWords(this).isVisible(), true);
   },
 );
@@ -183,7 +183,7 @@ Then(
 // have to come after the last of them rather than between them.
 Then(
   "the words beneath the block's grid about its tie break are printed after its last piece",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const last = await this.browserPage
       .locator("main .print-piece")
       .last()
@@ -194,22 +194,22 @@ Then(
   },
 );
 
-Then("the results are printed", async function (this: SpecWorld) {
+Then("the results are printed", async function (this: WebWorld) {
   assert.equal(await results(this).first().isVisible(), true);
 });
 
-Then("the site's bar is not printed", async function (this: SpecWorld) {
+Then("the site's bar is not printed", async function (this: WebWorld) {
   assert.equal(await this.browserPage.locator(".site-bar").isVisible(), false);
 });
 
-Then("the section bar is not printed", async function (this: SpecWorld) {
+Then("the section bar is not printed", async function (this: WebWorld) {
   assert.equal(
     await this.browserPage.locator(".site-sections").isVisible(),
     false,
   );
 });
 
-Then("the footer is not printed", async function (this: SpecWorld) {
+Then("the footer is not printed", async function (this: WebWorld) {
   assert.equal(
     await this.browserPage.locator(".site-footer").isVisible(),
     false,
@@ -218,37 +218,34 @@ Then("the footer is not printed", async function (this: SpecWorld) {
 
 // Next to it is on the same line and no further from it than the gap the
 // group of the two puts between them.
-Then(
-  "the views are next to the print button",
-  async function (this: SpecWorld) {
-    const views = await this.browserPage
-      .locator("main .competition-views")
-      .boundingBox();
-    const button = await printButton(this).boundingBox();
-    assert.ok(views !== null && button !== null, "One of them is not drawn.");
-    assert.ok(
-      views.y < button.y + button.height && button.y < views.y + views.height,
-      "The views and the print button are not on one line.",
+Then("the views are next to the print button", async function (this: WebWorld) {
+  const views = await this.browserPage
+    .locator("main .competition-views")
+    .boundingBox();
+  const button = await printButton(this).boundingBox();
+  assert.ok(views !== null && button !== null, "One of them is not drawn.");
+  assert.ok(
+    views.y < button.y + button.height && button.y < views.y + views.height,
+    "The views and the print button are not on one line.",
+  );
+  // The gap is the group's own, read from it, so that the scenario follows
+  // the stylesheet's choice of how wide it is rather than a number of its own.
+  const gap = await this.browserPage
+    .locator("main .competition-actions")
+    .evaluate((actions) =>
+      Number.parseFloat(
+        (globalThis as unknown as InThePage).getComputedStyle(actions)
+          .columnGap,
+      ),
     );
-    // The gap is the group's own, read from it, so that the scenario follows
-    // the stylesheet's choice of how wide it is rather than a number of its own.
-    const gap = await this.browserPage
-      .locator("main .competition-actions")
-      .evaluate((actions) =>
-        Number.parseFloat(
-          (globalThis as unknown as InThePage).getComputedStyle(actions)
-            .columnGap,
-        ),
-      );
-    const apart = button.x - (views.x + views.width);
-    assert.ok(
-      apart >= -0.5 && apart <= gap + 0.5,
-      `The views end ${String(apart)} pixels from the print button.`,
-    );
-  },
-);
+  const apart = button.x - (views.x + views.width);
+  assert.ok(
+    apart >= -0.5 && apart <= gap + 0.5,
+    `The views end ${String(apart)} pixels from the print button.`,
+  );
+});
 
-Then("the print button is beneath the views", async function (this: SpecWorld) {
+Then("the print button is beneath the views", async function (this: WebWorld) {
   const views = await this.browserPage
     .locator("main .competition-views")
     .boundingBox();
@@ -262,7 +259,7 @@ Then("the print button is beneath the views", async function (this: SpecWorld) {
 
 Then(
   "the print button is against the right edge",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const heading = await this.browserPage
       .locator("main .competition-heading")
       .boundingBox();
@@ -275,7 +272,7 @@ Then(
   },
 );
 
-Then("the views are not printed", async function (this: SpecWorld) {
+Then("the views are not printed", async function (this: WebWorld) {
   assert.equal(
     await this.browserPage.locator("main .competition-views").isVisible(),
     false,
@@ -284,7 +281,7 @@ Then("the views are not printed", async function (this: SpecWorld) {
 
 Then(
   /^the paper is (landscape|portrait)$/,
-  async function (this: SpecWorld, shape: string) {
+  async function (this: WebWorld, shape: string) {
     const named = await this.browserPage.evaluate(() => {
       const inThePage = globalThis as unknown as InThePage;
       return inThePage.getComputedStyle(inThePage.document.body).page;
@@ -295,7 +292,7 @@ Then(
 
 // A grid or a draw is printed in as many pieces as are drawn, the whole of it
 // that the printer is not shown being hidden for it.
-const drawn = (world: SpecWorld, selector: string): Locator =>
+const drawn = (world: WebWorld, selector: string): Locator =>
   world.browserPage.locator(`main ${selector}`).locator("visible=true");
 
 interface InThePageStyle {
@@ -309,7 +306,7 @@ interface InThePageStyle {
   };
 }
 
-const widthOfPaper = (world: SpecWorld): Promise<number> =>
+const widthOfPaper = (world: WebWorld): Promise<number> =>
   world.browserPage.evaluate(() => {
     const inThePage = globalThis as unknown as InThePageStyle;
     const ruler = inThePage.document.createElement("div");
@@ -322,19 +319,19 @@ const widthOfPaper = (world: SpecWorld): Promise<number> =>
 
 Then(
   "the block's grid is printed in one piece",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await drawn(this, "table.block-grid").count(), 1);
   },
 );
 
 Then(
   "the block's grid is printed in more than one piece",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.ok((await drawn(this, "table.block-grid").count()) > 1);
   },
 );
 
-Then("the block's grid is in one piece", async function (this: SpecWorld) {
+Then("the block's grid is in one piece", async function (this: WebWorld) {
   const grids = this.browserPage.locator("main table.block-grid");
   assert.equal(await grids.count(), 1);
   assert.equal(await grids.isVisible(), true);
@@ -342,7 +339,7 @@ Then("the block's grid is in one piece", async function (this: SpecWorld) {
 
 Then(
   "no piece of the block's grid is wider than the paper",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const paper = await widthOfPaper(this);
     for (const piece of await drawn(this, "table.block-grid").all()) {
       const box = await piece.boundingBox();
@@ -353,7 +350,7 @@ Then(
 
 Then(
   "each piece of the block's grid names the player {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     const pieces = await drawn(this, "table.block-grid").all();
     assert.ok(pieces.length > 0);
     for (const piece of pieces) {
@@ -365,7 +362,7 @@ Then(
 
 Then(
   "the pieces of the block's grid have every column once",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const headings = async (selector: string): Promise<string[]> =>
       (
         await this.browserPage
@@ -386,21 +383,21 @@ Then(
 
 Then(
   "the knockout's draw is printed in one piece",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await drawn(this, ".knockout").count(), 1);
   },
 );
 
 Then(
   "the knockout's draw is printed in more than one piece",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.ok((await drawn(this, ".knockout").count()) > 1);
   },
 );
 
 Then(
   "no piece of the knockout's draw is wider than the paper",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const paper = await widthOfPaper(this);
     for (const piece of await drawn(this, ".knockout").all()) {
       const box = await piece.boundingBox();
@@ -411,7 +408,7 @@ Then(
 
 Then(
   "the pieces of the knockout's draw have every round once",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const rounds = async (selector: string): Promise<string[]> =>
       (
         await this.browserPage
@@ -431,7 +428,7 @@ interface Underlinable {
 
 // Every link of the page, whether or not it is on the paper, since a link
 // drawn in some place the printer is shown is one that is looked at.
-Then("no link is underlined", async function (this: SpecWorld) {
+Then("no link is underlined", async function (this: WebWorld) {
   const links = this.browserPage.locator("main a");
   assert.ok((await links.count()) > 0);
   const lines = await links.evaluateAll((elements) =>

@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { isStruckThrough } from "../../support/struckThrough.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
@@ -16,10 +16,10 @@ const placeOf = (which: string): number => {
   return at;
 };
 
-const games = (world: SpecWorld): Locator =>
+const games = (world: WebWorld): Locator =>
   world.browserPage.locator("main .player-games-list > .player-game");
 
-const competitions = (world: SpecWorld): Locator =>
+const competitions = (world: WebWorld): Locator =>
   world.browserPage.locator(
     "main .player-competitions-list .player-competition",
   );
@@ -30,7 +30,7 @@ const said = async (found: Locator): Promise<string> =>
 
 When(
   /^the opponent in the (first|second|third) of the player's games is pressed$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     await games(this)
       .nth(placeOf(which))
       .locator(".player-game-opponent")
@@ -41,7 +41,7 @@ When(
 
 When(
   "the competition {string} of the player is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await competitions(this).filter({ hasText: name }).click();
     await this.browserPage.waitForLoadState();
   },
@@ -51,17 +51,17 @@ When(
 
 Then(
   /^the (first|second|third) of the player's games says "(.*)"$/,
-  async function (this: SpecWorld, which: string, words: string) {
+  async function (this: WebWorld, which: string, words: string) {
     assert.equal(await said(games(this).nth(placeOf(which))), words);
   },
 );
 
-const noGames = (world: SpecWorld): Locator =>
+const noGames = (world: WebWorld): Locator =>
   world.browserPage.locator("main .player-games-none");
 
 Then(
   /^the (first|second|third) of the player's games is (not )?marked as withdrawn$/,
-  async function (this: SpecWorld, which: string, not: string | null) {
+  async function (this: WebWorld, which: string, not: string | null) {
     assert.equal(
       (await games(this).nth(placeOf(which)).getAttribute("data-withdrawn")) !==
         null,
@@ -72,18 +72,18 @@ Then(
 
 Then(
   /^the (first|second|third) of the player's games is struck through$/,
-  async function (this: SpecWorld, which: string) {
+  async function (this: WebWorld, which: string) {
     assert.ok(await isStruckThrough(games(this).nth(placeOf(which))));
   },
 );
 
-Then("the page says the player has no games", async function (this: SpecWorld) {
+Then("the page says the player has no games", async function (this: WebWorld) {
   assert.equal(await noGames(this).count(), 1);
 });
 
 Then(
   "the page does not say the player has no games",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(await noGames(this).count(), 0);
   },
 );
@@ -92,14 +92,14 @@ Then(
 
 Then(
   /^the (first|second|third) of the player's competitions is "(.*)"$/,
-  async function (this: SpecWorld, which: string, name: string) {
+  async function (this: WebWorld, which: string, name: string) {
     assert.equal(await said(competitions(this).nth(placeOf(which))), name);
   },
 );
 
 Then(
   "{string} is not among the player's competitions",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.ok(
       !(await competitions(this).allTextContents())
         .map((each) => each.trim())
@@ -111,7 +111,7 @@ Then(
 
 Then(
   "the page says the player is in no competition",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     assert.equal(
       await this.browserPage.locator("main .player-competitions-none").count(),
       1,
@@ -131,7 +131,7 @@ const boxOf = async (
 
 Then(
   "the player's competitions are to the right of their games",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const theirGames = await boxOf(
       this.browserPage.locator("main .player-games"),
     );
@@ -147,7 +147,7 @@ Then(
 
 Then(
   "the player's competitions are above their games",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const theirGames = await boxOf(
       this.browserPage.locator("main .player-games"),
     );

@@ -133,3 +133,94 @@ Then(
     assert.ok(refusal.message.includes(setting), refusal.message);
   },
 );
+
+Given(
+  "the world rankings' lists are at {string} and {string}",
+  function (this: SpecWorld, ac: string, gc: string) {
+    const { settings } = startingOf(this);
+    settings["WORLD_RANKING_AC_ADDRESS"] = ac;
+    settings["WORLD_RANKING_GC_ADDRESS"] = gc;
+  },
+);
+
+Given(
+  "only the Association Croquet list is said to be at {string}",
+  function (this: SpecWorld, ac: string) {
+    startingOf(this).settings["WORLD_RANKING_AC_ADDRESS"] = ac;
+  },
+);
+
+Given(
+  "the world rankings are waited for {string}",
+  function (this: SpecWorld, milliseconds: string) {
+    startingOf(this).settings["WORLD_RANKING_WAIT_MILLISECONDS"] = milliseconds;
+  },
+);
+
+const configOf = (world: SpecWorld): Config => {
+  const { config, refusal } = startingOf(world);
+  assert.ok(
+    config !== undefined,
+    `The settings were not accepted: ${String(refusal)}`,
+  );
+  return config;
+};
+
+Then(
+  "the Association Croquet list is read from {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(configOf(this).worldRankingAddresses.ac, address);
+  },
+);
+
+Then(
+  "the Golf Croquet list is read from {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(configOf(this).worldRankingAddresses.gc, address);
+  },
+);
+
+Then(
+  "the world rankings are waited for {int} milliseconds",
+  function (this: SpecWorld, milliseconds: number) {
+    assert.equal(configOf(this).worldRankingWaitMilliseconds, milliseconds);
+  },
+);
+
+Given(
+  "the test control is on for a database the specs made",
+  function (this: SpecWorld) {
+    const { settings } = startingOf(this);
+    settings["TEST_CONTROL_TOKEN"] = "open sesame";
+    settings["DATABASE_URL"] =
+      "postgres://nobody@localhost:5432/zzz_delete_me_spec_nothing";
+  },
+);
+
+Given(
+  "Google is said to answer at {string}",
+  function (this: SpecWorld, address: string) {
+    startingOf(this).settings["TEST_GOOGLE_ADDRESS"] = address;
+  },
+);
+
+Then(
+  "Google's keys are read from {string}",
+  function (this: SpecWorld, address: string) {
+    assert.equal(configOf(this).googleEndpoints.keys, address);
+  },
+);
+
+Given(
+  "the site is said to be at version {string}",
+  function (this: SpecWorld, version: string) {
+    startingOf(this).settings["TEST_SITE_VERSION"] = version;
+  },
+);
+
+Then(
+  "the site reports version {int}",
+  function (this: SpecWorld, version: number) {
+    assert.equal(configOf(this).testSiteVersion, version);
+  },
+);

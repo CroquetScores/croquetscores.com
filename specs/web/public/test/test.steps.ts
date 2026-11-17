@@ -2,7 +2,7 @@ import { Then } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 
 // The page is drawn by the server, with no scripting, so what is read is there
 // once the page has loaded: nothing here waits for it to be drawn again. The
@@ -16,13 +16,13 @@ const placeOf = (which: string): number => {
   return at;
 };
 
-const tableOf = (world: SpecWorld): Locator =>
+const tableOf = (world: WebWorld): Locator =>
   world.browserPage.locator("main .test-matches");
 
-const matchAt = (world: SpecWorld, which: string): Locator =>
+const matchAt = (world: WebWorld, which: string): Locator =>
   tableOf(world).locator("tbody > tr.test-match").nth(placeOf(which));
 
-const gameAt = (world: SpecWorld, game: string, match: string): Locator =>
+const gameAt = (world: WebWorld, game: string, match: string): Locator =>
   matchAt(world, match).locator(".test-game").nth(placeOf(game));
 
 // What is said, as a reader reads it, one space between each word.
@@ -31,7 +31,7 @@ const said = async (found: Locator): Promise<string> =>
 
 Then(
   "the test says each match is the best of {int}",
-  async function (this: SpecWorld, games: number) {
+  async function (this: WebWorld, games: number) {
     assert.equal(
       await said(this.browserPage.locator("main .test-best-of")),
       `Each match is the best of ${String(games)}.`,
@@ -41,7 +41,7 @@ Then(
 
 Then(
   /^the test's table is headed "(.*)" on the (left|right)$/,
-  async function (this: SpecWorld, team: string, side: string) {
+  async function (this: WebWorld, team: string, side: string) {
     assert.equal(
       await said(
         tableOf(this)
@@ -55,7 +55,7 @@ Then(
 
 Then(
   /^the (first|second|third) match of the test is "(.*)" against "(.*)"$/,
-  async function (this: SpecWorld, which: string, left: string, right: string) {
+  async function (this: WebWorld, which: string, left: string, right: string) {
     const sides = matchAt(this, which).locator(".test-side");
     assert.deepEqual(
       [await said(sides.nth(0)), await said(sides.nth(1))],
@@ -67,7 +67,7 @@ Then(
 // As it is shown, each side's score with a hyphen between.
 Then(
   /^the (first|second|third) game of the (first|second|third) match of the test is "(.*)"$/,
-  async function (this: SpecWorld, game: string, match: string, words: string) {
+  async function (this: WebWorld, game: string, match: string, words: string) {
     const scores = gameAt(this, game, match).locator(".test-score");
     assert.equal(
       `${await said(scores.nth(0))} - ${await said(scores.nth(1))}`,
@@ -79,7 +79,7 @@ Then(
 Then(
   /^the (first|second) side's score in the (first|second|third) game of the (first|second|third) match of the test is (not )?marked as won$/,
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     side: string,
     game: string,
     match: string,
@@ -98,7 +98,7 @@ Then(
 Then(
   "the test's {string} are {string} on the left and {string} on the right",
   async function (
-    this: SpecWorld,
+    this: WebWorld,
     heading: string,
     left: string,
     right: string,
@@ -116,12 +116,12 @@ Then(
   },
 );
 
-const totalNames = (world: SpecWorld): Locator =>
+const totalNames = (world: WebWorld): Locator =>
   tableOf(world).locator("tfoot .test-total-name");
 
 Then(
   "the test has no {string} beneath its matches",
-  async function (this: SpecWorld, heading: string) {
+  async function (this: WebWorld, heading: string) {
     assert.equal(
       await totalNames(this)
         .filter({ hasText: new RegExp(`^${heading}$`) })
@@ -133,7 +133,7 @@ Then(
 
 Then(
   /^the (first|second|third) total beneath the test's matches is headed "(.*)"$/,
-  async function (this: SpecWorld, which: string, heading: string) {
+  async function (this: WebWorld, which: string, heading: string) {
     assert.equal(
       await said(
         totalNames(this).nth(["first", "second", "third"].indexOf(which)),
@@ -145,7 +145,7 @@ Then(
 
 Then(
   "the view {string} is not offered",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     assert.equal(
       await this.browserPage
         .locator("main .competition-views .competition-view", {

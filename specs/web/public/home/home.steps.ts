@@ -1,15 +1,15 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
+import type { WebWorld } from "../../support/world.js";
 import { boxOf, list, rows } from "../../support/tournamentLists.js";
 
 // What is the home page's own. What its lists share with a year's is said in
-// specs/web/support/tournamentLists.ts.
+// specs/web-units/support/tournamentLists.ts.
 
 When(
   /^the home page is opened for the (country|sport) "(.*)"$/,
-  async function (this: SpecWorld, chosen: string, code: string) {
+  async function (this: WebWorld, chosen: string, code: string) {
     await this.browserPage.goto(
       `${this.baseUrl!}/?${new URLSearchParams({ [chosen]: code }).toString()}`,
     );
@@ -18,7 +18,7 @@ When(
 
 When(
   /^the home page is opened asking to remember the (country|sport) "(.*)"$/,
-  async function (this: SpecWorld, chosen: string, code: string) {
+  async function (this: WebWorld, chosen: string, code: string) {
     await this.browserPage.goto(
       `${this.baseUrl!}/?${new URLSearchParams({ [chosen]: code, keep: "filter" }).toString()}`,
     );
@@ -27,7 +27,7 @@ When(
 
 Then(
   "{string} comes before {string}",
-  async function (this: SpecWorld, first: string, second: string) {
+  async function (this: WebWorld, first: string, second: string) {
     const said = await this.browserPage
       .locator("main")
       .getByRole("heading")
@@ -40,7 +40,7 @@ Then(
 
 Then(
   /^(\d+) upcoming tournaments? (?:is|are) listed$/,
-  async function (this: SpecWorld, count: string) {
+  async function (this: WebWorld, count: string) {
     assert.equal(
       await rows(this, "upcoming tournaments").count(),
       Number(count),
@@ -50,7 +50,7 @@ Then(
 
 Then(
   "the upcoming tournaments are followed by {string}",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     const last = list(this, "upcoming tournaments").locator(
       ":scope > :last-child",
     );
@@ -61,7 +61,7 @@ Then(
 
 Then(
   "the upcoming tournaments are below the recent results",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const recent = await boxOf(list(this, "recent results"));
     const upcoming = await boxOf(list(this, "upcoming tournaments"));
     assert.ok(
@@ -73,13 +73,13 @@ Then(
 
 // The pop-up cannot be drawn without a screen, so what is read is the height
 // the stylesheet gives it, which is what Chrome draws it at.
-When("the country list is opened", async function (this: SpecWorld) {
+When("the country list is opened", async function (this: WebWorld) {
   await this.browserPage.locator("#filter-country").focus();
 });
 
 Then(
   /^the country list is no taller than (\d+) rem$/,
-  async function (this: SpecWorld, rems: string) {
+  async function (this: WebWorld, rems: string) {
     const tallest = await this.browserPage.evaluate<string>(
       `getComputedStyle(document.querySelector("#filter-country"), "::picker(select)").maxHeight`,
     );
@@ -99,7 +99,7 @@ Then(
 
 Then(
   "the country is chosen from a drop-down list",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     const select = this.browserPage.locator("#filter-country");
     assert.equal(
       await this.browserPage.evaluate<string>(
@@ -117,7 +117,7 @@ Then(
 // from a reader's own tampering, which a page is not to be refused for.
 Given(
   /^the device remembers "(.*)" as the (country|region|sport)$/,
-  async function (this: SpecWorld, code: string, chosen: string) {
+  async function (this: WebWorld, code: string, chosen: string) {
     await this.browserPage.context().addCookies([
       {
         name: "filter",

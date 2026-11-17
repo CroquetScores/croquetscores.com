@@ -3,27 +3,28 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 
-import type { SpecWorld } from "../../../support/world.js";
-import { englishForScenarios, unmarked } from "../../support/languages.js";
+import type { WebWorld } from "../../support/world.js";
+import { unmarked } from "../../support/languages.js";
+import { wordsFor } from "../../support/words.js";
 
 const changeName = "/account/change-name";
 const dialog = "section.dialog";
 
 const words = (key: string): string => {
-  const said = englishForScenarios.words[key];
+  const said = wordsFor(key);
   assert.ok(said !== undefined, `English has no words for ${key}.`);
   return said;
 };
 
-const open = async (world: SpecWorld): Promise<void> => {
+const open = async (world: WebWorld): Promise<void> => {
   await world.browserPage.goto(`${world.baseUrl!}${changeName}`);
 };
 
-Given("the change name page is open", async function (this: SpecWorld) {
+Given("the change name page is open", async function (this: WebWorld) {
   await open(this);
 });
 
-When("the change name page is opened", async function (this: SpecWorld) {
+When("the change name page is opened", async function (this: WebWorld) {
   await open(this);
 });
 
@@ -31,12 +32,12 @@ When("the change name page is opened", async function (this: SpecWorld) {
 // opening, said all the same because it is what the scenario is about.
 When(
   "the change name page is opened with scripting off",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await open(this);
   },
 );
 
-Then("the change name page is shown", async function (this: SpecWorld) {
+Then("the change name page is shown", async function (this: WebWorld) {
   assert.equal(new URL(this.browserPage.url()).pathname, changeName);
   const title = unmarked(
     (await this.browserPage.locator(".dialog-title").textContent()) ?? "",
@@ -46,7 +47,7 @@ Then("the change name page is shown", async function (this: SpecWorld) {
 
 Given(
   "the name {string} is typed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await this.browserPage.fill(`${dialog} input[name="name"]`, name);
   },
 );

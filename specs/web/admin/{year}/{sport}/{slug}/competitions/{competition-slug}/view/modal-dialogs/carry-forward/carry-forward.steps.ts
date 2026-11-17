@@ -2,7 +2,7 @@ import { Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import type { Locator } from "playwright";
 
-import type { SpecWorld } from "../../../../../../../../../../support/world.js";
+import type { WebWorld } from "../../../../../../../../../support/world.js";
 import { unmarkedWithin } from "../../../../../../../../../support/marks.js";
 import {
   eventually,
@@ -17,12 +17,12 @@ import {
 
 const open = "dialog[open]";
 
-const dialogOf = (world: SpecWorld): Locator => world.browserPage.locator(open);
+const dialogOf = (world: WebWorld): Locator => world.browserPage.locator(open);
 
 // Whatever the button is called in the reader's language.
 When(
   "the way to change the carry forward of the player {string} is pressed",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await settled(this);
     await tabPanel(this)
       .locator("ul[data-listed] > .listed-item")
@@ -40,14 +40,14 @@ When(
 // the page is in.
 When(
   "{string} is typed into the first count",
-  async function (this: SpecWorld, words: string) {
+  async function (this: WebWorld, words: string) {
     await dialogOf(this).locator("#field-matchWins").fill(words);
   },
 );
 
 Then(
   "the carry forward dialog names the player {string}",
-  async function (this: SpecWorld, name: string) {
+  async function (this: WebWorld, name: string) {
     await dialogOf(this).waitFor();
     const title = (
       await dialogOf(this).locator(".dialog-title").innerText()
@@ -60,7 +60,7 @@ Then(
 // language's to choose.
 Then(
   "the carry forward dialog says above its fields that it was refused with {string}",
-  async function (this: SpecWorld, code: string) {
+  async function (this: WebWorld, code: string) {
     await eventually(this, async () => {
       const refused =
         (await dialogOf(this)
@@ -78,7 +78,7 @@ Then(
 // marks with them.
 Then(
   "every word in the carry forward dialog but the player's name is in the test locale",
-  async function (this: SpecWorld) {
+  async function (this: WebWorld) {
     await dialogOf(this).waitFor();
     const stray = await unmarkedWithin(this, open);
     assert.deepEqual(stray, [], "Words in the dialog came from elsewhere.");

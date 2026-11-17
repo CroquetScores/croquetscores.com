@@ -50,12 +50,6 @@ Feature: A reader can see the terms the site is used on
       When the help page "terms-of-use" is looked at
       Then the page is not found
 
-    Scenario: The terms for readers are shown in English to a reader of another language
-      Given a browser that asks for Welsh
-      And the help has no Welsh terms of use
-      When the terms of use are opened
-      Then the terms are in English
-
   Rule: The terms for readers lead to the terms for those who write
 
     Scenario: The terms for readers link to the terms for those who write
@@ -75,12 +69,6 @@ Feature: A reader can see the terms the site is used on
     Scenario: The terms for those who write are not also in the help
       When the help page "admin/terms-of-use" is looked at
       Then the page is not found
-
-    Scenario: The terms for those who write are shown in English to a reader of another language
-      Given a browser that asks for Welsh
-      And the help has no Welsh terms of use for those who write
-      When the terms of use for those who write are opened
-      Then the terms are in English
 
   Rule: The terms for those who write say how something written is reported
 
