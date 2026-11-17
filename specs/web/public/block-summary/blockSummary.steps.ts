@@ -92,6 +92,27 @@ Then(
   },
 );
 
+// A space a line may break at is an ordinary one; a no-break space, which is
+// what holds a name together, is not matched by a plain " ".
+const breakable = async (found: Locator): Promise<string> =>
+  (await found.textContent()) ?? "";
+
+Then(
+  /^the name of "(.*)" in the summary has (\d+) places? to break a line$/,
+  async function (this: SpecWorld, name: string, count: string) {
+    const text = await breakable(rowOf(this, name).locator(".player-name"));
+    assert.equal(text.split(" ").length - 1, Number(count));
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the summary breaks after its ampersand$/,
+  async function (this: SpecWorld, name: string) {
+    const text = await breakable(rowOf(this, name).locator(".player-name"));
+    assert.ok(text.includes("& "), `"${text}" does not break after "&".`);
+  },
+);
+
 // Its columns --------------------------------------------------------------------
 
 Then(

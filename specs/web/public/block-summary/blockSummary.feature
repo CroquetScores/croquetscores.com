@@ -114,6 +114,30 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the "Wins" of "Sam Someone" in the summary are "0"
 
+  Rule: A name is kept together, so that a narrow row breaks where it reads best
+
+    A phone's row is narrow, and a name that breaks wherever there is a space
+    leaves a first name on one line and its last name on the next. So a player's
+    name is held together, and a doubles pair's name is held together on each
+    side of its ampersand, which stays with the first player and is the one
+    place a line may break: "Tim Murphy &" over "Alison Sharpe".
+
+    Scenario: A player's name has nowhere to break
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Sam Someone" in the summary has 0 places to break a line
+
+    Scenario: A pair's name has one place to break
+      Given "organiser@example.com" has added the player "Tim Murphy & Alison Sharpe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Tim Murphy & Alison Sharpe" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Tim Murphy & Alison Sharpe" in the summary has 1 place to break a line
+
+    Scenario: A pair's name breaks after its ampersand
+      Given "organiser@example.com" has added the player "Tim Murphy & Alison Sharpe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Tim Murphy & Alison Sharpe" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Tim Murphy & Alison Sharpe" in the summary breaks after its ampersand
+
   Rule: Beside each player are their wins, their losses and their net hoops
 
     Scenario: The columns are headed in order

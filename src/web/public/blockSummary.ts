@@ -8,6 +8,7 @@ import type {
   BlockToRead,
   PlayerOfBlock,
 } from "../../application/operations/tournaments/PublicBlockOfTournament.js";
+import { pairSides } from "../../domain/aggregates/tournaments/value-objects/pairName.js";
 import type { Assets } from "../common/assets.js";
 import { escape } from "../common/escape.js";
 import type { Speaking } from "../common/language.js";
@@ -35,6 +36,19 @@ const columns: readonly {
   { word: "block.placing", of: placeShown },
 ];
 
+// A name held together with no-break spaces, so that a narrow row never leaves
+// a first name on one line and its last name on the next. A doubles pair is
+// held together on each side of its ampersand, which stays with the first
+// player and is followed by the one space a line may break at. Done here and
+// not in playerShown, which other pages draw with room to spare.
+const held = (name: string): string => {
+  const together = (words: string): string => words.split(/\s+/u).join(" ");
+  const sides = pairSides(name);
+  return sides === undefined
+    ? together(name)
+    : `${together(sides[0])} & ${together(sides[1])}`;
+};
+
 const summary = (
   asked: BlockToRead,
   speaking: Speaking,
@@ -52,7 +66,7 @@ const summary = (
         ? ` <span class="block-summary-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
       return `              <tr>
-                <th scope="row" class="block-summary-player">${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
+                <th scope="row" class="block-summary-player">${playerShown({ ...player, name: held(player.name) }, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>
 ${columns.map(({ of }) => `                <td class="block-summary-total">${escape(of(player))}</td>`).join("\n")}
               </tr>`;
     })
