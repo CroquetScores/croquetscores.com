@@ -1664,6 +1664,10 @@ export const buildApplication = async (
         standInReaderCheck?.reset();
         listedCountries?.ac.clear();
         listedCountries?.gc.clear();
+        // A deploy is something one scenario says happened; left standing, the
+        // next scenario's page would be sent as the build the site now names, and
+        // a deploy of its own would change nothing for it to be offered.
+        deployedAs = undefined;
       },
     );
   }
