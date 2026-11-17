@@ -10,6 +10,7 @@ import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/Bes
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
 import { Rounds } from "../../../domain/aggregates/tournaments/value-objects/Rounds.js";
 import { TieBreak } from "../../../domain/aggregates/tournaments/value-objects/TieBreak.js";
+import type { Games } from "../../services/Games.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { UpdateBlock } from "./UpdateBlock.js";
 
@@ -23,6 +24,7 @@ export class UpdateBlockHandler extends CommandHandler<UpdateBlock, void> {
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly games: Games,
   ) {
     super();
   }
@@ -34,11 +36,13 @@ export class UpdateBlockHandler extends CommandHandler<UpdateBlock, void> {
       command.tournament,
       "UpdateBlock",
     );
+    const competition = CompetitionId.from(command.competition);
     tournament.updateBlock(
-      CompetitionId.from(command.competition),
+      competition,
       CompetitionName.from(command.name),
       BestOf.from(command.bestOf),
       Rounds.from(command.rounds),
+      await this.games.hasAnyIn(tournament.id, competition),
       by,
       command.requestedAt,
       command.rules,

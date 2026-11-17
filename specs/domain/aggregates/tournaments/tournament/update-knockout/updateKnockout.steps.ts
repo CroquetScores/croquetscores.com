@@ -14,6 +14,7 @@ import {
   drawOf,
   drawOfPlaces,
   happened,
+  hasGamesKept,
   now,
   scenarioOf,
 } from "../aTournament.js";
@@ -126,6 +127,7 @@ When(
           ],
           roundsWithGames: [...(scenario.roundsWithGames.get(name) ?? [])],
         },
+        hasGamesKept(this, name),
         byOf(this),
         now(this),
         scenario.competitionUpdate.rules,

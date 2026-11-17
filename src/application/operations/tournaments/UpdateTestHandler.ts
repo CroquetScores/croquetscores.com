@@ -39,6 +39,7 @@ export class UpdateTestHandler extends CommandHandler<UpdateTest, void> {
       id,
       testDetailsFrom(command.test),
       await this.games.playedIn(tournament.id, id),
+      await this.games.hasAnyIn(tournament.id, id),
       by,
       command.requestedAt,
     );

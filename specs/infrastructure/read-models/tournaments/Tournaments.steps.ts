@@ -120,6 +120,7 @@ const changeBlock = async (
       CompetitionName.from(block),
       BestOf.from(1),
       Rounds.from(1),
+      false,
       by,
       at,
       { worldRankings },

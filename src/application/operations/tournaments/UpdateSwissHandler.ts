@@ -8,6 +8,7 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { BestOf } from "../../../domain/aggregates/tournaments/value-objects/BestOf.js";
 import { CompetitionName } from "../../../domain/aggregates/tournaments/value-objects/CompetitionName.js";
+import type { Games } from "../../services/Games.js";
 import { askedBy, tournamentFor } from "./tournamentOperations.js";
 import { UpdateSwiss } from "./UpdateSwiss.js";
 
@@ -21,6 +22,7 @@ export class UpdateSwissHandler extends CommandHandler<UpdateSwiss, void> {
   constructor(
     private readonly tournaments: AggregateRepository<Tournament, TournamentId>,
     private readonly accounts: AggregateRepository<Account, AccountId>,
+    private readonly games: Games,
   ) {
     super();
   }
@@ -32,10 +34,12 @@ export class UpdateSwissHandler extends CommandHandler<UpdateSwiss, void> {
       command.tournament,
       "UpdateSwiss",
     );
+    const competition = CompetitionId.from(command.competition);
     tournament.updateSwiss(
-      CompetitionId.from(command.competition),
+      competition,
       CompetitionName.from(command.name),
       BestOf.from(command.bestOf),
+      await this.games.hasAnyIn(tournament.id, competition),
       by,
       command.requestedAt,
       command.rules,

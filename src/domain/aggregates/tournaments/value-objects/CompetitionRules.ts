@@ -12,6 +12,12 @@ export interface CompetitionRules {
   readonly worldRankings: boolean;
   /** The most hoops a game is played to, or null where there is no most. */
   readonly maximumHoops: number | null;
+  /**
+   * Whether it is played as Advantage Golf Croquet, where the two players of a
+   * game have different targets and a game is decided by each one's scoring
+   * fraction rather than by hoops.
+   */
+  readonly advantage: boolean;
 }
 
 /**
@@ -25,4 +31,6 @@ export interface CompetitionRulesSaid {
   readonly worldRankings?: boolean | undefined;
   /** A number, or null to say there is no most. Left unsaid is the usual for the sport. */
   readonly maximumHoops?: number | null | undefined;
+  /** Left unsaid, it is not Advantage. */
+  readonly advantage?: boolean | undefined;
 }

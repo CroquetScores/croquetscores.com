@@ -61,6 +61,17 @@ export interface Games {
   ): Promise<ReadonlySet<string>>;
 
   /**
+   * Whether the competition `competition` has any game kept, as opposed to
+   * one in use: an archived game counts, since it can be restored, and so does
+   * a withdrawn one. Whether a competition may be switched to or from
+   * Advantage depends on it (advantage.feature).
+   */
+  hasAnyIn(
+    tournament: TournamentId,
+    competition: CompetitionId,
+  ): Promise<boolean>;
+
+  /**
    * What has been played in the test `test`: how many of its matches have
    * started, and the most games any two of its players have played.
    */

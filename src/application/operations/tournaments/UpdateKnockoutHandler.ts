@@ -50,6 +50,7 @@ export class UpdateKnockoutHandler extends CommandHandler<
         draw,
       ),
       await this.games.knockoutRoundsPlayed(tournament.id, competition),
+      await this.games.hasAnyIn(tournament.id, competition),
       by,
       command.requestedAt,
       command.rules,
