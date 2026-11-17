@@ -69,6 +69,13 @@ const git = (folder: string, ...args: string[]): void => {
       "user.email=spec@example.com",
       "-c",
       "commit.gpgsign=false",
+      // A commit leaves git to tidy the repository afterwards, in a process of
+      // its own that holds this call's output open, so the call is not over
+      // until that is. There is nothing to tidy in a history of empty commits.
+      "-c",
+      "maintenance.auto=false",
+      "-c",
+      "gc.auto=0",
       ...args,
     ],
     // Git is waited for with the thread blocked, so Cucumber's own timeout, a
