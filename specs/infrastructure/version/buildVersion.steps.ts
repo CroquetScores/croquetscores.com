@@ -1,7 +1,14 @@
 import { After, Given, Then, When } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -59,17 +66,42 @@ After(function (this: SpecWorld) {
   }
 });
 
+// What a git that was killed in the middle of a change leaves behind, which
+// would refuse the next one.
+const clearLocks = (folder: string): void => {
+  const git = join(folder, ".git");
+  rmSync(join(git, "index.lock"), { force: true });
+  rmSync(join(git, "HEAD.lock"), { force: true });
+  const branches = join(git, "refs", "heads");
+  if (existsSync(branches)) {
+    for (const name of readdirSync(branches)) {
+      if (name.endsWith(".lock")) rmSync(join(branches, name), { force: true });
+    }
+  }
+};
+
+// A call that hangs is killed and made again, a few times, with what it left
+// cleared. What these calls do is make an empty commit or move between
+// branches, which a call that never finished has not done.
 const git = (folder: string, ...args: string[]): void => {
-  try {
-    runGit(folder, args);
-  } catch (failure) {
-    const said = (failure as { stderr?: Buffer }).stderr?.toString() ?? "";
-    const lately = said.split("\n").filter((line) => line.trim() !== "");
-    throw new Error(
-      `git ${args.join(" ")} failed: ${(failure as Error).message}\n` +
-        `Git last said:\n${lately.slice(-15).join("\n")}`,
-      { cause: failure },
-    );
+  for (let attempt = 1; ; attempt++) {
+    try {
+      runGit(folder, args);
+      return;
+    } catch (failure) {
+      const hung = (failure as { code?: unknown }).code === "ETIMEDOUT";
+      if (hung && attempt < 3) {
+        clearLocks(folder);
+        continue;
+      }
+      const said = (failure as { stderr?: Buffer }).stderr?.toString() ?? "";
+      const lately = said.split("\n").filter((line) => line.trim() !== "");
+      throw new Error(
+        `git ${args.join(" ")} failed${hung ? ` ${String(attempt)} times` : ""}: ${(failure as Error).message}\n` +
+          `Git last said:\n${lately.slice(-15).join("\n")}`,
+        { cause: failure },
+      );
+    }
   }
 };
 
@@ -96,15 +128,15 @@ const runGit = (folder: string, args: string[]): void => {
     // stopped by this for ten minutes, idle, with these as the scenarios still
     // running. So this one ends it, and the scenario fails saying why.
     //
-    // A call takes a tenth of a second and has been seen to take over thirty
-    // while the whole suite ran, for a reason not yet found. Git's own trace is
-    // kept, and the end of it is said where the call fails, to show what it was
-    // doing. Nothing is read from standard input, so that a question git asks
+    // A call takes a tenth of a second and has been seen to stall for thirty
+    // while the whole suite ran, for a reason not found: git had started, said
+    // so, and then said nothing. Git's own trace is kept, and the end of it is
+    // said where the call fails, to show what it was doing. Nothing is read from standard input, so that a question git asks
     // is answered by its end rather than waited on.
     {
       cwd: folder,
       stdio: ["ignore", "pipe", "pipe"],
-      timeout: 30_000,
+      timeout: 15_000,
       env: { ...process.env, GIT_TRACE: "1" },
     },
   );
