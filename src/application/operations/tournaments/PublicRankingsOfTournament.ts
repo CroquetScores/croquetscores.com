@@ -12,6 +12,11 @@ export interface GameOfRanking {
   readonly loserScore: string;
   /** Whether the result's winner won this game, as they do not always. */
   readonly wonByWinner: boolean;
+  /**
+   * The day it was added, as "2026-10-03", in the time zone of the place the
+   * tournament is played. Not there for a game kept without when it was added.
+   */
+  readonly day?: string | undefined;
 }
 
 /**

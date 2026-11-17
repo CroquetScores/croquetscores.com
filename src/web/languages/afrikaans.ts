@@ -605,6 +605,8 @@ export const afrikaans: Language = {
     "admin.rankings.file":
       "Die wêreldranglyste sal die toernooi se uitslae gebruik deur hierdie funksie te gebruik, en bestuurders hoef niks te doen nie.",
     "admin.rankings.download": "Laai spelle af vir die wêreldranglys",
+    "admin.rankings.downloadWithGameDate":
+      "Laai spelle af vir die wêreldranglys met speldatum",
     "rankings.notAvailable": "Ranglyste is nie beskikbaar nie",
     "rankings.notAvailable.sport":
       "Hierdie toernooi se sport het geen wêreldranglyste nie, so daar is geen ranglyste om te stuur nie.",

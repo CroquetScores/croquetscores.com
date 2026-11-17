@@ -313,7 +313,10 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                 />
               ) : null}
               {chosen === "rankings" ? (
-                <RankingsTab address={asked.tournament.address} />
+                <RankingsTab
+                  address={asked.tournament.address}
+                  sport={asked.tournament.sport}
+                />
               ) : null}
             </TabControl>
           </div>

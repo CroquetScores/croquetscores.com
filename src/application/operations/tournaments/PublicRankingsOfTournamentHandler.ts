@@ -2,6 +2,10 @@ import { standingsOfBlock } from "./standingsOfBlock.js";
 import type { Game } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
+import {
+  dayInTimeZone,
+  timeZoneOf,
+} from "../../../domain/aggregates/tournaments/value-objects/timeZones.js";
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
@@ -94,6 +98,17 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
       ),
     ]);
 
+    // The day a game was added is the day where the tournament is played,
+    // since that is the day those entering its results kept it by.
+    const timeZone = timeZoneOf(
+      tournament.country.code,
+      tournament.region?.code,
+    );
+    const dayOf = (game: Game): { day?: string } =>
+      game.addedAt === undefined
+        ? {}
+        : { day: dayInTimeZone(game.addedAt.toDate(), timeZone) };
+
     const competitions: CompetitionOfRanking[] = [];
     for (const { reference, shape, rules } of tournament.competitions) {
       if (reference.archived || !rules.worldRankings) continue;
@@ -116,6 +131,7 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
             winnerScore: game.winnerScore.toString(),
             loserScore: game.loserScore.toString(),
             wonByWinner: true,
+            ...dayOf(game),
           },
         ],
       });
@@ -175,11 +191,13 @@ export class PublicRankingsOfTournamentHandler extends QueryHandler<
                     winnerScore: game.winnerScore.toString(),
                     loserScore: game.loserScore.toString(),
                     wonByWinner: true,
+                    ...dayOf(game),
                   }
                 : {
                     winnerScore: game.loserScore.toString(),
                     loserScore: game.winnerScore.toString(),
                     wonByWinner: false,
+                    ...dayOf(game),
                   },
             ),
           });

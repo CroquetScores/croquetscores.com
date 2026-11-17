@@ -16,6 +16,12 @@ export type Cell = string | number | undefined;
 export interface Styled {
   readonly value: Cell;
   readonly bold?: boolean | undefined;
+  /**
+   * Whether a number is a day, as a spreadsheet counts them: the days since
+   * 30 December 1899. Drawn as the reader's own short date, so that Excel
+   * sorts and calculates with it as a date and not as text.
+   */
+  readonly date?: boolean | undefined;
 }
 
 /** A row of cells, each text, a number, or a cell with a style. */
@@ -44,7 +50,8 @@ const sheetNameOf = (name: string): string =>
 const cellXml = (cell: Cell | Styled, at: string): string => {
   const styled =
     typeof cell === "object" && cell !== undefined ? cell : { value: cell };
-  const style = styled.bold === true ? ' s="1"' : "";
+  const style =
+    styled.date === true ? ' s="2"' : styled.bold === true ? ' s="1"' : "";
   if (styled.value === undefined || styled.value === "") return "";
   if (typeof styled.value === "number") {
     return `<c r="${at}"${style}><v>${String(styled.value)}</v></c>`;
@@ -88,10 +95,11 @@ const parts = (sheetName: string, rows: readonly Row[]): [string, string][] => [
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`,
   ],
   [
-    // Two cell formats: the default, and bold, which a cell asks for as s="1".
+    // Three cell formats: the default, bold, which a cell asks for as s="1",
+    // and a date in the reader's short form (built-in format 14), as s="2".
     "xl/styles.xml",
     `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs></styleSheet>`,
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="14" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs></styleSheet>`,
   ],
   ["xl/worksheets/sheet1.xml", worksheetXml(rows)],
 ];

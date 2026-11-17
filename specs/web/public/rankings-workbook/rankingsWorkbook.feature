@@ -36,6 +36,14 @@ Feature: Golf Croquet's rankings are a spreadsheet of who beat whom
   A knockout's match is not a line of its own: each game it was played in is,
   won by whoever won that game, which is not always the match's winner.
 
+  Its address with "rankings2" in place of "rankings" gives the same
+  spreadsheet with one column more: the day each game was added, in column I,
+  for those who must enter games in the order they were played, as the
+  Egyptian rankings officer must for tournaments that overlap for weeks. The
+  address with "rankings" is never changed, since the other officers' software
+  reads it by position. It is for Golf Croquet alone: the officers of the
+  other sports have not asked for it, so for them it is no address at all.
+
   Where a scenario says nothing else, the tournament "Spring Open" is for the
   sport "gc" and started on 3 October 2026, and has a block "Block A" with
   "Sam Someone" and "Alex Another" entered in it.
@@ -335,3 +343,65 @@ Feature: Golf Croquet's rankings are a spreadsheet of who beat whom
       And "Pat O’Byrne" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
       When the spreadsheet at "/2026/gc/spring-open/rankings" is read
       Then the winner's family name in the first game is "O'BYRNE"
+
+  Rule: The address with "rankings2" adds the day each game was added
+
+    Scenario: The address with "rankings" has no day
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings" is read
+      Then the first game has no day
+
+    Scenario: The address with "rankings2" has the day
+      Given the tournament "Spring Open" is played in the country "nz"
+      And the server's clock reads "2026-10-03T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is "2026-10-03"
+
+    Scenario: Another sport has no address with "rankings2"
+      Given "organiser@example.com" has moved the tournament "Spring Open" to the sport "ac"
+      When the address "/2026/ac/spring-open/rankings2" is requested
+      Then no file is given
+
+    Scenario: The rest of the line is as it is at "rankings"
+      Given "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the winner's family name in the first game is "SOMEONE"
+      And the winner's score in the first game is "7"
+
+    Scenario: The day is a date to the spreadsheet, not text
+      Given the server's clock reads "2026-10-03T10:00:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is a date
+
+    Scenario: The day is that of the tournament's place, not of Greenwich
+      Given the tournament "Spring Open" is played in the country "eg"
+      And the server's clock reads "2026-10-03T21:30:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is "2026-10-04"
+
+    Scenario: A region of a country with several time zones has its own
+      Given the tournament "Spring Open" is played in the country "au"
+      And the tournament "Spring Open" is played in the region "wa"
+      And the server's clock reads "2026-10-03T14:30:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is "2026-10-03"
+
+    Scenario: A region on the east coast is a day on
+      Given the tournament "Spring Open" is played in the country "au"
+      And the tournament "Spring Open" is played in the region "nsw"
+      And the server's clock reads "2026-10-03T14:30:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is "2026-10-04"
+
+    Scenario: Where the region does not say, the country's earliest time zone is used
+      Given the tournament "Spring Open" is played in the country "au"
+      And the tournament "Spring Open" is in no region
+      And the server's clock reads "2026-10-03T14:30:00Z"
+      And "Sam Someone" has beaten "Alex Another" 7 to 4 in "Block A" of "Spring Open"
+      When the spreadsheet at "/2026/gc/spring-open/rankings2" is read
+      Then the day of the first game is "2026-10-04"

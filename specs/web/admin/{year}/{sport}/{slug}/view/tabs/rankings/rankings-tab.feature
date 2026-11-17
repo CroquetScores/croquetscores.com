@@ -63,6 +63,32 @@ Feature: The rankings tab of a tournament's page
       When the rankings of "Spring Open" are opened
       Then the tab's link "Download games for world ranking" is at least 44 pixels tall
 
+  Rule: Golf Croquet has a second link, with each game's date
+
+    Where a Golf Croquet manager must enter games in the order they were
+    played, the spreadsheet with the day each game was added is a second
+    link (`rankingsWorkbook.feature`). No other sport has it.
+
+    Scenario: The link is offered for Golf Croquet
+      Given the tournament "Spring Open" is for the sport "gc"
+      When the rankings of "Spring Open" are opened
+      Then the tab's link "Download games for world ranking with game date" is offered
+
+    Scenario: The link leads to the tournament's rankings with the date
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the rankings of "Spring Open" are open
+      Then the tab's link "Download games for world ranking with game date" leads to "/2026/gc/spring-open/rankings2"
+
+    Scenario: Following the link gives a file
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the rankings of "Spring Open" are open
+      When the tab's link "Download games for world ranking with game date" is followed
+      Then a file is given
+
+    Scenario: The link is not offered for another sport
+      When the rankings of "Spring Open" are opened
+      Then the tab's link "Download games for world ranking with game date" is not offered
+
   Rule: A tournament played by teams has it too
 
     Scenario: A test's tournament is offered the link

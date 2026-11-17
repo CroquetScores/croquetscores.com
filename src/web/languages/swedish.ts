@@ -599,6 +599,8 @@ export const swedish: Language = {
     "admin.rankings.file":
       "Världsrankingen använder turneringens resultat via den här funktionen, så arrangörerna behöver inte göra något.",
     "admin.rankings.download": "Ladda ner partier för världsranking",
+    "admin.rankings.downloadWithGameDate":
+      "Ladda ner partier för världsranking med partidatum",
     "rankings.notAvailable": "Rankingar är inte tillgängliga",
     "rankings.notAvailable.sport":
       "Den här turneringens sport har ingen världsranking, så det finns inga rankingar att skicka.",

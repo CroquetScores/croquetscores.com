@@ -592,6 +592,8 @@ export const english: Language = {
     "admin.rankings.file":
       "The world rankings will use the tournament's results through this function, so managers do not need to do anything.",
     "admin.rankings.download": "Download games for world ranking",
+    "admin.rankings.downloadWithGameDate":
+      "Download games for world ranking with game date",
     "rankings.notAvailable": "Rankings are not available",
     "rankings.notAvailable.sport":
       "This tournament's sport has no world rankings, so there are no rankings to send.",

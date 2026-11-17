@@ -8,6 +8,8 @@ Open the tournament's page and choose **Rankings**, the last of its tabs. It say
 
 The tab is only in the page of a tournament of a sport with world rankings, and only for its managers: a scorer is not offered it. The file itself is at the tournament's own address followed by `/rankings`, as `/2026/ac/spring-open/rankings`, which is the address the site has always given it, and anybody who has the address may open it.
 
+A Golf Croquet tournament's spreadsheet is also at the address followed by `/rankings2`, as `/2026/gc/spring-open/rankings2`, which the tab offers as **Download games for world ranking with game date**. No other sport has it. It is the same spreadsheet with one column more: column I says the day each game was entered, as a date, by the clock of the place the tournament is played in, which is the time zone of its region, or of its country where the region does not say, and for a country with several the earliest. It is for entering the games of tournaments that overlap in the order they were played. The address with `/rankings` is never changed.
+
 ## What is in the file
 
 Every score that has been entered and not archived is in it, in the order it was entered, including a score that has been withdrawn, and those of a player who has withdrawn. A score archived is not. A match won by a bye or a walkover was not played, so it has no line.
