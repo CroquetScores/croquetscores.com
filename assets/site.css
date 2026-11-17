@@ -3084,9 +3084,17 @@ a.player-name[data-withdrawn] {
 }
 
 /* A block's summary: narrow enough for a phone, since it is the view for
-   one, the names wrapping rather than pushing the numbers off the edge, and
-   no wider than a medium screen, 38rem as a tournament's games are, so that
-   on a wide one its numbers stay within a glance of their names. */
+   one, and no wider than a medium screen, 38rem as a tournament's games are,
+   so that on a wide one its numbers stay within a glance of their names.
+   Names wrap only at the spaces a line may break at, never part-way along a
+   word, so a name wider than the room beside the numbers makes the table wider
+   than the window, and it scrolls across within the page as the grid does
+   rather than pushing the page out. */
+.block-summary-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .block-summary {
   width: 100%;
   max-width: 38rem;
@@ -3103,7 +3111,6 @@ a.player-name[data-withdrawn] {
 .block-summary-player {
   font-weight: normal;
   text-align: start;
-  overflow-wrap: anywhere;
 }
 
 /* As tight as the heading row, as in the grid. */

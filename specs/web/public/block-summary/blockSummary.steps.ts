@@ -92,6 +92,65 @@ Then(
   },
 );
 
+// A space a line may break at is an ordinary one; a no-break space, which is
+// what holds a name together, is not matched by a plain " ".
+const breakable = async (found: Locator): Promise<string> =>
+  (await found.textContent()) ?? "";
+
+Then(
+  /^the name of "(.*)" in the summary has (\d+) places? to break a line$/,
+  async function (this: SpecWorld, name: string, count: string) {
+    const text = await breakable(rowOf(this, name).locator(".player-name"));
+    assert.equal(text.split(" ").length - 1, Number(count));
+  },
+);
+
+Then(
+  /^the name of "(.*)" in the summary breaks after its ampersand$/,
+  async function (this: SpecWorld, name: string) {
+    const text = await breakable(rowOf(this, name).locator(".player-name"));
+    assert.ok(text.includes("& "), `"${text}" does not break after "&".`);
+  },
+);
+
+// A word broken part-way along is drawn on two lines, so the box of its text
+// has two tops where an unbroken one has one. The page is asked as a whole
+// expression, since a function given as text is not called.
+Then(
+  "no word of any name in the summary is broken",
+  async function (this: SpecWorld) {
+    const broken = await this.browserPage.evaluate(`(() => {
+      const split = [];
+      for (const name of document.querySelectorAll("main .block-summary .player-name")) {
+        const texts = document.createTreeWalker(name, NodeFilter.SHOW_TEXT);
+        for (let at = texts.nextNode(); at !== null; at = texts.nextNode()) {
+          for (const word of (at.textContent ?? "").matchAll(/\\S+/gu)) {
+            const range = document.createRange();
+            range.setStart(at, word.index);
+            range.setEnd(at, word.index + word[0].length);
+            const tops = new Set(
+              [...range.getClientRects()].map((box) => Math.round(box.top)),
+            );
+            if (tops.size > 1) split.push(word[0]);
+          }
+        }
+      }
+      return split;
+    })()`);
+    assert.deepEqual(broken, []);
+  },
+);
+
+Then("the summary scrolls sideways", async function (this: SpecWorld) {
+  const scrolls = await this.browserPage.evaluate(
+    `(() => {
+      const found = document.querySelector("main .block-summary-scroll");
+      return found !== null && found.scrollWidth > found.clientWidth;
+    })()`,
+  );
+  assert.ok(scrolls, "The summary fits the window, so has no need to scroll.");
+});
+
 // Its columns --------------------------------------------------------------------
 
 Then(

@@ -114,6 +114,50 @@ Feature: A block's summary ranks its players
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then the "Wins" of "Sam Someone" in the summary are "0"
 
+  Rule: A name is kept together, so that a narrow row breaks where it reads best
+
+    A phone's row is narrow, and a name that breaks wherever there is a space
+    leaves a first name on one line and its last name on the next. So a player's
+    name is held together, and a doubles pair's name is held together on each
+    side of its ampersand, which stays with the first player and is the one
+    place a line may break: "Tim Murphy &" over "Alison Sharpe".
+
+    Nor is a word broken part-way along to fit. Where a name is wider than the
+    room beside the numbers, the table is wider than the window and scrolls
+    across within the page, as the grid does, so that "Logan McCorkindale &"
+    is never "Logan Mc" over "Corkindale".
+
+    Scenario: A player's name has nowhere to break
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Sam Someone" in the summary has 0 places to break a line
+
+    Scenario: A pair's name has one place to break
+      Given "organiser@example.com" has added the player "Tim Murphy & Alison Sharpe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Tim Murphy & Alison Sharpe" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Tim Murphy & Alison Sharpe" in the summary has 1 place to break a line
+
+    Scenario: A pair's name breaks after its ampersand
+      Given "organiser@example.com" has added the player "Tim Murphy & Alison Sharpe" to "Spring Open"
+      And "organiser@example.com" has entered the player "Tim Murphy & Alison Sharpe" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the name of "Tim Murphy & Alison Sharpe" in the summary breaks after its ampersand
+
+    Scenario: No word of a name is broken on a phone
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Logan McCorkindale & Felix Gelman White" to "Spring Open"
+      And "organiser@example.com" has entered the player "Logan McCorkindale & Felix Gelman White" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then no word of any name in the summary is broken
+
+    Scenario: A table wider than a phone scrolls across within the page
+      Given a viewport 320 pixels wide
+      And "organiser@example.com" has added the player "Logan McCorkindale & Felix Gelman White" to "Spring Open"
+      And "organiser@example.com" has entered the player "Logan McCorkindale & Felix Gelman White" in "Block A" of "Spring Open"
+      When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
+      Then the summary scrolls sideways
+      And the page does not scroll sideways
+
   Rule: Beside each player are their wins, their losses and their net hoops
 
     Scenario: The columns are headed in order
