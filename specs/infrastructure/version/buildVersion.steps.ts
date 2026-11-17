@@ -71,7 +71,11 @@ const git = (folder: string, ...args: string[]): void => {
       "commit.gpgsign=false",
       ...args,
     ],
-    { cwd: folder, stdio: "pipe" },
+    // Git is waited for with the thread blocked, so Cucumber's own timeout, a
+    // timer on that same thread, cannot end a git that hangs: a run was once
+    // stopped by this for ten minutes, idle, with these as the scenarios still
+    // running. So this one ends it, and the scenario fails saying why.
+    { cwd: folder, stdio: "pipe", timeout: 30_000 },
   );
 };
 

@@ -23,6 +23,9 @@ const gitSays = (
       cwd: folder,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
+      // A git that hangs is a git that could not be asked, like the rest here,
+      // and not a build that waits for it for ever.
+      timeout: 30_000,
     }).trim();
   } catch {
     return undefined;
