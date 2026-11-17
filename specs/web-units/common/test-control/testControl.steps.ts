@@ -10,6 +10,7 @@ import {
   buildApplication,
   type Application,
 } from "../../../../src/web/server.js";
+import { oldSiteSaltForScenarios } from "../../support/accounts.js";
 import type { SpecWorld } from "../../../support/world.js";
 
 // What each scenario has asked for, and what came of it.
@@ -47,6 +48,7 @@ const start = async (world: SpecWorld): Promise<void> => {
     ...process.env,
     DATABASE_URL: control.databaseUrl ?? scratch,
     TEST_CONTROL_TOKEN: control.token ?? "",
+    OLD_SITE_PASSWORD_SALT: oldSiteSaltForScenarios,
   });
   const application = await buildApplication(config, {
     logger: false,
