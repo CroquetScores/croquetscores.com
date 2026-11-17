@@ -134,14 +134,15 @@ const testVersionOf = (
   const said = written?.trim();
   if (said === undefined || said === "") return undefined;
   if (said === "none") return null;
-  const version = Number(said);
-  if (!Number.isInteger(version)) {
+  // Digits and nothing else: Number() would take "0x10" for 16, "1e2" for 100
+  // and "1.0" for 1, none of which is a whole number as it is written.
+  if (!/^\d+$/u.test(said)) {
     problems.push(
       `TEST_SITE_VERSION must be a whole number or "none", not ${JSON.stringify(said)}.`,
     );
     return undefined;
   }
-  return version;
+  return Number(said);
 };
 
 /**
@@ -324,10 +325,24 @@ const defaultDatabaseUnreachableEmailIntervalMinutes = 30;
 // five.
 // Where Google answers when the specs stand another in its place: one address,
 // at which the stand-in answers everywhere Google does.
-const testGoogleEndpoints = (address: string | undefined): GoogleEndpoints => {
+const testGoogleEndpoints = (
+  address: string | undefined,
+  problems: string[],
+): GoogleEndpoints => {
+  const written = address?.trim() ?? "";
   // Without a slash at the end, which the paths added below would double.
-  const at = (address?.trim() ?? "").replace(/\/+$/u, "");
-  if (at === "") return googlesOwnEndpoints;
+  const at = written.replace(/\/+$/u, "");
+  if (at === "") {
+    // Nothing said is Google's own, but slashes alone are something said that
+    // names nowhere: taken for nothing they would send the specs to the real
+    // Google when they meant the stand-in.
+    if (written !== "") {
+      problems.push(
+        `TEST_GOOGLE_ADDRESS must be an address, not ${JSON.stringify(written)}.`,
+      );
+    }
+    return googlesOwnEndpoints;
+  }
   return {
     issuers: [at],
     authorization: `${at}/authorize`,
@@ -466,6 +481,10 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     testControlToken === undefined
       ? undefined
       : testVersionOf(env["TEST_SITE_VERSION"], problems);
+  const googleEndpoints =
+    testControlToken === undefined
+      ? googlesOwnEndpoints
+      : testGoogleEndpoints(env["TEST_GOOGLE_ADDRESS"], problems);
   if (problems.length > 0) throw new ConfigError(problems);
 
   return {
@@ -494,10 +513,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     testControlToken,
     worldRankingAddresses,
     worldRankingWaitMilliseconds,
-    googleEndpoints:
-      testControlToken === undefined
-        ? googlesOwnEndpoints
-        : testGoogleEndpoints(env["TEST_GOOGLE_ADDRESS"]),
+    googleEndpoints,
     testSiteVersion:
       testControlToken === undefined ? undefined : testSiteVersion,
   };

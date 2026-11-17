@@ -877,6 +877,14 @@ const withRequestsLogged = (
   };
 };
 
+// The table each sport's list is kept in. Looked up and not built from the
+// sport, so that a table name is one of these two whatever is passed at run
+// time: the type "ac" | "gc" is gone by then.
+const worldRankingTables = {
+  ac: "ac_world_ranking_players",
+  gc: "gc_world_ranking_players",
+} as const;
+
 export const buildApplication = async (
   config: Config,
   options: ApplicationOptions = {},
@@ -1781,12 +1789,12 @@ export const buildApplication = async (
       worldRankingPlayers: async (sport) =>
         (
           await pool.query<{ name: string }>(
-            `select name from ${sport}_world_ranking_players order by name`,
+            `select name from ${worldRankingTables[sport]} order by name`,
           )
         ).rows.map((row) => row.name),
       addWorldRankingPlayer: async (sport, name) => {
         await pool.query(
-          `insert into ${sport}_world_ranking_players (name)
+          `insert into ${worldRankingTables[sport]} (name)
            values ($1) on conflict do nothing`,
           [name],
         );

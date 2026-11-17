@@ -148,6 +148,14 @@ Feature: The settings the site is started with
       When the settings are loaded
       Then Google's keys are read from "http://127.0.0.1:9002/keys"
 
+    Scenario: A site told where Google is by nothing but slashes does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And Google is said to answer at "//"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "TEST_GOOGLE_ADDRESS"
+
   Rule: The version a site reports can be set only for a site that has the test control
 
     A version that is not a number would be passed on as one that is not, and a
@@ -176,3 +184,18 @@ Feature: The settings the site is started with
       When the settings are loaded
       Then they are refused
       And the refusal names the setting "TEST_SITE_VERSION"
+
+    Scenario Outline: A site told its version is written as anything but digits does not start
+      Given the administrator's email address is "administrator@example.com"
+      And the test control is on for a database the specs made
+      And the site is said to be at version "<written>"
+      When the settings are loaded
+      Then they are refused
+      And the refusal names the setting "TEST_SITE_VERSION"
+
+      Examples:
+        | written |
+        | 0x10    |
+        | 1e2     |
+        | 1.0     |
+        | -3      |

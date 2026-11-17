@@ -15,6 +15,7 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { stallMinutes } from "./stallLimit.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const require = createRequire(import.meta.url);
@@ -31,6 +32,15 @@ const kinds = [
 ];
 if (!kinds.includes(kind)) {
   console.error(`The first word is one of ${kinds.join(", ")}, not ${kind}.`);
+  process.exit(1);
+}
+
+// Asked before anything is started, so that a limit set wrongly is a refusal
+// and not a trace from Cucumber loading the formatter.
+try {
+  stallMinutes();
+} catch (refusal) {
+  console.error(refusal.message);
   process.exit(1);
 }
 
