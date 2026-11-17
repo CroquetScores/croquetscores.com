@@ -173,8 +173,28 @@ const start = async (): Promise<RunningSite> => {
 // database is sealed with them.
 let siteEnvironment: NodeJS.ProcessEnv = {};
 
-/** Starts a site over the run's database, told `settings` besides what it is always told. */
+/**
+ * Starts a site over the run's database, told `settings` besides what it is
+ * always told. The port is found free and then let go of before the site
+ * listens on it, so that another worker's site, finding ports at the same
+ * moment, can be given the same one; the site that loses says so and stops, and
+ * is started again on another.
+ */
 const spawnSite = async (
+  settings: Readonly<Record<string, string>>,
+): Promise<{ child: ChildProcess; baseUrl: string }> => {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await spawnSiteOnAFreePort(settings);
+    } catch (failure) {
+      const taken =
+        failure instanceof Error && failure.message.includes("EADDRINUSE");
+      if (!taken || attempt === 5) throw failure;
+    }
+  }
+};
+
+const spawnSiteOnAFreePort = async (
   settings: Readonly<Record<string, string>>,
 ): Promise<{ child: ChildProcess; baseUrl: string }> => {
   const port = await freePort();
