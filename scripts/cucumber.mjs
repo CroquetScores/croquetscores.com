@@ -49,6 +49,8 @@ const reports = (name) => [
   "progress-bar",
   `html:reports/${name}.html`,
   `summary:reports/${name}-summary.txt`,
+  // Fails a run that has stopped, naming what it stopped on.
+  "./scripts/stallWatch.mjs",
 ];
 
 const unitFeatures = [
