@@ -190,7 +190,7 @@ const countryZones: Readonly<Record<string, string>> = {
   pn: "Pacific/Pitcairn",
   pr: "America/Puerto_Rico",
   ps: "Asia/Gaza",
-  pt: "Atlantic/Azores",
+  pt: "Europe/Lisbon",
   pw: "Pacific/Palau",
   py: "America/Asuncion",
   qa: "Asia/Qatar",
@@ -259,7 +259,8 @@ const countryZones: Readonly<Record<string, string>> = {
 };
 
 // One zone to a region, by the old site's region codes (countryRegions.ts). A
-// region not named here has its country's.
+// region not named here has its country's. A state in two zones has the one
+// most of its people live in, since the rest of it is a few counties.
 const regionZones: Readonly<Record<string, Readonly<Record<string, string>>>> =
   {
     au: {
@@ -289,6 +290,7 @@ const regionZones: Readonly<Record<string, Readonly<Record<string, string>>>> =
     },
     us: {
       ala: "America/Chicago",
+      ala01: "America/Anchorage",
       ari: "America/Phoenix",
       ark: "America/Chicago",
       cal: "America/Los_Angeles",
@@ -311,6 +313,7 @@ const regionZones: Readonly<Record<string, Readonly<Record<string, string>>>> =
       mic: "America/Detroit",
       min: "America/Chicago",
       mis: "America/Chicago",
+      mis01: "America/Chicago",
       mon: "America/Denver",
       neb: "America/Chicago",
       nev: "America/Los_Angeles",

@@ -1,9 +1,11 @@
-// A tournament's rankings, at its address followed by "rankings" (or "rankings2", which Golf Croquet's spreadsheet gives a column more, rankingsWorkbook.feature): the file the
+// A tournament's rankings, at its address followed by "rankings": the file the
 // world rankings are sent where it counts towards them (rankings.feature), and
 // otherwise a page that says there are none and why. A file and not a page, so
 // opening it saves it: a text file for Association Croquet and a spreadsheet
 // for Golf Croquet and American 6 Wicket, each as that sport's rankings
-// officers read them.
+// officers read them. Golf Croquet's has a second address, "rankings2", whose
+// spreadsheet has the day of each game in a column more
+// (rankingsWorkbook.feature).
 //
 // An address the tournament has moved on from leads to the same address where
 // it is now, whether it is a file or a page.

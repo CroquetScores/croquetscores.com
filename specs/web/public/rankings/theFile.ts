@@ -164,6 +164,10 @@ export const keepSpreadsheet = (world: WebWorld): void => {
       const date = / s="2"/.test(cell[2]!);
       const inline = /<t[^>]*>(.*?)<\/t>/s.exec(cell[3]!)?.[1];
       const number = /<v>(.*?)<\/v>/s.exec(cell[3]!)?.[1];
+      assert.ok(
+        !date || Number.isFinite(Number(number)),
+        `A date cell holds ${String(number)}, which is not a day.`,
+      );
       cells.set(cell[1]!, {
         text:
           date && number !== undefined
