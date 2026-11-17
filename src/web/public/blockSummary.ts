@@ -42,11 +42,12 @@ const columns: readonly {
 // player and is followed by the one space a line may break at. Done here and
 // not in playerShown, which other pages draw with room to spare.
 const held = (name: string): string => {
-  const together = (words: string): string => words.split(/\s+/u).join(" ");
+  const together = (words: string): string =>
+    words.split(/\s+/u).join("\u00a0");
   const sides = pairSides(name);
   return sides === undefined
     ? together(name)
-    : `${together(sides[0])} & ${together(sides[1])}`;
+    : `${together(sides[0])}\u00a0& ${together(sides[1])}`;
 };
 
 const summary = (
@@ -71,7 +72,8 @@ ${columns.map(({ of }) => `                <td class="block-summary-total">${esc
               </tr>`;
     })
     .join("\n");
-  return `          <table class="block-summary">
+  return `          <div class="block-summary-scroll" role="region" aria-labelledby="competition-heading" tabindex="0">
+          <table class="block-summary">
             <thead>
               <tr>
                 <td class="block-summary-corner"></td>
@@ -82,6 +84,7 @@ ${columns.map(({ word }) => `                <th scope="col" class="block-summar
 ${rows}
             </tbody>
           </table>
+          </div>
           <p class="block-summary-ranking">${escape(say("blockSummary.ranking"))}</p>${tieBreakSaid(asked, speaking)}`;
 };
 
