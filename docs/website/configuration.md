@@ -55,6 +55,7 @@ Make a different one for each. `npm run dev:setup` does the same for a developme
 - **`RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`** — Both or neither. Without them the register form is open and emails whoever it is told to. Made at google.com/recaptcha for the site's domain
 - **`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER_NAME`, `SMTP_PASSWORD`** — All four or none. Brevo's: `smtp-relay.brevo.com`, `587`, and the user name and key Brevo gives for SMTP (not the account's sign-in). None, and every email is written to `temp/emails/` and nobody is sent anything. The connection is always encrypted, and a server that will not encrypt is not sent to
 - **`SEARCH_ENGINES_WELCOME`** — `true` or `false`, blank is `false`. **Leave it `false`** wherever the site is not meant to be found. `true` only when the site is meant to be found. Even then, only croquetscores.com and gateballscores.com are: a try website and a development computer ask search engines to keep away whatever it says (`searchEngines.feature`)
+- **`ADVANTAGE_GOLF_CROQUET`** — `true` or `false`, blank is `false`. Whether croquetscores.com lets a manager play a competition as Advantage Golf Croquet, which is a major change to how a competition is scored and ranked. Leave it `false` until it is to be released; then set `true` and restart the site, with nothing to deploy. A try website and a development computer offer it whatever this says, and Gateball Scores never does (`advantageGolfCroquet.feature`)
 
 ### Optional
 

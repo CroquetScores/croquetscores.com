@@ -91,6 +91,12 @@ export interface Config {
   // setting says so, because a site found before it was meant to be is
   // noticed by nobody, and one that is hard to find is noticed at once.
   readonly searchEnginesWelcome: boolean;
+  // Whether croquetscores.com offers Advantage Golf Croquet. False unless the
+  // setting says so, since it is a major change to how a competition is scored
+  // and ranked, and is first tried where anything entered may be removed. A try
+  // website and development offer it whatever this says, and Gateball Scores
+  // never does (advantageGolfCroquet.feature).
+  readonly advantageGolfCroquet: boolean;
   // The website's database, which only the backup reads, from the
   // administrator's own computer (backupCli.feature). Absent everywhere else.
   readonly websiteDatabaseUrl: string | undefined;
@@ -255,6 +261,24 @@ const readSearchEnginesWelcome = (
   problems: string[],
 ): boolean => {
   const key = "SEARCH_ENGINES_WELCOME";
+  const raw = env[key]?.trim().toLowerCase() ?? "";
+  if (raw === "" || raw === "false") return false;
+  if (raw === "true") return true;
+  problems.push(
+    `${key} must be true or false, not ${JSON.stringify(env[key]?.trim())}.`,
+  );
+  return false;
+};
+
+// Yes or no and nothing else, for the same reason as the setting above: a
+// misspelling left to mean one of them would have to mean the one that offers
+// a major change before it was meant to be, or else one that was meant to be
+// offered would quietly never be.
+const readAdvantageGolfCroquet = (
+  env: NodeJS.ProcessEnv,
+  problems: string[],
+): boolean => {
+  const key = "ADVANTAGE_GOLF_CROQUET";
   const raw = env[key]?.trim().toLowerCase() ?? "";
   if (raw === "" || raw === "false") return false;
   if (raw === "true") return true;
@@ -480,6 +504,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
   const port = readPort(env, problems);
   const trustedProxies = readTrustedProxies(env, problems);
   const searchEnginesWelcome = readSearchEnginesWelcome(env, problems);
+  const advantageGolfCroquet = readAdvantageGolfCroquet(env, problems);
   const smtp = readSmtp(env, problems);
   const emergencyContactEmailAddresses = readEmergencyContacts(env, problems);
   const worldRankingAddresses = readWorldRankingAddresses(env, problems);
@@ -528,6 +553,7 @@ export const loadConfig = (env: NodeJS.ProcessEnv = process.env): Config => {
     facebook: optional(env, "FACEBOOK_APP_ID", "FACEBOOK_APP_SECRET"),
     oldSitePasswordSalt: env["OLD_SITE_PASSWORD_SALT"]?.trim() || undefined,
     searchEnginesWelcome,
+    advantageGolfCroquet,
     websiteDatabaseUrl: env["WEBSITE_DATABASE_URL"]?.trim() || undefined,
     databaseBackupFolder: env["DATABASE_BACKUP_FOLDER"]?.trim() || undefined,
     pgDumpPath: env["PG_DUMP_PATH"]?.trim() || undefined,
