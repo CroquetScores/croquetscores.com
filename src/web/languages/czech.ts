@@ -593,6 +593,8 @@ export const czech: Language = {
     "admin.rankings.file":
       "Světové žebříčky použijí výsledky turnaje prostřednictvím této funkce, takže organizátoři nemusí dělat nic.",
     "admin.rankings.download": "Stáhnout hry pro světový žebříček",
+    "admin.rankings.downloadWithGameDate":
+      "Stáhnout hry pro světový žebříček s datem hry",
     "rankings.notAvailable": "Žebříčky nejsou k dispozici",
     "rankings.notAvailable.sport":
       "Sport tohoto turnaje nemá světové žebříčky, a proto není co odesílat.",

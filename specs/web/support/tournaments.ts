@@ -27,6 +27,7 @@ const usual = (name: string): Record<string, unknown> => ({
 // goes on to say so.
 const firstRegionOf: Record<string, string> = {
   au: "act",
+  eg: "cai",
   nz: "auc",
   jp: "aic",
 };

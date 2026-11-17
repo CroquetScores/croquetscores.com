@@ -49,6 +49,13 @@ Then(
 );
 
 Then(
+  "the tab's link {string} is not offered",
+  async function (this: WebWorld, name: string) {
+    assert.equal(await linkCalled(this, name).count(), 0);
+  },
+);
+
+Then(
   "the tab's link {string} leads to {string}",
   async function (this: WebWorld, name: string, path: string) {
     assert.equal(await linkCalled(this, name).getAttribute("href"), path);

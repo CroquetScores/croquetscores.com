@@ -598,6 +598,8 @@ export const latvian: Language = {
     "admin.rankings.file":
       "Pasaules rangi izmantos turnīra rezultātus ar šīs funkcijas palīdzību, tāpēc pārvaldniekiem nekas nav jādara.",
     "admin.rankings.download": "Lejupielādēt partijas pasaules rangam",
+    "admin.rankings.downloadWithGameDate":
+      "Lejupielādēt partijas pasaules rangam ar partijas datumu",
     "rankings.notAvailable": "Rangi nav pieejami",
     "rankings.notAvailable.sport":
       "Šī turnīra sporta veidam nav pasaules rangu, tāpēc nav ko sūtīt.",

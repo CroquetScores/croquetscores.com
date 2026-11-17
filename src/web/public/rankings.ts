@@ -1,4 +1,4 @@
-// A tournament's rankings, at its address followed by "rankings": the file the
+// A tournament's rankings, at its address followed by "rankings" (or "rankings2", which Golf Croquet's spreadsheet gives a column more, rankingsWorkbook.feature): the file the
 // world rankings are sent where it counts towards them (rankings.feature), and
 // otherwise a page that says there are none and why. A file and not a page, so
 // opening it saves it: a text file for Association Croquet and a spreadsheet
@@ -46,10 +46,12 @@ export const registerRankings = (
   server: FastifyInstance,
   assets: Assets,
 ): void => {
-  server.get<{ Params: { year: string; sport: string; slug: string } }>(
-    `/${yearInPath}/:sport/:slug/rankings`,
+  server.get<{
+    Params: { year: string; sport: string; slug: string; file: string };
+  }>(
+    `/${yearInPath}/:sport/:slug/:file(rankings|rankings2)`,
     async (request, reply) => {
-      const { year, sport, slug } = request.params;
+      const { year, sport, slug, file } = request.params;
       const address = `${year}/${sport}/${slug}`;
       const website = websiteOf(request);
       let asked: RankingsToRead;
@@ -66,10 +68,15 @@ export const registerRankings = (
         }
         throw failure;
       }
+      // The day of each game is Golf Croquet's rankings officers' to have, so
+      // for another sport this address is none, rather than the same file.
+      if (file === "rankings2" && asked.sport !== "gc") {
+        return reply.callNotFound();
+      }
       // Encoded, since a slug keeps letters of any script and a Location
       // outside Latin-1 is refused.
       if (asked.address !== address) {
-        return reply.redirect(encodeURI(`/${asked.address}/rankings`), 301);
+        return reply.redirect(encodeURI(`/${asked.address}/${file}`), 301);
       }
 
       const { rankings } = asked;
@@ -94,7 +101,7 @@ export const registerRankings = (
           .type(
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           )
-          .send(rankingsWorkbook(asked));
+          .send(rankingsWorkbook(asked, file === "rankings2"));
       }
 
       const speaking = speakingOf(request);

@@ -598,6 +598,8 @@ export const norwegian: Language = {
     "admin.rankings.file":
       "Verdensrangeringene bruker turneringens resultater gjennom denne funksjonen, så lederne trenger ikke gjøre noe.",
     "admin.rankings.download": "Last ned partier til verdensrangering",
+    "admin.rankings.downloadWithGameDate":
+      "Last ned partier til verdensrangering med partidato",
     "rankings.notAvailable": "Rangeringer er ikke tilgjengelige",
     "rankings.notAvailable.sport":
       "Denne turneringens idrett har ingen verdensrangeringer, så det er ingen rangeringer å sende.",

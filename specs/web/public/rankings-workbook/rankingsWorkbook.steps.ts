@@ -66,6 +66,28 @@ for (const [words, column] of columns) {
 }
 
 Then(
+  /^the day of the (first|second|third) game is "(.*)"$/,
+  function (this: WebWorld, which: string, expected: string) {
+    assert.equal(gameRow(this, which).get("I")?.text, expected);
+  },
+);
+
+Then(
+  /^the day of the (first|second|third) game is a date$/,
+  function (this: WebWorld, which: string) {
+    assert.equal(gameRow(this, which).get("I")?.date, true);
+  },
+);
+
+// A game has no day where it was read from the address with "rankings".
+Then(
+  /^the (first|second|third) game has no day$/,
+  function (this: WebWorld, which: string) {
+    assert.equal(gameRow(this, which).get("I"), undefined);
+  },
+);
+
+Then(
   /^the number of the (first|second|third) game is "(.*)"$/,
   function (this: WebWorld, which: string, expected: string) {
     assert.equal(gameRow(this, which).get("A")?.text, expected);

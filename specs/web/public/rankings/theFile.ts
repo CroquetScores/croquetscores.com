@@ -27,8 +27,11 @@ export interface Line {
 
 /** A cell of a spreadsheet's row, by its column's letter. */
 export interface Cell {
+  /** For a date, the day it is, as "2026-10-04", whatever it is drawn as. */
   readonly text: string;
   readonly bold: boolean;
+  /** Whether it is drawn as a date, which the file asks for as style 2. */
+  readonly date: boolean;
 }
 
 interface Kept {
@@ -158,11 +161,19 @@ export const keepSpreadsheet = (world: WebWorld): void => {
       /<c r="([A-Z]+)\d+"((?: [a-z]+="[^"]*")*)>(.*?)<\/c>/gs,
     )) {
       const bold = / s="1"/.test(cell[2]!);
+      const date = / s="2"/.test(cell[2]!);
       const inline = /<t[^>]*>(.*?)<\/t>/s.exec(cell[3]!)?.[1];
       const number = /<v>(.*?)<\/v>/s.exec(cell[3]!)?.[1];
       cells.set(cell[1]!, {
-        text: unescaped(inline ?? number ?? ""),
+        text:
+          date && number !== undefined
+            ? // 25569 days from 30 December 1899 to 1 January 1970.
+              new Date((Number(number) - 25_569) * 86_400_000)
+                .toISOString()
+                .slice(0, 10)
+            : unescaped(inline ?? number ?? ""),
         bold,
+        date,
       });
     }
     rows[Number(row[1]) - 1] = cells;

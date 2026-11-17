@@ -5,7 +5,7 @@
 // do not choose it.
 import type { RankingsToRead } from "../../application/operations/tournaments/PublicRankingsOfTournament.js";
 import { Slug } from "../../domain/common/Slug.js";
-import { xlsxOf, type Row } from "../common/xlsx.js";
+import { xlsxOf, type Row, type Styled } from "../common/xlsx.js";
 import { plainOf } from "./plainRankings.js";
 
 const months = [
@@ -89,8 +89,27 @@ const sheetNameOf = (name: string): string => {
   }
 };
 
-/** The spreadsheet of `rankings`, which must be available. */
-export const rankingsWorkbook = (given: RankingsToRead): Buffer => {
+// A spreadsheet counts a day as the days since 30 December 1899, which is
+// 25569 days before the first of January 1970.
+const dayCell = (day: string | undefined): Styled | undefined => {
+  if (day === undefined) return undefined;
+  const { year, month, day: of } = dayOf(day);
+  return {
+    value: Date.UTC(year, month - 1, of) / 86_400_000 + 25_569,
+    date: true,
+  };
+};
+
+/**
+ * The spreadsheet of `rankings`, which must be available. With `withDays`
+ * each game's line ends with the day it was added, in column I, which the
+ * address "rankings2" asks for; "rankings" never has it, since the officers'
+ * software reads that by position.
+ */
+export const rankingsWorkbook = (
+  given: RankingsToRead,
+  withDays = false,
+): Buffer => {
   const rankings = plainOf(given);
   const { rankings: said } = rankings;
   if (said.is !== "available") {
@@ -137,6 +156,7 @@ export const rankingsWorkbook = (given: RankingsToRead): Buffer => {
           loser.first,
           winnerScore,
           loserScore,
+          ...(withDays ? [dayCell(game.day)] : []),
         ]);
       }
     }

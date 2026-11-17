@@ -608,6 +608,8 @@ export const spanish: Language = {
       "El ranking internacional usará los resultados del torneo mediante esta función, y los gestores no tienen que hacer nada.",
     "admin.rankings.download":
       "Descargar partidas para el ranking internacional",
+    "admin.rankings.downloadWithGameDate":
+      "Descargar partidas para el ranking internacional con la fecha de la partida",
     "rankings.notAvailable": "Los rankings no están disponibles",
     "rankings.notAvailable.sport":
       "El deporte de este torneo no tiene ranking internacional, así que no hay rankings que enviar.",
