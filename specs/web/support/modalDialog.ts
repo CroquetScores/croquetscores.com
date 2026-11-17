@@ -34,6 +34,20 @@ Then(
   },
 );
 
+// For where another dialog is meant to open in the one that is not, so that
+// "no dialog is open" would be true only until it had: it waits for the dialog
+// that is open, and then says what it is not.
+Then(
+  "the modal dialog is not titled {string}",
+  async function (this: WebWorld, title: string) {
+    await dialogOf(this).waitFor();
+    assert.notEqual(
+      (await dialogOf(this).locator(".dialog-title").innerText()).trim(),
+      title,
+    );
+  },
+);
+
 Then(
   "the modal dialog names {string}",
   async function (this: WebWorld, name: string) {

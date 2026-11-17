@@ -174,7 +174,7 @@ Feature: The scores tab of a competition's page
     Scenario: Add Score in a knockout with a place left empty does not open the score dialog
       Given the scores of "Final Stage" in "Spring Open" are open
       When "Add Score" is pressed
-      Then the score dialog is not open
+      Then the modal dialog is not titled "Add Score"
 
     Scenario: Add Score in a knockout with a place left empty says why scores cannot be added
       Given the scores of "Final Stage" in "Spring Open" are open
