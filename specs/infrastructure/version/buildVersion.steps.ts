@@ -60,6 +60,20 @@ After(function (this: SpecWorld) {
 });
 
 const git = (folder: string, ...args: string[]): void => {
+  try {
+    runGit(folder, args);
+  } catch (failure) {
+    const said = (failure as { stderr?: Buffer }).stderr?.toString() ?? "";
+    const lately = said.split("\n").filter((line) => line.trim() !== "");
+    throw new Error(
+      `git ${args.join(" ")} failed: ${(failure as Error).message}\n` +
+        `Git last said:\n${lately.slice(-15).join("\n")}`,
+      { cause: failure },
+    );
+  }
+};
+
+const runGit = (folder: string, args: string[]): void => {
   execFileSync(
     "git",
     [
@@ -69,9 +83,8 @@ const git = (folder: string, ...args: string[]): void => {
       "user.email=spec@example.com",
       "-c",
       "commit.gpgsign=false",
-      // A commit leaves git to tidy the repository afterwards, in a process of
-      // its own that holds this call's output open, so the call is not over
-      // until that is. There is nothing to tidy in a history of empty commits.
+      // A commit may leave git to tidy the repository afterwards; there is
+      // nothing to tidy in a history of empty commits.
       "-c",
       "maintenance.auto=false",
       "-c",
@@ -82,7 +95,18 @@ const git = (folder: string, ...args: string[]): void => {
     // timer on that same thread, cannot end a git that hangs: a run was once
     // stopped by this for ten minutes, idle, with these as the scenarios still
     // running. So this one ends it, and the scenario fails saying why.
-    { cwd: folder, stdio: "pipe", timeout: 30_000 },
+    //
+    // A call takes a tenth of a second and has been seen to take over thirty
+    // while the whole suite ran, for a reason not yet found. Git's own trace is
+    // kept, and the end of it is said where the call fails, to show what it was
+    // doing. Nothing is read from standard input, so that a question git asks
+    // is answered by its end rather than waited on.
+    {
+      cwd: folder,
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 30_000,
+      env: { ...process.env, GIT_TRACE: "1" },
+    },
   );
 };
 
