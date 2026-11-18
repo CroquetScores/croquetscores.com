@@ -8,6 +8,10 @@
 // person on every site signing in with Google, and so would tie a forgotten
 // account to them if kept as given.
 //
+// What a person typed to tell their API keys apart is as personal as a name, and
+// is rewritten with it: the label in the event that records a key being made.
+// Only a hash of a key is ever kept, so nothing else of a key is personal.
+//
 // The key is made as the event an account begins with is kept, in the
 // transaction of that append, so that an account is never kept without its key.
 //
@@ -33,6 +37,7 @@
 import { AccountId } from "../../domain/aggregates/accounts/AccountId.js";
 import {
   forgottenEmailAddressOf,
+  forgottenApiKeyLabelOf,
   forgottenGoogleSubjectOf,
   forgottenNameOf,
 } from "../../domain/aggregates/accounts/forgottenAccount.js";
@@ -50,6 +55,8 @@ const personal: Readonly<Record<string, readonly string[]>> = {
   "account-email-address-change-asked": ["emailAddress"],
   "account-email-address-changed": ["emailAddress"],
   "account-google-account-linked": ["subject"],
+  // What the maker typed to tell their keys apart, which may be anything.
+  "account-api-key-created": ["label"],
 };
 
 /**
@@ -70,6 +77,7 @@ const beginnings: readonly string[] = [
 const forgotten = (field: string, account: AccountId): string => {
   if (field === "name") return forgottenNameOf(account);
   if (field === "subject") return forgottenGoogleSubjectOf(account);
+  if (field === "label") return forgottenApiKeyLabelOf(account);
   return forgottenEmailAddressOf(account);
 };
 

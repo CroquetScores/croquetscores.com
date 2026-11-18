@@ -28,6 +28,7 @@ import { AccountKeys } from "../../../src/infrastructure/encryption/AccountKeys.
 import { KeyedEmailAddressHasher } from "../../../src/infrastructure/encryption/KeyedEmailAddressHasher.js";
 import { PostgresEventStore } from "../../../src/infrastructure/event-store/PostgresEventStore.js";
 import { AccountsByEmailAddress } from "../../../src/infrastructure/read-models/AccountsByEmailAddress.js";
+import { AccountsByApiKey } from "../../../src/infrastructure/read-models/AccountsByApiKey.js";
 import { AccountsByGoogleAccount } from "../../../src/infrastructure/read-models/AccountsByGoogleAccount.js";
 import { AccountsByRole } from "../../../src/infrastructure/read-models/AccountsByRole.js";
 import type { SpecWorld } from "../../support/world.js";
@@ -40,6 +41,7 @@ export interface Accounts {
   readModel: AccountsByEmailAddress;
   byGoogleAccount: AccountsByGoogleAccount;
   byRole: AccountsByRole;
+  byApiKey: AccountsByApiKey;
   hasher: KeyedEmailAddressHasher;
   /** Every account kept, in the order they were first kept. */
   readonly kept: AccountId[];
@@ -97,6 +99,7 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
   const readModel = new AccountsByEmailAddress(unitOfWork, hasher);
   const byGoogleAccount = new AccountsByGoogleAccount(unitOfWork, aSiteKey());
   const byRole = new AccountsByRole(unitOfWork);
+  const byApiKey = new AccountsByApiKey(unitOfWork);
   const { keys, store } = storesFor(world, siteKey);
   const kept: Accounts = {
     siteKey,
@@ -105,6 +108,7 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
     readModel,
     byGoogleAccount,
     byRole,
+    byApiKey,
     hasher,
     kept: [],
     byAddress: new Map(),
@@ -123,6 +127,7 @@ export const keepAccounts = (world: SpecWorld, siteKey: string): Accounts => {
       readModel,
       byGoogleAccount,
       byRole,
+      byApiKey,
     ]);
     await world.asARequest(() =>
       projecting.appendEvents(account.id, expected, events),

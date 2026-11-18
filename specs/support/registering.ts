@@ -11,6 +11,20 @@ import type { AccountId } from "../../src/domain/aggregates/accounts/AccountId.j
 import type { AskToForgetAccount } from "../../src/application/operations/accounts/AskToForgetAccount.js";
 import type { AskToSetPassword } from "../../src/application/operations/accounts/AskToSetPassword.js";
 import type { ForgetAccount } from "../../src/application/operations/accounts/ForgetAccount.js";
+import type {
+  ApiKeyShown,
+  ApiKeysOfAccount,
+} from "../../src/application/operations/accounts/ApiKeysOfAccount.js";
+import type { ChangeApiKeyLimits } from "../../src/application/operations/accounts/ChangeApiKeyLimits.js";
+import type {
+  CreatedApiKey,
+  CreateApiKey,
+} from "../../src/application/operations/accounts/CreateApiKey.js";
+import type {
+  ApiKeyIdentified,
+  IdentifyApiKey,
+} from "../../src/application/operations/accounts/IdentifyApiKey.js";
+import type { RevokeApiKey } from "../../src/application/operations/accounts/RevokeApiKey.js";
 import type { ChangeName } from "../../src/application/operations/accounts/ChangeName.js";
 import type { ChangePassword } from "../../src/application/operations/accounts/ChangePassword.js";
 import type { AskToChangeEmailAddress } from "../../src/application/operations/accounts/AskToChangeEmailAddress.js";
@@ -102,6 +116,21 @@ export interface Registering {
 
   /** Changes an account's name. Answers with the account, or throws. */
   changeName(command: ChangeName): Promise<AccountId>;
+
+  /** Makes a key for an account. Answers with it, or throws. */
+  createApiKey(command: CreateApiKey): Promise<CreatedApiKey>;
+
+  /** Revokes a key of an account. Answers with the account, or throws. */
+  revokeApiKey(command: RevokeApiKey): Promise<AccountId>;
+
+  /** Changes the limits of a key, as an administrator. Throws what the mediator throws. */
+  changeApiKeyLimits(command: ChangeApiKeyLimits): Promise<void>;
+
+  /** The keys of an account, as its owner sees them. */
+  apiKeysOf(query: ApiKeysOfAccount): Promise<readonly ApiKeyShown[]>;
+
+  /** Who a key sent acts as, or nothing. */
+  identifyApiKey(query: IdentifyApiKey): Promise<ApiKeyIdentified | undefined>;
 
   /** Changes an account's password. Answers with the account, or throws. */
   changePassword(command: ChangePassword): Promise<AccountId>;

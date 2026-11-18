@@ -18,3 +18,7 @@ export const forgottenEmailAddressOf = (account: AccountId): string =>
 /** The Google account a forgotten account is linked to, which none is known by. */
 export const forgottenGoogleSubjectOf = (account: AccountId): string =>
   `google-account-forgotten-${account.uuid}`;
+
+/** What a forgotten account's key is labelled, which its maker typed. */
+export const forgottenApiKeyLabelOf = (account: AccountId): string =>
+  `Forgotten key ${account.uuid}`;

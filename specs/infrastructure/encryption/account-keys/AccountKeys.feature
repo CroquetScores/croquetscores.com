@@ -233,6 +233,14 @@ Feature: Keeping an account's name and email address readable only with its own 
       When the account is forgotten
       Then every event that held something personal is kept differently
 
+    Scenario: What its maker typed to tell a key by is kept no longer
+      Given an account is registered at "someone@example.com"
+      And the account's email address is confirmed as "Sam Someone"
+      And the account makes a key labelled "Sam's own laptop"
+      And every event is noted
+      When the account is forgotten
+      Then every event that held something personal is kept differently
+
     Scenario: A forgotten account is called forgotten, by its id
       Given an account "account/7c9e6679-7425-40de-944b-e07fc1f90ae7" is registered at "someone@example.com"
       And the account's email address is confirmed as "Sam Someone"

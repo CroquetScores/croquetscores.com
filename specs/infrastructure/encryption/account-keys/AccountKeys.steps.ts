@@ -432,6 +432,8 @@ const holdingNothingPersonal: readonly string[] = [
   "account-forgotten",
   "account-role-added",
   "account-role-removed",
+  "account-api-key-revoked",
+  "account-api-key-limits-changed",
 ];
 
 // What the check of the kinds of account event is given, and found.
