@@ -197,6 +197,10 @@ const spawnSite = async (
 const spawnSiteOnAFreePort = async (
   settings: Readonly<Record<string, string>>,
 ): Promise<{ child: ChildProcess; baseUrl: string }> => {
+  const token = siteEnvironment["TEST_CONTROL_TOKEN"];
+  if (token === undefined) {
+    throw new Error("A site was started before the run made its token.");
+  }
   const port = await freePort();
   const spawned = spawn(
     process.execPath,
@@ -221,8 +225,18 @@ const spawnSiteOnAFreePort = async (
   };
   spawned.stdout.on("data", keep);
   spawned.stderr.on("data", keep);
+  // Said when the pipes are drained and not when the process exits: the exit
+  // can be seen before the last of what it printed has been read, and the
+  // retry for a port that was taken depends on reading EADDRINUSE there.
+  const drained = new Promise<void>((done) => spawned.once("close", done));
   const baseUrl = `http://127.0.0.1:${String(port)}`;
-  await ready(baseUrl, spawned, said);
+  try {
+    await ready(baseUrl, token, spawned, drained, said);
+  } catch (failure) {
+    // Not handed to anything that would stop it later, so stopped here.
+    spawned.kill();
+    throw failure;
+  }
   return { child: spawned, baseUrl };
 };
 
@@ -274,7 +288,9 @@ export const endAnotherSite = async (): Promise<void> => {
 // connection. A site that stops instead is said so, rather than waited for.
 const ready = async (
   baseUrl: string,
+  token: string,
   launched: ChildProcess,
+  drained: Promise<void>,
   said: readonly string[],
 ): Promise<void> => {
   // What the site last said, which is what there is to go on where it neither
@@ -284,8 +300,12 @@ const ready = async (
       ? "It has said nothing."
       : `It last said:\n${said.slice(-15).join("\n")}`;
   const until = Date.now() + 120_000;
+  // What the control last answered, so that a site that is up and refusing is
+  // not reported as one that was slow to start.
+  let answered: string;
   for (;;) {
     if (launched.exitCode !== null) {
+      await drained;
       throw new Error(
         `The site stopped with code ${String(launched.exitCode)}. ${lately()}`,
       );
@@ -295,16 +315,23 @@ const ready = async (
     // site answers too. Only ours knows the token, so only ours says yes to
     // the clock. The other is waited out until this site stops with
     // EADDRINUSE, and is started again on another port.
-    const answered = await fetch(`${baseUrl}/__test/clock`, {
-      headers: { "x-test-control": siteEnvironment["TEST_CONTROL_TOKEN"]! },
-    }).then(
-      (answer) => answer.status === 200,
+    try {
+      const answer = await fetch(`${baseUrl}/__test/clock`, {
+        headers: { "x-test-control": token },
+        // A port that accepts and never answers is not waited on past the
+        // deadline.
+        signal: AbortSignal.timeout(5_000),
+      });
+      if (answer.status === 200) return;
+      answered = `status ${String(answer.status)}`;
+    } catch {
       // Refused, since a site that is still starting is not listening yet.
-      () => false,
-    );
-    if (answered) return;
+      answered = "nothing, as it was not listening or did not answer";
+    }
     if (Date.now() > until) {
-      throw new Error(`The site did not start. ${lately()}`);
+      throw new Error(
+        `The site did not start. Its test control answered ${answered}. ${lately()}`,
+      );
     }
     await new Promise((later) => setTimeout(later, 250));
   }
