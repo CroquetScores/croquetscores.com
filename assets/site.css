@@ -3457,31 +3457,32 @@ a.player-name[data-withdrawn] {
 
 /* A knockout's summary: its rounds one beneath another, each match a table of
    its own, for a phone. */
-/* No wider than a medium screen, 38rem as a tournament's games are, since it
-   is the view for a phone and its numbers would drift away from their names
-   across a wide one. */
+/* As wide as the page, each match's table with it, so that a score's box is
+   the page's width however wide the score is written. */
 .knockout-summary {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  max-width: 38rem;
 }
 
 /* In the summary, for a phone, a match is as wide as the page allows and a
    long name wraps rather than running off its edge, its scores still in a
-   column of their own. */
+   column of their own. The name takes whatever the scores leave, and a score
+   is as wide as it is written, since an Advantage game's, as "83% (5/6)", is
+   far wider than a number of hoops and would otherwise run out of its box. */
 .knockout-summary .knockout-match {
   width: 100%;
-  table-layout: fixed;
 }
 
 .knockout-summary .knockout-name {
+  width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
 .knockout-summary .knockout-score {
-  width: 2.5rem;
+  width: auto;
+  min-width: 2.5rem;
 }
 
 .knockout-summary-round {
