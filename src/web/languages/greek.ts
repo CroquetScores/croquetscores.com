@@ -612,6 +612,7 @@ export const greek: Language = {
     "admin.tournament.subtitle": "Υπότιτλος",
     "admin.rules.handicap": "Παίζεται με χάντικαπ",
     "admin.rules.drawsAllowed": "Επιτρέπει ισόπαλα αποτελέσματα",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Τα ισόπαλα τεστ λογίζονται ισοπαλία",
     "admin.rules.worldRankings": "Μετράει για τις παγκόσμιες κατατάξεις",
     "admin.rules.maximumHoops": "Μέγιστα τόξα",
@@ -1402,6 +1403,8 @@ export const greek: Language = {
       "Αυτό το τεστ έχει παιχνίδια, γι' αυτό δεν μπορεί να αρχειοθετηθεί μέχρι να αρχειοθετηθούν εκείνα.",
     "Tournament.TestHasGames":
       "Αυτό το τεστ έχει πλέον παιχνίδια, γι' αυτό οι ομάδες του δεν μπορούν πια να αλλάξουν.",
+    "Tournament.AdvantageHasGames":
+      "Αυτός ο διαγωνισμός έχει παιχνίδια, γι' αυτό δεν μπορεί να αλλάξει σε Advantage Golf Croquet ή από αυτό.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Έχουν ήδη ξεκινήσει περισσότεροι αγώνες από αυτόν τον αριθμό.",
     "Tournament.BestOfBelowGamesPlayed":

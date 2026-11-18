@@ -255,6 +255,13 @@ Given("the competition is to allow drawn results", function (this: WebWorld) {
 });
 
 Given(
+  "the competition is to be played as Advantage",
+  function (this: WebWorld) {
+    rulesOf(this, { advantage: true });
+  },
+);
+
+Given(
   /^"([^"]*)" has moved the player "([^"]*)" in "([^"]*)" of "([^"]*)" (up|down)$/,
   async function (
     this: WebWorld,

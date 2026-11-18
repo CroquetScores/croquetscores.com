@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+import { useAdvantageOffered } from "../../../../../../useAdvantageOffered.js";
 import { go } from "../../../../../../navigation.js";
 import { TabControl } from "../../../../../../TabControl.js";
 import { HeldPage } from "../../../HeldPage.js";
@@ -87,6 +88,7 @@ export const ViewCompetition = ({
   // says what it is now.
   const [editing, setEditing] = useState<CompetitionAsItIs | undefined>();
   const [kept, setKept] = useState(0);
+  const advantageOffered = useAdvantageOffered();
   // Whether the competition's list is being asked for, so that pressing the
   // pencil again meanwhile does not ask twice.
   const [opening, setOpening] = useState(false);
@@ -247,6 +249,9 @@ export const ViewCompetition = ({
           tournament={asked.competition.tournament}
           ranked={asked.competition.worldRankingSport !== undefined}
           usualMaximumHoops={asked.competition.usualMaximumHoops}
+          advantageOffered={
+            advantageOffered && asked.competition.worldRankingSport === "gc"
+          }
           competition={editing}
           kept={() => {
             setKept((count) => count + 1);

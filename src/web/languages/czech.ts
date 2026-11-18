@@ -568,6 +568,7 @@ export const czech: Language = {
     "admin.tournament.subtitle": "Podtitul",
     "admin.rules.handicap": "Hraje se s handicapy",
     "admin.rules.drawsAllowed": "Povoluje remízy",
+    "admin.rules.advantage": "Advantage golfový kroket",
     "admin.tournament.levelTestsDrawn": "Vyrovnané testy jsou remízy",
     "admin.rules.worldRankings": "Počítá se do světových žebříčků",
     "admin.rules.maximumHoops": "Nejvyšší počet branek",
@@ -1269,6 +1270,8 @@ export const czech: Language = {
       "Tento test má hry, a proto ho nelze archivovat, dokud nejsou archivovány i ty.",
     "Tournament.TestHasGames":
       "Tento test už má hry, a proto už nelze měnit jeho týmy.",
+    "Tournament.AdvantageHasGames":
+      "Tato soutěž už má hry, a proto ji nelze přepnout na Advantage golfový kroket ani zpět.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Více zápasů, než kolik je zadáno, už začalo.",
     "Tournament.BestOfBelowGamesPlayed":

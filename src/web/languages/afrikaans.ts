@@ -579,6 +579,7 @@ export const afrikaans: Language = {
     "admin.tournament.subtitle": "Onderskrif",
     "admin.rules.handicap": "Met voorgifte gespeel",
     "admin.rules.drawsAllowed": "Laat gelykopuitslae toe",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Gelyke toetse is gelykop",
     "admin.rules.worldRankings": "Tel vir wêreldranglyste",
     "admin.rules.maximumHoops": "Maksimum poorte",
@@ -1313,6 +1314,8 @@ export const afrikaans: Language = {
       "Hierdie toets het spelle, so dit kan nie geargiveer word totdat hulle dit is nie.",
     "Tournament.TestHasGames":
       "Hierdie toets het nou spelle, so sy spanne kan nie meer verander word nie.",
+    "Tournament.AdvantageHasGames":
+      "Hierdie kompetisie het spelle, so dit kan nie na of van Advantage Golf Croquet oorgeskakel word nie.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Meer wedstryde as dit het reeds begin.",
     "Tournament.BestOfBelowGamesPlayed":

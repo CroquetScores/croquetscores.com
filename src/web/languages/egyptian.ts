@@ -531,6 +531,7 @@ export const egyptian: Language = {
     "admin.tournament.subtitle": "العنوان الفرعي",
     "admin.rules.handicap": "بتتلعب بالهانديكاب",
     "admin.rules.drawsAllowed": "التعادل مسموح",
+    "admin.rules.advantage": "جولف كروكيه بنظام Advantage",
     "admin.tournament.levelTestsDrawn": "اللقاءات المتعادلة بتتحسب تعادل",
     "admin.rules.worldRankings": "بتتحسب في التصنيف العالمي",
     "admin.rules.maximumHoops": "أقصى عدد حلقات",
@@ -1188,6 +1189,8 @@ export const egyptian: Language = {
       "اللقاء ده فيه ألعاب، فمينفعش يتأرشف لحد ما هي تتأرشف.",
     "Tournament.TestHasGames":
       "اللقاء ده فيه ألعاب دلوقتي، فمبقاش ينفع نغيّر فرقه.",
+    "Tournament.AdvantageHasGames":
+      "المسابقة دي فيها ألعاب، فمينفعش نحوّلها لجولف كروكيه بنظام Advantage ولا نرجّعها منه.",
     "Tournament.ExpectedMatchesBelowStarted":
       "اتبدأت مباريات أكتر من كده فعلاً.",
     "Tournament.BestOfBelowGamesPlayed":

@@ -553,6 +553,7 @@ export const welsh: Language = {
     "admin.tournament.subtitle": "Is-deitl",
     "admin.rules.handicap": "Chwarae gyda handicapiau",
     "admin.rules.drawsAllowed": "Caniatáu canlyniadau cyfartal",
+    "admin.rules.advantage": "Golf Croquet Advantage",
     "admin.tournament.levelTestsDrawn": "Cyfrif profion cyfartal yn gyfartal",
     "admin.rules.worldRankings": "Yn cyfrif tuag at restr detholion y byd",
     "admin.rules.maximumHoops": "Uchafswm cylchau",
@@ -1279,6 +1280,8 @@ export const welsh: Language = {
       "Mae gan y prawf hwn gemau, felly ni ellir ei archifo nes y byddant hwy wedi'u harchifo.",
     "Tournament.TestHasGames":
       "Mae gan y prawf hwn gemau erbyn hyn, felly ni ellir newid ei dimau mwyach.",
+    "Tournament.AdvantageHasGames":
+      "Mae gan y gystadleuaeth hon gemau, felly ni ellir ei newid i Golf Croquet Advantage nac oddi wrtho.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mae mwy o gemau na hynny wedi dechrau eisoes.",
     "Tournament.BestOfBelowGamesPlayed":

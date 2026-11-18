@@ -47,6 +47,7 @@ export type CompetitionAsItIs = {
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly maximumHoops: number | null;
+  readonly advantage: boolean;
 } & (
   | {
       readonly kind: "block";
@@ -75,6 +76,12 @@ interface Props {
   readonly ranked: boolean;
   /** The most hoops a game of the sport is played to unless one says otherwise. */
   readonly usualMaximumHoops: number;
+  /**
+   * Whether it offers the choice of Advantage Golf Croquet: the site offers it
+   * and the sport is golf croquet. A competition that already is Advantage is
+   * asked wherever it is (RulesTicks.tsx).
+   */
+  readonly advantageOffered: boolean;
   /** Nothing when adding, and the competition when changing one. */
   readonly competition?: CompetitionAsItIs | undefined;
   /** Once a competition is kept, so that the list says so. */
@@ -151,6 +158,7 @@ export const CompetitionDialog = ({
   tournament,
   ranked,
   usualMaximumHoops,
+  advantageOffered,
   competition,
   kept,
   close,
@@ -219,6 +227,7 @@ export const CompetitionDialog = ({
     ranked,
     usualMaximumHoops,
     refusedFor("maximumHoops"),
+    advantageOffered,
   );
   const refusedForRound = (round: number): Refusal[] => {
     const broken = brokenByRound(rounds[round] ?? "");

@@ -581,6 +581,7 @@ export const spanish: Language = {
     "admin.tournament.subtitle": "Subtítulo",
     "admin.rules.handicap": "Se juega con hándicap",
     "admin.rules.drawsAllowed": "Permite resultados con empate",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn":
       "Los tests igualados se dan por empatados",
     "admin.rules.worldRankings": "Cuenta para el ranking internacional",
@@ -1316,6 +1317,8 @@ export const spanish: Language = {
       "Este test tiene partidas, así que no se puede archivar hasta que ellas lo estén.",
     "Tournament.TestHasGames":
       "Este test ya tiene partidas, así que sus equipos ya no se pueden cambiar.",
+    "Tournament.AdvantageHasGames":
+      "Esta competición ya tiene partidas, así que no se puede cambiar a Advantage Golf Croquet ni desde él.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Ya han empezado más partidos que esos.",
     "Tournament.BestOfBelowGamesPlayed":

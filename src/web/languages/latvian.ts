@@ -573,6 +573,7 @@ export const latvian: Language = {
     "admin.tournament.subtitle": "Apakšvirsraksts",
     "admin.rules.handicap": "Spēlē ar handikapiem",
     "admin.rules.drawsAllowed": "Pieļauj neizšķirtus rezultātus",
+    "admin.rules.advantage": "Advantage golfa krokets",
     "admin.tournament.levelTestsDrawn": "Vienādi testi ir neizšķirti",
     "admin.rules.worldRankings": "Ieskaita pasaules rangā",
     "admin.rules.maximumHoops": "Maksimālais vārtiņu skaits",
@@ -1284,6 +1285,8 @@ export const latvian: Language = {
       "Šim testam ir partijas, tāpēc to nevar arhivēt, kamēr tās nav arhivētas.",
     "Tournament.TestHasGames":
       "Šim testam tagad ir partijas, tāpēc tā komandas vairs nevar mainīt.",
+    "Tournament.AdvantageHasGames":
+      "Šai sacensībai ir partijas, tāpēc to nevar pārslēgt uz Advantage golfa kroketu vai no tā.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Jau ir sākts vairāk maču nekā tik.",
     "Tournament.BestOfBelowGamesPlayed":

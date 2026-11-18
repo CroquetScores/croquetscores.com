@@ -567,6 +567,7 @@ export const english: Language = {
     "admin.tournament.subtitle": "Subtitle",
     "admin.rules.handicap": "Played with handicaps",
     "admin.rules.drawsAllowed": "Allows drawn results",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
     "admin.rules.worldRankings": "Counts toward world rankings",
     "admin.rules.maximumHoops": "Maximum hoops",
@@ -1350,6 +1351,8 @@ export const english: Language = {
       "This test has games, so it cannot be archived until they are.",
     "Tournament.TestHasGames":
       "This test has games now, so its teams can no longer be changed.",
+    "Tournament.AdvantageHasGames":
+      "This competition has games, so it cannot be switched to or from Advantage Golf Croquet.",
     "Tournament.ExpectedMatchesBelowStarted":
       "More matches than that have started already.",
     "Tournament.BestOfBelowGamesPlayed":

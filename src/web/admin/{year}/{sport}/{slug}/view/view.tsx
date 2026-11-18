@@ -271,6 +271,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                   tournament={asked.tournament.id}
                   ranked={asked.tournament.worldRankingSport !== undefined}
                   usualMaximumHoops={asked.tournament.usualMaximumHoops}
+                  golfCroquet={asked.tournament.sport === "gc"}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                 />
@@ -287,6 +288,7 @@ export const ViewTournament = ({ address }: Props): React.JSX.Element => {
                   tournament={asked.tournament.id}
                   ranked={asked.tournament.worldRankingSport !== undefined}
                   usualMaximumHoops={asked.tournament.usualMaximumHoops}
+                  golfCroquet={asked.tournament.sport === "gc"}
                   address={asked.tournament.address}
                   part={partInCompetitions(asked.tournament.part)}
                   toTeams={() => {

@@ -574,6 +574,7 @@ export const swedish: Language = {
     "admin.tournament.subtitle": "Underrubrik",
     "admin.rules.handicap": "Spelas med handikapp",
     "admin.rules.drawsAllowed": "Tillåter oavgjorda resultat",
+    "admin.rules.advantage": "Advantage Golfcroquet",
     "admin.tournament.levelTestsDrawn": "Jämna landskamper blir oavgjorda",
     "admin.rules.worldRankings": "Räknas med i världsrankingen",
     "admin.rules.maximumHoops": "Högsta antal bågar",
@@ -1294,6 +1295,8 @@ export const swedish: Language = {
       "Den här landskampen har partier, så den kan inte arkiveras förrän de är det.",
     "Tournament.TestHasGames":
       "Den här landskampen har nu partier, så dess lag kan inte längre ändras.",
+    "Tournament.AdvantageHasGames":
+      "Den här tävlingen har partier, så den kan inte ändras till eller från Advantage Golfcroquet.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Fler matcher än så har redan startat.",
     "Tournament.BestOfBelowGamesPlayed":

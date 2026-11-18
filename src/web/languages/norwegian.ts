@@ -573,6 +573,7 @@ export const norwegian: Language = {
     "admin.tournament.subtitle": "Undertittel",
     "admin.rules.handicap": "Spilles med handicap",
     "admin.rules.drawsAllowed": "Tillater uavgjort",
+    "admin.rules.advantage": "Advantage Golfcroquet",
     "admin.tournament.levelTestsDrawn": "Like tester er uavgjort",
     "admin.rules.worldRankings": "Teller med i verdensrangeringene",
     "admin.rules.maximumHoops": "Maksimalt antall buer",
@@ -1289,6 +1290,8 @@ export const norwegian: Language = {
       "Denne testen har partier, så den kan ikke arkiveres før de er det.",
     "Tournament.TestHasGames":
       "Denne testen har partier nå, så lagene i den kan ikke lenger endres.",
+    "Tournament.AdvantageHasGames":
+      "Denne konkurransen har partier, så den kan ikke byttes til eller fra Advantage Golfcroquet.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Flere kamper enn det har allerede startet.",
     "Tournament.BestOfBelowGamesPlayed":
