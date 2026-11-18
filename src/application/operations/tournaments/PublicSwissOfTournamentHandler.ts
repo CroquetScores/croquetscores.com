@@ -12,7 +12,7 @@ import {
   competitionOf,
   countsForNothingIn,
 } from "../competitions/competitionOperations.js";
-import type { PlayerInGame } from "./GamesOfTournament.js";
+import { NOBODY_IN_GAME, type PlayerInGame } from "./GamesOfTournament.js";
 import {
   type PlayerOfSwiss,
   PublicSwissOfTournament,
@@ -85,6 +85,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       );
       if (player === undefined) continue;
       named.set(entered.id.value, {
+        playerId: player.id.value,
         name: player.name.toString(),
         representing: player.representing,
         handicap: player.handicap,
@@ -92,7 +93,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
         address: `${address}/players/${player.slug.toString()}`,
       });
     }
-    const nameless = { name: "", address };
+    const nameless = { ...NOBODY_IN_GAME, address };
     // What counts for nothing is still among the results and the games, and
     // said to be withdrawn, so that the pages strike it through.
     const countsForNothing = countsForNothingIn(
@@ -161,6 +162,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       players,
       ranked: rankingOf(players).map(({ id }) => id),
       games: games.map((game) => ({
+        id: game.id.value,
         winner: named.get(game.winner.value) ?? nameless,
         winnerScore: game.winnerScore.toString(),
         loser: named.get(game.loser.value) ?? nameless,

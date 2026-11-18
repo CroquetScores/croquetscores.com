@@ -16,6 +16,8 @@ export type PublicTestOfTournamentRefusedCode =
 
 /** One game of a match of a test, its scores as typed, the first side's first. */
 export interface GameOfTestMatch {
+  /** What the game is kept by, which never changes. */
+  readonly id: string;
   readonly scores: readonly [string, string];
   /** The side that won it, or nothing where it was drawn. */
   readonly winner: WhichSide | undefined;
@@ -28,6 +30,8 @@ export interface GameOfTestMatch {
 export interface MatchOfTest {
   /** Each side's player by their name. */
   readonly sides: readonly [string, string];
+  /** What the tournament keeps each side's player by, in the sides' order. */
+  readonly playerIds: readonly [string, string];
   /** Its games in use, oldest first. */
   readonly games: readonly GameOfTestMatch[];
   /** The side that won it once decided; nothing before, or where it was shared. */

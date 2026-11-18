@@ -64,6 +64,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
           players: team.players
             .filter((player) => !player.archived)
             .map((player) => ({
+              playerId: player.id.value,
               name: player.name.toString(),
               address: `${address}/players/${player.slug.toString()}`,
             }))
@@ -72,6 +73,7 @@ export class PublicPlayersOfTournamentHandler extends QueryHandler<
       players: tournament.players
         .filter((player) => !player.archived)
         .map((player) => ({
+          playerId: player.id.value,
           name: player.name.toString(),
           representing: player.representing,
           handicap: player.handicap,

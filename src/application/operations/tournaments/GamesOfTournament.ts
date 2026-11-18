@@ -12,6 +12,8 @@ export type GamesOfTournamentRefusedCode = "GamesOfTournament.NotText";
 
 /** A player as a game shows them. */
 export interface PlayerInGame {
+  /** What the tournament keeps them by, which never changes. */
+  readonly playerId: string;
   /** What the tournament calls them now. */
   readonly name: string;
   /** What they represent, or nothing where they represent nothing. */
@@ -21,6 +23,12 @@ export interface PlayerInGame {
   /** The name of the flag they fly, or nothing where they fly none. */
   readonly flag?: string | undefined;
 }
+
+/**
+ * Who a game names where no player of the tournament is found for them. One
+ * place for it, so that a field added to a player is not left out of a copy.
+ */
+export const NOBODY_IN_GAME: PlayerInGame = { name: "", playerId: "" };
 
 /** One of a tournament's games, as its page shows it. */
 export interface GameOfTournament {

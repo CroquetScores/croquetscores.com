@@ -46,6 +46,8 @@ export interface PlayerOfBlock extends PublicPlayer {
 
 /** One of a block's games, its scores as they were typed. */
 export interface GameOfBlock {
+  /** What the game is kept by, which never changes. */
+  readonly id: string;
   /** The id of the player who won it, as a player of the block has it. */
   readonly winner: string;
   readonly winnerScore: string;

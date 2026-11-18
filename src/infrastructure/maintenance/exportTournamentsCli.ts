@@ -16,6 +16,7 @@ import { PublicPlayersOfTournament } from "../../application/operations/tourname
 import { PublicSwissOfTournament } from "../../application/operations/tournaments/PublicSwissOfTournament.js";
 import { PublicTeamSummaryOfTournament } from "../../application/operations/tournaments/PublicTeamSummaryOfTournament.js";
 import { PublicTestOfTournament } from "../../application/operations/tournaments/PublicTestOfTournament.js";
+import type { CompetitionOfTournament } from "../../application/operations/tournaments/tournamentForReaders.js";
 import type { TournamentOfWebsite } from "../../application/operations/tournaments/tournamentsOfWebsite.js";
 import { TournamentFingerprints } from "../../application/operations/tournaments/TournamentFingerprints.js";
 import { TournamentYears } from "../../application/operations/tournaments/TournamentYears.js";
@@ -42,7 +43,7 @@ const READ_AT_ONCE = 6;
  * Which layout of a file this is. A reader of the files is told by it that the
  * layout has changed, and so does not have to notice.
  */
-export const LAYOUT = 1;
+export const LAYOUT = 2;
 
 /** How a run of Git ended, and what it said as it did. */
 export interface GitEnded {
@@ -157,26 +158,41 @@ const tournamentsWritten = (count: number): string =>
 // What a file says
 // ---------------------------------------------------------------------------
 
+interface PlayerOfGame {
+  readonly playerId: string;
+  readonly name: string;
+  readonly score: string;
+}
+
 interface PlayedGame {
-  readonly players: readonly [
-    { readonly name: string; readonly score: string },
-    { readonly name: string; readonly score: string },
-  ];
+  readonly gameId: string;
+  readonly players: readonly [PlayerOfGame, PlayerOfGame];
   readonly drawn: boolean;
   readonly withdrawn: boolean;
 }
 
+interface WhoPlayed {
+  readonly playerId: string;
+  readonly name: string;
+}
+
 interface Played {
-  readonly players: readonly [string, string];
+  readonly players: readonly [WhoPlayed, WhoPlayed];
   readonly games: readonly PlayedGame[];
 }
 
 const gameOf = (
-  first: { name: string; score: string },
-  second: { name: string; score: string },
+  gameId: string,
+  first: PlayerOfGame,
+  second: PlayerOfGame,
   drawn: boolean,
   withdrawn: boolean,
-): PlayedGame => ({ players: [first, second], drawn, withdrawn });
+): PlayedGame => ({
+  gameId,
+  players: [first, second],
+  drawn,
+  withdrawn,
+});
 
 // A knockout's games are said under the two who met, in the order they were
 // played, so that a match is its games. The page's rounds are not used: a
@@ -184,13 +200,16 @@ const gameOf = (
 const matchesOf = (games: readonly PlayedGame[]): readonly Played[] => {
   const matches = new Map<
     string,
-    { players: [string, string]; games: PlayedGame[] }
+    { players: [WhoPlayed, WhoPlayed]; games: PlayedGame[] }
   >();
   for (const game of games) {
     const [first, second] = game.players;
-    const key = JSON.stringify([first.name, second.name].sort());
+    const key = JSON.stringify([first.playerId, second.playerId].sort());
     const found = matches.get(key) ?? {
-      players: [first.name, second.name] as [string, string],
+      players: [
+        { playerId: first.playerId, name: first.name },
+        { playerId: second.playerId, name: second.name },
+      ] as [WhoPlayed, WhoPlayed],
       games: [],
     };
     found.games.push(game);
@@ -209,20 +228,22 @@ const competitionOf = async (
   world: ExportWorld,
   website: string,
   address: string,
-  name: string,
-  slug: string,
+  competition: CompetitionOfTournament,
 ): Promise<Record<string, unknown>> => {
+  const { name, id: competitionId } = competition;
+  const slug = lastPartOf(competition.address);
   try {
     const { block, players, games } = await world.ask(
       new PublicBlockOfTournament(website, address, slug),
     );
-    const names = new Map(players.map((each) => [each.id, each.name]));
+    const who = new Map(players.map((each) => [each.id, each]));
     return {
+      competitionId,
       name,
       kind: "block",
       games: games.flatMap((game) => {
-        const winner = names.get(game.winner);
-        const loser = names.get(game.loser);
+        const winner = who.get(game.winner);
+        const loser = who.get(game.loser);
         // A game the page shows is not left out of the file: the folder keeps
         // its history, so a loss here would be permanent.
         if (winner === undefined || loser === undefined) {
@@ -230,8 +251,17 @@ const competitionOf = async (
         }
         return [
           gameOf(
-            { name: winner, score: game.winnerScore },
-            { name: loser, score: game.loserScore },
+            game.id,
+            {
+              playerId: winner.playerId,
+              name: winner.name,
+              score: game.winnerScore,
+            },
+            {
+              playerId: loser.playerId,
+              name: loser.name,
+              score: game.loserScore,
+            },
             game.drawn,
             game.withdrawn,
           ),
@@ -249,14 +279,24 @@ const competitionOf = async (
       new PublicKnockoutOfTournament(website, address, slug),
     );
     return {
+      competitionId,
       name,
       kind: "knockout",
       // A knockout's game cannot be withdrawn, and so none is said to be.
       matches: matchesOf(
         games.map((game) =>
           gameOf(
-            { name: game.winner.name, score: game.winnerScore },
-            { name: game.loser.name, score: game.loserScore },
+            game.id,
+            {
+              playerId: game.winner.playerId,
+              name: game.winner.name,
+              score: game.winnerScore,
+            },
+            {
+              playerId: game.loser.playerId,
+              name: game.loser.name,
+              score: game.loserScore,
+            },
             game.drawn,
             false,
           ),
@@ -272,12 +312,22 @@ const competitionOf = async (
     new PublicSwissOfTournament(website, address, slug),
   );
   return {
+    competitionId,
     name,
     kind: "swiss",
     games: games.map((game) =>
       gameOf(
-        { name: game.winner.name, score: game.winnerScore },
-        { name: game.loser.name, score: game.loserScore },
+        game.id,
+        {
+          playerId: game.winner.playerId,
+          name: game.winner.name,
+          score: game.winnerScore,
+        },
+        {
+          playerId: game.loser.playerId,
+          name: game.loser.name,
+          score: game.loserScore,
+        },
         game.drawn,
         game.withdrawn,
       ),
@@ -289,22 +339,37 @@ const testOf = async (
   world: ExportWorld,
   website: string,
   address: string,
-  slug: string,
-  group: string | undefined,
+  competition: CompetitionOfTournament,
 ): Promise<Record<string, unknown>> => {
+  const slug = lastPartOf(competition.address);
+  const group = competition.group?.name;
+  const competitionId = competition.id;
   const { test, matches } = await world.ask(
     new PublicTestOfTournament(website, address, slug),
   );
   return {
+    competitionId,
     teams: [test.teams[0].name, test.teams[1].name],
     group: group ?? null,
     bestOf: test.bestOf,
     matches: matches.map((match) => ({
-      players: [match.sides[0], match.sides[1]],
+      players: [
+        { playerId: match.playerIds[0], name: match.sides[0] },
+        { playerId: match.playerIds[1], name: match.sides[1] },
+      ],
       games: match.games.map((game) =>
         gameOf(
-          { name: match.sides[0], score: game.scores[0] },
-          { name: match.sides[1], score: game.scores[1] },
+          game.id,
+          {
+            playerId: match.playerIds[0],
+            name: match.sides[0],
+            score: game.scores[0],
+          },
+          {
+            playerId: match.playerIds[1],
+            name: match.sides[1],
+            score: game.scores[1],
+          },
           game.winner === undefined,
           // A test's game cannot be withdrawn either.
           false,
@@ -325,27 +390,22 @@ const lastPartOf = (address: string): string =>
 const fileOf = async (
   world: ExportWorld,
   website: string,
-  listed: {
-    readonly name: string;
-    readonly sport: string;
-    readonly starts: string;
-    readonly finishes: string;
-    readonly country: string;
-    readonly region?: string | undefined;
-    readonly address: string;
-  },
+  listed: TournamentOfWebsite,
 ): Promise<string> => {
   const read = await world.ask(
     new PublicPlayersOfTournament(website, listed.address),
   );
   const said: Record<string, unknown> = {
     layout: LAYOUT,
+    tournamentId: listed.id,
     name: read.name,
     sport: listed.sport,
     firstDay: listed.starts,
     lastDay: listed.finishes,
     country: listed.country,
     region: listed.region ?? null,
+    national: listed.national,
+    international: listed.international,
   };
   if (read.playedByTeams) {
     const { teams } = await world.ask(
@@ -357,36 +417,26 @@ const fileOf = async (
     said["teams"] = read.teams.map((team) => ({
       name: team.name,
       shortName: shortNames.get(team.name) ?? null,
-      players: team.players.map((player) => player.name),
+      players: team.players.map((player) => ({
+        playerId: player.playerId,
+        name: player.name,
+      })),
     }));
     const tests: Record<string, unknown>[] = [];
     for (const competition of read.competitions) {
-      tests.push(
-        await testOf(
-          world,
-          website,
-          listed.address,
-          lastPartOf(competition.address),
-          competition.group?.name,
-        ),
-      );
+      tests.push(await testOf(world, website, listed.address, competition));
     }
     said["tests"] = tests;
   } else {
     said["players"] = read.players.map((player) => ({
+      playerId: player.playerId,
       name: player.name,
       representing: player.representing ?? null,
     }));
     const competitions: Record<string, unknown>[] = [];
     for (const competition of read.competitions) {
       competitions.push(
-        await competitionOf(
-          world,
-          website,
-          listed.address,
-          competition.name,
-          lastPartOf(competition.address),
-        ),
+        await competitionOf(world, website, listed.address, competition),
       );
     }
     said["competitions"] = competitions;

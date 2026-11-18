@@ -4,6 +4,7 @@ import type { Tournament } from "../../../domain/aggregates/tournaments/Tourname
 import { Website } from "../../../domain/common/Website.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import type { RequestType } from "../../common/Mediator.js";
+import { NOBODY_IN_GAME } from "./GamesOfTournament.js";
 import { QueryHandler } from "../../common/QueryHandler.js";
 import type { TournamentManagerNotes } from "./managerNoteOperations.js";
 import {
@@ -77,6 +78,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       );
       if (player === undefined) continue;
       shown.set(entered.id.value, {
+        playerId: player.id.value,
         name: player.name.toString(),
         representing: player.representing,
         handicap: player.handicap,
@@ -85,7 +87,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
         withdrawn: entered.withdrawn,
       });
     }
-    const nameless = { name: "" };
+    const nameless = NOBODY_IN_GAME;
     const told = toldOf(tournament, reference.id);
 
     const matches = competition.knockoutMatches(told);
@@ -173,6 +175,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       games: competition.games
         .filter((game) => !game.archived)
         .map((game) => ({
+          id: game.id.value,
           winner: shown.get(game.winner.value) ?? nameless,
           winnerScore: game.winnerScore.toString(),
           loser: shown.get(game.loser.value) ?? nameless,

@@ -54,9 +54,23 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
   was withdrawn. A withdrawn game is kept, as it is on the pages, since it was
   played, and is said to be withdrawn so that nobody counts it. A knockout's
   match is its games, in the order they were played, under the two players
-  who met. A file also says which version of this layout it is, which is 1,
+  who met. A file also says which version of this layout it is, which is 2,
   so that a reader of the files is told when the layout changes and does not
   have to notice.
+
+  Each thing a reader may want to follow from one run to the next, or to
+  another file, carries the id the website keeps it by: the tournament's
+  `tournamentId`, each competition's `competitionId` and each game's `gameId`, and each player's `playerId`, in the list of players
+  and in the games they played.
+  A name or an address can change, and the id does not, so it is what says
+  that this is the same tournament, competition or game as the last time.
+  The file also says whether its organiser ticked the tournament as national
+  or as international, as the home page does, and never both. A competition's
+  games are in the order they were entered, the first entered first, and not
+  in the order of their players' names or scores, so that a reader who wants
+  to know what was played when has it. A knockout's matches, and a test's, are
+  in the order their first games were entered, and the games of each in the
+  order they were entered.
 
   What is left out is as much of the decision as what is put in. No account
   is named: not who manages a tournament, not who added a player or a game,
@@ -352,7 +366,46 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
     Scenario: The file says which version of the layout it is
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
-      Then the file says the layout is version 1
+      Then the file says the layout is version 2
+
+    Scenario: The file says which tournament it is
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament's id is the one the site keeps "Spring Open" by
+
+    Scenario: The file says the tournament is national
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is national
+
+    Scenario: A national tournament is not said to be international
+      Given "organiser@example.com" has made the tournament "Spring Open" national
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is not international
+
+    Scenario: The file says the tournament is international
+      Given "organiser@example.com" has made the tournament "Spring Open" international
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is international
+
+    Scenario: An international tournament is not said to be national
+      Given "organiser@example.com" has made the tournament "Spring Open" international
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is not national
+
+    Scenario: A tournament that is neither is not said to be national
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is not national
+
+    Scenario: A tournament that is neither is not said to be international
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the tournament is not international
 
     Scenario: The file is JSON
       When the export script is run with "--folder export"
@@ -369,6 +422,11 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
       Then the file names the player "Alex Another"
+
+    Scenario: A player says which they are
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the id of the player "Sam Someone" is the one the tournament "Spring Open" keeps them by
 
     Scenario: A player says what they represent
       Given "organiser@example.com" has set "Sam Someone" to represent "Melbourne"
@@ -394,6 +452,17 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       And the file "2026/ac/spring-open.json" is read
       Then the file names the competition "Block A"
 
+    Scenario: A competition says which it is
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the file says the id of "Block A" is the one the site keeps "Block A" of "Spring Open" by
+
+    Scenario: Two competitions are not given one id
+      Given "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the ids of "Block A" and "Finals" differ
+
     Scenario: A competition says it is a block
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
@@ -416,6 +485,66 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
       Then the first game of "Block A" is between "Sam Someone" and "Alex Another"
+
+    Scenario: A game says which it is
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the first game of "Block A" has an id
+
+    Scenario: The games of a competition do not share an id
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the ids of the first and second games of "Block A" differ
+
+    Scenario: A block's second game entered is its second
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 9 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the second game of "Block A" is between "Alex Another" and "Chris Third"
+
+    Scenario: A block's third game entered is its third
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Block A" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 9 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the third game of "Block A" is between "Chris Third" and "Sam Someone"
+
+    Scenario: A Swiss's second game entered is its second
+      Given "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the Swiss "Open Swiss" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Open Swiss" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Open Swiss" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Open Swiss" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Open Swiss" of "Spring Open"
+      And "Chris Third" has beaten "Sam Someone" 26 to 9 in "Open Swiss" of "Spring Open"
+      And "Alex Another" has beaten "Chris Third" 26 to 3 in "Open Swiss" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the second game of "Open Swiss" is between "Chris Third" and "Sam Someone"
+
+    Scenario: A game says which player won
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then in the first game of "Block A" the id of "Sam Someone" is the one the tournament "Spring Open" keeps them by
+
+    Scenario: A game says which player lost
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then in the first game of "Block A" the id of "Alex Another" is the one the tournament "Spring Open" keeps them by
 
     Scenario: A game says what the first player scored
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
@@ -460,6 +589,28 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       When the export script is run with "--folder export"
       And the file "2026/ac/spring-open.json" is read
       Then the first match of "Finals" is between "Sam Someone" and "Alex Another"
+
+    Scenario: A game of a knockout says which it is
+      Given the knockout is to have a draw of 2 places
+      And its first round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then the first game of the first match of "Finals" has an id
+
+    Scenario: A game of a knockout says which player won
+      Given the knockout is to have a draw of 2 places
+      And its first round is to be the best of 3
+      And "organiser@example.com" has added the knockout "Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Finals" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 26 to 17 in "Finals" of "Spring Open"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-open.json" is read
+      Then in the first game of the first match of "Finals" the id of "Sam Someone" is the one the tournament "Spring Open" keeps them by
 
     Scenario: A knockout's match has each game it was played in
       Given the knockout is to have a draw of 2 places
@@ -1170,6 +1321,28 @@ Feature: Exporting the tournaments of croquet and gateball to a folder of files
       And the file "2026/ac/spring-tests.json" is read
       Then the first match of the first test is between "Pam Partner" and "Ken Kicker"
       And the second match of the first test is between "Pat Player" and "Kim Keeper"
+
+    Scenario: A test says which it is
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then the file says the id of the first test is the one the site keeps "AUS v ENG" of "Spring Tests" by
+
+    Scenario: A team's player says which they are
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then the file says the id of the player "Pat Player" of the team "Australia" is the one the tournament "Spring Tests" keeps them by
+
+    Scenario: A game of a test says which player played
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then in the first game of the first match of the first test the id of "Kim Keeper" is the one the tournament "Spring Tests" keeps them by
+
+    Scenario: A game of a test says which it is
+      Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"
+      When the export script is run with "--folder export"
+      And the file "2026/ac/spring-tests.json" is read
+      Then the first game of the first match of the first test has an id
 
     Scenario: A game of a test is not said to be withdrawn
       Given "Kim Keeper" has beaten "Pat Player" 26 to 17 in "AUS v ENG" of "Spring Tests"

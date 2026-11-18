@@ -68,6 +68,7 @@ export const standingsOfBlock = (
       return [
         {
           id: entered.id.value,
+          playerId: player.id.value,
           name: player.name.toString(),
           representing: player.representing,
           handicap: player.handicap,
