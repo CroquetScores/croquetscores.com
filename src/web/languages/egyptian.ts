@@ -1211,6 +1211,8 @@ export const egyptian: Language = {
       "اللقاء ده فيه ألعاب دلوقتي، فمبقاش ينفع نغيّر فرقه.",
     "Tournament.AdvantageHasGames":
       "المسابقة دي فيها ألعاب، فمينفعش نحوّلها لجولف كروكيه بنظام Advantage ولا نرجّعها منه.",
+    "Tournament.AdvantageWithHandicap":
+      "المسابقة مينفعش تكون جولف كروكيه بنظام Advantage وبتتلعب بالهانديكاب في نفس الوقت.",
     "Tournament.ExpectedMatchesBelowStarted":
       "اتبدأت مباريات أكتر من كده فعلاً.",
     "Tournament.BestOfBelowGamesPlayed":

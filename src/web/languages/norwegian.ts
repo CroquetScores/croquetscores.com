@@ -1312,6 +1312,8 @@ export const norwegian: Language = {
       "Denne testen har partier nå, så lagene i den kan ikke lenger endres.",
     "Tournament.AdvantageHasGames":
       "Denne konkurransen har partier, så den kan ikke byttes til eller fra Advantage Golfcroquet.",
+    "Tournament.AdvantageWithHandicap":
+      "En konkurranse kan ikke både være Advantage Golfcroquet og spilles med handicap.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Flere kamper enn det har allerede startet.",
     "Tournament.BestOfBelowGamesPlayed":

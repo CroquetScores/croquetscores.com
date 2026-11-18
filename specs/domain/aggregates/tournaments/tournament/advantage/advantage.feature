@@ -7,10 +7,15 @@ Feature: Whether a competition is played as Advantage Golf Croquet
   (`ScoringFraction.feature`) and not by hoops. A block, a knockout, a Swiss
   and a test each have it. The tournament itself has none.
 
-  A competition is not played as Advantage unless it is said to be. It is a
-  rule of a competition and not a sport of its own, so it is said apart from
-  playing with handicaps: the handicaps are what the targets are looked up
-  from, and whether they are kept is the competition's to say as it was.
+  A competition is not played as Advantage unless it is said to be.
+
+  It is not played with handicaps as well. Advantage is how players of
+  different strength are made to play each other fairly in golf croquet: each
+  player's handicap is what their target is looked up from, so the handicaps
+  are already counted in the targets, and extra strokes on top would count
+  them twice. A competition is one or the other, and saying both is refused by
+  `Tournament.AdvantageWithHandicap` rather than quietly undone, since whoever
+  said so meant something the competition cannot be.
 
   Only a golf croquet competition can be Advantage, since it is a rule of golf
   croquet. Saying otherwise is refused by `Tournament.AdvantageNotGolfCroquet`
@@ -76,6 +81,57 @@ Feature: Whether a competition is played as Advantage Golf Croquet
       And the competition is said to be Advantage
       When the block "Block A" is added
       Then it has recorded 0 events
+
+  Rule: A competition is not both Advantage and played under handicap
+
+    Scenario Outline: A competition said to be both is refused
+      Given a stream where a tournament was created in the sport "gc"
+      And the tournament is rebuilt from the stream
+      And the competition is said to be Advantage
+      And the competition is to be played under handicap
+      When the <kind> "Competition A" is added
+      Then it is refused with "Tournament.AdvantageWithHandicap"
+
+      Examples:
+        | kind     |
+        | block    |
+        | knockout |
+        | Swiss    |
+
+    Scenario: A competition refused for being both records nothing
+      Given a stream where a tournament was created in the sport "gc"
+      And the tournament is rebuilt from the stream
+      And the competition is said to be Advantage
+      And the competition is to be played under handicap
+      When the block "Block A" is added
+      Then it has recorded 0 events
+
+    Scenario: A block played under handicap is refused being switched to Advantage
+      Given a stream where a tournament was created in the sport "gc"
+      And the block "Block A" was added to it played under handicap
+      And the tournament is rebuilt from the stream
+      And the update says the competition is Advantage
+      And the update plays the competition under handicap
+      When the block "Block A" is updated
+      Then it is refused with "Tournament.AdvantageWithHandicap"
+
+    Scenario: A block played under handicap is switched to Advantage by leaving the handicaps off
+      Given a stream where a tournament was created in the sport "gc"
+      And the block "Block A" was added to it played under handicap
+      And the tournament is rebuilt from the stream
+      And the update says the competition is Advantage
+      When the block "Block A" is updated
+      Then the tournament's competition "Block A" is Advantage
+      And the tournament's competition "Block A" is not played under handicap
+
+    Scenario: An Advantage block is refused being switched to handicaps while it stays Advantage
+      Given a stream where a tournament was created in the sport "gc"
+      And the block "Block A" was added to it as Advantage
+      And the tournament is rebuilt from the stream
+      And the update says the competition is Advantage
+      And the update plays the competition under handicap
+      When the block "Block A" is updated
+      Then it is refused with "Tournament.AdvantageWithHandicap"
 
   Rule: An Advantage competition does not count towards the world rankings
 

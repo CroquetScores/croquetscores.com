@@ -1317,6 +1317,8 @@ export const swedish: Language = {
       "Den här landskampen har nu partier, så dess lag kan inte längre ändras.",
     "Tournament.AdvantageHasGames":
       "Den här tävlingen har partier, så den kan inte ändras till eller från Advantage Golfcroquet.",
+    "Tournament.AdvantageWithHandicap":
+      "En tävling kan inte både vara Advantage Golfcroquet och spelas med handikapp.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Fler matcher än så har redan startat.",
     "Tournament.BestOfBelowGamesPlayed":

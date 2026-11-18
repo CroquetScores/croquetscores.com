@@ -1427,6 +1427,8 @@ export const greek: Language = {
       "Αυτό το τεστ έχει πλέον παιχνίδια, γι' αυτό οι ομάδες του δεν μπορούν πια να αλλάξουν.",
     "Tournament.AdvantageHasGames":
       "Αυτός ο διαγωνισμός έχει παιχνίδια, γι' αυτό δεν μπορεί να αλλάξει σε Advantage Golf Croquet ή από αυτό.",
+    "Tournament.AdvantageWithHandicap":
+      "Ένας διαγωνισμός δεν μπορεί να είναι ταυτόχρονα Advantage Golf Croquet και να παίζεται με χάντικαπ.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Έχουν ήδη ξεκινήσει περισσότεροι αγώνες από αυτόν τον αριθμό.",
     "Tournament.BestOfBelowGamesPlayed":

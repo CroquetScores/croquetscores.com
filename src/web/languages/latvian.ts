@@ -1308,6 +1308,8 @@ export const latvian: Language = {
       "Šim testam tagad ir partijas, tāpēc tā komandas vairs nevar mainīt.",
     "Tournament.AdvantageHasGames":
       "Šai sacensībai ir partijas, tāpēc to nevar pārslēgt uz Advantage golfa kroketu vai no tā.",
+    "Tournament.AdvantageWithHandicap":
+      "Sacensības nevar vienlaikus būt Advantage golfa krokets un tikt spēlētas ar handikapiem.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Jau ir sākts vairāk maču nekā tik.",
     "Tournament.BestOfBelowGamesPlayed":

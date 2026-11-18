@@ -1373,6 +1373,8 @@ export const english: Language = {
       "This test has games now, so its teams can no longer be changed.",
     "Tournament.AdvantageHasGames":
       "This competition has games, so it cannot be switched to or from Advantage Golf Croquet.",
+    "Tournament.AdvantageWithHandicap":
+      "A competition cannot be both Advantage Golf Croquet and played with handicaps.",
     "Tournament.ExpectedMatchesBelowStarted":
       "More matches than that have started already.",
     "Tournament.BestOfBelowGamesPlayed":

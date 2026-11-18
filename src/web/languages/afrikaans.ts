@@ -1337,6 +1337,8 @@ export const afrikaans: Language = {
       "Hierdie toets het nou spelle, so sy spanne kan nie meer verander word nie.",
     "Tournament.AdvantageHasGames":
       "Hierdie kompetisie het spelle, so dit kan nie na of van Advantage Golf Croquet oorgeskakel word nie.",
+    "Tournament.AdvantageWithHandicap":
+      "'n Kompetisie kan nie beide Advantage Golf Croquet wees en met voorgifte gespeel word nie.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Meer wedstryde as dit het reeds begin.",
     "Tournament.BestOfBelowGamesPlayed":

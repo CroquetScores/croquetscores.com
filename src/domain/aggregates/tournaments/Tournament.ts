@@ -113,6 +113,7 @@ export type TournamentErrorCode =
   | "Tournament.CompetitionNameTaken"
   | "Tournament.MaximumHoopsInvalid"
   | "Tournament.AdvantageNotGolfCroquet"
+  | "Tournament.AdvantageWithHandicap"
   | "Tournament.AdvantageInWorldRankings"
   | "Tournament.AdvantageHasGames"
   | "Tournament.NoSuchCompetition"
@@ -2162,6 +2163,15 @@ export class Tournament extends AggregateRoot {
       refuse(
         "Tournament.AdvantageNotGolfCroquet",
         "Only a golf croquet competition can be played as Advantage.",
+      );
+    }
+    // Each player's handicap is what their target is looked up from, so the
+    // handicaps are already counted in the targets, and playing with them as
+    // well would count them twice.
+    if (advantage && handicap) {
+      refuse(
+        "Tournament.AdvantageWithHandicap",
+        "A competition played as Advantage is not played with handicaps as well.",
       );
     }
     // Its players have different targets, so a result says nothing of who is

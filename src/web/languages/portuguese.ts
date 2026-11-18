@@ -1326,6 +1326,8 @@ export const portuguese: Language = {
       "Este teste já tem jogos, então suas equipes não podem mais ser alteradas.",
     "Tournament.AdvantageHasGames":
       "Esta competição já tem jogos, então não pode ser mudada para Advantage Croquet de Golfe nem a partir dele.",
+    "Tournament.AdvantageWithHandicap":
+      "Uma competição não pode ser ao mesmo tempo Advantage Croquet de Golfe e jogada com handicaps.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mais partidas que isso já começaram.",
     "Tournament.BestOfBelowGamesPlayed":

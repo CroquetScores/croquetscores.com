@@ -54,7 +54,7 @@ export interface RulesAsItIs {
  * cannot count, and left unsaid otherwise for the tournament to decide
  * (create.feature). `said` is what is sent; `ticks` is what is drawn.
  *
- * Between them, where it is offered, is whether it is played as Advantage Golf
+ * Above them, where it is offered, is whether it is played as Advantage Golf
  * Croquet (advantage.feature). It is offered where the site offers it and the
  * sport is golf croquet, which the caller says as `advantageOffered`, and for
  * a competition that already is Advantage wherever it is, so that it can be
@@ -64,7 +64,10 @@ export interface RulesAsItIs {
  * offering it. Where it is neither offered nor already so, it is left unsaid,
  * which is not Advantage. It cannot count towards the world rankings, so a
  * competition ticked as Advantage is not asked about them, as one played under
- * handicap is not.
+ * handicap is not. It is not played with handicaps as well, since each
+ * player's handicap is what their target is looked up from, so the two are
+ * mutually exclusive (advantage.feature): ticked, either takes the other away,
+ * as one that cannot count takes away the question of the world rankings.
  *
  * After them is the most hoops a game is played to, which a competition being
  * added begins on the usual for its sport, and one being changed on its own.
@@ -113,12 +116,14 @@ export const useRules = (
         : String(begins.maximumHoops),
   );
   const typedMaximumHoops = maximumHoops.trim();
-  const asksAboutAdvantage = advantageOffered || begins?.advantage === true;
+  const asksAboutAdvantage =
+    (advantageOffered || begins?.advantage === true) && !handicap;
+  const asksAboutHandicap = !advantage;
   const asksAboutWorldRankings =
     ranked && !handicap && !drawsAllowed && !advantage;
   return {
     said: {
-      handicap,
+      handicap: asksAboutHandicap && handicap,
       drawsAllowed,
       ...(asksAboutAdvantage ? { advantage } : {}),
       maximumHoops: typedMaximumHoops === "" ? null : typedMaximumHoops,
@@ -126,18 +131,6 @@ export const useRules = (
     },
     ticks: (
       <>
-        <Tick
-          name="handicap"
-          label={say("admin.rules.handicap")}
-          ticked={handicap}
-          tick={setHandicap}
-        />
-        <Tick
-          name="drawsAllowed"
-          label={say("admin.rules.drawsAllowed")}
-          ticked={drawsAllowed}
-          tick={setDrawsAllowed}
-        />
         {asksAboutAdvantage ? (
           <Tick
             name="advantage"
@@ -146,6 +139,20 @@ export const useRules = (
             tick={setAdvantage}
           />
         ) : null}
+        {asksAboutHandicap ? (
+          <Tick
+            name="handicap"
+            label={say("admin.rules.handicap")}
+            ticked={handicap}
+            tick={setHandicap}
+          />
+        ) : null}
+        <Tick
+          name="drawsAllowed"
+          label={say("admin.rules.drawsAllowed")}
+          ticked={drawsAllowed}
+          tick={setDrawsAllowed}
+        />
         {asksAboutWorldRankings ? (
           <Tick
             name="worldRankings"

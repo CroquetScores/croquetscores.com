@@ -1409,6 +1409,8 @@ export const german: Language = {
       "Dieser Test hat jetzt Spiele, daher können seine Mannschaften nicht mehr geändert werden.",
     "Tournament.AdvantageHasGames":
       "Dieser Wettbewerb hat Spiele, daher kann er nicht auf Advantage Golf Croquet oder von diesem zurück umgestellt werden.",
+    "Tournament.AdvantageWithHandicap":
+      "Ein Wettbewerb kann nicht zugleich Advantage Golf Croquet sein und mit Vorgaben gespielt werden.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mehr Matches als das haben bereits begonnen.",
     "Tournament.BestOfBelowGamesPlayed":

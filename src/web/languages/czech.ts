@@ -1293,6 +1293,8 @@ export const czech: Language = {
       "Tento test už má hry, a proto už nelze měnit jeho týmy.",
     "Tournament.AdvantageHasGames":
       "Tato soutěž už má hry, a proto ji nelze přepnout na Advantage golfový kroket ani zpět.",
+    "Tournament.AdvantageWithHandicap":
+      "Soutěž nemůže být zároveň Advantage golfový kroket a hrát se s handicapy.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Více zápasů, než kolik je zadáno, už začalo.",
     "Tournament.BestOfBelowGamesPlayed":

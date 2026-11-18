@@ -72,7 +72,7 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
   its own dialog (`test.feature`).
 
   A competition in Golf Croquet is asked whether it is played as "Advantage
-  Golf Croquet" (`advantage.feature`), after "Allows drawn results", where
+  Golf Croquet" (`advantage.feature`), above "Played with handicaps", where
   the website offers it (`advantageGolfCroquet.feature`). What the website
   offers is asked of the site, not worked out here, so that the choice is
   there only where a request that makes it would be answered (the API's
@@ -83,6 +83,13 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
   competition on a site that stopped offering Advantage. It is not asked
   about the world rankings, since it cannot count towards them, as one played
   with handicaps is not.
+
+  The two are mutually exclusive (`advantage.feature`), so a competition
+  ticked as Advantage is not asked whether it is played with handicaps, and
+  one ticked as played with handicaps is not asked whether it is Advantage,
+  as one that cannot count is not asked about the world rankings. Unticking
+  the one asks the other again. A competition cannot be both when the dialog
+  is opened on it, since the tournament would not have kept it.
 
   Switching a competition to or from Advantage is refused once any score is
   kept in it, an archived one among them, with
@@ -811,6 +818,65 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
         | ac    |
         | a6w   |
         | rc    |
+
+    Scenario: The choice comes above whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the field after "Advantage Golf Croquet" in the competition dialog is "Played with handicaps"
+
+    Scenario: A competition played as Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When the reader ticks "Advantage Golf Croquet"
+      Then the competition dialog does not ask for "Played with handicaps"
+
+    Scenario: A competition played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When the reader ticks "Played with handicaps"
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: A competition no longer Advantage is asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the reader ticks "Advantage Golf Croquet"
+      When the reader unticks "Advantage Golf Croquet"
+      Then the competition dialog asks for "Played with handicaps"
+
+    Scenario: A competition no longer played with handicaps is asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the reader ticks "Played with handicaps"
+      When the reader unticks "Played with handicaps"
+      Then the competition dialog asks for "Advantage Golf Croquet"
+
+    Scenario: A competition changed that is played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: A competition changed that is Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not ask for "Played with handicaps"
 
     Scenario: A new competition is not played as Advantage to begin with
       Given the site is told Advantage Golf Croquet is offered

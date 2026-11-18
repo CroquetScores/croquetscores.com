@@ -1303,6 +1303,8 @@ export const welsh: Language = {
       "Mae gan y prawf hwn gemau erbyn hyn, felly ni ellir newid ei dimau mwyach.",
     "Tournament.AdvantageHasGames":
       "Mae gan y gystadleuaeth hon gemau, felly ni ellir ei newid i Golf Croquet Advantage nac oddi wrtho.",
+    "Tournament.AdvantageWithHandicap":
+      "Ni all cystadleuaeth fod yn Golf Croquet Advantage ac yn cael ei chwarae gyda handicapiau ar yr un pryd.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mae mwy o gemau na hynny wedi dechrau eisoes.",
     "Tournament.BestOfBelowGamesPlayed":

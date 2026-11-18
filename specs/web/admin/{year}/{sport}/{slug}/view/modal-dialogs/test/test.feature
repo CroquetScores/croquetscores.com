@@ -449,8 +449,10 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
   Rule: A test in Golf Croquet asks whether it is played as Advantage Golf Croquet
 
     A test is asked as a competition is (`competition.feature`): "Advantage
-    Golf Croquet", where the website offers it and the sport is Golf Croquet,
-    and ticked, wherever it is, for a test that already is Advantage. Switching
+    Golf Croquet", above "Played with handicaps", where the website offers it
+    and the sport is Golf Croquet, and ticked, wherever it is, for a test that
+    already is Advantage. The two are mutually exclusive, so each is not asked
+    while the other is ticked. Switching
     a test to or from Advantage once it has any score kept, an archived one
     among them, is refused with `Tournament.AdvantageHasGames`, said above the
     fields.
@@ -461,6 +463,29 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       And the tests of "Spring Tests" are open
       When "Add Test" is pressed
       Then the test dialog asks for "Advantage Golf Croquet"
+
+    Scenario: The choice comes above whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the field after "Advantage Golf Croquet" in the test dialog is "Played with handicaps"
+
+    Scenario: A test played as Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the reader ticks "Advantage Golf Croquet"
+      Then the test dialog does not ask for "Played with handicaps"
+
+    Scenario: A test played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the reader ticks "Played with handicaps"
+      Then the test dialog does not ask for "Advantage Golf Croquet"
 
     Scenario: The dialog does not ask for it where it is not offered
       Given the tournament "Spring Tests" is for the sport "gc"
