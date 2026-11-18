@@ -459,6 +459,7 @@ export const norwegian: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobuer",
+    "block.netSf": "Netto SF%",
     "block.won": "vant",
     "block.lost": "tapte",
     "block.drawn": "uavgjort",
@@ -474,8 +475,12 @@ export const norwegian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Uavgjort avgjøres av nettopartier, så nettobuer, så hvem som slo hvem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Uavgjort avgjøres av nettopartier, så netto SF%, så hvem som slo hvem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Uavgjort avgjøres av nettobuer, så hvem som slo hvem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Uavgjort avgjøres av netto SF%, så hvem som slo hvem.",
     "block.tieBreak.whoBeatWho": "Uavgjort avgjøres av hvem som slo hvem.",
     "block.tieBreak.other":
       "Det finnes ingen kjent metode for å avgjøre uavgjort.",
@@ -486,6 +491,8 @@ export const norwegian: Language = {
     "competition.view.orderOfPlay": "Spilleorden",
     "competition.print": "Skriv ut",
     "competition.playedTo": "Spilt til {hoops} buer",
+    "competition.advantage":
+      "Spilles som Advantage Golfcroquet. Hver poengsum er en spillers buer som prosent av målet deres (SF%), med buene og målet ved siden av.",
     "blockSummary.ranking":
       "Rangert etter andelen vunne kamper. En turnerings egne reglement kan plassere spillerne annerledes.",
     "orderOfPlay.none": "Ingen partier er spilt ennå.",

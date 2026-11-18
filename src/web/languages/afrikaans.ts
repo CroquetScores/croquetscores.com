@@ -467,6 +467,7 @@ export const afrikaans: Language = {
     "block.netGames": "Netto spelle",
     "block.games": "Spelle",
     "block.netHoops": "Netto hoepels",
+    "block.netSf": "Netto SF%",
     "block.won": "gewen",
     "block.lost": "verloor",
     "block.drawn": "gelykop",
@@ -482,8 +483,12 @@ export const afrikaans: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Gelykopbrekers word beslis deur netto spelle, dan netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto spelle, dan netto SF%, dan wie wie geklop het.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Gelykopbrekers word beslis deur netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto SF%, dan wie wie geklop het.",
     "block.tieBreak.whoBeatWho":
       "Gelykopbrekers word beslis deur wie wie geklop het.",
     "block.tieBreak.other": "Daar is geen bekende gelykopbreker-metode nie.",
@@ -494,6 +499,8 @@ export const afrikaans: Language = {
     "competition.view.orderOfPlay": "Speelvolgorde",
     "competition.print": "Druk",
     "competition.playedTo": "Gespeel tot {hoops} poorte",
+    "competition.advantage":
+      "Gespeel as Advantage Golf Croquet. Elke telling is 'n speler se poorte as 'n persentasie van hul teiken (SF%), met hul poorte en teiken langsaan.",
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",

@@ -462,6 +462,7 @@ export const portuguese: Language = {
     "block.netGames": "Saldo de jogos",
     "block.games": "Jogos",
     "block.netHoops": "Saldo de arcos",
+    "block.netSf": "Saldo de SF%",
     "block.won": "vitória",
     "block.lost": "derrota",
     "block.drawn": "empate",
@@ -477,8 +478,12 @@ export const portuguese: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Os desempates são decididos pelo saldo de jogos, depois pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Os desempates são decididos pelo saldo de jogos, depois pelo saldo de SF%, depois por quem venceu quem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Os desempates são decididos pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Os desempates são decididos pelo saldo de SF%, depois por quem venceu quem.",
     "block.tieBreak.whoBeatWho":
       "Os desempates são decididos por quem venceu quem.",
     "block.tieBreak.other": "Não há método de desempate conhecido.",
@@ -489,6 +494,8 @@ export const portuguese: Language = {
     "competition.view.orderOfPlay": "Ordem de jogo",
     "competition.print": "Imprimir",
     "competition.playedTo": "Jogado a {hoops} arcos",
+    "competition.advantage":
+      "Jogado como Advantage Croquet de Golfe. Cada pontuação é os arcos de um jogador como percentagem da sua meta (SF%), com os arcos e a meta ao lado.",
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",

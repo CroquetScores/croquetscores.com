@@ -459,6 +459,7 @@ export const swedish: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
+    "block.netSf": "Netto-SF%",
     "block.won": "vann",
     "block.lost": "förlorade",
     "block.drawn": "oavgjort",
@@ -475,8 +476,12 @@ export const swedish: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Lika resultat avgörs av nettopartier, sedan nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Lika resultat avgörs av nettopartier, sedan netto-SF%, sedan vem som slog vem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Lika resultat avgörs av nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Lika resultat avgörs av netto-SF%, sedan vem som slog vem.",
     "block.tieBreak.whoBeatWho": "Lika resultat avgörs av vem som slog vem.",
     "block.tieBreak.other":
       "Det finns ingen känd metod för att avgöra lika resultat.",
@@ -487,6 +492,8 @@ export const swedish: Language = {
     "competition.view.orderOfPlay": "Speltabell",
     "competition.print": "Skriv ut",
     "competition.playedTo": "Spelas till {hoops} bågar",
+    "competition.advantage":
+      "Spelas som Advantage Golfcroquet. Varje resultat är en spelares bågar som procent av målet (SF%), med bågarna och målet bredvid.",
     "blockSummary.ranking":
       "Rankad efter andelen vunna matcher. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",

@@ -3770,7 +3770,8 @@ a.player-name[data-withdrawn] {
 
 /* Said under the results, in the muted ink, since it explains the scores
    above it rather than being what the page is for. */
-.competition-played-to {
+.competition-played-to,
+.competition-advantage {
   color: var(--ink-muted);
   font-size: var(--text-sm);
   margin-block: var(--space-3) 0;

@@ -493,3 +493,23 @@ Feature: A Swiss of a tournament, for anybody to read
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
       Then it is refused with "PublicSwissOfTournament.NoSuchTournament"
+
+  Rule: The Swiss is answered with whether it is played as Advantage Golf Croquet
+
+    Its page says so (`swiss.feature`), and shows each margin in percentage
+    points. Its players are ranked as they always are, by the share of their
+    games they have won and then by their net hoops, which in an Advantage
+    Swiss are the percentage points they made less those made against them,
+    as in a block (`PublicBlockOfTournament.feature`).
+
+    Scenario: A Swiss played as Advantage is answered as such
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the Swiss "Golf Swiss" to "Spring Golf"
+      When the Swiss "golf-swiss" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the Swiss answered is played as Advantage
+
+    Scenario: A Swiss not played as Advantage is answered as not
+      When the Swiss "zed" of the tournament at "2026/ac/spring-open" is asked for
+      Then the Swiss answered is not played as Advantage

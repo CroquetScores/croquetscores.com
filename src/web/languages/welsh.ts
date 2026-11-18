@@ -448,6 +448,7 @@ export const welsh: Language = {
     "block.netGames": "Gemau net",
     "block.games": "Gemau unigol",
     "block.netHoops": "Cylchau net",
+    "block.netSf": "SF% net",
     "block.won": "wedi ennill",
     "block.lost": "wedi colli",
     "block.drawn": "cyfartal",
@@ -463,8 +464,12 @@ export const welsh: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Penderfynir clymau yn ôl gemau net, yna cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Penderfynir clymau yn ôl gemau net, yna SF% net, yna pwy a gurodd pwy.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Penderfynir clymau yn ôl cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Penderfynir clymau yn ôl SF% net, yna pwy a gurodd pwy.",
     "block.tieBreak.whoBeatWho": "Penderfynir clymau yn ôl pwy a gurodd pwy.",
     "block.tieBreak.other": "Nid oes dull torri clymau hysbys.",
     // The three views of a block, offered beneath its heading.
@@ -474,6 +479,8 @@ export const welsh: Language = {
     "competition.view.orderOfPlay": "Trefn chwarae",
     "competition.print": "Argraffu",
     "competition.playedTo": "Chwaraeir i {hoops} cylch",
+    "competition.advantage":
+      "Chwaraeir fel Golf Croquet Advantage. Mae pob sgôr yn gylchau chwaraewr fel canran o'u targed (SF%), gyda'u cylchau a'u targed wrth ei hochr.",
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",

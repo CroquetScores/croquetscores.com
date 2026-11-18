@@ -388,3 +388,43 @@ Feature: A Swiss's grid ranks its players with their results
       And "organiser@example.com" has withdrawn the player "Chris Third" from "Zed" of "Spring Open"
       When the page at "/2026/gc/spring-open/competitions/zed" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A Swiss played as Advantage Golf Croquet says so, and shows each margin in percentage points
+
+    The page says beneath its results that it is played as Advantage Golf
+    Croquet, and does not say how many hoops it is played to, since each game
+    has its own targets. A game is kept as the scoring fractions its sides made
+    (`AddGame.feature`), so the margin of a result is the percentage points
+    between them, shown with a percent sign and with nothing of what follows
+    each score's number, which for an Advantage game is its hoops and target
+    and not a peeling: "C. Third +20%".
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the Swiss "Golf Swiss" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Golf Swiss" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Golf Swiss" of "Spring Open"
+
+    Scenario: The page says it is played as Advantage Golf Croquet
+      When the page at "/2026/gc/spring-open/competitions/golf-swiss" is opened
+      Then the competition says it is played as Advantage Golf Croquet
+
+    Scenario: A Swiss that is not Advantage says nothing of it
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the competition does not say it is played as Advantage Golf Croquet
+
+    Scenario: A game won is the opponent and the margin in percentage points
+      Given "Sam Someone" has beaten "Chris Third" 5 of 6 to 5 of 8 in "Golf Swiss" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/golf-swiss" is opened
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +20%"
+
+    Scenario: A game lost is the opponent and the margin in percentage points
+      Given "Sam Someone" has beaten "Chris Third" 5 of 6 to 5 of 8 in "Golf Swiss" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/golf-swiss" is opened
+      Then the first result of "Chris Third" in the Swiss is "S. Someone -20%"
+
+    Scenario: A Swiss that is not Advantage shows its margins as it always did
+      Given "Sam Someone" has beaten "Chris Third" 7 to 3 in "Zed" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/zed" is opened
+      Then the first result of "Sam Someone" in the Swiss is "C. Third +4"

@@ -219,6 +219,13 @@ Then(
 );
 
 Then(
+  /^the Swiss answered is (not )?played as Advantage$/,
+  function (this: SpecWorld, not: string | null) {
+    assert.equal(answered(this).swiss.advantage, not === null);
+  },
+);
+
+Then(
   "the Swiss answered has no maximum number of hoops",
   function (this: SpecWorld) {
     assert.equal(answered(this).swiss.maximumHoops, null);

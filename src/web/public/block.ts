@@ -44,18 +44,22 @@ export const initialsOf = (name: string): string => {
 // games before hoops, and the totals are in that order.
 const totalsOf = (
   bestOf: number,
-): readonly { word: string; of: (player: PlayerOfBlock) => number }[] =>
-  bestOf === 1
-    ? [
-        { word: "block.wins", of: (player) => player.gamesWon },
-        { word: "block.netHoops", of: (player) => player.netHoops },
-      ]
+  advantage: boolean,
+): readonly { word: string; of: (player: PlayerOfBlock) => number }[] => {
+  // The same sum, which in an Advantage block is of percentage points.
+  const netHoops = {
+    word: advantage ? "block.netSf" : "block.netHoops",
+    of: (player: PlayerOfBlock) => player.netHoops,
+  };
+  return bestOf === 1
+    ? [{ word: "block.wins", of: (player) => player.gamesWon }, netHoops]
     : [
         { word: "block.matches", of: (player) => player.matchesWon },
         { word: "block.netGames", of: (player) => player.netGames },
         { word: "block.games", of: (player) => player.gamesWon },
-        { word: "block.netHoops", of: (player) => player.netHoops },
+        netHoops,
       ];
+};
 
 // One score, the row player's, in a game against the column player, marked
 // for the row player by more than its colour: a word for whatever reads the
@@ -83,7 +87,7 @@ const grid = (
   assets: Assets,
 ): string => {
   const { say } = speaking;
-  const totals = totalsOf(asked.block.bestOf);
+  const totals = totalsOf(asked.block.bestOf, asked.block.advantage);
   const heading = asked.players
     .map(
       (player) =>

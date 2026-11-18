@@ -482,6 +482,7 @@ export const german: Language = {
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
+    "block.netSf": "SF%-Differenz",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "unentschieden",
@@ -498,8 +499,12 @@ export const german: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Gleichstände werden nach der Spieldifferenz, dann der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Gleichstände werden nach der Spieldifferenz, dann der SF%-Differenz, dann danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Gleichstände werden nach der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Gleichstände werden nach der SF%-Differenz, dann danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.whoBeatWho":
       "Gleichstände werden danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.other": "Für Gleichstände ist kein Verfahren bekannt.",
@@ -510,6 +515,8 @@ export const german: Language = {
     "competition.view.orderOfPlay": "Spielreihenfolge",
     "competition.print": "Drucken",
     "competition.playedTo": "Gespielt bis {hoops} Tore",
+    "competition.advantage":
+      "Gespielt als Advantage Golf Croquet. Jedes Ergebnis sind die Tore eines Spielers als Prozentsatz seines Ziels (SF%), mit seinen Toren und seinem Ziel daneben.",
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",

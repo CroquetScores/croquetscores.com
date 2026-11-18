@@ -427,6 +427,7 @@ export const egyptian: Language = {
     "block.netGames": "صافي الألعاب",
     "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
+    "block.netSf": "صافي SF%",
     "block.won": "فاز",
     "block.lost": "خسر",
     "block.drawn": "تعادل",
@@ -442,8 +443,12 @@ export const egyptian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "التعادل بيتحسم بصافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "التعادل بيتحسم بصافي الألعاب بعدين صافي SF% بعدين مين غلب مين.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "التعادل بيتحسم بصافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "التعادل بيتحسم بصافي SF% بعدين مين غلب مين.",
     "block.tieBreak.whoBeatWho": "التعادل بيتحسم بمين غلب مين.",
     "block.tieBreak.other": "مفيش طريقة معروفة لكسر التعادل.",
     // The three views of a block.
@@ -453,6 +458,8 @@ export const egyptian: Language = {
     "competition.view.orderOfPlay": "ترتيب اللعب",
     "competition.print": "اطبع",
     "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
+    "competition.advantage":
+      "بتتلعب جولف كروكيه بنظام Advantage. كل نتيجة هي حلقات اللاعب كنسبة مئوية من هدفه (SF%)، وجنبها حلقاته وهدفه.",
     "blockSummary.ranking":
       "الترتيب على حسب نسبة المباريات اللي اتكسبت. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",

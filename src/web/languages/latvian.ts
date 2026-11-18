@@ -463,6 +463,7 @@ export const latvian: Language = {
     "block.netGames": "Partiju starpība",
     "block.games": "Partijas",
     "block.netHoops": "Vārtiņu starpība",
+    "block.netSf": "SF% starpība",
     "block.won": "uzvarēts",
     "block.lost": "zaudēts",
     "block.drawn": "neizšķirti",
@@ -477,8 +478,12 @@ export const latvian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc partiju starpības, tad pēc vārtiņu starpības, tad pēc tā, kurš kuru uzvarēja.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Neizšķirtu rezultātu izšķir pēc partiju starpības, tad pēc SF% starpības, tad pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc vārtiņu starpības, tad pēc tā, kurš kuru uzvarēja.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Neizšķirtu rezultātu izšķir pēc SF% starpības, tad pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.whoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.other": "Nav zināmas neizšķirta rezultāta metodes.",
@@ -489,6 +494,8 @@ export const latvian: Language = {
     "competition.view.orderOfPlay": "Spēļu kārtība",
     "competition.print": "Drukāt",
     "competition.playedTo": "Spēlē līdz {hoops} vārtiņiem",
+    "competition.advantage":
+      "Spēlē kā Advantage golfa kroketu. Katrs rezultāts ir spēlētāja vārtiņi kā procents no viņa mērķa (SF%), ar viņa vārtiņiem un mērķi blakus.",
     "blockSummary.ranking":
       "Sakārtots pēc uzvarēto maču daļas. Turnīra paša noteikumi spēlētājus var sakārtot citādi.",
     "orderOfPlay.none": "Vēl nav nospēlēta neviena partija.",

@@ -492,6 +492,7 @@ export const greek: Language = {
     "block.netGames": "Καθαρά παιχνίδια",
     "block.games": "Παιχνίδια",
     "block.netHoops": "Καθαρά τόξα",
+    "block.netSf": "Καθαρό SF%",
     "block.won": "νίκη",
     "block.lost": "ήττα",
     "block.drawn": "ισοπαλία",
@@ -508,8 +509,12 @@ export const greek: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Οι ισοβαθμίες κρίνονται από τα καθαρά παιχνίδια, μετά τα καθαρά τόξα και μετά από το ποιος νίκησε ποιον.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Οι ισοβαθμίες κρίνονται από τα καθαρά παιχνίδια, μετά τα καθαρό SF% και μετά από το ποιος νίκησε ποιον.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Οι ισοβαθμίες κρίνονται από τα καθαρά τόξα και μετά από το ποιος νίκησε ποιον.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Οι ισοβαθμίες κρίνονται από τα καθαρό SF% και μετά από το ποιος νίκησε ποιον.",
     "block.tieBreak.whoBeatWho":
       "Οι ισοβαθμίες κρίνονται από το ποιος νίκησε ποιον.",
     "block.tieBreak.other": "Δεν υπάρχει γνωστός τρόπος διάλυσης ισοβαθμίας.",
@@ -520,6 +525,8 @@ export const greek: Language = {
     "competition.view.orderOfPlay": "Σειρά παιχνιδιών",
     "competition.print": "Εκτύπωση",
     "competition.playedTo": "Παίζεται μέχρι {hoops} τόξα",
+    "competition.advantage":
+      "Παίζεται ως Advantage Golf Croquet. Κάθε σκορ είναι τα τόξα ενός παίκτη ως ποσοστό του στόχου του (SF%), με τα τόξα και τον στόχο του δίπλα.",
     "blockSummary.ranking":
       "Κατάταξη με βάση το ποσοστό των αγώνων που κερδήθηκαν. Οι κανονισμοί ενός τουρνουά μπορεί να κατατάσσουν τους παίκτες του διαφορετικά.",
     "orderOfPlay.none": "Δεν έχουν παιχτεί ακόμα παιχνίδια.",

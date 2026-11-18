@@ -457,6 +457,7 @@ export const english: Language = {
     "block.netGames": "Net Games",
     "block.games": "Games",
     "block.netHoops": "Net Hoops",
+    "block.netSf": "Net SF%",
     "block.won": "won",
     "block.lost": "lost",
     "block.drawn": "drawn",
@@ -472,8 +473,12 @@ export const english: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Tie breaks are decided by net games then net hoops then who beat who.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Tie breaks are decided by net games then net SF% then who beat who.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Tie breaks are decided by net hoops then who beat who.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Tie breaks are decided by net SF% then who beat who.",
     "block.tieBreak.whoBeatWho": "Tie breaks are decided by who beat who.",
     "block.tieBreak.other": "There is no known tie break method.",
     // The three views of a block, offered beneath its heading.
@@ -483,6 +488,8 @@ export const english: Language = {
     "competition.view.orderOfPlay": "Order of Play",
     "competition.print": "Print",
     "competition.playedTo": "Played to {hoops} hoops",
+    "competition.advantage":
+      "Played as Advantage Golf Croquet. Each score is a player's hoops as a percentage of their target (SF%), with their hoops and target beside it.",
     "blockSummary.ranking":
       "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",

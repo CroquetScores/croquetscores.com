@@ -459,6 +459,7 @@ export const czech: Language = {
     "block.netGames": "Rozdíl her",
     "block.games": "Hry",
     "block.netHoops": "Rozdíl branek",
+    "block.netSf": "Rozdíl SF%",
     "block.won": "výhra",
     "block.lost": "prohra",
     "block.drawn": "remíza",
@@ -473,8 +474,12 @@ export const czech: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Shodu rozhoduje rozdíl her, poté rozdíl branek a poté vzájemný zápas.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Shodu rozhoduje rozdíl her, poté rozdíl SF% a poté vzájemný zápas.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Shodu rozhoduje rozdíl branek a poté vzájemný zápas.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Shodu rozhoduje rozdíl SF% a poté vzájemný zápas.",
     "block.tieBreak.whoBeatWho": "Shodu rozhoduje vzájemný zápas.",
     "block.tieBreak.other": "Způsob rozhodování shody není znám.",
     // Tři pohledy na blok, nabízené pod jeho nadpisem.
@@ -484,6 +489,8 @@ export const czech: Language = {
     "competition.view.orderOfPlay": "Pořadí her",
     "competition.print": "Tisk",
     "competition.playedTo": "Počet branek ve hře: {hoops}",
+    "competition.advantage":
+      "Hraje se jako Advantage golfový kroket. Každé skóre je počet branek hráče jako procento jeho cíle (SF%), s jeho brankami a cílem vedle něj.",
     "blockSummary.ranking":
       "Pořadí podle podílu vyhraných zápasů. Vlastní pravidla turnaje mohou hráče seřadit jinak.",
     "orderOfPlay.none": "Zatím nebyly odehrány žádné hry.",
