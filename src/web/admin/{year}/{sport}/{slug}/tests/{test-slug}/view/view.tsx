@@ -33,6 +33,8 @@ interface Found {
   readonly kind: string;
   readonly tournamentAddress: string;
   readonly slug: string;
+  /** Whether it is played as Advantage Golf Croquet. */
+  readonly advantage: boolean;
 }
 
 /** The test as its tournament lists it, with what the heading says of it. */
@@ -144,6 +146,7 @@ export const ViewTest = ({ address, slug }: Props): React.JSX.Element => {
                 tournament={test.tournament}
                 competition={test.id}
                 kind="test"
+                advantage={test.advantage}
                 teams={
                   first === undefined || second === undefined
                     ? undefined

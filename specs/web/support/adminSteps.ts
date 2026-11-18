@@ -646,6 +646,34 @@ Then(
   },
 );
 
+// What a game is kept as, which in an Advantage competition is the text of its
+// scoring fractions, as "83% (5/6)".
+Then(
+  /^"([^"]*)" of "([^"]*)" has the score of "([^"]*)" beating "([^"]*)" kept as "([^"]*)" to "([^"]*)"$/,
+  async function (
+    this: WebWorld,
+    competition: string,
+    tournament: string,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    await retried(async () => {
+      const games = await gamesBetween(this, competition, tournament);
+      assert.ok(
+        games.some(
+          (game) =>
+            game.winner === winner &&
+            game.loser === loser &&
+            game.scores === `${winnerScore} to ${loserScore}`,
+        ),
+        `${competition} has ${JSON.stringify(games)}.`,
+      );
+    });
+  },
+);
+
 Then(
   /^"([^"]*)" of "([^"]*)" has the score of "([^"]*)" beating "([^"]*)" (\S+) to (\S+)$/,
   async function (

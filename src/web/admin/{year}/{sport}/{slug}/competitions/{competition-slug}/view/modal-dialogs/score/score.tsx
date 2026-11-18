@@ -34,6 +34,12 @@ interface Props {
   readonly competition: string;
   /** Whether the competition is a test, whose players are its teams'. */
   readonly inATest?: boolean;
+  /**
+   * Whether it is played as Advantage Golf Croquet, whose games are entered as
+   * the hoops each side made and its target in place of a score, and kept as
+   * the scoring fractions they make (advantage.feature).
+   */
+  readonly advantage?: boolean;
   /** The game to correct, as the Scores tab lists it, where one is. */
   readonly correcting?: Correcting | undefined;
   /** Once a game is added or corrected, so that the list says so. */
@@ -50,6 +56,13 @@ export interface Correcting {
   readonly loser: string;
   readonly loserId: string;
   readonly loserScore: string;
+  /** In an Advantage competition, what it was entered as, to correct it from. */
+  readonly winnerHoops?: number | undefined;
+  readonly winnerTarget?: number | undefined;
+  readonly loserHoops?: number | undefined;
+  readonly loserTarget?: number | undefined;
+  /** Whether the winner was declared by a "w", which is typed back in to correct it. */
+  readonly winnerWon?: boolean | undefined;
   /** Whether it could be archived, which is whether its players can change. */
   readonly archivable: boolean;
 }
@@ -72,7 +85,68 @@ interface TeamInTest {
   readonly players: readonly { readonly id: string; readonly name: string }[];
 }
 
-type Part = "winner" | "winnerScore" | "loser" | "loserScore";
+type Part =
+  | "winner"
+  | "winnerScore"
+  | "winnerHoops"
+  | "winnerTarget"
+  | "loser"
+  | "loserScore"
+  | "loserHoops"
+  | "loserTarget";
+
+// The parts in the order the reader comes to them, which is the order the
+// first refused is taken to.
+const partsInOrder: readonly Part[] = [
+  "winner",
+  "winnerScore",
+  "winnerHoops",
+  "winnerTarget",
+  "loser",
+  "loserScore",
+  "loserHoops",
+  "loserTarget",
+];
+
+// The number typed in a field, without the "w" that may follow it, which
+// declares the winner and is no part of the number.
+const typedNumber = (typed: string): number =>
+  Number(typed.trim().replace(/\s*w$/, ""));
+
+// What a scoring fraction refuses, with the part of a side it is about and
+// what it is of the hoops and the target typed. A refusal says what was wrong
+// and not whose it was, so the dialog works out which side broke it from what
+// was typed, the winner's first, as the site asks them (ScoringFraction.ts).
+const scoringFractionRefusals: Readonly<
+  Record<
+    string,
+    {
+      readonly part: "Hoops" | "Target";
+      readonly brokenBy: (hoops: number, target: number) => boolean;
+    }
+  >
+> = {
+  "ScoringFraction.HoopsNotWhole": {
+    part: "Hoops",
+    brokenBy: (hoops) => !Number.isSafeInteger(hoops),
+  },
+  "ScoringFraction.HoopsNegative": {
+    part: "Hoops",
+    brokenBy: (hoops) => hoops < 0,
+  },
+  "ScoringFraction.TargetNotWhole": {
+    part: "Target",
+    brokenBy: (_hoops, target) => !Number.isSafeInteger(target),
+  },
+  "ScoringFraction.TargetTooSmall": {
+    part: "Target",
+    brokenBy: (_hoops, target) => target < 1,
+  },
+  "ScoringFraction.HoopsAboveTarget": {
+    part: "Hoops",
+    brokenBy: (hoops, target) => hoops > target,
+  },
+};
 
 // What a test's player archived while the dialog is open is refused with.
 const ARCHIVED = "TeamPlayer.Archived";
@@ -97,6 +171,7 @@ export const ScoreDialog = ({
   tournament,
   competition,
   inATest = false,
+  advantage = false,
   correcting,
   kept,
   close,
@@ -110,10 +185,25 @@ export const ScoreDialog = ({
   // A game corrected begins as it is, each score as it was typed.
   const [said, setSaid] = useState<Record<Part, string>>({
     winner: correcting?.winnerId ?? "",
-    winnerScore: correcting?.winnerScore ?? "",
+    winnerScore: advantage ? "" : (correcting?.winnerScore ?? ""),
+    // Begins as it was typed, with the winner's w where there was one.
+    winnerHoops: `${String(correcting?.winnerHoops ?? "")}${correcting?.winnerWon === true ? "w" : ""}`,
+    winnerTarget: String(correcting?.winnerTarget ?? ""),
     loser: correcting?.loserId ?? "",
-    loserScore: correcting?.loserScore ?? "",
+    loserScore: advantage ? "" : (correcting?.loserScore ?? ""),
+    loserHoops: String(correcting?.loserHoops ?? ""),
+    loserTarget: String(correcting?.loserTarget ?? ""),
   });
+  const emptied: Record<Part, string> = {
+    winner: "",
+    winnerScore: "",
+    winnerHoops: "",
+    winnerTarget: "",
+    loser: "",
+    loserScore: "",
+    loserHoops: "",
+    loserTarget: "",
+  };
   const [refused, setRefused] = useState<readonly Refused[]>([]);
   // The game last added, said until the next winner is chosen.
   const [added, setAdded] = useState<
@@ -123,8 +213,12 @@ export const ScoreDialog = ({
   const fields = {
     winner: useRef<HTMLSelectElement>(null),
     winnerScore: useRef<HTMLInputElement>(null),
+    winnerHoops: useRef<HTMLInputElement>(null),
+    winnerTarget: useRef<HTMLInputElement>(null),
     loser: useRef<HTMLSelectElement>(null),
     loserScore: useRef<HTMLInputElement>(null),
+    loserHoops: useRef<HTMLInputElement>(null),
+    loserTarget: useRef<HTMLInputElement>(null),
   };
   const at = `/api/site/tournaments/${idInAddress(tournament)}/competitions/${idInAddress(competition)}`;
 
@@ -152,7 +246,7 @@ export const ScoreDialog = ({
     // A game that keeps its players has none to choose from, and begins on
     // what can be changed.
     if (!choosingPlayers) {
-      fields.winnerScore.current?.focus();
+      (advantage ? fields.winnerHoops : fields.winnerScore).current?.focus();
       return;
     }
     // A list the site fails to answer is said, rather than offered as nobody,
@@ -266,6 +360,40 @@ export const ScoreDialog = ({
         : undefined;
   };
 
+  // The part a refusal is about, where its code says: a winner not ahead is
+  // about the winner's score, or in an Advantage competition their hoops, and a
+  // scoring fraction's is about the hoops or the target of the side that broke
+  // it.
+  const partFor = (code: string): Part | undefined => {
+    if (code === "Game.WinnerNotAhead")
+      return advantage ? "winnerHoops" : "winnerScore";
+    // A w is refused beside the field it was typed in, the hoops where it is in
+    // both (a side's w is the same wherever it is typed).
+    const whereWTyped = (side: "winner" | "loser"): Part =>
+      /w\s*$/.test(said[`${side}Hoops`]) ? `${side}Hoops` : `${side}Target`;
+    if (advantage && code === "Game.WinnerMarkedNotLevel")
+      return whereWTyped("winner");
+    if (advantage && code === "Game.LoserMarked") return whereWTyped("loser");
+    const asScoringFraction = scoringFractionRefusals[code];
+    if (asScoringFraction === undefined) return partOf[code];
+    const winnerBroke = asScoringFraction.brokenBy(
+      typedNumber(said.winnerHoops),
+      typedNumber(said.winnerTarget),
+    );
+    return `${winnerBroke ? "winner" : "loser"}${asScoringFraction.part}`;
+  };
+
+  // What is sent of the scores: the hoops and the target of each side in an
+  // Advantage competition, and the scores as they were typed in any other.
+  const sentScores = advantage
+    ? {
+        winnerHoops: said.winnerHoops,
+        winnerTarget: said.winnerTarget,
+        loserHoops: said.loserHoops,
+        loserTarget: said.loserTarget,
+      }
+    : { winnerScore: said.winnerScore, loserScore: said.loserScore };
+
   const send = async (): Promise<void> => {
     if (sending) return;
     setSending(true);
@@ -284,13 +412,11 @@ export const ScoreDialog = ({
             correcting === undefined
               ? {
                   winner: sentAs(said.winner),
-                  winnerScore: said.winnerScore,
                   loser: sentAs(said.loser),
-                  loserScore: said.loserScore,
+                  ...sentScores,
                 }
               : {
-                  winnerScore: said.winnerScore,
-                  loserScore: said.loserScore,
+                  ...sentScores,
                   // Sent only where they can change: the game's own
                   // otherwise, which the correction keeps.
                   ...(choosingPlayers
@@ -313,7 +439,7 @@ export const ScoreDialog = ({
         kept();
         // Emptied for the next, with the reader back on the winner.
         setAdded({ winner: nameOf(said.winner), loser: nameOf(said.loser) });
-        setSaid({ winner: "", winnerScore: "", loser: "", loserScore: "" });
+        setSaid(emptied);
         fields.winner.current?.focus();
       } else {
         const answer = (await response.json()) as {
@@ -324,11 +450,11 @@ export const ScoreDialog = ({
         const code = answer.error ?? "Unknown";
         setRefused(
           answer.broken?.map(({ code: broken, fields: about }) =>
-            refusal(broken, (about[0] as Part | undefined) ?? partOf[broken]),
+            refusal(broken, (about[0] as Part | undefined) ?? partFor(broken)),
           ) ?? [
             refusal(
               code,
-              code === ARCHIVED ? await archivedPart() : partOf[code],
+              code === ARCHIVED ? await archivedPart() : partFor(code),
             ),
           ],
         );
@@ -342,7 +468,7 @@ export const ScoreDialog = ({
   // The reader is taken to the first part refused, as every refused form
   // takes them.
   useEffect(() => {
-    const first = (["winner", "winnerScore", "loser", "loserScore"] as const)
+    const first = partsInOrder
       .filter((part) => refused.some((each) => each.part === part))
       .at(0);
     if (first !== undefined) fields[first].current?.focus();
@@ -436,6 +562,41 @@ export const ScoreDialog = ({
     </Field>
   );
 
+  // A number of hoops or a target, typed on a keypad of numbers: unlike a
+  // score it has nothing after its number.
+  const typingANumber = (
+    part: "winnerHoops" | "winnerTarget" | "loserHoops" | "loserTarget",
+    label: string,
+  ) => (
+    <Field name={part} label={say(label)} refused={refusedFor(part)}>
+      {(tied) => (
+        <input
+          {...tied}
+          // Said to be the player's as well, since each side has the same two
+          // words and a screen reader would otherwise read out "Hoops" twice.
+          // Described by the player's label rather than named by it, so that
+          // the player's own label still finds one field.
+          aria-describedby={[
+            tied["aria-describedby"],
+            `field-${part.startsWith("winner") ? "winner" : "loser"}-label`,
+          ]
+            .filter((id) => id !== undefined)
+            .join(" ")}
+          ref={fields[part]}
+          // A number, and a w after it where the side is declared the winner, so
+          // it is typed on a keyboard of letters and not a keypad of numbers.
+          type="text"
+          placeholder=" "
+          autoComplete="off"
+          value={said[part]}
+          onChange={(event) => {
+            setSaid({ ...said, [part]: event.target.value });
+          }}
+        />
+      )}
+    </Field>
+  );
+
   const typing = (part: "winnerScore" | "loserScore", label: string) => (
     <Field name={part} label={say(label)} refused={refusedFor(part)}>
       {(tied) => (
@@ -485,14 +646,32 @@ export const ScoreDialog = ({
         {added === undefined ? null : say("admin.score.added", added)}
       </DialogStatus>
       <DialogProblems refused={above} />
-      <div className="score-row">
+      <div
+        className={advantage ? "score-row score-row-advantage" : "score-row"}
+      >
         {choosing("winner", "admin.score.winner")}
-        {typing("winnerScore", "admin.score.winnerScore")}
+        {advantage ? (
+          <>
+            {typingANumber("winnerHoops", "admin.score.hoops")}
+            {typingANumber("winnerTarget", "admin.score.target")}
+          </>
+        ) : (
+          typing("winnerScore", "admin.score.winnerScore")
+        )}
       </div>
       <p className="score-beat">{say("admin.score.beat")}</p>
-      <div className="score-row">
+      <div
+        className={advantage ? "score-row score-row-advantage" : "score-row"}
+      >
         {choosing("loser", "admin.score.loser")}
-        {typing("loserScore", "admin.score.loserScore")}
+        {advantage ? (
+          <>
+            {typingANumber("loserHoops", "admin.score.hoops")}
+            {typingANumber("loserTarget", "admin.score.target")}
+          </>
+        ) : (
+          typing("loserScore", "admin.score.loserScore")
+        )}
       </div>
     </ModalDialog>
   );

@@ -492,6 +492,7 @@ export const greek: Language = {
     "block.netGames": "Καθαρά παιχνίδια",
     "block.games": "Παιχνίδια",
     "block.netHoops": "Καθαρά τόξα",
+    "block.netSf": "Καθαρό SF%",
     "block.won": "νίκη",
     "block.lost": "ήττα",
     "block.drawn": "ισοπαλία",
@@ -508,8 +509,12 @@ export const greek: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Οι ισοβαθμίες κρίνονται από τα καθαρά παιχνίδια, μετά τα καθαρά τόξα και μετά από το ποιος νίκησε ποιον.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Οι ισοβαθμίες κρίνονται από τα καθαρά παιχνίδια, μετά τα καθαρό SF% και μετά από το ποιος νίκησε ποιον.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Οι ισοβαθμίες κρίνονται από τα καθαρά τόξα και μετά από το ποιος νίκησε ποιον.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Οι ισοβαθμίες κρίνονται από τα καθαρό SF% και μετά από το ποιος νίκησε ποιον.",
     "block.tieBreak.whoBeatWho":
       "Οι ισοβαθμίες κρίνονται από το ποιος νίκησε ποιον.",
     "block.tieBreak.other": "Δεν υπάρχει γνωστός τρόπος διάλυσης ισοβαθμίας.",
@@ -520,6 +525,8 @@ export const greek: Language = {
     "competition.view.orderOfPlay": "Σειρά παιχνιδιών",
     "competition.print": "Εκτύπωση",
     "competition.playedTo": "Παίζεται μέχρι {hoops} τόξα",
+    "competition.advantage":
+      "Παίζεται ως Advantage Golf Croquet. Κάθε σκορ είναι τα τόξα ενός παίκτη ως ποσοστό του στόχου του (SF%), με τα τόξα και τον στόχο του δίπλα.",
     "blockSummary.ranking":
       "Κατάταξη με βάση το ποσοστό των αγώνων που κερδήθηκαν. Οι κανονισμοί ενός τουρνουά μπορεί να κατατάσσουν τους παίκτες του διαφορετικά.",
     "orderOfPlay.none": "Δεν έχουν παιχτεί ακόμα παιχνίδια.",
@@ -612,6 +619,7 @@ export const greek: Language = {
     "admin.tournament.subtitle": "Υπότιτλος",
     "admin.rules.handicap": "Παίζεται με χάντικαπ",
     "admin.rules.drawsAllowed": "Επιτρέπει ισόπαλα αποτελέσματα",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Τα ισόπαλα τεστ λογίζονται ισοπαλία",
     "admin.rules.worldRankings": "Μετράει για τις παγκόσμιες κατατάξεις",
     "admin.rules.maximumHoops": "Μέγιστα τόξα",
@@ -835,6 +843,8 @@ export const greek: Language = {
     "admin.competition.tieBreaks": "Ισοβαθμίες",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Καθαρά παιχνίδια, μετά καθαρά τόξα, μετά ποιος νίκησε ποιον",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Καθαρά παιχνίδια, μετά καθαρό SF%, μετά ποιος νίκησε ποιον",
     "admin.competition.tieBreak.who-beat-who": "Ποιος νίκησε ποιον",
     "admin.competition.tieBreak.other": "Άλλο",
     "admin.competition.places": "Θέσεις",
@@ -1121,6 +1131,8 @@ export const greek: Language = {
     "admin.score.winnerScore": "Σκορ του νικητή",
     "admin.score.loser": "Ηττημένος",
     "admin.score.loserScore": "Σκορ του ηττημένου",
+    "admin.score.hoops": "Τόξα",
+    "admin.score.target": "Στόχος",
     "admin.score.beat": "νίκησε",
     "admin.score.added":
       "Το παιχνίδι προστέθηκε: νικητής {winner}, ηττημένος {loser}.",
@@ -1134,10 +1146,23 @@ export const greek: Language = {
     "Game.WinnerScoreMissing": "Πληκτρολογήστε το σκορ του νικητή.",
     "Game.LoserMissing": "Επιλέξτε τον ηττημένο.",
     "Game.LoserScoreMissing": "Πληκτρολογήστε το σκορ του ηττημένου.",
+    "ScoringFraction.HoopsNotWhole": "Τα τόξα είναι ακέραιος αριθμός.",
+    "ScoringFraction.HoopsNegative":
+      "Τα τόξα δεν μπορούν να είναι λιγότερα από 0.",
+    "ScoringFraction.TargetNotWhole": "Ο στόχος είναι ακέραιος αριθμός.",
+    "ScoringFraction.TargetTooSmall": "Ο στόχος είναι τουλάχιστον 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Τα τόξα δεν μπορούν να είναι περισσότερα από τον στόχο.",
+    "Game.WinnerHoopsMissing": "Πληκτρολογήστε τα τόξα του νικητή.",
+    "Game.WinnerTargetMissing": "Πληκτρολογήστε τον στόχο του νικητή.",
+    "Game.LoserHoopsMissing": "Πληκτρολογήστε τα τόξα του ηττημένου.",
+    "Game.LoserTargetMissing": "Πληκτρολογήστε τον στόχο του ηττημένου.",
     "Score.NoPoints": "Ένα σκορ αρχίζει με τον αριθμό των πόντων του.",
     "Game.SamePlayer": "Κανείς δεν παίζει με τον εαυτό του.",
     "Game.WinnerNotAhead":
       "Το σκορ του νικητή πρέπει να είναι μεγαλύτερο από του ηττημένου ή να σημαίνεται ως νίκη.",
+    "Game.WinnerMarkedNotLevel":
+      "Το w μπορεί να χρησιμοποιηθεί μόνο όταν και οι δύο πλευρές έχουν το ίδιο SF%.",
     "Game.LoserMarked": "Το σκορ του ηττημένου δεν μπορεί να σημανθεί ως νίκη.",
     "Game.ResultChanged":
       "Μια διόρθωση κρατά το αποτέλεσμα: ένα παιχνίδι που κερδήθηκε μένει κερδισμένο και ένα ισόπαλο μένει ισόπαλο.",
@@ -1402,6 +1427,10 @@ export const greek: Language = {
       "Αυτό το τεστ έχει παιχνίδια, γι' αυτό δεν μπορεί να αρχειοθετηθεί μέχρι να αρχειοθετηθούν εκείνα.",
     "Tournament.TestHasGames":
       "Αυτό το τεστ έχει πλέον παιχνίδια, γι' αυτό οι ομάδες του δεν μπορούν πια να αλλάξουν.",
+    "Tournament.AdvantageHasGames":
+      "Αυτός ο διαγωνισμός έχει παιχνίδια, γι' αυτό δεν μπορεί να αλλάξει σε Advantage Golf Croquet ή από αυτό.",
+    "Tournament.AdvantageWithHandicap":
+      "Ένας διαγωνισμός δεν μπορεί να είναι ταυτόχρονα Advantage Golf Croquet και να παίζεται με χάντικαπ.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Έχουν ήδη ξεκινήσει περισσότεροι αγώνες από αυτόν τον αριθμό.",
     "Tournament.BestOfBelowGamesPlayed":

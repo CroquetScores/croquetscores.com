@@ -91,6 +91,8 @@ export interface KnockoutToRead {
     readonly name: string;
     /** The most hoops a game in it is played to, or null where it has no most. */
     readonly maximumHoops: number | null;
+    /** Whether it is played as Advantage Golf Croquet, whose scores are percentages. */
+    readonly advantage: boolean;
   };
   /**
    * The most hoops a game of the tournament's sport is played to unless a

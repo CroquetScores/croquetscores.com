@@ -90,6 +90,8 @@ export interface BlockToRead {
     readonly rounds: number;
     /** The most hoops a game in it is played to, or null where it has no most. */
     readonly maximumHoops: number | null;
+    /** Whether it is played as Advantage Golf Croquet, whose scores are percentages. */
+    readonly advantage: boolean;
     /** How its players level on matches won are told apart, by code. */
     readonly tieBreak: string;
     /**

@@ -473,6 +473,28 @@ Then(
   },
 );
 
+// Said beneath the results, in a paragraph of its own, as the number of hoops
+// is.
+Then(
+  "the competition says it is played as Advantage Golf Croquet",
+  async function (this: WebWorld) {
+    assert.equal(
+      await said(this.browserPage.locator("main .competition-advantage")),
+      "Played as Advantage Golf Croquet. Each score is a player's hoops as a percentage of their target (SF%), with their hoops and target beside it.",
+    );
+  },
+);
+
+Then(
+  "the competition does not say it is played as Advantage Golf Croquet",
+  async function (this: WebWorld) {
+    assert.equal(
+      await this.browserPage.locator("main .competition-advantage").count(),
+      0,
+    );
+  },
+);
+
 Then(
   "the competition does not say how many hoops it is played to",
   async function (this: WebWorld) {

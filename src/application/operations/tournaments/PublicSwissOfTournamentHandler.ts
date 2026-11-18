@@ -155,6 +155,7 @@ export class PublicSwissOfTournamentHandler extends QueryHandler<
       swiss: {
         name: reference.name.toString(),
         maximumHoops: rules.maximumHoops,
+        advantage: rules.advantage,
       },
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       players,

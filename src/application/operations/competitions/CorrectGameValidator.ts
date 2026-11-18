@@ -3,6 +3,11 @@ import type { BrokenRule } from "../../../domain/common/validation/Validator.js"
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { CorrectGame, type CorrectGameErrorCode } from "./CorrectGame.js";
+import {
+  namesHoopsOrTargets,
+  readTyped,
+  type Typed,
+} from "./advantageScores.js";
 
 type Code = CorrectGameErrorCode | ScoreErrorCode;
 
@@ -31,8 +36,33 @@ export class CorrectGameValidator extends CommandValidator<CorrectGame> {
       else if (!BEGINS_WITH_A_DIGIT.test(said))
         broken.push({ code: "Score.NoPoints", fields: [field] });
     };
-    score(winnerScore, "Game.WinnerScoreMissing", "winnerScore");
-    score(loserScore, "Game.LoserScoreMissing", "loserScore");
+    const hoops = (said: Typed | undefined, missing: Code, field: string) => {
+      if (readTyped(said).count === undefined)
+        broken.push({ code: missing, fields: [field] });
+    };
+    // As when a game is added (AddGameValidator): a request that names any of
+    // the hoops and targets is for an Advantage game, and is asked for all four.
+    if (namesHoopsOrTargets(command.scores)) {
+      hoops(
+        command.scores.winnerHoops,
+        "Game.WinnerHoopsMissing",
+        "winnerHoops",
+      );
+      hoops(
+        command.scores.winnerTarget,
+        "Game.WinnerTargetMissing",
+        "winnerTarget",
+      );
+      hoops(command.scores.loserHoops, "Game.LoserHoopsMissing", "loserHoops");
+      hoops(
+        command.scores.loserTarget,
+        "Game.LoserTargetMissing",
+        "loserTarget",
+      );
+    } else {
+      score(winnerScore, "Game.WinnerScoreMissing", "winnerScore");
+      score(loserScore, "Game.LoserScoreMissing", "loserScore");
+    }
     return broken;
   }
 }

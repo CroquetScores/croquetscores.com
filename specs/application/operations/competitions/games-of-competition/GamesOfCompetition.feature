@@ -284,3 +284,63 @@ Feature: The scores of a competition, as its tournament's managers and scorers l
       Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
       When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
       Then the score of "Sam Someone" beating "Alex Another" 26 to 17 is answered with neither player playing for a team
+
+  Rule: A game in an Advantage competition is answered with its hoops and targets
+
+    A game kept as "83% (5/6)" is answered with that, as any score is, and with
+    the hoops and the target it was entered as, read back from it
+    (`ScoringFraction.feature`), so that a correction begins on what was typed
+    and not on a percentage. A game in any other competition is answered with
+    none.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario: A game is answered with its scores as they are kept
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered is kept as "83% (5/6)" to "63% (5/8)"
+
+    Scenario: A game is answered with the hoops and targets it was entered as
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered has 5 of 6 to 5 of 8
+
+    Scenario: A game in a competition that is not Advantage is answered with no hoops and targets
+      Given "Sam Someone" has beaten "Alex Another" 26 to 17 in "Block A" of "Spring Open"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Open"
+      Then the first score answered has no hoops and targets
+
+  Rule: A game in an Advantage competition is answered with whether its winner was declared
+
+    So that a correction begins on what was typed: the hoops and the target as
+    typed, and the winner's "w" where there was one.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+
+    Scenario: A game whose winner was declared is answered as such
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered is kept as "50% (3/6) w" to "50% (4/8)"
+      And the first score answered has 3 of 6 to 4 of 8
+      And the first score answered has its winner declared
+
+    Scenario: A game whose winner was not declared is answered as such
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+      When the reader signed in to the account for "organiser@example.com" lists the scores of "Block A" of "Spring Golf"
+      Then the first score answered does not have its winner declared

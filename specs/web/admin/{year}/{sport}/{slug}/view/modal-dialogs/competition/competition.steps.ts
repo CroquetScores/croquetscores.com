@@ -28,7 +28,7 @@ const fieldOf = (world: WebWorld, label: string): Locator =>
   dialogOf(world).getByLabel(label, { exact: true });
 
 Then(
-  /^the (?:competition|player|team player|test) dialog does not ask for "([^"]*)"$/,
+  /^the (?:competition|player|team player|test|score) dialog does not ask for "([^"]*)"$/,
   async function (this: WebWorld, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {
@@ -40,12 +40,16 @@ Then(
 // Which field comes after which, by the words each is labelled with, in the
 // order the reader comes to them.
 Then(
-  /^the field after "([^"]*)" in the (?:player|team player) dialog is "([^"]*)"$/,
+  /^the field after "([^"]*)" in the (?:player|team player|competition|test) dialog is "([^"]*)"$/,
   async function (this: WebWorld, before: string, label: string) {
     await dialogOf(this).waitFor();
     await eventually(this, async () => {
+      // A box to tick is a field too, and is read in the order it is met
+      // among the others.
       const labels = (
-        await dialogOf(this).locator(".field-label").allTextContents()
+        await dialogOf(this)
+          .locator(".field-label, .field-tick")
+          .allTextContents()
       ).map((text) => text.trim());
       assert.equal(
         labels[labels.indexOf(before) + 1],
@@ -125,6 +129,23 @@ Then(
       await tieBreakOf(this).locator("option").allInnerTexts()
     ).map((each) => each.trim());
     assert.ok(offered.includes(tieBreak), `${tieBreak} is not offered.`);
+  },
+);
+
+// Found by its place and not by its words, which are in another language where
+// a scenario is about the words.
+When("the box for Advantage is ticked", async function (this: WebWorld) {
+  await dialogOf(this).locator("#field-advantage").check();
+});
+
+Then(
+  "the tie break {string} is not offered",
+  async function (this: WebWorld, tieBreak: string) {
+    await dialogOf(this).waitFor();
+    const offered = (
+      await tieBreakOf(this).locator("option").allInnerTexts()
+    ).map((each) => each.trim());
+    assert.ok(!offered.includes(tieBreak), `${tieBreak} is offered.`);
   },
 );
 

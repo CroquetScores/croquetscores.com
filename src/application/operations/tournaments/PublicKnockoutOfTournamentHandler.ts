@@ -163,6 +163,7 @@ export class PublicKnockoutOfTournamentHandler extends QueryHandler<
       knockout: {
         name: reference.name.toString(),
         maximumHoops: rules.maximumHoops,
+        advantage: rules.advantage,
       },
       usualMaximumHoops: tournament.sport.usualMaximumHoops,
       rounds,

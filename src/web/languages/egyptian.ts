@@ -427,6 +427,7 @@ export const egyptian: Language = {
     "block.netGames": "صافي الألعاب",
     "block.games": "الألعاب",
     "block.netHoops": "صافي الأطواق",
+    "block.netSf": "صافي SF%",
     "block.won": "فاز",
     "block.lost": "خسر",
     "block.drawn": "تعادل",
@@ -442,8 +443,12 @@ export const egyptian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "التعادل بيتحسم بصافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "التعادل بيتحسم بصافي الألعاب بعدين صافي SF% بعدين مين غلب مين.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "التعادل بيتحسم بصافي الأطواق بعدين مين غلب مين.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "التعادل بيتحسم بصافي SF% بعدين مين غلب مين.",
     "block.tieBreak.whoBeatWho": "التعادل بيتحسم بمين غلب مين.",
     "block.tieBreak.other": "مفيش طريقة معروفة لكسر التعادل.",
     // The three views of a block.
@@ -453,6 +458,8 @@ export const egyptian: Language = {
     "competition.view.orderOfPlay": "ترتيب اللعب",
     "competition.print": "اطبع",
     "competition.playedTo": "بتتلعب لحد {hoops} حلقة",
+    "competition.advantage":
+      "بتتلعب جولف كروكيه بنظام Advantage. كل نتيجة هي حلقات اللاعب كنسبة مئوية من هدفه (SF%)، وجنبها حلقاته وهدفه.",
     "blockSummary.ranking":
       "الترتيب على حسب نسبة المباريات اللي اتكسبت. ممكن لوايح البطولة نفسها ترتّب اللاعبين بشكل تاني.",
     "orderOfPlay.none": "لسه محدش لعب أي لعبة.",
@@ -531,6 +538,7 @@ export const egyptian: Language = {
     "admin.tournament.subtitle": "العنوان الفرعي",
     "admin.rules.handicap": "بتتلعب بالهانديكاب",
     "admin.rules.drawsAllowed": "التعادل مسموح",
+    "admin.rules.advantage": "جولف كروكيه بنظام Advantage",
     "admin.tournament.levelTestsDrawn": "اللقاءات المتعادلة بتتحسب تعادل",
     "admin.rules.worldRankings": "بتتحسب في التصنيف العالمي",
     "admin.rules.maximumHoops": "أقصى عدد حلقات",
@@ -722,6 +730,8 @@ export const egyptian: Language = {
     "admin.competition.tieBreaks": "كسر التعادل",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "صافي الألعاب بعدين صافي الأطواق بعدين مين غلب مين",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "صافي الألعاب بعدين صافي SF% بعدين مين غلب مين",
     "admin.competition.tieBreak.who-beat-who": "مين غلب مين",
     "admin.competition.tieBreak.other": "غير كده",
     "admin.competition.places": "الأماكن",
@@ -945,6 +955,8 @@ export const egyptian: Language = {
     "admin.score.winnerScore": "نتيجة الفايز",
     "admin.score.loser": "الخاسر",
     "admin.score.loserScore": "نتيجة الخاسر",
+    "admin.score.hoops": "حلقات",
+    "admin.score.target": "الهدف",
     "admin.score.beat": "هزم",
     "admin.score.added": "اتضافت اللعبة اللي كسبها {winner} قدّام {loser}.",
     "admin.score.otherwise": "ما قدرناش نضيف اللعبة.",
@@ -957,10 +969,21 @@ export const egyptian: Language = {
     "Game.WinnerScoreMissing": "اكتب نتيجة الفايز.",
     "Game.LoserMissing": "اختار الخاسر.",
     "Game.LoserScoreMissing": "اكتب نتيجة الخاسر.",
+    "ScoringFraction.HoopsNotWhole": "عدد الحلقات لازم يكون رقم صحيح.",
+    "ScoringFraction.HoopsNegative": "عدد الحلقات مينفعش يبقى أقل من صفر.",
+    "ScoringFraction.TargetNotWhole": "الهدف لازم يكون رقم صحيح.",
+    "ScoringFraction.TargetTooSmall": "الهدف لازم يكون واحد على الأقل.",
+    "ScoringFraction.HoopsAboveTarget": "عدد الحلقات مينفعش يعدّي الهدف.",
+    "Game.WinnerHoopsMissing": "اكتب حلقات الفايز.",
+    "Game.WinnerTargetMissing": "اكتب هدف الفايز.",
+    "Game.LoserHoopsMissing": "اكتب حلقات الخاسر.",
+    "Game.LoserTargetMissing": "اكتب هدف الخاسر.",
     "Score.NoPoints": "النتيجة بتبدأ بعدد النقط.",
     "Game.SamePlayer": "محدش بيلعب ضد نفسه.",
     "Game.WinnerNotAhead":
       "نتيجة الفايز لازم تكون أكتر من نتيجة الخاسر، أو تتعلّم إنها فوز.",
+    "Game.WinnerMarkedNotLevel":
+      "حرف w ينفع بس لما الطرفين يبقوا عاملين نفس الـ SF%.",
     "Game.LoserMarked": "نتيجة الخاسر مينفعش تتعلّم إنها فوز.",
     "Game.ResultChanged":
       "التصحيح بيحافظ على النتيجة: اللعبة المكسوبة تفضل مكسوبة، والمتعادلة تفضل متعادلة.",
@@ -1188,6 +1211,10 @@ export const egyptian: Language = {
       "اللقاء ده فيه ألعاب، فمينفعش يتأرشف لحد ما هي تتأرشف.",
     "Tournament.TestHasGames":
       "اللقاء ده فيه ألعاب دلوقتي، فمبقاش ينفع نغيّر فرقه.",
+    "Tournament.AdvantageHasGames":
+      "المسابقة دي فيها ألعاب، فمينفعش نحوّلها لجولف كروكيه بنظام Advantage ولا نرجّعها منه.",
+    "Tournament.AdvantageWithHandicap":
+      "المسابقة مينفعش تكون جولف كروكيه بنظام Advantage وبتتلعب بالهانديكاب في نفس الوقت.",
     "Tournament.ExpectedMatchesBelowStarted":
       "اتبدأت مباريات أكتر من كده فعلاً.",
     "Tournament.BestOfBelowGamesPlayed":

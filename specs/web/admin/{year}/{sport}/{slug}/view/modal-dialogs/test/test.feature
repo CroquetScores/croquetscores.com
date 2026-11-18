@@ -446,6 +446,112 @@ Feature: A test is added to a tournament, or changed, in a modal dialog
       When "Edit" is pressed on the test "AUS v ENG"
       Then "Played with handicaps" is ticked
 
+  Rule: A test in Golf Croquet asks whether it is played as Advantage Golf Croquet
+
+    A test is asked as a competition is (`competition.feature`): "Advantage
+    Golf Croquet", above "Played with handicaps", where the website offers it
+    and the sport is Golf Croquet, and ticked, wherever it is, for a test that
+    already is Advantage. The two are mutually exclusive, so each is not asked
+    while the other is ticked. Switching
+    a test to or from Advantage once it has any score kept, an archived one
+    among them, is refused with `Tournament.AdvantageHasGames`, said above the
+    fields.
+
+    Scenario: The dialog asks for it in Golf Croquet where it is offered
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog asks for "Advantage Golf Croquet"
+
+    Scenario: The choice comes above whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the field after "Advantage Golf Croquet" in the test dialog is "Played with handicaps"
+
+    Scenario: A test played as Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the reader ticks "Advantage Golf Croquet"
+      Then the test dialog does not ask for "Played with handicaps"
+
+    Scenario: A test played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      When the reader ticks "Played with handicaps"
+      Then the test dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: The dialog does not ask for it where it is not offered
+      Given the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: The dialog does not ask for it in another sport
+      Given the site is told Advantage Golf Croquet is offered
+      And the tests of "Spring Tests" are open
+      When "Add Test" is pressed
+      Then the test dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: A test added as Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the tests of "Spring Tests" are open
+      And "Add Test" is pressed
+      And the team "Australia" is chosen as "Team A"
+      And the team "England" is chosen as "Team B"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Add" is pressed
+      Then the competition "AUS v ENG" of "Spring Tests" is Advantage
+
+    Scenario: A test changed begins as it is played
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then "Advantage Golf Croquet" is ticked
+
+    Scenario: A test changed to Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the tests of "Spring Tests" are open
+      And "Edit" is pressed on the test "AUS v ENG"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition "AUS v ENG" of "Spring Tests" is Advantage
+
+    Scenario: A test that is Advantage is asked, ticked, where it is no longer offered
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And the site is no longer told Advantage Golf Croquet is offered
+      And the tests of "Spring Tests" are open
+      When "Edit" is pressed on the test "AUS v ENG"
+      Then "Advantage Golf Croquet" is ticked
+
+    Scenario: A test with a score is not switched to Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Tests" is for the sport "gc"
+      And "organiser@example.com" has added the player "Sam Someone" to the team "Australia" of "Spring Tests"
+      And "organiser@example.com" has added the player "Chris Third" to the team "England" of "Spring Tests"
+      And "organiser@example.com" has added the test between "Australia" and "England" to "Spring Tests"
+      And "Sam Someone" has beaten "Chris Third" 7 to 3 in "AUS v ENG" of "Spring Tests"
+      And the tests of "Spring Tests" are open
+      And "Edit" is pressed on the test "AUS v ENG"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the test dialog is refused above its fields with "Tournament.AdvantageHasGames"
+
   Rule: A test asks the most hoops a game in it is played to
 
     A test is asked "Maximum hoops" as every competition is

@@ -489,3 +489,28 @@ Feature: A knockout's grid draws its draw round by round
       And "organiser@example.com" has entered the player "Pat Fourth" in "Plate" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/plate" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A knockout played as Advantage Golf Croquet says so
+
+    The page says beneath its results that it is played as Advantage Golf
+    Croquet, and does not say how many hoops it is played to, since each game
+    has its own targets (`block.feature`). Each score is shown as the
+    percentage and the hoops over the target that made it, "83% (5/6)", and the
+    side with the higher fraction wins the game.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the knockout "Golf Finals" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Golf Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Golf Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Golf Finals" of "Spring Open"
+      And "organiser@example.com" has entered the player "Pat Fourth" in "Golf Finals" of "Spring Open"
+
+    Scenario: The page says it is played as Advantage Golf Croquet
+      When the page at "/2026/gc/spring-open/competitions/golf-finals" is opened
+      Then the competition says it is played as Advantage Golf Croquet
+
+    Scenario: A knockout that is not Advantage says nothing of it
+      When the page at "/2026/gc/spring-open/competitions/finals" is opened
+      Then the competition does not say it is played as Advantage Golf Croquet

@@ -22,6 +22,9 @@ export class BlockUpdated extends DomainEvent {
     // event kept before it was said, which the tournament then reads as the
     // usual for its sport.
     readonly maximumHoops: number | null | undefined,
+    // Whether it is played as Advantage Golf Croquet. Left out by an event kept
+    // before it could be said, which is as not (advantage.feature).
+    readonly advantage: boolean | undefined,
     // How the players level on matches won are told apart (TieBreak), by its
     // code.
     readonly tieBreak: string,

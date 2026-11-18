@@ -1239,3 +1239,312 @@ Feature: A game's score is added to a competition, or corrected, in a modal dial
       And the scores of "Block A" in "Spring Open" are open
       When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
       Then the help icon leads to "/help/tournament-managers/standard-tournament/scores#correcting-a-score"
+
+  Rule: A game in an Advantage competition asks for hoops and targets
+
+    The two players of an Advantage game have different targets, so the dialog
+    asks, in place of each score, the hoops that side made and its target, and
+    the site works out the scoring fractions and keeps the game as them
+    (`AddGame.feature`). The scorer is never asked for a percentage.
+
+    Each side is a row of three fields on one line: the player, then "Hoops",
+    then "Target", so the winner's row is "Winner", "Hoops" and "Target" and
+    the loser's is "Loser", "Hoops" and "Target", as the result is said aloud.
+    Both rows have the same two labels, so each row is a group named by its
+    player's label, and a field is found by whose it is: the winner's "Hoops".
+    The three fit on one line across a phone, each as tall as a thumb needs.
+    Hoops and targets are whole numbers, followed by a "w" where the side is the
+    winner on equal scoring fractions, which is typed on a phone's keyboard of
+    letters and not a keypad of numbers.
+
+    A "w" typed after the winner's hoops or after the winner's target declares
+    that side the winner, as "6w" does for a score (`Score.feature`), and can
+    only be used where the two scoring fractions are equal (`AddGame.feature`).
+    It is typed in either field, whichever the scorer is in when they think of
+    it. Where the winner is ahead it is refused beside the field it was typed in
+    (`Game.WinnerMarkedNotLevel`), and so is a "w" after the loser's
+    (`Game.LoserMarked`), as a loser's score marked is in any other competition.
+
+    What is refused is said beside the field it is about, by the refusal's code:
+    hoops that are not a whole number, below nothing or above the target
+    beside the hoops (`ScoringFraction.HoopsNotWhole`,
+    `ScoringFraction.HoopsNegative`, `ScoringFraction.HoopsAboveTarget`), a
+    target that is not a whole number or is nothing beside the target
+    (`ScoringFraction.TargetNotWhole`, `ScoringFraction.TargetTooSmall`), a part
+    not typed beside it (`Game.WinnerHoopsMissing` and the rest), and a winner
+    whose fraction is not higher than the loser's, or equal to it where the
+    tournament does not allow drawn games, beside the winner's hoops
+    (`Game.WinnerNotAhead`).
+
+    Opened on a game to correct, the dialog begins on the hoops and targets it
+    was entered as. A competition that is not Advantage is asked as it always
+    was, for a score for each side.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block G" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block G" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block G" of "Spring Open"
+
+    Scenario Outline: The dialog asks for each side's hoops and target
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog asks for the <side>'s "<field>"
+
+      Examples:
+        | side   | field  |
+        | winner | Hoops  |
+        | winner | Target |
+        | loser  | Hoops  |
+        | loser  | Target |
+
+    Scenario Outline: The dialog does not ask for a score
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog does not ask for "<field>"
+
+      Examples:
+        | field          |
+        | Winner's score |
+        | Loser's score  |
+
+    Scenario: The dialog reads as the result is said aloud
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the fields of the score dialog are, in order, "Winner", "Hoops", "Target", "Loser", "Hoops" and "Target"
+
+    Scenario Outline: A side's player, hoops and target are on one line
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the <side>'s player, hoops and target are on one line
+
+      Examples:
+        | side   |
+        | winner |
+        | loser  |
+
+    Scenario Outline: Each side's hoops and target can be pressed with a thumb
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the <side>'s "<field>" is at least 44 pixels tall
+
+      Examples:
+        | side   | field  |
+        | winner | Hoops  |
+        | winner | Target |
+        | loser  | Hoops  |
+        | loser  | Target |
+
+    Scenario: The dialog is no wider than the window
+      Given the scores of "Block G" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog is no wider than the window
+
+    Scenario: A game is added from hoops and targets
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "5" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then "Block G" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" kept as "83% (5/6)" to "63% (5/8)"
+
+    Scenario: The game is listed on the Scores tab beneath as the fractions it makes
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "5" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the first score listed shows "83% (5/6)" as its winner's score
+      And the first score listed shows "63% (5/8)" as its loser's score
+
+    Scenario Outline: What is refused is said beside the field it is about
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "<winner hoops>" is typed as the winner's "Hoops"
+      And "<winner target>" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "3" is typed as the loser's "Hoops"
+      And "6" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the winner's "<field>" is refused with "<code>"
+      And the modal dialog says the words for "<code>"
+
+      Examples:
+        | winner hoops | winner target | field  | code                             |
+        | 7            | 6             | Hoops  | ScoringFraction.HoopsAboveTarget |
+        | 2.5          | 6             | Hoops  | ScoringFraction.HoopsNotWhole    |
+        | -1           | 6             | Hoops  | ScoringFraction.HoopsNegative    |
+        | 3            | 0             | Target | ScoringFraction.TargetTooSmall   |
+        | 3            | 6.5           | Target | ScoringFraction.TargetNotWhole   |
+        | 3            | 6             | Hoops  | Game.WinnerNotAhead              |
+
+    Scenario: The loser's hoops refused are said beside the loser's hoops
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "7" is typed as the loser's "Hoops"
+      And "6" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the loser's "Hoops" is refused with "ScoringFraction.HoopsAboveTarget"
+
+    Scenario Outline: A part left empty is refused beside it
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "5" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      And the <side>'s "<field>" is emptied
+      When "Add Game" is pressed
+      Then the <side>'s "<field>" is refused with "<code>"
+
+      Examples:
+        | side   | field  | code                     |
+        | winner | Hoops  | Game.WinnerHoopsMissing  |
+        | winner | Target | Game.WinnerTargetMissing |
+        | loser  | Hoops  | Game.LoserHoopsMissing   |
+        | loser  | Target | Game.LoserTargetMissing  |
+
+    Scenario: A refused game is not kept
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "7" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "3" is typed as the loser's "Hoops"
+      And "6" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then "Block G" of "Spring Open" has no scores
+
+    Scenario: A score's Edit begins on the hoops and targets it was entered as
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      And the scores of "Block G" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the winner's "Hoops" says "5"
+      And the winner's "Target" says "6"
+      And the loser's "Hoops" says "5"
+      And the loser's "Target" says "8"
+
+    Scenario: A score is corrected from hoops and targets
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      And the scores of "Block G" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "6" is typed as the winner's "Hoops"
+      When "Save" is pressed
+      Then "Block G" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" kept as "100% (6/6)" to "63% (5/8)"
+
+    Scenario: A correction refused is said beside the field it is about
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      And the scores of "Block G" in "Spring Open" are open
+      And "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      And "7" is typed as the winner's "Hoops"
+      When "Save" is pressed
+      Then the winner's "Hoops" is refused with "ScoringFraction.HoopsAboveTarget"
+
+    Scenario Outline: A competition that is not Advantage is asked for a score for each side
+      Given the scores of "Block A" in "Spring Open" are open
+      When "Add Score" is pressed
+      Then the score dialog asks for "<field>"
+
+      Examples:
+        | field          |
+        | Winner's score |
+        | Loser's score  |
+
+    Scenario: The dialog is in the reader's language
+      Given a browser that asks for "en-XA"
+      And the scores of "Block G" in "Spring Open" are open
+      When the way to add a score is pressed
+      Then every word in the score dialog but the players' names is in the test locale
+
+    Scenario Outline: A game on equal fractions is added as the winner's where a w is typed
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "<winner hoops>" is typed as the winner's "Hoops"
+      And "<winner target>" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "4" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then "Block G" of "Spring Open" has the score of "Sam Someone" beating "Alex Another" kept as "50% (3/6) w" to "50% (4/8)"
+
+      Examples:
+        | winner hoops | winner target |
+        | 3w           | 6             |
+        | 3            | 6w            |
+
+    Scenario: A game on equal fractions with no w is refused beside the winner's hoops
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "3" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "4" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the winner's "Hoops" is refused with "Game.WinnerNotAhead"
+
+    Scenario Outline: A w where the winner is ahead is refused beside the field it was typed in
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "<winner hoops>" is typed as the winner's "Hoops"
+      And "<winner target>" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "5" is typed as the loser's "Hoops"
+      And "8" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the winner's "<field>" is refused with "Game.WinnerMarkedNotLevel"
+      And the modal dialog says the words for "Game.WinnerMarkedNotLevel"
+
+      Examples:
+        | winner hoops | winner target | field  |
+        | 5w           | 6             | Hoops  |
+        | 5            | 6w            | Target |
+
+    Scenario Outline: A w after the loser's hoops or target is refused beside the field it was typed in
+      Given the scores of "Block G" in "Spring Open" are open
+      And "Add Score" is pressed
+      And "Sam Someone" is chosen as the "Winner"
+      And "5" is typed as the winner's "Hoops"
+      And "6" is typed as the winner's "Target"
+      And "Alex Another" is chosen as the "Loser"
+      And "<loser hoops>" is typed as the loser's "Hoops"
+      And "<loser target>" is typed as the loser's "Target"
+      When "Add Game" is pressed
+      Then the loser's "<field>" is refused with "Game.LoserMarked"
+
+      Examples:
+        | loser hoops | loser target | field  |
+        | 4w          | 8            | Hoops  |
+        | 4           | 8w           | Target |
+
+    Scenario: A game whose winner was declared begins with its w to correct
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block G" of "Spring Open"
+      And the scores of "Block G" in "Spring Open" are open
+      When "Edit" is pressed on the score of "Sam Someone" beating "Alex Another"
+      Then the winner's "Hoops" says "3w"
+      And the winner's "Target" says "6"
+
+    Scenario: A game is listed with its w
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block G" of "Spring Open"
+      When the scores of "Block G" in "Spring Open" are open
+      Then the first score listed shows "50% (3/6) w" as its winner's score

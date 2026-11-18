@@ -462,6 +462,7 @@ export const portuguese: Language = {
     "block.netGames": "Saldo de jogos",
     "block.games": "Jogos",
     "block.netHoops": "Saldo de arcos",
+    "block.netSf": "Saldo de SF%",
     "block.won": "vitória",
     "block.lost": "derrota",
     "block.drawn": "empate",
@@ -477,8 +478,12 @@ export const portuguese: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Os desempates são decididos pelo saldo de jogos, depois pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Os desempates são decididos pelo saldo de jogos, depois pelo saldo de SF%, depois por quem venceu quem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Os desempates são decididos pelo saldo de arcos, depois por quem venceu quem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Os desempates são decididos pelo saldo de SF%, depois por quem venceu quem.",
     "block.tieBreak.whoBeatWho":
       "Os desempates são decididos por quem venceu quem.",
     "block.tieBreak.other": "Não há método de desempate conhecido.",
@@ -489,6 +494,8 @@ export const portuguese: Language = {
     "competition.view.orderOfPlay": "Ordem de jogo",
     "competition.print": "Imprimir",
     "competition.playedTo": "Jogado a {hoops} arcos",
+    "competition.advantage":
+      "Jogado como Advantage Croquet de Golfe. Cada pontuação é os arcos de um jogador como percentagem da sua meta (SF%), com os arcos e a meta ao lado.",
     "blockSummary.ranking":
       "Classificados pela proporção de partidas vencidas. O regulamento do próprio torneio pode classificar os jogadores de outro modo.",
     "orderOfPlay.none": "Nenhuma partida foi jogada ainda.",
@@ -574,6 +581,7 @@ export const portuguese: Language = {
     "admin.tournament.subtitle": "Subtítulo",
     "admin.rules.handicap": "Jogado com handicaps",
     "admin.rules.drawsAllowed": "Permite empates",
+    "admin.rules.advantage": "Advantage Croquet de Golfe",
     "admin.tournament.levelTestsDrawn": "Testes igualados são empates",
     "admin.rules.worldRankings": "Conta para o ranking mundial",
     "admin.rules.maximumHoops": "Máximo de arcos",
@@ -782,6 +790,8 @@ export const portuguese: Language = {
     "admin.competition.tieBreaks": "Critérios de desempate",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Saldo de jogos, depois saldo de arcos, depois quem venceu quem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Saldo de jogos, depois saldo de SF%, depois quem venceu quem",
     "admin.competition.tieBreak.who-beat-who": "Quem venceu quem",
     "admin.competition.tieBreak.other": "Outro",
     "admin.competition.places": "Vagas",
@@ -1035,6 +1045,8 @@ export const portuguese: Language = {
     "admin.score.winnerScore": "Pontos do vencedor",
     "admin.score.loser": "Perdedor",
     "admin.score.loserScore": "Pontos do perdedor",
+    "admin.score.hoops": "Arcos",
+    "admin.score.target": "Meta",
     "admin.score.beat": "venceu",
     "admin.score.added":
       "O jogo em que {winner} venceu {loser} foi adicionado.",
@@ -1048,10 +1060,22 @@ export const portuguese: Language = {
     "Game.WinnerScoreMissing": "Digite os pontos do vencedor.",
     "Game.LoserMissing": "Escolha o perdedor.",
     "Game.LoserScoreMissing": "Digite os pontos do perdedor.",
+    "ScoringFraction.HoopsNotWhole": "Os arcos são um número inteiro.",
+    "ScoringFraction.HoopsNegative": "Os arcos não podem ser menos de 0.",
+    "ScoringFraction.TargetNotWhole": "A meta é um número inteiro.",
+    "ScoringFraction.TargetTooSmall": "A meta é pelo menos 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Os arcos não podem ser mais que a meta.",
+    "Game.WinnerHoopsMissing": "Digite os arcos do vencedor.",
+    "Game.WinnerTargetMissing": "Digite a meta do vencedor.",
+    "Game.LoserHoopsMissing": "Digite os arcos do perdedor.",
+    "Game.LoserTargetMissing": "Digite a meta do perdedor.",
     "Score.NoPoints": "Um resultado começa com o seu número de pontos.",
     "Game.SamePlayer": "Ninguém joga contra si mesmo.",
     "Game.WinnerNotAhead":
       "Os pontos do vencedor precisam ser maiores que os do perdedor, ou marcados como vitória.",
+    "Game.WinnerMarkedNotLevel":
+      "Um w só pode ser usado quando os dois lados fizeram o mesmo SF%.",
     "Game.LoserMarked":
       "Os pontos do perdedor não podem ser marcados como vitória.",
     "Game.ResultChanged":
@@ -1302,6 +1326,10 @@ export const portuguese: Language = {
       "Este teste tem jogos, então não pode ser arquivado até que eles sejam.",
     "Tournament.TestHasGames":
       "Este teste já tem jogos, então suas equipes não podem mais ser alteradas.",
+    "Tournament.AdvantageHasGames":
+      "Esta competição já tem jogos, então não pode ser mudada para Advantage Croquet de Golfe nem a partir dele.",
+    "Tournament.AdvantageWithHandicap":
+      "Uma competição não pode ser ao mesmo tempo Advantage Croquet de Golfe e jogada com handicaps.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mais partidas que isso já começaram.",
     "Tournament.BestOfBelowGamesPlayed":

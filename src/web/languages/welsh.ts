@@ -448,6 +448,7 @@ export const welsh: Language = {
     "block.netGames": "Gemau net",
     "block.games": "Gemau unigol",
     "block.netHoops": "Cylchau net",
+    "block.netSf": "SF% net",
     "block.won": "wedi ennill",
     "block.lost": "wedi colli",
     "block.drawn": "cyfartal",
@@ -463,8 +464,12 @@ export const welsh: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Penderfynir clymau yn ôl gemau net, yna cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Penderfynir clymau yn ôl gemau net, yna SF% net, yna pwy a gurodd pwy.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Penderfynir clymau yn ôl cylchau net, yna pwy a gurodd pwy.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Penderfynir clymau yn ôl SF% net, yna pwy a gurodd pwy.",
     "block.tieBreak.whoBeatWho": "Penderfynir clymau yn ôl pwy a gurodd pwy.",
     "block.tieBreak.other": "Nid oes dull torri clymau hysbys.",
     // The three views of a block, offered beneath its heading.
@@ -474,6 +479,8 @@ export const welsh: Language = {
     "competition.view.orderOfPlay": "Trefn chwarae",
     "competition.print": "Argraffu",
     "competition.playedTo": "Chwaraeir i {hoops} cylch",
+    "competition.advantage":
+      "Chwaraeir fel Golf Croquet Advantage. Mae pob sgôr yn gylchau chwaraewr fel canran o'u targed (SF%), gyda'u cylchau a'u targed wrth ei hochr.",
     "blockSummary.ranking":
       "Wedi'u trefnu yn ôl cyfran y gemau a enillwyd. Gall rheolau twrnamaint ei hun osod ei chwaraewyr mewn trefn wahanol.",
     "orderOfPlay.none": "Ni chwaraewyd unrhyw gemau eto.",
@@ -553,6 +560,7 @@ export const welsh: Language = {
     "admin.tournament.subtitle": "Is-deitl",
     "admin.rules.handicap": "Chwarae gyda handicapiau",
     "admin.rules.drawsAllowed": "Caniatáu canlyniadau cyfartal",
+    "admin.rules.advantage": "Golf Croquet Advantage",
     "admin.tournament.levelTestsDrawn": "Cyfrif profion cyfartal yn gyfartal",
     "admin.rules.worldRankings": "Yn cyfrif tuag at restr detholion y byd",
     "admin.rules.maximumHoops": "Uchafswm cylchau",
@@ -758,6 +766,8 @@ export const welsh: Language = {
     "admin.competition.tieBreaks": "Torri clymau",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Gemau net, yna cylchau net, yna pwy a gurodd pwy",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Gemau net, yna SF% net, yna pwy a gurodd pwy",
     "admin.competition.tieBreak.who-beat-who": "Pwy a gurodd pwy",
     "admin.competition.tieBreak.other": "Arall",
     "admin.competition.places": "Lleoedd",
@@ -1009,6 +1019,8 @@ export const welsh: Language = {
     "admin.score.winnerScore": "Sgôr yr enillydd",
     "admin.score.loser": "Collwr",
     "admin.score.loserScore": "Sgôr y collwr",
+    "admin.score.hoops": "Cylchau",
+    "admin.score.target": "Targed",
     "admin.score.beat": "a gurodd",
     "admin.score.added":
       "Ychwanegwyd y gêm a enillodd {winner} yn erbyn {loser}.",
@@ -1022,10 +1034,22 @@ export const welsh: Language = {
     "Game.WinnerScoreMissing": "Teipiwch sgôr yr enillydd.",
     "Game.LoserMissing": "Dewiswch y collwr.",
     "Game.LoserScoreMissing": "Teipiwch sgôr y collwr.",
+    "ScoringFraction.HoopsNotWhole": "Mae cylchau'n rhif cyfan.",
+    "ScoringFraction.HoopsNegative": "Ni all cylchau fod yn llai na 0.",
+    "ScoringFraction.TargetNotWhole": "Mae targed yn rhif cyfan.",
+    "ScoringFraction.TargetTooSmall": "Mae targed o leiaf 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Ni all cylchau fod yn fwy na'r targed.",
+    "Game.WinnerHoopsMissing": "Teipiwch gylchau'r enillydd.",
+    "Game.WinnerTargetMissing": "Teipiwch darged yr enillydd.",
+    "Game.LoserHoopsMissing": "Teipiwch gylchau'r collwr.",
+    "Game.LoserTargetMissing": "Teipiwch darged y collwr.",
     "Score.NoPoints": "Mae sgôr yn dechrau gyda'i nifer o bwyntiau.",
     "Game.SamePlayer": "Nid yw neb yn chwarae yn erbyn ei hun.",
     "Game.WinnerNotAhead":
       "Rhaid i sgôr yr enillydd fod yn fwy na sgôr y collwr, neu wedi'i farcio fel un a enillwyd.",
+    "Game.WinnerMarkedNotLevel":
+      "Dim ond lle mae'r ddwy ochr wedi gwneud yr un SF% y gellir defnyddio w.",
     "Game.LoserMarked": "Ni ellir marcio sgôr y collwr fel un a enillwyd.",
     "Game.ResultChanged":
       "Mae cywiriad yn cadw'r canlyniad: erys gêm a enillwyd yn gêm a enillwyd, ac erys gêm gyfartal yn gyfartal.",
@@ -1279,6 +1303,10 @@ export const welsh: Language = {
       "Mae gan y prawf hwn gemau, felly ni ellir ei archifo nes y byddant hwy wedi'u harchifo.",
     "Tournament.TestHasGames":
       "Mae gan y prawf hwn gemau erbyn hyn, felly ni ellir newid ei dimau mwyach.",
+    "Tournament.AdvantageHasGames":
+      "Mae gan y gystadleuaeth hon gemau, felly ni ellir ei newid i Golf Croquet Advantage nac oddi wrtho.",
+    "Tournament.AdvantageWithHandicap":
+      "Ni all cystadleuaeth fod yn Golf Croquet Advantage ac yn cael ei chwarae gyda handicapiau ar yr un pryd.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mae mwy o gemau na hynny wedi dechrau eisoes.",
     "Tournament.BestOfBelowGamesPlayed":

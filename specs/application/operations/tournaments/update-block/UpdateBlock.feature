@@ -136,3 +136,46 @@ Feature: Changing what a tournament's block is
       And the update calls the competition "Block One"
       When the reader signed in to that account updates the block "Block A" in "Spring Open"
       Then it is refused with "Account.Forgotten"
+
+  Rule: A block with any score kept is not switched to or from Advantage
+
+    A score is kept as a scoring fraction in an Advantage block and as the
+    points it was typed as in any other (`advantage.feature`), so the
+    application tells the tournament whether the block has any, and it counts
+    an archived score as much as any other, since an archived score can be
+    restored. A withdrawn one counts too.
+
+    Scenario: A block with a score is not switched to Advantage
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Golf"
+      And the update says the competition is Advantage
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Golf"
+      Then it is refused with "Tournament.AdvantageHasGames"
+
+    Scenario: A block whose only score is archived is not switched to Advantage
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Golf"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf"
+      And the update says the competition is Advantage
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Golf"
+      Then it is refused with "Tournament.AdvantageHasGames"
+
+    Scenario: A block with no score is switched to Advantage
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And the update says the competition is Advantage
+      When the reader signed in to the account for "organiser@example.com" updates the block "Block A" in "Spring Golf"
+      Then the tournament's competition "Block A" is Advantage

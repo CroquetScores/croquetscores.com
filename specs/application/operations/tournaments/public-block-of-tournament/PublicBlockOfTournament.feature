@@ -874,3 +874,57 @@ Feature: A block of a tournament, for anybody to read
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
       Then it is refused with "PublicBlockOfTournament.NoSuchTournament"
+
+  Rule: A block played as Advantage Golf Croquet is answered as such, its players totalled in percentage points
+
+    A game in an Advantage block is kept as the scoring fractions its sides
+    made (`AddGame.feature`), so its points are percentages, and a player's net
+    hoops are the percentage points they have made less those made against
+    them: their net SF%, which is what Croquet England asks a block of this
+    kind to be ordered by, since net hoops would always favour the player with
+    the larger target. It is the same sum, so the players are ranked by it as
+    they are by net hoops, and nothing in how a block is placed changes.
+
+    So the block is answered with whether it is Advantage, for a page to head
+    the sum as the sum it is (`block.feature`).
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the block is to be the best of 1
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block G" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block G" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block G" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block G" of "Spring Golf"
+
+    Scenario: A block played as Advantage is answered as such
+      When the block "block-g" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the block answered is played as Advantage
+
+    Scenario: A block not played as Advantage is answered as not
+      When the block "block-a" of the tournament at "2026/ac/spring-open" is asked for
+      Then the block answered is not played as Advantage
+
+    Scenario: The winner's net hoops are the percentage points they made less those made against them
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Golf"
+      When the block "block-g" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the player of the block "Sam Someone" is answered with net hoops of 20
+
+    Scenario: The loser's net hoops are the same less
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Golf"
+      When the block "block-g" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the player of the block "Alex Another" is answered with net hoops of -20
+
+    # Sam made 9 more hoops than were made against them, and Chris only 3 more,
+    # but Sam's were against a target of 13 and 20, and Chris's against 3 and 3,
+    # so Chris made the greater share of the points and is ranked above.
+    Scenario: Players level on matches won are ranked by net SF% and not by hoops
+      Given "Sam Someone" has beaten "Alex Another" 12 of 13 to 3 of 20 in "Block G" of "Spring Golf"
+      And "Chris Third" has beaten "Alex Another" 3 of 3 to 0 of 3 in "Block G" of "Spring Golf"
+      When the block "block-g" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the first player of the block ranked is "Chris Third"
+      And the second player of the block ranked is "Sam Someone"

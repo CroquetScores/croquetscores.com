@@ -39,6 +39,16 @@ const placesOffered = [2, 4, 8, 16, 32, 64, 128] as const;
 // again, so that one added there is offered here.
 const tieBreaksOffered = TieBreak.all.map(({ code }) => code);
 
+// What a tie break is called. Net hoops are net SF% in an Advantage
+// competition, the percentage points a player made less those made against
+// them, so the one that goes by them says so while the competition is ticked as
+// Advantage. It is the same tie break either way, so what is sent is the same
+// (competition.feature).
+const tieBreakWords = (code: string, advantage: boolean): string =>
+  advantage && code === TieBreak.netGamesNetHoopsWhoBeatWho.code
+    ? "admin.competition.tieBreak.net-games-net-sf-who-beat-who"
+    : `admin.competition.tieBreak.${code}`;
+
 /** A competition as it is, when one is being changed. */
 export type CompetitionAsItIs = {
   readonly id: string;
@@ -47,6 +57,7 @@ export type CompetitionAsItIs = {
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly maximumHoops: number | null;
+  readonly advantage: boolean;
 } & (
   | {
       readonly kind: "block";
@@ -75,6 +86,12 @@ interface Props {
   readonly ranked: boolean;
   /** The most hoops a game of the sport is played to unless one says otherwise. */
   readonly usualMaximumHoops: number;
+  /**
+   * Whether it offers the choice of Advantage Golf Croquet: the site offers it
+   * and the sport is golf croquet. A competition that already is Advantage is
+   * asked wherever it is (RulesTicks.tsx).
+   */
+  readonly advantageOffered: boolean;
   /** Nothing when adding, and the competition when changing one. */
   readonly competition?: CompetitionAsItIs | undefined;
   /** Once a competition is kept, so that the list says so. */
@@ -151,6 +168,7 @@ export const CompetitionDialog = ({
   tournament,
   ranked,
   usualMaximumHoops,
+  advantageOffered,
   competition,
   kept,
   close,
@@ -219,6 +237,7 @@ export const CompetitionDialog = ({
     ranked,
     usualMaximumHoops,
     refusedFor("maximumHoops"),
+    advantageOffered,
   );
   const refusedForRound = (round: number): Refusal[] => {
     const broken = brokenByRound(rounds[round] ?? "");
@@ -564,33 +583,34 @@ export const CompetitionDialog = ({
                 )}
               </Field>
             ) : null}
-            {kind === "block" ? (
-              <Field
-                name="tie-break"
-                label={say("admin.competition.tieBreaks")}
-                refused={refusedFor("tieBreak")}
-                lifted
-              >
-                {(tied) => (
-                  <select
-                    {...tied}
-                    value={tieBreak}
-                    onChange={(event) => {
-                      setTieBreak(event.target.value);
-                    }}
-                  >
-                    {tieBreaksOffered.map((offered) => (
-                      <option key={offered} value={offered}>
-                        {say(`admin.competition.tieBreak.${offered}`)}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </Field>
-            ) : null}
           </>
         )}
         {rules.ticks}
+        {kind === "block" ? (
+          <Field
+            name="tie-break"
+            label={say("admin.competition.tieBreaks")}
+            refused={refusedFor("tieBreak")}
+            lifted
+          >
+            {(tied) => (
+              <select
+                {...tied}
+                value={tieBreak}
+                onChange={(event) => {
+                  setTieBreak(event.target.value);
+                }}
+              >
+                {tieBreaksOffered.map((offered) => (
+                  <option key={offered} value={offered}>
+                    {say(tieBreakWords(offered, rules.advantage))}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Field>
+        ) : null}
+        {rules.hoops}
       </ModalDialog>
       {/* Beside the dialog and not in it: its own form must not be inside this
         one's, whose submit would be taken as this one's. */}

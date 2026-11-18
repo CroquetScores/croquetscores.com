@@ -38,6 +38,7 @@ export interface TestAsItIs {
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly maximumHoops: number | null;
+  readonly advantage: boolean;
 }
 
 /** A team as the API lists the tournament's. */
@@ -57,6 +58,8 @@ interface Props {
   readonly ranked: boolean;
   /** The most hoops a game of the sport is played to unless one says otherwise. */
   readonly usualMaximumHoops: number;
+  /** Whether it offers the choice of Advantage Golf Croquet (RulesTicks.tsx). */
+  readonly advantageOffered: boolean;
   /** Nothing when adding, and the test when changing one. */
   readonly test?: TestAsItIs | undefined;
   /** Once a test is kept, so that the list says so. */
@@ -132,6 +135,7 @@ export const TestDialog = ({
   address,
   ranked,
   usualMaximumHoops,
+  advantageOffered,
   test,
   kept,
   close,
@@ -284,6 +288,7 @@ export const TestDialog = ({
     ranked,
     usualMaximumHoops,
     refusedFor("maximumHoops"),
+    advantageOffered,
   );
 
   const team = (
@@ -412,6 +417,7 @@ export const TestDialog = ({
       {typed("bestOf", "admin.test.bestOf")}
       {hasGroups ? typed("group", "admin.test.group") : null}
       {rules.ticks}
+      {rules.hoops}
     </ModalDialog>
   );
 };

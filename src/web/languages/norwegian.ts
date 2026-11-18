@@ -459,6 +459,7 @@ export const norwegian: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobuer",
+    "block.netSf": "Netto SF%",
     "block.won": "vant",
     "block.lost": "tapte",
     "block.drawn": "uavgjort",
@@ -474,8 +475,12 @@ export const norwegian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Uavgjort avgjøres av nettopartier, så nettobuer, så hvem som slo hvem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Uavgjort avgjøres av nettopartier, så netto SF%, så hvem som slo hvem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Uavgjort avgjøres av nettobuer, så hvem som slo hvem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Uavgjort avgjøres av netto SF%, så hvem som slo hvem.",
     "block.tieBreak.whoBeatWho": "Uavgjort avgjøres av hvem som slo hvem.",
     "block.tieBreak.other":
       "Det finnes ingen kjent metode for å avgjøre uavgjort.",
@@ -486,6 +491,8 @@ export const norwegian: Language = {
     "competition.view.orderOfPlay": "Spilleorden",
     "competition.print": "Skriv ut",
     "competition.playedTo": "Spilt til {hoops} buer",
+    "competition.advantage":
+      "Spilles som Advantage Golfcroquet. Hver poengsum er en spillers buer som prosent av målet deres (SF%), med buene og målet ved siden av.",
     "blockSummary.ranking":
       "Rangert etter andelen vunne kamper. En turnerings egne reglement kan plassere spillerne annerledes.",
     "orderOfPlay.none": "Ingen partier er spilt ennå.",
@@ -573,6 +580,7 @@ export const norwegian: Language = {
     "admin.tournament.subtitle": "Undertittel",
     "admin.rules.handicap": "Spilles med handicap",
     "admin.rules.drawsAllowed": "Tillater uavgjort",
+    "admin.rules.advantage": "Advantage Golfcroquet",
     "admin.tournament.levelTestsDrawn": "Like tester er uavgjort",
     "admin.rules.worldRankings": "Teller med i verdensrangeringene",
     "admin.rules.maximumHoops": "Maksimalt antall buer",
@@ -779,6 +787,8 @@ export const norwegian: Language = {
     "admin.competition.tieBreaks": "Uavgjortregler",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Nettopartier, så nettobuer, så hvem som slo hvem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Nettopartier, så netto SF%, så hvem som slo hvem",
     "admin.competition.tieBreak.who-beat-who": "Hvem som slo hvem",
     "admin.competition.tieBreak.other": "Annet",
     "admin.competition.places": "Plasser",
@@ -1026,6 +1036,8 @@ export const norwegian: Language = {
     "admin.score.winnerScore": "Vinnerens poengsum",
     "admin.score.loser": "Taper",
     "admin.score.loserScore": "Taperens poengsum",
+    "admin.score.hoops": "Buer",
+    "admin.score.target": "Mål",
     "admin.score.beat": "slo",
     "admin.score.added": "Partiet {winner} vant mot {loser} ble lagt til.",
     "admin.score.otherwise": "Partiet kunne ikke legges til.",
@@ -1038,10 +1050,21 @@ export const norwegian: Language = {
     "Game.WinnerScoreMissing": "Skriv vinnerens poengsum.",
     "Game.LoserMissing": "Velg taperen.",
     "Game.LoserScoreMissing": "Skriv taperens poengsum.",
+    "ScoringFraction.HoopsNotWhole": "Buer er et helt tall.",
+    "ScoringFraction.HoopsNegative": "Buer kan ikke være færre enn 0.",
+    "ScoringFraction.TargetNotWhole": "Et mål er et helt tall.",
+    "ScoringFraction.TargetTooSmall": "Et mål er minst 1.",
+    "ScoringFraction.HoopsAboveTarget": "Buer kan ikke være flere enn målet.",
+    "Game.WinnerHoopsMissing": "Skriv vinnerens buer.",
+    "Game.WinnerTargetMissing": "Skriv vinnerens mål.",
+    "Game.LoserHoopsMissing": "Skriv taperens buer.",
+    "Game.LoserTargetMissing": "Skriv taperens mål.",
     "Score.NoPoints": "Et resultat begynner med antallet poeng.",
     "Game.SamePlayer": "Ingen spiller mot seg selv.",
     "Game.WinnerNotAhead":
       "Vinnerens poengsum må være høyere enn taperens, eller merket som vunnet.",
+    "Game.WinnerMarkedNotLevel":
+      "En w kan bare brukes når begge sider har oppnådd samme SF%.",
     "Game.LoserMarked": "Taperens poengsum kan ikke merkes som vunnet.",
     "Game.ResultChanged":
       "En rettelse beholder resultatet: et vunnet parti forblir vunnet, og et uavgjort parti forblir uavgjort.",
@@ -1289,6 +1312,10 @@ export const norwegian: Language = {
       "Denne testen har partier, så den kan ikke arkiveres før de er det.",
     "Tournament.TestHasGames":
       "Denne testen har partier nå, så lagene i den kan ikke lenger endres.",
+    "Tournament.AdvantageHasGames":
+      "Denne konkurransen har partier, så den kan ikke byttes til eller fra Advantage Golfcroquet.",
+    "Tournament.AdvantageWithHandicap":
+      "En konkurranse kan ikke både være Advantage Golfcroquet og spilles med handicap.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Flere kamper enn det har allerede startet.",
     "Tournament.BestOfBelowGamesPlayed":

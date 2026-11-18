@@ -210,6 +210,27 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
+      "who-beat-who",
+      causedBy,
+      happenedAt,
+    ),
+  // Kept before Advantage could be said, so the event says nothing of it.
+  "a block being added that says nothing of Advantage": () =>
+    new BlockAdded(
+      COMPETITION,
+      "Block A",
+      "block-a",
+      10000,
+      2,
+      3,
+      true,
+      true,
+      false,
+      14,
+      undefined,
       "who-beat-who",
       causedBy,
       happenedAt,
@@ -225,6 +246,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       "other",
       causedBy,
       happenedAt,
@@ -244,6 +268,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -260,6 +287,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
       "competition/123e4567-e89b-42d3-a456-426614174099",
@@ -278,6 +308,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -295,6 +328,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -308,6 +344,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -440,6 +479,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -460,6 +502,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),
@@ -480,6 +525,9 @@ const EVENTS: Readonly<Record<string, () => DomainEvent>> = {
       false,
       // Not the usual for any sport, so that one read back as the usual is found.
       14,
+      // Switched on, which a competition is not unless it is said, so that one
+      // read back as not is found.
+      true,
       causedBy,
       happenedAt,
     ),

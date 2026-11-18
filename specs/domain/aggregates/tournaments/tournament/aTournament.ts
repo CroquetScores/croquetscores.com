@@ -103,6 +103,9 @@ interface Scenario {
   drawPlaces: number | undefined;
   drawRounds: number[];
   competitionsWithGames: Set<string>;
+  // The competitions, by name or id, that whatever asks says have any game
+  // kept, archived or not (advantage.feature).
+  competitionsWithGamesKept: Set<string>;
   updateMovesAPlayerWithGames: boolean;
   // The rounds of a knockout, by its name and counted from 0, that whatever
   // asks says have a decided match, and a game.
@@ -137,6 +140,7 @@ export const scenarioOf = (world: SpecWorld): Scenario => {
       drawPlaces: undefined,
       drawRounds: [],
       competitionsWithGames: new Set(),
+      competitionsWithGamesKept: new Set(),
       updateMovesAPlayerWithGames: false,
       roundsWithDecidedMatch: new Map(),
       roundsWithGames: new Map(),
@@ -329,6 +333,10 @@ export const happenedAs = (
 ): void => {
   scenarioOf(world).later.push(making(rebuilt(world)));
 };
+
+/** Whether whatever asks says the competition `nameOrId` has any game kept. */
+export const hasGamesKept = (world: SpecWorld, nameOrId: string): boolean =>
+  scenarioOf(world).competitionsWithGamesKept.has(nameOrId);
 
 export const tournamentOf = (world: SpecWorld): Tournament => {
   assert.ok(

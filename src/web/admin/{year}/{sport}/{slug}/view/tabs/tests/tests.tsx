@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useAdvantageOffered } from "../../../../../../useAdvantageOffered.js";
 import { dayWritten } from "../../../../../../../common/dates.js";
 import { knows, say } from "../../../../../../words.js";
 import { TestDialog, type TestAsItIs } from "../../modal-dialogs/test/test.js";
@@ -29,6 +30,8 @@ interface Props {
   readonly ranked: boolean;
   /** The most hoops a game of the sport is played to unless one says otherwise. */
   readonly usualMaximumHoops: number;
+  /** Whether its sport is golf croquet, which Advantage is a rule of. */
+  readonly golfCroquet: boolean;
   /**
    * The reader's part in the tournament. A scorer is shown the tests in use
    * alone, as the API answers them, and can only view them.
@@ -105,7 +108,9 @@ export const TestsTab = ({
   toTeams,
   ranked,
   usualMaximumHoops,
+  golfCroquet,
 }: Props): React.JSX.Element => {
+  const advantageOffered = useAdvantageOffered();
   const [listed, setListed] = useState<readonly Listed[] | undefined>();
   // How many teams are in use, which is whether a test can be added. A
   // scorer adds none, so is not asked about.
@@ -337,6 +342,7 @@ export const TestsTab = ({
           tournament={tournament}
           ranked={ranked}
           usualMaximumHoops={usualMaximumHoops}
+          advantageOffered={golfCroquet && advantageOffered}
           address={address}
           test={editing}
           kept={() => {

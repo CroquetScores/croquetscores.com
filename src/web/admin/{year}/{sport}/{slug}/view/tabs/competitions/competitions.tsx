@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { useAdvantageOffered } from "../../../../../../useAdvantageOffered.js";
 import { knows, say } from "../../../../../../words.js";
 import { DialogProblems } from "../../../../../../DialogProblems.js";
 import {
@@ -29,6 +30,8 @@ interface Props {
   readonly ranked: boolean;
   /** The most hoops a game of the sport is played to unless one says otherwise. */
   readonly usualMaximumHoops: number;
+  /** Whether its sport is golf croquet, which Advantage is a rule of. */
+  readonly golfCroquet: boolean;
   /**
    * The reader's part in the tournament. A scorer is shown the competitions in
    * use alone, as the API answers them, and can only view them: adding them,
@@ -50,7 +53,9 @@ export const CompetitionsTab = ({
   part,
   ranked,
   usualMaximumHoops,
+  golfCroquet,
 }: Props): React.JSX.Element => {
+  const advantageOffered = useAdvantageOffered();
   const [acting, setActing] = useState(false);
   // What was refused of the last thing pressed, said above the list until the
   // next is, since the list asked for again would otherwise look as though
@@ -248,6 +253,7 @@ export const CompetitionsTab = ({
           tournament={tournament}
           ranked={ranked}
           usualMaximumHoops={usualMaximumHoops}
+          advantageOffered={golfCroquet && advantageOffered}
           competition={editing}
           kept={() => {
             askAgain();

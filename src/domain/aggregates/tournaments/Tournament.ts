@@ -112,6 +112,10 @@ export type TournamentErrorCode =
   | "Tournament.CompetitionAlreadyAdded"
   | "Tournament.CompetitionNameTaken"
   | "Tournament.MaximumHoopsInvalid"
+  | "Tournament.AdvantageNotGolfCroquet"
+  | "Tournament.AdvantageWithHandicap"
+  | "Tournament.AdvantageInWorldRankings"
+  | "Tournament.AdvantageHasGames"
   | "Tournament.NoSuchCompetition"
   | "Tournament.CompetitionArchived"
   | "Tournament.NotABlock"
@@ -910,6 +914,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         (tieBreak ?? TieBreak.unlessTold).code,
         by,
         at,
@@ -941,6 +946,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -995,6 +1001,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
         from.value,
@@ -1026,6 +1033,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -1043,6 +1051,7 @@ export class Tournament extends AggregateRoot {
     name: CompetitionName,
     bestOf: BestOf,
     rounds: Rounds,
+    hasGames: boolean,
     by: AccountId,
     at: ReadOnlyDate,
     rules?: CompetitionRulesSaid,
@@ -1051,7 +1060,7 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "block", name);
     if (found.shape.kind !== "block") return;
-    const settled = this.#rulesToUpdate(found, rules);
+    const settled = this.#rulesToUpdate(found, rules, hasGames);
     const settledTieBreak = tieBreak ?? found.shape.tieBreak;
     if (
       found.reference.name.equals(name) &&
@@ -1071,6 +1080,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         settledTieBreak.code,
         by,
         at,
@@ -1093,6 +1103,7 @@ export class Tournament extends AggregateRoot {
     draw: KnockoutDraw,
     movesAPlayerWithGames: boolean,
     played: KnockoutRoundsPlayed,
+    hasGames: boolean,
     by: AccountId,
     at: ReadOnlyDate,
     rules?: CompetitionRulesSaid,
@@ -1156,7 +1167,7 @@ export class Tournament extends AggregateRoot {
         );
       }
     });
-    const settled = this.#rulesToUpdate(found, rules);
+    const settled = this.#rulesToUpdate(found, rules, hasGames);
     if (
       found.reference.name.equals(name) &&
       !drawChanged &&
@@ -1173,6 +1184,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -1188,6 +1200,7 @@ export class Tournament extends AggregateRoot {
     id: CompetitionId,
     name: CompetitionName,
     bestOf: BestOf,
+    hasGames: boolean,
     by: AccountId,
     at: ReadOnlyDate,
     rules?: CompetitionRulesSaid,
@@ -1195,7 +1208,7 @@ export class Tournament extends AggregateRoot {
     this.#refuseUnlessManager(by);
     const found = this.#competitionToUpdate(id, "swiss", name);
     if (found.shape.kind !== "swiss") return;
-    const settled = this.#rulesToUpdate(found, rules);
+    const settled = this.#rulesToUpdate(found, rules, hasGames);
     if (
       found.reference.name.equals(name) &&
       found.shape.bestOf.equals(bestOf) &&
@@ -1211,6 +1224,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -1695,6 +1709,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -1713,6 +1728,7 @@ export class Tournament extends AggregateRoot {
     id: CompetitionId,
     details: TestDetails,
     played: TestPlayed,
+    hasGames: boolean,
     by: AccountId,
     at: ReadOnlyDate,
   ): void {
@@ -1753,7 +1769,7 @@ export class Tournament extends AggregateRoot {
         "Two players have played more games than a match would be the best of.",
       );
     }
-    const settled = this.#rulesToUpdate(found, details.rules);
+    const settled = this.#rulesToUpdate(found, details.rules, hasGames);
     if (
       sameTeams &&
       sameRules(found.rules, settled) &&
@@ -1779,6 +1795,7 @@ export class Tournament extends AggregateRoot {
         settled.drawsAllowed,
         settled.worldRankings,
         settled.maximumHoops,
+        settled.advantage,
         by,
         at,
       ),
@@ -2141,6 +2158,30 @@ export class Tournament extends AggregateRoot {
         "A competition allowing drawn games does not count towards the world rankings.",
       );
     }
+    const advantage = said?.advantage ?? false;
+    if (advantage && !this.#now.sport.equals(Sport.golfCroquet)) {
+      refuse(
+        "Tournament.AdvantageNotGolfCroquet",
+        "Only a golf croquet competition can be played as Advantage.",
+      );
+    }
+    // Each player's handicap is what their target is looked up from, so the
+    // handicaps are already counted in the targets, and playing with them as
+    // well would count them twice.
+    if (advantage && handicap) {
+      refuse(
+        "Tournament.AdvantageWithHandicap",
+        "A competition played as Advantage is not played with handicaps as well.",
+      );
+    }
+    // Its players have different targets, so a result says nothing of who is
+    // better.
+    if (said?.worldRankings === true && advantage) {
+      refuse(
+        "Tournament.AdvantageInWorldRankings",
+        "An Advantage competition does not count towards the world rankings.",
+      );
+    }
     const maximumHoops =
       said?.maximumHoops === undefined
         ? this.#now.sport.usualMaximumHoops
@@ -2158,19 +2199,34 @@ export class Tournament extends AggregateRoot {
       handicap,
       drawsAllowed,
       maximumHoops,
+      advantage,
       worldRankings:
-        said?.worldRankings ?? (hasRankings && !handicap && !drawsAllowed),
+        said?.worldRankings ??
+        (hasRankings && !handicap && !drawsAllowed && !advantage),
     };
   }
 
   // What the rules of `found` are once it is updated and `said` is what the
   // update says of them: as they were where it says nothing, and all of them
   // again, as adding one does, where it says any.
+  //
+  // Whether it is Advantage is not changed once the competition has a game
+  // kept, archived or withdrawn included: a game of one is kept as a scoring
+  // fraction and a game of the other as typed points, and neither can be read as
+  // the other. A change to nothing else is not refused for it.
   #rulesToUpdate(
     found: CompetitionInTournament,
     said: CompetitionRulesSaid | undefined,
+    hasGames: boolean,
   ): CompetitionRules {
-    return said === undefined ? found.rules : this.#rulesFor(said);
+    const settled = said === undefined ? found.rules : this.#rulesFor(said);
+    if (hasGames && settled.advantage !== found.rules.advantage) {
+      refuse(
+        "Tournament.AdvantageHasGames",
+        "The competition has games, so it cannot be switched to or from Advantage.",
+      );
+    }
+    return settled;
   }
 
   // Where a tournament named `name`, starting at `starts` and played in `sport`
@@ -2759,27 +2815,37 @@ export class Tournament extends AggregateRoot {
 }
 
 // What an event adding or updating a competition says of its rules.
-type WrittenRules = Omit<CompetitionRules, "maximumHoops"> & {
+type WrittenRules = Omit<CompetitionRules, "maximumHoops" | "advantage"> & {
   readonly maximumHoops: number | null | undefined;
+  readonly advantage: boolean | undefined;
 };
 
 // An event kept before a maximum was said has none written, and is then the
 // usual for its sport, which is what every competition had been played to.
 const rulesOf = (
-  { handicap, drawsAllowed, worldRankings, maximumHoops }: WrittenRules,
+  {
+    handicap,
+    drawsAllowed,
+    worldRankings,
+    maximumHoops,
+    advantage,
+  }: WrittenRules,
   usualMaximumHoops: number,
 ): CompetitionRules => ({
   handicap,
   drawsAllowed,
   worldRankings,
   maximumHoops: maximumHoops === undefined ? usualMaximumHoops : maximumHoops,
+  // An event kept before it could be said is of a competition that was not.
+  advantage: advantage ?? false,
 });
 
 const sameRules = (one: CompetitionRules, other: CompetitionRules): boolean =>
   one.handicap === other.handicap &&
   one.drawsAllowed === other.drawsAllowed &&
   one.worldRankings === other.worldRankings &&
-  one.maximumHoops === other.maximumHoops;
+  one.maximumHoops === other.maximumHoops &&
+  one.advantage === other.advantage;
 
 const NOT_A: Readonly<Record<CompetitionShape["kind"], TournamentErrorCode>> = {
   block: "Tournament.NotABlock",

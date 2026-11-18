@@ -62,6 +62,7 @@ export const plainTournament = (tournament: Tournament): object => ({
       drawsAllowed: rules.drawsAllowed,
       worldRankings: rules.worldRankings,
       maximumHoops: rules.maximumHoops,
+      advantage: rules.advantage,
     },
     places: shape.kind === "knockout" ? shape.draw.places : undefined,
     firstTeam: shape.kind === "test" ? shape.firstTeam.value : undefined,

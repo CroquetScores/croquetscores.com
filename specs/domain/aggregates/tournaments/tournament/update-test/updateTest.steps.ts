@@ -15,6 +15,7 @@ import {
   assertFirstRecorded,
   byOf,
   happened,
+  hasGamesKept,
   now,
 } from "../aTournament.js";
 
@@ -115,6 +116,7 @@ const updatedInTheStream = (
       reference.id,
       testUpdateOf(world, tournament, shape),
       { matchesStarted: 0, mostGamesBetweenTwo: 0 },
+      false,
       byOf(world),
       now(world),
     );
@@ -157,6 +159,7 @@ When("the test {string} is updated", function (this: SpecWorld, name: string) {
       reference.id,
       testUpdateOf(this, tournament, shape),
       playedIn(this, name),
+      hasGamesKept(this, name),
       byOf(this),
       now(this),
     );
@@ -171,6 +174,7 @@ When(
         CompetitionId.from(id),
         testUpdateOf(this, tournament, undefined),
         playedIn(this, id),
+        hasGamesKept(this, id),
         byOf(this),
         now(this),
       ),

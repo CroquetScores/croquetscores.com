@@ -459,6 +459,7 @@ export const czech: Language = {
     "block.netGames": "Rozdíl her",
     "block.games": "Hry",
     "block.netHoops": "Rozdíl branek",
+    "block.netSf": "Rozdíl SF%",
     "block.won": "výhra",
     "block.lost": "prohra",
     "block.drawn": "remíza",
@@ -473,8 +474,12 @@ export const czech: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Shodu rozhoduje rozdíl her, poté rozdíl branek a poté vzájemný zápas.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Shodu rozhoduje rozdíl her, poté rozdíl SF% a poté vzájemný zápas.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Shodu rozhoduje rozdíl branek a poté vzájemný zápas.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Shodu rozhoduje rozdíl SF% a poté vzájemný zápas.",
     "block.tieBreak.whoBeatWho": "Shodu rozhoduje vzájemný zápas.",
     "block.tieBreak.other": "Způsob rozhodování shody není znám.",
     // Tři pohledy na blok, nabízené pod jeho nadpisem.
@@ -484,6 +489,8 @@ export const czech: Language = {
     "competition.view.orderOfPlay": "Pořadí her",
     "competition.print": "Tisk",
     "competition.playedTo": "Počet branek ve hře: {hoops}",
+    "competition.advantage":
+      "Hraje se jako Advantage golfový kroket. Každé skóre je počet branek hráče jako procento jeho cíle (SF%), s jeho brankami a cílem vedle něj.",
     "blockSummary.ranking":
       "Pořadí podle podílu vyhraných zápasů. Vlastní pravidla turnaje mohou hráče seřadit jinak.",
     "orderOfPlay.none": "Zatím nebyly odehrány žádné hry.",
@@ -568,6 +575,7 @@ export const czech: Language = {
     "admin.tournament.subtitle": "Podtitul",
     "admin.rules.handicap": "Hraje se s handicapy",
     "admin.rules.drawsAllowed": "Povoluje remízy",
+    "admin.rules.advantage": "Advantage golfový kroket",
     "admin.tournament.levelTestsDrawn": "Vyrovnané testy jsou remízy",
     "admin.rules.worldRankings": "Počítá se do světových žebříčků",
     "admin.rules.maximumHoops": "Nejvyšší počet branek",
@@ -774,6 +782,8 @@ export const czech: Language = {
     "admin.competition.tieBreaks": "Rozhodování shody",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Rozdíl her, poté rozdíl branek, poté vzájemný zápas",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Rozdíl her, poté rozdíl SF%, poté vzájemný zápas",
     "admin.competition.tieBreak.who-beat-who": "Vzájemný zápas",
     "admin.competition.tieBreak.other": "Jiné",
     "admin.competition.places": "Místa",
@@ -1013,6 +1023,8 @@ export const czech: Language = {
     "admin.score.winnerScore": "Skóre vítěze",
     "admin.score.loser": "Poražený",
     "admin.score.loserScore": "Skóre poraženého",
+    "admin.score.hoops": "Branky",
+    "admin.score.target": "Cíl",
     "admin.score.beat": "porazil(a)",
     "admin.score.added":
       "Hra byla přidána. Vítěz: {winner}, poražený: {loser}.",
@@ -1026,10 +1038,22 @@ export const czech: Language = {
     "Game.WinnerScoreMissing": "Zadejte skóre vítěze.",
     "Game.LoserMissing": "Vyberte poraženého.",
     "Game.LoserScoreMissing": "Zadejte skóre poraženého.",
+    "ScoringFraction.HoopsNotWhole": "Počet branek je celé číslo.",
+    "ScoringFraction.HoopsNegative": "Počet branek nemůže být menší než 0.",
+    "ScoringFraction.TargetNotWhole": "Cíl je celé číslo.",
+    "ScoringFraction.TargetTooSmall": "Cíl je alespoň 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Počet branek nemůže být vyšší než cíl.",
+    "Game.WinnerHoopsMissing": "Zadejte branky vítěze.",
+    "Game.WinnerTargetMissing": "Zadejte cíl vítěze.",
+    "Game.LoserHoopsMissing": "Zadejte branky poraženého.",
+    "Game.LoserTargetMissing": "Zadejte cíl poraženého.",
     "Score.NoPoints": "Skóre začíná počtem bodů.",
     "Game.SamePlayer": "Nikdo nehraje sám proti sobě.",
     "Game.WinnerNotAhead":
       "Skóre vítěze musí být vyšší než skóre poraženého, nebo označené jako vítězné.",
+    "Game.WinnerMarkedNotLevel":
+      "Písmeno w lze použít jen tehdy, když obě strany dosáhly stejného SF%.",
     "Game.LoserMarked": "Skóre poraženého nelze označit jako vítězné.",
     "Game.ResultChanged":
       "Oprava ponechává výsledek: vyhraná hra zůstává vyhraná a remizovaná hra zůstává remizovaná.",
@@ -1269,6 +1293,10 @@ export const czech: Language = {
       "Tento test má hry, a proto ho nelze archivovat, dokud nejsou archivovány i ty.",
     "Tournament.TestHasGames":
       "Tento test už má hry, a proto už nelze měnit jeho týmy.",
+    "Tournament.AdvantageHasGames":
+      "Tato soutěž už má hry, a proto ji nelze přepnout na Advantage golfový kroket ani zpět.",
+    "Tournament.AdvantageWithHandicap":
+      "Soutěž nemůže být zároveň Advantage golfový kroket a hrát se s handicapy.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Více zápasů, než kolik je zadáno, už začalo.",
     "Tournament.BestOfBelowGamesPlayed":

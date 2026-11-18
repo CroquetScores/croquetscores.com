@@ -26,6 +26,9 @@ export class KnockoutAdded extends DomainEvent {
     // event kept before it was said, which the tournament then reads as the
     // usual for its sport.
     readonly maximumHoops: number | null | undefined,
+    // Whether it is played as Advantage Golf Croquet. Left out by an event kept
+    // before it could be said, which is as not (advantage.feature).
+    readonly advantage: boolean | undefined,
     createdBy: AccountId,
     occurredAt: ReadOnlyDate,
     // Left out of every knockout added before losers knockouts, and of one

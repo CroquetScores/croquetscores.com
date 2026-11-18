@@ -3,13 +3,13 @@ import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js
 import { gamePlayerIdFrom } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
-import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
 import { CommandHandler } from "../../common/CommandHandler.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddGame } from "./AddGame.js";
+import { scoresOfRequest } from "./advantageScores.js";
 import {
   type Competitions,
   competitionManagedBy,
@@ -42,15 +42,22 @@ export class AddGameHandler extends CommandHandler<AddGame, string> {
       { scorers: true },
     );
     // Each is there, once the validator has let it in.
-    const { winner, winnerScore, loser, loserScore } = command.game;
+    const { winner, loser } = command.game;
+    // As typed, or, in an Advantage competition, as the fractions the hoops and
+    // targets make (advantageScores.ts).
+    const scores = scoresOfRequest(
+      tournament,
+      CompetitionId.from(command.competition),
+      command.game,
+    );
     const id = GameId.create();
     competition.addGame(
       id,
       {
         winner: gamePlayerIdFrom(winner ?? ""),
-        winnerScore: Score.read(winnerScore ?? "", tournament.website),
+        winnerScore: scores.winner,
         loser: gamePlayerIdFrom(loser ?? ""),
-        loserScore: Score.read(loserScore ?? "", tournament.website),
+        loserScore: scores.loser,
       },
       told,
       by,

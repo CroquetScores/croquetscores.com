@@ -127,6 +127,10 @@ export const gamesKeptByCompetitions = (
       player: TeamPlayerId,
     ) => (await teamPlayersWhoHavePlayed(tournament)).has(player.value),
     teamPlayersWhoHavePlayed,
+    // Every game kept counts, archived or withdrawn, unlike what has been
+    // played in a test, where only a game in use does.
+    hasAnyIn: async (_tournament: TournamentId, competition: CompetitionId) =>
+      ((await competitions.load(competition))?.games.length ?? 0) > 0,
     playedIn: async (_tournament: TournamentId, test: CompetitionId) =>
       playedInTest(await competitions.load(test)),
   };

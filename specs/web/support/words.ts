@@ -69,6 +69,8 @@ const words: Readonly<Record<string, string>> = {
   "Game.ResultChanged":
     "A correction keeps the result: a game won stays won, and a drawn game stays drawn.",
   "Game.SamePlayer": "Nobody plays themselves.",
+  "Game.WinnerMarkedNotLevel":
+    "A w can only be used where both sides made the same SF%.",
   "Game.WinnerMissing": "Choose the winner.",
   "Game.WinnerNotAhead":
     "The winner's score has to be more than the loser's, or marked as won.",
@@ -95,6 +97,11 @@ const words: Readonly<Record<string, string>> = {
   "Rounds.NotWhole": "Enter a whole number of rounds.",
   "Rounds.TooSmall": "A block has to be played in at least 1 round.",
   "Score.NoPoints": "A score begins with its number of points.",
+  "ScoringFraction.HoopsAboveTarget": "Hoops cannot be more than the target.",
+  "ScoringFraction.HoopsNegative": "Hoops cannot be fewer than 0.",
+  "ScoringFraction.HoopsNotWhole": "Hoops are a whole number.",
+  "ScoringFraction.TargetNotWhole": "A target is a whole number.",
+  "ScoringFraction.TargetTooSmall": "A target is at least 1.",
   "Team.Archived": "That team is archived, and is restored first.",
   "Team.PlayerNameTaken": "Another player in this team already has that name.",
   "Team.ShortNameLongerThanName":

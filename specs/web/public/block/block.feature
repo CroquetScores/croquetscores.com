@@ -638,3 +638,118 @@ Feature: A block's page shows its results as a grid
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A block played as Advantage Golf Croquet says so, and totals the percentage points
+
+    The two players of an Advantage game have different targets, so a game is
+    kept as the scoring fractions its sides made (`AddGame.feature`), and a
+    cell shows each as a percentage with the hoops and the target beside it, as
+    "83% (5/6)". Net hoops would always favour the player with the larger
+    target, so an Advantage block is ordered by the percentage points a player
+    made less those made against them, which Croquet England calls net SF%, and
+    its total is headed "Net SF%" in place of "Net Hoops". Its values are the
+    plain numbers, with no percent sign after them, since the heading already
+    says what they are. The page says so
+    beneath its results, and how many hoops it is played to is not said, since
+    each game has its own targets.
+
+    A block that is not Advantage is shown as it always was.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block G" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block G" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block G" of "Spring Open"
+
+    Scenario: The page says it is played as Advantage Golf Croquet
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the competition says it is played as Advantage Golf Croquet
+
+    Scenario: A block that is not Advantage says nothing of it
+      When the page at "/2026/gc/spring-open/competitions/block-a" is opened
+      Then the competition does not say it is played as Advantage Golf Croquet
+
+    Scenario: A block played as Advantage does not say how many hoops it is played to
+      Given the competition is said to have a maximum of 14 hoops
+      And "organiser@example.com" has added the block "Short Golf" to "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/short-golf" is opened
+      Then the competition does not say how many hoops it is played to
+
+    Scenario: A score is shown as its percentage with its hoops and its target
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is "83% (5/6)"
+      And the first score where "Alex Another" meets "Sam Someone" is "63% (5/8)"
+
+    Scenario: The totals are headed Matches, Net Games, Games and Net SF%
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the first total of the grid is headed "Matches"
+      And the second total of the grid is headed "Net Games"
+      And the third total of the grid is headed "Games"
+      And the fourth total of the grid is headed "Net SF%"
+
+    Scenario: A player's net SF% is shown
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the "Net SF%" of "Sam Someone" in the grid are "20"
+      And the "Net SF%" of "Alex Another" in the grid are "-20"
+
+    Scenario: A player with no net SF% has 0 shown
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then the "Net SF%" of "Sam Someone" in the grid are "0"
+
+    Scenario: Where each match is a single game the totals are Wins and Net SF%
+      Given the block is to be the best of 1
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block Single" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block Single" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block Single" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-single" is opened
+      Then the first total of the grid is headed "Wins"
+      And the second total of the grid is headed "Net SF%"
+
+    Scenario: A tie is said to be told apart by net SF%
+      Given the block is to be the best of 1
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the block "Block Tie" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block Tie" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block Tie" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block Tie" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 5 of 6 to 5 of 8 in "Block Tie" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-tie" is opened
+      Then the page says "Tie breaks are decided by net SF% then who beat who."
+
+    Scenario: A block that is not Advantage is still headed Net Hoops
+      When the page at "/2026/gc/spring-open/competitions/block-a" is opened
+      Then the fourth total of the grid is headed "Net Hoops"
+
+    Scenario: The page is in the reader's language
+      Given a browser that asks for "en-XA"
+      And "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-g" is opened
+      Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A game won on equal scoring fractions shows its winner's mark
+
+    A cell holds the score as it was kept, so a winner declared on equal scoring
+    fractions (`AddGame.feature`) shows "50% (3/6) w" and the other side's
+    "50% (4/8)", and the game is marked won and lost as any other is.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block W" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block W" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block W" of "Spring Open"
+
+    Scenario: The winner's score shows its mark
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block W" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-w" is opened
+      Then the first score where "Sam Someone" meets "Alex Another" is "50% (3/6) w"
+
+    Scenario: The loser's score has none
+      Given "Sam Someone" has beaten "Alex Another" 3w of 6 to 4 of 8 in "Block W" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-w" is opened
+      Then the first score where "Alex Another" meets "Sam Someone" is "50% (4/8)"

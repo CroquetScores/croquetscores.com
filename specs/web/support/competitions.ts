@@ -155,6 +155,39 @@ Given(
 
 // A game played before the scenario's own steps, entered as the tournament's
 // manager, who created it.
+// An Advantage game, said as the hoops each side made "of" its target.
+Given(
+  /^"([^"]*)" has beaten "([^"]*)" (\S+) of (\S+) to (\S+) of (\S+) in "([^"]*)" of "([^"]*)"$/,
+  async function (
+    this: WebWorld,
+    winner: string,
+    loser: string,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+    competition: string,
+    tournament: string,
+  ) {
+    const found = tournamentOf(this, tournament);
+    const id = await made("add the game", "/competitions/games", {
+      manager: found.manager,
+      tournament: found.id,
+      competition: competitionId(this, tournament, competition),
+      winner: enteredId(this, tournament, competition, winner),
+      winnerHoops,
+      winnerTarget,
+      loser: enteredId(this, tournament, competition, loser),
+      loserHoops,
+      loserTarget,
+    });
+    this.games.set(
+      within(within(tournament, competition), `${winner}>${loser}`),
+      id!,
+    );
+  },
+);
+
 Given(
   /^"([^"]*)" has beaten "([^"]*)" (\S+) to (\S+) in "([^"]*)" of "([^"]*)"$/,
   async function (
@@ -253,6 +286,13 @@ Given(
 Given("the competition is to allow drawn results", function (this: WebWorld) {
   rulesOf(this, { drawsAllowed: true });
 });
+
+Given(
+  "the competition is to be played as Advantage",
+  function (this: WebWorld) {
+    rulesOf(this, { advantage: true });
+  },
+);
 
 Given(
   /^"([^"]*)" has moved the player "([^"]*)" in "([^"]*)" of "([^"]*)" (up|down)$/,

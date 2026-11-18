@@ -82,6 +82,7 @@ export class PublicBlockOfTournamentHandler extends QueryHandler<
         bestOf: shape.bestOf.games,
         rounds: shape.rounds.count,
         maximumHoops: rules.maximumHoops,
+        advantage: rules.advantage,
         tieBreak: shape.tieBreak.code,
         levelOnMatchesWon: placed.levelOnMatchesWon,
         tellsApartBy: placed.tellsApartBy,

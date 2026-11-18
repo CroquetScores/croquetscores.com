@@ -221,6 +221,14 @@ Feature: The names a tournament's events are kept under
       And what was kept is read back through the registry
       Then what was read back says everything the event said
 
+  Rule: A competition added before Advantage could be said is read back as saying nothing of it
+
+    Scenario: A block added by an event that says nothing of Advantage is read back saying nothing of it
+      Given an event of a block being added that says nothing of Advantage
+      When the event is written down through the registry
+      And what was kept is read back through the registry
+      Then what was read back says everything the event said
+
   Rule: A competition archived before archiving renamed it is read back with no new name
 
     Scenario: A competition archived without a new name is read back without one
@@ -300,6 +308,7 @@ Feature: The names a tournament's events are kept under
         | a block being added        | handicap     | the text "no"               |
         | a block being added        | drawsAllowed | the text "no"               |
         | a block being added        | worldRankings | the text "no"              |
+        | a block being added        | advantage    | the text "no"               |
         | a block being added        | order        | the text "10000"            |
         | a block being added        | tieBreak     | the number 1                |
         | a block being added        | tieBreak     | the text "net-hoops"        |

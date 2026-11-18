@@ -25,13 +25,19 @@ const signed = (count: number): string =>
 // The numbers beside each player, with the words they are headed by. A game
 // won is a match won where each match is a single game, so these serve a
 // block of any best-of.
-const columns: readonly {
+const columnsOf = (
+  advantage: boolean,
+): readonly {
   word: string;
   of: (player: PlayerOfBlock) => string;
-}[] = [
+}[] => [
   { word: "block.wins", of: (player) => String(player.matchesWon) },
   { word: "block.losses", of: (player) => String(player.matchesLost) },
-  { word: "block.netHoops", of: (player) => signed(player.netHoops) },
+  // In an Advantage block the same sum is of percentage points (block.feature).
+  {
+    word: advantage ? "block.netSf" : "block.netHoops",
+    of: (player) => signed(player.netHoops),
+  },
   // The place is the last, which is where a reader looks for it.
   { word: "block.placing", of: placeShown },
 ];
@@ -56,6 +62,7 @@ const summary = (
   assets: Assets,
 ): string => {
   const { say } = speaking;
+  const columns = columnsOf(asked.block.advantage);
   const byId = playersById(asked);
   const rows = asked.ranked
     .flatMap((id) => {

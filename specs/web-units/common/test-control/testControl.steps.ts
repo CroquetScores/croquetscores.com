@@ -367,6 +367,44 @@ When(
   },
 );
 
+// Advantage is a rule of golf croquet, so a tournament made to play it is one.
+When(
+  "{string} is made the manager of a golf croquet tournament called {string} through the control",
+  async function (this: SpecWorld, manager: string, name: string) {
+    await controlled(this, "/__test/tournaments", {
+      manager,
+      tournament: {
+        name,
+        starts: "2026-10-03T00:00:00Z",
+        finishes: "2026-10-05T00:00:00Z",
+        format: "Standard",
+        sport: "gc",
+        country: "au",
+        region: "vic",
+      },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    made.set(
+      this,
+      JSON.parse(responseOf(this).body) as { id: string; address: string },
+    );
+  },
+);
+
+Given(
+  "the block {string} played as Advantage is added to the tournament through the control",
+  async function (this: SpecWorld, name: string) {
+    await controlled(this, "/__test/tournaments/blocks", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      name,
+      rules: { advantage: true },
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
+    playedIn(this).block = idOfAnswer(this);
+  },
+);
+
 When(
   "the tournament is archived through the control",
   async function (this: SpecWorld) {
@@ -455,6 +493,32 @@ When(
         entered: idOfAnswer(this),
       });
     }
+  },
+);
+
+// Each side said as the hoops it made "of" its target, as an Advantage game is.
+When(
+  "Ann is made to have beaten Bea {int} of {int} to {int} of {int} in the block through the control",
+  async function (
+    this: SpecWorld,
+    winnerHoops: number,
+    winnerTarget: number,
+    loserHoops: number,
+    loserTarget: number,
+  ) {
+    const played = playedIn(this);
+    await controlled(this, "/__test/competitions/games", {
+      manager: "manager@example.com",
+      tournament: made.get(this)?.id,
+      competition: played.block,
+      winner: played.players.get("Ann")?.entered,
+      winnerHoops,
+      winnerTarget,
+      loser: played.players.get("Bea")?.entered,
+      loserHoops,
+      loserTarget,
+    });
+    assert.equal(responseOf(this).statusCode, 201, responseOf(this).body);
   },
 );
 
@@ -1363,7 +1427,12 @@ Then("none is told to hold it", function (this: SpecWorld) {
 interface Held {
   archived: boolean;
   players: { id: string; name: string }[];
-  competitions: { id: string; name: string; kind: string }[];
+  competitions: {
+    id: string;
+    name: string;
+    kind: string;
+    rules: { advantage: boolean };
+  }[];
 }
 
 const held = (world: SpecWorld): Held =>
@@ -1393,6 +1462,18 @@ Then(
 );
 
 Then(
+  "it is told to hold the block {string} played as Advantage",
+  function (this: SpecWorld, name: string) {
+    assert.ok(
+      held(this).competitions.some(
+        (each) =>
+          each.name === name && each.kind === "block" && each.rules.advantage,
+      ),
+    );
+  },
+);
+
+Then(
   "it is told to hold the player {string}",
   function (this: SpecWorld, name: string) {
     assert.ok(held(this).players.some((each) => each.name === name));
@@ -1413,6 +1494,23 @@ When("the games of the block are asked for", async function (this: SpecWorld) {
   );
   assert.equal(responseOf(this).statusCode, 200, responseOf(this).body);
 });
+
+Then(
+  "it is told to hold a game written {string} to {string}",
+  function (this: SpecWorld, winnerWritten: string, loserWritten: string) {
+    const { games } = JSON.parse(responseOf(this).body) as {
+      games: { winnerWritten: string; loserWritten: string }[];
+    };
+    assert.ok(
+      games.some(
+        (game) =>
+          game.winnerWritten === winnerWritten &&
+          game.loserWritten === loserWritten,
+      ),
+      responseOf(this).body,
+    );
+  },
+);
 
 Then(
   "it is told to hold a game won {int} to {int}",

@@ -2,7 +2,6 @@ import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
 import { gamePlayerIdFrom } from "../../../domain/aggregates/tournaments/competitions/Game.js";
 import { GameId } from "../../../domain/aggregates/tournaments/competitions/primitives/GameId.js";
-import { Score } from "../../../domain/aggregates/tournaments/competitions/value-objects/Score.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import type { Tournament } from "../../../domain/aggregates/tournaments/Tournament.js";
 import type { AggregateRepository } from "../../common/AggregateRepository.js";
@@ -15,6 +14,7 @@ import {
   competitionManagedBy,
 } from "./competitionOperations.js";
 import { CorrectGame } from "./CorrectGame.js";
+import { scoresOfRequest } from "./advantageScores.js";
 
 /**
  * Correcting a game's scores, by a manager or a scorer, once the tournament
@@ -44,14 +44,19 @@ export class CorrectGameHandler extends CommandHandler<CorrectGame, void> {
       { scorers: true },
     );
     // Each is there, once the validator has let it in.
-    const { winnerScore, loserScore, winner, loser } = command.scores;
+    const { winner, loser } = command.scores;
+    const scores = scoresOfRequest(
+      tournament,
+      CompetitionId.from(command.competition),
+      command.scores,
+    );
     // A competition's player, or in a test a player of one of its teams.
     const player = (id: string | undefined) =>
       id === undefined ? undefined : gamePlayerIdFrom(id);
     competition.correctGame(
       GameId.from(command.gameId),
-      Score.read(winnerScore ?? "", tournament.website),
-      Score.read(loserScore ?? "", tournament.website),
+      scores.winner,
+      scores.loser,
       told,
       by,
       command.requestedAt,

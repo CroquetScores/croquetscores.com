@@ -4,6 +4,11 @@ import type { BrokenRule } from "../../../domain/common/validation/Validator.js"
 import { CommandValidator } from "../../common/CommandValidator.js";
 import type { RequestType } from "../../common/Mediator.js";
 import { AddGame, type AddGameErrorCode } from "./AddGame.js";
+import {
+  namesHoopsOrTargets,
+  readTyped,
+  type Typed,
+} from "./advantageScores.js";
 
 type Code = AddGameErrorCode | ScoreErrorCode | GameErrorCode;
 
@@ -34,12 +39,30 @@ export class AddGameValidator extends CommandValidator<AddGame> {
       else if (!BEGINS_WITH_A_DIGIT.test(said))
         broken.push({ code: "Score.NoPoints", fields: [field] });
     };
+    // A request that names any of the hoops and targets is for an Advantage
+    // game, and is asked for all four in place of the scores. Whether the
+    // competition is one is for the tournament to say, once it has.
+    const hoops = (said: Typed | undefined, missing: Code, field: string) => {
+      if (readTyped(said).count === undefined)
+        broken.push({ code: missing, fields: [field] });
+    };
+    const forAnAdvantageGame = namesHoopsOrTargets(command.game);
     if (!given(winner))
       broken.push({ code: "Game.WinnerMissing", fields: ["winner"] });
-    score(winnerScore, "Game.WinnerScoreMissing", "winnerScore");
+    if (forAnAdvantageGame) {
+      hoops(command.game.winnerHoops, "Game.WinnerHoopsMissing", "winnerHoops");
+      hoops(
+        command.game.winnerTarget,
+        "Game.WinnerTargetMissing",
+        "winnerTarget",
+      );
+    } else score(winnerScore, "Game.WinnerScoreMissing", "winnerScore");
     if (!given(loser))
       broken.push({ code: "Game.LoserMissing", fields: ["loser"] });
-    score(loserScore, "Game.LoserScoreMissing", "loserScore");
+    if (forAnAdvantageGame) {
+      hoops(command.game.loserHoops, "Game.LoserHoopsMissing", "loserHoops");
+      hoops(command.game.loserTarget, "Game.LoserTargetMissing", "loserTarget");
+    } else score(loserScore, "Game.LoserScoreMissing", "loserScore");
     if (given(winner) && winner === loser)
       broken.push({ code: "Game.SamePlayer", fields: ["loser"] });
     return broken;

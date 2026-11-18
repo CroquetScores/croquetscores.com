@@ -241,3 +241,90 @@ Feature: Correcting a game's score entered wrongly
       And the account for "organiser@example.com" has been forgotten
       When the reader signed in to that account corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to 26 to 10
       Then it is refused with "Account.Forgotten"
+
+  Rule: A game in an Advantage competition is corrected from hoops and targets
+
+    A game entered wrongly is corrected as it was entered: from the hoops and
+    targets, which are kept as the scoring fractions they make
+    (`AddGame.feature`), keeping its result. Whether the competition is
+    Advantage says which a request must be, as it does when a game is added.
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+      And "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+
+    Scenario: The game has its corrected fractions
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 6 of 6 to 5 of 8
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "100% (6/6)" to "63% (5/8)"
+
+    Scenario: The game no longer has the fractions it was entered with
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 6 of 6 to 5 of 8
+      Then "Block A" of "Spring Golf" does not have the score of "Sam Someone" beating "Alex Another" kept as "83% (5/6)" to "63% (5/8)"
+
+    Scenario Outline: Corrected hoops and targets that cannot make a fraction are refused as a scoring fraction refuses them
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score <winner> to <loser>
+      Then it is refused with "<code>"
+
+      Examples:
+        | winner | loser  | code                             |
+        | 7 of 6 | 5 of 8 | ScoringFraction.HoopsAboveTarget |
+        | 3 of 0 | 5 of 8 | ScoringFraction.TargetTooSmall   |
+
+    Scenario: A winner who is no longer ahead is refused as the game refuses it
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 3 of 6 to 4 of 8
+      Then it is refused with "Game.WinnerNotAhead"
+
+    Scenario: A score typed as points is refused
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to 26 to 10
+      Then it is refused with "Game.AdvantageScoreTyped"
+
+    Scenario: A refused correction is not kept
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 7 of 6 to 5 of 8
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "83% (5/6)" to "63% (5/8)"
+
+  Rule: A game in a competition that is not Advantage is corrected from points as it always was
+
+    Scenario: Hoops and targets are refused
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open" to the Advantage score 6 of 6 to 5 of 8
+      Then it is refused with "Game.HoopsAndTargetsNotAdvantage"
+
+  Rule: A game in an Advantage competition is corrected to a winner declared by a w
+
+    As when a game is added (`AddGame.feature`): a "w" after the winner's hoops
+    or its target is the winner's mark, and can only be used on equal
+    fractions. A correction that would make a won game a drawn one, or the
+    reverse, is refused as ever (`Game.ResultChanged`).
+
+    Background:
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Golf"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Golf"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Golf"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Golf"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Golf"
+      And "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block A" of "Spring Golf"
+
+    Scenario: A game is corrected to equal fractions with the winner declared
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 3w of 6 to 4 of 8
+      Then "Block A" of "Spring Golf" has the score of "Sam Someone" beating "Alex Another" kept as "50% (3/6) w" to "50% (4/8)"
+
+    Scenario: A game is corrected to equal fractions with no w is refused
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 3 of 6 to 4 of 8
+      Then it is refused with "Game.WinnerNotAhead"
+
+    Scenario: A winner who is ahead is refused for a w
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 5w of 6 to 5 of 8
+      Then it is refused with "Game.WinnerMarkedNotLevel"
+
+    Scenario: A loser marked is refused
+      When the reader signed in to the account for "organiser@example.com" corrects the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Golf" to the Advantage score 5 of 6 to 4w of 8
+      Then it is refused with "Game.LoserMarked"

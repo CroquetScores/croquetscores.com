@@ -470,20 +470,26 @@ ${printPiecesScript}`,
   }
 };
 
-// What a block, a knockout or a Swiss says under its results of how many hoops
-// its games are played to, where that is not the usual for the sport. A reader
+// What a block, a knockout or a Swiss says under its results: that it is played
+// as Advantage Golf Croquet, or of how many hoops its games are played to,
+// where that is not the usual for the sport. A reader
 // seeing every winning score under 26 cannot otherwise tell a competition
 // played to 14 from one whose games were not played out. One played to the
 // usual says nothing, as does one with no most. A test is not asked it here,
 // since its games are the teams' players' own.
 const playedToNote = (found: Found, speaking: Speaking): string => {
   if (found.kind === "test") return "";
-  const { maximumHoops } =
+  const { maximumHoops, advantage } =
     found.kind === "block"
       ? found.asked.block
       : found.kind === "knockout"
         ? found.asked.knockout
         : found.asked.swiss;
+  // An Advantage competition says it is that instead, since each of its games
+  // has its own targets and there is no number of hoops it is played to.
+  if (advantage) {
+    return `          <p class="competition-advantage">${escape(speaking.say("competition.advantage"))}</p>`;
+  }
   if (maximumHoops === null || maximumHoops === found.asked.usualMaximumHoops) {
     return "";
   }

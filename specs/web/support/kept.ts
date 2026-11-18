@@ -38,6 +38,7 @@ export interface KeptRules {
   readonly drawsAllowed: boolean;
   readonly worldRankings: boolean;
   readonly maximumHoops: number | null;
+  readonly advantage: boolean;
 }
 
 export interface KeptCompetition {

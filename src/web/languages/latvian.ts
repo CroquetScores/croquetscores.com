@@ -463,6 +463,7 @@ export const latvian: Language = {
     "block.netGames": "Partiju starpība",
     "block.games": "Partijas",
     "block.netHoops": "Vārtiņu starpība",
+    "block.netSf": "SF% starpība",
     "block.won": "uzvarēts",
     "block.lost": "zaudēts",
     "block.drawn": "neizšķirti",
@@ -477,8 +478,12 @@ export const latvian: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc partiju starpības, tad pēc vārtiņu starpības, tad pēc tā, kurš kuru uzvarēja.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Neizšķirtu rezultātu izšķir pēc partiju starpības, tad pēc SF% starpības, tad pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc vārtiņu starpības, tad pēc tā, kurš kuru uzvarēja.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Neizšķirtu rezultātu izšķir pēc SF% starpības, tad pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.whoBeatWho":
       "Neizšķirtu rezultātu izšķir pēc tā, kurš kuru uzvarēja.",
     "block.tieBreak.other": "Nav zināmas neizšķirta rezultāta metodes.",
@@ -489,6 +494,8 @@ export const latvian: Language = {
     "competition.view.orderOfPlay": "Spēļu kārtība",
     "competition.print": "Drukāt",
     "competition.playedTo": "Spēlē līdz {hoops} vārtiņiem",
+    "competition.advantage":
+      "Spēlē kā Advantage golfa kroketu. Katrs rezultāts ir spēlētāja vārtiņi kā procents no viņa mērķa (SF%), ar viņa vārtiņiem un mērķi blakus.",
     "blockSummary.ranking":
       "Sakārtots pēc uzvarēto maču daļas. Turnīra paša noteikumi spēlētājus var sakārtot citādi.",
     "orderOfPlay.none": "Vēl nav nospēlēta neviena partija.",
@@ -573,6 +580,7 @@ export const latvian: Language = {
     "admin.tournament.subtitle": "Apakšvirsraksts",
     "admin.rules.handicap": "Spēlē ar handikapiem",
     "admin.rules.drawsAllowed": "Pieļauj neizšķirtus rezultātus",
+    "admin.rules.advantage": "Advantage golfa krokets",
     "admin.tournament.levelTestsDrawn": "Vienādi testi ir neizšķirti",
     "admin.rules.worldRankings": "Ieskaita pasaules rangā",
     "admin.rules.maximumHoops": "Maksimālais vārtiņu skaits",
@@ -781,6 +789,8 @@ export const latvian: Language = {
     "admin.competition.tieBreaks": "Neizšķirta rezultāta izšķiršana",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Partiju starpība, tad vārtiņu starpība, tad kurš kuru uzvarēja",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Partiju starpība, tad SF% starpība, tad kurš kuru uzvarēja",
     "admin.competition.tieBreak.who-beat-who": "Kurš kuru uzvarēja",
     "admin.competition.tieBreak.other": "Cits",
     "admin.competition.places": "Vietas",
@@ -1024,6 +1034,8 @@ export const latvian: Language = {
     "admin.score.winnerScore": "Uzvarētāja rezultāts",
     "admin.score.loser": "Zaudētājs",
     "admin.score.loserScore": "Zaudētāja rezultāts",
+    "admin.score.hoops": "Vārtiņi",
+    "admin.score.target": "Mērķis",
     "admin.score.beat": "uzvarēja",
     "admin.score.added":
       "Tika pievienota partija, kurā {winner} uzvarēja pret {loser}.",
@@ -1037,10 +1049,22 @@ export const latvian: Language = {
     "Game.WinnerScoreMissing": "Ievadiet uzvarētāja rezultātu.",
     "Game.LoserMissing": "Izvēlieties zaudētāju.",
     "Game.LoserScoreMissing": "Ievadiet zaudētāja rezultātu.",
+    "ScoringFraction.HoopsNotWhole": "Vārtiņu skaits ir vesels skaitlis.",
+    "ScoringFraction.HoopsNegative": "Vārtiņu skaits nevar būt mazāks par 0.",
+    "ScoringFraction.TargetNotWhole": "Mērķis ir vesels skaitlis.",
+    "ScoringFraction.TargetTooSmall": "Mērķis ir vismaz 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Vārtiņu skaits nevar būt lielāks par mērķi.",
+    "Game.WinnerHoopsMissing": "Ievadiet uzvarētāja vārtiņus.",
+    "Game.WinnerTargetMissing": "Ievadiet uzvarētāja mērķi.",
+    "Game.LoserHoopsMissing": "Ievadiet zaudētāja vārtiņus.",
+    "Game.LoserTargetMissing": "Ievadiet zaudētāja mērķi.",
     "Score.NoPoints": "Rezultāts sākas ar punktu skaitu.",
     "Game.SamePlayer": "Neviens nespēlē pats pret sevi.",
     "Game.WinnerNotAhead":
       "Uzvarētāja rezultātam jābūt lielākam par zaudētāja vai atzīmētam kā uzvarētam.",
+    "Game.WinnerMarkedNotLevel":
+      "Burtu w drīkst izmantot tikai tad, ja abām pusēm ir vienāds SF%.",
     "Game.LoserMarked": "Zaudētāja rezultātu nevar atzīmēt kā uzvarētu.",
     "Game.ResultChanged":
       "Labojums saglabā iznākumu: uzvarēta partija paliek uzvarēta, un neizšķirta partija paliek neizšķirta.",
@@ -1284,6 +1308,10 @@ export const latvian: Language = {
       "Šim testam ir partijas, tāpēc to nevar arhivēt, kamēr tās nav arhivētas.",
     "Tournament.TestHasGames":
       "Šim testam tagad ir partijas, tāpēc tā komandas vairs nevar mainīt.",
+    "Tournament.AdvantageHasGames":
+      "Šai sacensībai ir partijas, tāpēc to nevar pārslēgt uz Advantage golfa kroketu vai no tā.",
+    "Tournament.AdvantageWithHandicap":
+      "Sacensības nevar vienlaikus būt Advantage golfa krokets un tikt spēlētas ar handikapiem.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Jau ir sākts vairāk maču nekā tik.",
     "Tournament.BestOfBelowGamesPlayed":

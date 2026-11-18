@@ -363,3 +363,57 @@ Feature: A block's summary ranks its players
       And "organiser@example.com" has withdrawn the player "Alex Another" from "Block A" of "Spring Open"
       When the page at "/2026/ac/spring-open/competitions/block-a/summary" is opened
       Then every word in the page's content but the tournament's own is in the test locale
+
+  Rule: A block played as Advantage Golf Croquet is summarised in net SF%
+
+    As the grid shows it (`block.feature`): the page says it is played as
+    Advantage Golf Croquet, and its third column is headed "Net SF%", the
+    percentage points a player made less those made against them, in place of
+    "Net Hoops". Its values are the plain numbers, with no percent sign after
+    them since the heading already says what they are, and a plus or a minus
+    before them as they do in any other block.
+
+    Background:
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block G" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block G" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block G" of "Spring Open"
+
+    Scenario: The page says it is played as Advantage Golf Croquet
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the competition says it is played as Advantage Golf Croquet
+
+    Scenario: The third column is headed Net SF%
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the third column of the summary is headed "Net SF%"
+
+    Scenario: Net SF% ahead carries a plus
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the "Net SF%" of "Sam Someone" in the summary are "+20"
+
+    Scenario: No net SF% carries no sign
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the "Net SF%" of "Sam Someone" in the summary are "0"
+
+    Scenario: Net SF% behind carries a minus
+      Given "Sam Someone" has beaten "Alex Another" 5 of 6 to 5 of 8 in "Block G" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-g/summary" is opened
+      Then the "Net SF%" of "Alex Another" in the summary are "-20"
+
+    Scenario: A tie is said to be told apart by net SF%
+      Given the block is to be the best of 1
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the player "Chris Third" to "Spring Open"
+      And "organiser@example.com" has added the block "Block Tie" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block Tie" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block Tie" of "Spring Open"
+      And "organiser@example.com" has entered the player "Chris Third" in "Block Tie" of "Spring Open"
+      And "Alex Another" has beaten "Sam Someone" 5 of 6 to 5 of 8 in "Block Tie" of "Spring Open"
+      When the page at "/2026/gc/spring-open/competitions/block-tie/summary" is opened
+      Then the page says "Tie breaks are decided by net SF% then who beat who."
+
+    Scenario: A block that is not Advantage is still headed Net Hoops
+      When the page at "/2026/gc/spring-open/competitions/block-a/summary" is opened
+      Then the third column of the summary is headed "Net Hoops"

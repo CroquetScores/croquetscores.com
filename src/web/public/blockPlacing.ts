@@ -20,7 +20,9 @@ export const placeShown = ({ placing }: PlayerOfBlock): string =>
 
 // The words that say what tells apart the players level on matches won, from
 // what the answer says it was, so that the page can never say one thing and the
-// ranking do another. The steps are always looked at in the same order and each
+// ranking do another. An Advantage block's net hoops are its players' net SF%,
+// the percentage points they made less those made against them, and are called
+// so (block.feature). The steps are always looked at in the same order and each
 // begins a different sentence, so the first says which sentence it is. Every
 // step is named, so that one added to `TellsApartBy` is refused here by the
 // type check rather than worded as "no known way".
@@ -30,9 +32,13 @@ const wordsFor = ({ block }: BlockToRead): string => {
     case undefined:
       return "block.tieBreak.other";
     case "netGames":
-      return "block.tieBreak.netGamesNetHoopsWhoBeatWho";
+      return block.advantage
+        ? "block.tieBreak.netGamesNetSfWhoBeatWho"
+        : "block.tieBreak.netGamesNetHoopsWhoBeatWho";
     case "netHoops":
-      return "block.tieBreak.netHoopsWhoBeatWho";
+      return block.advantage
+        ? "block.tieBreak.netSfWhoBeatWho"
+        : "block.tieBreak.netHoopsWhoBeatWho";
     case "whoBeatWho":
       return "block.tieBreak.whoBeatWho";
     default:

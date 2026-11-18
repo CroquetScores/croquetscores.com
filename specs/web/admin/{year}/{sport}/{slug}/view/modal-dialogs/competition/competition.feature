@@ -71,6 +71,31 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
   competition being changed begins as it is, and a test is asked the same in
   its own dialog (`test.feature`).
 
+  A competition in Golf Croquet is asked whether it is played as "Advantage
+  Golf Croquet" (`advantage.feature`), above "Played with handicaps", where
+  the website offers it (`advantageGolfCroquet.feature`). What the website
+  offers is asked of the site, not worked out here, so that the choice is
+  there only where a request that makes it would be answered (the API's
+  `advantage.feature`). A competition that already is Advantage is asked,
+  ticked, wherever it is, so that it can be seen and switched off, and so
+  that changing anything else about it says what it is, as the dialog says
+  its other rules: otherwise a manager could not so much as rename a
+  competition on a site that stopped offering Advantage. It is not asked
+  about the world rankings, since it cannot count towards them, as one played
+  with handicaps is not.
+
+  The two are mutually exclusive (`advantage.feature`), so a competition
+  ticked as Advantage is not asked whether it is played with handicaps, and
+  one ticked as played with handicaps is not asked whether it is Advantage,
+  as one that cannot count is not asked about the world rankings. Unticking
+  the one asks the other again. A competition cannot be both when the dialog
+  is opened on it, since the tournament would not have kept it.
+
+  Switching a competition to or from Advantage is refused once any score is
+  kept in it, an archived one among them, with
+  `Tournament.AdvantageHasGames`. That is about the competition as a whole
+  rather than any one field, so it is said above the fields.
+
   Every kind asks the most hoops a game in it is played to, "Maximum hoops",
   after how it is played and counted (`maximumHoops.feature`). It begins on
   the usual for the sport, 26, or 13 in Golf Croquet, and a competition being
@@ -359,6 +384,26 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
     net hoops then who beat who, which is how blocks were told apart before
     this could be said. A Swiss and a knockout do not ask.
 
+    It comes after how the competition is played and counted, directly above
+    "Maximum hoops", so that the boxes to tick are together and what follows
+    them is the two things a block is told besides.
+
+    In an Advantage competition (`advantage.feature`) net hoops are net SF%,
+    the percentage points a player made less those made against them, so the
+    first choice reads net games then net SF% then who beat who while the
+    competition is ticked as Advantage, and net hoops otherwise. It is the one
+    tie break, so what is kept is the same either way.
+
+    Scenario: The tie breaks come directly above the most hoops
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the field after "Tie Breaks" in the competition dialog is "Maximum hoops"
+
+    Scenario: The tie breaks come after how the competition is played and counted
+      Given "Add Competition" is pressed
+      When the kind "Block" is chosen
+      Then the field after "Counts toward world rankings" in the competition dialog is "Tie Breaks"
+
     Scenario: A block asks for the tie break
       Given "Add Competition" is pressed
       When the kind "Block" is chosen
@@ -379,6 +424,63 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
         | Net games then net hoops then who beat who |
         | Who beat who                               |
         | Other                                      |
+
+    Scenario: A block played as Advantage begins on net games then net SF% then who beat who
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      When the reader ticks "Advantage Golf Croquet"
+      Then the tie break chosen is "Net games then net SF% then who beat who"
+
+    Scenario: A block played as Advantage is not offered net hoops
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      When the reader ticks "Advantage Golf Croquet"
+      Then the tie break "Net games then net hoops then who beat who" is not offered
+
+    Scenario: A block no longer played as Advantage is offered net hoops again
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      And the reader ticks "Advantage Golf Croquet"
+      When the reader unticks "Advantage Golf Croquet"
+      Then the tie break chosen is "Net games then net hoops then who beat who"
+
+    Scenario: A block added as Advantage goes by the same tie break
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the kind "Block" is chosen
+      And "Block A" is typed as the "Name"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Add" is pressed
+      Then the competition "Block A" of "Spring Open" goes by the tie break "net-games-net-hoops-who-beat-who"
+
+    Scenario: A block changed that is Advantage begins on net games then net SF% then who beat who
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the tie break chosen is "Net games then net SF% then who beat who"
+
+    Scenario: The tie breaks of an Advantage block are in the reader's language
+      Given a browser that asks for "en-XA"
+      And the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And the way to add a competition is pressed
+      When the box for Advantage is ticked
+      Then every word in the competition dialog is in the test locale
 
     Scenario Outline: A Swiss and a knockout do not ask for the tie break
       Given "Add Competition" is pressed
@@ -758,6 +860,198 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       And the reader ticks "Allows drawn results"
       When "Save" is pressed
       Then the competition "Block A" of "Spring Open" allows drawn results
+
+  Rule: A competition in Golf Croquet asks whether it is played as Advantage Golf Croquet
+
+    Scenario: The dialog asks for it in Golf Croquet where it is offered
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog asks for "Advantage Golf Croquet"
+
+    Scenario: The dialog does not ask for it where it is not offered
+      Given the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: The dialog asks for it on a try website whatever the site is told
+      Given a site served as "try.croquetscores.com"
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog asks for "Advantage Golf Croquet"
+
+    Scenario Outline: The dialog does not ask for it in another sport
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "<sport>"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+      Examples:
+        | sport |
+        | ac    |
+        | a6w   |
+        | rc    |
+
+    Scenario: The choice comes above whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then the field after "Advantage Golf Croquet" in the competition dialog is "Played with handicaps"
+
+    Scenario: A competition played as Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When the reader ticks "Advantage Golf Croquet"
+      Then the competition dialog does not ask for "Played with handicaps"
+
+    Scenario: A competition played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When the reader ticks "Played with handicaps"
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: A competition no longer Advantage is asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the reader ticks "Advantage Golf Croquet"
+      When the reader unticks "Advantage Golf Croquet"
+      Then the competition dialog asks for "Played with handicaps"
+
+    Scenario: A competition no longer played with handicaps is asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And the reader ticks "Played with handicaps"
+      When the reader unticks "Played with handicaps"
+      Then the competition dialog asks for "Advantage Golf Croquet"
+
+    Scenario: A competition changed that is played with handicaps is not asked whether it is Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played under handicap
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not ask for "Advantage Golf Croquet"
+
+    Scenario: A competition changed that is Advantage is not asked whether it is played with handicaps
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then the competition dialog does not ask for "Played with handicaps"
+
+    Scenario: A new competition is not played as Advantage to begin with
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      When "Add Competition" is pressed
+      Then "Advantage Golf Croquet" is not ticked
+
+    Scenario: A competition played as Advantage is not asked about the world rankings
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      When the reader ticks "Advantage Golf Croquet"
+      Then the competition dialog does not ask for "Counts toward world rankings"
+
+    Scenario: A competition added as Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" is Advantage
+
+    Scenario: A competition added not as Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competitions of "Spring Open" are open
+      And "Add Competition" is pressed
+      And "Main Event" is typed as the "Name"
+      When "Add" is pressed
+      Then the competition "Main Event" of "Spring Open" is not Advantage
+
+    Scenario: A competition changed begins as it is played
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Advantage Golf Croquet" is ticked
+
+    Scenario: A competition changed to Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" is Advantage
+
+    Scenario: A competition changed from Advantage is kept so
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader unticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition "Block A" of "Spring Open" is not Advantage
+
+    # It did not count because it was Advantage, and not because anybody chose
+    # that it should not, so once it is not it counts as one added would.
+    Scenario: A competition no longer Advantage begins counting
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      When the reader unticks "Advantage Golf Croquet"
+      Then "Counts toward world rankings" is ticked
+
+    Scenario: A competition that is Advantage is asked, ticked, where it is no longer offered
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the site is no longer told Advantage Golf Croquet is offered
+      And the competitions of "Spring Open" are open
+      When "Edit" is pressed on the competition "Block A"
+      Then "Advantage Golf Croquet" is ticked
+
+    Scenario: A competition that is Advantage is renamed where it is no longer offered
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And the site is no longer told Advantage Golf Croquet is offered
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "Block One" is typed as the "Name"
+      When "Save" is pressed
+      Then the competition "Block One" of "Spring Open" is Advantage
 
   Rule: A competition asks the most hoops a game in it is played to
 
@@ -1409,6 +1703,68 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
       When "Save" is pressed
       Then the competition dialog says "Tournament.KnockoutPlayerHasGames" above the fields
 
+    Scenario: A competition with a score is not switched to Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition dialog says "Tournament.AdvantageHasGames" above the fields
+
+    Scenario: A competition with a score is not switched from Advantage
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And the competition is to be played as Advantage
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 7 of 7 to 3 of 7 in "Block A" of "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader unticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition dialog says "Tournament.AdvantageHasGames" above the fields
+
+    Scenario: A competition whose only score is archived is not switched either
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Open"
+      And "organiser@example.com" has archived the score of "Sam Someone" beating "Alex Another" in "Block A" of "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And the reader ticks "Advantage Golf Croquet"
+      When "Save" is pressed
+      Then the competition dialog says "Tournament.AdvantageHasGames" above the fields
+
+    Scenario: A competition with a score can still be renamed
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
+      And "organiser@example.com" has added the block "Block A" to "Spring Open"
+      And "organiser@example.com" has added the player "Sam Someone" to "Spring Open"
+      And "organiser@example.com" has added the player "Alex Another" to "Spring Open"
+      And "organiser@example.com" has entered the player "Sam Someone" in "Block A" of "Spring Open"
+      And "organiser@example.com" has entered the player "Alex Another" in "Block A" of "Spring Open"
+      And "Sam Someone" has beaten "Alex Another" 7 to 3 in "Block A" of "Spring Open"
+      And the competitions of "Spring Open" are open
+      And "Edit" is pressed on the competition "Block A"
+      And "Block One" is typed as the "Name"
+      When "Save" is pressed
+      Then "Spring Open" has the competition "Block One"
+
   Rule: Every word the dialog says is in the reader's language
 
     The test locale shows it (`language.feature`). What the reader typed is in
@@ -1418,6 +1774,14 @@ Feature: A competition is added to a tournament, and changed, in a modal dialog
 
     Scenario: The dialog is in the reader's language
       Given a browser that asks for "en-XA"
+      And the competitions of "Spring Open" are open
+      When the way to add a competition is pressed
+      Then every word in the competition dialog is in the test locale
+
+    Scenario: The dialog asking for Advantage Golf Croquet is in the reader's language
+      Given a browser that asks for "en-XA"
+      Given the site is told Advantage Golf Croquet is offered
+      And the tournament "Spring Open" is for the sport "gc"
       And the competitions of "Spring Open" are open
       When the way to add a competition is pressed
       Then every word in the competition dialog is in the test locale

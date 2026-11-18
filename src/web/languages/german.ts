@@ -482,6 +482,7 @@ export const german: Language = {
     "block.netGames": "Spieldifferenz",
     "block.games": "Spiele",
     "block.netHoops": "Tordifferenz",
+    "block.netSf": "SF%-Differenz",
     "block.won": "gewonnen",
     "block.lost": "verloren",
     "block.drawn": "unentschieden",
@@ -498,8 +499,12 @@ export const german: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Gleichstände werden nach der Spieldifferenz, dann der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Gleichstände werden nach der Spieldifferenz, dann der SF%-Differenz, dann danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Gleichstände werden nach der Tordifferenz, dann danach entschieden, wer wen geschlagen hat.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Gleichstände werden nach der SF%-Differenz, dann danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.whoBeatWho":
       "Gleichstände werden danach entschieden, wer wen geschlagen hat.",
     "block.tieBreak.other": "Für Gleichstände ist kein Verfahren bekannt.",
@@ -510,6 +515,8 @@ export const german: Language = {
     "competition.view.orderOfPlay": "Spielreihenfolge",
     "competition.print": "Drucken",
     "competition.playedTo": "Gespielt bis {hoops} Tore",
+    "competition.advantage":
+      "Gespielt als Advantage Golf Croquet. Jedes Ergebnis sind die Tore eines Spielers als Prozentsatz seines Ziels (SF%), mit seinen Toren und seinem Ziel daneben.",
     "blockSummary.ranking":
       "Gereiht nach dem Anteil gewonnener Matches. Die eigenen Bestimmungen eines Turniers können die Spieler anders platzieren.",
     "orderOfPlay.none": "Es wurden noch keine Spiele gespielt.",
@@ -599,6 +606,7 @@ export const german: Language = {
     "admin.tournament.subtitle": "Untertitel",
     "admin.rules.handicap": "Mit Vorgaben gespielt",
     "admin.rules.drawsAllowed": "Lässt Unentschieden zu",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn":
       "Gleichstand in Tests ist unentschieden",
     "admin.rules.worldRankings": "Zählt für die Weltranglisten",
@@ -823,6 +831,8 @@ export const german: Language = {
     "admin.competition.tieBreaks": "Bei Gleichstand",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Spieldifferenz, dann Tordifferenz, dann wer wen geschlagen hat",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Spieldifferenz, dann SF%-Differenz, dann wer wen geschlagen hat",
     "admin.competition.tieBreak.who-beat-who": "Wer wen geschlagen hat",
     "admin.competition.tieBreak.other": "Andere",
     "admin.competition.places": "Plätze",
@@ -1100,6 +1110,8 @@ export const german: Language = {
     "admin.score.winnerScore": "Ergebnis des Siegers",
     "admin.score.loser": "Verlierer",
     "admin.score.loserScore": "Ergebnis des Verlierers",
+    "admin.score.hoops": "Tore",
+    "admin.score.target": "Ziel",
     "admin.score.beat": "schlug",
     "admin.score.added":
       "Das Spiel, das {winner} gegen {loser} gewonnen hat, wurde hinzugefügt.",
@@ -1113,10 +1125,23 @@ export const german: Language = {
     "Game.WinnerScoreMissing": "Geben Sie das Ergebnis des Siegers ein.",
     "Game.LoserMissing": "Wählen Sie den Verlierer.",
     "Game.LoserScoreMissing": "Geben Sie das Ergebnis des Verlierers ein.",
+    "ScoringFraction.HoopsNotWhole": "Die Tore sind eine ganze Zahl.",
+    "ScoringFraction.HoopsNegative":
+      "Die Tore dürfen nicht weniger als 0 sein.",
+    "ScoringFraction.TargetNotWhole": "Das Ziel ist eine ganze Zahl.",
+    "ScoringFraction.TargetTooSmall": "Das Ziel ist mindestens 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Die Tore dürfen nicht höher sein als das Ziel.",
+    "Game.WinnerHoopsMissing": "Geben Sie die Tore des Siegers ein.",
+    "Game.WinnerTargetMissing": "Geben Sie das Ziel des Siegers ein.",
+    "Game.LoserHoopsMissing": "Geben Sie die Tore des Verlierers ein.",
+    "Game.LoserTargetMissing": "Geben Sie das Ziel des Verlierers ein.",
     "Score.NoPoints": "Ein Ergebnis beginnt mit seiner Punktzahl.",
     "Game.SamePlayer": "Niemand spielt gegen sich selbst.",
     "Game.WinnerNotAhead":
       "Das Ergebnis des Siegers muss höher sein als das des Verlierers oder als gewonnen markiert.",
+    "Game.WinnerMarkedNotLevel":
+      "Ein w kann nur verwendet werden, wenn beide Seiten denselben SF% erreicht haben.",
     "Game.LoserMarked":
       "Das Ergebnis des Verlierers kann nicht als gewonnen markiert werden.",
     "Game.ResultChanged":
@@ -1384,6 +1409,10 @@ export const german: Language = {
       "Dieser Test hat Spiele, daher kann er erst archiviert werden, wenn diese es sind.",
     "Tournament.TestHasGames":
       "Dieser Test hat jetzt Spiele, daher können seine Mannschaften nicht mehr geändert werden.",
+    "Tournament.AdvantageHasGames":
+      "Dieser Wettbewerb hat Spiele, daher kann er nicht auf Advantage Golf Croquet oder von diesem zurück umgestellt werden.",
+    "Tournament.AdvantageWithHandicap":
+      "Ein Wettbewerb kann nicht zugleich Advantage Golf Croquet sein und mit Vorgaben gespielt werden.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Mehr Matches als das haben bereits begonnen.",
     "Tournament.BestOfBelowGamesPlayed":

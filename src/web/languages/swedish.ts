@@ -459,6 +459,7 @@ export const swedish: Language = {
     "block.netGames": "Nettopartier",
     "block.games": "Partier",
     "block.netHoops": "Nettobågar",
+    "block.netSf": "Netto-SF%",
     "block.won": "vann",
     "block.lost": "förlorade",
     "block.drawn": "oavgjort",
@@ -475,8 +476,12 @@ export const swedish: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Lika resultat avgörs av nettopartier, sedan nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Lika resultat avgörs av nettopartier, sedan netto-SF%, sedan vem som slog vem.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Lika resultat avgörs av nettobågar, sedan vem som slog vem.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Lika resultat avgörs av netto-SF%, sedan vem som slog vem.",
     "block.tieBreak.whoBeatWho": "Lika resultat avgörs av vem som slog vem.",
     "block.tieBreak.other":
       "Det finns ingen känd metod för att avgöra lika resultat.",
@@ -487,6 +492,8 @@ export const swedish: Language = {
     "competition.view.orderOfPlay": "Speltabell",
     "competition.print": "Skriv ut",
     "competition.playedTo": "Spelas till {hoops} bågar",
+    "competition.advantage":
+      "Spelas som Advantage Golfcroquet. Varje resultat är en spelares bågar som procent av målet (SF%), med bågarna och målet bredvid.",
     "blockSummary.ranking":
       "Rankad efter andelen vunna matcher. En turnerings egna regler kan placera spelarna annorlunda.",
     "orderOfPlay.none": "Inga partier har spelats än.",
@@ -574,6 +581,7 @@ export const swedish: Language = {
     "admin.tournament.subtitle": "Underrubrik",
     "admin.rules.handicap": "Spelas med handikapp",
     "admin.rules.drawsAllowed": "Tillåter oavgjorda resultat",
+    "admin.rules.advantage": "Advantage Golfcroquet",
     "admin.tournament.levelTestsDrawn": "Jämna landskamper blir oavgjorda",
     "admin.rules.worldRankings": "Räknas med i världsrankingen",
     "admin.rules.maximumHoops": "Högsta antal bågar",
@@ -784,6 +792,8 @@ export const swedish: Language = {
     "admin.competition.tieBreaks": "Särskiljning",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Nettopartier, sedan nettobågar, sedan vem som slog vem",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Nettopartier, sedan netto-SF%, sedan vem som slog vem",
     "admin.competition.tieBreak.who-beat-who": "Vem som slog vem",
     "admin.competition.tieBreak.other": "Annat",
     "admin.competition.places": "Platser",
@@ -1025,6 +1035,8 @@ export const swedish: Language = {
     "admin.score.winnerScore": "Vinnarens resultat",
     "admin.score.loser": "Förlorare",
     "admin.score.loserScore": "Förlorarens resultat",
+    "admin.score.hoops": "Bågar",
+    "admin.score.target": "Mål",
     "admin.score.beat": "slog",
     "admin.score.added": "Partiet som {winner} vann mot {loser} lades till.",
     "admin.score.otherwise": "Partiet kunde inte läggas till.",
@@ -1037,10 +1049,21 @@ export const swedish: Language = {
     "Game.WinnerScoreMissing": "Skriv vinnarens resultat.",
     "Game.LoserMissing": "Välj förloraren.",
     "Game.LoserScoreMissing": "Skriv förlorarens resultat.",
+    "ScoringFraction.HoopsNotWhole": "Bågar är ett heltal.",
+    "ScoringFraction.HoopsNegative": "Bågar kan inte vara färre än 0.",
+    "ScoringFraction.TargetNotWhole": "Ett mål är ett heltal.",
+    "ScoringFraction.TargetTooSmall": "Ett mål är minst 1.",
+    "ScoringFraction.HoopsAboveTarget": "Bågar kan inte vara fler än målet.",
+    "Game.WinnerHoopsMissing": "Skriv vinnarens bågar.",
+    "Game.WinnerTargetMissing": "Skriv vinnarens mål.",
+    "Game.LoserHoopsMissing": "Skriv förlorarens bågar.",
+    "Game.LoserTargetMissing": "Skriv förlorarens mål.",
     "Score.NoPoints": "Ett resultat börjar med antalet poäng.",
     "Game.SamePlayer": "Ingen spelar mot sig själv.",
     "Game.WinnerNotAhead":
       "Vinnarens resultat måste vara högre än förlorarens, eller markerat som vunnet.",
+    "Game.WinnerMarkedNotLevel":
+      "Ett w kan bara användas när båda sidor har samma SF%.",
     "Game.LoserMarked": "Förlorarens resultat kan inte markeras som vunnet.",
     "Game.ResultChanged":
       "En rättelse behåller resultatet: ett vunnet parti förblir vunnet, och ett oavgjort förblir oavgjort.",
@@ -1294,6 +1317,10 @@ export const swedish: Language = {
       "Den här landskampen har partier, så den kan inte arkiveras förrän de är det.",
     "Tournament.TestHasGames":
       "Den här landskampen har nu partier, så dess lag kan inte längre ändras.",
+    "Tournament.AdvantageHasGames":
+      "Den här tävlingen har partier, så den kan inte ändras till eller från Advantage Golfcroquet.",
+    "Tournament.AdvantageWithHandicap":
+      "En tävling kan inte både vara Advantage Golfcroquet och spelas med handikapp.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Fler matcher än så har redan startat.",
     "Tournament.BestOfBelowGamesPlayed":

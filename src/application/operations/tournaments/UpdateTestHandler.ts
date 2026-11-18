@@ -35,10 +35,18 @@ export class UpdateTestHandler extends CommandHandler<UpdateTest, void> {
       "UpdateTest",
     );
     const id = CompetitionId.from(command.testId);
+    // Whether it has any game kept only matters to a change of whether it is
+    // Advantage, which only a request that says its rules can make, so a
+    // request that says none is not made to read every game it has
+    // (advantage.feature).
+    const hasGames =
+      command.test.rules !== undefined &&
+      (await this.games.hasAnyIn(tournament.id, id));
     tournament.updateTest(
       id,
       testDetailsFrom(command.test),
       await this.games.playedIn(tournament.id, id),
+      hasGames,
       by,
       command.requestedAt,
     );

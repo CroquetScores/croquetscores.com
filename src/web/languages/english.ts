@@ -457,6 +457,7 @@ export const english: Language = {
     "block.netGames": "Net Games",
     "block.games": "Games",
     "block.netHoops": "Net Hoops",
+    "block.netSf": "Net SF%",
     "block.won": "won",
     "block.lost": "lost",
     "block.drawn": "drawn",
@@ -472,8 +473,12 @@ export const english: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Tie breaks are decided by net games then net hoops then who beat who.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Tie breaks are decided by net games then net SF% then who beat who.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Tie breaks are decided by net hoops then who beat who.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Tie breaks are decided by net SF% then who beat who.",
     "block.tieBreak.whoBeatWho": "Tie breaks are decided by who beat who.",
     "block.tieBreak.other": "There is no known tie break method.",
     // The three views of a block, offered beneath its heading.
@@ -483,6 +488,8 @@ export const english: Language = {
     "competition.view.orderOfPlay": "Order of Play",
     "competition.print": "Print",
     "competition.playedTo": "Played to {hoops} hoops",
+    "competition.advantage":
+      "Played as Advantage Golf Croquet. Each score is a player's hoops as a percentage of their target (SF%), with their hoops and target beside it.",
     "blockSummary.ranking":
       "Ranked by the share of matches won. A tournament's own regulations may place its players otherwise.",
     "orderOfPlay.none": "No games have been played yet.",
@@ -567,6 +574,7 @@ export const english: Language = {
     "admin.tournament.subtitle": "Subtitle",
     "admin.rules.handicap": "Played with handicaps",
     "admin.rules.drawsAllowed": "Allows drawn results",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Level tests are drawn",
     "admin.rules.worldRankings": "Counts toward world rankings",
     "admin.rules.maximumHoops": "Maximum hoops",
@@ -843,6 +851,8 @@ export const english: Language = {
     "admin.competition.tieBreaks": "Tie Breaks",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Net games then net hoops then who beat who",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Net games then net SF% then who beat who",
     "admin.competition.tieBreak.who-beat-who": "Who beat who",
     "admin.competition.tieBreak.other": "Other",
     "admin.competition.places": "Places",
@@ -1087,6 +1097,8 @@ export const english: Language = {
     "admin.score.winnerScore": "Winner's score",
     "admin.score.loser": "Loser",
     "admin.score.loserScore": "Loser's score",
+    "admin.score.hoops": "Hoops",
+    "admin.score.target": "Target",
     "admin.score.beat": "beat",
     "admin.score.added": "The game {winner} won against {loser} was added.",
     "admin.score.otherwise": "The game could not be added.",
@@ -1099,10 +1111,21 @@ export const english: Language = {
     "Game.WinnerScoreMissing": "Type the winner's score.",
     "Game.LoserMissing": "Choose the loser.",
     "Game.LoserScoreMissing": "Type the loser's score.",
+    "ScoringFraction.HoopsNotWhole": "Hoops are a whole number.",
+    "ScoringFraction.HoopsNegative": "Hoops cannot be fewer than 0.",
+    "ScoringFraction.TargetNotWhole": "A target is a whole number.",
+    "ScoringFraction.TargetTooSmall": "A target is at least 1.",
+    "ScoringFraction.HoopsAboveTarget": "Hoops cannot be more than the target.",
+    "Game.WinnerHoopsMissing": "Type the winner's hoops.",
+    "Game.WinnerTargetMissing": "Type the winner's target.",
+    "Game.LoserHoopsMissing": "Type the loser's hoops.",
+    "Game.LoserTargetMissing": "Type the loser's target.",
     "Score.NoPoints": "A score begins with its number of points.",
     "Game.SamePlayer": "Nobody plays themselves.",
     "Game.WinnerNotAhead":
       "The winner's score has to be more than the loser's, or marked as won.",
+    "Game.WinnerMarkedNotLevel":
+      "A w can only be used where both sides made the same SF%.",
     "Game.LoserMarked": "The loser's score cannot be marked as won.",
     "Game.ResultChanged":
       "A correction keeps the result: a game won stays won, and a drawn game stays drawn.",
@@ -1350,6 +1373,10 @@ export const english: Language = {
       "This test has games, so it cannot be archived until they are.",
     "Tournament.TestHasGames":
       "This test has games now, so its teams can no longer be changed.",
+    "Tournament.AdvantageHasGames":
+      "This competition has games, so it cannot be switched to or from Advantage Golf Croquet.",
+    "Tournament.AdvantageWithHandicap":
+      "A competition cannot be both Advantage Golf Croquet and played with handicaps.",
     "Tournament.ExpectedMatchesBelowStarted":
       "More matches than that have started already.",
     "Tournament.BestOfBelowGamesPlayed":

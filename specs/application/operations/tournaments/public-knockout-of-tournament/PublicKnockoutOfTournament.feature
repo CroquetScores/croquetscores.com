@@ -381,3 +381,22 @@ Feature: A knockout of a tournament, for anybody to read
       Given "organiser@example.com" has archived the tournament "Spring Open"
       When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
       Then it is refused with "PublicKnockoutOfTournament.NoSuchTournament"
+
+  Rule: The knockout is answered with whether it is played as Advantage Golf Croquet
+
+    Its page says so (`knockout.feature`). Its matches are decided by the
+    games won, and a game in an Advantage knockout is won by the higher scoring
+    fraction (`AddGame.feature`), so nothing else about how it is answered
+    changes.
+
+    Scenario: A knockout played as Advantage is answered as such
+      Given the tournament is to be for the sport "gc"
+      And "organiser@example.com" has created the tournament "Spring Golf"
+      And the competition is said to be Advantage
+      And "organiser@example.com" has added the knockout "Golf Finals" to "Spring Golf"
+      When the knockout "golf-finals" of the tournament at "2026/gc/spring-golf" is asked for
+      Then the knockout answered is played as Advantage
+
+    Scenario: A knockout not played as Advantage is answered as not
+      When the knockout "finals" of the tournament at "2026/ac/spring-open" is asked for
+      Then the knockout answered is not played as Advantage

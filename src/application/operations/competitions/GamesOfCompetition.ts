@@ -12,6 +12,18 @@ export interface ListedGame {
   readonly loser: string;
   readonly loserId: string;
   readonly loserScore: string;
+  /**
+   * In an Advantage competition, the hoops and the target each side was entered
+   * as, read back from how the game keeps its scores, so that a correction
+   * begins on what was typed and not on a percentage. Nothing for a game that
+   * is kept as points.
+   */
+  readonly winnerHoops?: number | undefined;
+  readonly winnerTarget?: number | undefined;
+  readonly loserHoops?: number | undefined;
+  readonly loserTarget?: number | undefined;
+  /** Whether the winner was declared by a "w", which decides a game on equal fractions. */
+  readonly winnerWon?: boolean | undefined;
   readonly archived: boolean;
   /** Whether it could be archived now, as the competition would say. */
   readonly archivable: boolean;

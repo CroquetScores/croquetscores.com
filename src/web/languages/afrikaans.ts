@@ -467,6 +467,7 @@ export const afrikaans: Language = {
     "block.netGames": "Netto spelle",
     "block.games": "Spelle",
     "block.netHoops": "Netto hoepels",
+    "block.netSf": "Netto SF%",
     "block.won": "gewen",
     "block.lost": "verloor",
     "block.drawn": "gelykop",
@@ -482,8 +483,12 @@ export const afrikaans: Language = {
     "block.placing": "#",
     "block.tieBreak.netGamesNetHoopsWhoBeatWho":
       "Gelykopbrekers word beslis deur netto spelle, dan netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.netGamesNetSfWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto spelle, dan netto SF%, dan wie wie geklop het.",
     "block.tieBreak.netHoopsWhoBeatWho":
       "Gelykopbrekers word beslis deur netto hoepels, dan wie wie geklop het.",
+    "block.tieBreak.netSfWhoBeatWho":
+      "Gelykopbrekers word beslis deur netto SF%, dan wie wie geklop het.",
     "block.tieBreak.whoBeatWho":
       "Gelykopbrekers word beslis deur wie wie geklop het.",
     "block.tieBreak.other": "Daar is geen bekende gelykopbreker-metode nie.",
@@ -494,6 +499,8 @@ export const afrikaans: Language = {
     "competition.view.orderOfPlay": "Speelvolgorde",
     "competition.print": "Druk",
     "competition.playedTo": "Gespeel tot {hoops} poorte",
+    "competition.advantage":
+      "Gespeel as Advantage Golf Croquet. Elke telling is 'n speler se poorte as 'n persentasie van hul teiken (SF%), met hul poorte en teiken langsaan.",
     "blockSummary.ranking":
       "Gerangskik volgens die aandeel wedstryde gewen. 'n Toernooi se eie reglement kan sy spelers anders plaas.",
     "orderOfPlay.none": "Nog geen spelle is gespeel nie.",
@@ -579,6 +586,7 @@ export const afrikaans: Language = {
     "admin.tournament.subtitle": "Onderskrif",
     "admin.rules.handicap": "Met voorgifte gespeel",
     "admin.rules.drawsAllowed": "Laat gelykopuitslae toe",
+    "admin.rules.advantage": "Advantage Golf Croquet",
     "admin.tournament.levelTestsDrawn": "Gelyke toetse is gelykop",
     "admin.rules.worldRankings": "Tel vir wêreldranglyste",
     "admin.rules.maximumHoops": "Maksimum poorte",
@@ -789,6 +797,8 @@ export const afrikaans: Language = {
     "admin.competition.tieBreaks": "Gelykopbrekers",
     "admin.competition.tieBreak.net-games-net-hoops-who-beat-who":
       "Netto spelle dan netto hoepels dan wie wie geklop het",
+    "admin.competition.tieBreak.net-games-net-sf-who-beat-who":
+      "Netto spelle dan netto SF% dan wie wie geklop het",
     "admin.competition.tieBreak.who-beat-who": "Wie wie geklop het",
     "admin.competition.tieBreak.other": "Ander",
     "admin.competition.places": "Plekke",
@@ -1041,6 +1051,8 @@ export const afrikaans: Language = {
     "admin.score.winnerScore": "Wenner se telling",
     "admin.score.loser": "Verloorder",
     "admin.score.loserScore": "Verloorder se telling",
+    "admin.score.hoops": "Poorte",
+    "admin.score.target": "Teiken",
     "admin.score.beat": "het gewen teen",
     "admin.score.added":
       "Die spel wat {winner} teen {loser} gewen het, is bygevoeg.",
@@ -1054,10 +1066,22 @@ export const afrikaans: Language = {
     "Game.WinnerScoreMissing": "Tik die wenner se telling.",
     "Game.LoserMissing": "Kies die verloorder.",
     "Game.LoserScoreMissing": "Tik die verloorder se telling.",
+    "ScoringFraction.HoopsNotWhole": "Poorte is 'n heelgetal.",
+    "ScoringFraction.HoopsNegative": "Poorte kan nie minder as 0 wees nie.",
+    "ScoringFraction.TargetNotWhole": "'n Teiken is 'n heelgetal.",
+    "ScoringFraction.TargetTooSmall": "'n Teiken is minstens 1.",
+    "ScoringFraction.HoopsAboveTarget":
+      "Poorte kan nie meer as die teiken wees nie.",
+    "Game.WinnerHoopsMissing": "Tik die wenner se poorte.",
+    "Game.WinnerTargetMissing": "Tik die wenner se teiken.",
+    "Game.LoserHoopsMissing": "Tik die verloorder se poorte.",
+    "Game.LoserTargetMissing": "Tik die verloorder se teiken.",
     "Score.NoPoints": "'n Telling begin met sy aantal punte.",
     "Game.SamePlayer": "Niemand speel teen homself nie.",
     "Game.WinnerNotAhead":
       "Die wenner se telling moet meer wees as die verloorder s'n, of as gewonne gemerk wees.",
+    "Game.WinnerMarkedNotLevel":
+      "'n w kan net gebruik word waar albei kante dieselfde SF% gemaak het.",
     "Game.LoserMarked":
       "Die verloorder se telling kan nie as gewonne gemerk word nie.",
     "Game.ResultChanged":
@@ -1313,6 +1337,10 @@ export const afrikaans: Language = {
       "Hierdie toets het spelle, so dit kan nie geargiveer word totdat hulle dit is nie.",
     "Tournament.TestHasGames":
       "Hierdie toets het nou spelle, so sy spanne kan nie meer verander word nie.",
+    "Tournament.AdvantageHasGames":
+      "Hierdie kompetisie het spelle, so dit kan nie na of van Advantage Golf Croquet oorgeskakel word nie.",
+    "Tournament.AdvantageWithHandicap":
+      "'n Kompetisie kan nie beide Advantage Golf Croquet wees en met voorgifte gespeel word nie.",
     "Tournament.ExpectedMatchesBelowStarted":
       "Meer wedstryde as dit het reeds begin.",
     "Tournament.BestOfBelowGamesPlayed":

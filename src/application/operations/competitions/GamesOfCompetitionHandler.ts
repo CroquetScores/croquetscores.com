@@ -1,5 +1,6 @@
 import type { Account } from "../../../domain/aggregates/accounts/Account.js";
 import type { AccountId } from "../../../domain/aggregates/accounts/AccountId.js";
+import { ScoringFraction } from "../../../domain/aggregates/tournaments/competitions/value-objects/ScoringFraction.js";
 import { CompetitionId } from "../../../domain/aggregates/tournaments/primitives/CompetitionId.js";
 import type { TournamentId } from "../../../domain/aggregates/tournaments/primitives/TournamentId.js";
 import {
@@ -12,6 +13,7 @@ import { QueryHandler } from "../../common/QueryHandler.js";
 import { askedBy, tournamentFor } from "../tournaments/tournamentOperations.js";
 import {
   type Competitions,
+  competitionFound,
   competitionOf,
   toldOf,
 } from "./competitionOperations.js";
@@ -77,20 +79,37 @@ export class GamesOfCompetitionHandler extends QueryHandler<
         team.players.map((player) => [player.id.value, team.id.value] as const),
       ),
     );
-    return competition.games.map((game) => ({
-      id: game.id.value,
-      winner: people.get(game.winner.value) ?? "",
-      winnerId: game.winner.value,
-      winnerScore: String(game.winnerScore),
-      loser: people.get(game.loser.value) ?? "",
-      loserId: game.loser.value,
-      loserScore: String(game.loserScore),
-      archived: game.archived,
-      archivable: competition.canBeArchived(game.id, told),
-      withdrawn: game.withdrawn,
-      withdrawable: competition.canBeWithdrawn(game.id, told),
-      winnerTeam: teams.get(game.winner.value),
-      loserTeam: teams.get(game.loser.value),
-    }));
+    // Only an Advantage competition's games are kept as scoring fractions. A
+    // score typed in any other that happens to look like one is the scorer's own
+    // text and no hoops or target (advantage.feature).
+    const advantage = competitionFound(tournament, id).rules.advantage;
+    return competition.games.map((game) => {
+      const winnerFraction = advantage
+        ? ScoringFraction.read(String(game.winnerScore))
+        : undefined;
+      const loserFraction = advantage
+        ? ScoringFraction.read(String(game.loserScore))
+        : undefined;
+      return {
+        id: game.id.value,
+        winner: people.get(game.winner.value) ?? "",
+        winnerId: game.winner.value,
+        winnerScore: String(game.winnerScore),
+        loser: people.get(game.loser.value) ?? "",
+        loserId: game.loser.value,
+        loserScore: String(game.loserScore),
+        archived: game.archived,
+        archivable: competition.canBeArchived(game.id, told),
+        withdrawn: game.withdrawn,
+        withdrawable: competition.canBeWithdrawn(game.id, told),
+        winnerTeam: teams.get(game.winner.value),
+        loserTeam: teams.get(game.loser.value),
+        winnerHoops: winnerFraction?.hoops,
+        winnerWon: winnerFraction?.won,
+        winnerTarget: winnerFraction?.target,
+        loserHoops: loserFraction?.hoops,
+        loserTarget: loserFraction?.target,
+      };
+    });
   }
 }

@@ -16,6 +16,8 @@ export type ListedCompetition = {
   readonly worldRankings: boolean;
   /** The most hoops a game is played to, or null for no most. */
   readonly maximumHoops: number | null;
+  /** Whether it is played as Advantage Golf Croquet. */
+  readonly advantage: boolean;
 } & (
   | {
       readonly kind: "block";

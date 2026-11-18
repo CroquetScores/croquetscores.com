@@ -401,6 +401,25 @@ Feature: A site over a database the specs made can be controlled by a token
       And it is told to hold the player "Ann"
       And it is told not to be archived
 
+    Scenario: Whether a competition is played as Advantage is told as plain data
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a golf croquet tournament called "Spring Open" through the control
+      And the block "Block A" played as Advantage is added to the tournament through the control
+      When what the tournament holds is asked for
+      Then it is told to hold the block "Block A" played as Advantage
+
+    Scenario: A game in an Advantage competition is added from hoops and targets
+      Given a site given the token "open sesame"
+      And an account for "manager@example.com" made through the control
+      And "manager@example.com" is made the manager of a golf croquet tournament called "Spring Open" through the control
+      And the block "Block A" played as Advantage is added to the tournament through the control
+      And the players "Ann" and "Bea" are added and entered in the block through the control
+      And Ann is made to have beaten Bea 5 of 6 to 5 of 8 in the block through the control
+      When what the tournament holds is asked for
+      And the games of the block are asked for
+      Then it is told to hold a game written "83% (5/6)" to "63% (5/8)"
+
     Scenario: The games of a competition are told as plain data
       Given a site given the token "open sesame"
       And an account for "manager@example.com" made through the control

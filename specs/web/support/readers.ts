@@ -59,6 +59,7 @@ Given(
 
 Given("nobody is signed in", async function (this: WebWorld) {
   await this.browserContext?.clearCookies({ name: "session" });
+  this.apiSession = undefined;
 });
 
 // An account that is there, whether or not anybody is signed in to it.

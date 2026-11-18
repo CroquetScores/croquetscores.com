@@ -1268,6 +1268,10 @@ const addingAs = async (
     readonly winnerScore?: string | undefined;
     readonly loser?: string | undefined;
     readonly loserScore?: string | undefined;
+    readonly winnerHoops?: number | string | undefined;
+    readonly winnerTarget?: number | string | undefined;
+    readonly loserHoops?: number | string | undefined;
+    readonly loserTarget?: number | string | undefined;
   },
 ): Promise<void> => {
   const competitionId = await competitionIn(world, tournament, competition);
@@ -1286,6 +1290,10 @@ const addingAs = async (
         winnerScore: game.winnerScore,
         loser: await player(game.loser),
         loserScore: game.loserScore,
+        winnerHoops: game.winnerHoops,
+        winnerTarget: game.winnerTarget,
+        loserHoops: game.loserHoops,
+        loserTarget: game.loserTarget,
       },
       momentOf(world),
     ),
@@ -2687,5 +2695,294 @@ Then(
   "the competition's player {string} is answered as not a bye",
   function (this: SpecWorld, name: string) {
     assert.equal(listedCalled(this, name).bye, false);
+  },
+);
+
+// An Advantage game -------------------------------------------------------------
+
+// Each side of an Advantage game is said as the hoops it made "of" its target,
+// as "5 of 6": a number said as it was typed, so that one that is not whole
+// reaches the scoring fraction to be refused there (advantage.feature).
+const SIDE = String.raw`(\S+) of (\S+)`;
+const SIDES = String.raw`${SIDE} to ${SIDE}`;
+
+// As they were typed, so that a "w" after one reaches the request to be read
+// there (`readTyped`): the winner is declared by it.
+const hoopsAndTargets = (
+  winnerHoops: string,
+  winnerTarget: string,
+  loserHoops: string,
+  loserTarget: string,
+) => ({ winnerHoops, winnerTarget, loserHoops, loserTarget });
+
+// A game played before the scenario's own request, entered as the
+// tournament's first manager.
+Given(
+  new RegExp(
+    `^"([^"]*)" has beaten "([^"]*)" ${SIDES} in "([^"]*)" of "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    winner: string,
+    loser: string,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+    competition: string,
+    name: string,
+  ) {
+    const tournament = tournamentNamed(this, name);
+    const manager = (await load(this, tournament)).managers[0];
+    assert.ok(manager !== undefined, `${name} has no manager.`);
+    await addingAs(this, manager.value, tournament, competition, {
+      winner,
+      loser,
+      ...hoopsAndTargets(winnerHoops, winnerTarget, loserHoops, loserTarget),
+    });
+    doneAs(this);
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" adds the Advantage game of ${GAME} ${SIDES} in "([^"]*)" of "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+    competition: string,
+    name: string,
+  ) {
+    await addingAs(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      {
+        winner,
+        loser,
+        ...hoopsAndTargets(winnerHoops, winnerTarget, loserHoops, loserTarget),
+      },
+    );
+  },
+);
+
+// Each part as the request would leave it out.
+const ADVANTAGE_PARTS: Readonly<Record<string, string>> = {
+  "winner's hoops": "winnerHoops",
+  "winner's target": "winnerTarget",
+  "loser's hoops": "loserHoops",
+  "loser's target": "loserTarget",
+};
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" adds the Advantage game of ${GAME} ${SIDES} in "([^"]*)" of "([^"]*)" without its (winner's hoops|winner's target|loser's hoops|loser's target)$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+    competition: string,
+    name: string,
+    part: string,
+  ) {
+    await addingAs(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      {
+        winner,
+        loser,
+        ...hoopsAndTargets(winnerHoops, winnerTarget, loserHoops, loserTarget),
+        [ADVANTAGE_PARTS[part] ?? part]: undefined,
+      },
+    );
+  },
+);
+
+When(
+  new RegExp(
+    `^the reader signed in to the account for "([^"]*)" corrects the score of ${GAME} in "([^"]*)" of "([^"]*)" to the Advantage score ${SIDES}$`,
+  ),
+  async function (
+    this: SpecWorld,
+    address: string,
+    winner: string,
+    loser: string,
+    competition: string,
+    name: string,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+  ) {
+    await gameSent(
+      this,
+      await asTheReader(this, address),
+      tournamentNamed(this, name),
+      competition,
+      { winner, loser },
+      correctingTo(
+        hoopsAndTargets(winnerHoops, winnerTarget, loserHoops, loserTarget),
+      ),
+    );
+  },
+);
+
+// What a game is kept as, which is the text of its scoring fractions.
+Then(
+  new RegExp(
+    `^"([^"]*)" of "([^"]*)" has the score of ${GAME} kept as "([^"]*)" to "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const about = await theCompetition(this, competition, name);
+    const games = (await competitionNow(this, about.competition))?.games ?? [];
+    const winnerId = await gamePlayerCalled(
+      this,
+      about.tournament,
+      about.competition,
+      winner,
+    );
+    const loserId = await gamePlayerCalled(
+      this,
+      about.tournament,
+      about.competition,
+      loser,
+    );
+    assert.ok(
+      games.some(
+        (game) =>
+          winnerId !== undefined &&
+          loserId !== undefined &&
+          game.winner.equals(winnerId.id) &&
+          game.loser.equals(loserId.id) &&
+          String(game.winnerScore) === winnerScore &&
+          String(game.loserScore) === loserScore,
+      ),
+      `${competition} has ${JSON.stringify(games.map((game) => `${String(game.winnerScore)} to ${String(game.loserScore)}`))}.`,
+    );
+  },
+);
+
+Then(
+  new RegExp(
+    `^"([^"]*)" of "([^"]*)" does not have the score of ${GAME} kept as "([^"]*)" to "([^"]*)"$`,
+  ),
+  async function (
+    this: SpecWorld,
+    competition: string,
+    name: string,
+    winner: string,
+    loser: string,
+    winnerScore: string,
+    loserScore: string,
+  ) {
+    const about = await theCompetition(this, competition, name);
+    const game = await gameCalled(
+      this,
+      about.tournament,
+      about.competition,
+      winner,
+      loser,
+    );
+    assert.ok(
+      game === undefined ||
+        String(game.winnerScore) !== winnerScore ||
+        String(game.loserScore) !== loserScore,
+      `${competition} has ${String(game)}.`,
+    );
+  },
+);
+
+Then(
+  /^the first score answered is kept as "([^"]*)" to "([^"]*)"$/,
+  function (this: SpecWorld, winnerScore: string, loserScore: string) {
+    const [first] = gamesListed(this);
+    assert.equal(
+      `${first?.winnerScore} to ${first?.loserScore}`,
+      `${winnerScore} to ${loserScore}`,
+    );
+  },
+);
+
+Then(
+  new RegExp(`^the first score answered has ${SIDES}$`),
+  function (
+    this: SpecWorld,
+    winnerHoops: string,
+    winnerTarget: string,
+    loserHoops: string,
+    loserTarget: string,
+  ) {
+    const [first] = gamesListed(this);
+    assert.deepEqual(
+      [
+        first?.winnerHoops,
+        first?.winnerTarget,
+        first?.loserHoops,
+        first?.loserTarget,
+      ],
+      [
+        Number(winnerHoops),
+        Number(winnerTarget),
+        Number(loserHoops),
+        Number(loserTarget),
+      ],
+    );
+  },
+);
+
+Then(
+  "the first score answered has its winner declared",
+  function (this: SpecWorld) {
+    const [first] = gamesListed(this);
+    assert.equal(first?.winnerWon, true);
+  },
+);
+
+Then(
+  "the first score answered does not have its winner declared",
+  function (this: SpecWorld) {
+    const [first] = gamesListed(this);
+    assert.notEqual(first?.winnerWon, true);
+  },
+);
+
+Then(
+  "the first score answered has no hoops and targets",
+  function (this: SpecWorld) {
+    const [first] = gamesListed(this);
+    assert.ok(first !== undefined, "No score was answered.");
+    assert.deepEqual(
+      [
+        first.winnerHoops,
+        first.winnerTarget,
+        first.loserHoops,
+        first.loserTarget,
+      ],
+      [undefined, undefined, undefined, undefined],
+    );
   },
 );

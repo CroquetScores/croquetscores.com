@@ -54,7 +54,10 @@ const shortNameOfPlayer = (name: string): string => {
 };
 
 // A margin as the old site wrote it: a plus for a game won, a minus for one
-// lost, and none for one drawn. The game's peeling follows it, as "+9tp".
+// lost, and none for one drawn. The game's peeling follows it, as "+9tp". In an
+// Advantage Swiss it is of percentage points and says so, as "+20%", with no
+// peeling: what follows an Advantage score's number is its hoops and target,
+// which are not the scorer's own mark to be passed on (swiss.feature).
 const marginOf = (margin: number): string =>
   margin > 0 ? `+${String(margin)}` : String(margin);
 
@@ -63,13 +66,13 @@ const marginOf = (margin: number): string =>
 // as well as by the sign of its margin. A withdrawn game is struck through,
 // and said to be withdrawn, since it counts for nothing.
 const resultShown =
-  (speaking: Speaking) =>
+  (speaking: Speaking, advantage: boolean) =>
   ({ opponent, result, margin, peeling, withdrawn }: ResultOfSwiss): string => {
     const marked = withdrawn ? " data-withdrawn" : "";
     const said = withdrawn
       ? ` <span class="swiss-result-withdrawn visually-hidden">${escape(speaking.say("block.gameWithdrawn"))}</span>`
       : "";
-    return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(marginOf(margin) + peeling)}</span>${said}</span>`;
+    return `<span class="swiss-result swiss-${result}"${marked}><span class="swiss-result-opponent"><span aria-hidden="true">${escape(shortNameOf(opponent.name))}</span><span class="visually-hidden">${escape(opponent.name)}</span></span> <span class="swiss-margin">${escape(advantage ? `${marginOf(margin)}%` : marginOf(margin) + peeling)}</span>${said}</span>`;
   };
 
 // The share of the games they have played that a player has won, to one
@@ -110,7 +113,7 @@ export const swissTable = (
         ? ` <span class="swiss-withdrawn">${escape(say("block.withdrawn"))}</span>`
         : "";
       const results = withResults
-        ? `\n                <td class="swiss-results">${player.results.map(resultShown(speaking)).join(", ")}</td>`
+        ? `\n                <td class="swiss-results">${player.results.map(resultShown(speaking, asked.swiss.advantage)).join(", ")}</td>`
         : "";
       return `              <tr>
                 <th scope="row" class="swiss-player">${playerShown(player, "player", speaking, assets, `/${player.address}`, player.withdrawn)}${withdrawn}</th>

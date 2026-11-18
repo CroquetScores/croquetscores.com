@@ -122,6 +122,13 @@ Then(
 );
 
 Then(
+  /^the competition "([^"]*)" is answered as (not )?Advantage$/,
+  function (this: SpecWorld, name: string, not: string | null) {
+    assert.equal(competitionCalled(this, name).advantage, not === null);
+  },
+);
+
+Then(
   /^the competition "([^"]*)" is answered as allowing drawn results$/,
   function (this: SpecWorld, name: string) {
     assert.equal(competitionCalled(this, name).drawsAllowed, true);
