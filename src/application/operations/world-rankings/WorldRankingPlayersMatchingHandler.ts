@@ -50,14 +50,13 @@ export class WorldRankingPlayersMatchingHandler extends QueryHandler<
       );
     }
     const typed = query.typed.trim();
-    // Asked together, each on the query's one connection, which takes them in
-    // turn without either waiting for the other's answer to be read.
-    const [players, known] = await Promise.all([
+    // One after the other: the query has one connection, which runs one
+    // statement at a time, and pg deprecates queueing a second on it.
+    const players =
       [...typed].length < FEWEST_CHARACTERS
         ? []
-        : this.names.beginning(sport, typed, MOST_FOUND),
-      this.names.has(sport, typed),
-    ]);
+        : await this.names.beginning(sport, typed, MOST_FOUND);
+    const known = await this.names.has(sport, typed);
     return { players, known };
   }
 }

@@ -48,21 +48,17 @@ export class CompetitionsOfTournamentHandler extends QueryHandler<
     const answered = tournament.competitions.filter(
       ({ reference }) => part === "manager" || !reference.archived,
     );
-    // What has been played in each test, read all at once rather than one
-    // test after another, since every page of the admin asks for this list.
-    const played = new Map(
-      await Promise.all(
-        answered
-          .filter(({ shape }) => shape.kind === "test")
-          .map(
-            async ({ reference }) =>
-              [
-                reference.id.value,
-                await this.games.playedIn(tournament.id, reference.id),
-              ] as const,
-          ),
-      ),
-    );
+    // What has been played in each test, read one test after another: the
+    // query has one connection, which runs one statement at a time, and pg
+    // deprecates queueing more on it by reading them all at once.
+    const played = new Map<string, Awaited<ReturnType<Games["playedIn"]>>>();
+    for (const { reference, shape } of answered) {
+      if (shape.kind !== "test") continue;
+      played.set(
+        reference.id.value,
+        await this.games.playedIn(tournament.id, reference.id),
+      );
+    }
     const listed: ListedCompetition[] = [];
     for (const { reference, shape, rules } of answered) {
       const about = {
